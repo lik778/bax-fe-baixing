@@ -1,0 +1,16 @@
+{
+  "name": "bax-fe",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "test": "echo todo"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@gitlab.baixing.cn:channel/bax-fe.git"
+  },
+  "dependencies": {
+    "vue": "^2.2.4",
+    "vue-duo": "^0.2.0"
+  }
+}
