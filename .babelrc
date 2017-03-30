@@ -17,8 +17,7 @@
     ["module-resolver", {
       "root": [],
       "alias": {
-        "com": "./component",
-        "css": "./cssbase"
+        "com$": "./component"
       }
     }]
   ]
