@@ -1,4 +1,5 @@
 
+import { Message } from 'element-ui'
 import Fetch from 'fetch.io'
 
 const api = new Fetch({
@@ -10,6 +11,7 @@ const api = new Fetch({
     }
 
     if (meta.message !== 'Success') {
+      Message.error(meta.message)
       throw new Error(meta.message)
     }
   }
