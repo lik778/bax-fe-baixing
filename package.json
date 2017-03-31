@@ -11,10 +11,14 @@
     "url": "git@gitlab.baixing.cn:channel/bax-fe.git"
   },
   "dependencies": {
+    "cssbase": "github:coderhaoxin/cssbase",
     "element-ui": "1.2.5",
+    "fetch.io": "4.0.0",
+    "object-keys-mapping": "2.0.0",
     "rxjs": "5.2.0",
     "vue": "2.2.6",
     "vue-duo": "0.2.0",
+    "vue-router": "2.3.0",
     "vue-rx": "3.0.0"
   },
   "devDependencies": {
