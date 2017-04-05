@@ -7,8 +7,8 @@ const env = process.env.NODE_ENV
 
 module.exports = {
   entry: {
-    signin: './component/signin',
-    bax: './component/bax'
+    signin: './template/signin',
+    bax: './template/bax'
   },
   output: {
     path: distPath,
