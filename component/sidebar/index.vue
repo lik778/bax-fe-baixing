@@ -11,7 +11,11 @@
             <i class="el-icon-message"></i>投放管理
           </template>
           <el-menu-item index="1-1">广告投放</el-menu-item>
-          <el-menu-item index="1-2">物料管理</el-menu-item>
+          <el-menu-item index="1-2">
+            <router-link to="/materials" tag="p">
+              物料管理
+            </router-link>
+          </el-menu-item>
           <el-menu-item index="1-3">订单管理</el-menu-item>
           <el-menu-item index="1-4">客户管理</el-menu-item>
         </el-submenu>
@@ -48,6 +52,7 @@ main {
     color: #768396;
   }
 
+  min-width: 180px;
   width: 180px;
   height: 100%;
   background: var(--c-gray);
