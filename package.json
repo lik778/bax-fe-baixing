@@ -3,8 +3,8 @@
   "private": true,
   "version": "0.1.0",
   "scripts": {
-    "start": "NODE_ENV=development node server.js",
-    "build": "NODE_ENV=production webpack --config webpack.pro.js"
+    "start": "node tool/server.js",
+    "build": "node tool/build.js"
   },
   "repository": {
     "type": "git",
@@ -32,8 +32,12 @@
     "express": "4",
     "extract-text-webpack-plugin": "2",
     "file-loader": "0",
+    "ora": "1",
     "postcss-cssnext": "2",
     "postcss-import": "9",
+    "postcss-mixins": "5",
+    "rimraf": "2",
+    "style-loader": "^0.16.1",
     "vue-loader": "11",
     "vue-template-compiler": "2",
     "webpack": "2",
