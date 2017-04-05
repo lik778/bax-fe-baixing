@@ -2,7 +2,7 @@
 <template>
   <content>
     <sidebar></sidebar>
-    <main>{{ msg }}</main>
+    <router-view></router-view>
   </content>
 </template>
 
@@ -17,7 +17,6 @@ export default {
   },
   data() {
     return {
-      msg: 'bingo'
     }
   }
 }
@@ -36,6 +35,10 @@ content {
   display: flex;
   width: 100%;
   height: 100%;
+
+  & > div:last-child {
+    flex-grow: 1;
+  }
 }
 
 </style>
