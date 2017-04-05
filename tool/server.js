@@ -1,7 +1,10 @@
 
+process.env.NODE_ENV = 'development'
+
 const config = require('./webpack.dev')
 const express = require('express')
 const webpack = require('webpack')
+const { join } = require('path')
 
 const compiler = webpack(config)
 const app = express()
@@ -14,7 +17,7 @@ app.use(require('webpack-dev-middleware')(compiler, {
 
 app.use(require('webpack-hot-middleware')(compiler))
 
-app.use(express.static(__dirname))
+app.use(express.static(join(__dirname, '..')))
 
 app.listen(3000, err => {
   if (err) {

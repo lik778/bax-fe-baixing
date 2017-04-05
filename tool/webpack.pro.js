@@ -1,11 +1,10 @@
 
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
-const base = require('./tool/webpack.base')
+const base = require('./webpack.base')
 const merge = require('webpack-merge')
 const webpack = require('webpack')
 
 const config = merge(base, {
-  devtool: '#source-map'
 })
 
 config.plugins = [
