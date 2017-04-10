@@ -2,6 +2,14 @@
 import { toCamelcase } from 'object-keys-mapping'
 import api from './base'
 
+export async function getCurrentUser() {
+  const body = await api
+    .get('/user/current')
+    .json()
+
+  return toCamelcase(body.data)
+}
+
 export async function login(email, password) {
   return await api
     .post('/user/login')
