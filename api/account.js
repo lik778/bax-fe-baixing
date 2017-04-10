@@ -45,6 +45,15 @@ export async function getUsers(opts = {}) {
   }
 }
 
+export async function updateUserInfo(uid, info) {
+  const body = await api
+    .post(`/user/${uid}`)
+    .send(info)
+    .json()
+
+  return body
+}
+
 export async function getUserInfo(uid) {
   const body = await api
     .get(`/user/${uid}`)
