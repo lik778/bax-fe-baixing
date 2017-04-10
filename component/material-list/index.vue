@@ -1,6 +1,9 @@
 
 <template>
   <div>
+    <topbar :userInfo="userInfo">
+      <label slot="title">物料管理</label>
+    </topbar>
     <material-filter></material-filter>
     <material-list></material-list>
   </div>
@@ -10,12 +13,20 @@
 
 import MaterialFilter from './filter'
 import MaterialList from './list'
+import Topbar from 'com/topbar'
 
 export default {
   name: 'material',
+  props: {
+    userInfo: {
+      type: Object,
+      required: true
+    }
+  },
   components: {
     MaterialFilter,
-    MaterialList
+    MaterialList,
+    Topbar
   }
 }
 
@@ -24,7 +35,7 @@ export default {
 <style scoped>
 
 div {
-  padding: 35px;
+  padding: 0 35px;
 }
 
 </style>

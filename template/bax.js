@@ -15,6 +15,9 @@ const router = new VueRouter({
   routes: [{
     component: MaterialList,
     path: '/materials'
+  }, {
+    component: MaterialList,
+    path: '/'
   }]
 })
 
