@@ -17,6 +17,7 @@
     ["module-resolver", {
       "root": [],
       "alias": {
+        "config": "./config",
         "com": "./component",
         "api": "./api"
       }
