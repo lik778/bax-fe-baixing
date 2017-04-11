@@ -2,11 +2,14 @@
 <template>
   <content>
     <sidebar></sidebar>
-    <router-view></router-view>
+    <router-view :userInfo="currentUser"></router-view>
   </content>
 </template>
 
 <script>
+
+import { getCurrentUser } from './action'
+import store from './store'
 
 import Sidebar from './sidebar'
 
@@ -18,7 +21,11 @@ export default {
   data() {
     return {
     }
-  }
+  },
+  mounted() {
+    getCurrentUser()
+  },
+  store
 }
 
 </script>
