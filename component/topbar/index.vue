@@ -30,7 +30,7 @@
           确认
         </el-button>
       </span>
-</el-dialog>
+    </el-dialog>
   </header>
 </template>
 
@@ -50,7 +50,7 @@ export default {
   },
   data() {
     return {
-      pwdDialogVisible: true,
+      pwdDialogVisible: false,
       newPassword: ''
     }
   },
