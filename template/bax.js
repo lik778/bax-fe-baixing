@@ -1,5 +1,7 @@
 
 import MaterialList from 'com/material-list'
+import OrderList from 'com/order-list'
+import UserList from 'com/user-list'
 import Bax from 'com/bax'
 
 import VueRouter from 'vue-router'
@@ -15,6 +17,12 @@ const router = new VueRouter({
   routes: [{
     component: MaterialList,
     path: '/materials'
+  }, {
+    component: OrderList,
+    path: '/orders'
+  }, {
+    component: UserList,
+    path: '/users'
   }, {
     component: MaterialList,
     path: '/'
