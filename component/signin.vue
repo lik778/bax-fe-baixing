@@ -13,6 +13,7 @@
 <script>
 
 import { login } from 'api/account'
+import { redirectTo } from 'utils'
 
 export default {
   name: 'signin',
@@ -34,8 +35,7 @@ export default {
 
       await login(email, password)
 
-      location.pathname = location.pathname
-        .replace('signin.html', 'bax.html')
+      redirectTo('bax')
     }
   }
 }
