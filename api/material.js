@@ -17,3 +17,14 @@ export async function getMaterial(id) {
 
   return toCamelcase(body.data)
 }
+
+/**
+ * @returns {String}
+ */
+export async function getQiniuToken() {
+  const body = await api
+    .get('/material/qiniu/token')
+    .json()
+
+  return body.data
+}
