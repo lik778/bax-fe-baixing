@@ -60,6 +60,10 @@ content {
   & > div {
     width: 500px;
     height: 200px;
+
+    & > .el-input {
+      margin: 10px 0;
+    }
   }
 }
 
