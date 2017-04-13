@@ -1,6 +1,10 @@
 
-import MaterialList from 'com/material-list'
+import CreateOrder from 'com/order-list/create'
+import OrderDetail from 'com/order-list/detail'
 import OrderList from 'com/order-list'
+
+import MaterialList from 'com/material-list'
+import AdGroupList from 'com/ad-group-list'
 import UserList from 'com/user-list'
 import Bax from 'com/bax'
 
@@ -15,17 +19,26 @@ Vue.use(Duo)
 
 const router = new VueRouter({
   routes: [{
+    component: AdGroupList,
+    path: '/'
+  }, {
+    component: AdGroupList,
+    path: '/ad/groups'
+  }, {
     component: MaterialList,
     path: '/materials'
+  }, {
+    component: CreateOrder,
+    path: '/order/create'
+  }, {
+    component: OrderDetail,
+    path: '/orders/:id'
   }, {
     component: OrderList,
     path: '/orders'
   }, {
     component: UserList,
     path: '/users'
-  }, {
-    component: MaterialList,
-    path: '/'
   }]
 })
 
