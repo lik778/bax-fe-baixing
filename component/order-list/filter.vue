@@ -2,6 +2,16 @@
 <template>
   <section>
     <div>
+      <span></span>
+      <span>
+        <el-button type="primary">
+          <router-link tag="p" to="/order/create">
+            新建订单
+          </router-link>
+        </el-button>
+      </span>
+    </div>
+    <div>
       <span>
         <label>订单状态</label>
         <el-input placeholder="..."></el-input>
@@ -40,7 +50,7 @@ export default {
 
 section {
   border: 1px solid #a3b2c4;
-  height: 110px;
+  height: 160px;
   width: 800px;
 
   & > div {

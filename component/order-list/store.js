@@ -2,17 +2,22 @@
 import { createStore } from 'vue-duo'
 
 import {
-  getOrders
+  getOrders,
+  getAds
 } from './action'
 
 const store = createStore({
   orders: [],
-  total: 0
+  total: 0,
+  ads: []
 })
 
 store.subscribeActions({
   [getOrders]: ({orders = []}) => ({
     orders
+  }),
+  [getAds]: ({ads = []}) => ({
+    ads
   })
 })
 
