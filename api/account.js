@@ -10,6 +10,13 @@ export async function getCurrentUser() {
   return toCamelcase(body.data)
 }
 
+export async function loginLocal() {
+  return await api
+    .post('/user/login/local')
+    .send({user_id: 1})
+    .json()
+}
+
 export async function login(email, password) {
   return await api
     .post('/user/login')

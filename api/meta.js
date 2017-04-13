@@ -10,7 +10,13 @@ export async function getCategories(levels = [1, 2]) {
     })
     .json()
 
-  return toCamelcase(body.data)
+  const categories = toCamelcase(body.data)
+
+  return categories.map(c => ({
+    ...c,
+    value: c.name,
+    label: c.nameCn
+  }))
 }
 
 export async function getAreas() {
@@ -18,5 +24,11 @@ export async function getAreas() {
     .get('/meta/areas')
     .json()
 
-  return toCamelcase(body.data)
+  const cities = toCamelcase(body.data)
+
+  return cities.map(c => ({
+    ...c,
+    value: c.name,
+    label: c.nameCn
+  }))
 }
