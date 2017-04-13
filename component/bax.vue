@@ -2,16 +2,26 @@
 <template>
   <content>
     <sidebar></sidebar>
-    <router-view :userInfo="currentUser"></router-view>
+    <router-view :userInfo="currentUser"
+      :allCategories="allCategories"
+      :allAreas="allAreas">
+    </router-view>
   </content>
 </template>
 
 <script>
 
-import { getCurrentUser } from './action'
+import Sidebar from './sidebar'
+
 import store from './store'
 
 import Sidebar from './sidebar'
+
+import {
+  getCurrentUser,
+  getCategories,
+  getAreas
+} from './action'
 
 export default {
   name: 'bax',
@@ -22,8 +32,12 @@ export default {
     return {
     }
   },
-  mounted() {
-    getCurrentUser()
+  async mounted() {
+    await Promise.all([
+      getCurrentUser(),
+      getCategories(),
+      getAreas()
+    ])
   },
   store
 }
