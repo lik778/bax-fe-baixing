@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "cssbase": "github:coderhaoxin/cssbase",
-    "element-ui": "1.2.5",
+    "element-ui": "1.2.8",
     "fetch.io": "4.0.0",
     "moment": "2.18.1",
     "object-keys-mapping": "2.0.0",
