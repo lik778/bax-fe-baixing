@@ -28,7 +28,7 @@
 <script>
 
 export default {
-  name: 'material-filter'
+  name: 'material-header'
 }
 
 </script>

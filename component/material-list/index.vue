@@ -4,7 +4,7 @@
     <topbar :userInfo="userInfo">
       <label slot="title">物料管理</label>
     </topbar>
-    <material-filter />
+    <material-header />
     <material-list :materials="materials"
       :total="total" :limit="limit"
       :offset="offset" />
@@ -13,7 +13,7 @@
 
 <script>
 
-import MaterialFilter from './filter'
+import MaterialHeader from './header'
 import MaterialList from './list'
 import Topbar from 'com/topbar'
 
@@ -33,7 +33,7 @@ export default {
     }
   },
   components: {
-    MaterialFilter,
+    MaterialHeader,
     MaterialList,
     Topbar
   },
