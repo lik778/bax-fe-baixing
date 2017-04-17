@@ -29,7 +29,7 @@ export default {
     }
   },
   watch: {
-    value: function(v) {
+    value(v) {
       this.onChange(v)
     }
   }
