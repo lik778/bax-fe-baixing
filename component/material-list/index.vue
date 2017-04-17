@@ -5,7 +5,7 @@
       <label slot="title">物料管理</label>
     </topbar>
     <material-filter></material-filter>
-    <material-list></material-list>
+    <material-list :materials="materials"></material-list>
   </div>
 </template>
 
@@ -15,8 +15,15 @@ import MaterialFilter from './filter'
 import MaterialList from './list'
 import Topbar from 'com/topbar'
 
+import store from './store'
+
+import {
+  getMaterials
+} from './action'
+
 export default {
   name: 'material',
+  store,
   props: {
     userInfo: {
       type: Object,
@@ -27,6 +34,9 @@ export default {
     MaterialFilter,
     MaterialList,
     Topbar
+  },
+  async mounted() {
+    await getMaterials()
   }
 }
 

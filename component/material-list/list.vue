@@ -18,9 +18,10 @@
 
 export default {
   name: 'material-list',
-  data() {
-    return {
-      materials: []
+  props: {
+    materials: {
+      type: Array,
+      required: true
     }
   }
 }
