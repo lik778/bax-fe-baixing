@@ -7,7 +7,9 @@ export async function getMaterials() {
     .get('/material')
     .json()
 
-  return toCamelcase(body.data)
+  return {
+    materials: toCamelcase(body.data)
+  }
 }
 
 export async function getMaterial(id) {

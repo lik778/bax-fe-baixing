@@ -21,6 +21,20 @@ export async function getAds() {
   }
 }
 
+export async function createAdGroup(group) {
+  return await api
+    .post('/ad/item/group')
+    .send(reverseCamelcase(group))
+    .json()
+}
+
+export async function transferGroupItems(data) {
+  return await api
+    .post('/ad/item/group/transfer')
+    .send(reverseCamelcase(data))
+    .json()
+}
+
 export async function getAdGroups(type = 'unverified', opts) {
   const query = {
     offset: 0,

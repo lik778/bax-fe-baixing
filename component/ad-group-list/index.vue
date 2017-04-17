@@ -4,6 +4,7 @@
     <topbar :userInfo="userInfo">
       <label slot="title">投放管理</label>
     </topbar>
+    <group-list :groups="groups"></group-list>
   </div>
 </template>
 
@@ -15,7 +16,10 @@ import GroupList from './list'
 import store from './store'
 
 import {
-  getAdGroups
+  getAdGroups,
+
+  createAdGroup,
+  // transferAdItems
 } from './action'
 
 export default {
@@ -40,6 +44,8 @@ export default {
 
 <style scoped>
 
-
+div {
+  padding: 0 35px;
+}
 
 </style>
