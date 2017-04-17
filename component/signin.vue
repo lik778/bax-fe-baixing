@@ -1,13 +1,15 @@
 
 <template>
-  <content>
+  <main>
     <div>
-      <el-input placeholder="邮箱" v-model="email"></el-input>
-      <el-input placeholder="密码" type="password" v-model="password">
-      </el-input>
-      <el-button type="primary" @click="login()">登录</el-button>
+      <header>BAX</header>
+      <el-input placeholder="邮箱" v-model="email" />
+      <el-input placeholder="密码" type="password" v-model="password" />
+      <footer>
+        <el-button type="primary" @click="login()">登录</el-button>
+      </footer>
     </div>
-  </content>
+  </main>
 </template>
 
 <script>
@@ -52,17 +54,34 @@ export default {
 
 @import 'cssbase/mixin';
 
-content {
+main {
   @mixin center;
   width: 100%;
   height: 100%;
 
   & > div {
     width: 500px;
-    height: 200px;
+    height: 300px;
+    border-radius: 5px;
+    background: #333333;
+    padding: 30px 20px;
+
+    & > header {
+      @mixin center;
+      margin-bottom: 20px;
+      color: white;
+      font-size: 26px;
+    }
 
     & > .el-input {
       margin: 10px 0;
+    }
+
+    & > footer {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 20px;
+      padding-right: 20px;
     }
   }
 }
