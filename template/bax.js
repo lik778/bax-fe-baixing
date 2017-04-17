@@ -1,6 +1,6 @@
 
 import CreateOrder from 'com/order-list/create'
-import OrderDetail from 'com/order-list/detail'
+import OrderInfo from 'com/order-info'
 import OrderList from 'com/order-list'
 
 import MaterialList from 'com/material-list'
@@ -31,8 +31,8 @@ const router = new VueRouter({
     component: CreateOrder,
     path: '/order/create'
   }, {
-    component: OrderDetail,
-    name: 'orderDetail',
+    component: OrderInfo,
+    name: 'orderInfo',
     path: '/orders/:id'
   }, {
     component: OrderList,
