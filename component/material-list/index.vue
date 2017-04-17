@@ -4,8 +4,10 @@
     <topbar :userInfo="userInfo">
       <label slot="title">物料管理</label>
     </topbar>
-    <material-filter></material-filter>
-    <material-list :materials="materials"></material-list>
+    <material-filter />
+    <material-list :materials="materials"
+      :total="total" :limit="limit"
+      :offset="offset" />
   </div>
 </template>
 

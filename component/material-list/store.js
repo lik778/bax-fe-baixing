@@ -6,12 +6,18 @@ import {
 } from './action'
 
 const store = createStore({
-  materials: []
+  materials: [],
+  offset: 0,
+  limit: 20,
+  total: 0
 })
 
 store.subscribeActions({
-  [getMaterials]: ({materials = []}) => ({
-    materials
+  [getMaterials]: ({materials = [], offset, limit, total}) => ({
+    materials,
+    offset,
+    limit,
+    total
   })
 })
 
