@@ -12,6 +12,10 @@ export const createOrder = createAction((order) => {
   return oapi.createOrder(order)
 })
 
+export const payOrder = createAction((oid) => {
+  return oapi.payOrder(oid)
+})
+
 export const getAds = createAction(() => {
   return aapi.getAds()
 })
