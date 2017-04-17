@@ -32,6 +32,7 @@ const router = new VueRouter({
     path: '/order/create'
   }, {
     component: OrderDetail,
+    name: 'orderDetail',
     path: '/orders/:id'
   }, {
     component: OrderList,
