@@ -15,8 +15,6 @@ import Sidebar from './sidebar'
 
 import store from './store'
 
-import Sidebar from './sidebar'
-
 import {
   getCurrentUser,
   getCategories,

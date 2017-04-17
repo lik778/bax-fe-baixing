@@ -7,14 +7,17 @@
     </span>
     <span>
       <i class="el-icon-message"></i>
-      <el-dropdown @click="onClickDropdown">
+      <el-dropdown @command="onDropdownCmd">
         <span class="el-dropdown-link">
           {{ userInfo.name }}
           <i class="el-icon-caret-bottom el-icon--right"></i>
         </span>
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item>
+          <el-dropdown-item command="changePwd">
             修改密码
+          </el-dropdown-item>
+          <el-dropdown-item>
+            退出
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -55,6 +58,13 @@ export default {
     }
   },
   methods: {
+    onDropdownCmd(cmd) {
+      switch (cmd) {
+        case 'changePwd':
+          this.pwdDialogVisible = true
+          break
+      }
+    },
     async changePassword() {
       const { userInfo, newPassword } = this
 
