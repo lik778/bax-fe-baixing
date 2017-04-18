@@ -1,6 +1,6 @@
 
 <template>
-  <main>
+  <main class="sidebar">
     <header>
       BAX SSP
     </header>
@@ -54,7 +54,7 @@ export default {
 
 @import '../../cssbase/var';
 
-main {
+.sidebar {
   & header {
     display: flex;
     justify-content: center;

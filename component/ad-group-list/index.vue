@@ -1,6 +1,6 @@
 
 <template>
-  <div>
+  <div class="ad-group">
     <topbar :userInfo="userInfo">
       <label slot="title">投放管理</label>
     </topbar>
@@ -44,7 +44,7 @@ export default {
 
 <style scoped>
 
-div {
+.ad-group {
   padding: 0 35px;
 }
 

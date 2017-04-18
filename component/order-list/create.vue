@@ -1,6 +1,6 @@
 
 <template>
-  <div>
+  <div class="create-order">
     <topbar :userInfo="userInfo">
       <label slot="title">新建订单</label>
     </topbar>
@@ -91,8 +91,10 @@ export default {
 
 <style scoped>
 
-div {
-
+.create-order {
+  & > main {
+    max-width: 680px;
+  }
 }
 
 </style>

@@ -1,6 +1,6 @@
 
 <template>
-  <div>
+  <div class="order">
     <topbar :userInfo="userInfo">
       <label slot="title">订单管理</label>
     </topbar>
@@ -38,7 +38,7 @@ export default {
 
 <style scoped>
 
-div {
+.order {
   padding: 0 35px;
 }
 

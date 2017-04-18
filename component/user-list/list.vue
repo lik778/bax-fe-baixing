@@ -26,8 +26,8 @@ export default {
       required: true
     }
   },
-  mounted() {
-    getUsers()
+  async mounted() {
+    await getUsers()
   }
 }
 

@@ -1,6 +1,6 @@
 
 <template>
-  <header>
+  <header class="topbar">
     <span>
       <i class="el-icon-arrow-left"></i>
       <slot name="title"></slot>
@@ -91,7 +91,7 @@ export default {
 
 <style scoped>
 
-header {
+.topbar {
   display: flex;
   justify-content: space-between;
   align-items: center;

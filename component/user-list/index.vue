@@ -1,6 +1,6 @@
 
 <template>
-  <div>
+  <div class="user">
     <topbar :userInfo="userInfo">
       <label slot="title">客户管理</label>
     </topbar>
@@ -34,7 +34,7 @@ export default {
 
 <style scoped>
 
-div {
+.user {
   padding: 0 35px;
 }
 
