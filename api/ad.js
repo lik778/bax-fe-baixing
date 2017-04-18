@@ -38,12 +38,19 @@ export async function transferGroupItems(data) {
 export async function getAdGroups(type = 'unverified', opts) {
   const query = {
     offset: 0,
-    limit: 30,
+    limit: 20,
     ...opts
   }
 
   if (type === 'all') {
+    const body = await api
+      .get('/ad/item/group')
+      .query(reverseCamelcase(query))
+      .json()
 
+    return {
+      groups: toCamelcase(body.data)
+    }
   }
 
   const body = await api

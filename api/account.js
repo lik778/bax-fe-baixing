@@ -1,5 +1,5 @@
 
-import { toCamelcase } from 'object-keys-mapping'
+import { reverseCamelcase, toCamelcase } from 'object-keys-mapping'
 import api from './base'
 
 export async function getCurrentUser() {
@@ -78,6 +78,6 @@ export async function getUserInfo(uid) {
 export async function createUser(user) {
   return await api
     .post('/user')
-    .send(user)
+    .send(reverseCamelcase(user))
     .json()
 }
