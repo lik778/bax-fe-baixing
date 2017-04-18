@@ -1,7 +1,12 @@
 
 import { createAction } from 'vue-duo'
 
+import * as mapi from 'api/material'
 import * as aapi from 'api/ad'
+
+export const getMaterials = createAction((opts) => {
+  return mapi.getMaterials(opts)
+})
 
 export const getAdGroups = createAction((type, opts) => {
   return aapi.getAdGroups(type, opts)
@@ -13,6 +18,10 @@ export const transferAdItems = createAction((data) => {
 
 export const createAdGroup = createAction((group) => {
   return aapi.createAdGroup(group)
+})
+
+export const setAdGroupMaterial = createAction((gid, mid) => {
+  return aapi.setAdGroupMaterial(gid, mid)
 })
 
 export const addAdGroupMaterial = createAction((gid, material) => {

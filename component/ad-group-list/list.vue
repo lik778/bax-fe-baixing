@@ -42,59 +42,31 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-dialog title="添加物料" v-model="dialogAddMaterialVisible">
-      <div>
-        <bax-select :options="[]" :on-change="() => {}"></bax-select>
-      </div>
-      <div>
-        <el-input v-model="material.name"></el-input>
-      </div>
-      <div>
-        <el-input v-model="material.content"></el-input>
-      </div>
-      <div>
-        <span>上传物料</span>
-        <uploader :on-success="url => material.url = url"></uploader>
-      </div>
-      <div slot="footer">
-        <el-button @click="cancelAddMaterial">
-          取消
-        </el-button>
-        <el-button type="primary" @click="addMaterial">
-          确认
-        </el-button>
-      </div>
-    </el-dialog>
+    <add-material :materials="materials" :groupId="currentGroupId"
+      :visible="addMaterialDialogVisible"
+      @hide="addMaterialDialogVisible = false"
+      @success="onAddMaterialSuccess" />
   </section>
 </template>
 
 <script>
 
-import Uploader from 'com/common/uploader'
-import BaxSelect from 'com/common/select'
+import AddMaterial from './add-material'
 
 import { toHumanTime } from 'utils'
 
 import ItemList from './item-list'
 
 import {
-  addAdGroupMaterial,
   verifyAdGroup,
   verifyAdItem,
   getAdGroups
 } from './action'
 
-const emptyMaterial = {
-  content: '',
-  name: '',
-  url: ''
-}
-
 export default {
   name: 'ad-group-list',
   components: {
-    BaxSelect,
-    Uploader,
+    AddMaterial,
     ItemList
   },
   props: {
@@ -109,8 +81,7 @@ export default {
   },
   data() {
     return {
-      dialogAddMaterialVisible: false,
-      material: {...emptyMaterial},
+      addMaterialDialogVisible: false,
       currentGroupId: 0
     }
   },
@@ -118,29 +89,12 @@ export default {
     toHumanTime
   },
   methods: {
+    async onAddMaterialSuccess() {
+      await getAdGroups()
+    },
     showAddMaterialDialog(gid) {
-      this.dialogAddMaterialVisible = true
+      this.addMaterialDialogVisible = true
       this.currentGroupId = gid
-    },
-    emptyData() {
-      this.material = {...emptyMaterial}
-
-      this.currentGroupId = 0
-    },
-    cancelAddMaterial() {
-      this.dialogAddMaterialVisible = false
-      this.emptyData()
-    },
-    async addMaterial() {
-      const {
-        currentGroupId,
-        material
-      } = this
-      // TODO - 字段检测
-      await addAdGroupMaterial(currentGroupId, material)
-
-      this.dialogAddMaterialVisible = false
-      this.emptyData()
     },
     async rejectAdGroup(gid) {
       await verifyAdGroup(gid, 'failed')
@@ -158,11 +112,7 @@ export default {
 <style scoped>
 
 .group-list {
-  & .el-dialog__body {
-    & > div {
-      margin: 10px 0;
-    }
-  }
+
 }
 
 </style>

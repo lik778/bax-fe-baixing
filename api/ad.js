@@ -63,6 +63,13 @@ export async function getAdGroups(type = 'unverified', opts) {
   }
 }
 
+export async function setAdGroupMaterial(gid, mid) {
+  return await api
+    .post(`/ad/item/group/${gid}/material/existed`)
+    .send(reverseCamelcase({materialId: mid}))
+    .json()
+}
+
 export async function addAdGroupMaterial(gid, material) {
   const data = {
     ...material,
