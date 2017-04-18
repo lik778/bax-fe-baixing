@@ -4,14 +4,14 @@
     <topbar :userInfo="userInfo">
       <label slot="title">订单管理</label>
     </topbar>
-    <order-filter></order-filter>
-    <order-list :orders="orders"></order-list>
+    <order-header />
+    <order-list :orders="orders" />
   </div>
 </template>
 
 <script>
 
-import OrderFilter from './filter'
+import OrderHeader from './header'
 import OrderList from './list'
 
 import Topbar from 'com/topbar'
@@ -27,7 +27,7 @@ export default {
     }
   },
   components: {
-    OrderFilter,
+    OrderHeader,
     OrderList,
     Topbar
   },

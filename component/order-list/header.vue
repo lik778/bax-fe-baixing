@@ -1,6 +1,6 @@
 
 <template>
-  <section>
+  <section class="order-header">
     <div>
       <span></span>
       <span>
@@ -39,7 +39,7 @@
 <script>
 
 export default {
-  name: 'order-filter'
+  name: 'order-header'
 }
 
 </script>
@@ -48,7 +48,7 @@ export default {
 
 @import 'cssbase/mixin';
 
-section {
+.order-header {
   border: 1px solid #a3b2c4;
   height: 160px;
   width: 800px;
