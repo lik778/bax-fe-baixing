@@ -29,7 +29,7 @@ export async function login(email, password) {
 
 export async function logout() {
   return await api
-    .get('/user/logout')
+    .post('/user/logout')
     .json()
 }
 
