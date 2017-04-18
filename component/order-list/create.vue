@@ -4,23 +4,26 @@
     <topbar :userInfo="userInfo">
       <label slot="title">新建订单</label>
     </topbar>
-    <content>
+    <main>
       <el-form ref="form" :model="newOrder" label-width="120px">
         <el-form-item label="广告位">
           <el-input v-model="newOrder.adId"></el-input>
         </el-form-item>
         <el-form-item label="城市">
           <bax-select :options="allAreas" multiple
-            :on-change="v => newOrder.cities = [v]">
+            @change="v => newOrder.cities = v">
           </bax-select>
         </el-form-item>
         <el-form-item label="类目">
           <bax-select :options="allCategories" multiple
-            :on-change="v => newOrder.categories = [v]">
+            @change="v => newOrder.categories = v">
           </bax-select>
         </el-form-item>
         <el-form-item label="时段">
-          <el-input v-model="newOrder._todo_"></el-input>
+          <el-date-picker type="datetime" placeholder="上线时间"
+            v-model="newOrder.onlineAt" />
+          <el-date-picker type="datetime" placeholder="下线时间"
+            v-model="newOrder.offlineAt" />
         </el-form-item>
         <el-form-item label="销售人员">
           <el-input v-model="newOrder.salesId"></el-input>
@@ -39,7 +42,7 @@
           </el-button>
         </el-form-item>
       </el-form>
-    </content>
+    </main>
   </div>
 </template>
 
@@ -47,6 +50,8 @@
 
 import BaxSelect from 'com/common/select'
 import Topbar from 'com/topbar'
+
+import { toTimestamp } from 'utils'
 
 import {
   createOrder
@@ -82,7 +87,13 @@ export default {
     async onSubmit() {
       const { newOrder } = this
 
-      await createOrder(newOrder)
+      const data = {
+        ...newOrder,
+        offlineAt: toTimestamp(newOrder.offlineAt),
+        onlineAt: toTimestamp(newOrder.onlineAt)
+      }
+
+      await createOrder(data)
     }
   }
 }
