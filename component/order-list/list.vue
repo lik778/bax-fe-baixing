@@ -36,6 +36,8 @@
 import { sspOrderStatus } from 'constant/order'
 import { toHumanTime } from 'utils'
 
+import { Message } from 'element-ui'
+
 import {
   getOrders,
   payOrder
@@ -53,6 +55,7 @@ export default {
     async pay(id) {
       await payOrder(id)
       await getOrders()
+      Message.success('支付成功')
     }
   },
   filters: {
