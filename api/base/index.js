@@ -3,8 +3,10 @@ import { Message } from 'element-ui'
 import { redirectTo } from 'utils'
 import Fetch from 'fetch.io'
 
+import { baxApiHost } from 'config'
+
 const api = new Fetch({
-  prefix: 'http://192.168.8.201/bax',
+  prefix: baxApiHost,
   afterJSON(body) {
     const meta = body.meta || {}
 
