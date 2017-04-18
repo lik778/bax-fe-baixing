@@ -1,6 +1,6 @@
 
 <template>
-  <el-select v-model="value">
+  <el-select v-model="value" :multiple="multiple" filterable>
     <el-option v-for="opt in options"
       :label="opt.label"
       :value="opt.value">
@@ -17,10 +17,6 @@ export default {
       type: Array,
       required: true
     },
-    onChange: {
-      type: Function,
-      required: true
-    },
     multiple: Boolean
   },
   data() {
@@ -30,7 +26,7 @@ export default {
   },
   watch: {
     value(v) {
-      this.onChange(v)
+      this.$emit('change', v)
     }
   }
 }
