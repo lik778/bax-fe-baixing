@@ -16,7 +16,7 @@
           <el-dropdown-item command="changePwd">
             修改密码
           </el-dropdown-item>
-          <el-dropdown-item>
+          <el-dropdown-item command="logout">
             退出
           </el-dropdown-item>
         </el-dropdown-menu>
@@ -39,9 +39,13 @@
 
 <script>
 
-import { updateUserInfo } from 'api/account'
-
 import { Message } from 'element-ui'
+import { redirectTo } from 'utils'
+
+import {
+  updateUserInfo,
+  logout
+} from 'api/account'
 
 export default {
   name: 'topbar',
@@ -58,10 +62,14 @@ export default {
     }
   },
   methods: {
-    onDropdownCmd(cmd) {
+    async onDropdownCmd(cmd) {
       switch (cmd) {
         case 'changePwd':
           this.pwdDialogVisible = true
+          break
+        case 'logout':
+          await logout()
+          redirectTo('signin')
           break
       }
     },

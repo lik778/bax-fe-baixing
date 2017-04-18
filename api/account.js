@@ -27,6 +27,12 @@ export async function login(email, password) {
     .json()
 }
 
+export async function logout() {
+  return await api
+    .get('/user/logout')
+    .json()
+}
+
 export async function getRoles() {
   const body = await api
     .get('/user/role')
