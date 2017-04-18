@@ -1,38 +1,42 @@
 
 <template>
-  <section>
+  <section class="group-list">
     <el-table :data="groups" style="width: 100%">
       <el-table-column type="expand">
         <template scope="scope">
           <item-list :group-id="scope.row.id"></item-list>
         </template>
       </el-table-column>
-      <el-table-column prop="id" label="id" width="180">
+      <el-table-column prop="name" label="名称" width="180">
       </el-table-column>
       <el-table-column prop="adId" label="adId" width="180">
       </el-table-column>
-      <el-table-column prop="offlineAt" label="下线时间">
+      <el-table-column label="投放时间">
+        <template scope="s">
+          <span>{{ s.row.onlineAt | toHumanTime }}</span>
+          <i>-</i>
+          <span>{{ s.row.offlineAt | toHumanTime }}</span>
+        </template>
       </el-table-column>
-      <el-table-column prop="onlineAt" label="上线时间">
       </el-table-column>
       <el-table-column label="物料">
-        <template scope="scope">
+        <template scope="s">
           <el-button type="text" size="small"
-            v-if="!scope.row.materialId"
-            @click="showAddMaterialDialog(scope.row.id)">
+            v-if="!s.row.materialId"
+            @click="showAddMaterialDialog(s.row.id)">
             上传物料
           </el-button>
-          <span v-else>{{ scope.row.materialId }}</span>
+          <span v-else>{{ s.row.materialId }}</span>
         </template>
       </el-table-column>
       <el-table-column label="审核">
-        <template scope="scope">
+        <template scope="s">
           <el-button type="text" size="small"
-            @click="rejectAdGroup(scope.row.id)">
+            @click="rejectAdGroup(s.row.id)">
             拒绝
           </el-button>
           <el-button type="text" size="small"
-            @click="passAdGroup(scope.row.id)">
+            @click="passAdGroup(s.row.id)">
             通过
           </el-button>
         </template>
@@ -69,6 +73,8 @@
 import Uploader from 'com/common/uploader'
 import BaxSelect from 'com/common/select'
 
+import { toHumanTime } from 'utils'
+
 import ItemList from './item-list'
 
 import {
@@ -95,6 +101,10 @@ export default {
     groups: {
       type: Array,
       required: true
+    },
+    materials: {
+      type: Array,
+      required: true
     }
   },
   data() {
@@ -103,6 +113,9 @@ export default {
       material: {...emptyMaterial},
       currentGroupId: 0
     }
+  },
+  filters: {
+    toHumanTime
   },
   methods: {
     showAddMaterialDialog(gid) {
@@ -143,5 +156,13 @@ export default {
 </script>
 
 <style scoped>
+
+.group-list {
+  & .el-dialog__body {
+    & > div {
+      margin: 10px 0;
+    }
+  }
+}
 
 </style>
