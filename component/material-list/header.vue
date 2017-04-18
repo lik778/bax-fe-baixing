@@ -1,6 +1,6 @@
 
 <template>
-  <section>
+  <section class="material-header">
     <div>
       <span>
         <label>类型</label>
@@ -35,10 +35,11 @@ export default {
 
 <style scoped>
 
+@import '../../cssbase/mixin';
 @import 'cssbase/mixin';
 
-section {
-  border: 1px solid #a3b2c4;
+.material-header {
+  @mixin top-filter;
   height: 110px;
   width: 800px;
 

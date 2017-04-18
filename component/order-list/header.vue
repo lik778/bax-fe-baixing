@@ -46,10 +46,11 @@ export default {
 
 <style scoped>
 
+@import '../../cssbase/mixin';
 @import 'cssbase/mixin';
 
 .order-header {
-  border: 1px solid #a3b2c4;
+  @mixin top-filter;
   height: 160px;
   width: 800px;
 

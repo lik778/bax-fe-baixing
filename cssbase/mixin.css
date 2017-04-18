@@ -1,0 +1,5 @@
+
+@define-mixin top-filter {
+  border: 1px solid #a3b2c4;
+  border-radius: 5px;
+}
