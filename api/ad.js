@@ -22,10 +22,22 @@ export async function getAds() {
 }
 
 export async function createAdGroup(group) {
-  return await api
+  const body = await api
     .post('/ad/item/group')
     .send(reverseCamelcase(group))
     .json()
+
+  return body.data
+}
+
+export async function queryAdItems(opts) {
+  const body = await api
+    .query(reverseCamelcase(opts))
+    .json()
+
+  return {
+    items: toCamelcase(body.data)
+  }
 }
 
 export async function transferGroupItems(data) {
