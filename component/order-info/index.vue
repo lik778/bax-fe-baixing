@@ -17,6 +17,9 @@
         <span>
         </span>
       </div>
+      <div>
+        <log v-for="log in logs" :info="log" />
+      </div>
     </main>
   </div>
 </template>
@@ -25,6 +28,7 @@
 
 import Topbar from 'com/topbar'
 import Item from './item'
+import Log from './log'
 
 import store from './store'
 
@@ -35,7 +39,8 @@ import {
 } from 'utils'
 
 import {
-  getOrderInfo
+  getOrderInfo,
+  getOrderLogs
 } from './action'
 
 export default {
@@ -49,7 +54,8 @@ export default {
   },
   components: {
     Topbar,
-    Item
+    Item,
+    Log
   },
   filters: {
     toHumanTime,
@@ -59,7 +65,10 @@ export default {
   },
   async mounted() {
     const orderId = this.$route.params.id
-    await getOrderInfo(orderId)
+    await Promise.all([
+      getOrderInfo(orderId),
+      getOrderLogs(orderId)
+    ])
   }
 }
 

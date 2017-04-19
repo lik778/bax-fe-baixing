@@ -10,8 +10,10 @@ export async function createOrder(order) {
 }
 
 export async function getOrderInfo(id) {
+export async function getOrderLogs(id) {
   const body = await api
     .get(`/order/${id}`)
+    .get(`/order/${id}/log`)
     .json()
 
   return toCamelcase(body.data)
