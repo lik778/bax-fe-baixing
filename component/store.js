@@ -4,12 +4,14 @@ import { createStore } from 'vue-duo'
 import {
   getCurrentUser,
   getCategories,
-  getAreas
+  getAreas,
+  getRoles
 } from './action'
 
 const store = createStore({
   allCategories: [],
   allAreas: [],
+  allRoles: [],
 
   currentUser: {}
 })
@@ -23,6 +25,9 @@ store.subscribeActions({
   }),
   [getAreas]: (areas) => ({
     allAreas: [...areas]
+  }),
+  [getRoles]: (roles) => ({
+    roles: [...roles]
   })
 })
 

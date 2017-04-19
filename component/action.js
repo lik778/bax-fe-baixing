@@ -15,3 +15,7 @@ export const getCategories = createAction(() => {
 export const getAreas = createAction(() => {
   return mapi.getAreas()
 })
+
+export const getRoles = createAction(() => {
+  return aapi.getRoles()
+})

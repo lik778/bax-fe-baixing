@@ -18,7 +18,8 @@ import store from './store'
 import {
   getCurrentUser,
   getCategories,
-  getAreas
+  getAreas,
+  getRoles
 } from './action'
 
 export default {
@@ -34,7 +35,8 @@ export default {
     await Promise.all([
       getCurrentUser(),
       getCategories(),
-      getAreas()
+      getAreas(),
+      getRoles()
     ])
   },
   store
