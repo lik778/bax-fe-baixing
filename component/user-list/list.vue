@@ -8,6 +8,13 @@
       </el-table-column>
       <el-table-column prop="mobile" label="号码" width="180">
       </el-table-column>
+      <el-table-column label="角色" width="180">
+        <template scope="s">
+          <i v-for="role in s.row.roles">
+            {{ role.name }}
+          </i>
+        </template>
+      </el-table-column>
       <el-table-column prop="email" label="邮箱">
       </el-table-column>
     </el-table>
@@ -27,6 +34,10 @@ export default {
     BaxPagination
   },
   props: {
+    allRoles: {
+      type: Array,
+      required: true
+    },
     users: {
       type: Array,
       required: true

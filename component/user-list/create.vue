@@ -12,7 +12,8 @@
         <el-input v-model="user.mobile" />
       </el-form-item>
       <el-form-item label="角色">
-        <bax-select :options="[]" @change="() => {}" />
+        <bax-select :options="roleOpts" multiple
+          @change="v => user.roles = v" />
       </el-form-item>
     </el-form>
     <div slot="footer">
@@ -35,6 +36,10 @@ export default {
     visible: {
       type: Boolean,
       required: true
+    },
+    allRoles: {
+      type: Array,
+      required: true
     }
   },
   data() {
@@ -44,6 +49,14 @@ export default {
   },
   components: {
     BaxSelect
+  },
+  computed: {
+    roleOpts() {
+      return this.allRoles.map(r => ({
+        label: r.name,
+        value: r.id
+      }))
+    }
   },
   methods: {
     async submit() {

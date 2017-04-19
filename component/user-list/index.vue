@@ -4,11 +4,12 @@
     <topbar :userInfo="userInfo">
       <label slot="title">客户管理</label>
     </topbar>
-    <user-header @create-user="showCreateUserDialog = true"
-      @created="onCreateUser" />
-    <user-list :users="users" :offset="offset"
-      :limit="limit" :total="total" />
+    <user-header @create-user="showCreateUserDialog = true" />
+    <user-list :users="users" :all-roles="allRoles"
+      :offset="offset" :limit="limit" :total="total" />
     <create-user :visible="showCreateUserDialog"
+      :all-roles="allRoles"
+      @created="onCreateUser"
       @hide="showCreateUserDialog = false" />
   </div>
 </template>
@@ -32,6 +33,10 @@ export default {
   props: {
     userInfo: {
       type: Object,
+      required: true
+    },
+    allRoles: {
+      type: Array,
       required: true
     }
   },
