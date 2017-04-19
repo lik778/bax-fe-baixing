@@ -27,7 +27,7 @@ store.subscribeActions({
     allAreas: [...areas]
   }),
   [getRoles]: (roles) => ({
-    roles: [...roles]
+    allRoles: [...roles]
   })
 })
 
