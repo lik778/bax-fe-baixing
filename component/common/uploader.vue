@@ -2,7 +2,7 @@
 <template>
   <div>
     <input type="file" ref="file" @change="uploadFile" hidden />
-    <button @click="selectFile">+</button>
+    <el-button @click="selectFile">+</el-button>
   </div>
 
 </template>
@@ -23,9 +23,6 @@ const request = new Fetch({
 
 export default {
   name: 'uploader',
-  props: {
-    onSuccess: Function
-  },
   methods: {
     selectFile() {
       this.$refs.file.click()
@@ -49,7 +46,7 @@ export default {
         .append('token', token)
         .json()
 
-      this.onSuccess(qiniuHost + body.key)
+      this.$emit('success', qiniuHost + body.key)
     }
   }
 }
