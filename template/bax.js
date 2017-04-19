@@ -18,6 +18,7 @@ Vue.use(Element)
 Vue.use(Duo)
 
 const router = new VueRouter({
+  mode: 'history',
   routes: [{
     component: AdGroupList,
     path: '/main',
