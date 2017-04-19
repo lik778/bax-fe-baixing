@@ -1,7 +1,6 @@
 
 <template>
-  <header>
-    <el-buttom>新建group</el-buttom>
+  <header class="group-header">
   </header>
 </template>
 
@@ -14,5 +13,9 @@ export default {
 </script>
 
 <style scoped>
+
+.group-header {
+
+}
 
 </style>

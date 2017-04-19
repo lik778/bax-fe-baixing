@@ -4,6 +4,7 @@
     <topbar :userInfo="userInfo">
       <label slot="title">投放管理</label>
     </topbar>
+    <group-header />
     <group-list :groups="groups" :materials="materials"
       :all-categories="allCategories" :all-areas="allAreas"
       :offset="offset" :limit="limit" :total="total" />
@@ -12,16 +13,14 @@
 
 <script>
 
+import GroupHeader from './header'
 import Topbar from 'com/topbar'
 import GroupList from './list'
 
 import store from './store'
 
 import {
-  getAdGroups,
-
-  createAdGroup,
-  // transferAdItems
+  getAdGroups
 } from './action'
 
 export default {
@@ -31,9 +30,18 @@ export default {
     userInfo: {
       type: Object,
       required: true
+    },
+    allCategories: {
+      type: Array,
+      required: true
+    },
+    allAreas: {
+      type: Array,
+      required: true
     }
   },
   components: {
+    GroupHeader,
     GroupList,
     Topbar
   },
