@@ -1,0 +1,35 @@
+image: docker
+
+before_script:
+  - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.baixing.cn
+  - docker login -u wangyanqing -p 1Q2W3E4r5t6y daocloud.io
+
+variables:
+  BAX_FE: daocloud.io/baixing/bax-fe
+  BAX_FE_REF: registry.gitlab.baixing.cn/channel/bax-fe:$CI_BUILD_REF_NAME
+  BAX_FE_LATEST: $BAX_FE:latest
+
+stages:
+  - build
+  - release
+
+build:
+  stage: build
+  script:
+    - docker build --pull -t $BAX_FE_REF .
+    - docker push $BAX_FE_REF
+
+release:
+  stage: release
+  only:
+    - tags
+    - /^v.*$/
+  script:
+    - export BAX_FE_CURRENT=$BAX:$CI_BUILD_REF_NAME
+    - docker pull $BAX_FE_REF
+    - docker tag $BAX_FE_REF $BAX_FE_LATEST
+    - docker tag $BAX_FE_REF $BAX_FE_CURRENT
+    - docker push $BAX_FE_LATEST
+    - docker push $BAX_FE_CURRENT
+    - docker rmi $BAX_FE_LATEST
+    - docker rmi $BAX_FE_CURRENT
