@@ -41,6 +41,10 @@
             @click="passAdGroup(s.row.id)">
             通过
           </el-button>
+          <el-button type="text" size="small"
+            @click="showAddAdGroupDialog(s.row.orderId)">
+            条件投放
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -50,6 +54,11 @@
       :visible="addMaterialDialogVisible"
       @hide="addMaterialDialogVisible = false"
       @success="onAddMaterialSuccess" />
+    <add-ad-group :orderId="currentGroupOrderId"
+      :visible="addAdGroupDialogVisible"
+      :all-categories="allCategories" :all-areas="allAreas"
+      @hide="addAdGroupDialogVisible = false"
+      @success="onAddAdGroupSuccess" />
   </section>
 </template>
 
@@ -57,6 +66,7 @@
 
 import BaxPagination from 'com/common/pagination'
 import AddMaterial from './add-material'
+import AddAdGroup from './add-ad-group'
 
 import { toHumanTime } from 'utils'
 
@@ -73,9 +83,18 @@ export default {
   components: {
     BaxPagination,
     AddMaterial,
+    AddAdGroup,
     ItemList
   },
   props: {
+    allCategories: {
+      type: Array,
+      required: true
+    },
+    allAreas: {
+      type: Array,
+      required: true
+    },
     groups: {
       type: Array,
       required: true
@@ -91,6 +110,8 @@ export default {
   data() {
     return {
       addMaterialDialogVisible: false,
+      addAdGroupDialogVisible: false,
+      currentGroupOrderId: '',
       currentGroupId: 0
     }
   },
@@ -100,6 +121,13 @@ export default {
   methods: {
     async onAddMaterialSuccess() {
       await getAdGroups()
+    },
+    async onAddAdGroupSuccess() {
+      await getAdGroups()
+    },
+    showAddAdGroupDialog(oid) {
+      this.addAdGroupDialogVisible = true
+      this.currentGroupOrderId = oid
     },
     showAddMaterialDialog(gid) {
       this.addMaterialDialogVisible = true
