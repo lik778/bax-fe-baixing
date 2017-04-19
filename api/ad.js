@@ -55,23 +55,29 @@ export async function getAdGroups(type = 'unverified', opts) {
   }
 
   if (type === 'all') {
-    const body = await api
-      .get('/ad/item/group')
-      .query(reverseCamelcase(query))
-      .json()
+    const [groups, total] = await Promise.all([
+      _getGroups(query),
+      _getGroupCount(query)
+    ])
 
     return {
-      groups: toCamelcase(body.data)
+      offset: query.offset,
+      limit: query.limit,
+      groups,
+      total
     }
   }
 
-  const body = await api
-    .get(`/ad/item/group/unverified`)
-    .query(query)
-    .json()
+  const [groups, total] = await Promise.all([
+    _getUnverifiedGroups(query),
+    _getUnverifiedGroupsCount(query)
+  ])
 
   return {
-    groups: toCamelcase(body.data)
+    offset: query.offset,
+    limit: query.limit,
+    groups,
+    total
   }
 }
 
@@ -132,4 +138,44 @@ export async function verifyAdGroup(id, status) {
     .post(`/ad/item/group/${id}/verify/failed`)
     .send({})
     .json()
+}
+
+/**
+ * private
+ */
+
+async function _getGroups(query) {
+  const body = await api
+    .get('/ad/item/group')
+    .query(reverseCamelcase(query))
+    .json()
+
+  return toCamelcase(body.data)
+}
+
+async function _getGroupCount(query) {
+  const body = await api
+    .get('/ad/item/group/count')
+    .query(reverseCamelcase(query))
+    .json()
+
+  return body.data
+}
+
+async function _getUnverifiedGroups(query) {
+  const body = await api
+    .get('/ad/item/group/unverified')
+    .query(query)
+    .json()
+
+  return toCamelcase(body.data)
+}
+
+async function _getUnverifiedGroupsCount(query) {
+  const body = await api
+    .get('/ad/item/group/unverified/count')
+    .query(reverseCamelcase(query))
+    .json()
+
+  return body.data
 }

@@ -4,7 +4,9 @@
     <topbar :userInfo="userInfo">
       <label slot="title">投放管理</label>
     </topbar>
-    <group-list :groups="groups"></group-list>
+    <group-list :groups="groups" :materials="materials"
+      :all-categories="allCategories" :all-areas="allAreas"
+      :offset="offset" :limit="limit" :total="total" />
   </div>
 </template>
 

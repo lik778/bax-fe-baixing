@@ -42,6 +42,8 @@
         </template>
       </el-table-column>
     </el-table>
+    <bax-pagination :offset="offset" :total="total" :limit="limit"
+      @current-change="onCurrentChange" />
     <add-material :materials="materials" :groupId="currentGroupId"
       :visible="addMaterialDialogVisible"
       @hide="addMaterialDialogVisible = false"
@@ -51,6 +53,7 @@
 
 <script>
 
+import BaxPagination from 'com/common/pagination'
 import AddMaterial from './add-material'
 
 import { toHumanTime } from 'utils'
@@ -66,6 +69,7 @@ import {
 export default {
   name: 'ad-group-list',
   components: {
+    BaxPagination,
     AddMaterial,
     ItemList
   },
@@ -74,6 +78,9 @@ export default {
       type: Array,
       required: true
     },
+    offset: Number,
+    total: Number,
+    limit: Number,
     materials: {
       type: Array,
       required: true
@@ -95,6 +102,9 @@ export default {
     showAddMaterialDialog(gid) {
       this.addMaterialDialogVisible = true
       this.currentGroupId = gid
+    },
+    async onCurrentChange({offset}) {
+      await getAdGroups({offset})
     },
     async rejectAdGroup(gid) {
       await verifyAdGroup(gid, 'failed')
