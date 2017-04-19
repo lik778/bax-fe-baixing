@@ -103,6 +103,8 @@ export default {
 <style scoped>
 
 .create-order {
+  padding: 0 35px;
+
   & > main {
     max-width: 680px;
   }
