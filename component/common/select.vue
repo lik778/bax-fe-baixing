@@ -1,6 +1,7 @@
 
 <template>
-  <el-select v-model="value" :multiple="multiple" filterable>
+  <el-select v-model="value" :multiple="multiple" filterable
+    :filter-method="filterMethod">
     <el-option v-for="opt in options"
       :label="opt.label"
       :value="opt.value">
@@ -17,6 +18,7 @@ export default {
       type: Array,
       required: true
     },
+    filterMethod: Function,
     multiple: Boolean
   },
   data() {
