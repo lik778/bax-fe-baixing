@@ -33,7 +33,7 @@
         </el-form-item>
         <el-form-item>
           <el-button>
-            <router-link tag="p" to="/orders">
+            <router-link tag="p" :to="{ name: 'order-list' }">
               取消
             </router-link>
           </el-button>

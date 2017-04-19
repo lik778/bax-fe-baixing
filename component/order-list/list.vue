@@ -22,7 +22,7 @@
       </el-table-column>
       <el-table-column label='操作'>
         <template scope="s">
-          <router-link :to="{ name: 'orderInfo', params: { id: s.row.order.id } }">
+          <router-link :to="{ name: 'order-info', params: { id: s.row.order.id } }">
             查看详情
           </router-link>
         </template>

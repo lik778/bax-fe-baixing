@@ -5,7 +5,7 @@
       <span></span>
       <span>
         <el-button type="primary">
-          <router-link tag="p" to="/order/create">
+          <router-link tag="p" :to="{ name: 'create-order' }">
             新建订单
           </router-link>
         </el-button>

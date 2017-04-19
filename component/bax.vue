@@ -1,11 +1,11 @@
 
 <template>
   <content>
-    <sidebar></sidebar>
+    <sidebar />
     <router-view :userInfo="currentUser"
       :allCategories="allCategories"
-      :allAreas="allAreas">
-    </router-view>
+      :allAreas="allAreas"
+      :allRoles="allRoles" />
   </content>
 </template>
 

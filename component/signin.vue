@@ -37,7 +37,7 @@ export default {
 
       await login(email, password)
 
-      redirectTo('bax')
+      redirectTo('main')
     }
   }
 }

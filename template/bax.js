@@ -20,26 +20,32 @@ Vue.use(Duo)
 const router = new VueRouter({
   routes: [{
     component: AdGroupList,
-    path: '/'
+    path: '/main',
+    name: 'root'
   }, {
     component: AdGroupList,
-    path: '/ad/groups'
+    path: '/main/ad/groups',
+    name: 'ad-group-list'
   }, {
     component: MaterialList,
-    path: '/materials'
+    path: '/main/materials',
+    name: 'material-list'
   }, {
     component: CreateOrder,
-    path: '/order/create'
+    path: '/main/order/create',
+    name: 'create-order'
   }, {
     component: OrderInfo,
-    name: 'orderInfo',
-    path: '/orders/:id'
+    path: '/main/orders/:id',
+    name: 'order-info'
   }, {
     component: OrderList,
-    path: '/orders'
+    path: '/main/orders',
+    name: 'order-list'
   }, {
     component: UserList,
-    path: '/users'
+    path: '/main/users',
+    name: 'user-list'
   }]
 })
 
