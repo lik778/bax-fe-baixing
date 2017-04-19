@@ -7,11 +7,16 @@ import {
 
 const store = createStore({
   users: [],
+  offset: 0,
+  limit: 20,
   total: 0
 })
 
 store.subscribeActions({
-  [getUsers]: ({users = []}) => ({
+  [getUsers]: ({users = [], offset, total, limit}) => ({
+    offset,
+    total,
+    limit,
     users
   })
 })

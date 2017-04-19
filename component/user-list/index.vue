@@ -6,7 +6,8 @@
     </topbar>
     <user-header @create-user="showCreateUserDialog = true"
       @created="onCreateUser" />
-    <user-list :users="users" />
+    <user-list :users="users" :offset="offset"
+      :limit="limit" :total="total" />
     <create-user :visible="showCreateUserDialog"
       @hide="showCreateUserDialog = false" />
   </div>

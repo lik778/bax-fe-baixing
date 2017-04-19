@@ -48,13 +48,16 @@ export async function getUsers(opts = {}) {
     ...opts
   }
 
-  const body = await api
-    .get(`/user`)
-    .query(query)
-    .json()
+  const [users, total] = await Promise.all([
+    _getUsers(query),
+    _getUserCount(query)
+  ])
 
   return {
-    users: [...toCamelcase(body.data)]
+    offset: query.offset,
+    limit: query.limit,
+    total,
+    users
   }
 }
 
@@ -80,4 +83,26 @@ export async function createUser(user) {
     .post('/user')
     .send(reverseCamelcase(user))
     .json()
+}
+
+/**
+ * private
+ */
+
+async function _getUsers(query) {
+  const body = await api
+    .get('/user')
+    .query(reverseCamelcase(query))
+    .json()
+
+  return toCamelcase(body.data)
+}
+
+async function _getUserCount(query) {
+  const body = await api
+    .get('/user/count')
+    .query(reverseCamelcase(query))
+    .json()
+
+  return body.data
 }

@@ -11,19 +11,33 @@
       <el-table-column prop="email" label="邮箱">
       </el-table-column>
     </el-table>
+    <bax-pagination :offset="offset" :total="total" :limit="limit"
+      @current-change="onCurrentChange" />
   </section>
 </template>
 
 <script>
 
+import BaxPagination from 'com/common/pagination'
 import { getUsers } from './action'
 
 export default {
   name: 'user-list',
+  components: {
+    BaxPagination
+  },
   props: {
     users: {
       type: Array,
       required: true
+    },
+    offset: Number,
+    total: Number,
+    limit: Number
+  },
+  methods: {
+    async onCurrentChange({offset}) {
+      await getUsers({offset})
     }
   },
   async mounted() {
