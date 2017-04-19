@@ -26,7 +26,9 @@
             @click="showAddMaterialDialog(s.row.id)">
             上传物料
           </el-button>
-          <span v-else>{{ s.row.materialId }}</span>
+          <img class="m-img" v-else-if="s.row.material.imgUrl"
+            v-bind:src="s.row.material.imgUrl" />
+          <span v-else>{{ s.row.material.content }}</span>
         </template>
       </el-table-column>
       <el-table-column label="审核">
@@ -122,7 +124,11 @@ export default {
 <style scoped>
 
 .group-list {
-
+  & .m-img {
+    max-width: 80px;
+    max-height: 60px;
+    object-fit: contain;
+  }
 }
 
 </style>
