@@ -25,6 +25,7 @@
 <script>
 
 import BaxSelect from 'com/common/select'
+import { Message } from 'element-ui'
 
 import { createUser } from './action'
 
@@ -47,7 +48,12 @@ export default {
   methods: {
     async submit() {
       const { user } = this
-      await createUser(user)
+
+      const { password } = await createUser(user)
+
+      Message.success('创建成功')
+
+      console.info('password:', password)
 
       this.user = {}
 

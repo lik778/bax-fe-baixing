@@ -79,10 +79,14 @@ export async function getUserInfo(uid) {
 }
 
 export async function createUser(user) {
-  return await api
+  const body = await api
     .post('/user')
     .send(reverseCamelcase(user))
     .json()
+
+  return {
+    password: body.data
+  }
 }
 
 /**
