@@ -9,23 +9,39 @@ export async function createOrder(order) {
     .json()
 }
 
-export async function getOrderInfo(id) {
 export async function getOrderLogs(id) {
   const body = await api
-    .get(`/order/${id}`)
     .get(`/order/${id}/log`)
     .json()
 
   return toCamelcase(body.data)
 }
 
-export async function getOrders() {
+export async function getOrderInfo(id) {
   const body = await api
-    .get('/order')
+    .get(`/order/${id}`)
     .json()
 
+  return toCamelcase(body.data)
+}
+
+export async function getOrders(opts = {}) {
+  const query = {
+    offset: 0,
+    limit: 20,
+    ...opts
+  }
+
+  const [orders, total] = await Promise.all([
+    _getOrders(query),
+    _getOrderCount(query)
+  ])
+
   return {
-    orders: toCamelcase(body.data)
+    offset: query.offset,
+    limit: query.limit,
+    orders,
+    total
   }
 }
 
@@ -41,4 +57,26 @@ export async function payOrder(oid) {
     .post(`/order/${oid}/pay`)
     .send({})
     .json()
+}
+
+/**
+ * private
+ */
+
+async function _getOrders(query) {
+  const body = await api
+    .get('/order')
+    .query(reverseCamelcase(query))
+    .json()
+
+  return toCamelcase(body.data)
+}
+
+async function _getOrderCount(query) {
+  const body = await api
+    .get('/order/count')
+    .query(reverseCamelcase(query))
+    .json()
+
+  return body.data
 }

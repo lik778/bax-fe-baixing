@@ -5,7 +5,8 @@
       <label slot="title">订单管理</label>
     </topbar>
     <order-header />
-    <order-list :orders="orders" />
+    <order-list :orders="orders" :offset="offset"
+      :limit="limit" :total="total" />
   </div>
 </template>
 

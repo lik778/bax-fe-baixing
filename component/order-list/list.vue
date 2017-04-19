@@ -28,10 +28,14 @@
         </template>
       </el-table-column>
     </el-table>
+    <bax-pagination :offset="offset" :total="total" :limit="limit"
+      @current-change="onCurrentChange" />
   </section>
 </template>
 
 <script>
+
+import BaxPagination from 'com/common/pagination'
 
 import { sspOrderStatus } from 'constant/order'
 import { toHumanTime } from 'utils'
@@ -49,13 +53,22 @@ export default {
     orders: {
       type: Array,
       required: true
-    }
+    },
+    offset: Number,
+    total: Number,
+    limit: Number
+  },
+  components: {
+    BaxPagination
   },
   methods: {
     async pay(id) {
       await payOrder(id)
       await getOrders()
       Message.success('支付成功')
+    },
+    async onCurrentChange({offset}) {
+      await getOrders({offset})
     }
   },
   filters: {
