@@ -2,9 +2,9 @@
   "presets": [
     ["env", {
       "targets": {
-        "safari": 10.1,
+        "safari": 10,
         "firefox": 52,
-        "chrome": 57,
+        "chrome": 42,
         "edge": 15
       },
       "exclude": [
