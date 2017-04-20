@@ -26,6 +26,8 @@ export default {
 
 .user-header {
   @mixin top-filter;
+  height: 80px;
+  padding: 20px;
 }
 
 </style>

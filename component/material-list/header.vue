@@ -2,22 +2,22 @@
 <template>
   <section class="material-header">
     <div>
-      <span>
+      <span class="filter-item">
         <label>类型</label>
         <el-input placeholder="请选择类型"></el-input>
       </span>
-      <span>
+      <span class="filter-item">
         <label>规格</label>
         <el-input placeholder="请选择规格"></el-input>
       </span>
     </div>
     <div>
-      <span>
+      <span class="filter-item">
         <label>创建时间</label>
         <el-date-picker type="date" placeholder="选择日期">
         </el-date-picker>
       </span>
-      <span>
+      <span class="filter-item">
         <label>客户</label>
         <el-input placeholder="请选择客户"></el-input>
       </span>
@@ -38,6 +38,8 @@ export default {
 @import '../../cssbase/mixin';
 @import 'cssbase/mixin';
 
+@mixin filter-item;
+
 .material-header {
   @mixin top-filter;
   height: 110px;
@@ -49,24 +51,6 @@ export default {
 
     & > span:last-child {
       margin-left: 70px;
-    }
-
-    & > span {
-      display: flex;
-      align-items: center;
-      margin-top: 16px;
-      width: 250px;
-      height: 30px;
-      padding: 0 18px;
-
-      & > label {
-        @mixin center;
-        min-width: 50px;
-        width: 50px;
-        margin: 0 5px;
-        font-size: 12px;
-        color: #475669;
-      }
     }
   }
 }
