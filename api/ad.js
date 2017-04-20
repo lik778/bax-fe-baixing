@@ -32,6 +32,7 @@ export async function createAdGroup(group) {
 
 export async function queryAdItems(opts) {
   const body = await api
+    .get('/ad/item/query')
     .query(reverseCamelcase(opts))
     .json()
 

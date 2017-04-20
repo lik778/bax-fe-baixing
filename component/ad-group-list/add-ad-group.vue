@@ -116,12 +116,16 @@ export default {
         allAreas,
 
         categories,
-        areas
+        areas,
+
+        orderId
       } = this
 
       if (categories.length && areas.length) {
         const { items } = await queryAdItems({
-          // ...
+          cities: areas,
+          categories,
+          orderId
         })
 
         this.items = items.map(i => {
@@ -165,6 +169,10 @@ export default {
         groupName,
         orderId
       } = this
+
+      if (!checkedItemIds.length) {
+        return Message.error('请选择投放')
+      }
 
       const groupId = await createAdGroup({
         name: groupName,
