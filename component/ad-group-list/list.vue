@@ -4,20 +4,18 @@
     <el-table :data="groups" style="width: 100%">
       <el-table-column type="expand">
         <template scope="scope">
-          <item-list :group-id="scope.row.id"></item-list>
+          <item-list :group-id="scope.row.id" />
         </template>
       </el-table-column>
-      <el-table-column prop="name" label="名称" width="180">
-      </el-table-column>
-      <el-table-column prop="adId" label="adId" width="180">
-      </el-table-column>
+      <el-table-column prop="name" label="名称" width="120" />
+      <el-table-column prop="orderId" label="order id" width="120" />
+      <el-table-column prop="adId" label="adId" width="120" />
       <el-table-column label="投放时间">
         <template scope="s">
           <span>{{ s.row.onlineAt | toHumanTime }}</span>
           <i>-</i>
           <span>{{ s.row.offlineAt | toHumanTime }}</span>
         </template>
-      </el-table-column>
       </el-table-column>
       <el-table-column label="物料">
         <template scope="s">
