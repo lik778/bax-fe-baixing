@@ -30,6 +30,11 @@
               客户管理
             </router-link>
           </el-menu-item>
+          <el-menu-item index="1-5">
+            <router-link :to="{ name: 'ad-calendar' }" tag="p">
+              广告排期
+            </router-link>
+          </el-menu-item>
         </el-submenu>
         <el-menu-item index="1-1">
           <i class="el-icon-menu"></i>设置

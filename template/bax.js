@@ -5,6 +5,7 @@ import OrderList from 'com/order-list'
 
 import MaterialList from 'com/material-list'
 import AdGroupList from 'com/ad-group-list'
+import AdCalendar from 'com/ad-calendar'
 import UserList from 'com/user-list'
 import Bax from 'com/bax'
 
@@ -47,6 +48,10 @@ const router = new VueRouter({
     component: UserList,
     path: '/main/users',
     name: 'user-list'
+  }, {
+    component: AdCalendar,
+    path: '/main/ad-calendar',
+    name: 'ad-calendar'
   }]
 })
 
