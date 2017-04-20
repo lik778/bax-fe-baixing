@@ -171,7 +171,7 @@ export default {
       } = this
 
       if (!checkedItemIds.length) {
-        return Message.error('请选择投放')
+        return Message.error('请选择投放单位')
       }
 
       const groupId = await createAdGroup({
