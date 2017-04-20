@@ -1,5 +1,5 @@
 
-import CreateOrder from 'com/order-list/create'
+import CreateOrder from 'com/order-create'
 import OrderInfo from 'com/order-info'
 import OrderList from 'com/order-list'
 
