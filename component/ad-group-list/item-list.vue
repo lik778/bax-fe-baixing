@@ -2,8 +2,8 @@
 <template>
   <el-table :data="items" style="width: 100%">
     <el-table-column prop="id" label="id" width="180" />
-    <el-table-column prop="tags.city" label="城市" width="120" />
-    <el-table-column prop="tags.category" label="类目" width="120" />
+    <el-table-column prop="areaId" label="城市" width="120" />
+    <el-table-column prop="categoryId" label="类目" width="120" />
     <el-table-column label="审核">
       <template scope="scope">
         <el-button type="text" size="small"
