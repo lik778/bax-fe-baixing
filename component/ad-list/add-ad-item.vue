@@ -3,7 +3,7 @@
   <el-dialog title="新增条件投放" v-model="visible">
     <el-form ref="form" label-width="100px">
       <el-form-item label="新方案名称">
-        <el-input v-model="groupName" />
+        <el-input v-model="name" />
       </el-form-item>
       <el-form-item label="请选择类目">
         <bax-select multiple :options="allCategories"
@@ -55,20 +55,19 @@ import BaxSelect from 'com/common/select'
 import { Message } from 'element-ui'
 
 import {
-  transferAdItems,
-  createAdGroup,
-  getAdGroups
+  createAdItem,
+  getAdItems
 } from './action'
 
 import {
   queryAdItems
 } from 'api/ad'
 
-const emptyAdGroup = {
+const emptyAdItem = {
 }
 
 export default {
-  name: 'add-ad-group',
+  name: 'add-ad-item',
   components: {
     BaxSelect
   },
@@ -93,7 +92,7 @@ export default {
   data() {
     return {
       checkedItemIds: [],
-      groupName: '',
+      name: '',
       categories: [],
       areas: [],
       items: []
@@ -154,7 +153,7 @@ export default {
     },
     empty() {
       this.checkedItemIds = []
-      this.groupName = ''
+      this.name = ''
       this.items = []
       this.categories = []
       this.areas = []
@@ -166,7 +165,7 @@ export default {
     async submit() {
       const {
         checkedItemIds,
-        groupName,
+        name,
         orderId
       } = this
 
@@ -174,19 +173,14 @@ export default {
         return Message.error('请选择投放单位')
       }
 
-      const groupId = await createAdGroup({
-        name: groupName,
+      await createAdItem({
+        name,
         orderId
-      })
-
-      await transferAdItems({
-        itemIds: checkedItemIds,
-        itemGroupId: groupId
       })
 
       this.empty()
 
-      await getAdGroups()
+      await getAdItems()
       Message.success('添加成功')
       this.$emit('hide')
     }

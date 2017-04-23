@@ -1,6 +1,6 @@
 
 <template>
-  <header class="group-header">
+  <header class="ad-header">
     <div>
       <span class="filter-item">
         <label>订单</label>
@@ -27,7 +27,7 @@
 <script>
 
 export default {
-  name: 'ad-group-header'
+  name: 'ad-header'
 }
 
 </script>
@@ -39,7 +39,7 @@ export default {
 
 @mixin filter-item;
 
-.group-header {
+.ad-header {
   @mixin top-filter;
   height: 120px;
   margin-bottom: 20px;

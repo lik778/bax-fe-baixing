@@ -1,11 +1,11 @@
 
 <template>
-  <div class="ad-group">
+  <div class="ad">
     <topbar :userInfo="userInfo">
       <label slot="title">投放管理</label>
     </topbar>
-    <group-header />
-    <group-list :groups="groups" :materials="materials"
+    <ad-header />
+    <ad-list :items="items" :materials="materials"
       :all-categories="allCategories" :all-areas="allAreas"
       :offset="offset" :limit="limit" :total="total" />
   </div>
@@ -13,18 +13,18 @@
 
 <script>
 
-import GroupHeader from './header'
+import AdHeader from './header'
 import Topbar from 'com/topbar'
-import GroupList from './list'
+import AdList from './list'
 
 import store from './store'
 
 import {
-  getAdGroups
+  getAdItems
 } from './action'
 
 export default {
-  name: 'ad-group',
+  name: 'ad',
   store,
   props: {
     userInfo: {
@@ -41,12 +41,12 @@ export default {
     }
   },
   components: {
-    GroupHeader,
-    GroupList,
+    AdHeader,
+    AdList,
     Topbar
   },
   async mounted() {
-    await getAdGroups()
+    await getAdItems()
   }
 }
 
@@ -54,7 +54,7 @@ export default {
 
 <style scoped>
 
-.ad-group {
+.ad {
   padding: 0 35px;
 }
 

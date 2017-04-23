@@ -31,8 +31,8 @@ import Uploader from 'com/common/uploader'
 import BaxSelect from 'com/common/select'
 
 import {
-  addAdGroupMaterial,
-  setAdGroupMaterial,
+  addAdItemMaterial,
+  setAdItemMaterial,
   getMaterials
 } from './action'
 
@@ -57,7 +57,7 @@ export default {
       type: Boolean,
       required: true
     },
-    groupId: {
+    itemId: {
       type: Number,
       required: true
     }
@@ -108,13 +108,13 @@ export default {
       const {
         createMaterial,
         material,
-        groupId
+        itemId
       } = this
       if (createMaterial) {
         // TODO - 字段检测
-        await addAdGroupMaterial(groupId, material)
+        await addAdItemMaterial(itemId, material)
       } else {
-        await setAdGroupMaterial(groupId, material.id)
+        await setAdItemMaterial(itemId, material.id)
       }
 
       this.$emit('success')

@@ -8,28 +8,16 @@ export const getMaterials = createAction((opts) => {
   return mapi.getMaterials(opts)
 })
 
-export const getAdGroups = createAction((type, opts) => {
-  return aapi.getAdGroups(type, opts)
+export const getAdItems = createAction((opts) => {
+  return aapi.getAdItems(opts)
 })
 
-export const transferAdItems = createAction((data) => {
-  return aapi.transferGroupItems(data)
+export const setAdItemMaterial = createAction((itemId, materialId) => {
+  return aapi.setAdItemMaterial(itemId, materialId)
 })
 
-export const createAdGroup = createAction((group) => {
-  return aapi.createAdGroup(group)
-})
-
-export const setAdGroupMaterial = createAction((gid, mid) => {
-  return aapi.setAdGroupMaterial(gid, mid)
-})
-
-export const addAdGroupMaterial = createAction((gid, material) => {
-  return aapi.addAdGroupMaterial(gid, material)
-})
-
-export const verifyAdGroup = createAction((id, status) => {
-  return aapi.verifyAdGroup(id, status)
+export const addAdItemMaterial = createAction((itemId, material) => {
+  return aapi.addAdItemMaterial(itemId, material)
 })
 
 export const verifyAdItem = createAction((id, status) => {

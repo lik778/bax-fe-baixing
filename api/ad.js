@@ -2,7 +2,7 @@
 import { reverseCamelcase, toCamelcase } from 'object-keys-mapping'
 import api from './base'
 
-export async function getAdPrice(aid, opts) {
+export async function getAdPrice(aid, opts = {}) {
   const body = await api
     .get(`/ad/${aid}/price`)
     .query(reverseCamelcase(opts))
@@ -21,7 +21,7 @@ export async function getAds() {
   }
 }
 
-export async function getAdItems(opts) {
+export async function getAdItems(opts = {}) {
   const query = {
     offset: 0,
     limit: 20,

@@ -3,12 +3,12 @@ import { createStore } from 'vue-duo'
 
 import {
   getMaterials,
-  getAdGroups
+  getAdItems
 } from './action'
 
 const store = createStore({
   materials: [],
-  groups: [],
+  items: [],
   offset: 0,
   limit: 20,
   total: 0
@@ -18,8 +18,8 @@ store.subscribeActions({
   [getMaterials]: ({materials = []}) => ({
     materials: [...materials]
   }),
-  [getAdGroups]: ({groups = [], offset, total, limit}) => ({
-    groups: [...groups],
+  [getAdItems]: ({items = [], offset, total, limit}) => ({
+    items: [...items],
     offset,
     limit,
     total

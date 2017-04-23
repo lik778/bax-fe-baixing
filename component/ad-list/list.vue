@@ -1,12 +1,7 @@
 
 <template>
-  <section class="group-list">
-    <el-table :data="groups" style="width: 100%">
-      <el-table-column type="expand">
-        <template scope="scope">
-          <item-list :group-id="scope.row.id" />
-        </template>
-      </el-table-column>
+  <section class="ad-list">
+    <el-table :data="items" style="width: 100%">
       <el-table-column prop="name" label="名称" width="120" />
       <el-table-column prop="orderId" label="order id" width="120" />
       <el-table-column prop="adId" label="adId" width="120" />
@@ -32,15 +27,15 @@
       <el-table-column label="审核">
         <template scope="s">
           <el-button type="text" size="small"
-            @click="rejectAdGroup(s.row.id)">
+            @click="rejectAdItem(s.row.id)">
             拒绝
           </el-button>
           <el-button type="text" size="small"
-            @click="passAdGroup(s.row.id)">
+            @click="passAdItem(s.row.id)">
             通过
           </el-button>
           <el-button type="text" size="small"
-            @click="showAddAdGroupDialog(s.row.orderId)">
+            @click="showAddAdItemDialog(s.row.orderId)">
             条件投放
           </el-button>
         </template>
@@ -48,15 +43,15 @@
     </el-table>
     <bax-pagination :offset="offset" :total="total" :limit="limit"
       @current-change="onCurrentChange" />
-    <add-material :materials="materials" :groupId="currentGroupId"
+    <add-material :materials="materials" :itemId="currentItemId"
       :visible="addMaterialDialogVisible"
       @hide="addMaterialDialogVisible = false"
       @success="onAddMaterialSuccess" />
-    <add-ad-group :orderId="currentGroupOrderId"
-      :visible="addAdGroupDialogVisible"
+    <add-ad-item :orderId="currentItemOrderId"
+      :visible="addAdItemDialogVisible"
       :all-categories="allCategories" :all-areas="allAreas"
-      @hide="addAdGroupDialogVisible = false"
-      @success="onAddAdGroupSuccess" />
+      @hide="addAdItemDialogVisible = false"
+      @success="onAddAdItemSuccess" />
   </section>
 </template>
 
@@ -64,16 +59,13 @@
 
 import BaxPagination from 'com/common/pagination'
 import AddMaterial from './add-material'
-import AddAdGroup from './add-ad-group'
+import AddAdItem from './add-ad-item'
 
 import { toHumanTime } from 'utils'
 
-import ItemList from './item-list'
-
 import {
-  verifyAdGroup,
   verifyAdItem,
-  getAdGroups
+  getAdItems
 } from './action'
 
 export default {
@@ -81,8 +73,7 @@ export default {
   components: {
     BaxPagination,
     AddMaterial,
-    AddAdGroup,
-    ItemList
+    AddAdItem
   },
   props: {
     allCategories: {
@@ -93,24 +84,24 @@ export default {
       type: Array,
       required: true
     },
-    groups: {
+    materials: {
+      type: Array,
+      required: true
+    },
+    items: {
       type: Array,
       required: true
     },
     offset: Number,
     total: Number,
-    limit: Number,
-    materials: {
-      type: Array,
-      required: true
-    }
+    limit: Number
   },
   data() {
     return {
       addMaterialDialogVisible: false,
-      addAdGroupDialogVisible: false,
-      currentGroupOrderId: '',
-      currentGroupId: 0
+      addAdItemDialogVisible: false,
+      currentItemOrderId: '',
+      currentItemId: 0
     }
   },
   filters: {
@@ -118,29 +109,29 @@ export default {
   },
   methods: {
     async onAddMaterialSuccess() {
-      await getAdGroups()
+      await getAdItems()
     },
-    async onAddAdGroupSuccess() {
-      await getAdGroups()
+    async onAddAdItemSuccess() {
+      await getAdItems()
     },
-    showAddAdGroupDialog(oid) {
-      this.addAdGroupDialogVisible = true
-      this.currentGroupOrderId = oid
+    showAddAdItemDialog(oid) {
+      this.addAdItemDialogVisible = true
+      this.currentItemOrderId = oid
     },
     showAddMaterialDialog(gid) {
       this.addMaterialDialogVisible = true
-      this.currentGroupId = gid
+      this.currentItemId = gid
     },
     async onCurrentChange({offset}) {
-      await getAdGroups({offset})
+      await getAdItems({offset})
     },
-    async rejectAdGroup(gid) {
-      await verifyAdGroup(gid, 'failed')
-      await getAdGroups()
+    async rejectAdItem(gid) {
+      await verifyAdItem(gid, 'failed')
+      await getAdItems()
     },
-    async passAdGroup(gid) {
-      await verifyAdGroup(gid, 'pass')
-      await getAdGroups()
+    async passAdItem(gid) {
+      await verifyAdItem(gid, 'pass')
+      await getAdItems()
     }
   }
 }
@@ -149,7 +140,7 @@ export default {
 
 <style scoped>
 
-.group-list {
+.ad-list {
   & .m-img {
     max-width: 80px;
     max-height: 60px;
