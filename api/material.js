@@ -1,16 +1,15 @@
 
 import { reverseCamelcase, toCamelcase } from 'object-keys-mapping'
-import { api } from './base'
-
-const assign = Object.assign
+import { api, trim } from './base'
 
 export async function getMaterials(opts = {}) {
-  const query = assign({}, {
+  const query = trim({
     offset: 0,
-    limit: 20
-  }, opts)
+    limit: 20,
+    ...opts
+  })
 
-  const [{materials}, total] = await Promise.all([
+  const [materials, total] = await Promise.all([
     _getMaterials(query),
     getMaterialCount(query)
   ])
@@ -52,9 +51,7 @@ async function _getMaterials(opts = {}) {
     .query(reverseCamelcase(opts))
     .json()
 
-  return {
-    materials: toCamelcase(body.data)
-  }
+  return toCamelcase(body.data)
 }
 
 /**

@@ -2,8 +2,7 @@
 <template>
   <section class="material-list">
     <el-table :data="materials" style="width: 100%">
-      <el-table-column prop="name" label="名称" width="180">
-      </el-table-column>
+      <el-table-column prop="name" label="名称" width="180" />
       <el-table-column label="缩略图" width="180">
         <template scope="s">
           <img class="material" v-bind:src="s.row.imgUrl" >
@@ -14,10 +13,8 @@
           <span>{{ s.row.materialType | materialType }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="slot" label="规格">
-      </el-table-column>
-      <el-table-column prop="userId" label="客户">
-      </el-table-column>
+      <el-table-column prop="slot" label="规格" />
+      <el-table-column prop="userId" label="客户" />
       <el-table-column label="操作">
         <template scope="s">
           <el-button size="mini">修改</el-button>

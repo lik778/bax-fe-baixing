@@ -26,9 +26,34 @@
 
 <script>
 
+import {
+  getMaterials
+} from './action'
+
 export default {
-  name: 'material-header'
+  name: 'material-header',
+  props: {
+    query: {
+      type: Object,
+      required: true
+    }
+  },
+  watch: {
+    'query.name': async function(v, p) {
+      await this.queryMaterialItems(v, p)
+    }
+  },
+  methods: {
+    async queryMaterialItems(v, p) {
+      if (v === p) {
+        return
+      }
+      const q = this.query
+      await getMaterials({...q})
+    }
+  }
 }
+
 
 </script>
 
