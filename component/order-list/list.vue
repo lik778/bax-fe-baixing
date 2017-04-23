@@ -2,8 +2,7 @@
 <template>
   <section>
     <el-table :data="orders" style="width: 100%">
-      <el-table-column prop="order.id" label="ID" width="120">
-      </el-table-column>
+      <el-table-column prop="order.id" label="ID" width="120" />
       <el-table-column label="订单状态" width="80">
         <template scope="s">
           <span>{{ s.row.order.status | orderStatus }}</span>
@@ -13,8 +12,7 @@
           </el-button>
         </template>
       </el-table-column>
-      <el-table-column prop="order.userName" label="客户" width="120">
-      </el-table-column>
+      <el-table-column prop="order.userName" label="客户" width="120" />
       <el-table-column label='创建时间'>
         <template scope="s">
           <span>{{ s.row.order.createdAt | toHumanTime }}</span>
@@ -28,7 +26,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <bax-pagination :offset="offset" :total="total" :limit="limit"
+    <bax-pagination :options="query"
       @current-change="onCurrentChange" />
   </section>
 </template>
@@ -54,9 +52,10 @@ export default {
       type: Array,
       required: true
     },
-    offset: Number,
-    total: Number,
-    limit: Number
+    query: {
+      type: Object,
+      required: true
+    }
   },
   components: {
     BaxPagination
@@ -78,7 +77,7 @@ export default {
     toHumanTime
   },
   async mounted() {
-    await getOrders()
+    await getOrders({...this.query})
   }
 }
 

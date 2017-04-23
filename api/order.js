@@ -1,6 +1,6 @@
 
 import { reverseCamelcase, toCamelcase } from 'object-keys-mapping'
-import { api } from './base'
+import { api, trim } from './base'
 
 export async function createOrder(order) {
   return await api
@@ -26,11 +26,11 @@ export async function getOrderInfo(id) {
 }
 
 export async function getOrders(opts = {}) {
-  const query = {
+  const query = trim({
     offset: 0,
     limit: 20,
     ...opts
-  }
+  })
 
   const [orders, total] = await Promise.all([
     _getOrders(query),
@@ -38,10 +38,11 @@ export async function getOrders(opts = {}) {
   ])
 
   return {
-    offset: query.offset,
-    limit: query.limit,
     orders,
-    total
+    query: {
+      ...query,
+      total
+    }
   }
 }
 

@@ -5,21 +5,28 @@ import {
   getOrders
 } from './action'
 
-const store = createStore({
-  orders: [],
+const defaultQuery = {
   offset: 0,
   limit: 20,
-  total: 0,
+  total: 0
+}
+
+const store = createStore({
+  orders: [],
+  query: {
+    ...defaultQuery
+  },
 
   ads: []
 })
 
 store.subscribeActions({
-  [getOrders]: ({orders = [], offset, total, limit}) => ({
+  [getOrders]: ({orders = [], query = {}}) => ({
     orders,
-    offset,
-    total,
-    limit
+    query: {
+      ...defaultQuery,
+      ...query
+    }
   })
 })
 
