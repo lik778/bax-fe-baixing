@@ -13,20 +13,21 @@
 export default {
   name: 'bax-pagination',
   props: {
-    offset: {
-      type: Number,
-      required: true
-    },
-    total: {
-      type: Number,
-      required: true
-    },
-    limit: {
-      type: Number,
+    options: {
+      type: Object,
       required: true
     }
   },
   computed: {
+    offset: function() {
+      return this.options.offset
+    },
+    total: function() {
+      return this.options.total
+    },
+    limit: function() {
+      return this.options.limit
+    },
     current() {
       const { offset, limit } = this
       return Math.floor(offset / limit) + 1
@@ -48,6 +49,7 @@ export default {
 
 .bax-pagination {
   @mixin center;
+  padding: 10px 0 40px;
 }
 
 </style>
