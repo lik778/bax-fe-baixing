@@ -21,7 +21,7 @@ Vue.use(Duo)
 const router = new VueRouter({
   mode: 'history',
   routes: [{
-    component: AdList,
+    component: OrderList,
     path: '/main',
     name: 'root'
   }, {
