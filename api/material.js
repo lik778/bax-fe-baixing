@@ -16,10 +16,11 @@ export async function getMaterials(opts = {}) {
   ])
 
   return {
-    offset: query.offset,
-    limit: query.limit,
     materials,
-    total
+    query: {
+      ...query,
+      total
+    }
   }
 }
 

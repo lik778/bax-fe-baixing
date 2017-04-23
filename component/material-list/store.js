@@ -7,17 +7,19 @@ import {
 
 const store = createStore({
   materials: [],
-  offset: 0,
-  limit: 20,
-  total: 0
+  query: {
+    offset: 0,
+    limit: 20,
+    total: 0,
+
+    name: ''
+  }
 })
 
 store.subscribeActions({
-  [getMaterials]: ({materials = [], offset, limit, total}) => ({
+  [getMaterials]: ({materials = [], query = {}}) => ({
     materials,
-    offset,
-    limit,
-    total
+    query
   })
 })
 

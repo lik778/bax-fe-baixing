@@ -4,10 +4,8 @@
     <topbar :userInfo="userInfo">
       <label slot="title">物料管理</label>
     </topbar>
-    <material-header />
-    <material-list :materials="materials"
-      :total="total" :limit="limit"
-      :offset="offset" />
+    <material-header :query="query" />
+    <material-list :materials="materials" :query="query" />
   </div>
 </template>
 
@@ -38,7 +36,7 @@ export default {
     Topbar
   },
   async mounted() {
-    await getMaterials()
+    await getMaterials({...this.query})
   }
 }
 

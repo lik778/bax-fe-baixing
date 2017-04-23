@@ -25,7 +25,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <bax-pagination :offset="offset" :total="total" :limit="limit"
+    <bax-pagination :options="query"
       @current-change="onCurrentChange" />
   </section>
 </template>
@@ -47,9 +47,10 @@ export default {
       type: Array,
       required: true
     },
-    offset: Number,
-    total: Number,
-    limit: Number
+    query: {
+      type: Object,
+      required: true
+    }
   },
   components: {
     BaxPagination
@@ -61,7 +62,11 @@ export default {
   },
   methods: {
     async onCurrentChange({offset}) {
-      await getMaterials({offset})
+      const q = {
+        ...this.query,
+        offset
+      }
+      await getMaterials(q)
     }
   }
 }
