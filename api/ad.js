@@ -34,9 +34,9 @@ export async function getAdItems(opts) {
   ])
 
   return {
+    items: toCamelcase(items),
     offset: query.offset,
     limit: query.limit,
-    items: [...items],
     total
   }
 }

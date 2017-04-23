@@ -4,9 +4,9 @@ import OrderInfo from 'com/order-info'
 import OrderList from 'com/order-list'
 
 import MaterialList from 'com/material-list'
-import AdGroupList from 'com/ad-group-list'
 import AdCalendar from 'com/ad-calendar'
 import UserList from 'com/user-list'
+import AdList from 'com/ad-list'
 import Bax from 'com/bax'
 
 import VueRouter from 'vue-router'
@@ -21,13 +21,13 @@ Vue.use(Duo)
 const router = new VueRouter({
   mode: 'history',
   routes: [{
-    component: AdGroupList,
+    component: AdList,
     path: '/main',
     name: 'root'
   }, {
-    component: AdGroupList,
-    path: '/main/ad/groups',
-    name: 'ad-group-list'
+    component: AdList,
+    path: '/main/ads',
+    name: 'ad-list'
   }, {
     component: MaterialList,
     path: '/main/materials',

@@ -77,7 +77,7 @@ import {
 } from './action'
 
 export default {
-  name: 'ad-group-list',
+  name: 'ad-list',
   components: {
     BaxPagination,
     AddMaterial,

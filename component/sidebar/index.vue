@@ -11,7 +11,7 @@
             <i class="el-icon-message"></i>投放管理
           </template>
           <el-menu-item index="1-1">
-            <router-link :to="{ name: 'ad-group-list' }" tag="p">
+            <router-link :to="{ name: 'ad-list' }" tag="p">
               广告投放
             </router-link>
           </el-menu-item>
