@@ -14,23 +14,21 @@
     <div>
       <span class="filter-item">
         <label>订单状态</label>
-        <el-input placeholder="..."></el-input>
+        <el-input placeholder="..." />
       </span>
       <span class="filter-item">
         <label>客户</label>
-        <el-input placeholder="请选择客户"></el-input>
+        <el-input placeholder="请选择客户" />
       </span>
     </div>
     <div>
       <span class="filter-item">
         <label>创建时间</label>
-        <el-date-picker type="date" placeholder="选择日期">
-        </el-date-picker>
+        <el-date-picker type="date" placeholder="选择日期" />
       </span>
       <span class="filter-item">
         <label>投放时间</label>
-        <el-date-picker type="date" placeholder="选择日期">
-        </el-date-picker>
+        <el-date-picker type="date" placeholder="选择日期" />
       </span>
     </div>
   </section>
@@ -39,7 +37,11 @@
 <script>
 
 export default {
-  name: 'order-header'
+  name: 'order-header',
+  query: {
+    type: Object,
+    required: true
+  }
 }
 
 </script>
