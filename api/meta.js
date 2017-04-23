@@ -1,6 +1,6 @@
 
 import { toCamelcase } from 'object-keys-mapping'
-import api from './base'
+import { api } from './base'
 
 export async function getCategories(levels = [1, 2]) {
   const body = await api

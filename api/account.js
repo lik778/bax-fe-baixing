@@ -1,6 +1,6 @@
 
 import { reverseCamelcase, toCamelcase } from 'object-keys-mapping'
-import api from './base'
+import { api, trim } from './base'
 
 export async function getCurrentUser() {
   const body = await api

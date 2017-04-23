@@ -5,7 +5,7 @@ import Fetch from 'fetch.io'
 
 import { baxApiHost } from 'config'
 
-const api = new Fetch({
+export const api = new Fetch({
   prefix: baxApiHost,
   afterJSON(body) {
     const meta = body.meta || {}
@@ -22,4 +22,17 @@ const api = new Fetch({
   }
 })
 
-export default api
+export function trim(obj) {
+  const result = {}
+  // only for - query filter
+  for (const k of Object.keys(obj)) {
+    const v = obj[k]
+    if (typeof v === 'number' ||
+      typeof v === 'boolean' ||
+      !!v) {
+      result[k] = v
+    }
+  }
+
+  return result
+}

@@ -1,6 +1,6 @@
 
 import { reverseCamelcase, toCamelcase } from 'object-keys-mapping'
-import api from './base'
+import { api } from './base'
 
 export async function createOrder(order) {
   return await api
