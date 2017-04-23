@@ -21,15 +21,38 @@ export async function getAds() {
   }
 }
 
-export async function queryAdItems(opts) {
-  const body = await api
-    .get('/ad/item/query')
-    .query(reverseCamelcase(opts))
-    .json()
+export async function getAdItems(opts) {
+  const query = {
+    offset: 0,
+    limit: 20,
+    ...opts
+  }
+
+  const [items, total] = await Promise.all([
+    _getAdItems(query),
+    _getAdItemCount(query)
+  ])
 
   return {
-    items: toCamelcase(body.data)
+    offset: query.offset,
+    limit: query.limit,
+    items: [...items],
+    total
   }
+}
+
+export async function addAdItemMaterial(itemId, data) {
+  return await api
+    .post(`/ad/item/${itemId}/material/new`)
+    .send(reverseCamelcase(data))
+    .json()
+}
+
+export async function setAdItemMaterial(itemId, materialId) {
+  return await api
+    .post(`/ad/item/${itemId}/material/existed`)
+    .send(reverseCamelcase({materialId}))
+    .json()
 }
 
 export async function verifyAdItem(id, status) {
@@ -45,4 +68,26 @@ export async function verifyAdItem(id, status) {
     .post(`/ad/item/${id}/verify/failed`)
     .send({})
     .json()
+}
+
+/**
+ * private
+ */
+
+async function _getAdItems(opts) {
+  const body = await api
+    .get('/ad/item')
+    .query(reverseCamelcase(opts))
+    .json()
+
+  return toCamelcase(body.data)
+}
+
+async function _getAdItemCount(opts) {
+  const body = await api
+    .get('/ad/item/count')
+    .query(reverseCamelcase(opts))
+    .json()
+
+  return body.data
 }
