@@ -5,19 +5,29 @@ import {
   getUsers
 } from './action'
 
-const store = createStore({
-  users: [],
+const defaultQuery = {
   offset: 0,
   limit: 20,
-  total: 0
+  total: 0,
+
+  userId: '',
+  name: ''
+}
+
+const store = createStore({
+  users: [],
+  query: {
+    ...defaultQuery
+  }
 })
 
 store.subscribeActions({
-  [getUsers]: ({users = [], offset, total, limit}) => ({
-    offset,
-    total,
-    limit,
-    users
+  [getUsers]: ({users = [], query = {}}) => ({
+    users,
+    query: {
+      ...defaultQuery,
+      ...query
+    }
   })
 })
 

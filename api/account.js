@@ -42,11 +42,11 @@ export async function getRoles() {
 }
 
 export async function getUsers(opts = {}) {
-  const query = {
+  const query = trim({
     offset: 0,
     limit: 20,
     ...opts
-  }
+  })
 
   const [users, total] = await Promise.all([
     _getUsers(query),
@@ -54,9 +54,10 @@ export async function getUsers(opts = {}) {
   ])
 
   return {
-    offset: query.offset,
-    limit: query.limit,
-    total,
+    query: {
+      ...query,
+      total
+    },
     users
   }
 }

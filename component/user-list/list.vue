@@ -2,12 +2,9 @@
 <template>
   <section>
     <el-table :data="users" style="width: 100%">
-      <el-table-column prop="id" label="id" width="60">
-      </el-table-column>
-      <el-table-column prop="name" label="姓名" width="180">
-      </el-table-column>
-      <el-table-column prop="mobile" label="号码" width="180">
-      </el-table-column>
+      <el-table-column prop="id" label="id" width="60" />
+      <el-table-column prop="name" label="名称" width="180" />
+      <el-table-column prop="mobile" label="号码" width="180" />
       <el-table-column label="角色" width="180">
         <template scope="s">
           <i v-for="role in s.row.roles">
@@ -15,10 +12,9 @@
           </i>
         </template>
       </el-table-column>
-      <el-table-column prop="email" label="邮箱">
-      </el-table-column>
+      <el-table-column prop="email" label="邮箱" />
     </el-table>
-    <bax-pagination :offset="offset" :total="total" :limit="limit"
+    <bax-pagination :options="query"
       @current-change="onCurrentChange" />
   </section>
 </template>
@@ -42,17 +38,23 @@ export default {
       type: Array,
       required: true
     },
-    offset: Number,
-    total: Number,
-    limit: Number
+    query: {
+      type: Object,
+      required: true
+    }
   },
   methods: {
     async onCurrentChange({offset}) {
-      await getUsers({offset})
+      const q = {
+        ...this.query,
+        offset,
+      }
+
+      await getUsers(q)
     }
   },
   async mounted() {
-    await getUsers()
+    await getUsers({...this.query})
   }
 }
 
