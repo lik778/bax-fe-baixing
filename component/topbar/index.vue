@@ -2,15 +2,15 @@
 <template>
   <header class="topbar">
     <span @click="goBack">
-      <i class="el-icon-arrow-left"></i>
-      <slot name="title"></slot>
+      <i class="el-icon-arrow-left" />
+      <slot name="title" />
     </span>
     <span>
-      <i class="el-icon-message"></i>
+      <i class="el-icon-message" />
       <el-dropdown @command="onDropdownCmd">
         <span class="el-dropdown-link">
           {{ userInfo.name }}
-          <i class="el-icon-caret-bottom el-icon--right"></i>
+          <i class="el-icon-caret-bottom el-icon--right" />
         </span>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item command="changePwd">
@@ -23,8 +23,7 @@
       </el-dropdown>
     </span>
     <el-dialog title="修改密码" v-model="pwdDialogVisible" size="small">
-      <el-input type="password" placeholder="请输入新密码" v-model="newPassword">
-      </el-input>
+      <el-input type="password" placeholder="请输入新密码" v-model="newPassword" />
       <span slot="footer">
         <el-button @click="cancel">
           取消

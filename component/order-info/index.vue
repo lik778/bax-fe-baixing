@@ -7,15 +7,13 @@
     <main>
       <div>
         <span>
-          <item label="订单号" :value="orderInfo.order.id"></item>
-          <item label="客户" :value="orderInfo.order.userName"></item>
-          <item label="销售" :value="orderInfo.order.salesName"></item>
-          <item label="创建时间" :value="orderInfo.order.createdAt | toHumanTime"></item>
-          <item label="订单价格" :value="orderInfo.order.realPrice | price">
-          </item>
+          <item label="订单号" :value="orderInfo.order.id" />
+          <item label="客户" :value="orderInfo.order.userName" />
+          <item label="销售" :value="orderInfo.order.salesName" />
+          <item label="创建时间" :value="orderInfo.order.createdAt | toHumanTime" />
+          <item label="订单价格" :value="orderInfo.order.realPrice | price" />
         </span>
-        <span>
-        </span>
+        <span />
       </div>
       <div>
         <log v-for="log in logs" :info="log" />

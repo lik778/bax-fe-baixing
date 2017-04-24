@@ -8,7 +8,7 @@
       <el-menu default-active="1">
         <el-submenu index="1">
           <template slot="title">
-            <i class="el-icon-message"></i>投放管理
+            <i class="el-icon-message" />投放管理
           </template>
           <el-menu-item index="1-1">
             <router-link :to="{ name: 'ad-list' }" tag="p">
@@ -37,10 +37,10 @@
           </el-menu-item>
         </el-submenu>
         <el-menu-item index="1-1">
-          <i class="el-icon-menu"></i>设置
+          <i class="el-icon-menu" />设置
         </el-menu-item>
         <el-menu-item index="1-1">
-          <i class="el-icon-setting"></i>账户
+          <i class="el-icon-setting" />账户
         </el-menu-item>
       </el-menu>
     </content>

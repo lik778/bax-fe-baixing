@@ -2,7 +2,7 @@
 <template>
   <section class="order-header">
     <div>
-      <span></span>
+      <span />
       <span>
         <el-button type="primary">
           <router-link tag="p" :to="{ name: 'create-order' }">
