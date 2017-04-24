@@ -1,7 +1,7 @@
 
 <template>
   <header class="topbar">
-    <span>
+    <span @click="goBack">
       <i class="el-icon-arrow-left"></i>
       <slot name="title"></slot>
     </span>
@@ -91,6 +91,9 @@ export default {
     },
     cancel() {
       this.pwdDialogVisible = false
+    },
+    goBack() {
+      window.history.back()
     }
   }
 }
@@ -105,6 +108,10 @@ export default {
   align-items: center;
   min-height: 60px;
   height: 60px;
+
+  & > span:first-child {
+    cursor: pointer;
+  }
 }
 
 </style>
