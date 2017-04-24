@@ -4,6 +4,7 @@ import OrderInfo from 'com/order-info'
 import OrderList from 'com/order-list'
 
 import MaterialList from 'com/material-list'
+import MaterialInfo from 'com/material-info'
 import AdCalendar from 'com/ad-calendar'
 import UserList from 'com/user-list'
 import AdList from 'com/ad-list'
@@ -28,6 +29,10 @@ const router = new VueRouter({
     component: AdList,
     path: '/main/ads',
     name: 'ad-list'
+  }, {
+    component: MaterialInfo,
+    path: '/main/materials/:id',
+    name: 'material-info'
   }, {
     component: MaterialList,
     path: '/main/materials',

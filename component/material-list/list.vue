@@ -18,7 +18,9 @@
       <el-table-column label="操作">
         <template scope="s">
           <el-button size="mini">修改</el-button>
-          <el-button size="mini">预览</el-button>
+          <router-link tag="p" :to="{ name: 'material-info', params: { id: s.row.id } } ">
+            预览
+          </router-link>
         </template>
       </el-table-column>
     </el-table>
