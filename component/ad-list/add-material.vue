@@ -88,6 +88,7 @@ export default {
   methods: {
     onSelectMaterial(v) {
       const m = this.materials.find(m => m.id === v)
+
       this.material = {
         content: m.content,
         url: m.imgUrl,

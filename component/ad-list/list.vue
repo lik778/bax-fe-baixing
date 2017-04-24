@@ -12,6 +12,21 @@
           <span>{{ s.row.offlineAt | toHumanTime }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="状态">
+        <template scope="s">
+          <span>{{ s.row.status | adItemStatus }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="区域">
+        <template scope="s">
+          <span>{{ s.row.areas.join(',') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="类目">
+        <template scope="s">
+          <span>{{ s.row.categories.join(',') }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="物料">
         <template scope="s">
           <el-button type="text" size="small"
@@ -26,17 +41,19 @@
       </el-table-column>
       <el-table-column label="审核">
         <template scope="s">
-          <el-button type="text" size="small"
+          <el-button v-if="s.row.status === 0"
+            type="text" size="small"
             @click="rejectAdItem(s.row.id)">
             拒绝
           </el-button>
-          <el-button type="text" size="small"
+          <el-button v-if="s.row.status === 0"
+            type="text" size="small"
             @click="passAdItem(s.row.id)">
             通过
           </el-button>
           <el-button type="text" size="small"
-            @click="showAddAdItemDialog(s.row.orderId)">
-            条件投放
+            @click="showAddAdItemDialog(s.row.id)">
+            新增投放
           </el-button>
         </template>
       </el-table-column>
@@ -47,7 +64,7 @@
       :visible="addMaterialDialogVisible"
       @hide="addMaterialDialogVisible = false"
       @success="onAddMaterialSuccess" />
-    <add-ad-item :orderId="currentItemOrderId"
+    <add-ad-item :oldItemId="currentItemId"
       :visible="addAdItemDialogVisible"
       :all-categories="allCategories" :all-areas="allAreas"
       @hide="addAdItemDialogVisible = false"
@@ -62,6 +79,10 @@ import AddMaterial from './add-material'
 import AddAdItem from './add-ad-item'
 
 import { toHumanTime } from 'utils'
+
+import {
+  adStatus
+} from 'constant/ad'
 
 import {
   verifyAdItem,
@@ -101,33 +122,40 @@ export default {
     return {
       addMaterialDialogVisible: false,
       addAdItemDialogVisible: false,
-      currentItemOrderId: '',
       currentItemId: 0
     }
   },
   filters: {
+    adItemStatus(s) {
+      return adStatus[String(s)]
+    },
     toHumanTime
   },
   methods: {
     async onAddMaterialSuccess() {
-      await getAdItems()
+      await getAdItems({...this.query})
     },
     async onAddAdItemSuccess() {
       await getAdItems()
     },
-    showAddAdItemDialog(oid) {
+    showAddAdItemDialog(id) {
       this.addAdItemDialogVisible = true
-      this.currentItemOrderId = oid
+      this.currentItemId = id
     },
-    showAddMaterialDialog(gid) {
+    showAddMaterialDialog(id) {
       this.addMaterialDialogVisible = true
-      this.currentItemId = gid
+      this.currentItemId = id
     },
     async onCurrentChange({offset}) {
-      await getAdItems({offset})
+      const q = {
+        ...this.query,
+        offset
+      }
+
+      await getAdItems(q)
     },
-    async rejectAdItem(gid) {
-      await verifyAdItem(gid, 'failed')
+    async rejectAdItem(id) {
+      await verifyAdItem(id, 'failed')
       await getAdItems()
     },
     async passAdItem(gid) {
