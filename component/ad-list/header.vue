@@ -4,7 +4,8 @@
     <div>
       <span class="filter-item">
         <label>订单</label>
-        <el-input placeholder="请选择订单" />
+        <el-input placeholder="请填写订单号查询"
+          v-model="query.orderId" />
       </span>
       <span class="filter-item">
         <label>广告位</label>
@@ -26,8 +27,30 @@
 
 <script>
 
+import { getAdItems } from './action'
+
 export default {
-  name: 'ad-header'
+  name: 'ad-header',
+  props: {
+    query: {
+      type: Object,
+      required: true
+    }
+  },
+  watch: {
+    'query.orderId': async function(v, p) {
+      await this.queryAdItems(v, p)
+    }
+  },
+  methods: {
+    async queryAdItems(v, p) {
+      if (v === p) {
+        return
+      }
+
+      await getAdItems({...this.query})
+    }
+  }
 }
 
 </script>

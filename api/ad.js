@@ -1,6 +1,6 @@
 
 import { reverseCamelcase, toCamelcase } from 'object-keys-mapping'
-import { api } from './base'
+import { api, trim } from './base'
 
 export async function getAdPrice(aid, opts = {}) {
   const body = await api
@@ -22,11 +22,11 @@ export async function getAds() {
 }
 
 export async function getAdItems(opts = {}) {
-  const query = {
+  const query = trim({
     offset: 0,
     limit: 20,
     ...opts
-  }
+  })
 
   const [items, total] = await Promise.all([
     _getAdItems(query),
@@ -35,9 +35,10 @@ export async function getAdItems(opts = {}) {
 
   return {
     items: toCamelcase(items),
-    offset: query.offset,
-    limit: query.limit,
-    total
+    query: {
+      ...query,
+      total
+    }
   }
 }
 

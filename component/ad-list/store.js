@@ -6,23 +6,32 @@ import {
   getAdItems
 } from './action'
 
+const defaultQuery = {
+  offset: 0,
+  limit: 20,
+  total: 0,
+
+  orderId: ''
+}
+
 const store = createStore({
   materials: [],
   items: [],
-  offset: 0,
-  limit: 20,
-  total: 0
+  query: {
+    ...defaultQuery
+  }
 })
 
 store.subscribeActions({
   [getMaterials]: ({materials = []}) => ({
     materials: [...materials]
   }),
-  [getAdItems]: ({items = [], offset, total, limit}) => ({
+  [getAdItems]: ({items = [], query = {}}) => ({
     items: [...items],
-    offset,
-    limit,
-    total
+    query: {
+      ...defaultQuery,
+      ...query
+    }
   })
 })
 

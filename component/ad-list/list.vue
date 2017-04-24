@@ -41,7 +41,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <bax-pagination :offset="offset" :total="total" :limit="limit"
+    <bax-pagination :options="query"
       @current-change="onCurrentChange" />
     <add-material :materials="materials" :itemId="currentItemId"
       :visible="addMaterialDialogVisible"
@@ -92,9 +92,10 @@ export default {
       type: Array,
       required: true
     },
-    offset: Number,
-    total: Number,
-    limit: Number
+    query: {
+      type: Object,
+      required: true
+    }
   },
   data() {
     return {
