@@ -1,6 +1,8 @@
 
 <template>
-  <el-dialog title="新增条件投放" v-model="visible">
+  <el-dialog title="新增条件投放" v-model="visible"
+    :close-on-click-modal="false"
+    @close="cancel">
     <el-form ref="form" label-width="100px">
       <el-form-item label="新方案名称">
         <el-input v-model="name" />
