@@ -8,7 +8,9 @@ import {
 const defaultQuery = {
   offset: 0,
   limit: 20,
-  total: 0
+  total: 0,
+
+  orderStatus: ''
 }
 
 const store = createStore({

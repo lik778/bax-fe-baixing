@@ -19,3 +19,9 @@ export const sspOrderStatus = {
   '20': '准备投放',
   '30': '投放中'
 }
+
+export const orderStatusOpts = Object.keys(sspOrderStatus)
+  .map((k) => ({
+    label: sspOrderStatus[k],
+    value: k
+  }))

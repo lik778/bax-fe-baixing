@@ -14,7 +14,8 @@
     <div>
       <span class="filter-item">
         <label>订单状态</label>
-        <el-input placeholder="..." />
+        <bax-select :options="orderStatusOpts" clearable
+          @change="v => query.orderStatus = v" />
       </span>
       <span class="filter-item">
         <label>客户</label>
@@ -36,11 +37,45 @@
 
 <script>
 
+import { orderStatusOpts } from 'constant/order'
+
+import BaxSelect from 'com/common/select'
+
+import {
+  getOrders
+} from './action'
+
 export default {
   name: 'order-header',
-  query: {
-    type: Object,
-    required: true
+  components: {
+    BaxSelect
+  },
+  props: {
+    query: {
+      type: Object,
+      required: true
+    }
+  },
+  data() {
+    return {
+      orderStatusOpts: [
+        ...orderStatusOpts
+      ]
+    }
+  },
+  watch: {
+    'query.orderStatus': async function(v, p) {
+      await this.queryOrders(v, p)
+    }
+  },
+  methods: {
+    async queryOrders(v, p) {
+      if (v === p) {
+        return
+      }
+
+      await getOrders({...this.query})
+    }
   }
 }
 
