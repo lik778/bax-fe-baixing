@@ -8,13 +8,16 @@
         <bax-select :options="moptions" @change="onSelectMaterial"
           :filter-method="onQueryMaterials" />
       </el-form-item>
-      <el-form-item label="名称">
+      <el-form-item label="名称" required>
         <el-input v-model="material.name" />
       </el-form-item>
       <el-form-item label="内容">
         <el-input v-model="material.content" />
       </el-form-item>
-      <el-form-item label="上传物料">
+      <el-form-item label="规格">
+        <el-input v-model="material.slot" />
+      </el-form-item>
+      <el-form-item label="上传物料" required>
         <uploader @success="onUploadSuccess" />
         <img class="preview" v-if="material.url"
           v-bind:src="material.url" />
@@ -41,6 +44,7 @@ import {
 const emptyMaterial = {
   content: '',
   name: '',
+  slot: '',
   url: ''
 }
 
@@ -88,6 +92,7 @@ export default {
         content: m.content,
         url: m.imgUrl,
         name: m.name,
+        slot: m.slot,
         id: m.id
       }
     },
@@ -112,6 +117,7 @@ export default {
         material,
         itemId
       } = this
+
       if (createMaterial) {
         // TODO - 字段检测
         await addAdItemMaterial(itemId, material)
