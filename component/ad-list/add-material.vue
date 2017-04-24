@@ -3,7 +3,7 @@
   <el-dialog title="添加物料" v-model="visible"
     :close-on-click-modal="false"
     @close="cancel">
-    <el-form ref="form" :model="material" label-width="80px">
+    <el-form ref="form" :model="material" label-width="100px">
       <el-form-item label="选择物料">
         <bax-select :options="moptions" @change="onSelectMaterial"
           :filter-method="onQueryMaterials" />

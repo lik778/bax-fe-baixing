@@ -2,6 +2,13 @@
 import { reverseCamelcase, toCamelcase } from 'object-keys-mapping'
 import { api, trim } from './base'
 
+export async function createAdItem(item) {
+  return await api
+    .post('/ad/item')
+    .send(reverseCamelcase(item))
+    .json()
+}
+
 export async function getAdPrice(aid, opts = {}) {
   const body = await api
     .get(`/ad/${aid}/price`)
