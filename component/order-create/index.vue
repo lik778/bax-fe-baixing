@@ -21,16 +21,16 @@
           </bax-select>
         </el-form-item>
         <el-form-item label="时段">
-          <el-date-picker type="datetime" placeholder="上线时间"
+          <el-date-picker type="date" placeholder="上线时间"
             v-model="newOrder.onlineAt" />
-          <el-date-picker type="datetime" placeholder="下线时间"
+          <el-date-picker type="date" placeholder="下线时间"
             v-model="newOrder.offlineAt" />
         </el-form-item>
         <el-form-item label="销售人员">
-          <el-input v-model="newOrder.salesId"></el-input>
+          <el-input v-model="newOrder.salesId" />
         </el-form-item>
         <el-form-item label="广告客户">
-          <el-input v-model="newOrder.userId"></el-input>
+          <el-input v-model="newOrder.userId" />
         </el-form-item>
         <section class="ad-price" v-if="adPrice">
           <label>价格:</label>
