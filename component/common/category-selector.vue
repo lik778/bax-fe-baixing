@@ -154,56 +154,6 @@ export default {
 
 <style scoped>
 
-@import 'cssbase/mixin';
-
-@define-mixin selected {
-  background: #20a0ff;
-  border-radius: 3px;
-  color: white;
-}
-
-.main {
-
-  & > div {
-    display: flex;
-    align-items: center;
-    padding: 10px 0;
-
-    & > span {
-      height: 100%;
-    }
-
-    & > span:first-child {
-      color: gray;
-      font-weight: bold;
-      min-width: 80px;
-      width: 80px;
-      padding: 5px 10px;
-      margin-right: 10px;
-      cursor: pointer;
-
-      &.selected {
-        @mixin selected;
-      }
-    }
-
-    & > span:last-child {
-      border-left: 1px gray dashed;
-      padding: 0 20px;
-
-      & > p {
-        display: inline-block;
-        margin: 5px 3px 0;
-        padding: 5px 10px;
-        color: gray;
-        cursor: pointer;
-
-        &.selected {
-          @mixin selected;
-        }
-      }
-    }
-  }
-}
+@import './selector'
 
 </style>
