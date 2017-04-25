@@ -60,7 +60,8 @@ import Topbar from 'com/topbar'
 import { getAdPrice } from 'api/ad'
 import {
   toTimestamp,
-  centToYuan
+  centToYuan,
+  now
 } from 'utils'
 
 import store from './store'
@@ -74,8 +75,8 @@ const emptyOrder = {
   adId: 0,
   categories: [],
   cities: [],
-  onlineAt: Date.now(),
-  offlineAt: Date.now(),
+  onlineAt: now(),
+  offlineAt: now(),
   salesId: 0,
   userId: 0
 }
