@@ -7,6 +7,10 @@ export const changeOrderDiscount = createAction((id, data) => {
   return oapi.changeOrderDiscount(id, data)
 })
 
+export const getOrderPayUrl = createAction((id) => {
+  return oapi.getOrderPayUrl(id)
+})
+
 export const getOrderInfo = createAction((id) => {
   return oapi.getOrderInfo(id)
 })

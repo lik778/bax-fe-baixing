@@ -21,6 +21,9 @@
         <el-input v-model="discount" />
         <el-button @click="changeDiscount">确认</el-button>
       </div>
+      <div v-if="payUrl">
+        {{ payUrl }}
+      </div>
       <div>
         <log v-for="log in logs" :info="log" />
       </div>
@@ -46,6 +49,7 @@ import {
 
 import {
   changeOrderDiscount,
+  getOrderPayUrl,
   getOrderInfo,
   getOrderLogs
 } from './action'
@@ -67,6 +71,7 @@ export default {
   data() {
     return {
       discount: '',
+      payUrl: ''
     }
   },
   filters: {
@@ -101,10 +106,15 @@ export default {
   },
   async mounted() {
     const orderId = this.$route.params.id
-    await Promise.all([
+    const [info] = await Promise.all([
       getOrderInfo(orderId),
       getOrderLogs(orderId)
     ])
+
+    if (info && info.order && info.order.status === 0) {
+      const url = await getOrderPayUrl(orderId)
+      this.payUrl = url
+    }
   }
 }
 

@@ -62,6 +62,14 @@ export async function changeOrderDiscount(oid, data) {
     .json()
 }
 
+export async function getOrderPayUrl(oid) {
+  const body = await api
+    .get(`/order/${oid}/pay/url`)
+    .json()
+
+  return body.data
+}
+
 export async function payOrder(oid) {
   return await api
     .post(`/order/${oid}/pay`)
