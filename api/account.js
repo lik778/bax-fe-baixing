@@ -10,10 +10,10 @@ export async function getCurrentUser() {
   return toCamelcase(body.data)
 }
 
-export async function loginLocal() {
+export async function loginLocal(id = 2) {
   return await api
     .post('/user/login/local')
-    .send({user_id: 1})
+    .send({user_id: id})
     .json()
 }
 
