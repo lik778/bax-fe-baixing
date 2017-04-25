@@ -1,12 +1,18 @@
 
 import { createStore } from 'vue-duo'
 
-const store = createStore({
+import {
+  queryCalendar
+} from './action'
 
+const store = createStore({
+  calendar: {}
 })
 
 store.subscribeActions({
+  [queryCalendar]: () => ({
 
+  })
 })
 
 export default store

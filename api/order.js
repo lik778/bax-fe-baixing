@@ -2,6 +2,15 @@
 import { reverseCamelcase, toCamelcase } from 'object-keys-mapping'
 import { api, trim } from './base'
 
+export async function getCalendar(opts = {}) {
+  const body = await api
+    .get('/order/calendar')
+    .query(reverseCamelcase(opts))
+    .json()
+
+  return toCamelcase(body.data)
+}
+
 export async function createOrder(order) {
   return await api
     .post('/order')
