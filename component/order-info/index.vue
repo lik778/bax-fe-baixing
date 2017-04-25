@@ -11,9 +11,15 @@
           <item label="客户" :value="orderInfo.order.userName" />
           <item label="销售" :value="orderInfo.order.salesName" />
           <item label="创建时间" :value="orderInfo.order.createdAt | toHumanTime" />
-          <item label="订单价格" :value="orderInfo.order.realPrice | price" />
+          <item label="订单实价" :value="orderInfo.order.realPrice | price" />
+          <item label="客户价格" :value="orderInfo.order.customerPrice | price" />
+          <item label="订单原价" :value="orderInfo.order.originalPrice | price" />
         </span>
         <span />
+      </div>
+      <div v-if="unpaied">
+        <el-input v-model="discount" />
+        <el-button @click="changeDiscount">确认</el-button>
       </div>
       <div>
         <log v-for="log in logs" :info="log" />
@@ -23,6 +29,8 @@
 </template>
 
 <script>
+
+import { Message } from 'element-ui'
 
 import Topbar from 'com/topbar'
 import Item from './item'
@@ -37,6 +45,7 @@ import {
 } from 'utils'
 
 import {
+  changeOrderDiscount,
   getOrderInfo,
   getOrderLogs
 } from './action'
@@ -55,10 +64,39 @@ export default {
     Item,
     Log
   },
+  data() {
+    return {
+      discount: '',
+    }
+  },
   filters: {
     toHumanTime,
     price(s) {
       return commafy(centToYuan(s)) + ' 元'
+    }
+  },
+  computed: {
+    unpaied() {
+      const { orderInfo } = this
+      return orderInfo && orderInfo.order && orderInfo.order.status === 0
+    }
+  },
+  methods: {
+    async changeDiscount() {
+      const { discount } = this
+      const amount = (discount | 0) * 100 | 0
+
+      const orderId = this.$route.params.id
+
+      await changeOrderDiscount(orderId, {
+        amount
+      })
+
+      await getOrderInfo(orderId)
+
+      Message.success('修改成功')
+
+      this.discount = ''
     }
   },
   async mounted() {
