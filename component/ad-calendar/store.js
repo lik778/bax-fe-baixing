@@ -2,16 +2,21 @@
 import { createStore } from 'vue-duo'
 
 import {
-  queryCalendar
+  getCalendar,
+  getAds
 } from './action'
 
 const store = createStore({
-  calendar: {}
+  calendar: {},
+  ads: []
 })
 
 store.subscribeActions({
-  [queryCalendar]: () => ({
+  [getCalendar]: () => ({
 
+  }),
+  [getAds]: ({ads = []}) => ({
+    ads
   })
 })
 
