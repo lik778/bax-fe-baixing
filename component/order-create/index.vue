@@ -164,14 +164,17 @@ export default {
         onlineAt: toTimestamp(newOrder.onlineAt)
       }
 
-      await createOrder(data)
+      const oid = await createOrder(data)
 
       this.empty()
 
       Message.success('创建成功')
 
       this.$router.push({
-        name: 'order-list'
+        name: 'order-info',
+        params: {
+          id: oid
+        }
       })
     }
   }
