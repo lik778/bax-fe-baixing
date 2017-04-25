@@ -20,6 +20,11 @@ export const sspOrderStatus = {
   '30': '投放中'
 }
 
+export const canGetPayUrlRoles = [
+  'NORMAL_OPERATOR',
+  'BAIXING_SALES'
+]
+
 export const orderStatusOpts = Object.keys(sspOrderStatus)
   .map((k) => ({
     label: sspOrderStatus[k],
