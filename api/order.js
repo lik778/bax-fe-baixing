@@ -8,7 +8,9 @@ export async function getCalendar(opts = {}) {
     .query(reverseCamelcase(opts))
     .json()
 
-  return toCamelcase(body.data)
+  return {
+    orders: toCamelcase(body.data)
+  }
 }
 
 export async function createOrder(order) {

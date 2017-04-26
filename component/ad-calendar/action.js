@@ -11,3 +11,5 @@ export const getCalendar = createAction((opts) => {
 export const getAds = createAction(() => {
   return aapi.getAds()
 })
+
+export const setCalendarOptions = createAction()
