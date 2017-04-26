@@ -12,10 +12,12 @@ export async function getCalendar(opts = {}) {
 }
 
 export async function createOrder(order) {
-  return await api
+  const body = await api
     .post('/order')
     .send(reverseCamelcase(order))
     .json()
+
+  return body.data
 }
 
 export async function getOrderLogs(id) {
@@ -72,7 +74,7 @@ export async function getOrderPayUrl(oid) {
 
 export async function payOrder(oid) {
   return await api
-    .post(`/order/${oid}/pay`)
+    .post(`/order/${oid}/pay/agent`)
     .send({})
     .json()
 }
