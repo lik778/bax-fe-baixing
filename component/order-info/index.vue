@@ -16,7 +16,15 @@
           <item label="订单原价" :value="orderInfo.order.originalPrice | price" />
         </span>
         <span>
-          <el-button @click="addRelatedOrder">添加关联订单</el-button>
+          <div v-if="orderInfo.order.relatedOrderId">
+            <label>关联订单</label>
+            <span @click="gotoRelatedOrder">
+              {{ orderInfo.order.relatedOrderId }}
+            </span>
+          </div>
+          <div v-else>
+            <el-button @click="addRelatedOrder">添加关联订单</el-button>
+          </div>
         </span>
       </div>
       <div class="discount" v-if="unpaied">
@@ -96,6 +104,20 @@ export default {
     }
   },
   methods: {
+    async initOrderInfo() {
+      const orderId = this.$route.params.id
+      const [info] = await Promise.all([
+        getOrderInfo(orderId),
+        getOrderLogs(orderId)
+      ])
+
+      console.warn('TODO - role 限制')
+
+      if (info && info.order && info.order.status === 0) {
+        const url = await getOrderPayUrl(orderId)
+        this.payUrl = url
+      }
+    },
     async changeDiscount() {
       const { discount } = this
       const amount = (discount | 0) * 100 | 0
@@ -122,6 +144,16 @@ export default {
         }
       })
     },
+    gotoRelatedOrder() {
+      const id = this.orderInfo.order.relatedOrderId
+
+      this.$router.push({
+        name: 'order-info',
+        params: {
+          id
+        }
+      })
+    },
     onCopySuccess() {
       Message.success('复制成功')
     },
@@ -130,15 +162,13 @@ export default {
     }
   },
   async mounted() {
-    const orderId = this.$route.params.id
-    const [info] = await Promise.all([
-      getOrderInfo(orderId),
-      getOrderLogs(orderId)
-    ])
-
-    if (info && info.order && info.order.status === 0) {
-      const url = await getOrderPayUrl(orderId)
-      this.payUrl = url
+    await this.initOrderInfo()
+  },
+  watch: {
+    '$route.params.id': async function(v, p) {
+      if (v !== p) {
+        await this.initOrderInfo()
+      }
     }
   }
 }
