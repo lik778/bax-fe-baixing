@@ -8,6 +8,10 @@ import { baxApiHost } from 'config'
 export const api = new Fetch({
   prefix: baxApiHost,
   afterJSON(body) {
+    if (body.errors) {
+      return Message.error('出错啦')
+    }
+
     const meta = body.meta || {}
 
     if (meta.status === 401) {
