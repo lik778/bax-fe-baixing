@@ -9,7 +9,8 @@ export const api = new Fetch({
   prefix: baxApiHost,
   afterJSON(body) {
     if (body.errors) {
-      return Message.error('出错啦')
+      Message.error('出错啦')
+      throw new Error('出错啦')
     }
 
     const meta = body.meta || {}
