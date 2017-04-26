@@ -4,18 +4,18 @@
     :close-on-click-modal="false"
     @close="cancel">
     <el-form ref="form" :model="user" label-width="120px">
-      <el-form-item label="名称">
+      <el-form-item label="名称" required>
         <el-input v-model="user.name" />
       </el-form-item>
-      <el-form-item label="邮箱">
+      <el-form-item label="邮箱" required>
         <el-input v-model="user.email" />
       </el-form-item>
-      <el-form-item label="号码">
+      <el-form-item label="号码" required>
         <el-input v-model="user.mobile" />
       </el-form-item>
-      <el-form-item label="角色">
+      <el-form-item label="角色" required>
         <bax-select :options="roleOpts" multiple
-          @change="v => user.roles = v" />
+          v-model="user.roles" />
       </el-form-item>
     </el-form>
     <div slot="footer">
@@ -32,6 +32,13 @@ import { Message } from 'element-ui'
 
 import { createUser } from './action'
 
+const emptyUser = {
+  name: '',
+  email: '',
+  mobile: '',
+  roles: []
+}
+
 export default {
   name: 'create-user-dialog',
   props: {
@@ -46,7 +53,9 @@ export default {
   },
   data() {
     return {
-      user: {}
+      user: {
+        ...emptyUser
+      }
     }
   },
   components: {
@@ -61,6 +70,12 @@ export default {
     }
   },
   methods: {
+    empty() {
+      this.user = {
+        ...emptyUser,
+        roles: []
+      }
+    },
     async submit() {
       const { user } = this
 
@@ -70,13 +85,13 @@ export default {
 
       console.info('password:', password)
 
-      this.user = {}
+      this.empty()
 
       this.$emit('created')
       this.$emit('hide')
     },
     async cancel() {
-      this.user = {}
+      this.empty()
       this.$emit('hide')
     }
   }
