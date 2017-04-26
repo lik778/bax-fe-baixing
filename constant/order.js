@@ -1,7 +1,15 @@
 
-export const orderType = {
-
+export const sspOrderType = {
+  '0': '广告',
+  '1': '运营',
+  '2': '置换'
 }
+
+export const sspOrderTypeOpts = Object.keys(sspOrderType)
+  .map((k) => ({
+    label: sspOrderType[k],
+    value: k
+  }))
 
 export const orderStatus = {
   '-10': '已退款',
