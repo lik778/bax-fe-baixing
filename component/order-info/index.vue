@@ -15,7 +15,9 @@
           <item label="客户价格" :value="orderInfo.order.customerPrice | price" />
           <item label="订单原价" :value="orderInfo.order.originalPrice | price" />
         </span>
-        <span />
+        <span>
+          <el-button @click="addRelatedOrder">添加关联订单</el-button>
+        </span>
       </div>
       <div class="discount" v-if="unpaied">
         <span>
@@ -109,6 +111,16 @@ export default {
       Message.success('修改成功')
 
       this.discount = ''
+    },
+    addRelatedOrder() {
+      const id = this.$route.params.id
+
+      this.$router.push({
+        name: 'create-order',
+        query: {
+          relatedOrderId: id
+        }
+      })
     },
     onCopySuccess() {
       Message.success('复制成功')

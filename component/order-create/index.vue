@@ -165,6 +165,10 @@ export default {
         onlineAt: toTimestamp(newOrder.onlineAt)
       }
 
+      const relatedOrderId = this.$route.query.relatedOrderId
+      if (relatedOrderId) {
+        data.relatedOrderId = relatedOrderId
+      }
       const oid = await createOrder(data)
 
       this.empty()
