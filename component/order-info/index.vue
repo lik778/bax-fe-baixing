@@ -17,8 +17,11 @@
         </span>
         <span />
       </div>
-      <div v-if="unpaied">
-        <el-input v-model="discount" />
+      <div class="discount" v-if="unpaied">
+        <span>
+          <el-input v-model="discount"
+            placeholder="降价 xx 元" />
+        </span>
         <el-button @click="changeDiscount">确认</el-button>
       </div>
       <div class="pay-url" v-if="payUrl">
@@ -133,6 +136,15 @@ export default {
 <style scoped>
 
 @import 'cssbase/mixin';
+
+.discount {
+  display: flex;
+  align-items: center;
+
+  & > span {
+    width: 200px;
+  }
+}
 
 .pay-url {
   display: flex;
