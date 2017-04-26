@@ -21,8 +21,12 @@
         <el-input v-model="discount" />
         <el-button @click="changeDiscount">确认</el-button>
       </div>
-      <div v-if="payUrl">
-        {{ payUrl }}
+      <div class="pay-url" v-if="payUrl">
+        <span :title="payUrl">{{ payUrl }}</span>
+        <i class="el-icon-document"
+          v-clipboard:copy="payUrl"
+          v-clipboard:success="onCopySuccess"
+          v-clipboard:error="onCopyError" />
       </div>
       <div>
         <log v-for="log in logs" :info="log" />
@@ -102,6 +106,12 @@ export default {
       Message.success('修改成功')
 
       this.discount = ''
+    },
+    onCopySuccess() {
+      Message.success('复制成功')
+    },
+    onCopyError() {
+      Message.error('复制失败')
     }
   },
   async mounted() {
@@ -121,6 +131,18 @@ export default {
 </script>
 
 <style scoped>
+
+@import 'cssbase/mixin';
+
+.pay-url {
+  display: flex;
+  align-items: center;
+
+  & > span {
+    @mixin wordline;
+    width: 200px;
+  }
+}
 
 .order-info {
   padding: 0 35px;
