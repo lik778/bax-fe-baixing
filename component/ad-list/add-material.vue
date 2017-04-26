@@ -5,7 +5,7 @@
     @close="cancel">
     <el-form ref="form" :model="material" label-width="100px">
       <el-form-item label="选择物料">
-        <bax-select :options="moptions" @change="onSelectMaterial"
+        <bax-select :options="moptions" v-model="materialId"
           :filter-method="onQueryMaterials" />
       </el-form-item>
       <el-form-item label="名称" required>
@@ -16,6 +16,9 @@
       </el-form-item>
       <el-form-item label="规格">
         <el-input v-model="material.slot" />
+      </el-form-item>
+      <el-form-item label="链接" required>
+        <el-input v-model="material.link" />
       </el-form-item>
       <el-form-item label="上传物料" required>
         <uploader @success="onUploadSuccess" />
@@ -45,6 +48,7 @@ const emptyMaterial = {
   content: '',
   name: '',
   slot: '',
+  link: '',
   url: ''
 }
 
@@ -71,7 +75,8 @@ export default {
   data() {
     return {
       material: {...emptyMaterial},
-      createMaterial: false
+      createMaterial: false,
+      materialId: ''
     }
   },
   computed: {
@@ -87,11 +92,16 @@ export default {
   },
   methods: {
     onSelectMaterial(v) {
+      if (!v) {
+        return
+      }
+
       const m = this.materials.find(m => m.id === v)
 
       this.material = {
         content: m.content,
         url: m.imgUrl,
+        link: m.link,
         name: m.name,
         slot: m.slot,
         id: m.id
@@ -104,6 +114,7 @@ export default {
     empty() {
       this.material = {...emptyMaterial}
       this.createMaterial = false
+      this.materialId = ''
       this.$emit('hide')
     },
     cancel() {
@@ -122,12 +133,18 @@ export default {
       if (createMaterial) {
         // TODO - 字段检测
         await addAdItemMaterial(itemId, material)
+        await getMaterials() // 刷新物料列表 供 筛选
       } else {
         await setAdItemMaterial(itemId, material.id)
       }
 
       this.$emit('success')
       this.empty()
+    }
+  },
+  watch: {
+    materialId(v) {
+      this.onSelectMaterial(v)
     }
   }
 }
