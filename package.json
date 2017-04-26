@@ -23,6 +23,7 @@
     "utils": "git+ssh://git@gitlab.baixing.cn:channel/fe-utils.git",
     "uuid": "3.0.1",
     "vue": "2.2.6",
+    "vue-clipboard2": "0.0.6",
     "vue-duo": "1.0.0",
     "vue-router": "2.3.0",
     "vue-rx": "3.0.0"

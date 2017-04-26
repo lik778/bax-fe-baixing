@@ -10,11 +10,13 @@ import UserList from 'com/user-list'
 import AdList from 'com/ad-list'
 import Bax from 'com/bax'
 
+import VueClipboard from 'vue-clipboard2'
 import VueRouter from 'vue-router'
 import Element from 'element-ui'
 import Duo from 'vue-duo'
 import Vue from 'vue'
 
+Vue.use(VueClipboard)
 Vue.use(VueRouter)
 Vue.use(Element)
 Vue.use(Duo)
