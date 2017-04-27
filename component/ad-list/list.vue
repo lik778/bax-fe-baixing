@@ -7,9 +7,9 @@
       <el-table-column prop="adId" label="adId" width="120" />
       <el-table-column label="投放时间">
         <template scope="s">
-          <span>{{ s.row.onlineAt | toHumanTime }}</span>
+          <span>{{ s.row.timeRange[0] | date }}</span>
           <i>-</i>
-          <span>{{ s.row.offlineAt | toHumanTime }}</span>
+          <span>{{ s.row.timeRange[1] | date }}</span>
         </template>
       </el-table-column>
       <el-table-column label="状态">
@@ -128,6 +128,9 @@ export default {
   filters: {
     adItemStatus(s) {
       return adStatus[String(s)]
+    },
+    date(v) {
+      return toHumanTime(v, 'MM月-DD日')
     },
     toHumanTime
   },
