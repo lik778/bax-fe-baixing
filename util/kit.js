@@ -10,3 +10,8 @@ export function getPagination(total, offset, limit) {
     total
   }
 }
+
+// 仅用于 区域 类目
+export function getCnName(item, allItems) {
+
+}
