@@ -28,10 +28,12 @@
         <el-form-item label="销售人员">
           <bax-select :options="userOpts"
             v-model="newOrder.salesId"
+            :filter-method="onQueryUsers" />
         </el-form-item>
         <el-form-item label="广告客户">
           <bax-select :options="userOpts"
             v-model="newOrder.userId"
+            :filter-method="onQueryUsers" />
         </el-form-item>
         <section class="ad-price" v-if="adPrice.originalPrice">
           <span>
