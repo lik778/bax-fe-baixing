@@ -18,9 +18,9 @@
       <el-table-column label="操作">
         <template scope="s">
           <el-button size="mini">修改</el-button>
-          <router-link tag="p" :to="{ name: 'material-info', params: { id: s.row.id } } ">
+          <el-button @click="gotoMaterialInfo(s.row.id)" size="mini">
             预览
-          </router-link>
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -66,6 +66,12 @@ export default {
         offset
       }
       await getMaterials(q)
+    },
+    gotoMaterialInfo(id) {
+      this.$router.push({
+        name: 'material-info',
+        params: { id }
+      })
     }
   }
 }
