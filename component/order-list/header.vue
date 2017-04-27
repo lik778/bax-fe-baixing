@@ -15,7 +15,7 @@
       <span class="filter-item">
         <label>订单状态</label>
         <bax-select :options="orderStatusOpts" clearable
-          @change="v => query.orderStatus = v" />
+          v-model="query.orderStatus" />
       </span>
       <span class="filter-item">
         <label>客户</label>

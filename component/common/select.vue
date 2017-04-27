@@ -1,6 +1,6 @@
 
 <template>
-  <el-select v-model="value" :multiple="multiple"
+  <el-select v-model="localValue" :multiple="multiple"
     :clearable="clearable" filterable
     :filter-method="filterMethod">
     <el-option v-for="opt in options"
@@ -21,16 +21,41 @@ export default {
     },
     filterMethod: Function,
     clearable: Boolean,
-    multiple: Boolean
+    multiple: Boolean,
+    value: {
+      type: [String, Number, Array]
+    }
   },
   data() {
     return {
-      value: ''
+      localValue: this.value
+    }
+  },
+  methods: {
+    setValue(v) {
+      console.debug('select: set value')
+      this.$emit('change', v)
+      this.$emit('input', v)
+
+      if (v === this.localValue) {
+        return
+      }
+
+      this.localValue = v
     }
   },
   watch: {
+    localValue(v) {
+      console.debug('select:watch:localValue')
+      this.setValue(v)
+    },
     value(v) {
-      this.$emit('change', v)
+      console.debug('select:watch:value', v, this.localValue)
+      if (v === this.localValue) {
+        return
+      }
+
+      this.localValue = v
     }
   }
 }

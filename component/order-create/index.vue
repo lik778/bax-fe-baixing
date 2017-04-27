@@ -55,11 +55,21 @@
         </el-form-item>
       </el-form>
     </main>
+    <category-selector :all-categories="allCategories"
+      :visible="categoryDialogVisible"
+      @success="categoryDialogVisible = false"
+      @cancel="categoryDialogVisible = false" />
+    <area-selector :all-areas="allAreas"
+      :visible="areaDialogVisible"
+      @success="areaDialogVisible = false"
+      @cancel="areaDialogVisible = false" />
   </div>
 </template>
 
 <script>
 
+import CategorySelector from 'com/common/category-selector'
+import AreaSelector from 'com/common/area-selector'
 import BaxSelect from 'com/common/select'
 import { Message } from 'element-ui'
 import Topbar from 'com/topbar'
@@ -110,12 +120,16 @@ export default {
     }
   },
   components: {
+    CategorySelector,
+    AreaSelector,
     BaxSelect,
     Topbar
   },
   data() {
     return {
       newOrder: clone(emptyOrder),
+      categoryDialogVisible: false,
+      areaDialogVisible: false
     }
   },
   computed: {
