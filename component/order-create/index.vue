@@ -8,16 +8,15 @@
       <el-form ref="form" :model="newOrder" label-width="120px">
         <el-form-item label="广告位">
           <bax-select :options="adOpts"
-            @change="v => newOrder.adId = v" />
+            v-model="newOrder.adId" />
         </el-form-item>
         <el-form-item label="城市">
           <bax-select :options="allAreas" multiple
-            @change="v => newOrder.cities = v">
-          </bax-select>
+            v-model="newOrder.cities" />
         </el-form-item>
         <el-form-item label="类目">
           <bax-select :options="allCategories" multiple
-            @change="v => newOrder.categories = v">
+            v-model="newOrder.categories">
           </bax-select>
         </el-form-item>
         <el-form-item label="时段">
@@ -27,14 +26,22 @@
             v-model="newOrder.offlineAt" />
         </el-form-item>
         <el-form-item label="销售人员">
-          <el-input v-model="newOrder.salesId" />
+          <bax-select :options="userOpts"
+            v-model="newOrder.salesId"
         </el-form-item>
         <el-form-item label="广告客户">
-          <el-input v-model="newOrder.userId" />
+          <bax-select :options="userOpts"
+            v-model="newOrder.userId"
         </el-form-item>
-        <section class="ad-price" v-if="adPrice">
-          <label>价格:</label>
-          <span>{{ '￥' + adPrice }}</span>
+        <section class="ad-price" v-if="adPrice.originalPrice">
+          <span>
+            <label>原价:</label>
+            <label>{{ adPrice.originalPrice | price }}</label>
+          </span>
+          <span>
+            <label>折扣价:</label>
+            <label>{{ adPrice.price | price }}</label>
+          </span>
         </section>
         <el-form-item>
           <el-button>
@@ -57,7 +64,8 @@ import BaxSelect from 'com/common/select'
 import { Message } from 'element-ui'
 import Topbar from 'com/topbar'
 
-import { getAdPrice } from 'api/ad'
+import clone from 'clone'
+
 import {
   toTimestamp,
   centToYuan,
@@ -67,18 +75,21 @@ import {
 import store from './store'
 
 import {
+  clearAdPrice,
   createOrder,
+  getAdPrice,
+  getUsers,
   getAds
 } from './action'
 
 const emptyOrder = {
-  adId: 0,
+  adId: '',
   categories: [],
   cities: [],
   onlineAt: now(),
   offlineAt: now(),
-  salesId: 0,
-  userId: 0
+  salesId: '',
+  userId: ''
 }
 
 export default {
@@ -104,11 +115,16 @@ export default {
   },
   data() {
     return {
-      newOrder: {...emptyOrder},
-      adPrice: ''
+      newOrder: clone(emptyOrder),
     }
   },
   computed: {
+    userOpts() {
+      return this.users.map(u => ({
+        label: u.name,
+        value: u.id
+      }))
+    },
     adOpts() {
       return this.ads.map(ad => ({
         label: ad.id + ' ' + ad.slotCode,
@@ -117,7 +133,10 @@ export default {
     }
   },
   async mounted() {
-    await getAds()
+    await Promise.all([
+      getUsers(),
+      getAds()
+    ])
   },
   watch: {
     newOrder: {
@@ -127,10 +146,18 @@ export default {
       deep: true
     }
   },
+  filters: {
+    price(v) {
+      return '￥' + centToYuan(v)
+    }
+  },
   methods: {
     empty() {
-      this.newOrder = {...emptyOrder}
-      this.adPrice = ''
+      this.newOrder = clone(emptyOrder)
+      clearAdPrice()
+    },
+    async onQueryUsers(v) {
+      await getUsers({name: v})
     },
     async queryAdPrice(newOrder) {
       const {
@@ -153,7 +180,6 @@ export default {
       if (opts.adId && opts.categories.length && opts.cities.length
         && opts.startAt && opts.endAt) {
           const price = await getAdPrice(opts.adId, opts)
-          this.adPrice = centToYuan(price)
         }
     },
     async onSubmit() {
@@ -169,6 +195,7 @@ export default {
       if (relatedOrderId) {
         data.relatedOrderId = relatedOrderId
       }
+
       const oid = await createOrder(data)
 
       this.empty()
@@ -201,13 +228,19 @@ export default {
     justify-content: flex-end;
     align-items: center;
 
-    & > label {
-      color: #5e6d82;
+    & > span {
+      margin-right: 20px;
     }
 
     & > span {
-      font-size: 22px;
-      color: red;
+      & > label:first-child {
+        color: #5e6d82;
+      }
+
+      & > label:last-child {
+        font-size: 22px;
+        color: red;
+      }
     }
   }
 }
