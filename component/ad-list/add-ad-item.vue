@@ -9,11 +9,11 @@
       </el-form-item>
       <el-form-item label="请选择类目">
         <bax-select multiple :options="allCategories"
-          @change="v => categories = v" />
+          v-model="categories" />
       </el-form-item>
       <el-form-item label="请选择城市">
         <bax-select multiple :options="allAreas"
-          @change="v => areas = v" />
+          v-model="areas" />
       </el-form-item>
     </el-form>
     <div slot="footer">
