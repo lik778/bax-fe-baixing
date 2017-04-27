@@ -4,18 +4,17 @@
     <topbar :userInfo="userInfo">
       <label slot="title">广告排期</label>
     </topbar>
-    <ad-header :all-categories="allCategories" :all-areas="allAreas"
+    <calendar-header :all-categories="allCategories" :all-areas="allAreas"
       :all-ads="ads" />
-    <main>
-      TODO
-    </main>
+    <calendar-main :orders="orders" :options="calendarOptions" />
   </div>
 </template>
 
 <script>
 
+import CalendarHeader from './header'
+import CalendarMain from './calendar'
 import Topbar from 'com/topbar'
-import AdHeader from './header'
 
 import store from './store'
 
@@ -24,10 +23,11 @@ import {
 } from './action'
 
 export default {
-  name: 'ad-calendar',
+  name: 'calendar',
   store,
   components: {
-    AdHeader,
+    CalendarHeader,
+    CalendarMain,
     Topbar
   },
   props: {
