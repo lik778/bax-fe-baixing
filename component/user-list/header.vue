@@ -62,8 +62,12 @@ export default {
 
 .user-header {
   @mixin top-filter;
-  height: 160px;
+  height: 130px;
   padding: 20px;
+
+  & > div {
+    display: flex;
+  }
 
   & > div:first-child {
     display: flex;
