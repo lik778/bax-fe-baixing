@@ -11,8 +11,7 @@
           <item label="客户" :value="orderInfo.order.userName" />
           <item label="销售" :value="orderInfo.order.salesName" />
           <item label="创建时间" :value="orderInfo.order.createdAt | toHumanTime" />
-          <item label="订单实价" :value="orderInfo.order.realPrice | price" />
-          <item label="客户价格" :value="orderInfo.order.customerPrice | price" />
+          <item label="订单价格" :value="orderInfo.order.customerPrice | price" />
           <item label="订单原价" :value="orderInfo.order.originalPrice | price" />
         </span>
         <span>

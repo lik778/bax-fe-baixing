@@ -66,13 +66,15 @@ export default {
     async submit() {
       const { user } = this
 
-      const { roles } = await createUser(user)
+      await updateUser({
+        roles: [...user.roles]
+      })
 
-      Message.success('创建成功')
+      Message.success('更新成功')
 
       this.empty()
 
-      this.$emit('created')
+      this.$emit('updated')
       this.$emit('hide')
     },
     async cancel() {

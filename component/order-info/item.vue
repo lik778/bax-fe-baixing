@@ -9,7 +9,7 @@
 <script>
 
 export default {
-  name: 'item',
+  name: 'order-info-item',
   props: {
     label: {
       type: String,
