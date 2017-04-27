@@ -113,6 +113,8 @@ export default {
 
 <style scoped>
 
+@import 'cssbase/mixin';
+
 .calendar {
   padding: 30px;
 

@@ -13,3 +13,5 @@ export const getAds = createAction(() => {
 })
 
 export const setCalendarOptions = createAction()
+
+export const clearStore = createAction()

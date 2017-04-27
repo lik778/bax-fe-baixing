@@ -19,6 +19,7 @@ import Topbar from 'com/topbar'
 import store from './store'
 
 import {
+  clearStore,
   getAds
 } from './action'
 
@@ -43,6 +44,9 @@ export default {
       type: Object,
       required: true
     }
+  },
+  beforeDestroy() {
+    clearStore()
   },
   async mounted() {
     await Promise.all([

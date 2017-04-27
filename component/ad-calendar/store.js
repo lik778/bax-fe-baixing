@@ -4,6 +4,7 @@ import { createStore } from 'vue-duo'
 import {
   setCalendarOptions,
   getCalendar,
+  clearStore,
   getAds
 } from './action'
 
@@ -26,6 +27,15 @@ store.subscribeActions({
   }),
   [getCalendar]: ({orders = []}) => ({
     orders
+  }),
+  [clearStore]: () => ({
+    calendarOptions: {
+      categories: [],
+      areas: [],
+      start: '',
+      end: ''
+    },
+    orders: []
   }),
   [getAds]: ({ads = []}) => ({
     ads
