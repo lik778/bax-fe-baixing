@@ -5,25 +5,25 @@
       <span class="filter-item">
         <label>广告位</label>
         <bax-select :options="adOpts" clearable
-          @change="v => adId = v" />
+          v-model="adId" />
       </span>
       <span class="filter-item">
         <label>类型</label>
         <bax-select :options="sspOrderTypeOpts" clearable
-          @change="v => sspOrderType = v" />
+          v-model="sspOrderType" />
       </span>
     </div>
     <div>
       <span class="filter-item">
         <label>区域</label>
         <bax-select :options="allAreas"
-          @change="v => categories = v"
+          v-model="areas"
           clearable multiple />
       </span>
       <span class="filter-item">
         <label>类目</label>
         <bax-select :options="allCategories"
-          @change="v => areas = v"
+          v-model="categories"
           clearable multiple />
       </span>
     </div>
@@ -53,6 +53,7 @@ import {
 } from 'constant/order'
 
 import {
+  setCalendarOptions,
   getCalendar
 } from './action'
 
@@ -113,6 +114,13 @@ export default {
       if (!areas.length || !categories.length) {
         return
       }
+
+      await setCalendarOptions({
+        start: toTimestamp(startAt),
+        end: toTimestamp(endAt),
+        categories,
+        areas
+      })
 
       await getCalendar({
         startAt: toTimestamp(startAt),
