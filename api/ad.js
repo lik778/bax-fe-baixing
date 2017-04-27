@@ -15,7 +15,7 @@ export async function getAdPrice(aid, opts = {}) {
     .query(reverseCamelcase(opts))
     .json()
 
-  return body.data
+  return toCamelcase(body.data)
 }
 
 export async function getAds() {
