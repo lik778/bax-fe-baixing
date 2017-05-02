@@ -3,7 +3,8 @@ import { createStore } from 'vue-duo'
 
 import {
   getMaterials,
-  getAdItems
+  getAdItems,
+  getAds
 } from './action'
 
 const defaultQuery = {
@@ -11,11 +12,15 @@ const defaultQuery = {
   limit: 20,
   total: 0,
 
-  orderId: ''
+  customerId: '',
+  orderId: '',
+  adId: ''
 }
 
 const store = createStore({
   materials: [],
+  ads: [],
+
   items: [],
   query: {
     ...defaultQuery
@@ -32,6 +37,9 @@ store.subscribeActions({
       ...defaultQuery,
       ...query
     }
+  }),
+  [getAds]: ({ads = []}) => ({
+    ads: [...ads]
   })
 })
 

@@ -4,6 +4,10 @@ import { createAction } from 'vue-duo'
 import * as mapi from 'api/material'
 import * as aapi from 'api/ad'
 
+export const getAds = createAction(() => {
+  return aapi.getAds()
+})
+
 export const createAdItem = createAction((item) => {
   return aapi.createAdItem(item)
 })

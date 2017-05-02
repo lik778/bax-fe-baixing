@@ -4,9 +4,11 @@
     <topbar :userInfo="userInfo">
       <label slot="title">投放管理</label>
     </topbar>
-    <ad-header :query="query" />
-    <ad-list :items="items" :materials="materials" :query="query"
-      :all-categories="allCategories" :all-areas="allAreas" />
+    <ad-header :query="query" :ads="ads" />
+    <ad-list :materials="materials"
+      :items="items" :query="query"
+      :all-categories="allCategories"
+      :all-areas="allAreas" />
   </div>
 </template>
 
@@ -19,7 +21,8 @@ import AdList from './list'
 import store from './store'
 
 import {
-  getAdItems
+  getAdItems,
+  getAds
 } from './action'
 
 export default {
@@ -45,7 +48,10 @@ export default {
     Topbar
   },
   async mounted() {
-    await getAdItems()
+    await Promise.all([
+      getAdItems(),
+      getAds()
+    ])
   }
 }
 

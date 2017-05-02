@@ -9,7 +9,9 @@
       </span>
       <span class="filter-item">
         <label>广告位</label>
-        <el-input placeholder="请选择广告位" />
+        <bax-select placeholder='请选择广告位'
+          :options="adOpts" clearable
+          v-model="query.adId" />
       </span>
     </div>
     <div>
@@ -19,13 +21,17 @@
       </span>
       <span class="filter-item">
         <label>客户</label>
-        <el-input placeholder="请选择客户" />
+        <user-selector placeholder='选客户' clearable
+          v-model="query.customerId" />
       </span>
     </div>
   </header>
 </template>
 
 <script>
+
+import UserSelector from 'com/common/user-selector'
+import BaxSelect from 'com/common/select'
 
 import { getAdItems } from './action'
 
@@ -35,10 +41,24 @@ export default {
     query: {
       type: Object,
       required: true
+    },
+    ads: {
+      type: Array,
+      required: true
     }
   },
+  components: {
+    UserSelector,
+    BaxSelect
+  },
   watch: {
+    'query.customerId': async function(v, p) {
+      await this.queryAdItems(v, p)
+    },
     'query.orderId': async function(v, p) {
+      await this.queryAdItems(v, p)
+    },
+    'query.adId': async function(v, p) {
       await this.queryAdItems(v, p)
     }
   },
@@ -49,6 +69,14 @@ export default {
       }
 
       await getAdItems({...this.query})
+    }
+  },
+  computed: {
+    adOpts() {
+      return this.ads.map(ad => ({
+        label: ad.slotCode,
+        value: ad.id
+      }))
     }
   }
 }
