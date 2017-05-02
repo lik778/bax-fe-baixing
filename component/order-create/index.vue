@@ -25,12 +25,12 @@
           <el-date-picker type="date" placeholder="下线时间"
             v-model="newOrder.offlineAt" />
         </el-form-item>
-        <el-form-item label="销售人员">
+        <el-form-item v-if="isOperator || isAgentAccounting" label="销售人员">
           <bax-select :options="salesOpts"
             v-model="newOrder.salesId"
             :filter-method="v => queryUsers('sales', v)" />
         </el-form-item>
-        <el-form-item label="广告客户">
+        <el-form-item v-if="isOperator || isBxSales" label="广告客户">
           <bax-select :options="customerOpts"
             v-model="newOrder.userId"
             :filter-method="v => queryUsers('customer', v)" />
@@ -154,10 +154,25 @@ export default {
         label: ad.id + ' ' + ad.slotCode,
         value: ad.id
       }))
+    },
+    currentRoles() {
+      const { userInfo } = this
+
+      const { roles = [] } = userInfo
+
+      return roles.map(r => r.nameEn)
+    },
+    isOperator() {
+      return this.currentRoles.includes('NORMAL_OPERATOR')
+    },
+    isAgentAccounting() {
+      return this.currentRoles.includes('AGENT_ACCOUNTING')
+    },
+    isBxSales() {
+      return this.currentRoles.includes('BAIXING_SALES')
     }
   },
   beforeMount() {
-    console.warn('TODO - 优化 rx debounce 使用')
     this.queryCustomersThrottle = new Subject().debounceTime(500)
     this.querySalesThrottle = new Subject().debounceTime(500)
   },
@@ -229,10 +244,10 @@ export default {
         }
     },
     async onSubmit() {
-      const { newOrder } = this
+      const { newOrder, userInfo } = this
 
       const data = {
-        ...newOrder,
+        ...clone(newOrder),
         offlineAt: toTimestamp(newOrder.offlineAt),
         onlineAt: toTimestamp(newOrder.onlineAt)
       }
@@ -240,6 +255,14 @@ export default {
       const relatedOrderId = this.$route.query.relatedOrderId
       if (relatedOrderId) {
         data.relatedOrderId = relatedOrderId
+      }
+
+      if (this.isBxSales) {
+        data.salesId = userInfo.id
+      }
+
+      if (this.isAgentAccounting) {
+        data.userId = userInfo.id
       }
 
       const oid = await createOrder(data)

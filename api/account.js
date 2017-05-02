@@ -12,7 +12,7 @@ export async function getCurrentUser() {
 
 export async function loginLocal(id = 2) {
   return await api
-    .post('/user/login/local')
+    .get('/user/login/local')
     .send({user_id: id})
     .json()
 }
