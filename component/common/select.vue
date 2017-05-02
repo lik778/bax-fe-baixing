@@ -4,6 +4,7 @@
     :clearable="clearable" filterable
     :filter-method="filterMethod">
     <el-option v-for="opt in options"
+      :key="opt.value"
       :label="opt.label"
       :value="opt.value">
     </el-option>
@@ -19,7 +20,10 @@ export default {
       type: Array,
       required: true
     },
-    filterMethod: Function,
+    filterMethod: {
+      type: Function,
+      default: () => {}
+    },
     clearable: {
       type: Boolean,
       default: () => true

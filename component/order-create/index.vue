@@ -26,15 +26,11 @@
             v-model="newOrder.offlineAt" />
         </el-form-item>
         <el-form-item v-if="isOperator || isAgentAccounting" label="销售人员">
-          <bax-select :options="salesOpts"
-            v-model="newOrder.salesId"
-            :filter-method="v => queryUsers('sales', v)" />
+          <user-selector v-model="newOrder.salesId" clearable />
         </el-form-item>
         <el-form-item v-if="isOperator || isBxSales" label="广告客户">
           <span>
-            <bax-select :options="customerOpts"
-              v-model="newOrder.userId"
-              :filter-method="v => queryUsers('customer', v)" />
+            <user-selector v-model="newOrder.userId" clearable />
             <i class="el-icon-plus"
               @click="showCreateUserDialog = true" />
           </span>
@@ -71,7 +67,6 @@
       @cancel="areaDialogVisible = false" />
     <create-user :visible="showCreateUserDialog"
       :all-roles="allRoles"
-      @created="onCreateUser"
       @hide="showCreateUserDialog = false" />
   </div>
 </template>
@@ -79,14 +74,15 @@
 <script>
 
 import CategorySelector from 'com/common/category-selector'
+import UserSelector from 'com/common/user-selector'
 import AreaSelector from 'com/common/area-selector'
 import CreateUser from 'com/common/create-user'
 import BaxSelect from 'com/common/select'
-import { Message } from 'element-ui'
 import Topbar from 'com/topbar'
 
 import 'rxjs/add/operator/debounceTime'
 import { Subject } from 'rxjs/Subject'
+import { Message } from 'element-ui'
 import moment from 'moment'
 import clone from 'clone'
 
@@ -102,7 +98,6 @@ import {
   clearAdPrice,
   createOrder,
   getAdPrice,
-  getUsers,
   getAds
 } from './action'
 
@@ -141,6 +136,7 @@ export default {
   },
   components: {
     CategorySelector,
+    UserSelector,
     AreaSelector,
     CreateUser,
     BaxSelect,
@@ -156,18 +152,6 @@ export default {
     }
   },
   computed: {
-    customerOpts() {
-      return this.customers.map(u => ({
-        label: u.name,
-        value: u.id
-      }))
-    },
-    salesOpts() {
-      return this.sales.map(u => ({
-        label: u.name,
-        value: u.id
-      }))
-    },
     adOpts() {
       return this.ads.map(ad => ({
         label: ad.id + ' ' + ad.slotCode,
@@ -191,22 +175,10 @@ export default {
       return this.currentRoles.includes('BAIXING_SALES')
     }
   },
-  beforeMount() {
-    this.queryCustomersThrottle = new Subject().debounceTime(500)
-    this.querySalesThrottle = new Subject().debounceTime(500)
-  },
   async mounted() {
-    this.queryCustomersThrottle.subscribe(this.queryCustomers)
-    this.querySalesThrottle.subscribe(this.querySales)
-
     await Promise.all([
-      getUsers('all'),
       getAds()
     ])
-  },
-  beforeDestroy() {
-    this.queryCustomersThrottle.unsubscribe(this.queryCustomers)
-    this.querySalesThrottle.unsubscribe(this.querySales)
   },
   watch: {
     newOrder: {
@@ -225,22 +197,6 @@ export default {
     empty() {
       this.newOrder = clone(emptyOrder)
       clearAdPrice()
-    },
-    queryUsers(type, v) {
-      if (type === 'customer' && this.queryCustomersThrottle) {
-        this.queryCustomersThrottle.next(v)
-      } else if (type === 'sales' && this.querySalesThrottle) {
-        this.querySalesThrottle.next(v)
-      }
-    },
-    async queryCustomers(v) {
-      await getUsers('customer', {name: v})
-    },
-    async querySales(v) {
-      await getUsers('sales', {name: v})
-    },
-    onCreateUser() {
-      // this.queryCustomersThrottle.next('')
     },
     async queryAdPrice(newOrder) {
       const {

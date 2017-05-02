@@ -15,15 +15,6 @@ export const getAdPrice = createAction((aid, opts) => {
 
 export const clearAdPrice = createAction()
 
-export const getUsers = createAction(async (type = 'all', opts) => {
-  const { users } = await capi.getUsers(opts)
-
-  return {
-    users,
-    type
-  }
-})
-
 export const getAds = createAction(() => {
   return aapi.getAds()
 })

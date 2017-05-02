@@ -40,6 +40,7 @@ export default {
   },
   methods: {
     query(v) {
+      console.debug('query', v)
       this.throttle.next(v)
     },
     setValue(v) {
@@ -67,7 +68,7 @@ export default {
       }
 
       this.localValue = v
-
+      console.debug('value changed', v)
       this.throttle.next(v)
     }
   },
