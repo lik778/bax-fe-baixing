@@ -34,6 +34,7 @@
         <el-button @click="changeDiscount">确认</el-button>
       </div>
       <div class="pay-url" v-if="payUrl">
+        <label>付款链接</label>
         <span :title="payUrl">{{ payUrl }}</span>
         <i class="el-icon-document"
           v-clipboard:copy="payUrl"
@@ -181,9 +182,11 @@ export default {
 .discount {
   display: flex;
   align-items: center;
+  margin: 10px 0;
 
   & > span {
     width: 200px;
+    margin-right: 10px;
   }
 }
 
@@ -191,9 +194,19 @@ export default {
   display: flex;
   align-items: center;
 
+  & > label {
+    font-size: 14px;
+    color: #5e6d82;
+    margin-right: 5px;
+  }
+
   & > span {
     @mixin wordline;
     width: 200px;
+  }
+
+  & > i {
+    cursor: pointer;
   }
 }
 
