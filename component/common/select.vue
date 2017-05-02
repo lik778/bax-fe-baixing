@@ -20,7 +20,10 @@ export default {
       required: true
     },
     filterMethod: Function,
-    clearable: Boolean,
+    clearable: {
+      type: Boolean,
+      default: () => true
+    },
     multiple: Boolean,
     value: {
       type: [String, Number, Array]
