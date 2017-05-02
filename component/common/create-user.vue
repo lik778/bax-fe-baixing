@@ -29,8 +29,9 @@
 
 import BaxSelect from 'com/common/select'
 import { Message } from 'element-ui'
+import clone from 'clone'
 
-import { createUser } from './action'
+import { createUser } from 'api/account'
 
 const emptyUser = {
   name: '',
@@ -53,9 +54,7 @@ export default {
   },
   data() {
     return {
-      user: {
-        ...emptyUser
-      }
+      user: clone(emptyUser)
     }
   },
   components: {
@@ -71,19 +70,14 @@ export default {
   },
   methods: {
     empty() {
-      this.user = {
-        ...emptyUser,
-        roles: []
-      }
+      this.user = clone(emptyUser)
     },
     async submit() {
       const { user } = this
 
-      const { password } = await createUser(user)
+      await createUser(user)
 
       Message.success('创建成功')
-
-      console.info('password:', password)
 
       this.empty()
 

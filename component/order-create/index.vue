@@ -31,9 +31,13 @@
             :filter-method="v => queryUsers('sales', v)" />
         </el-form-item>
         <el-form-item v-if="isOperator || isBxSales" label="广告客户">
-          <bax-select :options="customerOpts"
-            v-model="newOrder.userId"
-            :filter-method="v => queryUsers('customer', v)" />
+          <span>
+            <bax-select :options="customerOpts"
+              v-model="newOrder.userId"
+              :filter-method="v => queryUsers('customer', v)" />
+            <i class="el-icon-plus"
+              @click="showCreateUserDialog = true" />
+          </span>
         </el-form-item>
         <section class="ad-price" v-if="adPrice.originalPrice">
           <span>
@@ -65,6 +69,10 @@
       :visible="areaDialogVisible"
       @success="areaDialogVisible = false"
       @cancel="areaDialogVisible = false" />
+    <create-user :visible="showCreateUserDialog"
+      :all-roles="allRoles"
+      @created="onCreateUser"
+      @hide="showCreateUserDialog = false" />
   </div>
 </template>
 
@@ -72,6 +80,7 @@
 
 import CategorySelector from 'com/common/category-selector'
 import AreaSelector from 'com/common/area-selector'
+import CreateUser from 'com/common/create-user'
 import BaxSelect from 'com/common/select'
 import { Message } from 'element-ui'
 import Topbar from 'com/topbar'
@@ -118,6 +127,10 @@ export default {
       type: Array,
       required: true
     },
+    allRoles: {
+      type: Array,
+      required: true
+    },
     userInfo: {
       type: Object,
       required: true
@@ -126,6 +139,7 @@ export default {
   components: {
     CategorySelector,
     AreaSelector,
+    CreateUser,
     BaxSelect,
     Topbar
   },
@@ -133,6 +147,7 @@ export default {
     return {
       newOrder: clone(emptyOrder),
       categoryDialogVisible: false,
+      showCreateUserDialog: false,
       areaDialogVisible: false
     }
   },
@@ -220,6 +235,9 @@ export default {
     async querySales(v) {
       await getUsers('sales', {name: v})
     },
+    onCreateUser() {
+      // this.queryCustomersThrottle.next('')
+    },
     async queryAdPrice(newOrder) {
       const {
         categories,
@@ -287,6 +305,15 @@ export default {
 </script>
 
 <style scoped>
+
+@import '../../cssbase/var';
+
+.el-icon-plus {
+  border: 1px solid var(--c-gray);
+  border-radius: 3px;
+  padding: 8px;
+  cursor: pointer;
+}
 
 .create-order {
   padding: 0 35px;

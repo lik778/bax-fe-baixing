@@ -16,8 +16,8 @@
 
 <script>
 
+import CreateUser from 'com/common/create-user'
 import UserHeader from './header'
-import CreateUser from './create'
 import Topbar from 'com/topbar'
 import UserList from './list'
 
