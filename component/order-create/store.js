@@ -10,8 +10,10 @@ import {
 
 const store = createStore({
   adPrice: {},
-  users: [],
-  ads: []
+  ads: [],
+  // 用于筛选项
+  customers: [],
+  sales: []
 })
 
 store.subscribeActions({
@@ -21,9 +23,26 @@ store.subscribeActions({
   [getAdPrice]: (price) => ({
     adPrice: {...price}
   }),
-  [getUsers]: ({users}) => ({
-    users
-  }),
+  [getUsers]: ({users = [], type}) => {
+    if (type === 'all') {
+      return {
+        customers: [...users],
+        sales: [...users]
+      }
+    }
+
+    if (type === 'sales') {
+      return {
+        sales: [...users]
+      }
+    }
+
+    if (type === 'customer') {
+      return {
+        customers: [...users]
+      }
+    }
+  },
   [getAds]: ({ads = []}) => ({
     ads
   })

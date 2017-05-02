@@ -26,14 +26,14 @@
             v-model="newOrder.offlineAt" />
         </el-form-item>
         <el-form-item label="销售人员">
-          <bax-select :options="userOpts"
+          <bax-select :options="salesOpts"
             v-model="newOrder.salesId"
-            :filter-method="onQueryUsers" />
+            :filter-method="v => queryUsers('sales', v)" />
         </el-form-item>
         <el-form-item label="广告客户">
-          <bax-select :options="userOpts"
+          <bax-select :options="customerOpts"
             v-model="newOrder.userId"
-            :filter-method="onQueryUsers" />
+            :filter-method="v => queryUsers('customer', v)" />
         </el-form-item>
         <section class="ad-price" v-if="adPrice.originalPrice">
           <span>
@@ -76,6 +76,8 @@ import BaxSelect from 'com/common/select'
 import { Message } from 'element-ui'
 import Topbar from 'com/topbar'
 
+import 'rxjs/add/operator/debounceTime'
+import { Subject } from 'rxjs/Subject'
 import clone from 'clone'
 
 import {
@@ -135,8 +137,14 @@ export default {
     }
   },
   computed: {
-    userOpts() {
-      return this.users.map(u => ({
+    customerOpts() {
+      return this.customers.map(u => ({
+        label: u.name,
+        value: u.id
+      }))
+    },
+    salesOpts() {
+      return this.sales.map(u => ({
         label: u.name,
         value: u.id
       }))
@@ -148,11 +156,23 @@ export default {
       }))
     }
   },
+  beforeMount() {
+    console.warn('TODO - 优化 rx debounce 使用')
+    this.queryCustomersThrottle = new Subject().debounceTime(500)
+    this.querySalesThrottle = new Subject().debounceTime(500)
+  },
   async mounted() {
+    this.queryCustomersThrottle.subscribe(this.queryCustomers)
+    this.querySalesThrottle.subscribe(this.querySales)
+
     await Promise.all([
-      getUsers(),
+      getUsers('all'),
       getAds()
     ])
+  },
+  beforeDestroy() {
+    this.queryCustomersThrottle.unsubscribe(this.queryCustomers)
+    this.querySalesThrottle.unsubscribe(this.querySales)
   },
   watch: {
     newOrder: {
@@ -172,8 +192,18 @@ export default {
       this.newOrder = clone(emptyOrder)
       clearAdPrice()
     },
-    async onQueryUsers(v) {
-      await getUsers({name: v})
+    queryUsers(type, v) {
+      if (type === 'customer' && this.queryCustomersThrottle) {
+        this.queryCustomersThrottle.next(v)
+      } else if (type === 'sales' && this.querySalesThrottle) {
+        this.querySalesThrottle.next(v)
+      }
+    },
+    async queryCustomers(v) {
+      await getUsers('customer', {name: v})
+    },
+    async querySales(v) {
+      await getUsers('sales', {name: v})
     },
     async queryAdPrice(newOrder) {
       const {
@@ -225,6 +255,9 @@ export default {
         }
       })
     }
+  },
+  updated() {
+    console.debug('updated - create order')
   }
 }
 
