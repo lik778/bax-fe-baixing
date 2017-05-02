@@ -6,7 +6,8 @@
     </topbar>
     <calendar-header :all-categories="allCategories" :all-areas="allAreas"
       :all-ads="ads" />
-    <calendar-main :orders="orders" :options="calendarOptions" />
+    <calendar-main :orders="orders" :options="calendarOptions"
+      :all-categories="allCategories" :all-areas="allAreas" />
   </div>
 </template>
 

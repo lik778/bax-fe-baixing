@@ -1,4 +1,6 @@
 
+const isArray = Array.isArray
+
 export function filterCategories(allCategories, categories = []) {
   if (categories.length === 0) {
     return []
@@ -27,4 +29,35 @@ export function filterAreas(allAreas, areas = []) {
       }
     })
     .map(a => ({...a}))
+}
+
+/**
+ * 仅用于 区域 类目
+ * @params {String} name
+ * @params {Array} allItems
+ *
+ * @returns {String}
+ */
+export function getCnName(name, allItems) {
+  let result = name
+
+  allItems.forEach(i => {
+    if (i.name === name) {
+      if (i.nameCn) {
+        result = i.nameCn
+      }
+    }
+  })
+
+  return result
+}
+
+export function formatCategoriesOrAreas(names, allItems) {
+  if (!isArray(names)) {
+    return '无'
+  }
+
+  return names.map(c => {
+    return getCnName(c, allItems)
+  }).join(', ')
 }

@@ -6,7 +6,7 @@
       <el-input placeholder="邮箱" v-model="email" />
       <el-input placeholder="密码" type="password" v-model="password" />
       <footer>
-        <el-button type="primary" @click="login()">登录</el-button>
+        <el-button type="primary" @click="login">登录</el-button>
       </footer>
     </div>
   </main>

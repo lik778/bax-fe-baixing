@@ -17,16 +17,10 @@
           <span>{{ s.row.status | adItemStatus }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="区域">
-        <template scope="s">
-          <span>{{ s.row.areas.join(',') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="类目">
-        <template scope="s">
-          <span>{{ s.row.categories.join(',') }}</span>
-        </template>
-      </el-table-column>
+      <el-table-column label="区域"
+        :formatter="formatterArea" />
+      <el-table-column label="类目"
+        :formatter="formatterCategory" />
       <el-table-column label="物料">
         <template scope="s">
           <el-button type="text" size="small"
@@ -83,6 +77,10 @@ import AddAdItem from './add-ad-item'
 
 import { toHumanTime } from 'utils'
 import clone from 'clone'
+
+import {
+  formatCategoriesOrAreas
+} from 'util/meta'
 
 import {
   adStatus
@@ -171,6 +169,16 @@ export default {
     async passAdItem(gid) {
       await verifyAdItem(gid, 'pass')
       await getAdItems()
+    },
+    formatterCategory(row) {
+      const { allCategories } = this
+      const { categories } = row
+      return formatCategoriesOrAreas(categories, allCategories)
+    },
+    formatterArea(row) {
+      const { allAreas } = this
+      const { areas } = row
+      return formatCategoriesOrAreas(areas, allAreas)
     }
   }
 }

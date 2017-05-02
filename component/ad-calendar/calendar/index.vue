@@ -11,11 +11,11 @@
     <main>
       <div v-for="row in rows">
         <span>
-          <label :title="row.area">
-            {{ row.area }}
+          <label :title="formatArea(row.area)">
+            {{ formatArea(row.area) }}
           </label>
-          <label :title="row.category">
-            {{ row.category }}
+          <label :title="formatCategory(row.category)">
+            {{ formatCategory(row.category) }}
           </label>
         </span>
         <span>
@@ -34,16 +34,28 @@ import Days from './days'
 
 import moment from 'moment'
 
+import {
+  getCnName
+} from 'util/meta'
+
 export default {
   name: 'ad-calendar-main',
   props: {
+    allCategories: {
+      type: Array,
+      required: true
+    },
+    allAreas: {
+      type: Array,
+      required: true
+    },
     options: {
       type: Object,
-      requireed: true
+      required: true
     },
     orders: {
       type: Array,
-      requireed: true
+      required: true
     }
   },
   components: {
@@ -57,6 +69,14 @@ export default {
     }
   },
   methods: {
+    formatCategory(v) {
+      const { allCategories } = this
+      return getCnName(v, allCategories)
+    },
+    formatArea(v) {
+      const { allAreas } = this
+      return getCnName(v, allAreas)
+    },
     getDays() {
       const { options } = this
       const seconds = (options.end - options.start) || 0
