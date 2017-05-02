@@ -8,11 +8,11 @@
         <el-input v-model="name" />
       </el-form-item>
       <el-form-item label="请选择类目">
-        <bax-select multiple :options="allCategories"
+        <bax-select multiple :options="categoryOpts"
           v-model="categories" />
       </el-form-item>
       <el-form-item label="请选择城市">
-        <bax-select multiple :options="allAreas"
+        <bax-select multiple :options="areaOpts"
           v-model="areas" />
       </el-form-item>
     </el-form>
@@ -28,6 +28,12 @@
 import BaxSelect from 'com/common/select'
 
 import { Message } from 'element-ui'
+import clone from 'clone'
+
+import {
+  filterCategories,
+  filterAreas
+} from 'util/meta'
 
 import {
   createAdItem,
@@ -55,6 +61,16 @@ export default {
     allAreas: {
       type: Array,
       required: true
+    },
+    oldCategories: {
+      type: Array,
+      default: () => [],
+      required: true
+    },
+    oldAreas: {
+      type: Array,
+      default: () => [],
+      required: true
     }
   },
   data() {
@@ -62,6 +78,16 @@ export default {
       categories: [],
       areas: [],
       name: ''
+    }
+  },
+  computed: {
+    categoryOpts() {
+      const categories = [...this.oldCategories]
+      return filterCategories(this.allCategories, categories)
+    },
+    areaOpts() {
+      const areas = [...this.oldAreas]
+      return filterAreas(this.allAreas, areas)
     }
   },
   methods: {

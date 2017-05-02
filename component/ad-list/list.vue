@@ -51,8 +51,8 @@
             @click="passAdItem(s.row.id)">
             通过
           </el-button>
-          <el-button type="text" size="small"
-            @click="showAddAdItemDialog(s.row.id)">
+          <el-button v-if="s.row.itemType === 0" type="text" size="small"
+            @click="showAddAdItemDialog(s.row.id, s.row)">
             新增投放
           </el-button>
         </template>
@@ -64,9 +64,12 @@
       :visible="addMaterialDialogVisible"
       @hide="addMaterialDialogVisible = false"
       @success="onAddMaterialSuccess" />
-    <add-ad-item :oldItemId="currentItemId"
-      :visible="addAdItemDialogVisible"
-      :all-categories="allCategories" :all-areas="allAreas"
+    <add-ad-item :visible="addAdItemDialogVisible"
+      :old-item-id="currentItemId"
+      :old-categories="currentItem.categories"
+      :old-areas="currentItem.areas"
+      :all-categories="allCategories"
+      :all-areas="allAreas"
       @hide="addAdItemDialogVisible = false"
       @success="onAddAdItemSuccess" />
   </section>
@@ -79,6 +82,7 @@ import AddMaterial from './add-material'
 import AddAdItem from './add-ad-item'
 
 import { toHumanTime } from 'utils'
+import clone from 'clone'
 
 import {
   adStatus
@@ -122,7 +126,8 @@ export default {
     return {
       addMaterialDialogVisible: false,
       addAdItemDialogVisible: false,
-      currentItemId: 0
+      currentItemId: 0,
+      currentItem: {}
     }
   },
   filters: {
@@ -141,8 +146,10 @@ export default {
     async onAddAdItemSuccess() {
       await getAdItems()
     },
-    showAddAdItemDialog(id) {
+    showAddAdItemDialog(id, item) {
       this.addAdItemDialogVisible = true
+
+      this.currentItem = clone(item)
       this.currentItemId = id
     },
     showAddMaterialDialog(id) {

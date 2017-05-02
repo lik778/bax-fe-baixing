@@ -20,6 +20,7 @@
         "constant": "./constant",
         "config": "./config",
         "com": "./component",
+        "util": "./util",
         "api": "./api"
       }
     }]
