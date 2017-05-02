@@ -87,6 +87,7 @@ import Topbar from 'com/topbar'
 
 import 'rxjs/add/operator/debounceTime'
 import { Subject } from 'rxjs/Subject'
+import moment from 'moment'
 import clone from 'clone'
 
 import {
@@ -105,12 +106,14 @@ import {
   getAds
 } from './action'
 
+const tomorrow = moment().add(1, 'days').format('YYYY-MM-DD')
+
 const emptyOrder = {
   adId: '',
   categories: [],
   cities: [],
   onlineAt: now(),
-  offlineAt: now(),
+  offlineAt: tomorrow,
   salesId: '',
   userId: ''
 }
@@ -145,10 +148,11 @@ export default {
   },
   data() {
     return {
-      newOrder: clone(emptyOrder),
       categoryDialogVisible: false,
+      areaDialogVisible: false,
+
       showCreateUserDialog: false,
-      areaDialogVisible: false
+      newOrder: clone(emptyOrder)
     }
   },
   computed: {
