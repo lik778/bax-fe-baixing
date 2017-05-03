@@ -10,6 +10,10 @@
           <bax-select :options="adOpts"
             v-model="newOrder.adId" />
         </el-form-item>
+        <el-form-item label="订单类型" v-if="isOperator">
+          <bax-select :options="sspOrderTypeOpts"
+            v-model="newOrder.sspOrderType" />
+        </el-form-item>
         <el-form-item label="城市">
           <span>
             <el-tag type="success" closable
@@ -102,14 +106,17 @@ import moment from 'moment'
 import clone from 'clone'
 
 import { getCnName } from 'util/meta'
+import store from './store'
+
+import {
+  sspOrderTypeOpts
+} from 'constant/order'
 
 import {
   toTimestamp,
   centToYuan,
   now
 } from 'utils'
-
-import store from './store'
 
 import {
   clearAdPrice,
@@ -122,6 +129,7 @@ const tomorrow = moment().add(1, 'days').format('YYYY-MM-DD')
 
 const emptyOrder = {
   adId: '',
+  sspOrderType: '',
   categories: [],
   cities: [],
   onlineAt: now(),
@@ -161,6 +169,8 @@ export default {
   },
   data() {
     return {
+      sspOrderTypeOpts: [...sspOrderTypeOpts],
+
       categoryDialogVisible: false,
       areaDialogVisible: false,
 
@@ -284,6 +294,10 @@ export default {
 
       if (this.isAgentAccounting) {
         data.userId = userInfo.id
+      }
+
+      if (!this.isOperator) {
+        delete data.sspOrderType
       }
 
       const oid = await createOrder(data)
