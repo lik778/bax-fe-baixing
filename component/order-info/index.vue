@@ -26,7 +26,7 @@
           </div>
         </span>
       </div>
-      <div class="discount" v-if="unpaied">
+      <div class="discount" v-if="unpaied && isOperator">
         <span>
           <el-input v-model="discount"
             placeholder="降价 xx 元" />
@@ -101,6 +101,10 @@ export default {
     unpaied() {
       const { orderInfo } = this
       return orderInfo && orderInfo.order && orderInfo.order.status === 0
+    },
+    isOperator() {
+      const roles = this.userInfo.roles || []
+      return roles.map(r => r.nameEn).includes('NORMAL_OPERATOR')
     }
   },
   methods: {
