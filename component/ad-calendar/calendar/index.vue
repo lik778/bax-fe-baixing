@@ -1,14 +1,17 @@
 
 <template>
   <content class="calendar">
-    <header>
+    <div v-if="!hasData">
+      ~ 暂无符合条件的排期哟 ~
+    </div>
+    <header v-if="hasData">
       <span>
         <label>区域</label>
         <label>类目</label>
       </span>
       <days-tip :days="days" />
     </header>
-    <main>
+    <main v-if="hasData">
       <div v-for="row in rows">
         <span>
           <label :title="formatArea(row.area)">
@@ -116,6 +119,11 @@ export default {
       }))
     }
   },
+  computed: {
+    hasData() {
+      return !!this.rows.length
+    }
+  },
   watch: {
     'options.start': function() {
       this.getDays()
@@ -137,6 +145,13 @@ export default {
 
 .calendar {
   padding: 30px;
+
+  & > div {
+    @mixin center;
+    margin: 10px 0;
+    font-size: 18px;
+    color: gray;
+  }
 
   & > header {
     display: flex;
