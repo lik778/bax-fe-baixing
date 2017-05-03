@@ -14,7 +14,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="slot" label="规格" />
-      <el-table-column prop="userId" label="客户" />
+      <el-table-column prop="userName" label="客户" />
       <el-table-column label="操作">
         <template scope="s">
           <el-button size="mini">修改</el-button>

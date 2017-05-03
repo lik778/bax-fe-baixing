@@ -12,6 +12,8 @@
           </el-button>
         </template>
       </el-table-column>
+      <el-table-column label="订单类型" width="80"
+        :formatter="formatOrderType" />
       <el-table-column prop="order.userName" label="客户" width="120" />
       <el-table-column label='创建时间'>
         <template scope="s">
@@ -41,6 +43,10 @@ import { toHumanTime } from 'utils'
 import { Message } from 'element-ui'
 
 import {
+  sspOrderType
+} from 'constant/order'
+
+import {
   getOrders,
   payOrder
 } from './action'
@@ -68,6 +74,9 @@ export default {
     },
     async onCurrentChange({offset}) {
       await getOrders({offset})
+    },
+    formatOrderType(row) {
+      return sspOrderType[String(row.order.orderType)]
     }
   },
   filters: {
