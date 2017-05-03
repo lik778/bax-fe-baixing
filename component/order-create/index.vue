@@ -239,10 +239,6 @@ export default {
         ...this.newOrder.cities.filter(c => c !== a)
       ]
     },
-    empty() {
-      this.newOrder = clone(emptyOrder)
-      clearAdPrice()
-    },
     onChangeOrderCategories(v) {
       this.categoryDialogVisible = false
       this.newOrder.categories = v
@@ -250,6 +246,10 @@ export default {
     onChangeOrderAreas(v) {
       this.areaDialogVisible = false
       this.newOrder.cities = v
+    },
+    empty() {
+      this.newOrder = clone(emptyOrder)
+      clearAdPrice()
     },
     async queryAdPrice(newOrder) {
       const {
@@ -327,13 +327,11 @@ export default {
 
 <style scoped>
 
+@import '../../cssbase/mixin';
 @import '../../cssbase/var';
 
 .el-icon-plus {
-  border: 1px solid var(--c-gray);
-  border-radius: 3px;
-  padding: 8px;
-  cursor: pointer;
+  @mixin icon-btn;
 }
 
 .el-tag {

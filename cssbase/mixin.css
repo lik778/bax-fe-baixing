@@ -1,4 +1,6 @@
 
+@import './var';
+
 @define-mixin top-filter {
   border: 1px solid #a3b2c4;
   border-radius: 5px;
@@ -22,4 +24,11 @@
       color: #475669;
     }
   }
+}
+
+@define-mixin icon-btn {
+  border: 1px solid var(--c-gray);
+  border-radius: 3px;
+  padding: 8px;
+  cursor: pointer;
 }

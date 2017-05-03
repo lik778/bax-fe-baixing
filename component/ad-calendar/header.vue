@@ -16,15 +16,29 @@
     <div>
       <span class="filter-item">
         <label>区域</label>
-        <bax-select :options="allAreas"
-          v-model="areas"
-          clearable multiple />
+        <span>
+          <el-tag type="success" closable
+            v-for="c in areas" :key="c"
+            @close="removeArea(c)">
+            {{ formatterArea(c) }}
+          </el-tag>
+          <i class="el-icon-plus"
+            @click="areaDialogVisible = true" />
+        </span>
       </span>
+    </div>
+    <div>
       <span class="filter-item">
         <label>类目</label>
-        <bax-select :options="allCategories"
-          v-model="categories"
-          clearable multiple />
+        <span>
+          <el-tag type="success" closable
+            v-for="c in categories" :key="c"
+            @close="removeCategory(c)">
+            {{ formatterCategory(c) }}
+          </el-tag>
+          <i class="el-icon-plus"
+            @click="categoryDialogVisible = true" />
+        </span>
       </span>
     </div>
     <div>
@@ -39,13 +53,26 @@
           v-model="endAt" />
       </span>
     </div>
+    <category-selector :all-categories="allCategories"
+      :categories="categories"
+      :visible="categoryDialogVisible"
+      @ok="onChangeCategories"
+      @cancel="categoryDialogVisible = false" />
+    <area-selector :all-areas="allAreas"
+      :areas="areas"
+      :visible="areaDialogVisible"
+      @ok="onChangeAreas"
+      @cancel="areaDialogVisible = false" />
   </header>
 </template>
 
 <script>
 
+import CategorySelector from 'com/common/category-selector'
+import AreaSelector from 'com/common/area-selector'
 import BaxSelect from 'com/common/select'
 
+import { getCnName } from 'util/meta'
 import { toTimestamp } from 'utils'
 
 import {
@@ -60,6 +87,8 @@ import {
 export default {
   name: 'ad-calendar-header',
   components: {
+    CategorySelector,
+    AreaSelector,
     BaxSelect
   },
   props: {
@@ -80,6 +109,9 @@ export default {
     return {
       sspOrderTypeOpts: [...sspOrderTypeOpts],
 
+      categoryDialogVisible: false,
+      areaDialogVisible: false,
+
       sspOrderType: '',
       categories: [],
       areas: [],
@@ -97,6 +129,32 @@ export default {
     }
   },
   methods: {
+    formatterCategory(name) {
+      const { allCategories } = this
+      return getCnName(name, allCategories)
+    },
+    formatterArea(name) {
+      const { allAreas } = this
+      return getCnName(name, allAreas)
+    },
+    removeCategory(c) {
+      this.categories = [
+        ...this.categories.filter(i => i !== c)
+      ]
+    },
+    removeArea(a) {
+      this.areas = [
+        ...this.areas.filter(c => c !== a)
+      ]
+    },
+    onChangeCategories(v) {
+      this.categoryDialogVisible = false
+      this.categories = v
+    },
+    onChangeAreas(v) {
+      this.areaDialogVisible = false
+      this.areas = v
+    },
     async queryCalendar(v, p) {
       const {
         sspOrderType,
@@ -163,13 +221,28 @@ export default {
 
 @mixin filter-item;
 
+.el-icon-plus {
+  @mixin icon-btn;
+}
+
+.el-tag {
+  margin-right: 3px;
+}
+
 .ad-calendar-header {
   @mixin top-filter;
-  height: 160px;
+  padding: 10px 0 20px;
 
   & > div {
     display: flex;
     align-items: center;
+  }
+
+  & > div:nth-child(2), & > div:nth-child(3) {
+    & > span {
+      height: unset;
+      width: unset;
+    }
   }
 }
 
