@@ -12,14 +12,22 @@
         </el-form-item>
         <el-form-item label="城市">
           <span>
-            {{ newOrder.cities.join(', ') }}
+            <el-tag type="success" closable
+              v-for="c in newOrder.cities" :key="c"
+              @close="removeArea(c)">
+              {{ formatterArea(c) }}
+            </el-tag>
           </span>
           <i class="el-icon-plus"
             @click="areaDialogVisible = true" />
         </el-form-item>
         <el-form-item label="类目">
           <span>
-            {{ newOrder.categories.join(', ') }}
+            <el-tag type="success" closable
+              v-for="c in newOrder.categories" :key="c"
+              @close="removeCategory(c)">
+              {{ formatterCategory(c) }}
+            </el-tag>
           </span>
           <i class="el-icon-plus"
             @click="categoryDialogVisible = true" />
@@ -92,6 +100,8 @@ import { Subject } from 'rxjs/Subject'
 import { Message } from 'element-ui'
 import moment from 'moment'
 import clone from 'clone'
+
+import { getCnName } from 'util/meta'
 
 import {
   toTimestamp,
@@ -201,6 +211,24 @@ export default {
     }
   },
   methods: {
+    formatterCategory(name) {
+      const { allCategories } = this
+      return getCnName(name, allCategories)
+    },
+    formatterArea(name) {
+      const { allAreas } = this
+      return getCnName(name, allAreas)
+    },
+    removeCategory(c) {
+      this.newOrder.categories = [
+        ...this.newOrder.categories.filter(i => i !== c)
+      ]
+    },
+    removeArea(a) {
+      this.newOrder.cities = [
+        ...this.newOrder.cities.filter(c => c !== a)
+      ]
+    },
     empty() {
       this.newOrder = clone(emptyOrder)
       clearAdPrice()
@@ -272,6 +300,10 @@ export default {
       })
     }
   },
+  beforeDestroy() {
+    // 场景: 未提交
+    this.empty()
+  },
   updated() {
     console.debug('updated - create order')
   }
@@ -288,6 +320,10 @@ export default {
   border-radius: 3px;
   padding: 8px;
   cursor: pointer;
+}
+
+.el-tag {
+  margin-right: 3px;
 }
 
 .create-order {
