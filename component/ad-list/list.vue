@@ -33,7 +33,7 @@
           <span v-else>{{ s.row.material.content }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="审核">
+      <el-table-column label="审核" v-if="allowVerify">
         <template scope="s">
           <el-button v-if="s.row.status === 0"
             type="text" size="small"
@@ -83,6 +83,10 @@ import {
 } from 'util/meta'
 
 import {
+  allowVerifyAd
+} from 'constant/role'
+
+import {
   adStatus
 } from 'constant/ad'
 
@@ -99,6 +103,10 @@ export default {
     AddAdItem
   },
   props: {
+    userInfo: {
+      type: Object,
+      required: true
+    },
     allCategories: {
       type: Array,
       required: true
@@ -126,6 +134,11 @@ export default {
       addAdItemDialogVisible: false,
       currentItemId: 0,
       currentItem: {}
+    }
+  },
+  computed: {
+    allowVerify() {
+      return allowVerifyAd(this.userInfo.roles)
     }
   },
   filters: {

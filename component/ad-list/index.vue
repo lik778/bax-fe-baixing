@@ -8,7 +8,8 @@
     <ad-list :materials="materials"
       :items="items" :query="query"
       :all-categories="allCategories"
-      :all-areas="allAreas" />
+      :all-areas="allAreas"
+      :user-info="userInfo" />
   </div>
 </template>
 
