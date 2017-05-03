@@ -5,14 +5,14 @@
     @close="cancel">
     <main class="main">
       <div v-for="c in topCategories">
-        <span v-bind:class="{ selected: categoryChecked(c) }"
-          @click="clickCategory(c)">
+        <span v-bind:class="{ selected: categoryChecked(c.id) }"
+          @click="clickCategory(c.id)">
           {{ c.label }}
         </span>
         <span>
           <p v-for="category in c.categories"
-            v-bind:class="{ selected: categoryChecked(category) }"
-            @click="clickCategory(category)">
+            v-bind:class="{ selected: categoryChecked(category.id) }"
+            @click="clickCategory(category.id)">
             {{ category.label }}
           </p>
         </span>
@@ -27,12 +27,19 @@
 
 <script>
 
+import isequal from 'lodash.isequal'
+
 export default {
   name: 'category-selector',
   props: {
     allCategories: {
       type: Array,
       required: true
+    },
+    categories: {
+      type: Array,
+      required: true,
+      default: () => []
     },
     visible: {
       type: Boolean,
@@ -55,43 +62,59 @@ export default {
           id: c.id
         }))
     },
-    categoryChecked(c) {
+    getCategoryByName(id) {
+      const c = this.allCategories.find(c => c.name === id)
+
+      return {
+        parent: c.belongsToFirst,
+        label: c.nameCn,
+        level: c.level,
+        id: c.id
+      }
+    },
+    categoryChecked(id) {
+      const category = this.getCategoryByName(id)
+
       const {
         parent,
-        level,
-        id
-      } = c
+        level
+      } = category
 
       const { selectedCategories } = this
 
       if (level === 1) {
-        return !!selectedCategories.find(c => c.id === id)
+        return !!selectedCategories.find(c => c === id)
       }
 
       if (level === 2) {
-        return !!selectedCategories.find(c => c.id === id || c.id === parent)
+        return !!selectedCategories.find(c => c === id || c === parent)
       }
     },
-    clickCategory(c) {
+    clickCategory(id) {
       // type - add, del
-      const type = this.categoryChecked(c) ? 'del' : 'add'
+      const type = this.categoryChecked(id) ? 'del' : 'add'
+
+      const category = this.getCategoryByName(id)
 
       const {
         parent,
-        level,
-        id
-      } = c
+        level
+      } = category
 
       const { selectedCategories } = this
 
       if (level === 1) {
         const categories = selectedCategories
-          .filter(c => c.parent !== id && c.id !== id)
+          .filter(c => {
+            const i = this.getCategoryByName(c)
+
+            return i.parent !== id && i.id !== id
+          })
 
         if (type === 'add') {
           this.selectedCategories = [
             ...categories,
-            {...c}
+            id
           ]
         } else {
           this.selectedCategories = [...categories]
@@ -102,15 +125,22 @@ export default {
 
       if (level === 2) {
         const categories = selectedCategories
-          .filter(c => c.id !== parent && c.id !== id)
+          .filter(c => {
+            const i = this.getCategoryByName(c)
+
+            return i.id !== parent && i.id !== id
+          })
 
         if (type === 'add') {
-          this.selectedCategories = [...categories, {...c}]
+          this.selectedCategories = [...categories, id]
         } else {
-          const p = selectedCategories.find(c => c.id === parent)
+          const p = selectedCategories.find(c => c === parent)
 
           if (p) {
-            const mainCategories = this.getMainCategories(p.id).filter(c => c.id !== id)
+            const mainCategories = this.getMainCategories(p)
+              .filter(c => c.id !== id)
+              .map(c => c.id)
+
             this.selectedCategories = [
               ...categories,
               ...mainCategories
@@ -147,6 +177,9 @@ export default {
           id: c.id
         }))
     }
+  },
+  updated() {
+    console.debug('category selector updated')
   }
 }
 

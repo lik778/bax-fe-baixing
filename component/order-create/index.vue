@@ -11,13 +11,18 @@
             v-model="newOrder.adId" />
         </el-form-item>
         <el-form-item label="城市">
-          <bax-select :options="allAreas" multiple
-            v-model="newOrder.cities" />
+          <span>
+            {{ newOrder.cities.join(', ') }}
+          </span>
+          <i class="el-icon-plus"
+            @click="areaDialogVisible = true" />
         </el-form-item>
         <el-form-item label="类目">
-          <bax-select :options="allCategories" multiple
-            v-model="newOrder.categories">
-          </bax-select>
+          <span>
+            {{ newOrder.categories.join(', ') }}
+          </span>
+          <i class="el-icon-plus"
+            @click="categoryDialogVisible = true" />
         </el-form-item>
         <el-form-item label="时段">
           <el-date-picker type="date" placeholder="上线时间"
@@ -58,12 +63,14 @@
       </el-form>
     </main>
     <category-selector :all-categories="allCategories"
+      :categories="newOrder.categories"
       :visible="categoryDialogVisible"
-      @success="categoryDialogVisible = false"
+      @ok="onChangeOrderCategories"
       @cancel="categoryDialogVisible = false" />
     <area-selector :all-areas="allAreas"
+      :areas="newOrder.cities"
       :visible="areaDialogVisible"
-      @success="areaDialogVisible = false"
+      @ok="onChangeOrderAreas"
       @cancel="areaDialogVisible = false" />
     <create-user :visible="showCreateUserDialog"
       :all-roles="allRoles"
@@ -197,6 +204,14 @@ export default {
     empty() {
       this.newOrder = clone(emptyOrder)
       clearAdPrice()
+    },
+    onChangeOrderCategories(v) {
+      this.categoryDialogVisible = false
+      this.newOrder.categories = v
+    },
+    onChangeOrderAreas(v) {
+      this.areaDialogVisible = false
+      this.newOrder.cities = v
     },
     async queryAdPrice(newOrder) {
       const {

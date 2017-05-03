@@ -48,6 +48,7 @@ const specialCities = [
   'chongqing'
 ]
 
+import isequal from 'lodash.isequal'
 import clone from 'clone'
 
 export default {
@@ -57,6 +58,11 @@ export default {
       type: Array,
       required: true
     },
+    areas: {
+      type: Array,
+      required: true,
+      default: () => []
+    },
     visible: {
       type: Boolean,
       required: true
@@ -64,7 +70,7 @@ export default {
   },
   data() {
     return {
-      selectedAreas: []
+      selectedAreas: this.areas
     }
   },
   methods: {
@@ -218,7 +224,7 @@ export default {
         if (type === 'add') {
           this.selectedAreas = [
             ...selectedAreas.filter(a => {
-              return !belongToProvince(a, id)
+              return !this.belongToProvince(a, id)
             }),
             id
           ]
@@ -331,6 +337,9 @@ export default {
           areas: this.getSubAreas(a.name)
         }))
     }
+  },
+  updated() {
+    console.debug('area selector updated')
   }
 }
 
