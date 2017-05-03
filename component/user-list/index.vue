@@ -4,7 +4,8 @@
     <topbar :userInfo="userInfo">
       <label slot="title">客户管理</label>
     </topbar>
-    <user-header @create-user="showCreateUserDialog = true"
+    <user-header v-if="allowAddUser"
+      @create-user="showCreateUserDialog = true"
       :query="query" />
     <user-list :users="users" :all-roles="allRoles" :query="query" />
     <create-user :visible="showCreateUserDialog"
@@ -22,6 +23,11 @@ import Topbar from 'com/topbar'
 import UserList from './list'
 
 import store from './store'
+
+import {
+  // allowQueryUsers
+  allowAddUser // 目前: 两者权限一样
+} from 'constant/role'
 
 import {
   getUsers
@@ -50,6 +56,11 @@ export default {
     UserHeader,
     UserList,
     Topbar
+  },
+  computed: {
+    allowAddUser() {
+      return allowAddUser(this.userInfo.roles)
+    }
   },
   methods: {
     async onCreateUser() {

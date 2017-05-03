@@ -48,7 +48,7 @@
         <el-form-item v-if="isOperator || isBxSales" label="广告客户">
           <span>
             <user-selector v-model="newOrder.userId" clearable />
-            <i class="el-icon-plus"
+            <i v-if="allowAddUser" class="el-icon-plus"
               @click="showCreateUserDialog = true" />
           </span>
         </el-form-item>
@@ -111,6 +111,10 @@ import store from './store'
 import {
   sspOrderTypeOpts
 } from 'constant/order'
+
+import {
+  allowAddUser
+} from 'constant/role'
 
 import {
   toTimestamp,
@@ -191,6 +195,9 @@ export default {
       const { roles = [] } = userInfo
 
       return roles.map(r => r.nameEn)
+    },
+    allowAddUser() {
+      return allowAddUser(this.currentRoles)
     },
     isOperator() {
       return this.currentRoles.includes('NORMAL_OPERATOR')
