@@ -14,7 +14,12 @@
       </el-table-column>
       <el-table-column label="状态">
         <template scope="s">
-          <span>{{ s.row.status | adItemStatus }}</span>
+          <el-tooltip v-if="s.row.rejectReason"
+            effect="dark" placement="top"
+            :content="s.row.rejectReason">
+            <span>{{ s.row.status | adItemStatus }}</span>
+          </el-tooltip>
+          <span v-else>{{ s.row.status | adItemStatus }}</span>
         </template>
       </el-table-column>
       <el-table-column label="区域"
