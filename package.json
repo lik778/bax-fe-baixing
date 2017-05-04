@@ -27,7 +27,8 @@
     "vue-clipboard2": "0.0.6",
     "vue-duo": "1.0.0",
     "vue-router": "2.3.0",
-    "vue-rx": "3.0.0"
+    "vue-rx": "3.0.0",
+    "whatwg-fetch": "2.0.3"
   },
   "devDependencies": {
     "babel-core": "6",

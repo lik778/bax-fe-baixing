@@ -1,4 +1,6 @@
 
+import 'whatwg-fetch'
+
 import { Message } from 'element-ui'
 import { redirectTo } from 'utils'
 import Fetch from 'fetch.io'
