@@ -45,6 +45,10 @@
             @click="passAdItem(s.row.id)">
             通过
           </el-button>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作">
+        <template scope="s">
           <el-button v-if="s.row.itemType === 0" type="text" size="small"
             @click="showAddAdItemDialog(s.row.id, s.row)">
             新增投放
