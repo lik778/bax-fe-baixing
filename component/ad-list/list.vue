@@ -67,12 +67,22 @@
           </el-button>
         </template>
       </el-table-column>
-      <el-table-column label="操作" v-if="allowAddAdItem">
+      <el-table-column label="操作" v-if="allowAddAdItem || allowUpdateMaterial">
         <template scope="s">
-          <el-button v-if="s.row.itemType === 0" type="text" size="small"
-            @click="showAddAdItemDialog(s.row.id, s.row)">
-            新增投放
-          </el-button>
+          <div>
+            <el-button v-if="s.row.itemType === 0"
+              type="text" size="small"
+              @click="showAddAdItemDialog(s.row.id, s.row)">
+              新增投放
+            </el-button>
+          </div>
+          <div>
+            <el-button v-if="allowUpdateMaterial && s.row.materialId"
+              type="text" size="small"
+              @click="showAddMaterialDialog(s.row.id)">
+              修改物料
+            </el-button>
+          </div>
         </template>
       </el-table-column>
     </el-table>
@@ -112,6 +122,7 @@ import {
 } from 'util/meta'
 
 import {
+  allowUpdateMaterial,
   allowAddMaterial,
   allowAddAdItem,
   allowVerifyAd
@@ -175,11 +186,14 @@ export default {
       return (this.userInfo.roles || [])
         .map(r => r.nameEn)
     },
+    allowUpdateMaterial() {
+      return allowUpdateMaterial(this.userInfo.roles)
+    },
     allowAddMaterial() {
       return allowAddMaterial(this.userInfo.roles)
     },
     allowAddAdItem() {
-      return allowAddAdItem(this.userInfo.role)
+      return allowAddAdItem(this.userInfo.roles)
     },
     allowVerify() {
       return allowVerifyAd(this.userInfo.roles)
