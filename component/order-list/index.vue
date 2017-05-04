@@ -4,7 +4,7 @@
     <topbar :userInfo="userInfo">
       <label slot="title">订单管理</label>
     </topbar>
-    <order-header :query="query" />
+    <order-header :userInfo="userInfo" :query="query" />
     <order-list :orders="orders" :query="query" />
   </div>
 </template>

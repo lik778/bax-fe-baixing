@@ -5,24 +5,90 @@
 
 const isArray = Array.isArray
 
+// order
+
+export function allowQueryOrders(roles) {
+  const currentRoles = normalizeRoles(roles)
+
+  return checkRoles(currentRoles, [
+    'AGENT_ACCOUNTING',
+    'AGENT_SALES',
+    'NORMAL_OPERATOR',
+    'BAIXING_SALES',
+    'BAIXING_USER'
+  ])
+}
+
+export function allowAddOrder(roles) {
+  const currentRoles = normalizeRoles(roles)
+
+  return checkRoles(currentRoles, [
+    'AGENT_ACCOUNTING',
+    'NORMAL_OPERATOR',
+    'BAIXING_SALES'
+  ])
+}
+
+// user
+
 export function allowAddUser(roles) {
   const currentRoles = normalizeRoles(roles)
 
-  return currentRoles.includes('AGENT_ACCOUNTING') ||
-    currentRoles.includes('AGENT_SALES') ||
-    currentRoles.includes('NORMAL_OPERATOR') ||
-    currentRoles.includes('BAIXING_SALES')
+  return checkRoles(currentRoles, [
+    'AGENT_ACCOUNTING',
+    'AGENT_SALES',
+    'NORMAL_OPERATOR',
+    'BAIXING_SALES'
+  ])
 }
 
 export function allowQueryUsers(roles) {
   const currentRoles = normalizeRoles(roles)
 
-  return currentRoles.includes('AGENT_ACCOUNTING') ||
-    currentRoles.includes('AGENT_SALES') ||
-    currentRoles.includes('NORMAL_OPERATOR') ||
-    currentRoles.includes('BAIXING_SALES')
+  return checkRoles(currentRoles, [
+    'AGENT_ACCOUNTING',
+    'AGENT_SALES',
+    'NORMAL_OPERATOR',
+    'BAIXING_SALES'
+  ])
 }
 
+// material
+
+export function allowAddMaterial(roles) {
+  const currentRoles = normalizeRoles(roles)
+
+  return checkRoles(currentRoles, [
+    'AGENT_SALES',
+    'NORMAL_OPERATOR',
+    'BAIXING_SALES',
+    'BAIXING_USER'
+  ])
+}
+
+export function allowQueryMaterials(roles) {
+  const currentRoles = normalizeRoles(roles)
+
+  return checkRoles(currentRoles, [
+    'AGENT_SALES',
+    'NORMAL_OPERATOR',
+    'BAIXING_SALES',
+    'BAIXING_USER'
+  ])
+}
+
+export function allowUpdateMaterial(roles) {
+  const currentRoles = normalizeRoles(roles)
+
+  return checkRoles(currentRoles, [
+    'AGENT_SALES',
+    'NORMAL_OPERATOR',
+    'BAIXING_SALES',
+    'BAIXING_USER'
+  ])
+}
+
+// ad
 
 export function allowVerifyAd(roles) {
   const currentRoles = normalizeRoles(roles)
@@ -46,4 +112,17 @@ function normalizeRoles(roles) {
 
     return r.nameEn
   })
+}
+
+function checkRoles(currentRoles, validRoles) {
+  let valid = false
+
+  for (let r of validRoles) {
+    if (currentRoles.includes(r)) {
+      valid = true
+      break
+    }
+  }
+
+  return valid
 }

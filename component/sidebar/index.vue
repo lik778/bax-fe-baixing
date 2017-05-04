@@ -15,17 +15,17 @@
               广告投放
             </router-link>
           </el-menu-item>
-          <el-menu-item index="1-2">
+          <el-menu-item index="1-2" v-if="allowQueryMaterials">
             <router-link :to="{ name: 'material-list' }" tag="p">
               物料管理
             </router-link>
           </el-menu-item>
-          <el-menu-item index="1-3">
+          <el-menu-item index="1-3" v-if="allowQueryOrders">
             <router-link :to="{ name: 'order-list' }" tag="p">
               订单管理
             </router-link>
           </el-menu-item>
-          <el-menu-item index="1-4">
+          <el-menu-item index="1-4" v-if="allowQueryUsers">
             <router-link :to="{ name: 'user-list' }" tag="p">
               客户管理
             </router-link>
@@ -49,8 +49,31 @@
 
 <script>
 
+import {
+  allowQueryMaterials,
+  allowQueryOrders,
+  allowQueryUsers
+} from 'constant/role'
+
 export default {
-  name: 'sidebar'
+  name: 'sidebar',
+  props: {
+    userInfo: {
+      type: Object,
+      required: true
+    }
+  },
+  computed: {
+    allowQueryMaterials() {
+      return allowQueryMaterials(this.userInfo.roles)
+    },
+    allowQueryOrders() {
+      return allowQueryOrders(this.userInfo.roles)
+    },
+    allowQueryUsers() {
+      return allowQueryUsers(this.userInfo.roles)
+    }
+  }
 }
 
 </script>

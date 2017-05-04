@@ -1,7 +1,7 @@
 
 <template>
   <section class="order-header">
-    <div>
+    <div v-if="allowAddOrder">
       <span />
       <span>
         <el-button type="primary">
@@ -42,6 +42,10 @@ import { orderStatusOpts } from 'constant/order'
 import BaxSelect from 'com/common/select'
 
 import {
+  allowAddOrder
+} from 'constant/role'
+
+import {
   getOrders
 } from './action'
 
@@ -51,6 +55,10 @@ export default {
     BaxSelect
   },
   props: {
+    userInfo: {
+      type: Object,
+      required: true
+    },
     query: {
       type: Object,
       required: true
@@ -66,6 +74,11 @@ export default {
   watch: {
     'query.orderStatus': async function(v, p) {
       await this.queryOrders(v, p)
+    }
+  },
+  computed: {
+    allowAddOrder() {
+      return allowAddOrder(this.userInfo.roles)
     }
   },
   methods: {
@@ -90,8 +103,8 @@ export default {
 
 .order-header {
   @mixin top-filter;
+  padding: 10px 0 20px;
 
-  height: 160px;
   width: 800px;
   padding-top: 10px;
 

@@ -1,7 +1,7 @@
 
 <template>
   <content>
-    <sidebar />
+    <sidebar :user-info="currentUser" />
     <router-view :userInfo="currentUser"
       :allCategories="allCategories"
       :allAreas="allAreas"

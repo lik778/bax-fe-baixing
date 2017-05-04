@@ -23,14 +23,16 @@
         :formatter="formatterCategory" />
       <el-table-column label="物料">
         <template scope="s">
-          <el-button type="text" size="small"
-            v-if="!s.row.materialId"
+          <el-button v-if="allowAddMaterial && !s.row.materialId"
+            type="text" size="small"
             @click="showAddMaterialDialog(s.row.id)">
             上传物料
           </el-button>
-          <img class="m-img" v-else-if="s.row.material.imgUrl"
-            v-bind:src="s.row.material.imgUrl" />
-          <span v-else>{{ s.row.material.content }}</span>
+
+          <img class="m-img"
+            v-if="s.row.material && s.row.material.imgUrl"
+            v-bind:src="s.row.material.imgUrl"
+            v-bind:alt="s.row.material.content" />
         </template>
       </el-table-column>
       <el-table-column label="审核" v-if="allowVerify">
@@ -61,7 +63,8 @@
     <reject-ad-reason :visible="addRejectReasonDialogVisible"
       @hide="addRejectReasonDialogVisible = false"
       @success="rejectAdItem" />
-    <add-material :materials="materials" :itemId="currentItemId"
+    <add-material v-if="allowAddMaterial"
+      :materials="materials" :itemId="currentItemId"
       :visible="addMaterialDialogVisible"
       @hide="addMaterialDialogVisible = false"
       @success="onAddMaterialSuccess" />
@@ -91,6 +94,7 @@ import {
 } from 'util/meta'
 
 import {
+  allowAddMaterial,
   allowVerifyAd
 } from 'constant/role'
 
@@ -148,6 +152,9 @@ export default {
     }
   },
   computed: {
+    allowAddMaterial() {
+      return allowAddMaterial(this.userInfo.roles)
+    },
     allowVerify() {
       return allowVerifyAd(this.userInfo.roles)
     }
