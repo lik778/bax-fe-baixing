@@ -165,6 +165,7 @@ export default {
       await getAdItems()
     },
     showRejectReasonDialog(id) {
+      this.currentItem = {}
       this.currentItemId = id
       this.addRejectReasonDialogVisible = true
     },
@@ -176,6 +177,7 @@ export default {
     },
     showAddMaterialDialog(id) {
       this.addMaterialDialogVisible = true
+      this.currentItem = {}
       this.currentItemId = id
     },
     async onCurrentChange({offset}) {
