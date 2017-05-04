@@ -59,6 +59,10 @@ import Log from './log'
 import store from './store'
 
 import {
+  allowGetOrderPayUrl
+} from 'constant/role'
+
+import {
   toHumanTime,
   centToYuan,
   commafy
@@ -98,6 +102,9 @@ export default {
     }
   },
   computed: {
+    allowGetOrderPayUrl() {
+      return allowGetOrderPayUrl(this.userInfo.roles)
+    },
     unpaied() {
       const { orderInfo } = this
       return orderInfo && orderInfo.order && orderInfo.order.status === 0
@@ -115,9 +122,12 @@ export default {
         getOrderLogs(orderId)
       ])
 
-      console.warn('TODO - role 限制')
+      if (!this.allowGetOrderPayUrl) {
+        return
+      }
 
       if (info && info.order && info.order.status === 0) {
+
         const url = await getOrderPayUrl(orderId)
         this.payUrl = url
       }

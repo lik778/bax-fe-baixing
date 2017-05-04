@@ -7,6 +7,15 @@ const isArray = Array.isArray
 
 // order
 
+export function allowGetOrderPayUrl(roles) {
+  const currentRoles = normalizeRoles(roles)
+
+  return checkRoles(currentRoles, [
+    'NORMAL_OPERATOR',
+    'BAIXING_SALES'
+  ])
+}
+
 export function allowQueryOrders(roles) {
   const currentRoles = normalizeRoles(roles)
 
@@ -89,6 +98,16 @@ export function allowUpdateMaterial(roles) {
 }
 
 // ad
+
+export function allowAddAdItem(roles) {
+  const currentRoles = normalizeRoles(roles)
+
+  return checkRoles(currentRoles, [
+    'NORMAL_OPERATOR',
+    'BAIXING_SALES',
+    'AGENT_SALES'
+  ])
+}
 
 export function allowVerifyAd(roles) {
   const currentRoles = normalizeRoles(roles)

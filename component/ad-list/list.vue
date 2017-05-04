@@ -49,7 +49,7 @@
           </el-button>
         </template>
       </el-table-column>
-      <el-table-column label="操作">
+      <el-table-column label="操作" v-if="allowAddAdItem">
         <template scope="s">
           <el-button v-if="s.row.itemType === 0" type="text" size="small"
             @click="showAddAdItemDialog(s.row.id, s.row)">
@@ -95,6 +95,7 @@ import {
 
 import {
   allowAddMaterial,
+  allowAddAdItem,
   allowVerifyAd
 } from 'constant/role'
 
@@ -154,6 +155,9 @@ export default {
   computed: {
     allowAddMaterial() {
       return allowAddMaterial(this.userInfo.roles)
+    },
+    allowAddAdItem() {
+      return allowAddAdItem(this.userInfo.role)
     },
     allowVerify() {
       return allowVerifyAd(this.userInfo.roles)
