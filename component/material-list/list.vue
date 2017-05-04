@@ -14,6 +14,16 @@
         </template>
       </el-table-column>
       <el-table-column prop="slot" label="规格" />
+      <el-table-column label="链接">
+        <template scope="s">
+          <a target="_blank"
+            v-if="s.row.link"
+            v-bind:href="s.row.link">
+            点击查看
+          </a>
+          <span v-else>暂无</span>
+        </template>
+      </el-table-column>
       <el-table-column prop="userName" label="客户" />
       <el-table-column label="操作">
         <template scope="s">
