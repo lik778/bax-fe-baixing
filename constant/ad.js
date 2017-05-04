@@ -12,7 +12,7 @@ export const adType = {
 }
 
 export const adStatus = {
-  '-10': '审核失败',
+  '-10': '审核未通过',
   '-1': '下线',
   '-2': '未支付',
   '0': '等待产品审核',
