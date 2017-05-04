@@ -18,7 +18,8 @@
         <el-input v-model="material.slot" />
       </el-form-item>
       <el-form-item label="链接" required>
-        <el-input v-model="material.link" />
+        <el-input v-model.trim="material.link"
+          placeholder="如: http://baixing.com" />
       </el-form-item>
       <el-form-item label="上传物料" required>
         <uploader @success="onUploadSuccess" />
@@ -37,6 +38,9 @@
 
 import Uploader from 'com/common/uploader'
 import BaxSelect from 'com/common/select'
+
+import { Message } from 'element-ui'
+import clone from 'clone'
 
 import {
   addAdItemMaterial,
@@ -93,6 +97,8 @@ export default {
   methods: {
     onSelectMaterial(v) {
       if (!v) {
+        // clear
+        this.material = clone(emptyMaterial)
         return
       }
 
@@ -131,10 +137,24 @@ export default {
       } = this
 
       if (createMaterial) {
-        // TODO - 字段检测
+        if (material.link) {
+          if (!material.link.startsWith('http://') &&
+            !material.link.startsWith('https://')) {
+              return Message.error('请填写正确的链接')
+            }
+        }
+
+        if (!material.name) {
+          return Message.error('请填写物料名称')
+        }
+
         await addAdItemMaterial(itemId, material)
         await getMaterials() // 刷新物料列表 供 筛选
       } else {
+        if (!material.id) {
+          return Message.error('请选择或上传物料')
+        }
+
         await setAdItemMaterial(itemId, material.id)
       }
 
