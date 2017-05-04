@@ -9,6 +9,7 @@
     <user-list :users="users" :all-roles="allRoles" :query="query" />
     <create-user :visible="showCreateUserDialog"
       :all-roles="allRoles"
+      :user-info="userInfo"
       @created="onCreateUser"
       @hide="showCreateUserDialog = false" />
   </div>

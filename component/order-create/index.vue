@@ -86,6 +86,7 @@
       @cancel="areaDialogVisible = false" />
     <create-user :visible="showCreateUserDialog"
       :all-roles="allRoles"
+      :user-info="userInfo"
       @hide="showCreateUserDialog = false" />
   </div>
 </template>

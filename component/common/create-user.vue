@@ -43,6 +43,10 @@ const emptyUser = {
 export default {
   name: 'create-user-dialog',
   props: {
+    userInfo: {
+      type: Object,
+      required: true
+    },
     visible: {
       type: Boolean,
       required: true
@@ -62,10 +66,29 @@ export default {
   },
   computed: {
     roleOpts() {
-      return this.allRoles.map(r => ({
-        label: r.name,
-        value: r.id
-      }))
+      const roles = (this.userInfo.roles || [])
+        .map(r => r.nameEn)
+
+      return this.allRoles
+        .filter(r => {
+          if (roles.includes('NORMAL_OPERATOR')) {
+            return true
+          }
+
+          if (roles.includes('BAIXING_SALES')) {
+            return r.nameEn === 'BAIXING_USER'
+          }
+
+          if (roles.includes('AGENT_ACCOUNTING')) {
+            return r.nameEn === 'AGENT_SALES'
+          }
+
+          return false
+        })
+        .map(r => ({
+          label: r.name,
+          value: r.id
+        }))
     }
   },
   methods: {
