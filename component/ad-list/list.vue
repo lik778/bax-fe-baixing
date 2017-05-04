@@ -37,7 +37,7 @@
         <template scope="s">
           <el-button v-if="s.row.status === 0"
             type="text" size="small"
-            @click="rejectAdItem(s.row.id)">
+            @click="showRejectReasonDialog(s.row.id)">
             拒绝
           </el-button>
           <el-button v-if="s.row.status === 0"
@@ -54,6 +54,9 @@
     </el-table>
     <bax-pagination :options="query"
       @current-change="onCurrentChange" />
+    <reject-ad-reason :visible="addRejectReasonDialogVisible"
+      @hide="addRejectReasonDialogVisible = false"
+      @success="rejectAdItem" />
     <add-material :materials="materials" :itemId="currentItemId"
       :visible="addMaterialDialogVisible"
       @hide="addMaterialDialogVisible = false"
@@ -72,6 +75,7 @@
 <script>
 
 import BaxPagination from 'com/common/pagination'
+import RejectAdReason from './reject-ad-reason'
 import AddMaterial from './add-material'
 import AddAdItem from './add-ad-item'
 
@@ -98,6 +102,7 @@ import {
 export default {
   name: 'ad-list',
   components: {
+    RejectAdReason,
     BaxPagination,
     AddMaterial,
     AddAdItem
@@ -130,8 +135,10 @@ export default {
   },
   data() {
     return {
+      addRejectReasonDialogVisible: false,
       addMaterialDialogVisible: false,
       addAdItemDialogVisible: false,
+
       currentItemId: 0,
       currentItem: {}
     }
@@ -157,6 +164,10 @@ export default {
     async onAddAdItemSuccess() {
       await getAdItems()
     },
+    showRejectReasonDialog(id) {
+      this.currentItemId = id
+      this.addRejectReasonDialogVisible = true
+    },
     showAddAdItemDialog(id, item) {
       this.addAdItemDialogVisible = true
 
@@ -175,8 +186,13 @@ export default {
 
       await getAdItems(q)
     },
-    async rejectAdItem(id) {
-      await verifyAdItem(id, 'failed')
+    async rejectAdItem(reason) {
+      const { currentItemId } = this
+
+      await verifyAdItem(currentItemId, 'failed', {
+        reason
+      })
+
       await getAdItems()
     },
     async passAdItem(gid) {

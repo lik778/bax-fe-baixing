@@ -63,7 +63,7 @@ export async function setAdItemMaterial(itemId, materialId) {
     .json()
 }
 
-export async function verifyAdItem(id, status) {
+export async function verifyAdItem(id, status, opts = {}) {
   if (status === 'pass') {
     return await api
       .post(`/ad/item/${id}/verify/pass`)
@@ -74,7 +74,7 @@ export async function verifyAdItem(id, status) {
   // failed
   return await api
     .post(`/ad/item/${id}/verify/failed`)
-    .send({})
+    .send(reverseCamelcase(opts))
     .json()
 }
 

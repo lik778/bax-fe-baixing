@@ -28,6 +28,6 @@ export const addAdItemMaterial = createAction((itemId, material) => {
   return aapi.addAdItemMaterial(itemId, material)
 })
 
-export const verifyAdItem = createAction((id, status) => {
-  return aapi.verifyAdItem(id, status)
+export const verifyAdItem = createAction((id, status, opts) => {
+  return aapi.verifyAdItem(id, status, opts)
 })
