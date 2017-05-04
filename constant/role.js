@@ -7,6 +7,14 @@ const isArray = Array.isArray
 
 // order
 
+export function allowPayOrder(roles) {
+  const currentRoles = normalizeRoles(roles)
+
+  return checkRoles(currentRoles, [
+    'AGENT_ACCOUNTING'
+  ])
+}
+
 export function allowGetOrderPayUrl(roles) {
   const currentRoles = normalizeRoles(roles)
 

@@ -132,6 +132,8 @@ import {
 
 const tomorrow = moment().add(1, 'days').format('YYYY-MM-DD')
 
+const oneday = 24 * 60 * 60
+
 const emptyOrder = {
   adId: '',
   sspOrderType: '',
@@ -287,7 +289,7 @@ export default {
 
       const data = {
         ...clone(newOrder),
-        offlineAt: toTimestamp(newOrder.offlineAt),
+        offlineAt: toTimestamp(newOrder.offlineAt) + oneday,
         onlineAt: toTimestamp(newOrder.onlineAt)
       }
 

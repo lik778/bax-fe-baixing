@@ -6,7 +6,8 @@
       <el-table-column label="订单状态" width="80">
         <template scope="s">
           <span>{{ s.row.order.status | orderStatus }}</span>
-          <el-button v-if="s.row.order.status === 0" size="mini"
+          <el-button v-if="allowPayOrder && (s.row.order.status === 0)"
+            size="mini"
             @click="pay(s.row.order.id)">
             付款
           </el-button>
@@ -47,6 +48,10 @@ import {
 } from 'constant/order'
 
 import {
+  allowPayOrder
+} from 'constant/role'
+
+import {
   getOrders,
   payOrder
 } from './action'
@@ -54,6 +59,10 @@ import {
 export default {
   name: 'order-list',
   props: {
+    userInfo: {
+      type: Object,
+      required: true
+    },
     orders: {
       type: Array,
       required: true
@@ -77,6 +86,11 @@ export default {
     },
     formatOrderType(row) {
       return sspOrderType[String(row.order.orderType)]
+    }
+  },
+  computed: {
+    allowPayOrder() {
+      return allowPayOrder(this.userInfo.roles)
     }
   },
   filters: {

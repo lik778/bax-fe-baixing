@@ -123,7 +123,7 @@ export default {
   computed: {
     adOpts() {
       return this.allAds.map(ad => ({
-        label: ad.id + ' ' + ad.slotCode,
+        label: ad.name || ad.slotCode,
         value: ad.id
       }))
     }
