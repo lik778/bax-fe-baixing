@@ -4,7 +4,7 @@
     <el-table :data="items" style="width: 100%">
       <el-table-column prop="name" label="名称" width="120" />
       <el-table-column prop="orderId" label="order id" width="120" />
-      <el-table-column prop="adId" label="adId" width="120" />
+      <el-table-column prop="ad.name" label="ad" width="120" />
       <el-table-column label="投放时间">
         <template scope="s">
           <span>{{ s.row.timeRange[0] | date }}</span>
