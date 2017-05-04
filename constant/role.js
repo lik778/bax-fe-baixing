@@ -120,7 +120,10 @@ export function allowAddAdItem(roles) {
 export function allowVerifyAd(roles) {
   const currentRoles = normalizeRoles(roles)
 
-  return currentRoles.includes('QA_OPERATOR')
+  return checkRoles(currentRoles, [
+    'QA_OPERATOR',
+    'DESIGN_QA_OPERATOR'
+  ])
 }
 
 /**

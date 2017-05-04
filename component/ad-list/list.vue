@@ -37,12 +37,12 @@
       </el-table-column>
       <el-table-column label="审核" v-if="allowVerify">
         <template scope="s">
-          <el-button v-if="s.row.status === 0"
+          <el-button v-if="allowVerifyAdItem(s.row.status)"
             type="text" size="small"
             @click="showRejectReasonDialog(s.row.id)">
             拒绝
           </el-button>
-          <el-button v-if="s.row.status === 0"
+          <el-button v-if="allowVerifyAdItem(s.row.status)"
             type="text" size="small"
             @click="passAdItem(s.row.id)">
             通过
@@ -153,6 +153,10 @@ export default {
     }
   },
   computed: {
+    currentRoles() {
+      return (this.userInfo.roles || [])
+        .map(r => r.nameEn)
+    },
     allowAddMaterial() {
       return allowAddMaterial(this.userInfo.roles)
     },
@@ -178,6 +182,17 @@ export default {
     },
     async onAddAdItemSuccess() {
       await getAdItems()
+    },
+    allowVerifyAdItem(status) {
+      if (status === 0) {
+        return this.currentRoles.includes('QA_OPERATOR')
+      }
+
+      if (status === 1) {
+        return this.currentRoles.includes('DESIGN_QA_OPERATOR')
+      }
+
+      return false
     },
     showRejectReasonDialog(id) {
       this.currentItem = {}
