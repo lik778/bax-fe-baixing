@@ -5,7 +5,7 @@
       <el-table-column prop="order.id" label="ID" width="120" />
       <el-table-column label="订单状态" width="80">
         <template scope="s">
-          <span>{{ s.row.order.status | orderStatus }}</span>
+          <span>{{ s.row.status | orderStatus }}</span>
           <el-button v-if="allowPayOrder && (s.row.order.status === 0)"
             size="mini"
             @click="pay(s.row.order.id)">

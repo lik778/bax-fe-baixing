@@ -10,7 +10,7 @@ const defaultQuery = {
   limit: 20,
   total: 0,
 
-  orderStatus: ''
+  status: '',
 }
 
 const store = createStore({

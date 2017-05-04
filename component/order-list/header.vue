@@ -15,7 +15,7 @@
       <span class="filter-item">
         <label>订单状态</label>
         <bax-select :options="orderStatusOpts" clearable
-          v-model="query.orderStatus" />
+          v-model="query.status" />
       </span>
       <span class="filter-item">
         <label>客户</label>
@@ -72,7 +72,7 @@ export default {
     }
   },
   watch: {
-    'query.orderStatus': async function(v, p) {
+    'query.status': async function(v, p) {
       await this.queryOrders(v, p)
     }
   },
