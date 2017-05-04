@@ -19,7 +19,7 @@
       </span>
       <span class="filter-item">
         <label>客户</label>
-        <el-input placeholder="请选择客户" />
+        <user-selector v-model="query.userId" clearable />
       </span>
     </div>
     <div>
@@ -39,6 +39,7 @@
 
 import { orderStatusOpts } from 'constant/order'
 
+import UserSelector from 'com/common/user-selector'
 import BaxSelect from 'com/common/select'
 
 import {
@@ -52,6 +53,7 @@ import {
 export default {
   name: 'order-header',
   components: {
+    UserSelector,
     BaxSelect
   },
   props: {
@@ -73,6 +75,9 @@ export default {
   },
   watch: {
     'query.status': async function(v, p) {
+      await this.queryOrders(v, p)
+    },
+    'query.userId': async function(v, p) {
       await this.queryOrders(v, p)
     }
   },

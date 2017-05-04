@@ -11,6 +11,7 @@ const defaultQuery = {
   total: 0,
 
   status: '',
+  userId: ''
 }
 
 const store = createStore({
