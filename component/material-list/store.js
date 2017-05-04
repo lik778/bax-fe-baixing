@@ -10,7 +10,9 @@ const defaultQuery = {
   limit: 20,
   total: 0,
 
-  name: ''
+  userId: '',
+  name: '',
+  slot: ''
 }
 
 const store = createStore({

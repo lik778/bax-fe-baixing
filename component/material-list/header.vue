@@ -8,7 +8,7 @@
       </span>
       <span class="filter-item">
         <label>规格</label>
-        <el-input placeholder="请选择规格" />
+        <el-input placeholder="请输入规格" v-model="query.slot" />
       </span>
     </div>
     <div>
@@ -18,13 +18,15 @@
       </span>
       <span class="filter-item">
         <label>客户</label>
-        <el-input placeholder="请选择客户" />
+        <user-selector v-model="query.userId" clearable />
       </span>
     </div>
   </section>
 </template>
 
 <script>
+
+import UserSelector from 'com/common/user-selector'
 
 import {
   getMaterials
@@ -38,8 +40,17 @@ export default {
       required: true
     }
   },
+  components: {
+    UserSelector
+  },
   watch: {
+    'query.userId': async function(v, p) {
+      await this.queryMaterialItems(v, p)
+    },
     'query.name': async function(v, p) {
+      await this.queryMaterialItems(v, p)
+    },
+    'query.slot': async function(v, p) {
       await this.queryMaterialItems(v, p)
     }
   },
