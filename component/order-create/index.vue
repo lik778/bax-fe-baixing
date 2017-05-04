@@ -273,7 +273,7 @@ export default {
 
       const opts = {
         startAt: toTimestamp(onlineAt),
-        endAt: toTimestamp(offlineAt),
+        endAt: toTimestamp(offlineAt) + oneday,
         categories: [...categories],
         cities: [...cities],
         adId
