@@ -34,10 +34,23 @@
             上传物料
           </el-button>
 
-          <img class="m-img"
-            v-if="s.row.material && s.row.material.imgUrl"
-            v-bind:src="s.row.material.imgUrl"
-            v-bind:alt="s.row.material.content" />
+          <a v-if="s.row.material && s.row.material.imgUrl"
+            v-bind:href="s.row.material.imgUrl"
+            target="_blank">
+            <img class="m-img"
+              v-bind:src="s.row.material.imgUrl"
+              v-bind:alt="s.row.material.content" />
+          </a>
+        </template>
+      </el-table-column>
+      <el-table-column label="链接">
+        <template scope="s">
+          <a target="_black"
+            v-if="s.row.material && s.row.material.link"
+            v-bind:href="s.row.material && s.row.material.link">
+            点击查看
+          </a>
+          <span v-else>暂无</span>
         </template>
       </el-table-column>
       <el-table-column label="审核" v-if="allowVerify">
