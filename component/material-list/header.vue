@@ -33,6 +33,7 @@ import UserSelector from 'com/common/user-selector'
 import clone from 'clone'
 
 import {
+  toHumanTime,
   toTimestamp
 } from 'utils'
 
@@ -49,6 +50,20 @@ export default {
     }
   },
   data() {
+    const {
+      createdAtFrom,
+      createdAtTo
+    } = this.query
+
+    if (createdAtFrom && createdAtTo) {
+      return {
+        timeRange:[
+          toHumanTime(createdAtFrom, 'YYYY-MM-DD'),
+          toHumanTime(createdAtTo, 'YYYY-MM-DD')
+        ]
+      }
+    }
+
     return {
       timeRange: []
     }
@@ -66,7 +81,7 @@ export default {
     'query.slot': async function(v, p) {
       await this.queryMaterialItems(v, p)
     },
-    'timeRange': async function(v) {
+    'timeRange': async function(v = []) {
       const [start, end] = v
 
       if (!start && !end) {

@@ -59,6 +59,18 @@ export default {
     BaxSelect
   },
   data() {
+    const range = this.query.timeRange || ''
+    const [s, e] = range.split(',')
+
+    if (s && e) {
+      return {
+        timeRange:[
+          toHumanTime(s, 'YYYY-MM-DD'),
+          toHumanTime(e, 'YYYY-MM-DD')
+        ]
+      }
+    }
+
     return {
       timeRange: []
     }
@@ -73,7 +85,7 @@ export default {
     'query.adId': async function(v, p) {
       await this.queryAdItems(v, p)
     },
-    'timeRange': async function(v) {
+    'timeRange': async function(v = []) {
       const [start, end] = v
 
       if (!start && !end) {

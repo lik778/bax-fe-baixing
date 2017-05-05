@@ -78,13 +78,36 @@ export default {
     }
   },
   data() {
-    return {
+    const allData = {
       orderStatusOpts: [
         ...orderStatusOpts
       ],
       createTimeRange: [],
       onlineTimeRange: []
     }
+
+    const {
+      createdAtFrom,
+      createdAtTo,
+      timeRange = ''
+    } = this.query
+
+    if (createdAtFrom && createdAtTo) {
+      allData.createTimeRange = [
+        toHumanTime(createdAtFrom, 'YYYY-MM-DD'),
+        toHumanTime(createdAtTo, 'YYYY-MM-DD')
+      ]
+    }
+
+    const [s, e] = timeRange.split(',')
+    if (s && e) {
+      allData.onlineTimeRange = [
+        toHumanTime(s, 'YYYY-MM-DD'),
+        toHumanTime(e, 'YYYY-MM-DD')
+      ]
+    }
+
+    return allData
   },
   watch: {
     'query.status': async function(v, p) {
@@ -93,7 +116,7 @@ export default {
     'query.userId': async function(v, p) {
       await this.queryOrders(v, p)
     },
-    'createTimeRange': async function(v) {
+    'createTimeRange': async function(v = []) {
       const [start, end] = v
 
       if (!start && !end) {
@@ -111,11 +134,11 @@ export default {
         await getOrders({
           ...clone(this.query),
           createdAtFrom: s,
-          createdAtTo: e,
+          createdAtTo: e
         })
       }
     },
-    'onlineTimeRange': async function(v) {
+    'onlineTimeRange': async function(v = []) {
       const [start, end] = v
 
       if (!start && !end) {
