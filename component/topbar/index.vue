@@ -23,7 +23,16 @@
       </el-dropdown>
     </span>
     <el-dialog title="修改密码" v-model="pwdDialogVisible" size="small">
-      <el-input type="password" placeholder="请输入新密码" v-model="newPassword" />
+      <el-form label-width="120px">
+        <el-form-item label="密码" required>
+          <el-input type='password' placeholder="请输入新密码"
+            v-model="newPassword" />
+        </el-form-item>
+        <el-form-item label="确认密码" required>
+          <el-input type='password' placeholder="请确认新密码"
+            v-model="confirmPassword" />
+        </el-form-item>
+      </el-form>
       <span slot="footer">
         <el-button @click="cancel">
           取消
@@ -37,7 +46,7 @@
 </template>
 
 <script>
-
+// TODO - split change password
 import { Message } from 'element-ui'
 import { redirectTo } from 'utils'
 
@@ -57,6 +66,7 @@ export default {
   data() {
     return {
       pwdDialogVisible: false,
+      confirmPassword: '',
       newPassword: ''
     }
   },
@@ -73,10 +83,18 @@ export default {
       }
     },
     async changePassword() {
-      const { userInfo, newPassword } = this
+      const {
+        confirmPassword,
+        newPassword,
+        userInfo
+      } = this
 
       if (!newPassword) {
         return Message.error('请输入新密码哟 !')
+      }
+
+      if (confirmPassword !== newPassword) {
+        return Message.error('两次输入的密码不一致哟 ~')
       }
 
       await updateUserInfo(userInfo.id, {
@@ -84,12 +102,18 @@ export default {
       })
 
       this.pwdDialogVisible = false
-      this.newPassword = ''
+
+      this.empty()
 
       Message.success('修改成功')
     },
+    empty() {
+      this.confirmPassword = ''
+      this.newPassword = ''
+    },
     cancel() {
       this.pwdDialogVisible = false
+      this.empty()
     },
     goBack() {
       window.history.back()
