@@ -12,6 +12,7 @@ const defaultQuery = {
   limit: 20,
   total: 0,
 
+  timeRange: '', // xxx,ooo
   customerId: '',
   orderId: '',
   adId: ''

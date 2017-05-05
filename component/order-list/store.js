@@ -10,6 +10,9 @@ const defaultQuery = {
   limit: 20,
   total: 0,
 
+  createdAtFrom: '',
+  createdAtTo: '',
+  timeRange: '',
   status: '',
   userId: ''
 }

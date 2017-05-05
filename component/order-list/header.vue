@@ -25,11 +25,15 @@
     <div>
       <span class="filter-item">
         <label>创建时间</label>
-        <el-date-picker type="date" placeholder="选择日期" />
+        <el-date-picker type="daterange" placeholder="选择日期"
+          format="yyyy-MM-dd"
+          v-model="createTimeRange" />
       </span>
       <span class="filter-item">
         <label>投放时间</label>
-        <el-date-picker type="date" placeholder="选择日期" />
+        <el-date-picker type="daterange" placeholder="选择日期"
+          format="yyyy-MM-dd"
+          v-model="onlineTimeRange" />
       </span>
     </div>
   </section>
@@ -41,6 +45,13 @@ import { orderStatusOpts } from 'constant/order'
 
 import UserSelector from 'com/common/user-selector'
 import BaxSelect from 'com/common/select'
+
+import clone from 'clone'
+
+import {
+  toHumanTime,
+  toTimestamp
+} from 'utils'
 
 import {
   allowAddOrder
@@ -70,7 +81,9 @@ export default {
     return {
       orderStatusOpts: [
         ...orderStatusOpts
-      ]
+      ],
+      createTimeRange: [],
+      onlineTimeRange: []
     }
   },
   watch: {
@@ -79,6 +92,48 @@ export default {
     },
     'query.userId': async function(v, p) {
       await this.queryOrders(v, p)
+    },
+    'createTimeRange': async function(v) {
+      const [start, end] = v
+
+      if (!start && !end) {
+        await getOrders({
+          ...clone(this.query),
+          createdAtFrom: '',
+          createdAtTo: ''
+        })
+        return
+      }
+
+      const s = toTimestamp(start, 'YYYY-MM-DD')
+      const e = toTimestamp(end, 'YYYY-MM-DD')
+      if (s && e && e > s) {
+        await getOrders({
+          ...clone(this.query),
+          createdAtFrom: s,
+          createdAtTo: e,
+        })
+      }
+    },
+    'onlineTimeRange': async function(v) {
+      const [start, end] = v
+
+      if (!start && !end) {
+        await getOrders({
+          ...clone(this.query),
+          timeRange: ''
+        })
+        return
+      }
+
+      const s = toTimestamp(start, 'YYYY-MM-DD')
+      const e = toTimestamp(end, 'YYYY-MM-DD')
+      if (s && e && e > s) {
+        await getOrders({
+          ...clone(this.query),
+          timeRange: s + ',' + e
+        })
+      }
     }
   },
   computed: {

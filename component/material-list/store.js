@@ -10,6 +10,8 @@ const defaultQuery = {
   limit: 20,
   total: 0,
 
+  createdAtFrom: '',
+  createdAtTo: '',
   userId: '',
   name: '',
   slot: ''

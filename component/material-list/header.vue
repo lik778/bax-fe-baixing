@@ -14,7 +14,9 @@
     <div>
       <span class="filter-item">
         <label>创建时间</label>
-        <el-date-picker type="date" placeholder="选择日期" />
+        <el-date-picker type="daterange" placeholder="选择日期"
+          format="yyyy-MM-dd"
+          v-model="timeRange" />
       </span>
       <span class="filter-item">
         <label>客户</label>
@@ -28,6 +30,12 @@
 
 import UserSelector from 'com/common/user-selector'
 
+import clone from 'clone'
+
+import {
+  toTimestamp
+} from 'utils'
+
 import {
   getMaterials
 } from './action'
@@ -38,6 +46,11 @@ export default {
     query: {
       type: Object,
       required: true
+    }
+  },
+  data() {
+    return {
+      timeRange: []
     }
   },
   components: {
@@ -52,6 +65,28 @@ export default {
     },
     'query.slot': async function(v, p) {
       await this.queryMaterialItems(v, p)
+    },
+    'timeRange': async function(v) {
+      const [start, end] = v
+
+      if (!start && !end) {
+        await getMaterials({
+          ...clone(this.query),
+          createdAtFrom: '',
+          createdAtTo: ''
+        })
+        return
+      }
+
+      const s = toTimestamp(start, 'YYYY-MM-DD')
+      const e = toTimestamp(end, 'YYYY-MM-DD')
+      if (s && e && e > s) {
+        await getMaterials({
+          ...clone(this.query),
+          createdAtFrom: s,
+          createdAtTo: e,
+        })
+      }
     }
   },
   methods: {

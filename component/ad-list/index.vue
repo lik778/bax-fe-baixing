@@ -50,7 +50,7 @@ export default {
   },
   async mounted() {
     await Promise.all([
-      getAdItems(),
+      getAdItems({...this.query}),
       getAds()
     ])
   }

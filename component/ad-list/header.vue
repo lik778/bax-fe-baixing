@@ -17,7 +17,9 @@
     <div>
       <span class="filter-item">
         <label>上线时间</label>
-        <el-date-picker type="date" placeholder="选择日期" />
+        <el-date-picker type="daterange" placeholder="选择日期"
+          format="yyyy-MM-dd"
+          v-model="timeRange" />
       </span>
       <span class="filter-item">
         <label>客户</label>
@@ -32,6 +34,11 @@
 
 import UserSelector from 'com/common/user-selector'
 import BaxSelect from 'com/common/select'
+
+import {
+  toHumanTime,
+  toTimestamp
+} from 'utils'
 
 import { getAdItems } from './action'
 
@@ -51,6 +58,11 @@ export default {
     UserSelector,
     BaxSelect
   },
+  data() {
+    return {
+      timeRange: []
+    }
+  },
   watch: {
     'query.customerId': async function(v, p) {
       await this.queryAdItems(v, p)
@@ -60,6 +72,28 @@ export default {
     },
     'query.adId': async function(v, p) {
       await this.queryAdItems(v, p)
+    },
+    'timeRange': async function(v) {
+      const [start, end] = v
+
+      if (!start && !end) {
+        await getAdItems({
+          ...this.query,
+          timeRange: ''
+        })
+        return
+      }
+
+      const s = toTimestamp(start, 'YYYY-MM-DD')
+      const e = toTimestamp(end, 'YYYY-MM-DD')
+      if (s && e && e > s) {
+        const timeRange = s + ',' + e
+
+        await getAdItems({
+          ...this.query,
+          timeRange
+        })
+      }
     }
   },
   methods: {
