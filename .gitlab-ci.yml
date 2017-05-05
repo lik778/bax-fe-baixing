@@ -25,7 +25,7 @@ release:
     - tags
     - /^v.*$/
   script:
-    - export BAX_FE_CURRENT=$BAX:$CI_BUILD_REF_NAME
+    - export BAX_FE_CURRENT=$BAX_FE:$CI_BUILD_REF_NAME
     - docker pull $BAX_FE_REF
     - docker tag $BAX_FE_REF $BAX_FE_LATEST
     - docker tag $BAX_FE_REF $BAX_FE_CURRENT
