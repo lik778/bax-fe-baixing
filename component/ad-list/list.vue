@@ -204,7 +204,7 @@ export default {
       return adStatus[String(s)]
     },
     date(v) {
-      return toHumanTime(v, 'MM月-DD日')
+      return toHumanTime(v, 'MM月DD日')
     },
     toHumanTime
   },
