@@ -1,6 +1,6 @@
 
 <template>
-  <content>
+  <content v-loading.fullscreen="fullscreenLoading">
     <sidebar :user-info="currentUser" />
     <router-view :userInfo="currentUser"
       :allCategories="allCategories"
@@ -15,6 +15,8 @@ import Sidebar from './sidebar'
 
 import store from './store'
 
+import es from 'base/es'
+
 import {
   getCurrentUser,
   getCategories,
@@ -24,12 +26,29 @@ import {
 
 export default {
   name: 'bax',
+  store,
   components: {
     Sidebar
   },
   data() {
     return {
+      pending: 0
     }
+  },
+  computed: {
+    fullscreenLoading() {
+      return this.pending > 0
+    }
+  },
+  async beforeMount() {
+    // 全局只 mount 一次, 无需 remove listener
+    es.addListener('http fetch start', () => {
+      this.pending = this.pending + 1
+    })
+
+    es.addListener('http fetch end', () => {
+      this.pending = this.pending - 1
+    })
   },
   async mounted() {
     await Promise.all([
@@ -38,8 +57,7 @@ export default {
       getAreas(),
       getRoles()
     ])
-  },
-  store
+  }
 }
 
 </script>
@@ -60,6 +78,18 @@ content {
   & > div:last-child {
     flex-grow: 1;
   }
+}
+
+</style>
+
+<style>
+
+.el-loading-mask {
+  background-color: unset;
+  z-index: unset;
+  top: 240px;
+  bottom: unset;
+  height: 100px;
 }
 
 </style>

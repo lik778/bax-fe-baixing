@@ -7,8 +7,16 @@ import Fetch from 'fetch.io'
 
 import { baxApiHost } from 'config'
 
+import es from 'base/es'
+
 export const api = new Fetch({
   prefix: baxApiHost,
+  beforeRequest() {
+    es.emit('http fetch start')
+  },
+  afterResponse() {
+    es.emit('http fetch end')
+  },
   afterJSON(body) {
     if (body.errors) {
       Message.error('出错啦')
