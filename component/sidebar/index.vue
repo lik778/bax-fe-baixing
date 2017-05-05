@@ -10,7 +10,7 @@
           <template slot="title">
             <i class="el-icon-message" />投放管理
           </template>
-          <el-menu-item index="1-1">
+          <el-menu-item index="1-1" v-if="allowQueryAdItems">
             <router-link :to="{ name: 'ad-list' }" tag="p">
               广告投放
             </router-link>
@@ -51,6 +51,7 @@
 
 import {
   allowQueryMaterials,
+  allowQueryAdItems,
   allowQueryOrders,
   allowQueryUsers
 } from 'constant/role'
@@ -66,6 +67,9 @@ export default {
   computed: {
     allowQueryMaterials() {
       return allowQueryMaterials(this.userInfo.roles)
+    },
+    allowQueryAdItems() {
+      return allowQueryAdItems(this.userInfo.roles)
     },
     allowQueryOrders() {
       return allowQueryOrders(this.userInfo.roles)

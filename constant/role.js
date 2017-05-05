@@ -107,6 +107,19 @@ export function allowUpdateMaterial(roles) {
 
 // ad
 
+export function allowQueryAdItems(roles) {
+  const currentRoles = normalizeRoles(roles)
+
+  return checkRoles(currentRoles, [
+    'AGENT_SALES',
+    'NORMAL_OPERATOR',
+    'BAIXING_SALES',
+    'BAIXING_USER',
+    'QA_OPERATOR',
+    'DESIGN_QA_OPERATOR'
+  ])
+}
+
 export function allowAddAdItem(roles) {
   const currentRoles = normalizeRoles(roles)
 
