@@ -3,7 +3,7 @@
   <section>
     <el-table :data="orders" style="width: 100%">
       <el-table-column prop="order.id" label="ID" width="120" />
-      <el-table-column label="订单状态" width="80">
+      <el-table-column label="订单状态" width="120">
         <template scope="s">
           <span>{{ s.row.status | orderStatus }}</span>
           <el-button v-if="allowPayOrder && (s.row.order.status === 0)"
@@ -13,7 +13,7 @@
           </el-button>
         </template>
       </el-table-column>
-      <el-table-column label="订单类型" width="80"
+      <el-table-column label="订单类型" width="120"
         :formatter="formatOrderType" />
       <el-table-column prop="order.userName" label="客户" width="120" />
       <el-table-column label='创建时间'>

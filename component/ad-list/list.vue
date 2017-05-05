@@ -5,7 +5,7 @@
       <el-table-column prop="name" label="名称" width="120" />
       <el-table-column prop="orderId" label="订单 ID" width="120" />
       <el-table-column prop="ad.name" label="广告位" width="120" />
-      <el-table-column label="投放时间">
+      <el-table-column label="投放时间" width="120">
         <template scope="s">
           <span>{{ s.row.timeRange[0] | date }}</span>
           <i>-</i>
