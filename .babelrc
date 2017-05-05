@@ -20,6 +20,7 @@
         "constant": "./constant",
         "config": "./config",
         "com": "./component",
+        "base": "./base",
         "util": "./util",
         "api": "./api"
       }

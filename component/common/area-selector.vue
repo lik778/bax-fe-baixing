@@ -122,7 +122,7 @@ export default {
 
       result = [
         ...result,
-        ...topArea.areas.filter(a => a.id !== city)
+        ...topArea.areas.filter(a => a.id !== city).map(a => a.id)
       ]
 
       return result
