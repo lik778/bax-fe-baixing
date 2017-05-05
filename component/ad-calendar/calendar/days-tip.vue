@@ -7,7 +7,7 @@
       </p>
     </section>
     <section>
-      <p v-for="d in days">
+      <p v-for="d in days" :title="d">
         {{ d | date }}
       </p>
     </section>

@@ -83,9 +83,8 @@ export default {
     getDays() {
       const { options } = this
       const seconds = (options.end - options.start) || 0
-      const num = moment.duration(seconds, 'seconds').days()
+      const num = ((seconds / 60 / 60 / 24) + 1) | 0
       const start = moment(options.start * 1000).format('YYYY-MM-DD')
-
       const days = []
       for (let i = 0; i <= num; i++) {
         const d = moment(start, 'YYYY-MM-DD').add(i, 'day')

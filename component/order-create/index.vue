@@ -132,7 +132,7 @@ import {
 
 const tomorrow = moment().add(1, 'days').format('YYYY-MM-DD')
 
-const oneday = 24 * 60 * 60
+const oneday = 24 * 60 * 60 - 1 // 故意: 减一秒
 
 const emptyOrder = {
   adId: '',
