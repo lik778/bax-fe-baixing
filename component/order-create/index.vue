@@ -58,6 +58,12 @@
               @click="showCreateUserDialog = true" />
           </span>
         </el-form-item>
+        <section class="terms">
+          <el-checkbox disabled checked />
+          <a download="百姓网线上推广协议.docx">
+            同意《百姓网线上推广协议》
+          </a>
+        </section>
         <section class="ad-price" v-if="adPrice.originalPrice">
           <span>
             <label>原价:</label>
@@ -379,6 +385,18 @@ export default {
     & > img {
       margin-top: 15px;
       max-width: 480px;
+    }
+  }
+
+  & .terms {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    font-size: 14px;
+    padding-right: 120px;
+
+    & .el-checkbox {
+      margin-right: 10px;
     }
   }
 
