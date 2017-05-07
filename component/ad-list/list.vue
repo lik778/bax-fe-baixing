@@ -20,6 +20,14 @@
             <span>{{ s.row.status | adItemStatus }}</span>
           </el-tooltip>
           <span v-else>{{ s.row.status | adItemStatus }}</span>
+          <el-button size="mini" v-if="s.row.status === 20"
+            @click="onPauseAd(s.row.id, s.row.name)">
+            暂停投放
+          </el-button>
+          <el-button size="mini" v-if="s.row.status === -5"
+            @click="onContinueAd(s.row.id, s.row.name)">
+            继续投放
+          </el-button>
         </template>
       </el-table-column>
       <el-table-column label="区域"
@@ -114,6 +122,7 @@ import RejectAdReason from './reject-ad-reason'
 import AddMaterial from './add-material'
 import AddAdItem from './add-ad-item'
 
+import { Message } from 'element-ui'
 import { toHumanTime } from 'utils'
 import clone from 'clone'
 
@@ -124,8 +133,10 @@ import {
 import {
   allowUpdateMaterial,
   allowAddMaterial,
+  allowContinueAd,
   allowAddAdItem,
-  allowVerifyAd
+  allowVerifyAd,
+  allowPauseAd
 } from 'constant/role'
 
 import {
@@ -133,7 +144,9 @@ import {
 } from 'constant/ad'
 
 import {
+  continueAdItem,
   verifyAdItem,
+  pauseAdItem,
   getAdItems
 } from './action'
 
@@ -192,8 +205,14 @@ export default {
     allowAddMaterial() {
       return allowAddMaterial(this.userInfo.roles)
     },
+    allowContinueAd() {
+      return allowContinueAd(this.userInfo.roles)
+    },
     allowAddAdItem() {
       return allowAddAdItem(this.userInfo.roles)
+    },
+    allowPauseAd() {
+      return allowPauseAd(this.userInfo.roles)
     },
     allowVerify() {
       return allowVerifyAd(this.userInfo.roles)
@@ -214,6 +233,32 @@ export default {
     },
     async onAddAdItemSuccess() {
       await getAdItems()
+    },
+    async onContinueAd(id, name) {
+      try {
+        await this.$confirm(`确认继续投放: ${name}`)
+      } catch (err) {
+        return
+      }
+
+      await continueAdItem(id)
+
+      await getAdItems({...this.query})
+
+      Message.success('修改成功')
+    },
+    async onPauseAd(id, name) {
+      try {
+        await this.$confirm(`确认暂停投放: ${name}`)
+      } catch (err) {
+        return
+      }
+
+      await pauseAdItem(id)
+
+      await getAdItems({...this.query})
+
+      Message.success('修改成功')
     },
     allowVerifyAdItem(status) {
       if (status === 0) {

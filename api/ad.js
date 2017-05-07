@@ -9,6 +9,20 @@ export async function createAdItem(item) {
     .json()
 }
 
+export async function pauseAdItem(id) {
+  return await api
+    .post(`/ad/item/${id}/pause`)
+    .send({})
+    .json()
+}
+
+export async function continueAdItem(id) {
+  return await api
+    .post(`/ad/item/${id}/continue`)
+    .send({})
+    .json()
+}
+
 export async function getAdPrice(aid, opts = {}) {
   const body = await api
     .get(`/ad/${aid}/price`)

@@ -12,6 +12,14 @@ export const createAdItem = createAction((item) => {
   return aapi.createAdItem(item)
 })
 
+export const continueAdItem = createAction((id) => {
+  return aapi.continueAdItem(id)
+})
+
+export const pauseAdItem = createAction((id) => {
+  return aapi.pauseAdItem(id)
+})
+
 export const getMaterials = createAction((opts) => {
   return mapi.getMaterials(opts)
 })

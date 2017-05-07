@@ -139,6 +139,22 @@ export function allowVerifyAd(roles) {
   ])
 }
 
+export function allowPauseAd(roles) {
+  const currentRoles = normalizeRoles(roles)
+
+  return checkRoles(currentRoles, [
+    'NORMAL_OPERATOR'
+  ])
+}
+
+export function allowContinueAd(roles) {
+  const currentRoles = normalizeRoles(roles)
+
+  return checkRoles(currentRoles, [
+    'NORMAL_OPERATOR'
+  ])
+}
+
 /**
  * private
  */
