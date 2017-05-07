@@ -36,10 +36,10 @@
             </router-link>
           </el-menu-item>
         </el-submenu>
-        <el-menu-item index="1-1">
+        <el-menu-item index="2">
           <i class="el-icon-menu" />设置
         </el-menu-item>
-        <el-menu-item index="1-1">
+        <el-menu-item index="3">
           <i class="el-icon-setting" />账户
         </el-menu-item>
       </el-menu>
