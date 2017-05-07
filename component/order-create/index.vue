@@ -7,8 +7,14 @@
     <main>
       <el-form ref="form" :model="newOrder" label-width="120px">
         <el-form-item label="广告位">
-          <bax-select :options="adOpts"
-            v-model="newOrder.adId" />
+          <content class="select-ad">
+            <div>
+              <bax-select :options="adOpts"
+                v-model="newOrder.adId" />
+            </div>
+            <img v-if="adExampleImg"
+              v-bind:src="adExampleImg" />
+          </content>
         </el-form-item>
         <el-form-item label="订单类型" v-if="isOperator">
           <bax-select :options="sspOrderTypeOpts"
@@ -192,6 +198,17 @@ export default {
         value: ad.id
       }))
     },
+    adExampleImg() {
+      const adId = this.newOrder.adId
+
+      if (!adId) {
+        return ''
+      }
+
+      const ad = this.ads.find(a => a.id === adId)
+
+      return ad.exampleImg
+    },
     currentRoles() {
       const { userInfo } = this
 
@@ -353,6 +370,16 @@ export default {
 
   & > main {
     max-width: 680px;
+  }
+
+  & .select-ad {
+    display: flex;
+    flex-flow: column;
+
+    & > img {
+      margin-top: 15px;
+      max-width: 480px;
+    }
   }
 
   & .ad-price {
