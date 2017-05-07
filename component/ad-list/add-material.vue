@@ -22,9 +22,17 @@
           placeholder="如: http://baixing.com" />
       </el-form-item>
       <el-form-item label="上传物料" required>
-        <uploader @success="onUploadSuccess" />
-        <img class="preview" v-if="material.url"
-          v-bind:src="material.url" />
+        <div class="add-img">
+          <uploader @success="onUploadSuccess" />
+          <img v-if="material.url"
+            v-bind:src="material.url" />
+          <ul>
+            <li>图片素材要求：</li>
+            <li>1. 背景干净简洁不影响阅读</li>
+            <li>2. 配图风格不影响文字阅读</li>
+            <li>3. 文字规则：主标题字体需为开源字体，推荐使用黑体；主副标题字数、字号适当，不影响阅读</li>
+          </ul>
+        </div>
       </el-form-item>
     </el-form>
     <div slot="footer">
@@ -179,11 +187,27 @@ export default {
   }
 }
 
-.preview {
-  margin: 10px 0;
-  max-width: 120px;
-  max-height: 80px;
-  object-fit: contain;
+.add-img {
+  & > img {
+    margin-top: 10px;
+    max-width: 120px;
+    max-height: 80px;
+    object-fit: contain;
+  }
+
+  & > ul {
+    margin: 10px 0;
+
+    & > li:first-child {
+      font-size: 14px;
+      line-height: 26px;
+    }
+
+    & > li {
+      font-size: 12px;
+      line-height: 20px;
+    }
+  }
 }
 
 </style>
