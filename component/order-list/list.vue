@@ -77,6 +77,12 @@ export default {
   },
   methods: {
     async pay(id) {
+      try {
+        await this.$confirm(`确认支付订单: ${id} ?`)
+      } catch (err) {
+        return
+      }
+
       await payOrder(id)
       await getOrders()
       Message.success('支付成功')
