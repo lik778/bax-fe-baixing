@@ -404,6 +404,7 @@ export default {
     display: flex;
     justify-content: flex-end;
     align-items: center;
+    margin: 10px 0;
 
     & > span {
       margin-right: 20px;
