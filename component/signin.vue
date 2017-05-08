@@ -16,8 +16,16 @@
 <script>
 
 import { Message } from 'element-ui'
-import { login } from 'api/account'
 import { redirectTo } from 'utils'
+
+import {
+  allowVerifyAd
+} from 'constant/role'
+
+import {
+  getCurrentUser,
+  login
+} from 'api/account'
 
 export default {
   name: 'signin',
@@ -36,7 +44,13 @@ export default {
 
       await login(email, password)
 
-      redirectTo('main')
+      const userInfo = await getCurrentUser()
+
+      if (allowVerifyAd(userInfo.roles)) {
+        return redirectTo('main/ads')
+      }
+
+      redirectTo('main/orders')
     }
   }
 }
