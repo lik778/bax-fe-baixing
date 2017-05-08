@@ -97,7 +97,12 @@ export default {
   beforeMount() {
     this.throttle = new Subject().debounceTime(500)
   },
+  beforeDestroy() {
+    es.removeListener('new user created', this.appendUsers)
+  },
   async mounted() {
+    es.addListener('new user created', this.appendUsers)
+
     this.throttle.subscribe(this.queryUsers)
 
     await this.queryUsers()
