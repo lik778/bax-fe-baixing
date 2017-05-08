@@ -16,10 +16,10 @@ export async function pauseAdItem(id, opts = {}) {
     .json()
 }
 
-export async function continueAdItem(id) {
+export async function continueAdItem(id, opts = {}) {
   return await api
     .post(`/ad/item/${id}/continue`)
-    .send({})
+    .send(reverseCamelcase(opts))
     .json()
 }
 

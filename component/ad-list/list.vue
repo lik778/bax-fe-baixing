@@ -235,13 +235,21 @@ export default {
       await getAdItems()
     },
     async onContinueAd(id, name) {
+      let reason = ''
+
       try {
-        await this.$confirm(`确认继续投放: ${name}`)
+        const { value } = await this.$prompt(`确认继续投放: ${name}, 请输入理由`, '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消'
+        })
+        reason = value
       } catch (err) {
         return
       }
 
-      await continueAdItem(id)
+      await continueAdItem(id, {
+        reason
+      })
 
       await getAdItems({...this.query})
 
