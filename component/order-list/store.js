@@ -13,6 +13,7 @@ const defaultQuery = {
   createdAtFrom: '',
   createdAtTo: '',
   timeRange: '',
+  orderId: '',
   status: '',
   userId: ''
 }

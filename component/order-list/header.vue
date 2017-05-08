@@ -3,6 +3,8 @@
   <header class="order-header">
     <section>
       <span>
+        <el-input placeholder="请输入订单号" icon="search"
+          v-model="query.orderId" />
         <el-button icon="arrow-down"
           @click="switchShowMoreFilters">
           更多筛选
@@ -118,6 +120,9 @@ export default {
     return allData
   },
   watch: {
+    'query.orderId': async function(v, p) {
+      await this.queryOrders(v, p)
+    },
     'query.status': async function(v, p) {
       await this.queryOrders(v, p)
     },
@@ -202,6 +207,15 @@ export default {
     align-items: center;
     margin: 20px 0;
     width: 700px;
+
+    & > span:first-child {
+      display: flex;
+      align-items: center;
+
+      & > .el-input {
+        margin-right: 10px;
+      }
+    }
   }
 
   & > section:nth-child(2) {
