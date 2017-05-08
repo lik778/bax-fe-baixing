@@ -16,8 +16,8 @@ export const continueAdItem = createAction((id) => {
   return aapi.continueAdItem(id)
 })
 
-export const pauseAdItem = createAction((id) => {
-  return aapi.pauseAdItem(id)
+export const pauseAdItem = createAction((id, opts) => {
+  return aapi.pauseAdItem(id, opts)
 })
 
 export const getMaterials = createAction((opts) => {

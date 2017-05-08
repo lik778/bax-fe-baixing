@@ -9,10 +9,10 @@ export async function createAdItem(item) {
     .json()
 }
 
-export async function pauseAdItem(id) {
+export async function pauseAdItem(id, opts = {}) {
   return await api
     .post(`/ad/item/${id}/pause`)
-    .send({})
+    .send(reverseCamelcase(opts))
     .json()
 }
 

@@ -248,13 +248,22 @@ export default {
       Message.success('修改成功')
     },
     async onPauseAd(id, name) {
+      let reason = ''
+
       try {
-        await this.$confirm(`确认暂停投放: ${name}`)
+        const { value } = await this.$prompt(`您将暂停投放: ${name}, 请输入理由`, '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消'
+        })
+
+        reason = value
       } catch (err) {
         return
       }
 
-      await pauseAdItem(id)
+      await pauseAdItem(id, {
+        reason
+      })
 
       await getAdItems({...this.query})
 
