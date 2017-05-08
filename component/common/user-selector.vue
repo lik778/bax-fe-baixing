@@ -15,6 +15,8 @@ import { Subject } from 'rxjs/Subject'
 
 import BaxSelect from './select'
 
+import es from 'base/es'
+
 import {
   getUsers
 } from 'api/account'
@@ -52,6 +54,18 @@ export default {
       }
 
       this.localValue = v
+    },
+    async appendUsers(params = {}) {
+      const { userId } = params
+
+      if (userId) {
+        const { users = [] } = await getUsers({userId})
+
+        this.users = [
+          ...users,
+          ...this.users
+        ]
+      }
     },
     async queryUsers(v) {
       const { users = [] } = await getUsers({name: v})

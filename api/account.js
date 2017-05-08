@@ -86,7 +86,7 @@ export async function createUser(user) {
     .json()
 
   return {
-    password: body.data
+    userId: body.data
   }
 }
 

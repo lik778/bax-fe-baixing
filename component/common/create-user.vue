@@ -98,13 +98,15 @@ export default {
     async submit() {
       const { user } = this
 
-      await createUser(user)
+      const { userId } = await createUser(user)
 
       Message.success('创建成功')
 
       this.empty()
 
-      this.$emit('created')
+      this.$emit('created', {
+        userId
+      })
       this.$emit('hide')
     },
     async cancel() {

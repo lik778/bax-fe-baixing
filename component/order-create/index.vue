@@ -100,6 +100,7 @@
     <create-user :visible="showCreateUserDialog"
       :all-roles="allRoles"
       :user-info="userInfo"
+      @created="onUserCreated"
       @hide="showCreateUserDialog = false" />
   </div>
 </template>
@@ -123,6 +124,7 @@ import { getCnName } from 'util/meta'
 import store from './store'
 
 import { assetHost } from 'config'
+import es from 'base/es'
 
 import {
   sspOrderTypeOpts
@@ -285,6 +287,11 @@ export default {
     onChangeOrderAreas(v) {
       this.areaDialogVisible = false
       this.newOrder.cities = v
+    },
+    onUserCreated({userId}) {
+      es.emit('new user created', {
+        userId
+      })
     },
     empty() {
       this.newOrder = clone(emptyOrder)
