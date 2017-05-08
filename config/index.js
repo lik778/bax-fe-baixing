@@ -7,4 +7,4 @@ export const baxApiHost = isPro
   ? '//bax.baixing.com.cn/api'
   : '//192.168.8.201/bax'
 
-export const assetHost = ''
+export const assetHost = '//adfe.wzbaixing.com.cn/bax-asset.'

@@ -60,7 +60,8 @@
         </el-form-item>
         <section class="terms">
           <el-checkbox disabled checked />
-          <a download="百姓网线上推广协议.docx">
+          <a v-bind:href="contractDocx"
+            download="百姓网线上推广协议.docx">
             同意《百姓网线上推广协议》
           </a>
         </section>
@@ -120,6 +121,8 @@ import clone from 'clone'
 
 import { getCnName } from 'util/meta'
 import store from './store'
+
+import { assetHost } from 'config'
 
 import {
   sspOrderTypeOpts
@@ -233,6 +236,9 @@ export default {
     },
     isBxSales() {
       return this.currentRoles.includes('BAIXING_SALES')
+    },
+    contractDocx() {
+      return assetHost + 'baixing-online-promotion-contract.docx'
     }
   },
   async mounted() {
@@ -394,6 +400,11 @@ export default {
     align-items: center;
     font-size: 14px;
     padding-right: 120px;
+
+    & a {
+      color: #48576a;
+      cursor: pointer;
+    }
 
     & .el-checkbox {
       margin-right: 10px;
