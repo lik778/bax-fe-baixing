@@ -1,6 +1,6 @@
 
 <template>
-  <el-dialog title="区域选择" v-model="visible"
+  <el-dialog title="区域选择" :value="visible"
     :close-on-click-modal="false" size="large"
     @close="cancel">
     <main class="main">
@@ -70,7 +70,7 @@ export default {
   },
   data() {
     return {
-      selectedAreas: this.areas
+      selectedAreas: [...this.areas]
     }
   },
   methods: {
@@ -290,7 +290,8 @@ export default {
       }
     },
     empty() {
-      this.selectedAreas = []
+      // 一律由外部 prop 清空
+      // this.selectedAreas = []
     },
     cancel() {
       this.empty()
@@ -336,6 +337,17 @@ export default {
 
           areas: this.getSubAreas(a.name)
         }))
+    }
+  },
+  watch: {
+    areas(v) {
+      if (isequal(v, this.selectedAreas)) {
+        return
+      }
+
+      this.selectedAreas = [
+        ...v
+      ]
     }
   },
   updated() {

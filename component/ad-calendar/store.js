@@ -1,5 +1,6 @@
 
 import { createStore } from 'vue-duo'
+import clone from 'clone'
 
 import {
   setCalendarOptions,
@@ -21,9 +22,7 @@ const store = createStore({
 
 store.subscribeActions({
   [setCalendarOptions]: (options) => ({
-    calendarOptions: {
-      ...options
-    }
+    calendarOptions: clone(options)
   }),
   [getCalendar]: ({orders = []}) => ({
     orders

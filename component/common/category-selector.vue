@@ -1,6 +1,6 @@
 
 <template>
-  <el-dialog title="类目选择" v-model="visible"
+  <el-dialog title="类目选择" :value="visible"
     :close-on-click-modal="false" size="large"
     @close="cancel">
     <main class="main">
@@ -48,7 +48,7 @@ export default {
   },
   data() {
     return {
-      selectedCategories: []
+      selectedCategories: [...this.categories]
     }
   },
   methods: {
@@ -154,7 +154,8 @@ export default {
       }
     },
     empty() {
-      this.selectedCategories = []
+      // 一律由外部 prop 清空
+      // this.selectedCategories = []
     },
     cancel() {
       this.empty()
@@ -176,6 +177,15 @@ export default {
           level: 1,
           id: c.id
         }))
+    }
+  },
+  watch: {
+    categories(v) {
+      if (isequal(v, this.selectedCategories)) {
+        return
+      }
+
+      this.selectedCategories = [...v]
     }
   },
   updated() {
