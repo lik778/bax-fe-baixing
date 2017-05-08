@@ -1,42 +1,49 @@
 
 <template>
-  <section class="order-header">
-    <div v-if="allowAddOrder">
-      <span />
+  <header class="order-header">
+    <section>
       <span>
-        <el-button type="primary">
+        <el-button icon="arrow-down"
+          @click="switchShowMoreFilters">
+          更多筛选
+        </el-button>
+      </span>
+      <span v-if="allowAddOrder">
+        <el-button type="primary" icon="plus">
           <router-link tag="p" :to="{ name: 'create-order' }">
             新建订单
           </router-link>
         </el-button>
       </span>
-    </div>
-    <div>
-      <span class="filter-item">
-        <label>订单状态</label>
-        <bax-select :options="orderStatusOpts" clearable
-          v-model="query.status" />
-      </span>
-      <span class="filter-item">
-        <label>客户</label>
-        <user-selector v-model="query.userId" clearable />
-      </span>
-    </div>
-    <div>
-      <span class="filter-item">
-        <label>创建时间</label>
-        <el-date-picker type="daterange" placeholder="选择日期"
-          format="yyyy-MM-dd"
-          v-model="createTimeRange" />
-      </span>
-      <span class="filter-item">
-        <label>投放时间</label>
-        <el-date-picker type="daterange" placeholder="选择日期"
-          format="yyyy-MM-dd"
-          v-model="onlineTimeRange" />
-      </span>
-    </div>
-  </section>
+    </section>
+    <section v-if="showMoreFilters">
+      <div>
+        <span class="filter-item">
+          <label>订单状态</label>
+          <bax-select :options="orderStatusOpts" clearable
+            v-model="query.status" />
+        </span>
+        <span class="filter-item">
+          <label>客户</label>
+          <user-selector v-model="query.userId" clearable />
+        </span>
+      </div>
+      <div>
+        <span class="filter-item">
+          <label>创建时间</label>
+          <el-date-picker type="daterange" placeholder="选择日期"
+            format="yyyy-MM-dd"
+            v-model="createTimeRange" />
+        </span>
+        <span class="filter-item">
+          <label>投放时间</label>
+          <el-date-picker type="daterange" placeholder="选择日期"
+            format="yyyy-MM-dd"
+            v-model="onlineTimeRange" />
+        </span>
+      </div>
+    </section>
+  </header>
 </template>
 
 <script>
@@ -83,7 +90,8 @@ export default {
         ...orderStatusOpts
       ],
       createTimeRange: [],
-      onlineTimeRange: []
+      onlineTimeRange: [],
+      showMoreFilters: false
     }
 
     const {
@@ -165,6 +173,9 @@ export default {
     }
   },
   methods: {
+    switchShowMoreFilters() {
+      this.showMoreFilters = !this.showMoreFilters
+    },
     async queryOrders(v, p) {
       if (v === p) {
         return
@@ -185,18 +196,28 @@ export default {
 @mixin filter-item;
 
 .order-header {
-  @mixin top-filter;
-  padding: 10px 0 20px;
-
-  width: 800px;
-  padding-top: 10px;
-
-  & > div {
+  & > section:first-child {
     display: flex;
+    justify-content: space-between;
     align-items: center;
+    margin: 20px 0;
+    width: 700px;
+  }
 
-    & > span:last-child {
-      margin-left: 70px;
+  & > section:nth-child(2) {
+    @mixin top-filter;
+    padding: 10px 0 20px;
+
+    width: 800px;
+    padding-top: 10px;
+
+    & > div {
+      display: flex;
+      align-items: center;
+
+      & > span:last-child {
+        margin-left: 70px;
+      }
     }
   }
 }
