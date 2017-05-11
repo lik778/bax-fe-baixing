@@ -2,9 +2,6 @@
 <template>
   <header class="user-header">
     <div>
-      <el-button @click="addUser" type="primary">新增</el-button>
-    </div>
-    <div>
       <span class="filter-item">
         <label>客户 ID</label>
         <el-input placeholder="客户 ID" v-model="query.userId" />
@@ -12,6 +9,9 @@
       <span class="filter-item">
         <label>名称</label>
         <el-input placeholder="客户名称" v-model="query.name" />
+      </span>
+      <span>
+        <el-button @click="addUser" type="primary">新增</el-button>
       </span>
     </div>
   </header>
@@ -62,18 +62,15 @@ export default {
 
 .user-header {
   @mixin top-filter;
-  height: 130px;
-  padding: 20px;
+  padding: 20px 0;
 
   & > div {
     display: flex;
-  }
-
-  & > div:first-child {
-    display: flex;
-    justify-content: flex-end;
     align-items: center;
-    padding: 0 20px;
+
+    & > span {
+      margin-top: unset;
+    }
   }
 }
 
