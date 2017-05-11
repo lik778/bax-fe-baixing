@@ -1,6 +1,6 @@
 
 <template>
-  <el-dialog title="新增投放" v-model="visible"
+  <el-dialog title="新增投放" :value="visible"
     :close-on-click-modal="false"
     @close="cancel">
     <el-form ref="form" label-width="100px">
@@ -108,6 +108,14 @@ export default {
         oldItemId,
         name
       } = this
+
+      if (!categories.length) {
+        return Message.error('请选择投放类目')
+      }
+
+      if (!areas.length) {
+        return Message.error('请选择投放区域')
+      }
 
       await createAdItem({
         categories,
