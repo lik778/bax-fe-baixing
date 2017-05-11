@@ -2,7 +2,9 @@
 <template>
   <div class="create-order">
     <topbar :userInfo="userInfo">
-      <label slot="title">新建订单</label>
+      <label slot="title">
+        {{ topTitle }}
+      </label>
     </topbar>
     <main>
       <el-form ref="form" :model="newOrder" label-width="120px">
@@ -75,7 +77,7 @@
             <label>{{ adPrice.price | price }}</label>
           </span>
         </section>
-        <el-form-item>
+        <footer v-if="allowAddOrder">
           <el-button>
             <router-link tag="p" :to="{ name: 'order-list' }">
               取消
@@ -84,7 +86,7 @@
           <el-button type="primary" @click="onSubmit">
             确认
           </el-button>
-        </el-form-item>
+        </footer>
       </el-form>
     </main>
     <category-selector :all-categories="allCategories"
@@ -131,6 +133,7 @@ import {
 } from 'constant/order'
 
 import {
+  allowAddOrder,
   allowAddUser
 } from 'util/role'
 
@@ -227,8 +230,14 @@ export default {
 
       return roles.map(r => r.nameEn)
     },
+    allowAddOrder() {
+      return allowAddOrder(this.currentRoles)
+    },
     allowAddUser() {
       return allowAddUser(this.currentRoles)
+    },
+    isAgentSales() {
+      return this.currentRoles.includes('AGENT_SALES')
     },
     isOperator() {
       return this.currentRoles.includes('NORMAL_OPERATOR')
@@ -241,6 +250,13 @@ export default {
     },
     contractDocx() {
       return assetHost + 'baixing-online-promotion-contract.docx'
+    },
+    topTitle() {
+      if (this.isAgentSales) {
+        return '广告查价'
+      }
+
+      return '新建订单'
     }
   },
   async mounted() {
@@ -389,6 +405,13 @@ export default {
 
   & > main {
     max-width: 680px;
+
+    & footer {
+      display: flex;
+      justify-content: flex-end;
+      padding-right: 20px;
+      margin-top: 30px;
+    }
   }
 
   & .select-ad {
@@ -406,7 +429,8 @@ export default {
     justify-content: flex-end;
     align-items: center;
     font-size: 14px;
-    padding-right: 120px;
+    padding-right: 10px;
+    margin-bottom: 10px;
 
     & a {
       color: #48576a;

@@ -34,7 +34,7 @@
     </main>
     <footer slot="footer">
       <el-button @click="cancel">取消</el-button>
-      <el-button @click="ok">确认</el-button>
+      <el-button type="primary" @click="ok">确认</el-button>
     </footer>
   </el-dialog>
 </template>

@@ -17,6 +17,13 @@
           </router-link>
         </el-button>
       </span>
+      <span v-if="isAgentSales">
+        <el-button type="primary" icon="plus">
+          <router-link tag="p" :to="{ name: 'create-order' }">
+            广告查价
+          </router-link>
+        </el-button>
+      </span>
     </section>
     <section v-if="showMoreFilters">
       <div>
@@ -63,6 +70,7 @@ import {
 } from 'utils'
 
 import {
+  normalizeRoles,
   allowAddOrder
 } from 'util/role'
 
@@ -175,6 +183,10 @@ export default {
   computed: {
     allowAddOrder() {
       return allowAddOrder(this.userInfo.roles)
+    },
+    isAgentSales() {
+      const roles = normalizeRoles(this.userInfo.roles)
+      return roles.includes('AGENT_SALES')
     }
   },
   methods: {
