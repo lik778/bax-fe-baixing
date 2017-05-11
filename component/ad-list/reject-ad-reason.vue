@@ -1,6 +1,6 @@
 
 <template>
-  <el-dialog title="请填写拒绝理由" v-model="visible"
+  <el-dialog title="请填写拒绝理由" :value="visible"
     :close-on-click-modal="false"
     @close="cancel">
     <el-form ref="form" label-width="100px">

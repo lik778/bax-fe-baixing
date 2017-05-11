@@ -1,6 +1,6 @@
 
 <template>
-  <el-dialog title="添加物料" v-model="visible"
+  <el-dialog title="添加物料" :value="visible"
     :close-on-click-modal="false"
     @close="cancel">
     <el-form ref="form" :model="material" label-width="100px">

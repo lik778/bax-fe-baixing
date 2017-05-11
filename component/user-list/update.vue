@@ -1,6 +1,6 @@
 
 <template>
-  <el-dialog title="更新用户" v-model="visible" size="large"
+  <el-dialog title="更新用户" :value="visible" size="large"
     :close-on-click-modal="false"
     @close="cancel">
     <el-form ref="form" :model="user" label-width="120px">

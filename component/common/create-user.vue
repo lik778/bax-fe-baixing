@@ -1,6 +1,6 @@
 
 <template>
-  <el-dialog title="新增用户" v-model="visible" size="large"
+  <el-dialog title="新增用户" :value="visible" size="large"
     :close-on-click-modal="false"
     @close="cancel">
     <el-form ref="form" :model="user" label-width="120px">
@@ -97,6 +97,14 @@ export default {
     },
     async submit() {
       const { user } = this
+
+      if (!user.name) {
+        return Message.error('请填写用户名')
+      }
+
+      if (!user.email) {
+        return Message.error('请填写 email')
+      }
 
       const { userId } = await createUser(user)
 
