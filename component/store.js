@@ -13,11 +13,13 @@ const store = createStore({
   allAreas: [],
   allRoles: [],
 
+  emailMissing: false,
   currentUser: {}
 })
 
 store.subscribeActions({
   [getCurrentUser]: (user) => ({
+    emailMissing: !user.email,
     currentUser: {...user}
   }),
   [getCategories]: (categories) => ({

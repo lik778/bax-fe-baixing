@@ -6,11 +6,13 @@
       :allCategories="allCategories"
       :allAreas="allAreas"
       :allRoles="allRoles" />
+    <reset-email :visible="emailMissing" :uid="currentUser.id" />
   </content>
 </template>
 
 <script>
 
+import ResetEmail from './common/reset-email'
 import Sidebar from './sidebar'
 
 import store from './store'
@@ -28,6 +30,7 @@ export default {
   name: 'bax',
   store,
   components: {
+    ResetEmail,
     Sidebar
   },
   data() {
