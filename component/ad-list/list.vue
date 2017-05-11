@@ -137,7 +137,7 @@ import {
   allowAddAdItem,
   allowVerifyAd,
   allowPauseAd
-} from 'constant/role'
+} from 'util/role'
 
 import {
   adStatus

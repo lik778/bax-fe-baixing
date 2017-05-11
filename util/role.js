@@ -1,8 +1,4 @@
 
-/**
- * TODO - mv to util
- */
-
 const isArray = Array.isArray
 
 // order
@@ -155,11 +151,7 @@ export function allowContinueAd(roles) {
   ])
 }
 
-/**
- * private
- */
-
-function normalizeRoles(roles) {
+export function normalizeRoles(roles) {
   if (!isArray(roles)) {
     return []
   }
@@ -172,6 +164,10 @@ function normalizeRoles(roles) {
     return r.nameEn
   })
 }
+
+/**
+ * private
+ */
 
 function checkRoles(currentRoles, validRoles) {
   let valid = false

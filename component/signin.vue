@@ -20,7 +20,7 @@ import { redirectTo } from 'utils'
 
 import {
   allowVerifyAd
-} from 'constant/role'
+} from 'util/role'
 
 import {
   getCurrentUser,

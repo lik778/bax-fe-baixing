@@ -60,7 +60,7 @@ import store from './store'
 
 import {
   allowGetOrderPayUrl
-} from 'constant/role'
+} from 'util/role'
 
 import {
   toHumanTime,

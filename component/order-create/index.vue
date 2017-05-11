@@ -132,7 +132,7 @@ import {
 
 import {
   allowAddUser
-} from 'constant/role'
+} from 'util/role'
 
 import {
   toTimestamp,

@@ -49,7 +49,7 @@ import {
 
 import {
   allowPayOrder
-} from 'constant/role'
+} from 'util/role'
 
 import {
   getOrders,

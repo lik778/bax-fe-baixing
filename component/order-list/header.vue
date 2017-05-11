@@ -64,7 +64,7 @@ import {
 
 import {
   allowAddOrder
-} from 'constant/role'
+} from 'util/role'
 
 import {
   getOrders

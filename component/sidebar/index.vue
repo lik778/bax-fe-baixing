@@ -54,7 +54,7 @@ import {
   allowQueryAdItems,
   allowQueryOrders,
   allowQueryUsers
-} from 'constant/role'
+} from 'util/role'
 
 export default {
   name: 'sidebar',
