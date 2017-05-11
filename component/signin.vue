@@ -7,7 +7,11 @@
         <p>登录</p>
         <input placeholder="邮箱" v-model="email" />
         <input placeholder="密码" type="password" v-model="password" />
-        <button type="primary" @click="login">登录</button>
+        <footer>
+          <span @click="login">
+            登录
+          </span>
+        </footer>
       </content>
     </div>
   </main>
@@ -95,7 +99,7 @@ main {
       flex-flow: column;
       width: 420px;
       height: 220px;
-      padding: 5px 20px 0;
+      padding: 15px 20px 0;
       border-radius: 5px;
       border-radius: 4px;
       background: rgba(216, 216, 216, 0.30);
@@ -118,16 +122,24 @@ main {
         border-radius: 4px;
       }
 
-      & > button {
-        @mixin center;
-        width: 100px;
-        height: 36px;
-        margin-top: 20px;
-        background: #7DDEDE;
-        border: 1px solid #83E5E7;
-        box-shadow: 0 1px 2px 0 rgba(0,0,0,0.20), inset 0 2px 0 0 #FFFFFF;
-        border-radius: 4px;
-        cursor: pointer;
+      & > footer {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding-right: 20px;
+
+        & > span {
+          @mixin center;
+          width: 100px;
+          height: 36px;
+          margin-top: 20px;
+          background: #7DDEDE;
+          border: 1px solid #83E5E7;
+          box-shadow: 0 1px 2px 0 rgba(0,0,0,0.20), inset 0 2px 0 0 #ffffff;
+          border-radius: 4px;
+          color: #616161;
+          cursor: pointer;
+        }
       }
     }
   }
