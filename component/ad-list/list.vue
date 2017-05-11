@@ -20,11 +20,13 @@
             <span>{{ s.row.status | adItemStatus }}</span>
           </el-tooltip>
           <span v-else>{{ s.row.status | adItemStatus }}</span>
-          <el-button size="mini" v-if="s.row.status === 20"
+          <el-button size="mini"
+            v-if="allowPauseAd && s.row.status === 20"
             @click="onPauseAd(s.row.id, s.row.name)">
             暂停投放
           </el-button>
-          <el-button size="mini" v-if="s.row.status === -5"
+          <el-button size="mini"
+            v-if="allowContinueAd && s.row.status === -5"
             @click="onContinueAd(s.row.id, s.row.name)">
             继续投放
           </el-button>
