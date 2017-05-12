@@ -337,6 +337,8 @@ export default {
 <style scoped>
 
 .ad-list {
+  margin-top: 16px;
+
   & .m-img {
     max-width: 80px;
     max-height: 60px;

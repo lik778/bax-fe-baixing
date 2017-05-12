@@ -1,38 +1,45 @@
 
 <template>
   <header class="ad-header">
-    <span class="filter-item">
-      <label>投放状态</label>
-      <bax-select placeholder='请选择状态'
-        :options="adStatusOpts" clearable
-        v-model="query.status" />
-    </span>
-    <div>
-      <span class="filter-item">
-        <label>订单</label>
-        <el-input placeholder="请填写订单号查询"
+    <section>
+      <span>
+        <el-input placeholder="请输入订单号" icon="search"
           v-model="query.orderId" />
+        <el-button icon="arrow-down"
+          @click="switchShowMoreFilters">
+          更多筛选
+        </el-button>
       </span>
-      <span class="filter-item">
-        <label>广告位</label>
-        <bax-select placeholder='请选择广告位'
-          :options="adOpts" clearable
-          v-model="query.adId" />
-      </span>
-    </div>
-    <div>
-      <span class="filter-item">
-        <label>上线时间</label>
-        <el-date-picker type="daterange" placeholder="选择日期"
-          format="yyyy-MM-dd"
-          v-model="timeRange" />
-      </span>
-      <span class="filter-item">
-        <label>客户</label>
-        <user-selector placeholder='选客户' clearable
-          v-model="query.customerId" />
-      </span>
-    </div>
+    </section>
+    <section v-if="showMoreFilters">
+      <div>
+        <span class="filter-item">
+          <label>上线时间</label>
+          <el-date-picker type="daterange" placeholder="选择日期"
+            format="yyyy-MM-dd"
+            v-model="timeRange" />
+        </span>
+        <span class="filter-item">
+          <label>广告位</label>
+          <bax-select placeholder='请选择广告位'
+            :options="adOpts" clearable
+            v-model="query.adId" />
+        </span>
+      </div>
+      <div>
+        <span class="filter-item">
+          <label>投放状态</label>
+          <bax-select placeholder='请选择状态'
+            :options="adStatusOpts" clearable
+            v-model="query.status" />
+        </span>
+        <span class="filter-item">
+          <label>客户</label>
+          <user-selector placeholder='选客户' clearable
+            v-model="query.customerId" />
+        </span>
+      </div>
+    </section>
   </header>
 </template>
 
@@ -77,12 +84,14 @@ export default {
         timeRange:[
           toHumanTime(s, 'YYYY-MM-DD'),
           toHumanTime(e, 'YYYY-MM-DD')
-        ]
+        ],
+        showMoreFilters: false
       }
     }
 
     return {
-      timeRange: []
+      timeRange: [],
+      showMoreFilters: false
     }
   },
   watch: {
@@ -122,6 +131,9 @@ export default {
     }
   },
   methods: {
+    switchShowMoreFilters() {
+      this.showMoreFilters = !this.showMoreFilters
+    },
     async queryAdItems(v, p) {
       if (v === p) {
         return
@@ -156,13 +168,36 @@ export default {
 @mixin filter-item;
 
 .ad-header {
-  @mixin top-filter;
-  height: 120px;
-  margin-bottom: 20px;
-
-  & > div {
+  & > section:first-child {
     display: flex;
     align-items: center;
+    margin: 20px 0;
+
+    & > span:first-child {
+      display: flex;
+      align-items: center;
+
+      & > .el-input {
+        margin-right: 10px;
+      }
+    }
+  }
+
+  & > section:nth-child(2) {
+    @mixin top-filter;
+    padding: 10px 0 20px;
+
+    width: 800px;
+    padding-top: 10px;
+
+    & > div {
+      display: flex;
+      align-items: center;
+
+      & > span:last-child {
+        margin-left: 70px;
+      }
+    }
   }
 }
 
