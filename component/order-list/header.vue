@@ -75,6 +75,7 @@ import {
 } from 'util/role'
 
 import {
+  switchShowMoreFilters,
   getOrders
 } from './action'
 
@@ -85,6 +86,10 @@ export default {
     BaxSelect
   },
   props: {
+    showMoreFilters: {
+      type: Boolean,
+      required: true
+    },
     userInfo: {
       type: Object,
       required: true
@@ -100,8 +105,7 @@ export default {
         ...orderStatusOpts
       ],
       createTimeRange: [],
-      onlineTimeRange: [],
-      showMoreFilters: false
+      onlineTimeRange: []
     }
 
     const {
@@ -191,7 +195,7 @@ export default {
   },
   methods: {
     switchShowMoreFilters() {
-      this.showMoreFilters = !this.showMoreFilters
+      switchShowMoreFilters()
     },
     async queryOrders(v, p) {
       if (v === p) {

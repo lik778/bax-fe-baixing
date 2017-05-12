@@ -4,6 +4,8 @@ import { createAction } from 'vue-duo'
 import * as mapi from 'api/material'
 import * as aapi from 'api/ad'
 
+export const switchShowMoreFilters = createAction()
+
 export const getAds = createAction(() => {
   return aapi.getAds()
 })

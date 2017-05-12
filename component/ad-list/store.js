@@ -2,6 +2,7 @@
 import { createStore } from 'vue-duo'
 
 import {
+  switchShowMoreFilters,
   getMaterials,
   getAdItems,
   getAds
@@ -20,6 +21,8 @@ const defaultQuery = {
 }
 
 const store = createStore({
+  showMoreFilters: false,
+
   materials: [],
   ads: [],
 
@@ -30,6 +33,9 @@ const store = createStore({
 })
 
 store.subscribeActions({
+  [switchShowMoreFilters]: () => ({
+    showMoreFilters: !store.state.showMoreFilters
+  }),
   [getMaterials]: ({materials = []}) => ({
     materials: [...materials]
   }),

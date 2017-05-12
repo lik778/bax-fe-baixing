@@ -4,7 +4,8 @@
     <topbar :userInfo="userInfo">
       <label slot="title">投放管理</label>
     </topbar>
-    <ad-header :query="query" :ads="ads" />
+    <ad-header :query="query" :ads="ads"
+      :showMoreFilters="showMoreFilters" />
     <ad-list :materials="materials"
       :items="items" :query="query"
       :all-categories="allCategories"

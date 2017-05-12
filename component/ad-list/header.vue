@@ -57,11 +57,18 @@ import {
   toTimestamp
 } from 'utils'
 
-import { getAdItems } from './action'
+import {
+  switchShowMoreFilters,
+  getAdItems
+} from './action'
 
 export default {
   name: 'ad-header',
   props: {
+    showMoreFilters: {
+      type: Boolean,
+      required: true
+    },
     query: {
       type: Object,
       required: true
@@ -84,14 +91,12 @@ export default {
         timeRange:[
           toHumanTime(s, 'YYYY-MM-DD'),
           toHumanTime(e, 'YYYY-MM-DD')
-        ],
-        showMoreFilters: false
+        ]
       }
     }
 
     return {
-      timeRange: [],
-      showMoreFilters: false
+      timeRange: []
     }
   },
   watch: {
@@ -132,7 +137,7 @@ export default {
   },
   methods: {
     switchShowMoreFilters() {
-      this.showMoreFilters = !this.showMoreFilters
+      switchShowMoreFilters()
     },
     async queryAdItems(v, p) {
       if (v === p) {
