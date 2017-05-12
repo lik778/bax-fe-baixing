@@ -17,7 +17,7 @@
           </router-link>
         </el-button>
       </span>
-      <span v-if="isAgentSales">
+      <span v-if="isOnlyAgentSales">
         <el-button type="primary" icon="plus">
           <router-link tag="p" :to="{ name: 'create-order' }">
             广告查价
@@ -71,6 +71,7 @@ import {
 
 import {
   normalizeRoles,
+  onlyAgentSales,
   allowAddOrder
 } from 'util/role'
 
@@ -188,9 +189,9 @@ export default {
     allowAddOrder() {
       return allowAddOrder(this.userInfo.roles)
     },
-    isAgentSales() {
+    isOnlyAgentSales() {
       const roles = normalizeRoles(this.userInfo.roles)
-      return roles.includes('AGENT_SALES')
+      return onlyAgentSales(roles)
     }
   },
   methods: {

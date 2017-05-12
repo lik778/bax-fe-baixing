@@ -137,6 +137,7 @@ import {
 } from 'constant/order'
 
 import {
+  onlyAgentSales,
   allowAddOrder,
   allowAddUser
 } from 'util/role'
@@ -251,6 +252,9 @@ export default {
     allowAddUser() {
       return allowAddUser(this.currentRoles)
     },
+    isOnlyAgentSales() {
+      return onlyAgentSales(this.currentRoles)
+    },
     isAgentSales() {
       return this.currentRoles.includes('AGENT_SALES')
     },
@@ -267,7 +271,7 @@ export default {
       return assetHost + 'baixing-online-promotion-contract.docx'
     },
     topTitle() {
-      if (this.isAgentSales) {
+      if (this.isOnlyAgentSales) {
         return '广告查价'
       }
 
