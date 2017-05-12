@@ -53,7 +53,7 @@
           </a>
         </template>
       </el-table-column>
-      <el-table-column label="链接">
+      <el-table-column label="链接" width="100">
         <template scope="s">
           <a target="_black"
             v-if="s.row.material && s.row.material.link"
@@ -63,7 +63,7 @@
           <span v-else>暂无</span>
         </template>
       </el-table-column>
-      <el-table-column label="审核" v-if="allowVerify">
+      <el-table-column label="审核" v-if="allowVerify" width="100">
         <template scope="s">
           <el-button v-if="allowVerifyAdItem(s.row.status)"
             type="text" size="small"
