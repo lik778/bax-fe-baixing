@@ -134,6 +134,7 @@ export default {
         'BAIXING_SALES',
         'AGENT_SALES'
       ])
+
       if (isSales) {
         return sspOrderTypeOpts
           .filter((o) => !['1', '2'].includes(o.value))

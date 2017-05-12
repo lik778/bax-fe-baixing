@@ -18,3 +18,7 @@ export const getOrderInfo = createAction((id) => {
 export const getOrderLogs = createAction((id) => {
   return oapi.getOrderLogs(id)
 })
+
+export const payOrder = createAction((oid) => {
+  return oapi.payOrder(oid)
+})

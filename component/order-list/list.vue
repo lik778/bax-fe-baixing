@@ -7,7 +7,7 @@
         <template scope="s">
           <span>{{ s.row.status | orderStatus }}</span>
           <el-button v-if="allowPayOrder && (s.row.order.status === 0)"
-            size="mini"
+            size="mini" type="primary"
             @click="pay(s.row.order.id)">
             付款
           </el-button>

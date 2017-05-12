@@ -33,6 +33,12 @@
         </span>
         <el-button @click="changeDiscount">确认</el-button>
       </div>
+      <div class="pay-order" v-if="allowPayOrder">
+        <label>当前订单未付款</label>
+        <el-button @click="payOrder" type="primary">
+          立即支付
+        </el-button>
+      </div>
       <div class="pay-url" v-if="payUrl">
         <label>付款链接</label>
         <span :title="payUrl">{{ payUrl }}</span>
@@ -59,7 +65,8 @@ import Log from './log'
 import store from './store'
 
 import {
-  allowGetOrderPayUrl
+  allowGetOrderPayUrl,
+  allowPayOrder
 } from 'util/role'
 
 import {
@@ -72,7 +79,8 @@ import {
   changeOrderDiscount,
   getOrderPayUrl,
   getOrderInfo,
-  getOrderLogs
+  getOrderLogs,
+  payOrder
 } from './action'
 
 export default {
@@ -104,6 +112,10 @@ export default {
   computed: {
     allowGetOrderPayUrl() {
       return allowGetOrderPayUrl(this.userInfo.roles)
+    },
+    allowPayOrder() {
+      const ok = allowPayOrder(this.userInfo.roles)
+      return ok && this.unpaied
     },
     unpaied() {
       const { orderInfo } = this
@@ -147,6 +159,21 @@ export default {
       Message.success('修改成功')
 
       this.discount = ''
+    },
+    async payOrder() {
+      const orderId = this.$route.params.id
+
+      try {
+        await this.$confirm(`确认支付订单: ${orderId} ?`)
+      } catch (err) {
+        return
+      }
+
+      await payOrder(orderId)
+
+      Message.success('支付成功')
+
+      await this.initOrderInfo()
     },
     addRelatedOrder() {
       const id = this.$route.params.id
@@ -201,6 +228,18 @@ export default {
   & > span {
     width: 200px;
     margin-right: 10px;
+  }
+}
+
+.pay-order {
+  display: flex;
+  align-items: center;
+  margin: 20px 0;
+
+  & > label {
+    margin-right: 50px;
+    font-size: 14px;
+    color: #5e6d82;
   }
 }
 
