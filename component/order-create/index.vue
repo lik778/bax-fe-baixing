@@ -76,6 +76,10 @@
             <label>折扣价:</label>
             <label>{{ adPrice.price | price }}</label>
           </span>
+          <span v-if="adPriceDiscount">
+            <label>折扣:</label>
+            <p>{{ adPriceDiscount }}</p>
+          </span>
         </section>
         <footer v-if="allowAddOrder">
           <el-button>
@@ -212,6 +216,17 @@ export default {
         value: ad.id
       }))
     },
+    adPriceDiscount() {
+      const { adPrice } = this
+      if (adPrice && adPrice.discountCodes
+        && adPrice.discountCodes.length) {
+        return adPrice.discountCodes
+          .map(d => d.description)
+          .join(',')
+      }
+
+      return ''
+    },
     adExampleImg() {
       const adId = this.newOrder.adId
 
@@ -337,7 +352,7 @@ export default {
         }
     },
     async onSubmit() {
-      const { newOrder, userInfo } = this
+      const { newOrder, userInfo, adPrice } = this
 
       const data = {
         ...clone(newOrder),
@@ -360,6 +375,11 @@ export default {
 
       if (!this.isOperator) {
         delete data.sspOrderType
+      }
+
+      if (adPrice && adPrice.discountCodes
+        && adPrice.discountCodes.length) {
+        data.discountCodes = adPrice.discountCodes.map(d => d.code)
       }
 
       const oid = await createOrder(data)
@@ -449,17 +469,24 @@ export default {
     margin: 10px 0;
 
     & > span {
+      display: flex;
+      align-items: center;
       margin-right: 20px;
     }
 
     & > span {
       & > label:first-child {
+        margin-right: 5px;
         color: #5e6d82;
       }
 
       & > label:last-child {
         font-size: 22px;
         color: red;
+      }
+
+      & > p {
+        font-size: 14px;
       }
     }
   }
