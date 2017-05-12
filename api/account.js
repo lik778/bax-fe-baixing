@@ -72,11 +72,13 @@ export async function updateUserInfo(uid, info) {
 }
 
 export async function getUserInfo(uid) {
-  const body = await api
-    .get(`/user/${uid}`)
-    .json()
+  const users = await _getUsers({
+    userId: uid
+  })
 
-  return toCamelcase(body.data)
+  const user = (users && users[0]) || {}
+
+  return user
 }
 
 export async function createUser(user) {

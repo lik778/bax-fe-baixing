@@ -17,7 +17,7 @@
           </router-link>
         </el-button>
       </span>
-      <span v-if="isOnlyAgentSales">
+      <span v-if="!allowAddOrder && isOnlyAgentSales">
         <el-button type="primary" icon="plus">
           <router-link tag="p" :to="{ name: 'create-order' }">
             广告查价

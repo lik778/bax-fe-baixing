@@ -51,7 +51,10 @@
             v-model="newOrder.offlineAt" />
         </el-form-item>
         <el-form-item v-if="isOperator || isAgentAccounting" label="销售人员">
-          <user-selector v-model="newOrder.salesId" clearable />
+          <span v-if="salesIdLocked">
+            {{ salesDisplayName }}
+          </span>
+          <user-selector v-else v-model="newOrder.salesId" clearable />
         </el-form-item>
         <el-form-item v-if="isOperator || isBxSales" label="广告客户">
           <span>
@@ -75,6 +78,10 @@
           <span>
             <label>折扣价:</label>
             <label>{{ adPrice.price | price }}</label>
+          </span>
+          <span v-if="isAgentAccounting">
+            <label>提单价:</label>
+            <label>{{ adPrice.discountPrice | price }}</label>
           </span>
           <span v-if="adPriceDiscount">
             <label>折扣:</label>
@@ -135,6 +142,10 @@ import es from 'base/es'
 import {
   sspOrderTypeOpts
 } from 'constant/order'
+
+import {
+  getUserInfo
+} from 'api/account'
 
 import {
   onlyAgentSales,
@@ -207,7 +218,10 @@ export default {
       areaDialogVisible: false,
 
       showCreateUserDialog: false,
-      newOrder: clone(emptyOrder)
+      newOrder: clone(emptyOrder),
+
+      salesIdLocked: false,
+      salesDisplayName: '' // 说明: locked salesId -> name
     }
   },
   computed: {
@@ -282,6 +296,15 @@ export default {
     await Promise.all([
       getAds()
     ])
+
+    const { sales_id } = this.$route.query
+
+    if (sales_id) {
+      const info = await getUserInfo(sales_id)
+      this.salesIdLocked = true
+      this.salesDisplayName = info.name || '无名氏'
+      this.newOrder.salesId = sales_id
+    }
   },
   watch: {
     newOrder: {
@@ -330,6 +353,8 @@ export default {
     },
     empty() {
       this.newOrder = clone(emptyOrder)
+      this.salesDisplayName = ''
+      this.salesIdLocked = false
       clearAdPrice()
     },
     async queryAdPrice(newOrder) {
