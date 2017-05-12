@@ -152,8 +152,10 @@ export function allowContinueAd(roles) {
 }
 
 export function onlyAgentSales(roles) {
-  const isAgentAccounting = roles.includes('AGENT_ACCOUNTING')
-  const isAgentSales = roles.includes('AGENT_SALES')
+  const currentRoles = normalizeRoles(roles)
+
+  const isAgentAccounting = currentRoles.includes('AGENT_ACCOUNTING')
+  const isAgentSales = currentRoles.includes('AGENT_SALES')
 
   return isAgentSales && !isAgentAccounting
 }
