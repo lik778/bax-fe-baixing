@@ -74,6 +74,10 @@ import BaxSelect from 'com/common/select'
 
 import { getCnName } from 'util/meta'
 import { toTimestamp } from 'utils'
+import {
+  normalizeRoles,
+  checkRoles
+} from 'util/role'
 
 import {
   sspOrderTypeOpts
@@ -103,12 +107,14 @@ export default {
     allAds: {
       type: Array,
       required: true
+    },
+    userInfo: {
+      type: Object,
+      required: true
     }
   },
   data() {
     return {
-      sspOrderTypeOpts: [...sspOrderTypeOpts],
-
       categoryDialogVisible: false,
       areaDialogVisible: false,
 
@@ -121,6 +127,22 @@ export default {
     }
   },
   computed: {
+    sspOrderTypeOpts() {
+      const roles = normalizeRoles(this.userInfo.roles)
+
+      const isSales = checkRoles(roles, [
+        'BAIXING_SALES',
+        'AGENT_SALES'
+      ])
+      if (isSales) {
+        return sspOrderTypeOpts
+          .filter((o) => !['1', '2'].includes(o.value))
+      }
+
+      return [
+        ...sspOrderTypeOpts
+      ]
+    },
     adOpts() {
       return this.allAds.map(ad => ({
         label: ad.name || ad.slotCode,

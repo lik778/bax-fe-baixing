@@ -165,11 +165,7 @@ export function normalizeRoles(roles) {
   })
 }
 
-/**
- * private
- */
-
-function checkRoles(currentRoles, validRoles) {
+export function checkRoles(currentRoles, validRoles) {
   let valid = false
 
   for (let r of validRoles) {
