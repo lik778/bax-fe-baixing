@@ -2,17 +2,21 @@
 <template>
   <header class="user-header">
     <div>
-      <span class="filter-item">
-        <label>客户 ID</label>
-        <el-input placeholder="客户 ID" v-model="query.userId" />
-      </span>
-      <span class="filter-item">
-        <label>名称</label>
-        <el-input placeholder="客户名称" v-model="query.name" />
-      </span>
-      <span>
-        <el-button @click="addUser" type="primary">新增</el-button>
-      </span>
+      <aside>
+        <span class="filter-item">
+          <label>客户 ID</label>
+          <el-input placeholder="客户 ID" v-model="query.userId" />
+        </span>
+        <span class="filter-item">
+          <label>客户名</label>
+          <el-input placeholder="客户名" v-model="query.name" />
+        </span>
+      </aside>
+      <aside>
+        <el-button @click="addUser" type="primary" icon="plus">
+          新建用户
+        </el-button>
+      </aside>
     </div>
   </header>
 </template>
@@ -60,6 +64,10 @@ export default {
 
 @mixin filter-item;
 
+.filter-item {
+  margin-top: unset;
+}
+
 .user-header {
   @mixin top-filter;
   padding: 20px 0;
@@ -67,9 +75,12 @@ export default {
   & > div {
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    padding-right: 30px;
 
-    & > span {
-      margin-top: unset;
+    & > aside {
+      display: flex;
+      align-items: center;
     }
   }
 }
