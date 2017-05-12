@@ -1,6 +1,12 @@
 
 <template>
   <header class="ad-header">
+    <span class="filter-item">
+      <label>投放状态</label>
+      <bax-select placeholder='请选择状态'
+        :options="adStatusOpts" clearable
+        v-model="query.status" />
+    </span>
     <div>
       <span class="filter-item">
         <label>订单</label>
@@ -34,6 +40,10 @@
 
 import UserSelector from 'com/common/user-selector'
 import BaxSelect from 'com/common/select'
+
+import {
+  adStatus
+} from 'constant/ad'
 
 import {
   toHumanTime,
@@ -82,6 +92,9 @@ export default {
     'query.orderId': async function(v, p) {
       await this.queryAdItems(v, p)
     },
+    'query.status': async function(v, p) {
+      await this.queryAdItems(v, p)
+    },
     'query.adId': async function(v, p) {
       await this.queryAdItems(v, p)
     },
@@ -118,6 +131,12 @@ export default {
     }
   },
   computed: {
+    adStatusOpts() {
+      return Object.keys(adStatus).map((key) => ({
+        label: adStatus[key],
+        value: key
+      }))
+    },
     adOpts() {
       return this.ads.map(ad => ({
         label: ad.name || ad.slotCode,

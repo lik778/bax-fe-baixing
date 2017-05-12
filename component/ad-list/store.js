@@ -15,6 +15,7 @@ const defaultQuery = {
   timeRange: '', // xxx,ooo
   customerId: '',
   orderId: '',
+  status: '',
   adId: ''
 }
 
