@@ -301,9 +301,13 @@ export default {
 
     if (sales_id) {
       const info = await getUserInfo(sales_id)
-      this.salesIdLocked = true
-      this.salesDisplayName = info.name || '无名氏'
-      this.newOrder.salesId = sales_id
+      if (String(info.id) === sales_id) {
+        // 说明: get user info 是有权限设置的 salesId
+        // 如果 info == {}, 不锁定 salesId
+        this.salesIdLocked = true
+        this.salesDisplayName = info.name || '无名氏'
+        this.newOrder.salesId = sales_id
+      }
     }
   },
   watch: {
