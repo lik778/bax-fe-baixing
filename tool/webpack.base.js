@@ -1,5 +1,6 @@
 
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const { join } = require('path')
 
 const { distPath } = require('./config')
 
@@ -7,8 +8,8 @@ const env = process.env.NODE_ENV
 
 module.exports = {
   entry: {
-    signin: './template/signin',
-    bax: './template/bax'
+    signin: join(__dirname, '../template/signin'),
+    bax: join(__dirname, '../template/bax')
   },
   output: {
     path: distPath,

@@ -2,6 +2,9 @@
 const base = require('./webpack.base')
 const merge = require('webpack-merge')
 const webpack = require('webpack')
+const { join } = require('path')
+
+const isArray = Array.isArray
 
 const config = merge(base, {
   devServer: {
@@ -10,7 +13,14 @@ const config = merge(base, {
   }
 })
 
-config.entry.hot = ['webpack-hot-middleware/client?reload=true']
+Object.keys(config.entry).forEach((key) => {
+  const a = isArray(config.entry[key]) ? config.entry[key] : [config.entry[key]]
+
+  config.entry[key] = [
+    join(__dirname, 'dev-client'),
+    ...a
+  ]
+})
 
 config.plugins = [
   ...(config.plugins || []),
