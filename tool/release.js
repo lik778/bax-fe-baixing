@@ -11,8 +11,12 @@ pages.forEach((page) => {
   let text = fs.readFileSync(page, 'utf-8')
 
   assets.forEach((asset) => {
-    const [name, _, ext] = asset.split('.')
-    const reg = new RegExp(name + '*' + '.' + ext)
+    const [name, _, ext, map] = asset.split('.')
+    if (map) {
+      return
+    }
+
+    const reg = new RegExp(name + '.\\w+.' + ext)
     text = text.replace(reg, asset)
   })
 
