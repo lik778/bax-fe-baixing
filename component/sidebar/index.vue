@@ -96,8 +96,8 @@ export default {
     color: #768396;
   }
 
-  min-width: 180px;
-  width: 180px;
+  min-width: 140px;
+  width: 140px;
   height: 100%;
   background: var(--c-gray);
 }
