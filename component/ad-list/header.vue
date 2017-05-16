@@ -3,8 +3,8 @@
   <header class="ad-header">
     <section>
       <span>
-        <el-input placeholder="请输入订单号" icon="search"
-          v-model="query.orderId" />
+        <bax-input placeholder="请输入订单号" icon="search"
+          type="number" v-model="query.orderId" />
         <el-button icon="arrow-down"
           @click="switchShowMoreFilters">
           更多筛选
@@ -47,6 +47,7 @@
 
 import UserSelector from 'com/common/user-selector'
 import BaxSelect from 'com/common/select'
+import BaxInput from 'com/common/input'
 
 import {
   adStatus
@@ -80,7 +81,8 @@ export default {
   },
   components: {
     UserSelector,
-    BaxSelect
+    BaxSelect,
+    BaxInput
   },
   data() {
     const range = this.query.timeRange || ''

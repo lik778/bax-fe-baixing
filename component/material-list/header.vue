@@ -5,13 +5,13 @@
       <span class="filter-item">
         <label>名称</label>
         <div>
-          <el-input placeholder="输入名称" v-model="query.name" />
+          <bax-input placeholder="输入名称" v-model="query.name" />
         </div>
       </span>
       <span class="filter-item">
         <label>规格</label>
         <div>
-          <el-input placeholder="输入规格" v-model="query.slot" />
+          <bax-input placeholder="输入规格" v-model="query.slot" />
         </div>
       </span>
     </div>
@@ -34,7 +34,7 @@
 <script>
 
 import UserSelector from 'com/common/user-selector'
-
+import BaxInput from 'com/common/input'
 import clone from 'clone'
 
 import {
@@ -74,7 +74,8 @@ export default {
     }
   },
   components: {
-    UserSelector
+    UserSelector,
+    BaxInput
   },
   watch: {
     'query.userId': async function(v, p) {

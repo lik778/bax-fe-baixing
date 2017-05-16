@@ -5,13 +5,14 @@
       <span class="filter-item">
         <label>客户 ID</label>
         <div>
-          <el-input placeholder="客户 ID" v-model="query.userId" />
+          <bax-input placeholder="客户 ID" type="number"
+            v-model="query.userId" />
         </div>
       </span>
       <span class="filter-item">
         <label>客户名</label>
         <div>
-          <el-input placeholder="客户名" v-model="query.name" />
+          <bax-input placeholder="客户名" v-model="query.name" />
         </div>
       </span>
     </div>
@@ -35,6 +36,7 @@
 <script>
 
 import BaxSelect from 'com/common/select'
+import BaxInput from 'com/common/input'
 import { getUsers } from './action'
 
 export default {
@@ -50,7 +52,8 @@ export default {
     }
   },
   components: {
-    BaxSelect
+    BaxSelect,
+    BaxInput
   },
   computed: {
     roleOpts() {
