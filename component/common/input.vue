@@ -34,7 +34,7 @@ export default {
     }
   },
   methods: {
-    setValue(v) {console.debug('cdcdcd', Date.now())
+    setValue(v) {
       console.debug('input: set value')
       this.$emit('change', v)
       this.$emit('input', v)
@@ -49,7 +49,6 @@ export default {
   watch: {
     localValue(v) {
       console.debug('input:watch:localValue')
-      // this.setValue(v)
       this.throttle.next(v)
     },
     value(v) {
