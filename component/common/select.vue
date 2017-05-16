@@ -48,7 +48,7 @@ export default {
       this.$emit('change', v)
       this.$emit('input', v)
 
-      if (v === this.localValue) {
+      if (equal(v, this.localValue)) {
         return
       }
 
@@ -62,7 +62,8 @@ export default {
     },
     value(v) {
       console.debug('select:watch:value', v, this.localValue)
-      if (v === this.localValue) {
+      // multiple -> array
+      if (equal(v, this.localValue)) {
         return
       }
 
