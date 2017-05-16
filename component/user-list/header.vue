@@ -2,35 +2,58 @@
 <template>
   <header class="user-header">
     <div>
-      <aside>
-        <span class="filter-item">
-          <label>客户 ID</label>
-          <el-input placeholder="客户 ID" v-model="query.userId" />
-        </span>
-        <span class="filter-item">
-          <label>客户名</label>
-          <el-input placeholder="客户名" v-model="query.name" />
-        </span>
-      </aside>
-      <aside>
+      <span class="filter-item">
+        <label>客户 ID</label>
+        <el-input placeholder="客户 ID" v-model="query.userId" />
+      </span>
+      <span class="filter-item">
+        <label>客户名</label>
+        <el-input placeholder="客户名" v-model="query.name" />
+      </span>
+    </div>
+    <div>
+      <span class="filter-item">
+        <label>角色</label>
+        <bax-select clearable multiple
+          :options="roleOpts" placeholder='选择角色'
+          :value="query.roles.split(',').filter(s => !!s)"
+          @change="v => query.roles = v.join(',')" />
+      </span>
+      <span class="filter-item">
         <el-button @click="addUser" type="primary" icon="plus">
           新建用户
         </el-button>
-      </aside>
+      </span>
     </div>
   </header>
 </template>
 
 <script>
 
+import BaxSelect from 'com/common/select'
 import { getUsers } from './action'
 
 export default {
   name: 'user-header',
   props: {
+    allRoles: {
+      type: Array,
+      required: true
+    },
     query: {
       type: Object,
       required: true
+    }
+  },
+  components: {
+    BaxSelect
+  },
+  computed: {
+    roleOpts() {
+      return this.allRoles.map(r => ({
+        value: String(r.id),
+        label: r.name
+      }))
     }
   },
   methods: {
@@ -49,6 +72,9 @@ export default {
     'query.userId': async function(v, p) {
       await this.queryUsers(v, p)
     },
+    'query.roles': async function(v, p) {
+      await this.queryUsers(v, p)
+    },
     'query.name': async function(v, p) {
       await this.queryUsers(v, p)
     }
@@ -64,23 +90,30 @@ export default {
 
 @mixin filter-item;
 
-.filter-item {
-  margin-top: unset;
-}
-
 .user-header {
   @mixin top-filter;
-  padding: 20px 0;
 
   & > div {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding-right: 30px;
 
-    & > aside {
+    & > span {
       display: flex;
-      align-items: center;
+      flex-grow: 0.5;
+
+      & > div:last-child {
+        flex-grow: 1;
+      }
+    }
+
+    & > span:last-child {
+      margin-left: 60px;
+    }
+  }
+
+  & > div:last-child {
+    & > span:last-child {
+      justify-content: flex-end;
     }
   }
 }

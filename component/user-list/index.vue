@@ -4,7 +4,7 @@
     <topbar :userInfo="userInfo">
       <label slot="title">客户管理</label>
     </topbar>
-    <user-header :query="query"
+    <user-header :query="query" :all-roles="allRoles"
       @create-user="showCreateUserDialog = true" />
     <user-list :users="users" :all-roles="allRoles" :query="query" />
     <create-user :visible="showCreateUserDialog"

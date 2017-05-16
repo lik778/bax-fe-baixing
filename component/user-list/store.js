@@ -11,6 +11,7 @@ const defaultQuery = {
   total: 0,
 
   userId: '',
+  roles: '', // '1,3,7'
   name: ''
 }
 
