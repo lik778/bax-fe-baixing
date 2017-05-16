@@ -200,7 +200,6 @@ export default {
         flex-grow: 0.5;
 
         & > div:last-child {
-          flex-grow: 1;
         }
       }
 

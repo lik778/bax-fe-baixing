@@ -95,7 +95,7 @@ export default {
     }
   },
   beforeMount() {
-    this.throttle = new Subject().debounceTime(500)
+    this.throttle = new Subject().debounceTime(1000)
   },
   beforeDestroy() {
     es.removeListener('new user created', this.appendUsers)

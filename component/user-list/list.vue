@@ -12,7 +12,7 @@
           </i>
         </template>
       </el-table-column>
-      <el-table-column prop="email" label="邮箱" width="220" />
+      <el-table-column prop="email" label="邮箱" />
     </el-table>
     <bax-pagination :options="query"
       @current-change="onCurrentChange" />

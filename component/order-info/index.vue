@@ -48,7 +48,7 @@
           v-clipboard:error="onCopyError" />
       </div>
       <div>
-        <log v-for="log in logs" :info="log" />
+        <log v-for="(log, i) in logs" :info="log" :key="i" />
       </div>
     </main>
   </div>
@@ -265,6 +265,7 @@ export default {
 
 .order-info {
   padding: 0 35px;
+  width: 100%;
 }
 
 </style>

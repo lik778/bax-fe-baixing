@@ -4,11 +4,15 @@
     <div>
       <span class="filter-item">
         <label>名称</label>
-        <el-input placeholder="输入名称" v-model="query.name" />
+        <div>
+          <el-input placeholder="输入名称" v-model="query.name" />
+        </div>
       </span>
       <span class="filter-item">
         <label>规格</label>
-        <el-input placeholder="输入规格" v-model="query.slot" />
+        <div>
+          <el-input placeholder="输入规格" v-model="query.slot" />
+        </div>
       </span>
     </div>
     <div>
@@ -20,7 +24,8 @@
       </span>
       <span class="filter-item">
         <label>客户</label>
-        <user-selector v-model="query.userId" clearable />
+        <user-selector v-model="query.userId" clearable
+          placeholder='选择客户' />
       </span>
     </div>
   </section>
@@ -137,7 +142,6 @@ export default {
       flex-grow: 0.5;
 
       & > div:last-child {
-        flex-grow: 1;
       }
     }
 

@@ -2,6 +2,7 @@
 <template>
   <el-select v-model="localValue" :multiple="multiple"
     :clearable="clearable" filterable
+    :placeholder="placeholder"
     :filter-method="filterMethod">
     <el-option v-for="opt in options"
       :key="opt.value"
@@ -12,6 +13,8 @@
 </template>
 
 <script>
+
+import equal from 'lodash.isequal'
 
 export default {
   name: 'bax-select',
@@ -28,6 +31,7 @@ export default {
       type: Boolean,
       default: () => true
     },
+    placeholder: String,
     multiple: Boolean,
     value: {
       type: [String, Number, Array]

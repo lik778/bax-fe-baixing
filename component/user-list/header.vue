@@ -4,11 +4,15 @@
     <div>
       <span class="filter-item">
         <label>客户 ID</label>
-        <el-input placeholder="客户 ID" v-model="query.userId" />
+        <div>
+          <el-input placeholder="客户 ID" v-model="query.userId" />
+        </div>
       </span>
       <span class="filter-item">
         <label>客户名</label>
-        <el-input placeholder="客户名" v-model="query.name" />
+        <div>
+          <el-input placeholder="客户名" v-model="query.name" />
+        </div>
       </span>
     </div>
     <div>
@@ -100,10 +104,6 @@ export default {
     & > span {
       display: flex;
       flex-grow: 0.5;
-
-      & > div:last-child {
-        flex-grow: 1;
-      }
     }
 
     & > span:last-child {
@@ -113,7 +113,7 @@ export default {
 
   & > div:last-child {
     & > span:last-child {
-      justify-content: flex-end;
+      margin-left: 95px;
     }
   }
 }

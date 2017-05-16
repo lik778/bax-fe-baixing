@@ -62,6 +62,7 @@ export default {
 
 .ad-calendar {
   padding: 0 35px;
+  width: 100%;
 }
 
 </style>

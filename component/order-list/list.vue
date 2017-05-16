@@ -16,12 +16,12 @@
       <el-table-column label="广告类型" width="120"
         :formatter="formatOrderType" />
       <el-table-column prop="order.userName" label="客户" width="120" />
-      <el-table-column label='创建时间' width="220">
+      <el-table-column label='创建时间'>
         <template scope="s">
           <span>{{ s.row.order.createdAt | toHumanTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column label='操作' width="180">
+      <el-table-column label='操作'>
         <template scope="s">
           <router-link :to="{ name: 'order-info', params: { id: s.row.order.id } }">
             查看详情

@@ -41,6 +41,7 @@ export default {
 
 .order {
   padding: 0 35px;
+  width: 100%;
 }
 
 </style>

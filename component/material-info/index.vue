@@ -70,6 +70,7 @@ export default {
 
 .material-info {
   padding: 0 35px;
+  width: 100%;
 }
 
 </style>

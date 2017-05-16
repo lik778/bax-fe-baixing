@@ -455,6 +455,7 @@ export default {
 
 .create-order {
   padding: 0 35px;
+  width: 100%;
 
   & > main {
     max-width: 680px;
