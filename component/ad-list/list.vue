@@ -2,16 +2,8 @@
 <template>
   <section class="ad-list">
     <el-table :data="items" style="width: 100%">
+      <el-table-column prop="orderId" label="订单编号" width="120" />
       <el-table-column prop="name" label="名称" width="120" />
-      <el-table-column prop="orderId" label="订单 ID" width="120" />
-      <el-table-column prop="ad.name" label="广告位" width="120" />
-      <el-table-column label="投放时间" width="120">
-        <template scope="s">
-          <span>{{ s.row.timeRange[0] | date }}</span>
-          <i>-</i>
-          <span>{{ s.row.timeRange[1] | date }}</span>
-        </template>
-      </el-table-column>
       <el-table-column label="状态">
         <template scope="s">
           <el-tooltip v-if="s.row.rejectReason"
@@ -32,6 +24,15 @@
           </el-button>
         </template>
       </el-table-column>
+      <el-table-column prop="ad.name" label="广告位" width="120" />
+      <el-table-column label="投放时间" width="120">
+        <template scope="s">
+          <span>{{ s.row.timeRange[0] | date }}</span>
+          <i>-</i>
+          <span>{{ s.row.timeRange[1] | date }}</span>
+        </template>
+      </el-table-column>
+
       <el-table-column label="区域"
         :formatter="formatterArea" />
       <el-table-column label="类目"

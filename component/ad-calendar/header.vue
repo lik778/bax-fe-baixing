@@ -15,6 +15,18 @@
     </div>
     <div>
       <span class="filter-item">
+        <label>开始时间</label>
+        <el-date-picker type="date" placeholder="选择日期"
+          v-model="startAt" />
+      </span>
+      <span class="filter-item">
+        <label>结束时间</label>
+        <el-date-picker type="date" placeholder="选择日期"
+          v-model="endAt" />
+      </span>
+    </div>
+    <div>
+      <span class="filter-item">
         <label>区域</label>
         <span>
           <el-tag type="success" closable
@@ -39,18 +51,6 @@
           <i class="el-icon-plus"
             @click="categoryDialogVisible = true" />
         </span>
-      </span>
-    </div>
-    <div>
-      <span class="filter-item">
-        <label>开始时间</label>
-        <el-date-picker type="date" placeholder="选择日期"
-          v-model="startAt" />
-      </span>
-      <span class="filter-item">
-        <label>结束时间</label>
-        <el-date-picker type="date" placeholder="选择日期"
-          v-model="endAt" />
       </span>
     </div>
     <category-selector :all-categories="allCategories"
@@ -254,14 +254,27 @@ export default {
 
 .ad-calendar-header {
   @mixin top-filter;
-  padding: 10px 0 20px;
+  padding: 0 0 15px;
+  width: 100%;
 
   & > div {
     display: flex;
     align-items: center;
   }
 
-  & > div:nth-child(2), & > div:nth-child(3) {
+  & > div:nth-child(1), & > div:nth-child(2) {
+    & > span {
+      display: flex;
+      flex-grow: 0.5;
+      height: unset;
+      width: unset;
+
+      & > div:last-child {
+      }
+    }
+  }
+
+  & > div:nth-child(3), & > div:nth-child(4) {
     & > span {
       height: unset;
       width: unset;

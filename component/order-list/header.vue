@@ -11,17 +11,15 @@
         </el-button>
       </span>
       <span v-if="allowAddOrder">
-        <el-button type="primary" icon="plus">
-          <router-link tag="p" :to="{ name: 'create-order' }">
-            新建订单
-          </router-link>
+        <el-button type="primary" icon="plus"
+          @click="gotoCreateOrder">
+          新建订单
         </el-button>
       </span>
       <span v-if="!allowAddOrder && isOnlyAgentSales">
-        <el-button type="primary" icon="plus">
-          <router-link tag="p" :to="{ name: 'create-order' }">
-            广告查价
-          </router-link>
+        <el-button type="primary" icon="plus"
+          @click="gotoCreateOrder">
+          广告查价
         </el-button>
       </span>
     </section>
@@ -195,6 +193,11 @@ export default {
     }
   },
   methods: {
+    gotoCreateOrder() {
+      this.$router.push({
+        name: 'create-order'
+      })
+    },
     switchShowMoreFilters() {
       switchShowMoreFilters()
     },
