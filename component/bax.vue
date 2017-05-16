@@ -87,6 +87,11 @@ content {
 
 <style>
 
+body > content {
+  min-width: 1200px;
+  max-width: 1500px;
+}
+
 .el-loading-mask {
   background-color: unset;
   z-index: unset;

@@ -4,16 +4,16 @@
     <div>
       <span class="filter-item">
         <label>名称</label>
-        <el-input placeholder="请输入名称" v-model="query.name" />
+        <el-input placeholder="输入名称" v-model="query.name" />
       </span>
       <span class="filter-item">
         <label>规格</label>
-        <el-input placeholder="请输入规格" v-model="query.slot" />
+        <el-input placeholder="输入规格" v-model="query.slot" />
       </span>
     </div>
     <div>
       <span class="filter-item">
-        <label>创建时间</label>
+        <label>创建日期</label>
         <el-date-picker type="daterange" placeholder="选择日期"
           format="yyyy-MM-dd"
           v-model="timeRange" />
@@ -127,15 +127,22 @@ export default {
 
 .material-header {
   @mixin top-filter;
-  height: 110px;
-  width: 800px;
 
   & > div {
     display: flex;
     align-items: center;
 
+    & > span {
+      display: flex;
+      flex-grow: 0.5;
+
+      & > div:last-child {
+        flex-grow: 1;
+      }
+    }
+
     & > span:last-child {
-      margin-left: 70px;
+      margin-left: 60px;
     }
   }
 }

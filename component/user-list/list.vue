@@ -2,8 +2,8 @@
 <template>
   <section>
     <el-table :data="users" style="width: 100%">
-      <el-table-column prop="id" label="id" width="60" />
-      <el-table-column prop="name" label="名称" width="180" />
+      <el-table-column prop="id" label="ID" width="60" />
+      <el-table-column prop="name" label="名称" width="220" />
       <el-table-column prop="mobile" label="号码" width="180" />
       <el-table-column label="角色" width="180">
         <template scope="s">
@@ -12,7 +12,7 @@
           </i>
         </template>
       </el-table-column>
-      <el-table-column prop="email" label="邮箱" width="180" />
+      <el-table-column prop="email" label="邮箱" width="220" />
     </el-table>
     <bax-pagination :options="query"
       @current-change="onCurrentChange" />

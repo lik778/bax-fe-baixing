@@ -237,17 +237,22 @@ export default {
 
   & > section:nth-child(2) {
     @mixin top-filter;
-    padding: 10px 0 20px;
-
-    width: 800px;
-    padding-top: 10px;
 
     & > div {
       display: flex;
       align-items: center;
 
+      & > span {
+        display: flex;
+        flex-grow: 0.5;
+
+        & > div:last-child {
+          flex-grow: 1;
+        }
+      }
+
       & > span:last-child {
-        margin-left: 70px;
+        margin-left: 60px;
       }
     }
   }

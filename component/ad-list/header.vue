@@ -21,7 +21,7 @@
         </span>
         <span class="filter-item">
           <label>广告位</label>
-          <bax-select placeholder='请选择广告位'
+          <bax-select placeholder='选择广告位'
             :options="adOpts" clearable
             v-model="query.adId" />
         </span>
@@ -29,13 +29,13 @@
       <div>
         <span class="filter-item">
           <label>投放状态</label>
-          <bax-select placeholder='请选择状态'
+          <bax-select placeholder='选择投放状态'
             :options="adStatusOpts" clearable
             v-model="query.status" />
         </span>
         <span class="filter-item">
           <label>客户</label>
-          <user-selector placeholder='选客户' clearable
+          <user-selector placeholder='选择客户' clearable
             v-model="query.customerId" />
         </span>
       </div>
@@ -190,17 +190,22 @@ export default {
 
   & > section:nth-child(2) {
     @mixin top-filter;
-    padding: 10px 0 20px;
-
-    width: 800px;
-    padding-top: 10px;
 
     & > div {
       display: flex;
       align-items: center;
 
+      & > span {
+        display: flex;
+        flex-grow: 0.5;
+
+        & > div:last-child {
+          flex-grow: 1;
+        }
+      }
+
       & > span:last-child {
-        margin-left: 70px;
+        margin-left: 60px;
       }
     }
   }
