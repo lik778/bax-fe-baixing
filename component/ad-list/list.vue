@@ -2,9 +2,9 @@
 <template>
   <section class="ad-list">
     <el-table :data="items" style="width: 100%">
-      <el-table-column prop="orderId" label="订单编号" width="120" />
-      <el-table-column prop="name" label="名称" width="120" />
-      <el-table-column label="状态">
+      <el-table-column prop="orderId" label="订单编号" width="180" />
+      <el-table-column prop="name" label="名称" />
+      <el-table-column label="状态" width="120">
         <template scope="s">
           <el-tooltip v-if="s.row.rejectReason"
             effect="dark" placement="top"
@@ -24,12 +24,16 @@
           </el-button>
         </template>
       </el-table-column>
-      <el-table-column prop="ad.name" label="广告位" width="120" />
-      <el-table-column label="投放时间" width="120">
+      <el-table-column prop="ad.name" label="广告位" />
+      <el-table-column label="投放时间" width="100">
         <template scope="s">
-          <span>{{ s.row.timeRange[0] | date }}</span>
-          <i>-</i>
-          <span>{{ s.row.timeRange[1] | date }}</span>
+          <p class="center">
+            {{ s.row.timeRange[0] | date }}
+          </p>
+          <p class="center">-</p>
+          <p class="center">
+            {{ s.row.timeRange[1] | date }}
+          </p>
         </template>
       </el-table-column>
       <el-table-column label="类目·区域">
@@ -62,7 +66,7 @@
           <span v-else>暂无</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" v-if="allowAddAdItem || allowUpdateMaterial">
+      <el-table-column label="操作" v-if="allowAddAdItem || allowUpdateMaterial" width="100">
         <template scope="s">
           <div>
             <el-button v-if="s.row.itemType === 0"
@@ -332,6 +336,12 @@ export default {
 </script>
 
 <style scoped>
+
+.center {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
 
 a {
   color: #20a0ff;

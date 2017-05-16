@@ -3,7 +3,7 @@
   <section>
     <el-table :data="orders" style="width: 100%">
       <el-table-column prop="order.id" label="订单编号" width="120" />
-      <el-table-column label="订单状态" width="120">
+      <el-table-column label="订单状态">
         <template scope="s">
           <span>{{ s.row.status | orderStatus }}</span>
           <el-button v-if="allowPayOrder && (s.row.order.status === 0)"
@@ -15,13 +15,13 @@
       </el-table-column>
       <el-table-column label="广告类型" width="120"
         :formatter="formatOrderType" />
-      <el-table-column prop="order.userName" label="客户" width="120" />
+      <el-table-column prop="order.userName" label="客户" />
       <el-table-column label='创建时间'>
         <template scope="s">
           <span>{{ s.row.order.createdAt | toHumanTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column label='操作'>
+      <el-table-column label='操作' width="180">
         <template scope="s">
           <router-link :to="{ name: 'order-info', params: { id: s.row.order.id } }">
             查看详情
