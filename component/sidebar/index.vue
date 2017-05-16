@@ -87,7 +87,7 @@ export default {
 @import '../../cssbase/var';
 
 .sidebar {
-  & header {
+  & > header {
     display: flex;
     justify-content: center;
     padding-top: 15px;

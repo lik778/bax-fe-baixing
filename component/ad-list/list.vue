@@ -32,25 +32,23 @@
           <span>{{ s.row.timeRange[1] | date }}</span>
         </template>
       </el-table-column>
-
-      <el-table-column label="区域"
-        :formatter="formatterArea" />
-      <el-table-column label="类目"
-        :formatter="formatterCategory" />
+      <el-table-column label="类目·区域">
+        <template scope="s">
+          <p>类目: {{ formatterArea(s.row) }}</p>
+          <p>区域: {{ formatterCategory(s.row) }}</p>
+        </template>
+      </el-table-column>
       <el-table-column label="物料">
         <template scope="s">
           <el-button v-if="allowAddMaterial && !s.row.materialId"
-            type="text" size="small"
+            type="primary" size="mini"
             @click="showAddMaterialDialog(s.row.id)">
             上传物料
           </el-button>
-
           <a v-if="s.row.material && s.row.material.imgUrl"
             v-bind:href="s.row.material.imgUrl"
             target="_blank">
-            <img class="m-img"
-              v-bind:src="s.row.material.imgUrl"
-              v-bind:alt="s.row.material.content" />
+            {{ s.row.material.name }}
           </a>
         </template>
       </el-table-column>
@@ -64,34 +62,32 @@
           <span v-else>暂无</span>
         </template>
       </el-table-column>
-      <el-table-column label="审核" v-if="allowVerify" width="100">
-        <template scope="s">
-          <el-button v-if="allowVerifyAdItem(s.row.status)"
-            type="text" size="small"
-            @click="showRejectReasonDialog(s.row.id)">
-            拒绝
-          </el-button>
-          <el-button v-if="allowVerifyAdItem(s.row.status)"
-            type="text" size="small"
-            @click="passAdItem(s.row.id)">
-            通过
-          </el-button>
-        </template>
-      </el-table-column>
       <el-table-column label="操作" v-if="allowAddAdItem || allowUpdateMaterial">
         <template scope="s">
           <div>
             <el-button v-if="s.row.itemType === 0"
-              type="text" size="small"
+              type="primary" size="mini"
               @click="showAddAdItemDialog(s.row.id, s.row)">
               新增投放
             </el-button>
           </div>
           <div>
             <el-button v-if="allowUpdateMaterial && s.row.materialId"
-              type="text" size="small"
+              type="warning" size="mini"
               @click="showAddMaterialDialog(s.row.id)">
               修改物料
+            </el-button>
+          </div>
+          <div v-if="allowVerifyAdItem(s.row.status)">
+            <el-button type="danger" size="mini"
+              @click="showRejectReasonDialog(s.row.id)">
+              拒绝
+            </el-button>
+          </div>
+          <div v-if="allowVerifyAdItem(s.row.status)">
+            <el-button type="success" size="mini"
+              @click="passAdItem(s.row.id)">
+              通过
             </el-button>
           </div>
         </template>
@@ -336,6 +332,10 @@ export default {
 </script>
 
 <style scoped>
+
+a {
+  color: #20a0ff;
+}
 
 .ad-list {
   margin-top: 16px;
