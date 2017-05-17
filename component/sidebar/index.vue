@@ -2,7 +2,8 @@
 <template>
   <main class="sidebar">
     <header>
-      BAX SSP
+      <p>BAX SSP</p>
+      <p>v{{ version }}</p>
     </header>
     <content>
       <el-menu default-active="1">
@@ -49,6 +50,8 @@
 
 <script>
 
+import { version } from '../../package.json'
+
 import {
   allowQueryMaterials,
   allowQueryAdItems,
@@ -62,6 +65,11 @@ export default {
     userInfo: {
       type: Object,
       required: true
+    }
+  },
+  data() {
+    return {
+      version
     }
   },
   computed: {
@@ -89,11 +97,21 @@ export default {
 .sidebar {
   & > header {
     display: flex;
+    flex-flow: column;
     justify-content: center;
-    padding-top: 15px;
+    align-items: center;
+    padding-top: 5px;
     height: 90px;
-    font-size: 20px;
-    color: #768396;
+
+    & > p:first-child {
+      font-size: 20px;
+      color: #768396;
+    }
+
+    & > p:last-child {
+      font-size: 12px;
+      color: gray;
+    }
   }
 
   min-width: 140px;

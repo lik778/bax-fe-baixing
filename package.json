@@ -1,7 +1,7 @@
 {
   "name": "bax-fe",
   "private": true,
-  "version": "1.0.7",
+  "version": "1.0.8",
   "scripts": {
     "upload-asset": "qiniu -c tool/asset.qiniu.config.js -v",
     "upload": "qiniu -c tool/qiniu.config.js -v",
@@ -44,6 +44,7 @@
     "express": "4",
     "extract-text-webpack-plugin": "2",
     "file-loader": "0",
+    "json-loader": "^0.5.4",
     "ora": "1",
     "postcss-cssnext": "2",
     "postcss-import": "9",
