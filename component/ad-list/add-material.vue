@@ -17,7 +17,7 @@
       <el-form-item label="规格">
         <el-input v-model="material.slot" />
       </el-form-item>
-      <el-form-item label="链接" required>
+      <el-form-item label="链接">
         <el-input v-model.trim="material.link"
           placeholder="如: http://baixing.com" />
       </el-form-item>
