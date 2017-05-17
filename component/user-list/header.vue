@@ -111,7 +111,6 @@ export default {
     @mixin top-filter;
     padding: 0 30px 15px 0;
 
-
     & > span {
       width: 290px;
     }
