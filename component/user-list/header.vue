@@ -2,6 +2,11 @@
 <template>
   <header class="user-header">
     <div>
+      <el-button @click="addUser" type="primary" icon="plus">
+        新建用户
+      </el-button>
+    </div>
+    <div>
       <span class="filter-item">
         <label>客户 ID</label>
         <div>
@@ -15,19 +20,12 @@
           <bax-input placeholder="客户名" v-model="query.name" />
         </div>
       </span>
-    </div>
-    <div>
       <span class="filter-item">
         <label>角色</label>
         <bax-select clearable multiple
           :options="roleOpts" placeholder='选择角色'
           :value="query.roles.split(',').filter(s => !!s)"
           @change="v => query.roles = v.join(',')" />
-      </span>
-      <span class="filter-item">
-        <el-button @click="addUser" type="primary" icon="plus">
-          新建用户
-        </el-button>
       </span>
     </div>
   </header>
@@ -98,25 +96,24 @@ export default {
 @mixin filter-item;
 
 .user-header {
-  @mixin top-filter;
 
   & > div {
     display: flex;
     align-items: center;
+  }
 
-    & > span {
-      display: flex;
-      flex-grow: 0.5;
-    }
-
-    & > span:last-child {
-      margin-left: 60px;
-    }
+  & > div:first-child {
+    margin-bottom: 15px;
   }
 
   & > div:last-child {
-    & > span:last-child {
-      margin-left: 95px;
+    justify-content: space-around;
+    @mixin top-filter;
+    padding: 0 30px 15px 0;
+
+
+    & > span {
+      width: 290px;
     }
   }
 }
