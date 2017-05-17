@@ -2,8 +2,8 @@
 <template>
   <section class="ad-list">
     <el-table :data="items" style="width: 100%">
-      <el-table-column prop="orderId" label="订单编号" width="180" />
-      <el-table-column prop="name" label="名称" />
+      <el-table-column prop="orderId" label="订单编号" width="110" />
+      <el-table-column prop="name" label="名称" width="100" />
       <el-table-column label="状态" width="120">
         <template scope="s">
           <el-tooltip v-if="s.row.rejectReason"
@@ -24,7 +24,7 @@
           </el-button>
         </template>
       </el-table-column>
-      <el-table-column prop="ad.name" label="广告位" />
+      <el-table-column prop="ad.name" label="广告位" width="120" />
       <el-table-column label="投放时间" width="100">
         <template scope="s">
           <p class="center">
