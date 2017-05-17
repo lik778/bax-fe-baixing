@@ -116,7 +116,7 @@ export default {
 
   min-width: 140px;
   width: 140px;
-  height: 100%;
+  height: 600px;
   background: var(--c-gray);
 }
 
