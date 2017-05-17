@@ -11,12 +11,12 @@ export function getPagination(total, offset, limit) {
   }
 }
 
-export function getImageSizeWarnTip(imgWidth, imageHeight, adWidth, adHeight) {
-  if ((imageHeight < adHeight) || (imgWidth < adWidth)) {
-    return `图片尺寸较小, 会影响效果哟~ (广告位: ${adWidth}*${adHeight}, 图片: ${imgWidth}*${imageHeight})`
+export function getImageSizeWarnTip(imgWidth, imgHeight, adWidth, adHeight) {
+  if ((imgHeight < adHeight) || (imgWidth < adWidth)) {
+    return `图片尺寸较小, 会影响效果哟~ (广告位: ${adWidth}*${adHeight}, 图片: ${imgWidth}*${imgHeight})`
   }
-  if ((imgWidth / imageHeight).toFixed(2) !== (adWidth / adHeight).toFixed(2)) {
-    return `图片尺寸比例与广告位不匹配, 会影响效果哟~ (广告位: ${adWidth}*${adHeight}, 图片: ${imgWidth}*${imageHeight})`
+  if ((imgWidth / imgHeight).toFixed(2) !== (adWidth / adHeight).toFixed(2)) {
+    return `图片尺寸比例与广告位不匹配, 会影响效果哟~ (广告位: ${adWidth}*${adHeight}, 图片: ${imgWidth}*${imgHeight})`
   }
   return ''
 }

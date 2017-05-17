@@ -46,7 +46,7 @@
         <template scope="s">
           <el-button v-if="allowAddMaterial && !s.row.materialId"
             type="primary" size="mini"
-            @click="showAddMaterialDialog(s.row.id)">
+            @click="showAddMaterialDialog(s.row.id, s.row)">
             上传物料
           </el-button>
           <a v-if="s.row.material && s.row.material.imgUrl"
@@ -78,7 +78,7 @@
           <div>
             <el-button v-if="allowUpdateMaterial && s.row.materialId"
               type="warning" size="mini"
-              @click="showAddMaterialDialog(s.row.id)">
+              @click="showAddMaterialDialog(s.row.id, s.row)">
               修改物料
             </el-button>
           </div>
@@ -104,6 +104,7 @@
       @success="rejectAdItem" />
     <add-material v-if="allowAddMaterial"
       :materials="materials" :itemId="currentItemId"
+      :ad="currentItem.ad"
       :visible="addMaterialDialogVisible"
       @hide="addMaterialDialogVisible = false"
       @success="onAddMaterialSuccess" />
@@ -294,9 +295,9 @@ export default {
       this.currentItem = clone(item)
       this.currentItemId = id
     },
-    showAddMaterialDialog(id) {
+    showAddMaterialDialog(id, item) {
       this.addMaterialDialogVisible = true
-      this.currentItem = {}
+      this.currentItem = clone(item)
       this.currentItemId = id
     },
     async onCurrentChange({offset}) {

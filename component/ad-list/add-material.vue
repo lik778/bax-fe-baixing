@@ -3,10 +3,19 @@
   <el-dialog title="添加物料" :value="visible"
     :close-on-click-modal="false"
     @close="cancel">
-    <el-form ref="form" :model="material" label-width="100px">
+    <el-form ref="form" :model="material" label-width="100px"
+      v-loading="loading" element-loading-text="图片上传中..." >
       <el-form-item label="选择物料">
-        <bax-select :options="moptions" v-model="materialId"
-          :filter-method="onQueryMaterials" />
+        <div class="material-selector">
+          <bax-select :options="moptions" v-model="materialId"
+            :filter-method="onQueryMaterials" />
+          <p v-if="imageSizeWarnTip" class="warn">
+            {{ imageSizeWarnTip }}
+          </p>
+          <p v-else>
+            {{ adSizeTip }}
+          </p>
+        </div>
       </el-form-item>
       <el-form-item label="名称" required>
         <el-input v-model="material.name" />
@@ -23,7 +32,9 @@
       </el-form-item>
       <el-form-item label="上传物料" required>
         <div class="add-img">
-          <uploader @success="onUploadSuccess" />
+          <uploader :size-limit="ad"
+            @success="onUploadSuccess"
+            @start="() => loading = true" />
           <img v-if="material.url"
             v-bind:src="material.url" />
           <ul>
@@ -50,6 +61,11 @@ import BaxSelect from 'com/common/select'
 
 import { Message } from 'element-ui'
 import clone from 'clone'
+
+import {
+  getImageSizeWarnTip,
+  getImageInfo
+} from 'util/kit'
 
 import {
   addAdItemMaterial,
@@ -83,13 +99,20 @@ export default {
     itemId: {
       type: Number,
       required: true
+    },
+    ad: {
+      type: Object,
+      // required: true
+      default: () => {}
     }
   },
   data() {
     return {
       material: {...emptyMaterial},
       createMaterial: false,
-      materialId: ''
+      imageSizeWarnTip: '',
+      materialId: '',
+      loading: false
     }
   },
   computed: {
@@ -98,16 +121,25 @@ export default {
         label: m.name + ' ' + (m.slot || ''),
         value: m.id
       }))
+    },
+    adSizeTip() {
+      const { width: w, height: h } = this.ad || {}
+      if (w && h) {
+        return `广告位规格: ${w} * ${h}`
+      }
+
+      return ''
     }
   },
   async mounted() {
     await getMaterials()
   },
   methods: {
-    onSelectMaterial(v) {
+    async onSelectMaterial(v) {
       if (!v) {
         // clear
         this.material = clone(emptyMaterial)
+        this.imageSizeWarnTip = ''
         return
       }
 
@@ -121,15 +153,27 @@ export default {
         slot: m.slot,
         id: m.id
       }
+
+      if (m.imgUrl) {
+        const { width, height } = await getImageInfo(this.material.url)
+        const { width: w, height: h } = this.ad || {}
+        const tip = getImageSizeWarnTip(width, height, w, h)
+        this.imageSizeWarnTip = tip
+      } else {
+        this.imageSizeWarnTip = ''
+      }
     },
     onUploadSuccess(url) {
       this.createMaterial = true
       this.material.url = url
+      this.loading = false
     },
     empty() {
       this.material = {...emptyMaterial}
       this.createMaterial = false
+      this.imageSizeWarnTip = ''
       this.materialId = ''
+      this.loading = false
       this.$emit('hide')
     },
     cancel() {
@@ -185,6 +229,18 @@ export default {
 .el-dialog__body {
   & > div {
     margin: 10px 0;
+  }
+}
+
+.material-selector {
+  & > p:last-child {
+    margin-top: 10px;
+    font-size: 12px;
+    line-height: 14px;
+
+    &.warn {
+      color: red;
+    }
   }
 }
 
