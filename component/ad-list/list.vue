@@ -38,8 +38,8 @@
       </el-table-column>
       <el-table-column label="类目·区域">
         <template scope="s">
-          <p>类目: {{ formatterArea(s.row) }}</p>
-          <p>区域: {{ formatterCategory(s.row) }}</p>
+          <p>类目: {{ formatterCategory(s.row) }}</p>
+          <p>区域: {{ formatterArea(s.row) }}</p>
         </template>
       </el-table-column>
       <el-table-column label="物料">
