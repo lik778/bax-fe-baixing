@@ -59,6 +59,8 @@
 import Uploader from 'com/common/uploader'
 import BaxSelect from 'com/common/select'
 
+import 'rxjs/add/operator/debounceTime'
+import { Subject } from 'rxjs/Subject'
 import { Message } from 'element-ui'
 import clone from 'clone'
 
@@ -131,7 +133,14 @@ export default {
       return ''
     }
   },
+  beforeMount() {
+    this.throttle = new Subject().debounceTime(800)
+  },
+  beforeDestroy() {
+    this.throttle.unsubscribe()
+  },
   async mounted() {
+    this.throttle.subscribe(this.queryMaterials)
     await getMaterials()
   },
   methods: {
@@ -179,7 +188,10 @@ export default {
     cancel() {
       this.empty()
     },
-    async onQueryMaterials(v) {
+    onQueryMaterials(v) {
+      this.throttle.next(v)
+    },
+    async queryMaterials(v) {
       await getMaterials({name: v})
     },
     async submit() {
