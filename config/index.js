@@ -8,3 +8,9 @@ export const baxApiHost = isPro
   : '//192.168.8.201/bax'
 
 export const assetHost = '//adfe.wzbaixing.com.cn/bax-asset.'
+
+export const upyun = {
+  filehost: '//file.baixing.net/',
+  host: '//v0.api.upyun.com',
+  bucket: 'attachments'
+}

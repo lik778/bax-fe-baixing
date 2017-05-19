@@ -11,21 +11,28 @@
 
 <script>
 
-import { getQiniuToken } from 'api/material'
-import { qiniuHost } from 'config'
+import { getUpyunToken } from 'api/material'
+import { upyun } from 'config'
 
 import {
   getImageSizeWarnTip,
   getImageInfo
 } from 'util/kit'
 
+import { Message } from 'element-ui'
 import { extname } from 'path'
 import Fetch from 'fetch.io'
 import uuid from 'uuid/v4'
 
+const {
+  filehost: upyunFileHost,
+  host: upyunHost,
+  bucket,
+} = upyun
+
 const request = new Fetch({
-  prefix: '//upload.qiniu.com',
-  credentials: 'cors'
+  credentials: 'cors',
+  prefix: upyunHost
 })
 
 export default {
@@ -53,7 +60,7 @@ export default {
       }
 
       const ext = extname(file.name)
-      const name = uuid() + ext
+      const name = 'bax-img-' + uuid() + ext
 
       if (!['.jpeg', '.jpg', '.png', '.gif', '.webp'].includes(ext)) {
         this.tip = '仅允许上传图片文件 (png, gif, jpeg, jpg, webp 等)'
@@ -66,19 +73,28 @@ export default {
         this.tip = getImageSizeWarnTip(width, height, w, h)
       }
 
-      const token = await getQiniuToken()
+      // 15 min 过期
+      const expiration = (Date.now() / 1000 | 0) + 15 * 60 // 秒
 
       this.$emit('start')
       // TODO - emit error
+      const { policy, sign } = await getUpyunToken({
+        saveKey: name,
+        expiration,
+        bucket
+      })
 
-      const body = await request
-        .post('/')
-        .append('key', name)
+      const { url: filePath } = await request
+        .post('/' + bucket)
         .append('file', file)
-        .append('token', token)
+        .append('bucket', bucket)
+        .append('policy', policy)
+        .append('signature', sign)
+        .append('save-key', name)
+        .append('expiration', expiration)
         .json()
 
-      this.$emit('success', qiniuHost + body.key)
+      this.$emit('success', upyunFileHost + filePath)
     }
   }
 }

@@ -31,6 +31,15 @@ export async function getMaterial(id) {
   return toCamelcase(body.data)
 }
 
+export async function getUpyunToken(opts) {
+  const body = await api
+    .get('/material/upyun/token')
+    .query(reverseCamelcase(opts))
+    .json()
+
+  return body.data
+}
+
 /**
  * @returns {String}
  */
