@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+npm run build
+npm run upload
+npm run release
+
+git add view/*.html
+
+git commit view/*.html -m 'Release'
