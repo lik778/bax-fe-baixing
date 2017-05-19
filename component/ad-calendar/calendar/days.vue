@@ -62,8 +62,8 @@ section {
   align-items: center;
 
   & > p {
-    width: 25px;
-    height: 25px;
+    width: 28px;
+    height: 28px;
     border-top: 1px solid #a3b2c4;
     border-left: 1px solid #a3b2c4;
     border-bottom: 1px solid #a3b2c4;

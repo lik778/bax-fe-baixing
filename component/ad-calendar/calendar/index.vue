@@ -156,12 +156,28 @@ export default {
     display: flex;
     align-items: center;
 
+    & > span:first-child {
+      height: 59px;
+      border-bottom: 1px solid #a3b2c4;
+      border-left: 1px solid #a3b2c4;
+      border-top: 1px solid #a3b2c4;
+      background: #eef1f6;
+    }
+
     & > span {
       display: flex;
       align-items: center;
 
       & > label {
+        display: flex;
+        align-items: center;
+        padding-left: 10px;
         min-width: 100px;
+        height: 100%;
+      }
+
+      & > label:last-child {
+        border-left: 1px solid #a3b2c4;
       }
     }
   }
@@ -172,14 +188,31 @@ export default {
       align-items: center;
       margin: 5px 0;
 
+      & > span:first-child {
+        height: 28px;
+        border-bottom: 1px solid #a3b2c4;
+        border-left: 1px solid #a3b2c4;
+        border-top: 1px solid #a3b2c4;
+        background: #eef1f6;
+      }
+
       & > span {
         display: flex;
         align-items: center;
 
         & > label {
           @mixin wordline;
+          display: flex;
+          align-items: center;
+          padding: 0 10px;
+          height: 100%;
           min-width: 100px;
           max-width: 100px;
+          font-size: 14px;
+        }
+
+        & > label:last-child {
+          border-left: 1px solid #a3b2c4;
         }
       }
     }

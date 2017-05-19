@@ -64,16 +64,21 @@ span {
     & > p {
       @mixin center;
 
-      width: 25px;
-      height: 25px;
+      width: 28px;
+      height: 28px;
       border-top: 1px solid #a3b2c4;
       border-left: 1px solid #a3b2c4;
       border-bottom: 1px solid #a3b2c4;
+      background: #eef1f6;
 
       &:last-child {
         border-right: 1px solid #a3b2c4;
       }
     }
+  }
+
+  & > section:not(:first-child) {
+    margin-top: 3px;
   }
 }
 
