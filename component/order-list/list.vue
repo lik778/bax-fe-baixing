@@ -91,7 +91,7 @@ export default {
       await getOrders({offset})
     },
     formatOrderType(row) {
-      return sspOrderType[String(row.order.orderType)]
+      return sspOrderType[String(row.orderType)]
     }
   },
   computed: {
