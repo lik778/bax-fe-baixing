@@ -6,7 +6,9 @@
     </topbar>
     <main>
       <section>
-        <img class="img" v-bind:src="material.imgUrl" />
+        <a v-bind:href="material.imgUrl" target="_blank">
+          <img class="img" v-bind:src="material.imgUrl" />
+        </a>
       </section>
       <section>
         <item label="名称" :value="material.name" />
@@ -66,6 +68,7 @@ export default {
   max-width: 400px;
   max-height: 400px;
   object-fit: contain;
+  cursor: pointer;
 }
 
 .material-info {
