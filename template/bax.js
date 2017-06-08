@@ -9,6 +9,7 @@ import AdCalendar from 'com/ad-calendar'
 import UserList from 'com/user-list'
 import AdList from 'com/ad-list'
 import Bax from 'com/bax'
+import Dashboard from 'com/dashboard'
 
 import VueClipboard from 'vue-clipboard2'
 import VueRouter from 'vue-router'
@@ -59,6 +60,10 @@ const router = new VueRouter({
     component: AdCalendar,
     path: '/main/ad-calendar',
     name: 'ad-calendar'
+  }, {
+    component: Dashboard,
+    path: '/main/dashboard',
+    name: 'dashboard'
   }]
 })
 

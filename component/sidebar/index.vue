@@ -38,9 +38,14 @@
           </el-menu-item>
         </el-submenu>
         <el-menu-item index="2">
-          <i class="el-icon-menu" />设置
+          <router-link :to="{ name: 'dashboard' }" tag="p">
+            <i class="el-icon-menu" />数据报表
+          </router-link>
         </el-menu-item>
         <el-menu-item index="3">
+          <i class="el-icon-menu" />设置
+        </el-menu-item>
+        <el-menu-item index="4">
           <i class="el-icon-setting" />账户
         </el-menu-item>
       </el-menu>

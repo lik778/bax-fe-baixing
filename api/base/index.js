@@ -5,7 +5,7 @@ import { Message } from 'element-ui'
 import { redirectTo } from 'utils'
 import Fetch from 'fetch.io'
 
-import { baxApiHost } from 'config'
+import { baxApiHost, dashboardHost } from 'config'
 
 import es from 'base/es'
 
@@ -33,6 +33,25 @@ export const api = new Fetch({
     if (meta.message !== 'Success') {
       Message.error(meta.message)
       throw new Error(meta.message)
+    }
+  }
+})
+
+export const dashboardApi = new Fetch({
+  prefix: dashboardHost,
+  beforeRequest() {
+    es.emit('http fetch start')
+  },
+  afterResponse(res) {
+    es.emit('http fetch end')
+
+    if(res.status >= 500) {
+      Message.error('出错啦')
+      throw new Error('出错啦')
+    }
+    if(res.status === 401) {
+      Message.error('请重新登录 >_<')
+      return redirectTo('signin')
     }
   }
 })

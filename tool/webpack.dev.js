@@ -7,6 +7,7 @@ const { join } = require('path')
 const isArray = Array.isArray
 
 const config = merge(base, {
+  devtool: 'cheap-module-eval-source-map',
   devServer: {
     historyApiFallback: true,
     noInfo: true
