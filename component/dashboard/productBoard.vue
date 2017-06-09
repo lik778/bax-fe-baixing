@@ -40,7 +40,7 @@ export default {
     leftEachDay() {
       const days = moment().endOf('month').date()
       const passed = moment().date()
-      if(passed === days) return 0
+      if(passed === days || this.target <= this.done) return 0
       return Math.ceil( (this.target - this.done) / (days - passed) )
     },
     classes() {

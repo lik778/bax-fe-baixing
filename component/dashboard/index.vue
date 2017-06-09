@@ -14,15 +14,15 @@
     <el-row :gutter="40">
       <el-col :span="16">
         <el-row :gutter="20" class="row">
-          <el-col :span="4">业务进度</el-col>
+          <el-col :span="4"><span class="label">业务进度</span></el-col>
           <el-col :span="20">
-            <el-progress class="product-progress" :text-inside="true" :stroke-width="24" :percentage="70"></el-progress>
+            <el-progress class="product-progress" :text-inside="true" :stroke-width="24" :percentage="sumProgress"></el-progress>
           </el-col>
         </el-row>
         <el-row :gutter="20">
-          <el-col :span="4">时间进度</el-col>
+          <el-col :span="4"><span class="label">时间进度</span></el-col>
           <el-col :span="20">
-            <el-progress class="time-progress" :text-inside="true" :stroke-width="18" :percentage="60"></el-progress>
+            <el-progress class="time-progress" :text-inside="true" :stroke-width="18" :percentage="timeProgress"></el-progress>
           </el-col>
         </el-row>
       </el-col>
@@ -31,12 +31,9 @@
       </el-col>
     </el-row>
     <el-row :gutter="40">
-      <el-col :span="8"><product-board :title="'站内广告'" :target="100" :done="100" :done-yesterday="20"/></el-col>
-      <el-col :span="8"><product-board :title="'凤鸣业务'" :target="100" :done="80" :done-yesterday="20"/></el-col>
-      <el-col :span="8"><product-board :title="'大客户业务'" :target="100" :done="20" :done-yesterday="20"/></el-col>
-      <el-col :span="8"><product-board :title="'站外广告'" :target="100" :done="20" :done-yesterday="20"/></el-col>
-      <el-col :span="8"><product-board :title="'拼框业务'" :target="100" :done="20" :done-yesterday="20"/></el-col>
-      <el-col :span="8"><product-board :title="'众托帮'" :target="100" :done="20" :done-yesterday="20"/></el-col>
+      <el-col :span="8" v-for="(v, product) in productData" :key="product" v-if="product !== 'sum'">
+        <product-board :title="product" :target="v.target" :done="v.current" :done-yesterday="v.yesterday"/>
+      </el-col>
     </el-row>
     <el-row :gutter="40">
       <el-col :span="24"><div class="bar bg-light">各业务近60天业绩趋势</div></el-col>
@@ -50,14 +47,16 @@
 <script>
 import Topbar from 'com/topbar'
 import ProductBoard from './productBoard'
-import { summaryOfProduct } from './action'
+import moment from 'moment'
+import { summaryOfProduct, setRange } from './action'
 import store from './store'
 export default {
   name: 'dashboard',
   store,
   data() {
     return {
-      yesterday: []
+      yesterday: [],
+      productData: { sum: {}}
     }
   },
   props: {
@@ -67,11 +66,28 @@ export default {
     }
   },
   mounted() {
-    summaryOfProduct('month')
+    summaryOfProduct('month').then(() => {
+      this.productData = this[this.range]
+    })
   },
   methods: {
     setRange(v) {
-      console.log(v)
+      setRange(v)
+      summaryOfProduct(v).then(() => {
+        this.productData = this[this.range]
+      })
+    }
+  },
+  computed: {
+    sumProgress() {
+      const { current, target } = this.productData.sum
+      if(!target) return 0
+      return Math.floor( ( current / target ) * 100 )
+    },
+    timeProgress() {
+      const days = moment().endOf('month').date()
+      const passed = moment().date()
+      return Math.floor( passed / days * 100 )
     }
   },
   components: {
@@ -100,6 +116,11 @@ export default {
 .row {
   line-height: 24px;
   margin: 10px 0;
+}
+.label {
+  font-size: .8em;
+  color: #666;
+  padding-left: 15px;
 }
 </style>
 <style>

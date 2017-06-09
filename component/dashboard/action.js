@@ -13,6 +13,4 @@ export const setTarget = createAction((range, product, value) => {
   return dapi.setTarget(range, product, value)
 })
 
-export const getTarget = createAction((range) => {
-  return dapi.getTarget(range)
-})
+export const setRange = createAction()
