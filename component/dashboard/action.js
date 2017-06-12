@@ -9,6 +9,10 @@ export const summaryOfProduct = createAction((range) => {
     ])
 })
 
+export const getTrend = createAction(() => {
+  return dapi.getProfitByProductAndDay()
+})
+
 export const setTarget = createAction((range, product, value) => {
   return dapi.setTarget(range, product, value)
 })

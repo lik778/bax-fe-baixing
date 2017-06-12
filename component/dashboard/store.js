@@ -1,6 +1,6 @@
 import { createStore } from 'vue-duo'
 
-import { summaryOfProduct, setTarget, setRange } from './action'
+import { summaryOfProduct, setTarget, setRange, getTrend } from './action'
 
 
 const store = createStore({
@@ -8,12 +8,12 @@ const store = createStore({
     quarter: [],
     year: [],
     range: 'month',
-    products: ['站内广告', '凤鸣', '大客户', '站外广告', '拼框', '标王']
+    products: ['站内广告', '凤鸣', '摇钱树', '站外广告', '拼框', '标王'],
+    trend: {}
 })
 
 store.subscribeActions({
   [summaryOfProduct]: profits => {
-    console.log(profits)
     let result = {}, { range, products } = store.state
     const sum = products.reduce((a, b) => {
       if(!a[b]) {
@@ -30,7 +30,6 @@ store.subscribeActions({
 
       return a
     }, {'sum': { target: 0, current: 0, yesterday: 0 }})
-    console.log(sum)
 
     return {
       [range]: sum
@@ -39,6 +38,11 @@ store.subscribeActions({
   [setRange]: range => {
     return {
       range
+    }
+  },
+  [getTrend]: raw => {
+    return {
+      trend: raw
     }
   }
 })

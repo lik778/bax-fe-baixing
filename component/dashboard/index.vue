@@ -57,7 +57,7 @@
     <el-row :gutter="40">
       <el-col :span="24"><div class="bar bg-light">各业务近60天业绩趋势</div></el-col>
       <el-col :span="24">
-        tubiao
+        <chart id="trend-chart" :options="lineOptions" ref="trend" auto-resize></chart>
       </el-col>
     </el-row>
   </div>
@@ -67,7 +67,7 @@
 import Topbar from 'com/topbar'
 import ProductBoard from './productBoard'
 import moment from 'moment'
-import { summaryOfProduct, setRange } from './action'
+import { summaryOfProduct, setRange, getTrend } from './action'
 import store from './store'
 import MyProgress from 'com/common/my-progress'
 
@@ -77,7 +77,8 @@ export default {
   data() {
     return {
       yesterday: [],
-      productData: { sum: {}}
+      productData: { sum: {} },
+      lineOptions: {}
     }
   },
   props: {
@@ -90,6 +91,7 @@ export default {
     summaryOfProduct('month').then(() => {
       this.productData = this[this.range]
     })
+    getTrend().then(this.parseOption)
   },
   methods: {
     setRange(v) {
@@ -97,6 +99,55 @@ export default {
       summaryOfProduct(v).then(() => {
         this.productData = this[this.range]
       })
+    },
+    parseOption(raw) {
+      const reduced = raw.reduce((a, c) => {
+        const { date, product, profit } = c
+        if( !a[date] ) {
+            a[date] = {}
+        }
+        a[date][product] = profit
+        return a
+      }, {})
+      let start = moment().subtract(60, 'days')
+      const end = moment().subtract(1, 'days')
+      let dates = [], result = {}
+      while(!start.isAfter(end, 'day')) {
+        const dateKey = start.format('YYYY-MM-DD')
+        this.products.forEach(product => {
+          if( !result[product] ) result[product] = []
+          if( reduced[dateKey]) {
+            result[product].push( +reduced[dateKey][product] || null )
+          } else {
+            result[product].push(null)
+          }
+        })
+        dates.push(start.format('M-DD'))
+        start = start.add(1, 'days')
+      }
+      const series = this.products.map(product => ({
+        name: product,
+        type: 'line',
+        data: result[product]
+      }))
+      this.lineOptions = {
+        xAxis: {
+            data: dates,
+            axisLabel: {
+              interval: 0,
+              rotate: 90
+            }
+        },
+        tooltip: {
+            show: true
+        },
+        yAxis: {},
+        legend: {
+          data: this.products
+        },
+        series
+      }
+
     }
   },
   computed: {
@@ -126,7 +177,7 @@ export default {
   components: {
     Topbar,
     ProductBoard,
-    MyProgress
+    MyProgress,
   }
 }
 </script>
@@ -167,6 +218,10 @@ export default {
 }
 h3 {
   font-size: 1.4em;
+}
+#trend-chart {
+  height: 400px;
+  width: 100%;
 }
 </style>
 <style>

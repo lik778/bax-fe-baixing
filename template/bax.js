@@ -16,11 +16,16 @@ import VueRouter from 'vue-router'
 import Element from 'element-ui'
 import Duo from 'vue-duo'
 import Vue from 'vue'
+import ECharts from 'vue-echarts/components/ECharts.vue'
+import 'echarts/lib/chart/bar'
+import 'echarts/lib/chart/line'
+import 'echarts/lib/component/legend'
 
 Vue.use(VueClipboard)
 Vue.use(VueRouter)
 Vue.use(Element)
 Vue.use(Duo)
+Vue.component('chart', ECharts)
 
 const router = new VueRouter({
   mode: 'history',

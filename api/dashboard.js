@@ -17,7 +17,7 @@ export function getProfitByProductAndDay() {
 export function getTarget(range) {
   return new Promise(res => {
     setTimeout(() => {
-      console.log('call get api')
+      console.log('getTarget')
       res({
         '站内广告': 100,
         '站外广告': 100000,
