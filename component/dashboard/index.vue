@@ -11,23 +11,42 @@
     <el-row :gutter="40">
       <el-col :span="24"><div class="bar bg-light">总体指标完成度</div></el-col>
     </el-row>
-    <el-row :gutter="40">
-      <el-col :span="16">
+    <el-row :gutter="40" type="flex" align="middle">
+      <el-col :span="12">
         <el-row :gutter="20" class="row">
-          <el-col :span="4"><span class="label">业务进度</span></el-col>
+          <el-col :span="4"><span class="progress-label">业务进度</span></el-col>
           <el-col :span="20">
-            <el-progress class="product-progress" :text-inside="true" :stroke-width="24" :percentage="sumProgress"></el-progress>
+            <my-progress id="product-progress" :text-inside="true" :stroke-width="24" :percentage="sumProgress"></my-progress>
           </el-col>
         </el-row>
         <el-row :gutter="20">
-          <el-col :span="4"><span class="label">时间进度</span></el-col>
+          <el-col :span="4"><span class="progress-label">时间进度</span></el-col>
           <el-col :span="20">
-            <el-progress class="time-progress" :text-inside="true" :stroke-width="18" :percentage="timeProgress"></el-progress>
+            <my-progress id="time-progress" :text-inside="true" :stroke-width="18" :percentage="timeProgress"></my-progress>
           </el-col>
         </el-row>
       </el-col>
+      <el-col :span="4">
+        <div class="target">{{productData.sum.target}}</div>
+        <h4 class="label">指标</h4>
+      </el-col>
       <el-col :span="8">
-        some number
+        <el-row :gutter="50" type="flex" justify="center">
+          <el-col :span="10">
+            <h3>{{productData.sum.yesterday}}</h3>
+            <h4 class="label">昨日利润</h4>
+            <hr>
+            <h3>{{profitEachDay}}</h3>
+            <h4 class="label">日均利润</h4>
+          </el-col>
+          <el-col :span="10">
+            <h3>{{leftProfitEachDay}}</h3>
+            <h4 class="label">剩余日均</h4>
+            <hr>
+            <h3>{{productData.sum.current}}</h3>
+            <h4 class="label">累计完成</h4>
+          </el-col>
+        </el-row>
       </el-col>
     </el-row>
     <el-row :gutter="40">
@@ -50,6 +69,8 @@ import ProductBoard from './productBoard'
 import moment from 'moment'
 import { summaryOfProduct, setRange } from './action'
 import store from './store'
+import MyProgress from 'com/common/my-progress'
+
 export default {
   name: 'dashboard',
   store,
@@ -88,11 +109,24 @@ export default {
       const days = moment().endOf('month').date()
       const passed = moment().date()
       return Math.floor( passed / days * 100 )
+    },
+    profitEachDay() {
+      const passed = moment().date()
+      return Math.floor( this.productData.sum.current / passed )
+    },
+    leftProfitEachDay() {
+      const left = moment().endOf('month').date() - moment().date()
+      if(left > 0) {
+        return Math.floor( this.productData.sum.target / ( left ) )
+      } else {
+        return this.productData.sum.target
+      }
     }
   },
   components: {
     Topbar,
-    ProductBoard
+    ProductBoard,
+    MyProgress
   }
 }
 </script>
@@ -117,17 +151,29 @@ export default {
   line-height: 24px;
   margin: 10px 0;
 }
-.label {
+.progress-label {
   font-size: .8em;
   color: #666;
   padding-left: 15px;
 }
+.label {
+  font-weight: normal;
+  color: #888;
+  font-size: .8em;
+}
+.target {
+  color: #63D321;
+  font-size: 2em;
+}
+h3 {
+  font-size: 1.4em;
+}
 </style>
 <style>
-  .time-progress .el-progress-bar__inner {
-    background-color: #6196bd;
+  #time-progress .el-progress-bar__inner {
+    background-color: #5598D2;
   }
-  .product-progress .el-progress-bar__inner {
-    background-color: #f7b909;
+  #product-progress .el-progress-bar__inner {
+    background-color: #F5A623;
   }
 </style>

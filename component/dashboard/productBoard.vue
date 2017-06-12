@@ -3,7 +3,7 @@
     <div class="bar bg-light">{{title}}</div>
     <el-row :gutter="50" type="flex" justify="center">
       <el-col :span="10">
-        <el-progress type="circle" :percentage="progress" :width="80" :class="classes"></el-progress>
+        <my-progress type="circle" :percentage="progress" :width="80" :class="classes"></my-progress>
         <input ref="input" type="number" name="target" :value="target" @key.enter="saveTarget" @blur="saveTarget" class="target" v-show="showInput">
         <div class="target" @click="clickTarget" v-show="!showInput">{{target}}</div>
       </el-col>
@@ -23,6 +23,7 @@ import moment from 'moment'
 import { Message } from 'element-ui'
 import { setTarget } from './action'
 import store from './store'
+import MyProgress from 'com/common/my-progress'
 
 export default {
   name: 'product-board',
@@ -70,6 +71,9 @@ export default {
         this.$refs.input.focus()
       })
     }
+  },
+  components: {
+    MyProgress
   }
 }
 </script>
@@ -106,7 +110,7 @@ hr {
   stroke: gold;
 }
 .green path.el-progress-circle__path{
-  stroke: #13ce66;
+  stroke: #63D321;
 }
 .red path.el-progress-circle__path{
   stroke: #ff4949;

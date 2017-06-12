@@ -27,7 +27,7 @@ export function getTarget(range) {
         '大客户': 100,
         '拼框': 1000
       })
-    }, 1000)
+    }, 200)
   })
 }
 
