@@ -4,7 +4,7 @@
     <el-row :gutter="50" type="flex" justify="center">
       <el-col :span="10">
         <my-progress type="circle" :percentage="progress" :width="80" :class="classes"></my-progress>
-        <input ref="input" type="number" name="target" :value="target" @key.enter="saveTarget" @blur="saveTarget" class="target" v-show="showInput">
+        <input ref="input" type="number" name="target" :value="target" @keyup.enter="saveTarget" @blur="saveTarget" class="target" v-show="showInput">
         <div class="target" @click="clickTarget" v-show="!showInput">{{target}}</div>
       </el-col>
       <el-col :span="10">
@@ -60,8 +60,8 @@ export default {
       if(isNaN(value)) {
         Message.warning('请输入正整数')
       }
-      console.log('hide')
-      setTarget(store.state.range, value).then(() => {
+      if(value === this.target) return
+      setTarget(store.state.range, this.title, value).then(() => {
         this.showInput = false
       })
     },

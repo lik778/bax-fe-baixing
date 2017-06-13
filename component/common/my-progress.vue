@@ -171,7 +171,7 @@
     vertical-align: middle;
   }
  .el-progress-bar__inner {
-  position: absolute;
+    position: absolute;
     left: 0;
     top: 0;
     height: 100%;
@@ -179,6 +179,7 @@
     text-align: right;
     border-radius: 100px;
     line-height: 1;
+    transition: width .6s;
  }
  .el-progress-bar__innerText {
   color: #fff;

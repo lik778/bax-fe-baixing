@@ -27,13 +27,13 @@
         </el-row>
       </el-col>
       <el-col :span="4">
-        <div class="target">{{productData.sum.target}}</div>
+        <div class="target">{{rangeSum.target}}</div>
         <h4 class="label">指标</h4>
       </el-col>
       <el-col :span="8">
         <el-row :gutter="50" type="flex" justify="center">
           <el-col :span="10">
-            <h3>{{productData.sum.yesterday}}</h3>
+            <h3>{{rangeSum.yesterday}}</h3>
             <h4 class="label">昨日利润</h4>
             <hr>
             <h3>{{profitEachDay}}</h3>
@@ -43,19 +43,19 @@
             <h3>{{leftProfitEachDay}}</h3>
             <h4 class="label">剩余日均</h4>
             <hr>
-            <h3>{{productData.sum.current}}</h3>
+            <h3>{{rangeSum.current}}</h3>
             <h4 class="label">累计完成</h4>
           </el-col>
         </el-row>
       </el-col>
     </el-row>
     <el-row :gutter="40">
-      <el-col :span="8" v-for="(v, product) in productData" :key="product" v-if="product !== 'sum'">
+      <el-col :span="8" v-for="(v, product) in productData" :key="product">
         <product-board :title="product" :target="v.target" :done="v.current" :done-yesterday="v.yesterday"/>
       </el-col>
     </el-row>
     <el-row :gutter="40">
-      <el-col :span="24"><div class="bar bg-light">各业务近60天业绩趋势</div></el-col>
+      <el-col :span="24"><div class="bar bg-light">{{chartTitle}}</div></el-col>
       <el-col :span="24">
         <chart id="trend-chart" :options="lineOptions" ref="trend" auto-resize></chart>
       </el-col>
@@ -76,8 +76,6 @@ export default {
   store,
   data() {
     return {
-      yesterday: [],
-      productData: { sum: {} },
       lineOptions: {}
     }
   },
@@ -88,60 +86,65 @@ export default {
     }
   },
   mounted() {
-    summaryOfProduct('month').then(() => {
-      this.productData = this[this.range]
-    })
-    getTrend().then(this.parseOption)
+    this.load('month')
   },
   methods: {
+    load(range) {
+      summaryOfProduct(range)
+      getTrend(range).then(data => { setTimeout( () =>  { this.parseOption(data, range) }) })
+    },
     setRange(v) {
       setRange(v)
-      summaryOfProduct(v).then(() => {
-        this.productData = this[this.range]
-      })
+      this.load(v)
     },
-    parseOption(raw) {
-      const reduced = raw.reduce((a, c) => {
-        const { date, product, profit } = c
-        if( !a[date] ) {
-            a[date] = {}
+    parseOption(raw, range) {
+      let start, end, dates = [], result = {}
+      if(range === 'month') {
+        start = -60
+        end = -1
+      } else if(range === 'quarter') {
+        start = 1
+        end = 12
+      } else if(range === 'year') {
+        start = 1
+        end = 4
+      }
+      for (; start <= end; start++) {
+        let curDate = range === 'month' ? moment().add(start, 'days').format('YYYY-MM-DD'): start
+        for (var i = 0; i < this.products.length; i++) {
+          let curProduct = this.products[i], has = false
+          if(!result[curProduct]) result[curProduct] = []
+          for (var j = 0; j < raw.length; j++) {
+              if(raw[j]['date'] ===  curDate && raw[j]['product'] === this.products[i]) {
+                result[curProduct].push(raw[j]['profit'])
+                has = true
+              }
+            }
+          if(!has) result[curProduct].push(null)
         }
-        a[date][product] = profit
-        return a
-      }, {})
-      let start = moment().subtract(60, 'days')
-      const end = moment().subtract(1, 'days')
-      let dates = [], result = {}
-      while(!start.isAfter(end, 'day')) {
-        const dateKey = start.format('YYYY-MM-DD')
-        this.products.forEach(product => {
-          if( !result[product] ) result[product] = []
-          if( reduced[dateKey]) {
-            result[product].push( +reduced[dateKey][product] || null )
-          } else {
-            result[product].push(null)
-          }
-        })
-        dates.push(start.format('M-DD'))
-        start = start.add(1, 'days')
+        dates.push(curDate)
       }
       const series = this.products.map(product => ({
         name: product,
-        type: 'line',
+        type: range === 'year' ? 'bar': 'line',
         data: result[product]
       }))
+
       this.lineOptions = {
         xAxis: {
+            name: range === 'month' ? '日期': (range === 'quarter' ? '月份': '季度'),
             data: dates,
             axisLabel: {
               interval: 0,
-              rotate: 90
+              rotate: range ==='month' ? 90 : 0
             }
         },
         tooltip: {
             show: true
         },
-        yAxis: {},
+        yAxis: {
+          name: '单位:元'
+        },
         legend: {
           data: this.products
         },
@@ -152,7 +155,7 @@ export default {
   },
   computed: {
     sumProgress() {
-      const { current, target } = this.productData.sum
+      const { current, target } = this.rangeSum
       if(!target) return 0
       return Math.floor( ( current / target ) * 100 )
     },
@@ -163,15 +166,42 @@ export default {
     },
     profitEachDay() {
       const passed = moment().date()
-      return Math.floor( this.productData.sum.current / passed )
+      return Math.floor( this.rangeSum.current / passed )
     },
     leftProfitEachDay() {
       const left = moment().endOf('month').date() - moment().date()
       if(left > 0) {
-        return Math.floor( this.productData.sum.target / ( left ) )
+        return Math.floor( this.rangeSum.target / ( left ) )
       } else {
-        return this.productData.sum.target
+        return this.rangeSum.target
       }
+    },
+    chartTitle() {
+      if(this.range === 'month') {
+        return '各业务近60天业绩趋势'
+      }
+      if(this.range === 'quarter') {
+        return '各业务每月业务趋势'
+      }
+      if(this.range === 'year') {
+        return '各业务分季度业绩统计'
+      }
+    },
+    productData() {
+      return this[this.range]
+    },
+    rangeSum() {
+      let sum = {
+        current: 0,
+        target: 0,
+        yesterday: 0
+      }
+      for(const p in this.productData) {
+        sum['current'] += this.productData[p]['current'] || 0
+        sum['target'] += this.productData[p]['target'] || 0
+        sum['yesterday'] += this.productData[p]['yesterday'] || 0
+      }
+      return sum
     }
   },
   components: {
@@ -222,6 +252,7 @@ h3 {
 #trend-chart {
   height: 400px;
   width: 100%;
+  margin-bottom: 50px;
 }
 </style>
 <style>
