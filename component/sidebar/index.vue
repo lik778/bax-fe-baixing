@@ -9,6 +9,31 @@
       <el-menu default-active="1">
         <el-submenu index="1">
           <template slot="title">
+            <i class="el-icon-message" />全网通
+          </template>
+          <el-menu-item index="1-1">
+            <router-link :to="{ name: 'ad-list' }" tag="p">
+              todo
+            </router-link>
+          </el-menu-item>
+          <el-menu-item index="1-2">
+            <router-link :to="{ name: 'ad-list' }" tag="p">
+              todo
+            </router-link>
+          </el-menu-item>
+          <el-menu-item index="1-3">
+            <router-link :to="{ name: 'ad-list' }" tag="p">
+              todo
+            </router-link>
+          </el-menu-item>
+          <el-menu-item index="1-4">
+            <router-link :to="{ name: 'ad-list' }" tag="p">
+              todo
+            </router-link>
+          </el-menu-item>
+        </el-submenu>
+        <el-submenu index="3">
+          <template slot="title">
             <i class="el-icon-message" />品牌广告
           </template>
           <el-menu-item index="1-1" v-if="allowQueryAdItems">
