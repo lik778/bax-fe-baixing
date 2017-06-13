@@ -45,45 +45,46 @@ const qwtRoutes = [{
   name: 'qwt-charge'
 }]
 
+const bxadRoutes = [{
+  component: AdList,
+  path: '/main/ads',
+  name: 'ad-list'
+}, {
+  component: MaterialInfo,
+  path: '/main/materials/:id',
+  name: 'material-info'
+}, {
+  component: MaterialList,
+  path: '/main/materials',
+  name: 'material-list'
+}, {
+  component: CreateOrder,
+  path: '/main/order/create',
+  name: 'create-order'
+}, {
+  component: OrderInfo,
+  path: '/main/orders/:id',
+  name: 'order-info'
+}, {
+  component: OrderList,
+  path: '/main/orders',
+  name: 'order-list'
+}, {
+  component: UserList,
+  path: '/main/users',
+  name: 'user-list'
+}, {
+  component: AdCalendar,
+  path: '/main/ad-calendar',
+  name: 'ad-calendar'
+}]
+
 const router = new VueRouter({
   mode: 'history',
   routes: [{
     component: AdCalendar,
     path: '/main',
     name: 'root'
-  }, {
-    component: AdList,
-    path: '/main/ads',
-    name: 'ad-list'
-  }, {
-    component: MaterialInfo,
-    path: '/main/materials/:id',
-    name: 'material-info'
-  }, {
-    component: MaterialList,
-    path: '/main/materials',
-    name: 'material-list'
-  }, {
-    component: CreateOrder,
-    path: '/main/order/create',
-    name: 'create-order'
-  }, {
-    component: OrderInfo,
-    path: '/main/orders/:id',
-    name: 'order-info'
-  }, {
-    component: OrderList,
-    path: '/main/orders',
-    name: 'order-list'
-  }, {
-    component: UserList,
-    path: '/main/users',
-    name: 'user-list'
-  }, {
-    component: AdCalendar,
-    path: '/main/ad-calendar',
-    name: 'ad-calendar'
-  }]
   }, ...qwtRoutes, ...bxadRoutes]
 })
 
