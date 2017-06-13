@@ -52,11 +52,58 @@
           </el-button>
         </footer>
       </section>
-      <section>
+      <section class="keyword">
         <header>选取推广关键词</header>
+        <h4>根据当月数据，为您推荐如下关键词</h4>
+        <KeywordTable />
+        <h3>
+          <label>若没有您满意的关键词，</label>
+          <a>点此自定义添加</a>
+        </h3>
+        <div>
+          <span>
+            <el-input placeholder="请输入关键词" />
+          </span>
+          <el-button type="primary">
+            查询
+          </el-button>
+          <strong>
+            （请优先添加较为核心的关键词，关键词长度不宜超过5个字，不区分大小写。）
+          </strong>
+        </div>
+        <KeywordTable />
       </section>
-      <section>
+      <section class="timing">
         <header>设置时长和预算</header>
+        <div>
+          <aside>投放时间:</aside>
+          <span>
+            <el-date-picker type="daterange" placeholder="选择日期范围" />
+          </span>
+          <span>
+            <el-checkbox label="长期投放" />
+          </span>
+        </div>
+        <div>
+          <aside>设置推广日预算:</aside>
+          <span></span>
+          <span>
+            （根据您选取的关键词，最低预算为<p>XXX</p>元）
+          </span>
+        </div>
+        <h3>
+          需支付<strong>￥8888.00</strong>元，您的推广资金余额：<p>6666<p>元。
+        </h3>
+        <h4>
+          <el-checkbox />
+          <label>我已阅读并同意遵守</label>
+          <a>《百姓网站外推广用户协议》</a>
+        </h4>
+        <div>
+          <el-button type="primary">
+            先去充值
+          </el-button>
+        </div>
         <footer>
           <li>请注意：</li>
           <li>1. 预算不足时将有下线提醒（预算余额不足50元且当天23：59前未续费则下线）。如有剩余预算，将自动转入站外推广资金。</li>
@@ -69,6 +116,7 @@
 
 <script>
 
+import KeywordTable from './keyword-table'
 import Topbar from 'com/topbar'
 
 export default {
@@ -80,6 +128,7 @@ export default {
     }
   },
   components: {
+    KeywordTable,
     Topbar
   }
 }
@@ -114,6 +163,44 @@ export default {
 
         .el-input {
           width: 420px;
+        }
+      }
+    }
+
+    & > section.keyword {
+      & > h4 {
+        margin: 20px 0 30px;
+        color: #6a778c;
+        font-size: 13px;
+        font-weight: normal;
+      }
+
+      & > h3 {
+        font-size: 14px;
+        font-weight: normal;
+
+        & > label {
+          color: #424344;
+        }
+
+        & > a {
+          color: #0994ff;
+          cursor: pointer;
+        }
+      }
+
+      & > div:nth-child(5) {
+        display: flex;
+        align-items: center;
+
+        & > span {
+          margin-right: 20px;
+        }
+
+        & > strong {
+          color: #404e61;
+          font-size: 13px;
+          font-weight: normal;
         }
       }
     }
