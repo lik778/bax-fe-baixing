@@ -38,12 +38,12 @@
 
 import BaxPagination from 'com/common/pagination'
 
-import { sspOrderStatus } from 'constant/order'
 import { toHumanTime } from 'utils'
 
 import { Message } from 'element-ui'
 
 import {
+  sspOrderStatus,
   sspOrderType
 } from 'constant/order'
 

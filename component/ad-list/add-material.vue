@@ -205,8 +205,8 @@ export default {
         if (material.link) {
           if (!material.link.startsWith('http://') &&
             !material.link.startsWith('https://')) {
-              return Message.error('请填写正确的链接')
-            }
+            return Message.error('请填写正确的链接')
+          }
         }
 
         if (!material.name) {
