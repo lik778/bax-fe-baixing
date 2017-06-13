@@ -9,7 +9,7 @@
       <el-menu default-active="1">
         <el-submenu index="1">
           <template slot="title">
-            <i class="el-icon-message" />投放管理
+            <i class="el-icon-message" />品牌广告
           </template>
           <el-menu-item index="1-1" v-if="allowQueryAdItems">
             <router-link :to="{ name: 'ad-list' }" tag="p">
@@ -37,10 +37,10 @@
             </router-link>
           </el-menu-item>
         </el-submenu>
-        <el-menu-item index="2">
+        <el-menu-item index="4">
           <i class="el-icon-menu" />设置
         </el-menu-item>
-        <el-menu-item index="3">
+        <el-menu-item index="5">
           <i class="el-icon-setting" />账户
         </el-menu-item>
       </el-menu>
