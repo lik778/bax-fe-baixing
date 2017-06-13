@@ -3,6 +3,12 @@ import CreateOrder from 'com/order-create'
 import OrderInfo from 'com/order-info'
 import OrderList from 'com/order-list'
 
+// 全网通
+import QwtCreatePromotion from 'com/qwt-create-promotion'
+import QwtPromotionList from 'com/qwt-promotion-list'
+import QwtDashboard from 'com/qwt-dashboard'
+import QwtCharge from 'com/qwt-charge'
+
 import MaterialList from 'com/material-list'
 import MaterialInfo from 'com/material-info'
 import AdCalendar from 'com/ad-calendar'
@@ -20,6 +26,24 @@ Vue.use(VueClipboard)
 Vue.use(VueRouter)
 Vue.use(Element)
 Vue.use(Duo)
+
+const qwtRoutes = [{
+  component: QwtCreatePromotion,
+  path: '/main/qwt/promotion/create',
+  name: 'qwt-create-promotion'
+}, {
+  component: QwtPromotionList,
+  path: '/main/qwt/promotions',
+  name: 'qwt-promotion-list'
+}, {
+  component: QwtDashboard,
+  path: '/main/qwt/dashboard',
+  name: 'qwt-dashboard'
+}, {
+  component: QwtCharge,
+  path: '/main/qwt/charge',
+  name: 'qwt-charge'
+}]
 
 const router = new VueRouter({
   mode: 'history',
@@ -60,6 +84,7 @@ const router = new VueRouter({
     path: '/main/ad-calendar',
     name: 'ad-calendar'
   }]
+  }, ...qwtRoutes, ...bxadRoutes]
 })
 
 const app = new Vue({
