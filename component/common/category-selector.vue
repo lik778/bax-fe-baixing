@@ -149,8 +149,6 @@ export default {
             this.selectedCategories = [...categories]
           }
         }
-
-        return
       }
     },
     empty() {

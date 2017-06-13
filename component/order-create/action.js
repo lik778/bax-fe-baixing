@@ -1,7 +1,6 @@
 
 import { createAction } from 'vue-duo'
 
-import * as capi from 'api/account'
 import * as oapi from 'api/order'
 import * as aapi from 'api/ad'
 

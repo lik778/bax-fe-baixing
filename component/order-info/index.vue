@@ -139,7 +139,6 @@ export default {
       }
 
       if (info && info.order && info.order.status === 0) {
-
         const url = await getOrderPayUrl(orderId)
         this.payUrl = url
       }

@@ -62,7 +62,7 @@ export default {
 
     if (createdAtFrom && createdAtTo) {
       return {
-        timeRange:[
+        timeRange: [
           toHumanTime(createdAtFrom, 'YYYY-MM-DD'),
           toHumanTime(createdAtTo, 'YYYY-MM-DD')
         ]

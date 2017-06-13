@@ -210,7 +210,6 @@ export default {
 
       const area = this.getAreaByName(name)
       const {
-        parent,
         level,
         id
       } = area
@@ -285,8 +284,6 @@ export default {
             }
           }
         }
-
-        return
       }
     },
     empty() {

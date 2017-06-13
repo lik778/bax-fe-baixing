@@ -26,7 +26,7 @@ import uuid from 'uuid/v4'
 const {
   filehost: upyunFileHost,
   host: upyunHost,
-  bucket,
+  bucket
 } = upyun
 
 const request = new Fetch({
