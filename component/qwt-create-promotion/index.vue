@@ -233,7 +233,7 @@ export default {
 
         & > span:last-child {
           display: flex;
-          align-center: center;
+          align-items: center;
           margin: 0 3px;
           width: 260px;
           font-size: 13px;
