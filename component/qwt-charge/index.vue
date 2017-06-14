@@ -33,10 +33,27 @@
       </div>
     </section>
     <section>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
+      <div>
+        <aside>价格信息：</aside>
+        <span>
+          <price-list />
+        </span>
+      </div>
+      <div>
+        <aside>服务编号：</aside>
+        <span>
+          <el-input placeholder="如有服务编号请您填写" />
+        </span>
+      </div>
+      <div>
+        <aside>百姓网余额需支付：</aside>
+        <i>￥18865</i>
+      </div>
+      <div>
+        <el-button type="primary">
+          确认购买
+        </el-button>
+      </div>
       <footer>
         <li>推广资金使用规则：</li>
         <li>1. 该资金充值后不可退款。</li>
@@ -53,6 +70,7 @@
 
 import QwtPkgWidget from 'com/widget/qwt-pkg'
 import QwtProWidget from 'com/widget/qwt-pro'
+import PriceList from './price-list'
 import Topbar from 'com/topbar'
 
 export default {
@@ -60,6 +78,7 @@ export default {
   components: {
     QwtPkgWidget,
     QwtProWidget,
+    PriceList,
     Topbar
   },
   props: {
@@ -89,10 +108,37 @@ export default {
         margin-top: 25px;
       }
     }
+
+    & > div:first-child {
+      margin-bottom: 30px;
+    }
   }
 
-  & > section:last-child {
+  & > section:nth-child(3) {
+    margin-top: 35px;
+    border-top: dashed 1px #979797;
+
+    & > div {
+      margin-top: 20px;
+
+      & > aside {
+        font-size: 14px;
+        min-width: 80px;
+        color: #6a778c;
+      }
+
+      & > i {
+        font-size: 18px;
+        color: #ff1f0e;
+      }
+    }
+
+    & > div:first-child {
+      display: flex;
+    }
+
     & > footer {
+      margin-top: 40px;
       font-size: 13px;
       line-height: 1.62;
       color: #6a778c;
