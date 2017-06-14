@@ -13,7 +13,7 @@
 <script>
 
 export default {
-  name: 'qwt-keyword-table',
+  name: 'qwt-keyword-list',
   // props: {
   //   data: {
   //     type: Array,

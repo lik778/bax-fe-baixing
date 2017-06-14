@@ -55,7 +55,7 @@
       <section class="keyword">
         <header>选取推广关键词</header>
         <h4>根据当月数据，为您推荐如下关键词</h4>
-        <KeywordTable />
+        <keyword-list />
         <h3>
           <label>若没有您满意的关键词，</label>
           <a>点此自定义添加</a>
@@ -71,7 +71,7 @@
             （请优先添加较为核心的关键词，关键词长度不宜超过5个字，不区分大小写。）
           </strong>
         </div>
-        <KeywordTable />
+        <keyword-list />
       </section>
       <section class="timing">
         <header>设置时长和预算</header>
@@ -119,7 +119,7 @@
 
 <script>
 
-import KeywordTable from './keyword-table'
+import KeywordList from './keyword-list'
 import Topbar from 'com/topbar'
 
 export default {
@@ -131,7 +131,7 @@ export default {
     }
   },
   components: {
-    KeywordTable,
+    KeywordList,
     Topbar
   }
 }
