@@ -30,23 +30,23 @@
         </el-row>
       </el-col>
       <el-col :span="4">
-        <div class="target">{{rangeSum.target}}</div>
+        <div class="target">{{ rangeSum.target | currency('￥', 0) }}</div>
         <h4 class="label">指标</h4>
       </el-col>
       <el-col :span="8">
         <el-row :gutter="50" type="flex" justify="center">
           <el-col :span="10">
-            <h3>{{rangeSum.yesterday}}</h3>
+            <h3>{{rangeSum.yesterday | currency('￥', 0) }}</h3>
             <h4 class="label">昨日利润</h4>
             <hr>
-            <h3>{{profitEachDay}}</h3>
+            <h3>{{profitEachDay | currency('￥', 0) }}</h3>
             <h4 class="label">日均利润</h4>
           </el-col>
           <el-col :span="10">
-            <h3>{{leftProfitEachDay}}</h3>
+            <h3>{{leftProfitEachDay | currency('￥', 0) }}</h3>
             <h4 class="label">剩余日均</h4>
             <hr>
-            <h3>{{rangeSum.current}}</h3>
+            <h3>{{rangeSum.current | currency('￥', 0) }}</h3>
             <h4 class="label">累计完成</h4>
           </el-col>
         </el-row>

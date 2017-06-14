@@ -5,13 +5,13 @@
       <el-col :span="10">
         <my-progress type="circle" :percentage="progress" :width="80" :class="classes"></my-progress>
         <input ref="input" type="number" name="target" :value="target" @keyup.enter="saveTarget" @blur="saveTarget" class="target" v-show="showInput">
-        <div class="target" @click="clickTarget" v-show="!showInput">{{target}}</div>
+        <div class="target" @click="clickTarget" v-show="!showInput">{{target | currency('￥', 0) }}</div>
       </el-col>
       <el-col :span="10">
-        <h3>{{doneYesterday}}</h3>
+        <h3>{{doneYesterday | currency('￥', 0) }}</h3>
         <h4 class="label">昨日完成</h4>
         <hr>
-        <h3>{{leftEachDay}}</h3>
+        <h3>{{leftEachDay | currency('￥', 0) }}</h3>
         <h4 class="label">剩余日均</h4>
       </el-col>
     </el-row>

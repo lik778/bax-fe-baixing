@@ -17,6 +17,7 @@ import VueRouter from 'vue-router'
 import Element from 'element-ui'
 import Duo from 'vue-duo'
 import Vue from 'vue'
+import Vue2Filters from 'vue2-filters'
 import ECharts from 'vue-echarts/components/ECharts.vue'
 import 'echarts/lib/chart/bar'
 import 'echarts/lib/chart/line'
@@ -29,6 +30,7 @@ Vue.use(VueRouter)
 Vue.use(Element)
 Vue.use(Duo)
 Vue.component('chart', ECharts)
+Vue.use(Vue2Filters)
 
 const router = new VueRouter({
   mode: 'history',

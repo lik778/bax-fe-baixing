@@ -8,24 +8,29 @@
       <el-table-column
         prop="upload_date"
         :formatter="formatUploadDate"
+        sortable
         label="所属日期"
         width="180">
       </el-table-column>
       <el-table-column
         prop="product"
         label="产品线"
+        sortable
         width="180">
       </el-table-column>
       <el-table-column
         prop="client"
+        sortable
         label="客户名字">
       </el-table-column>
       <el-table-column
         prop="income"
+        sortable
         label="收入">
       </el-table-column>
       <el-table-column
         prop="profit"
+        sortable
         label="利润">
       </el-table-column>
       <el-table-column

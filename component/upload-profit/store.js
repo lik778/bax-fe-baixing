@@ -7,7 +7,13 @@ const store = createStore({
 })
 
 store.subscribeActions({
-  [getUploads]: uploads => ({ uploads }),
+  [getUploads]: uploads => {
+    uploads.forEach(u => {
+      u.income = Number(u.income)
+      u.profit = Number(u.profit)
+    })
+    return { uploads }
+  },
 
   [deleteUpload]: ({id, affectedRows}) => {
     return {
