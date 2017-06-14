@@ -86,13 +86,16 @@
         </div>
         <div>
           <aside>设置推广日预算:</aside>
-          <span></span>
+          <span>
+            <el-input placeholder="请输入每日最高预算" />
+          </span>
+          <i>元</i>
           <span>
             （根据您选取的关键词，最低预算为<p>XXX</p>元）
           </span>
         </div>
         <h3>
-          需支付<strong>￥8888.00</strong>元，您的推广资金余额：<p>6666<p>元。
+          需支付<strong>￥8888.00</strong>元，您的推广资金余额：<i>6666</i>元。
         </h3>
         <h4>
           <el-checkbox />
@@ -205,7 +208,70 @@ export default {
       }
     }
 
-    & > section:last-child {
+    & > section.timing {
+      & > div {
+        display: flex;
+        align-items: center;
+      }
+
+      & > div:nth-child(2) {
+        & > span:last-child {
+          margin-left: 20px;
+        }
+      }
+
+      & > div:nth-child(3) {
+        & > span:nth-child(2) {
+          width: 220px;
+        }
+
+        & > i {
+          margin-left: 5px;
+          color: #6a778c;
+          font-size: 13px;
+        }
+
+        & > span:last-child {
+          display: flex;
+          align-center: center;
+          margin: 0 3px;
+          width: 260px;
+          font-size: 13px;
+          color: #404e61;
+
+          & > p {
+            color: red;
+          }
+        }
+      }
+
+      & > h3 {
+        color: #6a778c;
+        font-size: 14px;
+        font-weight: normal;
+
+        & > strong {
+          margin: 0 5px;
+          color: #ff3001;
+          font-size: 18px;
+        }
+      }
+
+      & > h4 {
+        margin-top: 30px;
+        font-size: 14px;
+        font-weight: normal;
+
+        & > label {
+          color: #6a778c;
+        }
+
+        & > a {
+          color: #0994ff;
+          cursor: pointer;
+        }
+      }
+
       & > footer {
         color: #717d91;
         font-size: 13px;
