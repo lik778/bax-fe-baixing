@@ -8,6 +8,9 @@
       <el-radio-button label="quarter">季度</el-radio-button>
       <el-radio-button label="year">年度</el-radio-button>
     </el-radio-group>
+    <router-link :to="{name: 'upload-profit'}" class="upload-btn">
+      <el-button type="primary">每日上传<i class="el-icon-upload el-icon--right"></i></el-button>
+    </router-link>
     <el-row :gutter="40">
       <el-col :span="24"><div class="bar bg-light">总体指标完成度</div></el-col>
     </el-row>
@@ -65,7 +68,7 @@
 
 <script>
 import Topbar from 'com/topbar'
-import ProductBoard from './productBoard'
+import ProductBoard from './ProductBoard'
 import moment from 'moment'
 import { summaryOfProduct, setRange, getTrend } from './action'
 import store from './store'
@@ -253,6 +256,9 @@ h3 {
   height: 400px;
   width: 100%;
   margin-bottom: 50px;
+}
+.upload-btn {
+  float: right;
 }
 </style>
 <style>

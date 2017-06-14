@@ -28,3 +28,22 @@ export function setTarget(range, product, value) {
     .send({ range, product, value })
     .json()
 }
+
+export function getUploads() {
+  return dashboardApi
+    .get('/uploads')
+    .json()
+}
+
+export function saveUpload(upload) {
+  return dashboardApi
+    .post('/upload')
+    .send(upload)
+    .json()
+}
+
+export function deleteUpload(id) {
+  return dashboardApi
+    .delete(`/upload/${id}`)
+    .json()
+}

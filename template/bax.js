@@ -10,6 +10,7 @@ import UserList from 'com/user-list'
 import AdList from 'com/ad-list'
 import Bax from 'com/bax'
 import Dashboard from 'com/dashboard'
+import UploadProfit from 'com/upload-profit'
 
 import VueClipboard from 'vue-clipboard2'
 import VueRouter from 'vue-router'
@@ -71,6 +72,10 @@ const router = new VueRouter({
     component: Dashboard,
     path: '/main/dashboard',
     name: 'dashboard'
+  }, {
+    component: UploadProfit,
+    path: '/main/upload-profit',
+    name: 'upload-profit',
   }]
 })
 
