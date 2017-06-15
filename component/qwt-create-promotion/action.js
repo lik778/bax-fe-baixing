@@ -7,6 +7,10 @@ export const createCampaign = createAction((data) => {
   return fapi.createCampaign(data)
 })
 
+export const getCurrentBalance = createAction(() => {
+  return fapi.getCurrentBalance()
+})
+
 export const checkCreativeContent = createAction((opts) => {
   return fapi.checkCreativeContent(opts)
 })

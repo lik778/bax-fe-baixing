@@ -182,6 +182,7 @@ import { toTimestamp } from 'utils'
 import {
   checkCreativeContent,
   getRecommendedWords,
+  getCurrentBalance,
   getCreativeWords,
   createCampaign,
   clearStore
@@ -336,7 +337,8 @@ export default {
       await this.getCreativeWords()
     }
   },
-  mounted() {
+  async mounted() {
+    await getCurrentBalance()
   }
 }
 

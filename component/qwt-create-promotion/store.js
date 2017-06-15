@@ -3,13 +3,15 @@ import { createStore } from 'vue-duo'
 
 import {
   getRecommendedWords,
+  getCurrentBalance,
   getCreativeWords,
   clearStore
 } from './action'
 
 const store = createStore({
   recommendedWords: [],
-  creativeWords: []
+  creativeWords: [],
+  currentBalance: 0
 })
 
 store.subscribeActions({
@@ -18,6 +20,9 @@ store.subscribeActions({
   }),
   [getCreativeWords]: (words) => ({
     creativeWords: [...words]
+  }),
+  [getCurrentBalance]: (balance) => ({
+    currentBalance: balance
   }),
   [clearStore]: () => ({
     recommendedWords: [],
