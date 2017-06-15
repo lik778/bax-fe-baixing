@@ -3,6 +3,12 @@ import CreateOrder from 'com/order-create'
 import OrderInfo from 'com/order-info'
 import OrderList from 'com/order-list'
 
+// 全网通
+import QwtCreatePromotion from 'com/qwt-create-promotion'
+import QwtPromotionList from 'com/qwt-promotion-list'
+import QwtDashboard from 'com/qwt-dashboard'
+import QwtCharge from 'com/qwt-charge'
+
 import MaterialList from 'com/material-list'
 import MaterialInfo from 'com/material-info'
 import AdCalendar from 'com/ad-calendar'
@@ -31,6 +37,58 @@ Vue.use(Element)
 Vue.use(Duo)
 Vue.component('chart', ECharts)
 Vue.use(Vue2Filters)
+
+const qwtRoutes = [{
+  component: QwtCreatePromotion,
+  path: '/main/qwt/promotion/create',
+  name: 'qwt-create-promotion'
+}, {
+  component: QwtPromotionList,
+  path: '/main/qwt/promotions',
+  name: 'qwt-promotion-list'
+}, {
+  component: QwtDashboard,
+  path: '/main/qwt/dashboard',
+  name: 'qwt-dashboard'
+}, {
+  component: QwtCharge,
+  path: '/main/qwt/charge',
+  name: 'qwt-charge'
+}]
+
+const bxadRoutes = [{
+  component: AdList,
+  path: '/main/ads',
+  name: 'ad-list'
+}, {
+  component: MaterialInfo,
+  path: '/main/materials/:id',
+  name: 'material-info'
+}, {
+  component: MaterialList,
+  path: '/main/materials',
+  name: 'material-list'
+}, {
+  component: CreateOrder,
+  path: '/main/order/create',
+  name: 'create-order'
+}, {
+  component: OrderInfo,
+  path: '/main/orders/:id',
+  name: 'order-info'
+}, {
+  component: OrderList,
+  path: '/main/orders',
+  name: 'order-list'
+}, {
+  component: UserList,
+  path: '/main/users',
+  name: 'user-list'
+}, {
+  component: AdCalendar,
+  path: '/main/ad-calendar',
+  name: 'ad-calendar'
+}]
 
 const router = new VueRouter({
   mode: 'history',

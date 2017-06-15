@@ -90,7 +90,7 @@ export default {
 
     if (s && e) {
       return {
-        timeRange:[
+        timeRange: [
           toHumanTime(s, 'YYYY-MM-DD'),
           toHumanTime(e, 'YYYY-MM-DD')
         ]

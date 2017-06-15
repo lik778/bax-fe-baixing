@@ -44,7 +44,7 @@ export default {
   },
   methods: {
     empty() {
-      email: ''
+      this.email = ''
     },
     cancel() {
       this.empty()

@@ -1,8 +1,8 @@
 
 <template>
   <header class="topbar">
-    <span @click="goBack">
-      <i class="el-icon-arrow-left" />
+    <span>
+      <i class="el-icon-arrow-left" @click="goBack" />
       <slot name="title" />
     </span>
     <span>

@@ -22,8 +22,8 @@ app.use(history({
 
 app.use(require('webpack-dev-middleware')(compiler, {
   publicPath: config.output.publicPath,
-  noInfo: true,
-  quiet: true
+  noInfo: false,
+  quiet: false
 }))
 
 app.use(require('webpack-hot-middleware')(compiler))

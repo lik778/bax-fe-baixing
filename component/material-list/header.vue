@@ -62,7 +62,7 @@ export default {
 
     if (createdAtFrom && createdAtTo) {
       return {
-        timeRange:[
+        timeRange: [
           toHumanTime(createdAtFrom, 'YYYY-MM-DD'),
           toHumanTime(createdAtTo, 'YYYY-MM-DD')
         ]
@@ -105,7 +105,7 @@ export default {
         await getMaterials({
           ...clone(this.query),
           createdAtFrom: s,
-          createdAtTo: e,
+          createdAtTo: e
         })
       }
     }
@@ -120,7 +120,6 @@ export default {
     }
   }
 }
-
 
 </script>
 

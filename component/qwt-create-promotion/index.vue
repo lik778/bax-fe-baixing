@@ -1,0 +1,498 @@
+
+<template>
+  <div class="qwt-create-promotion">
+    <topbar :user-info="userInfo">
+      <label slot="title">全网通 - 新建推广</label>
+    </topbar>
+    <main>
+      <section>
+        <header>推广目标设置</header>
+        <div>
+          <aside>选择渠道：</aside>
+          <span>
+            <el-button-group>
+              <el-button @click="newPromotion.source = 0"
+                :type="newPromotion.source === 0 ? 'primary' : ''">
+                百度
+              </el-button>
+              <el-button @click="newPromotion.source = 5"
+                :type="newPromotion.source === 5 ? 'primary' : ''">
+                搜狗
+              </el-button>
+              <el-button @click="newPromotion.source = 1"
+                :type="newPromotion.source === 1 ? 'primary' : ''">
+                360
+              </el-button>
+            </el-button-group>
+          </span>
+        </div>
+        <div>
+          <aside style="align-items: flex-start; padding-top: 5px;">
+            投放页面：
+          </aside>
+          <span class="landingpage">
+            <div>
+              <el-button-group>
+                <el-button @click="newPromotion.landingType = 0"
+                  :type="newPromotion.landingType === 0 ? 'primary' : ''">
+                  帖子详情页
+                </el-button>
+                <el-button @click="newPromotion.landingType = 1"
+                  :type="newPromotion.landingType === 1 ? 'primary' : ''">
+                  企业官网
+                </el-button>
+                <el-button @click="newPromotion.landingType = 2"
+                  :type="newPromotion.landingType === 2 ? 'primary' : ''">
+                  活动定制页
+                </el-button>
+              </el-button-group>
+            </div>
+            <div style="margin-top: 20px; width: 490px;">
+              <el-input placeholder="请输入投放网址, 如: http://baixing.com" />
+            </div>
+          </span>
+        </div>
+        <div>
+          <aside>投放城市：</aside>
+          <span>
+            <el-tag type="success" closable
+              v-for="c in newPromotion.areas" :key="c"
+              @close="removeArea(c)">
+              {{ formatterArea(c) }}
+            </el-tag>
+            <i class="el-icon-plus"
+              @click="areaDialogVisible = true" />
+          </span>
+        </div>
+      </section>
+      <section>
+        <header>推广物料设置</header>
+        <div>
+          <aside>推广标题:</aside>
+           <span>
+            <el-input type="text" placeholder="请输入标题 ~" style="width: 420px"
+              v-model="newPromotion.creativeTitle" />
+          </span>
+        </div>
+        <div>
+          <aside style="align-items: flex-start; padding-top: 5px;">
+            推广内容:
+          </aside>
+          <span>
+            <el-input type="textarea" placeholder="请输入内容 ~"
+              :rows="5" style="width: 420px"
+              v-model="newPromotion.creativeContent" />
+          </span>
+        </div>
+        <footer>
+          <el-button type="primary" @click="checkCreativeContent">
+            检查推广是否可用
+          </el-button>
+        </footer>
+      </section>
+      <section class="keyword">
+        <header>选取推广关键词</header>
+        <h4>根据当月数据，为您推荐如下关键词</h4>
+        <keyword-list :words="creativeWords"
+          @select-words="words => newPromotion.creativeWords = [...words]" />
+        <h3>
+          <label>若没有您满意的关键词，</label>
+          <a>点此自定义添加</a>
+        </h3>
+        <div>
+          <span>
+            <el-input placeholder="请输入关键词" v-model="queryWord" />
+          </span>
+          <el-button type="primary" @click="queryRecommendedWords">
+            查询
+          </el-button>
+          <strong>
+            （请优先添加较为核心的关键词，关键词长度不宜超过5个字，不区分大小写。）
+          </strong>
+        </div>
+        <keyword-list :words="recommendedWords"
+          @select-words="words => newPromotion.recommendedWords = [...words]" />
+      </section>
+      <section class="timing">
+        <header>设置时长和预算</header>
+        <div>
+          <aside>投放时间:</aside>
+          <span>
+            <el-date-picker type="daterange" placeholder="选择日期范围"
+              v-model="newPromotion.validTime" />
+          </span>
+          <span>
+            <el-checkbox label="长期投放" />
+          </span>
+        </div>
+        <div>
+          <aside>设置推广日预算:</aside>
+          <span>
+            <el-input type="number" placeholder="请输入每日最高预算"
+              v-model="newPromotion.dailyBudget" />
+          </span>
+          <i>元</i>
+          <span>
+            （根据您选取的关键词，最低预算为<p>XXX</p>元）
+          </span>
+        </div>
+        <h3>
+          需支付<strong>￥8888.00</strong>元，您的推广资金余额：<i>6666</i>元。
+        </h3>
+        <h4>
+          <el-checkbox />
+          <label>我已阅读并同意遵守</label>
+          <a>《百姓网站外推广用户协议》</a>
+        </h4>
+        <div>
+          <el-button v-if="false" type="primary">
+            先去充值
+          </el-button>
+          <el-button type="primary" @click="createPromotion">
+            创建推广
+          </el-button>
+        </div>
+        <footer>
+          <li>请注意：</li>
+          <li>1. 预算不足时将有下线提醒（预算余额不足50元且当天23：59前未续费则下线）。如有剩余预算，将自动转入站外推广资金。</li>
+          <li>2. 该资金无法用于购买其他付费产品，自产生当日起有效期为一年，超出有效期后，未用完部分将无法继续使用。</li>
+        </footer>
+      </section>
+    </main>
+    <area-selector :all-areas="allAreas"
+      :areas="newPromotion.areas"
+      :visible="areaDialogVisible"
+      @ok="onChangeAreas"
+      @cancel="areaDialogVisible = false" />
+  </div>
+</template>
+
+<script>
+
+import { Message } from 'element-ui'
+import clone from 'clone'
+
+import AreaSelector from 'com/common/area-selector'
+import KeywordList from './keyword-list'
+import Topbar from 'com/topbar'
+
+import { getCnName } from 'util/meta'
+import { toTimestamp } from 'utils'
+
+import {
+  checkCreativeContent,
+  getRecommendedWords,
+  getCurrentBalance,
+  getCreativeWords,
+  createCampaign,
+  clearStore
+} from './action'
+
+import store from './store'
+
+const emptyPromotion = {
+  creativeContent: '',
+  creativeTitle: '',
+  dailyBudget: 0,
+  landingPage: '',
+  landingType: 0,
+  validTime: [],
+  keywords: [],
+  areas: [],
+  source: 0,
+  //
+  recommendedWords: [],
+  creativeWords: []
+}
+
+export default {
+  name: 'qwt-create-promotion',
+  store,
+  components: {
+    AreaSelector,
+    KeywordList,
+    Topbar
+  },
+  props: {
+    userInfo: {
+      type: Object,
+      required: true
+    },
+    allAreas: {
+      type: Array,
+      required: true
+    }
+  },
+  data() {
+    return {
+      newPromotion: clone(emptyPromotion),
+      areaDialogVisible: false,
+      queryWord: ''
+    }
+  },
+  methods: {
+    async createPromotion() {
+      const p = clone(this.newPromotion)
+
+      p.dailyBudget = p.dailyBudget * 100
+
+      if (p.validTime.length) {
+        p.validTime = [
+          toTimestamp(p.validTime[0]),
+          toTimestamp(p.validTime[1])
+        ]
+      }
+
+      p.keywords = [
+        ...p.recommendedWords,
+        ...p.creativeWords
+      ]
+
+      if (!p.keywords.length) {
+        return Message.error('请填写关键字')
+      }
+
+      if (!p.areas.length) {
+        return Message.error('请选择城市')
+      }
+
+      await createCampaign(p)
+
+      Message.success('创建成功')
+
+      await clearStore()
+
+      this.$router.push({
+        name: 'qwt-promotion-list'
+      })
+    },
+    async queryRecommendedWords() {
+      const { queryWord } = this
+
+      if (!queryWord) {
+        return Message.error('请输入查询关键词')
+      }
+
+      await getRecommendedWords(queryWord)
+    },
+    async checkCreativeContent() {
+      const {
+        creativeContent,
+        creativeTitle
+      } = this.newPromotion
+
+      if (!creativeContent) {
+        return Message.error('请填写推广内容')
+      }
+
+      if (!creativeTitle) {
+        return Message.error('请填写推广标题')
+      }
+
+      const data = await checkCreativeContent({
+        creativeContent,
+        creativeTitle
+      })
+
+      if (data.result) {
+        Message.success(data.hint)
+      } else {
+        Message.error(data.hint)
+      }
+    },
+    async getCreativeWords() {
+      const {
+        creativeContent,
+        creativeTitle
+      } = this.newPromotion
+
+      if (creativeContent && creativeTitle) {
+        await getCreativeWords({
+          creativeContent,
+          creativeTitle
+        })
+      }
+    },
+    onChangeAreas(areas) {
+      this.newPromotion.areas = [...areas]
+      this.areaDialogVisible = false
+    },
+    formatterArea(name) {
+      const { allAreas } = this
+      return getCnName(name, allAreas)
+    },
+    removeArea(c) {
+      this.newPromotion.areas = [
+        ...this.newPromotion.areas.filter(i => i !== c)
+      ]
+    }
+  },
+  watch: {
+    'newPromotion.creativeContent': async function() {
+      // TODO - debounce
+      await this.getCreativeWords()
+    },
+    'newPromotion.creativeTitle': async function() {
+      // TODO - debounce
+      await this.getCreativeWords()
+    }
+  },
+  async mounted() {
+    await getCurrentBalance()
+  }
+}
+
+</script>
+
+<style scoped>
+
+.el-icon-plus {
+  cursor: pointer;
+}
+
+.el-tag {
+  margin-right: 5px;
+}
+
+.qwt-create-promotion {
+  padding: 0 35px;
+  width: 100%;
+
+  & > main {
+    & > section:not(:last-child) {
+      border-bottom: 1px solid #c0ccda;
+    }
+
+    & > section {
+      margin-bottom: 30px;
+      padding-bottom: 30px;
+
+      & > header {
+        color: #6a778c;
+      }
+
+      & > div {
+        display: flex;
+        margin: 20px 0;
+
+        & > aside:first-child {
+          display: flex;
+          align-items: center;
+          margin-right: 20px;
+          color: #6a778c;
+          font-size: 14px;
+        }
+      }
+    }
+
+    & > section.keyword {
+      & > h4 {
+        margin: 20px 0 30px;
+        color: #6a778c;
+        font-size: 13px;
+        font-weight: normal;
+      }
+
+      & > h3 {
+        font-size: 14px;
+        font-weight: normal;
+
+        & > label {
+          color: #424344;
+        }
+
+        & > a {
+          color: #0994ff;
+          cursor: pointer;
+        }
+      }
+
+      & > div:nth-child(5) {
+        display: flex;
+        align-items: center;
+
+        & > span {
+          margin-right: 20px;
+        }
+
+        & > strong {
+          color: #404e61;
+          font-size: 13px;
+          font-weight: normal;
+        }
+      }
+    }
+
+    & > section.timing {
+      & > div {
+        display: flex;
+        align-items: center;
+      }
+
+      & > div:nth-child(2) {
+        & > span:last-child {
+          margin-left: 20px;
+        }
+      }
+
+      & > div:nth-child(3) {
+        & > span:nth-child(2) {
+          width: 220px;
+        }
+
+        & > i {
+          margin-left: 5px;
+          color: #6a778c;
+          font-size: 13px;
+        }
+
+        & > span:last-child {
+          display: flex;
+          align-items: center;
+          margin: 0 3px;
+          width: 260px;
+          font-size: 13px;
+          color: #404e61;
+
+          & > p {
+            color: red;
+          }
+        }
+      }
+
+      & > h3 {
+        color: #6a778c;
+        font-size: 14px;
+        font-weight: normal;
+
+        & > strong {
+          margin: 0 5px;
+          color: #ff3001;
+          font-size: 18px;
+        }
+      }
+
+      & > h4 {
+        margin-top: 30px;
+        font-size: 14px;
+        font-weight: normal;
+
+        & > label {
+          color: #6a778c;
+        }
+
+        & > a {
+          color: #0994ff;
+          cursor: pointer;
+        }
+      }
+
+      & > footer {
+        color: #717d91;
+        font-size: 13px;
+      }
+    }
+  }
+}
+
+</style>

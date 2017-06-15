@@ -231,8 +231,8 @@ export default {
     },
     adPriceDiscount() {
       const { adPrice } = this
-      if (adPrice && adPrice.discountCodes
-        && adPrice.discountCodes.length) {
+      if (adPrice && adPrice.discountCodes &&
+        adPrice.discountCodes.length) {
         return adPrice.discountCodes
           .map(d => d.description)
           .join(',')
@@ -295,16 +295,16 @@ export default {
       getAds()
     ])
 
-    const { sales_id } = this.$route.query
+    const { sales_id: salesId } = this.$route.query
 
-    if (sales_id) {
-      const info = await getUserInfo(sales_id)
-      if (String(info.id) === sales_id) {
+    if (salesId) {
+      const info = await getUserInfo(salesId)
+      if (String(info.id) === salesId) {
         // 说明: get user info 是有权限设置的 salesId
         // 如果 info == {}, 不锁定 salesId
         this.salesIdLocked = true
         this.salesDisplayName = info.name || '无名氏'
-        this.newOrder.salesId = sales_id
+        this.newOrder.salesId = salesId
       }
     }
   },
@@ -377,10 +377,10 @@ export default {
         adId
       }
 
-      if (opts.adId && opts.categories.length && opts.cities.length
-        && opts.startAt && opts.endAt) {
-          const price = await getAdPrice(opts.adId, opts)
-        }
+      if (opts.adId && opts.categories.length && opts.cities.length &&
+        opts.startAt && opts.endAt) {
+        await getAdPrice(opts.adId, opts)
+      }
     },
     async onSubmit() {
       const { newOrder, userInfo, adPrice } = this
@@ -408,8 +408,8 @@ export default {
         delete data.sspOrderType
       }
 
-      if (adPrice && adPrice.discountCodes
-        && adPrice.discountCodes.length) {
+      if (adPrice && adPrice.discountCodes &&
+        adPrice.discountCodes.length) {
         data.discountCodes = adPrice.discountCodes.map(d => d.code)
       }
 

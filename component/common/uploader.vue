@@ -19,7 +19,6 @@ import {
   getImageInfo
 } from 'util/kit'
 
-import { Message } from 'element-ui'
 import { extname } from 'path'
 import Fetch from 'fetch.io'
 import uuid from 'uuid/v4'
@@ -27,7 +26,7 @@ import uuid from 'uuid/v4'
 const {
   filehost: upyunFileHost,
   host: upyunHost,
-  bucket,
+  bucket
 } = upyun
 
 const request = new Fetch({

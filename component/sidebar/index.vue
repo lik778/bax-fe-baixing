@@ -9,7 +9,47 @@
       <el-menu default-active="1">
         <el-submenu index="1">
           <template slot="title">
-            <i class="el-icon-message" />投放管理
+            <i class="el-icon-star-on" />建站工具
+          </template>
+          <el-menu-item index="1-1">
+            <router-link :to="{ name: 'qwt-charge' }" tag="p">
+              企业官网
+            </router-link>
+          </el-menu-item>
+          <el-menu-item index="1-2">
+            <router-link :to="{ name: 'qwt-charge' }" tag="p">
+              单页定制
+            </router-link>
+          </el-menu-item>
+        </el-submenu>
+        <el-submenu index="2">
+          <template slot="title">
+            <i class="el-icon-star-on" />全网通
+          </template>
+          <el-menu-item index="2-1">
+            <router-link :to="{ name: 'qwt-charge' }" tag="p">
+              服务开启
+            </router-link>
+          </el-menu-item>
+          <el-menu-item index="2-2">
+            <router-link :to="{ name: 'qwt-create-promotion' }" tag="p">
+              新建推广
+            </router-link>
+          </el-menu-item>
+          <el-menu-item index="2-3">
+            <router-link :to="{ name: 'qwt-promotion-list' }" tag="p">
+              推广管理
+            </router-link>
+          </el-menu-item>
+          <el-menu-item index="2-4">
+            <router-link :to="{ name: 'qwt-dashboard' }" tag="p">
+              数据报表
+            </router-link>
+          </el-menu-item>
+        </el-submenu>
+        <el-submenu index="3">
+          <template slot="title">
+            <i class="el-icon-message" />品牌广告
           </template>
           <el-menu-item index="1-1" v-if="allowQueryAdItems">
             <router-link :to="{ name: 'ad-list' }" tag="p">

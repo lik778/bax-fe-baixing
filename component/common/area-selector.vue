@@ -1,6 +1,6 @@
 
 <template>
-  <el-dialog title="区域选择" :value="visible"
+  <el-dialog title="区域选择" :visible="visible"
     :close-on-click-modal="false" size="large"
     @close="cancel">
     <main class="main">
@@ -210,7 +210,6 @@ export default {
 
       const area = this.getAreaByName(name)
       const {
-        parent,
         level,
         id
       } = area
@@ -285,8 +284,6 @@ export default {
             }
           }
         }
-
-        return
       }
     },
     empty() {

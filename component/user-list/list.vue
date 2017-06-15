@@ -47,7 +47,7 @@ export default {
     async onCurrentChange({offset}) {
       const q = {
         ...this.query,
-        offset,
+        offset
       }
 
       await getUsers(q)

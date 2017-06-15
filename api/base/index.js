@@ -5,9 +5,41 @@ import { Message } from 'element-ui'
 import { redirectTo } from 'utils'
 import Fetch from 'fetch.io'
 
-import { baxApiHost, dashboardHost } from 'config'
+import {
+  fengmingApiHost,
+  baxApiHost,
+  dashboardHost
+} from 'config'
 
 import es from 'base/es'
+
+export const fengming = new Fetch({
+  prefix: fengmingApiHost,
+  beforeRequest() {
+    es.emit('http fetch start')
+  },
+  afterResponse() {
+    es.emit('http fetch end')
+  },
+  afterJSON(body) {
+    if (body.errors) {
+      Message.error('出错啦')
+      throw new Error('出错啦')
+    }
+
+    const meta = body.meta || {}
+
+    if (meta.status === 401) {
+      Message.error('请重新登录 >_<')
+      return redirectTo('signin')
+    }
+
+    if (meta.message !== 'Success') {
+      Message.error(meta.message)
+      throw new Error(meta.message)
+    }
+  }
+})
 
 export const api = new Fetch({
   prefix: baxApiHost,
