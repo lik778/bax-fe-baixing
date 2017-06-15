@@ -10,7 +10,8 @@
         </el-button>
       </span>
       <span>
-        <el-button type="primary" icon="plus">
+        <el-button type="primary" icon="plus"
+          @click="gotoCreatePromotion">
           新建推广计划
         </el-button>
       </span>
@@ -59,6 +60,11 @@ export default {
   methods: {
     switchShowMoreFilters() {
       switchShowMoreFilters()
+    },
+    gotoCreatePromotion() {
+      this.$router.push({
+        name: 'qwt-create-promotion'
+      })
     }
   }
 }

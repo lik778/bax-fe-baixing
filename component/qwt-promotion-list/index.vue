@@ -5,7 +5,7 @@
       <label slot="title">全网通 - 推广管理</label>
     </topbar>
     <promotion-header :show-more-filters="showMoreFilters" />
-    <promotion-list />
+    <promotion-list :promotions="currentPromotions" />
   </div>
 </template>
 
@@ -14,6 +14,10 @@
 import PromotionHeader from './header'
 import PromotionList from './list'
 import Topbar from 'com/topbar'
+
+import {
+  getCurrentCampaigns
+} from './action'
 
 import store from './store'
 
@@ -30,6 +34,9 @@ export default {
       type: Object,
       required: true
     }
+  },
+  async mounted() {
+    await getCurrentCampaigns()
   }
 }
 

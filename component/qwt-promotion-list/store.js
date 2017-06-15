@@ -2,16 +2,21 @@
 import { createStore } from 'vue-duo'
 
 import {
-  switchShowMoreFilters
+  switchShowMoreFilters,
+  getCurrentCampaigns
 } from './action'
 
 const store = createStore({
-  showMoreFilters: false
+  showMoreFilters: false,
+  currentPromotions: []
 })
 
 store.subscribeActions({
   [switchShowMoreFilters]: () => ({
     showMoreFilters: !store.state.showMoreFilters
+  }),
+  [getCurrentCampaigns]: (promotions) => ({
+    currentPromotions: [...promotions]
   })
 })
 
