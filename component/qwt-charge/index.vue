@@ -105,7 +105,12 @@ export default {
       }
 
       & > main {
+        display: flex;
         margin-top: 25px;
+
+        & > div {
+          margin-right: 10px;
+        }
       }
     }
 
@@ -138,7 +143,7 @@ export default {
     }
 
     & > footer {
-      margin-top: 40px;
+      margin: 40px 0 50px;
       font-size: 13px;
       line-height: 1.62;
       color: #6a778c;
