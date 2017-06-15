@@ -10,19 +10,21 @@
         <div>
           <aside>选择渠道：</aside>
           <span>
-            <el-checkbox-group>
-              <el-checkbox label="百度" />
-              <el-checkbox label="搜狗" />
-            </el-checkbox-group>
+            <el-button-group>
+              <el-button type="primary">百度</el-button>
+              <el-button type="primary">搜狗</el-button>
+              <el-button type="primary">360</el-button>
+            </el-button-group>
           </span>
         </div>
         <div>
           <aside>投放页面：</aside>
           <span>
-            <el-checkbox-group>
-              <el-checkbox label="帖子详情页" />
-              <el-checkbox label="企业官网" />
-            </el-checkbox-group>
+            <el-button-group>
+              <el-button type="primary">帖子详情页</el-button>
+              <el-button type="primary">企业官网</el-button>
+              <el-button type="primary">活动定制页</el-button>
+            </el-button-group>
           </span>
         </div>
         <div>
@@ -121,6 +123,10 @@
 
 import KeywordList from './keyword-list'
 import Topbar from 'com/topbar'
+
+import {
+  createCampaign
+} from './action'
 
 export default {
   name: 'qwt-create-promotion',
