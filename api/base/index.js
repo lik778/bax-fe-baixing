@@ -77,11 +77,12 @@ export const dashboardApi = new Fetch({
   afterResponse(res) {
     es.emit('http fetch end')
 
-    if(res.status >= 500) {
+    if (res.status >= 500) {
       Message.error('出错啦')
       throw new Error('出错啦')
     }
-    if(res.status === 401) {
+
+    if (res.status === 401) {
       Message.error('请重新登录 >_<')
       return redirectTo('signin')
     }

@@ -51,41 +51,41 @@
           <template slot="title">
             <i class="el-icon-message" />品牌广告
           </template>
-          <el-menu-item index="1-1" v-if="allowQueryAdItems">
+          <el-menu-item index="3-1" v-if="allowQueryAdItems">
             <router-link :to="{ name: 'ad-list' }" tag="p">
               广告投放
             </router-link>
           </el-menu-item>
-          <el-menu-item index="1-2" v-if="allowQueryMaterials">
+          <el-menu-item index="3-2" v-if="allowQueryMaterials">
             <router-link :to="{ name: 'material-list' }" tag="p">
               物料管理
             </router-link>
           </el-menu-item>
-          <el-menu-item index="1-3" v-if="allowQueryOrders">
+          <el-menu-item index="3-3" v-if="allowQueryOrders">
             <router-link :to="{ name: 'order-list' }" tag="p">
               订单管理
             </router-link>
           </el-menu-item>
-          <el-menu-item index="1-4" v-if="allowQueryUsers">
+          <el-menu-item index="3-4" v-if="allowQueryUsers">
             <router-link :to="{ name: 'user-list' }" tag="p">
               客户管理
             </router-link>
           </el-menu-item>
-          <el-menu-item index="1-5">
+          <el-menu-item index="3-5">
             <router-link :to="{ name: 'ad-calendar' }" tag="p">
               广告排期
             </router-link>
           </el-menu-item>
         </el-submenu>
-        <el-menu-item index="2">
+        <el-menu-item index="4">
           <router-link :to="{ name: 'dashboard' }" tag="p">
             <i class="el-icon-menu" />数据报表
           </router-link>
         </el-menu-item>
-        <el-menu-item index="3">
+        <el-menu-item index="5">
           <i class="el-icon-menu" />设置
         </el-menu-item>
-        <el-menu-item index="4">
+        <el-menu-item index="6">
           <i class="el-icon-setting" />账户
         </el-menu-item>
       </el-menu>
