@@ -11,6 +11,40 @@ export async function createCampaign(data) {
   return body.data
 }
 
+export async function activeCampaigns(ids) {
+  return await fengming
+    .post('/campaign/active')
+    .send(reverseCamelcase({
+      campaignIds: [...ids]
+    }))
+    .json()
+}
+
+export async function pauseCampaigns(ids) {
+  return await fengming
+    .post('/campaign/pause')
+    .send(reverseCamelcase({
+      campaignIds: [...ids]
+    }))
+    .json()
+}
+
+export async function getCurrentCampaigns() {
+  const body = await fengming
+    .get('/campaign/current')
+    .json()
+
+  return toCamelcase(body.data)
+}
+
+export async function getCurrentBalance() {
+  const body = await fengming
+    .get('/balance/current')
+    .json()
+
+  return body.data
+}
+
 export async function checkCreativeContent(opts) {
   const {
     content,
