@@ -1,6 +1,6 @@
 
 <template>
-  <el-dialog title="类目选择" :value="visible"
+  <el-dialog title="类目选择" :visible="visible"
     :close-on-click-modal="false" size="large"
     @close="cancel">
     <main class="main">
