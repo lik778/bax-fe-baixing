@@ -11,25 +11,58 @@
           <aside>选择渠道：</aside>
           <span>
             <el-button-group>
-              <el-button type="primary">百度</el-button>
-              <el-button type="primary">搜狗</el-button>
-              <el-button type="primary">360</el-button>
+              <el-button @click="newPromotion.source = 0"
+                :type="newPromotion.source === 0 ? 'primary' : ''">
+                百度
+              </el-button>
+              <el-button @click="newPromotion.source = 5"
+                :type="newPromotion.source === 5 ? 'primary' : ''">
+                搜狗
+              </el-button>
+              <el-button @click="newPromotion.source = 1"
+                :type="newPromotion.source === 1 ? 'primary' : ''">
+                360
+              </el-button>
             </el-button-group>
           </span>
         </div>
         <div>
-          <aside>投放页面：</aside>
-          <span>
-            <el-button-group>
-              <el-button type="primary">帖子详情页</el-button>
-              <el-button type="primary">企业官网</el-button>
-              <el-button type="primary">活动定制页</el-button>
-            </el-button-group>
+          <aside style="align-items: flex-start; padding-top: 5px;">
+            投放页面：
+          </aside>
+          <span class="landingpage">
+            <div>
+              <el-button-group>
+                <el-button @click="newPromotion.landingType = 0"
+                  :type="newPromotion.landingType === 0 ? 'primary' : ''">
+                  帖子详情页
+                </el-button>
+                <el-button @click="newPromotion.landingType = 1"
+                  :type="newPromotion.landingType === 1 ? 'primary' : ''">
+                  企业官网
+                </el-button>
+                <el-button @click="newPromotion.landingType = 2"
+                  :type="newPromotion.landingType === 2 ? 'primary' : ''">
+                  活动定制页
+                </el-button>
+              </el-button-group>
+            </div>
+            <div style="margin-top: 20px; width: 490px;">
+              <el-input placeholder="请输入投放网址, 如: http://baixing.com" />
+            </div>
           </span>
         </div>
         <div>
           <aside>投放城市：</aside>
-          <span></span>
+          <span>
+            <el-tag type="success" closable
+              v-for="c in newPromotion.areas" :key="c"
+              @close="removeArea(c)">
+              {{ formatterArea(c) }}
+            </el-tag>
+            <i class="el-icon-plus"
+              @click="areaDialogVisible = true" />
+          </span>
         </div>
       </section>
       <section>
@@ -37,19 +70,22 @@
         <div>
           <aside>推广标题:</aside>
            <span>
-            <el-input type="text" placeholder="请输入标题 ~"
-              style="width: 420px" />
+            <el-input type="text" placeholder="请输入标题 ~" style="width: 420px"
+              v-model="newPromotion.creativeTitle" />
           </span>
         </div>
         <div>
-          <aside>推广内容:</aside>
+          <aside style="align-items: flex-start; padding-top: 5px;">
+            推广内容:
+          </aside>
           <span>
             <el-input type="textarea" placeholder="请输入内容 ~"
-              :rows="5" style="width: 420px" />
+              :rows="5" style="width: 420px"
+              v-model="newPromotion.creativeContent" />
           </span>
         </div>
         <footer>
-          <el-button type="primary">
+          <el-button type="primary" @click="checkCreativeContent">
             检查推广是否可用
           </el-button>
         </footer>
@@ -57,30 +93,33 @@
       <section class="keyword">
         <header>选取推广关键词</header>
         <h4>根据当月数据，为您推荐如下关键词</h4>
-        <keyword-list />
+        <keyword-list :words="creativeWords"
+          @select-words="words => newPromotion.creativeWords = [...words]" />
         <h3>
           <label>若没有您满意的关键词，</label>
           <a>点此自定义添加</a>
         </h3>
         <div>
           <span>
-            <el-input placeholder="请输入关键词" />
+            <el-input placeholder="请输入关键词" v-model="queryWord" />
           </span>
-          <el-button type="primary">
+          <el-button type="primary" @click="queryRecommendedWords">
             查询
           </el-button>
           <strong>
             （请优先添加较为核心的关键词，关键词长度不宜超过5个字，不区分大小写。）
           </strong>
         </div>
-        <keyword-list />
+        <keyword-list :words="recommendedWords"
+          @select-words="words => newPromotion.recommendedWords = [...words]" />
       </section>
       <section class="timing">
         <header>设置时长和预算</header>
         <div>
           <aside>投放时间:</aside>
           <span>
-            <el-date-picker type="daterange" placeholder="选择日期范围" />
+            <el-date-picker type="daterange" placeholder="选择日期范围"
+              v-model="newPromotion.validTime" />
           </span>
           <span>
             <el-checkbox label="长期投放" />
@@ -89,7 +128,8 @@
         <div>
           <aside>设置推广日预算:</aside>
           <span>
-            <el-input placeholder="请输入每日最高预算" />
+            <el-input type="number" placeholder="请输入每日最高预算"
+              v-model="newPromotion.dailyBudget" />
           </span>
           <i>元</i>
           <span>
@@ -105,8 +145,11 @@
           <a>《百姓网站外推广用户协议》</a>
         </h4>
         <div>
-          <el-button type="primary">
+          <el-button v-if="false" type="primary">
             先去充值
+          </el-button>
+          <el-button type="primary" @click="createPromotion">
+            创建推广
           </el-button>
         </div>
         <footer>
@@ -116,29 +159,184 @@
         </footer>
       </section>
     </main>
+    <area-selector :all-areas="allAreas"
+      :areas="newPromotion.areas"
+      :visible="areaDialogVisible"
+      @ok="onChangeAreas"
+      @cancel="areaDialogVisible = false" />
   </div>
 </template>
 
 <script>
 
+import { Message } from 'element-ui'
+import clone from 'clone'
+
+import AreaSelector from 'com/common/area-selector'
 import KeywordList from './keyword-list'
 import Topbar from 'com/topbar'
 
+import { getCnName } from 'util/meta'
+import { toTimestamp } from 'utils'
+
 import {
-  createCampaign
+  checkCreativeContent,
+  getRecommendedWords,
+  getCreativeWords,
+  createCampaign,
+  clearStore
 } from './action'
+
+import store from './store'
+
+const emptyPromotion = {
+  creativeContent: '',
+  creativeTitle: '',
+  dailyBudget: 0,
+  landingPage: '',
+  landingType: 0,
+  validTime: [],
+  keywords: [],
+  areas: [],
+  source: 0,
+  //
+  recommendedWords: [],
+  creativeWords: []
+}
 
 export default {
   name: 'qwt-create-promotion',
+  store,
+  components: {
+    AreaSelector,
+    KeywordList,
+    Topbar
+  },
   props: {
     userInfo: {
       type: Object,
       required: true
+    },
+    allAreas: {
+      type: Array,
+      required: true
     }
   },
-  components: {
-    KeywordList,
-    Topbar
+  data() {
+    return {
+      newPromotion: clone(emptyPromotion),
+      areaDialogVisible: false,
+      queryWord: ''
+    }
+  },
+  methods: {
+    async createPromotion() {
+      const p = clone(this.newPromotion)
+
+      p.dailyBudget = p.dailyBudget * 100
+
+      if (p.validTime.length) {
+        p.validTime = [
+          toTimestamp(p.validTime[0]),
+          toTimestamp(p.validTime[1])
+        ]
+      }
+
+      p.keywords = [
+        ...p.recommendedWords,
+        ...p.creativeWords
+      ]
+
+      if (!p.keywords.length) {
+        return Message.error('请填写关键字')
+      }
+
+      if (!p.areas.length) {
+        return Message.error('请选择城市')
+      }
+
+      await createCampaign(p)
+
+      Message.success('创建成功')
+
+      await clearStore()
+
+      this.$router.push({
+        name: 'qwt-promotion-list'
+      })
+    },
+    async queryRecommendedWords() {
+      const { queryWord } = this
+
+      if (!queryWord) {
+        return Message.error('请输入查询关键词')
+      }
+
+      await getRecommendedWords(queryWord)
+    },
+    async checkCreativeContent() {
+      const {
+        creativeContent,
+        creativeTitle
+      } = this.newPromotion
+
+      if (!creativeContent) {
+        return Message.error('请填写推广内容')
+      }
+
+      if (!creativeTitle) {
+        return Message.error('请填写推广标题')
+      }
+
+      const data = await checkCreativeContent({
+        creativeContent,
+        creativeTitle
+      })
+
+      if (data.result) {
+        Message.success(data.hint)
+      } else {
+        Message.error(data.hint)
+      }
+    },
+    async getCreativeWords() {
+      const {
+        creativeContent,
+        creativeTitle
+      } = this.newPromotion
+
+      if (creativeContent && creativeTitle) {
+        await getCreativeWords({
+          creativeContent,
+          creativeTitle
+        })
+      }
+    },
+    onChangeAreas(areas) {
+      this.newPromotion.areas = [...areas]
+      this.areaDialogVisible = false
+    },
+    formatterArea(name) {
+      const { allAreas } = this
+      return getCnName(name, allAreas)
+    },
+    removeArea(c) {
+      this.newPromotion.areas = [
+        ...this.newPromotion.areas.filter(i => i !== c)
+      ]
+    }
+  },
+  watch: {
+    'newPromotion.creativeContent': async function() {
+      // TODO - debounce
+      await this.getCreativeWords()
+    },
+    'newPromotion.creativeTitle': async function() {
+      // TODO - debounce
+      await this.getCreativeWords()
+    }
+  },
+  mounted() {
   }
 }
 
@@ -146,15 +344,26 @@ export default {
 
 <style scoped>
 
+.el-icon-plus {
+  cursor: pointer;
+}
+
+.el-tag {
+  margin-right: 5px;
+}
+
 .qwt-create-promotion {
   padding: 0 35px;
   width: 100%;
 
   & > main {
-    & > section {
-      margin-bottom: 20px;
-      padding-bottom: 30px;
+    & > section:not(:last-child) {
       border-bottom: 1px solid #c0ccda;
+    }
+
+    & > section {
+      margin-bottom: 30px;
+      padding-bottom: 30px;
 
       & > header {
         color: #6a778c;
@@ -162,16 +371,14 @@ export default {
 
       & > div {
         display: flex;
-        margin: 15px 0;
+        margin: 20px 0;
 
         & > aside:first-child {
+          display: flex;
+          align-items: center;
           margin-right: 20px;
           color: #6a778c;
           font-size: 14px;
-        }
-
-        .el-input {
-          width: 420px;
         }
       }
     }

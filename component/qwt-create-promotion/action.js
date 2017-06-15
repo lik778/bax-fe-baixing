@@ -18,3 +18,5 @@ export const getRecommendedWords = createAction((word) => {
 export const getCreativeWords = createAction((opts) => {
   return fapi.getCreativeWords(opts)
 })
+
+export const clearStore = createAction()
