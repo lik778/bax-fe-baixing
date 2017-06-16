@@ -151,6 +151,14 @@ export function allowContinueAd(roles) {
   ])
 }
 
+export function allowSeeDashboard(roles) {
+  const currentRoles = normalizeRoles(roles)
+
+  return checkRoles(currentRoles, [
+    'DATA_OPERATOR'
+  ])
+}
+
 export function onlyAgentSales(roles) {
   const currentRoles = normalizeRoles(roles)
 

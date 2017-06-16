@@ -62,6 +62,11 @@ export const api = new Fetch({
       return redirectTo('signin')
     }
 
+    if(meta.status === 403) {
+      Message.error('你没有权限访问该页面')
+      return redirectTo('root')
+    }
+
     if (meta.message !== 'Success') {
       Message.error(meta.message)
       throw new Error(meta.message)
@@ -85,6 +90,11 @@ export const dashboardApi = new Fetch({
     if (res.status === 401) {
       Message.error('请重新登录 >_<')
       return redirectTo('signin')
+    }
+
+    if(res.status === 403) {
+      Message.error('你没有权限访问该页面')
+      return redirectTo('root')
     }
   }
 })

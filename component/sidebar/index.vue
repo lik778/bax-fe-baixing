@@ -77,9 +77,9 @@
             </router-link>
           </el-menu-item>
         </el-submenu>
-        <el-menu-item index="4">
+        <el-menu-item index="4" v-if="allowSeeDashboard">
           <router-link :to="{ name: 'dashboard' }" tag="p">
-            <i class="el-icon-menu" />数据报表
+            <i class="el-icon-menu" />部门业绩
           </router-link>
         </el-menu-item>
         <el-menu-item index="5">
@@ -101,7 +101,8 @@ import {
   allowQueryMaterials,
   allowQueryAdItems,
   allowQueryOrders,
-  allowQueryUsers
+  allowQueryUsers,
+  allowSeeDashboard
 } from 'util/role'
 
 export default {
@@ -129,6 +130,9 @@ export default {
     },
     allowQueryUsers() {
       return allowQueryUsers(this.userInfo.roles)
+    },
+    allowSeeDashboard() {
+      return allowSeeDashboard(this.userInfo.roles)
     }
   }
 }
