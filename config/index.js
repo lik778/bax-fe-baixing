@@ -12,7 +12,7 @@ export const baxApiHost = isPro
   : '//192.168.8.201/bax'
 
 export const dashboardHost = isPro
-  ? '//bax.baixing.com.cn/dashboard-api'
+  ? '//bax.baixing.com.cn/api/dashboard-api'
   : '//localhost:3003/api'
 
 export const assetHost = '//adfe.wzbaixing.com.cn/bax-asset.'
