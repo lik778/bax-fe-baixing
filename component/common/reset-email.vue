@@ -1,8 +1,8 @@
 
 <template>
-  <el-dialog title="请输入您的邮箱以便接收通知" :value="visible"
+  <el-dialog title="请输入您的邮箱以便接收通知" :visible="visible"
     :close-on-click-modal="false" :show-close="false"
-    @close="cancel">
+    :before-close="cancel">
     <el-form label-width="80px">
       <el-form-item label="邮箱" required>
         <el-input v-model="email" />

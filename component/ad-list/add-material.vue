@@ -1,8 +1,8 @@
 
 <template>
-  <el-dialog title="添加物料" :value="visible"
+  <el-dialog title="添加物料" :visible="visible"
     :close-on-click-modal="false"
-    @close="cancel">
+    :before-close="cancel">
     <el-form ref="form" :model="material" label-width="100px"
       v-loading="loading" element-loading-text="图片上传中..." >
       <el-form-item label="选择物料">

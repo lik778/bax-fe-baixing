@@ -1,8 +1,8 @@
 
 <template>
-  <el-dialog title="新增投放" :value="visible"
+  <el-dialog title="新增投放" :visible="visible"
     :close-on-click-modal="false"
-    @close="cancel">
+    :before-close="cancel">
     <el-form ref="form" label-width="100px">
       <el-form-item label="名称" required>
         <el-input v-model="name" />

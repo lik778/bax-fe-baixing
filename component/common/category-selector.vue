@@ -2,7 +2,7 @@
 <template>
   <el-dialog title="类目选择" :visible="visible"
     :close-on-click-modal="false" size="large"
-    @close="cancel">
+    :before-close="cancel">
     <main class="main">
       <div v-for="c in topCategories">
         <span v-bind:class="{ selected: categoryChecked(c.id) }"
