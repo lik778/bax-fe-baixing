@@ -97,9 +97,9 @@
           @select-words="words => newPromotion.creativeWords = [...words]" />
         <h3>
           <label>若没有您满意的关键词，</label>
-          <a>点此自定义添加</a>
+          <a @click="switchWordsVisible">点此自定义添加</a>
         </h3>
-        <div>
+        <div v-if="recommendedWordsVisible">
           <span>
             <el-input placeholder="请输入关键词" v-model="queryWord" />
           </span>
@@ -110,7 +110,7 @@
             （请优先添加较为核心的关键词，关键词长度不宜超过5个字，不区分大小写。）
           </strong>
         </div>
-        <keyword-list :words="recommendedWords"
+        <keyword-list v-if="recommendedWordsVisible" :words="recommendedWords"
           @select-words="words => newPromotion.recommendedWords = [...words]" />
       </section>
       <section class="timing">
@@ -234,6 +234,7 @@ export default {
   data() {
     return {
       newPromotion: clone(emptyPromotion),
+      recommendedWordsVisible: false,
       areaDialogVisible: false,
       queryWord: ''
     }
@@ -320,6 +321,9 @@ export default {
           creativeTitle
         })
       }
+    },
+    switchWordsVisible() {
+      this.recommendedWordsVisible = !this.recommendedWordsVisible
     },
     onChangeAreas(areas) {
       this.newPromotion.areas = [...areas]
