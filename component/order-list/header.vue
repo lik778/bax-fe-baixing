@@ -5,9 +5,8 @@
       <span>
         <bax-input placeholder="请输入订单号" icon="search"
           type="number" v-model="query.orderId" />
-        <el-button icon="arrow-down"
-          @click="switchShowMoreFilters">
-          更多筛选
+        <el-button @click="switchShowMoreFilters">
+          更多筛选<i class="el-icon-arrow-down el-icon--right" />
         </el-button>
       </span>
       <span v-if="allowAddOrder">
