@@ -5,6 +5,10 @@ import QwtPromotionList from 'com/qwt-promotion-list'
 import QwtDashboard from 'com/qwt-dashboard'
 import QwtCharge from 'com/qwt-charge'
 
+// 精品官网
+import GwCustomPage from 'com/gw-custom-page'
+import GwCharge from 'com/gw-charge'
+
 // dashboard
 import UploadProfit from 'com/upload-profit'
 import Dashboard from 'com/dashboard'
@@ -43,6 +47,16 @@ Vue.use(Duo)
 
 Vue.component('chart', ECharts)
 Vue.use(Vue2Filters)
+
+const gwRoutes = [{
+  component: GwCharge,
+  path: '/main/gw/charge',
+  name: 'gw-charge'
+}, {
+  component: GwCustomPage,
+  path: '/main/gw/custom-page',
+  name: 'gw-custom-page'
+}]
 
 const qwtRoutes = [{
   component: QwtCreatePromotion,
@@ -110,7 +124,7 @@ const router = new VueRouter({
     component: UploadProfit,
     path: '/main/upload-profit',
     name: 'upload-profit'
-  }, ...qwtRoutes, ...bxadRoutes]
+  }, ...qwtRoutes, ...bxadRoutes, ...gwRoutes]
 })
 
 const app = new Vue({
