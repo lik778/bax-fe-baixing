@@ -2,7 +2,7 @@
 <template>
   <el-dialog title="区域选择" :visible="visible"
     :close-on-click-modal="false" size="large"
-    :before-close="cancel">
+    :before-close="ok">
     <main class="main">
       <div>
         <span @click="clickArea('china')">全国</span>
