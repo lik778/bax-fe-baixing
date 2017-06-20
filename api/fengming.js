@@ -2,6 +2,14 @@
 import { reverseCamelcase, toCamelcase } from 'object-keys-mapping'
 import { fengming, trim } from './base'
 
+export async function getProductPackages() {
+  const body = await fengming
+    .get('/product/package')
+    .json()
+
+  return toCamelcase(body.data)
+}
+
 export async function createCampaign(data) {
   const body = await fengming
     .post('/campaign')
