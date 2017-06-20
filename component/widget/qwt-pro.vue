@@ -1,6 +1,7 @@
 
 <template>
   <div class="qwt-pro-widget">
+    <i v-if="checked" class="el-icon-check" />
     <main>
       <span v-if="hasPrice">
         价值
@@ -23,6 +24,7 @@
 export default {
   name: 'qwt-pro-widget',
   props: {
+    checked: Boolean,
     price: Number,
     title: String
   },
@@ -40,6 +42,7 @@ export default {
 
 <style scoped>
 
+@import '../../cssbase/mixin';
 @import 'cssbase/mixin';
 
 .qwt-pro-widget {
@@ -49,6 +52,11 @@ export default {
   height: 70px;
   border-radius: 4px;
   border: solid 1px #009cff;
+  cursor: pointer;
+
+  & > i {
+    @mixin checked-icon;
+  }
 
   & > main {
     @mixin center;

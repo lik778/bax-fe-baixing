@@ -1,5 +1,19 @@
 
+@import 'cssbase/mixin';
 @import './var';
+
+@define-mixin checked-icon {
+  @mixin center;
+  margin: -10px 0 0 -10px;
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: #13ce66;
+  border-radius: 50%;
+  color: white;
+  font-size: 10px;
+  font-weight: bold;
+}
 
 @define-mixin top-filter {
   border: 1px solid #a3b2c4;

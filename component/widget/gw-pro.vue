@@ -1,6 +1,7 @@
 
 <template>
   <div class="gw-pro-widget">
+    <i v-if="checked" class="el-icon-check" />
     <main>
       <span>
         价值
@@ -20,6 +21,7 @@
 export default {
   name: 'gw-pro-widget',
   props: {
+    checked: Boolean,
     price: Number,
     title: String
   }
@@ -29,6 +31,7 @@ export default {
 
 <style scoped>
 
+@import '../../cssbase/mixin';
 @import 'cssbase/mixin';
 
 .gw-pro-widget {
@@ -38,6 +41,11 @@ export default {
   height: 70px;
   border-radius: 4px;
   border: solid 1px #009cff;
+  cursor: pointer;
+
+  & > i {
+    @mixin checked-icon;
+  }
 
   & > main {
     @mixin center;

@@ -1,6 +1,7 @@
 
 <template>
   <div class="qwt-pkg-widget">
+    <i v-if="checked" class="el-icon-check" />
     <header>
       {{ name }}
     </header>
@@ -26,6 +27,9 @@
 export default {
   name: 'qwt-pkg-widget',
   props: {
+    checked: {
+      type: Boolean
+    },
     name: {
       type: String,
       required: true
@@ -43,6 +47,7 @@ export default {
 
 <style scoped>
 
+@import '../../cssbase/mixin';
 @import 'cssbase/mixin';
 
 .qwt-pkg-widget {
@@ -51,6 +56,11 @@ export default {
   height: 160px;
   border-radius: 4px;
   border: solid 1px #0b9eff;
+  cursor: pointer;
+
+  & > i {
+    @mixin checked-icon;
+  }
 
   & > header {
     @mixin center;
