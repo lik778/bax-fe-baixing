@@ -1,6 +1,6 @@
 
 <template>
-  <div class="qwt-pro-widget">
+  <div class="qwt-pro-widget" @click="onClick">
     <i v-if="checked" class="el-icon-check" />
     <main>
       <span v-if="hasPrice && mode === 'normal'">
@@ -56,6 +56,9 @@ export default {
     },
     onBlur() {
       this.mode = 'normal'
+    },
+    onClick() {
+      this.$emit('click')
     }
   },
   computed: {

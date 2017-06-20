@@ -1,6 +1,6 @@
 
 <template>
-  <div class="qwt-pkg-widget">
+  <div class="qwt-pkg-widget" @click="onClick">
     <i v-if="checked" class="el-icon-check" />
     <header>
       {{ name }}
@@ -38,6 +38,11 @@ export default {
     },
     h1: String,
     h2: String
+  },
+  methods: {
+    onClick() {
+      this.$emit('click')
+    }
   }
 }
 

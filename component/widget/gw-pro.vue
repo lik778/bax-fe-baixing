@@ -1,6 +1,6 @@
 
 <template>
-  <div class="gw-pro-widget">
+  <div class="gw-pro-widget" @click="onClick">
     <i v-if="checked" class="el-icon-check" />
     <main>
       <span>
@@ -24,6 +24,11 @@ export default {
     checked: Boolean,
     price: Number,
     title: String
+  },
+  methods: {
+    onClick() {
+      this.$emit('click')
+    }
   }
 }
 
