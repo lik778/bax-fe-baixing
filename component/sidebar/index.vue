@@ -83,10 +83,12 @@
           </router-link>
         </el-menu-item>
         <el-menu-item index="5">
-          <i class="el-icon-menu" />设置
+          <router-link :to="{ name: 'account' }" tag="p">
+            <i class="el-icon-menu" />账户
+          </router-link>
         </el-menu-item>
         <el-menu-item index="6">
-          <i class="el-icon-setting" />账户
+          <i class="el-icon-setting" />设置
         </el-menu-item>
       </el-menu>
     </content>

@@ -22,6 +22,7 @@ import OrderInfo from 'com/order-info'
 import OrderList from 'com/order-list'
 import UserList from 'com/user-list'
 import AdList from 'com/ad-list'
+import Account from 'com/account'
 
 import Bax from 'com/bax'
 
@@ -129,6 +130,10 @@ const router = new VueRouter({
     component: UploadProfit,
     path: '/main/upload-profit',
     name: 'upload-profit'
+  }, {
+    component: Account,
+    path: '/main/account',
+    name: 'account'
   }, ...qwtRoutes, ...bxadRoutes, ...gwRoutes]
 })
 
