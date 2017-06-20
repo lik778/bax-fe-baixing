@@ -5,30 +5,29 @@
       <label slot="title">全网通 - 服务购买</label>
     </topbar>
     <section>
-      <div>
+      <div v-if="mode === 'buy-service'" class="qwt-package">
         <header>
           请选择您需要的全网通版本：
         </header>
         <main>
           <qwt-pkg-widget name="基础版" :price="1588"
-            h1="360天" h2="588元" />
+            h1="360天" h2="588元" checked />
           <qwt-pkg-widget name="超值版" :price="5088"
             h1="360天" h2="5088元" />
           <qwt-pkg-widget name="特惠版" :price="10188"
             h1="360天" h2="10188元" />
         </main>
       </div>
-      <div>
+      <div class="charge-product">
         <header>
           推广资金充值金额：
         </header>
         <main>
-          <qwt-pro-widget :price="288" />
-          <qwt-pro-widget :price="588" />
-          <qwt-pro-widget :price="1088" />
-          <qwt-pro-widget :price="3088" />
-          <qwt-pro-widget title="其他金额" />
-          <qwt-pro-widget title="暂不充值" />
+          <qwt-pro-widget v-for="i of allProducts" :key="i.id"
+            :price="i.price" :title="i.title" :editable="i.editable"
+            :checked="chargeProductChecked(i.id)"
+            @click="checkChargeProduct(i.id)"
+            @change="extraChargeMoney" />
         </main>
       </div>
     </section>
@@ -36,7 +35,8 @@
       <div>
         <aside>价格信息：</aside>
         <span>
-          <price-list />
+          <price-list :packages="checkedPackages"
+            :products="checkedProducts" />
         </span>
       </div>
       <div>
@@ -78,8 +78,36 @@ import { Message } from 'element-ui'
 import store from './store'
 
 import {
+  getProductPackages,
   createOrder
 } from './action'
+
+/**
+ * 关于推广资金的产品说明:
+ *   1. 推广资金的产品只有 1 个, 客户自由定价
+ *   2. 前端展示多个产品
+ */
+
+const allProducts = [{
+  id: 1,
+  price: 288
+}, {
+  id: 2,
+  price: 588
+}, {
+  id: 3,
+  price: 1088
+}, {
+  id: 4,
+  price: 3088
+}, {
+  id: 5,
+  title: '其他金额',
+  editable: true
+}, {
+  id: 6,
+  title: '暂不充值'
+}]
 
 export default {
   name: 'qwt-charge',
@@ -96,7 +124,37 @@ export default {
       required: true
     }
   },
+  data() {
+    return {
+      allProducts,
+
+      checkedPackages: [],
+      checkedProducts: [],
+
+      extraChargeProductId: 0,
+      extraChargeMoney: 0
+    }
+  },
+  computed: {
+    productId() {
+      // 目前: products.length === 1
+      return this.products.map(p => p.id).pop()
+    },
+    mode() {
+      // mode: charge-only, buy-service
+      return this.$route.query.mode || 'buy-service'
+    }
+  },
   methods: {
+    chargeProductChecked(id) {
+      return this.extraChargeProductId === id
+    },
+    checkChargeProduct(id) {
+      this.extraChargeProductId = id
+    },
+    extraChargeMoney(v) {
+      this.extraChargeMoney = v * 100
+    },
     async createOrder() {
       const newOrder = {
         userId: 1,
@@ -113,6 +171,9 @@ export default {
         name: 'qwt-promotion-list'
       })
     }
+  },
+  async mounted() {
+    await getProductPackages(1)
   }
 }
 
@@ -141,7 +202,7 @@ export default {
       }
     }
 
-    & > div:first-child {
+    & > div.qwt-package {
       margin-bottom: 30px;
     }
   }
