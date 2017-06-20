@@ -2,6 +2,15 @@
 import { reverseCamelcase, toCamelcase } from 'object-keys-mapping'
 import { fengming, trim } from './base'
 
+export async function createOrder(order) {
+  const body = await fengming
+    .post('/order')
+    .send(reverseCamelcase(order))
+    .json()
+
+  return body.data
+}
+
 export async function getProductPackages() {
   const body = await fengming
     .get('/product/package')

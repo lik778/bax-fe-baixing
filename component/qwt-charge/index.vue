@@ -50,7 +50,7 @@
         <i>￥18865</i>
       </div>
       <div>
-        <el-button type="primary">
+        <el-button type="primary" @click="createOrder">
           确认购买
         </el-button>
       </div>
@@ -73,8 +73,17 @@ import QwtProWidget from 'com/widget/qwt-pro'
 import PriceList from './price-list'
 import Topbar from 'com/topbar'
 
+import { Message } from 'element-ui'
+
+import store from './store'
+
+import {
+  createOrder
+} from './action'
+
 export default {
   name: 'qwt-charge',
+  store,
   components: {
     QwtPkgWidget,
     QwtProWidget,
@@ -85,6 +94,24 @@ export default {
     userInfo: {
       type: Object,
       required: true
+    }
+  },
+  methods: {
+    async createOrder() {
+      const newOrder = {
+        userId: 1,
+        salesId: 2,
+        packages: [3, 4],
+        products: [5, 6]
+      }
+
+      await createOrder(newOrder)
+
+      Message.success('创建订单成功')
+
+      this.$router.push({
+        name: 'qwt-promotion-list'
+      })
     }
   }
 }
