@@ -2,6 +2,8 @@
 import { reverseCamelcase, toCamelcase } from 'object-keys-mapping'
 import { fengming, trim } from './base'
 
+const isArray = Array.isArray
+
 export async function createOrder(order) {
   const body = await fengming
     .post('/order')
@@ -9,6 +11,17 @@ export async function createOrder(order) {
     .json()
 
   return body.data
+}
+
+export async function getProducts(type = 1) {
+  const body = await fengming
+    .get('/product')
+    .query(reverseCamelcase({
+      productTypes: isArray(type) ? type.join(',') : type
+    }))
+    .json()
+
+  return toCamelcase(body.data)
 }
 
 export async function getProductPackages() {
