@@ -3,14 +3,22 @@
   <div class="qwt-pro-widget">
     <i v-if="checked" class="el-icon-check" />
     <main>
-      <span v-if="hasPrice">
+      <span v-if="hasPrice && mode === 'normal'">
         价值
       </span>
-      <span v-if="hasPrice">
-        {{ price + '元' }}
+      <span v-if="hasPrice && mode === 'normal'"
+        @click="toInputPrice">
+        {{ displayPrice + '元' }}
       </span>
-      <p v-if="!hasPrice">
+      <p v-if="!hasPrice && mode === 'normal'"
+        @click="toInputPrice">
         {{ title }}
+      </p>
+      <p v-if="mode === 'input'">
+        <el-input size="mini" style="width: 90px"
+          placeholder="输入金额" v-model="inputPrice"
+          @change="toInputPrice"
+          @blur="onBlur" />
       </p>
     </main>
     <footer v-if="showFooter">
@@ -24,13 +32,48 @@
 export default {
   name: 'qwt-pro-widget',
   props: {
+    editable: Boolean,
     checked: Boolean,
     price: Number,
     title: String
   },
+  data() {
+    return {
+      inputPrice: '',
+      mode: 'normal' // input
+    }
+  },
+  methods: {
+    toInputPrice() {
+      if (!this.editable) {
+        return
+      }
+
+      this.mode = 'input'
+    },
+    onInputPrice(v) {
+      this.$emit('change', v)
+    },
+    onBlur() {
+      this.mode = 'normal'
+    }
+  },
   computed: {
+    displayPrice() {
+      return this.inputPrice || this.price
+    },
     hasPrice() {
-      return !['其他金额', '暂不充值'].includes(this.title)
+      const { title } = this
+
+      if (title === '暂不充值') {
+        return false
+      }
+
+      if (title === '其他金额') {
+        return !!this.inputPrice
+      }
+
+      return true
     },
     showFooter() {
       return !['暂不充值'].includes(this.title)

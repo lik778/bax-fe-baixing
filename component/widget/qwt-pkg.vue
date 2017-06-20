@@ -27,9 +27,7 @@
 export default {
   name: 'qwt-pkg-widget',
   props: {
-    checked: {
-      type: Boolean
-    },
+    checked: Boolean,
     name: {
       type: String,
       required: true
