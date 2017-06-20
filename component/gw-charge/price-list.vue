@@ -1,22 +1,31 @@
 
 <template>
   <span class="gw-charge-price-list">
-    <el-table :data="data" style="width: 320px">
-      <el-table-column prop="product" label="购买的产品" width="120" />
-      <el-table-column prop="oriPrice" label="原价" width="100" />
-      <el-table-column prop="price" label="售价" />
+    <el-table :data="products" empty-text="暂未选中任何产品"
+      style="width: 320px">
+      <el-table-column prop="name" label="购买的产品" width="120" />
+      <el-table-column label="原价" width="100"
+        :formatter="r => centToYuan(r.showPrice)" />
+      <el-table-column prop="price" label="售价"
+        :formatter="r => centToYuan(r.price)" />
     </el-table>
   </span>
 </template>
 
 <script>
 
+import { centToYuan } from 'utils'
+
 export default {
   name: 'gw-charge-price-list',
-  data() {
-    return {
-      data: [{}, {}, {}]
+  props: {
+    products: {
+      type: Array,
+      required: true
     }
+  },
+  methods: {
+    centToYuan
   }
 }
 

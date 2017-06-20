@@ -7,15 +7,17 @@
     <section>
       <header>请选择您需要官网版本：</header>
       <main>
-        <gw-pro-widget title="精品官网基础版" :price="1000" />
-        <gw-pro-widget title="郝小鑫加强版" :price="999999999" />
+        <gw-pro-widget v-for="i of products" :key="i.id"
+          :title="i.name" :price="i.showPrice | centToYuan"
+          :checked="productChecked(i.id)"
+          @click="checkProduct(i.id)" />
       </main>
     </section>
     <section>
       <div style="margin-top: 45px;">
         <aside>价格信息:</aside>
         <span>
-          <price-list />
+          <price-list :products="checkedProducts" />
         </span>
       </div>
       <div style="margin-top: 35px;">
@@ -26,10 +28,10 @@
       </div>
       <div style="margin-top: 25px;">
         <aside>百姓网余额需支付:</aside>
-        <span>￥1000</span>
+        <span>{{ '￥' + totalPrice }}</span>
       </div>
       <div style="margin-top: 30px;">
-        <el-button type="primary">
+        <el-button type="primary" @click="createOrder">
           确认购买
         </el-button>
       </div>
@@ -49,8 +51,20 @@ import GwProWidget from 'com/widget/gw-pro'
 import PriceList from './price-list'
 import Topbar from 'com/topbar'
 
+import { Message } from 'element-ui'
+
+import { centToYuan } from 'utils'
+
+import store from './store'
+
+import {
+  createOrder,
+  getProducts
+} from './action'
+
 export default {
   name: 'gw-charge',
+  store,
   components: {
     GwProWidget,
     PriceList,
@@ -61,6 +75,62 @@ export default {
       type: Object,
       required: true
     }
+  },
+  data() {
+    return {
+      checkedProductId: 0
+    }
+  },
+  filters: {
+    centToYuan
+  },
+  computed: {
+    checkedProducts() {
+      return this.products.filter(p => p.id === this.checkedProductId)
+    },
+    totalPrice() {
+      // 目前就一个 :)
+      const p = this.checkedProducts.map(p => p.price).pop()
+      return centToYuan(p)
+    }
+  },
+  methods: {
+    productChecked(id) {
+      return this.checkedProductId === id
+    },
+    checkProduct(id) {
+      const checked = this.checkedProductId === id
+
+      if (checked) {
+        this.checkedProductId = 0
+      } else {
+        this.checkedProductId = id
+      }
+    },
+    async createOrder() {
+      const {
+        checkedProductId: id,
+        userInfo
+      } = this
+
+      if (!id) {
+        return Message.error('请先选择产品')
+      }
+
+      const order = {
+        user_id: userInfo.id,
+        products: [{
+          id
+        }]
+      }
+
+      await createOrder(order)
+
+      Message.success('购买成功')
+    }
+  },
+  async mounted() {
+    await getProducts(2)
   }
 }
 
