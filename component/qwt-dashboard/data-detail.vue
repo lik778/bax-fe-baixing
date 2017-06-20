@@ -74,6 +74,12 @@ export default {
   components: {
     BaxSelect
   },
+  props: {
+    statistics: {
+      type: Array,
+      required: true
+    }
+  },
   data() {
     return {
       displayColumns: columnOpts.map(c => c.value),

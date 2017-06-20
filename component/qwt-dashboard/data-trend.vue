@@ -5,7 +5,7 @@
       2017.09 - 2017.10 数据走势图
     </header>
     <main>
-      <chart :options="options"></chart>
+      <chart :options="options" />
     </main>
   </div>
 </template>
@@ -14,6 +14,12 @@
 
 export default {
   name: 'qwt-dashboard-data-trend',
+  props: {
+    statistics: {
+      type: Array,
+      required: true
+    }
+  },
   data() {
     return {
       options: {

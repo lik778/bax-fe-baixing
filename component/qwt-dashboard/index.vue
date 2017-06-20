@@ -48,8 +48,8 @@
           <bax-select :options="[]" />
         </span>
       </section>
-      <data-trend />
-      <data-detail />
+      <data-trend :statistics="statistics" />
+      <data-detail :statistics="statistics" />
     </main>
   </div>
 </template>
@@ -61,8 +61,11 @@ import DataDetail from './data-detail'
 import DataTrend from './data-trend'
 import Topbar from 'com/topbar'
 
+import store from './store'
+
 export default {
   name: 'qwt-dashboard',
+  store,
   components: {
     DataDetail,
     DataTrend,
