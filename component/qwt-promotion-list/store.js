@@ -15,7 +15,7 @@ store.subscribeActions({
   [switchShowMoreFilters]: () => ({
     showMoreFilters: !store.state.showMoreFilters
   }),
-  [getCurrentCampaigns]: (promotions) => ({
+  [getCurrentCampaigns]: ({promotions = []}) => ({
     currentPromotions: [...promotions]
   })
 })

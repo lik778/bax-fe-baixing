@@ -29,12 +29,25 @@ export async function pauseCampaigns(ids) {
     .json()
 }
 
-export async function getCurrentCampaigns() {
-  const body = await fengming
-    .get('/campaign/current')
-    .json()
+export async function getCurrentCampaigns(opts) {
+  const query = trim({
+    offset: 0,
+    limit: 20,
+    ...opts
+  })
 
-  return toCamelcase(body.data)
+  const [promotions, total] = await Promise.all([
+    _getCurrentCampaigns(query),
+    _getCurrentCampaignCount(query)
+  ])
+
+  return {
+    query: {
+      ...query,
+      total
+    },
+    promotions
+  }
 }
 
 export async function getCurrentBalance() {
@@ -99,3 +112,24 @@ export async function getStatistics(opts) {
   return toCamelcase(body.data)
 }
 
+/**
+ * private
+ */
+
+async function _getCurrentCampaigns(opts) {
+  const body = await fengming
+    .get('/campaign/current')
+    .query(opts)
+    .json()
+
+  return toCamelcase(body.data)
+}
+
+async function _getCurrentCampaignCount(opts) {
+  const body = await fengming
+    .get('/campaign/current/count')
+    .query(opts)
+    .json()
+
+  return body.data
+}
