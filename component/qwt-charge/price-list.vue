@@ -1,23 +1,32 @@
 
 <template>
   <span class="qwt-charge-price-list">
-    <el-table :data="data" style="width: 440px">
-      <el-table-column prop="product" label="购买的产品" width="120" />
-      <el-table-column prop="oriPrice" label="原价" width="100" />
-      <el-table-column prop="price" label="售价" width="110" />
-      <el-table-column prop="realPrice" label="提单价" width="110" />
+    <el-table :data="products">
+      <el-table-column prop="name" label="购买的产品" width="120" />
+      <el-table-column label="原价" width="100"
+        :formatter="r => centToYuan(r.originalPrice)" />
+      <el-table-column label="现价" width="110"
+        :formatter="r => centToYuan(r.price)" />
+      <el-table-column label="提单价" width="110"
+        :formatter="r => centToYuan(r.price)" />
     </el-table>
   </span>
 </template>
 
 <script>
 
+import { centToYuan } from 'utils'
+
 export default {
   name: 'qwt-charge-price-list',
-  data() {
-    return {
-      data: [{}, {}, {}]
+  props: {
+    products: {
+      type: Array,
+      required: true
     }
+  },
+  methods: {
+    centToYuan
   }
 }
 

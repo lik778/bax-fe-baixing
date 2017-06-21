@@ -7,13 +7,13 @@ import {
 } from './action'
 
 const store = createStore({
-  productPackages: [],
+  packages: [],
   products: []
 })
 
 store.subscribeActions({
-  [getProductPackages]: (productPackages) => ({
-    productPackages
+  [getProductPackages]: (packages) => ({
+    packages
   }),
   [getProducts]: (products) => ({
     products
