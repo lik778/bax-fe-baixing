@@ -34,6 +34,12 @@
         <el-button type="primary" @click="createOrder">
           确认购买
         </el-button>
+        <span v-if="orderPayUrl">
+          <label :title="orderPayUrl">
+            {{ '付款链接: ' + orderPayUrl }}
+          </label>
+          <Clipboard :content="orderPayUrl" />
+        </span>
       </div>
       <footer>
         <li>合同条款:</li>
@@ -47,6 +53,7 @@
 
 <script>
 
+import Clipboard from 'com/widget/clipboard'
 import GwProWidget from 'com/widget/gw-pro'
 import PriceList from './price-list'
 import Topbar from 'com/topbar'
@@ -55,18 +62,24 @@ import { Message } from 'element-ui'
 
 import { centToYuan } from 'utils'
 
-import store from './store'
+import {
+  allowGetOrderPayUrl
+} from 'util/role'
 
 import {
+  getOrderPayUrl,
   createOrder,
   getProducts
 } from './action'
+
+import store from './store'
 
 export default {
   name: 'gw-charge',
   store,
   components: {
     GwProWidget,
+    Clipboard,
     PriceList,
     Topbar
   },
@@ -78,7 +91,8 @@ export default {
   },
   data() {
     return {
-      checkedProductId: 0
+      checkedProductId: 0,
+      orderPayUrl: ''
     }
   },
   filters: {
@@ -107,6 +121,19 @@ export default {
         this.checkedProductId = id
       }
     },
+    async getOrderPayUrl(oids) {
+      const {
+        userInfo
+      } = this
+
+      if (!allowGetOrderPayUrl(userInfo.roles)) {
+        return
+      }
+
+      const url = await getOrderPayUrl(oids)
+
+      this.orderPayUrl = url
+    },
     async createOrder() {
       const {
         checkedProductId: id,
@@ -118,13 +145,16 @@ export default {
       }
 
       const order = {
-        user_id: userInfo.id,
+        userId: userInfo.id,
+        salesId: userInfo.id,
         products: [{
           id
         }]
       }
 
-      await createOrder(order)
+      const oids = await createOrder(order)
+
+      await this.getOrderPayUrl(oids)
 
       Message.success('购买成功')
     }
@@ -137,6 +167,8 @@ export default {
 </script>
 
 <style scoped>
+
+@import "cssbase/mixin";
 
 .gw-charge {
   padding: 0 35px;
@@ -163,6 +195,14 @@ export default {
   & > section:nth-child(3) {
     padding-left: 12px;
 
+    & > div {
+      & > aside {
+        min-width: 84px;
+        font-size: 14px;
+        color: #6a778c;
+      }
+    }
+
     & > div:first-child {
       display: flex;
 
@@ -178,11 +218,19 @@ export default {
       }
     }
 
-    & > div {
-      & > aside {
-        min-width: 84px;
-        font-size: 14px;
-        color: #6a778c;
+    & > div:nth-child(4) {
+      & > span {
+        display: inline-flex;
+        align-items: center;
+        margin-left: 35px;
+
+        & > label {
+          @mixin wordline;
+          width: 320px;
+          max-width: 320px;
+          font-size: 14px;
+          color: #6a778c;
+        }
       }
     }
 

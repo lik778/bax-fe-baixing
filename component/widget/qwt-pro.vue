@@ -61,7 +61,7 @@ export default {
       this.$emit('click')
 
       if (this.hasPrice) {
-        this.$emit('set-price', this.price)
+        this.$emit('set-money', this.price)
       }
     }
   },
