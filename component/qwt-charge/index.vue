@@ -50,6 +50,12 @@
         <el-button type="primary" @click="createOrder">
           确认购买
         </el-button>
+        <span v-if="orderPayUrl">
+          <label :title="orderPayUrl">
+            {{ '付款链接: ' + orderPayUrl }}
+          </label>
+          <Clipboard :content="orderPayUrl" />
+        </span>
       </div>
       <footer>
         <li>推广资金使用规则：</li>
@@ -67,6 +73,7 @@
 
 import QwtPkgWidget from 'com/widget/qwt-pkg'
 import QwtProWidget from 'com/widget/qwt-pro'
+import Clipboard from 'com/widget/clipboard'
 import PriceList from './price-list'
 import Topbar from 'com/topbar'
 
@@ -76,7 +83,12 @@ import { centToYuan } from 'utils'
 import store from './store'
 
 import {
+  allowGetOrderPayUrl
+} from 'util/role'
+
+import {
   getProductPackages,
+  getOrderPayUrl,
   getProducts,
   createOrder
 } from './action'
@@ -104,7 +116,7 @@ const allProducts = [{
   title: '其他金额',
   editable: true
 }, {
-  id: 6,
+  id: 0,
   title: '暂不充值'
 }]
 
@@ -114,6 +126,7 @@ export default {
   components: {
     QwtPkgWidget,
     QwtProWidget,
+    Clipboard,
     PriceList,
     Topbar
   },
@@ -129,7 +142,9 @@ export default {
 
       checkedPackageId: 0,
       checkedChargeProductId: 0, // 注: 此 id 仅用于前端标记
-      chargeMoney: 0
+      chargeMoney: 0,
+
+      orderPayUrl: ''
     }
   },
   computed: {
@@ -197,6 +212,19 @@ export default {
     setChargeMoney(v) {
       this.chargeMoney = v * 100
     },
+    async getOrderPayUrl(oids) {
+      const {
+        userInfo
+      } = this
+
+      if (!allowGetOrderPayUrl(userInfo.roles)) {
+        return
+      }
+
+      const url = await getOrderPayUrl(oids)
+
+      this.orderPayUrl = url
+    },
     async createOrder() {
       const {
         checkedChargeProductId,
@@ -228,13 +256,11 @@ export default {
         }]
       }
 
-      await createOrder(newOrder)
+      const oids = await createOrder(newOrder)
+
+      await this.getOrderPayUrl(oids)
 
       Message.success('创建订单成功')
-
-      this.$router.push({
-        name: 'qwt-promotion-list'
-      })
     },
     centToYuan
   },
@@ -249,6 +275,8 @@ export default {
 </script>
 
 <style scoped>
+
+@import "cssbase/mixin";
 
 .qwt-charge {
   padding: 0 35px;
@@ -297,6 +325,22 @@ export default {
 
     & > div:first-child {
       display: flex;
+    }
+
+    & > div:nth-child(4) {
+      & > span {
+        display: inline-flex;
+        align-items: center;
+        margin-left: 35px;
+
+        & > label {
+          @mixin wordline;
+          width: 320px;
+          max-width: 320px;
+          font-size: 14px;
+          color: #6a778c;
+        }
+      }
     }
 
     & > footer {
