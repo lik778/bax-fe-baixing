@@ -2,6 +2,8 @@
 import { reverseCamelcase, toCamelcase } from 'object-keys-mapping'
 import { api, trim } from './base'
 
+const isArray = Array.isArray
+
 export async function getCalendar(opts = {}) {
   const body = await api
     .get('/order/calendar')
@@ -66,9 +68,17 @@ export async function changeOrderDiscount(oid, data) {
     .json()
 }
 
-export async function getOrderPayUrl(oid) {
+export async function getOrderPayUrl(oids, summary) {
+  if (!isArray(oids)) {
+    oids = [oids]
+  }
+
   const body = await api
-    .get(`/order/${oid}/pay/url`)
+    .get('/order/pay/url')
+    .query(reverseCamelcase({
+      orderIds: oids,
+      summary
+    }))
     .json()
 
   return body.data
