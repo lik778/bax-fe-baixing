@@ -108,7 +108,7 @@
         return moment(row.created_at).format('YYYY-MM-DD HH:mm')
       },
       formatUploadDate(row, col) {
-        return moment(row.upload_date).format('YYYY-MM-DD')
+        return moment(row.upload_date + '').format('YYYY-MM-DD')
       }
     },
     computed: {

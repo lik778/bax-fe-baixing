@@ -65,8 +65,9 @@
             if (this.form.income < this.form.profit) {
               return this.$message.warning('利润超过收入。。')
             }
-            this.form.uploadDate = moment(this.form.uploadDate).format('YYYY-MM-DD')
-            saveUpload(this.form).then(() => {
+            let data = JSON.parse(JSON.stringify(this.form))
+            data.uploadDate = +moment(this.form.uploadDate).format('YYYYMMDD')
+            saveUpload(data).then(() => {
               this.$message.success('上传成功')
               this.resetForm('form')
             })

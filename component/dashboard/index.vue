@@ -113,7 +113,7 @@ export default {
         end = 4
       }
       for (; start <= end; start++) {
-        let curDate = range === 'month' ? moment().add(start, 'days').format('YYYY-MM-DD'): start
+        let curDate = range === 'month' ? +moment().add(start, 'days').format('YYYYMMDD'): start
         for (var i = 0; i < this.products.length; i++) {
           let curProduct = this.products[i], has = false
           if(!result[curProduct]) result[curProduct] = []
