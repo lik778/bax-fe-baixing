@@ -10,12 +10,10 @@
           请选择您需要的全网通版本：
         </header>
         <main>
-          <qwt-pkg-widget name="基础版" :price="1588"
-            h1="360天" h2="588元" checked />
-          <qwt-pkg-widget name="超值版" :price="5088"
-            h1="360天" h2="5088元" />
-          <qwt-pkg-widget name="特惠版" :price="10188"
-            h1="360天" h2="10188元" />
+          <qwt-pkg-widget v-for="i of packages" :key="i.id"
+            :name="i.name" :products="i.products"
+            :checked="packageChecked(i.id)"
+            @click="checkPackage(i.id)" />
         </main>
       </div>
       <div class="charge-product">
@@ -27,7 +25,7 @@
             :price="i.price" :title="i.title" :editable="i.editable"
             :checked="chargeProductChecked(i.id)"
             @click="checkChargeProduct(i.id)"
-            @change="extraChargeMoney" />
+            @set-money="setChargeMoney" />
         </main>
       </div>
     </section>
@@ -35,8 +33,7 @@
       <div>
         <aside>价格信息：</aside>
         <span>
-          <price-list :packages="checkedPackages"
-            :products="checkedProducts" />
+          <price-list :products="checkedProducts" />
         </span>
       </div>
       <div>
@@ -47,7 +44,7 @@
       </div>
       <div>
         <aside>百姓网余额需支付：</aside>
-        <i>￥18865</i>
+        <i>{{'￥' + centToYuan(totalPrice)}}</i>
       </div>
       <div>
         <el-button type="primary" @click="createOrder">
@@ -75,10 +72,12 @@ import Topbar from 'com/topbar'
 
 import { Message } from 'element-ui'
 
+import { centToYuan } from 'utils'
 import store from './store'
 
 import {
   getProductPackages,
+  getProducts,
   createOrder
 } from './action'
 
@@ -128,14 +127,51 @@ export default {
     return {
       allProducts,
 
-      checkedPackages: [],
-      checkedProducts: [],
-
-      extraChargeProductId: 0,
-      extraChargeMoney: 0
+      checkedPackageId: 0,
+      checkedChargeProductId: 0, // 注: 此 id 仅用于前端标记
+      chargeMoney: 0
     }
   },
   computed: {
+    checkedProducts() {
+      const {
+        checkedChargeProductId,
+        checkedPackageId,
+        chargeMoney
+      } = this
+
+      const pkg = this.packages
+        .filter(p => p.id === checkedPackageId)
+        .pop()
+
+      let products = []
+
+      if (pkg) {
+        products = pkg.products.map(p => {
+          return {
+            originalPrice: p.originalPrice,
+            price: p.price,
+            name: p.name
+          }
+        })
+      }
+
+      if (checkedChargeProductId &&
+        chargeMoney) {
+        products.push({
+          originalPrice: chargeMoney,
+          price: chargeMoney,
+          name: '推广资金'
+        })
+      }
+
+      return products
+    },
+    totalPrice() {
+      const p = this.checkedProducts.map(i => i.price)
+
+      return p.reduce((a, b) => a + b, 0)
+    },
     productId() {
       // 目前: products.length === 1
       return this.products.map(p => p.id).pop()
@@ -146,21 +182,50 @@ export default {
     }
   },
   methods: {
+    packageChecked(id) {
+      return this.checkedPackageId === id
+    },
+    checkPackage(id) {
+      this.checkedPackageId = id
+    },
     chargeProductChecked(id) {
-      return this.extraChargeProductId === id
+      return this.checkedChargeProductId === id
     },
     checkChargeProduct(id) {
-      this.extraChargeProductId = id
+      this.checkedChargeProductId = id
     },
-    extraChargeMoney(v) {
-      this.extraChargeMoney = v * 100
+    setChargeMoney(v) {
+      this.chargeMoney = v * 100
     },
     async createOrder() {
+      const {
+        checkedChargeProductId,
+        checkedPackageId,
+        chargeMoney,
+        productId,
+        userInfo
+      } = this
+
       const newOrder = {
-        userId: 1,
-        salesId: 2,
-        packages: [3, 4],
-        products: [5, 6]
+        userId: userInfo.id,
+        salesId: 2
+      }
+
+      if (!checkedChargeProductId && !checkedPackageId) {
+        return Message.error('请选择购买的产品 ~')
+      }
+
+      if (checkedChargeProductId) {
+        newOrder.products = [{
+          price: chargeMoney,
+          id: productId
+        }]
+      }
+
+      if (checkedPackageId) {
+        newOrder.packages = [{
+          id: checkedPackageId
+        }]
       }
 
       await createOrder(newOrder)
@@ -170,10 +235,14 @@ export default {
       this.$router.push({
         name: 'qwt-promotion-list'
       })
-    }
+    },
+    centToYuan
   },
   async mounted() {
-    await getProductPackages(1)
+    await Promise.all([
+      getProductPackages(1),
+      getProducts(1)
+    ])
   }
 }
 

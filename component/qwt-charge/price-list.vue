@@ -1,7 +1,7 @@
 
 <template>
   <span class="qwt-charge-price-list">
-    <el-table :data="products">
+    <el-table :data="products" empty-text="暂未选中任何产品">
       <el-table-column prop="name" label="购买的产品" width="120" />
       <el-table-column label="原价" width="100"
         :formatter="r => centToYuan(r.originalPrice)" />
