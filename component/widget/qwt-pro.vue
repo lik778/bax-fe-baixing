@@ -17,7 +17,7 @@
       <p v-if="mode === 'input'">
         <el-input size="mini" style="width: 90px"
           placeholder="输入金额" v-model="inputPrice"
-          @change="toInputPrice"
+          @change="onInputPrice"
           @blur="onBlur" />
       </p>
     </main>
@@ -52,13 +52,17 @@ export default {
       this.mode = 'input'
     },
     onInputPrice(v) {
-      this.$emit('change', v)
+      this.$emit('set-money', v)
     },
     onBlur() {
       this.mode = 'normal'
     },
     onClick() {
       this.$emit('click')
+
+      if (this.hasPrice) {
+        this.$emit('set-price', this.price)
+      }
     }
   },
   computed: {

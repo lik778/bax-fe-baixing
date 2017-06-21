@@ -24,20 +24,40 @@
 
 <script>
 
+import { centToYuan } from 'utils'
+
 export default {
   name: 'qwt-pkg-widget',
   props: {
     checked: Boolean,
+    products: {
+      type: Array,
+      required: true
+    },
     name: {
       type: String,
       required: true
+    }
+  },
+  computed: {
+    price() {
+      const a = this.products.map(p => p.price)
+      return centToYuan(a[0] + a[1])
     },
-    price: {
-      type: Number,
-      required: true
+    h1() {
+      const p = this.products
+        .filter(i => i.name === '精品官网')
+        .pop()
+
+      return p.amount + p.spec
     },
-    h1: String,
-    h2: String
+    h2() {
+      const p = this.products
+        .filter(i => i.name === '推广资金')
+        .pop()
+
+      return p.amount + p.spec
+    }
   },
   methods: {
     onClick() {
