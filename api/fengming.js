@@ -163,15 +163,6 @@ export async function getRecommendedWords(word) {
   return toCamelcase(body.data)
 }
 
-export async function getStatistics(opts) {
-  const body = await fengming
-    .get('/data_report/statistic')
-    .query(reverseCamelcase(opts))
-    .json()
-
-  return toCamelcase(body.data)
-}
-
 /**
  * private
  */
