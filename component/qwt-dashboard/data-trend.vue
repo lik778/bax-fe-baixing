@@ -12,6 +12,8 @@
 
 <script>
 
+import { toHumanTime } from 'utils'
+
 export default {
   name: 'qwt-dashboard-data-trend',
   props: {
@@ -20,17 +22,32 @@ export default {
       required: true
     }
   },
-  data() {
-    return {
-      options: {
+  computed: {
+    rows() {
+      return this.statistics.sort((a, b) => a.date > b.date)
+    },
+    days() {
+      return this.rows.map(r => toHumanTime(r.date, 'MMDD'))
+    },
+    costData() {
+      return this.rows.map(r => r.cost / 100)
+    },
+    showData() {
+      return this.rows.map(r => r.shows)
+    },
+    clickData() {
+      return this.rows.map(r => r.clicks)
+    },
+    options() {
+      return {
         title: {
-          text: '折线图堆叠'
+          text: ''
         },
         tooltip: {
           trigger: 'axis'
         },
         legend: {
-          data:['邮件营销','联盟广告','视频广告','直接访问','搜索引擎']
+          data: ['消费', '展现', '点击量']
         },
         grid: {
           left: '3%',
@@ -41,16 +58,26 @@ export default {
         xAxis: {
           type: 'category',
           boundaryGap: false,
-          data: ['0601', '0602', '0603', '0604', '0605', '0606', '0607']
+          data: this.days
         },
         yAxis: {
           type: 'value'
         },
         series: [{
-          name: '妹子基金收益',
+          name: '消费',
           type: 'line',
-          stack: '总量',
-          data: [120, 132, 101, 134, 90, 230, 210]
+          stack: '消费',
+          data: this.costData
+        }, {
+          name: '展现',
+          type: 'line',
+          stack: '展现',
+          data: this.showData
+        }, {
+          name: '点击量',
+          type: 'line',
+          stack: '点击量',
+          data: this.clickData
         }]
       }
     }

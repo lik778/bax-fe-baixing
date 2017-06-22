@@ -17,21 +17,23 @@
       </span>
     </section>
     <main>
-      <el-table :data="data">
-        <el-table-column v-if="checkVisiable('channel')"
-          prop="channel" label="渠道" />
-        <el-table-column v-if="checkVisiable('platform')"
-          prop="platform" label="设备"  />
+      <el-table :data="statistics">
+        <el-table-column v-if="checkVisiable('plan')" label="推广计划"
+          prop="cpcPlanName" />
+        <el-table-column v-if="checkVisiable('channel')" label="渠道"
+          :formatter="r => fmtChannel(r.channel)" />
+        <el-table-column v-if="checkVisiable('platform')" label="设备"
+          :formatter="r => fmtDevice(r.device)" />
         <el-table-column v-if="checkVisiable('keyword')"
-          prop="keyword" label="关键词" />
-        <el-table-column v-if="checkVisiable('impr')"
-          prop="impr" label="展现" />
+          prop="cpcGrpName" label="关键词" />
+        <el-table-column v-if="checkVisiable('shows')"
+          prop="shows" label="展现" />
         <el-table-column v-if="checkVisiable('click')"
-          prop="click" label="点击"  />
-        <el-table-column v-if="checkVisiable('cost')"
-          prop="cost" label="消费" />
+          prop="clicks" label="点击"  />
+        <el-table-column v-if="checkVisiable('cost')" label="消费"
+          :formatter="r => (r.cost / 100) + '元'" />
         <el-table-column v-if="checkVisiable('percent')"
-          prop="percent" label="点击率" />
+          prop="clickRate" label="点击率" />
       </el-table>
     </main>
   </div>
@@ -41,12 +43,22 @@
 
 import BaxSelect from 'com/common/select'
 
+import { centToYuan } from 'utils'
+
+import {
+  semPlatformCn,
+  device
+} from 'constant/fengming'
+
 // {
 //   label: '全选',
 //   value: '_all_'
 // }
 
 const columnOpts = [{
+  label: '推广计划',
+  value: 'plan'
+}, {
   label: '渠道',
   value: 'channel'
 }, {
@@ -57,7 +69,7 @@ const columnOpts = [{
   value: 'keyword'
 }, {
   label: '展现',
-  value: 'impr'
+  value: 'shows'
 }, {
   label: '点击',
   value: 'click'
@@ -83,7 +95,6 @@ export default {
   data() {
     return {
       displayColumns: columnOpts.map(c => c.value),
-      data: [{}, {}, {}, {}, {}],
       columnOpts
     }
   },
@@ -96,7 +107,14 @@ export default {
       }
 
       return displayColumns.includes(column)
-    }
+    },
+    fmtChannel(c) {
+      return semPlatformCn[String(c)] || '未知'
+    },
+    fmtDevice(a) {
+      return a.map(i => device[String(i)]).join(',')
+    },
+    centToYuan
   }
 }
 

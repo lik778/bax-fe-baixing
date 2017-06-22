@@ -25,3 +25,8 @@ export const landingType = {
   '1': '企业官网',
   '2': '活动定制页'
 }
+
+export const device = {
+  '0': 'PC',
+  '1': 'WAP'
+}
