@@ -2,10 +2,9 @@
   <el-form ref="form" :model="form" :rules="rules" label-width="100px">
     <el-form-item label="所属产品" prop="product">
       <el-select v-model="form.product" placeholder="请选择产品">
-        <el-option label="摇钱树" value="摇钱树"></el-option>
+        <el-option label="APP广告" value="APP广告"></el-option>
         <el-option label="拼框" value="拼框"></el-option>
-        <el-option label="标王" value="标王"></el-option>
-        <el-option label="站内广告" value="站内广告"></el-option>
+        <el-option label="大客户" value="大客户"></el-option>
       </el-select>
     </el-form-item>
     <el-form-item label="所属日期"  prop="uploadDate">

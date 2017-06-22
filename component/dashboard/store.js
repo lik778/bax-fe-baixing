@@ -8,7 +8,7 @@ const store = createStore({
     quarter: {},
     year: {},
     range: 'month',
-    products: ['站内广告', '凤鸣', '摇钱树', '站外广告', '拼框', '标王'],
+    products: ['站内广告', '凤鸣', '站外广告', 'APP广告', '拼框', '大客户'],
     trend: {}
 })
 
