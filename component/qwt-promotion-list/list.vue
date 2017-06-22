@@ -1,6 +1,61 @@
 
 <template>
   <div class="qwt-promotion-list">
+    <header>
+      <span>
+        <el-checkbox label="全选" :value="allRowsChecked"
+          @change="onClickCheckAllRows" />
+      </span>
+      <span>
+        <div>
+          <el-button @click="switchToolbox('price percent')">
+            设置出价比例
+            <i class="el-icon-arrow-down el-icon--right" />
+          </el-button>
+        </div>
+        <div v-if="toolbox.showPricePercent">
+          <el-input style="width: 60px;" placeholder="比例"
+            v-model="toolbox.ratio" />
+          <label>(0.1-50)</label>
+          <el-button type="primary" size="mini"
+            @click="updateCampaignRatio">
+            确定
+          </el-button>
+        </div>
+      </span>
+      <span>
+        <div>
+          <el-button @click="switchToolbox('daily budget')">
+            设置日预算
+            <i class="el-icon-arrow-down el-icon--right" />
+          </el-button>
+        </div>
+        <div v-if="toolbox.showDailyBudget">
+          <el-input style="width: 80px;" placeholder="日预算"
+            v-model="toolbox.budget" />
+          <el-button type="primary" size="mini"
+            @click="updateCampaignDailyBudget">
+            确定
+          </el-button>
+        </div>
+      </span>
+      <span>
+        <div>
+          <el-button @click="switchToolbox('time range')">
+            设置投放日期
+            <i class="el-icon-arrow-down el-icon--right" />
+          </el-button>
+        </div>
+        <div v-if="toolbox.showTimeRange" style="width: 260px;">
+          <el-date-picker type="daterange" placeholder="选择日期范围"
+            style="width: 200px;" v-model="toolbox.timeRange" />
+          <el-button type="primary" size="mini"
+            @click="updateCampaignTimeRange">
+            确定
+          </el-button>
+        </div>
+      </span>
+    </header>
     <el-table ref="table" :data="campaigns"
       @selection-change="onSelectionChange">
       <el-table-column type="selection" width="40" />
@@ -38,6 +93,7 @@
 <script>
 
 import BaxPagination from 'com/common/pagination'
+import { Message } from 'element-ui'
 
 import {
   semPlatformCn
@@ -46,12 +102,16 @@ import {
 import equal from 'lodash.isequal'
 
 import {
+  updateCampaignDailyBudget,
+  updateCampaignTimeRange,
+  updateCampaignRatio,
   getCurrentCampaigns,
   activeCampaigns,
   pauseCampaigns
 } from './action'
 
 import {
+  toTimestamp,
   toHumanTime,
   centToYuan,
   commafy
@@ -72,22 +132,114 @@ export default {
       required: true
     }
   },
-      selectedPromotionIds: []
+  data() {
+    return {
+      toolbox: {
+        showPricePercent: false,
+        showDailyBudget: false,
+        showTimeRange: false,
+        // 更新数据
+        timeRange: [],
+        budget: '',
+        ratio: ''
+      },
+      selectedCampaignIds: []
+    }
+  },
   computed: {
     allRowsChecked() {
       const {
-        selectedPromotionIds,
+        selectedCampaignIds,
         campaigns
       } = this
 
-      const ids = promotions.map(p => p.id).sort()
+      const ids = campaigns.map(p => p.id).sort()
 
-      return equal(selectedPromotionIds.sort(), ids)
+      return equal(selectedCampaignIds.sort(), ids)
     }
   },
   methods: {
     async onCurrentChange({offset}) {
       await getCurrentCampaigns({offset})
+    },
+    checkHasSelectedCampaigns() {
+      if (this.selectedCampaignIds.length) {
+        return true
+      }
+
+      Message.error('请先选择要设置的推广')
+
+      return false
+    },
+    async updateCampaignDailyBudget() {
+      if (!this.checkHasSelectedCampaigns()) {
+        return
+      }
+
+      const budget = parseInt(this.toolbox.budget)
+
+      if (!(budget > 0)) {
+        return Message.error('请设置合理的预算')
+      }
+
+      const opts = {
+        campaignIds: this.selectedCampaignIds,
+        dailyBudget: budget
+      }
+
+      await updateCampaignDailyBudget(opts)
+      await getCurrentCampaigns({...this.query})
+
+      this.toolbox.budget = ''
+
+      Message.success('更新成功')
+    },
+    async updateCampaignTimeRange() {
+      if (!this.checkHasSelectedCampaigns()) {
+        return
+      }
+
+      const { timeRange } = this.toolbox
+      if (!timeRange.length) {
+        return Message.error('请设置时间范围')
+      }
+
+      const opts = {
+        campaignIds: this.selectedCampaignIds,
+        validTime: [
+          toTimestamp(timeRange[0]),
+          toTimestamp(timeRange[1])
+        ]
+      }
+
+      await updateCampaignTimeRange(opts)
+      await getCurrentCampaigns({...this.query})
+
+      this.toolbox.timeRange = []
+
+      Message.success('更新成功')
+    },
+    async updateCampaignRatio() {
+      if (!this.checkHasSelectedCampaigns()) {
+        return
+      }
+
+      const ratio = parseFloat(this.toolbox.ratio)
+      if (!(ratio >= 0.1 && ratio <= 50)) {
+        return Message.error('请设置合理的出价比例')
+      }
+
+      const opts = {
+        campaignIds: this.selectedCampaignIds,
+        ratio
+      }
+
+      await updateCampaignRatio(opts)
+      await getCurrentCampaigns({...this.query})
+
+      this.toolbox.ratio = ''
+
+      Message.success('更新成功')
     },
     async switchPause(row) {
       const {
@@ -121,14 +273,49 @@ export default {
         })
       } else {
         this.$refs.table.clearSelection()
-        this.selectedPromotionIds = []
+        this.selectedCampaignIds = []
       }
     },
     onSelectionChange(rows) {
       const ids = rows.map(r => r.id)
-      this.selectedPromotionIds = [...ids]
+      this.selectedCampaignIds = [...ids]
+    },
+    switchToolbox(type) {
+      const toolbox = this.toolbox
+      let show = false
 
-      console.log(99, ids)
+      switch (type) {
+        case 'price percent':
+          show = toolbox.showPricePercent
+          if (show) {
+            toolbox.showPricePercent = false
+          } else {
+            toolbox.showPricePercent = true
+            toolbox.showDailyBudget = false
+            toolbox.showTimeRange = false
+          }
+          break
+        case 'daily budget':
+          show = toolbox.showDailyBudget
+          if (show) {
+            toolbox.showDailyBudget = false
+          } else {
+            toolbox.showDailyBudget = true
+            toolbox.showPricePercent = false
+            toolbox.showTimeRange = false
+          }
+          break
+        case 'time range':
+          show = toolbox.showTimeRange
+          if (show) {
+            toolbox.showTimeRange = false
+          } else {
+            toolbox.showTimeRange = true
+            toolbox.showDailyBudget = false
+            toolbox.showPricePercent = false
+          }
+          break
+      }
     },
     fmtPrice(s) {
       return commafy(centToYuan(s)) + ' 元'
@@ -158,6 +345,55 @@ export default {
 
 .qwt-promotion-list {
   margin-top: 16px;
+
+  & > header {
+    margin-bottom: 20px;
+
+    & > span {
+      display: inline-flex;
+      flex-flow: column;
+
+      & > div:nth-child(2) {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 10px;
+      }
+    }
+
+    & > span:nth-child(1) {
+      width: 120px;
+      padding-left: 20px;
+    }
+
+    & > span:nth-child(2) {
+      width: 180px;
+      margin-right: 20px;
+    }
+
+    & > span:nth-child(3) {
+      width: 145px;
+      margin-right: 40px;
+
+      & > div:nth-child(2) {
+        & > label {
+          min-width: 45px;
+          margin: 0 5px;
+          font-size: 11px;
+          color: #5e6b82;
+        }
+      }
+    }
+
+    & > span:nth-child(4) {
+      width: 145px;
+      margin-right: 100px;
+    }
+
+    & > span:nth-child(5) {
+      width: 145px;
+    }
+  }
 }
 
 </style>

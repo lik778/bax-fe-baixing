@@ -4,33 +4,24 @@ import { fengming, trim } from './base'
 
 const isArray = Array.isArray
 
-export async function updateCampaignDailyBudget({ids, budget}) {
+export async function updateCampaignDailyBudget(opts) {
   return await fengming
     .post('/campaign/daily_budget')
-    .send(reverseCamelcase({
-      dailyBudget: budget,
-      campaignIds: ids
-    }))
+    .send(reverseCamelcase(opts))
     .json()
 }
 
-export async function updateCampaignRatio({ids, ratio}) {
+export async function updateCampaignRatio(opts) {
   return await fengming
     .post('/campaign/ratio')
-    .send(reverseCamelcase({
-      campaignIds: ids,
-      ratio
-    }))
+    .send(reverseCamelcase(opts))
     .json()
 }
 
-export async function updateCampaignTimeRange({ids, range}) {
+export async function updateCampaignTimeRange(opts) {
   return await fengming
     .post('/campaign/valid_time')
-    .send(reverseCamelcase({
-      campaignIds: ids,
-      validTime: range
-    }))
+    .send(reverseCamelcase(opts))
     .json()
 }
 
