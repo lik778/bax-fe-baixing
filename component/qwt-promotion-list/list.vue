@@ -1,7 +1,8 @@
 
 <template>
-  <main class="qwt-promotion-list">
-    <el-table :data="promotions" style="width: 1140px">
+  <div class="qwt-promotion-list">
+    <el-table ref="table" :data="promotions"
+      @selection-change="onSelectionChange">
       <el-table-column type="selection" width="40" />
       <el-table-column prop="open" label="开关" width="80">
         <template scope="s">
@@ -29,9 +30,9 @@
         </template>
       </el-table-column>
     </el-table>
-  </main>
     <bax-pagination :options="query"
       @current-change="onCurrentChange" />
+  </div>
 </template>
 
 <script>
@@ -41,6 +42,8 @@ import BaxPagination from 'com/common/pagination'
 import {
   semPlatformCn
 } from 'constant/fengming'
+
+import equal from 'lodash.isequal'
 
 import {
   getCurrentCampaigns,
@@ -63,6 +66,23 @@ export default {
     promotions: {
       type: Array,
       required: true
+    },
+    query: {
+      type: Object,
+      required: true
+    }
+  },
+      selectedPromotionIds: []
+  computed: {
+    allRowsChecked() {
+      const {
+        selectedPromotionIds,
+        promotions
+      } = this
+
+      const ids = promotions.map(p => p.id).sort()
+
+      return equal(selectedPromotionIds.sort(), ids)
     }
   },
   methods: {
@@ -90,6 +110,25 @@ export default {
       }
 
       await getCurrentCampaigns({...this.query})
+    },
+    onClickCheckAllRows(e) {
+      const { checked } = e.target
+
+      if (checked) {
+        // select all
+        this.promotions.forEach(r => {
+          this.$refs.table.toggleRowSelection(r)
+        })
+      } else {
+        this.$refs.table.clearSelection()
+        this.selectedPromotionIds = []
+      }
+    },
+    onSelectionChange(rows) {
+      const ids = rows.map(r => r.id)
+      this.selectedPromotionIds = [...ids]
+
+      console.log(99, ids)
     },
     fmtPrice(s) {
       return commafy(centToYuan(s)) + ' 元'
