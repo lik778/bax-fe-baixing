@@ -7,6 +7,22 @@
           @change="onClickCheckAllRows" />
       </span>
       <span>
+        <el-dropdown @command="updateCampaignStatus">
+          <el-button type="primary">
+            批量开关
+            <i class="el-icon-arrow-down el-icon--right" />
+          </el-button>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item command="active">
+              计划开启
+            </el-dropdown-item>
+            <el-dropdown-item command="pause">
+              计划关闭
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </span>
+      <span>
         <div>
           <el-button @click="switchToolbox('price percent')">
             设置出价比例
@@ -62,7 +78,7 @@
       <el-table-column prop="open" label="开关" width="80">
         <template scope="s">
           <el-switch :value="!s.pause" on-text="" off-text=""
-            @change="switchPause(s)" />
+            @change="switchCampaignPause(s)" />
         </template>
       </el-table-column>
       <el-table-column prop="a1" label="计划/创意" width="160" />
@@ -241,7 +257,33 @@ export default {
 
       Message.success('更新成功')
     },
-    async switchPause(row) {
+    async updateCampaignStatus(cmd) {
+      if (!this.checkHasSelectedCampaigns()) {
+        return
+      }
+
+      try {
+        await this.$confirm(`确定${cmd === 'pause' ? '暂停' : '重新'}投放 ?`, '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消'
+        })
+      } catch (err) {
+        return
+      }
+
+      const ids = this.selectedCampaignIds
+
+      if (cmd === 'pause') {
+        await pauseCampaigns(ids)
+      } else {
+        await activeCampaigns(ids)
+      }
+
+      await getCurrentCampaigns({...this.query})
+
+      Message.success('更新成功')
+    },
+    async switchCampaignPause(row) {
       const {
         pause
       } = row
@@ -262,6 +304,8 @@ export default {
       }
 
       await getCurrentCampaigns({...this.query})
+
+      Message.success('更新成功')
     },
     onClickCheckAllRows(e) {
       const { checked } = e.target
