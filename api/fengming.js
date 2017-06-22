@@ -53,6 +53,13 @@ export async function getProductPackages() {
   return toCamelcase(body.data)
 }
 
+export async function updateCampaign(id, data) {
+  return await fengming
+    .post(`/campaign/${id}`)
+    .send(reverseCamelcase(data))
+    .json()
+}
+
 export async function createCampaign(data) {
   const body = await fengming
     .post('/campaign')
