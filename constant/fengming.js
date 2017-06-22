@@ -15,6 +15,11 @@ export const semPlatformCn = {
   '5': '搜狗'
 }
 
+export const semPlatformOpts = [{
+  label: '搜狗',
+  value: 5
+}]
+
 export const landingType = {
   '0': '帖子详情页',
   '1': '企业官网',
