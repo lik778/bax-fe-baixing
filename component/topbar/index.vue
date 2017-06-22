@@ -2,7 +2,8 @@
 <template>
   <header class="topbar">
     <span>
-      <i class="el-icon-arrow-left" @click="goBack" />
+      <i v-if="back" class="el-icon-arrow-left"
+        @click="goBack" />
       <slot name="title" />
     </span>
     <span>
@@ -61,6 +62,10 @@ export default {
     userInfo: {
       type: Object,
       required: true
+    },
+    back: {
+      type: Boolean,
+      default: true
     }
   },
   data() {
@@ -133,7 +138,14 @@ export default {
   height: 60px;
 
   & > span:first-child {
+    display: inline-flex;
+    align-items: center;
+    flex-grow: 0.6;
     cursor: pointer;
+
+    & > i {
+      margin-right: 5px;
+    }
   }
 }
 

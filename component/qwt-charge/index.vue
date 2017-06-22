@@ -1,8 +1,12 @@
 
 <template>
   <div class="qwt-charge">
-    <topbar :user-info="userInfo">
-      <label slot="title">全网通 - 服务购买</label>
+    <topbar :user-info="userInfo" :back="false">
+      <el-tabs slot="title" type="card"
+        @tab-click="onTabClick" :value="mode">
+        <el-tab-pane label="全网通购买" name="buy-service" />
+        <el-tab-pane label="推广资金充值" name="charge-only" />
+      </el-tabs>
     </topbar>
     <section>
       <div v-if="mode === 'buy-service'" class="qwt-package">
@@ -211,6 +215,14 @@ export default {
     },
     setChargeMoney(v) {
       this.chargeMoney = v * 100
+    },
+    onTabClick({name}) {
+      this.$router.push({
+        name: 'qwt-charge',
+        query: {
+          mode: name
+        }
+      })
     },
     async getOrderPayUrl(oids) {
       const {
