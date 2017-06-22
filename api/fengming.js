@@ -96,7 +96,7 @@ export async function getCurrentCampaigns(opts) {
     ...opts
   })
 
-  const [promotions, total] = await Promise.all([
+  const [campaigns, total] = await Promise.all([
     _getCurrentCampaigns(query),
     _getCurrentCampaignCount(query)
   ])
@@ -106,7 +106,7 @@ export async function getCurrentCampaigns(opts) {
       ...query,
       total
     },
-    promotions
+    campaigns
   }
 }
 

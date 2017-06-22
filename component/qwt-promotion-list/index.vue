@@ -5,7 +5,7 @@
       <label slot="title">全网通 - 推广管理</label>
     </topbar>
     <promotion-header :show-more-filters="showMoreFilters" />
-    <promotion-list :promotions="promotions"
+    <promotion-list :campaigns="campaigns"
       :query="query" />
   </div>
 </template>

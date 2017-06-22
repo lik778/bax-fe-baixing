@@ -15,7 +15,7 @@ const defaultQuery = {
 const store = createStore({
   showMoreFilters: false,
 
-  promotions: [],
+  campaigns: [],
   query: {
     ...defaultQuery
   }
@@ -25,8 +25,8 @@ store.subscribeActions({
   [switchShowMoreFilters]: () => ({
     showMoreFilters: !store.state.showMoreFilters
   }),
-  [getCurrentCampaigns]: ({promotions = [], query}) => ({
-    promotions,
+  [getCurrentCampaigns]: ({campaigns = [], query}) => ({
+    campaigns,
     query: {
       ...defaultQuery,
       ...query

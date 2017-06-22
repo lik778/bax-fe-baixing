@@ -1,7 +1,7 @@
 
 <template>
   <div class="qwt-promotion-list">
-    <el-table ref="table" :data="promotions"
+    <el-table ref="table" :data="campaigns"
       @selection-change="onSelectionChange">
       <el-table-column type="selection" width="40" />
       <el-table-column prop="open" label="开关" width="80">
@@ -63,7 +63,7 @@ export default {
     BaxPagination
   },
   props: {
-    promotions: {
+    campaigns: {
       type: Array,
       required: true
     },
@@ -77,7 +77,7 @@ export default {
     allRowsChecked() {
       const {
         selectedPromotionIds,
-        promotions
+        campaigns
       } = this
 
       const ids = promotions.map(p => p.id).sort()
@@ -116,7 +116,7 @@ export default {
 
       if (checked) {
         // select all
-        this.promotions.forEach(r => {
+        this.campaigns.forEach(r => {
           this.$refs.table.toggleRowSelection(r)
         })
       } else {
