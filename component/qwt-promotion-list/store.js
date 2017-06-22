@@ -6,17 +6,31 @@ import {
   getCurrentCampaigns
 } from './action'
 
+const defaultQuery = {
+  offset: 0,
+  limit: 20,
+  total: 0
+}
+
 const store = createStore({
   showMoreFilters: false,
-  currentPromotions: []
+
+  promotions: [],
+  query: {
+    ...defaultQuery
+  }
 })
 
 store.subscribeActions({
   [switchShowMoreFilters]: () => ({
     showMoreFilters: !store.state.showMoreFilters
   }),
-  [getCurrentCampaigns]: ({promotions = []}) => ({
-    currentPromotions: [...promotions]
+  [getCurrentCampaigns]: ({promotions = [], query}) => ({
+    promotions,
+    query: {
+      ...defaultQuery,
+      ...query
+    }
   })
 })
 

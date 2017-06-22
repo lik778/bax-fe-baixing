@@ -30,9 +30,13 @@
       </el-table-column>
     </el-table>
   </main>
+    <bax-pagination :options="query"
+      @current-change="onCurrentChange" />
 </template>
 
 <script>
+
+import BaxPagination from 'com/common/pagination'
 
 import {
   semPlatformCn
@@ -52,6 +56,9 @@ import {
 
 export default {
   name: 'qwt-promotion-list',
+  components: {
+    BaxPagination
+  },
   props: {
     promotions: {
       type: Array,
@@ -59,6 +66,9 @@ export default {
     }
   },
   methods: {
+    async onCurrentChange({offset}) {
+      await getCurrentCampaigns({offset})
+    },
     async switchPause(row) {
       const {
         pause
@@ -79,7 +89,7 @@ export default {
         await pauseCampaigns([row.id])
       }
 
-      await getCurrentCampaigns()
+      await getCurrentCampaigns({...this.query})
     },
     fmtPrice(s) {
       return commafy(centToYuan(s)) + ' 元'
@@ -97,6 +107,9 @@ export default {
 
       return toHumanTime(s, 'YYYY-MM-DD')
     }
+  },
+  async mounted() {
+    await getCurrentCampaigns({...this.query})
   }
 }
 
