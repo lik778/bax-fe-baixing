@@ -64,9 +64,10 @@ export async function createCampaign(data) {
 
 export async function activeCampaigns(ids) {
   return await fengming
-    .post('/campaign/active')
+    .post('/campaign/pause')
     .send(reverseCamelcase({
-      campaignIds: [...ids]
+      campaignIds: [...ids],
+      pause: 0
     }))
     .json()
 }
@@ -75,7 +76,8 @@ export async function pauseCampaigns(ids) {
   return await fengming
     .post('/campaign/pause')
     .send(reverseCamelcase({
-      campaignIds: [...ids]
+      campaignIds: [...ids],
+      pause: 1
     }))
     .json()
 }
