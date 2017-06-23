@@ -119,34 +119,18 @@ export async function getCurrentBalance() {
 }
 
 export async function checkCreativeContent(opts) {
-  const {
-    content,
-    title
-  } = opts
-
   const body = await fengming
     .get('/creative/check')
-    .query(reverseCamelcase({
-      creativeContent: content,
-      creativeTitle: title
-    }))
+    .query(reverseCamelcase(opts))
     .json()
 
   return body.data
 }
 
 export async function getCreativeWords(opts) {
-  const {
-    content,
-    title
-  } = opts
-
   const body = await fengming
     .get('/keyword/recommand/creative')
-    .query(reverseCamelcase({
-      creativeContent: content,
-      creativeTitle: title
-    }))
+    .query(reverseCamelcase(opts))
     .json()
 
   return toCamelcase(body.data)
