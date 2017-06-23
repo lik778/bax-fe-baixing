@@ -10,19 +10,22 @@
       <span class="filter-item">
         <label>类型</label>
         <bax-select :options="sspOrderTypeOpts" clearable
-          v-model="sspOrderType" />
+          v-model="sspOrderType">
+        </bax-select>
       </span>
     </div>
     <div>
       <span class="filter-item">
         <label>开始时间</label>
         <el-date-picker type="date" placeholder="选择日期"
-          v-model="startAt" />
+          v-model="startAt">
+        </el-date-picker>
       </span>
       <span class="filter-item">
         <label>结束时间</label>
         <el-date-picker type="date" placeholder="选择日期"
-          v-model="endAt" />
+          v-model="endAt">
+        </el-date-picker>
       </span>
     </div>
     <div>
@@ -35,7 +38,8 @@
             {{ formatterArea(c) }}
           </el-tag>
           <i class="el-icon-plus"
-            @click="areaDialogVisible = true" />
+            @click="areaDialogVisible = true">
+          </i>
         </span>
       </span>
     </div>
@@ -49,7 +53,8 @@
             {{ formatterCategory(c) }}
           </el-tag>
           <i class="el-icon-plus"
-            @click="categoryDialogVisible = true" />
+            @click="categoryDialogVisible = true">
+          </i>
         </span>
       </span>
     </div>
@@ -57,12 +62,14 @@
       :categories="categories"
       :visible="categoryDialogVisible"
       @ok="onChangeCategories"
-      @cancel="categoryDialogVisible = false" />
+      @cancel="categoryDialogVisible = false">
+    </category-selector>
     <area-selector :all-areas="allAreas"
       :areas="areas"
       :visible="areaDialogVisible"
       @ok="onChangeAreas"
-      @cancel="areaDialogVisible = false" />
+      @cancel="areaDialogVisible = false">
+    </area-selector>
   </header>
 </template>
 
