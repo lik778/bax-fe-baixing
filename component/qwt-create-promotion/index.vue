@@ -119,16 +119,19 @@
           <aside>投放时间:</aside>
           <span>
             <el-button-group>
-              <el-button>
+              <el-button :type="timeType === 'long' ? 'primary' : ''"
+                @click="timeType = 'long'">
                 长期投放
               </el-button>
-              <el-button>
+              <el-button :type="timeType === 'custom' ? 'primary' : ''"
+                @click="timeType = 'custom'">
                 定时投放
               </el-button>
             </el-button-group>
           </span>
           <span>
-            <el-date-picker type="daterange" placeholder="选择日期范围"
+            <el-date-picker v-if="timeType === 'custom'"
+              type="daterange" placeholder="选择日期范围"
               v-model="newPromotion.validTime" />
           </span>
         </div>
@@ -236,6 +239,7 @@ export default {
       newPromotion: clone(emptyPromotion),
       recommendedWordsVisible: false,
       areaDialogVisible: false,
+      timeType: 'long', // long, custom
       queryWord: ''
     }
   },
@@ -245,11 +249,15 @@ export default {
 
       p.dailyBudget = p.dailyBudget * 100
 
-      if (p.validTime.length) {
-        p.validTime = [
-          toTimestamp(p.validTime[0]),
-          toTimestamp(p.validTime[1])
-        ]
+      if (this.timeType === 'custom') {
+        if (p.validTime.length) {
+          p.validTime = [
+            toTimestamp(p.validTime[0]),
+            toTimestamp(p.validTime[1])
+          ]
+        } else {
+          return Message.error('请填写投放日期或选择长期投放')
+        }
       }
 
       p.keywords = [
