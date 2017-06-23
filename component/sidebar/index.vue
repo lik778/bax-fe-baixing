@@ -6,7 +6,12 @@
       <p>v{{ version }}</p>
     </header>
     <content>
-      <el-menu default-active="1">
+      <el-menu default-active="0">
+        <el-menu-item index="0">
+          <router-link :to="{ name: 'root' }" tag="p">
+            <i class="el-icon-menu" />首页
+          </router-link>
+        </el-menu-item>
         <el-submenu index="1">
           <template slot="title">
             <i class="el-icon-star-on" />建站工具
