@@ -26,12 +26,13 @@
         <div>
           <el-button @click="switchToolbox('price percent')">
             设置出价比例
-            <i class="el-icon-arrow-down el-icon--right" />
+            <i class="el-icon-arrow-down el-icon--right"></i>
           </el-button>
         </div>
         <div v-if="toolbox.showPricePercent">
           <el-input style="width: 60px;" placeholder="比例"
-            v-model="toolbox.ratio" />
+            v-model="toolbox.ratio">
+          </el-input>
           <label>(0.1-50)</label>
           <el-button type="primary" size="mini"
             @click="updateCampaignRatio">
@@ -43,12 +44,13 @@
         <div>
           <el-button @click="switchToolbox('daily budget')">
             设置日预算
-            <i class="el-icon-arrow-down el-icon--right" />
+            <i class="el-icon-arrow-down el-icon--right"></i>
           </el-button>
         </div>
         <div v-if="toolbox.showDailyBudget">
           <el-input style="width: 80px;" placeholder="日预算"
-            v-model="toolbox.budget" />
+            v-model="toolbox.budget">
+          </el-input>
           <el-button type="primary" size="mini"
             @click="updateCampaignDailyBudget">
             确定
@@ -59,12 +61,13 @@
         <div>
           <el-button @click="switchToolbox('time range')">
             设置投放日期
-            <i class="el-icon-arrow-down el-icon--right" />
+            <i class="el-icon-arrow-down el-icon--right"></i>
           </el-button>
         </div>
         <div v-if="toolbox.showTimeRange" style="width: 260px;">
           <el-date-picker type="daterange" placeholder="选择日期范围"
-            style="width: 200px;" v-model="toolbox.timeRange" />
+            style="width: 200px;" v-model="toolbox.timeRange">
+          </el-date-picker>
           <el-button type="primary" size="mini"
             @click="updateCampaignTimeRange">
             确定
@@ -78,23 +81,32 @@
       <el-table-column prop="open" label="开关" width="80">
         <template scope="s">
           <el-switch :value="!s.pause" on-text="" off-text=""
-            @change="switchCampaignPause(s)" />
+            @change="switchCampaignPause(s)">
+          </el-switch>
         </template>
       </el-table-column>
-      <el-table-column prop="a1" label="计划/创意" width="160" />
+      <el-table-column prop="a1" label="计划/创意" width="160">
+      </el-table-column>
       <el-table-column label="状态" width="120"
-        :formatter="r => fmtStatus(r.status)" />
+        :formatter="r => fmtStatus(r.status)">
+      </el-table-column>
       <el-table-column label="预算" width="100"
-        :formatter="r => fmtPrice(r.dailyBudget)" />
-      <el-table-column prop="mobilePriceRatio" label="移动端出价比例(0.1-50)" width="120" />
+        :formatter="r => fmtPrice(r.dailyBudget)">
+      </el-table-column>
+      <el-table-column prop="mobilePriceRatio" label="移动端出价比例(0.1-50)" width="120">
+      </el-table-column>
       <el-table-column label="开始日期" width="120"
-        :formatter="r => fmtDate(r.timeRange && r.timeRange[0])" />
+        :formatter="r => fmtDate(r.timeRange && r.timeRange[0])">
+      </el-table-column>
       <el-table-column label="结束日期" width="120"
-        :formatter="r => fmtDate(r.timeRange && r.timeRange[1])" />
+        :formatter="r => fmtDate(r.timeRange && r.timeRange[1])">
+      </el-table-column>
       <el-table-column label="今日消耗" width="100"
-        :formatter="r => fmtPrice(r.todayCost)" />
+        :formatter="r => fmtPrice(r.todayCost)">
+      </el-table-column>
       <el-table-column label="渠道" width="100"
-        :formatter="r => fmtSource(r.source)" />
+        :formatter="r => fmtSource(r.source)">
+      </el-table-column>
       <el-table-column label="操作" width="80">
         <template scope="s">
           <a>详情</a>
@@ -102,7 +114,8 @@
       </el-table-column>
     </el-table>
     <bax-pagination :options="query"
-      @current-change="onCurrentChange" />
+      @current-change="onCurrentChange">
+    </bax-pagination>
   </div>
 </template>
 
