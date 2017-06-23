@@ -48,7 +48,8 @@
               </el-button-group>
             </div>
             <div style="margin-top: 20px; width: 490px;">
-              <el-input placeholder="请输入投放网址, 如: http://baixing.com" />
+              <el-input placeholder="请输入投放网址, 如: http://baixing.com">
+              </el-input>
             </div>
           </span>
         </div>
@@ -61,7 +62,8 @@
               {{ formatterArea(c) }}
             </el-tag>
             <i class="el-icon-plus"
-              @click="areaDialogVisible = true" />
+              @click="areaDialogVisible = true">
+            </i>
           </span>
         </div>
       </section>
@@ -69,10 +71,11 @@
         <header>推广物料设置</header>
         <div>
           <aside>推广标题:</aside>
-           <span>
-            <el-input type="text" placeholder="请输入标题 ~" style="width: 420px"
-              v-model="newPromotion.creativeTitle" />
-          </span>
+            <span>
+              <el-input type="text" placeholder="请输入标题 ~" style="width: 420px"
+                v-model="newPromotion.creativeTitle">
+              </el-input>
+            </span>
         </div>
         <div>
           <aside style="align-items: flex-start; padding-top: 5px;">
@@ -81,7 +84,8 @@
           <span>
             <el-input type="textarea" placeholder="请输入内容 ~"
               :rows="5" style="width: 420px"
-              v-model="newPromotion.creativeContent" />
+              v-model="newPromotion.creativeContent">
+            </el-input>
           </span>
         </div>
         <footer>
@@ -94,14 +98,16 @@
         <header>选取推广关键词</header>
         <h4>根据当月数据，为您推荐如下关键词</h4>
         <keyword-list :words="creativeWords"
-          @select-words="words => newPromotion.creativeWords = [...words]" />
+          @select-words="words => newPromotion.creativeWords = [...words]">
+        </keyword-list>
         <h3>
           <label>若没有您满意的关键词，</label>
           <a @click="switchWordsVisible">点此自定义添加</a>
         </h3>
         <div v-if="recommendedWordsVisible">
           <span>
-            <el-input placeholder="请输入关键词" v-model="queryWord" />
+            <el-input placeholder="请输入关键词" v-model="queryWord">
+            </el-input>
           </span>
           <el-button type="primary" @click="queryRecommendedWords">
             查询
@@ -111,7 +117,8 @@
           </strong>
         </div>
         <keyword-list v-if="recommendedWordsVisible" :words="recommendedWords"
-          @select-words="words => newPromotion.recommendedWords = [...words]" />
+          @select-words="words => newPromotion.recommendedWords = [...words]">
+        </keyword-list>
       </section>
       <section class="timing">
         <header>设置时长和预算</header>
@@ -132,14 +139,16 @@
           <span>
             <el-date-picker v-if="timeType === 'custom'"
               type="daterange" placeholder="选择日期范围"
-              v-model="newPromotion.validTime" />
+              v-model="newPromotion.validTime">
+            </el-date-picker>
           </span>
         </div>
         <div>
           <aside>设置推广日预算:</aside>
           <span>
             <el-input type="number" placeholder="请输入每日最高预算"
-              v-model="newPromotion.dailyBudget" />
+              v-model="newPromotion.dailyBudget">
+            </el-input>
           </span>
           <i>元</i>
           <span>
@@ -150,7 +159,7 @@
           您的推广资金余额：￥6666 元，可消耗<strong>666</strong>天
         </h3>
         <h4>
-          <el-checkbox />
+          <el-checkbox></el-checkbox>
           <label>我已阅读并同意遵守</label>
           <a>《百姓网站外推广用户协议》</a>
         </h4>
@@ -174,7 +183,8 @@
       :areas="newPromotion.areas"
       :visible="areaDialogVisible"
       @ok="onChangeAreas"
-      @cancel="areaDialogVisible = false" />
+      @cancel="areaDialogVisible = false">
+    </area-selector>
   </div>
 </template>
 
