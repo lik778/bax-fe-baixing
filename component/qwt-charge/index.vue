@@ -45,7 +45,9 @@
       <div>
         <aside>服务编号：</aside>
         <span>
-          <el-input placeholder="如有服务编号请您填写"></el-input>
+          <el-input v-model.trim="salesId"
+            placeholder="如有服务编号请您填写">
+          </el-input>
         </span>
       </div>
       <div>
@@ -149,6 +151,7 @@ export default {
       checkedPackageId: 0,
       checkedChargeProductId: 0, // 注: 此 id 仅用于前端标记
       chargeMoney: 0,
+      salesId: '',
 
       orderPayUrl: ''
     }
@@ -245,12 +248,17 @@ export default {
         checkedPackageId,
         chargeMoney,
         productId,
-        userInfo
+        userInfo,
+        salesId
       } = this
 
+      const { user_id: userId } = this.$route.query
+
       const newOrder = {
-        userId: userInfo.id,
-        salesId: 2
+        userId: userId || userInfo.id
+      }
+      if (salesId) {
+        newOrder.salesId = salesId
       }
 
       if (!checkedChargeProductId && !checkedPackageId) {
