@@ -33,7 +33,10 @@ export default {
       return centToYuan(price)
     },
     onSelectionChange(rows) {
-      this.$emit('select-words', rows.map(r => r.word))
+      this.$emit('select-words', rows.map(r => ({
+        price: r.price,
+        word: r.word
+      })))
     }
   }
 }

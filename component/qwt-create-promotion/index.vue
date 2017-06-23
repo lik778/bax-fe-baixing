@@ -48,7 +48,8 @@
               </el-button-group>
             </div>
             <div style="margin-top: 20px; width: 490px;">
-              <el-input placeholder="请输入投放网址, 如: http://baixing.com">
+              <el-input v-model.trim="newPromotion.landingPage"
+                placeholder="请输入投放网址, 如: http://baixing.com">
               </el-input>
             </div>
           </span>
