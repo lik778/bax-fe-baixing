@@ -10,20 +10,23 @@
         <gw-pro-widget v-for="i of products" :key="i.id"
           :title="i.name" :price="i.showPrice | centToYuan"
           :checked="productChecked(i.id)"
-          @click="checkProduct(i.id)" />
+          @click="checkProduct(i.id)">
+        </gw-pro-widget>
       </main>
     </section>
     <section>
       <div style="margin-top: 45px;">
         <aside>价格信息:</aside>
         <span>
-          <price-list :products="checkedProducts" />
+          <price-list :products="checkedProducts"></price-list>
         </span>
       </div>
       <div style="margin-top: 35px;">
         <aside>服务编号:</aside>
         <span>
-          <el-input placeholder="如有服务编号请您填写" />
+          <el-input v-model.trim="salesId"
+            placeholder="如有服务编号请您填写">
+          </el-input>
         </span>
       </div>
       <div style="margin-top: 25px;">
@@ -38,7 +41,7 @@
           <label :title="orderPayUrl">
             {{ '付款链接: ' + orderPayUrl }}
           </label>
-          <Clipboard :content="orderPayUrl" />
+          <Clipboard :content="orderPayUrl"></Clipboard>
         </span>
       </div>
       <footer>
@@ -92,7 +95,8 @@ export default {
   data() {
     return {
       checkedProductId: 0,
-      orderPayUrl: ''
+      orderPayUrl: '',
+      salesId: ''
     }
   },
   filters: {
@@ -137,19 +141,27 @@ export default {
     async createOrder() {
       const {
         checkedProductId: id,
-        userInfo
+        userInfo,
+        salesId
       } = this
 
       if (!id) {
         return Message.error('请先选择产品')
       }
 
+      const { user_id: userId } = this.$route.query
+
       const order = {
-        userId: userInfo.id,
-        salesId: userInfo.id,
+        // salesId: userInfo.id,
         products: [{
           id
         }]
+      }
+
+      order.userId = userId || userInfo.id
+
+      if (salesId) {
+        order.salesId = salesId
       }
 
       const oids = await createOrder(order)
