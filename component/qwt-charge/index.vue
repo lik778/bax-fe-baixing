@@ -4,8 +4,8 @@
     <topbar :user-info="userInfo" :back="false">
       <el-tabs slot="title" type="card"
         @tab-click="onTabClick" :value="mode">
-        <el-tab-pane label="全网通购买" name="buy-service" />
-        <el-tab-pane label="推广资金充值" name="charge-only" />
+        <el-tab-pane label="全网通购买" name="buy-service"></el-tab-pane>
+        <el-tab-pane label="推广资金充值" name="charge-only"></el-tab-pane>
       </el-tabs>
     </topbar>
     <section>
@@ -17,7 +17,8 @@
           <qwt-pkg-widget v-for="i of packages" :key="i.id"
             :name="i.name" :products="i.products"
             :checked="packageChecked(i.id)"
-            @click="checkPackage(i.id)" />
+            @click="checkPackage(i.id)">
+          </qwt-pkg-widget>
         </main>
       </div>
       <div class="charge-product">
@@ -29,7 +30,8 @@
             :price="i.price" :title="i.title" :editable="i.editable"
             :checked="chargeProductChecked(i.id)"
             @click="checkChargeProduct(i.id)"
-            @set-money="setChargeMoney" />
+            @set-money="setChargeMoney">
+          </qwt-pro-widget>
         </main>
       </div>
     </section>
@@ -37,13 +39,13 @@
       <div>
         <aside>价格信息：</aside>
         <span>
-          <price-list :products="checkedProducts" />
+          <price-list :products="checkedProducts"></price-list>
         </span>
       </div>
       <div>
         <aside>服务编号：</aside>
         <span>
-          <el-input placeholder="如有服务编号请您填写" />
+          <el-input placeholder="如有服务编号请您填写"></el-input>
         </span>
       </div>
       <div>
@@ -58,7 +60,7 @@
           <label :title="orderPayUrl">
             {{ '付款链接: ' + orderPayUrl }}
           </label>
-          <Clipboard :content="orderPayUrl" />
+          <Clipboard :content="orderPayUrl"></Clipboard>
         </span>
       </div>
       <footer>

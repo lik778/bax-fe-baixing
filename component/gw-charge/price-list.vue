@@ -3,11 +3,14 @@
   <span class="gw-charge-price-list">
     <el-table :data="products" empty-text="暂未选中任何产品"
       style="width: 320px">
-      <el-table-column prop="name" label="购买的产品" width="120" />
+      <el-table-column prop="name" label="购买的产品" width="120">
+      </el-table-column>
       <el-table-column label="原价" width="100"
-        :formatter="r => centToYuan(r.showPrice)" />
+        :formatter="r => centToYuan(r.showPrice)">
+      </el-table-column>
       <el-table-column prop="price" label="售价"
-        :formatter="r => centToYuan(r.price)" />
+        :formatter="r => centToYuan(r.price)">
+      </el-table-column>
     </el-table>
   </span>
 </template>
