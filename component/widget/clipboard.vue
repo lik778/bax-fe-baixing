@@ -3,7 +3,8 @@
   <i class="el-icon-document"
     v-clipboard:copy="content"
     v-clipboard:success="onCopySuccess"
-    v-clipboard:error="onCopyError" />
+    v-clipboard:error="onCopyError">
+  </i>
 </template>
 
 <script>
@@ -37,4 +38,3 @@ i {
 }
 
 </style>
-
