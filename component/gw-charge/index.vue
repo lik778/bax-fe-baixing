@@ -23,7 +23,10 @@
       </div>
       <div style="margin-top: 35px;">
         <aside>服务编号:</aside>
-        <span>
+        <span v-if="salesIdLocked">
+          {{ salesId }}
+        </span>
+        <span v-else>
           <el-input v-model.trim="salesId"
             placeholder="如有服务编号请您填写">
           </el-input>
@@ -96,6 +99,8 @@ export default {
     return {
       checkedProductId: 0,
       orderPayUrl: '',
+
+      salesIdLocked: false,
       salesId: ''
     }
   },
@@ -152,16 +157,11 @@ export default {
       const { user_id: userId } = this.$route.query
 
       const order = {
-        // salesId: userInfo.id,
+        salesId: salesId || userInfo.salesId,
+        userId: userId || userInfo.id,
         products: [{
           id
         }]
-      }
-
-      order.userId = userId || userInfo.id
-
-      if (salesId) {
-        order.salesId = salesId
       }
 
       const oids = await createOrder(order)
@@ -172,6 +172,13 @@ export default {
     }
   },
   async mounted() {
+    const { sales_id: salesId } = this.$route.query
+
+    if (salesId) {
+      this.salesIdLocked = true
+      this.salesId = salesId
+    }
+
     await getProducts(2)
   }
 }

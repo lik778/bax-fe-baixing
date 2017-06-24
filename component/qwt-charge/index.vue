@@ -44,7 +44,10 @@
       </div>
       <div>
         <aside>服务编号：</aside>
-        <span>
+        <span v-if="salesIdLocked">
+          {{ salesId }}
+        </span>
+        <span v-else>
           <el-input v-model.trim="salesId"
             placeholder="如有服务编号请您填写">
           </el-input>
@@ -151,6 +154,8 @@ export default {
       checkedPackageId: 0,
       checkedChargeProductId: 0, // 注: 此 id 仅用于前端标记
       chargeMoney: 0,
+
+      salesIdLocked: false,
       salesId: '',
 
       orderPayUrl: ''
@@ -255,10 +260,8 @@ export default {
       const { user_id: userId } = this.$route.query
 
       const newOrder = {
+        salesId: salesId || userInfo.salesId,
         userId: userId || userInfo.id
-      }
-      if (salesId) {
-        newOrder.salesId = salesId
       }
 
       if (!checkedChargeProductId && !checkedPackageId) {
@@ -287,6 +290,13 @@ export default {
     centToYuan
   },
   async mounted() {
+    const { sales_id: salesId } = this.$route.query
+
+    if (salesId) {
+      this.salesIdLocked = true
+      this.salesId = salesId
+    }
+
     await Promise.all([
       getProductPackages(1),
       getProducts(1)
