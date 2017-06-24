@@ -77,7 +77,8 @@
     </header>
     <el-table ref="table" :data="campaigns"
       @selection-change="onSelectionChange">
-      <el-table-column type="selection" width="40" />
+      <el-table-column type="selection" width="40">
+      </el-table-column>
       <el-table-column prop="open" label="开关" width="80">
         <template scope="s">
           <el-switch :value="!s.pause" on-text="" off-text=""
@@ -109,7 +110,9 @@
       </el-table-column>
       <el-table-column label="操作" width="80">
         <template scope="s">
-          <a>详情</a>
+          <router-link :to="{ name: 'qwt-update-promotion', params: { id: s.row.id } }">
+            详情
+          </router-link>
         </template>
       </el-table-column>
     </el-table>

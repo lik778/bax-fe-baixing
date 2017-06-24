@@ -53,6 +53,14 @@ export async function getProductPackages() {
   return toCamelcase(body.data)
 }
 
+export async function getCampaignInfo(id) {
+  const body = await fengming
+    .get(`/campaign/${id}`)
+    .json()
+
+  return toCamelcase(body.data)
+}
+
 export async function updateCampaign(id, data) {
   return await fengming
     .post(`/campaign/${id}`)

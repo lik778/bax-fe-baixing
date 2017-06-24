@@ -1,5 +1,6 @@
 
 // 全网通
+import QwtUpdatePromotion from 'com/qwt-update-promotion'
 import QwtCreatePromotion from 'com/qwt-create-promotion'
 import QwtPromotionList from 'com/qwt-promotion-list'
 import QwtDashboard from 'com/qwt-dashboard'
@@ -62,6 +63,10 @@ const qwtRoutes = [{
   component: QwtCreatePromotion,
   path: '/main/qwt/promotion/create',
   name: 'qwt-create-promotion'
+}, {
+  component: QwtUpdatePromotion,
+  path: '/main/qwt/promotions/:id/update',
+  name: 'qwt-update-promotion'
 }, {
   component: QwtPromotionList,
   path: '/main/qwt/promotions',

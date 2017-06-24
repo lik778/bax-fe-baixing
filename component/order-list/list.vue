@@ -14,8 +14,10 @@
         </template>
       </el-table-column>
       <el-table-column label="广告类型" width="120"
-        :formatter="formatOrderType" />
-      <el-table-column prop="order.userName" label="客户" />
+        :formatter="formatOrderType">
+      </el-table-column>
+      <el-table-column prop="order.userName" label="客户">
+      </el-table-column>
       <el-table-column label='创建时间'>
         <template scope="s">
           <span>{{ s.row.order.createdAt | toHumanTime }}</span>
@@ -30,7 +32,8 @@
       </el-table-column>
     </el-table>
     <bax-pagination :options="query"
-      @current-change="onCurrentChange" />
+      @current-change="onCurrentChange">
+    </bax-pagination>
   </section>
 </template>
 
