@@ -151,14 +151,13 @@ export default {
     return {
       allProducts,
 
-      checkedPackageId: 0,
-      checkedChargeProductId: 0, // 注: 此 id 仅用于前端标记
-      chargeMoney: 0,
-
       salesIdLocked: false,
       salesId: '',
 
-      orderPayUrl: ''
+      orderPayUrl: '',
+      checkedPackageId: 0,
+      checkedChargeProductId: 0, // 注: 此 id 仅用于前端标记
+      chargeMoney: 0
     }
   },
   computed: {
@@ -211,6 +210,12 @@ export default {
     }
   },
   methods: {
+    empty() {
+      this.orderPayUrl = ''
+      this.checkedPackageId = 0
+      this.checkedChargeProductId = 0
+      this.chargeMoney = 0
+    },
     packageChecked(id) {
       return this.checkedPackageId === id
     },
@@ -227,9 +232,14 @@ export default {
       this.chargeMoney = v * 100
     },
     onTabClick({name}) {
+      this.empty()
+
+      const q = this.$route.query
+
       this.$router.push({
         name: 'qwt-charge',
         query: {
+          ...q,
           mode: name
         }
       })
