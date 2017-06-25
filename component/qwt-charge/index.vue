@@ -188,7 +188,7 @@ export default {
       if (pkg) {
         products = pkg.products.map(p => {
           return {
-            originalPrice: p.originalPrice,
+            originalPrice: p.showPrice,
             price: p.price,
             name: p.name
           }
