@@ -1,7 +1,7 @@
 
 <template>
   <div class="qwt-pkg-widget" @click="onClick">
-    <i v-if="checked" class="el-icon-check" />
+    <i v-if="checked" class="el-icon-check"></i>
     <header>
       {{ name }}
     </header>
