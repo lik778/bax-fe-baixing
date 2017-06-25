@@ -112,6 +112,7 @@ export async function getCurrentCampaigns(opts) {
 
   return {
     query: {
+      ...query,
       total
     },
     campaigns
