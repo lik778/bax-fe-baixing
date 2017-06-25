@@ -153,11 +153,12 @@
           </span>
           <i>元</i>
           <span>
-            （根据您选取的关键词，最低预算为<p>xxx</p>元）
+            （根据您选取的关键词，最低预算为<p>{{ predictedInfo.dailyBudget }}</p>元）
           </span>
         </div>
         <h3>
-          您的推广资金余额：￥6666 元，可消耗<strong>666</strong>天
+          {{ `您的推广资金余额：￥${ centToYuan(currentBalance) } 元，可消耗` }}
+          <strong>{{ predictedInfo.duration }}</strong>天
         </h3>
         <h4>
           <el-checkbox :value="true"></el-checkbox>
@@ -198,8 +199,12 @@ import AreaSelector from 'com/common/area-selector'
 import KeywordList from './keyword-list'
 import Topbar from 'com/topbar'
 
+import { getCampaignPrediction } from 'util/campaign'
 import { getCnName } from 'util/meta'
-import { toTimestamp } from 'utils'
+import {
+  toTimestamp,
+  centToYuan
+} from 'utils'
 
 import {
   checkCreativeContent,
@@ -252,6 +257,24 @@ export default {
       areaDialogVisible: false,
       timeType: 'long', // long, custom
       queryWord: ''
+    }
+  },
+  computed: {
+    predictedInfo() {
+      const {
+        currentBalance,
+        newPromotion
+      } = this
+
+      const {
+        recommendedWords,
+        creativeWords
+      } = newPromotion
+
+      const prices = [...recommendedWords, ...creativeWords]
+        .map(k => k.price)
+
+      return getCampaignPrediction(currentBalance, prices)
     }
   },
   methods: {
@@ -357,7 +380,8 @@ export default {
       this.newPromotion.areas = [
         ...this.newPromotion.areas.filter(i => i !== c)
       ]
-    }
+    },
+    centToYuan
   },
   watch: {
     'newPromotion.creativeContent': async function() {

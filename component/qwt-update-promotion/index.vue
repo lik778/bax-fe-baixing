@@ -154,11 +154,12 @@
           </span>
           <i>元</i>
           <span>
-            （根据您选取的关键词，最低预算为<p>xxx</p>元）
+            （根据您选取的关键词，最低预算为<p>{{ predictedInfo.dailyBudget }}</p>元）
           </span>
         </div>
         <h3>
-          您的推广资金余额：￥6666 元，可消耗<strong>666</strong>天
+          {{ `您的推广资金余额：￥${ centToYuan(currentBalance) } 元，可消耗` }}
+          <strong>{{ predictedInfo.duration }}</strong>天
         </h3>
         <h4>
           <el-checkbox :value="true"></el-checkbox>
@@ -200,10 +201,12 @@ import KeywordList from '../qwt-create-promotion/keyword-list'
 import AreaSelector from 'com/common/area-selector'
 import Topbar from 'com/topbar'
 
+import { getCampaignPrediction } from 'util/campaign'
 import { getCnName } from 'util/meta'
 import {
   toHumanTime,
-  toTimestamp
+  toTimestamp,
+  centToYuan
 } from 'utils'
 
 import {
@@ -260,6 +263,22 @@ export default {
     }
   },
   computed: {
+    predictedInfo() {
+      const {
+        currentBalance,
+        promotion
+      } = this
+
+      const {
+        keywords = [],
+        addedWords
+      } = promotion
+
+      const prices = [...keywords, ...addedWords]
+        .map(k => k.price)
+
+      return getCampaignPrediction(currentBalance, prices)
+    },
     id() {
       return this.$route.params.id
     }
@@ -350,7 +369,8 @@ export default {
       this.promotion.areas = [
         ...this.promotion.areas.filter(i => i !== c)
       ]
-    }
+    },
+    centToYuan
   },
   async mounted() {
     const info = await getCampaignInfo(this.id)
