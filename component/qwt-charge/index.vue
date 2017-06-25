@@ -242,7 +242,7 @@ export default {
     setChargeMoney(v) {
       this.chargeMoney = v * 100
     },
-    onTabClick({name}) {
+    async onTabClick({name}) {
       this.empty()
 
       const q = this.$route.query
@@ -254,6 +254,12 @@ export default {
           mode: name
         }
       })
+      // TODO: warning - 此处依赖 query mode
+      await this.getProducts()
+    },
+    async getProducts() {
+      const type = this.mode === 'buy-service' ? 1 : 3
+      await getProducts(type)
     },
     async getOrderPayUrl(oids, summary) {
       const {
@@ -321,7 +327,7 @@ export default {
 
     await Promise.all([
       getProductPackages(1),
-      getProducts(1)
+      this.getProducts()
     ])
   }
 }
