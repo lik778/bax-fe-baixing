@@ -11,7 +11,7 @@
           <aside>投放渠道：</aside>
           <span>
             <el-button-group>
-              <el-button :type="promotion.source === 0 ? 'primary' : ''"
+              <el-button v-if="false" :type="promotion.source === 0 ? 'primary' : ''"
                 @click="clickSourceTip">
                 百度
               </el-button>
@@ -19,7 +19,7 @@
                 @click="clickSourceTip">
                 搜狗
               </el-button>
-              <el-button :type="promotion.source === 1 ? 'primary' : ''"
+              <el-button v-if="false" :type="promotion.source === 1 ? 'primary' : ''"
                 @click="clickSourceTip">
                 360
               </el-button>
@@ -226,7 +226,7 @@ const emptyPromotion = {
   validTime: [],
   keywords: [],
   areas: [],
-  source: 0,
+  source: 5,
   //
   addedWords: []
 }
