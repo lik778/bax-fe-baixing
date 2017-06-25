@@ -7,7 +7,7 @@
       </el-table-column>
       <el-table-column prop="word" label="关键词" width="420">
       </el-table-column>
-      <el-table-column prop="show" label="日均搜索量" width="200">
+      <el-table-column prop="show" label="日均搜索量">
       </el-table-column>
       <el-table-column prop="price" label="CPC最高出价 (元/次点击)" width="200"
         :formatter="centToYuan">
