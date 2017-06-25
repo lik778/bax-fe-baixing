@@ -73,7 +73,7 @@
         <div>
           <aside>推广标题:</aside>
             <span>
-              <el-input type="text" placeholder="请输入标题 ~" style="width: 420px"
+              <el-input type="text" placeholder="请输入标题 ~ (字数限制为9-25个字)" style="width: 420px"
                 v-model="newPromotion.creativeTitle">
               </el-input>
             </span>
@@ -83,7 +83,7 @@
             推广内容:
           </aside>
           <span>
-            <el-input type="textarea" placeholder="请输入内容 ~"
+            <el-input type="textarea" placeholder="请输入内容 ~ (字数限制为9-40个字)"
               :rows="5" style="width: 420px"
               v-model="newPromotion.creativeContent">
             </el-input>
