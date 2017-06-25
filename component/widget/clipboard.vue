@@ -34,6 +34,8 @@ export default {
 <style scoped>
 
 i {
+  margin-left: 5px;
+  font-size: 20px;
   cursor: pointer;
 }
 
