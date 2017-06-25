@@ -13,7 +13,7 @@
       </el-col>
       <el-col :span="4" class="block">
         <h3>推广可用资金</h3>
-        <p><span class="number">{{summary.balance}}</span>元</p>
+        <p><span class="number">{{summary.balance / 100}}</span>元</p>
         <router-link :to="{name: 'qwt-charge', query: {mode: 'charge-only'}}"><el-button type="primary">充值</el-button></router-link>
       </el-col>
       <el-col :span="4"></el-col>

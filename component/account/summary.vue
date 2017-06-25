@@ -5,15 +5,15 @@
       <el-col :span="6">
         <div class="line">
           <p>推广资金余额</p>
-          <p><strong>{{summary.balance}}</strong>元</p>
+          <p><strong>{{summary.balance / 100}}</strong>元</p>
           <router-link :to="{name: 'qwt-charge', query: {mode: 'charge-only'}}"><el-button type="primary">充值</el-button></router-link>
         </div>
       </el-col>
       <el-col :span="12">
         <el-row>
           <el-col :span="8">
-            <p>今日消耗：{{summary.consume}}元</p>
-            <p>今日预算：{{summary.budget}}元</p>
+            <p>今日消耗：{{summary.consume / 100}}元</p>
+            <p>今日预算：{{summary.budget / 100}}元</p>
           </el-col>
           <el-col :span="8">
             <my-progress type="circle" :percentage="consumeRatio" :width="80" />
