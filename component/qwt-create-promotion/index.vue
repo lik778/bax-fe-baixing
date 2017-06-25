@@ -322,8 +322,9 @@ export default {
         creativeTitle
       })
 
-      if (data.result) {
+      if (!data.result) {
         Message.success(data.hint)
+        await this.getCreativeWords()
       } else {
         Message.error(data.hint)
       }
@@ -361,11 +362,11 @@ export default {
   watch: {
     'newPromotion.creativeContent': async function() {
       // TODO - debounce
-      await this.getCreativeWords()
+      // await this.getCreativeWords()
     },
     'newPromotion.creativeTitle': async function() {
       // TODO - debounce
-      await this.getCreativeWords()
+      // await this.getCreativeWords()
     }
   },
   async mounted() {
