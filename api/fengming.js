@@ -112,7 +112,6 @@ export async function getCurrentCampaigns(opts) {
 
   return {
     query: {
-      ...query,
       total
     },
     campaigns
@@ -194,6 +193,17 @@ export async function getSummary() {
   return {
     balance,
     ...daily
+  }
+}
+
+export async function getHomepageSummary() {
+  const [ campaignCount, balance ] = await Promise.all([
+    _getCurrentCampaignCount(),
+    getCurrentBalance()
+  ])
+  return {
+    balance,
+    campaignCount
   }
 }
 

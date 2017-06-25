@@ -1,4 +1,7 @@
 
+// 主页
+import Homepage from 'com/homepage'
+
 // 全网通
 import QwtUpdatePromotion from 'com/qwt-update-promotion'
 import QwtCreatePromotion from 'com/qwt-create-promotion'
@@ -119,7 +122,7 @@ const bxadRoutes = [{
 const router = new VueRouter({
   mode: 'history',
   routes: [{
-    component: AdCalendar,
+    component: Homepage,
     path: '/main',
     name: 'root'
   }, {
