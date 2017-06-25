@@ -30,6 +30,8 @@
 
 <script>
 
+import { Message } from 'element-ui'
+
 export default {
   name: 'qwt-pro-widget',
   props: {
@@ -40,6 +42,7 @@ export default {
   },
   data() {
     return {
+      minInputPrice: 288,
       inputPrice: '',
       mode: 'normal' // input
     }
@@ -53,9 +56,23 @@ export default {
       this.mode = 'input'
     },
     onInputPrice(v) {
-      this.$emit('set-money', v)
+      const price = parseInt(v)
+      if (price < this.minInputPrice) {
+        return
+      }
+
+      this.$emit('set-money', price)
     },
     onBlur() {
+      const {
+        minInputPrice,
+        inputPrice
+      } = this
+
+      if (parseInt(inputPrice) < minInputPrice) {
+        return Message.error(`最低充值金额: ${minInputPrice}`)
+      }
+
       this.mode = 'normal'
     },
     onClick() {
