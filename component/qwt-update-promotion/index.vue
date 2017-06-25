@@ -161,7 +161,7 @@
           您的推广资金余额：￥6666 元，可消耗<strong>666</strong>天
         </h3>
         <h4>
-          <el-checkbox></el-checkbox>
+          <el-checkbox :value="true"></el-checkbox>
           <label>我已阅读并同意遵守</label>
           <a>《百姓网站外推广用户协议》</a>
         </h4>
