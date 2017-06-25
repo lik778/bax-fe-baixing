@@ -1,7 +1,7 @@
 
 <template>
   <div class="qwt-pro-widget" @click="onClick">
-    <i v-if="checked" class="el-icon-check" />
+    <i v-if="checked" class="el-icon-check"></i>
     <main>
       <span v-if="hasPrice && mode === 'normal'">
         价值
@@ -18,7 +18,8 @@
         <el-input size="mini" style="width: 90px"
           placeholder="输入金额" v-model="inputPrice"
           @change="onInputPrice"
-          @blur="onBlur" />
+          @blur="onBlur">
+        </el-input>
       </p>
     </main>
     <footer v-if="showFooter">
