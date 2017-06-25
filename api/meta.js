@@ -2,6 +2,17 @@
 import { toCamelcase } from 'object-keys-mapping'
 import { api } from './base'
 
+export async function getProductDiscounts(type) {
+  const body = await api
+    .get('/meta/template/discount')
+    .query({
+      product_type: type
+    })
+    .json()
+
+  return toCamelcase(body.data)
+}
+
 export async function getCategories(levels = [1, 2]) {
   const body = await api
     .get('/meta/categories')
