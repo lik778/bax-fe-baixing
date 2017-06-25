@@ -1,26 +1,30 @@
 <template>
   <div class="summary-container">
     <section-header>我的账户</section-header>
-    <el-row type="flex" justify="space-around" align="space-between">
+    <el-row type="flex" justify="space-around">
       <el-col :span="6">
         <div class="line">
           <p>推广资金余额</p>
-          <p><strong>1020</strong>元</p>
-          <el-button type="primary">充值</el-button>
+          <p><strong>{{summary.balance}}</strong>元</p>
+          <router-link :to="{name: 'qwt-charge', query: {mode: 'charge-only'}}"><el-button type="primary">充值</el-button></router-link>
         </div>
       </el-col>
       <el-col :span="12">
         <el-row>
           <el-col :span="8">
-            <p>今日消耗：87元</p>
-            <p>今日预算：100元</p>
+            <p>今日消耗：{{summary.consume}}元</p>
+            <p>今日预算：{{summary.budget}}元</p>
           </el-col>
           <el-col :span="8">
-            <my-progress type="circle" :percentage="20" :width="80" :class="classes" />
+            <my-progress type="circle" :percentage="consumeRatio" :width="80" />
           </el-col>
           <el-col :span="8">
-            <div><el-button type="primary">推广管理</el-button></div>
-            <div><el-button type="primary">新建推广</el-button></div>
+            <div class="btns">
+              <router-link :to="{name: 'qwt-promotion-list'}"><el-button type="primary">推广管理</el-button></router-link>
+            </div>
+            <div>
+              <router-link :to="{name: 'qwt-create-promotion'}"><el-button type="primary">新建推广</el-button></router-link>
+            </div>
           </el-col>
         </el-row>
       </el-col>
@@ -31,12 +35,25 @@
 <script>
   import SectionHeader from 'com/common/section-header'
   import MyProgress from 'com/common/my-progress'
+  import { getSummary } from './action'
+  import store from './store'
 
   export default {
     name: 'summary',
+    store,
     components: {
       SectionHeader,
       MyProgress
+    },
+    mounted() {
+      getSummary()
+    },
+    computed: {
+      consumeRatio() {
+        const { consume, budget } = this.summary
+        if (!budget) return 0
+        return Math.floor(consume / budget * 100)
+      }
     }
   }
 </script>
@@ -47,5 +64,12 @@
   }
   .line {
     border-right: 1px dotted #aaa;
+    text-align: center;
+  }
+  p {
+    margin: 10px 0;
+  }
+  .btns {
+    margin-bottom: 10px;
   }
 </style>

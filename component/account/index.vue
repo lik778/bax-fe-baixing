@@ -1,20 +1,25 @@
 <template>
   <div class="account-container">
+    <topbar :userInfo="userInfo">
+      <label slot="title">账户</label>
+    </topbar>
     <h1>{{userInfo.name}},欢迎回来</h1>
-    <Summary />
-    <Log />
+    <account-summary />
+    <log />
   </div>
 </template>
 
 <script>
-  import Summary from './summary'
+  import Topbar from 'com/topbar'
+  import AccountSummary from './summary'
   import Log from './log'
   export default {
     name: 'account',
     props: ['userInfo'],
     components: {
-      Summary,
-      Log
+      AccountSummary,
+      Log,
+      Topbar
     }
   }
 </script>
@@ -23,5 +28,6 @@
   .account-container {
     padding: 0 35px;
     width: 100%;
+    color: #6a778c;
   }
 </style>

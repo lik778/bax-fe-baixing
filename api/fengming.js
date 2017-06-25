@@ -1,6 +1,7 @@
 
 import { reverseCamelcase, toCamelcase } from 'object-keys-mapping'
 import { fengming, trim } from './base'
+import moment from 'moment'
 
 const isArray = Array.isArray
 
@@ -155,6 +156,47 @@ export async function getRecommendedWords(word) {
   return toCamelcase(body.data)
 }
 
+export async function getLogs(opts = {}) {
+  let query = {
+    pageSize: 50,
+    offset: 0,
+    time: moment().subtract(1, 'months').unix(),
+    ...opts
+  }
+
+  const { type, time, pageSize, offset } = query
+
+  query = trim(reverseCamelcase({
+    timelineType: type,
+    createdAt: time,
+    offset,
+    limit: pageSize
+  }))
+
+  const [logs, total] = await Promise.all([
+    _getLogs(query),
+    _getLogCount(query)
+  ])
+  return {
+    query: {
+      ...query,
+      total
+    },
+    logs
+  }
+}
+
+export async function getSummary() {
+  const [ balance, daily ] = await Promise.all([
+    getCurrentBalance(),
+    _getDailySummary()
+  ])
+  return {
+    balance,
+    ...daily
+  }
+}
+
 /**
  * private
  */
@@ -168,9 +210,35 @@ async function _getCurrentCampaigns(opts) {
   return toCamelcase(body.data)
 }
 
+async function _getDailySummary() {
+  const body = await fengming
+    .get('/campaign/daily_simple_report')
+    .json()
+
+  return toCamelcase(body.data)
+}
+
+async function _getLogs(opts) {
+  const body = await fengming
+    .get('/timeline')
+    .query(opts)
+    .json()
+
+  return toCamelcase(body.data)
+}
+
 async function _getCurrentCampaignCount(opts) {
   const body = await fengming
     .get('/campaign/current/count')
+    .query(opts)
+    .json()
+
+  return body.data
+}
+
+async function _getLogCount(opts) {
+  const body = await fengming
+    .get('/timeline/count')
     .query(opts)
     .json()
 
