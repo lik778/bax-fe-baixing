@@ -68,7 +68,7 @@ export async function changeOrderDiscount(oid, data) {
     .json()
 }
 
-export async function getOrderPayUrl(oids, summary) {
+export async function getOrderPayUrl(oids, summary = '') {
   if (!isArray(oids)) {
     oids = [oids]
   }

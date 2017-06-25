@@ -161,6 +161,17 @@ export default {
     }
   },
   computed: {
+    checkedPackageName() {
+      const { checkedPackageId } = this
+
+      if (!checkedPackageId) {
+        return ''
+      }
+
+      const p = this.packages.find(p => p.id === checkedPackageId)
+
+      return p.name
+    },
     checkedProducts() {
       const {
         checkedChargeProductId,
@@ -244,7 +255,7 @@ export default {
         }
       })
     },
-    async getOrderPayUrl(oids) {
+    async getOrderPayUrl(oids, summary) {
       const {
         userInfo
       } = this
@@ -253,7 +264,7 @@ export default {
         return
       }
 
-      const url = await getOrderPayUrl(oids)
+      const url = await getOrderPayUrl(oids, summary)
 
       this.orderPayUrl = url
     },
@@ -292,8 +303,9 @@ export default {
       }
 
       const oids = await createOrder(newOrder)
+      const summary = this.checkedPackageName
 
-      await this.getOrderPayUrl(oids)
+      await this.getOrderPayUrl(oids, summary)
 
       Message.success('创建订单成功')
     },
