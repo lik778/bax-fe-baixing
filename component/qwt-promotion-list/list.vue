@@ -129,6 +129,7 @@ import BaxPagination from 'com/common/pagination'
 import { Message } from 'element-ui'
 
 import {
+  campaignStatus,
   semPlatformCn
 } from 'constant/fengming'
 
@@ -385,7 +386,7 @@ export default {
       return semPlatformCn[s] || '未知'
     },
     fmtStatus(s) {
-      return '' || '未知'
+      return campaignStatus[String(s)] || '未知'
     },
     fmtDate(s) {
       if (!s) {

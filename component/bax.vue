@@ -1,12 +1,14 @@
 
 <template>
   <content v-loading.fullscreen="fullscreenLoading">
-    <sidebar :user-info="currentUser" />
+    <sidebar :user-info="currentUser"></sidebar>
     <router-view :userInfo="currentUser"
       :allCategories="allCategories"
       :allAreas="allAreas"
-      :allRoles="allRoles" />
-    <reset-email :visible="emailMissing" :uid="currentUser.id" />
+      :allRoles="allRoles">
+    </router-view>
+    <reset-email :visible="emailMissing" :uid="currentUser.id">
+    </reset-email>
   </content>
 </template>
 

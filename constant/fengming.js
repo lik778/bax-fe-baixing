@@ -20,6 +20,14 @@ export const semPlatformOpts = [{
   value: 5
 }]
 
+export const campaignStatus = {
+  '100': '推广中',
+  '10': '审核中',
+  '0': '等待投放',
+  '-1': '下线',
+  '-10': '审核失败'
+}
+
 export const landingType = {
   '0': '帖子详情页',
   '1': '企业官网',
