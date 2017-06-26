@@ -374,7 +374,7 @@ export default {
   async mounted() {
     const info = await getCampaignInfo(this.id)
 
-    info.dailyBudget = info.dailyBudget / 100
+    info.dailyBudget = info.dailyBudget / 100 | 0
     if (info.validTime) {
       info.validTime = [
         toHumanTime(info.validTime[0], 'YYYY-MM-DD'),
