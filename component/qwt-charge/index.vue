@@ -47,10 +47,10 @@
       <div>
         <aside>服务编号：</aside>
         <span v-if="salesIdLocked">
-          {{ salesId }}
+          {{ displayBxSalesId }}
         </span>
         <span v-else>
-          <el-input v-model.trim="salesId"
+          <el-input v-model.trim="inputSalesId"
             placeholder="如有服务编号请您填写">
           </el-input>
           <i class="el-icon-check"
@@ -114,6 +114,8 @@ import {
   getOrderPayUrl,
   getProducts,
   createOrder,
+  getUserInfo,
+  payOrders
 } from './action'
 
 /**
@@ -164,7 +166,8 @@ export default {
       allProducts,
 
       salesIdLocked: false,
-      salesId: '',
+      displayBxSalesId: '',
+      inputSalesId: '',
 
       orderPayUrl: '',
       checkedPackageId: 0,
@@ -322,6 +325,17 @@ export default {
       const type = this.mode === 'buy-service' ? 1 : 3
       await getProducts(type)
     },
+    async payOrders(oids) {
+      const {
+        userInfo
+      } = this
+
+      if (!allowPayOrder(userInfo.roles)) {
+        return
+      }
+
+      await payOrders(oids)
+    },
     async getOrderPayUrl(oids, summary) {
       const {
         userInfo
@@ -336,30 +350,53 @@ export default {
       this.orderPayUrl = url
     },
     async checkInputSalesId() {
-      const { salesId } = this
-      if (!salesId) {
+      const { inputSalesId } = this
+      if (!inputSalesId) {
         return Message.error('请填写销售编号')
       }
 
-      await getUserIdFromBxSalesId(salesId)
+      await getUserIdFromBxSalesId(inputSalesId)
 
       Message.success('销售编号可用')
+    },
+    async getFinalSalesId() {
+      const { sales_id: salesId } = this.$route.query
+      if (salesId) {
+        return salesId
+      }
+
+      const {
+        inputSalesId,
+        userInfo
+      } = this
+
+      if (inputSalesId) {
+        const id = await getUserIdFromBxSalesId(inputSalesId)
+        return id
+      }
+
+      return userInfo.id
+    },
+    async getFinalUserId() {
+      const { user_id: userId } = this.$route.query
+      if (userId) {
+        return userId
+      }
+
+      const { userInfo } = this
+      return userInfo.id
     },
     async createOrder() {
       const {
         checkedChargeProductId,
         checkedPackageId,
         chargeMoney,
-        productId,
-        userInfo,
-        salesId
+        productId
       } = this
 
-      const { user_id: userId } = this.$route.query
-
       const newOrder = {
-        salesId: salesId || userInfo.salesId,
-        userId: userId || userInfo.id
+        salesId: await this.getFinalSalesId(),
+        userId: await this.getFinalUserId()
       }
 
       if (!checkedChargeProductId && !checkedPackageId) {
@@ -389,6 +426,8 @@ export default {
 
       await this.getOrderPayUrl(oids, summary)
 
+      await this.payOrders(oids)
+
       Message.success('创建订单成功')
     },
     centToYuan
@@ -397,8 +436,9 @@ export default {
     const { sales_id: salesId } = this.$route.query
 
     if (salesId) {
+      const userInfo = await getUserInfo(salesId)
+      this.displayBxSalesId = userInfo.salesId
       this.salesIdLocked = true
-      this.salesId = salesId
     }
 
     await Promise.all([

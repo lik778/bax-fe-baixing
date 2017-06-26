@@ -9,6 +9,10 @@ export const getUserIdFromBxSalesId = createAction((salesId) => {
   return aapi.getUserIdFromBxSalesId(salesId)
 })
 
+export const getUserInfo = createAction((uid) => {
+  return aapi.getUserInfo(uid)
+})
+
 export const getProductDiscounts = createAction((types) => {
   return mapi.getProductDiscounts(types)
 })
