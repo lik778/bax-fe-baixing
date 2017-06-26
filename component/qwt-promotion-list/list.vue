@@ -104,7 +104,7 @@
         :formatter="r => fmtDate(r.timeRange, r.timeRange && r.timeRange[1])">
       </el-table-column>
       <el-table-column label="今日消耗" width="100"
-        :formatter="r => fmtPrice(r.todayCost)">
+        :formatter="r => r.todayCost === 0 ? '-' : fmtPrice(r.todayCost)">
       </el-table-column>
       <el-table-column label="渠道" width="100"
         :formatter="r => fmtSource(r.source)">
