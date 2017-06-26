@@ -82,8 +82,8 @@
       </el-table-column>
       <el-table-column prop="open" label="开关" width="80">
         <template scope="s">
-          <el-switch :value="!s.pause" on-text="" off-text=""
-            @change="switchCampaignPause(s)">
+          <el-switch :value="!s.row.pause" on-text="" off-text=""
+            @change="switchCampaignPause(s.row)">
           </el-switch>
         </template>
       </el-table-column>
