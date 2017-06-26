@@ -33,17 +33,10 @@
           <span class="landingpage">
             <div>
               <el-button-group>
-                <el-button @click="promotion.landingType = 0"
-                  :type="promotion.landingType === 0 ? 'primary' : ''">
-                  帖子详情页
-                </el-button>
-                <el-button @click="promotion.landingType = 1"
-                  :type="promotion.landingType === 1 ? 'primary' : ''">
-                  企业官网
-                </el-button>
-                <el-button @click="promotion.landingType = 2"
-                  :type="promotion.landingType === 2 ? 'primary' : ''">
-                  活动定制页
+                <el-button v-for="o of landingTypeOpts" :key="o.value"
+                  @click="newPromotion.landingType = o.value"
+                  :type="newPromotion.landingType === o.value ? 'primary' : ''">
+                  {{ o.label }}
                 </el-button>
               </el-button-group>
             </div>
@@ -210,6 +203,10 @@ import {
 } from 'utils'
 
 import {
+  landingTypeOpts
+} from 'constant/fengming'
+
+import {
   checkCreativeContent,
   getRecommendedWords,
   getCurrentBalance,
@@ -259,7 +256,9 @@ export default {
       newaddedWordsVisible: false,
       areaDialogVisible: false,
       timeType: 'long', // long, custom
-      queryWord: ''
+      queryWord: '',
+
+      landingTypeOpts
     }
   },
   computed: {

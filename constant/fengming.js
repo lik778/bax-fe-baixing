@@ -23,8 +23,16 @@ export const semPlatformOpts = [{
 export const landingType = {
   '0': '帖子详情页',
   '1': '企业官网',
-  '2': '活动定制页'
+  '2': '活动定制页',
+  '3': '微店'
 }
+
+export const landingTypeOpts = Object.keys(landingType)
+  .filter(k => k !== '1') // 临时隐藏: 企业官网
+  .map(k => ({
+    label: landingType[k],
+    value: k | 0
+  }))
 
 export const device = {
   '0': 'PC',
