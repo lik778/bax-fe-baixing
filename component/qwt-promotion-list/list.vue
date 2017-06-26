@@ -209,7 +209,7 @@ export default {
         return
       }
 
-      const budget = parseInt(this.toolbox.budget)
+      const budget = parseInt(this.toolbox.budget) * 100
 
       if (!(budget > 0)) {
         return Message.error('请设置合理的预算')
