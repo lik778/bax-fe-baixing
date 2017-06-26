@@ -16,7 +16,7 @@ const store = createStore({
 
 store.subscribeActions({
   [getRecommendedWords]: (words) => ({
-    recommendedWords: [...words]
+    recommendedWords: [...words, ...store.state.recommendedWords]
   }),
   [getCreativeWords]: (words) => ({
     creativeWords: [...words]
