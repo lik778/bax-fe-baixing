@@ -59,7 +59,7 @@
       </div>
       <div>
         <aside>百姓网余额需支付：</aside>
-        <i>{{'￥' + centToYuan(totalPrice)}}</i>
+        <i>{{'￥' + (totalPrice / 100).toFixed(2)}}</i>
       </div>
       <div>
         <el-button type="primary" @click="createOrder">
