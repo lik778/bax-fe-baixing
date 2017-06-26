@@ -34,7 +34,7 @@
           <el-input style="width: 60px;" placeholder="比例"
             v-model="toolbox.ratio">
           </el-input>
-          <label>(0.1-50)</label>
+          <label>(0.1-10)</label>
           <el-button type="primary" size="mini"
             @click="updateCampaignRatio">
             确定
@@ -259,7 +259,7 @@ export default {
       }
 
       const ratio = parseFloat(this.toolbox.ratio)
-      if (!(ratio >= 0.1 && ratio <= 50)) {
+      if (!(ratio >= 0.1 && ratio <= 10)) {
         return Message.error('请设置合理的出价比例')
       }
 
