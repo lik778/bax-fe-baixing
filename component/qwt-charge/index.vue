@@ -60,7 +60,7 @@
       </div>
       <div>
         <el-button type="primary" @click="createOrder">
-          确认购买
+          {{ submitButtonText }}
         </el-button>
         <span v-if="orderPayUrl">
           <label :title="orderPayUrl">
@@ -97,6 +97,11 @@ import store from './store'
 
 import {
   allowGetOrderPayUrl,
+  allowPayOrder
+} from 'util/fengming-role'
+
+import {
+  normalizeRoles
 } from 'util/role'
 
 import {
@@ -207,6 +212,14 @@ export default {
       }
 
       return products
+    },
+    submitButtonText() {
+      const { userInfo } = this
+      if (allowGetOrderPayUrl(userInfo.roles)) {
+        return '生成链接'
+      }
+
+      return '确认购买'
     },
     totalPrice() {
       const p = this.checkedProducts.map(i => i.price)
