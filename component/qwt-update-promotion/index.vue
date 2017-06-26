@@ -34,8 +34,8 @@
             <div>
               <el-button-group>
                 <el-button v-for="o of landingTypeOpts" :key="o.value"
-                  @click="newPromotion.landingType = o.value"
-                  :type="newPromotion.landingType === o.value ? 'primary' : ''">
+                  @click="promotion.landingType = o.value"
+                  :type="promotion.landingType === o.value ? 'primary' : ''">
                   {{ o.label }}
                 </el-button>
               </el-button-group>
@@ -283,6 +283,26 @@ export default {
     }
   },
   methods: {
+    async initCampaignInfo() {
+      const info = await getCampaignInfo(this.id)
+
+      info.dailyBudget = info.dailyBudget / 100 | 0
+      if (info.validTime) {
+        info.validTime = [
+          toHumanTime(info.validTime[0], 'YYYY-MM-DD'),
+          toHumanTime(info.validTime[1], 'YYYY-MM-DD')
+        ]
+      } else {
+        info.validTime = []
+      }
+
+      this.promotion = {
+        ...this.promotion,
+        ...info
+      }
+
+      await getCurrentBalance()
+    },
     clickSourceTip() {
       Message.warning('投放渠道不能修改')
     },
@@ -371,25 +391,15 @@ export default {
     },
     centToYuan
   },
+  watch: {
+    '$route.params.id': async function(v, p) {
+      if (v !== p) {
+        await this.initCampaignInfo()
+      }
+    }
+  },
   async mounted() {
-    const info = await getCampaignInfo(this.id)
-
-    info.dailyBudget = info.dailyBudget / 100 | 0
-    if (info.validTime) {
-      info.validTime = [
-        toHumanTime(info.validTime[0], 'YYYY-MM-DD'),
-        toHumanTime(info.validTime[1], 'YYYY-MM-DD')
-      ]
-    } else {
-      info.validTime = []
-    }
-
-    this.promotion = {
-      ...this.promotion,
-      ...info
-    }
-
-    await getCurrentBalance()
+    await this.initCampaignInfo()
   }
 }
 
