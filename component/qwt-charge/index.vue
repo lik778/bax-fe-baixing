@@ -421,7 +421,7 @@ export default {
         userId: await this.getFinalUserId()
       }
 
-      if (!checkedPackageId) {
+      if (this.mode === 'buy-service' && !checkedPackageId) {
         return Message.error('必须选择一个全网通套餐包')
       }
 
