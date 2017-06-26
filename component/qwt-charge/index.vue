@@ -53,6 +53,8 @@
           <el-input v-model.trim="salesId"
             placeholder="如有服务编号请您填写">
           </el-input>
+          <i class="el-icon-check"
+            @click="checkInputSalesId"></i>
         </span>
       </div>
       <div>
@@ -106,6 +108,7 @@ import {
 } from 'util/role'
 
 import {
+  getUserIdFromBxSalesId,
   getProductDiscounts,
   getProductPackages,
   getOrderPayUrl,
@@ -332,6 +335,16 @@ export default {
 
       this.orderPayUrl = url
     },
+    async checkInputSalesId() {
+      const { salesId } = this
+      if (!salesId) {
+        return Message.error('请填写销售编号')
+      }
+
+      await getUserIdFromBxSalesId(salesId)
+
+      Message.success('销售编号可用')
+    },
     async createOrder() {
       const {
         checkedChargeProductId,
@@ -439,6 +452,18 @@ export default {
         font-size: 14px;
         min-width: 80px;
         color: #6a778c;
+      }
+
+      & > span {
+        display: inline-flex;
+        align-items: center;
+
+        & > i {
+          margin-left: 8px;
+          font-size: 18px;
+          color: gray;
+          cursor: pointer;
+        }
       }
 
       & > i {

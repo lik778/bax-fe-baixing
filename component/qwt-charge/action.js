@@ -1,8 +1,13 @@
 
 import { createAction } from 'vue-duo'
 import * as fapi from 'api/fengming'
+import * as aapi from 'api/account'
 import * as oapi from 'api/order'
 import * as mapi from 'api/meta'
+
+export const getUserIdFromBxSalesId = createAction((salesId) => {
+  return aapi.getUserIdFromBxSalesId(salesId)
+})
 
 export const getProductDiscounts = createAction((types) => {
   return mapi.getProductDiscounts(types)
