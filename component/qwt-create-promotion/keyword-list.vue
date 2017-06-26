@@ -17,7 +17,7 @@
             @blur="e => setCustomPrice(s.row.word, e.target.value, false)">
           </el-input>
           <label v-else
-            @dblclick="setCustomPrice(s.row.word, s.row.price / 100, true)">
+            @click="setCustomPrice(s.row.word, s.row.price / 100, true)">
             {{ getWordPrice(s.row.word) }}
           </label>
         </template>
