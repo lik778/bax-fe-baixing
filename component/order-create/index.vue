@@ -42,29 +42,34 @@
             </el-tag>
           </span>
           <i class="el-icon-plus"
-            @click="categoryDialogVisible = true" />
+            @click="categoryDialogVisible = true"></i>
         </el-form-item>
         <el-form-item label="时段">
           <el-date-picker type="date" placeholder="上线时间"
-            v-model="newOrder.onlineAt" />
+            v-model="newOrder.onlineAt">
+          </el-date-picker>
           <el-date-picker type="date" placeholder="下线时间"
-            v-model="newOrder.offlineAt" />
+            v-model="newOrder.offlineAt">
+          </el-date-picker>
         </el-form-item>
         <el-form-item v-if="isOperator || isAgentAccounting" label="销售人员">
           <span v-if="salesIdLocked">
             {{ salesDisplayName }}
           </span>
-          <user-selector v-else v-model="newOrder.salesId" clearable />
+          <user-selector v-else v-model="newOrder.salesId" clearable>
+          </user-selector>
         </el-form-item>
         <el-form-item v-if="isOperator || isBxSales" label="广告客户">
           <span>
-            <user-selector v-model="newOrder.userId" clearable />
+            <user-selector v-model="newOrder.userId" clearable>
+            </user-selector>
             <i v-if="allowAddUser" class="el-icon-plus"
-              @click="showCreateUserDialog = true" />
+              @click="showCreateUserDialog = true">
+            </i>
           </span>
         </el-form-item>
         <section class="terms">
-          <el-checkbox disabled checked />
+          <el-checkbox disabled checked></el-checkbox>
           <a v-bind:href="contractDocx"
             download="百姓网线上推广协议.docx">
             同意《百姓网线上推广协议》
@@ -104,17 +109,20 @@
       :categories="newOrder.categories"
       :visible="categoryDialogVisible"
       @ok="onChangeOrderCategories"
-      @cancel="categoryDialogVisible = false" />
+      @cancel="categoryDialogVisible = false">
+    </category-selector>
     <area-selector :all-areas="allAreas"
       :areas="newOrder.cities"
       :visible="areaDialogVisible"
       @ok="onChangeOrderAreas"
-      @cancel="areaDialogVisible = false" />
+      @cancel="areaDialogVisible = false">
+    </area-selector>
     <create-user :visible="showCreateUserDialog"
       :all-roles="allRoles"
       :user-info="userInfo"
       @created="onUserCreated"
-      @hide="showCreateUserDialog = false" />
+      @hide="showCreateUserDialog = false">
+    </create-user>
   </div>
 </template>
 
