@@ -95,7 +95,7 @@
       <el-table-column label="预算" width="100"
         :formatter="r => fmtPrice(r.dailyBudget)">
       </el-table-column>
-      <el-table-column prop="mobilePriceRatio" label="移动端出价比例(0.1-50)" width="120">
+      <el-table-column prop="mobilePriceRatio" label="移动端出价比例(0.1-10)" width="120">
       </el-table-column>
       <el-table-column label="开始日期" width="120"
         :formatter="r => fmtDate(r.timeRange, r.timeRange && r.timeRange[0])">
