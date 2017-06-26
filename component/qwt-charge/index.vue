@@ -39,7 +39,8 @@
       <div>
         <aside>价格信息：</aside>
         <span>
-          <price-list :products="checkedProducts"></price-list>
+          <price-list :products="checkedProducts"
+          </price-list>
         </span>
       </div>
       <div>
@@ -91,17 +92,18 @@ import Topbar from 'com/topbar'
 import { Message } from 'element-ui'
 
 import { centToYuan } from 'utils'
+
 import store from './store'
 
 import {
-  allowGetOrderPayUrl
+  allowGetOrderPayUrl,
 } from 'util/role'
 
 import {
   getProductPackages,
   getOrderPayUrl,
   getProducts,
-  createOrder
+  createOrder,
 } from './action'
 
 /**
@@ -176,7 +178,7 @@ export default {
       const {
         checkedChargeProductId,
         checkedPackageId,
-        chargeMoney
+        chargeMoney,
       } = this
 
       const pkg = this.packages
@@ -188,9 +190,9 @@ export default {
       if (pkg) {
         products = pkg.products.map(p => {
           return {
-            originalPrice: p.showPrice,
+            originalPrice: p.selfPriceAdjust ? p.price : p.showPrice,
             price: p.price,
-            name: p.name
+            name: p.name,
           }
         })
       }
@@ -200,7 +202,7 @@ export default {
         products.push({
           originalPrice: chargeMoney,
           price: chargeMoney,
-          name: '推广资金'
+          name: '推广资金',
         })
       }
 
@@ -212,7 +214,7 @@ export default {
       return p.reduce((a, b) => a + b, 0)
     },
     productId() {
-      // 目前: products.length === 1
+      // TODO 目前: products.length === 1
       return this.products.map(p => p.id).pop()
     },
     mode() {
