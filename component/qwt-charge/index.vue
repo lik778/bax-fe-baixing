@@ -176,6 +176,10 @@ export default {
     }
   },
   computed: {
+    isBxUser() {
+      const roles = normalizeRoles(this.userInfo.roles)
+      return roles.includes('BAIXING_USER')
+    },
     isBxSales() {
       const roles = normalizeRoles(this.userInfo.roles)
       return roles.includes('BAIXING_SALES')
@@ -266,6 +270,10 @@ export default {
     },
     submitButtonText() {
       const { userInfo } = this
+      if (this.isBxUser) {
+        return '确认购买'
+      }
+
       if (allowGetOrderPayUrl(userInfo.roles)) {
         return '生成链接'
       }
@@ -370,6 +378,10 @@ export default {
       const url = await getOrderPayUrl(oids, summary)
 
       this.orderPayUrl = url
+
+      if (this.isBxUser) {
+        location.href = url
+      }
     },
     async checkInputSalesId() {
       const { inputSalesId } = this
@@ -397,6 +409,10 @@ export default {
         return id
       }
 
+      if (this.isBxUser) {
+        return
+      }
+
       return userInfo.id
     },
     async getFinalUserId() {
@@ -417,8 +433,12 @@ export default {
       } = this
 
       const newOrder = {
-        salesId: await this.getFinalSalesId(),
         userId: await this.getFinalUserId()
+      }
+
+      const sid = await this.getFinalSalesId()
+      if (sid) {
+        newOrder.salesId = sid
       }
 
       if (this.mode === 'buy-service' && !checkedPackageId) {
