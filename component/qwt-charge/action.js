@@ -18,3 +18,7 @@ export const createOrder = createAction((order) => {
 export const getOrderPayUrl = createAction((oids, summary) => {
   return oapi.getOrderPayUrl(oids, summary)
 })
+
+export const payOrders = createAction((oids) => {
+  return oapi.payOrders(oids)
+})
