@@ -4,13 +4,14 @@
     <header>
       <span>
         <el-checkbox label="全选" :value="allRowsChecked"
-          @change="onClickCheckAllRows" />
+          @change="onClickCheckAllRows">
+        </el-checkbox>
       </span>
       <span>
         <el-dropdown @command="updateCampaignStatus">
           <el-button type="primary">
             批量开关
-            <i class="el-icon-arrow-down el-icon--right" />
+            <i class="el-icon-arrow-down el-icon--right"></i>
           </el-button>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item command="active">
