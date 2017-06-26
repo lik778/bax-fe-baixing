@@ -23,8 +23,8 @@ export const getRecommendedWords = createAction((word) => {
   return fapi.getRecommendedWords(word)
 })
 
-export const getCreativeWords = createAction((opts) => {
-  return fapi.getCreativeWords(opts)
+export const getCreativeWords = createAction((url) => {
+  return fapi.getCreativeWords(url)
 })
 
 export const clearStore = createAction()

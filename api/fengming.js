@@ -135,11 +135,11 @@ export async function checkCreativeContent(opts) {
 
   return body.data
 }
-
-export async function getCreativeWords(opts) {
+// TODO - rename
+export async function getCreativeWords(url) {
   const body = await fengming
-    .get('/keyword/recommand/creative')
-    .query(reverseCamelcase(opts))
+    .get('/keyword/recommand/url')
+    .query({url})
     .json()
 
   return toCamelcase(body.data)

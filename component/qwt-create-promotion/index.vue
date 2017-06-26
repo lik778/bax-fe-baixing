@@ -42,7 +42,8 @@
             </div>
             <div style="margin-top: 20px; width: 490px;">
               <el-input v-model.trim="newPromotion.landingPage"
-                placeholder="请输入投放网址, 如: http://baixing.com">
+                placeholder="请输入投放网址, 如: http://baixing.com"
+                @blur="getCreativeWords">
               </el-input>
             </div>
           </span>
@@ -348,22 +349,17 @@ export default {
 
       if (!data.result) {
         Message.success(data.hint)
-        await this.getCreativeWords()
       } else {
         Message.error(data.hint)
       }
     },
     async getCreativeWords() {
       const {
-        creativeContent,
-        creativeTitle
+        landingPage
       } = this.newPromotion
 
-      if (creativeContent && creativeTitle) {
-        await getCreativeWords({
-          creativeContent,
-          creativeTitle
-        })
+      if (landingPage) {
+        await getCreativeWords(landingPage)
       }
     },
     switchWordsVisible() {
@@ -383,16 +379,6 @@ export default {
       ]
     },
     centToYuan
-  },
-  watch: {
-    'newPromotion.creativeContent': async function() {
-      // TODO - debounce
-      // await this.getCreativeWords()
-    },
-    'newPromotion.creativeTitle': async function() {
-      // TODO - debounce
-      // await this.getCreativeWords()
-    }
   },
   async mounted() {
     await getCurrentBalance()
