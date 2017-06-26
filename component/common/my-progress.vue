@@ -70,57 +70,57 @@
     },
     computed: {
       barStyle() {
-        var style = {};
-        style.width = Math.min(100, this.percentage) + '%';
-        return style;
+        var style = {}
+        style.width = Math.min(100, this.percentage) + '%'
+        return style
       },
       relativeStrokeWidth() {
-        return (this.strokeWidth / this.width * 100).toFixed(1);
+        return (this.strokeWidth / this.width * 100).toFixed(1)
       },
       trackPath() {
-        var radius = parseInt(50 - parseFloat(this.relativeStrokeWidth) / 2, 10);
-        return `M 50 50 m 0 -${radius} a ${radius} ${radius} 0 1 1 0 ${radius * 2} a ${radius} ${radius} 0 1 1 0 -${radius * 2}`;
+        var radius = parseInt(50 - parseFloat(this.relativeStrokeWidth) / 2, 10)
+        return `M 50 50 m 0 -${radius} a ${radius} ${radius} 0 1 1 0 ${radius * 2} a ${radius} ${radius} 0 1 1 0 -${radius * 2}`
       },
       perimeter() {
-        var radius = 50 - parseFloat(this.relativeStrokeWidth) / 2;
-        return 2 * Math.PI * radius;
+        var radius = 50 - parseFloat(this.relativeStrokeWidth) / 2
+        return 2 * Math.PI * radius
       },
       circlePathStyle() {
-        var perimeter = this.perimeter;
+        var perimeter = this.perimeter
         return {
           strokeDasharray: `${perimeter}px,${perimeter}px`,
           strokeDashoffset: (1 - Math.min(100, this.percentage) / 100) * perimeter + 'px',
           transition: 'stroke-dashoffset 0.6s ease 0s, stroke 0.6s ease'
-        };
+        }
       },
       stroke() {
-        var ret;
+        var ret
         switch (this.status) {
           case 'success':
-            ret = '#13ce66';
-            break;
+            ret = '#13ce66'
+            break
           case 'exception':
-            ret = '#ff4949';
-            break;
+            ret = '#ff4949'
+            break
           default:
-            ret = '#20a0ff';
+            ret = '#20a0ff'
         }
-        return ret;
+        return ret
       },
       iconClass() {
         if (this.type === 'line') {
-          return this.status === 'success' ? 'el-icon-circle-check' : 'el-icon-circle-cross';
+          return this.status === 'success' ? 'el-icon-circle-check' : 'el-icon-circle-cross'
         } else {
-          return this.status === 'success' ? 'el-icon-check' : 'el-icon-close';
+          return this.status === 'success' ? 'el-icon-check' : 'el-icon-close'
         }
       },
       progressTextSize() {
         return this.type === 'line'
           ? 12 + this.strokeWidth * 0.4
-          : this.width * 0.111111 + 2 ;
+          : this.width * 0.111111 + 2
       }
     }
-  };
+  }
 </script>
 <style scoped>
   .el-progress--circle {

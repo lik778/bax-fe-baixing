@@ -45,14 +45,14 @@
         },
         rules: {
           product: { required: true, message: '请选择一个产品', trigger: 'change' },
-          uploadDate:   { type: 'date', required: true, message: '请选择日期', trigger: 'change' },
+          uploadDate: { type: 'date', required: true, message: '请选择日期', trigger: 'change' },
           income: [{ required: true, message: '收入不能为空' }, { type: 'number', message: '收入必须为数字值' }],
-          profit: [{ required: true, message: '收入不能为空' }, { type: 'number', message: '收入必须为数字值' }],
+          profit: [{ required: true, message: '收入不能为空' }, { type: 'number', message: '收入必须为数字值' }]
         },
         dateOption: {
           disabledDate(time) {
             // 前天、昨天、今天
-            return time.getTime() < Date.now() - 3*8.64e7 || time.getTime() > Date.now();
+            return time.getTime() < Date.now() - 3 * 8.64e7 || time.getTime() > Date.now()
           }
         }
       }
@@ -71,10 +71,10 @@
               this.resetForm('form')
             })
           }
-        });
+        })
       },
       resetForm(formName) {
-        this.$refs[formName].resetFields();
+        this.$refs[formName].resetFields()
       }
     }
   }

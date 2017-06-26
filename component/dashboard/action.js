@@ -6,7 +6,7 @@ export const summaryOfProduct = createAction((range) => {
     dapi.getProfitByProduct(), // yesterday
     dapi.getProfitByProduct(range),
     dapi.getTarget(range)
-    ])
+  ])
 })
 
 export const getTrend = createAction((range) => {

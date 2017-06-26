@@ -1,9 +1,8 @@
 import { createStore } from 'vue-duo'
 import { getUploads, saveUpload, deleteUpload } from './action'
-import moment from 'moment'
 
 const store = createStore({
-    uploads: []
+  uploads: []
 })
 
 store.subscribeActions({

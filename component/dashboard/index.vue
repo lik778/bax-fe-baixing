@@ -94,56 +94,60 @@ export default {
   methods: {
     load(range) {
       summaryOfProduct(range)
-      getTrend(range).then(data => { setTimeout( () =>  { this.parseOption(data, range) }) })
+      getTrend(range).then(data => { setTimeout(() => { this.parseOption(data, range) }) })
     },
     setRange(v) {
       setRange(v)
       this.load(v)
     },
     parseOption(raw, range) {
-      let start, end, dates = [], result = {}
-      if(range === 'month') {
+      let start, end
+      let dates = []
+      let result = {}
+
+      if (range === 'month') {
         start = -60
         end = -1
-      } else if(range === 'quarter') {
+      } else if (range === 'quarter') {
         start = 1
         end = 12
-      } else if(range === 'year') {
+      } else if (range === 'year') {
         start = 1
         end = 4
       }
       for (; start <= end; start++) {
-        let curDate = range === 'month' ? +moment().add(start, 'days').format('YYYYMMDD'): start
+        let curDate = range === 'month' ? +moment().add(start, 'days').format('YYYYMMDD') : start
         for (var i = 0; i < this.products.length; i++) {
-          let curProduct = this.products[i], has = false
-          if(!result[curProduct]) result[curProduct] = []
+          let curProduct = this.products[i]
+          let has = false
+          if (!result[curProduct]) result[curProduct] = []
           for (var j = 0; j < raw.length; j++) {
-              if(raw[j]['date'] ===  curDate && raw[j]['product'] === this.products[i]) {
-                result[curProduct].push(raw[j]['profit'])
-                has = true
-              }
+            if (raw[j]['date'] === curDate && raw[j]['product'] === this.products[i]) {
+              result[curProduct].push(raw[j]['profit'])
+              has = true
             }
-          if(!has) result[curProduct].push(null)
+          }
+          if (!has) result[curProduct].push(null)
         }
         dates.push(curDate)
       }
       const series = this.products.map(product => ({
         name: product,
-        type: range === 'year' ? 'bar': 'line',
+        type: range === 'year' ? 'bar' : 'line',
         data: result[product]
       }))
 
       this.lineOptions = {
         xAxis: {
-            name: range === 'month' ? '日期': (range === 'quarter' ? '月份': '季度'),
-            data: dates,
-            axisLabel: {
-              interval: 0,
-              rotate: range ==='month' ? 90 : 0
-            }
+          name: range === 'month' ? '日期' : (range === 'quarter' ? '月份' : '季度'),
+          data: dates,
+          axisLabel: {
+            interval: 0,
+            rotate: range === 'month' ? 90 : 0
+          }
         },
         tooltip: {
-            show: true
+          show: true
         },
         yAxis: {
           name: '单位:元'
@@ -153,40 +157,39 @@ export default {
         },
         series
       }
-
     }
   },
   computed: {
     sumProgress() {
       const { current, target } = this.rangeSum
-      if(!target) return 0
-      return Math.floor( ( current / target ) * 100 )
+      if (!target) return 0
+      return Math.floor((current / target) * 100)
     },
     timeProgress() {
       const days = moment().endOf('month').date()
       const passed = moment().date()
-      return Math.floor( passed / days * 100 )
+      return Math.floor(passed / days * 100)
     },
     profitEachDay() {
       const passed = moment().date()
-      return Math.floor( this.rangeSum.current / passed )
+      return Math.floor(this.rangeSum.current / passed)
     },
     leftProfitEachDay() {
       const left = moment().endOf('month').date() - moment().date()
-      if(left > 0) {
-        return Math.floor( this.rangeSum.target / ( left ) )
+      if (left > 0) {
+        return Math.floor(this.rangeSum.target / (left))
       } else {
         return this.rangeSum.target
       }
     },
     chartTitle() {
-      if(this.range === 'month') {
+      if (this.range === 'month') {
         return '各业务近60天业绩趋势'
       }
-      if(this.range === 'quarter') {
+      if (this.range === 'quarter') {
         return '各业务每月业务趋势'
       }
-      if(this.range === 'year') {
+      if (this.range === 'year') {
         return '各业务分季度业绩统计'
       }
     },
@@ -199,7 +202,7 @@ export default {
         target: 0,
         yesterday: 0
       }
-      for(const p in this.productData) {
+      for (const p in this.productData) {
         sum['current'] += this.productData[p]['current'] || 0
         sum['target'] += this.productData[p]['target'] || 0
         sum['yesterday'] += this.productData[p]['yesterday'] || 0
@@ -210,7 +213,7 @@ export default {
   components: {
     Topbar,
     ProductBoard,
-    MyProgress,
+    MyProgress
   }
 }
 </script>

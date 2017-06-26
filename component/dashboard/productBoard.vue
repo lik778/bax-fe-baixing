@@ -35,20 +35,20 @@ export default {
   },
   computed: {
     progress() {
-      if(this.target === 0) return 0
+      if (this.target === 0) return 0
       return Math.floor(this.done / this.target * 100)
     },
     leftEachDay() {
       const days = moment().endOf('month').date()
       const passed = moment().date()
-      if(passed === days || this.target <= this.done) return 0
-      return Math.ceil( (this.target - this.done) / (days - passed) )
+      if (passed === days || this.target <= this.done) return 0
+      return Math.ceil((this.target - this.done) / (days - passed))
     },
     classes() {
-      if(this.progress >= 100) {
+      if (this.progress >= 100) {
         return 'gold'
       }
-      if(this.progress >= 80) {
+      if (this.progress >= 80) {
         return 'green'
       }
       return 'red'
@@ -57,10 +57,10 @@ export default {
   methods: {
     saveTarget(evt) {
       const value = parseInt(evt.target.value, 10)
-      if(isNaN(value)) {
+      if (isNaN(value)) {
         Message.warning('请输入正整数')
       }
-      if(value === this.target) return
+      if (value === this.target) return
       setTarget(store.state.range, this.title, value).then(() => {
         this.showInput = false
       })

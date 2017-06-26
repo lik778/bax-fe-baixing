@@ -94,13 +94,13 @@
           this.$message({
             type: 'success',
             message: '删除成功!'
-          });
+          })
         }).catch(console.log)
       },
       gotoPage(no) {
-        if(no > this.current) {
+        if (no > this.current) {
           this.current ++
-        } else if(no < this.current) {
+        } else if (no < this.current) {
           this.current --
         }
       },
