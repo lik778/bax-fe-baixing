@@ -305,7 +305,7 @@ export default {
           ]
         } else {
           // return Message.error('请填写投放日期或选择长期投放')
-          p.validTime = []
+          p.validTime = undefined
         }
       }
 
