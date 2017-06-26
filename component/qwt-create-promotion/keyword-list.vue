@@ -34,7 +34,18 @@ function centToYuan(s) {
 
 function toFloat(s) {
   const i = parseFloat(s).toFixed(2)
-  return parseFloat(i)
+
+  if (i === 'NaN') {
+    return 1
+  }
+
+  const n = parseFloat(i)
+
+  if (n <= 0) {
+    return 1
+  }
+
+  return n
 }
 
 export default {
@@ -55,6 +66,7 @@ export default {
     getWordPrice(word) {
       // return : 元
       const item = this.customPrices.find(c => c.word === word)
+
       if (item) {
         return item.price
       }
@@ -89,7 +101,7 @@ export default {
       this.$emit('select-words', words)
     },
     setCustomPrice(word, v, editable) {
-      let price = toFloat(v)
+      let price = v ? toFloat(v) : this.getWordPrice(word)
       if (price <= 0) {
         price = 1
       }
