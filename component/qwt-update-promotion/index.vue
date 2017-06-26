@@ -194,11 +194,14 @@ import KeywordList from '../qwt-create-promotion/keyword-list'
 import AreaSelector from 'com/common/area-selector'
 import Topbar from 'com/topbar'
 
-import { getCampaignPrediction } from 'util/campaign'
 import { getCnName } from 'util/meta'
 import {
+  getCampaignPrediction,
+  getCampaignValidTime
+} from 'util/campaign'
+
+import {
   toHumanTime,
-  toTimestamp,
   centToYuan
 } from 'utils'
 
@@ -287,10 +290,10 @@ export default {
       const info = await getCampaignInfo(this.id)
 
       info.dailyBudget = info.dailyBudget / 100 | 0
-      if (info.validTime) {
+      if (info.timeRange && info.timeRange.length) {
         info.validTime = [
-          toHumanTime(info.validTime[0], 'YYYY-MM-DD'),
-          toHumanTime(info.validTime[1], 'YYYY-MM-DD')
+          toHumanTime(info.timeRange[0], 'YYYY-MM-DD'),
+          toHumanTime(info.timeRange[1], 'YYYY-MM-DD')
         ]
       } else {
         info.validTime = []
@@ -319,10 +322,7 @@ export default {
 
       if (this.timeType === 'custom') {
         if (p.validTime.length) {
-          p.validTime = [
-            toTimestamp(p.validTime[0]),
-            toTimestamp(p.validTime[1])
-          ]
+          p.validTime = getCampaignValidTime(p.validTime)
         } else {
           // return Message.error('请填写投放日期或选择长期投放')
           p.validTime = undefined

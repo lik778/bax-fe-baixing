@@ -145,7 +145,10 @@ import {
 } from './action'
 
 import {
-  toTimestamp,
+  getCampaignValidTime
+} from 'util/campaign'
+
+import {
   toHumanTime,
   centToYuan,
   commafy
@@ -240,10 +243,7 @@ export default {
 
       const opts = {
         campaignIds: this.selectedCampaignIds,
-        validTime: [
-          toTimestamp(timeRange[0]),
-          toTimestamp(timeRange[1])
-        ]
+        validTime: getCampaignValidTime(timeRange)
       }
 
       await updateCampaignTimeRange(opts)

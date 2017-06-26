@@ -193,10 +193,12 @@ import AreaSelector from 'com/common/area-selector'
 import KeywordList from './keyword-list'
 import Topbar from 'com/topbar'
 
-import { getCampaignPrediction } from 'util/campaign'
 import { getCnName } from 'util/meta'
 import {
-  toTimestamp,
+  getCampaignPrediction,
+  getCampaignValidTime
+} from 'util/campaign'
+import {
   centToYuan
 } from 'utils'
 
@@ -285,10 +287,7 @@ export default {
 
       if (this.timeType === 'custom') {
         if (p.validTime.length) {
-          p.validTime = [
-            toTimestamp(p.validTime[0]),
-            toTimestamp(p.validTime[1])
-          ]
+          p.validTime = getCampaignValidTime(p.validTime)
         } else {
           return Message.error('请填写投放日期或选择长期投放')
         }
