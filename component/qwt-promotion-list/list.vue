@@ -98,10 +98,10 @@
       <el-table-column prop="mobilePriceRatio" label="移动端出价比例(0.1-50)" width="120">
       </el-table-column>
       <el-table-column label="开始日期" width="120"
-        :formatter="r => fmtDate(r.timeRange && r.timeRange[0])">
+        :formatter="r => fmtDate(r.timeRange, r.timeRange && r.timeRange[0])">
       </el-table-column>
       <el-table-column label="结束日期" width="120"
-        :formatter="r => fmtDate(r.timeRange && r.timeRange[1])">
+        :formatter="r => fmtDate(r.timeRange, r.timeRange && r.timeRange[1])">
       </el-table-column>
       <el-table-column label="今日消耗" width="100"
         :formatter="r => fmtPrice(r.todayCost)">
@@ -388,12 +388,16 @@ export default {
     fmtStatus(s) {
       return campaignStatus[String(s)] || '未知'
     },
-    fmtDate(s) {
-      if (!s) {
+    fmtDate(range, date) {
+      if (!range) {
+        return '长期'
+      }
+
+      if (!date) {
         return '未知'
       }
 
-      return toHumanTime(s, 'YYYY-MM-DD')
+      return toHumanTime(date, 'YYYY-MM-DD')
     }
   },
   async mounted() {
