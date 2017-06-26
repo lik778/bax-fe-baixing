@@ -87,7 +87,7 @@
           </el-switch>
         </template>
       </el-table-column>
-      <el-table-column prop="a1" label="计划/创意" width="160">
+      <el-table-column prop="id" label="ID" width="160">
       </el-table-column>
       <el-table-column label="状态" width="120"
         :formatter="r => fmtStatus(r.status)">
