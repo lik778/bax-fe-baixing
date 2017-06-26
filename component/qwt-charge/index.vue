@@ -424,6 +424,10 @@ export default {
         userId: await this.getFinalUserId()
       }
 
+      if (!checkedPackageId) {
+        return Message.error('必须选择一个全网通套餐包')
+      }
+
       if (!checkedChargeProductId && !checkedPackageId) {
         return Message.error('请选择购买的产品 ~')
       }
