@@ -4,9 +4,11 @@
     <topbar :user-info="userInfo">
       <label slot="title">全网通 - 推广管理</label>
     </topbar>
-    <promotion-header :show-more-filters="showMoreFilters" />
+    <promotion-header :show-more-filters="showMoreFilters">
+    </promotion-header>
     <promotion-list :campaigns="campaigns"
-      :query="query" />
+      :query="query">
+    </promotion-list>
   </div>
 </template>
 
