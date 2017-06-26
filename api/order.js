@@ -84,6 +84,10 @@ export async function getOrderPayUrl(oids, summary = '') {
   return body.data
 }
 
+export async function payOrders(oids) {
+  return await Promise.all(oids.map(oid => payOrder(oid)))
+}
+
 export async function payOrder(oid) {
   return await api
     .post(`/order/${oid}/pay/agent`)
