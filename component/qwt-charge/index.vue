@@ -194,16 +194,35 @@ export default {
       return this.allDiscounts
         .filter(d => types.includes(d.productType))
     },
-    checkedPackageName() {
+    checkedProductDesc() {
       const { checkedPackageId } = this
 
-      if (!checkedPackageId) {
-        return ''
-      }
-
       const p = this.packages.find(p => p.id === checkedPackageId)
+      const name = (p && p.name) || ''
 
-      return p.name
+      let h1 = '0'
+      let h2 = '0'
+      let h3 = '0'
+
+      this.checkedProducts.forEach(p => {
+        if (p.name === '精品官网') {
+          h1 = p.amount
+          return
+        }
+
+        if (p.isPkg) {
+          h2 = centToYuan(p.discountPrice)
+          return
+        }
+
+        h3 = centToYuan(p.discountPrice)
+      })
+
+      return this.mode === 'charge-only' ? `搜狗推广资金：${h3}元` : `${name}
+精品官网：${h1}天
+推广资金：${h2}元
+推广资金包：${h3}元
+`
     },
     checkedProducts() {
       const {
@@ -226,8 +245,10 @@ export default {
             discountPrice: this.getDiscountPrice(p.productType, p.price),
             originalPrice: p.selfPriceAdjust ? p.price : p.showPrice,
             type: p.productType,
+            amount: p.amount,
             price: p.price,
             name: p.name,
+            isPkg: true,
             id: p.id
           }
         })
@@ -426,7 +447,7 @@ export default {
       }
 
       const oids = await createOrder(newOrder)
-      const summary = this.checkedPackageName
+      const summary = this.checkedProductDesc
 
       await this.getOrderPayUrl(oids, summary)
 
