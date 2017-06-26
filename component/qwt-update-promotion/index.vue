@@ -111,8 +111,8 @@
           </strong>
         </div>
         <keyword-list v-if="newaddedWordsVisible" :words="recommendedWords"
-          :selected-words="promotion.addedWords"
-          @select-words="words => promotion.addedWords = [...words]">
+          :selected-words="promotion.newKeywords"
+          @select-words="words => promotion.newKeywords = [...words]">
         </keyword-list>
       </section>
       <section class="timing">
@@ -231,7 +231,8 @@ const emptyPromotion = {
   areas: [],
   source: 5,
   //
-  addedWords: []
+  deletedKeywords: [],
+  newKeywords: []
 }
 
 export default {
@@ -273,10 +274,10 @@ export default {
 
       const {
         keywords = [],
-        addedWords
+        newKeywords = []
       } = promotion
 
-      const prices = [...keywords, ...addedWords]
+      const prices = [...keywords, ...newKeywords]
         .map(k => k.price)
 
       return getCampaignPrediction(currentBalance, prices)
@@ -299,6 +300,14 @@ export default {
         info.validTime = []
       }
 
+      if (info.creative) {
+        info.landingType = info.creative.landingType
+        info.landingPage = info.creative.landingPage
+        info.creativeContent = info.creative.content
+        info.creativeTitle = info.creative.title
+        info.creative = undefined
+      }
+
       this.promotion = {
         ...this.promotion,
         ...info
@@ -312,11 +321,8 @@ export default {
     async updatePromotion() {
       // TODO: 增量更新
       const p = pick(this.promotion, 'creativeContent', 'creativeTitle',
-        'dailyBudget', 'landingPage', 'landingType', 'areas', 'validTime')
-
-      if (this.promotion.addedWords.length) {
-        p.keywords = [...this.promotion.addedWords]
-      }
+        'dailyBudget', 'landingPage', 'landingType', 'areas', 'validTime',
+        'newKeywords')
 
       p.dailyBudget = p.dailyBudget * 100
 
