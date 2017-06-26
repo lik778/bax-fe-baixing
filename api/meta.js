@@ -2,15 +2,15 @@
 import { toCamelcase } from 'object-keys-mapping'
 import { api } from './base'
 
-export async function getProductDiscounts(type) {
-  const body = await api
-    .get('/meta/template/discount')
-    .query({
-      product_type: type
-    })
-    .json()
+const isArray = Array.isArray
 
-  return toCamelcase(body.data)
+export async function getProductDiscounts(type) {
+  if (isArray(type)) {
+    const arr = await Promise.all(type.map(t => _getProductDiscounts(t)))
+    return arr.reduce((a, b) => [...a, ...b], [])
+  } else {
+    return await _getProductDiscounts(type)
+  }
 }
 
 export async function getCategories(levels = [1, 2]) {
@@ -42,4 +42,19 @@ export async function getAreas() {
     value: c.name,
     label: c.nameCn
   }))
+}
+
+/**
+ * private
+ */
+
+async function _getProductDiscounts(type) {
+  const body = await api
+    .get('/meta/template/discount')
+    .query({
+      product_type: type
+    })
+    .json()
+
+  return toCamelcase(body.data)
 }

@@ -40,6 +40,7 @@
         <aside>价格信息：</aside>
         <span>
           <price-list :products="checkedProducts"
+            :has-discount="!!checkedProductDiscounts.length">
           </price-list>
         </span>
       </div>
@@ -105,6 +106,7 @@ import {
 } from 'util/role'
 
 import {
+  getProductDiscounts,
   getProductPackages,
   getOrderPayUrl,
   getProducts,
@@ -168,6 +170,20 @@ export default {
     }
   },
   computed: {
+    allowDiscount() {
+      const roles = normalizeRoles(this.userInfo.roles)
+      return roles.includes('AGENT_ACCOUNTING')
+    },
+    checkedProductDiscounts() {
+      if (!this.allowDiscount) {
+        return []
+      }
+
+      const types = this.checkedProducts.map(p => p.type)
+
+      return this.allDiscounts
+        .filter(d => types.includes(d.productType))
+    },
     checkedPackageName() {
       const { checkedPackageId } = this
 
@@ -184,6 +200,8 @@ export default {
         checkedChargeProductId,
         checkedPackageId,
         chargeMoney,
+        productType,
+        productId
       } = this
 
       const pkg = this.packages
@@ -195,19 +213,24 @@ export default {
       if (pkg) {
         products = pkg.products.map(p => {
           return {
+            discountPrice: this.getDiscountPrice(p.productType, p.price),
             originalPrice: p.selfPriceAdjust ? p.price : p.showPrice,
+            type: p.productType,
             price: p.price,
             name: p.name,
+            id: p.id
           }
         })
       }
 
-      if (checkedChargeProductId &&
-        chargeMoney) {
+      if (checkedChargeProductId && chargeMoney) {
         products.push({
+          discountPrice: this.getDiscountPrice(productType, chargeMoney),
           originalPrice: chargeMoney,
           price: chargeMoney,
+          type: productType,
           name: '推广资金',
+          id: productId
         })
       }
 
@@ -222,9 +245,13 @@ export default {
       return '确认购买'
     },
     totalPrice() {
-      const p = this.checkedProducts.map(i => i.price)
+      const p = this.checkedProducts.map(i => i.discountPrice)
 
       return p.reduce((a, b) => a + b, 0)
+    },
+    productType() {
+      // TODO 目前: products.length === 1
+      return this.products.map(p => p.productType).pop()
     },
     productId() {
       // TODO 目前: products.length === 1
@@ -256,6 +283,22 @@ export default {
     },
     setChargeMoney(v) {
       this.chargeMoney = v * 100
+    },
+    getDiscountPrice(productType, price) {
+      if (!this.allowDiscount) {
+        return price
+      }
+
+      const discounts = this.allDiscounts
+        .filter(d => d.productType === productType)
+
+      let p = price
+
+      for (const d of discounts) {
+        p = p * (d.percentage / 100)
+      }
+
+      return p | 0
     },
     async onTabClick({name}) {
       this.empty()
@@ -323,6 +366,11 @@ export default {
         }]
       }
 
+      const codes = this.checkedProductDiscounts.map(d => d.code)
+      if (codes.length) {
+        newOrder.discountCodes = [...codes]
+      }
+
       const oids = await createOrder(newOrder)
       const summary = this.checkedPackageName
 
@@ -341,6 +389,7 @@ export default {
     }
 
     await Promise.all([
+      getProductDiscounts([1, 2, 3]),
       getProductPackages(1),
       this.getProducts()
     ])
