@@ -12,7 +12,6 @@
       <el-col :span="12">
         <el-row>
           <el-col :span="8">
-            <p>今日消耗：{{summary.consume / 100}}元</p>
             <p>今日预算：{{summary.budget / 100}}元</p>
           </el-col>
           <el-col :span="8">
@@ -34,7 +33,6 @@
 
 <script>
   import SectionHeader from 'com/common/section-header'
-  import MyProgress from 'com/common/my-progress'
   import { getSummary } from './action'
   import store from './store'
 
@@ -42,18 +40,10 @@
     name: 'summary',
     store,
     components: {
-      SectionHeader,
-      MyProgress
+      SectionHeader
     },
     mounted() {
       getSummary()
-    },
-    computed: {
-      consumeRatio() {
-        const { consume, budget } = this.summary
-        if (!budget) return 0
-        return Math.floor(consume / budget * 100)
-      }
     }
   }
 </script>
