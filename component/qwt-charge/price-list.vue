@@ -10,7 +10,6 @@
       <el-table-column label="现价" width="110"
         :formatter="r => centToYuan(r.price)">
       </el-table-column>
-        :formatter="r => centToYuan(r.price)">
       <el-table-column v-if="hasDiscount"
         label="提单价" width="110"
         :formatter="r => centToYuan(r.discountPrice)">
