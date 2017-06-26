@@ -46,8 +46,8 @@
       </div>
       <div>
         <aside>服务编号：</aside>
-        <span v-if="salesIdLocked">
-          {{ displayBxSalesId }}
+        <span v-if="salesIdLocked || isBxSales">
+          {{ displayBxSalesId || userInfo.salesId }}
         </span>
         <span v-else>
           <el-input v-model.trim="inputSalesId"
@@ -176,6 +176,10 @@ export default {
     }
   },
   computed: {
+    isBxSales() {
+      const roles = normalizeRoles(this.userInfo.roles)
+      return roles.includes('BAIXING_SALES')
+    },
     allowDiscount() {
       const roles = normalizeRoles(this.userInfo.roles)
       return roles.includes('AGENT_ACCOUNTING')
