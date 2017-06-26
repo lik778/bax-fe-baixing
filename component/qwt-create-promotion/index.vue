@@ -93,6 +93,8 @@
         <header>选取推广关键词</header>
         <h4>根据当月数据，为您推荐如下关键词</h4>
         <keyword-list :words="creativeWords"
+          :selected-words="newPromotion.creativeWords"
+          @update-word="updateCreativeWord"
           @select-words="words => newPromotion.creativeWords = [...words]">
         </keyword-list>
         <h3>
@@ -112,6 +114,8 @@
           </strong>
         </div>
         <keyword-list v-if="recommendedWordsVisible" :words="recommendedWords"
+          :selected-words="newPromotion.recommendedWords"
+          @update-word="updateRecommendedWord"
           @select-words="words => newPromotion.recommendedWords = [...words]">
         </keyword-list>
       </section>
@@ -351,6 +355,30 @@ export default {
       } else {
         Message.error(data.hint)
       }
+    },
+    updateRecommendedWord(word) {
+      this.newPromotion.recommendedWords = this.newPromotion.recommendedWords.map(w => {
+        if (w.word === word.word) {
+          return {
+            ...w,
+            price: word.price
+          }
+        } else {
+          return {...w}
+        }
+      })
+    },
+    updateCreativeWord(word) {
+      this.newPromotion.creativeWords = this.newPromotion.creativeWords.map(w => {
+        if (w.word === word.word) {
+          return {
+            ...w,
+            price: word.price
+          }
+        } else {
+          return {...w}
+        }
+      })
     },
     async getCreativeWords() {
       const {

@@ -3,7 +3,7 @@
   <div>
     <el-table :data="words" style="width: 860px"
       @selection-change="onSelectionChange">
-      <el-table-column type="selection" width="40">
+      <el-table-column v-if="selectable" type="selection" width="40">
       </el-table-column>
       <el-table-column prop="word" label="关键词" width="420">
       </el-table-column>
@@ -20,6 +20,14 @@
             @click="setCustomPrice(s.row.word, s.row.price / 100, true)">
             {{ getWordPrice(s.row.word) }}
           </label>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="deletable" label="操作" width="80">
+        <template scope="s">
+          <el-button size="mini" type="danger"
+            @click="deleteWord(s.row)">
+            删除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -51,10 +59,22 @@ function toFloat(s) {
 export default {
   name: 'qwt-keyword-list',
   props: {
+    selectable: {
+      type: Boolean,
+      default: true
+    },
+    deletable: {
+      type: Boolean,
+      default: false
+    },
     words: {
       type: Array,
       required: true
     }
+    // selectedWords: {
+    //   type: Array,
+    //   required: true
+    // }
   },
   data() {
     return {
@@ -63,6 +83,15 @@ export default {
     }
   },
   methods: {
+    // setRowSelection() {
+    //   this.words.forEach((row) => {
+    //     const selected = this.selectedWords.includes(row.word)
+    //     this.$refs.table.toggleRowSelection(row, selected)
+    //   })
+    // },
+    deleteWord(row) {
+      this.$emit('delete-word', {...row})
+    },
     getWordPrice(word) {
       // return : 元
       const item = this.customPrices.find(c => c.word === word)
@@ -81,21 +110,10 @@ export default {
       return this.customPrices.findIndex(c => c.word === word) !== -1
     },
     onSelectionChange(rows) {
-      let words = []
-
-      if (rows) {
-        // table selection trigger
-        words = rows.map(r => ({
-          price: this.getWordPrice(r.word) * 100 | 0,
-          word: r.word
-        }))
-      } else {
-        // change word price
-        words = this.selectedWords.map(w => ({
-          price: this.getWordPrice(w.word) * 100 | 0,
-          word: w.word
-        }))
-      }
+      const words = rows.map(r => ({
+        price: this.getWordPrice(r.word) * 100 | 0,
+        word: r.word
+      }))
 
       this.selectedWords = [...words]
       this.$emit('select-words', words)
@@ -126,10 +144,18 @@ export default {
         }]
       }
 
-      this.onSelectionChange()
+      this.$emit('update-word', {
+        price: price * 100 | 0,
+        word
+      })
     },
     centToYuan
   }
+  // watch: {
+  //   'selectedWords': function() {
+  //     this.setRowSelection()
+  //   }
+  // }
 }
 
 </script>

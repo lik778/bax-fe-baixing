@@ -91,8 +91,10 @@
       <section class="keyword">
         <header>选取推广关键词</header>
         <h4>已经设置的关键词</h4>
-        <keyword-list :words="promotion.keywords"
-          :selected-words="promotion.keywords">
+        <keyword-list :words="currentKeywords"
+          :selectable="false" deletable
+          @update-word="updateExistWord"
+          @delete-word="word => promotion.deletedKeywords.push(word)">
         </keyword-list>
         <h3>
           <label>关键词不够？</label>
@@ -112,6 +114,7 @@
         </div>
         <keyword-list v-if="newaddedWordsVisible" :words="recommendedWords"
           :selected-words="promotion.newKeywords"
+          @update-word="updateNewWord"
           @select-words="words => promotion.newKeywords = [...words]">
         </keyword-list>
       </section>
@@ -231,6 +234,7 @@ const emptyPromotion = {
   areas: [],
   source: 5,
   //
+  updatedKeywords: [],
   deletedKeywords: [],
   newKeywords: []
 }
@@ -266,6 +270,16 @@ export default {
     }
   },
   computed: {
+    currentKeywords() {
+      const {
+        deletedKeywords,
+        keywords
+      } = this.promotion
+
+      return keywords.filter(w => {
+        return !deletedKeywords.map(i => i.id).includes(w.id)
+      })
+    },
     predictedInfo() {
       const {
         currentBalance,
@@ -318,11 +332,35 @@ export default {
     clickSourceTip() {
       Message.warning('投放渠道不能修改')
     },
+    updateExistWord(word) {
+      this.promotion.updatedKeywords = this.promotion.updatedKeywords.map(w => {
+        if (w.word === word.word) {
+          return {
+            ...w,
+            price: word.price
+          }
+        } else {
+          return {...w}
+        }
+      })
+    },
+    updateNewWord(word) {
+      this.promotion.newKeywords = this.promotion.newKeywords.map(w => {
+        if (w.word === word.word) {
+          return {
+            ...w,
+            price: word.price
+          }
+        } else {
+          return {...w}
+        }
+      })
+    },
     async updatePromotion() {
       // TODO: 增量更新
       const p = pick(this.promotion, 'creativeContent', 'creativeTitle',
         'dailyBudget', 'landingPage', 'landingType', 'areas', 'validTime',
-        'newKeywords')
+        'newKeywords', 'deletedKeywords', 'updatedKeywords')
 
       p.dailyBudget = p.dailyBudget * 100
 
@@ -333,6 +371,8 @@ export default {
           // return Message.error('请填写投放日期或选择长期投放')
           p.validTime = undefined
         }
+      } else {
+        p.validTime = [null, null]
       }
 
       await updateCampaign(this.id, p)
@@ -373,7 +413,7 @@ export default {
         creativeTitle
       })
 
-      if (data.result) {
+      if (!data.result) {
         Message.success(data.hint)
       } else {
         Message.error(data.hint)
