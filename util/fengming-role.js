@@ -6,7 +6,7 @@ import {
 
 // sidebar
 
-const specialUserId = 88 // 康品汇 特权 自建销售
+const specialUserId = 1 // 康品汇 特权 自建销售
 
 export function allowSeeGw(roles, uid) {
   return uid === specialUserId
