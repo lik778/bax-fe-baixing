@@ -2,6 +2,17 @@
 import { reverseCamelcase, toCamelcase } from 'object-keys-mapping'
 import { api, trim } from './base'
 
+export async function getUserIdFromBxSalesId(salesId) {
+  const body = await api
+    .get('/user/sales')
+    .query({
+      baixing_sales_id: salesId
+    })
+    .json()
+
+  return body.data
+}
+
 export async function getCurrentUser() {
   const body = await api
     .get('/user/current')

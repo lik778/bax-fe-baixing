@@ -1,4 +1,6 @@
 
+import { toTimestamp } from 'utils'
+
 export function getCampaignPrediction(total, prices) {
   const result = {
     dailyBudget: 100, // 元
@@ -12,4 +14,29 @@ export function getCampaignPrediction(total, prices) {
   result.duration = total / result.dailyBudget | 0
 
   return result
+}
+
+const oneDay = 24 * 60 * 60 - 1 // sec
+
+export function checkCampaignValidTime(range) {
+  if (!range || range.length !== 2) {
+    return 'invalid'
+  }
+
+  if (range[1] === null) {
+    return 'long'
+  }
+
+  return 'custom'
+}
+
+export function getCampaignValidTime(range) {
+  if (range[0] === null || range[1] === null) {
+    return [null, null] // 长期
+  }
+
+  return [
+    toTimestamp(range[0]),
+    toTimestamp(range[1]) + oneDay
+  ]
 }

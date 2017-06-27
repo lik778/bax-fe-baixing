@@ -1,6 +1,24 @@
 
 const isArray = Array.isArray
 
+// global
+
+export function allowSeeDashboard(roles) {
+  const currentRoles = normalizeRoles(roles)
+
+  return checkRoles(currentRoles, [
+    'DATA_OPERATOR'
+  ])
+}
+
+export function allowSeeAccount(roles) {
+  const currentRoles = normalizeRoles(roles)
+
+  return checkRoles(currentRoles, [
+    'BAIXING_USER'
+  ])
+}
+
 // order
 
 export function allowPayOrder(roles) {
@@ -148,14 +166,6 @@ export function allowContinueAd(roles) {
 
   return checkRoles(currentRoles, [
     'NORMAL_OPERATOR'
-  ])
-}
-
-export function allowSeeDashboard(roles) {
-  const currentRoles = normalizeRoles(roles)
-
-  return checkRoles(currentRoles, [
-    'DATA_OPERATOR'
   ])
 }
 

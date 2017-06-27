@@ -10,8 +10,9 @@
       <el-table-column label="现价" width="110"
         :formatter="r => centToYuan(r.price)">
       </el-table-column>
-      <el-table-column label="提单价" width="110"
-        :formatter="r => centToYuan(r.price)">
+      <el-table-column v-if="hasDiscount"
+        label="提单价" width="110"
+        :formatter="r => (r.discountPrice / 100).toFixed(2)">
       </el-table-column>
     </el-table>
   </span>
@@ -26,6 +27,10 @@ export default {
   props: {
     products: {
       type: Array,
+      required: true
+    },
+    hasDiscount: {
+      type: Boolean,
       required: true
     }
   },

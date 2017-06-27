@@ -12,7 +12,7 @@
             <i class="el-icon-menu" />首页
           </router-link>
         </el-menu-item>
-        <el-submenu index="1">
+        <el-submenu index="1" v-if="allowSeeGw">
           <template slot="title">
             <i class="el-icon-star-on" />建站工具
           </template>
@@ -36,17 +36,17 @@
               服务开启
             </router-link>
           </el-menu-item>
-          <el-menu-item index="2-2">
+          <el-menu-item index="2-2" v-if="allowSeeQwtPromotion">
             <router-link :to="{ name: 'qwt-create-promotion' }" tag="p">
               新建推广
             </router-link>
           </el-menu-item>
-          <el-menu-item index="2-3">
+          <el-menu-item index="2-3" v-if="allowSeeQwtPromotion">
             <router-link :to="{ name: 'qwt-promotion-list' }" tag="p">
               推广管理
             </router-link>
           </el-menu-item>
-          <el-menu-item index="2-4">
+          <el-menu-item index="2-4" v-if="allowSeeQwtReport">
             <router-link :to="{ name: 'qwt-dashboard' }" tag="p">
               数据报表
             </router-link>
@@ -87,7 +87,7 @@
             <i class="el-icon-menu" />部门业绩
           </router-link>
         </el-menu-item>
-        <el-menu-item index="5">
+        <el-menu-item index="5" v-if="allowSeeAccount">
           <router-link :to="{ name: 'account' }" tag="p">
             <i class="el-icon-menu" />账户
           </router-link>
@@ -105,11 +105,21 @@
 import { version } from '../../package.json'
 
 import {
+  allowSeeQwtPromotion,
+  allowSeeQwtReport,
+  allowSeeQwtCharge,
+  allowSeeGw
+} from 'util/fengming-role'
+
+import {
+  // bx ad
   allowQueryMaterials,
   allowQueryAdItems,
   allowQueryOrders,
   allowQueryUsers,
-  allowSeeDashboard
+  // global
+  allowSeeDashboard,
+  allowSeeAccount
 } from 'util/role'
 
 export default {
@@ -138,8 +148,25 @@ export default {
     allowQueryUsers() {
       return allowQueryUsers(this.userInfo.roles)
     },
+    //
     allowSeeDashboard() {
       return allowSeeDashboard(this.userInfo.roles)
+    },
+    allowSeeAccount() {
+      return allowSeeAccount(this.userInfo.roles)
+    },
+    //
+    allowSeeQwtPromotion() {
+      return allowSeeQwtPromotion(this.userInfo.roles)
+    },
+    allowSeeQwtCharge() {
+      return allowSeeQwtCharge(this.userInfo.roles, this.userInfo.id)
+    },
+    allowSeeQwtReport() {
+      return allowSeeQwtReport(this.userInfo.roles)
+    },
+    allowSeeGw() {
+      return allowSeeGw(this.userInfo.roles, this.userInfo.id)
     }
   }
 }

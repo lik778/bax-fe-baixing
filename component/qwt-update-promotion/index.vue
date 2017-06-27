@@ -91,8 +91,10 @@
       <section class="keyword">
         <header>选取推广关键词</header>
         <h4>已经设置的关键词</h4>
-        <keyword-list :words="promotion.keywords"
-          :selected-words="promotion.keywords">
+        <keyword-list :words="currentKeywords"
+          :selectable="false" deletable
+          @update-word="updateExistWord"
+          @delete-word="word => promotion.deletedKeywords.push(word)">
         </keyword-list>
         <h3>
           <label>关键词不够？</label>
@@ -111,8 +113,9 @@
           </strong>
         </div>
         <keyword-list v-if="newaddedWordsVisible" :words="recommendedWords"
-          :selected-words="promotion.addedWords"
-          @select-words="words => promotion.addedWords = [...words]">
+          :selected-words="promotion.newKeywords"
+          @update-word="updateNewWord"
+          @select-words="words => promotion.newKeywords = [...words]">
         </keyword-list>
       </section>
       <section class="timing">
@@ -194,11 +197,15 @@ import KeywordList from '../qwt-create-promotion/keyword-list'
 import AreaSelector from 'com/common/area-selector'
 import Topbar from 'com/topbar'
 
-import { getCampaignPrediction } from 'util/campaign'
 import { getCnName } from 'util/meta'
 import {
+  checkCampaignValidTime,
+  getCampaignPrediction,
+  getCampaignValidTime
+} from 'util/campaign'
+
+import {
   toHumanTime,
-  toTimestamp,
   centToYuan
 } from 'utils'
 
@@ -228,7 +235,9 @@ const emptyPromotion = {
   areas: [],
   source: 5,
   //
-  addedWords: []
+  updatedKeywords: [],
+  deletedKeywords: [],
+  newKeywords: []
 }
 
 export default {
@@ -262,6 +271,16 @@ export default {
     }
   },
   computed: {
+    currentKeywords() {
+      const {
+        deletedKeywords,
+        keywords
+      } = this.promotion
+
+      return keywords.filter(w => {
+        return !deletedKeywords.map(i => i.id).includes(w.id)
+      })
+    },
     predictedInfo() {
       const {
         currentBalance,
@@ -270,10 +289,10 @@ export default {
 
       const {
         keywords = [],
-        addedWords
+        newKeywords = []
       } = promotion
 
-      const prices = [...keywords, ...addedWords]
+      const prices = [...keywords, ...newKeywords]
         .map(k => k.price)
 
       return getCampaignPrediction(currentBalance, prices)
@@ -287,13 +306,25 @@ export default {
       const info = await getCampaignInfo(this.id)
 
       info.dailyBudget = info.dailyBudget / 100 | 0
-      if (info.validTime) {
+      if (info.timeRange && info.timeRange.length &&
+        (info.timeRange[0] !== null) &&
+        (info.timeRange[1] !== null)) {
         info.validTime = [
-          toHumanTime(info.validTime[0], 'YYYY-MM-DD'),
-          toHumanTime(info.validTime[1], 'YYYY-MM-DD')
+          toHumanTime(info.timeRange[0], 'YYYY-MM-DD'),
+          toHumanTime(info.timeRange[1], 'YYYY-MM-DD')
         ]
+        this.timeType = 'custom'
       } else {
         info.validTime = []
+        this.timeType = 'long'
+      }
+
+      if (info.creative) {
+        info.landingType = info.creative.landingType
+        info.landingPage = info.creative.landingPage
+        info.creativeContent = info.creative.content
+        info.creativeTitle = info.creative.title
+        info.creative = undefined
       }
 
       this.promotion = {
@@ -306,27 +337,46 @@ export default {
     clickSourceTip() {
       Message.warning('投放渠道不能修改')
     },
+    updateExistWord(word) {
+      this.promotion.updatedKeywords = this.promotion.updatedKeywords.map(w => {
+        if (w.word === word.word) {
+          return {
+            ...w,
+            price: word.price
+          }
+        } else {
+          return {...w}
+        }
+      })
+    },
+    updateNewWord(word) {
+      this.promotion.newKeywords = this.promotion.newKeywords.map(w => {
+        if (w.word === word.word) {
+          return {
+            ...w,
+            price: word.price
+          }
+        } else {
+          return {...w}
+        }
+      })
+    },
     async updatePromotion() {
       // TODO: 增量更新
       const p = pick(this.promotion, 'creativeContent', 'creativeTitle',
-        'dailyBudget', 'landingPage', 'landingType', 'areas', 'validTime')
-
-      if (this.promotion.addedWords.length) {
-        p.keywords = [...this.promotion.addedWords]
-      }
+        'dailyBudget', 'landingPage', 'landingType', 'areas', 'validTime',
+        'newKeywords', 'deletedKeywords', 'updatedKeywords')
 
       p.dailyBudget = p.dailyBudget * 100
 
       if (this.timeType === 'custom') {
-        if (p.validTime.length) {
-          p.validTime = [
-            toTimestamp(p.validTime[0]),
-            toTimestamp(p.validTime[1])
-          ]
+        if (checkCampaignValidTime(p.validTime) === 'custom') {
+          p.validTime = getCampaignValidTime(p.validTime)
         } else {
-          // return Message.error('请填写投放日期或选择长期投放')
-          p.validTime = undefined
+          return Message.error('请填写投放日期或选择长期投放')
         }
+      } else {
+        p.validTime = [null, null]
       }
 
       await updateCampaign(this.id, p)
@@ -367,7 +417,7 @@ export default {
         creativeTitle
       })
 
-      if (data.result) {
+      if (!data.result) {
         Message.success(data.hint)
       } else {
         Message.error(data.hint)

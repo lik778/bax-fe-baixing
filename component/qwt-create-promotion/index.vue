@@ -93,6 +93,8 @@
         <header>选取推广关键词</header>
         <h4>根据当月数据，为您推荐如下关键词</h4>
         <keyword-list :words="creativeWords"
+          :selected-words="newPromotion.creativeWords"
+          @update-word="updateCreativeWord"
           @select-words="words => newPromotion.creativeWords = [...words]">
         </keyword-list>
         <h3>
@@ -112,6 +114,8 @@
           </strong>
         </div>
         <keyword-list v-if="recommendedWordsVisible" :words="recommendedWords"
+          :selected-words="newPromotion.recommendedWords"
+          @update-word="updateRecommendedWord"
           @select-words="words => newPromotion.recommendedWords = [...words]">
         </keyword-list>
       </section>
@@ -193,10 +197,13 @@ import AreaSelector from 'com/common/area-selector'
 import KeywordList from './keyword-list'
 import Topbar from 'com/topbar'
 
-import { getCampaignPrediction } from 'util/campaign'
 import { getCnName } from 'util/meta'
 import {
-  toTimestamp,
+  checkCampaignValidTime,
+  getCampaignPrediction,
+  getCampaignValidTime
+} from 'util/campaign'
+import {
   centToYuan
 } from 'utils'
 
@@ -284,16 +291,13 @@ export default {
       p.dailyBudget = p.dailyBudget * 100
 
       if (this.timeType === 'custom') {
-        if (p.validTime.length) {
-          p.validTime = [
-            toTimestamp(p.validTime[0]),
-            toTimestamp(p.validTime[1])
-          ]
+        if (checkCampaignValidTime(p.validTime) === 'custom') {
+          p.validTime = getCampaignValidTime(p.validTime)
         } else {
           return Message.error('请填写投放日期或选择长期投放')
         }
       } else {
-        p.validTime = undefined
+        p.validTime = [null, null]
       }
 
       p.keywords = [
@@ -352,6 +356,30 @@ export default {
       } else {
         Message.error(data.hint)
       }
+    },
+    updateRecommendedWord(word) {
+      this.newPromotion.recommendedWords = this.newPromotion.recommendedWords.map(w => {
+        if (w.word === word.word) {
+          return {
+            ...w,
+            price: word.price
+          }
+        } else {
+          return {...w}
+        }
+      })
+    },
+    updateCreativeWord(word) {
+      this.newPromotion.creativeWords = this.newPromotion.creativeWords.map(w => {
+        if (w.word === word.word) {
+          return {
+            ...w,
+            price: word.price
+          }
+        } else {
+          return {...w}
+        }
+      })
     },
     async getCreativeWords() {
       const {

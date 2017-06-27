@@ -23,7 +23,7 @@
       </p>
     </main>
     <footer v-if="showFooter">
-      推广资金
+      推广资金包
     </footer>
   </div>
 </template>

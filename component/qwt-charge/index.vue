@@ -5,7 +5,7 @@
       <el-tabs slot="title" type="card"
         @tab-click="onTabClick" :value="mode">
         <el-tab-pane label="全网通购买" name="buy-service"></el-tab-pane>
-        <el-tab-pane label="推广资金充值" name="charge-only"></el-tab-pane>
+        <el-tab-pane label="搜狗资金充值" name="charge-only"></el-tab-pane>
       </el-tabs>
     </topbar>
     <section>
@@ -40,27 +40,31 @@
         <aside>价格信息：</aside>
         <span>
           <price-list :products="checkedProducts"
+            :has-discount="!!checkedProductDiscounts.length">
           </price-list>
         </span>
       </div>
       <div>
         <aside>服务编号：</aside>
-        <span v-if="salesIdLocked">
-          {{ salesId }}
+        <span v-if="salesIdLocked || isBxSales">
+          {{ displayBxSalesId || userInfo.salesId }}
         </span>
         <span v-else>
-          <el-input v-model.trim="salesId"
+          <el-input v-model.trim="inputSalesId"
             placeholder="如有服务编号请您填写">
           </el-input>
+          <i class="el-icon-check"
+            @click="checkInputSalesId"></i>
         </span>
       </div>
       <div>
         <aside>百姓网余额需支付：</aside>
-        <i>{{'￥' + centToYuan(totalPrice)}}</i>
+        <i>{{'￥' + (totalPrice / 100).toFixed(2)}}</i>
       </div>
       <div>
-        <el-button type="primary" @click="createOrder">
-          确认购买
+        <el-button v-if="!isAgentSales"
+          type="primary" @click="createOrder">
+          {{ submitButtonText }}
         </el-button>
         <span v-if="orderPayUrl">
           <label :title="orderPayUrl">
@@ -97,13 +101,22 @@ import store from './store'
 
 import {
   allowGetOrderPayUrl,
+  allowPayOrder
+} from 'util/fengming-role'
+
+import {
+  normalizeRoles
 } from 'util/role'
 
 import {
+  getUserIdFromBxSalesId,
+  getProductDiscounts,
   getProductPackages,
   getOrderPayUrl,
   getProducts,
   createOrder,
+  getUserInfo,
+  payOrders
 } from './action'
 
 /**
@@ -154,7 +167,8 @@ export default {
       allProducts,
 
       salesIdLocked: false,
-      salesId: '',
+      displayBxSalesId: '',
+      inputSalesId: '',
 
       orderPayUrl: '',
       checkedPackageId: 0,
@@ -163,22 +177,66 @@ export default {
     }
   },
   computed: {
-    checkedPackageName() {
-      const { checkedPackageId } = this
-
-      if (!checkedPackageId) {
-        return ''
+    isAgentSales() {
+      const roles = normalizeRoles(this.userInfo.roles)
+      return roles.includes('AGENT_SALES')
+    },
+    isBxUser() {
+      const roles = normalizeRoles(this.userInfo.roles)
+      return roles.includes('BAIXING_USER')
+    },
+    isBxSales() {
+      const roles = normalizeRoles(this.userInfo.roles)
+      return roles.includes('BAIXING_SALES')
+    },
+    allowDiscount() {
+      const roles = normalizeRoles(this.userInfo.roles)
+      return roles.includes('AGENT_ACCOUNTING')
+    },
+    checkedProductDiscounts() {
+      if (!this.allowDiscount) {
+        return []
       }
 
-      const p = this.packages.find(p => p.id === checkedPackageId)
+      const types = this.checkedProducts.map(p => p.type)
 
-      return p.name
+      return this.allDiscounts
+        .filter(d => types.includes(d.productType))
+    },
+    checkedProductDesc() {
+      const { checkedPackageId } = this
+
+      const p = this.packages.find(p => p.id === checkedPackageId)
+      const name = (p && p.name) || ''
+
+      let h1 = '0'
+      let h2 = '0'
+      let h3 = '0'
+
+      this.checkedProducts.forEach(p => {
+        if (p.name === '精品官网') {
+          h1 = p.amount
+          return
+        }
+
+        if (p.isPkg) {
+          h2 = centToYuan(p.discountPrice)
+          return
+        }
+
+        h3 = centToYuan(p.discountPrice)
+      })
+
+      return this.mode === 'charge-only' ? `搜狗推广资金：${h3}元`
+        : `${name}（精品官网：${h1}天，推广资金：${h2}元），推广资金包：${h3}元`
     },
     checkedProducts() {
       const {
         checkedChargeProductId,
         checkedPackageId,
         chargeMoney,
+        productType,
+        productId
       } = this
 
       const pkg = this.packages
@@ -190,28 +248,51 @@ export default {
       if (pkg) {
         products = pkg.products.map(p => {
           return {
+            discountPrice: this.getDiscountPrice(p.productType, p.price),
             originalPrice: p.selfPriceAdjust ? p.price : p.showPrice,
+            type: p.productType,
+            amount: p.amount,
             price: p.price,
             name: p.name,
+            isPkg: true,
+            id: p.id
           }
         })
       }
 
-      if (checkedChargeProductId &&
-        chargeMoney) {
+      if (checkedChargeProductId && chargeMoney) {
         products.push({
+          discountPrice: this.getDiscountPrice(productType, chargeMoney),
           originalPrice: chargeMoney,
           price: chargeMoney,
-          name: '推广资金',
+          type: productType,
+          name: '推广资金包',
+          id: productId
         })
       }
 
       return products
     },
+    submitButtonText() {
+      const { userInfo } = this
+      if (this.isBxUser) {
+        return '确认购买'
+      }
+
+      if (allowGetOrderPayUrl(userInfo.roles)) {
+        return '生成链接'
+      }
+
+      return '确认购买'
+    },
     totalPrice() {
-      const p = this.checkedProducts.map(i => i.price)
+      const p = this.checkedProducts.map(i => i.discountPrice)
 
       return p.reduce((a, b) => a + b, 0)
+    },
+    productType() {
+      // TODO 目前: products.length === 1
+      return this.products.map(p => p.productType).pop()
     },
     productId() {
       // TODO 目前: products.length === 1
@@ -244,6 +325,22 @@ export default {
     setChargeMoney(v) {
       this.chargeMoney = v * 100
     },
+    getDiscountPrice(productType, price) {
+      if (!this.allowDiscount) {
+        return price
+      }
+
+      const discounts = this.allDiscounts
+        .filter(d => d.productType === productType)
+
+      let p = price
+
+      for (const d of discounts) {
+        p = p * (d.percentage / 100)
+      }
+
+      return p | 0
+    },
     async onTabClick({name}) {
       this.empty()
 
@@ -263,6 +360,17 @@ export default {
       const type = this.mode === 'buy-service' ? 1 : 3
       await getProducts(type)
     },
+    async payOrders(oids) {
+      const {
+        userInfo
+      } = this
+
+      if (!allowPayOrder(userInfo.roles)) {
+        return
+      }
+
+      await payOrders(oids)
+    },
     async getOrderPayUrl(oids, summary) {
       const {
         userInfo
@@ -275,22 +383,71 @@ export default {
       const url = await getOrderPayUrl(oids, summary)
 
       this.orderPayUrl = url
+
+      if (this.isBxUser) {
+        location.href = url
+      }
+    },
+    async checkInputSalesId() {
+      const { inputSalesId } = this
+      if (!inputSalesId) {
+        return Message.error('请填写销售编号')
+      }
+
+      await getUserIdFromBxSalesId(inputSalesId)
+
+      Message.success('销售编号可用')
+    },
+    async getFinalSalesId() {
+      const { sales_id: salesId } = this.$route.query
+      if (salesId) {
+        return salesId
+      }
+
+      const {
+        inputSalesId,
+        userInfo
+      } = this
+
+      if (inputSalesId) {
+        const id = await getUserIdFromBxSalesId(inputSalesId)
+        return id
+      }
+
+      if (this.isBxUser) {
+        return
+      }
+
+      return userInfo.id
+    },
+    async getFinalUserId() {
+      const { user_id: userId } = this.$route.query
+      if (userId) {
+        return userId
+      }
+
+      const { userInfo } = this
+      return userInfo.id
     },
     async createOrder() {
       const {
         checkedChargeProductId,
         checkedPackageId,
         chargeMoney,
-        productId,
-        userInfo,
-        salesId
+        productId
       } = this
 
-      const { user_id: userId } = this.$route.query
-
       const newOrder = {
-        salesId: salesId || userInfo.salesId,
-        userId: userId || userInfo.id
+        userId: await this.getFinalUserId()
+      }
+
+      const sid = await this.getFinalSalesId()
+      if (sid) {
+        newOrder.salesId = sid
+      }
+
+      if (this.mode === 'buy-service' && !checkedPackageId) {
+        return Message.error('必须选择一个全网通套餐包')
       }
 
       if (!checkedChargeProductId && !checkedPackageId) {
@@ -310,10 +467,17 @@ export default {
         }]
       }
 
+      const codes = this.checkedProductDiscounts.map(d => d.code)
+      if (codes.length) {
+        newOrder.discountCodes = [...codes]
+      }
+
       const oids = await createOrder(newOrder)
-      const summary = this.checkedPackageName
+      const summary = this.checkedProductDesc
 
       await this.getOrderPayUrl(oids, summary)
+
+      await this.payOrders(oids)
 
       Message.success('创建订单成功')
     },
@@ -323,11 +487,13 @@ export default {
     const { sales_id: salesId } = this.$route.query
 
     if (salesId) {
+      const userInfo = await getUserInfo(salesId)
+      this.displayBxSalesId = userInfo.salesId
       this.salesIdLocked = true
-      this.salesId = salesId
     }
 
     await Promise.all([
+      getProductDiscounts([1, 2, 3]),
       getProductPackages(1),
       this.getProducts()
     ])
@@ -377,6 +543,18 @@ export default {
         font-size: 14px;
         min-width: 80px;
         color: #6a778c;
+      }
+
+      & > span {
+        display: inline-flex;
+        align-items: center;
+
+        & > i {
+          margin-left: 8px;
+          font-size: 18px;
+          color: gray;
+          cursor: pointer;
+        }
       }
 
       & > i {

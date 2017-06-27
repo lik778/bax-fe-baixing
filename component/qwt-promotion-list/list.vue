@@ -34,7 +34,7 @@
           <el-input style="width: 60px;" placeholder="比例"
             v-model="toolbox.ratio">
           </el-input>
-          <label>(0.1-50)</label>
+          <label>(0.1-10)</label>
           <el-button type="primary" size="mini"
             @click="updateCampaignRatio">
             确定
@@ -82,8 +82,8 @@
       </el-table-column>
       <el-table-column prop="open" label="开关" width="80">
         <template scope="s">
-          <el-switch :value="!s.pause" on-text="" off-text=""
-            @change="switchCampaignPause(s)">
+          <el-switch :value="!s.row.pause" on-text="" off-text=""
+            @change="switchCampaignPause(s.row)">
           </el-switch>
         </template>
       </el-table-column>
@@ -95,16 +95,16 @@
       <el-table-column label="预算" width="100"
         :formatter="r => fmtPrice(r.dailyBudget)">
       </el-table-column>
-      <el-table-column prop="mobilePriceRatio" label="移动端出价比例(0.1-50)" width="120">
+      <el-table-column prop="mobilePriceRatio" label="移动端出价比例(0.1-10)" width="120">
       </el-table-column>
       <el-table-column label="开始日期" width="120"
-        :formatter="r => fmtDate(r.timeRange && r.timeRange[0])">
+        :formatter="r => fmtDate(r.timeRange, r.timeRange && r.timeRange[0])">
       </el-table-column>
       <el-table-column label="结束日期" width="120"
-        :formatter="r => fmtDate(r.timeRange && r.timeRange[1])">
+        :formatter="r => fmtDate(r.timeRange, r.timeRange && r.timeRange[1])">
       </el-table-column>
       <el-table-column label="今日消耗" width="100"
-        :formatter="r => fmtPrice(r.todayCost)">
+        :formatter="r => r.todayCost === 0 ? '-' : fmtPrice(r.todayCost)">
       </el-table-column>
       <el-table-column label="渠道" width="100"
         :formatter="r => fmtSource(r.source)">
@@ -145,7 +145,10 @@ import {
 } from './action'
 
 import {
-  toTimestamp,
+  getCampaignValidTime
+} from 'util/campaign'
+
+import {
   toHumanTime,
   centToYuan,
   commafy
@@ -240,10 +243,7 @@ export default {
 
       const opts = {
         campaignIds: this.selectedCampaignIds,
-        validTime: [
-          toTimestamp(timeRange[0]),
-          toTimestamp(timeRange[1])
-        ]
+        validTime: getCampaignValidTime(timeRange)
       }
 
       await updateCampaignTimeRange(opts)
@@ -259,7 +259,7 @@ export default {
       }
 
       const ratio = parseFloat(this.toolbox.ratio)
-      if (!(ratio >= 0.1 && ratio <= 50)) {
+      if (!(ratio >= 0.1 && ratio <= 10)) {
         return Message.error('请设置合理的出价比例')
       }
 
@@ -388,12 +388,16 @@ export default {
     fmtStatus(s) {
       return campaignStatus[String(s)] || '未知'
     },
-    fmtDate(s) {
-      if (!s) {
+    fmtDate(range, date) {
+      if (!range || (date === null)) {
+        return '长期'
+      }
+
+      if (!date) {
         return '未知'
       }
 
-      return toHumanTime(s, 'YYYY-MM-DD')
+      return toHumanTime(date, 'YYYY-MM-DD')
     }
   },
   async mounted() {
