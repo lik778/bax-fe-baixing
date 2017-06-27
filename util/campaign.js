@@ -19,6 +19,10 @@ export function getCampaignPrediction(total, prices) {
 const oneDay = 24 * 60 * 60 - 1 // sec
 
 export function getCampaignValidTime(range) {
+  if (range[0] === null || range[1] === null) {
+    return [null, null] // 长期
+  }
+
   return [
     toTimestamp(range[0]),
     toTimestamp(range[1]) + oneDay

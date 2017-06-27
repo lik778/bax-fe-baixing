@@ -305,13 +305,17 @@ export default {
       const info = await getCampaignInfo(this.id)
 
       info.dailyBudget = info.dailyBudget / 100 | 0
-      if (info.timeRange && info.timeRange.length) {
+      if (info.timeRange && info.timeRange.length &&
+        (info.timeRange[0] !== null) &&
+        (info.timeRange[1] !== null)) {
         info.validTime = [
           toHumanTime(info.timeRange[0], 'YYYY-MM-DD'),
           toHumanTime(info.timeRange[1], 'YYYY-MM-DD')
         ]
+        this.timeType = 'custom'
       } else {
         info.validTime = []
+        this.timeType = 'long'
       }
 
       if (info.creative) {

@@ -296,7 +296,7 @@ export default {
           return Message.error('请填写投放日期或选择长期投放')
         }
       } else {
-        p.validTime = undefined
+        p.validTime = [null, null]
       }
 
       p.keywords = [
