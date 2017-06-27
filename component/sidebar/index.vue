@@ -107,6 +107,7 @@ import { version } from '../../package.json'
 import {
   allowSeeQwtPromotion,
   allowSeeQwtReport,
+  allowSeeQwtCharge,
   allowSeeGw
 } from 'util/fengming-role'
 
@@ -157,6 +158,9 @@ export default {
     //
     allowSeeQwtPromotion() {
       return allowSeeQwtPromotion(this.userInfo.roles)
+    },
+    allowSeeQwtCharge() {
+      return allowSeeQwtCharge(this.userInfo.roles, this.userInfo.id)
     },
     allowSeeQwtReport() {
       return allowSeeQwtReport(this.userInfo.roles)

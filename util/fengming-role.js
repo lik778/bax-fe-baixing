@@ -6,8 +6,25 @@ import {
 
 // sidebar
 
+const specialUserId = 88 // 康品汇 特权 自建销售
+
 export function allowSeeGw(roles, uid) {
-  return uid === 88
+  return uid === specialUserId
+}
+
+export function allowSeeQwtCharge(roles, uid) {
+  const currentRoles = normalizeRoles(roles)
+
+  if (uid === specialUserId) {
+    return true
+  }
+
+  return checkRoles(currentRoles, [
+    'AGENT_ACCOUNTING',
+    'AGENT_SALES',
+    'BAIXING_SALES',
+    'BAIXING_USER'
+  ])
 }
 
 export function allowSeeQwtPromotion(roles) {

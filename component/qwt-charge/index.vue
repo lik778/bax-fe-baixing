@@ -62,7 +62,8 @@
         <i>{{'￥' + (totalPrice / 100).toFixed(2)}}</i>
       </div>
       <div>
-        <el-button type="primary" @click="createOrder">
+        <el-button v-if="!isAgentSales"
+          type="primary" @click="createOrder">
           {{ submitButtonText }}
         </el-button>
         <span v-if="orderPayUrl">
@@ -176,6 +177,10 @@ export default {
     }
   },
   computed: {
+    isAgentSales() {
+      const roles = normalizeRoles(this.userInfo.roles)
+      return roles.includes('AGENT_SALES')
+    },
     isBxUser() {
       const roles = normalizeRoles(this.userInfo.roles)
       return roles.includes('BAIXING_USER')
