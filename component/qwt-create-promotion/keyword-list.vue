@@ -69,7 +69,7 @@ export default {
     },
     selectedWords: {
       type: Array,
-      required: true
+      default: []
     }
   },
   data() {
