@@ -6,6 +6,14 @@ import {
 
 // sidebar
 
+export function allowSeeQwtPromotion(roles) {
+  const currentRoles = normalizeRoles(roles)
+
+  return checkRoles(currentRoles, [
+    'BAIXING_USER'
+  ])
+}
+
 export function allowSeeQwtReport(roles) {
   const currentRoles = normalizeRoles(roles)
 

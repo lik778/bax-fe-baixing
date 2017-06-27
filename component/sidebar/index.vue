@@ -36,12 +36,12 @@
               服务开启
             </router-link>
           </el-menu-item>
-          <el-menu-item index="2-2">
+          <el-menu-item index="2-2" v-if="allowSeeQwtPromotion">
             <router-link :to="{ name: 'qwt-create-promotion' }" tag="p">
               新建推广
             </router-link>
           </el-menu-item>
-          <el-menu-item index="2-3">
+          <el-menu-item index="2-3" v-if="allowSeeQwtPromotion">
             <router-link :to="{ name: 'qwt-promotion-list' }" tag="p">
               推广管理
             </router-link>
@@ -105,6 +105,7 @@
 import { version } from '../../package.json'
 
 import {
+  allowSeeQwtPromotion,
   allowSeeQwtReport
 } from 'util/fengming-role'
 
@@ -153,6 +154,9 @@ export default {
       return allowSeeAccount(this.userInfo.roles)
     },
     //
+    allowSeeQwtPromotion() {
+      return allowSeeQwtPromotion(this.userInfo.roles)
+    },
     allowSeeQwtReport() {
       return allowSeeQwtReport(this.userInfo.roles)
     }
