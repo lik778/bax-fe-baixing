@@ -59,13 +59,13 @@
         </div>
       </span>
       <span>
-        <div>
+        <div v-if="false">
           <el-button @click="switchToolbox('time range')">
             设置投放日期
             <i class="el-icon-arrow-down el-icon--right"></i>
           </el-button>
         </div>
-        <div v-if="toolbox.showTimeRange" style="width: 260px;">
+        <div v-if="false" style="width: 260px;">
           <el-date-picker type="daterange" placeholder="选择日期范围"
             :picker-options="{disabledDate}"
             style="width: 200px;" v-model="toolbox.timeRange">
