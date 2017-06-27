@@ -1,7 +1,8 @@
 
 <template>
   <div>
-    <el-table :data="words" style="width: 860px"
+    <el-table ref="table" :data="words"
+      style="width: 860px" row-key="word"
       @selection-change="onSelectionChange">
       <el-table-column v-if="selectable" type="selection" width="40">
       </el-table-column>
@@ -70,25 +71,25 @@ export default {
     words: {
       type: Array,
       required: true
+    },
+    selectedWords: {
+      type: Array,
+      required: true
     }
-    // selectedWords: {
-    //   type: Array,
-    //   required: true
-    // }
   },
   data() {
     return {
-      selectedWords: [],
+      // selectedWords: [],
       customPrices: []
     }
   },
   methods: {
-    // setRowSelection() {
-    //   this.words.forEach((row) => {
-    //     const selected = this.selectedWords.includes(row.word)
-    //     this.$refs.table.toggleRowSelection(row, selected)
-    //   })
-    // },
+    setRowSelection(words) {
+      this.words.forEach((row) => {
+        const selected = words.includes(row.word)
+        this.$refs.table.toggleRowSelection(row, selected)
+      })
+    },
     deleteWord(row) {
       this.$emit('delete-word', {...row})
     },
@@ -115,7 +116,6 @@ export default {
         word: r.word
       }))
 
-      this.selectedWords = [...words]
       this.$emit('select-words', words)
     },
     setCustomPrice(word, v, editable) {
@@ -150,12 +150,18 @@ export default {
       })
     },
     centToYuan
+  },
+  watch: {
+    words(v) {
+      const selectedWords = this.selectedWords.map(w => w.word)
+      /**
+       * 说明: element table 在 words 变更后,
+       */
+      setTimeout(() => {
+        this.setRowSelection(selectedWords)
+      }, 250)
+    }
   }
-  // watch: {
-  //   'selectedWords': function() {
-  //     this.setRowSelection()
-  //   }
-  // }
 }
 
 </script>
