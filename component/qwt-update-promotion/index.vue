@@ -340,16 +340,24 @@ export default {
       Message.warning('投放渠道不能修改')
     },
     updateExistWord(word) {
-      this.promotion.updatedKeywords = this.promotion.updatedKeywords.map(w => {
-        if (w.word === word.word) {
-          return {
-            ...w,
-            price: word.price
+      const words = this.promotion.updatedKeywords.map(w => w.word)
+
+      if (words.includes(word.word)) {
+        this.promotion.updatedKeywords = this.promotion.updatedKeywords.map(w => {
+          if (w.word === word.word) {
+            return {
+              ...w,
+              price: word.price
+            }
+          } else {
+            return {...w}
           }
-        } else {
-          return {...w}
-        }
-      })
+        })
+      } else {
+        this.promotion.updatedKeywords.push({
+          ...word
+        })
+      }
     },
     updateNewWord(word) {
       this.promotion.newKeywords = this.promotion.newKeywords.map(w => {
