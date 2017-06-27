@@ -12,15 +12,10 @@
       </el-table-column>
       <el-table-column label="CPC最高出价 (元/次点击)" width="200">
         <template scope="s">
-          <el-input v-if="wordPriceEditable(s.row.word)"
-            size="mini" placeholder="单位: 元"
-            :value="getWordPrice[s.row.word]"
-            @blur="e => setCustomPrice(s.row.word, e.target.value, false)">
+          <el-input size="mini" placeholder="单位: 元"
+            :value="getWordPrice(s.row.word)"
+            @change="v => setCustomPrice(s.row.word, v, false)">
           </el-input>
-          <label v-else
-            @click="setCustomPrice(s.row.word, s.row.price / 100, true)">
-            {{ getWordPrice(s.row.word) }}
-          </label>
         </template>
       </el-table-column>
       <el-table-column v-if="deletable" label="操作" width="80">
