@@ -290,6 +290,11 @@ export default {
     async createPromotion() {
       const p = clone(this.newPromotion)
 
+      const pp = this.predictedInfo.dailyBudget
+      if (p.dailyBudget < pp) {
+        return Message.error(`推广日预算需大于 ${pp} 元`)
+      }
+
       p.dailyBudget = p.dailyBudget * 100
 
       if (this.timeType === 'custom') {

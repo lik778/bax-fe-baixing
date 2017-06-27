@@ -377,6 +377,11 @@ export default {
         'dailyBudget', 'landingPage', 'landingType', 'areas', 'validTime',
         'newKeywords', 'deletedKeywords', 'updatedKeywords')
 
+      const pp = this.predictedInfo.dailyBudget
+      if (p.dailyBudget < pp) {
+        return Message.error(`推广日预算需大于 ${pp} 元`)
+      }
+
       p.dailyBudget = p.dailyBudget * 100
 
       if (this.timeType === 'custom') {
