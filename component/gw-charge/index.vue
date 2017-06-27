@@ -49,9 +49,7 @@
       </div>
       <footer>
         <li>合同条款:</li>
-        <li>1. 一切我们说了算</li>
-        <li>2. 我们最牛逼</li>
-        <li>3. 不续费弄死你</li>
+        <li>~ 待补充 ~</li>
       </footer>
     </section>
   </div>
