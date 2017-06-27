@@ -67,6 +67,7 @@
         </div>
         <div v-if="toolbox.showTimeRange" style="width: 260px;">
           <el-date-picker type="daterange" placeholder="选择日期范围"
+            :picker-options="{disabledDate}"
             style="width: 200px;" v-model="toolbox.timeRange">
           </el-date-picker>
           <el-button type="primary" size="mini"
@@ -132,6 +133,10 @@ import {
   campaignStatus,
   semPlatformCn
 } from 'constant/fengming'
+
+import {
+  disabledDate
+} from 'util/element'
 
 import equal from 'lodash.isequal'
 
@@ -398,7 +403,8 @@ export default {
       }
 
       return toHumanTime(date, 'YYYY-MM-DD HH:mm')
-    }
+    },
+    disabledDate
   },
   async mounted() {
     await getCurrentCampaigns({...this.query})
