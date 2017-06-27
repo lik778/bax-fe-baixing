@@ -199,6 +199,7 @@ import Topbar from 'com/topbar'
 
 import { getCnName } from 'util/meta'
 import {
+  checkCampaignValidTime,
   getCampaignPrediction,
   getCampaignValidTime
 } from 'util/campaign'
@@ -290,7 +291,7 @@ export default {
       p.dailyBudget = p.dailyBudget * 100
 
       if (this.timeType === 'custom') {
-        if (p.validTime.length) {
+        if (checkCampaignValidTime(p.validTime) === 'custom') {
           p.validTime = getCampaignValidTime(p.validTime)
         } else {
           return Message.error('请填写投放日期或选择长期投放')
