@@ -389,7 +389,7 @@ export default {
       return campaignStatus[String(s)] || '未知'
     },
     fmtDate(range, date) {
-      if (!range) {
+      if (!range || (date === null)) {
         return '长期'
       }
 
