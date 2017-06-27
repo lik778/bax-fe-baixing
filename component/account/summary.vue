@@ -15,9 +15,6 @@
             <p>今日预算：{{summary.budget / 100}}元</p>
           </el-col>
           <el-col :span="8">
-            <my-progress type="circle" :percentage="consumeRatio" :width="80" />
-          </el-col>
-          <el-col :span="8">
             <div class="btns">
               <router-link :to="{name: 'qwt-promotion-list'}"><el-button type="primary">推广管理</el-button></router-link>
             </div>
