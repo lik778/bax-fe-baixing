@@ -2,6 +2,10 @@
 import { createStore } from 'vue-duo'
 
 import {
+  mergeKeywords
+} from 'util/campaign'
+
+import {
   getRecommendedWords,
   getCurrentBalance,
   getCreativeWords,
@@ -16,7 +20,7 @@ const store = createStore({
 
 store.subscribeActions({
   [getRecommendedWords]: (words) => ({
-    recommendedWords: [...words, ...store.state.recommendedWords]
+    recommendedWords: mergeKeywords(store.state.recommendedWords, words)
   }),
   [getCreativeWords]: (words) => ({
     creativeWords: [...words]

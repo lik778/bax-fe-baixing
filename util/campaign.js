@@ -1,6 +1,15 @@
 
 import { toTimestamp } from 'utils'
 
+export function mergeKeywords(preWords, newWords) {
+  const words = preWords.map(w => w.word)
+
+  return [
+    ...newWords.filter(w => !words.includes(w.word)).map(w => ({...w})),
+    ...preWords.map(w => ({...w}))
+  ]
+}
+
 export function getCampaignPrediction(total, prices) {
   const result = {
     dailyBudget: 100, // 元
