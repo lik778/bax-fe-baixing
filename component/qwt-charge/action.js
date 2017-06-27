@@ -8,6 +8,10 @@ import * as mapi from 'api/meta'
 export const getUserIdFromBxSalesId = createAction((salesId) => {
   return aapi.getUserIdFromBxSalesId(salesId)
 })
+// TODO - queryUserInfo, getUserInfo 嘟嘟噜的锅
+export const queryUserInfo = createAction((uid) => {
+  return aapi.queryUserInfo(uid)
+})
 
 export const getUserInfo = createAction((uid) => {
   return aapi.getUserInfo(uid)

@@ -82,6 +82,14 @@ export async function updateUserInfo(uid, info) {
   return body
 }
 
+export async function queryUserInfo(uid) {
+  const body = await api
+    .get(`/user/${uid}`)
+    .json()
+
+  return toCamelcase(body.data)
+}
+
 export async function getUserInfo(uid) {
   const users = await _getUsers({
     userId: uid

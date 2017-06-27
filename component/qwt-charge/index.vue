@@ -57,11 +57,17 @@
             @click="checkInputSalesId"></i>
         </span>
       </div>
+      <div v-if="displayUserMobile">
+        <aside>用户手机号：</aside>
+        <span>
+          {{ displayUserMobile }}
+        </span>
+      </div>
       <div>
         <aside>百姓网余额需支付：</aside>
         <i>{{'￥' + (totalPrice / 100).toFixed(2)}}</i>
       </div>
-      <div>
+      <div class="pay-info">
         <el-button v-if="!isAgentSales"
           type="primary" @click="createOrder">
           {{ submitButtonText }}
@@ -113,6 +119,7 @@ import {
   getProductDiscounts,
   getProductPackages,
   getOrderPayUrl,
+  queryUserInfo,
   getProducts,
   createOrder,
   getUserInfo,
@@ -167,6 +174,7 @@ export default {
       allProducts,
 
       salesIdLocked: false,
+      displayUserMobile: '',
       displayBxSalesId: '',
       inputSalesId: '',
 
@@ -484,12 +492,22 @@ export default {
     centToYuan
   },
   async mounted() {
-    const { sales_id: salesId } = this.$route.query
+    const {
+      sales_id: salesId,
+      user_id: userId
+    } = this.$route.query
 
     if (salesId) {
       const userInfo = await getUserInfo(salesId)
       this.displayBxSalesId = userInfo.salesId
       this.salesIdLocked = true
+    }
+
+    if (userId) {
+      const info = await queryUserInfo(userId)
+      if (info.mobile) {
+        this.displayUserMobile = info.mobile
+      }
     }
 
     await Promise.all([
@@ -567,7 +585,7 @@ export default {
       display: flex;
     }
 
-    & > div:nth-child(4) {
+    & > div.pay-info {
       & > span {
         display: inline-flex;
         align-items: center;
