@@ -87,7 +87,7 @@
             <i class="el-icon-menu" />部门业绩
           </router-link>
         </el-menu-item>
-        <el-menu-item index="5">
+        <el-menu-item index="5" v-if="allowSeeAccount">
           <router-link :to="{ name: 'account' }" tag="p">
             <i class="el-icon-menu" />账户
           </router-link>
@@ -105,11 +105,14 @@
 import { version } from '../../package.json'
 
 import {
+  // bx ad
   allowQueryMaterials,
   allowQueryAdItems,
   allowQueryOrders,
   allowQueryUsers,
-  allowSeeDashboard
+  // global
+  allowSeeDashboard,
+  allowSeeAccount
 } from 'util/role'
 
 export default {
@@ -140,6 +143,9 @@ export default {
     },
     allowSeeDashboard() {
       return allowSeeDashboard(this.userInfo.roles)
+    },
+    allowSeeAccount() {
+      return allowSeeAccount(this.userInfo.roles)
     }
   }
 }
