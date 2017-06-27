@@ -14,7 +14,7 @@
         <template scope="s">
           <el-input size="mini" placeholder="单位: 元"
             :value="getWordPrice(s.row.word)"
-            @change="v => setCustomPrice(s.row.word, v, false)">
+            @change="v => setCustomPrice(s.row, v, false)">
           </el-input>
         </template>
       </el-table-column>
@@ -69,7 +69,7 @@ export default {
     },
     selectedWords: {
       type: Array,
-      default: []
+      default: () => []
     }
   },
   data() {
@@ -86,7 +86,11 @@ export default {
       })
     },
     deleteWord(row) {
-      this.$emit('delete-word', {...row})
+      this.$emit('delete-word', {
+        price: row.price,
+        word: row.word,
+        id: row.id
+      })
     },
     getWordPrice(word) {
       // return : 元
@@ -108,12 +112,13 @@ export default {
     onSelectionChange(rows) {
       const words = rows.map(r => ({
         price: this.getWordPrice(r.word) * 100 | 0,
-        word: r.word
+        word: r.word,
+        id: r.id
       }))
 
       this.$emit('select-words', words)
     },
-    setCustomPrice(word, v, editable) {
+    setCustomPrice({word, id}, v, editable) {
       let price = v ? toFloat(v) : this.getWordPrice(word)
       if (price <= 0) {
         price = 1
@@ -141,7 +146,8 @@ export default {
 
       this.$emit('update-word', {
         price: price * 100 | 0,
-        word
+        word,
+        id
       })
     },
     centToYuan
