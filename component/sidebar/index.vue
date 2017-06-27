@@ -46,7 +46,7 @@
               推广管理
             </router-link>
           </el-menu-item>
-          <el-menu-item index="2-4">
+          <el-menu-item index="2-4" v-if="allowSeeQwtReport">
             <router-link :to="{ name: 'qwt-dashboard' }" tag="p">
               数据报表
             </router-link>
@@ -105,6 +105,10 @@
 import { version } from '../../package.json'
 
 import {
+  allowSeeQwtReport
+} from 'util/fengming-role'
+
+import {
   // bx ad
   allowQueryMaterials,
   allowQueryAdItems,
@@ -141,11 +145,16 @@ export default {
     allowQueryUsers() {
       return allowQueryUsers(this.userInfo.roles)
     },
+    //
     allowSeeDashboard() {
       return allowSeeDashboard(this.userInfo.roles)
     },
     allowSeeAccount() {
       return allowSeeAccount(this.userInfo.roles)
+    },
+    //
+    allowSeeQwtReport() {
+      return allowSeeQwtReport(this.userInfo.roles)
     }
   }
 }
