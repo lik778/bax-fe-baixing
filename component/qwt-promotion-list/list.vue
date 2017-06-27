@@ -87,7 +87,7 @@
           </el-switch>
         </template>
       </el-table-column>
-      <el-table-column prop="id" label="ID" width="160">
+      <el-table-column prop="id" label="ID" width="120">
       </el-table-column>
       <el-table-column label="状态" width="120"
         :formatter="r => fmtStatus(r.status)">
@@ -109,7 +109,7 @@
       <el-table-column label="渠道" width="100"
         :formatter="r => fmtSource(r.source)">
       </el-table-column>
-      <el-table-column label="操作" width="80">
+      <el-table-column label="操作">
         <template scope="s">
           <router-link :to="{ name: 'qwt-update-promotion', params: { id: s.row.id } }">
             详情
@@ -397,7 +397,7 @@ export default {
         return '未知'
       }
 
-      return toHumanTime(date, 'YYYY-MM-DD')
+      return toHumanTime(date, 'YYYY-MM-DD HH:mm')
     }
   },
   async mounted() {
