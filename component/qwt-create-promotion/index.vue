@@ -305,12 +305,34 @@ export default {
         ...p.creativeWords
       ]
 
+      if (!p.landingPage) {
+        return Message.error('请填写投放页面')
+      }
+
       if (!p.keywords.length) {
         return Message.error('请填写关键字')
       }
 
       if (!p.areas.length) {
         return Message.error('请选择城市')
+      }
+
+      if (!p.creativeTitle) {
+        return Message.error('请填写创意标题')
+      }
+
+      if (p.creativeTitle.length < 9 ||
+        p.creativeTitle.length > 25) {
+        return Message.error('创意标题需要在9-25个字')
+      }
+
+      if (!p.creativeContent) {
+        return Message.error('请填写创意内容')
+      }
+
+      if (p.creativeContent.length < 9 ||
+        p.creativeContent.length > 40) {
+        return Message.error('创意内容需要在9-40个字')
       }
 
       await createCampaign(p)
