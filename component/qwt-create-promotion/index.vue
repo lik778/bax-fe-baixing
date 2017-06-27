@@ -138,6 +138,7 @@
           <span>
             <el-date-picker v-if="timeType === 'custom'"
               type="daterange" placeholder="选择日期范围"
+              :picker-options="{disabledDate}"
               v-model="newPromotion.validTime">
             </el-date-picker>
           </span>
@@ -197,6 +198,7 @@ import AreaSelector from 'com/common/area-selector'
 import KeywordList from './keyword-list'
 import Topbar from 'com/topbar'
 
+import { disabledDate } from 'util/element'
 import { getCnName } from 'util/meta'
 import {
   checkCampaignValidTime,
@@ -428,6 +430,7 @@ export default {
         ...this.newPromotion.areas.filter(i => i !== c)
       ]
     },
+    disabledDate,
     centToYuan
   },
   async mounted() {

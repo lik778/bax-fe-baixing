@@ -137,6 +137,7 @@
           <span>
             <el-date-picker v-if="timeType === 'custom'"
               type="daterange" placeholder="选择日期范围"
+              :picker-options="{disabledDate}"
               v-model="promotion.validTime">
             </el-date-picker>
           </span>
@@ -197,6 +198,7 @@ import KeywordList from '../qwt-create-promotion/keyword-list'
 import AreaSelector from 'com/common/area-selector'
 import Topbar from 'com/topbar'
 
+import { disabledDate } from 'util/element'
 import { getCnName } from 'util/meta'
 import {
   checkCampaignValidTime,
@@ -439,6 +441,7 @@ export default {
         ...this.promotion.areas.filter(i => i !== c)
       ]
     },
+    disabledDate,
     centToYuan
   },
   watch: {
