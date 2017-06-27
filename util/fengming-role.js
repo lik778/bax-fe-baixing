@@ -6,6 +6,10 @@ import {
 
 // sidebar
 
+export function allowSeeGw(roles, uid) {
+  return uid === 88
+}
+
 export function allowSeeQwtPromotion(roles) {
   const currentRoles = normalizeRoles(roles)
 

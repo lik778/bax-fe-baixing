@@ -12,7 +12,7 @@
             <i class="el-icon-menu" />首页
           </router-link>
         </el-menu-item>
-        <el-submenu index="1">
+        <el-submenu index="1" v-if="allowSeeGw">
           <template slot="title">
             <i class="el-icon-star-on" />建站工具
           </template>
@@ -106,7 +106,8 @@ import { version } from '../../package.json'
 
 import {
   allowSeeQwtPromotion,
-  allowSeeQwtReport
+  allowSeeQwtReport,
+  allowSeeGw
 } from 'util/fengming-role'
 
 import {
@@ -159,6 +160,9 @@ export default {
     },
     allowSeeQwtReport() {
       return allowSeeQwtReport(this.userInfo.roles)
+    },
+    allowSeeGw() {
+      return allowSeeGw(this.userInfo.roles, this.userInfo.id)
     }
   }
 }
