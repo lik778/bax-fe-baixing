@@ -344,7 +344,7 @@ export default {
       let p = price
 
       for (const d of discounts) {
-        p = p * (1 - d.percentage / 100)
+        p = p - ((p * d.percentage / 100) | 0)
       }
 
       return p | 0
