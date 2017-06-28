@@ -18,7 +18,7 @@ import UploadProfit from 'com/upload-profit'
 import Dashboard from 'com/dashboard'
 
 import MaterialList from 'com/ssp-material-list'
-import MaterialInfo from 'com/material-info'
+import MaterialInfo from 'com/ssp-material-info'
 import CreateOrder from 'com/order-create'
 import AdCalendar from 'com/ssp-ad-calendar'
 import OrderInfo from 'com/order-info'
