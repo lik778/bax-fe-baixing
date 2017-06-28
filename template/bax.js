@@ -1,21 +1,10 @@
 
-// 主页
-import Homepage from 'com/homepage'
-
 // 全网通
 import QwtUpdatePromotion from 'com/qwt-update-promotion'
 import QwtCreatePromotion from 'com/qwt-create-promotion'
 import QwtPromotionList from 'com/qwt-promotion-list'
 import QwtDashboard from 'com/qwt-dashboard'
 import QwtCharge from 'com/qwt-charge'
-
-// 精品官网
-import GwCustomPage from 'com/gw-custom-page'
-import GwCharge from 'com/gw-charge'
-
-// dashboard
-import UploadProfit from 'com/upload-profit'
-import Dashboard from 'com/dashboard'
 
 // ssp
 import MaterialList from 'com/ssp-material-list'
@@ -26,6 +15,15 @@ import OrderInfo from 'com/ssp-order-info'
 import OrderList from 'com/ssp-order-list'
 import UserList from 'com/ssp-user-list'
 import AdList from 'com/ssp-ad-list'
+
+// 精品官网
+import GwCustomPage from 'com/gw-custom-page'
+import GwCharge from 'com/gw-charge'
+
+// global
+import UploadProfit from 'com/upload-profit'
+import Dashboard from 'com/dashboard'
+import Homepage from 'com/homepage'
 import Account from 'com/account'
 
 import Bax from 'com/bax'
