@@ -20,7 +20,7 @@ import Dashboard from 'com/dashboard'
 // ssp
 import MaterialList from 'com/ssp-material-list'
 import MaterialInfo from 'com/ssp-material-info'
-import CreateOrder from 'com/order-create'
+import CreateOrder from 'com/ssp-order-create'
 import AdCalendar from 'com/ssp-ad-calendar'
 import OrderInfo from 'com/ssp-order-info'
 import OrderList from 'com/ssp-order-list'
