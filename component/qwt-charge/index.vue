@@ -53,7 +53,7 @@
           <el-input v-model.trim="inputSalesId"
             placeholder="如有服务编号请您填写">
           </el-input>
-          <i class="el-icon-check"
+          <i class="el-icon-check" title="检测服务编号"
             @click="checkInputSalesId"></i>
         </span>
       </div>
@@ -331,7 +331,7 @@ export default {
       this.checkedChargeProductId = id
     },
     setChargeMoney(v) {
-      this.chargeMoney = v * 100
+      this.chargeMoney = (v * 100) | 0
     },
     getDiscountPrice(productType, price) {
       if (!this.allowDiscount) {
@@ -462,7 +462,7 @@ export default {
         return Message.error('请选择购买的产品 ~')
       }
 
-      if (checkedChargeProductId) {
+      if (checkedChargeProductId && chargeMoney) {
         newOrder.products = [{
           price: chargeMoney,
           id: productId
