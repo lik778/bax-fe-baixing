@@ -86,7 +86,7 @@ const qwtRoutes = [{
   name: 'qwt-charge'
 }]
 
-const bxadRoutes = [{
+const sspRoutes = [{
   component: AdList,
   path: '/main/ads',
   name: 'ad-list'
@@ -138,7 +138,7 @@ const router = new VueRouter({
     component: Account,
     path: '/main/account',
     name: 'account'
-  }, ...qwtRoutes, ...bxadRoutes, ...gwRoutes]
+  }, ...qwtRoutes, ...sspRoutes, ...gwRoutes]
 })
 
 const app = new Vue({
