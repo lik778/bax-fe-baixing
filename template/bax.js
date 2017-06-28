@@ -24,7 +24,7 @@ import CreateOrder from 'com/ssp-order-create'
 import AdCalendar from 'com/ssp-ad-calendar'
 import OrderInfo from 'com/ssp-order-info'
 import OrderList from 'com/ssp-order-list'
-import UserList from 'com/user-list'
+import UserList from 'com/ssp-user-list'
 import AdList from 'com/ssp-ad-list'
 import Account from 'com/account'
 
