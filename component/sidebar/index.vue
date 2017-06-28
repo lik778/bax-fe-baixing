@@ -2,19 +2,19 @@
 <template>
   <main class="sidebar">
     <header>
-      <p>BAX SSP</p>
+      <p>BAX</p>
       <p>v{{ version }}</p>
     </header>
     <content>
       <el-menu default-active="0">
         <el-menu-item index="0">
           <router-link :to="{ name: 'root' }" tag="p">
-            <i class="el-icon-menu" />首页
+            <i class="el-icon-menu"></i>首页
           </router-link>
         </el-menu-item>
         <el-submenu index="1" v-if="allowSeeGw">
           <template slot="title">
-            <i class="el-icon-star-on" />建站工具
+            <i class="el-icon-star-on"></i>建站工具
           </template>
           <el-menu-item index="1-1">
             <router-link :to="{ name: 'gw-charge' }" tag="p">
@@ -29,7 +29,7 @@
         </el-submenu>
         <el-submenu index="2">
           <template slot="title">
-            <i class="el-icon-star-on" />全网通
+            <i class="el-icon-star-on"></i>全网通
           </template>
           <el-menu-item index="2-1">
             <router-link :to="{ name: 'qwt-charge' }" tag="p">
@@ -54,7 +54,7 @@
         </el-submenu>
         <el-submenu index="3">
           <template slot="title">
-            <i class="el-icon-message" />品牌广告
+            <i class="el-icon-message"></i>品牌广告
           </template>
           <el-menu-item index="3-1" v-if="allowQueryAdItems">
             <router-link :to="{ name: 'ad-list' }" tag="p">
@@ -84,16 +84,16 @@
         </el-submenu>
         <el-menu-item index="4" v-if="allowSeeDashboard">
           <router-link :to="{ name: 'dashboard' }" tag="p">
-            <i class="el-icon-menu" />部门业绩
+            <i class="el-icon-menu"></i>部门业绩
           </router-link>
         </el-menu-item>
         <el-menu-item index="5" v-if="allowSeeAccount">
           <router-link :to="{ name: 'account' }" tag="p">
-            <i class="el-icon-menu" />账户
+            <i class="el-icon-menu"></i>账户
           </router-link>
         </el-menu-item>
         <el-menu-item index="6">
-          <i class="el-icon-setting" />设置
+          <i class="el-icon-setting"></i>设置
         </el-menu-item>
       </el-menu>
     </content>
