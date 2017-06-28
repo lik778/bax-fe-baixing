@@ -421,6 +421,10 @@ export default {
         data.discountCodes = adPrice.discountCodes.map(d => d.code)
       }
 
+      if (!data.salesId) {
+        return Message.error('请选择销售')
+      }
+
       const oid = await createOrder(data)
 
       this.empty()
