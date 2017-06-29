@@ -62,17 +62,17 @@
           </span>
         </div>
       </section>
-      <section>
+      <section class="creative">
         <header>推广物料设置</header>
         <div>
           <aside>推广标题:</aside>
-            <span>
-              <el-input type="text" style="width: 420px"
-                placeholder="请输入标题 ~ (字数限制为9-25个字)"
-                :value="getProp('creativeTitle')"
-                @change="v => promotion.creativeTitle = v">
-              </el-input>
-            </span>
+          <span>
+            <el-input type="text" style="width: 420px"
+              placeholder="请输入标题 ~ (字数限制为9-25个字)"
+              :value="getProp('creativeTitle')"
+              @change="v => promotion.creativeTitle = v">
+            </el-input>
+          </span>
         </div>
         <div>
           <aside style="align-items: flex-start; padding-top: 5px;">
@@ -85,6 +85,7 @@
               @change="v => promotion.creativeContent = v">
             </el-input>
           </span>
+          <p>{{ originPromotion.refuseReason }}</p>
         </div>
         <footer>
           <el-button type="primary" @click="checkCreativeContent">
@@ -594,6 +595,17 @@ export default {
           margin-right: 20px;
           color: #6a778c;
           font-size: 14px;
+        }
+      }
+    }
+
+    & > section.creative {
+      & > div:nth-child(3) {
+        & > p {
+          margin-left: 15px;
+          font-size: 12px;
+          line-height: 1.75;
+          color: #ff1400;
         }
       }
     }

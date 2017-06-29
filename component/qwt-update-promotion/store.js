@@ -75,6 +75,7 @@ store.subscribeActions({
       info.landingPage = info.creative.landingPage
       info.creativeContent = info.creative.content
       info.creativeTitle = info.creative.title
+      info.refuseReason = (info.creative.extra && info.creative.extra.refuseReason) || ''
       info.creative = undefined
     }
 
