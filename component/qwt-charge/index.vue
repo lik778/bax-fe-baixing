@@ -480,6 +480,17 @@ export default {
         newOrder.discountCodes = [...codes]
       }
 
+      if (!this.isBxUser) {
+        try {
+          await this.$confirm('是否购买 ?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消'
+          })
+        } catch (err) {
+          return
+        }
+      }
+
       const oids = await createOrder(newOrder)
       const summary = this.checkedProductDesc
 
