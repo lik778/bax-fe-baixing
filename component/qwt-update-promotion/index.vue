@@ -97,6 +97,8 @@
         <h4>已经设置的关键词</h4>
         <keyword-list :words="currentKeywords"
           :selectable="false" deletable
+          :show-prop-show="false"
+          :show-prop-status="true"
           @update-word="updateExistWord"
           @delete-word="word => promotion.deletedKeywords.push(word)">
         </keyword-list>

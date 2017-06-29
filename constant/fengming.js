@@ -1,4 +1,10 @@
 
+export const keywordStatus = {
+  '0': '投放中',
+  '-1': '已删除',
+  '1': '审核中'
+}
+
 export const semPlatform = {
   '0': 'baidu',
   '1': 'qihu',

@@ -8,7 +8,10 @@
       </el-table-column>
       <el-table-column prop="word" label="关键词" width="420">
       </el-table-column>
-      <el-table-column prop="show" label="日均搜索指数">
+      <el-table-column v-if="showPropShow" prop="show" label="日均搜索指数">
+      </el-table-column>
+      <el-table-column v-if="showPropStatus" label="关键词状态"
+        :formatter="r => fmtStatus(r.status)">
       </el-table-column>
       <el-table-column label="CPC最高出价 (元/次点击)" width="200">
         <template scope="s">
@@ -31,6 +34,8 @@
 </template>
 
 <script>
+
+import { keywordStatus } from 'constant/fengming'
 
 function centToYuan(s) {
   return toFloat(s) / 100
@@ -70,6 +75,14 @@ export default {
     selectedWords: {
       type: Array,
       default: () => []
+    },
+    showPropShow: {
+      type: Boolean,
+      default: true
+    },
+    showPropStatus: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -149,6 +162,9 @@ export default {
         word,
         id
       })
+    },
+    fmtStatus(s) {
+      return keywordStatus[String(s)] || '未知'
     },
     centToYuan
   },
