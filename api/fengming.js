@@ -128,9 +128,17 @@ export async function getCurrentBalance() {
 }
 
 export async function checkCreativeContent(opts) {
+  const {
+    creativeContent,
+    creativeTitle
+  } = opts
+
   const body = await fengming
     .get('/creative/check')
-    .query(reverseCamelcase(opts))
+    .query(reverseCamelcase({
+      creativeContent: removeComma(creativeContent),
+      creativeTitle: removeComma(creativeTitle)
+    }))
     .json()
 
   return body.data
@@ -177,6 +185,7 @@ export async function getLogs(opts = {}) {
     _getLogs(query),
     _getLogCount(query)
   ])
+
   return {
     query: {
       ...query,
@@ -191,6 +200,7 @@ export async function getSummary() {
     getCurrentBalance(),
     _getDailySummary()
   ])
+
   return {
     balance,
     ...daily
@@ -202,6 +212,7 @@ export async function getHomepageSummary() {
     _getCurrentCampaignCount(),
     getCurrentBalance()
   ])
+
   return {
     balance,
     campaignCount
@@ -254,4 +265,13 @@ async function _getLogCount(opts) {
     .json()
 
   return body.data
+}
+
+/**
+ * private
+ */
+
+function removeComma(s) {
+  // 移除 qs 中的 逗号 ~
+  return s.replace(/,/g, '')
 }
