@@ -167,7 +167,7 @@
           <el-button v-if="false" type="primary">
             先去充值
           </el-button>
-          <el-button v-if="false" type="primary" @click="updatePromotion">
+          <el-button type="primary" @click="updatePromotion">
             更新推广
           </el-button>
         </div>
