@@ -406,6 +406,8 @@ export default {
     },
     getUpdatedPromotionData() {
       // dailyBudget areas 要么都传, 要么都不传
+      const { validTime: originValidTime } = this.originPromotion
+
       const {
         dailyBudget,
         validTime,
@@ -440,7 +442,11 @@ export default {
           }
         } else {
           // 比如: sb user 点击自定义投放 却 不选时间
-          throw new Error('请填写投放日期或选择长期投放')
+          if (checkCampaignValidTime(originValidTime) === 'custom') {
+            // ignore
+          } else {
+            throw new Error('请填写投放日期或选择长期投放')
+          }
         }
       }
 
