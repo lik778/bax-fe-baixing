@@ -501,10 +501,8 @@ export default {
       await getRecommendedWords(queryWord)
     },
     async checkCreativeContent() {
-      const {
-        creativeContent,
-        creativeTitle
-      } = this.promotion
+      const creativeContent = this.getProp('creativeContent')
+      const creativeTitle = this.getProp('creativeTitle')
 
       if (!creativeContent) {
         return Message.error('请填写推广内容')
