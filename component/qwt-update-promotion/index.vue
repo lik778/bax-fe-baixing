@@ -11,15 +11,15 @@
           <aside>投放渠道：</aside>
           <span>
             <el-button-group>
-              <el-button v-if="false" :type="promotion.source === 0 ? 'primary' : ''"
+              <el-button v-if="false" :type="getProp('source') === 0 ? 'primary' : ''"
                 @click="clickSourceTip">
                 百度
               </el-button>
-              <el-button :type="promotion.source === 5 ? 'primary' : ''"
+              <el-button :type="getProp('source') === 5 ? 'primary' : ''"
                 @click="clickSourceTip">
                 搜狗
               </el-button>
-              <el-button v-if="false" :type="promotion.source === 1 ? 'primary' : ''"
+              <el-button v-if="false" :type="getProp('source') === 1 ? 'primary' : ''"
                 @click="clickSourceTip">
                 360
               </el-button>
@@ -34,15 +34,16 @@
             <div>
               <el-button-group>
                 <el-button v-for="o of landingTypeOpts" :key="o.value"
-                  @click="promotion.landingType = o.value"
-                  :type="promotion.landingType === o.value ? 'primary' : ''">
+                  :type="getProp('landingType') === o.value ? 'primary' : ''"
+                  @click="promotion.landingType = o.value">
                   {{ o.label }}
                 </el-button>
               </el-button-group>
             </div>
             <div style="margin-top: 20px; width: 490px;">
-              <el-input v-model.trim="promotion.landingPage"
-                placeholder="请输入投放网址, 如: http://baixing.com">
+              <el-input :value="getProp('landingPage')"
+                placeholder="请输入投放网址, 如: http://baixing.com"
+                @change="v => promotion.landingPage = v.trim()">
               </el-input>
             </div>
           </span>
@@ -51,7 +52,7 @@
           <aside>投放城市：</aside>
           <span>
             <el-tag type="success" closable
-              v-for="c in promotion.areas" :key="c"
+              v-for="c in getProp('areas')" :key="c"
               @close="removeArea(c)">
               {{ formatterArea(c) }}
             </el-tag>
@@ -66,8 +67,10 @@
         <div>
           <aside>推广标题:</aside>
             <span>
-              <el-input type="text" placeholder="请输入标题 ~ (字数限制为9-25个字)" style="width: 420px"
-                v-model="promotion.creativeTitle">
+              <el-input type="text" style="width: 420px"
+                placeholder="请输入标题 ~ (字数限制为9-25个字)"
+                :value="getProp('creativeTitle')"
+                @change="v => promotion.creativeTitle = v">
               </el-input>
             </span>
         </div>
@@ -78,7 +81,8 @@
           <span>
             <el-input type="textarea" placeholder="请输入内容 ~ (字数限制为9-40个字)"
               :rows="5" style="width: 420px"
-              v-model="promotion.creativeContent">
+              :value="getProp('creativeContent')"
+              @change="v => promotion.creativeContent = v">
             </el-input>
           </span>
         </div>
@@ -125,11 +129,11 @@
           <span>
             <el-button-group>
               <el-button :type="timeType === 'long' ? 'primary' : ''"
-                @click="timeType = 'long'">
+                @click="setTimeType('long')">
                 长期投放
               </el-button>
               <el-button :type="timeType === 'custom' ? 'primary' : ''"
-                @click="timeType = 'custom'">
+                @click="setTimeType('custom')">
                 定时投放
               </el-button>
             </el-button-group>
@@ -138,7 +142,8 @@
             <el-date-picker v-if="timeType === 'custom'"
               type="daterange" placeholder="选择日期范围"
               :picker-options="{disabledDate}"
-              v-model="promotion.validTime">
+              :value="getProp('validTime')"
+              @input="v => promotion.validTime = v">
             </el-date-picker>
           </span>
         </div>
@@ -146,7 +151,8 @@
           <aside>设置推广日预算:</aside>
           <span>
             <el-input type="number" placeholder="请输入每日最高预算"
-              v-model="promotion.dailyBudget">
+              :value="getProp('dailyBudget')"
+              @change="v => promotion.dailyBudget = v">
             </el-input>
           </span>
           <i>元</i>
@@ -180,7 +186,7 @@
       </section>
     </main>
     <area-selector :all-areas="allAreas"
-      :areas="promotion.areas"
+      :areas="getProp('areas')"
       :visible="areaDialogVisible"
       @ok="onChangeAreas"
       @cancel="areaDialogVisible = false">
@@ -191,10 +197,8 @@
 <script>
 
 import { Message } from 'element-ui'
-import pick from 'lodash.pick'
-import clone from 'clone'
 
-import KeywordList from '../qwt-create-promotion/keyword-list'
+import KeywordList from 'com/qwt-create-promotion/keyword-list'
 import AreaSelector from 'com/common/area-selector'
 import Topbar from 'com/topbar'
 
@@ -207,13 +211,8 @@ import {
 } from 'util/campaign'
 
 import {
-  toHumanTime,
   centToYuan
 } from 'utils'
-
-import {
-  landingTypeOpts
-} from 'constant/fengming'
 
 import {
   checkCreativeContent,
@@ -221,26 +220,13 @@ import {
   getCurrentBalance,
   getCampaignInfo,
   updateCampaign,
+  setTimeType,
   clearStore
 } from './action'
 
 import store from './store'
 
-const emptyPromotion = {
-  creativeContent: '',
-  creativeTitle: '',
-  dailyBudget: 0,
-  landingPage: '',
-  landingType: 0,
-  validTime: [],
-  keywords: [],
-  areas: [],
-  source: 5,
-  //
-  updatedKeywords: [],
-  deletedKeywords: [],
-  newKeywords: []
-}
+const isArray = Array.isArray
 
 export default {
   name: 'qwt-update-promotion',
@@ -262,25 +248,50 @@ export default {
   },
   data() {
     return {
-      promotion: clone(emptyPromotion),
-
       newaddedWordsVisible: false,
       areaDialogVisible: false,
-      timeType: 'long', // long, custom
       queryWord: '',
-
-      landingTypeOpts
+      // 注: 此处逻辑比较容易出错, 此处 定义为 undefined 与 getXXXdata 处 密切相关
+      // 注: 需要密切关注 更新 数据 的获取
+      promotion: {
+        // 创意
+        landingType: undefined,
+        landingPage: undefined,
+        creativeTitle: undefined,
+        creativeContent: undefined,
+        // 活动
+        areas: undefined,
+        dailyBudget: undefined,
+        validTime: undefined,
+        // 关键词
+        updatedKeywords: [],
+        deletedKeywords: [],
+        newKeywords: []
+      }
     }
   },
   computed: {
     currentKeywords() {
+      const { keywords } = this.originPromotion
+
       const {
-        deletedKeywords,
-        keywords
+        updatedKeywords,
+        deletedKeywords
       } = this.promotion
 
       return keywords.filter(w => {
         return !deletedKeywords.map(i => i.id).includes(w.id)
+      }).map(w => {
+        for (const word of updatedKeywords) {
+          if (word.id === w.id) {
+            return {
+              ...w,
+              ...word
+            }
+          }
+        }
+
+        return {...w}
       })
     },
     predictedInfo() {
@@ -304,37 +315,18 @@ export default {
     }
   },
   methods: {
+    getProp(prop) {
+      if (typeof this.promotion[prop] !== 'undefined') {
+        return this.promotion[prop]
+      }
+
+      return this.originPromotion[prop]
+    },
     async initCampaignInfo() {
-      const info = await getCampaignInfo(this.id)
-
-      info.dailyBudget = info.dailyBudget / 100 | 0
-      if (info.timeRange && info.timeRange.length &&
-        (info.timeRange[0] !== null) &&
-        (info.timeRange[1] !== null)) {
-        info.validTime = [
-          toHumanTime(info.timeRange[0], 'YYYY-MM-DD'),
-          toHumanTime(info.timeRange[1], 'YYYY-MM-DD')
-        ]
-        this.timeType = 'custom'
-      } else {
-        info.validTime = []
-        this.timeType = 'long'
-      }
-
-      if (info.creative) {
-        info.landingType = info.creative.landingType
-        info.landingPage = info.creative.landingPage
-        info.creativeContent = info.creative.content
-        info.creativeTitle = info.creative.title
-        info.creative = undefined
-      }
-
-      this.promotion = {
-        ...this.promotion,
-        ...info
-      }
-
-      await getCurrentBalance()
+      await Promise.all([
+        getCampaignInfo(this.id),
+        getCurrentBalance()
+      ])
     },
     clickSourceTip() {
       Message.warning('投放渠道不能修改')
@@ -371,30 +363,118 @@ export default {
         }
       })
     },
-    async updatePromotion() {
-      // TODO: 增量更新
-      const p = pick(this.promotion, 'creativeContent', 'creativeTitle',
-        'dailyBudget', 'landingPage', 'landingType', 'areas', 'validTime',
-        'newKeywords', 'deletedKeywords', 'updatedKeywords')
+    getUpdatedCreativeData() {
+      // 说明: 如下四个值, 要么都不传, 要么都传
+      const {
+        creativeContent,
+        creativeTitle,
+        landingPage,
+        landingType
+      } = this.promotion
+
+      if (creativeContent === '') {
+        throw new Error('请填写推广内容')
+      }
+
+      if (creativeTitle === '') {
+        throw new Error('请填写推广标题')
+      }
+
+      if (landingPage === '') {
+        throw new Error('请填写投放页面')
+      }
+
+      if (creativeContent || creativeTitle || landingPage ||
+        (landingType !== undefined)) {
+        return {
+          landingType: this.getProp('landingType'),
+          creativeContent: this.getProp('creativeContent'),
+          creativeTitle: this.getProp('creativeTitle'),
+          landingPage: this.getProp('landingPage')
+        }
+      }
+
+      return {}
+    },
+    getUpdatedPromotionData() {
+      // dailyBudget areas 要么都传, 要么都不传
+      const {
+        dailyBudget,
+        validTime,
+        areas
+      } = this.promotion
+
+      const data = {}
 
       const pp = this.predictedInfo.dailyBudget
-      if (p.dailyBudget < pp) {
-        return Message.error(`推广日预算需大于 ${pp} 元`)
+      if ((dailyBudget !== undefined) && (dailyBudget < pp)) {
+        throw new Error(`推广日预算需大于 ${pp} 元`)
       }
 
-      p.dailyBudget = p.dailyBudget * 100
+      if (areas && areas.length === 0) {
+        throw new Error('请选择投放区域')
+      }
 
-      if (this.timeType === 'custom') {
-        if (checkCampaignValidTime(p.validTime) === 'custom') {
-          p.validTime = getCampaignValidTime(p.validTime)
-        } else {
-          return Message.error('请填写投放日期或选择长期投放')
-        }
+      if (dailyBudget || (areas && areas.length)) {
+        data.dailyBudget = this.getProp('dailyBudget') * 100 | 0
+        data.areas = isArray(areas) ? [...areas] : this.originPromotion.areas
+      }
+
+      if (this.timeType === 'long') {
+        data.validTime = [null, null]
       } else {
-        p.validTime = [null, null]
+        if (validTime) {
+          if (checkCampaignValidTime(validTime) === 'custom') {
+            data.validTime = getCampaignValidTime(validTime)
+          } else {
+            // 比如: clear daterange -> undefined || [null, null]
+            throw new Error('请填写投放日期或选择长期投放')
+          }
+        } else {
+          // 比如: sb user 点击自定义投放 却 不选时间
+          throw new Error('请填写投放日期或选择长期投放')
+        }
       }
 
-      await updateCampaign(this.id, p)
+      return data
+    },
+    getUpdatedKeywordsData() {
+      const {
+        updatedKeywords,
+        deletedKeywords,
+        newKeywords
+      } = this.promotion
+
+      const data = {}
+
+      if (updatedKeywords.length) {
+        data.updatedKeywords = [...updatedKeywords]
+      }
+
+      if (deletedKeywords.length) {
+        data.deletedKeywords = [...deletedKeywords]
+      }
+
+      if (newKeywords.length) {
+        data.newKeywords = [...newKeywords]
+      }
+
+      return data
+    },
+    async updatePromotion() {
+      let data = {}
+      try {
+        data = {
+          ...this.getUpdatedCreativeData(),
+          ...this.getUpdatedPromotionData(),
+          ...this.getUpdatedKeywordsData()
+        }
+      } catch (err) {
+        Message.error(err.message)
+        return
+      }
+
+      await updateCampaign(this.id, data)
 
       Message.success('更新成功')
 
@@ -451,10 +531,11 @@ export default {
     },
     removeArea(c) {
       this.promotion.areas = [
-        ...this.promotion.areas.filter(i => i !== c)
+        ...this.getProp('areas').filter(i => i !== c)
       ]
     },
     disabledDate,
+    setTimeType,
     centToYuan
   },
   watch: {

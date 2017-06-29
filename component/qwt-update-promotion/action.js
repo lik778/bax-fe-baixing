@@ -27,4 +27,6 @@ export const getCreativeWords = createAction((url) => {
   return fapi.getCreativeWords(url)
 })
 
+export const setTimeType = createAction()
+
 export const clearStore = createAction()
