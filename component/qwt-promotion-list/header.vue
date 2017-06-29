@@ -3,9 +3,10 @@
   <header class="qwt-promotion-header">
     <section>
       <span>
-        <bax-input placeholder="请输入订单号" icon="search" />
+        <bax-input placeholder="请输入订单号" icon="search">
+        </bax-input>
         <el-button @click="switchShowMoreFilters">
-          更多筛选<i class="el-icon-arrow-down el-icon--right" />
+          更多筛选<i class="el-icon-arrow-down el-icon--right"></i>
         </el-button>
       </span>
       <span>
@@ -19,11 +20,11 @@
       <div>
         <span class="filter-item">
           <label>投放状态</label>
-          <bax-select :options="[]" clearable />
+          <bax-select :options="[]" clearable></bax-select>
         </span>
         <span class="filter-item">
           <label>投放区域</label>
-          <bax-select :options="[]" clearable />
+          <bax-select :options="[]" clearable></bax-select>
         </span>
       </div>
     </section>

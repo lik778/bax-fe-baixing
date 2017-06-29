@@ -101,7 +101,8 @@
           <label>若没有您满意的关键词，</label>
           <a @click="switchWordsVisible">点此自定义添加</a>
         </h3>
-        <div v-if="recommendedWordsVisible">
+        <div class="recommend"
+          v-if="recommendedWordsVisible">
           <span>
             <el-input placeholder="请输入关键词" v-model="queryWord">
             </el-input>
@@ -118,6 +119,20 @@
           @update-word="updateRecommendedWord"
           @select-words="words => newPromotion.recommendedWords = [...words]">
         </keyword-list>
+        <div class="mobile-ratio">
+          <section>
+            选择投放移动端的出价比例
+          </section>
+          <section>
+            <span>
+              <el-input placeholder="默认为1" v-model="newPromotion.mobilePriceRatio">
+              </el-input>
+            </span>
+            <span>
+              (请输入 0.1-10 之间的数字)
+            </span>
+          </section>
+        </div>
       </section>
       <section class="timing">
         <header>设置时长和预算</header>
@@ -225,6 +240,7 @@ import {
 import store from './store'
 
 const emptyPromotion = {
+  mobilePriceRatio: 1,
   creativeContent: '',
   creativeTitle: '',
   dailyBudget: 0,
@@ -311,6 +327,11 @@ export default {
         ...p.recommendedWords,
         ...p.creativeWords
       ]
+
+      p.mobilePriceRatio = parseFloat(p.mobilePriceRatio)
+      if (!(p.mobilePriceRatio >= 0.1 && p.mobilePriceRatio <= 10)) {
+        return Message.error('请设置合理的移动端出价比例')
+      }
 
       if (!p.landingPage) {
         return Message.error('请填写投放页面')
@@ -466,7 +487,7 @@ export default {
 
     & > section {
       margin-bottom: 30px;
-      padding-bottom: 30px;
+      padding-bottom: 10px;
 
       & > header {
         color: #6a778c;
@@ -508,7 +529,7 @@ export default {
         }
       }
 
-      & > div:nth-child(5) {
+      & > div.recommend {
         display: flex;
         align-items: center;
 
@@ -520,6 +541,26 @@ export default {
           color: #404e61;
           font-size: 13px;
           font-weight: normal;
+        }
+      }
+
+      & > div.mobile-ratio {
+        display: block;
+
+        & > section:first-child {
+          font-size: 14px;
+          line-height: 1;
+          color: #424344;
+        }
+
+        & > section:last-child {
+          margin-top: 16px;
+
+          & > span:last-child {
+            margin-left: 14px;
+            font-size: 13px;
+            color: #404e61;
+          }
         }
       }
     }
