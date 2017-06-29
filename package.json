@@ -6,9 +6,9 @@
     "upload-asset": "qiniu -c tool/asset.qiniu.config.js -v",
     "upload": "qiniu -c tool/qiniu.config.js -v",
     "release": "node tool/release.js",
+    "lint": "eslint . --ext .js,.vue",
     "start": "node tool/server.js",
-    "build": "node tool/build.js",
-    "lint": "eslint . --ext .js,.vue"
+    "build": "node tool/build.js"
   },
   "repository": {
     "type": "git",
