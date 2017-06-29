@@ -89,6 +89,10 @@ content {
 
 <style>
 
+@import 'cssbase/mixin';
+
+@mixin scrollbar;
+
 body > content {
   width: 100%;
   min-width: 1200px;
