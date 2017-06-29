@@ -118,7 +118,7 @@
             （请优先添加较为核心的关键词，关键词长度不宜超过5个字，不区分大小写。）
           </strong>
         </div>
-        <keyword-list v-if="newaddedWordsVisible" :words="recommendedWords"
+        <keyword-list v-if="newaddedWordsVisible" :words="addibleWords"
           :selected-words="promotion.newKeywords"
           @update-word="updateNewWord"
           @select-words="words => promotion.newKeywords = [...words]">
@@ -295,6 +295,11 @@ export default {
 
         return {...w}
       })
+    },
+    addibleWords() {
+      const words = this.currentKeywords.map(w => w.word)
+
+      return this.recommendedWords.filter(w => !words.includes(w.word))
     },
     predictedInfo() {
       const {

@@ -17,7 +17,6 @@ import {
 import {
   getRecommendedWords,
   getCurrentBalance,
-  getCreativeWords,
   getCampaignInfo,
   setTimeType,
   clearStore
@@ -40,7 +39,6 @@ const store = createStore({
   timeType: 'long', // long, custom
 
   recommendedWords: [],
-  creativeWords: [],
   currentBalance: 0,
 
   landingTypeOpts
@@ -49,9 +47,6 @@ const store = createStore({
 store.subscribeActions({
   [getRecommendedWords]: (words) => ({
     recommendedWords: mergeKeywords(store.state.recommendedWords, words)
-  }),
-  [getCreativeWords]: (words) => ({
-    creativeWords: [...words]
   }),
   [getCurrentBalance]: (balance) => ({
     currentBalance: balance
@@ -97,7 +92,6 @@ store.subscribeActions({
   [clearStore]: () => ({
     originPromotion: clone(emptyPromotion),
     recommendedWords: [],
-    creativeWords: [],
     timeType: ''
   })
 })
