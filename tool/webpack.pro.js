@@ -17,6 +17,7 @@ config.plugins = [
       NODE_ENV: '"production"'
     }
   }),
+  new webpack.ContextReplacementPlugin(/moment[\\\/]locale$/, /^\.\/(zh-cn)$/),
   new ExtractTextPlugin({
     filename: '[name].[contenthash:18].css'
   }),
