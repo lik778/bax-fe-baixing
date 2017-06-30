@@ -68,9 +68,9 @@
         <div>
           <aside>推广标题:</aside>
           <span>
-            <el-input :disabled="campaignStatus === 10"
-              type="text" style="width: 420px"
+            <el-input type="text" style="width: 420px"
               placeholder="请输入标题 ~ (字数限制为9-25个字)"
+              :disabled="campaignStatus === 10"
               :value="getProp('creativeTitle')"
               @change="v => promotion.creativeTitle = v">
             </el-input>
