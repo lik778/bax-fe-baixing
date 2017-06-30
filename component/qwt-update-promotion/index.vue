@@ -43,6 +43,7 @@
             <div style="margin-top: 20px; width: 490px;">
               <el-input :value="getProp('landingPage')"
                 placeholder="请输入投放网址, 如: http://baixing.com"
+                :disabled="campaignStatus === 10"
                 @change="v => promotion.landingPage = v.trim()">
               </el-input>
             </div>
@@ -67,7 +68,8 @@
         <div>
           <aside>推广标题:</aside>
           <span>
-            <el-input type="text" style="width: 420px"
+            <el-input :disabled="campaignStatus === 10"
+              type="text" style="width: 420px"
               placeholder="请输入标题 ~ (字数限制为9-25个字)"
               :value="getProp('creativeTitle')"
               @change="v => promotion.creativeTitle = v">
@@ -80,6 +82,7 @@
           </aside>
           <span>
             <el-input type="textarea" placeholder="请输入内容 ~ (字数限制为9-40个字)"
+              :disabled="campaignStatus === 10"
               :rows="5" style="width: 420px"
               :value="getProp('creativeContent')"
               @change="v => promotion.creativeContent = v">
@@ -317,6 +320,9 @@ export default {
         .map(k => k.price)
 
       return getCampaignPrediction(currentBalance, prices)
+    },
+    campaignStatus() {
+      return this.originPromotion.status
     },
     id() {
       return this.$route.params.id
