@@ -378,6 +378,12 @@ export default {
       })
     },
     getUpdatedCreativeData() {
+      const {
+        creativeContent: originCreativeContent,
+        creativeTitle: originCreativeTitle,
+        landingPage: originLandingPage,
+        landingType: originLandingType
+      } = this.originPromotion
       // 说明: 如下四个值, 要么都不传, 要么都传
       const {
         creativeContent,
@@ -385,6 +391,14 @@ export default {
         landingPage,
         landingType
       } = this.promotion
+
+      const changed = (now, ori) => {
+        if (now === undefined) {
+          return false
+        }
+
+        return now !== ori
+      }
 
       if (creativeContent === '') {
         throw new Error('请填写推广内容')
@@ -398,8 +412,10 @@ export default {
         throw new Error('请填写投放页面')
       }
 
-      if (creativeContent || creativeTitle || landingPage ||
-        (landingType !== undefined)) {
+      if (changed(creativeContent, originCreativeContent) ||
+        changed(creativeTitle, originCreativeTitle) ||
+        changed(landingPage, originLandingPage) ||
+        changed(landingType, originLandingType)) {
         return {
           landingType: this.getProp('landingType'),
           creativeContent: this.getProp('creativeContent'),
