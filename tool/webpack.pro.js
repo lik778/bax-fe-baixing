@@ -18,6 +18,12 @@ config.plugins = [
     }
   }),
   new webpack.ContextReplacementPlugin(/moment[\\\/]locale$/, /^\.\/(zh-cn)$/),
+  // new webpack.optimize.UglifyJsPlugin({
+  //   compress: {
+  //     warnings: true
+  //   },
+  //   sourceMap: true
+  // }),
   new ExtractTextPlugin({
     filename: '[name].[contenthash:18].css'
   }),
