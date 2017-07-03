@@ -79,7 +79,8 @@
     </header>
     <el-table ref="table" :data="campaigns"
       @selection-change="onSelectionChange">
-      <el-table-column type="selection" width="40">
+      <el-table-column type="selection" width="40"
+        :selectable="checkSelectable">
       </el-table-column>
       <el-table-column prop="open" label="开关" width="80">
         <template scope="s">
@@ -159,6 +160,8 @@ import {
   commafy
 } from 'utils'
 
+const cantSelectStatuses = [-10] // 不能选择的状态
+
 export default {
   name: 'qwt-promotion-list',
   components: {
@@ -195,7 +198,9 @@ export default {
         campaigns
       } = this
 
-      const ids = campaigns.map(p => p.id).sort()
+      const ids = campaigns.filter(c => {
+        return !cantSelectStatuses.includes(c.status)
+      }).map(p => p.id).sort()
 
       return equal(selectedCampaignIds.sort(), ids)
     }
@@ -212,6 +217,9 @@ export default {
       Message.error('请先选择要设置的推广')
 
       return false
+    },
+    checkSelectable(row) {
+      return !cantSelectStatuses.includes(row.status)
     },
     async updateCampaignDailyBudget() {
       if (!this.checkHasSelectedCampaigns()) {
@@ -335,7 +343,9 @@ export default {
 
       if (checked) {
         // select all
-        this.campaigns.forEach(r => {
+        this.campaigns.filter(c => {
+          return !cantSelectStatuses.includes(c.status)
+        }).forEach(r => {
           this.$refs.table.toggleRowSelection(r)
         })
       } else {
