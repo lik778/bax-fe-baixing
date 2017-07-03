@@ -35,7 +35,7 @@
               <el-button-group>
                 <el-button v-for="o of landingTypeOpts" :key="o.value"
                   :type="getProp('landingType') === o.value ? 'primary' : ''"
-                  @click="promotion.landingType = o.value">
+                  @click="clickLandingType(o.value)">
                   {{ o.label }}
                 </el-button>
               </el-button-group>
@@ -344,6 +344,13 @@ export default {
     },
     clickSourceTip() {
       Message.warning('投放渠道不能修改')
+    },
+    clickLandingType(type) {
+      if (this.campaignStatus === 10) {
+        return Message.warning('审核中, 无法修改')
+      }
+
+      this.promotion.landingType = type
     },
     updateExistWord(word) {
       const words = this.promotion.updatedKeywords.map(w => w.word)
