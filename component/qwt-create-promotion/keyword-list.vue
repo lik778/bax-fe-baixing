@@ -87,7 +87,6 @@ export default {
   },
   data() {
     return {
-      // selectedWords: [],
       customPrices: []
     }
   },
@@ -128,7 +127,7 @@ export default {
         word: r.word,
         id: r.id
       }))
-
+      console.debug('emit event: select-words')
       this.$emit('select-words', words)
     },
     setCustomPrice({word, id}, v, editable) {
