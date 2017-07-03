@@ -12,15 +12,18 @@
           <content class="select-ad">
             <div>
               <bax-select :options="adOpts"
-                v-model="newOrder.adId" />
+                v-model="newOrder.adId">
+              </bax-select>
             </div>
             <img v-if="adExampleImg"
-              v-bind:src="adExampleImg" />
+              v-bind:src="adExampleImg">
+            </img>
           </content>
         </el-form-item>
         <el-form-item label="订单类型" v-if="isOperator">
           <bax-select :options="sspOrderTypeOpts"
-            v-model="newOrder.sspOrderType" />
+            v-model="newOrder.sspOrderType">
+          </bax-select>
         </el-form-item>
         <el-form-item label="城市">
           <span>
@@ -31,7 +34,8 @@
             </el-tag>
           </span>
           <i class="el-icon-plus"
-            @click="areaDialogVisible = true" />
+            @click="areaDialogVisible = true">
+          </i>
         </el-form-item>
         <el-form-item label="类目">
           <span>
