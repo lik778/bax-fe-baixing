@@ -8,7 +8,7 @@ const env = process.env.NODE_ENV
 
 module.exports = {
   entry: {
-    signin: join(__dirname, '../template/signin'),
+    signin: ['babel-esnext-polyfill', join(__dirname, '../template/signin')],
     bax: ['babel-esnext-polyfill', join(__dirname, '../template/bax')]
   },
   output: {
