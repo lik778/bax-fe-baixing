@@ -54,7 +54,8 @@
     </el-row>
     <el-row :gutter="40">
       <el-col :span="8" v-for="(v, product) in productData" :key="product">
-        <product-board :title="product" :target="v.target" :done="v.current" :done-yesterday="v.yesterday"/>
+        <product-board :title="product" :target="v.target" :done="v.current" :done-yesterday="v.yesterday">
+        </product-board>
       </el-col>
     </el-row>
     <el-row :gutter="40">
