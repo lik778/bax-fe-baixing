@@ -3,7 +3,8 @@
   <el-input v-model="localValue"
     :placeholder="placeholder"
     :icon="icon"
-    :type="type" />
+    :type="type">
+  </el-input>
 </template>
 
 <script>

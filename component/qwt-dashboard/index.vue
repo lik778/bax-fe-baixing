@@ -9,7 +9,8 @@
         <aside>选择渠道:</aside>
         <span>
           <bax-select :options="semPlatformOpts" :clearable="false"
-            v-model="query.channel" />
+            v-model="query.channel">
+          </bax-select>
         </span>
       </section>
       <section>
@@ -39,7 +40,8 @@
           </i>
           <el-date-picker v-if="query.timeType === 'custom'"
             type="daterange" placeholder="选择日期"
-            format="yyyy-MM-dd" v-model="query.timeRange" />
+            format="yyyy-MM-dd" v-model="query.timeRange">
+          </el-date-picker>
         </span>
       </section>
       <section>
@@ -67,11 +69,12 @@
         <span>
           <plan-keyword-selector multiple
             :channel="query.channel"
-            v-model="query.keywordsAndPlans" />
+            v-model="query.keywordsAndPlans">
+          </plan-keyword-selector>
         </span>
       </section>
-      <data-trend :statistics="statistics" />
-      <data-detail :statistics="statistics" />
+      <data-trend :statistics="statistics"></data-trend>
+      <data-detail :statistics="statistics"></data-detail>
     </main>
   </div>
 </template>

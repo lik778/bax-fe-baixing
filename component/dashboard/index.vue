@@ -264,6 +264,7 @@ h3 {
   float: right;
 }
 </style>
+
 <style>
   #time-progress .el-progress-bar__inner {
     background-color: #5598D2;

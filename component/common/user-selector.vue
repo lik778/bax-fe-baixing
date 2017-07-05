@@ -5,7 +5,8 @@
     :clearable="clearable"
     :multiple="multiple"
     :options="userOpts"
-    :filter-method="query" />
+    :filter-method="query">
+  </bax-select>
 </template>
 
 <script>

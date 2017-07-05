@@ -5,9 +5,11 @@
       <label slot="title">广告排期</label>
     </topbar>
     <calendar-header :all-categories="allCategories" :all-areas="allAreas"
-      :all-ads="ads" :user-info="userInfo" />
+      :all-ads="ads" :user-info="userInfo">
+    </calendar-header>
     <calendar-main :orders="orders" :options="calendarOptions"
-      :all-categories="allCategories" :all-areas="allAreas" />
+      :all-categories="allCategories" :all-areas="allAreas">
+    </calendar-main>
   </div>
 </template>
 

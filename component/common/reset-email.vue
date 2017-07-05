@@ -5,7 +5,7 @@
     :before-close="cancel">
     <el-form label-width="80px">
       <el-form-item label="邮箱" required>
-        <el-input v-model="email" />
+        <el-input v-model="email"></el-input>
       </el-form-item>
       <section class="tip">
         必须填写有效的邮箱，避免操作失败

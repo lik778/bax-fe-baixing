@@ -1,7 +1,7 @@
 
 <template>
   <div class="gw-pro-widget" @click="onClick">
-    <i v-if="checked" class="el-icon-check" />
+    <i v-if="checked" class="el-icon-check"></i>
     <main>
       <span>
         价值

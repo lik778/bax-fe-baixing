@@ -8,7 +8,8 @@
       <el-form-item label="选择物料">
         <div class="material-selector">
           <bax-select :options="moptions" v-model="materialId"
-            :filter-method="onQueryMaterials" />
+            :filter-method="onQueryMaterials">
+          </bax-select>
           <p v-if="imageSizeWarnTip" class="warn">
             {{ imageSizeWarnTip }}
           </p>
@@ -18,23 +19,25 @@
         </div>
       </el-form-item>
       <el-form-item label="名称" required>
-        <el-input v-model="material.name" />
+        <el-input v-model="material.name"></el-input>
       </el-form-item>
       <el-form-item label="内容">
-        <el-input v-model="material.content" />
+        <el-input v-model="material.content"></el-input>
       </el-form-item>
       <el-form-item label="规格">
-        <el-input v-model="material.slot" />
+        <el-input v-model="material.slot"></el-input>
       </el-form-item>
       <el-form-item label="链接">
         <el-input v-model.trim="material.link"
-          placeholder="如: http://baixing.com" />
+          placeholder="如: http://baixing.com">
+        </el-input>
       </el-form-item>
       <el-form-item label="上传物料" required>
         <div class="add-img">
           <uploader :size-limit="ad"
             @success="onUploadSuccess"
-            @start="() => loading = true" />
+            @start="() => loading = true">
+          </uploader>
           <img v-if="material.url"
             v-bind:src="material.url" />
           <ul>

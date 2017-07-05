@@ -1,11 +1,12 @@
+
 <template>
   <div class="account-container">
     <topbar :userInfo="userInfo">
       <label slot="title">账户</label>
     </topbar>
     <h1>{{userInfo.name}},欢迎回来</h1>
-    <account-summary />
-    <log />
+    <account-summary></account-summary>
+    <log></log>
   </div>
 </template>
 

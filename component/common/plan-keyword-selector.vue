@@ -4,7 +4,8 @@
     :placeholder="placeholder"
     :clearable="clearable"
     :multiple="multiple"
-    :options="opts" />
+    :options="opts">
+  </bax-select>
 </template>
 
 <script>

@@ -4,7 +4,8 @@
     <el-pagination small layout="prev, pager, next"
       :total="total" :page-size="limit"
       :current-page="current"
-      @current-change="handleCurrentChange" />
+      @current-change="handleCurrentChange">
+    </el-pagination>
   </footer>
 </template>
 

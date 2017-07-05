@@ -5,7 +5,8 @@
       <span class="filter-item">
         <label>广告位</label>
         <bax-select :options="adOpts" clearable
-          v-model="adId" />
+          v-model="adId">
+        </bax-select>
       </span>
       <span class="filter-item">
         <label>类型</label>

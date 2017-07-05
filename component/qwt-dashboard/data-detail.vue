@@ -8,7 +8,8 @@
       <span>
         <label>自定义列:</label>
         <bax-select multiple :options="columnOpts"
-          v-model="displayColumns" />
+          v-model="displayColumns">
+        </bax-select>
       </span>
       <span>
         <el-button icon="view" type="primary">
@@ -19,21 +20,29 @@
     <main>
       <el-table :data="statistics">
         <el-table-column v-if="checkVisiable('plan')" label="推广计划"
-          prop="cpcPlanName" />
+          prop="cpcPlanName">
+        </el-table-column>
         <el-table-column v-if="checkVisiable('channel')" label="渠道"
-          :formatter="r => fmtChannel(r.channel)" />
+          :formatter="r => fmtChannel(r.channel)">
+        </el-table-column>
         <el-table-column v-if="checkVisiable('platform')" label="设备"
-          :formatter="r => fmtDevice(r.device)" />
+          :formatter="r => fmtDevice(r.device)">
+        </el-table-column>
         <el-table-column v-if="checkVisiable('keyword')"
-          prop="cpcGrpName" label="关键词" />
+          prop="cpcGrpName" label="关键词">
+        </el-table-column>
         <el-table-column v-if="checkVisiable('shows')"
-          prop="shows" label="展现" />
+          prop="shows" label="展现">
+        </el-table-column>
         <el-table-column v-if="checkVisiable('click')"
-          prop="clicks" label="点击"  />
+          prop="clicks" label="点击">
+        </el-table-column>
         <el-table-column v-if="checkVisiable('cost')" label="消费"
-          :formatter="r => (r.cost / 100) + '元'" />
+          :formatter="r => (r.cost / 100) + '元'">
+        </el-table-column>
         <el-table-column v-if="checkVisiable('percent')"
-          prop="clickRate" label="点击率" />
+          prop="clickRate" label="点击率">
+        </el-table-column>
       </el-table>
     </main>
   </div>

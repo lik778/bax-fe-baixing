@@ -5,7 +5,7 @@
       2017.09 - 2017.10 数据走势图
     </header>
     <main>
-      <chart :options="options" />
+      <chart :options="options"></chart>
     </main>
   </div>
 </template>

@@ -9,7 +9,7 @@
         <label>区域</label>
         <label>类目</label>
       </span>
-      <days-tip :days="days" />
+      <days-tip :days="days"></days-tip>
     </header>
     <main v-if="hasData">
       <div v-for="row in rows">
@@ -23,7 +23,8 @@
         </span>
         <span>
           <days :category="row.category" :area="row.area"
-            :ranges="row.ranges" :days="days" />
+            :ranges="row.ranges" :days="days">
+          </days>
         </span>
       </div>
     </main>

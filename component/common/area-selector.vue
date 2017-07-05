@@ -6,7 +6,7 @@
     <main class="main">
       <div>
         <span @click="clickArea('china')">全国</span>
-        <span />
+        <span></span>
       </div>
       <div>
         <span @click="clickArea('直辖市')">直辖市</span>

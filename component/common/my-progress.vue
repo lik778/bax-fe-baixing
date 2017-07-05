@@ -122,6 +122,7 @@
     }
   }
 </script>
+
 <style scoped>
   .el-progress--circle {
     display: inline-block;

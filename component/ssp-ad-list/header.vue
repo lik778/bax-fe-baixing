@@ -4,9 +4,10 @@
     <section>
       <span>
         <bax-input placeholder="请输入订单号" icon="search"
-          type="number" v-model="query.orderId" />
+          type="number" v-model="query.orderId">
+        </bax-input>
         <el-button @click="switchShowMoreFilters">
-          更多筛选<i class="el-icon-arrow-down el-icon--right" />
+          更多筛选<i class="el-icon-arrow-down el-icon--right"></i>
         </el-button>
       </span>
     </section>
@@ -16,13 +17,15 @@
           <label>上线时间</label>
           <el-date-picker type="daterange" placeholder="选择日期"
             format="yyyy-MM-dd"
-            v-model="timeRange" />
+            v-model="timeRange">
+          </el-date-picker>
         </span>
         <span class="filter-item">
           <label>广告位</label>
           <bax-select placeholder='选择广告位'
             :options="adOpts" clearable
-            v-model="query.adId" />
+            v-model="query.adId">
+          </bax-select>
         </span>
       </div>
       <div>
@@ -30,12 +33,14 @@
           <label>投放状态</label>
           <bax-select placeholder='选择投放状态'
             :options="adStatusOpts" clearable
-            v-model="query.status" />
+            v-model="query.status">
+          </bax-select>
         </span>
         <span class="filter-item">
           <label>客户</label>
           <user-selector placeholder='选择客户' clearable
-            v-model="query.customerId" />
+            v-model="query.customerId">
+          </user-selector>
         </span>
       </div>
     </section>

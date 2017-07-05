@@ -5,17 +5,18 @@
     :before-close="cancel">
     <el-form ref="form" :model="user" label-width="120px">
       <el-form-item label="名称" required>
-        <el-input v-model="user.name" />
+        <el-input v-model="user.name"></el-input>
       </el-form-item>
       <el-form-item label="邮箱" required>
-        <el-input v-model="user.email" />
+        <el-input v-model="user.email"></el-input>
       </el-form-item>
       <el-form-item label="号码" required>
-        <el-input v-model="user.mobile" />
+        <el-input v-model="user.mobile"></el-input>
       </el-form-item>
       <el-form-item label="角色" required>
         <bax-select :options="roleOpts" multiple
-          v-model="user.roles" />
+          v-model="user.roles">
+        </bax-select>
       </el-form-item>
     </el-form>
     <div slot="footer">

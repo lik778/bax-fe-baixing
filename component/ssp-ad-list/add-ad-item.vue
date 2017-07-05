@@ -5,15 +5,17 @@
     :before-close="cancel">
     <el-form ref="form" label-width="100px">
       <el-form-item label="名称" required>
-        <el-input v-model="name" />
+        <el-input v-model="name"></el-input>
       </el-form-item>
       <el-form-item label="请选择类目">
         <bax-select multiple :options="categoryOpts"
-          v-model="categories" />
+          v-model="categories">
+        </bax-select>
       </el-form-item>
       <el-form-item label="请选择城市">
         <bax-select multiple :options="areaOpts"
-          v-model="areas" />
+          v-model="areas">
+        </bax-select>
       </el-form-item>
     </el-form>
     <div slot="footer">
