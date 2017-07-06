@@ -23,6 +23,7 @@
     "lodash.pick": "4.4.0",
     "moment": "2.18.1",
     "object-keys-mapping": "2.0.0",
+    "query-string": "4.3.4",
     "rxjs": "5.2.0",
     "utils": "git+ssh://git@gitlab.baixing.cn:channel/fe-utils.git",
     "uuid": "3.0.1",

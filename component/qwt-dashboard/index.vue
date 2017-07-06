@@ -74,7 +74,8 @@
         </span>
       </section>
       <data-trend :statistics="statistics"></data-trend>
-      <data-detail :statistics="statistics"></data-detail>
+      <data-detail :statistics="statistics" :csv-download-url="csvDownloadUrl">
+      </data-detail>
     </main>
   </div>
 </template>
@@ -97,6 +98,7 @@ import {
 } from 'constant/fengming'
 
 import {
+  getCsvDownloadUrl,
   getStatistics
 } from './action'
 
@@ -213,6 +215,7 @@ export default {
         .map(i => i.replace('p-', ''))
         .join(',')
 
+      await getCsvDownloadUrl(q)
       await getStatistics(q)
     }
   },

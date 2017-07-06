@@ -12,9 +12,11 @@
         </bax-select>
       </span>
       <span>
-        <el-button icon="view" type="primary">
-          下载
-        </el-button>
+        <a download="数据报表.xls" :href="csvDownloadUrl">
+          <el-button icon="view" type="primary">
+            下载
+          </el-button>
+        </a>
       </span>
     </section>
     <main>
@@ -96,6 +98,10 @@ export default {
     BaxSelect
   },
   props: {
+    csvDownloadUrl: {
+      type: String,
+      required: true
+    },
     statistics: {
       type: Array,
       required: true
