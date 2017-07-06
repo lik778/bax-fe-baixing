@@ -6,7 +6,7 @@ import {
 
 // sidebar
 
-const specialUserIds = [1, 104] // 康品汇 特权 自建销售
+const specialUserIds = [1, 318] // 康品汇 特权 自建销售
 
 export function allowSeeGw(roles, uid) {
   return specialUserIds.includes(uid)
