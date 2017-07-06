@@ -23,22 +23,29 @@
       </div>
       <div style="margin-top: 35px;">
         <aside>服务编号:</aside>
-        <span v-if="salesIdLocked">
-          {{ salesId }}
+        <span v-if="salesIdLocked || isBxSales">
+          {{ displayBxSalesId || userInfo.salesId }}
         </span>
         <span v-else>
-          <el-input v-model.trim="salesId"
+          <el-input v-model.trim="inputSalesId"
             placeholder="如有服务编号请您填写">
           </el-input>
         </span>
       </div>
-      <div style="margin-top: 25px;">
+      <div v-if="!isBxUser" style="margin-top: 35px;">
+        <aside>用户ID:</aside>
+        <span>
+          <el-input v-model.trim="inputUserId" placeholder="用户 ID">
+          </el-input>
+        </span>
+      </div>
+      <div class="price" style="margin-top: 25px;">
         <aside>百姓网余额需支付:</aside>
         <span>{{ '￥' + totalPrice }}</span>
       </div>
-      <div style="margin-top: 30px;">
+      <div class="submit" style="margin-top: 30px;">
         <el-button type="primary" @click="createOrder">
-          确认购买
+          {{ submitButtonText }}
         </el-button>
         <span v-if="orderPayUrl">
           <label :title="orderPayUrl">
@@ -67,13 +74,21 @@ import { Message } from 'element-ui'
 import { centToYuan } from 'utils'
 
 import {
-  allowGetOrderPayUrl
+  allowGetOrderPayUrl,
+  allowPayOrder
+} from 'util/fengming-role'
+
+import {
+  normalizeRoles
 } from 'util/role'
 
 import {
+  getUserIdFromBxSalesId,
   getOrderPayUrl,
   createOrder,
-  getProducts
+  getProducts,
+  getUserInfo,
+  payOrders
 } from './action'
 
 import store from './store'
@@ -99,15 +114,45 @@ export default {
       orderPayUrl: '',
 
       salesIdLocked: false,
-      salesId: ''
+      displayBxSalesId: '',
+      inputSalesId: '',
+      inputUserId: ''
     }
   },
   filters: {
     centToYuan
   },
   computed: {
+    isAgentSales() {
+      const roles = normalizeRoles(this.userInfo.roles)
+      return roles.includes('AGENT_SALES')
+    },
+    isBxUser() {
+      const roles = normalizeRoles(this.userInfo.roles)
+      return roles.includes('BAIXING_USER')
+    },
+    isBxSales() {
+      const roles = normalizeRoles(this.userInfo.roles)
+      return roles.includes('BAIXING_SALES')
+    },
+    allowDiscount() {
+      const roles = normalizeRoles(this.userInfo.roles)
+      return roles.includes('AGENT_ACCOUNTING')
+    },
     checkedProducts() {
       return this.products.filter(p => p.id === this.checkedProductId)
+    },
+    submitButtonText() {
+      const { userInfo } = this
+      if (this.isBxUser) {
+        return '确认购买'
+      }
+
+      if (allowGetOrderPayUrl(userInfo.roles)) {
+        return '生成链接'
+      }
+
+      return '确认购买'
     },
     totalPrice() {
       // 目前就一个 :)
@@ -128,6 +173,53 @@ export default {
         this.checkedProductId = id
       }
     },
+    async getFinalSalesId() {
+      const { sales_id: salesId } = this.$route.query
+      if (salesId) {
+        return salesId
+      }
+
+      const {
+        inputSalesId,
+        userInfo
+      } = this
+
+      if (inputSalesId) {
+        const id = await getUserIdFromBxSalesId(inputSalesId)
+        return id
+      }
+
+      if (this.isBxUser) {
+        return
+      }
+
+      return userInfo.id
+    },
+    async getFinalUserId() {
+      const { user_id: userId } = this.$route.query
+      if (userId) {
+        return userId
+      }
+
+      const { inputUserId } = this
+      if (inputUserId) {
+        return inputUserId
+      }
+
+      const { userInfo } = this
+      return userInfo.id
+    },
+    async payOrders(oids) {
+      const {
+        userInfo
+      } = this
+
+      if (!allowPayOrder(userInfo.roles)) {
+        return
+      }
+
+      await payOrders(oids)
+    },
     async getOrderPayUrl(oids) {
       const {
         userInfo
@@ -143,28 +235,30 @@ export default {
     },
     async createOrder() {
       const {
-        checkedProductId: id,
-        userInfo,
-        salesId
+        checkedProductId: id
       } = this
 
       if (!id) {
         return Message.error('请先选择产品')
       }
 
-      const { user_id: userId } = this.$route.query
-
       const order = {
-        salesId: salesId || userInfo.salesId,
-        userId: userId || userInfo.id,
+        userId: await this.getFinalUserId(),
         products: [{
           id
         }]
       }
 
+      const sid = await this.getFinalSalesId()
+      if (sid) {
+        order.salesId = sid
+      }
+
       const oids = await createOrder(order)
 
       await this.getOrderPayUrl(oids)
+
+      await this.payOrders(oids)
 
       Message.success('购买成功')
     }
@@ -173,8 +267,9 @@ export default {
     const { sales_id: salesId } = this.$route.query
 
     if (salesId) {
+      const userInfo = await getUserInfo(salesId)
+      this.displayBxSalesId = userInfo.salesId
       this.salesIdLocked = true
-      this.salesId = salesId
     }
 
     await getProducts(2)
@@ -228,14 +323,14 @@ export default {
       }
     }
 
-    & > div:nth-child(3) {
+    & > div.price {
       & > span {
         font-size: 18px;
         color: #ff1f0e;
       }
     }
 
-    & > div:nth-child(4) {
+    & > div.submit {
       & > span {
         display: inline-flex;
         align-items: center;
