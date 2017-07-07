@@ -40,12 +40,15 @@
                 </el-button>
               </el-button-group>
             </div>
-            <div style="margin-top: 20px; width: 490px;">
-              <el-input :value="getProp('landingPage')"
+            <div style="margin-top: 20px;">
+              <el-input :value="getProp('landingPage')" style="width: 490px;"
                 placeholder="请输入投放网址, 如: http://baixing.com"
-                :disabled="campaignStatus === 10"
+                :disabled="isAuthing"
                 @change="v => promotion.landingPage = v.trim()">
               </el-input>
+              <p v-if="isAuthing" class="authing-tip">
+                您的推广在审核中，审核通过后可修改落地页，感谢配合！
+              </p>
             </div>
           </span>
         </div>
@@ -70,10 +73,13 @@
           <span>
             <el-input type="text" style="width: 420px"
               placeholder="请输入标题 ~ (字数限制为9-25个字)"
-              :disabled="campaignStatus === 10"
+              :disabled="isAuthing"
               :value="getProp('creativeTitle')"
               @change="v => promotion.creativeTitle = v">
             </el-input>
+            <p v-if="isAuthing" class="authing-tip">
+              您的推广在审核中，审核通过后可修改创意，感谢配合！
+            </p>
           </span>
         </div>
         <div>
@@ -82,7 +88,7 @@
           </aside>
           <span>
             <el-input type="textarea" placeholder="请输入内容 ~ (字数限制为9-40个字)"
-              :disabled="campaignStatus === 10"
+              :disabled="isAuthing"
               :rows="5" style="width: 420px"
               :value="getProp('creativeContent')"
               @change="v => promotion.creativeContent = v">
@@ -323,6 +329,9 @@ export default {
     },
     campaignStatus() {
       return this.originPromotion.status
+    },
+    isAuthing() {
+      return this.campaignStatus === 10
     },
     id() {
       return this.$route.params.id
@@ -594,6 +603,13 @@ export default {
 </script>
 
 <style scoped>
+
+.authing-tip {
+  display: inline-flex;
+  align-items: center;
+  font-size: 12px;
+  color: #ff4401;
+}
 
 .el-icon-plus {
   cursor: pointer;
