@@ -69,6 +69,7 @@
         <span>
           <plan-keyword-selector multiple
             :channel="query.channel"
+            :dimension="query.dimension"
             v-model="query.keywordsAndPlans">
           </plan-keyword-selector>
         </span>

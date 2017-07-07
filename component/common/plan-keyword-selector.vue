@@ -26,6 +26,10 @@ export default {
     placeholder: String,
     clearable: Boolean,
     multiple: Boolean,
+    dimension: {
+      type: Number, // 0 plan, 1 keyword
+      required: true
+    },
     channel: {
       type: Number,
       default: 5
@@ -42,6 +46,13 @@ export default {
     }
   },
   methods: {
+    clearValue() {
+      if (this.multiple) {
+        this.setValue([])
+      } else {
+        this.setValue('')
+      }
+    },
     setValue(v) {
       this.$emit('change', v)
       this.$emit('input', v)
@@ -68,6 +79,11 @@ export default {
     }
   },
   watch: {
+    dimension(val, pre) {
+      if (val !== pre) {
+        this.clearValue()
+      }
+    },
     localValue(v) {
       this.setValue(v)
     },
@@ -83,20 +99,30 @@ export default {
   computed: {
     opts() {
       const {
+        dimension,
         keywords,
         plans
       } = this
 
-      return [
-        ...keywords.map(k => ({
-          label: k.keyword,
-          value: 'k-' + k.id
-        })),
-        ...plans.map(p => ({
-          label: p.plan,
-          value: 'p-' + p.id
-        }))
-      ]
+      if (dimension === 0) {
+        return [
+          ...plans.map(p => ({
+            label: p.plan,
+            value: 'p-' + p.id
+          }))
+        ]
+      }
+
+      if (dimension === 1) {
+        return [
+          ...keywords.map(k => ({
+            label: k.keyword,
+            value: 'k-' + k.id
+          }))
+        ]
+      }
+
+      return []
     }
   },
   async mounted() {
