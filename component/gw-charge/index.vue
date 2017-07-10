@@ -39,11 +39,19 @@
           </el-input>
         </span>
       </div>
-      <div class="price" style="margin-top: 25px;">
+      <div class="price">
         <aside>百姓网余额需支付:</aside>
         <span>{{ '￥' + totalPrice }}</span>
       </div>
-      <div class="submit" style="margin-top: 30px;">
+      <div class="terms">
+        <el-checkbox :value="true"></el-checkbox>
+        <label>我已阅读并同意遵守</label>
+        <a download="百姓网精品官网入驻协议.docx"
+          v-bind:href="contractDocx">
+          《百姓网精品官网入驻协议》
+        </a>
+      </div>
+      <div class="submit">
         <el-button type="primary" @click="createOrder">
           {{ submitButtonText }}
         </el-button>
@@ -55,8 +63,6 @@
         </span>
       </div>
       <footer>
-        <li>合同条款:</li>
-        <li>~ 待补充 ~</li>
       </footer>
     </section>
   </div>
@@ -72,6 +78,8 @@ import Topbar from 'com/topbar'
 import { Message } from 'element-ui'
 
 import { centToYuan } from 'utils'
+
+import { assetHost } from 'config'
 
 import {
   allowGetOrderPayUrl,
@@ -158,6 +166,9 @@ export default {
       // 目前就一个 :)
       const p = this.checkedProducts.map(p => p.price).pop()
       return centToYuan(p)
+    },
+    contractDocx() {
+      return assetHost + 'baixing-custom-website-contract.docx'
     }
   },
   methods: {
@@ -324,13 +335,34 @@ export default {
     }
 
     & > div.price {
+      margin-top: 25px;
+
       & > span {
         font-size: 18px;
         color: #ff1f0e;
       }
     }
 
+    & > div.terms {
+      display: flex;
+      align-items: center;
+      font-size: 14px;
+      padding-left: 320px;
+      margin: 10px 0;
+
+      & a {
+        color: #48576a;
+        cursor: pointer;
+      }
+
+      & .el-checkbox {
+        margin-right: 10px;
+      }
+    }
+
     & > div.submit {
+      margin-top: 30px;
+
       & > span {
         display: inline-flex;
         align-items: center;
