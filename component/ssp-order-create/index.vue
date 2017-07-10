@@ -73,7 +73,7 @@
           </span>
         </el-form-item>
         <section class="terms">
-          <el-checkbox disabled checked></el-checkbox>
+          <el-checkbox :value="true"></el-checkbox>
           <a v-bind:href="contractDocx"
             download="百姓网线上推广协议.docx">
             同意《百姓网线上推广协议》
