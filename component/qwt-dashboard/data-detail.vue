@@ -21,6 +21,9 @@
     </section>
     <main>
       <el-table :data="statistics">
+        <el-table-column v-if="checkVisiable('date')" label="日期"
+          :formatter="r => toHumanTime(r.date, 'YYYY-MM-DD')">
+        </el-table-column>
         <el-table-column v-if="checkVisiable('plan')" label="推广计划"
           prop="cpcPlanName">
         </el-table-column>
@@ -31,19 +34,19 @@
           :formatter="r => fmtDevice(r.device)">
         </el-table-column>
         <el-table-column v-if="checkVisiable('keyword')"
-          prop="cpcGrpName" label="关键词">
+          prop="cpcName" label="关键词">
         </el-table-column>
         <el-table-column v-if="checkVisiable('shows')"
-          prop="shows" label="展现">
+          prop="shows" label="展现" sortable>
         </el-table-column>
         <el-table-column v-if="checkVisiable('click')"
-          prop="clicks" label="点击">
+          prop="clicks" label="点击" sortable>
         </el-table-column>
         <el-table-column v-if="checkVisiable('cost')" label="消费"
           :formatter="r => (r.cost / 100) + '元'">
         </el-table-column>
         <el-table-column v-if="checkVisiable('percent')"
-          prop="clickRate" label="点击率">
+          prop="clickRate" label="点击率" sortable>
         </el-table-column>
       </el-table>
     </main>
@@ -54,7 +57,10 @@
 
 import BaxSelect from 'com/common/select'
 
-import { centToYuan } from 'utils'
+import {
+  toHumanTime,
+  centToYuan
+} from 'utils'
 
 import {
   semPlatformCn,
@@ -67,6 +73,9 @@ import {
 // }
 
 const columnOpts = [{
+  label: '日期',
+  value: 'date'
+}, {
   label: '推广计划',
   value: 'plan'
 }, {
@@ -129,6 +138,7 @@ export default {
     fmtDevice(a) {
       return a.map(i => device[String(i)]).join(',')
     },
+    toHumanTime,
     centToYuan
   }
 }
