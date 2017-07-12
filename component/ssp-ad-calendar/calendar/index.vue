@@ -39,8 +39,12 @@ import Days from './days'
 import moment from 'moment'
 
 import {
+  getCategoryParent,
+  getAreaParent,
   getCnName
 } from 'util/meta'
+
+const isArray = Array.isArray
 
 export default {
   name: 'ad-calendar-main',
@@ -70,6 +74,51 @@ export default {
     return {
       rows: [],
       days: []
+    }
+  },
+  computed: {
+    validCategories() {
+      const {
+        allCategories,
+        options
+      } = this
+
+      if (!isArray(options.categories)) {
+        return []
+      }
+
+      return options.categories.reduce((pre, now) => {
+        const items = allCategories.filter(i => {
+          return i.name === now ||
+            i.belongsToFirst === now ||
+            i.belongsToSecond === now ||
+            getCategoryParent(allCategories, now) === i.name
+        }).map(i => i.name)
+
+        return [...pre, ...items]
+      }, [])
+    },
+    validAreas() {
+      const {
+        allAreas,
+        options
+      } = this
+
+      if (!isArray(options.areas)) {
+        return []
+      }
+
+      return options.areas.reduce((pre, now) => {
+        const items = allAreas.filter(i => {
+          return i.name === now || i.parent === now ||
+            getAreaParent(allAreas, now) === i.name
+        }).map(i => i.name)
+
+        return [...pre, ...items]
+      }, [])
+    },
+    hasData() {
+      return !!this.rows.length
     }
   },
   methods: {
@@ -112,16 +161,16 @@ export default {
         }
       }
 
-      this.rows = Object.keys(rowInfo).map((k) => ({
+      this.rows = Object.keys(rowInfo).filter(k => {
+        const [a, c] = k.split('-')
+        return this.validCategories.includes(c) &&
+          this.validAreas.includes(a)
+      })
+      .map((k) => ({
         category: k.split('-')[1],
         area: k.split('-')[0],
         ranges: rowInfo[k]
       }))
-    }
-  },
-  computed: {
-    hasData() {
-      return !!this.rows.length
     }
   },
   watch: {

@@ -31,6 +31,31 @@ export function filterAreas(allAreas, areas = []) {
     .map(a => ({...a}))
 }
 
+export function getCategoryParent(allCategories, name) {
+  // 目前: 层级仅 2 层
+  let result = ''
+
+  allCategories.forEach(c => {
+    if (c.name === name) {
+      result = c.belongsToFirst || c.belongsToSecond
+    }
+  })
+
+  return result
+}
+
+export function getAreaParent(allAreas, name) {
+  let result = ''
+
+  allAreas.forEach(a => {
+    if (a.name === name) {
+      result = a.parent
+    }
+  })
+
+  return result
+}
+
 /**
  * 仅用于 区域 类目
  * @params {String} name
