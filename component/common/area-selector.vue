@@ -70,7 +70,40 @@ export default {
   },
   data() {
     return {
-      selectedAreas: [...this.areas]
+      selectedAreas: [...this.areas],
+      china: {
+        label: '中国',
+        id: 'china',
+        parent: '',
+        level: 0
+      }
+    }
+  },
+  computed: {
+    specialCities() {
+      return this.allAreas
+        .filter(a => a.areaType === 1)
+        .filter(a => specialCities.includes(a.name))
+        .map(a => ({
+          label: a.nameCn,
+          id: a.name,
+          parent: '',
+          level: 1,
+
+          areas: this.getSubAreas(a.name)
+        }))
+    },
+    topAreas() {
+      return this.allAreas
+        .filter(a => a.areaType === 2)
+        .map(a => ({
+          parent: a.parent,
+          label: a.nameCn,
+          id: a.name,
+          level: 2,
+
+          areas: this.getSubAreas(a.name)
+        }))
     }
   },
   methods: {
@@ -297,43 +330,6 @@ export default {
     ok() {
       this.$emit('ok', [...this.selectedAreas])
       this.empty()
-    }
-  },
-  computed: {
-    china() {
-      const q = this.allAreas.find(a => a.name === 'china') || {}
-
-      return {
-        label: q.nameCn,
-        id: q.name,
-        parent: '',
-        level: 0
-      }
-    },
-    specialCities() {
-      return this.allAreas
-        .filter(a => a.areaType === 1)
-        .filter(a => specialCities.includes(a.name))
-        .map(a => ({
-          label: a.nameCn,
-          id: a.name,
-          parent: '',
-          level: 1,
-
-          areas: this.getSubAreas(a.name)
-        }))
-    },
-    topAreas() {
-      return this.allAreas
-        .filter(a => a.areaType === 2)
-        .map(a => ({
-          parent: a.parent,
-          label: a.nameCn,
-          id: a.name,
-          level: 2,
-
-          areas: this.getSubAreas(a.name)
-        }))
     }
   },
   watch: {
