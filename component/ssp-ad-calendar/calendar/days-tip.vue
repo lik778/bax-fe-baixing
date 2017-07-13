@@ -2,12 +2,12 @@
 <template>
   <span>
     <section>
-      <p v-for="d in days">
+      <p v-for="(d, i) in days" :key="i">
         {{ d | day }}
       </p>
     </section>
     <section>
-      <p v-for="d in days" :title="d">
+      <p v-for="(d, i) in days" :key="i" :title="d">
         {{ d | date }}
       </p>
     </section>

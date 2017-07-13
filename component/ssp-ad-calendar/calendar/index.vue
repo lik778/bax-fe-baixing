@@ -12,7 +12,7 @@
       <days-tip :days="days"></days-tip>
     </header>
     <main v-if="hasData">
-      <div v-for="row in rows">
+      <div v-for="(row, i) in rows" :key="i">
         <span>
           <label :title="formatArea(row.area)">
             {{ formatArea(row.area) }}

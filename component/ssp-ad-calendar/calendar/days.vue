@@ -1,7 +1,9 @@
 
 <template>
   <section>
-    <p v-for="i in items" v-bind:class="{ checked: i.checked }" />
+    <p v-for="(item, i) in items" :key="i"
+      v-bind:class="{ checked: item.checked }">
+    </p>
   </section>
 </template>
 
