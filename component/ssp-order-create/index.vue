@@ -194,6 +194,14 @@ const emptyOrder = {
 export default {
   name: 'create-order',
   store,
+  components: {
+    CategorySelector,
+    UserSelector,
+    AreaSelector,
+    CreateUser,
+    BaxSelect,
+    Topbar
+  },
   props: {
     allCategories: {
       type: Array,
@@ -211,14 +219,6 @@ export default {
       type: Object,
       required: true
     }
-  },
-  components: {
-    CategorySelector,
-    UserSelector,
-    AreaSelector,
-    CreateUser,
-    BaxSelect,
-    Topbar
   },
   data() {
     return {
@@ -300,37 +300,6 @@ export default {
       }
 
       return '新建订单'
-    }
-  },
-  async mounted() {
-    await Promise.all([
-      getAds()
-    ])
-
-    const { sales_id: salesId } = this.$route.query
-
-    if (salesId) {
-      const info = await getUserInfo(salesId)
-      if (String(info.id) === salesId) {
-        // 说明: get user info 是有权限设置的 salesId
-        // 如果 info == {}, 不锁定 salesId
-        this.salesIdLocked = true
-        this.salesDisplayName = info.name || '无名氏'
-        this.newOrder.salesId = salesId
-      }
-    }
-  },
-  watch: {
-    newOrder: {
-      handler(newOrder) {
-        this.queryAdPrice(newOrder)
-      },
-      deep: true
-    }
-  },
-  filters: {
-    price(v) {
-      return '￥' + centToYuan(v)
     }
   },
   methods: {
@@ -441,6 +410,37 @@ export default {
           id: oid
         }
       })
+    }
+  },
+  watch: {
+    newOrder: {
+      handler(newOrder) {
+        this.queryAdPrice(newOrder)
+      },
+      deep: true
+    }
+  },
+  filters: {
+    price(v) {
+      return '￥' + centToYuan(v)
+    }
+  },
+  async mounted() {
+    await Promise.all([
+      getAds()
+    ])
+
+    const { sales_id: salesId } = this.$route.query
+
+    if (salesId) {
+      const info = await getUserInfo(salesId)
+      if (String(info.id) === salesId) {
+        // 说明: get user info 是有权限设置的 salesId
+        // 如果 info == {}, 不锁定 salesId
+        this.salesIdLocked = true
+        this.salesDisplayName = info.name || '无名氏'
+        this.newOrder.salesId = salesId
+      }
     }
   },
   beforeDestroy() {
