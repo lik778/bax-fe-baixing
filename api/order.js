@@ -85,7 +85,12 @@ export async function getOrderPayUrl(oids, summary = '') {
 }
 
 export async function payOrders(oids) {
-  return await Promise.all(oids.map(oid => payOrder(oid)))
+  return await api
+    .post('/order/pay/agent/multi')
+    .send(reverseCamelcase({
+      orderIds: oids
+    }))
+    .json()
 }
 
 export async function payOrder(oid) {
