@@ -5,8 +5,13 @@
     :before-close="ok">
     <main class="main">
       <div>
-        <span @click="clickArea('china')">全国</span>
-        <span></span>
+        <span @click="clickArea('quanguo')">全国</span>
+        <span>
+          <p v-bind:class="{ selected: areaChecked(china.id) }"
+            @click="clickArea(china.id)">
+            {{ china.label }}
+          </p>
+        </span>
       </div>
       <div>
         <span @click="clickArea('直辖市')">直辖市</span>
@@ -18,13 +23,13 @@
           </p>
         </span>
       </div>
-      <div v-for="a in topAreas">
+      <div v-for="(a, i) in topAreas" :key="i">
         <span v-bind:class="{ selected: areaChecked(a.id) }"
           @click="clickArea(a.id)">
           {{ a.label }}
         </span>
         <span>
-          <p v-for="area in a.areas"
+          <p v-for="(area, i) in a.areas" :key="i"
             v-bind:class="{ selected: areaChecked(area.id) }"
             @click="clickArea(area.id)">
             {{ area.label }}
@@ -47,6 +52,12 @@ const specialCities = [
   'shanghai',
   'chongqing'
 ]
+
+/**
+ * 说明: quanguo vs china
+ *   - quanguo (全国), 选中所有 二级城市
+ *   - china (中国), china.baixing.com
+ */
 
 import isequal from 'lodash.isequal'
 import clone from 'clone'
@@ -119,7 +130,7 @@ export default {
     },
     getAreaByName(name) {
       const a = this.allAreas
-        .find(a => a.name === name)
+        .find(a => a.name === name) || {}
 
       return {
         level: a.areaType,
@@ -132,7 +143,7 @@ export default {
       const a = this.getAreaByName(name)
       return a.parent || ''
     },
-    removeCityFromChina(city) {
+    removeCityFromQuanguo(city) {
       let result = []
 
       const parent = this.getParentName(city)
@@ -184,10 +195,14 @@ export default {
 
       const { selectedAreas } = this
 
-      const c = selectedAreas.find(a => a === 'china')
+      const c = selectedAreas.find(a => a === 'quanguo')
       if (c) {
         // 全国
         return true
+      }
+
+      if (name === 'china') {
+        return selectedAreas.includes('china')
       }
 
       if (level === 2) {
@@ -203,120 +218,152 @@ export default {
         }
       }
     },
-    clickArea(name) {
+    clickSpecialCityArea(name) {
       const { selectedAreas } = this
 
-      if (name === 'china') {
-        // 全国
-        if (selectedAreas.includes('china')) {
-          this.selectedAreas = []
-        } else {
-          this.selectedAreas = ['china']
-        }
-
+      if (selectedAreas.includes('quanguo')) {
         return
       }
 
-      if (name === '直辖市') {
-        // 直接点击 直辖市 按钮
-        if (selectedAreas.includes('china')) {
-          return
-        }
+      const allChecked = selectedAreas
+        .filter(a => specialCities.includes(a))
+        .length === 4
 
-        const allChecked = selectedAreas
-          .filter(a => specialCities.includes(a))
-          .length === 4
+      const areas = selectedAreas.filter(a => !specialCities.includes(a))
 
-        const areas = selectedAreas.filter(a => !specialCities.includes(a))
-
-        if (allChecked) {
-          this.selectedAreas = [...areas]
-        } else {
-          this.selectedAreas = [
-            ...areas,
-            ...specialCities
-          ]
-        }
-
-        return
+      if (allChecked) {
+        this.selectedAreas = [...areas]
+      } else {
+        this.selectedAreas = [
+          ...areas,
+          ...specialCities
+        ]
       }
+    },
+    clickProvinceArea(name) {
+      const { selectedAreas } = this
 
       const area = this.getAreaByName(name)
-      const {
-        level,
-        id
-      } = area
+      const { id } = area
 
       // type - add, del
       const type = this.areaChecked(name) ? 'del' : 'add'
 
-      if (level === 2) {
-        // 省
-
-        if (type === 'add') {
+      if (type === 'add') {
+        this.selectedAreas = [
+          ...selectedAreas.filter(a => {
+            return !this.belongToProvince(a, id)
+          }),
+          id
+        ]
+      } else {
+        // del
+        if (selectedAreas.includes('quanguo')) {
           this.selectedAreas = [
-            ...selectedAreas.filter(a => {
-              return !this.belongToProvince(a, id)
-            }),
-            id
+            ...this.topAreas()
+              .filter(a => a.id !== id)
+              .map(a => a.id),
+            ...specialCities
           ]
         } else {
-          // del
-          if (selectedAreas.includes('china')) {
+          const areas = selectedAreas
+            .filter(a => {
+              if (a === id) {
+                return false
+              }
+
+              const parent = this.getParentName(a)
+
+              if (parent === id) {
+                return false
+              }
+
+              return true
+            })
+
+          this.selectedAreas = [...areas]
+        }
+      }
+    },
+    clickCityArea(name) {
+      const { selectedAreas } = this
+
+      const area = this.getAreaByName(name)
+      const { id } = area
+
+      // type - add, del
+      const type = this.areaChecked(name) ? 'del' : 'add'
+
+      if (type === 'add') {
+        this.selectedAreas = [
+          ...selectedAreas,
+          id
+        ]
+      } else {
+        // del
+        const parent = this.getParentName(id)
+
+        if (selectedAreas.includes('quanguo')) {
+          this.selectedAreas = this.removeCityFromQuanguo(id)
+        } else {
+          if (selectedAreas.includes(parent)) {
+            // 已选中省
             this.selectedAreas = [
-              ...this.topAreas()
-                .filter(a => a.id !== id)
-                .map(a => a.id),
-              ...specialCities
+              ...selectedAreas.filter(a => a !== parent),
+              ...this.removeCityFromProvince(id)
             ]
           } else {
-            const areas = selectedAreas
-              .filter(a => {
-                if (a === id) {
-                  return false
-                }
-
-                const parent = this.getParentName(a)
-
-                if (parent === id) {
-                  return false
-                }
-
-                return true
-              })
-
-            this.selectedAreas = [...areas]
+            this.selectedAreas = selectedAreas.filter(a => a !== id)
           }
+        }
+      }
+    },
+    clickChina() {
+      const { selectedAreas } = this
+
+      if (this.areaChecked('china')) {
+        this.selectedAreas = selectedAreas.filter(a => a !== 'china')
+      } else {
+        this.selectedAreas = [
+          ...selectedAreas,
+          'china'
+        ]
+      }
+    },
+    clickArea(name) {
+      const { selectedAreas } = this
+
+      if (name === 'quanguo') {
+        // 全国
+        if (selectedAreas.includes('quanguo')) {
+          this.selectedAreas = []
+        } else {
+          this.selectedAreas = ['quanguo']
         }
 
         return
       }
 
+      if (name === 'china') {
+        return this.clickChina()
+      }
+
+      if (name === '直辖市') {
+        // 直接点击 直辖市 按钮
+        return this.clickSpecialCityArea(name)
+      }
+
+      const area = this.getAreaByName(name)
+      const { level } = area
+
+      if (level === 2) {
+        // 省
+        return this.clickProvinceArea(name)
+      }
+
       if (level === 1) {
         // 市
-        if (type === 'add') {
-          this.selectedAreas = [
-            ...selectedAreas,
-            id
-          ]
-        } else {
-          // del
-          const parent = this.getParentName(id)
-
-          if (selectedAreas.includes('china')) {
-            this.selectedAreas = this.removeCityFromChina(id)
-          } else {
-            if (selectedAreas.includes(parent)) {
-              // 已选中省
-              this.selectedAreas = [
-                ...selectedAreas.filter(a => a !== parent),
-                ...this.removeCityFromProvince(id)
-              ]
-            } else {
-              this.selectedAreas = selectedAreas.filter(a => a !== id)
-            }
-          }
-        }
+        this.clickCityArea(name)
       }
     },
     empty() {

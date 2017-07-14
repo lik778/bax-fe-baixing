@@ -4,13 +4,13 @@
     :close-on-click-modal="false" size="large"
     :before-close="ok">
     <main class="main">
-      <div v-for="c in topCategories">
+      <div v-for="(c, i) in topCategories" :key="i">
         <span v-bind:class="{ selected: categoryChecked(c.id) }"
           @click="clickCategory(c.id)">
           {{ c.label }}
         </span>
         <span>
-          <p v-for="category in c.categories"
+          <p v-for="(category, i) in c.categories" :key="i"
             v-bind:class="{ selected: categoryChecked(category.id) }"
             @click="clickCategory(category.id)">
             {{ category.label }}

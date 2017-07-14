@@ -64,6 +64,10 @@ export function getAreaParent(allAreas, name) {
  * @returns {String}
  */
 export function getCnName(name, allItems) {
+  if (name === 'quanguo') {
+    return '全国'
+  }
+
   let result = name
 
   allItems.forEach(i => {
