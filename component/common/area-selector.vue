@@ -147,6 +147,7 @@ export default {
       return a.parent || ''
     },
     removeCityFromQuanguo(city) {
+      // 城市: 非 省, china
       let result = []
 
       const parent = this.getParentName(city)
