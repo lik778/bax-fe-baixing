@@ -6,10 +6,13 @@
       <el-table-column prop="name" label="名称" width="100" />
       <el-table-column label="状态" width="120">
         <template scope="s">
-          <el-tooltip v-if="s.row.rejectReason"
+          <el-tooltip v-if="s.row.status === -10"
             effect="dark" placement="top"
             :content="s.row.rejectReason">
-            <span>{{ s.row.status | adItemStatus }}</span>
+            <span class="tip">
+              <p>{{ s.row.status | adItemStatus }}</p>
+              <i class="el-icon-warning"></i>
+            </span>
           </el-tooltip>
           <span v-else>{{ s.row.status | adItemStatus }}</span>
           <el-button size="mini"
@@ -342,6 +345,17 @@ export default {
   display: flex;
   justify-content: center;
   width: 100%;
+}
+
+.tip {
+  display: inline-flex;
+  align-items: center;
+
+  & > i {
+    margin-left: 2px;
+    font-size: 11px;
+    color: gray;
+  }
 }
 
 a {
