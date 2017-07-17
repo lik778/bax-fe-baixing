@@ -14,7 +14,10 @@
         </span>
       </div>
       <div>
-        <span @click="clickArea('直辖市')">直辖市</span>
+        <span v-bind:class="{ selected: areaChecked('直辖市') }"
+          @click="clickArea('直辖市')">
+          直辖市
+        </span>
         <span>
           <p v-for="city in specialCities" :key="city"
             v-bind:class="{ selected: areaChecked(city.id) }"
@@ -152,12 +155,14 @@ export default {
 
       if (specialCities.includes(city)) {
         return [
+          this.china.id,
           ...specialCities.filter(a => a !== city),
           ...topAreas.map(a => a.id)
         ]
       }
 
       result = [
+        this.china.id,
         ...specialCities,
         ...topAreas.filter(a => a.id !== parent).map(a => a.id)
       ]
@@ -205,6 +210,14 @@ export default {
         return selectedAreas.includes('china')
       }
 
+      if (name === '直辖市') {
+        const allChecked = selectedAreas
+          .filter(a => specialCities.includes(a))
+          .length === 4
+
+        return allChecked
+      }
+
       if (level === 2) {
         return !!selectedAreas.find(a => a === id)
       }
@@ -218,7 +231,7 @@ export default {
         }
       }
     },
-    clickSpecialCityArea(name) {
+    clickSpecialCityButton(name) {
       const { selectedAreas } = this
 
       if (selectedAreas.includes('quanguo')) {
@@ -260,7 +273,8 @@ export default {
         // del
         if (selectedAreas.includes('quanguo')) {
           this.selectedAreas = [
-            ...this.topAreas()
+            this.china.id,
+            ...this.topAreas
               .filter(a => a.id !== id)
               .map(a => a.id),
             ...specialCities
@@ -319,15 +333,24 @@ export default {
       }
     },
     clickChina() {
+      const type = this.areaChecked('china') ? 'del' : 'add'
       const { selectedAreas } = this
 
-      if (this.areaChecked('china')) {
-        this.selectedAreas = selectedAreas.filter(a => a !== 'china')
-      } else {
+      if (type === 'add') {
         this.selectedAreas = [
           ...selectedAreas,
           'china'
         ]
+      } else {
+        // del
+        if (selectedAreas.includes('quanguo')) {
+          this.selectedAreas = [
+            ...this.topAreas.map(a => a.id),
+            ...specialCities
+          ]
+        } else {
+          this.selectedAreas = selectedAreas.filter(a => a !== 'china')
+        }
       }
     },
     clickArea(name) {
@@ -350,7 +373,7 @@ export default {
 
       if (name === '直辖市') {
         // 直接点击 直辖市 按钮
-        return this.clickSpecialCityArea(name)
+        return this.clickSpecialCityButton(name)
       }
 
       const area = this.getAreaByName(name)
