@@ -409,9 +409,7 @@ export default {
         return
       }
 
-      this.selectedAreas = [
-        ...v
-      ]
+      this.selectedAreas = [...v]
     }
   },
   updated() {
