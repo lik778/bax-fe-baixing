@@ -76,6 +76,11 @@ export default {
 
       return top.categories.filter(c => c.id !== mainId).map(c => c.id)
     },
+    belongToTopCategory(category, topId) {
+      const top = this.topCategories.find(t => t.id === topId)
+
+      return top.categories.map(c => c.id).includes(category)
+    },
     getMainCategories(topId) {
       return this.allCategories
         .filter(c => c.level === 2 && c.belongsToFirst === topId)
@@ -124,7 +129,7 @@ export default {
 
       if (type === 'add') {
         this.selectedCategories = [
-          ...selectedCategories,
+          ...selectedCategories.filter(c => !this.belongToTopCategory(c, id)),
           id
         ]
       } else {

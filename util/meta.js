@@ -111,6 +111,10 @@ export function getAreaParent(allAreas, name) {
  * @returns {String}
  */
 export function getCnName(name, allItems) {
+  if (name === 'all-categories') {
+    return '全类目'
+  }
+
   if (name === 'quanguo') {
     return '全国'
   }

@@ -195,7 +195,7 @@ export default {
     },
     belongToProvince(city, province) {
       const top = this.topAreas.find(a => a.id === province)
-      return top.areas.map(a => a.id).includes(top)
+      return top.areas.map(a => a.id).includes(city)
     },
     areaChecked(name) {
       const area = this.getAreaByName(name)
