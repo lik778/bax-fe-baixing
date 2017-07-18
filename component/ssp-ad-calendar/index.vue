@@ -15,8 +15,8 @@
 
 <script>
 
+import CalendarMain from 'com/common/ad-calendar'
 import CalendarHeader from './header'
-import CalendarMain from './calendar'
 import Topbar from 'com/topbar'
 
 import store from './store'
