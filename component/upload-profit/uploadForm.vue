@@ -52,7 +52,7 @@
         dateOption: {
           disabledDate(time) {
             // 前天、昨天、今天
-            return time.getTime() < Date.now() - 3 * 8.64e7 || time.getTime() > Date.now()
+            return time.getTime() > Date.now()
           }
         }
       }
