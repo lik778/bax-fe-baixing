@@ -18,6 +18,7 @@ config.plugins = [
     }
   }),
   new webpack.ContextReplacementPlugin(/moment[\\\/]locale$/, /^\.\/(zh-cn)$/),
+  new webpack.optimize.ModuleConcatenationPlugin(),
   // new webpack.optimize.UglifyJsPlugin({
   //   compress: {
   //     warnings: true

@@ -59,7 +59,7 @@
     "style-loader": "0",
     "vue-loader": "11",
     "vue-template-compiler": "2.3.4",
-    "webpack": "2",
+    "webpack": "3",
     "webpack-dev-middleware": "1",
     "webpack-hot-middleware": "2",
     "webpack-merge": "4"
