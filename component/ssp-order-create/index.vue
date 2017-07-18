@@ -143,7 +143,11 @@ import { Message } from 'element-ui'
 import moment from 'moment'
 import clone from 'clone'
 
-import { getCnName } from 'util/meta'
+import {
+  fmtCategoriesAndAreasInOpts,
+  getCnName
+} from 'util/meta'
+
 import store from './store'
 
 import { assetHost } from 'config'
@@ -360,7 +364,7 @@ export default {
 
       if (opts.adId && opts.categories.length && opts.cities.length &&
         opts.startAt && opts.endAt) {
-        await getAdPrice(opts.adId, opts)
+        await getAdPrice(opts.adId, fmtCategoriesAndAreasInOpts(opts))
       }
     },
     async onSubmit() {
@@ -398,7 +402,7 @@ export default {
         return Message.error('请选择销售')
       }
 
-      const oid = await createOrder(data)
+      const oid = await createOrder(fmtCategoriesAndAreasInOpts(data))
 
       this.empty()
 

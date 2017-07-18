@@ -214,8 +214,8 @@ import AreaSelector from 'com/common/area-selector'
 import KeywordList from './keyword-list'
 import Topbar from 'com/topbar'
 
+import { fmtAreasInQwt, getCnName } from 'util/meta'
 import { disabledDate } from 'util/element'
-import { getCnName } from 'util/meta'
 import {
   checkCampaignValidTime,
   getCampaignPrediction,
@@ -369,7 +369,7 @@ export default {
         return Message.error('创意内容需要在9-40个字')
       }
 
-      await createCampaign(p)
+      await createCampaign(fmtAreasInQwt(p))
 
       Message.success('创建成功')
 

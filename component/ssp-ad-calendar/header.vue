@@ -80,8 +80,11 @@ import CategorySelector from 'com/common/category-selector'
 import AreaSelector from 'com/common/area-selector'
 import BaxSelect from 'com/common/select'
 
-import { getCnName } from 'util/meta'
 import { toTimestamp } from 'utils'
+import {
+  fmtCategoriesAndAreasInOpts,
+  getCnName
+} from 'util/meta'
 import {
   normalizeRoles,
   checkRoles
@@ -211,14 +214,14 @@ export default {
         areas
       })
 
-      await getCalendar({
+      await getCalendar(fmtCategoriesAndAreasInOpts({
         startAt: toTimestamp(startAt),
         endAt: toTimestamp(endAt),
         sspOrderType,
         categories,
         areas,
         adId
-      })
+      }))
     }
   },
   watch: {

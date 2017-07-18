@@ -215,8 +215,8 @@ import KeywordList from 'com/qwt-create-promotion/keyword-list'
 import AreaSelector from 'com/common/area-selector'
 import Topbar from 'com/topbar'
 
+import { fmtAreasInQwt, getCnName } from 'util/meta'
 import { disabledDate } from 'util/element'
-import { getCnName } from 'util/meta'
 import {
   checkCampaignValidTime,
   getCampaignPrediction,
@@ -527,7 +527,7 @@ export default {
         return
       }
 
-      await updateCampaign(this.id, data)
+      await updateCampaign(this.id, fmtAreasInQwt(data))
 
       Message.success('更新成功')
 

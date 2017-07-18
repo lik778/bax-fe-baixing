@@ -1,5 +1,52 @@
 
+import clone from 'clone'
+
 const isArray = Array.isArray
+
+/**
+ * @param {Object} opts
+ *   说明: qwt, ssp 中对 quanguo, china 处理的逻辑不一样 (详见 common/area-selector)
+ *     cities: ['quanguo'] -> ['china']
+ *     areas: ['quanguo'] -> ['china']
+ */
+export function fmtAreasInQwt(opts) {
+  const result = clone(opts)
+
+  if (isArray(opts.cities) && opts.cities.includes('quanguo')) {
+    result.cities = ['china']
+  }
+
+  if (isArray(opts.areas) && opts.areas.includes('quanguo')) {
+    result.areas = ['china']
+  }
+
+  return result
+}
+
+/**
+ * @param {Object} opts
+ *   说明:
+ *     categories: ['all-categories'] -> null
+ *     cities: ['quanguo'] -> null
+ *     areas: ['quanguo'] -> null
+ */
+export function fmtCategoriesAndAreasInOpts(opts) {
+  const result = clone(opts)
+
+  if (isArray(opts.categories) && opts.categories.includes('all-categories')) {
+    result.categories = null
+  }
+
+  if (isArray(opts.cities) && opts.cities.includes('quanguo')) {
+    result.cities = null
+  }
+
+  if (isArray(opts.areas) && opts.areas.includes('quanguo')) {
+    result.areas = null
+  }
+
+  return result
+}
 
 export function filterCategories(allCategories, categories = []) {
   if (categories.length === 0) {
