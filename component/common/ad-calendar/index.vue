@@ -72,8 +72,6 @@ export default {
   },
   data() {
     return {
-      rows: [],
-      days: []
     }
   },
   computed: {
@@ -117,33 +115,7 @@ export default {
         return [...pre, ...items]
       }, [])
     },
-    hasData() {
-      return !!this.rows.length
-    }
-  },
-  methods: {
-    formatCategory(v) {
-      const { allCategories } = this
-      return getCnName(v, allCategories)
-    },
-    formatArea(v) {
-      const { allAreas } = this
-      return getCnName(v, allAreas)
-    },
-    getDays() {
-      const { options } = this
-      const seconds = (options.end - options.start) || 0
-      const num = ((seconds / 60 / 60 / 24) + 1) | 0
-      const start = moment(options.start * 1000).format('YYYY-MM-DD')
-      const days = []
-      for (let i = 0; i <= num; i++) {
-        const d = moment(start, 'YYYY-MM-DD').add(i, 'day')
-        days.push(d.format('YYYY-MM-DD'))
-      }
-
-      this.days = days
-    },
-    getRows() {
+    rows() {
       const { orders } = this
 
       const rowInfo = {}
@@ -161,7 +133,7 @@ export default {
         }
       }
 
-      this.rows = Object.keys(rowInfo).filter(k => {
+      const rows = Object.keys(rowInfo).filter(k => {
         const [a, c] = k.split('-')
         return this.validCategories.includes(c) &&
           this.validAreas.includes(a)
@@ -171,18 +143,43 @@ export default {
         area: k.split('-')[0],
         ranges: rowInfo[k]
       }))
+
+      if (rows.length) {
+        this.$emit('conflict')
+      }
+
+      return rows
+    },
+    days() {
+      const { options } = this
+      const seconds = (options.end - options.start) || 0
+      const num = ((seconds / 60 / 60 / 24) + 1) | 0
+      const start = moment(options.start * 1000).format('YYYY-MM-DD')
+
+      const days = []
+      for (let i = 0; i <= num; i++) {
+        const d = moment(start, 'YYYY-MM-DD').add(i, 'day')
+        days.push(d.format('YYYY-MM-DD'))
+      }
+
+      return days
+    },
+    hasData() {
+      return !!this.rows.length
     }
   },
-  watch: {
-    'options.start': function() {
-      this.getDays()
+  methods: {
+    formatCategory(v) {
+      const { allCategories } = this
+      return getCnName(v, allCategories)
     },
-    'options.end': function() {
-      this.getDays()
-    },
-    'orders': function() {
-      this.getRows()
+    formatArea(v) {
+      const { allAreas } = this
+      return getCnName(v, allAreas)
     }
+  },
+  updated() {
+    console.debug('ad calendar updated')
   }
 }
 
