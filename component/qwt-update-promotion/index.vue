@@ -200,6 +200,7 @@
     <area-selector :all-areas="allAreas"
       :areas="getProp('areas')"
       :visible="areaDialogVisible"
+      :enable-china="false"
       @ok="onChangeAreas"
       @cancel="areaDialogVisible = false">
     </area-selector>

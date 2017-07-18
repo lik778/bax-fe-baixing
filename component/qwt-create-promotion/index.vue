@@ -198,6 +198,7 @@
     <area-selector :all-areas="allAreas"
       :areas="newPromotion.areas"
       :visible="areaDialogVisible"
+      :enable-china="false"
       @ok="onChangeAreas"
       @cancel="areaDialogVisible = false">
     </area-selector>

@@ -7,8 +7,8 @@
       <div>
         <span @click="clickArea('quanguo')">全国</span>
         <span>
-          <p v-bind:class="{ selected: areaChecked(china.id) }"
-            @click="clickArea(china.id)">
+          <p v-if="enableChina" @click="clickArea(china.id)"
+            v-bind:class="{ selected: areaChecked(china.id) }">
             {{ china.label }}
           </p>
         </span>
@@ -57,9 +57,12 @@ const specialCities = [
 ]
 
 /**
- * 说明: quanguo vs china
- *   - quanguo (全国), 选中所有 二级城市
- *   - china (中国), china.baixing.com
+ * 说明:
+ *   百姓网 ~ quanguo vs china
+ *     - quanguo (全国), 选中所有 省, 城市
+ *     - china (中国), china.baixing.com
+ *   全网通 ~ quanguo === china
+ *     - 需要调用方 quanguo -> china
  */
 
 import isequal from 'lodash.isequal'
@@ -68,6 +71,10 @@ import clone from 'clone'
 export default {
   name: 'area-selector',
   props: {
+    enableChina: {
+      type: Boolean,
+      default: true
+    },
     allAreas: {
       type: Array,
       required: true
