@@ -210,8 +210,8 @@
 import { Message } from 'element-ui'
 import clone from 'clone'
 
+import KeywordList from 'com/common/qwt-keyword-list'
 import AreaSelector from 'com/common/area-selector'
-import KeywordList from './keyword-list'
 import Topbar from 'com/topbar'
 
 import { fmtAreasInQwt, getCnName } from 'util/meta'

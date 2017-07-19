@@ -211,7 +211,7 @@
 
 import { Message } from 'element-ui'
 
-import KeywordList from 'com/qwt-create-promotion/keyword-list'
+import KeywordList from 'com/common/qwt-keyword-list'
 import AreaSelector from 'com/common/area-selector'
 import Topbar from 'com/topbar'
 
