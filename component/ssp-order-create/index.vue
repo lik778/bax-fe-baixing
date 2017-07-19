@@ -55,6 +55,13 @@
           <el-date-picker type="date" placeholder="下线时间"
             v-model="newOrder.offlineAt">
           </el-date-picker>
+          <span v-if="adCalendarConflicting" class="conflict-tip">
+            <i class="el-icon-warning"></i>
+            <label>排期有冲突,</label>
+            <a href="#ad-conflict">
+              查看
+            </a>
+          </span>
         </el-form-item>
         <el-form-item v-if="isOperator || isAgentAccounting" label="销售人员">
           <span v-if="salesIdLocked">
@@ -107,6 +114,16 @@
             确认
           </el-button>
         </footer>
+        <a name="ad-conflict"
+          v-bind:style="{display: adCalendarConflicting ? 'block' : 'none'}">
+          <h3>排期冲突</h3>
+          <ad-calendar @conflict="onAdConflict"
+            :all-categories="allCategories"
+            :all-areas="allAreas"
+            :options="calendarOptions"
+            :orders="orders">
+          </ad-calendar>
+        </a>
       </el-form>
     </main>
     <category-selector :all-categories="allCategories"
@@ -136,6 +153,7 @@ import CategorySelector from 'com/common/category-selector'
 import UserSelector from 'com/common/user-selector'
 import AreaSelector from 'com/common/area-selector'
 import CreateUser from 'com/common/create-user'
+import AdCalendar from 'com/common/ad-calendar'
 import BaxSelect from 'com/common/select'
 import Topbar from 'com/topbar'
 
@@ -174,9 +192,11 @@ import {
 } from 'utils'
 
 import {
-  clearAdPrice,
+  setCalendarOptions,
+  getCalendar,
   createOrder,
   getAdPrice,
+  clearStore,
   getAds
 } from './action'
 
@@ -203,6 +223,7 @@ export default {
     UserSelector,
     AreaSelector,
     CreateUser,
+    AdCalendar,
     BaxSelect,
     Topbar
   },
@@ -233,6 +254,8 @@ export default {
 
       showCreateUserDialog: false,
       newOrder: clone(emptyOrder),
+
+      adCalendarConflicting: false,
 
       salesIdLocked: false,
       salesDisplayName: '' // 说明: locked salesId -> name
@@ -338,11 +361,42 @@ export default {
         userId
       })
     },
-    empty() {
-      this.newOrder = clone(emptyOrder)
-      this.salesDisplayName = ''
-      this.salesIdLocked = false
-      clearAdPrice()
+    onAdConflict() {
+      this.adCalendarConflicting = true
+    },
+    async queryAdCalendar(newOrder) {
+      const {
+        sspOrderType,
+        offlineAt,
+        onlineAt,
+        adId,
+
+        categories,
+        cities
+      } = newOrder
+
+      if (!(adId && categories.length && cities.length &&
+        onlineAt && offlineAt)) {
+        return
+      }
+
+      this.adCalendarConflicting = false
+
+      await setCalendarOptions({
+        start: toTimestamp(onlineAt),
+        end: toTimestamp(offlineAt),
+        areas: [...cities],
+        categories
+      })
+
+      await getCalendar(fmtCategoriesAndAreasInOpts({
+        startAt: toTimestamp(onlineAt),
+        endAt: toTimestamp(offlineAt),
+        sspOrderType,
+        areas: [...cities],
+        categories,
+        adId
+      }))
     },
     async queryAdPrice(newOrder) {
       const {
@@ -366,6 +420,12 @@ export default {
         opts.startAt && opts.endAt) {
         await getAdPrice(opts.adId, fmtCategoriesAndAreasInOpts(opts))
       }
+    },
+    empty() {
+      this.newOrder = clone(emptyOrder)
+      this.salesDisplayName = ''
+      this.salesIdLocked = false
+      clearStore()
     },
     async onSubmit() {
       const { newOrder, userInfo, adPrice } = this
@@ -418,8 +478,11 @@ export default {
   },
   watch: {
     newOrder: {
-      handler(newOrder) {
-        this.queryAdPrice(newOrder)
+      async handler(newOrder) {
+        await Promise.all([
+          this.queryAdPrice(newOrder),
+          this.queryAdCalendar(newOrder)
+        ])
       },
       deep: true
     }
@@ -483,6 +546,23 @@ export default {
       justify-content: flex-end;
       padding-right: 20px;
       margin-top: 30px;
+    }
+  }
+
+  & a[name=ad-conflict] {
+    margin-top: 50px;
+  }
+
+  & .conflict-tip {
+    margin-left: 5px;
+    font-size: 14px;
+
+    & i, & label {
+      color: red;
+    }
+
+    & a {
+      color: #20a0ff;
     }
   }
 
