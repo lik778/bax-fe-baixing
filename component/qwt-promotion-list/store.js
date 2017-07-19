@@ -7,6 +7,10 @@ import {
 } from './action'
 
 const defaultQuery = {
+  statuses: '',
+  areas: '',
+  id: '',
+
   offset: 0,
   limit: 20,
   total: 0

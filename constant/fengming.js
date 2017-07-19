@@ -41,6 +41,12 @@ export const landingType = {
   '3': '微店'
 }
 
+export const campaignStatusOpts = Object.keys(campaignStatus)
+  .map(k => ({
+    label: campaignStatus[k],
+    value: k | 0
+  }))
+
 export const landingTypeOpts = Object.keys(landingType)
   .filter(k => k !== '1') // 临时隐藏: 企业官网
   .map(k => ({

@@ -105,6 +105,26 @@ export async function getCurrentCampaigns(opts) {
     ...opts
   })
 
+  if (query.id) {
+    // 这里的逻辑是不是怪怪的 ? 哈哈, 因为:
+    // @嘟嘟噜 说: 你自己根据 `id` 调详情接口吧
+    const campaigns = []
+    try {
+      const campaign = await getCampaignInfo(query.id)
+      campaigns.push(campaign)
+    } catch (err) {
+      console.warn(err)
+    }
+
+    return {
+      query: {
+        ...query,
+        total: campaigns.length
+      },
+      campaigns
+    }
+  }
+
   const [campaigns, total] = await Promise.all([
     _getCurrentCampaigns(query),
     _getCurrentCampaignCount(query)

@@ -4,7 +4,8 @@
     <topbar :user-info="userInfo">
       <label slot="title">全网通 - 推广管理</label>
     </topbar>
-    <promotion-header :show-more-filters="showMoreFilters">
+    <promotion-header :show-more-filters="showMoreFilters"
+      :all-areas="allAreas" :query="query">
     </promotion-header>
     <promotion-list :campaigns="campaigns"
       :query="query">
@@ -31,6 +32,10 @@ export default {
   props: {
     userInfo: {
       type: Object,
+      required: true
+    },
+    allAreas: {
+      type: Array,
       required: true
     }
   }

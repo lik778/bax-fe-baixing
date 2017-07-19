@@ -128,7 +128,9 @@
 <script>
 
 import BaxPagination from 'com/common/pagination'
+
 import { Message } from 'element-ui'
+import equal from 'lodash.isequal'
 
 import {
   campaignStatus,
@@ -138,8 +140,6 @@ import {
 import {
   disabledDate
 } from 'util/element'
-
-import equal from 'lodash.isequal'
 
 import {
   updateCampaignDailyBudget,
@@ -207,7 +207,10 @@ export default {
   },
   methods: {
     async onCurrentChange({offset}) {
-      await getCurrentCampaigns({offset})
+      await getCurrentCampaigns({
+        ...this.query,
+        offset
+      })
     },
     checkHasSelectedCampaigns() {
       if (this.selectedCampaignIds.length) {

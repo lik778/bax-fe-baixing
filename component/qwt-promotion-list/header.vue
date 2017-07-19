@@ -3,7 +3,8 @@
   <header class="qwt-promotion-header">
     <section>
       <span>
-        <bax-input placeholder="请输入订单号" icon="search">
+        <bax-input placeholder="请输入ID查询" icon="search"
+          @change="v => queryCampaigns({id: v})">
         </bax-input>
         <el-button @click="switchShowMoreFilters">
           更多筛选<i class="el-icon-arrow-down el-icon--right"></i>
@@ -20,11 +21,16 @@
       <div>
         <span class="filter-item">
           <label>投放状态</label>
-          <bax-select :options="[]" clearable></bax-select>
+          <bax-select :options="campaignStatusOpts" clearable
+            @change="v => queryCampaigns({statuses: v})">
+          </bax-select>
         </span>
         <span class="filter-item">
           <label>投放区域</label>
-          <bax-select :options="[]" clearable></bax-select>
+          <bax-select :options="areaOpts" clearable
+            :filter-method="v => this.areaQueryWord = v"
+            @change="v => queryCampaigns({areas: v})">
+          </bax-select>
         </span>
       </div>
     </section>
@@ -37,7 +43,12 @@ import BaxSelect from 'com/common/select'
 import BaxInput from 'com/common/input'
 
 import {
-  switchShowMoreFilters
+  campaignStatusOpts
+} from 'constant/fengming'
+
+import {
+  switchShowMoreFilters,
+  getCurrentCampaigns
 } from './action'
 
 export default {
@@ -50,14 +61,44 @@ export default {
     showMoreFilters: {
       type: Boolean,
       required: true
+    },
+    allAreas: {
+      type: Array,
+      required: true
+    },
+    query: {
+      type: Object,
+      required: true
     }
   },
   data() {
     return {
+      campaignStatusOpts,
+      areaQueryWord: ''
+    }
+  },
+  computed: {
+    areaOpts() {
+      const q = this.areaQueryWord
 
+      if (!q) {
+        return this.allAreas
+      }
+
+      return this.allAreas
+        .filter(a => {
+          return a.name.includes(q) ||
+            a.nameCn.includes(q)
+        })
     }
   },
   methods: {
+    async queryCampaigns(opts) {
+      await getCurrentCampaigns({
+        ...this.query,
+        ...opts
+      })
+    },
     switchShowMoreFilters() {
       switchShowMoreFilters()
     },
