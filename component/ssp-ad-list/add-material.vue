@@ -136,16 +136,6 @@ export default {
       return ''
     }
   },
-  beforeMount() {
-    this.throttle = new Subject().debounceTime(800)
-  },
-  beforeDestroy() {
-    this.throttle.unsubscribe()
-  },
-  async mounted() {
-    this.throttle.subscribe(this.queryMaterials)
-    await getMaterials()
-  },
   methods: {
     async onSelectMaterial(v) {
       if (!v) {
@@ -234,6 +224,16 @@ export default {
     materialId(v) {
       this.onSelectMaterial(v)
     }
+  },
+  beforeMount() {
+    this.throttle = new Subject().debounceTime(800)
+  },
+  beforeDestroy() {
+    this.throttle.unsubscribe()
+  },
+  async mounted() {
+    this.throttle.subscribe(this.queryMaterials)
+    await getMaterials()
   }
 }
 

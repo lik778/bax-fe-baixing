@@ -69,6 +69,11 @@ import {
 
 export default {
   name: 'ad-header',
+  components: {
+    UserSelector,
+    BaxSelect,
+    BaxInput
+  },
   props: {
     showMoreFilters: {
       type: Boolean,
@@ -82,11 +87,6 @@ export default {
       type: Array,
       required: true
     }
-  },
-  components: {
-    UserSelector,
-    BaxSelect,
-    BaxInput
   },
   data() {
     const range = this.query.timeRange || ''
@@ -103,6 +103,32 @@ export default {
 
     return {
       timeRange: []
+    }
+  },
+  computed: {
+    adStatusOpts() {
+      return Object.keys(adStatus).map((key) => ({
+        label: adStatus[key],
+        value: key
+      }))
+    },
+    adOpts() {
+      return this.ads.map(ad => ({
+        label: ad.name || ad.slotCode,
+        value: ad.id
+      }))
+    }
+  },
+  methods: {
+    switchShowMoreFilters() {
+      switchShowMoreFilters()
+    },
+    async queryAdItems(v, p) {
+      if (v === p) {
+        return
+      }
+
+      await getAdItems({...this.query})
     }
   },
   watch: {
@@ -139,32 +165,6 @@ export default {
           timeRange
         })
       }
-    }
-  },
-  methods: {
-    switchShowMoreFilters() {
-      switchShowMoreFilters()
-    },
-    async queryAdItems(v, p) {
-      if (v === p) {
-        return
-      }
-
-      await getAdItems({...this.query})
-    }
-  },
-  computed: {
-    adStatusOpts() {
-      return Object.keys(adStatus).map((key) => ({
-        label: adStatus[key],
-        value: key
-      }))
-    },
-    adOpts() {
-      return this.ads.map(ad => ({
-        label: ad.name || ad.slotCode,
-        value: ad.id
-      }))
     }
   }
 }

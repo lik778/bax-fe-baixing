@@ -39,15 +39,15 @@ import {
 export default {
   name: 'material-info',
   store,
+  components: {
+    Topbar,
+    Item
+  },
   props: {
     userInfo: {
       type: Object,
       required: true
     }
-  },
-  components: {
-    Topbar,
-    Item
   },
   methods: {
     getMType(s) {

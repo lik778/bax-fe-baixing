@@ -28,6 +28,9 @@ const emptyUser = {
 
 export default {
   name: 'update-user-dialog',
+  components: {
+    BaxSelect
+  },
   props: {
     visible: {
       type: Boolean,
@@ -44,9 +47,6 @@ export default {
         roles: []
       }
     }
-  },
-  components: {
-    BaxSelect
   },
   computed: {
     roleOpts() {

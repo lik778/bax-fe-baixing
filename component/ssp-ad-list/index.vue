@@ -32,6 +32,11 @@ import {
 export default {
   name: 'ad',
   store,
+  components: {
+    AdHeader,
+    AdList,
+    Topbar
+  },
   props: {
     userInfo: {
       type: Object,
@@ -45,11 +50,6 @@ export default {
       type: Array,
       required: true
     }
-  },
-  components: {
-    AdHeader,
-    AdList,
-    Topbar
   },
   async mounted() {
     await Promise.all([

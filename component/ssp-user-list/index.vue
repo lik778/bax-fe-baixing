@@ -31,6 +31,12 @@ import {
 export default {
   name: 'user',
   store,
+  components: {
+    CreateUser,
+    UserHeader,
+    UserList,
+    Topbar
+  },
   props: {
     userInfo: {
       type: Object,
@@ -45,12 +51,6 @@ export default {
     return {
       showCreateUserDialog: false
     }
-  },
-  components: {
-    CreateUser,
-    UserHeader,
-    UserList,
-    Topbar
   },
   methods: {
     async onCreateUser() {

@@ -67,6 +67,9 @@ import {
 
 export default {
   name: 'order-list',
+  components: {
+    BaxPagination
+  },
   props: {
     userInfo: {
       type: Object,
@@ -80,9 +83,6 @@ export default {
       type: Object,
       required: true
     }
-  },
-  components: {
-    BaxPagination
   },
   computed: {
     allowPayOrder() {

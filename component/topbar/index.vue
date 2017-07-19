@@ -3,15 +3,15 @@
   <header class="topbar">
     <span>
       <i v-if="back" class="el-icon-arrow-left"
-        @click="goBack" />
+        @click="goBack"></i>
       <slot name="title" />
     </span>
     <span>
-      <i class="el-icon-message" />
+      <i class="el-icon-message"></i>
       <el-dropdown @command="onDropdownCmd">
         <span class="el-dropdown-link">
           {{ userInfo.name }}
-          <i class="el-icon-caret-bottom el-icon--right" />
+          <i class="el-icon-caret-bottom el-icon--right"></i>
         </span>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item command="changePwd">

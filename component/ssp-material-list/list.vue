@@ -50,6 +50,9 @@ import {
 
 export default {
   name: 'material-list',
+  components: {
+    BaxPagination
+  },
   props: {
     materials: {
       type: Array,
@@ -59,9 +62,6 @@ export default {
       type: Object,
       required: true
     }
-  },
-  components: {
-    BaxPagination
   },
   filters: {
     materialType(t) {

@@ -6,7 +6,7 @@
         <bax-input placeholder="请输入订单号" icon="search"
           type="number" v-model="query.orderId" />
         <el-button @click="switchShowMoreFilters">
-          更多筛选<i class="el-icon-arrow-down el-icon--right" />
+          更多筛选<i class="el-icon-arrow-down el-icon--right"></i>
         </el-button>
       </span>
       <span v-if="allowAddOrder">
@@ -131,6 +131,32 @@ export default {
 
     return allData
   },
+  computed: {
+    allowAddOrder() {
+      return allowAddOrder(this.userInfo.roles)
+    },
+    isOnlyAgentSales() {
+      const roles = normalizeRoles(this.userInfo.roles)
+      return onlyAgentSales(roles)
+    }
+  },
+  methods: {
+    gotoCreateOrder() {
+      this.$router.push({
+        name: 'create-order'
+      })
+    },
+    switchShowMoreFilters() {
+      switchShowMoreFilters()
+    },
+    async queryOrders(v, p) {
+      if (v === p) {
+        return
+      }
+
+      await getOrders({...this.query})
+    }
+  },
   watch: {
     'query.orderId': async function(v, p) {
       await this.queryOrders(v, p)
@@ -182,32 +208,6 @@ export default {
           timeRange: s + ',' + e
         })
       }
-    }
-  },
-  computed: {
-    allowAddOrder() {
-      return allowAddOrder(this.userInfo.roles)
-    },
-    isOnlyAgentSales() {
-      const roles = normalizeRoles(this.userInfo.roles)
-      return onlyAgentSales(roles)
-    }
-  },
-  methods: {
-    gotoCreateOrder() {
-      this.$router.push({
-        name: 'create-order'
-      })
-    },
-    switchShowMoreFilters() {
-      switchShowMoreFilters()
-    },
-    async queryOrders(v, p) {
-      if (v === p) {
-        return
-      }
-
-      await getOrders({...this.query})
     }
   }
 }

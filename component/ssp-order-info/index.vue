@@ -45,7 +45,7 @@
         <i class="el-icon-document"
           v-clipboard:copy="payUrl"
           v-clipboard:success="onCopySuccess"
-          v-clipboard:error="onCopyError" />
+          v-clipboard:error="onCopyError"></i>
       </div>
       <div>
         <log v-for="(log, i) in logs" :info="log" :key="i" />
@@ -86,16 +86,16 @@ import {
 export default {
   name: 'order-info',
   store,
+  components: {
+    Topbar,
+    Item,
+    Log
+  },
   props: {
     userInfo: {
       type: Object,
       required: true
     }
-  },
-  components: {
-    Topbar,
-    Item,
-    Log
   },
   data() {
     return {

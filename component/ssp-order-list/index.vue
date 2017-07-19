@@ -21,18 +21,18 @@ import store from './store'
 
 export default {
   name: 'order',
-  props: {
-    userInfo: {
-      type: Object,
-      required: true
-    }
-  },
+  store,
   components: {
     OrderHeader,
     OrderList,
     Topbar
   },
-  store
+  props: {
+    userInfo: {
+      type: Object,
+      required: true
+    }
+  }
 }
 
 </script>

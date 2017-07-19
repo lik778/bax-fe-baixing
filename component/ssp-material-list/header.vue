@@ -48,6 +48,10 @@ import {
 
 export default {
   name: 'material-header',
+  components: {
+    UserSelector,
+    BaxInput
+  },
   props: {
     query: {
       type: Object,
@@ -73,9 +77,14 @@ export default {
       timeRange: []
     }
   },
-  components: {
-    UserSelector,
-    BaxInput
+  methods: {
+    async queryMaterialItems(v, p) {
+      if (v === p) {
+        return
+      }
+      const q = this.query
+      await getMaterials({...q})
+    }
   },
   watch: {
     'query.userId': async function(v, p) {
@@ -108,15 +117,6 @@ export default {
           createdAtTo: e
         })
       }
-    }
-  },
-  methods: {
-    async queryMaterialItems(v, p) {
-      if (v === p) {
-        return
-      }
-      const q = this.query
-      await getMaterials({...q})
     }
   }
 }

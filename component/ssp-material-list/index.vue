@@ -24,16 +24,16 @@ import {
 export default {
   name: 'material',
   store,
+  components: {
+    MaterialHeader,
+    MaterialList,
+    Topbar
+  },
   props: {
     userInfo: {
       type: Object,
       required: true
     }
-  },
-  components: {
-    MaterialHeader,
-    MaterialList,
-    Topbar
   },
   async mounted() {
     await getMaterials({...this.query})

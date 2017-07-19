@@ -39,6 +39,10 @@ import { getUsers } from './action'
 
 export default {
   name: 'user-header',
+  components: {
+    BaxSelect,
+    BaxInput
+  },
   props: {
     allRoles: {
       type: Array,
@@ -48,10 +52,6 @@ export default {
       type: Object,
       required: true
     }
-  },
-  components: {
-    BaxSelect,
-    BaxInput
   },
   computed: {
     roleOpts() {

@@ -7,7 +7,7 @@
       <el-table-column prop="mobile" label="号码" width="180" />
       <el-table-column label="角色" width="180">
         <template scope="s">
-          <i v-for="role in s.row.roles">
+          <i v-for="(role, i) in s.row.roles" :key="i">
             {{ role.name }}
           </i>
         </template>

@@ -329,6 +329,11 @@ export default {
       return '新建订单'
     }
   },
+  filters: {
+    price(v) {
+      return '￥' + centToYuan(v)
+    }
+  },
   methods: {
     formatterCategory(name) {
       const { allCategories } = this
@@ -485,11 +490,6 @@ export default {
         ])
       },
       deep: true
-    }
-  },
-  filters: {
-    price(v) {
-      return '￥' + centToYuan(v)
     }
   },
   async mounted() {
