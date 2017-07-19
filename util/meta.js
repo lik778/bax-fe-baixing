@@ -26,23 +26,23 @@ export function fmtAreasInQwt(opts) {
 /**
  * @param {Object} opts
  *   说明:
- *     categories: ['all-categories'] -> null
- *     cities: ['quanguo'] -> null
- *     areas: ['quanguo'] -> null
+ *     categories: ['all-categories'] -> []
+ *     cities: ['quanguo'] -> []
+ *     areas: ['quanguo'] -> []
  */
 export function fmtCategoriesAndAreasInOpts(opts) {
   const result = clone(opts)
 
   if (isArray(opts.categories) && opts.categories.includes('all-categories')) {
-    result.categories = null
+    result.categories = []
   }
 
   if (isArray(opts.cities) && opts.cities.includes('quanguo')) {
-    result.cities = null
+    result.cities = []
   }
 
   if (isArray(opts.areas) && opts.areas.includes('quanguo')) {
-    result.areas = null
+    result.areas = []
   }
 
   return result
