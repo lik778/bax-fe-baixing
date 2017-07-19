@@ -85,6 +85,10 @@ export default {
         return []
       }
 
+      if (options.categories.includes('all-categories')) {
+        return allCategories.map(i => i.name)
+      }
+
       return options.categories.reduce((pre, now) => {
         const items = allCategories.filter(i => {
           return i.name === now ||
@@ -104,6 +108,10 @@ export default {
 
       if (!isArray(options.areas)) {
         return []
+      }
+
+      if (options.areas.includes('quanguo')) {
+        return allAreas.map(i => i.name)
       }
 
       return options.areas.reduce((pre, now) => {
