@@ -5,6 +5,10 @@ import * as oapi from 'api/order'
 
 export const switchShowMoreFilters = createAction()
 
+export const cancelOrder = createAction((oid) => {
+  return oapi.cancelOrder(oid)
+})
+
 export const getOrders = createAction((opts) => {
   return oapi.getOrders(opts)
 })

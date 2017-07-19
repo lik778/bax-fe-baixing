@@ -6,6 +6,11 @@
       <el-table-column label="订单状态">
         <template scope="s">
           <span>{{ s.row.status | orderStatus }}</span>
+          <el-button v-if="s.row.order.status === 0"
+            size="mini" type="danger"
+            @click="cancel(s.row.order.id)">
+            取消
+          </el-button>
           <el-button v-if="allowPayOrder && (s.row.order.status === 0)"
             size="mini" type="primary"
             @click="pay(s.row.order.id)">
@@ -55,6 +60,7 @@ import {
 } from 'util/role'
 
 import {
+  cancelOrder,
   getOrders,
   payOrder
 } from './action'
@@ -78,7 +84,29 @@ export default {
   components: {
     BaxPagination
   },
+  computed: {
+    allowPayOrder() {
+      return allowPayOrder(this.userInfo.roles)
+    }
+  },
+  filters: {
+    orderStatus(s) {
+      return sspOrderStatus[String(s)]
+    },
+    toHumanTime
+  },
   methods: {
+    async cancel(id) {
+      try {
+        await this.$confirm(`确认取消订单: ${id} ?`)
+      } catch (err) {
+        return
+      }
+
+      await cancelOrder(id)
+      await getOrders()
+      Message.success('已取消订单')
+    },
     async pay(id) {
       try {
         await this.$confirm(`确认支付订单: ${id} ?`)
@@ -96,17 +124,6 @@ export default {
     formatOrderType(row) {
       return sspOrderType[String(row.orderType)]
     }
-  },
-  computed: {
-    allowPayOrder() {
-      return allowPayOrder(this.userInfo.roles)
-    }
-  },
-  filters: {
-    orderStatus(s) {
-      return sspOrderStatus[String(s)]
-    },
-    toHumanTime
   },
   async mounted() {
     await getOrders({...this.query})

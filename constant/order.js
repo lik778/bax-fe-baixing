@@ -20,6 +20,7 @@ export const orderStatus = {
 }
 
 export const sspOrderStatus = {
+  '-20': '已取消',
   '-10': '审核失败',
   '-1': '下线',
   '0': '未支付',

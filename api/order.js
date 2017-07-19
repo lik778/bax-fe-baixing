@@ -15,6 +15,13 @@ export async function getCalendar(opts = {}) {
   }
 }
 
+export async function cancelOrder(oid) {
+  return await api
+    .post(`/order/${oid}/cancel`)
+    .send({})
+    .json()
+}
+
 export async function createOrder(order) {
   const body = await api
     .post('/order')
