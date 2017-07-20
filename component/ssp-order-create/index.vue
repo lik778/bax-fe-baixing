@@ -395,9 +395,9 @@ export default {
       })
 
       await getCalendar(fmtCategoriesAndAreasInOpts({
+        sspOrderType: this.isOperator ? sspOrderType : 0,
         startAt: toTimestamp(onlineAt),
         endAt: toTimestamp(offlineAt),
-        sspOrderType,
         areas: [...cities],
         categories,
         adId
