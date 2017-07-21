@@ -26,7 +26,7 @@
           推广资金充值金额：
         </header>
         <main>
-          <qwt-pro-widget v-for="i of allProducts" :key="i.id"
+          <qwt-pro-widget v-for="i of allProducts" :key="mode + i.id"
             :price="i.price" :title="i.title" :editable="i.editable"
             :checked="chargeProductChecked(i.id)"
             @click="checkChargeProduct(i.id)"
