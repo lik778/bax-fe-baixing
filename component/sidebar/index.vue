@@ -199,7 +199,7 @@ export default {
 
   min-width: 140px;
   width: 140px;
-  height: 600px;
+  height: 720px;
   background: var(--c-gray);
 }
 
