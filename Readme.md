@@ -31,5 +31,4 @@
   - `vue`, `vue-router`
   - `rxjs` -> TODO: `vue-rx`
   - `postcss`: `css` 部分 只使用了 `postcss-cssnext`, `postcss-import`, `postcss-mixins`
-    * 等到后期, 会用 `cssnext: @apply` 替代 `mixin`
   - `vue-duo`
