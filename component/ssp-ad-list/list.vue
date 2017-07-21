@@ -87,7 +87,7 @@
           </div>
           <div v-if="allowVerifyAdItem(s.row.status)">
             <el-button type="danger" size="mini"
-              @click="showRejectReasonDialog(s.row.id)">
+              @click="rejectAdItem(s.row.id)">
               拒绝
             </el-button>
           </div>
@@ -102,9 +102,6 @@
     </el-table>
     <bax-pagination :options="query"
       @current-change="onCurrentChange" />
-    <reject-ad-reason :visible="addRejectReasonDialogVisible"
-      @hide="addRejectReasonDialogVisible = false"
-      @success="rejectAdItem" />
     <add-material v-if="allowAddMaterial"
       :materials="materials" :itemId="currentItemId"
       :ad="currentItem.ad"
@@ -125,7 +122,6 @@
 <script>
 
 import BaxPagination from 'com/common/pagination'
-import RejectAdReason from './reject-ad-reason'
 import AddMaterial from './add-material'
 import AddAdItem from './add-ad-item'
 
@@ -160,7 +156,6 @@ import {
 export default {
   name: 'ad-list',
   components: {
-    RejectAdReason,
     BaxPagination,
     AddMaterial,
     AddAdItem
@@ -193,7 +188,6 @@ export default {
   },
   data() {
     return {
-      addRejectReasonDialogVisible: false,
       addMaterialDialogVisible: false,
       addAdItemDialogVisible: false,
 
@@ -287,11 +281,6 @@ export default {
 
       return false
     },
-    showRejectReasonDialog(id) {
-      this.currentItem = {}
-      this.currentItemId = id
-      this.addRejectReasonDialogVisible = true
-    },
     showAddAdItemDialog(id, item) {
       this.addAdItemDialogVisible = true
 
@@ -311,10 +300,26 @@ export default {
 
       await getAdItems(q)
     },
-    async rejectAdItem(reason) {
-      const { currentItemId } = this
+    async rejectAdItem(id) {
+      this.currentItem = {}
+      this.currentItemId = id
 
-      await verifyAdItem(currentItemId, 'failed', {
+      let reason = ''
+      try {
+        const { value } = await this.$prompt('请输入拒绝理由', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消'
+        })
+        reason = value
+      } catch (err) {
+        return
+      }
+
+      if (!reason) {
+        return Message.error('拒绝理由不能为空')
+      }
+
+      await verifyAdItem(id, 'failed', {
         reason
       })
 
