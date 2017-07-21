@@ -56,12 +56,12 @@ export default {
       this.mode = 'input'
     },
     onInputPrice(v) {
-      const price = parseInt(v)
-      if (price < this.minInputPrice) {
+      const p = parseInt(v)
+      if (p < this.minInputPrice) {
         return
       }
 
-      this.$emit('set-money', price)
+      this.$emit('set-money', p)
     },
     onBlur() {
       const {
@@ -79,7 +79,10 @@ export default {
       this.$emit('click')
 
       if (this.hasPrice) {
-        this.$emit('set-money', this.price)
+        const p = this.price || this.inputPrice
+        this.$emit('set-money', p)
+      } else {
+        this.$emit('set-money', 0)
       }
     }
   },
