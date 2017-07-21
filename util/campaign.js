@@ -19,8 +19,8 @@ export function getCampaignPrediction(total, prices) {
   if (prices.filter(p => p > 3000).length) {
     result.dailyBudget = 300
   }
-
-  result.duration = total / result.dailyBudget | 0
+  // total, prices: 分
+  result.duration = (total / result.dailyBudget / 100) | 0
 
   return result
 }
