@@ -527,6 +527,20 @@ export default {
         return
       }
 
+      // check price
+      const {
+        updatedKeywords = [],
+        newKeywords = []
+      } = data
+
+      const words = [...updatedKeywords, ...newKeywords]
+
+      for (const w of words) {
+        if (w.price * 2 < w.originPrice) {
+          return Message.error(`关键字: ${w.word} 出价低于指导价的1/2,请调高出价`)
+        }
+      }
+
       await updateCampaign(this.id, fmtAreasInQwt(data))
 
       Message.success('更新成功')

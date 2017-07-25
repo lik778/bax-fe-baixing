@@ -141,13 +141,14 @@ export default {
     onSelectionChange(rows) {
       const words = rows.map(r => ({
         price: this.getWordPrice(r.word) * 100 | 0,
+        originPrice: r.price,
         word: r.word,
         id: r.id
       }))
       console.debug('emit event: select-words')
       this.$emit('select-words', words)
     },
-    setCustomPrice({word, id}, v, editable) {
+    setCustomPrice({price: originPrice, word, id}, v, editable) {
       let price = v ? toFloat(v) : this.getWordPrice(word)
       if (price <= 0) {
         price = 1
@@ -175,6 +176,7 @@ export default {
 
       this.$emit('update-word', {
         price: price * 100 | 0,
+        originPrice,
         word,
         id
       })

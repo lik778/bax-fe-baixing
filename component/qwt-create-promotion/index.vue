@@ -347,6 +347,12 @@ export default {
         return Message.error('请填写关键字')
       }
 
+      for (const w of p.keywords) {
+        if (w.price * 2 < w.originPrice) {
+          return Message.error(`关键字: ${w.word} 出价低于指导价的1/2,请调高出价`)
+        }
+      }
+
       if (!p.areas.length) {
         return Message.error('请选择城市')
       }
