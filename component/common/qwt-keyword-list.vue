@@ -6,10 +6,11 @@
       @selection-change="onSelectionChange">
       <el-table-column v-if="selectable" type="selection" width="40">
       </el-table-column>
-      <el-table-column prop="word" label="关键词" width="240">
+      <el-table-column prop="word" label="关键词" width="240"
+        sortable :sort-method="sort">
       </el-table-column>
       <el-table-column v-if="showPropShow" prop="show" width="180"
-        label="日均搜索指数">
+        sortable label="日均搜索指数">
       </el-table-column>
       <el-table-column v-if="showPropStatus" label="关键词状态"
         :formatter="r => fmtStatus(r.status)">
@@ -178,6 +179,11 @@ export default {
         id
       })
     },
+    sort(a, b) {
+      const { selectedWords } = this
+      const words = selectedWords.map(w => w.word)
+      return words.includes(a.word)
+    },
     fmtStatus(s) {
       return keywordStatus[String(s)] || '未知'
     },
@@ -185,6 +191,7 @@ export default {
   },
   watch: {
     words(v) {
+      // TODO: use element table - reserve-selection option
       const selectedWords = this.selectedWords.map(w => w.word)
       /**
        * 说明: element table 在 words 变更后,
