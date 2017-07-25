@@ -6,19 +6,25 @@
       @selection-change="onSelectionChange">
       <el-table-column v-if="selectable" type="selection" width="40">
       </el-table-column>
-      <el-table-column prop="word" label="关键词" width="420">
+      <el-table-column prop="word" label="关键词" width="240">
       </el-table-column>
-      <el-table-column v-if="showPropShow" prop="show" label="日均搜索指数">
+      <el-table-column v-if="showPropShow" prop="show" width="180"
+        label="日均搜索指数">
       </el-table-column>
       <el-table-column v-if="showPropStatus" label="关键词状态"
         :formatter="r => fmtStatus(r.status)">
       </el-table-column>
-      <el-table-column label="CPC最高出价 (元/次点击)" width="200">
+      <el-table-column label="CPC最高出价 (元/次点击)">
         <template scope="s">
-          <el-input size="mini" placeholder="单位: 元"
-            :value="getWordPrice(s.row.word)"
-            @change="v => setCustomPrice(s.row, v, false)">
-          </el-input>
+          <span class="price">
+            <el-input size="mini" placeholder="单位: 元"
+              :value="getWordPrice(s.row.word)"
+              @change="v => setCustomPrice(s.row, v, false)">
+            </el-input>
+            <label v-if="!isValidPrice(s.row)">
+              出价最低为指导价的1/2, 请调高出价
+            </label>
+          </span>
         </template>
       </el-table-column>
       <el-table-column v-if="deletable" label="操作" width="80">
@@ -114,6 +120,16 @@ export default {
 
       return centToYuan(this.words.find(w => w.word === word).price)
     },
+    isValidPrice(row) {
+      const p = this.getWordPrice(row.word) * 100 | 0
+      const o = row.price
+
+      if (p * 2 < o) {
+        return false
+      }
+
+      return true
+    },
     wordPriceEditable(word) {
       const item = this.customPrices.find(c => c.word === word)
       return item && item.editable
@@ -181,3 +197,22 @@ export default {
 }
 
 </script>
+
+<style>
+
+.price {
+  display: flex;
+  align-items: center;
+
+  & > .el-input {
+    width: 140px;
+  }
+
+  & > label {
+    margin-left: 10px;
+    font-size: 12px;
+    color: red;
+  }
+}
+
+</style>
