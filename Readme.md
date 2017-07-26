@@ -8,7 +8,7 @@
   - `发布`:
     * 首先: 更改 `package.json` 的 version, 然后 `commit`
     * 然后: 执行 `./release`, 注意: 不是 `npm run release`
-    * 最终: `docker upgrade`
+    * 最终: `docker upgrade by rancher`
 
 * 主要文佳目录
   - `/api`: 所有的 `api` 全部在这里
