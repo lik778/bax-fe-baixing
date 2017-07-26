@@ -19,7 +19,7 @@
                 @click="clickSourceTip">
                 搜狗
               </el-button>
-              <el-button v-if="false" :type="getProp('source') === 1 ? 'primary' : ''"
+              <el-button :type="getProp('source') === 1 ? 'primary' : ''"
                 @click="clickSourceTip">
                 360
               </el-button>

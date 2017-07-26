@@ -19,7 +19,7 @@
                 :type="newPromotion.source === 5 ? 'primary' : ''">
                 搜狗
               </el-button>
-              <el-button v-if="false" @click="newPromotion.source = 1"
+              <el-button @click="newPromotion.source = 1"
                 :type="newPromotion.source === 1 ? 'primary' : ''">
                 360
               </el-button>
