@@ -540,7 +540,7 @@ export default {
 
       for (const w of words) {
         if (w.price * 2 < w.originPrice) {
-          return Message.error(`关键字: ${w.word} 出价低于指导价的1/2,请调高出价`)
+          return Message.error(`关键字: ${w.word} 出价低于 ${(w.originPrice / 200).toFixed(2)}, 请调高出价`)
         }
       }
 

@@ -23,7 +23,7 @@
               @change="v => setCustomPrice(s.row, v, false)">
             </el-input>
             <label v-if="!isValidPrice(s.row)">
-              出价最低为指导价的1/2, 请调高出价
+              {{ getPriceTip(s.row) }}
             </label>
           </span>
         </template>
@@ -130,6 +130,10 @@ export default {
       }
 
       return true
+    },
+    getPriceTip(row) {
+      const o = row.price
+      return `该关键词出价最低为: ${(o / 200).toFixed(2)}, 请调高出价`
     },
     wordPriceEditable(word) {
       const item = this.customPrices.find(c => c.word === word)
