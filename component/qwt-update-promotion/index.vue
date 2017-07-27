@@ -5,6 +5,7 @@
       <label slot="title">全网通 - 更新推广</label>
     </topbar>
     <main>
+      <h3>推广计划: {{ id }}</h3>
       <section>
         <header>推广目标设置</header>
         <div>
@@ -642,6 +643,13 @@ export default {
   width: 100%;
 
   & > main {
+    & > h3 {
+      margin: 5px 0 15px;
+      font-size: 18px;
+      font-weight: normal;
+      color: #1f2d3d;
+    }
+
     & > section:not(:last-child) {
       border-bottom: 1px solid #c0ccda;
     }
