@@ -52,13 +52,13 @@ function toFloat(s) {
   const i = parseFloat(s).toFixed(2)
 
   if (i === 'NaN') {
-    return 1
+    return 0
   }
 
   const n = parseFloat(i)
 
   if (n <= 0) {
-    return 1
+    return 0
   }
 
   return n
@@ -122,8 +122,13 @@ export default {
       return centToYuan(this.words.find(w => w.word === word).price)
     },
     isValidPrice(row) {
+      // 说明: TODO 这里需要优化
+      //   1. 新增关键词: words -> 直接取自 server (price === originPrice)
+      //     此时 word 没有 prop originPrice
+      //   2. 更新关键词: words -> 原有关键词 + 更新价格 (price !== originPrice)
+      //     此时 word 存在 prop originPrice
       const p = this.getWordPrice(row.word) * 100 | 0
-      const o = row.price
+      const o = row.originPrice || row.price
 
       if (p * 2 < o) {
         return false
@@ -132,7 +137,7 @@ export default {
       return true
     },
     getPriceTip(row) {
-      const o = row.price
+      const o = row.originPrice || row.price
       return `该关键词出价最低为: ${(o / 200).toFixed(2)}, 请调高出价`
     },
     wordPriceEditable(word) {
@@ -153,10 +158,7 @@ export default {
       this.$emit('select-words', words)
     },
     setCustomPrice({price: originPrice, word, id}, v, editable) {
-      let price = v ? toFloat(v) : this.getWordPrice(word)
-      if (price <= 0) {
-        price = 1
-      }
+      let price = v ? toFloat(v) : 0
 
       if (this.hasCustomPrice(word)) {
         this.customPrices = this.customPrices.map(c => {
