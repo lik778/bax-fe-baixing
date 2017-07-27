@@ -154,10 +154,10 @@ export async function checkCreativeContent(opts) {
   } = opts
 
   const body = await fengming
-    .get('/creative/check')
-    .query(reverseCamelcase({
-      creativeContent: removeComma(creativeContent),
-      creativeTitle: removeComma(creativeTitle)
+    .post('/creative/check')
+    .send(reverseCamelcase({
+      creativeContent,
+      creativeTitle
     }))
     .json()
 
@@ -285,13 +285,4 @@ async function _getLogCount(opts) {
     .json()
 
   return body.data
-}
-
-/**
- * private
- */
-
-function removeComma(s) {
-  // 移除 qs 中的 逗号 ~
-  return s.replace(/,/g, '')
 }
