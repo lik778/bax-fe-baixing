@@ -19,7 +19,7 @@
                 @click="clickSourceTip">
                 搜狗
               </el-button>
-              <el-button :type="getProp('source') === 1 ? 'primary' : ''"
+              <el-button v-if="!isPro" :type="getProp('source') === 1 ? 'primary' : ''"
                 @click="clickSourceTip">
                 360
               </el-button>
@@ -333,6 +333,9 @@ export default {
     },
     isAuthing() {
       return this.campaignStatus === 10
+    },
+    isPro() {
+      return window.location.hostname.includes('baixing.com')
     },
     id() {
       return this.$route.params.id

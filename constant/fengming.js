@@ -24,10 +24,10 @@ export const semPlatformCn = {
 export const semPlatformOpts = [{
   label: '搜狗',
   value: 5
-}, {
+}/*, {
   label: '360',
   value: 1
-}]
+}*/]
 
 export const campaignStatus = {
   '100': '推广中',
