@@ -2,7 +2,7 @@
 <template>
   <div class="qwt-dashboard-data-trend">
     <header>
-      2017.09 - 2017.10 数据走势图
+      数据走势图
     </header>
     <main>
       <chart :options="options"></chart>
@@ -13,6 +13,7 @@
 <script>
 
 import { toHumanTime } from 'utils'
+import clone from 'clone'
 
 export default {
   name: 'qwt-dashboard-data-trend',
@@ -24,10 +25,30 @@ export default {
   },
   computed: {
     rows() {
-      return this.statistics.sort((a, b) => a.date > b.date)
+      const items = clone(this.statistics.sort((a, b) => a.date - b.date))
+
+      return items.reduce((pre, now) => {
+        const last = pre.pop()
+        if (!last) {
+          return [now]
+        }
+
+        if (toHumanTime(last.date, 'YYYYMMDD') ===
+          toHumanTime(now.date, 'YYYYMMDD')) {
+          // merge
+          return [...pre, {
+            clicks: last.clicks + now.clicks,
+            shows: last.shows + now.shows,
+            cost: last.cost + now.cost,
+            date: last.date
+          }]
+        } else {
+          return [...pre, last, now]
+        }
+      }, [])
     },
     days() {
-      return this.rows.map(r => toHumanTime(r.date, 'MMDD'))
+      return this.rows.map(r => toHumanTime(r.date, 'MM月DD日'))
     },
     costData() {
       return this.rows.map(r => r.cost / 100)
@@ -52,13 +73,16 @@ export default {
         grid: {
           left: '3%',
           right: '4%',
-          bottom: '3%',
+          bottom: '10%',
           containLabel: true
         },
         xAxis: {
           type: 'category',
           boundaryGap: false,
-          data: this.days
+          data: this.days,
+          axisLabel: {
+            rotate: 60
+          }
         },
         yAxis: {
           type: 'value'
