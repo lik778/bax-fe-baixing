@@ -9,12 +9,14 @@
     </router-view>
     <reset-email :visible="emailMissing" :uid="currentUser.id">
     </reset-email>
+    <back-to-top></back-to-top>
   </content>
 </template>
 
 <script>
 
 import ResetEmail from './common/reset-email'
+import BackToTop from './widget/back-to-top'
 import Sidebar from './sidebar'
 
 import store from './store'
@@ -33,6 +35,7 @@ export default {
   store,
   components: {
     ResetEmail,
+    BackToTop,
     Sidebar
   },
   data() {
