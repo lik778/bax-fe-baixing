@@ -10,7 +10,6 @@ import {
 } from 'config'
 
 export const getCsvDownloadUrl = createAction((opts) => {
-  console.log(9999999, opts)
   return fengmingApiHost + '/data_report/statistic?' + stringify({
     ...reverseCamelcase(opts),
     export_csv: 1
