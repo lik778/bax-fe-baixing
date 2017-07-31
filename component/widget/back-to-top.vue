@@ -18,7 +18,7 @@ export default {
   },
   methods: {
     onscroll() {
-      if (window.pageYOffset > window.innerHeight) {
+      if (window.pageYOffset > 480) {
         this.show = true
       } else {
         this.show = false
