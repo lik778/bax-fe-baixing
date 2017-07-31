@@ -333,6 +333,11 @@ export default {
       return this.originPromotion.status
     },
     isAuthing() {
+      // 说明: sougou 审核中, 不允许修改创意; 但 360 可以
+      if (this.getProp('source') === 1) {
+        return false
+      }
+
       return this.campaignStatus === 10
     },
     isPro() {
