@@ -2,7 +2,8 @@
 export const keywordStatus = {
   '0': '投放中',
   '-1': '已删除',
-  '1': '审核中'
+  '1': '审核中',
+  '-10': '审核失败'
 }
 
 export const semPlatform = {
