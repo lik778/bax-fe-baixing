@@ -3,23 +3,9 @@
  * 赤壁状态对用户不可知
  *   - 关键词, 创意, 推广
  */
-export const keywordChibiStatus = {
-  '-10': 'reject', // 审核失败 (关键词 直接删除)
-  '0': 'pending',
-  '10': 'accept'
-}
-
-export const KEYWORD_CHIBI_REJECT = -10
+export const KEYWORD_CHIBI_REJECT = -10 // 审核失败 (关键词 直接删除)
 export const KEYWORD_CHIBI_PENDING = 0
 export const KEYWORD_CHIBI_ACCEPT = 10
-
-export const creativeChibiStatus = {
-  '-20': 'reject',
-  '0': 'pending',
-  '1': 'title pending',
-  '2': 'content pending',
-  '10': 'accept'
-}
 
 export const CREATIVE_CHIBI_REJECT = -20
 export const CREATIVE_CHIBI_PENDING = 0
@@ -27,15 +13,8 @@ export const CREATIVE_CHIBI_TITLE_PENDING = 1
 export const CREATIVE_CHIBI_CONTENT_PENDING = 2
 export const CREATIVE_CHIBI_ACCEPT = 10
 
-export const campaignChibiStatus = {
-  '-20': 'reject', // 审核失败 (创意 直接删除)
-  '-10': 'sendback', // 审核失败
-  '0': 'pending',
-  '10': 'accept'
-}
-
-export const CAMPAIGN_CHIBI_REJECT = -20
-export const CAMPAIGN_CHIBI_SENDBACK = -10
+export const CAMPAIGN_CHIBI_REJECT = -20 // 审核失败 (创意 直接删除)
+export const CAMPAIGN_CHIBI_SENDBACK = -10 // 审核失败
 export const CAMPAIGN_CHIBI_PENDING = 0
 export const CAMPAIGN_CHIBI_ACCEPT = 10
 
