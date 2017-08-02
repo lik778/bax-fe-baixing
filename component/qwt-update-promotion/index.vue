@@ -47,7 +47,7 @@
                 :disabled="!isCreativeEditable"
                 @change="v => promotion.landingPage = v.trim()">
               </el-input>
-              <p v-if="isCreativeEditable" class="authing-tip">
+              <p v-if="!isCreativeEditable" class="authing-tip">
                 您的推广在审核中，审核通过后可修改落地页，感谢配合！
               </p>
             </div>
