@@ -5,7 +5,7 @@
       <el-tabs slot="title" type="card"
         @tab-click="onTabClick" :value="mode">
         <el-tab-pane label="全网通购买" name="buy-service"></el-tab-pane>
-        <el-tab-pane label="搜狗资金充值" name="charge-only"></el-tab-pane>
+        <el-tab-pane label="搜狗360资金充值" name="charge-only"></el-tab-pane>
       </el-tabs>
     </topbar>
     <section>
