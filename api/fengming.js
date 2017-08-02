@@ -3,7 +3,12 @@ import { reverseCamelcase, toCamelcase } from 'object-keys-mapping'
 import { fengming, trim } from './base'
 import moment from 'moment'
 
+import {
+  CREATIVE_CHIBI_REJECT
+} from 'constant/fengming'
+
 const isArray = Array.isArray
+const assign = Object.assign
 
 export async function updateCampaignDailyBudget(opts) {
   return await fengming
@@ -59,7 +64,22 @@ export async function getCampaignInfo(id) {
     .get(`/campaign/${id}`)
     .json()
 
-  return toCamelcase(body.data)
+  const campaign = toCamelcase(body.data)
+
+  if (campaign.creative && campaign.creative.chibiStatus === CREATIVE_CHIBI_REJECT) {
+    const { content, title } = campaign.creative
+    // 针对赤壁拒绝创意审核, 获取 refuse reason
+    const result = await checkCreativeContent({
+      creativeContent: content,
+      creativeTitle: title
+    })
+
+    campaign.creative.extra = assign({}, campaign.creative.extra, {
+      refuseReason: result.hint || ''
+    })
+  }
+
+  return campaign
 }
 
 export async function updateCampaign(id, data) {
