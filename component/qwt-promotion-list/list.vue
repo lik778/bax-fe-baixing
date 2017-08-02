@@ -92,7 +92,7 @@
       <el-table-column prop="id" label="ID" width="120">
       </el-table-column>
       <el-table-column label="状态" width="120"
-        :formatter="r => fmtStatus(r.status)">
+        :formatter="fmtStatus">
       </el-table-column>
       <el-table-column label="预算" width="100"
         :formatter="r => fmtPrice(r.dailyBudget)">
@@ -133,6 +133,10 @@ import { Message } from 'element-ui'
 import equal from 'lodash.isequal'
 
 import {
+  CAMPAIGN_CHIBI_SENDBACK,
+  CAMPAIGN_CHIBI_PENDING,
+  CAMPAIGN_CHIBI_REJECT,
+
   campaignStatus,
   semPlatformCn
 } from 'constant/fengming'
@@ -403,8 +407,22 @@ export default {
     fmtSource(s) {
       return semPlatformCn[s] || '未知'
     },
-    fmtStatus(s) {
-      return campaignStatus[String(s)] || '未知'
+    fmtStatus(row) {
+      const { chibiStatus, status } = row
+
+      if (chibiStatus === CAMPAIGN_CHIBI_SENDBACK) {
+        return '审核失败'
+      }
+
+      if (chibiStatus === CAMPAIGN_CHIBI_PENDING) {
+        return '等待审核'
+      }
+
+      if (chibiStatus === CAMPAIGN_CHIBI_REJECT) {
+        return '审核失败'
+      }
+
+      return campaignStatus[String(status)] || '未知'
     },
     fmtDate(range, date) {
       if (!range || (date === null)) {
