@@ -44,10 +44,10 @@
             <div style="margin-top: 20px;">
               <el-input :value="getProp('landingPage')" style="width: 490px;"
                 placeholder="请输入投放网址, 如: http://baixing.com"
-                :disabled="isAuthing"
+                :disabled="isCreativeEditable"
                 @change="v => promotion.landingPage = v.trim()">
               </el-input>
-              <p v-if="isAuthing" class="authing-tip">
+              <p v-if="isCreativeAuthing" class="authing-tip">
                 您的推广在审核中，审核通过后可修改落地页，感谢配合！
               </p>
             </div>
@@ -74,12 +74,12 @@
           <span>
             <el-input type="text" style="width: 420px"
               placeholder="请输入标题 ~ (字数限制为9-25个字)"
-              :disabled="isAuthing"
+              :disabled="isCreativeEditable"
               :value="getProp('creativeTitle')"
               @change="v => promotion.creativeTitle = v">
             </el-input>
-            <p v-if="isAuthing" class="authing-tip">
-              您的推广在审核中，审核通过后可修改创意，感谢配合！
+            <p v-if="isCreativeAuthing" class="authing-tip">
+              您的推广物料正在审核中, 预计审核时间3个工作日内, 请您耐心等待短信和站内信通知.
             </p>
           </span>
         </div>
@@ -89,7 +89,7 @@
           </aside>
           <span>
             <el-input type="textarea" placeholder="请输入内容 ~ (字数限制为9-40个字)"
-              :disabled="isAuthing"
+              :disabled="isCreativeEditable"
               :rows="5" style="width: 420px"
               :value="getProp('creativeContent')"
               @change="v => promotion.creativeContent = v">
@@ -107,7 +107,7 @@
         <header>选取推广关键词</header>
         <h4>
           <span>已经设置的关键词</span>
-          <label>当前投放中: {{ currentKeywords.length }}个</label>
+          <label>当前关键词数量: {{ currentKeywords.length }}个</label>
         </h4>
         <keyword-list :words="currentKeywords"
           :selectable="false" deletable
@@ -221,6 +221,17 @@ import Topbar from 'com/topbar'
 
 import { fmtAreasInQwt, getCnName } from 'util/meta'
 import { disabledDate } from 'util/element'
+
+import {
+  CREATIVE_CHIBI_CONTENT_PENDING,
+  CREATIVE_CHIBI_TITLE_PENDING,
+  CREATIVE_CHIBI_PENDING,
+  CREATIVE_CHIBI_REJECT,
+
+  CREATIVE_STATUS_PENDING,
+  SEM_PLATFORM_QIHU
+} from 'constant/fengming'
+
 import {
   checkCampaignValidTime,
   getCampaignPrediction,
@@ -332,16 +343,33 @@ export default {
 
       return getCampaignPrediction(currentBalance, prices)
     },
-    campaignStatus() {
-      return this.originPromotion.status
-    },
-    isAuthing() {
+    isCreativeEditable() {
       // 说明: sougou 审核中, 不允许修改创意; 但 360 可以
-      if (this.getProp('source') === 1) {
+      if (this.getProp('source') === SEM_PLATFORM_QIHU) {
+        return true
+      }
+
+      return !this.isCreativeAuthing
+    },
+    isCreativeAuthing() {
+      const {
+        creativeChibiStatus,
+        creativeStatus
+      } = this.originPromotion
+
+      const a = [
+        CREATIVE_CHIBI_CONTENT_PENDING,
+        CREATIVE_CHIBI_TITLE_PENDING,
+        CREATIVE_CHIBI_PENDING
+      ]
+
+      if (a.includes(creativeChibiStatus)) {
+        return true
+      } else if (creativeChibiStatus === CREATIVE_CHIBI_REJECT) {
         return false
       }
 
-      return this.campaignStatus === 10
+      return creativeStatus === CREATIVE_STATUS_PENDING
     },
     id() {
       return this.$route.params.id
@@ -365,7 +393,7 @@ export default {
       Message.warning('投放渠道不能修改')
     },
     clickLandingType(type) {
-      if (this.campaignStatus === 10) {
+      if (this.isCreativeAuthing) {
         return Message.warning('审核中, 无法修改')
       }
 
