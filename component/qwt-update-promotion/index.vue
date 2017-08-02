@@ -44,7 +44,7 @@
             <div style="margin-top: 20px;">
               <el-input :value="getProp('landingPage')" style="width: 490px;"
                 placeholder="请输入投放网址, 如: http://baixing.com"
-                :disabled="isCreativeEditable"
+                :disabled="!isCreativeEditable"
                 @change="v => promotion.landingPage = v.trim()">
               </el-input>
               <p v-if="isCreativeAuthing" class="authing-tip">
@@ -74,7 +74,7 @@
           <span>
             <el-input type="text" style="width: 420px"
               placeholder="请输入标题 ~ (字数限制为9-25个字)"
-              :disabled="isCreativeEditable"
+              :disabled="!isCreativeEditable"
               :value="getProp('creativeTitle')"
               @change="v => promotion.creativeTitle = v">
             </el-input>
@@ -89,7 +89,7 @@
           </aside>
           <span>
             <el-input type="textarea" placeholder="请输入内容 ~ (字数限制为9-40个字)"
-              :disabled="isCreativeEditable"
+              :disabled="!isCreativeEditable"
               :rows="5" style="width: 420px"
               :value="getProp('creativeContent')"
               @change="v => promotion.creativeContent = v">
