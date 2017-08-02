@@ -19,7 +19,7 @@
                 :type="newPromotion.source === 5 ? 'primary' : ''">
                 搜狗
               </el-button>
-              <el-button v-if="!isPro" @click="newPromotion.source = 1"
+              <el-button @click="newPromotion.source = 1"
                 :type="newPromotion.source === 1 ? 'primary' : ''">
                 360
               </el-button>
@@ -306,9 +306,6 @@ export default {
       const words = this.creativeWords.map(w => w.word)
 
       return this.recommendedWords.filter(w => !words.includes(w.word))
-    },
-    isPro() {
-      return window.location.hostname.includes('baixing.com')
     }
   },
   methods: {
