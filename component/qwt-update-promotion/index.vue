@@ -619,6 +619,10 @@ export default {
       }
     }
   },
+  async beforeDestroy() {
+    console.debug('will destroy')
+    await clearStore()
+  },
   async mounted() {
     await this.initCampaignInfo()
   }
