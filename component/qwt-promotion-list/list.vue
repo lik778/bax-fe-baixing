@@ -134,6 +134,7 @@ import equal from 'lodash.isequal'
 
 import {
   CAMPAIGN_CHIBI_SENDBACK,
+  CAMPAIGN_CHIBI_UPDATED,
   CAMPAIGN_CHIBI_PENDING,
   CAMPAIGN_CHIBI_REJECT,
 
@@ -414,7 +415,11 @@ export default {
         return '审核失败'
       }
 
-      if (chibiStatus === CAMPAIGN_CHIBI_PENDING) {
+      const a = [
+        CAMPAIGN_CHIBI_PENDING,
+        CAMPAIGN_CHIBI_UPDATED
+      ]
+      if (a.includes(chibiStatus)) {
         return '等待审核'
       }
 

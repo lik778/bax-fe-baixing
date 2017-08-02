@@ -16,6 +16,7 @@ export const CREATIVE_CHIBI_ACCEPT = 10
 export const CAMPAIGN_CHIBI_REJECT = -20 // 审核失败 (创意 直接删除)
 export const CAMPAIGN_CHIBI_SENDBACK = -10 // 审核失败
 export const CAMPAIGN_CHIBI_PENDING = 0
+export const CAMPAIGN_CHIBI_UPDATED = 1 // 效力等同于 pending
 export const CAMPAIGN_CHIBI_ACCEPT = 10
 
 export const keywordStatus = {
