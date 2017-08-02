@@ -13,7 +13,7 @@
         sortable label="日均搜索指数">
       </el-table-column>
       <el-table-column v-if="showPropStatus" label="关键词状态"
-        :formatter="r => fmtStatus(r.status)">
+        :formatter="fmtStatus">
       </el-table-column>
       <el-table-column label="CPC最高出价 (元/次点击)">
         <template scope="s">
@@ -42,7 +42,12 @@
 
 <script>
 
-import { keywordStatus } from 'constant/fengming'
+import {
+  KEYWORD_CHIBI_PENDING,
+  KEYWORD_CHIBI_REJECT,
+  KEYWORD_CHIBI_ACCEPT,
+  keywordStatus
+} from 'constant/fengming'
 
 function centToYuan(s) {
   return toFloat(s) / 100
@@ -192,8 +197,18 @@ export default {
       const words = selectedWords.map(w => w.word)
       return words.includes(a.word)
     },
-    fmtStatus(s) {
-      return keywordStatus[String(s)] || '未知'
+    fmtStatus(row) {
+      const { chibiStatus, status } = row
+
+      if (chibiStatus === KEYWORD_CHIBI_PENDING) {
+        return '等待审核'
+      }
+
+      if (chibiStatus === KEYWORD_CHIBI_REJECT) {
+        return '审核失败'
+      }
+
+      return keywordStatus[String(status)] || '未知'
     },
     centToYuan
   },
