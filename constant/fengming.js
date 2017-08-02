@@ -36,6 +36,10 @@ export const semPlatform = {
   '5': 'sogou'
 }
 
+export const SEM_PLATFORM_BAIDU = 0
+export const SEM_PLATFORM_QIHU = 1
+export const SEM_PLATFORM_SOGOU = 5
+
 export const semPlatformCn = {
   '0': '百度',
   '1': '360',
@@ -52,6 +56,15 @@ export const semPlatformOpts = [{
   value: 1
 }]
 
+export const creativeStatus = {
+  '-10': '审核失败',
+  '-1': '下线',
+  '0': '等待审核',
+  '10': '推广中'
+}
+
+export const CREATIVE_STATUS_PENDING = 0
+
 export const campaignStatus = {
   '100': '推广中',
   '10': '审核中',
@@ -59,6 +72,8 @@ export const campaignStatus = {
   '-1': '下线',
   '-10': '审核失败'
 }
+
+export const CAMPAIGN_STATUS_PENDING = 10
 
 export const landingType = {
   '0': '帖子详情页',
