@@ -105,7 +105,10 @@
       </section>
       <section class="keyword">
         <header>选取推广关键词</header>
-        <h4>已经设置的关键词</h4>
+        <h4>
+          <span>已经设置的关键词</span>
+          <label>当前投放中: {{ currentKeywords.length }}个</label>
+        </h4>
         <keyword-list :words="currentKeywords"
           :selectable="false" deletable
           :show-prop-show="false"
@@ -698,6 +701,12 @@ export default {
         color: #6a778c;
         font-size: 13px;
         font-weight: normal;
+
+        & > label {
+          margin-left: 10px;
+          font-size: 12px;
+          color: red;
+        }
       }
 
       & > h3 {
