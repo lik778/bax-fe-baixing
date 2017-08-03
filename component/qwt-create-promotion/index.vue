@@ -129,7 +129,7 @@
               </el-input>
             </span>
             <span>
-              (请输入 0.1-10 之间的数字)
+              (请输入 0.1-9.9 之间的数字)
             </span>
           </section>
         </div>
@@ -335,7 +335,7 @@ export default {
       ]
 
       p.mobilePriceRatio = parseFloat(p.mobilePriceRatio)
-      if (!(p.mobilePriceRatio >= 0.1 && p.mobilePriceRatio <= 10)) {
+      if (!(p.mobilePriceRatio >= 0.1 && p.mobilePriceRatio <= 9.9)) {
         return Message.error('请设置合理的移动端出价比例')
       }
 

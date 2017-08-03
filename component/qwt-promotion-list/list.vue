@@ -34,7 +34,7 @@
           <el-input style="width: 60px;" placeholder="比例"
             v-model="toolbox.ratio">
           </el-input>
-          <label>(0.1-10)</label>
+          <label>(0.1-9.9)</label>
           <el-button type="primary" size="mini"
             @click="updateCampaignRatio">
             确定
@@ -97,7 +97,7 @@
       <el-table-column label="预算" width="100"
         :formatter="r => fmtPrice(r.dailyBudget)">
       </el-table-column>
-      <el-table-column prop="mobilePriceRatio" label="移动端出价比例(0.1-10)" width="120">
+      <el-table-column prop="mobilePriceRatio" label="移动端出价比例(0.1-9.9)" width="120">
       </el-table-column>
       <el-table-column label="开始日期" width="120"
         :formatter="r => fmtDate(r.timeRange, r.timeRange && r.timeRange[0])">
@@ -280,7 +280,7 @@ export default {
       }
 
       const ratio = parseFloat(this.toolbox.ratio)
-      if (!(ratio >= 0.1 && ratio <= 10)) {
+      if (!(ratio >= 0.1 && ratio <= 9.9)) {
         return Message.error('请设置合理的出价比例')
       }
 
