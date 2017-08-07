@@ -27,6 +27,10 @@
         <el-table-column v-if="checkVisiable('plan')" label="推广计划"
           prop="cpcPlanName" width="120">
         </el-table-column>
+        <el-table-column v-if="checkVisiable('cpcRanking')"
+          :formatter="r => fmtCpcRanking(r.cpcRanking)"
+          label="平均排名" width="150" sortable>
+        </el-table-column>
         <el-table-column v-if="checkVisiable('channel')" label="渠道"
           :formatter="r => fmtChannel(r.channel)">
         </el-table-column>
@@ -106,6 +110,9 @@ const columnOpts = [{
 }, {
   label: '点击率',
   value: 'percent'
+}, {
+  label: '平均排名',
+  value: 'cpcRanking'
 }]
 
 export default {

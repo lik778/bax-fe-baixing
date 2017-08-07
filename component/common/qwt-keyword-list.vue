@@ -12,6 +12,10 @@
       <el-table-column v-if="showPropShow" prop="show" width="180"
         sortable label="日均搜索指数">
       </el-table-column>
+      <el-table-column v-if="showPropRanking"
+        width="140" label="平均排名" sortable
+        :formatter="r => fmtCpcRanking(r.cpcRanking)">
+      </el-table-column>
       <el-table-column v-if="showPropStatus" label="关键词状态"
         :formatter="fmtStatus">
       </el-table-column>
@@ -45,9 +49,12 @@
 import {
   KEYWORD_CHIBI_PENDING,
   KEYWORD_CHIBI_REJECT,
-  KEYWORD_CHIBI_ACCEPT,
   keywordStatus
 } from 'constant/fengming'
+
+import {
+  fmtCpcRanking
+} from 'util/campaign'
 
 function centToYuan(s) {
   return toFloat(s) / 100
@@ -93,6 +100,10 @@ export default {
       default: true
     },
     showPropStatus: {
+      type: Boolean,
+      default: false
+    },
+    showPropRanking: {
       type: Boolean,
       default: false
     }
@@ -210,6 +221,7 @@ export default {
 
       return keywordStatus[String(status)] || '未知'
     },
+    fmtCpcRanking,
     centToYuan
   },
   watch: {

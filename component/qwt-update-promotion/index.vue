@@ -113,6 +113,7 @@
           :selectable="false" deletable
           :show-prop-show="false"
           :show-prop-status="true"
+          :show-prop-ranking="true"
           @update-word="updateExistWord"
           @delete-word="word => promotion.deletedKeywords.push(word)">
         </keyword-list>

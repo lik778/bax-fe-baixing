@@ -1,6 +1,14 @@
 
 import { toTimestamp } from 'utils'
 
+export function fmtCpcRanking(ranking) {
+  if (ranking === 0) {
+    return '未知'
+  }
+
+  return ranking
+}
+
 export function mergeKeywords(preWords, newWords) {
   const words = preWords.map(w => w.word)
 
