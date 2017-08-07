@@ -102,7 +102,14 @@ async function _getAdItems(opts) {
     .query(reverseCamelcase(opts))
     .json()
 
-  return toCamelcase(body.data)
+  return toCamelcase(body.data).map(ad => {
+    if (ad.areas && ad.areas.length === 0) {
+      // 全国
+      ad.areas = ['quanguo']
+    }
+
+    return ad
+  })
 }
 
 async function _getAdItemCount(opts) {
