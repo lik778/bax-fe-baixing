@@ -25,7 +25,7 @@
           :formatter="r => toHumanTime(r.date, 'YYYY-MM-DD')">
         </el-table-column>
         <el-table-column v-if="checkVisiable('plan')" label="推广计划"
-          prop="cpcPlanName">
+          prop="cpcPlanName" width="120">
         </el-table-column>
         <el-table-column v-if="checkVisiable('channel')" label="渠道"
           :formatter="r => fmtChannel(r.channel)">
@@ -37,16 +37,17 @@
           prop="cpcName" label="关键词">
         </el-table-column>
         <el-table-column v-if="checkVisiable('shows')"
-          prop="shows" label="展现" sortable>
+          prop="shows" label="展现" width="90" sortable>
         </el-table-column>
         <el-table-column v-if="checkVisiable('click')"
-          prop="clicks" label="点击" sortable>
+          prop="clicks" label="点击" width="90" sortable>
         </el-table-column>
         <el-table-column v-if="checkVisiable('cost')" label="消费"
-          :formatter="r => (r.cost / 100) + '元'">
+          :formatter="r => (r.cost / 100).toFixed(2) + '元'"
+          width="120">
         </el-table-column>
         <el-table-column v-if="checkVisiable('percent')"
-          prop="clickRate" label="点击率" sortable>
+          prop="clickRate" label="点击率" width="120" sortable>
         </el-table-column>
       </el-table>
     </main>
@@ -58,19 +59,25 @@
 import BaxSelect from 'com/common/select'
 
 import {
-  toHumanTime,
-  centToYuan
-} from 'utils'
-
-import {
   semPlatformCn,
   device
 } from 'constant/fengming'
+
+import {
+  fmtCpcRanking
+} from 'util/campaign'
+
+import {
+  toHumanTime,
+  centToYuan
+} from 'utils'
 
 // {
 //   label: '全选',
 //   value: '_all_'
 // }
+
+const isArray = Array.isArray
 
 const columnOpts = [{
   label: '日期',
@@ -136,8 +143,14 @@ export default {
       return semPlatformCn[String(c)] || '未知'
     },
     fmtDevice(a) {
+      if (!isArray(a)) {
+        // sogou
+        return a
+      }
+
       return a.map(i => device[String(i)]).join(',')
     },
+    fmtCpcRanking,
     toHumanTime,
     centToYuan
   }
