@@ -13,11 +13,11 @@ export const CREATIVE_CHIBI_TITLE_PENDING = 1
 export const CREATIVE_CHIBI_CONTENT_PENDING = 2
 export const CREATIVE_CHIBI_ACCEPT = 10
 
-export const CAMPAIGN_CHIBI_REJECT = -20 // 审核失败 (创意 直接删除)
-export const CAMPAIGN_CHIBI_SENDBACK = -10 // 审核失败
-export const CAMPAIGN_CHIBI_PENDING = 0
-export const CAMPAIGN_CHIBI_UPDATED = 1 // 效力等同于 pending
-export const CAMPAIGN_CHIBI_ACCEPT = 10
+// export const CAMPAIGN_CHIBI_REJECT = -20 // 审核失败 (创意 直接删除)
+// export const CAMPAIGN_CHIBI_SENDBACK = -10 // 审核失败
+// export const CAMPAIGN_CHIBI_PENDING = 0
+// export const CAMPAIGN_CHIBI_UPDATED = 1 // 效力等同于 pending
+// export const CAMPAIGN_CHIBI_ACCEPT = 10
 
 export const keywordStatus = {
   '0': '投放中',
@@ -66,12 +66,19 @@ export const creativeStatus = {
 
 export const CREATIVE_STATUS_PENDING = 0
 
+export const campaignAuditStatus = {
+  '-10': '审核驳回',
+  '0': '审核中',
+  '10': '审核通过'
+}
+
 export const campaignStatus = {
-  '100': '推广中',
-  '10': '审核中',
-  '0': '等待投放',
+  '100': '有效',
+  '5': '计划预算不足',
   '-1': '下线',
-  '-10': '审核失败'
+  '-10': '暂停投放',
+  '-50': '不在投放期',
+  '-51': '账户余额不足'
 }
 
 export const CAMPAIGN_STATUS_PENDING = 10

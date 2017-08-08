@@ -89,10 +89,13 @@
           </el-switch>
         </template>
       </el-table-column>
-      <el-table-column prop="id" label="ID" width="120">
+      <el-table-column prop="id" label="ID" width="80">
       </el-table-column>
       <el-table-column label="状态" width="120"
-        :formatter="fmtStatus">
+        :formatter="r => fmtStatus(r.status)">
+      </el-table-column>
+      <el-table-column label="审核状态" width="120"
+        :formatter="r => fmtAuditStatus(r.auditStatus)">
       </el-table-column>
       <el-table-column label="预算" width="100"
         :formatter="r => fmtPrice(r.dailyBudget)">
@@ -133,11 +136,7 @@ import { Message } from 'element-ui'
 import equal from 'lodash.isequal'
 
 import {
-  CAMPAIGN_CHIBI_SENDBACK,
-  CAMPAIGN_CHIBI_UPDATED,
-  CAMPAIGN_CHIBI_PENDING,
-  CAMPAIGN_CHIBI_REJECT,
-
+  campaignAuditStatus,
   campaignStatus,
   semPlatformCn
 } from 'constant/fengming'
@@ -402,32 +401,17 @@ export default {
           break
       }
     },
+    fmtAuditStatus(s) {
+      return campaignAuditStatus[String(s)] || '未知'
+    },
     fmtPrice(s) {
       return commafy(centToYuan(s)) + ' 元'
     },
     fmtSource(s) {
       return semPlatformCn[s] || '未知'
     },
-    fmtStatus(row) {
-      const { chibiStatus, status } = row
-
-      if (chibiStatus === CAMPAIGN_CHIBI_SENDBACK) {
-        return '审核失败'
-      }
-
-      const a = [
-        CAMPAIGN_CHIBI_PENDING,
-        CAMPAIGN_CHIBI_UPDATED
-      ]
-      if (a.includes(chibiStatus)) {
-        return '等待审核'
-      }
-
-      if (chibiStatus === CAMPAIGN_CHIBI_REJECT) {
-        return '审核失败'
-      }
-
-      return campaignStatus[String(status)] || '未知'
+    fmtStatus(s) {
+      return campaignStatus[String(s)] || '未知'
     },
     fmtDate(range, date) {
       if (!range || (date === null)) {
