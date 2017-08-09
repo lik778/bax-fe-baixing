@@ -18,7 +18,6 @@
 </template>
 
 <script>
-
 import { Message } from 'element-ui'
 import { redirectTo } from 'utils'
 
@@ -58,7 +57,6 @@ export default {
     }
   }
 }
-
 </script>
 
 <style>

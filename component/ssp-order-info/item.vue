@@ -7,7 +7,6 @@
 </template>
 
 <script>
-
 export default {
   name: 'order-info-item',
   props: {
@@ -20,7 +19,6 @@ export default {
     }
   }
 }
-
 </script>
 
 <style scoped>

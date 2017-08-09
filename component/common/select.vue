@@ -13,7 +13,6 @@
 </template>
 
 <script>
-
 import equal from 'lodash.isequal'
 
 export default {
@@ -71,7 +70,6 @@ export default {
     }
   }
 }
-
 </script>
 
 <style>

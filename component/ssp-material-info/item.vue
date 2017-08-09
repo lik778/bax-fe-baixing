@@ -12,7 +12,6 @@
 </template>
 
 <script>
-
 export default {
   name: 'material-info-item',
   props: {
@@ -26,7 +25,6 @@ export default {
     }
   }
 }
-
 </script>
 
 <style scoped>

@@ -55,7 +55,6 @@
 </template>
 
 <script>
-
 import { Message } from 'element-ui'
 
 import Topbar from 'com/topbar'
@@ -212,7 +211,6 @@ export default {
     }
   }
 }
-
 </script>
 
 <style scoped>

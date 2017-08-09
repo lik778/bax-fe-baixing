@@ -10,7 +10,6 @@
 </template>
 
 <script>
-
 import 'rxjs/add/operator/debounceTime'
 import { Subject } from 'rxjs/Subject'
 
@@ -110,5 +109,4 @@ export default {
     await this.queryUsers()
   }
 }
-
 </script>

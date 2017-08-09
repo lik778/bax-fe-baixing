@@ -10,7 +10,6 @@
 </template>
 
 <script>
-
 import MaterialHeader from './header'
 import MaterialList from './list'
 import Topbar from 'com/topbar'
@@ -39,7 +38,6 @@ export default {
     await getMaterials({...this.query})
   }
 }
-
 </script>
 
 <style scoped>

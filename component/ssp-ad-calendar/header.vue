@@ -75,7 +75,6 @@
 </template>
 
 <script>
-
 import CategorySelector from 'com/common/category-selector'
 import AreaSelector from 'com/common/area-selector'
 import BaxSelect from 'com/common/select'
@@ -245,7 +244,6 @@ export default {
     }
   }
 }
-
 </script>
 
 <style scoped>

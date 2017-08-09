@@ -148,7 +148,6 @@
 </template>
 
 <script>
-
 import CategorySelector from 'com/common/category-selector'
 import UserSelector from 'com/common/user-selector'
 import AreaSelector from 'com/common/area-selector'
@@ -518,7 +517,6 @@ export default {
     console.debug('updated - create order')
   }
 }
-
 </script>
 
 <style scoped>

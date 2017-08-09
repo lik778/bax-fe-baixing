@@ -39,7 +39,6 @@
 </template>
 
 <script>
-
 import BaxPagination from 'com/common/pagination'
 
 import { materialType } from 'constant/material'
@@ -84,7 +83,6 @@ export default {
     }
   }
 }
-
 </script>
 
 <style scoped>

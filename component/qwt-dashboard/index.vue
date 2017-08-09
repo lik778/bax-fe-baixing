@@ -82,7 +82,6 @@
 </template>
 
 <script>
-
 import PlanKeywordSelector from 'com/common/plan-keyword-selector'
 import BaxSelect from 'com/common/select'
 import DataDetail from './data-detail'
@@ -232,7 +231,6 @@ export default {
     // await this.queryStatistics()
   }
 }
-
 </script>
 
 <style scoped>

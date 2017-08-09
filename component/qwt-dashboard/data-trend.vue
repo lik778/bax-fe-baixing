@@ -11,7 +11,6 @@
 </template>
 
 <script>
-
 import { toHumanTime } from 'utils'
 import clone from 'clone'
 
@@ -107,7 +106,6 @@ export default {
     }
   }
 }
-
 </script>
 
 <style scoped>

@@ -58,7 +58,6 @@
 </template>
 
 <script>
-
 import Uploader from 'com/common/uploader'
 import BaxSelect from 'com/common/select'
 
@@ -236,7 +235,6 @@ export default {
     await getMaterials()
   }
 }
-
 </script>
 
 <style scoped>

@@ -23,7 +23,6 @@
 </template>
 
 <script>
-
 import { centToYuan } from 'utils'
 
 export default {
@@ -65,7 +64,6 @@ export default {
     }
   }
 }
-
 </script>
 
 <style scoped>

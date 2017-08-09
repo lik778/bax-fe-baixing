@@ -48,7 +48,6 @@
 </template>
 
 <script>
-
 import UserSelector from 'com/common/user-selector'
 import BaxSelect from 'com/common/select'
 import BaxInput from 'com/common/input'
@@ -168,7 +167,6 @@ export default {
     }
   }
 }
-
 </script>
 
 <style scoped>

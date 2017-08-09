@@ -92,7 +92,6 @@
 </template>
 
 <script>
-
 import QwtPkgWidget from 'com/widget/qwt-pkg'
 import QwtProWidget from 'com/widget/qwt-pro'
 import Clipboard from 'com/widget/clipboard'
@@ -528,7 +527,6 @@ export default {
     ])
   }
 }
-
 </script>
 
 <style scoped>

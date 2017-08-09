@@ -11,7 +11,6 @@
 </template>
 
 <script>
-
 import OrderHeader from './header'
 import OrderList from './list'
 
@@ -34,7 +33,6 @@ export default {
     }
   }
 }
-
 </script>
 
 <style scoped>

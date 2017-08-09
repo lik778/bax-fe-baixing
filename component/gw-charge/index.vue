@@ -69,7 +69,6 @@
 </template>
 
 <script>
-
 import Clipboard from 'com/widget/clipboard'
 import GwProWidget from 'com/widget/gw-pro'
 import PriceList from './price-list'
@@ -286,7 +285,6 @@ export default {
     await getProducts(2)
   }
 }
-
 </script>
 
 <style scoped>

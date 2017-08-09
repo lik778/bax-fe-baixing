@@ -53,7 +53,6 @@
 </template>
 
 <script>
-
 import { orderStatusOpts } from 'constant/order'
 
 import UserSelector from 'com/common/user-selector'
@@ -211,7 +210,6 @@ export default {
     }
   }
 }
-
 </script>
 
 <style scoped>

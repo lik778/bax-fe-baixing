@@ -20,7 +20,6 @@
 </template>
 
 <script>
-
 import BaxPagination from 'com/common/pagination'
 import { getUsers } from './action'
 
@@ -57,7 +56,6 @@ export default {
     await getUsers({...this.query})
   }
 }
-
 </script>
 
 <style scoped>

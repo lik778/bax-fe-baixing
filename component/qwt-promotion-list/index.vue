@@ -14,7 +14,6 @@
 </template>
 
 <script>
-
 import PromotionHeader from './header'
 import PromotionList from './list'
 import Topbar from 'com/topbar'
@@ -40,7 +39,6 @@ export default {
     }
   }
 }
-
 </script>
 
 <style scoped>

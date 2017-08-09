@@ -43,7 +43,6 @@
 </template>
 
 <script>
-
 import BaxPagination from 'com/common/pagination'
 
 import { toHumanTime } from 'utils'
@@ -129,7 +128,6 @@ export default {
     await getOrders({...this.query})
   }
 }
-
 </script>
 
 <style scoped>

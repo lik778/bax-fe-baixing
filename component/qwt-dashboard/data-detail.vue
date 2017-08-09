@@ -59,7 +59,6 @@
 </template>
 
 <script>
-
 import BaxSelect from 'com/common/select'
 
 import {
@@ -162,7 +161,6 @@ export default {
     centToYuan
   }
 }
-
 </script>
 
 <style scoped>

@@ -16,7 +16,6 @@
 </template>
 
 <script>
-
 import CreateUser from 'com/common/create-user'
 import UserHeader from './header'
 import Topbar from 'com/topbar'
@@ -58,7 +57,6 @@ export default {
     }
   }
 }
-
 </script>
 
 <style scoped>

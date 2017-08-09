@@ -11,7 +11,6 @@
 </template>
 
 <script>
-
 import Topbar from 'com/topbar'
 
 export default {
@@ -26,7 +25,6 @@ export default {
     }
   }
 }
-
 </script>
 
 <style scoped>

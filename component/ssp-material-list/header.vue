@@ -32,7 +32,6 @@
 </template>
 
 <script>
-
 import UserSelector from 'com/common/user-selector'
 import BaxInput from 'com/common/input'
 import clone from 'clone'
@@ -120,7 +119,6 @@ export default {
     }
   }
 }
-
 </script>
 
 <style scoped>

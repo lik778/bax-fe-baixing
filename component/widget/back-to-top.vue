@@ -8,7 +8,6 @@
 </template>
 
 <script>
-
 export default {
   name: 'bax-back-to-top-btn',
   data() {
@@ -35,7 +34,6 @@ export default {
     window.removeEventListener('scroll', this.onscroll)
   }
 }
-
 </script>
 
 <style scoped>

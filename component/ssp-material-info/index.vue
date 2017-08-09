@@ -22,7 +22,6 @@
 </template>
 
 <script>
-
 import Topbar from 'com/topbar'
 import Item from './item'
 
@@ -59,7 +58,6 @@ export default {
     await getMaterial(id)
   }
 }
-
 </script>
 
 <style scoped>

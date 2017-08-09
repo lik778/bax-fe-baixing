@@ -32,7 +32,6 @@
 </template>
 
 <script>
-
 import BaxSelect from 'com/common/select'
 import BaxInput from 'com/common/input'
 import { getUsers } from './action'
@@ -85,7 +84,6 @@ export default {
     }
   }
 }
-
 </script>
 
 <style scoped>

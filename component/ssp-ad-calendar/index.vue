@@ -14,7 +14,6 @@
 </template>
 
 <script>
-
 import CalendarMain from 'com/common/ad-calendar'
 import CalendarHeader from './header'
 import Topbar from 'com/topbar'
@@ -57,7 +56,6 @@ export default {
     ])
   }
 }
-
 </script>
 
 <style scoped>

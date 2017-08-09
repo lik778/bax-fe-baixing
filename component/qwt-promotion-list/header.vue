@@ -38,7 +38,6 @@
 </template>
 
 <script>
-
 import BaxSelect from 'com/common/select'
 import BaxInput from 'com/common/input'
 
@@ -109,7 +108,6 @@ export default {
     }
   }
 }
-
 </script>
 
 <style scoped>

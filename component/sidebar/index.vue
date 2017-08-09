@@ -101,7 +101,6 @@
 </template>
 
 <script>
-
 import { version } from '../../package.json'
 
 import {
@@ -170,7 +169,6 @@ export default {
     }
   }
 }
-
 </script>
 
 <style scoped>

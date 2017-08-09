@@ -120,7 +120,6 @@
 </template>
 
 <script>
-
 import BaxPagination from 'com/common/pagination'
 import AddMaterial from './add-material'
 import AddAdItem from './add-ad-item'
@@ -341,7 +340,6 @@ export default {
     }
   }
 }
-
 </script>
 
 <style scoped>

@@ -10,7 +10,6 @@
 </template>
 
 <script>
-
 import { getUpyunToken } from 'api/material'
 import { upyun } from 'config'
 
@@ -97,7 +96,6 @@ export default {
     }
   }
 }
-
 </script>
 
 <style scoped>

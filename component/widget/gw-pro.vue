@@ -17,7 +17,6 @@
 </template>
 
 <script>
-
 export default {
   name: 'gw-pro-widget',
   props: {
@@ -31,7 +30,6 @@ export default {
     }
   }
 }
-
 </script>
 
 <style scoped>

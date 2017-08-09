@@ -213,7 +213,6 @@
 </template>
 
 <script>
-
 import { Message } from 'element-ui'
 
 import KeywordList from 'com/common/qwt-keyword-list'
@@ -656,7 +655,6 @@ export default {
     await this.initCampaignInfo()
   }
 }
-
 </script>
 
 <style scoped>

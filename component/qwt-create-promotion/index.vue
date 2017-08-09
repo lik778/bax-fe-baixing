@@ -206,7 +206,6 @@
 </template>
 
 <script>
-
 import { Message } from 'element-ui'
 import clone from 'clone'
 
@@ -475,7 +474,6 @@ export default {
     await getCurrentBalance()
   }
 }
-
 </script>
 
 <style scoped>

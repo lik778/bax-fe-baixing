@@ -17,7 +17,6 @@
 </template>
 
 <script>
-
 import AdHeader from './header'
 import Topbar from 'com/topbar'
 import AdList from './list'
@@ -58,7 +57,6 @@ export default {
     ])
   }
 }
-
 </script>
 
 <style scoped>

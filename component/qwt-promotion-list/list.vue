@@ -129,7 +129,6 @@
 </template>
 
 <script>
-
 import BaxPagination from 'com/common/pagination'
 
 import { Message } from 'element-ui'
@@ -430,7 +429,6 @@ export default {
     await getCurrentCampaigns({...this.query})
   }
 }
-
 </script>
 
 <style scoped>

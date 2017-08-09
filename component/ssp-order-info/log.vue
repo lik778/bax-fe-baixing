@@ -10,7 +10,6 @@
 </template>
 
 <script>
-
 import { toHumanTime } from 'utils'
 
 import {
@@ -32,7 +31,6 @@ export default {
     toHumanTime
   }
 }
-
 </script>
 
 <style scoped>
