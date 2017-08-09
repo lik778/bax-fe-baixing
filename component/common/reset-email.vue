@@ -18,7 +18,6 @@
 </template>
 
 <script>
-
 import { updateUserInfo } from 'api/account'
 import { getCurrentUser } from '../action'
 
@@ -71,7 +70,6 @@ export default {
     }
   }
 }
-
 </script>
 
 <style scoped>

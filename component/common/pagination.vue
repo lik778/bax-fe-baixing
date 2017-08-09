@@ -10,7 +10,6 @@
 </template>
 
 <script>
-
 export default {
   name: 'bax-pagination',
   props: {
@@ -41,7 +40,6 @@ export default {
     }
   }
 }
-
 </script>
 
 <style scoped>

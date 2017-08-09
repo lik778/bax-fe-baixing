@@ -32,7 +32,6 @@
 </template>
 
 <script>
-
 import DaysTip from './days-tip'
 import Days from './days'
 
@@ -190,7 +189,6 @@ export default {
     console.debug('ad calendar updated')
   }
 }
-
 </script>
 
 <style scoped>

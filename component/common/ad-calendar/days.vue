@@ -8,7 +8,6 @@
 </template>
 
 <script>
-
 import moment from 'moment'
 
 export default {
@@ -54,7 +53,6 @@ function hitRanges(day, ranges) {
 
   return yes
 }
-
 </script>
 
 <style scoped>

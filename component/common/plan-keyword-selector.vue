@@ -9,7 +9,6 @@
 </template>
 
 <script>
-
 import BaxSelect from './select'
 
 import {
@@ -129,5 +128,4 @@ export default {
     await this.queryPlanAndKeyword()
   }
 }
-
 </script>

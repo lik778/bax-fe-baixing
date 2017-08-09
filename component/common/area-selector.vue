@@ -67,7 +67,6 @@ const specialCities = [
 
 import isequal from 'lodash.isequal'
 import clone from 'clone'
-
 export default {
   name: 'area-selector',
   props: {
@@ -423,7 +422,6 @@ export default {
     console.debug('area selector updated')
   }
 }
-
 </script>
 
 <style scoped>

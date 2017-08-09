@@ -32,7 +32,6 @@
 </template>
 
 <script>
-
 import isequal from 'lodash.isequal'
 
 export default {
@@ -240,7 +239,6 @@ export default {
     console.debug('category selector updated')
   }
 }
-
 </script>
 
 <style scoped>

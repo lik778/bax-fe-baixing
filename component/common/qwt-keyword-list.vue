@@ -45,7 +45,6 @@
 </template>
 
 <script>
-
 import {
   KEYWORD_CHIBI_PENDING,
   KEYWORD_CHIBI_REJECT,
@@ -237,7 +236,6 @@ export default {
     }
   }
 }
-
 </script>
 
 <style>

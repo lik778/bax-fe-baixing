@@ -27,7 +27,6 @@
 </template>
 
 <script>
-
 import BaxSelect from 'com/common/select'
 import { Message } from 'element-ui'
 import clone from 'clone'
@@ -124,7 +123,6 @@ export default {
     }
   }
 }
-
 </script>
 
 <style scoped>
