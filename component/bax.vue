@@ -14,7 +14,6 @@
 </template>
 
 <script>
-
 import ResetEmail from './common/reset-email'
 import BackToTop from './widget/back-to-top'
 import Sidebar from './sidebar'
@@ -67,7 +66,6 @@ export default {
     ])
   }
 }
-
 </script>
 
 <style>

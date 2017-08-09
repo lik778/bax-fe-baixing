@@ -145,11 +145,11 @@ export default {
         return this.validCategories.includes(c) &&
           this.validAreas.includes(a)
       })
-      .map((k) => ({
-        category: k.split('-')[1],
-        area: k.split('-')[0],
-        ranges: rowInfo[k]
-      }))
+        .map((k) => ({
+          category: k.split('-')[1],
+          area: k.split('-')[0],
+          ranges: rowInfo[k]
+        }))
 
       if (rows.length) {
         this.$emit('conflict')

@@ -99,9 +99,9 @@
       },
       gotoPage(no) {
         if (no > this.current) {
-          this.current ++
+          this.current++
         } else if (no < this.current) {
-          this.current --
+          this.current--
         }
       },
       formatCreatedAt(row, col) {

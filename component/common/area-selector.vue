@@ -48,6 +48,8 @@
 </template>
 
 <script>
+import isequal from 'lodash.isequal'
+import clone from 'clone'
 
 const specialCities = [
   'beijing',
@@ -65,8 +67,6 @@ const specialCities = [
  *     - 需要调用方 quanguo -> china
  */
 
-import isequal from 'lodash.isequal'
-import clone from 'clone'
 export default {
   name: 'area-selector',
   props: {
