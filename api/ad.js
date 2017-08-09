@@ -3,24 +3,30 @@ import { reverseCamelcase, toCamelcase } from 'object-keys-mapping'
 import { api, trim } from './base'
 
 export async function createAdItem(item) {
-  return await api
+  const body = await api
     .post('/ad/item')
     .send(reverseCamelcase(item))
     .json()
+
+  return body
 }
 
 export async function pauseAdItem(id, opts = {}) {
-  return await api
+  const body = await api
     .post(`/ad/item/${id}/pause`)
     .send(reverseCamelcase(opts))
     .json()
+
+  return body
 }
 
 export async function continueAdItem(id, opts = {}) {
-  return await api
+  const body = await api
     .post(`/ad/item/${id}/continue`)
     .send(reverseCamelcase(opts))
     .json()
+
+  return body
 }
 
 export async function getAdPrice(aid, opts = {}) {
@@ -64,32 +70,40 @@ export async function getAdItems(opts = {}) {
 }
 
 export async function addAdItemMaterial(itemId, data) {
-  return await api
+  const body = await api
     .post(`/ad/item/${itemId}/material/new`)
     .send(reverseCamelcase(data))
     .json()
+
+  return body
 }
 
 export async function setAdItemMaterial(itemId, materialId) {
-  return await api
+  const body = await api
     .post(`/ad/item/${itemId}/material/existed`)
     .send(reverseCamelcase({materialId}))
     .json()
+
+  return body
 }
 
 export async function verifyAdItem(id, status, opts = {}) {
   if (status === 'pass') {
-    return await api
+    const body = await api
       .post(`/ad/item/${id}/verify/pass`)
       .send({})
       .json()
+
+    return body
   }
 
   // failed
-  return await api
+  const body = await api
     .post(`/ad/item/${id}/verify/failed`)
     .send(reverseCamelcase(opts))
     .json()
+
+  return body
 }
 
 /**

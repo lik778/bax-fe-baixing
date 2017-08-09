@@ -9,7 +9,8 @@ export async function getProductDiscounts(type) {
     const arr = await Promise.all(type.map(t => _getProductDiscounts(t)))
     return arr.reduce((a, b) => [...a, ...b], [])
   } else {
-    return await _getProductDiscounts(type)
+    const arr = await _getProductDiscounts(type)
+    return arr
   }
 }
 

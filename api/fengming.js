@@ -11,24 +11,30 @@ const isArray = Array.isArray
 const assign = Object.assign
 
 export async function updateCampaignDailyBudget(opts) {
-  return await fengming
+  const body = await fengming
     .post('/campaign/daily_budget')
     .send(reverseCamelcase(opts))
     .json()
+
+  return body
 }
 
 export async function updateCampaignRatio(opts) {
-  return await fengming
+  const body = await fengming
     .post('/campaign/ratio')
     .send(reverseCamelcase(opts))
     .json()
+
+  return body
 }
 
 export async function updateCampaignTimeRange(opts) {
-  return await fengming
+  const body = await fengming
     .post('/campaign/valid_time')
     .send(reverseCamelcase(opts))
     .json()
+
+  return body
 }
 
 export async function createOrder(order) {
@@ -83,10 +89,12 @@ export async function getCampaignInfo(id) {
 }
 
 export async function updateCampaign(id, data) {
-  return await fengming
+  const body = await fengming
     .post(`/campaign/${id}`)
     .send(reverseCamelcase(data))
     .json()
+
+  return body
 }
 
 export async function createCampaign(data) {
@@ -99,23 +107,27 @@ export async function createCampaign(data) {
 }
 
 export async function activeCampaigns(ids) {
-  return await fengming
+  const body = await fengming
     .post('/campaign/pause')
     .send(reverseCamelcase({
       campaignIds: [...ids],
       pause: 0
     }))
     .json()
+
+  return body
 }
 
 export async function pauseCampaigns(ids) {
-  return await fengming
+  const body = await fengming
     .post('/campaign/pause')
     .send(reverseCamelcase({
       campaignIds: [...ids],
       pause: 1
     }))
     .json()
+
+  return body
 }
 
 export async function getCurrentCampaigns(opts) {

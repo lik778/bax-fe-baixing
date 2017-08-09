@@ -22,26 +22,32 @@ export async function getCurrentUser() {
 }
 
 export async function loginLocal(id = 2) {
-  return await api
+  const body = await api
     .get('/user/login/local')
     .send({user_id: id})
     .json()
+
+  return body
 }
 
 export async function login(email, password) {
-  return await api
+  const body = await api
     .post('/user/login')
     .send({
       password,
       email
     })
     .json()
+
+  return body
 }
 
 export async function logout() {
-  return await api
+  const body = await api
     .post('/user/logout')
     .json()
+
+  return body
 }
 
 export async function getRoles() {

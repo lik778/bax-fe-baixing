@@ -16,10 +16,12 @@ export async function getCalendar(opts = {}) {
 }
 
 export async function cancelOrder(oid) {
-  return await api
+  const body = await api
     .post(`/order/${oid}/cancel`)
     .send({})
     .json()
+
+  return body
 }
 
 export async function createOrder(order) {
@@ -69,10 +71,12 @@ export async function getOrders(opts = {}) {
 }
 
 export async function changeOrderDiscount(oid, data) {
-  return await api
+  const body = await api
     .post(`/order/${oid}/discount`)
     .send(reverseCamelcase(data))
     .json()
+
+  return body
 }
 
 export async function getOrderPayUrl(oids, summary = '') {
@@ -92,19 +96,23 @@ export async function getOrderPayUrl(oids, summary = '') {
 }
 
 export async function payOrders(oids) {
-  return await api
+  const body = await api
     .post('/order/pay/agent/multi')
     .send(reverseCamelcase({
       orderIds: oids
     }))
     .json()
+
+  return body
 }
 
 export async function payOrder(oid) {
-  return await api
+  const body = await api
     .post(`/order/${oid}/pay/agent`)
     .send({})
     .json()
+
+  return body
 }
 
 /**
