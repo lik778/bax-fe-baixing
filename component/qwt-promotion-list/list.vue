@@ -91,7 +91,7 @@
       </el-table-column>
       <el-table-column prop="id" label="ID" width="80">
       </el-table-column>
-      <el-table-column label="状态" width="120"
+      <el-table-column label="计划状态" width="120"
         :formatter="r => fmtStatus(r.status)">
       </el-table-column>
       <el-table-column label="审核状态" width="120"
@@ -301,7 +301,7 @@ export default {
       }
 
       try {
-        await this.$confirm(`确定${cmd === 'pause' ? '暂停' : '重新'}投放 ?`, '提示', {
+        await this.$confirm(`确定${cmd === 'pause' ? '暂停' : '开始'}投放 ?`, '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消'
         })
