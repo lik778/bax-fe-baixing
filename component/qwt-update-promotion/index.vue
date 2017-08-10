@@ -567,7 +567,10 @@ export default {
       // check price
       const {
         updatedKeywords = [],
-        newKeywords = []
+        newKeywords = [],
+
+        creativeContent,
+        creativeTitle
       } = data
 
       const words = [...updatedKeywords, ...newKeywords]
@@ -578,13 +581,16 @@ export default {
         }
       }
 
-      const res = await checkCreativeContent({
-        creativeContent: data.creativeContent,
-        creativeTitle: data.creativeTitle
-      })
+      if (creativeContent && creativeTitle) {
+        // 变更时检测
+        const res = await checkCreativeContent({
+          creativeContent,
+          creativeTitle
+        })
 
-      if (res.result) {
-        return Message.error(res.hint)
+        if (res.result) {
+          return Message.error(res.hint)
+        }
       }
 
       await updateCampaign(this.id, fmtAreasInQwt(data))
