@@ -369,7 +369,7 @@ export default {
       } = row
 
       try {
-        await this.$confirm(`确定${pause ? '重新' : '暂停'}投放 ?`, '提示', {
+        await this.$confirm(`确定${pause ? '开始' : '暂停'}投放 ?`, '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消'
         })
