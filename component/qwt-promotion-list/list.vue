@@ -84,7 +84,8 @@
       </el-table-column>
       <el-table-column prop="open" label="开关" width="80">
         <template scope="s">
-          <el-switch :value="!s.row.pause" on-text="" off-text=""
+          <el-switch :disabled="s.row.status === CAMPAIGN_STATUS_OFFLINE"
+            :value="!s.row.pause" on-text="" off-text=""
             @change="switchCampaignPause(s.row)">
           </el-switch>
         </template>
@@ -158,6 +159,8 @@ import { Message } from 'element-ui'
 import equal from 'lodash.isequal'
 
 import {
+  CAMPAIGN_STATUS_PENDING,
+  CAMPAIGN_STATUS_OFFLINE,
   campaignAuditStatus,
   campaignStatus,
   semPlatformCn
@@ -186,7 +189,11 @@ import {
   commafy
 } from 'utils'
 
-const cantSelectStatuses = [-10] // 不能选择的状态
+// 不能选择的状态
+const cantSelectStatuses = [
+  CAMPAIGN_STATUS_PENDING,
+  CAMPAIGN_STATUS_OFFLINE
+]
 
 const campaignStatusTooltip = `
 计划包含以下6种状态：
@@ -234,7 +241,9 @@ export default {
       selectedCampaignIds: [],
 
       campaignAuditStatusTooltip,
-      campaignStatusTooltip
+      campaignStatusTooltip,
+
+      CAMPAIGN_STATUS_OFFLINE
     }
   },
   computed: {

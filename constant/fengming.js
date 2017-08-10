@@ -81,7 +81,8 @@ export const campaignStatus = {
   '-51': '账户余额不足'
 }
 
-export const CAMPAIGN_STATUS_PENDING = 10
+export const CAMPAIGN_STATUS_PENDING = -10
+export const CAMPAIGN_STATUS_OFFLINE = -1
 
 export const landingType = {
   '0': '帖子详情页',
