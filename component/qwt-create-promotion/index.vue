@@ -374,6 +374,15 @@ export default {
         return Message.error('创意内容需要在9-40个字')
       }
 
+      const res = await checkCreativeContent({
+        creativeContent: p.creativeContent,
+        creativeTitle: p.creativeTitle
+      })
+
+      if (res.result) {
+        return Message.error(res.hint)
+      }
+
       await createCampaign(fmtAreasInQwt(p))
 
       Message.success('创建成功')

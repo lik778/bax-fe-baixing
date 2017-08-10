@@ -578,6 +578,15 @@ export default {
         }
       }
 
+      const res = await checkCreativeContent({
+        creativeContent: data.creativeContent,
+        creativeTitle: data.creativeTitle
+      })
+
+      if (res.result) {
+        return Message.error(res.hint)
+      }
+
       await updateCampaign(this.id, fmtAreasInQwt(data))
 
       Message.success('更新成功')
