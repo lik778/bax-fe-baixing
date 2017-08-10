@@ -68,12 +68,6 @@ export default {
 }
 </script>
 
-<style>
-
-@import 'cssbase/reset';
-
-</style>
-
 <style scoped>
 
 content {
@@ -90,6 +84,7 @@ content {
 
 <style>
 
+@import 'cssbase/reset';
 @import 'cssbase/mixin';
 
 @mixin scrollbar;
@@ -98,6 +93,10 @@ body > content {
   width: 100%;
   min-width: 1200px;
   max-width: 1500px;
+}
+
+.el-tooltip__popper {
+  max-width: 340px;
 }
 
 .el-loading-mask {
