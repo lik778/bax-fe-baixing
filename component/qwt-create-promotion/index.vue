@@ -243,7 +243,7 @@ const emptyPromotion = {
   mobilePriceRatio: 1,
   creativeContent: '',
   creativeTitle: '',
-  dailyBudget: 0,
+  dailyBudget: 100, // 元
   landingPage: '',
   landingType: 0,
   validTime: [],
