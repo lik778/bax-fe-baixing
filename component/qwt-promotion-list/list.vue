@@ -91,16 +91,39 @@
       </el-table-column>
       <el-table-column prop="id" label="ID" width="80">
       </el-table-column>
-      <el-table-column label="计划状态" width="120"
-        :formatter="r => fmtStatus(r.status)">
+      <el-table-column label="计划状态" width="140">
+        <template scope="s">
+          <div class="column-tip">
+            <span>{{ fmtStatus(s.row.status) }}</span>
+            <el-tooltip v-if="s.$index === 0"
+              effect="dark" placement="top"
+              :content="campaignStatusTooltip">
+              <i class="el-icon-information"></i>
+            </el-tooltip>
+          </div>
+        </template>
       </el-table-column>
-      <el-table-column label="审核状态" width="120"
-        :formatter="r => fmtAuditStatus(r.auditStatus)">
+      <el-table-column label="审核状态" width="120">
+        <template scope="s">
+          <div class="column-tip">
+            <span>{{ fmtAuditStatus(s.row.auditStatus, s) }}</span>
+            <el-tooltip v-if="s.$index === 0"
+              effect="dark" placement="top"
+              :content="campaignAuditStatusTooltip">
+              <i class="el-icon-information"></i>
+            </el-tooltip>
+          </div>
+        </template>
       </el-table-column>
       <el-table-column label="预算" width="100"
         :formatter="r => fmtPrice(r.dailyBudget)">
       </el-table-column>
-      <el-table-column prop="mobilePriceRatio" label="移动端出价比例(0.1-9.9)" width="120">
+      <el-table-column label="移动端出价比例(0.1-9.9)" width="120">
+        <template scope="s">
+          <p class="center">
+            {{ s.row.mobilePriceRatio }}
+          </p>
+        </template>
       </el-table-column>
       <el-table-column label="开始日期" width="120"
         :formatter="r => fmtDate(r.timeRange, r.timeRange && r.timeRange[0])">
@@ -165,6 +188,23 @@ import {
 
 const cantSelectStatuses = [-10] // 不能选择的状态
 
+const campaignStatusTooltip = `
+计划包含以下6中状态：
+  1. 有效：表示计划当前可以推广，但是计划能否正常展现，由审核状态决定；\n
+  2. 下线：表示当前计划被删除；
+  3. 计划预算不足：表示当前计划推广预算已花完；
+  4. 账户余额不足：表示当前账户余额不足以开启该计划，无法推广；
+  5. 不在投放期：表示当前计划当前不在推广日期内；
+  6. 暂停投放：表示当前计划设置了暂停，无法正常展现。
+`
+
+const campaignAuditStatusTooltip = `
+审核包含以下3种状态：
+  1. 审核驳回
+  2. 审核中
+  3. 审核通过
+`
+
 export default {
   name: 'qwt-promotion-list',
   components: {
@@ -191,7 +231,10 @@ export default {
         budget: '',
         ratio: ''
       },
-      selectedCampaignIds: []
+      selectedCampaignIds: [],
+
+      campaignAuditStatusTooltip,
+      campaignStatusTooltip
     }
   },
   computed: {
@@ -432,6 +475,24 @@ export default {
 </script>
 
 <style scoped>
+
+@import 'cssbase/mixin';
+
+.column-tip {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  & i {
+    margin-left: 3px;
+    font-size: 11px;
+    color: gray;
+  }
+}
+
+.center {
+  @mixin center;
+}
 
 .qwt-promotion-list {
   margin-top: 16px;
