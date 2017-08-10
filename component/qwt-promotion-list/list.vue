@@ -106,7 +106,7 @@
       <el-table-column label="审核状态" width="120">
         <template scope="s">
           <div class="column-tip">
-            <span>{{ fmtAuditStatus(s.row.auditStatus, s) }}</span>
+            <span>{{ fmtAuditStatus(s.row.auditStatus) }}</span>
             <el-tooltip v-if="s.$index === 0"
               effect="dark" placement="top"
               :content="campaignAuditStatusTooltip">
