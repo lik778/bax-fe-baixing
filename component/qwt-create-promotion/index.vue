@@ -183,7 +183,9 @@
           <el-button v-if="false" type="primary">
             先去充值
           </el-button>
-          <el-button type="primary" @click="createPromotion">
+          <el-button type="primary"
+            :disabled="isCreating"
+            @click="createPromotion">
             创建推广
           </el-button>
         </div>
@@ -281,6 +283,7 @@ export default {
       timeType: 'long', // long, custom
       queryWord: '',
 
+      isCreating: false,
       landingTypeOpts
     }
   },
@@ -309,6 +312,19 @@ export default {
   },
   methods: {
     async createPromotion() {
+      if (this.isCreating) {
+        return Message.warning('正在创建中, 请稍等一小会 ~')
+      }
+
+      this.isCreating = true
+
+      try {
+        await this._createPromotion()
+      } finally {
+        this.isCreating = false
+      }
+    },
+    async _createPromotion() {
       const p = clone(this.newPromotion)
 
       const pp = this.predictedInfo.dailyBudget

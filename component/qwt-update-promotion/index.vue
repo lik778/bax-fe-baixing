@@ -190,7 +190,9 @@
           <el-button v-if="false" type="primary">
             先去充值
           </el-button>
-          <el-button type="primary" @click="updatePromotion">
+          <el-button type="primary"
+            :disabled="isUpdating"
+            @click="updatePromotion">
             更新推广
           </el-button>
         </div>
@@ -278,6 +280,7 @@ export default {
     return {
       newaddedWordsVisible: false,
       areaDialogVisible: false,
+      isUpdating: false,
       queryWord: '',
       // 注: 此处逻辑比较容易出错, 此处 定义为 undefined 与 getXXXdata 处 密切相关
       // 注: 需要密切关注 更新 数据 的获取
@@ -552,6 +555,19 @@ export default {
       return data
     },
     async updatePromotion() {
+      if (this.isUpdating) {
+        return Message.warning('正在更新中, 请稍等一会儿 ~')
+      }
+
+      this.isUpdating = true
+
+      try {
+        await this._updatePromotion()
+      } finally {
+        this.isUpdating = false
+      }
+    },
+    async _updatePromotion() {
       let data = {}
       try {
         data = {
