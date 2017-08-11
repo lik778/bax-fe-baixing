@@ -123,13 +123,26 @@ export default {
       }, [])
     },
     rows() {
-      const { orders } = this
+      const {
+        allCategories,
+        allAreas,
+        orders
+      } = this
 
       const rowInfo = {}
 
       for (const o of orders) {
-        for (const a of o.areas) {
-          for (const c of o.categories) {
+        // NOTE: categories === [] ==> 全类目
+        const categories = (isArray(o.categories) && o.categories.length === 0)
+          ? allCategories.map(c => c.name)
+          : o.categories
+        // NOTE: areas === [] ==> 全国
+        const areas = (isArray(o.areas) && o.areas.length === 0)
+          ? allAreas.map(a => a.name)
+          : o.areas
+
+        for (const a of areas) {
+          for (const c of categories) {
             const k = a + '-' + c
             if (rowInfo[k]) {
               rowInfo[k].push(o.timeRange)
