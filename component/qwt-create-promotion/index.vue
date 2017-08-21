@@ -91,7 +91,7 @@
       </section>
       <section class="keyword">
         <header>选取推广关键词</header>
-        <h4>根据当月数据，为您推荐如下关键词</h4>
+        <h4>建议选取20个以上关键词，关键词越多您的创意被展现的机会越多。根据当月数据，为您推荐如下关键词</h4>
         <keyword-list :words="creativeWords"
           :selected-words="newPromotion.creativeWords"
           @update-word="updateCreativeWord"
