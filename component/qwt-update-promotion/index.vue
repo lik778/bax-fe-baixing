@@ -864,17 +864,6 @@ export default {
           cursor: pointer;
         }
       }
-
-      & > footer {
-        color: #717d91;
-        font-size: 13px;
-        line-height: 1.69;
-
-        & > a {
-          color: #0994ff;
-          cursor: pointer;
-        }
-      }
     }
   }
 }
