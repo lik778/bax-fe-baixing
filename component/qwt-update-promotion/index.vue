@@ -88,9 +88,9 @@
             推广内容:
           </aside>
           <span>
-            <el-input type="textarea" placeholder="请输入内容 ~ (字数限制为9-40个字)"
+            <el-input type="textarea" :rows="5" style="width: 420px"
+              :placeholder="creativeContentPlaceholder"
               :disabled="!isCreativeEditable"
-              :rows="5" style="width: 420px"
               :value="getProp('creativeContent')"
               @change="v => promotion.creativeContent = v">
             </el-input>
@@ -235,6 +235,10 @@ import {
 } from 'constant/fengming'
 
 import {
+  creativeContentPlaceholder
+} from 'constant/tip'
+
+import {
   checkCampaignValidTime,
   getCampaignPrediction,
   getCampaignValidTime
@@ -278,6 +282,8 @@ export default {
   },
   data() {
     return {
+      creativeContentPlaceholder,
+
       newaddedWordsVisible: false,
       areaDialogVisible: false,
       isUpdating: false,

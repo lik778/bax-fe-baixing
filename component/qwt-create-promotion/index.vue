@@ -77,8 +77,8 @@
             推广内容:
           </aside>
           <span>
-            <el-input type="textarea" placeholder="请输入内容 ~ (字数限制为9-40个字)"
-              :rows="5" style="width: 420px"
+            <el-input type="textarea" :rows="5" style="width: 420px"
+              :placeholder="creativeContentPlaceholder"
               v-model="newPromotion.creativeContent">
             </el-input>
           </span>
@@ -231,6 +231,10 @@ import {
 } from 'constant/fengming'
 
 import {
+  creativeContentPlaceholder
+} from 'constant/tip'
+
+import {
   checkCreativeContent,
   getRecommendedWords,
   getCurrentBalance,
@@ -283,8 +287,10 @@ export default {
       timeType: 'long', // long, custom
       queryWord: '',
 
-      isCreating: false,
-      landingTypeOpts
+      creativeContentPlaceholder,
+      landingTypeOpts,
+
+      isCreating: false
     }
   },
   computed: {
