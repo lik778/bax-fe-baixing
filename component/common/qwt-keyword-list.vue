@@ -256,7 +256,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 
 .price {
   display: flex;
