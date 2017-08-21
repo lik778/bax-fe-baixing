@@ -42,8 +42,8 @@
               </el-button-group>
             </div>
             <div style="margin-top: 20px;">
-              <el-input :value="getProp('landingPage')" style="width: 490px;"
-                placeholder="请输入投放网址, 如: http://baixing.com"
+              <el-input :value="getProp('landingPage')" style="width: 560px;"
+                placeholder="输入投放网址，如：http://baixing.com 网址有误会影响投放效果，请检查后再投放"
                 :disabled="!isCreativeEditable"
                 @change="v => promotion.landingPage = v.trim()">
               </el-input>
