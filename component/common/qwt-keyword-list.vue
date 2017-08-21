@@ -18,7 +18,8 @@
         :formatter="r => fmtCpcRanking(r.cpcRanking)">
       </el-table-column>
       <el-table-column v-if="showPropStatus" label="关键词状态"
-        :formatter="fmtStatus">
+        :formatter="fmtStatus"
+        :render-header="renderColumnHeaderWithTip(keywordStatusTip)">
       </el-table-column>
       <el-table-column label="PC端CPC最高出价（元/次点击）"
         :render-header="renderColumnHeaderWithTip(cpcTopPriceTip)">
@@ -54,6 +55,7 @@ import {
 } from 'constant/fengming'
 
 import {
+  keywordStatusTip,
   cpcTopPriceTip,
   searchIndexTip
 } from 'constant/tip'
@@ -121,6 +123,8 @@ export default {
   data() {
     return {
       customPrices: [],
+
+      keywordStatusTip,
       searchIndexTip,
       cpcTopPriceTip
     }
