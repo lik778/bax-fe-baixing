@@ -10,7 +10,8 @@
         sortable :sort-method="sort">
       </el-table-column>
       <el-table-column v-if="showPropShow" prop="show" width="180"
-        sortable label="日均搜索指数">
+        sortable label="日均搜索指数"
+        :render-header="renderColumnHeaderWithTip(searchIndexTip)">
       </el-table-column>
       <el-table-column v-if="showPropRanking"
         width="140" label="平均排名" sortable
@@ -20,7 +21,7 @@
         :formatter="fmtStatus">
       </el-table-column>
       <el-table-column label="PC端CPC最高出价（元/次点击）"
-        :render-header="renderPriceColumnHeader">
+        :render-header="renderColumnHeaderWithTip(cpcTopPriceTip)">
         <template scope="s">
           <span class="price">
             <el-input size="mini" placeholder="单位: 元"
@@ -53,8 +54,17 @@ import {
 } from 'constant/fengming'
 
 import {
+  cpcTopPriceTip,
+  searchIndexTip
+} from 'constant/tip'
+
+import {
   fmtCpcRanking
 } from 'util/campaign'
+
+import {
+  renderColumnHeaderWithTip
+} from 'util/element'
 
 function centToYuan(s) {
   return toFloat(s) / 100
@@ -110,31 +120,13 @@ export default {
   },
   data() {
     return {
-      customPrices: []
+      customPrices: [],
+      searchIndexTip,
+      cpcTopPriceTip
     }
   },
   methods: {
-    renderPriceColumnHeader(h, { column }) {
-      const tip = h('el-tooltip', {
-        props: {
-          effect: 'dark',
-          content: '首次为您推荐新词左侧（上方）指导价。您设置的出价是您愿意为一次PC端点击所支付的最高费用。实际点击价格不超过您的出价，一些情况下甚至可能远低于您的出价，为您尽可能地节省推广预算。'
-        }
-      }, [
-        h('i', {
-          class: 'el-icon-information',
-          style: {
-            fontSize: '12px',
-            color: '#97a8be',
-            cursor: 'help'
-          }
-        })
-      ])
-      return h('div', null, [
-        column.label,
-        tip
-      ])
-    },
+    renderColumnHeaderWithTip,
     setRowSelection(words) {
       this.words.forEach((row) => {
         const selected = words.includes(row.word)
