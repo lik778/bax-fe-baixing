@@ -19,7 +19,8 @@
       <el-table-column v-if="showPropStatus" label="关键词状态"
         :formatter="fmtStatus">
       </el-table-column>
-      <el-table-column label="CPC最高出价 (元/次点击)">
+      <el-table-column label="PC端CPC最高出价（元/次点击）"
+        :render-header="renderPriceColumnHeader">
         <template scope="s">
           <span class="price">
             <el-input size="mini" placeholder="单位: 元"
@@ -113,6 +114,27 @@ export default {
     }
   },
   methods: {
+    renderPriceColumnHeader(h, { column }) {
+      const tip = h('el-tooltip', {
+        props: {
+          effect: 'dark',
+          content: '首次为您推荐新词左侧（上方）指导价。您设置的出价是您愿意为一次PC端点击所支付的最高费用。实际点击价格不超过您的出价，一些情况下甚至可能远低于您的出价，为您尽可能地节省推广预算。'
+        }
+      }, [
+        h('i', {
+          class: 'el-icon-information',
+          style: {
+            fontSize: '12px',
+            color: '#97a8be',
+            cursor: 'help'
+          }
+        })
+      ])
+      return h('div', null, [
+        column.label,
+        tip
+      ])
+    },
     setRowSelection(words) {
       this.words.forEach((row) => {
         const selected = words.includes(row.word)
