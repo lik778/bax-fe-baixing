@@ -38,10 +38,14 @@
     <section>
       <div>
         <aside>价格信息：</aside>
-        <span>
+        <span class="price-list">
           <price-list :products="checkedProducts"
             :has-discount="!!checkedProductDiscounts.length">
           </price-list>
+          <label v-if="mode === 'buy-service' && checkedProducts.length"
+            class="tip">
+            该推广资金目前只能购买百度站外推广，九月下旬百度迁入广告系统后，该资金可以全渠道通用。
+          </label>
         </span>
       </div>
       <div>
@@ -531,7 +535,15 @@ export default {
 
 <style scoped>
 
+@import "../../cssbase/var";
 @import "cssbase/mixin";
+
+.tip {
+  margin-bottom: 10px;
+  margin-left: 5px;
+  font-size: 12px;
+  color: var(--c-tip-gray);
+}
 
 .qwt-charge {
   padding: 0 35px;
@@ -570,6 +582,10 @@ export default {
         font-size: 14px;
         min-width: 80px;
         color: #6a778c;
+      }
+
+      & > span.price-list {
+        align-items: flex-end;
       }
 
       & > span {
