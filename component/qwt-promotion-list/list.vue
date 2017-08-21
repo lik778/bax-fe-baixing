@@ -92,34 +92,19 @@
       </el-table-column>
       <el-table-column prop="id" label="ID" width="80">
       </el-table-column>
-      <el-table-column label="计划状态" width="140">
-        <template scope="s">
-          <div class="column-tip">
-            <span>{{ fmtStatus(s.row.status) }}</span>
-            <el-tooltip v-if="s.$index === 0"
-              effect="dark" placement="top"
-              :content="campaignStatusTooltip">
-              <i class="el-icon-information"></i>
-            </el-tooltip>
-          </div>
-        </template>
+      <el-table-column label="计划状态" width="140"
+        :formatter="r => fmtStatus(r.status)"
+        :render-header="renderColumnHeaderWithTip(campaignStatusTooltip)">
       </el-table-column>
-      <el-table-column label="审核状态" width="120">
-        <template scope="s">
-          <div class="column-tip">
-            <span>{{ fmtAuditStatus(s.row.auditStatus) }}</span>
-            <el-tooltip v-if="s.$index === 0"
-              effect="dark" placement="top"
-              :content="campaignAuditStatusTooltip">
-              <i class="el-icon-information"></i>
-            </el-tooltip>
-          </div>
-        </template>
+      <el-table-column label="审核状态" width="120"
+        :formatter="r => fmtAuditStatus(r.auditStatus) "
+        :render-header="renderColumnHeaderWithTip(campaignAuditStatusTooltip)">
       </el-table-column>
-      <el-table-column label="预算" width="100"
+      <el-table-column label="预算" width="90"
         :formatter="r => fmtPrice(r.dailyBudget)">
       </el-table-column>
-      <el-table-column label="移动端出价比例(0.1-9.9)" width="120">
+      <el-table-column label="移动端出价比例(0.1-9.9)" width="130"
+        :render-header="renderColumnHeaderWithTip(mobileRatioTip)">
         <template scope="s">
           <p class="center">
             {{ s.row.mobilePriceRatio }}
@@ -167,6 +152,13 @@ import {
 } from 'constant/fengming'
 
 import {
+  campaignAuditStatusTooltip,
+  campaignStatusTooltip,
+  mobileRatioTip
+} from 'constant/tip'
+
+import {
+  renderColumnHeaderWithTip,
   disabledDate
 } from 'util/element'
 
@@ -194,23 +186,6 @@ const cantSelectStatuses = [
   CAMPAIGN_STATUS_PENDING,
   CAMPAIGN_STATUS_OFFLINE
 ]
-
-const campaignStatusTooltip = `
-计划包含以下6种状态：
-  1. 有效：表示计划当前可以推广，但是计划能否正常展现，由审核状态决定；
-  2. 下线：表示当前计划被删除；
-  3. 计划预算不足：表示当前计划推广预算已花完；
-  4. 账户余额不足：表示当前账户余额不足以开启该计划，无法推广；
-  5. 不在投放期：表示当前计划当前不在推广日期内；
-  6. 暂停投放：表示当前计划设置了暂停，无法正常展现。
-`
-
-const campaignAuditStatusTooltip = `
-审核包含以下3种状态：
-  1. 审核驳回
-  2. 审核中
-  3. 审核通过
-`
 
 export default {
   name: 'qwt-promotion-list',
@@ -242,6 +217,7 @@ export default {
 
       campaignAuditStatusTooltip,
       campaignStatusTooltip,
+      mobileRatioTip,
 
       CAMPAIGN_STATUS_OFFLINE
     }
@@ -261,6 +237,7 @@ export default {
     }
   },
   methods: {
+    renderColumnHeaderWithTip,
     async onCurrentChange({offset}) {
       await getCurrentCampaigns({
         ...this.query,
@@ -486,18 +463,6 @@ export default {
 <style scoped>
 
 @import 'cssbase/mixin';
-
-.column-tip {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  & i {
-    margin-left: 3px;
-    font-size: 11px;
-    color: gray;
-  }
-}
 
 .center {
   @mixin center;
