@@ -11,6 +11,9 @@
           <bax-select :options="semPlatformOpts" :clearable="false"
             v-model="query.channel">
           </bax-select>
+          <label class="tip">
+            搜狗渠道无法提供今天的数据；百度和360渠道今天的数据存在一定延时，且最近1小时内的展现数据会存在波动。
+          </label>
         </span>
       </section>
       <section>
@@ -235,7 +238,14 @@ export default {
 
 <style scoped>
 
+@import '../../cssbase/var';
 @import 'cssbase/mixin';
+
+.tip {
+  margin-left: 5px;
+  font-size: 12px;
+  color: var(--c-tip-gray);
+}
 
 .qwt-dashboard {
   padding: 0 35px;
