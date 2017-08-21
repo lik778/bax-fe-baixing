@@ -189,12 +189,7 @@
             创建推广
           </el-button>
         </div>
-        <footer>
-          <li>请注意：</li>
-          <li>1. 预算不足时将有下线提醒（预算余额不足50元且当天23：59前未续费则下线）。如有剩余预算，将自动转入站外推广资金。</li>
-          <li>2. 该资金无法用于购买其他付费产品，自产生当日起有效期为一年，超出有效期后，未用完部分将无法继续使用。</li>
-          <a>常见问题解答</a>
-        </footer>
+        <promotion-charge-tip></promotion-charge-tip>
       </section>
     </main>
     <area-selector :all-areas="allAreas"
@@ -211,6 +206,7 @@
 import { Message } from 'element-ui'
 import clone from 'clone'
 
+import PromotionChargeTip from 'com/widget/promotion-charge-tip'
 import KeywordList from 'com/common/qwt-keyword-list'
 import AreaSelector from 'com/common/area-selector'
 import Topbar from 'com/topbar'
@@ -265,6 +261,7 @@ export default {
   name: 'qwt-create-promotion',
   store,
   components: {
+    PromotionChargeTip,
     AreaSelector,
     KeywordList,
     Topbar
@@ -663,17 +660,6 @@ export default {
         & > label {
           color: #6a778c;
         }
-
-        & > a {
-          color: #0994ff;
-          cursor: pointer;
-        }
-      }
-
-      & > footer {
-        color: #717d91;
-        font-size: 13px;
-        line-height: 1.69;
 
         & > a {
           color: #0994ff;
