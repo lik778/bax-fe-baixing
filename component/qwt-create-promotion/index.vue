@@ -132,6 +132,7 @@
               (请输入 0.1-9.9 之间的数字)
             </span>
           </section>
+          <promotion-mobile-ratio-tip></promotion-mobile-ratio-tip>
         </div>
       </section>
       <section class="timing">
@@ -206,6 +207,7 @@
 import { Message } from 'element-ui'
 import clone from 'clone'
 
+import PromotionMobileRatioTip from 'com/widget/promotion-mobile-ratio-tip'
 import PromotionChargeTip from 'com/widget/promotion-charge-tip'
 import KeywordList from 'com/common/qwt-keyword-list'
 import AreaSelector from 'com/common/area-selector'
@@ -261,6 +263,7 @@ export default {
   name: 'qwt-create-promotion',
   store,
   components: {
+    PromotionMobileRatioTip,
     PromotionChargeTip,
     AreaSelector,
     KeywordList,
@@ -591,7 +594,7 @@ export default {
           color: #424344;
         }
 
-        & > section:last-child {
+        & > section:nth-child(2) {
           margin-top: 16px;
 
           & > span:last-child {

@@ -15,6 +15,7 @@ export default {
 </script>
 
 <style>
+
 footer {
   color: #717d91;
   font-size: 13px;
@@ -25,4 +26,5 @@ footer {
     cursor: pointer;
   }
 }
+
 </style>
