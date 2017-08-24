@@ -9,7 +9,10 @@
         <span>
           <p v-if="enableChina" @click="clickArea(china.id)"
             v-bind:class="{ selected: areaChecked(china.id) }">
-            {{ china.label }}
+            <span>中国</span>
+            <label class="tip">
+              （仅在 china.baixing.com 上线）
+            </label>
           </p>
         </span>
       </div>
@@ -427,5 +430,10 @@ export default {
 <style scoped>
 
 @import './selector';
+
+.tip {
+  color: red;
+  font-size: 11px;
+}
 
 </style>
