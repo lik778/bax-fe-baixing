@@ -195,7 +195,9 @@ export default {
         areas,
         startAt,
         endAt,
-        adId
+        adId,
+
+        allAreas
       } = this
 
       if (!adId || !startAt || !endAt || !sspOrderType) {
@@ -220,7 +222,7 @@ export default {
         categories,
         areas,
         adId
-      }))
+      }, allAreas))
     }
   },
   watch: {

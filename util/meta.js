@@ -25,12 +25,14 @@ export function fmtAreasInQwt(opts) {
 
 /**
  * @param {Object} opts
+ * @param {Array} allAreas
  *   说明:
  *     categories: ['all-categories'] -> undefined
  *     cities: ['quanguo'] -> undefined
  *     areas: ['quanguo'] -> undefined
+ *     将 areas 中的省份展开为下属的全部市
  */
-export function fmtCategoriesAndAreasInOpts(opts) {
+export function fmtCategoriesAndAreasInOpts(opts, allAreas) {
   const result = clone(opts)
 
   if (isArray(opts.categories) && opts.categories.includes('all-categories')) {
@@ -43,6 +45,10 @@ export function fmtCategoriesAndAreasInOpts(opts) {
 
   if (isArray(opts.areas) && opts.areas.includes('quanguo')) {
     result.areas = undefined
+  }
+  // 展开省
+  if (isArray(result.areas)) {
+    result.areas = flattenProvinceAreas(result.areas, allAreas)
   }
 
   return result
@@ -140,4 +146,34 @@ export function formatCategoriesOrAreas(names, allItems) {
   return names.map(c => {
     return getCnName(c, allItems)
   }).join(', ')
+}
+
+/**
+ * private
+ */
+
+/**
+ * 说明: 因为与 banana 交互的 miss, 后期需要把 省 展开为 市
+ */
+function flattenProvinceAreas(names, allAreas) {
+  let result = []
+  const allProvinces = allAreas
+    .filter(a => a.areaType === 2)
+    .map(a => a.name)
+
+  const getCities = (name) => {
+    return allAreas
+      .filter(a => a.parent === name)
+      .map(a => a.name)
+  }
+
+  names.forEach(name => {
+    if (allProvinces.includes(name)) {
+      result = [...result, ...getCities(name)]
+    } else {
+      result = [...result, name]
+    }
+  })
+
+  return result
 }

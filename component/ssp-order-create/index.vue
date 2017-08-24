@@ -369,6 +369,8 @@ export default {
       this.adCalendarConflicting = true
     },
     async queryAdCalendar(newOrder) {
+      const { allAreas } = this
+
       const {
         sspOrderType,
         offlineAt,
@@ -400,9 +402,11 @@ export default {
         areas: [...cities],
         categories,
         adId
-      }))
+      }, allAreas))
     },
     async queryAdPrice(newOrder) {
+      const { allAreas } = this
+
       const {
         categories,
         cities,
@@ -422,7 +426,7 @@ export default {
 
       if (opts.adId && opts.categories.length && opts.cities.length &&
         opts.startAt && opts.endAt) {
-        await getAdPrice(opts.adId, fmtCategoriesAndAreasInOpts(opts))
+        await getAdPrice(opts.adId, fmtCategoriesAndAreasInOpts(opts, allAreas))
       }
     },
     empty() {
@@ -432,7 +436,7 @@ export default {
       clearStore()
     },
     async onSubmit() {
-      const { newOrder, userInfo, adPrice } = this
+      const { newOrder, userInfo, adPrice, allAreas } = this
 
       const data = {
         ...clone(newOrder),
@@ -466,7 +470,7 @@ export default {
         return Message.error('请选择销售')
       }
 
-      const oid = await createOrder(fmtCategoriesAndAreasInOpts(data))
+      const oid = await createOrder(fmtCategoriesAndAreasInOpts(data, allAreas))
 
       this.empty()
 
