@@ -50,6 +50,9 @@ export function fmtCategoriesAndAreasInOpts(opts, allAreas) {
   if (isArray(result.areas)) {
     result.areas = flattenProvinceAreas(result.areas, allAreas)
   }
+  if (isArray(result.cities)) {
+    result.cities = flattenProvinceAreas(result.cities, allAreas)
+  }
 
   return result
 }
