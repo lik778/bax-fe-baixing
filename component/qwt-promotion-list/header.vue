@@ -10,7 +10,7 @@
           更多筛选<i class="el-icon-arrow-down el-icon--right"></i>
         </el-button>
       </span>
-      <span>
+      <span v-if="canCreate">
         <el-button type="primary" icon="plus"
           @click="gotoCreatePromotion">
           新建推广计划
@@ -32,6 +32,12 @@
             @change="v => queryCampaigns({areas: v})">
           </bax-select>
         </span>
+        <span class="filter-item">
+          <label>渠道来源</label>
+          <bax-select :options="allSemPlatformOpts" clearable
+            @change="v => queryCampaigns({source: v})">
+          </bax-select>
+        </span>
       </div>
     </section>
   </header>
@@ -42,7 +48,8 @@ import BaxSelect from 'com/common/select'
 import BaxInput from 'com/common/input'
 
 import {
-  campaignStatusOpts
+  campaignStatusOpts,
+  allSemPlatformOpts,
 } from 'constant/fengming'
 
 import {
@@ -68,11 +75,16 @@ export default {
     query: {
       type: Object,
       required: true
+    },
+    canCreate: {
+      type: Boolean,
+      required: true
     }
   },
   data() {
     return {
       campaignStatusOpts,
+      allSemPlatformOpts,
       areaQueryWord: ''
     }
   },

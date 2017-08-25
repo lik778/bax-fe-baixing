@@ -181,7 +181,13 @@ export function allowContinueAd(roles) {
   ])
 }
 
-// utils
+export function isBaixingSales(roles) {
+  const currentRoles = normalizeRoles(roles)
+
+  return checkRoles(currentRoles, [
+    'BAIXING_SALES'
+  ])
+}
 
 export function onlyAgentSales(roles) {
   const currentRoles = normalizeRoles(roles)

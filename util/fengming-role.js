@@ -31,6 +31,7 @@ export function allowSeeQwtPromotion(roles) {
   const currentRoles = normalizeRoles(roles)
 
   return checkRoles(currentRoles, [
+    'BAIXING_SALES',
     'BAIXING_USER'
   ])
 }
