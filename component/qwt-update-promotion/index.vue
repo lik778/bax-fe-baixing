@@ -66,6 +66,15 @@
             </i>
           </span>
         </div>
+        <div>
+          <aside>投放时段</aside>
+          <span>
+            <el-button type="primary" size="small"
+              @click="durationSelectorVisible = true">
+              设置
+            </el-button>
+          </span>
+        </div>
       </section>
       <section class="creative">
         <header>推广物料设置</header>
@@ -206,6 +215,13 @@
       @ok="onChangeAreas"
       @cancel="areaDialogVisible = false">
     </area-selector>
+    <duration-selector
+      :visible="durationSelectorVisible"
+      :platform="getProp('source')"
+      :schedule="(getProp('schedule') || []).join(',')"
+      @change="onChangeDuration"
+      @hide="durationSelectorVisible = false">
+    </duration-selector>
   </div>
 </template>
 
@@ -213,6 +229,7 @@
 import { Message } from 'element-ui'
 
 import PromotionChargeTip from 'com/widget/promotion-charge-tip'
+import DurationSelector from 'com/common/duration-selector'
 import KeywordList from 'com/common/qwt-keyword-list'
 import AreaSelector from 'com/common/area-selector'
 import Topbar from 'com/topbar'
@@ -263,6 +280,7 @@ export default {
   store,
   components: {
     PromotionChargeTip,
+    DurationSelector,
     AreaSelector,
     KeywordList,
     Topbar
@@ -281,6 +299,7 @@ export default {
     return {
       creativeContentPlaceholder,
 
+      durationSelectorVisible: false,
       newaddedWordsVisible: false,
       areaDialogVisible: false,
       isUpdating: false,
@@ -382,6 +401,9 @@ export default {
     }
   },
   methods: {
+    onChangeDuration(durations) {
+      this.promotion.schedule = durations
+    },
     getProp(prop) {
       if (typeof this.promotion[prop] !== 'undefined') {
         return this.promotion[prop]
@@ -493,10 +515,14 @@ export default {
       const {
         dailyBudget,
         validTime,
+        schedule,
         areas
       } = this.promotion
 
       const data = {}
+      if (schedule) {
+        data.schedule = schedule
+      }
 
       const pp = this.predictedInfo.dailyBudget
       if ((dailyBudget !== undefined) && (dailyBudget < pp)) {

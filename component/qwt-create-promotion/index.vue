@@ -61,6 +61,15 @@
             </i>
           </span>
         </div>
+        <div>
+          <aside>投放时段</aside>
+          <span>
+            <el-button type="primary" size="small"
+              @click="durationSelectorVisible = true">
+              设置
+            </el-button>
+          </span>
+        </div>
       </section>
       <section>
         <header>推广物料设置</header>
@@ -200,6 +209,12 @@
       @ok="onChangeAreas"
       @cancel="areaDialogVisible = false">
     </area-selector>
+    <duration-selector
+      :visible="durationSelectorVisible"
+      :platform="newPromotion.source"
+      @change="onChangeDuration"
+      @hide="durationSelectorVisible = false">
+    </duration-selector>
   </div>
 </template>
 
@@ -209,6 +224,7 @@ import clone from 'clone'
 
 import PromotionMobileRatioTip from 'com/widget/promotion-mobile-ratio-tip'
 import PromotionChargeTip from 'com/widget/promotion-charge-tip'
+import DurationSelector from 'com/common/duration-selector'
 import KeywordList from 'com/common/qwt-keyword-list'
 import AreaSelector from 'com/common/area-selector'
 import Topbar from 'com/topbar'
@@ -265,6 +281,7 @@ export default {
   components: {
     PromotionMobileRatioTip,
     PromotionChargeTip,
+    DurationSelector,
     AreaSelector,
     KeywordList,
     Topbar
@@ -282,10 +299,12 @@ export default {
   data() {
     return {
       newPromotion: clone(emptyPromotion),
-      recommendedWordsVisible: false,
-      areaDialogVisible: false,
       timeType: 'long', // long, custom
       queryWord: '',
+
+      recommendedWordsVisible: false,
+      durationSelectorVisible: false,
+      areaDialogVisible: false,
 
       creativeContentPlaceholder,
       landingTypeOpts,
@@ -488,6 +507,9 @@ export default {
     onChangeAreas(areas) {
       this.newPromotion.areas = [...areas]
       this.areaDialogVisible = false
+    },
+    onChangeDuration(durations) {
+      this.newPromotion.schedule = durations
     },
     formatterArea(name) {
       const { allAreas } = this

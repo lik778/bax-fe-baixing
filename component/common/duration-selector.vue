@@ -2,7 +2,7 @@
 <template>
   <el-dialog title="推广时间选择" :visible="visible"
     :close-on-click-modal="false" size="large"
-    :before-close="ok">
+    :before-close="cancel">
     <main class="main">
       <header>
         <el-button @click="reset">
@@ -115,6 +115,8 @@ export default {
         return
       }
 
+      this.clickedFlags = {}
+
       for (let i = 0; i < 7; i++) {
         const d = durations[i]
         let s = parseInt(d).toString(2)
@@ -198,18 +200,26 @@ export default {
 
       this.$forceUpdate()
     },
-    tenToTwo(i) {
-      return i.toString(2)
-    },
     reset() {
-      this.clickedFlags = {}
+      if (this.schedule) {
+        this.initClickedFlags(this.schedule)
+      } else {
+        this.clickedFlags = {}
+      }
+
+      this.$forceUpdate()
+
+      const durations = this.getCheckedDurations()
+      this.$emit('change', durations)
     },
     cancel() {
-      this.$emit('cancel')
+      this.reset()
+      this.$emit('hide')
     },
     ok() {
       const durations = this.getCheckedDurations()
-      this.$emit('ok', durations)
+      this.$emit('change', durations)
+      this.$emit('hide')
     }
   },
   watch: {
