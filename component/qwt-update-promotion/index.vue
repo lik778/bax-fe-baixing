@@ -628,9 +628,11 @@ export default {
 
       if (creativeContent && creativeTitle) {
         // 变更时检测
+        const platform = this.getProp('source')
         const res = await checkCreativeContent({
           creativeContent,
-          creativeTitle
+          creativeTitle,
+          platform
         })
 
         if (res.result) {
@@ -660,6 +662,7 @@ export default {
     async checkCreativeContent() {
       const creativeContent = this.getProp('creativeContent')
       const creativeTitle = this.getProp('creativeTitle')
+      const platform = this.getProp('source')
 
       if (!creativeContent) {
         return Message.error('请填写推广内容')
@@ -671,7 +674,8 @@ export default {
 
       const data = await checkCreativeContent({
         creativeContent,
-        creativeTitle
+        creativeTitle,
+        platform
       })
 
       if (!data.result) {

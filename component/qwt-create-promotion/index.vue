@@ -417,7 +417,8 @@ export default {
 
       const res = await checkCreativeContent({
         creativeContent: p.creativeContent,
-        creativeTitle: p.creativeTitle
+        creativeTitle: p.creativeTitle,
+        platform: p.source
       })
 
       if (res.result) {
@@ -446,7 +447,8 @@ export default {
     async checkCreativeContent() {
       const {
         creativeContent,
-        creativeTitle
+        creativeTitle,
+        source
       } = this.newPromotion
 
       if (!creativeContent) {
@@ -458,6 +460,7 @@ export default {
       }
 
       const data = await checkCreativeContent({
+        platform: source,
         creativeContent,
         creativeTitle
       })

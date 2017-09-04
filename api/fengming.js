@@ -74,10 +74,12 @@ export async function getCampaignInfo(id) {
 
   if (campaign.creative && campaign.creative.chibiStatus === CREATIVE_CHIBI_REJECT) {
     const { content, title } = campaign.creative
+    const { source } = campaign
     // 针对赤壁拒绝创意审核, 获取 refuse reason
     const result = await checkCreativeContent({
       creativeContent: content,
-      creativeTitle: title
+      creativeTitle: title,
+      platform: source
     })
 
     campaign.creative.extra = assign({}, campaign.creative.extra, {
@@ -180,17 +182,9 @@ export async function getCurrentBalance() {
 }
 
 export async function checkCreativeContent(opts) {
-  const {
-    creativeContent,
-    creativeTitle
-  } = opts
-
   const body = await fengming
     .post('/creative/check')
-    .send(reverseCamelcase({
-      creativeContent,
-      creativeTitle
-    }))
+    .send(reverseCamelcase(opts))
     .json()
 
   return body.data
