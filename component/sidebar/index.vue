@@ -175,6 +175,10 @@ export default {
 
 @import '../../cssbase/var';
 
+.el-menu-item {
+  min-width: unset;
+}
+
 .sidebar {
   & > header {
     display: flex;
