@@ -22,7 +22,7 @@
           直辖市
         </span>
         <span>
-          <p v-for="city in specialCities" :key="city"
+          <p v-for="city in specialCities" :key="city.id"
             v-bind:class="{ selected: areaChecked(city.id) }"
             @click="clickArea(city.id)">
             {{ city.label }}
