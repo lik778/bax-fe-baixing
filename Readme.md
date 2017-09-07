@@ -32,3 +32,9 @@
   - `rxjs` -> TODO: `vue-rx`
   - `postcss`: `css` 部分 只使用了 `postcss-cssnext`, `postcss-import`, `postcss-mixins`
   - `vue-duo`
+
+### 关于 element ui 的样式文件
+
+* copy `//unpkg.com/element-ui/lib/theme-default/index.css` (这是被墙的 >_<)
+* css中 `fonts/element-icons.woff`
+* css中 `fonts/element-icons.ttf` 传一下, 改一下
