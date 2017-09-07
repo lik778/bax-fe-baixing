@@ -51,6 +51,11 @@
               数据报表
             </router-link>
           </el-menu-item>
+          <el-menu-item index="2-4" v-if="allowSeeQwtReport">
+            <router-link :to="{ name: 'qwt-cashcow' }" tag="p">
+              微站
+            </router-link>
+          </el-menu-item>
         </el-submenu>
         <el-submenu index="3">
           <template slot="title">

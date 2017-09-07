@@ -7,8 +7,9 @@ import Fetch from 'fetch.io'
 
 import {
   fengmingApiHost,
+  dashboardHost,
+  cashcowHost,
   baxApiHost,
-  dashboardHost
 } from 'config'
 
 import es from 'base/es'
@@ -95,6 +96,21 @@ export const dashboardApi = new Fetch({
     if (res.status === 403) {
       Message.error('你没有权限访问该页面')
       return redirectTo('main')
+    }
+  }
+})
+
+export const cashcowApi = new Fetch({
+  prefix: cashcowHost,
+  beforeRequest() {
+    es.emit('http fetch start')
+  },
+  afterResponse(res) {
+    es.emit('http fetch end')
+    
+    if (res.status >= 500) {
+      Message.error('出错啦')
+      throw new Error('出错啦')
     }
   }
 })

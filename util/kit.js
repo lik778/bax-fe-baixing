@@ -1,4 +1,7 @@
 
+import { createPageApiUrl, editPageApiUrl } from 'api/cashcow'
+import { isPro } from 'config'
+
 export function getPagination(total, offset, limit) {
   const currentPage = Math.floor(offset / limit) + 1
   const totalPage = Math.ceil(total / limit)
@@ -52,4 +55,18 @@ export function getImageInfo(file) {
 
     setTimeout(() => reject(new Error('加载图片超时')), 2000)
   })
+}
+
+export function getCashcowPageCreateUrl(userId) {
+  if (isPro) {
+    return createPageApiUrl
+  }
+  return `${createPageApiUrl}?uid=${userId}`
+}
+
+export function getCashcowPageEditUrl(pageId, userId) {
+  if (isPro) {
+    return `${editPageApiUrl}/${pageId}`
+  }
+  return `${editPageApiUrl}/${pageId}?uid=${userId}`
 }

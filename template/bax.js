@@ -4,6 +4,7 @@ import QwtUpdatePromotion from 'com/qwt-update-promotion'
 import QwtCreatePromotion from 'com/qwt-create-promotion'
 import QwtPromotionList from 'com/qwt-promotion-list'
 import QwtDashboard from 'com/qwt-dashboard'
+import QwtCashcow from 'com/qwt-cashcow'
 import QwtCharge from 'com/qwt-charge'
 
 // ssp
@@ -78,6 +79,10 @@ const qwtRoutes = [{
   component: QwtDashboard,
   path: '/main/qwt/dashboard',
   name: 'qwt-dashboard'
+}, {
+  component: QwtCashcow,
+  path: '/main/qwt/cashcow',
+  name: 'qwt-cashcow'
 }, {
   component: QwtCharge,
   path: '/main/qwt/charge',
