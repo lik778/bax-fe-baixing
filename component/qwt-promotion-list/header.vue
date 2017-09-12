@@ -10,10 +10,16 @@
           更多筛选<i class="el-icon-arrow-down el-icon--right"></i>
         </el-button>
       </span>
-      <span v-if="canCreate">
-        <el-button type="primary" icon="plus"
+      <span>
+        <el-button v-if="canCreate"
+          type="primary" icon="plus"
           @click="gotoCreatePromotion">
           新建推广计划
+        </el-button>
+        <el-button type="primary" v-if="!canCreate">
+          <router-link :to="{name: 'qwt-dashboard', query: {userId}}" tag="span">
+            查看数据报表
+          </router-link>
         </el-button>
       </span>
     </section>
@@ -75,6 +81,9 @@ export default {
     query: {
       type: Object,
       required: true
+    },
+    userId: {
+      type: [Number, String]
     },
     canCreate: {
       type: Boolean,

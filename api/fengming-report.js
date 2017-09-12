@@ -1,20 +1,19 @@
-
 import { reverseCamelcase, toCamelcase } from 'object-keys-mapping'
 import { fengming, trim } from './base'
 
-export async function getKeywords({channel}) {
+export async function getKeywords(opts) {
   const body = await fengming
     .get('/data_report/keywords')
-    .query({channel})
+    .query(reverseCamelcase(trim(opts)))
     .json()
 
   return toCamelcase(body.data)
 }
 
-export async function getPlans({channel}) {
+export async function getPlans(opts) {
   const body = await fengming
     .get('/data_report/plans')
-    .query({channel})
+    .query(reverseCamelcase(trim(opts)))
     .json()
 
   return toCamelcase(body.data)

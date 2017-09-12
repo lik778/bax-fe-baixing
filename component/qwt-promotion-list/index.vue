@@ -5,7 +5,8 @@
       <label slot="title">全网通 - 推广管理</label>
     </topbar>
     <promotion-header :show-more-filters="showMoreFilters"
-      :all-areas="allAreas" :query="localQuery" :canCreate="!isListReadonly">
+      :all-areas="allAreas" :query="localQuery"
+      :userId="currentUserId" :canCreate="!isListReadonly">
     </promotion-header>
     <promotion-list :campaigns="campaigns"
       :query="localQuery" :readonly="isListReadonly">
