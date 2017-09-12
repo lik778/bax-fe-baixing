@@ -87,8 +87,8 @@ export const CAMPAIGN_STATUS_OFFLINE = -1
 export const landingType = {
   '0': '帖子详情页',
   '1': '企业官网',
-  '2': '活动定制页',
-  '3': '微店'
+  '2': '活动定制页'
+  // '3': '微店'
 }
 
 export const campaignStatusOpts = Object.keys(campaignStatus)
