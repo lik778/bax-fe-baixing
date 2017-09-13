@@ -3,14 +3,10 @@
   <div>
     <section-header>账户查询</section-header>
     <label>选择查询项目</label>
-    <el-select v-model="type" clearable placeholder="请选择">
-      <el-option
-        v-for="item in logTypeOpts"
-        :key="item.value"
-        :label="item.label"
-        :value="item.value">
-      </el-option>
-    </el-select>
+    <bax-select v-model="type" clearable
+      placeholder="请选择"
+      :options="logTypeOpts">
+    </bax-select>
     <el-radio-group v-model="range" class="radio">
       <el-radio-button label="month">近一个月</el-radio-button>
       <el-radio-button label="quarter">近三个月</el-radio-button>
@@ -38,7 +34,7 @@
         label="操作IP">
       </el-table-column>
       <el-table-column
-        prop="relatedLog"
+        :formatter="logDescFormatter"
         label="操作内容">
       </el-table-column>
     </el-table>
@@ -54,37 +50,46 @@
 
 <script>
 import SectionHeader from 'com/common/section-header'
+import BaxSelect from 'com/common/select'
 
 import { toHumanTime } from 'utils'
 import moment from 'moment'
 
+import { getLogDesc } from '../../util/log'
 import { getLogs } from './action'
 import store from './store'
 
 import {
   logTypeOpts,
   logType
-} from 'constant/user'
+} from 'constant/log'
 
 export default {
   name: 'account-log',
   store,
   components: {
-    SectionHeader
+    SectionHeader,
+    BaxSelect
+  },
+  props: {
+    allAreas: {
+      type: Array,
+      required: true
+    }
   },
   data() {
     return {
       logTypeOpts,
       type: '',
       range: 'month',
-      pageSize: 1,
+      pageSize: 5,
       currentPage: 1
     }
   },
   computed: {
     pagedLogs() {
-      const startIndex = this.pageSize * (this.currentPage - 1)
-      return this.logs.slice(startIndex, startIndex + this.pageSize)
+      const start = this.pageSize * (this.currentPage - 1)
+      return this.logs.slice(start, start + this.pageSize)
     }
   },
   watch: {
@@ -114,6 +119,17 @@ export default {
         type: this.type,
         time: time.unix()
       })
+    },
+    logDescFormatter(row) {
+      const { allAreas } = this
+
+      if (!row.relatedLog) {
+        return getLogDesc(row, {
+          allAreas
+        })
+      }
+
+      return row.relatedLog
     },
     logTypeFormatter(row) {
       return logType[String(row.timelineType)]

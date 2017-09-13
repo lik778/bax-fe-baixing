@@ -6,7 +6,7 @@
     </topbar>
     <h1>{{ userInfo.name }},欢迎回来</h1>
     <account-summary></account-summary>
-    <log></log>
+    <log :all-areas="allAreas"></log>
   </div>
 </template>
 
@@ -17,7 +17,16 @@ import Log from './log'
 
 export default {
   name: 'bax-account',
-  props: ['userInfo'],
+  props: {
+    allAreas: {
+      type: Array,
+      required: true
+    },
+    userInfo: {
+      type: Object,
+      required: true
+    }
+  },
   components: {
     AccountSummary,
     Topbar,
