@@ -189,6 +189,15 @@ export async function checkCreativeContent(opts) {
 
   return body.data
 }
+
+export async function getQiqiaobanPageList() {
+  const body = await fengming
+    .get('/creative/url/qiqiaoban')
+    .json()
+
+  return toCamelcase(body.data)
+}
+
 // TODO - rename
 export async function getCreativeWords(url) {
   const body = await fengming
