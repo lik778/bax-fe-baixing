@@ -4,31 +4,34 @@
     <topbar :userInfo="userInfo">
       <label slot="title">账户</label>
     </topbar>
-    <h1>{{userInfo.name}},欢迎回来</h1>
+    <h1>{{ userInfo.name }},欢迎回来</h1>
     <account-summary></account-summary>
     <log></log>
   </div>
 </template>
 
 <script>
-  import Topbar from 'com/topbar'
-  import AccountSummary from './summary'
-  import Log from './log'
-  export default {
-    name: 'account',
-    props: ['userInfo'],
-    components: {
-      AccountSummary,
-      Log,
-      Topbar
-    }
+import AccountSummary from './summary'
+import Topbar from 'com/topbar'
+import Log from './log'
+
+export default {
+  name: 'bax-account',
+  props: ['userInfo'],
+  components: {
+    AccountSummary,
+    Topbar,
+    Log
   }
+}
 </script>
 
 <style scoped>
-  .account-container {
-    padding: 0 35px;
-    width: 100%;
-    color: #6a778c;
-  }
+
+.account-container {
+  padding: 0 35px;
+  width: 100%;
+  color: #6a778c;
+}
+
 </style>

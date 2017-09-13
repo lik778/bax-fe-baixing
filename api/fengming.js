@@ -223,8 +223,8 @@ export async function getLogs(opts = {}) {
   query = trim(reverseCamelcase({
     timelineType: type,
     createdAt: time,
-    offset,
-    limit: pageSize
+    limit: pageSize,
+    offset
   }))
 
   const [logs, total] = await Promise.all([

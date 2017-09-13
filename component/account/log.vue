@@ -1,3 +1,4 @@
+
 <template>
   <div>
     <section-header>账户查询</section-header>
@@ -46,78 +47,85 @@
       :page-size="pageSize"
       :current-page="currentPage"
       layout="total, prev, pager, next"
-      :total="logs.query.total">
+      :total="logQuery.total">
     </el-pagination>
   </div>
 </template>
 
 <script>
-  import SectionHeader from 'com/common/section-header'
-  import store from './store'
-  import { getLogs } from './action'
-  import moment from 'moment'
-  import {
-    logType, logTypeOpts
-  } from 'constant/user'
+import SectionHeader from 'com/common/section-header'
 
-  export default {
-    name: 'log',
-    store,
-    data() {
-      return {
-        logTypeOpts,
-        type: '',
-        range: 'month',
-        pageSize: 1,
-        currentPage: 1
-      }
-    },
-    methods: {
-      goto(pageNo) {
-        this.currentPage = pageNo
-      },
-      getCurrentLogs() {
-        let time = moment()
-        if (this.range === 'month') {
-          time = moment().subtract(1, 'months')
-        } else if (this.range === 'quarter') {
-          time = moment().subtract(3, 'months')
-        } else if (this.range === 'year') {
-          time = moment().subtract(1, 'years')
-        }
-        getLogs({
-          type: this.type,
-          time: time.unix()
-        })
-      },
-      logTypeFormatter(row) {
-        return logType[String(row.timelineType)]
-      },
-      dateFormatter(row) {
-        return moment(row.createdAt).format('YYYY-MM-DD')
-      }
-    },
-    mounted() {
-      getLogs()
-    },
-    computed: {
-      pagedLogs() {
-        const startIndex = this.pageSize * (this.currentPage - 1)
-        return this.logs.logs.slice(startIndex, startIndex + this.pageSize)
-      }
-    },
-    watch: {
-      type() {
-        this.getCurrentLogs()
-      },
-      range() {
-        this.getCurrentLogs()
-      }
-    },
-    components: {
-      SectionHeader
+import { toHumanTime } from 'utils'
+import moment from 'moment'
+
+import { getLogs } from './action'
+import store from './store'
+
+import {
+  logTypeOpts,
+  logType
+} from 'constant/user'
+
+export default {
+  name: 'account-log',
+  store,
+  components: {
+    SectionHeader
+  },
+  data() {
+    return {
+      logTypeOpts,
+      type: '',
+      range: 'month',
+      pageSize: 1,
+      currentPage: 1
     }
+  },
+  computed: {
+    pagedLogs() {
+      const startIndex = this.pageSize * (this.currentPage - 1)
+      return this.logs.slice(startIndex, startIndex + this.pageSize)
+    }
+  },
+  watch: {
+    type() {
+      this.getCurrentLogs()
+    },
+    range() {
+      this.getCurrentLogs()
+    }
+  },
+  methods: {
+    goto(pageNo) {
+      this.currentPage = pageNo
+    },
+    async getCurrentLogs() {
+      let time = moment()
+
+      if (this.range === 'month') {
+        time = moment().subtract(1, 'months')
+      } else if (this.range === 'quarter') {
+        time = moment().subtract(3, 'months')
+      } else if (this.range === 'year') {
+        time = moment().subtract(1, 'years')
+      }
+
+      await getLogs({
+        type: this.type,
+        time: time.unix()
+      })
+    },
+    logTypeFormatter(row) {
+      return logType[String(row.timelineType)]
+    },
+    dateFormatter(row) {
+      return toHumanTime(row.createdAt, 'YYYY-MM-DD')
+    }
+  },
+  async mounted() {
+    await getLogs()
   }
+}
 </script>
 
 <style scoped>
