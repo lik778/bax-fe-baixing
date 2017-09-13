@@ -91,6 +91,7 @@ export default {
       required: true
     },
     type: {
+      // bx qwt
       type: String,
       default: 'bx'
     }
