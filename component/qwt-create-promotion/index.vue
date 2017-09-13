@@ -41,10 +41,17 @@
               </el-button-group>
             </div>
             <div style="margin-top: 20px; width: 560px;">
-              <el-input v-model.trim="newPromotion.landingPage"
+              <el-input v-if="newPromotion.landingType !== 1"
+                v-model.trim="newPromotion.landingPage"
                 placeholder="输入投放网址，如：http://baixing.com 网址有误会影响投放效果，请检查后再投放"
                 @blur="getCreativeWords">
               </el-input>
+
+              <qiqiaoban-page-selector
+                v-if="newPromotion.landingType === 1"
+                v-model="newPromotion.landingPage"
+                @change="getCreativeWords">
+              </qiqiaoban-page-selector>
             </div>
           </span>
         </div>
@@ -223,6 +230,7 @@ import { Message } from 'element-ui'
 import clone from 'clone'
 
 import PromotionMobileRatioTip from 'com/widget/promotion-mobile-ratio-tip'
+import QiqiaobanPageSelector from 'com/common/qiqiaoban-page-selector'
 import PromotionChargeTip from 'com/widget/promotion-charge-tip'
 import DurationSelector from 'com/common/duration-selector'
 import KeywordList from 'com/common/qwt-keyword-list'
@@ -280,6 +288,7 @@ export default {
   store,
   components: {
     PromotionMobileRatioTip,
+    QiqiaobanPageSelector,
     PromotionChargeTip,
     DurationSelector,
     AreaSelector,
