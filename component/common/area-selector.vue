@@ -89,6 +89,10 @@ export default {
     visible: {
       type: Boolean,
       required: true
+    },
+    type: {
+      type: String,
+      default: 'bx'
     }
   },
   data() {
@@ -132,6 +136,14 @@ export default {
   methods: {
     getSubAreas(name) {
       return this.allAreas
+        .filter(a => {
+          // 对于全网通, 需要毙掉几个特殊的 市
+          if (this.type !== 'bx') {
+            return !!a.baiduCode
+          }
+
+          return true
+        })
         .filter(a => a.parent === name)
         .map(a => ({
           parent: a.parent,

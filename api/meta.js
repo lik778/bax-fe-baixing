@@ -1,6 +1,6 @@
 
 import { toCamelcase } from 'object-keys-mapping'
-import { api } from './base'
+import { fengming, api } from './base'
 
 const isArray = Array.isArray
 
@@ -32,7 +32,8 @@ export async function getCategories(levels = [1, 2]) {
 }
 
 export async function getAreas() {
-  const body = await api
+  // fengming vs bax (前者多几个字段)
+  const body = await fengming
     .get('/meta/areas')
     .json()
 

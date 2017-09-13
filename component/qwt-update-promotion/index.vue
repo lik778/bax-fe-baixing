@@ -209,7 +209,7 @@
       </section>
     </main>
     <area-selector :all-areas="allAreas"
-      :areas="getProp('areas')"
+      :areas="getProp('areas')" type="qwt"
       :visible="areaDialogVisible"
       :enable-china="false"
       @ok="onChangeAreas"

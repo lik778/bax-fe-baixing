@@ -203,7 +203,7 @@
       </section>
     </main>
     <area-selector :all-areas="allAreas"
-      :areas="newPromotion.areas"
+      :areas="newPromotion.areas" type="qwt"
       :visible="areaDialogVisible"
       :enable-china="false"
       @ok="onChangeAreas"
