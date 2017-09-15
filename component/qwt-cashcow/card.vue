@@ -2,14 +2,20 @@
 <template>
   <el-card class="card" :body-style="{padding: 0}">
     <div class="header" :class="{highlight: type === 'release'}">
-      <a @click="$emit('edit')">{{ title }}</a>
-      <i @click.stop="onOperate" class="operate material-icons">
-        {{ operateIconMapping[this.operateName] }}
-      </i>
+      <a v-if="!editTitle" @click="$emit('edit')">{{ title }}</a>
+      <el-input class="input" v-if="editTitle" v-model="localTitle">
+      </el-input>
+      <span class="icons">
+        <i class="material-icons" v-if="!editTitle" @click="editTitle = true">mode_edit</i>
+        <i class="material-icons" v-if="editTitle" @click="onUpdateTitle">done</i>
+        <i @click.stop="onOperate" class="operate material-icons">
+          {{ operateIconMapping[this.operateName] }}
+        </i>
+      </span>
     </div>
     <div class="body">
       <div v-if="createdAt">
-        创建于：{{ toHumanTime(updatedAt) }}
+        创建于：{{ toHumanTime(createdAt) }}
       </div>
       <div v-if="updatedAt">
         修改于：{{ toHumanTime(updatedAt) }}
@@ -33,6 +39,9 @@
   export default {
     data() {
       return {
+        localTitle: this.title,
+        editTitle: false,
+
         windowRef: null,
         operateIconMapping
       }
@@ -80,7 +89,23 @@
         this.$emit(operateName)
       },
 
+      async onUpdateTitle() {
+        const { localTitle } = this
+
+        if (localTitle) {
+          this.$emit('update', {name: localTitle})
+        }
+
+        this.editTitle = false
+      },
+
       toHumanTime
+    },
+
+    watch: {
+      title(v) {
+        this.localTitle = v
+      }
     }
   }
 </script>
@@ -94,8 +119,16 @@
     }
   }
 
+  .input {
+    margin-right: 5px;
+
+    & > input {
+      height: 29px
+    }
+  }
+
   .card {
-    box-shadow: none;
+    /* box-shadow: none; */
   }
 
   .operate {
@@ -109,13 +142,29 @@
     color: #475669;
     padding: 8px 10px;
     border-bottom: 1px solid #d1dbe5;
-    background: #D3DCE6;
+    background: #e9edf2;
 
     &.highlight {
       background: #d4edfb;
     }
 
-    & > i {
+    & i {
+
+    }
+
+    & > a {
+      text-overflow: ellipsis;
+      word-break: keep-all;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+  }
+
+  .icons {
+    word-break: keep-all;
+    white-space: nowrap;
+
+    & i {
       cursor: pointer;
     }
   }
@@ -124,7 +173,7 @@
     padding: 10px;
     min-height: 106px;
 
-    & > div + div {
+    & > div+div {
       margin-top: 10px;
     }
   }

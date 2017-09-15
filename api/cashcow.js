@@ -48,3 +48,12 @@ export function removeReleasePage(opts) {
     .json()
     .then(toCamelcase)
 }
+
+export function updatePage(opts) {
+  const { id, userId, ...restOpts } = opts
+  return cashcowApi
+    .put(`/pages/${id}?uid=${userId}`)
+    .send(reverseCamelcase(restOpts))
+    .json()
+    .then(toCamelcase)
+}

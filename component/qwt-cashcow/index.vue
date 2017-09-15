@@ -21,6 +21,7 @@
             :title="page.title" :createdAt="page.createdAt"
             :type="page.type" :updatedAt="page.updatedAt"
             :releaseAt="page.releaseAt" @edit="onEdit(page.pageId)"
+            @update="v => onUpdate(page.pageId, v)"
             @remove="onRemove(page.id)" @unrelease="onUnrelease(page.id)">
           </card>
         </el-col>
@@ -71,7 +72,7 @@
         return pageList.length >= maxPageCount
       },
       userId() {
-        return this.userInfo.id
+        return this.userInfo.baixingId
       }
     },
 
@@ -89,6 +90,14 @@
         const redirectUrl = getCashcowPageEditUrl(pageId, userId)
         windowRef.location = redirectUrl
         windowRef.focus()
+      },
+      async onUpdate(pageId, info) {
+        const { userId } = this
+        try {
+          await api.updatePage({...info, id: pageId, userId})
+        } finally {
+          await this.getPageList()
+        }
       },
       async onRemove(id) {
         const { userId } = this
@@ -114,7 +123,7 @@
         })
       },
       async getPageList() {
-        const userId = this.userInfo.id
+        const { userId } = this
         if (!userId) {
           return
         }
