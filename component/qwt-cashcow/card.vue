@@ -1,9 +1,11 @@
 
 <template>
   <el-card class="card" :body-style="{padding: 0}">
-    <div class="header" :class="{highlight: type === 'release'}">
+    <div class="header" :class="{highlight: type === 'release'}"
+      @keyup.enter="onUpdateTitle">
       <a v-if="!editTitle" @click="$emit('edit')">{{ title }}</a>
-      <el-input class="input" v-if="editTitle" v-model="localTitle">
+      <el-input class="input" v-if="editTitle" :maxlength="20"
+        v-model="localTitle" @blur="editTitle = false">
       </el-input>
       <span class="icons">
         <i class="material-icons" v-if="!editTitle" @click="editTitle = true">mode_edit</i>

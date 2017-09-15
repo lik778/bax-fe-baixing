@@ -107,10 +107,17 @@ export const cashcowApi = new Fetch({
   },
   afterResponse(res) {
     es.emit('http fetch end')
-    
+
     if (res.status >= 500) {
       Message.error('出错啦')
       throw new Error('出错啦')
+    }
+  },
+
+  afterJSON(body) {
+    if (body.message) {
+      Message.error(body.message)
+      throw new Error(body.message)
     }
   }
 })
