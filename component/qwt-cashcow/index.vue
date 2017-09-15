@@ -17,8 +17,8 @@
       <el-row :gutter="24" class="list">
         <el-col :span="8" class="item"
           v-for="page in pageList" :key="page.id">
-          <card :id="page.id"
-            :userId="userId" :title="page.title"
+          <card :id="page.id" :userId="userId"
+            :title="page.title" :createdAt="page.createdAt"
             :type="page.type" :updatedAt="page.updatedAt"
             :releaseAt="page.releaseAt" @edit="onEdit(page.pageId)"
             @remove="onRemove(page.id)" @unrelease="onUnrelease(page.id)">

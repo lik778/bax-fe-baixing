@@ -13,6 +13,7 @@ export const getPageList = createAction(async (uid) => {
 
   const list = draftPageList.map(d => ({
     title: d.config.campaignName,
+    createdAt: d.createdAt,
     updatedAt: d.updatedAt,
     pageId: d.id,
     type: 'draft',

@@ -8,6 +8,9 @@
       </i>
     </div>
     <div class="body">
+      <div v-if="createdAt">
+        创建于：{{ toHumanTime(updatedAt) }}
+      </div>
       <div v-if="updatedAt">
         修改于：{{ toHumanTime(updatedAt) }}
       </div>
@@ -38,6 +41,9 @@
     props: {
       type: {
         type: String // release/draft
+      },
+      createdAt: {
+        type: String
       },
       updatedAt: {
         type: String
@@ -81,7 +87,6 @@
 
 <style>
   a {
-    color: #337ab7;
     cursor: pointer;
 
     &:hover {
@@ -117,7 +122,7 @@
 
   .body {
     padding: 10px;
-    min-height: 76px;
+    min-height: 106px;
 
     & > div + div {
       margin-top: 10px;
