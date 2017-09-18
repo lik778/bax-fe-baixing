@@ -87,8 +87,9 @@ export const CAMPAIGN_STATUS_OFFLINE = -1
 export const landingType = {
   '0': '帖子详情页',
   '1': '企业官网',
-  '2': '活动定制页'
-  // '3': '微店'
+  '2': '活动定制页',
+  // '3': '微店',
+  '4': '微站'
 }
 
 export const campaignStatusOpts = Object.keys(campaignStatus)
@@ -98,7 +99,7 @@ export const campaignStatusOpts = Object.keys(campaignStatus)
   }))
 
 export const landingTypeOpts = Object.keys(landingType)
-  // .filter(k => k !== '1') // 临时隐藏: 企业官网
+  .filter(k => k !== '1') // 临时隐藏: 企业官网
   .map(k => ({
     label: landingType[k],
     value: k | 0
