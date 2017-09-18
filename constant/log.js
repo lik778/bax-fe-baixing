@@ -4,8 +4,7 @@ export const LOG_TYPE_CREATIVE = 3
 export const LOG_TYPE_KEYWORD = 4
 
 export const logType = {
-  '0': '账户',
-  '1': '账号',
+  '1': '账户',
   '2': '计划',
   '3': '创意',
   '4': '关键词',
