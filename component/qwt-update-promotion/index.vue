@@ -42,11 +42,27 @@
               </el-button-group>
             </div>
             <div style="margin-top: 20px;">
-              <el-input :value="getProp('landingPage')" style="width: 560px;"
+              <el-input
+                v-if="![1, 4].includes(getProp('landingType'))"
+                :value="getProp('landingPage')" style="width: 560px;"
                 placeholder="输入投放网址，如：http://baixing.com 网址有误会影响投放效果，请检查后再投放"
                 :disabled="!isCreativeEditable"
                 @change="v => promotion.landingPage = v.trim()">
               </el-input>
+
+               <qiqiaoban-page-selector
+                 :disabled="!isCreativeEditable"
+                 v-if="getProp('landingType') === 1"
+                 v-model="promotion.landingPage"
+                 @change="getCreativeWords">
+              </qiqiaoban-page-selector>
+
+              <cashcow-page-selector
+                :disabled="!isCreativeEditable"
+                v-if="getProp('landingType') === 4"
+                v-model="promotion.landingPage"
+                @change="getCreativeWords">
+              </cashcow-page-selector>
               <p v-if="!isCreativeEditable" class="authing-tip">
                 您的推广在审核中，审核通过后可修改落地页，感谢配合！
               </p>
@@ -228,6 +244,8 @@
 <script>
 import { Message } from 'element-ui'
 
+import QiqiaobanPageSelector from 'com/common/qiqiaoban-page-selector'
+import CashcowPageSelector from 'com/common/cashcow-page-selector'
 import PromotionChargeTip from 'com/widget/promotion-charge-tip'
 import DurationSelector from 'com/common/duration-selector'
 import KeywordList from 'com/common/qwt-keyword-list'
@@ -279,6 +297,8 @@ export default {
   name: 'qwt-update-promotion',
   store,
   components: {
+    QiqiaobanPageSelector,
+    CashcowPageSelector,
     PromotionChargeTip,
     DurationSelector,
     AreaSelector,
