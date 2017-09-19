@@ -44,6 +44,35 @@ export default {
       plans: []
     }
   },
+  computed: {
+    opts() {
+      const {
+        dimension,
+        keywords,
+        plans
+      } = this
+
+      if (dimension === 0) {
+        return [
+          ...plans.map(p => ({
+            label: p.plan,
+            value: 'p-' + p.id
+          }))
+        ]
+      }
+
+      if (dimension === 1) {
+        return [
+          ...keywords.map(k => ({
+            label: k.keyword,
+            value: 'k-' + k.id
+          }))
+        ]
+      }
+
+      return []
+    }
+  },
   methods: {
     clearValue() {
       if (this.multiple) {
@@ -83,6 +112,10 @@ export default {
         this.clearValue()
       }
     },
+    async channel(val) {
+      this.clearValue()
+      await this.queryPlanAndKeyword()
+    },
     localValue(v) {
       this.setValue(v)
     },
@@ -95,35 +128,7 @@ export default {
       console.debug('value changed', v)
     }
   },
-  computed: {
-    opts() {
-      const {
-        dimension,
-        keywords,
-        plans
-      } = this
 
-      if (dimension === 0) {
-        return [
-          ...plans.map(p => ({
-            label: p.plan,
-            value: 'p-' + p.id
-          }))
-        ]
-      }
-
-      if (dimension === 1) {
-        return [
-          ...keywords.map(k => ({
-            label: k.keyword,
-            value: 'k-' + k.id
-          }))
-        ]
-      }
-
-      return []
-    }
-  },
   async mounted() {
     await this.queryPlanAndKeyword()
   }
