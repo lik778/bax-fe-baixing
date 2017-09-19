@@ -2,6 +2,7 @@
 export const LOG_TYPE_CAMPAIGN = 2
 export const LOG_TYPE_CREATIVE = 3
 export const LOG_TYPE_KEYWORD = 4
+export const LOG_TYPE_ACCOUNT = 1
 
 export const logType = {
   '1': '账户',

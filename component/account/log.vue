@@ -55,7 +55,7 @@ import BaxSelect from 'com/common/select'
 import { toHumanTime } from 'utils'
 import moment from 'moment'
 
-import { getLogDesc } from '../../util/log'
+import { getLogDesc } from 'util/log'
 import { getLogs } from './action'
 import store from './store'
 
@@ -121,10 +121,10 @@ export default {
       })
     },
     logDescFormatter(row) {
-      const { allAreas } = this
+      const { allAreas, type } = this
 
       if (!row.relatedLog) {
-        return getLogDesc(row, {
+        return getLogDesc(type, row, {
           allAreas
         })
       }
