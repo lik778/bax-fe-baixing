@@ -99,7 +99,6 @@ export const campaignStatusOpts = Object.keys(campaignStatus)
   }))
 
 export const landingTypeOpts = Object.keys(landingType)
-  .filter(k => k !== '1') // 临时隐藏: 企业官网
   .map(k => ({
     label: landingType[k],
     value: k | 0
