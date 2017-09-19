@@ -421,7 +421,7 @@ export default {
       Message.warning('投放渠道不能修改')
     },
     clickLandingType(type) {
-      if (this.isCreativeAuthing) {
+      if (!this.isCreativeEditable) {
         return Message.warning('审核中, 无法修改')
       }
 
