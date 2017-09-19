@@ -1,6 +1,7 @@
 
 <template>
   <el-select v-model="localValue" :multiple="multiple"
+    :disabled="disabled"
     :clearable="clearable" filterable
     :placeholder="placeholder"
     :filter-method="filterMethod">
@@ -34,7 +35,8 @@ export default {
     multiple: Boolean,
     value: {
       type: [String, Number, Array]
-    }
+    },
+    disabled: Boolean
   },
   data() {
     return {
