@@ -1,7 +1,9 @@
 
 <template>
-  <bax-select class="cashcow-page-selector"
+  <bax-select
+    class="cashcow-page-selector"
     placeholder="请选择投放微站"
+    :disabled="disabled"
     :value="value"
     :options="options"
     @change="onChange">
@@ -28,6 +30,9 @@
     props: {
       value: {
         type: String
+      },
+      disabled: {
+        type: Boolean
       }
     },
 

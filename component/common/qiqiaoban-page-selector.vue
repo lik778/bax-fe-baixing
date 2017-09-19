@@ -1,7 +1,9 @@
 
 <template>
-  <bax-select class="qiqiaoban-page-selector"
+  <bax-select
+    class="qiqiaoban-page-selector"
     placeholder="请选择投放官网"
+    :disabled="disabled"
     :value="value"
     :options="options"
     @change="onChange">
@@ -28,6 +30,9 @@
     props: {
       value: {
         type: String
+      },
+      disabled: {
+        type: Boolean
       }
     },
 
