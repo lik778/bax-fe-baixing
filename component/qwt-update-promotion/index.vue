@@ -53,15 +53,13 @@
                <qiqiaoban-page-selector
                  :disabled="!isCreativeEditable"
                  v-if="getProp('landingType') === 1"
-                 v-model="promotion.landingPage"
-                 @change="getCreativeWords">
+                 v-model="promotion.landingPage">
               </qiqiaoban-page-selector>
 
               <cashcow-page-selector
                 :disabled="!isCreativeEditable"
                 v-if="getProp('landingType') === 4"
-                v-model="promotion.landingPage"
-                @change="getCreativeWords">
+                v-model="promotion.landingPage">
               </cashcow-page-selector>
               <p v-if="!isCreativeEditable" class="authing-tip">
                 您的推广在审核中，审核通过后可修改落地页，感谢配合！
@@ -445,7 +443,15 @@ export default {
         return Message.warning('审核中, 无法修改')
       }
 
+      if (this.getProp('landingType') === type) {
+        return
+      }
+
       this.promotion.landingType = type
+
+      if ([1, 4].includes(type)) {
+        this.promotion.landingPage = ''
+      }
     },
     updateExistWord(word) {
       const words = this.promotion.updatedKeywords.map(w => w.word)

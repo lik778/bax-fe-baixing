@@ -34,7 +34,7 @@
             <div>
               <el-button-group>
                 <el-button v-for="o of landingTypeOpts" :key="o.value"
-                  @click="newPromotion.landingType = o.value"
+                  @click="onLandingTypeChange(o.value)"
                   :type="newPromotion.landingType === o.value ? 'primary' : ''">
                   {{ o.label }}
                 </el-button>
@@ -523,6 +523,18 @@ export default {
     },
     switchWordsVisible() {
       this.recommendedWordsVisible = !this.recommendedWordsVisible
+    },
+    onLandingTypeChange(typeId) {
+      const { landingType } = this.newPromotion
+      if (landingType === typeId) {
+        return
+      }
+
+      this.newPromotion.landingType = typeId
+
+      if ([1, 4].includes(typeId)) {
+        this.newPromotion.landingPage = ''
+      }
     },
     onChangeAreas(areas) {
       this.newPromotion.areas = [...areas]
