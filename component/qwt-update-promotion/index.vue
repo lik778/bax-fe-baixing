@@ -54,7 +54,7 @@
                  :disabled="!isCreativeEditable"
                  v-if="getProp('landingType') === 1"
                  :value="getProp('landingPage')"
-                 @change="v => promotion.landingPage = v"
+                 @change="v => promotion.landingPage = v">
               </qiqiaoban-page-selector>
 
               <cashcow-page-selector
