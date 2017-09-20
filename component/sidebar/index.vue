@@ -51,7 +51,7 @@
               数据报表
             </router-link>
           </el-menu-item>
-          <el-menu-item index="2-4" v-if="allowSeeQwtReport">
+          <el-menu-item index="2-5" v-if="allowCashcow">
             <router-link :to="{ name: 'qwt-cashcow' }" tag="p">
               微站
             </router-link>
@@ -107,6 +107,7 @@
 
 <script>
 import { version } from '../../package.json'
+import { isPro } from 'config'
 
 import {
   allowSeeQwtPromotion,
@@ -140,6 +141,9 @@ export default {
     }
   },
   computed: {
+    allowCashcow() {
+      return !isPro || this.userInfo.id === 4050
+    },
     allowQueryMaterials() {
       return allowQueryMaterials(this.userInfo.roles)
     },

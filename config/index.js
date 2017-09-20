@@ -1,5 +1,5 @@
 
-const isPro = location.hostname.includes('bax.baixing.com.cn')
+export const isPro = location.hostname.includes('bax.baixing.com.cn')
 
 export const qiniuHost = '//ono2r7ueh.bkt.clouddn.com/'
 
