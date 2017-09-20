@@ -47,7 +47,7 @@
       const pageList = await getReleasePageList()
       this.options = pageList.map(p => ({
         label: p.config.campaignName,
-        value: `vp.baixing.com/${p.pageId}`
+        value: `http://vp.baixing.com/${p.pageId}`
       }))
     }
   }
