@@ -44,7 +44,7 @@
               <el-input v-if="![1, 4].includes(newPromotion.landingType)"
                 v-model.trim="newPromotion.landingPage"
                 placeholder="输入投放网址，如：http://baixing.com 网址有误会影响投放效果，请检查后再投放"
-                @blur="getCreativeWords">
+                @blur="getCreativeWords()">
               </el-input>
 
               <qiqiaoban-page-selector
@@ -512,13 +512,9 @@ export default {
         }
       })
     },
-    async getCreativeWords() {
-      const {
-        landingPage
-      } = this.newPromotion
-
-      if (landingPage) {
-        await getCreativeWords(landingPage)
+    async getCreativeWords(newLandingPage = this.newPromotion.landingPage) {
+      if (newLandingPage) {
+        await getCreativeWords(newLandingPage)
       }
     },
     switchWordsVisible() {
