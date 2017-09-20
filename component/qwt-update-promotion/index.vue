@@ -53,13 +53,15 @@
                <qiqiaoban-page-selector
                  :disabled="!isCreativeEditable"
                  v-if="getProp('landingType') === 1"
-                 v-model="promotion.landingPage">
+                 :value="getProp('landingPage')"
+                 @change="v => promotion.landingPage = v"
               </qiqiaoban-page-selector>
 
               <cashcow-page-selector
                 :disabled="!isCreativeEditable"
                 v-if="getProp('landingType') === 4"
-                v-model="promotion.landingPage">
+                :value="getProp('landingPage')"
+                @change="v => promotion.landingPage = v">
               </cashcow-page-selector>
               <p v-if="!isCreativeEditable" class="authing-tip">
                 您的推广在审核中，审核通过后可修改落地页，感谢配合！
