@@ -262,7 +262,8 @@ import {
   CREATIVE_CHIBI_REJECT,
 
   CREATIVE_STATUS_PENDING,
-  SEM_PLATFORM_QIHU
+  SEM_PLATFORM_BAIDU,
+  SEM_PLATFORM_QIHU,
 } from 'constant/fengming'
 
 import {
@@ -390,7 +391,7 @@ export default {
     },
     isCreativeEditable() {
       // 说明: sougou 审核中, 不允许修改创意; 但 360 可以
-      if (this.getProp('source') === SEM_PLATFORM_QIHU) {
+      if ([SEM_PLATFORM_QIHU, SEM_PLATFORM_BAIDU].includes(this.getProp('source'))) {
         return true
       }
 
