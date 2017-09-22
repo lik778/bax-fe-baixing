@@ -71,8 +71,6 @@ store.subscribeActions({
     }
 
     if (info.creative) {
-      info.landingType = info.creative.landingType
-      info.landingPage = info.creative.landingPage
       info.creativeContent = info.creative.content
       info.creativeTitle = info.creative.title
       info.creativeStatus = info.creative.status
