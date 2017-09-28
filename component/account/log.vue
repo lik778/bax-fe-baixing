@@ -135,7 +135,7 @@ export default {
       return logType[String(row.timelineType)]
     },
     dateFormatter(row) {
-      return toHumanTime(row.createdAt, 'YYYY-MM-DD')
+      return toHumanTime(row.createdAt, 'YYYY-MM-DD hh:mm')
     }
   },
   async mounted() {
