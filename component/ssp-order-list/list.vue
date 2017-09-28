@@ -2,7 +2,13 @@
 <template>
   <section>
     <el-table :data="orders" style="width: 100%">
-      <el-table-column prop="order.id" label="订单编号" width="120" />
+      <el-table-column label="订单编号" width="120">
+        <template scope="s">
+          <router-link :to="{name: 'order-info', params: {id: s.row.order.id}}">
+            {{ s.row.order.id }}
+          </router-link>
+        </template>
+      </el-table-column>
       <el-table-column label="订单状态">
         <template scope="s">
           <span>{{ s.row.status | orderStatus }}</span>
@@ -132,8 +138,15 @@ export default {
 
 <style scoped>
 
+@import '../../cssbase/var';
+
 section {
   margin-top: 16px;
+}
+
+a {
+  cursor: pointer;
+  color: var(--c-main-blue);
 }
 
 </style>

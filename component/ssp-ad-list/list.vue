@@ -2,7 +2,14 @@
 <template>
   <section class="ad-list">
     <el-table :data="items" style="width: 100%">
-      <el-table-column prop="orderId" label="订单编号" width="110" />
+      <el-table-column label="订单编号" width="110">
+        <template scope="s">
+          <router-link class="link"
+            :to="{name: 'order-info', params: {id: s.row.orderId}}">
+            {{ s.row.orderId }}
+          </router-link>
+        </template>
+      </el-table-column>
       <el-table-column prop="name" label="名称" width="100" />
       <el-table-column label="状态" width="120">
         <template scope="s">
@@ -344,6 +351,8 @@ export default {
 
 <style scoped>
 
+@import '../../cssbase/var';
+
 .center {
   display: flex;
   justify-content: center;
@@ -362,7 +371,8 @@ export default {
 }
 
 a {
-  color: #20a0ff;
+  color: var(--c-main-blue);
+  cursor: pointer;
 }
 
 .ad-list {

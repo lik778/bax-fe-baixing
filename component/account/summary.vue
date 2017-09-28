@@ -46,9 +46,6 @@
 </script>
 
 <style scoped>
-  .summary-container {
-
-  }
   .line {
     border-right: 1px dotted #aaa;
     text-align: center;
