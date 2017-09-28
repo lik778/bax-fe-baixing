@@ -108,3 +108,12 @@ export const device = {
   '0': 'PC',
   '1': 'WAP'
 }
+
+export const allowCashcowBaixingIds = [
+  133897612, // 虫虫
+  165293063,
+  198512558,
+  189284868,
+  90393621,
+  52160447
+]

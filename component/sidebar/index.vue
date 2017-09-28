@@ -109,6 +109,8 @@
 import { version } from '../../package.json'
 import { isPro } from 'config'
 
+import { allowCashcowBaixingIds } from 'constant/fengming'
+
 import {
   allowSeeQwtPromotion,
   allowSeeQwtReport,
@@ -142,7 +144,7 @@ export default {
   },
   computed: {
     allowCashcow() {
-      return !isPro || this.userInfo.id === 4050
+      return !isPro || allowCashcowBaixingIds.includes(this.userInfo.baixingId)
     },
     allowQueryMaterials() {
       return allowQueryMaterials(this.userInfo.roles)
