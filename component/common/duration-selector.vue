@@ -62,6 +62,7 @@
 
 <script>
 import padstart from 'lodash.padstart'
+import { Message } from 'element-ui'
 
 import {
   SEM_PLATFORM_SOGOU,
@@ -254,8 +255,8 @@ export default {
       this.initClickedFlags('all')
       this.$forceUpdate()
 
-      const durations = this.getCheckedDurations()
-      this.$emit('change', durations)
+      // const durations = this.getCheckedDurations()
+      // this.$emit('change', durations)
     },
     reset() {
       if (this.schedule && this.schedule !== 'all') {
@@ -267,8 +268,8 @@ export default {
 
       this.$forceUpdate()
 
-      const durations = this.getCheckedDurations()
-      this.$emit('change', durations)
+      // const durations = this.getCheckedDurations()
+      // this.$emit('change', durations)
     },
     cancel() {
       this.reset()
@@ -276,6 +277,10 @@ export default {
     },
     ok() {
       const durations = this.getCheckedDurations()
+      if (durations.reduce((a, b) => a + b, 0) === 0) {
+        return Message.error('投放时段不能为空')
+      }
+
       this.$emit('change', durations)
       this.$emit('hide')
     }
