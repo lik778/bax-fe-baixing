@@ -5,9 +5,14 @@
     :before-close="cancel">
     <main class="main">
       <header>
-        <el-button @click="reset">
-          重置
-        </el-button>
+        <span>
+          <el-button size="mini" @click="reset">
+            重置
+          </el-button>
+          <el-button size="mini" type="primary" @click="checkAll">
+            全选
+          </el-button>
+        </span>
         <span>
           <p class="on"></p>
           <label>推广时间段</label>
@@ -76,7 +81,7 @@ export default {
       required: true
     },
     schedule: {
-      // 123,456,444
+      // '123,456,444' 或者 'all'
       type: String
     }
   },
@@ -141,6 +146,18 @@ export default {
   },
   methods: {
     initClickedFlags(schedule) {
+      if (!schedule) {
+        // clear
+        this.clickedFlags = {}
+        return
+      }
+
+      if (schedule === 'all') {
+        this.clickedFlags = {}
+        this.durations.forEach(d => this.clickColumn(d))
+        return
+      }
+
       const durations = schedule.split(',')
 
       if (durations.length !== 7) {
@@ -233,11 +250,19 @@ export default {
 
       this.$forceUpdate()
     },
+    checkAll() {
+      this.initClickedFlags('all')
+      this.$forceUpdate()
+
+      const durations = this.getCheckedDurations()
+      this.$emit('change', durations)
+    },
     reset() {
-      if (this.schedule) {
+      if (this.schedule && this.schedule !== 'all') {
+        // 说明: all 是 component 默认设置, reset 是 reset 到目前 server 真正的 设置
         this.initClickedFlags(this.schedule)
       } else {
-        this.clickedFlags = {}
+        this.initClickedFlags()
       }
 
       this.$forceUpdate()
@@ -261,6 +286,9 @@ export default {
         this.initClickedFlags(now)
       }
     }
+  },
+  mounted() {
+    this.initClickedFlags(this.schedule)
   }
 }
 </script>
@@ -324,6 +352,8 @@ export default {
 }
 
 .main {
+  min-width: 820px;
+
   & > header {
     display: flex;
     justify-content: space-between;

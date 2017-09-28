@@ -225,6 +225,7 @@
     <duration-selector
       :visible="durationSelectorVisible"
       :platform="newPromotion.source"
+      schedule="all"
       @change="onChangeDuration"
       @hide="durationSelectorVisible = false">
     </duration-selector>
