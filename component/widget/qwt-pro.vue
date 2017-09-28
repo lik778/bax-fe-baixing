@@ -79,7 +79,11 @@ export default {
 
       if (this.hasPrice) {
         const p = this.price || this.inputPrice
-        this.$emit('set-money', p)
+        if (p >= this.minInputPrice) {
+          this.$emit('set-money', p)
+        } else {
+          this.$emit('set-money', 0)
+        }
       } else {
         this.$emit('set-money', 0)
       }
