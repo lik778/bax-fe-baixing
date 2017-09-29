@@ -357,7 +357,7 @@ export default {
 }
 
 .main {
-  min-width: 820px;
+  min-width: 620px;
 
   & > header {
     display: flex;
