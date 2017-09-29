@@ -37,9 +37,9 @@ export function getLogDesc(type, log, { allAreas = [] }) {
       if (c) {
         const money = (c.deltaMoney + c.deltaPoint) / 100
         if (money > 0) {
-          return `充值：${money}元`
+          return `充值：${money}元，推广 ID：${c.campaignId}`
         } else {
-          return `消费：${Math.abs(money)}元`
+          return `消费：${Math.abs(money)}元，推广 ID：${c.campaignId}`
         }
       }
     }
