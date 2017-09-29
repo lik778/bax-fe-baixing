@@ -256,14 +256,10 @@ import { fmtAreasInQwt, getCnName } from 'util/meta'
 import { disabledDate } from 'util/element'
 
 import {
-  CREATIVE_CHIBI_CONTENT_PENDING,
-  CREATIVE_CHIBI_TITLE_PENDING,
-  CREATIVE_CHIBI_PENDING,
-  CREATIVE_CHIBI_REJECT,
-
   CREATIVE_STATUS_PENDING,
+  CAMPAIGN_AUDIT_AUTHING,
   SEM_PLATFORM_BAIDU,
-  SEM_PLATFORM_QIHU,
+  SEM_PLATFORM_QIHU
 } from 'constant/fengming'
 
 import {
@@ -399,23 +395,10 @@ export default {
     },
     isCreativeAuthing() {
       const {
-        creativeChibiStatus,
-        creativeStatus
+        auditStatus
       } = this.originPromotion
 
-      const a = [
-        CREATIVE_CHIBI_CONTENT_PENDING,
-        CREATIVE_CHIBI_TITLE_PENDING,
-        CREATIVE_CHIBI_PENDING
-      ]
-
-      if (a.includes(creativeChibiStatus)) {
-        return true
-      } else if (creativeChibiStatus === CREATIVE_CHIBI_REJECT) {
-        return false
-      }
-
-      return creativeStatus === CREATIVE_STATUS_PENDING
+      return auditStatus === CREATIVE_STATUS_PENDING
     },
     id() {
       return this.$route.params.id

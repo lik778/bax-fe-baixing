@@ -66,6 +66,8 @@ export const creativeStatus = {
 
 export const CREATIVE_STATUS_PENDING = 0
 
+export const CAMPAIGN_AUDIT_AUTHING = 0
+
 export const campaignAuditStatus = {
   '-10': '审核驳回',
   '0': '审核中',
