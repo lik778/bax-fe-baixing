@@ -50,6 +50,9 @@ export const semPlatformCn = {
 }
 
 export const semPlatformOpts = [{
+  label: '百度',
+  value: 0
+}, {
   label: '搜狗',
   value: 5
 }, {
