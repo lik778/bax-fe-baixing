@@ -11,7 +11,7 @@
           <aside>选择渠道：</aside>
           <span>
             <el-button-group>
-              <el-button @click="newPromotion.source = 0"
+              <el-button v-if="false" @click="newPromotion.source = 0"
                 :type="newPromotion.source === 0 ? 'primary' : ''">
                 百度
               </el-button>

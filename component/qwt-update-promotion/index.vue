@@ -12,7 +12,7 @@
           <aside>投放渠道：</aside>
           <span>
             <el-button-group>
-              <el-button :type="getProp('source') === 0 ? 'primary' : ''"
+              <el-button v-if="false" :type="getProp('source') === 0 ? 'primary' : ''"
                 @click="clickSourceTip">
                 百度
               </el-button>
