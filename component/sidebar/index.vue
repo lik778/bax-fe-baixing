@@ -57,7 +57,7 @@
             </router-link>
           </el-menu-item>
         </el-submenu>
-        <el-submenu index="3">
+        <el-submenu index="3" v-if="allowSeeBxAd">
           <template slot="title">
             <i class="el-icon-message"></i>品牌广告
           </template>
@@ -97,9 +97,6 @@
             <i class="el-icon-menu"></i>账户
           </router-link>
         </el-menu-item>
-        <el-menu-item index="6">
-          <i class="el-icon-setting"></i>设置
-        </el-menu-item>
       </el-menu>
     </content>
   </main>
@@ -126,7 +123,8 @@ import {
   allowQueryUsers,
   // global
   allowSeeDashboard,
-  allowSeeAccount
+  allowSeeAccount,
+  allowSeeBxAd
 } from 'util/role'
 
 export default {
@@ -158,14 +156,17 @@ export default {
     allowQueryUsers() {
       return allowQueryUsers(this.userInfo.roles)
     },
-    //
+    // allow see bx ad ...
     allowSeeDashboard() {
       return allowSeeDashboard(this.userInfo.roles)
     },
     allowSeeAccount() {
       return allowSeeAccount(this.userInfo.roles)
     },
-    //
+    allowSeeBxAd() {
+      return allowSeeBxAd(this.userInfo.roles)
+    },
+    // allow see qwt ...
     allowSeeQwtPromotion() {
       return allowSeeQwtPromotion(this.userInfo.roles)
     },

@@ -19,6 +19,18 @@ export function allowSeeAccount(roles) {
   ])
 }
 
+export function allowSeeBxAd(roles) {
+  // 只要 role 不仅仅是 BAIXING_USER 即可
+  const currentRoles = normalizeRoles(roles)
+
+  if (currentRoles.length === 1 &&
+    currentRoles[0] === 'BAIXING_USER') {
+    return false
+  }
+
+  return true
+}
+
 // order
 
 export function allowPayOrder(roles) {
@@ -168,6 +180,8 @@ export function allowContinueAd(roles) {
     'NORMAL_OPERATOR'
   ])
 }
+
+// utils
 
 export function onlyAgentSales(roles) {
   const currentRoles = normalizeRoles(roles)
