@@ -42,10 +42,6 @@
           <price-list :products="checkedProducts"
             :has-discount="!!checkedProductDiscounts.length">
           </price-list>
-          <label v-if="mode === 'buy-service' && checkedProducts.length"
-            class="tip">
-            该推广资金目前只能购买百度站外推广，九月下旬百度迁入广告系统后，该资金可以全渠道通用。
-          </label>
         </span>
       </div>
       <div>
@@ -87,9 +83,8 @@
         <li>推广资金使用规则：</li>
         <li>1. 该产品购买后，精品官网及推广资金不可退款；</li>
         <li>2. 该精品官网及推广资金自购买之日起有效期为365天，请在有效期内使用；</li>
-        <li>3. 该推广资金目前只能用于购买百度站外推广，不能购买其他付费产品，不能转入余额，不能转入一卡通；</li>
-        <li>4. 推广下线后如有剩余预算，将于下线第二日自动转入站外推广资金；</li>
-        <li>5. 详细推广记录请在【账户】-【账户明细】-【消费记录】查看。</li>
+        <li>3. 推广下线后如有剩余预算，将于下线第二日自动转入站外推广资金；</li>
+        <li>4. 详细推广记录请在【账户】-【账户明细】-【消费记录】查看。</li>
       </footer>
     </section>
   </div>
