@@ -406,8 +406,11 @@ export default {
       }
 
       for (const w of p.keywords) {
-        if (w.price * 2 < w.originPrice) {
-          return Message.error(`关键字: ${w.word} 出价低于 ${(w.originPrice / 200).toFixed(2)}, 请调高出价`)
+        // if (w.price * 2 < w.originPrice) {
+        //   return Message.error(`关键字: ${w.word} 出价低于 ${(w.originPrice / 200).toFixed(2)}, 请调高出价`)
+        // }
+        if (w.price < 100) {
+          return Message.error(`关键字: ${w.word} 出价不得低于 1元, 请调高出价`)
         }
       }
 

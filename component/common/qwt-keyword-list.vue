@@ -161,7 +161,8 @@ export default {
       //   2. 更新关键词: words -> 原有关键词 + 更新价格 (price !== originPrice)
       //     此时 word 存在 prop originPrice
       const p = this.getWordPrice(row.word) * 100 | 0
-      const o = row.originPrice || row.price
+      // const o = row.originPrice || row.price
+      const o = 200
 
       if (p * 2 < o) {
         return false
@@ -170,8 +171,9 @@ export default {
       return true
     },
     getPriceTip(row) {
-      const o = row.originPrice || row.price
-      return `该关键词出价最低为: ${(o / 200).toFixed(2)}, 请调高出价`
+      // const o = row.originPrice || row.price
+      // return `该关键词出价最低为: ${(o / 200).toFixed(2)}, 请调高出价`
+      return `该关键词出价最低为: 1元, 请调高出价`
     },
     wordPriceEditable(word) {
       const item = this.customPrices.find(c => c.word === word)
