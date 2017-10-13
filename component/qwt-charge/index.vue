@@ -233,7 +233,7 @@ export default {
         h3 = centToYuan(p.discountPrice)
       })
 
-      return this.mode === 'charge-only' ? `搜狗推广资金：${h3}元`
+      return this.mode === 'charge-only' ? `推广资金：${h3}元`
         : `${name}（精品官网：${h1}天，推广资金：${h2}元），推广资金包：${h3}元`
     },
     checkedProducts() {
