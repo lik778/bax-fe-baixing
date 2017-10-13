@@ -140,7 +140,7 @@ export default {
         .filter(a => {
           // 对于全网通, 需要毙掉几个特殊的 市
           if (this.type === 'qwt') {
-            return !!a.baiduCode
+            return !!a.baiduCode && !!a.qihuCode
           }
 
           return true
