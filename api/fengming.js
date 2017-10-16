@@ -46,7 +46,7 @@ export async function createOrder(order) {
   return body.data
 }
 
-export async function getProducts(type = 1) {
+export async function getProducts(type = 3) {
   const body = await fengming
     .get('/product')
     .query(reverseCamelcase({

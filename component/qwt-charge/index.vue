@@ -363,8 +363,7 @@ export default {
       await this.getProducts()
     },
     async getProducts() {
-      const type = this.mode === 'buy-service' ? 1 : 3
-      await getProducts(type)
+      await getProducts(3)
     },
     async payOrders(oids) {
       const {
