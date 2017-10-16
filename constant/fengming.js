@@ -60,18 +60,6 @@ export const semPlatformOpts = [{
   value: 1
 }]
 
-// TODO 等全网通数据报表支持信息流，可与 semPlatformOpts 合并
-export const allSemPlatformOpts = [{
-  label: '搜狗',
-  value: 5
-}, {
-  label: '360',
-  value: 1
-}, {
-  label: '信息流',
-  value: 2
-}]
-
 export const creativeStatus = {
   '-10': '审核失败',
   '-1': '下线',

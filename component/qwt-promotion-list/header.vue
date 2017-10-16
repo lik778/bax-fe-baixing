@@ -40,7 +40,7 @@
         </span>
         <span class="filter-item">
           <label>渠道来源</label>
-          <bax-select :options="allSemPlatformOpts" clearable
+          <bax-select :options="semPlatformOpts" clearable
             @change="v => queryCampaigns({source: v})">
           </bax-select>
         </span>
@@ -55,7 +55,7 @@ import BaxInput from 'com/common/input'
 
 import {
   campaignStatusOpts,
-  allSemPlatformOpts,
+  semPlatformOpts,
 } from 'constant/fengming'
 
 import {
@@ -93,7 +93,7 @@ export default {
   data() {
     return {
       campaignStatusOpts,
-      allSemPlatformOpts,
+      semPlatformOpts,
       areaQueryWord: ''
     }
   },
