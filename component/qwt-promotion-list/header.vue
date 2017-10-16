@@ -11,9 +11,15 @@
         </el-button>
       </span>
       <span>
-        <el-button type="primary" icon="plus"
+        <el-button v-if="canCreate"
+          type="primary" icon="plus"
           @click="gotoCreatePromotion">
           新建推广计划
+        </el-button>
+        <el-button type="primary" v-if="!canCreate">
+          <router-link :to="{name: 'qwt-dashboard', query: {userId}}" tag="span">
+            查看数据报表
+          </router-link>
         </el-button>
       </span>
     </section>
@@ -32,6 +38,12 @@
             @change="v => queryCampaigns({areas: v})">
           </bax-select>
         </span>
+        <span class="filter-item">
+          <label>渠道来源</label>
+          <bax-select :options="semPlatformOpts" clearable
+            @change="v => queryCampaigns({source: v})">
+          </bax-select>
+        </span>
       </div>
     </section>
   </header>
@@ -42,7 +54,8 @@ import BaxSelect from 'com/common/select'
 import BaxInput from 'com/common/input'
 
 import {
-  campaignStatusOpts
+  campaignStatusOpts,
+  semPlatformOpts,
 } from 'constant/fengming'
 
 import {
@@ -68,11 +81,19 @@ export default {
     query: {
       type: Object,
       required: true
+    },
+    userId: {
+      type: [Number, String]
+    },
+    canCreate: {
+      type: Boolean,
+      required: true
     }
   },
   data() {
     return {
       campaignStatusOpts,
+      semPlatformOpts,
       areaQueryWord: ''
     }
   },

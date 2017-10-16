@@ -1,7 +1,7 @@
 
 <template>
   <div class="qwt-promotion-list">
-    <header>
+    <header v-if="!readonly">
       <span>
         <el-checkbox label="全选" :value="allRowsChecked"
           @change="onClickCheckAllRows">
@@ -79,14 +79,14 @@
     </header>
     <el-table ref="table" :data="campaigns"
       @selection-change="onSelectionChange">
-      <el-table-column type="selection" width="40"
+      <el-table-column v-if="!readonly" type="selection" width="40"
         :selectable="checkSelectable">
       </el-table-column>
       <el-table-column prop="open" label="开关" width="80">
         <template scope="s">
-          <el-switch :disabled="s.row.status === CAMPAIGN_STATUS_OFFLINE"
-            :value="!s.row.pause" on-text="" off-text=""
-            @change="switchCampaignPause(s.row)">
+          <el-switch :disabled="s.row.status === CAMPAIGN_STATUS_OFFLINE || readonly"
+            :on-text="readonly ? 'ON' : ''" :off-text="readonly ? 'OFF' : ''"
+            :value="!s.row.pause" @change="switchCampaignPause(s.row)">
           </el-switch>
         </template>
       </el-table-column>
@@ -199,6 +199,10 @@ export default {
     },
     query: {
       type: Object,
+      required: true
+    },
+    readonly: {
+      type: Boolean,
       required: true
     }
   },

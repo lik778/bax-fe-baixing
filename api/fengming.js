@@ -133,11 +133,11 @@ export async function pauseCampaigns(ids) {
 }
 
 export async function getCurrentCampaigns(opts) {
-  const query = trim({
+  const query = reverseCamelcase(trim({
     offset: 0,
     limit: 20,
     ...opts
-  })
+  }))
 
   if (query.id) {
     // 这里的逻辑是不是怪怪的 ? 哈哈, 因为:

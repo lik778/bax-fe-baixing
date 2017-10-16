@@ -72,6 +72,7 @@
         <span>
           <plan-keyword-selector multiple
             :channel="query.channel"
+            :userId="userId"
             :dimension="query.dimension"
             v-model="query.keywordsAndPlans">
           </plan-keyword-selector>
@@ -172,6 +173,11 @@ export default {
       }
     }
   },
+  computed: {
+    userId() {
+      return this.$route.query.userId
+    }
+  },
   methods: {
     setTimeUnit(v) {
       if (v !== 1) {
@@ -183,6 +189,7 @@ export default {
     async queryStatistics() {
       const q = {
         ...clone(this.query),
+        userId: this.userId,
         dataDimension: this.query.dimension
       }
 
@@ -223,7 +230,7 @@ export default {
     }
   },
   watch: {
-    'query': {
+    query: {
       deep: true,
       handler: async function() {
         await this.queryStatistics()

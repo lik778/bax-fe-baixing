@@ -9,6 +9,7 @@
 </template>
 
 <script>
+import pick from 'lodash/pick'
 import BaxSelect from './select'
 
 import {
@@ -32,6 +33,9 @@ export default {
     channel: {
       type: Number,
       default: 5
+    },
+    userId: {
+      type: [Number, String]
     },
     value: {
       type: [String, Number, Array]
@@ -92,14 +96,15 @@ export default {
       this.localValue = v
     },
     async queryPlanAndKeyword() {
-      const { channel } = this
+      const { channel, userId } = this
+      const query = pick(this, 'channel', 'userId')
 
       const [
         keywords,
         plans
       ] = await Promise.all([
-        getKeywords({channel}),
-        getPlans({channel})
+        getKeywords(query),
+        getPlans(query)
       ])
 
       this.keywords = keywords

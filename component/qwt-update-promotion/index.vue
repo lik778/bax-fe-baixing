@@ -46,7 +46,7 @@
                 v-if="![1, 4].includes(getProp('landingType'))"
                 :value="getProp('landingPage')" style="width: 560px;"
                 placeholder="输入投放网址，如：http://baixing.com 网址有误会影响投放效果，请检查后再投放"
-                :disabled="!isCreativeEditable"
+                :disabled="!isCreativeEditable || isFormReadonly"
                 @change="v => promotion.landingPage = v.trim()">
               </el-input>
 
@@ -72,12 +72,13 @@
         <div>
           <aside>投放城市：</aside>
           <span>
-            <el-tag type="success" closable
+            <el-tag type="success"
+              :closable="!isFormReadonly"
               v-for="c in getProp('areas')" :key="c"
               @close="removeArea(c)">
               {{ formatterArea(c) }}
             </el-tag>
-            <i class="el-icon-plus"
+            <i v-if="!isFormReadonly" class="el-icon-plus"
               @click="areaDialogVisible = true">
             </i>
           </span>
@@ -99,7 +100,7 @@
           <span>
             <el-input type="text" style="width: 420px"
               placeholder="请输入标题 ~ (字数限制为9-25个字)"
-              :disabled="!isCreativeEditable"
+              :disabled="!isCreativeEditable || isFormReadonly"
               :value="getProp('creativeTitle')"
               @change="v => promotion.creativeTitle = v">
             </el-input>
@@ -115,14 +116,14 @@
           <span>
             <el-input type="textarea" :rows="5" style="width: 420px"
               :placeholder="creativeContentPlaceholder"
-              :disabled="!isCreativeEditable"
+              :disabled="!isCreativeEditable || isFormReadonly"
               :value="getProp('creativeContent')"
               @change="v => promotion.creativeContent = v">
             </el-input>
           </span>
           <p>{{ originPromotion.refuseReason }}</p>
         </div>
-        <footer>
+        <footer v-if="!isFormReadonly">
           <el-button type="primary" @click="checkCreativeContent">
             检查推广是否可用
           </el-button>
@@ -135,14 +136,15 @@
           <label>当前关键词数量: {{ currentKeywords.length }}个</label>
         </h4>
         <keyword-list :words="currentKeywords"
-          :selectable="false" deletable
+          :selectable="false"
+          :deletable="!isFormReadonly"
           :show-prop-show="false"
           :show-prop-status="true"
           :show-prop-ranking="true"
           @update-word="updateExistWord"
           @delete-word="word => promotion.deletedKeywords.push(word)">
         </keyword-list>
-        <h3>
+        <h3 v-if="!isFormReadonly">
           <label>关键词不够？</label>
           <a @click="switchWordsVisible">点此自定义添加</a>
         </h3>
@@ -182,6 +184,7 @@
           </span>
           <span>
             <el-date-picker v-if="timeType === 'custom'"
+              :disabled="isFormReadonly"
               type="daterange" placeholder="选择日期范围"
               :picker-options="{disabledDate}"
               :value="getProp('validTime')"
@@ -192,7 +195,8 @@
         <div>
           <aside>设置推广日预算:</aside>
           <span>
-            <el-input type="number" placeholder="请输入每日最高预算"
+            <el-input :disabled="isFormReadonly"
+              type="number" placeholder="请输入每日最高预算"
               :value="getProp('dailyBudget')"
               @change="v => promotion.dailyBudget = v">
             </el-input>
@@ -216,7 +220,7 @@
             先去充值
           </el-button>
           <el-button type="primary"
-            :disabled="isUpdating"
+            :disabled="isUpdating || isFormReadonly"
             @click="updatePromotion">
             更新推广
           </el-button>
@@ -254,6 +258,7 @@ import Topbar from 'com/topbar'
 
 import { fmtAreasInQwt, getCnName } from 'util/meta'
 import { disabledDate } from 'util/element'
+import { isBaixingSales } from 'util/role'
 
 import {
   CREATIVE_STATUS_PENDING,
@@ -341,6 +346,10 @@ export default {
     }
   },
   computed: {
+    isFormReadonly() {
+      const { userInfo } = this
+      return isBaixingSales(userInfo.roles)
+    },
     currentKeywords() {
       const { keywords } = this.originPromotion
 
