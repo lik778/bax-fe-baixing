@@ -126,7 +126,7 @@
         <div class="recommend"
           v-if="recommendedWordsVisible">
           <span>
-            <el-input placeholder="请输入关键词" v-model="queryWord">
+            <el-input placeholder="请输入关键词" v-model.trim="queryWord">
             </el-input>
           </span>
           <el-button type="primary" @click="queryRecommendedWords">
