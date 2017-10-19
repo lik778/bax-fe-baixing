@@ -14,7 +14,7 @@
     </el-radio-group>
 
     <el-table class="log-table"
-      :data="pagedLogs"
+      :data="logs"
       style="width: 100%">
       <el-table-column
         prop="createdAt"
@@ -81,29 +81,12 @@ export default {
       logTypeOpts,
       type: '',
       range: 'month',
-      pageSize: 5,
+      pageSize: 20,
       currentPage: 1
     }
   },
   computed: {
-    pagedLogs() {
-      const start = this.pageSize * (this.currentPage - 1)
-      return this.logs.slice(start, start + this.pageSize)
-    }
-  },
-  watch: {
-    type() {
-      this.getCurrentLogs()
-    },
-    range() {
-      this.getCurrentLogs()
-    }
-  },
-  methods: {
-    goto(pageNo) {
-      this.currentPage = pageNo
-    },
-    async getCurrentLogs() {
+    startTime() {
       let time = moment()
 
       if (this.range === 'month') {
@@ -113,11 +96,31 @@ export default {
       } else if (this.range === 'year') {
         time = moment().subtract(1, 'years')
       }
-
+      return time.unix()
+    }
+  },
+  watch: {
+    type() {
+      this.currentPage = 1
+      this.load()
+    },
+    range() {
+      this.currentPage = 1
+      this.load()
+    }
+  },
+  methods: {
+    async load() {
       await getLogs({
+        pageSize: this.pageSize,
+        offset: this.pageSize * (this.currentPage - 1),
         type: this.type,
-        time: time.unix()
+        time: this.startTime
       })
+    },
+    goto(pageNo) {
+      this.currentPage = pageNo
+      this.load()
     },
     logDescFormatter(row) {
       const { allAreas, type } = this
@@ -138,7 +141,7 @@ export default {
     }
   },
   async mounted() {
-    await getLogs()
+    await this.load()
   }
 }
 </script>
