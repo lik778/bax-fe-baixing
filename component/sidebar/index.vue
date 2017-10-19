@@ -51,7 +51,7 @@
               数据报表
             </router-link>
           </el-menu-item>
-          <el-menu-item index="2-5" v-if="allowCashcow">
+          <el-menu-item index="2-5">
             <router-link :to="{ name: 'qwt-cashcow' }" tag="p">
               微站
             </router-link>
@@ -104,9 +104,6 @@
 
 <script>
 import { version } from '../../package.json'
-import { isPro } from 'config'
-
-import { allowCashcowBaixingIds } from 'constant/fengming'
 
 import {
   allowSeeQwtPromotion,
@@ -141,9 +138,6 @@ export default {
     }
   },
   computed: {
-    allowCashcow() {
-      return !isPro || allowCashcowBaixingIds.includes(this.userInfo.baixingId)
-    },
     allowQueryMaterials() {
       return allowQueryMaterials(this.userInfo.roles)
     },
