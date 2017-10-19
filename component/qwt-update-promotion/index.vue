@@ -105,7 +105,7 @@
               @change="v => promotion.creativeTitle = v">
             </el-input>
             <p v-if="isCreativeAuthing" class="authing-tip">
-              您的推广物料正在审核中, 预计审核时间3个工作日内, 请您耐心等待短信和站内信通知.
+              您的推广物料正在审核中，预计审核时间3个工作日内，请您耐心等待。
             </p>
           </span>
         </div>
