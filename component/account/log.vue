@@ -13,8 +13,7 @@
       <el-radio-button label="year">近一年</el-radio-button>
     </el-radio-group>
 
-    <el-table
-      class="log-table"
+    <el-table class="log-table"
       :data="pagedLogs"
       style="width: 100%">
       <el-table-column

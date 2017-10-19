@@ -36,10 +36,11 @@ export function getLogDesc(type, log, { allAreas = [] }) {
       const c = message.change
       if (c) {
         const money = (c.deltaMoney + c.deltaPoint) / 100
+        const date = toHumanTime(c.reportDate, 'MM月DD日 HH:mm')
         if (money > 0) {
-          return `充值：${money}元，推广 ID：${c.campaignId}`
+          return `充值：${money}元，推广ID：${c.campaignId}，充值时间：${date}`
         } else {
-          return `消费：${Math.abs(money)}元，推广 ID：${c.campaignId}`
+          return `消费：${Math.abs(money)}元，推广ID：${c.campaignId}，消费时间：${date}`
         }
       }
     }
