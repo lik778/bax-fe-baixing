@@ -98,6 +98,12 @@ import moment from 'moment'
 import clone from 'clone'
 
 import {
+  allDimensions,
+  allTimeUnits,
+  allDevices
+} from 'constant/fengming-report'
+
+import {
   semPlatformOpts
 } from 'constant/fengming'
 
@@ -107,36 +113,6 @@ import {
 } from './action'
 
 import store from './store'
-
-const allDimensions = [{
-  label: '计划维度',
-  value: 0
-}, {
-  label: '关键词维度',
-  value: 1
-}]
-
-const allDevices = [{
-  label: '全部',
-  value: '0,1'
-}, {
-  label: 'PC',
-  value: 0
-}, {
-  label: 'WAP',
-  value: 1
-}]
-
-const allTimeUnits = [{
-  label: '每日',
-  value: 1
-}, {
-  label: '每周',
-  value: 2
-}, {
-  label: '每月',
-  value: 3
-}]
 
 export default {
   name: 'qwt-dashboard',
