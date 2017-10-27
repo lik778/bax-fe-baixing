@@ -8,6 +8,9 @@
         <input placeholder="邮箱" v-model="email" />
         <input placeholder="密码" type="password" v-model="password" />
         <footer>
+          <a href="http://www.baixing.com/fengming/baidu/bax">
+            百姓网账号登录
+          </a>
           <span @click="login">
             登录
           </span>
@@ -122,9 +125,15 @@ main {
 
       & > footer {
         display: flex;
-        align-items: center;
+        align-items: flex-end;
         justify-content: flex-end;
         padding-right: 20px;
+
+        & > a {
+          margin: 0 10px 8px 0;
+          font-size: 14px;
+          color: #616161;
+        }
 
         & > span {
           @mixin center;
