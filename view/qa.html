@@ -1,43 +1,159 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>bax - 广告系统Q&amp;A文档</title>
+    <title>BAX - 广告系统Q&amp;A文档</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="renderer" content="webkit">
     <style>
-      .video {
+      * {
+        font-family: PingFangSC-Regular, 'Open Sans', 'Microsoft YaHei', 微软雅黑, STHeiti, 'WenQuanYi Micro Hei', SimSun, sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      header {
+        display: flex;
+        align-items: center;
+        height: 84px;
+        border-bottom: 2px solid #20a0ff;
+      }
+
+      header > span:first-child {
+        padding-left: 20px;
+        font-size: 30px;
+        font-weight: bold;
+      }
+
+      header > span:last-child {
         display: flex;
         justify-content: center;
+        width: 80px;
+        margin-left: 20px;
+        padding-bottom: 3px;
+        border-bottom: 2px solid #20a0ff;
+        font-size: 18px;
+        color: #20a0ff;
+        cursor: pointer;
       }
-      .index {
+
+      content {
+        display: flex;
+        padding: 20px 20px 100px;
+        background: #f9fafc;
+      }
+
+      content > aside:first-child {
         display: flex;
         flex-flow: column;
-        padding-left: 20px;
+        background: white;
+        height: 456px;
+        border: 1px solid #c0ccda;
       }
-      .index a {
-        margin: 5px 0;
-        color: red;
-        font-size: 20px;
-      }
-      #img {
+
+      content > aside:first-child > li {
         display: flex;
-        flex-flow: column;
         align-items: center;
         justify-content: center;
-        padding-top: 30px;
+        width: 194px;
+        height: 56px;
+        font-size: 20px;
+        cursor: pointer;
       }
-      img {
-        width: 90%;
+
+      content > aside:first-child > li:not(:last-child) {
+        border-bottom: 1px solid #c0ccda;
+      }
+
+      content > aside:last-child {
+        flex-grow: 1;
+        min-width: 700px;
+        margin-left: 20px;
+      }
+
+      content > aside:last-child > h3 {
+
+      }
+
+      content > aside:last-child > h3 > input {
+        width: 100%;
+        height: 42px;
+        padding-left: 5px;
+        line-height: 28px;
+      }
+
+      content > aside:last-child > h3 > input::-webkit-input-placeholder {
+        font-size: 20px;
+      }
+
+      content > aside:last-child > main {
+        margin-top: 15px;
+        padding: 10px;
+        background: white;
+        border: 1px solid #c0ccda;
+      }
+
+      content > aside:last-child > main > h4 {
+        margin: 10px 5px;
+        padding-left: 10px;
+        font-size: 18px;
+        font-weight: bold;
+        border-left: 4px solid #20a0ff;
+      }
+
+      content > aside:last-child > main > div {
+        display: flex;
+        flex-wrap: wrap;
+        border-top: 1px solid #c0ccda;
+        padding: 10px 0;
+      }
+
+      footer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 30px;
+        background: #f9fafc;
+      }
+
+      button.shang {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #20a0ff;
+        color: white;
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        font-size: 64px;
+        cursor: pointer;
+      }
+
+      .video-list > h5 {
+        margin: 10px;
+        font-size: 18px;
+      }
+
+      .video-list > video {
+        margin-bottom: 50px;
+      }
+
+      .image-slide, .video-list {
+        max-width: 100%;
+        width: 100%;
+      }
+
+      .image-slide img, .video-list video {
+        max-width: 1400px;
+        width: 100%;
         height: auto;
-        margin-bottom: 5px;
       }
-      .img-block {
-        display: inline-block;
-        width: auto;
-        height: auto;
-      }
+
       #doc {
         padding: 0 20px;
       }
@@ -53,63 +169,92 @@
         text-decoration: none;
       }
     </style>
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/gh/kenwheeler/slick@1.8.1/slick/slick.css">
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/gh/kenwheeler/slick@1.8.1/slick/slick-theme.css">
   </head>
   <body>
-    <section class="video">
-      <iframe height=498 width=510 src='http://player.youku.com/embed/XMzA5MDk5OTcxMg==' frameborder=0 'allowfullscreen'></iframe>
-    </section>
-    <section class="index">
-      <a href="#img">查看 PPT</a>
-      <a href="#doc">查看 QA 文档</a>
-    </section>
-    <section id="img">
-      <img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-0.jpg">
-      <img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-1.jpg">
-      <img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-2.jpg">
-      <img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-3.jpg">
-      <img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-4.jpg">
-      <img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-5.jpg">
-      <img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-6.jpg">
-      <img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-7.jpg">
-      <img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-8.jpg">
-      <img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-9.jpg">
-      <img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-10.jpg">
-      <img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-11.jpg">
-      <img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-12.jpg">
-      <img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-13.jpg">
-      <img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-14.jpg">
-      <img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-15.jpg">
-      <img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-16.jpg">
-      <img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-17.jpg">
-      <img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-18.jpg">
-      <img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-19.jpg">
-      <img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-20.jpg">
-      <img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-21.jpg">
-      <img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-22.jpg">
-      <img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-22.jpg">
-    </section>
-    <section id="doc">
-      <p style="font-size: 20px;">
-        广告系统Q&amp;A文档
-      </p>
-      <p style="font-size: 18px;">
-        目录
-      </p>
-      <p>
-        <ul>
-          <li><a href="#doc-sec-1">站外推广基础介绍</a></li>
-          <li><a href="#doc-sec-2">投放设置——创意</a></li>
-          <li><a href="#doc-sec-3">投放设置——关键词</a></li>
-          <li><a href="#doc-sec-4">投放设置——每日预算</a></li>
-          <li><a href="#doc-sec-5">投放管理及扣费</a></li>
-          <li><a href="#doc-sec-6">广告展现</a></li>
-        </ul>
-      </p>
-      <p><br />
-      </p>
-      <p id="doc-sec-1" class="doc-sec-title">
-        1. 站外推广基础介绍
-      </p>
+    <header>
+      <span>BAX | 广告系统</span>
+      <span>帮助中心</span>
+    </header>
+    <content>
+      <aside>
+        <li data-type="video-list">新手入门</li>
+        <li data-type="image-slide">操作指南</li>
+        <li data-type="doc-sec-1">基础介绍</li>
+        <li data-type="doc-sec-2">创意设置</li>
+        <li data-type="doc-sec-3">关键词设置</li>
+        <li data-type="doc-sec-4">预算设置</li>
+        <li data-type="doc-sec-5">投放管理及扣费</li>
+        <li data-type="doc-sec-6">广告展现</li>
+      </aside>
+      <aside>
+        <h3>
+          <input placeholder="您好，请问需要什么帮助">
+        </h3>
+        <main>
+          <h4></h4>
+          <div id="content">
+
+          </div>
+        </main>
+      </aside>
+    </content>
+    <footer>
+      <button class="shang" onclick="alert('虫虫 很辛苦的整理了文档，但不好意思收打赏，各位直接微信发红包吧')">赏</button>
+    </footer>
+
+    <div class="hidden image-slide">
+      <div><img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-0.jpg"></div>
+      <div><img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-1.jpg"></div>
+      <div><img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-2.jpg"></div>
+      <div><img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-3.jpg"></div>
+      <div><img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-4.jpg"></div>
+      <div><img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-5.jpg"></div>
+      <div><img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-6.jpg"></div>
+      <div><img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-7.jpg"></div>
+      <div><img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-8.jpg"></div>
+      <div><img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-9.jpg"></div>
+      <div><img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-10.jpg"></div>
+      <div><img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-11.jpg"></div>
+      <div><img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-12.jpg"></div>
+      <div><img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-13.jpg"></div>
+      <div><img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-14.jpg"></div>
+      <div><img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-15.jpg"></div>
+      <div><img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-16.jpg"></div>
+      <div><img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-17.jpg"></div>
+      <div><img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-18.jpg"></div>
+      <div><img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-19.jpg"></div>
+      <div><img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-20.jpg"></div>
+      <div><img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-21.jpg"></div>
+      <div><img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-22.jpg"></div>
+      <div><img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-23.jpg"></div>
+    </div>
+
+    <div class="hidden video-list">
+      <h5>第一部分：购买流程</h5>
+      <video controls>
+        <source src="//file.baixing.net/bax-qwt-intro-2ce9d2c0-737b-49fb-a293-4859adc925e5.mp4">
+      </video>
+      <h5>第二部分：创建推广计划</h5>
+      <video controls>
+        <source src="//file.baixing.net/bax-qwt-intro-fef11a06-feb5-4d92-9dc2-50ff93f59fdb.mp4">
+      </video>
+      <h5>第三部分：管理已创建计划</h5>
+      <video controls>
+        <source src="//file.baixing.net/bax-qwt-intro-f0e4afd3-0c40-4712-8c66-68daabd4194d.mp4">
+      </video>
+      <h5>第四部分：数据报表</h5>
+      <video controls>
+        <source src="//file.baixing.net/bax-qwt-intro-2f49bc28-da0b-41b1-9432-68b0349415e8.mp4">
+      </video>
+      <h5>第五部分：微站制作</h5>
+      <video controls>
+        <source src="//file.baixing.net/bax-qwt-intro-20c3f511-1277-4357-8a42-76e5629c0e98.mp4">
+      </video>
+    </div>
+
+    <section id="doc-sec-1" class="hidden docs" data-title="站外推广基础介绍">
       <p class="doc-question">
         Q：什么是站外推广？
       </p>
@@ -138,9 +283,9 @@
         Q：站外推广可以控制时间段吗？
       </p>
       <p>A：一般客户全天24小时。大客户可以进行分时段推广。建议全天推广，以免错失商机。</p>
-      <p id="doc-sec-2" class="doc-sec-title">
-        2. 投放设置——创意
-      </p>
+    </section>
+
+    <section id="doc-sec-2" class="hidden docs" data-title="投放设置——创意">
       <p class="doc-question">
         如何填写推广标题和推广内容？/创意为何审核不通过？
       </p>
@@ -185,9 +330,9 @@
       <p>A： 计划首次通过审核后，再次修改创意后，审核期间，老创意正常展示。通过审核后，展示新创意。</p>
       <p><br />
       </p>
-      <p id="doc-sec-3" class="doc-sec-title">
-        3. 投放设置——关键词
-      </p>
+    </section>
+
+    <section id="doc-sec-3" class="hidden docs" data-title="投放设置——关键词">
       <p class="doc-question">
         Q：什么是关键词？
       </p>
@@ -401,11 +546,8 @@
         <li>无效点击会自动被过滤而不计费；</li>
         <li>无效点击报表暂时无法在后台查看</li>
       </ul>
-      <p><br />
-      </p>
-      <p id="doc-sec-4" class="doc-sec-title">
-        4. 投放设置——每日预算
-      </p>
+    </section>
+    <section id="doc-sec-4" class="hidden docs" data-title="投放设置——每日预算">
       <p class="doc-question">
         Q：什么是每日预算？
       </p>
@@ -441,11 +583,8 @@
         <li>各平台本身的推广消费不是实时更新的，消费统计会有延后行，因此显示达到预算下线后，等到统计所有点击消费时，实际消费就会比预算还多一点。</li>
         <li>如果您要想实际消费跟预算一样多的话，可以把预算值设置低一点，同时每个推广计划也单独设置推广预算，这样就好控制百度推广的预算消费了。</li>
       </ul>
-      <p><br />
-      </p>
-      <p id="doc-sec-5" class="doc-sec-title">
-        5. 投放管理及扣费
-      </p>
+    </section>
+    <section id="doc-sec-5" class="hidden docs" data-title="投放管理及扣费">
       <p class="doc-question">
         Q：计划开关按钮是什么？有什么作用？
       </p>
@@ -537,11 +676,9 @@
         Q：当计划状态为“计划预算不足”时，如何继续投放？为何增加今日预算，计划状态仍显示“计划预算不足”？
       </p>
       <p>A：计划状态每5分钟更新一次，当您的计划在投放平台消耗接近或超过当日预算后，平台会将“计划预算不足”状态推送给百姓网。百姓网会在管理列表页面更新。此时您的计划在平台已经暂停投放，如果您希望继续投放，可以选择提高当日预算。过5分钟后，计划状态将会更新。如果仍为“计划预算不足”，建议您再次提高。如果有疑问请拨打客服电话。</p>
-      <p><br />
-      </p>
-      <p id="doc-sec-6" class="doc-sec-title">
-        6. 广告展现
-      </p>
+    </section>
+
+    <section id="doc-sec-6" class="hidden docs" data-title="广告展现">
       <p class="doc-question">
         Q：为什么新建推广成功后，在搜索结果页找不到自己的推广内容？
       </p>
@@ -586,5 +723,45 @@
         </ol>
       </ol>
     </section>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha256-k2WSCIexGzOj3Euiig+TlR8gA0EmPjuc79OEeY5L45g=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="//cdn.jsdelivr.net/gh/kenwheeler/slick@1.8.1/slick/slick.min.js"></script>
+    <script>
+      $('content > aside > li').click(function() {
+        var type = $(this).data('type')
+        var title = $(this).text()
+
+        $('#content').empty()
+        var child
+
+        switch (type) {
+          case 'video-list':
+            child = $('.video-list').clone().removeClass('hidden')
+            $('#content').append(child)
+            $('#content').parent().find('h4').text(title)
+            break
+          case 'image-slide':
+            child = $('.image-slide').clone().removeClass('hidden')
+            $('#content').append(child)
+            $('#content').parent().find('h4').text(title)
+            $('#content > .image-slide').slick({
+              dots: true,
+              speed: 500
+            })
+            break
+          case 'doc-sec-1':
+          case 'doc-sec-2':
+          case 'doc-sec-3':
+          case 'doc-sec-4':
+          case 'doc-sec-5':
+          case 'doc-sec-6':
+            child = $('#' + type).clone().removeClass('hidden')
+            $('#content').append(child)
+            $('#content').parent().find('h4').text(child.data('title'))
+            break
+        }
+      })
+
+      $('content > aside > li').first().click()
+    </script>
   </body>
 </html>
