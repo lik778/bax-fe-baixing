@@ -97,6 +97,12 @@
             <i class="el-icon-menu"></i>账户
           </router-link>
         </el-menu-item>
+        <el-menu-item index="6">
+          <a class="link" target="_blank" href="/qa">
+            <i class="el-icon-search"></i>
+            <label>答疑解惑</label>
+          </a>
+        </el-menu-item>
       </el-menu>
     </content>
   </main>
@@ -183,6 +189,12 @@ export default {
 
 .el-menu-item {
   min-width: unset;
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  color: #48576a;
 }
 
 .sidebar {
