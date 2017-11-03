@@ -15,7 +15,7 @@
       }
 
       .hidden {
-        display: none;
+        display: none !important;
       }
 
       strong {
@@ -50,6 +50,7 @@
       content {
         display: flex;
         padding: 20px 20px 100px;
+        min-width: 1200px;
         background: #f9fafc;
       }
 
@@ -57,7 +58,7 @@
         display: flex;
         flex-flow: column;
         background: white;
-        height: 456px;
+        height: 450px;
         border: 1px solid #c0ccda;
       }
 
@@ -148,12 +149,18 @@
         margin-bottom: 50px;
       }
 
-      .image-slide, .video-list {
-        max-width: 100%;
-        width: 100%;
+      .video-list {
+        /* max-width: 100%;
+        width: 100%; */
       }
 
-      .image-slide img, .video-list video {
+      .image-slide {
+        max-width: 100%;
+        width: 100%;
+        padding: 0 30px;
+      }
+
+      .image-slide img {
         max-width: 1400px;
         width: 100%;
         height: auto;
@@ -180,9 +187,24 @@
       .doc-answer ol > ol, .doc-answer ol > ul, .doc-answer ul > ol {
         padding-left: 10px;
       }
+      /* reset video.js */
+      .vjs-big-play-button {
+        margin: 225px 405px 0;
+      }
+      /* reset slick */
+      .slick-prev.slick-arrow {
+        left: 5px;
+      }
+      .slick-next.slick-arrow {
+        right: -5px;
+      }
+      .slick-prev:before, .slick-next:before {
+        color: #20a0ff !important;
+      }
     </style>
     <link rel="stylesheet" type="text/css" href="//adfe.wzbaixing.com.cn/bax-static.slick.1.8.1.css">
     <link rel="stylesheet" type="text/css" href="//adfe.wzbaixing.com.cn/bax-static.slick-theme.1.8.1.css">
+    <link rel="stylesheet" type="text/css" href="//adfe.wzbaixing.com.cn/bax-static.video-js-6.3.3.css">
   </head>
   <body>
     <header>
@@ -207,7 +229,54 @@
         <main>
           <h4></h4>
           <div id="content">
-
+            <div class="hidden video-list">
+              <h5>第一部分：购买流程</h5>
+              <video width="900px" class="video-js" data-setup='{}' controls preload="none">
+                <source src="//file.baixing.net/bax-qwt-intro-2ce9d2c0-737b-49fb-a293-4859adc925e5.mp4">
+              </video>
+              <h5>第二部分：创建推广计划</h5>
+              <video width="900px" class="video-js" data-setup='{}' controls preload="none">
+                <source src="//file.baixing.net/bax-qwt-intro-fef11a06-feb5-4d92-9dc2-50ff93f59fdb.mp4">
+              </video>
+              <h5>第三部分：管理已创建计划</h5>
+              <video width="900px" class="video-js" data-setup='{}' controls preload="none">
+                <source src="//file.baixing.net/bax-qwt-intro-f0e4afd3-0c40-4712-8c66-68daabd4194d.mp4">
+              </video>
+              <h5>第四部分：数据报表</h5>
+              <video width="900px" class="video-js" data-setup='{}' controls preload="none">
+                <source src="//file.baixing.net/bax-qwt-intro-2f49bc28-da0b-41b1-9432-68b0349415e8.mp4">
+              </video>
+              <h5>第五部分：微站制作</h5>
+              <video width="900px" class="video-js" data-setup='{}' controls preload="none">
+                <source src="//file.baixing.net/bax-qwt-intro-20c3f511-1277-4357-8a42-76e5629c0e98.mp4">
+              </video>
+            </div>
+            <div class="image-slide">
+              <div><img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-0.jpg"></div>
+              <div><img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-1.jpg"></div>
+              <div><img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-2.jpg"></div>
+              <div><img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-3.jpg"></div>
+              <div><img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-4.jpg"></div>
+              <div><img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-5.jpg"></div>
+              <div><img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-6.jpg"></div>
+              <div><img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-7.jpg"></div>
+              <div><img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-8.jpg"></div>
+              <div><img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-9.jpg"></div>
+              <div><img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-10.jpg"></div>
+              <div><img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-11.jpg"></div>
+              <div><img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-12.jpg"></div>
+              <div><img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-13.jpg"></div>
+              <div><img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-14.jpg"></div>
+              <div><img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-15.jpg"></div>
+              <div><img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-16.jpg"></div>
+              <div><img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-17.jpg"></div>
+              <div><img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-18.jpg"></div>
+              <div><img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-19.jpg"></div>
+              <div><img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-20.jpg"></div>
+              <div><img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-21.jpg"></div>
+              <div><img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-22.jpg"></div>
+              <div><img src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-23.jpg"></div>
+            </div>
           </div>
         </main>
       </aside>
@@ -215,56 +284,6 @@
     <footer>
       <button class="shang" onclick="alert('虫虫 很辛苦的整理了文档，但不好意思收打赏，各位直接微信发红包吧')">赏</button>
     </footer>
-
-    <div class="hidden image-slide">
-      <div><img data-src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-0.jpg"></div>
-      <div><img data-src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-1.jpg"></div>
-      <div><img data-src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-2.jpg"></div>
-      <div><img data-src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-3.jpg"></div>
-      <div><img data-src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-4.jpg"></div>
-      <div><img data-src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-5.jpg"></div>
-      <div><img data-src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-6.jpg"></div>
-      <div><img data-src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-7.jpg"></div>
-      <div><img data-src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-8.jpg"></div>
-      <div><img data-src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-9.jpg"></div>
-      <div><img data-src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-10.jpg"></div>
-      <div><img data-src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-11.jpg"></div>
-      <div><img data-src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-12.jpg"></div>
-      <div><img data-src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-13.jpg"></div>
-      <div><img data-src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-14.jpg"></div>
-      <div><img data-src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-15.jpg"></div>
-      <div><img data-src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-16.jpg"></div>
-      <div><img data-src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-17.jpg"></div>
-      <div><img data-src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-18.jpg"></div>
-      <div><img data-src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-19.jpg"></div>
-      <div><img data-src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-20.jpg"></div>
-      <div><img data-src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-21.jpg"></div>
-      <div><img data-src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-22.jpg"></div>
-      <div><img data-src="//adfe.wzbaixing.com.cn/bax-asset.bax-qwt-intro-23.jpg"></div>
-    </div>
-
-    <div class="hidden video-list">
-      <h5>第一部分：购买流程</h5>
-      <video controls>
-        <source data-src="//file.baixing.net/bax-qwt-intro-2ce9d2c0-737b-49fb-a293-4859adc925e5.mp4">
-      </video>
-      <h5>第二部分：创建推广计划</h5>
-      <video controls>
-        <source data-src="//file.baixing.net/bax-qwt-intro-fef11a06-feb5-4d92-9dc2-50ff93f59fdb.mp4">
-      </video>
-      <h5>第三部分：管理已创建计划</h5>
-      <video controls>
-        <source data-src="//file.baixing.net/bax-qwt-intro-f0e4afd3-0c40-4712-8c66-68daabd4194d.mp4">
-      </video>
-      <h5>第四部分：数据报表</h5>
-      <video controls>
-        <source data-src="//file.baixing.net/bax-qwt-intro-2f49bc28-da0b-41b1-9432-68b0349415e8.mp4">
-      </video>
-      <h5>第五部分：微站制作</h5>
-      <video controls>
-        <source data-src="//file.baixing.net/bax-qwt-intro-20c3f511-1277-4357-8a42-76e5629c0e98.mp4">
-      </video>
-    </div>
 
     <section id="doc-sec-1" class="hidden docs" data-title="站外推广基础介绍">
       <p class="doc-question">
@@ -828,12 +847,26 @@
       </div>
     </section>
     <script src="//adfe.wzbaixing.com.cn/bax-static.jquery-3.2.1.slim.min.js" integrity="sha256-k2WSCIexGzOj3Euiig+TlR8gA0EmPjuc79OEeY5L45g=" crossorigin="anonymous"></script>
-    <script type="text/javascript" src="//adfe.wzbaixing.com.cn/bax-static.slick.1.8.1.min.js"></script>
+    <script src="//adfe.wzbaixing.com.cn/bax-static.slick.1.8.1.min.js"></script>
+    <script src="//adfe.wzbaixing.com.cn/bax-static.video-6.3.3.js"></script>
     <script>
+      window.HELP_IMPROVE_VIDEOJS = false
+
+      function initContentBox() {
+        $('.image-slide').addClass('hidden')
+        $('.video-list').addClass('hidden')
+
+        $('#content').contents().filter(function() {
+          return !$(this).is('.image-slide') &&
+            !$(this).is('.video-list')
+        }).remove()
+      }
+
       $('#search').on('input', function() {
+        initContentBox()
+
         var val = $.trim($(this).val())
         $('#content').parent().find('h4').text('搜索结果')
-        $('#content').empty()
 
         if (!val) {
           return
@@ -878,26 +911,21 @@
       })
 
       $('content > aside > li').click(function() {
+        initContentBox()
+
         var type = $(this).data('type')
         var title = $(this).text()
 
-        $('#content').empty()
         var child
 
         switch (type) {
           case 'video-list':
-            child = $('.video-list').clone().removeClass('hidden')
-            $('#content').append(child)
+            $('.video-list').removeClass('hidden')
             $('#content').parent().find('h4').text(title)
             break
           case 'image-slide':
-            child = $('.image-slide').clone().removeClass('hidden')
-            $('#content').append(child)
+            $('.image-slide').removeClass('hidden')
             $('#content').parent().find('h4').text(title)
-            $('#content > .image-slide').slick({
-              dots: true,
-              speed: 500
-            })
             break
           case 'doc-sec-1':
           case 'doc-sec-2':
@@ -912,19 +940,14 @@
         }
       })
 
-      $('content > aside > li[data-type="doc-sec-1"]').click()
+      $('content > aside > li[data-type="image-slide"]').click()
 
       $(document).ready(function() {
-        $('img').each(function() {
-          if ($(this).data('src')) {
-            $(this).attr('src', $(this).data('src'))
-          }
-        })
-
-        $('source').each(function() {
-          if ($(this).data('src')) {
-            $(this).attr('src', $(this).data('src'))
-          }
+        $('#content > .image-slide').slick({
+          arrows: true,
+          fade: true,
+          dots: true,
+          speed: 500
         })
       })
     </script>
