@@ -348,9 +348,9 @@ export default {
       return getCampaignPrediction(currentBalance, prices)
     },
     addibleWords() {
-      const words = this.creativeWords.map(w => w.word)
+      const words = this.creativeWords.map(w => w.word.toLowerCase())
 
-      return this.recommendedWords.filter(w => !words.includes(w.word))
+      return this.recommendedWords.filter(w => !words.includes(w.word.toLowerCase()))
     }
   },
   methods: {

@@ -262,7 +262,6 @@ import { isBaixingSales } from 'util/role'
 
 import {
   CREATIVE_STATUS_PENDING,
-  CAMPAIGN_AUDIT_AUTHING,
   SEM_PLATFORM_BAIDU,
   SEM_PLATFORM_QIHU
 } from 'constant/fengming'
@@ -374,9 +373,9 @@ export default {
       })
     },
     addibleWords() {
-      const words = this.currentKeywords.map(w => w.word)
+      const words = this.currentKeywords.map(w => w.word.toLowerCase())
 
-      return this.recommendedWords.filter(w => !words.includes(w.word))
+      return this.recommendedWords.filter(w => !words.includes(w.word.toLowerCase()))
     },
     predictedInfo() {
       const {

@@ -10,12 +10,16 @@ export function fmtCpcRanking(ranking) {
 }
 
 export function mergeKeywords(preWords, newWords) {
-  const words = preWords.map(w => w.word)
+  const result = [...preWords.map(w => ({...w}))]
 
-  return [
-    ...newWords.filter(w => !words.includes(w.word)).map(w => ({...w})),
-    ...preWords.map(w => ({...w}))
-  ]
+  newWords.forEach(w => {
+    const words = result.map(w => w.word.toLowerCase())
+    if (!words.includes(w.word.toLowerCase())) {
+      result.push({...w})
+    }
+  })
+
+  return result
 }
 
 export function getCampaignPrediction(total, prices) {
