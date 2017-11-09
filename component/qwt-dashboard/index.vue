@@ -19,7 +19,7 @@
       <section>
         <aside>数据维度:</aside>
         <span>
-          <i v-for="d of allDimensions" :key="d.value"
+          <i class="badge" v-for="d of allDimensions" :key="d.value"
             :aria-checked="query.dimension === d.value"
             @click="query.dimension = d.value">
             {{ d.label }}
@@ -29,15 +29,15 @@
       <section>
         <aside>推广日期:</aside>
         <span>
-          <i :aria-checked="query.timeType === 'last-7-days'"
+          <i class="badge" :aria-checked="query.timeType === 'last-7-days'"
             @click="query.timeType = 'last-7-days'">
             近7天
           </i>
-          <i :aria-checked="query.timeType === 'last-month'"
+          <i class="badge" :aria-checked="query.timeType === 'last-month'"
             @click="query.timeType = 'last-month'">
             近1个月
           </i>
-          <i v-if="query.timeType !== 'custom'"
+          <i class="badge" v-if="query.timeType !== 'custom'"
             @click="query.timeType = 'custom'">
             自定义
           </i>
@@ -50,7 +50,7 @@
       <section>
         <aside>推广设备:</aside>
         <span>
-          <i v-for="d of allDevices" :key="d.value"
+          <i class="badge" v-for="d of allDevices" :key="d.value"
             :aria-checked="query.device === d.value"
             @click="query.device = d.value">
             {{ d.label }}
@@ -60,7 +60,7 @@
       <section>
         <aside>时间单位:</aside>
         <span>
-          <i v-for="d of allTimeUnits" :key="d.value"
+          <i class="badge" v-for="d of allTimeUnits" :key="d.value"
             :aria-checked="query.timeUnit === d.value"
             @click="setTimeUnit(d.value)">
             {{ d.label }}
@@ -230,6 +230,25 @@ export default {
   color: var(--c-tip-gray);
 }
 
+.badge {
+  @mixin center;
+  height: 24px;
+  min-width: 74px;
+  margin-right: 30px;
+  padding: 0 10px;
+  cursor: pointer;
+  border-radius: 4px;
+  background: #eff2f7;
+  font-size: 13px;
+  line-height: 1.08;
+  text-align: center;
+  color: #6a778c;
+
+  &[aria-checked="true"] {
+    background: #009cff !important;
+    color: white !important;
+  }
+}
 .qwt-dashboard {
   padding: 0 35px;
   width: 100%;
@@ -247,26 +266,6 @@ export default {
       & > span {
         display: inline-flex;
         align-items: center;
-
-        & i {
-          @mixin center;
-          height: 22px;
-          min-width: 74px;
-          margin-right: 30px;
-          padding: 0 10px;
-          cursor: pointer;
-          border-radius: 4px;
-          background: #eff2f7;
-          font-size: 13px;
-          line-height: 1.08;
-          text-align: center;
-          color: #6a778c;
-
-          &[aria-checked="true"] {
-            background: #009cff !important;
-            color: white !important;
-          }
-        }
       }
     }
 
