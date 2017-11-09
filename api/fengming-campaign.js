@@ -9,14 +9,23 @@ export async function getCampaignKeywords(campaignId, opts = {}) {
     ...opts
   }
 
-  const body = await fengming
-    .get(`/campaign/${campaignId}/keyword`)
-    .query(q)
-    .json()
+  const [body1, body2] = await Promise.all([
+    fengming
+      .get(`/campaign/${campaignId}/keyword`)
+      .query(q)
+      .json(),
+    fengming
+      .get(`/campaign/${campaignId}/keyword`)
+      .query({
+        ...opts,
+        count: true
+      })
+      .json()
+  ])
 
   return {
-    keywords: toCamelcase(body.data) || [],
-    total: 'todo',
+    keywords: toCamelcase(body1.data) || [],
+    total: body2.data,
     limit: q.limit,
     offset: q.offset
   }
