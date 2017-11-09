@@ -62,6 +62,10 @@
 import BaxSelect from 'com/common/select'
 
 import {
+  columnOpts
+} from 'constant/fengming-report'
+
+import {
   semPlatformCn,
   device
 } from 'constant/fengming'
@@ -81,38 +85,6 @@ import {
 // }
 
 const isArray = Array.isArray
-
-const columnOpts = [{
-  label: '日期',
-  value: 'date'
-}, {
-  label: '推广计划',
-  value: 'plan'
-}, {
-  label: '渠道',
-  value: 'channel'
-}, {
-  label: '设备',
-  value: 'platform'
-}, {
-  label: '关键词',
-  value: 'keyword'
-}, {
-  label: '展现',
-  value: 'shows'
-}, {
-  label: '点击',
-  value: 'click'
-}, {
-  label: '消费',
-  value: 'cost'
-}, {
-  label: '点击率',
-  value: 'percent'
-}, {
-  label: '平均排名',
-  value: 'cpcRanking'
-}]
 
 export default {
   name: 'qwt-dashboard-data-detail',
