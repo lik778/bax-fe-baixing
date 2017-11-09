@@ -1,141 +1,223 @@
 
 <template>
-  <bax-select v-model="localValue"
-    :placeholder="placeholder"
-    :clearable="clearable"
-    :multiple="multiple"
-    :options="opts">
-  </bax-select>
+  <el-dialog title="计划/关键词筛选" :visible="visible"
+    :close-on-click-modal="false" size="small"
+    :show-close="false"
+    :before-close="ok">
+    <main class="main">
+      <span>
+        <header>计划</header>
+        <content>
+          <li v-for="(campaign, i) in allCampaigns" :key="campaign.id"
+            @click="onClickCampaign(campaign.id)">
+            <el-checkbox @click="() => onCheckCampaign(campaign)"
+              :value="campaignChecked(campaign.id)">
+            </el-checkbox>
+            <label>{{ `推广：${campaign.semPlanId}` }}</label>
+          </li>
+        </content>
+        <footer>共条</footer>
+      </span>
+      <span>
+        <header>关键词</header>
+        <content>
+          <li v-for="(keyword, i) in currentKeywords" :key="keyword.id"
+            @click="onCheckKeyword(keyword)">
+            <el-checkbox @click="() => onCheckKeyword(keyword)"
+              :value="keywordChecked(keyword.id)">
+            </el-checkbox>
+            <label>{{ keyword.word }}</label>
+          </li>
+        </content>
+        <footer>共条</footer>
+      </span>
+    </main>
+    <footer slot="footer">
+      <el-button @click="cancel">取消</el-button>
+      <el-button type="primary" @click="ok">确认</el-button>
+    </footer>
+  </el-dialog>
 </template>
 
 <script>
-import pick from 'lodash/pick'
-import BaxSelect from './select'
-
 import {
-  getKeywords,
-  getPlans
-} from 'api/fengming-report'
+  getCampaignKeywords,
+  getCampaigns
+} from 'api/fengming-campaign'
+
+/**
+ * 说明: 此组件目前仅用于 报表筛选, 理论上, 用户不会变
+ *      考虑到关键词数量较大, 组件存续期间,
+ *      不清空关键词搜索结果
+ */
 
 export default {
   name: 'bax-qwt-plan-keyword-selector',
   components: {
-    BaxSelect
   },
   props: {
-    placeholder: String,
-    clearable: Boolean,
-    multiple: Boolean,
-    dimension: {
-      type: Number, // 0 plan, 1 keyword
+    campaignIds: {
+      type: Array,
+      required: true
+    },
+    keywordIds: {
+      type: Array,
       required: true
     },
     channel: {
-      type: Number,
-      default: 5
+      type: Number
+    },
+    visible: {
+      type: Boolean,
+      required: true
     },
     userId: {
       type: [Number, String]
-    },
-    value: {
-      type: [String, Number, Array]
     }
   },
   data() {
     return {
-      localValue: this.value,
-      keywords: [],
-      plans: []
-    }
-  },
-  computed: {
-    opts() {
-      const {
-        dimension,
-        keywords,
-        plans
-      } = this
+      httpReqPending: false,
 
-      if (dimension === 0) {
-        return [
-          ...plans.map(p => ({
-            label: p.plan,
-            value: 'p-' + p.id
-          }))
-        ]
-      }
+      currentKeywords: [],
 
-      if (dimension === 1) {
-        return [
-          ...keywords.map(k => ({
-            label: k.keyword,
-            value: 'k-' + k.id
-          }))
-        ]
-      }
-
-      return []
+      allCampaigns: [],
+      allKeywords: {}
     }
   },
   methods: {
-    clearValue() {
-      if (this.multiple) {
-        this.setValue([])
+    async initData() {
+      const { userId, channel } = this
+      // 正常用户单一渠道: 推广 10 个不到 (此处简化处理, 一次性拉取)
+      if (userId && channel) {
+        this.allCampaigns = await getCampaigns({
+          userId,
+          channel,
+          offset: 0,
+          limit: 300
+        })
+      }
+    },
+    async onClickCampaign(id) {
+      this.currentKeywords = this.allKeywords[id] || []
+
+      if (this.currentKeywords.length === 0) {
+        const { keywords } = await getCampaignKeywords(id, {
+          offset: 0,
+          limit: 100
+        })
+
+        this.currentKeywords = this.allKeywords[id] = keywords
+      }
+    },
+    onCheckCampaign(campaign) {
+      if (this.campaignChecked(campaign.id)) {
+        this.$emit('remove-campaign', campaign)
       } else {
-        this.setValue('')
+        this.$emit('select-campaign', campaign)
       }
     },
-    setValue(v) {
-      this.$emit('change', v)
-      this.$emit('input', v)
-
-      if (v === this.localValue) {
-        return
+    onCheckKeyword(keyword) {
+      if (this.keywordChecked(keyword.id)) {
+        this.$emit('remove-keyword', {...keyword})
+      } else {
+        this.$emit('select-keyword', {...keyword})
       }
-
-      this.localValue = v
     },
-    async queryPlanAndKeyword() {
-      const { channel, userId } = this
-      const query = pick(this, 'channel', 'userId')
-
-      const [
-        keywords,
-        plans
-      ] = await Promise.all([
-        getKeywords(query),
-        getPlans(query)
-      ])
-
-      this.keywords = keywords
-      this.plans = plans
+    campaignChecked(id) {
+      return this.campaignIds.includes(id)
+    },
+    keywordChecked(id) {
+      return this.keywordIds.includes(id)
+    },
+    empty() {
+      this.allCampaigns = []
+      this.allKeywords = {}
+    },
+    cancel() {
+      // this.$emit('cancel')
+      this.$emit('ok')
+    },
+    ok() {
+      this.$emit('ok', [])
     }
   },
   watch: {
-    dimension(val, pre) {
-      if (val !== pre) {
-        this.clearValue()
+    async channel(val, pre) {
+      if (val && val !== pre) {
+        await this.initData()
       }
     },
-    async channel(val) {
-      this.clearValue()
-      await this.queryPlanAndKeyword()
-    },
-    localValue(v) {
-      this.setValue(v)
-    },
-    value(v) {
-      if (v === this.localValue) {
-        return
+    async userId(val, pre) {
+      if (val && val !== pre) {
+        await this.initData()
       }
-
-      this.localValue = v
-      console.debug('value changed', v)
     }
-  },
-
-  async mounted() {
-    await this.queryPlanAndKeyword()
   }
 }
 </script>
+
+<style scoped>
+/*
+.bax-dialog {
+  width: 520px;
+  min-width: 520px;
+  max-width: 520px;
+} */
+
+.main {
+  & > span:first-child {
+    margin-left: 5px;
+  }
+
+  & > span:last-child {
+    margin-left: 25px;
+  }
+
+  & > span {
+    width: 200px;
+    border: 1px solid #d1dbe5;
+    box-shadow: 0 2px 4px rgba(0,0,0,.12), 0 0 6px rgba(0,0,0,.04);
+
+    & > header, & > footer {
+      display: flex;
+      align-items: center;
+      height: 36px;
+      padding: 0 10px;
+      background: #fbfdff;
+    }
+
+    & > header {
+      border-bottom: 1px solid #d1dbe5;
+    }
+
+    & > footer {
+      border-top: 1px solid #d1dbe5;
+    }
+
+    & > content {
+      display: block;
+      max-height: 280px;
+      min-height: 280px;
+      height: 280px;
+      overflow-y: auto;
+
+      & > li {
+        display: flex;
+        align-items: center;
+        padding-left: 10px;
+        height: 34px;
+
+        & > label {
+          margin-left: 10px;
+        }
+      }
+
+      & > li:hover {
+        background: #eef1f6;
+      }
+    }
+  }
+}
+
+</style>
