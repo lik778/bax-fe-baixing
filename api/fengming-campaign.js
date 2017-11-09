@@ -2,12 +2,24 @@
 import { reverseCamelcase, toCamelcase } from 'object-keys-mapping'
 import { fengming, trim } from './base'
 
-export async function getCampaignKeywords(campaignId) {
+export async function getCampaignKeywords(campaignId, opts = {}) {
+  const q = {
+    offset: 0,
+    limit: 20,
+    ...opts
+  }
+
   const body = await fengming
     .get(`/campaign/${campaignId}/keyword`)
+    .query(q)
     .json()
 
-  return toCamelcase(body.data)
+  return {
+    keywords: toCamelcase(body.data) || [],
+    total: 'todo',
+    limit: q.limit,
+    offset: q.offset
+  }
 }
 
 /**
