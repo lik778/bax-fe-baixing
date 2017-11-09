@@ -14,11 +14,13 @@ export async function getCampaignKeywords(campaignId) {
  * 注: 此 API 用于报表查询时, 选择 campaign
  *     simple -> 列表字段较少
  */
-export async function getCampaigns(userId) {
+export async function getCampaigns(opts = {}) {
   const body = await fengming
     .get('/campaign/simple')
     .query(reverseCamelcase({
-      userId
+      offset: 0,
+      limit: 20,
+      ...opts
     }))
     .json()
 

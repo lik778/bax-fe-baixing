@@ -2,7 +2,7 @@
 <template>
   <main>
     <div>
-      <header>Bax广告交易平台</header>
+      <header>BAX广告交易平台</header>
       <content>
         <p>登录</p>
         <input placeholder="邮箱" v-model="email" />
