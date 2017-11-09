@@ -3,19 +3,19 @@ import { reverseCamelcase } from 'object-keys-mapping'
 import { stringify } from 'query-string'
 import { createAction } from 'vue-duo'
 
-import * as fapi from 'api/fengming-report'
+import * as api from 'api/fengming-campaign'
 
 import {
   fengmingApiHost
 } from 'config'
 
-export const getCsvDownloadUrl = createAction((opts) => {
-  return fengmingApiHost + '/data_report/statistic?' + stringify({
+export const getCsvDownloadUrl = createAction(opts => {
+  return fengmingApiHost + '/data_report?' + stringify({
     ...reverseCamelcase(opts),
     export_csv: 1
   })
 })
 
-export const getStatistics = createAction((opts) => {
-  return fapi.getStatistics(opts)
-})
+export const getReport = createAction(api.getReport)
+
+export const clearStatistics = createAction()

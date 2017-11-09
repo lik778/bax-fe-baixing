@@ -8,12 +8,26 @@
       <span>
         <header>计划</header>
         <content>
-          <li v-for="(campaign, i) in allCampaigns" :key="campaign.id"
+          <li v-for="(campaign, i) in getLeftCampaigns()"
+            class="tree" :key="'c' + campaign.id"
             @click="onClickCampaign(campaign.id)">
-            <el-checkbox @click="() => onCheckCampaign(campaign)"
-              :value="campaignChecked(campaign.id)">
-            </el-checkbox>
-            <label>{{ `推广：${campaign.semPlanId}` }}</label>
+            <div class="tree-node">
+              <i class="el-icon-caret-right"></i>
+              <el-checkbox @click="() => onCheckCampaign(campaign)"
+                :value="campaignChecked(campaign.id)">
+              </el-checkbox>
+              <label>{{ `推广：${campaign.id}` }}</label>
+            </div>
+            <div>
+              <li v-for="(keyword, i) in campaign.keywords"
+                class="tree-node" :key="'k' + keyword.id"
+                @click="onCheckKeyword(keyword)">
+                <el-checkbox @click="() => onCheckKeyword(keyword)"
+                  :value="keywordChecked(keyword.id)">
+                </el-checkbox>
+                <label>{{ keyword.word }}</label>
+              </li>
+            </div>
           </li>
         </content>
         <footer>共条</footer>
@@ -21,12 +35,26 @@
       <span>
         <header>关键词</header>
         <content>
-          <li v-for="(keyword, i) in currentKeywords" :key="keyword.id"
-            @click="onCheckKeyword(keyword)">
-            <el-checkbox @click="() => onCheckKeyword(keyword)"
-              :value="keywordChecked(keyword.id)">
-            </el-checkbox>
-            <label>{{ keyword.word }}</label>
+          <li v-for="(campaign, i) in getRightCampaigns()"
+            :key="'c' + campaign.id" class="tree"
+            @click="onClickCampaign(campaign.id)">
+            <div class="tree-node">
+              <i class="el-icon-caret-right"></i>
+              <el-checkbox @click="() => onCheckCampaign(campaign)"
+                :value="campaignChecked(campaign.id)">
+              </el-checkbox>
+              <label>{{ `推广：${campaign.id}` }}</label>
+            </div>
+            <div>
+              <li v-for="(keyword, i) in campaign.keywords"
+                class="tree-node" :key="'k' + keyword.id"
+                @click="onCheckKeyword(keyword)">
+                <el-checkbox @click="() => onCheckKeyword(keyword)"
+                  :value="keywordChecked(keyword.id)">
+                </el-checkbox>
+                <label>{{ keyword.word }}</label>
+              </li>
+            </div>
           </li>
         </content>
         <footer>共条</footer>
@@ -49,6 +77,10 @@ import {
  * 说明: 此组件目前仅用于 报表筛选, 理论上, 用户不会变
  *      考虑到关键词数量较大, 组件存续期间,
  *      不清空关键词搜索结果
+ */
+
+/**
+ * TODO - TODO: 合并 two trees
  */
 
 export default {
@@ -81,9 +113,11 @@ export default {
 
       currentKeywords: [],
 
-      allCampaigns: [],
-      allKeywords: {}
+      allCampaigns: []
     }
+  },
+  computed: {
+
   },
   methods: {
     async initData() {
@@ -91,24 +125,65 @@ export default {
       // 正常用户单一渠道: 推广 10 个不到 (此处简化处理, 一次性拉取)
       if (userId && channel) {
         this.allCampaigns = await getCampaigns({
+          source: channel,
           userId,
-          channel,
           offset: 0,
           limit: 300
         })
       }
     },
     async onClickCampaign(id) {
-      this.currentKeywords = this.allKeywords[id] || []
+      const campaign = this.allCampaigns.find(c => c.id === id)
 
-      if (this.currentKeywords.length === 0) {
+      if (!campaign.keywords) {
         const { keywords } = await getCampaignKeywords(id, {
           offset: 0,
-          limit: 100
+          limit: 300
         })
 
-        this.currentKeywords = this.allKeywords[id] = keywords
+        campaign.keywords = keywords
+
+        this.$forceUpdate()
       }
+    },
+    getRightCampaigns() {
+      const { campaignIds, keywordIds } = this
+
+      return this.allCampaigns.map(c => {
+        // keywords filter
+        const { keywords = [] } = c
+        return {
+          ...c,
+          keywords: keywords.filter(k => keywordIds.includes(k.id))
+        }
+      }).filter(c => {
+        if (campaignIds.includes(c.id)) {
+          return true
+        }
+
+        const kids = c.keywords.map(k => k.id)
+        return overlap(kids, keywordIds)
+      })
+    },
+    getLeftCampaigns() {
+      const { campaignIds, keywordIds } = this
+
+      return this.allCampaigns.map(c => {
+        // keywords filter
+        const { keywords = [] } = c
+
+        return {
+          ...c,
+          keywords: keywords.filter(k => !keywordIds.includes(k.id))
+        }
+      }).filter(c => {
+        if (campaignIds.includes(c.id)) {
+          return false
+        }
+
+        const kids = c.keywords.map(k => k.id)
+        return !overlap(kids, keywordIds)
+      })
     },
     onCheckCampaign(campaign) {
       if (this.campaignChecked(campaign.id)) {
@@ -155,6 +230,20 @@ export default {
     }
   }
 }
+
+function overlap(arr1, arr2) {
+  let result = false
+
+  for (const a of arr1) {
+    if (arr2.includes(a)) {
+      result = true
+      break
+    }
+  }
+
+  return result
+}
+
 </script>
 
 <style scoped>
@@ -164,6 +253,21 @@ export default {
   min-width: 520px;
   max-width: 520px;
 } */
+
+.tree-node {
+  display: flex;
+  align-items: center;
+  height: 30px;
+  padding-left: 5px;
+
+  & > label {
+    margin-left: 10px;
+  }
+
+  &:hover {
+    background: #eef1f6;
+  }
+}
 
 .main {
   & > span:first-child {
@@ -201,21 +305,6 @@ export default {
       min-height: 280px;
       height: 280px;
       overflow-y: auto;
-
-      & > li {
-        display: flex;
-        align-items: center;
-        padding-left: 10px;
-        height: 34px;
-
-        & > label {
-          margin-left: 10px;
-        }
-      }
-
-      & > li:hover {
-        background: #eef1f6;
-      }
     }
   }
 }

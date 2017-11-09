@@ -62,7 +62,7 @@
         <span>
           <i class="badge" v-for="d of allTimeUnits" :key="d.value"
             :aria-checked="query.timeUnit === d.value"
-            @click="setTimeUnit(d.value)">
+            @click="query.timeUnit = d.value">
             {{ d.label }}
           </i>
         </span>
@@ -70,17 +70,36 @@
       <section>
         <aside>计划/关键词筛选:</aside>
         <span>
-          <plan-keyword-selector multiple
-            :channel="query.channel"
-            :userId="userId"
-            :dimension="query.dimension"
-            v-model="query.keywordsAndPlans">
-          </plan-keyword-selector>
+          <el-tag v-for="c in query.checkedCampaigns" closable
+            type="success" :key="'c-' + c.id"
+            @close="removeCampaign(c)">
+            {{ c.semPlanId }}
+          </el-tag>
+          <el-tag v-for="k in query.checkedKeywords" closable
+            type="success" :key="'k-' + k.id"
+            @close="removeKeyword(k)">
+            {{ k.word }}
+          </el-tag>
+          <i class="el-icon-plus"
+            @click="pksDialogVisible = true">
+          </i>
         </span>
       </section>
       <data-trend :statistics="statistics"></data-trend>
       <data-detail :statistics="statistics" :csv-download-url="csvDownloadUrl">
       </data-detail>
+      <plan-keyword-selector
+        :visible="pksDialogVisible"
+        :channel="query.channel"
+        :userId="userId"
+        :campaign-ids="query.checkedCampaigns.map(c => c.id)"
+        :keyword-ids="query.checkedKeywords.map(k => k.id)"
+        @ok="pksDialogVisible = false"
+        @select-campaign="selectCampaign"
+        @remove-campaign="removeCampaign"
+        @select-keyword="k => query.checkedKeywords.push(k)"
+        @remove-keyword="removeKeyword">
+      </plan-keyword-selector>
     </main>
   </div>
 </template>
@@ -93,14 +112,14 @@ import DataTrend from './data-trend'
 import Topbar from 'com/topbar'
 
 import { toTimestamp } from 'utils'
-import { Message } from 'element-ui'
 import moment from 'moment'
 import clone from 'clone'
 
 import {
   allDimensions,
   allTimeUnits,
-  allDevices
+  allDevices,
+  fields
 } from 'constant/fengming-report'
 
 import {
@@ -109,7 +128,8 @@ import {
 
 import {
   getCsvDownloadUrl,
-  getStatistics
+  clearStatistics,
+  getReport
 } from './action'
 
 import store from './store'
@@ -132,6 +152,8 @@ export default {
   },
   data() {
     return {
+      pksDialogVisible: false,
+
       semPlatformOpts,
       allDimensions,
       allTimeUnits,
@@ -139,8 +161,10 @@ export default {
 
       query: {
         timeType: 'last-7-days', // 'last-7-days', 'last-month', 'custom'
-        keywordsAndPlans: [],
         timeRange: [],
+
+        checkedCampaigns: [],
+        checkedKeywords: [],
 
         dimension: 0,
         timeUnit: 1,
@@ -151,58 +175,82 @@ export default {
   },
   computed: {
     userId() {
-      return this.$route.query.userId
+      return this.$route.query.userId || this.userInfo.id
     }
   },
   methods: {
-    setTimeUnit(v) {
-      if (v !== 1) {
-        return Message.warning('暂不支持, 程序员哥哥们会尽快支持哟 ~ 么么哒 !')
-      }
-
-      this.query.timeUnit = v
-    },
     async queryStatistics() {
-      const q = {
-        ...clone(this.query),
-        userId: this.userId,
-        dataDimension: this.query.dimension
-      }
+      const { query } = this
 
-      if (q.timeType === 'custom') {
-        q.timeRange = [
-          toTimestamp(q.timeRange[0], 'YYYY-MM-DD'),
-          toTimestamp(q.timeRange[1], 'YYYY-MM-DD')
-        ]
-      } else if (q.timeType === 'last-month') {
-        q.timeRange = [
-          moment().subtract('1', 'month').unix(),
-          moment().unix()
-        ]
-      } else {
-        // 7 days
-        q.timeRange = [
-          moment().subtract('7', 'days').unix(),
-          moment().unix()
-        ]
-      }
+      let startAt
+      let endAt
 
-      if (!q.keywordsAndPlans.length) {
+      if (!(query.checkedCampaigns.length + query.checkedKeywords.length)) {
         return
       }
 
-      q.keywords = q.keywordsAndPlans
-        .filter(i => i.startsWith('k-'))
-        .map(i => i.replace('k-', ''))
-        .join(',')
+      if (query.timeType === 'custom') {
+        startAt = toTimestamp(query.timeRange[0], 'YYYY-MM-DD')
+        endAt = toTimestamp(query.timeRange[1], 'YYYY-MM-DD')
+      } else if (query.timeType === 'last-month') {
+        startAt = moment().subtract('1', 'month').unix()
+        endAt = moment().unix()
+      } else {
+        // 7 days
+        startAt = moment().subtract('7', 'days').unix()
+        endAt = moment().unix()
+      }
 
-      q.plans = q.keywordsAndPlans
-        .filter(i => i.startsWith('p-'))
-        .map(i => i.replace('p-', ''))
-        .join(',')
+      const q = {
+        startAt,
+        endAt,
 
-      await getCsvDownloadUrl(q)
-      await getStatistics(q)
+        dataDimension: query.dimension,
+        timeUnit: query.timeUnit,
+        device: query.device,
+
+        offset: 0,
+        limit: 100,
+
+        fields
+      }
+
+      if (query.checkedCampaigns.length) {
+        q.campaignIds = query.checkedCampaigns.map(c => c.id)
+      }
+
+      if (query.checkedKeywords.length) {
+        q.keywordIds = query.checkedKeywords.map(k => k.id)
+      }
+
+      await Promise.all([
+        getCsvDownloadUrl(q),
+        getReport(q)
+      ])
+    },
+    selectCampaign(campaign) {console.log('select- s')
+      const ids = this.query.checkedCampaigns.map(c => c.id)
+      if (ids.includes(campaign.id)) {
+        return
+      }
+
+      this.query.checkedCampaigns.push(campaign)
+    },
+    removeCampaign(campaign) {
+      this.query.checkedCampaigns = this.query.checkedCampaigns
+        .filter(c => c.id !== campaign.id)
+    },
+    selectKeyword(keyword) {
+      const ids = this.query.checkedKeywords.map(k => k.id)
+      if (ids.includes(keyword.id)) {
+        return
+      }
+
+      this.query.checkedKeywords.push(keyword)
+    },
+    removeKeyword(keyword) {
+      this.query.checkedKeywords = this.query.checkedKeywords
+        .filter(k => k.id !== keyword.id)
     }
   },
   watch: {
@@ -212,9 +260,6 @@ export default {
         await this.queryStatistics()
       }
     }
-  },
-  async mounted() {
-    // await this.queryStatistics()
   }
 }
 </script>
@@ -249,6 +294,15 @@ export default {
     color: white !important;
   }
 }
+
+.el-icon-plus {
+  cursor: pointer;
+}
+
+.el-tag {
+  margin-right: 5px;
+}
+
 .qwt-dashboard {
   padding: 0 35px;
   width: 100%;

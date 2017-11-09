@@ -3,7 +3,7 @@ import { createStore } from 'vue-duo'
 
 import {
   getCsvDownloadUrl,
-  getStatistics
+  clearStatistics,
 } from './action'
 
 const store = createStore({
@@ -12,8 +12,8 @@ const store = createStore({
 })
 
 store.subscribeActions({
-  [getStatistics]: (statistics = []) => ({
-    statistics
+  [clearStatistics]: () => ({
+    statistics: []
   }),
   [getCsvDownloadUrl]: (url) => ({
     csvDownloadUrl: url
