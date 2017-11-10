@@ -210,11 +210,7 @@
           {{ `您的推广资金余额：￥${ centToYuan(currentBalance) } 元，可消耗` }}
           <strong>{{ predictedInfo.duration }}</strong>天
         </h3>
-        <h4>
-          <el-checkbox :value="true"></el-checkbox>
-          <label>我已阅读并同意遵守</label>
-          <a>《百姓网站外推广用户协议》</a>
-        </h4>
+        <contract-ack></contract-ack>
         <div>
           <el-button v-if="false" type="primary">
             先去充值
@@ -254,6 +250,7 @@ import PromotionChargeTip from 'com/widget/promotion-charge-tip'
 import DurationSelector from 'com/common/duration-selector'
 import KeywordList from 'com/common/qwt-keyword-list'
 import AreaSelector from 'com/common/area-selector'
+import ContractAck from 'com/widget/contract-ack'
 import Topbar from 'com/topbar'
 
 import { fmtAreasInQwt, getCnName } from 'util/meta'
@@ -304,6 +301,7 @@ export default {
     DurationSelector,
     AreaSelector,
     KeywordList,
+    ContractAck,
     Topbar
   },
   props: {
@@ -900,21 +898,6 @@ export default {
           margin: 0 5px;
           color: #ff4401;
           font-size: 18px;
-        }
-      }
-
-      & > h4 {
-        margin-top: 30px;
-        font-size: 14px;
-        font-weight: normal;
-
-        & > label {
-          color: #6a778c;
-        }
-
-        & > a {
-          color: #0994ff;
-          cursor: pointer;
         }
       }
     }
