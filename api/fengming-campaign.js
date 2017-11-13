@@ -48,11 +48,31 @@ export async function getCampaigns(opts = {}) {
   return toCamelcase(body.data)
 }
 
-export async function getReport(q = {}) {
-  const body = await fengming
-    .get('/data_report')
-    .query(reverseCamelcase(trim(q)))
-    .json()
+export async function getReport(opts = {}) {
+  const q = reverseCamelcase(trim({
+    offset: 0,
+    limit: 20,
+    ...opts
+  }))
 
-  return toCamelcase(body.data)
+  const [body1, body2] = await Promise.all([
+    fengming
+      .get('/data_report')
+      .query(q)
+      .json(),
+    fengming
+      .get('/data_report')
+      .query({
+        ...q,
+        count: true
+      })
+      .json()
+  ])
+
+  return {
+    offset: q.offset,
+    limit: q.limit,
+    rows: body1.data,
+    total: body2.total
+  }
 }
