@@ -69,11 +69,11 @@
       </section>
       <section>
         <aside>计划/关键词筛选:</aside>
-        <span>
+        <span class="kw-list">
           <el-tag v-for="c in query.checkedCampaigns" closable
             type="success" :key="'c-' + c.id"
             @close="removeCampaign(c)">
-            {{ c.semPlanId }}
+            {{ '计划：' + c.id }}
           </el-tag>
           <el-tag v-for="k in query.checkedKeywords" closable
             type="success" :key="'k-' + k.id"
@@ -186,6 +186,7 @@ export default {
       let endAt
 
       if (!(query.checkedCampaigns.length + query.checkedKeywords.length)) {
+        clearStatistics()
         return
       }
 
@@ -259,6 +260,10 @@ export default {
       handler: async function() {
         await this.queryStatistics()
       }
+    },
+    'query.channel': function() {
+      this.query.checkedCampaigns = []
+      this.query.checkedKeywords = []
     }
   }
 }
@@ -300,7 +305,14 @@ export default {
 }
 
 .el-tag {
-  margin-right: 5px;
+  margin: 5px 5px 0 0;
+}
+
+.kw-list {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  max-width: 620px;
 }
 
 .qwt-dashboard {
