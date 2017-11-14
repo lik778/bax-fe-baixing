@@ -63,6 +63,7 @@
           {{ displayUserMobile }}
         </span>
       </div>
+      <contract-ack type="contract"></contract-ack>
       <div>
         <aside>百姓网余额需支付：</aside>
         <i>{{'￥' + (totalPrice / 100).toFixed(2)}}</i>
@@ -90,6 +91,7 @@
 </template>
 
 <script>
+import ContractAck from 'com/widget/contract-ack'
 import QwtPkgWidget from 'com/widget/qwt-pkg'
 import QwtProWidget from 'com/widget/qwt-pro'
 import Clipboard from 'com/widget/clipboard'
@@ -156,6 +158,7 @@ export default {
   components: {
     QwtPkgWidget,
     QwtProWidget,
+    ContractAck,
     Clipboard,
     PriceList,
     Topbar

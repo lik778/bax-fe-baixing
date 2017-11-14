@@ -85,7 +85,7 @@
         </div>
       </section>
       <section>
-        <header>推广物料设置</header>
+        <promotion-creative-tip></promotion-creative-tip>
         <div>
           <aside>推广标题:</aside>
             <span>
@@ -197,7 +197,7 @@
           {{ `您的推广资金余额：￥${ centToYuan(currentBalance) } 元，可消耗` }}
           <strong>{{ predictedInfo.duration }}</strong>天
         </h3>
-        <contract-ack></contract-ack>
+        <contract-ack type="content-rule"></contract-ack>
         <div>
           <el-button v-if="false" type="primary">
             先去充值
@@ -234,6 +234,7 @@ import clone from 'clone'
 
 import PromotionMobileRatioTip from 'com/widget/promotion-mobile-ratio-tip'
 import QiqiaobanPageSelector from 'com/common/qiqiaoban-page-selector'
+import PromotionCreativeTip from 'com/widget/promotion-creative-tip'
 import CashcowPageSelector from 'com/common/cashcow-page-selector'
 import PromotionChargeTip from 'com/widget/promotion-charge-tip'
 import DurationSelector from 'com/common/duration-selector'
@@ -294,6 +295,7 @@ export default {
   components: {
     PromotionMobileRatioTip,
     QiqiaobanPageSelector,
+    PromotionCreativeTip,
     CashcowPageSelector,
     PromotionChargeTip,
     DurationSelector,
