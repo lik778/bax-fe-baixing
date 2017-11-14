@@ -123,12 +123,10 @@ export default {
       this.load()
     },
     logDescFormatter(row) {
-      const { allAreas, type } = this
+      const { allAreas } = this
 
       if (!row.relatedLog) {
-        return getLogDesc(type, row, {
-          allAreas
-        })
+        return getLogDesc(row, {allAreas})
       }
 
       return row.relatedLog

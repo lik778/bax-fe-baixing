@@ -25,26 +25,13 @@ const OP_UPDATE = 2
  * @return {String}
  */
 
-export function getLogDesc(type, log, { allAreas = [] }) {
+export function getLogDesc(log, { allAreas = [] }) {
   const {
     timelineType,
     message
   } = log
 
   if (message) {
-    if (String(LOG_TYPE_ACCOUNT) === type) {
-      const c = message.change
-      if (c) {
-        const money = (c.deltaMoney + c.deltaPoint) / 100
-        const date = toHumanTime(c.reportDate, 'MM月DD日 HH:mm')
-        if (money > 0) {
-          return `充值：${money}元，推广ID：${c.campaignId}，充值时间：${date}`
-        } else {
-          return `消费：${Math.abs(money)}元，推广ID：${c.campaignId}，消费时间：${date}`
-        }
-      }
-    }
-
     const { change, opType } = message
 
     switch (timelineType) {
@@ -54,6 +41,8 @@ export function getLogDesc(type, log, { allAreas = [] }) {
         return fmtCreativeLog(opType, change)
       case LOG_TYPE_KEYWORD:
         return fmtKeywordLog(opType, change)
+      case LOG_TYPE_ACCOUNT:
+        return fmtAccountLog(change)
     }
   }
 
@@ -63,6 +52,20 @@ export function getLogDesc(type, log, { allAreas = [] }) {
 /**
  * private
  */
+
+function fmtAccountLog(change) {
+  if (!change) {
+    return ''
+  }
+
+  const money = (change.deltaMoney + change.deltaPoint) / 100
+  const date = toHumanTime(change.reportDate, 'MM月DD日 HH:mm')
+  if (money > 0) {
+    return `充值：${money}元，推广ID：${change.campaignId}，充值时间：${date}`
+  } else {
+    return `消费：${Math.abs(money)}元，推广ID：${change.campaignId}，消费时间：${date}`
+  }
+}
 
 function fmtCampaignLog(type, change = {}, allAreas) {
   let result = ''
