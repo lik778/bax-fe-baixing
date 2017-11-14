@@ -442,8 +442,9 @@ export default {
       }
 
       this.promotion.landingType = type
+
       if ([1, 4].includes(type)) {
-        this.promotion.landingPage = ''
+        this.promotion.landingPage = undefined
       }
     },
     updateExistWord(word) {

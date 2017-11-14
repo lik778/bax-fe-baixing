@@ -32,7 +32,6 @@
         options: []
       }
     },
-
     methods: {
       onChange(v) {
         this.$emit('change', v)
