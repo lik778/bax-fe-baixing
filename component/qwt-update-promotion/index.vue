@@ -486,10 +486,11 @@ export default {
         landingPage: originLandingPage,
         landingType: originLandingType
       } = this.originPromotion
-      // 说明: 如下四个值, 要么都不传, 要么都传
+      // 说明: 如下四个值, 分为2组, 每一组要么都不传, 要么都传
       const {
         creativeContent,
         creativeTitle,
+
         landingPage,
         landingType
       } = this.promotion
@@ -514,19 +515,21 @@ export default {
         throw new Error('请填写投放页面')
       }
 
+      const result = {}
+
       if (changed(creativeContent, originCreativeContent) ||
-        changed(creativeTitle, originCreativeTitle) ||
-        changed(landingPage, originLandingPage) ||
-        changed(landingType, originLandingType)) {
-        return {
-          landingType: this.getProp('landingType'),
-          creativeContent: this.getProp('creativeContent'),
-          creativeTitle: this.getProp('creativeTitle'),
-          landingPage: this.getProp('landingPage')
-        }
+        changed(creativeTitle, originCreativeTitle)) {
+        result.creativeContent = this.getProp('creativeContent')
+        result.creativeTitle = this.getProp('creativeTitle')
       }
 
-      return {}
+      if (changed(landingPage, originLandingPage) ||
+        changed(landingType, originLandingType)) {
+        this.landingType = this.getProp('landingType')
+        this.landingPage = this.getProp('landingPage')
+      }
+
+      return result
     },
     getUpdatedPromotionData() {
       // dailyBudget areas 要么都传, 要么都不传
