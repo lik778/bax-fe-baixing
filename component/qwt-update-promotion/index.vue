@@ -42,24 +42,24 @@
               </el-button-group>
             </div>
             <div style="margin-top: 20px;">
-              <el-input
+              <el-input style="width: 560px;"
                 v-if="![1, 4].includes(getProp('landingType'))"
-                :value="getProp('landingPage')" style="width: 560px;"
-                placeholder="输入投放网址，如：http://baixing.com 网址有误会影响投放效果，请检查后再投放"
                 :disabled="!isCreativeEditable || isFormReadonly"
+                :value="getProp('landingPage')"
+                placeholder="输入投放网址，如：http://baixing.com 网址有误会影响投放效果，请检查后再投放"
                 @change="v => promotion.landingPage = v.trim()">
               </el-input>
 
                <qiqiaoban-page-selector
-                 :disabled="!isCreativeEditable"
                  v-if="getProp('landingType') === 1"
+                 :disabled="!isCreativeEditable"
                  :value="getProp('landingPage')"
                  @change="v => promotion.landingPage = v">
               </qiqiaoban-page-selector>
 
               <cashcow-page-selector
-                :disabled="!isCreativeEditable"
                 v-if="getProp('landingType') === 4"
+                :disabled="!isCreativeEditable"
                 :value="getProp('landingPage')"
                 @change="v => promotion.landingPage = v">
               </cashcow-page-selector>
@@ -442,7 +442,6 @@ export default {
       }
 
       this.promotion.landingType = type
-
       if ([1, 4].includes(type)) {
         this.promotion.landingPage = ''
       }
@@ -525,8 +524,8 @@ export default {
 
       if (changed(landingPage, originLandingPage) ||
         changed(landingType, originLandingType)) {
-        this.landingType = this.getProp('landingType')
-        this.landingPage = this.getProp('landingPage')
+        result.landingType = this.getProp('landingType')
+        result.landingPage = this.getProp('landingPage')
       }
 
       return result
