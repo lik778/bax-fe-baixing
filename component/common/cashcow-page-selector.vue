@@ -16,23 +16,20 @@
 
   export default {
     name: 'cashcow-page-selector',
-
     components: {
       BaxSelect
     },
-
-    data() {
-      return {
-        options: []
-      }
-    },
-
     props: {
       value: {
         type: String
       },
       disabled: {
         type: Boolean
+      }
+    },
+    data() {
+      return {
+        options: []
       }
     },
 
@@ -42,7 +39,6 @@
         this.$emit('input', v)
       }
     },
-
     async mounted() {
       const pageList = await getReleasePageList()
       this.options = pageList.map(p => ({

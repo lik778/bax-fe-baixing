@@ -16,23 +16,20 @@
 
   export default {
     name: 'qiqiaoban-page-selector',
-
     components: {
       BaxSelect
     },
-
-    data() {
-      return {
-        options: []
-      }
-    },
-
     props: {
       value: {
         type: String
       },
       disabled: {
         type: Boolean
+      }
+    },
+    data() {
+      return {
+        options: []
       }
     },
 
@@ -42,7 +39,6 @@
         this.$emit('input', v)
       }
     },
-
     async mounted() {
       const pageList = await getQiqiaobanPageList()
       this.options = pageList.map(p => ({
@@ -53,10 +49,8 @@
   }
 </script>
 
-
 <style scoped>
   .qiqiaoban-page-selector {
     width: 560px;
   }
 </style>
-
