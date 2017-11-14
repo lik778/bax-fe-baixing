@@ -7,7 +7,7 @@ export const searchIndexTip = '最近30天内网民的日均搜索情况，指�
 
 export const mobileRatioTip = '您能够以PC端关键词出价乘以一定比例的方式设定移动设备的关键词出价，方便您使用同个计划管理多屏投放。移动端最高出价 = PC端CPC最高出价 * 移动端出价比例。'
 
-export const campaignCreativeContentTooltip = `
+export const campaignCreativeTooltip = `
 1、推广内容和推广标题请勿完全相同；
 2、请填写完整通顺的语句，切勿堆叠词语，以免影响投放效果；
 3、请勿连续使用标点符号，如：“非常好！！！”，否则无法通过审核；

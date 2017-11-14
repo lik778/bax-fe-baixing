@@ -2,7 +2,7 @@
 <template>
   <header class="tip">
     <p>推广物料设置</p>
-    <el-tooltip :content="tip" placement="top">
+    <el-tooltip placement="top">
       <ul slot="content">
         <li v-for="(tip, i) in tips" :key="i">
           {{ tip }}
@@ -17,14 +17,14 @@
 
 <script>
 import {
-  campaignCreativeContentTooltip
+  campaignCreativeTooltip
 } from '../../constant/tip'
 
 export default {
   name: 'bax-promotion-creative-tip',
   data() {
     return {
-      tips: campaignCreativeContentTooltip.split('\n')
+      tips: campaignCreativeTooltip.split('\n')
     }
   }
 }
