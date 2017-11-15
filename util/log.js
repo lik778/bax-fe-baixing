@@ -32,7 +32,7 @@ export function getLogDesc(log, { allAreas = [] }) {
   } = log
 
   if (message) {
-    const { change, opType } = message
+    const { change, opType, word, campaignId } = message
 
     switch (timelineType) {
       case LOG_TYPE_CAMPAIGN:
@@ -40,9 +40,15 @@ export function getLogDesc(log, { allAreas = [] }) {
       case LOG_TYPE_CREATIVE:
         return fmtCreativeLog(opType, change)
       case LOG_TYPE_KEYWORD:
-        return fmtKeywordLog(opType, change)
+        return fmtKeywordLog(opType, {
+          word,
+          ...change
+        })
       case LOG_TYPE_ACCOUNT:
-        return fmtAccountLog(change)
+        return fmtAccountLog({
+          campaignId,
+          ...change
+        })
     }
   }
 
