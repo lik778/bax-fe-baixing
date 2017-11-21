@@ -184,18 +184,23 @@ function fmtCreativeLog(type, change = {}) {
 function fmtKeywordLog(type, change) {
   let result = ''
 
-  if (type === OP_CREATE) {
-    result += '添加关键词：'
-  } else {
-    result += '更新关键词：'
-  }
-
   const {
     price,
     word
   } = change
 
-  result += `【${word}】，价格：${centToYuan(price)}元。`
+  if (type === OP_CREATE) {
+    result += '添加关键词：'
+    result += `【${word}】，价格：${centToYuan(price)}元。`
+  } else {
+    result += '更新关键词：'
+    try {
+      const { oldValue, newValue } = price
+      result += `【${word}】，价格从${centToYuan(oldValue)}元『变更为』${centToYuan(newValue)}元。`
+    } catch (err) {
+      console.error(err)
+    }
+  }
 
   return result
 }
