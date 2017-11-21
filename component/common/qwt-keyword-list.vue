@@ -18,8 +18,17 @@
         :formatter="r => fmtCpcRanking(r.cpcRanking)">
       </el-table-column>
       <el-table-column v-if="showPropStatus" label="关键词状态"
-        :formatter="fmtStatus"
         :render-header="renderColumnHeaderWithTip(keywordStatusTip)">
+        <template scope="s">
+          <span class="status">
+            <label>
+              {{ fmtStatus(s.row) }}
+            </label>
+            <strong v-if="fmtStatus(s.row) === '审核失败'">
+              {{ s.row.extra && s.row.extra.refuseReason || '' }}
+            </strong>
+          </span>
+        </template>
       </el-table-column>
       <el-table-column label="PC端CPC最高出价（元/次点击）"
         :render-header="renderColumnHeaderWithTip(cpcTopPriceTip)">
@@ -49,6 +58,7 @@
 
 <script>
 import {
+  KEYWORD_STATUS_REFUSE,
   KEYWORD_CHIBI_PENDING,
   KEYWORD_CHIBI_REJECT,
   keywordStatus
@@ -230,12 +240,13 @@ export default {
     fmtStatus(row) {
       const { chibiStatus, status } = row
 
-      if (chibiStatus === KEYWORD_CHIBI_PENDING) {
-        return '等待审核'
+      if (chibiStatus === KEYWORD_CHIBI_REJECT ||
+        status === KEYWORD_STATUS_REFUSE) {
+        return '审核失败'
       }
 
-      if (chibiStatus === KEYWORD_CHIBI_REJECT) {
-        return '审核失败'
+      if (chibiStatus === KEYWORD_CHIBI_PENDING) {
+        return '等待审核'
       }
 
       return keywordStatus[String(status)] || '未知'
@@ -259,6 +270,19 @@ export default {
 </script>
 
 <style scoped>
+
+.status {
+  display: flex;
+  align-items: center;
+
+  & > strong {
+    max-width: 96px;
+    margin-left: 3px;
+    color: red;
+    font-size: 10px;
+    line-height: 14px;
+  }
+}
 
 .price {
   display: flex;

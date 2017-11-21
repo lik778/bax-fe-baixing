@@ -19,6 +19,8 @@ export const CREATIVE_CHIBI_ACCEPT = 10
 // export const CAMPAIGN_CHIBI_UPDATED = 1 // 效力等同于 pending
 // export const CAMPAIGN_CHIBI_ACCEPT = 10
 
+export const KEYWORD_STATUS_REFUSE = -10
+
 export const keywordStatus = {
   '0': '投放中',
   '-1': '已删除',
