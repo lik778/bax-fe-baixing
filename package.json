@@ -1,7 +1,7 @@
 {
   "name": "bax-fe",
   "private": true,
-  "version": "3.6.6",
+  "version": "3.7.0",
   "scripts": {
     "upload-asset": "qiniu -c tool/asset.qiniu.config.js -v",
     "upload": "qiniu -c tool/qiniu.config.js -v",

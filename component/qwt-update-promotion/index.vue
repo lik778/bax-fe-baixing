@@ -243,6 +243,7 @@
 
 <script>
 import { Message } from 'element-ui'
+import isEqual from 'lodash.isequal'
 
 import QiqiaobanPageSelector from 'com/common/qiqiaoban-page-selector'
 import PromotionCreativeTip from 'com/widget/promotion-creative-tip'
@@ -531,13 +532,45 @@ export default {
 
       return result
     },
+    getUpdatedValidTime() {
+      const {
+        timeRange: originTimeRange, // 说明: 参见 store 的处理
+        validTime: originValidTime // validTime 为格式化的 timeRange
+      } = this.originPromotion
+      const { validTime } = this.promotion
+
+      let newValidTime
+
+      if (this.timeType === 'long') {
+        newValidTime = [null, null]
+      } else {
+        if (validTime) {
+          if (checkCampaignValidTime(validTime) === 'custom') {
+            newValidTime = getCampaignValidTime(validTime)
+          } else {
+            // 比如: clear daterange -> undefined || [null, null]
+            throw new Error('请填写投放日期或选择长期投放')
+          }
+        } else {
+          // 比如: sb user 点击自定义投放 却 不选时间
+          if (checkCampaignValidTime(originValidTime) === 'custom') {
+            // ignore
+          } else {
+            throw new Error('请填写投放日期或选择长期投放')
+          }
+        }
+      }
+
+      // 检测是否变更
+      if (!isEqual(originTimeRange, newValidTime)) {
+        return newValidTime
+      }
+      // no change, no return
+    },
     getUpdatedPromotionData() {
       // dailyBudget areas 要么都传, 要么都不传
-      const { validTime: originValidTime } = this.originPromotion
-
       const {
         dailyBudget,
-        validTime,
         schedule,
         areas
       } = this.promotion
@@ -561,24 +594,9 @@ export default {
         data.areas = isArray(areas) ? [...areas] : this.originPromotion.areas
       }
 
-      if (this.timeType === 'long') {
-        data.validTime = [null, null]
-      } else {
-        if (validTime) {
-          if (checkCampaignValidTime(validTime) === 'custom') {
-            data.validTime = getCampaignValidTime(validTime)
-          } else {
-            // 比如: clear daterange -> undefined || [null, null]
-            throw new Error('请填写投放日期或选择长期投放')
-          }
-        } else {
-          // 比如: sb user 点击自定义投放 却 不选时间
-          if (checkCampaignValidTime(originValidTime) === 'custom') {
-            // ignore
-          } else {
-            throw new Error('请填写投放日期或选择长期投放')
-          }
-        }
+      const newValidTime = this.getUpdatedValidTime()
+      if (newValidTime) {
+        data.validTime = newValidTime
       }
 
       return data
