@@ -87,10 +87,12 @@
         <li>3. 详细推广记录请在【全网通】-【数据报表】查看。</li>
       </footer>
     </section>
+    <charge-promotion-alert></charge-promotion-alert>
   </div>
 </template>
 
 <script>
+import ChargePromotionAlert from 'com/widget/charge-promotion-alert'
 import ContractAck from 'com/widget/contract-ack'
 import QwtPkgWidget from 'com/widget/qwt-pkg'
 import QwtProWidget from 'com/widget/qwt-pro'
@@ -156,6 +158,7 @@ export default {
   name: 'qwt-charge',
   store,
   components: {
+    ChargePromotionAlert,
     QwtPkgWidget,
     QwtProWidget,
     ContractAck,
