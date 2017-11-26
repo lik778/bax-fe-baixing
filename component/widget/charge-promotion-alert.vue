@@ -69,7 +69,7 @@ export default {
   right: 20px;
   top: 105px;
   width: 290px;
-  height: 210px;
+  height: 230px;
 
   border: solid 1px var(--c-main-blue);
   border-radius: 4px;
