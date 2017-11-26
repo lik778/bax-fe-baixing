@@ -16,7 +16,7 @@
       <li>累计充值满<strong>6000元</strong>，赠送<strong>600元</strong>现金券；</li>
       <li>累计充值满<strong>12000元</strong>，赠送<strong>1300元</strong>现金券；</li>
       <li>累计充值满<strong>30000元</strong>，赠送<strong>3600元</strong>现金券；</li>
-      <p>现金券于12月1日下午2点发放至您的广告后台，有效期15天！</p>
+      <p>现金券于12月1日下午2点发放至您的广告后台，有效期15天！在充值时可抵扣劵面金额，不找零，不退款！</p>
     </content>
     <p class="circle2"></p>
   </div>
