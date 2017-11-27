@@ -24,7 +24,15 @@ export default {
   },
   computed: {
     rows() {
-      const items = clone(this.statistics.sort((a, b) => a.date - b.date))
+      const items = clone(this.statistics.sort((a, b) => {
+        if (a.date.includes('~')) {
+          // 2017-01-01 ~ 2017-02-02
+          return toHumanTime(a.date.split('~').shift().trim()) -
+            toHumanTime(b.date.split('~').shift().trim())
+        } else {
+          return toHumanTime(a.date) - toHumanTime(b.date)
+        }
+      }))
 
       return items.reduce((pre, now) => {
         const last = pre.pop()
@@ -32,8 +40,7 @@ export default {
           return [now]
         }
 
-        if (toHumanTime(last.date, 'YYYYMMDD') ===
-          toHumanTime(now.date, 'YYYYMMDD')) {
+        if (last.date === now.date) {
           // merge
           return [...pre, {
             clicks: last.clicks + now.clicks,
@@ -47,7 +54,7 @@ export default {
       }, [])
     },
     days() {
-      return this.rows.map(r => toHumanTime(r.date, 'MM月DD日'))
+      return this.rows.map(r => r.date)
     },
     costData() {
       return this.rows.map(r => r.cost / 100)

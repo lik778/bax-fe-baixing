@@ -123,7 +123,7 @@ export default {
     async initData() {
       const { userId, channel } = this
       // 正常用户单一渠道: 推广 10 个不到 (此处简化处理, 一次性拉取)
-      if (userId && channel) {
+      if (userId && typeof channel === 'number') {
         this.allCampaigns = await getCampaigns({
           source: channel,
           userId,
@@ -219,7 +219,8 @@ export default {
   },
   watch: {
     async channel(val, pre) {
-      if (val && val !== pre) {
+      if (typeof val === 'number' &&
+        val !== pre) {
         await this.initData()
       }
     },

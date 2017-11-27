@@ -229,7 +229,7 @@ export default {
         getReport(q)
       ])
     },
-    selectCampaign(campaign) {console.log('select- s')
+    selectCampaign(campaign) {
       const ids = this.query.checkedCampaigns.map(c => c.id)
       if (ids.includes(campaign.id)) {
         return

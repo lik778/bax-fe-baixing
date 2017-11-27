@@ -22,36 +22,36 @@
     <main>
       <el-table :data="statistics">
         <el-table-column v-if="checkVisiable('date')" label="日期"
-          :formatter="r => toHumanTime(r.date, 'YYYY-MM-DD')">
+          prop="date" width="120">
         </el-table-column>
-        <el-table-column v-if="checkVisiable('plan')" label="推广计划"
-          prop="cpcPlanName" width="120">
+        <el-table-column v-if="checkVisiable('campaignId')" label="推广计划"
+          prop="campaignId" width="120">
         </el-table-column>
-        <el-table-column v-if="checkVisiable('cpcRanking')"
+        <el-table-column v-if="checkVisiable('cpcRanking')" label="平均排名"
           :formatter="r => fmtCpcRanking(r.cpcRanking)"
-          label="平均排名" width="150" sortable>
+          width="150" sortable>
         </el-table-column>
         <el-table-column v-if="checkVisiable('channel')" label="渠道"
           :formatter="r => fmtChannel(r.channel)">
         </el-table-column>
-        <el-table-column v-if="checkVisiable('platform')" label="设备"
+        <el-table-column v-if="checkVisiable('device')" label="设备"
           :formatter="r => fmtDevice(r.device)">
         </el-table-column>
-        <el-table-column v-if="checkVisiable('keyword')"
-          prop="cpcName" label="关键词">
+        <el-table-column v-if="checkVisiable('keyword')" label="关键词"
+          prop="keyword">
         </el-table-column>
-        <el-table-column v-if="checkVisiable('shows')"
-          prop="shows" label="展现" width="90" sortable>
+        <el-table-column v-if="checkVisiable('shows')" label="展现"
+          prop="shows" width="90" sortable>
         </el-table-column>
-        <el-table-column v-if="checkVisiable('click')"
-          prop="clicks" label="点击" width="90" sortable>
+        <el-table-column v-if="checkVisiable('clicks')" label="点击"
+          prop="clicks" width="90" sortable>
         </el-table-column>
         <el-table-column v-if="checkVisiable('cost')" label="消费"
           :formatter="r => (r.cost / 100).toFixed(2) + '元'"
           width="120">
         </el-table-column>
-        <el-table-column v-if="checkVisiable('percent')"
-          prop="clickRate" label="点击率" width="120" sortable>
+        <el-table-column v-if="checkVisiable('clickRate')" label="点击率"
+          prop="clickRate" width="120" sortable>
         </el-table-column>
       </el-table>
     </main>
