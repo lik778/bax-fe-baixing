@@ -2,16 +2,14 @@
 <template>
   <div class="qwt-pro-widget" @click="onClick">
     <i v-if="checked" class="el-icon-check"></i>
-    <main>
+    <main @click="toInputPrice">
       <span v-if="hasPrice && mode === 'normal'">
         价值
       </span>
-      <span v-if="hasPrice && mode === 'normal'"
-        @click="toInputPrice">
+      <span v-if="hasPrice && mode === 'normal'">
         {{ displayPrice + '元' }}
       </span>
-      <p v-if="!hasPrice && mode === 'normal'"
-        @click="toInputPrice">
+      <p v-if="!hasPrice && mode === 'normal'">
         {{ title }}
       </p>
       <p v-if="mode === 'input'">
@@ -68,7 +66,7 @@ export default {
         inputPrice
       } = this
 
-      if (parseInt(inputPrice) < minInputPrice) {
+      if (!(parseInt(inputPrice) >= minInputPrice)) {
         return Message.error(`最低充值金额: ${minInputPrice}`)
       }
 
