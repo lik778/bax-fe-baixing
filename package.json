@@ -10,10 +10,7 @@
     "start": "node tool/server.js",
     "build": "node tool/build.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git@gitlab.baixing.cn:channel/bax-fe.git"
-  },
+  "repository": "https://gitlab.baixing.cn/channel/bax-fe",
   "dependencies": {
     "clone": "2.1.1",
     "cssbase": "github:coderhaoxin/cssbase",
