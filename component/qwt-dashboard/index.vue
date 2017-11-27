@@ -113,7 +113,6 @@ import Topbar from 'com/topbar'
 
 import { toTimestamp } from 'utils'
 import moment from 'moment'
-import clone from 'clone'
 
 import {
   allDimensions,

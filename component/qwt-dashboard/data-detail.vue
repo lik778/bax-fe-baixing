@@ -51,7 +51,8 @@
           width="120">
         </el-table-column>
         <el-table-column v-if="checkVisiable('clickRate')" label="点击率"
-          prop="clickRate" width="120" sortable>
+          :formatter="r => r.clickRate.toFixed(4)"
+          width="120" sortable>
         </el-table-column>
       </el-table>
     </main>

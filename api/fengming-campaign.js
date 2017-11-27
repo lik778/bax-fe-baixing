@@ -70,9 +70,9 @@ export async function getReport(opts = {}) {
   ])
 
   return {
+    rows: toCamelcase(body1.data),
+    total: body2.total,
     offset: q.offset,
-    limit: q.limit,
-    rows: body1.data,
-    total: body2.total
+    limit: q.limit
   }
 }

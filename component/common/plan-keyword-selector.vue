@@ -6,21 +6,21 @@
     :before-close="ok">
     <main class="main">
       <span>
-        <header>计划</header>
+        <header>未选择</header>
         <content>
           <li v-for="(campaign, i) in getLeftCampaigns()"
             class="tree" :key="'c' + campaign.id"
             @click="onClickCampaign(campaign.id)">
             <div class="tree-node">
               <i class="el-icon-caret-right"></i>
-              <el-checkbox @click="() => onCheckCampaign(campaign)"
+              <el-checkbox @change="() => onCheckCampaign(campaign)"
                 :value="campaignChecked(campaign.id)">
               </el-checkbox>
               <label>{{ `推广：${campaign.id}` }}</label>
             </div>
             <div>
               <li v-for="(keyword, i) in campaign.keywords"
-                class="tree-node" :key="'k' + keyword.id"
+                class="tree-node" :key="'lk' + keyword.id"
                 @click="onCheckKeyword(keyword)">
                 <el-checkbox @click="() => onCheckKeyword(keyword)"
                   :value="keywordChecked(keyword.id)">
@@ -30,24 +30,24 @@
             </div>
           </li>
         </content>
-        <footer>共条</footer>
+        <footer>{{ '计划：' + getLeftCampaigns().length }}</footer>
       </span>
       <span>
-        <header>关键词</header>
+        <header>已选择</header>
         <content>
           <li v-for="(campaign, i) in getRightCampaigns()"
             :key="'c' + campaign.id" class="tree"
             @click="onClickCampaign(campaign.id)">
             <div class="tree-node">
               <i class="el-icon-caret-right"></i>
-              <el-checkbox @click="() => onCheckCampaign(campaign)"
+              <el-checkbox @change="() => onCheckCampaign(campaign)"
                 :value="campaignChecked(campaign.id)">
               </el-checkbox>
               <label>{{ `推广：${campaign.id}` }}</label>
             </div>
             <div>
               <li v-for="(keyword, i) in campaign.keywords"
-                class="tree-node" :key="'k' + keyword.id"
+                class="tree-node" :key="'rk' + keyword.id"
                 @click="onCheckKeyword(keyword)">
                 <el-checkbox @click="() => onCheckKeyword(keyword)"
                   :value="keywordChecked(keyword.id)">
@@ -57,7 +57,7 @@
             </div>
           </li>
         </content>
-        <footer>共条</footer>
+        <footer>{{ '计划：' + getRightCampaigns().length }}</footer>
       </span>
     </main>
     <footer slot="footer">
@@ -85,8 +85,6 @@ import {
 
 export default {
   name: 'bax-qwt-plan-keyword-selector',
-  components: {
-  },
   props: {
     campaignIds: {
       type: Array,
@@ -115,9 +113,6 @@ export default {
 
       allCampaigns: []
     }
-  },
-  computed: {
-
   },
   methods: {
     async initData() {
@@ -244,16 +239,9 @@ function overlap(arr1, arr2) {
 
   return result
 }
-
 </script>
 
 <style scoped>
-/*
-.bax-dialog {
-  width: 520px;
-  min-width: 520px;
-  max-width: 520px;
-} */
 
 .tree-node {
   display: flex;
@@ -271,6 +259,8 @@ function overlap(arr1, arr2) {
 }
 
 .main {
+  min-width: 440px;
+
   & > span:first-child {
     margin-left: 5px;
   }
