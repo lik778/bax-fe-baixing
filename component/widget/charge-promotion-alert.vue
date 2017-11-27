@@ -43,7 +43,7 @@ export default {
 
 @keyframes rock {
   0% {
-    transform: rotate(-2deg);
+    transform: rotate(-3deg);
   }
 
   25% {
@@ -51,7 +51,7 @@ export default {
   }
 
   50% {
-    transform: rotate(2deg);
+    transform: rotate(3deg);
   }
 
   75% {
@@ -59,7 +59,7 @@ export default {
   }
 
   100% {
-    transform: rotate(-2deg);
+    transform: rotate(-3deg);
   }
 }
 
@@ -74,7 +74,7 @@ export default {
   border: solid 1px var(--c-main-blue);
   border-radius: 4px;
 
-  animation: rock 0.6s infinite alternate;
+  animation: rock 0.6s 3 alternate;
 
   & > header {
     display: flex;
