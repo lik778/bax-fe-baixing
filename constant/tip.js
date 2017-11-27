@@ -25,7 +25,7 @@ export const campaignStatusTooltip = `
 `
 
 export const keywordStatusTip = `
-关键词有以下11种状态：
+关键词有以下7种状态：
   (1) 有效（推广中）；
   (2) 不宜推广/审核拒绝（关键词不符合规定）；
   (3) 搜索无效（关键词出价低于最低展现价格，此时推广无法展现）
