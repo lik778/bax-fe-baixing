@@ -224,6 +224,9 @@ export default {
         await this.initData()
       }
     }
+  },
+  async mounted() {
+    await this.initData()
   }
 }
 
