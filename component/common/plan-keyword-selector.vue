@@ -20,10 +20,9 @@
             </div>
             <div>
               <li v-for="(keyword, i) in campaign.keywords"
-                class="tree-node" :key="'lk' + keyword.id"
+                class="tree-node" :key="'k' + keyword.id"
                 @click="onCheckKeyword(keyword)">
-                <el-checkbox @click="() => onCheckKeyword(keyword)"
-                  :value="keywordChecked(keyword.id)">
+                <el-checkbox :value="false">
                 </el-checkbox>
                 <label>{{ keyword.word }}</label>
               </li>
@@ -47,17 +46,18 @@
             </div>
             <div>
               <li v-for="(keyword, i) in campaign.keywords"
-                class="tree-node" :key="'rk' + keyword.id"
-                @click="onCheckKeyword(keyword)">
-                <el-checkbox @click="() => onCheckKeyword(keyword)"
-                  :value="keywordChecked(keyword.id)">
+                class="tree-node" :key="'k' + keyword.id"
+                @click="onCheckKeyword(keyword, campaign)">
+                <el-checkbox :value="true">
                 </el-checkbox>
                 <label>{{ keyword.word }}</label>
               </li>
             </div>
           </li>
         </content>
-        <footer>{{ '计划：' + getRightCampaigns().length }}</footer>
+        <footer>
+          {{ `计划：${campaignIds.length}，关键词：${keywordIds.length}` }}
+        </footer>
       </span>
     </main>
     <footer slot="footer">
@@ -147,6 +147,11 @@ export default {
       return this.allCampaigns.map(c => {
         // keywords filter
         const { keywords = [] } = c
+        // 选中 推广, 视觉上, 右侧: 该推广下所有关键词选中
+        if (this.campaignChecked(c.id)) {
+          return c
+        }
+
         return {
           ...c,
           keywords: keywords.filter(k => keywordIds.includes(k.id))
@@ -186,8 +191,33 @@ export default {
       } else {
         this.$emit('select-campaign', campaign)
       }
+
+      // 无论 选中/删除 campaign, 删除下属 所有 keywords
+      if (campaign.keywords && campaign.keywords.length) {
+        // TODO: 性能优化
+        campaign.keywords.forEach(k => {
+          this.$emit('remove-keyword', {...k})
+        })
+      }
     },
-    onCheckKeyword(keyword) {
+    onCheckKeyword(keyword, campaign = {}) {
+      const cid = campaign.id
+
+      if (cid && this.campaignChecked(cid)) {
+        this.$emit('remove-campaign', campaign)
+        campaign.keywords.forEach(k => {
+          // TODO - 性能优化
+          if (keyword.id === k.id) {
+            // remove
+            this.$emit('remove-keyword', {...k})
+          } else {
+            // select
+            this.$emit('select-keyword', {...k})
+          }
+        })
+        return
+      }
+
       if (this.keywordChecked(keyword.id)) {
         this.$emit('remove-keyword', {...keyword})
       } else {
