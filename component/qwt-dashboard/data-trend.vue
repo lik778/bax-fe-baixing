@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import { toHumanTime } from 'utils'
+import { toTimestamp } from 'utils'
 import clone from 'clone'
 
 export default {
@@ -27,10 +27,10 @@ export default {
       const items = clone(this.statistics.sort((a, b) => {
         if (a.date.includes('~')) {
           // 2017-01-01 ~ 2017-02-02
-          return toHumanTime(a.date.split('~').shift().trim()) -
-            toHumanTime(b.date.split('~').shift().trim())
+          return toTimestamp(a.date.split('~').shift().trim()) -
+            toTimestamp(b.date.split('~').shift().trim())
         } else {
-          return toHumanTime(a.date) - toHumanTime(b.date)
+          return toTimestamp(a.date) - toTimestamp(b.date)
         }
       }))
 

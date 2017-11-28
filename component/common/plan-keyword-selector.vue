@@ -79,10 +79,6 @@ import {
  *      不清空关键词搜索结果
  */
 
-/**
- * TODO - TODO: 合并 two trees
- */
-
 export default {
   name: 'bax-qwt-plan-keyword-selector',
   props: {
@@ -204,6 +200,7 @@ export default {
       const cid = campaign.id
 
       if (cid && this.campaignChecked(cid)) {
+        // 一定是右侧树
         this.$emit('remove-campaign', campaign)
         campaign.keywords.forEach(k => {
           // TODO - 性能优化
