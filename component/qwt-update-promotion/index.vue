@@ -258,6 +258,7 @@ import Topbar from 'com/topbar'
 import { fmtAreasInQwt, getCnName } from 'util/meta'
 import { disabledDate } from 'util/element'
 import { isBaixingSales } from 'util/role'
+import track from 'util/track'
 
 import {
   CREATIVE_STATUS_PENDING,
@@ -631,6 +632,16 @@ export default {
 
       this.isUpdating = true
 
+      const { userInfo, id } = this
+
+      track({
+        time: Date.now() / 1000 | 0,
+        baixingId: userInfo.baixingId,
+        baxId: userInfo.id,
+        campaignId: id,
+        action: 'click-button: update-campaign'
+      })
+
       try {
         await this._updatePromotion()
       } finally {
@@ -761,6 +772,17 @@ export default {
   },
   async mounted() {
     await this.initCampaignInfo()
+
+    setTimeout(() => {
+      const { userInfo, id } = this
+      track({
+        time: Date.now() / 1000 | 0,
+        baixingId: userInfo.baixingId,
+        baxId: userInfo.id,
+        campaignId: id,
+        action: 'enter-page: update-campaign'
+      })
+    }, 1200)
   }
 }
 </script>

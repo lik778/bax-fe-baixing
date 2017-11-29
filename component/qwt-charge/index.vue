@@ -106,6 +106,8 @@ import { centToYuan } from 'utils'
 
 import store from './store'
 
+import track from 'util/track'
+
 import {
   allowGetOrderPayUrl,
   allowPayOrder
@@ -395,7 +397,9 @@ export default {
       this.orderPayUrl = url
 
       if (this.isBxUser) {
-        location.href = url
+        setTimeout(() => {
+          location.href = url
+        }, 800)
       }
     },
     async checkInputSalesId() {
@@ -444,7 +448,8 @@ export default {
         checkedChargeProductId,
         checkedPackageId,
         chargeMoney,
-        productId
+        productId,
+        userInfo
       } = this
 
       const newOrder = {
@@ -493,6 +498,13 @@ export default {
         }
       }
 
+      track({
+        action: 'click-button: charge',
+        time: Date.now() / 1000 | 0,
+        baixingId: userInfo.baixingId,
+        baxId: userInfo.id
+      })
+
       const oids = await createOrder(newOrder)
       const summary = this.checkedProductDesc
 
@@ -509,6 +521,16 @@ export default {
       sales_id: salesId,
       user_id: userId
     } = this.$route.query
+
+    setTimeout(() => {
+      const { userInfo } = this
+      track({
+        time: Date.now() / 1000 | 0,
+        baixingId: userInfo.baixingId,
+        baxId: userInfo.id,
+        action: 'enter-page: charge'
+      })
+    }, 1200)
 
     if (salesId) {
       const userInfo = await getUserInfo(salesId)

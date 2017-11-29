@@ -245,6 +245,7 @@ import Topbar from 'com/topbar'
 
 import { fmtAreasInQwt, getCnName } from 'util/meta'
 import { disabledDate } from 'util/element'
+import track from 'util/track'
 import {
   checkCampaignValidTime,
   getCampaignPrediction,
@@ -360,6 +361,15 @@ export default {
       }
 
       this.isCreating = true
+
+      const { userInfo } = this
+
+      track({
+        time: Date.now() / 1000 | 0,
+        baixingId: userInfo.baixingId,
+        baxId: userInfo.id,
+        action: 'click-button: create-campaign'
+      })
 
       try {
         await this._createPromotion()
@@ -557,6 +567,16 @@ export default {
   },
   async mounted() {
     await getCurrentBalance()
+
+    setTimeout(() => {
+      const { userInfo } = this
+      track({
+        time: Date.now() / 1000 | 0,
+        baixingId: userInfo.baixingId,
+        baxId: userInfo.id,
+        action: 'enter-page: create-campaign'
+      })
+    }, 1200)
   }
 }
 </script>
