@@ -26,6 +26,7 @@ import UploadProfit from 'com/upload-profit'
 import Dashboard from 'com/dashboard'
 import Homepage from 'com/homepage'
 import Account from 'com/account'
+import Coupon from 'com/coupon/index.vue'
 
 import Bax from 'com/bax'
 
@@ -141,6 +142,10 @@ const router = new VueRouter({
     component: Account,
     path: '/main/account',
     name: 'account'
+  }, {
+    component: Coupon,
+    path: '/main/coupon',
+    name: 'coupon'
   }, ...qwtRoutes, ...sspRoutes, ...gwRoutes]
 })
 

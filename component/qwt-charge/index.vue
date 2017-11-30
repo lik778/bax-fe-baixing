@@ -44,6 +44,28 @@
           </price-list>
         </span>
       </div>
+
+      <div>
+        <el-checkbox v-model="couponVisible">使用优惠</el-checkbox>
+        <div v-if="couponVisible">
+          <el-tabs v-model="activeCouponTab">
+            <el-tab-pane label="可用优惠券" name="first" class="coupon-pane">
+              <coupon
+                v-for="coupon in effectiveCoupons"
+                :key="coupon.id"
+                :data="displayCoupon(coupon)"
+                class="coupon"
+                @click="onCouponClick(coupon)"
+                :selected="selectedCoupon.includes(coupon)"/>
+            </el-tab-pane>
+            <el-tab-pane label="优惠码兑换" name="second" class="coupon-code-pane">
+              <el-input class="coupon-code-input" v-model.trim="couponCode" placeholder="输入兑换码"/>
+              <el-button type="primary" @click="redeem">兑换</el-button>
+            </el-tab-pane>
+          </el-tabs>
+        </div>
+      </div>
+
       <div>
         <aside>服务编号：</aside>
         <span v-if="salesIdLocked || isBxSales">
@@ -63,14 +85,24 @@
           {{ displayUserMobile }}
         </span>
       </div>
-      <contract-ack type="contract"></contract-ack>
-      <div>
-        <aside>百姓网余额需支付：</aside>
-        <i>{{'￥' + (totalPrice / 100).toFixed(2)}}</i>
+      <div class="price-summary">
+        <div>
+          <aside>商品合计：</aside>
+          <i>{{'￥' + (totalPrice / 100).toFixed(2)}}</i>
+        </div>
+        <div>
+          <aside>优惠券抵扣：</aside>
+          <i>{{'￥' + (couponAmount / 100).toFixed(2)}}</i>
+        </div>
+        <div>
+          <aside>百姓网余额需支付：</aside>
+          <i>{{'￥' + (finalPrice / 100).toFixed(2)}}</i>
+        </div>
       </div>
+      <contract-ack type="contract"></contract-ack>
       <div class="pay-info">
         <el-button v-if="!isAgentSales"
-          type="primary" @click="createOrder">
+          type="primary" @click="createOrder" :loading="payInProgress">
           {{ submitButtonText }}
         </el-button>
         <span v-if="orderPayUrl">
@@ -88,6 +120,16 @@
       </footer>
     </section>
     <charge-promotion-alert v-if="false"></charge-promotion-alert>
+    <el-dialog
+      title="提示"
+      :visible.sync="payDialogVisible"
+      size="tiny">
+      <h3 class="hint-text">订单支付成功，资金已到账！</h3>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="$router.push({name: 'account'})">查看账户</el-button>
+        <el-button type="primary" @click="$router.push({name: 'qwt-create-promotion'})">创建投放计划</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -99,10 +141,12 @@ import QwtProWidget from 'com/widget/qwt-pro'
 import Clipboard from 'com/widget/clipboard'
 import PriceList from './price-list'
 import Topbar from 'com/topbar'
+import Coupon from 'com/common/coupon'
+import { usingCondition } from '../../constant/coupon'
 
 import { Message } from 'element-ui'
 
-import { centToYuan } from 'utils'
+import { centToYuan, toHumanTime } from 'utils'
 
 import store from './store'
 
@@ -126,7 +170,9 @@ import {
   getProducts,
   createOrder,
   getUserInfo,
-  payOrders
+  payOrders,
+  getCoupons,
+  redeemCoupon
 } from './action'
 
 /**
@@ -135,26 +181,28 @@ import {
  *   2. 前端展示多个产品
  */
 
-const allProducts = [{
-  id: 1,
-  price: 288
-}, {
-  id: 2,
-  price: 588
-}, {
-  id: 3,
-  price: 1088
-}, {
-  id: 4,
-  price: 3088
-}, {
-  id: 5,
-  title: '其他金额',
-  editable: true
-}, {
-  id: 0,
-  title: '暂不充值'
-}]
+const allProducts = [
+  {
+    id: 1,
+    price: 288
+  }, {
+    id: 2,
+    price: 588
+  }, {
+    id: 3,
+    price: 1088
+  }, {
+    id: 4,
+    price: 3088
+  }, {
+    id: 5,
+    title: '其他金额',
+    editable: true
+  }, {
+    id: 0,
+    title: '暂不充值'
+  }
+]
 
 export default {
   name: 'qwt-charge',
@@ -166,7 +214,8 @@ export default {
     ContractAck,
     Clipboard,
     PriceList,
-    Topbar
+    Topbar,
+    Coupon
   },
   props: {
     userInfo: {
@@ -186,10 +235,64 @@ export default {
       orderPayUrl: '',
       checkedPackageId: 0,
       checkedChargeProductId: 0, // 注: 此 id 仅用于前端标记
-      chargeMoney: 0
+      chargeMoney: 0,
+
+      couponVisible: false,
+      activeCouponTab: 'first',
+      selectedCoupon: [],
+      // 支持以后使用多种优惠券
+      couponCode: '',
+      payInProgress: false,
+      payDialogVisible: false
     }
   },
   computed: {
+    productSummary() {
+      var a = this.checkedProducts.reduce((s, p) => {
+        if (s[p.id] === undefined) {
+          s[p.id] = 0
+        }
+        s[p.id] += p.discountPrice
+        return s
+      }, {})
+      return a
+    },
+    effectiveCoupons() {
+      // 返回符合当前购买产品等条件的可用券
+      let products = this.checkedProducts
+      return this.coupons.filter(coupon => {
+        for (const condition of coupon.usingConditions) {
+          if (condition.type === usingCondition.PRODUCT_PACKAGES) {
+            products = products.filter(p => condition.productPackages.includes(p.pkgId))
+          } else if (condition.type === usingCondition.PRODUCTS) {
+            products = products.filter(p => condition.products.includes(p.id))
+          }
+        }
+        if (products.length === 0) {
+          return false
+        }
+        for (const condition of coupon.usingConditions) {
+          if (condition.type === usingCondition.ORDER_SUM_ORIGINAL_PRICE) {
+            const sum = products.reduce((s, p) => {
+              s += p.discountPrice
+              return s
+            }, 0)
+            return sum >= condition.orderSumOriginalPrice
+          }
+        }
+        return true
+      })
+    },
+    finalPrice() {
+      if (this.totalPrice >= this.couponAmount) {
+        return this.totalPrice - this.couponAmount
+      } else {
+        return 0
+      }
+    },
+    couponAmount() {
+      return this.selectedCoupon.reduce((a, b) => a + b.amount, 0)
+    },
     isAgentSales() {
       const roles = normalizeRoles(this.userInfo.roles)
       return roles.includes('AGENT_SALES')
@@ -268,6 +371,7 @@ export default {
             price: p.price,
             name: p.name,
             isPkg: true,
+            pkgId: checkedPackageId,
             id: p.id
           }
         })
@@ -317,6 +421,37 @@ export default {
     }
   },
   methods: {
+    displayCoupon(coupon) {
+      let priceLimit = coupon.usingConditions.filter(c => c.type === usingCondition.ORDER_SUM_ORIGINAL_PRICE)
+      if (priceLimit.length) {
+        priceLimit = `满${priceLimit[0]['orderSumOriginalPrice'] / 100}元可用`
+      } else {
+        priceLimit = ''
+      }
+      let products = coupon.usingConditions.filter(c => c.type === usingCondition.PRODUCTS)
+      if (products.length) {
+        products = products[0]['products'].join(',')
+      } else {
+        products = '任何产品可用'
+      }
+      const expire = toHumanTime(coupon.startAt, 'YYYY.MM.DD') + '-' + toHumanTime(coupon.expiredAt, 'YYYY.MM.DD')
+      const o = {}
+      o.money = +(coupon.amount / 100).toFixed(0)
+      o.text = priceLimit
+      o.title = products
+      o.expire = expire
+      o.showBtn = false
+      return o
+    },
+    onCouponClick(coupon) {
+      if (this.selectedCoupon.length) {
+        this.selectedCoupon.splice(0, 1)
+      }
+      this.selectedCoupon.splice(0, 0, coupon)
+    },
+    async redeem() {
+      await redeemCoupon(this.couponCode)
+    },
     empty() {
       this.orderPayUrl = ''
       this.checkedPackageId = 0
@@ -487,6 +622,11 @@ export default {
         newOrder.discountCodes = [...codes]
       }
 
+      // 添加优惠券
+      if (this.selectedCoupon.length) {
+        newOrder.couponIds = this.selectedCoupon.map(c => c.id)
+      }
+
       if (!this.isBxUser) {
         try {
           await this.$confirm('是否购买 ?', '提示', {
@@ -505,14 +645,27 @@ export default {
         baxId: userInfo.id
       })
 
-      const oids = await createOrder(newOrder)
-      const summary = this.checkedProductDesc
+      this.payInProgress = true
 
-      await this.getOrderPayUrl(oids, summary)
+      try {
+        const oids = await createOrder(newOrder)
 
-      await this.payOrders(oids)
+        if (this.finalPrice !== 0) {
+          const summary = this.checkedProductDesc
 
-      Message.success('创建订单成功')
+          await this.getOrderPayUrl(oids, summary)
+
+          await this.payOrders(oids)
+        } else {
+          this.orderPayUrl = '0元订单无需支付'
+          this.payDialogVisible = true
+        }
+        Message.success('创建订单成功')
+      } catch (e) {
+        console.error(e)
+      }
+      this.payInProgress = false
+      this.couponVisible = false
     },
     centToYuan
   },
@@ -550,6 +703,13 @@ export default {
       getProductPackages(1),
       this.getProducts()
     ])
+  },
+  watch: {
+    async couponVisible(v) {
+      if (v) {
+        this.coupons = await getCoupons()
+      }
+    }
   }
 }
 </script>
@@ -625,6 +785,44 @@ export default {
         font-size: 18px;
         color: #ff1f0e;
       }
+
+      & .coupon-pane {
+        display: flex;
+        flex-wrap: wrap;
+        max-height: 300px;
+        overflow: auto;
+
+        &>.coupon {
+          width: 310px;
+          height: 100px;
+          margin-right: 10px;
+          margin-bottom: 10px;
+        }
+      }
+
+      & .coupon-code-pane {
+        display: flex;
+
+        & > .coupon-code-input {
+          width: 256px;
+          margin-right: 10px;
+        }
+      }
+    }
+
+    & > .price-summary {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      width: 328px;
+
+      & i {
+        text-align: right;
+        display: inline-block;
+        font-size: 18px;
+        color: #ff1f0e;
+        width: 100px;
+      }
     }
 
     & > div:first-child {
@@ -655,5 +853,11 @@ export default {
     }
   }
 }
-
+.hint-text {
+  text-align: center;
+  font-size: 1.5em;
+}
+.dialog-footer {
+  text-align: center;
+}
 </style>

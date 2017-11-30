@@ -1,13 +1,17 @@
 import { createStore } from 'vue-duo'
 
-import { getHomepageSummary } from './action'
+import { getHomepageSummary, getCoupons } from './action'
 
 const store = createStore({
-  summary: {}
+  summary: {},
+  coupons: []
 })
 
 store.subscribeActions({
-  [getHomepageSummary]: summary => ({ summary })
+  [getHomepageSummary]: summary => ({ summary }),
+  [getCoupons]: (coupons) => ({
+    coupons
+  })
 })
 
 export default store

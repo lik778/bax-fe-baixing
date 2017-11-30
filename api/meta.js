@@ -1,5 +1,5 @@
 
-import { toCamelcase } from 'object-keys-mapping'
+import { toCamelcase, reverseCamelcase } from 'object-keys-mapping'
 import { fengming, api } from './base'
 
 const isArray = Array.isArray
@@ -44,6 +44,33 @@ export async function getAreas() {
     value: c.name,
     label: c.nameCn
   }))
+}
+
+// coupons api
+
+export async function getCoupons(opt = {}) {
+  const option = {
+    status: 0,
+    offset: 0,
+    limit: 100,
+    onlyValid: true,
+    ...opt
+  }
+  const body = await api
+    .get('/meta/coupon')
+    .query(reverseCamelcase(option))
+    .json()
+
+  return toCamelcase(body.data)
+}
+
+export async function redeemCoupon(code) {
+  const body = await api
+    .post('/meta/coupon/apply')
+    .send({code})
+    .json()
+
+  return toCamelcase(body.data)
 }
 
 /**
