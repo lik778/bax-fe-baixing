@@ -87,7 +87,7 @@
         <li>3. 详细推广记录请在【全网通】-【数据报表】查看。</li>
       </footer>
     </section>
-    <charge-promotion-alert></charge-promotion-alert>
+    <charge-promotion-alert v-if="false"></charge-promotion-alert>
   </div>
 </template>
 
