@@ -692,7 +692,7 @@ export default {
       if (v) {
         // 必须先拿到 condition
         await getCondition()
-        await getCoupons()
+        await getCoupons({ onlyValid: true, status: 0 })
       }
     }
   }
