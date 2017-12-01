@@ -8,7 +8,7 @@
       <el-button type="primary" @click="redeem" :loading="redeemInProgress">兑换</el-button>
     </div>
     <el-tabs v-model="activeCouponTab">
-      <el-tab-pane label="优惠券" name="first">
+      <el-tab-pane label="有效优惠券" name="first">
         <div class="coupon-list">
           <coupon
             v-for="coupon in coupons"
@@ -17,19 +17,19 @@
             class="coupon"
             :showBtn="true"
             @click="onCouponClick(coupon)" />
-            <p v-if="coupons">暂无可用优惠券</p>
+            <p v-if="coupons.length === 0">暂无有效优惠券</p>
         </div>
       </el-tab-pane>
-      <el-tab-pane label="过期优惠券" name="second">
+      <el-tab-pane label="已过期或未生效" name="second">
         <div class="coupon-list">
           <coupon
-            v-for="coupon in expiredCoupons"
+            v-for="coupon in invalidCoupons"
             :key="coupon.id"
             :data="displayCoupon(coupon)"
             class="coupon"
             @click="onCouponClick(coupon)"
             :disabled="true" />
-            <p v-if="coupons">暂无过期优惠券</p>
+            <p v-if="invalidCoupons.length === 0">暂无已过期或未生效优惠券</p>
         </div>
       </el-tab-pane>
     </el-tabs>
@@ -51,7 +51,7 @@
 import Topbar from 'com/topbar'
 import Coupon from 'com/common/coupon'
 
-import { getCoupons, redeemCoupon, getCondition } from './action'
+import { getCoupons, getValidCoupons, redeemCoupon, getCondition } from './action'
 import store from './store'
 import { displayCoupon } from 'util/meta'
 
@@ -74,6 +74,24 @@ export default {
     Topbar,
     Coupon
   },
+
+  computed: {
+    invalidCoupons() {
+      const seconds = Math.floor(Date.now() / 1000)
+      return this.coupons.filter(coupon => {
+        if (coupon.status !== 0) {
+          return true
+        }
+        if (seconds < coupon.startAt) {
+          return true
+        }
+        if (coupon.expiredAt < seconds) {
+          return true
+        }
+        return false
+      })
+    }
+  },
   methods: {
     onCouponClick() {
       this.$router.push({
@@ -95,8 +113,17 @@ export default {
   },
   async mounted() {
     await getCondition()
-    getCoupons({onlyValid: true})
-    getCoupons({onlyValid: false})
+    await getCoupons()
+  },
+
+  watch: {
+    async activeCouponTab(v) {
+      if (v === 'first') {
+        await getValidCoupons()
+      } else if (v === 'second') {
+        await getCoupons()
+      }
+    }
   }
 }
 </script>

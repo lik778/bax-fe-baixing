@@ -1,14 +1,17 @@
 import { createStore } from 'vue-duo'
 
-import { getCoupons, redeemCoupon, getCondition } from './action'
+import { getValidCoupons, getCoupons, redeemCoupon, getCondition } from './action'
 
 const store = createStore({
+  validCoupon: [],
   coupons: [],
-  expiredCoupons: [],
   usingConditions: []
 })
 
 store.subscribeActions({
+  [getValidCoupons]: (validCoupon) => ({
+    validCoupon
+  }),
   [getCoupons]: (coupons) => ({
     coupons
   }),

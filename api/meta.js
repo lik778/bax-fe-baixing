@@ -50,10 +50,8 @@ export async function getAreas() {
 
 export async function getCoupons(opt = {}) {
   const option = {
-    status: 0,
     offset: 0,
     limit: 100,
-    onlyValid: true,
     ...opt
   }
   const body = await api
