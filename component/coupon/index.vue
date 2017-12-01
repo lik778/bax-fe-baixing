@@ -8,24 +8,42 @@
       <el-button type="primary" @click="redeem" :loading="redeemInProgress">兑换</el-button>
     </div>
     <el-tabs v-model="activeCouponTab">
-      <el-tab-pane label="优惠券" name="first" class="coupon-pane">
-        <coupon
-          v-for="coupon in coupons"
-          :key="coupon.id"
-          :data="displayCoupon(coupon)"
-          class="coupon"
-          @click="onCouponClick(coupon)" />
+      <el-tab-pane label="优惠券" name="first">
+        <div class="coupon-list">
+          <coupon
+            v-for="coupon in coupons"
+            :key="coupon.id"
+            :data="displayCoupon(coupon)"
+            class="coupon"
+            :showBtn="true"
+            @click="onCouponClick(coupon)" />
+            <p v-if="coupons">暂无可用优惠券</p>
+        </div>
       </el-tab-pane>
-      <el-tab-pane label="过期优惠券" name="second" class="coupon-pane">
-        <coupon
-          v-for="coupon in expiredCoupons"
-          :key="coupon.id"
-          :data="displayCoupon(coupon)"
-          class="coupon"
-          @click="onCouponClick(coupon)"
-          :disabled="true" />
+      <el-tab-pane label="过期优惠券" name="second">
+        <div class="coupon-list">
+          <coupon
+            v-for="coupon in expiredCoupons"
+            :key="coupon.id"
+            :data="displayCoupon(coupon)"
+            class="coupon"
+            @click="onCouponClick(coupon)"
+            :disabled="true" />
+            <p v-if="coupons">暂无过期优惠券</p>
+        </div>
       </el-tab-pane>
     </el-tabs>
+    <footer>
+      <h4>优惠券使用说明</h4>
+      <ol>
+        <li>1.本券可在适用范围内购买付费产品时，抵扣对应金额的费用。</li>
+        <li>2.本券不能兑换现金，不找零。</li>
+        <li>3.发生退款时，现金券不退还。</li>
+        <li>4.请在到期时间前使用，券过期不补。</li>
+        <li>5.一次购买可使用张数以优惠券面提示为准。</li>
+        <li>6.使用规则最终解释权归百姓网所有。</li>
+      </ol>
+    </footer>
   </div>
 </template>
 
@@ -33,9 +51,9 @@
 import Topbar from 'com/topbar'
 import Coupon from 'com/common/coupon'
 
+import { getCoupons, redeemCoupon, getCondition } from './action'
 import store from './store'
-import { getCoupons, redeemCoupon } from './action'
-import { toHumanTime } from 'utils'
+import { displayCoupon } from 'util/meta'
 
 export default {
   store,
@@ -73,30 +91,10 @@ export default {
       }
       this.redeemInProgress = false
     },
-    displayCoupon(coupon, showBtn = true) {
-      let priceLimit = coupon.usingConditions.filter(c => c.type === 101)
-      if (priceLimit.length) {
-        priceLimit = `满${priceLimit[0]['orderSumOriginalPrice'] / 100}元可用`
-      } else {
-        priceLimit = ''
-      }
-      let products = coupon.usingConditions.filter(c => c.type === 201)
-      if (products.length) {
-        products = products[0]['products'].join(',')
-      } else {
-        products = '任何产品可用'
-      }
-      const expire = toHumanTime(coupon.startAt, 'YYYY.MM.DD') + '-' + toHumanTime(coupon.expiredAt, 'YYYY.MM.DD')
-      const o = {}
-      o.money = +(coupon.amount / 100).toFixed(0)
-      o.text = priceLimit
-      o.title = products
-      o.expire = expire
-      o.showBtn = showBtn
-      return o
-    }
+    displayCoupon
   },
-  mounted() {
+  async mounted() {
+    await getCondition()
     getCoupons({onlyValid: true})
     getCoupons({onlyValid: false})
   }
@@ -121,7 +119,7 @@ export default {
   }
 }
 
-.coupon-pane {
+.coupon-list {
   display: flex;
   flex-wrap: wrap;
 
@@ -131,5 +129,15 @@ export default {
     margin-right: 20px;
     margin-bottom: 20px;
   }
+}
+
+hr {
+  border-top: 1px solid rgb(209, 219, 229);
+}
+footer {
+  margin: 30px 0;
+  font-size: 13px;
+  line-height: 1.62;
+  color: #6a778c;
 }
 </style>

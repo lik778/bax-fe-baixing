@@ -12,14 +12,14 @@
         <router-link :to="{name: 'qwt-promotion-list'}"><el-button type="primary">管理</el-button></router-link>
       </el-col>
       <el-col :span="4" class="block">
-        <h3>推广可用资金</h3>
-        <p><span class="number">{{summary.balance / 100}}</span>元</p>
-        <router-link :to="{name: 'qwt-charge', query: {mode: 'charge-only'}}"><el-button type="primary">充值</el-button></router-link>
-      </el-col>
-      <el-col :span="4" class="block">
         <h3>可用优惠券</h3>
         <p><span class="number">{{coupons.length}}</span>张</p>
         <router-link :to="{name: 'coupon'}"><el-button type="primary">查看</el-button></router-link>
+      </el-col>
+      <el-col :span="4" class="block">
+        <h3>推广可用资金</h3>
+        <p><span class="number">{{summary.balance / 100}}</span>元</p>
+        <router-link :to="{name: 'qwt-charge', query: {mode: 'charge-only'}}"><el-button type="primary">充值</el-button></router-link>
       </el-col>
       <el-col :span="4"></el-col>
       <el-col :span="4"></el-col>

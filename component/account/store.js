@@ -1,12 +1,13 @@
 import { createStore } from 'vue-duo'
 
-import { getLogs, getSummary } from './action'
+import { getLogs, getSummary, getCoupons } from './action'
 
 const store = createStore({
   logQuery: {},
   logs: [],
 
-  summary: {}
+  summary: {},
+  coupons: []
 })
 
 store.subscribeActions({
@@ -16,6 +17,9 @@ store.subscribeActions({
   }),
   [getSummary]: summary => ({
     summary
+  }),
+  [getCoupons]: (coupons) => ({
+    coupons
   })
 })
 

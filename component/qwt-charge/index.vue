@@ -57,6 +57,7 @@
                 class="coupon"
                 @click="onCouponClick(coupon)"
                 :selected="selectedCoupon.includes(coupon)"/>
+                <p v-if="effectiveCoupons.length === 0">暂无可用优惠券</p>
             </el-tab-pane>
             <el-tab-pane label="优惠码兑换" name="second" class="coupon-code-pane">
               <el-input class="coupon-code-input" v-model.trim="couponCode" placeholder="输入兑换码"/>
@@ -142,15 +143,17 @@ import Clipboard from 'com/widget/clipboard'
 import PriceList from './price-list'
 import Topbar from 'com/topbar'
 import Coupon from 'com/common/coupon'
-import { usingCondition } from '../../constant/coupon'
 
 import { Message } from 'element-ui'
 
-import { centToYuan, toHumanTime } from 'utils'
+import { centToYuan } from 'utils'
 
 import store from './store'
 
 import track from 'util/track'
+
+import { displayCoupon } from 'util/meta'
+import { usingCondition } from 'constant/coupon'
 
 import {
   allowGetOrderPayUrl,
@@ -422,29 +425,7 @@ export default {
     }
   },
   methods: {
-    displayCoupon(coupon) {
-      let priceLimit = coupon.usingConditions.filter(c => c.type === usingCondition.ORDER_SUM_ORIGINAL_PRICE)
-      if (priceLimit.length) {
-        priceLimit = `满${priceLimit[0]['orderSumOriginalPrice'] / 100}元可用`
-      } else {
-        priceLimit = ''
-      }
-      const allProducts = this.usingConditions[usingCondition.PRODUCTS].fields[0].choices
-      let products = coupon.usingConditions.filter(c => c.type === usingCondition.PRODUCTS)
-      if (products.length) {
-        products = products[0]['products'].map(pid => allProducts[+pid]).join(',')
-      } else {
-        products = '任何产品可用'
-      }
-      const expire = toHumanTime(coupon.startAt, 'YYYY.MM.DD') + '-' + toHumanTime(coupon.expiredAt, 'YYYY.MM.DD')
-      const o = {}
-      o.money = +(coupon.amount / 100).toFixed(0)
-      o.text = priceLimit
-      o.title = products
-      o.expire = expire
-      o.showBtn = false
-      return o
-    },
+    displayCoupon,
     onCouponClick(coupon) {
       if (this.selectedCoupon.length) {
         this.selectedCoupon.splice(0, 1)

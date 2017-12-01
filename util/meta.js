@@ -1,5 +1,7 @@
 
 import clone from 'clone'
+import { usingCondition } from 'constant/coupon'
+import { toHumanTime } from 'utils'
 
 const isArray = Array.isArray
 
@@ -110,6 +112,33 @@ export function getAreaParent(allAreas, name) {
   })
 
   return result
+}
+
+export function displayCoupon(coupon) {
+  let priceLimit = coupon.usingConditions.filter(c => c.type === usingCondition.ORDER_SUM_ORIGINAL_PRICE)
+
+  if (priceLimit.length) {
+    priceLimit = `满${priceLimit[0]['orderSumOriginalPrice'] / 100}元可用`
+  } else {
+    priceLimit = ''
+  }
+
+  const allProducts = this.usingConditions[usingCondition.PRODUCTS].fields[0].choices
+  let products = coupon.usingConditions.filter(c => c.type === usingCondition.PRODUCTS)
+  if (products.length) {
+    products = products[0]['products'].map(pid => allProducts[+pid]).join(',')
+  } else {
+    products = '任何产品可用'
+  }
+
+  const expire = toHumanTime(coupon.startAt, 'YYYY.MM.DD') + '-' + toHumanTime(coupon.expiredAt, 'YYYY.MM.DD')
+
+  const o = {}
+  o.money = +(coupon.amount / 100).toFixed(0)
+  o.text = priceLimit
+  o.title = products
+  o.expire = expire
+  return o
 }
 
 /**

@@ -7,7 +7,7 @@
     <div class="detail">
       <div class="type">{{data.title}}</div>
       <div class="date">有效期：{{data.expire}}</div>
-      <div class="btn-use" v-if="!disabled && data.showBtn">立即使用</div>
+      <div class="btn-use" v-if="!disabled && showBtn">立即使用</div>
     </div>
   </div>
 </template>
@@ -25,6 +25,10 @@ export default {
       default: false
     },
     disabled: {
+      type: Boolean,
+      default: false
+    },
+    showBtn: {
       type: Boolean,
       default: false
     }

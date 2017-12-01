@@ -1,10 +1,11 @@
 import { createStore } from 'vue-duo'
 
-import { getCoupons, redeemCoupon } from './action'
+import { getCoupons, redeemCoupon, getCondition } from './action'
 
 const store = createStore({
   coupons: [],
-  expiredCoupons: []
+  expiredCoupons: [],
+  usingConditions: []
 })
 
 store.subscribeActions({
@@ -19,7 +20,10 @@ store.subscribeActions({
     } else {
       return {}
     }
-  }
+  },
+  [getCondition]: (conditions) => ({
+    usingConditions: conditions.usingConditions
+  })
 })
 
 export default store
