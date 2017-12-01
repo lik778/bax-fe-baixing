@@ -6,7 +6,8 @@ import {
   getProductPackages,
   getProducts,
   getCoupons,
-  redeemCoupon
+  redeemCoupon,
+  getCondition
 } from './action'
 
 // const returned = [{
@@ -106,7 +107,8 @@ const store = createStore({
   allDiscounts: [],
   packages: [],
   products: [],
-  coupons: []
+  coupons: [],
+  usingConditions: []
 })
 
 store.subscribeActions({
@@ -124,6 +126,9 @@ store.subscribeActions({
   }),
   [redeemCoupon]: (coupon) => ({
     coupons: [coupon, ...store.state.coupons]
+  }),
+  [getCondition]: (conditions) => ({
+    usingConditions: conditions.usingConditions
   })
 })
 

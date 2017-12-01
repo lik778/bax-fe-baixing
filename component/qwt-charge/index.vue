@@ -172,7 +172,8 @@ import {
   getUserInfo,
   payOrders,
   getCoupons,
-  redeemCoupon
+  redeemCoupon,
+  getCondition
 } from './action'
 
 /**
@@ -428,9 +429,10 @@ export default {
       } else {
         priceLimit = ''
       }
+      const allProducts = this.usingConditions[usingCondition.PRODUCTS].fields[0].choices
       let products = coupon.usingConditions.filter(c => c.type === usingCondition.PRODUCTS)
       if (products.length) {
-        products = products[0]['products'].join(',')
+        products = products[0]['products'].map(pid => allProducts[+pid]).join(',')
       } else {
         products = '任何产品可用'
       }
@@ -707,7 +709,9 @@ export default {
   watch: {
     async couponVisible(v) {
       if (v) {
-        this.coupons = await getCoupons()
+        // 必须先拿到 condition
+        await getCondition()
+        await getCoupons()
       }
     }
   }

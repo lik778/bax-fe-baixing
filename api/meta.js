@@ -73,6 +73,14 @@ export async function redeemCoupon(code) {
   return toCamelcase(body.data)
 }
 
+export async function getCondition() {
+  const body = await api
+    .get('/meta/coupon/condition')
+    .json()
+
+  return toCamelcase(body.data)
+}
+
 /**
  * private
  */

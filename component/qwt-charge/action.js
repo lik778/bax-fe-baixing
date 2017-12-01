@@ -48,3 +48,7 @@ export const getCoupons = createAction((opt) => {
 export const redeemCoupon = createAction((code) => {
   return mapi.redeemCoupon(code)
 })
+
+export const getCondition = createAction(() => {
+  return mapi.getCondition()
+})
