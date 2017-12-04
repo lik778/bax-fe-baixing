@@ -56,6 +56,9 @@
       Topbar,
       SectionHeader
     },
+    data: {
+      load: false // 仅查询一次
+    },
     computed: {
       allowSeeAccount() {
         return allowSeeAccount(this.userInfo.roles)
@@ -64,6 +67,10 @@
     watch: {
       async userInfo(user) {
         if (this.allowSeeAccount) {
+          if (this.load) return
+
+          this.load = true
+
           await Promise.all([
             getHomepageSummary(),
             getCoupons()
