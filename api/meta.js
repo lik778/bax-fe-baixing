@@ -46,8 +46,6 @@ export async function getAreas() {
   }))
 }
 
-// coupons api
-
 export async function getCoupons(opt = {}) {
   const option = {
     offset: 0,

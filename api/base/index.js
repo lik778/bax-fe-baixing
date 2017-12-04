@@ -9,7 +9,7 @@ import {
   fengmingApiHost,
   dashboardHost,
   cashcowHost,
-  baxApiHost,
+  baxApiHost
 } from 'config'
 
 import es from 'base/es'
