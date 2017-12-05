@@ -77,10 +77,6 @@
           ])
         }
       }
-    },
-    mounted() {
-      getHomepageSummary()
-      getCoupons({ onlyValid: true, status: 0 })
     }
   }
 </script>
