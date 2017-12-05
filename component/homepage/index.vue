@@ -73,10 +73,14 @@
 
           await Promise.all([
             getHomepageSummary(),
-            getCoupons()
+            getCoupons({ onlyValid: true, status: 0 })
           ])
         }
       }
+    },
+    mounted() {
+      getHomepageSummary()
+      getCoupons({ onlyValid: true, status: 0 })
     }
   }
 </script>

@@ -46,7 +46,7 @@
     },
     mounted() {
       getSummary()
-      getCoupons()
+      getCoupons({ onlyValid: true, status: 0 })
     }
   }
 </script>
