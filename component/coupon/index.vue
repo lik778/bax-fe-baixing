@@ -11,13 +11,13 @@
       <el-tab-pane label="有效优惠券" name="first">
         <div class="coupon-list">
           <coupon
-            v-for="coupon in coupons"
+            v-for="coupon in validCoupons"
             :key="coupon.id"
             :data="displayCoupon(coupon)"
             class="coupon"
             :showBtn="true"
             @click="onCouponClick(coupon)" />
-            <p v-if="coupons.length === 0">暂无有效优惠券</p>
+            <p v-if="validCoupons.length === 0">暂无有效优惠券</p>
         </div>
       </el-tab-pane>
       <el-tab-pane label="已过期或未生效" name="second">
@@ -113,7 +113,7 @@ export default {
   },
   async mounted() {
     await getCondition()
-    await getCoupons()
+    await getValidCoupons()
   },
 
   watch: {
