@@ -77,6 +77,14 @@
           ])
         }
       }
+    },
+    async mounted() {
+      if (this.allowSeeAccount) {
+        await Promise.all([
+          getHomepageSummary(),
+          getCoupons({ onlyValid: true, status: 0 })
+        ])
+      }
     }
   }
 </script>
