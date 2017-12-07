@@ -104,10 +104,13 @@ export default {
     async redeem() {
       this.redeemInProgress = true
       const result = await redeemCoupon(this.couponCode)
-      if (!result.id) {
-        this.$message.error('兑换失败')
+      if (result === 0) {
+        this.redeemInProgress = false
+        return this.$message.error('兑换失败')
       }
+      this.$message.success('兑换成功')
       this.redeemInProgress = false
+      await getValidCoupons()
     },
     displayCoupon
   },
@@ -152,7 +155,7 @@ export default {
 
   &>.coupon {
     width: 300px;
-    height: 90px;
+    min-height: 90px;
     margin-right: 20px;
     margin-bottom: 20px;
   }

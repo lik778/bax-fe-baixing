@@ -66,7 +66,7 @@ export async function redeemCoupon(code) {
     .send({code})
     .json()
 
-  return toCamelcase(body.data)
+  return body.data
 }
 
 export async function getCondition() {

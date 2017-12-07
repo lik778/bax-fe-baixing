@@ -6,7 +6,6 @@ import {
   getProductPackages,
   getProducts,
   getCoupons,
-  redeemCoupon,
   getCondition
 } from './action'
 
@@ -30,9 +29,6 @@ store.subscribeActions({
   }),
   [getCoupons]: (coupons) => ({
     coupons
-  }),
-  [redeemCoupon]: (coupon) => ({
-    coupons: [coupon, ...store.state.coupons]
   }),
   [getCondition]: (conditions) => ({
     usingConditions: conditions.usingConditions

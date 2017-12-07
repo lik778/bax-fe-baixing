@@ -85,9 +85,11 @@ export default {
     flex-grow: 1;
     &>.type {
       font-size: 1em;
+      margin: 2px auto;
     }
     &>.date {
       font-size: .8em;
+      color: gray;
     }
     &>.btn-use {
       font-size: .8em;
@@ -95,6 +97,8 @@ export default {
       padding: 0 10px;
       border: 1px solid #FDB335;
       border-radius: 30px;
+      margin: 5px auto;
+
     }
   }
 }

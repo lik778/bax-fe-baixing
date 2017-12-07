@@ -130,7 +130,6 @@ export function displayCoupon(coupon) {
   let productConditions = coupon.usingConditions.filter(c => c.type === usingCondition.PRODUCTS)
   let packageConditions = coupon.usingConditions.filter(c => c.type === usingCondition.PRODUCT_PACKAGES)
   if (productConditions.length) {
-    console.log(productConditions)
     products = productConditions[0]['products'].map(pid => allProducts[+pid]).join(',')
   }
   if (packageConditions.length) {

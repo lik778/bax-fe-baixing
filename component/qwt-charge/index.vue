@@ -433,7 +433,16 @@ export default {
       this.selectedCoupon.splice(0, 0, coupon)
     },
     async redeem() {
-      await redeemCoupon(this.couponCode)
+      if (!this.couponCode) {
+        return
+      }
+      const result = await redeemCoupon(this.couponCode)
+      if (result === 0) {
+        this.$message.error('兑换失败')
+        return
+      }
+      this.$message.success('兑换成功')
+      await getCoupons({ onlyValid: true, status: 0 })
     },
     empty() {
       this.orderPayUrl = ''
@@ -779,7 +788,7 @@ export default {
 
         &>.coupon {
           width: 310px;
-          height: 100px;
+          min-height: 100px;
           margin-right: 10px;
           margin-bottom: 10px;
         }
