@@ -5,7 +5,8 @@
       <small class="desc">{{data.text}}</small>
     </div>
     <div class="detail">
-      <div class="type">{{data.title}}</div>
+      <div class="type">{{data.products}}</div>
+      <div class="type">{{data.packages}}</div>
       <div class="date">有效期：{{data.expire}}</div>
       <div class="btn-use" v-if="!disabled && showBtn">立即使用</div>
     </div>
@@ -83,7 +84,7 @@ export default {
     align-items: center;
     flex-grow: 1;
     &>.type {
-      font-size: 1.2em;
+      font-size: 1em;
     }
     &>.date {
       font-size: .8em;

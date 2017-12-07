@@ -263,8 +263,8 @@ export default {
     },
     effectiveCoupons() {
       // 返回符合当前购买产品等条件的可用券
-      let products = this.checkedProducts
       return this.coupons.filter(coupon => {
+        let products = this.checkedProducts
         for (const condition of coupon.usingConditions) {
           if (condition.type === usingCondition.PRODUCT_PACKAGES) {
             products = products.filter(p => condition.productPackages.includes(p.pkgId))
