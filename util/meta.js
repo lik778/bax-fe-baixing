@@ -129,14 +129,19 @@ export function displayCoupon(coupon) {
   let packages = '任何套餐可用'
   let productConditions = coupon.usingConditions.filter(c => c.type === usingCondition.PRODUCTS)
   let packageConditions = coupon.usingConditions.filter(c => c.type === usingCondition.PRODUCT_PACKAGES)
+
   if (productConditions.length) {
-    products = productConditions[0]['products'].map(pid => allProducts[+pid]).join(',')
-  }
-  if (packageConditions.length) {
-    packages = productConditions[0]['products'].map(pid => allPackages[+pid]).join(',')
+    products = productConditions[0].products
+      .map(pid => allProducts[+pid]).join(',')
   }
 
-  const expire = toHumanTime(coupon.startAt, 'YYYY.MM.DD') + '-' + toHumanTime(coupon.expiredAt, 'YYYY.MM.DD')
+  if (packageConditions.length) {
+    packages = packageConditions[0].productPackages
+      .map(pid => allPackages[+pid]).join(',')
+  }
+
+  const expire = toHumanTime(coupon.startAt, 'YYYY.MM.DD') + '-' +
+    toHumanTime(coupon.expiredAt, 'YYYY.MM.DD')
 
   const o = {}
   o.money = +(coupon.amount / 100).toFixed(0)
