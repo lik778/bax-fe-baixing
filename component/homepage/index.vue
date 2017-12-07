@@ -56,8 +56,10 @@
       Topbar,
       SectionHeader
     },
-    data: {
-      load: false // 仅查询一次
+    data() {
+      return {
+        load: false // 仅查询一次
+      }
     },
     computed: {
       allowSeeAccount() {

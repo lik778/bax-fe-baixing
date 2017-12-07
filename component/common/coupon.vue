@@ -1,13 +1,13 @@
 <template>
   <div class="coupon" :class="{selected, disabled}" @click="onClick">
     <div class="brief">
-      <h2>￥{{data.money}}</h2>
-      <small class="desc">{{data.text}}</small>
+      <h2>￥{{coupon.money}}</h2>
+      <small class="desc">{{coupon.text}}</small>
     </div>
     <div class="detail">
-      <div class="type">{{data.products}}</div>
-      <div class="type">{{data.packages}}</div>
-      <div class="date">有效期：{{data.expire}}</div>
+      <div class="type">{{coupon.products}}</div>
+      <div class="type">{{coupon.packages}}</div>
+      <div class="date">有效期：{{coupon.expire}}</div>
       <div class="btn-use" v-if="!disabled && showBtn">立即使用</div>
     </div>
   </div>
@@ -15,9 +15,9 @@
 
 <script>
 export default {
-  name: 'coupon',
+  name: 'bax-coupon',
   props: {
-    data: {
+    coupon: {
       type: Object,
       required: true
     },
@@ -53,7 +53,7 @@ export default {
   border: 2px solid transparent;
   cursor: pointer;
 
-  &>.brief {
+  & > .brief {
     min-width: 100px;
     display: flex;
     flex-direction: column;
@@ -73,8 +73,8 @@ export default {
     &>.desc {
       font-size: .8em;
     }
-
   }
+
   &>.detail {
     border: 1px solid #FEC435;
     border-left: 2px dashed #FEC435;
@@ -85,7 +85,7 @@ export default {
     flex-grow: 1;
     &>.type {
       font-size: 1em;
-      margin: 2px auto;
+      margin: 2px;
     }
     &>.date {
       font-size: .8em;

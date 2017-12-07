@@ -13,7 +13,7 @@
           <coupon
             v-for="coupon in validCoupons"
             :key="coupon.id"
-            :data="displayCoupon(coupon)"
+            :coupon="displayCoupon(coupon)"
             class="coupon"
             :showBtn="true"
             @click="onCouponClick(coupon)" />
@@ -25,7 +25,7 @@
           <coupon
             v-for="coupon in invalidCoupons"
             :key="coupon.id"
-            :data="displayCoupon(coupon)"
+            :coupon="displayCoupon(coupon)"
             class="coupon"
             @click="onCouponClick(coupon)"
             :disabled="true" />
@@ -63,6 +63,10 @@ export default {
       required: true
     }
   },
+  components: {
+    Topbar,
+    Coupon
+  },
   data() {
     return {
       couponCode: '',
@@ -70,11 +74,6 @@ export default {
       redeemInProgress: false
     }
   },
-  components: {
-    Topbar,
-    Coupon
-  },
-
   computed: {
     invalidCoupons() {
       const seconds = Math.floor(Date.now() / 1000)
@@ -118,7 +117,6 @@ export default {
     await getCondition()
     await getValidCoupons()
   },
-
   watch: {
     async activeCouponTab(v) {
       if (v === 'first') {

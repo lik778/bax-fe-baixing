@@ -53,7 +53,7 @@
               <coupon
                 v-for="coupon in effectiveCoupons"
                 :key="coupon.id"
-                :data="displayCoupon(coupon)"
+                :coupon="displayCoupon(coupon)"
                 class="coupon"
                 @click="onCouponClick(coupon)"
                 :selected="selectedCoupon.includes(coupon)"/>
