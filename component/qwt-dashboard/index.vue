@@ -29,17 +29,10 @@
       <section>
         <aside>推广日期:</aside>
         <span>
-          <i class="badge" :aria-checked="query.timeType === 'last-7-days'"
-            @click="query.timeType = 'last-7-days'">
-            近7天
-          </i>
-          <i class="badge" :aria-checked="query.timeType === 'last-month'"
-            @click="query.timeType = 'last-month'">
-            近1个月
-          </i>
-          <i class="badge" v-if="query.timeType !== 'custom'"
-            @click="query.timeType = 'custom'">
-            自定义
+          <i class="badge" v-for="(t, i) in timeTypes" :key="i"
+            :aria-checked="query.timeType === t.value"
+            @click="query.timeType = t.value">
+            {{ t.label }}
           </i>
           <el-date-picker v-if="query.timeType === 'custom'"
             type="daterange" placeholder="选择日期"
@@ -133,6 +126,50 @@ import {
 
 import store from './store'
 
+const timeTypes = [{
+  label: '今日',
+  value: 'today',
+  getTime: () => ({
+    startAt: moment().subtract('1', 'days').unix(),
+    endAt: moment().unix()
+  })
+}, {
+  label: '昨日',
+  value: 'yesterday',
+  getTime: () => ({
+    startAt: moment().subtract('2', 'days').unix(),
+    endAt: moment().subtract('1', 'days').unix()
+  })
+}, {
+  label: '近7天',
+  value: 'last-7-days',
+  getTime: () => ({
+    startAt: moment().subtract('7', 'days').unix(),
+    endAt: moment().unix()
+
+  })
+}, {
+  label: '本月',
+  value: 'this-month',
+  getTime: () => ({
+    startAt: moment().subtract('1', 'month').unix(),
+    endAt: moment().unix()
+  })
+}, {
+  label: '上月',
+  value: 'last-month',
+  getTime: () => ({
+    startAt: moment().subtract('2', 'month').unix(),
+    endAt: moment().subtract('1', 'month').unix()
+  })
+}, {
+  label: '自定义',
+  value: 'custom',
+  getTime: () => ({
+
+  })
+}]
+
 export default {
   name: 'qwt-dashboard',
   store,
@@ -157,9 +194,10 @@ export default {
       allDimensions,
       allTimeUnits,
       allDevices,
+      timeTypes,
 
       query: {
-        timeType: 'last-7-days', // 'last-7-days', 'last-month', 'custom'
+        timeType: timeTypes[0].value,
         timeRange: [],
 
         checkedCampaigns: [],
@@ -167,7 +205,7 @@ export default {
 
         dimension: 0,
         timeUnit: 1,
-        channel: 5,
+        channel: 0,
         device: 0
       }
     }
@@ -192,13 +230,13 @@ export default {
       if (query.timeType === 'custom') {
         startAt = toTimestamp(query.timeRange[0], 'YYYY-MM-DD')
         endAt = toTimestamp(query.timeRange[1], 'YYYY-MM-DD')
-      } else if (query.timeType === 'last-month') {
-        startAt = moment().subtract('1', 'month').unix()
-        endAt = moment().unix()
       } else {
-        // 7 days
-        startAt = moment().subtract('7', 'days').unix()
-        endAt = moment().unix()
+        const t = timeTypes
+          .find(t => t.value === query.timeType)
+          .getTime()
+
+        startAt = t.startAt
+        endAt = t.endAt
       }
 
       const q = {

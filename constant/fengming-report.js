@@ -5,9 +5,6 @@ export const allDimensions = [{
 }, {
   label: '关键词维度',
   value: 1
-}, {
-  label: '全部',
-  value: 2
 }]
 
 export const allDevices = [{
