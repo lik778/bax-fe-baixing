@@ -164,10 +164,7 @@ const timeTypes = [{
   })
 }, {
   label: '自定义',
-  value: 'custom',
-  getTime: () => ({
-
-  })
+  value: 'custom'
 }]
 
 export default {

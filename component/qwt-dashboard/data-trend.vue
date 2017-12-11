@@ -90,23 +90,34 @@ export default {
             rotate: 60
           }
         },
-        yAxis: {
-          type: 'value'
-        },
+        yAxis: [{
+          type: 'value',
+          position: 'left',
+          min: 0,
+          max: Math.max(...this.costData)
+        }, {
+          type: 'value',
+          position: 'right',
+          min: 0,
+          max: Math.max(...[...this.showData, ...this.clickData])
+        }],
         series: [{
           name: '消费',
           type: 'line',
           stack: '消费',
+          yAxisIndex: 0,
           data: this.costData
         }, {
           name: '展现',
           type: 'line',
           stack: '展现',
+          yAxisIndex: 1,
           data: this.showData
         }, {
           name: '点击量',
           type: 'line',
           stack: '点击量',
+          yAxisIndex: 1,
           data: this.clickData
         }]
       }
