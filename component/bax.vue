@@ -7,8 +7,6 @@
       :allAreas="allAreas"
       :allRoles="allRoles">
     </router-view>
-    <reset-email :visible="emailMissing" :uid="currentUser.id">
-    </reset-email>
     <go-to-bottom></go-to-bottom>
     <back-to-top></back-to-top>
   </content>
@@ -16,7 +14,6 @@
 
 <script>
 import GoToBottom from './widget/go-to-bottom'
-import ResetEmail from './common/reset-email'
 import BackToTop from './widget/back-to-top'
 import Sidebar from './sidebar'
 
@@ -35,7 +32,6 @@ export default {
   name: 'bax',
   store,
   components: {
-    ResetEmail,
     GoToBottom,
     BackToTop,
     Sidebar
