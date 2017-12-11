@@ -1,4 +1,7 @@
 
+export const DIMENSION_CAMPAIGN = 0
+export const DIMENSION_KEYWORD = 1
+
 export const allDimensions = [{
   label: '计划维度',
   value: 0

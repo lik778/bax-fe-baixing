@@ -24,7 +24,7 @@
                 @click="onCheckKeyword(keyword)">
                 <el-checkbox :value="false">
                 </el-checkbox>
-                <label>{{ keyword.word }}</label>
+                <label>{{ fmtWord(keyword.word) }}</label>
               </li>
             </div>
           </li>
@@ -50,7 +50,7 @@
                 @click="onCheckKeyword(keyword, campaign)">
                 <el-checkbox :value="true">
                 </el-checkbox>
-                <label>{{ keyword.word }}</label>
+                <label>{{ fmtWord(keyword.word) }}</label>
               </li>
             </div>
           </li>
@@ -227,16 +227,22 @@ export default {
     keywordChecked(id) {
       return this.keywordIds.includes(id)
     },
+    fmtWord(w) {
+      if (w.length > 9) {
+        return w.slice(0, 9) + '...'
+      }
+
+      return w
+    },
     empty() {
       this.allCampaigns = []
       this.allKeywords = {}
     },
     cancel() {
-      // this.$emit('cancel')
       this.$emit('ok')
     },
     ok() {
-      this.$emit('ok', [])
+      this.$emit('ok')
     }
   },
   watch: {

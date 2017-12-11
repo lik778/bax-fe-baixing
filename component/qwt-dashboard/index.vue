@@ -108,6 +108,7 @@ import { toTimestamp } from 'utils'
 import moment from 'moment'
 
 import {
+  DIMENSION_CAMPAIGN,
   allDimensions,
   allTimeUnits,
   allDevices,
@@ -200,7 +201,7 @@ export default {
         checkedCampaigns: [],
         checkedKeywords: [],
 
-        dimension: 0,
+        dimension: DIMENSION_CAMPAIGN,
         timeUnit: 1,
         channel: 0,
         device: 0
