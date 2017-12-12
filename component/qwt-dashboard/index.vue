@@ -17,16 +17,6 @@
         </span>
       </section>
       <section>
-        <aside>数据维度:</aside>
-        <span>
-          <i class="badge" v-for="d of allDimensions" :key="d.value"
-            :aria-checked="query.dimension === d.value"
-            @click="query.dimension = d.value">
-            {{ d.label }}
-          </i>
-        </span>
-      </section>
-      <section>
         <aside>推广日期:</aside>
         <span>
           <i class="badge" v-for="(t, i) in timeTypes" :key="i"
@@ -63,18 +53,39 @@
       <section>
         <aside>计划/关键词筛选:</aside>
         <span class="kw-list">
-          <el-tag v-for="c in query.checkedCampaigns" closable
-            type="success" :key="'c-' + c.id"
-            @close="removeCampaign(c)">
-            {{ '计划：' + c.id }}
-          </el-tag>
-          <el-tag v-for="k in query.checkedKeywords" closable
-            type="success" :key="'k-' + k.id"
-            @close="removeKeyword(k)">
-            {{ k.word }}
-          </el-tag>
-          <i class="el-icon-plus"
-            @click="pksDialogVisible = true">
+          <div>
+            <el-tag v-for="c in displayCheckedCampaigns" closable
+              type="success" :key="'c-' + c.id"
+              @close="removeCampaign(c)">
+              {{ '计划：' + c.id }}
+            </el-tag>
+            <el-tag v-for="k in displayCheckedKeywords" closable
+              type="success" :key="'k-' + k.id"
+              @close="removeKeyword(k)">
+              {{ k.word }}
+            </el-tag>
+            <i class="el-icon-plus"
+              @click="pksDialogVisible = true">
+            </i>
+          </div>
+          <div class="switch"
+            v-if="kwListTotalSize > kwListLimitSize">
+            <p v-if="!kwListExpand" @click="kwListExpand = true">
+              展开
+            </p>
+            <p v-if="kwListExpand" @click="kwListExpand = false">
+              合起
+            </p>
+          </div>
+        </span>
+      </section>
+      <section>
+        <aside>数据维度:</aside>
+        <span>
+          <i class="badge" v-for="d of allDimensions" :key="d.value"
+            :aria-checked="query.dimension === d.value"
+            @click="query.dimension = d.value">
+            {{ d.label }}
           </i>
         </span>
       </section>
@@ -187,6 +198,8 @@ export default {
   data() {
     return {
       pksDialogVisible: false,
+      kwListExpand: false,
+      kwListLimitSize: 15,
 
       semPlatformOpts,
       allDimensions,
@@ -209,6 +222,33 @@ export default {
     }
   },
   computed: {
+    displayCheckedCampaigns() {
+      const { kwListExpand, kwListLimitSize, query } = this
+
+      if (kwListExpand) {
+        return query.checkedCampaigns
+      }
+
+      return query.checkedCampaigns.slice(0, kwListLimitSize)
+    },
+    displayCheckedKeywords() {
+      const { kwListExpand, kwListLimitSize, query } = this
+
+      if (kwListExpand) {
+        return query.checkedKeywords
+      }
+
+      if (query.checkedCampaigns.length >= kwListLimitSize) {
+        return []
+      }
+
+      return query.checkedKeywords
+        .slice(0, kwListLimitSize - query.checkedCampaigns.length)
+    },
+    kwListTotalSize() {
+      const { query } = this
+      return query.checkedCampaigns.length + query.checkedKeywords.length
+    },
     userId() {
       return this.$route.query.userId || this.userInfo.id
     }
@@ -345,9 +385,20 @@ export default {
 
 .kw-list {
   display: flex;
-  align-items: center;
-  flex-wrap: wrap;
+  flex-flow: column;
   max-width: 620px;
+
+  & > .switch {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 10px;
+    padding-top: 5px;
+    border-top: 1px solid #dde1e6;
+    font-size: 13px;
+    color: #6a778c;
+    cursor: pointer;
+  }
 }
 
 .qwt-dashboard {
