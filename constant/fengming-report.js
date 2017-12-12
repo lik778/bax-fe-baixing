@@ -1,6 +1,7 @@
 
 export const DIMENSION_CAMPAIGN = 0
 export const DIMENSION_KEYWORD = 1
+export const DIMENSION_NONE = 2 // 这是啥意思 ? @嘟嘟噜
 
 export const allDimensions = [{
   label: '计划维度',
@@ -20,6 +21,8 @@ export const allDevices = [{
   label: 'WAP',
   value: 2
 }]
+
+export const TIME_UNIT_YEAR = 4
 
 export const allTimeUnits = [{
   label: '每日',
