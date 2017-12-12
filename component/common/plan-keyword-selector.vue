@@ -19,11 +19,11 @@
               <label>{{ `推广：${campaign.id}` }}</label>
             </div>
             <div>
-              <li v-for="(keyword, i) in campaign.keywords"
-                class="tree-node" :key="'k' + keyword.id"
-                @click="onCheckKeyword(keyword)">
-                <el-checkbox :value="false">
-                </el-checkbox>
+              <li class="tree-node"
+                v-for="(keyword, i) in campaign.keywords"
+                :key="'k' + campaign.id + keyword.id"
+                @click="onCheckKeyword(keyword, {}, 'select')">
+                <el-checkbox></el-checkbox>
                 <label>{{ fmtWord(keyword.word) }}</label>
               </li>
             </div>
@@ -45,11 +45,11 @@
               <label>{{ `推广：${campaign.id}` }}</label>
             </div>
             <div>
-              <li v-for="(keyword, i) in campaign.keywords"
-                class="tree-node" :key="'k' + keyword.id"
-                @click="onCheckKeyword(keyword, campaign)">
-                <el-checkbox :value="true">
-                </el-checkbox>
+              <li class="tree-node"
+                v-for="(keyword, i) in campaign.keywords"
+                :key="'k' + campaign.id + keyword.id"
+                @click="onCheckKeyword(keyword, campaign, 'remove')">
+                <el-checkbox :checked="true"></el-checkbox>
                 <label>{{ fmtWord(keyword.word) }}</label>
               </li>
             </div>
@@ -190,35 +190,37 @@ export default {
 
       // 无论 选中/删除 campaign, 删除下属 所有 keywords
       if (campaign.keywords && campaign.keywords.length) {
-        // TODO: 性能优化
         campaign.keywords.forEach(k => {
           this.$emit('remove-keyword', {...k})
         })
       }
     },
-    onCheckKeyword(keyword, campaign = {}) {
+    onCheckKeyword(keyword, campaign = {}, action) {
       const cid = campaign.id
 
       if (cid && this.campaignChecked(cid)) {
         // 一定是右侧树
         this.$emit('remove-campaign', campaign)
         campaign.keywords.forEach(k => {
-          // TODO - 性能优化
           if (keyword.id === k.id) {
             // remove
             this.$emit('remove-keyword', {...k})
           } else {
             // select
-            this.$emit('select-keyword', {...k})
+            if (!this.keywordChecked(keyword.id)) {
+              this.$emit('select-keyword', {...k})
+            }
           }
         })
         return
       }
 
-      if (this.keywordChecked(keyword.id)) {
+      if (action === 'remove') {
         this.$emit('remove-keyword', {...keyword})
       } else {
-        this.$emit('select-keyword', {...keyword})
+        if (!this.keywordChecked(keyword.id)) {
+          this.$emit('select-keyword', {...keyword})
+        }
       }
     },
     campaignChecked(id) {
