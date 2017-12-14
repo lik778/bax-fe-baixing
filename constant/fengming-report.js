@@ -11,6 +11,9 @@ export const allDimensions = [{
   value: 1
 }]
 
+export const DEVICE_ALL = 0
+export const DEVICE_PC = 1
+
 export const allDevices = [{
   label: '全部',
   value: 0
@@ -23,6 +26,7 @@ export const allDevices = [{
 }]
 
 export const TIME_UNIT_YEAR = 4
+export const TIME_UNIT_DAY = 1
 
 export const allTimeUnits = [{
   label: '每日',

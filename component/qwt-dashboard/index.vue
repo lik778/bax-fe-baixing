@@ -90,7 +90,10 @@
         </span>
       </section>
       <data-trend :statistics="statistics"></data-trend>
-      <data-detail :statistics="statistics" :csv-download-url="csvDownloadUrl">
+      <data-detail :statistics="statistics" :summary="summary"
+        :offset="offset" :total="total" :limit="limit"
+        :csv-download-url="csvDownloadUrl"
+        @current-change="queryStatistics">
       </data-detail>
       <plan-keyword-selector
         :visible="pksDialogVisible"
@@ -111,15 +114,19 @@
 <script>
 import PlanKeywordSelector from 'com/common/plan-keyword-selector'
 import BaxSelect from 'com/common/select'
+import Topbar from 'com/topbar'
+
 import DataDetail from './data-detail'
 import DataTrend from './data-trend'
-import Topbar from 'com/topbar'
 
 import { toTimestamp } from 'utils'
 import moment from 'moment'
 
 import {
   DIMENSION_CAMPAIGN,
+  TIME_UNIT_DAY,
+  DEVICE_ALL,
+
   allDimensions,
   allTimeUnits,
   allDevices,
@@ -127,6 +134,8 @@ import {
 } from 'constant/fengming-report'
 
 import {
+  SEM_PLATFORM_BAIDU,
+
   semPlatformOpts
 } from 'constant/fengming'
 
@@ -215,9 +224,9 @@ export default {
         checkedKeywords: [],
 
         dimension: DIMENSION_CAMPAIGN,
-        timeUnit: 1,
-        channel: 0,
-        device: 0
+        channel: SEM_PLATFORM_BAIDU,
+        timeUnit: TIME_UNIT_DAY,
+        device: DEVICE_ALL
       }
     }
   },
@@ -254,7 +263,8 @@ export default {
     }
   },
   methods: {
-    async queryStatistics() {
+    async queryStatistics(opts = {}) {
+      const offset = opts.offset || 0
       const { query } = this
 
       let startAt
@@ -285,8 +295,8 @@ export default {
         timeUnit: query.timeUnit,
         device: query.device,
 
-        offset: 0,
         limit: 100,
+        offset,
 
         fields
       }

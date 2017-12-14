@@ -56,10 +56,30 @@
         </el-table-column>
       </el-table>
     </main>
+    <footer>
+      <div class="total" v-if="!!statistics.length">
+        <span>
+          <label>总展现：</label>
+          <strong>{{ summary.shows }}</strong>
+        </span>
+        <span>
+          <label>总点击：</label>
+          <strong>{{ summary.clicks }}</strong>
+        </span>
+        <span>
+          <label>总消费：</label>
+          <strong>{{ centToYuan(summary.cost) + '元' }}</strong>
+        </span>
+      </div>
+      <bax-pagination :options="{ total, offset, limit }"
+        @current-change="onCurrentChange">
+      </bax-pagination>
+    </footer>
   </div>
 </template>
 
 <script>
+import BaxPagination from 'com/common/pagination'
 import BaxSelect from 'com/common/select'
 
 import {
@@ -90,6 +110,7 @@ const isArray = Array.isArray
 export default {
   name: 'qwt-dashboard-data-detail',
   components: {
+    BaxPagination,
     BaxSelect
   },
   props: {
@@ -99,6 +120,22 @@ export default {
     },
     statistics: {
       type: Array,
+      required: true
+    },
+    summary: {
+      type: Object,
+      required: true
+    },
+    offset: {
+      type: Number,
+      required: true
+    },
+    limit: {
+      type: Number,
+      required: true
+    },
+    total: {
+      type: Number,
       required: true
     }
   },
@@ -137,6 +174,18 @@ export default {
 </script>
 
 <style scoped>
+
+.total {
+  padding: 10px 5px;
+
+  & > span {
+    & > label {
+      color: #6a778c;
+    }
+
+    margin-right: 20px;
+  }
+}
 
 .qwt-dashboard-data-detail {
   margin: 50px 0 30px;

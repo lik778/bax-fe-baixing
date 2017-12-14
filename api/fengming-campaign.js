@@ -57,7 +57,7 @@ export async function getCampaigns(opts = {}) {
 export async function getReport(opts = {}) {
   const q = reverseCamelcase(trim({
     offset: 0,
-    limit: 120,
+    limit: 100,
     ...opts
   }))
 
@@ -96,7 +96,7 @@ export async function getReport(opts = {}) {
 
   return {
     rows: toCamelcase(body1.data),
-    total: body2.total,
+    total: body2.data,
     offset: q.offset,
     limit: q.limit,
     summary: data

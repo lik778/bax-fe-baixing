@@ -11,8 +11,8 @@ const store = createStore({
   csvDownloadUrl: '',
   statistics: [],
   summary: {},
+  limit: 100,
   offset: 0,
-  limit: 20,
   total: 0
 })
 
@@ -23,9 +23,10 @@ store.subscribeActions({
   [getCsvDownloadUrl]: (url) => ({
     csvDownloadUrl: url
   }),
-  [getReport]: ({rows, total, limit, offset, summary}) => ({
+  [getReport]: ({rows, total, offset, summary}) => ({
     statistics: rows,
     summary,
+    offset,
     total
   })
 })
