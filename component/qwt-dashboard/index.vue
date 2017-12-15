@@ -92,6 +92,7 @@
       <data-trend :statistics="statistics"></data-trend>
       <data-detail :statistics="statistics" :summary="summary"
         :offset="offset" :total="total" :limit="limit"
+        :dimension="query.dimension"
         :csv-download-url="csvDownloadUrl"
         @current-change="queryStatistics">
       </data-detail>

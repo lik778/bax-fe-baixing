@@ -21,38 +21,40 @@
     </section>
     <main>
       <el-table :data="statistics">
-        <el-table-column v-if="checkVisiable('date')" label="日期"
-          prop="date" width="120">
+        <el-table-column v-if="checkVisiable('date')"
+          label="日期" prop="date" width="140">
         </el-table-column>
-        <el-table-column v-if="checkVisiable('campaignId')" label="推广计划"
-          prop="campaignId" width="120">
+        <el-table-column v-if="checkVisiable('campaignId')"
+          label="推广计划" prop="campaignId" width="120">
         </el-table-column>
-        <el-table-column v-if="checkVisiable('cpcRanking')" label="平均排名"
-          :formatter="r => fmtCpcRanking(r.cpcRanking)"
-          width="150" sortable>
+        <el-table-column v-if="checkVisiable('keyword')"
+          label="关键词" prop="keyword" width="120">
         </el-table-column>
-        <el-table-column v-if="checkVisiable('channel')" label="渠道"
+        <el-table-column v-if="checkVisiable('cpcRanking')"
+          label="平均排名" width="120" sortable
+          :formatter="r => fmtCpcRanking(r.cpcRanking)">
+        </el-table-column>
+        <el-table-column v-if="checkVisiable('channel')"
+          label="渠道" width="100"
           :formatter="r => fmtChannel(r.channel)">
         </el-table-column>
-        <el-table-column v-if="checkVisiable('device')" label="设备"
+        <el-table-column v-if="checkVisiable('device')"
+          label="设备" width="100"
           :formatter="r => fmtDevice(r.device)">
         </el-table-column>
-        <el-table-column v-if="checkVisiable('keyword')" label="关键词"
-          prop="keyword">
+        <el-table-column v-if="checkVisiable('shows')"
+          label="展现" prop="shows" width="90" sortable>
         </el-table-column>
-        <el-table-column v-if="checkVisiable('shows')" label="展现"
-          prop="shows" width="90" sortable>
+        <el-table-column v-if="checkVisiable('clicks')"
+          label="点击" prop="clicks" width="90" sortable>
         </el-table-column>
-        <el-table-column v-if="checkVisiable('clicks')" label="点击"
-          prop="clicks" width="90" sortable>
+        <el-table-column v-if="checkVisiable('cost')"
+          label="消费" width="120"
+          :formatter="r => (r.cost / 100).toFixed(2) + '元'">
         </el-table-column>
-        <el-table-column v-if="checkVisiable('cost')" label="消费"
-          :formatter="r => (r.cost / 100).toFixed(2) + '元'"
-          width="120">
-        </el-table-column>
-        <el-table-column v-if="checkVisiable('clickRate')" label="点击率"
-          :formatter="r => r.clickRate.toFixed(4)"
-          width="120" sortable>
+        <el-table-column v-if="checkVisiable('clickRate')"
+          label="点击率" width="120" sortable
+          :formatter="r => r.clickRate.toFixed(4)">
         </el-table-column>
       </el-table>
     </main>
@@ -83,6 +85,7 @@ import BaxPagination from 'com/common/pagination'
 import BaxSelect from 'com/common/select'
 
 import {
+  DIMENSION_CAMPAIGN,
   columnOpts
 } from 'constant/fengming-report'
 
@@ -107,6 +110,18 @@ import {
 
 const isArray = Array.isArray
 
+const campaignDefaultColumns = [
+  'date', 'campaignId', 'channel', 'device',
+  'shows', 'clicks', 'clickAvgPrice',
+  'cost', 'clickRate', 'cpcRanking'
+]
+
+const keywordDefaultColumns = [
+  'date', 'keyword', 'channel', 'device',
+  'shows', 'clicks', 'clickAvgPrice',
+  'cost', 'clickRate', 'cpcRanking'
+]
+
 export default {
   name: 'qwt-dashboard-data-detail',
   components: {
@@ -120,6 +135,10 @@ export default {
     },
     statistics: {
       type: Array,
+      required: true
+    },
+    dimension: {
+      type: Number,
       required: true
     },
     summary: {
@@ -141,11 +160,14 @@ export default {
   },
   data() {
     return {
-      displayColumns: columnOpts.map(c => c.value),
+      displayColumns: campaignDefaultColumns,
       columnOpts
     }
   },
   methods: {
+    onCurrentChange(opts) {
+      this.$emit('current-change', opts)
+    },
     checkVisiable(column) {
       const { displayColumns } = this
 
@@ -169,12 +191,18 @@ export default {
     fmtCpcRanking,
     toHumanTime,
     centToYuan
+  },
+  watch: {
+    dimension(v) {
+      this.displayColumns = v === DIMENSION_CAMPAIGN
+        ? campaignDefaultColumns
+        : keywordDefaultColumns
+    }
   }
 }
 </script>
 
 <style scoped>
-
 .total {
   padding: 10px 5px;
 
@@ -225,5 +253,4 @@ export default {
     }
   }
 }
-
 </style>
