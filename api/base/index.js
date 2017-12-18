@@ -9,7 +9,8 @@ import {
   fengmingApiHost,
   dashboardHost,
   cashcowHost,
-  baxApiHost
+  baxApiHost,
+  kaApiHost
 } from 'config'
 
 import es from 'base/es'
@@ -38,6 +39,22 @@ export const fengming = new Fetch({
     if (meta.message !== 'Success') {
       Message.error(meta.message)
       throw new Error(meta.message)
+    }
+  }
+})
+
+export const ka = new Fetch({
+  prefix: kaApiHost,
+  beforeRequest() {
+    es.emit('http fetch start')
+  },
+  afterResponse() {
+    es.emit('http fetch end')
+  },
+  afterJSON(body) {
+    if (body.msg !== 'success') {
+      Message.error(body.msg)
+      throw new Error(body.msg)
     }
   }
 })

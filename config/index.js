@@ -11,6 +11,10 @@ export const baxApiHost = isPro
   ? '//bax.baixing.com.cn/bax-api'
   : '//192.168.8.201/bax'
 
+export const kaApiHost = isPro
+  ? '//bax.baixing.com.cn/ka/api/admin'
+  : '//192.168.8.201:8008/ka/api/admin'
+
 export const dashboardHost = isPro
   ? '//bax.baixing.com.cn/dashboard-api'
   : '//localhost:3003/api'

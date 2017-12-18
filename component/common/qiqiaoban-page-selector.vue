@@ -12,7 +12,13 @@
 
 <script>
   import BaxSelect from './select'
-  import { getQiqiaobanPageList } from 'api/fengming'
+  import {
+    getQiqiaobanPageList
+  } from 'api/fengming'
+  import {
+    baxUserLogin,
+    getUserSites
+  } from 'api/ka'
 
   export default {
     name: 'qiqiaoban-page-selector',
@@ -39,11 +45,23 @@
       }
     },
     async mounted() {
-      const pageList = await getQiqiaobanPageList()
-      this.options = pageList.map(p => ({
-        label: p.name,
-        value: p.url
-      }))
+      await baxUserLogin()
+
+      const [list1, list2] = await Promise.all([
+        getQiqiaobanPageList(),
+        getUserSites()
+      ])
+
+      this.options = [
+        ...list2.map(p => ({
+          label: p.name,
+          value: 'http://' + p.domain + '.mvp.baixing.com'
+        })),
+        ...list1.map(p => ({
+          label: p.name,
+          value: p.url
+        }))
+      ]
     }
   }
 </script>
