@@ -97,7 +97,7 @@
         :render-header="renderColumnHeaderWithTip(campaignStatusTooltip)">
       </el-table-column>
       <el-table-column label="审核状态" width="120"
-        :formatter="r => fmtAuditStatus(r.auditStatus) "
+        :formatter="r => fmtAuditStatus(r) "
         :render-header="renderColumnHeaderWithTip(campaignAuditStatusTooltip)">
       </el-table-column>
       <el-table-column label="预算" width="90"
@@ -433,8 +433,14 @@ export default {
           break
       }
     },
-    fmtAuditStatus(s) {
-      return campaignAuditStatus[String(s)] || '未知'
+    fmtAuditStatus(row) {
+      const { auditStatus, status } = row
+
+      if (status === CAMPAIGN_STATUS_OFFLINE) {
+        return '-'
+      }
+
+      return campaignAuditStatus[String(auditStatus)] || '未知'
     },
     fmtPrice(s) {
       return commafy(centToYuan(s)) + ' 元'
