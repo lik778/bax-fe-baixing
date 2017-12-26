@@ -663,7 +663,7 @@ export default {
   },
 
   destroyed() {
-    this.timeout()
+    clearTimeout(this.timeout)
   }
 }
 </script>
