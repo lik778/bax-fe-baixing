@@ -19,7 +19,7 @@ span {
   margin-left: 5px;
 
   & > a {
-    color: var(--c-main);
+    color: var(--c-main-blue);
     font-size: 14px;
   }
 }
