@@ -84,6 +84,8 @@
             </i>
           </span>
         </div>
+        <promotion-area-limit-tip :all-areas="allAreas">
+        </promotion-area-limit-tip>
         <div>
           <aside>投放时段</aside>
           <span>
@@ -246,6 +248,7 @@
 import { Message } from 'element-ui'
 import isEqual from 'lodash.isequal'
 
+import PromotionAreaLimitTip from 'com/widget/promotion-area-limit-tip'
 import QiqiaobanPageSelector from 'com/common/qiqiaoban-page-selector'
 import PromotionCreativeTip from 'com/widget/promotion-creative-tip'
 import CashcowPageSelector from 'com/common/cashcow-page-selector'
@@ -300,6 +303,7 @@ export default {
   name: 'qwt-update-promotion',
   store,
   components: {
+    PromotionAreaLimitTip,
     QiqiaobanPageSelector,
     PromotionCreativeTip,
     CashcowPageSelector,
@@ -652,6 +656,8 @@ export default {
       }
     },
     async _updatePromotion() {
+      const { allAreas } = this
+
       let data = {}
       try {
         data = {
@@ -698,7 +704,7 @@ export default {
         }
       }
 
-      await updateCampaign(this.id, fmtAreasInQwt(data))
+      await updateCampaign(this.id, fmtAreasInQwt(data, allAreas))
 
       Message.success('更新成功')
 

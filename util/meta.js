@@ -5,21 +5,76 @@ import { toHumanTime } from 'utils'
 
 const isArray = Array.isArray
 
+const specialCities = [
+  'beijing',
+  'tianjin',
+  'shanghai',
+  'chongqing'
+]
+
+export function getDisAllowAreasDesc(allAreas) {
+  const areas = getDisAllowAreas(allAreas)
+
+  if (areas.length) {
+    const desc = areas.map(i => i.nameCn).join('、')
+    return `温馨提示：尊敬的用户，如果您的推广区域包含${desc}任一城市，请您致电：4008-627-637，开通帐号，否则将无法投放喔`
+  }
+
+  return ''
+}
+
+export function getDisAllowAreas(allAreas) {
+  const disAllowAreas = allAreas.filter(a => a.isAllowed === 0)
+  const topAreas = disAllowAreas.filter(a => a.areaType === 2)
+  const mainAreas = disAllowAreas
+    .filter(a => a.areaType === 1)
+    .filter(a => {
+      const p = a.parent
+      return !topAreas.map(t => t.name).includes(p)
+    })
+
+  return [...topAreas, ...mainAreas]
+}
+
 /**
  * @param {Object} opts
  *   说明: qwt, ssp 中对 quanguo, china 处理的逻辑不一样 (详见 common/area-selector)
  *     cities: ['quanguo'] -> ['china']
  *     areas: ['quanguo'] -> ['china']
  */
-export function fmtAreasInQwt(opts) {
+export function fmtAreasInQwt(opts, allAreas) {
   const result = clone(opts)
 
+  let items = ['china']
+
+  const disAllowAreas = getDisAllowAreas(allAreas)
+  if (disAllowAreas.length) {
+    items = [...specialCities]
+
+    const topAreas = allAreas // ['a', 'b']
+      .filter(a => a.areaType === 2 && a.isAllowed === 1)
+      .map(a => a.name)
+
+    for (const top of topAreas) {
+      const exist = disAllowAreas.find(a => a.parent === top)
+      if (exist) {
+        const subAreas = allAreas
+          .filter(a => a.parent === top && a.isAllowed === 1)
+          .map(a => a.name)
+
+        items = [...items, ...subAreas]
+      } else {
+        items.push(top)
+      }
+    }
+  }
+
   if (isArray(opts.cities) && opts.cities.includes('quanguo')) {
-    result.cities = ['china']
+    result.cities = items
   }
 
   if (isArray(opts.areas) && opts.areas.includes('quanguo')) {
-    result.areas = ['china']
+    result.areas = items
   }
 
   return result

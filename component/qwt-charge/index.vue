@@ -101,6 +101,8 @@
         </div>
       </div>
       <contract-ack type="contract"></contract-ack>
+      <promotion-area-limit-tip :all-areas="allAreas" page="charge">
+      </promotion-area-limit-tip>
       <div class="pay-info">
         <el-button v-if="!isAgentSales"
           type="primary" @click="createOrder" :loading="payInProgress">
@@ -135,6 +137,7 @@
 </template>
 
 <script>
+import PromotionAreaLimitTip from 'com/widget/promotion-area-limit-tip'
 import ChargePromotionAlert from 'com/widget/charge-promotion-alert'
 import ContractAck from 'com/widget/contract-ack'
 import QwtPkgWidget from 'com/widget/qwt-pkg'
@@ -212,6 +215,7 @@ export default {
   name: 'qwt-charge',
   store,
   components: {
+    PromotionAreaLimitTip,
     ChargePromotionAlert,
     QwtPkgWidget,
     QwtProWidget,
@@ -224,6 +228,10 @@ export default {
   props: {
     userInfo: {
       type: Object,
+      required: true
+    },
+    allAreas: {
+      type: Array,
       required: true
     }
   },
@@ -661,6 +669,15 @@ export default {
     },
     centToYuan
   },
+  watch: {
+    async couponVisible(v) {
+      if (v) {
+        // 必须先拿到 condition
+        await getCondition()
+        await getCoupons({ onlyValid: true, status: 0 })
+      }
+    }
+  },
   async mounted() {
     const {
       sales_id: salesId,
@@ -695,15 +712,6 @@ export default {
       getProductPackages(1),
       this.getProducts()
     ])
-  },
-  watch: {
-    async couponVisible(v) {
-      if (v) {
-        // 必须先拿到 condition
-        await getCondition()
-        await getCoupons({ onlyValid: true, status: 0 })
-      }
-    }
   }
 }
 </script>

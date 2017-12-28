@@ -75,6 +75,8 @@
             </i>
           </span>
         </div>
+        <promotion-area-limit-tip :all-areas="allAreas">
+        </promotion-area-limit-tip>
         <div>
           <aside>投放时段</aside>
           <span>
@@ -234,6 +236,7 @@ import { Message } from 'element-ui'
 import clone from 'clone'
 
 import PromotionMobileRatioTip from 'com/widget/promotion-mobile-ratio-tip'
+import PromotionAreaLimitTip from 'com/widget/promotion-area-limit-tip'
 import QiqiaobanPageSelector from 'com/common/qiqiaoban-page-selector'
 import PromotionCreativeTip from 'com/widget/promotion-creative-tip'
 import CashcowPageSelector from 'com/common/cashcow-page-selector'
@@ -297,6 +300,7 @@ export default {
   store,
   components: {
     PromotionMobileRatioTip,
+    PromotionAreaLimitTip,
     QiqiaobanPageSelector,
     PromotionCreativeTip,
     CashcowPageSelector,
@@ -381,6 +385,8 @@ export default {
       }
     },
     async _createPromotion() {
+      const { allAreas } = this
+
       const p = clone(this.newPromotion)
 
       const pp = this.predictedInfo.dailyBudget
@@ -459,7 +465,7 @@ export default {
         return Message.error(res.hint)
       }
 
-      await createCampaign(fmtAreasInQwt(p))
+      await createCampaign(fmtAreasInQwt(p, allAreas))
 
       Message.success('创建成功')
 

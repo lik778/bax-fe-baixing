@@ -51,6 +51,7 @@
 </template>
 
 <script>
+import { getDisAllowAreas } from 'util/meta'
 import isequal from 'lodash.isequal'
 import clone from 'clone'
 
@@ -91,7 +92,7 @@ export default {
       required: true
     },
     type: {
-      // bx qwt
+      // bx, qwt
       type: String,
       default: 'bx'
     }
@@ -121,9 +122,23 @@ export default {
           areas: this.getSubAreas(a.name)
         }))
     },
+    disAllowAreaIds() {
+      const { allAreas } = this
+      const a = getDisAllowAreas(allAreas)
+      return a.map(i => i.id)
+    },
     topAreas() {
+      const { disAllowAreaIds, type } = this
+
       return this.allAreas
         .filter(a => a.areaType === 2)
+        .filter(a => {
+          if (type === 'qwt') {
+            return !disAllowAreaIds.includes(a.id)
+          }
+
+          return true
+        })
         .map(a => ({
           parent: a.parent,
           label: a.nameCn,
@@ -136,11 +151,13 @@ export default {
   },
   methods: {
     getSubAreas(name) {
+      const { disAllowAreaIds, type } = this
       return this.allAreas
         .filter(a => {
           // 对于全网通, 需要毙掉几个特殊的 市
-          if (this.type === 'qwt') {
-            return !!a.baiduCode && !!a.qihuCode
+          if (type === 'qwt') {
+            return !!a.baiduCode && !!a.qihuCode &&
+              !disAllowAreaIds.includes(a.id)
           }
 
           return true
