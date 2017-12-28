@@ -25,6 +25,7 @@
               </el-button>
             </el-button-group>
           </span>
+          <promotion-rule-link></promotion-rule-link>
         </div>
         <div>
           <aside style="align-items: flex-start; padding-top: 5px;">
@@ -237,6 +238,7 @@ import QiqiaobanPageSelector from 'com/common/qiqiaoban-page-selector'
 import PromotionCreativeTip from 'com/widget/promotion-creative-tip'
 import CashcowPageSelector from 'com/common/cashcow-page-selector'
 import PromotionChargeTip from 'com/widget/promotion-charge-tip'
+import PromotionRuleLink from 'com/widget/promotion-rule-link'
 import DurationSelector from 'com/common/duration-selector'
 import KeywordList from 'com/common/qwt-keyword-list'
 import AreaSelector from 'com/common/area-selector'
@@ -299,6 +301,7 @@ export default {
     PromotionCreativeTip,
     CashcowPageSelector,
     PromotionChargeTip,
+    PromotionRuleLink,
     DurationSelector,
     AreaSelector,
     KeywordList,
