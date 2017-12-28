@@ -221,6 +221,7 @@
         <li data-type="doc-sec-4">预算设置</li>
         <li data-type="doc-sec-5">投放管理及扣费</li>
         <li data-type="doc-sec-6">广告展现</li>
+        <li data-type="doc-sec-7">行业投放规则</li>
       </aside>
       <aside>
         <h3>
@@ -846,6 +847,11 @@
         </ol>
       </div>
     </section>
+
+    <section id="doc-sec-7" class="hidden docs" data-title="行业投放规则">
+      <img style="width: 940px; padding-top: 20px;" src="http://bax-static.baixingcdn.com/bax-asset.qa-page-doc-img-10.jpeg">
+    </section>
+
     <script src="//bax-static.baixingcdn.com/bax-static.jquery-3.2.1.slim.min.js" integrity="sha256-k2WSCIexGzOj3Euiig+TlR8gA0EmPjuc79OEeY5L45g=" crossorigin="anonymous"></script>
     <script src="//bax-static.baixingcdn.com/bax-static.slick.1.8.1.min.js"></script>
     <script src="//bax-static.baixingcdn.com/bax-static.video-6.3.3.js"></script>
@@ -933,6 +939,7 @@
           case 'doc-sec-4':
           case 'doc-sec-5':
           case 'doc-sec-6':
+          case 'doc-sec-7':
             child = $('#' + type).clone().removeClass('hidden')
             $('#content').append(child)
             $('#content').parent().find('h4').text(child.data('title'))
@@ -949,6 +956,12 @@
           dots: true,
           speed: 500
         })
+
+        setTimeout(function() {
+          if (location.search.indexOf("promotion-rules") !== -1) {
+            $('li[data-type="doc-sec-7"]').click()
+          }
+        }, 100)
       })
     </script>
   </body>
