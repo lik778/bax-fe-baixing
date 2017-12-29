@@ -708,7 +708,7 @@ export default {
     }
 
     await Promise.all([
-      getProductDiscounts([1, 2, 3]),
+      getProductDiscounts([1, 2, 3, 4]),
       getProductPackages(1),
       this.getProducts()
     ])
