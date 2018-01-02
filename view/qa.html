@@ -208,6 +208,73 @@
       .slick-prev:before, .slick-next:before {
         color: #20a0ff !important;
       }
+
+      .promotion-rules {
+        padding: 20px;
+      }
+
+      .promotion-rules > header {
+        display: flex;
+        align-items: flex-start;
+        flex-flow: column;
+        height: 200px;
+        font-size: 20px;
+        border-style: none;
+      }
+
+      .promotion-rules > header > li {
+        display: block;
+        margin-bottom: 5px;
+      }
+
+      .promotion-rules > header > p {
+        margin-top: 20px;
+        color: red;
+      }
+
+      .promotion-rules > div {
+        border: 1px solid #87898c;
+      }
+
+      .promotion-rules > div > section {
+        display: flex;
+        align-items: center;
+      }
+
+      .promotion-rules > div > section:first-child > span:last-child {
+        padding: 20px 0;
+      }
+
+      .promotion-rules > div > section:not(:last-child) {
+        border-bottom: 1px solid #87898c;
+      }
+
+      .promotion-rules > div > section > span:first-child {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 120px;
+      }
+
+      .promotion-rules > div > section > span:last-child {
+        display: flex;
+        flex-flow: column;
+        align-items: center;
+        justify-content: center;
+        flex-grow: 1;
+        border-left: 1px solid #87898c;
+      }
+
+      .promotion-rules > div > section > span:last-child > li {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        padding: 10px 0;
+      }
+
+      .promotion-rules > div > section > span:last-child > li:not(:last-child) {
+        border-bottom: 1px solid #87898c;
+      }
     </style>
     <link rel="stylesheet" type="text/css" href="//bax-static.baixingcdn.com/bax-static.slick.1.8.1.css">
     <link rel="stylesheet" type="text/css" href="//bax-static.baixingcdn.com/bax-static.slick-theme.1.8.1.css">
@@ -857,8 +924,88 @@
       </div>
     </section>
 
-    <section id="doc-sec-7" class="hidden docs" data-title="行业投放规则">
-      <img style="width: 940px; padding-top: 20px;" src="http://bax-static.baixingcdn.com/bax-asset.qa-page-doc-img-10.jpeg">
+    <section id="doc-sec-7" class="hidden docs promotion-rules" data-title="行业投放规则">
+      <header>
+        <li>各位客户，</li>
+        <li>为了保证站外推广的信息真实、合规，对大家有以下规范，望谅解!以下表格是百度、360、</li>
+        <li>搜狗均不允许投放的行业，不会审核通过，具体投放规则如下:</li>
+        <p>招商加盟在百度渠道不允许投放，360 和搜狗可以，请知晓。</p>
+      </header>
+      <div>
+        <section>
+          <span>一级</span>
+          <span>二级</span>
+        </section>
+        <section>
+          <span>药品医疗</span>
+          <span>
+            <li>美容减肥</li>
+            <li>成人用品</li>
+            <li>医疗保健</li>
+            <li>医疗科室</li>
+            <li>医院</li>
+            <li>药品交易</li>
+            <li>药品生产研发</li>
+            <li>药品信息</li>
+            <li>医疗器械生产</li>
+            <li>医疗器械销售</li>
+            <li>假肢生产装备</li>
+          </span>
+        </section>
+        <section>
+          <span>金融</span>
+          <span>
+            <li>期货外汇</li>
+            <li>贵金属</li>
+            <li>典当</li>
+            <li>信用卡融资</li>
+            <li>拆分盘信息</li>
+            <li>涉及贵金属/开户/交易/股票/期货/微盘/现货的金融信息</li>
+          </span>
+        </section>
+        <section>
+          <span>迷信</span>
+          <span>
+            <li>算命</li>
+            <li>星座</li>
+            <li>佛牌</li>
+          </span>
+        </section>
+        <section>
+          <span>高仿</span>
+          <span>
+            <li>名牌运动鞋</li>
+            <li>名表</li>
+            <li>名包</li>
+            <li>奢侈品</li>
+            <li>名牌手机</li>
+          </span>
+        </section>
+        <section>
+          <span>游戏</span>
+          <span>
+            <li>禁止投放所有涉及游戏推广、下载等宣传物料，如:棋牌游戏、 捕鱼等</li>
+          </span>
+        </section>
+        <section>
+          <span>期刊印刷</span>
+          <span>
+            <li>报刊、名片等</li>
+          </span>
+        </section>
+        <section>
+          <span>APP 推广</span>
+          <span>
+            <li>禁止投放所有涉及 App 推广、下载等宣传物料，如:还乐推 广、牛魔王等</li>
+          </span>
+        </section>
+        <section>
+          <span>博彩</span>
+          <span>
+            <li>禁止投放所有涉及赌博和彩票的推广物料</li>
+          </span>
+        </section>
+      </div>
     </section>
 
     <script src="//bax-static.baixingcdn.com/bax-static.jquery-3.2.1.slim.min.js" integrity="sha256-k2WSCIexGzOj3Euiig+TlR8gA0EmPjuc79OEeY5L45g=" crossorigin="anonymous"></script>
