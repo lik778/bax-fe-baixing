@@ -247,6 +247,7 @@
 <script>
 import { Message } from 'element-ui'
 import isEqual from 'lodash.isequal'
+import uuid from 'uuid/v4'
 
 import PromotionAreaLimitTip from 'com/widget/promotion-area-limit-tip'
 import QiqiaobanPageSelector from 'com/common/qiqiaoban-page-selector'
@@ -328,6 +329,7 @@ export default {
   data() {
     return {
       creativeContentPlaceholder,
+      actionTrackId: '',
 
       durationSelectorVisible: false,
       newaddedWordsVisible: false,
@@ -642,12 +644,16 @@ export default {
       const { userInfo, id } = this
 
       track({
-        time: Date.now() / 1000 | 0,
+        roles: userInfo.roles.map(r => r.name).join(','),
+        action: 'click-button: update-campaign',
+        actionTrackId: this.actionTrackId,
         baixingId: userInfo.baixingId,
+        time: Date.now() / 1000 | 0,
         baxId: userInfo.id,
-        campaignId: id,
-        action: 'click-button: update-campaign'
+        campaignId: id
       })
+
+      this.actionTrackId = uuid()
 
       try {
         await this._updatePromotion()
@@ -784,12 +790,16 @@ export default {
 
     setTimeout(() => {
       const { userInfo, id } = this
+      this.actionTrackId = uuid()
+
       track({
-        time: Date.now() / 1000 | 0,
+        roles: userInfo.roles.map(r => r.name).join(','),
+        action: 'enter-page: update-campaign',
+        actionTrackId: this.actionTrackId,
         baixingId: userInfo.baixingId,
+        time: Date.now() / 1000 | 0,
         baxId: userInfo.id,
-        campaignId: id,
-        action: 'enter-page: update-campaign'
+        campaignId: id
       })
     }, 1200)
   }

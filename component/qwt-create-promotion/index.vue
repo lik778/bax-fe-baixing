@@ -233,6 +233,7 @@
 
 <script>
 import { Message } from 'element-ui'
+import uuid from 'uuid/v4'
 import clone from 'clone'
 
 import PromotionMobileRatioTip from 'com/widget/promotion-mobile-ratio-tip'
@@ -325,6 +326,7 @@ export default {
   data() {
     return {
       newPromotion: clone(emptyPromotion),
+      actionTrackId: '',
       timeType: 'long', // long, custom
       queryWord: '',
 
@@ -372,11 +374,15 @@ export default {
       const { userInfo } = this
 
       track({
-        time: Date.now() / 1000 | 0,
+        roles: userInfo.roles.map(r => r.name).join(','),
+        action: 'click-button: create-campaign',
+        actionTrackId: this.actionTrackId,
         baixingId: userInfo.baixingId,
-        baxId: userInfo.id,
-        action: 'click-button: create-campaign'
+        time: Date.now() / 1000 | 0,
+        baxId: userInfo.id
       })
+
+      this.actionTrackId = uuid()
 
       try {
         await this._createPromotion()
@@ -579,11 +585,16 @@ export default {
 
     setTimeout(() => {
       const { userInfo } = this
+
+      this.actionTrackId = uuid()
+
       track({
-        time: Date.now() / 1000 | 0,
+        roles: userInfo.roles.map(r => r.name).join(','),
+        action: 'enter-page: create-campaign',
+        actionTrackId: this.actionTrackId,
         baixingId: userInfo.baixingId,
-        baxId: userInfo.id,
-        action: 'enter-page: create-campaign'
+        time: Date.now() / 1000 | 0,
+        baxId: userInfo.id
       })
     }, 1200)
   }

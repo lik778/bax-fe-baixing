@@ -148,6 +148,7 @@ import Topbar from 'com/topbar'
 import Coupon from 'com/common/coupon'
 
 import { Message } from 'element-ui'
+import uuid from 'uuid/v4'
 
 import { centToYuan } from 'utils'
 
@@ -237,6 +238,7 @@ export default {
   },
   data() {
     return {
+      actionTrackId: '',
       allProducts,
 
       salesIdLocked: false,
@@ -639,11 +641,15 @@ export default {
       }
 
       track({
+        roles: userInfo.roles.map(r => r.name).join(','),
+        actionTrackId: this.actionTrackId,
         action: 'click-button: charge',
-        time: Date.now() / 1000 | 0,
         baixingId: userInfo.baixingId,
+        time: Date.now() / 1000 | 0,
         baxId: userInfo.id
       })
+
+      this.actionTrackId = uuid()
 
       this.payInProgress = true
 
@@ -686,11 +692,16 @@ export default {
 
     setTimeout(() => {
       const { userInfo } = this
+
+      this.actionTrackId = uuid()
+
       track({
-        time: Date.now() / 1000 | 0,
+        roles: userInfo.roles.map(r => r.name).join(','),
+        actionTrackId: this.actionTrackId,
         baixingId: userInfo.baixingId,
-        baxId: userInfo.id,
-        action: 'enter-page: charge'
+        action: 'enter-page: charge',
+        time: Date.now() / 1000 | 0,
+        baxId: userInfo.id
       })
     }, 1200)
 
