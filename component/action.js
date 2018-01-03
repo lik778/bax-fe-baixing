@@ -19,3 +19,5 @@ export const getAreas = createAction(() => {
 export const getRoles = createAction(() => {
   return aapi.getRoles()
 })
+
+export const toggleTuoguanVisible = createAction()

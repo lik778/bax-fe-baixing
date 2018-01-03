@@ -9,6 +9,7 @@
     </router-view>
     <go-to-bottom></go-to-bottom>
     <back-to-top></back-to-top>
+    <tuoguan :visible="tuoguanVisible" :categories="topCategories"/>
   </content>
 </template>
 
@@ -16,6 +17,7 @@
 import GoToBottom from './widget/go-to-bottom'
 import BackToTop from './widget/back-to-top'
 import Sidebar from './sidebar'
+import Tuoguan from './tuoguan'
 
 import store from './store'
 
@@ -25,7 +27,8 @@ import {
   getCurrentUser,
   getCategories,
   getAreas,
-  getRoles
+  getRoles,
+  getTuoguanStatus
 } from './action'
 
 export default {
@@ -34,7 +37,8 @@ export default {
   components: {
     GoToBottom,
     BackToTop,
-    Sidebar
+    Sidebar,
+    Tuoguan
   },
   data() {
     return {
@@ -44,6 +48,14 @@ export default {
   computed: {
     fullscreenLoading() {
       return this.pending > 0
+    },
+    topCategories() {
+      return this.allCategories
+        .filter(c => c.level === 1)
+        .map(c => ({
+          label: c.nameCn,
+          id: c.id
+        }))
     }
   },
   async beforeMount() {
@@ -61,7 +73,8 @@ export default {
       getCurrentUser(),
       getCategories(),
       getAreas(),
-      getRoles()
+      getRoles(),
+      getTuoguanStatus()
     ])
   }
 }

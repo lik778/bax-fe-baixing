@@ -7,6 +7,7 @@
         <el-tab-pane label="全网通购买" name="buy-service"></el-tab-pane>
         <el-tab-pane label="资金充值" name="charge-only"></el-tab-pane>
       </el-tabs>
+      <flat-btn slot="right" @click.native="toggleTuoguanVisible" class="tuoguan">托管服务</flat-btn>
     </topbar>
     <section>
       <div v-if="mode === 'buy-service'" class="qwt-package">
@@ -146,6 +147,7 @@ import Clipboard from 'com/widget/clipboard'
 import PriceList from './price-list'
 import Topbar from 'com/topbar'
 import Coupon from 'com/common/coupon'
+import FlatBtn from 'com/common/flat-btn'
 
 import { Message } from 'element-ui'
 import uuid from 'uuid/v4'
@@ -182,6 +184,10 @@ import {
   redeemCoupon,
   getCondition
 } from './action'
+
+import {
+  toggleTuoguanVisible
+} from '../action'
 
 /**
  * 关于推广资金的产品说明:
@@ -223,6 +229,7 @@ export default {
     ContractAck,
     Clipboard,
     PriceList,
+    FlatBtn,
     Topbar,
     Coupon
   },
@@ -436,6 +443,7 @@ export default {
   },
   methods: {
     displayCoupon,
+    toggleTuoguanVisible,
     onCouponClick(coupon) {
       if (this.selectedCoupon.length) {
         this.selectedCoupon.splice(0, 1)
@@ -879,5 +887,9 @@ export default {
 }
 .dialog-footer {
   text-align: center;
+}
+.tuoguan {
+  position: relative;
+  right: 10px;
 }
 </style>

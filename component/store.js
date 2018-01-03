@@ -5,7 +5,8 @@ import {
   getCurrentUser,
   getCategories,
   getAreas,
-  getRoles
+  getRoles,
+  toggleTuoguanVisible
 } from './action'
 
 const store = createStore({
@@ -13,7 +14,10 @@ const store = createStore({
   allAreas: [],
   allRoles: [],
 
-  currentUser: {}
+  currentUser: {},
+
+  tuoguanStatus: {},
+  tuoguanVisible: false
 })
 
 store.subscribeActions({
@@ -28,6 +32,10 @@ store.subscribeActions({
   }),
   [getRoles]: (roles) => ({
     allRoles: [...roles]
+  }),
+
+  [toggleTuoguanVisible]: () => ({
+    tuoguanVisible: !store.state.tuoguanVisible
   })
 })
 

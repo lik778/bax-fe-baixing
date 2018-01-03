@@ -88,6 +88,25 @@ export const campaignStatus = {
   '-51': '账户余额不足'
 }
 
+export const expectedBudget = {
+  '1': '50以下',
+  '2': '51-100',
+  '3': '101-400',
+  '4': '401-700',
+  '5': '701-1000',
+  '6': '1001以上'
+}
+
+export const expectedBudgetOpts = toOpt(expectedBudget)
+
+export const optType = {
+  '1': '关键词',
+  '2': '创意',
+  '3': '其他'
+}
+
+export const optTypeOpts = toOpt(optType)
+
 export const CAMPAIGN_STATUS_PENDING = -10
 export const CAMPAIGN_STATUS_OFFLINE = -1
 
@@ -99,19 +118,20 @@ export const landingType = {
   '4': '微站'
 }
 
-export const campaignStatusOpts = Object.keys(campaignStatus)
-  .map(k => ({
-    label: campaignStatus[k],
-    value: k | 0
-  }))
+export const campaignStatusOpts = toOpt(campaignStatus)
 
-export const landingTypeOpts = Object.keys(landingType)
-  .map(k => ({
-    label: landingType[k],
-    value: k | 0
-  }))
+export const landingTypeOpts = toOpt(landingType)
 
 export const device = {
   '0': 'PC',
   '1': 'WAP'
+}
+
+// 把 key 是数字，value 是 label 的对象转换成对象的 array
+function toOpt(obj, forceNumber = true) {
+  return Object.keys(obj)
+    .map(key => ({
+      label: obj[key],
+      value: forceNumber ? (key | 0) : key
+    }))
 }

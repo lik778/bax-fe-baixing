@@ -7,6 +7,7 @@
       <slot name="title" />
     </span>
     <span>
+      <slot name="right" />
       <i class="el-icon-message"></i>
       <el-dropdown @command="onDropdownCmd">
         <span class="el-dropdown-link">

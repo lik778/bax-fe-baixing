@@ -274,6 +274,13 @@ export async function getHomepageSummary() {
   }
 }
 
+export async function getTuoguanStatus() {
+  const body = await fengming
+    .get('/trusteeship/status')
+    .json()
+  return toCamelcase(body.data)
+}
+
 /**
  * private
  */
