@@ -17,7 +17,7 @@ export function getDisAllowAreasDesc(allAreas) {
 
   if (areas.length) {
     const desc = areas.map(i => i.nameCn).join('、')
-    return `温馨提示：尊敬的用户，如果您的推广区域包含${desc}任一城市，请您致电：4008-627-637，开通帐号，否则将无法投放喔`
+    return `温馨提示：尊敬的用户，自2018年1月4日零点起，如果您的推广区域包含${desc}任一城市，请您致电：4008-627-637，开通账号，否则将无法投放喔`
   }
 
   return ''
