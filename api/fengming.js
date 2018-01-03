@@ -281,6 +281,30 @@ export async function getTuoguanStatus() {
   return toCamelcase(body.data)
 }
 
+export function createTuoguan(opts) {
+  return fengming
+    .post('/trusteeship')
+    .send(reverseCamelcase(opts))
+    .json()
+}
+
+export function stopTuoguan() {
+  return fengming
+    .post('/trusteeship/cancel')
+    .json()
+}
+
+export function extendTuoguan(opts) {
+  const query = {
+    days: 30,
+    ...opts
+  }
+  return fengming
+    .post('/trusteeship/extend')
+    .send(reverseCamelcase(query))
+    .json()
+}
+
 /**
  * private
  */

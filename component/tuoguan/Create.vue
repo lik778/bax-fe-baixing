@@ -28,7 +28,7 @@
         <el-checkbox v-model="model.confirm">我已阅读并同意遵守<a>《百姓网托管协议》</a></el-checkbox>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="onSubmit">我要托管</el-button>
+        <el-button type="primary" @click="onSubmit" :loading="loading">我要托管</el-button>
         <el-button @click="$emit('cancel')">我再想想</el-button>
       </el-form-item>
     </el-form>
@@ -38,6 +38,7 @@
 <script>
 import Contract from './Contract'
 import {expectedBudgetOpts, semPlatformOpts, optTypeOpts} from 'constant/fengming'
+import {createTuoguan} from './action'
 
 export default {
   props: {
@@ -70,17 +71,40 @@ export default {
       },
       expectedBudgetOpts,
       semPlatformOpts,
-      optTypeOpts
+      optTypeOpts,
+      loading: false
     }
   },
   methods: {
     onSubmit() {
-      this.$refs.form.validate(valid => {
+      this.$refs.form.validate(async valid => {
         if (valid) {
+          const {
+            category,
+            expectedBudget,
+            optType,
+            platform
+          } = this.model
+          const optTypeIds = this.optTypeOpts.filter(o => optType.includes(o.label)).map(o => o.value)
+          console.log(optTypeIds)
+          const platformIds = this.semPlatformOpts.filter(o => platform.includes(o.label)).map(o => o.value)
+          this.loading = true
+          await createTuoguan({
+            category,
+            expectedBudget,
+            optType: optTypeIds,
+            platform: platformIds
+          })
+          this.loading = false
           this.$alert(
             '您的托管服务已经生效，稍后会有运营人员和您联系。本次服务有效期为 6 个月，取消和延期请到个人中心进行修改',
             '温馨提示',
-            { confirmButtonText: '我知道了' }
+            {
+              confirmButtonText: '我知道了',
+              callback: action => {
+                this.$emit('cancel')
+              }
+            }
           )
         }
       })

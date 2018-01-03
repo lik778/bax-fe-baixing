@@ -1,8 +1,8 @@
 
 <template>
-  <el-dialog :visible="visible" size="small" :title="title" :show-close="false" :close-on-click-modal="false" :close-on-press-escape="false">
-    <create v-if="false" :categories="categories" @cancel="toggleTuoguanVisible"/>
-    <edit v-else @cancel="toggleTuoguanVisible"/>
+  <el-dialog :visible="visible" size="small" :title="title" :show-close="false" :close-on-click-modal="false" :close-on-press-escape="false" v-loading="loading">
+    <create v-if="!status.active" :categories="categories" @cancel="toggleTuoguanVisible"/>
+    <edit v-else @cancel="toggleTuoguanVisible" :expire="status.expireAt"/>
   </el-dialog>
 </template>
 
@@ -30,17 +30,35 @@ export default {
     Edit
   },
   store,
+  data() {
+    return {
+      loading: false
+    }
+  },
   computed: {
     title() {
-      return status.active ? '开启托管服务' : '托管服务'
+      return this.status.active ? '开启托管服务' : '托管服务'
     }
   },
   methods: {
-    toggleTuoguanVisible
+    toggleTuoguanVisible,
+    async load() {
+      this.loading = true
+      await getTuoguanStatus()
+      this.loading = false
+    }
   },
 
   mounted() {
-    getTuoguanStatus()
+    this.load()
+  },
+
+  watch: {
+    visible(v) {
+      if (v) {
+        this.load()
+      }
+    }
   }
 }
 </script>
