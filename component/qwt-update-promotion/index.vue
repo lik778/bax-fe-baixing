@@ -2,7 +2,13 @@
 <template>
   <div class="qwt-update-promotion">
     <topbar :user-info="userInfo">
-      <label slot="title">全网通 - 更新推广</label>
+      <label slot="title">
+        <span>全网通 - 更新推广</span>
+        <el-button class="report-link" size="mini" type="primary"
+          @click="gotoReportPage">
+          查看计划报表
+        </el-button>
+      </label>
     </topbar>
     <main>
       <h3>推广计划: {{ id }}</h3>
@@ -754,6 +760,17 @@ export default {
         Message.error(data.hint)
       }
     },
+    gotoReportPage() {
+      const { id } = this
+
+      this.$router.push({
+        name: 'qwt-dashboard',
+        query: {
+          source: 'qwt-update-promotion',
+          campaignId: id
+        }
+      })
+    },
     switchWordsVisible() {
       this.newaddedWordsVisible = !this.newaddedWordsVisible
     },
@@ -813,6 +830,12 @@ export default {
   align-items: center;
   font-size: 12px;
   color: #ff4401;
+}
+
+.report-link {
+  margin-left: 10px;
+  background-color: unset;
+  color: #20a0ff;
 }
 
 .el-icon-plus {

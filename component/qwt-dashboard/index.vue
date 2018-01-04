@@ -125,6 +125,7 @@ import moment from 'moment'
 
 import {
   DIMENSION_CAMPAIGN,
+  DIMENSION_KEYWORD,
   TIME_UNIT_DAY,
   DEVICE_ALL,
 
@@ -143,6 +144,7 @@ import {
 import {
   getCsvDownloadUrl,
   clearStatistics,
+  getCampaignInfo,
   getReport
 } from './action'
 
@@ -350,6 +352,18 @@ export default {
     'query.channel': function() {
       this.query.checkedCampaigns = []
       this.query.checkedKeywords = []
+    }
+  },
+  async mounted() {
+    const { query } = this.$route
+    if (query.campaignId) {
+      const campaign = await getCampaignInfo(query.campaignId)
+      this.query.checkedKeywords = campaign.keywords
+      this.query.channel = campaign.source
+      this.query.timeType = timeTypes[0].value
+      this.query.device = DEVICE_ALL
+      this.query.timeUnit = TIME_UNIT_DAY
+      this.query.dimension = DIMENSION_KEYWORD
     }
   }
 }

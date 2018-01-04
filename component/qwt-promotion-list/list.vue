@@ -128,6 +128,9 @@
           <router-link :to="{ name: 'qwt-update-promotion', params: { id: s.row.id } }">
             详情
           </router-link>
+          <router-link :to="{ name: 'qwt-dashboard', query: { campaignId: s.row.id, source: 'qwt-promotion-list' } }">
+            报表
+          </router-link>
         </template>
       </el-table-column>
     </el-table>
