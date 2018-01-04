@@ -4,6 +4,7 @@ import { stringify } from 'query-string'
 import { createAction } from 'vue-duo'
 
 import * as api from 'api/fengming-campaign'
+import * as fapi from 'api/fengming'
 
 import {
   fengmingApiHost
@@ -15,6 +16,8 @@ export const getCsvDownloadUrl = createAction(opts => {
     export_csv: 1
   })
 })
+
+export const getCampaignInfo = createAction(fapi.getCampaignInfo)
 
 export const getReport = createAction(api.getReport)
 

@@ -5,7 +5,9 @@
       数据走势图
     </header>
     <main>
-      <chart :options="options"></chart>
+      <chart :options="options"
+        @legendselectchanged="onLegendSelectChange">
+      </chart>
     </main>
   </div>
 </template>
@@ -14,12 +16,19 @@
 import { toTimestamp } from 'utils'
 import clone from 'clone'
 
+const ALL_LEGENDS = ['消费', '展现', '点击量']
+
 export default {
   name: 'qwt-dashboard-data-trend',
   props: {
     statistics: {
       type: Array,
       required: true
+    }
+  },
+  data() {
+    return {
+      selectedLegends: ALL_LEGENDS
     }
   },
   computed: {
@@ -66,6 +75,32 @@ export default {
       return this.rows.map(r => r.clicks)
     },
     options() {
+      const { selectedLegends } = this
+
+      const yAxisRightMaxValue = selectedLegends.includes('展现')
+        ? Math.max(...[...this.showData, ...this.clickData])
+        : Math.max(...this.clickData)
+
+      const series = [{
+        name: '消费',
+        type: 'line',
+        stack: '消费',
+        yAxisIndex: 0,
+        data: selectedLegends.includes('消费') ? this.costData : []
+      }, {
+        name: '展现',
+        type: 'line',
+        stack: '展现',
+        yAxisIndex: 1,
+        data: selectedLegends.includes('展现') ? this.showData : []
+      }, {
+        name: '点击量',
+        type: 'line',
+        stack: '点击量',
+        yAxisIndex: 1,
+        data: selectedLegends.includes('点击量') ? this.clickData : []
+      }]
+
       return {
         title: {
           text: ''
@@ -74,7 +109,12 @@ export default {
           trigger: 'axis'
         },
         legend: {
-          data: ['消费', '展现', '点击量']
+          data: ALL_LEGENDS,
+          selected: {
+            '消费': selectedLegends.includes('消费'),
+            '展现': selectedLegends.includes('展现'),
+            '点击量': selectedLegends.includes('点击量')
+          }
         },
         grid: {
           left: '3%',
@@ -99,28 +139,16 @@ export default {
           type: 'value',
           position: 'right',
           min: 0,
-          max: Math.max(...[...this.showData, ...this.clickData])
+          max: yAxisRightMaxValue
         }],
-        series: [{
-          name: '消费',
-          type: 'line',
-          stack: '消费',
-          yAxisIndex: 0,
-          data: this.costData
-        }, {
-          name: '展现',
-          type: 'line',
-          stack: '展现',
-          yAxisIndex: 1,
-          data: this.showData
-        }, {
-          name: '点击量',
-          type: 'line',
-          stack: '点击量',
-          yAxisIndex: 1,
-          data: this.clickData
-        }]
+        series
       }
+    }
+  },
+  methods: {
+    onLegendSelectChange(event) {
+      const { selected } = event
+      this.selectedLegends = Object.keys(selected).filter(k => selected[k])
     }
   }
 }
