@@ -326,7 +326,7 @@ export default {
   data() {
     return {
       newPromotion: clone(emptyPromotion),
-      actionTrackId: '',
+      actionTrackId: uuid(),
       timeType: 'long', // long, custom
       queryWord: '',
 
@@ -371,18 +371,16 @@ export default {
 
       this.isCreating = true
 
-      const { userInfo } = this
+      const { actionTrackId, userInfo } = this
 
       track({
         roles: userInfo.roles.map(r => r.name).join(','),
         action: 'click-button: create-campaign',
-        actionTrackId: this.actionTrackId,
         baixingId: userInfo.baixingId,
         time: Date.now() / 1000 | 0,
-        baxId: userInfo.id
+        baxId: userInfo.id,
+        actionTrackId
       })
-
-      this.actionTrackId = uuid()
 
       try {
         await this._createPromotion()
@@ -584,17 +582,15 @@ export default {
     await getCurrentBalance()
 
     setTimeout(() => {
-      const { userInfo } = this
-
-      this.actionTrackId = uuid()
+      const { actionTrackId, userInfo } = this
 
       track({
         roles: userInfo.roles.map(r => r.name).join(','),
         action: 'enter-page: create-campaign',
-        actionTrackId: this.actionTrackId,
         baixingId: userInfo.baixingId,
         time: Date.now() / 1000 | 0,
-        baxId: userInfo.id
+        baxId: userInfo.id,
+        actionTrackId
       })
     }, 1200)
   }

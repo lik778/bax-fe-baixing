@@ -238,7 +238,7 @@ export default {
   },
   data() {
     return {
-      actionTrackId: '',
+      actionTrackId: uuid(),
       allProducts,
 
       salesIdLocked: false,
@@ -584,6 +584,7 @@ export default {
       const {
         checkedChargeProductId,
         checkedPackageId,
+        actionTrackId,
         chargeMoney,
         productId,
         userInfo
@@ -642,14 +643,12 @@ export default {
 
       track({
         roles: userInfo.roles.map(r => r.name).join(','),
-        actionTrackId: this.actionTrackId,
         action: 'click-button: charge',
         baixingId: userInfo.baixingId,
         time: Date.now() / 1000 | 0,
-        baxId: userInfo.id
+        baxId: userInfo.id,
+        actionTrackId
       })
-
-      this.actionTrackId = uuid()
 
       this.payInProgress = true
 
@@ -691,17 +690,15 @@ export default {
     } = this.$route.query
 
     setTimeout(() => {
-      const { userInfo } = this
-
-      this.actionTrackId = uuid()
+      const { userInfo, actionTrackId } = this
 
       track({
         roles: userInfo.roles.map(r => r.name).join(','),
-        actionTrackId: this.actionTrackId,
         baixingId: userInfo.baixingId,
         action: 'enter-page: charge',
         time: Date.now() / 1000 | 0,
-        baxId: userInfo.id
+        baxId: userInfo.id,
+        actionTrackId
       })
     }, 1200)
 

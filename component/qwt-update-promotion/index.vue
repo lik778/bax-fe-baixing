@@ -335,7 +335,7 @@ export default {
   data() {
     return {
       creativeContentPlaceholder,
-      actionTrackId: '',
+      actionTrackId: uuid(),
 
       durationSelectorVisible: false,
       newaddedWordsVisible: false,
@@ -647,19 +647,17 @@ export default {
 
       this.isUpdating = true
 
-      const { userInfo, id } = this
+      const { actionTrackId, userInfo, id } = this
 
       track({
         roles: userInfo.roles.map(r => r.name).join(','),
         action: 'click-button: update-campaign',
-        actionTrackId: this.actionTrackId,
         baixingId: userInfo.baixingId,
         time: Date.now() / 1000 | 0,
         baxId: userInfo.id,
-        campaignId: id
+        campaignId: id,
+        actionTrackId
       })
-
-      this.actionTrackId = uuid()
 
       try {
         await this._updatePromotion()
@@ -806,17 +804,16 @@ export default {
     await this.initCampaignInfo()
 
     setTimeout(() => {
-      const { userInfo, id } = this
-      this.actionTrackId = uuid()
+      const { actionTrackId, userInfo, id } = this
 
       track({
         roles: userInfo.roles.map(r => r.name).join(','),
         action: 'enter-page: update-campaign',
-        actionTrackId: this.actionTrackId,
         baixingId: userInfo.baixingId,
         time: Date.now() / 1000 | 0,
         baxId: userInfo.id,
-        campaignId: id
+        campaignId: id,
+        actionTrackId
       })
     }, 1200)
   }
