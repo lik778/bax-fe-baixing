@@ -655,6 +655,16 @@ export default {
       try {
         const oids = await createOrder(newOrder)
 
+        track({
+          roles: userInfo.roles.map(r => r.name).join(','),
+          action: 'create order success',
+          baixingId: userInfo.baixingId,
+          time: Date.now() / 1000 | 0,
+          oids: oids.join(','),
+          baxId: userInfo.id,
+          actionTrackId
+        })
+
         if (this.finalPrice !== 0) {
           const summary = this.checkedProductDesc
 
