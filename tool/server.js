@@ -14,6 +14,10 @@ app.use(history({
   rewrites: [{
     from: /^\/signin/,
     to: '/template/signin.html'
+  },
+  {
+    from: /^\/verify_tuoguan/,
+    to: '/template/verify_tuoguan.html'
   }, {
     from: /^\/main/,
     to: '/template/main.html'

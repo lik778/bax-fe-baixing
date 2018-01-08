@@ -305,6 +305,13 @@ export function extendTuoguan(opts) {
     .json()
 }
 
+export function verifyTuoguan(opts) {
+  return fengming
+    .post('/trusteeship/verify_create')
+    .send(reverseCamelcase(opts))
+    .json()
+}
+
 /**
  * private
  */
