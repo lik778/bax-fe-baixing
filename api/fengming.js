@@ -161,7 +161,7 @@ export async function getCurrentCampaigns(opts) {
 
   const [campaigns, total] = await Promise.all([
     _getCurrentCampaigns(query),
-    _getCurrentCampaignCount(query)
+    getCurrentCampaignCount(query)
   ])
 
   return {
@@ -264,7 +264,7 @@ export async function getSummary() {
 
 export async function getHomepageSummary() {
   const [ campaignCount, balance ] = await Promise.all([
-    _getCurrentCampaignCount(),
+    getCurrentCampaignCount(),
     getCurrentBalance()
   ])
 
@@ -312,6 +312,15 @@ export function verifyTuoguan(opts) {
     .json()
 }
 
+export async function getCurrentCampaignCount(opts) {
+  const body = await fengming
+    .get('/campaign/current/count')
+    .query(opts)
+    .json()
+
+  return body.data
+}
+
 /**
  * private
  */
@@ -340,15 +349,6 @@ async function _getLogs(opts) {
     .json()
 
   return toCamelcase(body.data)
-}
-
-async function _getCurrentCampaignCount(opts) {
-  const body = await fengming
-    .get('/campaign/current/count')
-    .query(opts)
-    .json()
-
-  return body.data
 }
 
 async function _getLogCount(opts) {

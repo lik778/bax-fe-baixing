@@ -9,13 +9,16 @@ import {
   getRecommendedWords,
   getCurrentBalance,
   getCreativeWords,
-  clearStore
+  clearStore,
+  getCampaignsCount
 } from './action'
 
 const store = createStore({
   recommendedWords: [],
   creativeWords: [],
-  currentBalance: 0
+  currentBalance: 0,
+
+  campaignsCount: 0
 })
 
 store.subscribeActions({
@@ -31,6 +34,10 @@ store.subscribeActions({
   [clearStore]: () => ({
     recommendedWords: [],
     creativeWords: []
+  }),
+
+  [getCampaignsCount]: (campaignsCount) => ({
+    campaignsCount
   })
 })
 

@@ -3,6 +3,7 @@
   <div class="qwt-create-promotion">
     <topbar :user-info="userInfo">
       <label slot="title">全网通 - 新建推广</label>
+      <flat-btn slot="right" @click.native="toggleTuoguanVisible" class="tuoguan">托管服务</flat-btn>
     </topbar>
     <main>
       <section>
@@ -228,6 +229,11 @@
       @change="onChangeDuration"
       @hide="durationSelectorVisible = false">
     </duration-selector>
+
+    <div class="tuoguan-promotion" v-show="showPromotion">
+      <i @click="closePromotion" class="el-icon-close"></i>
+      <el-button type="text" @click="toggleTuoguanVisible">我要托管</el-button>
+    </div>
   </div>
 </template>
 
@@ -247,6 +253,7 @@ import DurationSelector from 'com/common/duration-selector'
 import KeywordList from 'com/common/qwt-keyword-list'
 import AreaSelector from 'com/common/area-selector'
 import ContractAck from 'com/widget/contract-ack'
+import FlatBtn from 'com/common/flat-btn'
 import Topbar from 'com/topbar'
 
 import { fmtAreasInQwt, getCnName } from 'util/meta'
@@ -275,8 +282,13 @@ import {
   getCurrentBalance,
   getCreativeWords,
   createCampaign,
-  clearStore
+  clearStore,
+  getCampaignsCount
 } from './action'
+
+import {
+  toggleTuoguanVisible
+} from '../action'
 
 import store from './store'
 
@@ -296,6 +308,9 @@ const emptyPromotion = {
   creativeWords: []
 }
 
+const storageKey = 'user_close_tuoguan_promotion'
+const notActiveTime = 25 * 60 * 1000
+
 export default {
   name: 'qwt-create-promotion',
   store,
@@ -311,6 +326,7 @@ export default {
     AreaSelector,
     KeywordList,
     ContractAck,
+    FlatBtn,
     Topbar
   },
   props: {
@@ -337,10 +353,17 @@ export default {
       creativeContentPlaceholder,
       landingTypeOpts,
 
-      isCreating: false
+      isCreating: false,
+
+      showPromotion: false,
+      timeout: null,
+      failCount: 0
     }
   },
   computed: {
+    isFirstCampaign() {
+      return this.campaignsCount === 0
+    },
     predictedInfo() {
       const {
         currentBalance,
@@ -364,6 +387,17 @@ export default {
     }
   },
   methods: {
+    closePromotion() {
+      window.localStorage.setItem(storageKey, 'true')
+      this.showPromotion = false
+    },
+    toggleTuoguanVisible,
+    tryShowPromotion() {
+      const has = window.localStorage.getItem(storageKey)
+      if (has !== 'true') {
+        this.showPromotion = true
+      }
+    },
     async createPromotion() {
       if (this.isCreating) {
         return Message.warning('正在创建中, 请稍等一小会 ~')
@@ -384,6 +418,13 @@ export default {
 
       try {
         await this._createPromotion()
+        this.failCount = 0
+      } catch (error) {
+        // 创建出错三次以上，给提示
+        this.failCount++
+        if (this.failCount > 3) {
+          this.tryShowPromotion()
+        }
       } finally {
         this.isCreating = false
       }
@@ -395,7 +436,7 @@ export default {
 
       const pp = this.predictedInfo.dailyBudget
       if (p.dailyBudget < pp) {
-        return Message.error(`推广日预算需大于 ${pp} 元`)
+        throw Message.error(`推广日预算需大于 ${pp} 元`)
       }
 
       p.dailyBudget = p.dailyBudget * 100
@@ -404,7 +445,7 @@ export default {
         if (checkCampaignValidTime(p.validTime) === 'custom') {
           p.validTime = getCampaignValidTime(p.validTime)
         } else {
-          return Message.error('请填写投放日期或选择长期投放')
+          throw Message.error('请填写投放日期或选择长期投放')
         }
       } else {
         p.validTime = [null, null]
@@ -417,15 +458,15 @@ export default {
 
       p.mobilePriceRatio = parseFloat(p.mobilePriceRatio)
       if (!(p.mobilePriceRatio >= 0.1 && p.mobilePriceRatio <= 9.9)) {
-        return Message.error('请设置合理的移动端出价比例')
+        throw Message.error('请设置合理的移动端出价比例')
       }
 
       if (!p.landingPage) {
-        return Message.error('请填写投放页面')
+        throw Message.error('请填写投放页面')
       }
 
       if (!p.keywords.length) {
-        return Message.error('请填写关键字')
+        throw Message.error('请填写关键字')
       }
 
       for (const w of p.keywords) {
@@ -433,30 +474,30 @@ export default {
         //   return Message.error(`关键字: ${w.word} 出价低于 ${(w.originPrice / 200).toFixed(2)}, 请调高出价`)
         // }
         if (w.price < 100) {
-          return Message.error(`关键字: ${w.word} 出价不得低于 1元, 请调高出价`)
+          throw Message.error(`关键字: ${w.word} 出价不得低于 1元, 请调高出价`)
         }
       }
 
       if (!p.areas.length) {
-        return Message.error('请选择城市')
+        throw Message.error('请选择城市')
       }
 
       if (!p.creativeTitle) {
-        return Message.error('请填写创意标题')
+        throw Message.error('请填写创意标题')
       }
 
       if (p.creativeTitle.length < 9 ||
         p.creativeTitle.length > 25) {
-        return Message.error('创意标题需要在9-25个字')
+        throw Message.error('创意标题需要在9-25个字')
       }
 
       if (!p.creativeContent) {
-        return Message.error('请填写创意内容')
+        throw Message.error('请填写创意内容')
       }
 
       if (p.creativeContent.length < 9 ||
         p.creativeContent.length > 40) {
-        return Message.error('创意内容需要在9-40个字')
+        throw Message.error('创意内容需要在9-40个字')
       }
 
       const res = await checkCreativeContent({
@@ -466,7 +507,7 @@ export default {
       })
 
       if (res.result) {
-        return Message.error(res.hint)
+        throw Message.error(res.hint)
       }
 
       await createCampaign(fmtAreasInQwt(p, allAreas))
@@ -512,7 +553,7 @@ export default {
       if (!data.result) {
         Message.success(data.hint)
       } else {
-        Message.error(data.hint)
+        return Message.error(data.hint)
       }
     },
     updateRecommendedWord(word) {
@@ -579,7 +620,11 @@ export default {
     centToYuan
   },
   async mounted() {
-    await getCurrentBalance()
+    await Promise.all([getCurrentBalance(), getCampaignsCount()])
+
+    if (this.isFirstCampaign) {
+      this.tryShowPromotion()
+    }
 
     setTimeout(() => {
       const { actionTrackId, userInfo } = this
@@ -593,6 +638,15 @@ export default {
         actionTrackId
       })
     }, 1200)
+
+    // 25分钟未离开页面，出现提示
+    this.timeout = setTimeout(() => {
+      this.tryShowPromotion()
+    }, notActiveTime)
+  },
+
+  destroyed() {
+    this.timeout()
   }
 }
 </script>
@@ -747,5 +801,19 @@ export default {
     }
   }
 }
+.tuoguan {
+  position: relative;
+  right: 10px;
+}
+.tuoguan-promotion {
+  position: fixed;
+  right: 10px;
+  bottom: 10px;
 
+  &>.el-icon-close {
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+}
 </style>

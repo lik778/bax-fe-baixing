@@ -3,6 +3,7 @@
   <div class="qwt-promotion">
     <topbar :user-info="userInfo">
       <label slot="title">全网通 - 推广管理</label>
+      <flat-btn slot="right" @click.native="toggleTuoguanVisible" class="tuoguan">托管服务</flat-btn>
     </topbar>
     <promotion-header :show-more-filters="showMoreFilters"
       :all-areas="allAreas" :query="localQuery"
@@ -18,10 +19,15 @@
 import PromotionHeader from './header'
 import PromotionList from './list'
 import Topbar from 'com/topbar'
+import FlatBtn from 'com/common/flat-btn'
 
 import {
   isBaixingSales
 } from 'util/role'
+
+import {
+  toggleTuoguanVisible
+} from '../action'
 
 import store from './store'
 
@@ -31,7 +37,8 @@ export default {
   components: {
     PromotionHeader,
     PromotionList,
-    Topbar
+    Topbar,
+    FlatBtn
   },
   props: {
     userInfo: {
@@ -64,6 +71,10 @@ export default {
         userId: currentUserId,
       }
     }
+  },
+
+  methods: {
+    toggleTuoguanVisible
   }
 }
 </script>
@@ -74,5 +85,8 @@ export default {
   padding: 0 35px;
   width: 100%;
 }
-
+.tuoguan {
+  position: relative;
+  right: 10px;
+}
 </style>

@@ -23,4 +23,8 @@ export const getCreativeWords = createAction((url) => {
   return fapi.getCreativeWords(url)
 })
 
+export const getCampaignsCount = createAction(() => {
+  return fapi.getCurrentCampaignCount()
+})
+
 export const clearStore = createAction()
