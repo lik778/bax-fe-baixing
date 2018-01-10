@@ -230,10 +230,12 @@
       @hide="durationSelectorVisible = false">
     </duration-selector>
 
-    <div class="tuoguan-promotion" v-show="showPromotion">
-      <i @click="closePromotion" class="el-icon-close"></i>
-      <el-button type="text" @click="toggleTuoguanVisible">我要托管</el-button>
-    </div>
+    <transition name="slide-fade">
+      <div class="tuoguan-promotion" v-show="showPromotion">
+        <i @click="closePromotion" class="el-icon-close"></i>
+        <el-button class="tuoguan-btn" type="text" @click="toggleTuoguanVisible"></el-button>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -805,15 +807,45 @@ export default {
   position: relative;
   right: 10px;
 }
+
+.slide-fade-enter-active {
+  transition: all .4s ease;
+}
+.slide-fade-leave-active {
+  transition: all .2s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.slide-fade-enter, .slide-fade-leave-to {
+  transform: translateX(100px);
+  /* opacity: 0; */
+}
+
 .tuoguan-promotion {
+  background-image: url(http://file.baixing.net/201801/47f063038bdbb67660a114de96958e2f.png);
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 154px;
+  height: 216px;
   position: fixed;
-  right: 10px;
+  right: 80px;
   bottom: 10px;
 
   &>.el-icon-close {
     position: absolute;
-    right: 0;
-    top: 0;
+    right: 3px;
+    top: 29px;
+    cursor: pointer;
+    color: #666;
+  }
+  &>.tuoguan-btn {
+    background-image: url(http://file.baixing.net/201801/26a639493c25bc3d8f62c54848b312c2.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 128px;
+    height: 30px;
   }
 }
 </style>

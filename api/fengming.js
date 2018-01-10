@@ -312,6 +312,14 @@ export function verifyTuoguan(opts) {
     .json()
 }
 
+export async function tuoguanCode(code) {
+  const body = await fengming
+    .get('/trusteeship/code/' + code)
+    .json()
+
+  return toCamelcase(body.data)
+}
+
 export async function getCurrentCampaignCount(opts) {
   const body = await fengming
     .get('/campaign/current/count')

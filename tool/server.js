@@ -16,8 +16,8 @@ app.use(history({
     to: '/template/signin.html'
   },
   {
-    from: /^\/verify_tuoguan/,
-    to: '/template/verify_tuoguan.html'
+    from: /^\/vt/,
+    to: '/template/vt.html'
   }, {
     from: /^\/main/,
     to: '/template/main.html'
