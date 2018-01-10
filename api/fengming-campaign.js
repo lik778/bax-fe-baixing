@@ -54,12 +54,27 @@ export async function getCampaigns(opts = {}) {
   return toCamelcase(body.data)
 }
 
+export async function getPreparedDownloads() {
+  const body = await fengming
+    .get('/data_report/prepared')
+    .json()
+
+  return toCamelcase(body.data)
+}
+
 export async function getReport(opts = {}) {
   const q = reverseCamelcase(trim({
     offset: 0,
     limit: 100,
     ...opts
   }))
+
+  if (q.export_csv) {
+    return fengming
+      .get('/data_report')
+      .query(q)
+      .json()
+  }
 
   const [body1, body2, body3] = await Promise.all([
     fengming

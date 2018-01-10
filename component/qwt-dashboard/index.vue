@@ -93,7 +93,7 @@
       <data-detail :statistics="statistics" :summary="summary"
         :offset="offset" :total="total" :limit="limit"
         :dimension="query.dimension"
-        :csv-download-url="csvDownloadUrl"
+        @download="() => queryStatistics({}, 'download')"
         @current-change="queryStatistics">
       </data-detail>
       <plan-keyword-selector
@@ -108,6 +108,10 @@
         @select-keyword="k => query.checkedKeywords.push(k)"
         @remove-keyword="removeKeyword">
       </plan-keyword-selector>
+      <download-dialog
+        :visible="downloadDialogVisible"
+        @ok="downloadDialogVisible = false">
+      </download-dialog>
     </main>
   </div>
 </template>
@@ -117,9 +121,11 @@ import PlanKeywordSelector from 'com/common/plan-keyword-selector'
 import BaxSelect from 'com/common/select'
 import Topbar from 'com/topbar'
 
+import DownloadDialog from './download-dialog'
 import DataDetail from './data-detail'
 import DataTrend from './data-trend'
 
+import { Message } from 'element-ui'
 import { toTimestamp } from 'utils'
 import moment from 'moment'
 
@@ -142,9 +148,9 @@ import {
 } from 'constant/fengming'
 
 import {
-  getCsvDownloadUrl,
   clearStatistics,
   getCampaignInfo,
+  downloadCsv,
   getReport
 } from './action'
 
@@ -196,6 +202,7 @@ export default {
   store,
   components: {
     PlanKeywordSelector,
+    DownloadDialog,
     DataDetail,
     DataTrend,
     BaxSelect,
@@ -209,6 +216,7 @@ export default {
   },
   data() {
     return {
+      downloadDialogVisible: false,
       pksDialogVisible: false,
       kwListExpand: false,
       kwListLimitSize: 15,
@@ -266,7 +274,7 @@ export default {
     }
   },
   methods: {
-    async queryStatistics(opts = {}) {
+    async queryStatistics(opts = {}, action = 'query') {
       const offset = opts.offset || 0
       const { query } = this
 
@@ -275,6 +283,9 @@ export default {
 
       if (!(query.checkedCampaigns.length + query.checkedKeywords.length)) {
         clearStatistics()
+        if (action === 'download') {
+          Message.error('请选择查询条件')
+        }
         return
       }
 
@@ -312,10 +323,12 @@ export default {
         q.keywordIds = query.checkedKeywords.map(k => k.id)
       }
 
-      await Promise.all([
-        getCsvDownloadUrl(q),
-        getReport(q)
-      ])
+      if (action === 'download') {
+        await downloadCsv(q)
+        this.downloadDialogVisible = true
+      } else {
+        await getReport(q)
+      }
     },
     selectCampaign(campaign) {
       const ids = this.query.checkedCampaigns.map(c => c.id)
