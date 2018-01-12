@@ -113,8 +113,8 @@
               :value="getProp('creativeTitle')"
               @change="v => promotion.creativeTitle = v">
             </el-input>
-            <p v-if="isCreativeAuthing" class="authing-tip">
-              您的推广物料正在审核中，预计审核时间3个工作日内，请您耐心等待。
+            <p v-if="creativeTitleTip" class="authing-tip">
+              {{ creativeTitleTip }}
             </p>
           </span>
         </div>
@@ -133,7 +133,9 @@
           <p>{{ originPromotion.refuseReason }}</p>
         </div>
         <footer v-if="!isFormReadonly">
-          <el-button type="primary" @click="checkCreativeContent">
+          <el-button type="primary"
+            :disabled="checkCreativeBtnDisabled"
+            @click="checkCreativeContent">
             检查推广是否可用
           </el-button>
         </footer>
@@ -150,6 +152,7 @@
           :show-prop-show="false"
           :show-prop-status="true"
           :show-prop-ranking="true"
+          :campaign-offline="isCampaignOffline"
           @update-word="updateExistWord"
           @delete-word="word => promotion.deletedKeywords.push(word)">
         </keyword-list>
@@ -169,8 +172,10 @@
             （请优先添加较为核心的关键词，关键词长度不宜超过5个字，不区分大小写。）
           </strong>
         </div>
-        <keyword-list v-if="newaddedWordsVisible" :words="addibleWords"
+        <keyword-list v-if="newaddedWordsVisible"
+          :words="addibleWords"
           :selected-words="promotion.newKeywords"
+          :campaign-offline="isCampaignOffline"
           @update-word="updateNewWord"
           @select-words="words => promotion.newKeywords = [...words]">
         </keyword-list>
@@ -274,6 +279,8 @@ import track from 'util/track'
 
 import {
   CREATIVE_STATUS_PENDING,
+  CAMPAIGN_STATUS_OFFLINE,
+  SEM_PLATFORM_SOGOU,
   SEM_PLATFORM_BAIDU,
   SEM_PLATFORM_QIHU
 } from 'constant/fengming'
@@ -410,9 +417,26 @@ export default {
 
       return getCampaignPrediction(currentBalance, prices)
     },
+    checkCreativeBtnDisabled() {
+      const data = this.getUpdatedCreativeData()
+
+      if (data.creativeTitle || data.creativeContent) {
+        return false
+      }
+
+      return this.isCampaignOffline
+    },
     isCreativeEditable() {
+      const source = this.getProp('source')
+
       // 说明: sougou 审核中, 不允许修改创意; 但 360 可以
-      if ([SEM_PLATFORM_QIHU, SEM_PLATFORM_BAIDU].includes(this.getProp('source'))) {
+      if ([SEM_PLATFORM_QIHU, SEM_PLATFORM_BAIDU].includes(source)) {
+        return true
+      }
+
+      if (source === SEM_PLATFORM_SOGOU &&
+        this.isCampaignOffline &&
+        this.isCreativeAuthing) {
         return true
       }
 
@@ -424,6 +448,24 @@ export default {
       } = this.originPromotion
 
       return auditStatus === CREATIVE_STATUS_PENDING
+    },
+    isCampaignOffline() {
+      const {
+        status
+      } = this.originPromotion
+
+      return status === CAMPAIGN_STATUS_OFFLINE
+    },
+    creativeTitleTip() {
+      if (this.isCampaignOffline) {
+        return '您当前的计划已下线，请重新开启投放'
+      }
+
+      if (this.isCreativeAuthing) {
+        return '您的推广物料正在审核中，预计审核时间3个工作日内，请您耐心等待。'
+      }
+
+      return false
     },
     id() {
       return this.$route.params.id
@@ -678,6 +720,13 @@ export default {
       } catch (err) {
         Message.error(err.message)
         return
+      }
+
+      if (this.isCampaignOffline) {
+        if (!data.creativeTitle && !data.creativeContent) {
+          Message.error('您当前的投放内容违规，请联系客服或销售')
+          return
+        }
       }
 
       // check price

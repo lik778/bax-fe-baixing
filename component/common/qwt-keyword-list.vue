@@ -117,6 +117,10 @@ export default {
       type: Array,
       default: () => []
     },
+    campaignOffline: {
+      type: Boolean,
+      default: false
+    },
     showPropShow: {
       type: Boolean,
       default: true
@@ -239,6 +243,10 @@ export default {
     },
     fmtStatus(row) {
       const { chibiStatus, status } = row
+
+      if (this.campaignOffline) {
+        return '-'
+      }
 
       if (chibiStatus === KEYWORD_CHIBI_REJECT ||
         status === KEYWORD_STATUS_REFUSE) {

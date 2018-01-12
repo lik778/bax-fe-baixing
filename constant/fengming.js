@@ -13,12 +13,6 @@ export const CREATIVE_CHIBI_TITLE_PENDING = 1
 export const CREATIVE_CHIBI_CONTENT_PENDING = 2
 export const CREATIVE_CHIBI_ACCEPT = 10
 
-// export const CAMPAIGN_CHIBI_REJECT = -20 // 审核失败 (创意 直接删除)
-// export const CAMPAIGN_CHIBI_SENDBACK = -10 // 审核失败
-// export const CAMPAIGN_CHIBI_PENDING = 0
-// export const CAMPAIGN_CHIBI_UPDATED = 1 // 效力等同于 pending
-// export const CAMPAIGN_CHIBI_ACCEPT = 10
-
 export const KEYWORD_STATUS_REFUSE = -10
 
 export const keywordStatus = {
@@ -62,6 +56,8 @@ export const semPlatformOpts = [{
   value: 1
 }]
 
+export const CREATIVE_STATUS_PENDING = 0
+
 export const creativeStatus = {
   '-10': '审核失败',
   '-1': '下线',
@@ -69,12 +65,12 @@ export const creativeStatus = {
   '10': '推广中'
 }
 
-export const CREATIVE_STATUS_PENDING = 0
-
 export const CAMPAIGN_AUDIT_AUTHING = 0
+export const CAMPAIGN_AUDIT_OFFLINE = -1
 
 export const campaignAuditStatus = {
   '-10': '审核驳回',
+  '-1': '下线',
   '0': '审核中',
   '10': '审核通过'
 }
