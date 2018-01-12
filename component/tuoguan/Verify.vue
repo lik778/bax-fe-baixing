@@ -26,7 +26,7 @@ export default {
       contractDialogVisible: false,
       contractChecked: false,
       uid: '',
-      mobile: ''
+      phone: ''
     }
   },
 
@@ -43,23 +43,23 @@ export default {
         })
       }
 
-      this.$prompt(`请补全手机号码中的*号部分: ${this.mobile}`, '温馨提示', {
+      this.$prompt(`请补全手机号中间4位: ${this.phone}`, '温馨提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         inputPattern: /^\d{4}$/,
         inputErrorMessage: '请填写手机号中间4位'
       }).then(({ value }) => {
-        const arr = this.mobile.split('****')
-        arr.splice(1, value)
-        const mobile = arr.join('')
-        return verifyTuoguan({ mobile, uid: this.uid })
+        const arr = this.phone.split('****')
+        arr.splice(1, 0, value)
+        const phone = arr.join('')
+        return verifyTuoguan({ phone, uid: this.uid })
       }).then(() => {
         this.$alert('您正在使用托管服务，本次服务有效期为 6 个月，取消或延期请到“广告系统”进行修改', {
           confirmButtonText: '我知道了'
         })
       }).catch(err => {
         if (err !== 'cancel') {
-          this.$message.warning('号码输入错误')
+          this.$message.warning(err.data.message)
         }
       })
     }
@@ -68,9 +68,9 @@ export default {
   async mounted() {
     const q = querystring.parse(window.location.search)
     if (q.t) {
-      const {uid, mobile} = await tuoguanCode(q.t)
+      const {uid, phone} = await tuoguanCode(q.t)
       this.uid = uid
-      this.mobile = mobile
+      this.phone = phone
     } else {
       redirectTo('signin')
     }

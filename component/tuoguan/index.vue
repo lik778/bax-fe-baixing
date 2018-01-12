@@ -1,8 +1,13 @@
 
 <template>
-  <el-dialog :visible="visible" size="small" :title="title" :show-close="false" :close-on-click-modal="false" :close-on-press-escape="false" v-loading="loading">
-    <create v-if="!status.active" :categories="categories" @cancel="toggleTuoguanVisible"/>
-    <edit v-else @cancel="toggleTuoguanVisible" :expire="status.expireAt"/>
+  <el-dialog :visible="visible" size="small" :title="title" :show-close="false" :close-on-click-modal="false" :close-on-press-escape="false" :modal-append-to-body="true">
+    <div v-if="loading">
+      加载中...
+    </div>
+    <div v-else>
+      <create v-if="!status.active" :categories="categories" @cancel="toggleTuoguanVisible"/>
+      <edit v-else @cancel="toggleTuoguanVisible" :expire="status.expireAt"/>
+    </div>
   </el-dialog>
 </template>
 
@@ -32,7 +37,7 @@ export default {
   store,
   data() {
     return {
-      loading: false
+      loading: true
     }
   },
   computed: {

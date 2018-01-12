@@ -307,8 +307,8 @@ export function extendTuoguan(opts) {
 
 export function verifyTuoguan(opts) {
   return fengming
-    .post('/trusteeship/verify_create')
-    .send(reverseCamelcase(opts))
+    .get('/trusteeship/verify_create')
+    .query(reverseCamelcase(opts))
     .json()
 }
 
