@@ -130,7 +130,7 @@
               @change="v => promotion.creativeContent = v">
             </el-input>
           </span>
-          <p>{{ originPromotion.refuseReason }}</p>
+          <p>{{ (!creativeTitleTip && originPromotion.refuseReason) || '' }}</p>
         </div>
         <footer v-if="!isFormReadonly">
           <el-button type="primary"
@@ -424,7 +424,14 @@ export default {
         return false
       }
 
-      return this.isCampaignOffline
+      const { extra } = this.originPromotion
+      const reason = extra.campaignDeletedReason || ''
+
+      if (reason === '投放内容违规被下线') {
+        return true
+      } else {
+        return false
+      }
     },
     isCreativeEditable() {
       const source = this.getProp('source')
@@ -724,7 +731,7 @@ export default {
 
       if (this.isCampaignOffline) {
         if (!data.creativeTitle && !data.creativeContent) {
-          Message.error('您当前的投放内容违规，请联系客服或销售')
+          Message.error('您当前的投放内容违规，请修改后再投放，如有问题请联系客服或销售')
           return
         }
       }

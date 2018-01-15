@@ -30,6 +30,7 @@ const emptyPromotion = {
   landingType: 0,
   validTime: [],
   keywords: [],
+  extra: {},
   areas: [],
   source: 0
 }
