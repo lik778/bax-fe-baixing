@@ -3,7 +3,7 @@
   <div class="qwt-create-promotion">
     <topbar :user-info="userInfo">
       <label slot="title">全网通 - 新建推广</label>
-      <flat-btn slot="right" @click.native="toggleTuoguanVisible" class="tuoguan">托管服务</flat-btn>
+      <flat-btn slot="right" @click.native="toggleTuoguanVisible({action: 'tuoguan:entry:qwt-create-promotion', actionTrackId, baixingId: userInfo.id})" class="tuoguan">托管服务</flat-btn>
     </topbar>
     <main>
       <section>
@@ -233,7 +233,7 @@
     <transition name="slide-fade">
       <div class="tuoguan-promotion" v-show="showPromotion">
         <i @click="closePromotion" class="el-icon-close"></i>
-        <el-button class="tuoguan-btn" type="text" @click="toggleTuoguanVisible"></el-button>
+        <el-button class="tuoguan-btn" type="text" @click="toggleTuoguanVisible({action: 'tuoguan:entry:popover', actionTrackId, baixingId: userInfo.id})"></el-button>
       </div>
     </transition>
   </div>
@@ -394,10 +394,19 @@ export default {
       this.showPromotion = false
     },
     toggleTuoguanVisible,
-    tryShowPromotion() {
+    tryShowPromotion(sideEffect) {
       const has = window.localStorage.getItem(storageKey)
       if (has !== 'true') {
         this.showPromotion = true
+        if (sideEffect) {
+          track({
+            ...sideEffect,
+            baixingId: this.userInfo.id,
+            url: window.location.href,
+            time: Date.now() / 1000 | 0,
+            actionTrackId: this.actionTrackId
+          })
+        }
       }
     },
     async createPromotion() {
@@ -425,7 +434,9 @@ export default {
         // 创建出错三次以上，给提示
         this.failCount++
         if (this.failCount > 3) {
-          this.tryShowPromotion()
+          this.tryShowPromotion({
+            action: 'tuoguan:popup:fail-3-times'
+          })
         }
       } finally {
         this.isCreating = false
@@ -625,7 +636,9 @@ export default {
     await Promise.all([getCurrentBalance(), getCampaignsCount()])
 
     if (this.isFirstCampaign) {
-      this.tryShowPromotion()
+      this.tryShowPromotion({
+        action: 'tuoguan:popover:first-time-create'
+      })
     }
 
     setTimeout(() => {
@@ -643,7 +656,9 @@ export default {
 
     // 25分钟未离开页面，出现提示
     this.timeout = setTimeout(() => {
-      this.tryShowPromotion()
+      this.tryShowPromotion({
+        action: 'tuoguan:popover:linger-over-25'
+      })
     }, notActiveTime)
   },
 

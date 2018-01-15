@@ -3,7 +3,7 @@
   <div class="qwt-promotion">
     <topbar :user-info="userInfo">
       <label slot="title">全网通 - 推广管理</label>
-      <flat-btn slot="right" @click.native="toggleTuoguanVisible" class="tuoguan">托管服务</flat-btn>
+      <flat-btn slot="right" @click.native="toggleTuoguanVisible({action: 'tuoguan:entry:qwt-promotion-list', actionTrackId, baixingId: userInfo.id})" class="tuoguan">托管服务</flat-btn>
     </topbar>
     <promotion-header :show-more-filters="showMoreFilters"
       :all-areas="allAreas" :query="localQuery"
@@ -16,6 +16,8 @@
 </template>
 
 <script>
+import uuid from 'uuid/v4'
+
 import PromotionHeader from './header'
 import PromotionList from './list'
 import Topbar from 'com/topbar'
@@ -50,6 +52,11 @@ export default {
       required: true
     }
   },
+  data() {
+    return {
+      actionTrackId: uuid()
+    }
+  },
   computed: {
     isListReadonly() {
       return this.isBaixingSale
@@ -68,7 +75,7 @@ export default {
       }
       return {
         ...this.query,
-        userId: currentUserId,
+        userId: currentUserId
       }
     }
   },

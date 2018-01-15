@@ -29,7 +29,7 @@
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSubmit" :loading="loading">我要托管</el-button>
-        <el-button @click="$emit('cancel')">我再想想</el-button>
+        <el-button @click="onCancel">我再想想</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -39,10 +39,12 @@
 import Contract from './Contract'
 import {expectedBudgetOpts, semPlatformOpts, optTypeOpts} from 'constant/fengming'
 import {createTuoguan} from './action'
+import track from 'util/track'
 
 export default {
   props: {
-    categories: Array
+    categories: Array,
+    userInfo: Object
   },
   components: {
     Contract
@@ -76,7 +78,23 @@ export default {
     }
   },
   methods: {
+    track(action) {
+      track({
+        action,
+        time: Date.now() / 1000 | 0,
+        url: window.location.href,
+        baixingId: this.userInfo.id
+      })
+    },
+
+    onCancel() {
+      this.$emit('cancel')
+      this.track('tuoguan:cancel:click')
+    },
+
     onSubmit() {
+      this.track('tuoguan:create:click')
+
       this.$refs.form.validate(async valid => {
         if (valid) {
           const {
@@ -106,6 +124,7 @@ export default {
               }
             }
           )
+          this.track('tuoguan:create:success')
         }
       })
     }

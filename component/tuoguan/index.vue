@@ -5,8 +5,8 @@
       加载中...
     </div>
     <div v-else>
-      <create v-if="!status.active" :categories="categories" @cancel="toggleTuoguanVisible"/>
-      <edit v-else @cancel="toggleTuoguanVisible" :expire="status.expireAt"/>
+      <create v-if="!status.active" :categories="categories" :userInfo="userInfo" @cancel="toggleTuoguanVisible"/>
+      <edit v-else @cancel="toggleTuoguanVisible" :expire="status.expireAt" :userInfo="userInfo" />
     </div>
   </el-dialog>
 </template>
@@ -28,7 +28,8 @@ import Edit from './Edit'
 export default {
   props: {
     visible: Boolean,
-    categories: Array
+    categories: Array,
+    userInfo: Object
   },
   components: {
     Create,

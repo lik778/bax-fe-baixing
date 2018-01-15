@@ -7,7 +7,7 @@
         <el-tab-pane label="全网通购买" name="buy-service"></el-tab-pane>
         <el-tab-pane label="资金充值" name="charge-only"></el-tab-pane>
       </el-tabs>
-      <flat-btn slot="right" @click.native="toggleTuoguanVisible" class="tuoguan">托管服务</flat-btn>
+      <flat-btn slot="right" @click.native="toggleTuoguanVisible({action: 'tuoguan:entry:qwt-charge', actionTrackId, baixingId: userInfo.id})" class="tuoguan">托管服务</flat-btn>
     </topbar>
     <section>
       <div v-if="mode === 'buy-service'" class="qwt-package">

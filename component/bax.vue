@@ -9,7 +9,7 @@
     </router-view>
     <go-to-bottom></go-to-bottom>
     <back-to-top></back-to-top>
-    <tuoguan :visible="tuoguanVisible" :categories="topCategories"/>
+    <tuoguan :visible="tuoguanVisible" :categories="topCategories" :userInfo="currentUser"/>
   </content>
 </template>
 
@@ -27,8 +27,7 @@ import {
   getCurrentUser,
   getCategories,
   getAreas,
-  getRoles,
-  getTuoguanStatus
+  getRoles
 } from './action'
 
 export default {
@@ -73,8 +72,7 @@ export default {
       getCurrentUser(),
       getCategories(),
       getAreas(),
-      getRoles(),
-      getTuoguanStatus()
+      getRoles()
     ])
   }
 }

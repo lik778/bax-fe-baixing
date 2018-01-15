@@ -16,7 +16,6 @@ const store = createStore({
 
   currentUser: {},
 
-  tuoguanStatus: {},
   tuoguanVisible: false
 })
 

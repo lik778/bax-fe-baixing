@@ -33,11 +33,13 @@
 <script>
 import { extendTuoguan, stopTuoguan } from './action'
 import { toHumanTime } from 'utils'
+import track from 'util/track'
 
 export default {
   name: 'edit',
   props: {
-    expire: Number
+    expire: Number,
+    userInfo: Object
   },
   data() {
     return {
@@ -56,6 +58,15 @@ export default {
     }
   },
   methods: {
+    track(action) {
+      track({
+        action,
+        time: Date.now() / 1000 | 0,
+        url: window.location.href,
+        baixingId: this.userInfo.id
+      })
+    },
+
     close() {
       setTimeout(() => {
         this.step = 1
@@ -64,16 +75,24 @@ export default {
     },
 
     onExtend() {
+      this.track('tuoguan:extend:click')
+
       extendTuoguan(this.model).then(() => {
         this.close()
         this.$message.success('服务延期成功')
+
+        this.track(`tuoguan:extend-${this.model.days}:success`)
       })
     },
 
     onStop() {
+      this.track('tuoguan:stop:click')
+
       stopTuoguan().then(() => {
         this.close()
         this.$message.success('服务停止成功')
+
+        this.track('tuoguan:stop:success')
       })
     }
   }

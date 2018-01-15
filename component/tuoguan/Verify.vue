@@ -15,6 +15,8 @@ import Contract from './Contract'
 import {verifyTuoguan, tuoguanCode} from 'api/fengming'
 import querystring from 'query-string'
 import { redirectTo } from 'utils'
+import track from 'util/track'
+import uuid from 'uuid/v4'
 
 export default {
   components: {
@@ -26,7 +28,8 @@ export default {
       contractDialogVisible: false,
       contractChecked: false,
       uid: '',
-      phone: ''
+      phone: '',
+      actionTrackId: uuid()
     }
   },
 
@@ -36,7 +39,18 @@ export default {
       this.contractDialogVisible = true
     },
 
+    track(action) {
+      track({
+        action,
+        time: Date.now() / 1000 | 0,
+        url: window.location.href,
+        actionTrackId: this.actionTrackId
+      })
+    },
+
     onTuoguan() {
+      this.track('tuoguan:i-want-tuoguan:click')
+
       if (!this.contractChecked) {
         return this.$alert('请阅读并同意托管协议后参与', '温馨提示', {
           confirmButtonText: '我知道了'
@@ -57,9 +71,11 @@ export default {
         this.$alert('您正在使用托管服务，本次服务有效期为 6 个月，取消或延期请到“广告系统”进行修改', {
           confirmButtonText: '我知道了'
         })
+
+        this.track('tuoguan:verify:success')
       }).catch(err => {
         if (err !== 'cancel') {
-          this.$message.warning(err.data.message)
+          this.track('tuoguan:verify:fail')
         }
       })
     }
@@ -71,6 +87,8 @@ export default {
       const {uid, phone} = await tuoguanCode(q.t)
       this.uid = uid
       this.phone = phone
+
+      this.track('tuoguan:enter-verify:success')
     } else {
       redirectTo('signin')
     }
