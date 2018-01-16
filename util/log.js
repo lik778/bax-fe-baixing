@@ -7,6 +7,8 @@ import {
 } from 'utils'
 
 import {
+  CAMPAIGN_STATUS_OFFLINE,
+  CAMPAIGN_STATUS_ONLINE,
   semPlatformCn,
   landingType
 } from 'constant/fengming'
@@ -36,7 +38,10 @@ export function getLogDesc(log, { allAreas = [] }) {
 
     switch (timelineType) {
       case LOG_TYPE_CAMPAIGN:
-        return fmtCampaignLog(opType, change, allAreas)
+        return fmtCampaignLog(opType, {
+          ...change,
+          campaignId
+        }, allAreas)
       case LOG_TYPE_CREATIVE:
         return fmtCreativeLog(opType, change)
       case LOG_TYPE_KEYWORD:
@@ -78,9 +83,26 @@ function fmtCampaignLog(type, change = {}, allAreas) {
 
   const ops = []
   if (type === OP_CREATE) {
-    result += '新建推广：'
+    result += `新建推广：ID - ${change.campaignId}；`
   } else {
-    result += '更新推广：'
+    result += `更新推广：ID - ${change.campaignId}；`
+  }
+
+  if (change.status) {
+    const status = change.status.newValue
+    if ([CAMPAIGN_STATUS_OFFLINE, CAMPAIGN_STATUS_ONLINE].includes(status)) {
+      result = status === CAMPAIGN_STATUS_OFFLINE ? '计划下线' : '计划上线'
+      result += `：ID - ${change.campaignId}`
+      try {
+        const reason = change.extra.newValue.campaignDeletedReason
+        if (reason) {
+          result += `；原因 - ${reason}。`
+        }
+      } catch (err) {
+        // ignore
+      }
+      return result
+    }
   }
 
   Object.keys(change).map(key => {

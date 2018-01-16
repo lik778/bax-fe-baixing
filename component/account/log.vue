@@ -29,10 +29,6 @@
         width="180">
       </el-table-column>
       <el-table-column
-        prop="operatorIp"
-        label="操作IP">
-      </el-table-column>
-      <el-table-column
         :formatter="logDescFormatter"
         label="操作内容">
       </el-table-column>
