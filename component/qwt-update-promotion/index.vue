@@ -730,7 +730,7 @@ export default {
       }
 
       if (this.isCampaignOffline) {
-        if (!data.creativeTitle && !data.creativeContent) {
+        if (this.checkCreativeBtnDisabled) {
           Message.error('您当前的投放内容违规，请修改后再投放，如有问题请联系客服或销售')
           return
         }
