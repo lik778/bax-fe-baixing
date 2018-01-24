@@ -34,10 +34,13 @@ import VueClipboard from 'vue-clipboard2'
 import VueRouter from 'vue-router'
 import Element from 'element-ui'
 
+import { reaction } from 'mobx'
+import Movue from 'movue'
 import Duo from 'vue-duo'
 import Vue from 'vue'
 
 import Vue2Filters from 'vue2-filters'
+
 import ECharts from 'vue-echarts/components/ECharts.vue'
 
 import 'echarts/lib/chart/bar'
@@ -46,6 +49,7 @@ import 'echarts/lib/component/legend'
 import 'echarts/lib/component/tooltip'
 import 'echarts/lib/component/dataZoom'
 
+Vue.use(Movue, { reaction })
 Vue.use(VueClipboard)
 Vue.use(VueRouter)
 Vue.use(Element)
