@@ -36,78 +36,83 @@
 </template>
 
 <script>
-  import SectionHeader from 'com/common/section-header'
-  import Topbar from 'com/topbar'
+import SectionHeader from 'com/common/section-header'
+import Topbar from 'com/topbar'
 
-  import { allowSeeAccount } from 'util/role'
+import { allowSeeAccount } from 'util/role'
 
-  import store from './store'
+import homepageStore from './store'
 
-  import {
-    getHomepageSummary,
-    getCoupons
-  } from './action'
-
-  export default {
-    name: 'homepage',
-    props: ['userInfo'],
-    store,
-    components: {
-      Topbar,
-      SectionHeader
+export default {
+  name: 'homepage',
+  props: ['userInfo'],
+  fromMobx: {
+    coupons() {
+      return homepageStore.coupons
     },
-    data() {
-      return {
-        load: false // 仅查询一次
-      }
-    },
-    computed: {
-      allowSeeAccount() {
-        return allowSeeAccount(this.userInfo.roles)
-      }
-    },
-    watch: {
-      async userInfo(user) {
-        if (this.allowSeeAccount) {
-          if (this.load) return
-
-          this.load = true
-
-          await Promise.all([
-            getHomepageSummary(),
-            getCoupons({ onlyValid: true, status: 0 })
-          ])
-        }
-      }
-    },
-    async mounted() {
+    summary() {
+      return homepageStore.summary
+    }
+  },
+  components: {
+    Topbar,
+    SectionHeader
+  },
+  data() {
+    return {
+      load: false // 仅查询一次
+    }
+  },
+  computed: {
+    allowSeeAccount() {
+      return allowSeeAccount(this.userInfo.roles)
+    }
+  },
+  watch: {
+    async userInfo(user) {
       if (this.allowSeeAccount) {
+        if (this.load) return
+
+        this.load = true
+
         await Promise.all([
-          getHomepageSummary(),
-          getCoupons({ onlyValid: true, status: 0 })
+          homepageStore.getSummary(),
+          homepageStore.getCoupons({ onlyValid: true, status: 0 })
         ])
       }
     }
+  },
+  async mounted() {
+    if (this.allowSeeAccount) {
+      await Promise.all([
+        homepageStore.getSummary(),
+        homepageStore.getCoupons({ onlyValid: true, status: 0 })
+      ])
+    }
   }
+}
 </script>
 
 <style scoped>
-  .homepage-container {
-    padding: 0 35px;
-    width: 100%;
-    color: #6a778c;
-  }
-  .welcome {
-    margin-bottom: 20px;
-  }
-  .block {
-    text-align: center;
-    margin: 20px 0;
-    border-right: 1px dotted #aaa;
-  }
-  .number {
-    color: #2276f2;
-    font-size: 20px;
-    margin: 10px 5px;
-  }
+.homepage-container {
+  padding: 0 35px;
+  width: 100%;
+  color: #6a778c;
+}
+
+.welcome {
+  margin-bottom: 20px;
+}
+
+.block {
+  text-align: center;
+  margin: 20px 0;
+  border-right: 1px dotted #aaa;
+}
+
+.number {
+  color: #2276f2;
+  font-size: 20px;
+  margin: 10px 5px;
+}
 </style>

@@ -1,20 +1,24 @@
-import { createStore } from 'vue-duo'
 
-import { getHomepageSummary, getCoupons } from './action'
+import * as fapi from 'api/fengming'
+import * as mapi from 'api/meta'
 
-const store = createStore({
+import {
+  observable,
+  action
+} from 'mobx'
+
+const homepageStore = observable({
+  coupons: [],
   summary: {
     campaignCount: 0,
     balance: 0
   },
-  coupons: []
-})
-
-store.subscribeActions({
-  [getHomepageSummary]: summary => ({ summary }),
-  [getCoupons]: (coupons) => ({
-    coupons
+  getSummary: action(async function() {
+    this.summary = await fapi.getHomepageSummary()
+  }),
+  getCoupons: action(async function(opts) {
+    this.coupons = await mapi.getCoupons(opts)
   })
 })
 
-export default store
+export default homepageStore
