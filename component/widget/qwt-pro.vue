@@ -1,24 +1,24 @@
 
 <template>
-  <div class="qwt-pro-widget" @click="onClick">
-    <i v-if="checked" class="el-icon-check"></i>
-    <main @click="toInputPrice">
-      <span v-if="hasPrice && mode === 'normal'">
+  <div :class="{'qwt-pro-widget': true, checked}" @click="onClick">
+    <main v-if="title === '下次再充值'">
+      下次再充值
+    </main>
+    <main v-else-if="mode === 'normal'">
+      <span>
         价值
       </span>
-      <span v-if="hasPrice && mode === 'normal'">
+      <span>
         {{ displayPrice + '元' }}
       </span>
-      <p v-if="!hasPrice && mode === 'normal'">
-        {{ title }}
-      </p>
-      <p v-if="mode === 'input'">
-        <el-input size="mini" style="width: 90px"
-          placeholder="输入金额" v-model="inputPrice"
-          @change="onInputPrice"
-          @blur="onBlur">
-        </el-input>
-      </p>
+    </main>
+    <main v-else-if="mode === 'input'">
+      <el-input v-model="inputPrice"
+        placeholder="自定义金额数"
+        @change="onInputPrice"
+        @blur="onBlur">
+      </el-input>
+      <label>元</label>
     </main>
     <footer v-if="showFooter">
       推广资金包
@@ -40,18 +40,35 @@ export default {
   data() {
     return {
       minInputPrice: 288,
-      inputPrice: '',
-      mode: 'normal' // input
+      inputPrice: ''
+    }
+  },
+  computed: {
+    displayPrice() {
+      return this.inputPrice || this.price
+    },
+    hasPrice() {
+      const { title } = this
+
+      if (title === '下次再充值') {
+        return false
+      }
+
+      if (title === '购买其他金额') {
+        return !!this.inputPrice
+      }
+
+      return true
+    },
+    showFooter() {
+      return !['下次再充值'].includes(this.title)
+    },
+    mode() {
+      const { title } = this
+      return title === '购买其他金额' ? 'input' : 'normal'
     }
   },
   methods: {
-    toInputPrice() {
-      if (!this.editable) {
-        return
-      }
-
-      this.mode = 'input'
-    },
     onInputPrice(v) {
       const p = parseInt(v)
       if (p < this.minInputPrice) {
@@ -86,70 +103,57 @@ export default {
         this.$emit('set-money', 0)
       }
     }
-  },
-  computed: {
-    displayPrice() {
-      return this.inputPrice || this.price
-    },
-    hasPrice() {
-      const { title } = this
-
-      if (title === '暂不充值') {
-        return false
-      }
-
-      if (title === '其他金额') {
-        return !!this.inputPrice
-      }
-
-      return true
-    },
-    showFooter() {
-      return !['暂不充值'].includes(this.title)
-    }
   }
 }
 </script>
 
 <style scoped>
-
 @import '../../cssbase/mixin';
 @import 'cssbase/mixin';
+
+.el-input {
+  width: 118px;
+  height: 34px;
+}
 
 .qwt-pro-widget {
   display: inline-flex;
   flex-flow: column;
-  width: 120px;
-  height: 70px;
+  width: 170px;
+  height: 100px;
   border-radius: 4px;
-  border: solid 1px #009cff;
+  border: solid 1px #ffb74d;
   cursor: pointer;
-
-  & > i {
-    @mixin checked-icon;
-  }
 
   & > main {
     @mixin center;
     flex-grow: 1;
-    font-size: 14px;
-    font-weight: 500;
-    color: #6a778c;
+    border-bottom: 1px dotted #ffb74d;
+    color: #666666;
 
     & > span:last-child {
       margin-left: 10px;
-      color: #f9a568;
+      font-weight: 500;
+      color: #fc8342;
+    }
+
+    & > label {
+      margin-left: 8px;
     }
   }
 
   & > footer {
     @mixin center;
-    height: 22px;
-    background: #009cff;
-    font-size: 14px;
-    font-weight: 500;
-    color: white;
+    height: 40px;
+    color: #666666;
   }
 }
 
+.qwt-pro-widget.checked {
+  border: solid 1px #ff7533;
+
+  & > main {
+    border-bottom: 1px dotted #ff7533;
+  }
+}
 </style>
