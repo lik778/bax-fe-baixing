@@ -5,7 +5,7 @@
     </topbar>
     <main>
       <span>
-        <account />
+        <account :summary="summary" :coupons="coupons" />
         <campaign />
       </span>
       <span>

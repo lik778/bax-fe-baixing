@@ -10,29 +10,35 @@
       <span class="money">
         <h3>推广可用资金</h3>
         <p>
-          <strong>???</strong>
+          <strong>
+            {{ summary.balance / 100 }}
+          </strong>
           <span>元</span>
         </p>
         <router-link class="button primary"
-          :to="{name: 'qwt-charge'}">
+          :to="{name: 'qwt-charge', query: {mode: 'charge-only'}}">
           立即充值
         </router-link>
       </span>
       <span class="coupon">
         <h3>可用优惠券</h3>
         <p>
-          <strong>???</strong>
+          <strong>
+            {{ coupons.length }}
+          </strong>
           <span>张</span>
         </p>
         <router-link class="button"
-          :to="{name: 'qwt-charge'}">
+          :to="{name: 'coupon'}">
           查看
         </router-link>
       </span>
       <span class="campaign">
         <h3>我的推广</h3>
         <p>
-          <strong>???</strong>
+          <strong>
+            {{ summary.campaignCount }}
+          </strong>
           <span>个</span>
         </p>
         <div>
@@ -52,7 +58,17 @@
 
 <script>
 export default {
-  name: 'qwt-homepage-account'
+  name: 'qwt-homepage-account',
+  props: {
+    summary: {
+      type: Object,
+      required: true
+    },
+    coupons: {
+      type: Array,
+      required: true
+    }
+  }
 }
 </script>
 
