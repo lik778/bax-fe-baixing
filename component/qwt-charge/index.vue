@@ -9,129 +9,140 @@
       </el-tabs>
       <flat-btn slot="right" @click.native="toggleTuoguanVisible({action: 'tuoguan:entry:qwt-charge', actionTrackId, baixingId: userInfo.id})" class="tuoguan">托管服务</flat-btn>
     </topbar>
-    <section>
-      <div v-if="mode === 'buy-service'" class="qwt-package">
+    <main>
+      <step :mode="mode" :step="1" />
+      <section class="qwt-product">
         <header>
-          请选择您需要的全网通版本：
+          1. 选择产品
         </header>
-        <main>
-          <qwt-pkg-widget v-for="i of packages" :key="i.id"
-            :name="i.name" :products="i.products"
-            :checked="packageChecked(i.id)"
-            @click="checkPackage(i.id)">
-          </qwt-pkg-widget>
-        </main>
-      </div>
-      <div class="charge-product">
-        <header>
-          推广资金充值金额：
-        </header>
-        <main>
-          <qwt-pro-widget v-for="i of allProducts" :key="mode + i.id"
-            :price="i.price" :title="i.title" :editable="i.editable"
-            :checked="chargeProductChecked(i.id)"
-            @click="checkChargeProduct(i.id)"
-            @set-money="setChargeMoney">
-          </qwt-pro-widget>
-        </main>
-      </div>
-    </section>
-    <section>
-      <div>
-        <aside>价格信息：</aside>
-        <span class="price-list">
-          <price-list :products="checkedProducts"
-            :has-discount="!!checkedProductDiscounts.length">
-          </price-list>
-        </span>
-      </div>
+        <div v-if="mode === 'buy-service'"
+          class="package">
+          <header>
+            选择优惠套餐：
+          </header>
+          <main>
+            <qwt-pkg-widget v-for="i of packages" :key="i.id"
+              :name="i.name" :products="i.products"
+              :checked="packageChecked(i.id)"
+              @click="checkPackage(i.id)">
+            </qwt-pkg-widget>
+          </main>
+        </div>
+        <div class="charge">
+          <header>
+            叠加推广资金包：
+          </header>
+          <main>
+            <qwt-pro-widget v-for="i of allProducts" :key="mode + i.id"
+              :price="i.price" :title="i.title" :editable="i.editable"
+              :checked="chargeProductChecked(i.id)"
+              @click="checkChargeProduct(i.id)"
+              @set-money="setChargeMoney">
+            </qwt-pro-widget>
+          </main>
+        </div>
+      </section>
 
-      <div>
-        <el-checkbox v-model="couponVisible">使用优惠</el-checkbox>
-        <div v-if="couponVisible">
-          <el-tabs v-model="activeCouponTab">
-            <el-tab-pane label="可用优惠券" name="first" class="coupon-pane">
-              <coupon
-                v-for="coupon in effectiveCoupons"
-                :key="coupon.id"
-                :coupon="displayCoupon(coupon)"
-                class="coupon"
-                @click="onCouponClick(coupon)"
-                :selected="selectedCoupon.includes(coupon)"/>
-                <p v-if="effectiveCoupons.length === 0">暂无可用优惠券</p>
-            </el-tab-pane>
-            <el-tab-pane label="优惠码兑换" name="second" class="coupon-code-pane">
-              <el-input class="coupon-code-input" v-model.trim="couponCode" placeholder="输入兑换码"/>
-              <el-button type="primary" @click="redeem">兑换</el-button>
-            </el-tab-pane>
-          </el-tabs>
+      <section class="qwt-order">
+        <div>
+          <aside>价格信息：</aside>
+          <span class="price-list">
+            <price-list :products="checkedProducts"
+              :has-discount="!!checkedProductDiscounts.length">
+            </price-list>
+          </span>
         </div>
-      </div>
 
-      <div>
-        <aside>服务编号：</aside>
-        <span v-if="salesIdLocked || isBxSales">
-          {{ displayBxSalesId || userInfo.salesId }}
-        </span>
-        <span v-else>
-          <el-input v-model.trim="inputSalesId"
-            placeholder="如有服务编号请您填写">
-          </el-input>
-          <i class="el-icon-check" title="检测服务编号"
-            @click="checkInputSalesId"></i>
-        </span>
-      </div>
-      <div v-if="displayUserMobile">
-        <aside>用户手机号：</aside>
-        <span>
-          {{ displayUserMobile }}
-        </span>
-      </div>
-      <div class="price-summary">
         <div>
-          <aside>商品合计：</aside>
-          <i>{{'￥' + (totalPrice / 100).toFixed(2)}}</i>
+          <el-checkbox v-model="couponVisible">使用优惠</el-checkbox>
+          <div v-if="couponVisible">
+            <el-tabs v-model="activeCouponTab">
+              <el-tab-pane label="可用优惠券" name="first" class="coupon-pane">
+                <coupon
+                  v-for="coupon in effectiveCoupons"
+                  :key="coupon.id"
+                  :coupon="displayCoupon(coupon)"
+                  class="coupon"
+                  @click="onCouponClick(coupon)"
+                  :selected="selectedCoupon.includes(coupon)"/>
+                  <p v-if="effectiveCoupons.length === 0">暂无可用优惠券</p>
+              </el-tab-pane>
+              <el-tab-pane label="优惠码兑换" name="second" class="coupon-code-pane">
+                <el-input class="coupon-code-input" v-model.trim="couponCode" placeholder="输入兑换码"/>
+                <el-button type="primary" @click="redeem">兑换</el-button>
+              </el-tab-pane>
+            </el-tabs>
+          </div>
         </div>
+
         <div>
-          <aside>优惠券抵扣：</aside>
-          <i>{{'￥' + (couponAmount / 100).toFixed(2)}}</i>
+          <aside>服务编号：</aside>
+          <span v-if="salesIdLocked || isBxSales">
+            {{ displayBxSalesId || userInfo.salesId }}
+          </span>
+          <span v-else>
+            <el-input v-model.trim="inputSalesId"
+              placeholder="如有服务编号请您填写">
+            </el-input>
+            <i class="el-icon-check" title="检测服务编号"
+              @click="checkInputSalesId"></i>
+          </span>
         </div>
-        <div>
-          <aside>百姓网余额需支付：</aside>
-          <i>{{'￥' + (finalPrice / 100).toFixed(2)}}</i>
+        <div v-if="displayUserMobile">
+          <aside>用户手机号：</aside>
+          <span>
+            {{ displayUserMobile }}
+          </span>
         </div>
-      </div>
-      <contract-ack type="contract"></contract-ack>
-      <promotion-area-limit-tip :all-areas="allAreas" page="charge">
-      </promotion-area-limit-tip>
-      <div class="pay-info">
-        <el-button v-if="!isAgentSales"
-          type="primary" @click="createOrder" :loading="payInProgress">
-          {{ submitButtonText }}
-        </el-button>
-        <span v-if="orderPayUrl">
-          <label :title="orderPayUrl">
-            {{ '付款链接: ' + orderPayUrl }}
-          </label>
-          <Clipboard :content="orderPayUrl"></Clipboard>
-        </span>
-      </div>
-      <footer>
-        <li>推广资金使用规则：</li>
-        <li>1. 该产品购买后，精品官网及推广资金不可退款；</li>
-        <li>2. 该精品官网及推广资金自购买之日起有效期为365天，请在有效期内使用；</li>
-        <li>3. 详细推广记录请在【全网通】-【数据报表】查看。</li>
-      </footer>
-    </section>
-    <charge-promotion-alert v-if="false"></charge-promotion-alert>
+        <div class="price-summary">
+          <div>
+            <aside>商品合计：</aside>
+            <i>{{'￥' + (totalPrice / 100).toFixed(2)}}</i>
+          </div>
+          <div>
+            <aside>优惠券抵扣：</aside>
+            <i>{{'￥' + (couponAmount / 100).toFixed(2)}}</i>
+          </div>
+          <div>
+            <aside>百姓网余额需支付：</aside>
+            <i>{{'￥' + (finalPrice / 100).toFixed(2)}}</i>
+          </div>
+        </div>
+        <contract-ack type="contract" />
+        <promotion-area-limit-tip :all-areas="allAreas" page="charge" />
+        <div class="pay-info">
+          <el-button v-if="!isAgentSales"
+            type="primary" @click="createOrder" :loading="payInProgress">
+            {{ submitButtonText }}
+          </el-button>
+          <span v-if="orderPayUrl">
+            <label :title="orderPayUrl">
+              {{ '付款链接: ' + orderPayUrl }}
+            </label>
+            <Clipboard :content="orderPayUrl"></Clipboard>
+          </span>
+        </div>
+        <footer>
+          <li>推广资金使用规则：</li>
+          <li>1. 该产品购买后，精品官网及推广资金不可退款；</li>
+          <li>2. 该精品官网及推广资金自购买之日起有效期为365天，请在有效期内使用；</li>
+          <li>3. 详细推广记录请在【全网通】-【数据报表】查看。</li>
+        </footer>
+      </section>
+    </main>
+
     <el-dialog
       title="提示"
       :visible.sync="payDialogVisible"
       size="tiny">
       <h3 class="hint-text">订单支付成功，资金已到账！</h3>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="$router.push({name: 'account'})">查看账户</el-button>
-        <el-button type="primary" @click="$router.push({name: 'qwt-create-promotion'})">创建投放计划</el-button>
+        <el-button @click="$router.push({name: 'account'})">
+          查看账户
+        </el-button>
+        <el-button type="primary" @click="$router.push({name: 'qwt-create-promotion'})">
+          创建投放计划
+        </el-button>
       </div>
     </el-dialog>
   </div>
@@ -139,18 +150,19 @@
 
 <script>
 import PromotionAreaLimitTip from 'com/widget/promotion-area-limit-tip'
-import ChargePromotionAlert from 'com/widget/charge-promotion-alert'
 import ContractAck from 'com/widget/contract-ack'
 import QwtPkgWidget from 'com/widget/qwt-pkg'
 import QwtProWidget from 'com/widget/qwt-pro'
 import Clipboard from 'com/widget/clipboard'
+import FlatBtn from 'com/common/flat-btn'
+import Coupon from 'com/common/coupon'
 import PriceList from './price-list'
 import Topbar from 'com/topbar'
-import Coupon from 'com/common/coupon'
-import FlatBtn from 'com/common/flat-btn'
 
 import { Message } from 'element-ui'
 import uuid from 'uuid/v4'
+
+import Step from './step'
 
 import { centToYuan } from 'utils'
 
@@ -159,12 +171,15 @@ import store from './store'
 import track from 'util/track'
 
 import { displayCoupon } from 'util/meta'
-import { usingCondition } from 'constant/coupon'
 
 import {
   allowGetOrderPayUrl,
   allowPayOrder
 } from 'util/fengming-role'
+
+import {
+  usingCondition
+} from 'constant/coupon'
 
 import {
   normalizeRoles
@@ -210,11 +225,11 @@ const allProducts = [
     price: 3088
   }, {
     id: 5,
-    title: '其他金额',
+    title: '购买其他金额',
     editable: true
   }, {
     id: 0,
-    title: '暂不充值'
+    title: '下次再充值'
   }
 ]
 
@@ -223,7 +238,6 @@ export default {
   store,
   components: {
     PromotionAreaLimitTip,
-    ChargePromotionAlert,
     QwtPkgWidget,
     QwtProWidget,
     ContractAck,
@@ -231,7 +245,8 @@ export default {
     PriceList,
     FlatBtn,
     Topbar,
-    Coupon
+    Coupon,
+    Step
   },
   props: {
     userInfo: {
@@ -743,9 +758,64 @@ export default {
 </script>
 
 <style scoped>
-
 @import "../../cssbase/var";
 @import "cssbase/mixin";
+
+.qwt-charge {
+  width: 100%;
+
+  & > main {
+    width: 100%;
+    padding: 10px 10px 30px 10px;
+    background: var(--qwt-c-gray);
+  }
+}
+
+.qwt-product, .qwt-order {
+  margin-top: 10px;
+  padding: 20px 0 30px 21px;
+  background: white;
+}
+
+.qwt-product {
+  & > header {
+    font-weight: 600;
+    font-size: 14px;
+    color: #333333;
+  }
+
+  & .package, & .charge {
+    & > header {
+      font-size: 14px;
+      color: #333333;
+      line-height: 1.5;
+    }
+
+    & > main {
+      margin-top: 20px;
+    }
+  }
+
+  & .package {
+    margin-top: 20px;
+  }
+
+  & .charge {
+    margin-top: 30px;
+  }
+}
+
+.qwt-order {
+
+}
+
+.qwt-pkg-widget {
+  margin-right: 30px;
+}
+
+.qwt-pro-widget {
+  margin: 0 30px 20px 0;
+}
 
 .tip {
   margin-bottom: 10px;
@@ -754,140 +824,15 @@ export default {
   color: var(--c-tip-gray);
 }
 
-.qwt-charge {
-  padding: 0 35px;
-  width: 100%;
-
-  & > section:nth-child(2) {
-    & > div {
-      & > header {
-        font-size: 14px;
-        color: #6a778c;
-      }
-
-      & > main {
-        display: flex;
-        margin-top: 25px;
-
-        & > div {
-          margin-right: 10px;
-        }
-      }
-    }
-
-    & > div.qwt-package {
-      margin-bottom: 30px;
-    }
-  }
-
-  & > section:nth-child(3) {
-    margin-top: 35px;
-    border-top: dashed 1px #979797;
-
-    & > div {
-      margin-top: 20px;
-
-      & > aside {
-        font-size: 14px;
-        min-width: 80px;
-        color: #6a778c;
-      }
-
-      & > span.price-list {
-        align-items: flex-end;
-      }
-
-      & > span {
-        display: inline-flex;
-        align-items: center;
-
-        & > i {
-          margin-left: 8px;
-          font-size: 18px;
-          color: gray;
-          cursor: pointer;
-        }
-      }
-
-      & > i {
-        font-size: 18px;
-        color: #ff1f0e;
-      }
-
-      & .coupon-pane {
-        display: flex;
-        flex-wrap: wrap;
-        max-height: 300px;
-        overflow: auto;
-
-        &>.coupon {
-          width: 310px;
-          min-height: 100px;
-          margin-right: 10px;
-          margin-bottom: 10px;
-        }
-      }
-
-      & .coupon-code-pane {
-        display: flex;
-
-        & > .coupon-code-input {
-          width: 256px;
-          margin-right: 10px;
-        }
-      }
-    }
-
-    & > .price-summary {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      width: 328px;
-
-      & i {
-        text-align: right;
-        display: inline-block;
-        font-size: 18px;
-        color: #ff1f0e;
-        width: 100px;
-      }
-    }
-
-    & > div:first-child {
-      display: flex;
-    }
-
-    & > div.pay-info {
-      & > span {
-        display: inline-flex;
-        align-items: center;
-        margin-left: 35px;
-
-        & > label {
-          @mixin wordline;
-          width: 320px;
-          max-width: 320px;
-          font-size: 14px;
-          color: #6a778c;
-        }
-      }
-    }
-
-    & > footer {
-      margin: 40px 0 50px;
-      font-size: 13px;
-      line-height: 1.62;
-      color: #6a778c;
-    }
-  }
-}
 .hint-text {
   text-align: center;
   font-size: 1.5em;
 }
+
 .dialog-footer {
   text-align: center;
 }
+
 .tuoguan {
   position: relative;
   right: 10px;
