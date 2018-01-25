@@ -1,24 +1,23 @@
 
 <template>
-  <div class="qwt-pkg-widget" @click="onClick">
-    <i v-if="checked" class="el-icon-check"></i>
+  <div :class="{'qwt-pkg-widget': true, checked}" @click="onClick">
     <header>
       {{ name }}
     </header>
     <main>
       <div>
-        <span>精品官网</span>
-        <span>{{ h1 }}</span>
+        <span>精品官网365天</span>
+        <span>1200元</span>
       </div>
       <div>
         <span>推广资金</span>
-        <span>{{ h2 }}</span>
-      </div>
-      <div>
-        <span>售价</span>
-        <span>{{ price + '元' }}</span>
+        <span>{{ chargePrice + '元' }}</span>
       </div>
     </main>
+    <footer>
+      <span>{{ salesPrice + '元' }}</span>
+      <span>{{ '原价' + (chargePrice + 1200) + '元' }}</span>
+    </footer>
   </div>
 </template>
 
@@ -39,23 +38,16 @@ export default {
     }
   },
   computed: {
-    price() {
+    salesPrice() {
       const a = this.products.map(p => p.price)
       return centToYuan(a[0] + a[1])
     },
-    h1() {
-      const p = this.products
-        .filter(i => i.name === '精品官网')
-        .pop()
-
-      return p.amount + p.spec
-    },
-    h2() {
+    chargePrice() {
       const p = this.products
         .filter(i => i.name === '推广资金')
         .pop()
 
-      return p.amount + p.spec
+      return p.amount
     }
   },
   methods: {
@@ -72,56 +64,62 @@ export default {
 @import 'cssbase/mixin';
 
 .qwt-pkg-widget {
-  display: inline-block;
-  width: 196px;
+  display: inline-flex;
+  flex-flow: column;
+  width: 280px;
   height: 160px;
-  border-radius: 4px;
-  border: solid 1px #0b9eff;
-  cursor: pointer;
 
-  & > i {
-    @mixin checked-icon;
-  }
+  border-radius: 4px;
+  border: solid 1px #ffb74d;
+  cursor: pointer;
 
   & > header {
     @mixin center;
-    height: 30px;
-    background: #0b9eff;
-    font-size: 14px;
-    font-weight: 500;
-    color: white;
+    height: 42px;
+    border-bottom: 1px dotted #ffb74d;
+    color: #333333;
   }
 
   & > main {
+    padding: 15px 58px 10px;
+    font-size: 14px;
+    color: #666666;
+
     & > div {
       display: flex;
       align-items: center;
-
-      & > span:first-child {
-        color: #6a778d;
-        width: 80px;
-      }
-
-      & > span:last-child {
-        font-weight: 600;
-        color: #ff944d;
-      }
-    }
-
-    & > div:nth-child(1), & > div:nth-child(2) {
-      margin-top: 15px;
-      padding-left: 27px;
-    }
-
-    & > div:nth-child(3) {
-      justify-content: center;
-      margin-top: 20px;
-
-      & > span:first-child {
-        width: 40px;
-      }
+      justify-content: space-between;
     }
   }
+
+  & > footer {
+    @mixin center;
+    flex-grow: 1;
+    color: white;
+    background: #ffb74d;
+
+    & > span:first-child {
+      font-size: 18px;
+      font-weight: 500;
+    }
+
+    & > span:last-child {
+      margin-left: 12px;
+    }
+  }
+}
+
+.qwt-pkg-widget.checked {
+  border: solid 1px #ff7533;
+
+  & > header {
+    border-bottom: 1px dotted #ff7533;
+  }
+
+  & > footer {
+    background: #ff7533;
+  }
+
 }
 
 </style>
