@@ -30,3 +30,5 @@ export const toggleTuoguanVisible = createAction((sideEffect) => {
     })
   }
 })
+
+export const toggleAddUserLeadVisible = createAction()

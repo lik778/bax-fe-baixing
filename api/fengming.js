@@ -37,6 +37,15 @@ export async function updateCampaignTimeRange(opts) {
   return body
 }
 
+export async function addUserLead(opts) {
+  const body = await fengming
+    .post('/new_user_leads')
+    .send(reverseCamelcase(opts))
+    .json()
+
+  return body
+}
+
 export async function createOrder(order) {
   const body = await fengming
     .post('/order')

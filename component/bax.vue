@@ -7,13 +7,19 @@
       :allAreas="allAreas"
       :allRoles="allRoles">
     </router-view>
+    <add-user-lead :visible="addUserLeadVisible"
+      @close="toggleAddUserLeadVisible"
+      :user-info="currentUser" />
     <go-to-bottom></go-to-bottom>
     <back-to-top></back-to-top>
-    <tuoguan :visible="tuoguanVisible" :categories="topCategories" :userInfo="currentUser"/>
+    <tuoguan :visible="tuoguanVisible"
+      :categories="topCategories"
+      :userInfo="currentUser" />
   </content>
 </template>
 
 <script>
+import AddUserLead from './common/add-user-lead'
 import GoToBottom from './widget/go-to-bottom'
 import BackToTop from './widget/back-to-top'
 import Sidebar from './sidebar'
@@ -24,6 +30,7 @@ import store from './store'
 import es from 'base/es'
 
 import {
+  toggleAddUserLeadVisible,
   getCurrentUser,
   getCategories,
   getAreas,
@@ -34,6 +41,7 @@ export default {
   name: 'bax',
   store,
   components: {
+    AddUserLead,
     GoToBottom,
     BackToTop,
     Sidebar,
@@ -57,6 +65,9 @@ export default {
         }))
     }
   },
+  methods: {
+    toggleAddUserLeadVisible
+  },
   async beforeMount() {
     // 全局只 mount 一次, 无需 remove listener
     es.addListener('http fetch start', () => {
@@ -79,7 +90,6 @@ export default {
 </script>
 
 <style scoped>
-
 content {
   display: flex;
   width: 100%;
@@ -89,11 +99,9 @@ content {
     flex-grow: 1;
   }
 }
-
 </style>
 
 <style>
-
 @import 'cssbase/reset';
 @import 'cssbase/mixin';
 
@@ -116,5 +124,4 @@ body > content {
   bottom: unset;
   height: 100px;
 }
-
 </style>
