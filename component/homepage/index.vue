@@ -96,10 +96,6 @@ export default {
 
   & > main {
     display: flex;
-    /* flex-flow: column; */
-
-    & > span {
-    }
 
     & > span:last-child {
       margin-left: 10px;

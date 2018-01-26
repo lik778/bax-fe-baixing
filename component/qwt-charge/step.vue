@@ -32,6 +32,7 @@ export default {
 </script>
 
 <style scoped>
+@import '../../cssbase/mixin';
 @import '../../cssbase/var';
 
 .step {

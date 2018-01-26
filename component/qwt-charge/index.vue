@@ -44,16 +44,16 @@
       </section>
 
       <section class="qwt-order">
-        <div>
-          <aside>价格信息：</aside>
-          <span class="price-list">
-            <price-list :products="checkedProducts"
-              :has-discount="!!checkedProductDiscounts.length">
-            </price-list>
-          </span>
+        <header>
+          2. 核对订单
+        </header>
+        <div class="price-list">
+          <price-list :products="checkedProducts"
+            :has-discount="!!checkedProductDiscounts.length">
+          </price-list>
         </div>
 
-        <div>
+        <div class="coupon">
           <el-checkbox v-model="couponVisible">使用优惠</el-checkbox>
           <div v-if="couponVisible">
             <el-tabs v-model="activeCouponTab">
@@ -75,53 +75,56 @@
           </div>
         </div>
 
-        <div>
-          <aside>服务编号：</aside>
-          <span v-if="salesIdLocked || isBxSales">
-            {{ displayBxSalesId || userInfo.salesId }}
-          </span>
-          <span v-else>
-            <el-input v-model.trim="inputSalesId"
-              placeholder="如有服务编号请您填写">
-            </el-input>
-            <i class="el-icon-check" title="检测服务编号"
-              @click="checkInputSalesId"></i>
-          </span>
+        <div class="info">
+          <section>
+            <aside>服务编号：</aside>
+            <span v-if="salesIdLocked || isBxSales">
+              {{ displayBxSalesId || userInfo.salesId }}
+            </span>
+            <span v-else>
+              <el-input v-model.trim="inputSalesId"
+                placeholder="如有服务编号请您填写">
+              </el-input>
+              <i class="el-icon-check" title="检测服务编号"
+                @click="checkInputSalesId"></i>
+            </span>
+          </section>
+          <section v-if="displayUserMobile">
+            <aside>用户手机号：</aside>
+            <span>
+              {{ displayUserMobile }}
+            </span>
+          </section>
+          <section class="price-summary">
+            <div>
+              <aside>商品合计：</aside>
+              <i>{{'￥' + (totalPrice / 100).toFixed(2)}}</i>
+            </div>
+            <div>
+              <aside>优惠券抵扣：</aside>
+              <i>{{'￥' + (couponAmount / 100).toFixed(2)}}</i>
+            </div>
+            <div>
+              <aside>百姓网余额需支付：</aside>
+              <i>{{'￥' + (finalPrice / 100).toFixed(2)}}</i>
+            </div>
+          </section>
+          <contract-ack type="contract" />
+          <promotion-area-limit-tip :all-areas="allAreas" page="charge" />
+          <section class="pay-info">
+            <el-button v-if="!isAgentSales"
+              type="primary" @click="createOrder" :loading="payInProgress">
+              {{ submitButtonText }}
+            </el-button>
+            <span v-if="orderPayUrl">
+              <label :title="orderPayUrl">
+                {{ '付款链接: ' + orderPayUrl }}
+              </label>
+              <Clipboard :content="orderPayUrl"></Clipboard>
+            </span>
+          </section>
         </div>
-        <div v-if="displayUserMobile">
-          <aside>用户手机号：</aside>
-          <span>
-            {{ displayUserMobile }}
-          </span>
-        </div>
-        <div class="price-summary">
-          <div>
-            <aside>商品合计：</aside>
-            <i>{{'￥' + (totalPrice / 100).toFixed(2)}}</i>
-          </div>
-          <div>
-            <aside>优惠券抵扣：</aside>
-            <i>{{'￥' + (couponAmount / 100).toFixed(2)}}</i>
-          </div>
-          <div>
-            <aside>百姓网余额需支付：</aside>
-            <i>{{'￥' + (finalPrice / 100).toFixed(2)}}</i>
-          </div>
-        </div>
-        <contract-ack type="contract" />
-        <promotion-area-limit-tip :all-areas="allAreas" page="charge" />
-        <div class="pay-info">
-          <el-button v-if="!isAgentSales"
-            type="primary" @click="createOrder" :loading="payInProgress">
-            {{ submitButtonText }}
-          </el-button>
-          <span v-if="orderPayUrl">
-            <label :title="orderPayUrl">
-              {{ '付款链接: ' + orderPayUrl }}
-            </label>
-            <Clipboard :content="orderPayUrl"></Clipboard>
-          </span>
-        </div>
+
         <footer>
           <li>推广资金使用规则：</li>
           <li>1. 该产品购买后，精品官网及推广资金不可退款；</li>
@@ -806,7 +809,17 @@ export default {
 }
 
 .qwt-order {
+  & > .info {
+    padding-bottom: 34px;
+    border-bottom: solid 1px #e6e6e6;
+  }
 
+  & > footer {
+    margin-top: 20px;
+    font-size: 14px;
+    line-height: 1.86;
+    color: #999999;
+  }
 }
 
 .qwt-pkg-widget {
