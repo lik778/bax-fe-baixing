@@ -7,6 +7,8 @@
       :allAreas="allAreas"
       :allRoles="allRoles">
     </router-view>
+    <new-user-intro :visible="showNewUserIntro"
+      @close="showNewUserIntro = false" />
     <add-user-lead :visible="addUserLeadVisible"
       @close="toggleAddUserLeadVisible"
       :user-info="currentUser" />
@@ -19,6 +21,7 @@
 </template>
 
 <script>
+import NewUserIntro from './common/new-user-intro'
 import AddUserLead from './common/add-user-lead'
 import GoToBottom from './widget/go-to-bottom'
 import BackToTop from './widget/back-to-top'
@@ -41,6 +44,7 @@ export default {
   name: 'bax',
   store,
   components: {
+    NewUserIntro,
     AddUserLead,
     GoToBottom,
     BackToTop,
@@ -49,6 +53,7 @@ export default {
   },
   data() {
     return {
+      showNewUserIntro: false,
       pending: 0
     }
   },

@@ -2,11 +2,12 @@
 import { createStore } from 'vue-duo'
 
 import {
+  toggleAddUserLeadVisible,
+  toggleTuoguanVisible,
   getCurrentUser,
   getCategories,
   getAreas,
-  getRoles,
-  toggleTuoguanVisible
+  getRoles
 } from './action'
 
 const store = createStore({
@@ -16,10 +17,17 @@ const store = createStore({
 
   currentUser: {},
 
+  addUserLeadVisible: false,
   tuoguanVisible: false
 })
 
 store.subscribeActions({
+  [toggleAddUserLeadVisible]: () => ({
+    addUserLeadVisible: !store.state.addUserLeadVisible
+  }),
+  [toggleTuoguanVisible]: () => ({
+    tuoguanVisible: !store.state.tuoguanVisible
+  }),
   [getCurrentUser]: (user) => ({
     currentUser: {...user}
   }),
@@ -31,10 +39,6 @@ store.subscribeActions({
   }),
   [getRoles]: (roles) => ({
     allRoles: [...roles]
-  }),
-
-  [toggleTuoguanVisible]: () => ({
-    tuoguanVisible: !store.state.tuoguanVisible
   })
 })
 

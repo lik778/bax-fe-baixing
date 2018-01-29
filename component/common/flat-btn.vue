@@ -1,8 +1,8 @@
 
 <template>
-  <span class="btn">
+  <label class="btn">
     <slot />
-  </span>
+  </label>
 </template>
 
 <script>
@@ -13,10 +13,8 @@ export default {
 
 <style scoped>
 .btn {
-  padding: 2px 5px;
-  border-radius: 4px;
-  color: white;
-  background-color: #0b9eff;
+  font-size: 14px;
+  color: #15a4fa;
   cursor: pointer;
 }
 </style>
