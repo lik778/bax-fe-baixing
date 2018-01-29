@@ -2,21 +2,21 @@
   <div class="card">
     <header>
       <strong>推广情况</strong>
-      <router-link :to="{name: 'qwt-promotion-list'}">
+      <router-link :to="{name: 'qwt-dashboard'}">
         查看详情
       </router-link>
     </header>
     <content>
       <span>
-        <h3>???</h3>
+        <h3>{{ summary.clicks }}</h3>
         <p>点击量</p>
       </span>
       <span>
-        <h3>???</h3>
+        <h3>{{ summary.consume / 100 }}</h3>
         <p>消耗</p>
       </span>
       <span>
-        <h3>???</h3>
+        <h3>{{ summary.shows }}</h3>
         <p>展示量</p>
       </span>
     </content>
@@ -31,7 +31,13 @@
 
 <script>
 export default {
-  name: 'qwt-homepage-campaign'
+  name: 'qwt-homepage-campaign',
+  props: {
+    summary: {
+      type: Object,
+      required: true
+    }
+  }
 }
 </script>
 

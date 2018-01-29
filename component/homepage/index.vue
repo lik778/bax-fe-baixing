@@ -6,7 +6,7 @@
     <main>
       <span>
         <account :summary="summary" :coupons="coupons" />
-        <campaign />
+        <campaign :summary="summary" />
       </span>
       <span>
         <board />
@@ -28,7 +28,12 @@ import Qa from './qa'
 
 import { allowSeeAccount } from 'util/role'
 
-import homepageStore from './store'
+import store from './store'
+
+import {
+  getHomepageSummary,
+  getCoupons
+} from './action'
 
 export default {
   name: 'qwt-homepage',
@@ -41,14 +46,7 @@ export default {
     Topbar
   },
   props: ['userInfo'],
-  fromMobx: {
-    coupons() {
-      return homepageStore.coupons
-    },
-    summary() {
-      return homepageStore.summary
-    }
-  },
+  store,
   data() {
     return {
       load: false // 仅查询一次
@@ -67,8 +65,8 @@ export default {
         this.load = true
 
         await Promise.all([
-          homepageStore.getSummary(),
-          homepageStore.getCoupons({ onlyValid: true, status: 0 })
+          getHomepageSummary(),
+          getCoupons({ onlyValid: true, status: 0 })
         ])
       }
     }
@@ -76,8 +74,8 @@ export default {
   async mounted() {
     if (this.allowSeeAccount) {
       await Promise.all([
-        homepageStore.getSummary(),
-        homepageStore.getCoupons({ onlyValid: true, status: 0 })
+        getHomepageSummary(),
+        getCoupons({ onlyValid: true, status: 0 })
       ])
     }
   }

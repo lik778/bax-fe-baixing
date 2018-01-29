@@ -6,11 +6,11 @@
     <content>
       <section>
         <strong>【操作指南】</strong>
-        <a target="_blank" href="/qa">如何使用站外推广</a>
+        <a target="_blank" href="/qa?mode=tutorials">如何使用站外推广</a>
       </section>
       <section>
         <strong>【常见问题】</strong>
-        <a target="_blank" href="/qa">常见问题查询</a>
+        <a target="_blank" href="/qa?mode=questions">常见问题查询</a>
       </section>
     </content>
   </div>

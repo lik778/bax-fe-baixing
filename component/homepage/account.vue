@@ -11,11 +11,11 @@
         <h3>推广可用资金</h3>
         <p>
           <strong>
-            {{ summary.balance / 100 }}
+            {{ balance }}
           </strong>
           <span>元</span>
         </p>
-        <router-link class="button primary"
+        <router-link :class="{button: true, primary: balance === 0}"
           :to="{name: 'qwt-charge', query: {mode: 'charge-only'}}">
           立即充值
         </router-link>
@@ -42,11 +42,11 @@
           <span>个</span>
         </p>
         <div>
-          <router-link class="button"
+          <router-link :class="{button: true, primary: balance > 0}"
             :to="{name: 'qwt-create-promotion'}">
             新建推广计划
           </router-link>
-          <router-link class="button"
+          <router-link :class="{button: true, primary: balance > 0}"
             :to="{name: 'qwt-promotion-list'}">
             管理推广计划
           </router-link>
@@ -67,6 +67,12 @@ export default {
     coupons: {
       type: Array,
       required: true
+    }
+  },
+  computed: {
+    balance() {
+      const { summary } = this
+      return summary.balance / 100 | 0
     }
   }
 }

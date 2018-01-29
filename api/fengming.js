@@ -272,14 +272,16 @@ export async function getSummary() {
 }
 
 export async function getHomepageSummary() {
-  const [ campaignCount, balance ] = await Promise.all([
+  const [ campaignCount, balance, daily ] = await Promise.all([
     getCurrentCampaignCount(),
-    getCurrentBalance()
+    getCurrentBalance(),
+    _getDailySummary()
   ])
 
   return {
     balance,
-    campaignCount
+    campaignCount,
+    ...daily
   }
 }
 
