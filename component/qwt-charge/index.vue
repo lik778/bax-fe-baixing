@@ -47,6 +47,7 @@
         <header>
           2. 核对订单
         </header>
+
         <div class="price-list">
           <price-list :products="checkedProducts"
             :has-discount="!!checkedProductDiscounts.length">
@@ -54,7 +55,13 @@
         </div>
 
         <div class="coupon">
-          <el-checkbox v-model="couponVisible">使用优惠</el-checkbox>
+          <header>
+            <span>
+              <el-checkbox v-model="couponVisible">使用优惠券</el-checkbox>
+              <i>{{'有' + effectiveCoupons.length + '张可用优惠券'}}</i>
+            </span>
+            <span>{{'-' + (couponAmount / 100).toFixed(2) + '元'}}</span>
+          </header>
           <div v-if="couponVisible">
             <el-tabs v-model="activeCouponTab">
               <el-tab-pane label="可用优惠券" name="first" class="coupon-pane">
@@ -68,15 +75,23 @@
                   <p v-if="effectiveCoupons.length === 0">暂无可用优惠券</p>
               </el-tab-pane>
               <el-tab-pane label="优惠码兑换" name="second" class="coupon-code-pane">
-                <el-input class="coupon-code-input" v-model.trim="couponCode" placeholder="输入兑换码"/>
-                <el-button type="primary" @click="redeem">兑换</el-button>
+                <el-input class="coupon-code-input" style="width: 200px"
+                  v-model.trim="couponCode" placeholder="输入优惠码" />
+                <el-button type="primary" style="margin-left: 16px;"
+                  @click="redeem">确认</el-button>
               </el-tab-pane>
             </el-tabs>
           </div>
         </div>
 
         <div class="info">
-          <section>
+          <section class="price-summary">
+            <div>
+              <aside>百姓网余额需支付：</aside>
+              <i>{{(finalPrice / 100).toFixed(2) + '元'}}</i>
+            </div>
+          </section>
+          <section class="sales-code">
             <aside>服务编号：</aside>
             <span v-if="salesIdLocked || isBxSales">
               {{ displayBxSalesId || userInfo.salesId }}
@@ -89,33 +104,20 @@
                 @click="checkInputSalesId"></i>
             </span>
           </section>
-          <section v-if="displayUserMobile">
+          <section class="user-mobile"
+            v-if="displayUserMobile">
             <aside>用户手机号：</aside>
             <span>
               {{ displayUserMobile }}
             </span>
           </section>
-          <section class="price-summary">
-            <div>
-              <aside>商品合计：</aside>
-              <i>{{'￥' + (totalPrice / 100).toFixed(2)}}</i>
-            </div>
-            <div>
-              <aside>优惠券抵扣：</aside>
-              <i>{{'￥' + (couponAmount / 100).toFixed(2)}}</i>
-            </div>
-            <div>
-              <aside>百姓网余额需支付：</aside>
-              <i>{{'￥' + (finalPrice / 100).toFixed(2)}}</i>
-            </div>
-          </section>
           <contract-ack type="contract" />
           <promotion-area-limit-tip :all-areas="allAreas" page="charge" />
           <section class="pay-info">
-            <el-button v-if="!isAgentSales"
-              type="primary" @click="createOrder" :loading="payInProgress">
+            <button v-if="!isAgentSales" class="pay-order"
+              @click="createOrder" :loading="payInProgress">
               {{ submitButtonText }}
-            </el-button>
+            </button>
             <span v-if="orderPayUrl">
               <label :title="orderPayUrl">
                 {{ '付款链接: ' + orderPayUrl }}
@@ -795,6 +797,8 @@ export default {
     }
 
     & > main {
+      display: flex;
+      flex-wrap: wrap;
       margin-top: 20px;
     }
   }
@@ -809,9 +813,125 @@ export default {
 }
 
 .qwt-order {
+  & > header {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.5;
+    color: #333333;
+  }
+
+  & > .price-list {
+    margin-top: 20px;
+  }
+
+  & > .coupon {
+    margin-top: 20px;
+    width: 610px;
+
+    & > header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 30px 0 20px;
+
+      & > span:first-child {
+        & > i {
+          font-size: 12px;
+          color: #666666;
+        }
+      }
+
+      & > span:last-child {
+        color: #333333;
+      }
+    }
+
+    & .coupon {
+      width: 310px;
+    }
+  }
+
   & > .info {
+    display: flex;
+    flex-flow: column;
+    align-items: flex-end;
+    justify-content: center;
+    margin-top: 30px;
+    width: 610px;
+    padding-right: 35px;
     padding-bottom: 34px;
     border-bottom: solid 1px #e6e6e6;
+
+    & > .price-summary {
+      & > div:first-child {
+        & > aside {
+          font-size: 14px;
+          color: #666666;
+        }
+
+        & > i {
+          font-size: 22px;
+          font-weight: 500;
+          color: #ff7533;
+        }
+      }
+    }
+
+    & > .sales-code {
+      display: flex;
+      align-items: center;
+      margin-top: 20px;
+
+      & > aside {
+        font-size: 14px;
+        color: #666666;
+      }
+
+      & > span {
+        display: flex;
+        align-items: center;
+
+        & > i {
+          margin-left: 5px;
+          font-size: 14px;
+          color: #666666;
+        }
+      }
+    }
+
+    & > .pay-info {
+      & > .pay-order {
+        @mixin center;
+        width: 110px;
+        height: 32px;
+        margin-top: 30px;
+        border-radius: 4px;
+        background: #ff7533;
+        color: white;
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 1.29;
+      }
+
+      & > span {
+        display: flex;
+        align-items: center;
+        margin-top: 10px;
+        font-size: 14px;
+        color: #333333;
+
+        & > label {
+          @mixin wordline;
+          width: 320px;
+        }
+      }
+    }
+
+    & > .user-mobile {
+      margin: 20px 0 0;
+      font-size: 14px;
+      color: #333333;
+    }
   }
 
   & > footer {
