@@ -91,11 +91,11 @@ export default {
   display: flex;
   flex-flow: column;
   width: 100%;
-  padding: 10px;
   background: var(--qwt-c-gray);
 
   & > main {
     display: flex;
+    padding: 10px;
 
     & > span:last-child {
       margin-left: 10px;
