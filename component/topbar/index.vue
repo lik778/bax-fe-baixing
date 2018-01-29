@@ -1,28 +1,28 @@
 
 <template>
   <header class="topbar">
+    <span></span>
     <span>
-      <i v-if="back" class="el-icon-arrow-left"
-        @click="goBack"></i>
-      <slot name="title" />
-    </span>
-    <span>
+      <label class="help" @click="help">
+        联系客服 400-036-3650
+      </label>
       <slot name="right" />
-      <i class="el-icon-message"></i>
-      <el-dropdown @command="onDropdownCmd">
-        <span class="el-dropdown-link">
-          {{ userInfo.name }}
-          <i class="el-icon-caret-bottom el-icon--right"></i>
-        </span>
-        <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item command="changePwd">
-            修改密码
-          </el-dropdown-item>
-          <el-dropdown-item command="logout">
-            退出
-          </el-dropdown-item>
-        </el-dropdown-menu>
-      </el-dropdown>
+      <label>
+        <el-dropdown @command="onDropdownCmd">
+          <span class="el-dropdown-link">
+            {{ userInfo.name }}
+            <i class="el-icon-caret-bottom el-icon--right"></i>
+          </span>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item command="changePwd">
+              修改密码
+            </el-dropdown-item>
+            <el-dropdown-item command="logout">
+              退出
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </label>
     </span>
     <el-dialog title="修改密码" v-model="pwdDialogVisible" size="small">
       <el-form label-width="120px">
@@ -51,6 +51,10 @@
 // TODO - split change password
 import { Message } from 'element-ui'
 import { redirectTo } from 'utils'
+
+import {
+  toggleAddUserLeadVisible
+} from '../action'
 
 import {
   updateUserInfo,
@@ -113,6 +117,9 @@ export default {
 
       Message.success('修改成功')
     },
+    help() {
+      toggleAddUserLeadVisible()
+    },
     empty() {
       this.confirmPassword = ''
       this.newPassword = ''
@@ -129,24 +136,43 @@ export default {
 </script>
 
 <style scoped>
+@import '../../cssbase/mixin';
 
 .topbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  min-height: 60px;
-  height: 60px;
+  min-height: 50px;
+  height: 50px;
+  padding: 0 35px;
+  background: white;
 
-  & > span:first-child {
-    display: inline-flex;
+  & > span:nth-child(2) {
+    display: flex;
     align-items: center;
-    flex-grow: 0.6;
-    cursor: pointer;
+    justify-content: flex-end;
+    flex-grow: 1;
 
-    & > i {
-      margin-right: 5px;
+    & > label {
+      display: flex;
+      align-items: center;
+      height: 23px;
+    }
+
+    & > label:not(:last-child) {
+      margin-right: 30px;
+      padding-right: 30px;
+      border-right: solid 1px #e6e6e6;
     }
   }
+}
+
+.help {
+  justify-content: flex-start;
+  opacity: 0.89;
+  font-size: 14px;
+  color: #999999;
+  cursor: pointer;
 }
 
 </style>
