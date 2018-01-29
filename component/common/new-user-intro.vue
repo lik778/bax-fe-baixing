@@ -31,7 +31,7 @@
       <main>
         <h3>你只需以下操作即可完成推广</h3>
         <img class="info" :src="step2infoImg" />
-        <img class="btn" :src="step2btnImg" />
+        <img @click="charge" class="btn" :src="step2btnImg" />
         <div @click="help">
           <img :src="step2callImg" />
           <strong>我想了解更多，请顾问联系我</strong>
@@ -77,6 +77,12 @@ export default {
   methods: {
     close() {
       this.$emit('close')
+    },
+    charge() {
+      this.close()
+      this.$router.push({
+        name: 'qwt-charge'
+      })
     },
     async help() {
       this.close()
