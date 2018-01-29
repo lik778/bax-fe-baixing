@@ -45,13 +45,19 @@ export default {
     }
   },
   methods: {
-    cancel() {
+    close() {
       this.$emit('close')
+      this.$router.push({
+        name: 'root'
+      })
+    },
+    cancel() {
+      this.close()
     },
     async submit() {
       const { mobile } = this
 
-      Message.success('添加成功')
+      Message.success('提交成功！我们的顾问会尽快与您联系哟~')
 
       if (!mobile) {
         return Message.error('请填写手机号')
@@ -61,7 +67,7 @@ export default {
         mobile
       })
 
-      this.$emit('close')
+      this.close()
     }
   },
   watch: {
