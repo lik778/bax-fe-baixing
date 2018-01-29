@@ -18,7 +18,9 @@
       </div>
     </main>
     <footer v-if="products.length">
-      <span></span>
+      <span>
+        {{ '已优惠' + ((originTotal - total) / 100).toFixed(2) + '元' }}
+      </span>
       <span>
         <label>总计：</label>
         <strong>{{ (total / 100).toFixed(2) + '元' }}</strong>
@@ -45,6 +47,10 @@ export default {
   computed: {
     total() {
       const p = this.products.map(i => i.discountPrice)
+      return p.reduce((a, b) => a + b, 0)
+    },
+    originTotal() {
+      const p = this.products.map(i => i.originalPrice)
       return p.reduce((a, b) => a + b, 0)
     }
   },
@@ -121,6 +127,12 @@ export default {
     justify-content: flex-end;
     padding-right: 35px;
     height: 48px;
+
+    & > span:first-child {
+      margin-right: 10px;
+      font-size: 14px;
+      color: #999999;
+    }
 
     & > span:last-child {
       & > label {

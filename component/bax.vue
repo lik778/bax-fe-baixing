@@ -33,6 +33,10 @@ import store from './store'
 import es from 'base/es'
 
 import {
+  normalizeRoles
+} from 'util/role'
+
+import {
   toggleAddUserLeadVisible,
   getCurrentUser,
   getCategories,
@@ -90,6 +94,14 @@ export default {
       getAreas(),
       getRoles()
     ])
+
+    setTimeout(() => {
+      const roles = normalizeRoles(this.currentUser.roles)
+      if (this.currentUser.isNewUser === 1 &&
+        roles.includes('BAIXING_USER')) {
+        this.showNewUserIntro = true
+      }
+    }, 1200)
   }
 }
 </script>

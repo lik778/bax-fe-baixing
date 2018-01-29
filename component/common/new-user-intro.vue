@@ -52,6 +52,10 @@ import {
 } from '../action'
 
 import {
+  markNotNew
+} from 'api/account'
+
+import {
   assetHost
 } from 'config'
 
@@ -75,8 +79,9 @@ export default {
     }
   },
   methods: {
-    close() {
+    async close() {
       this.$emit('close')
+      await markNotNew()
     },
     charge() {
       this.close()

@@ -13,6 +13,13 @@ export async function getUserIdFromBxSalesId(salesId) {
   return body.data
 }
 
+export async function markNotNew() {
+  await api
+    .post('/user/not_new')
+    .send({})
+    .json()
+}
+
 export async function getCurrentUser() {
   const body = await api
     .get('/user/current')
