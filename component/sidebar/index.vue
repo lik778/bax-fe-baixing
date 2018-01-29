@@ -1,11 +1,11 @@
 
 <template>
-  <main class="sidebar">
+  <div class="sidebar">
     <header>
-      <p>BAX</p>
+      <p>广告系统</p>
       <p>v{{ version }}</p>
     </header>
-    <content>
+    <main>
       <el-menu default-active="0">
         <el-menu-item index="0">
           <router-link :to="{ name: 'root' }" tag="p">
@@ -104,8 +104,8 @@
           </a>
         </el-menu-item>
       </el-menu>
-    </content>
-  </main>
+    </main>
+  </div>
 </template>
 
 <script>
@@ -187,10 +187,6 @@ export default {
 
 @import '../../cssbase/var';
 
-.el-menu-item {
-  min-width: unset;
-}
-
 .link {
   display: inline-flex;
   align-items: center;
@@ -198,29 +194,70 @@ export default {
 }
 
 .sidebar {
+  display: flex;
+  flex-flow: column;
+  background: #2e394b;
+  min-width: 180px;
+  width: 180px;
+
   & > header {
     display: flex;
-    flex-flow: column;
-    justify-content: center;
     align-items: center;
-    padding-top: 5px;
-    height: 90px;
+    height: 50px;
+    padding: 0 20px;
+    color: white;
 
-    & > p:first-child {
-      font-size: 20px;
-      color: #768396;
+    & p {
+      height: 25px;
     }
 
-    & > p:last-child {
+    & p:first-child {
+      opacity: 0.9;
+      font-size: 18px;
+      letter-spacing: 0.8px;
+    }
+
+    & p:last-child {
+      display: flex;
+      align-items: flex-end;
+      margin-left: 10px;
       font-size: 12px;
-      color: gray;
+      padding-bottom: 1px;
     }
   }
 
-  min-width: 140px;
-  width: 140px;
-  height: 720px;
-  background: var(--c-gray);
+  & > main {
+
+  }
+}
+
+.el-menu-item {
+  min-width: unset;
+}
+
+.el-menu, .el-submenu .el-menu {
+  background-color: unset;
+  /* background-color: #2e394b !important; */
+}
+
+.el-menu-item, .el-submenu__title {
+  color: #e1e4ee;
+}
+
+.homepage {
+  display: flex;
+  align-items: center;
+  height: 50px;
+  font-size: 14px;
+  line-height: 1;
+  letter-spacing: 0.4px;
+  padding-left: 22px;
+  color: #e1e4ee;
+  border: 1px solid #273141;
+
+  & > label {
+    margin-left: 14px;
+  }
 }
 
 </style>
