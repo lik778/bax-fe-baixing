@@ -182,15 +182,15 @@ const timeTypes = [{
   label: '本月',
   value: 'this-month',
   getTime: () => ({
-    startAt: moment().subtract('1', 'month').unix(),
+    startAt: moment().startOf('month').unix(),
     endAt: moment().unix()
   })
 }, {
   label: '上月',
   value: 'last-month',
   getTime: () => ({
-    startAt: moment().subtract('2', 'month').unix(),
-    endAt: moment().subtract('1', 'month').unix()
+    startAt: moment().subtract(1, 'month').startOf('month').unix(),
+    endAt: moment().subtract(1, 'month').endOf('month').unix()
   })
 }, {
   label: '自定义',
