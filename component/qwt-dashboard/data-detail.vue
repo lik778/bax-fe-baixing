@@ -52,7 +52,7 @@
         </el-table-column>
         <el-table-column v-if="checkVisiable('clickRate')"
           label="点击率" width="120" sortable
-          :formatter="r => r.clickRate.toFixed(4)">
+          :formatter="r => (r.clickRate * 100).toFixed(2) + '%'">
         </el-table-column>
         <el-table-column v-if="checkVisiable('clickAvgPrice')"
           label="平均点击单价" width="160" sortable
@@ -72,7 +72,7 @@
         </span>
         <span>
           <label>总消费：</label>
-          <strong>{{ centToYuan(summary.cost) + '元' }}</strong>
+          <strong>{{ (summary.cost / 100).toFixed(2) + '元' }}</strong>
         </span>
       </div>
       <bax-pagination :options="{ total, offset, limit }"
