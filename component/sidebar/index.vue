@@ -9,9 +9,10 @@
       <el-menu default-active="0">
         <el-menu-item index="0">
           <router-link :to="{ name: 'root' }" tag="p">
-            <i class="el-icon-menu"></i>首页
+            <bx-icon type="appstore"></bx-icon>首页
           </router-link>
         </el-menu-item>
+
         <el-submenu index="1" v-if="allowSeeGw">
           <template slot="title">
             <i class="el-icon-star-on"></i>建站工具
@@ -27,82 +28,109 @@
             </router-link>
           </el-menu-item>
         </el-submenu>
+
         <el-submenu index="2">
           <template slot="title">
-            <i class="el-icon-star-on"></i>全网通
+            <bx-icon type="paycircleo"></bx-icon>产品购买
           </template>
           <el-menu-item index="2-1">
             <router-link :to="{ name: 'qwt-charge' }" tag="p">
               服务开启
             </router-link>
           </el-menu-item>
-          <el-menu-item index="2-2" v-if="allowSeeQwtPromotion">
+          <el-menu-item index="2-2">
+            <router-link :to="{ name: 'qwt-charge' }" tag="p">
+              服务开启
+            </router-link>
+          </el-menu-item>
+        </el-submenu>
+
+        <el-submenu index="3">
+          <template slot="title">
+            <bx-icon type="sharealt"></bx-icon>广告投放
+          </template>
+          <el-menu-item index="3-1" v-if="allowSeeQwtPromotion">
             <router-link :to="{ name: 'qwt-create-promotion' }" tag="p">
               新建推广
             </router-link>
           </el-menu-item>
-          <el-menu-item index="2-3" v-if="allowSeeQwtPromotion">
+          <el-menu-item index="3-2" v-if="allowSeeQwtPromotion">
             <router-link :to="{ name: 'qwt-promotion-list' }" tag="p">
               推广管理
             </router-link>
           </el-menu-item>
-          <el-menu-item index="2-4" v-if="allowSeeQwtReport">
-            <router-link :to="{ name: 'qwt-dashboard' }" tag="p">
-              数据报表
-            </router-link>
-          </el-menu-item>
-          <el-menu-item index="2-5">
-            <router-link :to="{ name: 'qwt-cashcow' }" tag="p">
-              微站
-            </router-link>
-          </el-menu-item>
         </el-submenu>
-        <el-submenu index="3" v-if="allowSeeBxAd">
+
+        <el-menu-item index="4" v-if="allowSeeQwtReport">
+          <router-link :to="{ name: 'qwt-dashboard' }" tag="p">
+              数据报表
+          </router-link>
+        </el-menu-item>
+
+        <el-menu-item index="5">
+          <router-link :to="{ name: 'qwt-cashcow' }" tag="p">
+            微站
+          </router-link>
+        </el-menu-item>
+
+        <el-submenu index="6" v-if="allowSeeBxAd">
           <template slot="title">
             <i class="el-icon-message"></i>品牌广告
           </template>
-          <el-menu-item index="3-1" v-if="allowQueryAdItems">
+          <el-menu-item index="6-1" v-if="allowQueryAdItems">
             <router-link :to="{ name: 'ad-list' }" tag="p">
               广告投放
             </router-link>
           </el-menu-item>
-          <el-menu-item index="3-2" v-if="allowQueryMaterials">
+          <el-menu-item index="6-2" v-if="allowQueryMaterials">
             <router-link :to="{ name: 'material-list' }" tag="p">
               物料管理
             </router-link>
           </el-menu-item>
-          <el-menu-item index="3-3" v-if="allowQueryOrders">
+          <el-menu-item index="6-3" v-if="allowQueryOrders">
             <router-link :to="{ name: 'order-list' }" tag="p">
               订单管理
             </router-link>
           </el-menu-item>
-          <el-menu-item index="3-4" v-if="allowQueryUsers">
+          <el-menu-item index="6-4" v-if="allowQueryUsers">
             <router-link :to="{ name: 'user-list' }" tag="p">
               客户管理
             </router-link>
           </el-menu-item>
-          <el-menu-item index="3-5">
+          <el-menu-item index="6-5">
             <router-link :to="{ name: 'ad-calendar' }" tag="p">
               广告排期
             </router-link>
           </el-menu-item>
         </el-submenu>
-        <el-menu-item index="4" v-if="allowSeeDashboard">
+
+        <el-menu-item index="7" v-if="allowSeeDashboard">
           <router-link :to="{ name: 'dashboard' }" tag="p">
             <i class="el-icon-menu"></i>部门业绩
           </router-link>
         </el-menu-item>
-        <el-menu-item index="5" v-if="allowSeeAccount">
+
+        <el-menu-item index="8" v-if="allowSeeAccount">
           <router-link :to="{ name: 'account' }" tag="p">
             <i class="el-icon-menu"></i>账户
           </router-link>
         </el-menu-item>
-        <el-menu-item index="6">
-          <a class="link" target="_blank" href="/qa">
-            <i class="el-icon-search"></i>
-            <label>答疑解惑</label>
-          </a>
-        </el-menu-item>
+
+        <el-submenu index="9">
+          <template slot="title">
+            <bx-icon type="questioncircleo"></bx-icon>答疑解惑
+          </template>
+          <el-menu-item index="9-1">
+            <a class="link" target="_blank" href="/qa?mode=tutorials">
+              操作指南
+            </a>
+          </el-menu-item>
+          <el-menu-item index="9-2">
+            <a class="link" target="_blank" href="/qa?mode=questions">
+              常见问题
+            </a>
+          </el-menu-item>
+        </el-submenu>
       </el-menu>
     </main>
   </div>
@@ -110,6 +138,7 @@
 
 <script>
 import { version } from '../../package.json'
+import BxIcon from 'com/widget/icon'
 
 import {
   allowSeeQwtPromotion,
@@ -132,6 +161,9 @@ import {
 
 export default {
   name: 'sidebar',
+  components: {
+    BxIcon
+  },
   props: {
     userInfo: {
       type: Object,
@@ -190,7 +222,8 @@ export default {
 .link {
   display: inline-flex;
   align-items: center;
-  color: #48576a;
+  color: #e1e4ee;
+  cursor: pointer;
 }
 
 .sidebar {
@@ -235,29 +268,15 @@ export default {
   min-width: unset;
 }
 
-.el-menu, .el-submenu .el-menu {
+.el-menu, .el-submenu {
   background-color: unset;
-  /* background-color: #2e394b !important; */
-}
-
-.el-menu-item, .el-submenu__title {
-  color: #e1e4ee;
-}
-
-.homepage {
-  display: flex;
-  align-items: center;
-  height: 50px;
-  font-size: 14px;
-  line-height: 1;
-  letter-spacing: 0.4px;
-  padding-left: 22px;
-  color: #e1e4ee;
   border: 1px solid #273141;
-
-  & > label {
-    margin-left: 14px;
-  }
+  color: #e1e4ee;
 }
 
+.el-menu-item, .el-submenu__title,
+.el-menu-item:hover, .el-submenu__title:hover {
+  background-color: #2e394b;
+  color: #e1e4ee;
+}
 </style>
