@@ -287,6 +287,10 @@ export default {
 .el-menu-item, .el-menu-item:hover {
   background-color: #2e394b;
   color: #e1e4ee;
+
+  & > p, & > a {
+    padding-left: 6px;
+  }
 }
 
 .menu-main-title {

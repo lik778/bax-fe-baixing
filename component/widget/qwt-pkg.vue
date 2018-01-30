@@ -16,16 +16,26 @@
     </main>
     <footer>
       <span>{{ salesPrice + '元' }}</span>
-      <span>{{ '原价' + (chargePrice + 1200) + '元' }}</span>
+      <span>
+        <p>{{ '原价' + (chargePrice + 1200) + '元' }}</p>
+        <li />
+      </span>
     </footer>
+    <p>
+      <bx-icon v-if="checked" type="check"></bx-icon>
+    </p>
   </div>
 </template>
 
 <script>
+import BxIcon from 'com/widget/icon'
 import { centToYuan } from 'utils'
 
 export default {
   name: 'qwt-pkg-widget',
+  components: {
+    BxIcon
+  },
   props: {
     checked: Boolean,
     products: {
@@ -105,6 +115,12 @@ export default {
 
     & > span:last-child {
       margin-left: 12px;
+
+      & > li {
+        position: relative;
+        top: -12px;
+        border-bottom: 1px solid white;
+      }
     }
   }
 }
@@ -120,6 +136,26 @@ export default {
     background: #ff7533;
   }
 
+  & > p {
+    position: relative;
+    height: 0;
+    width: 0;
+    left: 288px;
+    bottom: 10px;
+  }
+
+  & i.icon-check {
+    @mixin center;
+    float: right;
+    width: 20px;
+    height: 20px;
+    font-size: 10px;
+    font-weight: 600;
+    border-radius: 50%;
+    background: #ff7533;
+    color: white;
+    border: 2px solid white;
+  }
 }
 
 </style>

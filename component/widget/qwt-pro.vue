@@ -23,14 +23,21 @@
     <footer v-if="showFooter">
       推广资金包
     </footer>
+    <p>
+      <bx-icon v-if="checked" type="check"></bx-icon>
+    </p>
   </div>
 </template>
 
 <script>
+import BxIcon from 'com/widget/icon'
 import { Message } from 'element-ui'
 
 export default {
   name: 'qwt-pro-widget',
+  components: {
+    BxIcon
+  },
   props: {
     editable: Boolean,
     checked: Boolean,
@@ -159,6 +166,27 @@ export default {
   & > footer {
     background: #ff7533;
     color: white;
+  }
+
+  & > p {
+    position: relative;
+    height: 0;
+    width: 0;
+    left: 178px;
+    bottom: 10px;
+  }
+
+  & i.icon-check {
+    @mixin center;
+    float: right;
+    width: 20px;
+    height: 20px;
+    font-size: 10px;
+    font-weight: 600;
+    border-radius: 50%;
+    background: #ff7533;
+    color: white;
+    border: 2px solid white;
   }
 }
 </style>

@@ -137,6 +137,7 @@ export default {
 
 <style scoped>
 @import '../../cssbase/mixin';
+@import '../../cssbase/var';
 
 .topbar {
   display: flex;
@@ -165,6 +166,10 @@ export default {
       border-right: solid 1px #e6e6e6;
     }
   }
+}
+
+.el-dropdown-link {
+  color: var(--qwt-c-blue);
 }
 
 .help {
