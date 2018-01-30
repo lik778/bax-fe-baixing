@@ -74,7 +74,7 @@ export const columnOpts = [{
   label: '点击',
   value: 'clicks'
 }, {
-  label: '点击均价',
+  label: '平均点击单价',
   value: 'clickAvgPrice'
 }, {
   label: '消费',

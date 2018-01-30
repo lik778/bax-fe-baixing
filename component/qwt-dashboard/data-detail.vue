@@ -54,6 +54,10 @@
           label="点击率" width="120" sortable
           :formatter="r => r.clickRate.toFixed(4)">
         </el-table-column>
+        <el-table-column v-if="checkVisiable('clickAvgPrice')"
+          label="平均点击单价" width="160" sortable
+          :formatter="r => (r.clickAvgPrice / 100).toFixed(2) + '元'">
+        </el-table-column>
       </el-table>
     </main>
     <footer>
@@ -110,13 +114,13 @@ const isArray = Array.isArray
 const campaignDefaultColumns = [
   'date', 'campaignId', 'channel', 'device',
   'shows', 'clicks', 'clickAvgPrice',
-  'cost', 'clickRate', 'cpcRanking'
+  'cost', 'clickRate', 'cpcRanking', 'clickAvgPrice'
 ]
 
 const keywordDefaultColumns = [
   'date', 'keyword', 'channel', 'device',
   'shows', 'clicks', 'clickAvgPrice',
-  'cost', 'clickRate', 'cpcRanking'
+  'cost', 'clickRate', 'cpcRanking', 'clickAvgPrice'
 ]
 
 export default {
