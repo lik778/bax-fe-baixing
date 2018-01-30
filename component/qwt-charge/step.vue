@@ -1,7 +1,9 @@
 <template>
   <div class="step">
-    <label>套餐购买</label>
-    <span v-if="mode === 'buy-service'"
+    <label>
+      {{ mode === 'buy-service' ? '套餐购买' : '资金充值' }}
+    </label>
+    <span
       class="buy-service-step">
       <i>1</i>
       <label>选择产品</label>

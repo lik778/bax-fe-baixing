@@ -31,7 +31,9 @@
 
         <el-submenu index="2">
           <template slot="title">
-            <bx-icon type="paycircleo"></bx-icon>产品购买
+            <div class="menu-main-title">
+              <bx-icon type="paycircleo"></bx-icon>产品购买
+            </div>
           </template>
           <el-menu-item index="2-1">
             <router-link :to="{ name: 'qwt-charge', query: { mode: 'buy-service' } }" tag="p">
@@ -47,7 +49,9 @@
 
         <el-submenu index="3">
           <template slot="title">
-            <bx-icon type="sharealt"></bx-icon>广告投放
+            <div class="menu-main-title">
+              <bx-icon type="sharealt"></bx-icon>广告投放
+            </div>
           </template>
           <el-menu-item index="3-1" v-if="allowSeeQwtPromotion">
             <router-link :to="{ name: 'qwt-create-promotion' }" tag="p">
@@ -63,13 +67,13 @@
 
         <el-menu-item index="4" v-if="allowSeeQwtReport">
           <router-link :to="{ name: 'qwt-dashboard' }" tag="p">
-              数据报表
+            <bx-icon type="barchart"></bx-icon>数据报表
           </router-link>
         </el-menu-item>
 
         <el-menu-item index="5">
           <router-link :to="{ name: 'qwt-cashcow' }" tag="p">
-            微站
+            <bx-icon type="iconfontdesktop"></bx-icon>微站
           </router-link>
         </el-menu-item>
 
@@ -112,13 +116,15 @@
 
         <el-menu-item index="8" v-if="allowSeeAccount">
           <router-link :to="{ name: 'account' }" tag="p">
-            <i class="el-icon-menu"></i>账户
+            <bx-icon type="user"></bx-icon>我的账户
           </router-link>
         </el-menu-item>
 
         <el-submenu index="9">
           <template slot="title">
-            <bx-icon type="questioncircleo"></bx-icon>答疑解惑
+            <div class="menu-main-title">
+              <bx-icon type="questioncircleo"></bx-icon>答疑解惑
+            </div>
           </template>
           <el-menu-item index="9-1">
             <a class="link" target="_blank" href="/qa?mode=tutorials">
@@ -218,6 +224,11 @@ export default {
 <style scoped>
 @import '../../cssbase/var';
 
+.iconfont {
+  margin-right: 13px;
+  font-size: 14px;
+}
+
 .link {
   display: inline-flex;
   align-items: center;
@@ -273,9 +284,12 @@ export default {
   color: #e1e4ee;
 }
 
-.el-menu-item, .el-submenu__title,
-.el-menu-item:hover, .el-submenu__title:hover {
+.el-menu-item, .el-menu-item:hover {
   background-color: #2e394b;
+  color: #e1e4ee;
+}
+
+.menu-main-title {
   color: #e1e4ee;
 }
 </style>
