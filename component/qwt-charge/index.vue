@@ -28,12 +28,24 @@
             叠加推广资金包：
           </header>
           <main>
-            <qwt-pro-widget v-for="i of allProducts" :key="mode + i.id"
-              :price="i.price" :title="i.title" :editable="i.editable"
-              :checked="chargeProductChecked(i.id)"
-              @click="checkChargeProduct(i.id)"
-              @set-money="setChargeMoney">
-            </qwt-pro-widget>
+            <section>
+              <qwt-pro-widget v-for="i of allProducts.slice(0, 4)" :key="mode + i.id"
+                :price="i.price" :title="i.title" :editable="i.editable"
+                :highlight="mode === 'charge-only'"
+                :checked="chargeProductChecked(i.id)"
+                @click="checkChargeProduct(i.id)"
+                @set-money="setChargeMoney">
+              </qwt-pro-widget>
+            </section>
+            <section>
+              <qwt-pro-widget v-for="i of allProducts.slice(4)" :key="mode + i.id"
+                :price="i.price" :title="i.title" :editable="i.editable"
+                :highlight="mode === 'charge-only'"
+                :checked="chargeProductChecked(i.id)"
+                @click="checkChargeProduct(i.id)"
+                @set-money="setChargeMoney">
+              </qwt-pro-widget>
+            </section>
           </main>
         </div>
       </section>
@@ -714,6 +726,9 @@ export default {
         await getCondition()
         await getCoupons({ onlyValid: true, status: 0 })
       }
+    },
+    mode() {
+      this.empty()
     }
   },
   async mounted() {
@@ -773,7 +788,7 @@ export default {
 
 .qwt-product, .qwt-order {
   margin-top: 10px;
-  padding: 20px 0 30px 21px;
+  padding: 20px 0 10px 21px;
   background: white;
 }
 
@@ -795,6 +810,10 @@ export default {
       display: flex;
       flex-wrap: wrap;
       margin-top: 20px;
+
+      & > section {
+        display: flex;
+      }
     }
   }
 

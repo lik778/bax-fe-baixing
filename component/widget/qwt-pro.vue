@@ -1,6 +1,6 @@
 
 <template>
-  <div :class="{'qwt-pro-widget': true, checked}" @click="onClick">
+  <div :class="{'qwt-pro-widget': true, checked, highlight}" @click="onClick">
     <main v-if="title === '下次再充值'">
       下次再充值
     </main>
@@ -39,6 +39,7 @@ export default {
     BxIcon
   },
   props: {
+    highlight: Boolean,
     editable: Boolean,
     checked: Boolean,
     price: Number,
@@ -153,6 +154,13 @@ export default {
     @mixin center;
     height: 40px;
     color: #666666;
+  }
+}
+
+.qwt-pro-widget.highlight {
+  & > footer {
+    background: #ffb74d;
+    color: white;
   }
 }
 

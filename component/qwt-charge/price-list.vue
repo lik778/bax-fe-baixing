@@ -118,6 +118,10 @@ export default {
       }
     }
 
+    & > div:not(:last-child) {
+      border-bottom: dotted 1px #e6e6e6;
+    }
+
     border-bottom: solid 1px #e6e6e6;
   }
 
