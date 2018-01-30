@@ -133,11 +133,13 @@ export default {
         yAxis: [{
           type: 'value',
           position: 'left',
+          name: '金额：元',
           min: 0,
           max: Math.max(...this.costData)
         }, {
           type: 'value',
           position: 'right',
+          name: '次数',
           min: 0,
           max: yAxisRightMaxValue
         }],

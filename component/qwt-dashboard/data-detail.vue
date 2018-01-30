@@ -88,8 +88,7 @@ import {
 } from 'constant/fengming-report'
 
 import {
-  semPlatformCn,
-  device
+  semPlatformCn
 } from 'constant/fengming'
 
 import {
@@ -178,12 +177,16 @@ export default {
       return semPlatformCn[String(c)] || '未知'
     },
     fmtDevice(a) {
-      if (!isArray(a)) {
-        // sogou
-        return a
+      const m = {
+        '1': '电脑',
+        '2': '手机'
       }
 
-      return a.map(i => device[String(i)]).join(',')
+      if (!isArray(a)) {
+        return m[String(a)]
+      }
+
+      return a.map(i => m[String(i)]).join(',')
     },
     fmtCpcRanking,
     toHumanTime,
