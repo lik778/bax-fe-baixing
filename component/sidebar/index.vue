@@ -34,13 +34,13 @@
             <bx-icon type="paycircleo"></bx-icon>产品购买
           </template>
           <el-menu-item index="2-1">
-            <router-link :to="{ name: 'qwt-charge' }" tag="p">
-              服务开启
+            <router-link :to="{ name: 'qwt-charge', query: { mode: 'buy-service' } }" tag="p">
+              套餐购买
             </router-link>
           </el-menu-item>
           <el-menu-item index="2-2">
-            <router-link :to="{ name: 'qwt-charge' }" tag="p">
-              服务开启
+            <router-link :to="{ name: 'qwt-charge', query: { mode: 'charge-only' } }" tag="p">
+              资金充值
             </router-link>
           </el-menu-item>
         </el-submenu>
@@ -51,12 +51,12 @@
           </template>
           <el-menu-item index="3-1" v-if="allowSeeQwtPromotion">
             <router-link :to="{ name: 'qwt-create-promotion' }" tag="p">
-              新建推广
+              新建推广计划
             </router-link>
           </el-menu-item>
           <el-menu-item index="3-2" v-if="allowSeeQwtPromotion">
             <router-link :to="{ name: 'qwt-promotion-list' }" tag="p">
-              推广管理
+              管理推广计划
             </router-link>
           </el-menu-item>
         </el-submenu>
@@ -216,7 +216,6 @@ export default {
 </script>
 
 <style scoped>
-
 @import '../../cssbase/var';
 
 .link {

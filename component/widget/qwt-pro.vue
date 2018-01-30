@@ -155,5 +155,10 @@ export default {
   & > main {
     border-bottom: 1px dotted #ff7533;
   }
+
+  & > footer {
+    background: #ff7533;
+    color: white;
+  }
 }
 </style>
