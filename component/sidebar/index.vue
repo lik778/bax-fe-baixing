@@ -6,7 +6,8 @@
       <p>v{{ version }}</p>
     </header>
     <main>
-      <el-menu default-active="0">
+      <el-menu default-active="0"
+        :default-openeds="['1', '2', '3', '6', '9']">
         <el-menu-item index="0">
           <router-link :to="{ name: 'root' }" tag="p">
             <bx-icon type="appstore"></bx-icon>首页
