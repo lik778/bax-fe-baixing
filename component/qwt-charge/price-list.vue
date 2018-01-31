@@ -71,7 +71,7 @@ export default {
     display: flex;
     align-items: center;
     height: 48px;
-    padding-left: 30px;
+    padding: 0 20px 0 30px;
     font-size: 14px;
     font-weight: 600;
     color: #666666;
@@ -87,13 +87,12 @@ export default {
     }
 
     & > p:not(:first-child) {
-      /* justify-content: center; */
       flex-grow: 0.5;
     }
   }
 
   & > main {
-    padding: 0 20px;
+    padding: 0 20px 0 30px;
     font-size: 14px;
     color: #666666;
 
@@ -109,11 +108,9 @@ export default {
 
       & > p:first-child {
         width: 210px;
-        padding-left: 10px;
       }
 
       & > p:not(:first-child) {
-        /* justify-content: center; */
         flex-grow: 0.5;
       }
     }

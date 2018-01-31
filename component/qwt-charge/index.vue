@@ -734,6 +734,8 @@ export default {
         // 必须先拿到 condition
         await getCondition()
         await getCoupons({ onlyValid: true, status: 0 })
+      } else {
+        this.selectedCoupon = []
       }
     },
     async mode() {
