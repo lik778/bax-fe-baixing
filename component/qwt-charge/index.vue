@@ -809,7 +809,7 @@ export default {
   & .package, & .charge {
     & > header {
       font-size: 14px;
-      color: #333333;
+      color: #666666;
       line-height: 1.5;
     }
 
@@ -924,7 +924,7 @@ export default {
       & > .pay-order {
         @mixin center;
         width: 110px;
-        height: 32px;
+        height: 35px;
         margin-top: 30px;
         border-radius: 4px;
         background: #ff7533;
@@ -957,7 +957,7 @@ export default {
 
   & > footer {
     margin-top: 20px;
-    font-size: 14px;
+    font-size: 12px;
     line-height: 1.86;
     color: #999999;
   }

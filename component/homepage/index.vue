@@ -109,6 +109,7 @@ export default {
 .qwt-homepage .card {
   padding: 0 20px;
   background: white;
+  box-shadow: 0 2px 9px 0 rgba(83, 95, 127, 0.1);
 
   & > header {
     display: flex;
@@ -124,6 +125,7 @@ export default {
 
     & > a {
       color: var(--qwt-c-blue);
+      font-size: 14px;
     }
   }
 }

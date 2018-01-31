@@ -8,7 +8,7 @@
     </header>
     <content>
       <span>
-        <h3>{{ summary.clicks }}</h3>
+        <h3>{{ summary.clicks || 0 }}</h3>
         <p>点击量</p>
       </span>
       <span>
@@ -16,12 +16,12 @@
         <p>消耗</p>
       </span>
       <span>
-        <h3>{{ summary.shows }}</h3>
+        <h3>{{ summary.shows || 0 }}</h3>
         <p>展示量</p>
       </span>
     </content>
     <footer>
-      <i></i>
+      <bx-icon type="infocircleo"></bx-icon>
       <span>
         以上均为昨日数据，了解详细数据请点击查看详情
       </span>
@@ -30,8 +30,13 @@
 </template>
 
 <script>
+import BxIcon from 'com/widget/icon'
+
 export default {
   name: 'qwt-homepage-campaign',
+  components: {
+    BxIcon
+  },
   props: {
     summary: {
       type: Object,
@@ -80,6 +85,10 @@ export default {
     margin-top: 20px;
     font-size: 14px;
     color: #999999;
+
+    & > i {
+      margin-right: 10px;
+    }
   }
 }
 </style>

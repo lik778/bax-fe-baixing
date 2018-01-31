@@ -10,10 +10,10 @@
     <main>
       <div v-for="(p, i) of products" :key="i">
         <p>{{ p.name }}</p>
-        <p>{{ centToYuan(p.originalPrice) }}</p>
-        <p>{{ centToYuan(p.price) }}</p>
+        <p>{{ centToYuan(p.originalPrice) + '元' }}</p>
+        <p>{{ centToYuan(p.price) + '元' }}</p>
         <p v-if="hasDiscount">
-          {{ (r.discountPrice / 100).toFixed(2) }}
+          {{ (r.discountPrice / 100).toFixed(2) + '元' }}
         </p>
       </div>
     </main>
@@ -75,7 +75,7 @@ export default {
     font-size: 14px;
     font-weight: 600;
     color: #666666;
-    background: #e6e6e6;
+    background: #f2f2f2;
 
     & > p {
       display: flex;
