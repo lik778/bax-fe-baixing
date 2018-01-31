@@ -495,6 +495,30 @@ export default {
       this.checkedChargeProductId = 0
       this.chargeMoney = 0
     },
+    async init() {
+      this.empty()
+
+      await Promise.all([
+        getProductDiscounts([1, 2, 3, 4]),
+        getProductPackages(1),
+        this.getProducts()
+      ])
+
+      setTimeout(() => {
+        const { mode } = this
+        const pkg = this.packages[0]
+        const pro = this.allProducts[0]
+
+        if (mode === 'buy-service') {
+          this.checkPackage(pkg.id)
+          this.checkChargeProduct(pro.id)
+          this.setChargeMoney(pro.price)
+        } else if (mode === 'charge-only') {
+          this.checkChargeProduct(pro.id)
+          this.setChargeMoney(pro.price)
+        }
+      }, 100)
+    },
     packageChecked(id) {
       return this.checkedPackageId === id
     },
@@ -525,21 +549,6 @@ export default {
       }
 
       return p | 0
-    },
-    async onTabClick({name}) {
-      this.empty()
-
-      const q = this.$route.query
-
-      this.$router.push({
-        name: 'qwt-charge',
-        query: {
-          ...q,
-          mode: name
-        }
-      })
-      // TODO: warning - 此处依赖 query mode
-      await this.getProducts()
     },
     async getProducts() {
       await getProducts(3)
@@ -727,8 +736,8 @@ export default {
         await getCoupons({ onlyValid: true, status: 0 })
       }
     },
-    mode() {
-      this.empty()
+    async mode() {
+      this.init()
     }
   },
   async mounted() {
@@ -736,6 +745,8 @@ export default {
       sales_id: salesId,
       user_id: userId
     } = this.$route.query
+
+    await this.init()
 
     setTimeout(() => {
       const { userInfo, actionTrackId } = this
@@ -762,12 +773,6 @@ export default {
         this.displayUserMobile = info.mobile
       }
     }
-
-    await Promise.all([
-      getProductDiscounts([1, 2, 3, 4]),
-      getProductPackages(1),
-      this.getProducts()
-    ])
   }
 }
 </script>

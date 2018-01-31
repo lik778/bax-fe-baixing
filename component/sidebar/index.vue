@@ -298,3 +298,10 @@ export default {
   color: #e1e4ee;
 }
 </style>
+
+<style>
+.sidebar .el-submenu .el-menu-item:hover,
+.sidebar .el-submenu__title:hover {
+  background-color: #2e394b;
+}
+</style>

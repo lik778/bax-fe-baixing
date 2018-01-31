@@ -94,8 +94,6 @@ export default {
       if (!(parseInt(inputPrice) >= minInputPrice)) {
         return Message.error(`最低充值金额: ${minInputPrice}`)
       }
-
-      this.mode = 'normal'
     },
     onClick() {
       this.$emit('click')
