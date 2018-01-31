@@ -1,6 +1,19 @@
 
 <template>
   <div :class="{'qwt-pkg-widget': true, checked}" @click="onClick">
+    <div class="badge-discount">
+      <section>
+        <main>
+          <p>减</p>
+          <p>1200元</p>
+        </main>
+        <footer>
+          <svg xmlns="http://www.w3.org/2000/svg" version="1.1" class="svg-triangle">
+            <polygon points="0,0 44,0 22,12"/>
+          </svg>
+        </footer>
+      </section>
+    </div>
     <header>
       {{ name }}
     </header>
@@ -21,7 +34,7 @@
         <li />
       </span>
     </footer>
-    <p>
+    <p class="badge-check">
       <bx-icon v-if="checked" type="check"></bx-icon>
     </p>
   </div>
@@ -83,6 +96,42 @@ export default {
   border: solid 1px #ffb74d;
   cursor: pointer;
 
+  & > .badge-discount {
+    position: relative;
+    height: 0;
+    width: 0;
+    top: -4px;
+    left: 226px;
+
+    & > section {
+      width: 44px;
+      height: 50px;
+
+      & > main {
+        display: flex;
+        flex-flow: column;
+        align-items: center;
+        padding: 4px 0;
+        color: white;
+        background: #ff3c3c;
+        font-size: 12px;
+        line-height: 1.33;
+        border-top-left-radius: 2px;
+        border-top-right-radius: 2px;
+      }
+
+      & > footer {
+        display: flex;
+        background: transparent;
+        height: 12px;
+
+        & .svg-triangle polygon {
+          fill: #ff3c3c;
+        }
+      }
+    }
+  }
+
   & > header {
     @mixin center;
     height: 42px;
@@ -136,7 +185,7 @@ export default {
     background: #ff7533;
   }
 
-  & > p {
+  & > .badge-check {
     position: relative;
     height: 0;
     width: 0;

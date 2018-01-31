@@ -2,6 +2,7 @@
 <template>
   <content v-loading.fullscreen="fullscreenLoading">
     <sidebar :user-info="currentUser"></sidebar>
+    <p class="stuff"></p>
     <router-view :userInfo="currentUser"
       :allCategories="allCategories"
       :allAreas="allAreas"
@@ -111,6 +112,12 @@ content {
   display: flex;
   width: 100%;
   height: 100%;
+
+  & > p.stuff {
+    height: 1px;
+    width: 180px;
+    min-width: 180px;
+  }
 
   & > div:last-child {
     flex-grow: 1;

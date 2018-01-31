@@ -238,6 +238,11 @@ export default {
 }
 
 .sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 6666;
   display: flex;
   flex-flow: column;
   background: #2e394b;
