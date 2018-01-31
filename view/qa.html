@@ -58,22 +58,31 @@
         display: flex;
         flex-flow: column;
         background: white;
-        height: 450px;
+        height: 480px;
+        width: 196px;
+        min-width: 196px;
         border: 1px solid #c0ccda;
+      }
+
+      content > aside:first-child > p {
+        display: flex;
+        align-items: center;
+        height: 56px;
+        padding-left: 15px;
+        font-size: 26px;
       }
 
       content > aside:first-child > li {
         display: flex;
         align-items: center;
-        justify-content: center;
-        width: 194px;
         height: 56px;
+        padding-left: 35px;
         font-size: 20px;
         cursor: pointer;
       }
 
       content > aside:first-child > li:not(:last-child) {
-        border-bottom: 1px solid #c0ccda;
+        /* border-bottom: 1px solid #c0ccda; */
       }
 
       content > aside:last-child {
@@ -150,8 +159,6 @@
       }
 
       .video-list {
-        /* max-width: 100%;
-        width: 100%; */
       }
 
       .image-slide {
@@ -213,8 +220,10 @@
     </header>
     <content>
       <aside>
-        <li data-type="video-list">新手入门</li>
-        <li data-type="image-slide">操作指南</li>
+        <p>操作指南</p>
+        <li data-type="image-slide">操作概览</li>
+        <li data-type="video-list">视频演示</li>
+        <p>常见问题</p>
         <li data-type="doc-sec-1">基础介绍</li>
         <li data-type="doc-sec-2">创意设置</li>
         <li data-type="doc-sec-3">关键词设置</li>
@@ -958,8 +967,13 @@
         })
 
         setTimeout(function() {
-          if (location.search.indexOf("promotion-rules") !== -1) {
+          var search = location.search
+          if (search.indexOf('promotion-rules') !== -1) {
             $('li[data-type="doc-sec-7"]').click()
+          } else if (search.indexOf('mode=tutorials') !== -1) {
+            $('li[data-type="image-slide"]').click()
+          } else if (search.indexOf('mode=questions') !== -1) {
+            $('li[data-type="doc-sec-1"]').click()
           }
         }, 100)
       })
