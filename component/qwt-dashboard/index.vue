@@ -84,7 +84,7 @@
         <span>
           <i class="badge" v-for="d of allDimensions" :key="d.value"
             :aria-checked="query.dimension === d.value"
-            @click="query.dimension = d.value">
+            @click="changeDimension(d.value)">
             {{ d.label }}
           </i>
         </span>
@@ -330,6 +330,14 @@ export default {
         await getReport(q)
       }
     },
+    changeDimension(value) {
+      if (this.query.checkedKeywords.length &&
+        value === DIMENSION_CAMPAIGN) {
+        return Message.error('你当前选择了关键词，不能按计划维度查询数据')
+      }
+
+      this.query.dimension = value
+    },
     selectCampaign(campaign) {
       const ids = this.query.checkedCampaigns.map(c => c.id)
       if (ids.includes(campaign.id)) {
@@ -365,6 +373,11 @@ export default {
     'query.channel': function() {
       this.query.checkedCampaigns = []
       this.query.checkedKeywords = []
+    },
+    'query.checkedKeywords': function(kws) {
+      if (kws.length) {
+        this.query.dimension = DIMENSION_KEYWORD
+      }
     }
   },
   async mounted() {

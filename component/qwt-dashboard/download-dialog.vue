@@ -17,7 +17,7 @@
         </el-table-column>
         <el-table-column label="下载地址">
           <template scope="s">
-            <a :href="s.row.uri" download>{{ s.row.uri }}</a>
+            <a class="link" :href="s.row.uri" download>{{ s.row.uri }}</a>
           </template>
         </el-table-column>
       </el-table>
@@ -70,7 +70,8 @@ export default {
   },
   methods: {
     async checkDownloads() {
-      const reports = this.reports = await getPreparedDownloads()
+      this.reports = await getPreparedDownloads()
+      const reports = this.reports = this.reports.sort((a, b) => b.createdAt - a.createdAt)
 
       const ing = reports.find(d => d.status === CSV_REPORT_GENERATING)
       if (ing) {
@@ -115,5 +116,10 @@ export default {
 </script>
 
 <style scoped>
+@import 'cssbase/mixin';
 
+.link {
+  @mixin wordline;
+  width: 400px;
+}
 </style>
