@@ -817,10 +817,6 @@ export default {
       display: flex;
       flex-wrap: wrap;
       margin-top: 20px;
-
-      & > section {
-        display: flex;
-      }
     }
   }
 
@@ -830,6 +826,14 @@ export default {
 
   & .charge {
     margin-top: 30px;
+
+    & > main {
+      flex-flow: column;
+
+      & > section {
+        display: flex;
+      }
+    }
   }
 }
 

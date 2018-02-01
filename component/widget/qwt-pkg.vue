@@ -5,7 +5,7 @@
       <section>
         <main>
           <p>减</p>
-          <p>1200元</p>
+          <p>{{ (chargePrice + 1200 - salesPrice) + '元' }}</p>
         </main>
         <footer>
           <svg xmlns="http://www.w3.org/2000/svg" version="1.1" class="svg-triangle">
