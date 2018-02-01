@@ -5,7 +5,7 @@
       <flat-btn slot="right" @click.native="toggleTuoguanVisible({action: 'tuoguan:entry:qwt-charge', actionTrackId, baixingId: userInfo.id})" class="tuoguan">托管服务</flat-btn>
     </topbar>
     <main>
-      <step :mode="mode" :step="1" />
+      <step :mode="mode" :step="currentStep" />
       <section class="qwt-product">
         <header>
           1. 选择产品
@@ -273,6 +273,7 @@ export default {
   data() {
     return {
       actionTrackId: uuid(),
+      currentStep: 2,
       allProducts,
 
       salesIdLocked: false,
@@ -694,6 +695,8 @@ export default {
         actionTrackId
       })
 
+      this.currentStep = 3
+
       this.payInProgress = true
 
       try {
@@ -852,6 +855,8 @@ export default {
   & > .coupon {
     margin-top: 20px;
     width: 610px;
+    padding: 15px 10px 20px;
+    border: solid 1px #e6e6e6;
 
     & > header {
       display: flex;

@@ -5,13 +5,19 @@
     </label>
     <span
       class="buy-service-step">
-      <i>1</i>
+      <i :class="getIconClass(1)">
+        {{ getIconContent(1) }}
+      </i>
       <label>选择产品</label>
       <strong></strong>
-      <i>2</i>
+      <i :class="getIconClass(2)">
+        {{ getIconContent(2) }}
+      </i>
       <label>核对订单</label>
       <strong></strong>
-      <i>3</i>
+      <i :class="getIconClass(3)">
+        {{ getIconContent(3) }}
+      </i>
       <label>确认购买</label>
     </span>
   </div>
@@ -28,6 +34,30 @@ export default {
     step: {
       type: Number,
       required: true
+    }
+  },
+  methods: {
+    getIconClass(n) {
+      const { step } = this
+
+      if (n < step) {
+        return 'iconfont icon-check'
+      }
+
+      if (n === step) {
+        return 'ing'
+      }
+
+      return ''
+    },
+    getIconContent(n) {
+      const { step } = this
+
+      if (n >= step) {
+        return n
+      }
+
+      return ''
     }
   }
 }
@@ -65,6 +95,18 @@ export default {
     border: 1px solid #999999;
     font-size: 12px;
     color: #999999;
+  }
+
+  & .iconfont.icon-check {
+    color: var(--qwt-c-blue);
+    border-color: var(--qwt-c-blue);
+    padding-top: 3px;
+  }
+
+  & .ing {
+    background: var(--qwt-c-blue);
+    border-color: white;
+    color: white;
   }
 
   & > label {

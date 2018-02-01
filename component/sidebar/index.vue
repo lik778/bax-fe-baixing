@@ -309,4 +309,9 @@ export default {
 .sidebar .el-submenu__title:hover {
   background-color: #2e394b;
 }
+
+.sidebar .el-menu-item, .el-submenu__title {
+  height: 48px;
+  line-height: 48px;
+}
 </style>

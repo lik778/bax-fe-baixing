@@ -71,7 +71,7 @@ export default {
     display: flex;
     align-items: center;
     height: 48px;
-    padding: 0 20px 0 30px;
+    padding: 0 35px 0 30px;
     font-size: 14px;
     font-weight: 600;
     color: #666666;
@@ -83,16 +83,20 @@ export default {
     }
 
     & > p:first-child {
-      width: 210px;
+      width: 260px;
     }
 
     & > p:not(:first-child) {
       flex-grow: 0.5;
     }
+
+    & > p:last-child {
+      justify-content: flex-end;
+    }
   }
 
   & > main {
-    padding: 0 20px 0 30px;
+    padding: 0 35px 0 30px;
     font-size: 14px;
     color: #666666;
 
@@ -107,11 +111,15 @@ export default {
       }
 
       & > p:first-child {
-        width: 210px;
+        width: 260px;
       }
 
       & > p:not(:first-child) {
         flex-grow: 0.5;
+      }
+
+      & > p:last-child {
+        justify-content: flex-end;
       }
     }
 
@@ -149,15 +157,31 @@ export default {
 
 .qwt-charge-price-list.has-discount {
   & > header {
+    & > p:first-child {
+      width: 210px;
+    }
+
     & > p:not(:first-child) {
-      flex-grow: 0.33;
+      flex-grow: 0.5;
+    }
+
+    & > p:last-child {
+      flex-grow: 0;
     }
   }
 
   & > main {
     & > div {
+      & > p:first-child {
+        width: 210px;
+      }
+
       & > p:not(:first-child) {
-        flex-grow: 0.33;
+        flex-grow: 0.5;
+      }
+
+      & > p:last-child {
+        flex-grow: 0;
       }
     }
   }

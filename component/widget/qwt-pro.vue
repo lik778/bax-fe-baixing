@@ -134,7 +134,6 @@ export default {
   & > main {
     @mixin center;
     flex-grow: 1;
-    border-bottom: 1px dotted #ffb74d;
     color: #666666;
 
     & > span:last-child {
@@ -152,6 +151,7 @@ export default {
     @mixin center;
     height: 40px;
     color: #666666;
+    border-top: 1px dotted #ffb74d;
   }
 }
 
@@ -165,11 +165,8 @@ export default {
 .qwt-pro-widget.checked {
   border: solid 1px #ff7533;
 
-  & > main {
-    border-bottom: 1px dotted #ff7533;
-  }
-
   & > footer {
+    border-top: 1px dotted #ff7533;
     background: #ff7533;
     color: white;
   }

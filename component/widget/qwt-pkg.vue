@@ -140,6 +140,7 @@ export default {
   }
 
   & > main {
+    flex-grow: 1;
     padding: 15px 58px 10px;
     font-size: 14px;
     color: #666666;
@@ -149,11 +150,15 @@ export default {
       align-items: center;
       justify-content: space-between;
     }
+
+    & > div:last-child {
+      margin-top: 10px;
+    }
   }
 
   & > footer {
     @mixin center;
-    flex-grow: 1;
+    height: 41px;
     color: white;
     background: #ffb74d;
 
