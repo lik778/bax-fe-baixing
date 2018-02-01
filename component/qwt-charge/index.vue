@@ -61,7 +61,7 @@
           </price-list>
         </div>
 
-        <div class="coupon">
+        <div class="coupon" v-if="!allowDiscount">
           <header>
             <span>
               <el-checkbox v-model="couponVisible">使用优惠券</el-checkbox>

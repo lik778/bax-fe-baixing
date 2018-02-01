@@ -13,7 +13,7 @@
         <p>{{ centToYuan(p.originalPrice) + '元' }}</p>
         <p>{{ centToYuan(p.price) + '元' }}</p>
         <p v-if="hasDiscount">
-          {{ (r.discountPrice / 100).toFixed(2) + '元' }}
+          {{ (p.discountPrice / 100).toFixed(2) + '元' }}
         </p>
       </div>
     </main>
@@ -149,14 +149,14 @@ export default {
 
 .qwt-charge-price-list.has-discount {
   & > header {
-    & > p {
+    & > p:not(:first-child) {
       flex-grow: 0.33;
     }
   }
 
   & > main {
     & > div {
-      & > p {
+      & > p:not(:first-child) {
         flex-grow: 0.33;
       }
     }
