@@ -8,19 +8,19 @@
       <span>
         <header>未选择</header>
         <content>
-          <li v-for="(campaign, i) in getLeftCampaigns()"
+          <li v-for="campaign in getLeftCampaigns()"
             class="tree" :key="'c' + campaign.id"
             @click="onClickCampaign(campaign.id)">
             <div class="tree-node">
               <i class="el-icon-caret-right"></i>
-              <el-checkbox @change="() => onCheckCampaign(campaign)"
+              <el-checkbox @change="() => onCheckCampaign(campaign, 'left')"
                 :value="campaignChecked(campaign.id)">
               </el-checkbox>
               <label>{{ `推广：${campaign.id}` }}</label>
             </div>
             <div>
-              <li class="tree-node"
-                v-for="(keyword, i) in campaign.keywords"
+              <li v-if="showKeyword" class="tree-node"
+                v-for="keyword in campaign.keywords"
                 :key="'k' + campaign.id + keyword.id"
                 @click="onCheckKeyword(keyword, {}, 'select')">
                 <el-checkbox></el-checkbox>
@@ -34,19 +34,19 @@
       <span>
         <header>已选择</header>
         <content>
-          <li v-for="(campaign, i) in getRightCampaigns()"
+          <li v-for="campaign in getRightCampaigns()"
             :key="'c' + campaign.id" class="tree"
             @click="onClickCampaign(campaign.id)">
             <div class="tree-node">
               <i class="el-icon-caret-right"></i>
-              <el-checkbox @change="() => onCheckCampaign(campaign)"
+              <el-checkbox @change="() => onCheckCampaign(campaign, 'right')"
                 :value="campaignChecked(campaign.id)">
               </el-checkbox>
               <label>{{ `推广：${campaign.id}` }}</label>
             </div>
             <div>
-              <li class="tree-node"
-                v-for="(keyword, i) in campaign.keywords"
+              <li v-if="showKeyword" class="tree-node"
+                v-for="keyword in campaign.keywords"
                 :key="'k' + campaign.id + keyword.id"
                 @click="onCheckKeyword(keyword, campaign, 'remove')">
                 <el-checkbox :checked="true"></el-checkbox>
@@ -69,6 +69,11 @@
 
 <script>
 import {
+  DIMENSION_CAMPAIGN,
+  DIMENSION_KEYWORD
+} from 'constant/fengming-report'
+
+import {
   getCampaignKeywords,
   getCampaigns
 } from 'api/fengming-campaign'
@@ -90,6 +95,9 @@ export default {
       type: Array,
       required: true
     },
+    dimension: {
+      type: Number
+    },
     channel: {
       type: Number
     },
@@ -108,6 +116,11 @@ export default {
       currentKeywords: [],
 
       allCampaigns: []
+    }
+  },
+  computed: {
+    showKeyword() {
+      return this.dimension === DIMENSION_KEYWORD
     }
   },
   methods: {
@@ -181,7 +194,27 @@ export default {
         return !overlap(kids, keywordIds)
       })
     },
-    onCheckCampaign(campaign) {
+    onCheckCampaign(campaign, type) {
+      if (this.dimension === DIMENSION_KEYWORD) {
+        if (type === 'left') {
+          if (campaign.keywords && campaign.keywords.length) {
+            campaign.keywords.forEach(k => {
+              if (!this.keywordIds.includes(k.id)) {
+                this.$emit('select-keyword', {...k})
+              }
+            })
+          }
+        } else if (type === 'right') {
+          if (campaign.keywords && campaign.keywords.length) {
+            campaign.keywords.forEach(k => {
+              this.$emit('remove-keyword', {...k})
+            })
+          }
+        }
+
+        return
+      }
+
       if (this.campaignChecked(campaign.id)) {
         this.$emit('remove-campaign', campaign)
       } else {
@@ -248,6 +281,12 @@ export default {
     }
   },
   watch: {
+    dimension(val, pre) {
+      if (typeof val === 'number' &&
+        val !== pre) {
+        this.$emit('clear')
+      }
+    },
     async channel(val, pre) {
       if (typeof val === 'number' &&
         val !== pre) {

@@ -51,6 +51,16 @@
         </span>
       </section>
       <section>
+        <aside>数据维度:</aside>
+        <span>
+          <i class="badge" v-for="d of allDimensions" :key="d.value"
+            :aria-checked="query.dimension === d.value"
+            @click="changeDimension(d.value)">
+            {{ d.label }}
+          </i>
+        </span>
+      </section>
+      <section>
         <aside>计划/关键词筛选:</aside>
         <span class="kw-list">
           <div>
@@ -79,16 +89,6 @@
           </div>
         </span>
       </section>
-      <section>
-        <aside>数据维度:</aside>
-        <span>
-          <i class="badge" v-for="d of allDimensions" :key="d.value"
-            :aria-checked="query.dimension === d.value"
-            @click="changeDimension(d.value)">
-            {{ d.label }}
-          </i>
-        </span>
-      </section>
       <data-trend :statistics="statistics"></data-trend>
       <data-detail :statistics="statistics" :summary="summary"
         :offset="offset" :total="total" :limit="limit"
@@ -99,10 +99,12 @@
       <plan-keyword-selector
         :visible="pksDialogVisible"
         :channel="query.channel"
+        :dimension="query.dimension"
         :userId="userId"
         :campaign-ids="query.checkedCampaigns.map(c => c.id)"
         :keyword-ids="query.checkedKeywords.map(k => k.id)"
         @ok="pksDialogVisible = false"
+        @clear="clearCheckedKeywordsAndCampaigns"
         @select-campaign="selectCampaign"
         @remove-campaign="removeCampaign"
         @select-keyword="k => query.checkedKeywords.push(k)"
@@ -330,11 +332,13 @@ export default {
         await getReport(q)
       }
     },
-    changeDimension(value) {
-      if (this.query.checkedKeywords.length &&
-        value === DIMENSION_CAMPAIGN) {
-        return Message.error('你当前选择了关键词，不能按计划维度查询数据')
-      }
+    async changeDimension(value) {
+      // if (this.query.checkedKeywords.length &&
+      //   value === DIMENSION_CAMPAIGN) {
+      //   return Message.error('你当前选择了关键词，不能按计划维度查询数据')
+      // }
+
+      await this.clearCheckedKeywordsAndCampaigns()
 
       this.query.dimension = value
     },
@@ -361,6 +365,11 @@ export default {
     removeKeyword(keyword) {
       this.query.checkedKeywords = this.query.checkedKeywords
         .filter(k => k.id !== keyword.id)
+    },
+    async clearCheckedKeywordsAndCampaigns() {
+      this.query.checkedCampaigns = []
+      this.query.checkedKeywords = []
+      await clearStatistics()
     }
   },
   watch: {
@@ -373,6 +382,9 @@ export default {
     'query.channel': function() {
       this.query.checkedCampaigns = []
       this.query.checkedKeywords = []
+    },
+    'query.dimension': async function() {
+      await this.clearCheckedKeywordsAndCampaigns()
     },
     'query.checkedKeywords': function(kws) {
       if (kws.length) {
