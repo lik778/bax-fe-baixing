@@ -5,6 +5,14 @@ const merge = require('webpack-merge')
 const webpack = require('webpack')
 
 const config = merge(base, {
+  mode: 'production',
+  optimization: {
+    splitChunks: {
+      name: 'vendor',
+      minSize: 0,
+      chunks: "all",
+    }
+  },
   output: {
     filename: '[name].[chunkhash:18].js'
   }
@@ -17,38 +25,12 @@ config.plugins = [
       NODE_ENV: '"production"'
     }
   }),
+  new webpack.EnvironmentPlugin(['NODE_ENV']),
   new webpack.ContextReplacementPlugin(/moment[\\\/]locale$/, /^\.\/(zh-cn)$/),
-  new webpack.optimize.ModuleConcatenationPlugin(),
-  // new webpack.optimize.UglifyJsPlugin({
-  //   compress: {
-  //     warnings: true
-  //   },
-  //   sourceMap: true
   // }),
   new ExtractTextPlugin({
     filename: '[name].[contenthash:18].css'
   }),
-  new webpack.EnvironmentPlugin(['NODE_ENV']),
-  new webpack.optimize.OccurrenceOrderPlugin(true),
-  new webpack.optimize.CommonsChunkPlugin({
-    name: 'vendor',
-    minChunks: (module, count) => {
-      return (
-        module.resource &&
-        module.resource.endsWith('.js') &&
-        module.resource.includes('/node_modules/')
-      )
-    }
-  }),
-  new webpack.optimize.CommonsChunkPlugin({
-    name: 'manifest',
-    chunks: ['vendor']
-  }),
-  new webpack.LoaderOptionsPlugin({
-    minimize: true,
-    debug: false
-  }),
-  new webpack.NoEmitOnErrorsPlugin()
 ]
 
 module.exports = config
