@@ -1,7 +1,7 @@
 
 <template>
   <el-dialog title="类目选择" :visible="visible"
-    :close-on-click-modal="false" size="large"
+    :close-on-click-modal="false"
     :before-close="ok">
     <main class="main">
       <div>
