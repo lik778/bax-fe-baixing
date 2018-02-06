@@ -7,6 +7,9 @@
     </header>
     <main>
       <el-menu default-active="0"
+        background-color="#2e394b"
+        active-text-color="15a4fa"
+        text-color="#e1e4ee"
         :default-openeds="['1', '2', '3', '6', '9']">
         <el-menu-item index="homepage">
           <router-link :to="{ name: 'root' }" tag="p">
@@ -288,10 +291,6 @@ export default {
       padding-bottom: 1px;
     }
   }
-
-  & > main {
-
-  }
 }
 
 .el-menu-item {
@@ -299,31 +298,17 @@ export default {
 }
 
 .el-menu, .el-submenu {
-  background-color: unset;
   border: 1px solid #273141;
-  color: #e1e4ee;
 }
 
 .el-menu-item, .el-menu-item:hover {
-  background-color: #2e394b;
-  color: #e1e4ee;
-
   & > p, & > a {
     padding-left: 6px;
   }
 }
-
-.menu-main-title {
-  color: #e1e4ee;
-}
 </style>
 
 <style>
-.sidebar .el-submenu .el-menu-item:hover,
-.sidebar .el-submenu__title:hover {
-  background-color: #2e394b;
-}
-
 .sidebar .el-menu-item, .el-submenu__title {
   height: 48px;
   line-height: 48px;
