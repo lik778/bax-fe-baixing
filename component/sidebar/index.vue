@@ -48,18 +48,18 @@
           </el-menu-item>
         </el-submenu>
 
-        <el-submenu index="3">
+        <el-submenu index="3" v-if="allowSeeQwtPromotion">
           <template slot="title">
             <div class="menu-main-title">
               <bx-icon type="sharealt"></bx-icon>广告投放
             </div>
           </template>
-          <el-menu-item index="3-1" v-if="allowSeeQwtPromotion">
+          <el-menu-item index="3-1">
             <router-link :to="{ name: 'qwt-create-promotion' }" tag="p">
               新建推广计划
             </router-link>
           </el-menu-item>
-          <el-menu-item index="3-2" v-if="allowSeeQwtPromotion">
+          <el-menu-item index="3-2">
             <router-link :to="{ name: 'qwt-promotion-list' }" tag="p">
               管理推广计划
             </router-link>
