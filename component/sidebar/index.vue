@@ -37,14 +37,14 @@
             </div>
           </template>
           <el-menu-item index="2-1">
-            <router-link :to="{ name: 'qwt-charge', query: { mode: 'buy-service' } }" tag="p">
+            <p @click="toBuyService">
               套餐购买
-            </router-link>
+            </p>
           </el-menu-item>
           <el-menu-item index="2-2">
-            <router-link :to="{ name: 'qwt-charge', query: { mode: 'charge-only' } }" tag="p">
+            <p @click="toChargeOnly">
               资金充值
-            </router-link>
+            </p>
           </el-menu-item>
         </el-submenu>
 
@@ -217,6 +217,30 @@ export default {
     },
     allowSeeGw() {
       return allowSeeGw(this.userInfo.roles, this.userInfo.id)
+    }
+  },
+  methods: {
+    toBuyService() {
+      const q = this.$route.query
+
+      this.$router.push({
+        name: 'qwt-charge',
+        query: {
+          ...q,
+          mode: 'buy-service'
+        }
+      })
+    },
+    toChargeOnly() {
+      const q = this.$route.query
+
+      this.$router.push({
+        name: 'qwt-charge',
+        query: {
+          ...q,
+          mode: 'charge-only'
+        }
+      })
     }
   }
 }
