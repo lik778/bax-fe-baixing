@@ -2,7 +2,7 @@
 <template>
   <el-input v-model="localValue"
     :placeholder="placeholder"
-    :icon="icon"
+    :suffix-icon="icon"
     :type="type">
   </el-input>
 </template>
