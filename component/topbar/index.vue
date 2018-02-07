@@ -24,7 +24,8 @@
         </el-dropdown>
       </label>
     </span>
-    <el-dialog title="修改密码" v-model="pwdDialogVisible" size="small">
+    <el-dialog :visible="pwdDialogVisible"
+      title="修改密码" width="360px">
       <el-form label-width="120px">
         <el-form-item label="密码" required>
           <el-input type='password' placeholder="请输入新密码"

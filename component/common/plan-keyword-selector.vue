@@ -1,7 +1,7 @@
 
 <template>
   <el-dialog title="计划/关键词筛选" :visible="visible"
-    :close-on-click-modal="false" size="small"
+    :close-on-click-modal="false"
     :show-close="false"
     :before-close="ok">
     <main class="main">

@@ -1,8 +1,9 @@
 
 <template>
-  <el-dialog title="新增用户" :visible="visible" size="large"
+  <el-dialog title="新增用户" :visible="visible"
     :close-on-click-modal="false"
-    :before-close="cancel">
+    :before-close="cancel"
+    width="420px">
     <el-form ref="form" :model="user" label-width="120px">
       <el-form-item label="名称" required>
         <el-input v-model="user.name"></el-input>

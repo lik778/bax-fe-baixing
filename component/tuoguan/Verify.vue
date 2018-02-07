@@ -1,9 +1,12 @@
 <template>
   <div class="wrapper">
-    <el-checkbox class="checkbox" v-model="contractChecked">我已阅读<a class="link" @click="showContract">托管协议</a></el-checkbox>
+    <el-checkbox class="checkbox" v-model="contractChecked">
+      我已阅读<a class="link" @click="showContract">托管协议</a>
+    </el-checkbox>
     <el-button class="btn" @click="onTuoguan"></el-button>
 
-    <el-dialog :visible.sync="contractDialogVisible" size="full" class="dialog">
+    <el-dialog :visible.sync="contractDialogVisible"
+      fullscreen class="dialog">
       <contract />
     </el-dialog>
 

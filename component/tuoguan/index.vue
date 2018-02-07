@@ -1,6 +1,11 @@
 
 <template>
-  <el-dialog :visible="visible" size="small" :title="title" :show-close="false" :close-on-click-modal="false" :close-on-press-escape="false" :modal-append-to-body="true">
+  <el-dialog :visible="visible" :title="title"
+    :show-close="false"
+    :close-on-click-modal="false"
+    :close-on-press-escape="false"
+    :modal-append-to-body="true"
+    width="640px">
     <div v-if="loading">
       加载中...
     </div>

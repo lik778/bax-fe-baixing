@@ -1,9 +1,10 @@
 
 <template>
   <el-dialog :title="title" :visible="visible"
-    :close-on-click-modal="false" size="large"
+    :close-on-click-modal="false"
     :show-close="false"
-    :before-close="ok">
+    :before-close="ok"
+    width="760px">
     <main class="main">
       <el-progress v-if="downloading" :text-inside="true" :stroke-width="18"
         :percentage="percentage">

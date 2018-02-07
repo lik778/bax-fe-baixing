@@ -143,10 +143,8 @@
       </section>
     </main>
 
-    <el-dialog
-      title="提示"
-      :visible.sync="payDialogVisible"
-      size="tiny">
+    <el-dialog title="提示"
+      :visible.sync="payDialogVisible">
       <h3 class="hint-text">订单支付成功，资金已到账！</h3>
       <div slot="footer" class="dialog-footer">
         <el-button @click="$router.push({name: 'account'})">
