@@ -3,7 +3,7 @@
   <header class="qwt-promotion-header">
     <section>
       <span>
-        <bax-input placeholder="请输入ID查询" icon="search"
+        <bax-input placeholder="请输入ID查询" icon="el-icon-search"
           @change="v => queryCampaigns({id: v})">
         </bax-input>
         <el-button @click="switchShowMoreFilters">
@@ -12,7 +12,7 @@
       </span>
       <span>
         <el-button v-if="canCreate"
-          type="primary" icon="plus"
+          type="primary" icon="el-icon-plus"
           @click="gotoCreatePromotion">
           新建推广计划
         </el-button>

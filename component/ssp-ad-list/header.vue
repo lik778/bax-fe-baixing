@@ -3,7 +3,7 @@
   <header class="ad-header">
     <section>
       <span>
-        <bax-input placeholder="请输入订单号" icon="search"
+        <bax-input placeholder="请输入订单号" icon="el-icon-search"
           type="number" v-model="query.orderId">
         </bax-input>
         <el-button @click="switchShowMoreFilters">

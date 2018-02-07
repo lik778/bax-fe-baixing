@@ -3,20 +3,20 @@
   <header class="order-header">
     <section>
       <span>
-        <bax-input placeholder="请输入订单号" icon="search"
+        <bax-input placeholder="请输入订单号" icon="el-icon-search"
           type="number" v-model="query.orderId" />
         <el-button @click="switchShowMoreFilters">
           更多筛选<i class="el-icon-arrow-down el-icon--right"></i>
         </el-button>
       </span>
       <span v-if="allowAddOrder">
-        <el-button type="primary" icon="plus"
+        <el-button type="primary" icon="el-icon-plus"
           @click="gotoCreateOrder">
           新建订单
         </el-button>
       </span>
       <span v-if="!allowAddOrder && isOnlyAgentSales">
-        <el-button type="primary" icon="plus"
+        <el-button type="primary" icon="el-icon-plus"
           @click="gotoCreateOrder">
           广告查价
         </el-button>

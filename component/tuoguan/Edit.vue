@@ -3,9 +3,9 @@
   <div class="edit">
     <div v-if="step === 1" class="center">
       <p>托管服务结束时间：{{expireAt}}</p>
-      <el-button type="primary" size="large" @click="step = 2">延长服务</el-button>
-      <el-button type="danger" size="large" @click="step = 3">停止服务</el-button>
-      <el-button size="large" @click="close">取消</el-button>
+      <el-button type="primary" size="medium" @click="step = 2">延长服务</el-button>
+      <el-button type="danger" size="medium" @click="step = 3">停止服务</el-button>
+      <el-button size="medium" @click="close">取消</el-button>
     </div>
     <div v-if="step === 2">
       <el-form :model="model" label-width="150px" class="form">

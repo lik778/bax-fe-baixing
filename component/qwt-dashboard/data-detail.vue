@@ -12,7 +12,7 @@
         </bax-select>
       </span>
       <span>
-        <el-button icon="view" type="primary" @click="download">
+        <el-button icon="el-icon-view" type="primary" @click="download">
           下载
         </el-button>
       </span>

@@ -9,7 +9,7 @@
         微站列表
         <el-button
           :disabled="reachLimit" @click="onCreate"
-          type="primary" icon="plus">
+          type="primary" icon="el-icon-plus">
           新建微站
         </el-button>
       </header>
