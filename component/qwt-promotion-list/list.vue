@@ -85,8 +85,10 @@
       <el-table-column prop="open" label="开关" width="80">
         <template scope="s">
           <el-switch :disabled="s.row.status === CAMPAIGN_STATUS_OFFLINE || readonly"
-            :on-text="readonly ? 'ON' : ''" :off-text="readonly ? 'OFF' : ''"
-            :value="!s.row.pause" @change="switchCampaignPause(s.row)">
+            :active-text="readonly ? 'ON' : ''"
+            :inactive-text="readonly ? 'OFF' : ''"
+            :value="!s.row.pause"
+            @change="switchCampaignPause(s.row)">
           </el-switch>
         </template>
       </el-table-column>
