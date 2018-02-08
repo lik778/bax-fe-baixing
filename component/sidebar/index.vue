@@ -8,125 +8,125 @@
     <main>
       <el-menu default-active="0"
         :default-openeds="['1', '2', '3', '6', '9']">
-        <el-menu-item index="0">
+        <el-menu-item index="homepage">
           <router-link :to="{ name: 'root' }" tag="p">
             <bx-icon type="appstore"></bx-icon>首页
           </router-link>
         </el-menu-item>
 
-        <el-submenu index="1" v-if="allowSeeGw">
+        <el-submenu index="ka" v-if="allowSeeGw">
           <template slot="title">
             <i class="el-icon-star-on"></i>建站工具
           </template>
-          <el-menu-item index="1-1">
+          <el-menu-item index="ka-1">
             <router-link :to="{ name: 'gw-charge' }" tag="p">
               企业官网
             </router-link>
           </el-menu-item>
-          <el-menu-item index="1-2">
+          <el-menu-item index="ka-2">
             <router-link :to="{ name: 'gw-custom-page' }" tag="p">
               单页定制
             </router-link>
           </el-menu-item>
         </el-submenu>
 
-        <el-submenu index="2">
+        <el-submenu index="qwt-charge">
           <template slot="title">
             <div class="menu-main-title">
               <bx-icon type="paycircleo"></bx-icon>产品购买
             </div>
           </template>
-          <el-menu-item index="2-1">
+          <el-menu-item index="qwt-charge-1">
             <p @click="toBuyService">
               套餐购买
             </p>
           </el-menu-item>
-          <el-menu-item index="2-2">
+          <el-menu-item index="qwt-charge-2">
             <p @click="toChargeOnly">
               资金充值
             </p>
           </el-menu-item>
         </el-submenu>
 
-        <el-submenu index="3" v-if="allowSeeQwtPromotion">
+        <el-submenu index="qwt-campaign" v-if="allowSeeQwtPromotion">
           <template slot="title">
             <div class="menu-main-title">
               <bx-icon type="sharealt"></bx-icon>广告投放
             </div>
           </template>
-          <el-menu-item index="3-1">
+          <el-menu-item index="qwt-campaign-1">
             <router-link :to="{ name: 'qwt-create-promotion' }" tag="p">
               新建推广计划
             </router-link>
           </el-menu-item>
-          <el-menu-item index="3-2">
+          <el-menu-item index="qwt-campaign-2">
             <router-link :to="{ name: 'qwt-promotion-list' }" tag="p">
               管理推广计划
             </router-link>
           </el-menu-item>
         </el-submenu>
 
-        <el-menu-item index="4" v-if="allowSeeQwtReport">
+        <el-menu-item index="qwt-dashboard" v-if="allowSeeQwtReport">
           <router-link :to="{ name: 'qwt-dashboard' }" tag="p">
             <bx-icon type="barchart"></bx-icon>数据报表
           </router-link>
         </el-menu-item>
 
-        <el-menu-item index="5">
+        <el-menu-item index="qwt-cashcow">
           <router-link :to="{ name: 'qwt-cashcow' }" tag="p">
             <bx-icon type="iconfontdesktop"></bx-icon>微站
           </router-link>
         </el-menu-item>
 
-        <el-submenu index="6" v-if="allowSeeBxAd">
+        <el-submenu index="ssp" v-if="allowSeeBxAd">
           <template slot="title">
             <i class="el-icon-message"></i>品牌广告
           </template>
-          <el-menu-item index="6-1" v-if="allowQueryAdItems">
+          <el-menu-item index="ssp-1" v-if="allowQueryAdItems">
             <router-link :to="{ name: 'ad-list' }" tag="p">
               广告投放
             </router-link>
           </el-menu-item>
-          <el-menu-item index="6-2" v-if="allowQueryMaterials">
+          <el-menu-item index="ssp-2" v-if="allowQueryMaterials">
             <router-link :to="{ name: 'material-list' }" tag="p">
               物料管理
             </router-link>
           </el-menu-item>
-          <el-menu-item index="6-3" v-if="allowQueryOrders">
+          <el-menu-item index="ssp-3" v-if="allowQueryOrders">
             <router-link :to="{ name: 'order-list' }" tag="p">
               订单管理
             </router-link>
           </el-menu-item>
-          <el-menu-item index="6-4" v-if="allowQueryUsers">
+          <el-menu-item index="ssp-4" v-if="allowQueryUsers">
             <router-link :to="{ name: 'user-list' }" tag="p">
               客户管理
             </router-link>
           </el-menu-item>
-          <el-menu-item index="6-5">
+          <el-menu-item index="ssp-5">
             <router-link :to="{ name: 'ad-calendar' }" tag="p">
               广告排期
             </router-link>
           </el-menu-item>
         </el-submenu>
 
-        <el-menu-item index="8" v-if="allowSeeAccount">
+        <el-menu-item index="account" v-if="allowSeeAccount">
           <router-link :to="{ name: 'account' }" tag="p">
             <bx-icon type="user"></bx-icon>我的账户
           </router-link>
         </el-menu-item>
 
-        <el-submenu index="9">
+        <el-submenu index="qa">
           <template slot="title">
             <div class="menu-main-title">
               <bx-icon type="questioncircleo"></bx-icon>答疑解惑
             </div>
           </template>
-          <el-menu-item index="9-1">
+          <el-menu-item index="qa-1">
             <a class="link" target="_blank" href="/qa?mode=tutorials">
               操作指南
             </a>
           </el-menu-item>
-          <el-menu-item index="9-2">
+          <el-menu-item index="qa-2">
             <a class="link" target="_blank" href="/qa?mode=questions">
               常见问题
             </a>
