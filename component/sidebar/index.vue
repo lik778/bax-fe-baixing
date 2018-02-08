@@ -109,12 +109,6 @@
           </el-menu-item>
         </el-submenu>
 
-        <el-menu-item index="7" v-if="allowSeeDashboard">
-          <router-link :to="{ name: 'dashboard' }" tag="p">
-            <i class="el-icon-menu"></i>部门业绩
-          </router-link>
-        </el-menu-item>
-
         <el-menu-item index="8" v-if="allowSeeAccount">
           <router-link :to="{ name: 'account' }" tag="p">
             <bx-icon type="user"></bx-icon>我的账户
@@ -161,7 +155,6 @@ import {
   allowQueryOrders,
   allowQueryUsers,
   // global
-  allowSeeDashboard,
   allowSeeAccount,
   allowSeeBxAd
 } from 'util/role'
@@ -196,9 +189,6 @@ export default {
       return allowQueryUsers(this.userInfo.roles)
     },
     // allow see bx ad ...
-    allowSeeDashboard() {
-      return allowSeeDashboard(this.userInfo.roles)
-    },
     allowSeeAccount() {
       return allowSeeAccount(this.userInfo.roles)
     },
