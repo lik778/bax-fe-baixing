@@ -3,14 +3,6 @@ const isArray = Array.isArray
 
 // global
 
-export function allowSeeDashboard(roles) {
-  const currentRoles = normalizeRoles(roles)
-
-  return checkRoles(currentRoles, [
-    'DATA_OPERATOR'
-  ])
-}
-
 export function allowSeeAccount(roles) {
   const currentRoles = normalizeRoles(roles)
 

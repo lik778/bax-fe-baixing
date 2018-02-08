@@ -23,7 +23,6 @@ import GwCharge from 'com/gw-charge'
 
 // global
 import UploadProfit from 'com/upload-profit'
-import Dashboard from 'com/dashboard'
 import Homepage from 'com/homepage'
 import Account from 'com/account'
 import Coupon from 'com/coupon/index.vue'
@@ -134,10 +133,6 @@ const router = new VueRouter({
     component: Homepage,
     path: '/main',
     name: 'root'
-  }, {
-    component: Dashboard,
-    path: '/main/dashboard',
-    name: 'dashboard'
   }, {
     component: UploadProfit,
     path: '/main/upload-profit',
