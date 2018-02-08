@@ -10,7 +10,7 @@
         background-color="#2e394b"
         active-text-color="15a4fa"
         text-color="#e1e4ee"
-        :default-openeds="['ka', 'qwt-charge', 'qwt-campaign', 'ssp', 'qa']">
+        :default-openeds="['ka', 'qwt-charge', 'qwt-campaign', 'mvp-campaign', 'ssp', 'qa']">
         <el-menu-item index="homepage">
           <router-link :to="{ name: 'root' }" tag="p">
             <bx-icon type="appstore"></bx-icon>首页
@@ -35,9 +35,7 @@
 
         <el-submenu index="qwt-charge">
           <template slot="title">
-            <div class="menu-main-title">
-              <bx-icon type="paycircleo"></bx-icon>产品购买
-            </div>
+            <bx-icon type="paycircleo"></bx-icon>产品购买
           </template>
           <el-menu-item index="qwt-charge-1">
             <p @click="toBuyService">
@@ -51,11 +49,30 @@
           </el-menu-item>
         </el-submenu>
 
+        <el-submenu index="mvp-campaign" v-if="allowSeeQwtPromotion">
+          <template slot="title">
+            <bx-icon type="sharealt"></bx-icon>mvp
+          </template>
+          <el-menu-item index="">
+            <router-link :to="{ name: 'mvp-create-campaign' }" tag="p">
+              新建推广计划
+            </router-link>
+          </el-menu-item>
+          <el-menu-item index="">
+            <router-link :to="{ name: 'mvp-campaign-list' }" tag="p">
+              管理推广计划
+            </router-link>
+          </el-menu-item>
+          <el-menu-item index="">
+            <router-link :to="{ name: 'mvp-dashboard' }" tag="p">
+              数据报表
+            </router-link>
+          </el-menu-item>
+        </el-submenu>
+
         <el-submenu index="qwt-campaign" v-if="allowSeeQwtPromotion">
           <template slot="title">
-            <div class="menu-main-title">
-              <bx-icon type="sharealt"></bx-icon>广告投放
-            </div>
+            <bx-icon type="sharealt"></bx-icon>广告投放
           </template>
           <el-menu-item index="qwt-campaign-1">
             <router-link :to="{ name: 'qwt-create-promotion' }" tag="p">
@@ -120,9 +137,7 @@
 
         <el-submenu index="qa">
           <template slot="title">
-            <div class="menu-main-title">
-              <bx-icon type="questioncircleo"></bx-icon>答疑解惑
-            </div>
+            <bx-icon type="questioncircleo"></bx-icon>答疑解惑
           </template>
           <el-menu-item index="qa-1">
             <a class="link" target="_blank" href="/qa?mode=tutorials">
