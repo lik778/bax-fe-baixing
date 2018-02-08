@@ -113,14 +113,14 @@ const isArray = Array.isArray
 
 const campaignDefaultColumns = [
   'date', 'campaignId', 'channel', 'device',
-  'shows', 'clicks', 'clickAvgPrice',
-  'cost', 'clickRate', 'cpcRanking', 'clickAvgPrice'
+  'shows', 'clicks', 'cost', 'clickRate',
+  'cpcRanking', 'clickAvgPrice'
 ]
 
 const keywordDefaultColumns = [
   'date', 'keyword', 'channel', 'device',
-  'shows', 'clicks', 'clickAvgPrice',
-  'cost', 'clickRate', 'cpcRanking', 'clickAvgPrice'
+  'shows', 'clicks', 'cost', 'clickRate',
+  'cpcRanking', 'clickAvgPrice'
 ]
 
 export default {
