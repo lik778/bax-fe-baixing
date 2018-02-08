@@ -10,7 +10,7 @@
         background-color="#2e394b"
         active-text-color="15a4fa"
         text-color="#e1e4ee"
-        :default-openeds="['1', '2', '3', '6', '9']">
+        :default-openeds="['ka', 'qwt-charge', 'qwt-campaign', 'ssp', 'qa']">
         <el-menu-item index="homepage">
           <router-link :to="{ name: 'root' }" tag="p">
             <bx-icon type="appstore"></bx-icon>首页
@@ -270,6 +270,7 @@ export default {
     display: flex;
     align-items: center;
     height: 50px;
+    min-height: 50px;
     padding: 0 20px;
     color: white;
 
