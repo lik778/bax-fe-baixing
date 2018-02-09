@@ -53,17 +53,17 @@
           <template slot="title">
             <bx-icon type="sharealt"></bx-icon>mvp
           </template>
-          <el-menu-item index="">
+          <el-menu-item index="mvp-campaign-1">
             <router-link :to="{ name: 'mvp-create-campaign' }" tag="p">
               新建推广计划
             </router-link>
           </el-menu-item>
-          <el-menu-item index="">
+          <el-menu-item index="mvp-campaign-2">
             <router-link :to="{ name: 'mvp-campaign-list' }" tag="p">
               管理推广计划
             </router-link>
           </el-menu-item>
-          <el-menu-item index="">
+          <el-menu-item index="mvp-campaign-3">
             <router-link :to="{ name: 'mvp-dashboard' }" tag="p">
               数据报表
             </router-link>
