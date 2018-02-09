@@ -1,13 +1,11 @@
 
-import { createStore } from 'vue-duo'
+import { observable, action, toJS } from 'mobx'
 
-import {
-  getHomepageSummary,
-  getCoupons
-} from './action'
+import * as fapi from 'api/fengming'
+import * as mapi from 'api/meta'
 
-const store = createStore({
-  summary: {
+const store = observable({
+  _summary: {
     campaignCount: 0,
     balance: 0,
 
@@ -16,15 +14,21 @@ const store = createStore({
     clicks: 0,
     shows: 0
   },
-  coupons: []
-})
+  _coupons: [],
 
-store.subscribeActions({
-  [getHomepageSummary]: summary => ({
-    summary
+  get summary() {
+    return toJS(this._summary)
+  },
+  get coupons() {
+    return toJS(this._coupons)
+  },
+
+  getHomepageSummary: action(async function() {
+    this._summary = await fapi.getHomepageSummary()
   }),
-  [getCoupons]: (coupons) => ({
-    coupons
+
+  getCoupons: action(async function(opt) {
+    this._coupons = await mapi.getCoupons(opt)
   })
 })
 

@@ -30,11 +30,6 @@ import { allowSeeAccount } from 'util/role'
 
 import store from './store'
 
-import {
-  getHomepageSummary,
-  getCoupons
-} from './action'
-
 export default {
   name: 'qwt-homepage',
   components: {
@@ -46,7 +41,10 @@ export default {
     Topbar
   },
   props: ['userInfo'],
-  store,
+  fromMobx: {
+    summary: () => store.summary,
+    coupons: () => store.coupons
+  },
   data() {
     return {
       load: false // 仅查询一次
@@ -65,8 +63,8 @@ export default {
         this.load = true
 
         await Promise.all([
-          getHomepageSummary(),
-          getCoupons({ onlyValid: true, status: 0 })
+          store.getHomepageSummary(),
+          store.getCoupons({ onlyValid: true, status: 0 })
         ])
       }
     }
@@ -74,8 +72,8 @@ export default {
   async mounted() {
     if (this.allowSeeAccount) {
       await Promise.all([
-        getHomepageSummary(),
-        getCoupons({ onlyValid: true, status: 0 })
+        store.getHomepageSummary(),
+        store.getCoupons({ onlyValid: true, status: 0 })
       ])
     }
   }

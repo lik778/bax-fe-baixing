@@ -35,18 +35,22 @@
 
 <script>
   import SectionHeader from 'com/common/section-header'
-  import { getSummary, getCoupons } from './action'
   import store from './store'
 
   export default {
-    name: 'summary',
-    store,
+    name: 'account-summary',
+    fromMobx: {
+      summary: () => store.summary,
+      coupons: () => store.coupons
+    },
     components: {
       SectionHeader
     },
-    mounted() {
-      getSummary()
-      getCoupons({ onlyValid: true, status: 0 })
+    async mounted() {
+      await Promise.all([
+        store.getSummary(),
+        store.getCoupons({ onlyValid: true, status: 0 })
+      ])
     }
   }
 </script>

@@ -51,7 +51,7 @@ import { toHumanTime } from 'utils'
 import moment from 'moment'
 
 import { getLogDesc } from 'util/log'
-import { getLogs } from './action'
+
 import store from './store'
 
 import {
@@ -61,7 +61,10 @@ import {
 
 export default {
   name: 'account-log',
-  store,
+  fromMobx: {
+    logQuery: () => store.logQuery,
+    logs: () => store.logs
+  },
   components: {
     SectionHeader,
     BaxSelect
@@ -107,7 +110,7 @@ export default {
   },
   methods: {
     async load() {
-      await getLogs({
+      await store.getLogs({
         pageSize: this.pageSize,
         offset: this.pageSize * (this.currentPage - 1),
         type: this.type,

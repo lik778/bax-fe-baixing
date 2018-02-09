@@ -36,11 +36,9 @@ export default {
 </script>
 
 <style scoped>
-
 .account-container {
   padding: 0 35px;
   width: 100%;
   color: #6a778c;
 }
-
 </style>
