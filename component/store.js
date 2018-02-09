@@ -1,45 +1,63 @@
 
-import { createStore } from 'vue-duo'
+import { observable, action, toJS } from 'mobx'
 
-import {
-  toggleAddUserLeadVisible,
-  toggleTuoguanVisible,
-  getCurrentUser,
-  getCategories,
-  getAreas,
-  getRoles
-} from './action'
+import * as aapi from 'api/account'
+import * as mapi from 'api/meta'
+import track from 'util/track'
 
-const store = createStore({
-  allCategories: [],
-  allAreas: [],
-  allRoles: [],
-
-  currentUser: {},
+const gStore = observable({
+  _currentUser: {},
+  _allCategories: [],
+  _allAreas: [],
+  _allRoles: [],
 
   addUserLeadVisible: false,
-  tuoguanVisible: false
-})
+  tuoguanVisible: false,
 
-store.subscribeActions({
-  [toggleAddUserLeadVisible]: () => ({
-    addUserLeadVisible: !store.state.addUserLeadVisible
+  get currentUser() {
+    return toJS(this._currentUser)
+  },
+  get allCategories() {
+    return toJS(this._allCategories)
+  },
+  get allAreas() {
+    return toJS(this._allAreas)
+  },
+  get allRoles() {
+    return toJS(this.__allRoles)
+  },
+
+  toggleAddUserLeadVisible: action(function() {
+    this.addUserLeadVisible = !this.addUserLeadVisible
   }),
-  [toggleTuoguanVisible]: () => ({
-    tuoguanVisible: !store.state.tuoguanVisible
+
+  toggleTuoguanVisible: action(function(sideEffect) {
+    if (sideEffect) {
+      track({
+        ...sideEffect,
+        time: Date.now() / 1000 | 0,
+        url: window.location.href
+      })
+    }
+
+    this.tuoguanVisible = !this.tuoguanVisible
   }),
-  [getCurrentUser]: (user) => ({
-    currentUser: {...user}
+
+  getCurrentUser: action(async function() {
+    this._currentUser = await aapi.getCurrentUser()
   }),
-  [getCategories]: (categories) => ({
-    allCategories: [...categories]
+
+  getCategories: action(async function() {
+    this._allCategories = await mapi.getCategories()
   }),
-  [getAreas]: (areas) => ({
-    allAreas: [...areas]
+
+  getAreas: action(async function() {
+    this._allAreas = await mapi.getAreas()
   }),
-  [getRoles]: (roles) => ({
-    allRoles: [...roles]
+
+  getRoles: action(async function() {
+    this._allRoles = await aapi.getRoles()
   })
 })
 
-export default store
+export default gStore
