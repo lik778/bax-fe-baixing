@@ -27,10 +27,7 @@ import {
   isBaixingSales
 } from 'util/role'
 
-import {
-  toggleTuoguanVisible
-} from '../action'
-
+import gStore from '../store'
 import store from './store'
 
 export default {
@@ -81,7 +78,9 @@ export default {
   },
 
   methods: {
-    toggleTuoguanVisible
+    toggleTuoguanVisible() {
+      gStore.toggleTuoguanVisible()
+    }
   }
 }
 </script>

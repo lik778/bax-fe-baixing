@@ -176,6 +176,7 @@ import Step from './step'
 
 import { centToYuan } from 'utils'
 
+import gStore from '../store'
 import store from './store'
 
 import track from 'util/track'
@@ -209,10 +210,6 @@ import {
   redeemCoupon,
   getCondition
 } from './action'
-
-import {
-  toggleTuoguanVisible
-} from '../action'
 
 /**
  * 关于推广资金的产品说明:
@@ -469,7 +466,9 @@ export default {
   },
   methods: {
     displayCoupon,
-    toggleTuoguanVisible,
+    toggleTuoguanVisible() {
+      gStore.toggleTuoguanVisible()
+    },
     onCouponClick(coupon) {
       if (this.selectedCoupon.length) {
         this.selectedCoupon.splice(0, 1)

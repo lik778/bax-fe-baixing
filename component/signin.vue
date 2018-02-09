@@ -63,13 +63,10 @@ export default {
 </script>
 
 <style>
-
 @import 'cssbase/reset';
-
 </style>
 
 <style scoped>
-
 @import 'cssbase/mixin';
 
 main {
@@ -155,5 +152,4 @@ main {
     }
   }
 }
-
 </style>

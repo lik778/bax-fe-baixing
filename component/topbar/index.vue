@@ -53,9 +53,7 @@
 import { Message } from 'element-ui'
 import { redirectTo } from 'utils'
 
-import {
-  toggleAddUserLeadVisible
-} from '../action'
+import gStore from '../store'
 
 import {
   updateUserInfo,
@@ -119,7 +117,7 @@ export default {
       Message.success('修改成功')
     },
     help() {
-      toggleAddUserLeadVisible()
+      gStore.toggleAddUserLeadVisible()
     },
     empty() {
       this.confirmPassword = ''

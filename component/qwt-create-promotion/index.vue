@@ -288,10 +288,7 @@ import {
   getCampaignsCount
 } from './action'
 
-import {
-  toggleTuoguanVisible
-} from '../action'
-
+import gStore from '../store'
 import store from './store'
 
 const emptyPromotion = {
@@ -393,7 +390,9 @@ export default {
       window.localStorage.setItem(storageKey, 'true')
       this.showPromotion = false
     },
-    toggleTuoguanVisible,
+    toggleTuoguanVisible() {
+      gStore.toggleTuoguanVisible()
+    },
     tryShowPromotion(sideEffect) {
       const has = window.localStorage.getItem(storageKey)
       if (has !== 'true') {

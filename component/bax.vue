@@ -29,7 +29,7 @@ import BackToTop from './widget/back-to-top'
 import Sidebar from './sidebar'
 import Tuoguan from './tuoguan'
 
-import store from './store'
+import gStore from './store'
 
 import es from 'base/es'
 
@@ -37,17 +37,8 @@ import {
   normalizeRoles
 } from 'util/role'
 
-import {
-  toggleAddUserLeadVisible,
-  getCurrentUser,
-  getCategories,
-  getAreas,
-  getRoles
-} from './action'
-
 export default {
   name: 'bax',
-  store,
   components: {
     NewUserIntro,
     AddUserLead,
@@ -55,6 +46,15 @@ export default {
     BackToTop,
     Sidebar,
     Tuoguan
+  },
+  fromMobx: {
+    addUserLeadVisible: () => gStore.addUserLeadVisible,
+    tuoguanVisible: () => gStore.tuoguanVisible,
+    currentUser: () => gStore.currentUser,
+
+    allCategories: () => gStore.allCategories,
+    allAreas: () => gStore.allAreas,
+    allRoles: () => gStore.allRoles
   },
   data() {
     return {
@@ -76,7 +76,9 @@ export default {
     }
   },
   methods: {
-    toggleAddUserLeadVisible
+    toggleAddUserLeadVisible() {
+      gStore.toggleAddUserLeadVisible()
+    }
   },
   async beforeMount() {
     // 全局只 mount 一次, 无需 remove listener
@@ -90,10 +92,10 @@ export default {
   },
   async mounted() {
     await Promise.all([
-      getCurrentUser(),
-      getCategories(),
-      getAreas(),
-      getRoles()
+      gStore.getCurrentUser(),
+      gStore.getCategories(),
+      gStore.getAreas(),
+      gStore.getRoles()
     ])
 
     setTimeout(() => {

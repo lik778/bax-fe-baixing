@@ -17,9 +17,7 @@
 </template>
 
 <script>
-import {
-  toggleTuoguanVisible
-} from '../action'
+import gStore from '../store'
 
 import {
   getTuoguanStatus
@@ -52,7 +50,9 @@ export default {
     }
   },
   methods: {
-    toggleTuoguanVisible,
+    toggleTuoguanVisible() {
+      gStore.toggleTuoguanVisible()
+    },
     async load() {
       this.loading = true
       await getTuoguanStatus()

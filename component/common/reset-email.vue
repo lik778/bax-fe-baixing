@@ -19,7 +19,7 @@
 
 <script>
 import { updateUserInfo } from 'api/account'
-import { getCurrentUser } from '../action'
+import gStore from '../store'
 
 import { Message } from 'element-ui'
 
@@ -64,7 +64,7 @@ export default {
 
       this.empty()
 
-      await getCurrentUser()
+      await gStore.getCurrentUser()
 
       Message.success('添加成功')
     }

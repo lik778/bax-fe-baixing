@@ -47,9 +47,7 @@
 </template>
 
 <script>
-import {
-  toggleAddUserLeadVisible
-} from '../action'
+import gStore from '../store'
 
 import {
   markNotNew
@@ -92,7 +90,7 @@ export default {
     async help() {
       this.close()
 
-      await toggleAddUserLeadVisible()
+      await gStore.toggleAddUserLeadVisible()
     }
   }
 }
