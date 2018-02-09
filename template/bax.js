@@ -7,6 +7,11 @@ import QwtDashboard from 'com/qwt-dashboard'
 import QwtCashcow from 'com/qwt-cashcow'
 import QwtCharge from 'com/qwt-charge'
 
+// mvp
+import MvpCreateCampaign from 'com/mvp-create-campaign'
+import MvpCampaignList from 'com/mvp-campaign-list'
+import MvpDashboard from 'com/mvp-dashboard'
+
 // ssp
 import MaterialList from 'com/ssp-material-list'
 import MaterialInfo from 'com/ssp-material-info'
@@ -64,6 +69,20 @@ const gwRoutes = [{
   component: GwCustomPage,
   path: '/main/gw/custom-page',
   name: 'gw-custom-page'
+}]
+
+const mvpRoutes = [{
+  component: MvpCreateCampaign,
+  path: '/main/mvp/campaign/create',
+  name: 'mvp-create-campaign'
+}, {
+  component: MvpCampaignList,
+  path: '/main/mvp/campaigns',
+  name: 'mvp-campaign-list'
+}, {
+  component: MvpDashboard,
+  path: '/main/mvp/dashboard',
+  name: 'mvp-dashboard'
 }]
 
 const qwtRoutes = [{
@@ -140,7 +159,7 @@ const router = new VueRouter({
     component: Coupon,
     path: '/main/coupon',
     name: 'coupon'
-  }, ...qwtRoutes, ...sspRoutes, ...gwRoutes]
+  }, ...qwtRoutes, ...mvpRoutes, ...sspRoutes, ...gwRoutes]
 })
 
 const app = new Vue({
