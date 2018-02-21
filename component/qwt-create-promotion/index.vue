@@ -668,7 +668,6 @@ export default {
 </script>
 
 <style scoped>
-
 .el-icon-plus {
   cursor: pointer;
 }
@@ -817,6 +816,7 @@ export default {
     }
   }
 }
+
 .tuoguan {
   position: relative;
   right: 10px;
@@ -825,12 +825,13 @@ export default {
 .slide-fade-enter-active {
   transition: all .4s ease;
 }
+
 .slide-fade-leave-active {
   transition: all .2s cubic-bezier(1.0, 0.5, 0.8, 1.0);
 }
+
 .slide-fade-enter, .slide-fade-leave-to {
   transform: translateX(100px);
-  /* opacity: 0; */
 }
 
 .tuoguan-promotion {
@@ -843,14 +844,15 @@ export default {
   right: 80px;
   bottom: 10px;
 
-  &>.el-icon-close {
+  & > .el-icon-close {
     position: absolute;
     right: 3px;
     top: 29px;
     cursor: pointer;
     color: #666;
   }
-  &>.tuoguan-btn {
+
+  & > .tuoguan-btn {
     background-image: url(http://file.baixing.net/201801/26a639493c25bc3d8f62c54848b312c2.png);
     background-repeat: no-repeat;
     background-position: center;
