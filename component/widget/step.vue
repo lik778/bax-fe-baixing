@@ -7,9 +7,9 @@
       <span v-for="(s, i) in steps" :key="i">
         <i :class="getIconClass(i + 1)">
         {{ getIconContent(i + 1) }}
-      </i>
-      <label>{{ s.name }}</label>
-      <strong v-if="i + 1 < steps.length"></strong>
+        </i>
+        <label>{{ s.name }}</label>
+        <strong v-if="i + 1 < steps.length"></strong>
       </span>
     </section>
   </div>
