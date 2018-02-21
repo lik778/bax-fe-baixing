@@ -55,7 +55,7 @@ import BaxInput from 'com/common/input'
 
 import {
   campaignStatusOpts,
-  semPlatformOpts,
+  semPlatformOpts
 } from 'constant/fengming'
 
 import {

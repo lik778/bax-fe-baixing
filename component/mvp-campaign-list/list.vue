@@ -1,15 +1,13 @@
-
 <template>
-  <div>bingo</div>
+  <main></main>
 </template>
 
 <script>
 export default {
-  name: 'mvp-create-campaign'
+  name: 'mvp-campaign-list'
 }
 </script>
 
 <style scoped>
 
 </style>
-

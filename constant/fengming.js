@@ -107,6 +107,8 @@ export const CAMPAIGN_STATUS_PENDING = -10
 export const CAMPAIGN_STATUS_OFFLINE = -1
 export const CAMPAIGN_STATUS_ONLINE = 100
 
+export const LANDING_TYPE_AD = 0
+
 export const landingType = {
   '0': '帖子详情页',
   '1': '企业官网',
@@ -118,6 +120,9 @@ export const landingType = {
 export const campaignStatusOpts = toOpt(campaignStatus)
 
 export const landingTypeOpts = toOpt(landingType)
+
+export const DEVICE_WAP = 1
+export const DEVICE_PC = 0
 
 export const device = {
   '0': 'PC',
