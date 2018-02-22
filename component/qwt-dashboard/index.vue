@@ -69,8 +69,8 @@
               @close="removeCampaign(c)">
               {{ '计划：' + c.id }}
             </el-tag>
-            <el-tag v-for="k in displayCheckedKeywords" closable
-              type="success" :key="'k-' + k.id"
+            <el-tag v-for="(k, i) in displayCheckedKeywords" closable
+              type="success" :key="'k-' + i"
               @close="removeKeyword(k)">
               {{ k.word }}
             </el-tag>
@@ -145,16 +145,12 @@ import {
 
 import {
   SEM_PLATFORM_BAIDU,
-
   semPlatformOpts
 } from 'constant/fengming'
 
 import {
-  clearStatistics,
-  getCampaignInfo,
-  downloadCsv,
-  getReport
-} from './action'
+  getCampaignInfo
+} from 'api/fengming'
 
 import store from './store'
 
@@ -201,7 +197,6 @@ const timeTypes = [{
 
 export default {
   name: 'qwt-dashboard',
-  store,
   components: {
     PlanKeywordSelector,
     DownloadDialog,
@@ -209,6 +204,13 @@ export default {
     DataTrend,
     BaxSelect,
     Topbar
+  },
+  fromMobx: {
+    statistics: () => store.statistics,
+    summary: () => store.summary,
+    offset: () => store.offset,
+    limit: () => store.limit,
+    total: () => store.total
   },
   props: {
     userInfo: {
@@ -284,7 +286,7 @@ export default {
       let endAt
 
       if (!(query.checkedCampaigns.length + query.checkedKeywords.length)) {
-        clearStatistics()
+        store.clearStatistics()
         if (action === 'download') {
           Message.error('请选择查询条件')
         }
@@ -326,10 +328,10 @@ export default {
       }
 
       if (action === 'download') {
-        await downloadCsv(q)
+        await store.downloadCsv(q)
         this.downloadDialogVisible = true
       } else {
-        await getReport(q)
+        await store.getReport(q)
       }
     },
     async changeDimension(value) {
@@ -369,7 +371,7 @@ export default {
     async clearCheckedKeywordsAndCampaigns() {
       this.query.checkedCampaigns = []
       this.query.checkedKeywords = []
-      await clearStatistics()
+      await store.clearStatistics()
     }
   },
   watch: {
@@ -399,7 +401,7 @@ export default {
       this.query.checkedKeywords = campaign.keywords
       this.query.channel = campaign.source
       this.query.timeType = timeTypes[0].value
-      this.query.device = DEVICE_ALL
+      this.query.device = DEVICE_PC
       this.query.timeUnit = TIME_UNIT_DAY
       this.query.dimension = DIMENSION_KEYWORD
     }
@@ -408,7 +410,6 @@ export default {
 </script>
 
 <style scoped>
-
 @import '../../cssbase/var';
 @import 'cssbase/mixin';
 
@@ -492,5 +493,4 @@ export default {
     }
   }
 }
-
 </style>

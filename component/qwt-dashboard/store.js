@@ -1,28 +1,42 @@
 
-import { createStore } from 'vue-duo'
+import { observable, action, toJS } from 'mobx'
 
-import {
-  clearStatistics,
-  getReport
-} from './action'
+import * as api from 'api/fengming-campaign'
 
-const store = createStore({
-  statistics: [],
-  summary: {},
+const store = observable({
+  _statistics: [],
+  _summary: {},
   limit: 100,
   offset: 0,
-  total: 0
-})
+  total: 0,
 
-store.subscribeActions({
-  [clearStatistics]: () => ({
-    statistics: []
+  get statistics() {
+    return toJS(this._statistics)
+  },
+
+  get summary() {
+    return toJS(this._summary)
+  },
+
+  clearStatistics: action(function() {
+    this._statistics = []
   }),
-  [getReport]: ({rows, total, offset, summary}) => ({
-    statistics: rows,
-    summary,
-    offset,
-    total
+
+  downloadCsv: action(function(opts) {
+    return api.getReport({
+      ...opts,
+      exportCsv: 1
+    })
+  }),
+
+  getReport: action(async function(opts) {
+    const result = await api.getReport(opts)
+    const { rows, total, offset, summary } = result
+
+    this._statistics = rows
+    this._summary = summary
+    this.offset = offset
+    this.total = total
   })
 })
 
