@@ -26,11 +26,6 @@
               企业官网
             </router-link>
           </el-menu-item>
-          <el-menu-item index="ka-2">
-            <router-link :to="{ name: 'gw-custom-page' }" tag="p">
-              单页定制
-            </router-link>
-          </el-menu-item>
         </el-submenu>
 
         <el-submenu index="qwt-charge">

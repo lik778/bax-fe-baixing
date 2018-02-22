@@ -1,15 +1,31 @@
 
 <template>
-  <div>哈喽</div>
+  <div class="mvp-dashboard">
+    <topbar :user-info="userInfo" :back="false">
+    </topbar>
+    <main>
+      TODO ~
+    </main>
+  </div>
 </template>
 
 <script>
+import Topbar from 'com/topbar'
+
 export default {
-  name: 'mvp-dashboard'
+  name: 'mvp-dashboard',
+  components: {
+    Topbar
+  },
+  props: {
+    userInfo: {
+      type: Object,
+      required: true
+    }
+  }
 }
 </script>
 
 <style scoped>
 
 </style>
-
