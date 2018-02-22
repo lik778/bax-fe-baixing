@@ -23,7 +23,6 @@ import UserList from 'com/ssp-user-list'
 import AdList from 'com/ssp-ad-list'
 
 // 精品官网
-import GwCustomPage from 'com/gw-custom-page'
 import GwCharge from 'com/gw-charge'
 
 // global
@@ -65,10 +64,6 @@ const gwRoutes = [{
   component: GwCharge,
   path: '/main/gw/charge',
   name: 'gw-charge'
-}, {
-  component: GwCustomPage,
-  path: '/main/gw/custom-page',
-  name: 'gw-custom-page'
 }]
 
 const mvpRoutes = [{
