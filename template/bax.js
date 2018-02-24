@@ -8,6 +8,7 @@ import QwtCashcow from 'com/qwt-cashcow'
 import QwtCharge from 'com/qwt-charge'
 
 // mvp
+import MvpUpdateCampaign from 'com/mvp-update-campaign'
 import MvpCreateCampaign from 'com/mvp-create-campaign'
 import MvpCampaignList from 'com/mvp-campaign-list'
 import MvpDashboard from 'com/mvp-dashboard'
@@ -70,6 +71,10 @@ const mvpRoutes = [{
   component: MvpCreateCampaign,
   path: '/main/mvp/campaign/create',
   name: 'mvp-create-campaign'
+}, {
+  component: MvpUpdateCampaign,
+  path: '/main/mvp/campaigns/:id/update',
+  name: 'mvp-update-campaign'
 }, {
   component: MvpCampaignList,
   path: '/main/mvp/campaigns',
