@@ -11,6 +11,8 @@ const store = observable({
   },
 
   getCampaigns: action(async function() {
+    const rows = await api.getCampaigns()
+    this._campaigns = rows
   })
 })
 

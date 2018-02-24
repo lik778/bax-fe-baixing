@@ -55,10 +55,7 @@
               </li>
             </section>
             <section class="add-ad">
-              <el-input size="small" suffix-icon="el-icon-search"
-                style="width: 240px; margin-bottom: 14px;"
-                placeholder="请输入帖子标题进行搜索"></el-input>
-              <ad-list />
+              <user-ad-selector></user-ad-selector>
             </section>
             <section class="add-area">
               <strong>投放城市：</strong>
@@ -134,10 +131,10 @@
 </template>
 
 <script>
+import UserAdSelector from 'com/common/user-ad-selector'
 import AreaSelector from 'com/common/area-selector'
 import BxIcon from 'com/widget/icon'
 import Topbar from 'com/topbar'
-import AdList from './ad-list'
 import Step from './step'
 
 import { fmtAreasInQwt, getCnName } from 'util/meta'
@@ -162,6 +159,7 @@ import {
 const defaultCampaign = {
   sources: [SEM_PLATFORM_BAIDU],
   devices: [DEVICE_WAP],
+  category: 'ershouqiche',
   areas: [],
 
   landingType: LANDING_TYPE_AD,
@@ -173,9 +171,9 @@ const defaultCampaign = {
 export default {
   name: 'mvp-create-campaign',
   components: {
+    UserAdSelector,
     AreaSelector,
     Topbar,
-    AdList,
     BxIcon,
     Step
   },
@@ -375,10 +373,6 @@ export default {
           }
         }
       }
-    }
-
-    & .add-ad {
-
     }
 
     & .add-area {

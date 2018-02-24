@@ -37,5 +37,10 @@ export default {
 </script>
 
 <style scoped>
+@import "../../cssbase/var";
 
+.mvp-campaign-list {
+  width: 100%;
+  background: var(--qwt-c-gray);
+}
 </style>
