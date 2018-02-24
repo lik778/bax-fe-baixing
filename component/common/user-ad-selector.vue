@@ -1,5 +1,8 @@
 <template>
-  <div class="bx-ad-list">
+  <div class="user-ad-selector">
+    <el-input size="small" suffix-icon="el-icon-search"
+      style="width: 240px; margin-bottom: 14px;"
+      placeholder="请输入帖子标题进行搜索"></el-input>
     <el-table :data="ads" border
     style="width: 490px">
       <el-table-column
@@ -24,7 +27,7 @@
 
 <script>
 export default {
-  name: 'mvp-campaign-ad-list',
+  name: 'mvp-user-ad-selector',
   data() {
     return {
       ads: []
@@ -34,7 +37,7 @@ export default {
 </script>
 
 <style>
-.bx-ad-list {
+.user-ad-selector {
   & .el-table__header-wrapper {
     background-color: #f7f7f7;
   }
