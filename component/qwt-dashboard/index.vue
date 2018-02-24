@@ -129,7 +129,6 @@ import DataTrend from './data-trend'
 
 import { Message } from 'element-ui'
 import { toTimestamp } from 'utils'
-import moment from 'moment'
 
 import {
   DIMENSION_CAMPAIGN,
@@ -140,6 +139,7 @@ import {
   allDimensions,
   allTimeUnits,
   allDevices,
+  timeTypes,
   fields
 } from 'constant/fengming-report'
 
@@ -153,47 +153,6 @@ import {
 } from 'api/fengming'
 
 import store from './store'
-
-const timeTypes = [{
-  label: '今日',
-  value: 'today',
-  getTime: () => ({
-    startAt: moment().subtract('1', 'days').unix(),
-    endAt: moment().unix()
-  })
-}, {
-  label: '昨日',
-  value: 'yesterday',
-  getTime: () => ({
-    startAt: moment().subtract('2', 'days').unix(),
-    endAt: moment().subtract('1', 'days').unix()
-  })
-}, {
-  label: '近7天',
-  value: 'last-7-days',
-  getTime: () => ({
-    startAt: moment().subtract('7', 'days').unix(),
-    endAt: moment().unix()
-
-  })
-}, {
-  label: '本月',
-  value: 'this-month',
-  getTime: () => ({
-    startAt: moment().startOf('month').unix(),
-    endAt: moment().unix()
-  })
-}, {
-  label: '上月',
-  value: 'last-month',
-  getTime: () => ({
-    startAt: moment().subtract(1, 'month').startOf('month').unix(),
-    endAt: moment().subtract(1, 'month').endOf('month').unix()
-  })
-}, {
-  label: '自定义',
-  value: 'custom'
-}]
 
 export default {
   name: 'qwt-dashboard',

@@ -46,7 +46,7 @@
 
         <el-submenu index="mvp-campaign" v-if="allowSeeQwtPromotion">
           <template slot="title">
-            <bx-icon type="sharealt"></bx-icon>mvp
+            <bx-icon type="link"></bx-icon>mvp
           </template>
           <el-menu-item index="mvp-campaign-1">
             <router-link :to="{ name: 'mvp-create-campaign' }" tag="p">
