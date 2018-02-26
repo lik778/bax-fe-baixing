@@ -311,12 +311,6 @@ export default {
 .el-menu, .el-submenu {
   border: 1px solid #273141;
 }
-
-.el-menu-item, .el-menu-item:hover {
-  & > p, & > a {
-    padding-left: 6px;
-  }
-}
 </style>
 
 <style>
