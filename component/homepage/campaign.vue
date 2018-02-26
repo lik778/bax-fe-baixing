@@ -1,8 +1,8 @@
 <template>
   <div class="card">
     <header>
-      <strong>推广情况</strong>
-      <router-link :to="{name: 'qwt-dashboard'}">
+      <strong>{{ title }}</strong>
+      <router-link :to="{name: dashboardName}">
         查看详情
       </router-link>
     </header>
@@ -41,6 +41,18 @@ export default {
     summary: {
       type: Object,
       required: true
+    },
+    type: {
+      type: String,
+      default: 'qwt' // qwt, mvp
+    }
+  },
+  computed: {
+    title() {
+      return this.type === 'mvp' ? '智能推广情况' : '推广情况'
+    },
+    dashboardName() {
+      return this.type === 'mvp' ? 'mvp-dashboard' : 'qwt-dashboard'
     }
   }
 }

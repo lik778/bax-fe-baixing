@@ -16,6 +16,9 @@ const store = observable({
   },
   _coupons: [],
 
+  get mvpSummary() {
+    return {}
+  },
   get summary() {
     return toJS(this._summary)
   },

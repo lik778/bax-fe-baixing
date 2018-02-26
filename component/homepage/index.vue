@@ -6,7 +6,8 @@
     <main>
       <span>
         <account :summary="summary" :coupons="coupons" />
-        <campaign :summary="summary" />
+        <campaign type="qwt" :summary="summary" />
+        <campaign type="mvp" :summary="mvpSummary" />
       </span>
       <span>
         <board />
@@ -40,8 +41,14 @@ export default {
     Qa,
     Topbar
   },
-  props: ['userInfo'],
+  props: {
+    userInfo: {
+      type: Object,
+      required: true
+    }
+  },
   fromMobx: {
+    mvpSummary: () => store.mvpSummary,
     summary: () => store.summary,
     coupons: () => store.coupons
   },
