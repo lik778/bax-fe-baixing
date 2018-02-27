@@ -20,7 +20,7 @@ export function renderColumnHeaderWithTip(tipText) {
       }
     }, [
       h('i', {
-        class: 'el-icon-information',
+        class: 'el-icon-question',
         style: {
           marginLeft: '5px',
           fontSize: '12px',

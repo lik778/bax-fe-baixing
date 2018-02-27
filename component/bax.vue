@@ -143,6 +143,12 @@ body > content {
   max-width: 340px;
 }
 
+.el-input__prefix, .el-input__suffix {
+  & > span {
+    display: unset;
+  }
+}
+
 .el-loading-mask {
   background-color: unset;
   z-index: unset;
