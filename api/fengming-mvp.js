@@ -26,6 +26,7 @@ export async function getCampaigns() {
 export async function updateCampaign(id, data) {
   const body = await fengming
     .post(`/simple/campaign/${id}`)
+    .send(reverseCamelcase(data))
     .json()
 
   return body

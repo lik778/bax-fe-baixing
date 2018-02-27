@@ -164,6 +164,7 @@ const defaultCampaign = {
 
   landingType: LANDING_TYPE_AD,
   landingPage: 'http://shanghai.baixing.com/renshi/a1092914927.html?from=guarantee', // TODO - TODO
+  landingPageId: 1092914927, // TODO ... TODO
   dailyBudget: 0,
   cpcPrice: 0
 }

@@ -1,54 +1,133 @@
 <template>
-  <main class="mvp-campaign-list">
-    <el-table :data="campaigns" border>
-      <el-table-column label="开关" width="80">
-        <template scope="s">
-          <el-switch :value="!s.row.pause"
-            @change="toggleCampaignPause(s.row)">
-          </el-switch>
-        </template>
-      </el-table-column>
-      <el-table-column label="计划ID" prop="id">
-      </el-table-column>
-      <el-table-column label="计划状态"
-        :formatter="r => r.status">
-      </el-table-column>
-      <el-table-column label="渠道"
-        :formatter="r => r.sources.join('，')">
-      </el-table-column>
-      <el-table-column label="终端"
-        :formatter="r => r.devices.join('，')">
-      </el-table-column>
-      <el-table-column label="城市"
-        :formatter="r => r.areas.join('，')">
-      </el-table-column>
-      <el-table-column label="最高点击单价" width="120">
-      </el-table-column>
-      <el-table-column label="今日预算">
-      </el-table-column>
-      <el-table-column label="今日消耗">
-      </el-table-column>
-      <el-table-column label="操作">
-        <template scope="s">
-          <router-link :to="{ name: 'mvp-update-campaign', params: { id: s.row.id } }">
-            管理
-          </router-link>
-          <router-link :to="{ name: 'mvp-dashboard', query: { campaignId: s.row.id, source: 'mvp-campaign-list' } }">
-            查看报表
-          </router-link>
-        </template>
-      </el-table-column>
-    </el-table>
-  </main>
+  <div class="mvp-campaign-list">
+    <header>
+      <span>
+        <div>
+          <el-button @click="switchToolbox('daily budget')">
+            设置日预算
+            <i class="el-icon-arrow-down el-icon--right"></i>
+          </el-button>
+        </div>
+        <div v-if="toolbox.showDailyBudget">
+          <el-input style="width: 120px;"
+            placeholder="日预算"
+            v-model="toolbox.budget">
+          </el-input>
+          <el-button type="primary" size="mini"
+            @click="updateCampaignDailyBudget">
+            确定
+          </el-button>
+        </div>
+      </span>
+      <span>
+        <div>
+          <el-button @click="switchToolbox('cpc price')">
+            设置点击单价
+            <i class="el-icon-arrow-down el-icon--right"></i>
+          </el-button>
+        </div>
+        <div v-if="toolbox.showCpcPrice">
+          <el-input style="width: 120px;"
+            placeholder="点击单价"
+            v-model="toolbox.cpcPrice">
+          </el-input>
+          <el-button type="primary" size="mini"
+            @click="updateCampaignCpcPrice">
+            确定
+          </el-button>
+        </div>
+      </span>
+    </header>
+    <main>
+      <el-table :data="campaigns" border>
+        <el-table-column label="开关" width="80">
+          <template scope="s">
+            <el-switch :value="!s.row.pause"
+              @change="toggleCampaignPause(s.row)">
+            </el-switch>
+          </template>
+        </el-table-column>
+        <el-table-column label="计划ID" prop="id">
+        </el-table-column>
+        <el-table-column label="计划状态"
+          :render-header="renderColumnHeaderWithTip(campaignStatusTooltip)"
+          :formatter="r => fmtStatus(r.status)">
+        </el-table-column>
+        <el-table-column label="渠道"
+          :formatter="r => r.sources.map(fmtSource).join('，')">
+        </el-table-column>
+        <el-table-column label="终端"
+          :formatter="r => r.devices.map(fmtDevice).join('，')">
+        </el-table-column>
+        <el-table-column label="城市"
+          :formatter="r => r.areas.join('，')">
+        </el-table-column>
+        <el-table-column label="最高点击单价" width="120"
+          :formatter="r => fmtPrice(r.cpcPrice)">
+        </el-table-column>
+        <el-table-column label="今日预算"
+          :formatter="r => fmtPrice(r.dailyBudget)">
+        </el-table-column>
+        <el-table-column label="今日消耗">
+        </el-table-column>
+        <el-table-column label="操作">
+          <template scope="s">
+            <router-link :to="{ name: 'mvp-update-campaign', params: { id: s.row.id } }">
+              管理
+            </router-link>
+            <router-link :to="{ name: 'mvp-dashboard', query: { campaignId: s.row.id, source: 'mvp-campaign-list' } }">
+              查看报表
+            </router-link>
+          </template>
+        </el-table-column>
+      </el-table>
+    </main>
+  </div>
 </template>
 
 <script>
+import {
+  campaignStatus,
+  semPlatformCn,
+  device
+} from 'constant/fengming'
+
+import {
+  renderColumnHeaderWithTip
+} from 'util/element'
+
+import {
+  centToYuan,
+  commafy
+} from 'utils'
+
 import store from './store'
+
+const campaignStatusTooltip = `
+计划包含以下5种状态：
+  1. 有效：表示计划当前正常推广中；
+  2. 计划预算不足：表示当前计划推广预算已花完；
+  3. 账户余额不足：表示当前账户余额不足以开启该计划，无法推广；
+  4. 不在投放期：表示当前计划当前不在推广日期内；
+  5. 审核中：表示当前计划正在审核中，无法正常展现
+`
 
 export default {
   name: 'mvp-campaign-list',
   fromMobx: {
     campaigns: () => store.campaigns
+  },
+  data() {
+    return {
+      campaignStatusTooltip,
+      toolbox: {
+        showDailyBudget: false,
+        showCpcPrice: false,
+        // 更新数据
+        cpcPrice: '',
+        budget: ''
+      }
+    }
   },
   methods: {
     async toggleCampaignPause(campaign) {
@@ -64,13 +143,77 @@ export default {
       }
 
       console.error('todo')
-    }
+    },
+    async updateCampaignDailyBudget() {
+
+    },
+    async updateCampaignCpcPrice() {
+
+    },
+    switchToolbox(type) {
+      const { toolbox } = this
+      let show = false
+
+      switch (type) {
+        case 'daily budget':
+          show = toolbox.showDailyBudget
+          if (show) {
+            toolbox.showDailyBudget = false
+          } else {
+            toolbox.showDailyBudget = true
+            toolbox.showCpcPrice = false
+          }
+          break
+        case 'cpc price':
+          show = toolbox.showCpcPrice
+          if (show) {
+            toolbox.showCpcPrice = false
+          } else {
+            toolbox.showCpcPrice = true
+            toolbox.showDailyBudget = false
+          }
+          break
+      }
+    },
+    fmtSource(s) {
+      return semPlatformCn[String(s)] || '未知'
+    },
+    fmtStatus(s) {
+      return campaignStatus[String(s)] || '未知'
+    },
+    fmtPrice(s) {
+      return commafy(centToYuan(s)) + '元'
+    },
+    fmtDevice(i) {
+      return device[String(i)] || '未知'
+    },
+    renderColumnHeaderWithTip
   }
 }
 </script>
 
 <style scoped>
 .mvp-campaign-list {
-  padding: 10px;
+  background: white;
+  margin: 10px;
+  padding: 10px 20px;
+
+  & > header {
+    display: flex;
+
+    & > span {
+      display: flex;
+      flex-flow: column;
+      width: 220px;
+
+      & > div:nth-child(2) {
+        margin-top: 10px;
+      }
+    }
+  }
+
+  & > main {
+    margin-top: 10px;
+  }
 }
 </style>

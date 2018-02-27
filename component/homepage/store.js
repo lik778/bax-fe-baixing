@@ -5,6 +5,11 @@ import * as fapi from 'api/fengming'
 import * as mapi from 'api/meta'
 
 const store = observable({
+  _mvpSummary: {
+    consume: 0,
+    clicks: 0,
+    shows: 0
+  },
   _summary: {
     campaignCount: 0,
     balance: 0,
@@ -17,7 +22,7 @@ const store = observable({
   _coupons: [],
 
   get mvpSummary() {
-    return {}
+    return toJS(this._mvpSummary)
   },
   get summary() {
     return toJS(this._summary)

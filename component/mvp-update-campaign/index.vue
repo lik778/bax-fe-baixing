@@ -58,14 +58,10 @@
             <section class="add-area">
               <strong>投放城市：</strong>
               <span>
-                <el-tag type="success" closable
-                  v-for="c in originCampaign.areas" :key="c"
-                  @close="removeArea(c)">
+                <el-tag type="success"
+                  v-for="c in originCampaign.areas" :key="c">
                   {{ formatArea(c) }}
                 </el-tag>
-                <bx-icon type="plus"
-                  @click.native="areaDialogVisible = true">
-                </bx-icon>
               </span>
             </section>
             <section>
@@ -87,9 +83,10 @@
         <main>
           <div>
             <strong>最高点击单价：</strong>
-            <el-input-number v-model="originCampaign.cpcPrice"
+            <el-input-number :value="getProp('cpcPrice')"
+              style="width: 72px; margin-right: 9px;"
               size="small" :min="0" :controls="false"
-              style="width: 72px; margin-right: 9px;">
+              @change="v => campaign.cpcPrice = v">
             </el-input-number>
             <strong>元</strong>
             <p>{{ '最高点击单价不得低于：XX元' }}</p>
@@ -97,9 +94,10 @@
           </div>
           <div>
             <strong>单日总预算：</strong>
-            <el-input-number v-model="originCampaign.dailyBudget"
+            <el-input-number :value="getProp('dailyBudget')"
+              style="width: 72px; margin-right: 9px;"
               size="small" :step="1" :min="0" :controls="false"
-              style="width: 72px; margin-right: 9px;">
+              @change="v => campaign.dailyBudget = v">
             </el-input-number>
             <strong>元</strong>
             <p>{{ '您当前的总预算不得低于：XX元' }}</p>
@@ -136,6 +134,10 @@ import Topbar from 'com/topbar'
 
 import { fmtAreasInQwt, getCnName } from 'util/meta'
 
+import { updateCampaign } from 'api/fengming-mvp'
+
+import { Message } from 'element-ui'
+
 import store from './store'
 
 export default {
@@ -163,7 +165,11 @@ export default {
   data() {
     return {
       areaDialogVisible: false,
-      isUpdating: false
+      isUpdating: false,
+      campaign: {
+        dailyBudget: undefined,
+        cpcPrice: undefined
+      }
     }
   },
   computed: {
@@ -191,14 +197,51 @@ export default {
   },
   methods: {
     async updateCampaign() {
+      if (this.isUpdating) {
+        return Message.warning('正在更新中, 请稍等一会儿 ~')
+      }
 
-    },
-    onChangeAreas() {
+      this.isUpdating = true
 
+      try {
+        await this._updateCampaign()
+      } finally {
+        this.isUpdating = false
+      }
     },
+    async _updateCampaign() {
+      const { campaign, id } = this
+      const data = {}
+
+      if (typeof campaign.dailyBudget !== 'undefined') {
+        data.dailyBudget = campaign.dailyBudget * 100
+      }
+      if (typeof campaign.cpcPrice !== 'undefined') {
+        data.cpcPrice = campaign.cpcPrice * 100
+      }
+
+      if (Object.keys(data).length) {
+        await updateCampaign(id, data)
+        await store.getCampaignInfo(id)
+        Message.success('更新成功')
+        this.$router.push({
+          name: 'mvp-campaign-list'
+        })
+      } else {
+        Message.warning('没有需要更新的变更')
+      }
+    },
+    onChangeAreas() {},
     formatArea(name) {
       const { allAreas } = this
       return getCnName(name, allAreas)
+    },
+    getProp(prop) {
+      if (typeof this.campaign[prop] !== 'undefined') {
+        return this.campaign[prop]
+      }
+
+      return this.originCampaign[prop]
     }
   },
   async mounted() {

@@ -3,7 +3,7 @@
   <div class="mvp-campaign-list">
     <topbar :user-info="userInfo" :back="false">
     </topbar>
-    <campaign-header>
+    <campaign-header :all-areas="allAreas">
     </campaign-header>
     <campaign-list>
     </campaign-list>
@@ -27,6 +27,10 @@ export default {
   props: {
     userInfo: {
       type: Object,
+      required: true
+    },
+    allAreas: {
+      type: Array,
       required: true
     }
   },
