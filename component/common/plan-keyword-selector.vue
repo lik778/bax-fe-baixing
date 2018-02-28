@@ -69,7 +69,6 @@
 
 <script>
 import {
-  DIMENSION_CAMPAIGN,
   DIMENSION_KEYWORD
 } from 'constant/fengming-report'
 
@@ -319,7 +318,6 @@ function overlap(arr1, arr2) {
 </script>
 
 <style scoped>
-
 .tree-node {
   display: flex;
   align-items: center;
@@ -376,5 +374,4 @@ function overlap(arr1, arr2) {
     }
   }
 }
-
 </style>

@@ -10,8 +10,8 @@ const store = observable({
     return toJS(this._campaigns)
   },
 
-  getCampaigns: action(async function() {
-    const rows = await api.getCampaigns()
+  getCampaigns: action(async function(opts) {
+    const rows = await api.getCampaigns(opts)
     this._campaigns = rows
   })
 })

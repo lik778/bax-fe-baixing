@@ -4,11 +4,16 @@ import { observable, action, toJS } from 'mobx'
 import * as api from 'api/fengming-mvp'
 
 const store = observable({
+  _allCampaigns: [],
   _statistics: [],
   _summary: {},
   limit: 100,
   offset: 0,
   total: 0,
+
+  get allCampaigns() {
+    return toJS(this._allCampaigns)
+  },
 
   get statistics() {
     return toJS(this._statistics)
@@ -27,6 +32,10 @@ const store = observable({
       ...opts,
       exportCsv: 1
     })
+  }),
+
+  queryCampaigns: action(async function(opts) {
+    this._allCampaigns = await api.getCampaigns(opts)
   }),
 
   getReport: action(async function(opts) {

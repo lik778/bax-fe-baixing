@@ -15,9 +15,10 @@ export async function createCampaign(data) {
   return body
 }
 
-export async function getCampaigns() {
+export async function getCampaigns(opts = {}) {
   const body = await fengming
     .get('/simple/campaign')
+    .query(reverseCamelcase(opts))
     .json()
 
   return toCamelcase(body.data)

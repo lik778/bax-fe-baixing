@@ -24,6 +24,7 @@ export const allDimensions = [{
 }]
 
 export const DEVICE_ALL = 0
+export const DEVICE_WAP = 2
 export const DEVICE_PC = 1
 
 export const allDevices = [{
