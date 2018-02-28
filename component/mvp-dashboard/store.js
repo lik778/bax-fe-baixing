@@ -41,7 +41,7 @@ const store = observable({
   getReport: action(async function(opts) {
     const result = await api.getMvpReport(opts)
     const { rows, total, offset, summary } = result
-console.log(99, result)
+
     this._statistics = rows
     this._summary = summary
     this.offset = offset

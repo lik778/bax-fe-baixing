@@ -75,7 +75,9 @@
           <i class="c-badge">3</i>
           <label>数据详情：</label>
         </div>
-        <data-detail></data-detail>
+        <data-detail :statistics="statistics"
+          :offset="offset" :limit="limit" :total="total">
+        </data-detail>
       </section>
       <download-dialog></download-dialog>
     </main>
