@@ -27,10 +27,9 @@ config.plugins = [
   }),
   new webpack.EnvironmentPlugin(['NODE_ENV']),
   new webpack.ContextReplacementPlugin(/moment[\\\/]locale$/, /^\.\/(zh-cn)$/),
-  // }),
   new ExtractTextPlugin({
     filename: '[name].[contenthash:18].css'
-  }),
+  })
 ]
 
 module.exports = config
