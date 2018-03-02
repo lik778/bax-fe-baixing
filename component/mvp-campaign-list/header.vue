@@ -29,16 +29,16 @@
         </span>
         <span class="filter-item">
           <label>投放区域</label>
-          <bax-select clearable
+          <bax-select clearable multiple
             :options="areaOpts"
             :filter-method="v => this.areaQueryWord = v"
-            @change="v => queryCampaigns({areas: v})" />
+            @change="v => queryCampaigns({areas: v.join(',')})" />
         </span>
         <span class="filter-item">
           <label>渠道来源</label>
-          <bax-select clearable
+          <bax-select clearable multiple
             :options="semPlatformOpts"
-            @change="v => queryCampaigns({source: v})" />
+            @change="v => queryCampaigns({sources: v.join(',')})" />
         </span>
       </section>
     </div>
@@ -53,6 +53,8 @@ import {
   campaignStatusOpts,
   semPlatformOpts
 } from 'constant/fengming'
+
+import store from './store'
 
 export default {
   name: 'mvp-campaign-header',
@@ -91,8 +93,8 @@ export default {
     }
   },
   methods: {
-    async queryCampaigns() {
-
+    async queryCampaigns(opts) {
+      await store.getCampaigns(opts)
     },
     gotoCreateCampaign() {
       this.$router.push({

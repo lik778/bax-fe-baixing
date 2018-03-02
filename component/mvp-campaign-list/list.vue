@@ -40,6 +40,15 @@
     </header>
     <main>
       <el-table :data="campaigns" border>
+        <el-table-column width="40">
+          <template scope="s">
+            <span class="center">
+              <el-checkbox
+                :value="s.row.id === toolbox.campaignId"
+                @change="onCheckCampaign(s.row.id)" />
+            </span>
+          </template>
+        </el-table-column>
         <el-table-column label="开关" width="80">
           <template scope="s">
             <el-switch :value="!s.row.pause"
@@ -82,15 +91,28 @@
         </el-table-column>
       </el-table>
     </main>
+    <footer>
+      <bax-pagination :options="query"
+        @current-change="onCurrentChange">
+      </bax-pagination>
+    </footer>
   </div>
 </template>
 
 <script>
+import BaxPagination from 'com/common/pagination'
+
+import { Message } from 'element-ui'
+
 import {
   campaignStatus,
   semPlatformCn,
   device
 } from 'constant/fengming'
+
+import {
+  updateCampaign
+} from 'api/fengming-mvp'
 
 import {
   renderColumnHeaderWithTip
@@ -114,8 +136,12 @@ const campaignStatusTooltip = `
 
 export default {
   name: 'mvp-campaign-list',
+  components: {
+    BaxPagination
+  },
   fromMobx: {
-    campaigns: () => store.campaigns
+    campaigns: () => store.campaigns,
+    query: () => store.query
   },
   data() {
     return {
@@ -124,6 +150,7 @@ export default {
         showDailyBudget: false,
         showCpcPrice: false,
         // 更新数据
+        campaignId: 0, // 选中的单个 campaign
         cpcPrice: '',
         budget: ''
       }
@@ -142,13 +169,65 @@ export default {
         return
       }
 
-      console.error('todo')
+      await updateCampaign(campaign.id, {
+        pause: pause === 0 ? 1 : 0
+      })
+
+      await store.getCampaigns()
     },
     async updateCampaignDailyBudget() {
+      const {
+        campaignId: cid,
+        budget
+      } = this.toolbox
 
+      if (!cid) {
+        return Message.error('请选择要更新的推广')
+      }
+      if (!budget) {
+        return Message.error('请设置预算')
+      }
+
+      await updateCampaign(cid, {
+        dailyBudget: budget * 100
+      })
+
+      this.clearToolbox()
+
+      await store.getCampaigns()
     },
     async updateCampaignCpcPrice() {
+      const {
+        campaignId: cid,
+        cpcPrice
+      } = this.toolbox
 
+      if (!cid) {
+        return Message.error('请选择要更新的推广')
+      }
+      if (!cpcPrice) {
+        return Message.error('请设置点击单价')
+      }
+
+      await updateCampaign(cid, {
+        cpcPrice: cpcPrice * 100
+      })
+
+      this.clearToolbox()
+
+      await store.getCampaigns()
+    },
+    async onCurrentChange({ offset }) {
+console.log(offset, 89)
+      await store.getCampaigns({offset})
+    },
+    onCheckCampaign(id) {
+      this.toolbox.campaignId = id
+    },
+    clearToolbox() {
+      this.toolbox.campaignId = 0
+      this.toolbox.cpcPrice = ''
+      this.toolbox.budget = ''
     },
     switchToolbox(type) {
       const { toolbox } = this
@@ -193,6 +272,12 @@ export default {
 </script>
 
 <style scoped>
+.center {
+  display: inline-flex;
+  justify-content: center;
+  width: 100%;
+}
+
 .mvp-campaign-list {
   background: white;
   margin: 10px;
