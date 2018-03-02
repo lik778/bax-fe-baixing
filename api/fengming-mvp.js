@@ -26,8 +26,7 @@ export async function queryAds(opts = {}) {
 
   return {
     ads: toCamelcase(body.data),
-    // total: body.meta.total
-    total: 5
+    total: body.meta.count
   }
 }
 
