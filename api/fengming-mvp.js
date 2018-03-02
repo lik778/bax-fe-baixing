@@ -6,6 +6,31 @@ import {
   TIME_UNIT_YEAR
 } from 'constant/fengming-report'
 
+const isArray = Array.isArray
+
+export async function queryAds(opts = {}) {
+  const q = {
+    offset: 0,
+    limit: 3,
+    ...opts
+  }
+
+  if (isArray(q.adIds)) {
+    q.adIds = q.adIds.join(',')
+  }
+
+  const body = await fengming
+    .get('/simple/ad')
+    .query(reverseCamelcase(q))
+    .json()
+
+  return {
+    ads: toCamelcase(body.data),
+    // total: body.meta.total
+    total: 5
+  }
+}
+
 export async function createCampaign(data) {
   const body = await fengming
     .post('/simple/campaign')
@@ -18,10 +43,13 @@ export async function createCampaign(data) {
 export async function getCampaigns(opts = {}) {
   const body = await fengming
     .get('/simple/campaign')
-    .query(reverseCamelcase(opts))
+    .query(reverseCamelcase(trim(opts)))
     .json()
 
-  return toCamelcase(body.data)
+  return {
+    campaigns: toCamelcase(body.data),
+    total: body.meta.count
+  }
 }
 
 export async function updateCampaign(id, data) {
