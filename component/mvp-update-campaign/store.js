@@ -22,8 +22,9 @@ const store = observable({
   },
 
   getCampaignInfo: action(async function(id) {
-    this._originCampaign = await api.getCampaignInfo(id)
-    this._originCampaign.landingPageId = String(this._originCampaign.extra.landingPageId)
+    const c = await api.getCampaignInfo(id)
+    c.landingPageId = String(c.extra.landingPageId)
+    this._originCampaign = c
   }),
 
   getSummary: action(async function() {

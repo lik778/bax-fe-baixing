@@ -1,12 +1,19 @@
 <template>
   <div class="user-ad-selector">
-    <bax-input size="small" icon="el-icon-search"
+    <bax-input v-if="mode !== MODE_SELECTED"
+      size="small" icon="el-icon-search"
       style="width: 240px; margin-bottom: 14px;"
       placeholder="请输入帖子标题进行搜索"
       v-model="keyword"
       @change="onKeywordChange" />
     <el-table :data="ads" border fit
       style="width: 530px">
+      <template slot="empty">
+        <a class="fabu" target="_blank"
+          href="http://shanghai.baixing.com/fabu/">
+          您当前账户无有效帖子，先去发一条吧！
+        </a>
+      </template>
       <el-table-column label="选择" width="50">
         <template slot-scope="s">
           <div class="center">
@@ -46,8 +53,14 @@
         </bax-pagination>
       </span>
       <span>
-        <el-button size="mini">取 消</el-button>
-        <el-button type="primary" size="mini">确 定</el-button>
+        <el-button size="mini"
+          @click="onCancel()">
+          取 消
+        </el-button>
+        <el-button type="primary" size="mini"
+          @click="onSelectAd()">
+          确 定
+        </el-button>
       </span>
     </footer>
   </div>
@@ -98,6 +111,7 @@ export default {
       total: 0,
       ads: [],
 
+      innerCheckedAd: null,
       mode: MODE_INIT
     }
   },
@@ -108,13 +122,19 @@ export default {
   },
   methods: {
     async onKeywordChange(k) {
-      console.info(99, k)
+      this.keyword = k
+      this.offset = 0
+
+      await this.queryAds()
     },
     async onCurrentChange(opts) {
       const { offset } = opts
       this.offset = offset
 
-      const { keyword, limit } = this
+      await this.queryAds()
+    },
+    async queryAds() {
+      const { keyword, offset, limit } = this
 
       const data = await queryAds({
         keyword,
@@ -126,19 +146,57 @@ export default {
       this.total = data.total
     },
     adSelected(adId) {
+      const { innerCheckedAd } = this
+
+      if (innerCheckedAd) {
+        return adId === innerCheckedAd.adId
+      }
+
       return adId === this.selectedId
     },
-    onCheckAd(ad) {
+    async onSelectAd() {
+      const ad = this.innerCheckedAd
+      if (!ad) {
+        return
+      }
+
       this.$emit('select-ad', {
         ...ad,
         url: isArray(ad.url) ? ad.url[0] : ad.url
       })
+
+      await this.reset(MODE_SELECTED, ad.adId)
+    },
+    onCheckAd(ad) {
+      this.innerCheckedAd = ad
+    },
+    async onCancel() {
+      if (this.selectedId) {
+        await this.reset(MODE_SELECTED, this.selectedId)
+      }
     },
     fmtCity(c) {
       const { allAreas } = this
       return getCnName(c, allAreas)
     },
-    async reset() {
+    async reset(mode, adId) {
+      if (mode === MODE_SELECTED) {
+        this.mode = MODE_SELECTED
+        this.keyword = ''
+        this.offset = 0
+
+        const { offset, limit } = this
+        const data = await queryAds({
+          adIds: [adId],
+          offset,
+          limit
+        })
+
+        this.ads = data.ads
+        this.total = data.total
+        return
+      }
+
       this.offset = 0
       this.mode = MODE_INIT
       this.keyword = ''
@@ -186,6 +244,16 @@ export default {
   justify-content: center;
   align-items: center;
   width: 100%;
+}
+
+.fabu {
+  cursor: pointer;
+  color: var(--qwt-c-blue);
+  font-size: 14px;
+}
+
+.fabu:visited {
+  color: var(--qwt-c-blue);
 }
 
 .line {

@@ -7,3 +7,8 @@ export const cpcPrice = {
   chongqing: 1.5,
   daqing: 1.5
 }
+
+export const device = {
+  '1': 'PC',
+  '2': 'WAP'
+}

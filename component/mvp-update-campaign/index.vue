@@ -62,7 +62,7 @@
               <strong>投放城市：</strong>
               <span>
                 <el-tag type="success"
-                  v-for="c in originCampaign.areas" :key="c">
+                  v-for="c in getProp('areas')" :key="c">
                   {{ formatArea(c) }}
                 </el-tag>
               </span>
@@ -135,7 +135,7 @@ import AreaSelector from 'com/common/area-selector'
 import BxIcon from 'com/widget/icon'
 import Topbar from 'com/topbar'
 
-import { fmtAreasInQwt, getCnName } from 'util/meta'
+import { getCnName } from 'util/meta'
 
 import { updateCampaign } from 'api/fengming-mvp'
 
@@ -170,6 +170,11 @@ export default {
       areaDialogVisible: false,
       isUpdating: false,
       campaign: {
+        landingPageId: undefined,
+        landingPage: undefined,
+        category: undefined,
+        areas: undefined,
+
         dailyBudget: undefined,
         cpcPrice: undefined
       }
@@ -195,6 +200,9 @@ export default {
       return (summary.balance / 100).toFixed(2)
     },
     selectedAdId() {
+      if (this.campaign.landingPageId) {
+        return this.campaign.landingPageId
+      }
       return this.originCampaign.landingPageId
     },
     minBudget() {
@@ -244,6 +252,12 @@ export default {
         }
         data.cpcPrice = campaign.cpcPrice * 100
       }
+
+      ['category', 'areas', 'landingPageId', 'landingPage'].forEach(k => {
+        if (typeof campaign[k] !== 'undefined') {
+          data[k] = campaign[k]
+        }
+      })
 
       if (Object.keys(data).length) {
         await updateCampaign(id, data)

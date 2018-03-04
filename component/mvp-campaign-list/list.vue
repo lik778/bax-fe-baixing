@@ -69,7 +69,7 @@
           :formatter="r => r.devices.map(fmtDevice).join('，')">
         </el-table-column>
         <el-table-column label="城市"
-          :formatter="r => r.areas.join('，')">
+          :formatter="r => r.areas.map(fmtArea).join('，')">
         </el-table-column>
         <el-table-column label="最高点击单价" width="120"
           :formatter="r => fmtPrice(r.cpcPrice)">
@@ -106,9 +106,12 @@ import BaxPagination from 'com/common/pagination'
 import { Message } from 'element-ui'
 
 import {
-  campaignStatus,
-  semPlatformCn,
   device
+} from 'constant/fengming-mvp'
+
+import {
+  campaignStatus,
+  semPlatformCn
 } from 'constant/fengming'
 
 import {
@@ -118,6 +121,10 @@ import {
 import {
   renderColumnHeaderWithTip
 } from 'util/element'
+
+import {
+  getCnName
+} from 'util/meta'
 
 import {
   centToYuan,
@@ -139,6 +146,12 @@ export default {
   name: 'mvp-campaign-list',
   components: {
     BaxPagination
+  },
+  props: {
+    allAreas: {
+      type: Array,
+      required: true
+    }
   },
   fromMobx: {
     campaigns: () => store.campaigns,
@@ -266,6 +279,9 @@ console.log(offset, 89)
     },
     fmtDevice(i) {
       return device[String(i)] || '未知'
+    },
+    fmtArea(a) {
+      return getCnName(a, this.allAreas)
     },
     renderColumnHeaderWithTip
   }

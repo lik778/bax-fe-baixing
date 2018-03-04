@@ -5,7 +5,7 @@
     </topbar>
     <campaign-header :all-areas="allAreas">
     </campaign-header>
-    <campaign-list>
+    <campaign-list :all-areas="allAreas">
     </campaign-list>
   </div>
 </template>
