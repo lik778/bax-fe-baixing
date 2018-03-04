@@ -53,7 +53,10 @@
               </li>
             </section>
             <section class="add-ad">
-              <user-ad-selector />
+              <user-ad-selector type="reselect"
+                :all-areas="allAreas"
+                :selected-id="selectedAdId"
+                @select-ad="ad => onSelectAd(ad)" />
             </section>
             <section class="add-area">
               <strong>投放城市：</strong>
@@ -89,7 +92,7 @@
               @change="v => campaign.cpcPrice = v">
             </el-input-number>
             <strong>元</strong>
-            <p>{{ '最高点击单价不得低于：XX元' }}</p>
+            <p>{{ `最高点击单价不得低于：${minCpcPrice}元` }}</p>
             <i>出价越高，免费展示几率越大，位置越靠前！</i>
           </div>
           <div>
@@ -100,7 +103,7 @@
               @change="v => campaign.dailyBudget = v">
             </el-input-number>
             <strong>元</strong>
-            <p>{{ '您当前的总预算不得低于：XX元' }}</p>
+            <p>{{ `您当前的总预算不得低于：${minBudget}元` }}</p>
             <i>总预算越高，免费展示时长越长，效果越好！</i>
           </div>
           <div>
@@ -191,6 +194,22 @@ export default {
       const { summary } = this
       return (summary.balance / 100).toFixed(2)
     },
+    selectedAdId() {
+      return this.originCampaign.landingPageId
+    },
+    minBudget() {
+      const p = this.minCpcPrice
+      const { cpcPrice } = this.campaign
+
+      if (cpcPrice > p) {
+        return cpcPrice * 30
+      } else {
+        return p * 30
+      }
+    },
+    minCpcPrice() {
+      return 1.5
+    },
     id() {
       return this.$route.params.id
     }
@@ -214,9 +233,15 @@ export default {
       const data = {}
 
       if (typeof campaign.dailyBudget !== 'undefined') {
+        if (campaign.dailyBudget < this.minBudget) {
+          throw new Error(`每日预算不得低于 ${this.minBudget} 元`)
+        }
         data.dailyBudget = campaign.dailyBudget * 100
       }
       if (typeof campaign.cpcPrice !== 'undefined') {
+        if (campaign.cpcPrice < this.minCpcPrice) {
+          throw new Error(`最高点击单价不得低于 ${this.minCpcPrice} 元`)
+        }
         data.cpcPrice = campaign.cpcPrice * 100
       }
 
@@ -230,6 +255,12 @@ export default {
       } else {
         Message.warning('没有需要更新的变更')
       }
+    },
+    onSelectAd(ad) {
+      this.campaign.category = ad.category
+      this.campaign.areas = [ad.city]
+      this.campaign.landingPageId = ad.adId
+      this.campaign.landingPage = ad.url
     },
     onChangeAreas() {},
     formatArea(name) {
@@ -411,5 +442,4 @@ export default {
     }
   }
 }
-
 </style>

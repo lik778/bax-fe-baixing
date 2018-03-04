@@ -77,7 +77,8 @@
         <el-table-column label="今日预算"
           :formatter="r => fmtPrice(r.dailyBudget)">
         </el-table-column>
-        <el-table-column label="今日消耗">
+        <el-table-column label="今日消耗"
+          :formatter="r => fmtPrice(r.todayCost)">
         </el-table-column>
         <el-table-column label="操作">
           <template scope="s">

@@ -55,7 +55,10 @@
               </li>
             </section>
             <section class="add-ad">
-              <user-ad-selector></user-ad-selector>
+              <user-ad-selector :all-areas="allAreas"
+                :selected-id="newCampaign.landingPageId"
+                @select-ad="ad => onSelectAd(ad)">
+              </user-ad-selector>
             </section>
             <section class="add-area">
               <strong>投放城市：</strong>
@@ -65,9 +68,6 @@
                   @close="removeArea(c)">
                   {{ formatArea(c) }}
                 </el-tag>
-                <bx-icon type="plus"
-                  @click.native="areaDialogVisible = true">
-                </bx-icon>
               </span>
             </section>
             <section>
@@ -94,7 +94,7 @@
               style="width: 72px; margin-right: 9px;">
             </el-input-number>
             <strong>元</strong>
-            <p>{{ '最高点击单价不得低于：XX元' }}</p>
+            <p>{{ `最高点击单价不得低于：${minCpcPrice}元` }}</p>
             <i>出价越高，免费展示几率越大，位置越靠前！</i>
           </div>
           <div>
@@ -104,7 +104,7 @@
               style="width: 72px; margin-right: 9px;">
             </el-input-number>
             <strong>元</strong>
-            <p>{{ '您当前的总预算不得低于：XX元' }}</p>
+            <p>{{ `您当前的总预算不得低于：${minBudget}元` }}</p>
             <i>总预算越高，免费展示时长越长，效果越好！</i>
           </div>
           <div>
@@ -159,14 +159,14 @@ import {
 const defaultCampaign = {
   sources: [SEM_PLATFORM_BAIDU],
   devices: [DEVICE_WAP],
-  category: 'ershouqiche',
+  category: '',
   areas: [],
 
   landingType: LANDING_TYPE_AD,
-  landingPage: 'http://shanghai.baixing.com/renshi/a1092914927.html?from=guarantee', // TODO - TODO
-  landingPageId: 1092914927, // TODO ... TODO
-  dailyBudget: 0,
-  cpcPrice: 0
+  landingPage: '',
+  landingPageId: '',
+  dailyBudget: 1.5 * 30,
+  cpcPrice: 1.5
 }
 
 export default {
@@ -218,6 +218,19 @@ export default {
     balance() {
       const { summary } = this
       return (summary.balance / 100).toFixed(2)
+    },
+    minBudget() {
+      const p = this.minCpcPrice
+      const { cpcPrice } = this.newCampaign
+
+      if (cpcPrice > p) {
+        return cpcPrice * 30
+      } else {
+        return p * 30
+      }
+    },
+    minCpcPrice() {
+      return 1.5
     }
   },
   methods: {
@@ -241,24 +254,20 @@ export default {
 
       const c = clone(newCampaign)
 
-      c.dailyBudget = c.dailyBudget * 100
-      c.cpcPrice = c.cpcPrice * 100
-
-      if (!c.areas.length) {
-        throw new Error('请选择投放城市')
-      }
-
       if (!c.landingPage) {
         throw new Error('请选择投放帖子')
       }
 
-      if (c.dailyBudget < 1) {
-        throw new Error('请设置每日预算')
+      if (c.cpcPrice < this.minCpcPrice) {
+        throw new Error(`最高点击单价不得低于 ${this.minCpcPrice} 元`)
       }
 
-      if (c.cpcPrice < 1) {
-        throw new Error('请设置最高点击单价')
+      if (c.dailyBudget < this.minBudget) {
+        throw new Error(`每日预算不得低于 ${this.minBudget} 元`)
       }
+
+      c.dailyBudget = c.dailyBudget * 100
+      c.cpcPrice = c.cpcPrice * 100
 
       await createCampaign(fmtAreasInQwt(c, allAreas))
 
@@ -273,6 +282,12 @@ export default {
     onChangeAreas(areas) {
       this.newCampaign.areas = areas
       this.areaDialogVisible = false
+    },
+    onSelectAd(ad) {
+      this.newCampaign.category = ad.category
+      this.newCampaign.areas = [ad.city]
+      this.newCampaign.landingPageId = ad.adId
+      this.newCampaign.landingPage = ad.url
     },
     removeArea(c) {
       this.newCampaign.areas = this.newCampaign.areas

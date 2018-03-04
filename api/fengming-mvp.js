@@ -1,9 +1,13 @@
 
 import { trim, toCamelcase, reverseCamelcase } from 'object-keys-mapping'
+import moment from 'moment'
 import { fengming } from './base'
 
 import {
-  TIME_UNIT_YEAR
+  DIMENSION_CAMPAIGN,
+  TIME_UNIT_YEAR,
+  TIME_UNIT_DAY,
+  DEVICE_ALL
 } from 'constant/fengming-report'
 
 const isArray = Array.isArray
@@ -40,14 +44,58 @@ export async function createCampaign(data) {
 }
 
 export async function getCampaigns(opts = {}) {
-  const body = await fengming
-    .get('/simple/campaign')
-    .query(reverseCamelcase(trim(opts)))
-    .json()
+  let campaigns = []
+  let total = 0
+
+  if (opts.id) {
+    const campaign = await getCampaignInfo(opts.id)
+
+    if (campaign && campaign.id) {
+      campaigns = [campaign]
+      total = 1
+    }
+  } else {
+    const body = await fengming
+      .get('/simple/campaign')
+      .query(reverseCamelcase(trim(opts)))
+      .json()
+
+    campaigns = toCamelcase(body.data)
+    total = body.meta.count
+  }
+
+  const ids = campaigns.map(c => c.id)
+
+  let reports = []
+
+  if (ids.length) {
+    const result = await getMvpReport({
+      dataDimension: DIMENSION_CAMPAIGN,
+      campaignIds: ids,
+      timeUnit: TIME_UNIT_DAY,
+      device: DEVICE_ALL,
+
+      limit: 100,
+      offset: 0,
+      startAt: moment().subtract('1', 'days').unix(),
+      endAt: moment().unix()
+    })
+
+    reports = result.rows
+  }
 
   return {
-    campaigns: toCamelcase(body.data),
-    total: body.meta.count
+    campaigns: campaigns.map(c => {
+      c.todayCost = 0
+      for (const r of reports) {
+        if (r.campaignId === c.id) {
+          c.todayCost = r.cost
+          break
+        }
+      }
+      return c
+    }),
+    total
   }
 }
 
@@ -116,7 +164,8 @@ export async function getMvpReport(opts) {
 
   return {
     rows: toCamelcase(body1.data),
-    total: body2.data,
+    // total: body2.data,
+    total: body2.meta.count,
     offset: q.offset,
     limit: q.limit,
     summary: data

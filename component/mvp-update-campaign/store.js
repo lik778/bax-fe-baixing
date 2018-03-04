@@ -6,7 +6,7 @@ import * as api from 'api/fengming-mvp'
 import * as fapi from 'api/fengming'
 
 const emptyCampaign = {
-
+  landingPageId: ''
 }
 
 const store = observable({
@@ -23,6 +23,7 @@ const store = observable({
 
   getCampaignInfo: action(async function(id) {
     this._originCampaign = await api.getCampaignInfo(id)
+    this._originCampaign.landingPageId = String(this._originCampaign.extra.landingPageId)
   }),
 
   getSummary: action(async function() {

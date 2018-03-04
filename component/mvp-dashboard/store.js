@@ -35,7 +35,8 @@ const store = observable({
   }),
 
   queryCampaigns: action(async function(opts) {
-    this._allCampaigns = await api.getCampaigns(opts)
+    const { campaigns } = await api.getCampaigns(opts)
+    this._allCampaigns = campaigns
   }),
 
   getReport: action(async function(opts) {
