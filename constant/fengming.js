@@ -78,6 +78,7 @@ export const campaignAuditStatus = {
 export const campaignStatus = {
   '100': '有效',
   '5': '计划预算不足',
+  '0': '审核中', // mvp
   '-1': '下线',
   '-10': '暂停投放',
   '-50': '不在投放期',
