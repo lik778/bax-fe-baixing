@@ -60,7 +60,7 @@
         </el-table-column>
         <el-table-column label="计划状态"
           :render-header="renderColumnHeaderWithTip(campaignStatusTooltip)"
-          :formatter="r => fmtStatus(r.status)">
+          :formatter="r => r.pause ? '-' : fmtStatus(r.status)">
         </el-table-column>
         <el-table-column label="渠道"
           :formatter="r => r.sources.map(fmtSource).join('，')">
