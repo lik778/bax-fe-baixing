@@ -271,6 +271,7 @@ import {
 } from 'utils'
 
 import {
+  SEM_PLATFORM_BAIDU,
   landingTypeOpts
 } from 'constant/fengming'
 
@@ -301,7 +302,7 @@ const emptyPromotion = {
   validTime: [],
   keywords: [],
   areas: [],
-  source: 5,
+  source: SEM_PLATFORM_BAIDU,
   //
   recommendedWords: [],
   creativeWords: []
