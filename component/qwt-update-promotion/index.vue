@@ -107,12 +107,14 @@
         <div>
           <aside>推广标题:</aside>
           <span>
-            <el-input type="text" style="width: 420px"
-              placeholder="请输入标题 ~ (字数限制为9-25个字)"
-              :disabled="!isCreativeEditable || isFormReadonly"
-              :value="getProp('creativeTitle')"
-              @change="v => promotion.creativeTitle = v">
-            </el-input>
+            <text-limit-tip :rest="25 - getProp('creativeTitle').length">
+              <el-input slot="input" type="text" style="width: 420px"
+                placeholder="请输入标题 ~ (字数限制为9-25个字)"
+                :disabled="!isCreativeEditable || isFormReadonly"
+                :value="getProp('creativeTitle')"
+                @change="v => promotion.creativeTitle = v">
+              </el-input>
+            </text-limit-tip>
             <p v-if="creativeTitleTip" class="authing-tip">
               {{ creativeTitleTip }}
             </p>
@@ -123,12 +125,14 @@
             推广内容:
           </aside>
           <span>
-            <el-input type="textarea" :rows="5" style="width: 420px"
-              :placeholder="creativeContentPlaceholder"
-              :disabled="!isCreativeEditable || isFormReadonly"
-              :value="getProp('creativeContent')"
-              @change="v => promotion.creativeContent = v">
-            </el-input>
+            <text-limit-tip :rest="40 - getProp('creativeContent').length">
+              <el-input slot="input" type="textarea" :rows="5" style="width: 420px"
+                :placeholder="creativeContentPlaceholder"
+                :disabled="!isCreativeEditable || isFormReadonly"
+                :value="getProp('creativeContent')"
+                @change="v => promotion.creativeContent = v">
+              </el-input>
+            </text-limit-tip>
           </span>
           <p>{{ (!creativeTitleTip && originPromotion.refuseReason) || '' }}</p>
         </div>
@@ -268,6 +272,7 @@ import PromotionChargeTip from 'com/widget/promotion-charge-tip'
 import PromotionRuleLink from 'com/widget/promotion-rule-link'
 import DurationSelector from 'com/common/duration-selector'
 import KeywordList from 'com/common/qwt-keyword-list'
+import TextLimitTip from 'com/widget/text-limit-tip'
 import AreaSelector from 'com/common/area-selector'
 import ContractAck from 'com/widget/contract-ack'
 import Topbar from 'com/topbar'
@@ -324,6 +329,7 @@ export default {
     PromotionChargeTip,
     PromotionRuleLink,
     DurationSelector,
+    TextLimitTip,
     AreaSelector,
     KeywordList,
     ContractAck,

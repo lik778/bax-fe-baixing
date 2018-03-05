@@ -93,9 +93,12 @@
         <div>
           <aside>推广标题:</aside>
             <span>
-              <el-input type="text" placeholder="请输入标题 ~ (字数限制为9-25个字)" style="width: 420px"
-                v-model="newPromotion.creativeTitle">
-              </el-input>
+              <text-limit-tip :rest="25 - newPromotion.creativeTitle.length">
+                <el-input slot="input" type="text" style="width: 420px"
+                  placeholder="请输入标题 ~ (字数限制为9-25个字)"
+                  v-model="newPromotion.creativeTitle">
+                </el-input>
+              </text-limit-tip>
             </span>
         </div>
         <div>
@@ -103,10 +106,13 @@
             推广内容:
           </aside>
           <span>
-            <el-input type="textarea" :rows="5" style="width: 420px"
-              :placeholder="creativeContentPlaceholder"
-              v-model="newPromotion.creativeContent">
-            </el-input>
+            <text-limit-tip :rest="40 - newPromotion.creativeContent.length">
+              <el-input slot="input" type="textarea"
+                :rows="5" style="width: 420px"
+                :placeholder="creativeContentPlaceholder"
+                v-model="newPromotion.creativeContent">
+              </el-input>
+            </text-limit-tip>
           </span>
         </div>
         <footer>
@@ -253,6 +259,7 @@ import PromotionChargeTip from 'com/widget/promotion-charge-tip'
 import PromotionRuleLink from 'com/widget/promotion-rule-link'
 import DurationSelector from 'com/common/duration-selector'
 import KeywordList from 'com/common/qwt-keyword-list'
+import TextLimitTip from 'com/widget/text-limit-tip'
 import AreaSelector from 'com/common/area-selector'
 import ContractAck from 'com/widget/contract-ack'
 import FlatBtn from 'com/common/flat-btn'
@@ -324,6 +331,7 @@ export default {
     PromotionRuleLink,
     DurationSelector,
     AreaSelector,
+    TextLimitTip,
     KeywordList,
     ContractAck,
     FlatBtn,
