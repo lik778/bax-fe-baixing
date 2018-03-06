@@ -147,9 +147,12 @@ import clone from 'clone'
 import store from './store'
 
 import {
-  SEM_PLATFORM_BAIDU,
-  LANDING_TYPE_AD,
   DEVICE_WAP
+} from 'constant/fengming-mvp'
+
+import {
+  SEM_PLATFORM_BAIDU,
+  LANDING_TYPE_AD
 } from 'constant/fengming'
 
 import {

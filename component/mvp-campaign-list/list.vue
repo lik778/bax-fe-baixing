@@ -127,7 +127,6 @@ import {
 } from 'util/meta'
 
 import {
-  centToYuan,
   commafy
 } from 'utils'
 
@@ -199,7 +198,11 @@ export default {
         return Message.error('请选择要更新的推广')
       }
       if (!budget) {
-        return Message.error('请设置预算')
+        return Message.error('请设置每日预算')
+      }
+      const minBudget = this.getMinBudget(cid)
+      if (budget < minBudget) {
+        return Message.error(`每日预算不得低于 ${minBudget} 元`)
       }
 
       await updateCampaign(cid, {
@@ -220,7 +223,11 @@ export default {
         return Message.error('请选择要更新的推广')
       }
       if (!cpcPrice) {
-        return Message.error('请设置点击单价')
+        return Message.error('请设置最高点击单价')
+      }
+      const minPrice = this.getMinCpcPrice()
+      if (cpcPrice < minPrice) {
+        return Message.error(`最高点击单价不得低于 ${minPrice} 元`)
       }
 
       await updateCampaign(cid, {
@@ -233,7 +240,22 @@ export default {
     },
     async onCurrentChange({ offset }) {
 console.log(offset, 89)
+      this.clearToolbox()
       await store.getCampaigns({offset})
+    },
+    getMinBudget(cid) {
+      const p = this.getMinCpcPrice()
+      const campaign = this.campaigns.find(c => c.id === cid)
+      const { cpcPrice } = campaign
+
+      if ((cpcPrice / 100) > p) {
+        return cpcPrice / 100 * 30
+      } else {
+        return p * 30
+      }
+    },
+    getMinCpcPrice() {
+      return 1.5
     },
     onCheckCampaign(id) {
       this.toolbox.campaignId = id
