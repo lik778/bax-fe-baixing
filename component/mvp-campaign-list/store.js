@@ -29,7 +29,7 @@ const store = observable({
 
   getCampaigns: action(async function(opts) {
     this._query = {
-      ...defaultQuery,
+      ...this._query,
       ...opts
     }
 

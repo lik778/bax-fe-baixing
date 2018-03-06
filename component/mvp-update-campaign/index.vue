@@ -232,6 +232,8 @@ export default {
 
       try {
         await this._updateCampaign()
+      } catch (err) {
+        Message.error(err.message)
       } finally {
         this.isUpdating = false
       }
@@ -250,6 +252,12 @@ export default {
         if (campaign.cpcPrice < this.minCpcPrice) {
           throw new Error(`最高点击单价不得低于 ${this.minCpcPrice} 元`)
         }
+        // 只要更新 cpcPrice price ~
+        const v = this.getProp('dailyBudget')
+        if (v < this.minBudget) {
+          throw new Error(`每日预算不得低于 ${this.minBudget} 元`)
+        }
+
         data.cpcPrice = campaign.cpcPrice * 100
       }
 
@@ -282,11 +290,18 @@ export default {
       return getCnName(name, allAreas)
     },
     getProp(prop) {
+      let v
+
       if (typeof this.campaign[prop] !== 'undefined') {
-        return this.campaign[prop]
+        v = this.campaign[prop]
+      } else {
+        v = this.originCampaign[prop]
+        if (['dailyBudget', 'cpcPrice'].includes(prop)) {
+          v = (v / 100).toFixed(2)
+        }
       }
 
-      return this.originCampaign[prop]
+      return v
     }
   },
   async mounted() {

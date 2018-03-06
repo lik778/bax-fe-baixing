@@ -275,7 +275,7 @@ console.log(offset, 89)
       return campaignStatus[String(s)] || '未知'
     },
     fmtPrice(s) {
-      return commafy(centToYuan(s)) + '元'
+      return commafy((s / 100).toFixed(2)) + '元'
     },
     fmtDevice(i) {
       return device[String(i)] || '未知'
