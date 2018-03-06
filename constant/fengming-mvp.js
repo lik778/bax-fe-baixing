@@ -8,7 +8,9 @@ export const cpcPrice = {
   daqing: 1.5
 }
 
+export const DEVICE_WAP = 2
+
 export const device = {
-  '1': 'PC',
-  '2': 'WAP'
+  '1': '电脑端',
+  '2': '移动端'
 }
