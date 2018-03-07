@@ -244,7 +244,6 @@ export default {
       await store.getCampaigns()
     },
     async onCurrentChange({ offset }) {
-console.log(offset, 89)
       this.clearToolbox()
       await store.getCampaigns({offset})
     },

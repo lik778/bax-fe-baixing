@@ -105,6 +105,7 @@ export default {
     return {
       MODE_SELECTED,
 
+      requestStartTime: 0,
       keyword: '',
       offset: 0,
       limit: 3,
@@ -133,17 +134,23 @@ export default {
 
       await this.queryAds()
     },
-    async queryAds() {
+    async queryAds(opts = {}) {
       const { keyword, offset, limit } = this
+
+      const t = Date.now()
 
       const data = await queryAds({
         keyword,
         offset,
-        limit
+        limit,
+        ...opts
       })
 
-      this.ads = data.ads
-      this.total = data.total
+      if (t > this.requestStartTime) {
+        this.ads = data.ads
+        this.total = data.total
+        this.requestStartTime = t
+      }
     },
     adSelected(adId) {
       const { innerCheckedAd } = this
@@ -185,15 +192,9 @@ export default {
         this.keyword = ''
         this.offset = 0
 
-        const { offset, limit } = this
-        const data = await queryAds({
-          adIds: [adId],
-          offset,
-          limit
+        await this.queryAds({
+          adIds: [adId]
         })
-
-        this.ads = data.ads
-        this.total = data.total
         return
       }
 
@@ -201,14 +202,7 @@ export default {
       this.mode = MODE_INIT
       this.keyword = ''
 
-      const { offset, limit } = this
-      const data = await queryAds({
-        offset,
-        limit
-      })
-
-      this.ads = data.ads
-      this.total = data.total
+      await this.queryAds()
     }
   },
   watch: {
