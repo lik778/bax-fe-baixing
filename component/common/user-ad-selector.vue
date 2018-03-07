@@ -45,9 +45,9 @@
         </template>
       </el-table-column>
     </el-table>
-    <footer>
+    <footer v-if="mode !== MODE_SELECTED">
       <span>
-        <bax-pagination v-if="mode !== MODE_SELECTED"
+        <bax-pagination
           :options="{ offset, limit, total }"
           @current-change="onCurrentChange">
         </bax-pagination>
@@ -213,24 +213,18 @@ export default {
   },
   watch: {
     async selectedId(now, pre) {
-      if (this.type === TYPE_RESELECT && now && now !== pre) { // ??
-        const data = await queryAds({
-          adIds: [now]
-        })
-
-        this.ads = data.ads
+      if (this.type === TYPE_RESELECT && now) {
+        await this.reset(MODE_SELECTED, now)
       }
     }
   },
   async mounted() {
-    const { type } = this
-
+    const { selectedId, type } = this
     if (type === TYPE_RESELECT) {
-      this.mode = MODE_SELECTED
-      return
+      await this.reset(MODE_SELECTED, selectedId)
+    } else {
+      await this.reset()
     }
-
-    await this.reset()
   }
 }
 </script>
