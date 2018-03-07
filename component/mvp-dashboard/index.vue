@@ -75,11 +75,16 @@
           <i class="c-badge">3</i>
           <label>数据详情：</label>
         </div>
-        <data-detail :statistics="statistics"
-          :offset="offset" :limit="limit" :total="total">
+        <data-detail :statistics="statistics" :summary="summary"
+          :offset="offset" :limit="limit" :total="total"
+          @current-change="queryStatistics"
+          @download="() => queryStatistics({}, 'download')">
         </data-detail>
       </section>
-      <download-dialog></download-dialog>
+      <download-dialog
+        :visible="downloadDialogVisible"
+        @ok="downloadDialogVisible = false">
+      </download-dialog>
     </main>
   </div>
 </template>

@@ -81,6 +81,10 @@ import {
 } from 'constant/fengming-report'
 
 import {
+  device
+} from 'constant/fengming-mvp'
+
+import {
   semPlatformCn
 } from 'constant/fengming'
 
@@ -108,10 +112,10 @@ export default {
       type: Array,
       required: true
     },
-    // summary: {
-    //   type: Object,
-    //   required: true
-    // },
+    summary: {
+      type: Object,
+      required: true
+    },
     offset: {
       type: Number,
       required: true
@@ -151,16 +155,11 @@ export default {
       return semPlatformCn[String(c)] || '未知'
     },
     fmtDevice(a) {
-      const m = {
-        '1': '电脑',
-        '2': '手机'
-      }
-
       if (!isArray(a)) {
-        return m[String(a)]
+        return device[String(a)]
       }
 
-      return a.map(i => m[String(i)]).join(',')
+      return a.map(i => device[String(i)]).join(',')
     },
     toHumanTime,
     centToYuan
