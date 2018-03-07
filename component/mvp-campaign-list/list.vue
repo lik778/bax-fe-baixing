@@ -230,6 +230,11 @@ export default {
         return Message.error(`最高点击单价不得低于 ${minPrice} 元`)
       }
 
+      const campaign = this.campaigns.find(c => c.id === cid)
+      if (cpcPrice * 30 * 100 > campaign.dailyBudget) {
+        return Message.error(`按照设置的最高点击单价，当前日预算不得低于 ${cpcPrice * 30} 元，请先调高日预算`)
+      }
+
       await updateCampaign(cid, {
         cpcPrice: cpcPrice * 100
       })
