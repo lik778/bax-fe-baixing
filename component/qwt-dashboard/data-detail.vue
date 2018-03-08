@@ -182,6 +182,7 @@ export default {
     },
     fmtDevice(a) {
       const m = {
+        '0': '电脑，手机',
         '1': '电脑',
         '2': '手机'
       }

@@ -134,7 +134,7 @@ import {
   DIMENSION_CAMPAIGN,
   DIMENSION_KEYWORD,
   TIME_UNIT_DAY,
-  DEVICE_PC,
+  DEVICE_ALL,
 
   allDimensions,
   allTimeUnits,
@@ -200,7 +200,7 @@ export default {
         dimension: DIMENSION_CAMPAIGN,
         channel: SEM_PLATFORM_BAIDU,
         timeUnit: TIME_UNIT_DAY,
-        device: DEVICE_PC
+        device: DEVICE_ALL
       }
     }
   },

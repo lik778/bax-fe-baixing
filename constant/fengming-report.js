@@ -28,9 +28,9 @@ export const DEVICE_WAP = 2
 export const DEVICE_PC = 1
 
 export const allDevices = [{
-//   label: '全部',
-//   value: 0
-// }, {
+  label: '全部',
+  value: 0
+}, {
   label: 'PC',
   value: 1
 }, {
