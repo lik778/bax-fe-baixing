@@ -8,8 +8,10 @@
       <section>
         <aside>选择渠道:</aside>
         <span>
-          <bax-select :options="semPlatformOpts" :clearable="false"
-            v-model="query.channel">
+          <bax-select :options="semPlatformOpts"
+            :clearable="false"
+            :value="query.channel"
+            @change="onChangeChannel">
           </bax-select>
           <label class="tip">
             搜狗渠道无法提供今天的数据；百度和360渠道今天的数据存在一定延时，且最近1小时内的展现数据会存在波动。
@@ -55,7 +57,7 @@
         <span>
           <i class="badge" v-for="d of allDimensions" :key="d.value"
             :aria-checked="query.dimension === d.value"
-            @click="changeDimension(d.value)">
+            @click="onChangeDimension(d.value)">
             {{ d.label }}
           </i>
         </span>
@@ -107,7 +109,7 @@
         @clear="clearCheckedKeywordsAndCampaigns"
         @select-campaign="selectCampaign"
         @remove-campaign="removeCampaign"
-        @select-keyword="k => query.checkedKeywords.push(k)"
+        @select-keyword="selectKeyword"
         @remove-keyword="removeKeyword">
       </plan-keyword-selector>
       <download-dialog
@@ -293,15 +295,13 @@ export default {
         await store.getReport(q)
       }
     },
-    async changeDimension(value) {
-      // if (this.query.checkedKeywords.length &&
-      //   value === DIMENSION_CAMPAIGN) {
-      //   return Message.error('你当前选择了关键词，不能按计划维度查询数据')
-      // }
-
+    async onChangeChannel(v) {
       await this.clearCheckedKeywordsAndCampaigns()
-
-      this.query.dimension = value
+      this.query.channel = v
+    },
+    async onChangeDimension(v) {
+      await this.clearCheckedKeywordsAndCampaigns()
+      this.query.dimension = v
     },
     selectCampaign(campaign) {
       const ids = this.query.checkedCampaigns.map(c => c.id)
@@ -322,6 +322,7 @@ export default {
       }
 
       this.query.checkedKeywords.push(keyword)
+      this.query.dimension = DIMENSION_KEYWORD
     },
     removeKeyword(keyword) {
       this.query.checkedKeywords = this.query.checkedKeywords
@@ -339,30 +340,21 @@ export default {
       handler: async function() {
         await this.queryStatistics()
       }
-    },
-    'query.channel': function() {
-      this.query.checkedCampaigns = []
-      this.query.checkedKeywords = []
-    },
-    'query.dimension': async function() {
-      await this.clearCheckedKeywordsAndCampaigns()
-    },
-    'query.checkedKeywords': function(kws) {
-      if (kws.length) {
-        this.query.dimension = DIMENSION_KEYWORD
-      }
     }
   },
   async mounted() {
     const { query } = this.$route
     if (query.campaignId) {
       const campaign = await getCampaignInfo(query.campaignId)
-      this.query.checkedKeywords = campaign.keywords
       this.query.channel = campaign.source
       this.query.timeType = timeTypes[0].value
       this.query.device = DEVICE_PC
       this.query.timeUnit = TIME_UNIT_DAY
       this.query.dimension = DIMENSION_KEYWORD
+      setTimeout(() => {
+        // 说明: query.xxx = ooo 会 reset checkedXXXs
+        this.query.checkedKeywords = campaign.keywords
+      }, 50)
     }
   }
 }

@@ -132,7 +132,6 @@ export default {
 </script>
 
 <style scoped>
-
 @import '../../cssbase/mixin';
 @import 'cssbase/mixin';
 
@@ -174,5 +173,4 @@ export default {
     }
   }
 }
-
 </style>

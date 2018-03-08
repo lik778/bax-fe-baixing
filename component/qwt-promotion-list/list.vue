@@ -483,11 +483,15 @@ export default {
 </script>
 
 <style scoped>
-
+@import '../../cssbase/var';
 @import 'cssbase/mixin';
 
 .center {
   @mixin center;
+}
+
+a {
+  color: var(--qwt-c-blue);
 }
 
 .qwt-promotion-list {
@@ -542,5 +546,4 @@ export default {
     }
   }
 }
-
 </style>
