@@ -28,11 +28,13 @@ const store = observable({
     this._statistics = []
   }),
 
-  downloadCsv: action(function(opts) {
-    return api.getMvpReport({
+  downloadCsv: action(async function(opts) {
+    const url = await api.getMvpReport({
       ...opts,
       exportCsv: 1
     })
+
+    window.open(url)
   }),
 
   queryCampaigns: action(async function(opts) {
