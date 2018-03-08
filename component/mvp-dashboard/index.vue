@@ -81,10 +81,6 @@
           @download="() => queryStatistics({}, 'download')">
         </data-detail>
       </section>
-      <download-dialog
-        :visible="downloadDialogVisible"
-        @ok="downloadDialogVisible = false">
-      </download-dialog>
     </main>
   </div>
 </template>
@@ -143,8 +139,6 @@ export default {
   },
   data() {
     return {
-      downloadDialogVisible: false,
-
       allTimeUnits,
       timeTypes,
 
@@ -214,7 +208,6 @@ export default {
 
       if (action === 'download') {
         await store.downloadCsv(q)
-        this.downloadDialogVisible = true
       } else {
         await store.getReport(q)
       }

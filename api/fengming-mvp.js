@@ -1,6 +1,8 @@
 
 import { trim, toCamelcase, reverseCamelcase } from 'object-keys-mapping'
+import qs from 'query-string'
 import moment from 'moment'
+
 import { fengming } from './base'
 
 import {
@@ -9,6 +11,10 @@ import {
   TIME_UNIT_DAY,
   DEVICE_ALL
 } from 'constant/fengming-report'
+
+import {
+  fengmingApiHost
+} from 'config'
 
 const isArray = Array.isArray
 
@@ -124,10 +130,7 @@ export async function getMvpReport(opts) {
   }))
 
   if (q.export_csv) {
-    return fengming
-      .get('/simple/campaign/report')
-      .query(q)
-      .json()
+    return fengmingApiHost + '/simple/campaign/report?' + qs.stringify(q)
   }
 
   const [body1, body2, body3] = await Promise.all([

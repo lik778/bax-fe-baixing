@@ -9,7 +9,9 @@
         </bax-select>
       </span>
       <span>
-        <el-button icon="el-icon-view" type="primary" @click="download">
+        <el-button icon="el-icon-view" type="primary"
+          :disabled="downloadDisable"
+          @click="download">
           下载
         </el-button>
       </span>
@@ -132,7 +134,9 @@ export default {
   data() {
     return {
       displayColumns: campaignDefaultColumns,
-      columnOpts: mvpColumnOpts
+      columnOpts: mvpColumnOpts,
+      downloadDisableTimerId: 0,
+      downloadDisable: false
     }
   },
   methods: {
@@ -150,6 +154,11 @@ export default {
     },
     download() {
       this.$emit('download')
+      this.downloadDisable = true
+      this.downloadDisableTimerId = setTimeout(() => {
+        this.downloadDisable = false
+        this.downloadDisableTimerId = 0
+      }, 5 * 1000)
     },
     fmtChannel(c) {
       return semPlatformCn[String(c)] || '未知'
@@ -163,6 +172,12 @@ export default {
     },
     toHumanTime,
     centToYuan
+  },
+  beforeDestroy() {
+    if (this.downloadDisableTimerId) {
+      clearTimeout(this.downloadDisableTimerId)
+      this.downloadDisableTimerId = null
+    }
   }
 }
 </script>
