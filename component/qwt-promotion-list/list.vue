@@ -470,7 +470,14 @@ export default {
     disabledDate
   },
   async mounted() {
-    await getCurrentCampaigns({...this.query})
+    const { campaigns } = await getCurrentCampaigns({...this.query})
+
+    const { src } = this.$route.query
+    if (src === 'bxuc' && !campaigns.length) {
+      this.$router.push({
+        name: 'qwt-create-promotion'
+      })
+    }
   }
 }
 </script>

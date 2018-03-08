@@ -76,7 +76,6 @@ export default {
       }
     }
   },
-
   methods: {
     toggleTuoguanVisible() {
       gStore.toggleTuoguanVisible()
