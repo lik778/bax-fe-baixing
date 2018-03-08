@@ -5,8 +5,9 @@ import * as api from 'api/fengming-mvp'
 
 const store = observable({
   _allCampaigns: [],
-  _statistics: [],
   _summary: {},
+
+  _statistics: [],
   limit: 100,
   offset: 0,
   total: 0,
@@ -35,7 +36,11 @@ const store = observable({
   }),
 
   queryCampaigns: action(async function(opts) {
-    const { campaigns } = await api.getCampaigns(opts)
+    const q = {
+      limit: 300,
+      ...opts
+    }
+    const { campaigns } = await api.getCampaigns(q)
     this._allCampaigns = campaigns
   }),
 

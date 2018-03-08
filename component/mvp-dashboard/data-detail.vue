@@ -24,7 +24,7 @@
         </el-table-column>
         <el-table-column v-if="checkVisiable('channel')"
           label="渠道" width="100"
-          :formatter="r => fmtChannel(r.channel)">
+          :formatter="r => fmtChannel(r.source)">
         </el-table-column>
         <el-table-column v-if="checkVisiable('device')"
           label="设备" width="100"
@@ -37,7 +37,7 @@
           label="点击" prop="clicks" width="90" sortable>
         </el-table-column>
         <el-table-column v-if="checkVisiable('cost')"
-          label="消费" width="120"
+          label="消费" width="120" sortable
           :formatter="r => (r.cost / 100).toFixed(2) + '元'">
         </el-table-column>
         <el-table-column v-if="checkVisiable('clickRate')"
