@@ -79,13 +79,12 @@
               管理推广计划
             </router-link>
           </el-menu-item>
+          <el-menu-item index="qwt-dashboard">
+            <router-link :to="{ name: 'qwt-dashboard' }" tag="p">
+              数据报表
+            </router-link>
+          </el-menu-item>
         </el-submenu>
-
-        <el-menu-item index="qwt-dashboard" v-if="allowSeeQwtReport">
-          <router-link :to="{ name: 'qwt-dashboard' }" tag="p">
-            <bx-icon type="barchart"></bx-icon>数据报表
-          </router-link>
-        </el-menu-item>
 
         <el-menu-item index="qwt-cashcow">
           <router-link :to="{ name: 'qwt-cashcow' }" tag="p">
