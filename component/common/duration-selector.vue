@@ -3,7 +3,7 @@
   <el-dialog title="推广时间选择" :visible="visible"
     :close-on-click-modal="false"
     :before-close="cancel"
-    width="760px">
+    width="880px">
     <main class="main">
       <header>
         <span>

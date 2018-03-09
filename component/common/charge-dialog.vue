@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :visible="visible" size="tiny"
+  <el-dialog :visible="visible" width="320px"
     class="qwt-charge-dialog"
     :close-on-click-modal="false"
     :before-close="cancel">
@@ -80,6 +80,12 @@ export default {
 
 <style>
 .qwt-charge-dialog {
+  & .el-icon-close {
+    position: relative;
+    top: -20px;
+    right: -10px;
+  }
+
   & .el-dialog__header {
     padding-top: 5px;
   }
