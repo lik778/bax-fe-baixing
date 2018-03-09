@@ -348,7 +348,7 @@ export default {
       const campaign = await getCampaignInfo(query.campaignId)
       this.query.channel = campaign.source
       this.query.timeType = timeTypes[0].value
-      this.query.device = DEVICE_PC
+      this.query.device = DEVICE_ALL
       this.query.timeUnit = TIME_UNIT_DAY
       this.query.dimension = DIMENSION_KEYWORD
       setTimeout(() => {
