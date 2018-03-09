@@ -238,6 +238,10 @@
       @change="onChangeDuration"
       @hide="durationSelectorVisible = false">
     </duration-selector>
+    <charge-dialog
+      :visible="chargeDialogVisible"
+      @cancel="gotoPromotionList">
+    </charge-dialog>
 
     <transition name="slide-fade">
       <div class="tuoguan-promotion" v-show="showPromotion">
@@ -264,6 +268,7 @@ import DurationSelector from 'com/common/duration-selector'
 import KeywordList from 'com/common/qwt-keyword-list'
 import TextLimitTip from 'com/widget/text-limit-tip'
 import AreaSelector from 'com/common/area-selector'
+import ChargeDialog from 'com/common/charge-dialog'
 import ContractAck from 'com/widget/contract-ack'
 import FlatBtn from 'com/common/flat-btn'
 import Topbar from 'com/topbar'
@@ -335,6 +340,7 @@ export default {
     PromotionRuleLink,
     DurationSelector,
     AreaSelector,
+    ChargeDialog,
     TextLimitTip,
     KeywordList,
     ContractAck,
@@ -360,6 +366,7 @@ export default {
 
       recommendedWordsVisible: false,
       durationSelectorVisible: false,
+      chargeDialogVisible: false,
       areaDialogVisible: false,
 
       creativeContentPlaceholder,
@@ -469,7 +476,7 @@ export default {
       }
     },
     async _createPromotion() {
-      const { allAreas } = this
+      const { currentBalance, allAreas } = this
 
       const p = clone(this.newPromotion)
 
@@ -555,9 +562,12 @@ export default {
 
       await clearStore()
 
-      this.$router.push({
-        name: 'qwt-promotion-list'
-      })
+      if (p.dailyBudget > currentBalance) {
+        this.chargeDialogVisible = true
+        return
+      }
+
+      this.gotoPromotionList()
     },
     async queryRecommendedWords() {
       const { queryWord } = this
@@ -623,6 +633,13 @@ export default {
       if (newLandingPage) {
         await getCreativeWords(newLandingPage)
       }
+    },
+    gotoPromotionList() {
+      this.chargeDialogVisible = false
+
+      this.$router.push({
+        name: 'qwt-promotion-list'
+      })
     },
     switchWordsVisible() {
       this.recommendedWordsVisible = !this.recommendedWordsVisible
