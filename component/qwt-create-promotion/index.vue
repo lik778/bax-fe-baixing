@@ -79,8 +79,11 @@
         <promotion-area-limit-tip :all-areas="allAreas">
         </promotion-area-limit-tip>
         <div>
-          <aside>投放时段</aside>
+          <aside>投放时段：</aside>
           <span>
+            <label class="duration-type">
+              {{ getDurationType() }}
+            </label>
             <el-button type="primary" size="small"
               @click="durationSelectorVisible = true">
               设置
@@ -279,6 +282,7 @@ import {
 
 import {
   SEM_PLATFORM_BAIDU,
+  SEM_PLATFORM_SOGOU,
   landingTypeOpts
 } from 'constant/fengming'
 
@@ -399,8 +403,22 @@ export default {
       window.localStorage.setItem(storageKey, 'true')
       this.showPromotion = false
     },
-    toggleTuoguanVisible() {
-      gStore.toggleTuoguanVisible()
+    toggleTuoguanVisible(opts) {
+      gStore.toggleTuoguanVisible(opts)
+    },
+    getDurationType() {
+      const { schedule } = this.newPromotion
+      if (!schedule) {
+        return '全时段'
+      }
+
+      const sum = schedule.reduce((a, b) => a + b, 0)
+
+      if (this.newPromotion.source === SEM_PLATFORM_SOGOU) {
+        return sum < 3670009 ? '部分时段' : '全时段'
+      }
+
+      return sum < 117440505 ? '部分时段' : '全时段'
     },
     tryShowPromotion(sideEffect) {
       const has = window.localStorage.getItem(storageKey)
@@ -683,6 +701,11 @@ export default {
 
 .el-tag {
   margin-right: 5px;
+}
+
+.duration-type {
+  color: #6a778c;
+  font-size: 14px;
 }
 
 .qwt-create-promotion {

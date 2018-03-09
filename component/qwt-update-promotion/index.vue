@@ -93,8 +93,11 @@
         <promotion-area-limit-tip :all-areas="allAreas">
         </promotion-area-limit-tip>
         <div>
-          <aside>投放时段</aside>
+          <aside>投放时段：</aside>
           <span>
+            <label class="duration-type">
+              {{ getDurationType() }}
+            </label>
             <el-button type="primary" size="small"
               @click="durationSelectorVisible = true">
               设置
@@ -485,6 +488,22 @@ export default {
     }
   },
   methods: {
+    getDurationType() {
+      const schedule = this.getProp('schedule')
+
+      if (!schedule) {
+        return '全时段'
+      }
+
+      const sum = schedule.reduce((a, b) => a + b, 0)
+      const source = this.getProp('source')
+
+      if (source === SEM_PLATFORM_SOGOU) {
+        return sum < 3670009 ? '部分时段' : '全时段'
+      }
+
+      return sum < 117440505 ? '部分时段' : '全时段'
+    },
     onChangeDuration(durations) {
       this.promotion.schedule = durations
     },
@@ -903,6 +922,11 @@ export default {
 
 .el-tag {
   margin-right: 5px;
+}
+
+.duration-type {
+  color: #6a778c;
+  font-size: 14px;
 }
 
 .qwt-update-promotion {

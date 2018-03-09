@@ -255,9 +255,6 @@ export default {
     checkAll() {
       this.initClickedFlags('all')
       this.$forceUpdate()
-
-      // const durations = this.getCheckedDurations()
-      // this.$emit('change', durations)
     },
     reset() {
       if (this.schedule && this.schedule !== 'all') {
@@ -268,9 +265,6 @@ export default {
       }
 
       this.$forceUpdate()
-
-      // const durations = this.getCheckedDurations()
-      // this.$emit('change', durations)
     },
     cancel() {
       this.reset()
