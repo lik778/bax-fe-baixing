@@ -29,7 +29,8 @@
             </i>
             <el-date-picker v-if="query.timeType === 'custom'"
               size="mini" type="daterange" placeholder="选择日期"
-              format="yyyy-MM-dd" v-model="query.timeRange">
+              format="yyyy-MM-dd" v-model="query.timeRange"
+              :picker-options="{disabledDate}">
             </el-date-picker>
           </span>
         </section>
@@ -211,6 +212,9 @@ export default {
       } else {
         await store.getReport(q)
       }
+    },
+    disabledDate(time) {
+      return time.getTime() < (Date.now() - 365 * 24 * 60 * 60 * 1000)
     }
   },
   watch: {
