@@ -84,7 +84,8 @@ export default {
     },
     schedule: {
       // '123,456,444' 或者 'all'
-      type: String
+      type: String,
+      default: 'all'
     }
   },
   data() {
@@ -257,13 +258,7 @@ export default {
       this.$forceUpdate()
     },
     reset() {
-      if (this.schedule && this.schedule !== 'all') {
-        // 说明: all 是 component 默认设置, reset 是 reset 到目前 server 真正的 设置
-        this.initClickedFlags(this.schedule)
-      } else {
-        this.initClickedFlags()
-      }
-
+      this.initClickedFlags(this.schedule)
       this.$forceUpdate()
     },
     cancel() {
@@ -294,7 +289,6 @@ export default {
 </script>
 
 <style scoped>
-
 @import 'cssbase/mixin';
 
 .on, .off {
@@ -376,5 +370,4 @@ export default {
     font-size: 14px;
   }
 }
-
 </style>

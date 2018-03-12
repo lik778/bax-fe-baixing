@@ -265,7 +265,7 @@
     <duration-selector
       :visible="durationSelectorVisible"
       :platform="newPromotion.source"
-      schedule="all"
+      :schedule="getCurrentSchedule()"
       @change="onChangeDuration"
       @hide="durationSelectorVisible = false">
     </duration-selector>
@@ -452,8 +452,16 @@ export default {
       window.localStorage.setItem(storageKey, 'true')
       this.showPromotion = false
     },
+<<<<<<< HEAD
     toggleTuoguanVisible(opts) {
       gStore.toggleTuoguanVisible(opts)
+=======
+    getCurrentSchedule() {
+      const { schedule } = this.newPromotion
+      return Array.isArray(schedule)
+        ? schedule.join(',')
+        : schedule
+>>>>>>> 5a77506... fix duration selector
     },
     getDurationType() {
       const { schedule } = this.newPromotion

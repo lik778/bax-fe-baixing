@@ -255,7 +255,7 @@
     <duration-selector
       :visible="durationSelectorVisible"
       :platform="getProp('source')"
-      :schedule="(getProp('schedule') || []).join(',')"
+      :schedule="getCurrentSchedule()"
       @change="onChangeDuration"
       @hide="durationSelectorVisible = false">
     </duration-selector>
@@ -488,6 +488,13 @@ export default {
     }
   },
   methods: {
+    getCurrentSchedule() {
+      const schedule = this.getProp('schedule')
+
+      return Array.isArray(schedule)
+        ? schedule.join(',')
+        : schedule
+    },
     getDurationType() {
       const schedule = this.getProp('schedule')
 
