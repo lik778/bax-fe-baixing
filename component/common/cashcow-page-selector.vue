@@ -1,13 +1,19 @@
 
 <template>
-  <bax-select
-    class="cashcow-page-selector"
-    placeholder="请选择投放微站"
-    :disabled="disabled"
-    :value="value"
-    :options="options"
-    @change="onChange">
-  </bax-select>
+  <span>
+    <bax-select v-if="options.length"
+      class="cashcow-page-selector"
+      placeholder="请选择投放微站"
+      :disabled="disabled"
+      :value="value"
+      :options="options"
+      @change="onChange">
+    </bax-select>
+    <a v-else target="_blank"
+      href="http://bax.baixing.com.cn/main/qwt/cashcow">
+      还没微站？快去免费创建！
+    </a>
+  </span>
 </template>
 
 <script>
@@ -52,5 +58,12 @@
 <style scoped>
   .cashcow-page-selector {
     width: 560px;
+  }
+
+  a, a:visited {
+    margin-left: 20px;
+    font-size: 14px;
+    color: red;
+    cursor: pointer;
   }
 </style>

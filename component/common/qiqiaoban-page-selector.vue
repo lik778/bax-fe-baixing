@@ -1,13 +1,19 @@
 
 <template>
-  <bax-select
-    class="qiqiaoban-page-selector"
-    placeholder="请选择投放官网"
-    :disabled="disabled"
-    :value="value"
-    :options="options"
-    @change="onChange">
-  </bax-select>
+  <span>
+    <bax-select v-if="options.length"
+      class="qiqiaoban-page-selector"
+      placeholder="请选择投放官网"
+      :disabled="disabled"
+      :value="value"
+      :options="options"
+      @change="onChange">
+    </bax-select>
+    <a v-else target="_blank"
+      href="http://bax.baixing.com.cn/ka/main">
+      还没官网？了解并创建！
+    </a>
+  </span>
 </template>
 
 <script>
@@ -69,5 +75,12 @@
 <style scoped>
   .qiqiaoban-page-selector {
     width: 560px;
+  }
+
+  a, a:visited {
+    margin-left: 20px;
+    font-size: 14px;
+    color: red;
+    cursor: pointer;
   }
 </style>
