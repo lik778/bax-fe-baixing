@@ -11,16 +11,47 @@
         <div>
           <aside>选择渠道：</aside>
           <span>
+            <el-popover ref="popover-baidu-preview"
+              placement="bottom-start"
+              trigger="hover">
+              <div class="source-preview">
+                <h3>效果示例：电脑端</h3>
+                <img :src="PRE_IMG_BAIDU_PC" />
+                <h3>效果示例：手机端</h3>
+                <img :src="PRE_IMG_BAIDU_WAP" />
+              </div>
+            </el-popover>
+            <el-popover ref="popover-sougou-preview"
+              placement="bottom-start"
+              trigger="hover">
+              <div class="source-preview">
+                <h3>效果示例：电脑端</h3>
+                <img :src="PRE_IMG_SOGOU_PC" />
+                <h3>效果示例：手机端</h3>
+                <img :src="PRE_IMG_SOGOU_WAP" />
+              </div>
+            </el-popover>
+            <el-popover ref="popover-360-preview"
+              placement="bottom-start"
+              trigger="hover">
+              <div class="source-preview">
+                <h3>效果示例：电脑端</h3>
+                <img :src="PRE_IMG_360_PC" />
+              </div>
+            </el-popover>
             <el-button-group>
-              <el-button @click="newPromotion.source = 0"
+              <el-button v-popover:popover-baidu-preview
+                @click="newPromotion.source = 0"
                 :type="newPromotion.source === 0 ? 'primary' : ''">
                 百度
               </el-button>
-              <el-button @click="newPromotion.source = 5"
+              <el-button v-popover:popover-sougou-preview
+                @click="newPromotion.source = 5"
                 :type="newPromotion.source === 5 ? 'primary' : ''">
                 搜狗
               </el-button>
-              <el-button @click="newPromotion.source = 1"
+              <el-button v-popover:popover-360-preview
+                @click="newPromotion.source = 1"
                 :type="newPromotion.source === 1 ? 'primary' : ''">
                 360
               </el-button>
@@ -306,6 +337,11 @@ import {
 } from './action'
 
 import gStore from '../store'
+
+import {
+  assetHost
+} from 'config'
+
 import store from './store'
 
 const emptyPromotion = {
@@ -376,7 +412,13 @@ export default {
 
       showPromotion: false,
       timeout: null,
-      failCount: 0
+      failCount: 0,
+
+      PRE_IMG_SOGOU_WAP: assetHost + 'example-sougou-wap.png',
+      PRE_IMG_SOGOU_PC: assetHost + 'example-sougou-pc.png',
+      PRE_IMG_BAIDU_WAP: assetHost + 'example-baidu-wap.png',
+      PRE_IMG_BAIDU_PC: assetHost + 'example-baidu-pc.png',
+      PRE_IMG_360_PC: assetHost + 'example-360-pc.png'
     }
   },
   computed: {
@@ -723,6 +765,21 @@ export default {
 .duration-type {
   color: #6a778c;
   font-size: 14px;
+}
+
+.source-preview {
+  width: 340px;
+  display: flex;
+  flex-flow: column;
+
+  & > h3 {
+    margin: 5px 0 10px;
+  }
+
+  & > img {
+    width: 330px;
+    height: auto;
+  }
 }
 
 .qwt-create-promotion {
