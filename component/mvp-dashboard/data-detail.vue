@@ -40,14 +40,17 @@
         </el-table-column>
         <el-table-column v-if="checkVisiable('cost')"
           label="消费" width="120" sortable
+          :sort-method="(a, b) => a.cost - b.cost"
           :formatter="r => (r.cost / 100).toFixed(2) + '元'">
         </el-table-column>
         <el-table-column v-if="checkVisiable('clickRate')"
           label="点击率" width="120" sortable
+          :sort-method="(a, b) => a.clickRate - b.clickRate"
           :formatter="r => (r.clickRate * 100).toFixed(2) + '%'">
         </el-table-column>
         <el-table-column v-if="checkVisiable('clickAvgPrice')"
           label="平均点击价格" width="160" sortable
+          :sort-method="(a, b) => a.clickAvgPrice - b.clickAvgPrice"
           :formatter="r => (r.clickAvgPrice / 100).toFixed(2) + '元'">
         </el-table-column>
       </el-table>
