@@ -36,7 +36,7 @@
         <template slot-scope="s">
           <div class="op">
             <a target="_blank"
-              :href="s.row.url && s.row.url[0]">
+              :href="s.row.url">
               查看
             </a>
             <a v-if="mode === MODE_SELECTED"
