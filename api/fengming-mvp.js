@@ -83,7 +83,7 @@ export async function getCampaigns(opts = {}) {
 
       limit: 100,
       offset: 0,
-      startAt: moment().subtract('1', 'days').unix(),
+      startAt: moment().startOf('day').unix(),
       endAt: moment().unix()
     })
 
