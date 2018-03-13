@@ -59,6 +59,7 @@
           <span>
             <bax-select clearable multiple
             :options="campaignOpts"
+            :value="query.campaignIds"
             @change="v => query.campaignIds = v" />
           </span>
         </section>
@@ -184,6 +185,8 @@ export default {
       }
 
       if (query.timeType === 'custom') {
+        // 先选中计划, 再点击时间选择 -> timeRange -> []
+        if (query.timeRange.length !== 2) return
         startAt = toTimestamp(query.timeRange[0], 'YYYY-MM-DD')
         endAt = toTimestamp(query.timeRange[1], 'YYYY-MM-DD')
       } else {
@@ -233,6 +236,11 @@ export default {
     await store.queryCampaigns({
       sources: [source]
     })
+
+    const id = this.$route.query.campaignId
+    if (id) {
+      this.query.campaignIds = [parseInt(id)]
+    }
   }
 }
 </script>
