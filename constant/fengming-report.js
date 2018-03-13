@@ -59,15 +59,15 @@ export const timeTypes = [{
   label: '今日',
   value: 'today',
   getTime: () => ({
-    startAt: moment().subtract('1', 'days').unix(),
+    startAt: moment().startOf('day').unix(),
     endAt: moment().unix()
   })
 }, {
   label: '昨日',
   value: 'yesterday',
   getTime: () => ({
-    startAt: moment().subtract('2', 'days').unix(),
-    endAt: moment().subtract('1', 'days').unix()
+    startAt: moment().subtract('1', 'days').startOf('day').unix(),
+    endAt: moment().subtract('1', 'days').endOf('day').unix()
   })
 }, {
   label: '近7天',
