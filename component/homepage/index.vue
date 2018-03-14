@@ -71,6 +71,7 @@ export default {
 
         await Promise.all([
           store.getHomepageSummary(),
+          store.getMvpSummary(),
           store.getCoupons({ onlyValid: true, status: 0 })
         ])
       }
@@ -80,6 +81,7 @@ export default {
     if (this.allowSeeAccount) {
       await Promise.all([
         store.getHomepageSummary(),
+        store.getMvpSummary(),
         store.getCoupons({ onlyValid: true, status: 0 })
       ])
     }

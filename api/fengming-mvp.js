@@ -7,6 +7,7 @@ import { fengming } from './base'
 
 import {
   DIMENSION_CAMPAIGN,
+  DIMENSION_NONE,
   TIME_UNIT_YEAR,
   TIME_UNIT_DAY,
   DEVICE_ALL
@@ -75,19 +76,22 @@ export async function getCampaigns(opts = {}) {
   let reports = []
 
   if (ids.length) {
-    const result = await getMvpReport({
-      dataDimension: DIMENSION_CAMPAIGN,
-      campaignIds: ids,
-      timeUnit: TIME_UNIT_DAY,
-      device: DEVICE_ALL,
+    const body = await fengming
+      .get('/simple/campaign/report')
+      .query(reverseCamelcase(trim({
+        dataDimension: DIMENSION_CAMPAIGN,
+        campaignIds: ids,
+        timeUnit: TIME_UNIT_DAY,
+        device: DEVICE_ALL,
 
-      limit: 100,
-      offset: 0,
-      startAt: moment().startOf('day').unix(),
-      endAt: moment().unix()
-    })
+        startAt: moment().startOf('day').unix(),
+        endAt: moment().unix(),
+        limit: 100,
+        offset: 0
+      })))
+      .json()
 
-    reports = result.rows
+    reports = toCamelcase(body.data)
   }
 
   return {
@@ -120,6 +124,36 @@ export async function getCampaignInfo(id) {
     .json()
 
   return toCamelcase(body.data)
+}
+
+export async function getMvpSummary() {
+  const body = await fengming
+    .get('/simple/campaign/report')
+    .query(reverseCamelcase(trim({
+      dataDimension: DIMENSION_NONE,
+      timeUnit: TIME_UNIT_DAY,
+      device: DEVICE_ALL,
+
+      startAt: moment().subtract('1', 'days').startOf('day').unix(),
+      endAt: moment().subtract('1', 'days').endOf('day').unix(),
+      limit: 10,
+      offset: 0
+    })))
+    .json()
+
+  const result = {
+    consume: 0,
+    clicks: 0,
+    shows: 0
+  }
+
+  if (body && body.data && body.data[0]) {
+    const data = toCamelcase(body.data[0])
+    result.consume = data.cost
+    result.clicks = data.clicks
+    result.shows = data.shows
+  }
+  return result
 }
 
 export async function getMvpReport(opts) {
