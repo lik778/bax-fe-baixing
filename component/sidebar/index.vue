@@ -50,12 +50,12 @@
           </template>
           <el-menu-item index="mvp-campaign-1">
             <router-link :to="{ name: 'mvp-create-campaign' }" tag="p">
-              新建推广计划
+              新建智能推广
             </router-link>
           </el-menu-item>
           <el-menu-item index="mvp-campaign-2">
             <router-link :to="{ name: 'mvp-campaign-list' }" tag="p">
-              管理推广计划
+              管理智能推广
             </router-link>
           </el-menu-item>
           <el-menu-item index="mvp-campaign-3">
