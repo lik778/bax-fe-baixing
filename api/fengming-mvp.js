@@ -153,6 +153,7 @@ export async function getMvpSummary() {
     result.clicks = data.clicks
     result.shows = data.shows
   }
+
   return result
 }
 
