@@ -107,7 +107,8 @@
             </i>
           </span>
         </div>
-        <promotion-area-limit-tip :all-areas="allAreas">
+        <promotion-area-limit-tip :all-areas="allAreas"
+          :selected-areas="newPromotion.areas">
         </promotion-area-limit-tip>
         <div>
           <aside>投放时段：</aside>

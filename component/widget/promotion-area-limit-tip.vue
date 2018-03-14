@@ -14,6 +14,10 @@ import {
 export default {
   name: 'bax-promotion-area-limit-tip',
   props: {
+    selectedAreas: {
+      type: Array,
+      default: () => []
+    },
     allAreas: {
       type: Array,
       required: true
@@ -24,6 +28,10 @@ export default {
   },
   computed: {
     disAllowDesc() {
+      if (this.selectedAreas && this.selectedAreas.length) {
+        return ''
+      }
+
       return getDisAllowAreasDesc(this.allAreas)
     }
   }
