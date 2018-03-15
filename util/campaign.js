@@ -2,7 +2,7 @@
 import { toTimestamp } from 'utils'
 
 export function fmtCpcRanking(ranking) {
-  if (ranking === 0) {
+  if (ranking === 0 || ranking === -1) {
     return '-'
   }
 
