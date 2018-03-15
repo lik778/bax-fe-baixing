@@ -3,7 +3,8 @@
   <content v-loading.fullscreen="fullscreenLoading">
     <sidebar :user-info="currentUser"></sidebar>
     <p class="stuff"></p>
-    <router-view :userInfo="currentUser"
+    <router-view class="view"
+      :userInfo="currentUser"
       :allCategories="allCategories"
       :allAreas="allAreas"
       :allRoles="allRoles">
@@ -121,7 +122,9 @@ content {
     min-width: 180px;
   }
 
-  & > div:last-child {
+  & > .view {
+    max-width: calc(100% - 180px);
+    width: calc(100% - 180px);
     flex-grow: 1;
   }
 }
