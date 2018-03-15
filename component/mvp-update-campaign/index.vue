@@ -89,7 +89,7 @@
             <el-input-number :value="getProp('cpcPrice')"
               style="width: 72px; margin-right: 9px;"
               size="small" :min="0" :controls="false"
-              @change="v => campaign.cpcPrice = v">
+              @change="v => campaign.cpcPrice = fmtPrice(v)">
             </el-input-number>
             <strong>元</strong>
             <p>{{ `最高点击单价不得低于：${minCpcPrice}元` }}</p>
@@ -100,7 +100,7 @@
             <el-input-number :value="getProp('dailyBudget')"
               style="width: 72px; margin-right: 9px;"
               size="small" :step="1" :min="0" :controls="false"
-              @change="v => campaign.dailyBudget = v">
+              @change="v => campaign.dailyBudget = fmtPrice(v)">
             </el-input-number>
             <strong>元</strong>
             <p>{{ `您当前的总预算不得低于：${minBudget}元` }}</p>
@@ -210,9 +210,9 @@ export default {
       const { cpcPrice } = this.campaign
 
       if (cpcPrice > p) {
-        return cpcPrice * 30
+        return (cpcPrice * 30).toFixed(2)
       } else {
-        return p * 30
+        return (p * 30).toFixed(2)
       }
     },
     minCpcPrice() {
@@ -288,6 +288,9 @@ export default {
     formatArea(name) {
       const { allAreas } = this
       return getCnName(name, allAreas)
+    },
+    fmtPrice(v) {
+      return parseFloat(((100 * v | 0) / 100).toFixed(2))
     },
     getProp(prop) {
       let v
