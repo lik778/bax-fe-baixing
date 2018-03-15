@@ -182,7 +182,7 @@ export default {
   },
   computed: {
     consumeDays() {
-      const { dailyBudget } = this.originCampaign
+      const dailyBudget = this.getProp('dailyBudget')
       const { balance } = this.summary
 
       if (balance === 0) {
@@ -193,7 +193,7 @@ export default {
         return '?'
       }
 
-      return (balance / dailyBudget) | 0
+      return (balance / 100 / dailyBudget) | 0
     },
     balance() {
       const { summary } = this

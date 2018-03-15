@@ -220,7 +220,7 @@ export default {
         return '?'
       }
 
-      return (balance / dailyBudget) | 0
+      return (balance / 100 / dailyBudget) | 0
     },
     balance() {
       const { summary } = this
