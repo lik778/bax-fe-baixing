@@ -341,6 +341,7 @@ export default {
   }
 
   & > main {
+    max-width: 1080px;
     margin-top: 10px;
   }
 }
