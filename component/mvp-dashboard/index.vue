@@ -300,6 +300,7 @@ export default {
       margin-top: 10px;
       padding: 20px 16px;
       background: white;
+      border-radius: 4px;
 
       & > section {
         display: flex;
@@ -322,8 +323,9 @@ export default {
 
     & > section {
       margin-top: 10px;
-      padding: 10px;
+      padding: 19px 16px;
       background: white;
+      border-radius: 4px;
     }
   }
 }

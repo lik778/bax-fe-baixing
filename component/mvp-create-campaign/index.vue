@@ -331,6 +331,7 @@ export default {
     margin-top: 10px;
     background: white;
     padding: 20px;
+    border-radius: 4px;
 
     & > header {
       display: flex;

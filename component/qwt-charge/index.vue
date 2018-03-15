@@ -796,6 +796,7 @@ export default {
 .qwt-product, .qwt-order {
   margin-top: 10px;
   padding: 20px 0 10px 21px;
+  border-radius: 4px;
   background: white;
 }
 
