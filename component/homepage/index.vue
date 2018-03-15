@@ -100,6 +100,7 @@ export default {
 
   & > main {
     display: flex;
+    min-width: 1125px;
     padding: 10px;
 
     & > span:last-child {

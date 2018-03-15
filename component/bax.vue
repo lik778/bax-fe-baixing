@@ -138,7 +138,7 @@ content {
 
 body > content {
   width: 100%;
-  min-width: 1200px;
+  min-width: 1320px;
   max-width: 1500px;
 }
 

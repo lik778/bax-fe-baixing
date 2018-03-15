@@ -77,6 +77,7 @@
         </div>
       </span>
     </header>
+    <main>
     <el-table ref="table" :data="campaigns"
       @selection-change="onSelectionChange">
       <el-table-column v-if="!readonly" type="selection" width="40"
@@ -136,6 +137,7 @@
         </template>
       </el-table-column>
     </el-table>
+    </main>
     <bax-pagination :options="query"
       @current-change="onCurrentChange">
     </bax-pagination>
@@ -544,6 +546,10 @@ a {
     & > span:nth-child(5) {
       width: 145px;
     }
+  }
+
+  & > main {
+    max-width: 1080px;
   }
 }
 </style>
