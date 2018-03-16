@@ -154,7 +154,8 @@
           <span>已经设置的关键词</span>
           <label>当前关键词数量: {{ currentKeywords.length }}个</label>
         </h4>
-        <keyword-list :words="currentKeywords"
+        <keyword-list mode="update"
+          :words="currentKeywords"
           :selectable="false"
           :deletable="!isFormReadonly"
           :show-prop-show="false"
@@ -181,7 +182,7 @@
           </strong>
         </div>
         <keyword-list v-if="newaddedWordsVisible"
-          :words="addibleWords"
+          mode="select" :words="addibleWords"
           :selected-words="promotion.newKeywords"
           :campaign-offline="isCampaignOffline"
           @update-word="updateNewWord"

@@ -159,7 +159,8 @@
       <section class="keyword">
         <header>选取推广关键词</header>
         <h4>建议选取20个以上关键词，关键词越多您的创意被展现的机会越多。根据当月数据，为您推荐如下关键词</h4>
-        <keyword-list :words="creativeWords"
+        <keyword-list mode="select"
+          :words="creativeWords"
           :selected-words="newPromotion.creativeWords"
           @update-word="updateCreativeWord"
           @select-words="words => newPromotion.creativeWords = [...words]">
@@ -181,7 +182,8 @@
             （请优先添加较为核心的关键词，关键词长度不宜超过5个字，不区分大小写。）
           </strong>
         </div>
-        <keyword-list v-if="recommendedWordsVisible" :words="addibleWords"
+        <keyword-list v-if="recommendedWordsVisible"
+          mode="select" :words="addibleWords"
           :selected-words="newPromotion.recommendedWords"
           @update-word="updateRecommendedWord"
           @select-words="words => newPromotion.recommendedWords = [...words]">

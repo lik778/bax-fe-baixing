@@ -30,7 +30,7 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column label="PC端最高出价（元/次点击）"
+      <el-table-column label="PC端最高出价(元/次点击)"
         :render-header="renderColumnHeaderWithTip(cpcTopPriceTip)">
         <template scope="s">
           <span class="price">
@@ -101,6 +101,13 @@ function toFloat(s) {
 export default {
   name: 'qwt-keyword-list',
   props: {
+    mode: {
+      type: String,
+      required: true,
+      validator: v => {
+        return ['select', 'update'].includes(v)
+      }
+    },
     selectable: {
       type: Boolean,
       default: true
@@ -167,6 +174,10 @@ export default {
       }
 
       const p = this.words.find(w => w.word === word).price
+      if (this.mode === 'update') {
+        return centToYuan(p)
+      }
+
       if (p < 3000) {
         return centToYuan(p * 1.5)
       }
@@ -283,7 +294,6 @@ export default {
 </script>
 
 <style scoped>
-
 .status {
   display: flex;
   align-items: center;
@@ -311,5 +321,4 @@ export default {
     color: red;
   }
 }
-
 </style>
