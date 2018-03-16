@@ -59,15 +59,26 @@
       <div class="total" v-if="!!statistics.length">
         <span>
           <label>总展现：</label>
-          <strong>{{ summary.shows }}</strong>
+          <strong>{{
+            fakeSummary.shows > summary.shows
+              ? fakeSummary.shows
+              : summary.shows
+          }}</strong>
         </span>
         <span>
           <label>总点击：</label>
-          <strong>{{ summary.clicks }}</strong>
+          <strong>{{
+            fakeSummary.clicks > summary.clicks
+              ? fakeSummary.clicks
+              : summary.clicks
+          }}</strong>
         </span>
         <span>
           <label>总消费：</label>
-          <strong>{{ (summary.cost / 100).toFixed(2) + '元' }}</strong>
+          <strong>{{
+            ((fakeSummary.cost > summary.cost ? fakeSummary.cost : summary.cost) / 100)
+              .toFixed(2) + '元'
+          }}</strong>
         </span>
       </div>
       <bax-pagination :options="{ total, offset, limit }"
@@ -140,6 +151,21 @@ export default {
       columnOpts: mvpColumnOpts,
       downloadDisableTimerId: 0,
       downloadDisable: false
+    }
+  },
+  computed: {
+    fakeSummary() {
+      return this.statistics.reduce((pre, now) => {
+        return {
+          clicks: pre.clicks + now.clicks,
+          shows: pre.shows + now.shows,
+          cost: pre.cost + now.cost
+        }
+      }, {
+        cost: 0,
+        shows: 0,
+        clicks: 0
+      })
     }
   },
   methods: {
