@@ -134,8 +134,8 @@ export async function getMvpSummary() {
       timeUnit: TIME_UNIT_DAY,
       device: DEVICE_ALL,
 
-      startAt: moment().subtract('1', 'days').startOf('day').unix(),
-      endAt: moment().subtract('1', 'days').endOf('day').unix(),
+      startAt: moment().startOf('day').unix(),
+      endAt: moment().unix(),
       limit: 10,
       offset: 0
     })))
