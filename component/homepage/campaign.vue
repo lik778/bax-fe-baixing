@@ -23,7 +23,7 @@
     <footer>
       <bx-icon type="infocircleo"></bx-icon>
       <span>
-        以上均为昨日数据，了解详细数据请点击查看详情
+        以上均为今日数据，了解详细数据请点击查看详情
       </span>
     </footer>
   </div>

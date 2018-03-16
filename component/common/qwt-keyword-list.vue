@@ -166,7 +166,12 @@ export default {
         return item.price
       }
 
-      return centToYuan(this.words.find(w => w.word === word).price)
+      const p = this.words.find(w => w.word === word).price
+      if (p < 3000) {
+        return centToYuan(p * 1.5)
+      }
+
+      return centToYuan(p)
     },
     isValidPrice(row) {
       // 说明: TODO 这里需要优化
