@@ -210,9 +210,9 @@ export default {
       const { cpcPrice } = this.campaign
 
       if (cpcPrice > p) {
-        return (cpcPrice * 30).toFixed(2)
+        return parseFloat((cpcPrice * 30).toFixed(2))
       } else {
-        return (p * 30).toFixed(2)
+        return parseFloat((p * 30).toFixed(2))
       }
     },
     minCpcPrice() {
@@ -300,7 +300,7 @@ export default {
       } else {
         v = this.originCampaign[prop]
         if (['dailyBudget', 'cpcPrice'].includes(prop)) {
-          v = (v / 100).toFixed(2)
+          v = parseFloat((v / 100).toFixed(2))
         }
       }
 
