@@ -51,16 +51,16 @@ module.exports = {
 function getVueLoaders() {
   if (env === 'production') {
     return {
-      css: ExtractTextPlugin.extract({
-        use: [{
-          loader: 'css-loader',
-          options: {
-            sourceMap: true,
-            minimize: true
-          }
-        }],
-        fallback: 'style-loader'
-      })
+      // css: ExtractTextPlugin.extract({
+      //   use: [{
+      //     loader: 'css-loader',
+      //     options: {
+      //       sourceMap: true,
+      //       minimize: true
+      //     }
+      //   }],
+      //   fallback: 'style-loader'
+      // })
     }
   }
 
