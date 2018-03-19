@@ -7,6 +7,10 @@ export const fengmingApiHost = isPro
   ? '//bax.baixing.com.cn/fengmingx-api'
   : '//192.168.8.201/fengmingx'
 
+export const mvpApiHost = isPro
+  ? '//bax.baixing.com.cn/fengmingx-mvp'
+  : '//192.168.8.201:8048'
+
 export const baxApiHost = isPro
   ? '//bax.baixing.com.cn/bax-api'
   : '//192.168.8.201/bax'

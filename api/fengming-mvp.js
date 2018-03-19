@@ -3,7 +3,7 @@ import { trim, toCamelcase, reverseCamelcase } from 'object-keys-mapping'
 import qs from 'query-string'
 import moment from 'moment'
 
-import { fengming } from './base'
+import { mvp } from './base'
 
 import {
   DIMENSION_CAMPAIGN,
@@ -14,7 +14,7 @@ import {
 } from 'constant/fengming-report'
 
 import {
-  fengmingApiHost
+  mvpApiHost
 } from 'config'
 
 const isArray = Array.isArray
@@ -30,7 +30,7 @@ export async function queryAds(opts = {}) {
     q.adIds = q.adIds.join(',')
   }
 
-  const body = await fengming
+  const body = await mvp
     .get('/simple/ad')
     .query(reverseCamelcase(q))
     .json()
@@ -42,7 +42,7 @@ export async function queryAds(opts = {}) {
 }
 
 export async function createCampaign(data) {
-  const body = await fengming
+  const body = await mvp
     .post('/simple/campaign')
     .send(reverseCamelcase(data))
     .json()
@@ -62,7 +62,7 @@ export async function getCampaigns(opts = {}) {
       total = 1
     }
   } else {
-    const body = await fengming
+    const body = await mvp
       .get('/simple/campaign')
       .query(reverseCamelcase(trim(opts)))
       .json()
@@ -76,7 +76,7 @@ export async function getCampaigns(opts = {}) {
   let reports = []
 
   if (ids.length) {
-    const body = await fengming
+    const body = await mvp
       .get('/simple/campaign/report')
       .query(reverseCamelcase(trim({
         dataDimension: DIMENSION_CAMPAIGN,
@@ -110,7 +110,7 @@ export async function getCampaigns(opts = {}) {
 }
 
 export async function updateCampaign(id, data) {
-  const body = await fengming
+  const body = await mvp
     .post(`/simple/campaign/${id}`)
     .send(reverseCamelcase(data))
     .json()
@@ -119,7 +119,7 @@ export async function updateCampaign(id, data) {
 }
 
 export async function getCampaignInfo(id) {
-  const body = await fengming
+  const body = await mvp
     .get(`/simple/campaign/${id}`)
     .json()
 
@@ -127,7 +127,7 @@ export async function getCampaignInfo(id) {
 }
 
 export async function getMvpSummary() {
-  const body = await fengming
+  const body = await mvp
     .get('/simple/campaign/report')
     .query(reverseCamelcase(trim({
       dataDimension: DIMENSION_NONE,
@@ -165,22 +165,22 @@ export async function getMvpReport(opts) {
   }))
 
   if (q.export_csv) {
-    return fengmingApiHost + '/simple/campaign/report?' + qs.stringify(q)
+    return mvpApiHost + '/simple/campaign/report?' + qs.stringify(q)
   }
 
   const [body1, body2, body3] = await Promise.all([
-    fengming
+    mvp
       .get('/simple/campaign/report')
       .query(q)
       .json(),
-    fengming
+    mvp
       .get('/simple/campaign/report')
       .query({
         ...q,
         count: true
       })
       .json(),
-    fengming
+    mvp
       .get('/simple/campaign/report')
       .query({
         ...q,
