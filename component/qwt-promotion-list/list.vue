@@ -126,7 +126,7 @@
       <el-table-column label="渠道" width="100"
         :formatter="r => fmtSource(r.source)">
       </el-table-column>
-      <el-table-column label="操作">
+      <el-table-column label="操作" fixed="right">
         <template scope="s">
           <router-link :to="{ name: 'qwt-update-promotion', params: { id: s.row.id } }">
             详情
