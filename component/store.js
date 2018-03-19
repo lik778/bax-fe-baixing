@@ -24,7 +24,7 @@ const gStore = observable({
     return toJS(this._allAreas)
   },
   get allRoles() {
-    return toJS(this.__allRoles)
+    return toJS(this._allRoles)
   },
 
   toggleAddUserLeadVisible: action(function() {
