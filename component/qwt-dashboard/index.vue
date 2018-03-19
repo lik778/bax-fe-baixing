@@ -185,6 +185,7 @@ export default {
       pksDialogVisible: false,
       kwListExpand: false,
       kwListLimitSize: 15,
+      hasOperated: false, // 用户已经操作过
 
       semPlatformOpts,
       allDimensions,
@@ -288,6 +289,14 @@ export default {
         q.keywordIds = query.checkedKeywords.map(k => k.id)
       }
 
+      // 特事特办
+      if (this.$route.query.source === 'qwt-promotion-list' &&
+        this.$route.query.campaignId &&
+        !this.hasOperated) {
+        q.keywordIds = undefined
+        q.campaignIds = [this.$route.query.campaignId | 0]
+      }
+
       if (action === 'download') {
         await store.downloadCsv(q)
         this.downloadDialogVisible = true
@@ -296,14 +305,17 @@ export default {
       }
     },
     async onChangeChannel(v) {
+      this.hasOperated = true
       await this.clearCheckedKeywordsAndCampaigns()
       this.query.channel = v
     },
     async onChangeDimension(v) {
+      this.hasOperated = true
       await this.clearCheckedKeywordsAndCampaigns()
       this.query.dimension = v
     },
     selectCampaign(campaign) {
+      this.hasOperated = true
       const ids = this.query.checkedCampaigns.map(c => c.id)
       if (ids.includes(campaign.id)) {
         return
@@ -312,10 +324,12 @@ export default {
       this.query.checkedCampaigns.push(campaign)
     },
     removeCampaign(campaign) {
+      this.hasOperated = true
       this.query.checkedCampaigns = this.query.checkedCampaigns
         .filter(c => c.id !== campaign.id)
     },
     selectKeyword(keyword) {
+      this.hasOperated = true
       const ids = this.query.checkedKeywords.map(k => k.id)
       if (ids.includes(keyword.id)) {
         return
@@ -325,6 +339,7 @@ export default {
       this.query.dimension = DIMENSION_KEYWORD
     },
     removeKeyword(keyword) {
+      this.hasOperated = true
       this.query.checkedKeywords = this.query.checkedKeywords
         .filter(k => k.id !== keyword.id)
     },
