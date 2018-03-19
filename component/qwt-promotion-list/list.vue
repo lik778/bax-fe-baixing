@@ -31,7 +31,7 @@
           </el-button>
         </div>
         <div v-if="toolbox.showPricePercent">
-          <el-input style="width: 60px;" placeholder="比例"
+          <el-input style="min-width: 60px;" placeholder="比例"
             v-model="toolbox.ratio">
           </el-input>
           <label>(0.1-9.9)</label>
