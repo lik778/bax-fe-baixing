@@ -1,15 +1,18 @@
 <template>
   <bax-step title="新建推广流程" :steps="steps" :step="step">
+    <tip slot="tip" />
   </bax-step>
 </template>
 
 <script>
 import BaxStep from 'com/widget/step'
+import Tip from 'com/widget/mvp-tip'
 
 export default {
   name: 'mvp-create-campaign-step',
   components: {
-    BaxStep
+    BaxStep,
+    Tip
   },
   props: {
     step: {

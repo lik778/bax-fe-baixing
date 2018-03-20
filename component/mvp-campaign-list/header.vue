@@ -11,6 +11,7 @@
           更多筛选<i class="el-icon-arrow-down el-icon--right"></i>
         </el-button>
       </span>
+      <tip />
       <span>
         <el-button
           type="primary" icon="el-icon-plus"
@@ -48,6 +49,7 @@
 <script>
 import BaxSelect from 'com/common/select'
 import BaxInput from 'com/common/input'
+import Tip from 'com/widget/mvp-tip'
 
 import {
   campaignStatusOpts,
@@ -60,7 +62,8 @@ export default {
   name: 'mvp-campaign-header',
   components: {
     BaxSelect,
-    BaxInput
+    BaxInput,
+    Tip
   },
   props: {
     allAreas: {

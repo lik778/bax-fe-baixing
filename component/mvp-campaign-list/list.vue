@@ -322,9 +322,10 @@ export default {
 }
 
 .mvp-campaign-list {
-  background: white;
+  width: calc(100% - 20px);
   margin: 10px;
   padding: 10px 20px;
+  background: white;
 
   & > header {
     display: flex;

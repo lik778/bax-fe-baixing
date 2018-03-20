@@ -3,6 +3,7 @@
     <label>
       {{ title }}
     </label>
+    <slot name="tip"></slot>
     <section class="step-bar">
       <span v-for="(s, i) in steps" :key="i">
         <i :class="getIconClass(i + 1)">
