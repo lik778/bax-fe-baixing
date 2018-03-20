@@ -3,7 +3,8 @@
   <div class="mvp-create-campaign">
     <topbar :user-info="userInfo"></topbar>
     <main>
-      <step :step="currentStep"></step>
+      <step :step="currentStep">
+      </step>
       <section class="content">
         <header>
           <i>1</i>
@@ -14,7 +15,19 @@
             <section>
               <li>
                 <strong>推广渠道：</strong>
-                <label>点击查看渠道效果</label>
+                <el-popover ref="popover-baidu-preview"
+                  placement="bottom-start"
+                  trigger="hover">
+                  <div class="source-preview">
+                    <h3>效果示例：电脑端</h3>
+                    <img :src="PRE_IMG_BAIDU_PC" />
+                    <h3>效果示例：手机端</h3>
+                    <img :src="PRE_IMG_BAIDU_WAP" />
+                  </div>
+                </el-popover>
+                <label v-popover:popover-baidu-preview>
+                  点击查看渠道效果
+                </label>
               </li>
               <li>
                 <el-button-group>
@@ -163,6 +176,10 @@ import {
   createCampaign
 } from 'api/fengming-mvp'
 
+import {
+  assetHost
+} from 'config'
+
 const defaultCampaign = {
   sources: [SEM_PLATFORM_BAIDU],
   devices: [DEVICE_WAP],
@@ -204,7 +221,10 @@ export default {
       areaDialogVisible: false,
       actionTrackId: uuid(),
       isCreating: false,
-      currentStep: 1
+      currentStep: 1,
+
+      PRE_IMG_BAIDU_WAP: assetHost + 'example-baidu-wap.png',
+      PRE_IMG_BAIDU_PC: assetHost + 'example-baidu-pc.png'
     }
   },
   computed: {
@@ -317,6 +337,21 @@ export default {
 <style scoped>
 @import "../../cssbase/var";
 @import "cssbase/mixin";
+
+.source-preview {
+  width: 340px;
+  display: flex;
+  flex-flow: column;
+
+  & > h3 {
+    margin: 5px 0 10px;
+  }
+
+  & > img {
+    width: 330px;
+    height: auto;
+  }
+}
 
 .mvp-create-campaign {
   width: 100%;
