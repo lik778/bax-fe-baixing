@@ -9,8 +9,12 @@
       :options="options"
       @change="onChange">
     </bax-select>
-    <a v-else target="_blank"
+    <a v-else-if="ticketCount" target="_blank"
       href="http://bax.baixing.com.cn/ka/main">
+      您已经购买了官网，点击创建！
+    </a>
+    <a v-else target="_blank"
+      href="http://www.baixing.com/a/shop">
       还没官网？了解并创建！
     </a>
   </span>
@@ -22,6 +26,7 @@
     getQiqiaobanPageList
   } from 'api/fengming'
   import {
+    getUserTicketCount,
     baxUserLogin,
     getUserSites
   } from 'api/ka'
@@ -41,6 +46,7 @@
     },
     data() {
       return {
+        ticketCount: 0,
         options: []
       }
     },
@@ -53,10 +59,13 @@
     async mounted() {
       await baxUserLogin()
 
-      const [list1, list2] = await Promise.all([
+      const [list1, list2, count] = await Promise.all([
         getQiqiaobanPageList(),
-        getUserSites()
+        getUserSites(),
+        getUserTicketCount()
       ])
+
+      this.ticketCount = count
 
       this.options = [
         ...list2.map(p => ({

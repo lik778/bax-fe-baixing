@@ -15,6 +15,17 @@ export async function getUserSites(params) {
   return body.data
 }
 
+export async function getUserTicketCount() {
+  const body = await ka
+    .get('/tickets')
+    .query({
+      status: 1
+    })
+    .json()
+
+  return body.total
+}
+
 export async function baxUserLogin() {
   const body = await ka
     .get('/bax/user/login')

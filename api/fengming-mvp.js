@@ -32,7 +32,7 @@ export async function queryAds(opts = {}) {
 
   const body = await mvp
     .get('/simple/ad')
-    .query(reverseCamelcase(q))
+    .query(reverseCamelcase(trim(q)))
     .json()
 
   return {
