@@ -87,6 +87,10 @@ export default {
     BaxInput
   },
   props: {
+    limitMvp: {
+      type: Boolean,
+      default: true
+    },
     allAreas: {
       type: Array,
       required: true
@@ -135,11 +139,12 @@ export default {
       await this.queryAds()
     },
     async queryAds(opts = {}) {
-      const { keyword, offset, limit } = this
+      const { limitMvp, keyword, offset, limit } = this
 
       const t = Date.now()
 
       const data = await queryAds({
+        limitMvp,
         keyword,
         offset,
         limit,

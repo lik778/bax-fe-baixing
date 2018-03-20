@@ -10,7 +10,7 @@
         <header>推广目标设置</header>
         <div>
           <aside>选择渠道：</aside>
-          <span>
+          <span class="select-source">
             <el-popover ref="popover-baidu-preview"
               placement="bottom-start"
               trigger="hover">
@@ -299,6 +299,7 @@ import CashcowPageSelector from 'com/common/cashcow-page-selector'
 import PromotionChargeTip from 'com/widget/promotion-charge-tip'
 import PromotionRuleLink from 'com/widget/promotion-rule-link'
 import DurationSelector from 'com/common/duration-selector'
+import UserAdSelector from 'com/common/user-ad-selector'
 import KeywordList from 'com/common/qwt-keyword-list'
 import TextLimitTip from 'com/widget/text-limit-tip'
 import AreaSelector from 'com/common/area-selector'
@@ -352,6 +353,7 @@ const emptyPromotion = {
   creativeContent: '',
   creativeTitle: '',
   dailyBudget: 100, // 元
+  landingPageId: '',
   landingPage: '',
   landingType: 0,
   validTime: [],
@@ -378,6 +380,7 @@ export default {
     PromotionChargeTip,
     PromotionRuleLink,
     DurationSelector,
+    UserAdSelector,
     AreaSelector,
     ChargeDialog,
     TextLimitTip,
@@ -451,6 +454,16 @@ export default {
     }
   },
   methods: {
+    async onSelectAd(ad) {
+      this.newPromotion.areas = [ad.city]
+      this.newPromotion.landingPageId = ad.adId
+      this.newPromotion.landingPage = ad.url
+
+      this.newPromotion.creativeTitle = ad.title && ad.title.slice(0, 39)
+      this.newPromotion.creativeContent = ad.content && ad.content.slice(0, 39)
+
+      await this.getCreativeWords()
+    },
     closePromotion() {
       window.localStorage.setItem(storageKey, 'true')
       this.showPromotion = false
@@ -774,6 +787,12 @@ export default {
 .duration-type {
   color: #6a778c;
   font-size: 14px;
+}
+
+.select-source {
+  display: flex;
+  align-items: center;
+  width: 210px;
 }
 
 .source-preview {
