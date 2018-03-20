@@ -74,11 +74,12 @@
               </el-button-group>
             </div>
             <div style="margin-top: 20px; width: 560px;">
-              <el-input v-if="![1, 4].includes(newPromotion.landingType)"
-                v-model.trim="newPromotion.landingPage"
-                placeholder="输入投放网址，如：http://baixing.com 网址有误会影响投放效果，请检查后再投放"
-                @blur="getCreativeWords()">
-              </el-input>
+              <user-ad-selector
+                v-if="newPromotion.landingType === 0"
+                :all-areas="allAreas" :limit-mvp="false"
+                :selected-id="newPromotion.landingPageId"
+                @select-ad="ad => onSelectAd(ad)">
+              </user-ad-selector>
 
               <qiqiaoban-page-selector
                 v-if="newPromotion.landingType === 1"
@@ -459,7 +460,7 @@ export default {
       this.newPromotion.landingPageId = ad.adId
       this.newPromotion.landingPage = ad.url
 
-      this.newPromotion.creativeTitle = ad.title && ad.title.slice(0, 39)
+      this.newPromotion.creativeTitle = ad.title && ad.title.slice(0, 24)
       this.newPromotion.creativeContent = ad.content && ad.content.slice(0, 39)
 
       await this.getCreativeWords()
