@@ -21,7 +21,7 @@ export function isQwtEnableCity(name, allAreas) {
 
   return !!a.baiduCode &&
     !!a.qihuCode &&
-    !a.isAllowed === 0
+    !!a.isAllowed
 }
 
 export function getDisAllowAreasDesc(allAreas) {
