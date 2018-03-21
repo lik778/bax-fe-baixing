@@ -6,19 +6,53 @@
     <content>
       <section>
         <strong>【操作指南】</strong>
-        <a target="_blank" href="/qa?mode=tutorials">如何使用站外推广</a>
+        <a target="_blank" href="/qa?mode=tutorials"
+          @click="onClickHowTo">
+          如何使用站外推广
+        </a>
       </section>
       <section>
         <strong>【常见问题】</strong>
-        <a target="_blank" href="/qa?mode=questions">常见问题查询</a>
+        <a target="_blank" href="/qa?mode=questions"
+          @click="onClickQa">
+          常见问题查询
+        </a>
       </section>
     </content>
   </div>
 </template>
 
 <script>
+import track from 'util/track'
+
 export default {
-  name: 'qwt-homepage-qa'
+  name: 'qwt-homepage-qa',
+  props: {
+    userInfo: {
+      type: Object,
+      required: true
+    }
+  },
+  methods: {
+    onClickHowTo() {
+      const { userInfo } = this
+
+      track({
+        action: `homepage qa: click how to`,
+        baixingId: userInfo.baixingId,
+        baxId: userInfo.id
+      })
+    },
+    onClickQa() {
+      const { userInfo } = this
+
+      track({
+        action: `homepage qa: click qa`,
+        baixingId: userInfo.baixingId,
+        baxId: userInfo.id
+      })
+    }
+  }
 }
 </script>
 

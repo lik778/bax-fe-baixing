@@ -2,7 +2,8 @@
   <div class="card">
     <header>
       <strong>账户概览</strong>
-      <router-link :to="{name: 'account'}">
+      <router-link :to="{name: 'account'}"
+        @click.native="onClickAccountDetail">
         查看详情
       </router-link>
     </header>
@@ -16,7 +17,8 @@
           <span>元</span>
         </p>
         <router-link :class="{button: true, primary: balance === 0}"
-          :to="{name: 'qwt-charge', query: {mode: 'charge-only'}}">
+          :to="{name: 'qwt-charge', query: {mode: 'charge-only'}}"
+          @click.native="onClickCharge">
           立即充值
         </router-link>
       </span>
@@ -28,8 +30,8 @@
           </strong>
           <span>张</span>
         </p>
-        <router-link class="button"
-          :to="{name: 'coupon'}">
+        <router-link class="button" :to="{name: 'coupon'}"
+          @click.native="onClickCoupon">
           查看
         </router-link>
       </span>
@@ -43,11 +45,13 @@
         </p>
         <div>
           <router-link :class="{button: true, primary: balance > 0}"
-            :to="{name: 'qwt-create-promotion'}">
+            :to="{name: 'qwt-create-promotion'}"
+            @click.native="onClickCreateCampaign">
             新建推广计划
           </router-link>
           <router-link :class="{button: true, primary: balance > 0}"
-            :to="{name: 'qwt-promotion-list'}">
+            :to="{name: 'qwt-promotion-list'}"
+            @click.native="onClickQueryCampaigns">
             管理推广计划
           </router-link>
         </div>
@@ -57,9 +61,15 @@
 </template>
 
 <script>
+import track from 'util/track'
+
 export default {
   name: 'qwt-homepage-account',
   props: {
+    userInfo: {
+      type: Object,
+      required: true
+    },
     summary: {
       type: Object,
       required: true
@@ -73,6 +83,48 @@ export default {
     balance() {
       const { summary } = this
       return summary.balance / 100 | 0
+    }
+  },
+  methods: {
+    onClickCreateCampaign() {
+      const { userInfo } = this
+      track({
+        action: 'homepage account: click create campaign',
+        baixingId: userInfo.baixingId,
+        baxId: userInfo.id
+      })
+    },
+    onClickQueryCampaigns() {
+      const { userInfo } = this
+      track({
+        action: 'homepage account: click view campaigns',
+        baixingId: userInfo.baixingId,
+        baxId: userInfo.id
+      })
+    },
+    onClickAccountDetail() {
+      const { userInfo } = this
+      track({
+        action: 'homepage account: click account detail',
+        baixingId: userInfo.baixingId,
+        baxId: userInfo.id
+      })
+    },
+    onClickCharge() {
+      const { userInfo } = this
+      track({
+        action: 'homepage account: click charge',
+        baixingId: userInfo.baixingId,
+        baxId: userInfo.id
+      })
+    },
+    onClickCoupon() {
+      const { userInfo } = this
+      track({
+        action: 'homepage account: click coupon',
+        baixingId: userInfo.baixingId,
+        baxId: userInfo.id
+      })
     }
   }
 }

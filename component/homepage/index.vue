@@ -5,14 +5,14 @@
     </topbar>
     <main>
       <span>
-        <account :summary="summary" :coupons="coupons" />
-        <campaign type="qwt" :summary="summary" />
-        <campaign type="mvp" :summary="mvpSummary" />
+        <account :user-info="userInfo" :summary="summary" :coupons="coupons" />
+        <campaign type="qwt" :user-info="userInfo" :summary="summary" />
+        <campaign type="mvp" :user-info="userInfo" :summary="mvpSummary" />
       </span>
       <span>
         <board />
         <notification />
-        <qa />
+        <qa :user-info="userInfo" />
       </span>
     </main>
   </div>
@@ -28,6 +28,7 @@ import Board from './board'
 import Qa from './qa'
 
 import { allowSeeAccount } from 'util/role'
+import track from 'util/track'
 
 import store from './store'
 
@@ -78,6 +79,8 @@ export default {
     }
   },
   async mounted() {
+    const { userInfo } = this
+
     if (this.allowSeeAccount) {
       await Promise.all([
         store.getHomepageSummary(),
@@ -85,6 +88,12 @@ export default {
         store.getCoupons({ onlyValid: true, status: 0 })
       ])
     }
+
+    track({
+      action: 'homepage: enter page',
+      baixingId: userInfo.baixingId,
+      baxId: userInfo.id
+    })
   }
 }
 </script>

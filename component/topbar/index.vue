@@ -53,6 +53,8 @@
 import { Message } from 'element-ui'
 import { redirectTo } from 'utils'
 
+import track from 'util/track'
+
 import gStore from '../store'
 
 import {
@@ -118,6 +120,13 @@ export default {
     },
     help() {
       gStore.toggleAddUserLeadVisible()
+      const { userInfo } = this
+
+      track({
+        action: 'topbar: click help',
+        baixingId: userInfo.baixingId,
+        baxId: userInfo.id
+      })
     },
     empty() {
       this.confirmPassword = ''

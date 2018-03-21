@@ -2,7 +2,8 @@
   <div class="card">
     <header>
       <strong>{{ title }}</strong>
-      <router-link :to="{name: dashboardName}">
+      <router-link :to="{name: dashboardName}"
+        @click.native="onClickDetail">
         查看详情
       </router-link>
     </header>
@@ -32,12 +33,18 @@
 <script>
 import BxIcon from 'com/widget/icon'
 
+import track from 'util/track'
+
 export default {
   name: 'qwt-homepage-campaign',
   components: {
     BxIcon
   },
   props: {
+    userInfo: {
+      type: Object,
+      required: true
+    },
     summary: {
       type: Object,
       required: true
@@ -53,6 +60,18 @@ export default {
     },
     dashboardName() {
       return this.type === 'mvp' ? 'mvp-dashboard' : 'qwt-dashboard'
+    }
+  },
+  methods: {
+    onClickDetail() {
+      const { userInfo } = this
+      const type = this.type === 'mvp' ? 'mvp' : 'qwt'
+
+      track({
+        action: `homepage campaign: click ${type} campaign detail`,
+        baixingId: userInfo.baixingId,
+        baxId: userInfo.id
+      })
     }
   }
 }
@@ -90,7 +109,6 @@ export default {
         font-size: 14px;
       }
     }
-
   }
 
   & > footer {

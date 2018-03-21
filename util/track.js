@@ -8,6 +8,9 @@ module.exports = function track(opts) {
   try {
     opts.biztype = 'bax-qwt'
     opts.env = isPro ? 'pro' : 'test'
+    if (!opts.time) {
+      opts.time = Date.now() / 1000 | 0
+    }
 
     const img = new Image()
     img.id = 'bxti-' + uuid()
