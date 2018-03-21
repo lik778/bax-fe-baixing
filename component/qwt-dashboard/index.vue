@@ -370,7 +370,7 @@ export default {
         await this.queryStatistics()
       }
     },
-    'query.timeRange': () => {
+    'query.timeType': () => {
       track({
         action: 'qwt-dashboard: click time range'
       })
