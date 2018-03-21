@@ -16,6 +16,8 @@
 import { toTimestamp } from 'utils'
 import clone from 'clone'
 
+import track from 'util/track'
+
 const ALL_LEGENDS = ['消费', '展现', '点击量']
 
 export default {
@@ -151,6 +153,10 @@ export default {
     onLegendSelectChange(event) {
       const { selected } = event
       this.selectedLegends = Object.keys(selected).filter(k => selected[k])
+
+      track({
+        action: 'qwt-dashboard: click trend graph'
+      })
     }
   }
 }

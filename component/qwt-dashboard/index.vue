@@ -77,7 +77,7 @@
               {{ k.word }}
             </el-tag>
             <i class="el-icon-plus"
-              @click="pksDialogVisible = true">
+              @click="openKeywordSelector">
             </i>
           </div>
           <div class="switch"
@@ -153,6 +153,8 @@ import {
 import {
   getCampaignInfo
 } from 'api/fengming'
+
+import track from 'util/track'
 
 import store from './store'
 
@@ -304,15 +306,27 @@ export default {
         await store.getReport(q)
       }
     },
+    openKeywordSelector() {
+      this.pksDialogVisible = true
+      track({
+        action: 'qwt-dashboard: click keyword selector'
+      })
+    },
     async onChangeChannel(v) {
       this.hasOperated = true
       await this.clearCheckedKeywordsAndCampaigns()
       this.query.channel = v
+      track({
+        action: 'qwt-dashboard: click channel'
+      })
     },
     async onChangeDimension(v) {
       this.hasOperated = true
       await this.clearCheckedKeywordsAndCampaigns()
       this.query.dimension = v
+      track({
+        action: 'qwt-dashboard: click dimension'
+      })
     },
     selectCampaign(campaign) {
       this.hasOperated = true
@@ -355,6 +369,21 @@ export default {
       handler: async function() {
         await this.queryStatistics()
       }
+    },
+    'query.timeRange': () => {
+      track({
+        action: 'qwt-dashboard: click time range'
+      })
+    },
+    'query.timeUnit': () => {
+      track({
+        action: 'qwt-dashboard: click time unit'
+      })
+    },
+    'query.device': () => {
+      track({
+        action: 'qwt-dashboard: click device'
+      })
     }
   },
   async mounted() {
@@ -371,6 +400,16 @@ export default {
         this.query.checkedKeywords = campaign.keywords
       }, 50)
     }
+
+    setTimeout(() => {
+      const { userInfo } = this
+
+      track({
+        action: 'qwt-dashboard: enter page',
+        baixingId: userInfo.baixingId,
+        baxId: userInfo.id
+      })
+    }, 1200)
   }
 }
 </script>

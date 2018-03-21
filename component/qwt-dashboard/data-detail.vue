@@ -8,6 +8,7 @@
       <span>
         <label>自定义列:</label>
         <bax-select multiple :options="columnOpts"
+          @click.native="onClickCustomColumns"
           v-model="displayColumns">
         </bax-select>
       </span>
@@ -95,6 +96,7 @@ import {
   semPlatformCn
 } from 'constant/fengming'
 
+import track from 'util/track'
 import {
   fmtCpcRanking
 } from 'util/campaign'
@@ -162,6 +164,11 @@ export default {
     }
   },
   methods: {
+    onClickCustomColumns() {
+      track({
+        action: 'qwt-dashboard: click set custom columns'
+      })
+    },
     onCurrentChange(opts) {
       this.$emit('current-change', opts)
     },
@@ -176,6 +183,9 @@ export default {
     },
     download() {
       this.$emit('download')
+      track({
+        action: 'qwt-dashboard: click download'
+      })
     },
     fmtChannel(c) {
       return semPlatformCn[String(c)] || '未知'
