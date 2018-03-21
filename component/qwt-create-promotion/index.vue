@@ -74,7 +74,7 @@
               </el-button-group>
             </div>
             <div style="margin-top: 20px; width: 560px;">
-              <user-ad-selector
+              <user-ad-selector :type="adSelectorType"
                 v-if="newPromotion.landingType === 0"
                 :all-areas="allAreas" :limit-mvp="false"
                 :selected-id="newPromotion.landingPageId"
@@ -331,6 +331,8 @@ import {
   centToYuan
 } from 'utils'
 
+import { queryAds } from 'api/fengming-mvp'
+
 import {
   SEM_PLATFORM_BAIDU,
   SEM_PLATFORM_SOGOU,
@@ -439,6 +441,10 @@ export default {
     }
   },
   computed: {
+    adSelectorType() {
+      const adId = this.$route.query.adId
+      return adId ? 'reselect' : ''
+    },
     isFirstCampaign() {
       return this.campaignsCount === 0
     },
@@ -762,6 +768,19 @@ export default {
   },
   async mounted() {
     await Promise.all([getCurrentBalance(), getCampaignsCount()])
+
+    const adId = this.$route.query.adId
+    if (adId) {
+      const result = await queryAds({
+        limitMvp: false,
+        adIds: [adId],
+        limit: 1
+      })
+      const ad = result.ads && result.ads[0]
+      if (ad) {
+        await this.onSelectAd(ad)
+      }
+    }
 
     if (this.isFirstCampaign) {
       this.tryShowPromotion({
