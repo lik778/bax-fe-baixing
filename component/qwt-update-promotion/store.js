@@ -26,6 +26,7 @@ const emptyPromotion = {
   creativeContent: '',
   creativeTitle: '',
   dailyBudget: 0,
+  landingPageId: '',
   landingPage: '',
   landingType: 0,
   validTime: [],
@@ -56,6 +57,10 @@ store.subscribeActions({
     let timeType = ''
 
     info.dailyBudget = info.dailyBudget / 100 | 0
+
+    if (info.landingPageId) {
+      info.landingPageId = String(info.landingPageId)
+    }
 
     if (info.timeRange && info.timeRange.length &&
       (info.timeRange[0] !== null) &&

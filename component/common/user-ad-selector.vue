@@ -39,7 +39,7 @@
               :href="s.row.url">
               查看
             </a>
-            <a v-if="mode === MODE_SELECTED"
+            <a v-if="mode === MODE_SELECTED && !disabled"
               @click="reset">重选</a>
           </div>
         </template>
@@ -87,6 +87,10 @@ export default {
     BaxInput
   },
   props: {
+    disabled: {
+      type: Boolean,
+      default: false
+    },
     limitMvp: {
       type: Boolean,
       default: true

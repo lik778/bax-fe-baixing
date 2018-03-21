@@ -49,13 +49,14 @@
               </el-button-group>
             </div>
             <div style="margin-top: 20px;">
-              <el-input style="width: 560px;"
-                v-if="![1, 4].includes(getProp('landingType'))"
+              <user-ad-selector
+                v-if="getProp('landingType') === 0"
+                type="reselect"
                 :disabled="!isCreativeEditable || isFormReadonly"
-                :value="getProp('landingPage')"
-                placeholder="输入投放网址，如：http://baixing.com 网址有误会影响投放效果，请检查后再投放"
-                @change="v => promotion.landingPage = v.trim()">
-              </el-input>
+                :all-areas="allAreas" :limit-mvp="false"
+                :selected-id="getProp('landingPageId')"
+                @select-ad="ad => onSelectAd(ad)">
+              </user-ad-selector>
 
                <qiqiaoban-page-selector
                  v-if="getProp('landingType') === 1"
@@ -276,6 +277,7 @@ import CashcowPageSelector from 'com/common/cashcow-page-selector'
 import PromotionChargeTip from 'com/widget/promotion-charge-tip'
 import PromotionRuleLink from 'com/widget/promotion-rule-link'
 import DurationSelector from 'com/common/duration-selector'
+import UserAdSelector from 'com/common/user-ad-selector'
 import KeywordList from 'com/common/qwt-keyword-list'
 import TextLimitTip from 'com/widget/text-limit-tip'
 import AreaSelector from 'com/common/area-selector'
@@ -334,6 +336,7 @@ export default {
     PromotionChargeTip,
     PromotionRuleLink,
     DurationSelector,
+    UserAdSelector,
     TextLimitTip,
     AreaSelector,
     KeywordList,
@@ -490,6 +493,12 @@ export default {
     }
   },
   methods: {
+    async onSelectAd(ad) {
+      this.promotion.category = ad.category
+      this.promotion.areas = [ad.city]
+      this.promotion.landingPageId = ad.adId
+      this.promotion.landingPage = ad.url
+    },
     getCurrentSchedule() {
       const schedule = this.getProp('schedule')
 
