@@ -83,14 +83,14 @@
 
               <qiqiaoban-page-selector
                 v-if="newPromotion.landingType === 1"
-                v-model="newPromotion.landingPage"
-                @change="getCreativeWords">
+                :value="newPromotion.landingPage"
+                @change="setLandingPage">
               </qiqiaoban-page-selector>
 
               <cashcow-page-selector
                 v-if="newPromotion.landingType === 4"
-                v-model="newPromotion.landingPage"
-                @change="getCreativeWords">
+                :value="newPromotion.landingPage"
+                @change="setLandingPage">
               </cashcow-page-selector>
             </div>
           </span>
@@ -465,6 +465,11 @@ export default {
     }
   },
   methods: {
+    async setLandingPage(url) {
+      this.newPromotion.landingPage = url
+      this.newPromotion.areas = ['quanguo']
+      await this.getCreativeWords()
+    },
     async onSelectAd(ad) {
       const { allAreas } = this
 

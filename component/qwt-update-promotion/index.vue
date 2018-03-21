@@ -62,14 +62,14 @@
                  v-if="getProp('landingType') === 1"
                  :disabled="!isCreativeEditable"
                  :value="getProp('landingPage')"
-                 @change="v => promotion.landingPage = v">
+                 @change="setLandingPage">
               </qiqiaoban-page-selector>
 
               <cashcow-page-selector
                 v-if="getProp('landingType') === 4"
                 :disabled="!isCreativeEditable"
                 :value="getProp('landingPage')"
-                @change="v => promotion.landingPage = v">
+                @change="setLandingPage">
               </cashcow-page-selector>
               <p v-if="!isCreativeEditable" class="authing-tip">
                 您的推广在审核中，审核通过后可修改落地页，感谢配合！
@@ -503,6 +503,10 @@ export default {
     }
   },
   methods: {
+    setLandingPage(url) {
+      this.promotion.landingPage = url
+      this.promotion.areas = ['quanguo']
+    },
     async onSelectAd(ad) {
       const { allAreas } = this
 
