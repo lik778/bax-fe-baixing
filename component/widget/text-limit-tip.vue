@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <p :class="{warning: rest < 0}">
+    <p :class="{warning}">
       {{ text }}
     </p>
     <slot name="input"></slot>
@@ -11,14 +11,30 @@
 export default {
   name: 'text-limit-tip',
   props: {
+    current: {
+      type: Number,
+      default: 0
+    },
     rest: {
+      type: Number,
+      default: 0
+    },
+    min: {
       type: Number,
       default: 0
     }
   },
   computed: {
+    warning() {
+      const { current, rest, min } = this
+      return rest < 0 || (current && current < min)
+    },
     text() {
-      const { rest } = this
+      const { current, rest, min } = this
+
+      if (current && (current < min)) {
+        return `不足${min}字`
+      }
 
       if (rest < 0) {
         return `超出${Math.abs(rest)}字`

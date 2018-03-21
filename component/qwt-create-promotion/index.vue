@@ -129,7 +129,10 @@
         <div>
           <aside>推广标题:</aside>
             <span>
-              <text-limit-tip :rest="25 - newPromotion.creativeTitle.length">
+              <text-limit-tip
+                :rest="25 - newPromotion.creativeTitle.length"
+                :current="newPromotion.creativeTitle.length"
+                :min="9">
                 <el-input slot="input" type="text" style="width: 420px"
                   placeholder="请输入标题 ~ (字数限制为9-25个字)"
                   v-model="newPromotion.creativeTitle">
@@ -142,7 +145,10 @@
             推广内容:
           </aside>
           <span>
-            <text-limit-tip :rest="40 - newPromotion.creativeContent.length">
+            <text-limit-tip
+              :rest="40 - newPromotion.creativeContent.length"
+              :current="newPromotion.creativeContent.length"
+              :min="9">
               <el-input slot="input" type="textarea"
                 :rows="5" style="width: 420px"
                 :placeholder="creativeContentPlaceholder"
