@@ -290,10 +290,14 @@ import AreaSelector from 'com/common/area-selector'
 import ContractAck from 'com/widget/contract-ack'
 import Topbar from 'com/topbar'
 
-import { fmtAreasInQwt, getCnName } from 'util/meta'
 import { disabledDate } from 'util/element'
 import { isBaixingSales } from 'util/role'
 import track from 'util/track'
+import {
+  isQwtEnableCity,
+  fmtAreasInQwt,
+  getCnName
+} from 'util/meta'
 
 import {
   CREATIVE_STATUS_PENDING,
@@ -500,8 +504,12 @@ export default {
   },
   methods: {
     async onSelectAd(ad) {
+      const { allAreas } = this
+
       this.promotion.category = ad.category
-      this.promotion.areas = [ad.city]
+      if (isQwtEnableCity(ad.city, allAreas)) {
+        this.promotion.areas = [ad.city]
+      }
       this.promotion.landingPageId = ad.adId
       this.promotion.landingPage = ad.url
     },

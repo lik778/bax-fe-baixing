@@ -12,6 +12,18 @@ const specialCities = [
   'chongqing'
 ]
 
+export function isQwtEnableCity(name, allAreas) {
+  const a = allAreas.find(i => i.name === name)
+
+  if (!a) {
+    return false
+  }
+
+  return !!a.baiduCode &&
+    !!a.qihuCode &&
+    !a.isAllowed === 0
+}
+
 export function getDisAllowAreasDesc(allAreas) {
   const areas = getDisAllowAreas(allAreas)
 

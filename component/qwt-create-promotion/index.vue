@@ -315,7 +315,6 @@ import ContractAck from 'com/widget/contract-ack'
 import FlatBtn from 'com/common/flat-btn'
 import Topbar from 'com/topbar'
 
-import { fmtAreasInQwt, getCnName } from 'util/meta'
 import { disabledDate } from 'util/element'
 import track from 'util/track'
 import {
@@ -323,6 +322,11 @@ import {
   getCampaignPrediction,
   getCampaignValidTime
 } from 'util/campaign'
+import {
+  isQwtEnableCity,
+  fmtAreasInQwt,
+  getCnName
+} from 'util/meta'
 import {
   centToYuan
 } from 'utils'
@@ -462,7 +466,12 @@ export default {
   },
   methods: {
     async onSelectAd(ad) {
-      this.newPromotion.areas = [ad.city]
+      const { allAreas } = this
+
+      if (isQwtEnableCity(ad.city, allAreas)) {
+        this.newPromotion.areas = [ad.city]
+      }
+
       this.newPromotion.landingPageId = ad.adId
       this.newPromotion.landingPage = ad.url
 
