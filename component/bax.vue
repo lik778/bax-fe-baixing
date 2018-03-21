@@ -34,6 +34,7 @@ import gStore from './store'
 
 import es from 'base/es'
 
+import track from 'util/track'
 import {
   normalizeRoles
 } from 'util/role'
@@ -99,13 +100,21 @@ export default {
       gStore.getRoles()
     ])
 
+    const { currentUser } = this
+
     setTimeout(() => {
-      const roles = normalizeRoles(this.currentUser.roles)
+      const roles = normalizeRoles(currentUser.roles)
       if (this.currentUser.isNewUser === 1 &&
         roles.includes('BAIXING_USER')) {
         this.showNewUserIntro = true
       }
     }, 1200)
+
+    track({
+      action: `bax: enter page`,
+      baixingId: currentUser.baixingId,
+      baxId: currentUser.id
+    })
   }
 }
 </script>

@@ -63,6 +63,8 @@ import {
   getCurrentCampaigns
 } from './action'
 
+import track from 'util/track'
+
 export default {
   name: 'qwt-promotion-header',
   components: {
@@ -121,6 +123,10 @@ export default {
     },
     switchShowMoreFilters() {
       switchShowMoreFilters()
+
+      track({
+        action: 'campaign list: click more filters'
+      })
     },
     gotoCreatePromotion() {
       this.$router.push({

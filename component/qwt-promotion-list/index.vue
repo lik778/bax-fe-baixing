@@ -18,11 +18,13 @@
 <script>
 import uuid from 'uuid/v4'
 
+import FlatBtn from 'com/common/flat-btn'
+import Topbar from 'com/topbar'
+
 import PromotionHeader from './header'
 import PromotionList from './list'
-import Topbar from 'com/topbar'
-import FlatBtn from 'com/common/flat-btn'
 
+import track from 'util/track'
 import {
   isBaixingSales
 } from 'util/role'
@@ -80,6 +82,15 @@ export default {
     toggleTuoguanVisible() {
       gStore.toggleTuoguanVisible()
     }
+  },
+  mounted() {
+    const { userInfo } = this
+
+    track({
+      action: 'campaign list: enter page',
+      baixingId: userInfo.baixingId,
+      baxId: userInfo.id
+    })
   }
 }
 </script>

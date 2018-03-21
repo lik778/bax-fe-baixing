@@ -128,10 +128,14 @@
       </el-table-column>
       <el-table-column label="操作" fixed="right">
         <template scope="s">
-          <router-link :to="{ name: 'qwt-update-promotion', params: { id: s.row.id } }">
+          <router-link
+            :to="{ name: 'qwt-update-promotion', params: { id: s.row.id } }"
+            @click.native="onClickCampaignDetail">
             详情
           </router-link>
-          <router-link :to="{ name: 'qwt-dashboard', query: { campaignId: s.row.id, source: 'qwt-promotion-list' } }">
+          <router-link
+            :to="{ name: 'qwt-dashboard', query: { campaignId: s.row.id, source: 'qwt-promotion-list' } }"
+            @click.native="onClickCampaignReport">
             报表
           </router-link>
         </template>
@@ -178,6 +182,7 @@ import {
   pauseCampaigns
 } from './action'
 
+import track from 'util/track'
 import {
   getCampaignValidTime
 } from 'util/campaign'
@@ -272,6 +277,10 @@ export default {
         return
       }
 
+      track({
+        action: 'campaign list: update campaigns daily budget'
+      })
+
       const budget = parseInt(this.toolbox.budget) * 100
 
       if (!(budget > 0)) {
@@ -317,6 +326,10 @@ export default {
         return
       }
 
+      track({
+        action: 'campaign list: update campaigns ratio'
+      })
+
       const ratio = parseFloat(this.toolbox.ratio)
       if (!(ratio >= 0.1 && ratio <= 9.9)) {
         return Message.error('请设置合理的出价比例')
@@ -347,6 +360,10 @@ export default {
       } catch (err) {
         return
       }
+
+      track({
+        action: 'campaign list: update campaigns status'
+      })
 
       const ids = this.selectedCampaignIds
 
@@ -398,6 +415,16 @@ export default {
         this.$refs.table.clearSelection()
         this.selectedCampaignIds = []
       }
+    },
+    onClickCampaignDetail() {
+      track({
+        action: 'campaign list: click campaign detail'
+      })
+    },
+    onClickCampaignReport() {
+      track({
+        action: 'campaign list: click campaign report'
+      })
     },
     onSelectionChange(rows) {
       const ids = rows.map(r => r.id)
