@@ -100,21 +100,21 @@ export default {
       gStore.getRoles()
     ])
 
-    const { currentUser } = this
-
     setTimeout(() => {
+      const { currentUser } = this
+
       const roles = normalizeRoles(currentUser.roles)
       if (this.currentUser.isNewUser === 1 &&
         roles.includes('BAIXING_USER')) {
         this.showNewUserIntro = true
       }
-    }, 1200)
 
-    track({
-      action: `bax: enter page`,
-      baixingId: currentUser.baixingId,
-      baxId: currentUser.id
-    })
+      track({
+        action: `bax: enter page`,
+        baixingId: currentUser.baixingId,
+        baxId: currentUser.id
+      })
+    }, 1200)
   }
 }
 </script>

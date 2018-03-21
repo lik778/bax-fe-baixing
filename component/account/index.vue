@@ -15,6 +15,8 @@ import AccountSummary from './summary'
 import Topbar from 'com/topbar'
 import Log from './log'
 
+import track from 'util/track'
+
 export default {
   name: 'bax-account',
   props: {
@@ -31,6 +33,15 @@ export default {
     AccountSummary,
     Topbar,
     Log
+  },
+  mounted() {
+    const { userInfo } = this
+
+    track({
+      action: 'account: enter page',
+      baixingId: userInfo.baixingId,
+      baxId: userInfo.id
+    })
   }
 }
 </script>

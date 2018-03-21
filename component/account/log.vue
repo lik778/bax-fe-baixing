@@ -5,9 +5,11 @@
     <label>选择查询项目</label>
     <bax-select v-model="type" clearable
       placeholder="请选择"
-      :options="logTypeOpts">
+      :options="logTypeOpts"
+      @click.native="onClickLogType">
     </bax-select>
-    <el-radio-group v-model="range" class="radio">
+    <el-radio-group v-model="range" class="radio"
+      @click.native="onClickRange">
       <el-radio-button label="month">近一个月</el-radio-button>
       <el-radio-button label="quarter">近三个月</el-radio-button>
       <el-radio-button label="year">近一年</el-radio-button>
@@ -51,6 +53,7 @@ import { toHumanTime } from 'utils'
 import moment from 'moment'
 
 import { getLogDesc } from 'util/log'
+import track from 'util/track'
 
 import store from './store'
 
@@ -98,17 +101,17 @@ export default {
       return time.unix()
     }
   },
-  watch: {
-    type() {
-      this.currentPage = 1
-      this.load()
-    },
-    range() {
-      this.currentPage = 1
-      this.load()
-    }
-  },
   methods: {
+    onClickLogType() {
+      track({
+        action: 'account: click log type'
+      })
+    },
+    onClickRange() {
+      track({
+        action: 'account: click log range'
+      })
+    },
     async load() {
       await store.getLogs({
         pageSize: this.pageSize,
@@ -135,6 +138,16 @@ export default {
     },
     dateFormatter(row) {
       return toHumanTime(row.createdAt, 'YYYY-MM-DD HH:mm')
+    }
+  },
+  watch: {
+    type() {
+      this.currentPage = 1
+      this.load()
+    },
+    range() {
+      this.currentPage = 1
+      this.load()
     }
   },
   async mounted() {
