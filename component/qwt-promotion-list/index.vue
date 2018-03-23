@@ -24,7 +24,6 @@ import Topbar from 'com/topbar'
 import PromotionHeader from './header'
 import PromotionList from './list'
 
-import track from 'util/track'
 import {
   isBaixingSales
 } from 'util/role'
@@ -82,21 +81,11 @@ export default {
     toggleTuoguanVisible() {
       gStore.toggleTuoguanVisible()
     }
-  },
-  mounted() {
-    const { userInfo } = this
-
-    track({
-      action: 'campaign list: enter page',
-      baixingId: userInfo.baixingId,
-      baxId: userInfo.id
-    })
   }
 }
 </script>
 
 <style scoped>
-
 .qwt-promotion {
   padding: 0 35px;
   width: 100%;

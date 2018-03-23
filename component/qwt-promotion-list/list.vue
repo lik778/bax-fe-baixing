@@ -506,7 +506,17 @@ export default {
       this.$router.push({
         name: 'qwt-create-promotion'
       })
+
+      return
     }
+
+    const { userInfo } = this
+
+    track({
+      action: 'campaign list: enter page',
+      baixingId: userInfo.baixingId,
+      baxId: userInfo.id
+    })
   }
 }
 </script>
