@@ -5,7 +5,7 @@ export const LOG_TYPE_KEYWORD = 4
 export const LOG_TYPE_ACCOUNT = 1
 
 export const logType = {
-  '1': '账户',
+  // '1': '账户',
   '2': '计划',
   '3': '创意',
   '4': '关键词',

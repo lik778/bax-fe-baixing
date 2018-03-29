@@ -1,8 +1,7 @@
-
 <template>
   <div>
-    <section-header>账户查询</section-header>
-    <label>选择查询项目</label>
+    <section-header>操作日志</section-header>
+        <label>选择查询项目</label>
     <bax-select v-model="type" clearable
       placeholder="请选择"
       :options="logTypeOpts"
@@ -63,14 +62,14 @@ import {
 } from 'constant/log'
 
 export default {
-  name: 'account-log',
-  fromMobx: {
-    logQuery: () => store.logQuery,
-    logs: () => store.logs
-  },
+  name: 'qwt-operastion-log-list',
   components: {
     SectionHeader,
     BaxSelect
+  },
+  fromMobx: {
+    logQuery: () => store.logQuery,
+    logs: () => store.logs
   },
   props: {
     allAreas: {
@@ -81,10 +80,12 @@ export default {
   data() {
     return {
       logTypeOpts,
-      type: '',
+
       range: 'month',
-      pageSize: 20,
-      currentPage: 1
+      type: '',
+
+      currentPage: 1,
+      pageSize: 20
     }
   },
   computed: {
@@ -128,7 +129,7 @@ export default {
       const { allAreas } = this
 
       if (!row.relatedLog) {
-        return getLogDesc(row, {allAreas})
+        return getLogDesc(row, { allAreas })
       }
 
       return row.relatedLog
@@ -157,11 +158,10 @@ export default {
 </script>
 
 <style scoped>
-  .log-table {
-    margin-top: 40px;
-    margin-bottom: 20px;
-  }
-  .radio {
-    margin-left: 50px;
-  }
+.log-table {
+  margin: 40px 0 20px;
+}
+.radio {
+  margin-left: 50px;
+}
 </style>
