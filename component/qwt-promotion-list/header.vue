@@ -58,12 +58,9 @@ import {
   semPlatformOpts
 } from 'constant/fengming'
 
-import {
-  switchShowMoreFilters,
-  getCurrentCampaigns
-} from './action'
-
 import track from 'util/track'
+
+import store from './store'
 
 export default {
   name: 'qwt-promotion-header',
@@ -116,13 +113,13 @@ export default {
   },
   methods: {
     async queryCampaigns(opts) {
-      await getCurrentCampaigns({
+      await store.getCurrentCampaigns({
         ...this.query,
         ...opts
       })
     },
     switchShowMoreFilters() {
-      switchShowMoreFilters()
+      store.switchShowMoreFilters()
 
       track({
         action: 'campaign list: click more filters'

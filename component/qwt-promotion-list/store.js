@@ -1,10 +1,7 @@
 
-import { createStore } from 'vue-duo'
+import { observable, action, toJS } from 'mobx'
 
-import {
-  switchShowMoreFilters,
-  getCurrentCampaigns
-} from './action'
+import * as fapi from 'api/fengming'
 
 const defaultQuery = {
   statuses: '',
@@ -17,24 +14,37 @@ const defaultQuery = {
   total: 0
 }
 
-const store = createStore({
+const store = observable({
   showMoreFilters: false,
 
-  campaigns: [],
-  query: {
+  _campaigns: [],
+  _query: {
     ...defaultQuery
-  }
-})
+  },
 
-store.subscribeActions({
-  [switchShowMoreFilters]: () => ({
-    showMoreFilters: !store.state.showMoreFilters
+  get campaigns() {
+    return toJS(this._campaigns)
+  },
+
+  get query() {
+    return toJS(this._query)
+  },
+
+  switchShowMoreFilters: action(function() {
+    this.showMoreFilters = !this.showMoreFilters
   }),
-  [getCurrentCampaigns]: ({campaigns = [], query}) => ({
-    campaigns,
-    query: {
+
+  getCurrentCampaigns: action(async function(opts) {
+    const {campaigns = [], query} = await fapi.getCurrentCampaigns(opts)
+    this._campaigns = campaigns
+    this._query = {
       ...defaultQuery,
       ...query
+    }
+
+    return {
+      campaigns: this.campaigns,
+      query: this.query
     }
   })
 })

@@ -177,10 +177,9 @@ import {
   updateCampaignDailyBudget,
   updateCampaignTimeRange,
   updateCampaignRatio,
-  getCurrentCampaigns,
   activeCampaigns,
   pauseCampaigns
-} from './action'
+} from 'api/fengming'
 
 import track from 'util/track'
 import {
@@ -192,6 +191,8 @@ import {
   centToYuan,
   commafy
 } from 'utils'
+
+import store from './store'
 
 // 不能选择的状态
 const cantSelectStatuses = [
@@ -205,6 +206,10 @@ export default {
     BaxPagination
   },
   props: {
+    userInfo: {
+      type: Object,
+      required: true
+    },
     campaigns: {
       type: Array,
       required: true
@@ -255,7 +260,7 @@ export default {
   methods: {
     renderColumnHeaderWithTip,
     async onCurrentChange({offset}) {
-      await getCurrentCampaigns({
+      await store.getCurrentCampaigns({
         ...this.query,
         offset
       })
@@ -293,7 +298,7 @@ export default {
       }
 
       await updateCampaignDailyBudget(opts)
-      await getCurrentCampaigns({...this.query})
+      await store.getCurrentCampaigns({...this.query})
 
       this.toolbox.budget = ''
 
@@ -315,7 +320,7 @@ export default {
       }
 
       await updateCampaignTimeRange(opts)
-      await getCurrentCampaigns({...this.query})
+      await store.getCurrentCampaigns({...this.query})
 
       this.toolbox.timeRange = []
 
@@ -341,7 +346,7 @@ export default {
       }
 
       await updateCampaignRatio(opts)
-      await getCurrentCampaigns({...this.query})
+      await store.getCurrentCampaigns({...this.query})
 
       this.toolbox.ratio = ''
 
@@ -373,7 +378,7 @@ export default {
         await activeCampaigns(ids)
       }
 
-      await getCurrentCampaigns({...this.query})
+      await store.getCurrentCampaigns({...this.query})
 
       Message.success('更新成功')
     },
@@ -397,7 +402,7 @@ export default {
         await pauseCampaigns([row.id])
       }
 
-      await getCurrentCampaigns({...this.query})
+      await store.getCurrentCampaigns({...this.query})
 
       Message.success('更新成功')
     },
@@ -499,7 +504,7 @@ export default {
     disabledDate
   },
   async mounted() {
-    const { campaigns } = await getCurrentCampaigns({...this.query})
+    const { campaigns } = await store.getCurrentCampaigns({...this.query})
 
     const { src } = this.$route.query
     if (src === 'bxuc' && !campaigns.length) {

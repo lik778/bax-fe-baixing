@@ -9,7 +9,7 @@
       :all-areas="allAreas" :query="localQuery"
       :userId="currentUserId" :canCreate="!isListReadonly">
     </promotion-header>
-    <promotion-list :campaigns="campaigns"
+    <promotion-list :user-info="userInfo" :campaigns="campaigns"
       :query="localQuery" :readonly="isListReadonly">
     </promotion-list>
   </div>
@@ -33,12 +33,16 @@ import store from './store'
 
 export default {
   name: 'qwt-promotion',
-  store,
   components: {
     PromotionHeader,
     PromotionList,
     Topbar,
     FlatBtn
+  },
+  fromMobx: {
+    showMoreFilters: () => store.showMoreFilters,
+    campaigns: () => store.campaigns,
+    query: () => store.query
   },
   props: {
     userInfo: {
