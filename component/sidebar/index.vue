@@ -128,6 +128,11 @@
             <bx-icon type="user"></bx-icon>我的账户
           </router-link>
         </el-menu-item>
+        <el-menu-item index="operation-log" v-if="allowSeeAccount">
+          <router-link :to="{ name: 'operation-log' }" tag="p">
+            <bx-icon type="inbox"></bx-icon>操作日志
+          </router-link>
+        </el-menu-item>
 
         <el-submenu index="qa">
           <template slot="title">

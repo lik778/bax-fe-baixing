@@ -27,9 +27,10 @@ import AdList from 'com/ssp-ad-list'
 import GwCharge from 'com/gw-charge'
 
 // global
+import OperationLog from 'com/operation-log'
 import Homepage from 'com/homepage'
 import Account from 'com/account'
-import Coupon from 'com/coupon/index.vue'
+import Coupon from 'com/coupon'
 
 import Bax from 'com/bax'
 
@@ -151,6 +152,10 @@ const router = new VueRouter({
     component: Homepage,
     path: '/main',
     name: 'root'
+  }, {
+    component: OperationLog,
+    path: '/main/operation-log',
+    name: 'operation-log'
   }, {
     component: Account,
     path: '/main/account',
