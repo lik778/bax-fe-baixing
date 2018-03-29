@@ -35,27 +35,6 @@
           查看
         </router-link>
       </span>
-      <span class="campaign">
-        <h3>我的推广</h3>
-        <p>
-          <strong>
-            {{ summary.campaignCount }}
-          </strong>
-          <span>个</span>
-        </p>
-        <div>
-          <router-link :class="{button: true, primary: balance > 0}"
-            :to="{name: 'qwt-create-promotion'}"
-            @click.native="onClickCreateCampaign">
-            新建推广计划
-          </router-link>
-          <router-link :class="{button: true, primary: balance > 0}"
-            :to="{name: 'qwt-promotion-list'}"
-            @click.native="onClickQueryCampaigns">
-            管理推广计划
-          </router-link>
-        </div>
-      </span>
     </content>
   </div>
 </template>
@@ -141,14 +120,16 @@ export default {
   height: 224px;
 
   & > content {
+    display: flex;
     margin-top: 26px;
   }
 }
 
-.money, .coupon, .campaign {
+.money, .coupon {
   display: inline-flex;
   flex-flow: column;
   align-items: center;
+  flex-grow: 0.5;
   padding-top: 10px;
 
   & > h3 {
@@ -178,29 +159,7 @@ export default {
 }
 
 .money {
-  width: 170px;
   border-right: 1px solid #e6e6e6;
-}
-
-.coupon {
-  width: 190px;
-  border-right: 1px solid #e6e6e6;
-}
-
-.campaign {
-  flex-grow: 1;
-
-  & > div:last-child {
-    display: flex;
-  }
-
-  & .button:first-child {
-    margin-left: 20px;
-  }
-
-  & .button:last-child {
-    margin-left: 20px;
-  }
 }
 
 .button {
