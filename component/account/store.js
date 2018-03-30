@@ -5,17 +5,26 @@ import * as fapi from 'api/fengming'
 import * as mapi from 'api/meta'
 
 const store = observable({
-  _logQuery: {},
-  _logs: [],
+  _consumeQuery: {},
+  _consumeLogs: [],
+
+  _chargeQuery: {},
+  _chargeLogs: [],
 
   _summary: {},
   _coupons: [],
 
-  get logQuery() {
-    return toJS(this._logQuery)
+  get consumeQuery() {
+    return toJS(this._consumeQuery)
   },
-  get logs() {
-    return toJS(this._logs)
+  get consumeLogs() {
+    return toJS(this._consumeLogs)
+  },
+  get chargeQuery() {
+    return toJS(this._chargeQuery)
+  },
+  get chargeLogs() {
+    return toJS(this._chargeLogs)
   },
   get summary() {
     return toJS(this._summary)
@@ -25,12 +34,16 @@ const store = observable({
   },
 
   // opts: { type, time, offset, pageSize }
-  getLogs: action(async function(opts) {
-    const { query, logs } = await fapi.getLogs(opts)
-    this._logQuery = query
-    this._logs = logs
+  getConsumeLogs: action(async function(opts) {
+    // const { query, logs } = await fapi.getLogs(opts)
+    this._consumeQuery = {}
+    this._consumeLogs = []
   }),
-
+  // opts: { type, time, offset, pageSize }
+  getChargeLogs: action(async function() {
+    this._chargeQuery = {}
+    this._chargeLogs = []
+  }),
   getSummary: action(async function() {
     this._summary = await fapi.getSummary()
   }),
