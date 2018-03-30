@@ -1,5 +1,5 @@
 <template>
-  <div class="summary-container">
+  <div>
     <section-header>我的账户</section-header>
     <el-row type="flex" justify="space-around" align="center">
       <el-col :span="4"></el-col>
@@ -22,25 +22,23 @@
       <el-col :span="8" class="column">
         <el-row class="multi">
           <el-col :span="12">
-            <h3>今日预算：{{summary.budget / 100}}元</h3>
-          </el-col>
-          <el-col :span="12">
             <div class="btn">
+              <span>广告投放：</span>
               <router-link :to="{name: 'qwt-promotion-list'}"
                 @click.native="onClickCampaignList">
                 <el-button type="primary">推广管理</el-button>
               </router-link>
             </div>
             <div class="btn">
-              <router-link :to="{name: 'qwt-create-promotion'}"
-                @click.native="onClickCreateCampaign">
-                <el-button type="primary">新建推广</el-button>
+              <span>智能投放：</span>
+              <router-link :to="{name: 'mvp-campaign-list'}"
+                @click.native="onClickMvpCampaignList">
+                <el-button type="primary">推广管理</el-button>
               </router-link>
             </div>
           </el-col>
         </el-row>
       </el-col>
-      <el-col :span="4"></el-col>
     </el-row>
   </div>
 </template>
@@ -64,6 +62,11 @@
       onClickCreateCampaign() {
         track({
           action: 'account: click create campaign'
+        })
+      },
+      onClickMvpCampaignList() {
+        track({
+          action: 'account: click query mvp campaigns'
         })
       },
       onClickCampaignList() {
@@ -93,7 +96,9 @@
 
 <style scoped>
   .column {
-    text-align: center;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
   }
   p {
     margin: 10px 0;
@@ -101,9 +106,17 @@
   .multi {
     display: flex;
     align-items: center;
+    justify-content: center;
     width: 100%;
   }
   .btn {
+    display: flex;
+    align-items: center;
     margin-bottom: 10px;
+
+    & > span {
+      font-weight: 600;
+      color: #6a778c;
+    }
   }
 </style>

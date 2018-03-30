@@ -4,21 +4,30 @@
     <topbar :userInfo="userInfo">
       <label slot="title">账户</label>
     </topbar>
-    <h1>{{ userInfo.name }},欢迎回来</h1>
-    <account-summary></account-summary>
-    <log :all-areas="allAreas"></log>
+    <h1>{{ userInfo.name }}，欢迎回来</h1>
+    <account-summary />
+    <consume />
+    <charge />
   </div>
 </template>
 
 <script>
 import AccountSummary from './summary'
+import Consume from './consume'
+import Charge from './charge'
+
 import Topbar from 'com/topbar'
-import Log from './log'
 
 import track from 'util/track'
 
 export default {
   name: 'bax-account',
+  components: {
+    AccountSummary,
+    Consume,
+    Charge,
+    Topbar
+  },
   props: {
     allAreas: {
       type: Array,
@@ -28,11 +37,6 @@ export default {
       type: Object,
       required: true
     }
-  },
-  components: {
-    AccountSummary,
-    Topbar,
-    Log
   },
   mounted() {
     const { userInfo } = this
