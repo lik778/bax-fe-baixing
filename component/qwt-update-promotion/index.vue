@@ -272,6 +272,7 @@
 </template>
 
 <script>
+import VueScrollTo from 'vue-scrollto'
 import { Message } from 'element-ui'
 import isEqual from 'lodash.isequal'
 import uuid from 'uuid/v4'
@@ -921,6 +922,12 @@ export default {
     await this.initCampaignInfo()
 
     setTimeout(() => {
+      if (this.$route.query.target === 'keyword') {
+        VueScrollTo.scrollTo('.keyword', 200)
+      }
+    }, 320)
+
+    setTimeout(() => {
       const { actionTrackId, userInfo, id } = this
 
       track({
@@ -938,7 +945,6 @@ export default {
 </script>
 
 <style scoped>
-
 .authing-tip {
   display: inline-flex;
   align-items: center;
@@ -1109,5 +1115,4 @@ export default {
     }
   }
 }
-
 </style>
