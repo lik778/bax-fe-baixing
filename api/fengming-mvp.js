@@ -126,6 +126,14 @@ export async function getCampaignInfo(id) {
   return toCamelcase(body.data)
 }
 
+export async function getMvpSimpleReport() {
+  const body = await mvp
+    .get('/simple/campaign/simple_report')
+    .json()
+
+  return toCamelcase(body.data)
+}
+
 export async function getMvpSummary() {
   const body = await mvp
     .get('/simple/campaign/report')

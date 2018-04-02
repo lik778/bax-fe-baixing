@@ -8,6 +8,7 @@ import * as mapi from 'api/meta'
 const store = observable({
   _mvpSummary: {
     consume: 0,
+    budget: 0,
     clicks: 0,
     shows: 0
   },
@@ -37,7 +38,14 @@ const store = observable({
   }),
 
   getMvpSummary: action(async function() {
-    this._mvpSummary = await api.getMvpSummary()
+    const [summary, report] = await Promise.all([
+      api.getMvpSummary(),
+      api.getMvpSimpleReport()
+    ])
+    this._mvpSummary = {
+      ...summary,
+      ...report
+    }
   }),
 
   getCoupons: action(async function(opt) {
