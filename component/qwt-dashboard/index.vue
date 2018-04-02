@@ -43,13 +43,20 @@
         </span>
       </section>
       <section>
-        <aside>时间单位:</aside>
-        <span>
-          <i class="badge" v-for="d of allTimeUnits" :key="d.value"
-            :aria-checked="query.timeUnit === d.value"
-            @click="query.timeUnit = d.value">
-            {{ d.label }}
-          </i>
+        <aside>选择计划</aside>
+        <span class="kw-list">
+          <div>
+            <el-tag v-for="c in query.checkedCampaigns" closable
+              type="success" :key="'c-' + c.id"
+              @close="removeCampaign(c)">
+              {{ '计划：' + c.id }}
+            </el-tag>
+            <button class="add-campaign-btn"
+              @click="openCampaignSelector">
+              <i class="el-icon-plus" />
+              添加计划
+            </button>
+          </div>
         </span>
       </section>
       <section>
@@ -62,72 +69,31 @@
           </i>
         </span>
       </section>
-      <section>
-        <aside>计划/关键词筛选:</aside>
-        <span class="kw-list">
-          <div>
-            <el-tag v-for="c in displayCheckedCampaigns" closable
-              type="success" :key="'c-' + c.id"
-              @close="removeCampaign(c)">
-              {{ '计划：' + c.id }}
-            </el-tag>
-            <el-tag v-for="(k, i) in displayCheckedKeywords" closable
-              type="success" :key="'k-' + i"
-              @close="removeKeyword(k)">
-              {{ k.word }}
-            </el-tag>
-            <i class="el-icon-plus"
-              @click="openKeywordSelector">
-            </i>
-          </div>
-          <div class="switch"
-            v-if="kwListTotalSize > kwListLimitSize">
-            <p v-if="!kwListExpand" @click="kwListExpand = true">
-              展开
-            </p>
-            <p v-if="kwListExpand" @click="kwListExpand = false">
-              合起
-            </p>
-          </div>
-        </span>
-      </section>
-      <data-trend :statistics="statistics"></data-trend>
       <data-detail :statistics="statistics" :summary="summary"
         :offset="offset" :total="total" :limit="limit"
         :dimension="query.dimension"
         @download="() => queryStatistics({}, 'download')"
         @current-change="queryStatistics">
       </data-detail>
-      <plan-keyword-selector
-        :visible="pksDialogVisible"
+      <campaign-selector
+        :visible="campaignDialogVisible"
         :channel="query.channel"
-        :dimension="query.dimension"
         :userId="userId"
         :campaign-ids="query.checkedCampaigns.map(c => c.id)"
-        :keyword-ids="query.checkedKeywords.map(k => k.id)"
-        @ok="pksDialogVisible = false"
-        @clear="clearCheckedKeywordsAndCampaigns"
+        @ok="campaignDialogVisible = false"
         @select-campaign="selectCampaign"
         @remove-campaign="removeCampaign"
-        @select-keyword="selectKeyword"
-        @remove-keyword="removeKeyword">
-      </plan-keyword-selector>
-      <download-dialog
-        :visible="downloadDialogVisible"
-        @ok="downloadDialogVisible = false">
-      </download-dialog>
+        @clear="clearCheckedCampaigns" />
     </main>
   </div>
 </template>
 
 <script>
-import PlanKeywordSelector from 'com/common/plan-keyword-selector'
+import CampaignSelector from 'com/common/campaign-selector'
 import BaxSelect from 'com/common/select'
 import Topbar from 'com/topbar'
 
-import DownloadDialog from './download-dialog'
 import DataDetail from './data-detail'
-import DataTrend from './data-trend'
 
 import { Message } from 'element-ui'
 import { toTimestamp } from 'utils'
@@ -161,10 +127,8 @@ import store from './store'
 export default {
   name: 'qwt-dashboard',
   components: {
-    PlanKeywordSelector,
-    DownloadDialog,
+    CampaignSelector,
     DataDetail,
-    DataTrend,
     BaxSelect,
     Topbar
   },
@@ -183,10 +147,7 @@ export default {
   },
   data() {
     return {
-      downloadDialogVisible: false,
-      pksDialogVisible: false,
-      kwListExpand: false,
-      kwListLimitSize: 15,
+      campaignDialogVisible: false,
       hasOperated: false, // 用户已经操作过
 
       semPlatformOpts,
@@ -200,7 +161,6 @@ export default {
         timeRange: [],
 
         checkedCampaigns: [],
-        checkedKeywords: [],
 
         dimension: DIMENSION_CAMPAIGN,
         channel: SEM_PLATFORM_BAIDU,
@@ -210,33 +170,6 @@ export default {
     }
   },
   computed: {
-    displayCheckedCampaigns() {
-      const { kwListExpand, kwListLimitSize, query } = this
-
-      if (kwListExpand) {
-        return query.checkedCampaigns
-      }
-
-      return query.checkedCampaigns.slice(0, kwListLimitSize)
-    },
-    displayCheckedKeywords() {
-      const { kwListExpand, kwListLimitSize, query } = this
-
-      if (kwListExpand) {
-        return query.checkedKeywords
-      }
-
-      if (query.checkedCampaigns.length >= kwListLimitSize) {
-        return []
-      }
-
-      return query.checkedKeywords
-        .slice(0, kwListLimitSize - query.checkedCampaigns.length)
-    },
-    kwListTotalSize() {
-      const { query } = this
-      return query.checkedCampaigns.length + query.checkedKeywords.length
-    },
     userId() {
       return this.$route.query.userId || this.userInfo.id
     }
@@ -248,14 +181,6 @@ export default {
 
       let startAt
       let endAt
-
-      if (!(query.checkedCampaigns.length + query.checkedKeywords.length)) {
-        store.clearStatistics()
-        if (action === 'download') {
-          Message.error('请选择查询条件')
-        }
-        return
-      }
 
       if (query.timeType === 'custom') {
         startAt = toTimestamp(query.timeRange[0], 'YYYY-MM-DD')
@@ -285,44 +210,39 @@ export default {
 
       if (query.checkedCampaigns.length) {
         q.campaignIds = query.checkedCampaigns.map(c => c.id)
-      }
-
-      if (query.checkedKeywords.length) {
-        q.keywordIds = query.checkedKeywords.map(k => k.id)
+      } else {
+        q.campaignIds = undefined
       }
 
       // 特事特办
       if (this.$route.query.source === 'qwt-promotion-list' &&
         this.$route.query.campaignId &&
         !this.hasOperated) {
-        q.keywordIds = undefined
         q.campaignIds = [this.$route.query.campaignId | 0]
       }
 
       if (action === 'download') {
         await store.downloadCsv(q)
-        this.downloadDialogVisible = true
       } else {
         await store.getReport(q)
       }
     },
-    openKeywordSelector() {
-      this.pksDialogVisible = true
+    openCampaignSelector() {
+      this.campaignDialogVisible = true
       track({
-        action: 'qwt-dashboard: click keyword selector'
+        action: 'qwt-dashboard: click campaign selector'
       })
     },
     async onChangeChannel(v) {
       this.hasOperated = true
-      await this.clearCheckedKeywordsAndCampaigns()
+      await this.clearCheckedCampaigns()
       this.query.channel = v
       track({
         action: 'qwt-dashboard: click channel'
       })
     },
-    async onChangeDimension(v) {
+    onChangeDimension(v) {
       this.hasOperated = true
-      await this.clearCheckedKeywordsAndCampaigns()
       this.query.dimension = v
       track({
         action: 'qwt-dashboard: click dimension'
@@ -342,24 +262,8 @@ export default {
       this.query.checkedCampaigns = this.query.checkedCampaigns
         .filter(c => c.id !== campaign.id)
     },
-    selectKeyword(keyword) {
-      this.hasOperated = true
-      const ids = this.query.checkedKeywords.map(k => k.id)
-      if (ids.includes(keyword.id)) {
-        return
-      }
-
-      this.query.checkedKeywords.push(keyword)
-      this.query.dimension = DIMENSION_KEYWORD
-    },
-    removeKeyword(keyword) {
-      this.hasOperated = true
-      this.query.checkedKeywords = this.query.checkedKeywords
-        .filter(k => k.id !== keyword.id)
-    },
-    async clearCheckedKeywordsAndCampaigns() {
+    async clearCheckedCampaigns() {
       this.query.checkedCampaigns = []
-      this.query.checkedKeywords = []
       await store.clearStatistics()
     }
   },
@@ -395,10 +299,6 @@ export default {
       this.query.device = DEVICE_ALL
       this.query.timeUnit = TIME_UNIT_DAY
       this.query.dimension = DIMENSION_KEYWORD
-      setTimeout(() => {
-        // 说明: query.xxx = ooo 会 reset checkedXXXs
-        this.query.checkedKeywords = campaign.keywords
-      }, 50)
     }
 
     setTimeout(() => {
@@ -417,6 +317,25 @@ export default {
 <style scoped>
 @import '../../cssbase/var';
 @import 'cssbase/mixin';
+
+.add-campaign-btn {
+  @mixin center;
+  display: inline-flex;
+  width: 84px;
+  height: 22px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.67;
+  color: #666666;
+  border-radius: 4px;
+  border: dashed 1px #d9d9d9;
+  cursor: pointer;
+
+  & > i {
+    margin-right: 8px;
+    font-size: 10px;
+  }
+}
 
 .tip {
   margin-left: 5px;
@@ -456,18 +375,6 @@ export default {
   display: flex;
   flex-flow: column;
   max-width: 620px;
-
-  & > .switch {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    margin-top: 10px;
-    padding-top: 5px;
-    border-top: 1px solid #dde1e6;
-    font-size: 13px;
-    color: #6a778c;
-    cursor: pointer;
-  }
 }
 
 .qwt-dashboard {
