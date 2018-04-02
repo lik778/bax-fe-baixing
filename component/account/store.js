@@ -4,11 +4,23 @@ import { observable, action, toJS } from 'mobx'
 import * as fapi from 'api/fengming'
 import * as mapi from 'api/meta'
 
+const emptyQuery = {
+  fromDate: 0,
+  toDate: 0,
+  offset: 0,
+  limit: 10,
+  total: 10
+}
+
 const store = observable({
-  _consumeQuery: {},
+  _consumeQuery: {
+    ...emptyQuery
+  },
   _consumeLogs: [],
 
-  _chargeQuery: {},
+  _chargeQuery: {
+    ...emptyQuery
+  },
   _chargeLogs: [],
 
   _summary: {},
@@ -33,17 +45,38 @@ const store = observable({
     return toJS(this._coupons)
   },
 
-  // opts: { type, time, offset, pageSize }
-  getConsumeLogs: action(async function(opts) {
-    // const { query, logs } = await fapi.getLogs(opts)
-    this._consumeQuery = {}
+  clearConsumeLogs: action(async function() {
+    this._consumeQuery = {
+      ...emptyQuery
+    }
     this._consumeLogs = []
   }),
-  // opts: { type, time, offset, pageSize }
-  getChargeLogs: action(async function() {
-    this._chargeQuery = {}
+  getConsumeLogs: action(async function(opts) {
+    this._consumeQuery = {
+      ...this._consumeQuery,
+      ...opts
+    }
+    const { logs, total } = await fapi.getChangeLogs(this.consumeQuery)
+    this._consumeQuery.total = total
+    this._consumeLogs = logs
+  }),
+
+  clearChargeLogs: action(function() {
+    this._chargeQuery = {
+      ...emptyQuery
+    }
     this._chargeLogs = []
   }),
+  getChargeLogs: action(async function(opts) {
+    this._chargeQuery = {
+      ...this._chargeQuery,
+      ...opts
+    }
+    const { logs, total } = await fapi.getChargeLogs(this.chargeQuery)
+    this._chargeQuery.total = total
+    this._chargeLogs = logs
+  }),
+
   getSummary: action(async function() {
     this._summary = await fapi.getSummary()
   }),
