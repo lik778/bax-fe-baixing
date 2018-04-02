@@ -7,44 +7,33 @@
     <main>
       <el-table :data="statistics">
         <el-table-column v-if="checkVisiable('date')"
-          label="日期" prop="date" width="140">
-        </el-table-column>
+          label="日期" prop="date" width="140" />
         <el-table-column v-if="checkVisiable('campaignId')"
-          label="推广计划" prop="campaignId" width="120">
-        </el-table-column>
+          label="推广计划" prop="campaignId" width="120" />
         <el-table-column v-if="checkVisiable('keyword')"
-          label="关键词" prop="keyword" width="120">
-        </el-table-column>
-        <el-table-column v-if="checkVisiable('cpcRanking')"
-          label="平均排名" width="120" sortable
-          :formatter="r => fmtCpcRanking(r.cpcRanking)">
-        </el-table-column>
+          label="关键词" prop="keyword" width="120" />
         <el-table-column v-if="checkVisiable('channel')"
           label="渠道" width="100"
-          :formatter="r => fmtChannel(r.channel)">
-        </el-table-column>
+          :formatter="r => fmtChannel(r.channel)" />
         <el-table-column v-if="checkVisiable('device')"
           label="设备" width="100"
-          :formatter="r => fmtDevice(r.device)">
-        </el-table-column>
+          :formatter="r => fmtDevice(r.device)" />
         <el-table-column v-if="checkVisiable('shows')"
-          label="展现" prop="shows" width="90" sortable>
-        </el-table-column>
+          label="展现" prop="shows" width="90" sortable />
         <el-table-column v-if="checkVisiable('clicks')"
-          label="点击" prop="clicks" width="90" sortable>
-        </el-table-column>
+          label="点击" prop="clicks" width="90" sortable />
+        <el-table-column v-if="checkVisiable('clickAvgPrice')"
+          label="实扣点击单价" width="160" sortable
+          :formatter="r => (r.clickAvgPrice / 100).toFixed(2) + '元'" />
         <el-table-column v-if="checkVisiable('cost')"
-          label="消费" width="120"
-          :formatter="r => (r.cost / 100).toFixed(2) + '元'">
-        </el-table-column>
+          label="消耗" width="120"
+          :formatter="r => (r.cost / 100).toFixed(2) + '元'" />
+        <el-table-column v-if="checkVisiable('cpcRanking')"
+          label="排名" width="120" sortable
+          :formatter="r => fmtCpcRanking(r.cpcRanking)" />
         <el-table-column v-if="checkVisiable('clickRate')"
           label="点击率" width="120" sortable
-          :formatter="r => (r.clickRate * 100).toFixed(2) + '%'">
-        </el-table-column>
-        <el-table-column v-if="checkVisiable('clickAvgPrice')"
-          label="平均点击单价" width="160" sortable
-          :formatter="r => (r.clickAvgPrice / 100).toFixed(2) + '元'">
-        </el-table-column>
+          :formatter="r => (r.clickRate * 100).toFixed(2) + '%'" />
       </el-table>
     </main>
     <footer>
@@ -74,8 +63,7 @@ import BaxPagination from 'com/common/pagination'
 import BaxSelect from 'com/common/select'
 
 import {
-  DIMENSION_CAMPAIGN,
-  columnOpts
+  DIMENSION_CAMPAIGN
 } from 'constant/fengming-report'
 
 import {
