@@ -923,7 +923,7 @@ export default {
 
     setTimeout(() => {
       if (this.$route.query.target === 'keyword') {
-        VueScrollTo.scrollTo('.keyword', 200)
+        VueScrollTo.scrollTo('.keyword', 100)
       }
     }, 320)
 
