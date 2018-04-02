@@ -5,7 +5,7 @@ export const cpcTopPriceTip = '首次为您推荐新词左侧（上方）指导�
 
 export const searchIndexTip = '最近30天内网民的日均搜索情况，指数越高表明网民搜索次数越多。日均搜索量大小仅与关键词本身、推广地域有关系，一般来说，推广地域越多，同一个关键词的日均搜索量越大。'
 
-export const mobileRatioTip = '您能够以PC端关键词出价乘以一定比例的方式设定移动设备的关键词出价，方便您使用同个计划管理多屏投放。移动端最高出价 = PC端CPC最高出价 * 移动端出价比例。'
+export const mobileRatioTip = '移动端关键词最高出价 = 电脑端关键词最高出价 * 移动端出价比例'
 
 export const campaignCreativeTooltip = `
 1、推广内容和推广标题请勿完全相同；

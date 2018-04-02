@@ -83,7 +83,8 @@
       <el-table-column v-if="!readonly" type="selection" width="40"
         :selectable="checkSelectable">
       </el-table-column>
-      <el-table-column prop="open" label="开关" width="80">
+      <el-table-column prop="open" label="开关" width="80"
+        :render-header="renderColumnHeaderWithTip('关闭计划后，投放将暂停，暂停3天后将下线。')">
         <template scope="s">
           <el-switch :disabled="s.row.status === CAMPAIGN_STATUS_OFFLINE || readonly"
             :active-text="readonly ? 'ON' : ''"
@@ -95,16 +96,20 @@
       </el-table-column>
       <el-table-column prop="id" label="ID" width="80">
       </el-table-column>
-      <el-table-column label="计划状态" width="140"
+      <el-table-column label="状态" width="140"
         :formatter="r => fmtStatus(r.status)"
         :render-header="renderColumnHeaderWithTip(campaignStatusTooltip)">
       </el-table-column>
-      <el-table-column label="审核状态" width="120"
-        :formatter="r => fmtAuditStatus(r) "
-        :render-header="renderColumnHeaderWithTip(campaignAuditStatusTooltip)">
+      <el-table-column label="渠道" width="100"
+        :formatter="r => fmtSource(r.source)">
       </el-table-column>
-      <el-table-column label="预算" width="90"
+      <el-table-column label="今日预算" width="100"
+        :render-header="renderColumnHeaderWithTip('该计划今日消耗的上限')"
         :formatter="r => fmtPrice(r.dailyBudget)">
+      </el-table-column>
+      <el-table-column label="今日消耗" width="100"
+        :render-header="renderColumnHeaderWithTip('该计划今日已消耗金额')"
+        :formatter="r => r.todayCost === 0 ? '-' : fmtPrice(r.todayCost)">
       </el-table-column>
       <el-table-column label="移动端出价比例(0.1-9.9)" width="130"
         :render-header="renderColumnHeaderWithTip(mobileRatioTip)">
@@ -114,19 +119,7 @@
           </p>
         </template>
       </el-table-column>
-      <el-table-column label="开始日期" width="120"
-        :formatter="r => fmtDate(r.timeRange, r.timeRange && r.timeRange[0])">
-      </el-table-column>
-      <el-table-column label="结束日期" width="120"
-        :formatter="r => fmtDate(r.timeRange, r.timeRange && r.timeRange[1])">
-      </el-table-column>
-      <el-table-column label="今日消耗" width="100"
-        :formatter="r => r.todayCost === 0 ? '-' : fmtPrice(r.todayCost)">
-      </el-table-column>
-      <el-table-column label="渠道" width="100"
-        :formatter="r => fmtSource(r.source)">
-      </el-table-column>
-      <el-table-column label="操作" fixed="right">
+      <el-table-column label="优化投放" fixed="right">
         <template scope="s">
           <router-link
             :to="{ name: 'qwt-update-promotion', params: { id: s.row.id } }"
