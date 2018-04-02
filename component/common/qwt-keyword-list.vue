@@ -30,7 +30,7 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column label="PC端最高出价(元/次点击)"
+      <el-table-column label="电脑端最高出价(元/次点击)"
         :render-header="renderColumnHeaderWithTip(cpcTopPriceTip)">
         <template scope="s">
           <span class="price">

@@ -31,10 +31,10 @@ export const allDevices = [{
   label: '全部',
   value: 0
 }, {
-  label: 'PC',
+  label: '电脑端',
   value: 1
 }, {
-  label: 'WAP',
+  label: '手机端',
   value: 2
 }]
 
