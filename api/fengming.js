@@ -228,6 +228,30 @@ export async function getRecommendedWords(word) {
   return toCamelcase(body.data)
 }
 
+export async function getChangeLogs(opts) {
+  const body = await fengming
+    .get('/balance/changelog')
+    .query(reverseCamelcase(opts))
+    .json()
+
+  return {
+    total: body.meta.count,
+    logs: toCamelcase(body.data)
+  }
+}
+
+export async function getChargeLogs(opts) {
+  const body = await fengming
+    .get('/balance/chargelog')
+    .query(reverseCamelcase(opts))
+    .json()
+
+  return {
+    total: body.meta.count,
+    logs: toCamelcase(body.data)
+  }
+}
+
 export async function getLogs(opts = {}) {
   let query = {
     pageSize: 50,
