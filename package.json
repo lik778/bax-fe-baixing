@@ -34,6 +34,7 @@
     "vue-echarts": "^3.0.1",
     "vue-router": "^3.0.1",
     "vue-rx": "^5.0.0",
+    "vue-scrollto": "^2.11.0",
     "vue2-filters": "0.1.9",
     "whatwg-fetch": "^2.0.3"
   },
