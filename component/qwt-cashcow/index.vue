@@ -36,7 +36,7 @@
 
   import {
     getCashcowPageCreateUrl,
-    getCashcowPageEditUrl,
+    getCashcowPageEditUrl
   } from 'util/kit'
 
   import * as action from './action'
@@ -50,7 +50,7 @@
     store,
     components: {
       Topbar,
-      Card,
+      Card
     },
 
     data() {

@@ -3,7 +3,7 @@ import { createAction } from 'vue-duo'
 
 import {
   getReleasePageList,
-  getDraftPageList,
+  getDraftPageList
 } from 'api/cashcow'
 
 export const getPageList = createAction(async (uid) => {
@@ -17,7 +17,7 @@ export const getPageList = createAction(async (uid) => {
     updatedAt: d.updatedAt,
     pageId: d.id,
     type: 'draft',
-    id: d.id,
+    id: d.id
   }))
 
   releasePageList.forEach(page => {
@@ -35,7 +35,7 @@ export const getPageList = createAction(async (uid) => {
       title: page.config.campaignName,
       releaseAt: page.updatedAt,
       type: 'release',
-      id: page.id,
+      id: page.id
     })
   })
 

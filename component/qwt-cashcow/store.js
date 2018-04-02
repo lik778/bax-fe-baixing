@@ -11,7 +11,7 @@ const store = createStore({
 
 store.subscribeActions({
   [getPageList]: (list) => ({
-   pageList: list
+    pageList: list
   })
 })
 

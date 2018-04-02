@@ -30,7 +30,6 @@
 </template>
 
 <script>
-  import pick from 'lodash/pick'
   import { toHumanTime } from 'utils'
 
   const operateIconMapping = {
