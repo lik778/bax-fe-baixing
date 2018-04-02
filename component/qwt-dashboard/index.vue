@@ -73,6 +73,7 @@
         :offset="offset" :total="total" :limit="limit"
         :dimension="query.dimension"
         @download="() => queryStatistics({}, 'download')"
+        @switch-to-campaign-report="({campaignId}) => getCampaignReport(campaignId)"
         @current-change="queryStatistics">
       </data-detail>
       <campaign-selector
@@ -95,7 +96,6 @@ import Topbar from 'com/topbar'
 
 import DataDetail from './data-detail'
 
-import { Message } from 'element-ui'
 import { toTimestamp } from 'utils'
 
 import {
@@ -227,6 +227,15 @@ export default {
         await store.getReport(q)
       }
     },
+    async getCampaignReport(campaignId) {
+      const campaign = await getCampaignInfo(campaignId)
+      this.query.channel = campaign.source
+      this.query.timeType = timeTypes[0].value
+      this.query.device = DEVICE_ALL
+      this.query.timeUnit = TIME_UNIT_DAY
+      this.query.dimension = DIMENSION_KEYWORD
+      this.query.checkedCampaigns = [campaign]
+    },
     openCampaignSelector() {
       this.campaignDialogVisible = true
       track({
@@ -293,12 +302,7 @@ export default {
   async mounted() {
     const { query } = this.$route
     if (query.campaignId) {
-      const campaign = await getCampaignInfo(query.campaignId)
-      this.query.channel = campaign.source
-      this.query.timeType = timeTypes[0].value
-      this.query.device = DEVICE_ALL
-      this.query.timeUnit = TIME_UNIT_DAY
-      this.query.dimension = DIMENSION_KEYWORD
+      await this.getCampaignReport(query.campaignId)
     }
 
     setTimeout(() => {

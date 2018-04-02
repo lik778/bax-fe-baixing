@@ -5,35 +5,48 @@
       数据详情
     </header>
     <main>
-      <el-table :data="statistics">
-        <el-table-column v-if="checkVisiable('date')"
-          label="日期" prop="date" width="140" />
-        <el-table-column v-if="checkVisiable('campaignId')"
-          label="推广计划" prop="campaignId" width="120" />
-        <el-table-column v-if="checkVisiable('keyword')"
-          label="关键词" prop="keyword" width="120" />
-        <el-table-column v-if="checkVisiable('channel')"
-          label="渠道" width="100"
+      <el-table v-if="isCampaignDimension"
+        :key="1" :data="statistics">
+        <el-table-column label="日期" prop="date" width="140" />
+        <el-table-column label="推广计划" prop="campaignId" width="120" />
+        <el-table-column label="渠道" width="100"
           :formatter="r => fmtChannel(r.channel)" />
-        <el-table-column v-if="checkVisiable('device')"
-          label="设备" width="100"
+        <el-table-column label="设备" width="100"
           :formatter="r => fmtDevice(r.device)" />
-        <el-table-column v-if="checkVisiable('shows')"
-          label="展现" prop="shows" width="90" sortable />
-        <el-table-column v-if="checkVisiable('clicks')"
-          label="点击" prop="clicks" width="90" sortable />
-        <el-table-column v-if="checkVisiable('clickAvgPrice')"
-          label="实扣点击单价" width="160" sortable
+        <el-table-column label="展现" prop="shows" width="90" sortable />
+        <el-table-column label="点击" prop="clicks" width="90" sortable />
+        <el-table-column label="实扣点击单价" width="160" sortable
           :formatter="r => (r.clickAvgPrice / 100).toFixed(2) + '元'" />
-        <el-table-column v-if="checkVisiable('cost')"
-          label="消耗" width="120"
+        <el-table-column label="消耗" width="120"
           :formatter="r => (r.cost / 100).toFixed(2) + '元'" />
-        <el-table-column v-if="checkVisiable('cpcRanking')"
-          label="排名" width="120" sortable
+        <el-table-column label="关键词详情" width="140">
+          <template scope="s">
+            <p class="link" @click="switchToCampaignReport(s.row.campaignId)">
+              查看
+            </p>
+          </template>
+        </el-table-column>
+      </el-table>
+      <el-table v-else :key="2" :data="statistics">
+        <el-table-column label="日期" prop="date" width="140" />
+        <el-table-column label="关键词" prop="keyword" width="120" />
+        <el-table-column label="渠道" width="100"
+          :formatter="r => fmtChannel(r.channel)" />
+        <el-table-column label="设备" width="100"
+          :formatter="r => fmtDevice(r.device)" />
+        <el-table-column label="展现" prop="shows" width="90" sortable />
+        <el-table-column label="点击" prop="clicks" width="90" sortable />
+        <el-table-column label="实扣点击单价" width="160" sortable
+          :formatter="r => (r.clickAvgPrice / 100).toFixed(2) + '元'" />
+        <el-table-column label="消耗" width="120"
+          :formatter="r => (r.cost / 100).toFixed(2) + '元'" />
+        <el-table-column label="排名" width="120" sortable
           :formatter="r => fmtCpcRanking(r.cpcRanking)" />
-        <el-table-column v-if="checkVisiable('clickRate')"
-          label="点击率" width="120" sortable
-          :formatter="r => (r.clickRate * 100).toFixed(2) + '%'" />
+        <el-table-column label="优化出价">
+          <template scope="s">
+            <p class="link" @click="gotoUpdateCampaign(s.row.campaignId)">修改计划</p>
+          </template>
+        </el-table-column>
       </el-table>
     </main>
     <footer>
@@ -82,17 +95,6 @@ import {
 
 const isArray = Array.isArray
 
-const campaignDefaultColumns = [
-  'date', 'campaignId', 'channel', 'device',
-  'shows', 'clicks', 'clickAvgPrice', 'cost'
-]
-
-const keywordDefaultColumns = [
-  'date', 'keyword', 'channel', 'device',
-  'shows', 'clicks', 'clickAvgPrice', 'cost',
-  'clickRate', 'cpcRanking'
-]
-
 export default {
   name: 'qwt-dashboard-data-detail',
   components: {
@@ -125,12 +127,28 @@ export default {
       required: true
     }
   },
-  data() {
-    return {
-      displayColumns: campaignDefaultColumns
+  computed: {
+    isCampaignDimension() {
+      return this.dimension === DIMENSION_CAMPAIGN
     }
   },
   methods: {
+    switchToCampaignReport(cid) {
+      this.$emit('switch-to-campaign-report', {
+        campaignId: cid
+      })
+    },
+    gotoUpdateCampaign(cid) {
+      this.$router.push({
+        name: 'qwt-update-promotion',
+        params: {
+          id: cid
+        },
+        query: {
+          target: 'keyword'
+        }
+      })
+    },
     onClickCustomColumns() {
       track({
         action: 'qwt-dashboard: click set custom columns'
@@ -167,16 +185,21 @@ export default {
     fmtCpcRanking,
     toHumanTime,
     centToYuan
-  },
-  watch: {
-    dimension(v) {
-      this.displayColumns = v === DIMENSION_CAMPAIGN
-        ? campaignDefaultColumns
-        : keywordDefaultColumns
-    }
   }
 }
 </script>
+
+<style>
+@import '../../cssbase/var';
+@import 'cssbase/mixin';
+
+.qwt-dashboard-data-detail .link {
+  @mixin center;
+  max-width: 70px;
+  color: var(--qwt-c-blue);
+  cursor: pointer;
+}
+</style>
 
 <style scoped>
 .total {
