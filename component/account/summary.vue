@@ -19,7 +19,7 @@
           <el-button type="primary">查看</el-button>
         </router-link>
       </el-col>
-      <el-col :span="8" class="column">
+      <el-col :span="16" class="column">
         <el-row class="multi">
           <el-col :span="12">
             <div class="btn">
