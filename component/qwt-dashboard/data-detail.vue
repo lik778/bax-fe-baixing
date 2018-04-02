@@ -4,20 +4,6 @@
     <header>
       数据详情
     </header>
-    <section>
-      <span>
-        <label>自定义列:</label>
-        <bax-select multiple :options="columnOpts"
-          @click.native="onClickCustomColumns"
-          v-model="displayColumns">
-        </bax-select>
-      </span>
-      <span>
-        <el-button icon="el-icon-view" type="primary" @click="download">
-          下载
-        </el-button>
-      </span>
-    </section>
     <main>
       <el-table :data="statistics">
         <el-table-column v-if="checkVisiable('date')"
@@ -106,23 +92,17 @@ import {
   centToYuan
 } from 'utils'
 
-// {
-//   label: '全选',
-//   value: '_all_'
-// }
-
 const isArray = Array.isArray
 
 const campaignDefaultColumns = [
   'date', 'campaignId', 'channel', 'device',
-  'shows', 'clicks', 'cost', 'clickRate',
-  'cpcRanking', 'clickAvgPrice'
+  'shows', 'clicks', 'clickAvgPrice', 'cost'
 ]
 
 const keywordDefaultColumns = [
   'date', 'keyword', 'channel', 'device',
-  'shows', 'clicks', 'cost', 'clickRate',
-  'cpcRanking', 'clickAvgPrice'
+  'shows', 'clicks', 'clickAvgPrice', 'cost',
+  'clickRate', 'cpcRanking'
 ]
 
 export default {
@@ -159,8 +139,7 @@ export default {
   },
   data() {
     return {
-      displayColumns: campaignDefaultColumns,
-      columnOpts
+      displayColumns: campaignDefaultColumns
     }
   },
   methods: {
@@ -173,13 +152,7 @@ export default {
       this.$emit('current-change', opts)
     },
     checkVisiable(column) {
-      const { displayColumns } = this
-
-      if (displayColumns.includes('_all_')) {
-        return true
-      }
-
-      return displayColumns.includes(column)
+      return this.displayColumns.includes(column)
     },
     download() {
       this.$emit('download')
