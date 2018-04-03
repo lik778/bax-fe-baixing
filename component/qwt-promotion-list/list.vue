@@ -96,9 +96,15 @@
       </el-table-column>
       <el-table-column prop="id" label="ID" width="80">
       </el-table-column>
-      <el-table-column label="状态" width="140"
-        :formatter="r => fmtStatus(r.status)"
-        :render-header="renderColumnHeaderWithTip(campaignStatusTooltip)">
+      <el-table-column label="计划状态" width="140">
+        <template scope="s">
+          <i class="dot" />
+          <label>{{ fmtStatus(s.row.status) }}</label>
+          <el-tooltip effect="dark" placement="top"
+            content="你是我的小啊小苹果">
+            <i class="el-icon-info" />
+          </el-tooltip>
+        </template>
       </el-table-column>
       <el-table-column label="渠道" width="100"
         :formatter="r => fmtSource(r.source)">
@@ -623,6 +629,23 @@ a {
 
   & > main {
     max-width: 1080px;
+  }
+}
+</style>
+
+<style>
+.qwt-promotion-list {
+  & .el-icon-info {
+    font-size: 11px;
+    color: rgb(151, 168, 190);
+  }
+
+  & .dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.25);
   }
 }
 </style>
