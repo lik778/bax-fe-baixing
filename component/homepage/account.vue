@@ -61,7 +61,7 @@ export default {
   computed: {
     balance() {
       const { summary } = this
-      return summary.balance / 100 | 0
+      return (summary.balance / 100).toFixed(2)
     }
   },
   methods: {
