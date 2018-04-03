@@ -39,7 +39,7 @@
       </span>
     </header>
     <main>
-      <el-table :data="campaigns" border>
+      <el-table :data="campaigns">
         <el-table-column width="40">
           <template scope="s">
             <span class="center">

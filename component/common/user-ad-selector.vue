@@ -105,7 +105,7 @@ export default {
     type: {
       type: String,
       validator(v) {
-        return [TYPE_RESELECT].includes(v)
+        return [TYPE_RESELECT, ''].includes(v)
       }
     }
   },
