@@ -110,9 +110,10 @@ export default {
       }
 
       track({
-        action: `bax: enter page`,
+        action: 'bax: enter page',
         baixingId: currentUser.baixingId,
-        baxId: currentUser.id
+        baxId: currentUser.id,
+        src: this.$route.query.src || ''
       })
     }, 1200)
   }
