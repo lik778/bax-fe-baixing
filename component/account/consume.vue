@@ -32,6 +32,7 @@ import BaxPagination from 'com/common/pagination'
 
 import { toHumanTime, toTimestamp } from 'utils'
 import { changeLogType } from 'constant/log'
+import moment from 'moment'
 
 import store from './store'
 
@@ -47,7 +48,10 @@ export default {
   },
   data() {
     return {
-      daterange: []
+      daterange: [
+        moment().startOf('day').toDate(),
+        moment().toDate()
+      ]
     }
   },
   methods: {
@@ -75,6 +79,12 @@ export default {
         toDate
       })
     }
+  },
+  async mounted() {
+    await this.queryLogs({
+      fromDate: moment().startOf('day').unix(),
+      toDate: moment().unix()
+    })
   }
 }
 </script>
