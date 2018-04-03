@@ -2,7 +2,8 @@
   <div>
     <section-header>操作日志</section-header>
         <label>选择查询项目</label>
-    <bax-select v-model="type" clearable
+    <bax-select v-model="type"
+      :clearable="false"
       placeholder="请选择"
       :options="logTypeOpts"
       @click.native="onClickLogType">
@@ -57,6 +58,7 @@ import track from 'util/track'
 import store from './store'
 
 import {
+  LOG_TYPE_CAMPAIGN,
   logTypeOpts,
   logType
 } from 'constant/log'
@@ -82,7 +84,7 @@ export default {
       logTypeOpts,
 
       range: 'month',
-      type: '',
+      type: String(LOG_TYPE_CAMPAIGN),
 
       currentPage: 1,
       pageSize: 20
