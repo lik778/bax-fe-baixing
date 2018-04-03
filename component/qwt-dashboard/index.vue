@@ -333,6 +333,7 @@ export default {
   color: #666666;
   border-radius: 4px;
   border: dashed 1px #d9d9d9;
+  background: white;
   cursor: pointer;
 
   & > i {

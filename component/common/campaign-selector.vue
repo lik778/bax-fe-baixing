@@ -1,6 +1,7 @@
 
 <template>
   <el-dialog title="计划筛选" :visible="visible"
+    width="420px"
     :close-on-click-modal="false"
     :show-close="false"
     :before-close="ok">
@@ -127,6 +128,7 @@ export default {
 .content {
   display: flex;
   flex-flow: column;
+  margin: 0 auto;
   width: 220px;
 
   border: 1px solid #d1dbe5;
