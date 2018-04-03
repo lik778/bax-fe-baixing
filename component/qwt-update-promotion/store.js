@@ -60,6 +60,9 @@ store.subscribeActions({
 
     if (info.landingPageId) {
       info.landingPageId = String(info.landingPageId)
+    } else {
+      // landingPageId === 0, 保存为 ''
+      delete info.landingPageId
     }
 
     if (info.timeRange && info.timeRange.length &&
@@ -87,7 +90,7 @@ store.subscribeActions({
 
     return {
       originPromotion: {
-        ...store.state.promotion,
+        ...store.state.originPromotion,
         ...info
       },
       timeType
