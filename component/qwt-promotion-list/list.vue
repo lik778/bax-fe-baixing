@@ -98,10 +98,10 @@
       </el-table-column>
       <el-table-column label="计划状态" width="140">
         <template scope="s">
-          <i class="dot" />
-          <label>{{ fmtStatus(s.row.status) }}</label>
+          <i class="dot" :style="{background: getColor(s.row.statusText)}" />
+          <label>{{ s.row.statusText }}</label>
           <el-tooltip effect="dark" placement="top"
-            content="你是我的小啊小苹果">
+            :content="s.row.detailStatusText">
             <i class="el-icon-info" />
           </el-tooltip>
         </template>
@@ -518,6 +518,17 @@ export default {
 
       return campaignAuditStatus[String(auditStatus)] || '未知'
     },
+    getColor(s) {
+      if (s === '推广中') {
+        return '#52c41a'
+      }
+
+      if (s === '已下线') {
+        return 'rgba(0, 0, 0, 0.25)'
+      }
+
+      return '#f5222d'
+    },
     fmtPrice(s) {
       return commafy(centToYuan(s)) + ' 元'
     },
@@ -642,8 +653,8 @@ a {
 
   & .dot {
     display: inline-block;
-    width: 8px;
-    height: 8px;
+    width: 7px;
+    height: 7px;
     border-radius: 50%;
     background: rgba(0, 0, 0, 0.25);
   }

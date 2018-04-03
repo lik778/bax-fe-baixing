@@ -1,7 +1,7 @@
 <template>
   <div>
     <span v-if="mode === 'view'">
-      <label>{{ displayValue }}</label>
+      <label style="min-width: 40px">{{ displayValue }}</label>
       <el-button type="text" @click="mode = 'edit'">
         修改
       </el-button>

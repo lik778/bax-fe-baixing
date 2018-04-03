@@ -167,11 +167,11 @@ export default {
 
       & > span {
         display: flex;
-        flex-grow: 0.5;
+        flex-grow: 0.33;
       }
 
       & > span:last-child {
-        margin-left: 60px;
+        /* margin-left: 40px; */
       }
     }
   }
