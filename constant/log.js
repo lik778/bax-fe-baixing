@@ -12,6 +12,11 @@ export const logType = {
   '-1': '其他'
 }
 
+export const changeLogType = {
+  '2': '广告投放',
+  '5': '智能投放'
+}
+
 export const logTypeOpts = Object.keys(logType)
   .map((k) => ({
     label: logType[k],

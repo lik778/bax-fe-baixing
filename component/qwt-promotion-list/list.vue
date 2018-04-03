@@ -103,20 +103,23 @@
       <el-table-column label="渠道" width="100"
         :formatter="r => fmtSource(r.source)">
       </el-table-column>
-      <el-table-column label="今日预算" width="100"
-        :render-header="renderColumnHeaderWithTip('该计划今日消耗的上限')"
-        :formatter="r => fmtPrice(r.dailyBudget)">
+      <el-table-column label="今日预算" width="180"
+        :render-header="renderColumnHeaderWithTip('该计划今日消耗的上限')">
+        <template scope="s">
+          <editable-label type="price"
+            :value="s.row.dailyBudget"
+            @change="v => inlineUpdateBudget(s.row.id, v)" />
+        </template>
       </el-table-column>
       <el-table-column label="今日消耗" width="100"
         :render-header="renderColumnHeaderWithTip('该计划今日已消耗金额')"
         :formatter="r => r.todayCost === 0 ? '-' : fmtPrice(r.todayCost)">
       </el-table-column>
-      <el-table-column label="移动端出价比例(0.1-9.9)" width="130"
+      <el-table-column label="移动端出价比例(0.1-9.9)" width="200"
         :render-header="renderColumnHeaderWithTip(mobileRatioTip)">
         <template scope="s">
-          <p class="center">
-            {{ s.row.mobilePriceRatio }}
-          </p>
+          <editable-label :value="s.row.mobilePriceRatio"
+            @change="v => inlineUpdateRatio(s.row.id, v)" />
         </template>
       </el-table-column>
       <el-table-column label="优化投放" fixed="right">
@@ -142,6 +145,7 @@
 </template>
 
 <script>
+import EditableLabel from 'com/common/editable-label'
 import BaxPagination from 'com/common/pagination'
 
 import { Message } from 'element-ui'
@@ -196,6 +200,7 @@ const cantSelectStatuses = [
 export default {
   name: 'qwt-promotion-list',
   components: {
+    EditableLabel,
     BaxPagination
   },
   props: {
@@ -270,6 +275,23 @@ export default {
     checkSelectable(row) {
       return !cantSelectStatuses.includes(row.status)
     },
+    async inlineUpdateBudget(id, v) {
+      const budget = parseInt(v)
+
+      if (!(budget > 0)) {
+        return Message.error('请设置合理的预算')
+      }
+
+      const opts = {
+        campaignIds: [id],
+        dailyBudget: budget
+      }
+
+      await updateCampaignDailyBudget(opts)
+      await store.getCurrentCampaigns({...this.query})
+
+      Message.success('更新成功')
+    },
     async updateCampaignDailyBudget() {
       if (!this.checkHasSelectedCampaigns()) {
         return
@@ -316,6 +338,22 @@ export default {
       await store.getCurrentCampaigns({...this.query})
 
       this.toolbox.timeRange = []
+
+      Message.success('更新成功')
+    },
+    async inlineUpdateRatio(id, v) {
+      const ratio = parseFloat(v)
+      if (!(ratio >= 0.1 && ratio <= 9.9)) {
+        return Message.error('请设置合理的出价比例')
+      }
+
+      const opts = {
+        campaignIds: [id],
+        ratio
+      }
+
+      await updateCampaignRatio(opts)
+      await store.getCurrentCampaigns({...this.query})
 
       Message.success('更新成功')
     },

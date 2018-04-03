@@ -9,15 +9,19 @@
           range-separator="-"
           v-model="daterange" />
       </div>
-      <el-table :data="consumeLogs">
-        <el-table-column label="日期" prop="id" />
-        <el-table-column label="计划" prop="id" />
-        <el-table-column label="类型" prop="id" />
-        <el-table-column label="消费金额" prop="id" />
-      </el-table>
-      <bax-pagination :options="consumeQuery"
-        @current-change="onCurrentChange">
-      </bax-pagination>
+      <main style="width: 720px">
+        <el-table :data="consumeLogs">
+          <el-table-column label="日期" prop="reportDate" />
+          <el-table-column label="计划" prop="campaignId" />
+          <el-table-column label="类型"
+            :formatter="r => fmtLogType(r.logType)" />
+          <el-table-column label="消费金额"
+            :formatter="r => (r.consume / 100).toFixed(2) + '元'" />
+        </el-table>
+        <bax-pagination :options="consumeQuery"
+          @current-change="onCurrentChange">
+        </bax-pagination>
+      </main>
     </content>
   </div>
 </template>
@@ -27,6 +31,7 @@ import SectionHeader from 'com/common/section-header'
 import BaxPagination from 'com/common/pagination'
 
 import { toHumanTime, toTimestamp } from 'utils'
+import { changeLogType } from 'constant/log'
 
 import store from './store'
 
@@ -51,6 +56,9 @@ export default {
     },
     async queryLogs(q) {
       await store.getConsumeLogs(q)
+    },
+    fmtLogType(n) {
+      return changeLogType[String(n)]
     },
     toHumanTime
   },
