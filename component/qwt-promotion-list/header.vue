@@ -54,13 +54,29 @@ import BaxSelect from 'com/common/select'
 import BaxInput from 'com/common/input'
 
 import {
-  campaignStatusOpts,
   semPlatformOpts
 } from 'constant/fengming'
 
 import track from 'util/track'
 
 import store from './store'
+
+const campaignStatusOpts = [{
+  label: '推广中',
+  value: '100'
+}, {
+  label: '计划预算不足',
+  value: '5'
+}, {
+  label: '账户余额不足',
+  value: '-51'
+}, {
+  label: '已暂停',
+  value: '-10,-50'
+}, {
+  label: '已下线',
+  value: '-1'
+}]
 
 export default {
   name: 'qwt-promotion-header',
