@@ -59,6 +59,14 @@ export default {
         : this.localValue
       this.$emit('change', v)
     }
+  },
+  watch: {
+    value(v) {
+      this.mode = 'view'
+      this.localValue = this.type === 'price'
+        ? this.centToYuan(v)
+        : v
+    }
   }
 }
 </script>
