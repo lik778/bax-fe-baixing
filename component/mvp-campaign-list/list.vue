@@ -252,11 +252,19 @@ export default {
       const campaign = this.campaigns.find(c => c.id === cid)
       const { cpcPrice } = campaign
 
+      let min = 0
+
       if ((cpcPrice / 100) > p) {
-        return cpcPrice / 100 * 30
+        min = cpcPrice / 100 * 30
       } else {
-        return p * 30
+        min = p * 30
       }
+
+      if (min < 100) {
+        return 100
+      }
+
+      return min
     },
     getMinCpcPrice() {
       return 1.5
