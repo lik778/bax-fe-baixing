@@ -303,6 +303,8 @@ export default {
     const { query } = this.$route
     if (query.campaignId) {
       await this.getCampaignReport(query.campaignId)
+    } else {
+      await this.queryStatistics()
     }
 
     setTimeout(() => {
