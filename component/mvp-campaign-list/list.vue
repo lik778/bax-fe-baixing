@@ -247,24 +247,8 @@ export default {
       this.clearToolbox()
       await store.getCampaigns({offset})
     },
-    getMinBudget(cid) {
-      const p = this.getMinCpcPrice()
-      const campaign = this.campaigns.find(c => c.id === cid)
-      const { cpcPrice } = campaign
-
-      let min = 0
-
-      if ((cpcPrice / 100) > p) {
-        min = cpcPrice / 100 * 30
-      } else {
-        min = p * 30
-      }
-
-      if (min < 100) {
-        return 100
-      }
-
-      return min
+    getMinBudget() {
+      return 100
     },
     getMinCpcPrice() {
       return 1.5

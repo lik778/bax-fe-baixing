@@ -189,7 +189,7 @@ const defaultCampaign = {
   landingType: LANDING_TYPE_AD,
   landingPage: '',
   landingPageId: '',
-  dailyBudget: 1.5 * 30,
+  dailyBudget: 100,
   cpcPrice: 1.5
 }
 
@@ -247,22 +247,7 @@ export default {
       return (summary.balance / 100).toFixed(2)
     },
     minBudget() {
-      const p = this.minCpcPrice
-      const { cpcPrice } = this.newCampaign
-
-      let min = 0
-
-      if (cpcPrice > p) {
-        min = (cpcPrice * 30).toFixed(2)
-      } else {
-        min = (p * 30).toFixed(2)
-      }
-
-      if (min < 100) {
-        return 100
-      }
-
-      return min
+      return 100
     },
     minCpcPrice() {
       return 1.5

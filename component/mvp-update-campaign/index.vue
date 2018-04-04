@@ -206,22 +206,7 @@ export default {
       return this.originCampaign.landingPageId
     },
     minBudget() {
-      const p = this.minCpcPrice
-      const { cpcPrice } = this.campaign
-
-      let min = 0
-
-      if (cpcPrice > p) {
-        min = parseFloat((cpcPrice * 30).toFixed(2))
-      } else {
-        min = parseFloat((p * 30).toFixed(2))
-      }
-
-      if (min < 100) {
-        return 100
-      }
-
-      return min
+      return 100
     },
     minCpcPrice() {
       return 1.5
