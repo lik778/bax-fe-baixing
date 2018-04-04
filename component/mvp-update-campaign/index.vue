@@ -209,11 +209,19 @@ export default {
       const p = this.minCpcPrice
       const { cpcPrice } = this.campaign
 
+      let min = 0
+
       if (cpcPrice > p) {
-        return parseFloat((cpcPrice * 30).toFixed(2))
+        min = parseFloat((cpcPrice * 30).toFixed(2))
       } else {
-        return parseFloat((p * 30).toFixed(2))
+        min = parseFloat((p * 30).toFixed(2))
       }
+
+      if (min < 100) {
+        return 100
+      }
+
+      return min
     },
     minCpcPrice() {
       return 1.5
