@@ -1,10 +1,10 @@
 
 @font-face {font-family: "iconfont";
-  src: url('bax-asset.iconfont.eot?t=1470281018'); /* IE9*/
-  src: url('bax-asset.iconfont.eot?t=1470281018#iefix') format('embedded-opentype'), /* IE6-IE8 */
-  url('bax-asset.iconfont.woff?t=1470281018') format('woff'), /* chrome, firefox */
-  url('bax-asset.iconfont.ttf?t=1470281018') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
-  url('bax-asset.iconfont.svg?t=1470281018#iconfont') format('svg'); /* iOS 4.1- */
+  src: url('iconfont.eot?t=1470281018'); /* IE9*/
+  src: url('iconfont.eot?t=1470281018#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('iconfont.woff?t=1470281018') format('woff'), /* chrome, firefox */
+  url('iconfont.ttf?t=1470281018') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+  url('iconfont.svg?t=1470281018#iconfont') format('svg'); /* iOS 4.1- */
 }
 
 .iconfont {
