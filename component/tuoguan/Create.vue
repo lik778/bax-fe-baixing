@@ -25,7 +25,7 @@
         </el-checkbox-group>
       </el-form-item>
       <el-form-item prop="confirm">
-        <el-checkbox v-model="model.confirm">我已阅读并同意遵守<a href="http://bax-static.baixingcdn.com/bax-asset.baixing-online-promotion-trusteeship-contract.docx">《百姓网托管协议》</a></el-checkbox>
+        <el-checkbox v-model="model.confirm">我已阅读并同意遵守<a href="http://file.baixing.net/bax-fe/asset/baixing-online-promotion-trusteeship-contract.docx">《百姓网托管协议》</a></el-checkbox>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSubmit" :loading="loading">我要托管</el-button>
