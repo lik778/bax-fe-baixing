@@ -62,7 +62,7 @@ import track from 'util/track'
 import store from './store'
 
 const campaignStatusOpts = [{
-  label: '推广中',
+  label: '推广中/审核中',
   value: '100'
 }, {
   label: '计划预算不足',

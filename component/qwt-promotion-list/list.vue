@@ -191,7 +191,6 @@ import {
 
 import {
   toHumanTime,
-  centToYuan,
   commafy
 } from 'utils'
 
@@ -530,7 +529,7 @@ export default {
       return '#f5222d'
     },
     fmtPrice(s) {
-      return commafy(centToYuan(s)) + ' 元'
+      return commafy((s / 100).toFixed(2)) + ' 元'
     },
     fmtSource(s) {
       return semPlatformCn[s] || '未知'
