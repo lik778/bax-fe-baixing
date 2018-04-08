@@ -1,12 +1,15 @@
 
+// 切记: 不可 build 进前端 js
+
 const { join } = require('path')
 
 module.exports = {
-  accessKey: 'dOp3WMvDbVIbjL0vRk9rKF7HXb_UK13kLnknM8oY',
-  secretKey: 'YKqPJ4PD6M-rxOLXjgGAIJJyUDOZMqP8TxAKtfFU',
+  operator: 'attach',
+  password: 'baixing!123',
   tasks: [{
-    directory: join(__dirname, '../asset'),
-    prefix: 'bax-asset.',
-    bucket: 'adfe'
+    prefix: 'bax-fe/',
+    bucket: 'attachments',
+    rename: origin => join('asset', origin),
+    directory: join(__dirname, '../asset')
   }]
 }

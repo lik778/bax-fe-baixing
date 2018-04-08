@@ -3,7 +3,7 @@
   "private": true,
   "version": "4.1.0",
   "scripts": {
-    "upload-asset": "qiniu -c tool/asset.qiniu.config.js -v",
+    "upload-asset": "upyun-upload -c tool/asset.qiniu.config.js -v",
     "upload": "upyun-upload -c tool/qiniu.config.js -v",
     "release": "node tool/release.js",
     "lint": "eslint . --ext .js,.vue",
