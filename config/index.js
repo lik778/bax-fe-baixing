@@ -27,7 +27,7 @@ export const cashcowHost = isPro
   ? '//bax.baixing.com.cn/cashcow/api/bax'
   : '//192.168.8.201/cashcow/api/bax'
 
-export const assetHost = '//bax-static.baixingcdn.com/bax-asset.'
+export const assetHost = '//file.baixing.net/bax-fe/asset/'
 
 export const upyun = {
   filehost: '//file.baixing.net/',
