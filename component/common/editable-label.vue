@@ -64,6 +64,8 @@ export default {
         : this.localValue
       this.$emit('change', v)
 
+      this.mode = 'view'
+
       if (this.trackAction) {
         track({
           action: this.trackAction
