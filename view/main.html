@@ -50,6 +50,28 @@
     if (navigator.userAgent.indexOf('MSIE') !== -1) {
       var e = document.getElementById('browser-warning')
       e.style.display = 'block'
+
+      try {
+        var time = Date.now() / 1000 | 0
+        var img = new Image()
+
+        img.id = 'bxti-' + Math.random().toString(16).slice(2)
+        img.src = 'http://www.baixing.com/c/ev/bxad?biztype=bax-qwt&time=' + time +
+          '&env=pro&action=show-ie-browser-warning'
+        img.style.display = 'none'
+
+        document.body.appendChild(img)
+
+        img.onload = () => {
+          try {
+            document.querySelector('#' + img.id).remove()
+          } catch (err) {
+            console.error(err)
+          }
+        }
+      } catch (err) {
+        console.error(err)
+      }
     }
   </script>
   <script src="//file.baixing.net/bax-fe/static/vendor.b94491a9bea32ec6c0.js"></script>
