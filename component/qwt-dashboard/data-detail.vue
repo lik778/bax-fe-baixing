@@ -137,6 +137,10 @@ export default {
       this.$emit('switch-to-campaign-report', {
         campaignId: cid
       })
+
+      track({
+        action: 'qwt-dashboard: switch to campaign report'
+      })
     },
     gotoUpdateCampaign(cid) {
       this.$router.push({
@@ -147,6 +151,10 @@ export default {
         query: {
           target: 'keyword'
         }
+      })
+
+      track({
+        action: 'qwt-dashboard: goto update campaign'
       })
     },
     onClickCustomColumns() {

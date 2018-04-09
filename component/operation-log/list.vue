@@ -1,7 +1,7 @@
 <template>
   <div>
     <section-header>操作日志</section-header>
-        <label>选择查询项目</label>
+    <label>选择查询项目</label>
     <bax-select v-model="type"
       :clearable="false"
       placeholder="请选择"
@@ -107,12 +107,12 @@ export default {
   methods: {
     onClickLogType() {
       track({
-        action: 'account: click log type'
+        action: 'operation-log: click log type'
       })
     },
     onClickRange() {
       track({
-        action: 'account: click log range'
+        action: 'operation-log: click log range'
       })
     },
     async load() {

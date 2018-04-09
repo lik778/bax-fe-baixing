@@ -113,6 +113,7 @@
         :render-header="renderColumnHeaderWithTip('该计划今日消耗的上限')">
         <template scope="s">
           <editable-label type="price"
+            track-action="campaign list: change daily budget inline"
             :value="s.row.dailyBudget"
             @change="v => inlineUpdateBudget(s.row.id, v)" />
         </template>
@@ -124,7 +125,8 @@
       <el-table-column label="移动端出价比例(0.1-9.9)" width="200"
         :render-header="renderColumnHeaderWithTip(mobileRatioTip)">
         <template scope="s">
-          <editable-label :value="s.row.mobilePriceRatio"
+          <editable-label track-action="campaign list: change mobile ratio inline"
+            :value="s.row.mobilePriceRatio"
             @change="v => inlineUpdateRatio(s.row.id, v)" />
         </template>
       </el-table-column>

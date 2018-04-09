@@ -29,6 +29,7 @@ import SectionHeader from 'com/common/section-header'
 import BaxPagination from 'com/common/pagination'
 
 import { toHumanTime, toTimestamp } from 'utils'
+import track from 'util/track'
 import moment from 'moment'
 
 import store from './store'
@@ -71,6 +72,10 @@ export default {
       await this.queryLogs({
         fromDate,
         toDate
+      })
+
+      track({
+        action: 'account: charge log - change daterange'
       })
     }
   },

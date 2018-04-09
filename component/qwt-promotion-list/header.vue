@@ -145,6 +145,10 @@ export default {
       this.$router.push({
         name: 'qwt-create-promotion'
       })
+
+      track({
+        action: 'campaign list: click create campaign'
+      })
     }
   }
 }

@@ -15,7 +15,8 @@
             <p>今日预算</p>
           </span>
         </div>
-        <router-link :to="{name: campaignListName}">
+        <router-link :to="{name: campaignListName}"
+          @click.native="onClickCampaignList">
           计划管理
         </router-link>
       </aside>
@@ -81,12 +82,22 @@ export default {
     }
   },
   methods: {
+    onClickCampaignList() {
+      const { userInfo } = this
+      const type = this.type === 'mvp' ? 'mvp' : 'qwt'
+
+      track({
+        action: `homepage campaign: click ${type} campaign list`,
+        baixingId: userInfo.baixingId,
+        baxId: userInfo.id
+      })
+    },
     onClickDetail() {
       const { userInfo } = this
       const type = this.type === 'mvp' ? 'mvp' : 'qwt'
 
       track({
-        action: `homepage campaign: click ${type} campaign detail`,
+        action: `homepage campaign: click ${type} campaign report`,
         baixingId: userInfo.baixingId,
         baxId: userInfo.id
       })

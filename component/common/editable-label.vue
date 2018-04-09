@@ -1,7 +1,7 @@
 <template>
   <div>
     <span v-if="mode === 'view'">
-      <label style="min-width: 40px">{{ displayValue }}</label>
+      <label style="min-width: 14px">{{ displayValue }}</label>
       <el-button type="text" @click="mode = 'edit'">
         修改
       </el-button>
@@ -18,10 +18,15 @@
 
 <script>
 import { commafy } from 'utils'
+import track from 'util/track'
 
 export default {
   name: 'bax-editable-label',
   props: {
+    trackAction: {
+      type: String,
+      required: false
+    },
     value: {
       type: [Number, String],
       required: true
@@ -58,6 +63,12 @@ export default {
         ? this.localValue * 100
         : this.localValue
       this.$emit('change', v)
+
+      if (this.trackAction) {
+        track({
+          action: this.trackAction
+        })
+      }
     }
   },
   watch: {
