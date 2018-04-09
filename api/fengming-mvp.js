@@ -224,9 +224,9 @@ export async function getGridMinPrice(city, category) {
     category
   }
   const body = await mvp
-  .get('/simple/campaign/grid_min_price')
-  .query(reverseCamelcase(trim(q)))
-  .json()
+    .get('/simple/campaign/grid_min_price')
+    .query(reverseCamelcase(trim(q)))
+    .json()
 
-  return body.data
+  return body.data / 100
 }

@@ -230,7 +230,7 @@ export default {
       PRE_IMG_BAIDU_WAP: assetHost + 'example-baidu-wap.png',
       PRE_IMG_BAIDU_PC: assetHost + 'example-baidu-pc.png',
 
-      minCpcPrice: 0.00
+      minCpcPrice: 0
     }
   },
   computed: {
