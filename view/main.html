@@ -63,9 +63,9 @@
 
         document.body.appendChild(img)
 
-        img.onload = () => {
+        img.onload = function() {
           try {
-            document.querySelector('#' + img.id).remove()
+            document.getElementById(img.id).remove()
           } catch (err) {
             console.error(err)
           }
