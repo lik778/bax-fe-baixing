@@ -125,9 +125,11 @@
       <el-table-column label="移动端出价比例(0.1-9.9)" width="200"
         :render-header="renderColumnHeaderWithTip(mobileRatioTip)">
         <template scope="s">
-          <editable-label track-action="campaign list: change mobile ratio inline"
-            :value="s.row.mobilePriceRatio"
-            @change="v => inlineUpdateRatio(s.row.id, v)" />
+          <div style="padding-left: 20px;">
+            <editable-label track-action="campaign list: change mobile ratio inline"
+              :value="s.row.mobilePriceRatio"
+              @change="v => inlineUpdateRatio(s.row.id, v)" />
+          </div>
         </template>
       </el-table-column>
       <el-table-column label="优化投放" fixed="right">
