@@ -1,7 +1,6 @@
 
 <template>
-  <div class="gw-pro-widget" @click="onClick">
-    <i v-if="checked" class="el-icon-check"></i>
+  <div :class="{'gw-pro-widget': true, checked}" @click="onClick">
     <main>
       <span>
         价值
@@ -13,12 +12,20 @@
     <footer>
       {{ title }}
     </footer>
+    <p>
+      <bx-icon v-if="checked" type="check" />
+    </p>
   </div>
 </template>
 
 <script>
+import BxIcon from 'com/widget/icon'
+
 export default {
   name: 'gw-pro-widget',
+  components: {
+    BxIcon
+  },
   props: {
     checked: Boolean,
     price: Number,
@@ -33,7 +40,6 @@ export default {
 </script>
 
 <style scoped>
-
 @import '../../cssbase/mixin';
 @import 'cssbase/mixin';
 

@@ -81,6 +81,20 @@ import { centToYuan } from 'utils'
 import { assetHost } from 'config'
 
 import {
+  createOrder
+} from 'api/fengming'
+
+import {
+  getUserIdFromBxSalesId,
+  getUserInfo
+} from 'api/account'
+
+import {
+  getOrderPayUrl,
+  payOrders
+} from 'api/order'
+
+import {
   allowGetOrderPayUrl,
   allowPayOrder
 } from 'util/fengming-role'
@@ -89,20 +103,10 @@ import {
   normalizeRoles
 } from 'util/role'
 
-import {
-  getUserIdFromBxSalesId,
-  getOrderPayUrl,
-  createOrder,
-  getProducts,
-  getUserInfo,
-  payOrders
-} from './action'
-
 import store from './store'
 
 export default {
   name: 'gw-charge',
-  store,
   components: {
     GwProWidget,
     Clipboard,
@@ -114,6 +118,9 @@ export default {
       type: Object,
       required: true
     }
+  },
+  fromMobx: {
+    products: () => store.products
   },
   data() {
     return {
@@ -282,13 +289,12 @@ export default {
       this.salesIdLocked = true
     }
 
-    await getProducts(2)
+    await store.getProducts()
   }
 }
 </script>
 
 <style scoped>
-
 @import "cssbase/mixin";
 
 .gw-charge {
@@ -384,5 +390,4 @@ export default {
     }
   }
 }
-
 </style>
