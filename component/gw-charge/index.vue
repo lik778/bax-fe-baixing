@@ -5,7 +5,7 @@
       <label slot="title">精品官网 - 购买</label>
     </topbar>
     <section>
-      <header>请选择您需要官网版本：</header>
+      <header>请选择您需要的官网版本：</header>
       <main>
         <gw-pro-widget v-for="i of products" :key="i.id"
           :title="i.name" :price="i.showPrice | centToYuan"
@@ -52,9 +52,9 @@
         </a>
       </div>
       <div class="submit">
-        <el-button type="primary" @click="createOrder">
+        <button class="buy-btn" @click="createOrder">
           {{ submitButtonText }}
-        </el-button>
+        </button>
         <span v-if="orderPayUrl">
           <label :title="orderPayUrl">
             {{ '付款链接: ' + orderPayUrl }}
@@ -296,6 +296,20 @@ export default {
 
 <style scoped>
 @import "cssbase/mixin";
+
+.buy-btn {
+  @mixin center;
+  width: 110px;
+  height: 35px;
+  margin-top: 30px;
+  border-radius: 4px;
+  background: #ff7533;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.29;
+  cursor: pointer;
+}
 
 .gw-charge {
   padding: 0 35px;
