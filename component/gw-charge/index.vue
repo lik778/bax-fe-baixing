@@ -124,7 +124,7 @@ export default {
   },
   data() {
     return {
-      checkedProductId: 0,
+      checkedProductId: 4,
       orderPayUrl: '',
 
       salesIdLocked: false,

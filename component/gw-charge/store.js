@@ -12,7 +12,7 @@ const store = observable({
 
   getProducts: action(async function() {
     const products = await fapi.getProducts([2, 4])
-    this._products = products.map(p => {
+    this._products = products.reverse().map(p => {
       if (p.id === 4) {
         return {
           ...p,
