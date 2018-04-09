@@ -101,19 +101,23 @@
         </header>
         <main>
           <div>
-            <strong>最高点击单价：</strong>
+            <strong>最高点击单价
+              <el-tooltip effect="dark" content="每次点击的实际扣费小于或等于这个值" placement="top-start">
+                <i class="el-icon-question"></i>
+              </el-tooltip>
+            ：</strong>
             <el-input-number
               style="width: 72px; margin-right: 9px;"
               size="small" :min="0" :controls="false"
               :value="newCampaign.cpcPrice"
-              @change="v => newCampaign.cpcPrice = fmtPrice(v)">
+              @change="v => newCampaign.cpcPrice = fmtPrice(v, 2)">
             </el-input-number>
             <strong>元</strong>
-            <p>{{ `最高点击单价不得低于：${minCpcPrice}元` }}</p>
+            <p>{{ `所选类目城市底价：${parseFloat(minCpcPrice).toFixed(2)}元` }}</p>
             <i>出价越高，免费展示几率越大，位置越靠前！</i>
           </div>
           <div>
-            <strong>单日总预算：</strong>
+            <strong>单日预算：</strong>
             <el-input-number
               style="width: 72px; margin-right: 9px;"
               size="small" :step="1" :min="0" :controls="false"
@@ -121,12 +125,11 @@
               @change="v => newCampaign.dailyBudget = fmtPrice(v)">
             </el-input-number>
             <strong>元</strong>
-            <p>{{ `您当前的总预算不得低于：${minBudget}元` }}</p>
-            <i>总预算越高，免费展示时长越长，效果越好！</i>
+            <p>{{ `单日预算不得低于：${minBudget}元` }}</p>
+            <i>单日预算越高，免费展示时长越长，效果越好！</i>
           </div>
           <div>
-            您的推广资金余额：<i>{{ balance }}</i>元，
-            可消耗<i>{{ consumeDays }}</i>天
+            扣除其余有效计划日预算后，您的推广资金可用余额为<i>{{ balance }}</i>元，可消耗<i>{{ consumeDays }}</i>天
           </div>
         </main>
         <footer>
@@ -173,7 +176,8 @@ import {
 } from 'constant/fengming'
 
 import {
-  createCampaign
+  createCampaign,
+  getGridMinPrice
 } from 'api/fengming-mvp'
 
 import {
@@ -224,7 +228,9 @@ export default {
       currentStep: 1,
 
       PRE_IMG_BAIDU_WAP: assetHost + 'example-baidu-wap.png',
-      PRE_IMG_BAIDU_PC: assetHost + 'example-baidu-pc.png'
+      PRE_IMG_BAIDU_PC: assetHost + 'example-baidu-pc.png',
+
+      minCpcPrice: 0.00
     }
   },
   computed: {
@@ -248,9 +254,6 @@ export default {
     },
     minBudget() {
       return 100
-    },
-    minCpcPrice() {
-      return 1.5
     }
   },
   methods: {
@@ -303,11 +306,13 @@ export default {
       this.newCampaign.areas = areas
       this.areaDialogVisible = false
     },
-    onSelectAd(ad) {
+    async onSelectAd(ad) {
       this.newCampaign.category = ad.category
       this.newCampaign.areas = [ad.city]
       this.newCampaign.landingPageId = ad.adId
       this.newCampaign.landingPage = ad.url
+
+      this.minCpcPrice = await getGridMinPrice(ad.city, ad.category)
     },
     removeArea(c) {
       this.newCampaign.areas = this.newCampaign.areas
@@ -317,8 +322,8 @@ export default {
       const { allAreas } = this
       return getCnName(name, allAreas)
     },
-    fmtPrice(v) {
-      return parseFloat(((100 * v | 0) / 100).toFixed(2))
+    fmtPrice(v, fixed = 0) {
+      return parseFloat(((100 * v | 0) / 100).toFixed(fixed))
     }
   },
   async mounted() {

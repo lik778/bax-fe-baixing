@@ -217,3 +217,16 @@ export async function getMvpReport(opts) {
     summary: data
   }
 }
+
+export async function getGridMinPrice(city, category) {
+  const q = {
+    city,
+    category
+  }
+  const body = await mvp
+  .get('/simple/campaign/grid_min_price')
+  .query(reverseCamelcase(trim(q)))
+  .json()
+
+  return body.data
+}
