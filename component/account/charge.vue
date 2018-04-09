@@ -14,7 +14,7 @@
           <el-table-column label="日期" prop="id" width="240"
             :formatter="r => toHumanTime(r.createdAt, 'YYYY-MM-DD HH:mm')" />
           <el-table-column label="充值金额" prop="id"
-            :formatter="r => r.remark + '：' + (r.deltaMoney / 100) + '元'" />
+            :formatter="r => r.remark + '：' + ((r.deltaMoney + r.deltaPoint) / 100) + '元'" />
         </el-table>
         <bax-pagination :options="chargeQuery"
           @current-change="onCurrentChange">
