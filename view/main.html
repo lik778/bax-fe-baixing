@@ -47,7 +47,8 @@
     <a href="http://browser.qq.com/" target="_blank">QQ</a>浏览器
   </div>
   <script>
-    if (navigator.userAgent.indexOf('MSIE') !== -1) {
+    if (navigator.userAgent.indexOf('MSIE') !== -1 ||
+      navigator.userAgent.indexOf('Trident/') !== -1) {
       var e = document.getElementById('browser-warning')
       e.style.display = 'block'
 
