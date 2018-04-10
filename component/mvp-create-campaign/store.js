@@ -2,26 +2,25 @@
 import { observable, action, toJS } from 'mobx'
 
 import * as fapi from 'api/fengming'
-import * as api from 'api/fengming-mvp'
 
 const store = observable({
   _summary: {},
-  _mvpSummary: {},
+  _usableBalance: 0,
 
   get summary() {
     return toJS(this._summary)
   },
 
-  get mvpSummary() {
-    return toJS(this._mvpSummary)
+  get usableBalance() {
+    return toJS(this._usableBalance)
   },
 
   getSummary: action(async function() {
     this._summary = await fapi.getSummary()
   }),
 
-  getMvpSummary: action(async function() {
-    this._mvpSummary = await api.getMvpSimpleReport()
+  getUsableBalance: action(async function() {
+    this._usableBalance = await fapi.getUsableBalance()
   }),
 
   clear: action(async function() {
