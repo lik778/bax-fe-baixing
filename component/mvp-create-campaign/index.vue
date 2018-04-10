@@ -129,7 +129,7 @@
             <i>单日预算越高，免费展示时长越长，效果越好！</i>
           </div>
           <div>
-            扣除其余有效计划日预算后，您的推广资金可用余额为<i>{{ (balance / 100).toFixed(2) }}</i>元，可消耗<i>{{ consumeDays }}</i>天
+            扣除其余有效计划日预算后，您的推广资金可用余额为<i>{{ (usableBalance / 100).toFixed(2) }}</i>元，可消耗<i>{{ consumeDays }}</i>天
           </div>
         </main>
         <footer>
@@ -218,7 +218,7 @@ export default {
   },
   fromMobx: {
     summary: () => store.summary,
-    mvpSummary: () => store.mvpSummary
+    usableBalance: () => store.usableBalance
   },
   data() {
     return {
@@ -248,10 +248,6 @@ export default {
       }
 
       return (balance / 100 / dailyBudget) | 0
-    },
-    balance() {
-      const { summary, mvpSummary } = this
-      return (summary.balance - summary.budget - mvpSummary.budget)
     },
     minBudget() {
       return 100
@@ -330,7 +326,7 @@ export default {
   },
   async mounted() {
     await store.getSummary()
-    await store.getMvpSummary()
+    await store.getUsableBalance()
   }
 }
 </script>
