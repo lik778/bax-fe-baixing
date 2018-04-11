@@ -19,7 +19,7 @@
       </el-table-column>
       <el-table-column v-if="showPropStatus" label="关键词状态"
         :render-header="renderColumnHeaderWithTip(keywordStatusTip)">
-        <template scope="s">
+        <template slot-scope="s">
           <span class="status">
             <label>
               {{ fmtStatus(s.row) }}
@@ -32,12 +32,16 @@
       </el-table-column>
       <el-table-column label="电脑端最高出价(元/次点击)"
         :render-header="renderColumnHeaderWithTip(cpcTopPriceTip)">
-        <template scope="s">
+        <template slot-scope="s">
           <span class="price">
             <el-input size="mini" placeholder="单位: 元"
               :value="getWordPrice(s.row.word)"
               @change="v => setCustomPrice(s.row, v, false)">
             </el-input>
+            <span class="add-w-price">
+              <button>提价20%</button>
+              <label>获得更高排名</label>
+            </span>
             <label v-if="!isValidPrice(s.row)">
               {{ getPriceTip(s.row) }}
             </label>
@@ -45,7 +49,7 @@
         </template>
       </el-table-column>
       <el-table-column v-if="deletable" label="操作" width="80">
-        <template scope="s">
+        <template slot-scope="s">
           <el-button size="mini" type="danger"
             @click="deleteWord(s.row)">
             删除
@@ -294,6 +298,25 @@ export default {
 </script>
 
 <style scoped>
+.add-w-price {
+  display: inline-flex;
+  padding: 0 5px;
+  font-size: 11px;
+  color: #67c23a;
+
+  & > button {
+    width: 60px;
+    height: 20px;
+    margin-right: 5px;
+    background: rgba(103, 194, 58, 0.1);
+    font-size: 11px;
+    border-radius: 4px;
+    border: 1px solid rgba(103, 194, 58, 0.2);
+    color: #67c23a;
+    cursor: pointer;
+  }
+}
+
 .status {
   display: flex;
   align-items: center;

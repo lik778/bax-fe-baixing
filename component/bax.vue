@@ -4,6 +4,7 @@
     <sidebar :user-info="currentUser"></sidebar>
     <p class="stuff"></p>
     <router-view class="view"
+      :key="$route.fullPath"
       :userInfo="currentUser"
       :allCategories="allCategories"
       :allAreas="allAreas"

@@ -279,11 +279,14 @@
       @change="onChangeDuration"
       @hide="durationSelectorVisible = false">
     </duration-selector>
+    <copy-campaign-dialog
+      :visible="copyDialogVisible"
+      :platform="newPromotion.source"
+      @cancel="gotoPromotionList"
+      @copy="copyCampaign" />
     <charge-dialog
       :visible="chargeDialogVisible"
-      @cancel="gotoPromotionList">
-    </charge-dialog>
-
+      @cancel="gotoPromotionList" />
     <transition name="slide-fade">
       <div class="tuoguan-promotion" v-show="showPromotion">
         <i @click="closePromotion" class="el-icon-close"></i>
@@ -304,6 +307,7 @@ import QiqiaobanPageSelector from 'com/common/qiqiaoban-page-selector'
 import PromotionCreativeTip from 'com/widget/promotion-creative-tip'
 import CashcowPageSelector from 'com/common/cashcow-page-selector'
 import PromotionChargeTip from 'com/widget/promotion-charge-tip'
+import CopyCampaignDialog from 'com/common/copy-campaign-dialog'
 import PromotionRuleLink from 'com/widget/promotion-rule-link'
 import DurationSelector from 'com/common/duration-selector'
 import UserAdSelector from 'com/common/user-ad-selector'
@@ -331,6 +335,7 @@ import {
   centToYuan
 } from 'utils'
 
+import { getCampaignInfo } from 'api/fengming'
 import { queryAds } from 'api/fengming-mvp'
 
 import {
@@ -391,6 +396,7 @@ export default {
     PromotionCreativeTip,
     CashcowPageSelector,
     PromotionChargeTip,
+    CopyCampaignDialog,
     PromotionRuleLink,
     DurationSelector,
     UserAdSelector,
@@ -422,7 +428,9 @@ export default {
       recommendedWordsVisible: false,
       durationSelectorVisible: false,
       chargeDialogVisible: false,
+      copyDialogVisible: false,
       areaDialogVisible: false,
+      createdCampaignId: 0,
 
       creativeContentPlaceholder,
       landingTypeOpts,
@@ -647,7 +655,8 @@ export default {
         throw Message.error(res.hint)
       }
 
-      await createCampaign(fmtAreasInQwt(p, allAreas))
+      const { id } = await createCampaign(fmtAreasInQwt(p, allAreas))
+      this.createdCampaignId = id
 
       Message.success('创建成功')
 
@@ -655,10 +664,9 @@ export default {
 
       if (p.dailyBudget > currentBalance) {
         this.chargeDialogVisible = true
-        return
+      } else {
+        this.copyDialogVisible = true
       }
-
-      this.gotoPromotionList()
     },
     async queryRecommendedWords() {
       const { queryWord } = this
@@ -763,13 +771,23 @@ export default {
         ...this.newPromotion.areas.filter(i => i !== c)
       ]
     },
+    copyCampaign({platform}) {
+      this.$router.push({
+        name: 'qwt-create-promotion',
+        query: {
+          campaignId: this.createdCampaignId,
+          mode: 'copy',
+          platform
+        }
+      })
+    },
     disabledDate,
     centToYuan
   },
   async mounted() {
     await Promise.all([getCurrentBalance(), getCampaignsCount()])
 
-    const adId = this.$route.query.adId
+    const { adId, mode, campaignId } = this.$route.query
     if (adId) {
       const result = await queryAds({
         limitMvp: false,
@@ -780,6 +798,10 @@ export default {
       if (ad) {
         await this.onSelectAd(ad)
       }
+    }
+
+    if (mode === 'copy' && campaignId) {
+      await this.copyExistCampaignInfo(campaignId)
     }
 
     if (this.isFirstCampaign) {
@@ -799,7 +821,7 @@ export default {
         baxId: userInfo.id,
         actionTrackId
       })
-    }, 1200)
+    }, 800)
 
     // 25分钟未离开页面，出现提示
     this.timeout = setTimeout(() => {
