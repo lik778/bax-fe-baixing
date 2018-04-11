@@ -16,7 +16,7 @@
           :formatter="fmtStatus">
         </el-table-column>
         <el-table-column label="下载地址">
-          <template scope="s">
+          <template slot-scope="s">
             <a class="link" :href="s.row.uri" download>{{ s.row.uri }}</a>
           </template>
         </el-table-column>

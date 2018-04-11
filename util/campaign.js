@@ -3,7 +3,7 @@ import { toTimestamp } from 'utils'
 
 export function fmtCpcRanking(ranking) {
   if (ranking === 0 || ranking === -1) {
-    return '-'
+    return '无昨日排名'
   }
 
   return ranking

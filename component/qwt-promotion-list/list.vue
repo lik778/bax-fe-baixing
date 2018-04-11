@@ -85,7 +85,7 @@
       </el-table-column>
       <el-table-column prop="open" label="开关" width="80"
         :render-header="renderColumnHeaderWithTip('关闭计划后，投放将暂停，暂停3天后将下线。')">
-        <template scope="s">
+        <template slot-scope="s">
           <el-switch :disabled="s.row.status === CAMPAIGN_STATUS_OFFLINE || readonly"
             :active-text="readonly ? 'ON' : ''"
             :inactive-text="readonly ? 'OFF' : ''"
@@ -97,7 +97,7 @@
       <el-table-column prop="id" label="ID" width="80">
       </el-table-column>
       <el-table-column label="计划状态" width="140">
-        <template scope="s">
+        <template slot-scope="s">
           <i class="dot" :style="{background: getColor(s.row.statusText)}" />
           <label>{{ s.row.statusText }}</label>
           <el-tooltip effect="dark" placement="top"
@@ -111,7 +111,7 @@
       </el-table-column>
       <el-table-column label="今日预算" width="180"
         :render-header="renderColumnHeaderWithTip('该计划今日消耗的上限')">
-        <template scope="s">
+        <template slot-scope="s">
           <editable-label type="price"
             track-action="campaign list: change daily budget inline"
             :value="s.row.dailyBudget"
@@ -124,7 +124,7 @@
       </el-table-column>
       <el-table-column label="移动端出价比例(0.1-9.9)" width="200"
         :render-header="renderColumnHeaderWithTip(mobileRatioTip)">
-        <template scope="s">
+        <template slot-scope="s">
           <div style="padding-left: 20px;">
             <editable-label track-action="campaign list: change mobile ratio inline"
               :value="s.row.mobilePriceRatio"
@@ -133,7 +133,7 @@
         </template>
       </el-table-column>
       <el-table-column label="优化投放" fixed="right">
-        <template scope="s">
+        <template slot-scope="s">
           <router-link
             :to="{ name: 'qwt-update-promotion', params: { id: s.row.id } }"
             @click.native="onClickCampaignDetail">

@@ -3,7 +3,7 @@
   <section class="ad-list">
     <el-table :data="items" style="width: 100%">
       <el-table-column label="订单编号" width="110">
-        <template scope="s">
+        <template slot-scope="s">
           <router-link class="link"
             :to="{name: 'order-info', params: {id: s.row.orderId}}">
             {{ s.row.orderId }}
@@ -12,7 +12,7 @@
       </el-table-column>
       <el-table-column prop="name" label="名称" width="100" />
       <el-table-column label="状态" width="120">
-        <template scope="s">
+        <template slot-scope="s">
           <el-tooltip v-if="s.row.status === -10"
             effect="dark" placement="top"
             :content="s.row.rejectReason">
@@ -36,7 +36,7 @@
       </el-table-column>
       <el-table-column prop="ad.name" label="广告位" width="120" />
       <el-table-column label="投放时间" width="100">
-        <template scope="s">
+        <template slot-scope="s">
           <p class="center">
             {{ s.row.timeRange[0] | date }}
           </p>
@@ -47,13 +47,13 @@
         </template>
       </el-table-column>
       <el-table-column label="类目·区域">
-        <template scope="s">
+        <template slot-scope="s">
           <p>类目: {{ formatterCategory(s.row) }}</p>
           <p>区域: {{ formatterArea(s.row) }}</p>
         </template>
       </el-table-column>
       <el-table-column label="物料">
-        <template scope="s">
+        <template slot-scope="s">
           <el-button v-if="allowAddMaterial && !s.row.materialId"
             type="primary" size="mini"
             @click="showAddMaterialDialog(s.row.id, s.row)">
@@ -67,7 +67,7 @@
         </template>
       </el-table-column>
       <el-table-column label="链接" width="100">
-        <template scope="s">
+        <template slot-scope="s">
           <a target="_black"
             v-if="s.row.material && s.row.material.link"
             v-bind:href="s.row.material && s.row.material.link">
@@ -77,7 +77,7 @@
         </template>
       </el-table-column>
       <el-table-column label="操作" v-if="allowVerify || allowAddAdItem || allowUpdateMaterial" width="100">
-        <template scope="s">
+        <template slot-scope="s">
           <div>
             <el-button v-if="s.row.itemType === 0"
               type="primary" size="mini"

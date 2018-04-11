@@ -41,7 +41,7 @@
     <main>
       <el-table :data="campaigns">
         <el-table-column width="40">
-          <template scope="s">
+          <template slot-scope="s">
             <span class="center">
               <el-checkbox
                 :value="s.row.id === toolbox.campaignId"
@@ -50,7 +50,7 @@
           </template>
         </el-table-column>
         <el-table-column label="开关" width="80">
-          <template scope="s">
+          <template slot-scope="s">
             <el-switch :value="!s.row.pause"
               @change="toggleCampaignPause(s.row)">
             </el-switch>
@@ -81,7 +81,7 @@
           :formatter="r => fmtPrice(r.todayCost)">
         </el-table-column>
         <el-table-column label="操作">
-          <template scope="s">
+          <template slot-scope="s">
             <router-link :to="{ name: 'mvp-update-campaign', params: { id: s.row.id } }">
               管理
             </router-link>

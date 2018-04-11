@@ -20,7 +20,7 @@
         <el-table-column label="消耗" width="120"
           :formatter="r => (r.cost / 100).toFixed(2) + '元'" />
         <el-table-column label="关键词详情" width="140">
-          <template scope="s">
+          <template slot-scope="s">
             <p class="link" @click="switchToCampaignReport(s.row.campaignId)">
               查看
             </p>
@@ -43,7 +43,7 @@
         <el-table-column label="排名" width="120" sortable
           :formatter="r => fmtCpcRanking(r.cpcRanking)" />
         <el-table-column label="优化出价">
-          <template scope="s">
+          <template slot-scope="s">
             <p class="link" @click="gotoUpdateCampaign(s.row.campaignId)">修改计划</p>
           </template>
         </el-table-column>
