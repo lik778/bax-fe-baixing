@@ -822,6 +822,7 @@ export default {
 
 .el-tag {
   margin-right: 5px;
+  margin-bottom: 5px;
 }
 
 .duration-type {

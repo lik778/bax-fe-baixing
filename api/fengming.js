@@ -81,21 +81,6 @@ export async function getCampaignInfo(id) {
 
   const campaign = toCamelcase(body.data)
 
-  if (campaign.creative && campaign.creative.chibiStatus === CREATIVE_CHIBI_REJECT) {
-    const { content, title } = campaign.creative
-    const { source } = campaign
-    // 针对赤壁拒绝创意审核, 获取 refuse reason
-    const result = await checkCreativeContent({
-      creativeContent: content,
-      creativeTitle: title,
-      platform: source
-    })
-
-    campaign.creative.extra = assign({}, campaign.creative.extra, {
-      refuseReason: result.hint || ''
-    })
-  }
-
   return campaign
 }
 
