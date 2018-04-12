@@ -9,7 +9,6 @@
       <p>已进入审核，推广可用资金不足，请前去充值</p>
       <button @click="charge">立即充值</button>
     </main>
-
   </el-dialog>
 </template>
 

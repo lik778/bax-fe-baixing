@@ -9,7 +9,7 @@ export const fengmingApiHost = isPro
 
 export const mvpApiHost = isPro
   ? '//bax.baixing.com.cn/fengmingx-mvp'
-  : '//192.168.8.201:8048'
+  : '//192.168.8.201/fengmingx'
 
 export const baxApiHost = isPro
   ? '//bax.baixing.com.cn/bax-api'

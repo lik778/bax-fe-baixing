@@ -170,7 +170,7 @@
           :words="creativeWords"
           :selected-words="newPromotion.creativeWords"
           @update-word="updateCreativeWord"
-          @select-words="words => newPromotion.creativeWords = [...words]">
+          @select-words="words => newPromotion.creativeWords = words">
         </keyword-list>
         <h3>
           <label>若没有您满意的关键词，</label>
@@ -335,8 +335,14 @@ import {
   centToYuan
 } from 'utils'
 
-import { getCampaignInfo } from 'api/fengming'
-import { queryAds } from 'api/fengming-mvp'
+import {
+  checkCreativeContent,
+  getCampaignInfo,
+  createCampaign
+} from 'api/fengming'
+import {
+  queryAds
+} from 'api/fengming-mvp'
 
 import {
   SEM_PLATFORM_BAIDU,
@@ -347,16 +353,6 @@ import {
 import {
   creativeContentPlaceholder
 } from 'constant/tip'
-
-import {
-  checkCreativeContent,
-  getRecommendedWords,
-  getCurrentBalance,
-  getCreativeWords,
-  createCampaign,
-  clearStore,
-  getCampaignsCount
-} from './action'
 
 import gStore from '../store'
 
@@ -388,7 +384,6 @@ const notActiveTime = 25 * 60 * 1000
 
 export default {
   name: 'qwt-create-promotion',
-  store,
   components: {
     PromotionMobileRatioTip,
     PromotionAreaLimitTip,
@@ -407,6 +402,13 @@ export default {
     ContractAck,
     FlatBtn,
     Topbar
+  },
+  fromMobx: {
+    recommendedWords: () => store.recommendedWords,
+    creativeWords: () => store.creativeWords,
+
+    currentBalance: () => store.currentBalance,
+    campaignsCount: () => store.campaignsCount
   },
   props: {
     userInfo: {
@@ -660,7 +662,7 @@ export default {
 
       Message.success('创建成功')
 
-      await clearStore()
+      store.clearStore()
 
       if (p.dailyBudget > currentBalance) {
         this.chargeDialogVisible = true
@@ -675,7 +677,7 @@ export default {
         return Message.error('请输入查询关键词')
       }
 
-      await getRecommendedWords(queryWord)
+      await store.getRecommendedWords(queryWord)
     },
     async checkCreativeContent() {
       const {
@@ -724,13 +726,13 @@ export default {
             price: word.price
           }
         } else {
-          return {...w}
+          return w
         }
       })
     },
     async getCreativeWords(newLandingPage = this.newPromotion.landingPage) {
       if (newLandingPage) {
-        await getCreativeWords(newLandingPage)
+        await store.getCreativeWords(newLandingPage)
       }
     },
     gotoPromotionList() {
@@ -785,7 +787,10 @@ export default {
     centToYuan
   },
   async mounted() {
-    await Promise.all([getCurrentBalance(), getCampaignsCount()])
+    await Promise.all([
+      store.getCurrentBalance(),
+      store.getCampaignsCount()
+    ])
 
     const { adId, mode, campaignId } = this.$route.query
     if (adId) {

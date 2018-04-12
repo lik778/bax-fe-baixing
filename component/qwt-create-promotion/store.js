@@ -1,43 +1,43 @@
 
-import { createStore } from 'vue-duo'
+import { observable, action, toJS } from 'mobx'
+
+import * as fapi from 'api/fengming'
 
 import {
   mergeKeywords
 } from 'util/campaign'
 
-import {
-  getRecommendedWords,
-  getCurrentBalance,
-  getCreativeWords,
-  clearStore,
-  getCampaignsCount
-} from './action'
+const store = observable({
+  _recommendedWords: [],
+  _creativeWords: [],
 
-const store = createStore({
-  recommendedWords: [],
-  creativeWords: [],
   currentBalance: 0,
+  campaignsCount: 0,
 
-  campaignsCount: 0
-})
+  get recommendedWords() {
+    return toJS(this._recommendedWords)
+  },
+  get creativeWords() {
+    return toJS(this._creativeWords)
+  },
 
-store.subscribeActions({
-  [getRecommendedWords]: (words) => ({
-    recommendedWords: mergeKeywords(store.state.recommendedWords, words)
+  getRecommendedWords: action(async function(word) {
+    const words = await fapi.getRecommendedWords(word)
+    this._recommendedWords = mergeKeywords(this._recommendedWords, words)
   }),
-  [getCreativeWords]: (words) => ({
-    creativeWords: [...words]
+  getCreativeWords: action(async function(url) {
+    const words = await fapi.getCreativeWords(url)
+    this._creativeWords = words
   }),
-  [getCurrentBalance]: (balance) => ({
-    currentBalance: balance
+  getCurrentBalance: action(async function() {
+    this.currentBalance = await fapi.getCurrentBalance()
   }),
-  [clearStore]: () => ({
-    recommendedWords: [],
-    creativeWords: []
+  getCampaignsCount: action(async function() {
+    this.campaignsCount = fapi.getCurrentCampaignCount()
   }),
-
-  [getCampaignsCount]: (campaignsCount) => ({
-    campaignsCount
+  clearStore: action(function() {
+    this._recommendedWords = []
+    this._creativeWords = []
   })
 })
 

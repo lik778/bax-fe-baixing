@@ -10,12 +10,12 @@ export function fmtCpcRanking(ranking) {
 }
 
 export function mergeKeywords(preWords, newWords) {
-  const result = [...preWords.map(w => ({...w}))]
+  const result = preWords
 
   newWords.forEach(w => {
     const words = result.map(w => w.word.toLowerCase())
     if (!words.includes(w.word.toLowerCase())) {
-      result.push({...w})
+      result.push(w)
     }
   })
 
