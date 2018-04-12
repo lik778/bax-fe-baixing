@@ -145,7 +145,9 @@
               </el-input>
             </text-limit-tip>
           </span>
-          <p>{{ (!creativeTitleTip && originPromotion.refuseReason) || '' }}</p>
+          <p class="authing-tip-2">
+            {{ originPromotion.refuseReason || '' }}
+          </p>
         </div>
         <footer v-if="!isFormReadonly">
           <el-button type="primary"
@@ -952,6 +954,13 @@ export default {
   color: #ff4401;
 }
 
+.authing-tip-2 {
+  margin-left: 5px;
+  font-size: 12px;
+  line-height: 1.75;
+  color: #ff4401;
+}
+
 .report-link {
   margin-left: 10px;
   background-color: unset;
@@ -1005,17 +1014,6 @@ export default {
           margin-right: 20px;
           color: #6a778c;
           font-size: 14px;
-        }
-      }
-    }
-
-    & > section.creative {
-      & > div:nth-child(3) {
-        & > p {
-          margin-left: 15px;
-          font-size: 12px;
-          line-height: 1.75;
-          color: #ff1400;
         }
       }
     }
