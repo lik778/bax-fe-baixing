@@ -303,6 +303,15 @@ import {
 } from 'util/meta'
 
 import {
+  landingTypeOpts
+} from 'constant/fengming'
+
+import {
+  checkCreativeContent,
+  updateCampaign
+} from 'api/fengming'
+
+import {
   CREATIVE_STATUS_PENDING,
   CAMPAIGN_STATUS_OFFLINE,
   SEM_PLATFORM_SOGOU,
@@ -324,23 +333,12 @@ import {
   centToYuan
 } from 'utils'
 
-import {
-  checkCreativeContent,
-  getRecommendedWords,
-  getCurrentBalance,
-  getCampaignInfo,
-  updateCampaign,
-  setTimeType,
-  clearStore
-} from './action'
-
 import store from './store'
 
 const isArray = Array.isArray
 
 export default {
   name: 'qwt-update-promotion',
-  store,
   components: {
     PromotionAreaLimitTip,
     QiqiaobanPageSelector,
@@ -356,6 +354,12 @@ export default {
     ContractAck,
     Topbar
   },
+  fromMobx: {
+    recommendedWords: () => store.recommendedWords,
+    originPromotion: () => store.originPromotion,
+    currentBalance: () => store.currentBalance,
+    timeType: () => store.timeType
+  },
   props: {
     userInfo: {
       type: Object,
@@ -370,6 +374,7 @@ export default {
     return {
       creativeContentPlaceholder,
       actionTrackId: uuid(),
+      landingTypeOpts,
 
       durationSelectorVisible: false,
       newaddedWordsVisible: false,
@@ -555,8 +560,8 @@ export default {
     },
     async initCampaignInfo() {
       await Promise.all([
-        getCampaignInfo(this.id),
-        getCurrentBalance()
+        store.getCampaignInfo(this.id),
+        store.getCurrentBalance()
       ])
     },
     clickSourceTip() {
@@ -838,7 +843,7 @@ export default {
 
       Message.success('更新成功')
 
-      await clearStore()
+      await store.clearStore()
 
       this.$router.push({
         name: 'qwt-promotion-list'
@@ -851,7 +856,7 @@ export default {
         return Message.error('请输入查询关键词')
       }
 
-      await getRecommendedWords(queryWord)
+      await store.getRecommendedWords(queryWord)
     },
     async checkCreativeContent() {
       const creativeContent = this.getProp('creativeContent')
@@ -905,8 +910,8 @@ export default {
         ...this.getProp('areas').filter(i => i !== c)
       ]
     },
+    setTimeType: store.setTimeType,
     disabledDate,
-    setTimeType,
     centToYuan
   },
   watch: {
@@ -918,7 +923,7 @@ export default {
   },
   async beforeDestroy() {
     console.debug('will destroy')
-    await clearStore()
+    await store.clearStore()
   },
   async mounted() {
     await this.initCampaignInfo()

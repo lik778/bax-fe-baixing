@@ -1,10 +1,8 @@
 
-import { createStore } from 'vue-duo'
+import { observable, action, toJS } from 'mobx'
 import clone from 'clone'
 
-import {
-  landingTypeOpts
-} from 'constant/fengming'
+import * as fapi from 'api/fengming'
 
 import {
   mergeKeywords
@@ -13,14 +11,6 @@ import {
 import {
   toHumanTime
 } from 'utils'
-
-import {
-  getRecommendedWords,
-  getCurrentBalance,
-  getCampaignInfo,
-  setTimeType,
-  clearStore
-} from './action'
 
 const emptyPromotion = {
   creativeContent: '',
@@ -36,24 +26,30 @@ const emptyPromotion = {
   source: 0
 }
 
-const store = createStore({
-  originPromotion: clone(emptyPromotion),
+const store = observable({
+  _originPromotion: clone(emptyPromotion),
   timeType: 'long', // long, custom
 
-  recommendedWords: [],
+  _recommendedWords: [],
   currentBalance: 0,
 
-  landingTypeOpts
-})
+  get originPromotion() {
+    return toJS(this._originPromotion)
+  },
+  get recommendedWords() {
+    return toJS(this._recommendedWords)
+  },
 
-store.subscribeActions({
-  [getRecommendedWords]: (words) => ({
-    recommendedWords: mergeKeywords(store.state.recommendedWords, words)
+  getRecommendedWords: action(async function(word) {
+    const words = await fapi.getRecommendedWords(word)
+    this._recommendedWords = mergeKeywords(this._recommendedWords, words)
   }),
-  [getCurrentBalance]: (balance) => ({
-    currentBalance: balance
+  getCurrentBalance: action(async function() {
+    this.currentBalance = await fapi.getCurrentBalance()
   }),
-  [getCampaignInfo]: (info) => {
+  getCampaignInfo: action(async function(id) {
+    const info = await fapi.getCampaignInfo(id)
+
     let timeType = ''
 
     info.dailyBudget = info.dailyBudget / 100 | 0
@@ -88,21 +84,19 @@ store.subscribeActions({
       info.creative = undefined
     }
 
-    return {
-      originPromotion: {
-        ...store.state.originPromotion,
-        ...info
-      },
-      timeType
+    this._originPromotion = {
+      ...this._originPromotion,
+      ...info
     }
-  },
-  [setTimeType]: (timeType) => ({
-    timeType
+    this.timeType = timeType
   }),
-  [clearStore]: () => ({
-    originPromotion: clone(emptyPromotion),
-    recommendedWords: [],
-    timeType: ''
+  setTimeType: action(function(timeType) {
+    this.timeType = timeType
+  }),
+  clearStore: action(function() {
+    this._originPromotion = clone(emptyPromotion)
+    this._recommendedWords = []
+    this.timeType = ''
   })
 })
 
