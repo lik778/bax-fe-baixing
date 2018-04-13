@@ -168,8 +168,10 @@
         <h4>建议选取20个以上关键词，关键词越多您的创意被展现的机会越多。根据当月数据，为您推荐如下关键词</h4>
         <keyword-list mode="select"
           :words="creativeWords"
+          :offset="creativeWordsOffset"
           :selected-words="newPromotion.creativeWords"
           @update-word="updateCreativeWord"
+          @change-offset="offset => creativeWordsOffset = offset"
           @select-words="words => newPromotion.creativeWords = words">
         </keyword-list>
         <h3>
@@ -191,9 +193,11 @@
         </div>
         <keyword-list v-if="recommendedWordsVisible"
           mode="select" :words="addibleWords"
+          :offset="recommendedWordsOffset"
           :selected-words="newPromotion.recommendedWords"
           @update-word="updateRecommendedWord"
-          @select-words="words => newPromotion.recommendedWords = [...words]">
+          @change-offset="setRecommendedWordsOffset"
+          @select-words="words => newPromotion.recommendedWords = words">
         </keyword-list>
         <div class="mobile-ratio">
           <section>
@@ -404,6 +408,7 @@ export default {
     Topbar
   },
   fromMobx: {
+    recommendedWordsOffset: () => store.recommendedWordsOffset,
     recommendedWords: () => store.recommendedWords,
     creativeWords: () => store.creativeWords,
 
@@ -432,6 +437,8 @@ export default {
       chargeDialogVisible: false,
       copyDialogVisible: false,
       areaDialogVisible: false,
+
+      creativeWordsOffset: 0,
       createdCampaignId: 0,
 
       creativeContentPlaceholder,
@@ -481,6 +488,9 @@ export default {
     }
   },
   methods: {
+    setRecommendedWordsOffset(offset) {
+      store.setRecommendedWordsOffset(offset)
+    },
     async setLandingPage(url) {
       this.newPromotion.landingPage = url
       this.newPromotion.areas = ['quanguo']

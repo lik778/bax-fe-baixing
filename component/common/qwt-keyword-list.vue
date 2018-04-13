@@ -1,24 +1,26 @@
 
 <template>
-  <div>
-    <el-table ref="table" :data="words"
-      style="width: 860px" row-key="word"
-      @selection-change="onSelectionChange">
-      <el-table-column v-if="selectable" type="selection" width="40">
+  <div class="qwt-keyword-list">
+    <el-table row-key="word" :data="rows">
+      <el-table-column v-if="selectable" width="40">
+        <template slot-scope="s">
+          <el-checkbox :value="wordChecked(s.row)"
+            @change="onCheckWord(s.row)" />
+        </template>
       </el-table-column>
-      <el-table-column prop="word" label="关键词" width="240"
-        sortable :sort-method="sort">
-      </el-table-column>
-      <el-table-column v-if="showPropShow" prop="show" width="180"
+      <el-table-column prop="word" label="关键词" width="220" />
+      <el-table-column v-if="showPropShow"
+        prop="show" width="180"
         sortable label="日均搜索指数"
-        :render-header="renderColumnHeaderWithTip(searchIndexTip)">
+        :render-header="renderWithTip(searchIndexTip)">
       </el-table-column>
       <el-table-column v-if="showPropRanking"
         width="140" label="平均排名" sortable
         :formatter="r => fmtCpcRanking(r.cpcRanking)">
       </el-table-column>
-      <el-table-column v-if="showPropStatus" label="关键词状态"
-        :render-header="renderColumnHeaderWithTip(keywordStatusTip)">
+      <el-table-column v-if="showPropStatus"
+        label="关键词状态"
+        :render-header="renderWithTip(keywordStatusTip)">
         <template slot-scope="s">
           <span class="status">
             <label>
@@ -31,15 +33,18 @@
         </template>
       </el-table-column>
       <el-table-column label="电脑端最高出价(元/次点击)"
-        :render-header="renderColumnHeaderWithTip(cpcTopPriceTip)">
+        :render-header="renderWithTip(cpcTopPriceTip)">
         <template slot-scope="s">
           <span class="price">
             <el-input size="mini" placeholder="单位: 元"
               :value="getWordPrice(s.row.word)"
-              @change="v => setCustomPrice(s.row, v, false)">
+              @change="v => setCustomPrice(s.row, v)">
             </el-input>
-            <span class="add-w-price">
-              <button>提价20%</button>
+            <span v-if="true"
+              class="add-w-price">
+              <button @click="setCustomPrice(s.row, getWordPrice(s.row.word) * 1.2)">
+                提价20%
+              </button>
               <label>获得更高排名</label>
             </span>
             <label v-if="!isValidPrice(s.row)">
@@ -57,10 +62,15 @@
         </template>
       </el-table-column>
     </el-table>
+    <bax-pagination :options="pagination"
+      @current-change="onCurrentChange">
+    </bax-pagination>
   </div>
 </template>
 
 <script>
+import BaxPagination from 'com/common/pagination'
+
 import {
   KEYWORD_STATUS_REFUSE,
   KEYWORD_CHIBI_PENDING,
@@ -102,8 +112,13 @@ function toFloat(s) {
   return n
 }
 
+const LIMIT = 20
+
 export default {
   name: 'qwt-keyword-list',
+  components: {
+    BaxPagination
+  },
   props: {
     mode: {
       type: String,
@@ -112,14 +127,6 @@ export default {
         return ['select', 'update'].includes(v)
       }
     },
-    selectable: {
-      type: Boolean,
-      default: true
-    },
-    deletable: {
-      type: Boolean,
-      default: false
-    },
     words: {
       type: Array,
       required: true
@@ -127,6 +134,18 @@ export default {
     selectedWords: {
       type: Array,
       default: () => []
+    },
+    offset: {
+      type: Number,
+      required: true
+    },
+    selectable: {
+      type: Boolean,
+      default: true
+    },
+    deletable: {
+      type: Boolean,
+      default: false
     },
     campaignOffline: {
       type: Boolean,
@@ -148,19 +167,34 @@ export default {
   data() {
     return {
       customPrices: [],
+      userOperatedPages: [], // 用户操作过的页: 0, 1, 2
 
       keywordStatusTip,
       searchIndexTip,
       cpcTopPriceTip
     }
   },
+  computed: {
+    currentPage() {
+      return this.offset / LIMIT | 0
+    },
+    pagination() {
+      return {
+        limit: LIMIT,
+        offset: this.offset,
+        total: this.words.length
+      }
+    },
+    rows() {
+      const { currentPage } = this
+      const start = currentPage * LIMIT
+      return this.words.slice(start, start + LIMIT)
+    }
+  },
   methods: {
-    renderColumnHeaderWithTip,
-    setRowSelection(words) {
-      this.words.forEach((row) => {
-        const selected = words.includes(row.word)
-        this.$refs.table.toggleRowSelection(row, selected)
-      })
+    renderWithTip: renderColumnHeaderWithTip,
+    onCurrentChange({offset}) {
+      this.$emit('change-offset', offset)
     },
     deleteWord(row) {
       this.$emit('delete-word', {
@@ -207,26 +241,51 @@ export default {
     getPriceTip(row) {
       // const o = row.originPrice || row.price
       // return `该关键词出价最低为: ${(o / 200).toFixed(2)}, 请调高出价`
-      return `该关键词出价最低为: 1元, 请调高出价`
-    },
-    wordPriceEditable(word) {
-      const item = this.customPrices.find(c => c.word === word)
-      return item && item.editable
+      return '该关键词出价最低为: 1元, 请调高出价'
     },
     hasCustomPrice(word) {
       return this.customPrices.findIndex(c => c.word === word) !== -1
     },
-    onSelectionChange(rows) {
-      const words = rows.map(r => ({
-        price: this.getWordPrice(r.word) * 100 | 0,
-        originPrice: r.price,
-        word: r.word,
-        id: r.id
-      }))
-      console.debug('emit event: select-words')
-      this.$emit('select-words', words)
+    tryAutoSelectWords() {
+      const { currentPage } = this
+
+      if (!this.userOperatedPages.includes(currentPage)) {
+        this.mergeSelectedWords(this.rows)
+      }
     },
-    setCustomPrice({price: originPrice, word, id}, v, editable) {
+    wordChecked(word) {
+      return this.selectedWords
+        .map(w => w.word)
+        .includes(word.word)
+    },
+    onCheckWord(word) {
+      if (!this.userOperatedPages.includes(this.currentPage)) {
+        this.userOperatedPages.push(this.currentPage)
+      }
+
+      if (this.wordChecked(word)) {
+        const words = this.selectedWords
+          .filter(w => w.word !== word.word)
+        this.$emit('select-words', words)
+      } else {
+        const words = [...this.selectedWords, this.fmtWord(word)]
+        this.$emit('select-words', words)
+      }
+    },
+    mergeSelectedWords(rows) {
+      const preSelectedWords = this.selectedWords
+      const currentPageWords = this.rows
+        .map(w => w.word)
+
+      const selectedWords = preSelectedWords
+        .filter(w => !currentPageWords.includes(w.word))
+        .concat(rows.map(this.fmtWord))
+
+      console.debug('emit event: select-words',
+        selectedWords.map(w => w.word))
+      this.$emit('select-words', selectedWords)
+    },
+    setCustomPrice({price: originPrice, word, id}, v) {
       let price = v ? toFloat(v) : 0
 
       if (this.hasCustomPrice(word)) {
@@ -234,7 +293,6 @@ export default {
           if (c.word === word) {
             return {
               word: c.word,
-              editable,
               price
             }
           } else {
@@ -243,7 +301,6 @@ export default {
         })
       } else {
         this.customPrices = [...this.customPrices, {
-          editable,
           price,
           word
         }]
@@ -255,11 +312,6 @@ export default {
         word,
         id
       })
-    },
-    sort(a, b) {
-      const { selectedWords } = this
-      const words = selectedWords.map(w => w.word)
-      return words.includes(a.word)
     },
     fmtStatus(row) {
       const { chibiStatus, status } = row
@@ -279,25 +331,34 @@ export default {
 
       return keywordStatus[String(status)] || '未知'
     },
-    fmtCpcRanking,
-    centToYuan
+    fmtWord(w) {
+      return {
+        price: this.getWordPrice(w.word) * 100 | 0,
+        originPrice: w.price,
+        word: w.word,
+        id: w.id
+      }
+    },
+    fmtCpcRanking
   },
   watch: {
     words(v) {
-      // TODO: use element table - reserve-selection option
-      const selectedWords = this.selectedWords.map(w => w.word)
-      /**
-       * 说明: element table 在 words 变更后,
-       */
-      setTimeout(() => {
-        this.setRowSelection(selectedWords)
-      }, 250)
+      this.tryAutoSelectWords()
+    },
+    offset() {
+      this.tryAutoSelectWords()
     }
   }
 }
 </script>
 
 <style scoped>
+.qwt-keyword-list {
+  display: flex;
+  flex-flow: column;
+  max-width: 1120px;
+}
+
 .add-w-price {
   display: inline-flex;
   padding: 0 5px;
