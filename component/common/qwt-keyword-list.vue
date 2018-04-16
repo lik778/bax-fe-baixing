@@ -178,7 +178,7 @@ export default {
   },
   computed: {
     currentPage() {
-      return this.offset / LIMIT | 0
+      return this.offset / LIMIT | 0 // 0, 1, 2
     },
     pagination() {
       return {
@@ -197,6 +197,7 @@ export default {
     renderWithTip: renderColumnHeaderWithTip,
     onCurrentChange({offset}) {
       this.$emit('change-offset', offset)
+      setTimeout(() => this.tryAutoSelectWords(), 5)
     },
     deleteWord(row) {
       this.$emit('delete-word', {
@@ -249,14 +250,21 @@ export default {
       return this.customPrices.findIndex(c => c.word === word) !== -1
     },
     tryAutoSelectWords() {
-      const { currentPage, mode } = this
+      const { currentPage, offset, mode } = this
 
       if (mode === MODE_UPDATE) {
         return
       }
 
       if (!this.userOperatedPages.includes(currentPage)) {
+        // 新一页
         this.mergeSelectedWords(this.rows)
+        return
+      }
+
+      if (offset < (currentPage + 1) * LIMIT) {
+        // 当前页, 新增词
+        this.mergeSelectedWords(this.rows.slice(offset, LIMIT))
       }
     },
     wordChecked(word) {
@@ -280,12 +288,14 @@ export default {
     },
     mergeSelectedWords(rows) {
       const preSelectedWords = this.selectedWords
-      const currentPageWords = this.rows
-        .map(w => w.word)
-
-      const selectedWords = preSelectedWords
-        .filter(w => !currentPageWords.includes(w.word))
-        .concat(rows.map(this.fmtWord))
+      const ws = preSelectedWords.map(w => w.word)
+      const newSelectedWords = rows
+        .map(this.fmtWord)
+        .filter(w => !ws.includes(w.word))
+      const selectedWords = [
+        ...preSelectedWords,
+        ...newSelectedWords
+      ]
 
       console.debug('emit event: select-words',
         selectedWords.map(w => w.word))
@@ -349,10 +359,8 @@ export default {
   },
   watch: {
     words(v) {
-      this.tryAutoSelectWords()
-    },
-    offset() {
-      this.tryAutoSelectWords()
+      console.debug('words changed')
+      setTimeout(() => this.tryAutoSelectWords(), 10)
     }
   }
 }
