@@ -193,10 +193,10 @@
         </div>
         <keyword-list v-if="recommendedWordsVisible"
           mode="select" :words="addibleWords"
-          :offset="recommendedWordsOffset"
+          :offset="addibleWordsOffset"
           :selected-words="newPromotion.recommendedWords"
           @update-word="updateRecommendedWord"
-          @change-offset="setRecommendedWordsOffset"
+          @change-offset="setAddibleWordsOffset"
           @select-words="words => newPromotion.recommendedWords = words">
         </keyword-list>
         <div class="mobile-ratio">
@@ -408,7 +408,6 @@ export default {
     Topbar
   },
   fromMobx: {
-    recommendedWordsOffset: () => store.recommendedWordsOffset,
     recommendedWords: () => store.recommendedWords,
     creativeWords: () => store.creativeWords,
 
@@ -439,6 +438,7 @@ export default {
       areaDialogVisible: false,
 
       creativeWordsOffset: 0,
+      addibleWordsOffset: 0,
       createdCampaignId: 0,
 
       creativeContentPlaceholder,
@@ -484,12 +484,13 @@ export default {
     addibleWords() {
       const words = this.creativeWords.map(w => w.word.toLowerCase())
 
-      return this.recommendedWords.filter(w => !words.includes(w.word.toLowerCase()))
+      return this.recommendedWords
+        .filter(w => !words.includes(w.word.toLowerCase()))
     }
   },
   methods: {
-    setRecommendedWordsOffset(offset) {
-      store.setRecommendedWordsOffset(offset)
+    setAddibleWordsOffset(offset) {
+      this.addibleWordsOffset = offset
     },
     async setLandingPage(url) {
       this.newPromotion.landingPage = url
@@ -687,7 +688,9 @@ export default {
         return Message.error('请输入查询关键词')
       }
 
+      const preLength = this.addibleWords.length
       await store.getRecommendedWords(queryWord)
+      this.addibleWordsOffset = preLength
     },
     async checkCreativeContent() {
       const {

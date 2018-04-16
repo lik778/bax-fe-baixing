@@ -112,6 +112,8 @@ function toFloat(s) {
   return n
 }
 
+const MODE_SELECT = 'select'
+const MODE_UPDATE = 'update'
 const LIMIT = 20
 
 export default {
@@ -124,7 +126,7 @@ export default {
       type: String,
       required: true,
       validator: v => {
-        return ['select', 'update'].includes(v)
+        return [MODE_SELECT, MODE_UPDATE].includes(v)
       }
     },
     words: {
@@ -247,7 +249,11 @@ export default {
       return this.customPrices.findIndex(c => c.word === word) !== -1
     },
     tryAutoSelectWords() {
-      const { currentPage } = this
+      const { currentPage, mode } = this
+
+      if (mode === MODE_UPDATE) {
+        return
+      }
 
       if (!this.userOperatedPages.includes(currentPage)) {
         this.mergeSelectedWords(this.rows)

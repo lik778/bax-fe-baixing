@@ -11,7 +11,6 @@ const store = observable({
   _recommendedWords: [],
   _creativeWords: [],
 
-  recommendedWordsOffset: 0,
   currentBalance: 0,
   campaignsCount: 0,
 
@@ -22,12 +21,8 @@ const store = observable({
     return toJS(this._creativeWords)
   },
 
-  setRecommendedWordsOffset(offset) {
-    this.recommendedWordsOffset = offset
-  },
   getRecommendedWords: action(async function(word) {
     const words = await fapi.getRecommendedWords(word)
-    this.recommendedWordsOffset = this.recommendedWords.length
     this._recommendedWords = mergeKeywords(this._recommendedWords, words)
   }),
   getCreativeWords: action(async function(url) {

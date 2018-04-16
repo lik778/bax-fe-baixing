@@ -165,6 +165,7 @@
         </h4>
         <keyword-list mode="update"
           :words="currentKeywords"
+          :offset="currentKeywordsOffset"
           :selectable="false"
           :deletable="!isFormReadonly"
           :show-prop-show="false"
@@ -172,6 +173,7 @@
           :show-prop-ranking="true"
           :campaign-offline="isCampaignOffline"
           @update-word="updateExistWord"
+          @change-offset="offset => currentKeywordsOffset = offset"
           @delete-word="word => promotion.deletedKeywords.push(word)">
         </keyword-list>
         <h3 v-if="!isFormReadonly">
@@ -180,8 +182,8 @@
         </h3>
         <div v-if="newaddedWordsVisible">
           <span>
-            <el-input placeholder="请输入关键词" v-model.trim="queryWord">
-            </el-input>
+            <el-input placeholder="请输入关键词"
+              v-model.trim="queryWord" />
           </span>
           <el-button type="primary" @click="queryRecommendedWords">
             查询
@@ -192,9 +194,11 @@
         </div>
         <keyword-list v-if="newaddedWordsVisible"
           mode="select" :words="addibleWords"
+          :offset="addibleWordsOffset"
           :selected-words="promotion.newKeywords"
           :campaign-offline="isCampaignOffline"
           @update-word="updateNewWord"
+          @change-offset="setAddibleWordsOffset"
           @select-words="words => promotion.newKeywords = [...words]">
         </keyword-list>
       </section>
@@ -303,10 +307,6 @@ import {
 } from 'util/meta'
 
 import {
-  landingTypeOpts
-} from 'constant/fengming'
-
-import {
   checkCreativeContent,
   updateCampaign
 } from 'api/fengming'
@@ -316,7 +316,9 @@ import {
   CAMPAIGN_STATUS_OFFLINE,
   SEM_PLATFORM_SOGOU,
   SEM_PLATFORM_BAIDU,
-  SEM_PLATFORM_QIHU
+  SEM_PLATFORM_QIHU,
+
+  landingTypeOpts
 } from 'constant/fengming'
 
 import {
@@ -379,6 +381,9 @@ export default {
       durationSelectorVisible: false,
       newaddedWordsVisible: false,
       areaDialogVisible: false,
+
+      currentKeywordsOffset: 0,
+      addibleWordsOffset: 0,
       isUpdating: false,
       queryWord: '',
       // 注: 此处逻辑比较容易出错, 此处 定义为 undefined 与 getXXXdata 处 密切相关
@@ -413,20 +418,20 @@ export default {
         deletedKeywords
       } = this.promotion
 
-      return keywords.filter(w => {
-        return !deletedKeywords.map(i => i.id).includes(w.id)
-      }).map(w => {
-        for (const word of updatedKeywords) {
-          if (word.id === w.id) {
-            return {
-              ...w,
-              ...word
+      return keywords
+        .filter(w => !deletedKeywords.map(i => i.id).includes(w.id))
+        .map(w => {
+          for (const word of updatedKeywords) {
+            if (word.id === w.id) {
+              return {
+                ...w,
+                ...word
+              }
             }
           }
-        }
 
-        return {...w}
-      })
+          return {...w}
+        })
     },
     addibleWords() {
       const words = this.currentKeywords.map(w => w.word.toLowerCase())
@@ -511,6 +516,9 @@ export default {
     }
   },
   methods: {
+    setAddibleWordsOffset(offset) {
+      this.addibleWordsOffset = offset
+    },
     setLandingPage(url) {
       this.promotion.landingPage = url
       this.promotion.areas = ['quanguo']
@@ -856,7 +864,9 @@ export default {
         return Message.error('请输入查询关键词')
       }
 
+      const preLength = this.addibleWords.length
       await store.getRecommendedWords(queryWord)
+      this.addibleWordsOffset = preLength
     },
     async checkCreativeContent() {
       const creativeContent = this.getProp('creativeContent')
