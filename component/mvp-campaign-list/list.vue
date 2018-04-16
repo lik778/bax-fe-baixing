@@ -19,24 +19,6 @@
           </el-button>
         </div>
       </span>
-      <span>
-        <div>
-          <el-button @click="switchToolbox('cpc price')">
-            设置点击单价
-            <i class="el-icon-arrow-down el-icon--right"></i>
-          </el-button>
-        </div>
-        <div v-if="toolbox.showCpcPrice">
-          <el-input style="width: 120px;"
-            placeholder="点击单价"
-            v-model="toolbox.cpcPrice">
-          </el-input>
-          <el-button type="primary" size="mini"
-            @click="updateCampaignCpcPrice">
-            确定
-          </el-button>
-        </div>
-      </span>
     </header>
     <main>
       <el-table :data="campaigns">
@@ -71,7 +53,8 @@
         <el-table-column label="城市"
           :formatter="r => r.areas.map(fmtArea).join('，')">
         </el-table-column>
-        <el-table-column label="最高点击单价" width="120"
+        <el-table-column label="点击单价" width="120"
+          :render-header="renderColumnHeaderWithTip(campaignCpcPriceTooltip)"
           :formatter="r => fmtPrice(r.cpcPrice)">
         </el-table-column>
         <el-table-column label="今日预算"
@@ -83,7 +66,7 @@
         <el-table-column label="操作">
           <template slot-scope="s">
             <router-link :to="{ name: 'mvp-update-campaign', params: { id: s.row.id } }">
-              管理
+              修改
             </router-link>
             <router-link :to="{ name: 'mvp-dashboard', query: { campaignId: s.row.id, source: 'mvp-campaign-list' } }">
               查看报表
@@ -139,6 +122,9 @@ const campaignStatusTooltip = `
   3. 账户余额不足：表示当前账户余额不足以开启该计划，无法推广；
   4. -: 表示计划暂停;
 `
+const campaignCpcPriceTooltip = `
+每次点击的实际扣费小于或等于这个值
+`
 
 export default {
   name: 'mvp-campaign-list',
@@ -158,6 +144,7 @@ export default {
   data() {
     return {
       campaignStatusTooltip,
+      campaignCpcPriceTooltip,
       toolbox: {
         showDailyBudget: false,
         showCpcPrice: false,
@@ -272,15 +259,6 @@ export default {
           } else {
             toolbox.showDailyBudget = true
             toolbox.showCpcPrice = false
-          }
-          break
-        case 'cpc price':
-          show = toolbox.showCpcPrice
-          if (show) {
-            toolbox.showCpcPrice = false
-          } else {
-            toolbox.showCpcPrice = true
-            toolbox.showDailyBudget = false
           }
           break
       }
