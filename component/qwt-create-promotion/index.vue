@@ -912,6 +912,7 @@ export default {
         & > aside:first-child {
           display: flex;
           align-items: center;
+          min-width: 70px;
           margin-right: 20px;
           color: #6a778c;
           font-size: 14px;

@@ -58,11 +58,11 @@
                 @select-ad="ad => onSelectAd(ad)">
               </user-ad-selector>
 
-               <qiqiaoban-page-selector
-                 v-if="getProp('landingType') === 1"
-                 :disabled="!isCreativeEditable"
-                 :value="getProp('landingPage')"
-                 @change="setLandingPage">
+              <qiqiaoban-page-selector
+                v-if="getProp('landingType') === 1"
+                :disabled="!isCreativeEditable"
+                :value="getProp('landingPage')"
+                @change="setLandingPage">
               </qiqiaoban-page-selector>
 
               <cashcow-page-selector
@@ -1017,6 +1017,7 @@ export default {
         & > aside:first-child {
           display: flex;
           align-items: center;
+          min-width: 70px;
           margin-right: 20px;
           color: #6a778c;
           font-size: 14px;
