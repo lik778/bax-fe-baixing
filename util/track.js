@@ -8,6 +8,7 @@ module.exports = function track(opts) {
   try {
     opts.biztype = 'bax-qwt'
     opts.env = isPro ? 'pro' : 'test'
+    opts.referrer = document.referrer
     opts.isMobile = /Android|iPhone|iPad|micromessenger/i.test(navigator.userAgent)
     if (!opts.time) {
       opts.time = Date.now() / 1000 | 0
