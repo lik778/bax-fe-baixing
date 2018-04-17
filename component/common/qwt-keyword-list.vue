@@ -258,6 +258,10 @@ export default {
         return
       }
 
+      // console.debug('op pages', this.userOperatedPages,
+      //   'page', currentPage,
+      //   'offset', offset, 'limit', LIMIT,
+      //   'rows', this.rows.map(w => w.word))
       if (!this.userOperatedPages.includes(currentPage)) {
         // 新一页
         this.mergeSelectedWords(this.rows)
@@ -268,6 +272,7 @@ export default {
         (offset < (currentPage + 1) * LIMIT)) {
         // 当前页, 新增词
         const start = offset % LIMIT
+        // console.debug('start', start)
         this.mergeSelectedWords(this.rows.slice(start, LIMIT))
       }
     },
