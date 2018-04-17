@@ -28,6 +28,7 @@ import GwCharge from 'com/gw-charge'
 
 // global
 import OperationLog from 'com/operation-log'
+import Redirect from 'com/redirect'
 import Homepage from 'com/homepage'
 import Account from 'com/account'
 import Coupon from 'com/coupon'
@@ -156,6 +157,10 @@ const router = new VueRouter({
     component: OperationLog,
     path: '/main/operation-log',
     name: 'operation-log'
+  }, {
+    component: Redirect,
+    path: '/main/redirect-to',
+    name: 'bax-redirect-page'
   }, {
     component: Account,
     path: '/main/account',

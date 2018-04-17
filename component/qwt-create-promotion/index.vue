@@ -165,11 +165,12 @@
       </section>
       <section class="keyword">
         <header>选取推广关键词</header>
-        <h4>建议选取20个以上关键词，关键词越多您的创意被展现的机会越多。根据当月数据，为您推荐如下关键词</h4>
+        <h4 v-if="!isCopy">建议选取20个以上关键词，关键词越多您的创意被展现的机会越多。根据当月数据，为您推荐如下关键词</h4>
         <keyword-list mode="select"
           :words="creativeWords"
           :offset="creativeWordsOffset"
           :selected-words="newPromotion.creativeWords"
+          :show-prop-show="!isCopy"
           @update-word="updateCreativeWord"
           @change-offset="offset => creativeWordsOffset = offset"
           @select-words="words => newPromotion.creativeWords = words">
@@ -252,7 +253,7 @@
           </span>
         </div>
         <h3>
-          {{ `您的推广资金余额：￥${ centToYuan(currentBalance) } 元，可消耗` }}
+          {{ `您的推广资金余额：￥${ (currentBalance / 100).toFixed(2) } 元，可消耗` }}
           <strong>{{ predictedInfo.duration }}</strong>天
         </h3>
         <contract-ack type="content-rule"></contract-ack>
@@ -269,8 +270,8 @@
         <promotion-charge-tip></promotion-charge-tip>
       </section>
     </main>
-    <area-selector :all-areas="allAreas"
-      :areas="newPromotion.areas" type="qwt"
+    <area-selector type="qwt" :all-areas="allAreas"
+      :areas="newPromotion.areas"
       :visible="areaDialogVisible"
       :enable-china="false"
       @ok="onChangeAreas"
@@ -336,7 +337,7 @@ import {
   getCnName
 } from 'util/meta'
 import {
-  centToYuan
+  toHumanTime
 } from 'utils'
 
 import {
@@ -385,6 +386,7 @@ const emptyPromotion = {
 
 const storageKey = 'user_close_tuoguan_promotion'
 const notActiveTime = 25 * 60 * 1000
+const MODE_COPY = 'copy'
 
 export default {
   name: 'qwt-create-promotion',
@@ -486,6 +488,9 @@ export default {
 
       return this.recommendedWords
         .filter(w => !words.includes(w.word.toLowerCase()))
+    },
+    isCopy() {
+      return this.$route.query.mode === MODE_COPY
     }
   },
   methods: {
@@ -668,7 +673,7 @@ export default {
         throw Message.error(res.hint)
       }
 
-      const { id } = await createCampaign(fmtAreasInQwt(p, allAreas))
+      const id = await createCampaign(fmtAreasInQwt(p, allAreas))
       this.createdCampaignId = id
 
       Message.success('创建成功')
@@ -786,18 +791,64 @@ export default {
         ...this.newPromotion.areas.filter(i => i !== c)
       ]
     },
+    async copyExistCampaignInfo(campaignId) {
+      const info = await getCampaignInfo(campaignId)
+
+      this.newPromotion.creativeContent = info.creative.content
+      this.newPromotion.creativeTitle = info.creative.title
+
+      if (info.landingPageId) {
+        // landingPageId === 0, 保存为 ''
+        this.newPromotion.landingPageId = String(info.landingPageId)
+      }
+      this.newPromotion.landingPage = info.landingPage
+      this.newPromotion.landingType = info.landingType
+
+      this.newPromotion.mobilePriceRatio = info.mobilePriceRatio
+      this.newPromotion.dailyBudget = info.dailyBudget / 100 | 0
+      this.newPromotion.source = this.$route.query.platform | 0
+      this.newPromotion.validTime = info.validTime
+      this.newPromotion.areas = info.areas
+
+      let timeType = ''
+
+      if (info.timeRange && info.timeRange.length &&
+        (info.timeRange[0] !== null) &&
+        (info.timeRange[1] !== null)) {
+        info.validTime = [
+          toHumanTime(info.timeRange[0], 'YYYY-MM-DD'),
+          toHumanTime(info.timeRange[1], 'YYYY-MM-DD')
+        ]
+
+        timeType = 'custom'
+      } else {
+        info.validTime = []
+        timeType = 'long'
+      }
+
+      this.timeType = timeType
+
+      const words = info.keywords
+        .map(k => ({
+          ...k,
+          ...k.extra
+        }))
+
+      this.newPromotion.creativeWords = clone(words)
+      store.setCreativeWords(clone(words))
+    },
     copyCampaign({platform}) {
       this.$router.push({
-        name: 'qwt-create-promotion',
+        name: 'bax-redirect-page',
         query: {
           campaignId: this.createdCampaignId,
-          mode: 'copy',
+          targetPage: 'qwt-create-promotion',
+          mode: MODE_COPY,
           platform
         }
       })
     },
-    disabledDate,
-    centToYuan
+    disabledDate
   },
   async mounted() {
     await Promise.all([
@@ -818,7 +869,7 @@ export default {
       }
     }
 
-    if (mode === 'copy' && campaignId) {
+    if (mode === MODE_COPY && campaignId) {
       await this.copyExistCampaignInfo(campaignId)
     }
 

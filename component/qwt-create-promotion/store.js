@@ -25,6 +25,10 @@ const store = observable({
     const words = await fapi.getRecommendedWords(word)
     this._recommendedWords = mergeKeywords(this._recommendedWords, words)
   }),
+  setCreativeWords: action(function(words) {
+    // 场景: copy campaign 时, set keywords
+    this._creativeWords = words
+  }),
   getCreativeWords: action(async function(url) {
     const words = await fapi.getCreativeWords(url)
     this._creativeWords = words

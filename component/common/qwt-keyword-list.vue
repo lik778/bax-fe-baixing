@@ -40,7 +40,7 @@
               :value="getWordPrice(s.row.word)"
               @change="v => setCustomPrice(s.row, v)">
             </el-input>
-            <span v-if="true"
+            <span v-if="s.row.cpcRanking >= 5"
               class="add-w-price">
               <button @click="setCustomPrice(s.row, getWordPrice(s.row.word) * 1.2)">
                 提价20%
@@ -112,6 +112,8 @@ function toFloat(s) {
   return n
 }
 
+const TRIGGER_WORDS_CHANGED = 1
+const TRIGGER_PAGE_CHANGED = 2
 const MODE_SELECT = 'select'
 const MODE_UPDATE = 'update'
 const LIMIT = 20
@@ -197,7 +199,7 @@ export default {
     renderWithTip: renderColumnHeaderWithTip,
     onCurrentChange({offset}) {
       this.$emit('change-offset', offset)
-      setTimeout(() => this.tryAutoSelectWords(), 5)
+      setTimeout(() => this.tryAutoSelectWords(TRIGGER_PAGE_CHANGED), 5)
     },
     deleteWord(row) {
       this.$emit('delete-word', {
@@ -249,7 +251,7 @@ export default {
     hasCustomPrice(word) {
       return this.customPrices.findIndex(c => c.word === word) !== -1
     },
-    tryAutoSelectWords() {
+    tryAutoSelectWords(trigger) {
       const { currentPage, offset, mode } = this
 
       if (mode === MODE_UPDATE) {
@@ -262,9 +264,11 @@ export default {
         return
       }
 
-      if (offset < (currentPage + 1) * LIMIT) {
+      if (trigger === TRIGGER_WORDS_CHANGED &&
+        (offset < (currentPage + 1) * LIMIT)) {
         // 当前页, 新增词
-        this.mergeSelectedWords(this.rows.slice(offset, LIMIT))
+        const start = offset % LIMIT
+        this.mergeSelectedWords(this.rows.slice(start, LIMIT))
       }
     },
     wordChecked(word) {
@@ -287,11 +291,13 @@ export default {
       }
     },
     mergeSelectedWords(rows) {
+      // console.debug('merge words', rows.map(w => w.word))
       const preSelectedWords = this.selectedWords
       const ws = preSelectedWords.map(w => w.word)
       const newSelectedWords = rows
         .map(this.fmtWord)
         .filter(w => !ws.includes(w.word))
+
       const selectedWords = [
         ...preSelectedWords,
         ...newSelectedWords
@@ -360,7 +366,7 @@ export default {
   watch: {
     words(v) {
       console.debug('words changed')
-      setTimeout(() => this.tryAutoSelectWords(), 10)
+      setTimeout(() => this.tryAutoSelectWords(TRIGGER_WORDS_CHANGED), 10)
     }
   }
 }
