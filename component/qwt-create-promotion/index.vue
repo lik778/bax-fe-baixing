@@ -899,7 +899,9 @@ export default {
       })
     }, notActiveTime)
   },
-
+  beforeDestroy() {
+    store.clearStore()
+  },
   destroyed() {
     clearTimeout(this.timeout)
   }
