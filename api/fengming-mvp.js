@@ -14,7 +14,8 @@ import {
 } from 'constant/fengming-report'
 
 import {
-  mvpApiHost
+  mvpApiHost,
+  isPro
 } from 'config'
 
 const isArray = Array.isArray
@@ -28,6 +29,14 @@ export async function queryAds(opts = {}) {
 
   if (isArray(q.adIds)) {
     q.adIds = q.adIds.join(',')
+  }
+
+  if (!isPro && localStorage.getItem('__bax_user_ads')) {
+    const data = JSON.parse(localStorage.getItem('__bax_user_ads'))
+    return {
+      ads: toCamelcase(data),
+      total: data.length
+    }
   }
 
   const body = await mvp
