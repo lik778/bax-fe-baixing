@@ -352,6 +352,7 @@ import {
 import {
   SEM_PLATFORM_BAIDU,
   SEM_PLATFORM_SOGOU,
+  LANDING_TYPE_AD,
   landingTypeOpts
 } from 'constant/fengming'
 
@@ -462,7 +463,16 @@ export default {
   computed: {
     adSelectorType() {
       const adId = this.$route.query.adId
-      return adId ? 'reselect' : ''
+      if (adId) {
+        return 'reselect'
+      }
+
+      if ((this.newPromotion.landingType === LANDING_TYPE_AD) &&
+        this.isCopy) {
+        return 'reselect'
+      }
+
+      return ''
     },
     isFirstCampaign() {
       return this.campaignsCount === 0
