@@ -361,6 +361,7 @@ export default {
     fmtWord(w) {
       return {
         price: this.getWordPrice(w.word) * 100 | 0,
+        recommandSource: w.recommandSource,
         originPrice: w.price,
         word: w.word,
         id: w.id
