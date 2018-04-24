@@ -263,6 +263,9 @@ export default {
       }
 
       // console.debug('op pages', this.userOperatedPages,
+      //   'pre words length', this.preWordsLength,
+      //   'cur words length', this.curWordsLength,
+      //   'pre page', prePage,
       //   'page', currentPage,
       //   'offset', offset, 'limit', LIMIT,
       //   'rows', this.rows.map(w => w.word))
