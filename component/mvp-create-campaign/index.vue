@@ -101,7 +101,7 @@
         </header>
         <main>
           <div>
-            <strong>点击单价
+            <strong>最高点击单价
               <el-tooltip effect="dark" content="每次点击的实际扣费小于或等于这个值" placement="top-start">
                 <i class="el-icon-question"></i>
               </el-tooltip>

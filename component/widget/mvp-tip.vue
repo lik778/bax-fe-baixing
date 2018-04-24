@@ -1,7 +1,6 @@
 <template>
   <span class="tip">
-    可推广行业：家电维修、管道维修、电脑维修、搬家、开锁修锁、保姆月嫂、保洁清洗、物品回收。
-更多行业敬请期待~
+    当前仅支持家电维修类目的帖子投放，更多城市类目敬请期待。
   </span>
 </template>
 
@@ -13,7 +12,7 @@ export default {
 
 <style scoped>
 .tip {
-  width: 350px;
+  width: 280px;
   color: red;
   font-size: 12px;
 }

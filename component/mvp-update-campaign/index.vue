@@ -85,18 +85,14 @@
         </header>
         <main>
           <div>
-            <strong>点击单价
-              <el-tooltip effect="dark" content="每次点击的实际扣费小于或等于这个值" placement="top-start">
-                <i class="el-icon-question"></i>
-              </el-tooltip>
-            ：</strong>
+            <strong>最高点击单价：</strong>
             <el-input-number :value="getProp('cpcPrice')"
               style="width: 72px; margin-right: 9px;"
               size="small" :min="0" :controls="false"
               @change="v => campaign.cpcPrice = fmtPrice(v)">
             </el-input-number>
             <strong>元</strong>
-            <p>{{ `所选类目城市底价：${parseFloat(minCpcPrice).toFixed(2)}元` }}</p>
+            <p>{{ `最高点击单价不得低于：${minCpcPrice}元` }}</p>
             <i>出价越高，免费展示几率越大，位置越靠前！</i>
           </div>
           <div>
@@ -141,7 +137,7 @@ import Topbar from 'com/topbar'
 
 import { getCnName } from 'util/meta'
 
-import { updateCampaign, getGridMinPrice } from 'api/fengming-mvp'
+import { updateCampaign } from 'api/fengming-mvp'
 
 import { Message } from 'element-ui'
 
@@ -181,8 +177,7 @@ export default {
 
         dailyBudget: undefined,
         cpcPrice: undefined
-      },
-      minCpcPrice: 0
+      }
     }
   },
   computed: {
@@ -212,6 +207,9 @@ export default {
     },
     minBudget() {
       return 100
+    },
+    minCpcPrice() {
+      return 1.5
     },
     id() {
       return this.$route.params.id
@@ -247,7 +245,6 @@ export default {
         if (campaign.cpcPrice < this.minCpcPrice) {
           throw new Error(`最高点击单价不得低于 ${this.minCpcPrice} 元`)
         }
-        data.cpcPrice = campaign.cpcPrice * 100
         // 只要更新 cpcPrice price ~
         const v = this.getProp('dailyBudget')
         if (v < this.minBudget) {
@@ -274,14 +271,11 @@ export default {
         Message.warning('没有需要更新的变更')
       }
     },
-    async onSelectAd(ad) {
+    onSelectAd(ad) {
       this.campaign.category = ad.category
       this.campaign.areas = [ad.city]
       this.campaign.landingPageId = ad.adId
       this.campaign.landingPage = ad.url
-
-      this.minCpcPrice = await getGridMinPrice(ad.city, ad.category)
-      this.campaign.cpcPrice = this.minCpcPrice
     },
     onChangeAreas() {},
     formatArea(name) {
@@ -313,7 +307,6 @@ export default {
       store.getCampaignInfo(id),
       store.getSummary()
     ])
-    this.minCpcPrice = await getGridMinPrice(this.originCampaign.areas[0], this.originCampaign.category)
   }
 }
 </script>
