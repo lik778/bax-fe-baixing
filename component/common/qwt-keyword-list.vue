@@ -170,6 +170,10 @@ export default {
   },
   data() {
     return {
+      preWordsLength: 0,
+      curWordsLength: 0,
+      prePage: 0,
+
       customPrices: [],
       userOperatedPages: [], // 用户操作过的页: 0, 1, 2
 
@@ -252,7 +256,7 @@ export default {
       return this.customPrices.findIndex(c => c.word === word) !== -1
     },
     tryAutoSelectWords(trigger) {
-      const { currentPage, offset, mode } = this
+      const { currentPage, prePage, offset, mode } = this
 
       if (mode === MODE_UPDATE) {
         return
@@ -263,17 +267,25 @@ export default {
       //   'offset', offset, 'limit', LIMIT,
       //   'rows', this.rows.map(w => w.word))
       if (!this.userOperatedPages.includes(currentPage)) {
-        // 新一页
+        // 1. 用户未操作过当前页
         this.mergeSelectedWords(this.rows)
         return
       }
 
-      if (trigger === TRIGGER_WORDS_CHANGED &&
-        (offset < (currentPage + 1) * LIMIT)) {
-        // 当前页, 新增词
-        const start = offset % LIMIT
-        // console.debug('start', start)
-        this.mergeSelectedWords(this.rows.slice(start, LIMIT))
+      // 2. 用户操作过当前页
+      if (trigger === TRIGGER_WORDS_CHANGED) {
+        if (prePage < currentPage) {
+          // 2.1 先前页 < 当前页, 新增词
+          const start = this.preWordsLength % LIMIT
+          this.mergeSelectedWords(this.rows.slice(start, LIMIT))
+        } else if (prePage === currentPage) {
+          // 2.2 先前页 == 当前页, 新增词
+          const start = offset % LIMIT
+          // console.debug('start', start)
+          this.mergeSelectedWords(this.rows.slice(start, LIMIT))
+        } else {
+          // 2.3 不可能
+        }
       }
     },
     wordChecked(word) {
@@ -370,8 +382,17 @@ export default {
     fmtCpcRanking
   },
   watch: {
+    currentPage(val, pre) {
+      if (val !== this.prePage) {
+        this.prePage = pre
+      }
+    },
     words(v) {
       console.debug('words changed')
+      if (v && v.length && v.length > this.curWordsLength) {
+        this.preWordsLength = this.curWordsLength
+        this.curWordsLength = v.length
+      }
       setTimeout(() => this.tryAutoSelectWords(TRIGGER_WORDS_CHANGED), 10)
     }
   }
