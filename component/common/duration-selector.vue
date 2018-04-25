@@ -276,6 +276,11 @@ export default {
     }
   },
   watch: {
+    platform(now, pre) {
+      if (now !== pre) {
+        this.initClickedFlags(this.schedule)
+      }
+    },
     schedule(now, pre) {
       if (now !== pre) {
         this.initClickedFlags(now)
