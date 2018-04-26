@@ -207,7 +207,7 @@ export async function getCreativeWords(url) {
     .query({url})
     .json()
 
-  return toCamelcase(body.data)
+  return fmtWords(toCamelcase(body.data))
 }
 
 export async function getRecommendedWords(word) {
@@ -218,7 +218,7 @@ export async function getRecommendedWords(word) {
     })
     .json()
 
-  return toCamelcase(body.data)
+  return fmtWords(toCamelcase(body.data))
 }
 
 export async function getChangeLogs(opts) {
@@ -394,4 +394,19 @@ async function _getLogCount(opts) {
     .json()
 
   return body.data
+}
+
+/**
+ * private
+ */
+
+function fmtWords(words) {
+  if (!isArray(words)) {
+    return words
+  }
+
+  return words.map(w => ({
+    id: w.word,
+    ...w
+  }))
 }

@@ -1,7 +1,7 @@
 {
   "name": "bax-fe",
   "private": true,
-  "version": "4.2.0",
+  "version": "4.2.1",
   "scripts": {
     "upload-asset": "upyun-upload -c tool/asset.qiniu.config.js -v",
     "upload": "upyun-upload -c tool/qiniu.config.js -v",
