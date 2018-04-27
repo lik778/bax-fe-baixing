@@ -328,15 +328,15 @@ export default {
       return this.customPrices.findIndex(c => c.word === word) !== -1
     },
     tryAutoSelectWords(trigger) {
-      const { currentPage, prePage, offset, mode } = this
+      // const { currentPage, prePage, offset, mode } = this
 
-      if (mode === MODE_UPDATE) {
-        return
-      }
+      // if (mode === MODE_UPDATE) {
+      //   return
+      // }
 
-      if (this.stopAutoSelectWords) {
-        return
-      }
+      // if (this.stopAutoSelectWords) {
+      //   return
+      // }
 
       // console.debug('op pages', this.userOperatedPages,
       //   'pre words length', this.preWordsLength,
@@ -345,27 +345,27 @@ export default {
       //   'page', currentPage,
       //   'offset', offset, 'limit', LIMIT,
       //   'rows', this.rows.map(w => w.word))
-      if (!this.userOperatedPages.includes(currentPage)) {
-        // 1. 用户未操作过当前页
-        this.mergeSelectedWords(this.rows)
-        return
-      }
+      // if (!this.userOperatedPages.includes(currentPage)) {
+      //   // 1. 用户未操作过当前页
+      //   this.mergeSelectedWords(this.rows)
+      //   return
+      // }
 
       // 2. 用户操作过当前页
-      if (trigger === TRIGGER_WORDS_CHANGED) {
-        if (prePage < currentPage) {
-          // 2.1 先前页 < 当前页, 新增词
-          const start = this.preWordsLength % LIMIT
-          this.mergeSelectedWords(this.rows.slice(start, LIMIT))
-        } else if (prePage === currentPage) {
-          // 2.2 先前页 == 当前页, 新增词
-          const start = offset % LIMIT
-          // console.debug('start', start)
-          this.mergeSelectedWords(this.rows.slice(start, LIMIT))
-        } else {
-          // 2.3 不可能
-        }
-      }
+      // if (trigger === TRIGGER_WORDS_CHANGED) {
+      //   if (prePage < currentPage) {
+      //     // 2.1 先前页 < 当前页, 新增词
+      //     const start = this.preWordsLength % LIMIT
+      //     this.mergeSelectedWords(this.rows.slice(start, LIMIT))
+      //   } else if (prePage === currentPage) {
+      //     // 2.2 先前页 == 当前页, 新增词
+      //     const start = offset % LIMIT
+      //     // console.debug('start', start)
+      //     this.mergeSelectedWords(this.rows.slice(start, LIMIT))
+      //   } else {
+      //     // 2.3 不可能
+      //   }
+      // }
     },
     wordChecked(word) {
       return this.selectedWords
