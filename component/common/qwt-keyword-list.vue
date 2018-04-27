@@ -2,7 +2,8 @@
 <template>
   <div class="qwt-keyword-list">
     <el-table row-key="word" :data="rows">
-      <el-table-column v-if="selectable" width="40">
+      <el-table-column v-if="selectable" width="40"
+        :render-header="renderSwitchAllHeader">
         <template slot-scope="s">
           <el-checkbox :value="wordChecked(s.row)"
             @change="onCheckWord(s.row)" />
@@ -170,6 +171,7 @@ export default {
   },
   data() {
     return {
+      stopAutoSelectWords: false,
       preWordsLength: 0,
       curWordsLength: 0,
       prePage: 0,
@@ -183,6 +185,46 @@ export default {
     }
   },
   computed: {
+    isCurrentHasChecked() {
+      // 有选中
+      const cids = this.rows.map(r => r.id)
+      const sids = this.selectedWords.map(r => r.id)
+
+      if (!cids.length) {
+        return false
+      }
+
+      let yes = false
+
+      for (const i of cids) {
+        if (sids.includes(i)) {
+          yes = true
+          break
+        }
+      }
+
+      return yes
+    },
+    isCurrentAllChecked() {
+      // 全部选中
+      const cids = this.rows.map(r => r.id)
+      const sids = this.selectedWords.map(r => r.id)
+
+      if (!sids.length) {
+        return false
+      }
+
+      let yes = true
+
+      for (const i of cids) {
+        if (!sids.includes(i)) {
+          yes = false
+          break
+        }
+      }
+
+      return yes
+    },
     currentPage() {
       return this.offset / LIMIT | 0 // 0, 1, 2
     },
@@ -200,6 +242,30 @@ export default {
     }
   },
   methods: {
+    renderSwitchAllHeader(h) {
+      const checked = this.isCurrentHasChecked
+      const cids = this.rows.map(r => r.id)
+
+      return h('el-checkbox', {
+        props: {
+          value: checked
+        },
+        on: {
+          change: () => {
+            if (checked) {
+              // 取消
+              const words = this.selectedWords
+                .filter(r => !cids.includes(r.word))
+              this.stopAutoSelectWords = true
+              this.$emit('select-words', words)
+            } else {
+              // all
+              this.mergeSelectedWords(this.rows)
+            }
+          }
+        }
+      })
+    },
     renderWithTip: renderColumnHeaderWithTip,
     onCurrentChange({offset}) {
       this.$emit('change-offset', offset)
@@ -259,6 +325,10 @@ export default {
       const { currentPage, prePage, offset, mode } = this
 
       if (mode === MODE_UPDATE) {
+        return
+      }
+
+      if (this.stopAutoSelectWords) {
         return
       }
 
