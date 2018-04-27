@@ -63,9 +63,15 @@
         </template>
       </el-table-column>
     </el-table>
-    <bax-pagination :options="pagination"
-      @current-change="onCurrentChange">
-    </bax-pagination>
+    <footer>
+      <p v-if="selectable && selectedWords.length">
+        当前累计选中关键词数：
+        <strong>{{ selectedWords.length }}</strong>
+      </p>
+      <bax-pagination :options="pagination"
+        @current-change="onCurrentChange">
+      </bax-pagination>
+    </footer>
   </div>
 </template>
 
@@ -477,6 +483,24 @@ export default {
   display: flex;
   flex-flow: column;
   max-width: 1120px;
+
+  & > footer {
+    display: flex;
+
+    & > p {
+      padding-top: 15px;
+      font-size: 12px;
+      color: #717d91;
+
+      & strong {
+        color: red;
+      }
+    }
+
+    & > footer {
+      flex-grow: 1;
+    }
+  }
 }
 
 .add-w-price {
