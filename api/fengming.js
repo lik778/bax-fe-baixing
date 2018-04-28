@@ -221,7 +221,9 @@ export async function getRecommendedWords(word) {
   const words = fmtWords(toCamelcase(body.data))
   if (isArray(words)) {
     const first = words.find(w => w.word === word)
-    return [first, ...words.filter(w => w.word !== word)]
+    if (first) {
+      return [first, ...words.filter(w => w.word !== word)]
+    }
   }
 
   return words
