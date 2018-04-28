@@ -218,7 +218,13 @@ export async function getRecommendedWords(word) {
     })
     .json()
 
-  return fmtWords(toCamelcase(body.data))
+  const words = fmtWords(toCamelcase(body.data))
+  if (isArray(words)) {
+    const first = words.find(w => w.word === word)
+    return [first, ...words.filter(w => w.word !== word)]
+  }
+
+  return words
 }
 
 export async function getChangeLogs(opts) {
