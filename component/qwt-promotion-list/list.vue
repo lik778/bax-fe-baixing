@@ -287,7 +287,7 @@ export default {
     async inlineUpdateBudget(id, v) {
       const budget = parseInt(v)
 
-      if (!(budget > 0)) {
+      if (!(budget > 0 && budget < 10000000)) {
         return Message.error('请设置合理的预算')
       }
 
@@ -312,7 +312,7 @@ export default {
 
       const budget = parseInt(this.toolbox.budget) * 100
 
-      if (!(budget > 0)) {
+      if (!(budget > 0 && budget < 10000000)) {
         return Message.error('请设置合理的预算')
       }
 
