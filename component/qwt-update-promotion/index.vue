@@ -723,8 +723,14 @@ export default {
       }
 
       const pp = this.predictedInfo.dailyBudget
-      if ((dailyBudget !== undefined) && (dailyBudget < pp)) {
-        throw new Error(`推广日预算需大于 ${pp} 元`)
+      if ((dailyBudget !== undefined)) {
+        if (dailyBudget < pp) {
+          throw new Error(`推广日预算需大于 ${pp} 元`)
+        }
+
+        if (dailyBudget > 10000000) {
+          throw Message.error('推广日预算太高啦！您咋这么土豪呢~')
+        }
       }
 
       if (areas && areas.length === 0) {

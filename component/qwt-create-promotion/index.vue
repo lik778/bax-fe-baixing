@@ -611,6 +611,9 @@ export default {
       if (p.dailyBudget < pp) {
         throw Message.error(`推广日预算需大于 ${pp} 元`)
       }
+      if (p.dailyBudget > 10000000) {
+        throw Message.error('推广日预算太高啦！您咋这么土豪呢~')
+      }
 
       p.dailyBudget = p.dailyBudget * 100
 
