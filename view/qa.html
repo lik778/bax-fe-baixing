@@ -275,6 +275,20 @@
       .promotion-rules > div > section > span:last-child > li:not(:last-child) {
         border-bottom: 1px solid #87898c;
       }
+
+      .upgrade-landing-page {
+        padding: 20px;
+      }
+
+      .upgrade-landing-page > div > li {
+        display: block;
+        margin-bottom: 2px;
+      }
+
+      .upgrade-landing-page > div > img {
+        width: 100%;
+        height: auto;
+      }
     </style>
     <link rel="stylesheet" type="text/css" href="//file.baixing.net/bax-fe/static/slick-1.8.1.css">
     <link rel="stylesheet" type="text/css" href="//file.baixing.net/bax-fe/static/slick-1.8.1-theme.css">
@@ -298,6 +312,7 @@
         <li data-type="doc-sec-5">投放管理及扣费</li>
         <li data-type="doc-sec-6">广告展现</li>
         <li data-type="doc-sec-7">行业投放规则</li>
+        <li data-type="doc-sec-8">落地页升级</li>
       </aside>
       <aside>
         <h3>
@@ -1008,6 +1023,19 @@
       </div>
     </section>
 
+    <section id="doc-sec-8" class="hidden upgrade-landing-page" data-title="落地页升级">
+      <div>
+        <li>亲爱的用户：</li>
+        <li>感谢您对站外推广的认可与信赖，我们对站外推广投放的帖子落地页样式进行了优化升级（升级前后样式请见下图），删除广告/其他用户信息，只保留您发布的推广&您的同类目信息。升级对同类目发布信息多的用户，推广效果的提升将尤其显著，请努力多发信息吧！恭祝生意兴隆！</li>
+        <li>聚焦商户需求、提升推广效果，是百姓网坚持的追求，请与我们一路同行！</li>
+        <li><strong>备注：</strong>升级只影响落地页是帖子的站外推广，落地页为官网的暂时不变。</li>
+      </div>
+      <div>
+        <img src="//file.baixing.net/bax-fe/asset/qa-landing-page-upgrade-pc.jpg">
+        <img src="//file.baixing.net/bax-fe/asset/qa-landing-page-upgrade-wap.jpg">
+      </div>
+    </section>
+
     <script src="//file.baixing.net/bax-fe/static/jquery-3.3.1.min.js"></script>
     <script src="//file.baixing.net/bax-fe/static/slick-1.8.1.min.js"></script>
     <script src="//file.baixing.net/bax-fe/static/video-6.7.min.js?d=10"></script>
@@ -1096,6 +1124,7 @@
           case 'doc-sec-5':
           case 'doc-sec-6':
           case 'doc-sec-7':
+          case 'doc-sec-8':
             child = $('#' + type).clone().removeClass('hidden')
             $('#content').append(child)
             $('#content').parent().find('h4').text(child.data('title'))
@@ -1121,6 +1150,8 @@
             $('li[data-type="image-slide"]').click()
           } else if (search.indexOf('mode=questions') !== -1) {
             $('li[data-type="doc-sec-1"]').click()
+          } else if (search.indexOf('ulpt') !== -1) {
+            $('li[data-type="doc-sec-8"]').click()
           }
         }, 100)
       })
