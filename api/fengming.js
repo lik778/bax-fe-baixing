@@ -3,12 +3,7 @@ import { reverseCamelcase, toCamelcase } from 'object-keys-mapping'
 import { fengming, trim } from './base'
 import moment from 'moment'
 
-import {
-  CREATIVE_CHIBI_REJECT
-} from 'constant/fengming'
-
 const isArray = Array.isArray
-const assign = Object.assign
 
 export async function updateCampaignDailyBudget(opts) {
   const body = await fengming

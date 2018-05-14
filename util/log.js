@@ -21,7 +21,6 @@ import {
 } from 'constant/log'
 
 const OP_CREATE = 1
-const OP_UPDATE = 2
 
 /**
  * @return {String}
