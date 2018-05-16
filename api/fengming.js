@@ -79,7 +79,7 @@ export async function getCampaignInfo(id) {
 
   if (!campaign.landingPageId) {
     // why ? 不想多说什么了, 呵呵
-    if (campaign.landingPage && campaign.landingPage.contains('vad_id')) {
+    if (campaign.landingPage && campaign.landingPage.includes('vad_id')) {
       const search = (new URL(campaign.landingPage)).search
       const o = qs.parse(search)
       if (o.vad_id) {
