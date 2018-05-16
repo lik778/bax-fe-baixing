@@ -1,6 +1,7 @@
 
 import { reverseCamelcase, toCamelcase } from 'object-keys-mapping'
 import { fengming, trim } from './base'
+import qs from 'query-string'
 import moment from 'moment'
 
 const isArray = Array.isArray
@@ -76,6 +77,16 @@ export async function getCampaignInfo(id) {
 
   const campaign = toCamelcase(body.data)
 
+  if (!campaign.landingPageId) {
+    // why ? 不想多说什么了, 呵呵
+    if (campaign.landingPage && campaign.landingPage.contains('vad_id')) {
+      const search = (new URL(campaign.landingPage)).search
+      const o = qs.parse(search)
+      if (o.vad_id) {
+        campaign.landingPageId = o.vad_id
+      }
+    }
+  }
   return campaign
 }
 
