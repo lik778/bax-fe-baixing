@@ -926,7 +926,9 @@ export default {
         ...this.getProp('areas').filter(i => i !== c)
       ]
     },
-    setTimeType: store.setTimeType,
+    setTimeType(type) {
+      store.setTimeType(type)
+    },
     disabledDate,
     centToYuan
   },
