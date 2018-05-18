@@ -629,7 +629,7 @@ export default {
         landingPage: originLandingPage,
         landingType: originLandingType
       } = this.originPromotion
-      // 说明: 如下四个值, 分为2组, 每一组要么都不传, 要么都传
+      // 说明: 如下四个值, 分为2组, 每一组要么都不传(to server), 要么都传(to server)
       const {
         creativeContent,
         creativeTitle,
@@ -666,8 +666,9 @@ export default {
         result.creativeTitle = this.getProp('creativeTitle')
       }
 
-      if (changed(landingPage, originLandingPage) ||
-        changed(landingType, originLandingType)) {
+      if (changed(landingPage, originLandingPage)) {
+        // 忽略如下情形: 改了 type, 不改 page
+        //   - changed(landingType, originLandingType)
         result.landingType = this.getProp('landingType')
         result.landingPage = this.getProp('landingPage')
       }
