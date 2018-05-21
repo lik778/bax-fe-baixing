@@ -242,7 +242,5 @@ export default {
 </script>
 
 <style scoped>
-
 @import './selector'
-
 </style>
