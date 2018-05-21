@@ -5,8 +5,8 @@ import {
 } from './role'
 
 // sidebar
-
-const specialUserIds = [1, 318, 53470] // 康品汇 特权 自建销售
+// 米勺: 47709
+const specialUserIds = [1, 318, 47709, 53470] // 康品汇 特权 自建销售
 
 export function allowSeeGw(roles, uid) {
   return specialUserIds.includes(uid)
