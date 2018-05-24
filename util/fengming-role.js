@@ -7,10 +7,10 @@ import {
 // sidebar
 // 康品汇: 318
 // 米勺: 47709
-// 优米帮: 810422
+// 优米帮: 860603
 // 测试帐号: 53470
 const specialUserIds = [318, 47709, 53470]
-const specialKaUserIds = [810422]
+const specialKaUserIds = [860603]
 
 export function allowSeeGw(roles, uid) {
   return specialUserIds.includes(uid) ||
