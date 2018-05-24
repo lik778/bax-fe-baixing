@@ -32,9 +32,9 @@
             </p>
           </el-menu-item>
           <el-menu-item v-if="allowSeeGw" index="ka">
-            <router-link :to="{ name: 'gw-charge' }" tag="p">
+            <p @click="toBuyKaOrGw">
               官网购买
-            </router-link>
+            </p>
           </el-menu-item>
         </el-submenu>
 
@@ -243,6 +243,16 @@ export default {
         query: {
           ...q,
           mode: 'charge-only'
+        }
+      })
+    },
+    toBuyKaOrGw() {
+      const q = this.$route.query
+
+      this.$router.push({
+        name: 'gw-charge',
+        query: {
+          ...q
         }
       })
     }
