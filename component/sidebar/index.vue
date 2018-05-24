@@ -17,17 +17,6 @@
           </router-link>
         </el-menu-item>
 
-        <el-submenu index="ka" v-if="allowSeeGw">
-          <template slot="title">
-            <i class="el-icon-star-on"></i>建站工具
-          </template>
-          <el-menu-item index="ka-1">
-            <router-link :to="{ name: 'gw-charge' }" tag="p">
-              企业官网
-            </router-link>
-          </el-menu-item>
-        </el-submenu>
-
         <el-submenu index="qwt-charge">
           <template slot="title">
             <bx-icon type="paycircleo"></bx-icon>产品购买
@@ -41,6 +30,11 @@
             <p @click="toChargeOnly">
               资金充值
             </p>
+          </el-menu-item>
+          <el-menu-item v-if="allowSeeGw" index="ka">
+            <router-link :to="{ name: 'gw-charge' }" tag="p">
+              官网购买
+            </router-link>
           </el-menu-item>
         </el-submenu>
 
