@@ -36,7 +36,11 @@
       <div v-if="!isBxUser" style="margin-top: 35px;">
         <aside>用户ID:</aside>
         <span>
-          <el-input v-model.trim="inputUserId" placeholder="用户 ID">
+          <span v-if="userIdLocked">
+            {{ displayUserId }}
+          </span>
+          <el-input v-else
+            v-model.trim="inputUserId" placeholder="用户 ID">
           </el-input>
         </span>
       </div>
@@ -131,6 +135,8 @@ export default {
 
       salesIdLocked: false,
       displayBxSalesId: '',
+      userIdLocked: false,
+      displayUserId: '',
       inputSalesId: '',
       inputUserId: ''
     }
@@ -287,12 +293,17 @@ export default {
     }
   },
   async mounted() {
-    const { sales_id: salesId } = this.$route.query
+    const { sales_id: salesId, user_id: userId } = this.$route.query
 
     if (salesId) {
       const userInfo = await getUserInfo(salesId)
       this.displayBxSalesId = userInfo.salesId
       this.salesIdLocked = true
+    }
+
+    if (userId) {
+      this.userIdLocked = true
+      this.displayUserId = userId
     }
 
     await store.getProducts()
