@@ -8,6 +8,7 @@
       <header>请选择您需要的官网版本：</header>
       <main>
         <gw-pro-widget v-for="i of products" :key="i.id"
+          v-if="!isKaOnly || i.name === '升级版精品官网'"
           :title="i.name" :price="i.showPrice | centToYuan"
           :checked="productChecked(i.id)"
           @click="checkProduct(i.id)">
@@ -96,6 +97,7 @@ import {
 
 import {
   allowGetOrderPayUrl,
+  allowSeeKaOnly,
   allowPayOrder
 } from 'util/fengming-role'
 
@@ -140,6 +142,10 @@ export default {
     isAgentSales() {
       const roles = normalizeRoles(this.userInfo.roles)
       return roles.includes('AGENT_SALES')
+    },
+    isKaOnly() {
+      const { roles, id } = this.userInfo
+      return allowSeeKaOnly(roles, id)
     },
     isBxUser() {
       const roles = normalizeRoles(this.userInfo.roles)

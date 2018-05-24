@@ -162,6 +162,7 @@ import {
   allowSeeQwtPromotion,
   allowSeeQwtReport,
   allowSeeQwtCharge,
+  allowSeeKaOnly,
   allowSeeGw
 } from 'util/fengming-role'
 
@@ -223,7 +224,9 @@ export default {
       return allowSeeQwtReport(this.userInfo.roles)
     },
     allowSeeGw() {
-      return allowSeeGw(this.userInfo.roles, this.userInfo.id)
+      const { roles, id } = this.userInfo
+      return allowSeeKaOnly(roles, id) ||
+        allowSeeGw(roles, id)
     }
   },
   methods: {

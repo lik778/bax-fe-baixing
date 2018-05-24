@@ -5,11 +5,20 @@ import {
 } from './role'
 
 // sidebar
+// 康品汇: 318
 // 米勺: 47709
-const specialUserIds = [1, 318, 47709, 53470] // 康品汇 特权 自建销售
+// 优米帮: 810422
+// 测试帐号: 53470
+const specialUserIds = [318, 47709, 53470]
+const specialKaUserIds = [810422]
 
 export function allowSeeGw(roles, uid) {
-  return specialUserIds.includes(uid)
+  return specialUserIds.includes(uid) ||
+    specialKaUserIds.includes(uid)
+}
+
+export function allowSeeKaOnly(roles, uid) {
+  return specialKaUserIds.includes(uid)
 }
 
 export function allowSeeQwtCharge(roles, uid) {
