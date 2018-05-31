@@ -1,75 +1,87 @@
 
 <template>
   <div class="gw-charge">
-    <topbar :user-info="userInfo">
-      <label slot="title">精品官网 - 购买</label>
-    </topbar>
-    <section>
-      <header>请选择您需要的官网版本：</header>
-      <main>
-        <gw-pro-widget v-for="i of products" :key="i.id"
-          v-if="!isKaOnly || i.name === '升级版精品官网'"
-          :title="i.name" :price="i.showPrice | centToYuan"
-          :checked="productChecked(i.id)"
-          @click="checkProduct(i.id)">
-        </gw-pro-widget>
+    <topbar :user-info="userInfo" />
+    <content>
+      <step :step="step" />
+      <section class="gw-product">
+        <header>
+          1. 选择产品
+        </header>
+        <main>
+          <gw-pro-widget
+            v-if="!isKaOnly || i.name === '升级版精品官网'"
+            v-for="i of products" :key="i.id"
+            :title="i.name"
+            :price="i.showPrice | centToYuan"
+            :checked="productChecked(i.id)"
+            @click="checkProduct(i.id)">
+          </gw-pro-widget>
       </main>
-    </section>
-    <section>
-      <div style="margin-top: 45px;">
-        <aside>价格信息:</aside>
-        <span>
-          <price-list :products="checkedProducts"></price-list>
-        </span>
-      </div>
-      <div style="margin-top: 35px;">
-        <aside>服务编号:</aside>
-        <span v-if="salesIdLocked || isBxSales">
-          {{ displayBxSalesId || userInfo.salesId }}
-        </span>
-        <span v-else>
-          <el-input v-model.trim="inputSalesId"
-            placeholder="如有服务编号请您填写">
-          </el-input>
-        </span>
-      </div>
-      <div v-if="!isBxUser" style="margin-top: 35px;">
-        <aside>用户ID:</aside>
-        <span>
-          <span v-if="userIdLocked">
-            {{ displayUserId }}
-          </span>
-          <el-input v-else
-            v-model.trim="inputUserId" placeholder="用户 ID">
-          </el-input>
-        </span>
-      </div>
-      <div class="price">
-        <aside>百姓网余额需支付:</aside>
-        <span>{{ '￥' + totalPrice }}</span>
-      </div>
-      <div class="terms">
-        <el-checkbox :value="true"></el-checkbox>
-        <label>我已阅读并同意遵守</label>
-        <a download="百姓网精品官网入驻协议.docx"
-          v-bind:href="contractDocx">
-          《百姓网精品官网入驻协议》
-        </a>
-      </div>
-      <div class="submit">
-        <button class="buy-btn" @click="createOrder">
-          {{ submitButtonText }}
-        </button>
-        <span v-if="orderPayUrl">
-          <label :title="orderPayUrl">
-            {{ '付款链接: ' + orderPayUrl }}
-          </label>
-          <Clipboard :content="orderPayUrl"></Clipboard>
-        </span>
-      </div>
-      <footer>
-      </footer>
-    </section>
+      </section>
+      <section class="gw-order">
+        <header>
+          2. 核对订单
+        </header>
+        <main>
+          <div>
+            <price-list :products="checkedProducts" />
+          </div>
+          <div class="info">
+            <section>
+              <aside>服务编号:</aside>
+              <span v-if="salesIdLocked || isBxSales">
+                {{ displayBxSalesId || userInfo.salesId }}
+              </span>
+              <span v-else>
+                <el-input v-model.trim="inputSalesId"
+                  placeholder="如有服务编号请您填写" />
+                </span>
+            </section>
+            <section v-if="!isBxUser">
+              <aside>用户ID:</aside>
+              <span>
+                <span v-if="userIdLocked">
+                {{ displayUserId }}
+                </span>
+                <el-input v-else
+                  v-model.trim="inputUserId"
+                  placeholder="用户 ID" />
+              </span>
+            </section>
+            <section class="price">
+              <aside>百姓网余额需支付:</aside>
+              <span>{{ '￥' + totalPrice }}</span>
+            </section>
+            <section class="terms">
+              <el-checkbox :value="true" />
+              <label>我已阅读并同意遵守</label>
+              <a download="百姓网精品官网入驻协议.docx"
+                v-bind:href="contractDocx">
+                《百姓网精品官网入驻协议》
+              </a>
+            </section>
+            <section class="submit">
+              <button class="buy-btn" @click="createOrder">
+                {{ submitButtonText }}
+              </button>
+              <span v-if="orderPayUrl">
+                <label :title="orderPayUrl">
+                  {{ '付款链接：' + orderPayUrl }}
+                </label>
+                <Clipboard :content="orderPayUrl" />
+              </span>
+            </section>
+          </div>
+          <div class="rules">
+            <p>精品官网使用规则：</p>
+            <li>1. 该产品购买后，精品官网不可退款，如有疑问请致电客服400-036-3650；</li>
+            <li>2. 该精品官网自购买之日起有效期为365天，请在有效期内使用；</li>
+            <li>3. 详细推广记录请在【全网通】-【数据报表】查看。</li>
+          </div>
+        </main>
+      </section>
+    </content>
   </div>
 </template>
 
@@ -78,6 +90,7 @@ import Clipboard from 'com/widget/clipboard'
 import GwProWidget from 'com/widget/gw-pro'
 import PriceList from './price-list'
 import Topbar from 'com/topbar'
+import Step from './step'
 
 import { Message } from 'element-ui'
 
@@ -117,7 +130,8 @@ export default {
     GwProWidget,
     Clipboard,
     PriceList,
-    Topbar
+    Topbar,
+    Step
   },
   props: {
     userInfo: {
@@ -130,6 +144,8 @@ export default {
   },
   data() {
     return {
+      contractDocx: assetHost + 'baixing-custom-website-contract.docx',
+
       checkedProductId: 4,
       orderPayUrl: '',
 
@@ -138,7 +154,9 @@ export default {
       userIdLocked: false,
       displayUserId: '',
       inputSalesId: '',
-      inputUserId: ''
+      inputUserId: '',
+
+      step: 1
     }
   },
   filters: {
@@ -184,9 +202,6 @@ export default {
       // 目前就一个 :)
       const p = this.checkedProducts.map(p => p.price).pop()
       return centToYuan(p)
-    },
-    contractDocx() {
-      return assetHost + 'baixing-custom-website-contract.docx'
     }
   },
   methods: {
@@ -312,113 +327,110 @@ export default {
 </script>
 
 <style scoped>
+@import "../../cssbase/var";
 @import "cssbase/mixin";
 
 .buy-btn {
   @mixin center;
   width: 110px;
   height: 35px;
-  margin-top: 30px;
+  margin-top: 20px;
   border-radius: 4px;
   background: #ff7533;
   color: white;
   font-size: 14px;
   font-weight: 600;
-  line-height: 1.29;
   cursor: pointer;
 }
 
 .gw-charge {
-  padding: 0 35px;
   width: 100%;
 
-  & > section:nth-child(2) {
-    border-bottom: dashed 1px #979797;
+  & > content {
+    display: block;
+    width: 100%;
+    min-height: calc(100% - 50px);
+    padding: 10px 10px 30px;
+    background: var(--qwt-c-gray);
+  }
+}
 
-    & > header {
+.gw-product, .gw-order {
+  margin-top: 10px;
+  padding: 20px 0 10px 20px;
+  border-radius: 4px;
+  background: white;
+
+  & > header {
+    font-weight: 600;
+    font-size: 14px;
+    color: #333333;
+  }
+
+  & > main {
+    margin-top: 20px;
+  }
+}
+
+.gw-product {
+  padding-bottom: 30px;
+
+  & > main > div:not(:last-child) {
+    margin-right: 20px;
+  }
+}
+
+.gw-order {
+  & > main {
+    width: 610px;
+  }
+}
+
+.gw-order .info {
+  display: flex;
+  flex-flow: column;
+  align-items: flex-end;
+  justify-content: center;
+  margin-top: 30px;
+  width: 610px;
+  padding-right: 35px;
+  padding-bottom: 34px;
+  border-bottom: solid 1px #e6e6e6;
+
+  & > section {
+    margin-bottom: 10px;
+
+    & > aside, & > label, & > a {
       font-size: 14px;
-      color: #6a778c;
-    }
-
-    & > main {
-      display: flex;
-      margin: 46px 0 50px;
-
-      & > div {
-        margin-right: 10px;
-      }
+      color: #666666;
     }
   }
 
-  & > section:nth-child(3) {
-    padding-left: 12px;
-
-    & > div {
-      & > aside {
-        min-width: 84px;
-        font-size: 14px;
-        color: #6a778c;
-      }
+  & > section.terms {
+    & > a {
+      color: var(--qwt-c-blue);
     }
+  }
 
-    & > div:first-child {
-      display: flex;
-
-      & > aside {
-        margin: 5px 5px 0 0;
-      }
+  & > section.price {
+    & > span {
+      font-size: 22px;
+      font-weight: 500;
+      color: var(--qwt-c-orange);
     }
+  }
+}
 
-    & > div.price {
-      margin-top: 25px;
+.gw-order .rules {
+  margin-top: 10px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #999999;
 
-      & > span {
-        font-size: 18px;
-        color: #ff1f0e;
-      }
-    }
-
-    & > div.terms {
-      display: flex;
-      align-items: center;
-      font-size: 14px;
-      padding-left: 320px;
-      margin: 10px 0;
-
-      & a {
-        color: #48576a;
-        cursor: pointer;
-      }
-
-      & .el-checkbox {
-        margin-right: 10px;
-      }
-    }
-
-    & > div.submit {
-      margin-top: 30px;
-
-      & > span {
-        display: inline-flex;
-        align-items: center;
-        margin-left: 35px;
-
-        & > label {
-          @mixin wordline;
-          width: 320px;
-          max-width: 320px;
-          font-size: 14px;
-          color: #6a778c;
-        }
-      }
-    }
-
-    & > footer {
-      margin: 34px 0 30px;
-      font-size: 13px;
-      line-height: 1.62;
-      color: #6a778c;
-    }
+  & > li {
+    padding-left: 1em;
+    font-size: 12px;
+    line-height: 1.86;
   }
 }
 </style>

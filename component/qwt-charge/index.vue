@@ -797,7 +797,7 @@ export default {
 
 .qwt-product, .qwt-order {
   margin-top: 10px;
-  padding: 20px 0 10px 21px;
+  padding: 20px 0 10px 20px;
   border-radius: 4px;
   background: white;
 }
@@ -812,8 +812,8 @@ export default {
   & .package, & .charge {
     & > header {
       font-size: 14px;
-      color: #666666;
       line-height: 1.5;
+      color: #666666;
     }
 
     & > main {

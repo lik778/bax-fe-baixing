@@ -31,7 +31,7 @@
               资金充值
             </p>
           </el-menu-item>
-          <el-menu-item v-if="allowSeeGw" index="ka">
+          <el-menu-item index="ka">
             <p @click="toBuyKaOrGw">
               官网购买
             </p>
@@ -149,9 +149,7 @@ import BxIcon from 'com/widget/icon'
 import {
   allowSeeQwtPromotion,
   allowSeeQwtReport,
-  allowSeeQwtCharge,
-  allowSeeKaOnly,
-  allowSeeGw
+  allowSeeQwtCharge
 } from 'util/fengming-role'
 
 import {
@@ -210,11 +208,6 @@ export default {
     },
     allowSeeQwtReport() {
       return allowSeeQwtReport(this.userInfo.roles)
-    },
-    allowSeeGw() {
-      const { roles, id } = this.userInfo
-      return allowSeeKaOnly(roles, id) ||
-        allowSeeGw(roles, id)
     }
   },
   methods: {
