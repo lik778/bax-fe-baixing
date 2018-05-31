@@ -1,8 +1,6 @@
 
 export const isPro = location.hostname.includes('bax.baixing.com.cn')
 
-export const qiniuHost = '//ono2r7ueh.bkt.clouddn.com/'
-
 export const fengmingApiHost = isPro
   ? '//bax.baixing.com.cn/fengmingx-api'
   : '//192.168.8.201/fengmingx'
