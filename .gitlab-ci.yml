@@ -8,19 +8,9 @@ variables:
 
 stages:
   - build
-  - release
 
 build:
   stage: build
   script:
     - docker build --pull -t $BAX_FE_REF .
     - docker push $BAX_FE_REF
-
-release:
-  stage: release
-  only:
-    - tags
-    - /^v.*$/
-  script:
-    - docker pull $BAX_FE_REF
-    - docker tag $BAX_FE_REF
