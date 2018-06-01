@@ -62,7 +62,6 @@
                 <el-button-group>
                   <el-button type="primary" size="small">帖子</el-button>
                   <el-button size="small" disabled>官网</el-button>
-                  <el-button size="small" disabled>微站</el-button>
                 </el-button-group>
                 <i>其他页面陆续开放中，敬请期待</i>
               </li>
