@@ -80,12 +80,6 @@
           </el-menu-item>
         </el-submenu>
 
-        <el-menu-item index="qwt-cashcow">
-          <router-link :to="{ name: 'qwt-cashcow' }" tag="p">
-            <bx-icon type="iconfontdesktop"></bx-icon>微站
-          </router-link>
-        </el-menu-item>
-
         <el-submenu index="ssp" v-if="allowSeeBxAd">
           <template slot="title">
             <i class="el-icon-message"></i>品牌广告

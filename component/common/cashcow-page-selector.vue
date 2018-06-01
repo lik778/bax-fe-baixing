@@ -9,10 +9,6 @@
       :options="options"
       @change="onChange">
     </bax-select>
-    <a v-else target="_blank"
-      href="http://bax.baixing.com.cn/main/qwt/cashcow">
-      还没微站？快去免费创建！
-    </a>
   </span>
 </template>
 
