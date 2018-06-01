@@ -1,16 +1,39 @@
 
 <template>
-  <div :class="{'gw-pro-widget': true, checked}" @click="onClick">
+  <div :class="{'gw-pro-widget': true, checked}"
+    @click="onClick">
+    <div class="hot-flag">
+      <section>
+        <main>
+          <p>热卖</p>
+        </main>
+        <footer>
+          <svg xmlns="http://www.w3.org/2000/svg" version="1.1" class="svg-triangle">
+            <polygon points="0,0 44,0 22,12"/>
+          </svg>
+        </footer>
+      </section>
+    </div>
+    <header>
+      {{ title }}
+    </header>
     <main>
-      <span>
-        价值
-      </span>
-      <span>
-        {{ price + '元' }}
-      </span>
+      <p>
+        {{ title + '365天' }}
+      </p>
+      <div>
+        <span>
+          <li>支持多端展示</li>
+          <li>共享多渠道落地页</li>
+        </span>
+        <span>
+          <li>支持微信分享</li>
+          <li>丰富媒体库</li>
+        </span>
+      </div>
     </main>
     <footer>
-      {{ title }}
+      {{ price + '元' }}
     </footer>
     <p>
       <bx-icon v-if="checked" type="check" />
@@ -41,47 +64,104 @@ export default {
 
 <style scoped>
 @import '../../cssbase/mixin';
+@import '../../cssbase/var';
 @import 'cssbase/mixin';
 
 .gw-pro-widget {
   display: inline-flex;
   flex-flow: column;
-  width: 170px;
-  height: 100px;
+  width: 290px;
+  height: 210px;
   border-radius: 4px;
-  border: solid 1px #ffb74d;
+  border: solid 1px var(--qwt-c-yellow);
   cursor: pointer;
 
-  & > main {
+  & > header {
     @mixin center;
-    flex-grow: 1;
-    color: #666666;
+    height: 42px;
+    color: #333333;
+    font-weight: 500;
+    border-bottom: dotted 1px var(--qwt-c-yellow);
+  }
 
-    & > span:last-child {
-      margin-left: 10px;
-      font-weight: 500;
-      color: #fc8342;
+  & > main {
+    flex-grow: 1;
+
+    & > p {
+      @mixin center;
+      margin: 15px 0;
+      font-weight: 600;
+      color: var(--qwt-c-yellow);
     }
 
-    & > label {
-      margin-left: 8px;
+    & > div {
+      padding: 0 15px;
+
+      & > span {
+        & > li {
+          font-size: 14px;
+          line-height: 2;
+          color: #666666;
+          list-style: unset;
+        }
+      }
     }
   }
 
   & > footer {
     @mixin center;
     height: 40px;
-    color: #666666;
-    border-top: 1px dotted #ffb74d;
+    color: white;
+    background: var(--qwt-c-yellow);
+    border-top: 1px dotted var(--qwt-c-yellow);
+  }
+}
+
+.hot-flag {
+  position: relative;
+  width: 0;
+  height: 0;
+  top: -4px;
+  left: 226px;
+
+  & > section {
+    width: 44px;
+    height: 50px;
+
+    & > main {
+      @mixin center;
+      height: 40px;
+      background: #ff3c3c;
+      font-size: 12px;
+      color: white;
+      border-top-left-radius: 2px;
+      border-top-right-radius: 2px;
+    }
+
+    & > footer {
+      display: flex;
+      background: transparent;
+      height: 12px;
+
+      & .svg-triangle polygon {
+        fill: #ff3c3c;
+      }
+    }
   }
 }
 
 .gw-pro-widget.checked {
-  border: solid 1px #ff7533;
+  border: solid 1px var(--qwt-c-orange);
+
+  & > main {
+    & > p {
+      color: var(--qwt-c-orange);
+    }
+  }
 
   & > footer {
-    border-top: 1px dotted #ff7533;
-    background: #ff7533;
+    border-top: 1px dotted var(--qwt-c-orange);
+    background: var(--qwt-c-orange);
     color: white;
   }
 
@@ -89,7 +169,7 @@ export default {
     position: relative;
     height: 0;
     width: 0;
-    left: 178px;
+    left: 300px;
     bottom: 10px;
   }
 
