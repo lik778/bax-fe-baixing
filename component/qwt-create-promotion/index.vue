@@ -86,12 +86,6 @@
                 :value="newPromotion.landingPage"
                 @change="setLandingPage">
               </qiqiaoban-page-selector>
-
-              <cashcow-page-selector
-                v-if="newPromotion.landingType === 4"
-                :value="newPromotion.landingPage"
-                @change="setLandingPage">
-              </cashcow-page-selector>
             </div>
           </span>
         </div>
@@ -310,7 +304,6 @@ import PromotionMobileRatioTip from 'com/widget/promotion-mobile-ratio-tip'
 import PromotionAreaLimitTip from 'com/widget/promotion-area-limit-tip'
 import QiqiaobanPageSelector from 'com/common/qiqiaoban-page-selector'
 import PromotionCreativeTip from 'com/widget/promotion-creative-tip'
-import CashcowPageSelector from 'com/common/cashcow-page-selector'
 import PromotionChargeTip from 'com/widget/promotion-charge-tip'
 import CopyCampaignDialog from 'com/common/copy-campaign-dialog'
 import PromotionRuleLink from 'com/widget/promotion-rule-link'
@@ -396,7 +389,6 @@ export default {
     PromotionAreaLimitTip,
     QiqiaobanPageSelector,
     PromotionCreativeTip,
-    CashcowPageSelector,
     PromotionChargeTip,
     CopyCampaignDialog,
     PromotionRuleLink,

@@ -65,12 +65,6 @@
                 @change="setLandingPage">
               </qiqiaoban-page-selector>
 
-              <cashcow-page-selector
-                v-if="getProp('landingType') === 4"
-                :disabled="!isCreativeEditable"
-                :value="getProp('landingPage')"
-                @change="setLandingPage">
-              </cashcow-page-selector>
               <p v-if="!isCreativeEditable" class="authing-tip">
                 您的推广在审核中，审核通过后可修改落地页，感谢配合！
               </p>
@@ -286,7 +280,6 @@ import uuid from 'uuid/v4'
 import PromotionAreaLimitTip from 'com/widget/promotion-area-limit-tip'
 import QiqiaobanPageSelector from 'com/common/qiqiaoban-page-selector'
 import PromotionCreativeTip from 'com/widget/promotion-creative-tip'
-import CashcowPageSelector from 'com/common/cashcow-page-selector'
 import PromotionChargeTip from 'com/widget/promotion-charge-tip'
 import PromotionRuleLink from 'com/widget/promotion-rule-link'
 import DurationSelector from 'com/common/duration-selector'
@@ -345,7 +338,6 @@ export default {
     PromotionAreaLimitTip,
     QiqiaobanPageSelector,
     PromotionCreativeTip,
-    CashcowPageSelector,
     PromotionChargeTip,
     PromotionRuleLink,
     DurationSelector,
