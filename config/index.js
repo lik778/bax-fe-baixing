@@ -21,10 +21,6 @@ export const dashboardHost = isPro
   ? '//bax.baixing.com.cn/dashboard-api'
   : '//localhost:3003/api'
 
-export const cashcowHost = isPro
-  ? '//bax.baixing.com.cn/cashcow/api/bax'
-  : '//192.168.8.201/cashcow/api/bax'
-
 export const assetHost = '//file.baixing.net/bax-fe/asset/'
 
 export const upyun = {
