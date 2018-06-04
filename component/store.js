@@ -3,7 +3,6 @@ import { observable, action, toJS } from 'mobx'
 
 import * as aapi from 'api/account'
 import * as mapi from 'api/meta'
-import track from 'util/track'
 
 const gStore = observable({
   _currentUser: {},
