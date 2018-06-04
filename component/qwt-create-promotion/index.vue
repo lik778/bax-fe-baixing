@@ -11,9 +11,11 @@
         <div>
           <aside>选择渠道：</aside>
           <span class="select-source">
-            <el-popover ref="popover-baidu-preview"
+            <el-popover
+              ref="popover-baidu-preview"
               placement="bottom-start"
-              trigger="hover">
+              trigger="hover"
+            >
               <div class="source-preview">
                 <h3>效果示例：电脑端</h3>
                 <img :src="PRE_IMG_BAIDU_PC" />
@@ -21,9 +23,11 @@
                 <img :src="PRE_IMG_BAIDU_WAP" />
               </div>
             </el-popover>
-            <el-popover ref="popover-sougou-preview"
+            <el-popover
+              ref="popover-sougou-preview"
               placement="bottom-start"
-              trigger="hover">
+              trigger="hover"
+            >
               <div class="source-preview">
                 <h3>效果示例：电脑端</h3>
                 <img :src="PRE_IMG_SOGOU_PC" />
@@ -31,9 +35,11 @@
                 <img :src="PRE_IMG_SOGOU_WAP" />
               </div>
             </el-popover>
-            <el-popover ref="popover-360-preview"
+            <el-popover
+              ref="popover-360-preview"
               placement="bottom-start"
-              trigger="hover">
+              trigger="hover"
+            >
               <div class="source-preview">
                 <h3>效果示例：电脑端</h3>
                 <img :src="PRE_IMG_360_PC" />
@@ -119,7 +125,7 @@
         </div>
       </section>
       <section>
-        <promotion-creative-tip></promotion-creative-tip>
+        <promotion-creative-tip />
         <div>
           <aside>推广标题:</aside>
             <span>
@@ -931,7 +937,7 @@ export default {
 .select-source {
   display: flex;
   align-items: center;
-  width: 210px;
+  width: 280px;
 }
 
 .source-preview {
@@ -1089,6 +1095,13 @@ export default {
       }
     }
   }
+}
+
+.warning {
+  @mixin center;
+  padding-left: 12px;
+  font-size: 12px;
+  color: red;
 }
 
 .tuoguan {

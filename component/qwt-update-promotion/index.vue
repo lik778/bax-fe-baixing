@@ -18,21 +18,27 @@
           <aside>投放渠道：</aside>
           <span>
             <el-button-group>
-              <el-button :type="getProp('source') === 0 ? 'primary' : ''"
-                @click="clickSourceTip">
+              <el-button
+                :type="getProp('source') === SEM_PLATFORM_BAIDU ? 'primary' : ''"
+                @click="clickSourceTip"
+              >
                 百度
               </el-button>
-              <el-button :type="getProp('source') === 5 ? 'primary' : ''"
-                @click="clickSourceTip">
+              <el-button
+                :type="getProp('source') === SEM_PLATFORM_SOGOU ? 'primary' : ''"
+                @click="clickSourceTip"
+              >
                 搜狗
               </el-button>
-              <el-button :type="getProp('source') === 1 ? 'primary' : ''"
-                @click="clickSourceTip">
+              <el-button
+                :type="getProp('source') === SEM_PLATFORM_QIHU ? 'primary' : ''"
+                @click="clickSourceTip"
+              >
                 360
               </el-button>
             </el-button-group>
           </span>
-          <promotion-rule-link></promotion-rule-link>
+          <promotion-rule-link />
         </div>
         <div>
           <aside style="align-items: flex-start; padding-top: 5px;">
@@ -102,7 +108,7 @@
         </div>
       </section>
       <section class="creative">
-        <promotion-creative-tip></promotion-creative-tip>
+        <promotion-creative-tip />
         <div>
           <aside>推广标题:</aside>
           <span>
