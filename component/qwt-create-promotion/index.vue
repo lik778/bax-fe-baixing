@@ -3,7 +3,6 @@
   <div class="qwt-create-promotion">
     <topbar :user-info="userInfo">
       <label slot="title">全网通 - 新建推广</label>
-      <flat-btn slot="right" @click.native="toggleTuoguanVisible({action: 'tuoguan:entry:qwt-create-promotion', actionTrackId, baixingId: userInfo.id})" class="tuoguan">托管服务</flat-btn>
     </topbar>
     <main>
       <section>
@@ -530,9 +529,6 @@ export default {
     closePromotion() {
       window.localStorage.setItem(storageKey, 'true')
       this.showPromotion = false
-    },
-    toggleTuoguanVisible(opts) {
-      gStore.toggleTuoguanVisible(opts)
     },
     getCurrentSchedule() {
       const { schedule } = this.newPromotion

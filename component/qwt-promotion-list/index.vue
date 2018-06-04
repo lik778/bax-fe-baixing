@@ -3,7 +3,6 @@
   <div class="qwt-promotion">
     <topbar :user-info="userInfo">
       <label slot="title">全网通 - 推广管理</label>
-      <flat-btn slot="right" @click.native="toggleTuoguanVisible({action: 'tuoguan:entry:qwt-promotion-list', actionTrackId, baixingId: userInfo.id})" class="tuoguan">托管服务</flat-btn>
     </topbar>
     <promotion-header :show-more-filters="showMoreFilters"
       :all-areas="allAreas" :query="localQuery"
@@ -79,11 +78,6 @@ export default {
         ...this.query,
         userId: currentUserId
       }
-    }
-  },
-  methods: {
-    toggleTuoguanVisible() {
-      gStore.toggleTuoguanVisible()
     }
   }
 }

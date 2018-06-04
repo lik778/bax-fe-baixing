@@ -2,7 +2,6 @@
 <template>
   <div class="qwt-charge">
     <topbar :user-info="userInfo" :back="false">
-      <flat-btn slot="right" @click.native="toggleTuoguanVisible({action: 'tuoguan:entry:qwt-charge', actionTrackId, baixingId: userInfo.id})" class="tuoguan">托管服务</flat-btn>
     </topbar>
     <main>
       <step :mode="mode" :step="currentStep" />
@@ -476,9 +475,6 @@ export default {
   },
   methods: {
     displayCoupon,
-    toggleTuoguanVisible() {
-      gStore.toggleTuoguanVisible()
-    },
     onCouponClick(coupon) {
       if (this.selectedCoupon.length) {
         this.selectedCoupon.splice(0, 1)

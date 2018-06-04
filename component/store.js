@@ -31,18 +31,6 @@ const gStore = observable({
     this.addUserLeadVisible = !this.addUserLeadVisible
   }),
 
-  toggleTuoguanVisible: action(function(sideEffect) {
-    if (sideEffect) {
-      track({
-        ...sideEffect,
-        time: Date.now() / 1000 | 0,
-        url: window.location.href
-      })
-    }
-
-    this.tuoguanVisible = !this.tuoguanVisible
-  }),
-
   getCurrentUser: action(async function() {
     this._currentUser = await aapi.getCurrentUser()
   }),

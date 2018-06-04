@@ -316,52 +316,6 @@ export async function getHomepageSummary() {
   }
 }
 
-export async function getTuoguanStatus() {
-  const body = await fengming
-    .get('/trusteeship/status')
-    .json()
-  return toCamelcase(body.data)
-}
-
-export function createTuoguan(opts) {
-  return fengming
-    .post('/trusteeship')
-    .send(reverseCamelcase(opts))
-    .json()
-}
-
-export function stopTuoguan() {
-  return fengming
-    .post('/trusteeship/cancel')
-    .json()
-}
-
-export function extendTuoguan(opts) {
-  const query = {
-    days: 30,
-    ...opts
-  }
-  return fengming
-    .post('/trusteeship/extend')
-    .send(reverseCamelcase(query))
-    .json()
-}
-
-export function verifyTuoguan(opts) {
-  return fengming
-    .get('/trusteeship/verify_create')
-    .query(reverseCamelcase(opts))
-    .json()
-}
-
-export async function tuoguanCode(code) {
-  const body = await fengming
-    .get('/trusteeship/code/' + code)
-    .json()
-
-  return toCamelcase(body.data)
-}
-
 export async function getCurrentCampaignCount(opts) {
   const body = await fengming
     .get('/campaign/current/count')
