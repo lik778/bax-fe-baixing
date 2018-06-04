@@ -17,9 +17,6 @@
       :user-info="currentUser" />
     <go-to-bottom></go-to-bottom>
     <back-to-top></back-to-top>
-    <tuoguan :visible="tuoguanVisible"
-      :categories="topCategories"
-      :userInfo="currentUser" />
   </content>
 </template>
 
@@ -29,7 +26,6 @@ import AddUserLead from './common/add-user-lead'
 import GoToBottom from './widget/go-to-bottom'
 import BackToTop from './widget/back-to-top'
 import Sidebar from './sidebar'
-import Tuoguan from './tuoguan'
 
 import gStore from './store'
 
@@ -47,12 +43,10 @@ export default {
     AddUserLead,
     GoToBottom,
     BackToTop,
-    Sidebar,
-    Tuoguan
+    Sidebar
   },
   fromMobx: {
     addUserLeadVisible: () => gStore.addUserLeadVisible,
-    tuoguanVisible: () => gStore.tuoguanVisible,
     currentUser: () => gStore.currentUser,
 
     allCategories: () => gStore.allCategories,

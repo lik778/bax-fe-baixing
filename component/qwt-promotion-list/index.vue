@@ -88,8 +88,4 @@ export default {
   padding: 0 35px;
   width: 100%;
 }
-.tuoguan {
-  position: relative;
-  right: 10px;
-}
 </style>

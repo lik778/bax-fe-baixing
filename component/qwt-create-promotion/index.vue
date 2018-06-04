@@ -198,20 +198,25 @@
           @change-offset="setAddibleWordsOffset"
           @select-words="words => newPromotion.recommendedWords = words">
         </keyword-list>
-        <div class="mobile-ratio">
+        <div
+          v-if="newPromotion.source !== SEM_PLATFORM_SHENMA"
+          class="mobile-ratio"
+        >
           <section>
             选择投放移动端的出价比例
           </section>
           <section>
             <span>
-              <el-input placeholder="默认为1" v-model="newPromotion.mobilePriceRatio">
-              </el-input>
+              <el-input
+                placeholder="默认为1"
+                v-model="newPromotion.mobilePriceRatio"
+              />
             </span>
             <span>
               (请输入 0.1-9.9 之间的数字)
             </span>
           </section>
-          <promotion-mobile-ratio-tip></promotion-mobile-ratio-tip>
+          <promotion-mobile-ratio-tip />
         </div>
       </section>
       <section class="timing">
@@ -290,12 +295,6 @@
     <charge-dialog
       :visible="chargeDialogVisible"
       @cancel="gotoPromotionList" />
-    <transition name="slide-fade">
-      <div class="tuoguan-promotion" v-show="showPromotion">
-        <i @click="closePromotion" class="el-icon-close"></i>
-        <el-button class="tuoguan-btn" type="text" @click="toggleTuoguanVisible({action: 'tuoguan:entry:popover', actionTrackId, baixingId: userInfo.id})"></el-button>
-      </div>
-    </transition>
   </div>
 </template>
 
@@ -380,7 +379,6 @@ const emptyPromotion = {
   creativeWords: []
 }
 
-const storageKey = 'user_close_tuoguan_promotion'
 const notActiveTime = 25 * 60 * 1000
 const MODE_COPY = 'copy'
 
@@ -443,7 +441,6 @@ export default {
 
       showPromotion: false,
       timeout: null,
-      failCount: 0,
 
       PRE_IMG_SHENMA_WAP_NOT_TOP: assetHost + 'example-shenma-wap-not-top.jpeg',
       PRE_IMG_SHENMA_WAP_TOP: assetHost + 'example-shenma-wap-top.jpeg',
@@ -550,21 +547,6 @@ export default {
 
       return sum < 117440505 ? '部分时段' : '全时段'
     },
-    tryShowPromotion(sideEffect) {
-      const has = window.localStorage.getItem(storageKey)
-      if (has !== 'true') {
-        this.showPromotion = true
-        if (sideEffect) {
-          track({
-            ...sideEffect,
-            baixingId: this.userInfo.id,
-            url: window.location.href,
-            time: Date.now() / 1000 | 0,
-            actionTrackId: this.actionTrackId
-          })
-        }
-      }
-    },
     async createPromotion() {
       if (this.isCreating) {
         return Message.warning('正在创建中, 请稍等一小会 ~')
@@ -585,15 +567,6 @@ export default {
 
       try {
         await this._createPromotion()
-        this.failCount = 0
-      } catch (error) {
-        // 创建出错三次以上，给提示
-        this.failCount++
-        if (this.failCount > 3) {
-          this.tryShowPromotion({
-            action: 'tuoguan:popup:fail-3-times'
-          })
-        }
       } finally {
         this.isCreating = false
       }
@@ -882,12 +855,6 @@ export default {
       await this.copyExistCampaignInfo(campaignId)
     }
 
-    if (this.isFirstCampaign) {
-      this.tryShowPromotion({
-        action: 'tuoguan:popover:first-time-create'
-      })
-    }
-
     setTimeout(() => {
       const { actionTrackId, userInfo } = this
 
@@ -900,13 +867,6 @@ export default {
         actionTrackId
       })
     }, 800)
-
-    // 25分钟未离开页面，出现提示
-    this.timeout = setTimeout(() => {
-      this.tryShowPromotion({
-        action: 'tuoguan:popover:linger-over-25'
-      })
-    }, notActiveTime)
   },
   beforeDestroy() {
     store.clearStore()
@@ -1104,11 +1064,6 @@ export default {
   color: red;
 }
 
-.tuoguan {
-  position: relative;
-  right: 10px;
-}
-
 .slide-fade-enter-active {
   transition: all .4s ease;
 }
@@ -1119,36 +1074,5 @@ export default {
 
 .slide-fade-enter, .slide-fade-leave-to {
   transform: translateX(100px);
-}
-
-.tuoguan-promotion {
-  background-image: url(http://file.baixing.net/201801/47f063038bdbb67660a114de96958e2f.png);
-  background-position: center;
-  background-repeat: no-repeat;
-  width: 154px;
-  height: 216px;
-  position: fixed;
-  right: 80px;
-  bottom: 10px;
-
-  & > .el-icon-close {
-    position: absolute;
-    right: 3px;
-    top: 29px;
-    cursor: pointer;
-    color: #666;
-  }
-
-  & > .tuoguan-btn {
-    background-image: url(http://file.baixing.net/201801/26a639493c25bc3d8f62c54848b312c2.png);
-    background-repeat: no-repeat;
-    background-position: center;
-    position: absolute;
-    bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 128px;
-    height: 30px;
-  }
 }
 </style>

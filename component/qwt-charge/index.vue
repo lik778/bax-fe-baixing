@@ -996,9 +996,4 @@ export default {
 .dialog-footer {
   text-align: center;
 }
-
-.tuoguan {
-  position: relative;
-  right: 10px;
-}
 </style>

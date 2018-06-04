@@ -12,7 +12,6 @@ const gStore = observable({
   _allRoles: [],
 
   addUserLeadVisible: false,
-  tuoguanVisible: false,
 
   get currentUser() {
     return toJS(this._currentUser)
