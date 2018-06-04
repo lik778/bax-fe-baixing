@@ -1,37 +1,51 @@
 
-import { createStore } from 'vue-duo'
+import { observable, action, toJS } from 'mobx'
 
-import {
-  getProductDiscounts,
-  getProductPackages,
-  getProducts,
-  getCoupons,
-  getCondition
-} from './action'
+import * as fapi from 'api/fengming'
+import * as mapi from 'api/meta'
 
-const store = createStore({
-  allDiscounts: [],
-  packages: [],
-  products: [],
-  coupons: [],
-  usingConditions: []
-})
+const store = observable({
+  _usingConditions: [],
+  _allDiscounts: [],
+  _packages: [],
+  _products: [],
+  _coupons: [],
 
-store.subscribeActions({
-  [getProductDiscounts]: (discounts) => ({
-    allDiscounts: [...discounts]
+  get usingConditions() {
+    return toJS(this._usingConditions)
+  },
+  get allDiscounts() {
+    return toJS(this._allDiscounts)
+  },
+  get packages() {
+    return toJS(this._packages)
+  },
+  get products() {
+    return toJS(this._products)
+  },
+  get coupons() {
+    return toJS(this._coupons)
+  },
+
+  getProductDiscounts: action(async function(types) {
+    this._allDiscounts = await mapi.getProductDiscounts(types)
   }),
-  [getProductPackages]: (packages) => ({
-    packages
+
+  getProductPackages: action(async function() {
+    this._packages = await fapi.getProductPackages()
   }),
-  [getProducts]: (products) => ({
-    products
+
+  getProducts: action(async function(type) {
+    this._products = await fapi.getProducts(type)
   }),
-  [getCoupons]: (coupons) => ({
-    coupons
+
+  getConditions: action(async function() {
+    const condition = await mapi.getCondition()
+    this._usingConditions = condition.usingConditions
   }),
-  [getCondition]: (conditions) => ({
-    usingConditions: conditions.usingConditions
+
+  getCoupons: action(async function(opts) {
+    this._coupons = await mapi.getCoupons(opts)
   })
 })
 

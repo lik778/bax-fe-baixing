@@ -197,19 +197,23 @@ import {
 } from 'util/role'
 
 import {
+  createOrder
+} from 'api/fengming'
+
+import {
   getUserIdFromBxSalesId,
-  getProductDiscounts,
-  getProductPackages,
-  getOrderPayUrl,
   queryUserInfo,
-  getProducts,
-  createOrder,
-  getUserInfo,
-  payOrders,
-  getCoupons,
-  redeemCoupon,
-  getCondition
-} from './action'
+  getUserInfo
+} from 'api/account'
+
+import {
+  getOrderPayUrl,
+  payOrders
+} from 'api/order'
+
+import {
+  redeemCoupon
+} from 'api/meta'
 
 /**
  * 关于推广资金的产品说明:
@@ -242,7 +246,6 @@ const allProducts = [
 
 export default {
   name: 'qwt-charge',
-  store,
   components: {
     PromotionAreaLimitTip,
     QwtPkgWidget,
@@ -254,6 +257,13 @@ export default {
     Topbar,
     Coupon,
     Step
+  },
+  fromMobx: {
+    usingConditions: () => store.usingConditions,
+    allDiscounts: () => store.allDiscounts,
+    packages: () => store.packages,
+    products: () => store.products,
+    coupons: () => store.coupons
   },
   props: {
     userInfo: {
@@ -485,7 +495,7 @@ export default {
         return
       }
       this.$message.success('兑换成功')
-      await getCoupons({ onlyValid: true, status: 0 })
+      await store.getCoupons({ onlyValid: true, status: 0 })
     },
     empty() {
       this.orderPayUrl = ''
@@ -497,9 +507,9 @@ export default {
       this.empty()
 
       await Promise.all([
-        getProductDiscounts([1, 2, 3, 4]),
-        getProductPackages(1),
-        this.getProducts()
+        store.getProductDiscounts([1, 2, 3, 4]),
+        store.getProductPackages(1),
+        store.getProducts(3)
       ])
 
       setTimeout(() => {
@@ -547,9 +557,6 @@ export default {
       }
 
       return p | 0
-    },
-    async getProducts() {
-      await getProducts(3)
     },
     async payOrders(oids) {
       const {
@@ -732,8 +739,8 @@ export default {
     async couponVisible(v) {
       if (v) {
         // 必须先拿到 condition
-        await getCondition()
-        await getCoupons({ onlyValid: true, status: 0 })
+        await store.getConditions()
+        await store.getCoupons({ onlyValid: true, status: 0 })
       } else {
         this.selectedCoupon = []
       }
