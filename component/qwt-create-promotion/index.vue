@@ -45,25 +45,56 @@
                 <img :src="PRE_IMG_360_PC" />
               </div>
             </el-popover>
+            <el-popover
+              ref="popover-shenma-preview"
+              placement="bottom-start"
+              trigger="hover"
+            >
+              <div class="source-preview">
+                <h3>效果示例：移动端首位样式</h3>
+                <img :src="PRE_IMG_SHENMA_WAP_TOP" />
+                <h3>效果示例：移动端非首位样式</h3>
+                <img :src="PRE_IMG_SHENMA_WAP_NOT_TOP" />
+              </div>
+            </el-popover>
             <el-button-group>
-              <el-button v-popover:popover-baidu-preview
-                @click="newPromotion.source = 0"
-                :type="newPromotion.source === 0 ? 'primary' : ''">
+              <el-button
+                v-popover:popover-baidu-preview
+                :type="newPromotion.source === SEM_PLATFORM_BAIDU ? 'primary' : ''"
+                @click="newPromotion.source = SEM_PLATFORM_BAIDU"
+              >
                 百度
               </el-button>
-              <el-button v-popover:popover-sougou-preview
-                @click="newPromotion.source = 5"
-                :type="newPromotion.source === 5 ? 'primary' : ''">
+              <el-button
+                v-popover:popover-sougou-preview
+                :type="newPromotion.source === SEM_PLATFORM_SOGOU ? 'primary' : ''"
+                @click="newPromotion.source = SEM_PLATFORM_SOGOU"
+              >
                 搜狗
               </el-button>
-              <el-button v-popover:popover-360-preview
-                @click="newPromotion.source = 1"
-                :type="newPromotion.source === 1 ? 'primary' : ''">
+              <el-button
+                v-popover:popover-360-preview
+                :type="newPromotion.source === SEM_PLATFORM_QIHU ? 'primary' : ''"
+                @click="newPromotion.source = SEM_PLATFORM_QIHU"
+              >
                 360
+              </el-button>
+              <el-button
+                v-popover:popover-shenma-preview
+                :type="newPromotion.source === SEM_PLATFORM_SHENMA ? 'primary' : ''"
+                @click="newPromotion.source = SEM_PLATFORM_SHENMA"
+              >
+                神马
               </el-button>
             </el-button-group>
           </span>
-          <promotion-rule-link></promotion-rule-link>
+          <promotion-rule-link />
+          <i
+            v-if="newPromotion.source === SEM_PLATFORM_SHENMA"
+            class="warning"
+          >
+            神马渠道仅支持移动端
+          </i>
         </div>
         <div>
           <aside style="align-items: flex-start; padding-top: 5px;">
@@ -349,8 +380,10 @@ import {
 } from 'api/fengming-mvp'
 
 import {
+  SEM_PLATFORM_SHENMA,
   SEM_PLATFORM_BAIDU,
   SEM_PLATFORM_SOGOU,
+  SEM_PLATFORM_QIHU,
   LANDING_TYPE_AD,
   landingTypeOpts
 } from 'constant/fengming'
@@ -451,11 +484,18 @@ export default {
       timeout: null,
       failCount: 0,
 
+      PRE_IMG_SHENMA_WAP_NOT_TOP: assetHost + 'example-shenma-wap-not-top.jpeg',
+      PRE_IMG_SHENMA_WAP_TOP: assetHost + 'example-shenma-wap-top.jpeg',
       PRE_IMG_SOGOU_WAP: assetHost + 'example-sougou-wap.png',
       PRE_IMG_SOGOU_PC: assetHost + 'example-sougou-pc.png',
       PRE_IMG_BAIDU_WAP: assetHost + 'example-baidu-wap.png',
       PRE_IMG_BAIDU_PC: assetHost + 'example-baidu-pc.png',
-      PRE_IMG_360_PC: assetHost + 'example-360-pc.png'
+      PRE_IMG_360_PC: assetHost + 'example-360-pc.png',
+
+      SEM_PLATFORM_SHENMA,
+      SEM_PLATFORM_BAIDU,
+      SEM_PLATFORM_SOGOU,
+      SEM_PLATFORM_QIHU
     }
   },
   computed: {

@@ -30,19 +30,22 @@ export const semPlatform = {
   '1': 'qihu',
   '3': 'baidu test',
   '4': 'qihu test',
-  '5': 'sogou'
+  '5': 'sogou',
+  '8': 'shenma'
 }
 
 export const SEM_PLATFORM_BAIDU = 0
 export const SEM_PLATFORM_QIHU = 1
 export const SEM_PLATFORM_SOGOU = 5
+export const SEM_PLATFORM_SHENMA = 8
 
 export const semPlatformCn = {
   '0': '百度',
   '1': '360',
   '3': '百度测试',
   '4': '360测试',
-  '5': '搜狗'
+  '5': '搜狗',
+  '8': '神马'
 }
 
 export const semPlatformOpts = [{
@@ -54,6 +57,9 @@ export const semPlatformOpts = [{
 }, {
   label: '360',
   value: 1
+}, {
+  label: '神马',
+  value: 8
 }]
 
 export const CREATIVE_STATUS_PENDING = 0
@@ -111,8 +117,8 @@ export const CAMPAIGN_STATUS_ONLINE = 100
 export const LANDING_TYPE_AD = 0
 
 export const landingType = {
-  '0': '帖子详情页',
-  '1': '企业官网'
+  '0': '帖子',
+  '1': '官网'
 }
 
 export const campaignStatusOpts = toOpt(campaignStatus)
@@ -127,7 +133,7 @@ export const device = {
   '1': 'WAP'
 }
 
-// 把 key 是数字，value 是 label 的对象转换成对象的 array
+// 把 key 是数字, value 是 label 的对象转换成对象的 array
 function toOpt(obj, forceNumber = true) {
   return Object.keys(obj)
     .map(key => ({

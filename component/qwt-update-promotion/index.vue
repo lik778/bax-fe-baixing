@@ -36,6 +36,12 @@
               >
                 360
               </el-button>
+              <el-button
+                :type="getProp('source') === SEM_PLATFORM_SHENMA ? 'primary' : ''"
+                @click="clickSourceTip"
+              >
+                神马
+              </el-button>
             </el-button-group>
           </span>
           <promotion-rule-link />
@@ -313,6 +319,7 @@ import {
 import {
   CREATIVE_STATUS_PENDING,
   CAMPAIGN_STATUS_OFFLINE,
+  SEM_PLATFORM_SHENMA,
   SEM_PLATFORM_SOGOU,
   SEM_PLATFORM_BAIDU,
   SEM_PLATFORM_QIHU,
@@ -400,7 +407,12 @@ export default {
         updatedKeywords: [],
         deletedKeywords: [],
         newKeywords: []
-      }
+      },
+
+      SEM_PLATFORM_SHENMA,
+      SEM_PLATFORM_BAIDU,
+      SEM_PLATFORM_SOGOU,
+      SEM_PLATFORM_QIHU
     }
   },
   computed: {
