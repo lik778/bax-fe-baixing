@@ -175,7 +175,6 @@ import Step from './step'
 
 import { centToYuan } from 'utils'
 
-import gStore from '../store'
 import store from './store'
 
 import track from 'util/track'

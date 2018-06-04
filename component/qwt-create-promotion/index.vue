@@ -354,8 +354,6 @@ import {
   landingTypeOpts
 } from 'constant/fengming'
 
-import gStore from '../store'
-
 import {
   assetHost
 } from 'config'
@@ -379,7 +377,6 @@ const emptyPromotion = {
   creativeWords: []
 }
 
-const notActiveTime = 25 * 60 * 1000
 const MODE_COPY = 'copy'
 
 export default {
@@ -522,10 +519,6 @@ export default {
       this.newPromotion.creativeContent = ad.content && ad.content.slice(0, 39)
 
       await this.getCreativeWords()
-    },
-    closePromotion() {
-      window.localStorage.setItem(storageKey, 'true')
-      this.showPromotion = false
     },
     getCurrentSchedule() {
       const { schedule } = this.newPromotion

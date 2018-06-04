@@ -114,6 +114,7 @@
         </div>
       </section>
       <creative-editor
+        :platform="getProp('source')"
         :title="getProp('creativeTitle')"
         :content="getProp('creativeContent')"
         :title-tip="creativeTitleTip"
@@ -595,16 +596,14 @@ export default {
       const {
         creativeContent: originCreativeContent,
         creativeTitle: originCreativeTitle,
-        landingPage: originLandingPage,
-        landingType: originLandingType
+        landingPage: originLandingPage
       } = this.originPromotion
       // 说明: 如下四个值, 分为2组, 每一组要么都不传(to server), 要么都传(to server)
       const {
         creativeContent,
         creativeTitle,
 
-        landingPage,
-        landingType
+        landingPage
       } = this.promotion
 
       const changed = (now, ori) => {

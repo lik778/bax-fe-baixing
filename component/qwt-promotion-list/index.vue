@@ -27,7 +27,6 @@ import {
   isBaixingSales
 } from 'util/role'
 
-import gStore from '../store'
 import store from './store'
 
 export default {
