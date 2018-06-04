@@ -113,56 +113,17 @@
           </span>
         </div>
       </section>
-      <section class="creative">
-        <promotion-creative-tip />
-        <div>
-          <aside>推广标题:</aside>
-          <span>
-            <text-limit-tip
-              :rest="25 - getProp('creativeTitle').length"
-              :current="getProp('creativeTitle').length"
-              :min="9">
-              <el-input slot="input" type="text" style="width: 420px"
-                placeholder="请输入标题 ~ (字数限制为9-25个字)"
-                :disabled="!isCreativeEditable || isFormReadonly"
-                :value="getProp('creativeTitle')"
-                @change="v => promotion.creativeTitle = v">
-              </el-input>
-            </text-limit-tip>
-            <p v-if="creativeTitleTip" class="authing-tip">
-              {{ creativeTitleTip }}
-            </p>
-          </span>
-        </div>
-        <div>
-          <aside style="align-items: flex-start; padding-top: 5px;">
-            推广内容:
-          </aside>
-          <span>
-            <text-limit-tip
-              :rest="40 - getProp('creativeContent').length"
-              :current="getProp('creativeContent').length"
-              :min="9">
-              <el-input slot="input" type="textarea" :rows="5" style="width: 420px"
-                :placeholder="creativeContentPlaceholder"
-                :disabled="!isCreativeEditable || isFormReadonly"
-                :value="getProp('creativeContent')"
-                @change="v => promotion.creativeContent = v">
-              </el-input>
-            </text-limit-tip>
-          </span>
-          <p class="authing-tip-2">
-            {{ originPromotion.refuseReason || '' }}
-          </p>
-        </div>
-        <footer v-if="!isFormReadonly">
-          <el-button type="primary"
-            :disabled="checkCreativeBtnDisabled"
-            @click="checkCreativeContent">
-            检查推广是否可用
-          </el-button>
-        </footer>
-      </section>
+      <creative-editor
+        :title="getProp('creativeTitle')"
+        :content="getProp('creativeContent')"
+        :title-tip="creativeTitleTip"
+        :isFormReadonly="isFormReadonly"
+        :isCreativeEditable="isCreativeEditable"
+        :refuseReason="originPromotion.refuseReason"
+        :checkCreativeBtnDisabled="checkCreativeBtnDisabled"
+        @change-title="v => promotion.creativeTitle = v"
+        @change-content="v => promotion.creativeContent = v"
+      />
       <section class="keyword">
         <header>选取推广关键词</header>
         <h4>
@@ -291,13 +252,12 @@ import uuid from 'uuid/v4'
 
 import PromotionAreaLimitTip from 'com/widget/promotion-area-limit-tip'
 import QiqiaobanPageSelector from 'com/common/qiqiaoban-page-selector'
-import PromotionCreativeTip from 'com/widget/promotion-creative-tip'
 import PromotionChargeTip from 'com/widget/promotion-charge-tip'
 import PromotionRuleLink from 'com/widget/promotion-rule-link'
 import DurationSelector from 'com/common/duration-selector'
 import UserAdSelector from 'com/common/user-ad-selector'
+import CreativeEditor from 'com/widget/creative-editor'
 import KeywordList from 'com/common/qwt-keyword-list'
-import TextLimitTip from 'com/widget/text-limit-tip'
 import AreaSelector from 'com/common/area-selector'
 import ContractAck from 'com/widget/contract-ack'
 import Topbar from 'com/topbar'
@@ -350,12 +310,11 @@ export default {
   components: {
     PromotionAreaLimitTip,
     QiqiaobanPageSelector,
-    PromotionCreativeTip,
     PromotionChargeTip,
     PromotionRuleLink,
     DurationSelector,
+    CreativeEditor,
     UserAdSelector,
-    TextLimitTip,
     AreaSelector,
     KeywordList,
     ContractAck,
@@ -981,17 +940,12 @@ export default {
 </script>
 
 <style scoped>
+@import 'cssbase/mixin';
+
 .authing-tip {
   display: inline-flex;
   align-items: center;
   font-size: 12px;
-  color: #ff4401;
-}
-
-.authing-tip-2 {
-  margin-left: 5px;
-  font-size: 12px;
-  line-height: 1.75;
   color: #ff4401;
 }
 

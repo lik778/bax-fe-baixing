@@ -155,45 +155,13 @@
           </span>
         </div>
       </section>
-      <section>
-        <promotion-creative-tip />
-        <div>
-          <aside>推广标题:</aside>
-            <span>
-              <text-limit-tip
-                :rest="25 - newPromotion.creativeTitle.length"
-                :current="newPromotion.creativeTitle.length"
-                :min="9">
-                <el-input slot="input" type="text" style="width: 420px"
-                  placeholder="请输入标题 ~ (字数限制为9-25个字)"
-                  v-model="newPromotion.creativeTitle">
-                </el-input>
-              </text-limit-tip>
-            </span>
-        </div>
-        <div>
-          <aside style="align-items: flex-start; padding-top: 5px;">
-            推广内容:
-          </aside>
-          <span>
-            <text-limit-tip
-              :rest="40 - newPromotion.creativeContent.length"
-              :current="newPromotion.creativeContent.length"
-              :min="9">
-              <el-input slot="input" type="textarea"
-                :rows="5" style="width: 420px"
-                :placeholder="creativeContentPlaceholder"
-                v-model="newPromotion.creativeContent">
-              </el-input>
-            </text-limit-tip>
-          </span>
-        </div>
-        <footer>
-          <el-button type="primary" @click="checkCreativeContent">
-            检查推广是否可用
-          </el-button>
-        </footer>
-      </section>
+      <creative-editor
+        :platform="newPromotion.source"
+        :title="newPromotion.creativeTitle"
+        :content="newPromotion.creativeContent"
+        @change-title="v => newPromotion.creativeTitle = v"
+        @change-content="v => newPromotion.creativeContent = v"
+      />
       <section class="keyword">
         <header>选取推广关键词</header>
         <h4 v-if="!isCopy">建议选取20个以上关键词，关键词越多您的创意被展现的机会越多。根据当月数据，为您推荐如下关键词</h4>
@@ -340,14 +308,13 @@ import clone from 'clone'
 import PromotionMobileRatioTip from 'com/widget/promotion-mobile-ratio-tip'
 import PromotionAreaLimitTip from 'com/widget/promotion-area-limit-tip'
 import QiqiaobanPageSelector from 'com/common/qiqiaoban-page-selector'
-import PromotionCreativeTip from 'com/widget/promotion-creative-tip'
 import PromotionChargeTip from 'com/widget/promotion-charge-tip'
 import CopyCampaignDialog from 'com/common/copy-campaign-dialog'
 import PromotionRuleLink from 'com/widget/promotion-rule-link'
 import DurationSelector from 'com/common/duration-selector'
 import UserAdSelector from 'com/common/user-ad-selector'
+import CreativeEditor from 'com/widget/creative-editor'
 import KeywordList from 'com/common/qwt-keyword-list'
-import TextLimitTip from 'com/widget/text-limit-tip'
 import AreaSelector from 'com/common/area-selector'
 import ChargeDialog from 'com/common/charge-dialog'
 import ContractAck from 'com/widget/contract-ack'
@@ -375,6 +342,7 @@ import {
   getCampaignInfo,
   createCampaign
 } from 'api/fengming'
+
 import {
   queryAds
 } from 'api/fengming-mvp'
@@ -387,10 +355,6 @@ import {
   LANDING_TYPE_AD,
   landingTypeOpts
 } from 'constant/fengming'
-
-import {
-  creativeContentPlaceholder
-} from 'constant/tip'
 
 import gStore from '../store'
 
@@ -427,15 +391,14 @@ export default {
     PromotionMobileRatioTip,
     PromotionAreaLimitTip,
     QiqiaobanPageSelector,
-    PromotionCreativeTip,
     PromotionChargeTip,
     CopyCampaignDialog,
     PromotionRuleLink,
     DurationSelector,
     UserAdSelector,
+    CreativeEditor,
     AreaSelector,
     ChargeDialog,
-    TextLimitTip,
     KeywordList,
     ContractAck,
     FlatBtn,
@@ -475,7 +438,6 @@ export default {
       addibleWordsOffset: 0,
       createdCampaignId: 0,
 
-      creativeContentPlaceholder,
       landingTypeOpts,
 
       isCreating: false,
@@ -960,6 +922,8 @@ export default {
 </script>
 
 <style scoped>
+@import 'cssbase/mixin';
+
 .el-icon-plus {
   cursor: pointer;
 }
