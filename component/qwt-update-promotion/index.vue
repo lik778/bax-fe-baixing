@@ -200,7 +200,8 @@
         <div>
           <aside>设置推广日预算:</aside>
           <span>
-            <el-input :disabled="isFormReadonly"
+            <el-input
+              :disabled="isFormReadonly || !modifyBudgetQuota"
               type="number" placeholder="请输入每日最高预算"
               :value="getProp('dailyBudget')"
               @change="v => promotion.dailyBudget = v">
@@ -378,6 +379,10 @@ export default {
     }
   },
   computed: {
+    modifyBudgetQuota() {
+      const n = this.getProp('budgetModificationCount') | 0
+      return 5 - n
+    },
     isFormReadonly() {
       const { userInfo } = this
       return isBaixingSales(userInfo.roles)
@@ -408,7 +413,8 @@ export default {
     addibleWords() {
       const words = this.currentKeywords.map(w => w.word.toLowerCase())
 
-      return this.recommendedWords.filter(w => !words.includes(w.word.toLowerCase()))
+      return this.recommendedWords
+        .filter(w => !words.includes(w.word.toLowerCase()))
     },
     predictedInfo() {
       const {
@@ -481,7 +487,7 @@ export default {
         return '您的推广物料正在审核中，预计审核时间3个工作日内，请您耐心等待。'
       }
 
-      return false
+      return ''
     },
     id() {
       return this.$route.params.id
