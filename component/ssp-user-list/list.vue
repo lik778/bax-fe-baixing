@@ -21,7 +21,8 @@
 
 <script>
 import BaxPagination from 'com/common/pagination'
-import { getUsers } from './action'
+
+import store from './store'
 
 export default {
   name: 'user-list',
@@ -49,19 +50,17 @@ export default {
         offset
       }
 
-      await getUsers(q)
+      await store.getUsers(q)
     }
   },
   async mounted() {
-    await getUsers({...this.query})
+    await store.getUsers({...this.query})
   }
 }
 </script>
 
 <style scoped>
-
 section {
   margin-top: 16px;
 }
-
 </style>

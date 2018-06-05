@@ -1,9 +1,6 @@
 
-import { createStore } from 'vue-duo'
-
-import {
-  getUsers
-} from './action'
+import { observable, action, toJS } from 'mobx'
+import * as aapi from 'api/account'
 
 const defaultQuery = {
   offset: 0,
@@ -15,17 +12,23 @@ const defaultQuery = {
   name: ''
 }
 
-const store = createStore({
-  users: [],
-  query: {
-    ...defaultQuery
-  }
-})
+const store = observable({
+  _query: { ...defaultQuery },
+  _users: [],
 
-store.subscribeActions({
-  [getUsers]: ({users = [], query = {}}) => ({
-    users,
-    query: {
+  get query() {
+    return toJS(this._query)
+  },
+
+  get users() {
+    return toJS(this._users)
+  },
+
+  getUsers: action(async function(opts) {
+    const { users = [], query = {} } = await aapi.getUsers(opts)
+
+    this._users = users
+    this._query = {
       ...defaultQuery,
       ...query
     }

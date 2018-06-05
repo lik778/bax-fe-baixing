@@ -4,14 +4,23 @@
     <topbar :userInfo="userInfo">
       <label slot="title">客户管理</label>
     </topbar>
-    <user-header :query="query" :all-roles="allRoles"
-      @create-user="showCreateUserDialog = true" />
-    <user-list :users="users" :all-roles="allRoles" :query="query" />
-    <create-user :visible="showCreateUserDialog"
+    <user-header
+      :query="query"
+      :all-roles="allRoles"
+      @create-user="showCreateUserDialog = true"
+    />
+    <user-list
+      :users="users"
+      :all-roles="allRoles"
+      :query="query"
+    />
+    <create-user
+      :visible="showCreateUserDialog"
       :all-roles="allRoles"
       :user-info="userInfo"
       @created="onCreateUser"
-      @hide="showCreateUserDialog = false" />
+      @hide="showCreateUserDialog = false"
+    />
   </div>
 </template>
 
@@ -23,18 +32,17 @@ import UserList from './list'
 
 import store from './store'
 
-import {
-  getUsers
-} from './action'
-
 export default {
   name: 'user',
-  store,
   components: {
     CreateUser,
     UserHeader,
     UserList,
     Topbar
+  },
+  fromMobx: {
+    query: () => store.query,
+    users: () => store.users
   },
   props: {
     userInfo: {
@@ -53,17 +61,15 @@ export default {
   },
   methods: {
     async onCreateUser() {
-      await getUsers()
+      await store.getUsers()
     }
   }
 }
 </script>
 
 <style scoped>
-
 .user {
   padding: 0 35px;
   width: 100%;
 }
-
 </style>

@@ -10,22 +10,34 @@
       <span class="filter-item">
         <label>客户 ID</label>
         <div>
-          <bax-input placeholder="客户 ID" type="number"
-            v-model="query.userId" />
+          <bax-input
+            type="number"
+            placeholder="客户 ID"
+            :value="query.userId"
+            @change="v => queryUsers({ userId: v })"
+          />
         </div>
       </span>
       <span class="filter-item">
         <label>客户名</label>
         <div>
-          <bax-input placeholder="客户名" v-model="query.name" />
+          <bax-input
+            placeholder="客户名"
+            :value="query.name"
+            @change="v => queryUsers({ name: v })"
+          />
         </div>
       </span>
       <span class="filter-item">
         <label>角色</label>
-        <bax-select clearable multiple
-          :options="roleOpts" placeholder='选择角色'
+        <bax-select
+          multiple
+          clearable
+          placeholder='选择角色'
+          :options="roleOpts"
           :value="query.roles.split(',').filter(s => !!s)"
-          @change="v => query.roles = v.join(',')" />
+          @change="v => queryUsers({ roles: v.join(',') })"
+        />
       </span>
     </div>
   </header>
@@ -34,7 +46,8 @@
 <script>
 import BaxSelect from 'com/common/select'
 import BaxInput from 'com/common/input'
-import { getUsers } from './action'
+
+import store from './store'
 
 export default {
   name: 'user-header',
@@ -64,30 +77,14 @@ export default {
     addUser() {
       this.$emit('create-user')
     },
-    async queryUsers(v, p) {
-      if (v === p) {
-        return
-      }
-
-      await getUsers({...this.query})
-    }
-  },
-  watch: {
-    'query.userId': async function(v, p) {
-      await this.queryUsers(v, p)
-    },
-    'query.roles': async function(v, p) {
-      await this.queryUsers(v, p)
-    },
-    'query.name': async function(v, p) {
-      await this.queryUsers(v, p)
+    async queryUsers(opts) {
+      await store.getUsers(opts)
     }
   }
 }
 </script>
 
 <style scoped>
-
 @import '../../cssbase/mixin';
 @import 'cssbase/mixin';
 
@@ -114,5 +111,4 @@ export default {
     }
   }
 }
-
 </style>
