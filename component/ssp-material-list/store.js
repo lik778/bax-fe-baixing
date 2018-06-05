@@ -1,9 +1,7 @@
 
-import { createStore } from 'vue-duo'
+import { observable, action, toJS } from 'mobx'
 
-import {
-  getMaterials
-} from './action'
+import * as mapi from 'api/material'
 
 const defaultQuery = {
   offset: 0,
@@ -17,15 +15,22 @@ const defaultQuery = {
   slot: ''
 }
 
-const store = createStore({
-  materials: [],
-  query: {...defaultQuery}
-})
+const store = observable({
+  _query: { ...defaultQuery },
+  _materials: [],
 
-store.subscribeActions({
-  [getMaterials]: ({materials = [], query = {}}) => ({
-    materials,
-    query: {
+  get materials() {
+    return toJS(this._materials)
+  },
+
+  get query() {
+    return toJS(this._query)
+  },
+
+  getMaterials: action(async function(opts) {
+    const { materials = [], query = {} } = await mapi.getMaterials(opts)
+    this._materials = materials
+    this._query = {
       ...defaultQuery,
       ...query
     }

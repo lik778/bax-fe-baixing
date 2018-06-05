@@ -5,27 +5,43 @@
       <span class="filter-item">
         <label>名称</label>
         <div>
-          <bax-input placeholder="输入名称" v-model="query.name" />
+          <bax-input
+            placeholder="输入名称"
+            :value="query.name"
+            @change="v => queryMaterialItems({ name: v })"
+          />
         </div>
       </span>
       <span class="filter-item">
         <label>规格</label>
         <div>
-          <bax-input placeholder="输入规格" v-model="query.slot" />
+          <bax-input
+            placeholder="输入规格"
+            :value="query.slot"
+            @change="v => queryMaterialItems({ slot: v })"
+          />
         </div>
       </span>
     </div>
     <div>
       <span class="filter-item">
         <label>创建日期</label>
-        <el-date-picker type="daterange" placeholder="选择日期"
+        <el-date-picker
+          type="daterange"
+          placeholder="选择日期"
           format="yyyy-MM-dd"
-          v-model="timeRange" />
+          :value="timeRange"
+          @input="queryByTimeRange"
+        />
       </span>
       <span class="filter-item">
         <label>客户</label>
-        <user-selector v-model="query.userId" clearable
-          placeholder='选择客户' />
+        <user-selector
+          clearable
+          placeholder='选择客户'
+          :value="query.userId"
+          @change="v => queryMaterialItems({ userId: v })"
+        />
       </span>
     </div>
   </section>
@@ -34,16 +50,13 @@
 <script>
 import UserSelector from 'com/common/user-selector'
 import BaxInput from 'com/common/input'
-import clone from 'clone'
 
 import {
   toHumanTime,
   toTimestamp
 } from 'utils'
 
-import {
-  getMaterials
-} from './action'
+import store from './store'
 
 export default {
   name: 'material-header',
@@ -57,50 +70,36 @@ export default {
       required: true
     }
   },
-  data() {
-    const {
-      createdAtFrom,
-      createdAtTo
-    } = this.query
+  computed: {
+    timeRange() {
+      const {
+        createdAtFrom,
+        createdAtTo
+      } = this.query
 
-    if (createdAtFrom && createdAtTo) {
-      return {
-        timeRange: [
+      if (createdAtFrom && createdAtTo) {
+        return [
           toHumanTime(createdAtFrom, 'YYYY-MM-DD'),
           toHumanTime(createdAtTo, 'YYYY-MM-DD')
         ]
       }
-    }
 
-    return {
-      timeRange: []
+      return []
     }
   },
   methods: {
-    async queryMaterialItems(v, p) {
-      if (v === p) {
-        return
-      }
-      const q = this.query
-      await getMaterials({...q})
-    }
-  },
-  watch: {
-    'query.userId': async function(v, p) {
-      await this.queryMaterialItems(v, p)
+    async queryMaterialItems(opts) {
+      await store.getMaterials({
+        ...this.query,
+        ...opts
+      })
     },
-    'query.name': async function(v, p) {
-      await this.queryMaterialItems(v, p)
-    },
-    'query.slot': async function(v, p) {
-      await this.queryMaterialItems(v, p)
-    },
-    'timeRange': async function(v = []) {
+    async queryByTimeRange(v = []) {
       const [start, end] = v
 
       if (!start && !end) {
-        await getMaterials({
-          ...clone(this.query),
+        await store.getMaterials({
+          ...this.query,
           createdAtFrom: '',
           createdAtTo: ''
         })
@@ -110,8 +109,8 @@ export default {
       const s = toTimestamp(start, 'YYYY-MM-DD')
       const e = toTimestamp(end, 'YYYY-MM-DD')
       if (s && e && e > s) {
-        await getMaterials({
-          ...clone(this.query),
+        await store.getMaterials({
+          ...this.query,
           createdAtFrom: s,
           createdAtTo: e
         })
@@ -122,7 +121,6 @@ export default {
 </script>
 
 <style scoped>
-
 @import '../../cssbase/mixin';
 @import 'cssbase/mixin';
 
@@ -148,5 +146,4 @@ export default {
     }
   }
 }
-
 </style>

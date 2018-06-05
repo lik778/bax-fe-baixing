@@ -33,8 +33,10 @@
         </template>
       </el-table-column>
     </el-table>
-    <bax-pagination :options="query"
-      @current-change="onCurrentChange" />
+    <bax-pagination
+      :options="query"
+      @current-change="onCurrentChange"
+    />
   </section>
 </template>
 
@@ -43,9 +45,7 @@ import BaxPagination from 'com/common/pagination'
 
 import { materialType } from 'constant/material'
 
-import {
-  getMaterials
-} from './action'
+import store from './store'
 
 export default {
   name: 'material-list',
@@ -73,7 +73,7 @@ export default {
         ...this.query,
         offset
       }
-      await getMaterials(q)
+      await store.getMaterials(q)
     },
     gotoMaterialInfo(id) {
       this.$router.push({
@@ -86,7 +86,6 @@ export default {
 </script>
 
 <style scoped>
-
 .material-list {
   margin-top: 16px;
 
@@ -97,5 +96,4 @@ export default {
     object-fit: contain;
   }
 }
-
 </style>

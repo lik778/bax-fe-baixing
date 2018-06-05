@@ -2,7 +2,10 @@
 <template>
   <header class="user-header">
     <div>
-      <el-button @click="addUser" type="primary" icon="el-icon-plus">
+      <el-button
+        type="primary"
+        icon="el-icon-plus"
+        @click="addUser">
         新建用户
       </el-button>
     </div>
