@@ -1,31 +1,46 @@
-import { createStore } from 'vue-duo'
 
-import { getValidCoupons, getCoupons, redeemCoupon, getCondition } from './action'
+import { observable, action, toJS } from 'mobx'
 
-const store = createStore({
-  validCoupons: [],
-  coupons: [],
-  usingConditions: []
-})
+import * as mapi from 'api/meta'
 
-store.subscribeActions({
-  [getValidCoupons]: (validCoupons) => ({
-    validCoupons
-  }),
-  [getCoupons]: (coupons) => ({
-    coupons
-  }),
-  [redeemCoupon]: (coupon) => {
-    if (coupon.id) {
-      return {
-        coupons: [coupon, ...store.state.coupons]
-      }
-    } else {
-      return {}
-    }
+const store = observable({
+  _usingConditions: [],
+  _validCoupons: [],
+  _coupons: [],
+
+  get usingConditions() {
+    return toJS(this._usingConditions)
   },
-  [getCondition]: (conditions) => ({
-    usingConditions: conditions.usingConditions
+
+  get validCoupons() {
+    return toJS(this._validCoupons)
+  },
+
+  get coupons() {
+    return toJS(this._coupons)
+  },
+
+  getValidCoupons: action(async function() {
+    this._validCoupons = await mapi.getCoupons({
+      onlyValid: true,
+      status: 0
+    })
+  }),
+
+  getConditions: action(async function() {
+    const condition = await mapi.getCondition()
+    this._usingConditions = condition.usingConditions
+  }),
+
+  redeemCoupon: action(async function(code) {
+    const coupon = await mapi.redeemCoupon(code)
+    if (coupon.id) {
+      this._coupons = [coupon, ...this.coupons]
+    }
+  }),
+
+  getCoupons: action(async function() {
+    this._coupons = await mapi.getCoupons()
   })
 })
 

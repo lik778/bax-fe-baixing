@@ -4,8 +4,18 @@
       <label slot="title">我的优惠券</label>
     </topbar>
     <div class="redeem">
-      <el-input class="coupon-code-input" v-model.trim="couponCode" placeholder="输入兑换码"/>
-      <el-button type="primary" @click="redeem" :loading="redeemInProgress">兑换</el-button>
+      <el-input
+        class="coupon-code-input"
+        placeholder="输入兑换码"
+        v-model.trim="couponCode"
+      />
+      <el-button
+        type="primary"
+        :loading="redeemInProgress"
+        @click="redeem"
+      >
+        兑换
+      </el-button>
     </div>
     <el-tabs v-model="activeCouponTab">
       <el-tab-pane label="有效优惠券" name="first">
@@ -16,8 +26,9 @@
             :coupon="displayCoupon(coupon)"
             class="coupon"
             :showBtn="true"
-            @click="onCouponClick(coupon)" />
-            <p v-if="validCoupons.length === 0">暂无有效优惠券</p>
+            @click="onCouponClick(coupon)"
+          />
+          <p v-if="validCoupons.length === 0">暂无有效优惠券</p>
         </div>
       </el-tab-pane>
       <el-tab-pane label="已过期或未生效" name="second">
@@ -29,7 +40,9 @@
             class="coupon"
             @click="onCouponClick(coupon)"
             :disabled="true" />
-            <p v-if="invalidCoupons.length === 0">暂无已过期或未生效优惠券</p>
+            <p v-if="invalidCoupons.length === 0">
+              暂无已过期或未生效优惠券
+            </p>
         </div>
       </el-tab-pane>
     </el-tabs>
@@ -51,12 +64,17 @@
 import Topbar from 'com/topbar'
 import Coupon from 'com/common/coupon'
 
-import { getCoupons, getValidCoupons, redeemCoupon, getCondition } from './action'
-import store from './store'
 import { displayCoupon } from 'util/meta'
 
+import store from './store'
+
 export default {
-  store,
+  name: 'qwt-coupon',
+  fromMobx: {
+    usingConditions: () => store.usingConditions,
+    validCoupons: () => store.validCoupons,
+    coupons: () => store.coupons
+  },
   props: {
     userInfo: {
       type: Object,
@@ -102,27 +120,27 @@ export default {
     },
     async redeem() {
       this.redeemInProgress = true
-      const result = await redeemCoupon(this.couponCode)
+      const result = await store.redeemCoupon(this.couponCode)
       if (result === 0) {
         this.redeemInProgress = false
         return this.$message.error('兑换失败')
       }
       this.$message.success('兑换成功')
       this.redeemInProgress = false
-      await getValidCoupons()
+      await store.getValidCoupons()
     },
     displayCoupon
   },
   async mounted() {
-    await getCondition()
-    await getValidCoupons()
+    await store.getConditions()
+    await store.getValidCoupons()
   },
   watch: {
     async activeCouponTab(v) {
       if (v === 'first') {
-        await getValidCoupons()
+        await store.getValidCoupons()
       } else if (v === 'second') {
-        await getCoupons()
+        await store.getCoupons()
       }
     }
   }
