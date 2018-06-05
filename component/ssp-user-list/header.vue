@@ -78,7 +78,10 @@ export default {
       this.$emit('create-user')
     },
     async queryUsers(opts) {
-      await store.getUsers(opts)
+      await store.getUsers({
+        ...this.query,
+        ...opts
+      })
     }
   }
 }
