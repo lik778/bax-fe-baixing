@@ -381,7 +381,10 @@ export default {
   computed: {
     modifyBudgetQuota() {
       const n = this.getProp('budgetModificationCount') | 0
-      return 5 - n
+      let q = 5 - n
+      if (q < 0) {
+        q = 0
+      }
     },
     isFormReadonly() {
       const { userInfo } = this
