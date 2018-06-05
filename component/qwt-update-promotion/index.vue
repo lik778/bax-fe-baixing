@@ -1086,7 +1086,7 @@ export default {
           display: flex;
           align-items: center;
           margin: 0 3px;
-          width: 260px;
+          width: 480px;
           font-size: 13px;
           color: #404e61;
 
