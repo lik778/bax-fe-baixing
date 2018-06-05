@@ -4,12 +4,18 @@
     <topbar :userInfo="userInfo">
       <label slot="title">广告排期</label>
     </topbar>
-    <calendar-header :all-categories="allCategories" :all-areas="allAreas"
-      :all-ads="ads" :user-info="userInfo">
-    </calendar-header>
-    <calendar-main :orders="orders" :options="calendarOptions"
-      :all-categories="allCategories" :all-areas="allAreas">
-    </calendar-main>
+    <calendar-header
+      :all-categories="allCategories"
+      :all-areas="allAreas"
+      :all-ads="ads"
+      :user-info="userInfo"
+    />
+    <calendar-main
+      :orders="orders"
+      :options="calendarOptions"
+      :all-categories="allCategories"
+      :all-areas="allAreas"
+    />
   </div>
 </template>
 
@@ -20,18 +26,17 @@ import Topbar from 'com/topbar'
 
 import store from './store'
 
-import {
-  clearStore,
-  getAds
-} from './action'
-
 export default {
   name: 'calendar',
-  store,
   components: {
     CalendarHeader,
     CalendarMain,
     Topbar
+  },
+  fromMobx: {
+    calendarOptions: () => store.calendarOptions,
+    orders: () => store.orders,
+    ads: () => store.ads
   },
   props: {
     allCategories: {
@@ -48,21 +53,17 @@ export default {
     }
   },
   beforeDestroy() {
-    clearStore()
+    store.clearStore()
   },
   async mounted() {
-    await Promise.all([
-      getAds()
-    ])
+    await store.getAds()
   }
 }
 </script>
 
 <style scoped>
-
 .ad-calendar {
   padding: 0 35px;
   width: 100%;
 }
-
 </style>

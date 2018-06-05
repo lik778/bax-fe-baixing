@@ -1,43 +1,54 @@
 
-import { createStore } from 'vue-duo'
+import { observable, action, toJS } from 'mobx'
 import clone from 'clone'
 
-import {
-  setCalendarOptions,
-  getCalendar,
-  clearStore,
-  getAds
-} from './action'
+import * as oapi from 'api/order'
+import * as aapi from 'api/ad'
 
-const store = createStore({
-  calendarOptions: {
+const store = observable({
+  _calendarOptions: {
     categories: [],
     areas: [],
     start: '',
     end: ''
   },
-  orders: [],
-  ads: []
-})
+  _orders: [],
+  _ads: [],
 
-store.subscribeActions({
-  [setCalendarOptions]: (options) => ({
-    calendarOptions: clone(options)
+  get calendarOptions() {
+    return toJS(this._calendarOptions)
+  },
+
+  get orders() {
+    return toJS(this._orders)
+  },
+
+  get ads() {
+    return toJS(this._ads)
+  },
+
+  setCalendarOptions: action(function(opts) {
+    this._calendarOptions = clone(opts)
   }),
-  [getCalendar]: ({orders = []}) => ({
-    orders
+
+  getCalendar: action(async function(opts) {
+    const { orders = [] } = await oapi.getCalendar(opts)
+    this._orders = orders
   }),
-  [clearStore]: () => ({
-    calendarOptions: {
+
+  clearStore: action(function() {
+    this._calendarOptions = {
       categories: [],
       areas: [],
       start: '',
       end: ''
-    },
-    orders: []
+    }
+    this._orders = []
   }),
-  [getAds]: ({ads = []}) => ({
-    ads
+
+  getAds: action(async function() {
+    const { ads = [] } = await aapi.getAds()
+    this._ads = ads
   })
 })
 

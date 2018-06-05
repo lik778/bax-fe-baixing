@@ -4,43 +4,54 @@
     <div>
       <span class="filter-item">
         <label>广告位</label>
-        <bax-select :options="adOpts" clearable
-          v-model="adId">
-        </bax-select>
+        <bax-select
+          clearable
+          :options="adOpts"
+          v-model="adId"
+        />
       </span>
       <span class="filter-item">
         <label>类型</label>
-        <bax-select :options="sspOrderTypeOpts" clearable
-          v-model="sspOrderType">
-        </bax-select>
+        <bax-select
+          clearable
+          :options="sspOrderTypeOpts"
+          v-model="sspOrderType"
+        />
       </span>
     </div>
     <div>
       <span class="filter-item">
         <label>开始时间</label>
-        <el-date-picker type="date" placeholder="选择日期"
-          v-model="startAt">
-        </el-date-picker>
+        <el-date-picker
+          type="date"
+          placeholder="选择日期"
+          v-model="startAt"
+        />
       </span>
       <span class="filter-item">
         <label>结束时间</label>
-        <el-date-picker type="date" placeholder="选择日期"
-          v-model="endAt">
-        </el-date-picker>
+        <el-date-picker
+          type="date"
+          placeholder="选择日期"
+          v-model="endAt"
+        />
       </span>
     </div>
     <div>
       <span class="filter-item">
         <label>区域</label>
         <span>
-          <el-tag type="success" closable
+          <el-tag
             v-for="c in areas" :key="c"
-            @close="removeArea(c)">
+            closable
+            type="success"
+            @close="removeArea(c)"
+          >
             {{ formatterArea(c) }}
           </el-tag>
           <i class="el-icon-plus"
-            @click="areaDialogVisible = true">
-          </i>
+            @click="areaDialogVisible = true"
+          />
         </span>
       </span>
     </div>
@@ -48,29 +59,34 @@
       <span class="filter-item">
         <label>类目</label>
         <span>
-          <el-tag type="success" closable
+          <el-tag
+            closable
+            type="success"
             v-for="c in categories" :key="c"
-            @close="removeCategory(c)">
+            @close="removeCategory(c)"
+          >
             {{ formatterCategory(c) }}
           </el-tag>
           <i class="el-icon-plus"
-            @click="categoryDialogVisible = true">
-          </i>
+            @click="categoryDialogVisible = true"
+          />
         </span>
       </span>
     </div>
-    <category-selector :all-categories="allCategories"
+    <category-selector
+      :all-categories="allCategories"
       :categories="categories"
       :visible="categoryDialogVisible"
       @ok="onChangeCategories"
-      @cancel="categoryDialogVisible = false">
-    </category-selector>
-    <area-selector :all-areas="allAreas"
+      @cancel="categoryDialogVisible = false"
+    />
+    <area-selector
+      :all-areas="allAreas"
       :areas="areas"
       :visible="areaDialogVisible"
       @ok="onChangeAreas"
-      @cancel="areaDialogVisible = false">
-    </area-selector>
+      @cancel="areaDialogVisible = false"
+    />
   </header>
 </template>
 
@@ -93,10 +109,7 @@ import {
   sspOrderTypeOpts
 } from 'constant/order'
 
-import {
-  setCalendarOptions,
-  getCalendar
-} from './action'
+import store from './store'
 
 export default {
   name: 'ad-calendar-header',
@@ -208,14 +221,14 @@ export default {
         return
       }
 
-      await setCalendarOptions({
+      store.setCalendarOptions({
         start: toTimestamp(startAt),
         end: toTimestamp(endAt),
         categories,
         areas
       })
 
-      await getCalendar(fmtCategoriesAndAreasInOpts({
+      await store.getCalendar(fmtCategoriesAndAreasInOpts({
         startAt: toTimestamp(startAt),
         endAt: toTimestamp(endAt),
         sspOrderType,
@@ -249,7 +262,6 @@ export default {
 </script>
 
 <style scoped>
-
 @import '../../cssbase/mixin';
 @import 'cssbase/mixin';
 
@@ -292,5 +304,4 @@ export default {
     }
   }
 }
-
 </style>
