@@ -31,13 +31,11 @@ import {
   materialType
 } from 'constant/material'
 
-import {
-  getMaterial
-} from './action'
-
 export default {
   name: 'material-info',
-  store,
+  fromMobx: {
+    material: () => store.material
+  },
   components: {
     Topbar,
     Item
@@ -55,13 +53,12 @@ export default {
   },
   async mounted() {
     const id = this.$route.params.id
-    await getMaterial(id)
+    await store.getMaterial(id)
   }
 }
 </script>
 
 <style scoped>
-
 .img {
   max-width: 400px;
   max-height: 400px;
@@ -73,5 +70,4 @@ export default {
   padding: 0 35px;
   width: 100%;
 }
-
 </style>

@@ -1,17 +1,17 @@
 
-import { createStore } from 'vue-duo'
+import { observable, action, toJS } from 'mobx'
 
-import {
-  getMaterial
-} from './action'
+import * as mapi from 'api/material'
 
-const store = createStore({
-  material: {}
-})
+const store = observable({
+  _material: {},
 
-store.subscribeActions({
-  [getMaterial]: (material) => ({
-    material: {...material}
+  get material() {
+    return toJS(this._material)
+  },
+
+  getMaterial: action(async function(id) {
+    this._material = await mapi.getMaterial(id)
   })
 })
 

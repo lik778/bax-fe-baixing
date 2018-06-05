@@ -2,7 +2,9 @@
 <template>
   <div>
     <span>{{ label }}</span>
-    <a v-if="tag === 'a'" :href="value" target="_blank">
+    <a v-if="tag === 'a'"
+      target="_blank"
+      :href="value">
       {{ value }}
     </a>
     <span v-else>
@@ -28,7 +30,6 @@ export default {
 </script>
 
 <style scoped>
-
 div {
   display: flex;
   align-items: center;
@@ -42,10 +43,10 @@ div {
     text-align: right;
   }
 
-  & > span:last-child, & > a:last-child {
+  & > span:last-child,
+  & > a:last-child {
     font-size: 14px;
     color: #1f2d3d;
   }
 }
-
 </style>
