@@ -33,8 +33,10 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column label="电脑端最高出价(元/次点击)"
-        :render-header="renderWithTip(cpcTopPriceTip)">
+      <el-table-column
+        :label="maxPriceLabel"
+        :render-header="renderWithTip(cpcTopPriceTip)"
+      >
         <template slot-scope="s">
           <span class="price">
             <el-input size="mini" placeholder="单位: 元"
@@ -82,6 +84,7 @@ import {
   KEYWORD_STATUS_REFUSE,
   KEYWORD_CHIBI_PENDING,
   KEYWORD_CHIBI_REJECT,
+  SEM_PLATFORM_SHENMA,
   keywordStatus
 } from 'constant/fengming'
 
@@ -131,6 +134,10 @@ export default {
     BaxPagination
   },
   props: {
+    platform: {
+      type: Number,
+      required: true
+    },
     mode: {
       type: String,
       required: true,
@@ -230,6 +237,13 @@ export default {
       }
 
       return yes
+    },
+    maxPriceLabel() {
+      if (this.platform === SEM_PLATFORM_SHENMA) {
+        return '移动端出价(元/次点击)'
+      }
+
+      return '电脑端最高出价(元/次点击)'
     },
     currentPage() {
       return this.offset / LIMIT | 0 // 0, 1, 2

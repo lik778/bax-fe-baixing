@@ -132,6 +132,7 @@
           <label>当前关键词数量: {{ currentKeywords.length }}个</label>
         </h4>
         <keyword-list mode="update"
+          :platform="getProp('source')"
           :words="currentKeywords"
           :offset="currentKeywordsOffset"
           :selectable="false"
