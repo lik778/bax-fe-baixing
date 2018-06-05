@@ -208,7 +208,8 @@
           </span>
           <i>元</i>
           <span>
-            （根据您选取的关键词，最低预算为<p>{{ predictedInfo.dailyBudget }}</p>元）
+            （根据您选取的关键词，最低预算为<p>{{ predictedInfo.dailyBudget }}</p>元，
+            今日还可修改<p>{{ modifyBudgetQuota }}</p>次）
           </span>
         </div>
         <h3>
@@ -226,7 +227,7 @@
             更新推广
           </el-button>
         </div>
-        <promotion-charge-tip></promotion-charge-tip>
+        <promotion-charge-tip />
       </section>
     </main>
     <area-selector :all-areas="allAreas"
