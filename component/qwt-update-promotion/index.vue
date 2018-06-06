@@ -380,6 +380,8 @@ export default {
       if (q < 0) {
         q = 0
       }
+
+      return q
     },
     isFormReadonly() {
       const { userInfo } = this
