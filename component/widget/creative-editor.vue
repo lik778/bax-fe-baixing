@@ -5,11 +5,11 @@
       <aside>推广标题:</aside>
       <span>
         <text-limit-tip
-          :rest="25 - title.length"
+          :rest="titleMaxLen - title.length"
           :current="title.length"
-          :min="9">
+          :min="titleMinLen">
           <el-input slot="input" type="text" style="width: 420px"
-            placeholder="请输入标题 ~ (字数限制为9-25个字)"
+            :placeholder="`请输入标题 ~ (字数限制为${titleMinLen}-${titleMaxLen}个字)`"
             :disabled="!isCreativeEditable || isFormReadonly"
             :value="title"
             @change="onChangeTitle"
@@ -29,12 +29,12 @@
       </aside>
       <span>
         <text-limit-tip
-          :rest="40 - content.length"
+          :rest="contentMaxLen - content.length"
           :current="content.length"
-          :min="9">
+          :min="contentMinLen">
           <el-input slot="input" type="textarea"
             :rows="5" style="width: 420px"
-            :placeholder="creativeContentPlaceholder"
+            :placeholder="`请输入内容 ~ (字数限制为${contentMinLen}-${contentMaxLen}个字)`"
             :disabled="!isCreativeEditable || isFormReadonly"
             :value="content"
             @change="onChangeContent"
@@ -64,8 +64,8 @@ import TextLimitTip from './text-limit-tip'
 import { Message } from 'element-ui'
 
 import {
-  creativeContentPlaceholder
-} from 'constant/tip'
+  SEM_PLATFORM_SHENMA
+} from 'constant/fengming'
 
 import {
   checkCreativeContent
@@ -112,7 +112,41 @@ export default {
   },
   data() {
     return {
-      creativeContentPlaceholder
+      SEM_PLATFORM_SHENMA
+    }
+  },
+  computed: {
+    titleMinLen() {
+      const { platform } = this
+      if (platform === SEM_PLATFORM_SHENMA) {
+        return 8
+      }
+
+      return 9
+    },
+    titleMaxLen() {
+      const { platform } = this
+      if (platform === SEM_PLATFORM_SHENMA) {
+        return 35
+      }
+
+      return 25
+    },
+    contentMinLen() {
+      const { platform } = this
+      if (platform === SEM_PLATFORM_SHENMA) {
+        return 8
+      }
+
+      return 9
+    },
+    contentMaxLen() {
+      const { platform } = this
+      if (platform === SEM_PLATFORM_SHENMA) {
+        return 68
+      }
+
+      return 40
     }
   },
   methods: {

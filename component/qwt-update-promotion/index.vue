@@ -292,10 +292,6 @@ import {
 } from 'constant/fengming'
 
 import {
-  creativeContentPlaceholder
-} from 'constant/tip'
-
-import {
   checkCampaignValidTime,
   getCampaignPrediction,
   getCampaignValidTime
@@ -342,7 +338,6 @@ export default {
   },
   data() {
     return {
-      creativeContentPlaceholder,
       actionTrackId: uuid(),
       landingTypeOpts,
 
