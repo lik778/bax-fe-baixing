@@ -4,20 +4,22 @@
     <header>BAX广告交易平台</header>
     <form class="box">
       <p>登录</p>
-      <input placeholder="邮箱" v-model="email" />
+      <input
+        placeholder="邮箱"
+        v-model="email"
+      />
       <input
         autocomplete
         type="password"
         placeholder="密码"
-        v-model="password" />
-      <footer>
-        <a href="http://www.baixing.com/fengming/bax">
-          百姓网账号登录
-        </a>
-        <span @click="login">
-          登录
-        </span>
-      </footer>
+        v-model="password"
+      />
+      <a href="http://www.baixing.com/fengming/bax">
+        百姓网账号登录
+      </a>
+      <span @click="login">
+        登录
+      </span>
     </form>
   </main>
 </template>
@@ -72,8 +74,15 @@ export default {
 @import 'cssbase/mixin';
 
 .box {
-  display: flex;
-  flex-flow: column;
+  display: grid;
+  grid-template-rows: 40px 55px 55px;
+  grid-template-columns: 4fr 2fr;
+  align-items: start;
+  grid-template-areas:
+    "title title"
+    "email email"
+    "password password"
+    "bxLogin submit";
   width: 420px;
   height: 220px;
   padding: 15px 20px 0;
@@ -82,50 +91,53 @@ export default {
   background: rgba(216, 216, 216, 0.30);
 
   & > p {
+    grid-area: title;
     font-size: 16px;
     color: #616161;
-    letter-spacing: 0;
   }
 
   & > input {
     width: 380px;
     height: 36px;
-    margin-top: 20px;
     padding: 0 5px;
-    color: #afafaf;
-    font-size: 14px;
     border: 1px solid #979797;
     box-shadow: inset 0 1px 3px 0 rgba(0,0,0,0.50);
     border-radius: 4px;
+    font-size: 14px;
+    color: #afafaf;
   }
 
-  & > footer {
-    display: flex;
-    align-items: flex-end;
-    justify-content: flex-end;
-    padding: 20px 20px 0 0;
+  & > input:nth-child(2) {
+    grid-area: email;
+  }
 
-    & > a {
-      @mixin center;
-      margin-right: 10px;
-      padding: 0 10px;
-      height: 36px;
-      font-size: 14px;
-      border-radius: 4px;
-      border: 1px solid white;
-      color: white;
-    }
+  & > input:nth-child(3) {
+    grid-area: password;
+  }
 
-    & > span {
-      @mixin center;
-      width: 100px;
-      height: 36px;
-      background: #7ddede;
-      border: 1px solid #83e5e7;
-      border-radius: 4px;
-      cursor: pointer;
-      color: #616161;
-    }
+  & > a {
+    @mixin center;
+    grid-area: bxLogin;
+    justify-self: end;
+    width: 120px;
+    height: 36px;
+    border-radius: 4px;
+    border: 1px solid white;
+    font-size: 14px;
+    color: white;
+  }
+
+  & > span {
+    @mixin center;
+    grid-area: submit;
+    justify-self: end;
+    width: 100px;
+    height: 36px;
+    border: 1px solid #83e5e7;
+    border-radius: 4px;
+    background: #7ddede;
+    color: #616161;
+    cursor: pointer;
   }
 }
 
