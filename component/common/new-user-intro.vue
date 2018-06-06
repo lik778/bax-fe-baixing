@@ -1,6 +1,39 @@
 <template>
   <div :class="{'new-user-intro': true, hide: !visible}">
-    <section v-if="step === 1"
+    <section
+      v-if="mode === 'shenma'"
+      class="shenma">
+      <i>
+        <p @click="close()">
+          ✕
+        </p>
+      </i>
+      <header>
+        <h3>新媒体渠道已上线</h3>
+        <h5>— 神马移动搜索</h5>
+      </header>
+      <p>
+        第二大<strong>移动搜索流量</strong>入口强势来袭！
+        把您的<strong>百姓网信息</strong>推广到
+        <strong>神马移动搜索平台</strong>上，
+        覆盖海量移动端流量，订单电话滚滚来！
+      </p>
+      <div>
+        <img :src="shenmaBxImg" />
+        <img :src="shenmaArrowImg" />
+        <img :src="shenmaLogoImg" />
+      </div>
+      <section>
+        <p>您的推广页面</p>
+        <p>神马移动搜索平台</p>
+      </section>
+      <img
+        :src="shenmaBtnImg"
+        @click="createPromotion"
+      />
+    </section>
+    <section
+      v-else-if="step === 1"
       class="step-1">
       <main>
         <div>
@@ -23,7 +56,8 @@
       </footer>
     </section>
 
-    <section v-if="step === 2"
+    <section
+      v-else-if="step === 2"
       class="step-2">
       <header>
         <i @click="close()">✕</i>
@@ -63,6 +97,13 @@ export default {
     visible: {
       type: Boolean,
       required: true
+    },
+    mode: {
+      type: String,
+      required: false,
+      validator(v) {
+        return ['', 'shenma'].includes(v)
+      }
     }
   },
   data() {
@@ -73,6 +114,10 @@ export default {
       step2btnImg: assetHost + 'new-user-intro-2-charge-btn.png',
       step2callImg: assetHost + 'new-user-intro-2-i-call.png',
       step2infoImg: assetHost + 'new-user-intro-2-info.png',
+      shenmaArrowImg: assetHost + 'shenma-intro-arrow.png',
+      shenmaLogoImg: assetHost + 'shenma-intro-logo.png',
+      shenmaBtnImg: assetHost + 'shenma-intro-btn.png',
+      shenmaBxImg: assetHost + 'shenma-intro-bx.png',
       step: 1
     }
   },
@@ -80,6 +125,12 @@ export default {
     async close() {
       this.$emit('close')
       await markNotNew()
+    },
+    createPromotion() {
+      this.close()
+      this.$router.push({
+        name: 'qwt-create-promotion'
+      })
     },
     charge() {
       this.close()
@@ -112,6 +163,104 @@ export default {
 
 .new-user-intro.hide {
   display: none;
+}
+
+.shenma {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  width: 630px;
+  height: 550px;
+  padding-left: 10px;
+  background: url('//file.baixing.net/bax-fe/asset/shenma-intro-bg.png') no-repeat;
+
+  & > i {
+    position: relative;
+    width: 0;
+    height: 0;
+    right: -280px;
+    top: 65px;
+
+    & > p {
+      font-size: 12px;
+      color: white;
+      cursor: pointer;
+    }
+  }
+
+  & > header {
+    display: flex;
+    align-items: center;
+    flex-flow: column;
+    margin-top: 74px;
+
+    & > h3 {
+      width: 290px;
+      font-size: 32px;
+      letter-spacing: 4px;
+      line-height: 45px;
+      color: white;
+    }
+
+    & > h5 {
+      width: 120px;
+      margin-top: 8px;
+      margin-left: 150px;
+      font-size: 16px;
+      line-height: 22px;
+      color: white;
+    }
+  }
+
+  & > p {
+    margin-top: 57px;
+    width: 530px;
+    font-size: 16px;
+    letter-spacing: 1.8px;
+    line-height: 33px;
+    color: #666666;
+
+    & > strong {
+      font-size: 18px;
+      color: #151515;
+    }
+  }
+
+  & > div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 18px;
+
+    & > img:nth-child(2) {
+      margin: 0 45px 0 27px;
+    }
+  }
+
+  & > section {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 11px;
+    width: 447px;
+    font-size: 12px;
+    letter-spacing: 0.75px;
+    line-height: 17px;
+
+    & > p:first-child {
+      margin-left: 65px;
+      color: #329ccc;
+    }
+
+    & > p:last-child {
+      margin-right: 21px;
+      color: #d18413;
+    }
+  }
+
+  & > img {
+    margin-top: 22px;
+    cursor: pointer;
+  }
 }
 
 .step-1, .step-2 {

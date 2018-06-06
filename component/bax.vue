@@ -10,13 +10,18 @@
       :allAreas="allAreas"
       :allRoles="allRoles">
     </router-view>
-    <new-user-intro :visible="showNewUserIntro"
-      @close="showNewUserIntro = false" />
-    <add-user-lead :visible="addUserLeadVisible"
+    <new-user-intro
+      :mode="newUserIntroMode"
+      :visible="showNewUserIntro"
+      @close="showNewUserIntro = false"
+    />
+    <add-user-lead
+      :user-info="currentUser"
+      :visible="addUserLeadVisible"
       @close="toggleAddUserLeadVisible"
-      :user-info="currentUser" />
-    <go-to-bottom></go-to-bottom>
-    <back-to-top></back-to-top>
+    />
+    <go-to-bottom />
+    <back-to-top />
   </content>
 </template>
 
@@ -56,6 +61,7 @@ export default {
   data() {
     return {
       showNewUserIntro: false,
+      newUserIntroMode: '',
       pending: 0
     }
   },
@@ -102,6 +108,23 @@ export default {
       if (this.currentUser.isNewUser === 1 &&
         roles.includes('BAIXING_USER')) {
         this.showNewUserIntro = true
+      } else if (Date.now() < 1529596800000) {
+        const times = localStorage.getItem('bx-qt-sm-al-t') | 0
+        if (times === 0) {
+          // 初次
+          this.newUserIntroMode = 'shenma'
+          this.showNewUserIntro = true
+          localStorage.setItem('bx-qt-sm-al-lt', Date.now())
+          localStorage.setItem('bx-qt-sm-al-t', 1)
+        } else if (times < 3) {
+          const lastTime = parseInt(localStorage.getItem('bx-qt-sm-al-lt'))
+          if ((Date.now() - lastTime) > 24 * 60 * 60 * 1000) {
+            this.newUserIntroMode = 'shenma'
+            this.showNewUserIntro = true
+            localStorage.setItem('bx-qt-sm-al-lt', Date.now())
+            localStorage.setItem('bx-qt-sm-al-t', times + 1)
+          }
+        }
       }
 
       track({
