@@ -143,7 +143,7 @@ export default {
 
 main {
   display: flex;
-  flex-flow:column;
+  flex-flow: column;
   justify-content: center;
   align-items: flex-end;
   width: 100%;

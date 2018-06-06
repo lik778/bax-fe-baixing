@@ -187,5 +187,4 @@ export default {
   color: #999999;
   cursor: pointer;
 }
-
 </style>
