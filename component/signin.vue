@@ -1,7 +1,7 @@
 
 <template>
   <main>
-    <header>BAX广告交易平台</header>
+    <header>BAX 广告交易平台</header>
     <form class="box">
       <p>登录</p>
       <input
