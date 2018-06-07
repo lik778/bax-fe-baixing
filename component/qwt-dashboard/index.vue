@@ -35,7 +35,8 @@
       <section>
         <aside>推广设备:</aside>
         <span>
-          <i class="badge" v-for="d of allDevices" :key="d.value"
+          <i class="badge"
+            v-for="d of allDevices" :key="d.value"
             :aria-checked="query.device === d.value"
             @click="query.device = d.value">
             {{ d.label }}
@@ -103,6 +104,7 @@ import {
   DIMENSION_KEYWORD,
   TIME_UNIT_DAY,
   DEVICE_ALL,
+  DEVICE_WAP,
 
   allDimensions,
   allTimeUnits,
@@ -112,6 +114,7 @@ import {
 } from 'constant/fengming-report'
 
 import {
+  SEM_PLATFORM_SHENMA,
   SEM_PLATFORM_BAIDU,
   semPlatformOpts
 } from 'constant/fengming'
@@ -150,10 +153,12 @@ export default {
       campaignDialogVisible: false,
       hasOperated: false, // 用户已经操作过
 
+      SEM_PLATFORM_SHENMA,
+      DEVICE_WAP,
+
       semPlatformOpts,
       allDimensions,
       allTimeUnits,
-      allDevices,
       timeTypes,
 
       query: {
@@ -170,6 +175,13 @@ export default {
     }
   },
   computed: {
+    allDevices() {
+      if (this.query.channel === SEM_PLATFORM_SHENMA) {
+        return allDevices.filter(d => d.value === DEVICE_ALL)
+      }
+
+      return allDevices
+    },
     userId() {
       return this.$route.query.userId || this.userInfo.id
     }
