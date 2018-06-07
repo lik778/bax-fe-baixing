@@ -22,14 +22,18 @@
             </span>
           </div>
           <div v-else>
-            <el-button @click="addRelatedOrder">添加关联订单</el-button>
+            <el-button @click="addRelatedOrder">
+              添加关联订单
+            </el-button>
           </div>
         </span>
       </div>
       <div class="discount" v-if="unpaied && isOperator">
         <span>
-          <el-input v-model="discount"
-            placeholder="降价 xx 元" />
+          <el-input
+            v-model="discount"
+            placeholder="降价 xx 元"
+          />
         </span>
         <el-button @click="changeDiscount">确认</el-button>
       </div>
@@ -45,7 +49,8 @@
         <i class="el-icon-document"
           v-clipboard:copy="payUrl"
           v-clipboard:success="onCopySuccess"
-          v-clipboard:error="onCopyError"></i>
+          v-clipboard:error="onCopyError"
+        />
       </div>
       <div>
         <log v-for="(log, i) in logs" :info="log" :key="i" />
@@ -61,7 +66,11 @@ import Topbar from 'com/topbar'
 import Item from './item'
 import Log from './log'
 
-import store from './store'
+import {
+  changeOrderDiscount,
+  getOrderPayUrl,
+  payOrder
+} from 'api/order'
 
 import {
   allowGetOrderPayUrl,
@@ -74,21 +83,18 @@ import {
   commafy
 } from 'utils'
 
-import {
-  changeOrderDiscount,
-  getOrderPayUrl,
-  getOrderInfo,
-  getOrderLogs,
-  payOrder
-} from './action'
+import store from './store'
 
 export default {
   name: 'order-info',
-  store,
   components: {
     Topbar,
     Item,
     Log
+  },
+  fromMobx: {
+    orderInfo: () => store.orderInfo,
+    logs: () => store.logs
   },
   props: {
     userInfo: {
@@ -118,7 +124,8 @@ export default {
     },
     unpaied() {
       const { orderInfo } = this
-      return orderInfo && orderInfo.order && orderInfo.order.status === 0
+      return orderInfo && orderInfo.order &&
+        orderInfo.order.status === 0
     },
     isOperator() {
       const roles = this.userInfo.roles || []
@@ -129,8 +136,8 @@ export default {
     async initOrderInfo() {
       const orderId = this.$route.params.id
       const [info] = await Promise.all([
-        getOrderInfo(orderId),
-        getOrderLogs(orderId)
+        store.getOrderInfo(orderId),
+        store.getOrderLogs(orderId)
       ])
 
       if (!this.allowGetOrderPayUrl) {
@@ -152,7 +159,7 @@ export default {
         amount
       })
 
-      await getOrderInfo(orderId)
+      await store.getOrderInfo(orderId)
 
       Message.success('修改成功')
 
@@ -214,7 +221,6 @@ export default {
 </script>
 
 <style scoped>
-
 @import 'cssbase/mixin';
 
 .discount {
@@ -264,5 +270,4 @@ export default {
   padding: 0 35px;
   width: 100%;
 }
-
 </style>

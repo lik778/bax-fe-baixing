@@ -1,24 +1,28 @@
 
-import { createStore } from 'vue-duo'
+import { observable, action, toJS } from 'mobx'
 
-import {
-  getOrderInfo,
-  getOrderLogs
-} from './action'
+import * as oapi from 'api/order'
 
-const store = createStore({
-  orderInfo: {
+const store = observable({
+  _orderInfo: {
     order: {}
   },
-  logs: []
-})
+  _logs: [],
 
-store.subscribeActions({
-  [getOrderInfo]: (info) => ({
-    orderInfo: {...info}
+  get orderInfo() {
+    return toJS(this._orderInfo)
+  },
+
+  get logs() {
+    return toJS(this._logs)
+  },
+
+  getOrderLogs: action(async function(id) {
+    this._logs = await oapi.getOrderLogs(id)
   }),
-  [getOrderLogs]: (logs) => ({
-    logs
+
+  getOrderInfo: action(async function(id) {
+    this._orderInfo = await oapi.getOrderInfo(id)
   })
 })
 

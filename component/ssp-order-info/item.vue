@@ -1,7 +1,7 @@
 
 <template>
   <div>
-    <span>{{ label }}</span>
+    <label>{{ label }}</label>
     <span>{{ value }}</span>
   </div>
 </template>
@@ -22,13 +22,12 @@ export default {
 </script>
 
 <style scoped>
-
 div {
   display: flex;
   align-items: center;
   margin: 10px 0;
 
-  & > span:first-child {
+  & > label {
     width: 80px;
     margin-right: 10px;
     font-size: 14px;
@@ -36,10 +35,9 @@ div {
     text-align: right;
   }
 
-  & > span:last-child {
+  & > span {
     font-size: 14px;
     color: #1f2d3d;
   }
 }
-
 </style>
