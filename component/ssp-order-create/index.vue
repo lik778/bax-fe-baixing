@@ -11,13 +11,14 @@
         <el-form-item label="广告位">
           <content class="select-ad">
             <div>
-              <bax-select :options="adOpts"
-                v-model="newOrder.adId">
-              </bax-select>
+              <bax-select
+                :options="adOpts"
+                v-model="newOrder.adId"
+              />
             </div>
             <img v-if="adExampleImg"
-              v-bind:src="adExampleImg">
-            </img>
+              v-bind:src="adExampleImg"
+            />
           </content>
         </el-form-item>
         <el-form-item label="订单类型" v-if="isOperator">
@@ -179,6 +180,10 @@ import {
 } from 'api/account'
 
 import {
+  createOrder
+} from 'api/order'
+
+import {
   onlyAgentSales,
   allowAddOrder,
   allowAddUser
@@ -189,15 +194,6 @@ import {
   centToYuan,
   now
 } from 'utils'
-
-import {
-  setCalendarOptions,
-  getCalendar,
-  createOrder,
-  getAdPrice,
-  clearStore,
-  getAds
-} from './action'
 
 const tomorrow = moment().add(1, 'days').format('YYYY-MM-DD')
 
@@ -216,7 +212,6 @@ const emptyOrder = {
 
 export default {
   name: 'create-order',
-  store,
   components: {
     CategorySelector,
     UserSelector,
@@ -225,6 +220,14 @@ export default {
     AdCalendar,
     BaxSelect,
     Topbar
+  },
+  fromMobx: {
+    calendarOptions: () => store.calendarOptions,
+
+    adPrice: () => store.adPrice,
+    ads: () => store.ads,
+
+    orders: () => store.orders
   },
   props: {
     allCategories: {
@@ -388,14 +391,14 @@ export default {
 
       this.adCalendarConflicting = false
 
-      await setCalendarOptions({
+      await store.setCalendarOptions({
         start: toTimestamp(onlineAt),
         end: toTimestamp(offlineAt),
         areas: [...cities],
         categories
       })
 
-      await getCalendar(fmtCategoriesAndAreasInOpts({
+      await store.getCalendar(fmtCategoriesAndAreasInOpts({
         sspOrderType: this.isOperator ? sspOrderType : 0,
         startAt: toTimestamp(onlineAt),
         endAt: toTimestamp(offlineAt),
@@ -424,16 +427,17 @@ export default {
         adId
       }
 
-      if (opts.adId && opts.categories.length && opts.cities.length &&
+      if (opts.adId && opts.categories.length &&
+        opts.cities.length &&
         opts.startAt && opts.endAt) {
-        await getAdPrice(opts.adId, fmtCategoriesAndAreasInOpts(opts, allAreas))
+        await store.getAdPrice(opts.adId, fmtCategoriesAndAreasInOpts(opts, allAreas))
       }
     },
     empty() {
       this.newOrder = clone(emptyOrder)
       this.salesDisplayName = ''
       this.salesIdLocked = false
-      clearStore()
+      store.clearStore()
     },
     async onSubmit() {
       const { newOrder, userInfo, adPrice, allAreas } = this
@@ -496,9 +500,7 @@ export default {
     }
   },
   async mounted() {
-    await Promise.all([
-      getAds()
-    ])
+    await store.getAds()
 
     const { sales_id: salesId } = this.$route.query
 
@@ -524,7 +526,6 @@ export default {
 </script>
 
 <style scoped>
-
 @import '../../cssbase/mixin';
 @import '../../cssbase/var';
 
@@ -625,5 +626,4 @@ export default {
     }
   }
 }
-
 </style>
