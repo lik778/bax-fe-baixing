@@ -1,10 +1,15 @@
 
 <template>
   <section>
-    <el-table :data="orders" style="width: 100%">
+    <el-table
+      style="width: 100%"
+      :data="orders"
+    >
       <el-table-column label="订单编号" width="120">
         <template slot-scope="s">
-          <router-link :to="{name: 'order-info', params: {id: s.row.order.id}}">
+          <router-link
+            :to="{name: 'order-info', params: {id: s.row.order.id}}"
+          >
             {{ s.row.order.id }}
           </router-link>
         </template>
@@ -24,11 +29,15 @@
           </el-button>
         </template>
       </el-table-column>
-      <el-table-column label="广告类型" width="120"
-        :formatter="formatOrderType">
-      </el-table-column>
-      <el-table-column prop="order.userName" label="客户">
-      </el-table-column>
+      <el-table-column
+        label="广告类型"
+        width="120"
+        :formatter="formatOrderType"
+      />
+      <el-table-column
+        prop="order.userName"
+        label="客户"
+      />
       <el-table-column label='创建时间'>
         <template slot-scope="s">
           <span>{{ s.row.order.createdAt | toHumanTime }}</span>
@@ -42,18 +51,19 @@
         </template>
       </el-table-column>
     </el-table>
-    <bax-pagination :options="query"
-      @current-change="onCurrentChange">
-    </bax-pagination>
+    <bax-pagination
+      :options="query"
+      @current-change="onCurrentChange"
+    />
   </section>
 </template>
 
 <script>
 import BaxPagination from 'com/common/pagination'
 
-import { toHumanTime } from 'utils'
-
 import { Message } from 'element-ui'
+
+import { toHumanTime } from 'utils'
 
 import {
   sspOrderStatus,
@@ -66,9 +76,10 @@ import {
 
 import {
   cancelOrder,
-  getOrders,
   payOrder
-} from './action'
+} from 'api/order'
+
+import store from './store'
 
 export default {
   name: 'order-list',
@@ -109,7 +120,7 @@ export default {
       }
 
       await cancelOrder(id)
-      await getOrders()
+      await store.getOrders()
       Message.success('已取消订单')
     },
     async pay(id) {
@@ -120,24 +131,23 @@ export default {
       }
 
       await payOrder(id)
-      await getOrders()
+      await store.getOrders()
       Message.success('支付成功')
     },
     async onCurrentChange({offset}) {
-      await getOrders({offset})
+      await store.getOrders({offset})
     },
     formatOrderType(row) {
       return sspOrderType[String(row.orderType)]
     }
   },
   async mounted() {
-    await getOrders({...this.query})
+    await store.getOrders({...this.query})
   }
 }
 </script>
 
 <style scoped>
-
 @import '../../cssbase/var';
 
 section {
@@ -148,5 +158,4 @@ a {
   cursor: pointer;
   color: var(--c-main-blue);
 }
-
 </style>

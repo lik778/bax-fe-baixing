@@ -4,9 +4,16 @@
     <topbar :userInfo="userInfo">
       <label slot="title">订单管理</label>
     </topbar>
-    <order-header :userInfo="userInfo" :query="query"
-      :showMoreFilters="showMoreFilters" />
-    <order-list :user-info="userInfo" :orders="orders" :query="query" />
+    <order-header
+      :query="query"
+      :userInfo="userInfo"
+      :showMoreFilters="showMoreFilters"
+    />
+    <order-list
+      :user-info="userInfo"
+      :orders="orders"
+      :query="query"
+    />
   </div>
 </template>
 
@@ -20,11 +27,15 @@ import store from './store'
 
 export default {
   name: 'order',
-  store,
   components: {
     OrderHeader,
     OrderList,
     Topbar
+  },
+  fromMobx: {
+    showMoreFilters: () => store.showMoreFilters,
+    orders: () => store.orders,
+    query: () => store.query
   },
   props: {
     userInfo: {
@@ -36,10 +47,8 @@ export default {
 </script>
 
 <style scoped>
-
 .order {
   padding: 0 35px;
   width: 100%;
 }
-
 </style>

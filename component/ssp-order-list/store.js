@@ -1,10 +1,7 @@
 
-import { createStore } from 'vue-duo'
+import { observable, action, toJS } from 'mobx'
 
-import {
-  switchShowMoreFilters,
-  getOrders
-} from './action'
+import * as oapi from 'api/order'
 
 const defaultQuery = {
   offset: 0,
@@ -19,24 +16,38 @@ const defaultQuery = {
   userId: ''
 }
 
-const store = createStore({
+const store = observable({
   showMoreFilters: false,
 
-  orders: [],
-  query: {
-    ...defaultQuery
+  _query: { ...defaultQuery },
+  _orders: [],
+
+  _ads: [],
+
+  get query() {
+    return toJS(this._query)
   },
 
-  ads: []
-})
+  get orders() {
+    return toJS(this._orders)
+  },
 
-store.subscribeActions({
-  [switchShowMoreFilters]: () => ({
-    showMoreFilters: !store.state.showMoreFilters
+  get ads() {
+    return toJS(this._ads)
+  },
+
+  switchShowMoreFilters: action(async function() {
+    this.showMoreFilters = !this.showMoreFilters
   }),
-  [getOrders]: ({orders = [], query = {}}) => ({
-    orders,
-    query: {
+
+  getOrders: action(async function(opts) {
+    const {
+      orders = [],
+      query = {}
+    } = await oapi.getOrders(opts)
+
+    this._orders = orders
+    this._query = {
       ...defaultQuery,
       ...query
     }

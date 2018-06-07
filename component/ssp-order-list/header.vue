@@ -59,6 +59,8 @@ import UserSelector from 'com/common/user-selector'
 import BaxSelect from 'com/common/select'
 import BaxInput from 'com/common/input'
 
+import store from './store'
+
 import clone from 'clone'
 
 import {
@@ -71,11 +73,6 @@ import {
   onlyAgentSales,
   allowAddOrder
 } from 'util/role'
-
-import {
-  switchShowMoreFilters,
-  getOrders
-} from './action'
 
 export default {
   name: 'order-header',
@@ -146,14 +143,14 @@ export default {
       })
     },
     switchShowMoreFilters() {
-      switchShowMoreFilters()
+      store.switchShowMoreFilters()
     },
     async queryOrders(v, p) {
       if (v === p) {
         return
       }
 
-      await getOrders({...this.query})
+      await store.getOrders({...this.query})
     }
   },
   watch: {
@@ -170,7 +167,7 @@ export default {
       const [start, end] = v
 
       if (!start && !end) {
-        await getOrders({
+        await store.getOrders({
           ...clone(this.query),
           createdAtFrom: '',
           createdAtTo: ''
@@ -181,7 +178,7 @@ export default {
       const s = toTimestamp(start, 'YYYY-MM-DD')
       const e = toTimestamp(end, 'YYYY-MM-DD')
       if (s && e && e > s) {
-        await getOrders({
+        await store.getOrders({
           ...clone(this.query),
           createdAtFrom: s,
           createdAtTo: e
@@ -192,7 +189,7 @@ export default {
       const [start, end] = v
 
       if (!start && !end) {
-        await getOrders({
+        await store.getOrders({
           ...clone(this.query),
           timeRange: ''
         })
@@ -202,7 +199,7 @@ export default {
       const s = toTimestamp(start, 'YYYY-MM-DD')
       const e = toTimestamp(end, 'YYYY-MM-DD')
       if (s && e && e > s) {
-        await getOrders({
+        await store.getOrders({
           ...clone(this.query),
           timeRange: s + ',' + e
         })
@@ -213,7 +210,6 @@ export default {
 </script>
 
 <style scoped>
-
 @import '../../cssbase/mixin';
 @import 'cssbase/mixin';
 
@@ -247,9 +243,6 @@ export default {
       & > span {
         display: flex;
         flex-grow: 0.5;
-
-        & > div:last-child {
-        }
       }
 
       & > span:last-child {
@@ -258,5 +251,4 @@ export default {
     }
   }
 }
-
 </style>
