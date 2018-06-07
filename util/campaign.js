@@ -1,6 +1,10 @@
 
 import { toTimestamp } from 'utils'
 
+import {
+  SEM_PLATFORM_SHENMA
+} from 'constant/fengming'
+
 export function fmtCpcRanking(ranking) {
   if (ranking === 0 || ranking === -1) {
     return '无昨日排名'
@@ -60,4 +64,20 @@ export function getCampaignValidTime(range) {
     toTimestamp(range[0]),
     toTimestamp(range[1]) + oneDay
   ]
+}
+
+export function getCreativeTitleLenLimit(platform) {
+  if (platform === SEM_PLATFORM_SHENMA) {
+    return [8, 35]
+  }
+
+  return [9, 25]
+}
+
+export function getCreativeContentLenLimit(platform) {
+  if (platform === SEM_PLATFORM_SHENMA) {
+    return [8, 68]
+  }
+
+  return [9, 40]
 }

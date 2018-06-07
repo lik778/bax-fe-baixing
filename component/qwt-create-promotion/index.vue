@@ -326,6 +326,8 @@ import Topbar from 'com/topbar'
 import { disabledDate } from 'util/element'
 import track from 'util/track'
 import {
+  getCreativeContentLenLimit,
+  getCreativeTitleLenLimit,
   checkCampaignValidTime,
   getCampaignPrediction,
   getCampaignValidTime
@@ -628,18 +630,20 @@ export default {
         throw Message.error('请填写创意标题')
       }
 
-      if (p.creativeTitle.length < 9 ||
-        p.creativeTitle.length > 25) {
-        throw Message.error('创意标题需要在9-25个字')
+      let [min, max] = getCreativeTitleLenLimit(p.source)
+      if (p.creativeTitle.length < min ||
+        p.creativeTitle.length > max) {
+        throw Message.error(`创意标题需要在${min}-${max}个字`)
       }
 
       if (!p.creativeContent) {
         throw Message.error('请填写创意内容')
       }
 
-      if (p.creativeContent.length < 9 ||
-        p.creativeContent.length > 40) {
-        throw Message.error('创意内容需要在9-40个字')
+      [min, max] = getCreativeContentLenLimit(p.source)
+      if (p.creativeContent.length < min ||
+        p.creativeContent.length > max) {
+        throw Message.error(`创意内容需要在${min}-${max}个字`)
       }
 
       const res = await checkCreativeContent({

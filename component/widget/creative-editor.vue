@@ -68,6 +68,11 @@ import {
 } from 'constant/fengming'
 
 import {
+  getCreativeContentLenLimit,
+  getCreativeTitleLenLimit
+} from 'util/campaign'
+
+import {
   checkCreativeContent
 } from 'api/fengming'
 
@@ -118,35 +123,19 @@ export default {
   computed: {
     titleMinLen() {
       const { platform } = this
-      if (platform === SEM_PLATFORM_SHENMA) {
-        return 8
-      }
-
-      return 9
+      return getCreativeTitleLenLimit(platform)[0]
     },
     titleMaxLen() {
       const { platform } = this
-      if (platform === SEM_PLATFORM_SHENMA) {
-        return 35
-      }
-
-      return 25
+      return getCreativeTitleLenLimit(platform)[1]
     },
     contentMinLen() {
       const { platform } = this
-      if (platform === SEM_PLATFORM_SHENMA) {
-        return 8
-      }
-
-      return 9
+      return getCreativeContentLenLimit(platform)[0]
     },
     contentMaxLen() {
       const { platform } = this
-      if (platform === SEM_PLATFORM_SHENMA) {
-        return 68
-      }
-
-      return 40
+      return getCreativeContentLenLimit(platform)[1]
     }
   },
   methods: {
