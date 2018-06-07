@@ -191,8 +191,11 @@
             （请优先添加较为核心的关键词，关键词长度不宜超过5个字，不区分大小写。）
           </strong>
         </div>
-        <keyword-list v-if="recommendedWordsVisible"
-          mode="select" :words="addibleWords"
+        <keyword-list
+          v-if="recommendedWordsVisible"
+          mode="select"
+          :platform="newPromotion.source"
+          :words="addibleWords"
           :offset="addibleWordsOffset"
           :selected-words="newPromotion.recommendedWords"
           @update-word="updateRecommendedWord"

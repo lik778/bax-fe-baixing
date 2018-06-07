@@ -131,7 +131,8 @@
           <span>已经设置的关键词</span>
           <label>当前关键词数量: {{ currentKeywords.length }}个</label>
         </h4>
-        <keyword-list mode="update"
+        <keyword-list
+          mode="update"
           :platform="getProp('source')"
           :words="currentKeywords"
           :offset="currentKeywordsOffset"
@@ -143,8 +144,8 @@
           :campaign-offline="isCampaignOffline"
           @update-word="updateExistWord"
           @change-offset="offset => currentKeywordsOffset = offset"
-          @delete-word="word => promotion.deletedKeywords.push(word)">
-        </keyword-list>
+          @delete-word="word => promotion.deletedKeywords.push(word)"
+        />
         <h3 v-if="!isFormReadonly">
           <label>关键词不够？</label>
           <a @click="switchWordsVisible">点此自定义添加</a>
@@ -161,15 +162,18 @@
             （请优先添加较为核心的关键词，关键词长度不宜超过5个字，不区分大小写。）
           </strong>
         </div>
-        <keyword-list v-if="newaddedWordsVisible"
-          mode="select" :words="addibleWords"
+        <keyword-list
+          v-if="newaddedWordsVisible"
+          mode="select"
+          :platform="getProp('source')"
+          :words="addibleWords"
           :offset="addibleWordsOffset"
           :selected-words="promotion.newKeywords"
           :campaign-offline="isCampaignOffline"
           @update-word="updateNewWord"
           @change-offset="setAddibleWordsOffset"
-          @select-words="words => promotion.newKeywords = [...words]">
-        </keyword-list>
+          @select-words="words => promotion.newKeywords = [...words]"
+        />
       </section>
       <section class="timing">
         <header>设置时长和预算</header>
