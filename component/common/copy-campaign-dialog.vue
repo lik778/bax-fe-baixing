@@ -10,8 +10,10 @@
     <main class="main">
       <h3>您还可以一键投放到：</h3>
       <li v-for="p in platforms" :key="p.id">
-        <bx-icon :type="getPlatformIcon(p.id)"
-          @click.native="onClickPlatform(p.id)" />
+        <bx-icon
+          :type="getPlatformIcon(p.id)"
+          @click.native="onClickPlatform(p.id)"
+        />
         <span>{{ p.name }}</span>
       </li>
       <footer>
@@ -31,6 +33,7 @@
 import BxIcon from 'com/widget/icon'
 
 import {
+  SEM_PLATFORM_SHENMA,
   SEM_PLATFORM_BAIDU,
   SEM_PLATFORM_SOGOU,
   SEM_PLATFORM_QIHU,
@@ -39,6 +42,7 @@ import {
 } from 'constant/fengming'
 
 const allPlatforms = [
+  SEM_PLATFORM_SHENMA,
   SEM_PLATFORM_BAIDU,
   SEM_PLATFORM_SOGOU,
   SEM_PLATFORM_QIHU
