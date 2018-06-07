@@ -3,21 +3,32 @@
   <header class="order-header">
     <section>
       <span>
-        <bax-input placeholder="请输入订单号" icon="el-icon-search"
-          type="number" v-model="query.orderId" />
+        <bax-input
+          icon="el-icon-search"
+          placeholder="请输入订单号"
+          type="number"
+          :value="query.orderId"
+          @change="v => queryOrders({ orderId: v })"
+        />
         <el-button @click="switchShowMoreFilters">
-          更多筛选<i class="el-icon-arrow-down el-icon--right"></i>
+          更多筛选<i class="el-icon-arrow-down el-icon--right" />
         </el-button>
       </span>
       <span v-if="allowAddOrder">
-        <el-button type="primary" icon="el-icon-plus"
-          @click="gotoCreateOrder">
+        <el-button
+          type="primary"
+          icon="el-icon-plus"
+          @click="gotoCreateOrder"
+        >
           新建订单
         </el-button>
       </span>
       <span v-if="!allowAddOrder && isOnlyAgentSales">
-        <el-button type="primary" icon="el-icon-plus"
-          @click="gotoCreateOrder">
+        <el-button
+          type="primary"
+          icon="el-icon-plus"
+          @click="gotoCreateOrder"
+        >
           广告查价
         </el-button>
       </span>
@@ -26,26 +37,42 @@
       <div>
         <span class="filter-item">
           <label>订单状态</label>
-          <bax-select :options="orderStatusOpts" clearable
-            v-model="query.status" />
+          <bax-select
+            clearable
+            :options="orderStatusOpts"
+            :value="query.status"
+            @change="v => queryOrders({ status: v })"
+          />
         </span>
         <span class="filter-item">
           <label>客户</label>
-          <user-selector v-model="query.userId" clearable />
+          <user-selector
+            clearable
+            :value="query.userId"
+            @change="v => queryOrders({ userId: v })"
+          />
         </span>
       </div>
       <div>
         <span class="filter-item">
           <label>创建时间</label>
-          <el-date-picker type="daterange" placeholder="选择日期"
+          <el-date-picker
+            type="daterange"
             format="yyyy-MM-dd"
-            v-model="createTimeRange" />
+            placeholder="选择日期"
+            :value="createTimeRange"
+            @input="v => queryOrdersByTimeRange(v, 'create')"
+          />
         </span>
         <span class="filter-item">
           <label>投放时间</label>
-          <el-date-picker type="daterange" placeholder="选择日期"
+          <el-date-picker
+            type="daterange"
             format="yyyy-MM-dd"
-            v-model="onlineTimeRange" />
+            placeholder="选择日期"
+            :value="onlineTimeRange"
+            @input="v => queryOrdersByTimeRange(v, 'online')"
+          />
         </span>
       </div>
     </section>
@@ -60,8 +87,6 @@ import BaxSelect from 'com/common/select'
 import BaxInput from 'com/common/input'
 
 import store from './store'
-
-import clone from 'clone'
 
 import {
   toHumanTime,
@@ -96,38 +121,43 @@ export default {
     }
   },
   data() {
-    const allData = {
+    return {
       orderStatusOpts: [
         ...orderStatusOpts
-      ],
-      createTimeRange: [],
-      onlineTimeRange: []
-    }
-
-    const {
-      createdAtFrom,
-      createdAtTo,
-      timeRange = ''
-    } = this.query
-
-    if (createdAtFrom && createdAtTo) {
-      allData.createTimeRange = [
-        toHumanTime(createdAtFrom, 'YYYY-MM-DD'),
-        toHumanTime(createdAtTo, 'YYYY-MM-DD')
       ]
     }
-
-    const [s, e] = timeRange.split(',')
-    if (s && e) {
-      allData.onlineTimeRange = [
-        toHumanTime(s, 'YYYY-MM-DD'),
-        toHumanTime(e, 'YYYY-MM-DD')
-      ]
-    }
-
-    return allData
   },
   computed: {
+    onlineTimeRange() {
+      const {
+        timeRange = ''
+      } = this.query
+
+      const [s, e] = timeRange.split(',')
+      if (s && e) {
+        return [
+          toHumanTime(s, 'YYYY-MM-DD'),
+          toHumanTime(e, 'YYYY-MM-DD')
+        ]
+      }
+
+      return []
+    },
+    createTimeRange() {
+      const {
+        createdAtFrom,
+        createdAtTo
+      } = this.query
+
+      if (createdAtFrom && createdAtTo) {
+        return [
+          toHumanTime(createdAtFrom, 'YYYY-MM-DD'),
+          toHumanTime(createdAtTo, 'YYYY-MM-DD')
+        ]
+      }
+
+      return []
+    },
     allowAddOrder() {
       return allowAddOrder(this.userInfo.roles)
     },
@@ -145,64 +175,37 @@ export default {
     switchShowMoreFilters() {
       store.switchShowMoreFilters()
     },
-    async queryOrders(v, p) {
-      if (v === p) {
-        return
-      }
-
-      await store.getOrders({...this.query})
-    }
-  },
-  watch: {
-    'query.orderId': async function(v, p) {
-      await this.queryOrders(v, p)
+    async queryOrders(opts) {
+      await store.getOrders({
+        ...this.query,
+        ...opts
+      })
     },
-    'query.status': async function(v, p) {
-      await this.queryOrders(v, p)
-    },
-    'query.userId': async function(v, p) {
-      await this.queryOrders(v, p)
-    },
-    'createTimeRange': async function(v = []) {
-      const [start, end] = v
+    async queryOrdersByTimeRange(range, type) {
+      const [start, end] = range || []
 
       if (!start && !end) {
-        await store.getOrders({
-          ...clone(this.query),
+        const q = type === 'create' ? {
           createdAtFrom: '',
           createdAtTo: ''
-        })
+        } : {
+          timeRange: ''
+        }
+        await this.queryOrders(q)
         return
       }
 
       const s = toTimestamp(start, 'YYYY-MM-DD')
       const e = toTimestamp(end, 'YYYY-MM-DD')
       if (s && e && e > s) {
-        await store.getOrders({
-          ...clone(this.query),
+        const q = type === 'create' ? {
           createdAtFrom: s,
           createdAtTo: e
-        })
-      }
-    },
-    'onlineTimeRange': async function(v = []) {
-      const [start, end] = v
-
-      if (!start && !end) {
-        await store.getOrders({
-          ...clone(this.query),
-          timeRange: ''
-        })
-        return
-      }
-
-      const s = toTimestamp(start, 'YYYY-MM-DD')
-      const e = toTimestamp(end, 'YYYY-MM-DD')
-      if (s && e && e > s) {
-        await store.getOrders({
-          ...clone(this.query),
+        } : {
           timeRange: s + ',' + e
-        })
+        }
+
+        await this.queryOrders(q)
       }
     }
   }
