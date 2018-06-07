@@ -103,7 +103,7 @@ export default {
 
     setTimeout(() => {
       const { currentUser } = this
-
+      // move to user intro component
       const roles = normalizeRoles(currentUser.roles)
       if (this.currentUser.isNewUser === 1 &&
         roles.includes('BAIXING_USER')) {

@@ -452,7 +452,11 @@ export default {
       const source = this.getProp('source')
 
       // 说明: sougou 审核中, 不允许修改创意; 但 360 可以
-      if ([SEM_PLATFORM_QIHU, SEM_PLATFORM_BAIDU].includes(source)) {
+      if ([
+        SEM_PLATFORM_SHENMA,
+        SEM_PLATFORM_BAIDU,
+        SEM_PLATFORM_QIHU
+      ].includes(source)) {
         return true
       }
 
