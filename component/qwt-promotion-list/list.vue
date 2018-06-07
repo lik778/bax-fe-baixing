@@ -126,9 +126,15 @@
         :render-header="renderColumnHeaderWithTip(mobileRatioTip)">
         <template slot-scope="s">
           <div style="padding-left: 20px;">
-            <editable-label track-action="campaign list: change mobile ratio inline"
+            <p v-if="s.row.source === SEM_PLATFORM_SHENMA">
+              -
+            </p>
+            <editable-label
+              v-else
+              track-action="campaign list: change mobile ratio inline"
               :value="s.row.mobilePriceRatio"
-              @change="v => inlineUpdateRatio(s.row.id, v)" />
+              @change="v => inlineUpdateRatio(s.row.id, v)"
+            />
           </div>
         </template>
       </el-table-column>
@@ -164,6 +170,7 @@ import equal from 'lodash.isequal'
 import {
   CAMPAIGN_STATUS_PENDING,
   CAMPAIGN_STATUS_OFFLINE,
+  SEM_PLATFORM_SHENMA,
   campaignAuditStatus,
   campaignStatus,
   semPlatformCn
@@ -247,7 +254,8 @@ export default {
       campaignStatusTooltip,
       mobileRatioTip,
 
-      CAMPAIGN_STATUS_OFFLINE
+      CAMPAIGN_STATUS_OFFLINE,
+      SEM_PLATFORM_SHENMA
     }
   },
   computed: {
