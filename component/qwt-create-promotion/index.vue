@@ -172,7 +172,8 @@
           :show-prop-show="!isCopy"
           @update-word="updateCreativeWord"
           @change-offset="offset => creativeWordsOffset = offset"
-          @select-words="words => newPromotion.creativeWords = words">
+          @select-words="words => newPromotion.creativeWords = words"
+          @operated-pages="pages => operatedPages = pages">
         </keyword-list>
         <h3>
           <label>若没有您满意的关键词，</label>
@@ -437,6 +438,7 @@ export default {
       creativeWordsOffset: 0,
       addibleWordsOffset: 0,
       createdCampaignId: 0,
+      operatedPages: [], // for logging
 
       landingTypeOpts,
 
@@ -561,7 +563,10 @@ export default {
         baixingId: userInfo.baixingId,
         time: Date.now() / 1000 | 0,
         baxId: userInfo.id,
-        actionTrackId
+        actionTrackId,
+        creativeWords: this.creativeWords.length,
+        selectedCreativeWords: this.newPromotion.creativeWords.length,
+        creativeWordPages: this.operatedPages.join(',')
       })
 
       try {

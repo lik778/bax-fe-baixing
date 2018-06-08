@@ -390,6 +390,7 @@ export default {
       if (!this.userOperatedPages.includes(this.currentPage)) {
         this.userOperatedPages.push(this.currentPage)
       }
+      this.$emit('operated-pages', this.userOperatedPages)
 
       if (this.wordChecked(word)) {
         const words = this.selectedWords
