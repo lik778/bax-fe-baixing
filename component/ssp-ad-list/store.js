@@ -1,12 +1,8 @@
 
-import { createStore } from 'vue-duo'
+import { observable, action, toJS } from 'mobx'
 
-import {
-  switchShowMoreFilters,
-  getMaterials,
-  getAdItems,
-  getAds
-} from './action'
+import * as mapi from 'api/material'
+import * as aapi from 'api/ad'
 
 const defaultQuery = {
   offset: 0,
@@ -20,34 +16,52 @@ const defaultQuery = {
   adId: ''
 }
 
-const store = createStore({
+const store = observable({
   showMoreFilters: false,
 
-  materials: [],
-  ads: [],
+  _query: { ...defaultQuery },
+  _items: [],
 
-  items: [],
-  query: {
-    ...defaultQuery
-  }
-})
+  _materials: [],
+  _ads: [],
 
-store.subscribeActions({
-  [switchShowMoreFilters]: () => ({
-    showMoreFilters: !store.state.showMoreFilters
+  get query() {
+    return toJS(this._query)
+  },
+
+  get items() {
+    return toJS(this._items)
+  },
+
+  get materials() {
+    return toJS(this._materials)
+  },
+
+  get ads() {
+    return toJS(this._ads)
+  },
+
+  switchShowMoreFilters: action(function() {
+    this.showMoreFilters = !this.showMoreFilters
   }),
-  [getMaterials]: ({materials = []}) => ({
-    materials: [...materials]
+
+  getMaterials: action(async function(opts) {
+    const { materials = [] } = await mapi.getMaterials(opts)
+    this._materials = materials
   }),
-  [getAdItems]: ({items = [], query = {}}) => ({
-    items: [...items],
-    query: {
+
+  getAdItems: action(async function(opts) {
+    const { items = [], query = {} } = await aapi.getAdItems(opts)
+    this._items = items
+    this._query = {
       ...defaultQuery,
       ...query
     }
   }),
-  [getAds]: ({ads = []}) => ({
-    ads: [...ads]
+
+  getAds: action(async function() {
+    const { ads = [] } = await aapi.getAds()
+    this._ads = ads
   })
 })
 

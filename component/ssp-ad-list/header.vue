@@ -61,10 +61,7 @@ import {
   toTimestamp
 } from 'utils'
 
-import {
-  switchShowMoreFilters,
-  getAdItems
-} from './action'
+import store from './store'
 
 export default {
   name: 'ad-header',
@@ -120,14 +117,14 @@ export default {
   },
   methods: {
     switchShowMoreFilters() {
-      switchShowMoreFilters()
+      store.switchShowMoreFilters()
     },
     async queryAdItems(v, p) {
       if (v === p) {
         return
       }
 
-      await getAdItems({...this.query})
+      await store.getAdItems({...this.query})
     }
   },
   watch: {
@@ -147,7 +144,7 @@ export default {
       const [start, end] = v
 
       if (!start && !end) {
-        await getAdItems({
+        await store.getAdItems({
           ...this.query,
           timeRange: ''
         })
@@ -159,7 +156,7 @@ export default {
       if (s && e && e > s) {
         const timeRange = s + ',' + e
 
-        await getAdItems({
+        await store.getAdItems({
           ...this.query,
           timeRange
         })
@@ -170,7 +167,6 @@ export default {
 </script>
 
 <style scoped>
-
 @import '../../cssbase/mixin';
 @import 'cssbase/mixin';
 
@@ -213,5 +209,4 @@ export default {
     }
   }
 }
-
 </style>

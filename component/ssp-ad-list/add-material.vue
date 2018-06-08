@@ -73,9 +73,10 @@ import {
 
 import {
   addAdItemMaterial,
-  setAdItemMaterial,
-  getMaterials
-} from './action'
+  setAdItemMaterial
+} from 'api/ad'
+
+import store from './store'
 
 const emptyMaterial = {
   content: '',
@@ -184,7 +185,7 @@ export default {
       this.throttle.next(v)
     },
     async queryMaterials(v) {
-      await getMaterials({name: v})
+      await store.getMaterials({name: v})
     },
     async submit() {
       const {
@@ -206,7 +207,7 @@ export default {
         }
 
         await addAdItemMaterial(itemId, material)
-        await getMaterials() // 刷新物料列表 供 筛选
+        await store.getMaterials() // 刷新物料列表 供 筛选
       } else {
         if (!material.id) {
           return Message.error('请选择或上传物料')
@@ -232,13 +233,12 @@ export default {
   },
   async mounted() {
     this.throttle.subscribe(this.queryMaterials)
-    await getMaterials()
+    await store.getMaterials()
   }
 }
 </script>
 
 <style scoped>
-
 .el-dialog__body {
   & > div {
     margin: 10px 0;
@@ -279,5 +279,4 @@ export default {
     }
   }
 }
-
 </style>

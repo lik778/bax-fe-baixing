@@ -155,9 +155,10 @@ import {
 import {
   continueAdItem,
   verifyAdItem,
-  pauseAdItem,
-  getAdItems
-} from './action'
+  pauseAdItem
+} from 'api/ad'
+
+import store from './store'
 
 export default {
   name: 'ad-list',
@@ -236,10 +237,10 @@ export default {
   },
   methods: {
     async onAddMaterialSuccess() {
-      await getAdItems({...this.query})
+      await store.getAdItems({...this.query})
     },
     async onAddAdItemSuccess() {
-      await getAdItems()
+      await store.getAdItems()
     },
     async onContinueAd(id, name) {
       try {
@@ -250,7 +251,7 @@ export default {
 
       await continueAdItem(id)
 
-      await getAdItems({...this.query})
+      await store.getAdItems({...this.query})
 
       Message.success('修改成功')
     },
@@ -272,7 +273,7 @@ export default {
         reason
       })
 
-      await getAdItems({...this.query})
+      await store.getAdItems({...this.query})
 
       Message.success('修改成功')
     },
@@ -304,7 +305,7 @@ export default {
         offset
       }
 
-      await getAdItems(q)
+      await store.getAdItems(q)
     },
     async rejectAdItem(id) {
       this.currentItem = {}
@@ -329,11 +330,11 @@ export default {
         reason
       })
 
-      await getAdItems()
+      await store.getAdItems()
     },
     async passAdItem(gid) {
       await verifyAdItem(gid, 'pass')
-      await getAdItems()
+      await store.getAdItems()
     },
     formatterCategory(row) {
       const { allCategories } = this
@@ -350,7 +351,6 @@ export default {
 </script>
 
 <style scoped>
-
 @import '../../cssbase/var';
 
 .center {
@@ -384,5 +384,4 @@ a {
     object-fit: contain;
   }
 }
-
 </style>

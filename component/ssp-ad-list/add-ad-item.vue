@@ -36,9 +36,10 @@ import {
 } from 'util/meta'
 
 import {
-  createAdItem,
-  getAdItems
-} from './action'
+  createAdItem
+} from 'api/ad'
+
+import store from './store'
 
 export default {
   name: 'add-ad-item',
@@ -126,7 +127,7 @@ export default {
       })
 
       this.empty()
-      await getAdItems()
+      await store.getAdItems()
 
       Message.success('添加成功')
       this.$emit('hide')
@@ -136,7 +137,6 @@ export default {
 </script>
 
 <style scoped>
-
 .items {
   & > div {
     display: flex;
@@ -169,5 +169,4 @@ export default {
     }
   }
 }
-
 </style>
