@@ -40,7 +40,6 @@ import Element from 'element-ui'
 
 import { reaction } from 'mobx'
 import Movue from 'movue'
-import Duo from 'vue-duo'
 import Vue from 'vue'
 
 import Vue2Filters from 'vue2-filters'
@@ -57,7 +56,6 @@ Vue.use(Movue, { reaction })
 Vue.use(VueClipboard)
 Vue.use(VueRouter)
 Vue.use(Element)
-Vue.use(Duo)
 
 Vue.component('chart', ECharts)
 Vue.use(Vue2Filters)

@@ -31,7 +31,6 @@
   - `vue`, `vue-router`
   - `rxjs` -> TODO: `vue-rx`
   - `postcss`: `css` 部分 只使用了 `postcss-cssnext`, `postcss-import`, `postcss-mixins`
-  - `vue-duo`
 
 ### 关于 element ui 的样式文件
 
