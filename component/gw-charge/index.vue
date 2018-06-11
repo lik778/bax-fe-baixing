@@ -10,7 +10,7 @@
         </header>
         <main>
           <gw-pro-widget
-            v-if="!isKaOnly || i.name === '升级版精品官网'"
+            v-if="allowSeeOldGw || i.name === '升级版精品官网'"
             v-for="i of products" :key="i.id"
             :title="i.name"
             :price="i.showPrice | centToYuan"
@@ -121,12 +121,15 @@
               <button class="buy-btn" @click="createOrder">
                 {{ submitButtonText }}
               </button>
-              <span v-if="orderPayUrl">
-                <label :title="orderPayUrl">
-                  {{ '付款链接：' + orderPayUrl }}
-                </label>
-                <Clipboard :content="orderPayUrl" />
-              </span>
+            </section>
+            <section
+              v-if="orderPayUrl"
+              class="pay-url"
+            >
+              <label :title="orderPayUrl">
+                {{ '付款链接：' + orderPayUrl }}
+              </label>
+              <Clipboard :content="orderPayUrl" />
             </section>
           </div>
           <div class="rules">
@@ -179,6 +182,7 @@ import {
 import {
   allowGetOrderPayUrl,
   allowSeeKaOnly,
+  allowSeeOldGw,
   allowPayOrder
 } from 'util/fengming-role'
 
@@ -291,6 +295,11 @@ export default {
     isBxSales() {
       const roles = normalizeRoles(this.userInfo.roles)
       return roles.includes('BAIXING_SALES')
+    },
+    allowSeeOldGw() {
+      const roles = normalizeRoles(this.userInfo.roles)
+      const { id } = this.userInfo
+      return allowSeeOldGw(roles, id)
     },
     allowDiscount() {
       const roles = normalizeRoles(this.userInfo.roles)
@@ -617,6 +626,18 @@ export default {
     padding-left: 1em;
     font-size: 12px;
     line-height: 1.86;
+  }
+}
+
+.pay-url {
+  display: flex;
+  justify-content: flex-end;
+  width: 420px;
+  font-size: 12px;
+
+  & > label {
+    @mixin wordline;
+    width: 280px;
   }
 }
 </style>

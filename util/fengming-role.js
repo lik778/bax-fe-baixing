@@ -12,6 +12,10 @@ import {
 const specialUserIds = [318, 47709, 53470]
 const specialKaUserIds = [860603]
 
+export function allowSeeOldGw(roles, uid) {
+  return specialUserIds.includes(uid)
+}
+
 export function allowSeeGw(roles, uid) {
   return specialUserIds.includes(uid) ||
     specialKaUserIds.includes(uid)
