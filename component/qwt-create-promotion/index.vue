@@ -95,6 +95,13 @@
             神马渠道仅支持移动端
           </i>
         </div>
+        <p
+          v-if="newPromotion.source === SEM_PLATFORM_SHENMA"
+          style="justify-content: flex-start; margin-left: 80px;"
+          class="warning"
+        >
+          神马渠道禁止投放搬家、金融类（包括但不限于担保贷款）信息
+        </p>
         <div>
           <aside style="align-items: flex-start; padding-top: 5px;">
             投放页面：
@@ -326,6 +333,7 @@ import Topbar from 'com/topbar'
 
 import { disabledDate } from 'util/element'
 import track from 'util/track'
+
 import {
   getCreativeContentLenLimit,
   getCreativeTitleLenLimit,
@@ -333,11 +341,13 @@ import {
   getCampaignPrediction,
   getCampaignValidTime
 } from 'util/campaign'
+
 import {
   isQwtEnableCity,
   fmtAreasInQwt,
   getCnName
 } from 'util/meta'
+
 import {
   toHumanTime
 } from 'utils'
