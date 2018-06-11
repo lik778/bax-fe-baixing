@@ -27,6 +27,59 @@
           <div>
             <price-list :products="checkedProducts" />
           </div>
+
+          <div
+            v-if="!allowDiscount"
+            class="coupon"
+          >
+            <header>
+              <span>
+                <el-checkbox v-model="couponVisible">使用优惠券</el-checkbox>
+                <i>{{'有' + effectiveCoupons.length + '张可用优惠券'}}</i>
+              </span>
+              <span>{{'-' + (couponAmount / 100).toFixed(2) + '元'}}</span>
+            </header>
+            <div
+              v-if="couponVisible">
+              <el-tabs v-model="activeCouponTab">
+                <el-tab-pane
+                  label="可用优惠券"
+                  name="first"
+                  class="coupon-pane"
+                >
+                  <coupon
+                    v-for="coupon in effectiveCoupons"
+                    :key="coupon.id"
+                    :coupon="displayCoupon(coupon)"
+                    class="coupon"
+                    :selected="selectedCoupon.includes(coupon)"
+                    @click="onCouponClick(coupon)"
+                  />
+                  <p v-if="effectiveCoupons.length === 0">暂无可用优惠券</p>
+                </el-tab-pane>
+                <el-tab-pane
+                  label="优惠码兑换"
+                  name="second"
+                  class="coupon-code-pane"
+                >
+                  <el-input
+                    class="coupon-code-input"
+                    style="width: 200px"
+                    placeholder="输入优惠码"
+                    v-model.trim="couponCode"
+                  />
+                  <el-button
+                    type="primary"
+                    style="margin-left: 16px;"
+                    @click="redeem"
+                  >
+                    确认
+                  </el-button>
+                </el-tab-pane>
+              </el-tabs>
+            </div>
+          </div>
+
           <div class="info">
             <section>
               <aside>服务编号:</aside>
@@ -99,6 +152,10 @@ import { centToYuan } from 'utils'
 import { assetHost } from 'config'
 
 import {
+  usingCondition
+} from 'constant/coupon'
+
+import {
   createOrder
 } from 'api/fengming'
 
@@ -113,10 +170,18 @@ import {
 } from 'api/order'
 
 import {
+  redeemCoupon
+} from 'api/meta'
+
+import {
   allowGetOrderPayUrl,
   allowSeeKaOnly,
   allowPayOrder
 } from 'util/fengming-role'
+
+import {
+  displayCoupon
+} from 'util/meta'
 
 import {
   normalizeRoles
@@ -140,6 +205,10 @@ export default {
     }
   },
   fromMobx: {
+    usingConditions: () => store.usingConditions,
+    allDiscounts: () => store.allDiscounts,
+    coupons: () => store.coupons,
+
     products: () => store.products
   },
   data() {
@@ -156,6 +225,11 @@ export default {
       inputSalesId: '',
       inputUserId: '',
 
+      activeCouponTab: 'first',
+      couponVisible: false,
+      selectedCoupon: [],
+      couponCode: '',
+
       step: 1
     }
   },
@@ -163,6 +237,35 @@ export default {
     centToYuan
   },
   computed: {
+    effectiveCoupons() {
+      // 返回符合当前购买产品等条件的可用券
+      return this.coupons.filter(coupon => {
+        let products = this.checkedProducts
+        for (const condition of coupon.usingConditions) {
+          if (condition.type === usingCondition.PRODUCT_PACKAGES) {
+            products = products.filter(p => condition.productPackages.includes(p.pkgId))
+          } else if (condition.type === usingCondition.PRODUCTS) {
+            products = products.filter(p => condition.products.includes(p.id))
+          }
+        }
+        if (products.length === 0) {
+          return false
+        }
+        for (const condition of coupon.usingConditions) {
+          if (condition.type === usingCondition.ORDER_SUM_ORIGINAL_PRICE) {
+            const sum = products.reduce((s, p) => {
+              s += p.discountPrice
+              return s
+            }, 0)
+            return sum >= condition.orderSumOriginalPrice
+          }
+        }
+        return true
+      })
+    },
+    couponAmount() {
+      return this.selectedCoupon.reduce((a, b) => a + b.amount, 0)
+    },
     isAgentSales() {
       const roles = normalizeRoles(this.userInfo.roles)
       return roles.includes('AGENT_SALES')
@@ -278,6 +381,8 @@ export default {
       this.orderPayUrl = url
     },
     async createOrder() {
+      this.step = 2
+
       const {
         checkedProductId: id
       } = this
@@ -305,7 +410,26 @@ export default {
       await this.payOrders(oids)
 
       Message.success('购买成功')
-    }
+    },
+    onCouponClick(coupon) {
+      if (this.selectedCoupon.length) {
+        this.selectedCoupon.splice(0, 1)
+      }
+      this.selectedCoupon.splice(0, 0, coupon)
+    },
+    async redeem() {
+      if (!this.couponCode) {
+        return
+      }
+      const result = await redeemCoupon(this.couponCode)
+      if (result === 0) {
+        this.$message.error('兑换失败')
+        return
+      }
+      this.$message.success('兑换成功')
+      await store.getCoupons({ onlyValid: true, status: 0 })
+    },
+    displayCoupon
   },
   async mounted() {
     const { sales_id: salesId, user_id: userId } = this.$route.query
@@ -418,6 +542,35 @@ export default {
       font-weight: 500;
       color: var(--qwt-c-orange);
     }
+  }
+}
+
+.gw-order .coupon {
+  margin-top: 20px;
+  width: 610px;
+  padding: 15px 10px 20px;
+  border: solid 1px #e6e6e6;
+
+  & > header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 30px 0 20px;
+
+    & > span:first-child {
+      & > i {
+        font-size: 12px;
+        color: #666666;
+      }
+    }
+
+    & > span:last-child {
+      color: #333333;
+    }
+  }
+
+  & .coupon {
+    width: 310px;
   }
 }
 
