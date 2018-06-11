@@ -55,9 +55,10 @@
         </header>
 
         <div class="price-list">
-          <price-list :products="checkedProducts"
-            :has-discount="!!checkedProductDiscounts.length">
-          </price-list>
+          <price-list
+            :products="checkedProducts"
+            :has-discount="!!checkedProductDiscounts.length"
+          />
         </div>
 
         <div class="coupon" v-if="!allowDiscount">
@@ -103,11 +104,15 @@
               {{ displayBxSalesId || userInfo.salesId }}
             </span>
             <span v-else>
-              <el-input v-model.trim="inputSalesId"
-                placeholder="如有服务编号请您填写">
-              </el-input>
-              <i class="el-icon-check" title="检测服务编号"
-                @click="checkInputSalesId"></i>
+              <el-input
+                placeholder="如有服务编号请您填写"
+                v-model.trim="inputSalesId"
+              />
+              <i
+                class="el-icon-check"
+                title="检测服务编号"
+                @click="checkInputSalesId"
+              />
             </span>
           </section>
           <section class="user-mobile"

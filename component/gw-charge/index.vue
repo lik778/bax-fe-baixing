@@ -25,7 +25,10 @@
         </header>
         <main>
           <div>
-            <price-list :products="checkedProducts" />
+            <price-list
+              :products="checkedProducts"
+              :has-discount="!!checkedProductDiscounts.length"
+            />
           </div>
 
           <div
@@ -104,7 +107,7 @@
             </section>
             <section class="price">
               <aside>百姓网余额需支付:</aside>
-              <span>{{ '￥' + totalPrice }}</span>
+              <span>{{ '￥' + (finalPrice / 100).toFixed(2) }}</span>
             </section>
             <section class="terms">
               <el-checkbox :value="true" />
@@ -266,6 +269,13 @@ export default {
     couponAmount() {
       return this.selectedCoupon.reduce((a, b) => a + b.amount, 0)
     },
+    finalPrice() {
+      if (this.totalPrice >= this.couponAmount) {
+        return this.totalPrice - this.couponAmount
+      } else {
+        return 0
+      }
+    },
     isAgentSales() {
       const roles = normalizeRoles(this.userInfo.roles)
       return roles.includes('AGENT_SALES')
@@ -286,6 +296,16 @@ export default {
       const roles = normalizeRoles(this.userInfo.roles)
       return roles.includes('AGENT_ACCOUNTING')
     },
+    checkedProductDiscounts() {
+      if (!this.allowDiscount) {
+        return []
+      }
+
+      const types = this.checkedProducts.map(p => p.type)
+
+      return this.allDiscounts
+        .filter(d => types.includes(d.productType))
+    },
     checkedProducts() {
       return this.products.filter(p => p.id === this.checkedProductId)
     },
@@ -304,7 +324,7 @@ export default {
     totalPrice() {
       // 目前就一个 :)
       const p = this.checkedProducts.map(p => p.price).pop()
-      return centToYuan(p)
+      return p
     }
   },
   methods: {
@@ -403,6 +423,16 @@ export default {
         order.salesId = sid
       }
 
+      const codes = this.checkedProductDiscounts.map(d => d.code)
+      if (codes.length) {
+        order.discountCodes = codes
+      }
+
+      // 添加优惠券
+      if (this.selectedCoupon.length) {
+        order.couponIds = this.selectedCoupon.map(c => c.id)
+      }
+
       const oids = await createOrder(order)
 
       await this.getOrderPayUrl(oids)
@@ -445,7 +475,10 @@ export default {
       this.displayUserId = userId
     }
 
-    await store.getProducts()
+    await Promise.all([
+      store.getProductDiscounts(),
+      store.getProducts()
+    ])
   }
 }
 </script>

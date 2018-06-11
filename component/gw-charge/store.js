@@ -27,8 +27,8 @@ const store = observable({
     return toJS(this._products)
   },
 
-  getProductDiscounts: action(async function(types) {
-    this._allDiscounts = await mapi.getProductDiscounts(types)
+  getProductDiscounts: action(async function() {
+    this._allDiscounts = await mapi.getProductDiscounts([2, 4])
   }),
 
   getConditions: action(async function() {
