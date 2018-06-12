@@ -28,6 +28,7 @@
             <price-list
               :products="checkedProducts"
               :has-discount="!!checkedProductDiscounts.length"
+              :percentage="discountPercentage"
             />
           </div>
 
@@ -310,10 +311,21 @@ export default {
         return []
       }
 
-      const types = this.checkedProducts.map(p => p.type)
+      const types = this.checkedProducts.map(p => p.productType)
 
       return this.allDiscounts
         .filter(d => types.includes(d.productType))
+    },
+    discountPercentage() {
+      let p = 100
+
+      try {
+        p = this.checkedProductDiscounts[0].percentage
+      } catch (err) {
+        // ignore
+      }
+
+      return p
     },
     checkedProducts() {
       return this.products.filter(p => p.id === this.checkedProductId)
@@ -332,7 +344,9 @@ export default {
     },
     totalPrice() {
       // 目前就一个 :)
-      const p = this.checkedProducts.map(p => p.price).pop()
+      const p = this.checkedProducts
+        .map(p => p.price * (this.discountPercentage / 100))
+        .pop()
       return p
     }
   },

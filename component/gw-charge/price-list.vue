@@ -1,16 +1,20 @@
 
 <template>
-  <span class="gw-charge-price-list">
+  <span :class="{'gw-charge-price-list': true, 'has-discount': hasDiscount}">
     <header>
       <p>购买的产品</p>
       <p>原价</p>
       <p>现价</p>
+      <p v-if="hasDiscount">提单价</p>
     </header>
     <main>
       <div v-for="p of products" :key="p.id">
         <p>{{ p.name }}</p>
         <p>{{ (p.showPrice / 100).toFixed(2) + '元' }}</p>
         <p>{{ (p.price / 100).toFixed(2) + '元' }}</p>
+        <p v-if="hasDiscount">
+          {{ (p.price * percentage / 100 / 100).toFixed(2) + '元' }}
+        </p>
       </div>
     </main>
     <footer v-if="products.length">
@@ -32,11 +36,21 @@ export default {
     products: {
       type: Array,
       required: true
+    },
+    hasDiscount: {
+      type: Boolean,
+      required: true
+    },
+    percentage: {
+      type: Number,
+      default: 100,
+      required: false
     }
   },
   computed: {
     total() {
-      const p = this.products.map(i => i.price)
+      const p = this.products
+        .map(i => i.price * (this.percentage / 100))
       return p.reduce((a, b) => a + b, 0)
     },
     originTotal() {
@@ -126,6 +140,38 @@ export default {
 
       & > strong {
         color: var(--qwt-c-orange);
+      }
+    }
+  }
+}
+
+.gw-charge-price-list.has-discount {
+  & > header {
+    & > p:first-child {
+      width: 210px;
+    }
+
+    & > p:not(:first-child) {
+      flex-grow: 0.5;
+    }
+
+    & > p:last-child {
+      flex-grow: 0;
+    }
+  }
+
+  & > main {
+    & > div {
+      & > p:first-child {
+        width: 210px;
+      }
+
+      & > p:not(:first-child) {
+        flex-grow: 0.5;
+      }
+
+      & > p:last-child {
+        flex-grow: 0;
       }
     }
   }
