@@ -44,12 +44,17 @@ const store = observable({
     const products = await fapi.getProducts([2, 4])
     this._products = products.reverse().map(p => {
       if (p.id === 4) {
+        // 新
         return {
           ...p,
-          name: '升级版精品官网'
+          name: '精品官网'
         }
       } else {
-        return p
+        // 老
+        return {
+          ...p,
+          name: '精品官网(旧版)'
+        }
       }
     })
   })

@@ -10,13 +10,13 @@
         </header>
         <main>
           <gw-pro-widget
-            v-if="allowSeeOldGw || i.name === '升级版精品官网'"
+            v-if="allowSeeOldGw || i.name === '精品官网'"
             v-for="i of products" :key="i.id"
             :title="i.name"
             :price="i.showPrice | centToYuan"
             :checked="productChecked(i.id)"
-            @click="checkProduct(i.id)">
-          </gw-pro-widget>
+            @click="checkProduct(i.id)"
+          />
       </main>
       </section>
       <section class="gw-order">
@@ -408,6 +408,12 @@ export default {
       const url = await getOrderPayUrl(oids)
 
       this.orderPayUrl = url
+
+      if (this.isBxUser) {
+        setTimeout(() => {
+          location.href = url
+        }, 800)
+      }
     },
     async createOrder() {
       this.step = 2
@@ -448,7 +454,7 @@ export default {
 
       await this.payOrders(oids)
 
-      Message.success('购买成功')
+      Message.success('创建订单成功')
     },
     onCouponClick(coupon) {
       if (this.selectedCoupon.length) {
