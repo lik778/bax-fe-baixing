@@ -96,14 +96,15 @@
                 </span>
             </section>
             <section v-if="!isBxUser">
-              <aside>用户ID:</aside>
+              <aside>{{ userIdLocked ? '用户手机号:' : '用户ID:' }}</aside>
               <span>
                 <span v-if="userIdLocked">
-                {{ displayUserId }}
+                {{ displayUserMobile }}
                 </span>
                 <el-input v-else
                   v-model.trim="inputUserId"
-                  placeholder="用户 ID" />
+                  placeholder="用户 ID"
+                />
               </span>
             </section>
             <section class="price">
@@ -172,6 +173,7 @@ import {
 
 import {
   getUserIdFromBxSalesId,
+  queryUserInfo,
   getUserInfo
 } from 'api/account'
 
@@ -231,6 +233,7 @@ export default {
       orderPayUrl: '',
 
       salesIdLocked: false,
+      displayUserMobile: '',
       displayBxSalesId: '',
       userIdLocked: false,
       displayUserId: '',
@@ -517,6 +520,11 @@ export default {
     if (userId) {
       this.userIdLocked = true
       this.displayUserId = userId
+
+      const info = await queryUserInfo(userId)
+      if (info.mobile) {
+        this.displayUserMobile = info.mobile
+      }
     }
 
     await Promise.all([
