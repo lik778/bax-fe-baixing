@@ -119,7 +119,11 @@
               </a>
             </section>
             <section class="submit">
-              <button class="buy-btn" @click="createOrder">
+              <button
+                v-if="!isAgentSales"
+                class="buy-btn"
+                @click="createOrder"
+              >
                 {{ submitButtonText }}
               </button>
             </section>
@@ -460,6 +464,17 @@ export default {
       // 添加优惠券
       if (this.selectedCoupon.length) {
         order.couponIds = this.selectedCoupon.map(c => c.id)
+      }
+
+      if (!this.isBxUser) {
+        try {
+          await this.$confirm('是否购买 ?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消'
+          })
+        } catch (err) {
+          return
+        }
       }
 
       const oids = await createOrder(order)

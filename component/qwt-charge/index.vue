@@ -115,8 +115,10 @@
               />
             </span>
           </section>
-          <section class="user-mobile"
-            v-if="displayUserMobile">
+          <section
+            v-if="displayUserMobile"
+            class="user-mobile"
+          >
             <aside>用户手机号：</aside>
             <span>
               {{ displayUserMobile }}
@@ -125,8 +127,12 @@
           <contract-ack type="contract" />
           <promotion-area-limit-tip :all-areas="allAreas" page="charge" />
           <section class="pay-info">
-            <button v-if="!isAgentSales" class="pay-order"
-              @click="createOrder" :loading="payInProgress">
+            <button
+              v-if="!isAgentSales"
+              class="pay-order"
+              :loading="payInProgress"
+              @click="createOrder"
+            >
               {{ submitButtonText }}
             </button>
             <span v-if="orderPayUrl">
