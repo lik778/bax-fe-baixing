@@ -514,7 +514,7 @@ export default {
 
       await Promise.all([
         store.getProductDiscounts([1, 2, 3, 4]),
-        store.getProductPackages(1),
+        store.getProductPackages(0),
         store.getProducts(3)
       ])
 
