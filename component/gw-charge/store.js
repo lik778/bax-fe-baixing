@@ -9,6 +9,7 @@ const store = observable({
   _allDiscounts: [],
   _coupons: [],
 
+  _packages: [],
   _products: [],
 
   get usingConditions() {
@@ -23,6 +24,10 @@ const store = observable({
     return toJS(this._coupons)
   },
 
+  get packages() {
+    return toJS(this._packages)
+  },
+
   get products() {
     return toJS(this._products)
   },
@@ -34,6 +39,10 @@ const store = observable({
   getConditions: action(async function() {
     const condition = await mapi.getCondition()
     this._usingConditions = condition.usingConditions
+  }),
+
+  getProductPackages: action(async function(type) {
+    this._packages = await fapi.getProductPackages(type)
   }),
 
   getCoupons: action(async function(opts) {

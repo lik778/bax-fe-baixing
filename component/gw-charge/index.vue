@@ -11,7 +11,7 @@
         <main>
           <gw-pro-widget
             v-if="allowSeeOldGw || i.name === '精品官网'"
-            v-for="i of products" :key="i.id"
+            v-for="i of realProducts" :key="i.id"
             :title="i.name"
             :price="i.showPrice | centToYuan"
             :checked="productChecked(i.id)"
@@ -188,7 +188,7 @@ import {
 
 import {
   allowGetOrderPayUrl,
-  allowSeeKaOnly,
+  allowUseKaPackage,
   allowSeeOldGw,
   allowPayOrder
 } from 'util/fengming-role'
@@ -202,6 +202,13 @@ import {
 } from 'util/role'
 
 import store from './store'
+
+/**
+ * 备注说明:
+ *   1. 新官网单独售卖, 价格 1200
+ *   2. 原有的个别渠道, 优米帮, 康品汇 1000 元
+ *   3. 为了实现一个产品, 不同价格, 个别渠道通过 套餐包 购买
+ */
 
 export default {
   name: 'gw-charge',
@@ -223,6 +230,7 @@ export default {
     allDiscounts: () => store.allDiscounts,
     coupons: () => store.coupons,
 
+    packages: () => store.packages,
     products: () => store.products
   },
   data() {
@@ -278,6 +286,22 @@ export default {
         return true
       })
     },
+    realProducts() {
+      if (this.isNiubiUser) {
+        return this.products.map(p => {
+          if (p.id === 4) {
+            return {
+              ...p,
+              price: 100000
+            }
+          }
+
+          return p
+        })
+      }
+
+      return this.products
+    },
     couponAmount() {
       return this.selectedCoupon.reduce((a, b) => a + b.amount, 0)
     },
@@ -291,6 +315,11 @@ export default {
     isAgentSales() {
       const roles = normalizeRoles(this.userInfo.roles)
       return roles.includes('AGENT_SALES')
+    },
+    isNiubiUser() {
+      const roles = normalizeRoles(this.userInfo.roles)
+      const { id } = this.userInfo
+      return allowUseKaPackage(roles, id)
     },
     isBxUser() {
       const roles = normalizeRoles(this.userInfo.roles)
@@ -331,7 +360,7 @@ export default {
       return p
     },
     checkedProducts() {
-      return this.products.filter(p => p.id === this.checkedProductId)
+      return this.realProducts.filter(p => p.id === this.checkedProductId)
     },
     submitButtonText() {
       const { userInfo } = this
@@ -444,8 +473,15 @@ export default {
       }
 
       const order = {
-        userId: await this.getFinalUserId(),
-        products: [{
+        userId: await this.getFinalUserId()
+      }
+
+      if (id === 4 && this.isNiubiUser) {
+        order.packages = [{
+          id: this.packages[0].id
+        }]
+      } else {
+        order.products = [{
           id
         }]
       }
@@ -525,6 +561,7 @@ export default {
 
     await Promise.all([
       store.getProductDiscounts(),
+      store.getProductPackages(1),
       store.getProducts()
     ])
   }
