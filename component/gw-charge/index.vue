@@ -292,10 +292,6 @@ export default {
       const roles = normalizeRoles(this.userInfo.roles)
       return roles.includes('AGENT_SALES')
     },
-    isKaOnly() {
-      const { roles, id } = this.userInfo
-      return allowSeeKaOnly(roles, id)
-    },
     isBxUser() {
       const roles = normalizeRoles(this.userInfo.roles)
       return roles.includes('BAIXING_USER')

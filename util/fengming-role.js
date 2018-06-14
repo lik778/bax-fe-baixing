@@ -16,10 +16,6 @@ export function allowSeeOldGw(roles, uid) {
   return specialUserIds.includes(uid)
 }
 
-export function allowSeeKaOnly(roles, uid) {
-  return specialKaUserIds.includes(uid)
-}
-
 export function allowSeeQwtCharge(roles, uid) {
   const currentRoles = normalizeRoles(roles)
 
