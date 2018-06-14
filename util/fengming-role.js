@@ -4,7 +4,6 @@ import {
   checkRoles
 } from './role'
 
-// sidebar
 // 康品汇: 318
 // 米勺: 47709
 // 优米帮: 860603
@@ -14,21 +13,6 @@ const specialKaUserIds = [860603]
 
 export function allowSeeOldGw(roles, uid) {
   return specialUserIds.includes(uid)
-}
-
-export function allowSeeQwtCharge(roles, uid) {
-  const currentRoles = normalizeRoles(roles)
-
-  if (specialUserIds.includes(uid)) {
-    return true
-  }
-
-  return checkRoles(currentRoles, [
-    'AGENT_ACCOUNTING',
-    'AGENT_SALES',
-    'BAIXING_SALES',
-    'BAIXING_USER'
-  ])
 }
 
 export function allowSeeQwtPromotion(roles) {
