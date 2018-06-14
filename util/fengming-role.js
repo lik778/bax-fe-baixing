@@ -16,11 +16,6 @@ export function allowSeeOldGw(roles, uid) {
   return specialUserIds.includes(uid)
 }
 
-export function allowSeeGw(roles, uid) {
-  return specialUserIds.includes(uid) ||
-    specialKaUserIds.includes(uid)
-}
-
 export function allowSeeKaOnly(roles, uid) {
   return specialKaUserIds.includes(uid)
 }
