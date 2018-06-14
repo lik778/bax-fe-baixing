@@ -23,16 +23,6 @@ export function allowSeeQwtPromotion(roles) {
   ])
 }
 
-export function allowSeeQwtReport(roles) {
-  const currentRoles = normalizeRoles(roles)
-
-  return checkRoles(currentRoles, [
-    'BAIXING_USER'
-  ])
-}
-
-//
-
 export function allowGetOrderPayUrl(roles) {
   const currentRoles = normalizeRoles(roles)
 

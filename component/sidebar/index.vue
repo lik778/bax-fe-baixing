@@ -147,8 +147,7 @@ import { version } from '../../package.json'
 import BxIcon from 'com/widget/icon'
 
 import {
-  allowSeeQwtPromotion,
-  allowSeeQwtReport
+  allowSeeQwtPromotion
 } from 'util/fengming-role'
 
 import {
@@ -201,9 +200,6 @@ export default {
     // allow see qwt ...
     allowSeeQwtPromotion() {
       return allowSeeQwtPromotion(this.userInfo.roles)
-    },
-    allowSeeQwtReport() {
-      return allowSeeQwtReport(this.userInfo.roles)
     }
   },
   methods: {
