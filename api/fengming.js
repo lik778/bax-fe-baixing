@@ -62,9 +62,12 @@ export async function getProducts(type = 3) {
   return toCamelcase(body.data)
 }
 
-export async function getProductPackages() {
+export async function getProductPackages(type = 0) {
   const body = await fengming
     .get('/product/package')
+    .query({
+      package_type: type
+    })
     .json()
 
   return toCamelcase(body.data)
