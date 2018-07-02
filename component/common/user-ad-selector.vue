@@ -17,8 +17,7 @@
       <el-table-column label="选择" width="50">
         <template slot-scope="s">
           <div class="center">
-            <el-checkbox :value="adSelected(s.row.adId)"
-              @change="onCheckAd(s.row)" />
+            <el-radio v-model="innerCheckedAd" :label="s.row">&nbsp</el-radio>
           </div>
         </template>
       </el-table-column>
@@ -161,15 +160,6 @@ export default {
         this.requestStartTime = t
       }
     },
-    adSelected(adId) {
-      const { innerCheckedAd } = this
-
-      if (innerCheckedAd) {
-        return adId === innerCheckedAd.adId
-      }
-
-      return adId === this.selectedId
-    },
     async onSelectAd() {
       const ad = this.innerCheckedAd
       if (!ad) {
@@ -182,9 +172,6 @@ export default {
       })
 
       await this.reset(MODE_SELECTED, ad.adId)
-    },
-    onCheckAd(ad) {
-      this.innerCheckedAd = ad
     },
     async onCancel() {
       if (this.selectedId) {
@@ -204,6 +191,7 @@ export default {
         await this.queryAds({
           adIds: [adId]
         })
+        this.innerCheckedAd = this.ads[0]
         return
       }
 
