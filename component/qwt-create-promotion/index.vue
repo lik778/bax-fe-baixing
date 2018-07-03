@@ -189,7 +189,7 @@
         <div class="recommend"
           v-if="recommendedWordsVisible">
           <span>
-            <el-input placeholder="请输入关键词" v-model.trim="queryWord">
+            <el-input placeholder="请输入关键词" v-model.trim="queryWord" @keyup.native.enter="queryRecommendedWords">
             </el-input>
           </span>
           <el-button type="primary" @click="queryRecommendedWords">
@@ -692,8 +692,19 @@ export default {
       }
 
       const preLength = this.addibleWords.length
+
       await store.getRecommendedWords(queryWord)
       this.addibleWordsOffset = preLength
+
+      // 默认选中搜索词
+      const match = this.addibleWords.find(item => item.word === queryWord)
+
+      if (match) {
+        const has = this.newPromotion.recommendedWords.find(item => item.word === match.word)
+        if (!has) {
+          this.newPromotion.recommendedWords.push(match)
+        }
+      }
     },
     async checkCreativeContent() {
       const {

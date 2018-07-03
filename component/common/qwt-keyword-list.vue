@@ -1,6 +1,12 @@
 
 <template>
   <div class="qwt-keyword-list">
+    <div v-if="selectable && selectedWords.length" class="cart">
+      <p>当前累计选中关键词数：<strong> {{ selectedWords.length }} </strong>个</p>
+      <p>{{simpleShoppingCart}}</p>
+    </div>
+
+
     <el-table row-key="word" :data="rows">
       <el-table-column v-if="selectable" width="40"
         :render-header="renderSwitchAllHeader">
@@ -66,10 +72,6 @@
       </el-table-column>
     </el-table>
     <footer>
-      <p v-if="selectable && selectedWords.length">
-        当前累计选中关键词数：
-        <strong>{{ selectedWords.length }}</strong>
-      </p>
       <bax-pagination :options="pagination"
         @current-change="onCurrentChange">
       </bax-pagination>
@@ -184,7 +186,6 @@ export default {
   },
   data() {
     return {
-      stopAutoSelectWords: false,
       preWordsLength: 0,
       curWordsLength: 0,
       prePage: 0,
@@ -198,6 +199,10 @@ export default {
     }
   },
   computed: {
+    simpleShoppingCart() {
+      const joined = this.selectedWords.map(item => item.word).join(',')
+      return joined.length > 100 ? joined.slice(0, 100) + '...' : joined
+    },
     isCurrentHasChecked() {
       // 有选中
       const cids = this.rows.map(r => r.id)
@@ -276,7 +281,6 @@ export default {
               // 取消
               const words = this.selectedWords
                 .filter(r => !cids.includes(r.word))
-              this.stopAutoSelectWords = true
               this.$emit('select-words', words)
             } else {
               // all
@@ -340,46 +344,6 @@ export default {
     },
     hasCustomPrice(word) {
       return this.customPrices.findIndex(c => c.word === word) !== -1
-    },
-    tryAutoSelectWords(trigger) {
-      // const { currentPage, prePage, offset, mode } = this
-
-      // if (mode === MODE_UPDATE) {
-      //   return
-      // }
-
-      // if (this.stopAutoSelectWords) {
-      //   return
-      // }
-
-      // console.debug('op pages', this.userOperatedPages,
-      //   'pre words length', this.preWordsLength,
-      //   'cur words length', this.curWordsLength,
-      //   'pre page', prePage,
-      //   'page', currentPage,
-      //   'offset', offset, 'limit', LIMIT,
-      //   'rows', this.rows.map(w => w.word))
-      // if (!this.userOperatedPages.includes(currentPage)) {
-      //   // 1. 用户未操作过当前页
-      //   this.mergeSelectedWords(this.rows)
-      //   return
-      // }
-
-      // 2. 用户操作过当前页
-      // if (trigger === TRIGGER_WORDS_CHANGED) {
-      //   if (prePage < currentPage) {
-      //     // 2.1 先前页 < 当前页, 新增词
-      //     const start = this.preWordsLength % LIMIT
-      //     this.mergeSelectedWords(this.rows.slice(start, LIMIT))
-      //   } else if (prePage === currentPage) {
-      //     // 2.2 先前页 == 当前页, 新增词
-      //     const start = offset % LIMIT
-      //     // console.debug('start', start)
-      //     this.mergeSelectedWords(this.rows.slice(start, LIMIT))
-      //   } else {
-      //     // 2.3 不可能
-      //   }
-      // }
     },
     wordChecked(word) {
       return this.selectedWords
@@ -482,12 +446,10 @@ export default {
       }
     },
     words(v) {
-      console.debug('words changed')
       if (v && v.length && v.length > this.curWordsLength) {
         this.preWordsLength = this.curWordsLength
         this.curWordsLength = v.length
       }
-      setTimeout(() => this.tryAutoSelectWords(TRIGGER_WORDS_CHANGED), 10)
     }
   }
 }
@@ -499,21 +461,15 @@ export default {
   flex-flow: column;
   max-width: 1120px;
 
-  & > footer {
-    display: flex;
-
-    & > p {
-      padding-top: 15px;
-      font-size: 12px;
-      color: #717d91;
-
-      & strong {
-        color: red;
-      }
+  & > .cart {
+    margin-top: 10px;
+    font-size: 12px;
+    color: #717d91;
+    & p {
+      margin-bottom: 10px;
     }
-
-    & > footer {
-      flex-grow: 1;
+    & strong {
+      color: red;
     }
   }
 }
