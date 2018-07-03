@@ -210,20 +210,24 @@ export async function getQiqiaobanPageList() {
 }
 
 // TODO - rename
-export async function getCreativeWords(url) {
+export async function getCreativeWords(url, areas = []) {
   const body = await fengming
-    .get('/keyword/recommand/url')
-    .query({url})
+    .post('/keyword/recommand/url')
+    .send({
+      url,
+      areas
+    })
     .json()
 
   return fmtWords(toCamelcase(body.data))
 }
 
-export async function getRecommendedWords(word) {
+export async function getRecommendedWords(word, areas = []) {
   const body = await fengming
     .post('/keyword/recommand/word')
     .send({
-      word
+      word,
+      areas
     })
     .json()
 

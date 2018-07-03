@@ -395,6 +395,7 @@ const emptyPromotion = {
 }
 
 const MODE_COPY = 'copy'
+const MIN_WORD_PRICE = 200
 
 export default {
   name: 'qwt-create-promotion',
@@ -521,7 +522,6 @@ export default {
     async setLandingPage(url) {
       this.newPromotion.landingPage = url
       this.newPromotion.areas = ['quanguo']
-      await this.getCreativeWords()
     },
     async onSelectAd(ad) {
       const { allAreas } = this
@@ -535,8 +535,6 @@ export default {
 
       this.newPromotion.creativeTitle = ad.title && ad.title.slice(0, 24)
       this.newPromotion.creativeContent = ad.content && ad.content.slice(0, 39)
-
-      await this.getCreativeWords()
     },
     getCurrentSchedule() {
       const { schedule } = this.newPromotion
@@ -632,8 +630,8 @@ export default {
         // if (w.price * 2 < w.originPrice) {
         //   return Message.error(`关键字: ${w.word} 出价低于 ${(w.originPrice / 200).toFixed(2)}, 请调高出价`)
         // }
-        if (w.price < 100) {
-          throw Message.error(`关键字: ${w.word} 出价不得低于 1元, 请调高出价`)
+        if (w.price < MIN_WORD_PRICE) {
+          throw Message.error(`关键字: ${w.word} 出价不得低于 ${MIN_WORD_PRICE}元, 请调高出价`)
         }
       }
 
@@ -685,7 +683,7 @@ export default {
       }
     },
     async queryRecommendedWords() {
-      const { queryWord } = this
+      const { queryWord, newPromotion } = this
 
       if (!queryWord) {
         return Message.error('请输入查询关键词')
@@ -693,7 +691,7 @@ export default {
 
       const preLength = this.addibleWords.length
 
-      await store.getRecommendedWords(queryWord)
+      await store.getRecommendedWords(queryWord, newPromotion.areas)
       this.addibleWordsOffset = preLength
 
       // 默认选中搜索词
@@ -757,9 +755,9 @@ export default {
         }
       })
     },
-    async getCreativeWords(newLandingPage = this.newPromotion.landingPage) {
+    async getCreativeWords(newLandingPage = this.newPromotion.landingPage, areas = this.newPromotion.areas) {
       if (newLandingPage) {
-        await store.getCreativeWords(newLandingPage)
+        await store.getCreativeWords(newLandingPage, areas)
       }
     },
     gotoPromotionList() {
@@ -894,6 +892,14 @@ export default {
         actionTrackId
       })
     }, 800)
+  },
+  watch: {
+    'newPromotion.landingPage': async function(cur, pre) {
+      await this.getCreativeWords()
+    },
+    'newPromotion.areas': async function(cur, pre) {
+      await this.getCreativeWords()
+    }
   },
   beforeDestroy() {
     store.clearStore()

@@ -153,7 +153,7 @@
         <div v-if="newaddedWordsVisible">
           <span>
             <el-input placeholder="请输入关键词"
-              v-model.trim="queryWord" />
+              v-model.trim="queryWord" @keyup.native.enter="queryRecommendedWords" />
           </span>
           <el-button type="primary" @click="queryRecommendedWords">
             查询
@@ -308,6 +308,7 @@ import {
 import store from './store'
 
 const isArray = Array.isArray
+const MIN_WORD_PRICE = 200
 
 export default {
   name: 'qwt-update-promotion',
@@ -819,8 +820,8 @@ export default {
         // if (w.price * 2 < w.originPrice) {
         //   return Message.error(`关键字: ${w.word} 出价低于 ${(w.originPrice / 200).toFixed(2)}, 请调高出价`)
         // }
-        if (w.price < 100) {
-          return Message.error(`关键字: ${w.word} 出价不得低于 1元, 请调高出价`)
+        if (w.price < MIN_WORD_PRICE) {
+          return Message.error(`关键字: ${w.word} 出价不得低于 ${MIN_WORD_PRICE}元, 请调高出价`)
         }
       }
 
@@ -856,7 +857,7 @@ export default {
       }
 
       const preLength = this.addibleWords.length
-      await store.getRecommendedWords(queryWord)
+      await store.getRecommendedWords(queryWord, this.getProp('areas'))
       this.addibleWordsOffset = preLength
     },
     async checkCreativeContent() {

@@ -46,12 +46,12 @@
         <template slot-scope="s">
           <span class="price">
             <el-input size="mini" placeholder="单位: 元"
-              :value="getWordPrice(s.row.word)"
+              :value="centToYuan(getWordPrice(s.row.word))"
               @change="v => setCustomPrice(s.row, v)">
             </el-input>
             <span v-if="s.row.cpcRanking >= 5"
               class="add-w-price">
-              <button @click="setCustomPrice(s.row, getWordPrice(s.row.word) * 1.2)">
+              <button @click="setCustomPrice(s.row, centToYuan(getWordPrice(s.row.word)) * 1.2)">
                 提价20%
               </button>
               <label>获得更高排名</label>
@@ -124,11 +124,10 @@ function toFloat(s) {
   return n
 }
 
-const TRIGGER_WORDS_CHANGED = 1
-const TRIGGER_PAGE_CHANGED = 2
 const MODE_SELECT = 'select'
 const MODE_UPDATE = 'update'
 const LIMIT = 20
+const MIN_WORD_PRICE = 200
 
 export default {
   name: 'qwt-keyword-list',
@@ -267,6 +266,7 @@ export default {
     }
   },
   methods: {
+    centToYuan,
     renderSwitchAllHeader(h) {
       const checked = this.isCurrentHasChecked
       const cids = this.rows.map(r => r.id)
@@ -293,7 +293,6 @@ export default {
     renderWithTip: renderColumnHeaderWithTip,
     onCurrentChange({offset}) {
       this.$emit('change-offset', offset)
-      setTimeout(() => this.tryAutoSelectWords(TRIGGER_PAGE_CHANGED), 5)
     },
     deleteWord(row) {
       this.$emit('delete-word', {
@@ -303,7 +302,6 @@ export default {
       })
     },
     getWordPrice(word) {
-      // return : 元
       const item = this.customPrices.find(c => c.word === word)
 
       if (item) {
@@ -312,14 +310,20 @@ export default {
 
       const p = this.words.find(w => w.word === word).price
       if (this.mode === 'update') {
-        return centToYuan(p)
+        return p
       }
-
-      if (p < 3000) {
-        return centToYuan(p * 1.5)
+      // 前端更改百度推荐出价
+      let modified = p
+      if (p <= 300) {
+        modified *= 3
+      } else if (p <= 500) {
+        modified *= 2.5
+      } else if (p <= 1000) {
+        modified *= 2
+      } else {
+        modified *= 1.5
       }
-
-      return centToYuan(p)
+      return modified > MIN_WORD_PRICE ? modified : MIN_WORD_PRICE
     },
     isValidPrice(row) {
       // 说明: TODO 这里需要优化
@@ -327,20 +331,11 @@ export default {
       //     此时 word 没有 prop originPrice
       //   2. 更新关键词: words -> 原有关键词 + 更新价格 (price !== originPrice)
       //     此时 word 存在 prop originPrice
-      const p = this.getWordPrice(row.word) * 100 | 0
-      // const o = row.originPrice || row.price
-      const o = 200
 
-      if (p * 2 < o) {
-        return false
-      }
-
-      return true
+      return this.getWordPrice(row.word) >= MIN_WORD_PRICE
     },
     getPriceTip(row) {
-      // const o = row.originPrice || row.price
-      // return `该关键词出价最低为: ${(o / 200).toFixed(2)}, 请调高出价`
-      return '该关键词出价最低为: 1元, 请调高出价'
+      return `该关键词出价最低为: ${centToYuan(MIN_WORD_PRICE)}元, 请调高出价`
     },
     hasCustomPrice(word) {
       return this.customPrices.findIndex(c => c.word === word) !== -1
@@ -356,14 +351,14 @@ export default {
       }
       this.$emit('operated-pages', this.userOperatedPages)
 
+      let words = []
       if (this.wordChecked(word)) {
-        const words = this.selectedWords
+        words = this.selectedWords
           .filter(w => w.word !== word.word)
-        this.$emit('select-words', words)
       } else {
-        const words = [...this.selectedWords, this.fmtWord(word)]
-        this.$emit('select-words', words)
+        words = [...this.selectedWords, this.fmtWord(word)]
       }
+      this.$emit('select-words', words)
     },
     mergeSelectedWords(rows) {
       // console.debug('merge words', rows.map(w => w.word))
@@ -383,7 +378,7 @@ export default {
       this.$emit('select-words', selectedWords)
     },
     setCustomPrice({price: originPrice, word, id}, v) {
-      let price = v ? toFloat(v) : 0
+      let price = (v ? toFloat(v) : 0) * 100
 
       if (this.hasCustomPrice(word)) {
         this.customPrices = this.customPrices.map(c => {
@@ -404,7 +399,7 @@ export default {
       }
 
       this.$emit('update-word', {
-        price: price * 100 | 0,
+        price,
         originPrice,
         word,
         id
@@ -430,7 +425,7 @@ export default {
     },
     fmtWord(w) {
       return {
-        price: this.getWordPrice(w.word) * 100 | 0,
+        price: this.getWordPrice(w.word),
         recommandSource: w.recommandSource,
         originPrice: w.price,
         word: w.word,
