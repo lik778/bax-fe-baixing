@@ -372,6 +372,15 @@ import {
 } from 'constant/fengming'
 
 import {
+  MIN_WORD_PRICE,
+  MAX_WORD_PRICE
+} from 'constant/keyword'
+
+import {
+  keywordPriceTip
+} from 'constant/tip'
+
+import {
   assetHost
 } from 'config'
 
@@ -395,7 +404,6 @@ const emptyPromotion = {
 }
 
 const MODE_COPY = 'copy'
-const MIN_WORD_PRICE = 200
 
 export default {
   name: 'qwt-create-promotion',
@@ -630,8 +638,8 @@ export default {
         // if (w.price * 2 < w.originPrice) {
         //   return Message.error(`关键字: ${w.word} 出价低于 ${(w.originPrice / 200).toFixed(2)}, 请调高出价`)
         // }
-        if (w.price < MIN_WORD_PRICE) {
-          throw Message.error(`关键字: ${w.word} 出价不得低于 ${MIN_WORD_PRICE}元, 请调高出价`)
+        if (w.price < MIN_WORD_PRICE || w.price > MAX_WORD_PRICE) {
+          throw Message.error(keywordPriceTip)
         }
       }
 
@@ -691,7 +699,7 @@ export default {
 
       const preLength = this.addibleWords.length
 
-      await store.getRecommendedWords(queryWord, newPromotion.areas)
+      await store.recommendByWord(queryWord, newPromotion.areas)
       this.addibleWordsOffset = preLength
 
       // 默认选中搜索词
@@ -755,9 +763,9 @@ export default {
         }
       })
     },
-    async getCreativeWords(newLandingPage = this.newPromotion.landingPage, areas = this.newPromotion.areas) {
+    async recommendByUrl(newLandingPage = this.newPromotion.landingPage, areas = this.newPromotion.areas) {
       if (newLandingPage) {
-        await store.getCreativeWords(newLandingPage, areas)
+        await store.recommendByUrl(newLandingPage, areas)
       }
     },
     gotoPromotionList() {
@@ -895,10 +903,10 @@ export default {
   },
   watch: {
     'newPromotion.landingPage': async function(cur, pre) {
-      await this.getCreativeWords()
+      await this.recommendByUrl()
     },
     'newPromotion.areas': async function(cur, pre) {
-      await this.getCreativeWords()
+      await this.recommendByUrl()
     }
   },
   beforeDestroy() {

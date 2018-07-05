@@ -40,8 +40,8 @@ const store = observable({
     return toJS(this._recommendedWords)
   },
 
-  getRecommendedWords: action(async function(word) {
-    const words = await fapi.getRecommendedWords(word)
+  recommendByWord: action(async function(word) {
+    const words = await fapi.recommendByWord(word)
     this._recommendedWords = mergeKeywords(this._recommendedWords, words)
   }),
   getCurrentBalance: action(async function() {

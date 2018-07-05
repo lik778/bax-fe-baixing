@@ -21,16 +21,16 @@ const store = observable({
     return toJS(this._creativeWords)
   },
 
-  getRecommendedWords: action(async function(word, areas) {
-    const words = await fapi.getRecommendedWords(word, areas)
+  recommendByWord: action(async function(word, areas) {
+    const words = await fapi.recommendByWord(word, areas)
     this._recommendedWords = mergeKeywords(this._recommendedWords, words)
   }),
   setCreativeWords: action(function(words) {
     // 场景: copy campaign 时, set keywords
     this._creativeWords = words
   }),
-  getCreativeWords: action(async function(url, areas) {
-    const words = await fapi.getCreativeWords(url, areas)
+  recommendByUrl: action(async function(url, areas) {
+    const words = await fapi.recommendByUrl(url, areas)
     this._creativeWords = words
   }),
   getCurrentBalance: action(async function() {

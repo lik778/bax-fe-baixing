@@ -6,7 +6,6 @@
       <p>{{simpleShoppingCart}}</p>
     </div>
 
-
     <el-table row-key="word" :data="rows">
       <el-table-column v-if="selectable" width="40"
         :render-header="renderSwitchAllHeader">
@@ -49,15 +48,15 @@
               :value="centToYuan(getWordPrice(s.row.word))"
               @change="v => setCustomPrice(s.row, v)">
             </el-input>
-            <span v-if="s.row.cpcRanking >= 5"
+            <span v-if="showAddPrice(s.row)"
               class="add-w-price">
-              <button @click="setCustomPrice(s.row, centToYuan(getWordPrice(s.row.word)) * 1.2)">
+              <button @click="bumpPriceBy20(s.row)">
                 提价20%
               </button>
               <label>获得更高排名</label>
             </span>
             <label v-if="!isValidPrice(s.row)">
-              {{ getPriceTip(s.row) }}
+              {{keywordPriceTip}}
             </label>
           </span>
         </template>
@@ -83,6 +82,7 @@
 import BaxPagination from 'com/common/pagination'
 
 import {
+  KEYWORD_STATUS_ONLINE,
   KEYWORD_STATUS_REFUSE,
   KEYWORD_CHIBI_PENDING,
   KEYWORD_CHIBI_REJECT,
@@ -93,8 +93,14 @@ import {
 import {
   keywordStatusTip,
   cpcTopPriceTip,
-  searchIndexTip
+  searchIndexTip,
+  keywordPriceTip
 } from 'constant/tip'
+
+import {
+  MIN_WORD_PRICE,
+  MAX_WORD_PRICE
+} from 'constant/keyword'
 
 import {
   fmtCpcRanking
@@ -104,9 +110,11 @@ import {
   renderColumnHeaderWithTip
 } from 'util/element'
 
-function centToYuan(s) {
-  return toFloat(s) / 100
-}
+import {
+  centToYuan
+} from 'utils'
+
+import track from 'util/track'
 
 function toFloat(s) {
   const i = parseFloat(s).toFixed(2)
@@ -127,7 +135,6 @@ function toFloat(s) {
 const MODE_SELECT = 'select'
 const MODE_UPDATE = 'update'
 const LIMIT = 20
-const MIN_WORD_PRICE = 200
 
 export default {
   name: 'qwt-keyword-list',
@@ -170,6 +177,10 @@ export default {
       type: Boolean,
       default: false
     },
+    campaignOnline: {
+      type: Boolean,
+      default: true
+    },
     showPropShow: {
       type: Boolean,
       default: true
@@ -194,7 +205,8 @@ export default {
 
       keywordStatusTip,
       searchIndexTip,
-      cpcTopPriceTip
+      cpcTopPriceTip,
+      keywordPriceTip
     }
   },
   computed: {
@@ -267,6 +279,17 @@ export default {
   },
   methods: {
     centToYuan,
+    showAddPrice(row) {
+      // 过去24小时排名低于5或无排名的，在线的 keyword，在线的 campaign
+      const {cpcRanking, isPriceChanged, status: keywordStatus} = row
+      const show = keywordStatus === KEYWORD_STATUS_ONLINE && this.campaignOnline && isPriceChanged && (cpcRanking > 5 || cpcRanking === 0)
+      if (show) {
+        track({
+          action: 'pv: bump-price-by-20'
+        })
+      }
+      return show
+    },
     renderSwitchAllHeader(h) {
       const checked = this.isCurrentHasChecked
       const cids = this.rows.map(r => r.id)
@@ -331,11 +354,8 @@ export default {
       //     此时 word 没有 prop originPrice
       //   2. 更新关键词: words -> 原有关键词 + 更新价格 (price !== originPrice)
       //     此时 word 存在 prop originPrice
-
-      return this.getWordPrice(row.word) >= MIN_WORD_PRICE
-    },
-    getPriceTip(row) {
-      return `该关键词出价最低为: ${centToYuan(MIN_WORD_PRICE)}元, 请调高出价`
+      const finalPrice = this.getWordPrice(row.word)
+      return finalPrice >= MIN_WORD_PRICE && finalPrice <= MAX_WORD_PRICE
     },
     hasCustomPrice(word) {
       return this.customPrices.findIndex(c => c.word === word) !== -1
@@ -404,6 +424,12 @@ export default {
         word,
         id
       })
+    },
+    bumpPriceBy20(row) {
+      track({
+        action: 'click-button: bump-price-by-20'
+      })
+      this.setCustomPrice(row, centToYuan(this.getWordPrice(row.word)) * 1.2)
     },
     fmtStatus(row) {
       const { chibiStatus, status } = row

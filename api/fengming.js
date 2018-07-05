@@ -210,7 +210,7 @@ export async function getQiqiaobanPageList() {
 }
 
 // TODO - rename
-export async function getCreativeWords(url, areas = []) {
+export async function recommendByUrl(url, areas = []) {
   const body = await fengming
     .post('/keyword/recommand/url')
     .send({
@@ -222,7 +222,7 @@ export async function getCreativeWords(url, areas = []) {
   return fmtWords(toCamelcase(body.data))
 }
 
-export async function getRecommendedWords(word, areas = []) {
+export async function recommendByWord(word, areas = []) {
   const body = await fengming
     .post('/keyword/recommand/word')
     .send({

@@ -1,3 +1,11 @@
+import {
+  centToYuan
+} from 'utils'
+
+import {
+  MIN_WORD_PRICE,
+  MAX_WORD_PRICE
+} from 'constant/keyword'
 
 export const cpcTopPriceTip = '首次为您推荐新词左侧（上方）指导价。您设置的出价是您愿意为一次电脑端点击所支付的最高费用。实际点击价格不超过您的出价，一些情况下甚至可能远低于您的出价，为您尽可能地节省推广预算。'
 
@@ -38,4 +46,8 @@ export const campaignAuditStatusTooltip = `
   1. 审核驳回
   2. 审核中
   3. 审核通过
+`
+
+export const keywordPriceTip = `
+关键词有效出价区间为[${centToYuan(MIN_WORD_PRICE)}, ${centToYuan(MAX_WORD_PRICE)}]元，请调整出价
 `

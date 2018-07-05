@@ -142,6 +142,7 @@
           :show-prop-status="true"
           :show-prop-ranking="true"
           :campaign-offline="isCampaignOffline"
+          :campaign-online="isCampaignOnline"
           @update-word="updateExistWord"
           @change-offset="offset => currentKeywordsOffset = offset"
           @delete-word="word => promotion.deletedKeywords.push(word)"
@@ -170,6 +171,7 @@
           :offset="addibleWordsOffset"
           :selected-words="promotion.newKeywords"
           :campaign-offline="isCampaignOffline"
+          :campaign-online="isCampaignOnline"
           @update-word="updateNewWord"
           @change-offset="setAddibleWordsOffset"
           @select-words="words => promotion.newKeywords = [...words]"
@@ -287,6 +289,7 @@ import {
 import {
   CREATIVE_STATUS_PENDING,
   CAMPAIGN_STATUS_OFFLINE,
+  CAMPAIGN_STATUS_ONLINE,
   SEM_PLATFORM_SHENMA,
   SEM_PLATFORM_SOGOU,
   SEM_PLATFORM_BAIDU,
@@ -294,6 +297,15 @@ import {
 
   landingTypeOpts
 } from 'constant/fengming'
+
+import {
+  keywordPriceTip
+} from 'constant/tip'
+
+import {
+  MIN_WORD_PRICE,
+  MAX_WORD_PRICE
+} from 'constant/keyword'
 
 import {
   checkCampaignValidTime,
@@ -308,7 +320,6 @@ import {
 import store from './store'
 
 const isArray = Array.isArray
-const MIN_WORD_PRICE = 200
 
 export default {
   name: 'qwt-update-promotion',
@@ -486,6 +497,10 @@ export default {
       } = this.originPromotion
 
       return status === CAMPAIGN_STATUS_OFFLINE
+    },
+    isCampaignOnline() {
+      const { status } = this.originPromotion
+      return status === CAMPAIGN_STATUS_ONLINE
     },
     creativeTitleTip() {
       if (this.isCampaignOffline) {
@@ -820,8 +835,8 @@ export default {
         // if (w.price * 2 < w.originPrice) {
         //   return Message.error(`关键字: ${w.word} 出价低于 ${(w.originPrice / 200).toFixed(2)}, 请调高出价`)
         // }
-        if (w.price < MIN_WORD_PRICE) {
-          return Message.error(`关键字: ${w.word} 出价不得低于 ${MIN_WORD_PRICE}元, 请调高出价`)
+        if (w.price < MIN_WORD_PRICE || w.price > MAX_WORD_PRICE) {
+          return Message.error(keywordPriceTip)
         }
       }
 
@@ -857,8 +872,18 @@ export default {
       }
 
       const preLength = this.addibleWords.length
-      await store.getRecommendedWords(queryWord, this.getProp('areas'))
+      await store.recommendByWord(queryWord, this.getProp('areas'))
       this.addibleWordsOffset = preLength
+
+      // 默认选中搜索词
+      const match = this.addibleWords.find(item => item.word === queryWord)
+
+      if (match) {
+        const has = this.promotion.newKeywords.find(item => item.word === match.word)
+        if (!has) {
+          this.promotion.newKeywords.push(match)
+        }
+      }
     },
     async checkCreativeContent() {
       const creativeContent = this.getProp('creativeContent')

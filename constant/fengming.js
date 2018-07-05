@@ -14,6 +14,7 @@ export const CREATIVE_CHIBI_CONTENT_PENDING = 2
 export const CREATIVE_CHIBI_ACCEPT = 10
 
 export const KEYWORD_STATUS_REFUSE = -10
+export const KEYWORD_STATUS_ONLINE = 0
 
 export const keywordStatus = {
   '0': '投放中',
