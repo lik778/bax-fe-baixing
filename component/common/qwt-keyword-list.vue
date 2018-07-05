@@ -110,14 +110,10 @@ import {
   renderColumnHeaderWithTip
 } from 'util/element'
 
-import {
-  centToYuan
-} from 'utils'
-
 import track from 'util/track'
 
-function toFloat(s) {
-  const i = parseFloat(s).toFixed(2)
+function toFloat(s, f = 2) {
+  const i = parseFloat(s).toFixed(f)
 
   if (i === 'NaN') {
     return 0
@@ -130,6 +126,10 @@ function toFloat(s) {
   }
 
   return n
+}
+
+function centToYuan(string) {
+  return toFloat(string, 0) / 100
 }
 
 const MODE_SELECT = 'select'
