@@ -2,7 +2,10 @@
 <template>
   <content v-loading.fullscreen="fullscreenLoading">
     <sidebar :user-info="currentUser"></sidebar>
-    <p class="stuff"></p>
+    <div class="notice" v-if="showNotice">
+      <marquee direction="left" scrollamount="6" height="20px" class="notice" scrolldelay="60">{{notice}}</marquee>
+      <span class="close el-icon-close" @click="showNotice = false" title="关闭通知"></span>
+    </div>
     <router-view class="view"
       :key="$route.fullPath"
       :userInfo="currentUser"
@@ -62,7 +65,9 @@ export default {
     return {
       showNewUserIntro: false,
       newUserIntroMode: '',
-      pending: 0
+      pending: 0,
+      notice: '通知：7月10日起，关键词检索量按推广地区预估，推荐出价根据媒体竞价水平调整（已购买词可原价正常投放）。',
+      showNotice: true
     }
   },
   computed: {
@@ -140,20 +145,33 @@ export default {
 
 <style scoped>
 content {
-  display: flex;
+  display: block;
   width: 100%;
   height: 100%;
 
-  & > p.stuff {
-    height: 1px;
-    width: 180px;
-    min-width: 180px;
+  & > .notice {
+    display: flex;
+    position: fixed;
+    left: 190px;
+    top: 0;
+    width: 35%;
+    color: #f44336;
+    background-color: white;
+    font-size: .8em;
+    z-index: 1000;
+    box-shadow: 1px 2px 1px #ddd;
+
+    & > .close {
+      color: gray;
+      font-size: 1.5em;
+      cursor: pointer;
+    }
   }
 
   & > .view {
+    margin-left: 180px;
     max-width: calc(100% - 180px);
     width: calc(100% - 180px);
-    flex-grow: 1;
   }
 }
 </style>
