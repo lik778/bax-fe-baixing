@@ -26,19 +26,18 @@ export function mergeKeywords(preWords, newWords) {
   return result
 }
 
-export function getCampaignPrediction(total, prices) {
-  const result = {
-    dailyBudget: 100, // 元
-    duration: 0 // 天
+export function getCampaignPrediction(balance, dailyBudget, prices) {
+  const prediction = {
+    minDailyBudget: 10000,
+    days: 0
   }
 
-  if (prices.filter(p => p > 3000).length) {
-    result.dailyBudget = 300
+  if (prices.some(p => p > 3000)) {
+    prediction.minDailyBudget = 30000
   }
-  // total, prices: 分
-  result.duration = (total / result.dailyBudget / 100) | 0
+  prediction.days = (balance / dailyBudget) | 0
 
-  return result
+  return prediction
 }
 
 const oneDay = 24 * 60 * 60 - 1 // sec

@@ -210,18 +210,18 @@
               :disabled="isFormReadonly || !modifyBudgetQuota"
               type="number" placeholder="请输入每日最高预算"
               :value="getProp('dailyBudget')"
-              @change="v => promotion.dailyBudget = v">
+              @input="v => promotion.dailyBudget = Number(v)">
             </el-input>
           </span>
           <i>元</i>
           <span>
-            （根据您选取的关键词，最低预算为<p>{{ predictedInfo.dailyBudget }}</p>元，
+            （根据您选取的关键词，最低预算为<p>{{ centToYuan(predictedInfo.minDailyBudget) }}</p>元，
             今日还可修改<p>{{ modifyBudgetQuota }}</p>次）
           </span>
         </div>
         <h3>
           {{ `您的推广资金余额：￥${ centToYuan(currentBalance) } 元，可消耗` }}
-          <strong>{{ predictedInfo.duration }}</strong>天
+          <strong>{{ predictedInfo.days }}</strong>天
         </h3>
         <contract-ack type="content-rule"></contract-ack>
         <div>
@@ -382,6 +382,10 @@ export default {
         deletedKeywords: [],
         newKeywords: []
       },
+      predictedInfo: {
+        minDailyBudget: 10000,
+        duration: 0
+      },
 
       SEM_PLATFORM_SHENMA,
       SEM_PLATFORM_BAIDU,
@@ -431,22 +435,6 @@ export default {
 
       return this.recommendedWords
         .filter(w => !words.includes(w.word.toLowerCase()))
-    },
-    predictedInfo() {
-      const {
-        currentBalance,
-        promotion
-      } = this
-
-      const {
-        keywords = [],
-        newKeywords = []
-      } = promotion
-
-      const prices = [...keywords, ...newKeywords]
-        .map(k => k.price)
-
-      return getCampaignPrediction(currentBalance, prices)
     },
     checkCreativeBtnDisabled() {
       const data = this.getUpdatedCreativeData()
@@ -723,7 +711,7 @@ export default {
         data.schedule = schedule
       }
 
-      const pp = this.predictedInfo.dailyBudget
+      const pp = this.predictedInfo.minDailyBudget
       if ((dailyBudget !== undefined)) {
         if (dailyBudget < pp) {
           throw new Error(`推广日预算需大于 ${pp} 元`)
@@ -948,10 +936,30 @@ export default {
       if (v !== p) {
         await this.initCampaignInfo()
       }
+    },
+    'promotion.dailyBudget'(v) {
+      console.log(v, typeof v)
+      if (!v) {
+        return
+      }
+      const dailyBudget = v * 100
+      const {
+        currentBalance,
+        promotion
+      } = this
+
+      const {
+        keywords = [],
+        newKeywords = []
+      } = promotion
+
+      const prices = [...keywords, ...newKeywords]
+        .map(k => k.price)
+
+      this.predictedInfo = getCampaignPrediction(currentBalance, dailyBudget, prices)
     }
   },
   async beforeDestroy() {
-    console.debug('will destroy')
     await store.clearStore()
   },
   async mounted() {

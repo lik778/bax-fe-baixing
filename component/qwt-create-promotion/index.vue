@@ -259,17 +259,17 @@
           <aside>设置推广日预算:</aside>
           <span>
             <el-input type="number" placeholder="请输入每日最高预算"
-              v-model="newPromotion.dailyBudget">
+              v-model.number="newPromotion.dailyBudget">
             </el-input>
           </span>
           <i>元</i>
           <span>
-            （根据您选取的关键词，最低预算为<p>{{ predictedInfo.dailyBudget }}</p>元）
+            （根据您选取的关键词，最低预算为<p>{{ centToYuan(predictedInfo.minDailyBudget) }}</p>元）
           </span>
         </div>
         <h3>
-          {{ `您的推广资金余额：￥${ (currentBalance / 100).toFixed(2) } 元，可消耗` }}
-          <strong>{{ predictedInfo.duration }}</strong>天
+          {{ `您的推广资金余额：￥${ centToYuan(currentBalance) } 元，可消耗` }}
+          <strong>{{ predictedInfo.days }}</strong>天
         </h3>
         <contract-ack type="content-rule"></contract-ack>
         <div>
@@ -349,7 +349,8 @@ import {
 } from 'util/meta'
 
 import {
-  toHumanTime
+  toHumanTime,
+  centToYuan
 } from 'utils'
 
 import {
@@ -447,6 +448,10 @@ export default {
       actionTrackId: uuid(),
       timeType: 'long', // long, custom
       queryWord: '',
+      predictedInfo: {
+        minDailyBudget: 10000,
+        duration: 0
+      },
 
       recommendedWordsVisible: false,
       durationSelectorVisible: false,
@@ -497,22 +502,6 @@ export default {
     isFirstCampaign() {
       return this.campaignsCount === 0
     },
-    predictedInfo() {
-      const {
-        currentBalance,
-        newPromotion
-      } = this
-
-      const {
-        recommendedWords,
-        creativeWords
-      } = newPromotion
-
-      const prices = [...recommendedWords, ...creativeWords]
-        .map(k => k.price)
-
-      return getCampaignPrediction(currentBalance, prices)
-    },
     addibleWords() {
       const words = this.creativeWords.map(w => w.word.toLowerCase())
 
@@ -524,6 +513,7 @@ export default {
     }
   },
   methods: {
+    centToYuan,
     setAddibleWordsOffset(offset) {
       this.addibleWordsOffset = offset
     },
@@ -598,15 +588,16 @@ export default {
 
       const p = clone(this.newPromotion)
 
-      const pp = this.predictedInfo.dailyBudget
+      p.dailyBudget = p.dailyBudget * 100
+
+      const pp = this.predictedInfo.minDailyBudget
+
       if (p.dailyBudget < pp) {
-        throw Message.error(`推广日预算需大于 ${pp} 元`)
+        throw Message.error(`推广日预算需大于 ${centToYuan(pp)} 元`)
       }
-      if (p.dailyBudget > 10000000) {
+      if (p.dailyBudget > 1000000000) {
         throw Message.error('推广日预算太高啦！您咋这么土豪呢~')
       }
-
-      p.dailyBudget = p.dailyBudget * 100
 
       if (this.timeType === 'custom') {
         if (checkCampaignValidTime(p.validTime) === 'custom') {
@@ -636,11 +627,13 @@ export default {
         throw Message.error('请填写关键字')
       }
 
+      console.log(p.keywords)
       for (const w of p.keywords) {
         // if (w.price * 2 < w.originPrice) {
         //   return Message.error(`关键字: ${w.word} 出价低于 ${(w.originPrice / 200).toFixed(2)}, 请调高出价`)
         // }
         if (w.price < MIN_WORD_PRICE || w.price > MAX_WORD_PRICE) {
+          console.log(w.price)
           throw Message.error(keywordPriceTip)
         }
       }
@@ -903,6 +896,28 @@ export default {
         actionTrackId
       })
     }, 800)
+  },
+  watch: {
+    'newPromotion.dailyBudget'(v) {
+      if (!v) {
+        return
+      }
+      const dailyBudget = v * 100
+      const {
+        currentBalance,
+        newPromotion
+      } = this
+
+      const {
+        recommendedWords,
+        creativeWords
+      } = newPromotion
+
+      const prices = [...recommendedWords, ...creativeWords]
+        .map(word => word.price)
+
+      this.predictedInfo = getCampaignPrediction(currentBalance, dailyBudget, prices)
+    }
   },
   beforeDestroy() {
     store.clearStore()
