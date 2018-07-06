@@ -17,11 +17,11 @@
       <el-table-column prop="word" label="关键词" width="220" />
       <el-table-column v-if="showPropShow"
         prop="show" width="180"
-        sortable label="日均搜索指数"
+        label="日均搜索指数"
         :render-header="renderWithTip(searchIndexTip)">
       </el-table-column>
       <el-table-column v-if="showPropRanking"
-        width="140" label="平均排名" sortable
+        width="140" label="平均排名"
         :formatter="r => fmtCpcRanking(r.cpcRanking)">
       </el-table-column>
       <el-table-column v-if="showPropStatus"
