@@ -324,36 +324,22 @@ export default {
         id: row.id
       })
     },
-    getWordPrice(word) {
-      const item = this.customPrices.find(c => c.word === word)
+    getWordPrice(kw) {
+      const item = this.customPrices.find(c => c.word === kw)
 
       if (item) {
         return item.price
       }
 
-      const p = this.words.find(w => w.word === word).price
-      if (this.mode === 'update') {
-        return p
+      const word = this.words.find(w => w.word === kw)
+      if (this.mode === MODE_UPDATE) {
+        console.log(word.serverPrice)
+        return word.serverPrice
+      } else if (this.mode === MODE_SELECT) {
+        return word.price
       }
-      // 前端更改百度推荐出价
-      let modified = p
-      if (p <= 300) {
-        modified *= 3
-      } else if (p <= 500) {
-        modified *= 2.5
-      } else if (p <= 1000) {
-        modified *= 2
-      } else {
-        modified *= 1.5
-      }
-      return modified > MIN_WORD_PRICE ? modified : MIN_WORD_PRICE
     },
     isValidPrice(row) {
-      // 说明: TODO 这里需要优化
-      //   1. 新增关键词: words -> 直接取自 server (price === originPrice)
-      //     此时 word 没有 prop originPrice
-      //   2. 更新关键词: words -> 原有关键词 + 更新价格 (price !== originPrice)
-      //     此时 word 存在 prop originPrice
       const finalPrice = this.getWordPrice(row.word)
       return finalPrice >= MIN_WORD_PRICE && finalPrice <= MAX_WORD_PRICE
     },
@@ -381,7 +367,6 @@ export default {
       this.$emit('select-words', words)
     },
     mergeSelectedWords(rows) {
-      // console.debug('merge words', rows.map(w => w.word))
       const preSelectedWords = this.selectedWords
       const ws = preSelectedWords.map(w => w.word)
       const newSelectedWords = rows
@@ -397,7 +382,7 @@ export default {
         selectedWords.map(w => w.word))
       this.$emit('select-words', selectedWords)
     },
-    setCustomPrice({price: originPrice, word, id}, v) {
+    setCustomPrice({serverPrice, word, id}, v) {
       let price = (v ? toFloat(v) : 0) * 100
 
       if (this.hasCustomPrice(word)) {
@@ -420,7 +405,7 @@ export default {
 
       this.$emit('update-word', {
         price,
-        originPrice,
+        serverPrice,
         word,
         id
       })
@@ -453,7 +438,7 @@ export default {
       return {
         price: this.getWordPrice(w.word),
         recommandSource: w.recommandSource,
-        originPrice: w.price,
+        serverPrice: w.serverPrice,
         word: w.word,
         id: w.id
       }

@@ -627,13 +627,8 @@ export default {
         throw Message.error('请填写关键字')
       }
 
-      console.log(p.keywords)
       for (const w of p.keywords) {
-        // if (w.price * 2 < w.originPrice) {
-        //   return Message.error(`关键字: ${w.word} 出价低于 ${(w.originPrice / 200).toFixed(2)}, 请调高出价`)
-        // }
         if (w.price < MIN_WORD_PRICE || w.price > MAX_WORD_PRICE) {
-          console.log(w.price)
           throw Message.error(keywordPriceTip)
         }
       }
