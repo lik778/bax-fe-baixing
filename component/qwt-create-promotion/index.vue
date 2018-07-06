@@ -541,6 +541,8 @@ export default {
       this.newPromotion.landingPageId = ad.adId
       this.newPromotion.landingPage = ad.url
 
+      await this.recommendByUrl()
+
       this.newPromotion.creativeTitle = ad.title && ad.title.slice(0, 24)
       this.newPromotion.creativeContent = ad.content && ad.content.slice(0, 39)
     },
@@ -790,9 +792,10 @@ export default {
         this.newPromotion.landingPage = ''
       }
     },
-    onChangeAreas(areas) {
+    async onChangeAreas(areas) {
       this.newPromotion.areas = [...areas]
       this.areaDialogVisible = false
+      await this.recommendByUrl()
     },
     onChangeDuration(durations) {
       this.newPromotion.schedule = durations
@@ -900,14 +903,6 @@ export default {
         actionTrackId
       })
     }, 800)
-  },
-  watch: {
-    'newPromotion.landingPage': async function(cur, pre) {
-      await this.recommendByUrl()
-    },
-    'newPromotion.areas': async function(cur, pre) {
-      await this.recommendByUrl()
-    }
   },
   beforeDestroy() {
     store.clearStore()

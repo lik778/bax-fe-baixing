@@ -17,7 +17,7 @@
       <el-table-column label="选择" width="50">
         <template slot-scope="s">
           <div class="center">
-            <el-radio v-model="innerCheckedAd" :label="s.row">&nbsp</el-radio>
+            <el-radio v-model="checkedAdId" :label="s.row.adId">&nbsp</el-radio>
           </div>
         </template>
       </el-table-column>
@@ -119,7 +119,7 @@ export default {
       total: 0,
       ads: [],
 
-      innerCheckedAd: null,
+      checkedAdId: null,
       mode: MODE_INIT
     }
   },
@@ -161,17 +161,17 @@ export default {
       }
     },
     async onSelectAd() {
-      const ad = this.innerCheckedAd
-      if (!ad) {
+      if (!this.checkedAdId) {
         return
       }
 
+      const ad = this.ads.find(ad => ad.adId === this.checkedAdId)
       this.$emit('select-ad', {
         ...ad,
         url: isArray(ad.url) ? ad.url[0] : ad.url
       })
 
-      await this.reset(MODE_SELECTED, ad.adId)
+      await this.reset(MODE_SELECTED, this.checkedAdId)
     },
     async onCancel() {
       if (this.selectedId) {
@@ -191,7 +191,7 @@ export default {
         await this.queryAds({
           adIds: [adId]
         })
-        this.innerCheckedAd = this.ads[0]
+        this.checkedAdId = this.ads[0].adId
         return
       }
 
