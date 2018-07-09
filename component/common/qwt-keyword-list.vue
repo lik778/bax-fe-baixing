@@ -282,7 +282,7 @@ export default {
     showAddPrice(row) {
       // 过去24小时排名低于5或无排名的，在线的 keyword，在线的 campaign
       const {cpcRanking, isPriceChanged, status: keywordStatus} = row
-      const show = keywordStatus === KEYWORD_STATUS_ONLINE && this.campaignOnline && isPriceChanged && (cpcRanking > 5 || cpcRanking === 0)
+      const show = keywordStatus === KEYWORD_STATUS_ONLINE && this.campaignOnline && !isPriceChanged && (cpcRanking > 5 || cpcRanking === 0)
       if (show) {
         track({
           action: 'pv: bump-price-by-20'
@@ -333,7 +333,6 @@ export default {
 
       const word = this.words.find(w => w.word === kw)
       if (this.mode === MODE_UPDATE) {
-        console.log(word.serverPrice)
         return word.serverPrice
       } else if (this.mode === MODE_SELECT) {
         return word.price
@@ -402,7 +401,6 @@ export default {
           word
         }]
       }
-
       this.$emit('update-word', {
         price,
         serverPrice,
