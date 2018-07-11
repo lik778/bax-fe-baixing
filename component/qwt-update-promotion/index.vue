@@ -702,9 +702,8 @@ export default {
       // no change, no return
     },
     getUpdatedPromotionData() {
-      // dailyBudget areas 要么都传, 要么都不传
       const {
-        dailyBudget,
+        dailyBudget, // 元
         schedule,
         areas
       } = this.promotion
@@ -716,8 +715,8 @@ export default {
 
       const pp = this.predictedInfo.minDailyBudget
       if ((dailyBudget !== undefined)) {
-        if (dailyBudget < pp) {
-          throw new Error(`推广日预算需大于 ${pp} 元`)
+        if (dailyBudget * 100 < pp) {
+          throw new Error(`推广日预算需大于 ${centToYuan(pp)} 元`)
         }
 
         if (dailyBudget > 10000000) {
@@ -729,6 +728,7 @@ export default {
         throw new Error('请选择投放区域')
       }
 
+      // dailyBudget areas 要么都传, 要么都不传
       if (dailyBudget || (areas && areas.length)) {
         data.dailyBudget = this.getProp('dailyBudget') * 100 | 0
         data.areas = isArray(areas) ? [...areas] : this.originPromotion.areas
