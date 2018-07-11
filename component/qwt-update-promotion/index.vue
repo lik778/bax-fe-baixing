@@ -151,7 +151,7 @@
           <label>关键词不够？</label>
           <a @click="switchWordsVisible">点此自定义添加</a>
         </h3>
-        <div v-if="newaddedWordsVisible">
+        <div v-if="searchRecommendsVisible">
           <span>
             <el-input placeholder="请输入关键词"
               v-model.trim="queryWord" @keyup.native.enter="queryRecommendedWords" />
@@ -164,7 +164,7 @@
           </strong>
         </div>
         <keyword-list
-          v-if="newaddedWordsVisible"
+          v-if="searchRecommendsVisible"
           mode="select"
           :platform="getProp('source')"
           :words="addibleWords"
@@ -175,6 +175,7 @@
           @update-word="updateNewWord"
           @change-offset="setAddibleWordsOffset"
           @select-words="words => promotion.newKeywords = [...words]"
+          @operated-pages="pages => searchRecommendsPages = pages"
         />
       </section>
       <section class="timing">
@@ -358,7 +359,7 @@ export default {
       landingTypeOpts,
 
       durationSelectorVisible: false,
-      newaddedWordsVisible: false,
+      searchRecommendsVisible: false,
       areaDialogVisible: false,
 
       currentKeywordsOffset: 0,
@@ -386,6 +387,8 @@ export default {
         minDailyBudget: 10000,
         duration: 0
       },
+
+      searchRecommendsPages: [0], // for logging
 
       SEM_PLATFORM_SHENMA,
       SEM_PLATFORM_BAIDU,
@@ -777,7 +780,10 @@ export default {
         time: Date.now() / 1000 | 0,
         baxId: userInfo.id,
         campaignId: id,
-        actionTrackId
+        actionTrackId,
+        searchRecommends: this.addibleWords.length,
+        selectedSearchRecommends: this.promotion.newKeywords.length,
+        searchRecommendsPages: this.searchRecommendsPages.length
       })
 
       try {
@@ -910,7 +916,7 @@ export default {
       })
     },
     switchWordsVisible() {
-      this.newaddedWordsVisible = !this.newaddedWordsVisible
+      this.searchRecommendsVisible = !this.searchRecommendsVisible
     },
     onChangeAreas(areas) {
       this.promotion.areas = [...areas]

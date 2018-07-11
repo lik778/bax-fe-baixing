@@ -351,11 +351,6 @@ export default {
         .includes(word.word)
     },
     onCheckWord(word) {
-      if (!this.userOperatedPages.includes(this.currentPage)) {
-        this.userOperatedPages.push(this.currentPage)
-      }
-      this.$emit('operated-pages', this.userOperatedPages)
-
       let words = []
       if (this.wordChecked(word)) {
         words = this.selectedWords
@@ -447,6 +442,10 @@ export default {
     currentPage(val, pre) {
       if (val !== this.prePage) {
         this.prePage = pre
+      }
+      if (!this.userOperatedPages.includes(val)) {
+        this.userOperatedPages.push(val)
+        this.$emit('operated-pages', this.userOperatedPages)
       }
     },
     words(v) {

@@ -173,26 +173,26 @@
         <h4 v-if="!isCopy">建议选取20个以上关键词，关键词越多您的创意被展现的机会越多。根据当月数据，为您推荐如下关键词</h4>
         <keyword-list mode="select"
           :platform="newPromotion.source"
-          :words="creativeWords"
-          :offset="creativeWordsOffset"
-          :selected-words="newPromotion.creativeWords"
+          :words="urlRecommends"
+          :offset="urlRecommendsOffset"
+          :selected-words="newPromotion.urlRecommends"
           :show-prop-show="!isCopy"
-          @update-word="updateCreativeWord"
-          @change-offset="offset => creativeWordsOffset = offset"
-          @select-words="words => newPromotion.creativeWords = words"
-          @operated-pages="pages => operatedPages = pages">
+          @update-word="updateUrlRecommend"
+          @change-offset="offset => urlRecommendsOffset = offset"
+          @select-words="words => newPromotion.urlRecommends = words"
+          @operated-pages="pages => urlRecommendsPages = pages">
         </keyword-list>
         <h3>
           <label>若没有您满意的关键词，</label>
           <a @click="switchWordsVisible">点此自定义添加</a>
         </h3>
         <div class="recommend"
-          v-if="recommendedWordsVisible">
+          v-if="searchRecommendsVisible">
           <span>
-            <el-input placeholder="请输入关键词" v-model.trim="queryWord" @keyup.native.enter="queryRecommendedWords">
+            <el-input placeholder="请输入关键词" v-model.trim="queryWord" @keyup.native.enter="recommendByWord">
             </el-input>
           </span>
-          <el-button type="primary" @click="queryRecommendedWords">
+          <el-button type="primary" @click="recommendByWord">
             查询
           </el-button>
           <strong>
@@ -200,15 +200,16 @@
           </strong>
         </div>
         <keyword-list
-          v-if="recommendedWordsVisible"
+          v-if="searchRecommendsVisible"
           mode="select"
           :platform="newPromotion.source"
           :words="addibleWords"
           :offset="addibleWordsOffset"
-          :selected-words="newPromotion.recommendedWords"
-          @update-word="updateRecommendedWord"
+          :selected-words="newPromotion.searchRecommends"
+          @update-word="updateSearchRecommend"
           @change-offset="setAddibleWordsOffset"
-          @select-words="words => newPromotion.recommendedWords = words">
+          @select-words="words => newPromotion.searchRecommends = words"
+          @operated-pages="pages => searchRecommendsPages = pages">
         </keyword-list>
         <div
           v-if="newPromotion.source !== SEM_PLATFORM_SHENMA"
@@ -400,8 +401,8 @@ const emptyPromotion = {
   areas: [],
   source: SEM_PLATFORM_BAIDU,
   //
-  recommendedWords: [],
-  creativeWords: []
+  searchRecommends: [],
+  urlRecommends: []
 }
 
 const MODE_COPY = 'copy'
@@ -426,8 +427,8 @@ export default {
     Topbar
   },
   fromMobx: {
-    recommendedWords: () => store.recommendedWords,
-    creativeWords: () => store.creativeWords,
+    searchRecommends: () => store.searchRecommends,
+    urlRecommends: () => store.urlRecommends,
 
     currentBalance: () => store.currentBalance,
     campaignsCount: () => store.campaignsCount
@@ -453,16 +454,17 @@ export default {
         duration: 0
       },
 
-      recommendedWordsVisible: false,
+      searchRecommendsVisible: false,
       durationSelectorVisible: false,
       chargeDialogVisible: false,
       copyDialogVisible: false,
       areaDialogVisible: false,
 
-      creativeWordsOffset: 0,
+      urlRecommendsOffset: 0,
       addibleWordsOffset: 0,
       createdCampaignId: 0,
-      operatedPages: [], // for logging
+      urlRecommendsPages: [0], // for logging
+      searchRecommendsPages: [0],
 
       landingTypeOpts,
 
@@ -503,9 +505,9 @@ export default {
       return this.campaignsCount === 0
     },
     addibleWords() {
-      const words = this.creativeWords.map(w => w.word.toLowerCase())
+      const words = this.urlRecommends.map(w => w.word.toLowerCase())
 
-      return this.recommendedWords
+      return this.searchRecommends
         .filter(w => !words.includes(w.word.toLowerCase()))
     },
     isCopy() {
@@ -572,9 +574,12 @@ export default {
         time: Date.now() / 1000 | 0,
         baxId: userInfo.id,
         actionTrackId,
-        creativeWords: this.creativeWords.length,
-        selectedCreativeWords: this.newPromotion.creativeWords.length,
-        creativeWordPages: this.operatedPages.join(',')
+        urlRecommends: this.urlRecommends.length,
+        selectedUrlRecommends: this.newPromotion.urlRecommends.length,
+        urlRecommendsPages: this.urlRecommendsPages.length,
+        searchRecommends: this.searchRecommends.length,
+        selectedSearchRecommends: this.newPromotion.searchRecommends.length,
+        searchRecommendsPages: this.searchRecommendsPages.length
       })
 
       try {
@@ -610,8 +615,8 @@ export default {
       }
 
       p.keywords = [
-        ...p.recommendedWords,
-        ...p.creativeWords
+        ...p.searchRecommends,
+        ...p.urlRecommends
       ]
 
       p.mobilePriceRatio = parseFloat(p.mobilePriceRatio)
@@ -680,7 +685,7 @@ export default {
         this.copyDialogVisible = true
       }
     },
-    async queryRecommendedWords() {
+    async recommendByWord() {
       const { queryWord, newPromotion } = this
 
       if (!queryWord) {
@@ -696,9 +701,9 @@ export default {
       const match = this.addibleWords.find(item => item.word === queryWord)
 
       if (match) {
-        const has = this.newPromotion.recommendedWords.find(item => item.word === match.word)
+        const has = this.newPromotion.searchRecommends.find(item => item.word === match.word)
         if (!has) {
-          this.newPromotion.recommendedWords.push(match)
+          this.newPromotion.searchRecommends.push(match)
         }
       }
     },
@@ -729,8 +734,8 @@ export default {
         return Message.error(data.hint)
       }
     },
-    updateRecommendedWord(word) {
-      this.newPromotion.recommendedWords = this.newPromotion.recommendedWords.map(w => {
+    updateSearchRecommend(word) {
+      this.newPromotion.searchRecommends = this.newPromotion.searchRecommends.map(w => {
         if (w.word === word.word) {
           return {
             ...w,
@@ -741,8 +746,8 @@ export default {
         }
       })
     },
-    updateCreativeWord(word) {
-      this.newPromotion.creativeWords = this.newPromotion.creativeWords.map(w => {
+    updateUrlRecommend(word) {
+      this.newPromotion.urlRecommends = this.newPromotion.urlRecommends.map(w => {
         if (w.word === word.word) {
           return {
             ...w,
@@ -766,7 +771,7 @@ export default {
       })
     },
     switchWordsVisible() {
-      this.recommendedWordsVisible = !this.recommendedWordsVisible
+      this.searchRecommendsVisible = !this.searchRecommendsVisible
     },
     onLandingTypeChange(typeId) {
       const { landingType } = this.newPromotion
@@ -840,7 +845,7 @@ export default {
           ...k.extra
         }))
 
-      this.newPromotion.creativeWords = clone(words)
+      this.newPromotion.urlRecommends = clone(words)
       store.setCreativeWords(clone(words))
     },
     copyCampaign({platform}) {
@@ -904,11 +909,11 @@ export default {
       } = this
 
       const {
-        recommendedWords,
-        creativeWords
+        searchRecommends,
+        urlRecommends
       } = newPromotion
 
-      const prices = [...recommendedWords, ...creativeWords]
+      const prices = [...searchRecommends, ...urlRecommends]
         .map(word => word.price)
 
       this.predictedInfo = getCampaignPrediction(currentBalance, dailyBudget, prices)

@@ -114,7 +114,6 @@ const store = observable({
         serverPrice: kw.price
       }
     })
-    console.log(info.keywords)
     this._originPromotion = {
       ...this._originPromotion,
       ...info

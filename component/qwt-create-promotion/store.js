@@ -12,29 +12,29 @@ import {
 } from 'util/campaign'
 
 const store = observable({
-  _recommendedWords: [],
-  _creativeWords: [],
+  _urlRecommends: [],
+  _searchRecommends: [],
 
   currentBalance: 0,
   campaignsCount: 0,
 
-  get recommendedWords() {
-    return toJS(this._recommendedWords)
+  get searchRecommends() {
+    return toJS(this._searchRecommends)
   },
-  get creativeWords() {
-    return toJS(this._creativeWords)
+  get urlRecommends() {
+    return toJS(this._urlRecommends)
   },
   recommendByUrl: action(async function(url, areas) {
     const words = await fapi.recommendByUrl(url, areas)
-    this._creativeWords = words.map(attachDisplayPrice)
+    this._urlRecommends = words.map(attachDisplayPrice)
   }),
   recommendByWord: action(async function(word, areas) {
     const words = await fapi.recommendByWord(word, areas)
-    this._recommendedWords = mergeKeywords(this._recommendedWords, words.map(attachDisplayPrice))
+    this._searchRecommends = mergeKeywords(this._searchRecommends, words.map(attachDisplayPrice))
   }),
   setCreativeWords: action(function(words) {
     // 场景: copy campaign 时, set keywords
-    this._creativeWords = words
+    this._urlRecommends = words
   }),
   getCurrentBalance: action(async function() {
     this.currentBalance = await fapi.getCurrentBalance()
@@ -43,8 +43,8 @@ const store = observable({
     this.campaignsCount = fapi.getCurrentCampaignCount()
   }),
   clearStore: action(function() {
-    this._recommendedWords = []
-    this._creativeWords = []
+    this._searchRecommends = []
+    this._urlRecommends = []
   })
 })
 
