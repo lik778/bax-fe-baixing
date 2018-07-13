@@ -1,14 +1,9 @@
 
 <template>
   <div class="qwt-promotion-list">
-    <header v-if="!readonly">
-      <span>
-        <el-checkbox label="全选" :value="allRowsChecked"
-          @change="onClickCheckAllRows">
-        </el-checkbox>
-      </span>
-      <span>
-        <el-dropdown @command="updateCampaignStatus">
+    <header class="qwt-promotion-header">
+      <section class="actions">
+        <el-dropdown @command="updateCampaignStatus" v-if="!readonly" class="action">
           <el-button type="primary">
             批量开关
             <i class="el-icon-arrow-down el-icon--right"></i>
@@ -22,61 +17,46 @@
             </el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
-      </span>
-      <span>
-        <div>
-          <el-button @click="switchToolbox('price percent')">
-            设置出价比例
-            <i class="el-icon-arrow-down el-icon--right"></i>
-          </el-button>
-        </div>
-        <div v-if="toolbox.showPricePercent">
-          <el-input style="min-width: 60px;" placeholder="比例"
-            v-model="toolbox.ratio">
-          </el-input>
-          <label>(0.1-9.9)</label>
-          <el-button type="primary" size="mini"
-            @click="updateCampaignRatio">
-            确定
-          </el-button>
-        </div>
-      </span>
-      <span>
-        <div>
-          <el-button @click="switchToolbox('daily budget')">
-            设置日预算
-            <i class="el-icon-arrow-down el-icon--right"></i>
-          </el-button>
-        </div>
-        <div v-if="toolbox.showDailyBudget">
-          <el-input style="width: 80px;" placeholder="日预算"
-            v-model="toolbox.budget">
-          </el-input>
-          <el-button type="primary" size="mini"
-            @click="updateCampaignDailyBudget">
-            确定
-          </el-button>
-        </div>
-      </span>
-      <span>
-        <div v-if="false">
-          <el-button @click="switchToolbox('time range')">
-            设置投放日期
-            <i class="el-icon-arrow-down el-icon--right"></i>
-          </el-button>
-        </div>
-        <div v-if="false" style="width: 260px;">
-          <el-date-picker type="daterange" placeholder="选择日期范围"
-            :picker-options="{disabledDate}"
-            style="width: 200px;" v-model="toolbox.timeRange">
-          </el-date-picker>
-          <el-button type="primary" size="mini"
-            @click="updateCampaignTimeRange">
-            确定
-          </el-button>
-        </div>
-      </span>
+        <el-button v-if="canCreate"
+          type="primary" icon="el-icon-plus"
+          @click="gotoCreatePromotion" class="action">
+          新建推广计划
+        </el-button>
+        <el-button type="primary" v-else class="action">
+          <router-link :to="{name: 'qwt-dashboard', query: {userId}}" tag="span">
+            查看数据报表
+          </router-link>
+        </el-button>
+        <bax-input placeholder="请输入ID查询" icon="el-icon-search"
+          @change="v => queryCampaigns({id: v})" class="action search">
+        </bax-input>
+        <el-button @click="switchShowMoreFilters">
+          更多筛选<i class="el-icon-arrow-down el-icon--right"></i>
+        </el-button>
+      </section>
+      <div v-show="showMoreFilters" class="filters">
+        <span class="filter-item">
+          <label>投放状态</label>
+          <bax-select :options="campaignStatusOpts" clearable
+            @change="v => queryCampaigns({statuses: v})">
+          </bax-select>
+        </span>
+        <span class="filter-item">
+          <label>投放区域</label>
+          <bax-select :options="areaOpts" clearable
+            :filter-method="v => this.areaQueryWord = v"
+            @change="v => queryCampaigns({areas: v})">
+          </bax-select>
+        </span>
+        <span class="filter-item">
+          <label>渠道来源</label>
+          <bax-select :options="semPlatformOpts" clearable
+            @change="v => queryCampaigns({source: v})">
+          </bax-select>
+        </span>
+      </div>
     </header>
+
     <main>
     <el-table ref="table" :data="campaigns"
       @selection-change="onSelectionChange">
@@ -163,7 +143,8 @@
 <script>
 import EditableLabel from 'com/common/editable-label'
 import BaxPagination from 'com/common/pagination'
-
+import BaxSelect from 'com/common/select'
+import BaxInput from 'com/common/input'
 import { Message } from 'element-ui'
 import equal from 'lodash.isequal'
 
@@ -173,7 +154,8 @@ import {
   SEM_PLATFORM_SHENMA,
   campaignAuditStatus,
   campaignStatus,
-  semPlatformCn
+  semPlatformCn,
+  semPlatformOpts
 } from 'constant/fengming'
 
 import {
@@ -204,7 +186,6 @@ import {
   toHumanTime,
   commafy
 } from 'utils'
-
 import store from './store'
 
 // 不能选择的状态
@@ -213,11 +194,30 @@ const cantSelectStatuses = [
   CAMPAIGN_STATUS_OFFLINE
 ]
 
+const campaignStatusOpts = [{
+  label: '推广中/审核中',
+  value: '100'
+}, {
+  label: '计划预算不足',
+  value: '5'
+}, {
+  label: '账户余额不足',
+  value: '-51'
+}, {
+  label: '已暂停',
+  value: '-10,-50'
+}, {
+  label: '已下线',
+  value: '-1'
+}]
+
 export default {
   name: 'qwt-promotion-list',
   components: {
     EditableLabel,
-    BaxPagination
+    BaxPagination,
+    BaxSelect,
+    BaxInput
   },
   props: {
     userInfo: {
@@ -235,6 +235,21 @@ export default {
     readonly: {
       type: Boolean,
       required: true
+    },
+    showMoreFilters: {
+      type: Boolean,
+      required: true
+    },
+    allAreas: {
+      type: Array,
+      required: true
+    },
+    userId: {
+      type: [Number, String]
+    },
+    canCreate: {
+      type: Boolean,
+      required: true
     }
   },
   data() {
@@ -246,8 +261,11 @@ export default {
         // 更新数据
         timeRange: [],
         budget: '',
-        ratio: ''
+        ratio: '',
+        areaQueryWord: ''
       },
+      semPlatformOpts,
+      campaignStatusOpts,
       selectedCampaignIds: [],
 
       campaignAuditStatusTooltip,
@@ -270,9 +288,44 @@ export default {
       }).map(p => p.id).sort()
 
       return equal(selectedCampaignIds.sort(), ids)
+    },
+    areaOpts() {
+      const q = this.areaQueryWord
+
+      if (!q) {
+        return this.allAreas
+      }
+
+      return this.allAreas
+        .filter(a => {
+          return a.name.includes(q) ||
+            a.nameCn.includes(q)
+        })
     }
   },
   methods: {
+    async queryCampaigns(opts) {
+      await store.getCurrentCampaigns({
+        ...this.query,
+        ...opts
+      })
+    },
+    switchShowMoreFilters() {
+      store.switchShowMoreFilters()
+
+      track({
+        action: 'campaign list: click more filters'
+      })
+    },
+    gotoCreatePromotion() {
+      this.$router.push({
+        name: 'qwt-create-promotion'
+      })
+
+      track({
+        action: 'campaign list: click create campaign'
+      })
+    },
     renderColumnHeaderWithTip,
     async onCurrentChange({offset}) {
       await store.getCurrentCampaigns({
@@ -589,12 +642,40 @@ export default {
 @import '../../cssbase/var';
 @import 'cssbase/mixin';
 
+@mixin filter-item;
+
 .center {
   @mixin center;
 }
 
 a {
   color: var(--qwt-c-blue);
+}
+.actions {
+  display: flex;
+}
+.action {
+  margin-right: 15px;
+}
+.action.search {
+  width: auto;
+}
+.filters {
+  @mixin top-filter;
+
+  display: flex;
+  align-items: center;
+  border: 1px solid #a3b2c4;
+  margin-top: 10px;
+
+  & > span {
+    display: flex;
+    flex-grow: 0.33;
+  }
+
+  & > span:last-child {
+    /* margin-left: 40px; */
+  }
 }
 
 .qwt-promotion-list {

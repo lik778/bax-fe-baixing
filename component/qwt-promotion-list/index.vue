@@ -4,12 +4,10 @@
     <topbar :user-info="userInfo">
       <label slot="title">全网通 - 推广管理</label>
     </topbar>
-    <promotion-header :show-more-filters="showMoreFilters"
-      :all-areas="allAreas" :query="localQuery"
-      :userId="currentUserId" :canCreate="!isListReadonly">
-    </promotion-header>
     <promotion-list :user-info="userInfo" :campaigns="campaigns"
-      :query="localQuery" :readonly="isListReadonly">
+      :query="localQuery" :readonly="isListReadonly"
+      :show-more-filters="showMoreFilters" :all-areas="allAreas"
+      :userId="currentUserId" :canCreate="!isListReadonly">
     </promotion-list>
   </div>
 </template>
@@ -20,7 +18,6 @@ import uuid from 'uuid/v4'
 import FlatBtn from 'com/common/flat-btn'
 import Topbar from 'com/topbar'
 
-import PromotionHeader from './header'
 import PromotionList from './list'
 
 import {
@@ -32,7 +29,6 @@ import store from './store'
 export default {
   name: 'qwt-promotion',
   components: {
-    PromotionHeader,
     PromotionList,
     Topbar,
     FlatBtn
