@@ -26,7 +26,10 @@ export function mergeKeywords(preWords, newWords) {
   return result
 }
 
-export function getCampaignPrediction(balance, dailyBudget, prices) {
+/*
+  availableBalance: 此刻账户余额扣除今日所有在线计划剩余预算后的余额
+*/
+export function getCampaignPrediction(availableBalance, dailyBudget, prices) {
   const prediction = {
     minDailyBudget: 10000,
     days: 0
@@ -35,7 +38,7 @@ export function getCampaignPrediction(balance, dailyBudget, prices) {
   if (prices.some(p => p > 3000)) {
     prediction.minDailyBudget = 30000
   }
-  prediction.days = (balance / dailyBudget) | 0
+  prediction.days = (availableBalance / dailyBudget) | 0
 
   return prediction
 }

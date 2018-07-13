@@ -36,13 +36,19 @@ const store = observable({
 
   _recommendedWords: [],
   currentBalance: 0,
+  usableBalance: 0,
 
   get originPromotion() {
     return toJS(this._originPromotion)
   },
+
   get recommendedWords() {
     return toJS(this._recommendedWords)
   },
+
+  getUsableBalance: action(async function() {
+    this.usableBalance = await fapi.getUsableBalance()
+  }),
 
   recommendByWord: action(async function(word) {
     const words = await fapi.recommendByWord(word)

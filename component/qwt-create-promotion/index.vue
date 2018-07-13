@@ -268,9 +268,11 @@
             （根据您选取的关键词，最低预算为<p>{{ centToYuan(predictedInfo.minDailyBudget) }}</p>元）
           </span>
         </div>
-        <h3>
-          {{ `您的推广资金余额：￥${ centToYuan(currentBalance) } 元，可消耗` }}
-          <strong>{{ predictedInfo.days }}</strong>天
+        <h3 v-if="usableBalance <= 0">
+          扣除其余有效计划日预算后，您的推广资金可用余额为0元，请<router-link :to="{name: 'qwt-charge', query: {mode: 'charge-only'}}">充值</router-link>
+        </h3>
+        <h3 v-else>
+          您的推广资金余额：￥{{centToYuan(usableBalance)}} 元，可消耗<strong>{{predictedInfo.days}}</strong>天
         </h3>
         <contract-ack type="content-rule"></contract-ack>
         <div>
@@ -431,7 +433,8 @@ export default {
     urlRecommends: () => store.urlRecommends,
 
     currentBalance: () => store.currentBalance,
-    campaignsCount: () => store.campaignsCount
+    campaignsCount: () => store.campaignsCount,
+    usableBalance: () => store.usableBalance
   },
   props: {
     userInfo: {
@@ -864,7 +867,8 @@ export default {
   async mounted() {
     await Promise.all([
       store.getCurrentBalance(),
-      store.getCampaignsCount()
+      store.getCampaignsCount(),
+      store.getUsableBalance()
     ])
 
     const { adId, mode, campaignId } = this.$route.query
@@ -904,7 +908,7 @@ export default {
       }
       const dailyBudget = v * 100
       const {
-        currentBalance,
+        usableBalance,
         newPromotion
       } = this
 
@@ -916,7 +920,7 @@ export default {
       const prices = [...searchRecommends, ...urlRecommends]
         .map(word => word.price)
 
-      this.predictedInfo = getCampaignPrediction(currentBalance, dailyBudget, prices)
+      this.predictedInfo = getCampaignPrediction(usableBalance, dailyBudget, prices)
     }
   },
   beforeDestroy() {

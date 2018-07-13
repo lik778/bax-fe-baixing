@@ -220,9 +220,11 @@
             今日还可修改<p>{{ modifyBudgetQuota }}</p>次）
           </span>
         </div>
-        <h3>
-          {{ `您的推广资金余额：￥${ centToYuan(currentBalance) } 元，可消耗` }}
-          <strong>{{ predictedInfo.days }}</strong>天
+        <h3 v-if="usableBalance <= 0">
+          扣除其余有效计划日预算后，您的推广资金可用余额为0元，请<router-link :to="{name: 'qwt-charge', query: {mode: 'charge-only'}}">充值</router-link>
+        </h3>
+        <h3 v-else>
+          您的推广资金余额：￥{{centToYuan(usableBalance)}} 元，可消耗<strong>{{predictedInfo.days}}</strong>天
         </h3>
         <contract-ack type="content-rule"></contract-ack>
         <div>
@@ -341,7 +343,8 @@ export default {
     recommendedWords: () => store.recommendedWords,
     originPromotion: () => store.originPromotion,
     currentBalance: () => store.currentBalance,
-    timeType: () => store.timeType
+    timeType: () => store.timeType,
+    usableBalance: () => store.usableBalance
   },
   props: {
     userInfo: {
@@ -562,7 +565,8 @@ export default {
     async initCampaignInfo() {
       await Promise.all([
         store.getCampaignInfo(this.id),
-        store.getCurrentBalance()
+        store.getCurrentBalance(),
+        store.getUsableBalance()
       ])
     },
     clickSourceTip() {
@@ -950,7 +954,7 @@ export default {
       }
       const dailyBudget = v * 100
       const {
-        currentBalance,
+        usableBalance,
         promotion
       } = this
 
@@ -962,7 +966,7 @@ export default {
       const prices = [...keywords, ...newKeywords]
         .map(k => k.price)
 
-      this.predictedInfo = getCampaignPrediction(currentBalance, dailyBudget, prices)
+      this.predictedInfo = getCampaignPrediction(usableBalance, dailyBudget, prices)
     }
   },
   async beforeDestroy() {
