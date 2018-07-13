@@ -527,7 +527,8 @@ export default {
       const prices = [...keywords, ...newKeywords]
         .map(k => k.price)
 
-      return getCampaignPrediction(usableBalance, v * 100, prices)
+      // 与创建时不同，这里需要加上计划原本设置的每日预算
+      return getCampaignPrediction(usableBalance + this.originPromotion.dailyBudget * 100, v * 100, prices)
     }
   },
   methods: {

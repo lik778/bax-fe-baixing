@@ -83,7 +83,7 @@ const store = observable({
 
     let timeType = ''
 
-    info.dailyBudget = info.dailyBudget / 100 | 0
+    info.dailyBudget = info.dailyBudget / 100
 
     if (info.landingPageId) {
       info.landingPageId = String(info.landingPageId)
