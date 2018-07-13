@@ -272,7 +272,7 @@
           扣除其余有效计划日预算后，您的推广资金可用余额为0元，请<router-link :to="{name: 'qwt-charge', query: {mode: 'charge-only'}}">充值</router-link>
         </h3>
         <h3 v-else>
-          您的推广资金余额：￥{{centToYuan(usableBalance)}} 元，可消耗<strong>{{predictedInfo.days}}</strong>天
+          扣除其余有效计划日预算后，您的推广资金可用余额为￥{{centToYuan(usableBalance)}}元，可消耗<strong>{{predictedInfo.days}}</strong>天
         </h3>
         <contract-ack type="content-rule"></contract-ack>
         <div>
@@ -452,10 +452,6 @@ export default {
       actionTrackId: uuid(),
       timeType: 'long', // long, custom
       queryWord: '',
-      predictedInfo: {
-        minDailyBudget: 10000,
-        duration: 0
-      },
 
       searchRecommendsVisible: false,
       durationSelectorVisible: false,
@@ -515,6 +511,29 @@ export default {
     },
     isCopy() {
       return this.$route.query.mode === MODE_COPY
+    },
+    predictedInfo() {
+      const v = this.newPromotion.dailyBudget
+      if (!v) {
+        return {
+          minDailyBudget: 10000,
+          duration: 0
+        }
+      }
+      const {
+        usableBalance,
+        newPromotion
+      } = this
+
+      const {
+        searchRecommends,
+        urlRecommends
+      } = newPromotion
+
+      const prices = [...searchRecommends, ...urlRecommends]
+        .map(word => word.price)
+
+      return getCampaignPrediction(usableBalance, v * 100, prices)
     }
   },
   methods: {
@@ -900,28 +919,6 @@ export default {
         actionTrackId
       })
     }, 800)
-  },
-  watch: {
-    'newPromotion.dailyBudget'(v) {
-      if (!v) {
-        return
-      }
-      const dailyBudget = v * 100
-      const {
-        usableBalance,
-        newPromotion
-      } = this
-
-      const {
-        searchRecommends,
-        urlRecommends
-      } = newPromotion
-
-      const prices = [...searchRecommends, ...urlRecommends]
-        .map(word => word.price)
-
-      this.predictedInfo = getCampaignPrediction(usableBalance, dailyBudget, prices)
-    }
   },
   beforeDestroy() {
     store.clearStore()
