@@ -1,16 +1,14 @@
 
 <template>
-  <header class="tip">
+  <header class="notice">
     <p>推广物料设置</p>
-    <el-tooltip placement="top">
+    <el-tooltip placement="right">
       <ul slot="content">
         <li v-for="(tip, i) in tips" :key="i">
           {{ tip }}
         </li>
       </ul>
-      <el-button size="mini" type="primary">
-        推广创意须知
-      </el-button>
+      <i class="el-icon-question"></i>
     </el-tooltip>
   </header>
 </template>
@@ -36,8 +34,10 @@ export default {
   background-color: unset;
   color: #20a0ff;
 }
-
-.tip {
+i {
+  margin-left: 10px;
+}
+.notice {
   display: flex;
   align-items: center;
   color: #6a778c;
