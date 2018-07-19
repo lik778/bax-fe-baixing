@@ -64,7 +64,7 @@
               <user-ad-selector
                 v-if="getProp('landingType') === 0"
                 type="reselect"
-                :disabled="!isCreativeEditable || isFormReadonly"
+                :disabled="disabled"
                 :all-areas="allAreas" :limit-mvp="false"
                 :selected-id="getProp('landingPageId')"
                 @select-ad="ad => onSelectAd(ad)">
@@ -87,12 +87,12 @@
           <aside>投放城市：</aside>
           <span>
             <el-tag type="success"
-              :closable="!isFormReadonly"
+              :closable="!isSales"
               v-for="c in getProp('areas')" :key="c"
               @close="removeArea(c)">
               {{ formatterArea(c) }}
             </el-tag>
-            <i v-if="!isFormReadonly" class="el-icon-plus"
+            <i v-if="!isSales" class="el-icon-plus"
               @click="areaDialogVisible = true">
             </i>
           </span>
@@ -114,16 +114,13 @@
         </div>
       </section>
       <creative-editor
-        :platform="getProp('source')"
+        :platforms="getProp('source')"
         :title="getProp('creativeTitle')"
         :content="getProp('creativeContent')"
-        :title-tip="creativeTitleTip"
-        :isFormReadonly="isFormReadonly"
-        :isCreativeEditable="isCreativeEditable"
-        :refuseReason="originPromotion.refuseReason"
-        :checkCreativeBtnDisabled="checkCreativeBtnDisabled"
+        :disabled="disabled"
         @change-title="v => promotion.creativeTitle = v"
         @change-content="v => promotion.creativeContent = v"
+        @error="e => {}"
       />
       <section class="keyword">
         <header>选取推广关键词</header>
@@ -137,7 +134,7 @@
           :words="currentKeywords"
           :offset="currentKeywordsOffset"
           :selectable="false"
-          :deletable="!isFormReadonly"
+          :deletable="!isSales"
           :show-prop-show="false"
           :show-prop-status="true"
           :show-prop-ranking="true"
@@ -147,7 +144,7 @@
           @change-offset="offset => currentKeywordsOffset = offset"
           @delete-word="word => promotion.deletedKeywords.push(word)"
         />
-        <h3 v-if="!isFormReadonly">
+        <h3 v-if="!isSales">
           <label>关键词不够？</label>
           <a @click="switchWordsVisible">点此自定义添加</a>
         </h3>
@@ -196,7 +193,7 @@
           </span>
           <span>
             <el-date-picker v-if="timeType === 'custom'"
-              :disabled="isFormReadonly"
+              :disabled="isSales"
               type="daterange" placeholder="选择日期范围"
               :picker-options="{disabledDate}"
               :value="getProp('validTime')"
@@ -208,7 +205,7 @@
           <aside>设置推广日预算:</aside>
           <span>
             <el-input
-              :disabled="isFormReadonly || !modifyBudgetQuota"
+              :disabled="isSales || !modifyBudgetQuota"
               type="number" placeholder="请输入每日最高预算"
               :value="getProp('dailyBudget')"
               @input="v => promotion.dailyBudget = Number(v)">
@@ -232,7 +229,7 @@
             先去充值
           </el-button>
           <el-button type="primary"
-            :disabled="isUpdating || isFormReadonly"
+            :disabled="isUpdating || isSales"
             @click="updatePromotion">
             更新推广
           </el-button>
@@ -405,9 +402,28 @@ export default {
 
       return q
     },
-    isFormReadonly() {
-      const { userInfo } = this
-      return isBaixingSales(userInfo.roles)
+    isSales() {
+      return isBaixingSales(this.userInfo.roles)
+    },
+    disabled() {
+      const source = this.getProp('source')
+
+      // 说明: sougou 审核中, 不允许修改创意; 但 360 可以
+      if ([
+        SEM_PLATFORM_SHENMA,
+        SEM_PLATFORM_BAIDU,
+        SEM_PLATFORM_QIHU
+      ].includes(source)) {
+        return true
+      }
+
+      if (source === SEM_PLATFORM_SOGOU &&
+        this.isCampaignOffline &&
+        this.creativeAuditing) {
+        return true
+      }
+
+      return this.creativeAuditing || this.isSales
     },
     currentKeywords() {
       const { keywords } = this.originPromotion
@@ -455,31 +471,10 @@ export default {
       }
     },
     isCreativeEditable() {
-      const source = this.getProp('source')
 
-      // 说明: sougou 审核中, 不允许修改创意; 但 360 可以
-      if ([
-        SEM_PLATFORM_SHENMA,
-        SEM_PLATFORM_BAIDU,
-        SEM_PLATFORM_QIHU
-      ].includes(source)) {
-        return true
-      }
-
-      if (source === SEM_PLATFORM_SOGOU &&
-        this.isCampaignOffline &&
-        this.isCreativeAuthing) {
-        return true
-      }
-
-      return !this.isCreativeAuthing
     },
-    isCreativeAuthing() {
-      const {
-        auditStatus
-      } = this.originPromotion
-
-      return auditStatus === CREATIVE_STATUS_PENDING
+    creativeAuditing() {
+      return this.originPromotion.auditStatus === CREATIVE_STATUS_PENDING
     },
     isCampaignOffline() {
       const {
@@ -497,7 +492,7 @@ export default {
         return '您当前的计划已下线，请重新开启投放'
       }
 
-      if (this.isCreativeAuthing) {
+      if (this.creativeAuditing) {
         return '您的推广物料正在审核中，预计审核时间3个工作日内，请您耐心等待。'
       }
 

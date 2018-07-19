@@ -1,6 +1,5 @@
 <template>
   <section class="editor">
-    <promotion-creative-tip />
     <div>
       <aside>推广标题:</aside>
       <span>
@@ -10,17 +9,11 @@
           :min="titleMinLen">
           <el-input slot="input" type="text" style="width: 420px"
             :placeholder="`请输入标题 ~ (字数限制为${titleMinLen}-${titleMaxLen}个字)`"
-            :disabled="!isCreativeEditable || isFormReadonly"
+            :disabled="disabled"
             :value="title"
             @change="onChangeTitle"
           />
         </text-limit-tip>
-        <p
-          v-if="titleTip"
-          class="authing-tip"
-        >
-          {{ titleTip }}
-        </p>
       </span>
     </div>
     <div>
@@ -35,37 +28,18 @@
           <el-input slot="input" type="textarea"
             :rows="5" style="width: 420px"
             :placeholder="`请输入内容 ~ (字数限制为${contentMinLen}-${contentMaxLen}个字)`"
-            :disabled="!isCreativeEditable || isFormReadonly"
+            :disabled="disabled"
             :value="content"
             @change="onChangeContent"
           />
         </text-limit-tip>
       </span>
-      <p class="authing-tip-2">
-        {{ refuseReason }}
-      </p>
     </div>
-    <footer v-if="!isFormReadonly">
-      <el-button
-        :disabled="checkCreativeBtnDisabled"
-        type="primary"
-        @click="checkCreativeContent"
-      >
-        检查推广是否可用
-      </el-button>
-    </footer>
   </section>
 </template>
 
 <script>
-import PromotionCreativeTip from './promotion-creative-tip'
 import TextLimitTip from './text-limit-tip'
-
-import { Message } from 'element-ui'
-
-import {
-  SEM_PLATFORM_SHENMA
-} from 'constant/fengming'
 
 import {
   getCreativeContentLenLimit,
@@ -79,28 +53,12 @@ import {
 export default {
   name: 'qwt-creative-editor',
   components: {
-    PromotionCreativeTip,
     TextLimitTip
   },
   props: {
-    checkCreativeBtnDisabled: {
+    disabled: {
       type: Boolean,
       default: false
-    },
-    isCreativeEditable: {
-      type: Boolean,
-      default: true
-    },
-    isFormReadonly: {
-      type: Boolean,
-      default: false
-    },
-    refuseReason: {
-      type: String,
-      default: ''
-    },
-    titleTip: {
-      type: String
     },
     title: {
       type: String,
@@ -110,66 +68,65 @@ export default {
       type: String,
       required: true
     },
-    platform: {
-      type: Number,
+    platforms: {
+      type: Array,
       required: true
-    }
-  },
-  data() {
-    return {
-      SEM_PLATFORM_SHENMA
     }
   },
   computed: {
     titleMinLen() {
-      const { platform } = this
-      return getCreativeTitleLenLimit(platform)[0]
+      const { platforms } = this
+      return getCreativeTitleLenLimit(platforms)[0]
     },
     titleMaxLen() {
-      const { platform } = this
-      return getCreativeTitleLenLimit(platform)[1]
+      const { platforms } = this
+      return getCreativeTitleLenLimit(platforms)[1]
     },
     contentMinLen() {
-      const { platform } = this
-      return getCreativeContentLenLimit(platform)[0]
+      const { platforms } = this
+      return getCreativeContentLenLimit(platforms)[0]
     },
     contentMaxLen() {
-      const { platform } = this
-      return getCreativeContentLenLimit(platform)[1]
+      const { platforms } = this
+      return getCreativeContentLenLimit(platforms)[1]
     }
   },
   methods: {
-    onChangeTitle(v) {
-      this.$emit('change-title', v)
+    async onChangeTitle(title) {
+      this.$emit('change-title', title)
+      try {
+        await this.checkCreative(title, this.content, this.platforms)
+        this.$emit('error', undefined)
+      } catch (e) {
+        this.$emit('error', e.message)
+      }
     },
-    onChangeContent(v) {
-      this.$emit('change-content', v)
+    async onChangeContent(content) {
+      this.$emit('change-content', content)
+      try {
+        await this.checkCreative(this.title, content, this.platforms)
+        this.$emit('error', undefined)
+      } catch (e) {
+        this.$emit('error', e.message)
+      }
     },
-    async checkCreativeContent() {
-      const {
-        platform,
-        content,
-        title
-      } = this
-
-      if (!content) {
-        return Message.error('请填写推广内容')
+    async checkCreative(title, content, platforms) {
+      if (!title) {
+        throw Error('请填写推广标题')
       }
 
-      if (!title) {
-        return Message.error('请填写推广标题')
+      if (!content) {
+        throw Error('请填写推广内容')
       }
 
       const data = await checkCreativeContent({
         creativeContent: content,
         creativeTitle: title,
-        platform
+        platforms
       })
 
-      if (!data.result) {
-        Message.success(data.hint)
-      } else {
-        return Message.error(data.hint)
+      if (data.result) {
+        throw Error(data.hint)
       }
     }
   }
@@ -177,20 +134,6 @@ export default {
 </script>
 
 <style scoped>
-.authing-tip {
-  display: inline-flex;
-  align-items: center;
-  font-size: 12px;
-  color: #ff4401;
-}
-
-.authing-tip-2 {
-  margin-left: 5px;
-  font-size: 12px;
-  line-height: 1.75;
-  color: #ff4401;
-}
-
 .editor {
   margin-bottom: 30px;
   padding-bottom: 10px;

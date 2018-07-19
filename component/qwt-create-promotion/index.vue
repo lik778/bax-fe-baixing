@@ -1,284 +1,111 @@
-
 <template>
   <div class="qwt-create-promotion">
+
     <topbar :user-info="userInfo">
       <label slot="title">全网通 - 新建推广</label>
     </topbar>
+
     <main>
       <section>
         <header>推广目标设置</header>
+
         <div>
-          <aside>选择渠道：</aside>
-          <span class="select-source">
-            <el-popover
-              ref="popover-baidu-preview"
-              placement="bottom-start"
-              trigger="hover"
-            >
-              <div class="source-preview">
-                <h3>效果示例：电脑端</h3>
-                <img :src="PRE_IMG_BAIDU_PC" />
-                <h3>效果示例：手机端</h3>
-                <img :src="PRE_IMG_BAIDU_WAP" />
-              </div>
-            </el-popover>
-            <el-popover
-              ref="popover-sougou-preview"
-              placement="bottom-start"
-              trigger="hover"
-            >
-              <div class="source-preview">
-                <h3>效果示例：电脑端</h3>
-                <img :src="PRE_IMG_SOGOU_PC" />
-                <h3>效果示例：手机端</h3>
-                <img :src="PRE_IMG_SOGOU_WAP" />
-              </div>
-            </el-popover>
-            <el-popover
-              ref="popover-360-preview"
-              placement="bottom-start"
-              trigger="hover"
-            >
-              <div class="source-preview">
-                <h3>效果示例：电脑端</h3>
-                <img :src="PRE_IMG_360_PC" />
-              </div>
-            </el-popover>
-            <el-popover
-              ref="popover-shenma-preview"
-              placement="bottom-start"
-              trigger="hover"
-            >
-              <div class="source-preview">
-                <h3>效果示例：移动端首位样式</h3>
-                <img :src="PRE_IMG_SHENMA_WAP_TOP" />
-                <h3>效果示例：移动端非首位样式</h3>
-                <img :src="PRE_IMG_SHENMA_WAP_NOT_TOP" />
-              </div>
-            </el-popover>
-            <el-button-group>
-              <el-button
-                v-popover:popover-baidu-preview
-                :type="newPromotion.source === SEM_PLATFORM_BAIDU ? 'primary' : ''"
-                @click="newPromotion.source = SEM_PLATFORM_BAIDU"
-              >
-                百度
-              </el-button>
-              <el-button
-                v-popover:popover-sougou-preview
-                :type="newPromotion.source === SEM_PLATFORM_SOGOU ? 'primary' : ''"
-                @click="newPromotion.source = SEM_PLATFORM_SOGOU"
-              >
-                搜狗
-              </el-button>
-              <el-button
-                v-popover:popover-360-preview
-                :type="newPromotion.source === SEM_PLATFORM_QIHU ? 'primary' : ''"
-                @click="newPromotion.source = SEM_PLATFORM_QIHU"
-              >
-                360
-              </el-button>
-              <el-button
-                v-popover:popover-shenma-preview
-                :type="newPromotion.source === SEM_PLATFORM_SHENMA ? 'primary' : ''"
-                @click="newPromotion.source = SEM_PLATFORM_SHENMA"
-              >
-                神马
-              </el-button>
-            </el-button-group>
-          </span>
-          <promotion-rule-link />
-          <i
-            v-if="newPromotion.source === SEM_PLATFORM_SHENMA"
-            class="warning"
-          >
-            神马渠道仅支持移动端
-          </i>
-        </div>
-        <p
-          v-if="newPromotion.source === SEM_PLATFORM_SHENMA"
-          style="justify-content: flex-start; margin-left: 80px;"
-          class="warning"
-        >
-          神马渠道禁止投放搬家、金融类（包括但不限于担保贷款）信息
-        </p>
-        <div>
-          <aside style="align-items: flex-start; padding-top: 5px;">
-            投放页面：
-          </aside>
-          <span class="landingpage">
-            <div>
-              <el-button-group>
-                <el-button v-for="o of landingTypeOpts" :key="o.value"
-                  @click="onLandingTypeChange(o.value)"
-                  :type="newPromotion.landingType === o.value ? 'primary' : ''">
-                  {{ o.label }}
-                </el-button>
-              </el-button-group>
+          <label>投放页面：</label>
+          <div class="landingpage">
+            <div style="margin-bottom: 10px">
+              <el-radio-group v-model="newPromotion.landingType">
+                <el-radio-button v-for="option of landingTypeOpts" :key="option.value" :label="option.value">{{option.label}}</el-radio-button>
+              </el-radio-group>
             </div>
-            <div style="margin-top: 20px; width: 560px;">
+            <div>
               <user-ad-selector :type="adSelectorType"
                 v-if="newPromotion.landingType === 0"
                 :all-areas="allAreas" :limit-mvp="false"
                 :selected-id="newPromotion.landingPageId"
-                @select-ad="ad => onSelectAd(ad)">
-              </user-ad-selector>
+                @select-ad="ad => onSelectAd(ad)"
+              />
 
               <qiqiaoban-page-selector
                 v-if="newPromotion.landingType === 1"
                 :value="newPromotion.landingPage"
-                @change="setLandingPage">
-              </qiqiaoban-page-selector>
+                @change="setLandingPage"
+              />
             </div>
-          </span>
+          </div>
         </div>
         <div>
-          <aside>投放城市：</aside>
-          <span>
+          <label>投放城市：</label>
+          <div>
             <el-tag type="success" closable
               v-for="c in newPromotion.areas" :key="c"
               @close="removeArea(c)">
               {{ formatterArea(c) }}
             </el-tag>
-            <i class="el-icon-plus"
-              @click="areaDialogVisible = true">
-            </i>
-          </span>
+            <i class="el-icon-plus" @click="areaDialogVisible = true"></i>
+          </div>
         </div>
-        <promotion-area-limit-tip :all-areas="allAreas"
-          :selected-areas="newPromotion.areas">
-        </promotion-area-limit-tip>
-        <div>
-          <aside>投放时段：</aside>
-          <span>
-            <label class="duration-type">
-              {{ getDurationType() }}
-            </label>
-            <el-button type="primary" size="small"
-              @click="durationSelectorVisible = true">
-              设置
-            </el-button>
-          </span>
-        </div>
+
+        <promotion-area-limit-tip :all-areas="allAreas" :selected-areas="newPromotion.areas" />
       </section>
-      <creative-editor
-        :platform="newPromotion.source"
-        :title="newPromotion.creativeTitle"
-        :content="newPromotion.creativeContent"
-        @change-title="v => newPromotion.creativeTitle = v"
-        @change-content="v => newPromotion.creativeContent = v"
-      />
+
+      <section class="creative">
+        <header><promotion-creative-tip /> </header>
+        <creative-editor
+          :platforms="newPromotion.sources"
+          :title="newPromotion.creativeTitle"
+          :content="newPromotion.creativeContent"
+          @change-title="v => newPromotion.creativeTitle = v"
+          @change-content="v => newPromotion.creativeContent = v"
+          @error="e => creativeError = e"
+        />
+      </section>
+
       <section class="keyword">
         <header>选取推广关键词</header>
-        <h4 v-if="!isCopy">建议选取20个以上关键词，关键词越多您的创意被展现的机会越多。根据当月数据，为您推荐如下关键词</h4>
-        <keyword-list mode="select"
-          :platform="newPromotion.source"
-          :words="urlRecommends"
-          :offset="urlRecommendsOffset"
-          :selected-words="newPromotion.urlRecommends"
-          :show-prop-show="!isCopy"
-          @update-word="updateUrlRecommend"
-          @change-offset="offset => urlRecommendsOffset = offset"
-          @select-words="words => newPromotion.urlRecommends = words"
-          @operated-pages="pages => urlRecommendsPages = pages">
-        </keyword-list>
-        <h3>
-          <label>若没有您满意的关键词，</label>
-          <a @click="switchWordsVisible">点此自定义添加</a>
-        </h3>
-        <div class="recommend"
-          v-if="searchRecommendsVisible">
-          <span>
-            <el-input placeholder="请输入关键词" v-model.trim="queryWord" @keyup.native.enter="recommendByWord">
-            </el-input>
-          </span>
-          <el-button type="primary" @click="recommendByWord">
-            查询
-          </el-button>
-          <strong>
-            （请优先添加较为核心的关键词，关键词长度不宜超过5个字，不区分大小写。）
-          </strong>
-        </div>
-        <keyword-list
-          v-if="searchRecommendsVisible"
-          mode="select"
-          :platform="newPromotion.source"
-          :words="addibleWords"
-          :offset="addibleWordsOffset"
-          :selected-words="newPromotion.searchRecommends"
-          @update-word="updateSearchRecommend"
-          @change-offset="setAddibleWordsOffset"
-          @select-words="words => newPromotion.searchRecommends = words"
-          @operated-pages="pages => searchRecommendsPages = pages">
-        </keyword-list>
-        <div
-          v-if="newPromotion.source !== SEM_PLATFORM_SHENMA"
-          class="mobile-ratio"
-        >
-          <section>
-            选择投放移动端的出价比例
-          </section>
-          <section>
-            <span>
-              <el-input
-                placeholder="默认为1"
-                v-model="newPromotion.mobilePriceRatio"
-              />
-            </span>
-            <span>
-              (请输入 0.1-9.9 之间的数字)
-            </span>
-          </section>
-          <promotion-mobile-ratio-tip />
-        </div>
+        <h4>建议选取20个以上关键词，关键词越多您的创意被展现的机会越多。根据当月数据，为您推荐如下关键词</h4>
       </section>
-      <section class="timing">
-        <header>设置时长和预算</header>
-        <div>
-          <aside>投放时间:</aside>
-          <span>
-            <el-button-group>
-              <el-button :type="timeType === 'long' ? 'primary' : ''"
-                @click="timeType = 'long'">
-                长期投放
-              </el-button>
-              <el-button :type="timeType === 'custom' ? 'primary' : ''"
-                @click="timeType = 'custom'">
-                定时投放
-              </el-button>
-            </el-button-group>
-          </span>
-          <span>
-            <el-date-picker v-if="timeType === 'custom'"
-              type="daterange" placeholder="选择日期范围"
-              :picker-options="{disabledDate}"
-              v-model="newPromotion.validTime">
-            </el-date-picker>
-          </span>
+
+      <section class="price">
+        <header>设置预算</header>
+        <div class="kw-price">
+          <label>关键词出价：</label>
+          <el-input type="number"
+            :value="f2y(kwPrice)"
+            @change="onKwPriceChange"
+            class="input"
+          >
+            <template slot="append">元</template>
+          </el-input>
         </div>
-        <div>
-          <aside>设置推广日预算:</aside>
-          <span>
-            <el-input type="number" placeholder="请输入每日最高预算"
-              v-model.number="newPromotion.dailyBudget">
-            </el-input>
-          </span>
-          <i>元</i>
-          <span>
-            （根据您选取的关键词，最低预算为<p>{{ centToYuan(predictedInfo.minDailyBudget) }}</p>元）
-          </span>
+
+        <div class="platform">
+          <label>选择渠道：</label>
+          <el-checkbox-group v-model="newPromotion.sources">
+            <el-checkbox-button v-for="(opt, index) in semPlatformOpts" :key="index" :label="opt.value">{{opt.label}}</el-checkbox-button>
+          </el-checkbox-group>
+          <promotion-rule-link />
         </div>
-        <h3 v-if="usableBalance <= 0">
+        <p v-if="isShenmaChecked" class="warning">神马渠道仅支持移动端, 禁止投放搬家、金融类（包括但不限于担保贷款）信息</p>
+
+        <div class="budget">
+          <label>设置单渠道日预算:</label>
+          <el-input type="number"
+            :value="f2y(newPromotion.dailyBudget)"
+            @change="onBudgetChange"
+            class="input"
+          >
+            <template slot="append">元</template>
+          </el-input>
+          <p>（根据您选取的关键词，最低预算为<strong class="red">{{ f2y(predictedInfo.minDailyBudget) }} </strong>元）</p>
+        </div>
+        <p v-if="usableBalance <= 0">
           扣除其余有效计划日预算后，您的推广资金可用余额为0元，请<router-link :to="{name: 'qwt-charge', query: {mode: 'charge-only'}}">充值</router-link>
-        </h3>
-        <h3 v-else>
-          扣除其余有效计划日预算后，您的推广资金可用余额为￥{{centToYuan(usableBalance)}}元，可消耗<strong>{{predictedInfo.days}}</strong>天
-        </h3>
-        <contract-ack type="content-rule"></contract-ack>
+        </p>
+        <p v-else>
+          扣除其余有效计划日预算后，您的推广资金可用余额为￥{{f2y(usableBalance)}}元，可消耗<strong class="red">{{predictedInfo.days}}</strong>天
+        </p>
+        <contract-ack type="content-rule" />
         <div>
-          <el-button v-if="false" type="primary">
-            先去充值
-          </el-button>
           <el-button type="primary"
             :disabled="isCreating"
             @click="createPromotion">
@@ -288,28 +115,19 @@
         <promotion-charge-tip></promotion-charge-tip>
       </section>
     </main>
+
     <area-selector type="qwt" :all-areas="allAreas"
       :areas="newPromotion.areas"
       :visible="areaDialogVisible"
       :enable-china="false"
       @ok="onChangeAreas"
-      @cancel="areaDialogVisible = false">
-    </area-selector>
-    <duration-selector
-      :visible="durationSelectorVisible"
-      :platform="newPromotion.source"
-      :schedule="getCurrentSchedule()"
-      @change="onChangeDuration"
-      @hide="durationSelectorVisible = false">
-    </duration-selector>
-    <copy-campaign-dialog
-      :visible="copyDialogVisible"
-      :platform="newPromotion.source"
-      @cancel="gotoPromotionList"
-      @copy="copyCampaign" />
+      @cancel="areaDialogVisible = false"
+    />
+
     <charge-dialog
       :visible="chargeDialogVisible"
-      @cancel="gotoPromotionList" />
+      @cancel="gotoPromotionList"
+    />
   </div>
 </template>
 
@@ -318,47 +136,31 @@ import { Message } from 'element-ui'
 import uuid from 'uuid/v4'
 import clone from 'clone'
 
-import PromotionMobileRatioTip from 'com/widget/promotion-mobile-ratio-tip'
+import PromotionCreativeTip from 'com/widget//promotion-creative-tip'
 import PromotionAreaLimitTip from 'com/widget/promotion-area-limit-tip'
 import QiqiaobanPageSelector from 'com/common/qiqiaoban-page-selector'
 import PromotionChargeTip from 'com/widget/promotion-charge-tip'
-import CopyCampaignDialog from 'com/common/copy-campaign-dialog'
 import PromotionRuleLink from 'com/widget/promotion-rule-link'
-import DurationSelector from 'com/common/duration-selector'
 import UserAdSelector from 'com/common/user-ad-selector'
 import CreativeEditor from 'com/widget/creative-editor'
-import KeywordList from 'com/common/qwt-keyword-list'
 import AreaSelector from 'com/common/area-selector'
 import ChargeDialog from 'com/common/charge-dialog'
 import ContractAck from 'com/widget/contract-ack'
-import FlatBtn from 'com/common/flat-btn'
 import Topbar from 'com/topbar'
+import SelectPlatform from './select-platform'
 
-import { disabledDate } from 'util/element'
 import track from 'util/track'
 
 import {
-  getCreativeContentLenLimit,
-  getCreativeTitleLenLimit,
-  checkCampaignValidTime,
-  getCampaignPrediction,
-  getCampaignValidTime
-} from 'util/campaign'
-
-import {
+  f2y,
+  toFloat,
   isQwtEnableCity,
   fmtAreasInQwt,
-  getCnName
-} from 'util/meta'
+  getCnName,
+  getCampaignPrediction
+} from 'util'
 
 import {
-  toHumanTime,
-  centToYuan
-} from 'utils'
-
-import {
-  checkCreativeContent,
-  getCampaignInfo,
   createCampaign
 } from 'api/fengming'
 
@@ -368,11 +170,8 @@ import {
 
 import {
   SEM_PLATFORM_SHENMA,
-  SEM_PLATFORM_BAIDU,
-  SEM_PLATFORM_SOGOU,
-  SEM_PLATFORM_QIHU,
-  LANDING_TYPE_AD,
-  landingTypeOpts
+  landingTypeOpts,
+  semPlatformOpts
 } from 'constant/fengming'
 
 import {
@@ -384,48 +183,38 @@ import {
   keywordPriceTip
 } from 'constant/tip'
 
-import {
-  assetHost
-} from 'config'
-
 import store from './store'
 
-const emptyPromotion = {
-  mobilePriceRatio: 1,
-  creativeContent: '',
-  creativeTitle: '',
-  dailyBudget: 100, // 元
-  landingPageId: '',
-  landingPage: '',
+const promotionTemplate = {
   landingType: 0,
-  validTime: [],
-  keywords: [],
+  landingPage: '',
+  landingPageId: '',
   areas: [],
-  source: SEM_PLATFORM_BAIDU,
-  //
-  searchRecommends: [],
-  urlRecommends: []
-}
 
-const MODE_COPY = 'copy'
+  creativeTitle: '',
+  creativeContent: '',
+
+  urlRecommends: [],
+  searchRecommends: [],
+  keywords: [],
+  sources: semPlatformOpts.map(opt => opt.value),
+  dailyBudget: 10000
+}
 
 export default {
   name: 'qwt-create-promotion',
   components: {
-    PromotionMobileRatioTip,
+    PromotionCreativeTip,
     PromotionAreaLimitTip,
     QiqiaobanPageSelector,
     PromotionChargeTip,
-    CopyCampaignDialog,
     PromotionRuleLink,
-    DurationSelector,
+    SelectPlatform,
     UserAdSelector,
     CreativeEditor,
     AreaSelector,
     ChargeDialog,
-    KeywordList,
     ContractAck,
-    FlatBtn,
     Topbar
   },
   fromMobx: {
@@ -448,103 +237,68 @@ export default {
   },
   data() {
     return {
-      newPromotion: clone(emptyPromotion),
+      newPromotion: clone(promotionTemplate),
       actionTrackId: uuid(),
-      timeType: 'long', // long, custom
       queryWord: '',
+      creativeError: null,
+      kwPrice: 200,
 
       searchRecommendsVisible: false,
-      durationSelectorVisible: false,
       chargeDialogVisible: false,
-      copyDialogVisible: false,
       areaDialogVisible: false,
 
-      urlRecommendsOffset: 0,
-      addibleWordsOffset: 0,
-      createdCampaignId: 0,
-      urlRecommendsPages: [0], // for logging
-      searchRecommendsPages: [0],
-
       landingTypeOpts,
-
+      semPlatformOpts,
       isCreating: false,
-
       showPromotion: false,
-      timeout: null,
-
-      PRE_IMG_SHENMA_WAP_NOT_TOP: assetHost + 'example-shenma-wap-not-top.jpeg',
-      PRE_IMG_SHENMA_WAP_TOP: assetHost + 'example-shenma-wap-top.jpeg',
-      PRE_IMG_SOGOU_WAP: assetHost + 'example-sougou-wap.png',
-      PRE_IMG_SOGOU_PC: assetHost + 'example-sougou-pc.png',
-      PRE_IMG_BAIDU_WAP: assetHost + 'example-baidu-wap.png',
-      PRE_IMG_BAIDU_PC: assetHost + 'example-baidu-pc.png',
-      PRE_IMG_360_PC: assetHost + 'example-360-pc.png',
-
-      SEM_PLATFORM_SHENMA,
-      SEM_PLATFORM_BAIDU,
-      SEM_PLATFORM_SOGOU,
-      SEM_PLATFORM_QIHU
+      timeout: null
     }
   },
   computed: {
+    isShenmaChecked() {
+      return this.newPromotion.sources.includes(SEM_PLATFORM_SHENMA)
+    },
+
     adSelectorType() {
-      const adId = this.$route.query.adId
-      if (adId) {
-        return 'reselect'
-      }
-
-      if ((this.newPromotion.landingType === LANDING_TYPE_AD) &&
-        this.isCopy) {
-        return 'reselect'
-      }
-
-      return ''
-    },
-    isFirstCampaign() {
-      return this.campaignsCount === 0
-    },
-    addibleWords() {
-      const words = this.urlRecommends.map(w => w.word.toLowerCase())
-
-      return this.searchRecommends
-        .filter(w => !words.includes(w.word.toLowerCase()))
-    },
-    isCopy() {
-      return this.$route.query.mode === MODE_COPY
+      return this.$route.query.adId ? 'reselect' : ''
     },
     predictedInfo() {
-      const v = this.newPromotion.dailyBudget
-      if (!v) {
+      const dailyBudget = this.newPromotion.dailyBudget
+
+      if (!dailyBudget) {
         return {
           minDailyBudget: 10000,
-          duration: 0
+          days: 0
         }
       }
-      const {
-        usableBalance,
-        newPromotion
-      } = this
+      const { usableBalance, newPromotion } = this
 
-      const {
-        searchRecommends,
-        urlRecommends
-      } = newPromotion
+      const { searchRecommends, urlRecommends } = newPromotion
 
-      const prices = [...searchRecommends, ...urlRecommends]
-        .map(word => word.price)
+      const prices = [...searchRecommends, ...urlRecommends].map(word => word.price)
 
-      return getCampaignPrediction(usableBalance, v * 100, prices)
+      return getCampaignPrediction(usableBalance, dailyBudget, prices)
     }
   },
   methods: {
-    centToYuan,
-    setAddibleWordsOffset(offset) {
-      this.addibleWordsOffset = offset
+    f2y,
+
+    onKwPriceChange(val) {
+      const fen = toFloat(val) * 100
+      this.newPromotion.keywords.forEach(kw => {
+        kw.price = fen
+      })
     },
-    async setLandingPage(url) {
+
+    onBudgetChange(val) {
+      this.newPromotion.dailyBudget = toFloat(val) * 100
+    },
+
+    setLandingPage(url) {
       this.newPromotion.landingPage = url
       this.newPromotion.areas = ['quanguo']
     },
+
     async onSelectAd(ad) {
       const { allAreas } = this
 
@@ -560,26 +314,7 @@ export default {
       this.newPromotion.creativeTitle = ad.title && ad.title.slice(0, 24)
       this.newPromotion.creativeContent = ad.content && ad.content.slice(0, 39)
     },
-    getCurrentSchedule() {
-      const { schedule } = this.newPromotion
-      return Array.isArray(schedule)
-        ? schedule.join(',')
-        : schedule
-    },
-    getDurationType() {
-      const { schedule } = this.newPromotion
-      if (!schedule) {
-        return '全时段'
-      }
 
-      const sum = schedule.reduce((a, b) => a + b, 0)
-
-      if (this.newPromotion.source === SEM_PLATFORM_SOGOU) {
-        return sum < 3670009 ? '部分时段' : '全时段'
-      }
-
-      return sum < 117440505 ? '部分时段' : '全时段'
-    },
     async createPromotion() {
       if (this.isCreating) {
         return Message.warning('正在创建中, 请稍等一小会 ~')
@@ -595,13 +330,7 @@ export default {
         baixingId: userInfo.baixingId,
         time: Date.now() / 1000 | 0,
         baxId: userInfo.id,
-        actionTrackId,
-        urlRecommends: this.urlRecommends.length,
-        selectedUrlRecommends: this.newPromotion.urlRecommends.length,
-        urlRecommendsPages: this.urlRecommendsPages.length,
-        searchRecommends: this.searchRecommends.length,
-        selectedSearchRecommends: this.newPromotion.searchRecommends.length,
-        searchRecommendsPages: this.searchRecommendsPages.length
+        actionTrackId
       })
 
       try {
@@ -610,6 +339,7 @@ export default {
         this.isCreating = false
       }
     },
+
     async _createPromotion() {
       const { currentBalance, allAreas } = this
 
@@ -620,20 +350,10 @@ export default {
       const pp = this.predictedInfo.minDailyBudget
 
       if (p.dailyBudget < pp) {
-        throw Message.error(`推广日预算需大于 ${centToYuan(pp)} 元`)
+        return Message.error(`推广日预算需大于 ${f2y(pp)} 元`)
       }
       if (p.dailyBudget > 1000000000) {
-        throw Message.error('推广日预算太高啦！您咋这么土豪呢~')
-      }
-
-      if (this.timeType === 'custom') {
-        if (checkCampaignValidTime(p.validTime) === 'custom') {
-          p.validTime = getCampaignValidTime(p.validTime)
-        } else {
-          throw Message.error('请填写投放日期或选择长期投放')
-        }
-      } else {
-        p.validTime = [null, null]
+        return Message.error('推广日预算太高啦！您咋这么土豪呢~')
       }
 
       p.keywords = [
@@ -641,61 +361,32 @@ export default {
         ...p.urlRecommends
       ]
 
-      p.mobilePriceRatio = parseFloat(p.mobilePriceRatio)
-      if (!(p.mobilePriceRatio >= 0.1 && p.mobilePriceRatio <= 9.9)) {
-        throw Message.error('请设置合理的移动端出价比例')
+      if (!p.landingPage) {
+        return Message.error('请填写投放页面')
       }
 
-      if (!p.landingPage) {
-        throw Message.error('请填写投放页面')
+      if (this.creativeError) {
+        return Message.error(this.creativeError)
+      }
+      if (!p.creativeTitle || !p.creativeContent) {
+        return Message.error('请填写创意')
       }
 
       if (!p.keywords.length) {
-        throw Message.error('请填写关键字')
+        return Message.error('请填写关键字')
       }
 
       for (const w of p.keywords) {
         if (w.price < MIN_WORD_PRICE || w.price > MAX_WORD_PRICE) {
-          throw Message.error(keywordPriceTip)
+          return Message.error(keywordPriceTip)
         }
       }
 
       if (!p.areas.length) {
-        throw Message.error('请选择城市')
+        return Message.error('请选择城市')
       }
 
-      if (!p.creativeTitle) {
-        throw Message.error('请填写创意标题')
-      }
-
-      let [min, max] = getCreativeTitleLenLimit(p.source)
-      if (p.creativeTitle.length < min ||
-        p.creativeTitle.length > max) {
-        throw Message.error(`创意标题需要在${min}-${max}个字`)
-      }
-
-      if (!p.creativeContent) {
-        throw Message.error('请填写创意内容')
-      }
-
-      [min, max] = getCreativeContentLenLimit(p.source)
-      if (p.creativeContent.length < min ||
-        p.creativeContent.length > max) {
-        throw Message.error(`创意内容需要在${min}-${max}个字`)
-      }
-
-      const res = await checkCreativeContent({
-        creativeContent: p.creativeContent,
-        creativeTitle: p.creativeTitle,
-        platform: p.source
-      })
-
-      if (res.result) {
-        throw Message.error(res.hint)
-      }
-
-      const id = await createCampaign(fmtAreasInQwt(p, allAreas))
-      this.createdCampaignId = id
+      await createCampaign(fmtAreasInQwt(p, allAreas))
 
       Message.success('创建成功')
 
@@ -703,8 +394,6 @@ export default {
 
       if (p.dailyBudget > currentBalance) {
         this.chargeDialogVisible = true
-      } else {
-        this.copyDialogVisible = true
       }
     },
     async recommendByWord() {
@@ -713,11 +402,7 @@ export default {
       if (!queryWord) {
         return Message.error('请输入查询关键词')
       }
-
-      const preLength = this.addibleWords.length
-
       await store.recommendByWord(queryWord, newPromotion.areas)
-      this.addibleWordsOffset = preLength
 
       // 默认选中搜索词
       const match = this.addibleWords.find(item => item.word === queryWord)
@@ -729,57 +414,7 @@ export default {
         }
       }
     },
-    async checkCreativeContent() {
-      const {
-        creativeContent,
-        creativeTitle,
-        source
-      } = this.newPromotion
 
-      if (!creativeContent) {
-        return Message.error('请填写推广内容')
-      }
-
-      if (!creativeTitle) {
-        return Message.error('请填写推广标题')
-      }
-
-      const data = await checkCreativeContent({
-        platform: source,
-        creativeContent,
-        creativeTitle
-      })
-
-      if (!data.result) {
-        Message.success(data.hint)
-      } else {
-        return Message.error(data.hint)
-      }
-    },
-    updateSearchRecommend(word) {
-      this.newPromotion.searchRecommends = this.newPromotion.searchRecommends.map(w => {
-        if (w.word === word.word) {
-          return {
-            ...w,
-            price: word.price
-          }
-        } else {
-          return {...w}
-        }
-      })
-    },
-    updateUrlRecommend(word) {
-      this.newPromotion.urlRecommends = this.newPromotion.urlRecommends.map(w => {
-        if (w.word === word.word) {
-          return {
-            ...w,
-            price: word.price
-          }
-        } else {
-          return w
-        }
-      })
-    },
     async recommendByUrl(newLandingPage = this.newPromotion.landingPage, areas = this.newPromotion.areas) {
       if (newLandingPage) {
         await store.recommendByUrl(newLandingPage, areas)
@@ -792,9 +427,7 @@ export default {
         name: 'qwt-promotion-list'
       })
     },
-    switchWordsVisible() {
-      this.searchRecommendsVisible = !this.searchRecommendsVisible
-    },
+
     onLandingTypeChange(typeId) {
       const { landingType } = this.newPromotion
       if (landingType === typeId) {
@@ -807,82 +440,31 @@ export default {
         this.newPromotion.landingPage = ''
       }
     },
+
     async onChangeAreas(areas) {
       this.newPromotion.areas = [...areas]
       this.areaDialogVisible = false
       await this.recommendByUrl()
     },
-    onChangeDuration(durations) {
-      this.newPromotion.schedule = durations
-    },
+
     formatterArea(name) {
       const { allAreas } = this
       return getCnName(name, allAreas)
     },
+
     removeArea(c) {
       this.newPromotion.areas = [
         ...this.newPromotion.areas.filter(i => i !== c)
       ]
-    },
-    async copyExistCampaignInfo(campaignId) {
-      const info = await getCampaignInfo(campaignId)
-
-      this.newPromotion.creativeContent = info.creative.content
-      this.newPromotion.creativeTitle = info.creative.title
-
-      if (info.landingPageId) {
-        // landingPageId === 0, 保存为 ''
-        this.newPromotion.landingPageId = String(info.landingPageId)
-      }
-      this.newPromotion.landingPage = info.landingPage
-      this.newPromotion.landingType = info.landingType
-
-      this.newPromotion.mobilePriceRatio = info.mobilePriceRatio
-      this.newPromotion.dailyBudget = info.dailyBudget / 100 | 0
-      this.newPromotion.source = this.$route.query.platform | 0
-      this.newPromotion.validTime = info.validTime
-      this.newPromotion.areas = info.areas
-
-      let timeType = ''
-
-      if (info.timeRange && info.timeRange.length &&
-        (info.timeRange[0] !== null) &&
-        (info.timeRange[1] !== null)) {
-        info.validTime = [
-          toHumanTime(info.timeRange[0], 'YYYY-MM-DD'),
-          toHumanTime(info.timeRange[1], 'YYYY-MM-DD')
-        ]
-
-        timeType = 'custom'
-      } else {
-        info.validTime = []
-        timeType = 'long'
-      }
-
-      this.timeType = timeType
-
-      const words = info.keywords
-        .map(k => ({
-          ...k,
-          ...k.extra
-        }))
-
-      this.newPromotion.urlRecommends = clone(words)
-      store.setCreativeWords(clone(words))
-    },
-    copyCampaign({platform}) {
-      this.$router.push({
-        name: 'bax-redirect-page',
-        query: {
-          campaignId: this.createdCampaignId,
-          targetPage: 'qwt-create-promotion',
-          mode: MODE_COPY,
-          platform
-        }
-      })
-    },
-    disabledDate
+    }
   },
+
+  watch: {
+    creativeError(message) {
+      Message.error(message)
+    }
+  },
+
   async mounted() {
     await Promise.all([
       store.getCurrentBalance(),
@@ -890,7 +472,8 @@ export default {
       store.getUsableBalance()
     ])
 
-    const { adId, mode, campaignId } = this.$route.query
+    // 主站个人中心跳转 case
+    const { adId } = this.$route.query
     if (adId) {
       const result = await queryAds({
         limitMvp: false,
@@ -903,11 +486,8 @@ export default {
       }
     }
 
-    if (mode === MODE_COPY && campaignId) {
-      await this.copyExistCampaignInfo(campaignId)
-    }
-
     setTimeout(() => {
+      // pv
       const { actionTrackId, userInfo } = this
 
       track({
@@ -920,9 +500,11 @@ export default {
       })
     }, 800)
   },
+
   beforeDestroy() {
     store.clearStore()
   },
+
   destroyed() {
     clearTimeout(this.timeout)
   }
@@ -932,42 +514,24 @@ export default {
 <style scoped>
 @import 'cssbase/mixin';
 
-.el-icon-plus {
-  cursor: pointer;
+
+.warning {
+  font-size: 12px;
+  color: red;
 }
 
-.el-tag {
-  margin-right: 5px;
-  margin-bottom: 5px;
+.input {
+  width: 150px;
 }
 
-.duration-type {
-  color: #6a778c;
-  font-size: 14px;
-}
-
-.select-source {
-  display: flex;
-  align-items: center;
-  width: 280px;
-}
-
-.source-preview {
-  width: 340px;
-  display: flex;
-  flex-flow: column;
-
-  & > h3 {
-    margin: 5px 0 10px;
-  }
-
-  & > img {
-    width: 330px;
-    height: auto;
-  }
+strong.red {
+  color: red;
+  margin: 0 5px;
 }
 
 .qwt-create-promotion {
+  font-size: 14px;
+  color: #6a778c;
   padding: 0 35px;
   width: 100%;
 
@@ -986,145 +550,15 @@ export default {
 
       & > div {
         display: flex;
+        align-items: baseline;
         margin: 20px 0;
-
-        & > aside:first-child {
-          display: flex;
-          align-items: center;
-          min-width: 70px;
-          margin-right: 20px;
-          color: #6a778c;
-          font-size: 14px;
-        }
       }
     }
 
-    & > section.keyword {
-      & > h4 {
-        margin: 20px 0 30px;
-        color: #6a778c;
-        font-size: 13px;
-        font-weight: normal;
-      }
+    & > section.price {
 
-      & > h3 {
-        font-size: 14px;
-        font-weight: normal;
-
-        & > label {
-          color: #424344;
-        }
-
-        & > a {
-          color: #0994ff;
-          cursor: pointer;
-        }
-      }
-
-      & > div.recommend {
-        display: flex;
-        align-items: center;
-
-        & > span {
-          margin-right: 20px;
-        }
-
-        & > strong {
-          color: #404e61;
-          font-size: 13px;
-          font-weight: normal;
-        }
-      }
-
-      & > div.mobile-ratio {
-        display: block;
-
-        & > section:first-child {
-          font-size: 14px;
-          line-height: 1;
-          color: #424344;
-        }
-
-        & > section:nth-child(2) {
-          margin-top: 16px;
-
-          & > span:last-child {
-            margin-left: 14px;
-            font-size: 13px;
-            color: #404e61;
-          }
-        }
-      }
-    }
-
-    & > section.timing {
-      & > div {
-        display: flex;
-        align-items: center;
-      }
-
-      & > div:nth-child(2) {
-        & > span:last-child {
-          margin-left: 20px;
-        }
-      }
-
-      & > div:nth-child(3) {
-        & > span:nth-child(2) {
-          width: 220px;
-        }
-
-        & > i {
-          margin-left: 5px;
-          color: #6a778c;
-          font-size: 13px;
-        }
-
-        & > span:last-child {
-          display: flex;
-          align-items: center;
-          margin: 0 3px;
-          width: 260px;
-          font-size: 13px;
-          color: #404e61;
-
-          & > p {
-            color: red;
-          }
-        }
-      }
-
-      & > h3 {
-        color: #6a778c;
-        font-size: 14px;
-        font-weight: normal;
-
-        & > strong {
-          margin: 0 5px;
-          color: #ff4401;
-          font-size: 18px;
-        }
-      }
     }
   }
 }
 
-.warning {
-  @mixin center;
-  padding-left: 12px;
-  font-size: 12px;
-  color: red;
-}
-
-.slide-fade-enter-active {
-  transition: all .4s ease;
-}
-
-.slide-fade-leave-active {
-  transition: all .2s cubic-bezier(1.0, 0.5, 0.8, 1.0);
-}
-
-.slide-fade-enter, .slide-fade-leave-to {
-  transform: translateX(100px);
-}
 </style>

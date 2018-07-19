@@ -195,7 +195,7 @@ import { displayCoupon } from 'util/meta'
 import {
   allowGetOrderPayUrl,
   allowPayOrder
-} from 'util/fengming-role'
+} from 'util'
 
 import {
   usingCondition
