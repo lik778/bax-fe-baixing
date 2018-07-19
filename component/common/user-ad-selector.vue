@@ -2,7 +2,7 @@
   <div class="user-ad-selector">
     <bax-input v-if="mode !== MODE_SELECTED"
       size="small" icon="el-icon-search"
-      style="width: 240px; margin-bottom: 14px;"
+      style="width: 240px; margin-bottom: 10px;"
       placeholder="请输入帖子标题进行搜索"
       v-model="keyword"
       @change="onKeywordChange" />

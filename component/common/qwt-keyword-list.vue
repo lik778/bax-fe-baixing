@@ -45,7 +45,7 @@
         <template slot-scope="s">
           <span class="price">
             <el-input size="mini" placeholder="单位: 元"
-              :value="centToYuan(getWordPrice(s.row.word))"
+              :value="f2y(getWordPrice(s.row.word))"
               @change="v => setCustomPrice(s.row, v)">
             </el-input>
             <span v-if="showAddPrice(s.row)"
@@ -111,26 +111,7 @@ import {
 } from 'util/element'
 
 import track from 'util/track'
-
-function toFloat(s, f = 2) {
-  const i = parseFloat(s).toFixed(f)
-
-  if (i === 'NaN') {
-    return 0
-  }
-
-  const n = parseFloat(i)
-
-  if (n <= 0) {
-    return 0
-  }
-
-  return n
-}
-
-function centToYuan(string) {
-  return toFloat(string, 0) / 100
-}
+import { toFloat, f2y } from 'util/kit'
 
 const MODE_SELECT = 'select'
 const MODE_UPDATE = 'update'
@@ -278,7 +259,7 @@ export default {
     }
   },
   methods: {
-    centToYuan,
+    f2y,
     showAddPrice(row) {
       // 过去24小时排名低于5或无排名的，在线的 keyword，在线的 campaign
       const {cpcRanking, isPriceChanged, status: keywordStatus} = row
@@ -407,7 +388,7 @@ export default {
       track({
         action: 'click-button: bump-price-by-20'
       })
-      this.setCustomPrice(row, centToYuan(this.getWordPrice(row.word)) * 1.2)
+      this.setCustomPrice(row, f2y(this.getWordPrice(row.word)) * 1.2)
     },
     fmtStatus(row) {
       const { chibiStatus, status } = row

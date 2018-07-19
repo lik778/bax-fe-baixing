@@ -75,7 +75,7 @@ import {
 import {
   allowGetOrderPayUrl,
   allowPayOrder
-} from 'util/role'
+} from 'util'
 
 import {
   toHumanTime,

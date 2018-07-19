@@ -191,7 +191,7 @@ import {
   allowUseKaPackage,
   allowSeeOldGw,
   allowPayOrder
-} from 'util/fengming-role'
+} from 'util'
 
 import {
   displayCoupon

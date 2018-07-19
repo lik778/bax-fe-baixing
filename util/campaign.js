@@ -68,18 +68,24 @@ export function getCampaignValidTime(range) {
   ]
 }
 
-export function getCreativeTitleLenLimit(platform) {
-  if (platform === SEM_PLATFORM_SHENMA) {
-    return [8, 35]
+export function getCreativeTitleLenLimit(platforms) {
+  let min = 9
+  let max = 25
+  if (platforms.includes(SEM_PLATFORM_SHENMA)) {
+    // [8, 35]
+    min = 8
   }
 
-  return [9, 25]
+  return [min, max]
 }
 
-export function getCreativeContentLenLimit(platform) {
-  if (platform === SEM_PLATFORM_SHENMA) {
-    return [8, 68]
+export function getCreativeContentLenLimit(platforms) {
+  let min = 9
+  let max = 40
+  if (platforms.includes(SEM_PLATFORM_SHENMA)) {
+    // [8, 68]
+    min = 8
   }
 
-  return [9, 40]
+  return [min, max]
 }

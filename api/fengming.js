@@ -104,7 +104,7 @@ export async function updateCampaign(id, data) {
 
 export async function createCampaign(data) {
   const body = await fengming
-    .post('/campaign')
+    .post('/campaign/create')
     .send(reverseCamelcase(data))
     .json()
 
@@ -194,7 +194,7 @@ export async function getUsableBalance() {
 
 export async function checkCreativeContent(opts) {
   const body = await fengming
-    .post('/creative/check')
+    .post('/creative/validate')
     .send(reverseCamelcase(opts))
     .json()
 
