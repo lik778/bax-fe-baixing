@@ -147,7 +147,6 @@ import AreaSelector from 'com/common/area-selector'
 import ChargeDialog from 'com/common/charge-dialog'
 import ContractAck from 'com/widget/contract-ack'
 import Topbar from 'com/topbar'
-import SelectPlatform from './select-platform'
 
 import track from 'util/track'
 
@@ -209,7 +208,6 @@ export default {
     QiqiaobanPageSelector,
     PromotionChargeTip,
     PromotionRuleLink,
-    SelectPlatform,
     UserAdSelector,
     CreativeEditor,
     AreaSelector,
