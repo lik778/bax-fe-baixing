@@ -72,7 +72,7 @@ import {
 
 import {
   allowPayOrder
-} from 'util/role'
+} from 'util'
 
 import {
   cancelOrder,

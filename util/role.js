@@ -33,15 +33,6 @@ export function allowPayOrder(roles) {
   ])
 }
 
-export function allowGetOrderPayUrl(roles) {
-  const currentRoles = normalizeRoles(roles)
-
-  return checkRoles(currentRoles, [
-    'NORMAL_OPERATOR',
-    'BAIXING_SALES'
-  ])
-}
-
 export function allowQueryOrders(roles) {
   const currentRoles = normalizeRoles(roles)
 

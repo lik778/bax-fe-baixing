@@ -74,5 +74,4 @@ function attachDisplayPrice(word) {
   }
 }
 
-
 export default store

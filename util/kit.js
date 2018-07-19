@@ -53,3 +53,26 @@ export function getImageInfo(file) {
     setTimeout(() => reject(new Error('加载图片超时')), 2000)
   })
 }
+
+export function f2y(fen) {
+  if (typeof fen === 'string') {
+    fen = toFloat(fen, 0)
+  }
+  return fen / 100
+}
+
+export function toFloat(str, f = 2) {
+  const i = parseFloat(str).toFixed(f)
+
+  if (i === 'NaN') {
+    return 0
+  }
+
+  const n = parseFloat(i)
+
+  if (n <= 0) {
+    return 0
+  }
+
+  return n
+}
