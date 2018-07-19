@@ -7,10 +7,6 @@ import {
   MIN_WORD_PRICE
 } from 'constant/keyword'
 
-import {
-  mergeKeywords
-} from 'util/campaign'
-
 const store = observable({
   _urlRecommends: [],
   _searchRecommends: [],
@@ -34,7 +30,7 @@ const store = observable({
   }),
   recommendByWord: action(async function(word, areas) {
     const words = await fapi.recommendByWord(word, areas)
-    this._searchRecommends = mergeKeywords(this._searchRecommends, words.map(attachDisplayPrice))
+    this._searchRecommends = words.slice(0, 10).map(attachDisplayPrice).map(attachValue)
   }),
   setCreativeWords: action(function(words) {
     // 场景: copy campaign 时, set keywords
@@ -71,6 +67,13 @@ function attachDisplayPrice(word) {
     ...word,
     serverPrice,
     price // override price, price is display value
+  }
+}
+
+function attachValue(word) {
+  return {
+    ...word,
+    value: word.word
   }
 }
 

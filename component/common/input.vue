@@ -3,6 +3,7 @@
   <el-input v-model="localValue"
     :placeholder="placeholder"
     :suffix-icon="icon"
+    :size="size"
     :type="type">
   </el-input>
 </template>
@@ -14,6 +15,10 @@ import { Subject } from 'rxjs/Subject'
 export default {
   name: 'bax-input',
   props: {
+    size: {
+      type: String,
+      default: 'small'
+    },
     placeholder: {
       type: String
     },
