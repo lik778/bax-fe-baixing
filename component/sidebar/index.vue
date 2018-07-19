@@ -38,6 +38,34 @@
           </el-menu-item>
         </el-submenu>
 
+        <el-submenu index="qwt-campaign" v-if="allowSeeQwtPromotion">
+          <template slot="title">
+            <bx-icon type="sharealt"></bx-icon>站外推广
+          </template>
+          <el-menu-item index="qwt-campaign-1">
+            <router-link :to="{ name: 'qwt-create-promotion' }" tag="p">
+              新建推广计划
+            </router-link>
+          </el-menu-item>
+          <el-menu-item index="qwt-campaign-2">
+            <router-link :to="{ name: 'qwt-promotion-list' }" tag="p">
+              管理推广计划
+            </router-link>
+          </el-menu-item>
+          <el-menu-item index="qwt-dashboard">
+            <router-link :to="{ name: 'qwt-dashboard' }" tag="p">
+              数据报表
+            </router-link>
+          </el-menu-item>
+        </el-submenu>
+
+        <el-menu-item index="operation-log" v-if="allowSeeQwtPromotion">
+          <!-- TODO: 标王推广跳转链接更换 -->
+          <router-link :to="{ name: 'operation-log' }" tag="p">
+            <i class="material-icons" style="font-size: 16px; margin-right: 11px; vertical-align: -3px;">dvr</i>标王推广
+          </router-link>
+        </el-menu-item>
+
         <el-submenu index="mvp-campaign" v-if="allowSeeQwtPromotion">
           <template slot="title">
             <bx-icon type="link"></bx-icon>智能投放
@@ -59,26 +87,6 @@
           </el-menu-item>
         </el-submenu>
 
-        <el-submenu index="qwt-campaign" v-if="allowSeeQwtPromotion">
-          <template slot="title">
-            <bx-icon type="sharealt"></bx-icon>广告投放
-          </template>
-          <el-menu-item index="qwt-campaign-1">
-            <router-link :to="{ name: 'qwt-create-promotion' }" tag="p">
-              新建推广计划
-            </router-link>
-          </el-menu-item>
-          <el-menu-item index="qwt-campaign-2">
-            <router-link :to="{ name: 'qwt-promotion-list' }" tag="p">
-              管理推广计划
-            </router-link>
-          </el-menu-item>
-          <el-menu-item index="qwt-dashboard">
-            <router-link :to="{ name: 'qwt-dashboard' }" tag="p">
-              数据报表
-            </router-link>
-          </el-menu-item>
-        </el-submenu>
 
         <el-submenu index="ssp" v-if="allowSeeBxAd">
           <template slot="title">
