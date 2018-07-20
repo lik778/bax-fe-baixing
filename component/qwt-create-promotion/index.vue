@@ -613,4 +613,8 @@ strong.red {
 .platform-checkbox {
   margin-right: 20px;
 }
+.el-icon-plus {
+  cursor: pointer;
+  font-size: 1.2em;
+}
 </style>

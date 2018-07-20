@@ -8,9 +8,9 @@
     <main>
       <el-menu default-active="0"
         background-color="#2e394b"
-        active-text-color="15a4fa"
+        active-text-color="rgb(255, 208, 75)"
         text-color="#e1e4ee"
-        :default-openeds="['ka', 'qwt-charge', 'qwt-campaign', 'mvp-campaign', 'ssp', 'qa']">
+       >
         <el-menu-item index="homepage">
           <router-link :to="{ name: 'root' }" tag="p">
             <bx-icon type="appstore"></bx-icon>首页
