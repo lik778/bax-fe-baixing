@@ -59,12 +59,11 @@
           </el-menu-item>
         </el-submenu>
 
-        <el-menu-item index="bax" v-if="allowSeeQwtPromotion">
-          <!-- TODO: 标王推广跳转链接更换 -->
+        <!-- <el-menu-item index="bax" v-if="allowSeeQwtPromotion">
           <router-link :to="{ name: 'root' }" tag="p">
             <i class="material-icons" style="font-size: 16px; margin-right: 11px; vertical-align: -3px;">dvr</i>标王推广
           </router-link>
-        </el-menu-item>
+        </el-menu-item> -->
 
         <el-submenu index="mvp-campaign" v-if="allowSeeQwtPromotion">
           <template slot="title">
