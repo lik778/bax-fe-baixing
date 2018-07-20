@@ -8,9 +8,9 @@
     <main>
       <el-menu default-active="0"
         background-color="#2e394b"
-        active-text-color="15a4fa"
+        active-text-color="rgb(255, 208, 75)"
         text-color="#e1e4ee"
-        :default-openeds="['ka', 'qwt-charge', 'qwt-campaign', 'mvp-campaign', 'ssp', 'qa']">
+       >
         <el-menu-item index="homepage">
           <router-link :to="{ name: 'root' }" tag="p">
             <bx-icon type="appstore"></bx-icon>首页
@@ -59,12 +59,11 @@
           </el-menu-item>
         </el-submenu>
 
-        <el-menu-item index="operation-log" v-if="allowSeeQwtPromotion">
-          <!-- TODO: 标王推广跳转链接更换 -->
-          <router-link :to="{ name: 'operation-log' }" tag="p">
+        <!-- <el-menu-item index="bax" v-if="allowSeeQwtPromotion">
+          <router-link :to="{ name: 'root' }" tag="p">
             <i class="material-icons" style="font-size: 16px; margin-right: 11px; vertical-align: -3px;">dvr</i>标王推广
           </router-link>
-        </el-menu-item>
+        </el-menu-item> -->
 
         <el-submenu index="mvp-campaign" v-if="allowSeeQwtPromotion">
           <template slot="title">

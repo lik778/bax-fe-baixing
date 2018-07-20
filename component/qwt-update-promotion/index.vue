@@ -15,38 +15,6 @@
       <section>
         <header>推广目标设置</header>
         <div>
-          <aside>投放渠道：</aside>
-          <span>
-            <el-button-group>
-              <el-button
-                :type="getProp('source') === SEM_PLATFORM_BAIDU ? 'primary' : ''"
-                @click="clickSourceTip"
-              >
-                百度
-              </el-button>
-              <el-button
-                :type="getProp('source') === SEM_PLATFORM_SOGOU ? 'primary' : ''"
-                @click="clickSourceTip"
-              >
-                搜狗
-              </el-button>
-              <el-button
-                :type="getProp('source') === SEM_PLATFORM_QIHU ? 'primary' : ''"
-                @click="clickSourceTip"
-              >
-                360
-              </el-button>
-              <el-button
-                :type="getProp('source') === SEM_PLATFORM_SHENMA ? 'primary' : ''"
-                @click="clickSourceTip"
-              >
-                神马
-              </el-button>
-            </el-button-group>
-          </span>
-          <promotion-rule-link />
-        </div>
-        <div>
           <aside style="align-items: flex-start; padding-top: 5px;">
             投放页面：
           </aside>
@@ -100,28 +68,19 @@
         <promotion-area-limit-tip :all-areas="allAreas"
           :selected-areas="getProp('areas')">
         </promotion-area-limit-tip>
-        <div>
-          <aside>投放时段：</aside>
-          <span>
-            <label class="duration-type">
-              {{ getDurationType() }}
-            </label>
-            <el-button type="primary" size="small"
-              @click="durationSelectorVisible = true">
-              设置
-            </el-button>
-          </span>
-        </div>
       </section>
-      <creative-editor
-        :platforms="getProp('source')"
-        :title="getProp('creativeTitle')"
-        :content="getProp('creativeContent')"
-        :disabled="disabled"
-        @change-title="v => promotion.creativeTitle = v"
-        @change-content="v => promotion.creativeContent = v"
-        @error="e => {}"
-      />
+      <section class="creative">
+        <header><promotion-creative-tip /> </header>
+        <creative-editor
+          :platforms="[getProp('source')]"
+          :title="getProp('creativeTitle')"
+          :content="getProp('creativeContent')"
+          :disabled="disabled"
+          @change-title="v => promotion.creativeTitle = v"
+          @change-content="v => promotion.creativeContent = v"
+          @error="e => {}"
+        />
+      </section>
       <section class="keyword">
         <header>选取推广关键词</header>
         <h4>
@@ -178,33 +137,58 @@
       <section class="timing">
         <header>设置时长和预算</header>
         <div>
-          <aside>投放时间:</aside>
+          <aside>投放渠道&nbsp;
+            <el-tooltip placement="top" content="行业投放规则">
+            <a href="/qa?promotion-rules" style="color: #6a778c;">
+              <i class="el-icon-question"></i>
+            </a>
+            </el-tooltip>：
+          </aside>
           <span>
-            <el-button-group>
-              <el-button :type="timeType === 'long' ? 'primary' : ''"
-                @click="setTimeType('long')">
-                长期投放
+            <!-- <el-button-group>
+              <el-button
+                :type="getProp('source') === SEM_PLATFORM_BAIDU ? 'primary' : ''"
+                @click="clickSourceTip"
+              >
+                百度
               </el-button>
-              <el-button :type="timeType === 'custom' ? 'primary' : ''"
-                @click="setTimeType('custom')">
-                定时投放
+              <el-button
+                :type="getProp('source') === SEM_PLATFORM_SOGOU ? 'primary' : ''"
+                @click="clickSourceTip"
+              >
+                搜狗
               </el-button>
-            </el-button-group>
+              <el-button
+                :type="getProp('source') === SEM_PLATFORM_QIHU ? 'primary' : ''"
+                @click="clickSourceTip"
+              >
+                360
+              </el-button>
+              <el-button
+                :type="getProp('source') === SEM_PLATFORM_SHENMA ? 'primary' : ''"
+                @click="clickSourceTip"
+              >
+                神马
+              </el-button>
+            </el-button-group> -->
+            <el-checkbox-group :value="[getProp('source')]" disabled>
+              <el-checkbox
+                @click.native="clickSourceTip"
+                v-for="sourceTip in Object.entries(sourceTipMap)" 
+                :key="sourceTip[0]"
+                :label="+sourceTip[0]"
+                >
+                {{sourceTip[1]}}
+              </el-checkbox>
+            </el-checkbox-group>
           </span>
-          <span>
-            <el-date-picker v-if="timeType === 'custom'"
-              :disabled="isSales"
-              type="daterange" placeholder="选择日期范围"
-              :picker-options="{disabledDate}"
-              :value="getProp('validTime')"
-              @input="v => promotion.validTime = v">
-            </el-date-picker>
-          </span>
+          <!-- <promotion-rule-link /> -->
         </div>
         <div>
           <aside>设置推广日预算:</aside>
           <span>
             <el-input
+              size="small"
               :disabled="isSales || !modifyBudgetQuota"
               type="number" placeholder="请输入每日最高预算"
               :value="getProp('dailyBudget')"
@@ -212,17 +196,93 @@
             </el-input>
           </span>
           <i>元</i>
-          <span>
-            （根据您选取的关键词，最低预算为<p>{{ centToYuan(predictedInfo.minDailyBudget) }}</p>元，
-            今日还可修改<p>{{ modifyBudgetQuota }}</p>次）
+          <span class="prompt-text">
+            （根据您选取的关键词，最低预算为<strong>{{ centToYuan(predictedInfo.minDailyBudget) }}</strong>元，
+            今日还可修改<strong>{{ modifyBudgetQuota }}</strong>次）
           </span>
         </div>
-        <h3 v-if="usableBalance <= 0">
+        <h3 v-if="usableBalance <= 0" class="prompt-text">
           扣除其余有效计划日预算后，您的推广资金可用余额为0元，请<router-link :to="{name: 'qwt-charge', query: {mode: 'charge-only'}}">充值</router-link>
         </h3>
-        <h3 v-else>
+        <h3 v-else class="prompt-text">
           扣除其余有效计划日预算后，您的推广资金可用余额为￥{{centToYuan(usableBalance)}}元，可消耗<strong>{{predictedInfo.days}}</strong>天
         </h3>
+        
+
+        <el-button 
+          type="primary" 
+          :style="{marginTop: '20px'}" 
+          :icon="moreSettingDisplay ? 'el-icon-arrow-up' : 'el-icon-arrow-down'"
+          @click="toggleDisplaySettingArea"
+          >
+          更多设置
+        </el-button>
+        <section v-show="moreSettingDisplay" class="more-setting-container">
+          <!-- TODO: -->
+          <section class="promotion-time">
+            <div>
+              <aside>投放时段：</aside>
+              <span>
+                <label class="duration-type">
+                  {{ getDurationType() }}
+                </label>
+                <el-button type="primary" size="small"
+                  @click="durationSelectorVisible = true">
+                  设置
+                </el-button>
+              </span>
+            </div>
+            <div>
+              <aside>投放时间:</aside>
+              <span>
+                <el-button-group>
+                  <el-button :type="timeType === 'long' ? 'primary' : ''"
+                    size="small"
+                    @click="setTimeType('long')">
+                    长期投放长期投放
+                  </el-button>
+                  <el-button :type="timeType === 'custom' ? 'primary' : ''"
+                    size="small"
+                    @click="setTimeType('custom')">
+                    定时投放
+                  </el-button>
+                </el-button-group>
+              </span>
+              <span>
+                <el-date-picker v-if="timeType === 'custom'"
+                  size="small"
+                  :disabled="isSales"
+                  type="daterange" placeholder="选择日期范围"
+                  :picker-options="{disabledDate}"
+                  :value="getProp('validTime')"
+                  @input="v => promotion.validTime = v">
+                </el-date-picker>
+              </span>
+            </div>
+          </section>
+          <section class="mobile-ratio" v-if="getProp('source') !== SEM_PLATFORM_SHENMA">
+            <section>
+              <label>
+                选择投放移动端的出价比例：
+              </label>
+              <section>
+                <span>
+                  <el-input
+                    size="small"
+                    :value="getProp('mobilePriceRatio')"
+                    @input="v => promotion.mobilePriceRatio = v"
+                    placeholder="默认为1"
+                  />
+                </span>
+                <span class="prompt-text">
+                  (请输入 0.1-9.9 之间的数字)
+                </span>
+              </section>
+            </section>
+            <promotion-mobile-ratio-tip />
+          </section>
+        </section>
+    
         <contract-ack type="content-rule"></contract-ack>
         <div>
           <el-button v-if="false" type="primary">
@@ -260,8 +320,10 @@ import { Message } from 'element-ui'
 import isEqual from 'lodash.isequal'
 import uuid from 'uuid/v4'
 
+import PromotionMobileRatioTip from 'com/widget/promotion-mobile-ratio-tip'
 import PromotionAreaLimitTip from 'com/widget/promotion-area-limit-tip'
 import QiqiaobanPageSelector from 'com/common/qiqiaoban-page-selector'
+import PromotionCreativeTip from 'com/widget//promotion-creative-tip'
 import PromotionChargeTip from 'com/widget/promotion-charge-tip'
 import PromotionRuleLink from 'com/widget/promotion-rule-link'
 import DurationSelector from 'com/common/duration-selector'
@@ -321,11 +383,20 @@ import store from './store'
 
 const isArray = Array.isArray
 
+const sourceTipMap = {
+  [SEM_PLATFORM_BAIDU]: '百度',
+  [SEM_PLATFORM_SOGOU]: '搜狗',
+  [SEM_PLATFORM_QIHU]: '360',
+  [SEM_PLATFORM_SHENMA]: '神马'
+}
+
 export default {
   name: 'qwt-update-promotion',
   components: {
+    PromotionMobileRatioTip,
     PromotionAreaLimitTip,
     QiqiaobanPageSelector,
+    PromotionCreativeTip,
     PromotionChargeTip,
     PromotionRuleLink,
     DurationSelector,
@@ -355,6 +426,8 @@ export default {
   },
   data() {
     return {
+      sourceTipMap, // 投放渠道
+
       actionTrackId: uuid(),
       landingTypeOpts,
 
@@ -381,8 +454,11 @@ export default {
         // 关键词
         updatedKeywords: [],
         deletedKeywords: [],
-        newKeywords: []
+        newKeywords: [],
+        
       },
+
+      moreSettingDisplay: false,
 
       searchRecommendsPages: [0], // for logging
 
@@ -527,6 +603,9 @@ export default {
     }
   },
   methods: {
+    toggleDisplaySettingArea() {
+      this.moreSettingDisplay = !this.moreSettingDisplay
+    },
     setAddibleWordsOffset(offset) {
       this.addibleWordsOffset = offset
     },
@@ -813,13 +892,15 @@ export default {
     },
     async _updatePromotion() {
       const { allAreas } = this
-
+      console.error()
       let data = {}
       try {
         data = {
           ...this.getUpdatedCreativeData(),
           ...this.getUpdatedPromotionData(),
-          ...this.getUpdatedKeywordsData()
+          ...this.getUpdatedKeywordsData(),
+          // TODO: 添加一个更新移动端出价比例的字段
+          mobilePriceRatio: this.promotion.mobilePriceRatio
         }
       } catch (err) {
         Message.error(err.message)
@@ -839,8 +920,10 @@ export default {
         newKeywords = [],
 
         creativeContent,
-        creativeTitle
+        creativeTitle,
+        mobilePriceRatio
       } = data
+
 
       const words = [...updatedKeywords, ...newKeywords]
 
@@ -864,6 +947,13 @@ export default {
 
         if (res.result) {
           return Message.error(res.hint)
+        }
+      }
+
+      if(mobilePriceRatio !== undefined) {
+        const ratio = +(Number(mobilePriceRatio).toFixed(2))
+        if(!(ratio >= 0.1 && ratio <= 9.9)) {
+          return Message.error('投放移动端的出价比率应在0.1 ~ 9.9之间')
         }
       }
 
@@ -1044,12 +1134,14 @@ export default {
 
       & > header {
         color: #6a778c;
+        font-weight: bold;
+        font-size: 14px;
       }
 
       & > div {
         display: flex;
         margin: 20px 0;
-
+        /* TODO: */
         & > aside:first-child {
           display: flex;
           align-items: center;
@@ -1111,11 +1203,11 @@ export default {
         align-items: center;
       }
 
-      & > div:nth-child(2) {
+      /* & > div:nth-child(2) {
         & > span:last-child {
           margin-left: 20px;
         }
-      }
+      } */
 
       & > div:nth-child(3) {
         & > span:nth-child(2) {
@@ -1136,8 +1228,9 @@ export default {
           font-size: 13px;
           color: #404e61;
 
-          & > p {
+          & > strong {
             color: red;
+            margin: 0 5px;
           }
         }
       }
@@ -1155,5 +1248,55 @@ export default {
       }
     }
   }
+}
+
+.more-setting-container {
+  margin-top: 30px;
+  padding-top: 30px;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-top: 1px solid #c0ccda;
+  border-bottom: 1px solid #c0ccda;
+  & > section {
+    &.promotion-time {
+      display: flex;
+      align-items: center;
+      & /deep/ .el-date-editor {
+        position: relative;
+        top: 2px;
+      }
+    }
+    & > div {
+      &:nth-child(2) {
+        margin-left: 60px;
+      }
+      & > aside {
+        color: #6a778c;
+        font-size: 14px;
+        margin-right: 16px;
+      }
+    }
+
+    &.mobile-ratio {
+      & > section {
+        display: flex;
+        align-items: center;
+        margin-top: 30px;
+        & > label {
+          color: #6a778c;
+          font-size: 14px;
+          margin-right: 16px;
+        }
+        & .prompt-text {
+          margin-left: 14px;
+          color: #404e61;
+        }
+      }
+    }
+  }
+}
+
+.prompt-text {
+  font-size: 12px !important;
 }
 </style>

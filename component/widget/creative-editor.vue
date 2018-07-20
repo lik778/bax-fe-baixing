@@ -7,11 +7,12 @@
           :rest="titleMaxLen - title.length"
           :current="title.length"
           :min="titleMinLen">
-          <el-input slot="input" type="text" style="width: 420px"
+          <el-input slot="input" type="text" style="width: 530px"
             :placeholder="`请输入标题 ~ (字数限制为${titleMinLen}-${titleMaxLen}个字)`"
             :disabled="disabled"
             :value="title"
             @change="onChangeTitle"
+            size="small"
           />
         </text-limit-tip>
       </span>
@@ -26,7 +27,7 @@
           :current="content.length"
           :min="contentMinLen">
           <el-input slot="input" type="textarea"
-            :rows="5" style="width: 420px"
+            :rows="4" style="width: 530px"
             :placeholder="`请输入内容 ~ (字数限制为${contentMinLen}-${contentMaxLen}个字)`"
             :disabled="disabled"
             :value="content"
@@ -135,7 +136,6 @@ export default {
 
 <style scoped>
 .editor {
-  margin-bottom: 30px;
   padding-bottom: 10px;
 
   & > header {
