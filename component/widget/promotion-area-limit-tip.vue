@@ -41,7 +41,7 @@ export default {
 <style scoped>
 div {
   margin-bottom: 10px;
-  font-size: 14px;
+  font-size: 12px;
   color: #ff1f0e;
 }
 </style>

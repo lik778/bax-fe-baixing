@@ -13,7 +13,7 @@
           <label>投放页面：</label>
           <div class="landingpage">
             <div style="margin-bottom: 10px">
-              <el-radio-group v-model="newPromotion.landingType">
+              <el-radio-group v-model="newPromotion.landingType" size="small">
                 <el-radio-button v-for="option of landingTypeOpts" :key="option.value" :label="option.value">{{option.label}}</el-radio-button>
               </el-radio-group>
             </div>
@@ -36,7 +36,7 @@
         <div>
           <label>投放城市：</label>
           <div>
-            <el-tag type="success" closable
+            <el-tag type="success" closable class="kw-tag"
               v-for="c in newPromotion.areas" :key="c"
               @close="removeArea(c)">
               {{ formatterArea(c) }}
@@ -62,46 +62,59 @@
 
       <section class="keyword">
         <header>选取推广关键词</header>
-        <h4>建议选取20个以上关键词，关键词越多您的创意被展现的机会越多。根据当月数据，为您推荐如下关键词</h4>
+        <p class="tip">建议选取20个以上关键词，关键词越多您的创意被展现的机会越多。根据当月数据，为您推荐如下关键词</p>
+        <div>
+          <el-tag class="kw-tag" v-for="(kw, index) in newPromotion.keywords" :key="index" closable @close="removeKeyword(index)">{{kw.word}}</el-tag>
+          <el-autocomplete
+            v-model="queryWord"
+            :fetch-suggestions="fetchRecommends"
+            placeholder="添加自定义词"
+            @select="selectRecommend"
+            :trigger-on-focus="false"
+            size="small"
+          />
+        </div>
       </section>
 
       <section class="price">
         <header>设置预算</header>
         <div class="kw-price">
-          <label>关键词出价：</label>
+          <label>关键词出价<cpc-price-tip />：</label>
           <el-input type="number"
-            :value="f2y(kwPrice)"
+            :value="f2y(kwPrice) || f2y(recommendKwPrice)"
             @change="onKwPriceChange"
             class="input"
+            size="small"
           >
             <template slot="append">元</template>
           </el-input>
+          <span class="tip">（关键词出价区间为 [2, 999] 元）</span>
         </div>
 
         <div class="platform">
-          <label>选择渠道：</label>
-          <el-checkbox-group v-model="newPromotion.sources">
-            <el-checkbox-button v-for="(opt, index) in semPlatformOpts" :key="index" :label="opt.value">{{opt.label}}</el-checkbox-button>
+          <label>选择渠道<a target="_blank" href="/qa?promotion-rules"><i class="el-icon-question"></i></a>：</label>
+          <el-checkbox-group v-model="newPromotion.sources" size="small" class="platform-checkbox">
+            <el-checkbox v-for="(opt, index) in semPlatformOpts" :key="index" :label="opt.value">{{opt.label}}</el-checkbox>
           </el-checkbox-group>
-          <promotion-rule-link />
+          <p v-if="isShenmaChecked" class="tip warning">神马渠道仅支持移动端, 禁止投放搬家、金融类（包括但不限于担保贷款）信息</p>
         </div>
-        <p v-if="isShenmaChecked" class="warning">神马渠道仅支持移动端, 禁止投放搬家、金融类（包括但不限于担保贷款）信息</p>
 
         <div class="budget">
-          <label>设置单渠道日预算:</label>
+          <label>单渠道日预算：</label>
           <el-input type="number"
             :value="f2y(newPromotion.dailyBudget)"
             @change="onBudgetChange"
             class="input"
+            size="small"
           >
             <template slot="append">元</template>
           </el-input>
-          <p>（根据您选取的关键词，最低预算为<strong class="red">{{ f2y(predictedInfo.minDailyBudget) }} </strong>元）</p>
+          <p class="tip">（根据您选取的关键词，最低预算为<strong class="red">{{ f2y(predictedInfo.minDailyBudget) }} </strong>元）</p>
         </div>
-        <p v-if="usableBalance <= 0">
+        <p v-if="usableBalance <= 0" class="tip">
           扣除其余有效计划日预算后，您的推广资金可用余额为0元，请<router-link :to="{name: 'qwt-charge', query: {mode: 'charge-only'}}">充值</router-link>
         </p>
-        <p v-else>
+        <p v-else class="tip">
           扣除其余有效计划日预算后，您的推广资金可用余额为￥{{f2y(usableBalance)}}元，可消耗<strong class="red">{{predictedInfo.days}}</strong>天
         </p>
         <contract-ack type="content-rule" />
@@ -141,6 +154,7 @@ import PromotionAreaLimitTip from 'com/widget/promotion-area-limit-tip'
 import QiqiaobanPageSelector from 'com/common/qiqiaoban-page-selector'
 import PromotionChargeTip from 'com/widget/promotion-charge-tip'
 import PromotionRuleLink from 'com/widget/promotion-rule-link'
+import CpcPriceTip from 'com/widget/cpc-price-tip'
 import UserAdSelector from 'com/common/user-ad-selector'
 import CreativeEditor from 'com/widget/creative-editor'
 import AreaSelector from 'com/common/area-selector'
@@ -178,9 +192,7 @@ import {
   MAX_WORD_PRICE
 } from 'constant/keyword'
 
-import {
-  keywordPriceTip
-} from 'constant/tip'
+import { keywordPriceTip } from 'constant/tip'
 
 import store from './store'
 
@@ -193,8 +205,6 @@ const promotionTemplate = {
   creativeTitle: '',
   creativeContent: '',
 
-  urlRecommends: [],
-  searchRecommends: [],
   keywords: [],
   sources: semPlatformOpts.map(opt => opt.value),
   dailyBudget: 10000
@@ -213,6 +223,7 @@ export default {
     AreaSelector,
     ChargeDialog,
     ContractAck,
+    CpcPriceTip,
     Topbar
   },
   fromMobx: {
@@ -239,7 +250,7 @@ export default {
       actionTrackId: uuid(),
       queryWord: '',
       creativeError: null,
-      kwPrice: 200,
+      kwPrice: 0,
 
       searchRecommendsVisible: false,
       chargeDialogVisible: false,
@@ -271,21 +282,52 @@ export default {
       }
       const { usableBalance, newPromotion } = this
 
-      const { searchRecommends, urlRecommends } = newPromotion
-
-      const prices = [...searchRecommends, ...urlRecommends].map(word => word.price)
+      let prices = []
+      if (this.kwPrice) {
+        prices = newPromotion.keywords.map(kw => this.kwPrice)
+      } else {
+        prices = newPromotion.keywords.map(kw => this.recommendKwPrice)
+      }
 
       return getCampaignPrediction(usableBalance, dailyBudget, prices)
+    },
+
+    recommendKwPrice() {
+      console.log(this.newPromotion.keywords.map(kw => kw.price))
+      const max = Math.max.apply(null, this.newPromotion.keywords.map(kw => kw.price))
+      console.log(toFloat(max * 0.8, 0))
+      return toFloat(max * 0.8, 0)
     }
   },
   methods: {
     f2y,
 
+    fetchRecommends(query, cb) {
+      if (query.trim()) {
+        store.recommendByWord(query, this.newPromotion.areas).then(
+          () => {
+            cb(this.searchRecommends)
+          }
+        )
+      }
+    },
+
+    selectRecommend(item) {
+      const { keywords } = this.newPromotion
+      if (keywords.find(kw => kw.word === item.word)) {
+        Message.warning('已选择该关键词')
+      } else {
+        keywords.push(item)
+        this.queryWord = ''
+      }
+    },
+
+    removeKeyword(index) {
+      this.newPromotion.keywords.splice(index, 1)
+    },
+
     onKwPriceChange(val) {
-      const fen = toFloat(val) * 100
-      this.newPromotion.keywords.forEach(kw => {
-        kw.price = fen
-      })
+      this.kwPrice = toFloat(val) * 100
     },
 
     onBudgetChange(val) {
@@ -343,21 +385,16 @@ export default {
 
       const p = clone(this.newPromotion)
 
-      p.dailyBudget = p.dailyBudget * 100
+      p.dailyBudget = p.dailyBudget
 
       const pp = this.predictedInfo.minDailyBudget
 
       if (p.dailyBudget < pp) {
         return Message.error(`推广日预算需大于 ${f2y(pp)} 元`)
       }
-      if (p.dailyBudget > 1000000000) {
+      if (p.dailyBudget > 10000000 * 100) {
         return Message.error('推广日预算太高啦！您咋这么土豪呢~')
       }
-
-      p.keywords = [
-        ...p.searchRecommends,
-        ...p.urlRecommends
-      ]
 
       if (!p.landingPage) {
         return Message.error('请填写投放页面')
@@ -384,6 +421,22 @@ export default {
         return Message.error('请选择城市')
       }
 
+      if (this.kwPrice) {
+        if (this.kwPrice < 200 || this.kwPrice > 99900) {
+          return Message.error('关键词价格需在[2, 999]区间内')
+        } else {
+          p.keywords.forEach(kw => {
+            kw.price = this.kwPrice
+          })
+        }
+      } else {
+        p.keywords.forEach(kw => {
+          kw.price = this.recommendKwPrice
+        })
+      }
+
+      console.log(`创建计划参数：`, p)
+
       await createCampaign(fmtAreasInQwt(p, allAreas))
 
       Message.success('创建成功')
@@ -393,6 +446,10 @@ export default {
       if (p.dailyBudget > currentBalance) {
         this.chargeDialogVisible = true
       }
+
+      setTimeout(() => {
+        this.gotoPromotionList()
+      }, 1000)
     },
     async recommendByWord() {
       const { queryWord, newPromotion } = this
@@ -401,21 +458,12 @@ export default {
         return Message.error('请输入查询关键词')
       }
       await store.recommendByWord(queryWord, newPromotion.areas)
-
-      // 默认选中搜索词
-      const match = this.addibleWords.find(item => item.word === queryWord)
-
-      if (match) {
-        const has = this.newPromotion.searchRecommends.find(item => item.word === match.word)
-        if (!has) {
-          this.newPromotion.searchRecommends.push(match)
-        }
-      }
     },
 
     async recommendByUrl(newLandingPage = this.newPromotion.landingPage, areas = this.newPromotion.areas) {
       if (newLandingPage) {
         await store.recommendByUrl(newLandingPage, areas)
+        this.newPromotion.keywords = this.urlRecommends
       }
     },
     gotoPromotionList() {
@@ -459,7 +507,9 @@ export default {
 
   watch: {
     creativeError(message) {
-      Message.error(message)
+      if (message) {
+        Message.error(message)
+      }
     }
   },
 
@@ -512,12 +562,6 @@ export default {
 <style scoped>
 @import 'cssbase/mixin';
 
-
-.warning {
-  font-size: 12px;
-  color: red;
-}
-
 .input {
   width: 150px;
 }
@@ -544,6 +588,7 @@ strong.red {
 
       & > header {
         color: #6a778c;
+        font-weight: bold;
       }
 
       & > div {
@@ -552,11 +597,26 @@ strong.red {
         margin: 20px 0;
       }
     }
-
-    & > section.price {
-
-    }
   }
 }
-
+.kw-tag {
+  margin-right: 5px;
+}
+.el-icon-question {
+  color: #6a778c;
+  margin-left: 10px;
+}
+.tip {
+  font-size: 12px;
+}
+.tip.warning {
+  color: red;
+}
+.platform-checkbox {
+  margin-right: 20px;
+}
+.el-icon-plus {
+  cursor: pointer;
+  font-size: 1.2em;
+}
 </style>
