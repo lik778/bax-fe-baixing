@@ -8,7 +8,7 @@
       《百姓网站外推广用户协议》
     </a>
     <a v-if="type === 'content-rule'"
-      v-bind:href="assetHost + 'baixing-qwt-promotion-content-rule.docx'"
+      v-bind:href="assetHost + 'baixing-online-promotion-content-rule.docx'"
       download="百姓网站外推广填写准则.docx">
       《百姓网站外推广填写准则》
     </a>
