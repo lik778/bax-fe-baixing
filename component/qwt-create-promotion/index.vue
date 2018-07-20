@@ -93,11 +93,11 @@
 
         <div class="platform">
           <label>选择渠道<a target="_blank" href="/qa?promotion-rules"><i class="el-icon-question"></i></a>：</label>
-          <el-checkbox-group v-model="newPromotion.sources" size="small">
+          <el-checkbox-group v-model="newPromotion.sources" size="small" class="platform-checkbox">
             <el-checkbox v-for="(opt, index) in semPlatformOpts" :key="index" :label="opt.value">{{opt.label}}</el-checkbox>
           </el-checkbox-group>
+          <p v-if="isShenmaChecked" class="tip warning">神马渠道仅支持移动端, 禁止投放搬家、金融类（包括但不限于担保贷款）信息</p>
         </div>
-        <p v-if="isShenmaChecked" class="tip warning">神马渠道仅支持移动端, 禁止投放搬家、金融类（包括但不限于担保贷款）信息</p>
 
         <div class="budget">
           <label>单渠道日预算：</label>
@@ -311,8 +311,13 @@ export default {
     },
 
     selectRecommend(item) {
-      this.newPromotion.keywords.push(item)
-      this.queryWord = ''
+      const { keywords } = this.newPromotion
+      if (keywords.find(kw => kw.word === item.word)) {
+        Message.warning('已选择该关键词')
+      } else {
+        keywords.push(item)
+        this.queryWord = ''
+      }
     },
 
     removeKeyword(index) {
@@ -604,5 +609,8 @@ strong.red {
 }
 .tip.warning {
   color: red;
+}
+.platform-checkbox {
+  margin-right: 20px;
 }
 </style>
