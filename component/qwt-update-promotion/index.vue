@@ -1134,6 +1134,8 @@ export default {
 
       & > header {
         color: #6a778c;
+        font-weight: bold;
+        font-size: 14px;
       }
 
       & > div {
@@ -1253,8 +1255,8 @@ export default {
   padding-top: 30px;
   margin-bottom: 20px;
   padding-bottom: 20px;
-  border-top: 1px solid #e0e0e0;
-  border-bottom: 1px solid #e0e0e0;
+  border-top: 1px solid #c0ccda;
+  border-bottom: 1px solid #c0ccda;
   & > section {
     &.promotion-time {
       display: flex;
