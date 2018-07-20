@@ -139,7 +139,7 @@
         <div>
           <aside>投放渠道&nbsp;
             <el-tooltip placement="top" content="行业投放规则">
-            <a href="#todo" style="color: #6a778c;">
+            <a href="/qa?promotion-rules" style="color: #6a778c;">
               <i class="el-icon-question"></i>
             </a>
             </el-tooltip>：
@@ -188,6 +188,7 @@
           <aside>设置推广日预算:</aside>
           <span>
             <el-input
+              size="small"
               :disabled="isSales || !modifyBudgetQuota"
               type="number" placeholder="请输入每日最高预算"
               :value="getProp('dailyBudget')"
@@ -195,15 +196,15 @@
             </el-input>
           </span>
           <i>元</i>
-          <span>
+          <span class="prompt-text">
             （根据您选取的关键词，最低预算为<strong>{{ centToYuan(predictedInfo.minDailyBudget) }}</strong>元，
             今日还可修改<strong>{{ modifyBudgetQuota }}</strong>次）
           </span>
         </div>
-        <h3 v-if="usableBalance <= 0">
+        <h3 v-if="usableBalance <= 0" class="prompt-text">
           扣除其余有效计划日预算后，您的推广资金可用余额为0元，请<router-link :to="{name: 'qwt-charge', query: {mode: 'charge-only'}}">充值</router-link>
         </h3>
-        <h3 v-else>
+        <h3 v-else class="prompt-text">
           扣除其余有效计划日预算后，您的推广资金可用余额为￥{{centToYuan(usableBalance)}}元，可消耗<strong>{{predictedInfo.days}}</strong>天
         </h3>
         
@@ -249,6 +250,7 @@
               </span>
               <span>
                 <el-date-picker v-if="timeType === 'custom'"
+                  size="small"
                   :disabled="isSales"
                   type="daterange" placeholder="选择日期范围"
                   :picker-options="{disabledDate}"
@@ -259,20 +261,23 @@
             </div>
           </section>
           <section class="mobile-ratio">
-            <section>
-              选择投放移动端的出价比例
-            </section>
-            <section>
-              <span>
-                <el-input
-                  :value="getProp('mobilePriceRatio')"
-                  @input="v => promotion.mobilePriceRatio = v"
-                  placeholder="默认为1"
-                />
-              </span>
-              <span>
-                (请输入 0.1-9.9 之间的数字)
-              </span>
+            <section class="">
+              <label>
+                选择投放移动端的出价比例：
+              </label>
+              <section>
+                <span>
+                  <el-input
+                    size="small"
+                    :value="getProp('mobilePriceRatio')"
+                    @input="v => promotion.mobilePriceRatio = v"
+                    placeholder="默认为1"
+                  />
+                </span>
+                <span class="prompt-text">
+                  (请输入 0.1-9.9 之间的数字)
+                </span>
+              </section>
             </section>
             <promotion-mobile-ratio-tip />
           </section>
@@ -901,7 +906,6 @@ export default {
         Message.error(err.message)
         return
       }
-      console.error(data)
 
       if (this.isCampaignOffline) {
         if (this.checkCreativeBtnDisabled) {
@@ -1256,9 +1260,8 @@ export default {
       display: flex;
       align-items: center;
       & /deep/ .el-date-editor {
-          position: relative;
-          top: 4px;
-          height: 34px;
+        position: relative;
+        top: 2px;
       }
     }
     & > div {
@@ -1274,22 +1277,24 @@ export default {
 
     &.mobile-ratio {
       & > section {
-        &:first-child {
-          margin-top: 22px;
-          font-size: 15px;
-          color: #424344;
+        display: flex;
+        align-items: center;
+        margin-top: 30px;
+        & > label {
+          color: #6a778c;
+          font-size: 14px;
+          margin-right: 16px;
         }
-        &:nth-child(2) {
-          margin-top: 16px;
-          & > span:last-child {
-            margin-left: 14px;
-            font-size: 13px;
-            color: #404e61;
-          }
+        & .prompt-text {
+          margin-left: 14px;
+          color: #404e61;
         }
-      }      
-
+      }
     }
   }
+}
+
+.prompt-text {
+  font-size: 12px !important;
 }
 </style>
