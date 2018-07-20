@@ -59,9 +59,9 @@
           </el-menu-item>
         </el-submenu>
 
-        <el-menu-item index="operation-log" v-if="allowSeeQwtPromotion">
+        <el-menu-item index="bax" v-if="allowSeeQwtPromotion">
           <!-- TODO: 标王推广跳转链接更换 -->
-          <router-link :to="{ name: 'operation-log' }" tag="p">
+          <router-link :to="{ name: 'root' }" tag="p">
             <i class="material-icons" style="font-size: 16px; margin-right: 11px; vertical-align: -3px;">dvr</i>标王推广
           </router-link>
         </el-menu-item>
