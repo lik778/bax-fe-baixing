@@ -79,7 +79,7 @@
       <section class="price">
         <header>设置预算</header>
         <div class="kw-price">
-          <label>关键词出价：</label>
+          <label>关键词出价<cpc-price-tip />：</label>
           <el-input type="number"
             :value="f2y(kwPrice) || f2y(recommendKwPrice)"
             @change="onKwPriceChange"
@@ -154,6 +154,7 @@ import PromotionAreaLimitTip from 'com/widget/promotion-area-limit-tip'
 import QiqiaobanPageSelector from 'com/common/qiqiaoban-page-selector'
 import PromotionChargeTip from 'com/widget/promotion-charge-tip'
 import PromotionRuleLink from 'com/widget/promotion-rule-link'
+import CpcPriceTip from 'com/widget/cpc-price-tip'
 import UserAdSelector from 'com/common/user-ad-selector'
 import CreativeEditor from 'com/widget/creative-editor'
 import AreaSelector from 'com/common/area-selector'
@@ -222,6 +223,7 @@ export default {
     AreaSelector,
     ChargeDialog,
     ContractAck,
+    CpcPriceTip,
     Topbar
   },
   fromMobx: {
