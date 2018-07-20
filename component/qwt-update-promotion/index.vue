@@ -260,8 +260,8 @@
               </span>
             </div>
           </section>
-          <section class="mobile-ratio">
-            <section class="">
+          <section class="mobile-ratio" v-if="getProp('source') !== SEM_PLATFORM_SHENMA">
+            <section>
               <label>
                 选择投放移动端的出价比例：
               </label>
@@ -951,7 +951,7 @@ export default {
       }
 
       if(mobilePriceRatio !== undefined) {
-        const ratio = Number(mobilePriceRatio)
+        const ratio = +(Number(mobilePriceRatio).toFixed(2))
         if(!(ratio >= 0.1 && ratio <= 9.9)) {
           return Message.error('投放移动端的出价比率应在0.1 ~ 9.9之间')
         }
