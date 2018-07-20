@@ -7,7 +7,7 @@
 
     <main>
       <section>
-        <header>推广目标设置</header>
+        <header>推广目标设置 </header>
 
         <div>
           <label>投放页面：</label>
