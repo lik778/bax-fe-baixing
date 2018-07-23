@@ -17,7 +17,7 @@
       <el-table-column label="选择" width="50">
         <template slot-scope="s">
           <div class="center">
-            <el-radio v-model="checkedAdId" :label="s.row.adId">&nbsp</el-radio>
+            <el-radio v-model="checkedAdId" :label="s.row.adId">&nbsp;</el-radio>
           </div>
         </template>
       </el-table-column>
@@ -158,6 +158,9 @@ export default {
         this.ads = data.ads
         this.total = data.total
         this.requestStartTime = t
+        // 默认置为第一项
+        const defaultAdId = this.ads[0] ? this.ads[0].adId : null
+        this.checkedAdId = defaultAdId
       }
     },
     async onSelectAd() {
