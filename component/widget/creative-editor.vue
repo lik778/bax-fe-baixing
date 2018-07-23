@@ -120,6 +120,13 @@ export default {
         throw Error('请填写推广内容')
       }
 
+      if(this.titleMinLen || this.titleMaxLen) {
+        throw Error('推广标题应在9到25字之间')
+      }
+      if (this.contentMinLen || this.contentMaxLen) {
+        throw Error('推广内容应在9到40字之间')
+      }
+
       const data = await checkCreativeContent({
         creativeContent: content,
         creativeTitle: title,

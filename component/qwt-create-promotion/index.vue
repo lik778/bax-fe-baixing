@@ -6,8 +6,17 @@
     </topbar>
 
     <main>
-      <section>
-        <header>推广目标设置 </header>
+      <section class="promotion-target">
+        <header>
+          推广目标设置
+          <p>
+            按点击付费，展现免费，288元一键投放百度，神马等多渠道
+            <el-popover trigger="hover">
+              <img :src="PRE_IMG_PROMOTION">
+              <a slot="reference">查看详情</a>
+            </el-popover>
+          </p> 
+        </header>
 
         <div>
           <label>投放页面：</label>
@@ -63,10 +72,11 @@
       <section class="keyword">
         <header>选取推广关键词</header>
         <p class="tip">建议选取20个以上关键词，关键词越多您的创意被展现的机会越多。根据当月数据，为您推荐如下关键词</p>
-        <div>
+        <div class="kw-tag-container">
           <el-tag class="kw-tag" v-for="(kw, index) in newPromotion.keywords" :key="index" closable @close="removeKeyword(index)">{{kw.word}}</el-tag>
           <el-autocomplete
             v-model="queryWord"
+            :debounce="600"
             :fetch-suggestions="fetchRecommends"
             placeholder="添加自定义词"
             @select="selectRecommend"
@@ -165,6 +175,10 @@ import Topbar from 'com/topbar'
 import track from 'util/track'
 
 import {
+  assetHost
+} from 'config'
+
+import {
   f2y,
   toFloat,
   isQwtEnableCity,
@@ -193,6 +207,8 @@ import {
 } from 'constant/keyword'
 
 import { keywordPriceTip } from 'constant/tip'
+
+import debounce from 'lodash.debounce'
 
 import store from './store'
 
@@ -260,7 +276,9 @@ export default {
       semPlatformOpts,
       isCreating: false,
       showPromotion: false,
-      timeout: null
+      timeout: null,
+
+      PRE_IMG_PROMOTION: assetHost + 'promotion-advantage.png',
     }
   },
   computed: {
@@ -303,7 +321,7 @@ export default {
     f2y,
 
     fetchRecommends(query, cb) {
-      if (query.trim()) {
+      if (query = query.trim()) {
         store.recommendByWord(query, this.newPromotion.areas).then(
           () => {
             cb(this.searchRecommends)
@@ -498,10 +516,11 @@ export default {
       return getCnName(name, allAreas)
     },
 
-    removeArea(c) {
+    async removeArea(c) {
       this.newPromotion.areas = [
         ...this.newPromotion.areas.filter(i => i !== c)
       ]
+      await this.recommendByUrl()
     }
   },
 
@@ -594,13 +613,19 @@ strong.red {
       & > div {
         display: flex;
         align-items: baseline;
-        margin: 20px 0;
+        margin: 12px 0;
       }
     }
   }
 }
 .kw-tag {
   margin-right: 5px;
+  margin-top: 8px;
+}
+.kw-tag-container {
+  max-width: 100%;
+  display: flex;
+  flex-wrap: wrap;
 }
 .el-icon-question {
   color: #6a778c;
@@ -618,5 +643,21 @@ strong.red {
 .el-icon-plus {
   cursor: pointer;
   font-size: 1.2em;
+}
+.promotion-target {
+  & > header  {
+    & > p {
+      font-size: .88em;
+      color: #333;
+      display: inline-block;
+      margin-left: 20px;
+      font-weight: normal;  
+    }
+    & a {
+      margin-left: 10px;
+      cursor: pointer;
+      color: rgb(21, 164, 250);
+    }
+  }
 }
 </style>
