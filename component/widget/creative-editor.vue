@@ -1,6 +1,6 @@
 <template>
   <section class="editor">
-    <div>
+    <div class="creative-title-container">
       <aside>推广标题:</aside>
       <span>
         <text-limit-tip
@@ -15,6 +15,7 @@
             size="small"
           />
         </text-limit-tip>
+        <p class="auditing-prompt" v-if="creativeAuditing">您的推广物料正在审核中，预计审核时间3个工作日内，清您耐心等待。</p>
       </span>
     </div>
     <div>
@@ -71,6 +72,10 @@ export default {
     },
     platforms: {
       type: Array,
+      required: true
+    },
+    creativeAuditing: {
+      type: Boolean,
       required: true
     }
   },
@@ -173,4 +178,17 @@ export default {
     }
   }
 }
+.creative-title-container {
+  display: inline-block;
+  & span {
+    display: flex;
+    align-items: center;
+  }
+  & .auditing-prompt {
+    font-size: 12px;
+    color: #ff4401;
+    margin-left: 10px;
+  }
+}
+
 </style>

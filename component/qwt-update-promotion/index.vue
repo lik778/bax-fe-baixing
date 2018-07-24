@@ -76,6 +76,7 @@
           :title="getProp('creativeTitle')"
           :content="getProp('creativeContent')"
           :disabled="disabled"
+          :creative-auditing="creativeAuditing"
           @change-title="v => promotion.creativeTitle = v"
           @change-content="v => promotion.creativeContent = v"
           @error="e => {}"
@@ -218,7 +219,6 @@
           更多设置
         </el-button>
         <section v-show="moreSettingDisplay" class="more-setting-container">
-          <!-- TODO: -->
           <section class="promotion-time">
             <div>
               <aside>投放时段：</aside>
@@ -313,7 +313,7 @@
     </duration-selector>
   </div>
 </template>
-
+ 
 <script>
 import VueScrollTo from 'vue-scrollto'
 import { Message } from 'element-ui'
