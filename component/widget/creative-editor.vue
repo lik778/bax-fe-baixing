@@ -97,6 +97,8 @@ export default {
       this.$emit('change-title', title)
       this._title = title 
       try {
+        // 填写完标题不立即执行检查
+        if(!this._content) return
         await this.checkCreative(title, this._content, this.platforms)
         this.$emit('error', undefined)
       } catch (e) {
@@ -121,7 +123,7 @@ export default {
       if (!content) {
         throw Error('请填写推广内容')
       }
-      
+
       if(this.titleMinLen >= title.length || this.titleMaxLen <= title.length) {
         throw Error('推广标题应在9到25字之间')
       }
@@ -138,6 +140,12 @@ export default {
       if (data.result) {
         throw Error(data.hint)
       }
+
+      // 全部校验成功success弹框
+      this.$message({
+        message: '推广设置检查通过',
+        type: 'success'
+      })
     }
   }
 }

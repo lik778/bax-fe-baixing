@@ -100,7 +100,7 @@
           </el-input>
           <span class="tip">（关键词出价区间为 [2, 999] 元）</span>
         </div>
-      
+
         <div class="platform">
           <label>选择渠道
             <el-tooltip 
@@ -314,14 +314,18 @@ export default {
         prices = newPromotion.keywords.map(kw => this.recommendKwPrice)
       }
 
-      return getCampaignPrediction(usableBalance, dailyBudget, prices)
+      const tempPredictedInfo = getCampaignPrediction(usableBalance, dailyBudget, prices)
+      const sourcesLen = Math.max(1, this.newPromotion.sources.length)
+      return {
+        ...tempPredictedInfo,
+        days:  (tempPredictedInfo.days / sourcesLen).toFixed(2)
+      }
     },
 
     recommendKwPrice() {
       console.log(this.newPromotion.keywords.map(kw => kw.price))
       const max = Math.max.apply(null, this.newPromotion.keywords.map(kw => kw.price))
-      console.log(toFloat(max * 0.8, 0))
-      return toFloat(max * 0.8, 0)
+      return Math.min(Math.max(200, toFloat(max * 0.8, 0)), 99900)
     }
   },
   methods: {
@@ -345,7 +349,7 @@ export default {
         keywords.push(item)
         this.queryWord = ''
       }
-    },
+    }, 
 
     removeKeyword(index) {
       this.newPromotion.keywords.splice(index, 1)
