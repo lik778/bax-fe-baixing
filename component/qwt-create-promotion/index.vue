@@ -332,7 +332,8 @@ export default {
     f2y,
 
     fetchRecommends(query, cb) {
-      if (query = query.trim()) {
+      query = query.trim()
+      if (query) {
         store.recommendByWord(query, this.newPromotion.areas).then(
           () => {
             cb(this.searchRecommends)
