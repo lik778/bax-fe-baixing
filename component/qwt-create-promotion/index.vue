@@ -100,9 +100,16 @@
           </el-input>
           <span class="tip">（关键词出价区间为 [2, 999] 元）</span>
         </div>
-
+      
         <div class="platform">
-          <label>选择渠道<a target="_blank" href="/qa?promotion-rules"><i class="el-icon-question"></i></a>：</label>
+          <label>选择渠道
+            <el-tooltip 
+              style="cursor:pointer;"
+              content="您可以根据需求选择一个或多个渠道展示您的广告。不同渠道会分开建立投放计划，您可以在管理推广计划页面对您的计划进行管理。" 
+              placement="right">
+              <i class="el-icon-question"></i>
+            </el-tooltip>：
+          </label>
           <el-checkbox-group v-model="newPromotion.sources" size="small" class="platform-checkbox">
             <el-checkbox v-for="(opt, index) in semPlatformOpts" :key="index" :label="opt.value">{{opt.label}}</el-checkbox>
           </el-checkbox-group>
