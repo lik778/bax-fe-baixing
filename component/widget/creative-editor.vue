@@ -95,8 +95,9 @@ export default {
   methods: {
     async onChangeTitle(title) {
       this.$emit('change-title', title)
+      this._title = title 
       try {
-        await this.checkCreative(title, this.content, this.platforms)
+        await this.checkCreative(title, this._content, this.platforms)
         this.$emit('error', undefined)
       } catch (e) {
         this.$emit('error', e.message)
@@ -104,8 +105,9 @@ export default {
     },
     async onChangeContent(content) {
       this.$emit('change-content', content)
+      this._content = content
       try {
-        await this.checkCreative(this.title, content, this.platforms)
+        await this.checkCreative(this._title, content, this.platforms)
         this.$emit('error', undefined)
       } catch (e) {
         this.$emit('error', e.message)
@@ -119,11 +121,11 @@ export default {
       if (!content) {
         throw Error('请填写推广内容')
       }
-
-      if(this.titleMinLen || this.titleMaxLen) {
+      
+      if(this.titleMinLen >= title.length || this.titleMaxLen <= title.length) {
         throw Error('推广标题应在9到25字之间')
       }
-      if (this.contentMinLen || this.contentMaxLen) {
+      if (this.contentMinLen >= content.length || this.contentMaxLen <= content.length) {
         throw Error('推广内容应在9到40字之间')
       }
 
