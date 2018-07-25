@@ -63,8 +63,7 @@
           :platforms="newPromotion.sources"
           :title="newPromotion.creativeTitle"
           :content="newPromotion.creativeContent"
-          @change-title="v => newPromotion.creativeTitle = v"
-          @change-content="v => newPromotion.creativeContent = v"
+          @change="handleCreativeValueChange"
           @error="handleCreativeError"
         />
       </section>
@@ -329,7 +328,10 @@ export default {
   },
   methods: {
     f2y,
-
+    handleCreativeValueChange({title, content}) {
+        this.newPromotion.creativeTitle = title
+        this.newPromotion.creativeContent = content
+    },
     handleCreativeError(message) {
       if(message) Message.error(message)
       this.creativeError = message

@@ -79,8 +79,7 @@
           :disabled="disabled"
           :creative-auditing="creativeAuditing"
           :campaign-offline="isCampaignOffline"
-          @change-title="v => promotion.creativeTitle = v"
-          @change-content="v => promotion.creativeContent = v"
+          @change="handleCreativeValueChange"
           @error="handleCreativeError"
         />
       </section>
@@ -574,6 +573,10 @@ export default {
     }
   },
   methods: {
+    handleCreativeValueChange({title, content}) {
+      this.promotion.creativeTitle = title
+      this.promotion.creativeContent = content
+    },
     handleCreativeError(message) {
       if(message) Message.error(message)
       this.creativeError = message
