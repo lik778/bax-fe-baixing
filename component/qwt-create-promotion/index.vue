@@ -132,7 +132,7 @@
           扣除其余有效计划日预算后，您的推广资金可用余额为0元，请<router-link :to="{name: 'qwt-charge', query: {mode: 'charge-only'}}">充值</router-link>
         </p>
         <p v-else class="tip">
-          扣除其余有效计划日预算后，您的推广资金可用余额为￥{{f2y(usableBalance)}}元，可消耗<strong class="red">{{predictedInfo.days}}</strong>天
+          扣除其余有效计划日预算后，您的推广资金可用余额为￥{{f2y(usableBalance)}}元，可消耗<strong class="red strong">{{predictedInfo.days}}</strong>天
         </p>
         <contract-ack type="content-rule" />
         <div>
@@ -318,7 +318,7 @@ export default {
       const sourcesLen = Math.max(1, this.newPromotion.sources.length)
       return {
         ...tempPredictedInfo,
-        days:  (tempPredictedInfo.days / sourcesLen).toFixed(2)
+        days:  (tempPredictedInfo.days / sourcesLen) | 0
       }
     },
 
@@ -448,7 +448,7 @@ export default {
       }
 
       if (!p.areas.length) {
-        return Message.error('请选择城市')
+        return Message.error('请选择投放区域')
       }
 
       if (this.kwPrice) {
@@ -600,6 +600,9 @@ export default {
 strong.red {
   color: red;
   margin: 0 5px;
+  &.strong {
+    font-size: 16px;
+  }
 }
 
 .qwt-create-promotion {

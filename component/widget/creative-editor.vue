@@ -15,7 +15,8 @@
             size="small"
           />
         </text-limit-tip>
-        <p class="auditing-prompt" v-if="creativeAuditing">您的推广物料正在审核中，预计审核时间3个工作日内，清您耐心等待。</p>
+        <p class="auditing-prompt" v-if="creativeAuditing">您的推广物料正在审核中，预计审核时间3个工作日内，请您耐心等待。</p>
+        <p class="auditing-prompt" v-else-if="campaignOffline">您当前的计划已下线，请重新开启投放。</p>
       </span>
     </div>
     <div>
@@ -76,7 +77,11 @@ export default {
     },
     creativeAuditing: {
       type: Boolean,
-      required: true
+      default: false
+    },
+    campaignOffline: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -121,19 +126,12 @@ export default {
       }
     },
     async checkCreative(title, content, platforms) {
-      if (!title) {
-        throw Error('请填写推广标题')
-      }
-
-      if (!content) {
-        throw Error('请填写推广内容')
-      }
-
-      if(this.titleMinLen >= title.length || this.titleMaxLen <= title.length) {
-        throw Error('推广标题应在9到25字之间')
-      }
-      if (this.contentMinLen >= content.length || this.contentMaxLen <= content.length) {
-        throw Error('推广内容应在9到40字之间')
+      if (!title || !content) {
+        return
+      } else if(this.titleMinLen >= title.length || this.titleMaxLen <= title.length) {
+        return
+      } else if (this.contentMinLen >= content.length || this.contentMaxLen <= content.length) {
+        return
       }
 
       const data = await checkCreativeContent({
