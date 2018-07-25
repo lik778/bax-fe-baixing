@@ -6,8 +6,17 @@
     </topbar>
 
     <main>
-      <section>
-        <header>推广目标设置</header>
+      <section class="promotion-target">
+        <header>
+          推广目标设置
+          <p>
+            按点击付费，展现免费，288元一键投放百度，神马等多渠道
+            <el-popover trigger="hover">
+              <img :src="PRE_IMG_PROMOTION">
+              <a slot="reference">查看详情</a>
+            </el-popover>
+          </p> 
+        </header>
 
         <div>
           <label>投放页面：</label>
@@ -63,10 +72,11 @@
       <section class="keyword">
         <header>选取推广关键词</header>
         <p class="tip">建议选取20个以上关键词，关键词越多您的创意被展现的机会越多。根据当月数据，为您推荐如下关键词</p>
-        <div>
+        <div class="kw-tag-container">
           <el-tag class="kw-tag" v-for="(kw, index) in newPromotion.keywords" :key="index" closable @close="removeKeyword(index)">{{kw.word}}</el-tag>
           <el-autocomplete
             v-model="queryWord"
+            :debounce="600"
             :fetch-suggestions="fetchRecommends"
             placeholder="添加自定义词"
             @select="selectRecommend"
@@ -92,7 +102,14 @@
         </div>
 
         <div class="platform">
-          <label>选择渠道<a target="_blank" href="/qa?promotion-rules"><i class="el-icon-question"></i></a>：</label>
+          <label>选择渠道
+            <el-tooltip 
+              style="cursor:pointer;"
+              content="您可以根据需求选择一个或多个渠道展示您的广告。不同渠道会分开建立投放计划，您可以在管理推广计划页面对您的计划进行管理。" 
+              placement="right">
+              <i class="el-icon-question"></i>
+            </el-tooltip>：
+          </label>
           <el-checkbox-group v-model="newPromotion.sources" size="small" class="platform-checkbox">
             <el-checkbox v-for="(opt, index) in semPlatformOpts" :key="index" :label="opt.value">{{opt.label}}</el-checkbox>
           </el-checkbox-group>
@@ -115,7 +132,7 @@
           扣除其余有效计划日预算后，您的推广资金可用余额为0元，请<router-link :to="{name: 'qwt-charge', query: {mode: 'charge-only'}}">充值</router-link>
         </p>
         <p v-else class="tip">
-          扣除其余有效计划日预算后，您的推广资金可用余额为￥{{f2y(usableBalance)}}元，可消耗<strong class="red">{{predictedInfo.days}}</strong>天
+          扣除其余有效计划日预算后，您的推广资金可用余额为￥{{f2y(usableBalance)}}元，可消耗<strong class="red strong">{{predictedInfo.days}}</strong>天
         </p>
         <contract-ack type="content-rule" />
         <div>
@@ -165,6 +182,10 @@ import Topbar from 'com/topbar'
 import track from 'util/track'
 
 import {
+  assetHost
+} from 'config'
+
+import {
   f2y,
   toFloat,
   isQwtEnableCity,
@@ -193,6 +214,8 @@ import {
 } from 'constant/keyword'
 
 import { keywordPriceTip } from 'constant/tip'
+
+import debounce from 'lodash.debounce'
 
 import store from './store'
 
@@ -260,7 +283,9 @@ export default {
       semPlatformOpts,
       isCreating: false,
       showPromotion: false,
-      timeout: null
+      timeout: null,
+
+      PRE_IMG_PROMOTION: assetHost + 'promotion-advantage.png',
     }
   },
   computed: {
@@ -289,21 +314,26 @@ export default {
         prices = newPromotion.keywords.map(kw => this.recommendKwPrice)
       }
 
-      return getCampaignPrediction(usableBalance, dailyBudget, prices)
+      const tempPredictedInfo = getCampaignPrediction(usableBalance, dailyBudget, prices)
+      const sourcesLen = Math.max(1, this.newPromotion.sources.length)
+      return {
+        ...tempPredictedInfo,
+        days:  (tempPredictedInfo.days / sourcesLen) | 0
+      }
     },
 
     recommendKwPrice() {
       console.log(this.newPromotion.keywords.map(kw => kw.price))
       const max = Math.max.apply(null, this.newPromotion.keywords.map(kw => kw.price))
-      console.log(toFloat(max * 0.8, 0))
-      return toFloat(max * 0.8, 0)
+      return Math.min(Math.max(200, toFloat(max * 0.8, 0)), 99900)
     }
   },
   methods: {
     f2y,
 
     fetchRecommends(query, cb) {
-      if (query.trim()) {
+      query = query.trim()
+      if (query) {
         store.recommendByWord(query, this.newPromotion.areas).then(
           () => {
             cb(this.searchRecommends)
@@ -320,7 +350,7 @@ export default {
         keywords.push(item)
         this.queryWord = ''
       }
-    },
+    }, 
 
     removeKeyword(index) {
       this.newPromotion.keywords.splice(index, 1)
@@ -418,7 +448,7 @@ export default {
       }
 
       if (!p.areas.length) {
-        return Message.error('请选择城市')
+        return Message.error('请选择投放区域')
       }
 
       if (this.kwPrice) {
@@ -498,10 +528,11 @@ export default {
       return getCnName(name, allAreas)
     },
 
-    removeArea(c) {
+    async removeArea(c) {
       this.newPromotion.areas = [
         ...this.newPromotion.areas.filter(i => i !== c)
       ]
+      await this.recommendByUrl()
     }
   },
 
@@ -569,6 +600,9 @@ export default {
 strong.red {
   color: red;
   margin: 0 5px;
+  &.strong {
+    font-size: 16px;
+  }
 }
 
 .qwt-create-promotion {
@@ -594,13 +628,22 @@ strong.red {
       & > div {
         display: flex;
         align-items: baseline;
-        margin: 20px 0;
+        margin: 12px 0;
       }
     }
   }
 }
 .kw-tag {
   margin-right: 5px;
+  margin-top: 8px;
+}
+.kw-tag-container {
+  max-width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  & /deep/ .el-input__inner{
+    margin-top: 8px;
+  }
 }
 .el-icon-question {
   color: #6a778c;
@@ -618,5 +661,21 @@ strong.red {
 .el-icon-plus {
   cursor: pointer;
   font-size: 1.2em;
+}
+.promotion-target {
+  & > header  {
+    & > p {
+      font-size: .88em;
+      color: #333;
+      display: inline-block;
+      margin-left: 20px;
+      font-weight: normal;  
+    }
+    & a {
+      margin-left: 10px;
+      cursor: pointer;
+      color: rgb(21, 164, 250);
+    }
+  }
 }
 </style>

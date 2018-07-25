@@ -1,6 +1,6 @@
 <template>
   <section class="editor">
-    <div>
+    <div class="creative-title-container">
       <aside>推广标题:</aside>
       <span>
         <text-limit-tip
@@ -15,6 +15,8 @@
             size="small"
           />
         </text-limit-tip>
+        <p class="auditing-prompt" v-if="creativeAuditing">您的推广物料正在审核中，预计审核时间3个工作日内，请您耐心等待。</p>
+        <p class="auditing-prompt" v-else-if="campaignOffline">您当前的计划已下线，请重新开启投放。</p>
       </span>
     </div>
     <div>
@@ -72,6 +74,14 @@ export default {
     platforms: {
       type: Array,
       required: true
+    },
+    creativeAuditing: {
+      type: Boolean,
+      default: false
+    },
+    campaignOffline: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -95,8 +105,11 @@ export default {
   methods: {
     async onChangeTitle(title) {
       this.$emit('change-title', title)
+      this._title = title 
       try {
-        await this.checkCreative(title, this.content, this.platforms)
+        // 填写完标题不立即执行检查
+        if(!this._content) return
+        await this.checkCreative(title, this._content, this.platforms)
         this.$emit('error', undefined)
       } catch (e) {
         this.$emit('error', e.message)
@@ -104,20 +117,21 @@ export default {
     },
     async onChangeContent(content) {
       this.$emit('change-content', content)
+      this._content = content
       try {
-        await this.checkCreative(this.title, content, this.platforms)
+        await this.checkCreative(this._title, content, this.platforms)
         this.$emit('error', undefined)
       } catch (e) {
         this.$emit('error', e.message)
       }
     },
     async checkCreative(title, content, platforms) {
-      if (!title) {
-        throw Error('请填写推广标题')
-      }
-
-      if (!content) {
-        throw Error('请填写推广内容')
+      if (!title || !content) {
+        return
+      } else if(this.titleMinLen >= title.length || this.titleMaxLen <= title.length) {
+        return
+      } else if (this.contentMinLen >= content.length || this.contentMaxLen <= content.length) {
+        return
       }
 
       const data = await checkCreativeContent({
@@ -129,6 +143,12 @@ export default {
       if (data.result) {
         throw Error(data.hint)
       }
+
+      // 全部校验成功success弹框
+      this.$message({
+        message: '推广设置检查通过',
+        type: 'success'
+      })
     }
   }
 }
@@ -156,4 +176,17 @@ export default {
     }
   }
 }
+.creative-title-container {
+  display: inline-block;
+  & span {
+    display: flex;
+    align-items: center;
+  }
+  & .auditing-prompt {
+    font-size: 12px;
+    color: #ff4401;
+    margin-left: 10px;
+  }
+}
+
 </style>

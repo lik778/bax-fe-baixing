@@ -4,6 +4,8 @@ const { join } = require('path')
 
 const { distPath } = require('./config')
 
+const VueLoaderPlugin = require('vue-loader/lib/plugin')
+
 const env = process.env.NODE_ENV
 
 module.exports = {
@@ -20,27 +22,48 @@ module.exports = {
     rules: [{
       test: /\.vue$/,
       loader: 'vue-loader',
-      options: {
-        postcss: [
-          require('postcss-import')(),
-          require('postcss-mixins')(),
-          require('postcss-cssnext')()
-        ],
-        loaders: getVueLoaders()
-      }
-    }, {
+      }, {
       test: /\.js$/,
       loader: 'babel-loader',
-      exclude: /node_modules/
-    }]
+      exclude: file => (
+        /node_modules/.test(file) &&
+        !/\.vue\.js/.test(file)
+      )}, 
+      {
+      test: /\.css$/,
+      use: [
+        'vue-style-loader',
+        {
+          loader: 'css-loader',
+          options: {
+            import: false,
+            importLoaders: 1
+          }
+        },
+        {
+          loader: 'postcss-loader',
+          options: {
+            plugins: [
+              require('postcss-import')(),
+              require('postcss-mixins')(),
+              require('postcss-cssnext')()
+            ]
+          }
+        }
+      ],
+    }
+  ]
   },
   resolve: {
     alias: {
       'vue$': 'vue/dist/vue.esm.js'
     },
-    extensions: ['.js', '.vue']
+    extensions: ['.js', '.vue', '.css']
   },
-  devtool: '#source-map'
+  devtool: '#source-map',
+  plugins: [
+    new VueLoaderPlugin()
+  ]
 }
 
 /**

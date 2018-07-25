@@ -46,7 +46,7 @@
             </div>
           </aside>
         </section>
-        <section class="tips">
+        <section class="tips" v-if="!isShenmaPlatform">
           <li>说明</li>
           <li v-for="(t, i) in tips" :key="i">
             {{ t }}
@@ -68,7 +68,8 @@ import { Message } from 'element-ui'
 import {
   SEM_PLATFORM_SOGOU,
   SEM_PLATFORM_BAIDU,
-  SEM_PLATFORM_QIHU
+  SEM_PLATFORM_QIHU,
+  SEM_PLATFORM_SHENMA
 } from 'constant/fengming'
 
 export default {
@@ -97,6 +98,9 @@ export default {
     }
   },
   computed: {
+    isShenmaPlatform() {
+      return this.platform === SEM_PLATFORM_SHENMA
+    },
     tips() {
       const { platform } = this
 
@@ -124,7 +128,7 @@ export default {
             '4、行、列的勾选框“√”实现行、列全选，点击数字可选择某天的某一时段'
           ]
         default:
-          return ['大虫姐还没想好 ~']
+          return ['']
       }
     },
     durations() {

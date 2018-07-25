@@ -40,12 +40,12 @@
 
               <qiqiaoban-page-selector
                 v-if="getProp('landingType') === 1"
-                :disabled="!isCreativeEditable"
+                :disabled="disabled"
                 :value="getProp('landingPage')"
                 @change="setLandingPage">
               </qiqiaoban-page-selector>
 
-              <p v-if="!isCreativeEditable" class="authing-tip">
+              <p v-if="disabled" class="authing-tip">
                 您的推广在审核中，审核通过后可修改落地页，感谢配合！
               </p>
             </div>
@@ -76,6 +76,8 @@
           :title="getProp('creativeTitle')"
           :content="getProp('creativeContent')"
           :disabled="disabled"
+          :creative-auditing="creativeAuditing"
+          :campaign-offline="isCampaignOffline"
           @change-title="v => promotion.creativeTitle = v"
           @change-content="v => promotion.creativeContent = v"
           @error="e => {}"
@@ -145,32 +147,6 @@
             </el-tooltip>：
           </aside>
           <span>
-            <!-- <el-button-group>
-              <el-button
-                :type="getProp('source') === SEM_PLATFORM_BAIDU ? 'primary' : ''"
-                @click="clickSourceTip"
-              >
-                百度
-              </el-button>
-              <el-button
-                :type="getProp('source') === SEM_PLATFORM_SOGOU ? 'primary' : ''"
-                @click="clickSourceTip"
-              >
-                搜狗
-              </el-button>
-              <el-button
-                :type="getProp('source') === SEM_PLATFORM_QIHU ? 'primary' : ''"
-                @click="clickSourceTip"
-              >
-                360
-              </el-button>
-              <el-button
-                :type="getProp('source') === SEM_PLATFORM_SHENMA ? 'primary' : ''"
-                @click="clickSourceTip"
-              >
-                神马
-              </el-button>
-            </el-button-group> -->
             <el-checkbox-group :value="[getProp('source')]" disabled>
               <el-checkbox
                 @click.native="clickSourceTip"
@@ -197,7 +173,7 @@
           </span>
           <i>元</i>
           <span class="prompt-text">
-            （根据您选取的关键词，最低预算为<strong>{{ centToYuan(predictedInfo.minDailyBudget) }}</strong>元，
+            （根据您选取的关键词，最低预算为<strong>{{ f2y(predictedInfo.minDailyBudget) }}</strong>元，
             今日还可修改<strong>{{ modifyBudgetQuota }}</strong>次）
           </span>
         </div>
@@ -205,7 +181,7 @@
           扣除其余有效计划日预算后，您的推广资金可用余额为0元，请<router-link :to="{name: 'qwt-charge', query: {mode: 'charge-only'}}">充值</router-link>
         </h3>
         <h3 v-else class="prompt-text">
-          扣除其余有效计划日预算后，您的推广资金可用余额为￥{{centToYuan(usableBalance)}}元，可消耗<strong>{{predictedInfo.days}}</strong>天
+          扣除其余有效计划日预算后，您的推广资金可用余额为￥{{f2y(usableBalance)}}元，可消耗<strong>{{predictedInfo.days}}</strong>天
         </h3>
         
 
@@ -218,7 +194,6 @@
           更多设置
         </el-button>
         <section v-show="moreSettingDisplay" class="more-setting-container">
-          <!-- TODO: -->
           <section class="promotion-time">
             <div>
               <aside>投放时段：</aside>
@@ -313,7 +288,7 @@
     </duration-selector>
   </div>
 </template>
-
+ 
 <script>
 import VueScrollTo from 'vue-scrollto'
 import { Message } from 'element-ui'
@@ -376,8 +351,8 @@ import {
 } from 'util/campaign'
 
 import {
-  centToYuan
-} from 'utils'
+  f2y
+} from 'util/kit'
 
 import store from './store'
 
@@ -482,24 +457,33 @@ export default {
       return isBaixingSales(this.userInfo.roles)
     },
     disabled() {
-      const source = this.getProp('source')
+      const source = this.getProp('source') // 渠道
+      const creativeAuditing = this.creativeAuditing // 审核中
+
+      // 审核中：神马，百度，360落地页和创意应该可以修改；搜狗无法修改
+
+      if(source === SEM_PLATFORM_SOGOU && creativeAuditing) {
+        return true
+      }
+      return false
+     
 
       // 说明: sougou 审核中, 不允许修改创意; 但 360 可以
-      if ([
-        SEM_PLATFORM_SHENMA,
-        SEM_PLATFORM_BAIDU,
-        SEM_PLATFORM_QIHU
-      ].includes(source)) {
-        return true
-      }
+      // if ([
+      //   SEM_PLATFORM_SHENMA,
+      //   SEM_PLATFORM_BAIDU,
+      //   SEM_PLATFORM_QIHU
+      // ].includes(source)) {
+      //   return true
+      // }
 
-      if (source === SEM_PLATFORM_SOGOU &&
-        this.isCampaignOffline &&
-        this.creativeAuditing) {
-        return true
-      }
+      // if (source === SEM_PLATFORM_SOGOU &&
+      //   this.isCampaignOffline &&
+      //   this.creativeAuditing) {
+      //   return true
+      // }
 
-      return this.creativeAuditing || this.isSales
+      // return this.creativeAuditing || this.isSales
     },
     currentKeywords() {
       const { keywords } = this.originPromotion
@@ -546,9 +530,6 @@ export default {
         return false
       }
     },
-    isCreativeEditable() {
-
-    },
     creativeAuditing() {
       return this.originPromotion.auditStatus === CREATIVE_STATUS_PENDING
     },
@@ -562,17 +543,6 @@ export default {
     isCampaignOnline() {
       const { status } = this.originPromotion
       return status === CAMPAIGN_STATUS_ONLINE
-    },
-    creativeTitleTip() {
-      if (this.isCampaignOffline) {
-        return '您当前的计划已下线，请重新开启投放'
-      }
-
-      if (this.creativeAuditing) {
-        return '您的推广物料正在审核中，预计审核时间3个工作日内，请您耐心等待。'
-      }
-
-      return ''
     },
     id() {
       return this.$route.params.id
@@ -597,12 +567,18 @@ export default {
 
       const prices = [...keywords, ...newKeywords]
         .map(k => k.price)
-
+      
+      const tempCampaignPrediction = getCampaignPrediction(usableBalance + this.originPromotion.dailyBudget, v, prices)
+      return {
+        ...tempCampaignPrediction,
+        days: (tempCampaignPrediction.days / 100) | 0
+      }
       // 与创建时不同，这里需要加上计划原本设置的每日预算
-      return getCampaignPrediction(usableBalance + this.originPromotion.dailyBudget * 100, v * 100, prices)
+      // return getCampaignPrediction(usableBalance + this.originPromotion.dailyBudget * 100, v * 100, prices)
     }
   },
   methods: {
+    
     toggleDisplaySettingArea() {
       this.moreSettingDisplay = !this.moreSettingDisplay
     },
@@ -667,7 +643,7 @@ export default {
       Message.warning('投放渠道不能修改')
     },
     clickLandingType(type) {
-      if (!this.isCreativeEditable) {
+      if (this.disabled) {
         return Message.warning('审核中, 无法修改')
       }
 
@@ -814,7 +790,7 @@ export default {
       const pp = this.predictedInfo.minDailyBudget
       if ((dailyBudget !== undefined)) {
         if (dailyBudget * 100 < pp) {
-          throw new Error(`推广日预算需大于 ${centToYuan(pp)} 元`)
+          throw new Error(`推广日预算需大于 ${f2y(pp)} 元`)
         }
 
         if (dailyBudget > 10000000) {
@@ -892,7 +868,6 @@ export default {
     },
     async _updatePromotion() {
       const { allAreas } = this
-      console.error()
       let data = {}
       try {
         data = {
@@ -938,11 +913,11 @@ export default {
 
       if (creativeContent && creativeTitle) {
         // 变更时检测
-        const platform = this.getProp('source')
+        const platforms = [this.getProp('source')]
         const res = await checkCreativeContent({
           creativeContent,
           creativeTitle,
-          platform
+          platforms
         })
 
         if (res.result) {
@@ -993,12 +968,14 @@ export default {
       const creativeTitle = this.getProp('creativeTitle')
       const platform = this.getProp('source')
 
-      if (!creativeContent) {
-        return Message.error('请填写推广内容')
-      }
-
-      if (!creativeTitle) {
+      if (!title) {
         return Message.error('请填写推广标题')
+      } else if(!content) {
+        return Message.error('请填写推广内容')
+      } else if(this.titleMinLen >= title.length || this.titleMaxLen <= title.length) {
+        return Message.error('推广标题字数应在9~25字范围内')
+      } else if (this.contentMinLen >= content.length || this.contentMaxLen <= content.length) {
+        return  Message.error('推广内容字数应在9~40字范围内') 
       }
 
       const data = await checkCreativeContent({
@@ -1044,7 +1021,7 @@ export default {
       store.setTimeType(type)
     },
     disabledDate,
-    centToYuan
+    f2y
   },
   watch: {
     '$route.params.id': async function(v, p) {
@@ -1243,7 +1220,7 @@ export default {
         & > strong {
           margin: 0 5px;
           color: #ff4401;
-          font-size: 18px;
+          font-size: 16px;
         }
       }
     }
