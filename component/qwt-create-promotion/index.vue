@@ -15,7 +15,7 @@
               <img :src="PRE_IMG_PROMOTION">
               <a slot="reference">查看详情</a>
             </el-popover>
-          </p> 
+          </p>
         </header>
 
         <div>
@@ -103,9 +103,9 @@
 
         <div class="platform">
           <label>选择渠道
-            <el-tooltip 
+            <el-tooltip
               style="cursor:pointer;"
-              content="您可以根据需求选择一个或多个渠道展示您的广告。不同渠道会分开建立投放计划，您可以在管理推广计划页面对您的计划进行管理。" 
+              content="您可以根据需求选择一个或多个渠道展示您的广告。不同渠道会分开建立投放计划，您可以在管理推广计划页面对您的计划进行管理。"
               placement="right">
               <i class="el-icon-question"></i>
             </el-tooltip>：
@@ -214,8 +214,6 @@ import {
 } from 'constant/keyword'
 
 import { keywordPriceTip } from 'constant/tip'
-
-import debounce from 'lodash.debounce'
 
 import store from './store'
 
@@ -350,7 +348,7 @@ export default {
         keywords.push(item)
         this.queryWord = ''
       }
-    }, 
+    },
 
     removeKeyword(index) {
       this.newPromotion.keywords.splice(index, 1)
@@ -669,7 +667,7 @@ strong.red {
       color: #333;
       display: inline-block;
       margin-left: 20px;
-      font-weight: normal;  
+      font-weight: normal;
     }
     & a {
       margin-left: 10px;
