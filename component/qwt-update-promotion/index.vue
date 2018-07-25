@@ -182,9 +182,8 @@
           扣除其余有效计划日预算后，您的推广资金可用余额为0元，请<router-link :to="{name: 'qwt-charge', query: {mode: 'charge-only'}}">充值</router-link>
         </h3>
         <h3 v-else class="prompt-text">
-          扣除其余有效计划日预算后，您的推广资金可用余额为￥{{f2y(usableBalance)}}元，可消耗<strong>{{predictedInfo.days}}</strong>天
+          扣除其余有效计划日预算后，您的推广资金可用余额为￥{{f2y(usableBalance + originPromotion.dailyBudget * 100)}}元，可消耗<strong>{{predictedInfo.days}}</strong>天
         </h3>
-
 
         <el-button
           type="primary"
@@ -569,13 +568,8 @@ export default {
       const prices = [...keywords, ...newKeywords]
         .map(k => k.price)
 
-      const tempCampaignPrediction = getCampaignPrediction(usableBalance + this.originPromotion.dailyBudget, v, prices)
-      return {
-        ...tempCampaignPrediction,
-        days: (tempCampaignPrediction.days / 100) | 0
-      }
       // 与创建时不同，这里需要加上计划原本设置的每日预算
-      // return getCampaignPrediction(usableBalance + this.originPromotion.dailyBudget * 100, v * 100, prices)
+      return getCampaignPrediction(usableBalance + this.originPromotion.dailyBudget * 100, v * 100, prices)
     }
   },
   methods: {
