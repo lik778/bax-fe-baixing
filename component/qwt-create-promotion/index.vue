@@ -215,7 +215,6 @@ import {
 
 import { keywordPriceTip } from 'constant/tip'
 
-
 import store from './store'
 
 const promotionTemplate = {
