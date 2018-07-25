@@ -66,7 +66,7 @@ export default {
       showNewUserIntro: false,
       newUserIntroMode: '',
       pending: 0,
-      notice: '通知：7月10日起，关键词检索量按推广地区预估，推荐出价根据媒体竞价水平调整（已购买词可原价正常投放）。',
+      notice: '7月26日起，站外推广的新建计划流程简化升级，开启投放更快捷！更多功能可在“管理推广计划”配置',
       showNotice: true
     }
   },

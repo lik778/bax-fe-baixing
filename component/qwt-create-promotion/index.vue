@@ -65,7 +65,7 @@
           :content="newPromotion.creativeContent"
           @change-title="v => newPromotion.creativeTitle = v"
           @change-content="v => newPromotion.creativeContent = v"
-          @error="e => creativeError = e"
+          @error="handleCreativeError"
         />
       </section>
 
@@ -330,6 +330,10 @@ export default {
   methods: {
     f2y,
 
+    handleCreativeError(message) {
+      if(message) Message.error(message)
+      this.creativeError = message
+    },
     fetchRecommends(query, cb) {
       query = query.trim()
       if (query) {
@@ -432,6 +436,7 @@ export default {
       if (this.creativeError) {
         return Message.error(this.creativeError)
       }
+
       if (!p.creativeTitle || !p.creativeContent) {
         return Message.error('请填写创意')
       }
@@ -532,14 +537,6 @@ export default {
         ...this.newPromotion.areas.filter(i => i !== c)
       ]
       await this.recommendByUrl()
-    }
-  },
-
-  watch: {
-    creativeError(message) {
-      if (message) {
-        Message.error(message)
-      }
     }
   },
 

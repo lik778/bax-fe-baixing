@@ -81,7 +81,7 @@
           :campaign-offline="isCampaignOffline"
           @change-title="v => promotion.creativeTitle = v"
           @change-content="v => promotion.creativeContent = v"
-          @error="e => {}"
+          @error="handleCreativeError"
         />
       </section>
       <section class="keyword">
@@ -401,6 +401,7 @@ export default {
   },
   data() {
     return {
+      creativeError: null,
       sourceTipMap, // 投放渠道
 
       actionTrackId: uuid(),
@@ -573,7 +574,10 @@ export default {
     }
   },
   methods: {
-
+    handleCreativeError(message) {
+      if(message) Message.error(message)
+      this.creativeError = message
+    },
     toggleDisplaySettingArea() {
       this.moreSettingDisplay = !this.moreSettingDisplay
     },
@@ -963,14 +967,8 @@ export default {
       const creativeTitle = this.getProp('creativeTitle')
       const platform = this.getProp('source')
 
-      if (!title) {
-        return Message.error('请填写推广标题')
-      } else if(!content) {
-        return Message.error('请填写推广内容')
-      } else if(this.titleMinLen >= title.length || this.titleMaxLen <= title.length) {
-        return Message.error('推广标题字数应在9~25字范围内')
-      } else if (this.contentMinLen >= content.length || this.contentMaxLen <= content.length) {
-        return  Message.error('推广内容字数应在9~40字范围内')
+      if (this.creativeError) {
+        return Message.error(this.creativeError)
       }
 
       const data = await checkCreativeContent({

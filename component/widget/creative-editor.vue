@@ -43,7 +43,6 @@
 
 <script>
 import TextLimitTip from './text-limit-tip'
-import store from '../qwt-update-promotion/store'
 import {
   getCreativeContentLenLimit,
   getCreativeTitleLenLimit
@@ -128,10 +127,10 @@ export default {
       }
     },
     async checkCreative(title, content, platforms) {
-      // 校验逻辑：当为update页面时候，先测试传参是否为空，如果为空，则从store中取
+      // 校验逻辑：当为update页面时候，先测试传参是否为空，如果为空使用props的值
       if(this.updatePromotion) {
-        if(!title) title = store.originPromotion.creativeTitle
-        if(!content) content = store.originPromotion.creativeContent
+        if(!title) title = this.title
+        if(!content) content = this.content
       }
 
       if (!title || !content) {
