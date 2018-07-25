@@ -12,10 +12,10 @@
           <p>
             按点击付费，展现免费，288元一键投放百度，神马等多渠道
             <el-popover trigger="hover">
-              <img :src="PRE_IMG_PROMOTION">
+              <img :src="PRE_IMG_PROMOTION" width="580" height="450">
               <a slot="reference">查看详情</a>
             </el-popover>
-          </p> 
+          </p>
         </header>
 
         <div>
@@ -103,9 +103,9 @@
 
         <div class="platform">
           <label>选择渠道
-            <el-tooltip 
+            <el-tooltip
               style="cursor:pointer;"
-              content="您可以根据需求选择一个或多个渠道展示您的广告。不同渠道会分开建立投放计划，您可以在管理推广计划页面对您的计划进行管理。" 
+              content="您可以根据需求选择一个或多个渠道展示您的广告。不同渠道会分开建立投放计划，您可以在管理推广计划页面对您的计划进行管理。"
               placement="right">
               <i class="el-icon-question"></i>
             </el-tooltip>：
@@ -215,7 +215,6 @@ import {
 
 import { keywordPriceTip } from 'constant/tip'
 
-import debounce from 'lodash.debounce'
 
 import store from './store'
 
@@ -285,7 +284,8 @@ export default {
       showPromotion: false,
       timeout: null,
 
-      PRE_IMG_PROMOTION: assetHost + 'promotion-advantage.png',
+      // PRE_IMG_PROMOTION: assetHost + 'promotion-advantage.png'
+      PRE_IMG_PROMOTION: 'http://file.baixing.net/201807/0bf28bef5b6e0b476daed9da30e229e7.png'
     }
   },
   computed: {
@@ -350,7 +350,7 @@ export default {
         keywords.push(item)
         this.queryWord = ''
       }
-    }, 
+    },
 
     removeKeyword(index) {
       this.newPromotion.keywords.splice(index, 1)
@@ -669,7 +669,7 @@ strong.red {
       color: #333;
       display: inline-block;
       margin-left: 20px;
-      font-weight: normal;  
+      font-weight: normal;
     }
     & a {
       margin-left: 10px;

@@ -72,6 +72,7 @@
       <section class="creative">
         <header><promotion-creative-tip /> </header>
         <creative-editor
+          :update-promotion="true"
           :platforms="[getProp('source')]"
           :title="getProp('creativeTitle')"
           :content="getProp('creativeContent')"
@@ -150,7 +151,7 @@
             <el-checkbox-group :value="[getProp('source')]" disabled>
               <el-checkbox
                 @click.native="clickSourceTip"
-                v-for="sourceTip in Object.entries(sourceTipMap)" 
+                v-for="sourceTip in Object.entries(sourceTipMap)"
                 :key="sourceTip[0]"
                 :label="+sourceTip[0]"
                 >
@@ -183,11 +184,11 @@
         <h3 v-else class="prompt-text">
           扣除其余有效计划日预算后，您的推广资金可用余额为￥{{f2y(usableBalance)}}元，可消耗<strong>{{predictedInfo.days}}</strong>天
         </h3>
-        
 
-        <el-button 
-          type="primary" 
-          :style="{marginTop: '20px'}" 
+
+        <el-button
+          type="primary"
+          :style="{marginTop: '20px'}"
           :icon="moreSettingDisplay ? 'el-icon-arrow-up' : 'el-icon-arrow-down'"
           @click="toggleDisplaySettingArea"
           >
@@ -257,7 +258,7 @@
             <promotion-mobile-ratio-tip />
           </section>
         </section>
-    
+
         <contract-ack type="content-rule"></contract-ack>
         <div>
           <el-button v-if="false" type="primary">
@@ -288,7 +289,7 @@
     </duration-selector>
   </div>
 </template>
- 
+
 <script>
 import VueScrollTo from 'vue-scrollto'
 import { Message } from 'element-ui'
@@ -430,7 +431,7 @@ export default {
         updatedKeywords: [],
         deletedKeywords: [],
         newKeywords: [],
-        
+
       },
 
       moreSettingDisplay: false,
@@ -466,7 +467,7 @@ export default {
         return true
       }
       return false
-     
+
 
       // 说明: sougou 审核中, 不允许修改创意; 但 360 可以
       // if ([
@@ -567,7 +568,7 @@ export default {
 
       const prices = [...keywords, ...newKeywords]
         .map(k => k.price)
-      
+
       const tempCampaignPrediction = getCampaignPrediction(usableBalance + this.originPromotion.dailyBudget, v, prices)
       return {
         ...tempCampaignPrediction,
@@ -578,7 +579,7 @@ export default {
     }
   },
   methods: {
-    
+
     toggleDisplaySettingArea() {
       this.moreSettingDisplay = !this.moreSettingDisplay
     },
@@ -975,7 +976,7 @@ export default {
       } else if(this.titleMinLen >= title.length || this.titleMaxLen <= title.length) {
         return Message.error('推广标题字数应在9~25字范围内')
       } else if (this.contentMinLen >= content.length || this.contentMaxLen <= content.length) {
-        return  Message.error('推广内容字数应在9~40字范围内') 
+        return  Message.error('推广内容字数应在9~40字范围内')
       }
 
       const data = await checkCreativeContent({

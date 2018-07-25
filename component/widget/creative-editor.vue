@@ -43,7 +43,7 @@
 
 <script>
 import TextLimitTip from './text-limit-tip'
-
+import store from '../qwt-update-promotion/store'
 import {
   getCreativeContentLenLimit,
   getCreativeTitleLenLimit
@@ -82,6 +82,10 @@ export default {
     campaignOffline: {
       type: Boolean,
       default: false
+    },
+    updatePromotion: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -105,10 +109,8 @@ export default {
   methods: {
     async onChangeTitle(title) {
       this.$emit('change-title', title)
-      this._title = title 
+      this._title = title
       try {
-        // 填写完标题不立即执行检查
-        if(!this._content) return
         await this.checkCreative(title, this._content, this.platforms)
         this.$emit('error', undefined)
       } catch (e) {
@@ -126,11 +128,17 @@ export default {
       }
     },
     async checkCreative(title, content, platforms) {
+      // 校验逻辑：当为update页面时候，先测试传参是否为空，如果为空，则从store中取
+      if(this.updatePromotion) {
+        if(!title) title = store.originPromotion.creativeTitle
+        if(!content) content = store.originPromotion.creativeContent
+      }
+
       if (!title || !content) {
         return
-      } else if(this.titleMinLen >= title.length || this.titleMaxLen <= title.length) {
+      } else if(this.titleMinLen > title.length || this.titleMaxLen < title.length) {
         return
-      } else if (this.contentMinLen >= content.length || this.contentMaxLen <= content.length) {
+      } else if (this.contentMinLen > content.length || this.contentMaxLen < content.length) {
         return
       }
 
