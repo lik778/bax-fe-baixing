@@ -147,32 +147,6 @@
             </el-tooltip>：
           </aside>
           <span>
-            <!-- <el-button-group>
-              <el-button
-                :type="getProp('source') === SEM_PLATFORM_BAIDU ? 'primary' : ''"
-                @click="clickSourceTip"
-              >
-                百度
-              </el-button>
-              <el-button
-                :type="getProp('source') === SEM_PLATFORM_SOGOU ? 'primary' : ''"
-                @click="clickSourceTip"
-              >
-                搜狗
-              </el-button>
-              <el-button
-                :type="getProp('source') === SEM_PLATFORM_QIHU ? 'primary' : ''"
-                @click="clickSourceTip"
-              >
-                360
-              </el-button>
-              <el-button
-                :type="getProp('source') === SEM_PLATFORM_SHENMA ? 'primary' : ''"
-                @click="clickSourceTip"
-              >
-                神马
-              </el-button>
-            </el-button-group> -->
             <el-checkbox-group :value="[getProp('source')]" disabled>
               <el-checkbox
                 @click.native="clickSourceTip"

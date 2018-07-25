@@ -641,6 +641,9 @@ strong.red {
   max-width: 100%;
   display: flex;
   flex-wrap: wrap;
+  & /deep/ .el-input__inner{
+    margin-top: 8px;
+  }
 }
 .el-icon-question {
   color: #6a778c;
