@@ -108,10 +108,10 @@ export default {
           content: this.content
       }
       const creativeValues = {
-        ...originCreative,
+        ...defaultCreativeValues,
         [type]: value
       }
-      this.$emit('change', defaultCreativeValues)
+      this.$emit('change', creativeValues)
       try {
         await this.checkCreative(creativeValues.title, creativeValues.content, this.platforms)
         this.$emit('error', undefined)
