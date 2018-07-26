@@ -2,6 +2,9 @@
   <div class="step">
     <label>
       {{ title }}
+      <span v-if="hint" class="hint">
+        &nbsp;{{ hint }}
+      </span>
     </label>
     <slot name="tip"></slot>
     <section class="step-bar">
@@ -31,6 +34,10 @@ export default {
     step: {
       type: Number,
       required: true
+    },
+    hint: {
+      type: String,
+      default: ''
     }
   },
   methods: {
@@ -77,6 +84,10 @@ export default {
   & > label {
     font-weight: 600;
     color: #666666;
+  }
+  & .hint {
+    font-size: 12px;
+    color: #999;
   }
 }
 

@@ -1,5 +1,5 @@
 <template>
-  <bax-step :title="title" :steps="steps" :step="step">
+  <bax-step :title="title" hint="账户内推广资金暂不支持购买标王，如需标王推广请直接进入标王页面进行购买" :steps="steps" :step="step" >
   </bax-step>
 </template>
 
