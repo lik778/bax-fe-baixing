@@ -247,7 +247,6 @@ export default {
         }
         return defaultOpeneds
       }, [])
-
       this.defaultActive = defaultActive
     },
     toBuyService() {
@@ -346,6 +345,7 @@ export default {
 
 .el-menu-item {
   min-width: unset;
+  padding-right: 0;
 }
 
 .el-menu, .el-submenu {
