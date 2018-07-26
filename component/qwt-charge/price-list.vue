@@ -60,7 +60,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="postcss" scoped>
 .qwt-charge-price-list {
   display: flex;
   flex-flow: column;

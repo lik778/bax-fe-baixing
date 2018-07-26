@@ -31,7 +31,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="postcss" scoped>
 .operation-log {
   padding: 0 35px;
   width: 100%;

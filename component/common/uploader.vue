@@ -98,7 +98,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="postcss" scoped>
 
 .uploader {
   display: flex;

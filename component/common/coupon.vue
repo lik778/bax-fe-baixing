@@ -44,7 +44,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="postcss" scoped>
 .coupon {
   position: relative;
   display: flex;

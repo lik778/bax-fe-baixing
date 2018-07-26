@@ -588,7 +588,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="postcss">
 @import 'cssbase/mixin';
 
 .input {

@@ -136,7 +136,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="postcss" scoped>
 .items {
   & > div {
     display: flex;

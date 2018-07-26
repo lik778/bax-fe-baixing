@@ -35,7 +35,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="postcss" scoped>
 
 .main {
   margin-top: 30px;

@@ -29,7 +29,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="postcss" scoped>
 
 i {
   margin-left: 5px;
