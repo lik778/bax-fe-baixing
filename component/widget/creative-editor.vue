@@ -148,7 +148,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="postcss" scoped>
 .editor {
   padding-bottom: 10px;
 

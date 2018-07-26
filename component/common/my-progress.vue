@@ -123,7 +123,7 @@
   }
 </script>
 
-<style scoped>
+<style lang="postcss" scoped>
   .el-progress--circle {
     display: inline-block;
   }

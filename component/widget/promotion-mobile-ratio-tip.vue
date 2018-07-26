@@ -12,7 +12,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="postcss" scoped>
 
 footer {
   margin: 10px 0;

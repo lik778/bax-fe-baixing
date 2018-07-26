@@ -65,7 +65,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="postcss" scoped>
 .ad {
   padding: 0 35px;
   width: 100%;

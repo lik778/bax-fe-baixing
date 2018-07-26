@@ -28,9 +28,9 @@ module.exports = {
       exclude: file => (
         /node_modules/.test(file) &&
         !/\.vue\.js/.test(file)
-      )}, 
+      )},
       {
-      test: /\.css$/,
+      test: /css$/,
       use: [
         'vue-style-loader',
         {

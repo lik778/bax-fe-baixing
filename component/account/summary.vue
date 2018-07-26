@@ -94,7 +94,7 @@
   }
 </script>
 
-<style scoped>
+<style lang="postcss" scoped>
   .column {
     display: flex;
     flex-flow: column;

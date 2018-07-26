@@ -87,7 +87,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="postcss" scoped>
 .tip {
   display: flex;
   align-items: center;

@@ -10,7 +10,7 @@
   }
 </script>
 
-<style scoped>
+<style lang="postcss" scoped>
   header {
     height: 30px;
     border-radius: 4px;

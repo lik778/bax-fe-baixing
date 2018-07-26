@@ -13,7 +13,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="postcss" scoped>
 
 footer {
   color: #717d91;

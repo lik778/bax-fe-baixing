@@ -223,7 +223,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="postcss" scoped>
 @import '../../cssbase/var';
 @import 'cssbase/mixin';
 

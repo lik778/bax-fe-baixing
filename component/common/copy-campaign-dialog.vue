@@ -106,7 +106,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="postcss" scoped>
 @import '../../cssbase/var';
 
 .title {

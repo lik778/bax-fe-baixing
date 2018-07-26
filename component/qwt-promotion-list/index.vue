@@ -78,7 +78,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="postcss" scoped>
 .qwt-promotion {
   padding: 0 35px;
   width: 100%;

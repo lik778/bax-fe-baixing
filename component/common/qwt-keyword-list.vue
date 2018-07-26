@@ -439,7 +439,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="postcss" scoped>
 .qwt-keyword-list {
   display: flex;
   flex-flow: column;

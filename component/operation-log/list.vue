@@ -159,7 +159,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="postcss" scoped>
 .log-table {
   margin: 40px 0 20px;
 }

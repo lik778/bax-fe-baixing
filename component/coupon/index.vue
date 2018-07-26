@@ -147,7 +147,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="postcss" scoped>
 .my-coupon {
   padding: 0 35px;
   width: 100%;
