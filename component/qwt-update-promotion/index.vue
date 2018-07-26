@@ -213,7 +213,7 @@
                   <el-button :type="timeType === 'long' ? 'primary' : ''"
                     size="small"
                     @click="setTimeType('long')">
-                    长期投放长期投放
+                    长期投放
                   </el-button>
                   <el-button :type="timeType === 'custom' ? 'primary' : ''"
                     size="small"

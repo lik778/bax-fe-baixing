@@ -6,12 +6,15 @@
       <p>v{{ version }}</p>
     </header>
     <main>
-      <el-menu default-active="0"
+      <el-menu
+        :default-active="defaultActive"
+        :default-openeds="defaultOpeneds"
         background-color="#2e394b"
         active-text-color="rgb(255, 208, 75)"
         text-color="#e1e4ee"
+        ref="menu"
        >
-        <el-menu-item index="homepage">
+        <el-menu-item index="root">
           <router-link :to="{ name: 'root' }" tag="p">
             <bx-icon type="appstore"></bx-icon>首页
           </router-link>
@@ -21,17 +24,17 @@
           <template slot="title">
             <bx-icon type="paycircleo"></bx-icon>产品购买
           </template>
-          <el-menu-item index="qwt-charge-1">
+          <el-menu-item index="qwt-charge-buy-service">
             <p @click="toBuyService">
               套餐购买
             </p>
           </el-menu-item>
-          <el-menu-item index="qwt-charge-2">
+          <el-menu-item index="qwt-charge-charge-only">
             <p @click="toChargeOnly">
               资金充值
             </p>
           </el-menu-item>
-          <el-menu-item index="ka">
+          <el-menu-item index="gw-charge">
             <p @click="toBuyKaOrGw">
               官网购买
             </p>
@@ -42,12 +45,12 @@
           <template slot="title">
             <bx-icon type="sharealt"></bx-icon>站外推广
           </template>
-          <el-menu-item index="qwt-campaign-1">
+          <el-menu-item index="qwt-create-promotion">
             <router-link :to="{ name: 'qwt-create-promotion' }" tag="p">
               新建推广计划
             </router-link>
           </el-menu-item>
-          <el-menu-item index="qwt-campaign-2">
+          <el-menu-item index="qwt-promotion-list">
             <router-link :to="{ name: 'qwt-promotion-list' }" tag="p">
               管理推广计划
             </router-link>
@@ -69,17 +72,17 @@
           <template slot="title">
             <bx-icon type="link"></bx-icon>智能投放
           </template>
-          <el-menu-item index="mvp-campaign-1">
+          <el-menu-item index="mvp-create-campaign">
             <router-link :to="{ name: 'mvp-create-campaign' }" tag="p">
               新建智能推广
             </router-link>
           </el-menu-item>
-          <el-menu-item index="mvp-campaign-2">
+          <el-menu-item index="mvp-campaign-list">
             <router-link :to="{ name: 'mvp-campaign-list' }" tag="p">
               管理智能推广
             </router-link>
           </el-menu-item>
-          <el-menu-item index="mvp-campaign-3">
+          <el-menu-item index="mvp-dashboard">
             <router-link :to="{ name: 'mvp-dashboard' }" tag="p">
               数据报表
             </router-link>
@@ -91,27 +94,27 @@
           <template slot="title">
             <i class="el-icon-message"></i>品牌广告
           </template>
-          <el-menu-item index="ssp-1" v-if="allowQueryAdItems">
+          <el-menu-item index="ad-list" v-if="allowQueryAdItems">
             <router-link :to="{ name: 'ad-list' }" tag="p">
               广告投放
             </router-link>
           </el-menu-item>
-          <el-menu-item index="ssp-2" v-if="allowQueryMaterials">
+          <el-menu-item index="material-list" v-if="allowQueryMaterials">
             <router-link :to="{ name: 'material-list' }" tag="p">
               物料管理
             </router-link>
           </el-menu-item>
-          <el-menu-item index="ssp-3" v-if="allowQueryOrders">
+          <el-menu-item index="order-list" v-if="allowQueryOrders">
             <router-link :to="{ name: 'order-list' }" tag="p">
               订单管理
             </router-link>
           </el-menu-item>
-          <el-menu-item index="ssp-4" v-if="allowQueryUsers">
+          <el-menu-item index="user-list" v-if="allowQueryUsers">
             <router-link :to="{ name: 'user-list' }" tag="p">
               客户管理
             </router-link>
           </el-menu-item>
-          <el-menu-item index="ssp-5">
+          <el-menu-item index="ad-calendar">
             <router-link :to="{ name: 'ad-calendar' }" tag="p">
               广告排期
             </router-link>
@@ -168,6 +171,15 @@ import {
   allowSeeBxAd
 } from 'util/role'
 
+
+const MENU_GROUP_MAP = {
+  'qwt-charge': ['qwt-charge-buy-service', 'qwt-charge-charge-only', 'gw-charge'],
+  'qwt-campaign': ['qwt-create-promotion', 'qwt-promotion-list', 'qwt-dashboard'],
+  'mvp-campaign': ['mvp-create-campaign', 'mvp-campaign-list', 'mvp-dashboard'],
+  'ssp': ['ad-list', 'material-list', 'order-list', 'user-list', 'ad-calendar']
+}
+
+
 export default {
   name: 'sidebar',
   components: {
@@ -181,7 +193,18 @@ export default {
   },
   data() {
     return {
-      version
+      version,
+      defaultActive: null,
+      defaultOpeneds: null
+    }
+  },
+  watch: {
+    $route(route) {
+      if(route.name === 'qwt-charge') {
+        this.$refs.menu.activeIndex = `${route.name}-${route.query.mode}`
+      } else {
+        this.$refs.menu.activeIndex = route.name
+      }
     }
   },
   computed: {
@@ -210,6 +233,22 @@ export default {
     }
   },
   methods: {
+    _initNavMenu() {
+      const route = this.$route
+      let defaultActive = route.name
+
+      if(route.name === 'qwt-charge') {
+        defaultActive = `${route.name}-${route.query.mode}`
+      }
+
+      this.defaultOpeneds = Object.entries(MENU_GROUP_MAP).reduce((defaultOpeneds, [group_index, group]) => {
+        if(group.some(item => item === defaultActive)) {
+          return defaultOpeneds.concat(group_index)
+        }
+        return defaultOpeneds
+      }, [])
+      this.defaultActive = defaultActive
+    },
     toBuyService() {
       const q = this.$route.query
 
@@ -242,6 +281,9 @@ export default {
         }
       })
     }
+  },
+  created() {
+    this._initNavMenu()
   }
 }
 </script>
@@ -303,6 +345,7 @@ export default {
 
 .el-menu-item {
   min-width: unset;
+  padding-right: 0;
 }
 
 .el-menu, .el-submenu {
