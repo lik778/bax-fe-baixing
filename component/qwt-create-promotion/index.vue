@@ -12,7 +12,7 @@
           <p>
             按点击付费，展现免费，288元一键投放百度，神马等多渠道
             <el-popover trigger="hover">
-              <img :src="PRE_IMG_PROMOTION" width="580" height="450">
+              <img :src="PRE_IMG_PROMOTION" width="638" height="405">
               <a slot="reference">查看详情</a>
             </el-popover>
           </p>
