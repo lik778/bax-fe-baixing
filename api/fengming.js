@@ -209,10 +209,9 @@ export async function getQiqiaobanPageList() {
   return toCamelcase(body.data)
 }
 
-// TODO - rename
 export async function recommendByUrl(url, areas = []) {
   const body = await fengming
-    .post('/keyword/recommand/url')
+    .post('/keyword/recommand/vad')
     .send({
       url,
       areas
