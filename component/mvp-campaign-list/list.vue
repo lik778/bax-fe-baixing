@@ -283,7 +283,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="postcss" scoped>
 .center {
   display: inline-flex;
   justify-content: center;

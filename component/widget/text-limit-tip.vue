@@ -46,7 +46,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="postcss" scoped>
 .wrapper {
   display: inline-flex;
   flex-flow: column;

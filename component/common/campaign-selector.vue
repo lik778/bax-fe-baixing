@@ -109,7 +109,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="postcss" scoped>
 .tree-node {
   display: flex;
   align-items: center;

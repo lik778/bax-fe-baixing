@@ -21,7 +21,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="postcss" scoped>
 div {
   display: flex;
   align-items: center;

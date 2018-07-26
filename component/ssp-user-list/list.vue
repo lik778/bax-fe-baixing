@@ -59,7 +59,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="postcss" scoped>
 section {
   margin-top: 16px;
 }

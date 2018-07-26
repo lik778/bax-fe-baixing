@@ -81,7 +81,7 @@
   }
 </script>
 
-<style scoped>
+<style lang="postcss" scoped>
   .qiqiaoban-page-selector {
     width: 560px;
   }

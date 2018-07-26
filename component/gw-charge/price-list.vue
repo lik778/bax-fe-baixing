@@ -63,7 +63,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="postcss" scoped>
 @import "../../cssbase/var";
 
 .gw-charge-price-list {

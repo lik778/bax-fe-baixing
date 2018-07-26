@@ -211,7 +211,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="postcss" scoped>
 .total {
   padding: 10px 5px;
 

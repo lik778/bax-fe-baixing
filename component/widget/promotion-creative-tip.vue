@@ -28,7 +28,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="postcss" scoped>
 .el-button--primary {
   margin-left: 10px;
   background-color: unset;

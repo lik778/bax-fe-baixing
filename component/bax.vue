@@ -143,7 +143,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="postcss">
 content {
   display: block;
   width: 100%;

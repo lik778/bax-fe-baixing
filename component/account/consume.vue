@@ -94,7 +94,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="postcss" scoped>
 .consume {
   & > content {
     & > div {
