@@ -72,15 +72,15 @@
       <section class="creative">
         <header><promotion-creative-tip /> </header>
         <creative-editor
+          :update-promotion="true"
           :platforms="[getProp('source')]"
           :title="getProp('creativeTitle')"
           :content="getProp('creativeContent')"
           :disabled="disabled"
           :creative-auditing="creativeAuditing"
           :campaign-offline="isCampaignOffline"
-          @change-title="v => promotion.creativeTitle = v"
-          @change-content="v => promotion.creativeContent = v"
-          @error="e => {}"
+          @change="handleCreativeValueChange"
+          @error="handleCreativeError"
         />
       </section>
       <section class="keyword">
@@ -150,7 +150,7 @@
             <el-checkbox-group :value="[getProp('source')]" disabled>
               <el-checkbox
                 @click.native="clickSourceTip"
-                v-for="sourceTip in Object.entries(sourceTipMap)" 
+                v-for="sourceTip in Object.entries(sourceTipMap)"
                 :key="sourceTip[0]"
                 :label="+sourceTip[0]"
                 >
@@ -181,13 +181,12 @@
           扣除其余有效计划日预算后，您的推广资金可用余额为0元，请<router-link :to="{name: 'qwt-charge', query: {mode: 'charge-only'}}">充值</router-link>
         </h3>
         <h3 v-else class="prompt-text">
-          扣除其余有效计划日预算后，您的推广资金可用余额为￥{{f2y(usableBalance)}}元，可消耗<strong>{{predictedInfo.days}}</strong>天
+          扣除其余有效计划日预算后，您的推广资金可用余额为￥{{f2y(usableBalance + originPromotion.dailyBudget * 100)}}元，可消耗<strong>{{predictedInfo.days}}</strong>天
         </h3>
-        
 
-        <el-button 
-          type="primary" 
-          :style="{marginTop: '20px'}" 
+        <el-button
+          type="primary"
+          :style="{marginTop: '20px'}"
           :icon="moreSettingDisplay ? 'el-icon-arrow-up' : 'el-icon-arrow-down'"
           @click="toggleDisplaySettingArea"
           >
@@ -257,7 +256,7 @@
             <promotion-mobile-ratio-tip />
           </section>
         </section>
-    
+
         <contract-ack type="content-rule"></contract-ack>
         <div>
           <el-button v-if="false" type="primary">
@@ -288,7 +287,7 @@
     </duration-selector>
   </div>
 </template>
- 
+
 <script>
 import VueScrollTo from 'vue-scrollto'
 import { Message } from 'element-ui'
@@ -401,6 +400,7 @@ export default {
   },
   data() {
     return {
+      creativeError: null,
       sourceTipMap, // 投放渠道
 
       actionTrackId: uuid(),
@@ -430,7 +430,7 @@ export default {
         updatedKeywords: [],
         deletedKeywords: [],
         newKeywords: [],
-        
+
       },
 
       moreSettingDisplay: false,
@@ -466,7 +466,7 @@ export default {
         return true
       }
       return false
-     
+
 
       // 说明: sougou 审核中, 不允许修改创意; 但 360 可以
       // if ([
@@ -567,18 +567,20 @@ export default {
 
       const prices = [...keywords, ...newKeywords]
         .map(k => k.price)
-      
-      const tempCampaignPrediction = getCampaignPrediction(usableBalance + this.originPromotion.dailyBudget, v, prices)
-      return {
-        ...tempCampaignPrediction,
-        days: (tempCampaignPrediction.days / 100) | 0
-      }
+
       // 与创建时不同，这里需要加上计划原本设置的每日预算
-      // return getCampaignPrediction(usableBalance + this.originPromotion.dailyBudget * 100, v * 100, prices)
+      return getCampaignPrediction(usableBalance + this.originPromotion.dailyBudget * 100, v * 100, prices)
     }
   },
   methods: {
-    
+    handleCreativeValueChange({title, content}) {
+      this.promotion.creativeTitle = title
+      this.promotion.creativeContent = content
+    },
+    handleCreativeError(message) {
+      if(message) Message.error(message)
+      this.creativeError = message
+    },
     toggleDisplaySettingArea() {
       this.moreSettingDisplay = !this.moreSettingDisplay
     },
@@ -968,14 +970,8 @@ export default {
       const creativeTitle = this.getProp('creativeTitle')
       const platform = this.getProp('source')
 
-      if (!title) {
-        return Message.error('请填写推广标题')
-      } else if(!content) {
-        return Message.error('请填写推广内容')
-      } else if(this.titleMinLen >= title.length || this.titleMaxLen <= title.length) {
-        return Message.error('推广标题字数应在9~25字范围内')
-      } else if (this.contentMinLen >= content.length || this.contentMaxLen <= content.length) {
-        return  Message.error('推广内容字数应在9~40字范围内') 
+      if (this.creativeError) {
+        return Message.error(this.creativeError)
       }
 
       const data = await checkCreativeContent({

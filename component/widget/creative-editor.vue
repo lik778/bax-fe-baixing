@@ -11,7 +11,7 @@
             :placeholder="`请输入标题 ~ (字数限制为${titleMinLen}-${titleMaxLen}个字)`"
             :disabled="disabled"
             :value="title"
-            @change="onChangeTitle"
+            @change="onCreativeChange('title', $event)"
             size="small"
           />
         </text-limit-tip>
@@ -33,7 +33,7 @@
             :placeholder="`请输入内容 ~ (字数限制为${contentMinLen}-${contentMaxLen}个字)`"
             :disabled="disabled"
             :value="content"
-            @change="onChangeContent"
+            @change="onCreativeChange('content', $event)"
           />
         </text-limit-tip>
       </span>
@@ -43,7 +43,6 @@
 
 <script>
 import TextLimitTip from './text-limit-tip'
-
 import {
   getCreativeContentLenLimit,
   getCreativeTitleLenLimit
@@ -103,23 +102,18 @@ export default {
     }
   },
   methods: {
-    async onChangeTitle(title) {
-      this.$emit('change-title', title)
-      this._title = title 
-      try {
-        // 填写完标题不立即执行检查
-        if(!this._content) return
-        await this.checkCreative(title, this._content, this.platforms)
-        this.$emit('error', undefined)
-      } catch (e) {
-        this.$emit('error', e.message)
+    async onCreativeChange(type, value) {
+      const defaultCreativeValues = {
+          title: this.title,
+          content: this.content
       }
-    },
-    async onChangeContent(content) {
-      this.$emit('change-content', content)
-      this._content = content
+      const creativeValues = {
+        ...originCreative,
+        [type]: value
+      }
+      this.$emit('change', defaultCreativeValues)
       try {
-        await this.checkCreative(this._title, content, this.platforms)
+        await this.checkCreative(creativeValues.title, creativeValues.content, this.platforms)
         this.$emit('error', undefined)
       } catch (e) {
         this.$emit('error', e.message)
@@ -128,9 +122,9 @@ export default {
     async checkCreative(title, content, platforms) {
       if (!title || !content) {
         return
-      } else if(this.titleMinLen >= title.length || this.titleMaxLen <= title.length) {
+      } else if(this.titleMinLen > title.length || this.titleMaxLen < title.length) {
         return
-      } else if (this.contentMinLen >= content.length || this.contentMaxLen <= content.length) {
+      } else if (this.contentMinLen > content.length || this.contentMaxLen < content.length) {
         return
       }
 

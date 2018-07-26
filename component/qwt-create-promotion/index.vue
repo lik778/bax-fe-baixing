@@ -12,7 +12,7 @@
           <p>
             按点击付费，展现免费，288元一键投放百度，神马等多渠道
             <el-popover trigger="hover">
-              <img :src="PRE_IMG_PROMOTION">
+              <img :src="PRE_IMG_PROMOTION" width="638" height="405">
               <a slot="reference">查看详情</a>
             </el-popover>
           </p>
@@ -63,9 +63,8 @@
           :platforms="newPromotion.sources"
           :title="newPromotion.creativeTitle"
           :content="newPromotion.creativeContent"
-          @change-title="v => newPromotion.creativeTitle = v"
-          @change-content="v => newPromotion.creativeContent = v"
-          @error="e => creativeError = e"
+          @change="handleCreativeValueChange"
+          @error="handleCreativeError"
         />
       </section>
 
@@ -283,7 +282,8 @@ export default {
       showPromotion: false,
       timeout: null,
 
-      PRE_IMG_PROMOTION: assetHost + 'promotion-advantage.png',
+      // PRE_IMG_PROMOTION: assetHost + 'promotion-advantage.png'
+      PRE_IMG_PROMOTION: 'http://file.baixing.net/201807/0bf28bef5b6e0b476daed9da30e229e7.png'
     }
   },
   computed: {
@@ -328,7 +328,14 @@ export default {
   },
   methods: {
     f2y,
-
+    handleCreativeValueChange({title, content}) {
+        this.newPromotion.creativeTitle = title
+        this.newPromotion.creativeContent = content
+    },
+    handleCreativeError(message) {
+      if(message) Message.error(message)
+      this.creativeError = message
+    },
     fetchRecommends(query, cb) {
       query = query.trim()
       if (query) {
@@ -431,6 +438,7 @@ export default {
       if (this.creativeError) {
         return Message.error(this.creativeError)
       }
+
       if (!p.creativeTitle || !p.creativeContent) {
         return Message.error('请填写创意')
       }
@@ -531,14 +539,6 @@ export default {
         ...this.newPromotion.areas.filter(i => i !== c)
       ]
       await this.recommendByUrl()
-    }
-  },
-
-  watch: {
-    creativeError(message) {
-      if (message) {
-        Message.error(message)
-      }
     }
   },
 
