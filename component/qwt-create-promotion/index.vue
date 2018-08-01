@@ -178,6 +178,7 @@ import ChargeDialog from 'com/common/charge-dialog'
 import ContractAck from 'com/widget/contract-ack'
 import Topbar from 'com/topbar'
 
+import moment from 'moment'
 import track from 'util/track'
 
 import {
@@ -390,6 +391,34 @@ export default {
       this.newPromotion.creativeContent = ad.content && ad.content.slice(0, 39)
     },
 
+    trackPromotionKeywords(promotionIds) {
+      const recommendKeywordsList = this.urlRecommends
+      const allKeywordsList = clone(this.newPromotion.keywords)
+      const systemKeywordsList = []
+      const uesrKeywordsList = []
+      const dailyBudget = this.newPromotion.dailyBudget / 100
+      const date = moment().format('YYYY-MM-DD')
+      allKeywordsList.forEach( ({ id }) => {
+        // 表示当前关键字在系统创建的关键字数组中
+        if(recommendKeywordsList.some(item => item.id === id)) {
+          systemKeywordsList.push(id)
+        } else {
+          uesrKeywordsList.push(id)
+        }
+      })
+
+      promotionIds.forEach(id => {
+        track({
+          promotionId: id,
+          allKeywords: allKeywordsList.length,
+          systemKeywords: systemKeywordsList.length,
+          uesrKeywords: uesrKeywordsList.length,
+          dailyBudget,
+          date
+        })
+      })
+    },
+
     async createPromotion() {
       if (this.isCreating) {
         return Message.warning('正在创建中, 请稍等一小会 ~')
@@ -471,9 +500,8 @@ export default {
         })
       }
 
-      console.log(`创建计划参数：`, p)
-
-      await createCampaign(fmtAreasInQwt(p, allAreas))
+      const promotionIds = await createCampaign(fmtAreasInQwt(p, allAreas))
+      this.trackPromotionKeywords(promotionIds)
 
       Message.success('创建成功')
 
@@ -499,7 +527,7 @@ export default {
     async recommendByUrl(newLandingPage = this.newPromotion.landingPage, areas = this.newPromotion.areas) {
       if (newLandingPage) {
         await store.recommendByUrl(newLandingPage, areas)
-        this.newPromotion.keywords = this.urlRecommends
+        this.newPromotion.keywords = clone(this.urlRecommends)
       }
     },
     gotoPromotionList() {
