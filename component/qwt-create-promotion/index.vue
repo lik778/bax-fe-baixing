@@ -409,6 +409,7 @@ export default {
 
       promotionIds.forEach(id => {
         track({
+          action: 'record-keywords',
           promotionId: id,
           allKeywords: allKeywordsList.length,
           systemKeywords: systemKeywordsList.length,
