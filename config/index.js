@@ -3,19 +3,19 @@ export const isPro = location.hostname.includes('bax.baixing.com.cn')
 
 export const fengmingApiHost = isPro
   ? '//bax.baixing.com.cn/fengmingx-api'
-  : '//192.168.8.201/fengmingx'
+  : '//bax.baixing.cn/fengmingx'
 
 export const mvpApiHost = isPro
   ? '//bax.baixing.com.cn/fengmingx-mvp'
-  : '//192.168.8.201/fengmingx'
+  : '//bax.baixing.cn/fengmingx'
 
 export const baxApiHost = isPro
   ? '//bax.baixing.com.cn/bax-api'
-  : '//192.168.8.201/bax'
+  : '//bax.baixing.cn/bax'
 
 export const kaApiHost = isPro
   ? '//bax.baixing.com.cn/ka/api/admin'
-  : '//192.168.8.201:8008/ka/api/admin'
+  : '//bax.baixing.cn:8008/ka/api/admin'
 
 export const dashboardHost = isPro
   ? '//bax.baixing.com.cn/dashboard-api'
