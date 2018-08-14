@@ -1,4 +1,3 @@
-
 <template>
   <div class="qwt-update-promotion">
     <topbar :user-info="userInfo">
@@ -178,10 +177,12 @@
           </span>
         </div>
         <h3 v-if="usableBalance <= 0" class="prompt-text">
-          扣除其余有效计划日预算后，您的推广资金可用余额为0元，请<router-link :to="{name: 'qwt-charge', query: {mode: 'charge-only'}}">充值</router-link>
+          <!-- 扣除其余有效计划日预算后， -->
+          您的推广资金可用余额为0元，请<router-link :to="{name: 'qwt-charge', query: {mode: 'charge-only'}}">充值</router-link>
         </h3>
         <h3 v-else class="prompt-text">
-          扣除其余有效计划日预算后，您的推广资金可用余额为￥{{f2y(usableBalance + originPromotion.dailyBudget * 100)}}元，可消耗<strong>{{predictedInfo.days}}</strong>天
+          <!-- 扣除其余有效计划日预算后， -->
+          您的推广资金可用余额为￥{{f2y(usableBalance)}}元，可消耗<strong>{{predictedInfo.days}}</strong>天
         </h3>
 
         <el-button
@@ -444,6 +445,14 @@ export default {
     }
   },
   computed: {
+    // displayBlance() {
+    //   // 充足情况下余额显示为真实余额+计划日消耗，不充足情况直接现实真是余额
+    //   if (this.usableBalance > this.getProp('dailyBudget') * 100) {
+    //     return this.usableBalance + this.getProp('dailyBudget') * 100
+    //   } else {
+    //     return this.usableBalance
+    //   }
+    // },
     modifyBudgetQuota() {
       const n = this.getProp('budgetModificationCount') | 0
       let q = 5 - n
@@ -461,29 +470,10 @@ export default {
       const creativeAuditing = this.creativeAuditing // 审核中
 
       // 审核中：神马，百度，360落地页和创意应该可以修改；搜狗无法修改
-
       if(source === SEM_PLATFORM_SOGOU && creativeAuditing) {
         return true
       }
       return false
-
-
-      // 说明: sougou 审核中, 不允许修改创意; 但 360 可以
-      // if ([
-      //   SEM_PLATFORM_SHENMA,
-      //   SEM_PLATFORM_BAIDU,
-      //   SEM_PLATFORM_QIHU
-      // ].includes(source)) {
-      //   return true
-      // }
-
-      // if (source === SEM_PLATFORM_SOGOU &&
-      //   this.isCampaignOffline &&
-      //   this.creativeAuditing) {
-      //   return true
-      // }
-
-      // return this.creativeAuditing || this.isSales
     },
     currentKeywords() {
       const { keywords } = this.originPromotion
@@ -569,7 +559,7 @@ export default {
         .map(k => k.price)
 
       // 与创建时不同，这里需要加上计划原本设置的每日预算
-      return getCampaignPrediction(usableBalance + this.originPromotion.dailyBudget * 100, v * 100, prices)
+      return getCampaignPrediction(usableBalance, v * 100, prices)
     }
   },
   methods: {
