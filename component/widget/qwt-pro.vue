@@ -14,14 +14,14 @@
     </main>
     <main v-else-if="mode === 'input'">
       <el-input v-model="inputPrice"
-        placeholder="自定义金额数"
+        :placeholder="minInputPrice"
         @change="onInputPrice"
         @blur="onBlur">
       </el-input>
       <label>元</label>
     </main>
     <footer v-if="showFooter">
-      推广资金包
+      {{footer}}
     </footer>
     <p>
       <bx-icon v-if="checked" type="check"></bx-icon>
@@ -70,6 +70,9 @@ export default {
     },
     showFooter() {
       return !['下次再充值'].includes(this.title)
+    },
+    footer() {
+      return this.mode === 'input' ? '自定义推广资金包' : '推广资金包'
     },
     mode() {
       const { title } = this
