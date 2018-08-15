@@ -47,7 +47,7 @@ export default {
   },
   data() {
     return {
-      minInputPrice: 288,
+      minInputPrice: 100,
       inputPrice: ''
     }
   },
