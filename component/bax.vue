@@ -66,7 +66,7 @@ export default {
       showNewUserIntro: false,
       newUserIntroMode: '',
       pending: 0,
-      notice: '7月26日起，站外推广的新建计划流程简化升级，开启投放更快捷！更多功能可在“管理推广计划”配置',
+      notice: '近期因360家电维修行业被整治，目前360渠道关于家电维修的订单会全部下线，请知晓',
       showNotice: true
     }
   },
