@@ -14,7 +14,7 @@
     </main>
     <main v-else-if="mode === 'input'">
       <el-input v-model="inputPrice"
-        :placeholder="minInputPrice"
+        :placeholder="String(minInputPrice)"
         @change="onInputPrice"
         @blur="onBlur">
       </el-input>
