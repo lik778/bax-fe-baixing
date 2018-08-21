@@ -20,26 +20,17 @@
           </router-link>
         </el-menu-item>
 
-        <el-submenu index="qwt-charge">
-          <template slot="title">
+        <el-menu-item index="charge">
+          <router-link :to="{ name: 'charge' }" tag="p">
             <bx-icon type="paycircleo"></bx-icon>产品购买
-          </template>
-          <el-menu-item index="qwt-charge-buy-service">
-            <p @click="toBuyService">
-              套餐购买
-            </p>
-          </el-menu-item>
-          <el-menu-item index="qwt-charge-charge-only">
-            <p @click="toChargeOnly">
-              资金充值
-            </p>
-          </el-menu-item>
-          <el-menu-item index="gw-charge">
-            <p @click="toBuyKaOrGw">
-              官网购买
-            </p>
-          </el-menu-item>
-        </el-submenu>
+          </router-link>
+        </el-menu-item>
+
+        <el-menu-item index="gw-charge">
+          <p @click="toBuyKaOrGw">
+            <bx-icon type="book"></bx-icon>官网购买
+          </p>
+        </el-menu-item>
 
         <el-submenu index="qwt-campaign" v-if="allowSeeQwtPromotion">
           <template slot="title">
@@ -248,28 +239,6 @@ export default {
         return defaultOpeneds
       }, [])
       this.defaultActive = defaultActive
-    },
-    toBuyService() {
-      const q = this.$route.query
-
-      this.$router.push({
-        name: 'qwt-charge',
-        query: {
-          ...q,
-          mode: 'buy-service'
-        }
-      })
-    },
-    toChargeOnly() {
-      const q = this.$route.query
-
-      this.$router.push({
-        name: 'qwt-charge',
-        query: {
-          ...q,
-          mode: 'charge-only'
-        }
-      })
     },
     toBuyKaOrGw() {
       const q = this.$route.query

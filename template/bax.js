@@ -31,6 +31,7 @@ import Redirect from 'com/redirect'
 import Homepage from 'com/homepage'
 import Account from 'com/account'
 import Coupon from 'com/coupon'
+import Charge from 'com/charge'
 
 import Bax from 'com/bax'
 
@@ -162,6 +163,10 @@ const router = new VueRouter({
     component: Coupon,
     path: '/main/coupon',
     name: 'coupon'
+  }, {
+    component: Charge,
+    path: '/main/charge',
+    name: 'charge'
   }, ...qwtRoutes, ...mvpRoutes, ...sspRoutes, ...gwRoutes]
 })
 

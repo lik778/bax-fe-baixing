@@ -15,12 +15,9 @@
       </section>
     </div>
     <header>
-      {{ title }}
+      {{ title + '365天' }}
     </header>
     <main>
-      <p>
-        {{ title + '365天' }}
-      </p>
       <div>
         <span>
           <li>支持多端展示</li>
@@ -70,10 +67,10 @@ export default {
 .gw-pro-widget {
   display: inline-flex;
   flex-flow: column;
-  width: 290px;
-  height: 210px;
+  width: 260px;
+  height: 134px;
   border-radius: 4px;
-  border: solid 1px var(--qwt-c-yellow);
+  border: solid 1px #ccc;
   cursor: pointer;
 
   & > header {
@@ -81,7 +78,8 @@ export default {
     height: 42px;
     color: #333333;
     font-weight: 500;
-    border-bottom: dotted 1px var(--qwt-c-yellow);
+    border-bottom: dotted 1px #ccc;
+    font-size: 14px;
   }
 
   & > main {
@@ -91,15 +89,15 @@ export default {
       @mixin center;
       margin: 15px 0;
       font-weight: 600;
-      color: var(--qwt-c-yellow);
+      color: #ccc;
     }
 
     & > div {
-      padding: 0 15px;
+      padding: 5px 15px;
 
       & > span {
         & > li {
-          font-size: 14px;
+          font-size: 12px;
           line-height: 2;
           color: #666666;
           list-style: unset;
@@ -110,10 +108,10 @@ export default {
 
   & > footer {
     @mixin center;
-    height: 40px;
+    height: 36px;
     color: white;
-    background: var(--qwt-c-yellow);
-    border-top: 1px dotted var(--qwt-c-yellow);
+    background: #ccc;
+    border-top: 1px dotted #ccc;
   }
 }
 
@@ -122,7 +120,7 @@ export default {
   width: 0;
   height: 0;
   top: -4px;
-  left: 226px;
+  left: 190px;
 
   & > section {
     width: 44px;
@@ -130,7 +128,7 @@ export default {
 
     & > main {
       @mixin center;
-      height: 40px;
+      height: 20px;
       background: #ff3c3c;
       font-size: 12px;
       color: white;
@@ -169,7 +167,7 @@ export default {
     position: relative;
     height: 0;
     width: 0;
-    left: 300px;
+    left: 266px;
     bottom: 10px;
   }
 
