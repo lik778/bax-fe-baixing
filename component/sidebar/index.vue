@@ -26,7 +26,7 @@
           </router-link>
         </el-menu-item>
 
-        <el-menu-item index="gw-charge">
+        <el-menu-item index="gw-charge" v-if="allowUseKaPackage">
           <p @click="toBuyKaOrGw">
             <bx-icon type="book"></bx-icon>官网购买
           </p>
@@ -148,7 +148,8 @@ import { version } from '../../package.json'
 import BxIcon from 'com/widget/icon'
 
 import {
-  allowSeeQwtPromotion
+  allowSeeQwtPromotion,
+  allowUseKaPackage
 } from 'util/fengming-role'
 
 import {
@@ -199,6 +200,10 @@ export default {
     }
   },
   computed: {
+    allowUseKaPackage() {
+      // 合并产品购买和充值后，只有几个大客户可以看到官网单独购买入口
+      return allowUseKaPackage(this.userInfo.roles)
+    },
     allowQueryMaterials() {
       return allowQueryMaterials(this.userInfo.roles)
     },
