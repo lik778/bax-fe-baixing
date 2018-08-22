@@ -30,7 +30,8 @@
       </div>
     </main>
     <footer>
-      {{ price + '元' }}
+      <span v-if="price !== undefined">{{ price + '元' }}</span>
+      <span v-if="price !== originalPrice" class="original">原价{{ originalPrice}}元</span>
     </footer>
     <p>
       <bx-icon v-if="checked" type="check" />
@@ -49,6 +50,7 @@ export default {
   props: {
     checked: Boolean,
     price: Number,
+    originalPrice: Number,
     title: String
   },
   methods: {
@@ -183,5 +185,10 @@ export default {
     color: white;
     border: 2px solid white;
   }
+}
+.original {
+  margin-left: 10px;
+  font-size: 12px;
+  text-decoration: line-through;
 }
 </style>

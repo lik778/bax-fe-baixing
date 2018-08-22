@@ -19,7 +19,7 @@
     </main>
     <footer v-if="products.length">
       <span>
-        {{ '已优惠' + ((originTotal - total) / 100).toFixed(2) + '元' }}
+        <p class="youhui" v-for="(info, index) in discountInfos" :key="index" v-html="info"></p>
       </span>
       <span>
         <label>总计：</label>
@@ -42,6 +42,10 @@ export default {
     hasDiscount: {
       type: Boolean,
       required: true
+    },
+    discountInfos: {
+      type: Array,
+      required: false
     }
   },
   computed: {
@@ -133,14 +137,19 @@ export default {
   & > footer {
     display: flex;
     align-items: center;
-    justify-content: flex-end;
-    padding-right: 35px;
+    justify-content: space-between;
+    padding: 0 35px 0 30px;
     height: 48px;
 
     & > span:first-child {
       margin-right: 10px;
       font-size: 14px;
       color: #999999;
+
+      & > p {
+        color: #ff3c3c;
+        font-size: 12px;
+      }
     }
 
     & > span:last-child {
@@ -185,5 +194,10 @@ export default {
       }
     }
   }
+}
+</style>
+<style>
+.mute {
+  color: #949292;
 }
 </style>

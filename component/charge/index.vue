@@ -29,7 +29,9 @@
                 @change="v => product.price = v">
               </price-tag>
             </section>
-            <div v-html="currentDiscountInfo"></div>
+            <div>
+              <p class="discount-info" v-html="promotionDiscount"></p>
+            </div>
           </main>
 
           <header>选择精品官网</header>
@@ -38,7 +40,8 @@
               <gw-pro-widget
                 v-for="(product, index) of allProducts.slice(7)" :key="index"
                 :title="product.name"
-                :price="centToYuan(product.price)"
+                :original-price="centToYuan(product.price)"
+                :price="gwPrice"
                 :checked="checkedProducts.includes(product)"
                 @click.native="toggleProduct(product)"
               />
@@ -56,6 +59,7 @@
           <price-list
             :products="fullCheckedProducts"
             :has-discount="!!checkedProductDiscounts.length"
+            :discount-infos="discountInfos"
           />
         </div>
 
@@ -251,7 +255,7 @@ const allProducts = [
     id: 7,
     productType: 3,
     editable: true,
-    price: 10000
+    price: 0
   }, {
     id: 8,
     productType: 4,
@@ -315,37 +319,52 @@ export default {
     }
   },
   computed: {
-    currentDiscountInfo() {
+    gwPrice() {
+      const gw = this.fullCheckedProducts.find(p => p.productType ===4)
+      if (gw) {
+        return centToYuan(gw.price)
+      }
+    },
+    promotionDiscount() {
       const charge = this.checkedProducts.find(p => p.productType === 3)
       if (charge) {
         if (charge.price < 58800) {
             return `
-              <p class="discount-info">充值更多，可享更多优惠！</p>
+              充值更多，可享更多优惠！
             `
           } else if (charge.price < 108800) {
             return `
-              <p class="discount-info">满588元：<span class="red">赠</span>送十万火急 50 元现金券 <span class="mute">(满100元可用，不限城市与类目)；</span>同时购买精品官网（365天）<span class="red">减</span>立减 200 元</p>
+              <span class="red">赠</span>送十万火急 50 元现金券 <span class="mute">(满100元可用，不限城市与类目)；</span>同时购买精品官网（365天）立<span class="red">减</span> 200 元
             `
           } else if (charge.price < 308800) {
             return `
-              <p class="discount-info">满1088元：<span class="red">赠</span>送十万火急 80 元现金券 <span class="mute">(满100元可用，不限城市与类目)；</span>同时购买精品官网（365天）<span class="red">减</span>立减 200 元</p>
+              <span class="red">赠</span>送十万火急 80 元现金券 <span class="mute">(满100元可用，不限城市与类目)；</span>同时购买精品官网（365天）立<span class="red">减</span>200 元
             `
           }
           else if (charge.price < 508800) {
             return `
-              <p class="discount-info">满3088元：<span class="red">赠</span>送十万火急 五折券 <span class="mute">(无门槛，不限城市与类目)；</span>同时购买精品官网（365天）<span class="red">减</span>立减 200 元</p>
+              <span class="red">赠</span>送十万火急 五折券 <span class="mute">(无门槛，不限城市与类目)；</span>同时购买精品官网（365天）立<span class="red">减</span>200 元
             `
           } else if (charge.price < 1018800) {
             return `
-              <p class="discount-info">满5088元：<span class="red">赠</span>送十万火急 五折券 <span class="mute">(无门槛，不限城市与类目)；</span>同时购买精品官网（365天）<span class="red">减</span>立减 600 元</p>
+              <span class="red">赠</span>送十万火急 五折券 <span class="mute">(无门槛，不限城市与类目)；</span>同时购买精品官网（365天）立<span class="red">减</span>600 元
             `
           } else {
             return `
-              <p class="discount-info">满10188元：<span class="red">赠</span>送十万火急 五折券 <span class="mute">(无门槛，不限城市与类目)；</span>同时购买精品官网（365天）<span class="red">减</span>立减 1200 元</p>
+              <span class="red">赠</span>送十万火急 五折券 <span class="mute">(无门槛，不限城市与类目)；</span>同时购买精品官网（365天）立<span class="red">减</span>1200 元
             `
           }
       }
       return ''
+    },
+    discountInfos() {
+      const charge = this.checkedProducts.find(p => p.productType === 3)
+      const gw = this.checkedProducts.find(p => p.productType === 4)
+      if (charge && !gw) {
+        return this.promotionDiscount.split('；').slice(0, 1)
+      } else if (charge && gw) {
+        return this.promotionDiscount.split('；')
+      }
     },
     productSummary() {
       var a = this.checkedProducts.reduce((s, p) => {
@@ -593,6 +612,11 @@ export default {
 
       if (this.checkedProducts.length === 0) {
         return Message.error('请选择购买的产品 ~')
+      }
+
+      const chargeProduct = this.checkedProducts.find(p => p.product === 3)
+      if (chargeProduct && chargeProduct.price < 100 * 100) {
+        return Message.error('最低充值金额100元')
       }
 
       newOrder.products = this.fullCheckedProducts.map(p => {

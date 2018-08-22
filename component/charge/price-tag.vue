@@ -68,10 +68,6 @@ export default {
   },
   watch: {
     inputPrice (v) {
-      if (v < this.minInputPrice) {
-        return
-      }
-
       this.$emit('change', v * 100)
     }
   }
