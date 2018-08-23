@@ -4,7 +4,6 @@ import QwtUpdatePromotion from 'com/qwt-update-promotion'
 import QwtCreatePromotion from 'com/qwt-create-promotion'
 import QwtPromotionList from 'com/qwt-promotion-list'
 import QwtDashboard from 'com/qwt-dashboard'
-import QwtCharge from 'com/qwt-charge'
 
 // mvp
 import MvpUpdateCampaign from 'com/mvp-update-campaign'
@@ -102,7 +101,7 @@ const qwtRoutes = [{
   path: '/main/qwt/dashboard',
   name: 'qwt-dashboard'
 }, {
-  component: QwtCharge,
+  component: Charge,
   path: '/main/qwt/charge',
   name: 'qwt-charge'
 }]
@@ -163,10 +162,6 @@ const router = new VueRouter({
     component: Coupon,
     path: '/main/coupon',
     name: 'coupon'
-  }, {
-    component: Charge,
-    path: '/main/charge',
-    name: 'charge'
   }, ...qwtRoutes, ...mvpRoutes, ...sspRoutes, ...gwRoutes]
 })
 

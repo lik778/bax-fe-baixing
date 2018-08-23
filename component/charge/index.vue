@@ -470,7 +470,6 @@ export default {
         }
         this.checkedProducts.push(product)
       }
-      console.log(this.checkedProducts)
     },
     onCouponClick(coupon) {
       if (this.selectedCoupon.length) {
@@ -659,7 +658,6 @@ export default {
       this.currentStep = 3
 
       this.payInProgress = true
-      console.log('new order', newOrder, this.finalPrice)
 
       try {
         const oids = await createOrder(newOrder)
@@ -741,7 +739,6 @@ export default {
             }
           })
         }
-        console.log(this.fullCheckedProducts)
       }
     }
   },
