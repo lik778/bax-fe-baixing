@@ -376,6 +376,13 @@ export default {
     },
 
     async onSelectAd(ad) {
+      // 【凤鸣】落地页选择搬家、金融类帖子的计划渠道默认不选中神马
+      const categories = ['jiadianweixiu', 'banjia', 'jinrongfuwu', 'licaifuwu', 'kuaijijianzhi']
+      if (categories.includes(ad.category) && this.newPromotion.sources.includes(SEM_PLATFORM_SHENMA)) {
+        const index = this.newPromotion.sources.indexOf(SEM_PLATFORM_SHENMA)
+        this.newPromotion.sources.splice(index, 1)
+      }
+
       const { allAreas } = this
 
       if (isQwtEnableCity(ad.city, allAreas)) {
