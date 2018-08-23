@@ -27,32 +27,43 @@
             查看数据报表
           </router-link>
         </el-button>
-        <bax-input placeholder="请输入ID查询" icon="el-icon-search"
-          @change="v => queryCampaigns({id: v})" class="action search">
-        </bax-input>
-        <el-button @click="switchShowMoreFilters">
+
+        <el-button type="text" @click="switchShowMoreFilters" class="more-filter">
           更多筛选<i class="el-icon-arrow-down el-icon--right"></i>
         </el-button>
       </section>
       <div v-show="showMoreFilters" class="filters">
         <span class="filter-item">
-          <label>投放状态</label>
-          <bax-select :options="campaignStatusOpts" clearable
-            @change="v => queryCampaigns({statuses: v})">
-          </bax-select>
+          <label>计划ID</label>
+          <bax-input placeholder="请输入ID查询" icon="el-icon-search"
+            @change="v => queryCampaigns({id: v})" class="action search">
+          </bax-input>
         </span>
+
         <span class="filter-item">
-          <label>投放区域</label>
-          <bax-select :options="areaOpts" clearable
-            :filter-method="v => this.areaQueryWord = v"
-            @change="v => queryCampaigns({areas: v})">
-          </bax-select>
+          <label>投放状态</label>
+          <el-checkbox-group :value="query.statuses" @input="v => queryCampaigns({statuses: v})">
+            <el-checkbox v-for="(opt, index) in campaignStatusOpts" :key="index" :label="opt.value">{{opt.label}}</el-checkbox>
+          </el-checkbox-group>
         </span>
+
         <span class="filter-item">
           <label>渠道来源</label>
-          <bax-select :options="semPlatformOpts" clearable
-            @change="v => queryCampaigns({source: v})">
-          </bax-select>
+          <el-checkbox-group :value="query.source" @input="v => queryCampaigns({source: v})">
+            <el-checkbox v-for="(opt, index) in semPlatformOpts" :key="index" :label="opt.value">{{opt.label}}</el-checkbox>
+          </el-checkbox-group>
+        </span>
+
+        <span class="filter-item">
+          <label>投放区域</label>
+          <div>
+            <el-tag type="success" closable class="area-tag"
+              v-for="area in query.areas" :key="area"
+              @close="removeArea(area)">
+              {{ formatterArea(area) }}
+            </el-tag>
+            <i class="el-icon-plus" @click="areaDialogVisible = true"></i>
+          </div>
         </span>
       </div>
     </header>
@@ -84,6 +95,7 @@
             :content="s.row.detailStatusText">
             <i class="el-icon-info" />
           </el-tooltip>
+          <router-link :to="{name: 'qwt-charge'}" v-show="s.row.statusText === '账户余额不足'">充值</router-link>
         </template>
       </el-table-column>
       <el-table-column label="渠道" width="100"
@@ -137,11 +149,20 @@
     <bax-pagination :options="query"
       @current-change="onCurrentChange">
     </bax-pagination>
+
+    <area-selector type="qwt" :all-areas="allAreas"
+      :areas="query.areas"
+      :visible="areaDialogVisible"
+      :enable-china="false"
+      @ok="v => {queryCampaigns({areas: v}), areaDialogVisible = false}"
+      @cancel="areaDialogVisible = false"
+    />
   </div>
 </template>
 
 <script>
 import EditableLabel from 'com/common/editable-label'
+import AreaSelector from 'com/common/area-selector'
 import BaxPagination from 'com/common/pagination'
 import BaxSelect from 'com/common/select'
 import BaxInput from 'com/common/input'
@@ -165,11 +186,6 @@ import {
 } from 'constant/tip'
 
 import {
-  renderColumnHeaderWithTip,
-  disabledDate
-} from 'util/element'
-
-import {
   updateCampaignDailyBudget,
   updateCampaignTimeRange,
   updateCampaignRatio,
@@ -179,8 +195,11 @@ import {
 
 import track from 'util/track'
 import {
-  getCampaignValidTime
-} from 'util/campaign'
+  renderColumnHeaderWithTip,
+  disabledDate,
+  getCampaignValidTime,
+  getCnName
+} from 'util'
 
 import {
   toHumanTime,
@@ -216,6 +235,7 @@ export default {
   components: {
     EditableLabel,
     BaxPagination,
+    AreaSelector,
     BaxSelect,
     BaxInput
   },
@@ -262,8 +282,9 @@ export default {
         timeRange: [],
         budget: '',
         ratio: '',
-        areaQueryWord: ''
+        areaQueryWord: '',
       },
+      areaDialogVisible: false,
       semPlatformOpts,
       campaignStatusOpts,
       selectedCampaignIds: [],
@@ -304,7 +325,18 @@ export default {
     }
   },
   methods: {
+    async removeArea(area) {
+      await this.queryCampaigns({
+        areas: this.query.areas.filter(a => a !== area)
+      })
+    },
+
+    formatterArea(name) {
+      const { allAreas } = this
+      return getCnName(name, allAreas)
+    },
     async queryCampaigns(opts) {
+      console.log(opts)
       await store.getCurrentCampaigns({
         ...this.query,
         ...opts
@@ -642,8 +674,27 @@ export default {
 @import '../../cssbase/var';
 @import 'cssbase/mixin';
 
-@mixin filter-item;
+.filter-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+  &>label {
+    font-size: 12px;
+    color: #475669;
+    width: 60px;
+  }
+  &>div {
+    display: flex;
+    align-items: center;
+  }
+}
 
+.more-filter {
+  margin-left: auto;
+}
+.area-tag {
+  margin-right: 5px;
+}
 .center {
   @mixin center;
 }
@@ -661,12 +712,9 @@ a {
   width: auto;
 }
 .filters {
-  @mixin top-filter;
-
   display: flex;
-  align-items: center;
-  border: 1px solid #a3b2c4;
-  margin-top: 10px;
+  flex-direction: column;
+  margin-top: 20px;
 
   & > span {
     display: flex;

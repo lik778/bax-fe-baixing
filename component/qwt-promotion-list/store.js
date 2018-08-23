@@ -4,9 +4,9 @@ import { observable, action, toJS } from 'mobx'
 import * as fapi from 'api/fengming'
 
 const defaultQuery = {
-  statuses: '',
-  source: '',
-  areas: '',
+  statuses: [],
+  source: [],
+  areas: [],
   id: '',
 
   offset: 0,
@@ -35,12 +35,12 @@ const store = observable({
   }),
 
   getCurrentCampaigns: action(async function(opts) {
-    const {campaigns = [], query} = await fapi.getCurrentCampaigns(opts)
-    this._campaigns = campaigns
     this._query = {
       ...defaultQuery,
-      ...query
+      ...opts
     }
+    const {campaigns = []} = await fapi.getCurrentCampaigns(opts)
+    this._campaigns = campaigns
 
     return {
       campaigns: this.campaigns,
