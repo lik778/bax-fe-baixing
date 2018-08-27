@@ -4,13 +4,35 @@ before_script:
   - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.baixing.cn
 
 variables:
-  BAX_FE_REF: registry.gitlab.baixing.cn/channel/bax-fe:$CI_BUILD_REF_NAME
+  BAX_FE_REF: registry.gitlab.baixing.cn/channel/bax-fe:${CI_BUILD_REF_NAME}-${CI_PIPELINE_ID}
 
 stages:
   - build
+  - dev-deploy-auto-master
+  - dev-deploy
+
 
 build:
   stage: build
   script:
     - docker build --pull -t $BAX_FE_REF .
     - docker push $BAX_FE_REF
+
+dev-deploy:
+  stage: dev-deploy
+  when: manual
+  except:
+    - master
+  tags:
+    - k8s-dev
+  script:
+    - kubectl set image -n adtech deployments --selector app=bax-fe *=$BAX_FE_REF
+
+dev-deploy-auto-master:
+  stage: dev-deploy-auto-master
+  only:
+    - master
+  tags:
+    - k8s-dev
+  script:
+    - kubectl set image -n adtech deployments --selector app=bax-fe *=$BAX_FE_REF
