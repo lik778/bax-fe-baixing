@@ -1,7 +1,7 @@
 {
   "name": "bax-fe",
   "private": true,
-  "version": "4.12.1",
+  "version": "4.12.2",
   "scripts": {
     "upload-asset": "upyun-upload -c tool/asset.upyun.config.js -v",
     "upload": "upyun-upload -c tool/upyun.config.js -v",
