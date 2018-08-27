@@ -67,8 +67,8 @@ export default {
         ]
       }
     },
-    async queryUsers(v) {
-      const { users = [] } = await getUsers({name: v})
+    async queryUsers(mobile) {
+      const { users = [] } = await getUsers({ mobile })
       this.users = users
     }
   },

@@ -68,11 +68,14 @@
           <span v-if="salesIdLocked">
             {{ salesDisplayName }}
           </span>
-          <user-selector v-else v-model="newOrder.salesId" clearable>
+          <user-selector v-else v-model="newOrder.salesId">
           </user-selector>
         </el-form-item>
         <el-form-item v-if="isOperator || isBxSales" label="广告客户">
-          <span>
+          <span v-if="clientIdLocked">
+            {{ clientDisplayName }}
+          </span>
+          <span v-else>
             <user-selector v-model="newOrder.userId" clearable>
             </user-selector>
             <i v-if="allowAddUser" class="el-icon-plus"
@@ -260,7 +263,10 @@ export default {
       adCalendarConflicting: false,
 
       salesIdLocked: false,
-      salesDisplayName: '' // 说明: locked salesId -> name
+      salesDisplayName: '', // 说明: locked salesId -> name
+
+      clientIdLocked: false,
+      clientDisplayName: ''
     }
   },
   computed: {
@@ -437,6 +443,8 @@ export default {
       this.newOrder = clone(emptyOrder)
       this.salesDisplayName = ''
       this.salesIdLocked = false
+      this.clientLocked = false
+      this.clientDisplayName = ''
       store.clearStore()
     },
     async onSubmit() {
@@ -470,10 +478,6 @@ export default {
         data.discountCodes = adPrice.discountCodes.map(d => d.code)
       }
 
-      if (!data.salesId) {
-        return Message.error('请选择销售')
-      }
-
       const oid = await createOrder(fmtCategoriesAndAreasInOpts(data, allAreas))
 
       this.empty()
@@ -502,7 +506,7 @@ export default {
   async mounted() {
     await store.getAds()
 
-    const { sales_id: salesId } = this.$route.query
+    const { sales_id: salesId, client_id: clientId } = this.$route.query
 
     if (salesId) {
       const info = await getUserInfo(salesId)
@@ -512,6 +516,15 @@ export default {
         this.salesIdLocked = true
         this.salesDisplayName = info.name || '无名氏'
         this.newOrder.salesId = salesId
+      }
+    }
+
+    if (clientId) {
+      const client = await getUserInfo(clientId)
+      if (String(client.id) === clientId) {
+        this.clientIdLocked = true
+        this.clientDisplayName = client.name || '无名氏'
+        this.newOrder.userId = clientId
       }
     }
   },
