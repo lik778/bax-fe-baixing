@@ -202,7 +202,7 @@ export default {
   computed: {
     allowUseKaPackage() {
       // 合并产品购买和充值后，只有几个大客户可以看到官网单独购买入口
-      return allowUseKaPackage(this.userInfo.roles)
+      return allowUseKaPackage(this.userInfo.roles, this.userInfo.id)
     },
     allowQueryMaterials() {
       return allowQueryMaterials(this.userInfo.roles)

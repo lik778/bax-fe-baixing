@@ -5,23 +5,13 @@ import * as fapi from 'api/fengming'
 import * as mapi from 'api/meta'
 
 const store = observable({
-  _usingConditions: [],
   _allDiscounts: [],
-  _coupons: [],
 
   _packages: [],
   _products: [],
 
-  get usingConditions() {
-    return toJS(this._usingConditions)
-  },
-
   get allDiscounts() {
     return toJS(this._allDiscounts)
-  },
-
-  get coupons() {
-    return toJS(this._coupons)
   },
 
   get packages() {
@@ -36,17 +26,8 @@ const store = observable({
     this._allDiscounts = await mapi.getProductDiscounts([2, 4])
   }),
 
-  getConditions: action(async function() {
-    const condition = await mapi.getCondition()
-    this._usingConditions = condition.usingConditions
-  }),
-
   getProductPackages: action(async function(type) {
     this._packages = await fapi.getProductPackages(type)
-  }),
-
-  getCoupons: action(async function(opts) {
-    this._coupons = await mapi.getCoupons(opts)
   }),
 
   getProducts: action(async function() {
