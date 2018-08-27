@@ -4,6 +4,9 @@
     <topbar :user-info="userInfo">
       <label slot="title">全网通 - 推广管理</label>
     </topbar>
+
+    <p v-if="summary.budget" class="info">您的推广资金可用余额为<span class="red">{{f2y(usableBalance)}}元</span>，预计可消耗<span class="red">{{days}}天</span>，为了保证您的广告正常投放，请及时<router-link :to="{name: 'qwt-charge'}">充值</router-link></p>
+
     <promotion-list :user-info="userInfo" :campaigns="campaigns"
       :query="localQuery" :readonly="isListReadonly"
       :show-more-filters="showMoreFilters" :all-areas="allAreas"
@@ -21,8 +24,9 @@ import Topbar from 'com/topbar'
 import PromotionList from './list'
 
 import {
-  isBaixingSales
-} from 'util/role'
+  isBaixingSales,
+  f2y
+} from 'util'
 
 import store from './store'
 
@@ -36,7 +40,9 @@ export default {
   fromMobx: {
     showMoreFilters: () => store.showMoreFilters,
     campaigns: () => store.campaigns,
-    query: () => store.query
+    query: () => store.query,
+    usableBalance: () => store.usableBalance,
+    summary: () => store.summary
   },
   props: {
     userInfo: {
@@ -50,10 +56,13 @@ export default {
   },
   data() {
     return {
-      actionTrackId: uuid()
+      actionTrackId: uuid(),
     }
   },
   computed: {
+    days() {
+      return Math.ceil(this.usableBalance / this.summary.budget)
+    },
     isListReadonly() {
       return this.isBaixingSale
     },
@@ -74,7 +83,13 @@ export default {
         userId: currentUserId
       }
     }
-  }
+  },
+  methods: {
+    f2y
+  },
+  async mounted() {
+    await Promise.all([store.getUsableBalance(), store.getSummary()])
+  },
 }
 </script>
 
@@ -82,5 +97,12 @@ export default {
 .qwt-promotion {
   padding: 0 35px;
   width: 100%;
+}
+.info {
+  font-size: 12px;
+  &>.red {
+    color: red;
+    margin: 0 5px;
+  }
 }
 </style>

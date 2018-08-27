@@ -21,6 +21,8 @@ const store = observable({
   _query: {
     ...defaultQuery
   },
+  usableBalance: 0,
+  _summary: {},
 
   get campaigns() {
     return toJS(this._campaigns)
@@ -28,6 +30,10 @@ const store = observable({
 
   get query() {
     return toJS(this._query)
+  },
+
+  get summary() {
+    return toJS(this._summary)
   },
 
   switchShowMoreFilters: action(function() {
@@ -46,7 +52,15 @@ const store = observable({
       campaigns: this.campaigns,
       query: this.query
     }
+  }),
+
+  getUsableBalance: action(async function() {
+    this.usableBalance = await fapi.getUsableBalance()
+  }),
+  getSummary: action(async function() {
+    this._summary = await fapi.getHomepageSummary()
   })
+
 })
 
 export default store
