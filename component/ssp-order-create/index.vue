@@ -506,7 +506,8 @@ export default {
   async mounted() {
     await store.getAds()
 
-    const { sales_id: salesId, client_id: clientId } = this.$route.query
+    // 从指南车、米奇跳过来时会带上参数。两者自动登录的用户角色不同
+    const { sales_id: salesId, user_id: clientId } = this.$route.query
 
     if (salesId) {
       const info = await getUserInfo(salesId)
