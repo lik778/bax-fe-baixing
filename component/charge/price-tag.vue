@@ -2,9 +2,10 @@
 <template>
   <div :class="{'qwt-pro-widget': true, checked}" @click="onClick">
     <main v-if="editable">
-      <input v-model.number="inputPrice"
+      自定义<input v-model.number="inputPrice"
         :placeholder="String(minInputPrice)"
-        @blur="onBlur" />元
+        @blur="onBlur"
+        ref="input" />元
     </main>
     <main v-else>
       <label>
@@ -57,6 +58,9 @@ export default {
     },
     onClick(e) {
       if (!this.checked) {
+        if (this.editable) {
+          this.$refs.input.focus()
+        }
         this.$emit('click')
       } else {
         if (e.target.nodeName !== 'INPUT') {
@@ -81,14 +85,16 @@ export default {
 input {
   width: 70px;
   height: 24px;
-  margin-right: 5px;
+  margin: 0 5px;
   padding: 5px;
   border-radius: 3px;
 }
+input::placeholder {
+  color: #ccc;
+}
 
 .qwt-pro-widget {
-  width: 110px;
-  height: 60px;
+  padding: 20px 30px;
   border-radius: 4px;
   border: solid 1px #ccc;
   cursor: pointer;
@@ -111,12 +117,13 @@ input {
   border: 1px solid #FF7533;
   background-color: #FF7533;
   color: white;
+  position: relative;
 
   & > p {
-    position: relative;
+    position: absolute;
     height: 0;
     width: 0;
-    left: 118px;
+    right: -10px;
     bottom: 10px;
   }
 
