@@ -228,6 +228,9 @@ const campaignStatusOpts = [{
 }, {
   label: '已下线',
   value: '-1'
+}, {
+  label: '审核驳回',
+  value: '-53'
 }]
 
 export default {
