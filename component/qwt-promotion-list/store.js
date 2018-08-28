@@ -41,11 +41,11 @@ const store = observable({
   }),
 
   getCurrentCampaigns: action(async function(opts) {
+    const {campaigns = [], query} = await fapi.getCurrentCampaigns(opts)
     this._query = {
       ...defaultQuery,
-      ...opts
+      ...query
     }
-    const {campaigns = []} = await fapi.getCurrentCampaigns(opts)
     this._campaigns = campaigns
 
     return {
