@@ -613,7 +613,7 @@ export default {
         return Message.error('请选择购买的产品 ~')
       }
 
-      const chargeProduct = this.checkedProducts.find(p => p.product === 3)
+      const chargeProduct = this.checkedProducts.find(p => p.productType === 3)
       if (chargeProduct && chargeProduct.price < 100 * 100) {
         return Message.error('最低充值金额100元')
       }
