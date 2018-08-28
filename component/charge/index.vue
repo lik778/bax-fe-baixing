@@ -12,11 +12,11 @@
           1. 选择产品 | <span class="discount-btn" @click="showDiscount = !showDiscount">查看优惠细则<i class="el-icon-question"></i></span>
         </header>
         <div class="discount-section" v-show="showDiscount">
-          <p class="discount-info">满588元：<span class="red">赠</span>送十万火急 50 元现金券 <span class="mute">(满100元可用，不限城市与类目)；</span>同时购买精品官网（365天）<span class="red">减</span>立减 200 元</p>
-          <p class="discount-info">满1088元：<span class="red">赠</span>送十万火急 80 元现金券 <span class="mute">(满100元可用，不限城市与类目)；</span>同时购买精品官网（365天）<span class="red">减</span>立减 200 元</p>
-          <p class="discount-info">满3088元：<span class="red">赠</span>送十万火急 五折券 <span class="mute">(无门槛，不限城市与类目)；</span>同时购买精品官网（365天）<span class="red">减</span>立减 200 元</p>
-          <p class="discount-info">满5088元：<span class="red">赠</span>送十万火急 五折券 <span class="mute">(无门槛，不限城市与类目)；</span>同时购买精品官网（365天）<span class="red">减</span>立减 600 元</p>
-          <p class="discount-info">满10188元：<span class="red">赠</span>送十万火急 五折券 <span class="mute">(无门槛，不限城市与类目)；</span>同时购买精品官网（365天）<span class="red">减</span>立减 1200 元</p>
+          <p class="discount-info">满588元：<span class="red">赠</span>送十万火急 50 元现金券 <span class="mute">(满100元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（365天）<span class="red">减</span>立减 200 元</p>
+          <p class="discount-info">满1088元：<span class="red">赠</span>送十万火急 80 元现金券 <span class="mute">(满100元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（365天）<span class="red">减</span>立减 200 元</p>
+          <p class="discount-info">满3088元：<span class="red">赠</span>送十万火急 五折券 <span class="mute">(无门槛，不限城市与类目，有效期30天)；</span>同时购买精品官网（365天）<span class="red">减</span>立减 200 元</p>
+          <p class="discount-info">满5088元：<span class="red">赠</span>送十万火急 五折券 <span class="mute">(无门槛，不限城市与类目，有效期30天)；</span>同时购买精品官网（365天）<span class="red">减</span>立减 600 元</p>
+          <p class="discount-info">满10188元：<span class="red">赠</span>送十万火急 五折券 <span class="mute">(无门槛，不限城市与类目，有效期30天)；</span>同时购买精品官网（365天）<span class="red">减</span>立减 1200 元</p>
         </div>
         <div class="charge">
           <header>选择充值推广资金包：</header>
@@ -334,24 +334,24 @@ export default {
             `
           } else if (charge.price < 108800) {
             return `
-              <span class="red">赠</span>送十万火急 50 元现金券 <span class="mute">(满100元可用，不限城市与类目)；</span>同时购买精品官网（365天）立<span class="red">减</span> 200 元
+              <span class="red">赠</span>送十万火急 50 元现金券 <span class="mute">(满100元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（365天）立<span class="red">减</span> 200 元
             `
           } else if (charge.price < 308800) {
             return `
-              <span class="red">赠</span>送十万火急 80 元现金券 <span class="mute">(满100元可用，不限城市与类目)；</span>同时购买精品官网（365天）立<span class="red">减</span>200 元
+              <span class="red">赠</span>送十万火急 80 元现金券 <span class="mute">(满100元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（365天）立<span class="red">减</span>200 元
             `
           }
           else if (charge.price < 508800) {
             return `
-              <span class="red">赠</span>送十万火急 五折券 <span class="mute">(无门槛，不限城市与类目)；</span>同时购买精品官网（365天）立<span class="red">减</span>200 元
+              <span class="red">赠</span>送十万火急 五折券 <span class="mute">(无门槛，不限城市与类目，有效期30天)；</span>同时购买精品官网（365天）立<span class="red">减</span>200 元
             `
           } else if (charge.price < 1018800) {
             return `
-              <span class="red">赠</span>送十万火急 五折券 <span class="mute">(无门槛，不限城市与类目)；</span>同时购买精品官网（365天）立<span class="red">减</span>600 元
+              <span class="red">赠</span>送十万火急 五折券 <span class="mute">(无门槛，不限城市与类目，有效期30天)；</span>同时购买精品官网（365天）立<span class="red">减</span>600 元
             `
           } else {
             return `
-              <span class="red">赠</span>送十万火急 五折券 <span class="mute">(无门槛，不限城市与类目)；</span>同时购买精品官网（365天）立<span class="red">减</span>1200 元
+              <span class="red">赠</span>送十万火急 五折券 <span class="mute">(无门槛，不限城市与类目，有效期30天)；</span>同时购买精品官网（365天）立<span class="red">减</span>1200 元
             `
           }
       }
