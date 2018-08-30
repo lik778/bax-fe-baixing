@@ -76,7 +76,8 @@
           :title="getProp('creativeTitle')"
           :content="getProp('creativeContent')"
           :disabled="disabled"
-          :creative-auditing="creativeAuditing"
+          :creative-status="originPromotion.auditStatus"
+          :status-text="originPromotion.detailStatusText"
           :campaign-offline="isCampaignOffline"
           @change="handleCreativeValueChange"
           @error="handleCreativeError"
@@ -324,6 +325,7 @@ import {
 } from 'api/fengming'
 
 import {
+  CREATIVE_STATUS_REJECT,
   CREATIVE_STATUS_PENDING,
   CAMPAIGN_STATUS_OFFLINE,
   CAMPAIGN_STATUS_ONLINE,

@@ -15,8 +15,15 @@
             size="small"
           />
         </text-limit-tip>
-        <p class="auditing-prompt" v-if="creativeAuditing">您的推广物料正在审核中，预计审核时间3个工作日内，请您耐心等待。</p>
-        <p class="auditing-prompt" v-else-if="campaignOffline">您当前的计划已下线，请重新开启投放。</p>
+        <p class="auditing-prompt" v-if="creativeStatus === CREATIVE_STATUS_REJECT">
+          {{statusText}}
+        </p>
+        <p class="auditing-prompt" v-else-if="creativeStatus === CREATIVE_STATUS_PENDING">
+          您的推广物料正在审核中，预计审核时间3个工作日内，请您耐心等待。
+        </p>
+        <p class="auditing-prompt" v-else-if="campaignOffline">
+          您当前的计划已下线，请重新开启投放。
+        </p>
       </span>
     </div>
     <div>
@@ -52,6 +59,12 @@ import {
   checkCreativeContent
 } from 'api/fengming'
 
+import {
+  CREATIVE_STATUS_REJECT,
+  CREATIVE_STATUS_PENDING,
+} from 'constant/fengming'
+
+
 export default {
   name: 'qwt-creative-editor',
   components: {
@@ -74,13 +87,21 @@ export default {
       type: Array,
       required: true
     },
-    creativeAuditing: {
-      type: Boolean,
-      default: false
+    creativeStatus: {
+      type: Number
+    },
+    statusText: {
+      type: String
     },
     campaignOffline: {
       type: Boolean,
       default: false
+    }
+  },
+  data () {
+    return {
+      CREATIVE_STATUS_REJECT,
+      CREATIVE_STATUS_PENDING
     }
   },
   computed: {
