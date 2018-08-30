@@ -64,6 +64,7 @@ export const semPlatformOpts = [{
 }]
 
 export const CREATIVE_STATUS_PENDING = 0
+export const CREATIVE_STATUS_REJECT = -10
 
 export const creativeStatus = {
   '-10': '审核失败',
