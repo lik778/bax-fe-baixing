@@ -343,15 +343,15 @@ export default {
           }
           else if (charge.price < 508800) {
             return `
-              <span class="red">赠</span>送十万火急 300 元现金券 <span class="mute">(满300元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（365天）立<span class="red">减</span>200 元
+              <span class="red">赠</span>送十万火急 300 元现金券 <span class="mute">(满400元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（365天）立<span class="red">减</span>200 元
             `
           } else if (charge.price < 1018800) {
             return `
-              <span class="red">赠</span>送十万火急 300 元现金券 <span class="mute">(满300元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（365天）立<span class="red">减</span>600 元
+              <span class="red">赠</span>送十万火急 300 元现金券 <span class="mute">(满400元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（365天）立<span class="red">减</span>600 元
             `
           } else {
             return `
-              <span class="red">赠</span>送十万火急 300 元现金券 <span class="mute">(满300元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（365天）立<span class="red">减</span>1200 元
+              <span class="red">赠</span>送十万火急 300 元现金券 <span class="mute">(满400元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（365天）立<span class="red">减</span>1200 元
             `
           }
       }
