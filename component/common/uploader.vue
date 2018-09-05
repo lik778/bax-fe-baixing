@@ -28,8 +28,10 @@ const {
   bucket
 } = upyun
 
+// https://fetch.spec.whatwg.org/#cors-protocol-and-credentials
 const request = new Fetch({
-  credentials: 'cors',
+  mode: 'cors',
+  credentials: 'omit',
   prefix: upyunHost
 })
 
