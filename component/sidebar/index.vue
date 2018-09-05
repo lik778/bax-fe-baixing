@@ -22,7 +22,7 @@
 
         <el-menu-item index="charge">
           <router-link :to="{ name: 'qwt-charge' }" tag="p">
-            <bx-icon type="paycircleo"></bx-icon>产品购买
+            <bx-icon type="paycircleo"></bx-icon>充值购买
           </router-link>
         </el-menu-item>
 
