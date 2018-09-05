@@ -2,7 +2,7 @@
 <template>
   <div class="sidebar">
     <header>
-      <p>广告系统</p>
+      <img src="http://file.baixing.net/201809/072639ff317bcec3be97c2235918f786.png" alt="logo" class="logo" />
       <p>v{{ version }}</p>
     </header>
     <main>
@@ -301,10 +301,8 @@ export default {
       height: 25px;
     }
 
-    & p:first-child {
-      opacity: 0.9;
-      font-size: 18px;
-      letter-spacing: 0.8px;
+    & .logo {
+      width: 80px;
     }
 
     & p:last-child {
