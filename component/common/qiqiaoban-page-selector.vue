@@ -14,7 +14,7 @@
       您已经购买了官网，点击创建！
     </a>
     <a v-else target="_blank"
-      href="http://www.baixing.com/a/shop">
+      href="http://www.baixing.com/a/quanwangtong?src=haina_topbar#five">
       还没官网？了解并创建！
     </a>
   </span>

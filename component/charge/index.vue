@@ -502,10 +502,6 @@ export default {
         store.getProductDiscounts([3, 4]), // 充值／新官网
         store.getProducts([3,4])
       ])
-
-      setTimeout(() => {
-        this.checkedProducts.push(this.allProducts[0])
-      }, 100)
     },
     getDiscountPrice(productType, price) {
       if (!this.canUseCoupon) {
@@ -745,7 +741,8 @@ export default {
   async mounted() {
     const {
       sales_id: salesId,
-      user_id: userId
+      user_id: userId,
+      select_gw: selectGw
     } = this.$route.query
 
     await this.init()
@@ -762,6 +759,12 @@ export default {
         actionTrackId
       })
     }, 1200)
+
+    if (selectGw === 'true' || selectGw === '1') {
+      this.checkedProducts.push(this.allProducts[this.allProducts.length - 1])
+    } else {
+      this.checkedProducts.push(this.allProducts[0])
+    }
 
     if (salesId) {
       const userInfo = await getUserInfo(salesId)
