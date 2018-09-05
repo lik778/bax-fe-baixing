@@ -10,7 +10,7 @@
         <header>
           推广目标设置
           <p>
-            按点击付费，展现免费，288元一键投放百度，神马等多渠道
+            按点击付费，展现免费，100元一键投放百度，神马等多渠道
             <el-popover trigger="hover">
               <img :src="PRE_IMG_PROMOTION" width="638" height="405">
               <a slot="reference">查看详情</a>
@@ -127,10 +127,7 @@
           </el-input>
           <p class="tip">（根据您选取的关键词，最低预算为<strong class="red">{{ f2y(predictedInfo.minDailyBudget) }} </strong>元）</p>
         </div>
-        <p v-if="usableBalance <= 0" class="tip">
-          扣除其余有效计划日预算后，您的推广资金可用余额为0元，请<router-link :to="{name: 'qwt-charge', query: {mode: 'charge-only'}}">充值</router-link>
-        </p>
-        <p v-else class="tip">
+        <p class="tip">
           扣除其余有效计划日预算后，您的推广资金可用余额为￥{{f2y(usableBalance)}}元，可消耗<strong class="red strong">{{predictedInfo.days}}</strong>天
         </p>
         <contract-ack type="content-rule" />
@@ -284,7 +281,7 @@ export default {
       timeout: null,
 
       // PRE_IMG_PROMOTION: assetHost + 'promotion-advantage.png'
-      PRE_IMG_PROMOTION: 'http://file.baixing.net/201807/0bf28bef5b6e0b476daed9da30e229e7.png'
+      PRE_IMG_PROMOTION: 'http://file.baixing.net/201809/a995bf0f1707a3e98a2c82a5dc5f8ad3.png'
     }
   },
   computed: {
@@ -517,11 +514,12 @@ export default {
 
       if (p.dailyBudget > currentBalance) {
         this.chargeDialogVisible = true
+      } else {
+        setTimeout(() => {
+          this.gotoPromotionList()
+        }, 1000)
       }
 
-      setTimeout(() => {
-        this.gotoPromotionList()
-      }, 1000)
     },
     async recommendByWord() {
       const { queryWord, newPromotion } = this
