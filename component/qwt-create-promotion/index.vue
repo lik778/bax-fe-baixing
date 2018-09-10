@@ -605,11 +605,26 @@ export default {
         roles: userInfo.roles.map(r => r.name).join(','),
         action: 'enter-page: create-campaign',
         baixingId: userInfo.baixingId,
-        time: Date.now() / 1000 | 0,
         baxId: userInfo.id,
         actionTrackId
       })
     }, 800)
+
+    let clickSent = false
+
+    document.addEventListener('click', evt => {
+      if (!clickSent) {
+        const { actionTrackId, userInfo } = this
+        track({
+          roles: userInfo.roles.map(r => r.name).join(','),
+          action: 'clicked: create-campaign',
+          baixingId: userInfo.baixingId,
+          baxId: userInfo.id,
+          actionTrackId
+        })
+        clickSent = true
+      }
+    })
   },
 
   beforeDestroy() {

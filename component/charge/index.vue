@@ -754,11 +754,26 @@ export default {
         roles: userInfo.roles.map(r => r.name).join(','),
         baixingId: userInfo.baixingId,
         action: 'enter-page: charge',
-        time: Date.now() / 1000 | 0,
         baxId: userInfo.id,
         actionTrackId
       })
     }, 1200)
+
+    let clickSent = false
+
+    document.addEventListener('click', evt => {
+      if (!clickSent) {
+        const { userInfo, actionTrackId } = this
+        track({
+          roles: userInfo.roles.map(r => r.name).join(','),
+          action: 'clicked: charge',
+          baixingId: userInfo.baixingId,
+          baxId: userInfo.id,
+          actionTrackId
+        })
+        clickSent = true
+      }
+    })
 
     if (selectGw === 'true' || selectGw === '1') {
       this.checkedProducts.push(this.allProducts[this.allProducts.length - 1])
