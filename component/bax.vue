@@ -25,6 +25,7 @@
     />
     <go-to-bottom />
     <back-to-top />
+    <chat />
   </content>
 </template>
 
@@ -33,6 +34,7 @@ import NewUserIntro from './common/new-user-intro'
 import AddUserLead from './common/add-user-lead'
 import GoToBottom from './widget/go-to-bottom'
 import BackToTop from './widget/back-to-top'
+import Chat from './widget/chat'
 import Sidebar from './sidebar'
 
 import gStore from './store'
@@ -51,7 +53,8 @@ export default {
     AddUserLead,
     GoToBottom,
     BackToTop,
-    Sidebar
+    Sidebar,
+    Chat
   },
   fromMobx: {
     addUserLeadVisible: () => gStore.addUserLeadVisible,
