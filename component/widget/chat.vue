@@ -20,7 +20,7 @@
       </div>
 
       <div class="footer">
-        <el-input v-model.trim="userInput" />
+        <input v-model.trim="userInput" @keyup.enter="send" placeholder="输入您的问题"/>
         <button class="button" size="large" @click="send">发送问题</button>
       </div>
 
@@ -29,6 +29,12 @@
 </template>
 
 <script>
+const keywords = [
+  '站外推广', '充值', '买', '购买', '收费', '扣费', '行业', '限制', '创建', '建', '创意', '多久', '多少钱', '出价', '价格', '扣费', '关键词', '审核', '不通过', '官网', '预算', '状态', '余额不足', '不足', '修改', '改'
+]
+const selectedQuestions = [
+  "Q：什么是全网通？", "Q：全网通有什么产品？", "Q：怎么充值？在哪里买？","Q：什么是站外推广？","Q：站外推广如何收费？", "Q: 什么是精品官网？","Q: 精品官网在哪里买?"
+]
 export default {
 
   data () {
@@ -49,13 +55,16 @@ export default {
       if (!this.userInput) return
 
       this.messages.push({message: this.userInput, type: 'user'})
-      const input = this.userInput
+      let input = this.userInput
       this.userInput = ''
+
+      // extract keywords
+      let inputKeywords = keywords.filter(k => input.includes(k))
 
       setTimeout(() => {
         let message = this.questions
-          .filter(q => q.indexOf(input) > -1)
-          .map(q => highlight(q, input))
+          .filter(q => inputKeywords.some(k => q.indexOf(k) > -1))
+          .map(q => highlight(q, inputKeywords))
           .map(wrapQuestion)
           .join('')
 
@@ -100,16 +109,15 @@ export default {
     ]
     this.qa = getQa(html, ids)
 
-    let selectedQuestions = [
-      "Q：什么是全网通？", "Q：全网通有什么产品？", "Q：怎么充值？在哪里买？","Q：什么是站外推广？","Q：站外推广如何收费？", "Q: 什么是精品官网？","Q: 精品官网在哪里买?"
-    ]
     let message = selectedQuestions.map(wrapQuestion).join('')
     message = `<p>您可能关心以下问题</p>` + message
     this.messages.push({message, type: 'promote'})
 
     this.$refs.content.addEventListener('click', evt => {
-      if (evt.target.parentElement.classList.contains('promote')) {
-        const q = evt.target.innerText
+      if (evt.target.parentElement.classList.contains('promote') ||
+      evt.target.parentElement.parentElement.classList.contains('promote')) {
+        // click P or EM
+        const q = evt.target.nodeName === 'P' ? evt.target.innerText : evt.target.parentElement.innerText
         const a = this.qa[q]
         this.messages.push({message: q, type: 'user'})
         setTimeout(() => {
@@ -148,26 +156,21 @@ function getRandom(array, n) {
   return r
 }
 
-function highlight(msg, keyword) {
-  return msg.replace(new RegExp(keyword, 'g'), '<em>' + keyword + '</em>')
+function highlight(msg, keywords) {
+  let r = msg
+  for (let keyword of keywords) {
+    r = r.replace(new RegExp(keyword, 'g'), '<em>' + keyword + '</em>')
+  }
+  return r
 }
 
 </script>
 
 <style lang="postcss" scoped>
-.widget {
-  position: fixed;
-  right: 20px;
-  bottom: 20px;
-  width: 670px;
-  height: 500px;
-  z-index: 100;
-}
-
 .chat-button {
-  position: absolute;
-  bottom: 200px;
-  right: 0;
+  position: fixed;
+  bottom: 100px;
+  right: 20px;
   border: 1px solid #ccc;
   height: 52px;
   width: 52px;
@@ -178,11 +181,13 @@ function highlight(msg, keyword) {
   line-height: 52px;
   cursor: pointer;
   border-radius: 4px;
+  z-index: 100;
 }
 .chat-container {
-  position: absolute;
-  top: 0;
-  left: 0;
+  z-index: 100;
+  position: fixed;
+  bottom: 20px ;
+  right: 90px;
   width: 600px;
   height: 500px;
   border: 1px solid #eee;
@@ -286,6 +291,17 @@ function highlight(msg, keyword) {
     background-color: #fff;
     border-top: 1px solid #eee;
     padding: 14px 30px;
+
+    & > input {
+      margin: auto;
+      width: 100%;
+      border: 1px solid #eee;
+      height: 40px;
+      padding-left: 20px;
+      background: #F9F9F9;
+      border-radius: 4px;
+      font-size: 14px;
+    }
 
     & > .button {
       width: 100px;
