@@ -331,6 +331,15 @@ export async function getCurrentCampaignCount(opts) {
   return body.data
 }
 
+export async function sendQuestion(content) {
+  const body = await fengming
+    .post('/qa')
+    .send({content})
+    .json()
+
+  return body.data
+}
+
 /**
  * private
  */

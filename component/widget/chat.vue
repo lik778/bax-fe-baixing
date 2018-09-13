@@ -29,6 +29,8 @@
 </template>
 
 <script>
+import {sendQuestion} from 'api/fengming'
+
 const keywords = [
   '站外推广', '充值', '买', '购买', '收费', '扣费', '行业', '限制', '创建', '建', '创意', '多久', '多少钱', '出价', '价格', '扣费', '关键词', '审核', '不通过', '官网', '预算', '状态', '余额不足', '不足', '修改', '改'
 ]
@@ -57,6 +59,8 @@ export default {
       this.messages.push({message: this.userInput, type: 'user'})
       let input = this.userInput
       this.userInput = ''
+
+      sendQuestion(input)
 
       // extract keywords
       let inputKeywords = keywords.filter(k => input.includes(k))
