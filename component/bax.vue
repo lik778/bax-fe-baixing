@@ -23,7 +23,6 @@
       :visible="addUserLeadVisible"
       @close="toggleAddUserLeadVisible"
     />
-    <go-to-bottom />
     <back-to-top />
     <chat />
   </content>
@@ -32,7 +31,6 @@
 <script>
 import NewUserIntro from './common/new-user-intro'
 import AddUserLead from './common/add-user-lead'
-import GoToBottom from './widget/go-to-bottom'
 import BackToTop from './widget/back-to-top'
 import Chat from './widget/chat'
 import Sidebar from './sidebar'
@@ -51,7 +49,6 @@ export default {
   components: {
     NewUserIntro,
     AddUserLead,
-    GoToBottom,
     BackToTop,
     Sidebar,
     Chat
