@@ -125,7 +125,7 @@
           >
             <template slot="append">元</template>
           </el-input>
-          <p class="tip">（根据您选取的关键词，最低预算为<strong class="red">{{ f2y(predictedInfo.minDailyBudget) }} </strong>元）</p>
+          <p class="tip">（根据您选取的关键词，建议最低预算为<strong class="red">{{ f2y(predictedInfo.minDailyBudget) }} </strong>元）</p>
         </div>
         <p class="tip">
           扣除其余有效计划日预算后，您的推广资金可用余额为￥{{f2y(usableBalance)}}元，可消耗<strong class="red strong">{{predictedInfo.days}}</strong>天
@@ -214,6 +214,8 @@ import { keywordPriceTip } from 'constant/tip'
 
 import store from './store'
 
+const MIN_DAILY_BUDGET = 100 * 100
+
 const promotionTemplate = {
   landingType: 0,
   landingPage: '',
@@ -225,7 +227,7 @@ const promotionTemplate = {
 
   keywords: [],
   sources: semPlatformOpts.map(opt => opt.value),
-  dailyBudget: 10000
+  dailyBudget: MIN_DAILY_BUDGET
 }
 
 export default {
@@ -297,7 +299,7 @@ export default {
 
       if (!dailyBudget) {
         return {
-          minDailyBudget: 10000,
+          minDailyBudget: MIN_DAILY_BUDGET,
           days: 0
         }
       }
@@ -321,7 +323,7 @@ export default {
     recommendKwPrice() {
       console.log(this.newPromotion.keywords.map(kw => kw.price))
       const max = Math.max.apply(null, this.newPromotion.keywords.map(kw => kw.price))
-      return Math.min(Math.max(200, toFloat(max * 0.8, 0)), 99900)
+      return Math.min(Math.max(200, toFloat(max, 0)), 99900)
     }
   },
   methods: {
@@ -454,12 +456,8 @@ export default {
 
       const p = clone(this.newPromotion)
 
-      p.dailyBudget = p.dailyBudget
-
-      const pp = this.predictedInfo.minDailyBudget
-
-      if (p.dailyBudget < pp) {
-        return Message.error(`推广日预算需大于 ${f2y(pp)} 元`)
+      if (p.dailyBudget < MIN_DAILY_BUDGET) {
+        return Message.error(`推广日预算需大于 ${f2y(MIN_WORD_PRICE)} 元`)
       }
       if (p.dailyBudget > 10000000 * 100) {
         return Message.error('推广日预算太高啦！您咋这么土豪呢~')

@@ -12,6 +12,7 @@
             :disabled="disabled"
             :value="title"
             @change="onCreativeChange('title', $event)"
+            @input="onInput('title', $event)"
             size="small"
           />
         </text-limit-tip>
@@ -41,6 +42,7 @@
             :disabled="disabled"
             :value="content"
             @change="onCreativeChange('content', $event)"
+            @input="onInput('content', $event)"
           />
         </text-limit-tip>
       </span>
@@ -123,7 +125,7 @@ export default {
     }
   },
   methods: {
-    async onCreativeChange(type, value) {
+    onInput(type, value) {
       const defaultCreativeValues = {
           title: this.title,
           content: this.content
@@ -133,6 +135,16 @@ export default {
         [type]: value
       }
       this.$emit('change', creativeValues)
+    },
+    async onCreativeChange(type, value) {
+      const defaultCreativeValues = {
+          title: this.title,
+          content: this.content
+      }
+      const creativeValues = {
+        ...defaultCreativeValues,
+        [type]: value
+      }
       try {
         await this.checkCreative(creativeValues.title, creativeValues.content, this.platforms)
         this.$emit('error', undefined)
