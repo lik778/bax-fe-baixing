@@ -55,16 +55,7 @@ const store = observable({
     this._recommendedWords = mergeKeywords(this._recommendedWords, words)
     this._recommendedWords = this._recommendedWords.map(w => {
       const { price: serverPrice } = w
-      let price = serverPrice
-      if (serverPrice <= 300) {
-        price *= 3
-      } else if (serverPrice <= 500) {
-        price *= 2.5
-      } else if (serverPrice <= 1000) {
-        price *= 2
-      } else {
-        price *= 1.5
-      }
+      let price = serverPrice * 1.2
       if (price < MIN_WORD_PRICE) {
         price = MIN_WORD_PRICE
       }

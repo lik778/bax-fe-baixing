@@ -173,7 +173,7 @@
           </span>
           <i>元</i>
           <span class="prompt-text">
-            （根据您选取的关键词，最低预算为<strong>{{ f2y(predictedInfo.minDailyBudget) }}</strong>元，
+            （根据您选取的关键词，建议最低预算为<strong>{{ f2y(predictedInfo.minDailyBudget) }}</strong>元，
             今日还可修改<strong>{{ modifyBudgetQuota }}</strong>次）
           </span>
         </div>
@@ -360,6 +360,8 @@ import store from './store'
 
 const isArray = Array.isArray
 
+const MIN_DAILY_BUDGET = 100 * 100
+
 const sourceTipMap = {
   [SEM_PLATFORM_BAIDU]: '百度',
   [SEM_PLATFORM_SOGOU]: '搜狗',
@@ -543,7 +545,7 @@ export default {
       const v = this.getProp('dailyBudget')
       if (!v) {
         return {
-          minDailyBudget: 10000,
+          minDailyBudget: MIN_DAILY_BUDGET,
           days: 0
         }
       }
@@ -781,10 +783,9 @@ export default {
         data.schedule = schedule
       }
 
-      const pp = this.predictedInfo.minDailyBudget
       if ((dailyBudget !== undefined)) {
-        if (dailyBudget * 100 < pp) {
-          throw new Error(`推广日预算需大于 ${f2y(pp)} 元`)
+        if (dailyBudget * 100 < MIN_DAILY_BUDGET) {
+          throw new Error(`推广日预算需大于 ${f2y(MIN_DAILY_BUDGET)} 元`)
         }
 
         if (dailyBudget > 10000000) {
