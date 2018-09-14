@@ -556,10 +556,11 @@ export default {
 
       const {
         keywords = [],
-        newKeywords = []
+        newKeywords = [],
+        updatedKeywords = []
       } = promotion
 
-      const prices = [...keywords, ...newKeywords]
+      const prices = [...keywords, ...newKeywords, ...updatedKeywords]
         .map(k => k.price)
 
       // 与创建时不同，这里需要加上计划原本设置的每日预算
