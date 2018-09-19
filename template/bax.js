@@ -162,7 +162,11 @@ const router = new VueRouter({
     component: Coupon,
     path: '/main/coupon',
     name: 'coupon'
-  }, ...qwtRoutes, ...mvpRoutes, ...sspRoutes, ...gwRoutes]
+  }, ...qwtRoutes, ...sspRoutes, ...gwRoutes
+  , {
+    component: Homepage,
+    path: '*'
+  }]
 })
 
 const app = new Vue({

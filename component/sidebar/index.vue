@@ -59,28 +59,6 @@
           </router-link>
         </el-menu-item> -->
 
-        <el-submenu index="mvp-campaign" v-if="allowSeeQwtPromotion">
-          <template slot="title">
-            <bx-icon type="link"></bx-icon>智能投放
-          </template>
-          <el-menu-item index="mvp-create-campaign">
-            <router-link :to="{ name: 'mvp-create-campaign' }" tag="p">
-              新建智能推广
-            </router-link>
-          </el-menu-item>
-          <el-menu-item index="mvp-campaign-list">
-            <router-link :to="{ name: 'mvp-campaign-list' }" tag="p">
-              管理智能推广
-            </router-link>
-          </el-menu-item>
-          <el-menu-item index="mvp-dashboard">
-            <router-link :to="{ name: 'mvp-dashboard' }" tag="p">
-              数据报表
-            </router-link>
-          </el-menu-item>
-        </el-submenu>
-
-
         <el-submenu index="ssp" v-if="allowSeeBxAd">
           <template slot="title">
             <i class="el-icon-message"></i>品牌广告
@@ -167,7 +145,6 @@ import {
 const MENU_GROUP_MAP = {
   'qwt-charge': ['qwt-charge-buy-service', 'qwt-charge-charge-only', 'gw-charge'],
   'qwt-campaign': ['qwt-create-promotion', 'qwt-promotion-list', 'qwt-dashboard'],
-  'mvp-campaign': ['mvp-create-campaign', 'mvp-campaign-list', 'mvp-dashboard'],
   'ssp': ['ad-list', 'material-list', 'order-list', 'user-list', 'ad-calendar']
 }
 
