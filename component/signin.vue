@@ -14,7 +14,7 @@
         placeholder="密码"
         v-model="password"
       />
-      <a href="http://www.baixing.com/fengming/bax">
+      <a :href="redirectHref">
         百姓网账号登录
       </a>
       <span @click="login">
@@ -27,6 +27,7 @@
 <script>
 import { Message } from 'element-ui'
 import { redirectTo } from 'utils'
+import { isPro } from 'config'
 
 import {
   allowVerifyAd
@@ -42,8 +43,12 @@ export default {
   data() {
     return {
       password: '',
-      email: ''
+      email: '',
+      redirectHref: ''
     }
+  },
+  created () {
+    this.redirectHref = isPro ? 'http://www.baixing.com/fengming/bax' : 'http://www.zhubailin.baixing.com/fengming/bax'
   },
   methods: {
     async login() {
