@@ -1,4 +1,5 @@
 
+import Huodong from 'com/huodong'
 // 全网通
 import QwtUpdatePromotion from 'com/qwt-update-promotion'
 import QwtCreatePromotion from 'com/qwt-create-promotion'
@@ -143,6 +144,10 @@ const sspRoutes = [{
 const router = new VueRouter({
   mode: 'history',
   routes: [{
+    component: Huodong,
+    path: '/huodong',
+    name: 'huodong'
+  }, {
     component: Homepage,
     path: '/main',
     name: 'root'

@@ -21,6 +21,9 @@ app.use(history({
   }, {
     from: /^\/main/,
     to: '/template/main.html'
+  }, {
+    from: /^\/huodong/,
+    to: '/template/huodong.html'
   }]
 }))
 

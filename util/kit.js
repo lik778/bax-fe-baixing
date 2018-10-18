@@ -76,3 +76,28 @@ export function toFloat(str, f = 2) {
 
   return n
 }
+
+export function parseQuery(queryString) {
+  var query = {}
+  var pairs = (queryString[0] === '?' ? queryString.substr(1) : queryString).split('&')
+  for (var i = 0; i < pairs.length; i++) {
+    var pair = pairs[i].split('=')
+    query[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || '')
+  }
+  return query
+}
+
+export function redirect(p, qs) {
+  if (!p.startsWith('/')) {
+    p = '/' + p
+  }
+  if (location.pathname === p) {
+    return
+  }
+
+  if (qs) {
+    location.href = location.origin + p + '?' + qs
+  } else {
+    location.pathname = p
+  }
+}

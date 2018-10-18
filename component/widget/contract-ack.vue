@@ -1,6 +1,6 @@
 <template>
   <h4 class="main">
-    <el-checkbox :value="true"></el-checkbox>
+    <input type="checkbox" checked disabled />
     <label>我已阅读并同意遵守</label>
     <a v-if="type === 'contract'"
       v-bind:href="assetHost + 'baixing-qwt-promotion-contract.docx'"

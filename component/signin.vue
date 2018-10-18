@@ -26,12 +26,13 @@
 
 <script>
 import { Message } from 'element-ui'
-import { redirectTo } from 'utils'
 import { isPro } from 'config'
 
 import {
-  allowVerifyAd
-} from 'util/role'
+  allowVerifyAd,
+  parseQuery,
+  redirect
+} from 'util'
 
 import {
   getCurrentUser,
@@ -60,6 +61,12 @@ export default {
       await login(email, password)
 
       const userInfo = await getCurrentUser()
+
+      const query = parseQuery(window.location.search.substring(1))
+      if (query.return) {
+        location.href = location.origin + query.return
+        return
+      }
 
       if (allowVerifyAd(userInfo.roles)) {
         return redirectTo('main/ads')

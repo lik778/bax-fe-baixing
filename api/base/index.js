@@ -2,7 +2,6 @@
 import 'whatwg-fetch'
 
 import { Message } from 'element-ui'
-import { redirectTo } from 'utils'
 import Fetch from 'fetch.io'
 
 import {
@@ -14,6 +13,7 @@ import {
 } from 'config'
 
 import es from 'base/es'
+import {redirect} from 'util'
 
 export const fengming = new Fetch({
   prefix: fengmingApiHost,
@@ -33,7 +33,7 @@ export const fengming = new Fetch({
 
     if (meta.status === 401) {
       Message.error('请重新登录 >_<')
-      return redirectTo('signin')
+      return redirect('signin', `return=${encodeURIComponent(location.pathname + location.search)}`)
     }
 
     if (meta.message !== 'Success') {
@@ -61,7 +61,7 @@ export const mvp = new Fetch({
 
     if (meta.status === 401) {
       Message.error('请重新登录 >_<')
-      return redirectTo('signin')
+      return redirect('signin', `return=${encodeURIComponent(location.pathname + location.search)}`)
     }
 
     if (meta.message !== 'Success') {
@@ -105,12 +105,12 @@ export const api = new Fetch({
 
     if (meta.status === 401) {
       Message.error('请重新登录 >_<')
-      return redirectTo('signin')
+      return redirect('signin', `return=${encodeURIComponent(location.pathname + location.search)}`)
     }
 
     if (meta.status === 403) {
       Message.error('你没有权限访问该页面')
-      return redirectTo('main')
+      return redirect('main')
     }
 
     if (meta.message !== 'Success') {
@@ -135,12 +135,12 @@ export const dashboardApi = new Fetch({
 
     if (res.status === 401) {
       Message.error('请重新登录 >_<')
-      return redirectTo('signin')
+      return redirect('signin')
     }
 
     if (res.status === 403) {
       Message.error('你没有权限访问该页面')
-      return redirectTo('main')
+      return redirect('main')
     }
   }
 })
@@ -159,3 +159,4 @@ export function trim(obj) {
 
   return result
 }
+
