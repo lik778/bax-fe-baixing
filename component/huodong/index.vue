@@ -46,10 +46,11 @@ import * as aapi from 'api/account'
 
 import {
   allowGetOrderPayUrl,
+  normalizeRoles,
   allowPayOrder,
-  parseQuery
+  parseQuery,
 } from 'util'
-import { normalizeRoles } from 'util/role'
+import track from 'util/track'
 
 export default {
   name: 'huodong',
@@ -141,6 +142,17 @@ export default {
       } else if (now > tab.period[1]) {
         tab.status = '已结束'
       }
+    }
+
+    const bindHandler = onPageClick.bind(this)
+    document.body.addEventListener('click', bindHandler)
+
+    function onPageClick(e) {
+      track({
+        action: 'page-click: huodong',
+        baxId: this.user.id,
+        tab: this.activeTab
+      })
     }
   },
 }

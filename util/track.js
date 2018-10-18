@@ -4,7 +4,7 @@ import uuid from 'uuid/v4'
 
 import { isPro } from 'config'
 
-module.exports = function track(opts) {
+export default function track(opts) {
   try {
     opts.biztype = 'bax-qwt'
     opts.env = isPro ? 'pro' : 'test'

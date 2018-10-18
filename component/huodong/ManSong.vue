@@ -100,8 +100,9 @@ import { centToYuan as f2y } from 'utils'
 import { normalizeRoles } from 'util/role'
 import {
   allowGetOrderPayUrl,
-  allowPayOrder
+  allowPayOrder,
 } from 'util'
+import track from 'util/track'
 import {
   getUserIdFromBxSalesId,
   queryUserInfo,
@@ -323,6 +324,11 @@ export default {
       return this.userId || this.user.id
     },
     async createOrder() {
+      track({
+        action: 'click-buy: huodong2',
+        baxId: this.user.id
+      })
+
       const newOrder = {
         activity: '181111p2',
         userId: await this.getFinalUserId()
@@ -423,6 +429,13 @@ export default {
         this.displayUserMobile = info.mobile
       }
     }
+
+    setTimeout(() => {
+      track({
+        action: 'enter-page: huodong2',
+        baxId: this.user.id
+      })
+    }, 1200)
   },
   watch: {
     checkedProducts: {

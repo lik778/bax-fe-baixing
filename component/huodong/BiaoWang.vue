@@ -37,7 +37,8 @@
 
 <script>
 import Rules from './Rules'
-import { normalizeRoles } from 'util/role'
+import { normalizeRoles } from 'util'
+import track from 'util/track'
 
 export default {
   name: 'biaowang',
@@ -59,13 +60,25 @@ export default {
   methods: {
     onClick() {
       if (this.status !== '进行中') { return }
+      track({
+        action: 'click-buy: huodong3',
+        baxId: this.user.id
+      })
       const roles = normalizeRoles(this.user.roles)
       if (roles.includes('BAIXING_SALES') || roles.includes('AGENT_SALES') || roles.includes('AGENT_ACCOUNTING')) {
         return alert('请通过米奇或指南车进入标王购买页面')
       }
       window.open('http://www.baixing.com/pays/show?type=216&src=bax-huodong')
     }
-  }
+  },
+  mounted() {
+    setTimeout(() => {
+      track({
+        action: 'enter-page: huodong3',
+        baxId: this.user.id
+      })
+    }, 1200)
+  },
 }
 </script>
 
