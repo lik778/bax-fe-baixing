@@ -1,6 +1,9 @@
 <template>
   <div>
-    <div class="nav-bar">百姓网|全网通</div>
+    <div class="nav-bar">
+      <div class="nav-container">
+        <a href="http://www.baixing.com"><img src="http://file.baixing.net/201810/82ace1fa56397b063c085fd1109cabf9.png" alt=""></a>|<a href="http://bax.baixing.com.cn/main"><img src="http://file.baixing.net/201810/75dcdf51eb762b8eaad557b7d5d3d85f.png" alt=""></a></div>
+    </div>
     <div class="hd-container">
       <main>
         <div class="tabs">
@@ -153,12 +156,26 @@ body {
 .nav-bar {
   height: 48px;
   background-color: #fff;
-  display: flex;
-  align-items: center;
+
+  & > .nav-container {
+    height: 48px;
+    padding-top: 10px;
+    width: 1000px;
+    margin: auto;
+
+    & > a:first-of-type > img {
+      height: 25px;
+      margin-right: 10px;
+    }
+    & > a:last-of-type > img {
+      height: 16px;
+      margin-left: 10px;
+    }
+  }
 }
 .hd-container {
-  background-image: url('http://file.baixing.net/201810/4bced297328975b34e9ae2ba4f504f84.png');
-  background-position: center -222px;
+  background-image: url('http://file.baixing.net/201810/a10c1bf6abf9fbae47ce746452885af7.png');
+  background-position: center 0;
 
   & > main {
     width: 1000px;
