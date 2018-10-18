@@ -66,19 +66,19 @@ export default {
         timeRange: '10.25-11.5',
         status: '预热中',
         desc: '优惠规则：活动期间买精品官网，加送1年官网使用时长。任意套餐和单独买精品官网均可享受！',
-        period: [+new Date(2018, 9, 25), +new Date(2018, 10, 5)],
+        period: [+new Date(2018, 9, 24, 18), +new Date(2018, 10, 6)],
       }, {
         title: '满送(最高1500)',
         timeRange: '11.6-11.20',
         status: '预热中',
         desc: '优惠规则：活动期间买任意产品（推广资金+精品官网）实付满1000 送50元；满4000送 350元；满10000送1500元 无门槛推广资金券 ，有效期30天',
-        period: [+new Date(2018, 10, 6), +new Date(2018, 10, 20)],
+        period: [+new Date(2018, 10, 6), +new Date(2018, 10, 21)],
       }, {
         title: '标王折上折',
         timeRange: '10.25-11.20',
         status: '预热中',
         desc: '优惠规则：活动期间买任意标王关键词满5000－9999，8折；10000-14999，7折；15000及以上，7折且赠送1年精品官网',
-        period: [+new Date(2018, 9, 25), +new Date(2018, 10, 20)],
+        period: [+new Date(2018, 9, 24, 18), +new Date(2018, 10, 21)],
       }],
       discounts: [],
 
@@ -119,10 +119,11 @@ export default {
       }
     },
     getTime() {
+      // 必须取服务器时间
       return new Promise((resolve, reject) => {
         setTimeout(() => {
-          resolve(+new Date(2018, 10, 6))
-        }, 1000)
+          resolve(+new Date())
+        }, 500)
       })
     }
   },
