@@ -101,7 +101,6 @@ export default {
       return this.tabs[this.activeTab].desc
     },
     isAgent() {
-      return true
       const roles = normalizeRoles(this.user.roles)
       return roles.includes('AGENT_ACCOUNTING')
     },
