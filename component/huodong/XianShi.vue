@@ -6,7 +6,7 @@
       :active="checkedPkg === pkg" @click.native="checkedPkg = pkg">
         <div class="gw-content">
           <p v-for="(product, index) in pkg.products" :key="index">
-            <span class="price">{{f2y(product.price)}}元</span><span>{{product.name}}</span>
+            <span class="price">{{f2y(product.productType === 3 ? product.price : product.originalPrice / 2)}}元</span><span>{{product.name}}</span>
           </p>
         </div>
       </card>

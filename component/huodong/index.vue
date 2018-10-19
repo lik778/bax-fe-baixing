@@ -39,6 +39,7 @@
 import ManSong from './ManSong'
 import BiaoWang from './BiaoWang'
 import XianShi from './XianShi'
+import {Message} from 'element-ui'
 
 import * as fapi from 'api/fengming'
 import * as mapi from 'api/meta'
@@ -72,7 +73,7 @@ export default {
         title: '满送(最高1500)',
         timeRange: '11.6-11.20',
         status: '预热中',
-        desc: '优惠规则：活动期间买任意产品（推广资金+精品官网）实付满1000 送50元；满4000送 350元；满10000送1500元 无门槛推广资金券 ，有效期30天',
+        desc: '优惠规则：活动期间买任意产品（推广资金+精品官网）实付满1000送50元；满4000送350元；满10000送1500元 无门槛推广资金券 ，有效期30天',
         period: [+new Date(2018, 10, 6), +new Date(2018, 10, 21)],
       }, {
         title: '标王折上折',
@@ -116,6 +117,8 @@ export default {
     onTabClick(tab, index) {
       if (tab.status !== '已结束'){
         this.activeTab = index
+      } else {
+        Message.info('活动已结束')
       }
     },
     getTime() {
@@ -167,6 +170,7 @@ body {
   margin: 0;
   padding: 0;
   font-size: 14px;
+  font-family: sans-serif;
 }
 </style>
 <style scoped lang="postcss">

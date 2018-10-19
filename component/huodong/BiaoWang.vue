@@ -125,13 +125,12 @@ section {
       display: inline-block;
       width: 110px;
       height: 32px;
-      line-height: 32px;
       text-align: center;
       text-decoration: none;
       background-color: #FFD500;
       color: #5F00C9;
       font-size: 14px;
-      font-weight: normal;
+      font-weight: bold;
       margin-top: 50px;
       border-radius: 4px;
     }
