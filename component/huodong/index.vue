@@ -188,6 +188,9 @@ body {
 .hd-container {
   background-image: url('http://file.baixing.net/201810/a10c1bf6abf9fbae47ce746452885af7.png');
   background-position: center 0;
+  background-color: #3E00C1;
+  background-repeat: no-repeat;
+  padding-bottom: 50px;
 
   & > main {
     width: 1000px;

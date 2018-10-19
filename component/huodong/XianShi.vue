@@ -294,7 +294,7 @@ export default {
         userId: this.getFinalUserId()
       }
 
-      const sid = this.getFinalSalesId()
+      const sid = await this.getFinalSalesId()
       if (sid) {
         newOrder.salesId = sid
       }
@@ -420,6 +420,7 @@ export default {
     }
   }
 }
+
 div.xianshi > section {
   padding: 27px 13px 27px 35px;
   border-radius: 8px;
