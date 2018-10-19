@@ -6,7 +6,7 @@
       <div class="product-container">
         <simple-card v-for="(product, index) in products.slice(0,7)"
         :key="index" :price="product.price" :checked="checkedProducts.includes(product)"
-        :editable="product.editable" class="simple-card" @click.native="toggleProduct(product)"
+        :editable="product.editable" class="simple-card" @click="toggleProduct(product)"
         @change="v => (product.price = v, product.originalPrice = v)" />
       </div>
       <p class="subtitle">选择精品官网</p>
@@ -34,9 +34,9 @@
           @discount-total="total => discountTotal = total"
           @price-total="total => priceTotal = total"
         >
-        <p v-if="currentManSong.length">
-          <strong class="tag">满送</strong>已送<strong>{{f2y(currentManSong[1])}}元</strong>
-          <span v-if="nextManSong.length">，购买<strong>{{f2y(nextManSong[0])}}元</strong>可送<strong>{{f2y(nextManSong[1])}}</strong>元</strong>，还差<strong>{{f2y(nextManSong[0] - priceTotal)}}元</strong></span>
+        <p>
+          <span v-if="currentManSong.length"><strong class="tag">满送</strong>已送<strong>{{f2y(currentManSong[1])}}元.</strong></span>
+          <span v-if="nextManSong.length">购买<strong>{{f2y(nextManSong[0])}}元</strong>可送<strong>{{f2y(nextManSong[1])}}</strong>元</strong>，还差<strong>{{f2y(nextManSong[0] - priceTotal)}}元</strong></span>
         </p>
         <p v-if="gw && gw.originalPrice - gw.price > 0">
           <strong class="tag">减</strong>同时购买精品官网（365天）立减<strong>{{f2y(gw.originalPrice - gw.price)}}元</strong>
@@ -78,7 +78,7 @@
           </button>
           <span v-if="orderPayUrl">
             <label :title="orderPayUrl">{{ '付款链接: ' + orderPayUrl }}</label>
-            <Clipboard :content="orderPayUrl"></Clipboard>
+            <clipboard :content="orderPayUrl" />
           </span>
         </section>
       </div>
@@ -95,6 +95,7 @@ import Card from './Card'
 import ContractAck from 'com/widget/contract-ack'
 import Rules from './Rules'
 import { Message, MessageBox } from 'element-ui'
+import Clipboard from 'com/widget/clipboard'
 
 import { centToYuan as f2y } from 'utils'
 import { normalizeRoles } from 'util/role'
@@ -182,7 +183,8 @@ export default {
     Card,
     ContractAck,
     Order,
-    Rules
+    Rules,
+    Clipboard
   },
   data () {
     return {

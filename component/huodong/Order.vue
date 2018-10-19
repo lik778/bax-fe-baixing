@@ -157,7 +157,7 @@ export default {
         & >>> strong {
           color: #FFD500;
         }
-        & > strong.tag {
+        & >>> strong.tag {
           margin-right: 5px;
           display: inline-block;
           width: 32px;

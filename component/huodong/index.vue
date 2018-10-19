@@ -142,6 +142,11 @@ export default {
         tab.status = '已结束'
       }
     }
+    // 选中当前活动
+    const inProgress = this.tabs.find(tab => tab.status === '进行中')
+    if (inProgress) {
+      this.activeTab = this.tabs.indexOf(inProgress)
+    }
 
     const bindHandler = onPageClick.bind(this)
     document.body.addEventListener('click', bindHandler)

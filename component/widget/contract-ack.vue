@@ -1,6 +1,6 @@
 <template>
   <h4 class="main">
-    <input type="checkbox" checked disabled />
+    <el-checkbox :value="true" />
     <label>我已阅读并同意遵守</label>
     <a v-if="type === 'contract'"
       v-bind:href="assetHost + 'baixing-qwt-promotion-contract.docx'"
@@ -17,9 +17,13 @@
 
 <script>
 import { assetHost } from 'config'
+import {Checkbox as ElCheckbox} from 'element-ui'
 
 export default {
   name: 'bax-qwt-contract-ack',
+  components: {
+    ElCheckbox,
+  },
   props: {
     type: {
       // content-rule, contract
