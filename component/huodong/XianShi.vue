@@ -81,6 +81,7 @@ import { normalizeRoles } from 'util/role'
 import {
   allowGetOrderPayUrl,
   allowPayOrder,
+  allowUseKaPackage
 } from 'util'
 
 import track from 'util/track'
@@ -284,6 +285,9 @@ export default {
       return this.userId || this.user.id
     },
     async createOrder() {
+      if (allowUseKaPackage([], this.user.id)) {
+        return alert('您不在本次活动参与范围之内')
+      }
       track({
         action: 'click-buy: huodong1',
         baxId: this.user.id
