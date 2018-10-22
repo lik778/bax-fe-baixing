@@ -87,7 +87,8 @@ export default {
       now: +new Date(), // 从后端取
       user: {},
 
-      query: {}
+      query: {},
+      sendLeads: false
     }
   },
   created() {
@@ -154,7 +155,15 @@ export default {
     const bindHandler = onPageClick.bind(this)
     document.body.addEventListener('click', bindHandler)
 
-    function onPageClick(e) {
+    async function onPageClick(e) {
+      if (!this.sendLeads) {
+        this.sendLeads = true
+        await fapi.huodongLeads({
+          contactId: this.user.mobile,
+          contactName: this.user.name
+        })
+      }
+
       track({
         action: 'page-click: huodong',
         baxId: this.user.id,
