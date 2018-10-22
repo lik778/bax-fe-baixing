@@ -68,19 +68,19 @@ export default {
         timeRange: '10.25-11.5',
         status: '预热中',
         desc: '优惠规则：活动期间买精品官网，加送1年官网使用时长。任意套餐和单独买精品官网均可享受！',
-        period: [+new Date(2018, 9, 24, 18), +new Date(2018, 10, 6)],
+        period: [Date.UTC(2018, 9, 24, 10), Date.UTC(2018, 10, 5, 16)],
       }, {
         title: '满送(最高1500)',
         timeRange: '11.6-11.20',
         status: '预热中',
         desc: '优惠规则：活动期间买任意产品（推广资金+精品官网）实付满1000送50元；满4000送350元；满10000送1500元 无门槛推广资金券 ，有效期30天',
-        period: [+new Date(2018, 10, 6), +new Date(2018, 10, 21)],
+        period: [Date.UTC(2018, 10, 6, 16), Date.UTC(2018, 10, 20, 16)],
       }, {
         title: '标王折上折',
         timeRange: '10.25-11.20',
         status: '预热中',
         desc: '优惠规则：活动期间买任意标王关键词满5000－9999，8折；10000-14999，7折；15000及以上，7折且赠送1年精品官网',
-        period: [+new Date(2018, 9, 24, 18), +new Date(2018, 10, 21)],
+        period: [Date.UTC(2018, 9, 24, 10), Date.UTC(2018, 10, 20, 16)],
       }],
       discounts: [],
 
@@ -122,13 +122,10 @@ export default {
         Message.info('活动已结束')
       }
     },
-    getTime() {
+    async getTime() {
       // 必须取服务器时间
-      return new Promise((resolve, reject) => {
-        setTimeout(() => {
-          resolve(+new Date())
-        }, 500)
-      })
+      const dateHeader = await fapi.getServerTime()
+      return +new Date(dateHeader) || Date.now()
     }
   },
   async mounted() {
@@ -136,6 +133,7 @@ export default {
     this.discounts = await mapi.getProductDiscounts([3, 4])
 
     const now = await this.getTime()
+    console.log({now})
 
     for (let tab of this.tabs) {
       if (now < tab.period[0]) {
