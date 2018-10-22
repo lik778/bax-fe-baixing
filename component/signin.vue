@@ -49,7 +49,9 @@ export default {
     }
   },
   created () {
-    this.redirectHref = isPro ? 'http://www.baixing.com/fengming/bax' : 'http://www.zhubailin.baixing.com/fengming/bax'
+    const query = parseQuery(window.location.search.substring(1))
+    const returnUrl = query.return || ''
+    this.redirectHref = isPro ? `http://www.baixing.com/fengming/bax?redirect_url=${returnUrl}` : `http://www.zhubailin.baixing.cn/fengming/bax?redirect_url=${returnUrl}`
   },
   methods: {
     async login() {
