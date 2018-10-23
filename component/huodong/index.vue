@@ -68,7 +68,7 @@ export default {
         timeRange: '10.25-11.5',
         status: '预热中',
         desc: '优惠规则：活动期间买精品官网，加送1年官网使用时长。任意套餐和单独买精品官网均可享受！',
-        period: [Date.UTC(2018, 9, 24, 10), Date.UTC(2018, 10, 5, 16)],
+        period: [Date.UTC(2018, 9, 24, 9), Date.UTC(2018, 10, 5, 16)],
       }, {
         title: '满送(最高1500)',
         timeRange: '11.6-11.20',
@@ -80,7 +80,7 @@ export default {
         timeRange: '10.25-11.20',
         status: '预热中',
         desc: '优惠规则：活动期间买任意标王关键词满5000－9999，8折；10000-14999，7折；15000及以上，7折且赠送1年精品官网',
-        period: [Date.UTC(2018, 9, 24, 10), Date.UTC(2018, 10, 20, 16)],
+        period: [Date.UTC(2018, 9, 24, 9), Date.UTC(2018, 10, 20, 16)],
       }],
       discounts: [],
 
