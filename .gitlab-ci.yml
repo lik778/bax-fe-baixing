@@ -38,7 +38,7 @@ dev-deploy-auto-master:
   script:
     - kubectl set image -n adtech deployments --selector app=bax-fe *=$BAX_FE_REF
 
-deploy:
+prod-deploy:
   stage: prod-deploy
   when: manual
   tags:
