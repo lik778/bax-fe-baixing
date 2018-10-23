@@ -10,6 +10,7 @@ stages:
   - build
   - dev-deploy-auto-master
   - dev-deploy
+  - prod-deploy
 
 
 build:
@@ -34,5 +35,13 @@ dev-deploy-auto-master:
     - master
   tags:
     - k8s-dev
+  script:
+    - kubectl set image -n adtech deployments --selector app=bax-fe *=$BAX_FE_REF
+
+deploy:
+  stage: prod-deploy
+  when: manual
+  tags:
+    - k8s-prod
   script:
     - kubectl set image -n adtech deployments --selector app=bax-fe *=$BAX_FE_REF
