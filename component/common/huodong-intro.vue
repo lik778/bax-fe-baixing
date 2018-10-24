@@ -2,17 +2,27 @@
   <div class="huodong-intro" v-show="show">
     <div class="center">
       <img src="http://file.baixing.net/201810/ee0bf3a22a1b8c2d8a1798001d514a9c.png" alt="" @click="$emit('close')">
-      <a href="http://bax.baixing.com.cn/huodong">去看看</a>
+      <a :href="href">去看看</a>
     </div>
   </div>
 </template>
 
 <script>
+const href = 'http://bax.baixing.com.cn/huodong'
+
 export default {
   name: 'huodong-intro',
   props: {
     show: Boolean
-  }
+  },
+  data() {
+    return {
+      href: href
+    }
+  },
+  mounted() {
+    this.href = href + window.location.search
+  },
 }
 </script>
 

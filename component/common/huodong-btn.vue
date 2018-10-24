@@ -1,15 +1,25 @@
 <template>
   <div class="huodong-btn">
-    <a href="http://bax.baixing.com.cn/huodong"><img src="http://file.baixing.net/201810/e709aea1f70ba444d8ea514590c76354.png" alt=""></a>
+    <a :href="href"><img src="http://file.baixing.net/201810/e709aea1f70ba444d8ea514590c76354.png" alt=""></a>
   </div>
 </template>
 
 <script>
+const href = `http://bax.baixing.com.cn/huodong`
+
 export default {
   name: 'huodong-btn',
   props: {
     show: Boolean
-  }
+  },
+  data() {
+    return {
+      href: href
+    }
+  },
+  mounted() {
+    this.href = href + window.location.search
+  },
 }
 </script>
 
