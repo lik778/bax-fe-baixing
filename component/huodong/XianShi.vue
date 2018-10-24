@@ -357,7 +357,6 @@ export default {
     },
   },
   async mounted() {
-    this.checkedPkg = this.pkgs[1]
 
     if (this.salesId) {
       const userInfo = await getUserInfo(this.salesId)
@@ -371,6 +370,7 @@ export default {
         this.displayUserMobile = info.mobile
       }
     }
+    this.checkedPkg = this.pkgs[1]
 
     setTimeout(() => {
       track({
