@@ -202,7 +202,7 @@ body {
   }
 }
 .hd-container {
-  background-image: url('http://file.baixing.net/201810/a10c1bf6abf9fbae47ce746452885af7.png');
+  background-image: url('http://file.baixing.net/201810/666580479c1bf083f2012ff0f8bd7ecd.png');
   background-position: center 0;
   background-color: #3E00C1;
   background-repeat: no-repeat;
