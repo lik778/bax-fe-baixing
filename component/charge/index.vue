@@ -80,8 +80,18 @@
                   :coupon="displayCoupon(coupon)"
                   class="coupon"
                   @click="onCouponClick(coupon)"
-                  :selected="selectedCoupon.includes(coupon)"/>
-                  <p v-if="effectiveCoupons.length === 0">暂无可用优惠券</p>
+                  :selected="selectedCoupon.includes(coupon)"
+                />
+                <p v-if="effectiveCoupons.length === 0">暂无可用优惠券</p>
+                <hr class="hr">
+                <coupon
+                  v-for="(coupon, index) in ineffectiveCoupons" :key="index"
+                  :coupon="displayCoupon(coupon)"
+                  class="coupon"
+                  :disabled="true"
+                  >
+                </coupon>
+
               </el-tab-pane>
               <el-tab-pane label="优惠码兑换" name="second" class="coupon-code-pane">
                 <el-input class="coupon-code-input" style="width: 200px"
@@ -402,6 +412,9 @@ export default {
         return true
       })
     },
+    ineffectiveCoupons() {
+      return this.coupons.filter(coupon => !this.effectiveCoupons.includes(coupon))
+    },
     finalPrice() {
       if (this.totalPrice >= this.couponAmount) {
         return this.totalPrice - this.couponAmount
@@ -686,6 +699,20 @@ export default {
     centToYuan
   },
   watch: {
+    // 选中最合适的coupon
+    fullCheckedProducts(v) {
+      if (this.effectiveCoupons.length) {
+        let theOne = this.effectiveCoupons[0]
+        for(let coupon of this.effectiveCoupons) {
+          if (coupon.amount > theOne.amount) {
+            theOne = coupon
+          } else if (coupon.amount === theOne.amount && coupon.expiredAt < theOne.expiredAt) {
+            theOne = coupon
+          }
+        }
+        this.selectedCoupon = [theOne]
+      }
+    },
     async couponVisible(v) {
       if (v) {
         // 必须先拿到 condition
@@ -739,6 +766,7 @@ export default {
     }
   },
   async mounted() {
+    this.couponVisible = true
     const {
       sales_id: salesId,
       user_id: userId,
@@ -1049,5 +1077,10 @@ export default {
 }
 .shadow {
   box-shadow: 0px 2px 9px 0px rgba(83,95,127,0.1);
+}
+.hr {
+  height: 1px;
+  margin: 10px 0;
+  background-color: #CFCFCF;
 }
 </style>
