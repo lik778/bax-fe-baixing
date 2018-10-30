@@ -415,6 +415,7 @@ export default {
     ineffectiveCoupons() {
       return this.coupons.filter(coupon => !this.effectiveCoupons.includes(coupon))
     },
+    // 减去各选中产品对应的券金额
     finalPrice() {
       if (this.totalPrice >= this.couponAmount) {
         return this.totalPrice - this.couponAmount
@@ -423,7 +424,33 @@ export default {
       }
     },
     couponAmount() {
-      return this.selectedCoupon.reduce((a, b) => a + b.amount, 0)
+      if (!this.selectedCoupon.length) return 0
+
+      const coupon = this.selectedCoupon[0]
+      let products = this.fullCheckedProducts
+
+      let productSum = products.reduce((s, p) => {s += p.discountPrice; return s}, 0)
+      let sum = productSum > coupon.amount ? coupon.amount : productSum
+console.log('1', sum)
+
+      for (let condition of coupon.usingConditions) {
+        if (condition.type === usingCondition.PRODUCTS) {
+          products = this.fullCheckedProducts.filter(p => condition.products.includes(p.productType))
+        }
+      }
+      productSum = products.reduce((s, p) => {s += p.discountPrice; return s}, 0)
+      sum = productSum > coupon.amount ? coupon.amount : productSum
+console.log('2', sum)
+
+      for (let condition of coupon.usingConditions) {
+        if (condition.type === usingCondition.ORDER_SUM_ORIGINAL_PRICE) {
+          productSum = products.reduce((s, p) => {s += p.discountPrice; return s}, 0)
+          sum = productSum > coupon.amount ? coupon.amount : productSum
+        }
+      }
+console.log('3', sum)
+
+      return sum
     },
     isAgentSales() {
       const roles = normalizeRoles(this.userInfo.roles)
