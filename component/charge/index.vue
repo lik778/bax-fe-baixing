@@ -319,7 +319,7 @@ export default {
       inputSalesId: '',
       orderPayUrl: '',
 
-      couponVisible: false,
+      couponVisible: true,
       activeCouponTab: 'first',
       selectedCoupon: [],
       // 支持以后使用多种优惠券
@@ -537,8 +537,9 @@ console.log('3', sum)
     },
     async init() {
       this.empty()
-
+      await store.getConditions()
       await Promise.all([
+        store.getCoupons({ onlyValid: true, status: 0 }),
         store.getProductDiscounts([3, 4]), // 充值／新官网
         store.getProducts([3,4])
       ])
@@ -793,7 +794,6 @@ console.log('3', sum)
     }
   },
   async mounted() {
-    this.couponVisible = true
     const {
       sales_id: salesId,
       user_id: userId,
