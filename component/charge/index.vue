@@ -63,7 +63,7 @@
           />
         </div>
 
-        <div class="coupon" v-if="!canUseCoupon">
+        <div class="coupon" v-if="!isAgentAccounting">
           <header>
             <span>
               <el-checkbox v-model="couponVisible">使用优惠券</el-checkbox>
@@ -464,12 +464,12 @@ console.log('3', sum)
       const roles = normalizeRoles(this.userInfo.roles)
       return roles.includes('BAIXING_SALES')
     },
-    canUseCoupon() {
+    isAgentAccounting() {
       const roles = normalizeRoles(this.userInfo.roles)
       return roles.includes('AGENT_ACCOUNTING')
     },
     checkedProductDiscounts() {
-      if (!this.canUseCoupon) {
+      if (!this.isAgentAccounting) {
         return []
       }
 
@@ -537,15 +537,18 @@ console.log('3', sum)
     },
     async init() {
       this.empty()
-      await store.getConditions()
+      //  目前只有这一个角色可以用券
+      if (this.isBxUser) {
+        await store.getConditions()
+        await store.getCoupons({ onlyValid: true, status: 0 })
+      }
       await Promise.all([
-        store.getCoupons({ onlyValid: true, status: 0 }),
         store.getProductDiscounts([3, 4]), // 充值／新官网
         store.getProducts([3,4])
       ])
     },
     getDiscountPrice(productType, price) {
-      if (!this.canUseCoupon) {
+      if (!this.isAgentAccounting) {
         return price
       }
 
