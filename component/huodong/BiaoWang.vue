@@ -7,18 +7,19 @@
         <table>
           <tbody>
             <tr>
+              <td>满<strong>1000-4999</strong></td>
+              <td><span>活动价<strong>8.8</strong>折</span></td>
+            </tr>
+            <tr>
               <td>满<strong>5000-9999</strong></td>
-              <td><span class="original">原价8.8折</span></td>
               <td><span>活动价<strong>8</strong>折</span></td>
             </tr>
             <tr>
               <td>满<strong>10000-14999</strong></td>
-              <td><span class="original">原价8折</span></td>
               <td><span>活动价<strong>7</strong>折</span></td>
             </tr>
             <tr>
               <td>满<strong>15000及以上</strong></td>
-              <td><span class="original">原价8折</span></td>
               <td><span>活动价<strong>7</strong>折</span>+<strong>赠送一年精品官网</strong></td>
             </tr>
             <tr>
