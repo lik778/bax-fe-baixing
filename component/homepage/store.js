@@ -1,7 +1,6 @@
 
 import { observable, action, toJS } from 'mobx'
 
-import * as api from 'api/fengming-mvp'
 import * as fapi from 'api/fengming'
 import * as mapi from 'api/meta'
 
@@ -35,17 +34,6 @@ const store = observable({
 
   getHomepageSummary: action(async function() {
     this._summary = await fapi.getHomepageSummary()
-  }),
-
-  getMvpSummary: action(async function() {
-    const [summary, report] = await Promise.all([
-      api.getMvpSummary(),
-      api.getMvpSimpleReport()
-    ])
-    this._mvpSummary = {
-      ...summary,
-      ...report
-    }
   }),
 
   getCoupons: action(async function(opt) {

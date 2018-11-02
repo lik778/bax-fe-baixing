@@ -7,7 +7,6 @@
       <span>
         <account :user-info="userInfo" :summary="summary" :coupons="coupons" />
         <campaign type="qwt" :user-info="userInfo" :summary="summary" />
-        <campaign type="mvp" :user-info="userInfo" :summary="mvpSummary" />
       </span>
       <span>
         <board />
@@ -49,7 +48,6 @@ export default {
     }
   },
   fromMobx: {
-    mvpSummary: () => store.mvpSummary,
     summary: () => store.summary,
     coupons: () => store.coupons
   },
@@ -72,7 +70,6 @@ export default {
 
         await Promise.all([
           store.getHomepageSummary(),
-          store.getMvpSummary(),
           store.getCoupons({ onlyValid: true, status: 0 })
         ])
       }
@@ -84,7 +81,6 @@ export default {
     if (this.allowSeeAccount) {
       await Promise.all([
         store.getHomepageSummary(),
-        store.getMvpSummary(),
         store.getCoupons({ onlyValid: true, status: 0 })
       ])
     }

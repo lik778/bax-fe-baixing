@@ -69,7 +69,7 @@
 import BaxPagination from 'com/common/pagination'
 import BaxInput from 'com/common/input'
 
-import { queryAds } from 'api/fengming-mvp'
+import { queryAds } from 'api/fengming'
 import { getCnName } from 'util/meta'
 
 const TYPE_RESELECT = 'reselect'
