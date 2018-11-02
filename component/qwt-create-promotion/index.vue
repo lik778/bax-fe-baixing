@@ -158,6 +158,7 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import { Message } from 'element-ui'
 import uuid from 'uuid/v4'
 import clone from 'clone'
@@ -167,12 +168,13 @@ import PromotionAreaLimitTip from 'com/widget/promotion-area-limit-tip'
 import QiqiaobanPageSelector from 'com/common/qiqiaoban-page-selector'
 import PromotionChargeTip from 'com/widget/promotion-charge-tip'
 import PromotionRuleLink from 'com/widget/promotion-rule-link'
-import CpcPriceTip from 'com/widget/cpc-price-tip'
 import UserAdSelector from 'com/common/user-ad-selector'
 import CreativeEditor from 'com/widget/creative-editor'
 import AreaSelector from 'com/common/area-selector'
 import ChargeDialog from 'com/common/charge-dialog'
+import CpcPriceTip from 'com/widget/cpc-price-tip'
 import ContractAck from 'com/widget/contract-ack'
+import wxBindModal from 'com/common/wx-bind-modal'
 import Topbar from 'com/topbar'
 
 import moment from 'moment'
@@ -510,6 +512,11 @@ export default {
 
       store.clearStore()
 
+      // 微信绑定弹窗
+      if (!this.userInfo.hasBoundWechat) {
+        await this.openWxModal()
+      }
+
       if (p.dailyBudget > currentBalance) {
         this.chargeDialogVisible = true
       } else {
@@ -571,6 +578,22 @@ export default {
         ...this.newPromotion.areas.filter(i => i !== c)
       ]
       await this.recommendByUrl()
+    },
+    handleWxModalClose() {
+      this.isWxModalVisible =false
+    },
+    openWxModal() {
+      const ModalConstructor = Vue.extend(wxBindModal)
+      this.modalInstance = new ModalConstructor({
+        el: document.createElement('div')
+      })
+      document.body.appendChild(this.modalInstance.$el)
+      this.modalInstance.visible = true
+      return new Promise(resolve => {
+        this.modalInstance.closeCb = () => {
+          resolve('关闭')
+        }
+      })
     }
   },
 
