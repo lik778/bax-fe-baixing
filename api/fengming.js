@@ -3,8 +3,41 @@ import { reverseCamelcase, toCamelcase } from 'object-keys-mapping'
 import { fengming, trim } from './base'
 import qs from 'query-string'
 import moment from 'moment'
+import {
+  isPro
+} from 'config'
 
 const isArray = Array.isArray
+
+export async function queryAds(opts = {}) {
+  const q = {
+    offset: 0,
+    limit: 3,
+    ...opts
+  }
+
+  if (isArray(q.adIds)) {
+    q.adIds = q.adIds.join(',')
+  }
+
+  if (!isPro && localStorage.getItem('__bax_user_ads')) {
+    const data = JSON.parse(localStorage.getItem('__bax_user_ads'))
+    return {
+      ads: toCamelcase(data),
+      total: data.length
+    }
+  }
+
+  const body = await fengming
+    .get('/simple/ad')
+    .query(reverseCamelcase(trim(q)))
+    .json()
+
+  return {
+    ads: toCamelcase(body.data),
+    total: body.meta.count
+  }
+}
 
 export async function updateCampaignDailyBudget(opts) {
   const body = await fengming

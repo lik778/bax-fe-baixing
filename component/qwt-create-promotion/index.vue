@@ -199,7 +199,7 @@ import {
 
 import {
   queryAds
-} from 'api/fengming-mvp'
+} from 'api/fengming'
 
 import {
   SEM_PLATFORM_SHENMA,
