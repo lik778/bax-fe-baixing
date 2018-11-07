@@ -56,7 +56,7 @@ export default {
   text-align: center;
   cursor: pointer;
   border-radius: 4px;
-  z-index: 101;
+  z-index: 100;
   & .text {
     padding: 5px;
     letter-spacing: 2px;
