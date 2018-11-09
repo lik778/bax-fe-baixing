@@ -51,7 +51,11 @@ module.exports = {
             ]
           }
         }
-      ],
+      ]
+    },
+    {
+      test: /\.(eot|woff|ttf)$/,
+      loader: "file-loader"
     }
   ]
   },
