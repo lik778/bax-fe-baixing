@@ -899,7 +899,6 @@ console.log('3', sum)
 
   & > main {
     width: 100%;
-    padding: 10px 10px 30px 10px;
     background: var(--qwt-c-gray);
   }
 }

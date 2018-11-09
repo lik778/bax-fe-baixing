@@ -1,17 +1,14 @@
 
 <template>
   <div class="sidebar">
-    <header>
-      <img src="http://file.baixing.net/201809/072639ff317bcec3be97c2235918f786.png" alt="logo" class="logo" />
-      <p>v{{ version }}</p>
-    </header>
     <main>
       <el-menu
+        style="border: none;"
         :default-active="defaultActive"
         :default-openeds="defaultOpeneds"
-        background-color="#2e394b"
-        active-text-color="rgb(255, 208, 75)"
-        text-color="#e1e4ee"
+        background-color="#fff"
+        active-text-color="#FF6350"
+        text-color="#333"
         ref="menu"
        >
         <el-menu-item index="root">
@@ -241,6 +238,9 @@ export default {
 
 <style lang="postcss" scoped>
 @import '../../cssbase/var';
+:root {
+  --active-bg: #FFF7EB;
+}
 
 .iconfont {
   margin-right: 13px;
@@ -256,55 +256,37 @@ export default {
 
 .sidebar {
   position: fixed;
-  top: 0;
+  top: 50px;
   left: 0;
   bottom: 0;
-  z-index: 6666;
+  z-index: 1;
   display: flex;
   flex-flow: column;
-  background: #2e394b;
+  background: #fff;
   min-width: 180px;
   width: 180px;
+  border-right: 1px solid #e6e6e6;
+}
 
-  & > header {
-    display: flex;
-    align-items: center;
-    height: 50px;
-    min-height: 50px;
-    padding: 0 20px;
-    color: white;
-
-    & p {
-      height: 25px;
+.sidebar {
+  & >>> .el-menu-item {
+    height: 48px;
+    line-height: 48px;
+    min-width: unset;
+    padding-right: 0;
+    &:hover {
+      background-color: var(--active-bg) !important;
     }
-
-    & .logo {
-      width: 80px;
-    }
-
-    & p:last-child {
-      display: flex;
-      align-items: flex-end;
-      margin-left: 10px;
-      font-size: 12px;
-      padding-bottom: 1px;
+    &.is-active {
+      background-color: var(--active-bg) !important;
     }
   }
-}
-
-.el-menu-item {
-  min-width: unset;
-  padding-right: 0;
-}
-
-.el-menu, .el-submenu {
-  border: 1px solid #273141;
-}
-</style>
-
-<style>
-.sidebar .el-menu-item, .el-submenu__title {
-  height: 48px;
-  line-height: 48px;
+  & >>> .el-submenu__title {
+    height: 48px;
+    line-height: 48px;
+    &:hover {
+      background-color: var(--active-bg) !important;
+    }
+  }
 }
 </style>

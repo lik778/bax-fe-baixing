@@ -1,11 +1,12 @@
 
 <template>
   <content v-loading.fullscreen="fullscreenLoading">
+    <Header :userInfo="currentUser"/>
     <sidebar :user-info="currentUser"></sidebar>
-    <div class="notice" v-if="showNotice">
+    <!-- <div class="notice" v-if="showNotice">
       <marquee direction="left" scrollamount="6" height="20px" class="notice" scrolldelay="60">{{notice}}</marquee>
       <span class="close el-icon-close" @click="showNotice = false" title="关闭通知"></span>
-    </div>
+    </div> -->
     <router-view class="view"
       :key="$route.fullPath"
       :userInfo="currentUser"
@@ -33,13 +34,14 @@
 
 <script>
 import NewUserIntro from './common/new-user-intro'
-import AddUserLead from './common/add-user-lead'
 import HuoDongIntro from './common/huodong-intro'
+import AddUserLead from './common/add-user-lead'
 import HuoDongBtn from './common/huodong-btn'
 import WechatScan from './widget/wechat-scan'
 import BackToTop from './widget/back-to-top'
+import Sidebar from './layout/sidebar'
+import Header from './layout/header'
 import Chat from './widget/chat'
-import Sidebar from './sidebar'
 
 import gStore from './store'
 
@@ -60,6 +62,7 @@ export default {
     WechatScan,
     BackToTop,
     Sidebar,
+    Header,
     Chat
   },
   fromMobx: {
@@ -182,6 +185,9 @@ content {
     margin-left: 180px;
     max-width: calc(100% - 180px);
     width: calc(100% - 180px);
+    background-color: #eeeff0;
+    padding: 12px;
+    margin-top: 50px;
   }
 }
 </style>
@@ -193,7 +199,7 @@ content {
 body > content {
   width: 100%;
   min-width: 1320px;
-  max-width: 1500px;
+  /* max-width: 1500px; */
 }
 
 .el-tooltip__popper {
