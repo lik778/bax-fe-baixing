@@ -52,6 +52,9 @@ import 'echarts/lib/component/legend'
 import 'echarts/lib/component/tooltip'
 import 'echarts/lib/component/dataZoom'
 
+// element 样式文件
+import '../theme/index.css'
+
 Vue.use(Movue, { reaction })
 Vue.use(VueClipboard)
 Vue.use(VueRouter)
