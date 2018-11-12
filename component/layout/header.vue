@@ -1,39 +1,46 @@
 <template>
-  <div class="header">
-    <router-link to="/main">
-      <h1 class="logo">全网通</h1>
-    </router-link>
-    <ul class="nav">
-      <li class="nav-item">联系客服&nbsp;400-036-3650</li>
-      <router-link class="nav-item help" to="/main/operation-log" tag="li">帮助中心</router-link>
-      <li
-        class="nav-item menu"
-        @mouseenter="() => toggleMenuVisible(true)"
-        @mouseleave="() => toggleMenuVisible(false)">
-        {{userInfo.name}}
-        <i :class="isMenuVisible ? 'el-icon-arrow-up' : 'el-icon-arrow-down'"/>
-        <transition name="el-zoom-in-top">
-          <ul class="menu-group" v-show="isMenuVisible" @click="handleMenuClick">
-            <li class="menu-item" data-command="account">我的账户</li>
-            <li class="menu-item" data-command="back">返回百姓网</li>
-            <li class="menu-item" data-command="logout">退出</li>
-          </ul>
-        </transition>
-      </li>
-    </ul>
+  <div>
+    <div class="header">
+      <router-link to="/main">
+        <h1 class="logo">全网通</h1>
+      </router-link>
+      <ul class="nav">
+        <li class="nav-item" @click="isDialogVisible = true">联系客服&nbsp;400-036-3650</li>
+        <router-link class="nav-item help" to="/main/operation-log" tag="li">帮助中心</router-link>
+        <li
+          class="nav-item menu"
+          @mouseenter="() => toggleMenuVisible(true)"
+          @mouseleave="() => toggleMenuVisible(false)">
+          {{userInfo.name}}
+          <i :class="isMenuVisible ? 'el-icon-arrow-up' : 'el-icon-arrow-down'"/>
+          <transition name="el-zoom-in-top">
+            <ul class="menu-group" v-show="isMenuVisible" @click="handleMenuClick">
+              <li class="menu-item" data-command="account">我的账户</li>
+              <li class="menu-item" data-command="back">返回百姓网</li>
+              <li class="menu-item" data-command="logout">退出</li>
+            </ul>
+          </transition>
+        </li>
+      </ul>
+    </div>
+    <add-user-lead :visible="isDialogVisible" :userInfo="userInfo" @close="isDialogVisible = false"/>
   </div>
 </template>
 
 <script>
   import { redirectTo } from 'utils'
   import { logout } from 'api/account'
+  import AddUserLead from 'com/common/add-user-lead'
 
   export default {
+    name: 'layout-header',
     data () {
       return {
-        isMenuVisible: false
+        isMenuVisible: false,
+        isDialogVisible: false
       }
     },
+    components: {AddUserLead},
     props: ['userInfo'],
     methods: {
       toggleMenuVisible(visible) {
@@ -87,11 +94,16 @@
       position: relative;
       padding: 0 25px;
       float: left;
+      cursor: pointer;
       &.help, &.menu {
         cursor: pointer;
       }
       &:not(.menu) {
         border-right: 1px solid #fff;
+      }
+      &.menu {
+        text-align: right;
+        min-width: 150px;
       }
     }
     & .menu-group {
@@ -100,6 +112,7 @@
       right: 24px;
       line-height: 45px;
       color: #333;
+      text-align: left;
       background-color: #fff;
       border-radius: 3px;
       border: 1px solid #eee;
