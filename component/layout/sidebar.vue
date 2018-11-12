@@ -17,7 +17,7 @@
           </router-link>
         </el-menu-item>
 
-        <el-menu-item index="charge">
+        <el-menu-item index="qwt-charge">
           <router-link :to="{ name: 'qwt-charge' }" tag="p">
             <bx-icon type="paycircleo"></bx-icon>充值购买
           </router-link>
@@ -140,7 +140,6 @@ import {
 
 
 const MENU_GROUP_MAP = {
-  'qwt-charge': ['qwt-charge-buy-service', 'qwt-charge-charge-only', 'gw-charge'],
   'qwt-campaign': ['qwt-create-promotion', 'qwt-promotion-list', 'qwt-dashboard'],
   'ssp': ['ad-list', 'material-list', 'order-list', 'user-list', 'ad-calendar']
 }
@@ -166,11 +165,7 @@ export default {
   },
   watch: {
     $route(route) {
-      if(route.name === 'qwt-charge') {
-        this.$refs.menu.activeIndex = `${route.name}-${route.query.mode}`
-      } else {
-        this.$refs.menu.activeIndex = route.name
-      }
+      this.$refs.menu.activeIndex = route.name
     }
   },
   computed: {
@@ -206,10 +201,6 @@ export default {
     _initNavMenu() {
       const route = this.$route
       let defaultActive = route.name
-
-      if(route.name === 'qwt-charge') {
-        defaultActive = `${route.name}-${route.query.mode}`
-      }
 
       this.defaultOpeneds = Object.entries(MENU_GROUP_MAP).reduce((defaultOpeneds, [group_index, group]) => {
         if(group.some(item => item === defaultActive)) {
