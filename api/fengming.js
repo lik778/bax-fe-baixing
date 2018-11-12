@@ -355,6 +355,29 @@ export async function getHomepageSummary() {
   }
 }
 
+export async function getHomePageFengmingData() {
+  const [ balance, daily, notices ] = await Promise.all([
+    getCurrentBalance(),
+    _getDailySummary(),
+    getFengmingNotice()
+  ])
+
+  return {
+    balance,
+    notices,
+    ...daily
+  }
+}
+
+export async function getFengmingNotice(opts) {
+  const body = await fengming
+    .get('/dashboard/notice')
+    .query(opts)
+    .json()
+
+  return body.data
+}
+
 export async function getCurrentCampaignCount(opts) {
   const body = await fengming
     .get('/campaign/current/count')

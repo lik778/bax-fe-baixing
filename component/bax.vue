@@ -1,19 +1,21 @@
 
 <template>
-  <content v-loading.fullscreen="fullscreenLoading">
+  <div class="container" v-loading.fullscreen="fullscreenLoading">
     <Header :userInfo="currentUser"/>
+    <div class="main-content">
+      <router-view class="view"
+        :key="$route.fullPath"
+        :userInfo="currentUser"
+        :allCategories="allCategories"
+        :allAreas="allAreas"
+        :allRoles="allRoles">
+      </router-view>
+    </div>
     <sidebar :user-info="currentUser"></sidebar>
     <!-- <div class="notice" v-if="showNotice">
       <marquee direction="left" scrollamount="6" height="20px" class="notice" scrolldelay="60">{{notice}}</marquee>
       <span class="close el-icon-close" @click="showNotice = false" title="关闭通知"></span>
     </div> -->
-    <router-view class="view"
-      :key="$route.fullPath"
-      :userInfo="currentUser"
-      :allCategories="allCategories"
-      :allAreas="allAreas"
-      :allRoles="allRoles">
-    </router-view>
     <new-user-intro
       :mode="newUserIntroMode"
       :visible="showNewUserIntro"
@@ -29,7 +31,7 @@
     <back-to-top />
     <wechat-scan />
     <chat />
-  </content>
+  </div>
 </template>
 
 <script>
@@ -157,12 +159,7 @@ export default {
 </script>
 
 <style scoped lang="postcss">
-content {
-  display: block;
-  width: 100%;
-  height: 100%;
-
-  & > .notice {
+  .notice {
     display: flex;
     position: fixed;
     left: 190px;
@@ -180,26 +177,24 @@ content {
       cursor: pointer;
     }
   }
-
-  & > .view {
-    margin-left: 180px;
-    max-width: calc(100% - 180px);
-    width: calc(100% - 180px);
+  .main-content {
+    width: 100%;
+    padding-top: 50px;
+    padding-left: 180px;
     background-color: #eeeff0;
-    padding: 12px;
-    margin-top: 50px;
   }
-}
+  .view {
+    padding: 12px;
+  }
 </style>
 
-<style>
+<style lang="postcss">
 @import 'cssbase/reset';
 @import 'cssbase/mixin';
 
-body > content {
-  width: 100%;
+body > .container {
+  display: block;
   min-width: 1320px;
-  /* max-width: 1500px; */
 }
 
 .el-tooltip__popper {
@@ -213,10 +208,7 @@ body > content {
 }
 
 .el-loading-mask {
-  background-color: unset;
-  z-index: unset;
-  top: 240px;
-  bottom: unset;
-  height: 100px;
+  background-color: transparent !important;
+  height: 173px;
 }
 </style>
