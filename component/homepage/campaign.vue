@@ -18,8 +18,8 @@
             </div>
           </div>
           <div class="actions">
-            <el-button type="primary">新建站外推广</el-button>
-            <el-button type="primary">管理站外推广</el-button>
+            <el-button type="primary" @click="() => $router.push({name: 'qwt-create-promotion'})">新建站外推广</el-button>
+            <el-button type="primary" @click="() => $router.push({name: 'qwt-promotion-list'})">管理站外推广</el-button>
           </div>
         </div>
       </div>
@@ -28,30 +28,30 @@
     <div class="layout-right">
       <h5 class="layout-header">
         站外推广数据概览
-        <span class="action">查看详情</span>
+        <span class="action" @click="() => $router.push({name: 'qwt-dashboard'})">查看详情</span>
       </h5>
       <div class="layout-content">
         <div class="radio-group">
-          <el-radio>今日</el-radio>
-          <el-radio>昨日</el-radio>
-          <el-radio>过去7天</el-radio>
+          <el-radio v-model="reportPrefix" label="">今日</el-radio>
+          <el-radio v-model="reportPrefix" label="weekly">昨日</el-radio>
+          <el-radio v-model="reportPrefix" label="yesterday">过去7天</el-radio>
         </div>
         <ul class="reports">
           <li class="report">
             <h6 class="title">预算(元)</h6>
-            <p class="num">100.00</p>
+            <p class="num">{{formatPrice(reportData[0])}}</p>
           </li>
           <li class="report">
             <h6 class="title">消耗(元)</h6>
-            <p class="num">100.00</p>
+            <p class="num">{{formatPrice(reportData[1])}}</p>
           </li>
           <li class="report">
             <h6 class="title">展现量</h6>
-            <p class="num">10</p>
+            <p class="num">{{reportData[2]}}</p>
           </li>
           <li class="report">
             <h6 class="title">点击量</h6>
-            <p class="num">100</p>
+            <p class="num">{{reportData[3]}}</p>
           </li>
         </ul>
       </div>
@@ -61,7 +61,12 @@
 
 <script>
 import clone from 'clone'
+import store from './store'
+import { toJS } from 'mobx'
 import 'echarts/lib/chart/radar'
+const formatPrice = (p) => {
+  return p ? (p / 100).toFixed(2) : 0
+} 
 
 const chartOptionsTmpl = {
   title: {
@@ -135,9 +140,27 @@ export default {
   },
   data() {
     return {
-      chartOptions: null
+      chartOptions: null,
+      reportPrefix: ''
     }
-  }
+  },
+  fromMobx: {
+    fengmingData: () => toJS(store.fengmingData)
+  },
+  computed: {
+    reportData() {
+      const prefix = this.reportPrefix
+      const data = this.fengmingData
+      if (!data) return [0, 0, 0, 0]
+
+      const keys = ['Budget', 'Consume', 'Shows', 'Clicks']
+      if (prefix) {
+        return keys.map(k => data[prefix + k])
+      }
+      return keys.map(k => data[k.toLowerCase()])
+    }
+  },
+  methods: {formatPrice}
 }
 </script>
 

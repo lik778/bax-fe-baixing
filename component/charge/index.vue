@@ -829,7 +829,7 @@ console.log('3', sum)
       }
     })
 
-    if (selectGw === 'true' || selectGw === '1') {
+    if (selectGw === 'true' || +selectGw === 1) {
       this.checkedProducts.push(this.allProducts[this.allProducts.length - 1])
     } else {
       this.checkedProducts.push(this.allProducts[0])
