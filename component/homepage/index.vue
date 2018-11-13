@@ -1,6 +1,6 @@
 <template>
   <div class="homepage">
-    <accout />
+    <account />
     <campaign />
     <site />
   </div>
@@ -10,7 +10,7 @@
 import store from './store'
 
 import Site from './site'
-import Accout from './accout'
+import Account from './account'
 import Campaign from './campaign'
 
 export default {
@@ -20,7 +20,7 @@ export default {
   },
   components: {
     Site,
-    Accout,
+    Account,
     Campaign
   }
 }

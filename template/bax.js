@@ -25,7 +25,7 @@ import AdList from 'com/ssp-ad-list'
 import GwCharge from 'com/gw-charge'
 
 // global
-import OperationLog from 'com/operation-log'
+// import OperationLog from 'com/operation-log'
 import Redirect from 'com/redirect'
 import Homepage from 'com/homepage'
 import Account from 'com/account'
@@ -143,16 +143,17 @@ const sspRoutes = [{
   name: 'ad-calendar'
 }]
 
+// {
+//   component: OperationLog,
+//   path: '/main/operation-log',
+//   name: 'operation-log'
+// },
 const router = new VueRouter({
   mode: 'history',
   routes: [{
     component: Homepage,
     path: '/main',
     name: 'root'
-  }, {
-    component: OperationLog,
-    path: '/main/operation-log',
-    name: 'operation-log'
   }, {
     component: Redirect,
     path: '/main/redirect-to',

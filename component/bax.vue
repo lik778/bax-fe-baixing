@@ -184,7 +184,7 @@ export default {
     background-color: #eeeff0;
   }
   .view {
-    padding: 12px;
+    padding: 12px 12px 32px;
   }
 </style>
 

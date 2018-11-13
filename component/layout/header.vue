@@ -1,16 +1,29 @@
 <template>
   <div>
     <div class="header">
-      <router-link to="/main">
-        <h1 class="logo">全网通</h1>
-      </router-link>
+      <router-link to="/main" class="logo" tag="h1">全网通</router-link>
+      <p class="version" v-once>v{{version}}</p>
       <ul class="nav">
         <li class="nav-item" @click="isDialogVisible = true">联系客服&nbsp;400-036-3650</li>
-        <router-link class="nav-item help" to="/main/operation-log" tag="li">帮助中心</router-link>
+        <li
+          class="nav-item"
+          @mouseenter="() => this.isHelpVisible = true"
+          @mouseleave="() => this.isHelpVisible = false"
+        >
+          帮助中心
+          <i :class="isHelpVisible ? 'el-icon-arrow-up' : 'el-icon-arrow-down'"/>
+          <transition name="el-zoom-in-top">
+            <div class="menu-group help" v-show="isHelpVisible">
+              <a target="_blank" href="/qa?mode=tutorials" class="menu-item link">操作指南</a>
+              <a target="_blank" href="/qa?mode=questions" class="menu-item link">常见问题</a>
+            </div>
+          </transition>
+        </li>
         <li
           class="nav-item menu"
-          @mouseenter="() => toggleMenuVisible(true)"
-          @mouseleave="() => toggleMenuVisible(false)">
+          @mouseenter="() => this.isMenuVisible = true"
+          @mouseleave="() => this.isMenuVisible = false"
+        >
           {{userInfo.name}}
           <i :class="isMenuVisible ? 'el-icon-arrow-up' : 'el-icon-arrow-down'"/>
           <transition name="el-zoom-in-top">
@@ -30,28 +43,29 @@
 <script>
   import { redirectTo } from 'utils'
   import { logout } from 'api/account'
+  import { version } from '../../package.json'
   import AddUserLead from 'com/common/add-user-lead'
 
   export default {
     name: 'layout-header',
     data () {
       return {
+        version,
         isMenuVisible: false,
+        isHelpVisible: false,
         isDialogVisible: false
       }
     },
     components: {AddUserLead},
     props: ['userInfo'],
     methods: {
-      toggleMenuVisible(visible) {
-        this.isMenuVisible = visible
-      },
       async handleMenuClick(e) {
         switch(e.target.dataset.command) {
           case 'account':
-            return this.$route.push()
+            return this.$router.push({name: 'account'})
           case 'back':
-            return console.log('百姓')
+            window.location.href = '//www.baixing.com/w/posts'
+            return
           case 'logout':
             await logout()
             return redirectTo('signin')
@@ -84,6 +98,12 @@
       background: url('http://file.baixing.net/201809/072639ff317bcec3be97c2235918f786.png') 23px center no-repeat;
       background-size: 85px 24.7px;
     }
+    & .version {
+      color: #fff;
+      font-size: 13px;
+      margin-left: 8px;
+      margin-top: 13px;
+    }
     & .nav {
       margin-left: auto;
       font-size: 14px;
@@ -95,9 +115,6 @@
       padding: 0 25px;
       float: left;
       cursor: pointer;
-      &.help, &.menu {
-        cursor: pointer;
-      }
       &:not(.menu) {
         border-right: 1px solid #fff;
       }
@@ -117,6 +134,9 @@
       border-radius: 3px;
       border: 1px solid #eee;
       z-index: 100;
+      &.help {
+        right: 4px;
+      }
       &:before {
         content: '';
         position: absolute;
@@ -138,6 +158,11 @@
       & .menu-item {
         padding: 0 20px;
         letter-spacing: 1px;
+        &.link {
+          display: block;
+          color: #333;
+          padding: 0 20px;
+        }
         &:hover {
           color: #FF6350;
           background-color: #FFF7EB;

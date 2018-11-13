@@ -1,13 +1,13 @@
 
 <template>
   <div class="account-container">
-    <topbar :userInfo="userInfo">
-      <label slot="title">账户</label>
-    </topbar>
-    <h1>{{ userInfo.name }}，欢迎回来</h1>
-    <account-summary />
-    <consume />
-    <charge />
+    <main>
+      <h1>{{ userInfo.name }}，欢迎回来</h1>
+      <account-summary />
+      <consume />
+      <charge />
+      <log-list :all-areas="allAreas"/>
+    </main>
   </div>
 </template>
 
@@ -15,8 +15,7 @@
 import AccountSummary from './summary'
 import Consume from './consume'
 import Charge from './charge'
-
-import Topbar from 'com/topbar'
+import LogList from './log-list'
 
 import track from 'util/track'
 
@@ -24,9 +23,9 @@ export default {
   name: 'bax-account',
   components: {
     AccountSummary,
+    LogList,
     Consume,
-    Charge,
-    Topbar
+    Charge
   },
   props: {
     allAreas: {
@@ -55,5 +54,10 @@ export default {
   padding: 0 35px;
   width: 100%;
   color: #6a778c;
+  & > main {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 4px;
+  }
 }
 </style>

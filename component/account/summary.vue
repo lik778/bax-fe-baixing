@@ -29,13 +29,13 @@
                 <el-button type="primary">推广管理</el-button>
               </router-link>
             </div>
-            <div class="btn">
+            <!-- <div class="btn">
               <span>智能投放：</span>
               <router-link :to="{name: 'mvp-campaign-list'}"
                 @click.native="onClickMvpCampaignList">
                 <el-button type="primary">推广管理</el-button>
               </router-link>
-            </div>
+            </div> -->
           </el-col>
         </el-row>
       </el-col>
@@ -64,11 +64,11 @@
           action: 'account: click create campaign'
         })
       },
-      onClickMvpCampaignList() {
-        track({
-          action: 'account: click query mvp campaigns'
-        })
-      },
+      // onClickMvpCampaignList() {
+      //   track({
+      //     action: 'account: click query mvp campaigns'
+      //   })
+      // },
       onClickCampaignList() {
         track({
           action: 'account: click query campaigns'

@@ -1,10 +1,5 @@
 <template>
   <div class="qwt-create-promotion">
-
-    <topbar :user-info="userInfo">
-      <label slot="title">全网通 - 新建推广</label>
-    </topbar>
-
     <main>
       <section class="promotion-target">
         <header>
@@ -175,7 +170,6 @@ import ChargeDialog from 'com/common/charge-dialog'
 import CpcPriceTip from 'com/widget/cpc-price-tip'
 import ContractAck from 'com/widget/contract-ack'
 import wxBindModal from 'com/common/wx-bind-modal'
-import Topbar from 'com/topbar'
 
 import moment from 'moment'
 import track from 'util/track'
@@ -245,8 +239,7 @@ export default {
     AreaSelector,
     ChargeDialog,
     ContractAck,
-    CpcPriceTip,
-    Topbar
+    CpcPriceTip
   },
   fromMobx: {
     searchRecommends: () => store.searchRecommends,
@@ -680,13 +673,15 @@ strong.red {
   width: 100%;
 
   & > main {
-    & > section:not(:last-child) {
-      border-bottom: 1px solid #c0ccda;
-    }
-
     & > section {
-      margin-bottom: 30px;
-      padding-bottom: 10px;
+      border-radius: 4px;
+      margin-bottom: 10px;
+      background-color: #fff;
+      padding: 20px;
+      box-shadow: 0 2px 9px 0 rgba(83,95,127,0.10);
+      &:last-child {
+        padding-bottom: 40px;
+      }
 
       & > header {
         color: #6a778c;

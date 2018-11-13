@@ -1,9 +1,6 @@
 
 <template>
   <div class="qwt-dashboard">
-    <topbar :user-info="userInfo">
-      <label slot="title">全网通 - 数据报表</label>
-    </topbar>
     <main>
       <section>
         <aside>选择渠道:</aside>
@@ -93,7 +90,6 @@
 <script>
 import CampaignSelector from 'com/common/campaign-selector'
 import BaxSelect from 'com/common/select'
-import Topbar from 'com/topbar'
 
 import DataDetail from './data-detail'
 
@@ -132,8 +128,7 @@ export default {
   components: {
     CampaignSelector,
     DataDetail,
-    BaxSelect,
-    Topbar
+    BaxSelect
   },
   fromMobx: {
     statistics: () => store.statistics,
@@ -397,10 +392,11 @@ export default {
 }
 
 .qwt-dashboard {
-  padding: 0 35px;
   width: 100%;
-
   & > main {
+    background-color: #fff;
+    border-radius: 4px;
+    padding: 20px 35px;
     & > section {
       margin: 20px 0;
 

@@ -1,14 +1,5 @@
 <template>
   <div class="qwt-update-promotion">
-    <topbar :user-info="userInfo">
-      <label slot="title">
-        <span>全网通 - 更新推广</span>
-        <el-button class="report-link" size="mini" type="primary"
-          @click="gotoReportPage">
-          查看计划报表
-        </el-button>
-      </label>
-    </topbar>
     <main>
       <h3>推广计划: {{ id }}</h3>
       <section>
@@ -308,7 +299,6 @@ import CreativeEditor from 'com/widget/creative-editor'
 import KeywordList from 'com/common/qwt-keyword-list'
 import AreaSelector from 'com/common/area-selector'
 import ContractAck from 'com/widget/contract-ack'
-import Topbar from 'com/topbar'
 
 import { disabledDate } from 'util/element'
 import { isBaixingSales } from 'util/role'
@@ -383,8 +373,7 @@ export default {
     UserAdSelector,
     AreaSelector,
     KeywordList,
-    ContractAck,
-    Topbar
+    ContractAck
   },
   fromMobx: {
     recommendedWords: () => store.recommendedWords,
@@ -1085,19 +1074,23 @@ export default {
 
   & > main {
     & > h3 {
-      margin: 5px 0 15px;
+      background-color: #fff;
       font-size: 18px;
       font-weight: normal;
       color: #1f2d3d;
-    }
-
-    & > section:not(:last-child) {
-      border-bottom: 1px solid #c0ccda;
+      padding: 20px;
+      border-radius: 4px;
     }
 
     & > section {
-      margin-bottom: 30px;
-      padding-bottom: 30px;
+      border-radius: 4px;
+      margin-bottom: 10px;
+      background-color: #fff;
+      padding: 20px;
+      box-shadow: 0 2px 9px 0 rgba(83,95,127,0.10);
+      &:last-child {
+        padding-bottom: 40px;
+      }
 
       & > header {
         color: #6a778c;

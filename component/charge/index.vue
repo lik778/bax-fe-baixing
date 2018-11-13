@@ -1,8 +1,6 @@
 
 <template>
   <div class="qwt-charge">
-    <topbar :user-info="userInfo" :back="false">
-    </topbar>
     <main>
       <section class="shadow">
         <step :step="currentStep" />
@@ -189,7 +187,6 @@ import GwProWidget from 'com/widget/gw-pro'
 import Coupon from 'com/common/coupon'
 import PriceList from './price-list'
 import PriceTag from './price-tag'
-import Topbar from 'com/topbar'
 
 import { Message } from 'element-ui'
 import uuid from 'uuid/v4'
@@ -284,7 +281,6 @@ export default {
     PriceList,
     PriceTag,
     FlatBtn,
-    Topbar,
     Coupon,
     Step
   },

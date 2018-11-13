@@ -13,13 +13,13 @@
        >
         <el-menu-item index="root">
           <router-link :to="{ name: 'root' }" tag="p">
-            <bx-icon type="appstore"></bx-icon>首页
+            <bx-icon type="appstore"></bx-icon>我的全网通
           </router-link>
         </el-menu-item>
 
         <el-menu-item index="qwt-charge">
           <router-link :to="{ name: 'qwt-charge' }" tag="p">
-            <bx-icon type="paycircleo"></bx-icon>充值购买
+            <bx-icon type="paycircleo"></bx-icon>充值与购买
           </router-link>
         </el-menu-item>
 
@@ -35,17 +35,12 @@
           </template>
           <el-menu-item index="qwt-create-promotion">
             <router-link :to="{ name: 'qwt-create-promotion' }" tag="p">
-              新建推广计划
+              新建站外推广
             </router-link>
           </el-menu-item>
           <el-menu-item index="qwt-promotion-list">
             <router-link :to="{ name: 'qwt-promotion-list' }" tag="p">
-              管理推广计划
-            </router-link>
-          </el-menu-item>
-          <el-menu-item index="qwt-dashboard">
-            <router-link :to="{ name: 'qwt-dashboard' }" tag="p">
-              数据报表
+              管理站外推广
             </router-link>
           </el-menu-item>
         </el-submenu>
@@ -55,7 +50,14 @@
             <i class="material-icons" style="font-size: 16px; margin-right: 11px; vertical-align: -3px;">dvr</i>标王推广
           </router-link>
         </el-menu-item> -->
-
+        <el-menu-item index="ka" @click="goKaPage">
+          <i class="el-icon-news" />精品官网
+        </el-menu-item>
+        <el-menu-item index="qwt-dashboard">
+          <router-link :to="{ name: 'qwt-dashboard' }" tag="p">
+            <i class="el-icon-document" />数据报表
+          </router-link>
+        </el-menu-item>
         <el-submenu index="ssp" v-if="allowSeeBxAd">
           <template slot="title">
             <i class="el-icon-message"></i>品牌广告
@@ -87,32 +89,16 @@
           </el-menu-item>
         </el-submenu>
 
-        <el-menu-item index="account" v-if="allowSeeAccount">
+        <!-- <el-menu-item index="account" v-if="allowSeeAccount">
           <router-link :to="{ name: 'account' }" tag="p">
             <bx-icon type="user"></bx-icon>我的账户
           </router-link>
-        </el-menu-item>
-        <el-menu-item index="operation-log" v-if="allowSeeAccount">
+        </el-menu-item> -->
+        <!-- <el-menu-item index="operation-log" v-if="allowSeeAccount">
           <router-link :to="{ name: 'operation-log' }" tag="p">
             <bx-icon type="inbox"></bx-icon>操作日志
           </router-link>
-        </el-menu-item>
-
-        <el-submenu index="qa">
-          <template slot="title">
-            <bx-icon type="questioncircleo"></bx-icon>答疑解惑
-          </template>
-          <el-menu-item index="qa-1">
-            <a class="link" target="_blank" href="/qa?mode=tutorials">
-              操作指南
-            </a>
-          </el-menu-item>
-          <el-menu-item index="qa-2">
-            <a class="link" target="_blank" href="/qa?mode=questions">
-              常见问题
-            </a>
-          </el-menu-item>
-        </el-submenu>
+        </el-menu-item> -->
       </el-menu>
     </main>
   </div>
@@ -219,6 +205,9 @@ export default {
           ...q
         }
       })
+    },
+    goKaPage() {
+
     }
   },
   created() {
@@ -257,6 +246,9 @@ export default {
   min-width: 180px;
   width: 180px;
   border-right: 1px solid #e6e6e6;
+  & > main {
+    margin-top: 12px;
+  }
 }
 
 .sidebar {
@@ -278,6 +270,11 @@ export default {
     &:hover {
       background-color: var(--active-bg) !important;
     }
+  }
+  & >>> .el-icon-news, & >>> .el-icon-document {
+    text-align: left;
+    margin-right: 1px;
+    font-size: 16px;
   }
 }
 </style>
