@@ -28,27 +28,22 @@
         账户推广通知
         <span class="action" v-if="notices && notices.length">更多</span>
       </h5>
-      <ul class="notice-list" v-if="notices">
-        <template v-if="notices.length">
-          <li
-            class="notice-item"
-            v-for="notice in notices"
-            :key="notice.id"
-          >
-            2018.9.21 【站外推广】您的计划（id）由于（xx原因）未通过，请去广告系统修改后重新提交！
-          </li>
+      <notice :notice-list="notices" type="fengming" height="179px">
+        <template slot-scope="{notice}">
+          {{notice.formatDate(notice.ts * 1000)}} {{notice.content}}
         </template>
-        <div v-else class="notice-placeholder"><i class="el-icon-info" />暂无账户推广通知</div>
-      </ul>
+      </notice>
     </div>
   </div>
 </template>
 
 <script>
 import store from './store'
+import Notice from './notice'
 
 export default {
   name: 'homepage-accout',
+  components: {Notice},
   fromMobx: {
     fengmingBalance: () => store.fengmingBalance,
     notices: () => store.notices.fengming
@@ -57,6 +52,7 @@ export default {
     handleCharge(type) {
       switch(type) {
         case 'bax':
+          return this.$router.push({name: 'qwt-charge'})
       }
     }
   }
@@ -94,29 +90,6 @@ export default {
       width: 110px;
       height: 32px;
       margin: 20px 0;
-    }
-  }
-  .notice-list {
-    color: #666;
-    font-size: 14px;
-    & .notice-item {
-      margin-top: 20px;
-      overflow : hidden;
-      text-overflow: ellipsis;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-    }
-  }
-  .notice-placeholder {
-    height: 184px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #999;
-    font-size: 16px;
-    & .el-icon-info {
-      margin-right: 4px;
     }
   }
 </style>

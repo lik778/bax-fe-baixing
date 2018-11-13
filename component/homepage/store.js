@@ -1,4 +1,4 @@
-import { observable, action, computed } from 'mobx'
+import { observable, toJS, action, computed } from 'mobx'
 import { getHomePageFengmingData } from 'api/fengming'
 
 class Store {
@@ -17,7 +17,7 @@ class Store {
   get notices() {
     if (!this.fengmingData) return {}
     return {
-      fengming: this.fengmingData.notices
+      fengming: toJS(this.fengmingData.notices)
     }
   }
 

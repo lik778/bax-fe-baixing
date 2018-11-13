@@ -36,27 +36,23 @@
         官网留言通知
         <span class="action" v-if="notices && notices.length">更多</span>
       </h5>
-      <ul class="notice-list" v-if="notices">
-        <template v-if="notices.length">
-          <li
-            class="notice-item"
-            v-for="notice in notices"
-            :key="notice.id"
-          >
-            2018.9.21 【站外推广】您的计划（id）由于（xx原因）未通过，请去广告系统修改后重新提交！
-          </li>
+      <notice :notice-list="notices" type="site" height="198px">
+        <template slot-scope="{notice}">
+          {{notice.formatDate(notice.ts * 1000)}} {{notice.content}}
         </template>
-        <div v-else class="notice-placeholder"><i class="el-icon-info" />暂无官网留言通知</div>
-      </ul>
+      </notice>
     </div>
   </div>
 </template>
 
 <script>
 import store from './store'
+import Notice from './notice'
+
 
 export default {
   name: 'homepage-site',
+  components: {Notice},
   fromMobx: {
     notices: () => store.notices.fengming
   }
