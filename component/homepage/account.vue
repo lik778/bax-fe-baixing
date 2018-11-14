@@ -2,26 +2,30 @@
   <div class="layout-container">
     <div class="layout-left">
       <h5 class="layout-header">账户概览</h5>
-      <ul class="accout">
+      <ul class="accout" v-if="fengmingBalance && sites">
         <li class="account-item">
           <p class="title">站外推广余额(元)</p>
-          <p class="num" v-cloak>{{fengmingBalance.price}}</p>
-          <p class="desc" v-cloak>（可消耗 {{fengmingBalance.day}} 天）</p>
+          <p class="num">{{fengmingBalance.price}}</p>
+          <p class="desc">（可消耗 {{fengmingBalance.day}} 天）</p>
           <el-button type="primary" class="button" size="small" @click.native="() => handleCharge('bax')">立即充值</el-button>
         </li>
         <li class="account-item">
           <p class="title">标王推广关键词(个)</p>
-          <p class="num" v-cloak>{{0}}</p>
-          <p class="desc" v-cloak>（ {{5}} 个词即将到期）</p>
+          <p class="num">{{0}}</p>
+          <p class="desc">（ {{5}} 个词即将到期）</p>
           <el-button type="primary" class="button" size="small" @click.native="() => handleCharge('biaowang')">立即充值</el-button>
         </li>
         <li class="account-item">
             <p class="title">精品官网(个)</p>
-            <p class="num" v-cloak>{{0}}</p>
-            <p class="desc" v-cloak> （ {{'2019.1.1'}} 到期）</p>
+            <p class="num">{{sites.length}}</p>
+            <p class="desc" v-if="sites.length">
+              （ {{sites.length > 1 ? '最早官网到期日' : '官网到期日'}} {{sites[0].createAt | formatDate}} ）
+            </p>
+            <p class="desc" v-else>暂无精品官网</p>
             <el-button type="primary" class="button" size="small" @click.native="() => handleCharge('site')">立即充值</el-button>
         </li>
       </ul>
+      <div class="placeholder" v-else><i class="el-icon-loading" />正在获取数据</div>
     </div>
     <div class="layout-right">
       <h5 class="layout-header">
@@ -38,6 +42,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 import store from './store'
 import Notice from './notice'
 
@@ -46,7 +51,8 @@ export default {
   components: {Notice},
   fromMobx: {
     fengmingBalance: () => store.fengmingBalance,
-    notices: () => store.notices.fengming
+    notices: () => store.notices.fengming,
+    sites: () => store.kaSiteData && store.kaSiteData.sites
   },
   methods: {
     handleCharge(type) {
@@ -56,6 +62,11 @@ export default {
         case 'site':
           return this.$router.push({name: 'qwt-charge', query: {select_gw: 1}})
       }
+    }
+  },
+  filters: {
+    formatDate(date) {
+      return moment(date).format('YYYY.MM.DD')
     }
   }
 }
@@ -92,6 +103,17 @@ export default {
       width: 110px;
       height: 32px;
       margin: 20px 0;
+    }
+  }
+  .placeholder {
+    color: #888;
+    line-height: 189px;
+    text-align: center;
+    font-size: 18px;
+    letter-spacing: 1px;
+    & .el-icon-loading {
+      font-size: 20px;
+      margin-right: 5px;
     }
   }
 </style>

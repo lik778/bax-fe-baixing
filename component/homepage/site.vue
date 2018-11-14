@@ -5,28 +5,31 @@
       <div class="layout-content">
         <div class="report">
           <div class="radio-group">
-            <el-radio>今日</el-radio>
-            <el-radio>昨日</el-radio>
-            <el-radio>过去7天</el-radio>
+            <el-radio v-model="selectedReportKey" label="today">今日</el-radio>
+            <el-radio v-model="selectedReportKey" label="yesterday">昨日</el-radio>
+            <el-radio v-model="selectedReportKey" label="weekly">过去7天</el-radio>
           </div>
           <ul class="data-list">
             <li class="data">
               <h6 class="title">访问量</h6>
-              <p class="num">12</p>
+              <p class="num">{{selectedReport.pv}}</p>
             </li>
             <li class="data">
               <h6 class="title">访问人数</h6>
-              <p class="num">12</p>
+              <p class="num">{{selectedReport.uv}}</p>
             </li>
           </ul>
         </div>
         <div class="description">
           <p>您当前的官网的浏览量较低，</p>
-          <p>打败了<strong>5%</strong>同行业客户</p>
-          <p>建议您进行<a href="javascript:;">站外推广</a>或<a href="javascript:;">标王推广</a>，提升官网访问量</p>
+          <p>打败了<strong>{{siteBeatPercent}}%</strong>同行业客户</p>
+          <p>建议您进行
+            <a href="javascript:;" @click="() => $router.push({name: 'qwt-create-promotion'})">站外推广</a>或
+            <a href="javascript:;">标王推广</a>，提升官网访问量
+          </p>
           <div class="actions">
-            <el-button type="primary">购买与续费</el-button>
-            <el-button type="primary">查看详情</el-button>
+            <el-button type="primary" @click="() => $router.push({name: 'qwt-charge', query: {select_gw: 1}})">购买与续费</el-button>
+            <el-button type="primary" @click="goKaSiteLList">查看详情</el-button>
           </div>
         </div>
       </div>
@@ -34,12 +37,14 @@
     <div class="layout-right">
       <h5 class="layout-header">
         官网留言通知
-        <span class="action" v-if="notices && notices.length">更多</span>
+        <span class="action" v-if="notices && notices.length" @click="handleMoreBtnClick">更多</span>
       </h5>
       <notice :notice-list="notices" type="site" height="198px">
-        <template slot-scope="{notice}">
-          {{notice.formatDate(notice.ts * 1000)}} {{notice.content}}
-        </template>
+        <p slot-scope="{notice}" class="notice">
+          {{notice.formatDate(new Date(notice.createdAt))}}&nbsp;&nbsp;
+          {{notice.name}} ({{notice.mobile}}) 给您留言：
+          <br />{{notice.content}}
+        </p>
       </notice>
     </div>
   </div>
@@ -52,9 +57,36 @@ import Notice from './notice'
 
 export default {
   name: 'homepage-site',
+  data() {
+    return {
+      selectedReportKey: 'today'
+    }
+  },
   components: {Notice},
   fromMobx: {
-    notices: () => store.notices.fengming
+    kaSiteReports: () => store.kaSiteData ? store.kaSiteData.reports : {},
+    siteBeatPercent: () => store.fengmingData && store.fengmingData.beatPeerPercent.toFixed(1),
+    notices: () => store.notices.kaSite
+  },
+  computed: {
+    selectedReport() {
+      return this.kaSiteReports[this.selectedReportKey] || {pv: 0, uv: 0}
+    }
+  },
+  methods: {
+    goKaSiteLList() {
+      window.location.href = '/ka/main'
+    },
+    handleMoreBtnClick() {
+      const notices = this.notices
+      if (notices.length === 1) {
+        // 跳转到站点的留言列表
+        const siteId = notices[0].siteId
+      } else {
+        // 跳转到站点列表
+        this.goKaSiteLList()
+      }
+    }
   }
 }
 </script>
@@ -113,32 +145,17 @@ export default {
       & .actions {
         margin-top: 16px;
         & >>> .el-button {
+          min-width: 110px;
           padding: 8px 12px;
         }
       }
     }
   }
-  .notice-list {
-    color: #666;
-    font-size: 14px;
-    & .notice-item {
-      margin-top: 20px;
-      overflow : hidden;
-      text-overflow: ellipsis;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-    }
-  }
-  .notice-placeholder {
-    height: 184px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #999;
-    font-size: 16px;
-    & .el-icon-info {
-      margin-right: 4px;
-    }
+  .notice {
+    text-indent: 0;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
   }
 </style>

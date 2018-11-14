@@ -7,14 +7,22 @@
           <chart :options="chartOptions" />
         </div>
         <div class="description">
-          <p>您当前的推广健康度为:<strong>61.5</strong>分，</p>
-          <p>已经超过<strong>11%</strong>的用户，</p>
-          <p>您当前有计划未通过审核，请 <a href="javascript:;">前往修改</a></p>
-          <div class="optimization">
+          <p>您当前的推广健康度为:<strong>{{avgScore}}</strong>分，</p>
+          <p>已经超过<strong>{{higherThan}}%</strong>的用户，</p>
+          <p>
+            您当前有计划未通过审核，请 
+            <a href="javascript:;" @click="() => $router.push({name: 'qwt-promotion-list'})">前往修改</a>
+          </p>
+          <div class="optimization" v-if="optimizablePoints.length">
             <p class="title">建议进行如下优化，提升广告效果</p>
             <div class="keywords">
-              <span class="keyword">投放渠道</span>
-              <span class="keyword">投放渠道</span>
+              <span class="keyword"
+                @click="handlePointClick(p.key)"
+                v-for="p in optimizablePoints"
+                :key="p.key"
+              >
+                {{p.text}}
+              </span>
             </div>
           </div>
           <div class="actions">
@@ -23,7 +31,7 @@
           </div>
         </div>
       </div>
-      <div class="placeholder" v-else><i class="el-icon-loading" />正在站外推广数据</div>
+      <div class="placeholder" v-else><i class="el-icon-loading" />正在获取站外推广数据</div>
     </div>
     <div class="layout-right">
       <h5 class="layout-header">
@@ -62,8 +70,17 @@
 <script>
 import clone from 'clone'
 import store from './store'
-import { toJS } from 'mobx'
 import 'echarts/lib/chart/radar'
+
+const OPTIMIZABLE_POINTS = [
+  {key: 'dailyBudget', text: '账户余额'},
+  {key: 'cntSrc', text: '关键词'},
+  {key: 'kwCtr', text: '关键词出价'},
+  {key: 'cntNonDefault', text: '投放设置'},
+  {key: 'kwPrice', text: '创意'},
+  {key: 'avgCntKw', text: '渠道'}
+]
+
 const formatPrice = (p) => {
   return p ? (p / 100).toFixed(2) : 0
 } 
@@ -78,15 +95,7 @@ const chartOptionsTmpl = {
   },
   radar: [
     {
-      indicator: [
-        {text: '关键词', max: 100},
-        {text: '投放设置', max: 100},
-        {text: '账户余额', max: 100},
-        {text: '日预算', max: 100},
-        {text: '关键词出价', max: 100},
-        {text: '创意', max: 100},
-        {text: '渠道', max: 100}
-      ],
+      indicator: OPTIMIZABLE_POINTS.map(({text}) => ({text, max: 100})),
       center: ['45%','55%'],
       radius: '70%',
       axisLine: {
@@ -104,7 +113,7 @@ const chartOptionsTmpl = {
   ],
   series: [
     {
-      name: '站外推广健康度',
+      name: '站外推广健康度(分)',
       type: 'radar',
       itemStyle: {
         color: ['#FF8955']
@@ -133,19 +142,18 @@ const genChartOptions = value => {
 
 export default {
   name: 'homepage-campaign',
-  created() {
-    setTimeout(() => {
-      this.chartOptions = genChartOptions([10,20,30,40,50,60,70])
-    }, 100)
-  },
   data() {
     return {
       chartOptions: null,
-      reportPrefix: ''
+      reportPrefix: '',
+      radarScores: [],
+      avgScore: '0',
+      higherThan: '0'
     }
   },
   fromMobx: {
-    fengmingData: () => toJS(store.fengmingData)
+    fengmingData: () => store.fengmingData,
+    campaignRadar: () => store.campaignRadar
   },
   computed: {
     reportData() {
@@ -158,9 +166,29 @@ export default {
         return keys.map(k => data[prefix + k])
       }
       return keys.map(k => data[k.toLowerCase()])
+    },
+    optimizablePoints() {
+      const scores = this.radarScores
+      return OPTIMIZABLE_POINTS.filter((_, index) => {
+        if (scores[index] < 60) return true
+      })
     }
   },
-  methods: {formatPrice}
+  methods: {
+    formatPrice,
+    handlePointClick(key) {
+      console.log(key)
+    }
+  },
+  watch: {
+    campaignRadar(val) {
+      if (!val) return
+      const radarScores = this.radarScores = OPTIMIZABLE_POINTS.map(({key}) => parseInt(val[key]))
+      this.chartOptions = genChartOptions(radarScores)
+      this.avgScore = (radarScores.reduce((t, s) => t + s, 0) / radarScores.length).toFixed(1)
+      this.higherThan = val.higherThan.toFixed(1)
+    }
+  }
 }
 </script>
 
@@ -221,6 +249,7 @@ export default {
     & .actions {
       margin-top: 25px;
       & >>> .el-button {
+        min-width: 110px;
         padding: 8px 12px;
       }
     }

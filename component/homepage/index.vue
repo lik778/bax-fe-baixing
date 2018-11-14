@@ -2,6 +2,7 @@
   <div class="homepage">
     <account />
     <campaign />
+    <!-- <biaowang /> -->
     <site />
   </div>
 </template>
@@ -12,6 +13,7 @@ import store from './store'
 import Site from './site'
 import Account from './account'
 import Campaign from './campaign'
+import Biaowang from './biaowang'
 
 export default {
   name: 'qwt-homepage',
@@ -21,7 +23,8 @@ export default {
   components: {
     Site,
     Account,
-    Campaign
+    Campaign,
+    Biaowang
   }
 }
 </script>

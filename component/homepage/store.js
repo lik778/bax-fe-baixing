@@ -1,8 +1,12 @@
 import { observable, toJS, action, computed } from 'mobx'
 import { getHomePageFengmingData } from 'api/fengming'
+import { baxUserLogin, kaSimpleReport } from 'api/ka'
+import { getCampaignRadar } from 'api/fengming-campaign'
 
 class Store {
   @observable fengmingData = null
+  @observable kaSiteData = null
+  @observable campaignRadar = null
 
   @computed
   get fengmingBalance() {
@@ -15,16 +19,19 @@ class Store {
 
   @computed
   get notices() {
-    if (!this.fengmingData) return {}
     return {
-      fengming: toJS(this.fengmingData.notices)
+      fengming: this.fengmingData && toJS(this.fengmingData.notices),
+      kaSite: this.kaSiteData && toJS(this.kaSiteData.messages)
     }
   }
 
   @action
   async initPageStore() {
-    const data = await getHomePageFengmingData()
-    this.fengmingData = data
+    const [fengmingData, campaignRadar] = await Promise.all([getHomePageFengmingData(), getCampaignRadar(), baxUserLogin()])
+    const kaSiteData = await kaSimpleReport()
+    this.fengmingData = fengmingData
+    this.kaSiteData = kaSiteData
+    this.campaignRadar = campaignRadar
   }
 }
 

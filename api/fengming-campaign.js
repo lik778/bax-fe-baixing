@@ -117,3 +117,11 @@ export async function getReport(opts = {}) {
     summary: data
   }
 }
+
+export async function getCampaignRadar() {
+  const body = await fengming
+    .get('/campaign/radar')
+    .json()
+
+  return toCamelcase(body.data)
+}

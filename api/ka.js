@@ -1,5 +1,6 @@
 
 import { ka } from './base'
+import { toCamelcase } from 'object-keys-mapping'
 
 export async function getUserSites(params) {
   const body = await ka
@@ -32,4 +33,12 @@ export async function baxUserLogin() {
     .json()
 
   return body
+}
+
+export async function kaSimpleReport() {
+  const body = await ka
+    .get('/user/simple-report')
+    .json()
+
+  return toCamelcase(body.data)
 }
