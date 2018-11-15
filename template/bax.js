@@ -5,6 +5,11 @@ import QwtCreatePromotion from 'com/qwt-create-promotion'
 import QwtPromotionList from 'com/qwt-promotion-list'
 import QwtDashboard from 'com/qwt-dashboard'
 
+// 标王
+import BwQueryPrice from 'com/bw-query-price'
+import BwEditPlan from 'com/bw-edit-plan'
+import BwPlanList from 'com/bw-plan-list'
+
 // mvp
 import MvpUpdateCampaign from 'com/mvp-update-campaign'
 import MvpCreateCampaign from 'com/mvp-create-campaign'
@@ -64,6 +69,20 @@ const gwRoutes = [{
   component: GwCharge,
   path: '/main/gw/charge',
   name: 'gw-charge'
+}]
+
+const bwRoutes = [{
+  component: BwQueryPrice,
+  path: '/main/bw/query-price',
+  name: 'bw-query-price'
+}, {
+  component: BwEditPlan,
+  path: '/main/bw/edit-plan',
+  name: 'bw-edit-plan'
+}, {
+  component: BwPlanList,
+  path: '/main/bw/plan-list',
+  name: 'bw-plan-list'
 }]
 
 const mvpRoutes = [{
@@ -162,7 +181,7 @@ const router = new VueRouter({
     component: Coupon,
     path: '/main/coupon',
     name: 'coupon'
-  }, ...qwtRoutes, ...sspRoutes, ...gwRoutes, {
+  }, ...qwtRoutes, ...sspRoutes, ...gwRoutes, ...bwRoutes, {
     component: Homepage,
     path: '*'
   }]
