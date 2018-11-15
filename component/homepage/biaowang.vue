@@ -42,16 +42,16 @@
       <div class="layout-content">
         <dl class="dl-wrap">
           <dt class="dt wrap">
-            <span class="row">有效关键词</span>
-            <span class="row">昨日排名</span>
-            <span class="row">剩余天数</span>
-            <span class="row action"></span>
+            <span class="col">有效关键词</span>
+            <span class="col">昨日排名</span>
+            <span class="col">剩余天数</span>
+            <span class="col action"></span>
           </dt>
           <dd class="dd wrap">
-            <span class="row">关键词1</span>
-            <span class="row">4</span>
-            <span class="row">17/30天</span>
-            <span class="row action">续费</span>
+            <span class="col">关键词1</span>
+            <span class="col">4</span>
+            <span class="col">17/30天</span>
+            <span class="col action">续费</span>
           </dd>
         </dl>
       </div>
@@ -138,7 +138,7 @@ export default {
       }
       & .dd {
       }
-      & .row {
+      & .col {
         width: 25%;
         flex: 1;
         &.action {

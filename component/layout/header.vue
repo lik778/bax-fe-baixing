@@ -24,7 +24,7 @@
           @mouseenter="() => this.isMenuVisible = true"
           @mouseleave="() => this.isMenuVisible = false"
         >
-          {{userInfo.name}}
+          {{userInfo.name || '我是小小百姓'}}
           <i :class="isMenuVisible ? 'el-icon-arrow-up' : 'el-icon-arrow-down'"/>
           <transition name="el-zoom-in-top">
             <ul class="menu-group" v-show="isMenuVisible" @click="handleMenuClick">
