@@ -163,16 +163,17 @@ export default {
         this.checkedAdId = defaultAdId
       }
     },
-    async onSelectAd() {
+    async onSelectAd(notEmitSelected) {
       if (!this.checkedAdId) {
         return
       }
-
-      const ad = this.ads.find(ad => ad.adId === this.checkedAdId)
-      this.$emit('select-ad', {
-        ...ad,
-        url: isArray(ad.url) ? ad.url[0] : ad.url
-      })
+      if (!notEmitSelected) {
+        const ad = this.ads.find(ad => ad.adId === this.checkedAdId)
+        this.$emit('select-ad', {
+          ...ad,
+          url: isArray(ad.url) ? ad.url[0] : ad.url
+        })
+      }
 
       await this.reset(MODE_SELECTED, this.checkedAdId)
     },

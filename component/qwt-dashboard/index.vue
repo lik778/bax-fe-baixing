@@ -45,7 +45,7 @@
         <span class="kw-list">
           <div>
             <el-tag v-for="c in query.checkedCampaigns" closable
-              type="success" :key="'c-' + c.id"
+              type="danger" :key="'c-' + c.id"
               @close="removeCampaign(c)">
               {{ '计划：' + c.id }}
             </el-tag>

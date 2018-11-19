@@ -34,6 +34,7 @@
             <td class="col3">百度</td>
             <td class="col4">
               <span>100</span>
+              <a href="javascript:;" class="btn">修改</a>
             </td>
             <td class="col5">20</td>
             <td class="col6">3.5</td>
@@ -129,8 +130,12 @@ export default {
       text-align: center;
     }
     & .col4 {
-      width: 12%;
+      width: 14%;
       text-align: center;
+      & .btn {
+        color: #35A5E4;
+        margin-left: 5px;
+      }
     }
     & .col5 {
       width: 8%;

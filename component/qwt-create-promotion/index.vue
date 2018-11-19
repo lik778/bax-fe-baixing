@@ -22,7 +22,9 @@
               </el-radio-group>
             </div>
             <div>
-              <user-ad-selector :type="adSelectorType"
+              <user-ad-selector
+                ref="userAdSelector"
+                :type="adSelectorType"
                 v-if="newPromotion.landingType === 0"
                 :all-areas="allAreas" :limit-mvp="false"
                 :selected-id="newPromotion.landingPageId"
@@ -40,7 +42,7 @@
         <div>
           <label>投放城市：</label>
           <div>
-            <el-tag type="success" closable class="kw-tag"
+            <el-tag type="danger" closable class="kw-tag"
               v-for="c in newPromotion.areas" :key="c"
               @close="removeArea(c)">
               {{ formatterArea(c) }}
@@ -210,6 +212,8 @@ import { keywordPriceTip } from 'constant/tip'
 
 import store from './store'
 
+const MVP_AD = 0
+
 const MIN_DAILY_BUDGET = 100 * 100
 
 const promotionTemplate = {
@@ -316,7 +320,6 @@ export default {
     },
 
     recommendKwPrice() {
-      console.log(this.newPromotion.keywords.map(kw => kw.price))
       const max = Math.max.apply(null, this.newPromotion.keywords.map(kw => kw.price))
       return Math.min(Math.max(200, toFloat(max, 0)), 99900)
     }
@@ -450,6 +453,8 @@ export default {
       const { currentBalance, allAreas } = this
 
       const p = clone(this.newPromotion)
+      
+      if (!p.sources.length) return Message.error('请选择投放渠道')
 
       if (p.dailyBudget < MIN_DAILY_BUDGET) {
         return Message.error(`推广日预算需大于 ${f2y(MIN_WORD_PRICE)} 元`)
@@ -587,6 +592,35 @@ export default {
           resolve('关闭')
         }
       })
+    },
+
+    async cloneCampaignById(campaignId) {
+      const originPromotion = await store.getCampaignInfo(campaignId)
+      const clonedPromotion = {}
+      let ad = null
+      // 判断源计划落地页类型是主站广告或者官网
+      if (originPromotion.landingType === MVP_AD) {
+        // 官网
+        const result = await queryAds({
+          limitMvp: false,
+          adIds: [originPromotion.landingPageId],
+          limit: 1
+        })
+        ad = result.ads && result.ads[0]
+        if (ad) {
+          clonedPromotion.landingPage = ad.url
+          await this.$refs.userAdSelector.reset('selected', ad.adId)
+        }
+      }
+      Object.keys(promotionTemplate).map(key => {
+        if (ad && key === 'landingPage') return
+        clonedPromotion[key] = originPromotion[key]
+      })
+      clonedPromotion.landingPageId = originPromotion.landingPageId.toString()
+      clonedPromotion.creativeTitle = originPromotion.creative.title
+      clonedPromotion.creativeContent = originPromotion.creative.content
+      clonedPromotion.sources = []
+      this.newPromotion = clonedPromotion
     }
   },
 
@@ -596,20 +630,6 @@ export default {
       store.getCampaignsCount(),
       store.getUsableBalance()
     ])
-
-    // 主站个人中心跳转 case
-    const { adId } = this.$route.query
-    if (adId) {
-      const result = await queryAds({
-        limitMvp: false,
-        adIds: [adId],
-        limit: 1
-      })
-      const ad = result.ads && result.ads[0]
-      if (ad) {
-        await this.onSelectAd(ad)
-      }
-    }
 
     setTimeout(() => {
       // pv
@@ -639,6 +659,26 @@ export default {
         clickSent = true
       }
     })
+
+    // 从投放列表复制按钮点进来的，除了渠道不选择外其他都带出来
+    const cloneId = this.$route.query.cloneId
+    if (cloneId) {
+      await this.cloneCampaignById(cloneId)
+      return
+    }
+    // 主站个人中心跳转 case
+    const { adId } = this.$route.query
+    if (adId) {
+      const result = await queryAds({
+        limitMvp: false,
+        adIds: [adId],
+        limit: 1
+      })
+      const ad = result.ads && result.ads[0]
+      if (ad) {
+        await this.onSelectAd(ad)
+      }
+    }
   },
 
   beforeDestroy() {

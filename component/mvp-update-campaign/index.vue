@@ -60,7 +60,7 @@
             <section class="add-area">
               <strong>投放城市：</strong>
               <span>
-                <el-tag type="success"
+                <el-tag type="danger"
                   v-for="c in getProp('areas')" :key="c">
                   {{ formatArea(c) }}
                 </el-tag>

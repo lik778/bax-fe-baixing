@@ -44,7 +44,7 @@
         <div>
           <aside>投放城市：</aside>
           <span>
-            <el-tag type="success"
+            <el-tag type="danger"
               :closable="!isSales"
               v-for="c in getProp('areas')" :key="c"
               @close="removeArea(c)">

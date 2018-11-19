@@ -75,7 +75,7 @@
             <section class="add-area">
               <strong>投放城市：</strong>
               <span>
-                <el-tag type="success" closable
+                <el-tag type="danger" closable
                   v-for="c in newCampaign.areas" :key="c"
                   @close="removeArea(c)">
                   {{ formatArea(c) }}

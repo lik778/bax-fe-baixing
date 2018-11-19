@@ -57,7 +57,7 @@
         <span class="filter-item">
           <label>投放区域</label>
           <div>
-            <el-tag type="success" closable class="area-tag"
+            <el-tag type="danger" closable class="area-tag"
               v-for="area in query.areas" :key="area"
               @close="removeArea(area)">
               {{ formatterArea(area) }}

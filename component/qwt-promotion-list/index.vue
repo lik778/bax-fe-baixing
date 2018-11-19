@@ -4,10 +4,10 @@
       <h2 class="header">我的站外推广计划</h2>
       <div class="action-group">
         <div class="top">
-          <el-button class="button" icon="el-icon-plus" type="primary">新建推广计划</el-button>
+          <el-button class="button" icon="el-icon-plus" type="primary" @click="() => $router.push({name: 'qwt-create-promotion'})">新建推广计划</el-button>
           <a href="javascript:;" class="expand-button" @click="isActionGroupExpand = !isActionGroupExpand">
             更多筛选
-            <i class="el-icon-arrow-down icon" />
+            <i class="icon" :class="isActionGroupExpand ? 'el-icon-arrow-up' : 'el-icon-arrow-down' " />
           </a>
         </div>
         <div v-show="isActionGroupExpand">
@@ -30,7 +30,7 @@
               </el-checkbox-group>
             </div>
           </div>
-          <div class="column">
+          <div class="column source">
             <h6 class="title">渠道来源</h6>
             <div class="checkbox-group">
               <el-checkbox-group v-model="params.source">
@@ -45,13 +45,13 @@
               </el-checkbox-group>
             </div>
           </div>
-          <div class="column">
+          <div class="column area">
             <span class="title">渠道区域</span>
             <el-tag
               v-for="a in params.areas"
               @close="removeSelectedArea(a)"
               :key="a"
-              type="success"
+              type="danger"
               :closable="true"
               class="tag"
             >
@@ -195,6 +195,12 @@ export default {
       flex-wrap: wrap;
       text-align: left;
       margin-bottom: 25px;
+      &.source {
+        margin-bottom: 17px;
+      }
+      &.area .title{
+        margin: 15px 0 5px;
+      }
       & .title {
         font-weight: 600;
         text-align: left;
