@@ -60,7 +60,10 @@
         </promotion-area-limit-tip>
       </section>
       <section class="creative">
-        <header><promotion-creative-tip /> </header>
+        <header class="top-col">
+          <promotion-creative-tip />
+          <el-button type="primary" class="button" size="small" @click="optimizeCreative">一键优化</el-button>
+        </header>
         <creative-editor
           :update-promotion="true"
           :platforms="[getProp('source')]"
@@ -75,7 +78,16 @@
         />
       </section>
       <section class="keyword">
-        <header>选取推广关键词</header>
+        <header class="top-col">
+          <span>选取推广关键词</span>
+          <el-input size="small" class="input" placeholder="添加关键词"/>
+          <el-button size="small" type="warning" class="button">添加</el-button>
+          <el-button size="small" type="primary" class="button">一键拓词</el-button>
+        </header>
+        <div class="second-col">
+          <el-input size="small" class="input" placeholder="填写关键词价格"/>
+          <el-button size="small" type="primary" class="button">批量改价</el-button>
+        </div>
         <h4>
           <span>已经设置的关键词</span>
           <label>当前关键词数量: {{ currentKeywords.length }}个</label>
@@ -999,6 +1011,9 @@ export default {
     setTimeType(type) {
       store.setTimeType(type)
     },
+    optimizeCreative() {
+      console.debug('一键优化创意')
+    },
     disabledDate,
     f2y
   },
@@ -1047,6 +1062,34 @@ export default {
   font-size: 12px;
   color: #ff4401;
 }
+
+.creative {
+  & .top-col {
+    display: flex;
+    align-items: center;
+    & .button {
+      margin-left: 32px;
+      padding: 8px 25px;
+    }
+  }
+}
+
+.keyword {
+  & .top-col {
+    display: flex;
+    align-items: center;
+  }
+  & .second-col {
+    & .input {
+      margin-left: 130px;
+    }
+  }
+  & .input {
+    width: 200px;
+    margin-left: 32px;
+    margin-right: 16px;
+  }
+} 
 
 .report-link {
   margin-left: 10px;
@@ -1115,7 +1158,7 @@ export default {
 
     & > section.keyword {
       & > h4 {
-        margin: 20px 0 30px;
+        margin: 20px 130px 30px;
         color: #6a778c;
         font-size: 13px;
         font-weight: normal;
