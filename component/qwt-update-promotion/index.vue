@@ -79,19 +79,16 @@
       </section>
       <section class="keyword">
         <header class="top-col">
-          <span>选取推广关键词</span>
+          <span :class="canOptimize('keyword')">选取推广关键词</span>
           <el-input size="small" class="input" placeholder="添加关键词"/>
           <el-button size="small" type="warning" class="button">添加</el-button>
           <el-button size="small" type="primary" class="button">一键拓词</el-button>
+          <strong>当前关键词数量: {{ currentKeywords.length }}个</strong>
         </header>
         <div class="second-col">
           <el-input size="small" class="input" placeholder="填写关键词价格"/>
           <el-button size="small" type="primary" class="button">批量改价</el-button>
         </div>
-        <h4>
-          <span>已经设置的关键词</span>
-          <label>当前关键词数量: {{ currentKeywords.length }}个</label>
-        </h4>
         <keyword-list
           mode="update"
           :platform="getProp('source')"
@@ -200,7 +197,7 @@
         <section v-show="moreSettingDisplay" class="more-setting-container">
           <section class="promotion-time">
             <div>
-              <aside>投放时段：</aside>
+              <aside :class="canOptimize('duration')">投放时段：</aside>
               <span>
                 <label class="duration-type">
                   {{ getDurationType() }}
@@ -212,7 +209,7 @@
               </span>
             </div>
             <div>
-              <aside>投放时间:</aside>
+              <aside :class="canOptimize('time')">投放时间:</aside>
               <span>
                 <el-button-group>
                   <el-button :type="timeType === 'long' ? 'primary' : ''"
@@ -241,7 +238,7 @@
           </section>
           <section class="mobile-ratio" v-if="getProp('source') !== SEM_PLATFORM_SHENMA">
             <section>
-              <label>
+              <label :class="canOptimize('ratio')">
                 选择投放移动端的出价比例：
               </label>
               <section>
@@ -1011,6 +1008,18 @@ export default {
     setTimeType(type) {
       store.setTimeType(type)
     },
+    canOptimize(type) {
+      const expandMoreSettingArea = () => this.moreSettingDisplay = true
+      const opt = {
+        keyword: () => this.currentKeywords.length < 10,
+        time: () => this.timeType === 'custom' && expandMoreSettingArea(),
+        duration: () => this.getDurationType() === '部分时段' && expandMoreSettingArea(),
+        ratio:
+          () =>!(!this.getProp('mobilePriceRatio') || this.getProp('mobilePriceRatio') === 1 || +this.promotion.mobilePriceRatio === 1)
+          && expandMoreSettingArea()
+      }
+      return opt[type]() ? 'highlight' : ''
+    },
     optimizeCreative() {
       console.debug('一键优化创意')
     },
@@ -1078,6 +1087,11 @@ export default {
   & .top-col {
     display: flex;
     align-items: center;
+    & > strong {
+      margin-left: 18px;
+      color: #666;
+      font-size: 12px;
+    }
   }
   & .second-col {
     & .input {
@@ -1114,7 +1128,10 @@ export default {
 .qwt-update-promotion {
   padding: 0 35px;
   width: 100%;
-
+  & .highlight {
+    color: #B66969 !important;
+    font-weight: 600;
+  }
   & > main {
     & > h3 {
       background-color: #fff;
@@ -1157,19 +1174,6 @@ export default {
     }
 
     & > section.keyword {
-      & > h4 {
-        margin: 20px 130px 30px;
-        color: #6a778c;
-        font-size: 13px;
-        font-weight: normal;
-
-        & > label {
-          margin-left: 10px;
-          font-size: 12px;
-          color: red;
-        }
-      }
-
       & > h3 {
         font-size: 14px;
         font-weight: normal;
