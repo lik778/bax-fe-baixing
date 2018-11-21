@@ -242,12 +242,14 @@ export async function getQiqiaobanPageList() {
   return toCamelcase(body.data)
 }
 
-export async function recommendByUrl(url, areas = []) {
+// TODO: 添加计划id
+export async function recommendByUrl(url, areas = [], campaignId = null) {
   const body = await fengming
     .post('/keyword/recommand/vad')
     .send({
       url,
-      areas
+      areas,
+      campaignId
     })
     .json()
 
@@ -417,6 +419,15 @@ export async function getServerTime() {
   return r.headers.get('date')
 }
 
+export async function changeCampaignKeywordsPrice(campaignId, price) {
+  const body = await fengming
+    .post(`/campaign/${campaignId}/keyword`)
+    .send({price})
+    .json()
+
+  return body.data
+}
+
 /**
  * private
  */
@@ -470,3 +481,4 @@ function fmtWords(words) {
     ...w
   }))
 }
+

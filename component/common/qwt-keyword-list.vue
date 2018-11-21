@@ -14,7 +14,12 @@
             @change="onCheckWord(s.row)" />
         </template>
       </el-table-column>
-      <el-table-column prop="word" label="关键词" width="220" />
+      <el-table-column label="关键词" width="220">
+        <template slot-scope="{row}">
+          {{row.word}}
+          <span class="new-word" v-if="row.isNew">(新)</span>
+        </template>
+      </el-table-column>
       <el-table-column v-if="showPropShow"
         prop="show" width="180"
         label="日均搜索指数"
@@ -22,7 +27,7 @@
       </el-table-column>
       <el-table-column v-if="showPropRanking"
         width="140" label="平均排名"
-        :formatter="r => fmtCpcRanking(r.cpcRanking)">
+        :formatter="r => fmtCpcRanking(r.cpcRanking || -1)">
       </el-table-column>
       <el-table-column v-if="showPropStatus"
         label="关键词状态"
@@ -181,7 +186,6 @@ export default {
       curWordsLength: 0,
       prePage: 0,
 
-      customPrices: [],
       userOperatedPages: [], // 用户操作过的页: 0, 1, 2
 
       keywordStatusTip,
@@ -300,31 +304,19 @@ export default {
     },
     deleteWord(row) {
       this.$emit('delete-word', {
+        isNew:  row.isNew,
         price: row.price,
         word: row.word,
         id: row.id
       })
     },
     getWordPrice(kw) {
-      const item = this.customPrices.find(c => c.word === kw)
-
-      if (item) {
-        return item.price
-      }
-
       const word = this.words.find(w => w.word === kw)
-      if (this.mode === MODE_UPDATE) {
-        return word.serverPrice
-      } else if (this.mode === MODE_SELECT) {
-        return word.price
-      }
+      return word.price
     },
     isValidPrice(row) {
       const finalPrice = this.getWordPrice(row.word)
       return finalPrice >= MIN_WORD_PRICE && finalPrice <= MAX_WORD_PRICE
-    },
-    hasCustomPrice(word) {
-      return this.customPrices.findIndex(c => c.word === word) !== -1
     },
     wordChecked(word) {
       return this.selectedWords
@@ -359,24 +351,6 @@ export default {
     },
     setCustomPrice({serverPrice, word, id}, v) {
       let price = (v ? toFloat(v) : 0) * 100
-
-      if (this.hasCustomPrice(word)) {
-        this.customPrices = this.customPrices.map(c => {
-          if (c.word === word) {
-            return {
-              word: c.word,
-              price
-            }
-          } else {
-            return {...c}
-          }
-        })
-      } else {
-        this.customPrices = [...this.customPrices, {
-          price,
-          word
-        }]
-      }
       this.$emit('update-word', {
         price,
         serverPrice,
@@ -406,7 +380,7 @@ export default {
         return '等待审核'
       }
 
-      return keywordStatus[String(status)] || '未知'
+      return keywordStatus[String(status || 5)] || '未知'
     },
     fmtWord(w) {
       return {
@@ -444,6 +418,11 @@ export default {
   display: flex;
   flex-flow: column;
   max-width: 1120px;
+
+  & >>> .new-word {]
+    font-size: 12px;
+    color: #ff4401;
+  }
 
   & > .cart {
     margin-top: 10px;

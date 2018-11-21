@@ -66,6 +66,20 @@ const store = observable({
       }
     })
   }),
+  fmtNewKeywordsPrice: action(function(words) {
+    return words.map(w => {
+      const { price: serverPrice } = w
+      let price = serverPrice * 1.2
+      if (price < MIN_WORD_PRICE) {
+        price = MIN_WORD_PRICE
+      }
+      return {
+        ...w,
+        serverPrice,
+        price // override price, price is display value
+      }
+    })
+  }),
   getCurrentBalance: action(async function() {
     this.currentBalance = await fapi.getCurrentBalance()
   }),

@@ -80,14 +80,14 @@
       <section class="keyword">
         <header class="top-col">
           <span :class="canOptimize('keyword')">选取推广关键词</span>
-          <el-input size="small" class="input" placeholder="添加关键词"/>
-          <el-button size="small" type="warning" class="button">添加</el-button>
-          <el-button size="small" type="primary" class="button">一键拓词</el-button>
+          <el-input size="small" class="input" placeholder="添加关键词" v-model="queryWord"/>
+          <el-button size="small" type="warning" class="button" @click="addKeyword('single')">添加</el-button>
+          <el-button size="small" type="primary" class="button" @click="addKeyword">一键拓词</el-button>
           <strong>当前关键词数量: {{ currentKeywords.length }}个</strong>
         </header>
         <div class="second-col">
-          <el-input size="small" class="input" placeholder="填写关键词价格"/>
-          <el-button size="small" type="primary" class="button">批量改价</el-button>
+          <el-input size="small" class="input" v-model="keywordsPrice" placeholder="填写关键词价格"/>
+          <el-button size="small" type="primary" class="button" @click="changeKeywordsPrice">批量改价</el-button>
         </div>
         <keyword-list
           mode="update"
@@ -103,7 +103,7 @@
           :campaign-online="isCampaignOnline"
           @update-word="updateExistWord"
           @change-offset="offset => currentKeywordsOffset = offset"
-          @delete-word="word => promotion.deletedKeywords.push(word)"
+          @delete-word="handleDeleteWord"
         />
         <h3 v-if="!isSales">
           <label>关键词不够？</label>
@@ -319,8 +319,11 @@ import {
 } from 'util/meta'
 
 import {
+  recommendByUrl,
+  updateCampaign,
+  recommendByWord,
   checkCreativeContent,
-  updateCampaign
+  changeCampaignKeywordsPrice
 } from 'api/fengming'
 
 import {
@@ -408,12 +411,14 @@ export default {
 
       actionTrackId: uuid(),
       landingTypeOpts,
-
+      keywordsPrice: '',
       durationSelectorVisible: false,
+      // FIXME:
       searchRecommendsVisible: false,
       areaDialogVisible: false,
 
       currentKeywordsOffset: 0,
+      // FIXME:
       addibleWordsOffset: 0,
       isUpdating: false,
       queryWord: '',
@@ -478,13 +483,17 @@ export default {
       return false
     },
     currentKeywords() {
-      const { keywords } = this.originPromotion
-
+      const { keywords: originKeywords } = this.originPromotion
       const {
         updatedKeywords,
-        deletedKeywords
+        deletedKeywords,
+        newKeywords
       } = this.promotion
-
+      // 新增的keywords 加上原来的keywords
+      const keywords = newKeywords.map(word => ({
+        isNew: true,
+        ...word
+      })).concat(originKeywords)
       return keywords
         .filter(w => !deletedKeywords.map(i => i.id).includes(w.id))
         .map(w => {
@@ -578,6 +587,7 @@ export default {
       this.moreSettingDisplay = !this.moreSettingDisplay
     },
     setAddibleWordsOffset(offset) {
+      // FIXME:
       this.addibleWordsOffset = offset
     },
     setLandingPage(url) {
@@ -653,26 +663,45 @@ export default {
       }
     },
     updateExistWord(word) {
-      const words = this.promotion.updatedKeywords.map(w => w.word)
-
-      if (words.includes(word.word)) {
-        this.promotion.updatedKeywords = this.promotion.updatedKeywords.map(w => {
-          if (w.word === word.word) {
+      const {
+        newKeywords,
+        updatedKeywords
+      } = this.promotion
+      // 更新的关键词是新增加的关键词
+      if (newKeywords.some(w => word.word === w.word)) {
+        this.promotion.newKeywords = newKeywords.map(w => {
+          if (word.word === w.word) {
             return {
               ...w,
-              price: word.price
+              ...word
             }
           } else {
             return {...w}
           }
         })
       } else {
-        this.promotion.updatedKeywords.push({
-          ...word
-        })
+        // 更新的关键词是已经存在的
+        const words = updatedKeywords.map(w => w.word)
+        if (words.includes(word.word)) {
+          this.promotion.updatedKeywords = this.promotion.updatedKeywords.map(w => {
+            if (w.word === word.word) {
+              return {
+                ...w,
+                price: word.price
+              }
+            } else {
+              return {...w}
+            }
+          })
+        } else {
+          this.promotion.updatedKeywords.push({
+            ...word
+          })
+        }
       }
     },
     updateNewWord(word) {
+      // FIXME:
       this.promotion.newKeywords = this.promotion.newKeywords.map(w => {
         if (w.word === word.word) {
           return {
@@ -868,7 +897,6 @@ export default {
           ...this.getUpdatedCreativeData(),
           ...this.getUpdatedPromotionData(),
           ...this.getUpdatedKeywordsData(),
-          // TODO: 添加一个更新移动端出价比例的字段
           mobilePriceRatio: this.promotion.mobilePriceRatio
         }
       } catch (err) {
@@ -936,6 +964,7 @@ export default {
         name: 'qwt-promotion-list'
       })
     },
+    // FIXME:
     async queryRecommendedWords() {
       const { queryWord } = this
 
@@ -989,6 +1018,7 @@ export default {
         }
       })
     },
+    // FIXME:
     switchWordsVisible() {
       this.searchRecommendsVisible = !this.searchRecommendsVisible
     },
@@ -1023,6 +1053,62 @@ export default {
     optimizeCreative() {
       console.debug('一键优化创意')
     },
+    filterExistCurrentWords(newWords) {
+      const words = this.currentKeywords.map(w => w.word.toLowerCase())
+      return newWords
+        .filter(w => !words.includes(w.word.toLowerCase()))
+    },
+    async addKeyword(type) {
+      const queryWord = this.queryWord.trim()
+      let newKeywords = []
+      if (type === 'single') {
+        // 单个添加
+        if (!queryWord) return
+        const recommendKeywords = await recommendByWord(queryWord)
+        newKeywords = store.fmtNewKeywordsPrice(recommendKeywords).slice(0, 1)
+        if (!newKeywords.length) return this.$message.info('没有合适的关键词')
+        if (!this.filterExistCurrentWords(newKeywords).length) return this.$message.info('当前关键词已存在关键词列表')
+        this.queryWord = ''
+      } else {
+        // 一键拓词
+        const landingPage = this.promotion.landingPage || this.getProp('landingPage')
+        const areas = this.promotion.areas || this.getProp('areas')
+        const campaignId = +this.$route.params.id
+        const recommendKeywords = await recommendByUrl(landingPage, areas, campaignId)
+        if (!recommendKeywords.length) return this.$message.info('无法提供推荐关键词')
+        newKeywords = this.filterExistCurrentWords(store.fmtNewKeywordsPrice(recommendKeywords)).slice(0, 5)
+        if (!newKeywords.length) return this.$message.info('没有更多的关键词可以推荐啦')
+      }
+      this.promotion.newKeywords = this.promotion.newKeywords.concat(newKeywords)
+    },
+    handleDeleteWord(w) {
+      const {isNew, ...word} = w
+      if (!!isNew) {
+        this.promotion.newKeywords = this.promotion.newKeywords.filter(w => w.word !== word.word)
+      } else {
+        this.promotion.deletedKeywords.push(word)
+      }
+    },
+    async changeKeywordsPrice() {
+      const price = this.keywordsPrice * 100
+      const campaignId = +this.$route.params.id
+      if (price < 200 || price > 99900) {
+        return this.$message.error('关键词有效出价区间为[2, 999]元，请调整出价')
+      }
+      await changeCampaignKeywordsPrice(campaignId, price)
+      this.$message.success('关键词批量改价成功')
+      this.originPromotion.keywords.forEach(word => {
+        this.updateExistWord({
+          ...word,
+          price
+        })
+      })
+      this.promotion.newKeywords = this.promotion.newKeywords.map(word => ({
+        ...word,
+        price
+      }))
+      console.log(this.promotion.newKeywords, this.promotion.updatedKeywords)
+    },
     disabledDate,
     f2y
   },
@@ -1031,6 +1117,11 @@ export default {
       if (v !== p) {
         await this.initCampaignInfo()
       }
+    },
+    'promotion.deletedKeywords'(deletedKws) {
+      // 删除的时候有可能批量改价过，所以要把在deletedKeywords中的关键字从updatedKeywords中过滤
+      this.promotion.updatedKeywords =
+        this.promotion.updatedKeywords.filter(w => !deletedKws.some(dw => dw.word === w.word))
     }
   },
   async beforeDestroy() {
@@ -1161,7 +1252,6 @@ export default {
       & > div {
         display: flex;
         margin: 20px 0;
-        /* TODO: */
         & > aside:first-child {
           display: flex;
           align-items: center;
