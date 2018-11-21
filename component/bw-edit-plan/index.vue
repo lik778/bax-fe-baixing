@@ -1,83 +1,113 @@
 <template>
-  <div>
-    <form :model="form">
-      <el-form-item label="推广关键词">
-        <el-checkbox-group v-model="form.promotes">
-          <el-checkbox v-for="(promote, index) in promotes" :key="index">{{promote.word}}</el-checkbox>
-        </el-checkbox-group>
-      </el-form-item>
-      <el-form-item label="投放页面">
-        <div class="landing-type">
-          <el-radio-group v-model="form.landingType" size="small">
-            <el-radio-button v-for="option of landingTypeOpts" :key="option.value" :label="option.value">{{option.label}}</el-radio-button>
-          </el-radio-group>
-        </div>
-        <div class="landing-page">
-          <user-ad-selector :type="adSelectorType"
-            v-if="form.landingType === 0"
-            :all-areas="allAreas" :limit-mvp="false"
-            :selected-id="form.landingPageId"
-            @select-ad="ad => onSelectAd(ad)"
-          />
+  <div class="bg">
+    <div class="white-bg">
+      <header>我的标王推广计划</header>
+      <main>
+        <el-form ref="form" :model="form" :rules="rules" label-width="90px">
+          <el-form-item label="推广关键词">
+            <el-checkbox-group v-model="form.promoteIds">
+              <el-checkbox v-for="(promote, index) in promotes" :key="index" :label="promote.id" :disabled="!!$route.query.promoteId">{{promote.word}}</el-checkbox>
+            </el-checkbox-group>
+          </el-form-item>
+          <el-form-item label="投放页面">
+            <div class="landing-type">
+              <el-radio-group v-model="form.landingType" size="small">
+                <el-radio-button v-for="option of landingTypeOpts" :key="option.value" :label="option.value">{{option.label}}</el-radio-button>
+              </el-radio-group>
+            </div>
+            <div class="landing-page">
+              <user-ad-selector :type="'reselect'"
+                v-if="form.landingType === 0"
+                :all-areas="allAreas" :limit-mvp="false"
+                :selected-id="form.landingPageId"
+                @select-ad="ad => onSelectAd(ad)"
+              />
 
-          <qiqiaoban-page-selector
-            v-if="form.landingType === 1"
-            :value="form.landingPage"
-            @change="setLandingPage"
+              <qiqiaoban-page-selector
+                v-if="form.landingType === 1"
+                :value="form.landingPage"
+                @change="v => form.landingPage = v"
+              />
+            </div>
+          </el-form-item>
+          <h3>投放物料设置</h3>
+          <creative-editor
+            :platforms="[SEM_PLATFORM_BAIDU]"
+            :title="form.creativeTitle"
+            :content="form.creativeContent"
+            @change="handleCreativeValueChange"
+            @error="handleCreativeError"
           />
-        </div>
-      </el-form-item>
-      <h3>投放物料设置</h3>
-      <creative-editor
-        :platforms="[SEM_PLATFORM_BAIDU]"
-        :title="form.creativeTitle"
-        :content="form.creativeContent"
-        @change="handleCreativeValueChange"
-        @error="handleCreativeError"
-      />
-      <el-form-item>
-        <el-button @click="onSubmit">创建标王计划</el-button>
-      </el-form-item>
-    </form>
+          <el-form-item>
+            <el-button :loading="isLoading" @click="onSubmit" type="primary">创建标王计划</el-button>
+          </el-form-item>
+        </el-form>
+      </main>
+    </div>
   </div>
 </template>
 
 <script>
-  import store from './store'
-  // import {getPromteById, getPromtesByOrders, updatePromote} from 'api/bw'
-  import {landingTypeOpts, SEM_PLATFORM_BAIDU} from 'constant/fengming'
+  import {getPromoteById, getPromtesByOrders, updatePromote} from 'api/biaowang'
+  import {landingTypeOpts, SEM_PLATFORM_BAIDU, PROMOTE_STATUS_INIT} from 'constant/fengming'
   import {Message} from 'element-ui'
+  import UserAdSelector from 'com/common/user-ad-selector'
+  import CreativeEditor from 'com/widget/creative-editor'
+  import QiqiaobanPageSelector from 'com/common/qiqiaoban-page-selector'
 
   export default {
     name: 'bw-edit-plan',
     props: {
-      allAreas: Object
+      allAreas: Array
+    },
+    components: {
+      UserAdSelector,
+      CreativeEditor,
+      QiqiaobanPageSelector
     },
     data() {
       return {
+        SEM_PLATFORM_BAIDU,
         promotes: [],
         form: {
-          promotes: [],
+          promoteIds: [],
           landingType: 0,
           landingPageId: '',
           landingPage: '',
           creativeTitle: '',
           creativeContent: '',
         },
+        rules: {
+          promoteIds: [{required: true}],
+          landingPage: [{required: true}]
+        },
 
         landingTypeOpts,
-        creativeError: ''
+        creativeError: '',
+        isLoading: false
       }
     },
     computed: {
       adSelectorType() {
-        return this.$route.query.promoteId ? 'reselect' : ''
+        return this.promotes.every(p => p.status !== PROMOTE_STATUS_INIT)
+          ? 'reselect'
+          : ''
       },
     },
     async mounted() {
       const {orderId, promoteId} = this.$route.query
       if (promoteId) {
-        this.promotes = [await getPromteById(promoteId) ]
+        const onePromote = await getPromoteById(promoteId)
+        this.promotes = [onePromote]
+        const {landingType, landingPage, creativeTitle, creativeContent} = onePromote
+        this.form = {
+          promoteIds: [+promoteId],
+          landingType,
+          landingPage,
+          creativeTitle,
+          creativeContent
+        }
+        this.form.landingPageId = '1472828515'
       }
       if (orderId) {
         this.promotes = await getPromtesByOrders
@@ -96,16 +126,50 @@
         this.creativeError = message
       },
       handleCreativeValueChange({title, content}) {
-        this.newPromotion.creativeTitle = title
-        this.newPromotion.creativeContent = content
+        this.form.creativeTitle = title
+        this.form.creativeContent = content
       },
       onSubmit() {
-
+        this.$refs.form.validate(async isValid => {
+          if (isValid && !this.creativeError) {
+            this.isLoading = true
+            try {
+              await updatePromote(this.form)
+            } finally {
+              this.isLoading = false
+            }
+          } else {
+            return false
+          }
+        })
       }
     }
   }
 </script>
 
 <style lang="postcss" scoped>
+header {
+  color: #666;
+  border-bottom: 1px solid #E6E6E6;
+  padding: 15px;
+  font-size: 16px;
+}
 
+div.bg {
+  padding: 10px 10px 30px 10px;
+  background-color: #f4f4f4;
+
+  & > .white-bg {
+    background-color: #fff;
+
+    & > main {
+      box-shadow: 0px 2px 9px 0px rgba(83, 95, 127, .1);
+      min-height: 700px;
+      padding: 45px 60px;
+    }
+  }
+}
+.landing-page {
+  margin: 20px auto;
+}
 </style>

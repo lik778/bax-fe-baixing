@@ -136,7 +136,7 @@ export const device = {
 }
 
 // 把 key 是数字, value 是 label 的对象转换成对象的 array
-function toOpt(obj, forceNumber = true) {
+export function toOpt(obj, forceNumber = true) {
   return Object.keys(obj)
     .map(key => ({
       label: obj[key],

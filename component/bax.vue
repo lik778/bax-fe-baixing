@@ -206,7 +206,7 @@ body > content {
   }
 }
 
-.el-loading-mask {
+.el-loading-mask.is-fullscreen {
   background-color: unset;
   z-index: unset;
   top: 240px;
