@@ -23,8 +23,6 @@
       :visible="addUserLeadVisible"
       @close="toggleAddUserLeadVisible"
     />
-    <huo-dong-intro :show="huoDongIntroVisible" @close="huoDongIntroVisible = false" />
-    <huo-dong-btn />
     <back-to-top />
     <wechat-scan />
     <chat />
@@ -34,8 +32,6 @@
 <script>
 import NewUserIntro from './common/new-user-intro'
 import AddUserLead from './common/add-user-lead'
-import HuoDongIntro from './common/huodong-intro'
-import HuoDongBtn from './common/huodong-btn'
 import WechatScan from './widget/wechat-scan'
 import BackToTop from './widget/back-to-top'
 import Chat from './widget/chat'
@@ -53,10 +49,8 @@ import {
 export default {
   name: 'bax',
   components: {
-    HuoDongIntro,
     NewUserIntro,
     AddUserLead,
-    HuoDongBtn,
     WechatScan,
     BackToTop,
     Sidebar,
@@ -76,8 +70,7 @@ export default {
       newUserIntroMode: '',
       pending: 0,
       notice: '近期因360家电维修行业被整治，目前360渠道关于家电维修的订单会全部下线，请知晓',
-      showNotice: true,
-      huoDongIntroVisible: !document.referrer.includes('/a/quanwangtong')
+      showNotice: true
     }
   },
   computed: {
