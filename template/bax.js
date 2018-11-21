@@ -23,6 +23,7 @@ import AdList from 'com/ssp-ad-list'
 
 // 精品官网
 import GwCharge from 'com/gw-charge'
+import GwHomepage from 'com/gw-homepage'
 
 // global
 // import OperationLog from 'com/operation-log'
@@ -64,6 +65,10 @@ Vue.component('chart', ECharts)
 Vue.use(Vue2Filters)
 
 const gwRoutes = [{
+  component: GwHomepage,
+  path: '/main/gw',
+  name: 'gw-homepage'
+}, {
   component: GwCharge,
   path: '/main/gw/charge',
   name: 'gw-charge'

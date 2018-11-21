@@ -50,8 +50,10 @@
             <i class="material-icons" style="font-size: 16px; margin-right: 11px; vertical-align: -3px;">dvr</i>标王推广
           </router-link>
         </el-menu-item> -->
-        <el-menu-item index="ka" @click="goKaPage">
-          <i class="el-icon-news" />精品官网
+        <el-menu-item index="gw-homepage">
+          <router-link :to="{name: 'gw-homepage'}" tag="p">
+            <i class="el-icon-news" />精品官网
+          </router-link>
         </el-menu-item>
         <el-menu-item index="qwt-dashboard">
           <router-link :to="{ name: 'qwt-dashboard' }" tag="p">
@@ -205,9 +207,6 @@ export default {
           ...q
         }
       })
-    },
-    goKaPage() {
-
     }
   },
   created() {
