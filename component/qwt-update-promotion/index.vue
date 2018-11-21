@@ -105,36 +105,6 @@
           @change-offset="offset => currentKeywordsOffset = offset"
           @delete-word="handleDeleteWord"
         />
-        <h3 v-if="!isSales">
-          <label>关键词不够？</label>
-          <a @click="switchWordsVisible">点此自定义添加</a>
-        </h3>
-        <div v-if="searchRecommendsVisible">
-          <span>
-            <el-input placeholder="请输入关键词"
-              v-model.trim="queryWord" @keyup.native.enter="queryRecommendedWords" />
-          </span>
-          <el-button type="primary" @click="queryRecommendedWords">
-            查询
-          </el-button>
-          <strong>
-            （请优先添加较为核心的关键词，关键词长度不宜超过5个字，不区分大小写。）
-          </strong>
-        </div>
-        <keyword-list
-          v-if="searchRecommendsVisible"
-          mode="select"
-          :platform="getProp('source')"
-          :words="addibleWords"
-          :offset="addibleWordsOffset"
-          :selected-words="promotion.newKeywords"
-          :campaign-offline="isCampaignOffline"
-          :campaign-online="isCampaignOnline"
-          @update-word="updateNewWord"
-          @change-offset="setAddibleWordsOffset"
-          @select-words="words => promotion.newKeywords = [...words]"
-          @operated-pages="pages => searchRecommendsPages = pages"
-        />
       </section>
       <section class="timing">
         <header>设置时长和预算</header>
@@ -413,13 +383,10 @@ export default {
       landingTypeOpts,
       keywordsPrice: '',
       durationSelectorVisible: false,
-      // FIXME:
-      searchRecommendsVisible: false,
       areaDialogVisible: false,
 
       currentKeywordsOffset: 0,
-      // FIXME:
-      addibleWordsOffset: 0,
+
       isUpdating: false,
       queryWord: '',
       // 注: 此处逻辑比较容易出错, 此处 定义为 undefined 与 getXXXdata 处 密切相关
@@ -442,8 +409,6 @@ export default {
       },
 
       moreSettingDisplay: false,
-
-      searchRecommendsPages: [0], // for logging
 
       SEM_PLATFORM_SHENMA,
       SEM_PLATFORM_BAIDU,
@@ -508,12 +473,6 @@ export default {
 
           return {...w}
         })
-    },
-    addibleWords() {
-      const words = this.currentKeywords.map(w => w.word.toLowerCase())
-
-      return this.recommendedWords
-        .filter(w => !words.includes(w.word.toLowerCase()))
     },
     checkCreativeBtnDisabled() {
       const data = this.getUpdatedCreativeData()
@@ -585,10 +544,6 @@ export default {
     },
     toggleDisplaySettingArea() {
       this.moreSettingDisplay = !this.moreSettingDisplay
-    },
-    setAddibleWordsOffset(offset) {
-      // FIXME:
-      this.addibleWordsOffset = offset
     },
     setLandingPage(url) {
       this.promotion.landingPage = url
@@ -699,19 +654,6 @@ export default {
           })
         }
       }
-    },
-    updateNewWord(word) {
-      // FIXME:
-      this.promotion.newKeywords = this.promotion.newKeywords.map(w => {
-        if (w.word === word.word) {
-          return {
-            ...w,
-            price: word.price
-          }
-        } else {
-          return {...w}
-        }
-      })
     },
     getUpdatedCreativeData() {
       const {
@@ -878,9 +820,7 @@ export default {
         baxId: userInfo.id,
         campaignId: id,
         actionTrackId,
-        searchRecommends: this.addibleWords.length,
         selectedSearchRecommends: this.promotion.newKeywords.length,
-        searchRecommendsPages: this.searchRecommendsPages.length
       })
 
       try {
@@ -964,28 +904,6 @@ export default {
         name: 'qwt-promotion-list'
       })
     },
-    // FIXME:
-    async queryRecommendedWords() {
-      const { queryWord } = this
-
-      if (!queryWord) {
-        return Message.error('请输入查询关键词')
-      }
-
-      const preLength = this.addibleWords.length
-      await store.recommendByWord(queryWord, this.getProp('areas'))
-      this.addibleWordsOffset = preLength
-
-      // 默认选中搜索词
-      const match = this.addibleWords.find(item => item.word === queryWord)
-
-      if (match) {
-        const has = this.promotion.newKeywords.find(item => item.word === match.word)
-        if (!has) {
-          this.promotion.newKeywords.push(match)
-        }
-      }
-    },
     async checkCreativeContent() {
       const creativeContent = this.getProp('creativeContent')
       const creativeTitle = this.getProp('creativeTitle')
@@ -1017,10 +935,6 @@ export default {
           campaignId: id
         }
       })
-    },
-    // FIXME:
-    switchWordsVisible() {
-      this.searchRecommendsVisible = !this.searchRecommendsVisible
     },
     onChangeAreas(areas) {
       this.promotion.areas = [...areas]
@@ -1074,12 +988,13 @@ export default {
         const landingPage = this.promotion.landingPage || this.getProp('landingPage')
         const areas = this.promotion.areas || this.getProp('areas')
         const campaignId = +this.$route.params.id
+
         const recommendKeywords = await recommendByUrl(landingPage, areas, campaignId)
         if (!recommendKeywords.length) return this.$message.info('无法提供推荐关键词')
         newKeywords = this.filterExistCurrentWords(store.fmtNewKeywordsPrice(recommendKeywords)).slice(0, 5)
         if (!newKeywords.length) return this.$message.info('没有更多的关键词可以推荐啦')
       }
-      this.promotion.newKeywords = this.promotion.newKeywords.concat(newKeywords)
+      this.promotion.newKeywords = newKeywords.concat(this.promotion.newKeywords)
     },
     handleDeleteWord(w) {
       const {isNew, ...word} = w
@@ -1107,7 +1022,6 @@ export default {
         ...word,
         price
       }))
-      console.log(this.promotion.newKeywords, this.promotion.updatedKeywords)
     },
     disabledDate,
     f2y
