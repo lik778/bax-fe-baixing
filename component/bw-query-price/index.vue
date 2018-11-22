@@ -55,14 +55,12 @@
       @ok="onAreasChange"
       @cancel="areaDialogVisible = false"
     />
-    <shopping-cart :items="cartItems" />
   </div>
 </template>
 
 <script>
   import AreaSelector from 'com/common/area-selector'
   import ResultRow from './result-row'
-  import ShoppingCart from 'com/common/bw-shopping-cart'
 
   import {queryKeywordPrice} from 'api/biaowang'
   import clone from 'clone'
@@ -78,7 +76,6 @@
     components: {
       AreaSelector,
       ResultRow,
-      ShoppingCart
     },
     props: {
       userInfo: {
@@ -104,7 +101,6 @@
         },
         skus: [],
         selected: [],
-        cartItems: [],
 
         areaDialogVisible: false,
         loading: false
@@ -153,7 +149,7 @@
               cities: areas
             })
             this.skus = results.map(item => {
-              return Object.entries(item.price).map(entry => {
+              return Object.entries(item.soldPriceMap).map(entry => {
                 return {
                   ...item,
                   days: +entry[0],
@@ -168,8 +164,7 @@
         })
       },
       addToCart() {
-        console.log(this.selected)
-        this.cartItems = clone(this.selected)
+        this.$parent.$refs.bwShoppingCart.addToCart(this.selected)
         this.selected = []
       }
     }

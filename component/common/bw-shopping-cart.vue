@@ -42,15 +42,9 @@
 
   export default {
     name: 'bw-shopping-cart',
-    props: {
-      items: {
-        type: Array,
-        default: () => []
-      }
-    },
     data() {
       return {
-        localItems: clone(this.items),
+        localItems: [],
 
         gwSelected: false,
         show: false,
@@ -83,15 +77,15 @@
       },
       onHandleClick() {
         this.show = !this.show
+      },
+      addToCart(items) {
+        const newItems = items.filter(i => !this.localItems.some(j => j.word === i.word))
+        if (newItems.length) {
+          this.localItems.push(...clone(newItems))
+        }
       }
     },
     watch: {
-      items(items) {
-        const newItems = items.filter(i => !this.localItems.some(j => j.word === i.word))
-        if (newItems.length) {
-          this.localItems.push(...newItems)
-        }
-      },
       localItems: {
         handler: function(local) {
           localStorage.setItem(storageKey, JSON.stringify(local))

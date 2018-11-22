@@ -3,7 +3,6 @@
     <div class="white-bg">
       <header>我的标王推广计划</header>
       <main>
-        <shopping-cart :items="items" />
         <router-link :to="{name: 'bw-query-price'}">
           <el-button class="create-plan" type="primary"><i class="el-icon-plus" ></i>新建标王计划</el-button>
         </router-link>
@@ -44,7 +43,7 @@
           <el-form-item label="城市">{{xufeiForm.cities}}</el-form-item>
           <el-form-item label="投放平台">{{xufeiForm.device}}</el-form-item>
           <el-form-item label="购买天数">
-            <el-radio v-model="xufeiForm.days" :label="+option[0]" v-for="(option, index) in Object.entries(xufeiForm.price)" :key="index">{{option[0]}}天{{f2y(option[1])}}元</el-radio>
+            <el-radio v-model="xufeiForm.days" :label="+option[0]" v-for="(option, index) in Object.entries(xufeiForm.soldPriceMap)" :key="index">{{option[0]}}天{{f2y(option[1])}}元</el-radio>
           </el-form-item>
           <el-form-item label="">
             <el-button @click="xufeiDialogVisible = false">取消续费</el-button>
@@ -57,7 +56,6 @@
 </template>
 
 <script>
-  import ShoppingCart from 'com/common/bw-shopping-cart'
   import BaxPagination from 'com/common/pagination'
   import {promoteStatusOpts, DEVICE, PROMOTE_STATUS} from 'constant/biaowang'
   import {getPromotes, queryKeywordPrice} from 'api/biaowang'
@@ -66,12 +64,10 @@
     getCnName
   } from 'util'
   import moment from 'moment'
-  import clone from 'clone'
 
   export default {
     name: 'bw-plan-list',
     components: {
-      ShoppingCart,
       BaxPagination
     },
     props: {
@@ -87,13 +83,12 @@
           limit: 20,
           total: 0,
         },
-        items: [],
         promotes: [],
         xufeiForm: {
           word: '',
           cities: [],
           device: 0,
-          price: {},
+          soldPriceMap: {},
           days: 0
         },
         xufeiDialogVisible: false,
@@ -119,14 +114,13 @@
         })
         this.xufeiForm = result[0]
         this.xufeiDialogVisible = true
-        console.log(this.xufeiForm)
       },
       addToCart() {
         const item = {
           ...this.xufeiForm,
-          price: this.xufeiForm.price[this.xufeiForm.days]
+          price: this.xufeiForm.soldPriceMap[this.xufeiForm.days]
         }
-        this.items.push(clone(item))
+        this.$parent.$refs.bwShoppingCart.addToCart([item])
       },
       cityFormatter({cities}) {
         return cities.map(city => getCnName(city, this.allAreas)).join(',')
