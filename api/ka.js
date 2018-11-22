@@ -35,7 +35,15 @@ export async function baxUserLogin() {
 
 export async function kaSimpleReport() {
   const body = await ka
-    .get('/user/simple-report')
+    .get('/bax/user/simple-report')
+    .json()
+
+  return toCamelcase(body.data)
+}
+
+export async function kaNavigation() {
+  const body = await ka
+    .get('/bax/user/navigation')
     .json()
 
   return toCamelcase(body.data)

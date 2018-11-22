@@ -51,8 +51,13 @@
           </router-link>
         </el-menu-item> -->
         <el-menu-item index="gw-homepage">
-          <router-link :to="{name: 'gw-homepage'}" tag="p">
+          <a href="/ka/main" v-if="isRenderSiteLink" style="color: inherit">
             <i class="el-icon-news" />精品官网
+            <strong v-if="isRenderSiteNavTag" style="color: rgb(255, 99, 80); font-size: 18px;">!</strong>
+          </a>
+          <router-link :to="{name: 'gw-homepage'}" tag="p" v-else>
+            <i class="el-icon-news" />精品官网
+            <strong v-if="isRenderSiteNavTag" style="color: rgb(255, 99, 80); font-size: 18px;">!</strong>
           </router-link>
         </el-menu-item>
         <el-menu-item index="qwt-dashboard">
@@ -126,6 +131,7 @@ import {
   allowSeeBxAd
 } from 'util/role'
 
+import { baxUserLogin, kaNavigation } from 'api/ka'
 
 const MENU_GROUP_MAP = {
   'qwt-campaign': ['qwt-create-promotion', 'qwt-promotion-list', 'qwt-dashboard'],
@@ -148,7 +154,9 @@ export default {
     return {
       version,
       defaultActive: null,
-      defaultOpeneds: null
+      defaultOpeneds: null,
+      isRenderSiteLink: false,
+      isRenderSiteNavTag: false
     }
   },
   watch: {
@@ -186,7 +194,7 @@ export default {
     }
   },
   methods: {
-    _initNavMenu() {
+    async _initNavMenu() {
       const route = this.$route
       let defaultActive = route.name
 
@@ -197,6 +205,12 @@ export default {
         return defaultOpeneds
       }, [])
       this.defaultActive = defaultActive
+
+      // 获取ka nav 数据
+      await baxUserLogin()
+      const { offlineSiteNum, canUseTicketsNum, allTicketsNum } = await kaNavigation()
+      this.isRenderSiteNavTag = !!(offlineSiteNum || canUseTicketsNum)
+      this.isRenderSiteLink = !!allTicketsNum
     },
     toBuyKaOrGw() {
       const q = this.$route.query
