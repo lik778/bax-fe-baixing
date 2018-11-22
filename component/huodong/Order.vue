@@ -75,7 +75,7 @@ export default {
   display: flex;
   flex-flow: column;
   width: 610px;
-  border: solid 1px #5D00C6;
+  border: solid 1px #C5007A;
   font-weight: lighter;
 
   & > header {
@@ -86,7 +86,7 @@ export default {
     font-size: 14px;
     font-weight: 600;
     color: #fff;
-    border-bottom: 1px dashed #5D00C6;
+    border-bottom: 1px dashed #C5007A;
 
     & > p {
       display: flex;
@@ -135,10 +135,10 @@ export default {
     }
 
     & > div:not(:last-child) {
-      border-bottom: dashed 1px #5D00C6;
+      border-bottom: dashed 1px #C5007A;
     }
 
-    border-bottom: solid 1px #5D00C6;
+    border-bottom: solid 1px #C5007A;
   }
 
   & > footer {

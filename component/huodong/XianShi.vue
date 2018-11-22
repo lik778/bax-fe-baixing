@@ -20,7 +20,7 @@
           @discount-total="total => discountTotal = total"
           @price-total="total => priceTotal = total"
         >
-          <p><strong class="tag">赠</strong>精品官网买一送一</p>
+          <p><strong class="tag">赠</strong>精品官网买一年送半年</p>
         </order>
       </div>
 
@@ -68,7 +68,6 @@
 </template>
 
 <script>
-import SimpleCard from './SimpleCard'
 import Order from './Order'
 import Card from './Card'
 import ContractAck from 'com/widget/contract-ack'
@@ -100,16 +99,16 @@ import {
 const pkgs = [
   {
     name: '精品官网',
-    flag: '买一送一',
+    flag: 'http://file.baixing.net/201811/729711e63f828e4f0239576987a5324b.png',
     products: [{
       productType: 4,
-      name: '精品官网买1年送1年',
-      originalPrice: 240000,
+      name: '精品官网买1年送半年',
+      originalPrice: 180000,
       price: 120000
     }]
   }, {
-    name: '精品官网超值包',
-    flag: '买一送一再减200',
+    name: '特惠包',
+    flag: 'http://file.baixing.net/201811/b02412dc8014897fdc1676e829f922a2.png',
     products: [{
       productType: 3,
       name: '推广资金',
@@ -117,13 +116,13 @@ const pkgs = [
       price: 58800
     }, {
       productType: 4,
-      name: '精品官网买1年送1年',
-      originalPrice: 240000,
+      name: '精品官网买1年送半年',
+      originalPrice: 180000,
       price: 100000
     }]
   }, {
-    name: '精品官网特惠包',
-    flag: '买一送一再减600',
+    name: '超值包',
+    flag: 'http://file.baixing.net/201811/9fb67142559c3f329fe31ef22ab8ee9b.png',
     products: [{
       productType: 3,
       name: '推广资金',
@@ -131,9 +130,23 @@ const pkgs = [
       price: 508800
     }, {
       productType: 4,
-      name: '精品官网买1年送1年',
-      originalPrice: 240000,
+      name: '精品官网买1年送半年',
+      originalPrice: 180000,
       price: 60000
+    }]
+  }, {
+    name: '尊享包',
+    flag: 'http://file.baixing.net/201811/e7b0c9d528862eb7f8f92102bb399111.png',
+    products: [{
+      productType: 3,
+      name: '推广资金',
+      originalPrice: 998800,
+      price: 998800
+    }, {
+      productType: 4,
+      name: '精品官网买1年送半年',
+      originalPrice: 180000,
+      price: 20000
     }]
   }
 ]
@@ -148,7 +161,6 @@ export default {
     user: Object
   },
   components: {
-    SimpleCard,
     Card,
     ContractAck,
     Order,
@@ -402,7 +414,7 @@ export default {
   justify-content: space-between;
 
   & > .gw-card {
-    width: 321px;
+    width: 280px;
     margin-bottom: 27px;
 
     & > .content > .gw-content {
@@ -410,7 +422,7 @@ export default {
       display: flex;
       flex-direction: column;
       justify-content: space-around;
-      font-size: 20px;
+      font-size: 18px;
       & > p {
         margin-bottom: 5px;
         margin-top: 5px;
@@ -429,7 +441,7 @@ div.xianshi > section {
   padding: 27px 13px 27px 35px;
   border-radius: 8px;
   color: #fff;
-  background-color: #380098;
+  background-color: #9B0060;
   margin-bottom: 20px;
 
   & > .title {
@@ -437,7 +449,7 @@ div.xianshi > section {
     margin-bottom: 16px;
     padding-bottom: 10px;
     font-size: 18px;
-    border-bottom: 1px solid #5D00C6;
+    border-bottom: 1px solid #C5007A;
   }
 
 
@@ -479,11 +491,11 @@ div.xianshi > section {
         display: flex;
         align-items: center;
         & > input {
-          background-color: #5E00FF;
+          background-color: #C7007B;
           width: 167px;
           height: 32px;
           border: none;
-          color: #fff;
+          color: #FFC1E7;
           border-radius: 4px;
           padding-left: 5px;
         }

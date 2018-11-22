@@ -1,12 +1,11 @@
 <template>
   <section>
-    <img />
+    <img src="http://file.baixing.net/201811/6834bec9a2d41fc68c5b92532873535f.png" />
     <div class="rules">
-      <p><span>1</span>活动时间：10月25日-11月20日</p>
-      <p><span>1</span>优惠券可在电脑端全网通系统-首页中查看，30天内有效；优惠券不与本次活动同享</p>
+      <p><span>1</span>活动时间：12月5日-12月31日</p>
+      <p><span>2</span>优惠券不与本次活动同享</p>
       <p><span>3</span>购买前请阅读违禁行业类目；对于违禁行业，不能进行全网通推广，如购买后不支持退款；违禁行业类目见：<a href="http://bax.baixing.com.cn/qa?mode=questions"><strong>http://bax.baixing.com.cn/qa?mode=questions</strong></a></p>
-      <p><span>4</span>本次活动精品官网和推广资金不支持退款，如有疑问请致电客服 <strong>400-036-3650</strong></p>
-      <p><span>5</span>解释权归百姓网所有</p>
+      <p><span>5</span>解释权归百姓网所有，如有疑问请致电客服 <strong>400-036-3650</strong></p>
     </div>
   </section>
 </template>
@@ -26,7 +25,10 @@ section {
   margin-bottom: 20px;
   font-weight: lighter;
 }
-
+img {
+  display: block;
+  margin: auto;
+}
 .rules {
   & > p {
     margin-bottom: 10px;
@@ -37,7 +39,7 @@ section {
       text-align: center;
       margin-right: 10px;
       border-radius: 50%;
-      background-color: #8616FF;
+      background-color: #C7007B;
       color: white;
     }
     & > a > strong, & > strong {

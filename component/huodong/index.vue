@@ -22,11 +22,11 @@
             <xian-shi :status="tabs[0].status" :user-discounts="userDiscounts"
             :user-id="query.userId" :sales-id="query.salesId" :user="user"/>
           </div>
-          <div v-if="activeTab === 1">
+          <!-- <div v-if="activeTab === 1">
             <man-song :status="tabs[1].status" :user-discounts="userDiscounts" :user-id="query.userId" :sales-id="query.salesId" :user="user"/>
-          </div>
-          <div v-if="activeTab === 2">
-            <biao-wang :status="tabs[2].status" :user="user" />
+          </div> -->
+          <div v-if="activeTab === 1">
+            <biao-wang :status="tabs[1].status" :user="user" />
           </div>
         </div>
       </main>
@@ -36,7 +36,6 @@
 
 <script>
 
-import ManSong from './ManSong'
 import BiaoWang from './BiaoWang'
 import XianShi from './XianShi'
 import {Message} from 'element-ui'
@@ -56,7 +55,6 @@ import track from 'util/track'
 export default {
   name: 'huodong',
   components: {
-    ManSong,
     BiaoWang,
     XianShi
   },
@@ -64,23 +62,17 @@ export default {
     return {
       activeTab: 0,
       tabs: [{
-        title: '限时买一送一',
-        timeRange: '10.25-11.5',
+        title: '精品官网/买1年送半年',
+        timeRange: '12.5-12.31',
         status: '预热中',
-        desc: '优惠规则：活动期间买精品官网，加送1年官网使用时长。任意套餐和单独买精品官网均可享受！',
-        period: [Date.UTC(2018, 9, 24, 9), Date.UTC(2018, 10, 5, 16)],
+        desc: '优惠规则：12.05-12.31期间买精品官网，加送6个月官网使用时长。任意套餐和单独买精品官网均可享受！',
+        period: [Date.UTC(2018, 11, 4, 9), Date.UTC(2018, 11, 31, 16)],
       }, {
-        title: '满送(最高1500)',
-        timeRange: '11.6-11.20',
+        title: '标王折扣狂欢',
+        timeRange: '12.5-12.31',
         status: '预热中',
-        desc: '优惠规则：活动期间买任意产品（推广资金+精品官网）实付满1000送50元；满4000送350元；满10000送1500元 无门槛推广资金券 ，有效期30天',
-        period: [Date.UTC(2018, 10, 5, 16), Date.UTC(2018, 10, 20, 16)],
-      }, {
-        title: '标王折上折',
-        timeRange: '10.25-11.20',
-        status: '预热中',
-        desc: '优惠规则：活动期间买任意标王关键词1000-4999, 8.8折; 5000－9999，8折；10000-14999，7折；15000及以上，7折且赠送1年精品官网',
-        period: [Date.UTC(2018, 9, 24, 9), Date.UTC(2018, 10, 20, 16)],
+        desc: '温馨提示：标王，官网券抢购方式，请联系您的专属销售或者咨询客服：400-036-3650 查价购买',
+        period: [Date.UTC(2018, 11, 4, 9), Date.UTC(2018, 11, 31, 16)],
       }],
       discounts: [],
 
@@ -188,7 +180,7 @@ body {
   & > .nav-container {
     height: 48px;
     padding-top: 10px;
-    width: 1000px;
+    width: 1150px;
     margin: auto;
 
     & > a:first-of-type > img {
@@ -202,15 +194,15 @@ body {
   }
 }
 .hd-container {
-  background-image: url('http://file.baixing.net/201810/666580479c1bf083f2012ff0f8bd7ecd.png');
+  background-image: url('http://file.baixing.net/201811/e55485a14b37581e54b5e827a8cb1fdd.png');
   background-position: center 0;
-  background-color: #3E00C1;
+  background-color: #CE0054;
   background-repeat: no-repeat;
   padding-bottom: 50px;
 
   & > main {
-    width: 1000px;
-    padding-top: 343px;
+    width: 1150px;
+    padding-top: 670px;
     margin: auto;
 
     & > .tabs {
@@ -224,8 +216,8 @@ body {
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        color: #CFA5FF;
-        background-color: #5F00C9;
+        color: #FFC1E7;
+        background-color: #BF0076;
         border-radius: 50px 50px 0 0;
         cursor: pointer;
 
@@ -235,19 +227,19 @@ body {
         }
         & > .status {
           padding: 3px 21px;
-          color: #C189FF;
+          color: #E0C4FF;
           border-radius: 20px;
-          background-color: #380098;
+          background-color: #9B0060;
           font-size: 14px;
         }
       }
       & > .tab.active {
-        color: #5F00C9;
-        background-color: #ffd500;
+        color: #9B0060;
+        background-color: #FFBD89;
 
         & > .status {
           color: #AE3A09;
-          background-color: #FFAE00;
+          background-color: #FFB679;
         }
       }
       & > .tab.over {
@@ -266,7 +258,7 @@ body {
       font-size: 14px;
       color: #AE3A09;
       border-radius: 0 0 10px 10px;
-      background-color: #ffd500;
+      background-color: #FFBD89;
       margin-bottom: 20px;
     }
 

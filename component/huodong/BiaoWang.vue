@@ -1,35 +1,37 @@
 <template>
   <div>
     <section>
-      <h3 class="title">标王折上折</h3>
-      <div class="content">
-        <p>购买任意关键词</p>
-        <table>
-          <tbody>
-            <tr>
-              <td>满<strong>1000-4999</strong></td>
-              <td><span>活动价<strong>8.8</strong>折</span></td>
-            </tr>
-            <tr>
-              <td>满<strong>5000-9999</strong></td>
-              <td><span>活动价<strong>8</strong>折</span></td>
-            </tr>
-            <tr>
-              <td>满<strong>10000-14999</strong></td>
-              <td><span>活动价<strong>7</strong>折</span></td>
-            </tr>
-            <tr>
-              <td>满<strong>15000及以上</strong></td>
-              <td><span>活动价<strong>7</strong>折</span>+<strong>赠送一年精品官网</strong></td>
-            </tr>
-            <tr>
-              <td>
-                <button @click="onClick" :disabled="status !== '进行中'">{{btnText}}</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      <div class="tehui">
+        <img src="http://file.baixing.net/201811/889923e16034e6124ca6a619155ba04a.png" alt="">
+        <div class="pics">
+          <img src="http://file.baixing.net/201811/e599da7ca93f5318ab763eb8b7686850.png" alt="">
+          <img src="http://file.baixing.net/201811/9978cf6a9464544c0508414886e99316.png" alt="">
+          <img src="http://file.baixing.net/201811/d2d714d3d00f2a1d06d5b7dfd42893bf.png" alt="">
+        </div>
 
+        <div class="content">
+          <p>买标王送官网</p>
+          <table>
+            <tbody>
+              <tr>
+                <td>满<strong>1000-4999</strong></td>
+                <td>送精品官网（1年）</td>
+                <td><span><strong>200元</strong>无门槛直减券</span></td>
+              </tr>
+              <tr>
+                <td>满<strong>5000-9999</strong></td>
+                <td>送精品官网（1年）</td>
+                <td><span><strong>600元</strong>无门槛直减券</span></td>
+              </tr>
+              <tr>
+                <td>满<strong>10000-14999</strong></td>
+                <td>送精品官网（1年）</td>
+                <td><span><strong>1000元</strong>无门槛直减券</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <button @click="onClick" :disabled="status !== '进行中'">{{btnText}}</button>
       </div>
     </section>
     <rules />
@@ -88,7 +90,7 @@ section {
   padding: 27px 13px 27px 35px;
   border-radius: 8px;
   color: #fff;
-  background-color: #380098;
+  background-color: #9B0060;
   margin-bottom: 20px;
   font-weight: lighter;
 
@@ -100,45 +102,65 @@ section {
     font-size: 18px;
     border-bottom: 1px solid #5D00C6;
   }
-  & > .content {
-    font-size: 18px;
-    display: flex;
-    align-content: flex-start;
-
-    & > p {
-      margin-top: 4px;
-      margin-right: 20px;
-    }
-    & > table td {
-      padding: 0 10px 10px;
-    }
-    & > table strong {
-      color: #FFD500;
-      font-size: 20px;
-      margin: 0 10px;
-    }
-    & > table span.original {
-      text-decoration: line-through;
-      color: #9B61FF;
-      margin: 0 10px;
-    }
-    & > table button {
+  & > div {
+    & > button {
       display: inline-block;
-      width: 110px;
-      height: 32px;
+      width: 240px;
+      height: 60px;
       text-align: center;
       text-decoration: none;
       background-color: #FFD500;
       color: #5F00C9;
-      font-size: 14px;
+      font-size: 24px;
       font-weight: bold;
       margin-top: 50px;
       border-radius: 4px;
     }
-    & > table button[disabled] {
+    & > button[disabled] {
       color: #666;
       background-color: #DBDBDB;
     }
+    & > .content {
+      align-self: flex-start;
+      font-size: 18px;
+      display: flex;
+      align-content: flex-start;
+
+      & > p {
+        margin-top: 4px;
+        margin-right: 20px;
+        margin-left: 100px;
+      }
+      & > table td {
+        padding: 0 10px 10px;
+      }
+      & > table strong {
+        color: #FFD500;
+        font-size: 20px;
+        margin: 0 10px;
+      }
+      & > table span.original {
+        text-decoration: line-through;
+        color: #9B61FF;
+        margin: 0 10px;
+      }
+    }
   }
+
+}
+.tehui {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  & > img {
+    margin-bottom: 27px;
+  }
+}
+.pics {
+  width: 900px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 46px;
 }
 </style>

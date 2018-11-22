@@ -1,8 +1,7 @@
 <template>
   <div class="card" :class="{active}">
     <div class="flag">
-      <div class="flag-text">{{flag}}</div>
-      <div class="flag-corner"></div>
+      <img :src="flag" alt="">
     </div>
     <div class="title">{{title}}</div>
     <div class="content">
@@ -60,7 +59,7 @@
       font-size: 12px;
       text-align: center;
       height: 35px;
-      color: #380098;
+      color: #BF0076;
       width: 50px;
       background-color: #FFD500;
     }
@@ -71,7 +70,8 @@
     }
   }
   & > .title {
-    background-color: #5700EB;
+    background-color: #C7007B;
+    color: #FFC1E7;
     height: 50px;
     line-height: 50px;
     font-size: 18px;
@@ -80,7 +80,7 @@
   & > .content {
     padding: 30px 15px;
     font-size: 16px;
-    background-color: #380098;
+    background-color: #9B0060;
   }
 
   & > .footer {
@@ -88,8 +88,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    border-top: 1px solid #5D00C6;
-    background-color: #380098;
+    border-top: 1px solid #C5007A;
+    background-color: #9B0060;
 
     & > .price {
       font-size: 28px;
@@ -97,20 +97,23 @@
     }
     & > .original-price {
       text-decoration: line-through;
-      color: #A681FF;
+      color: #F70098;
     }
   }
 }
 .card.active {
   color: #FFD500;
   border: 2px solid #FFD500;
+  & > .title {
+    color: #FFD500;
+  }
 
   & > p {
     position: absolute;
     height: 0;
     width: 0;
-    right: 10px;
-    bottom: 0px;
+    left: 20px;
+    top: 0px;
   }
 
   & i.icon-check {
@@ -118,7 +121,7 @@
     font-weight: 600;
     border-radius: 50%;
     background: #FFD500;
-    color: #5F00C9;
+    color: #9B0060;
   }
 }
 </style>
