@@ -84,7 +84,8 @@
 
         landingTypeOpts,
         creativeError: '',
-        isLoading: false
+        isLoading: false,
+        showNotice: false
       }
     },
     computed: {
@@ -95,7 +96,7 @@
       },
     },
     async mounted() {
-      const {orderId, promoteId} = this.$route.query
+      const {promoteId, orderIds: orderIdsString, notice} = this.$route.query
       if (promoteId) {
         const onePromote = await getPromoteById(promoteId)
         this.promotes = [onePromote]
@@ -109,8 +110,12 @@
         }
         this.form.landingPageId = '1472828515'
       }
-      if (orderId) {
-        this.promotes = await getPromtesByOrders
+      if (orderIdsString) {
+        const orderIds = orderIdsString.split(',')
+        this.promotes = await getPromtesByOrders(orderIds)
+      }
+      if (notice === 'true' || notice === '1') {
+        this.showNotice = true
       }
     },
     methods: {
