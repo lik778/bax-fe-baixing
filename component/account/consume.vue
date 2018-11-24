@@ -1,5 +1,5 @@
 <template>
-  <div class="consume">
+  <div class="consume layout-container">
     <section-header>消耗查询</section-header>
     <content>
       <div>

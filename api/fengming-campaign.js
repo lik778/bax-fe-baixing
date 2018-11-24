@@ -125,3 +125,21 @@ export async function getCampaignRadar() {
 
   return toCamelcase(body.data)
 }
+
+export async function getCampaignLanding(query) {
+  const body = await fengming
+    .get('/campaign/current_landing')
+    .query(query)
+    .json()
+
+  return toCamelcase(body.data)
+}
+
+export async function getCurrentCampaigns(query) {
+  const body = await fengming
+    .get('/campaign/current')
+    .query(query)
+    .json()
+
+  return toCamelcase(body.data)
+}

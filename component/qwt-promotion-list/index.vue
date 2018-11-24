@@ -18,10 +18,10 @@
           <div class="column">
             <h6 class="title">投放状态</h6>
             <div class="checkbox-group">
-              <el-checkbox-group v-model="params.status">
+              <el-checkbox-group v-model="queryParams.statuses">
                 <el-checkbox
                   class="checkbox"
-                  v-for="c in STATUS_OPTS"               
+                  v-for="c in CAMPAIGN_STATUS_OPTS"               
                   :key="c.value" 
                   :label="c.value"
                 >
@@ -33,7 +33,7 @@
           <div class="column source">
             <h6 class="title">渠道来源</h6>
             <div class="checkbox-group">
-              <el-checkbox-group v-model="params.source">
+              <el-checkbox-group v-model="queryParams.source">
                 <el-checkbox
                   class="checkbox"
                   v-for="c in SOURCES_OPTS"               
@@ -48,7 +48,7 @@
           <div class="column area">
             <span class="title">渠道区域</span>
             <el-tag
-              v-for="a in params.areas"
+              v-for="a in queryParams.areas"
               @close="removeSelectedArea(a)"
               :key="a"
               type="danger"
@@ -62,10 +62,10 @@
           <div class="column">
             <h6 class="title hightlight">投放优化</h6>
             <div class="checkbox-group">
-              <el-checkbox-group v-model="params.source">
+              <el-checkbox-group v-model="queryParams.statuses">
                 <el-checkbox
                   class="checkbox"
-                  v-for="c in SOURCES_OPTS"               
+                  v-for="c in CAMPAIGN_OPTIMIZATION_OPTS"               
                   :key="c.value" 
                   :label="c.value"
                 >
@@ -76,11 +76,19 @@
           </div>
         </div>
       </div>
-      <list class="list"/>
+      <list
+        class="list"
+        v-if="landingPageList"
+        :landingPageList="landingPageList"
+        :landingPageLoading="landingPageLoading"
+        :campaignMap="campaignMap"
+        @expand-change="fetchPromotionList"
+        @reload-promotion="fetchPromotionList"
+      />
     </main>
     <area-selector
       type="qwt"
-      :areas="params.areas"
+      :areas="queryParams.areas"
       :all-areas="allAreas"
       :visible="areaDialogVisible"
       :enable-china="false"
@@ -91,37 +99,75 @@
 </template>
 
 <script>
-import {
-  semPlatformOpts as SOURCES_OPTS
-} from 'constant/fengming'
-import {getCnName } from 'util'
+import { getCnName } from 'util'
 
 import List from './list'
 import AreaSelector from 'com/common/area-selector'
 
-const STATUS_OPTS = Object.freeze(
+import {
+  getCampaignLanding,
+  getCurrentCampaigns
+} from 'api/fengming-campaign'
+
+import {
+  semPlatformOpts as SOURCES_OPTS,
+  campaignOptimization
+} from 'constant/fengming'
+
+const CAMPAIGN_STATUS_OPTS = Object.freeze(
   [
-    {label: '推广中/审核中', value: 100},
-    {label: '计划预算不足', value: 5},
-    {label: '账户余额不足', value: -51},
-    {label: '已暂停', value: -10},
-    {label: '已下线', value: -1},
-    {label: '审核驳回', value: -50}
+    {label: '推广中/审核中', value: '100'},
+    {label: '计划预算不足', value: '5'},
+    {label: '账户余额不足', value: '-51'},
+    {label: '已暂停', value: '-10,-50'},
+    {label: '已下线', value: '-1'},
+    {label: '审核驳回', value: '-53'}
   ]
 )
 
+const CAMPAIGN_OPTIMIZATION_OPTS = Object.freeze(
+  [
+    {label: '创意', value: campaignOptimization.STATUS_OPT_CREATIVE},
+    {label: '关键词', value: campaignOptimization.STATUS_OPT_KEYWORD},
+    {label: '渠道', value: campaignOptimization.STATUS_OPT_SOURCE},
+    {label: '账户余额', value: campaignOptimization.STATUS_OPT_PRICE},
+    {label: '投放设置', value: campaignOptimization.STATUS_OPT_SETTING}
+  ]
+)
+
+const ONE_PAGE_NUM = 10
+
+const formatlandingPageList = res => {
+  return Object.entries(res).reduce((list, [k, v]) => {
+    return list.concat({
+    ...v,
+    id: k
+  })
+  }, [])
+}
+
 export default {
   name: 'qwt-promotion-list',
+  created() {
+    this.fetchlandingPageList()
+  },
   data() {
     return {
-      STATUS_OPTS,
       SOURCES_OPTS,
+      CAMPAIGN_STATUS_OPTS,
+      CAMPAIGN_OPTIMIZATION_OPTS,
 
-      params: {
+      queryParams: {
         areas: [],
-        status: STATUS_OPTS.map(s => s.value).filter(v => v !== -1),
-        source: []
+        statuses: CAMPAIGN_STATUS_OPTS.map(s => s.value).filter(v => v !== '-1'),
+        source: [],
+        offset: 0,
+        limit: ONE_PAGE_NUM
       },
+      
+      landingPageLoading: false,
+      landingPageList: null,
+      campaignMap: {},
 
       isActionGroupExpand: false,
       areaDialogVisible: false
@@ -132,12 +178,34 @@ export default {
   methods: {
     handleSelectArea(areas) {
       
-      this.params.areas = areas
+      this.queryParams.areas = areas
       this.areaDialogVisible = false
     },
     removeSelectedArea(area) {
-      console.log(area)
-      this.params.areas = this.params.areas.filter(a => a !== area)
+      this.queryParams.areas = this.queryParams.areas.filter(a => a !== area)
+    },
+    async fetchlandingPageList() {
+      this.landingPageLoading = true
+      try {
+        const result = await getCampaignLanding(this.queryParams)
+        this.landingPageList = Object.freeze(formatlandingPageList(result))
+      } catch(err) {
+        console.error(err)
+      } finally {
+        this.landingPageLoading = false
+      }
+    },
+    async fetchPromotionList(id, campaignIds, isForceUpdate) {
+      // 判断是否已经存在
+      const campaignMap = this.campaignMap
+      const campaignMapKeys = Object.keys(campaignMap)
+      if (isForceUpdate || !campaignMapKeys.includes(id)) {
+        const campaigns = await getCurrentCampaigns({...this.queryParams, campaignIds})
+        this.campaignMap = Object.freeze({
+          ...campaignMap,
+          [id]: campaigns
+        })
+      }
     }
   },
   filters: {
@@ -146,10 +214,10 @@ export default {
     }
   },
   watch: {
-    params: {
+    queryParams: {
       deep: true,
       handler(val) {
-        console.log({...val})
+        this.fetchlandingPageList()
       }
     }
   }

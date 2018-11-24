@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <div class="layout-container">
     <section-header>我的账户</section-header>
     <el-row type="flex" justify="space-around" align="center">
-      <el-col :span="4"></el-col>
+      <el-col :span="1"></el-col>
       <el-col :span="4" class="column">
         <h3>推广资金余额</h3>
         <p><strong>{{summary.balance / 100}}</strong>元</p>
@@ -21,7 +21,7 @@
       </el-col>
       <el-col :span="16" class="column">
         <el-row class="multi">
-          <el-col :span="12">
+          <el-col :span="18">
             <div class="btn">
               <span>广告投放：</span>
               <router-link :to="{name: 'qwt-promotion-list'}"
@@ -99,6 +99,7 @@
     display: flex;
     flex-flow: column;
     align-items: center;
+    justify-content: center;
   }
   p {
     margin: 10px 0;

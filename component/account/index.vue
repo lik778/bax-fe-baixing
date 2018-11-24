@@ -2,7 +2,7 @@
 <template>
   <div class="account-container">
     <main>
-      <h1>{{ userInfo.name }}，欢迎回来</h1>
+      <h1 class="title">{{ userInfo.name }}，欢迎回来</h1>
       <account-summary />
       <consume />
       <charge />
@@ -54,10 +54,17 @@ export default {
   padding: 0 35px;
   width: 100%;
   color: #6a778c;
-  & > main {
+  & .title {
     background-color: #fff;
-    padding: 20px;
+    padding: 20px 20px 6px;
     border-radius: 4px;
+  }
+  & >>> .layout-container {
+    background-color: #fff;
+    border-radius: 4px;
+    padding: 20px;
+    box-shadow: 0 2px 9px 0 rgba(83, 95, 127, .10);
+    margin-bottom: 10px;
   }
 }
 </style>

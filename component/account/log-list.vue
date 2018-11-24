@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <section-header>操作日志</section-header>
+  <div class="layout-container">
+    <section-header>历史操作记录</section-header>
     <label>选择查询项目</label>
     <bax-select v-model="type"
       :clearable="false"

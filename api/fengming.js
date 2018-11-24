@@ -481,4 +481,3 @@ function fmtWords(words) {
     ...w
   }))
 }
-

@@ -1,5 +1,5 @@
 <template>
-  <div class="charge">
+  <div class="charge layout-container">
     <section-header>充值查询</section-header>
     <content>
       <div>

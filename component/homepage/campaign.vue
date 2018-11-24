@@ -74,11 +74,11 @@ import 'echarts/lib/chart/radar'
 
 const OPTIMIZABLE_POINTS = [
   {key: 'dailyBudget', text: '账户余额'},
-  {key: 'cntSrc', text: '关键词'},
-  {key: 'kwCtr', text: '关键词出价'},
+  {key: 'cntSrc', text: '渠道'},
+  {key: 'kwCtr', text: '创意'},
   {key: 'cntNonDefault', text: '投放设置'},
-  {key: 'kwPrice', text: '创意'},
-  {key: 'avgCntKw', text: '渠道'}
+  {key: 'kwPrice', text: '出价'},
+  {key: 'avgCntKw', text: '关键词'}
 ]
 
 const formatPrice = (p) => {

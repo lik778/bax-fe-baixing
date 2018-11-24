@@ -5,7 +5,6 @@
       <div class="layout-content">
         <div class="report">
           <div class="radio-group">
-            <el-radio v-model="selectedReportKey" label="today">今日</el-radio>
             <el-radio v-model="selectedReportKey" label="yesterday">昨日</el-radio>
             <el-radio v-model="selectedReportKey" label="weekly">过去7天</el-radio>
           </div>
