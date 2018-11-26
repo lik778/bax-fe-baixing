@@ -69,3 +69,12 @@ export async function updatePromote(opts = {}) {
     .send(opts)
     .json()
 }
+
+export async function createPreOrder(items, saleWithShopOrder) {
+  const body = await biaowang
+    .post('/trade/user/order/pre')
+    .send({pricingList: items, saleWithShopOrder})
+    .json()
+
+  return body.data
+}

@@ -36,7 +36,7 @@
 <script>
   import clone from 'clone'
   import {f2y} from 'util'
-  import {refreshKeywordPrice} from 'api/biaowang'
+  import {refreshKeywordPrice, createPreOrder} from 'api/biaowang'
 
   const storageKey = 'bw-shopping-cart'
 
@@ -70,10 +70,13 @@
       remove(index) {
         this.localItems.splice(index, 1)
       },
-      checkout() {
+      async checkout() {
+        console.log(this.localItems)
+        const preTradeId = await createPreOrder(this.localItems, this.gwSelected)
 
         // 预订单创建后，清空购物车
         this.localItems = []
+        location.href = `http://trade-dev.baixing.cn/?appId=101&seq=${preTradeId}`
       },
       onHandleClick() {
         this.show = !this.show

@@ -9,8 +9,8 @@
           </el-form-item>
           <el-form-item label="推广平台" prop="devices">
             <el-checkbox-group v-model="form.devices">
-              <el-checkbox :label="0" name="type">电脑</el-checkbox>
-              <el-checkbox :label="1" name="type">手机</el-checkbox>
+              <el-checkbox :label="1" name="type">电脑</el-checkbox>
+              <el-checkbox :label="2" name="type">手机</el-checkbox>
             </el-checkbox-group>
           </el-form-item>
           <el-form-item label="推广区域" prop="areas">
@@ -91,7 +91,7 @@
       return {
         form: {
           keyword: 'jk',
-          devices: [0],
+          devices: [1],
           areas: ['beijing']
         },
         rules: {
@@ -145,7 +145,7 @@
             const {keyword, devices, areas} = this.form
             const results = await queryKeywordPrice({
               word: keyword,
-              device: devices.length === 2 ? 2 : devices[0],
+              device: devices.length === 2 ? 0 : devices[0],
               cities: areas
             })
             this.skus = results.map(item => {

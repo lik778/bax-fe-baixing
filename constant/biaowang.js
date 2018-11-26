@@ -17,7 +17,7 @@ export const PROMOTE_STATUS = {
 export const promoteStatusOpts = toOpt(PROMOTE_STATUS)
 
 export const DEVICE = {
-  '0': '电脑',
-  '1': '手机',
-  '2': '全平台'
+  '0': '全平台',
+  '1': '电脑',
+  '2': '手机',
 }
