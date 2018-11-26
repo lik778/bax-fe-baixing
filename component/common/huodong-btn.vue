@@ -1,6 +1,6 @@
 <template>
   <div class="huodong-btn">
-    <a :href="href"><img src="http://file.baixing.net/201810/e709aea1f70ba444d8ea514590c76354.png" alt=""></a>
+    <a :href="href"><img src="http://file.baixing.net/201811/629d6d1e8b0c870fdf270e057fac567f.png" alt=""></a>
   </div>
 </template>
 
@@ -28,7 +28,7 @@ export default {
   position: fixed;
   right: 0;
   top: 50%;
-  width: 116px;
+  width: 136px;
   height: 116px;
   cursor: pointer;
 }
