@@ -306,7 +306,7 @@ export default {
       })
 
       const newOrder = {
-        activity: '181111p1',
+        activity: '181212',
         userId: this.getFinalUserId()
       }
 
