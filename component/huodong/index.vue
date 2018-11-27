@@ -52,6 +52,9 @@ import {
 } from 'util'
 import track from 'util/track'
 
+const start = Date.UTC(2018, 10, 4, 9)
+const end = Date.UTC(2018, 11, 31, 16)
+
 export default {
   name: 'huodong',
   components: {
@@ -66,13 +69,13 @@ export default {
         timeRange: '12.5-12.31',
         status: '预热中',
         desc: '优惠规则：12.05-12.31期间买精品官网，加送6个月官网使用时长。任意套餐和单独买精品官网均可享受！',
-        period: [Date.UTC(2018, 11, 4, 9), Date.UTC(2018, 11, 31, 16)],
+        period: [start, end],
       }, {
         title: '标王折扣狂欢',
         timeRange: '12.5-12.31',
         status: '预热中',
         desc: '温馨提示：标王，官网券抢购方式，请联系您的专属销售或者咨询客服：400-036-3650 查价购买',
-        period: [Date.UTC(2018, 11, 4, 9), Date.UTC(2018, 11, 31, 16)],
+        period: [start, end],
       }],
       discounts: [],
 
