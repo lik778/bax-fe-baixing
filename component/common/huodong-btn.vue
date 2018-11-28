@@ -31,5 +31,6 @@ export default {
   width: 136px;
   height: 116px;
   cursor: pointer;
+  z-index: 100;
 }
 </style>

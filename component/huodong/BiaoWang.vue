@@ -14,7 +14,7 @@
           <table>
             <tbody>
               <tr>
-                <td>满<strong>1000-4999</strong></td>
+                <td>满<strong>500-4999</strong></td>
                 <td>送精品官网（1年）</td>
                 <td><span><strong>200元</strong>无门槛直减券</span></td>
               </tr>
@@ -24,7 +24,7 @@
                 <td><span><strong>600元</strong>无门槛直减券</span></td>
               </tr>
               <tr>
-                <td>满<strong>10000-14999</strong></td>
+                <td>满<strong>10000及以上</strong></td>
                 <td>送精品官网（1年）</td>
                 <td><span><strong>1000元</strong>无门槛直减券</span></td>
               </tr>
