@@ -14,7 +14,7 @@
           <p class="discount-info">满1088元：<span class="red">赠</span>送十万火急 80 元现金券 <span class="mute">(满200元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（365天）<span class="red">减</span>立减 200 元</p>
           <p class="discount-info">满3088元：<span class="red">赠</span>送十万火急 300 元现金券 <span class="mute">(满400元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（365天）<span class="red">减</span>立减 200 元</p>
           <p class="discount-info">满5088元：<span class="red">赠</span>送十万火急 300 元现金券 <span class="mute">(满400元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（365天）<span class="red">减</span>立减 600 元</p>
-          <p class="discount-info">满10188元：<span class="red">赠</span>送十万火急 300 元现金券 <span class="mute">(满400元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（365天）<span class="red">减</span>立减 1200 元</p>
+          <p class="discount-info">满10188元：<span class="red">赠</span>送十万火急 300 元现金券 <span class="mute">(满400元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（365天）<span class="red">减</span>立减 1000 元</p>
         </div>
         <div class="charge">
           <header>选择充值推广资金包：</header>
@@ -357,7 +357,7 @@ export default {
             `
           } else {
             return `
-              <span class="red">赠</span>送十万火急 300 元现金券 <span class="mute">(满400元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（365天）立<span class="red">减</span>1200 元
+              <span class="red">赠</span>送十万火急 300 元现金券 <span class="mute">(满400元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（365天）立<span class="red">减</span>1000 元
             `
           }
       }
@@ -763,7 +763,7 @@ console.log('3', sum)
           } else if (charge.price < 1018800) {
             gwPrice = gw.price - 60000
           } else {
-            gwPrice = gw.price - 120000
+            gwPrice = gw.price - 100000
           }
           this.fullCheckedProducts = checked.map(product => {
             const {id, productType, price} = product
