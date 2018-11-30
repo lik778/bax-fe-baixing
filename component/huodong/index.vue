@@ -52,7 +52,7 @@ import {
 } from 'util'
 import track from 'util/track'
 
-const start = Date.UTC(2018, 10, 4, 9)
+const start = Date.UTC(2018, 11, 4, 9)
 const end = Date.UTC(2018, 11, 31, 16)
 
 export default {
