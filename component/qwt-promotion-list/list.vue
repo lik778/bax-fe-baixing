@@ -204,6 +204,11 @@ export default {
       }
       await updateCampaignDailyBudget(opts)
       this.$emit('reload-promotion', landingPageId, campaignIds, true)
+      this.budgetMap = {
+        ...this.budgetMap,
+        [id]: undefined
+      }
+      this.$message.success('今日预算修改成功')
     },
     handleBudgetInput(id, value) {
       this.budgetMap = {

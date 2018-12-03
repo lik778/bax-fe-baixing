@@ -242,6 +242,15 @@ export async function getQiqiaobanPageList() {
   return toCamelcase(body.data)
 }
 
+export async function getRecommandCreative(opts) {
+  const body = await fengming
+    .get('/creative/recommand')
+    .query(reverseCamelcase(opts))
+    .json()
+
+  return toCamelcase(body.data)
+}
+
 // TODO: 添加计划id
 export async function recommendByUrl(url, areas = [], campaignId = null) {
   const body = await fengming

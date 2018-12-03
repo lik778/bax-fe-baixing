@@ -47,4 +47,8 @@ i {
   align-items: center;
   color: #6a778c;
 }
+.highlight {
+  color: #B66969 !important;
+  font-weight: 600;
+}
 </style>
