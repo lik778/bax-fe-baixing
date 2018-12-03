@@ -402,7 +402,7 @@ export async function huodongLeads(opts) {
   const option = {
     contactName: '无',
     sourceType: 50,
-    remark: '您的用户对全网通双十一活动有意向，快去跟进吧！',
+    remark: '您的用户对全网通年终狂欢购活动有意向，快去跟进吧！',
     ...opts
   }
   const body = await fengming

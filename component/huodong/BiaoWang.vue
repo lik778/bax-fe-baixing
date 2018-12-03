@@ -15,18 +15,18 @@
             <tbody>
               <tr>
                 <td>满<strong>500-4999</strong></td>
-                <td>送精品官网（1年）</td>
-                <td><span><strong>200元</strong>无门槛直减券</span></td>
+                <td>送一年精品官网</td>
+                <td><span><strong class="mr">200元</strong>直减券</span></td>
               </tr>
               <tr>
                 <td>满<strong>5000-9999</strong></td>
-                <td>送精品官网（1年）</td>
-                <td><span><strong>600元</strong>无门槛直减券</span></td>
+                <td>送一年精品官网</td>
+                <td><span><strong class="mr">600元</strong>直减券</span></td>
               </tr>
               <tr>
                 <td>满<strong>10000及以上</strong></td>
-                <td>送精品官网（1年）</td>
-                <td><span><strong>1000元</strong>无门槛直减券</span></td>
+                <td>送一年精品官网</td>
+                <td><span><strong class="mr">1000元</strong>直减券</span></td>
               </tr>
             </tbody>
           </table>
@@ -125,6 +125,9 @@ section {
       font-size: 18px;
       display: flex;
       align-content: flex-start;
+     & small {
+      font-size: .7em;
+     }
 
       & > p {
         margin-top: 4px;
@@ -138,6 +141,9 @@ section {
         color: #FFD500;
         font-size: 20px;
         margin: 0 10px;
+        &.mr {
+          margin-left: -10px;
+        }
       }
       & > table span.original {
         text-decoration: line-through;
