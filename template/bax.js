@@ -176,6 +176,10 @@ const router = new VueRouter({
     path: '*'
   }]
 })
+router.beforeEach((to, from, next) => {
+  window.scrollTo(0, 0)
+  next()
+})
 
 const app = new Vue({
   render: h => h(Bax),

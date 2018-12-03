@@ -149,6 +149,10 @@ const formatlandingPageList = res => {
 export default {
   name: 'qwt-promotion-list',
   created() {
+    if (this.$route.query.statuses) {
+      this.isActionGroupExpand = true
+      this.queryParams.statuses.push(this.$route.query.statuses)
+    }
     this.fetchlandingPageList()
   },
   data() {

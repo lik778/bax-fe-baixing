@@ -9,17 +9,18 @@
           <p class="desc">（可消耗 {{fengmingBalance.day}} 天）</p>
           <el-button type="primary" class="button" size="small" @click.native="() => handleCharge('bax')">立即充值</el-button>
         </li>
-        <li class="account-item">
+        <!-- FIXME: 标王重构玩再上 -->
+        <!-- <li class="account-item">
           <p class="title">标王推广关键词(个)</p>
           <p class="num">{{0}}</p>
           <p class="desc">（ {{5}} 个词即将到期）</p>
           <el-button type="primary" class="button" size="small" @click.native="() => handleCharge('biaowang')">立即充值</el-button>
-        </li>
+        </li> -->
         <li class="account-item">
             <p class="title">精品官网(个)</p>
             <p class="num">{{sites.length}}</p>
             <p class="desc" v-if="sites.length">
-              （ {{sites.length > 1 ? '最早官网到期日' : '官网到期日'}} {{sites[0].createAt | formatDate}} ）
+              （ {{sites.length > 1 ? '最早官网到期日' : '官网到期日'}} {{sites[0].expireAt | formatDate}} ）
             </p>
             <p class="desc" v-else>暂无精品官网</p>
             <el-button type="primary" class="button" size="small" @click.native="() => handleCharge('site')">立即充值</el-button>
@@ -66,6 +67,7 @@ export default {
   },
   filters: {
     formatDate(date) {
+      console.log(date)
       return moment(date).format('YYYY.MM.DD')
     }
   }

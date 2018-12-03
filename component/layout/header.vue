@@ -41,6 +41,7 @@
 </template>
 
 <script>
+  import { isPro } from 'config'
   import { redirectTo } from 'utils'
   import { logout } from 'api/account'
   import { version } from '../../package.json'
@@ -64,7 +65,8 @@
           case 'account':
             return this.$router.push({name: 'account'})
           case 'back':
-            window.location.href = '//www.baixing.com/w/posts'
+            const redirectUrl = isPro ? '//www.baixing.com/w/posts' : 'http://www.qatest1.baixing.cn/w/posts'
+            window.location.href = redirectUrl
             return
           case 'logout':
             await logout()

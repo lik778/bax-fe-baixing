@@ -25,11 +25,7 @@ export default {
       tips: campaignCreativeTooltip.split('\n')
     }
   },
-  props: {
-    highlight: {
-      required: true
-    }
-  }
+  props: ['highlight']
 }
 </script>
 

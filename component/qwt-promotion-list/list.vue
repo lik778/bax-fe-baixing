@@ -196,7 +196,7 @@ export default {
     async modifyBudget(id, landingPageId, campaignIds) {
       const budget = this.budgetMap[id]
       if (!(budget > 0 && budget < 10000000)) {
-        return Message.error('请设置合理的预算')
+        return this.$message.error('请设置合理的预算')
       }
       const opts = {
         campaignIds: [id],

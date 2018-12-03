@@ -10,14 +10,14 @@
           <p>您当前的推广健康度为:<strong>{{avgScore}}</strong>分，</p>
           <p>已经超过<strong>{{higherThan}}%</strong>的用户，</p>
           <p>
-            您当前有计划未通过审核，请 
+            您当前有计划未通过审核，请
             <a href="javascript:;" @click="() => $router.push({name: 'qwt-promotion-list'})">前往修改</a>
           </p>
           <div class="optimization" v-if="optimizablePoints.length">
             <p class="title">建议进行如下优化，提升广告效果</p>
             <div class="keywords">
               <span class="keyword"
-                @click="handlePointClick(p.key)"
+                @click="handlePointClick(p.routerKey)"
                 v-for="p in optimizablePoints"
                 :key="p.key"
               >
@@ -71,14 +71,17 @@
 import clone from 'clone'
 import store from './store'
 import 'echarts/lib/chart/radar'
+import {
+  campaignOptimization
+} from 'constant/fengming'
 
 const OPTIMIZABLE_POINTS = [
-  {key: 'dailyBudget', text: '账户余额'},
-  {key: 'cntSrc', text: '渠道'},
-  {key: 'kwCtr', text: '创意'},
-  {key: 'cntNonDefault', text: '投放设置'},
+  {key: 'dailyBudget', text: '账户余额', routerKey: campaignOptimization.STATUS_OPT_PRICE},
+  {key: 'cntSrc', text: '渠道', routerKey: campaignOptimization.STATUS_OPT_SOURCE},
+  {key: 'kwCtr', text: '创意', routerKey: campaignOptimization.STATUS_OPT_CREATIVE},
+  {key: 'cntNonDefault', text: '投放设置', routerKey: campaignOptimization.STATUS_OPT_SETTING},
   {key: 'kwPrice', text: '出价'},
-  {key: 'avgCntKw', text: '关键词'}
+  {key: 'avgCntKw', text: '关键词', routerKey: campaignOptimization.STATUS_OPT_KEYWORD}
 ]
 
 const formatPrice = (p) => {
@@ -177,7 +180,9 @@ export default {
   methods: {
     formatPrice,
     handlePointClick(key) {
-      console.log(key)
+      this.$router.push({name: 'qwt-promotion-list', query: {
+        statuses: key
+      }})
     }
   },
   watch: {
@@ -186,7 +191,7 @@ export default {
       const radarScores = this.radarScores = OPTIMIZABLE_POINTS.map(({key}) => parseInt(val[key]))
       this.chartOptions = genChartOptions(radarScores)
       this.avgScore = (radarScores.reduce((t, s) => t + s, 0) / radarScores.length).toFixed(1)
-      this.higherThan = val.higherThan.toFixed(1)
+      this.higherThan = (val.higherThan * 100).toFixed(1)
     }
   }
 }
