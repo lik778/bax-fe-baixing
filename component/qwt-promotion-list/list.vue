@@ -30,10 +30,10 @@
             <tr class="tr" v-for="item in campaignMap[landingPage.id]" :key="item.id">
               <td class="col1">
                 <span class="t">{{item.id}}</span>
-                <strong class="hint">关</strong>
-                <strong class="hint">价</strong>
-                <strong class="hint">创</strong>
-                <strong class="hint">设</strong>
+                <strong class="hint" v-if="item.kwMark">关</strong>
+                <strong class="hint" v-if="item.priceMark">价</strong>
+                <strong class="hint" v-if="item.ctrMark">创</strong>
+                <strong class="hint" v-if="item.defaultMark">设</strong>
               </td>
               <td class="col2">
                 <span class="dot" :style="{backgroundColor: getColor(item.statusText)}" />
@@ -44,14 +44,19 @@
                 </el-tooltip>
               </td>
               <td class="col3">{{item.source | genSourceText}}</td>
-              <td class="col4">
+              <td class="col4" v-if="budgetMap[item.id] === undefined">
                 <span class="price">{{item.dailyBudget | fmtPrice}}元</span>
-                <a href="javascript:;" class="btn">修改</a>
+                <a href="javascript:;" @click="toggleBudgetInputDisplay(item.id, item.dailyBudget)" class="btn">修改</a>
+              </td>
+              <td class="col4" v-else>
+                <el-input size="small" :value="fmtLandingPageBudget(item.id)" @input="handleBudgetInput(item.id, $event)"/>
+                <el-button size="small" type="primary" @click="modifyBudget(item.id, landingPage.id, landingPage.campaignIds)">确定</el-button>
               </td>
               <td class="col5">
                 {{item.todayCost === 0 ? '-' : fmtPrice(item.todayCost)}}
               </td>
-              <td class="col6">3.5</td>
+              <!-- 已下线的status -->
+              <td class="col6">{{item.status === -1 ? '-' : item.avgCpcRanking}}</td>
               <td class="col7">
                 <a
                   class="btn"
@@ -90,8 +95,9 @@
 <script>
 import TopTip from './topTip.js'
 import {
+  pauseCampaigns,
   activeCampaigns,
-  pauseCampaigns
+  updateCampaignDailyBudget
 } from 'api/fengming'
 import {
   semPlatformCn,
@@ -116,7 +122,8 @@ export default {
     return {
       LANGPAGE_TYPES,
       CAMPAIGN_STATUS_OFFLINE,
-
+      
+      budgetMap: {},
       expands: []
     }
   },
@@ -150,6 +157,15 @@ export default {
         this.expands.splice(index, 1)
       }
     },
+    toggleBudgetInputDisplay(id, dailyBudget, isDeleted) {
+      const budgetMap = this.budgetMap
+      if (budgetMap[id] === undefined) {
+        this.budgetMap = {
+          ...budgetMap,
+          [id]: dailyBudget
+        }
+      }
+    },
     isExistInExpands(id) {
       return this.expands.includes(id)
     },
@@ -173,6 +189,27 @@ export default {
         await pauseCampaigns([campaign.id])
       }
       this.$emit('reload-promotion', landingPageId, campaignIds, true)
+    },
+    fmtLandingPageBudget(id) {
+      return this.budgetMap[id] / 100
+    },
+    async modifyBudget(id, landingPageId, campaignIds) {
+      const budget = this.budgetMap[id]
+      if (!(budget > 0 && budget < 10000000)) {
+        return Message.error('请设置合理的预算')
+      }
+      const opts = {
+        campaignIds: [id],
+        dailyBudget: budget
+      }
+      await updateCampaignDailyBudget(opts)
+      this.$emit('reload-promotion', landingPageId, campaignIds, true)
+    },
+    handleBudgetInput(id, value) {
+      this.budgetMap = {
+        ...this.budgetMap,
+        [id]: value.replace(/[^0-9]/g, '') * 100
+      }
     }
   },
   watch: {
@@ -317,6 +354,16 @@ export default {
     & .col4 {
       width: 18%;
       padding-left: 36px;
+      white-space: nowrap;
+      & >>> .el-input__inner {
+        padding: 0 4px;
+      }
+      & >>> .el-input--small {
+        width: 60px;
+      }
+      & >>> .el-button--small {
+        padding: 9px 10px;
+      }
       & .btn {
         color: #35A5E4;
         margin-left: 5px;

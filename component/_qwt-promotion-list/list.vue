@@ -380,7 +380,7 @@ export default {
     checkSelectable(row) {
       return !cantSelectStatuses.includes(row.status)
     },
-    async inlineUpdateBudget(id, v) {
+    async inlineUpdateBudget(id, v) { 
       const budget = parseInt(v)
 
       if (!(budget > 0 && budget < 10000000)) {

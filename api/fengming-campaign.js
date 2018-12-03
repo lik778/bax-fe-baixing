@@ -138,7 +138,7 @@ export async function getCampaignLanding(query) {
 export async function getCurrentCampaigns(query) {
   const body = await fengming
     .get('/campaign/current')
-    .query(query)
+    .query(reverseCamelcase(query))
     .json()
 
   return toCamelcase(body.data)

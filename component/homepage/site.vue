@@ -58,7 +58,7 @@ export default {
   name: 'homepage-site',
   data() {
     return {
-      selectedReportKey: 'today'
+      selectedReportKey: 'yesterday'
     }
   },
   components: {Notice},

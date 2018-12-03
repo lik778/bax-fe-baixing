@@ -1,7 +1,7 @@
 
 <template>
   <header class="notice">
-    <p>推广物料设置</p>
+    <p :class="{highlight: highlight}">推广物料设置</p>
     <el-tooltip placement="right">
       <ul slot="content">
         <li v-for="(tip, i) in tips" :key="i">
@@ -23,6 +23,11 @@ export default {
   data() {
     return {
       tips: campaignCreativeTooltip.split('\n')
+    }
+  },
+  props: {
+    highlight: {
+      required: true
     }
   }
 }

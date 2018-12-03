@@ -61,7 +61,7 @@
       </section>
       <section class="creative">
         <header class="top-col">
-          <promotion-creative-tip />
+          <promotion-creative-tip/>
           <el-button type="primary" class="button" size="small" @click="optimizeCreative">一键优化</el-button>
         </header>
         <creative-editor
@@ -955,6 +955,7 @@ export default {
     canOptimize(type) {
       const expandMoreSettingArea = () => this.moreSettingDisplay = true
       const opt = {
+        creative: (ctrMark) => ctrMark,
         keyword: () => this.currentKeywords.length < 10,
         time: () => this.timeType === 'custom' && expandMoreSettingArea(),
         duration: () => this.getDurationType() === '部分时段' && expandMoreSettingArea(),
