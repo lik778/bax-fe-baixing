@@ -342,6 +342,7 @@ export default {
       padding-left: 66px;
       & .t {
         margin-right: 20px;
+        width: 66px;
       }
     }
     & .col2 {

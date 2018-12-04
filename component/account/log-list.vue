@@ -1,7 +1,14 @@
 <template>
   <div class="layout-container">
     <section-header>历史操作记录</section-header>
-    <label>选择查询项目</label>
+    <label>查询产品</label>
+    <bax-select v-model="productType"
+      :clearable="false"
+      placeholder="请选择"
+      :options="logTypeOpts"
+      @click.native="onClickProductType">
+    </bax-select>
+    <label class="ml">选择查询项目</label>
     <bax-select v-model="type"
       :clearable="false"
       placeholder="请选择"
@@ -42,7 +49,7 @@
       layout="total, prev, pager, next"
       :total="logQuery.total">
     </el-pagination>
-  </div>
+  </div> 
 </template>
 
 <script>
@@ -59,8 +66,10 @@ import store from './store'
 
 import {
   LOG_TYPE_CAMPAIGN,
+
+  logType,
   logTypeOpts,
-  logType
+  productTypeOpts
 } from 'constant/log'
 
 export default {
@@ -85,6 +94,7 @@ export default {
 
       range: 'month',
       type: String(LOG_TYPE_CAMPAIGN),
+      productType: '3',
 
       currentPage: 1,
       pageSize: 20
@@ -108,6 +118,11 @@ export default {
     onClickLogType() {
       track({
         action: 'operation-log: click log type'
+      })
+    },
+    onClickProductType() {
+      track({
+        action: 'operation-log: click product type'
       })
     },
     onClickRange() {
@@ -160,10 +175,18 @@ export default {
 </script>
 
 <style lang="postcss" scoped>
+.layout-container {
+  & >>> .el-select {
+    width: 110px;
+  }
+  & .ml {
+    margin-left: 20px;
+  }
+}
 .log-table {
   margin: 40px 0 20px;
 }
 .radio {
-  margin-left: 50px;
+  margin-left: 40px;
 }
 </style>

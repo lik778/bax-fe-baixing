@@ -85,6 +85,12 @@
         @expand-change="fetchPromotionList"
         @reload-promotion="fetchPromotionList"
       />
+      <el-pagination
+        layout="total, prev, pager, next"
+        @current-change="handlePageChange"
+        :page-size="ONE_PAGE_NUM"
+        :total="totalPage"
+      />
     </main>
     <area-selector
       type="qwt"
@@ -102,7 +108,9 @@
 import { getCnName } from 'util'
 
 import List from './list'
+import { toCamelcase } from 'object-keys-mapping'
 import AreaSelector from 'com/common/area-selector'
+
 
 import {
   getCampaignLanding,
@@ -113,6 +121,8 @@ import {
   semPlatformOpts as SOURCES_OPTS,
   campaignOptimization
 } from 'constant/fengming'
+
+const CNT_REJECTED_CODE = '-53'
 
 const CAMPAIGN_STATUS_OPTS = Object.freeze(
   [
@@ -148,15 +158,22 @@ const formatlandingPageList = res => {
 
 export default {
   name: 'qwt-promotion-list',
-  created() {
-    if (this.$route.query.statuses) {
-      this.isActionGroupExpand = true
-      this.queryParams.statuses.push(this.$route.query.statuses)
+  async created() {
+    const statuses = this.$route.query.statuses
+    if (!!statuses) {
+      // 从首页未审核处点击进来的
+      if (statuses === CNT_REJECTED_CODE) {
+        this.queryParams.statuses = [CNT_REJECTED_CODE]
+      } else {
+        this.isActionGroupExpand = true
+        this.queryParams.statuses.push(statuses)
+      }
     }
-    this.fetchlandingPageList()
+    await this.fetchlandingPageList()
   },
   data() {
     return {
+      ONE_PAGE_NUM,
       SOURCES_OPTS,
       CAMPAIGN_STATUS_OPTS,
       CAMPAIGN_OPTIMIZATION_OPTS,
@@ -172,14 +189,19 @@ export default {
       landingPageLoading: false,
       landingPageList: null,
       campaignMap: {},
+      totalPage: 0,
 
-      isActionGroupExpand: false,
-      areaDialogVisible: false
+      areaDialogVisible: false,
+      isActionGroupExpand: false
     }
   },
   props: ['allAreas'],
   components: {AreaSelector, List},
   methods: {
+    handlePageChange(page) {
+      this.queryParams.offset = (page - 1) * ONE_PAGE_NUM
+      this.fetchlandingPageList()
+    },
     handleSelectArea(areas) {
       
       this.queryParams.areas = areas
@@ -192,7 +214,10 @@ export default {
       this.landingPageLoading = true
       try {
         const result = await getCampaignLanding(this.queryParams)
-        this.landingPageList = Object.freeze(formatlandingPageList(result))
+        const { total, ...pageList } = result
+        this.totalPage = total
+        // toCamelcase 插件有个坑（当object的key值为url格式时，转换对象的key有问题）
+        this.landingPageList = Object.freeze(toCamelcase(formatlandingPageList(pageList)))
       } catch(err) {
         console.error(err)
       } finally {
@@ -236,6 +261,10 @@ export default {
     box-shadow: 0 2px 9px 0 rgba(83, 95, 127, .10);
     color: #666;
     font-size: 14px;
+    & >>> .el-pagination {
+      display: flex;
+      justify-content: center;
+    }
   }
   .header {
     font-size: 16px;

@@ -9,9 +9,9 @@
         <div class="description">
           <p>您当前的推广健康度为:<strong>{{avgScore}}</strong>分，</p>
           <p>已经超过<strong>{{higherThan}}%</strong>的用户，</p>
-          <p>
+          <p v-if="campaignRadar.cntRejected > 0">
             您当前有计划未通过审核，请
-            <a href="javascript:;" @click="() => $router.push({name: 'qwt-promotion-list'})">前往修改</a>
+            <a href="javascript:;" @click="goPromotionList">前往修改</a>
           </p>
           <div class="optimization" v-if="optimizablePoints.length">
             <p class="title">建议进行如下优化，提升广告效果</p>
@@ -143,6 +143,8 @@ const genChartOptions = value => {
     return Object.freeze(opt)
 }
 
+const CNT_REJECTED_CODE = '-53'
+
 export default {
   name: 'homepage-campaign',
   data() {
@@ -182,6 +184,11 @@ export default {
     handlePointClick(key) {
       this.$router.push({name: 'qwt-promotion-list', query: {
         statuses: key
+      }})
+    },
+    goPromotionList() {
+      this.$router.push({name: 'qwt-promotion-list', query: {
+        statuses: CNT_REJECTED_CODE
       }})
     }
   },

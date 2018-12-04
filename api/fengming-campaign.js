@@ -131,8 +131,10 @@ export async function getCampaignLanding(query) {
     .get('/campaign/current_landing')
     .query(query)
     .json()
-
-  return toCamelcase(body.data)
+  return {
+    ...body.data,
+    total: body.meta.count
+  }
 }
 
 export async function getCurrentCampaigns(query) {
