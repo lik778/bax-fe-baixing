@@ -53,6 +53,7 @@ import {
 import track from 'util/track'
 
 const start = Date.UTC(2018, 11, 4, 9)
+const biaowangStart = Date.UTC(2018, 11, 4, 16)
 const end = Date.UTC(2018, 11, 31, 16)
 
 export default {
@@ -75,7 +76,7 @@ export default {
         timeRange: '12.5-12.31',
         status: '预热中',
         desc: '温馨提示：标王，官网券抢购方式，请联系您的专属销售或者咨询客服：400-036-3650 查价购买',
-        period: [start, end],
+        period: [biaowangStart, end],
       }],
       discounts: [],
 
