@@ -309,35 +309,47 @@ export async function getChargeLogs(opts) {
   }
 }
 
-export async function getLogs(opts = {}) {
-  let query = {
-    pageSize: 50,
-    offset: 0,
-    time: moment().subtract(1, 'months').unix(),
-    ...opts
-  }
+// export async function getLogs(opts = {}) {
+//   let query = {
+//     pageSize: 50,
+//     offset: 0,
+//     time: moment().subtract(1, 'months').unix(),
+//     ...opts
+//   }
 
-  const { type, time, pageSize, offset } = query
+//   const { type, time, pageSize, offset } = query
 
-  query = trim(reverseCamelcase({
-    timelineType: type,
-    createdAt: time,
-    limit: pageSize,
-    offset
-  }))
+//   query = trim(reverseCamelcase({
+//     timelineType: type,
+//     createdAt: time,
+//     limit: pageSize,
+//     offset
+//   }))
 
-  const [logs, total] = await Promise.all([
-    _getLogs(query),
-    _getLogCount(query)
-  ])
+//   const [logs, total] = await Promise.all([
+//     _getLogs(query),
+//     _getLogCount(query)
+//   ])
 
-  return {
-    query: {
-      ...query,
-      total
-    },
-    logs
-  }
+//   return {
+//     query: {
+//       ...query,
+//       total
+//     },
+//     logs
+//   }
+// }
+
+export async function getLogs(queryParmas = {}) {
+  const { meta, data } = await fengming
+    .get('/timeline/query')
+    .query(reverseCamelcase(queryParmas))
+    .json()
+
+  return toCamelcase({
+    ...data,
+    total: meta.count
+  })
 }
 
 export async function getSummary() {

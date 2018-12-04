@@ -1,29 +1,41 @@
+export const TIMELINE_TYPE_BALANCE = 1
+export const TIMELINE_TYPE_CAMPAIGN = 2
+export const TIMELINE_TYPE_CREATIVE = 3
+export const TIMELINE_TYPE_KEYWORD = 4
+export const TIMELINE_TYPE_UNKNOWN = -1
 
-export const LOG_TYPE_CAMPAIGN = 2
-export const LOG_TYPE_CREATIVE = 3
-export const LOG_TYPE_KEYWORD = 4
-export const LOG_TYPE_ACCOUNT = 1
+export const OP_TYPE_CREATE = 1
+export const OP_TYPE_UPDATE = 2
+export const OP_TYPE_DELETE = 3
 
 const fmtOpts = (type) => {
-  return Object.keys(type)
-    .map((k) => ({
-      label: type[k],
-      value: k
-    }))
+  return Object.freeze(
+    Object.entries(type)
+      .map(([label, value]) => ({
+        label,
+        value
+      }))
+  )
 }
 
-export const logType = {
-  // '1': '账户',
-  '2': '计划',
-  '3': '创意',
-  '4': '关键词',
-  '-1': '其他'
+export const timelineType = {
+  // [TIMELINE_TYPE_BALANCE]: '余额',
+  '不限': '',
+  '计划': TIMELINE_TYPE_CAMPAIGN,
+  '创意': TIMELINE_TYPE_CREATIVE,
+  '关键词': TIMELINE_TYPE_KEYWORD
 }
 
 const productType = {
+  '3': '不限',
   '1': '标王',
-  '2': '站外推广',
-  '3': '不限'
+  '2': '站外推广'
+}
+
+const opType = {
+  '不限': '',
+  '创建': OP_TYPE_CREATE,
+  '变更': OP_TYPE_UPDATE
 }
 
 export const changeLogType = {
@@ -31,5 +43,6 @@ export const changeLogType = {
   '5': '智能投放'
 }
 
-export const logTypeOpts = fmtOpts(logType)
+export const timelineTypeOpts = fmtOpts(timelineType)
 export const productTypeOpts = fmtOpts(productType)
+export const opTypeOpts = fmtOpts(opType)
