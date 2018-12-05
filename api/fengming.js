@@ -347,7 +347,7 @@ export async function getLogs(queryParmas = {}) {
     .json()
 
   return toCamelcase({
-    ...data,
+    logs: data,
     total: meta.count
   })
 }

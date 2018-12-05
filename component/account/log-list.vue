@@ -18,7 +18,7 @@
     <label class="ml">选择查询类型</label>
     <bax-select
       :clearable="false"
-      placeholder="请选择"
+      placeholder="请选择查询类型"
       v-model="queryParmas.opType"
       :options="opTypeOpts">
     </bax-select>
@@ -42,15 +42,37 @@
         :formatter="dateFormatter"
         width="180">
       </el-table-column>
+      <!-- <el-table-column
+        label="产品"
+        prop="productType"
+        width="100">
+      </el-table-column> -->
       <el-table-column
-        label="类型"
+        label="项目"
         prop="timelineType"
-        :formatter="logTypeFormatter"
+        :formatter="timelineTypeFormatter"
         width="180">
       </el-table-column>
       <el-table-column
-        :formatter="logDescFormatter"
-        label="操作内容">
+        label="类型"
+        :formatter="opTypeFormatter"
+        width="180">
+      </el-table-column>
+      <el-table-column
+        :formatter="campaignIdFormatter"
+        label="计划Id">
+      </el-table-column>
+      <el-table-column
+        :formatter="changeLogFormatter('field')"
+        label="变更字段">
+      </el-table-column>
+      <el-table-column
+        :formatter="changeLogFormatter('old')"
+        label="变更前">
+      </el-table-column>
+      <el-table-column
+        :formatter="changeLogFormatter('new')"
+        label="变更后">
       </el-table-column>
     </el-table>
     <el-pagination
@@ -82,8 +104,10 @@ const CREATED_AT_VALUES = [
 
 
 import {
+  OP_TYPE_CREATE,
   TIMELINE_TYPE_UNKNOWN,
 
+  fieldType,
   opTypeOpts,
   logTypeOpts,
   timelineTypeOpts,
@@ -124,19 +148,6 @@ export default {
       },
     }
   },
-  computed: {
-    startTime() {
-      let time = moment()
-      if (this.range === 'month') {
-        time = moment().subtract(1, 'months')
-      } else if (this.range === 'quarter') {
-        time = moment().subtract(3, 'months')
-      } else if (this.range === 'year') {
-        time = moment().subtract(1, 'years')
-      }
-      return time.unix()
-    }
-  },
   methods: {
     genCreatedAtValues(index) {
       return CREATED_AT_VALUES[index]
@@ -148,31 +159,42 @@ export default {
       this.queryParmas.offset = page * ONE_PAGE_NUM
       this.load()
     },
-    logDescFormatter(row) {
-      const { allAreas } = this
-      if (!row.relatedLog) {
-        return getLogDesc(row, { allAreas })
+    opTypeFormatter({message: {opType}}) {
+      return opTypeOpts.find(({value}) => value === opType).label
+    },
+    timelineTypeFormatter({timelineType}) {
+      return timelineTypeOpts.find(({value}) => value === timelineType).label
+    },
+    dateFormatter({createdAt}) {
+      return toHumanTime(createdAt, 'YYYY-MM-DD HH:mm')
+    },
+    campaignIdFormatter({message:{campaignId}}) {
+      return campaignId
+    },
+    changeLogFormatter(type) {
+      return ({message}) => {
+        const changeKeys = Object.keys(message.change)
+        // OP_TYPE_CREATE
+        const opType = message.opType
+        if (type === 'field') {
+          return changeKeys.map(key => fieldType[key]).toString()
+        } else if (type === 'old') {
+          if (opType === OP_TYPE_CREATE) return '-'
+        }
       }
-
-      return row.relatedLog
-    },
-    logTypeFormatter(row) {
-      return logType[String(row.timelineType)]
-    },
-    dateFormatter(row) {
-      return toHumanTime(row.createdAt, 'YYYY-MM-DD HH:mm')
     }
   },
   watch: {
     queryParmas: {
       deep: true,
-      handler(val) {
-        console.log(val.createdAt)
+      handler(params) {
+        console.log(params)
+        this.load(params)
       }
     }
   },
-  async mounted() {
-    await this.load()
+  created() {
+    this.load()
   }
 }
 </script>

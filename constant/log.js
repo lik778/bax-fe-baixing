@@ -43,6 +43,12 @@ export const changeLogType = {
   '5': '智能投放'
 }
 
+export const fieldType = {
+  title: '创意标题',
+  price: '价格',
+  dailyBudget: '日预算'
+}
+
 export const timelineTypeOpts = fmtOpts(timelineType)
 export const productTypeOpts = fmtOpts(productType)
 export const opTypeOpts = fmtOpts(opType)
