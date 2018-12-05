@@ -6,6 +6,7 @@ import Fetch from 'fetch.io'
 
 import {
   fengmingApiHost,
+  biaowangApiHost,
   dashboardHost,
   mvpApiHost,
   baxApiHost,
@@ -141,6 +142,34 @@ export const dashboardApi = new Fetch({
     if (res.status === 403) {
       Message.error('你没有权限访问该页面')
       return redirect('main')
+    }
+  }
+})
+
+export const biaowang = new Fetch({
+  prefix: biaowangApiHost,
+  beforeRequest() {
+    es.emit('http fetch start')
+  },
+  afterResponse() {
+    es.emit('http fetch end')
+  },
+  afterJSON(body) {
+    const {errors, code, message} = body
+    if (errors) {
+      Message.error('出错啦')
+      throw new Error('出错啦')
+    }
+    console.log(body)
+
+    // if (code === 1002) {
+    //   Message.error('请重新登录 >_<')
+    //   return redirect('signin', `return=${encodeURIComponent(location.pathname + location.search)}`)
+    // }
+
+    if (message !== 'Success') {
+      Message.error(message)
+      throw new Error(message)
     }
   }
 })

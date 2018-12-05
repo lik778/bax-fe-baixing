@@ -50,6 +50,21 @@
             <i class="material-icons" style="font-size: 16px; margin-right: 11px; vertical-align: -3px;">dvr</i>标王推广
           </router-link>
         </el-menu-item> -->
+        <el-submenu index="bw" v-if="allowSeeQwtPromotion">
+          <template slot="title">
+            <bx-icon type="sharealt"></bx-icon>标王推广
+          </template>
+          <el-menu-item index="bw-query-price">
+            <router-link :to="{ name: 'bw-query-price' }" tag="p">
+              <i class="material-icons" style="font-size: 16px; margin-right: 11px; vertical-align: -3px;"></i>查价
+            </router-link>
+          </el-menu-item>
+          <el-menu-item index="bw-plan-list">
+            <router-link :to="{ name: 'bw-plan-list' }" tag="p">
+              <i class="material-icons" style="font-size: 16px; margin-right: 11px; vertical-align: -3px;"></i>推广列表
+            </router-link>
+          </el-menu-item>
+        </el-submenu>
         <el-menu-item index="gw-homepage">
           <a href="/ka/main" v-if="isRenderSiteLink" style="color: inherit">
             <i class="el-icon-news" />精品官网
@@ -65,6 +80,7 @@
             <i class="el-icon-document" />数据报表
           </router-link>
         </el-menu-item>
+
         <el-submenu index="ssp" v-if="allowSeeBxAd">
           <template slot="title">
             <i class="el-icon-message"></i>品牌广告

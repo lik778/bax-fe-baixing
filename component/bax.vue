@@ -31,6 +31,7 @@
     <back-to-top />
     <wechat-scan />
     <chat />
+    <bw-shopping-cart ref="bwShoppingCart" />
   </div>
 </template>
 
@@ -44,6 +45,7 @@ import BackToTop from './widget/back-to-top'
 import Sidebar from './layout/sidebar'
 import Header from './layout/header'
 import Chat from './widget/chat'
+import BwShoppingCart from './common/bw-shopping-cart'
 
 import gStore from './store'
 
@@ -57,6 +59,7 @@ import {
 export default {
   name: 'bax',
   components: {
+    BwShoppingCart,
     HuoDongIntro,
     NewUserIntro,
     AddUserLead,
