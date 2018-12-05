@@ -44,9 +44,17 @@ export const changeLogType = {
 }
 
 export const fieldType = {
+  landingPage: '落地页',
+  areas: '投放地域',
+  dailyBudget: '日预算',
+  mobilePriceRatio: '移动出价比',
+  timeRange: '投放时间',
+  schedule: '投放时段',
+  status: '计划状态',
   title: '创意标题',
-  price: '价格',
-  dailyBudget: '日预算'
+  content: '创意内容',
+  word: '关键词',
+  price: '关键词出价'
 }
 
 export const timelineTypeOpts = fmtOpts(timelineType)

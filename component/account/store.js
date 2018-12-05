@@ -27,6 +27,7 @@ const store = observable({
   _coupons: [],
 
   _logs: [],
+  totalLogs: 0,
 
   get logs() {
     return toJS(this._logs)
@@ -55,7 +56,7 @@ const store = observable({
   getLogs: action(async function(opts) {
     const { total, logs } = await fapi.getLogs(opts)
     console.log(logs)
-    this.total = total
+    this.totalLogs = total
     this._logs = logs
   }),
 

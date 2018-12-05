@@ -29,8 +29,7 @@
     </el-radio-group>
     <div class="input-wrap">
       <label class="ml">订单id</label>
-      <el-input v-model="queryParmas.campaignId" class="input" placeholder="请输入订单id" />
-      <el-button type="primary">查询</el-button>
+      <bax-input v-model="queryParmas.campaignId" class="input" placeholder="请输入订单id" />
     </div>
 
     <el-table class="log-table"
@@ -51,35 +50,42 @@
         label="项目"
         prop="timelineType"
         :formatter="timelineTypeFormatter"
-        width="180">
+        width="90">
       </el-table-column>
       <el-table-column
         label="类型"
         :formatter="opTypeFormatter"
-        width="180">
+        width="80">
       </el-table-column>
       <el-table-column
         :formatter="campaignIdFormatter"
-        label="计划Id">
+        label="计划Id"
+        width="110">
       </el-table-column>
       <el-table-column
         :formatter="changeLogFormatter('field')"
-        label="变更字段">
+        label="变更字段"
+        align="center"
+        width="260">
       </el-table-column>
       <el-table-column
         :formatter="changeLogFormatter('old')"
-        label="变更前">
+        label="变更前"
+        align="center"
+        width="180">
       </el-table-column>
       <el-table-column
         :formatter="changeLogFormatter('new')"
-        label="变更后">
+        label="变更后"
+        align="center"
+        width="180">
       </el-table-column>
     </el-table>
     <el-pagination
       :total="total"
       @current-change="goto"
       :page-size="ONE_PAGE_NUM"
-      layout="total, prev, pager, next"
+      layout="total, prev, pager, next, jumper"
     >
     </el-pagination>
   </div> 
@@ -88,6 +94,7 @@
 <script>
 import BaxSelect from 'com/common/select'
 import SectionHeader from 'com/common/section-header'
+import BaxInput from 'com/common/input'
 
 import store from './store'
 import moment from 'moment'
@@ -101,6 +108,26 @@ const CREATED_AT_VALUES = [
   moment().subtract(3, 'months').unix(),
   moment().subtract(1, 'years').unix(),
 ]
+const DIVIDING_CHAR = '   '
+
+const genFormatLogValues = (change, keys, type, opType) => {
+  const valueKey = type === 'old' ? 'oldValue' : 'newValue'
+  return keys.map(k => {
+    const value = opType === OP_TYPE_CREATE ? change[k] : change[k][valueKey]
+    if (k === 'price' || k === 'dailyBudget') {
+      return value / 100
+    } else if (k === 'timeRange') {
+      if (value.includes(null)) return '全时段'
+      return value.map(timeStamp => toHumanTime(new Date(timeStamp * 1000), 'MM月DD')).join('~')
+    } else if (k === 'status') {
+      return value === -10 ? '开启投放' : '暂停投放'
+    } else if (k === 'schedule') {
+      return value.every(v => v === 16777215) ? '全部时段' : '部分时段'
+    } else if (k in fieldType) {
+      return value
+    }
+  }).join(DIVIDING_CHAR)
+}
 
 
 import {
@@ -117,11 +144,13 @@ import {
 export default {
   name: 'qwt-operastion-log-list',
   components: {
+    BaxInput,
     BaxSelect,
     SectionHeader
   },
   fromMobx: {
-    logs: () => store.logs
+    logs: () => store.logs,
+    total: () => store.totalLogs
   },
   props: {
     allAreas: {
@@ -135,7 +164,6 @@ export default {
       timelineTypeOpts,
       // productTypeOpts,
       ONE_PAGE_NUM,
-      total: 0,
 
       queryParmas: {
         offset: 0,
@@ -173,13 +201,16 @@ export default {
     },
     changeLogFormatter(type) {
       return ({message}) => {
-        const changeKeys = Object.keys(message.change)
-        // OP_TYPE_CREATE
+        const change = message.change
+        const changeKeys = Object.keys(change)
         const opType = message.opType
         if (type === 'field') {
-          return changeKeys.map(key => fieldType[key]).toString()
+          return changeKeys.map(key => fieldType[key]).join(DIVIDING_CHAR)
         } else if (type === 'old') {
           if (opType === OP_TYPE_CREATE) return '-'
+          return genFormatLogValues(change, changeKeys, type, opType)
+        } else if (type === 'new') {
+          return genFormatLogValues(change, changeKeys, type, opType)
         }
       }
     }
@@ -188,7 +219,6 @@ export default {
     queryParmas: {
       deep: true,
       handler(params) {
-        console.log(params)
         this.load(params)
       }
     }

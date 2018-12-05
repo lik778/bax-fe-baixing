@@ -13,7 +13,7 @@
         <div v-show="isActionGroupExpand">
           <div class="column">
             <span class="title">计划id</span>
-            <el-input class="input" placeholder="请输入ID查询" suffix-icon="el-icon-search"/>
+            <bax-input class="input" placeholder="请输入ID查询" suffix-icon="el-icon-search" v-model="queryParams.userId"/>
           </div>
           <div class="column">
             <h6 class="title">投放状态</h6>
@@ -59,20 +59,20 @@
             </el-tag>
             <i class="el-icon-plus icon" @click="areaDialogVisible = true"/>
           </div>
-          <div class="column">
-            <h6 class="title hightlight">投放优化</h6>
-            <div class="checkbox-group">
-              <el-checkbox-group v-model="queryParams.statuses">
-                <el-checkbox
-                  class="checkbox"
-                  v-for="c in CAMPAIGN_OPTIMIZATION_OPTS"               
-                  :key="c.value" 
-                  :label="c.value"
-                >
-                  {{c.label}}
-                </el-checkbox>
-              </el-checkbox-group>
-            </div>
+        </div>
+        <div class="column">
+          <h6 class="title hightlight">投放优化</h6>
+          <div class="checkbox-group">
+            <el-checkbox-group v-model="queryParams.statuses">
+              <el-checkbox
+                class="checkbox"
+                v-for="c in CAMPAIGN_OPTIMIZATION_OPTS"               
+                :key="c.value" 
+                :label="c.value"
+              >
+                {{c.label}}
+              </el-checkbox>
+            </el-checkbox-group>
           </div>
         </div>
       </div>
@@ -110,7 +110,7 @@ import { getCnName } from 'util'
 import List from './list'
 import { toCamelcase } from 'object-keys-mapping'
 import AreaSelector from 'com/common/area-selector'
-
+import BaxInput from 'com/common/input'
 
 import {
   getCampaignLanding,
@@ -179,6 +179,7 @@ export default {
       CAMPAIGN_OPTIMIZATION_OPTS,
 
       queryParams: {
+        userId: '',
         areas: [],
         statuses: CAMPAIGN_STATUS_OPTS.map(s => s.value).filter(v => v !== '-1'),
         source: [],
@@ -196,7 +197,7 @@ export default {
     }
   },
   props: ['allAreas'],
-  components: {AreaSelector, List},
+  components: {AreaSelector, List, BaxInput},
   methods: {
     handlePageChange(page) {
       this.queryParams.offset = (page - 1) * ONE_PAGE_NUM
@@ -212,6 +213,8 @@ export default {
     },
     async fetchlandingPageList() {
       this.landingPageLoading = true
+      // 重置campaignMap
+      this.campaignMap = {}
       try {
         const result = await getCampaignLanding(this.queryParams)
         const { total, ...pageList } = result
