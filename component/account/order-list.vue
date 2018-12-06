@@ -62,16 +62,19 @@
         width="180"
         align="center"
       >
-        <div slot-scope="{row}" class="btn-wrap">
-          <a href="javascript:;" @click="payOrder(row.id)">支付</a>
-          <a href="javascript:;" @click="cancelOrder(row.id)">取消订单</a>
+        <div slot-scope="{row}">
+          <div class="btn-wrap" v-if="row.status === statusType.STATUS_UNPAID">
+            <a href="javascript:;" @click="payOrder(row.id)">支付</a>
+            <a href="javascript:;" @click="cancelOrder(row.id)">取消订单</a>
+          </div>
+          <div v-else>-</div>
         </div>
       </el-table-column>
     </el-table>
     <el-pagination
       v-if="total"
       class="pagination"
-      :total="total"
+      :page-count="Math.floor(total / params.limit)"
       @current-change="goto"
       :page-size="params.limit"
       layout="total, prev, pager, next, jumper"
@@ -128,15 +131,22 @@ export default {
   components: {SectionHeader},
   methods: {
     async payOrder(orderId) {
-      console.log(orderId)
+      const url = await api.payOrder([orderId])
+      this.$message.success('正在跳转支付页面')
+      setTimeout(() => {
+        location.href = url
+      }, 800)
     },
     async cancelOrder(orderId) {
-      console.log(orderId)
+      await api.cancelOrder(orderId)
+      await this.fetchOrderData()
+      this.$message.success('取消订单成功')
     },
     async fetchOrderData() {
       // format quey parmas
       const { dateRange, ...otherParams } = this.params
       const [startTs, endTs] = dateRange.map(transformUnixTimeStamp)
+      if (!(startTs && endTs)) return
       const queryParmas = {
         startTs,
         endTs,

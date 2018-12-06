@@ -157,3 +157,21 @@ export async function queryOrder(query) {
     total: meta.count
   }
 }
+
+export async function cancelOrder(orderId) {
+  const { data } = await api
+    .post(`/order/cancel`)
+    .send(reverseCamelcase({orderId}))
+    .json()
+
+  return data
+}
+
+export async function payOrder(orderIds) {
+  const { data } = await api
+    .get('/order/pay/url')
+    .query(reverseCamelcase({orderIds}))
+    .json()
+
+  return data
+}
