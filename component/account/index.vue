@@ -7,6 +7,7 @@
       <consume />
       <charge />
       <log-list :all-areas="allAreas"/>
+      <order-list />
     </main>
   </div>
 </template>
@@ -16,6 +17,7 @@ import AccountSummary from './summary'
 import Consume from './consume'
 import Charge from './charge'
 import LogList from './log-list'
+import orderList from './order-list'
 
 import track from 'util/track'
 
@@ -23,6 +25,7 @@ export default {
   name: 'bax-account',
   components: {
     AccountSummary,
+    orderList,
     LogList,
     Consume,
     Charge

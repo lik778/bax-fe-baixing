@@ -28,8 +28,8 @@
       <el-radio-button :label="genCreatedAtValues(2)">近一年</el-radio-button>
     </el-radio-group>
     <div class="input-wrap">
-      <label class="ml">订单id</label>
-      <bax-input v-model="queryParmas.campaignId" class="input" placeholder="请输入订单id" />
+      <label class="ml">计划id</label>
+      <bax-input v-model="queryParmas.campaignId" class="input" placeholder="请输入计划id" />
     </div>
 
     <el-table class="log-table"
@@ -101,6 +101,17 @@ import moment from 'moment'
 import track from 'util/track'
 import { toHumanTime } from 'utils'
 import { getLogDesc } from 'util/log'
+import {
+  fieldType,
+  opTypeOpts,
+  logTypeOpts,
+  timelineTypeOpts,
+
+  OP_TYPE_CREATE,
+  TIMELINE_TYPE_UNKNOWN,
+  // productTypeOpts
+} from 'constant/log'
+
 
 const ONE_PAGE_NUM = 10
 const CREATED_AT_VALUES = [
@@ -128,18 +139,6 @@ const genFormatLogValues = (change, keys, type, opType) => {
     }
   }).join(DIVIDING_CHAR)
 }
-
-
-import {
-  OP_TYPE_CREATE,
-  TIMELINE_TYPE_UNKNOWN,
-
-  fieldType,
-  opTypeOpts,
-  logTypeOpts,
-  timelineTypeOpts,
-  // productTypeOpts
-} from 'constant/log'
 
 export default {
   name: 'qwt-operastion-log-list',

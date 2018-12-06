@@ -145,3 +145,15 @@ async function _getUserCount(query) {
 
   return body.data
 }
+
+export async function queryOrder(query) {
+  const { data, meta } = await api
+    .get('/order/query')
+    .query(reverseCamelcase(query))
+    .json()
+
+  return {
+    data: toCamelcase(data),
+    total: meta.count
+  }
+}

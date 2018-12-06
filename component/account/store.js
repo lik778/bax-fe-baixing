@@ -55,7 +55,6 @@ const store = observable({
   // opts: { type, time, offset, pageSize }
   getLogs: action(async function(opts) {
     const { total, logs } = await fapi.getLogs(opts)
-    console.log(logs)
     this.totalLogs = total
     this._logs = logs
   }),

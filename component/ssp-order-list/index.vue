@@ -1,19 +1,18 @@
 
 <template>
-  <div class="order">
-    <topbar :userInfo="userInfo">
-      <label slot="title">订单管理</label>
-    </topbar>
-    <order-header
-      :query="query"
-      :userInfo="userInfo"
-      :showMoreFilters="showMoreFilters"
-    />
-    <order-list
-      :user-info="userInfo"
-      :orders="orders"
-      :query="query"
-    />
+  <div class="container">
+    <div class="order">
+      <order-header
+        :query="query"
+        :userInfo="userInfo"
+        :showMoreFilters="showMoreFilters"
+      />
+      <order-list
+        :user-info="userInfo"
+        :orders="orders"
+        :query="query"
+      />
+    </div>
   </div>
 </template>
 
@@ -48,7 +47,10 @@ export default {
 
 <style lang="postcss" scoped>
 .order {
-  padding: 0 35px;
   width: 100%;
+  padding: 25px;
+  border-radius: 4px;
+  background-color: #fff;
+  box-shadow: 0 2px 9px 0 rgba(83, 95, 127, .10);
 }
 </style>
