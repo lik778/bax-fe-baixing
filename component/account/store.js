@@ -5,7 +5,7 @@ import * as fapi from 'api/fengming'
 import * as mapi from 'api/meta'
 
 const emptyQuery = {
-  fromDate: 0, 
+  fromDate: 0,
   toDate: 0,
   offset: 0,
   limit: 10,
@@ -27,6 +27,7 @@ const store = observable({
   _coupons: [],
 
   _logs: [],
+  totalLogs: 0,
 
   get logs() {
     return toJS(this._logs)
@@ -53,11 +54,9 @@ const store = observable({
 
   // opts: { type, time, offset, pageSize }
   getLogs: action(async function(opts) {
-    // const { query, logs } = await fapi.getLogs(opts)
-    // this._logQuery = query
-    // this._logs = logs
-    const { total, ...logs } = await fapi.getLogs(opts)
-    console.log(total, logs)
+    const { total, logs } = await fapi.getLogs(opts)
+    this.totalLogs = total
+    this._logs = logs
   }),
 
   clearConsumeLogs: action(async function() {

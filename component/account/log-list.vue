@@ -18,7 +18,7 @@
     <label class="ml">选择查询类型</label>
     <bax-select
       :clearable="false"
-      placeholder="请选择"
+      placeholder="请选择查询类型"
       v-model="queryParmas.opType"
       :options="opTypeOpts">
     </bax-select>
@@ -28,9 +28,8 @@
       <el-radio-button :label="genCreatedAtValues(2)">近一年</el-radio-button>
     </el-radio-group>
     <div class="input-wrap">
-      <label class="ml">订单id</label>
-      <el-input v-model="queryParmas.campaignId" class="input" placeholder="请输入订单id" />
-      <el-button type="primary">查询</el-button>
+      <label class="ml">计划id</label>
+      <bax-input v-model="queryParmas.campaignId" class="input" placeholder="请输入计划id" />
     </div>
 
     <el-table class="log-table"
@@ -42,22 +41,51 @@
         :formatter="dateFormatter"
         width="180">
       </el-table-column>
+      <!-- <el-table-column
+        label="产品"
+        prop="productType"
+        width="100">
+      </el-table-column> -->
+      <el-table-column
+        label="项目"
+        prop="timelineType"
+        :formatter="timelineTypeFormatter"
+        width="90">
+      </el-table-column>
       <el-table-column
         label="类型"
-        prop="timelineType"
-        :formatter="logTypeFormatter"
+        :formatter="opTypeFormatter"
+        width="80">
+      </el-table-column>
+      <el-table-column
+        :formatter="campaignIdFormatter"
+        label="计划Id"
+        width="110">
+      </el-table-column>
+      <el-table-column
+        :formatter="changeLogFormatter('field')"
+        label="变更字段"
+        align="center"
+        width="260">
+      </el-table-column>
+      <el-table-column
+        :formatter="changeLogFormatter('old')"
+        label="变更前"
+        align="center"
         width="180">
       </el-table-column>
       <el-table-column
-        :formatter="logDescFormatter"
-        label="操作内容">
+        :formatter="changeLogFormatter('new')"
+        label="变更后"
+        align="center"
+        width="180">
       </el-table-column>
     </el-table>
     <el-pagination
       :total="total"
       @current-change="goto"
       :page-size="ONE_PAGE_NUM"
-      layout="total, prev, pager, next"
+      layout="total, prev, pager, next, jumper"
     >
     </el-pagination>
   </div> 
@@ -66,12 +94,24 @@
 <script>
 import BaxSelect from 'com/common/select'
 import SectionHeader from 'com/common/section-header'
+import BaxInput from 'com/common/input'
 
 import store from './store'
 import moment from 'moment'
 import track from 'util/track'
 import { toHumanTime } from 'utils'
 import { getLogDesc } from 'util/log'
+import {
+  fieldType,
+  opTypeOpts,
+  logTypeOpts,
+  timelineTypeOpts,
+
+  OP_TYPE_CREATE,
+  TIMELINE_TYPE_UNKNOWN,
+  // productTypeOpts
+} from 'constant/log'
+
 
 const ONE_PAGE_NUM = 10
 const CREATED_AT_VALUES = [
@@ -79,25 +119,37 @@ const CREATED_AT_VALUES = [
   moment().subtract(3, 'months').unix(),
   moment().subtract(1, 'years').unix(),
 ]
+const DIVIDING_CHAR = '   '
 
-
-import {
-  TIMELINE_TYPE_UNKNOWN,
-
-  opTypeOpts,
-  logTypeOpts,
-  timelineTypeOpts,
-  // productTypeOpts
-} from 'constant/log'
+const genFormatLogValues = (change, keys, type, opType) => {
+  const valueKey = type === 'old' ? 'oldValue' : 'newValue'
+  return keys.map(k => {
+    const value = opType === OP_TYPE_CREATE ? change[k] : change[k][valueKey]
+    if (k === 'price' || k === 'dailyBudget') {
+      return value / 100
+    } else if (k === 'timeRange') {
+      if (value.includes(null)) return '全时段'
+      return value.map(timeStamp => toHumanTime(new Date(timeStamp * 1000), 'MM月DD')).join('~')
+    } else if (k === 'status') {
+      return value === -10 ? '开启投放' : '暂停投放'
+    } else if (k === 'schedule') {
+      return value.every(v => v === 16777215) ? '全部时段' : '部分时段'
+    } else if (k in fieldType) {
+      return value
+    }
+  }).join(DIVIDING_CHAR)
+}
 
 export default {
   name: 'qwt-operastion-log-list',
   components: {
+    BaxInput,
     BaxSelect,
     SectionHeader
   },
   fromMobx: {
-    logs: () => store.logs
+    logs: () => store.logs,
+    total: () => store.totalLogs
   },
   props: {
     allAreas: {
@@ -111,7 +163,6 @@ export default {
       timelineTypeOpts,
       // productTypeOpts,
       ONE_PAGE_NUM,
-      total: 0,
 
       queryParmas: {
         offset: 0,
@@ -122,19 +173,6 @@ export default {
         createdAt: CREATED_AT_VALUES[0],
         // productType: '3',
       },
-    }
-  },
-  computed: {
-    startTime() {
-      let time = moment()
-      if (this.range === 'month') {
-        time = moment().subtract(1, 'months')
-      } else if (this.range === 'quarter') {
-        time = moment().subtract(3, 'months')
-      } else if (this.range === 'year') {
-        time = moment().subtract(1, 'years')
-      }
-      return time.unix()
     }
   },
   methods: {
@@ -148,31 +186,44 @@ export default {
       this.queryParmas.offset = page * ONE_PAGE_NUM
       this.load()
     },
-    logDescFormatter(row) {
-      const { allAreas } = this
-      if (!row.relatedLog) {
-        return getLogDesc(row, { allAreas })
+    opTypeFormatter({message: {opType}}) {
+      return opTypeOpts.find(({value}) => value === opType).label
+    },
+    timelineTypeFormatter({timelineType}) {
+      return timelineTypeOpts.find(({value}) => value === timelineType).label
+    },
+    dateFormatter({createdAt}) {
+      return toHumanTime(createdAt, 'YYYY-MM-DD HH:mm')
+    },
+    campaignIdFormatter({message:{campaignId}}) {
+      return campaignId
+    },
+    changeLogFormatter(type) {
+      return ({message}) => {
+        const change = message.change
+        const changeKeys = Object.keys(change)
+        const opType = message.opType
+        if (type === 'field') {
+          return changeKeys.map(key => fieldType[key]).join(DIVIDING_CHAR)
+        } else if (type === 'old') {
+          if (opType === OP_TYPE_CREATE) return '-'
+          return genFormatLogValues(change, changeKeys, type, opType)
+        } else if (type === 'new') {
+          return genFormatLogValues(change, changeKeys, type, opType)
+        }
       }
-
-      return row.relatedLog
-    },
-    logTypeFormatter(row) {
-      return logType[String(row.timelineType)]
-    },
-    dateFormatter(row) {
-      return toHumanTime(row.createdAt, 'YYYY-MM-DD HH:mm')
     }
   },
   watch: {
     queryParmas: {
       deep: true,
-      handler(val) {
-        console.log(val.createdAt)
+      handler(params) {
+        this.load(params)
       }
     }
   },
-  async mounted() {
-    await this.load()
+  created() {
+    this.load()
   }
 }
 </script>
