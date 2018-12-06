@@ -76,11 +76,11 @@ import {
 } from 'constant/fengming'
 
 const OPTIMIZABLE_POINTS = [
-  {key: 'dailyBudget', text: '账户余额', routerKey: campaignOptimization.STATUS_OPT_PRICE},
+  {key: 'dailyBudget', text: '账户余额', routerKey: 'charge'},
   {key: 'cntSrc', text: '渠道', routerKey: campaignOptimization.STATUS_OPT_SOURCE},
   {key: 'kwCtr', text: '创意', routerKey: campaignOptimization.STATUS_OPT_CREATIVE},
   {key: 'cntNonDefault', text: '投放设置', routerKey: campaignOptimization.STATUS_OPT_SETTING},
-  {key: 'kwPrice', text: '出价'},
+  {key: 'kwPrice', text: '出价', routerKey: campaignOptimization.STATUS_OPT_PRICE},
   {key: 'avgCntKw', text: '关键词', routerKey: campaignOptimization.STATUS_OPT_KEYWORD}
 ]
 
@@ -182,6 +182,7 @@ export default {
   methods: {
     formatPrice,
     handlePointClick(key) {
+      if (key === 'charge') return this.$router.push({name: 'qwt-charge'})
       this.$router.push({name: 'qwt-promotion-list', query: {
         statuses: key
       }})

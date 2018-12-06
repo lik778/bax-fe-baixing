@@ -82,9 +82,8 @@
       </el-table-column>
     </el-table>
     <el-pagination
-      :total="total"
+      :page-count="Math.floor(total / queryParmas.limit)"
       @current-change="goto"
-      :page-size="ONE_PAGE_NUM"
       layout="total, prev, pager, next, jumper"
     >
     </el-pagination>
@@ -162,7 +161,6 @@ export default {
       opTypeOpts,
       timelineTypeOpts,
       // productTypeOpts,
-      ONE_PAGE_NUM,
 
       queryParmas: {
         offset: 0,

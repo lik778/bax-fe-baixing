@@ -46,7 +46,7 @@
             </div>
           </div>
           <div class="column area">
-            <span class="title">渠道区域</span>
+            <span class="title">投放区域</span>
             <el-tag
               v-for="a in queryParams.areas"
               @close="removeSelectedArea(a)"
@@ -140,7 +140,7 @@ const CAMPAIGN_OPTIMIZATION_OPTS = Object.freeze(
     {label: '创意', value: campaignOptimization.STATUS_OPT_CREATIVE},
     {label: '关键词', value: campaignOptimization.STATUS_OPT_KEYWORD},
     {label: '渠道', value: campaignOptimization.STATUS_OPT_SOURCE},
-    {label: '账户余额', value: campaignOptimization.STATUS_OPT_PRICE},
+    {label: '出价', value: campaignOptimization.STATUS_OPT_PRICE},
     {label: '投放设置', value: campaignOptimization.STATUS_OPT_SETTING}
   ]
 )

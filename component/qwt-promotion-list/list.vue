@@ -61,8 +61,8 @@
                 <a
                   class="btn"
                   href="javascript:;"
-                  @click="togglePromotionStatus(item, landingPage.id, landingPage.campaignIds, item.status === CAMPAIGN_STATUS_OFFLINE)"
-                  :disabled="item.status === CAMPAIGN_STATUS_OFFLINE"
+                  @click="togglePromotionStatus(item, landingPage.id, landingPage.campaignIds, item.status === CAMPAIGN_STATUS_OFFLINE || item.auditStatus === KEYWORD_CHIBI_REJECT)"
+                  :disabled="item.status === CAMPAIGN_STATUS_OFFLINE || item.auditStatus === KEYWORD_CHIBI_REJECT"
                 >
                   {{!!item.pause ? '投放' : '暂停'}}
                 </a>
@@ -101,6 +101,7 @@ import {
 } from 'api/fengming'
 import {
   semPlatformCn,
+  KEYWORD_CHIBI_REJECT,
   CAMPAIGN_STATUS_OFFLINE
 } from 'constant/fengming'
 
@@ -121,6 +122,7 @@ export default {
   data() {
     return {
       LANGPAGE_TYPES,
+      KEYWORD_CHIBI_REJECT,
       CAMPAIGN_STATUS_OFFLINE,
       
       budgetMap: {},
