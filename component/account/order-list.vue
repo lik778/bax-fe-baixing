@@ -74,7 +74,7 @@
     <el-pagination
       v-if="total"
       class="pagination"
-      :page-count="Math.floor(total / params.limit)"
+      :total="total"
       @current-change="goto"
       :page-size="params.limit"
       layout="total, prev, pager, next, jumper"
@@ -138,6 +138,10 @@ export default {
       }, 800)
     },
     async cancelOrder(orderId) {
+      await this.$confirm('您确定要取消该订单吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '放弃'
+      })
       await api.cancelOrder(orderId)
       await this.fetchOrderData()
       this.$message.success('取消订单成功')
