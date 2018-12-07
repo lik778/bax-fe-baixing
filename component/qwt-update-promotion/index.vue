@@ -956,8 +956,8 @@ export default {
     canOptimize(type) {
       const expandMoreSettingArea = () => this.moreSettingDisplay = true
       const opt = {
-        creative: () => this.originPromotion.ctrHigherThanAvg,
-        keyword: () => this.currentKeywords.length < 10,
+        creative: () => this.originPromotion.ctrMark,
+        keyword: () => this.originPromotion.kwMark || this.originPromotion.priceMark,
         time: () => this.timeType === 'custom' && expandMoreSettingArea(),
         duration: () => this.getDurationType() === '部分时段' && expandMoreSettingArea(),
         ratio:
@@ -985,8 +985,10 @@ export default {
         // 单个添加
         if (!queryWord) return
         const recommendKeywords = await recommendByWord(queryWord)
-        newKeywords = store.fmtNewKeywordsPrice(recommendKeywords).slice(0, 1)
-        if (!newKeywords.length) return this.$message.info('没有合适的关键词')
+        const newKeyword = store.fmtNewKeywordsPrice(recommendKeywords).find( k => k.word === queryWord)
+        console.log('单个关键词添加', newKeyword)
+        if (!newKeyword) return this.$message.info('没有合适的关键词')
+        newKeywords = [newKeyword]
         if (!this.filterExistCurrentWords(newKeywords).length) return this.$message.info('当前关键词已存在关键词列表')
         this.queryWord = ''
       } else {

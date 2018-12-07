@@ -42,6 +42,7 @@
                   :content="item.detailStatusText">
                   <i class="el-icon-info" />
                 </el-tooltip>
+                <a href="javascript:;" v-if="item.statusText === '账户余额不足'" @click="$router.push(`/main/qwt/charge`)">充值</a>
               </td>
               <td class="col3">{{item.source | genSourceText}}</td>
               <td class="col4" v-if="budgetMap[item.id] === undefined">
@@ -145,9 +146,12 @@ export default {
   },
   methods: {
     ...RENDER_OPTIMIZATION_METHODS,
-    reset() {
-      // 清除expands
+    reset(firstChild) {
+      // 清除expands并且展开第一项
       this.expands = []
+      if (firstChild) {
+        this.toggleTableExpand(firstChild.id, firstChild.campaignIds)
+      }
     },
     toggleTableExpand(id, campaignIds) {
       const index = this.expands.indexOf(id)
@@ -215,14 +219,17 @@ export default {
     handleBudgetInput(id, value) {
       this.budgetMap = {
         ...this.budgetMap,
-        [id]: value.replace(/[^0-9]/g, '') * 100
+        [id]: value.replace(/[^0-9.]/g, '') * 100
       }
     }
   },
   watch: {
-    landingPageList() {
-      // 当list的数据变化的时候，进行reset操作
-      this.reset()
+    landingPageList: {
+      immediate: true,
+      handler(val) {
+        // 当list的数据变化的时候，进行reset操作
+        this.reset(val[0])
+      }
     }
   },
   filters: {
@@ -348,11 +355,14 @@ export default {
       }
     }
     & .col2 {
-      width: 12%;
+      width: 15%;
       & .el-icon-info {
         font-size: 12px;
         color: rgb(151, 168, 190);
         cursor: help;
+      }
+      & a {
+        color: #35A5E4;
       }
     }
     & .col3 {
