@@ -116,7 +116,7 @@ import {
 } from 'util/element'
 
 import track from 'util/track'
-import { toFloat, f2y } from 'util/kit'
+import { toFloat } from 'util/kit'
 
 const MODE_SELECT = 'select'
 const MODE_UPDATE = 'update'
@@ -263,7 +263,9 @@ export default {
     }
   },
   methods: {
-    f2y,
+    f2y(price) {
+      return (price / 100).toFixed(2)
+    },
     showAddPrice(row) {
       // 过去24小时排名低于5或无排名的，在线的 keyword，在线的 campaign
       const {cpcRanking, isPriceChanged, status: keywordStatus} = row

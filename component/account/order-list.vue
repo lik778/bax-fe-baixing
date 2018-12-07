@@ -9,9 +9,9 @@
         end-placeholder="结束日期">
       </el-date-picker>
       <label>订单状态</label>
-      <el-radio-group v-model="params.status">
+      <el-radio-group v-model="params.statuses">
         <el-radio-button :label="statusType.STATUS_UNPAID">未支付</el-radio-button>
-        <el-radio-button :label="statusType.STATUS_PAID">已支付</el-radio-button>
+        <el-radio-button :label="[statusType.STATUS_PAID, statusType.STATUS_ACTIVE]">已支付</el-radio-button>
         <el-radio-button :label="statusType.STATUS_CANCELED">已取消</el-radio-button>
       </el-radio-group>
     </div>
@@ -47,12 +47,12 @@
         width="105"
         align="center"
         label="优惠券"
-        :formatter="({originalPrice, realPrice}) => formatPrice(originalPrice - realPrice)"/>
+        :formatter="({originalPrice, customerPrice}) => formatPrice(originalPrice - customerPrice)"/>
       <el-table-column
         width="105"
         align="center"
         label="实价"
-        :formatter="({realPrice}) => formatPrice(realPrice)"/>
+        :formatter="({customerPrice}) => formatPrice(customerPrice)"/>
       <el-table-column
         width="140"
         align="center"
@@ -101,7 +101,7 @@ const statusLabel = {
   [statusType.STATUS_CANCELED]: '已取消',
   [statusType.STATUS_UNPAID]: '未支付',
   [statusType.STATUS_PAID]: '已支付',
-  [statusType.STATUS_ACTIVE]: '-'
+  [statusType.STATUS_ACTIVE]: '已支付'
 }
 
 const ONE_PAGE_NUM = 10
@@ -109,19 +109,26 @@ const ONE_PAGE_NUM = 10
 const transformUnixTimeStamp = (date) =>  {
   return moment(new Date(date)).unix()
 }
+const DEFAULT_DATE_RANGE = [
+  moment(new Date()).subtract('months', 1),
+  new Date()
+]
 
 export default {
   name: 'qwt-operastion-order-list',
+  created() {
+    this.fetchOrderData()
+  },
   data() {
     return {
       statusType,
       statusLabel,
 
       params: {
-        dateRange: [],
+        dateRange: DEFAULT_DATE_RANGE,
         limit: ONE_PAGE_NUM,
         offset: 0,
-        status: statusType.STATUS_UNPAID
+        statuses: statusType.STATUS_UNPAID
       },
 
       orderData: [],
@@ -131,7 +138,7 @@ export default {
   components: {SectionHeader},
   methods: {
     async payOrder(orderId) {
-      const url = await api.payOrder([orderId])
+      const url = await api.payOrder(orderId)
       this.$message.success('正在跳转支付页面')
       setTimeout(() => {
         location.href = url
@@ -167,13 +174,13 @@ export default {
       return moment(new Date(createdAt * 1000)).format('YY-MM-DD HH:mm')
     },
     goto(page) {
-      this.params.offset = page * ONE_PAGE_NUM
+      this.params.offset = (page - 1) * ONE_PAGE_NUM
     }
   },
   watch: {
     params: {
       deep: true,
-      handler() {
+      handler(val, oVal) {
         this.fetchOrderData()
       }
     }
