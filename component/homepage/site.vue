@@ -2,7 +2,7 @@
   <div class="layout-container">
     <div class="layout-left">
       <h5 class="layout-header">精品官网概览</h5>
-      <div class="layout-content">
+      <div class="layout-content" v-if="isHasSite">
         <div class="report">
           <div class="radio-group">
             <el-radio v-model="selectedReportKey" label="yesterday">昨日</el-radio>
@@ -31,6 +31,10 @@
             <el-button type="primary" @click="goKaSiteLList">查看详情</el-button>
           </div>
         </div>
+      </div>
+      <div class="no-site-placeholder" v-else>
+        <p class="text">您暂时没有开通精品官网，您可以</p>
+        <el-button type="primary" @click="() => $router.push({name: 'qwt-charge', query: {select_gw: 1}})">购买精品官网</el-button>
       </div>
     </div>
     <div class="layout-right">
@@ -63,6 +67,7 @@ export default {
   },
   components: {Notice},
   fromMobx: {
+    isHasSite: () => store.kaSiteData && !!store.kaSiteData.sites.length,
     kaSiteReports: () => store.kaSiteData ? store.kaSiteData.reports : {},
     siteBeatPercent: () => store.fengmingData && store.fengmingData.beatPeerPercent.toFixed(1),
     notices: () => store.notices.kaSite
@@ -81,6 +86,7 @@ export default {
       if (notices.length === 1) {
         // 跳转到站点的留言列表
         const siteId = notices[0].siteId
+        location.href = `/ka/edit/sites/${siteId}/messages`
       } else {
         // 跳转到站点列表
         this.goKaSiteLList()
@@ -156,5 +162,17 @@ export default {
     display: -webkit-box;
     -webkit-line-clamp: 5;
     -webkit-box-orient: vertical;
+  }
+  .no-site-placeholder {
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 17px;
+    color: #999;
+    & > .text {
+      margin-bottom: 20px;
+    }
   }
 </style>

@@ -20,7 +20,7 @@
             <p class="title">精品官网(个)</p>
             <p class="num">{{sites.length}}</p>
             <p class="desc" v-if="sites.length">
-              （ {{sites.length > 1 ? '最早官网到期日' : '官网到期日'}} {{sites[0].expireAt | formatDate}} ）
+              （ {{sites.length > 1 ? '最早官网到期日' : '官网到期日'}} {{noExpiredSite[0].expireAt | formatDate}} ）
             </p>
             <p class="desc" v-else>暂无精品官网</p>
             <el-button type="primary" class="button" size="small" @click.native="() => handleCharge('site')">立即充值</el-button>
@@ -63,6 +63,11 @@ export default {
         case 'site':
           return this.$router.push({name: 'qwt-charge', query: {select_gw: 1}})
       }
+    }
+  },
+  computed: {
+    noExpiredSite() {
+      return this.sites.filter(site => +new Date(site.expireAt) - +new Date() > 0)
     }
   },
   filters: {

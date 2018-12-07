@@ -2,7 +2,7 @@
   <div class="layout-container">
     <div class="layout-left">
       <h5 class="layout-header">站外推广诊断</h5>
-      <div class="layout-content" v-if="chartOptions">
+      <div class="layout-content" v-if="chartOptions && true">
         <div class="chart">
           <chart :options="chartOptions" />
         </div>
@@ -31,14 +31,21 @@
           </div>
         </div>
       </div>
-      <div class="placeholder" v-else><i class="el-icon-loading" />正在获取站外推广数据</div>
+      <div class="placeholder" v-else-if="!chartOptions"><i class="el-icon-loading" />正在获取站外推广数据</div>
+      <div v-else class="no-campaign-radar-placeholder">
+        <p class="text">您暂时没有站外推广，您可以</p>
+        <div>
+          <el-button type="primary" @click="() => $router.push({name: 'qwt-create-promotion'})">新建站外推广</el-button>
+          <el-button type="primary" @click="() => $router.push({name: 'qwt-charge'})">充值推广资金</el-button>
+        </div>
+      </div>
     </div>
     <div class="layout-right">
       <h5 class="layout-header">
         站外推广数据概览
         <span class="action" @click="() => $router.push({name: 'qwt-dashboard'})">查看详情</span>
       </h5>
-      <div class="layout-content">
+      <div class="layout-content" v-if="true">
         <div class="radio-group">
           <el-radio v-model="reportPrefix" label="">今日</el-radio>
           <el-radio v-model="reportPrefix" label="weekly">昨日</el-radio>
@@ -62,6 +69,9 @@
             <p class="num">{{reportData[3]}}</p>
           </li>
         </ul>
+      </div>
+      <div class="no-campaign-data-placeholder" v-else>
+        <span><i class="el-icon-info" />暂无站外推广数据概览</span>
       </div>
     </div>
   </div>
@@ -206,6 +216,14 @@ export default {
 </script>
 
 <style lang="postcss" scoped>
+ @define-mixin placeholder {
+    display: flex;
+    height: 288px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #999;
+  }
   .layout-left {
     & .layout-content {
       display: flex;
@@ -325,6 +343,22 @@ export default {
           border-bottom: 1px solid #e6e6e6;
         }
       }
+    }
+  }
+
+  .no-campaign-data-placeholder {
+    @mixin placeholder;
+    font-size: 16px;
+    & .el-icon-info {
+      margin-right: 4px;
+    }
+  }
+
+  .no-campaign-radar-placeholder {
+    @mixin placeholder;
+    font-size: 17px;
+    & .text {
+      margin-bottom: 20px;
     }
   }
 </style>
