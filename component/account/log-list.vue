@@ -134,6 +134,8 @@ const genFormatLogValues = (change, keys, type, opType) => {
       return value === -10 ? '开启投放' : '暂停投放'
     } else if (k === 'schedule') {
       return value.every(v => v === 16777215) ? '全部时段' : '部分时段'
+    } else if (k === 'areas') {
+      return value.slice(0, 10).toString() + '...'
     } else if (k in fieldType) {
       return value
     }

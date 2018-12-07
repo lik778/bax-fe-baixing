@@ -75,6 +75,7 @@
       v-if="total"
       class="pagination"
       :total="total"
+      :current-page="Math.floor(offset / params.limit) + 1"
       @current-change="goto"
       :page-size="params.limit"
       layout="total, prev, pager, next, jumper"
@@ -116,9 +117,6 @@ const DEFAULT_DATE_RANGE = [
 
 export default {
   name: 'qwt-operastion-order-list',
-  created() {
-    this.fetchOrderData()
-  },
   data() {
     return {
       statusType,
@@ -127,10 +125,9 @@ export default {
       params: {
         dateRange: DEFAULT_DATE_RANGE,
         limit: ONE_PAGE_NUM,
-        offset: 0,
         statuses: statusType.STATUS_UNPAID
       },
-
+      offset: 0,
       orderData: [],
       total: 0
     }
@@ -153,7 +150,8 @@ export default {
       await this.fetchOrderData()
       this.$message.success('取消订单成功')
     },
-    async fetchOrderData() {
+    async fetchOrderData(isResetOffset) {
+      if (isResetOffset) this.offset = 0
       // format quey parmas
       const { dateRange, ...otherParams } = this.params
       const [startTs, endTs] = dateRange.map(transformUnixTimeStamp)
@@ -161,6 +159,7 @@ export default {
       const queryParmas = {
         startTs,
         endTs,
+        offset: this.offset,
         ...otherParams
       }
       const {total, data} = await api.queryOrder(queryParmas)
@@ -174,14 +173,16 @@ export default {
       return moment(new Date(createdAt * 1000)).format('YY-MM-DD HH:mm')
     },
     goto(page) {
-      this.params.offset = (page - 1) * ONE_PAGE_NUM
+      this.offset = (page - 1) * ONE_PAGE_NUM
+      this.fetchOrderData()
     }
   },
   watch: {
     params: {
       deep: true,
-      handler(val, oVal) {
-        this.fetchOrderData()
+      immediate: true,
+      handler() {
+        this.fetchOrderData(true)
       }
     }
   }
