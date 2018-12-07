@@ -167,10 +167,10 @@ export async function cancelOrder(orderId) {
   return data
 }
 
-export async function payOrder(orderIds) {
+export async function payOrder(orderId) {
   const { data } = await api
-    .get('/order/pay/url')
-    .query(reverseCamelcase({orderIds}))
+    .get('/order/pay_url')
+    .query(reverseCamelcase({orderId}))
     .json()
 
   return data

@@ -82,7 +82,8 @@
       </el-table-column>
     </el-table>
     <el-pagination
-      :page-count="Math.floor(total / queryParmas.limit)"
+      :total="total"
+      :page-size="queryParmas.limit"
       @current-change="goto"
       layout="total, prev, pager, next, jumper"
     >
@@ -181,7 +182,7 @@ export default {
       await store.getLogs(this.queryParmas)
     },
     goto(page) {
-      this.queryParmas.offset = page * ONE_PAGE_NUM
+      this.queryParmas.offset = (page - 1) * ONE_PAGE_NUM
       this.load()
     },
     opTypeFormatter({message: {opType}}) {
@@ -216,6 +217,7 @@ export default {
     queryParmas: {
       deep: true,
       handler(params) {
+        this.params.offset = 0
         this.load(params)
       }
     }

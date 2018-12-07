@@ -58,7 +58,7 @@ export function f2y(fen) {
   if (typeof fen === 'string') {
     fen = toFloat(fen, 0)
   }
-  return (fen / 100).toFixed(2)
+  return fen / 100
 }
 
 export function toFloat(str, f = 2) {

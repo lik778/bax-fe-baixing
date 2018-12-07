@@ -13,7 +13,7 @@
         <div v-show="isActionGroupExpand">
           <div class="column">
             <span class="title">计划id</span>
-            <bax-input class="input" placeholder="请输入ID查询" suffix-icon="el-icon-search" v-model="queryParams.userId"/>
+            <bax-input class="input" placeholder="请输入ID查询" suffix-icon="el-icon-search" v-model="queryParams.campaignId"/>
           </div>
           <div class="column">
             <h6 class="title">投放状态</h6>
@@ -179,7 +179,7 @@ export default {
       CAMPAIGN_OPTIMIZATION_OPTS,
 
       queryParams: {
-        userId: '',
+        campaignId: '',
         areas: [],
         statuses: CAMPAIGN_STATUS_OPTS.map(s => s.value).filter(v => v !== '-1'),
         source: [],
