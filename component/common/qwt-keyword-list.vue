@@ -115,6 +115,7 @@ import {
   renderColumnHeaderWithTip
 } from 'util/element'
 
+import { f2y } from 'util'
 import track from 'util/track'
 import { toFloat } from 'util/kit'
 

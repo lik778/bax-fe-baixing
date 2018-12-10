@@ -320,6 +320,12 @@ export default {
     },
 
     recommendKwPrice() {
+      // 复制推荐词价格取平均值
+      if (this.$route.query.cloneId) {
+        const keywords = this.newPromotion.keywords
+        const sum = this.newPromotion.keywords.reduce((total, kw) => total + kw.price, 0)
+        return Math.min(Math.max(200, toFloat(sum / keywords.length)), 99900)
+      }
       const max = Math.max.apply(null, this.newPromotion.keywords.map(kw => kw.price))
       return Math.min(Math.max(200, toFloat(max, 0)), 99900)
     }
@@ -457,7 +463,7 @@ export default {
       if (!p.sources.length) return Message.error('请选择投放渠道')
 
       if (p.dailyBudget < MIN_DAILY_BUDGET) {
-        return Message.error(`推广日预算需大于 ${f2y(MIN_WORD_PRICE)} 元`)
+        return Message.error(`推广日预算需大于 ${f2y(MIN_DAILY_BUDGET)} 元`)
       }
       if (p.dailyBudget > 10000000 * 100) {
         return Message.error('推广日预算太高啦！您咋这么土豪呢~')
@@ -479,11 +485,12 @@ export default {
         return Message.error('请填写关键字')
       }
 
-      for (const w of p.keywords) {
-        if (w.price < MIN_WORD_PRICE || w.price > MAX_WORD_PRICE) {
-          return Message.error(keywordPriceTip)
-        }
-      }
+      // 这个应该是个雷！
+      // for (const w of p.keywords) {
+      //   if (w.price < MIN_WORD_PRICE || w.price > MAX_WORD_PRICE) {
+      //     return Message.error(keywordPriceTip)
+      //   }
+      // }
 
       if (!p.areas.length) {
         return Message.error('请选择投放区域')
