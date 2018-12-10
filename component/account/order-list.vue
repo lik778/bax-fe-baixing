@@ -32,7 +32,7 @@
         width="105"
         align="center"
         label="充值金额"
-        :formatter="({customerPrice}) => formatPrice(customerPrice)"/>
+        :formatter="formatChargePrice"/>
       <el-table-column
         width="90"
         align="center"
@@ -75,6 +75,7 @@
       v-if="total"
       class="pagination"
       :total="total"
+      :current-page="Math.floor(offset / params.limit) + 1"
       @current-change="goto"
       :page-size="params.limit"
       layout="total, prev, pager, next, jumper"
@@ -116,9 +117,6 @@ const DEFAULT_DATE_RANGE = [
 
 export default {
   name: 'qwt-operastion-order-list',
-  created() {
-    this.fetchOrderData()
-  },
   data() {
     return {
       statusType,
@@ -127,10 +125,9 @@ export default {
       params: {
         dateRange: DEFAULT_DATE_RANGE,
         limit: ONE_PAGE_NUM,
-        offset: 0,
         statuses: statusType.STATUS_UNPAID
       },
-
+      offset: 0,
       orderData: [],
       total: 0
     }
@@ -153,7 +150,8 @@ export default {
       await this.fetchOrderData()
       this.$message.success('取消订单成功')
     },
-    async fetchOrderData() {
+    async fetchOrderData(isResetOffset) {
+      if (isResetOffset) this.offset = 0
       // format quey parmas
       const { dateRange, ...otherParams } = this.params
       const [startTs, endTs] = dateRange.map(transformUnixTimeStamp)
@@ -161,6 +159,7 @@ export default {
       const queryParmas = {
         startTs,
         endTs,
+        offset: this.offset,
         ...otherParams
       }
       const {total, data} = await api.queryOrder(queryParmas)
@@ -170,18 +169,24 @@ export default {
     formatPrice(price) {
       return (price / 100)
     },
+    formatChargePrice({customerPrice, productType}) {
+      // 这个订单如果只买了官网，没有充值，就显示“-”
+      return productType === 4 && customerPrice === 120000 ? '-' : this.formatPrice(customerPrice)
+    },
     formatCreatedAt({createdAt}) {
       return moment(new Date(createdAt * 1000)).format('YY-MM-DD HH:mm')
     },
     goto(page) {
-      this.params.offset = (page - 1) * ONE_PAGE_NUM
+      this.offset = (page - 1) * ONE_PAGE_NUM
+      this.fetchOrderData()
     }
   },
   watch: {
     params: {
       deep: true,
-      handler(val, oVal) {
-        this.fetchOrderData()
+      immediate: true,
+      handler() {
+        this.fetchOrderData(true)
       }
     }
   }

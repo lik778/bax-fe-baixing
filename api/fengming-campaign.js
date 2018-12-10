@@ -129,7 +129,7 @@ export async function getCampaignRadar() {
 export async function getCampaignLanding(query) {
   const body = await fengming
     .get('/campaign/current_landing')
-    .query(query)
+    .query(reverseCamelcase(query))
     .json()
   return {
     ...body.data,

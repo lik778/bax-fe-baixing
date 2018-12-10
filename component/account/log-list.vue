@@ -84,6 +84,7 @@
     <el-pagination
       :total="total"
       :page-size="queryParmas.limit"
+      :current-page="Math.floor(offset / queryParmas.limit) + 1"
       @current-change="goto"
       layout="total, prev, pager, next, jumper"
     >
@@ -114,6 +115,7 @@ import {
 
 
 const ONE_PAGE_NUM = 10
+const MAX_AREAS_LOG_LENGTH = 30
 const CREATED_AT_VALUES = [
   moment().subtract(1, 'months').unix(),
   moment().subtract(3, 'months').unix(),
@@ -134,6 +136,8 @@ const genFormatLogValues = (change, keys, type, opType) => {
       return value === -10 ? '开启投放' : '暂停投放'
     } else if (k === 'schedule') {
       return value.every(v => v === 16777215) ? '全部时段' : '部分时段'
+    } else if (k === 'areas') {
+      return value.slice(0, MAX_AREAS_LOG_LENGTH).toString() + '...'
     } else if (k in fieldType) {
       return value
     }
@@ -163,8 +167,9 @@ export default {
       timelineTypeOpts,
       // productTypeOpts,
 
+      offset: 0,
+
       queryParmas: {
-        offset: 0,
         opType: '',
         campaignId: '',
         timelineType: '',
@@ -178,11 +183,15 @@ export default {
     genCreatedAtValues(index) {
       return CREATED_AT_VALUES[index]
     },
-    async load() {
-      await store.getLogs(this.queryParmas)
+    async load(isResetOffset) {
+      if (isResetOffset) this.offset = 0
+      await store.getLogs({
+        ...this.queryParmas,
+        offset: this.offset
+      })
     },
     goto(page) {
-      this.queryParmas.offset = (page - 1) * ONE_PAGE_NUM
+      this.offset = (page - 1) * ONE_PAGE_NUM
       this.load()
     },
     opTypeFormatter({message: {opType}}) {
@@ -216,14 +225,11 @@ export default {
   watch: {
     queryParmas: {
       deep: true,
+      immediate: true,
       handler(params) {
-        this.params.offset = 0
-        this.load(params)
+        this.load(true)
       }
     }
-  },
-  created() {
-    this.load()
   }
 }
 </script>
