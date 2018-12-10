@@ -2,7 +2,7 @@
   <div class="layout-container">
     <div class="layout-left">
       <h5 class="layout-header">站外推广诊断</h5>
-      <div class="layout-content" v-if="chartOptions && true">
+      <div class="layout-content" v-if="chartOptions && hasCampaign">
         <div class="chart">
           <chart :options="chartOptions" />
         </div>
@@ -45,7 +45,7 @@
         站外推广数据概览
         <span class="action" @click="() => $router.push({name: 'qwt-dashboard'})">查看详情</span>
       </h5>
-      <div class="layout-content" v-if="true">
+      <div class="layout-content" v-if="hasCampaign">
         <div class="radio-group">
           <el-radio v-model="reportPrefix" label="">今日</el-radio>
           <el-radio v-model="reportPrefix" label="weekly">昨日</el-radio>
@@ -187,6 +187,9 @@ export default {
       return OPTIMIZABLE_POINTS.filter((_, index) => {
         if (scores[index] < 60) return true
       })
+    },
+    hasCampaign() {
+      return store.campaignRadar.cntCampaign > 0
     }
   },
   methods: {
