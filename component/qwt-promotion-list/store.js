@@ -1,5 +1,6 @@
 import {
   getCampaignLanding,
+  getHomepageSummary,
   getCurrentCampaigns
 } from 'api/fengming-campaign'
 import { observable, action } from 'mobx'
@@ -17,6 +18,7 @@ class Store {
   @observable campaignMap = {}
   @observable landingPageLoading = false
   @observable landingPageList = null
+  @observable summary = null
 
   @action
   async fetchPromotionList(id, campaignIds, isForceUpdate) {
@@ -42,6 +44,10 @@ class Store {
     } finally {
       this.landingPageLoading = false
     }
+  }
+  @action
+  async fetchSummary() {
+    this.summary = await getHomepageSummary()
   }
 }
 

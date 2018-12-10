@@ -2,6 +2,7 @@
   <div class="qwt-promotion-list">
     <main class="container">
       <h2 class="header">我的站外推广计划</h2>
+      <p class="info" v-if="summary && summary.budget">您的推广资金可用余额为<span class="red">{{f2y(usableBalance)}}元</span>，预计可消耗<span class="red">{{days}}天</span>，为了保证您的广告正常投放，请及时<router-link :to="{name: 'qwt-charge'}">充值</router-link></p>
       <div class="action-group">
         <div class="top">
           <el-button class="button" icon="el-icon-plus" type="primary" @click="() => $router.push({name: 'qwt-create-promotion'})">新建推广计划</el-button>
@@ -118,6 +119,13 @@ import {
 } from 'api/fengming-campaign'
 
 import {
+  getUsableBalance,
+  getHomepageSummary
+} from 'api/fengming'
+
+import {f2y} from 'util'
+
+import {
   semPlatformOpts as SOURCES_OPTS,
   campaignOptimization
 } from 'constant/fengming'
@@ -158,7 +166,7 @@ const formatlandingPageList = res => {
 
 export default {
   name: 'qwt-promotion-list',
-  async created() {
+  created() {
     const statuses = this.$route.query.statuses
     if (!!statuses) {
       // 从首页未审核处点击进来的
@@ -169,7 +177,8 @@ export default {
         this.queryParams.statuses.push(statuses)
       }
     }
-    await this.fetchlandingPageList()
+    this.fetchSummary()
+    this.fetchlandingPageList()
   },
   data() {
     return {
@@ -186,10 +195,12 @@ export default {
         offset: 0,
         limit: ONE_PAGE_NUM
       },
-      
+
       landingPageLoading: false,
       landingPageList: null,
+      usableBalance: null,
       campaignMap: {},
+      summary: null,
       totalPage: 0,
 
       areaDialogVisible: false,
@@ -199,6 +210,7 @@ export default {
   props: ['allAreas'],
   components: {AreaSelector, List, BaxInput},
   methods: {
+    f2y,
     handlePageChange(page) {
       this.queryParams.offset = (page - 1) * ONE_PAGE_NUM
       this.fetchlandingPageList()
@@ -238,12 +250,22 @@ export default {
           [id]: campaigns
         })
       }
+    },
+    async fetchSummary() {
+      const [usableBalance, summary] = await Promise.all([getUsableBalance(), getHomepageSummary()])
+      this.summary = summary
+      this.usableBalance = usableBalance
     }
   },
   filters: {
     transformCityName(name, allAreas) {
       return getCnName(name, allAreas)
     }
+  },
+  computed: {
+    days() {
+      return Math.ceil(this.usableBalance / this.summary.budget)
+    },
   },
   watch: {
     queryParams: {
@@ -345,4 +367,18 @@ export default {
   .list {
     padding: 10px 30px 30px;
   }
+
+.info {
+  font-size: 12px;
+  margin-top: 15px;
+  margin-left: 30px;
+  & > a {
+    margin-left: 4px;
+    color: #35A5E4;
+  }
+  & > .red {
+    color: red;
+    margin: 0 5px;
+  }
+}
 </style>
