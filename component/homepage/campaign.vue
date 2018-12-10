@@ -189,7 +189,7 @@ export default {
       })
     },
     hasCampaign() {
-      return store.campaignRadar.cntCampaign > 0
+      return this.campaignRadar && this.campaignRadar.cntCampaign > 0
     }
   },
   methods: {

@@ -37,6 +37,7 @@ import Homepage from 'com/homepage'
 import Account from 'com/account'
 import Coupon from 'com/coupon'
 import Charge from 'com/charge'
+import Notice from 'com/notice'
 
 import Bax from 'com/bax'
 
@@ -190,10 +191,17 @@ const router = new VueRouter({
     component: Coupon,
     path: '/main/coupon',
     name: 'coupon'
-  }, ...qwtRoutes, ...sspRoutes, ...gwRoutes, ...bwRoutes, {
+  }, {
+    component: Notice,
+    path: '/main/notice',
+    name: 'notice'
+  }, {
     component: Homepage,
     path: '*'
-  }]
+  },
+  ...qwtRoutes,
+  ...sspRoutes,
+  ...gwRoutes]
 })
 router.beforeEach((to, from, next) => {
   window.scrollTo(0, 0)
