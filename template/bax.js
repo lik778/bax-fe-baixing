@@ -199,6 +199,7 @@ const router = new VueRouter({
     component: Homepage,
     path: '*'
   },
+  ...bwRoutes,
   ...qwtRoutes,
   ...sspRoutes,
   ...gwRoutes]
