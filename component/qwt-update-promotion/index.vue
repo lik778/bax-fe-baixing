@@ -85,10 +85,6 @@
           <el-button size="small" type="primary" class="button" @click="addKeyword">一键拓词</el-button>
           <strong>当前关键词数量: {{ currentKeywords.length }}个</strong>
         </header>
-        <div class="second-col">
-          <el-input size="small" class="input" v-model="keywordsPrice" placeholder="填写关键词价格"/>
-          <el-button size="small" type="primary" class="button" @click="changeKeywordsPrice">批量改价</el-button>
-        </div>
         <keyword-list
           mode="update"
           :platform="getProp('source')"
@@ -382,7 +378,6 @@ export default {
 
       actionTrackId: uuid(),
       landingTypeOpts,
-      keywordsPrice: '',
       durationSelectorVisible: false,
       areaDialogVisible: false,
 
@@ -1012,14 +1007,13 @@ export default {
         this.promotion.deletedKeywords.push(word)
       }
     },
-    async changeKeywordsPrice() {
-      const price = this.keywordsPrice * 100
+    async changeKeywordsPrice(keywordsPrice) {
+      const price = keywordsPrice * 100
       const campaignId = +this.$route.params.id
       if (price < 200 || price > 99900) {
-        return this.$message.error('关键词有效出价区间为[2, 999]元，请调整出价')
+        throw '关键词有效出价区间为[2, 999]元，请调整出价'
       }
       await changeCampaignKeywordsPrice(campaignId, price)
-      this.$message.success('关键词批量改价成功')
       this.originPromotion.keywords.forEach(word => {
         this.updateExistWord({
           ...word,
@@ -1030,6 +1024,7 @@ export default {
         ...word,
         price
       }))
+      return '关键词批量改价成功'
     },
     disabledDate,
     f2y
