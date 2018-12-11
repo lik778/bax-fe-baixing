@@ -30,7 +30,7 @@
         :formatter="r => fmtCpcRanking(r.cpcRanking || -1)">
       </el-table-column>
       <el-table-column v-if="showPropStatus"
-        width="180"
+        width="200"
         label="关键词状态"
         :render-header="renderWithTip(keywordStatusTip)">
         <template slot-scope="s">
@@ -44,7 +44,9 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column>
+      <el-table-column
+        width="300"
+      >
         <template slot="header" slot-scope="col">
           {{maxPriceLabel}}<cpc-top-price-tip/>
           <el-popover
@@ -458,7 +460,7 @@ export default {
 .qwt-keyword-list {
   display: flex;
   flex-flow: column;
-  max-width: 1150px;
+  max-width: 1120px;
 
   & >>> .new-word {]
     font-size: 12px;
@@ -494,11 +496,6 @@ export default {
     border: 1px solid rgba(103, 194, 58, 0.2);
     color: #67c23a;
     cursor: pointer;
-    white-space: nowrap;
-  }
-
-  & > label {
-    white-space: nowrap;
   }
 }
 
@@ -527,7 +524,6 @@ export default {
     margin-left: 10px;
     font-size: 12px;
     color: red;
-    max-width: 180px;
   }
 }
 
