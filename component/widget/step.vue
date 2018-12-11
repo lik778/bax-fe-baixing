@@ -29,11 +29,11 @@ export default {
     },
     steps: {
       type: Array,
-      required: true
+      // required: true
     },
     step: {
       type: Number,
-      required: true
+      // required: true
     },
     hint: {
       type: String,

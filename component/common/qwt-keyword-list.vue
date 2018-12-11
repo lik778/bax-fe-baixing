@@ -21,15 +21,16 @@
         </template>
       </el-table-column>
       <el-table-column v-if="showPropShow"
-        prop="show" width="180"
+        prop="show" width="200"
         label="日均搜索指数"
         :render-header="renderWithTip(searchIndexTip)">
       </el-table-column>
       <el-table-column v-if="showPropRanking"
-        width="140" label="平均排名"
+        width="150" label="平均排名"
         :formatter="r => fmtCpcRanking(r.cpcRanking || -1)">
       </el-table-column>
       <el-table-column v-if="showPropStatus"
+        width="200"
         label="关键词状态"
         :render-header="renderWithTip(keywordStatusTip)">
         <template slot-scope="s">
@@ -44,6 +45,7 @@
         </template>
       </el-table-column>
       <el-table-column
+        width="300"
         :label="maxPriceLabel"
         :render-header="renderWithTip(cpcTopPriceTip)"
       >

@@ -372,7 +372,7 @@ export default {
   color: #6a778c;
 
   &[aria-checked="true"] {
-    background: #009cff !important;
+    background: var(--qwt-c-orange) !important;
     color: white !important;
   }
 }

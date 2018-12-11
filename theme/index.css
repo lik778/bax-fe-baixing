@@ -37,6 +37,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -263,6 +271,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -633,6 +649,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -751,6 +775,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -863,6 +895,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -981,6 +1021,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -1093,6 +1141,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -1211,6 +1267,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -1323,6 +1387,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -1441,6 +1513,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -1677,6 +1757,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -1795,6 +1883,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -2154,6 +2250,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -2272,6 +2376,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -2481,6 +2593,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -2599,6 +2719,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -2735,6 +2863,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -2853,6 +2989,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -2992,6 +3136,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -3110,6 +3262,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -3572,6 +3732,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -3690,6 +3858,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -3802,6 +3978,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -4073,6 +4257,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -4191,6 +4383,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -4303,6 +4503,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -4421,6 +4629,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -4780,6 +4996,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -4898,6 +5122,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -5055,6 +5287,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -5173,6 +5413,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -5421,6 +5669,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -5539,6 +5795,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -5649,6 +5913,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -5759,6 +6031,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -5871,6 +6151,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -6382,6 +6670,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -6500,6 +6796,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -6797,6 +7101,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -6915,6 +7227,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -7025,6 +7345,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -7487,6 +7815,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -7605,6 +7941,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -7964,6 +8308,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -8082,6 +8434,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -8194,6 +8554,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -8312,6 +8680,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -8778,6 +9154,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -8896,6 +9280,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -9006,6 +9398,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -9160,15 +9560,15 @@
       color: #c0c4cc;
       cursor: not-allowed; }
     .el-radio__input.is-checked .el-radio__inner {
-      border-color: #35A5E4;
-      background: #35A5E4; }
+      border-color: #ff7533;
+      background: #ff7533; }
       .el-radio__input.is-checked .el-radio__inner::after {
         -webkit-transform: translate(-50%, -50%) scale(1);
         transform: translate(-50%, -50%) scale(1); }
     .el-radio__input.is-checked + .el-radio__label {
       color: #666; }
     .el-radio__input.is-focus .el-radio__inner {
-      border-color: #35A5E4; }
+      border-color: #ff7533; }
   .el-radio__inner {
     border: 1px solid #dcdfe6;
     border-radius: 100%;
@@ -9181,7 +9581,7 @@
     -webkit-box-sizing: border-box;
     box-sizing: border-box; }
     .el-radio__inner:hover {
-      border-color: #35A5E4; }
+      border-color: #ff7533; }
     .el-radio__inner::after {
       width: 4px;
       height: 4px;
@@ -9210,8 +9610,8 @@
   .el-radio:focus:not(.is-focus):not(:active):not(.is-disabled) {
     /*获得焦点时 样式提醒*/ }
     .el-radio:focus:not(.is-focus):not(:active):not(.is-disabled) .el-radio__inner {
-      -webkit-box-shadow: 0 0 2px 2px #35A5E4;
-      box-shadow: 0 0 2px 2px #35A5E4; }
+      -webkit-box-shadow: 0 0 2px 2px #ff7533;
+      box-shadow: 0 0 2px 2px #ff7533; }
   .el-radio__label {
     font-size: 14px;
     padding-left: 10px; }
@@ -9256,6 +9656,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -9374,6 +9782,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -9492,6 +9908,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -9610,6 +10034,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -9720,6 +10152,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -9918,6 +10358,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -10030,6 +10478,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -10148,6 +10604,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -10525,6 +10989,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -10643,6 +11115,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -10839,6 +11319,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -10957,6 +11445,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -11069,6 +11565,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -11187,6 +11691,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -11299,6 +11811,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -11417,6 +11937,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -11653,6 +12181,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -11771,6 +12307,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -12130,6 +12674,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -12248,6 +12800,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -12457,6 +13017,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -12575,6 +13143,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -12711,6 +13287,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -12829,6 +13413,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -12968,6 +13560,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -13086,6 +13686,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -13346,6 +13954,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -13456,6 +14072,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -13568,6 +14192,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -14079,6 +14711,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -14197,6 +14837,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -14309,6 +14957,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -14427,6 +15083,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -14804,6 +15468,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -14922,6 +15594,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -15131,6 +15811,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -15249,6 +15937,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -15451,6 +16147,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -15917,6 +16621,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -16035,6 +16747,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -16147,6 +16867,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -16265,6 +16993,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -16642,6 +17378,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -16760,6 +17504,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -16967,6 +17719,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -17138,6 +17898,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -17250,6 +18018,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -17471,6 +18247,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -17607,6 +18391,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -17745,6 +18537,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -17931,6 +18731,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -18049,6 +18857,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -18159,6 +18975,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -18523,6 +19347,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -18635,6 +19467,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -18753,6 +19593,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -19010,6 +19858,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -19186,6 +20042,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -19318,6 +20182,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -19498,6 +20370,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -19616,6 +20496,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -19975,6 +20863,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -20093,6 +20989,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -20250,6 +21154,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -20368,6 +21280,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -20557,6 +21477,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -20669,6 +21597,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -20787,6 +21723,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -20897,6 +21841,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -21261,6 +22213,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -21373,6 +22333,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -21491,6 +22459,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -21750,6 +22726,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -21868,6 +22852,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -22025,6 +23017,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -22143,6 +23143,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -22360,6 +23368,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -22478,6 +23494,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -22588,6 +23612,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -22952,6 +23984,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -23149,6 +24189,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -23333,6 +24381,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -23511,6 +24567,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -23645,6 +24709,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -23763,6 +24835,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -24122,6 +25202,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -24240,6 +25328,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -24397,6 +25493,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -24515,6 +25619,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -24706,6 +25818,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -24824,6 +25944,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -24936,6 +26064,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -25054,6 +26190,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -25271,6 +26415,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -25389,6 +26541,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -25593,6 +26753,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -25711,6 +26879,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -25823,6 +26999,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -25971,6 +27155,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -26081,6 +27273,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -26193,6 +27393,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -26704,6 +27912,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -26822,6 +28038,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -27361,6 +28585,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -27479,6 +28711,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -27629,6 +28869,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -27747,6 +28995,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -27977,6 +29233,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -28095,6 +29359,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -28782,6 +30054,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -28900,6 +30180,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -29109,6 +30397,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -29227,6 +30523,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -29337,6 +30641,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -29563,6 +30875,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -29675,6 +30995,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -29793,6 +31121,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -30257,6 +31593,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -30375,6 +31719,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -30564,6 +31916,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -30682,6 +32042,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -30867,6 +32235,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -30987,6 +32363,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -31105,6 +32489,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -31217,6 +32609,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -31335,6 +32735,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -31801,6 +33209,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -31919,6 +33335,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -32121,6 +33545,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -32408,6 +33840,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -32526,6 +33966,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -32723,6 +34171,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -32835,6 +34291,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -32993,6 +34457,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -33105,6 +34577,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -34853,6 +36333,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -34973,6 +36461,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -35091,6 +36587,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -35295,6 +36799,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -35851,6 +37363,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -35969,6 +37489,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -36169,6 +37697,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -36340,6 +37876,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -36458,6 +38002,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -36657,6 +38209,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -36775,6 +38335,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -36928,6 +38496,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -37046,6 +38622,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -37180,6 +38764,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -37298,6 +38890,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -37445,6 +39045,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -37582,6 +39190,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -37700,6 +39316,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -38048,6 +39672,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -38166,6 +39798,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -38381,6 +40021,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -38499,6 +40147,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -38656,6 +40312,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -38774,6 +40438,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -38928,6 +40600,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -39046,6 +40726,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -39156,6 +40844,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -39434,6 +41130,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -39552,6 +41256,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -39664,6 +41376,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -39782,6 +41502,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -40141,6 +41869,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -40259,6 +41995,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -40580,6 +42324,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -40698,6 +42450,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -41106,6 +42866,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -41224,6 +42992,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -41336,6 +43112,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -41454,6 +43238,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -41811,6 +43603,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -41921,6 +43721,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -42033,6 +43841,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -42542,6 +44358,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -42654,6 +44478,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -42772,6 +44604,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -43314,6 +45154,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -43456,6 +45304,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -43574,6 +45430,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -43693,6 +45557,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -43820,6 +45692,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -43938,6 +45818,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -44062,6 +45950,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert
@@ -44180,6 +46076,14 @@
 -------------------------- */
 /* Radio
 -------------------------- */
+/*
+$--radio-checked-text-color: $--color-primary !default;
+$--radio-checked-input-border-color: $--color-primary !default;
+$--radio-checked-input-fill: $--color-white !default;
+$--radio-checked-icon-color: $--color-primary !default;
+
+$--radio-input-border-color-hover: $--color-primary !default;
+*/
 /* Select
 -------------------------- */
 /* Alert

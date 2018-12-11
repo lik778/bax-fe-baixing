@@ -53,11 +53,11 @@
         <el-menu-item index="gw-homepage">
           <a href="/ka/main" v-if="isRenderSiteLink" style="color: inherit">
             <i class="el-icon-news" />精品官网
-            <strong v-if="isRenderSiteNavTag" style="color: rgb(255, 99, 80); font-size: 18px;">!</strong>
+            <i v-if="isRenderSiteNavTag" class="el-icon-question" />
           </a>
           <router-link :to="{name: 'gw-homepage'}" tag="p" v-else>
             <i class="el-icon-news" />精品官网
-            <strong v-if="isRenderSiteNavTag" style="color: rgb(255, 99, 80); font-size: 18px;">!</strong>
+            <i v-if="isRenderSiteNavTag" class="el-icon-question" />
           </router-link>
         </el-menu-item>
         <el-menu-item index="qwt-dashboard">
@@ -287,6 +287,12 @@ export default {
   & >>> .el-icon-news, & >>> .el-icon-document {
     text-align: left;
     margin-right: 1px;
+    font-size: 16px;
+  }
+  & .el-icon-question {
+    margin-top: -2px;
+    margin-left: -3px;
+    color: rgb(255, 99, 80); 
     font-size: 16px;
   }
 }

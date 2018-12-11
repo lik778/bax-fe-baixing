@@ -46,7 +46,7 @@
       <el-table-column
         width="105"
         align="center"
-        label="优惠券"
+        label="优惠"
         :formatter="({originalPrice, customerPrice}) => formatPrice(originalPrice - customerPrice)"/>
       <el-table-column
         width="105"
@@ -194,6 +194,7 @@ export default {
 </script>
 
 <style scoped lang="postcss">
+  @import "../../cssbase/var.css";
   .action-container {
     margin-bottom: 20px;
     & > label {
@@ -203,7 +204,7 @@ export default {
   }
   .btn-wrap {
     & > a {
-      color: #409EFF;
+      color: var(--qwt-c-blue);
     }
   }
   .pagination {

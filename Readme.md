@@ -37,3 +37,5 @@
 * copy `//unpkg.com/element-ui/lib/theme-default/index.css` (这是被墙的 >_<)
 * css中 `fonts/element-icons.woff`
 * css中 `fonts/element-icons.ttf` 传一下, 改一下
+
+* 修改element配置样式：修改根目录的element-theme.scss 并执行 `et -c ./element-theme.scss`
