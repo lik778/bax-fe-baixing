@@ -15,7 +15,7 @@
     "clone": "^2.1.1",
     "cssbase": "github:coderhaoxin/cssbase",
     "echarts": "^4.0.3",
-    "element-ui": "^2.2.0",
+    "element-ui": "^2.4.11",
     "fetch.io": "^4.1.2",
     "lodash.isequal": "4.5.0",
     "lodash.padstart": "4.6.1",

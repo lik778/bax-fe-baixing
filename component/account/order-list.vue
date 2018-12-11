@@ -194,6 +194,7 @@ export default {
 </script>
 
 <style scoped lang="postcss">
+  @import "../../cssbase/var.css";
   .action-container {
     margin-bottom: 20px;
     & > label {
@@ -203,7 +204,7 @@ export default {
   }
   .btn-wrap {
     & > a {
-      color: #409EFF;
+      color: var(--qwt-c-blue);
     }
   }
   .pagination {

@@ -17,7 +17,10 @@
         <table class="table-container" v-if="isExistInExpands(landingPage.id)" border="none">
           <thead>
             <tr class="tr">
-              <th class="col1">计划id</th>
+              <th class="col1">
+                <span class="t">计划id</span>
+                优化项
+              </th>
               <th class="col2">状态</th>
               <th class="col3">渠道</th>
               <th class="col4"><top-tip label="今日预算" tip="该计划今日已消耗的上限"/></th>
@@ -30,7 +33,7 @@
             <tr class="tr" v-for="item in campaignMap[landingPage.id]" :key="item.id">
               <td class="col1">
                 <span class="t">{{item.id}}</span>
-                <strong class="hint" v-if="item.kwMark">关</strong>
+                <strong class="hint" v-if="item.kwMark">词</strong>
                 <strong class="hint" v-if="item.priceMark">价</strong>
                 <strong class="hint" v-if="item.ctrMark">创</strong>
                 <strong class="hint" v-if="item.defaultMark">设</strong>
@@ -245,6 +248,7 @@ export default {
 </script>
 
 <style lang="postcss" scoped>
+  @import "../../cssbase/var.css";
   .list-container {
     position: relative;
     min-height: 208px;
@@ -370,7 +374,7 @@ export default {
       text-align: center;
     }
     & .col4 {
-      width: 18%;
+      width: 17%;
       padding-left: 36px;
       white-space: nowrap;
       & >>> .el-input__inner {
@@ -383,7 +387,7 @@ export default {
         padding: 9px 10px;
       }
       & .btn {
-        color: #35A5E4;
+        color: var(--qwt-c-blue);
         margin-left: 5px;
       }
     }
@@ -399,7 +403,7 @@ export default {
     & .col7 {
       text-align: center;
       & .btn {
-        color: #35A5E4;
+        color: var(--qwt-c-blue);
         margin-right: 8px;
       }
     }

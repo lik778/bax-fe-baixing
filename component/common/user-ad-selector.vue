@@ -237,12 +237,12 @@ export default {
 
 .fabu {
   cursor: pointer;
-  color: var(--qwt-c-blue);
+  color: var(--qwt-c-orange);
   font-size: 14px;
 }
 
 .fabu:visited {
-  color: var(--qwt-c-blue);
+  color: var(--qwt-c-orange);
 }
 
 .line {
@@ -252,11 +252,11 @@ export default {
 .op {
   & > a {
     cursor: pointer;
-    color: var(--qwt-c-blue);
+    color: var(--qwt-c-orange);
   }
 
   & > a:visited {
-    color: var(--qwt-c-blue);
+    color: var(--qwt-c-orange);
   }
 }
 

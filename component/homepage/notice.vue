@@ -97,7 +97,7 @@ export default {
 <style lang="postcss" scoped>
   .homepage-notices {
     margin-top: 15px;
-    overflow: hidden auto;
+    overflow-y: hidden;
     &::-webkit-scrollbar { width: 0 !important }
     &.element { -ms-overflow-style: none; }
     &.element { overflow: -moz-scrollbars-none; }

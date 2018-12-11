@@ -137,7 +137,8 @@ const genFormatLogValues = (change, keys, type, opType) => {
     } else if (k === 'schedule') {
       return value.every(v => v === 16777215) ? '全部时段' : '部分时段'
     } else if (k === 'areas') {
-      return value.slice(0, MAX_AREAS_LOG_LENGTH).toString() + '...'
+      const sliceAreas = value.slice(0, MAX_AREAS_LOG_LENGTH)
+      return `${sliceAreas.toString()}${sliceAreas.length === MAX_AREAS_LOG_LENGTH ? '...' : ''}`
     } else if (k in fieldType) {
       return value
     }
