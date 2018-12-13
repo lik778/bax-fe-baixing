@@ -10,7 +10,7 @@
     <a v-if="type === 'content-rule'"
       v-bind:href="assetHost + 'baixing-online-promotion-content-rule.docx'"
       download="百姓网站外推广填写准则.docx">
-      《百姓网填写准则》
+      《百姓网站外推广填写准则》
     </a>
   </h4>
 </template>
