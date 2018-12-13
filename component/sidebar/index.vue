@@ -105,11 +105,11 @@
           <template slot="title">
             <bx-icon type="questioncircleo"></bx-icon>答疑解惑
           </template>
-          <el-menu-item index="qa-1">
+          <!-- <el-menu-item index="qa-1">
             <a class="link" target="_blank" href="/qa?mode=tutorials">
               操作指南
             </a>
-          </el-menu-item>
+          </el-menu-item> -->
           <el-menu-item index="qa-2">
             <a class="link" target="_blank" href="/qa?mode=questions">
               常见问题
