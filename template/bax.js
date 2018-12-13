@@ -5,12 +5,6 @@ import QwtCreatePromotion from 'com/qwt-create-promotion'
 import QwtPromotionList from 'com/qwt-promotion-list'
 import QwtDashboard from 'com/qwt-dashboard'
 
-// mvp
-import MvpUpdateCampaign from 'com/mvp-update-campaign'
-import MvpCreateCampaign from 'com/mvp-create-campaign'
-import MvpCampaignList from 'com/mvp-campaign-list'
-import MvpDashboard from 'com/mvp-dashboard'
-
 // ssp
 import MaterialList from 'com/ssp-material-list'
 import MaterialInfo from 'com/ssp-material-info'
@@ -64,24 +58,6 @@ const gwRoutes = [{
   component: GwCharge,
   path: '/main/gw/charge',
   name: 'gw-charge'
-}]
-
-const mvpRoutes = [{
-  component: MvpCreateCampaign,
-  path: '/main/mvp/campaign/create',
-  name: 'mvp-create-campaign'
-}, {
-  component: MvpUpdateCampaign,
-  path: '/main/mvp/campaigns/:id/update',
-  name: 'mvp-update-campaign'
-}, {
-  component: MvpCampaignList,
-  path: '/main/mvp/campaigns',
-  name: 'mvp-campaign-list'
-}, {
-  component: MvpDashboard,
-  path: '/main/mvp/dashboard',
-  name: 'mvp-dashboard'
 }]
 
 const qwtRoutes = [{
