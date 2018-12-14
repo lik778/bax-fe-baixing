@@ -1,5 +1,5 @@
 <template>
-  <div class="cart" :class="{show}">
+  <div class="cart" :class="{expand}">
     <div class="handle" @click="onHandleClick">
       <i class="el-icon-edit"></i><p>关键词购物车({{localItems.length}})</p>
     </div>
@@ -47,8 +47,9 @@
         localItems: [],
 
         gwSelected: false,
-        show: false,
-        loading: false
+        expand: false,
+        loading: false,
+        firstLoad: true
       }
     },
     computed: {
@@ -79,7 +80,7 @@
         location.href = `http://trade-dev.baixing.cn/?appId=101&seq=${preTradeId}`
       },
       onHandleClick() {
-        this.show = !this.show
+        this.expand = !this.expand
       },
       addToCart(items) {
         const newItems = items.filter(i => !this.localItems.some(j => j.word === i.word))
@@ -92,11 +93,16 @@
       localItems: {
         handler: function(local) {
           localStorage.setItem(storageKey, JSON.stringify(local))
-          this.show = true
+          if (!this.firstLoad) {
+            this.expand = true
+          }
+          if (this.firstLoad) {
+            this.firstLoad = false
+          }
         },
         deep: true
       },
-      async show(visible) {
+      async expand(visible) {
         if (visible && this.localItems.length) {
           // 每次打开更新下关键词价格、是否已售卖
           console.log('check')
@@ -115,7 +121,7 @@
 .cart {
   position: fixed;
   z-index: 1000;
-  background-color: #fff;
+  background-color: transparent;
   width: 390px;
   top: 10px;
   display: flex;
@@ -134,6 +140,7 @@
   }
 
   & > .main {
+    background-color: #fff;
     padding: 10px;
     box-shadow: 0 2px 16px 0 rgba(0,0,0,.2);
     display: flex;
@@ -200,7 +207,7 @@
 .cart {
   right: -345px;
 }
-.cart.show {
+.cart.expand {
   right: 0;
 }
 .empty {

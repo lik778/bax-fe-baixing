@@ -28,7 +28,7 @@
     <back-to-top />
     <wechat-scan />
     <chat />
-    <bw-shopping-cart ref="bwShoppingCart" />
+    <bw-shopping-cart ref="bwShoppingCart" v-show="isBwRoute" />
   </content>
 </template>
 
@@ -51,6 +51,8 @@ import track from 'util/track'
 import {
   normalizeRoles
 } from 'util/role'
+
+import {router} from '../template/bax'
 
 export default {
   name: 'bax',
@@ -80,7 +82,8 @@ export default {
       pending: 0,
       notice: '近期因360家电维修行业被整治，目前360渠道关于家电维修的订单会全部下线，请知晓',
       showNotice: true,
-      huoDongIntroVisible: !document.referrer.includes('/a/quanwangtong')
+      huoDongIntroVisible: !document.referrer.includes('/a/quanwangtong'),
+      isBwRoute: false,
     }
   },
   computed: {
@@ -112,6 +115,13 @@ export default {
     })
   },
   async mounted() {
+    // 购物车限制在标王页面
+    this.isBwRoute = this.$route.path.startsWith('/main/bw')
+    router.beforeEach((to, from, next) => {
+      this.isBwRoute = to.path.startsWith('/main/bw')
+      next()
+    })
+
     await Promise.all([
       gStore.getCurrentUser(),
       gStore.getCategories(),
