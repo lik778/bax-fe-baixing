@@ -31,7 +31,7 @@
     <div class="layout-right">
       <h5 class="layout-header">
         账户推广通知
-        <span class="action" v-if="notices && notices.length">更多</span>
+        <span class="action" v-if="notices && notices.length" @click="$router.push('/main/notice')">更多</span>
       </h5>
       <notice :notice-list="notices" type="fengming" height="179px">
         <template slot-scope="{notice}">

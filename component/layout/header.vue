@@ -29,7 +29,7 @@
           <transition name="el-zoom-in-top">
             <ul class="menu-group" v-show="isMenuVisible" @click="handleMenuClick">
               <li class="menu-item" data-command="account">我的账户</li>
-              <li class="menu-item" data-command="back">返回百姓网</li>
+              <!-- <li class="menu-item" data-command="back">返回百姓网</li> -->
               <li class="menu-item" data-command="logout">退出</li>
             </ul>
           </transition>
@@ -64,10 +64,10 @@
         switch(e.target.dataset.command) {
           case 'account':
             return this.$router.push({name: 'account'})
-          case 'back':
-            const redirectUrl = isPro ? '//www.baixing.com/w/posts' : 'http://www.qatest1.baixing.cn/w/posts'
-            window.location.href = redirectUrl
-            return
+          // case 'back':
+          //   const redirectUrl = isPro ? '//www.baixing.com/w/posts' : 'http://www.qatest1.baixing.cn/w/posts'
+          //   window.location.href = redirectUrl
+          //   return
           case 'logout':
             await logout()
             return redirectTo('signin')
