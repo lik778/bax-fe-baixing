@@ -328,7 +328,8 @@ import {
 
 import {
   f2y,
-  isQiqiaobanSite  
+  isQiqiaobanSite,
+  isSiteLandingType
 } from 'util/kit'
 
 import store from './store'
@@ -731,6 +732,11 @@ export default {
         result.landingPage = this.getProp('landingPage')
       }
 
+      // FIX: 修复 landingPage landingType 错误
+      if (landingPage) {
+        result.landingType = isSiteLandingType(landingPage) ? 1 : 0
+      }
+
       return result
     },
     getUpdatedValidTime() {
@@ -921,6 +927,8 @@ export default {
           return Message.error('投放移动端的出价比率应在0.1 ~ 9.9之间')
         }
       }
+      console.log(this.promotion.landingPage)
+      return
 
       await updateCampaign(this.id, fmtAreasInQwt(data, allAreas))
 
@@ -1084,15 +1092,16 @@ export default {
   async mounted() {
     await this.initCampaignInfo()
 
-    // 验证落地页是否404
-    const { landingPage } = this.originPromotion
-    const { status } = await fetch(landingPage, {
-      method: 'head'
-    })
-    if (status === 404) {
-      this.isErrorLandingPageShow = true
+    // 验证官网落地页是否404
+    const { landingPage, landingType } = this.originPromotion
+    if (landingType === 1) {
+      const { status } = await fetch(landingPage, {
+        method: 'head'
+      })
+      if (status === 404) {
+        this.isErrorLandingPageShow = true
+      }
     }
-
     setTimeout(() => {
       if (this.$route.query.target === 'keyword') {
         VueScrollTo.scrollTo('.keyword', 100)

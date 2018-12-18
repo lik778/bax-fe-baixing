@@ -106,3 +106,8 @@ export function isQiqiaobanSite(siteUrl) {
   const regExp = /\.shop\.baixing/i
   return regExp.test(siteUrl)
 }
+
+export function isSiteLandingType(landingPage) {
+  const isSiteLandingTypeReg = /(\.shop|\.mvp)\.baixing\.com/i
+  return isSiteLandingTypeReg.test(landingPage)
+}
