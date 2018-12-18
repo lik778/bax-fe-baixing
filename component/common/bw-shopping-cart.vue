@@ -37,11 +37,15 @@
   import clone from 'clone'
   import {f2y} from 'util'
   import {refreshKeywordPrice, createPreOrder} from 'api/biaowang'
+  import {normalizeRoles} from 'util/role'
 
-  const storageKey = 'bw-shopping-cart'
+  const storageKeyPrefix = `bw-shopping-cart-`
 
   export default {
     name: 'bw-shopping-cart',
+    props: {
+      userInfo: Object
+    },
     data() {
       return {
         localItems: [],
@@ -49,7 +53,8 @@
         gwSelected: false,
         expand: false,
         loading: false,
-        firstLoad: true
+        firstLoad: true,
+        storageKey: storageKeyPrefix + this.userInfo.id
       }
     },
     computed: {
@@ -61,10 +66,15 @@
       }
     },
     mounted() {
-      const stringValue = localStorage.getItem(storageKey)
-      if (stringValue) {
-        this.localItems = JSON.parse(stringValue)
+      const roles = normalizeRoles(this.userInfo.roles)
+      // 销售会代不同的用户操作，所以不读取本地购物车数据
+      if (roles.includes('BAIXING_USER')) {
+        const stringValue = localStorage.getItem(this.storageKey)
+        if (stringValue) {
+          this.localItems = JSON.parse(stringValue)
+        }
       }
+
     },
     methods: {
       f2y,
@@ -92,7 +102,11 @@
     watch: {
       localItems: {
         handler: function(local) {
-          localStorage.setItem(storageKey, JSON.stringify(local))
+          const roles = normalizeRoles(this.userInfo.roles)
+          // 销售会代不同的用户操作，所以不读取本地购物车数据
+          if (roles.includes('BAIXING_USER')) {
+            localStorage.setItem(this.storageKey, JSON.stringify(local))
+          }
           if (!this.firstLoad) {
             this.expand = true
           }
