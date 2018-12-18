@@ -37,7 +37,7 @@
         width="90"
         align="center"
         label="精品官网"
-        :formatter="({productType}) => productType === 4 ? 1200 : '-'"/>
+        :formatter="formatKaSiteDuration"/>
       <el-table-column
         width="105"
         align="center"
@@ -175,6 +175,18 @@ export default {
     },
     formatCreatedAt({createdAt}) {
       return moment(new Date(createdAt * 1000)).format('YY-MM-DD HH:mm')
+    },
+    formatKaSiteDuration({productType, extra}) {
+      if (productType === 3) return '-'
+      const {new_shop_duration} = JSON.parse(extra)
+      switch(new_shop_duration) {
+        case 31536000:
+          return '1年'
+        case 47304000:
+          return '1.5年'
+        case 63072000:
+          return '2年'
+      }
     },
     goto(page) {
       this.offset = (page - 1) * ONE_PAGE_NUM
