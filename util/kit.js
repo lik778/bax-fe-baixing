@@ -101,3 +101,8 @@ export function redirect(p, qs) {
     location.pathname = p
   }
 }
+
+export function isQiqiaobanSite(siteUrl) {
+  const regExp = /\.shop\.baixing/i
+  return regExp.test(siteUrl)
+}

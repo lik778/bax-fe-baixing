@@ -8,7 +8,7 @@
           <aside style="align-items: flex-start; padding-top: 5px;">
             投放页面：
           </aside>
-          <span class="landingpage">
+          <span class="landingpage" v-if="!isErrorLandingPageShow">
             <div>
               <el-button-group>
                 <el-button v-for="o of landingTypeOpts" :key="o.value"
@@ -17,11 +17,12 @@
                   {{ o.label }}
                 </el-button>
               </el-button-group>
+              <a href="javascript:;" class="qiqiaoban-warning" v-if="isQiqiaobanSite" @click="goChargeKaSite">升级新精品官网，全网通替你付一半</a>
             </div>
             <div style="margin-top: 20px;">
               <user-ad-selector
                 v-if="getProp('landingType') === 0"
-                type="reselect"
+                :type="adSelectortype"
                 :disabled="disabled"
                 :all-areas="allAreas" :limit-mvp="false"
                 :selected-id="getProp('landingPageId')"
@@ -32,6 +33,7 @@
                 v-if="getProp('landingType') === 1"
                 :disabled="disabled"
                 :value="getProp('landingPage')"
+                :is-qiqiaoban-site="isQiqiaobanSite"
                 @change="setLandingPage">
               </qiqiaoban-page-selector>
 
@@ -40,6 +42,9 @@
               </p>
             </div>
           </span>
+          <div class="page-error-placeholder" v-else>
+            所选推广页面失效，请 <a href="javascript:;" @click="isErrorLandingPageShow = false; adSelectortype = ''">从新选择</a>
+          </div>
         </div>
         <div>
           <aside>投放城市：</aside>
@@ -322,7 +327,8 @@ import {
 } from 'util/campaign'
 
 import {
-  f2y
+  f2y,
+  isQiqiaobanSite  
 } from 'util/kit'
 
 import store from './store'
@@ -405,6 +411,10 @@ export default {
       },
 
       moreSettingDisplay: false,
+      // 是否为老官网
+      isQiqiaobanSite: false,
+      adSelectortype: 'reselect',
+      isErrorLandingPageShow: false,
 
       SEM_PLATFORM_SHENMA,
       SEM_PLATFORM_BAIDU,
@@ -534,18 +544,39 @@ export default {
       this.promotion.creativeTitle = title
       this.promotion.creativeContent = content
     },
+    goChargeKaSite() {
+      // TODO: 请求去领用优惠券
+    },
     handleCreativeError(message) {
       if(message) Message.error(message)
       this.creativeError = message
-    },
+    }, 
     toggleDisplaySettingArea() {
       this.moreSettingDisplay = !this.moreSettingDisplay
     },
-    setLandingPage(url) {
+    setLandingPage() {
       this.promotion.landingPage = url
       this.promotion.areas = ['quanguo']
     },
+    banLandPageSelected() {
+      // 落地页404，需要更改落地页投放
+      if (this.isErrorLandingPageShow && (!this.promotion.landingPage || this.promotion.landingPage === this.originPromotion.landingPage)) {
+        this.adSelectortype = ''
+        const pageErrorPlaceholder = document.querySelector('.page-error-placeholder')
+        pageErrorPlaceholder.scrollIntoViewIfNeeded()
+        pageErrorPlaceholder.style.borderColor = "#ff4401"
+        throw this.$message.error('当前投放页面失效，请重新选择新的投放页面')
+      }
+      // 已经下线计划当前落地页为老官网且 没有重选新落地页
+      if(this.isQiqiaobanSite && this.isCampaignOffline && (!this.promotion.landingPage || isQiqiaobanSite(this.promotion.landingPage))) {
+        this.adSelectortype = ''
+        const landingpage = document.querySelector('.landingpage')
+        landingpage.scrollIntoViewIfNeeded()
+        throw this.$message.error('请修改推广计划的投放页面')
+      }
+    },
     async onSelectAd(ad) {
+
       const { allAreas } = this
 
       this.promotion.category = ad.category
@@ -800,6 +831,7 @@ export default {
       return data
     },
     async updatePromotion() {
+      this.banLandPageSelected()
       if (this.isUpdating) {
         return Message.warning('正在更新中, 请稍等一会儿 ~')
       }
@@ -1030,6 +1062,11 @@ export default {
     f2y
   },
   watch: {
+    'originPromotion'({landingPage, landingType}) {
+      if (landingType === 1) {
+        this.isQiqiaobanSite = isQiqiaobanSite(landingPage)
+      }
+    },
     '$route.params.id': async function(v, p) {
       if (v !== p) {
         await this.initCampaignInfo()
@@ -1046,6 +1083,15 @@ export default {
   },
   async mounted() {
     await this.initCampaignInfo()
+
+    // 验证落地页是否404
+    const { landingPage } = this.originPromotion
+    const { status } = await fetch(landingPage, {
+      method: 'head'
+    })
+    if (status === 404) {
+      this.isErrorLandingPageShow = true
+    }
 
     setTimeout(() => {
       if (this.$route.query.target === 'keyword') {
@@ -1072,6 +1118,28 @@ export default {
 
 <style lang="postcss" scoped>
 @import 'cssbase/mixin';
+
+.qiqiaoban-warning {
+  margin-left: 20px;
+  font-size: 13px;
+  color: #ff4401;
+}
+
+.page-error-placeholder {
+  border: 1px solid #eee;
+  border-radius: 4px;
+  height: 161px;
+  width: 540px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  color: #999;
+  & > a {
+    color: #ff4401;
+    margin-left: 5px;
+  }
+}
 
 .authing-tip {
   display: inline-flex;

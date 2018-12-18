@@ -82,7 +82,7 @@
 <style lang="postcss" scoped>
   .header {
     position: fixed;
-    z-index: 1024;
+    z-index: 998;
     display: flex;
     align-items: center;
     top: 0;

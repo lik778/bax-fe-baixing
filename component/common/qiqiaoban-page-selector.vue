@@ -23,9 +23,6 @@
 <script>
   import BaxSelect from './select'
   import {
-    getQiqiaobanPageList
-  } from 'api/fengming'
-  import {
     getUserTicketCount,
     baxUserLogin,
     getUserSites
@@ -42,6 +39,11 @@
       },
       disabled: {
         type: Boolean
+      },
+      // FIXME: 老官网
+      isQiqiaobanSite: {
+        type: Boolean,
+        default: false
       }
     },
     data() {
@@ -57,24 +59,28 @@
       }
     },
     async mounted() {
+      // FIXME: 老官网
+      let currentQiqiaobanSiteOption = []
+      if (this.isQiqiaobanSite) {
+        currentQiqiaobanSiteOption = [{
+          label: this.value,
+          value: this.value
+        }]
+      }
       await baxUserLogin()
 
-      const [list1, list2, count] = await Promise.all([
-        getQiqiaobanPageList(),
+      const [list, count] = await Promise.all([
         getUserSites(),
         getUserTicketCount()
       ])
 
       this.ticketCount = count
-
+      // FIXME: 老官网 currentQiqiaobanSiteOption
       this.options = [
-        ...list2.map(p => ({
+        ...currentQiqiaobanSiteOption,
+        ...list.map(p => ({
           label: p.name,
           value: 'http://' + p.domain + '.mvp.baixing.com'
-        })),
-        ...list1.map(p => ({
-          label: p.name,
-          value: p.url
         }))
       ]
     }
