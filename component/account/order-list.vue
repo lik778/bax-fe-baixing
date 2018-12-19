@@ -42,7 +42,7 @@
         width="105"
         align="center"
         label="原价"
-        :formatter="({originalPrice}) => formatPrice(originalPrice)"/>
+        :formatter="({originalPrice, extra}) => formatPrice(originalPrice * genKaSiteDuration(extra))"/>
       <el-table-column
         width="105"
         align="center"
@@ -178,14 +178,20 @@ export default {
     },
     formatKaSiteDuration({productType, extra}) {
       if (productType === 3) return '-'
+      const duration = this.genKaSiteDuration(extra)
+      return `${duration}年`
+    },
+    genKaSiteDuration(extra) {
       const {new_shop_duration} = JSON.parse(extra)
       switch(new_shop_duration) {
         case 31536000:
-          return '1年'
+          return 1
         case 47304000:
-          return '1.5年'
+          return 1.5
         case 63072000:
-          return '2年'
+          return 2
+        default:
+          return 1
       }
     },
     goto(page) {

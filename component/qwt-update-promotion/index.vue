@@ -547,6 +547,7 @@ export default {
     },
     goChargeKaSite() {
       // TODO: 请求去领用优惠券
+      this.$router.push('/main/qwt/charge?select_gw=1')
     },
     handleCreativeError(message) {
       if(message) Message.error(message)

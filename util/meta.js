@@ -194,8 +194,11 @@ export function displayCoupon(coupon) {
   const allPackages = this.usingConditions[usingCondition.PRODUCT_PACKAGES].fields[0].choices
   let products = '任何产品可用'
   let packages = '任何套餐可用'
+  let discountRatio = null
+
   let productConditions = coupon.usingConditions.filter(c => c.type === usingCondition.PRODUCTS)
   let packageConditions = coupon.usingConditions.filter(c => c.type === usingCondition.PRODUCT_PACKAGES)
+  let discountConditions = coupon.usingConditions.filter(c => c.type === usingCondition.ORDER_DISCOUNT_PRICE_RATIO)
 
   if (productConditions.length) {
     products = productConditions[0].products
@@ -207,10 +210,15 @@ export function displayCoupon(coupon) {
       .map(pid => allPackages[+pid]).join(',')
   }
 
+  if (discountConditions.length) {
+    discountRatio = discountConditions[0].orderSumOriginalPriceRatio
+  }
+
   const expire = toHumanTime(coupon.startAt, 'YYYY.MM.DD') + '-' +
     toHumanTime(coupon.expiredAt, 'YYYY.MM.DD')
 
   const o = {}
+  o.discountRatio = discountRatio
   o.money = +(coupon.amount / 100).toFixed(0)
   o.text = priceLimit
   o.products = products
