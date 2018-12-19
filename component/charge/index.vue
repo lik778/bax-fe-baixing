@@ -187,7 +187,7 @@ import GwProWidget from 'com/widget/gw-pro'
 import Coupon from 'com/common/coupon'
 import PriceList from './price-list'
 import PriceTag from './price-tag'
-
+ 
 import { Message } from 'element-ui'
 import uuid from 'uuid/v4'
 
@@ -425,9 +425,8 @@ export default {
       const coupon = this.selectedCoupon[0]
       let products = this.fullCheckedProducts
 
-      let productSum = products.reduce((s, p) => {s += p.discountPrice; return s}, 0)
-      let sum = productSum > coupon.amount ? coupon.amount : productSum
-console.log('1', sum)
+      let productSum = 0
+      let sum = 0
 
       for (let condition of coupon.usingConditions) {
         if (condition.type === usingCondition.PRODUCTS) {
@@ -436,7 +435,6 @@ console.log('1', sum)
       }
       productSum = products.reduce((s, p) => {s += p.discountPrice; return s}, 0)
       sum = productSum > coupon.amount ? coupon.amount : productSum
-console.log('2', sum)
 
       for (let condition of coupon.usingConditions) {
         if (condition.type === usingCondition.ORDER_SUM_ORIGINAL_PRICE) {
@@ -444,7 +442,14 @@ console.log('2', sum)
           sum = productSum > coupon.amount ? coupon.amount : productSum
         }
       }
-console.log('3', sum)
+
+      for (let condition of coupon.usingConditions) {
+        if (condition.type === usingCondition.ORDER_DISCOUNT_PRICE_RATIO) {
+          const discountRatio = condition.orderSumOriginalPriceRatio
+          productSum = products.reduce((s, p) => {s += p.discountPrice; return s}, 0)
+          sum = productSum * discountRatio / 100
+        }
+      }
 
       return sum
     },
@@ -534,10 +539,16 @@ console.log('3', sum)
     async init() {
       this.empty()
       //  目前只有这一个角色可以用券
-      if (this.isBxUser) {
-        await store.getConditions()
-        await store.getCoupons({ onlyValid: true, status: 0 })
-      }
+      //  FIX: 修复页面加载后没有优惠券信息 使用$watch去监听 bxUser 变化并触发coupon 更新
+      this.unBxUserWatch = this.$watch(
+        () => this.isBxUser, 
+        async isBxUser => {
+          if (isBxUser) {
+            await store.getConditions()
+            await store.getCoupons({ onlyValid: true, status: 0 })
+            this.unBxUserWatch()
+          }
+      })
       await Promise.all([
         store.getProductDiscounts([3, 4]), // 充值／新官网
         store.getProducts([3,4])
