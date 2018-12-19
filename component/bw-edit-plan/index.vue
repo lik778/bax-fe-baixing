@@ -16,7 +16,7 @@
               </el-radio-group>
             </div>
             <div class="landing-page">
-              <user-ad-selector :type="'reselect'"
+              <user-ad-selector :type="adSelectorType"
                 v-if="form.landingType === 0"
                 :all-areas="allAreas" :limit-mvp="false"
                 :selected-id="form.landingPageId"
@@ -48,8 +48,8 @@
 </template>
 
 <script>
-  import {getPromoteById, getPromtesByOrders, updatePromote} from 'api/biaowang'
-  import {landingTypeOpts, SEM_PLATFORM_BAIDU, PROMOTE_STATUS_INIT} from 'constant/fengming'
+  import {getPromoteById, getPromtesByOrders, updatePromote, PROMOTE_STATUS_INIT} from 'api/biaowang'
+  import {landingTypeOpts, SEM_PLATFORM_BAIDU} from 'constant/fengming'
   import {Message} from 'element-ui'
   import UserAdSelector from 'com/common/user-ad-selector'
   import CreativeEditor from 'com/widget/creative-editor'
@@ -74,8 +74,8 @@
           landingType: 0,
           landingPageId: '',
           landingPage: '',
-          creativeTitle: '',
-          creativeContent: '',
+          creativeTitle: 'a',
+          creativeContent: 'a',
         },
         rules: {
           promoteIds: [{required: true}],
@@ -85,14 +85,13 @@
         landingTypeOpts,
         creativeError: '',
         isLoading: false,
-        showNotice: false
+        showNotice: false,
       }
     },
     computed: {
       adSelectorType() {
-        return this.promotes.every(p => p.status !== PROMOTE_STATUS_INIT)
-          ? 'reselect'
-          : ''
+        const type = this.promotes.every(p => p.status === PROMOTE_STATUS_INIT) ? '' : 'reselect'
+        return type
       },
     },
     async mounted() {
@@ -100,15 +99,15 @@
       if (promoteId) {
         const onePromote = await getPromoteById(promoteId)
         this.promotes = [onePromote]
-        const {landingType, landingPage, creativeTitle, creativeContent} = onePromote
+        const {landingType, landingPage, landingPageId, creativeTitle, creativeContent} = onePromote
         this.form = {
           promoteIds: [+promoteId],
-          landingType,
+          landingType: landingType || 0,
           landingPage,
-          creativeTitle,
-          creativeContent
+          creativeTitle: creativeTitle || '',
+          creativeContent: creativeContent || ''
         }
-        this.form.landingPageId = '1472828515'
+        this.form.landingPageId = landingPageId
       }
       if (orderIdsString) {
         const orderIds = orderIdsString.split(',')

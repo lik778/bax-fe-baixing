@@ -9,6 +9,7 @@
     <router-view class="view"
       :key="$route.fullPath"
       :userInfo="currentUser"
+      :salesInfo="salesInfo"
       :allCategories="allCategories"
       :allAreas="allAreas"
       :allRoles="allRoles">
@@ -84,6 +85,10 @@ export default {
       showNotice: true,
       huoDongIntroVisible: !document.referrer.includes('/a/quanwangtong'),
       isBwRoute: false,
+      salesInfo: {
+        salesId: '',
+        userId: ''
+      }
     }
   },
   computed: {
@@ -115,6 +120,13 @@ export default {
     })
   },
   async mounted() {
+    await Promise.all([
+      gStore.getCurrentUser(),
+      gStore.getCategories(),
+      gStore.getAreas(),
+      gStore.getRoles()
+    ])
+
     // 购物车限制在标王页面
     this.isBwRoute = this.$route.path.startsWith('/main/bw')
     router.beforeEach((to, from, next) => {
@@ -122,12 +134,13 @@ export default {
       next()
     })
 
-    await Promise.all([
-      gStore.getCurrentUser(),
-      gStore.getCategories(),
-      gStore.getAreas(),
-      gStore.getRoles()
-    ])
+    // 记录销售的客户id等信息
+    const sessionKey = `bax-sales-info`
+    const {user_id: userId, sales_id: salesId} = this.$route.query
+    if (userId && salesId) {
+      this.salesInfo.userId = +userId
+      this.salesInfo.salesId = +salesId
+    }
 
     setTimeout(() => {
       const { currentUser } = this

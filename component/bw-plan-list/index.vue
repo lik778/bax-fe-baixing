@@ -29,7 +29,7 @@
           </el-table-column>
           <el-table-column label="操作">
             <template slot-scope="scope">
-              <router-link :to="{name: 'bw-edit-plan', query: {promoteId: scope.row.id}}"><el-button type="text" size="small">编辑</el-button></router-link>
+              <router-link v-if="!isBxSales && !isAgentAccounting" :to="{name: 'bw-edit-plan', query: {promoteId: scope.row.id}}"><el-button type="text" size="small">编辑</el-button></router-link>
               <el-button size="small" type="text" @click="onXufei(scope.row)">续费</el-button>
             </template>
           </el-table-column>
@@ -38,11 +38,11 @@
       </main>
 
       <el-dialog :visible.sync="xufeiDialogVisible" title="标王续费">
-        <el-form :model="xufeiForm" label-width="200px">
+        <el-form :model="xufeiForm" label-width="200px" :rules="rules" ref="xufei">
           <el-form-item label="关键词">{{xufeiForm.word}}</el-form-item>
           <el-form-item label="城市">{{xufeiForm.cities}}</el-form-item>
           <el-form-item label="投放平台">{{xufeiForm.device}}</el-form-item>
-          <el-form-item label="购买天数">
+          <el-form-item label="购买天数" prop="days">
             <el-radio v-model="xufeiForm.days" :label="+option[0]" v-for="(option, index) in Object.entries(xufeiForm.soldPriceMap)" :key="index">{{option[0]}}天{{f2y(option[1])}}元</el-radio>
           </el-form-item>
           <el-form-item label="">
@@ -64,6 +64,9 @@
     getCnName
   } from 'util'
   import moment from 'moment'
+  import {
+    normalizeRoles
+  } from 'util/role'
 
   export default {
     name: 'bw-plan-list',
@@ -71,14 +74,16 @@
       BaxPagination
     },
     props: {
-      allAreas: Array
+      allAreas: Array,
+      salesInfo: Object,
+      userInfo: Object
     },
     data() {
       return {
         promoteStatusOpts,
         query: {
           keyword: '',
-          statusFilters: [0],
+          statusFilters: [],
           offset: 0,
           limit: 20,
           total: 0,
@@ -89,16 +94,33 @@
           cities: [],
           device: 0,
           soldPriceMap: {},
-          days: 0
+          days: null
+        },
+        rules: {
+          days: [{required: true, message: '请选择购买天数'}],
         },
         xufeiDialogVisible: false,
       }
     },
+    computed: {
+      isBxUser() {
+        const roles = normalizeRoles(this.userInfo.roles)
+        return roles.includes('BAIXING_USER')
+      },
+      isBxSales() {
+        const roles = normalizeRoles(this.userInfo.roles)
+        return roles.includes('BAIXING_SALES')
+      },
+      isAgentAccounting() {
+        const roles = normalizeRoles(this.userInfo.roles)
+        return roles.includes('AGENT_ACCOUNTING')
+      },
+    },
     methods: {
       f2y,
       async getPromotes() {
-        const {offset, limit} = this.query
-        const {items, total} = await getPromotes({page: offset / limit, size: limit})
+        const {offset, limit, keyword: word, statusFilters: status} = this.query
+        const {items, total} = await getPromotes({page: offset / limit, size: limit, word, status})
         this.promotes = items
         this.query.total = total
       },
@@ -116,11 +138,18 @@
         this.xufeiDialogVisible = true
       },
       addToCart() {
-        const item = {
-          ...this.xufeiForm,
-          price: this.xufeiForm.soldPriceMap[this.xufeiForm.days]
-        }
-        this.$parent.$refs.bwShoppingCart.addToCart([item])
+        this.$refs.xufei.validate(isValid => {
+          if (isValid) {
+            const item = {
+              ...this.xufeiForm,
+              price: this.xufeiForm.soldPriceMap[this.xufeiForm.days]
+            }
+            this.$parent.$refs.bwShoppingCart.addToCart([item])
+            this.xufeiDialogVisible = false
+          } else {
+            return false
+          }
+        })
       },
       cityFormatter({cities}) {
         return cities.map(city => getCnName(city, this.allAreas)).join(',')
@@ -136,6 +165,7 @@
       }
     },
     async mounted() {
+      this.query.userId = this.salesInfo.userId
       await this.getPromotes()
     },
   }
