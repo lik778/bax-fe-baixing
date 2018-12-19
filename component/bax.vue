@@ -12,10 +12,14 @@
       </router-view>
     </div>
     <sidebar :user-info="currentUser"></sidebar>
-    <!-- <div class="notice" v-if="showNotice">
-      <marquee direction="left" scrollamount="6" height="20px" class="notice" scrolldelay="60">{{notice}}</marquee>
-      <span class="close el-icon-close" @click="showNotice = false" title="关闭通知"></span>
-    </div> -->
+    <router-view class="view"
+      :key="$route.fullPath"
+      :userInfo="currentUser"
+      :salesInfo="salesInfo"
+      :allCategories="allCategories"
+      :allAreas="allAreas"
+      :allRoles="allRoles">
+    </router-view>
     <new-user-intro
       :mode="newUserIntroMode"
       :visible="showNewUserIntro"
@@ -31,7 +35,7 @@
     <back-to-top />
     <wechat-scan />
     <chat />
-    <bw-shopping-cart ref="bwShoppingCart" />
+    <bw-shopping-cart ref="bwShoppingCart" v-show="isBwRoute" :userInfo="currentUser" v-if="currentUser.id" />
   </div>
 </template>
 
@@ -55,6 +59,8 @@ import track from 'util/track'
 import {
   normalizeRoles
 } from 'util/role'
+
+import {router} from '../template/bax'
 
 export default {
   name: 'bax',
@@ -85,7 +91,12 @@ export default {
       pending: 0,
       notice: '近期因360家电维修行业被整治，目前360渠道关于家电维修的订单会全部下线，请知晓',
       showNotice: true,
-      huoDongIntroVisible: !document.referrer.includes('/a/quanwangtong')
+      huoDongIntroVisible: !document.referrer.includes('/a/quanwangtong'),
+      isBwRoute: false,
+      salesInfo: {
+        salesId: '',
+        userId: ''
+      }
     }
   },
   computed: {
@@ -123,6 +134,21 @@ export default {
       gStore.getAreas(),
       gStore.getRoles()
     ])
+
+    // 购物车限制在标王页面
+    this.isBwRoute = this.$route.path.startsWith('/main/bw')
+    router.beforeEach((to, from, next) => {
+      this.isBwRoute = to.path.startsWith('/main/bw')
+      next()
+    })
+
+    // 记录销售的客户id等信息
+    const sessionKey = `bax-sales-info`
+    const {user_id: userId, sales_id: salesId} = this.$route.query
+    if (userId && salesId) {
+      this.salesInfo.userId = +userId
+      this.salesInfo.salesId = +salesId
+    }
 
     setTimeout(() => {
       const { currentUser } = this

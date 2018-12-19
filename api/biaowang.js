@@ -1,5 +1,5 @@
 
-import { biaowang } from './base'
+import { biaowang, trim } from './base'
 
 export async function queryKeywordPrice(opts = {}) {
   const body = await biaowang
@@ -35,9 +35,10 @@ export async function getPromotes(opts = {}) {
     page: 0,
     ...opts
   }
+  console.log(trim(q))
   const body = await biaowang
     .get('/promote/user')
-    .query(q)
+    .query(trim(q))
     .json()
 
   return {

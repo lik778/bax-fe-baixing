@@ -162,10 +162,10 @@ export const biaowang = new Fetch({
     }
     console.log(body)
 
-    // if (code === 1002) {
-    //   Message.error('请重新登录 >_<')
-    //   return redirect('signin', `return=${encodeURIComponent(location.pathname + location.search)}`)
-    // }
+    if (code === 1002) {
+      Message.error('请重新登录 >_<')
+      return redirect('signin', `return=${encodeURIComponent(location.pathname + location.search)}`)
+    }
 
     if (message !== 'Success') {
       Message.error(message)
@@ -179,7 +179,11 @@ export function trim(obj) {
   // only for - query filter
   for (const k of Object.keys(obj)) {
     const v = obj[k]
-    if (typeof v === 'number' ||
+    if (Array.isArray(v)) {
+      if (v.length !== 0) {
+        result[k] = v
+      }
+    } else if (typeof v === 'number' ||
       typeof v === 'boolean' ||
       !!v) {
       result[k] = v

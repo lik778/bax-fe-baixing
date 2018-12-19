@@ -168,12 +168,7 @@ const sspRoutes = [{
   name: 'ad-calendar'
 }]
 
-// {
-//   component: OperationLog,
-//   path: '/main/operation-log',
-//   name: 'operation-log'
-// },
-const router = new VueRouter({
+export const router = new VueRouter({
   mode: 'history',
   routes: [{
     component: Homepage,
