@@ -401,6 +401,15 @@ export async function getFengmingNotice(opts) {
   return body.data
 }
 
+export async function getQiqiaobanCoupon(campaignId) {
+  const body = await fengming
+    .get('/coupon/qiqiaoban')
+    .query(reverseCamelcase({campaignId}))
+    .json()
+
+  return body.data
+}
+
 export async function getCurrentCampaignCount(opts) {
   const body = await fengming
     .get('/campaign/current/count')

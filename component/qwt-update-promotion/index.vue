@@ -293,6 +293,7 @@ import {
   recommendByUrl,
   updateCampaign,
   recommendByWord,
+  getQiqiaobanCoupon,
   checkCreativeContent,
   getRecommandCreative,
   changeCampaignKeywordsPrice
@@ -545,8 +546,8 @@ export default {
       this.promotion.creativeTitle = title
       this.promotion.creativeContent = content
     },
-    goChargeKaSite() {
-      // TODO: 请求去领用优惠券
+    async goChargeKaSite() {
+      await getQiqiaobanCoupon(this.id)
       this.$router.push('/main/qwt/charge?select_gw=1')
     },
     handleCreativeError(message) {

@@ -734,11 +734,8 @@ export default {
       this.payInProgress = false
       this.couponVisible = false
     },
-    centToYuan
-  },
-  watch: {
     // 选中最合适的coupon
-    fullCheckedProducts(v) {
+    selectDefaultCoupon() {
       if (this.effectiveCoupons.length) {
         let theOne = this.effectiveCoupons[0]
         for(let coupon of this.effectiveCoupons) {
@@ -750,6 +747,15 @@ export default {
         }
         this.selectedCoupon = [theOne]
       }
+    },
+    centToYuan
+  },
+  watch: {
+    fullCheckedProducts(v) {
+      this.selectDefaultCoupon()
+    },
+    coupons() {
+      this.selectDefaultCoupon()
     },
     async couponVisible(v) {
       if (v) {
