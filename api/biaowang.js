@@ -57,8 +57,8 @@ export async function getPromoteById(id) {
 
 export async function getPromtesByOrders(orderIds) {
   const body = await biaowang
-    .post(`/promote/user/order`)
-    .send({orderIds})
+    .get(`/promote/user/order`)
+    .query({orderIds})
     .json()
 
   return body.data.content
