@@ -6,20 +6,13 @@
       <router-view class="view"
         :key="$route.fullPath"
         :userInfo="currentUser"
+        :salesInfo="salesInfo"
         :allCategories="allCategories"
         :allAreas="allAreas"
         :allRoles="allRoles">
       </router-view>
     </div>
     <sidebar :user-info="currentUser"></sidebar>
-    <router-view class="view"
-      :key="$route.fullPath"
-      :userInfo="currentUser"
-      :salesInfo="salesInfo"
-      :allCategories="allCategories"
-      :allAreas="allAreas"
-      :allRoles="allRoles">
-    </router-view>
     <new-user-intro
       :mode="newUserIntroMode"
       :visible="showNewUserIntro"
