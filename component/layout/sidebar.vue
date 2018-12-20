@@ -56,12 +56,12 @@
           </template>
           <el-menu-item index="bw-query-price">
             <router-link :to="{ name: 'bw-query-price' }" tag="p">
-              <i class="material-icons" style="font-size: 16px; margin-right: 11px; vertical-align: -3px;"></i>查价
+              <i class="material-icons" style="font-size: 16px; margin-right: 11px; vertical-align: -3px;"></i>新建标王推广
             </router-link>
           </el-menu-item>
           <el-menu-item index="bw-plan-list">
             <router-link :to="{ name: 'bw-plan-list' }" tag="p">
-              <i class="material-icons" style="font-size: 16px; margin-right: 11px; vertical-align: -3px;"></i>推广列表
+              <i class="material-icons" style="font-size: 16px; margin-right: 11px; vertical-align: -3px;"></i>管理标王推广
             </router-link>
           </el-menu-item>
         </el-submenu>

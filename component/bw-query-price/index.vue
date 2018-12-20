@@ -3,7 +3,7 @@
     <div class="white-bg">
       <header>标王关键词查价</header>
       <main>
-        <el-form :model="form" :rules="rules" label-width="120px" ref="form" label-position="left" class="form">
+        <el-form :model="form" :rules="rules" label-width="120px" ref="form" label-position="left" class="form" @submit.native.prevent>
           <el-form-item label="推广关键词" prop="keyword">
             <el-input v-model="form.keyword" style="width: 200px"/>
           </el-form-item>
@@ -95,9 +95,9 @@
           areas: ['beijing']
         },
         rules: {
-          keyword: [{required: true}],
-          devices: [{type: 'array', required: true}],
-          areas: [{type: 'array', required: true, trigger: 'change'}]
+          keyword: [{required: true, message: '请填写推广关键词'}],
+          devices: [{type: 'array', required: true, message: '请选择推广平台'}],
+          areas: [{type: 'array', required: true, trigger: 'change', message: '请选择推广区域'}]
         },
         skus: [],
         selected: [],
