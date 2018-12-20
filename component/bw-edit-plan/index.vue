@@ -105,9 +105,9 @@
           landingType: landingType || 0,
           landingPage,
           creativeTitle: creativeTitle || '',
-          creativeContent: creativeContent || ''
+          creativeContent: creativeContent || '',
+          landingPageId: landingPageId || ''
         }
-        this.form.landingPageId = landingPageId
       }
       if (orderIdsString) {
         const orderIds = orderIdsString.split(',')
@@ -139,6 +139,8 @@
             this.isLoading = true
             try {
               await updatePromote(this.form)
+              Message.success('更新推广成功')
+              this.$router.push({name: 'bw-plan-list'})
             } finally {
               this.isLoading = false
             }
