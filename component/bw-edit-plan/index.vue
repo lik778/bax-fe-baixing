@@ -78,8 +78,8 @@
           creativeContent: 'a',
         },
         rules: {
-          promoteIds: [{required: true}],
-          landingPage: [{required: true}]
+          promoteIds: [{required: true, message: '请勾选关键词'}],
+          landingPage: [{required: true, message: '请选择投放页面'}]
         },
 
         landingTypeOpts,
