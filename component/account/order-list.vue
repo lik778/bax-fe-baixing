@@ -111,7 +111,7 @@ const transformUnixTimeStamp = (date) =>  {
   return moment(new Date(date)).unix()
 }
 const DEFAULT_DATE_RANGE = [
-  moment(new Date()).subtract('months', 1),
+  moment(new Date()).subtract(1, 'months'),
   new Date()
 ]
 
