@@ -29,7 +29,7 @@
     <back-to-top />
     <wechat-scan />
     <chat />
-    <bw-shopping-cart ref="bwShoppingCart" v-show="isBwRoute" :userInfo="currentUser" v-if="currentUser.id" />
+    <bw-shopping-cart ref="bwShoppingCart" v-show="isBwRoute" :userInfo="currentUser" v-if="currentUser.id" :salesInfo="salesInfo" />
   </content>
 </template>
 
@@ -135,7 +135,6 @@ export default {
     })
 
     // 记录销售的客户id等信息
-    const sessionKey = `bax-sales-info`
     const {user_id: userId, sales_id: salesId} = this.$route.query
     if (userId && salesId) {
       this.salesInfo.userId = +userId

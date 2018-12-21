@@ -26,7 +26,7 @@
       </div>
       <div class="footer">
         <p>总计：<span class="price">{{f2y(totalPrice)}}</span>元</p>
-        <el-button class="checkout" @click="checkout">购买</el-button>
+        <el-button class="checkout" type="primary" @click="checkout">购买</el-button>
       </div>
     </div>
     <div v-else class="main empty">购物车空空如也~</div>
@@ -44,7 +44,8 @@
   export default {
     name: 'bw-shopping-cart',
     props: {
-      userInfo: Object
+      userInfo: Object,
+      salesInfo: Object
     },
     data() {
       return {
@@ -74,7 +75,6 @@
           this.localItems = JSON.parse(stringValue)
         }
       }
-
     },
     methods: {
       f2y,
@@ -83,7 +83,8 @@
       },
       async checkout() {
         console.log(this.localItems)
-        const preTradeId = await createPreOrder(this.localItems, this.gwSelected)
+        const {salesId, userId} = this.salesInfo
+        const preTradeId = await createPreOrder(this.localItems, this.gwSelected, userId, salesId)
 
         // 预订单创建后，清空购物车
         this.localItems = []
@@ -137,7 +138,7 @@
   z-index: 1000;
   background-color: transparent;
   width: 390px;
-  top: 10px;
+  top: 55px;
   display: flex;
   transition: right .2s;
 
@@ -214,6 +215,7 @@
         font-size: 1.5em;
       }
       & > .checkout {
+        float: right;
       }
     }
   }
