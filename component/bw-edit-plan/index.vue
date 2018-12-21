@@ -74,8 +74,8 @@
           landingType: 0,
           landingPageId: '',
           landingPage: '',
-          creativeTitle: 'a',
-          creativeContent: 'a',
+          creativeTitle: '',
+          creativeContent: '',
         },
         rules: {
           promoteIds: [{required: true, message: '请勾选关键词'}],
@@ -112,6 +112,7 @@
       if (orderIdsString) {
         const orderIds = orderIdsString.split(',')
         this.promotes = await getPromtesByOrders(orderIds)
+        this.form.promoteIds = this.promotes.map(p => p.id)
       }
       if (notice === 'true' || notice === '1') {
         this.showNotice = true
