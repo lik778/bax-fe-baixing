@@ -45,12 +45,7 @@
           </el-menu-item>
         </el-submenu>
 
-        <!-- <el-menu-item index="bax" v-if="allowSeeQwtPromotion">
-          <router-link :to="{ name: 'root' }" tag="p">
-            <i class="material-icons" style="font-size: 16px; margin-right: 11px; vertical-align: -3px;">dvr</i>标王推广
-          </router-link>
-        </el-menu-item> -->
-        <el-submenu index="bw" v-if="allowSeeQwtPromotion">
+        <el-submenu index="bw">
           <template slot="title">
             <bx-icon type="sharealt"></bx-icon>标王推广
           </template>
@@ -65,6 +60,7 @@
             </router-link>
           </el-menu-item>
         </el-submenu>
+
         <el-menu-item index="gw-homepage">
           <a href="/ka/main" v-if="isRenderSiteLink" style="color: inherit">
             <i class="el-icon-news" />精品官网
@@ -308,7 +304,7 @@ export default {
   & .el-icon-question {
     margin-top: -2px;
     margin-left: -3px;
-    color: rgb(255, 99, 80); 
+    color: rgb(255, 99, 80);
     font-size: 16px;
   }
 }
