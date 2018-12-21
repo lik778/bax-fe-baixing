@@ -53,7 +53,7 @@
           </el-menu-item>
         </el-submenu>
 
-        <el-submenu index="bw" v-if="allowSeeQwtPromotion">
+        <el-submenu index="bw">
           <template slot="title">
             <bx-icon type="sharealt"></bx-icon>标王推广
           </template>
