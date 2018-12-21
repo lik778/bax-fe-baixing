@@ -136,10 +136,18 @@ export const device = {
 }
 
 // 把 key 是数字, value 是 label 的对象转换成对象的 array
-export function toOpt(obj, forceNumber = true) {
-  return Object.keys(obj)
-    .map(key => ({
-      label: obj[key],
-      value: forceNumber ? (key | 0) : key
-    }))
+export function toOpt(obj, forceNumber = true, reverse = false) {
+  if (reverse) {
+    return Object.keys(obj)
+      .map(key => ({
+        label: key,
+        value: obj[key]
+      }))
+  } else {
+    return Object.keys(obj)
+      .map(key => ({
+        label: obj[key],
+        value: forceNumber ? (key | 0) : key
+      }))
+  }
 }
