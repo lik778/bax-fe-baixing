@@ -11,22 +11,22 @@
           </el-form-item>
           <el-form-item label="投放页面">
             <div class="landing-type">
-              <el-radio-group v-model="form.landingType" size="small">
+              <el-radio-group v-model="landingTypeDisplay" size="small">
                 <el-radio-button v-for="option of landingTypeOpts" :key="option.value" :label="option.value">{{option.label}}</el-radio-button>
               </el-radio-group>
             </div>
             <div class="landing-page">
               <user-ad-selector :type="adSelectorType"
-                v-if="form.landingType === 0"
+                v-if="landingTypeDisplay === 0"
                 :all-areas="allAreas" :limit-mvp="false"
                 :selected-id="form.landingPageId"
-                @select-ad="ad => onSelectAd(ad)"
+                @select-ad="onSelectAd"
               />
 
               <qiqiaoban-page-selector
-                v-if="form.landingType === 1"
+                v-if="landingTypeDisplay === 1"
                 :value="form.landingPage"
-                @change="v => form.landingPage = v"
+                @change="onQiqiaobanChange"
               />
             </div>
           </el-form-item>
@@ -69,6 +69,7 @@
       return {
         SEM_PLATFORM_BAIDU,
         promotes: [],
+        landingTypeDisplay: 0,
         form: {
           promoteIds: [],
           landingType: 0,
@@ -122,9 +123,14 @@
       onSelectAd(ad) {
         this.form.landingPageId = ad.adId
         this.form.landingPage = ad.url
+        this.form.landingType = 0
 
         this.form.creativeTitle = ad.title && ad.title.slice(0, 24)
         this.form.creativeContent = ad.content && ad.content.slice(0, 39)
+      },
+      onQiqiaobanChange(v) {
+        form.landingType = 1
+        form.landingPage = v
       },
       handleCreativeError(message) {
         if(message) Message.error(message)
