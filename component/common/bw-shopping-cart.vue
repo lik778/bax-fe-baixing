@@ -26,7 +26,13 @@
       </div>
       <div class="footer">
         <p>总计：<span class="price">{{f2y(totalPrice)}}</span>元</p>
-        <el-button class="checkout" type="primary" @click="checkout">购买</el-button>
+        <el-button class="checkout" type="primary" @click="checkout">{{payText}}</el-button>
+        <div v-if="payUrl">
+          <label :title="orderPayUrl">
+            {{ '付款链接: ' + orderPayUrl }}
+          </label>
+          <Clipboard :content="orderPayUrl"></Clipboard>
+        </div>
       </div>
     </div>
     <div v-else class="main empty">购物车空空如也~</div>
@@ -38,6 +44,7 @@
   import {f2y} from 'util'
   import {refreshKeywordPrice, createPreOrder} from 'api/biaowang'
   import {normalizeRoles} from 'util/role'
+  import Clipboard from 'com/widget/clipboard'
 
   const storageKeyPrefix = `bw-shopping-cart-`
 
@@ -47,14 +54,18 @@
       userInfo: Object,
       salesInfo: Object
     },
+    components: {
+      Clipboard
+    },
     data() {
       return {
         localItems: [],
+        payUrl: '',
 
         gwSelected: false,
         expand: false,
         loading: false,
-        firstLoad: true,
+        firstLoad: false,
         storageKey: storageKeyPrefix + this.userInfo.id
       }
     },
@@ -64,31 +75,44 @@
       },
       totalPrice() {
         return this.localItems.reduce((a, b) => a + b.price , 0) + (this.gwSelected ? this.gwPrice : 0)
+      },
+      payText() {
+        return this.isUser('BAIXING_SALES') ? '生成支付链接' : '去支付'
       }
     },
     mounted() {
-      const roles = normalizeRoles(this.userInfo.roles)
-      // 销售会代不同的用户操作，所以不读取本地购物车数据
-      if (roles.includes('BAIXING_USER')) {
+      if (this.isUser('BAIXING_USER')) {
         const stringValue = localStorage.getItem(this.storageKey)
         if (stringValue) {
           this.localItems = JSON.parse(stringValue)
+          this.firstLoad = true
         }
       }
     },
     methods: {
       f2y,
+      isUser(roleString) {
+        return normalizeRoles(this.userInfo.roles).includes(roleString)
+      },
       remove(index) {
         this.localItems.splice(index, 1)
       },
       async checkout() {
-        console.log(this.localItems)
+        // 角色：普通用户跳转支付
+        // 代理商跳转支付，url带上
+        // 百姓网销售显示链接
         const {salesId, userId} = this.salesInfo
         const preTradeId = await createPreOrder(this.localItems, this.gwSelected, userId, salesId)
 
         // 预订单创建后，清空购物车
         this.localItems = []
-        location.href = `http://trade-dev.baixing.cn/?appId=101&seq=${preTradeId}`
+        if (this.isUser('BAIXING_USER')) {
+          location.href = `http://trade-dev.baixing.cn/?appId=101&seq=${preTradeId}`
+        } else if (this.isUser('AGENT_ACCOUNTING')) {
+          location.href = `http://trade-dev.baixing.cn/?appId=101&seq=${preTradeId}&agentId=${this.userInfo.id}`
+        } else if (this.isUser('BAIXING_SALES')) {
+          this.payUrl = `http://trade-dev.baixing.cn/?appId=101&seq=${preTradeId}`
+        }
       },
       onHandleClick() {
         this.expand = !this.expand
@@ -105,15 +129,13 @@
         handler: function(local) {
           const roles = normalizeRoles(this.userInfo.roles)
           // 销售会代不同的用户操作，所以不读取本地购物车数据
-          if (roles.includes('BAIXING_USER')) {
+          if (this.isUser('BAIXING_USER')) {
             localStorage.setItem(this.storageKey, JSON.stringify(local))
           }
           if (!this.firstLoad) {
             this.expand = true
           }
-          if (this.firstLoad) {
-            this.firstLoad = false
-          }
+          this.firstLoad = false
         },
         deep: true
       },
