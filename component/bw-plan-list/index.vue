@@ -127,10 +127,11 @@
     methods: {
       f2y,
       async getPromotes() {
-        const {offset, limit, keyword: word, promoteStatusFilters, auditStatusFilters} = this.query
+        const {offset, limit, keyword: word, promoteStatusFilters, auditStatusFilters, userId} = this.query
         const {items, total} = await getPromotes({
           page: offset / limit,
           size: limit, word,
+          userId,
           status: promoteStatusFilters.flat(),
           auditStatus: auditStatusFilters.flat()
         })
