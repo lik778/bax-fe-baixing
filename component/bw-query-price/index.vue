@@ -37,10 +37,11 @@
         <div v-if="skus.length" class="results">
           <div>
             <label>查询结果</label>
-            <p v-if="exactMatch[0].isSold">关键词在城市<span class="highlight">{{formatArea(soldCities)}}</span>已售出。<span v-if="availableCities.length">投放在剩余城市价格： 30天 共{{f2y(exactMatch[0].price)}}元、90天 共{{f2y(exactMatch[1].price)}}元，</span>请重新输入关键词推广城市</p>
-            <result-row v-else :options="exactMatch" :selected="selected" @change="onSelected" />
+            <p v-if="exactMatch[0].isSold && exactMatch[0].price">关键词在城市<span class="highlight">{{formatArea(soldCities)}}</span>已售出。<span v-if="availableCities.length">投放在剩余城市价格： 30天 共{{f2y(exactMatch[0].price)}}元、90天 共{{f2y(exactMatch[1].price)}}元，</span>请重新输入关键词推广城市。</p>
+            <result-row v-else-if="!exactMatch[0].isSold && exactMatch[0].price" :options="exactMatch" :selected="selected" @change="onSelected" />
+            <div v-else>关键词不予售卖</div>
           </div>
-          <div>
+          <div v-if="recommends.length">
             <label>推荐近似关键词</label>
             <div>
               <result-row v-for="item in recommends" :key="item.keyword"
@@ -48,8 +49,10 @@
             </div>
           </div>
 
-          <p class="clear" @click="selected = []"><i class="el-icon-close"></i>清除所有选择</p>
-          <el-button class="add-to-cart" type="primary" @click="addToCart">加入购物车</el-button>
+          <section v-if="selected.length">
+            <p class="clear" @click="selected = []"><i class="el-icon-close"></i>清除所有选择</p>
+            <el-button class="add-to-cart" type="primary" @click="addToCart">加入购物车</el-button>
+          </section>
         </div>
       </main>
     </div>
