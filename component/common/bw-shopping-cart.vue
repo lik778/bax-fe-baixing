@@ -145,7 +145,7 @@
           // 每次打开更新下关键词价格、是否已售卖
           console.log('check')
           this.loading = true
-          // this.localItems = await refreshKeywordPrice(this.localItems)
+          this.localItems = await refreshKeywordPrice(this.localItems)
           this.loading = false
         }
       }

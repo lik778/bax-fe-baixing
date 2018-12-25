@@ -22,10 +22,14 @@ export async function refreshKeywordPrice(keywords) {
     .send({pricingList: requestBody})
     .json()
 
-  const parsedBody = body.data.content.map(i => ({
-    ...i,
-    price: i.price[i.days]
-  }))
+  const parsedBody = body.data.content.map(i => {
+    const days = keywords.find(k => k.word === i.word).days
+    return {
+      ...i,
+      price: i.soldPriceMap[days],
+      days: days
+    }
+  })
   return parsedBody
 }
 
