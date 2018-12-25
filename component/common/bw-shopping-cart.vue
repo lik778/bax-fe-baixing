@@ -28,10 +28,10 @@
         <p>总计：<span class="price">{{f2y(totalPrice)}}</span>元</p>
         <el-button class="checkout" type="primary" @click="checkout">{{payText}}</el-button>
         <div v-if="payUrl">
-          <label :title="orderPayUrl">
-            {{ '付款链接: ' + orderPayUrl }}
+          <label :title="payUrl">
+            {{ '付款链接: ' + payUrl }}
           </label>
-          <Clipboard :content="orderPayUrl"></Clipboard>
+          <Clipboard :content="payUrl" @success="onCopy"></Clipboard>
         </div>
       </div>
     </div>
@@ -71,10 +71,22 @@
     },
     computed: {
       gwPrice() {
-        return 120000
+        if (this.keywordsPrice < 50000) {
+          return 120000
+        }
+        if (this.keywordsPrice < 499900) {
+          return 100000
+        }
+        if (this.keywordsPrice < 999900) {
+          return 60000
+        }
+        return 20000
+      },
+      keywordsPrice() {
+        return this.localItems.reduce((a, b) => a + b.price , 0)
       },
       totalPrice() {
-        return this.localItems.reduce((a, b) => a + b.price , 0) + (this.gwSelected ? this.gwPrice : 0)
+        return this.keywordsPrice + (this.gwSelected ? this.gwPrice : 0)
       },
       payText() {
         return this.isUser('BAIXING_SALES') ? '生成支付链接' : '去支付'
@@ -104,8 +116,6 @@
         const {salesId, userId} = this.salesInfo
         const preTradeId = await createPreOrder(this.localItems, this.gwSelected, userId, salesId)
 
-        // 预订单创建后，清空购物车
-        this.localItems = []
         if (this.isUser('BAIXING_USER')) {
           location.href = `http://trade-dev.baixing.cn/?appId=101&seq=${preTradeId}`
         } else if (this.isUser('AGENT_ACCOUNTING')) {
@@ -122,6 +132,9 @@
         if (newItems.length) {
           this.localItems.push(...clone(newItems))
         }
+      },
+      onCopy() {
+        this.localItems = []
       }
     },
     watch: {
@@ -144,7 +157,7 @@
           // 每次打开更新下关键词价格、是否已售卖
           console.log('check')
           this.loading = true
-          // this.localItems = await refreshKeywordPrice(this.localItems)
+          this.localItems = await refreshKeywordPrice(this.localItems)
           this.loading = false
         }
       }
