@@ -3,6 +3,11 @@
     <div class="white-bg">
       <header>标王关键词查价</header>
       <main>
+        <div class="notice">
+          <p><span><i class="red">满</i>500-4999元，</span>购买精品官网（365天）立<i class="red">减</i>200元；</p>
+          <p><span><i class="red">满</i>5000-9999元，</span>购买精品官网（365天）立<i class="red">减</i>600元；</p>
+          <p><span><i class="red">满</i>10000元及以上，</span>购买精品官网（365天）立<i class="red">减</i>1000元；</p>
+        </div>
         <el-form :model="form" :rules="rules" label-width="120px" ref="form" label-position="left" class="form" @submit.native.prevent>
           <el-form-item label="推广关键词" prop="keyword">
             <el-input v-model="form.keyword" style="width: 200px"/>
@@ -224,6 +229,25 @@ div.bg {
 .highlight {
   color: red;
   margin: 0 5px;
+}
+.notice {
+  font-size: 13px;
+  margin-bottom: 20px;
+  & > p {
+    margin-bottom: 5px;
+
+    & > span {
+      width: 145px;
+    }
+
+    & >>> .red {
+      background-color: #ff3c3c;
+      color: white;
+      padding: 1px 4px;
+      margin: 0 5px;
+      border-radius: 2px;
+    }
+  }
 }
 .results {
   & > div {

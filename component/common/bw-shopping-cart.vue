@@ -71,10 +71,22 @@
     },
     computed: {
       gwPrice() {
-        return 120000
+        if (this.keywordsPrice < 50000) {
+          return 120000
+        }
+        if (this.keywordsPrice < 499900) {
+          return 100000
+        }
+        if (this.keywordsPrice < 999900) {
+          return 60000
+        }
+        return 20000
+      },
+      keywordsPrice() {
+        return this.localItems.reduce((a, b) => a + b.price , 0)
       },
       totalPrice() {
-        return this.localItems.reduce((a, b) => a + b.price , 0) + (this.gwSelected ? this.gwPrice : 0)
+        return this.keywordsPrice + (this.gwSelected ? this.gwPrice : 0)
       },
       payText() {
         return this.isUser('BAIXING_SALES') ? '生成支付链接' : '去支付'
