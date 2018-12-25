@@ -21,6 +21,7 @@ export default {
   methods: {
     onCopySuccess() {
       Message.success('已复制到剪切板')
+      this.$emit('success')
     },
     onCopyError() {
       Message.error('复制到剪切板失败')

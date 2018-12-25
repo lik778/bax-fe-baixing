@@ -28,10 +28,10 @@
         <p>总计：<span class="price">{{f2y(totalPrice)}}</span>元</p>
         <el-button class="checkout" type="primary" @click="checkout">{{payText}}</el-button>
         <div v-if="payUrl">
-          <label :title="orderPayUrl">
-            {{ '付款链接: ' + orderPayUrl }}
+          <label :title="payUrl">
+            {{ '付款链接: ' + payUrl }}
           </label>
-          <Clipboard :content="orderPayUrl"></Clipboard>
+          <Clipboard :content="payUrl" @success="onCopy"></Clipboard>
         </div>
       </div>
     </div>
@@ -104,8 +104,6 @@
         const {salesId, userId} = this.salesInfo
         const preTradeId = await createPreOrder(this.localItems, this.gwSelected, userId, salesId)
 
-        // 预订单创建后，清空购物车
-        this.localItems = []
         if (this.isUser('BAIXING_USER')) {
           location.href = `http://trade-dev.baixing.cn/?appId=101&seq=${preTradeId}`
         } else if (this.isUser('AGENT_ACCOUNTING')) {
@@ -122,6 +120,9 @@
         if (newItems.length) {
           this.localItems.push(...clone(newItems))
         }
+      },
+      onCopy() {
+        this.localItems = []
       }
     },
     watch: {

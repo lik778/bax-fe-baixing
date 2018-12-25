@@ -118,6 +118,13 @@ export default {
     es.addListener('http fetch end', () => {
       this.pending = this.pending - 1
     })
+
+    // 记录销售的客户id等信息
+    const {user_id: userId, sales_id: salesId} = this.$route.query
+    if (userId && salesId) {
+      this.salesInfo.userId = +userId
+      this.salesInfo.salesId = +salesId
+    }
   },
   async mounted() {
     await Promise.all([
@@ -133,13 +140,6 @@ export default {
       this.isBwRoute = to.path.startsWith('/main/bw')
       next()
     })
-
-    // 记录销售的客户id等信息
-    const {user_id: userId, sales_id: salesId} = this.$route.query
-    if (userId && salesId) {
-      this.salesInfo.userId = +userId
-      this.salesInfo.salesId = +salesId
-    }
 
     setTimeout(() => {
       const { currentUser } = this
