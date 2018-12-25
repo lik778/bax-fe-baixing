@@ -24,8 +24,8 @@
 
         <el-table :data="promotes">
           <el-table-column prop="word" label="关键词" />
-          <el-table-column prop="cities" label="城市" :formatter="cityFormatter" />
-          <el-table-column prop="device" label="平台" :formatter="deviceFormatter" />
+          <el-table-column prop="cities" label="城市" :formatter="row => cityFormatter(row.cities)" />
+          <el-table-column prop="device" label="平台" :formatter="row => deviceFormatter(row.device)" />
           <el-table-column prop="status" label="投放状态" :formatter="statusFormatter" />
           <el-table-column prop="auditStatus" label="审核状态" :formatter="auditStatusFormatter" />
           <el-table-column prop="" label="平均排名" />
@@ -46,8 +46,8 @@
       <el-dialog :visible.sync="xufeiDialogVisible" title="标王续费">
         <el-form :model="xufeiForm" label-width="200px" :rules="rules" ref="xufei">
           <el-form-item label="关键词：">{{xufeiForm.word}}</el-form-item>
-          <el-form-item label="城市：">{{xufeiForm.cities}}</el-form-item>
-          <el-form-item label="投放平台：">{{xufeiForm.device}}</el-form-item>
+          <el-form-item label="城市：">{{cityFormatter(xufeiForm.cities)}}</el-form-item>
+          <el-form-item label="投放平台：">{{deviceFormatter(xufeiForm.device)}}</el-form-item>
           <el-form-item label="购买天数：" prop="days">
             <el-radio v-model="xufeiForm.days" :label="+option[0]" v-for="(option, index) in Object.entries(xufeiForm.soldPriceMap)" :key="index">{{option[0]}}天{{f2y(option[1])}}元</el-radio>
           </el-form-item>
@@ -165,10 +165,11 @@
           }
         })
       },
-      cityFormatter({cities}) {
-        return cities.map(city => getCnName(city, this.allAreas)).join(',')
+      cityFormatter(cities) {
+        const max = 20
+        return cities.slice(0, max).map(city => getCnName(city, this.allAreas)).join(',') + (cities.length > max ? `等${cities.length}个城市` : '')
       },
-      deviceFormatter({device}) {
+      deviceFormatter(device) {
         return DEVICE[device]
       },
       statusFormatter({status}) {
