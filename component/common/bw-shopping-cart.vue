@@ -27,7 +27,7 @@
       <div class="footer">
         <p>总计：<span class="price">{{f2y(totalPrice)}}</span>元</p>
         <el-button class="checkout" type="primary" @click="checkout">{{payText}}</el-button>
-        <div v-if="payUrl">
+        <div v-if="payUrl" class="payurl">
           <label :title="payUrl">
             {{ '付款链接: ' + payUrl }}
           </label>
@@ -267,5 +267,9 @@
   justify-content: center;
   text-align: center;
   color: gray;
+}
+.payurl {
+  font-size: 14px;
+  margin-top: 10px;
 }
 </style>

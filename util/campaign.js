@@ -82,7 +82,7 @@ export function getCreativeTitleLenLimit(platforms) {
 
 export function getCreativeContentLenLimit(platforms) {
   let min = 9
-  let max = 40
+  let max = 80
   if (platforms.length === 1 && platforms.includes(SEM_PLATFORM_SHENMA)) {
     // [8, 68], 较为宽松
     min = 8
