@@ -111,3 +111,7 @@ export function isSiteLandingType(landingPage) {
   const isSiteLandingTypeReg = /(\.shop|\.mvp)\.baixing\.com/i
   return isSiteLandingTypeReg.test(landingPage)
 }
+
+export function removeUrlProtocol(url) {
+  return url.replace(/^https?:\/\//, '')
+}
