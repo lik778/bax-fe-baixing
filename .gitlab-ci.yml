@@ -32,7 +32,7 @@ dev-deploy:
 dev-deploy-auto-master:
   stage: dev-deploy-auto-master
   only:
-    - master
+    - test-env
   tags:
     - k8s-dev
   script:

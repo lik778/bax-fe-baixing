@@ -548,7 +548,9 @@ export default {
     },
     async goChargeKaSite() {
       await getQiqiaobanCoupon(this.id)
-      this.$router.push('/main/qwt/charge?select_gw=1')
+      setTimeout(() => {
+        this.$router.push('/main/qwt/charge?select_gw=1')
+      }, 300)
     },
     handleCreativeError(message) {
       if(message) Message.error(message)
@@ -557,7 +559,7 @@ export default {
     toggleDisplaySettingArea() {
       this.moreSettingDisplay = !this.moreSettingDisplay
     },
-    setLandingPage() {
+    setLandingPage(url) {
       this.promotion.landingPage = url
       this.promotion.areas = ['quanguo']
     },
@@ -575,7 +577,7 @@ export default {
         this.adSelectortype = ''
         const landingpage = document.querySelector('.landingpage')
         landingpage.scrollIntoViewIfNeeded()
-        throw this.$message.error('请修改推广计划的投放页面')
+        throw this.$message.error('当前所选落地页无效，请修改推广计划的投放页面')
       }
     },
     async onSelectAd(ad) {
@@ -929,8 +931,6 @@ export default {
           return Message.error('投放移动端的出价比率应在0.1 ~ 9.9之间')
         }
       }
-      console.log(this.promotion.landingPage)
-      return
 
       await updateCampaign(this.id, fmtAreasInQwt(data, allAreas))
 
@@ -1097,12 +1097,20 @@ export default {
     // 验证官网落地页是否404
     const { landingPage, landingType } = this.originPromotion
     if (landingType === 1) {
-      const { status } = await fetch(landingPage, {
-        method: 'head'
-      })
-      if (status === 404) {
+      // 将帖子选择组件的类型重置
+      this.adSelectortype = ''
+      const script = document.createElement('script')
+      script.src = landingPage
+      document.body.appendChild(script)
+      script.addEventListener('error', e => {
+        document.body.removeChild(script)
         this.isErrorLandingPageShow = true
-      }
+        console.error(e)
+      })
+      script.addEventListener('load', e => {
+        console.log(e)
+        document.body.removeChild(script)
+      })
     }
     setTimeout(() => {
       if (this.$route.query.target === 'keyword') {

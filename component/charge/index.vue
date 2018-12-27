@@ -541,14 +541,14 @@ export default {
       //  目前只有这一个角色可以用券
       //  FIX: 修复页面加载后没有优惠券信息 使用$watch去监听 bxUser 变化并触发coupon 更新
       this.unBxUserWatch = this.$watch(
-        () => this.isBxUser, 
+        () => this.isBxUser,
         async isBxUser => {
           if (isBxUser) {
             await store.getConditions()
             await store.getCoupons({ onlyValid: true, status: 0 })
             this.unBxUserWatch()
           }
-      })
+      }, {immediate: true})
       await Promise.all([
         store.getProductDiscounts([3, 4]), // 充值／新官网
         store.getProducts([3,4])

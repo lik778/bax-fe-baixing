@@ -5,7 +5,7 @@
       class="qiqiaoban-page-selector"
       placeholder="请选择投放官网"
       :disabled="disabled"
-      :value="value"
+      :value="isSiteLandingType(value) ? value : null"
       :options="options"
       @change="onChange">
     </bax-select>
@@ -22,6 +22,7 @@
 
 <script>
   import BaxSelect from './select'
+  import {isSiteLandingType} from 'util/kit'
   import {
     getUserTicketCount,
     baxUserLogin,
@@ -53,6 +54,7 @@
       }
     },
     methods: {
+      isSiteLandingType,
       onChange(v) {
         this.$emit('change', v)
         this.$emit('input', v)

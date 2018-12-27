@@ -47,7 +47,7 @@
         width="105"
         align="center"
         label="优惠"
-        :formatter="({originalPrice, customerPrice}) => formatPrice(originalPrice - customerPrice)"/>
+        :formatter="({originalPrice, customerPrice, extra}) => formatPrice(originalPrice * genKaSiteDuration(extra) - customerPrice)"/>
       <el-table-column
         width="105"
         align="center"
@@ -111,7 +111,7 @@ const transformUnixTimeStamp = (date) =>  {
   return moment(new Date(date)).unix()
 }
 const DEFAULT_DATE_RANGE = [
-  moment(new Date()).subtract('months', 1),
+  moment(new Date()).subtract(1, 'months'),
   new Date()
 ]
 
