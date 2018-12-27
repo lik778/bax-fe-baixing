@@ -117,8 +117,10 @@
         const preTradeId = await createPreOrder(this.localItems, this.gwSelected, userId, salesId)
 
         if (this.isUser('BAIXING_USER')) {
+          this.localItems = []
           location.href = `http://trade-dev.baixing.cn/?appId=101&seq=${preTradeId}`
         } else if (this.isUser('AGENT_ACCOUNTING')) {
+          this.localItems = []
           location.href = `http://trade-dev.baixing.cn/?appId=101&seq=${preTradeId}&agentId=${this.userInfo.id}`
         } else if (this.isUser('BAIXING_SALES')) {
           this.payUrl = `http://trade-dev.baixing.cn/?appId=101&seq=${preTradeId}`
