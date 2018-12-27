@@ -929,8 +929,6 @@ export default {
           return Message.error('投放移动端的出价比率应在0.1 ~ 9.9之间')
         }
       }
-      console.log(this.promotion.landingPage)
-      return
 
       await updateCampaign(this.id, fmtAreasInQwt(data, allAreas))
 
