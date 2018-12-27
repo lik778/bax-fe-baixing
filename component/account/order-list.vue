@@ -47,7 +47,7 @@
         width="105"
         align="center"
         label="优惠"
-        :formatter="({originalPrice, customerPrice}) => formatPrice(originalPrice - customerPrice)"/>
+        :formatter="({originalPrice, customerPrice, extra}) => formatPrice(originalPrice * genKaSiteDuration(extra) - customerPrice)"/>
       <el-table-column
         width="105"
         align="center"
