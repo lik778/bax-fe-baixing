@@ -330,6 +330,7 @@ import {
 import {
   f2y,
   isQiqiaobanSite,
+  removeUrlProtocol,
   isSiteLandingType
 } from 'util/kit'
 
@@ -1101,7 +1102,8 @@ export default {
     if (landingType === 1) {
       // 将帖子选择组件的类型重置
       this.adSelectortype = ''
-      const { status } = await fetch(landingPage, {
+      // url加上http://不知道为什么会爆跨域问题
+      const { status } = await fetch(removeUrlProtocol(landingPage), {
         method: 'head'
       })
       if (status === 404) {
