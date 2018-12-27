@@ -330,7 +330,6 @@ import {
 import {
   f2y,
   isQiqiaobanSite,
-  removeUrlProtocol,
   isSiteLandingType
 } from 'util/kit'
 
@@ -932,8 +931,6 @@ export default {
           return Message.error('投放移动端的出价比率应在0.1 ~ 9.9之间')
         }
       }
-      console.log(this.promotion.landingPage)
-      return
 
       await updateCampaign(this.id, fmtAreasInQwt(data, allAreas))
 
@@ -1102,13 +1099,18 @@ export default {
     if (landingType === 1) {
       // 将帖子选择组件的类型重置
       this.adSelectortype = ''
-      // url加上http://不知道为什么会爆跨域问题
-      const { status } = await fetch(removeUrlProtocol(landingPage), {
-        method: 'head'
-      })
-      if (status === 404) {
+      const script = document.createElement('script')
+      script.src = landingPage
+      document.body.appendChild(script)
+      script.addEventListener('error', e => {
+        document.body.removeChild(script)
         this.isErrorLandingPageShow = true
-      }
+        console.error(e)
+      })
+      script.addEventListener('load', e => {
+        console.log(e)
+        document.body.removeChild(script)
+      })
     }
     setTimeout(() => {
       if (this.$route.query.target === 'keyword') {
