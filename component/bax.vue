@@ -29,7 +29,7 @@
     <back-to-top />
     <wechat-scan />
     <chat />
-    <bw-shopping-cart ref="bwShoppingCart" v-show="isBwRoute" :userInfo="currentUser" v-if="currentUser.id" :salesInfo="salesInfo" />
+    <bw-shopping-cart ref="bwShoppingCart" v-show="isBwRoute" :userInfo="currentUser" v-if="currentUser.id" :salesInfo="salesInfo" :allAreas="allAreas"/>
   </content>
 </template>
 

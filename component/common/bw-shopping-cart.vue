@@ -12,12 +12,12 @@
             <h3 class="keyword">{{item.word}}{{item.isSold ? '（已售出）': ''}}</h3><div @click="remove(index)"><i class="el-icon-close"></i></div>
           </div>
           <div>
-            <p><label>平台：</label>{{item.device}}</p>
-            <p><label>时长：</label>{{item.days}}</p>
+            <p><label>平台：</label>{{DEVICE[item.device]}}</p>
+            <p><label>时长：</label>{{item.days}}天</p>
           </div>
           <div>
             <p><label>价格：</label><span class="item-price">{{f2y(item.price)}}</span>元</p>
-            <p><label>城市：</label>{{item.cities.join(',')}}</p>
+            <p :title="cityFormatter(item.cities, 400)"><label>城市：</label>{{cityFormatter(item.cities, 2)}}</p>
           </div>
         </div>
       </div>
@@ -45,6 +45,8 @@
   import {refreshKeywordPrice, createPreOrder} from 'api/biaowang'
   import {normalizeRoles} from 'util/role'
   import Clipboard from 'com/widget/clipboard'
+  import {getCnName} from 'util/meta'
+  import {DEVICE} from 'constant/biaowang'
 
   const storageKeyPrefix = `bw-shopping-cart-`
 
@@ -52,7 +54,8 @@
     name: 'bw-shopping-cart',
     props: {
       userInfo: Object,
-      salesInfo: Object
+      salesInfo: Object,
+      allAreas: Array
     },
     components: {
       Clipboard
@@ -61,6 +64,7 @@
       return {
         localItems: [],
         payUrl: '',
+        DEVICE,
 
         gwSelected: false,
         expand: false,
@@ -102,6 +106,9 @@
       }
     },
     methods: {
+      cityFormatter(cities, max) {
+        return cities.slice(0, max).map(city => getCnName(city, this.allAreas)).join(',') + (cities.length > max ? `等${cities.length}个城市` : '')
+      },
       f2y,
       isUser(roleString) {
         return normalizeRoles(this.userInfo.roles).includes(roleString)
@@ -222,7 +229,7 @@
           justify-content: space-between;
         }
         & > p:first-of-type {
-          width: 60%;
+          width: 120px;
         }
 
         & >>> .el-icon-close {
