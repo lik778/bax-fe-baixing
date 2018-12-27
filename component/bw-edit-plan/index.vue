@@ -39,7 +39,7 @@
             @error="handleCreativeError"
           />
           <el-form-item>
-            <el-button :loading="isLoading" @click="onSubmit" type="primary">创建标王计划</el-button>
+            <el-button :loading="isLoading" @click="onSubmit" type="primary">buttonText</el-button>
           </el-form-item>
         </el-form>
       </main>
@@ -82,6 +82,7 @@
           promoteIds: [{required: true, message: '请勾选关键词'}],
           landingPage: [{required: true, message: '请选择投放页面'}]
         },
+        buttonText: '创建标王计划',
 
         landingTypeOpts,
         creativeError: '',
@@ -109,11 +110,13 @@
           creativeContent: creativeContent || '',
           landingPageId: landingPageId || ''
         }
+        this.buttonText = '更新标王计划'
       }
       if (orderIdsString) {
         const orderIds = orderIdsString.split(',')
         this.promotes = await getPromtesByOrders(orderIds)
         this.form.promoteIds = this.promotes.map(p => p.id)
+        this.buttonText = '创建标王计划'
       }
       if (notice === 'true' || notice === '1') {
         this.showNotice = true

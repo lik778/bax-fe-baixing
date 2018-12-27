@@ -99,9 +99,9 @@
     data() {
       return {
         form: {
-          keyword: 'jk',
-          devices: [1],
-          areas: ['beijing']
+          keyword: '',
+          devices: [1, 2],
+          areas: []
         },
         rules: {
           keyword: [{required: true, message: '请填写推广关键词'}],
