@@ -102,6 +102,7 @@ import moment from 'moment'
 import track from 'util/track'
 import { toHumanTime } from 'utils'
 import { getLogDesc } from 'util/log'
+import { SEM_PLATFORM_SOGOU } from 'constant/fengming'
 import {
   fieldType,
   opTypeOpts,
@@ -123,7 +124,7 @@ const CREATED_AT_VALUES = [
 ]
 const DIVIDING_CHAR = '   '
 
-const genFormatLogValues = (change, keys, type, opType) => {
+const genFormatLogValues = (change, keys, type, opType, campaignSource) => {
   const valueKey = type === 'old' ? 'oldValue' : 'newValue'
   return keys.map(k => {
     const value = opType === OP_TYPE_CREATE ? change[k] : change[k][valueKey]
@@ -135,6 +136,9 @@ const genFormatLogValues = (change, keys, type, opType) => {
     } else if (k === 'status') {
       return value === -10 ? '开启投放' : '暂停投放'
     } else if (k === 'schedule') {
+      if (campaignSource === SEM_PLATFORM_SOGOU) {
+        return value.every(v => v === 3670009) ? '全部时段' : '部分时段'
+      }
       return value.every(v => v === 16777215) ? '全部时段' : '部分时段'
     } else if (k === 'areas') {
       const sliceAreas = value.slice(0, MAX_AREAS_LOG_LENGTH)
@@ -212,13 +216,14 @@ export default {
         const change = message.change
         const changeKeys = Object.keys(change)
         const opType = message.opType
+        const campaignSource = message.campaignSource
         if (type === 'field') {
           return changeKeys.map(key => fieldType[key]).join(DIVIDING_CHAR)
         } else if (type === 'old') {
           if (opType === OP_TYPE_CREATE) return '-'
-          return genFormatLogValues(change, changeKeys, type, opType)
+          return genFormatLogValues(change, changeKeys, type, opType, campaignSource)
         } else if (type === 'new') {
-          return genFormatLogValues(change, changeKeys, type, opType)
+          return genFormatLogValues(change, changeKeys, type, opType, campaignSource)
         }
       }
     }
