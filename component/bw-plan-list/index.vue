@@ -31,7 +31,11 @@
           <el-table-column prop="" label="平均排名" />
           <el-table-column prop="createdAt" label="购买日期" :formatter="dateFormatter" />
           <el-table-column label="投放剩余天数">
-
+            <template slot-scope="scope">
+              <div>
+                {{leftDays(scope.row)}}
+              </div>
+            </template>
           </el-table-column>
           <el-table-column label="操作">
             <template slot-scope="scope">
@@ -126,6 +130,9 @@
     },
     methods: {
       f2y,
+      leftDays(row) {
+        return row.startedAt ? row.days - (Date.now() - row.startedAt) / 86400 : row.days
+      },
       async getPromotes() {
         const {offset, limit, keyword: word, promoteStatusFilters, auditStatusFilters, userId} = this.query
         const {items, total} = await getPromotes({
@@ -142,7 +149,11 @@
         this.query.offset = offset
         await this.getPromotes()
       },
-      async onXufei({word, cities, device}) {
+      async onXufei(row) {
+        const {word, cities, device} = row
+        if (this.leftDays(row) > 15) {
+          return this.$message.info('到期前15天才可续费哦')
+        }
         const result = await queryKeywordPrice({
           word,
           cities,
