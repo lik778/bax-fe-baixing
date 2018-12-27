@@ -6,22 +6,28 @@
         <router-link :to="{name: 'bw-query-price'}">
           <el-button class="create-plan" type="primary"><i class="el-icon-plus" ></i>新建标王计划</el-button>
         </router-link>
-        <el-form :model="query" label-width="100px" label-position="left">
+        <el-form :model="query" label-width="100px" label-position="left" @submit.native.prevent >
           <el-form-item label="关键词">
             <el-input v-model="query.keyword" placeholder="输入关键词查询" style="width: 300px;" />
           </el-form-item>
           <el-form-item label="投放状态">
-            <el-checkbox-group v-model="query.statusFilters">
+            <el-checkbox-group v-model="query.promoteStatusFilters">
               <el-checkbox :label="opt.value" v-for="(opt, index) in promoteStatusOpts" :key="index">{{opt.label}}</el-checkbox>
+            </el-checkbox-group>
+          </el-form-item>
+          <el-form-item label="审核状态">
+            <el-checkbox-group v-model="query.auditStatusFilters">
+              <el-checkbox :label="opt.value" v-for="(opt, index) in auditStatusOpts" :key="index">{{opt.label}}</el-checkbox>
             </el-checkbox-group>
           </el-form-item>
         </el-form>
 
         <el-table :data="promotes">
           <el-table-column prop="word" label="关键词" />
-          <el-table-column prop="cities" label="城市" :formatter="cityFormatter" />
-          <el-table-column prop="device" label="平台" :formatter="deviceFormatter" />
+          <el-table-column prop="cities" label="城市" :formatter="row => cityFormatter(row.cities)" />
+          <el-table-column prop="device" label="平台" :formatter="row => deviceFormatter(row.device)" />
           <el-table-column prop="status" label="投放状态" :formatter="statusFormatter" />
+          <el-table-column prop="auditStatus" label="审核状态" :formatter="auditStatusFormatter" />
           <el-table-column prop="" label="平均排名" />
           <el-table-column prop="createdAt" label="购买日期" :formatter="dateFormatter" />
           <el-table-column label="投放剩余天数">
@@ -39,10 +45,10 @@
 
       <el-dialog :visible.sync="xufeiDialogVisible" title="标王续费">
         <el-form :model="xufeiForm" label-width="200px" :rules="rules" ref="xufei">
-          <el-form-item label="关键词">{{xufeiForm.word}}</el-form-item>
-          <el-form-item label="城市">{{xufeiForm.cities}}</el-form-item>
-          <el-form-item label="投放平台">{{xufeiForm.device}}</el-form-item>
-          <el-form-item label="购买天数" prop="days">
+          <el-form-item label="关键词：">{{xufeiForm.word}}</el-form-item>
+          <el-form-item label="城市：">{{cityFormatter(xufeiForm.cities)}}</el-form-item>
+          <el-form-item label="投放平台：">{{deviceFormatter(xufeiForm.device)}}</el-form-item>
+          <el-form-item label="购买天数：" prop="days">
             <el-radio v-model="xufeiForm.days" :label="+option[0]" v-for="(option, index) in Object.entries(xufeiForm.soldPriceMap)" :key="index">{{option[0]}}天{{f2y(option[1])}}元</el-radio>
           </el-form-item>
           <el-form-item label="">
@@ -57,7 +63,7 @@
 
 <script>
   import BaxPagination from 'com/common/pagination'
-  import {promoteStatusOpts, DEVICE, PROMOTE_STATUS} from 'constant/biaowang'
+  import {promoteStatusOpts, auditStatusOpts, DEVICE, PROMOTE_STATUS, AUDIT_STATUS} from 'constant/biaowang'
   import {getPromotes, queryKeywordPrice} from 'api/biaowang'
   import {
     f2y,
@@ -81,9 +87,11 @@
     data() {
       return {
         promoteStatusOpts,
+        auditStatusOpts,
         query: {
           keyword: '',
-          statusFilters: [],
+          promoteStatusFilters: [],
+          auditStatusFilters: [],
           offset: 0,
           limit: 20,
           total: 0,
@@ -119,8 +127,14 @@
     methods: {
       f2y,
       async getPromotes() {
-        const {offset, limit, keyword: word, statusFilters: status} = this.query
-        const {items, total} = await getPromotes({page: offset / limit, size: limit, word, status})
+        const {offset, limit, keyword: word, promoteStatusFilters, auditStatusFilters, userId} = this.query
+        const {items, total} = await getPromotes({
+          page: offset / limit,
+          size: limit, word,
+          userId,
+          status: promoteStatusFilters.flat(),
+          auditStatus: auditStatusFilters.flat()
+        })
         this.promotes = items
         this.query.total = total
       },
@@ -151,14 +165,18 @@
           }
         })
       },
-      cityFormatter({cities}) {
-        return cities.map(city => getCnName(city, this.allAreas)).join(',')
+      cityFormatter(cities) {
+        const max = 20
+        return cities.slice(0, max).map(city => getCnName(city, this.allAreas)).join(',') + (cities.length > max ? `等${cities.length}个城市` : '')
       },
-      deviceFormatter({device}) {
+      deviceFormatter(device) {
         return DEVICE[device]
       },
       statusFormatter({status}) {
-        return PROMOTE_STATUS[status]
+        return Object.entries(PROMOTE_STATUS).find(arr => arr[1].includes(status))[0]
+      },
+      auditStatusFormatter({auditStatus}) {
+        return Object.entries(AUDIT_STATUS).find(arr => arr[1].includes(auditStatus))[0]
       },
       dateFormatter({createdAt}) {
         return moment(createdAt * 1000).format('YYYY-MM-DD')
@@ -168,6 +186,17 @@
       this.query.userId = this.salesInfo.userId
       await this.getPromotes()
     },
+    watch: {
+      'query.keyword': function (v) {
+        this.getPromotes()
+      },
+      'query.promoteStatusFilters': function (v) {
+        this.getPromotes()
+      },
+      'query.auditStatusFilters': function (v) {
+        this.getPromotes()
+      },
+    }
   }
 </script>
 

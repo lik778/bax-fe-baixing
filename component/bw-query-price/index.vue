@@ -3,7 +3,12 @@
     <div class="white-bg">
       <header>标王关键词查价</header>
       <main>
-        <el-form :model="form" :rules="rules" label-width="120px" ref="form" label-position="left" class="form">
+        <div class="notice">
+          <p><span><i class="red">满</i>500-4999元，</span>购买精品官网（365天）立<i class="red">减</i>200元；</p>
+          <p><span><i class="red">满</i>5000-9999元，</span>购买精品官网（365天）立<i class="red">减</i>600元；</p>
+          <p><span><i class="red">满</i>10000元及以上，</span>购买精品官网（365天）立<i class="red">减</i>1000元；</p>
+        </div>
+        <el-form :model="form" :rules="rules" label-width="120px" ref="form" label-position="left" class="form" @submit.native.prevent>
           <el-form-item label="推广关键词" prop="keyword">
             <el-input v-model="form.keyword" style="width: 200px"/>
           </el-form-item>
@@ -32,9 +37,11 @@
         <div v-if="skus.length" class="results">
           <div>
             <label>查询结果</label>
-            <result-row :options="exactMatch" :selected="selected" @change="onSelected" />
+            <p v-if="exactMatch[0].isSold && exactMatch[0].price">关键词在城市<span class="highlight">{{formatArea(soldCities)}}</span>已售出。<span v-if="availableCities.length">投放在剩余城市价格： 30天 共{{f2y(exactMatch[0].price)}}元、90天 共{{f2y(exactMatch[1].price)}}元，</span>请重新输入关键词推广城市。</p>
+            <result-row v-else-if="!exactMatch[0].isSold && exactMatch[0].price" :options="exactMatch" :selected="selected" @change="onSelected" />
+            <div v-else>关键词不予售卖</div>
           </div>
-          <div>
+          <div v-if="recommends.length">
             <label>推荐近似关键词</label>
             <div>
               <result-row v-for="item in recommends" :key="item.keyword"
@@ -42,13 +49,15 @@
             </div>
           </div>
 
-          <p class="clear" @click="selected = []"><i class="el-icon-close"></i>清除所有选择</p>
-          <el-button class="add-to-cart" type="primary" @click="addToCart">加入购物车</el-button>
+          <section v-if="selected.length">
+            <p class="clear" @click="selected = []"><i class="el-icon-close"></i>清除所有选择</p>
+            <el-button class="add-to-cart" type="primary" @click="addToCart">加入购物车</el-button>
+          </section>
         </div>
       </main>
     </div>
 
-    <area-selector type="qwt" :all-areas="allAreas"
+    <area-selector type="bx" :all-areas="allAreas"
       :areas="form.areas"
       :visible="areaDialogVisible"
       :enable-china="false"
@@ -95,9 +104,9 @@
           areas: ['beijing']
         },
         rules: {
-          keyword: [{required: true}],
-          devices: [{type: 'array', required: true}],
-          areas: [{type: 'array', required: true, trigger: 'change'}]
+          keyword: [{required: true, message: '请填写推广关键词'}],
+          devices: [{type: 'array', required: true, message: '请选择推广平台'}],
+          areas: [{type: 'array', required: true, trigger: 'change', message: '请选择推广区域'}]
         },
         skus: [],
         selected: [],
@@ -112,9 +121,16 @@
       },
       recommends() {
         return this.skus.slice(1)
+      },
+      soldCities() {
+        return this.exactMatch[0].soldCities.join(',')
+      },
+      availableCities() {
+        return this.exactMatch[0].cities.filter(c =>  !this.exactMatch[0].soldCities.includes(c))
       }
     },
     methods: {
+      f2y,
       onSelected(item) {
         if (this.selected.includes(item)) {
           this.selected.splice(this.selected.indexOf(item), 1)
@@ -212,6 +228,29 @@ div.bg {
 }
 .result-row {
   margin-bottom: 10px;
+}
+.highlight {
+  color: red;
+  margin: 0 5px;
+}
+.notice {
+  font-size: 13px;
+  margin-bottom: 20px;
+  & > p {
+    margin-bottom: 5px;
+
+    & > span {
+      width: 145px;
+    }
+
+    & >>> .red {
+      background-color: #ff3c3c;
+      color: white;
+      padding: 1px 4px;
+      margin: 0 5px;
+      border-radius: 2px;
+    }
+  }
 }
 .results {
   & > div {

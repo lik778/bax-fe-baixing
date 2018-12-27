@@ -7,10 +7,10 @@
     :show-close="false"
   >
     <main class="main">
-      <div>
+      <div v-if="enableChina">
         <span @click="clickArea('quanguo')">全国</span>
         <span>
-          <p v-if="enableChina" @click="clickArea(china.id)"
+          <p @click="clickArea(china.id)"
             v-bind:class="{ selected: areaChecked(china.id) }">
             <span>中国</span>
             <label class="tip">

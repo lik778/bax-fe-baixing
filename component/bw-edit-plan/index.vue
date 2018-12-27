@@ -11,22 +11,22 @@
           </el-form-item>
           <el-form-item label="投放页面">
             <div class="landing-type">
-              <el-radio-group v-model="form.landingType" size="small">
+              <el-radio-group v-model="landingTypeDisplay" size="small">
                 <el-radio-button v-for="option of landingTypeOpts" :key="option.value" :label="option.value">{{option.label}}</el-radio-button>
               </el-radio-group>
             </div>
             <div class="landing-page">
               <user-ad-selector :type="adSelectorType"
-                v-if="form.landingType === 0"
+                v-if="landingTypeDisplay === 0"
                 :all-areas="allAreas" :limit-mvp="false"
                 :selected-id="form.landingPageId"
-                @select-ad="ad => onSelectAd(ad)"
+                @select-ad="onSelectAd"
               />
 
               <qiqiaoban-page-selector
-                v-if="form.landingType === 1"
+                v-if="landingTypeDisplay === 1"
                 :value="form.landingPage"
-                @change="v => form.landingPage = v"
+                @change="onQiqiaobanChange"
               />
             </div>
           </el-form-item>
@@ -69,17 +69,18 @@
       return {
         SEM_PLATFORM_BAIDU,
         promotes: [],
+        landingTypeDisplay: 0,
         form: {
           promoteIds: [],
           landingType: 0,
           landingPageId: '',
           landingPage: '',
-          creativeTitle: 'a',
-          creativeContent: 'a',
+          creativeTitle: '',
+          creativeContent: '',
         },
         rules: {
-          promoteIds: [{required: true}],
-          landingPage: [{required: true}]
+          promoteIds: [{required: true, message: '请勾选关键词'}],
+          landingPage: [{required: true, message: '请选择投放页面'}]
         },
 
         landingTypeOpts,
@@ -105,13 +106,14 @@
           landingType: landingType || 0,
           landingPage,
           creativeTitle: creativeTitle || '',
-          creativeContent: creativeContent || ''
+          creativeContent: creativeContent || '',
+          landingPageId: landingPageId || ''
         }
-        this.form.landingPageId = landingPageId
       }
       if (orderIdsString) {
         const orderIds = orderIdsString.split(',')
         this.promotes = await getPromtesByOrders(orderIds)
+        this.form.promoteIds = this.promotes.map(p => p.id)
       }
       if (notice === 'true' || notice === '1') {
         this.showNotice = true
@@ -121,9 +123,14 @@
       onSelectAd(ad) {
         this.form.landingPageId = ad.adId
         this.form.landingPage = ad.url
+        this.form.landingType = 0
 
         this.form.creativeTitle = ad.title && ad.title.slice(0, 24)
         this.form.creativeContent = ad.content && ad.content.slice(0, 39)
+      },
+      onQiqiaobanChange(v) {
+        form.landingType = 1
+        form.landingPage = v
       },
       handleCreativeError(message) {
         if(message) Message.error(message)
@@ -139,6 +146,8 @@
             this.isLoading = true
             try {
               await updatePromote(this.form)
+              Message.success('更新推广成功')
+              this.$router.push({name: 'bw-plan-list'})
             } finally {
               this.isLoading = false
             }

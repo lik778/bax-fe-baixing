@@ -26,7 +26,13 @@
       </div>
       <div class="footer">
         <p>总计：<span class="price">{{f2y(totalPrice)}}</span>元</p>
-        <el-button class="checkout" @click="checkout">购买</el-button>
+        <el-button class="checkout" type="primary" @click="checkout">{{payText}}</el-button>
+        <div v-if="payUrl" class="payurl">
+          <label :title="payUrl">
+            {{ '付款链接: ' + payUrl }}
+          </label>
+          <Clipboard :content="payUrl" @success="onCopy"></Clipboard>
+        </div>
       </div>
     </div>
     <div v-else class="main empty">购物车空空如也~</div>
@@ -38,56 +44,85 @@
   import {f2y} from 'util'
   import {refreshKeywordPrice, createPreOrder} from 'api/biaowang'
   import {normalizeRoles} from 'util/role'
+  import Clipboard from 'com/widget/clipboard'
 
   const storageKeyPrefix = `bw-shopping-cart-`
 
   export default {
     name: 'bw-shopping-cart',
     props: {
-      userInfo: Object
+      userInfo: Object,
+      salesInfo: Object
+    },
+    components: {
+      Clipboard
     },
     data() {
       return {
         localItems: [],
+        payUrl: '',
 
         gwSelected: false,
         expand: false,
         loading: false,
-        firstLoad: true,
+        firstLoad: false,
         storageKey: storageKeyPrefix + this.userInfo.id
       }
     },
     computed: {
       gwPrice() {
-        return 120000
+        if (this.keywordsPrice < 50000) {
+          return 120000
+        }
+        if (this.keywordsPrice < 499900) {
+          return 100000
+        }
+        if (this.keywordsPrice < 999900) {
+          return 60000
+        }
+        return 20000
+      },
+      keywordsPrice() {
+        return this.localItems.reduce((a, b) => a + b.price , 0)
       },
       totalPrice() {
-        return this.localItems.reduce((a, b) => a + b.price , 0) + (this.gwSelected ? this.gwPrice : 0)
+        return this.keywordsPrice + (this.gwSelected ? this.gwPrice : 0)
+      },
+      payText() {
+        return this.isUser('BAIXING_SALES') ? '生成支付链接' : '去支付'
       }
     },
     mounted() {
-      const roles = normalizeRoles(this.userInfo.roles)
-      // 销售会代不同的用户操作，所以不读取本地购物车数据
-      if (roles.includes('BAIXING_USER')) {
+      if (this.isUser('BAIXING_USER')) {
         const stringValue = localStorage.getItem(this.storageKey)
         if (stringValue) {
           this.localItems = JSON.parse(stringValue)
+          this.firstLoad = true
         }
       }
-
     },
     methods: {
       f2y,
+      isUser(roleString) {
+        return normalizeRoles(this.userInfo.roles).includes(roleString)
+      },
       remove(index) {
         this.localItems.splice(index, 1)
       },
       async checkout() {
-        console.log(this.localItems)
-        const preTradeId = await createPreOrder(this.localItems, this.gwSelected)
+        // 角色：普通用户跳转支付
+        // 代理商跳转支付，url带上
+        // 百姓网销售显示链接
+        const {salesId, userId} = this.salesInfo
+        const preTradeId = await createPreOrder(this.localItems, this.gwSelected, userId, salesId)
 
-        // 预订单创建后，清空购物车
-        this.localItems = []
-        location.href = `http://trade-dev.baixing.cn/?appId=101&seq=${preTradeId}`
+        if (this.isUser('BAIXING_USER')) {
+          location.href = `http://trade-dev.baixing.cn/?appId=101&seq=${preTradeId}`
+        } else if (this.isUser('AGENT_ACCOUNTING')) {
+          location.href = `http://trade-dev.baixing.cn/?appId=101&seq=${preTradeId}&agentId=${this.userInfo.id}`
+        } else if (this.isUser('BAIXING_SALES')) {
+          this.payUrl = `http://trade-dev.baixing.cn/?appId=101&seq=${preTradeId}`
+        }
       },
       onHandleClick() {
         this.expand = !this.expand
@@ -97,6 +132,9 @@
         if (newItems.length) {
           this.localItems.push(...clone(newItems))
         }
+      },
+      onCopy() {
+        this.localItems = []
       }
     },
     watch: {
@@ -104,15 +142,13 @@
         handler: function(local) {
           const roles = normalizeRoles(this.userInfo.roles)
           // 销售会代不同的用户操作，所以不读取本地购物车数据
-          if (roles.includes('BAIXING_USER')) {
+          if (this.isUser('BAIXING_USER')) {
             localStorage.setItem(this.storageKey, JSON.stringify(local))
           }
           if (!this.firstLoad) {
             this.expand = true
           }
-          if (this.firstLoad) {
-            this.firstLoad = false
-          }
+          this.firstLoad = false
         },
         deep: true
       },
@@ -121,7 +157,7 @@
           // 每次打开更新下关键词价格、是否已售卖
           console.log('check')
           this.loading = true
-          // this.localItems = await refreshKeywordPrice(this.localItems)
+          this.localItems = await refreshKeywordPrice(this.localItems)
           this.loading = false
         }
       }
@@ -137,7 +173,7 @@
   z-index: 1000;
   background-color: transparent;
   width: 390px;
-  top: 10px;
+  top: 55px;
   display: flex;
   transition: right .2s;
 
@@ -214,6 +250,7 @@
         font-size: 1.5em;
       }
       & > .checkout {
+        float: right;
       }
     }
   }
@@ -230,5 +267,9 @@
   justify-content: center;
   text-align: center;
   color: gray;
+}
+.payurl {
+  font-size: 14px;
+  margin-top: 10px;
 }
 </style>

@@ -22,10 +22,14 @@ export async function refreshKeywordPrice(keywords) {
     .send({pricingList: requestBody})
     .json()
 
-  const parsedBody = body.data.content.map(i => ({
-    ...i,
-    price: i.price[i.days]
-  }))
+  const parsedBody = body.data.content.map(i => {
+    const days = keywords.find(k => k.word === i.word).days
+    return {
+      ...i,
+      price: i.soldPriceMap[days],
+      days: days
+    }
+  })
   return parsedBody
 }
 
@@ -71,10 +75,12 @@ export async function updatePromote(opts = {}) {
     .json()
 }
 
-export async function createPreOrder(items, saleWithShopOrder) {
+// targetUserId, salesId are baxid, not baixingid
+export async function createPreOrder(items, saleWithShopOrder, targetUserId, salesId) {
+  console.log(targetUserId, salesId)
   const body = await biaowang
     .post('/trade/user/order/pre')
-    .send({pricingList: items, saleWithShopOrder})
+    .send(trim({pricingList: items, saleWithShopOrder, targetUserId, salesId}))
     .json()
 
   return body.data
