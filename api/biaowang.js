@@ -85,3 +85,11 @@ export async function createPreOrder(items, saleWithShopOrder, targetUserId, sal
 
   return body.data
 }
+
+export async function getRecentSold() {
+  const body = await biaowang
+    .get(`/promote/user/global/promote`)
+    .json()
+
+  return body.data.content
+}
