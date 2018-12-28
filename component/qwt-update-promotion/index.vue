@@ -1105,10 +1105,9 @@ export default {
       script.addEventListener('error', e => {
         document.body.removeChild(script)
         this.isErrorLandingPageShow = true
-        console.error(e)
+        this.promotion.landingPage = ''
       })
       script.addEventListener('load', e => {
-        console.log(e)
         document.body.removeChild(script)
       })
     }

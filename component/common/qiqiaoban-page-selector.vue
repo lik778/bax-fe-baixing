@@ -5,7 +5,7 @@
       class="qiqiaoban-page-selector"
       placeholder="请选择投放官网"
       :disabled="disabled"
-      :value="isSiteLandingType(value) ? value : null"
+      :value="isSiteLandingType(value) ? value : ''"
       :options="options"
       @change="onChange">
     </bax-select>
