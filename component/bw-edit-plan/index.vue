@@ -115,6 +115,7 @@
       if (orderIdsString) {
         const orderIds = orderIdsString.split(',')
         this.promotes = await getPromtesByOrders(orderIds)
+        console.log(this.promotes)
         this.form.promoteIds = this.promotes.map(p => p.id)
         this.buttonText = '创建标王计划'
       }
