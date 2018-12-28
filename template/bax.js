@@ -9,6 +9,7 @@ import QwtDashboard from 'com/qwt-dashboard'
 import BwQueryPrice from 'com/bw-query-price'
 import BwEditPlan from 'com/bw-edit-plan'
 import BwPlanList from 'com/bw-plan-list'
+import BwLanding from 'com/bw-landing'
 
 // mvp
 import MvpUpdateCampaign from 'com/mvp-update-campaign'
@@ -92,6 +93,10 @@ const bwRoutes = [{
   component: BwPlanList,
   path: '/main/bw/plan-list',
   name: 'bw-plan-list'
+}, {
+  component: BwLanding,
+  path: '/main/bw/landing',
+  name: 'bw-landing'
 }]
 
 const mvpRoutes = [{

@@ -22,12 +22,20 @@
           </el-form-item>
         </el-form>
 
-        <el-table :data="promotes">
+        <marquee direction="left" scrollamount="6" height="40px" scrolldelay="60"  class="notice"><recent-sold :allAreas="allAreas" /></marquee>
+        <el-table :data="promotes" border>
           <el-table-column prop="word" label="关键词" />
           <el-table-column prop="cities" label="城市" :formatter="row => cityFormatter(row.cities)" />
           <el-table-column prop="device" label="平台" :formatter="row => deviceFormatter(row.device)" />
-          <el-table-column prop="status" label="投放状态" :formatter="statusFormatter" />
-          <el-table-column prop="auditStatus" label="审核状态" :formatter="auditStatusFormatter" />
+          <el-table-column prop="status" label="投放状态" :formatter="v => statusFormatter(v.status)" />
+          <el-table-column prop="auditStatus" label="审核状态">
+            <template slot-scope="scope">
+              <el-tooltip v-if="isRejected(scope.row.auditStatus)" effect="dark" content="scope.row.auditRejectReason" placement="top">
+                {{auditStatusFormatter(scope.row.auditStatus)}}
+              </el-tooltip>
+              <p v-else>{{auditStatusFormatter(scope.row.auditStatus)}}</p>
+            </template>
+          </el-table-column>
           <el-table-column prop="" label="平均排名" />
           <el-table-column prop="createdAt" label="购买日期" :formatter="dateFormatter" />
           <el-table-column label="投放剩余天数">
@@ -67,7 +75,14 @@
 
 <script>
   import BaxPagination from 'com/common/pagination'
-  import {promoteStatusOpts, auditStatusOpts, DEVICE, PROMOTE_STATUS, AUDIT_STATUS} from 'constant/biaowang'
+  import {
+    promoteStatusOpts,
+    auditStatusOpts,
+    DEVICE,
+    PROMOTE_STATUS,
+    AUDIT_STATUS,
+    AUDIT_STATUS_REJECT
+  } from 'constant/biaowang'
   import {getPromotes, queryKeywordPrice} from 'api/biaowang'
   import {
     f2y,
@@ -77,11 +92,13 @@
   import {
     normalizeRoles
   } from 'util/role'
+  import RecentSold from './recent-sold'
 
   export default {
     name: 'bw-plan-list',
     components: {
-      BaxPagination
+      BaxPagination,
+      RecentSold
     },
     props: {
       allAreas: Array,
@@ -129,6 +146,9 @@
       },
     },
     methods: {
+      isRejected(status) {
+        return AUDIT_STATUS_REJECT.includes(status)
+      },
       f2y,
       leftDays(row) {
         return row.startedAt ? row.days - (Date.now() - row.startedAt) / 86400 : row.days
@@ -183,10 +203,10 @@
       deviceFormatter(device) {
         return DEVICE[device]
       },
-      statusFormatter({status}) {
+      statusFormatter(status) {
         return Object.entries(PROMOTE_STATUS).find(arr => arr[1].includes(status))[0]
       },
-      auditStatusFormatter({auditStatus}) {
+      auditStatusFormatter(auditStatus) {
         return Object.entries(AUDIT_STATUS).find(arr => arr[1].includes(auditStatus))[0]
       },
       dateFormatter({createdAt}) {
@@ -234,5 +254,11 @@ div.bg {
 }
 .create-plan {
   margin-bottom: 35px;
+}
+.notice {
+  background-color: #FFF7EB;
+  color: #C6A674;
+  display: flex;
+  align-items: center;
 }
 </style>

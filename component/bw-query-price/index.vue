@@ -39,7 +39,7 @@
             <label>查询结果</label>
             <p v-if="exactMatch[0].isSold && exactMatch[0].price">关键词在城市<span class="highlight">{{formatArea(soldCities)}}</span>已售出。<span v-if="availableCities.length">投放在剩余城市价格： 30天 共{{f2y(exactMatch[0].price)}}元、90天 共{{f2y(exactMatch[1].price)}}元，</span>请重新输入关键词推广城市。</p>
             <result-row v-else-if="!exactMatch[0].isSold && exactMatch[0].price" :options="exactMatch" :selected="selected" @change="onSelected" />
-            <div v-else>关键词不予售卖</div>
+            <div v-else>当前标王询价量过大，暂时无法对您的查询词提供报价，请稍后再试。</div>
           </div>
           <div v-if="recommends.length">
             <label>推荐近似关键词</label>

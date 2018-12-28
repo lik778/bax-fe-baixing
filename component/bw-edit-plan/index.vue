@@ -31,6 +31,7 @@
             </div>
           </el-form-item>
           <h3>投放物料设置</h3>
+          <p class="reject-reason" v-if="isPromoteRejected">{{rejectReason}}</p>
           <creative-editor
             :platforms="[SEM_PLATFORM_BAIDU]"
             :title="form.creativeTitle"
@@ -39,7 +40,7 @@
             @error="handleCreativeError"
           />
           <el-form-item>
-            <el-button :loading="isLoading" @click="onSubmit" type="primary">buttonText</el-button>
+            <el-button :loading="isLoading" @click="onSubmit" type="primary">{{buttonText}}</el-button>
           </el-form-item>
         </el-form>
       </main>
@@ -49,7 +50,7 @@
 
 <script>
   import {getPromoteById, getPromtesByOrders, updatePromote, PROMOTE_STATUS_INIT} from 'api/biaowang'
-  import {landingTypeOpts, SEM_PLATFORM_BAIDU} from 'constant/fengming'
+  import {landingTypeOpts, SEM_PLATFORM_BAIDU, AUDIT_STATUS_REJECT} from 'constant/fengming'
   import {Message} from 'element-ui'
   import UserAdSelector from 'com/common/user-ad-selector'
   import CreativeEditor from 'com/widget/creative-editor'
@@ -95,6 +96,12 @@
         const type = this.promotes.every(p => p.status === PROMOTE_STATUS_INIT) ? '' : 'reselect'
         return type
       },
+      isPromoteRejected() {
+        return this.promotes.some(p => AUDIT_STATUS_REJECT.includes(p.auditStatus))
+      },
+      rejectReason() {
+        return this.promotes.map(p => p.auditRejectReason).join(',')
+      }
     },
     async mounted() {
       const {promoteId, orderIds: orderIdsString, notice} = this.$route.query
@@ -115,6 +122,7 @@
       if (orderIdsString) {
         const orderIds = orderIdsString.split(',')
         this.promotes = await getPromtesByOrders(orderIds)
+        console.log(this.promotes)
         this.form.promoteIds = this.promotes.map(p => p.id)
         this.buttonText = '创建标王计划'
       }
@@ -170,7 +178,9 @@ header {
   padding: 15px;
   font-size: 16px;
 }
-
+.reject-reason {
+  color: #f44336;
+}
 div.bg {
   padding: 10px 10px 30px 10px;
   background-color: #f4f4f4;
