@@ -25,8 +25,10 @@
         return this.words.map(
           item =>
           `关键词${item.word}，在${this.formatCities(item.cities, item.cityCounts)}已被售出`
-        )
-      },
+        ).join('。')
+      }
+    },
+    methods: {
       formatCities(cities, count) {
         return cities.map(city => getCnName(city, this.allAreas)).join(',') + (count > cities.length ? `等${cityCounts}个城市` : '')
       }

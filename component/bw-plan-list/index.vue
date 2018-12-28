@@ -22,7 +22,7 @@
           </el-form-item>
         </el-form>
 
-        <recent-sold :allAreas="allAreas" />
+        <marquee direction="left" scrollamount="6" height="40px" scrolldelay="60"  class="notice"><recent-sold :allAreas="allAreas" /></marquee>
         <el-table :data="promotes" border>
           <el-table-column prop="word" label="关键词" />
           <el-table-column prop="cities" label="城市" :formatter="row => cityFormatter(row.cities)" />
@@ -254,5 +254,11 @@ div.bg {
 }
 .create-plan {
   margin-bottom: 35px;
+}
+.notice {
+  background-color: #FFF7EB;
+  color: #C6A674;
+  display: flex;
+  align-items: center;
 }
 </style>
