@@ -19,7 +19,7 @@
     },
     methods: {
       format(option) {
-        return option.days + '天, ' + f2y(option.price) + '元'
+        return  `${f2y(option.price)} 元 ( ${option.days} 天 )`
       },
       onChange(checked) {
         if (checked) {
@@ -39,6 +39,6 @@
   color: #999;
 }
 .option {
-  width: 100px;
+  width: 150px;
 }
 </style>
