@@ -2,6 +2,9 @@
 import { toTimestamp } from 'utils'
 
 import {
+  SEM_PLATFORM_QIHU,
+  SEM_PLATFORM_SOGOU,
+  SEM_PLATFORM_BAIDU,
   SEM_PLATFORM_SHENMA
 } from 'constant/fengming'
 
@@ -82,11 +85,14 @@ export function getCreativeTitleLenLimit(platforms) {
 
 export function getCreativeContentLenLimit(platforms) {
   let min = 9
-  let max = 80
-  if (platforms.length === 1 && platforms.includes(SEM_PLATFORM_SHENMA)) {
+  let max = 40
+  if (platforms.includes(SEM_PLATFORM_SHENMA) && !platforms.includes(SEM_PLATFORM_QIHU) && !platforms.includes(SEM_PLATFORM_SOGOU)) {
     // [8, 68], 较为宽松
     min = 8
     max = 68
+  }
+  if (platforms.length === 1 && platforms.includes(SEM_PLATFORM_BAIDU)) {
+    max = 80
   }
 
   return [min, max]
