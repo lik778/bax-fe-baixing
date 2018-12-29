@@ -129,7 +129,7 @@ const genFormatLogValues = (change, keys, type, opType, campaignSource) => {
   return keys.map(k => {
     const value = opType === OP_TYPE_CREATE ? change[k] : change[k][valueKey]
     if (k === 'price' || k === 'dailyBudget') {
-      return value / 100
+      return (value / 100).toFixed(2)
     } else if (k === 'timeRange') {
       if (value.includes(null)) return '全时段'
       return value.map(timeStamp => toHumanTime(new Date(timeStamp * 1000), 'MM月DD')).join('~')
