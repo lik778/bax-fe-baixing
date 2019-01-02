@@ -23,8 +23,8 @@
       :visible="addUserLeadVisible"
       @close="toggleAddUserLeadVisible"
     />
-    <huo-dong-intro :show="huoDongIntroVisible" @close="huoDongIntroVisible = false" />
-    <huo-dong-btn />
+    <!-- <huo-dong-intro :show="huoDongIntroVisible" @close="huoDongIntroVisible = false" /> -->
+    <!-- <huo-dong-btn /> -->
     <back-to-top />
     <wechat-scan />
     <chat />
@@ -32,10 +32,10 @@
 </template>
 
 <script>
+// import HuoDongIntro from './common/huodong-intro'
+// import HuoDongBtn from './common/huodong-btn'
 import NewUserIntro from './common/new-user-intro'
 import AddUserLead from './common/add-user-lead'
-import HuoDongIntro from './common/huodong-intro'
-import HuoDongBtn from './common/huodong-btn'
 import WechatScan from './widget/wechat-scan'
 import BackToTop from './widget/back-to-top'
 import Chat from './widget/chat'
@@ -53,10 +53,10 @@ import {
 export default {
   name: 'bax',
   components: {
-    HuoDongIntro,
+    // HuoDongIntro,
+    // HuoDongBtn,
     NewUserIntro,
     AddUserLead,
-    HuoDongBtn,
     WechatScan,
     BackToTop,
     Sidebar,
