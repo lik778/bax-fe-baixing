@@ -23,7 +23,7 @@
               （ {{sites.length > 1 ? '最早官网到期日' : '官网到期日'}} {{noExpiredSite[0].expireAt | formatDate}} ）
             </p>
             <p class="desc" v-else>暂无精品官网</p>
-            <el-button type="primary" class="button" size="small" @click.native="() => handleCharge('site')">立即充值</el-button>
+            <el-button type="primary" class="button" size="small" @click.native="() => handleCharge('site')">{{sites.length === 0 ? '立即购买' : '立即续费'}}</el-button>
         </li>
       </ul>
       <div class="placeholder" v-else><i class="el-icon-loading" />正在获取数据</div>

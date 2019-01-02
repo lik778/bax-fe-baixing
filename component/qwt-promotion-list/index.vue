@@ -169,11 +169,11 @@ export default {
   created() {
     const statuses = this.$route.query.statuses
     if (!!statuses) {
+      this.isActionGroupExpand = true
       // 从首页未审核处点击进来的
       if (statuses === CNT_REJECTED_CODE) {
         this.queryParams.statuses = [CNT_REJECTED_CODE]
       } else {
-        this.isActionGroupExpand = true
         this.queryParams.statuses.push(statuses)
       }
     }

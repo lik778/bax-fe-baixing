@@ -51,8 +51,8 @@ export default {
         if (this.pauseScroll || this.stopScroll) return
         if (listHeght < scrollPos + containerHeight) scrollPos = 0
         scrollPos++
-        containerRef.scroll(0, scrollPos)
-        clearTimeout(timer)
+        containerRef.scrollTop = scrollPos
+        timer && clearTimeout(timer)
         timer = setTimeout(scroller, 100)
       }
       // 超过容器50px高度，执行滚动
