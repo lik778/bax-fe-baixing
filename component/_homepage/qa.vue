@@ -4,13 +4,13 @@
       <strong>答疑解惑</strong>
     </header>
     <content>
-      <section>
+      <!-- <section>
         <strong>【操作指南】</strong>
         <a target="_blank" href="/qa?mode=tutorials"
           @click="onClickHowTo">
           如何使用站外推广
         </a>
-      </section>
+      </section> -->
       <section>
         <strong>【常见问题】</strong>
         <a target="_blank" href="/qa?mode=questions"
