@@ -11,12 +11,6 @@ import BwEditPlan from 'com/bw-edit-plan'
 import BwPlanList from 'com/bw-plan-list'
 import BwLanding from 'com/bw-landing'
 
-// mvp
-import MvpUpdateCampaign from 'com/mvp-update-campaign'
-import MvpCreateCampaign from 'com/mvp-create-campaign'
-import MvpCampaignList from 'com/mvp-campaign-list'
-import MvpDashboard from 'com/mvp-dashboard'
-
 // ssp
 import MaterialList from 'com/ssp-material-list'
 import MaterialInfo from 'com/ssp-material-info'
@@ -97,24 +91,6 @@ const bwRoutes = [{
   component: BwLanding,
   path: '/main/bw/landing',
   name: 'bw-landing'
-}]
-
-const mvpRoutes = [{
-  component: MvpCreateCampaign,
-  path: '/main/mvp/campaign/create',
-  name: 'mvp-create-campaign'
-}, {
-  component: MvpUpdateCampaign,
-  path: '/main/mvp/campaigns/:id/update',
-  name: 'mvp-update-campaign'
-}, {
-  component: MvpCampaignList,
-  path: '/main/mvp/campaigns',
-  name: 'mvp-campaign-list'
-}, {
-  component: MvpDashboard,
-  path: '/main/mvp/dashboard',
-  name: 'mvp-dashboard'
 }]
 
 const qwtRoutes = [{
