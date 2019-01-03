@@ -50,7 +50,8 @@
 
 <script>
   import {getPromoteById, getPromtesByOrders, updatePromote, PROMOTE_STATUS_INIT} from 'api/biaowang'
-  import {landingTypeOpts, SEM_PLATFORM_BAIDU, AUDIT_STATUS_REJECT} from 'constant/fengming'
+  import {landingTypeOpts, SEM_PLATFORM_BAIDU} from 'constant/fengming'
+  import {AUDIT_STATUS_REJECT} from 'constant/biaowang'
   import {Message} from 'element-ui'
   import UserAdSelector from 'com/common/user-ad-selector'
   import CreativeEditor from 'com/widget/creative-editor'
