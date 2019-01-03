@@ -28,7 +28,7 @@
     <back-to-top />
     <wechat-scan />
     <chat />
-    <bw-shopping-cart ref="bwShoppingCart" v-show="isBwRoute" :userInfo="currentUser" v-if="currentUser.id" :salesInfo="salesInfo" :allAreas="allAreas"/>
+    <bw-shopping-cart ref="bwShoppingCart" :userInfo="currentUser" v-if="currentUser.id && isBwRoute" :salesInfo="salesInfo" :allAreas="allAreas"/>
   </div>
 </template>
 
@@ -58,6 +58,7 @@ import {router} from '../template/bax'
 export default {
   name: 'bax',
   components: {
+    BwShoppingCart,
     // HuoDongIntro,
     // HuoDongBtn,
     NewUserIntro,
