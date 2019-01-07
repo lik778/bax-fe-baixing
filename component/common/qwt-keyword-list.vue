@@ -14,17 +14,23 @@
             @change="onCheckWord(s.row)" />
         </template>
       </el-table-column>
-      <el-table-column prop="word" label="关键词" width="220" />
+      <el-table-column label="关键词" width="220">
+        <template slot-scope="{row}">
+          {{row.word}}
+          <span class="new-word" v-if="row.isNew">(新)</span>
+        </template>
+      </el-table-column>
       <el-table-column v-if="showPropShow"
-        prop="show" width="180"
+        prop="show" width="200"
         label="日均搜索指数"
         :render-header="renderWithTip(searchIndexTip)">
       </el-table-column>
       <el-table-column v-if="showPropRanking"
-        width="140" label="平均排名"
-        :formatter="r => fmtCpcRanking(r.cpcRanking)">
+        width="150" label="平均排名"
+        :formatter="r => fmtCpcRanking(r.cpcRanking || -1)">
       </el-table-column>
       <el-table-column v-if="showPropStatus"
+        width="180"
         label="关键词状态"
         :render-header="renderWithTip(keywordStatusTip)">
         <template slot-scope="s">
@@ -33,15 +39,28 @@
               {{ fmtStatus(s.row) }}
             </label>
             <strong v-if="fmtStatus(s.row) === '审核失败'">
-              {{ s.row.extra && s.row.extra.refuseReason || '' }}
+              {{ s.row.extra && s.row.extra.refuseReason.message || '' }}
             </strong>
           </span>
         </template>
       </el-table-column>
-      <el-table-column
-        :label="maxPriceLabel"
-        :render-header="renderWithTip(cpcTopPriceTip)"
-      >
+      <el-table-column>
+        <template slot="header" slot-scope="col">
+          {{maxPriceLabel}}<cpc-top-price-tip/>
+          <el-popover
+            placement="top"
+            v-model="popoverVisible"
+          >
+            <div>
+              <el-input placeholder="请输入关键词价格" v-model="keywordPrice" size="mini"></el-input>
+              <div class="actions">
+                <el-button size="mini" @click="popoverVisible = false">取消</el-button>
+                <el-button type="primary" size="mini" @click="handleKeywordsPriceChange">确定</el-button>
+              </div>
+            </div>
+            <a href="javascript:;" slot="reference" class="pcice-action" @click="popoverVisible = true">批量改价</a>
+          </el-popover>
+        </template>
         <template slot-scope="s">
           <span class="price">
             <el-input size="mini" placeholder="单位: 元"
@@ -79,6 +98,7 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import BaxPagination from 'com/common/pagination'
 
 import {
@@ -110,9 +130,15 @@ import {
   renderColumnHeaderWithTip
 } from 'util/element'
 
+import { f2y } from 'util'
 import track from 'util/track'
-import { toFloat, f2y } from 'util/kit'
+import { toFloat } from 'util/kit'
 
+const CpcTopPriceTip = Vue.extend({
+  render(h) {
+    return renderColumnHeaderWithTip(cpcTopPriceTip)(h, {column: {}})
+  }
+})
 const MODE_SELECT = 'select'
 const MODE_UPDATE = 'update'
 const LIMIT = 20
@@ -120,7 +146,8 @@ const LIMIT = 20
 export default {
   name: 'qwt-keyword-list',
   components: {
-    BaxPagination
+    BaxPagination,
+    CpcTopPriceTip
   },
   props: {
     platform: {
@@ -181,13 +208,15 @@ export default {
       curWordsLength: 0,
       prePage: 0,
 
-      customPrices: [],
       userOperatedPages: [], // 用户操作过的页: 0, 1, 2
 
       keywordStatusTip,
       searchIndexTip,
       cpcTopPriceTip,
-      keywordPriceTip
+      keywordPriceTip,
+
+      popoverVisible: false,
+      keywordPrice: ''
     }
   },
   computed: {
@@ -259,7 +288,22 @@ export default {
     }
   },
   methods: {
-    f2y,
+    async handleKeywordsPriceChange() {
+      const keywordPrice = this.keywordPrice.trim()
+      if (!keywordPrice) return
+      try {
+        const res = await this.$parent.changeKeywordsPrice(keywordPrice)
+        this.$message.success(res)
+        this.popoverVisible = false
+        this.keywordPrice = ''
+      } catch(err) {
+        console.log(err)
+        this.$message.error(err)
+      }
+    },
+    f2y(price) {
+      return (price / 100).toFixed(2)
+    },
     showAddPrice(row) {
       // 过去24小时排名低于5或无排名的，在线的 keyword，在线的 campaign
       const {cpcRanking, isPriceChanged, status: keywordStatus} = row
@@ -300,31 +344,19 @@ export default {
     },
     deleteWord(row) {
       this.$emit('delete-word', {
+        isNew:  row.isNew,
         price: row.price,
         word: row.word,
         id: row.id
       })
     },
     getWordPrice(kw) {
-      const item = this.customPrices.find(c => c.word === kw)
-
-      if (item) {
-        return item.price
-      }
-
       const word = this.words.find(w => w.word === kw)
-      if (this.mode === MODE_UPDATE) {
-        return word.serverPrice
-      } else if (this.mode === MODE_SELECT) {
-        return word.price
-      }
+      return word.price
     },
     isValidPrice(row) {
       const finalPrice = this.getWordPrice(row.word)
       return finalPrice >= MIN_WORD_PRICE && finalPrice <= MAX_WORD_PRICE
-    },
-    hasCustomPrice(word) {
-      return this.customPrices.findIndex(c => c.word === word) !== -1
     },
     wordChecked(word) {
       return this.selectedWords
@@ -359,24 +391,6 @@ export default {
     },
     setCustomPrice({serverPrice, word, id}, v) {
       let price = (v ? toFloat(v) : 0) * 100
-
-      if (this.hasCustomPrice(word)) {
-        this.customPrices = this.customPrices.map(c => {
-          if (c.word === word) {
-            return {
-              word: c.word,
-              price
-            }
-          } else {
-            return {...c}
-          }
-        })
-      } else {
-        this.customPrices = [...this.customPrices, {
-          price,
-          word
-        }]
-      }
       this.$emit('update-word', {
         price,
         serverPrice,
@@ -406,7 +420,7 @@ export default {
         return '等待审核'
       }
 
-      return keywordStatus[String(status)] || '未知'
+      return keywordStatus[String(status || 5)] || '未知'
     },
     fmtWord(w) {
       return {
@@ -440,10 +454,16 @@ export default {
 </script>
 
 <style lang="postcss" scoped>
+@import "../../cssbase/var.css";
 .qwt-keyword-list {
   display: flex;
   flex-flow: column;
-  max-width: 1120px;
+  max-width: 1150px;
+
+  & >>> .new-word {]
+    font-size: 12px;
+    color: #ff4401;
+  }
 
   & > .cart {
     margin-top: 10px;
@@ -474,6 +494,11 @@ export default {
     border: 1px solid rgba(103, 194, 58, 0.2);
     color: #67c23a;
     cursor: pointer;
+    white-space: nowrap;
+  }
+
+  & > label {
+    white-space: nowrap;
   }
 }
 
@@ -502,6 +527,23 @@ export default {
     margin-left: 10px;
     font-size: 12px;
     color: red;
+    max-width: 180px;
   }
 }
+
+.pcice-action {
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--qwt-c-orange);
+}
+
+.actions {
+  margin-top:  8px;
+  display: flex;
+  justify-content: flex-end;
+  & .el-button {
+    margin-left: 6px;
+  }
+}
+
 </style>

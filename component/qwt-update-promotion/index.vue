@@ -1,14 +1,5 @@
 <template>
   <div class="qwt-update-promotion">
-    <topbar :user-info="userInfo">
-      <label slot="title">
-        <span>全网通 - 更新推广</span>
-        <el-button class="report-link" size="mini" type="primary"
-          @click="gotoReportPage">
-          查看计划报表
-        </el-button>
-      </label>
-    </topbar>
     <main>
       <h3>推广计划: {{ id }}</h3>
       <section>
@@ -17,7 +8,7 @@
           <aside style="align-items: flex-start; padding-top: 5px;">
             投放页面：
           </aside>
-          <span class="landingpage">
+          <span class="landingpage" v-if="!isErrorLandingPageShow">
             <div>
               <el-button-group>
                 <el-button v-for="o of landingTypeOpts" :key="o.value"
@@ -26,11 +17,12 @@
                   {{ o.label }}
                 </el-button>
               </el-button-group>
+              <a href="javascript:;" class="qiqiaoban-warning" v-if="isQiqiaobanSite" @click="goChargeKaSite">升级新精品官网，全网通替你付一半</a>
             </div>
             <div style="margin-top: 20px;">
               <user-ad-selector
                 v-if="getProp('landingType') === 0"
-                type="reselect"
+                :type="adSelectortype"
                 :disabled="disabled"
                 :all-areas="allAreas" :limit-mvp="false"
                 :selected-id="getProp('landingPageId')"
@@ -41,6 +33,7 @@
                 v-if="getProp('landingType') === 1"
                 :disabled="disabled"
                 :value="getProp('landingPage')"
+                :is-qiqiaoban-site="isQiqiaobanSite"
                 @change="setLandingPage">
               </qiqiaoban-page-selector>
 
@@ -49,11 +42,14 @@
               </p>
             </div>
           </span>
+          <div class="page-error-placeholder" v-else>
+            所选推广页面失效，请 <a href="javascript:;" @click="isErrorLandingPageShow = false; adSelectortype = ''">从新选择</a>
+          </div>
         </div>
         <div>
           <aside>投放城市：</aside>
           <span>
-            <el-tag type="success"
+            <el-tag type="danger"
               :closable="!isSales"
               v-for="c in getProp('areas')" :key="c"
               @close="removeArea(c)">
@@ -69,7 +65,10 @@
         </promotion-area-limit-tip>
       </section>
       <section class="creative">
-        <header><promotion-creative-tip /> </header>
+        <header class="top-col">
+          <promotion-creative-tip :highlight="canOptimize('creative')"/>
+          <el-button type="primary" class="button" size="small" @click="optimizeCreative">一键优化</el-button>
+        </header>
         <creative-editor
           :update-promotion="true"
           :platforms="[getProp('source')]"
@@ -84,11 +83,13 @@
         />
       </section>
       <section class="keyword">
-        <header>选取推广关键词</header>
-        <h4>
-          <span>已经设置的关键词</span>
-          <label>当前关键词数量: {{ currentKeywords.length }}个</label>
-        </h4>
+        <header class="top-col">
+          <span :class="canOptimize('keyword')">选取推广关键词</span>
+          <el-input size="small" class="input" placeholder="添加关键词" v-model="queryWord"/>
+          <el-button size="small" type="warning" class="button" @click="addKeyword('single')">添加</el-button>
+          <el-button size="small" type="primary" class="button" @click="addKeyword">一键拓词</el-button>
+          <strong>当前关键词数量: {{ currentKeywords.length }}个</strong>
+        </header>
         <keyword-list
           mode="update"
           :platform="getProp('source')"
@@ -103,37 +104,7 @@
           :campaign-online="isCampaignOnline"
           @update-word="updateExistWord"
           @change-offset="offset => currentKeywordsOffset = offset"
-          @delete-word="word => promotion.deletedKeywords.push(word)"
-        />
-        <h3 v-if="!isSales">
-          <label>关键词不够？</label>
-          <a @click="switchWordsVisible">点此自定义添加</a>
-        </h3>
-        <div v-if="searchRecommendsVisible">
-          <span>
-            <el-input placeholder="请输入关键词"
-              v-model.trim="queryWord" @keyup.native.enter="queryRecommendedWords" />
-          </span>
-          <el-button type="primary" @click="queryRecommendedWords">
-            查询
-          </el-button>
-          <strong>
-            （请优先添加较为核心的关键词，关键词长度不宜超过5个字，不区分大小写。）
-          </strong>
-        </div>
-        <keyword-list
-          v-if="searchRecommendsVisible"
-          mode="select"
-          :platform="getProp('source')"
-          :words="addibleWords"
-          :offset="addibleWordsOffset"
-          :selected-words="promotion.newKeywords"
-          :campaign-offline="isCampaignOffline"
-          :campaign-online="isCampaignOnline"
-          @update-word="updateNewWord"
-          @change-offset="setAddibleWordsOffset"
-          @select-words="words => promotion.newKeywords = [...words]"
-          @operated-pages="pages => searchRecommendsPages = pages"
+          @delete-word="handleDeleteWord"
         />
       </section>
       <section class="timing">
@@ -197,7 +168,7 @@
         <section v-show="moreSettingDisplay" class="more-setting-container">
           <section class="promotion-time">
             <div>
-              <aside>投放时段：</aside>
+              <aside :class="canOptimize('duration')">投放时段：</aside>
               <span>
                 <label class="duration-type">
                   {{ getDurationType() }}
@@ -209,7 +180,7 @@
               </span>
             </div>
             <div>
-              <aside>投放时间:</aside>
+              <aside :class="canOptimize('time')">投放时间:</aside>
               <span>
                 <el-button-group>
                   <el-button :type="timeType === 'long' ? 'primary' : ''"
@@ -238,7 +209,7 @@
           </section>
           <section class="mobile-ratio" v-if="getProp('source') !== SEM_PLATFORM_SHENMA">
             <section>
-              <label>
+              <label :class="canOptimize('ratio')">
                 选择投放移动端的出价比例：
               </label>
               <section>
@@ -308,7 +279,6 @@ import CreativeEditor from 'com/widget/creative-editor'
 import KeywordList from 'com/common/qwt-keyword-list'
 import AreaSelector from 'com/common/area-selector'
 import ContractAck from 'com/widget/contract-ack'
-import Topbar from 'com/topbar'
 
 import { disabledDate } from 'util/element'
 import { isBaixingSales } from 'util/role'
@@ -320,8 +290,13 @@ import {
 } from 'util/meta'
 
 import {
+  recommendByUrl,
+  updateCampaign,
+  recommendByWord,
+  getQiqiaobanCoupon,
   checkCreativeContent,
-  updateCampaign
+  getRecommandCreative,
+  changeCampaignKeywordsPrice
 } from 'api/fengming'
 
 import {
@@ -353,7 +328,9 @@ import {
 } from 'util/campaign'
 
 import {
-  f2y
+  f2y,
+  isQiqiaobanSite,
+  isSiteLandingType
 } from 'util/kit'
 
 import store from './store'
@@ -383,8 +360,7 @@ export default {
     UserAdSelector,
     AreaSelector,
     KeywordList,
-    ContractAck,
-    Topbar
+    ContractAck
   },
   fromMobx: {
     recommendedWords: () => store.recommendedWords,
@@ -410,13 +386,11 @@ export default {
 
       actionTrackId: uuid(),
       landingTypeOpts,
-
       durationSelectorVisible: false,
-      searchRecommendsVisible: false,
       areaDialogVisible: false,
 
       currentKeywordsOffset: 0,
-      addibleWordsOffset: 0,
+
       isUpdating: false,
       queryWord: '',
       // 注: 此处逻辑比较容易出错, 此处 定义为 undefined 与 getXXXdata 处 密切相关
@@ -439,8 +413,10 @@ export default {
       },
 
       moreSettingDisplay: false,
-
-      searchRecommendsPages: [0], // for logging
+      // 是否为老官网
+      isQiqiaobanSite: false,
+      adSelectortype: 'reselect',
+      isErrorLandingPageShow: false,
 
       SEM_PLATFORM_SHENMA,
       SEM_PLATFORM_BAIDU,
@@ -480,13 +456,17 @@ export default {
       return false
     },
     currentKeywords() {
-      const { keywords } = this.originPromotion
-
+      const { keywords: originKeywords } = this.originPromotion
       const {
         updatedKeywords,
-        deletedKeywords
+        deletedKeywords,
+        newKeywords
       } = this.promotion
-
+      // 新增的keywords 加上原来的keywords
+      const keywords = newKeywords.map(word => ({
+        isNew: true,
+        ...word
+      })).concat(originKeywords)
       return keywords
         .filter(w => !deletedKeywords.map(i => i.id).includes(w.id))
         .map(w => {
@@ -501,12 +481,6 @@ export default {
 
           return {...w}
         })
-    },
-    addibleWords() {
-      const words = this.currentKeywords.map(w => w.word.toLowerCase())
-
-      return this.recommendedWords
-        .filter(w => !words.includes(w.word.toLowerCase()))
     },
     checkCreativeBtnDisabled() {
       const data = this.getUpdatedCreativeData()
@@ -572,21 +546,42 @@ export default {
       this.promotion.creativeTitle = title
       this.promotion.creativeContent = content
     },
+    async goChargeKaSite() {
+      await getQiqiaobanCoupon(this.id)
+      setTimeout(() => {
+        this.$router.push('/main/qwt/charge?select_gw=1')
+      }, 300)
+    },
     handleCreativeError(message) {
       if(message) Message.error(message)
       this.creativeError = message
-    },
+    }, 
     toggleDisplaySettingArea() {
       this.moreSettingDisplay = !this.moreSettingDisplay
-    },
-    setAddibleWordsOffset(offset) {
-      this.addibleWordsOffset = offset
     },
     setLandingPage(url) {
       this.promotion.landingPage = url
       this.promotion.areas = ['quanguo']
     },
+    banLandPageSelected() {
+      // 落地页404，需要更改落地页投放
+      if (this.isErrorLandingPageShow && (!this.promotion.landingPage || this.promotion.landingPage === this.originPromotion.landingPage)) {
+        this.adSelectortype = ''
+        const pageErrorPlaceholder = document.querySelector('.page-error-placeholder')
+        pageErrorPlaceholder.scrollIntoViewIfNeeded()
+        pageErrorPlaceholder.style.borderColor = "#ff4401"
+        throw this.$message.error('当前投放页面失效，请重新选择新的投放页面')
+      }
+      // 已经下线计划当前落地页为老官网且 没有重选新落地页
+      if(this.isQiqiaobanSite && this.isCampaignOffline && (!this.promotion.landingPage || isQiqiaobanSite(this.promotion.landingPage))) {
+        this.adSelectortype = ''
+        const landingpage = document.querySelector('.landingpage')
+        landingpage.scrollIntoViewIfNeeded()
+        throw this.$message.error('当前所选落地页无效，请修改推广计划的投放页面')
+      }
+    },
     async onSelectAd(ad) {
+
       const { allAreas } = this
 
       this.promotion.category = ad.category
@@ -655,36 +650,42 @@ export default {
       }
     },
     updateExistWord(word) {
-      const words = this.promotion.updatedKeywords.map(w => w.word)
-
-      if (words.includes(word.word)) {
-        this.promotion.updatedKeywords = this.promotion.updatedKeywords.map(w => {
-          if (w.word === word.word) {
+      const {
+        newKeywords,
+        updatedKeywords
+      } = this.promotion
+      // 更新的关键词是新增加的关键词
+      if (newKeywords.some(w => word.word === w.word)) {
+        this.promotion.newKeywords = newKeywords.map(w => {
+          if (word.word === w.word) {
             return {
               ...w,
-              price: word.price
+              ...word
             }
           } else {
             return {...w}
           }
         })
       } else {
-        this.promotion.updatedKeywords.push({
-          ...word
-        })
-      }
-    },
-    updateNewWord(word) {
-      this.promotion.newKeywords = this.promotion.newKeywords.map(w => {
-        if (w.word === word.word) {
-          return {
-            ...w,
-            price: word.price
-          }
+        // 更新的关键词是已经存在的
+        const words = updatedKeywords.map(w => w.word)
+        if (words.includes(word.word)) {
+          this.promotion.updatedKeywords = this.promotion.updatedKeywords.map(w => {
+            if (w.word === word.word) {
+              return {
+                ...w,
+                price: word.price
+              }
+            } else {
+              return {...w}
+            }
+          })
         } else {
-          return {...w}
+          this.promotion.updatedKeywords.push({
+            ...word
+          })
         }
-      })
+      }
     },
     getUpdatedCreativeData() {
       const {
@@ -733,6 +734,11 @@ export default {
         //   - changed(landingType, originLandingType)
         result.landingType = this.getProp('landingType')
         result.landingPage = this.getProp('landingPage')
+      }
+
+      // FIX: 修复 landingPage landingType 错误
+      if (landingPage) {
+        result.landingType = isSiteLandingType(landingPage) ? 1 : 0
       }
 
       return result
@@ -835,6 +841,7 @@ export default {
       return data
     },
     async updatePromotion() {
+      this.banLandPageSelected()
       if (this.isUpdating) {
         return Message.warning('正在更新中, 请稍等一会儿 ~')
       }
@@ -851,9 +858,7 @@ export default {
         baxId: userInfo.id,
         campaignId: id,
         actionTrackId,
-        searchRecommends: this.addibleWords.length,
         selectedSearchRecommends: this.promotion.newKeywords.length,
-        searchRecommendsPages: this.searchRecommendsPages.length
       })
 
       try {
@@ -870,7 +875,6 @@ export default {
           ...this.getUpdatedCreativeData(),
           ...this.getUpdatedPromotionData(),
           ...this.getUpdatedKeywordsData(),
-          // TODO: 添加一个更新移动端出价比例的字段
           mobilePriceRatio: this.promotion.mobilePriceRatio
         }
       } catch (err) {
@@ -938,27 +942,6 @@ export default {
         name: 'qwt-promotion-list'
       })
     },
-    async queryRecommendedWords() {
-      const { queryWord } = this
-
-      if (!queryWord) {
-        return Message.error('请输入查询关键词')
-      }
-
-      const preLength = this.addibleWords.length
-      await store.recommendByWord(queryWord, this.getProp('areas'))
-      this.addibleWordsOffset = preLength
-
-      // 默认选中搜索词
-      const match = this.addibleWords.find(item => item.word === queryWord)
-
-      if (match) {
-        const has = this.promotion.newKeywords.find(item => item.word === match.word)
-        if (!has) {
-          this.promotion.newKeywords.push(match)
-        }
-      }
-    },
     async checkCreativeContent() {
       const creativeContent = this.getProp('creativeContent')
       const creativeTitle = this.getProp('creativeTitle')
@@ -991,9 +974,6 @@ export default {
         }
       })
     },
-    switchWordsVisible() {
-      this.searchRecommendsVisible = !this.searchRecommendsVisible
-    },
     onChangeAreas(areas) {
       this.promotion.areas = [...areas]
       this.areaDialogVisible = false
@@ -1010,14 +990,102 @@ export default {
     setTimeType(type) {
       store.setTimeType(type)
     },
+    canOptimize(type) {
+      const expandMoreSettingArea = () => this.moreSettingDisplay = true
+      const opt = {
+        creative: () => this.originPromotion.ctrMark,
+        keyword: () => this.originPromotion.kwMark || this.originPromotion.priceMark,
+        time: () => this.timeType === 'custom' && expandMoreSettingArea(),
+        duration: () => this.getDurationType() === '部分时段' && expandMoreSettingArea(),
+        ratio:
+          () =>!(!this.getProp('mobilePriceRatio') || this.getProp('mobilePriceRatio') === 1 || +this.promotion.mobilePriceRatio === 1)
+          && expandMoreSettingArea()
+      }
+      return opt[type]() ? 'highlight' : ''
+    },
+    async optimizeCreative() {
+      const campaignId = this.$route.params.id
+      const { title, content } = await getRecommandCreative({campaignId})
+      if (!(title && content)) return this.$message.error('无法提供创意优化建议')
+      this.promotion.creativeTitle = title
+      this.promotion.creativeContent = content
+    },
+    filterExistCurrentWords(newWords) {
+      const words = this.currentKeywords.map(w => w.word.toLowerCase())
+      return newWords
+        .filter(w => !words.includes(w.word.toLowerCase()))
+    },
+    async addKeyword(type) {
+      const queryWord = this.queryWord.trim()
+      let newKeywords = []
+      if (type === 'single') {
+        // 单个添加
+        if (!queryWord) return
+        const recommendKeywords = await recommendByWord(queryWord)
+        const newKeyword = store.fmtNewKeywordsPrice(recommendKeywords).find( k => k.word === queryWord)
+        console.log('单个关键词添加', newKeyword)
+        if (!newKeyword) return this.$message.info('没有合适的关键词')
+        newKeywords = [newKeyword]
+        if (!this.filterExistCurrentWords(newKeywords).length) return this.$message.info('当前关键词已存在关键词列表')
+        this.queryWord = ''
+      } else {
+        // 一键拓词
+        const landingPage = this.promotion.landingPage || this.getProp('landingPage')
+        const areas = this.promotion.areas || this.getProp('areas')
+        const campaignId = +this.$route.params.id
+
+        const recommendKeywords = await recommendByUrl(landingPage, areas, campaignId)
+        if (!recommendKeywords.length) return this.$message.info('无法提供推荐关键词')
+        newKeywords = this.filterExistCurrentWords(store.fmtNewKeywordsPrice(recommendKeywords)).slice(0, 5)
+        if (!newKeywords.length) return this.$message.info('没有更多的关键词可以推荐啦')
+      }
+      this.promotion.newKeywords = newKeywords.concat(this.promotion.newKeywords)
+    },
+    handleDeleteWord(w) {
+      const {isNew, ...word} = w
+      if (!!isNew) {
+        this.promotion.newKeywords = this.promotion.newKeywords.filter(w => w.word !== word.word)
+      } else {
+        this.promotion.deletedKeywords.push(word)
+      }
+    },
+    async changeKeywordsPrice(keywordsPrice) {
+      const price = keywordsPrice * 100
+      const campaignId = +this.$route.params.id
+      if (price < 200 || price > 99900) {
+        throw '关键词有效出价区间为[2, 999]元，请调整出价'
+      }
+      await changeCampaignKeywordsPrice(campaignId, price)
+      this.originPromotion.keywords.forEach(word => {
+        this.updateExistWord({
+          ...word,
+          price
+        })
+      })
+      this.promotion.newKeywords = this.promotion.newKeywords.map(word => ({
+        ...word,
+        price
+      }))
+      return '关键词批量改价成功'
+    },
     disabledDate,
     f2y
   },
   watch: {
+    'originPromotion'({landingPage, landingType}) {
+      if (landingType === 1) {
+        this.isQiqiaobanSite = isQiqiaobanSite(landingPage)
+      }
+    },
     '$route.params.id': async function(v, p) {
       if (v !== p) {
         await this.initCampaignInfo()
       }
+    },
+    'promotion.deletedKeywords'(deletedKws) {
+      // 删除的时候有可能批量改价过，所以要把在deletedKeywords中的关键字从updatedKeywords中过滤
+      this.promotion.updatedKeywords =
+        this.promotion.updatedKeywords.filter(w => !deletedKws.some(dw => dw.word === w.word))
     }
   },
   async beforeDestroy() {
@@ -1026,6 +1094,23 @@ export default {
   async mounted() {
     await this.initCampaignInfo()
 
+    // 验证官网落地页是否404
+    const { landingPage, landingType } = this.originPromotion
+    if (landingType === 1) {
+      // 将帖子选择组件的类型重置
+      this.adSelectortype = ''
+      const script = document.createElement('script')
+      script.src = landingPage
+      document.body.appendChild(script)
+      script.addEventListener('error', e => {
+        document.body.removeChild(script)
+        this.isErrorLandingPageShow = true
+        this.promotion.landingPage = ''
+      })
+      script.addEventListener('load', e => {
+        document.body.removeChild(script)
+      })
+    }
     setTimeout(() => {
       if (this.$route.query.target === 'keyword') {
         VueScrollTo.scrollTo('.keyword', 100)
@@ -1052,12 +1137,67 @@ export default {
 <style lang="postcss" scoped>
 @import 'cssbase/mixin';
 
+.qiqiaoban-warning {
+  margin-left: 20px;
+  font-size: 13px;
+  color: #ff4401;
+}
+
+.page-error-placeholder {
+  border: 1px solid #eee;
+  border-radius: 4px;
+  height: 161px;
+  width: 540px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  color: #999;
+  & > a {
+    color: #ff4401;
+    margin-left: 5px;
+  }
+}
+
 .authing-tip {
   display: inline-flex;
   align-items: center;
   font-size: 12px;
   color: #ff4401;
 }
+
+.creative {
+  & .top-col {
+    display: flex;
+    align-items: center;
+    & .button {
+      margin-left: 32px;
+      padding: 8px 25px;
+    }
+  }
+}
+
+.keyword {
+  & .top-col {
+    display: flex;
+    align-items: center;
+    & > strong {
+      margin-left: 18px;
+      color: #666;
+      font-size: 12px;
+    }
+  }
+  & .second-col {
+    & .input {
+      margin-left: 130px;
+    }
+  }
+  & .input {
+    width: 200px;
+    margin-left: 32px;
+    margin-right: 16px;
+  }
+} 
 
 .report-link {
   margin-left: 10px;
@@ -1082,22 +1222,29 @@ export default {
 .qwt-update-promotion {
   padding: 0 35px;
   width: 100%;
-
+  & .highlight {
+    color: #B66969 !important;
+    font-weight: 600;
+  }
   & > main {
     & > h3 {
-      margin: 5px 0 15px;
+      background-color: #fff;
       font-size: 18px;
       font-weight: normal;
       color: #1f2d3d;
-    }
-
-    & > section:not(:last-child) {
-      border-bottom: 1px solid #c0ccda;
+      padding: 20px;
+      border-radius: 4px;
     }
 
     & > section {
-      margin-bottom: 30px;
-      padding-bottom: 30px;
+      border-radius: 4px;
+      margin-bottom: 10px;
+      background-color: #fff;
+      padding: 20px;
+      box-shadow: 0 2px 9px 0 rgba(83,95,127,0.10);
+      &:last-child {
+        padding-bottom: 40px;
+      }
 
       & > header {
         color: #6a778c;
@@ -1108,7 +1255,6 @@ export default {
       & > div {
         display: flex;
         margin: 20px 0;
-        /* TODO: */
         & > aside:first-child {
           display: flex;
           align-items: center;
@@ -1121,19 +1267,6 @@ export default {
     }
 
     & > section.keyword {
-      & > h4 {
-        margin: 20px 0 30px;
-        color: #6a778c;
-        font-size: 13px;
-        font-weight: normal;
-
-        & > label {
-          margin-left: 10px;
-          font-size: 12px;
-          color: red;
-        }
-      }
-
       & > h3 {
         font-size: 14px;
         font-weight: normal;

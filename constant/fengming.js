@@ -123,6 +123,16 @@ export const landingType = {
   '1': '官网'
 }
 
+export const campaignOptimization = {
+  STATUS_REJECT: -53,
+  STATUS_OPT_SOURCE: 101,
+  STATUS_OPT_CREATIVE: 102,
+  STATUS_OPT_PRICE: 103,
+  STATUS_OPT_SETTING: 104,
+  STATUS_OPT_KEYWORD: 105
+
+}
+
 export const campaignStatusOpts = toOpt(campaignStatus)
 
 export const landingTypeOpts = toOpt(landingType)

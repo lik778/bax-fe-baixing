@@ -28,7 +28,7 @@
         </el-form-item>
         <el-form-item label="城市">
           <span>
-            <el-tag type="success" closable
+            <el-tag type="danger" closable
               v-for="c in newOrder.cities" :key="c"
               @close="removeArea(c)">
               {{ formatterArea(c) }}
@@ -40,7 +40,7 @@
         </el-form-item>
         <el-form-item label="类目">
           <span>
-            <el-tag type="success" closable
+            <el-tag type="danger" closable
               v-for="c in newOrder.categories" :key="c"
               @close="removeCategory(c)">
               {{ formatterCategory(c) }}

@@ -223,7 +223,7 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 20px 0;
+    margin-bottom: 20px;
     width: 100%;
 
     & > span:first-child {

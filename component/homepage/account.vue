@@ -1,180 +1,126 @@
 <template>
-  <div class="card">
-    <header>
-      <strong>账户概览</strong>
-      <router-link :to="{name: 'account'}"
-        @click.native="onClickAccountDetail">
-        查看详情
-      </router-link>
-    </header>
-    <content>
-      <span class="money">
-        <h3>推广可用资金</h3>
-        <p>
-          <strong>
-            {{ balance }}
-          </strong>
-          <span>元</span>
-        </p>
-        <router-link :class="{button: true, primary: balance === 0}"
-          :to="{name: 'qwt-charge', query: {mode: 'charge-only'}}"
-          @click.native="onClickCharge">
-          立即充值
-        </router-link>
-      </span>
-      <span class="coupon">
-        <h3>可用优惠券</h3>
-        <p>
-          <strong>
-            {{ coupons.length }}
-          </strong>
-          <span>张</span>
-        </p>
-        <router-link class="button" :to="{name: 'coupon'}"
-          @click.native="onClickCoupon">
-          查看
-        </router-link>
-      </span>
-    </content>
+  <div class="layout-container">
+    <div class="layout-left">
+      <h5 class="layout-header">账户概览</h5>
+      <ul class="accout" v-if="fengmingBalance && sites">
+        <li class="account-item">
+          <p class="title">站外推广余额(元)</p>
+          <p class="num">{{fengmingBalance.price}}</p>
+          <p class="desc">（可消耗 {{fengmingBalance.day}} 天）</p>
+          <el-button type="primary" class="button" size="small" @click.native="() => handleCharge('bax')">立即充值</el-button>
+        </li>
+        <!-- FIXME: 标王重构玩再上 -->
+        <!-- <li class="account-item">
+          <p class="title">标王推广关键词(个)</p>
+          <p class="num">{{0}}</p>
+          <p class="desc">（ {{5}} 个词即将到期）</p>
+          <el-button type="primary" class="button" size="small" @click.native="() => handleCharge('biaowang')">立即充值</el-button>
+        </li> -->
+        <li class="account-item">
+            <p class="title">精品官网(个)</p>
+            <p class="num">{{sites.length}}</p>
+            <p class="desc" v-if="sites.length">
+              （ {{sites.length > 1 ? '最早官网到期日' : '官网到期日'}} {{noExpiredSite[0].expireAt | formatDate}} ）
+            </p>
+            <p class="desc" v-else>暂无精品官网</p>
+            <el-button type="primary" class="button" size="small" @click.native="() => handleCharge('site')">{{sites.length === 0 ? '立即购买' : '立即续费'}}</el-button>
+        </li>
+      </ul>
+      <div class="placeholder" v-else><i class="el-icon-loading" />正在获取数据</div>
+    </div>
+    <div class="layout-right">
+      <h5 class="layout-header">
+        账户推广通知
+        <span class="action" v-if="notices && notices.length" @click="$router.push('/main/notice')">更多</span>
+      </h5>
+      <notice :notice-list="notices" type="fengming" height="179px">
+        <template slot-scope="{notice}">
+          {{notice.formatDate(notice.ts * 1000)}} {{notice.content}}
+        </template>
+      </notice>
+    </div>
   </div>
 </template>
 
 <script>
-import track from 'util/track'
+import moment from 'moment'
+import store from './store'
+import Notice from './notice'
 
 export default {
-  name: 'qwt-homepage-account',
-  props: {
-    userInfo: {
-      type: Object,
-      required: true
-    },
-    summary: {
-      type: Object,
-      required: true
-    },
-    coupons: {
-      type: Array,
-      required: true
+  name: 'homepage-accout',
+  components: {Notice},
+  fromMobx: {
+    fengmingBalance: () => store.fengmingBalance,
+    notices: () => store.notices.fengming,
+    sites: () => store.kaSiteData && store.kaSiteData.sites
+  },
+  methods: {
+    handleCharge(type) {
+      switch(type) {
+        case 'bax':
+          return this.$router.push({name: 'qwt-charge'})
+        case 'site':
+          return this.$router.push({name: 'qwt-charge', query: {select_gw: 1}})
+      }
     }
   },
   computed: {
-    balance() {
-      const { summary } = this
-      return (summary.balance / 100).toFixed(2)
+    noExpiredSite() {
+      return this.sites.filter(site => +new Date(site.expireAt) - +new Date() > 0)
     }
   },
-  methods: {
-    onClickCreateCampaign() {
-      const { userInfo } = this
-      track({
-        action: 'homepage account: click create campaign',
-        baixingId: userInfo.baixingId,
-        baxId: userInfo.id
-      })
-    },
-    onClickQueryCampaigns() {
-      const { userInfo } = this
-      track({
-        action: 'homepage account: click view campaigns',
-        baixingId: userInfo.baixingId,
-        baxId: userInfo.id
-      })
-    },
-    onClickAccountDetail() {
-      const { userInfo } = this
-      track({
-        action: 'homepage account: click account detail',
-        baixingId: userInfo.baixingId,
-        baxId: userInfo.id
-      })
-    },
-    onClickCharge() {
-      const { userInfo } = this
-      track({
-        action: 'homepage account: click charge',
-        baixingId: userInfo.baixingId,
-        baxId: userInfo.id
-      })
-    },
-    onClickCoupon() {
-      const { userInfo } = this
-      track({
-        action: 'homepage account: click coupon',
-        baixingId: userInfo.baixingId,
-        baxId: userInfo.id
-      })
+  filters: {
+    formatDate(date) {
+      console.log(date)
+      return moment(date).format('YYYY.MM.DD')
     }
   }
 }
 </script>
 
 <style lang="postcss" scoped>
-@import '../../cssbase/mixin';
-@import '../../cssbase/var';
-
-.card {
-  display: flex;
-  flex-flow: column;
-  width: 694px;
-  height: 224px;
-
-  & > content {
-    display: flex;
-    margin-top: 26px;
-  }
-}
-
-.money, .coupon {
-  display: inline-flex;
-  flex-flow: column;
-  align-items: center;
-  flex-grow: 0.5;
-  padding-top: 10px;
-
-  & > h3 {
-    font-size: 14px;
-    color: #666666;
-    font-weight: 600;
-  }
-
-  & > p {
+  .accout {
     display: flex;
     align-items: center;
-    margin: 10px 0 20px;
-
-    & > strong {
-      font-size: 24px;
-      font-weight: 600;
-      color: var(--qwt-c-blue);
+    color: #666;
+    font-size: 14px;
+    text-align: center;
+    padding-top: 30px;
+    line-clamp: 1;
+    & .account-item {
+      flex: 1;
+      &:not(:last-of-type) {
+        border-right: 1px solid #e6e6e6;
+      }
     }
-
-    & > span {
-      @mixin center;
-      margin-left: 10px;
+    & .title {
       font-weight: 600;
-      color: #647781;
+    }
+    & .num {
+      color: #FF4F49;
+      font-weight: 600;
+      font-size: 24px;
+      line-height: 50px;
+    }
+    & .desc {
+      font-size: 12px;
+    }
+    & .button {
+      width: 110px;
+      height: 32px;
+      margin: 20px 0;
     }
   }
-}
-
-.money {
-  border-right: 1px solid #e6e6e6;
-}
-
-.button {
-  @mixin center;
-  width: 110px;
-  height: 32px;
-  font-size: 14px;
-  border-radius: 4px;
-  color: #666666;
-  border: 1px solid #d9d9d9;
-}
-
-.button.primary {
-  border: unset;
-  color: white;
-  background: var(--qwt-c-blue);
-}
+  .placeholder {
+    color: #888;
+    line-height: 189px;
+    text-align: center;
+    font-size: 18px;
+    letter-spacing: 1px;
+    & .el-icon-loading {
+      font-size: 20px;
+      margin-right: 5px;
+    }
+  }
 </style>

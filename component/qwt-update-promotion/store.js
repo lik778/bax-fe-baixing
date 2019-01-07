@@ -9,10 +9,6 @@ import {
 } from 'constant/keyword'
 
 import {
-  mergeKeywords
-} from 'util/campaign'
-
-import {
   toHumanTime
 } from 'utils'
 
@@ -49,11 +45,8 @@ const store = observable({
   getUsableBalance: action(async function() {
     this.usableBalance = await fapi.getUsableBalance()
   }),
-
-  recommendByWord: action(async function(word) {
-    const words = await fapi.recommendByWord(word)
-    this._recommendedWords = mergeKeywords(this._recommendedWords, words)
-    this._recommendedWords = this._recommendedWords.map(w => {
+  fmtNewKeywordsPrice: action(function(words) {
+    return words.map(w => {
       const { price: serverPrice } = w
       let price = serverPrice * 1.2
       if (price < MIN_WORD_PRICE) {

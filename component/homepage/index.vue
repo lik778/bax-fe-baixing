@@ -1,146 +1,76 @@
 <template>
-  <div class="qwt-homepage">
-    <topbar :userInfo="userInfo">
-      <label slot="title">首页</label>
-    </topbar>
-    <main>
-      <span>
-        <account :user-info="userInfo" :summary="summary" :coupons="coupons" />
-        <campaign type="qwt" :user-info="userInfo" :summary="summary" />
-      </span>
-      <span>
-        <board />
-        <notification />
-        <qa :user-info="userInfo" />
-      </span>
-    </main>
+  <div class="homepage">
+    <account />
+    <campaign />
+    <!-- <biaowang /> -->
+    <site />
   </div>
 </template>
 
 <script>
-import Topbar from 'com/topbar'
-
-import Notification from './notification'
-import Campaign from './campaign'
-import Account from './account'
-import Board from './board'
-import Qa from './qa'
-
-import { allowSeeAccount } from 'util/role'
-import track from 'util/track'
-
 import store from './store'
+
+import Site from './site'
+import Account from './account'
+import Campaign from './campaign'
+import Biaowang from './biaowang'
 
 export default {
   name: 'qwt-homepage',
+  created() {
+    store.initPageStore()
+  },
   components: {
-    Notification,
-    Campaign,
+    Site,
     Account,
-    Board,
-    Qa,
-    Topbar
-  },
-  props: {
-    userInfo: {
-      type: Object,
-      required: true
-    }
-  },
-  fromMobx: {
-    summary: () => store.summary,
-    coupons: () => store.coupons
-  },
-  data() {
-    return {
-      load: false // 仅查询一次
-    }
-  },
-  computed: {
-    allowSeeAccount() {
-      return allowSeeAccount(this.userInfo.roles)
-    }
-  },
-  watch: {
-    async userInfo(user) {
-      if (this.allowSeeAccount) {
-        if (this.load) return
-
-        this.load = true
-
-        await Promise.all([
-          store.getHomepageSummary(),
-          store.getCoupons({ onlyValid: true, status: 0 })
-        ])
-      }
-    }
-  },
-  async mounted() {
-    const { userInfo } = this
-
-    if (this.allowSeeAccount) {
-      await Promise.all([
-        store.getHomepageSummary(),
-        store.getCoupons({ onlyValid: true, status: 0 })
-      ])
-    }
-
-    track({
-      action: 'homepage: enter page',
-      baixingId: userInfo.baixingId,
-      baxId: userInfo.id
-    })
+    Campaign,
+    Biaowang
   }
 }
 </script>
 
 <style lang="postcss" scoped>
-@import '../../cssbase/var';
-
-.qwt-homepage {
-  display: flex;
-  flex-flow: column;
-  width: 100%;
-  background: var(--qwt-c-gray);
-
-  & > main {
-    display: flex;
-    min-width: 1125px;
-    padding: 10px;
-
-    & > span:last-child {
-      margin-left: 10px;
+  @define-mixin layout-base {
+    border-radius: 4px;
+    box-shadow: 0 2px 9px 0 rgba(83,95,127,0.10);
+    background-color: #fff;
+    padding: 0 20px 30px;
+  }
+  .homepage {
+    padding: 0 10px;
+    font-size: 14px;
+    color: #666;
+    /* ------------ layout style ------------ */
+    & .layout-container {
+      display: flex;
+      &:not(:first-of-type) {
+        margin-top: 10px;
+      }
+      & >>> .layout-left {
+        flex-basis: 62%;
+        margin-right: 10px;
+        @mixin layout-base;
+      }
+      & >>> .layout-right {
+        flex-basis: 38%;
+        @mixin layout-base;
+      }
+      & >>> .layout-header {
+        width: 100%;
+        height: 42px;
+        line-height: 42px;
+        font-size: 16px;
+        color: #666;
+        border-bottom: 1px solid #E6E6E6;
+        & .action {
+          float: right;
+          padding-left: 20px;
+          font-size: 14px;
+          color: #999;
+          font-weight: normal;
+          cursor: pointer;
+        }
+      }
     }
   }
-}
-
-</style>
-
-<style>
-@import '../../cssbase/var';
-
-.qwt-homepage .card {
-  padding: 0 20px;
-  background: white;
-  border-radius: 4px;
-  box-shadow: 0 2px 9px 0 rgba(83, 95, 127, 0.1);
-
-  & > header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 42px;
-    border-bottom: 1px solid #e6e6e6;
-
-    & > strong {
-      font-weight: 600;
-      color: #666666;
-    }
-
-    & > a {
-      color: var(--qwt-c-blue);
-      font-size: 14px;
-    }
-  }
-}
 </style>

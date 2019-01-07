@@ -1,62 +1,61 @@
 <template>
   <div class="my-coupon">
-    <topbar :user-info="userInfo" class="topbar">
-      <label slot="title">我的优惠券</label>
-    </topbar>
-    <div class="redeem">
-      <el-input
-        class="coupon-code-input"
-        placeholder="输入兑换码"
-        v-model.trim="couponCode"
-      />
-      <el-button
-        type="primary"
-        :loading="redeemInProgress"
-        @click="redeem"
-      >
-        兑换
-      </el-button>
-    </div>
-    <el-tabs v-model="activeCouponTab">
-      <el-tab-pane label="有效优惠券" name="first">
-        <div class="coupon-list">
-          <coupon
-            v-for="coupon in validCoupons"
-            :key="coupon.id"
-            :coupon="displayCoupon(coupon)"
-            class="coupon"
-            :showBtn="true"
-            @click="onCouponClick(coupon)"
-          />
-          <p v-if="validCoupons.length === 0">暂无有效优惠券</p>
-        </div>
-      </el-tab-pane>
-      <el-tab-pane label="已过期或未生效" name="second">
-        <div class="coupon-list">
-          <coupon
-            v-for="coupon in invalidCoupons"
-            :key="coupon.id"
-            :coupon="displayCoupon(coupon)"
-            class="coupon"
-            @click="onCouponClick(coupon)"
-            :disabled="true" />
-            <p v-if="invalidCoupons.length === 0">
-              暂无已过期或未生效优惠券
-            </p>
-        </div>
-      </el-tab-pane>
-    </el-tabs>
-    <footer>
-      <h4>优惠券使用说明</h4>
-      <ol>
-        <li>1.本券可在适用范围内购买付费产品时，抵扣对应金额的费用。</li>
-        <li>2.本券不能兑换现金，不找零。</li>
-        <li>3.发生退款时，现金券不退还。</li>
-        <li>4.请在到期时间前使用，券过期不补。</li>
-        <li>5.一次购买可使用张数以优惠券面提示为准。</li>
-        <li>6.使用规则最终解释权归百姓网所有。</li>
-      </ol>
-    </footer>
+    <main>
+      <div class="redeem">
+        <el-input
+          class="coupon-code-input"
+          placeholder="输入兑换码"
+          v-model.trim="couponCode"
+        />
+        <el-button
+          type="primary"
+          :loading="redeemInProgress"
+          @click="redeem"
+        >
+          兑换
+        </el-button>
+      </div>
+      <el-tabs v-model="activeCouponTab">
+        <el-tab-pane label="有效优惠券" name="first">
+          <div class="coupon-list">
+            <coupon
+              v-for="coupon in validCoupons"
+              :key="coupon.id"
+              :coupon="displayCoupon(coupon)"
+              class="coupon"
+              :showBtn="true"
+              @click="onCouponClick(coupon)"
+            />
+            <p v-if="validCoupons.length === 0">暂无有效优惠券</p>
+          </div>
+        </el-tab-pane>
+        <el-tab-pane label="已过期或未生效" name="second">
+          <div class="coupon-list">
+            <coupon
+              v-for="coupon in invalidCoupons"
+              :key="coupon.id"
+              :coupon="displayCoupon(coupon)"
+              class="coupon"
+              @click="onCouponClick(coupon)"
+              :disabled="true" />
+              <p v-if="invalidCoupons.length === 0">
+                暂无已过期或未生效优惠券
+              </p>
+          </div>
+        </el-tab-pane>
+      </el-tabs>
+      <footer>
+        <h4>优惠券使用说明</h4>
+        <ol>
+          <li>1.本券可在适用范围内购买付费产品时，抵扣对应金额的费用。</li>
+          <li>2.本券不能兑换现金，不找零。</li>
+          <li>3.发生退款时，现金券不退还。</li>
+          <li>4.请在到期时间前使用，券过期不补。</li>
+          <li>5.一次购买可使用张数以优惠券面提示为准。</li>
+          <li>6.使用规则最终解释权归百姓网所有。</li>
+        </ol>
+      </footer>
+    </main>
   </div>
 </template>
 
@@ -149,8 +148,12 @@ export default {
 
 <style lang="postcss" scoped>
 .my-coupon {
-  padding: 0 35px;
-  width: 100%;
+  & > main {
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 4px;
+    box-shadow: 0 2px 9px 0 rgba(83, 95, 127, .10);
+  }
 }
 .topbar {
   margin-bottom: 20px;

@@ -1,28 +1,25 @@
 
 <template>
   <div class="sidebar">
-    <header>
-      <img src="http://file.baixing.net/201809/072639ff317bcec3be97c2235918f786.png" alt="logo" class="logo" />
-      <p>v{{ version }}</p>
-    </header>
     <main>
       <el-menu
+        style="border: none;"
         :default-active="defaultActive"
         :default-openeds="defaultOpeneds"
-        background-color="#2e394b"
-        active-text-color="rgb(255, 208, 75)"
-        text-color="#e1e4ee"
+        background-color="#fff"
+        active-text-color="#FF6350"
+        text-color="#333"
         ref="menu"
        >
         <el-menu-item index="root">
           <router-link :to="{ name: 'root' }" tag="p">
-            <bx-icon type="appstore"></bx-icon>首页
+            <bx-icon type="appstore"></bx-icon>我的全网通
           </router-link>
         </el-menu-item>
 
-        <el-menu-item index="charge">
+        <el-menu-item index="qwt-charge">
           <router-link :to="{ name: 'qwt-charge' }" tag="p">
-            <bx-icon type="paycircleo"></bx-icon>充值购买
+            <bx-icon type="paycircleo"></bx-icon>充值与购买
           </router-link>
         </el-menu-item>
 
@@ -38,17 +35,12 @@
           </template>
           <el-menu-item index="qwt-create-promotion">
             <router-link :to="{ name: 'qwt-create-promotion' }" tag="p">
-              新建推广计划
+              新建站外推广
             </router-link>
           </el-menu-item>
           <el-menu-item index="qwt-promotion-list">
             <router-link :to="{ name: 'qwt-promotion-list' }" tag="p">
-              管理推广计划
-            </router-link>
-          </el-menu-item>
-          <el-menu-item index="qwt-dashboard">
-            <router-link :to="{ name: 'qwt-dashboard' }" tag="p">
-              数据报表
+              管理站外推广
             </router-link>
           </el-menu-item>
         </el-submenu>
@@ -58,7 +50,21 @@
             <i class="material-icons" style="font-size: 16px; margin-right: 11px; vertical-align: -3px;">dvr</i>标王推广
           </router-link>
         </el-menu-item> -->
-
+        <el-menu-item index="gw-homepage">
+          <a href="/ka/main" v-if="isRenderSiteLink" style="color: inherit">
+            <i class="el-icon-news" />精品官网
+            <i v-if="isRenderSiteNavTag" class="el-icon-question" />
+          </a>
+          <router-link :to="{name: 'gw-homepage'}" tag="p" v-else>
+            <i class="el-icon-news" />精品官网
+            <i v-if="isRenderSiteNavTag" class="el-icon-question" />
+          </router-link>
+        </el-menu-item>
+        <el-menu-item index="qwt-dashboard">
+          <router-link :to="{ name: 'qwt-dashboard' }" tag="p">
+            <i class="el-icon-document" />数据报表
+          </router-link>
+        </el-menu-item>
         <el-submenu index="ssp" v-if="allowSeeBxAd">
           <template slot="title">
             <i class="el-icon-message"></i>品牌广告
@@ -90,32 +96,16 @@
           </el-menu-item>
         </el-submenu>
 
-        <el-menu-item index="account" v-if="allowSeeAccount">
+        <!-- <el-menu-item index="account" v-if="allowSeeAccount">
           <router-link :to="{ name: 'account' }" tag="p">
             <bx-icon type="user"></bx-icon>我的账户
           </router-link>
-        </el-menu-item>
-        <el-menu-item index="operation-log" v-if="allowSeeAccount">
+        </el-menu-item> -->
+        <!-- <el-menu-item index="operation-log" v-if="allowSeeAccount">
           <router-link :to="{ name: 'operation-log' }" tag="p">
             <bx-icon type="inbox"></bx-icon>操作日志
           </router-link>
-        </el-menu-item>
-
-        <el-submenu index="qa">
-          <template slot="title">
-            <bx-icon type="questioncircleo"></bx-icon>答疑解惑
-          </template>
-          <!-- <el-menu-item index="qa-1">
-            <a class="link" target="_blank" href="/qa?mode=tutorials">
-              操作指南
-            </a>
-          </el-menu-item> -->
-          <el-menu-item index="qa-2">
-            <a class="link" target="_blank" href="/qa?mode=questions">
-              常见问题
-            </a>
-          </el-menu-item>
-        </el-submenu>
+        </el-menu-item> -->
       </el-menu>
     </main>
   </div>
@@ -141,9 +131,9 @@ import {
   allowSeeBxAd
 } from 'util/role'
 
+import { baxUserLogin, kaNavigation } from 'api/ka'
 
 const MENU_GROUP_MAP = {
-  'qwt-charge': ['qwt-charge-buy-service', 'qwt-charge-charge-only', 'gw-charge'],
   'qwt-campaign': ['qwt-create-promotion', 'qwt-promotion-list', 'qwt-dashboard'],
   'ssp': ['ad-list', 'material-list', 'order-list', 'user-list', 'ad-calendar']
 }
@@ -164,16 +154,14 @@ export default {
     return {
       version,
       defaultActive: null,
-      defaultOpeneds: null
+      defaultOpeneds: null,
+      isRenderSiteLink: false,
+      isRenderSiteNavTag: false
     }
   },
   watch: {
     $route(route) {
-      if(route.name === 'qwt-charge') {
-        this.$refs.menu.activeIndex = `${route.name}-${route.query.mode}`
-      } else {
-        this.$refs.menu.activeIndex = route.name
-      }
+      this.$refs.menu.activeIndex = route.name
     }
   },
   computed: {
@@ -206,13 +194,9 @@ export default {
     }
   },
   methods: {
-    _initNavMenu() {
+    async _initNavMenu() {
       const route = this.$route
       let defaultActive = route.name
-
-      if(route.name === 'qwt-charge') {
-        defaultActive = `${route.name}-${route.query.mode}`
-      }
 
       this.defaultOpeneds = Object.entries(MENU_GROUP_MAP).reduce((defaultOpeneds, [group_index, group]) => {
         if(group.some(item => item === defaultActive)) {
@@ -221,6 +205,12 @@ export default {
         return defaultOpeneds
       }, [])
       this.defaultActive = defaultActive
+
+      // 获取ka nav 数据
+      await baxUserLogin()
+      const { offlineSiteNum, canUseTicketsNum, allTicketsNum } = await kaNavigation()
+      this.isRenderSiteNavTag = !!(offlineSiteNum || canUseTicketsNum)
+      this.isRenderSiteLink = !!allTicketsNum
     },
     toBuyKaOrGw() {
       const q = this.$route.query
@@ -241,6 +231,9 @@ export default {
 
 <style lang="postcss" scoped>
 @import '../../cssbase/var';
+:root {
+  --active-bg: #FFF7EB;
+}
 
 .iconfont {
   margin-right: 13px;
@@ -256,55 +249,51 @@ export default {
 
 .sidebar {
   position: fixed;
-  top: 0;
+  top: 50px;
   left: 0;
   bottom: 0;
-  z-index: 6666;
+  z-index: 1;
   display: flex;
   flex-flow: column;
-  background: #2e394b;
+  background: #fff;
   min-width: 180px;
   width: 180px;
-
-  & > header {
-    display: flex;
-    align-items: center;
-    height: 50px;
-    min-height: 50px;
-    padding: 0 20px;
-    color: white;
-
-    & p {
-      height: 25px;
-    }
-
-    & .logo {
-      width: 80px;
-    }
-
-    & p:last-child {
-      display: flex;
-      align-items: flex-end;
-      margin-left: 10px;
-      font-size: 12px;
-      padding-bottom: 1px;
-    }
+  border-right: 1px solid #e6e6e6;
+  & > main {
+    margin-top: 12px;
   }
 }
 
-.el-menu-item {
-  min-width: unset;
-  padding-right: 0;
-}
-
-.el-menu, .el-submenu {
-  border: 1px solid #273141;
-}
-</style>
-
-<style>
-.sidebar .el-menu-item, .el-submenu__title {
-  height: 48px;
-  line-height: 48px;
+.sidebar {
+  & >>> .el-menu-item {
+    height: 48px;
+    line-height: 48px;
+    min-width: unset;
+    padding-right: 0;
+    &:hover {
+      background-color: var(--active-bg) !important;
+    }
+    &.is-active {
+      background-color: var(--active-bg) !important;
+    }
+  }
+  & >>> .el-submenu__title {
+    height: 48px;
+    line-height: 48px;
+    &:hover {
+      background-color: var(--active-bg) !important;
+    }
+  }
+  & >>> .el-icon-news, & >>> .el-icon-document {
+    text-align: left;
+    margin-right: 1px;
+    font-size: 16px;
+  }
+  & .el-icon-question {
+    margin-top: -2px;
+    margin-left: -3px;
+    color: rgb(255, 99, 80); 
+    font-size: 16px;
+  }
 }
 </style>

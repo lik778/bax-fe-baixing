@@ -1,8 +1,11 @@
 
 <template>
-  <el-dialog title="区域选择" :visible="visible"
+  <el-dialog
+    :visible="visible"
     :close-on-click-modal="false"
-    :before-close="ok">
+    :before-close="ok"
+    :show-close="false"
+  >
     <main class="main">
       <div>
         <span @click="clickArea('quanguo')">全国</span>
@@ -43,10 +46,13 @@
         </span>
       </div>
     </main>
-    <footer slot="footer">
-      <el-button @click="cancel">取消</el-button>
-      <el-button type="primary" @click="ok">确认</el-button>
-    </footer>
+    <header slot="title" class="dialog-header">
+      <h5 class="title">区域选择</h5>
+      <div class="buttons">
+        <el-button @click="cancel">取消</el-button>
+        <el-button type="primary" @click="ok">确认</el-button>
+      </div>
+    </header>
   </el-dialog>
 </template>
 
@@ -466,4 +472,19 @@ export default {
   font-size: 11px;
 }
 
+.dialog-header {
+  width: 100%;
+  display: flex;
+  text-align: center;
+  line-height: 40px;
+  & .title {
+    text-indent: 10px;
+    font-size: 18px;
+    color: #565656;
+  }
+  & .buttons {
+    margin-left: auto;
+    margin-right: 26px;
+  }
+}
 </style>

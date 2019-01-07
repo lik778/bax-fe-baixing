@@ -1,7 +1,8 @@
 <template>
   <div class="coupon" :class="{selected, disabled}" @click="onClick">
     <div class="brief">
-      <h2>￥{{coupon.money}}</h2>
+      <h2 v-if="coupon.discountRatio">{{coupon.discountRatio / 10}} 折</h2>
+      <h2 v-else>￥{{coupon.money}}</h2>
       <small class="desc">{{coupon.text}}</small>
     </div>
     <div class="detail">

@@ -17,14 +17,16 @@ import AdList from 'com/ssp-ad-list'
 
 // 精品官网
 import GwCharge from 'com/gw-charge'
+import GwHomepage from 'com/gw-homepage'
 
 // global
-import OperationLog from 'com/operation-log'
+// import OperationLog from 'com/operation-log'
 import Redirect from 'com/redirect'
 import Homepage from 'com/homepage'
 import Account from 'com/account'
 import Coupon from 'com/coupon'
 import Charge from 'com/charge'
+import Notice from 'com/notice'
 
 import Bax from 'com/bax'
 
@@ -46,6 +48,9 @@ import 'echarts/lib/component/legend'
 import 'echarts/lib/component/tooltip'
 import 'echarts/lib/component/dataZoom'
 
+// element 样式文件
+import '../theme/index.css'
+
 Vue.use(Movue, { reaction })
 Vue.use(VueClipboard)
 Vue.use(VueRouter)
@@ -55,6 +60,10 @@ Vue.component('chart', ECharts)
 Vue.use(Vue2Filters)
 
 const gwRoutes = [{
+  component: GwHomepage,
+  path: '/main/gw',
+  name: 'gw-homepage'
+}, {
   component: GwCharge,
   path: '/main/gw/charge',
   name: 'gw-charge'
@@ -116,16 +125,17 @@ const sspRoutes = [{
   name: 'ad-calendar'
 }]
 
+// {
+//   component: OperationLog,
+//   path: '/main/operation-log',
+//   name: 'operation-log'
+// },
 const router = new VueRouter({
   mode: 'history',
   routes: [{
     component: Homepage,
     path: '/main',
     name: 'root'
-  }, {
-    component: OperationLog,
-    path: '/main/operation-log',
-    name: 'operation-log'
   }, {
     component: Redirect,
     path: '/main/redirect-to',
@@ -138,10 +148,21 @@ const router = new VueRouter({
     component: Coupon,
     path: '/main/coupon',
     name: 'coupon'
-  }, ...qwtRoutes, ...sspRoutes, ...gwRoutes, {
+  }, {
+    component: Notice,
+    path: '/main/notice',
+    name: 'notice'
+  }, {
     component: Homepage,
     path: '*'
-  }]
+  },
+  ...qwtRoutes,
+  ...sspRoutes,
+  ...gwRoutes]
+})
+router.beforeEach((to, from, next) => {
+  window.scrollTo(0, 0)
+  next()
 })
 
 const app = new Vue({

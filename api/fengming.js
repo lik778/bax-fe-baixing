@@ -242,12 +242,23 @@ export async function getQiqiaobanPageList() {
   return toCamelcase(body.data)
 }
 
-export async function recommendByUrl(url, areas = []) {
+export async function getRecommandCreative(opts) {
+  const body = await fengming
+    .get('/creative/recommand')
+    .query(reverseCamelcase(opts))
+    .json()
+
+  return toCamelcase(body.data)
+}
+
+// TODO: 添加计划id
+export async function recommendByUrl(url, areas = [], campaignId = null) {
   const body = await fengming
     .post('/keyword/recommand/vad')
     .send({
       url,
-      areas
+      areas,
+      campaignId
     })
     .json()
 
@@ -298,35 +309,47 @@ export async function getChargeLogs(opts) {
   }
 }
 
-export async function getLogs(opts = {}) {
-  let query = {
-    pageSize: 50,
-    offset: 0,
-    time: moment().subtract(1, 'months').unix(),
-    ...opts
-  }
+// export async function getLogs(opts = {}) {
+//   let query = {
+//     pageSize: 50,
+//     offset: 0,
+//     time: moment().subtract(1, 'months').unix(),
+//     ...opts
+//   }
 
-  const { type, time, pageSize, offset } = query
+//   const { type, time, pageSize, offset } = query
 
-  query = trim(reverseCamelcase({
-    timelineType: type,
-    createdAt: time,
-    limit: pageSize,
-    offset
-  }))
+//   query = trim(reverseCamelcase({
+//     timelineType: type,
+//     createdAt: time,
+//     limit: pageSize,
+//     offset
+//   }))
 
-  const [logs, total] = await Promise.all([
-    _getLogs(query),
-    _getLogCount(query)
-  ])
+//   const [logs, total] = await Promise.all([
+//     _getLogs(query),
+//     _getLogCount(query)
+//   ])
 
-  return {
-    query: {
-      ...query,
-      total
-    },
-    logs
-  }
+//   return {
+//     query: {
+//       ...query,
+//       total
+//     },
+//     logs
+//   }
+// }
+
+export async function getLogs(queryParmas = {}) {
+  const { meta, data } = await fengming
+    .get('/timeline/query')
+    .query(reverseCamelcase(queryParmas))
+    .json()
+
+  return toCamelcase({
+    logs: data,
+    total: meta.count
+  })
 }
 
 export async function getSummary() {
@@ -353,6 +376,38 @@ export async function getHomepageSummary() {
     campaignCount,
     ...daily
   }
+}
+
+export async function getHomePageFengmingData() {
+  const [ balance, daily, notices ] = await Promise.all([
+    getCurrentBalance(),
+    _getDailySummary(),
+    getFengmingNotice()
+  ])
+
+  return {
+    balance,
+    notices,
+    ...daily
+  }
+}
+
+export async function getFengmingNotice(opts) {
+  const body = await fengming
+    .get('/dashboard/notice')
+    .query(opts)
+    .json()
+
+  return body.data
+}
+
+export async function getQiqiaobanCoupon(campaignId) {
+  const body = await fengming
+    .get('/coupon/qiqiaoban')
+    .query(reverseCamelcase({campaignId}))
+    .json()
+
+  return body.data
 }
 
 export async function getCurrentCampaignCount(opts) {
@@ -392,6 +447,15 @@ export async function getServerTime() {
   const r = await fengming.get('/product?product_types=3')
   console.log(r.headers.get('date'))
   return r.headers.get('date')
+}
+
+export async function changeCampaignKeywordsPrice(campaignId, price) {
+  const body = await fengming
+    .post(`/campaign/${campaignId}/keyword`)
+    .send({price})
+    .json()
+
+  return body.data
 }
 
 /**

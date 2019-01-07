@@ -45,7 +45,10 @@ const store = observable({
   clearStore: action(function() {
     this._searchRecommends = []
     this._urlRecommends = []
-  })
+  }),
+  getCampaignInfo(campaignId) {
+    return fapi.getCampaignInfo(campaignId)
+  }
 })
 
 function attachDisplayPrice(word) {

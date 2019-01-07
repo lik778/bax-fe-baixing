@@ -163,16 +163,17 @@ export default {
         this.checkedAdId = defaultAdId
       }
     },
-    async onSelectAd() {
+    async onSelectAd(notEmitSelected) {
       if (!this.checkedAdId) {
         return
       }
-
-      const ad = this.ads.find(ad => ad.adId === this.checkedAdId)
-      this.$emit('select-ad', {
-        ...ad,
-        url: isArray(ad.url) ? ad.url[0] : ad.url
-      })
+      if (!notEmitSelected) {
+        const ad = this.ads.find(ad => ad.adId === this.checkedAdId)
+        this.$emit('select-ad', {
+          ...ad,
+          url: isArray(ad.url) ? ad.url[0] : ad.url
+        })
+      }
 
       await this.reset(MODE_SELECTED, this.checkedAdId)
     },
@@ -236,12 +237,12 @@ export default {
 
 .fabu {
   cursor: pointer;
-  color: var(--qwt-c-blue);
+  color: var(--qwt-c-orange);
   font-size: 14px;
 }
 
 .fabu:visited {
-  color: var(--qwt-c-blue);
+  color: var(--qwt-c-orange);
 }
 
 .line {
@@ -251,11 +252,11 @@ export default {
 .op {
   & > a {
     cursor: pointer;
-    color: var(--qwt-c-blue);
+    color: var(--qwt-c-orange);
   }
 
   & > a:visited {
-    color: var(--qwt-c-blue);
+    color: var(--qwt-c-orange);
   }
 }
 

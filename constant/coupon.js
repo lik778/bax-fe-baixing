@@ -6,6 +6,7 @@ export const couponStatus = {
 }
 
 export const usingCondition = {
+  'ORDER_DISCOUNT_PRICE_RATIO': 102,
   'ORDER_SUM_ORIGINAL_PRICE': 101,
   'PRODUCTS': 201,
   'PRODUCT_PACKAGES': 202

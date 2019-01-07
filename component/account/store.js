@@ -26,6 +26,13 @@ const store = observable({
   _summary: {},
   _coupons: [],
 
+  _logs: [],
+  totalLogs: 0,
+
+  get logs() {
+    return toJS(this._logs)
+  },
+
   get consumeQuery() {
     return toJS(this._consumeQuery)
   },
@@ -44,6 +51,13 @@ const store = observable({
   get coupons() {
     return toJS(this._coupons)
   },
+
+  // opts: { type, time, offset, pageSize }
+  getLogs: action(async function(opts) {
+    const { total, logs } = await fapi.getLogs(opts)
+    this.totalLogs = total
+    this._logs = logs
+  }),
 
   clearConsumeLogs: action(async function() {
     this._consumeQuery = {
