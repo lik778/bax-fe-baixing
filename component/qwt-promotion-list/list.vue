@@ -49,7 +49,7 @@
               </td>
               <td class="col3">{{item.source | genSourceText}}</td>
               <td class="col4" v-if="budgetMap[item.id] === undefined">
-                <span class="price">{{item.dailyBudget | fmtPrice}}元</span>
+                <span class="price">{{fmtPrice(item.dailyBudget)}}元</span>
                 <a href="javascript:;" @click="toggleBudgetInputDisplay(item.id, item.dailyBudget)" class="btn">修改</a>
               </td>
               <td class="col4" v-else>
@@ -224,6 +224,9 @@ export default {
         ...this.budgetMap,
         [id]: value.replace(/[^0-9.]/g, '') * 100
       }
+    },
+    fmtPrice(price) {
+      return (price / 100).toFixed(2)
     }
   },
   watch: {
@@ -238,9 +241,6 @@ export default {
   filters: {
     genSourceText(source) {
       return semPlatformCn[source]
-    },
-    fmtPrice(price) {
-      return (price / 100).toFixed(2)
     }
   },
   components: {TopTip}
