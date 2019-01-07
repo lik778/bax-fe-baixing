@@ -171,9 +171,9 @@
       },
       async onXufei(row) {
         const {word, cities, device} = row
-        if (this.leftDays(row) > 15) {
-          return this.$message.info('到期前15天才可续费哦')
-        }
+        // if (this.leftDays(row) > 15) {
+        //   return this.$message.info('到期前15天才可续费哦')
+        // }
         const result = await queryKeywordPrice({
           word,
           cities,
