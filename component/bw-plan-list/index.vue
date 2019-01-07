@@ -30,9 +30,9 @@
           <el-table-column prop="status" label="投放状态" :formatter="v => statusFormatter(v.status)" />
           <el-table-column prop="auditStatus" label="审核状态">
             <template slot-scope="scope">
-              <el-tooltip v-if="isRejected(scope.row.auditStatus)" effect="dark" content="scope.row.auditRejectReason" placement="top">
-                {{auditStatusFormatter(scope.row.auditStatus)}}
-              </el-tooltip>
+              <el-popover v-if="isRejected(scope.row.auditStatus)" :content="scope.row.auditRejectReason" placement="top" trigger="hover">
+                <span slot="reference">{{auditStatusFormatter(scope.row.auditStatus)}}</span>
+              </el-popover>
               <p v-else>{{auditStatusFormatter(scope.row.auditStatus)}}</p>
             </template>
           </el-table-column>
