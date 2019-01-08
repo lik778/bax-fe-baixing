@@ -8,7 +8,8 @@
         :userInfo="currentUser"
         :allCategories="allCategories"
         :allAreas="allAreas"
-        :allRoles="allRoles">
+        :allRoles="allRoles"
+        :salesInfo="salesInfo">
       </router-view>
     </div>
     <sidebar :user-info="currentUser"></sidebar>
@@ -120,6 +121,16 @@ export default {
       this.pending = this.pending - 1
     })
   },
+  created() {
+    // 记录销售的客户id等信息
+    // 米奇跳转userId需改成user_id
+    const {user_id, userId, sales_id: salesId} = this.$route.query
+    const uid = userId || user_id
+    if (uid && salesId) {
+      this.salesInfo.userId = +uid
+      this.salesInfo.salesId = +salesId
+    }
+  },
   async mounted() {
     await Promise.all([
       gStore.getCurrentUser(),
@@ -134,13 +145,6 @@ export default {
       this.isBwRoute = to.path.startsWith('/main/bw')
       next()
     })
-
-    // 记录销售的客户id等信息
-    const {user_id: userId, sales_id: salesId} = this.$route.query
-    if (userId && salesId) {
-      this.salesInfo.userId = +userId
-      this.salesInfo.salesId = +salesId
-    }
 
     setTimeout(() => {
       const { currentUser } = this
