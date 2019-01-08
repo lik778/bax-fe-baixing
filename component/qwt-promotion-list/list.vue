@@ -60,7 +60,7 @@
                 {{item.todayCost === 0 ? '-' : fmtPrice(item.todayCost)}}
               </td>
               <!-- 已下线的status -->
-              <td class="col6">{{item.status === -1 ? '-' : item.avgCpcRanking}}</td>
+              <td class="col6">{{item.status === -1 ? '-' : parseFloat(item.avgCpcRanking).toFixed(2)}}</td>
               <td class="col7">
                 <a
                   class="btn"
@@ -128,7 +128,7 @@ export default {
       LANGPAGE_TYPES,
       KEYWORD_CHIBI_REJECT,
       CAMPAIGN_STATUS_OFFLINE,
-      
+
       budgetMap: {},
       expands: []
     }
@@ -335,7 +335,7 @@ export default {
     }
   }
   /* ------ table ------ */
-  .table-container { 
+  .table-container {
     position: relative;
     width: 100%;
     background-color: #fff;
@@ -412,7 +412,7 @@ export default {
       width: 6px;
       height: 6px;
       border-radius: 50%;
-      background: rgba(0, 0, 0, 0.25);      
+      background: rgba(0, 0, 0, 0.25);
     }
     & > thead {
       & .col2 {
