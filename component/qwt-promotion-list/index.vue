@@ -271,7 +271,7 @@ export default {
     queryParams: {
       deep: true,
       handler(val) {
-        if (/^[0-9]+$/.test(val.campaignId)) {
+        if (!val.campaignId || /^[0-9]+$/.test(val.campaignId)) {
           this.fetchlandingPageList()
         } else {
           this.$message.error('您要查询的计划id格式不正确')
