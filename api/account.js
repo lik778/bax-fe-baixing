@@ -145,3 +145,33 @@ async function _getUserCount(query) {
 
   return body.data
 }
+
+export async function queryOrder(query) {
+  const { data, meta } = await api
+    .get('/order/query')
+    .query(reverseCamelcase(query))
+    .json()
+
+  return {
+    data: toCamelcase(data),
+    total: meta.count
+  }
+}
+
+export async function cancelOrder(orderId) {
+  const { data } = await api
+    .post(`/order/cancel`)
+    .send(reverseCamelcase({orderId}))
+    .json()
+
+  return data
+}
+
+export async function payOrder(orderId) {
+  const { data } = await api
+    .get('/order/pay_url')
+    .query(reverseCamelcase({orderId}))
+    .json()
+
+  return data
+}

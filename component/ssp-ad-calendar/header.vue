@@ -44,7 +44,7 @@
           <el-tag
             v-for="c in areas" :key="c"
             closable
-            type="success"
+            type="danger"
             @close="removeArea(c)"
           >
             {{ formatterArea(c) }}
@@ -61,7 +61,7 @@
         <span>
           <el-tag
             closable
-            type="success"
+            type="danger"
             v-for="c in categories" :key="c"
             @close="removeCategory(c)"
           >

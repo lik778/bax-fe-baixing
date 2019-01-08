@@ -1,8 +1,6 @@
 
 <template>
   <div class="qwt-charge">
-    <topbar :user-info="userInfo" :back="false">
-    </topbar>
     <main>
       <section class="shadow">
         <step :step="currentStep" />
@@ -16,7 +14,7 @@
           <p class="discount-info">满1088元：<span class="red">赠</span>送十万火急 80 元现金券 <span class="mute">(满200元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（365天）<span class="red">减</span>立减 200 元</p>
           <p class="discount-info">满3088元：<span class="red">赠</span>送十万火急 300 元现金券 <span class="mute">(满400元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（365天）<span class="red">减</span>立减 200 元</p>
           <p class="discount-info">满5088元：<span class="red">赠</span>送十万火急 300 元现金券 <span class="mute">(满400元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（365天）<span class="red">减</span>立减 600 元</p>
-          <p class="discount-info">满10188元：<span class="red">赠</span>送十万火急 300 元现金券 <span class="mute">(满400元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（365天）<span class="red">减</span>立减 1200 元</p>
+          <p class="discount-info">满10188元：<span class="red">赠</span>送十万火急 300 元现金券 <span class="mute">(满400元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（365天）<span class="red">减</span>立减 1000 元</p>
         </div>
         <div class="charge">
           <header>选择充值推广资金包：</header>
@@ -189,8 +187,7 @@ import GwProWidget from 'com/widget/gw-pro'
 import Coupon from 'com/common/coupon'
 import PriceList from './price-list'
 import PriceTag from './price-tag'
-import Topbar from 'com/topbar'
-
+ 
 import { Message } from 'element-ui'
 import uuid from 'uuid/v4'
 
@@ -284,7 +281,6 @@ export default {
     PriceList,
     PriceTag,
     FlatBtn,
-    Topbar,
     Coupon,
     Step
   },
@@ -361,7 +357,7 @@ export default {
             `
           } else {
             return `
-              <span class="red">赠</span>送十万火急 300 元现金券 <span class="mute">(满400元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（365天）立<span class="red">减</span>1200 元
+              <span class="red">赠</span>送十万火急 300 元现金券 <span class="mute">(满400元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（365天）立<span class="red">减</span>1000 元
             `
           }
       }
@@ -429,9 +425,8 @@ export default {
       const coupon = this.selectedCoupon[0]
       let products = this.fullCheckedProducts
 
-      let productSum = products.reduce((s, p) => {s += p.discountPrice; return s}, 0)
-      let sum = productSum > coupon.amount ? coupon.amount : productSum
-console.log('1', sum)
+      let productSum = 0
+      let sum = 0
 
       for (let condition of coupon.usingConditions) {
         if (condition.type === usingCondition.PRODUCTS) {
@@ -440,7 +435,6 @@ console.log('1', sum)
       }
       productSum = products.reduce((s, p) => {s += p.discountPrice; return s}, 0)
       sum = productSum > coupon.amount ? coupon.amount : productSum
-console.log('2', sum)
 
       for (let condition of coupon.usingConditions) {
         if (condition.type === usingCondition.ORDER_SUM_ORIGINAL_PRICE) {
@@ -448,7 +442,14 @@ console.log('2', sum)
           sum = productSum > coupon.amount ? coupon.amount : productSum
         }
       }
-console.log('3', sum)
+
+      for (let condition of coupon.usingConditions) {
+        if (condition.type === usingCondition.ORDER_DISCOUNT_PRICE_RATIO) {
+          const discountRatio = condition.orderSumOriginalPriceRatio
+          productSum = products.reduce((s, p) => {s += p.discountPrice; return s}, 0)
+          sum = productSum * discountRatio / 100
+        }
+      }
 
       return sum
     },
@@ -538,10 +539,16 @@ console.log('3', sum)
     async init() {
       this.empty()
       //  目前只有这一个角色可以用券
-      if (this.isBxUser) {
-        await store.getConditions()
-        await store.getCoupons({ onlyValid: true, status: 0 })
-      }
+      //  FIX: 修复页面加载后没有优惠券信息 使用$watch去监听 bxUser 变化并触发coupon 更新
+      this.unBxUserWatch = this.$watch(
+        () => this.isBxUser,
+        async isBxUser => {
+          if (isBxUser) {
+            await store.getConditions()
+            await store.getCoupons({ onlyValid: true, status: 0 })
+            this.unBxUserWatch()
+          }
+      }, {immediate: true})
       await Promise.all([
         store.getProductDiscounts([3, 4]), // 充值／新官网
         store.getProducts([3,4])
@@ -727,11 +734,8 @@ console.log('3', sum)
       this.payInProgress = false
       this.couponVisible = false
     },
-    centToYuan
-  },
-  watch: {
     // 选中最合适的coupon
-    fullCheckedProducts(v) {
+    selectDefaultCoupon() {
       if (this.effectiveCoupons.length) {
         let theOne = this.effectiveCoupons[0]
         for(let coupon of this.effectiveCoupons) {
@@ -743,6 +747,15 @@ console.log('3', sum)
         }
         this.selectedCoupon = [theOne]
       }
+    },
+    centToYuan
+  },
+  watch: {
+    fullCheckedProducts(v) {
+      this.selectDefaultCoupon()
+    },
+    coupons() {
+      this.selectDefaultCoupon()
     },
     async couponVisible(v) {
       if (v) {
@@ -767,7 +780,7 @@ console.log('3', sum)
           } else if (charge.price < 1018800) {
             gwPrice = gw.price - 60000
           } else {
-            gwPrice = gw.price - 120000
+            gwPrice = gw.price - 100000
           }
           this.fullCheckedProducts = checked.map(product => {
             const {id, productType, price} = product
@@ -833,7 +846,7 @@ console.log('3', sum)
       }
     })
 
-    if (selectGw === 'true' || selectGw === '1') {
+    if (selectGw === 'true' || +selectGw === 1) {
       this.checkedProducts.push(this.allProducts[this.allProducts.length - 1])
     } else {
       this.checkedProducts.push(this.allProducts[0])
@@ -899,7 +912,6 @@ console.log('3', sum)
 
   & > main {
     width: 100%;
-    padding: 10px 10px 30px 10px;
     background: var(--qwt-c-gray);
   }
 }

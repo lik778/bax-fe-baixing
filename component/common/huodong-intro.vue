@@ -1,9 +1,10 @@
 <template>
   <div class="huodong-intro" v-show="show">
-    <div class="center">
-      <img src="http://file.baixing.net/201810/6e4ba7a5c63169277e19f521d5a898e3.png" alt="" @click="$emit('close')">
-      <a :href="href">去看看</a>
-    </div>
+    <a :href="href">
+      <div class="center">
+        <img src="http://file.baixing.net/201811/d4dfeb04a7c1afbabe5afc5269da0f6f.png" alt="" @click="$emit('close')">
+      </div>
+    </a>
   </div>
 </template>
 
@@ -22,6 +23,12 @@ export default {
   },
   mounted() {
     this.href = href + window.location.search
+    const self = this
+    document.querySelector('.huodong-intro').addEventListener('click', function(e) {
+      if (e.target.tagName !== 'IMG') {
+        self.$emit('close')
+      }
+    })
   },
 }
 </script>

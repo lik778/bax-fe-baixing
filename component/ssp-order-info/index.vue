@@ -135,7 +135,7 @@ export default {
   methods: {
     async initOrderInfo() {
       const orderId = this.$route.params.id
-      const [info] = await Promise.all([
+      await Promise.all([
         store.getOrderInfo(orderId),
         store.getOrderLogs(orderId)
       ])
@@ -144,7 +144,7 @@ export default {
         return
       }
 
-      if (info && info.order && info.order.status === 0) {
+      if (this.orderInfo && this.orderInfo.order && this.orderInfo.order.status === 0) {
         const url = await getOrderPayUrl(orderId)
         this.payUrl = url
       }

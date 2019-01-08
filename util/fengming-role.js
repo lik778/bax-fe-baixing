@@ -10,7 +10,8 @@ import {
 // 测试帐号: 53470
 
 export function allowSeeOldGw(roles, uid) {
-  const specialUserIds = [318, 47709, 53470] // 这几个挺牛逼, 能买 老官网
+  // 318, 47709, 53470
+  const specialUserIds = [] // 这几个挺牛逼, 能买 老官网
   return specialUserIds.includes(uid)
 }
 

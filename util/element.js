@@ -16,7 +16,8 @@ export function renderColumnHeaderWithTip(tipText) {
     const tip = h('el-tooltip', {
       props: {
         effect: 'dark',
-        content: tipText
+        content: tipText,
+        placement: 'top'
       }
     }, [
       h('i', {

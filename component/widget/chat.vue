@@ -1,6 +1,6 @@
 <template>
   <div class="widget">
-    <div class="chat-button" @click="visible = !visible">
+    <div class="chat-button" @click="initChat">
       <i class="el-icon-service"></i>
     </div>
     <div class="chat-container" v-show="visible">
@@ -81,6 +81,49 @@ export default {
 
         this.messages.push({message, type: 'promote'})
       }, 500)
+    },
+    async initChat() {
+      this.visible = true
+      // 如果qa为初始值{}时，加载数据
+      if (Object.keys(this.qa).length) return
+
+      const text = await fetch('/qa').then(r => r.text())
+      const html = document.createElement('html')
+      html.innerHTML = text
+      const ids = [
+        '#doc-sec-1',
+        '#doc-sec-2',
+        '#doc-sec-3',
+        '#doc-sec-4-1',
+        '#doc-sec-4-2',
+        '#doc-sec-4-3',
+        '#doc-sec-4-4',
+        '#doc-sec-4-5',
+        '#doc-sec-4-6',
+        '#doc-sec-4-7',
+        '#doc-sec-5',
+        '#doc-sec-6-1',
+        '#doc-sec-6-2',
+        '#doc-sec-6-3'
+      ]
+      this.qa = getQa(html, ids)
+
+      let message = selectedQuestions.map(wrapQuestion).join('')
+      message = `<p>您可能关心以下问题</p>` + message
+      this.messages.push({message, type: 'promote'})
+
+      this.$refs.content.addEventListener('click', evt => {
+        if (evt.target.parentElement.classList.contains('promote') ||
+        evt.target.parentElement.parentElement.classList.contains('promote')) {
+          // click P or EM
+          const q = evt.target.nodeName === 'P' ? evt.target.innerText : evt.target.parentElement.innerText
+          const a = this.qa[q]
+          this.messages.push({message: q, type: 'user'})
+          setTimeout(() => {
+            this.messages.push({message: a, type: 'answer'})
+          }, 500);
+        }
+      })
     }
   },
   watch: {
@@ -90,46 +133,7 @@ export default {
         content.scrollTop = content.scrollHeight
       })
     }
-  },
-  async mounted() {
-    const text = await fetch('/qa').then(r => r.text())
-    const html = document.createElement('html')
-    html.innerHTML = text
-    const ids = [
-      '#doc-sec-1',
-      '#doc-sec-2',
-      '#doc-sec-3',
-      '#doc-sec-4-1',
-      '#doc-sec-4-2',
-      '#doc-sec-4-3',
-      '#doc-sec-4-4',
-      '#doc-sec-4-5',
-      '#doc-sec-4-6',
-      '#doc-sec-4-7',
-      '#doc-sec-5',
-      '#doc-sec-6-1',
-      '#doc-sec-6-2',
-      '#doc-sec-6-3'
-    ]
-    this.qa = getQa(html, ids)
-
-    let message = selectedQuestions.map(wrapQuestion).join('')
-    message = `<p>您可能关心以下问题</p>` + message
-    this.messages.push({message, type: 'promote'})
-
-    this.$refs.content.addEventListener('click', evt => {
-      if (evt.target.parentElement.classList.contains('promote') ||
-      evt.target.parentElement.parentElement.classList.contains('promote')) {
-        // click P or EM
-        const q = evt.target.nodeName === 'P' ? evt.target.innerText : evt.target.parentElement.innerText
-        const a = this.qa[q]
-        this.messages.push({message: q, type: 'user'})
-        setTimeout(() => {
-          this.messages.push({message: a, type: 'answer'})
-        }, 500);
-      }
-    })
-  },
+  }
 }
 function getQa(dom, ids) {
   let qa = {}

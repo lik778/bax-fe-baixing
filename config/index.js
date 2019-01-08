@@ -15,7 +15,7 @@ export const baxApiHost = isPro
 
 export const kaApiHost = isPro
   ? '//bax.baixing.com.cn/ka/api/admin'
-  : '//bax.baixing.cn:8008/ka/api/admin'
+  : '//bax.baixing.cn/ka/api/admin'
 
 export const dashboardHost = isPro
   ? '//bax.baixing.com.cn/dashboard-api'

@@ -1,44 +1,38 @@
+import { observable, toJS, action, computed } from 'mobx'
+import { getHomePageFengmingData } from 'api/fengming'
+import { baxUserLogin, kaSimpleReport } from 'api/ka'
+import { getCampaignRadar } from 'api/fengming-campaign'
 
-import { observable, action, toJS } from 'mobx'
+class Store {
+  @observable fengmingData = null
+  @observable kaSiteData = null
+  @observable campaignRadar = null
 
-import * as fapi from 'api/fengming'
-import * as mapi from 'api/meta'
+  @computed
+  get fengmingBalance() {
+    const data = this.fengmingData
+    return {
+      price: data ? (data.balance / 100).toFixed(2) : null,
+      day: data ? data.balance / data.budget | 0 : null
+    }
+  }
 
-const store = observable({
-  _mvpSummary: {
-    consume: 0,
-    budget: 0,
-    clicks: 0,
-    shows: 0
-  },
-  _summary: {
-    campaignCount: 0,
-    balance: 0,
+  @computed
+  get notices() {
+    return {
+      fengming: this.fengmingData && toJS(this.fengmingData.notices),
+      kaSite: this.kaSiteData && toJS(this.kaSiteData.messages)
+    }
+  }
 
-    consume: 0,
-    budget: 0,
-    clicks: 0,
-    shows: 0
-  },
-  _coupons: [],
+  @action
+  async initPageStore() {
+    const [fengmingData, campaignRadar] = await Promise.all([getHomePageFengmingData(), getCampaignRadar(), baxUserLogin()])
+    const kaSiteData = await kaSimpleReport()
+    this.fengmingData = fengmingData
+    this.kaSiteData = kaSiteData
+    this.campaignRadar = campaignRadar
+  }
+}
 
-  get mvpSummary() {
-    return toJS(this._mvpSummary)
-  },
-  get summary() {
-    return toJS(this._summary)
-  },
-  get coupons() {
-    return toJS(this._coupons)
-  },
-
-  getHomepageSummary: action(async function() {
-    this._summary = await fapi.getHomepageSummary()
-  }),
-
-  getCoupons: action(async function(opt) {
-    this._coupons = await mapi.getCoupons(opt)
-  })
-})
-
-export default store
+export default new Store()

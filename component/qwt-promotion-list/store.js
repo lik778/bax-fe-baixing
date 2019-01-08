@@ -1,66 +1,54 @@
+import {
+  getCampaignLanding,
+  getHomepageSummary,
+  getCurrentCampaigns
+} from 'api/fengming-campaign'
+import { observable, action } from 'mobx'
 
-import { observable, action, toJS } from 'mobx'
-
-import * as fapi from 'api/fengming'
-
-const defaultQuery = {
-  statuses: [],
-  source: [],
-  areas: [],
-  id: '',
-
-  offset: 0,
-  limit: 20,
-  total: 0
+const formatlandingPageList = res => {
+  return Object.entries(res).reduce((list, [k, v]) => {
+    return list.concat({
+      ...v,
+      id: k
+    })
+  }, [])
 }
 
-const store = observable({
-  showMoreFilters: false,
+class Store {
+  @observable campaignMap = {}
+  @observable landingPageLoading = false
+  @observable landingPageList = null
+  @observable summary = null
 
-  _campaigns: [],
-  _query: {
-    ...defaultQuery
-  },
-  usableBalance: 0,
-  _summary: {},
-
-  get campaigns() {
-    return toJS(this._campaigns)
-  },
-
-  get query() {
-    return toJS(this._query)
-  },
-
-  get summary() {
-    return toJS(this._summary)
-  },
-
-  switchShowMoreFilters: action(function() {
-    this.showMoreFilters = !this.showMoreFilters
-  }),
-
-  getCurrentCampaigns: action(async function(opts) {
-    const {campaigns = [], query} = await fapi.getCurrentCampaigns(opts)
-    this._query = {
-      ...defaultQuery,
-      ...query
+  @action
+  async fetchPromotionList(id, campaignIds, isForceUpdate) {
+    // 判断是否已经存在
+    const campaignMap = this.campaignMap
+    const campaignMapKeys = Object.keys(campaignMap)
+    if (isForceUpdate || !campaignMapKeys.includes(id)) {
+      const campaigns = await getCurrentCampaigns({...this.queryParams, campaignIds})
+      this.campaignMap = Object.freeze({
+        ...campaignMap,
+        [id]: campaigns
+      })
     }
-    this._campaigns = campaigns
-
-    return {
-      campaigns: this.campaigns,
-      query: this.query
+  }
+  @action
+  async fetchlandingPageList(queryParams) {
+    this.landingPageLoading = true
+    try {
+      const result = await getCampaignLanding(queryParams)
+      this.landingPageList = formatlandingPageList(result)
+    } catch (err) {
+      console.error(err)
+    } finally {
+      this.landingPageLoading = false
     }
-  }),
+  }
+  @action
+  async fetchSummary() {
+    this.summary = await getHomepageSummary()
+  }
+}
 
-  getUsableBalance: action(async function() {
-    this.usableBalance = await fapi.getUsableBalance()
-  }),
-  getSummary: action(async function() {
-    this._summary = await fapi.getHomepageSummary()
-  })
-
-})
-
-export default store
+export default new Store()

@@ -5,17 +5,6 @@ import QwtCreatePromotion from 'com/qwt-create-promotion'
 import QwtPromotionList from 'com/qwt-promotion-list'
 import QwtDashboard from 'com/qwt-dashboard'
 
-// 标王
-import BwQueryPrice from 'com/bw-query-price'
-import BwEditPlan from 'com/bw-edit-plan'
-import BwPlanList from 'com/bw-plan-list'
-
-// mvp
-import MvpUpdateCampaign from 'com/mvp-update-campaign'
-import MvpCreateCampaign from 'com/mvp-create-campaign'
-import MvpCampaignList from 'com/mvp-campaign-list'
-import MvpDashboard from 'com/mvp-dashboard'
-
 // ssp
 import MaterialList from 'com/ssp-material-list'
 import MaterialInfo from 'com/ssp-material-info'
@@ -28,14 +17,16 @@ import AdList from 'com/ssp-ad-list'
 
 // 精品官网
 import GwCharge from 'com/gw-charge'
+import GwHomepage from 'com/gw-homepage'
 
 // global
-import OperationLog from 'com/operation-log'
+// import OperationLog from 'com/operation-log'
 import Redirect from 'com/redirect'
 import Homepage from 'com/homepage'
 import Account from 'com/account'
 import Coupon from 'com/coupon'
 import Charge from 'com/charge'
+import Notice from 'com/notice'
 
 import Bax from 'com/bax'
 
@@ -57,6 +48,9 @@ import 'echarts/lib/component/legend'
 import 'echarts/lib/component/tooltip'
 import 'echarts/lib/component/dataZoom'
 
+// element 样式文件
+import '../theme/index.css'
+
 Vue.use(Movue, { reaction })
 Vue.use(VueClipboard)
 Vue.use(VueRouter)
@@ -66,41 +60,13 @@ Vue.component('chart', ECharts)
 Vue.use(Vue2Filters)
 
 const gwRoutes = [{
+  component: GwHomepage,
+  path: '/main/gw',
+  name: 'gw-homepage'
+}, {
   component: GwCharge,
   path: '/main/gw/charge',
   name: 'gw-charge'
-}]
-
-const bwRoutes = [{
-  component: BwQueryPrice,
-  path: '/main/bw/query-price',
-  name: 'bw-query-price'
-}, {
-  component: BwEditPlan,
-  path: '/main/bw/edit-plan',
-  name: 'bw-edit-plan'
-}, {
-  component: BwPlanList,
-  path: '/main/bw/plan-list',
-  name: 'bw-plan-list'
-}]
-
-const mvpRoutes = [{
-  component: MvpCreateCampaign,
-  path: '/main/mvp/campaign/create',
-  name: 'mvp-create-campaign'
-}, {
-  component: MvpUpdateCampaign,
-  path: '/main/mvp/campaigns/:id/update',
-  name: 'mvp-update-campaign'
-}, {
-  component: MvpCampaignList,
-  path: '/main/mvp/campaigns',
-  name: 'mvp-campaign-list'
-}, {
-  component: MvpDashboard,
-  path: '/main/mvp/dashboard',
-  name: 'mvp-dashboard'
 }]
 
 const qwtRoutes = [{
@@ -159,16 +125,17 @@ const sspRoutes = [{
   name: 'ad-calendar'
 }]
 
-export const router = new VueRouter({
+// {
+//   component: OperationLog,
+//   path: '/main/operation-log',
+//   name: 'operation-log'
+// },
+const router = new VueRouter({
   mode: 'history',
   routes: [{
     component: Homepage,
     path: '/main',
     name: 'root'
-  }, {
-    component: OperationLog,
-    path: '/main/operation-log',
-    name: 'operation-log'
   }, {
     component: Redirect,
     path: '/main/redirect-to',
@@ -181,10 +148,21 @@ export const router = new VueRouter({
     component: Coupon,
     path: '/main/coupon',
     name: 'coupon'
-  }, ...qwtRoutes, ...sspRoutes, ...gwRoutes, ...bwRoutes, {
+  }, {
+    component: Notice,
+    path: '/main/notice',
+    name: 'notice'
+  }, {
     component: Homepage,
     path: '*'
-  }]
+  },
+  ...qwtRoutes,
+  ...sspRoutes,
+  ...gwRoutes]
+})
+router.beforeEach((to, from, next) => {
+  window.scrollTo(0, 0)
+  next()
 })
 
 const app = new Vue({

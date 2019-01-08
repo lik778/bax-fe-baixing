@@ -99,7 +99,7 @@
             </el-button>
           </div>
           <div v-if="allowVerifyAdItem(s.row.status)">
-            <el-button type="success" size="mini"
+            <el-button type="danger" size="mini"
               @click="passAdItem(s.row.id)">
               通过
             </el-button>

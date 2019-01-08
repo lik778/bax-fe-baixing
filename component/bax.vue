@@ -1,19 +1,21 @@
 
 <template>
-  <content v-loading.fullscreen="fullscreenLoading">
+  <div class="container" v-loading.fullscreen="fullscreenLoading">
+    <Header :userInfo="currentUser"/>
+    <div class="main-content">
+      <router-view class="view"
+        :key="$route.fullPath"
+        :userInfo="currentUser"
+        :allCategories="allCategories"
+        :allAreas="allAreas"
+        :allRoles="allRoles">
+      </router-view>
+    </div>
     <sidebar :user-info="currentUser"></sidebar>
-    <div class="notice" v-if="showNotice">
+    <!-- <div class="notice" v-if="showNotice">
       <marquee direction="left" scrollamount="6" height="20px" class="notice" scrolldelay="60">{{notice}}</marquee>
       <span class="close el-icon-close" @click="showNotice = false" title="关闭通知"></span>
-    </div>
-    <router-view class="view"
-      :key="$route.fullPath"
-      :userInfo="currentUser"
-      :salesInfo="salesInfo"
-      :allCategories="allCategories"
-      :allAreas="allAreas"
-      :allRoles="allRoles">
-    </router-view>
+    </div> -->
     <new-user-intro
       :mode="newUserIntroMode"
       :visible="showNewUserIntro"
@@ -24,25 +26,24 @@
       :visible="addUserLeadVisible"
       @close="toggleAddUserLeadVisible"
     />
-    <huo-dong-intro :show="huoDongIntroVisible" @close="huoDongIntroVisible = false" />
-    <huo-dong-btn />
+    <!-- <huo-dong-intro :show="huoDongIntroVisible" @close="huoDongIntroVisible = false" /> -->
+    <!-- <huo-dong-btn /> -->
     <back-to-top />
     <wechat-scan />
     <chat />
-    <bw-shopping-cart ref="bwShoppingCart" v-show="isBwRoute" :userInfo="currentUser" v-if="currentUser.id" :salesInfo="salesInfo" />
-  </content>
+  </div>
 </template>
 
 <script>
+// import HuoDongIntro from './common/huodong-intro'
+// import HuoDongBtn from './common/huodong-btn'
 import NewUserIntro from './common/new-user-intro'
 import AddUserLead from './common/add-user-lead'
-import HuoDongIntro from './common/huodong-intro'
-import HuoDongBtn from './common/huodong-btn'
 import WechatScan from './widget/wechat-scan'
 import BackToTop from './widget/back-to-top'
+import Sidebar from './layout/sidebar'
+import Header from './layout/header'
 import Chat from './widget/chat'
-import Sidebar from './sidebar'
-import BwShoppingCart from './common/bw-shopping-cart'
 
 import gStore from './store'
 
@@ -58,14 +59,14 @@ import {router} from '../template/bax'
 export default {
   name: 'bax',
   components: {
-    BwShoppingCart,
-    HuoDongIntro,
+    // HuoDongIntro,
+    // HuoDongBtn,
     NewUserIntro,
     AddUserLead,
-    HuoDongBtn,
     WechatScan,
     BackToTop,
     Sidebar,
+    Header,
     Chat
   },
   fromMobx: {
@@ -179,12 +180,7 @@ export default {
 </script>
 
 <style scoped lang="postcss">
-content {
-  display: block;
-  width: 100%;
-  height: 100%;
-
-  & > .notice {
+  .notice {
     display: flex;
     position: fixed;
     left: 190px;
@@ -202,23 +198,24 @@ content {
       cursor: pointer;
     }
   }
-
-  & > .view {
-    margin-left: 180px;
-    max-width: calc(100% - 180px);
-    width: calc(100% - 180px);
+  .main-content {
+    width: 100%;
+    padding-top: 50px;
+    padding-left: 180px;
+    background-color: #eeeff0;
   }
-}
+  .view {
+    padding: 12px 12px 32px;
+  }
 </style>
 
-<style>
+<style lang="postcss">
 @import 'cssbase/reset';
 @import 'cssbase/mixin';
 
-body > content {
-  width: 100%;
+body > .container {
+  display: block;
   min-width: 1320px;
-  max-width: 1500px;
 }
 
 .el-tooltip__popper {
@@ -231,11 +228,8 @@ body > content {
   }
 }
 
-.el-loading-mask.is-fullscreen {
-  background-color: unset;
-  z-index: unset;
-  top: 240px;
-  bottom: unset;
-  height: 100px;
+.el-loading-mask {
+  background-color: transparent !important;
+  height: 173px;
 }
 </style>

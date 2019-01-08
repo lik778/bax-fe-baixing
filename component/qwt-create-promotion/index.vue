@@ -1,10 +1,5 @@
 <template>
   <div class="qwt-create-promotion">
-
-    <topbar :user-info="userInfo">
-      <label slot="title">全网通 - 新建推广</label>
-    </topbar>
-
     <main>
       <section class="promotion-target">
         <header>
@@ -27,7 +22,9 @@
               </el-radio-group>
             </div>
             <div>
-              <user-ad-selector :type="adSelectorType"
+              <user-ad-selector
+                ref="userAdSelector"
+                :type="adSelectorType"
                 v-if="newPromotion.landingType === 0"
                 :all-areas="allAreas" :limit-mvp="false"
                 :selected-id="newPromotion.landingPageId"
@@ -45,7 +42,7 @@
         <div>
           <label>投放城市：</label>
           <div>
-            <el-tag type="success" closable class="kw-tag"
+            <el-tag type="danger" closable class="kw-tag"
               v-for="c in newPromotion.areas" :key="c"
               @close="removeArea(c)">
               {{ formatterArea(c) }}
@@ -175,7 +172,6 @@ import ChargeDialog from 'com/common/charge-dialog'
 import CpcPriceTip from 'com/widget/cpc-price-tip'
 import ContractAck from 'com/widget/contract-ack'
 import wxBindModal from 'com/common/wx-bind-modal'
-import Topbar from 'com/topbar'
 
 import moment from 'moment'
 import track from 'util/track'
@@ -216,6 +212,8 @@ import { keywordPriceTip } from 'constant/tip'
 
 import store from './store'
 
+const MVP_AD = 0
+
 const MIN_DAILY_BUDGET = 100 * 100
 
 const promotionTemplate = {
@@ -245,8 +243,7 @@ export default {
     AreaSelector,
     ChargeDialog,
     ContractAck,
-    CpcPriceTip,
-    Topbar
+    CpcPriceTip
   },
   fromMobx: {
     searchRecommends: () => store.searchRecommends,
@@ -323,7 +320,12 @@ export default {
     },
 
     recommendKwPrice() {
-      console.log(this.newPromotion.keywords.map(kw => kw.price))
+      // 复制推荐词价格取平均值
+      if (this.$route.query.cloneId) {
+        const keywords = this.newPromotion.keywords
+        const sum = this.newPromotion.keywords.reduce((total, kw) => total + kw.price, 0)
+        return Math.min(Math.max(200, toFloat(sum / keywords.length)), 99900)
+      }
       const max = Math.max.apply(null, this.newPromotion.keywords.map(kw => kw.price))
       return Math.min(Math.max(200, toFloat(max, 0)), 99900)
     }
@@ -457,9 +459,11 @@ export default {
       const { currentBalance, allAreas } = this
 
       const p = clone(this.newPromotion)
+      
+      if (!p.sources.length) return Message.error('请选择投放渠道')
 
       if (p.dailyBudget < MIN_DAILY_BUDGET) {
-        return Message.error(`推广日预算需大于 ${f2y(MIN_WORD_PRICE)} 元`)
+        return Message.error(`推广日预算需大于 ${f2y(MIN_DAILY_BUDGET)} 元`)
       }
       if (p.dailyBudget > 10000000 * 100) {
         return Message.error('推广日预算太高啦！您咋这么土豪呢~')
@@ -481,11 +485,12 @@ export default {
         return Message.error('请填写关键字')
       }
 
-      for (const w of p.keywords) {
-        if (w.price < MIN_WORD_PRICE || w.price > MAX_WORD_PRICE) {
-          return Message.error(keywordPriceTip)
-        }
-      }
+      // 这个应该是个雷！
+      // for (const w of p.keywords) {
+      //   if (w.price < MIN_WORD_PRICE || w.price > MAX_WORD_PRICE) {
+      //     return Message.error(keywordPriceTip)
+      //   }
+      // }
 
       if (!p.areas.length) {
         return Message.error('请选择投放区域')
@@ -594,6 +599,35 @@ export default {
           resolve('关闭')
         }
       })
+    },
+
+    async cloneCampaignById(campaignId) {
+      const originPromotion = await store.getCampaignInfo(campaignId)
+      const clonedPromotion = {}
+      let ad = null
+      // 判断源计划落地页类型是主站广告或者官网
+      if (originPromotion.landingType === MVP_AD) {
+        // 官网
+        const result = await queryAds({
+          limitMvp: false,
+          adIds: [originPromotion.landingPageId],
+          limit: 1
+        })
+        ad = result.ads && result.ads[0]
+        if (ad) {
+          clonedPromotion.landingPage = ad.url
+          await this.$refs.userAdSelector.reset('selected', ad.adId)
+        }
+      }
+      Object.keys(promotionTemplate).map(key => {
+        if (ad && key === 'landingPage') return
+        clonedPromotion[key] = originPromotion[key]
+      })
+      clonedPromotion.landingPageId = originPromotion.landingPageId.toString()
+      clonedPromotion.creativeTitle = originPromotion.creative.title
+      clonedPromotion.creativeContent = originPromotion.creative.content
+      clonedPromotion.sources = []
+      this.newPromotion = clonedPromotion
     }
   },
 
@@ -603,20 +637,6 @@ export default {
       store.getCampaignsCount(),
       store.getUsableBalance()
     ])
-
-    // 主站个人中心跳转 case
-    const { adId } = this.$route.query
-    if (adId) {
-      const result = await queryAds({
-        limitMvp: false,
-        adIds: [adId],
-        limit: 1
-      })
-      const ad = result.ads && result.ads[0]
-      if (ad) {
-        await this.onSelectAd(ad)
-      }
-    }
 
     setTimeout(() => {
       // pv
@@ -646,6 +666,26 @@ export default {
         clickSent = true
       }
     })
+
+    // 从投放列表复制按钮点进来的，除了渠道不选择外其他都带出来
+    const cloneId = this.$route.query.cloneId
+    if (cloneId) {
+      await this.cloneCampaignById(cloneId)
+      return
+    }
+    // 主站个人中心跳转 case
+    const { adId } = this.$route.query
+    if (adId) {
+      const result = await queryAds({
+        limitMvp: false,
+        adIds: [adId],
+        limit: 1
+      })
+      const ad = result.ads && result.ads[0]
+      if (ad) {
+        await this.onSelectAd(ad)
+      }
+    }
   },
 
   beforeDestroy() {
@@ -680,13 +720,15 @@ strong.red {
   width: 100%;
 
   & > main {
-    & > section:not(:last-child) {
-      border-bottom: 1px solid #c0ccda;
-    }
-
     & > section {
-      margin-bottom: 30px;
-      padding-bottom: 10px;
+      border-radius: 4px;
+      margin-bottom: 10px;
+      background-color: #fff;
+      padding: 20px;
+      box-shadow: 0 2px 9px 0 rgba(83,95,127,0.10);
+      &:last-child {
+        padding-bottom: 40px;
+      }
 
       & > header {
         color: #6a778c;

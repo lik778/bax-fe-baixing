@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <div class="layout-container">
     <section-header>我的账户</section-header>
     <el-row type="flex" justify="space-around" align="center">
-      <el-col :span="4"></el-col>
+      <el-col :span="1"></el-col>
       <el-col :span="4" class="column">
         <h3>推广资金余额</h3>
         <p><strong>{{summary.balance / 100}}</strong>元</p>
@@ -21,7 +21,7 @@
       </el-col>
       <el-col :span="16" class="column">
         <el-row class="multi">
-          <el-col :span="12">
+          <el-col :span="18">
             <div class="btn">
               <span>广告投放：</span>
               <router-link :to="{name: 'qwt-promotion-list'}"
@@ -29,13 +29,13 @@
                 <el-button type="primary">推广管理</el-button>
               </router-link>
             </div>
-            <div class="btn">
+            <!-- <div class="btn">
               <span>智能投放：</span>
               <router-link :to="{name: 'mvp-campaign-list'}"
                 @click.native="onClickMvpCampaignList">
                 <el-button type="primary">推广管理</el-button>
               </router-link>
-            </div>
+            </div> -->
           </el-col>
         </el-row>
       </el-col>
@@ -64,11 +64,11 @@
           action: 'account: click create campaign'
         })
       },
-      onClickMvpCampaignList() {
-        track({
-          action: 'account: click query mvp campaigns'
-        })
-      },
+      // onClickMvpCampaignList() {
+      //   track({
+      //     action: 'account: click query mvp campaigns'
+      //   })
+      // },
       onClickCampaignList() {
         track({
           action: 'account: click query campaigns'
@@ -99,6 +99,7 @@
     display: flex;
     flex-flow: column;
     align-items: center;
+    justify-content: center;
   }
   p {
     margin: 10px 0;

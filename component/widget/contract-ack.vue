@@ -3,9 +3,9 @@
     <el-checkbox :value="true" />
     <label>我已阅读并同意遵守</label>
     <a v-if="type === 'contract'"
-      v-bind:href="assetHost + 'baixing-qwt-promotion-contract.docx'"
-      download="百姓网站外推广用户协议.docx">
-      《百姓网站外推广用户协议》
+      v-bind:href="assetHost + 'baixing-qwt-promotion-contract.pdf'"
+      download="百姓网全网通用户协议.pdf">
+      《百姓网全网通用户协议》
     </a>
     <a v-if="type === 'content-rule'"
       v-bind:href="assetHost + 'baixing-online-promotion-content-rule.docx'"
