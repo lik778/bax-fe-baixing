@@ -77,7 +77,7 @@
       <campaign-selector
         :visible="campaignDialogVisible"
         :channel="query.channel"
-        :userId="userId"
+        :userId="salesInfo.userId"
         :campaign-ids="query.checkedCampaigns.map(c => c.id)"
         @ok="campaignDialogVisible = false"
         @select-campaign="selectCampaign"
@@ -141,7 +141,8 @@ export default {
     userInfo: {
       type: Object,
       required: true
-    }
+    },
+    salesInfo: Object
   },
   data() {
     return {
@@ -176,9 +177,6 @@ export default {
       }
 
       return allDevices
-    },
-    userId() {
-      return this.$route.query.userId || this.userInfo.id
     }
   },
   methods: {

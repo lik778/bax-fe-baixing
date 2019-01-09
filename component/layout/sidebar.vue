@@ -292,7 +292,7 @@ export default {
   & .el-icon-question {
     margin-top: -2px;
     margin-left: -3px;
-    color: rgb(255, 99, 80); 
+    color: rgb(255, 99, 80);
     font-size: 16px;
   }
 }

@@ -6,6 +6,7 @@ import Fetch from 'fetch.io'
 
 import {
   fengmingApiHost,
+  biaowangApiHost,
   dashboardHost,
   mvpApiHost,
   baxApiHost,
@@ -145,12 +146,44 @@ export const dashboardApi = new Fetch({
   }
 })
 
+export const biaowang = new Fetch({
+  prefix: biaowangApiHost,
+  beforeRequest() {
+    es.emit('http fetch start')
+  },
+  afterResponse() {
+    es.emit('http fetch end')
+  },
+  afterJSON(body) {
+    const {errors, code, message} = body
+    if (errors) {
+      Message.error('出错啦')
+      throw new Error('出错啦')
+    }
+    console.log(body)
+
+    if (code === 1002) {
+      Message.error('请重新登录 >_<')
+      return redirect('signin', `return=${encodeURIComponent(location.pathname + location.search)}`)
+    }
+
+    if (message !== 'Success') {
+      Message.error(message)
+      throw new Error(message)
+    }
+  }
+})
+
 export function trim(obj) {
   const result = {}
   // only for - query filter
   for (const k of Object.keys(obj)) {
     const v = obj[k]
-    if (typeof v === 'number' ||
+    if (Array.isArray(v)) {
+      if (v.length !== 0) {
+        result[k] = v
+      }
+    } else if (typeof v === 'number' ||
       typeof v === 'boolean' ||
       !!v) {
       result[k] = v

@@ -22,8 +22,8 @@
               <el-checkbox-group v-model="queryParams.statuses">
                 <el-checkbox
                   class="checkbox"
-                  v-for="c in CAMPAIGN_STATUS_OPTS"               
-                  :key="c.value" 
+                  v-for="c in CAMPAIGN_STATUS_OPTS"
+                  :key="c.value"
                   :label="c.value"
                 >
                   {{c.label}}
@@ -37,8 +37,8 @@
               <el-checkbox-group v-model="queryParams.source">
                 <el-checkbox
                   class="checkbox"
-                  v-for="c in SOURCES_OPTS"               
-                  :key="c.value" 
+                  v-for="c in SOURCES_OPTS"
+                  :key="c.value"
                   :label="c.value"
                 >
                   {{c.label}}
@@ -67,8 +67,8 @@
             <el-checkbox-group v-model="queryParams.statuses">
               <el-checkbox
                 class="checkbox"
-                v-for="c in CAMPAIGN_OPTIMIZATION_OPTS"               
-                :key="c.value" 
+                v-for="c in CAMPAIGN_OPTIMIZATION_OPTS"
+                :key="c.value"
                 :label="c.value"
               >
                 {{c.label}}
@@ -167,7 +167,7 @@ const formatlandingPageList = res => {
 export default {
   name: 'qwt-promotion-list',
   created() {
-    const statuses = this.$route.query.statuses
+    const {statuses} = this.$route.query
     if (!!statuses) {
       this.isActionGroupExpand = true
       // 从首页未审核处点击进来的
@@ -176,6 +176,9 @@ export default {
       } else {
         this.queryParams.statuses.push(statuses)
       }
+    }
+    if(this.salesInfo.userId)  {
+      this.queryParams.userId = this.salesInfo.userId
     }
     this.fetchSummary()
     this.fetchlandingPageList()
@@ -193,7 +196,8 @@ export default {
         statuses: CAMPAIGN_STATUS_OPTS.map(s => s.value).filter(v => v !== '-1'),
         source: [],
         offset: 0,
-        limit: ONE_PAGE_NUM
+        limit: ONE_PAGE_NUM,
+        userId: ''
       },
 
       landingPageLoading: false,
@@ -207,7 +211,7 @@ export default {
       isActionGroupExpand: false
     }
   },
-  props: ['allAreas'],
+  props: ['allAreas', 'salesInfo'],
   components: {AreaSelector, List, BaxInput},
   methods: {
     f2y,
@@ -216,7 +220,7 @@ export default {
       this.fetchlandingPageList()
     },
     handleSelectArea(areas) {
-      
+
       this.queryParams.areas = areas
       this.areaDialogVisible = false
     },

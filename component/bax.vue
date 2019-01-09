@@ -8,7 +8,8 @@
         :userInfo="currentUser"
         :allCategories="allCategories"
         :allAreas="allAreas"
-        :allRoles="allRoles">
+        :allRoles="allRoles"
+        :salesInfo="salesInfo">
       </router-view>
     </div>
     <sidebar :user-info="currentUser"></sidebar>
@@ -54,6 +55,8 @@ import {
   normalizeRoles
 } from 'util/role'
 
+import {router} from '../template/bax'
+
 export default {
   name: 'bax',
   components: {
@@ -82,7 +85,12 @@ export default {
       pending: 0,
       notice: '近期因360家电维修行业被整治，目前360渠道关于家电维修的订单会全部下线，请知晓',
       showNotice: true,
-      huoDongIntroVisible: !document.referrer.includes('/a/quanwangtong')
+      huoDongIntroVisible: !document.referrer.includes('/a/quanwangtong'),
+      isBwRoute: false,
+      salesInfo: {
+        salesId: '',
+        userId: ''
+      }
     }
   },
   computed: {
@@ -113,6 +121,16 @@ export default {
       this.pending = this.pending - 1
     })
   },
+  created() {
+    // 记录销售的客户id等信息
+    // 米奇跳转userId需改成user_id
+    const {user_id, userId, sales_id: salesId} = this.$route.query
+    const uid = userId || user_id
+    if (uid && salesId) {
+      this.salesInfo.userId = +uid
+      this.salesInfo.salesId = +salesId
+    }
+  },
   async mounted() {
     await Promise.all([
       gStore.getCurrentUser(),
@@ -120,6 +138,13 @@ export default {
       gStore.getAreas(),
       gStore.getRoles()
     ])
+
+    // 购物车限制在标王页面
+    this.isBwRoute = this.$route.path.startsWith('/main/bw')
+    router.beforeEach((to, from, next) => {
+      this.isBwRoute = to.path.startsWith('/main/bw')
+      next()
+    })
 
     setTimeout(() => {
       const { currentUser } = this
