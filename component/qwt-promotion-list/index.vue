@@ -193,7 +193,7 @@ export default {
       queryParams: {
         campaignId: '',
         areas: [],
-        statuses: CAMPAIGN_STATUS_OPTS.map(s => s.value).filter(v => v !== '-1'),
+        statuses: CAMPAIGN_STATUS_OPTS.map(s => s.value),
         source: [],
         offset: 0,
         limit: ONE_PAGE_NUM,
@@ -208,7 +208,7 @@ export default {
       totalPage: 0,
 
       areaDialogVisible: false,
-      isActionGroupExpand: false
+      isActionGroupExpand: true
     }
   },
   props: ['allAreas', 'salesInfo'],
