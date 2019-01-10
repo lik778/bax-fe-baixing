@@ -420,7 +420,7 @@ export default {
         return '等待审核'
       }
 
-      return keywordStatus[String(status || 5)] || '未知'
+      return keywordStatus[String(status)] || '未知'
     },
     fmtWord(w) {
       return {
