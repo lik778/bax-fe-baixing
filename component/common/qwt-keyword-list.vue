@@ -39,7 +39,7 @@
               {{ fmtStatus(s.row) }}
             </label>
             <strong v-if="fmtStatus(s.row) === '审核失败'">
-              {{ s.row.extra && s.row.extra.refuseReason.message || '' }}
+              {{ getRefuseReason(s.row) }}
             </strong>
           </span>
         </template>
@@ -288,6 +288,14 @@ export default {
     }
   },
   methods: {
+    getRefuseReason(word) {
+      const {refuseReason} = word.extra
+      return (
+        typeof refuseReason === 'string'
+        ? refuseReason
+        : refuseReason.message
+        ) || '审核驳回'
+    },
     async handleKeywordsPriceChange() {
       const keywordPrice = this.keywordPrice.trim()
       if (!keywordPrice) return
