@@ -9,7 +9,7 @@
       <div class="items">
         <div class="item" :class="{'sold': item.isSold}" v-for="(item, index) in localItems" :key="index">
           <div>
-            <h3 class="keyword">{{item.word}}{{item.isSold ? '（已售出）': ''}}</h3><div @click="remove(index)"><i class="el-icon-close"></i></div>
+            <h3 class="keyword">{{keywordTitle(item)}}</h3><div @click="remove(index)"><i class="el-icon-close"></i></div>
           </div>
           <div>
             <p><label>平台：</label>{{DEVICE[item.device]}}</p>
@@ -106,6 +106,9 @@
       }
     },
     methods: {
+      keywordTitle(word) {
+        return word.word + (word.xufei ? '(续费)' : (word.isSold ? '(已售出)' : ''))
+      },
       cityFormatter(cities, max) {
         return cities.slice(0, max).map(city => getCnName(city, this.allAreas)).join(',') + (cities.length > max ? `等${cities.length}个城市` : '')
       },
@@ -164,9 +167,15 @@
       async expand(visible) {
         if (visible && this.localItems.length) {
           // 每次打开更新下关键词价格、是否已售卖
-          console.log('check')
           this.loading = true
-          this.localItems = await refreshKeywordPrice(this.localItems)
+          const items = await refreshKeywordPrice(this.localItems)
+          // 保留字段 xufei
+          this.localItems = items.map(i => {
+            const one = this.localItems.find(li => li.word === i.word)
+            if (one) {
+              return Object.assign({}, one, i)
+            }
+          })
           this.loading = false
         }
       }

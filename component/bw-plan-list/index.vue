@@ -187,7 +187,8 @@
           if (isValid) {
             const item = {
               ...this.xufeiForm,
-              price: this.xufeiForm.soldPriceMap[this.xufeiForm.days]
+              price: this.xufeiForm.soldPriceMap[this.xufeiForm.days],
+              xufei: true
             }
             this.$parent.$refs.bwShoppingCart.addToCart([item])
             this.xufeiDialogVisible = false
