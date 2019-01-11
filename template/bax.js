@@ -130,7 +130,7 @@ const sspRoutes = [{
 //   path: '/main/operation-log',
 //   name: 'operation-log'
 // },
-const router = new VueRouter({
+export const router = new VueRouter({
   mode: 'history',
   routes: [{
     component: Homepage,
