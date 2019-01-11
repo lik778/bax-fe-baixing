@@ -77,7 +77,7 @@
       <campaign-selector
         :visible="campaignDialogVisible"
         :channel="query.channel"
-        :userId="salesInfo.userId"
+        :userId="normalUserId"
         :campaign-ids="query.checkedCampaigns.map(c => c.id)"
         @ok="campaignDialogVisible = false"
         @select-campaign="selectCampaign"
@@ -171,6 +171,9 @@ export default {
     }
   },
   computed: {
+    normalUserId() {
+      return this.salesInfo.userId || this.userInfo.id
+    },
     allDevices() {
       if (this.query.channel === SEM_PLATFORM_SHENMA) {
         return allDevices.filter(d => d.value === DEVICE_ALL)
