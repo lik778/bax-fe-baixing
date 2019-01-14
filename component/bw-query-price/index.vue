@@ -57,7 +57,7 @@
       </main>
     </div>
 
-    <area-selector type="bx" :all-areas="allAreas"
+    <area-selector type="bw" :all-areas="allAreas"
       :areas="form.areas"
       :visible="areaDialogVisible"
       :enable-china="false"
