@@ -455,7 +455,8 @@ export default {
       }
 
       this.selectedAreas = [...v]
-    }
+    },
+    // selectedAreas: console.log
   },
   updated() {
     console.debug('area selector updated')
