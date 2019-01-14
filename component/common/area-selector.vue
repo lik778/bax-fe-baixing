@@ -92,7 +92,8 @@ export default {
       required: true
     },
     type: {
-      // bx, qwt
+      // bx, qwt, bw
+      // 标王把省细化到城市
       type: String,
       default: 'bx'
     }
@@ -438,7 +439,16 @@ export default {
       this.$emit('cancel')
     },
     ok() {
-      this.$emit('ok', [...this.selectedAreas])
+      if (this.type === 'bw') {
+        const areas = this.selectedAreas
+          .map(this.getAreaByName)
+          .map(a => a.level === 2 ? this.getSubAreas(a.id) : a)
+          .flat()
+          .map(a => a.id)
+        this.$emit('ok', [...areas])
+      } else {
+        this.$emit('ok', [...this.selectedAreas])
+      }
       this.empty()
     }
   },
@@ -450,7 +460,9 @@ export default {
 
       this.selectedAreas = [...v]
     },
-    // selectedAreas: console.log
+    selectedAreas (v) {
+      console.log(v)
+    }
   },
   updated() {
     console.debug('area selector updated')
