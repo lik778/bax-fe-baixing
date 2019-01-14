@@ -104,7 +104,7 @@
         return this.promotes.map(p => p.auditRejectReason).join(',')
       },
       isPromoteOffline() {
-        return this.promotes.some(p => PROMOTE_STATUS_OFFLINE.includes(p.auditStatus))
+        return this.promotes.some(p => PROMOTE_STATUS_OFFLINE.includes(p.status))
       }
     },
     async mounted() {
