@@ -134,7 +134,7 @@ export default {
       return this.allAreas
         .filter(a => a.areaType === 2)
         .filter(a => {
-          if (type === 'qwt') {
+          if (type === 'qwt' || type === 'bw') {
             return !disAllowAreaIds.includes(a.id)
           }
 
@@ -156,7 +156,7 @@ export default {
       return this.allAreas
         .filter(a => {
           // 对于全网通, 需要毙掉几个特殊的 市
-          if (type === 'qwt') {
+          if (type === 'qwt' || type === 'bw') {
             return !!a.baiduCode && !!a.qihuCode &&
               !disAllowAreaIds.includes(a.id)
           }
