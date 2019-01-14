@@ -3,13 +3,13 @@
     <div class="white-bg">
       <header>我的标王推广计划</header>
       <main>
-        <el-form ref="form" :model="form" :rules="rules" label-width="90px">
-          <el-form-item label="推广关键词">
+        <el-form ref="form" :model="form" :rules="rules" label-width="120px">
+          <el-form-item label="推广关键词" prop="promoteIds">
             <el-checkbox-group v-model="form.promoteIds">
               <el-checkbox v-for="(promote, index) in promotes" :key="index" :label="promote.id" :disabled="!!$route.query.promoteId">{{promote.word}}</el-checkbox>
             </el-checkbox-group>
           </el-form-item>
-          <el-form-item label="投放页面">
+          <el-form-item label="投放页面" prop="landingPage">
             <div class="landing-type">
               <el-radio-group v-model="landingTypeDisplay" size="small">
                 <el-radio-button v-for="option of landingTypeOpts" :key="option.value" :label="option.value">{{option.label}}</el-radio-button>
@@ -40,7 +40,7 @@
             @error="handleCreativeError"
           />
           <el-form-item>
-            <el-button :loading="isLoading" @click="onSubmit" type="primary">{{buttonText}}</el-button>
+            <el-button :disabled="isPromoteOffline" :loading="isLoading" @click="onSubmit" type="primary">{{buttonText}}</el-button>
           </el-form-item>
         </el-form>
       </main>
@@ -51,7 +51,7 @@
 <script>
   import {getPromoteById, getPromtesByOrders, updatePromote, PROMOTE_STATUS_INIT} from 'api/biaowang'
   import {landingTypeOpts, SEM_PLATFORM_BAIDU} from 'constant/fengming'
-  import {AUDIT_STATUS_REJECT} from 'constant/biaowang'
+  import {AUDIT_STATUS_REJECT, PROMOTE_STATUS_OFFLINE} from 'constant/biaowang'
   import {Message} from 'element-ui'
   import UserAdSelector from 'com/common/user-ad-selector'
   import CreativeEditor from 'com/widget/creative-editor'
@@ -102,6 +102,9 @@
       },
       rejectReason() {
         return this.promotes.map(p => p.auditRejectReason).join(',')
+      },
+      isPromoteOffline() {
+        return this.promotes.some(p => PROMOTE_STATUS_OFFLINE.includes(p.auditStatus))
       }
     },
     async mounted() {

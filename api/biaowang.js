@@ -39,7 +39,6 @@ export async function getPromotes(opts = {}) {
     page: 0,
     ...opts
   }
-  console.log(trim(q))
   const body = await biaowang
     .get('/promote/user')
     .query(trim(q))
@@ -49,6 +48,15 @@ export async function getPromotes(opts = {}) {
     items: body.data.content,
     total: body.data.totalElements
   }
+}
+
+export async function getCpcRanking(promoteIds = []) {
+  const body = await biaowang
+    .get('/promote/user/cpc_ranking')
+    .query({promoteIds})
+    .json()
+
+  return body.data
 }
 
 export async function getPromoteById(id) {

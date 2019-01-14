@@ -36,7 +36,7 @@
               <p v-else>{{auditStatusFormatter(scope.row.auditStatus)}}</p>
             </template>
           </el-table-column>
-          <el-table-column prop="" label="平均排名" />
+          <el-table-column prop="cpcRanking" label="平均排名" />
           <el-table-column prop="createdAt" label="购买日期" :formatter="dateFormatter" />
           <el-table-column label="投放剩余天数">
             <template slot-scope="scope">
@@ -83,7 +83,7 @@
     AUDIT_STATUS,
     AUDIT_STATUS_REJECT
   } from 'constant/biaowang'
-  import {getPromotes, queryKeywordPrice} from 'api/biaowang'
+  import {getPromotes, queryKeywordPrice, getCpcRanking} from 'api/biaowang'
   import {
     f2y,
     getCnName
@@ -151,7 +151,12 @@
       },
       f2y,
       leftDays(row) {
-        return row.startedAt ? row.days - (Date.now() - row.startedAt) / 86400 : row.days
+        if (row.startedAt) {
+          const ms = row.days - (Date.now() - row.startedAt * 1000) / 86400 / 1000
+          return parseFloat(ms).toFixed(1)
+        }
+
+        return row.days
       },
       async getPromotes() {
         const {offset, limit, keyword: word, promoteStatusFilters, auditStatusFilters, userId} = this.query
@@ -164,6 +169,15 @@
         })
         this.promotes = items
         this.query.total = total
+
+        const rankings = await getCpcRanking(items.map(i => i.id))
+        this.promotes = this.promotes.map(p => {
+          const one = rankings.find(r => r.promoteId === p.id)
+          if (one) {
+            return Object.assign({}, p, {cpcRanking: parseFloat(one.cpcRanking).toFixed(2)})
+          }
+          return p
+        })
       },
       async onCurrentChange({offset}) {
         this.query.offset = offset
@@ -187,7 +201,8 @@
           if (isValid) {
             const item = {
               ...this.xufeiForm,
-              price: this.xufeiForm.soldPriceMap[this.xufeiForm.days]
+              price: this.xufeiForm.soldPriceMap[this.xufeiForm.days],
+              xufei: true
             }
             this.$parent.$refs.bwShoppingCart.addToCart([item])
             this.xufeiDialogVisible = false
