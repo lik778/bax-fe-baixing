@@ -81,7 +81,8 @@
     DEVICE,
     PROMOTE_STATUS,
     AUDIT_STATUS,
-    AUDIT_STATUS_REJECT
+    AUDIT_STATUS_REJECT,
+    PROMOTE_STATUS_OFFLINE
   } from 'constant/biaowang'
   import {getPromotes, queryKeywordPrice, getCpcRanking} from 'api/biaowang'
   import {
@@ -151,9 +152,12 @@
       },
       f2y,
       leftDays(row) {
+        if (PROMOTE_STATUS_OFFLINE.includes(row.status)) {
+          return '-'
+        }
         if (row.startedAt) {
           const ms = row.days - (Date.now() - row.startedAt * 1000) / 86400 / 1000
-          return parseFloat(ms).toFixed(1)
+          return parseFloat(Math.max(ms, 0)).toFixed(1)
         }
 
         return row.days
@@ -185,9 +189,9 @@
       },
       async onXufei(row) {
         const {word, cities, device} = row
-        // if (this.leftDays(row) > 15) {
-        //   return this.$message.info('到期前15天才可续费哦')
-        // }
+        if (this.leftDays(row) > 15) {
+          return this.$message.info('到期前15天才可续费哦')
+        }
         const result = await queryKeywordPrice({
           word,
           cities,
