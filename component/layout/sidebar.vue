@@ -45,11 +45,22 @@
           </el-menu-item>
         </el-submenu>
 
-        <!-- <el-menu-item index="bax" v-if="allowSeeQwtPromotion">
-          <router-link :to="{ name: 'root' }" tag="p">
-            <i class="material-icons" style="font-size: 16px; margin-right: 11px; vertical-align: -3px;">dvr</i>标王推广
-          </router-link>
-        </el-menu-item> -->
+        <!-- <el-submenu index="bw">
+          <template slot="title">
+            <bx-icon type="sharealt"></bx-icon>标王推广
+          </template>
+          <el-menu-item index="bw-query-price">
+            <router-link :to="{ name: 'bw-query-price' }" tag="p">
+              <i class="material-icons" style="font-size: 16px; margin-right: 11px; vertical-align: -3px;"></i>新建标王推广
+            </router-link>
+          </el-menu-item>
+          <el-menu-item index="bw-plan-list">
+            <router-link :to="{ name: 'bw-plan-list' }" tag="p">
+              <i class="material-icons" style="font-size: 16px; margin-right: 11px; vertical-align: -3px;"></i>管理标王推广
+            </router-link>
+          </el-menu-item>
+        </el-submenu> -->
+
         <el-menu-item index="gw-homepage">
           <a href="/ka/main" v-if="isRenderSiteLink" style="color: inherit">
             <i class="el-icon-news" />精品官网

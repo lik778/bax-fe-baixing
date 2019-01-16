@@ -5,6 +5,12 @@ import QwtCreatePromotion from 'com/qwt-create-promotion'
 import QwtPromotionList from 'com/qwt-promotion-list'
 import QwtDashboard from 'com/qwt-dashboard'
 
+// 标王
+import BwQueryPrice from 'com/bw-query-price'
+import BwEditPlan from 'com/bw-edit-plan'
+import BwPlanList from 'com/bw-plan-list'
+import BwLanding from 'com/bw-landing'
+
 // ssp
 import MaterialList from 'com/ssp-material-list'
 import MaterialInfo from 'com/ssp-material-info'
@@ -69,6 +75,24 @@ const gwRoutes = [{
   name: 'gw-charge'
 }]
 
+const bwRoutes = [{
+  component: BwQueryPrice,
+  path: '/main/bw/_query-price',
+  name: 'bw-query-price'
+}, {
+  component: BwEditPlan,
+  path: '/main/bw/edit-plan',
+  name: 'bw-edit-plan'
+}, {
+  component: BwPlanList,
+  path: '/main/bw/_plan-list',
+  name: 'bw-plan-list'
+}, {
+  component: BwLanding,
+  path: '/main/bw/landing',
+  name: 'bw-landing'
+}]
+
 const qwtRoutes = [{
   component: QwtCreatePromotion,
   path: '/main/qwt/promotion/create',
@@ -125,11 +149,6 @@ const sspRoutes = [{
   name: 'ad-calendar'
 }]
 
-// {
-//   component: OperationLog,
-//   path: '/main/operation-log',
-//   name: 'operation-log'
-// },
 export const router = new VueRouter({
   mode: 'history',
   routes: [{
@@ -152,13 +171,15 @@ export const router = new VueRouter({
     component: Notice,
     path: '/main/notice',
     name: 'notice'
-  }, {
-    component: Homepage,
-    path: '*'
   },
+  ...bwRoutes,
   ...qwtRoutes,
   ...sspRoutes,
-  ...gwRoutes]
+  ...gwRoutes,
+  {
+    path: '*',
+    redirect: '/main'
+  }]
 })
 router.beforeEach((to, from, next) => {
   window.scrollTo(0, 0)

@@ -9,15 +9,15 @@
       <div class="items">
         <div class="item" :class="{'sold': item.isSold}" v-for="(item, index) in localItems" :key="index">
           <div>
-            <h3 class="keyword">{{item.word}}{{item.isSold ? '（已售出）': ''}}</h3><div @click="remove(index)"><i class="el-icon-close"></i></div>
+            <h3 class="keyword">{{keywordTitle(item)}}</h3><div @click="remove(index)"><i class="el-icon-close"></i></div>
           </div>
           <div>
-            <p><label>平台：</label>{{item.device}}</p>
-            <p><label>时长：</label>{{item.days}}</p>
+            <p><label>平台：</label>{{DEVICE[item.device]}}</p>
+            <p><label>时长：</label>{{item.days}}天</p>
           </div>
           <div>
             <p><label>价格：</label><span class="item-price">{{f2y(item.price)}}</span>元</p>
-            <p><label>城市：</label>{{item.cities.join(',')}}</p>
+            <p :title="cityFormatter(item.cities, 400)"><label>城市：</label>{{cityFormatter(item.cities, 2)}}</p>
           </div>
         </div>
       </div>
@@ -27,11 +27,11 @@
       <div class="footer">
         <p>总计：<span class="price">{{f2y(totalPrice)}}</span>元</p>
         <el-button class="checkout" type="primary" @click="checkout">{{payText}}</el-button>
-        <div v-if="payUrl">
-          <label :title="orderPayUrl">
-            {{ '付款链接: ' + orderPayUrl }}
+        <div v-if="payUrl" class="payurl">
+          <label :title="payUrl">
+            {{ '付款链接: ' + payUrl }}
           </label>
-          <Clipboard :content="orderPayUrl"></Clipboard>
+          <Clipboard :content="payUrl" @success="onCopy"></Clipboard>
         </div>
       </div>
     </div>
@@ -45,6 +45,8 @@
   import {refreshKeywordPrice, createPreOrder} from 'api/biaowang'
   import {normalizeRoles} from 'util/role'
   import Clipboard from 'com/widget/clipboard'
+  import {getCnName} from 'util/meta'
+  import {DEVICE} from 'constant/biaowang'
 
   const storageKeyPrefix = `bw-shopping-cart-`
 
@@ -52,7 +54,8 @@
     name: 'bw-shopping-cart',
     props: {
       userInfo: Object,
-      salesInfo: Object
+      salesInfo: Object,
+      allAreas: Array
     },
     components: {
       Clipboard
@@ -61,6 +64,7 @@
       return {
         localItems: [],
         payUrl: '',
+        DEVICE,
 
         gwSelected: false,
         expand: false,
@@ -71,10 +75,22 @@
     },
     computed: {
       gwPrice() {
-        return 120000
+        if (this.keywordsPrice < 50000) {
+          return 120000
+        }
+        if (this.keywordsPrice < 499900) {
+          return 100000
+        }
+        if (this.keywordsPrice < 999900) {
+          return 60000
+        }
+        return 20000
+      },
+      keywordsPrice() {
+        return this.localItems.reduce((a, b) => a + b.price , 0)
       },
       totalPrice() {
-        return this.localItems.reduce((a, b) => a + b.price , 0) + (this.gwSelected ? this.gwPrice : 0)
+        return this.keywordsPrice + (this.gwSelected ? this.gwPrice : 0)
       },
       payText() {
         return this.isUser('BAIXING_SALES') ? '生成支付链接' : '去支付'
@@ -90,6 +106,12 @@
       }
     },
     methods: {
+      keywordTitle(word) {
+        return word.word + (word.xufei ? '(续费)' : (word.isSold ? '(已售出)' : ''))
+      },
+      cityFormatter(cities, max) {
+        return cities.slice(0, max).map(city => getCnName(city, this.allAreas)).join(',') + (cities.length > max ? `等${cities.length}个城市` : '')
+      },
       f2y,
       isUser(roleString) {
         return normalizeRoles(this.userInfo.roles).includes(roleString)
@@ -104,11 +126,11 @@
         const {salesId, userId} = this.salesInfo
         const preTradeId = await createPreOrder(this.localItems, this.gwSelected, userId, salesId)
 
-        // 预订单创建后，清空购物车
-        this.localItems = []
         if (this.isUser('BAIXING_USER')) {
+          this.localItems = []
           location.href = `http://trade-dev.baixing.cn/?appId=101&seq=${preTradeId}`
         } else if (this.isUser('AGENT_ACCOUNTING')) {
+          this.localItems = []
           location.href = `http://trade-dev.baixing.cn/?appId=101&seq=${preTradeId}&agentId=${this.userInfo.id}`
         } else if (this.isUser('BAIXING_SALES')) {
           this.payUrl = `http://trade-dev.baixing.cn/?appId=101&seq=${preTradeId}`
@@ -122,6 +144,9 @@
         if (newItems.length) {
           this.localItems.push(...clone(newItems))
         }
+      },
+      onCopy() {
+        this.localItems = []
       }
     },
     watch: {
@@ -142,9 +167,15 @@
       async expand(visible) {
         if (visible && this.localItems.length) {
           // 每次打开更新下关键词价格、是否已售卖
-          console.log('check')
           this.loading = true
-          // this.localItems = await refreshKeywordPrice(this.localItems)
+          const items = await refreshKeywordPrice(this.localItems)
+          // 保留字段 xufei
+          this.localItems = items.map(i => {
+            const one = this.localItems.find(li => li.word === i.word)
+            if (one) {
+              return Object.assign({}, one, i)
+            }
+          })
           this.loading = false
         }
       }
@@ -207,7 +238,7 @@
           justify-content: space-between;
         }
         & > p:first-of-type {
-          width: 60%;
+          width: 120px;
         }
 
         & >>> .el-icon-close {
@@ -254,5 +285,9 @@
   justify-content: center;
   text-align: center;
   color: gray;
+}
+.payurl {
+  font-size: 14px;
+  margin-top: 10px;
 }
 </style>

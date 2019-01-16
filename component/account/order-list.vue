@@ -169,9 +169,9 @@ export default {
     formatPrice(price) {
       return (price / 100)
     },
-    formatChargePrice({customerPrice, productType}) {
+    formatChargePrice({originalPrice, productType}) {
       // 这个订单如果只买了官网，没有充值，就显示“-”
-      return productType === 4 ? '-' : this.formatPrice(customerPrice)
+      return productType === 4 ? '-' : this.formatPrice(originalPrice)
     },
     formatCreatedAt({createdAt}) {
       return moment(new Date(createdAt * 1000)).format('YY-MM-DD HH:mm')

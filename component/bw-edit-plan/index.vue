@@ -3,13 +3,13 @@
     <div class="white-bg">
       <header>我的标王推广计划</header>
       <main>
-        <el-form ref="form" :model="form" :rules="rules" label-width="90px">
-          <el-form-item label="推广关键词">
+        <el-form ref="form" :model="form" :rules="rules" label-width="120px">
+          <el-form-item label="推广关键词" prop="promoteIds">
             <el-checkbox-group v-model="form.promoteIds">
               <el-checkbox v-for="(promote, index) in promotes" :key="index" :label="promote.id" :disabled="!!$route.query.promoteId">{{promote.word}}</el-checkbox>
             </el-checkbox-group>
           </el-form-item>
-          <el-form-item label="投放页面">
+          <el-form-item label="投放页面" prop="landingPage">
             <div class="landing-type">
               <el-radio-group v-model="landingTypeDisplay" size="small">
                 <el-radio-button v-for="option of landingTypeOpts" :key="option.value" :label="option.value">{{option.label}}</el-radio-button>
@@ -31,6 +31,7 @@
             </div>
           </el-form-item>
           <h3>投放物料设置</h3>
+          <p class="reject-reason" v-if="isPromoteRejected">{{rejectReason}}</p>
           <creative-editor
             :platforms="[SEM_PLATFORM_BAIDU]"
             :title="form.creativeTitle"
@@ -39,7 +40,7 @@
             @error="handleCreativeError"
           />
           <el-form-item>
-            <el-button :loading="isLoading" @click="onSubmit" type="primary">创建标王计划</el-button>
+            <el-button :disabled="isPromoteOffline" :loading="isLoading" @click="onSubmit" type="primary">{{buttonText}}</el-button>
           </el-form-item>
         </el-form>
       </main>
@@ -50,6 +51,7 @@
 <script>
   import {getPromoteById, getPromtesByOrders, updatePromote, PROMOTE_STATUS_INIT} from 'api/biaowang'
   import {landingTypeOpts, SEM_PLATFORM_BAIDU} from 'constant/fengming'
+  import {AUDIT_STATUS_REJECT, PROMOTE_STATUS_OFFLINE} from 'constant/biaowang'
   import {Message} from 'element-ui'
   import UserAdSelector from 'com/common/user-ad-selector'
   import CreativeEditor from 'com/widget/creative-editor'
@@ -82,6 +84,7 @@
           promoteIds: [{required: true, message: '请勾选关键词'}],
           landingPage: [{required: true, message: '请选择投放页面'}]
         },
+        buttonText: '创建标王计划',
 
         landingTypeOpts,
         creativeError: '',
@@ -94,6 +97,15 @@
         const type = this.promotes.every(p => p.status === PROMOTE_STATUS_INIT) ? '' : 'reselect'
         return type
       },
+      isPromoteRejected() {
+        return this.promotes.some(p => AUDIT_STATUS_REJECT.includes(p.auditStatus))
+      },
+      rejectReason() {
+        return this.promotes.map(p => p.auditRejectReason).join(',')
+      },
+      isPromoteOffline() {
+        return this.promotes.some(p => PROMOTE_STATUS_OFFLINE.includes(p.status))
+      }
     },
     async mounted() {
       const {promoteId, orderIds: orderIdsString, notice} = this.$route.query
@@ -109,11 +121,14 @@
           creativeContent: creativeContent || '',
           landingPageId: landingPageId || ''
         }
+        this.buttonText = '更新标王计划'
       }
       if (orderIdsString) {
         const orderIds = orderIdsString.split(',')
         this.promotes = await getPromtesByOrders(orderIds)
+        console.log(this.promotes)
         this.form.promoteIds = this.promotes.map(p => p.id)
+        this.buttonText = '创建标王计划'
       }
       if (notice === 'true' || notice === '1') {
         this.showNotice = true
@@ -167,7 +182,9 @@ header {
   padding: 15px;
   font-size: 16px;
 }
-
+.reject-reason {
+  color: #f44336;
+}
 div.bg {
   padding: 10px 10px 30px 10px;
   background-color: #f4f4f4;

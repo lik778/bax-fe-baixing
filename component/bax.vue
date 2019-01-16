@@ -6,17 +6,13 @@
       <router-view class="view"
         :key="$route.fullPath"
         :userInfo="currentUser"
+        :salesInfo="salesInfo"
         :allCategories="allCategories"
         :allAreas="allAreas"
-        :allRoles="allRoles"
-        :salesInfo="salesInfo">
+        :allRoles="allRoles">
       </router-view>
     </div>
     <sidebar :user-info="currentUser"></sidebar>
-    <!-- <div class="notice" v-if="showNotice">
-      <marquee direction="left" scrollamount="6" height="20px" class="notice" scrolldelay="60">{{notice}}</marquee>
-      <span class="close el-icon-close" @click="showNotice = false" title="关闭通知"></span>
-    </div> -->
     <new-user-intro
       :mode="newUserIntroMode"
       :visible="showNewUserIntro"
@@ -32,6 +28,7 @@
     <back-to-top />
     <wechat-scan />
     <chat />
+    <bw-shopping-cart ref="bwShoppingCart" :userInfo="currentUser" v-if="currentUser.id && isBwRoute" :salesInfo="salesInfo" :allAreas="allAreas"/>
   </div>
 </template>
 
@@ -45,6 +42,7 @@ import BackToTop from './widget/back-to-top'
 import Sidebar from './layout/sidebar'
 import Header from './layout/header'
 import Chat from './widget/chat'
+import BwShoppingCart from './common/bw-shopping-cart'
 
 import gStore from './store'
 
@@ -60,6 +58,7 @@ import {router} from '../template/bax'
 export default {
   name: 'bax',
   components: {
+    BwShoppingCart,
     // HuoDongIntro,
     // HuoDongBtn,
     NewUserIntro,
@@ -120,6 +119,13 @@ export default {
     es.addListener('http fetch end', () => {
       this.pending = this.pending - 1
     })
+
+    // 记录销售的客户id等信息
+    const {user_id: userId, sales_id: salesId} = this.$route.query
+    if (userId && salesId) {
+      this.salesInfo.userId = +userId
+      this.salesInfo.salesId = +salesId
+    }
   },
   created() {
     // 记录销售的客户id等信息

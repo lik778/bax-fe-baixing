@@ -22,16 +22,28 @@
           </el-form-item>
         </el-form>
 
-        <el-table :data="promotes">
+        <marquee direction="left" scrollamount="6" height="40px" scrolldelay="60"  class="notice"><recent-sold :allAreas="allAreas" /></marquee>
+        <el-table :data="promotes" border>
           <el-table-column prop="word" label="关键词" />
-          <el-table-column prop="cities" label="城市" :formatter="cityFormatter" />
-          <el-table-column prop="device" label="平台" :formatter="deviceFormatter" />
-          <el-table-column prop="status" label="投放状态" :formatter="statusFormatter" />
-          <el-table-column prop="auditStatus" label="审核状态" :formatter="auditStatusFormatter" />
-          <el-table-column prop="" label="平均排名" />
+          <el-table-column prop="cities" label="城市" :formatter="row => cityFormatter(row.cities)" />
+          <el-table-column prop="device" label="平台" :formatter="row => deviceFormatter(row.device)" />
+          <el-table-column prop="status" label="投放状态" :formatter="v => statusFormatter(v.status)" />
+          <el-table-column prop="auditStatus" label="审核状态">
+            <template slot-scope="scope">
+              <el-popover v-if="isRejected(scope.row.auditStatus)" :content="scope.row.auditRejectReason" placement="top" trigger="hover">
+                <span slot="reference">{{auditStatusFormatter(scope.row.auditStatus)}}</span>
+              </el-popover>
+              <p v-else>{{auditStatusFormatter(scope.row.auditStatus)}}</p>
+            </template>
+          </el-table-column>
+          <el-table-column prop="cpcRanking" label="平均排名" />
           <el-table-column prop="createdAt" label="购买日期" :formatter="dateFormatter" />
           <el-table-column label="投放剩余天数">
-
+            <template slot-scope="scope">
+              <div>
+                {{leftDays(scope.row)}}
+              </div>
+            </template>
           </el-table-column>
           <el-table-column label="操作">
             <template slot-scope="scope">
@@ -46,8 +58,8 @@
       <el-dialog :visible.sync="xufeiDialogVisible" title="标王续费">
         <el-form :model="xufeiForm" label-width="200px" :rules="rules" ref="xufei">
           <el-form-item label="关键词：">{{xufeiForm.word}}</el-form-item>
-          <el-form-item label="城市：">{{xufeiForm.cities}}</el-form-item>
-          <el-form-item label="投放平台：">{{xufeiForm.device}}</el-form-item>
+          <el-form-item label="城市：">{{cityFormatter(xufeiForm.cities)}}</el-form-item>
+          <el-form-item label="投放平台：">{{deviceFormatter(xufeiForm.device)}}</el-form-item>
           <el-form-item label="购买天数：" prop="days">
             <el-radio v-model="xufeiForm.days" :label="+option[0]" v-for="(option, index) in Object.entries(xufeiForm.soldPriceMap)" :key="index">{{option[0]}}天{{f2y(option[1])}}元</el-radio>
           </el-form-item>
@@ -63,8 +75,16 @@
 
 <script>
   import BaxPagination from 'com/common/pagination'
-  import {promoteStatusOpts, auditStatusOpts, DEVICE, PROMOTE_STATUS, AUDIT_STATUS} from 'constant/biaowang'
-  import {getPromotes, queryKeywordPrice} from 'api/biaowang'
+  import {
+    promoteStatusOpts,
+    auditStatusOpts,
+    DEVICE,
+    PROMOTE_STATUS,
+    AUDIT_STATUS,
+    AUDIT_STATUS_REJECT,
+    PROMOTE_STATUS_OFFLINE
+  } from 'constant/biaowang'
+  import {getPromotes, queryKeywordPrice, getCpcRanking} from 'api/biaowang'
   import {
     f2y,
     getCnName
@@ -73,11 +93,13 @@
   import {
     normalizeRoles
   } from 'util/role'
+  import RecentSold from './recent-sold'
 
   export default {
     name: 'bw-plan-list',
     components: {
-      BaxPagination
+      BaxPagination,
+      RecentSold
     },
     props: {
       allAreas: Array,
@@ -125,7 +147,21 @@
       },
     },
     methods: {
+      isRejected(status) {
+        return AUDIT_STATUS_REJECT.includes(status)
+      },
       f2y,
+      leftDays(row) {
+        if (PROMOTE_STATUS_OFFLINE.includes(row.status)) {
+          return '-'
+        }
+        if (row.startedAt) {
+          const ms = row.days - (Date.now() - row.startedAt * 1000) / 86400 / 1000
+          return parseFloat(Math.max(ms, 0)).toFixed(1)
+        }
+
+        return row.days
+      },
       async getPromotes() {
         const {offset, limit, keyword: word, promoteStatusFilters, auditStatusFilters, userId} = this.query
         const {items, total} = await getPromotes({
@@ -137,12 +173,25 @@
         })
         this.promotes = items
         this.query.total = total
+
+        const rankings = await getCpcRanking(items.map(i => i.id))
+        this.promotes = this.promotes.map(p => {
+          const one = rankings.find(r => r.promoteId === p.id)
+          if (one) {
+            return Object.assign({}, p, {cpcRanking: parseFloat(one.cpcRanking).toFixed(2)})
+          }
+          return p
+        })
       },
       async onCurrentChange({offset}) {
         this.query.offset = offset
         await this.getPromotes()
       },
-      async onXufei({word, cities, device}) {
+      async onXufei(row) {
+        const {word, cities, device} = row
+        if (this.leftDays(row) > 15) {
+          return this.$message.info('到期前15天才可续费哦')
+        }
         const result = await queryKeywordPrice({
           word,
           cities,
@@ -156,7 +205,8 @@
           if (isValid) {
             const item = {
               ...this.xufeiForm,
-              price: this.xufeiForm.soldPriceMap[this.xufeiForm.days]
+              price: this.xufeiForm.soldPriceMap[this.xufeiForm.days],
+              xufei: true
             }
             this.$parent.$refs.bwShoppingCart.addToCart([item])
             this.xufeiDialogVisible = false
@@ -165,16 +215,17 @@
           }
         })
       },
-      cityFormatter({cities}) {
-        return cities.map(city => getCnName(city, this.allAreas)).join(',')
+      cityFormatter(cities) {
+        const max = 20
+        return cities.slice(0, max).map(city => getCnName(city, this.allAreas)).join(',') + (cities.length > max ? `等${cities.length}个城市` : '')
       },
-      deviceFormatter({device}) {
+      deviceFormatter(device) {
         return DEVICE[device]
       },
-      statusFormatter({status}) {
+      statusFormatter(status) {
         return Object.entries(PROMOTE_STATUS).find(arr => arr[1].includes(status))[0]
       },
-      auditStatusFormatter({auditStatus}) {
+      auditStatusFormatter(auditStatus) {
         return Object.entries(AUDIT_STATUS).find(arr => arr[1].includes(auditStatus))[0]
       },
       dateFormatter({createdAt}) {
@@ -222,5 +273,11 @@ div.bg {
 }
 .create-plan {
   margin-bottom: 35px;
+}
+.notice {
+  background-color: #FFF7EB;
+  color: #C6A674;
+  display: flex;
+  align-items: center;
 }
 </style>

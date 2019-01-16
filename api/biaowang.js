@@ -22,10 +22,14 @@ export async function refreshKeywordPrice(keywords) {
     .send({pricingList: requestBody})
     .json()
 
-  const parsedBody = body.data.content.map(i => ({
-    ...i,
-    price: i.price[i.days]
-  }))
+  const parsedBody = body.data.content.map(i => {
+    const days = keywords.find(k => k.word === i.word).days
+    return {
+      ...i,
+      price: i.soldPriceMap[days],
+      days: days
+    }
+  })
   return parsedBody
 }
 
@@ -35,7 +39,6 @@ export async function getPromotes(opts = {}) {
     page: 0,
     ...opts
   }
-  console.log(trim(q))
   const body = await biaowang
     .get('/promote/user')
     .query(trim(q))
@@ -45,6 +48,15 @@ export async function getPromotes(opts = {}) {
     items: body.data.content,
     total: body.data.totalElements
   }
+}
+
+export async function getCpcRanking(promoteIds = []) {
+  const body = await biaowang
+    .get('/promote/user/cpc_ranking')
+    .query({promoteIds})
+    .json()
+
+  return body.data
 }
 
 export async function getPromoteById(id) {
@@ -80,4 +92,12 @@ export async function createPreOrder(items, saleWithShopOrder, targetUserId, sal
     .json()
 
   return body.data
+}
+
+export async function getRecentSold() {
+  const body = await biaowang
+    .get(`/promote/user/global/promote`)
+    .json()
+
+  return body.data.content
 }
