@@ -77,7 +77,7 @@ const gwRoutes = [{
 
 const bwRoutes = [{
   component: BwQueryPrice,
-  path: '/main/bw/_query-price',
+  path: '/main/bw/query-price',
   name: 'bw-query-price'
 }, {
   component: BwEditPlan,
@@ -85,7 +85,7 @@ const bwRoutes = [{
   name: 'bw-edit-plan'
 }, {
   component: BwPlanList,
-  path: '/main/bw/_plan-list',
+  path: '/main/bw/plan-list',
   name: 'bw-plan-list'
 }, {
   component: BwLanding,
