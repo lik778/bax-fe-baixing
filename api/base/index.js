@@ -192,4 +192,3 @@ export function trim(obj) {
 
   return result
 }
-

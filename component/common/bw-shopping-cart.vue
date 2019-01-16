@@ -47,6 +47,7 @@
   import Clipboard from 'com/widget/clipboard'
   import {getCnName} from 'util/meta'
   import {DEVICE} from 'constant/biaowang'
+  import {orderServiceHost} from 'config'
 
   const storageKeyPrefix = `bw-shopping-cart-`
 
@@ -128,12 +129,12 @@
 
         if (this.isUser('BAIXING_USER')) {
           this.localItems = []
-          location.href = `http://trade-dev.baixing.cn/?appId=101&seq=${preTradeId}`
+          location.href = `${orderServiceHost}/?appId=101&seq=${preTradeId}`
         } else if (this.isUser('AGENT_ACCOUNTING')) {
           this.localItems = []
-          location.href = `http://trade-dev.baixing.cn/?appId=101&seq=${preTradeId}&agentId=${this.userInfo.id}`
+          location.href = `${orderServiceHost}/?appId=101&seq=${preTradeId}&agentId=${this.userInfo.id}`
         } else if (this.isUser('BAIXING_SALES')) {
-          this.payUrl = `http://trade-dev.baixing.cn/?appId=101&seq=${preTradeId}`
+          this.payUrl = `${orderServiceHost}/?appId=101&seq=${preTradeId}`
         }
       },
       onHandleClick() {

@@ -32,3 +32,7 @@ export const upyun = {
   host: '//v0.api.upyun.com',
   bucket: 'attachments'
 }
+
+export const orderServiceHost = isPro
+  ? 'https://trade.baixing.com'
+  : 'http://trade-dev.baixing.cn'
