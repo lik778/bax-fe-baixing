@@ -171,14 +171,15 @@ export const router = new VueRouter({
     component: Notice,
     path: '/main/notice',
     name: 'notice'
-  }, {
-    component: Homepage,
-    path: '*'
   },
   ...bwRoutes,
   ...qwtRoutes,
   ...sspRoutes,
-  ...gwRoutes]
+  ...gwRoutes,
+  {
+    path: '*',
+    redirect: '/main'
+  }]
 })
 router.beforeEach((to, from, next) => {
   window.scrollTo(0, 0)
