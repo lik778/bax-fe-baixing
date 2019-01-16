@@ -89,7 +89,7 @@
       layout="total, prev, pager, next, jumper"
     >
     </el-pagination>
-  </div> 
+  </div>
 </template>
 
 <script>
@@ -101,7 +101,6 @@ import store from './store'
 import moment from 'moment'
 import track from 'util/track'
 import { toHumanTime } from 'utils'
-import { getLogDesc } from 'util/log'
 import { SEM_PLATFORM_SOGOU } from 'constant/fengming'
 import {
   fieldType,

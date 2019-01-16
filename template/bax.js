@@ -31,8 +31,8 @@ import Redirect from 'com/redirect'
 import Homepage from 'com/homepage'
 import Account from 'com/account'
 import Coupon from 'com/coupon'
-import Charge from 'com/charge'
 import Notice from 'com/notice'
+import Charge from 'com/charge'
 
 import Bax from 'com/bax'
 

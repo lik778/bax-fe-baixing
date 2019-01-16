@@ -17,6 +17,7 @@ module.exports = {
   output: {
     path: distPath,
     publicPath: '/dist/',
+    chunkFilename: '[name].js',
     filename: '[name].js'
   },
   module: {
@@ -61,9 +62,16 @@ module.exports = {
   },
   resolve: {
     alias: {
-      'vue$': 'vue/dist/vue.esm.js'
+      'vue$': 'vue/dist/vue.esm.js',
+      'constant': join(__dirname, '../constant'),
+      'config': join(__dirname, '../config'),
+      'com': join(__dirname, '../component'),
+      'base': join(__dirname, '../base'),
+      'util': join(__dirname, '../util'),
+      'api': join(__dirname, '../api')
     },
-    extensions: ['.js', '.vue', '.css']
+    extensions: ['.js', '.vue', '.css'],
+    modules: [join(__dirname, '../'), 'node_modules']
   },
   devtool: '#source-map',
   plugins: [

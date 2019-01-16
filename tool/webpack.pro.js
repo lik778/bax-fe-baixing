@@ -1,5 +1,5 @@
 
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const base = require('./webpack.base')
 const merge = require('webpack-merge')
 const webpack = require('webpack')
@@ -27,8 +27,11 @@ config.plugins = [
   }),
   new webpack.EnvironmentPlugin(['NODE_ENV']),
   new webpack.ContextReplacementPlugin(/moment[\\\/]locale$/, /^\.\/(zh-cn)$/),
-  new ExtractTextPlugin({
-    filename: '[name].[contenthash:18].css'
+  new MiniCssExtractPlugin({
+    // Options similar to the same options in webpackOptions.output
+    // both options are optional
+    filename: "[name].[hash].css",
+    chunkFilename: "[id].[hash].css"
   })
 ]
 

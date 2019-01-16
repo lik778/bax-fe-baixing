@@ -49,9 +49,9 @@
 </template>
 
 <script>
-  import {getPromoteById, getPromtesByOrders, updatePromote, PROMOTE_STATUS_INIT} from 'api/biaowang'
+  import {getPromoteById, getPromtesByOrders, updatePromote} from 'api/biaowang'
   import {landingTypeOpts, SEM_PLATFORM_BAIDU} from 'constant/fengming'
-  import {AUDIT_STATUS_REJECT, PROMOTE_STATUS_OFFLINE} from 'constant/biaowang'
+  import {AUDIT_STATUS_REJECT, PROMOTE_STATUS_OFFLINE, PROMOTE_STATUS_PENDING_EDIT} from 'constant/biaowang'
   import {Message} from 'element-ui'
   import UserAdSelector from 'com/common/user-ad-selector'
   import CreativeEditor from 'com/widget/creative-editor'
@@ -94,7 +94,7 @@
     },
     computed: {
       adSelectorType() {
-        const type = this.promotes.every(p => p.status === PROMOTE_STATUS_INIT) ? '' : 'reselect'
+        const type = this.promotes.every(p => PROMOTE_STATUS_PENDING_EDIT.includes(p.status)) ? '' : 'reselect'
         return type
       },
       isPromoteRejected() {
