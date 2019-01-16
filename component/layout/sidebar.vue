@@ -45,7 +45,7 @@
           </el-menu-item>
         </el-submenu>
 
-        <el-submenu index="bw">
+        <!-- <el-submenu index="bw">
           <template slot="title">
             <bx-icon type="sharealt"></bx-icon>标王推广
           </template>
@@ -59,7 +59,7 @@
               <i class="material-icons" style="font-size: 16px; margin-right: 11px; vertical-align: -3px;"></i>管理标王推广
             </router-link>
           </el-menu-item>
-        </el-submenu>
+        </el-submenu> -->
 
         <el-menu-item index="gw-homepage">
           <a href="/ka/main" v-if="isRenderSiteLink" style="color: inherit">
