@@ -59,6 +59,7 @@
 <script>
 import { getDisAllowAreas } from 'util/meta'
 import isequal from 'lodash.isequal'
+import flatten from 'lodash.flatten'
 import clone from 'clone'
 
 const specialCities = [
@@ -446,10 +447,10 @@ export default {
     },
     ok() {
       if (this.type === 'bw') {
-        const areas = this.selectedAreas
+        const tmp = this.selectedAreas
           .map(this.getAreaByName)
           .map(a => a.level === 2 ? this.getSubAreas(a.id) : a)
-          .flat()
+        const areas = flatten(tmp)
           .map(a => a.id)
         this.$emit('ok', [...areas])
       } else {

@@ -94,6 +94,7 @@
     normalizeRoles
   } from 'util/role'
   import RecentSold from './recent-sold'
+  import flatten from 'lodash.flatten'
 
   export default {
     name: 'bw-plan-list',
@@ -168,8 +169,8 @@
           page: offset / limit,
           size: limit, word,
           userId,
-          status: promoteStatusFilters.flat(),
-          auditStatus: auditStatusFilters.flat()
+          status: flatten(promoteStatusFilters),
+          auditStatus: flatten(auditStatusFilters)
         })
         this.promotes = items
         this.query.total = total

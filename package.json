@@ -17,6 +17,7 @@
     "echarts": "^4.0.3",
     "element-ui": "^2.4.11",
     "fetch.io": "^4.1.2",
+    "lodash.flatten": "^4.4.0",
     "lodash.isequal": "4.5.0",
     "lodash.padstart": "4.6.1",
     "lodash.pick": "4.4.0",
