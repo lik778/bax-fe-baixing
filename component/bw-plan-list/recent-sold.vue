@@ -30,7 +30,7 @@
     },
     methods: {
       formatCities(cities, count) {
-        return cities.map(city => getCnName(city, this.allAreas)).join(',') + (count > cities.length ? `等${cityCounts}个城市` : '')
+        return cities.map(city => getCnName(city, this.allAreas)).join(',') + (count > cities.length ? `等${count}个城市` : '')
       }
     },
     async mounted() {
