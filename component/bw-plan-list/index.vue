@@ -48,7 +48,7 @@
           <el-table-column label="操作">
             <template slot-scope="scope">
               <router-link v-if="!isBxSales && !isAgentAccounting" :to="{name: 'bw-edit-plan', query: {promoteId: scope.row.id}}"><el-button type="text" size="small">编辑</el-button></router-link>
-              <el-button size="small" type="text" @click="onXufei(scope.row)">续费</el-button>
+              <el-button v-if="canXufei(scope.row)" size="small" type="text" @click="onXufei(scope.row)">续费</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -82,6 +82,7 @@
     PROMOTE_STATUS,
     AUDIT_STATUS,
     AUDIT_STATUS_REJECT,
+    PROMOTE_STATUS_ONLINE,
     PROMOTE_STATUS_OFFLINE
   } from 'constant/biaowang'
   import {getPromotes, queryKeywordPrice, getCpcRanking} from 'api/biaowang'
@@ -153,15 +154,17 @@
       },
       f2y,
       leftDays(row) {
-        if (PROMOTE_STATUS_OFFLINE.includes(row.status)) {
-          return '-'
+        if (!PROMOTE_STATUS_OFFLINE.includes(row.status)) {
+          let daysLeft = row.days
+          if (row.startedAt) {
+            // 可能是负值
+            daysLeft = row.days - (Date.now() - row.startedAt * 1000) / 86400 / 1000
+          }
+          return parseFloat(Math.max(daysLeft, 0)).toFixed(1)
         }
-        if (row.startedAt) {
-          const ms = row.days - (Date.now() - row.startedAt * 1000) / 86400 / 1000
-          return parseFloat(Math.max(ms, 0)).toFixed(1)
-        }
-
-        return row.days
+      },
+      canXufei(row) {
+        return PROMOTE_STATUS_ONLINE.includes(row.status) && this.leftDays(row) <= 15
       },
       async getPromotes() {
         const {offset, limit, keyword: word, promoteStatusFilters, auditStatusFilters, userId} = this.query
@@ -190,7 +193,7 @@
       },
       async onXufei(row) {
         const {word, cities, device} = row
-        if (this.leftDays(row) > 15) {
+        if (!this.canXufei(row)) {
           return this.$message.info('到期前15天才可续费哦')
         }
         const result = await queryKeywordPrice({
