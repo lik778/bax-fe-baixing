@@ -164,12 +164,10 @@ export default {
         .filter(a => {
           // 对于全网通, 需要毙掉几个特殊的 市
           if (type === 'qwt') {
-            return !!a.baiduCode && !!a.qihuCode && a.sogouCode
-              !disAllowAreaIds.includes(a.id)
+            return !!a.baiduCode && !!a.qihuCode && !!a.sogouCode && !disAllowAreaIds.includes(a.id)
           }
           if (type === 'bw') {
-            return !!a.baiduCode &&
-              !disAllowAreaIds.includes(a.id)
+            return !!a.baiduCode && !disAllowAreaIds.includes(a.id)
           }
 
           return true
