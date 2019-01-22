@@ -113,7 +113,7 @@
         const onePromote = await getPromoteById(promoteId)
         this.promotes = [onePromote]
         const {landingType, landingPage, landingPageId, creativeTitle, creativeContent} = onePromote
-        this.form = {
+        this.form = { 
           promoteIds: [+promoteId],
           landingType: landingType || 0,
           landingPage,
@@ -121,6 +121,7 @@
           creativeContent: creativeContent || '',
           landingPageId: landingPageId || ''
         }
+        this.landingTypeDisplay = landingType
         this.buttonText = '更新标王计划'
       }
       if (orderIdsString) {
