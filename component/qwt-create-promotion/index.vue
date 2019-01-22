@@ -17,25 +17,32 @@
           <label>投放页面：</label>
           <div class="landingpage">
             <div style="margin-bottom: 10px">
-              <el-radio-group v-model="newPromotion.landingType" size="small">
-                <el-radio-button v-for="option of landingTypeOpts" :key="option.value" :label="option.value">{{option.label}}</el-radio-button>
+              <el-radio-group v-model="landingTypeDisplay" size="small">
+                <el-radio-button v-for="option of extendLandingTypeOpts" :key="option.value" :label="option.value">{{option.label}}</el-radio-button>
               </el-radio-group>
             </div>
             <div>
               <user-ad-selector
                 ref="userAdSelector"
                 :type="adSelectorType"
-                v-if="newPromotion.landingType === 0"
+                v-if="landingTypeDisplay === LANDING_TYPE_AD"
                 :all-areas="allAreas" :limit-mvp="false"
                 :selected-id="newPromotion.landingPageId"
-                @select-ad="ad => onSelectAd(ad)"
+                @select-ad="onSelectAd"
               />
 
               <qiqiaoban-page-selector
-                v-if="newPromotion.landingType === 1"
+                v-if="landingTypeDisplay === LANDING_TYPE_GW"
                 :value="newPromotion.landingPage"
-                @change="setLandingPage"
+                @change="v => setLanding(LANDING_TYPE_GW, v)"
               />
+
+              <ka-258-selector
+                v-if="landingTypeDisplay === LANDING_TYPE_258"
+                :value="newPromotion.landingPage"
+                @change="v => setLanding(LANDING_TYPE_258, v)"
+              />
+
             </div>
           </div>
         </div>
@@ -167,6 +174,7 @@ import PromotionChargeTip from 'com/widget/promotion-charge-tip'
 import PromotionRuleLink from 'com/widget/promotion-rule-link'
 import UserAdSelector from 'com/common/user-ad-selector'
 import CreativeEditor from 'com/widget/creative-editor'
+import Ka258Selector from 'com/common/ka-258-selector'
 import AreaSelector from 'com/common/area-selector'
 import ChargeDialog from 'com/common/charge-dialog'
 import CpcPriceTip from 'com/widget/cpc-price-tip'
@@ -200,8 +208,13 @@ import {
 import {
   SEM_PLATFORM_SHENMA,
   landingTypeOpts,
-  semPlatformOpts
+  semPlatformOpts,
+  LANDING_TYPE_AD,
+  LANDING_TYPE_GW,
+  LANDING_TYPE_258
 } from 'constant/fengming'
+
+import {allowSee258} from 'util/fengming-role'
 
 import {
   MIN_WORD_PRICE,
@@ -240,6 +253,7 @@ export default {
     PromotionRuleLink,
     UserAdSelector,
     CreativeEditor,
+    Ka258Selector,
     AreaSelector,
     ChargeDialog,
     ContractAck,
@@ -270,12 +284,15 @@ export default {
       queryWord: '',
       creativeError: null,
       kwPrice: 0,
+      LANDING_TYPE_AD,
+      LANDING_TYPE_GW,
+      LANDING_TYPE_258,
+      landingTypeDisplay: LANDING_TYPE_AD,
 
       searchRecommendsVisible: false,
       chargeDialogVisible: false,
       areaDialogVisible: false,
 
-      landingTypeOpts,
       semPlatformOpts,
       isCreating: false,
       showPromotion: false,
@@ -286,6 +303,12 @@ export default {
     }
   },
   computed: {
+    extendLandingTypeOpts() {
+      if (allowSee258(null, this.userInfo.id)) {
+        return landingTypeOpts.concat([{label: '258官网', value: LANDING_TYPE_258}])
+      }
+      return landingTypeOpts
+    },
     isShenmaChecked() {
       return this.newPromotion.sources.includes(SEM_PLATFORM_SHENMA)
     },
@@ -373,7 +396,8 @@ export default {
       this.newPromotion.dailyBudget = toFloat(val) * 100
     },
 
-    setLandingPage(url) {
+    setLanding(type, url) {
+      this.newPromotion.landingType = type
       this.newPromotion.landingPage = url
       this.newPromotion.areas = ['quanguo']
     },
@@ -392,6 +416,7 @@ export default {
         this.newPromotion.areas = [ad.city]
       }
 
+      this.newPromotion.landingType = LANDING_TYPE_AD
       this.newPromotion.landingPageId = ad.adId
       this.newPromotion.landingPage = ad.url
 
@@ -459,7 +484,7 @@ export default {
       const { currentBalance, allAreas } = this
 
       const p = clone(this.newPromotion)
-      
+
       if (!p.sources.length) return Message.error('请选择投放渠道')
 
       if (p.dailyBudget < MIN_DAILY_BUDGET) {

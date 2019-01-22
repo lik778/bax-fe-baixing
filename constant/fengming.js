@@ -117,10 +117,12 @@ export const CAMPAIGN_STATUS_OFFLINE = -1
 export const CAMPAIGN_STATUS_ONLINE = 100
 
 export const LANDING_TYPE_AD = 0
+export const LANDING_TYPE_GW = 1
+export const LANDING_TYPE_258 = 5
 
 export const landingType = {
-  '0': '帖子',
-  '1': '官网'
+  [`${LANDING_TYPE_AD}`]: '帖子',
+  [`${LANDING_TYPE_GW}`]: '官网'
 }
 
 export const campaignOptimization = {
