@@ -144,8 +144,8 @@
         this.form.creativeContent = ad.content && ad.content.slice(0, 39)
       },
       onQiqiaobanChange(v) {
-        form.landingType = 1
-        form.landingPage = v
+        this.form.landingType = 1
+        this.form.landingPage = v
       },
       handleCreativeError(message) {
         if(message) Message.error(message)
