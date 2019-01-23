@@ -39,6 +39,7 @@
 
               <ka-258-selector
                 v-if="getProp('landingType') === LANDING_TYPE_258"
+                :disabled="disabled"
                 :value="getProp('landingPage')"
                 @change="setLandingPage"
               />
