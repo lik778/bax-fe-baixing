@@ -1,3 +1,4 @@
+import {isPro} from '../config'
 
 import {
   normalizeRoles,
@@ -13,6 +14,13 @@ export function allowSeeOldGw(roles, uid) {
   // 318, 47709, 53470
   const specialUserIds = [] // 这几个挺牛逼, 能买 老官网
   return specialUserIds.includes(uid)
+}
+
+export function allowSee258(roles, uid) {
+  if (isPro) {
+    return [2888091].includes(uid)
+  }
+  return [303].includes(uid)
 }
 
 export function allowUseKaPackage(roles, uid) {

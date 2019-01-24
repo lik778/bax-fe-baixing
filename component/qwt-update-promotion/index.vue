@@ -11,7 +11,7 @@
           <span class="landingpage" v-if="!isErrorLandingPageShow">
             <div>
               <el-button-group>
-                <el-button v-for="o of landingTypeOpts" :key="o.value"
+                <el-button v-for="o of extendLandingTypeOpts" :key="o.value"
                   :type="getProp('landingType') === o.value ? 'primary' : ''"
                   @click="clickLandingType(o.value)">
                   {{ o.label }}
@@ -21,7 +21,7 @@
             </div>
             <div style="margin-top: 20px;">
               <user-ad-selector
-                v-if="getProp('landingType') === 0"
+                v-if="getProp('landingType') === LANDING_TYPE_AD"
                 :type="adSelectortype"
                 :disabled="disabled"
                 :all-areas="allAreas" :limit-mvp="false"
@@ -30,12 +30,19 @@
               </user-ad-selector>
 
               <qiqiaoban-page-selector
-                v-if="getProp('landingType') === 1"
+                v-if="getProp('landingType') === LANDING_TYPE_GW"
                 :disabled="disabled"
                 :value="getProp('landingPage')"
                 :is-qiqiaoban-site="isQiqiaobanSite"
                 @change="setLandingPage">
               </qiqiaoban-page-selector>
+
+              <ka-258-selector
+                v-if="getProp('landingType') === LANDING_TYPE_258"
+                :disabled="disabled"
+                :value="getProp('landingPage')"
+                @change="setLandingPage"
+              />
 
               <p v-if="disabled" class="authing-tip">
                 您的推广在审核中，审核通过后可修改落地页，感谢配合！
@@ -276,6 +283,7 @@ import PromotionRuleLink from 'com/widget/promotion-rule-link'
 import DurationSelector from 'com/common/duration-selector'
 import UserAdSelector from 'com/common/user-ad-selector'
 import CreativeEditor from 'com/widget/creative-editor'
+import Ka258Selector from 'com/common/ka-258-selector'
 import KeywordList from 'com/common/qwt-keyword-list'
 import AreaSelector from 'com/common/area-selector'
 import ContractAck from 'com/widget/contract-ack'
@@ -309,6 +317,10 @@ import {
   SEM_PLATFORM_BAIDU,
   SEM_PLATFORM_QIHU,
 
+  LANDING_TYPE_AD,
+  LANDING_TYPE_GW,
+  LANDING_TYPE_258,
+
   landingTypeOpts
 } from 'constant/fengming'
 
@@ -332,6 +344,8 @@ import {
   isQiqiaobanSite,
   isSiteLandingType
 } from 'util/kit'
+
+import {allowSee258} from 'util/fengming-role'
 
 import store from './store'
 
@@ -358,6 +372,7 @@ export default {
     DurationSelector,
     CreativeEditor,
     UserAdSelector,
+    Ka258Selector,
     AreaSelector,
     KeywordList,
     ContractAck
@@ -385,7 +400,6 @@ export default {
       sourceTipMap, // 投放渠道
 
       actionTrackId: uuid(),
-      landingTypeOpts,
       durationSelectorVisible: false,
       areaDialogVisible: false,
 
@@ -411,6 +425,9 @@ export default {
         newKeywords: [],
 
       },
+      LANDING_TYPE_AD,
+      LANDING_TYPE_GW,
+      LANDING_TYPE_258,
 
       moreSettingDisplay: false,
       // 是否为老官网
@@ -433,6 +450,12 @@ export default {
     //     return this.usableBalance
     //   }
     // },
+    extendLandingTypeOpts() {
+      if (allowSee258(null, this.userInfo.id)) {
+        return landingTypeOpts.concat([{label: '258官网', value: LANDING_TYPE_258}])
+      }
+      return landingTypeOpts
+    },
     modifyBudgetQuota() {
       const n = this.getProp('budgetModificationCount') | 0
       let q = 5 - n
@@ -555,7 +578,7 @@ export default {
     handleCreativeError(message) {
       if(message) Message.error(message)
       this.creativeError = message
-    }, 
+    },
     toggleDisplaySettingArea() {
       this.moreSettingDisplay = !this.moreSettingDisplay
     },
@@ -1197,7 +1220,7 @@ export default {
     margin-left: 32px;
     margin-right: 16px;
   }
-} 
+}
 
 .report-link {
   margin-left: 10px;
