@@ -18,7 +18,7 @@ export function allowSeeOldGw(roles, uid) {
 
 export function allowSee258(roles, uid) {
   if (isPro) {
-    return [2888091].includes(uid)
+    return [2888091, 1847989].includes(uid)
   }
   return [303].includes(uid)
 }
