@@ -49,9 +49,9 @@
 </template>
 
 <script>
-  import {getPromoteById, getPromtesByOrders, updatePromote, PROMOTE_STATUS_INIT} from 'api/biaowang'
+  import {getPromoteById, getPromtesByOrders, updatePromote} from 'api/biaowang'
   import {landingTypeOpts, SEM_PLATFORM_BAIDU} from 'constant/fengming'
-  import {AUDIT_STATUS_REJECT, PROMOTE_STATUS_OFFLINE} from 'constant/biaowang'
+  import {AUDIT_STATUS_REJECT, PROMOTE_STATUS_OFFLINE, PROMOTE_STATUS_INIT} from 'constant/biaowang'
   import {Message} from 'element-ui'
   import UserAdSelector from 'com/common/user-ad-selector'
   import CreativeEditor from 'com/widget/creative-editor'
@@ -113,7 +113,7 @@
         const onePromote = await getPromoteById(promoteId)
         this.promotes = [onePromote]
         const {landingType, landingPage, landingPageId, creativeTitle, creativeContent} = onePromote
-        this.form = { 
+        this.form = {
           promoteIds: [+promoteId],
           landingType: landingType || 0,
           landingPage,
@@ -121,7 +121,7 @@
           creativeContent: creativeContent || '',
           landingPageId: landingPageId || ''
         }
-        this.landingTypeDisplay = landingType
+        this.landingTypeDisplay = landingType || 0
         this.buttonText = '更新标王计划'
       }
       if (orderIdsString) {
