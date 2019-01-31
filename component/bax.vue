@@ -29,6 +29,13 @@
     <wechat-scan />
     <chat />
     <bw-shopping-cart ref="bwShoppingCart" :userInfo="currentUser" v-if="currentUser.id && isBwRoute" :salesInfo="salesInfo" :allAreas="allAreas"/>
+    <el-dialog :visible.sync="dialogVisible" width="700px" title="通知" :center="true">
+      <div class="user-notice">
+        <p>亲爱的用户，目前百度投放出现异常，我们正在与百度反馈沟通，会尽快解决这个问题。</p>
+        <p>1.【站外推广】计划暂时没有展现，当前异常不会对您的计划、资金产生影响，您可保持计划状态不变，问题排除后您的计划将正常展现。</p>
+        <p>2.【标王】计划，由于百度投放问题所造成的推广时长损失，可在续费时向您的专属销售申请抵扣。给您带来的不便敬请谅解。</p>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -89,7 +96,8 @@ export default {
       salesInfo: {
         salesId: '',
         userId: ''
-      }
+      },
+      dialogVisible: true
     }
   },
   computed: {
@@ -216,6 +224,13 @@ export default {
   }
   .view {
     padding: 12px 12px 32px;
+  }
+  .user-notice {
+    font-size: 16px;
+    padding: 10px 0 30px;
+    & > p {
+      margin-bottom: 10px;
+    }
   }
 </style>
 
