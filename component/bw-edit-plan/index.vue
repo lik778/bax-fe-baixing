@@ -157,7 +157,7 @@
         this.form.creativeContent = content
       },
       onSubmit() {
-        return this.$alert('亲爱的用户，目前百度投放出现异常，我们正在与百度反馈沟通，会尽快解决这个问题。百度修复问题之前，标王计划设置及更新功能暂时关闭，敬请谅解。')
+        return this.$alert('春节临近，为确保投放效果，【标王】于1月31日起暂停投放，年后流量回升后统一开启。暂停期间，【标王】计划不扣时长，并且无法进行设置及更新操作。')
         this.$refs.form.validate(async isValid => {
           if (isValid && !this.creativeError) {
             this.isLoading = true

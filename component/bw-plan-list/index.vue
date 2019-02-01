@@ -83,6 +83,7 @@
     AUDIT_STATUS,
     AUDIT_STATUS_REJECT,
     PROMOTE_STATUS_ONLINE,
+    PROMOTE_STATUS_PENDING_ONLINE,
     PROMOTE_STATUS_OFFLINE
   } from 'constant/biaowang'
   import {getPromotes, queryKeywordPrice, getCpcRanking} from 'api/biaowang'
@@ -154,7 +155,7 @@
       },
       f2y,
       leftDays(row) {
-        if (!PROMOTE_STATUS_OFFLINE.includes(row.status)) {
+        if (!PROMOTE_STATUS_PENDING_ONLINE.includes(row.status) ||!PROMOTE_STATUS_OFFLINE.includes(row.status)) {
           let daysLeft = row.days
           if (row.startedAt) {
             // 可能是负值

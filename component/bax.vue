@@ -31,9 +31,21 @@
     <bw-shopping-cart ref="bwShoppingCart" :userInfo="currentUser" v-if="currentUser.id && isBwRoute" :salesInfo="salesInfo" :allAreas="allAreas"/>
     <el-dialog :visible.sync="dialogVisible" width="700px" title="通知" :center="true">
       <div class="user-notice">
-        <p>亲爱的用户，目前百度投放出现异常，我们正在与百度反馈沟通，会尽快解决这个问题。</p>
-        <p>1.【站外推广】计划暂时没有展现，当前异常不会对您的计划、资金产生影响，您可保持计划状态不变，问题排除后您的计划将正常展现。</p>
-        <p>2.【标王】计划，由于百度投放问题所造成的推广时长损失，可在续费时向您的专属销售申请抵扣。给您带来的不便敬请谅解。</p>
+        <p>
+          春节临近，为确保投放效果，全网通【站外推广】及【标王】产品于1月31日起暂停百度投放，年后流量回升统一开启投放。
+        </p>
+        <p>
+          暂停期间：
+        </p>
+        <p>
+          1、【站外推广】所有百度计划暂停投放（360、神马、搜狗除外），期间不会产生任何消耗。
+        </p>
+        <p>
+          2、【标王】不扣时长。如有疑问，可在年后联系您的专属销售核实。
+        </p>
+        <p>
+          以上操作系统自动完成，您不用进行任何操作。祝您春节快乐，财源广进。
+        </p>
       </div>
     </el-dialog>
   </div>
