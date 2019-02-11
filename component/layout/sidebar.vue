@@ -13,7 +13,7 @@
        >
         <el-menu-item index="root">
           <router-link :to="{ name: 'root' }" tag="p">
-            <bx-icon type="appstore"></bx-icon>我的全网通
+            <bx-icon type="appstore"></bx-icon>我的搜索通
           </router-link>
         </el-menu-item>
 

@@ -17,7 +17,7 @@
                   {{ o.label }}
                 </el-button>
               </el-button-group>
-              <a href="javascript:;" class="qiqiaoban-warning" v-if="isQiqiaobanSite" @click="goChargeKaSite">升级新精品官网，全网通替你付一半</a>
+              <a href="javascript:;" class="qiqiaoban-warning" v-if="isQiqiaobanSite" @click="goChargeKaSite">升级新精品官网，搜索通替你付一半</a>
             </div>
             <div style="margin-top: 20px;">
               <user-ad-selector

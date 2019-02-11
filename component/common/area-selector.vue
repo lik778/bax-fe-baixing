@@ -74,7 +74,7 @@ const specialCities = [
  *   百姓网 ~ quanguo vs china
  *     - quanguo (全国), 选中所有 省, 城市
  *     - china (中国), china.baixing.com
- *   全网通 ~ quanguo === china
+ *   搜索通 ~ quanguo === china
  *     - 需要调用方 quanguo -> china
  */
 

@@ -1,5 +1,5 @@
 
-// 全网通
+// 搜索通
 import QwtUpdatePromotion from 'com/qwt-update-promotion'
 import QwtCreatePromotion from 'com/qwt-create-promotion'
 import QwtPromotionList from 'com/qwt-promotion-list'

@@ -2,7 +2,7 @@
 <template>
   <div class="qwt-promotion">
     <topbar :user-info="userInfo">
-      <label slot="title">全网通 - 推广管理</label>
+      <label slot="title">搜索通 - 推广管理</label>
     </topbar>
 
     <p v-if="summary.budget" class="info">您的推广资金可用余额为<span class="red">{{f2y(usableBalance)}}元</span>，预计可消耗<span class="red">{{days}}天</span>，为了保证您的广告正常投放，请及时<router-link :to="{name: 'qwt-charge'}">充值</router-link></p>

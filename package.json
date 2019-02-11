@@ -74,5 +74,9 @@
     "extends": [
       "ok"
     ]
+  },
+  "toolchain": {
+    "node": "10.15.1",
+    "yarn": "1.3.2"
   }
 }

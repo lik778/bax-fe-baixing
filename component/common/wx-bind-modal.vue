@@ -1,7 +1,7 @@
 <template>
   <div class="wx-modal" v-show="visible">
     <div class="img-wrap">
-      <img width="100%" height="100%" src="//file.baixing.net/bax-fe/asset/wx-modal-bax.png">
+      <img width="100%" height="100%" src="//file.baixing.net/201902/a037414f359b035df7ce5a020085d6a4.png">
       <span class="close-btn" @click="handleWxModalClose">知道啦</span>
     </div>
   </div>

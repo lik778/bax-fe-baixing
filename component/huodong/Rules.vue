@@ -4,7 +4,7 @@
     <div class="rules">
       <p><span>1</span>活动时间：12月5日-12月31日</p>
       <p><span>2</span>优惠券不与本次活动同享</p>
-      <p><span>3</span>购买前请阅读违禁行业类目；对于违禁行业，不能进行全网通推广，如购买后不支持退款；违禁行业类目见：<a href="http://bax.baixing.com.cn/qa?mode=questions"><strong>http://bax.baixing.com.cn/qa?mode=questions</strong></a></p>
+      <p><span>3</span>购买前请阅读违禁行业类目；对于违禁行业，不能进行搜索通推广，如购买后不支持退款；违禁行业类目见：<a href="http://bax.baixing.com.cn/qa?mode=questions"><strong>http://bax.baixing.com.cn/qa?mode=questions</strong></a></p>
       <p><span>5</span>解释权归百姓网所有，如有疑问请致电客服 <strong>400-036-3650</strong></p>
     </div>
   </section>
