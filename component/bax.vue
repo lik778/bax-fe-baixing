@@ -29,25 +29,6 @@
     <wechat-scan />
     <chat />
     <bw-shopping-cart ref="bwShoppingCart" :userInfo="currentUser" v-if="currentUser.id && isBwRoute" :salesInfo="salesInfo" :allAreas="allAreas"/>
-    <el-dialog :visible.sync="dialogVisible" width="700px" title="通知" :center="true">
-      <div class="user-notice">
-        <p>
-          春节临近，为确保投放的效果，全网通【站外推广】及【标王】产品于1月31日起暂停百度投放，年后视流量恢复情况进行投放恢复。
-        </p>
-        <p>
-          具体安排如下：
-        </p>
-        <p>
-          1、【站外推广】所有百度计划暂停投放（360、神马、搜狗除外），期间不会产生任何消耗，预计2月7日恢复（具体视流量恢复情况而定）。
-        </p>
-        <p>
-          2、【标王】暂停期间不扣时长，预计在2月11日恢复（具体视流量恢复情况而定）。如有疑问，可在年后联系您的专属销售核实。
-        </p>
-        <p>
-          以上操作系统自动完成，您不用进行任何操作。祝您春节快乐，财源广进。
-        </p>
-      </div>
-    </el-dialog>
   </div>
 </template>
 
@@ -109,7 +90,6 @@ export default {
         salesId: '',
         userId: ''
       },
-      dialogVisible: true
     }
   },
   computed: {
@@ -236,13 +216,6 @@ export default {
   }
   .view {
     padding: 12px 12px 32px;
-  }
-  .user-notice {
-    font-size: 16px;
-    padding: 10px 0 30px;
-    & > p {
-      margin-bottom: 10px;
-    }
   }
 </style>
 
