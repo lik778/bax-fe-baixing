@@ -22,7 +22,9 @@
           </el-form-item>
         </el-form>
 
-        <marquee direction="left" scrollamount="6" height="40px" scrolldelay="60"  class="notice"><recent-sold :allAreas="allAreas" /></marquee>
+        <marquee v-if="promotesDue.length" direction="left" scrollamount="6" height="40px" scrolldelay="60">
+          {{promotesDueText}}
+        </marquee>
         <el-table :data="promotes" border>
           <el-table-column prop="word" label="关键词" />
           <el-table-column prop="cities" label="城市" :formatter="row => cityFormatter(row.cities)" />
@@ -95,14 +97,12 @@
   import {
     normalizeRoles
   } from 'util/role'
-  import RecentSold from './recent-sold'
   import flatten from 'lodash.flatten'
 
   export default {
     name: 'bw-plan-list',
     components: {
       BaxPagination,
-      RecentSold
     },
     props: {
       allAreas: Array,
@@ -136,6 +136,42 @@
       }
     },
     computed: {
+      promotesDue() {
+        const arr = this.promotes
+        .map(p => ({
+          id: p.id,
+          word: p.word,
+          leftDays: this.leftDays(p)
+        }))
+        .filter(p => p.leftDays)
+        return arr
+          .sort((a, b) => a.leftDays - b.leftDays)
+      },
+      promotesDueText() {
+        const key = 'bw-word-query-times'
+        const raw = localStorage.getItem(key)
+        let times = {}
+        if (raw) {
+          times = JSON.parse(raw)
+        }
+        const dateStr = moment().format('YYYY-MM-DD')
+
+        if (this.promotesDue.length) {
+          const arr = this.promotesDue
+            .slice(0, 3)
+            .map(p => ({
+              ...p,
+              times: dateStr === times.date ? (times[p.id] || this.getRandomQueryTimes()) : this.getRandomQueryTimes()
+            }))
+          const storageObj = Object.assign(times, arr.reduce((s, a) => {s[a.id] = a.times; return s}, {}))
+          storageObj.date = dateStr
+
+          localStorage.setItem(key, JSON.stringify(storageObj))
+
+          return arr.map(p => `今日 ${p.word} 关键词被查价 ${p.times} 次，如需继续投放，请在关键词到期前续费，以免被同行客户抢单`)
+            .join('。 ')
+        }
+      },
       isBxUser() {
         const roles = normalizeRoles(this.userInfo.roles)
         return roles.includes('BAIXING_USER')
@@ -150,6 +186,13 @@
       },
     },
     methods: {
+      getRandomQueryTimes() {
+        let r = Math.random()
+        while(r > 1 || r < .3) {
+          r = Math.random()
+        }
+        return Math.floor(r * 10)
+      },
       isRejected(status) {
         return AUDIT_STATUS_REJECT.includes(status)
       },
@@ -279,7 +322,7 @@ div.bg {
 .create-plan {
   margin-bottom: 35px;
 }
-.notice {
+marquee {
   background-color: #FFF7EB;
   color: #C6A674;
   display: flex;

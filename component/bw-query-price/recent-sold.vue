@@ -25,7 +25,7 @@
         return this.words.map(
           item =>
           `关键词${item.word}，在${this.formatCities(item.cities, item.cityCounts)}已被售出`
-        ).join('。')
+        ).join('。 ')
       }
     },
     methods: {

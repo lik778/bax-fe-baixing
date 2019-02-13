@@ -2,6 +2,7 @@
   <div class="bg">
     <div class="white-bg">
       <header>标王关键词查价</header>
+      <marquee direction="left" scrollamount="6" height="40px" scrolldelay="60"><recent-sold :allAreas="allAreas" /></marquee>
       <main>
         <div class="notice">
           <p><span><i class="red">满</i>500-4999元，</span>购买精品官网（365天）立<i class="red">减</i>200元；</p>
@@ -37,7 +38,7 @@
         <div v-if="skus.length" class="results">
           <div>
             <label>查询结果</label>
-            <p v-if="exactMatch[0].isSold && exactMatch[0].price">关键词在城市<span class="highlight">{{formatArea(soldCities)}}</span>已售出。<span v-if="availableCities.length">投放在剩余城市价格： 30天 共{{f2y(exactMatch[0].price)}}元、90天 共{{f2y(exactMatch[1].price)}}元，</span>请重新输入关键词推广城市。</p>
+            <p v-if="exactMatch[0].isSold">关键词在城市<span class="highlight">{{soldCities.map(formatArea).join(', ')}}</span>已售出。<span v-if="availableCities.length">投放在剩余城市价格： 30天 共{{f2y(exactMatch[0].price)}}元、90天 共{{f2y(exactMatch[1].price)}}元，</span>请重新输入关键词推广城市。</p>
             <result-row v-else-if="!exactMatch[0].isSold && exactMatch[0].price" :options="exactMatch" :selected="selected" @change="onSelected" />
             <div v-else>当前标王询价量过大，暂时无法对您的查询词提供报价，请稍后再试。</div>
           </div>
@@ -69,6 +70,7 @@
 
 <script>
   import AreaSelector from 'com/common/area-selector'
+  import RecentSold from './recent-sold'
   import ResultRow from './result-row'
 
   import {queryKeywordPrice} from 'api/biaowang'
@@ -85,6 +87,7 @@
     components: {
       AreaSelector,
       ResultRow,
+      RecentSold
     },
     props: {
       userInfo: {
@@ -123,7 +126,7 @@
         return this.skus.slice(1)
       },
       soldCities() {
-        return this.exactMatch[0].soldCities.join(',')
+        return this.exactMatch[0].soldCities
       },
       availableCities() {
         return this.exactMatch[0].cities.filter(c =>  !this.exactMatch[0].soldCities.includes(c))
@@ -268,5 +271,11 @@ div.bg {
       box-sizing: border-box;
     }
   }
+}
+marquee {
+  background-color: #FFF7EB;
+  color: #C6A674;
+  display: flex;
+  align-items: center;
 }
 </style>

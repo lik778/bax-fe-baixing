@@ -48,8 +48,8 @@
       <div class="layout-content" v-if="hasCampaign">
         <div class="radio-group">
           <el-radio v-model="reportPrefix" label="">今日</el-radio>
-          <el-radio v-model="reportPrefix" label="weekly">昨日</el-radio>
-          <el-radio v-model="reportPrefix" label="yesterday">过去7天</el-radio>
+          <el-radio v-model="reportPrefix" label="yesterday">昨日</el-radio>
+          <el-radio v-model="reportPrefix" label="weekly">过去7天</el-radio>
         </div>
         <ul class="reports">
           <li class="report">
@@ -96,7 +96,7 @@ const OPTIMIZABLE_POINTS = [
 
 const formatPrice = (p) => {
   return p ? (p / 100).toFixed(2) : 0
-} 
+}
 
 const chartOptionsTmpl = {
   title: {
