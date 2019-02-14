@@ -208,7 +208,7 @@ export default {
   },
   watch: {
     async selectedId(now, pre) {
-      if (this.type === TYPE_RESELECT && now) {
+      if (this.type === TYPE_RESELECT && parseInt(now)) {
         await this.reset(MODE_SELECTED, now)
       }
     }

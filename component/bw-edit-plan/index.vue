@@ -137,9 +137,9 @@
     },
     methods: {
       onSelectAd(ad) {
+        this.form.landingType = 0
         this.form.landingPageId = ad.adId
         this.form.landingPage = ad.url
-        this.form.landingType = 0
 
         this.form.creativeTitle = ad.title && ad.title.slice(0, 24)
         this.form.creativeContent = ad.content && ad.content.slice(0, 39)
@@ -147,6 +147,10 @@
       onQiqiaobanChange(v) {
         this.form.landingType = 1
         this.form.landingPage = v
+        this.form.landingPageId = ''
+
+        this.form.creativeTitle = ''
+        this.form.creativeContent = ''
       },
       handleCreativeError(message) {
         if(message) Message.error(message)
