@@ -1,8 +1,19 @@
 {
-  "presets": ["@babel/preset-env"],
+  "presets": [["@babel/preset-env"]],
   "plugins": [
     "@babel/plugin-syntax-dynamic-import",
-    "@babel/plugin-proposal-class-properties",
-    ["@babel/plugin-proposal-decorators", {"legacy": true}]
+    ["@babel/plugin-proposal-decorators", {"legacy": true}],
+    ["@babel/plugin-proposal-class-properties", {"loose": true}],
+    ["module-resolver", {
+      "root": [],
+      "alias": {
+        "constant": "./constant",
+        "config": "./config",
+        "com": "./component",
+        "base": "./base",
+        "util": "./util",
+        "api": "./api"
+      }
+    }]
   ]
 }

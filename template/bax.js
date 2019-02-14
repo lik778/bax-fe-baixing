@@ -1,38 +1,9 @@
 
-// 全网通
-import QwtUpdatePromotion from 'com/qwt-update-promotion'
-import QwtCreatePromotion from 'com/qwt-create-promotion'
-import QwtPromotionList from 'com/qwt-promotion-list'
-import QwtDashboard from 'com/qwt-dashboard'
-
-// 标王
-import BwQueryPrice from 'com/bw-query-price'
-import BwEditPlan from 'com/bw-edit-plan'
-import BwPlanList from 'com/bw-plan-list'
-import BwLanding from 'com/bw-landing'
-
-// ssp
-import MaterialList from 'com/ssp-material-list'
-import MaterialInfo from 'com/ssp-material-info'
-import CreateOrder from 'com/ssp-order-create'
-import AdCalendar from 'com/ssp-ad-calendar'
-import OrderInfo from 'com/ssp-order-info'
-import OrderList from 'com/ssp-order-list'
-import UserList from 'com/ssp-user-list'
-import AdList from 'com/ssp-ad-list'
-
-// 精品官网
-import GwCharge from 'com/gw-charge'
-import GwHomepage from 'com/gw-homepage'
-
-// global
-// import OperationLog from 'com/operation-log'
 import Redirect from 'com/redirect'
 import Homepage from 'com/homepage'
 import Account from 'com/account'
 import Coupon from 'com/coupon'
 import Notice from 'com/notice'
-import Charge from 'com/charge'
 
 import Bax from 'com/bax'
 
@@ -66,85 +37,85 @@ Vue.component('chart', ECharts)
 Vue.use(Vue2Filters)
 
 const gwRoutes = [{
-  component: GwHomepage,
+  component: () => import('com/gw-homepage'),
   path: '/main/gw',
   name: 'gw-homepage'
 }, {
-  component: GwCharge,
+  component: () => import('com/gw-charge'),
   path: '/main/gw/charge',
   name: 'gw-charge'
 }]
 
 const bwRoutes = [{
-  component: BwQueryPrice,
+  component: () => import('com/bw-query-price'),
   path: '/main/bw/_query-price',
   name: 'bw-query-price'
 }, {
-  component: BwEditPlan,
+  component: () => import('com/bw-edit-plan'),
   path: '/main/bw/edit-plan',
   name: 'bw-edit-plan'
 }, {
-  component: BwPlanList,
+  component: () => import('com/bw-plan-list'),
   path: '/main/bw/_plan-list',
   name: 'bw-plan-list'
 }, {
-  component: BwLanding,
+  component: () => import('com/bw-landing'),
   path: '/main/bw/landing',
   name: 'bw-landing'
 }]
 
 const qwtRoutes = [{
-  component: QwtCreatePromotion,
+  component: () => import('com/qwt-create-promotion'),
   path: '/main/qwt/promotion/create',
   name: 'qwt-create-promotion'
 }, {
-  component: QwtUpdatePromotion,
+  component: () => import('com/qwt-update-promotion'),
   path: '/main/qwt/promotions/:id/update',
   name: 'qwt-update-promotion'
 }, {
-  component: QwtPromotionList,
+  component: () => import('com/qwt-promotion-list'),
   path: '/main/qwt/promotions',
   name: 'qwt-promotion-list'
 }, {
-  component: QwtDashboard,
+  component: () => import('com/qwt-dashboard'),
   path: '/main/qwt/dashboard',
   name: 'qwt-dashboard'
 }, {
-  component: Charge,
+  component: () => import('com/charge'),
   path: '/main/qwt/charge',
   name: 'qwt-charge'
 }]
 
 const sspRoutes = [{
-  component: AdList,
+  component: () => import('com/ssp-ad-list'),
   path: '/main/ads',
   name: 'ad-list'
 }, {
-  component: MaterialInfo,
+  component: () => import('com/ssp-material-info'),
   path: '/main/materials/:id',
   name: 'material-info'
 }, {
-  component: MaterialList,
+  component: () => import('com/ssp-material-list'),
   path: '/main/materials',
   name: 'material-list'
 }, {
-  component: CreateOrder,
+  component: () => import('com/ssp-order-create'),
   path: '/main/order/create',
   name: 'create-order'
 }, {
-  component: OrderInfo,
+  component: () => import('com/ssp-order-info'),
   path: '/main/orders/:id',
   name: 'order-info'
 }, {
-  component: OrderList,
+  component: () => import('com/ssp-order-list'),
   path: '/main/orders',
   name: 'order-list'
 }, {
-  component: UserList,
+  component: () => import('com/ssp-user-list'),
   path: '/main/users',
   name: 'user-list'
 }, {
-  component: AdCalendar,
+  component: () => import('com/ssp-ad-calendar'),
   path: '/main/ad-calendar',
   name: 'ad-calendar'
 }]

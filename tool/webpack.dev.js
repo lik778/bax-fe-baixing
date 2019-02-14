@@ -25,7 +25,7 @@ Object.keys(config.entry).forEach((key) => {
 })
 
 config.plugins = [
-  ...(config.plugins || []),
+  ...config.plugins,
   new webpack.DefinePlugin({
     'process.env': {
       NODE_ENV: '"development"'
@@ -34,5 +34,6 @@ config.plugins = [
   new webpack.HotModuleReplacementPlugin(),
   new webpack.NoEmitOnErrorsPlugin()
 ]
+console.log(config.module.rules)
 
 module.exports = config
