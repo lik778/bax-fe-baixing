@@ -89,7 +89,7 @@
     f2y,
     getCnName
   } from 'util'
-  import moment from 'moment'
+  import dayjs from 'dayjs'
   import {
     normalizeRoles
   } from 'util/role'
@@ -229,7 +229,7 @@
         return Object.entries(AUDIT_STATUS).find(arr => arr[1].includes(auditStatus))[0]
       },
       dateFormatter({createdAt}) {
-        return moment(createdAt * 1000).format('YYYY-MM-DD')
+        return dayjs(createdAt * 1000).format('YYYY-MM-DD')
       }
     },
     async mounted() {

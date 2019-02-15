@@ -25,7 +25,6 @@
 </template>
 
 <script>
-import { Message } from 'element-ui'
 import { isPro } from 'config'
 
 import {
@@ -57,7 +56,7 @@ export default {
     async login() {
       const { password, email } = this
       if (!password || !email) {
-        return Message.error('请输入邮箱和密码哟 >_<')
+        return alert('请输入邮箱和密码哟 >_<')
       }
 
       await login(email, password)

@@ -5,6 +5,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
 const merge = require('webpack-merge')
 const webpack = require('webpack')
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+
 const base = require('./webpack.base')
 
 const config = merge(base, {
@@ -16,15 +18,33 @@ const config = merge(base, {
         parallel: true,
         sourceMap: true,
         terserOptions: {
-          // https://github.com/webpack-contrib/terser-webpack-plugin#terseroptions
+          output: {
+            comments: false
+          },
         }
       }),
       new OptimizeCSSAssetsPlugin({})
     ],
     splitChunks: {
-      name: 'vendor',
-      minSize: 0,
-      chunks: "all",
+      chunks: 'all',
+      minSize: 30000,
+      maxSize: 0,
+      minChunks: 1,
+      maxAsyncRequests: 5,
+      maxInitialRequests: 3,
+      automaticNameDelimiter: '~',
+      name: true,
+      // cacheGroups: {
+      //   commons: {
+      //     name: 'commons',
+      //     chunks: 'initial',
+      //     minChunks: 2
+      //   },
+      //   vendors: {
+      //     test: /[\\/]node_modules[\\/]/,
+      //     priority: -10
+      //   }
+      // }
     }
   },
   output: {
@@ -36,7 +56,6 @@ const config = merge(base, {
 config.plugins = [
   ...config.plugins,
   new webpack.EnvironmentPlugin(['NODE_ENV']),
-  new webpack.ContextReplacementPlugin(/moment[\\\/]locale$/, /^\.\/(zh-cn)$/),
   new MiniCssExtractPlugin({
     filename: "[name].[hash].css",
     chunkFilename: "[id].[hash].css"
@@ -44,7 +63,7 @@ config.plugins = [
   new HtmlWebpackPlugin({
     filename: 'main.html',
     template: 'template/main.html',
-    chunks: ['bax', 'vendor'],
+    chunks: ['vendors~bax~signin', 'vendors~bax', 'bax'],
     minify: {
       collapseWhitespace: true,
     }
@@ -52,11 +71,12 @@ config.plugins = [
   new HtmlWebpackPlugin({
     filename: 'signin.html',
     template: 'template/signin.html',
-    chunks: ['signin', 'vendor'],
+    chunks: ['vendors~bax~signin', 'signin'],
     minify: {
       collapseWhitespace: true,
     }
-  })
+  }),
+  new BundleAnalyzerPlugin()
 ]
 
 module.exports = config

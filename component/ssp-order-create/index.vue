@@ -161,7 +161,7 @@ import BaxSelect from 'com/common/select'
 import Topbar from 'com/topbar'
 
 import { Message } from 'element-ui'
-import moment from 'moment'
+import dayjs from 'dayjs'
 import clone from 'clone'
 
 import {
@@ -198,7 +198,7 @@ import {
   now
 } from 'utils'
 
-const tomorrow = moment().add(1, 'days').format('YYYY-MM-DD')
+const tomorrow = dayjs().add(1, 'days').format('YYYY-MM-DD')
 
 const oneday = 24 * 60 * 60 - 1 // 故意: 减一秒
 

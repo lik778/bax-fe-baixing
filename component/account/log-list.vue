@@ -98,7 +98,7 @@ import SectionHeader from 'com/common/section-header'
 import BaxInput from 'com/common/input'
 
 import store from './store'
-import moment from 'moment'
+import dayjs from 'dayjs'
 import track from 'util/track'
 import { toHumanTime } from 'utils'
 import { SEM_PLATFORM_SOGOU } from 'constant/fengming'
@@ -117,9 +117,9 @@ import {
 const ONE_PAGE_NUM = 10
 const MAX_AREAS_LOG_LENGTH = 30
 const CREATED_AT_VALUES = [
-  moment().subtract(1, 'months').unix(),
-  moment().subtract(3, 'months').unix(),
-  moment().subtract(1, 'years').unix(),
+  dayjs().subtract(1, 'months').unix(),
+  dayjs().subtract(3, 'months').unix(),
+  dayjs().subtract(1, 'years').unix(),
 ]
 const DIVIDING_CHAR = '   '
 

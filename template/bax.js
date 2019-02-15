@@ -9,7 +9,47 @@ import Bax from 'com/bax'
 
 import VueClipboard from 'vue-clipboard2'
 import VueRouter from 'vue-router'
-import Element from 'element-ui'
+import {
+  Pagination,
+  Dialog,
+  Autocomplete,
+  Dropdown,
+  DropdownMenu,
+  DropdownItem,
+  Menu,
+  Submenu,
+  MenuItem,
+  Input,
+  Radio,
+  RadioGroup,
+  RadioButton,
+  Checkbox,
+  CheckboxButton,
+  CheckboxGroup,
+  Select,
+  Option,
+  Button,
+  ButtonGroup,
+  Table,
+  TableColumn,
+  DatePicker,
+  Popover,
+  Tooltip,
+  Form,
+  FormItem,
+  Tabs,
+  TabPane,
+  Tag,
+  Icon,
+  Row,
+  Col,
+  Progress,
+  Card,
+  Loading,
+  MessageBox,
+  Message,
+  Notification
+} from 'element-ui'
 
 import { reaction } from 'mobx'
 import Movue from 'movue'
@@ -17,23 +57,55 @@ import Vue from 'vue'
 
 import Vue2Filters from 'vue2-filters'
 
-import ECharts from 'vue-echarts/components/ECharts.vue'
-
-import 'echarts/lib/chart/bar'
-import 'echarts/lib/chart/line'
-import 'echarts/lib/component/legend'
-import 'echarts/lib/component/tooltip'
-import 'echarts/lib/component/dataZoom'
-
-// element 样式文件
-import '../theme/index.css'
-
 Vue.use(Movue, { reaction })
 Vue.use(VueClipboard)
 Vue.use(VueRouter)
-Vue.use(Element)
 
-Vue.component('chart', ECharts)
+Vue.use(Pagination)
+Vue.use(Dialog)
+Vue.use(Autocomplete)
+Vue.use(Dropdown)
+Vue.use(DropdownMenu)
+Vue.use(DropdownItem)
+Vue.use(Menu)
+Vue.use(Submenu)
+Vue.use(MenuItem)
+Vue.use(Input)
+Vue.use(Radio)
+Vue.use(RadioGroup)
+Vue.use(RadioButton)
+Vue.use(Checkbox)
+Vue.use(CheckboxButton)
+Vue.use(CheckboxGroup)
+Vue.use(Select)
+Vue.use(Option)
+Vue.use(Button)
+Vue.use(ButtonGroup)
+Vue.use(Table)
+Vue.use(TableColumn)
+Vue.use(DatePicker)
+Vue.use(Popover)
+Vue.use(Tooltip)
+Vue.use(Form)
+Vue.use(FormItem)
+Vue.use(Tabs)
+Vue.use(TabPane)
+Vue.use(Tag)
+Vue.use(Icon)
+Vue.use(Row)
+Vue.use(Col)
+Vue.use(Progress)
+Vue.use(Card)
+
+Vue.use(Loading.directive)
+Vue.prototype.$loading = Loading.service
+Vue.prototype.$msgbox = MessageBox
+Vue.prototype.$alert = MessageBox.alert
+Vue.prototype.$confirm = MessageBox.confirm
+Vue.prototype.$prompt = MessageBox.prompt
+Vue.prototype.$notify = Notification
+Vue.prototype.$message = Message
+
 Vue.use(Vue2Filters)
 
 const gwRoutes = [{

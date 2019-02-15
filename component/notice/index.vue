@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import moment from 'moment'
+import dayjs from 'dayjs'
 import { getFengmingNotice } from 'api/fengming'
 
 export default {
@@ -29,7 +29,7 @@ export default {
   },
   filters: {
     fmtTime(ts) {
-      return moment(new Date(ts * 1000)).format('YYYY-MM-DD hh:mm')
+      return dayjs(new Date(ts * 1000)).format('YYYY-MM-DD hh:mm')
     }
   }
 }

@@ -2,7 +2,7 @@
 import { reverseCamelcase, toCamelcase } from 'object-keys-mapping'
 import { fengming, trim } from './base'
 import qs from 'query-string'
-import moment from 'moment'
+import dayjs from 'dayjs'
 import {
   isPro
 } from 'config'
@@ -313,7 +313,7 @@ export async function getChargeLogs(opts) {
 //   let query = {
 //     pageSize: 50,
 //     offset: 0,
-//     time: moment().subtract(1, 'months').unix(),
+//     time: dayjs().subtract(1, 'months').unix(),
 //     ...opts
 //   }
 

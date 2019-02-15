@@ -30,7 +30,7 @@ import BaxPagination from 'com/common/pagination'
 
 import { toHumanTime, toTimestamp } from 'utils'
 import track from 'util/track'
-import moment from 'moment'
+import dayjs from 'dayjs'
 
 import store from './store'
 
@@ -47,8 +47,8 @@ export default {
   data() {
     return {
       daterange: [
-        moment().startOf('day').toDate(),
-        moment().toDate()
+        dayjs().startOf('day').toDate(),
+        dayjs().toDate()
       ]
     }
   },
@@ -81,8 +81,8 @@ export default {
   },
   async mounted() {
     await this.queryLogs({
-      fromDate: moment().startOf('day').unix(),
-      toDate: moment().unix()
+      fromDate: dayjs().startOf('day').unix(),
+      toDate: dayjs().unix()
     })
   }
 }

@@ -1,5 +1,5 @@
 
-import moment from 'moment'
+import dayjs from 'dayjs'
 
 export const DIMENSION_CAMPAIGN = 0
 export const DIMENSION_KEYWORD = 1
@@ -59,37 +59,37 @@ export const timeTypes = [{
   label: '今日',
   value: 'today',
   getTime: () => ({
-    startAt: moment().startOf('day').unix(),
-    endAt: moment().unix()
+    startAt: dayjs().startOf('day').unix(),
+    endAt: dayjs().unix()
   })
 }, {
   label: '昨日',
   value: 'yesterday',
   getTime: () => ({
-    startAt: moment().subtract('1', 'days').startOf('day').unix(),
-    endAt: moment().subtract('1', 'days').endOf('day').unix()
+    startAt: dayjs().subtract('1', 'days').startOf('day').unix(),
+    endAt: dayjs().subtract('1', 'days').endOf('day').unix()
   })
 }, {
   label: '近7天',
   value: 'last-7-days',
   getTime: () => ({
-    startAt: moment().subtract('7', 'days').unix(),
-    endAt: moment().unix()
+    startAt: dayjs().subtract('7', 'days').unix(),
+    endAt: dayjs().unix()
 
   })
 }, {
   label: '本月',
   value: 'this-month',
   getTime: () => ({
-    startAt: moment().startOf('month').unix(),
-    endAt: moment().unix()
+    startAt: dayjs().startOf('month').unix(),
+    endAt: dayjs().unix()
   })
 }, {
   label: '上月',
   value: 'last-month',
   getTime: () => ({
-    startAt: moment().subtract(1, 'month').startOf('month').unix(),
-    endAt: moment().subtract(1, 'month').endOf('month').unix()
+    startAt: dayjs().subtract(1, 'month').startOf('month').unix(),
+    endAt: dayjs().subtract(1, 'month').endOf('month').unix()
   })
 }, {
   label: '自定义',

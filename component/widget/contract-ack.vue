@@ -17,13 +17,9 @@
 
 <script>
 import { assetHost } from 'config'
-import {Checkbox as ElCheckbox} from 'element-ui'
 
 export default {
   name: 'bax-qwt-contract-ack',
-  components: {
-    ElCheckbox,
-  },
   props: {
     type: {
       // content-rule, contract

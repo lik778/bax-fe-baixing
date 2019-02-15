@@ -8,8 +8,8 @@ const env = process.env.NODE_ENV
 
 module.exports = {
   entry: {
-    signin: ['@babel/polyfill', join(__dirname, '../template/signin')],
-    bax: ['@babel/polyfill', join(__dirname, '../template/bax')],
+    signin: './template/signin',
+    bax: './template/bax',
   },
   output: {
     path: distPath,
@@ -61,8 +61,7 @@ module.exports = {
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
     },
-    extensions: ['.js', '.vue', '.css'],
-    modules: [join(__dirname, '../'), 'node_modules']
+    extensions: ['.js', '.vue', '.css']
   },
   devtool: '#source-map',
   plugins: [

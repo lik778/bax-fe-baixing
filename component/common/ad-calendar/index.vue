@@ -35,7 +35,7 @@
 import DaysTip from './days-tip'
 import Days from './days'
 
-import moment from 'moment'
+import dayjs from 'dayjs'
 
 import {
   getCategoryParent,
@@ -174,11 +174,11 @@ export default {
       const { options } = this
       const seconds = (options.end - options.start) || 0
       const num = ((seconds / 60 / 60 / 24) + 1) | 0
-      const start = moment(options.start * 1000).format('YYYY-MM-DD')
+      const start = dayjs(options.start * 1000).format('YYYY-MM-DD')
 
       const days = []
       for (let i = 0; i <= num; i++) {
-        const d = moment(start, 'YYYY-MM-DD').add(i, 'day')
+        const d = dayjs(start, 'YYYY-MM-DD').add(i, 'day')
         days.push(d.format('YYYY-MM-DD'))
       }
 

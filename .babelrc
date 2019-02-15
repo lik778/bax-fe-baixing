@@ -1,5 +1,5 @@
 {
-  "presets": [["@babel/preset-env"]],
+  "presets": [["@babel/preset-env", {"useBuiltIns": "usage", "modules": false}]],
   "plugins": [
     "@babel/plugin-syntax-dynamic-import",
     ["@babel/plugin-proposal-decorators", {"legacy": true}],
@@ -14,6 +14,10 @@
         "util": "./util",
         "api": "./api"
       }
+    }],
+    ["component", {
+      "styleLibrary": "element-ui",
+      "styleLibraryName": "~theme"
     }]
   ]
 }
