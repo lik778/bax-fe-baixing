@@ -1,22 +1,23 @@
 
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin")
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const UglifyJsPlugin = require("uglifyjs-webpack-plugin")
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const TerserPlugin = require('terser-webpack-plugin')
 const merge = require('webpack-merge')
 const webpack = require('webpack')
-
 const base = require('./webpack.base')
 
 const config = merge(base, {
   mode: 'production',
   optimization: {
     minimizer: [
-      new UglifyJsPlugin({
+      new TerserPlugin({
         cache: true,
         parallel: true,
-        sourceMap: true, // set to true if you want JS source maps
-        chunkFilter: (chunk) => chunk.name !== 'vendor'
+        sourceMap: true,
+        terserOptions: {
+          // https://github.com/webpack-contrib/terser-webpack-plugin#terseroptions
+        }
       }),
       new OptimizeCSSAssetsPlugin({})
     ],

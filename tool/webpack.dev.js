@@ -26,11 +26,7 @@ Object.keys(config.entry).forEach((key) => {
 
 config.plugins = [
   ...config.plugins,
-  new webpack.DefinePlugin({
-    'process.env': {
-      NODE_ENV: '"development"'
-    }
-  }),
+  new webpack.EnvironmentPlugin(['NODE_ENV']),
   new webpack.HotModuleReplacementPlugin(),
   new webpack.NoEmitOnErrorsPlugin()
 ]
