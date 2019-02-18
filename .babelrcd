@@ -1,0 +1,32 @@
+{
+  "presets": [
+    ["env", {
+      "targets": {
+        "firefox": 59,
+        "safari": 11,
+        "chrome": 45,
+        "edge": 16
+      },
+      "exclude": [
+        "transform-regenerator"
+      ]
+    }]
+  ],
+  "plugins": [
+    "syntax-dynamic-import",
+    "transform-object-rest-spread",
+    "transform-decorators-legacy",
+    "transform-class-properties",
+    ["module-resolver", {
+      "root": [],
+      "alias": {
+        "constant": "./constant",
+        "config": "./config",
+        "com": "./component",
+        "base": "./base",
+        "util": "./util",
+        "api": "./api"
+      }
+    }]
+  ]
+}

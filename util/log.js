@@ -13,52 +13,6 @@ import {
   landingType
 } from 'constant/fengming'
 
-import {
-  LOG_TYPE_CAMPAIGN,
-  LOG_TYPE_CREATIVE,
-  LOG_TYPE_KEYWORD,
-  LOG_TYPE_ACCOUNT
-} from 'constant/log'
-
-const OP_CREATE = 1
-
-/**
- * @return {String}
- */
-
-export function getLogDesc(log, { allAreas = [] }) {
-  const {
-    timelineType,
-    message
-  } = log
-
-  if (message) {
-    const { change, opType, word, campaignId } = message
-
-    switch (timelineType) {
-      case LOG_TYPE_CAMPAIGN:
-        return fmtCampaignLog(opType, {
-          ...change,
-          campaignId
-        }, allAreas)
-      case LOG_TYPE_CREATIVE:
-        return fmtCreativeLog(opType, change)
-      case LOG_TYPE_KEYWORD:
-        return fmtKeywordLog(opType, {
-          word,
-          ...change
-        })
-      case LOG_TYPE_ACCOUNT:
-        return fmtAccountLog({
-          campaignId,
-          ...change
-        })
-    }
-  }
-
-  return ''
-}
-
 /**
  * private
  */

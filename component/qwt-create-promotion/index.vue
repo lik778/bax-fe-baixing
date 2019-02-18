@@ -181,7 +181,7 @@ import CpcPriceTip from 'com/widget/cpc-price-tip'
 import ContractAck from 'com/widget/contract-ack'
 import wxBindModal from 'com/common/wx-bind-modal'
 
-import moment from 'moment'
+import dayjs from 'dayjs'
 import track from 'util/track'
 
 import {
@@ -433,7 +433,7 @@ export default {
       const systemKeywordsList = []
       const uesrKeywordsList = []
       const dailyBudget = this.newPromotion.dailyBudget / 100
-      const date = moment().format('YYYY-MM-DD')
+      const date = dayjs().format('YYYY-MM-DD')
       allKeywordsList.forEach( ({ id }) => {
         // 表示当前关键字在系统创建的关键字数组中
         if(recommendKeywordsList.some(item => item.id === id)) {

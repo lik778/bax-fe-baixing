@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import moment from 'moment'
+import dayjs from 'dayjs'
 const noticeTexts = {
   fengming: '账户推广通知',
   site: '官网留言通知'
@@ -37,7 +37,7 @@ export default {
   },
   methods: {
     formatDate(date) {
-      return moment(date).format('YYYY.MM.DD')
+      return dayjs(date).format('YYYY.MM.DD')
     },
     execContainerScroll() {
       const containerRef = this.$refs.container

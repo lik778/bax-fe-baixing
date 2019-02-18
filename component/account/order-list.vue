@@ -85,7 +85,7 @@
 </template>
 
 <script>
-import moment from 'moment'
+import dayjs from 'dayjs'
 import * as api from 'api/account'
 import SectionHeader from 'com/common/section-header'
 
@@ -108,10 +108,10 @@ const statusLabel = {
 const ONE_PAGE_NUM = 10
 
 const transformUnixTimeStamp = (date) =>  {
-  return moment(new Date(date)).unix()
+  return dayjs(new Date(date)).unix()
 }
 const DEFAULT_DATE_RANGE = [
-  moment(new Date()).subtract(1, 'months'),
+  dayjs(new Date()).subtract(1, 'months'),
   new Date()
 ]
 
@@ -174,7 +174,7 @@ export default {
       return productType === 4 ? '-' : this.formatPrice(originalPrice)
     },
     formatCreatedAt({createdAt}) {
-      return moment(new Date(createdAt * 1000)).format('YY-MM-DD HH:mm')
+      return dayjs(new Date(createdAt * 1000)).format('YY-MM-DD HH:mm')
     },
     formatKaSiteDuration({productType, extra}) {
       if (productType === 3) return '-'

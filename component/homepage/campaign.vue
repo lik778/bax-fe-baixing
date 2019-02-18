@@ -4,7 +4,7 @@
       <h5 class="layout-header">站外推广诊断</h5>
       <div class="layout-content" v-if="chartOptions && hasCampaign">
         <div class="chart">
-          <chart :options="chartOptions" />
+          <e-charts :options="chartOptions"/>
         </div>
         <div class="description">
           <p>您当前的推广健康度为:<strong>{{avgScore}}</strong>分，</p>
@@ -79,8 +79,11 @@
 
 <script>
 import clone from 'clone'
-import store from './store'
+import ECharts from 'vue-echarts/components/ECharts.vue'
+import 'echarts/lib/component/tooltip'
 import 'echarts/lib/chart/radar'
+
+import store from './store'
 import {
   campaignOptimization
 } from 'constant/fengming'
@@ -157,6 +160,9 @@ const CNT_REJECTED_CODE = '-53'
 
 export default {
   name: 'homepage-campaign',
+  components: {
+    ECharts
+  },
   data() {
     return {
       chartOptions: null,

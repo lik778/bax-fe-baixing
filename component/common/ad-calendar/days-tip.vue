@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import moment from 'moment'
+import dayjs from 'dayjs'
 
 export default {
   name: 'ad-calendar-days-tip',
@@ -27,10 +27,10 @@ export default {
   },
   filters: {
     date(s) {
-      return moment(s, 'YYYY-MM-DD').date()
+      return dayjs(s, 'YYYY-MM-DD').date()
     },
     day(s) {
-      const d = moment(s, 'YYYY-MM-DD').day()
+      const d = dayjs(s, 'YYYY-MM-DD').day()
 
       const m = {
         '0': '日',

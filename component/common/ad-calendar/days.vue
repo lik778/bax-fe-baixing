@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import moment from 'moment'
+import dayjs from 'dayjs'
 
 export default {
   name: 'ad-calendar-days',
@@ -40,7 +40,7 @@ export default {
 }
 
 function hitRanges(day, ranges) {
-  const m = moment(day, 'YYYY-MM-DD')
+  const m = dayjs(day, 'YYYY-MM-DD')
   const start = m.startOf('day').unix()
   const end = m.endOf('day').unix()
 

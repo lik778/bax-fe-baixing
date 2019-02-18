@@ -1,21 +1,9 @@
 {
-  "presets": [
-    ["env", {
-      "targets": {
-        "firefox": 59,
-        "safari": 11,
-        "chrome": 45,
-        "edge": 16
-      },
-      "exclude": [
-        "transform-regenerator"
-      ]
-    }]
-  ],
+  "presets": [["@babel/preset-env", {"useBuiltIns": "usage", "modules": false}]],
   "plugins": [
-    "transform-object-rest-spread",
-    "transform-decorators-legacy",
-    "transform-class-properties",
+    "@babel/plugin-syntax-dynamic-import",
+    ["@babel/plugin-proposal-decorators", {"legacy": true}],
+    ["@babel/plugin-proposal-class-properties", {"loose": true}],
     ["module-resolver", {
       "root": [],
       "alias": {
@@ -26,6 +14,10 @@
         "util": "./util",
         "api": "./api"
       }
+    }],
+    ["component", {
+      "styleLibrary": "element-ui",
+      "styleLibraryName": "~theme"
     }]
   ]
 }

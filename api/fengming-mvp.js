@@ -1,7 +1,7 @@
 
 import { trim, toCamelcase, reverseCamelcase } from 'object-keys-mapping'
 import qs from 'query-string'
-import moment from 'moment'
+import dayjs from 'dayjs'
 
 import { mvp } from './base'
 
@@ -93,8 +93,8 @@ export async function getCampaigns(opts = {}) {
         timeUnit: TIME_UNIT_DAY,
         device: DEVICE_ALL,
 
-        startAt: moment().startOf('day').unix(),
-        endAt: moment().unix(),
+        startAt: dayjs().startOf('day').unix(),
+        endAt: dayjs().unix(),
         limit: 100,
         offset: 0
       })))
@@ -151,8 +151,8 @@ export async function getMvpSummary() {
       timeUnit: TIME_UNIT_DAY,
       device: DEVICE_ALL,
 
-      startAt: moment().startOf('day').unix(),
-      endAt: moment().unix(),
+      startAt: dayjs().startOf('day').unix(),
+      endAt: dayjs().unix(),
       limit: 10,
       offset: 0
     })))

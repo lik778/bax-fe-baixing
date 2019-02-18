@@ -94,7 +94,7 @@
     },
     computed: {
       adSelectorType() {
-        const type = this.promotes.every(p => p.status === PROMOTE_STATUS_INIT) ? '' : 'reselect'
+        const type = this.promotes.every(p => PROMOTE_STATUS_INIT.includes(p.status)) ? '' : 'reselect'
         return type
       },
       isPromoteRejected() {

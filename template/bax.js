@@ -1,44 +1,55 @@
 
-// 搜索通
-import QwtUpdatePromotion from 'com/qwt-update-promotion'
-import QwtCreatePromotion from 'com/qwt-create-promotion'
-import QwtPromotionList from 'com/qwt-promotion-list'
-import QwtDashboard from 'com/qwt-dashboard'
-
-// 标王
-import BwQueryPrice from 'com/bw-query-price'
-import BwEditPlan from 'com/bw-edit-plan'
-import BwPlanList from 'com/bw-plan-list'
-import BwLanding from 'com/bw-landing'
-
-// ssp
-import MaterialList from 'com/ssp-material-list'
-import MaterialInfo from 'com/ssp-material-info'
-import CreateOrder from 'com/ssp-order-create'
-import AdCalendar from 'com/ssp-ad-calendar'
-import OrderInfo from 'com/ssp-order-info'
-import OrderList from 'com/ssp-order-list'
-import UserList from 'com/ssp-user-list'
-import AdList from 'com/ssp-ad-list'
-
-// 精品官网
-import GwCharge from 'com/gw-charge'
-import GwHomepage from 'com/gw-homepage'
-
-// global
-// import OperationLog from 'com/operation-log'
 import Redirect from 'com/redirect'
 import Homepage from 'com/homepage'
 import Account from 'com/account'
 import Coupon from 'com/coupon'
-import Charge from 'com/charge'
 import Notice from 'com/notice'
 
 import Bax from 'com/bax'
 
 import VueClipboard from 'vue-clipboard2'
 import VueRouter from 'vue-router'
-import Element from 'element-ui'
+import {
+  Pagination,
+  Dialog,
+  Autocomplete,
+  Dropdown,
+  DropdownMenu,
+  DropdownItem,
+  Menu,
+  Submenu,
+  MenuItem,
+  Input,
+  Radio,
+  RadioGroup,
+  RadioButton,
+  Checkbox,
+  CheckboxButton,
+  CheckboxGroup,
+  Select,
+  Option,
+  Button,
+  ButtonGroup,
+  Table,
+  TableColumn,
+  DatePicker,
+  Popover,
+  Tooltip,
+  Form,
+  FormItem,
+  Tabs,
+  TabPane,
+  Tag,
+  Icon,
+  Row,
+  Col,
+  Progress,
+  Card,
+  Loading,
+  MessageBox,
+  Message,
+  Notification
+} from 'element-ui'
 
 import { reaction } from 'mobx'
 import Movue from 'movue'
@@ -46,105 +57,137 @@ import Vue from 'vue'
 
 import Vue2Filters from 'vue2-filters'
 
-import ECharts from 'vue-echarts/components/ECharts.vue'
-
-import 'echarts/lib/chart/bar'
-import 'echarts/lib/chart/line'
-import 'echarts/lib/component/legend'
-import 'echarts/lib/component/tooltip'
-import 'echarts/lib/component/dataZoom'
-
-// element 样式文件
-import '../theme/index.css'
-
 Vue.use(Movue, { reaction })
 Vue.use(VueClipboard)
 Vue.use(VueRouter)
-Vue.use(Element)
 
-Vue.component('chart', ECharts)
+Vue.use(Pagination)
+Vue.use(Dialog)
+Vue.use(Autocomplete)
+Vue.use(Dropdown)
+Vue.use(DropdownMenu)
+Vue.use(DropdownItem)
+Vue.use(Menu)
+Vue.use(Submenu)
+Vue.use(MenuItem)
+Vue.use(Input)
+Vue.use(Radio)
+Vue.use(RadioGroup)
+Vue.use(RadioButton)
+Vue.use(Checkbox)
+Vue.use(CheckboxButton)
+Vue.use(CheckboxGroup)
+Vue.use(Select)
+Vue.use(Option)
+Vue.use(Button)
+Vue.use(ButtonGroup)
+Vue.use(Table)
+Vue.use(TableColumn)
+Vue.use(DatePicker)
+Vue.use(Popover)
+Vue.use(Tooltip)
+Vue.use(Form)
+Vue.use(FormItem)
+Vue.use(Tabs)
+Vue.use(TabPane)
+Vue.use(Tag)
+Vue.use(Icon)
+Vue.use(Row)
+Vue.use(Col)
+Vue.use(Progress)
+Vue.use(Card)
+
+Vue.use(Loading.directive)
+Vue.prototype.$loading = Loading.service
+Vue.prototype.$msgbox = MessageBox
+Vue.prototype.$alert = MessageBox.alert
+Vue.prototype.$confirm = MessageBox.confirm
+Vue.prototype.$prompt = MessageBox.prompt
+Vue.prototype.$notify = Notification
+Vue.prototype.$message = Message
+
 Vue.use(Vue2Filters)
 
 const gwRoutes = [{
-  component: GwHomepage,
+  component: () => import('com/gw-homepage'),
   path: '/main/gw',
   name: 'gw-homepage'
 }, {
-  component: GwCharge,
+  component: () => import('com/gw-charge'),
   path: '/main/gw/charge',
   name: 'gw-charge'
 }]
 
 const bwRoutes = [{
-  component: BwQueryPrice,
+  component: () => import('com/bw-query-price'),
   path: '/main/bw/query-price',
   name: 'bw-query-price'
 }, {
-  component: BwEditPlan,
+  component: () => import('com/bw-edit-plan'),
   path: '/main/bw/edit-plan',
   name: 'bw-edit-plan'
 }, {
-  component: BwPlanList,
-  path: '/main/bw/plan-list',
+  component: () => import('com/bw-plan-list'),
+  path: '/main/bw/_plan-list',
   name: 'bw-plan-list'
 }, {
-  component: BwLanding,
+  component: () => import('com/bw-landing'),
   path: '/main/bw/landing',
   name: 'bw-landing'
 }]
 
 const qwtRoutes = [{
-  component: QwtCreatePromotion,
+  component: () => import('com/qwt-create-promotion'),
   path: '/main/qwt/promotion/create',
   name: 'qwt-create-promotion'
 }, {
-  component: QwtUpdatePromotion,
+  component: () => import('com/qwt-update-promotion'),
   path: '/main/qwt/promotions/:id/update',
   name: 'qwt-update-promotion'
 }, {
-  component: QwtPromotionList,
+  component: () => import('com/qwt-promotion-list'),
   path: '/main/qwt/promotions',
   name: 'qwt-promotion-list'
 }, {
-  component: QwtDashboard,
+  component: () => import('com/qwt-dashboard'),
   path: '/main/qwt/dashboard',
   name: 'qwt-dashboard'
 }, {
-  component: Charge,
+  component: () => import('com/charge'),
   path: '/main/qwt/charge',
   name: 'qwt-charge'
 }]
 
 const sspRoutes = [{
-  component: AdList,
+  component: () => import('com/ssp-ad-list'),
   path: '/main/ads',
   name: 'ad-list'
 }, {
-  component: MaterialInfo,
+  component: () => import('com/ssp-material-info'),
   path: '/main/materials/:id',
   name: 'material-info'
 }, {
-  component: MaterialList,
+  component: () => import('com/ssp-material-list'),
   path: '/main/materials',
   name: 'material-list'
 }, {
-  component: CreateOrder,
+  component: () => import('com/ssp-order-create'),
   path: '/main/order/create',
   name: 'create-order'
 }, {
-  component: OrderInfo,
+  component: () => import('com/ssp-order-info'),
   path: '/main/orders/:id',
   name: 'order-info'
 }, {
-  component: OrderList,
+  component: () => import('com/ssp-order-list'),
   path: '/main/orders',
   name: 'order-list'
 }, {
-  component: UserList,
+  component: () => import('com/ssp-user-list'),
   path: '/main/users',
   name: 'user-list'
 }, {
-  component: AdCalendar,
+  component: () => import('com/ssp-ad-calendar'),
   path: '/main/ad-calendar',
   name: 'ad-calendar'
 }]
