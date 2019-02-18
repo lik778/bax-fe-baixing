@@ -5,7 +5,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
 const merge = require('webpack-merge')
 const webpack = require('webpack')
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
 const base = require('./webpack.base')
 
@@ -66,7 +66,7 @@ config.plugins = [
       collapseWhitespace: true,
     }
   }),
-  new BundleAnalyzerPlugin()
+  // new BundleAnalyzerPlugin()
 ]
 
 module.exports = config
