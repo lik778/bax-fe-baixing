@@ -34,20 +34,10 @@ const config = merge(base, {
       maxInitialRequests: 3,
       automaticNameDelimiter: '~',
       name: true,
-      // cacheGroups: {
-      //   commons: {
-      //     name: 'commons',
-      //     chunks: 'initial',
-      //     minChunks: 2
-      //   },
-      //   vendors: {
-      //     test: /[\\/]node_modules[\\/]/,
-      //     priority: -10
-      //   }
-      // }
     }
   },
   output: {
+    publicPath: '//file.baixing.net/bax-fe/static/',
     chunkFilename: '[name].[chunkhash:18].js',
     filename: '[name].[chunkhash:18].js'
   }

@@ -1,5 +1,4 @@
 
-const { join } = require('path')
 const { distPath } = require('./config')
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
