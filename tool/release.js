@@ -6,11 +6,8 @@ const fs = require('fs')
 const assets = fs.readdirSync(join(__dirname, '../dist'))
 const pages = fs.readdirSync(join(__dirname, '../view'))
 
-console.log(assets)
-
 for (const asset of assets) {
   const [name, _, ext] = asset.split('.')
-  console.log(asset, name, _, ext)
   if (ext === 'html' || _ === 'html') {
     fs.renameSync(
       join(__dirname, '../dist/', asset),
