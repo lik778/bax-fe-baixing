@@ -366,7 +366,8 @@ export default {
     fetchRecommends(query, cb) {
       query = query.trim()
       if (query) {
-        store.recommendByWord(query, this.newPromotion.areas).then(
+        const {areas, sources} = this.newPromotion
+        store.recommendByWord(query, {areas, sources}).then(
           () => {
             cb(this.searchRecommends)
           }
@@ -555,14 +556,6 @@ export default {
         }, 1000)
       }
 
-    },
-    async recommendByWord() {
-      const { queryWord, newPromotion } = this
-
-      if (!queryWord) {
-        return Message.error('请输入查询关键词')
-      }
-      await store.recommendByWord(queryWord, newPromotion.areas)
     },
 
     async recommendByUrl(newLandingPage = this.newPromotion.landingPage, areas = this.newPromotion.areas) {

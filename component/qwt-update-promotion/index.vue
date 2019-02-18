@@ -1044,7 +1044,7 @@ export default {
       if (type === 'single') {
         // 单个添加
         if (!queryWord) return
-        const recommendKeywords = await recommendByWord(queryWord)
+        const recommendKeywords = await recommendByWord(queryWord, {campaignId: this.originPromotion.id})
         const newKeyword = store.fmtNewKeywordsPrice(recommendKeywords).find( k => k.word === queryWord)
         console.log('单个关键词添加', newKeyword)
         if (!newKeyword) return this.$message.info('没有合适的关键词')

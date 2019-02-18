@@ -28,8 +28,8 @@ const store = observable({
     const words = await fapi.recommendByUrl(url, areas)
     this._urlRecommends = words.map(attachDisplayPrice)
   }),
-  recommendByWord: action(async function(word, areas) {
-    const words = await fapi.recommendByWord(word, areas)
+  recommendByWord: action(async function(word, opts) {
+    const words = await fapi.recommendByWord(word, opts)
     this._searchRecommends = words.slice(0, 10).map(attachDisplayPrice).map(attachValue)
   }),
   setCreativeWords: action(function(words) {

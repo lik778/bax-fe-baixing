@@ -265,13 +265,10 @@ export async function recommendByUrl(url, areas = [], campaignId = null) {
   return fmtWords(toCamelcase(body.data))
 }
 
-export async function recommendByWord(word, areas = []) {
+export async function recommendByWord(word, opts) {
   const body = await fengming
     .post('/keyword/recommand/word')
-    .send({
-      word,
-      areas
-    })
+    .send(reverseCamelcase({word, ...opts}))
     .json()
 
   const words = fmtWords(toCamelcase(body.data))
