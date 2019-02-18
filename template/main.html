@@ -1,12 +1,87 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <title>BAX 广告交易平台</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>BAX 广告交易平台</title>
+  <meta name="renderer" content="webkit">
+  <link rel="icon" type="image/png" href="http://file.baixing.net/201902/9856aa75e93dcea9e300132fd0423aac.png">
+  <link rel="stylesheet" href="//file.baixing.net/bax-fe/asset/icon-font.css?d=9">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <script src="//file.baixing.net/bax-fe/static/raven3.17.0.min.js" crossorigin="anonymous"></script>
+  <script>
+    Raven.config('http://57272e63e6164cf4ae01f3cd422bc418@sentry.baixing.cn/30').install()
+  </script>
+  <style>
+    #browser-warning {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 99999;
+      height: 26px;
+      min-height: 26px;
+      text-align: center;
+      padding-top: 6px;
+      line-height: 14px;
+      font-size: 14px;
+      color: red;
+      background: yellow;
+    }
+
+    #browser-warning a {
+      color: #409eff;
+      cursor: pointer;
+    }
+    </style>
 </head>
 <body>
   <main id="bax"></main>
+  <div id="browser-warning">
+    暂不支持IE浏览器，推荐您使用
+    <a href="https://browser.360.cn/se/" target="_blank">360，</a>
+    <a href="https://ie.sogou.com/" target="_blank">搜狗，</a>
+    <a href="http://browser.qq.com/" target="_blank">QQ</a>浏览器
+  </div>
+  <script>
+    if (navigator.userAgent.indexOf('MSIE') !== -1 ||
+      navigator.userAgent.indexOf('Trident/') !== -1) {
+      var e = document.getElementById('browser-warning')
+      e.style.display = 'block'
+
+      try {
+        var time = Date.now() / 1000 | 0
+        var img = new Image()
+
+        img.id = 'bxti-' + Math.random().toString(16).slice(2)
+        img.src = 'http://www.baixing.com/c/ev/bxad?biztype=bax-qwt&time=' + time +
+          '&env=pro&action=show-ie-browser-warning'
+        img.style.display = 'none'
+
+        document.body.appendChild(img)
+
+        img.onload = function() {
+          try {
+            document.getElementById(img.id).remove()
+          } catch (err) {
+            console.error(err)
+          }
+        }
+      } catch (err) {
+        console.error(err)
+      }
+    }
+  </script>
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?2379ff449e4e4a7461b5c3ca6a04288e";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
 </body>
 </html>
