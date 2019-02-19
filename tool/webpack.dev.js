@@ -3,6 +3,7 @@ const base = require('./webpack.base')
 const merge = require('webpack-merge')
 const webpack = require('webpack')
 const { join } = require('path')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 const isArray = Array.isArray
 
@@ -28,7 +29,17 @@ config.plugins = [
   ...config.plugins,
   new webpack.EnvironmentPlugin(['NODE_ENV']),
   new webpack.HotModuleReplacementPlugin(),
-  new webpack.NoEmitOnErrorsPlugin()
+  new webpack.NoEmitOnErrorsPlugin(),
+  new HtmlWebpackPlugin({
+    filename: 'main.html',
+    template: 'template/main.html',
+    chunks: ['vendors~bax~signin', 'vendors~bax', 'bax'],
+  }),
+  new HtmlWebpackPlugin({
+    filename: 'signin.html',
+    template: 'template/signin.html',
+    chunks: ['vendors~bax~signin', 'signin'],
+  }),
 ]
 console.log(config.module.rules)
 

@@ -13,17 +13,17 @@ const app = express()
 app.use(history({
   rewrites: [{
     from: /^\/signin/,
-    to: '/template/signin.html'
+    to: '/dist/signin.html'
   },
   {
     from: /^\/vt/,
-    to: '/template/vt.html'
+    to: '/dist/vt.html'
   }, {
     from: /^\/main/,
-    to: '/template/main.html'
+    to: '/dist/main.html'
   }, {
     from: /^\/huodong/,
-    to: '/template/huodong.html'
+    to: '/dist/huodong.html'
   }]
 }))
 
