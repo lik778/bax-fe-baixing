@@ -154,7 +154,7 @@
         if (raw) {
           times = JSON.parse(raw)
         }
-        const dateStr = moment().format('YYYY-MM-DD')
+        const dateStr = dayjs().format('YYYY-MM-DD')
 
         if (this.promotesDue.length) {
           const arr = this.promotesDue
