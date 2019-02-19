@@ -1,7 +1,7 @@
 <template>
   <div class="homepage">
     <account />
-    <campaign />
+    <homepage-campaign />
     <!-- <biaowang /> -->
     <site />
   </div>
@@ -12,7 +12,6 @@ import store from './store'
 
 import Site from './site'
 import Account from './account'
-import Campaign from './campaign'
 import Biaowang from './biaowang'
 
 export default {
@@ -23,7 +22,6 @@ export default {
   components: {
     Site,
     Account,
-    Campaign,
     Biaowang
   }
 }
