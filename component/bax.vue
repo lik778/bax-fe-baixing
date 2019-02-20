@@ -119,13 +119,6 @@ export default {
     es.addListener('http fetch end', () => {
       this.pending = this.pending - 1
     })
-
-    // 记录销售的客户id等信息
-    const {user_id: userId, sales_id: salesId} = this.$route.query
-    if (userId && salesId) {
-      this.salesInfo.userId = +userId
-      this.salesInfo.salesId = +salesId
-    }
   },
   created() {
     // 记录销售的客户id等信息
