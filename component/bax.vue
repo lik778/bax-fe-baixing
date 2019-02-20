@@ -119,10 +119,13 @@ export default {
     es.addListener('http fetch end', () => {
       this.pending = this.pending - 1
     })
+
+    console.log('in before mount, query', this.$route.query)
   },
   created() {
     // 记录销售的客户id等信息
     // 米奇跳转userId需改成user_id
+    console.log('query', this.$route.query)
     const {user_id, userId, sales_id: salesId} = this.$route.query
     const uid = userId || user_id
     if (uid && salesId) {
