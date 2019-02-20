@@ -1,10 +1,5 @@
 
-import Redirect from 'com/redirect'
 import Homepage from 'com/homepage'
-import Account from 'com/account'
-import Coupon from 'com/coupon'
-import Notice from 'com/notice'
-
 import Bax from 'com/bax'
 
 import VueClipboard from 'vue-clipboard2'
@@ -202,19 +197,19 @@ export const router = new VueRouter({
     path: '/main',
     name: 'root'
   }, {
-    component: Redirect,
+    component: () => import('com/redirect'),
     path: '/main/redirect-to',
     name: 'bax-redirect-page'
   }, {
-    component: Account,
+    component: () => import('com/account'),
     path: '/main/account',
     name: 'account'
   }, {
-    component: Coupon,
+    component: () => import('com/coupon'),
     path: '/main/coupon',
     name: 'coupon'
   }, {
-    component: Notice,
+    component: () => import('com/notice'),
     path: '/main/notice',
     name: 'notice'
   },
