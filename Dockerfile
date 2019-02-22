@@ -11,7 +11,7 @@ RUN npm ci
 
 COPY ./ ./
 
-RUN bash ./release
+RUN npm run release
 
 
 FROM nginx:1.10
