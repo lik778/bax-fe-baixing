@@ -54,6 +54,7 @@ import {
 } from 'util/role'
 
 import {router} from '../template/bax'
+import qs from 'query-string'
 
 export default {
   name: 'bax',
@@ -125,8 +126,7 @@ export default {
   created() {
     // 记录销售的客户id等信息
     // 米奇跳转userId需改成user_id
-    console.log('query', this.$route.query)
-    const {user_id, userId, sales_id: salesId} = this.$route.query
+    const {user_id, userId, sales_id: salesId} = qs.parse(location.search)
     const uid = userId || user_id
     if (uid && salesId) {
       this.salesInfo.userId = +uid
