@@ -3,12 +3,13 @@
   "private": true,
   "version": "5.4.1",
   "scripts": {
+    "start": "node tool/server.js",
+    "build": "node tool/build.js",
+    "move-file": "node tool/move-file.js",
     "upload-asset": "upyun-upload -c tool/asset.upyun.config.js -v",
     "upload": "upyun-upload -c tool/upyun.config.js -v",
-    "release": "node tool/release.js",
     "lint": "eslint . --ext .js,.vue",
-    "start": "node tool/server.js",
-    "build": "node tool/build.js"
+    "release": "npm run build && npm run upload && npm run move-file"
   },
   "repository": "https://gitlab.baixing.cn/channel/bax-fe",
   "dependencies": {
