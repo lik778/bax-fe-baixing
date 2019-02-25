@@ -15,7 +15,7 @@
               <el-checkbox :label="opt.value" v-for="(opt, index) in promoteStatusOpts" :key="index">{{opt.label}}</el-checkbox>
             </el-checkbox-group>
           </el-form-item>
-          <el-form-item label="审核状态">
+          <el-form-item >
             <el-checkbox-group v-model="query.auditStatusFilters">
               <el-checkbox :label="opt.value" v-for="(opt, index) in auditStatusOpts" :key="index">{{opt.label}}</el-checkbox>
             </el-checkbox-group>
@@ -30,7 +30,15 @@
           <el-table-column prop="cities" label="城市" :formatter="row => cityFormatter(row.cities)" />
           <el-table-column prop="device" label="平台" :formatter="row => deviceFormatter(row.device)" />
           <el-table-column prop="status" label="投放状态" :formatter="v => statusFormatter(v.status)" />
-          <el-table-column prop="auditStatus" label="审核状态">
+          <el-table-column>
+            <template slot="header">
+              <div>
+                审核状态
+                <el-tooltip content="指您最近一次提交内容的审核状态，系统将以最近一次通过审核的版本投放。">
+                  <i class="el-icon-info"></i>
+                </el-tooltip>
+              </div>
+            </template>
             <template slot-scope="scope">
               <el-popover v-if="isRejected(scope.row.auditStatus)" :content="scope.row.auditRejectReason" placement="top" trigger="hover">
                 <span slot="reference">{{auditStatusFormatter(scope.row.auditStatus)}}</span>
