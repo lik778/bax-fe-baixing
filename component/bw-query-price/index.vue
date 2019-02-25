@@ -162,21 +162,24 @@
           if (isValid) {
             this.loading = true
             const {keyword, devices, areas} = this.form
-            const results = await queryKeywordPrice({
-              word: keyword,
-              device: devices.length === 2 ? 0 : devices[0],
-              cities: areas
-            })
-            this.skus = results.map(item => {
-              return Object.entries(item.soldPriceMap).map(entry => {
-                return {
-                  ...item,
-                  days: +entry[0],
-                  price: entry[1]
-                }
+            try {
+              const results = await queryKeywordPrice({
+                word: keyword,
+                device: devices.length === 2 ? 0 : devices[0],
+                cities: areas
               })
-            })
-            this.loading = false
+              this.skus = results.map(item => {
+                return Object.entries(item.soldPriceMap).map(entry => {
+                  return {
+                    ...item,
+                    days: +entry[0],
+                    price: entry[1]
+                  }
+                })
+              })
+            } finally {
+              this.loading = false
+            }
           } else {
             return false
           }
@@ -277,5 +280,14 @@ marquee {
   color: #C6A674;
   display: flex;
   align-items: center;
+}
+.el-icon-plus {
+  cursor: pointer;
+  font-size: 1.2em;
+  padding: 10px;
+
+  &:hover {
+    font-weight: bold;
+  }
 }
 </style>

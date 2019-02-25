@@ -151,25 +151,20 @@ export const biaowang = new Fetch({
   beforeRequest() {
     es.emit('http fetch start')
   },
-  afterResponse() {
+  afterResponse(res) {
     es.emit('http fetch end')
-  },
-  afterJSON(body) {
-    const {errors, code, message} = body
-    if (errors) {
-      Message.error('出错啦')
-      throw new Error('出错啦')
-    }
-    console.log(body)
 
-    if (code === 1002) {
+    if (res.status === 200) {
+
+    } else if (res.status === 401) {
       Message.error('请重新登录 >_<')
       return redirect('signin', `return=${encodeURIComponent(location.pathname + location.search)}`)
-    }
-
-    if (message !== 'Success') {
-      Message.error(message)
-      throw new Error(message)
+    } else if (res.status === 500) {
+      Message.error(`出错了，请稍后重试`)
+    } else {
+      res.clone().json().then(body => {
+        Message.error(body.message || `出错了，请稍后重试`)
+      })
     }
   }
 })
