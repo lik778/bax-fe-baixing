@@ -7,8 +7,6 @@ import Fetch from 'fetch.io'
 import {
   fengmingApiHost,
   biaowangApiHost,
-  dashboardHost,
-  mvpApiHost,
   baxApiHost,
   kaApiHost
 } from 'config'
@@ -18,34 +16,6 @@ import {redirect} from 'util'
 
 export const fengming = new Fetch({
   prefix: fengmingApiHost,
-  beforeRequest() {
-    es.emit('http fetch start')
-  },
-  afterResponse() {
-    es.emit('http fetch end')
-  },
-  afterJSON(body) {
-    if (body.errors) {
-      Message.error('出错啦')
-      throw new Error('出错啦')
-    }
-
-    const meta = body.meta || {}
-
-    if (meta.status === 401) {
-      Message.error('请重新登录 >_<')
-      return redirect('signin', `return=${encodeURIComponent(location.pathname + location.search)}`)
-    }
-
-    if (meta.message !== 'Success') {
-      Message.error(meta.message)
-      throw new Error(meta.message)
-    }
-  }
-})
-
-export const mvp = new Fetch({
-  prefix: mvpApiHost,
   beforeRequest() {
     es.emit('http fetch start')
   },
@@ -117,31 +87,6 @@ export const api = new Fetch({
     if (meta.message !== 'Success') {
       Message.error(meta.message)
       throw new Error(meta.message)
-    }
-  }
-})
-
-export const dashboardApi = new Fetch({
-  prefix: dashboardHost,
-  beforeRequest() {
-    es.emit('http fetch start')
-  },
-  afterResponse(res) {
-    es.emit('http fetch end')
-
-    if (res.status >= 500) {
-      Message.error('出错啦')
-      throw new Error('出错啦')
-    }
-
-    if (res.status === 401) {
-      Message.error('请重新登录 >_<')
-      return redirect('signin')
-    }
-
-    if (res.status === 403) {
-      Message.error('你没有权限访问该页面')
-      return redirect('main')
     }
   }
 })
