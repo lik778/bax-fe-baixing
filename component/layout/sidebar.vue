@@ -6,6 +6,7 @@
         style="border: none;"
         :default-active="defaultActive"
         :default-openeds="defaultOpeneds"
+        :unique-opened="true"
         background-color="#fff"
         active-text-color="#FF6350"
         text-color="#333"
@@ -29,7 +30,7 @@
           </p>
         </el-menu-item>
 
-        <el-submenu index="qwt-campaign" v-if="allowSeeQwtPromotion">
+        <el-submenu index="sst" v-show="allowSeeQwtPromotion">
           <template slot="title">
             <bx-icon type="sharealt"></bx-icon>站外推广
           </template>
@@ -76,7 +77,8 @@
             <i class="el-icon-document" />数据报表
           </router-link>
         </el-menu-item>
-        <el-submenu index="ssp" v-if="allowSeeBxAd">
+
+        <el-submenu index="ssp" v-show="allowSeeBxAd">
           <template slot="title">
             <i class="el-icon-message"></i>品牌广告
           </template>
@@ -106,17 +108,6 @@
             </router-link>
           </el-menu-item>
         </el-submenu>
-
-        <!-- <el-menu-item index="account" v-if="allowSeeAccount">
-          <router-link :to="{ name: 'account' }" tag="p">
-            <bx-icon type="user"></bx-icon>我的账户
-          </router-link>
-        </el-menu-item> -->
-        <!-- <el-menu-item index="operation-log" v-if="allowSeeAccount">
-          <router-link :to="{ name: 'operation-log' }" tag="p">
-            <bx-icon type="inbox"></bx-icon>操作日志
-          </router-link>
-        </el-menu-item> -->
       </el-menu>
     </main>
   </div>
@@ -145,7 +136,8 @@ import {
 import { baxUserLogin, kaNavigation } from 'api/ka'
 
 const MENU_GROUP_MAP = {
-  'qwt-campaign': ['qwt-create-promotion', 'qwt-promotion-list', 'qwt-dashboard'],
+  'sst': ['qwt-create-promotion', 'qwt-promotion-list'],
+  'bw': ['bw-query-price', 'bw-plan-list'],
   'ssp': ['ad-list', 'material-list', 'order-list', 'user-list', 'ad-calendar']
 }
 
@@ -165,14 +157,22 @@ export default {
     return {
       version,
       defaultActive: null,
-      defaultOpeneds: null,
+      defaultOpeneds: [],
       isRenderSiteLink: false,
       isRenderSiteNavTag: false
     }
   },
   watch: {
     $route(route) {
-      this.$refs.menu.activeIndex = route.name
+      this.defaultOpeneds = Object
+        .entries(MENU_GROUP_MAP)
+        .reduce((defaultOpeneds, [group_index, group]) => {
+          if(group.some(item => item === route.name)) {
+            return defaultOpeneds.concat(group_index)
+          }
+          return defaultOpeneds
+        }, [])
+      this.defaultActive = route.name
     }
   },
   computed: {
@@ -206,17 +206,6 @@ export default {
   },
   methods: {
     async _initNavMenu() {
-      const route = this.$route
-      let defaultActive = route.name
-
-      this.defaultOpeneds = Object.entries(MENU_GROUP_MAP).reduce((defaultOpeneds, [group_index, group]) => {
-        if(group.some(item => item === defaultActive)) {
-          return defaultOpeneds.concat(group_index)
-        }
-        return defaultOpeneds
-      }, [])
-      this.defaultActive = defaultActive
-
       // 获取ka nav 数据
       await baxUserLogin()
       const { offlineSiteNum, canUseTicketsNum, allTicketsNum } = await kaNavigation()
@@ -233,9 +222,6 @@ export default {
         }
       })
     }
-  },
-  created() {
-    this._initNavMenu()
   }
 }
 </script>

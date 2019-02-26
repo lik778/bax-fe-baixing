@@ -109,6 +109,7 @@ export const biaowang = new Fetch({
     } else {
       res.clone().json().then(body => {
         Message.error(body.message || `出错了，请稍后重试`)
+        throw new Error(body.message)
       })
     }
   }
