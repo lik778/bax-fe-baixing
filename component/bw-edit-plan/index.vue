@@ -130,7 +130,6 @@
         const onePromote = await getPromoteById(promoteId)
         this.promotes = [onePromote]
         const {landingType, landingPage, landingPageId, creativeTitle, creativeContent} = onePromote
-        this.originalLandingpage = landingPage
         this.form = {
           promoteIds: [+promoteId],
           landingType: landingType || 0,
