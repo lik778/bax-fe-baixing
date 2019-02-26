@@ -15,10 +15,11 @@
                 <el-radio-group v-model="landingTypeDisplay" size="small">
                   <el-radio-button v-for="option of landingTypeOpts" :key="option.value" :label="option.value">{{option.label}}</el-radio-button>
                 </el-radio-group>
-                <a v-else href="javascript:;" class="qiqiaoban-warning" @click="goChargeKaSite">升级新精品官网，搜索通替你付一半</a>
+                <a v-if="isSpecialLandingpage" href="javascript:;" class="qiqiaoban-warning" @click="goChargeKaSite">升级新精品官网，搜索通替你付一半</a>
               </div>
               <div class="landing-page">
-                <user-ad-selector :type="adSelectorType"
+                <user-ad-selector
+                  :type="adSelectorType"
                   v-if="landingTypeDisplay === 0"
                   :all-areas="allAreas" :limit-mvp="false"
                   :selected-id="form.landingPageId"
@@ -33,7 +34,7 @@
                 />
               </div>
             </div>
-            <div class="error-page-placeholder" v-if="isErrorLandingPageShow">
+            <div class="error-page-placeholder" v-else>
               所选推广页面失效，请 <a href="javascript:;" @click="reselectLandingpage">从新选择</a>
             </div>
           </el-form-item>
