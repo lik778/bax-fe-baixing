@@ -27,7 +27,7 @@
                 />
 
                 <qiqiaoban-page-selector
-                  v-if="landingTypeDisplay === 1"
+                  v-if="landingTypeDisplay === 1 || landingTypeDisplay === 2"
                   :value="form.landingPage"
                   :is-special-landingpage="isSpecialLandingpage"
                   @change="onQiqiaobanChange"
@@ -158,7 +158,7 @@
       },
       verifyLandingpageIsError() {
         const { landingPage, landingType } = this.form
-        if (landingType === 1) {
+        if (landingType === 1 || landingType === 2) {
           const script = document.createElement('script')
           script.src = landingPage
           document.body.appendChild(script)
