@@ -47,7 +47,7 @@
         <span>
           <i class="badge" v-for="d of allDimensions" :key="d.value"
             :aria-checked="query.dimension === d.value"
-            @click="onChangeDimension(d.value)">
+            @click="query.dimension = d.value">
             {{ d.label }}
           </i>
         </span>
@@ -56,7 +56,6 @@
       <data-detail :statistics="statistics" :summary="summary"
         :offset="offset" :total="total" :limit="limit"
         :dimension="query.dimension"
-        @switch-to-campaign-report="({campaignId}) => getCampaignReport(campaignId)"
         @current-change="queryStatistics">
       </data-detail>
 
@@ -81,7 +80,8 @@ import {
   allTimeUnits,
   allDevices,
   timeTypes,
-  fields
+  campaignFields,
+  keywordFields
 } from 'constant/fengming-report'
 
 import {
@@ -89,10 +89,6 @@ import {
   SEM_PLATFORM_BAIDU,
   semPlatformOpts
 } from 'constant/fengming'
-
-import {
-  getCampaignInfo
-} from 'api/fengming'
 
 import track from 'util/track'
 
@@ -112,17 +108,11 @@ export default {
     total: () => store.total
   },
   props: {
-    userInfo: {
-      type: Object,
-      required: true
-    },
+    userInfo: Object,
     salesInfo: Object
   },
   data() {
     return {
-      campaignDialogVisible: false,
-      hasOperated: false, // 用户已经操作过
-
       SEM_PLATFORM_SHENMA,
       DEVICE_WAP,
 
@@ -133,7 +123,7 @@ export default {
 
       query: {
         timeType: timeTypes[0].value,
-        timeRange: [],
+        timeRange: [Date.now(), Date.now()],
 
         checkedCampaigns: [],
 
@@ -183,53 +173,30 @@ export default {
         dataDimension: query.dimension,
         timeUnit: query.timeUnit,
         device: query.device,
+        channel: query.channel,
 
         limit: 100,
         offset,
 
-        fields
+        fields: query.dimension === DIMENSION_CAMPAIGN
+          ? campaignFields
+          : keywordFields
       }
-
-      if (query.checkedCampaigns.length) {
-        q.campaignIds = query.checkedCampaigns.map(c => c.id)
-      } else {
-        q.campaignIds = undefined
-      }
-
-      // // 特事特办
-      // if (this.$route.query.source === 'qwt-promotion-list' &&
-      //   this.$route.query.campaignId &&
-      //   !this.hasOperated) {
-      //   q.campaignIds = [this.$route.query.campaignId | 0]
-      // }
 
       await store.getReport(q)
-    },
-    async getCampaignReport(campaignId) {
-      const campaign = await getCampaignInfo(campaignId)
-      this.query.channel = campaign.source
-      this.query.timeType = timeTypes[0].value
-      this.query.device = DEVICE_ALL
-      this.query.timeUnit = TIME_UNIT_DAY
-      this.query.dimension = DIMENSION_KEYWORD
-      this.query.checkedCampaigns = [campaign]
     },
   },
   watch: {
     query: {
       deep: true,
-      handler: async function() {
+      handler: async function(v) {
+        console.log(v)
         await this.queryStatistics()
       }
     },
   },
   async mounted() {
-    const { query } = this.$route
-    if (query.campaignId) {
-      await this.getCampaignReport(query.campaignId)
-    } else {
-      await this.queryStatistics()
-    }
+    await this.queryStatistics()
 
     setTimeout(() => {
       const { userInfo } = this

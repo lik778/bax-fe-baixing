@@ -96,7 +96,7 @@ export const timeTypes = [{
   value: 'custom'
 }]
 
-export const columnOpts = [{
+export const campaignColumnOpts = [{
   label: '日期',
   value: 'date'
 }, {
@@ -104,13 +104,45 @@ export const columnOpts = [{
   value: 'campaignId'
 }, {
   label: '渠道',
-  value: 'channel' // 暂缺
+  value: 'channel'
 }, {
   label: '设备',
   value: 'device'
 }, {
+  label: '展现',
+  value: 'shows'
+}, {
+  label: '点击',
+  value: 'clicks'
+}, {
+  label: '平均点击单价',
+  value: 'clickAvgPrice'
+}, {
+  label: '消费',
+  value: 'cost'
+}]
+
+export const keywordColumnOpts = [{
+  label: '日期',
+  value: 'date'
+}, {
+  label: '推广计划',
+  value: 'campaignId'
+}, {
+  label: '渠道',
+  value: 'channel'
+}, {
+  label: '设备',
+  value: 'device'
+}, {
+  label: '关键词id',
+  value: 'keywordId'
+}, {
   label: '关键词',
-  value: 'keyword' // 暂缺
+  value: 'keyword'
+}, {
+  label: '出价',
+  value: 'price'
 }, {
   label: '展现',
   value: 'shows'
@@ -131,40 +163,9 @@ export const columnOpts = [{
   value: 'cpcRanking'
 }]
 
-export const mvpColumnOpts = [{
-  label: '日期',
-  value: 'date'
-}, {
-  label: '推广计划',
-  value: 'campaignId'
-}, {
-  label: '渠道',
-  value: 'channel' // 暂缺
-}, {
-  label: '设备',
-  value: 'device'
-}, {
-  label: '展现',
-  value: 'shows'
-}, {
-  label: '点击',
-  value: 'clicks'
-}, {
-  label: '平均点击单价',
-  value: 'clickAvgPrice'
-}, {
-  label: '消费',
-  value: 'cost'
-}, {
-  label: '点击率',
-  value: 'clickRate'
-}/* , {
-  label: '平均排名',
-  value: 'cpcRanking'
-} */ ]
+function toUnderscore(s) {
+  return s.replace(/[A-Z]/g, s => '_' + s.toLowerCase())
+}
 
-export const fields = columnOpts.map(col => {
-  return col.value.replace(/[A-Z]/g, (s) => {
-    return '_' + s.toLowerCase()
-  })
-})
+export const campaignFields = campaignColumnOpts.map(col => toUnderscore(col.value))
+export const keywordFields = keywordColumnOpts.map(col => toUnderscore(col.value))
