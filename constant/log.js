@@ -8,6 +8,13 @@ export const OP_TYPE_CREATE = 1
 export const OP_TYPE_UPDATE = 2
 export const OP_TYPE_DELETE = 3
 
+export const PRODUCT_TYPE_BIAOWANG = 1
+export const PRODUCT_TYPE_FENGMING = 2
+
+export const TYPE_LANDING_PAGE = 11
+export const TYPE_CREATIVE_TITLE = 12
+export const TYPE_CREATIVE_CONTENT = 13
+
 const fmtOpts = (type) => {
   return Object.freeze(
     Object.entries(type)
@@ -18,7 +25,7 @@ const fmtOpts = (type) => {
   )
 }
 
-export const timelineType = {
+export const fengmingTimelineType = {
   // [TIMELINE_TYPE_BALANCE]: '余额',
   '不限': '',
   '计划': TIMELINE_TYPE_CAMPAIGN,
@@ -26,10 +33,15 @@ export const timelineType = {
   '关键词': TIMELINE_TYPE_KEYWORD
 }
 
+export const biaowangTimelineType = {
+  '落地页': TYPE_LANDING_PAGE,
+  '创意标题': TYPE_CREATIVE_TITLE,
+  '创意内容': TYPE_CREATIVE_CONTENT
+}
+
 const productType = {
-  '3': '不限',
-  '1': '标王',
-  '2': '站外推广'
+  '标王': PRODUCT_TYPE_BIAOWANG,
+  '站外推广': PRODUCT_TYPE_FENGMING
 }
 
 const opType = {
@@ -57,6 +69,7 @@ export const fieldType = {
   price: '关键词出价'
 }
 
-export const timelineTypeOpts = fmtOpts(timelineType)
+export const fengmingTimelineTypeOpts = fmtOpts(fengmingTimelineType)
+export const biaowangTimelineTypeOpts = fmtOpts(biaowangTimelineType)
 export const productTypeOpts = fmtOpts(productType)
 export const opTypeOpts = fmtOpts(opType)

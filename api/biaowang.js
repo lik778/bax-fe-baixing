@@ -73,7 +73,7 @@ export async function getPromtesByOrders(orderIds) {
     .query({orderIds})
     .json()
 
-  return body.data.content
+  return body.data
 }
 
 export async function updatePromote(opts = {}) {
@@ -100,4 +100,13 @@ export async function getRecentSold() {
     .json()
 
   return body.data.content
+}
+
+export async function getLogs(parmas) {
+  const body = await biaowang
+    .get(`/promote/timeline/query`)
+    .query(parmas)
+    .json()
+
+  return body.data
 }
