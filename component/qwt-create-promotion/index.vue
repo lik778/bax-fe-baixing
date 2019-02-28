@@ -378,7 +378,7 @@ export default {
     selectRecommend(item) {
       const { keywords } = this.newPromotion
       if (keywords.find(kw => kw.word === item.word)) {
-        Message.warning('已选择该关键词')
+        Message.warning('该关键词已存在')
       } else {
         keywords.push(item)
         this.queryWord = ''
@@ -789,6 +789,11 @@ strong.red {
 .el-icon-plus {
   cursor: pointer;
   font-size: 1.2em;
+  padding: 10px;
+
+  &:hover {
+    font-weight: bold;
+  }
 }
 .promotion-target {
   & > header  {

@@ -2,7 +2,6 @@
 import { reverseCamelcase, toCamelcase } from 'object-keys-mapping'
 import { fengming, trim } from './base'
 import qs from 'query-string'
-import dayjs from 'dayjs'
 import {
   isPro
 } from 'config'
@@ -306,37 +305,6 @@ export async function getChargeLogs(opts) {
   }
 }
 
-// export async function getLogs(opts = {}) {
-//   let query = {
-//     pageSize: 50,
-//     offset: 0,
-//     time: dayjs().subtract(1, 'months').unix(),
-//     ...opts
-//   }
-
-//   const { type, time, pageSize, offset } = query
-
-//   query = trim(reverseCamelcase({
-//     timelineType: type,
-//     createdAt: time,
-//     limit: pageSize,
-//     offset
-//   }))
-
-//   const [logs, total] = await Promise.all([
-//     _getLogs(query),
-//     _getLogCount(query)
-//   ])
-
-//   return {
-//     query: {
-//       ...query,
-//       total
-//     },
-//     logs
-//   }
-// }
-
 export async function getLogs(queryParmas = {}) {
   const { meta, data } = await fengming
     .get('/timeline/query')
@@ -486,24 +454,6 @@ async function _getDailySummary() {
     .json()
 
   return toCamelcase(body.data)
-}
-
-async function _getLogs(opts) {
-  const body = await fengming
-    .get('/timeline')
-    .query(opts)
-    .json()
-
-  return toCamelcase(body.data)
-}
-
-async function _getLogCount(opts) {
-  const body = await fengming
-    .get('/timeline/count')
-    .query(opts)
-    .json()
-
-  return body.data
 }
 
 /**

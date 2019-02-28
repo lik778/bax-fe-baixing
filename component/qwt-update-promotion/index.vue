@@ -1044,12 +1044,15 @@ export default {
       if (type === 'single') {
         // 单个添加
         if (!queryWord) return
+        // 前端检查是否已有
+        if (this.currentKeywords.find(w => w.word.toLowerCase() === queryWord.toLowerCase())) {
+          return this.$message.info('当前关键词已存在关键词列表')
+        }
         const recommendKeywords = await recommendByWord(queryWord, {campaignId: this.originPromotion.id})
         const newKeyword = store.fmtNewKeywordsPrice(recommendKeywords).find( k => k.word === queryWord)
-        console.log('单个关键词添加', newKeyword)
         if (!newKeyword) return this.$message.info('没有合适的关键词')
+
         newKeywords = [newKeyword]
-        if (!this.filterExistCurrentWords(newKeywords).length) return this.$message.info('当前关键词已存在关键词列表')
         this.queryWord = ''
       } else {
         // 一键拓词

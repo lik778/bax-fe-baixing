@@ -7,8 +7,6 @@ import Fetch from 'fetch.io'
 import {
   fengmingApiHost,
   biaowangApiHost,
-  dashboardHost,
-  mvpApiHost,
   baxApiHost,
   kaApiHost
 } from 'config'
@@ -18,34 +16,6 @@ import {redirect} from 'util'
 
 export const fengming = new Fetch({
   prefix: fengmingApiHost,
-  beforeRequest() {
-    es.emit('http fetch start')
-  },
-  afterResponse() {
-    es.emit('http fetch end')
-  },
-  afterJSON(body) {
-    if (body.errors) {
-      Message.error('出错啦')
-      throw new Error('出错啦')
-    }
-
-    const meta = body.meta || {}
-
-    if (meta.status === 401) {
-      Message.error('请重新登录 >_<')
-      return redirect('signin', `return=${encodeURIComponent(location.pathname + location.search)}`)
-    }
-
-    if (meta.message !== 'Success') {
-      Message.error(meta.message)
-      throw new Error(meta.message)
-    }
-  }
-})
-
-export const mvp = new Fetch({
-  prefix: mvpApiHost,
   beforeRequest() {
     es.emit('http fetch start')
   },
@@ -121,55 +91,26 @@ export const api = new Fetch({
   }
 })
 
-export const dashboardApi = new Fetch({
-  prefix: dashboardHost,
+export const biaowang = new Fetch({
+  prefix: biaowangApiHost,
   beforeRequest() {
     es.emit('http fetch start')
   },
   afterResponse(res) {
     es.emit('http fetch end')
 
-    if (res.status >= 500) {
-      Message.error('出错啦')
-      throw new Error('出错啦')
-    }
+    if (res.status === 200) {
 
-    if (res.status === 401) {
-      Message.error('请重新登录 >_<')
-      return redirect('signin')
-    }
-
-    if (res.status === 403) {
-      Message.error('你没有权限访问该页面')
-      return redirect('main')
-    }
-  }
-})
-
-export const biaowang = new Fetch({
-  prefix: biaowangApiHost,
-  beforeRequest() {
-    es.emit('http fetch start')
-  },
-  afterResponse() {
-    es.emit('http fetch end')
-  },
-  afterJSON(body) {
-    const {errors, code, message} = body
-    if (errors) {
-      Message.error('出错啦')
-      throw new Error('出错啦')
-    }
-    console.log(body)
-
-    if (code === 1002) {
+    } else if (res.status === 401) {
       Message.error('请重新登录 >_<')
       return redirect('signin', `return=${encodeURIComponent(location.pathname + location.search)}`)
-    }
-
-    if (message !== 'Success') {
-      Message.error(message)
-      throw new Error(message)
+    } else if (res.status === 500) {
+      Message.error(`出错了，请稍后重试`)
+    } else {
+      res.clone().json().then(body => {
+        Message.error(body.message || `出错了，请稍后重试`)
+      })
+      throw new Error(res.statusText)
     }
   }
 })
