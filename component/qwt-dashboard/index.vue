@@ -2,19 +2,19 @@
 <template>
   <div class="qwt-dashboard">
     <main>
+      <dashboard-header />
       <section>
+        <p class="tip">搜狗渠道无法提供今天的数据；百度、360和神马渠道今天的数据存在一定延时，且最近1小时内的展现数据会存在波动。</p>
         <aside>选择渠道:</aside>
         <span>
-          <bax-select :options="semPlatformOpts"
-            :clearable="false"
-            :value="query.channel"
-            @change="onChangeChannel">
-          </bax-select>
-          <label class="tip">
-            搜狗渠道无法提供今天的数据；百度、360和神马渠道今天的数据存在一定延时，且最近1小时内的展现数据会存在波动。
-          </label>
+          <i class="badge" v-for="(t, i) in semPlatformOpts" :key="i"
+            :aria-checked="query.channel === t.value"
+            @click="query.channel = t.value">
+            {{ t.label }}
+          </i>
         </span>
       </section>
+
       <section>
         <aside>推广日期:</aside>
         <span>
@@ -23,12 +23,13 @@
             @click="query.timeType = t.value">
             {{ t.label }}
           </i>
-          <el-date-picker v-if="query.timeType === 'custom'"
+          <el-date-picker size="small" v-if="query.timeType === 'custom'"
             type="daterange" placeholder="选择日期"
             format="yyyy-MM-dd" v-model="query.timeRange">
           </el-date-picker>
         </span>
       </section>
+
       <section>
         <aside>推广设备:</aside>
         <span>
@@ -40,57 +41,30 @@
           </i>
         </span>
       </section>
-      <section>
-        <aside>选择计划</aside>
-        <span class="kw-list">
-          <div>
-            <el-tag v-for="c in query.checkedCampaigns" closable
-              type="danger" :key="'c-' + c.id"
-              @close="removeCampaign(c)">
-              {{ '计划：' + c.id }}
-            </el-tag>
-            <button class="add-campaign-btn"
-              @click="openCampaignSelector">
-              <i class="el-icon-plus" />
-              添加计划
-            </button>
-          </div>
-        </span>
-      </section>
+
       <section>
         <aside>数据维度:</aside>
         <span>
           <i class="badge" v-for="d of allDimensions" :key="d.value"
             :aria-checked="query.dimension === d.value"
-            @click="onChangeDimension(d.value)">
+            @click="query.dimension = d.value">
             {{ d.label }}
           </i>
         </span>
       </section>
+
       <data-detail :statistics="statistics" :summary="summary"
         :offset="offset" :total="total" :limit="limit"
         :dimension="query.dimension"
-        @download="() => queryStatistics({}, 'download')"
-        @switch-to-campaign-report="({campaignId}) => getCampaignReport(campaignId)"
         @current-change="queryStatistics">
       </data-detail>
-      <campaign-selector
-        :visible="campaignDialogVisible"
-        :channel="query.channel"
-        :userId="normalUserId"
-        :campaign-ids="query.checkedCampaigns.map(c => c.id)"
-        @ok="campaignDialogVisible = false"
-        @select-campaign="selectCampaign"
-        @remove-campaign="removeCampaign"
-        @clear="clearCheckedCampaigns" />
+
     </main>
   </div>
 </template>
 
 <script>
-import CampaignSelector from 'com/common/campaign-selector'
-import BaxSelect from 'com/common/select'
-
+import DashboardHeader from './dashboard-header'
 import DataDetail from './data-detail'
 
 import { toTimestamp } from 'utils'
@@ -106,7 +80,8 @@ import {
   allTimeUnits,
   allDevices,
   timeTypes,
-  fields
+  campaignFields,
+  keywordFields
 } from 'constant/fengming-report'
 
 import {
@@ -115,10 +90,6 @@ import {
   semPlatformOpts
 } from 'constant/fengming'
 
-import {
-  getCampaignInfo
-} from 'api/fengming'
-
 import track from 'util/track'
 
 import store from './store'
@@ -126,9 +97,8 @@ import store from './store'
 export default {
   name: 'qwt-dashboard',
   components: {
-    CampaignSelector,
     DataDetail,
-    BaxSelect
+    DashboardHeader
   },
   fromMobx: {
     statistics: () => store.statistics,
@@ -138,17 +108,11 @@ export default {
     total: () => store.total
   },
   props: {
-    userInfo: {
-      type: Object,
-      required: true
-    },
+    userInfo: Object,
     salesInfo: Object
   },
   data() {
     return {
-      campaignDialogVisible: false,
-      hasOperated: false, // 用户已经操作过
-
       SEM_PLATFORM_SHENMA,
       DEVICE_WAP,
 
@@ -159,7 +123,7 @@ export default {
 
       query: {
         timeType: timeTypes[0].value,
-        timeRange: [],
+        timeRange: [Date.now(), Date.now()],
 
         checkedCampaigns: [],
 
@@ -183,7 +147,7 @@ export default {
     }
   },
   methods: {
-    async queryStatistics(opts = {}, action = 'query') {
+    async queryStatistics(opts = {}) {
       const offset = opts.offset || 0
       const { query } = this
 
@@ -209,111 +173,30 @@ export default {
         dataDimension: query.dimension,
         timeUnit: query.timeUnit,
         device: query.device,
+        channel: query.channel,
 
         limit: 100,
         offset,
 
-        fields
+        fields: query.dimension === DIMENSION_CAMPAIGN
+          ? campaignFields
+          : keywordFields
       }
 
-      if (query.checkedCampaigns.length) {
-        q.campaignIds = query.checkedCampaigns.map(c => c.id)
-      } else {
-        q.campaignIds = undefined
-      }
-
-      // 特事特办
-      if (this.$route.query.source === 'qwt-promotion-list' &&
-        this.$route.query.campaignId &&
-        !this.hasOperated) {
-        q.campaignIds = [this.$route.query.campaignId | 0]
-      }
-
-      if (action === 'download') {
-        await store.downloadCsv(q)
-      } else {
-        await store.getReport(q)
-      }
+      await store.getReport(q)
     },
-    async getCampaignReport(campaignId) {
-      const campaign = await getCampaignInfo(campaignId)
-      this.query.channel = campaign.source
-      this.query.timeType = timeTypes[0].value
-      this.query.device = DEVICE_ALL
-      this.query.timeUnit = TIME_UNIT_DAY
-      this.query.dimension = DIMENSION_KEYWORD
-      this.query.checkedCampaigns = [campaign]
-    },
-    openCampaignSelector() {
-      this.campaignDialogVisible = true
-      track({
-        action: 'qwt-dashboard: click campaign selector'
-      })
-    },
-    async onChangeChannel(v) {
-      this.hasOperated = true
-      await this.clearCheckedCampaigns()
-      this.query.channel = v
-      track({
-        action: 'qwt-dashboard: click channel'
-      })
-    },
-    onChangeDimension(v) {
-      this.hasOperated = true
-      this.query.dimension = v
-      track({
-        action: 'qwt-dashboard: click dimension'
-      })
-    },
-    selectCampaign(campaign) {
-      this.hasOperated = true
-      const ids = this.query.checkedCampaigns.map(c => c.id)
-      if (ids.includes(campaign.id)) {
-        return
-      }
-
-      this.query.checkedCampaigns.push(campaign)
-    },
-    removeCampaign(campaign) {
-      this.hasOperated = true
-      this.query.checkedCampaigns = this.query.checkedCampaigns
-        .filter(c => c.id !== campaign.id)
-    },
-    async clearCheckedCampaigns() {
-      this.query.checkedCampaigns = []
-      await store.clearStatistics()
-    }
   },
   watch: {
     query: {
       deep: true,
-      handler: async function() {
+      handler: async function(v) {
+        console.log(v)
         await this.queryStatistics()
       }
     },
-    'query.timeType': () => {
-      track({
-        action: 'qwt-dashboard: click time range'
-      })
-    },
-    'query.timeUnit': () => {
-      track({
-        action: 'qwt-dashboard: click time unit'
-      })
-    },
-    'query.device': () => {
-      track({
-        action: 'qwt-dashboard: click device'
-      })
-    }
   },
   async mounted() {
-    const { query } = this.$route
-    if (query.campaignId) {
-      await this.getCampaignReport(query.campaignId)
-    } else {
-      await this.queryStatistics()
-    }
+    await this.queryStatistics()
 
     setTimeout(() => {
       const { userInfo } = this
@@ -353,9 +236,9 @@ export default {
 }
 
 .tip {
-  margin-left: 5px;
   font-size: 12px;
   color: var(--c-tip-gray);
+  margin-bottom: 20px;
 }
 
 .badge {

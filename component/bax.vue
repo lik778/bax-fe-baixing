@@ -120,6 +120,8 @@ export default {
     es.addListener('http fetch end', () => {
       this.pending = this.pending - 1
     })
+
+    console.log('in before mount, query', this.$route.query)
   },
   created() {
     // 记录销售的客户id等信息
