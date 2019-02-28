@@ -22,13 +22,27 @@ class Store {
       kaSite: this.kaSiteData && toJS(this.kaSiteData.messages)
     }
   }
-
-  @action async initPageStore() {
-    const [fengmingData, campaignRadar] = await Promise.all([getHomePageFengmingData(), getCampaignRadar(), baxUserLogin()])
-    const kaSiteData = await kaSimpleReport()
-    this.fengmingData = fengmingData
-    this.kaSiteData = kaSiteData
-    this.campaignRadar = campaignRadar
+  @action async loadBaxData() {
+    try {
+      const [fengmingData, campaignRadar] = await Promise.all([getHomePageFengmingData(), getCampaignRadar()])
+      this.fengmingData = fengmingData
+      this.campaignRadar = campaignRadar
+    } catch (err) {
+      console.error(err)
+    }
+  }
+  @action async loadKaData() {
+    try {
+      await baxUserLogin()
+      const kaSiteData = await kaSimpleReport()
+      this.kaSiteData = kaSiteData
+    } catch (err) {
+      console.error(err)
+    }
+  }
+  @action initPageStore() {
+    this.loadKaData()
+    this.loadBaxData()
   }
 }
 

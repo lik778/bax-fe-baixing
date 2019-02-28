@@ -2,21 +2,20 @@
   <div class="layout-container">
     <div class="layout-left">
       <h5 class="layout-header">账户概览</h5>
-      <ul class="accout" v-if="fengmingBalance && sites">
-        <li class="account-item">
+      <ul class="accout">
+        <li class="account-item" v-if="fengmingBalance.price && fengmingBalance.day">
           <p class="title">站外推广余额(元)</p>
           <p class="num">{{fengmingBalance.price}}</p>
           <p class="desc">（可消耗 {{fengmingBalance.day}} 天）</p>
           <el-button type="primary" class="button" size="small" @click.native="() => handleCharge('bax')">立即充值</el-button>
         </li>
-        <!-- FIXME: 标王重构玩再上 -->
         <!-- <li class="account-item">
           <p class="title">标王推广关键词(个)</p>
           <p class="num">{{0}}</p>
           <p class="desc">（ {{5}} 个词即将到期）</p>
           <el-button type="primary" class="button" size="small" @click.native="() => handleCharge('biaowang')">立即充值</el-button>
         </li> -->
-        <li class="account-item">
+        <li class="account-item" v-if="sites">
             <p class="title">精品官网(个)</p>
             <p class="num">{{sites.length}}</p>
             <p class="desc" v-if="sites.length">
@@ -26,7 +25,7 @@
             <el-button type="primary" class="button" size="small" @click.native="() => handleCharge('site')">{{sites.length === 0 ? '立即购买' : '立即续费'}}</el-button>
         </li>
       </ul>
-      <div class="placeholder" v-else><i class="el-icon-loading" />正在获取数据</div>
+      <div class="placeholder" v-if="!fengmingBalance.price && !fengmingBalance.day && !sites"><i class="el-icon-loading" />正在获取数据</div>
     </div>
     <div class="layout-right">
       <h5 class="layout-header">

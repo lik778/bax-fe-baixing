@@ -16,7 +16,7 @@ import Biaowang from './biaowang'
 
 export default {
   name: 'qwt-homepage',
-  created() {
+  mounted() {
     store.initPageStore()
   },
   components: {
