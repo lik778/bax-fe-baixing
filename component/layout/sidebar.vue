@@ -204,8 +204,11 @@ export default {
       return allowSeeQwtPromotion(this.userInfo.roles)
     }
   },
+  mounted() {
+    this.initNavMenu()
+  },
   methods: {
-    async _initNavMenu() {
+    async initNavMenu() {
       // 获取ka nav 数据
       await baxUserLogin()
       const { offlineSiteNum, canUseTicketsNum, allTicketsNum } = await kaNavigation()
