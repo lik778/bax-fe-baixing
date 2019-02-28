@@ -16,13 +16,14 @@ export const CREATIVE_CHIBI_ACCEPT = 10
 export const KEYWORD_STATUS_REFUSE = -10
 export const KEYWORD_STATUS_ONLINE = 0
 
+// 针对用户显示做了简化
 export const keywordStatus = {
   '0': '投放中',
   '-1': '已删除',
   '1': '审核中',
-  '5': '准备创建',
-  '6': '准备删除',
-  '7': '准备更新',
+  '5': '审核中',
+  '6': '已删除',
+  '7': '审核中',
   '-10': '审核失败'
 }
 
