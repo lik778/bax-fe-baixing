@@ -413,22 +413,11 @@ export default {
       this.setCustomPrice(row, f2y(this.getWordPrice(row.word)) * 1.2)
     },
     fmtStatus(row) {
-      const { chibiStatus, status } = row
-
       if (this.campaignOffline) {
         return '-'
       }
 
-      if (chibiStatus === KEYWORD_CHIBI_REJECT ||
-        status === KEYWORD_STATUS_REFUSE) {
-        return '审核失败'
-      }
-
-      if (chibiStatus === KEYWORD_CHIBI_PENDING) {
-        return '等待审核'
-      }
-
-      return keywordStatus[String(status)] || '未知'
+      return keywordStatus[String(row.status)] || '未知'
     },
     fmtWord(w) {
       return {
