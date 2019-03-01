@@ -38,7 +38,6 @@
       style="width: 100%">
       <el-table-column
         label="日期"
-        prop="createdAt"
         :formatter="dateFormatter"
         width="180">
       </el-table-column>
@@ -178,14 +177,13 @@ export default {
       productTypeOpts,
 
       offset: 0,
-
       queryParmas: {
         opType: '',
         campaignId: '',
         timelineType: '',
         limit: ONE_PAGE_NUM,
         createdAt: CREATED_AT_VALUES[0],
-        productType: PRODUCT_TYPE_BIAOWANG,
+        productType: PRODUCT_TYPE_FENGMING,
       },
     }
   },
@@ -225,8 +223,8 @@ export default {
       const result = timelineTypeOpts.find(({value}) => value === timelineType)
       return result && result.label
     },
-    dateFormatter({createdAt}) {
-      return toHumanTime(createdAt, 'YYYY-MM-DD HH:mm')
+    dateFormatter({createdAt, timestamp}) {
+      return toHumanTime(createdAt || timestamp, 'YYYY-MM-DD HH:mm')
     },
     campaignIdFormatter({promoteId: id, message}) {
       if (message) {

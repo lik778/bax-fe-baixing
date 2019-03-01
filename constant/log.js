@@ -34,6 +34,7 @@ export const fengmingTimelineType = {
 }
 
 export const biaowangTimelineType = {
+  '不限': '',
   '落地页': TYPE_LANDING_PAGE,
   '创意标题': TYPE_CREATIVE_TITLE,
   '创意内容': TYPE_CREATIVE_CONTENT
