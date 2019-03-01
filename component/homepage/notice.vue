@@ -17,14 +17,14 @@
       </template>
       <div v-else class="notice-placeholder"><i class="el-icon-info" />暂无{{noticeTitle}}</div>
     </ul>
-    <div v-else class="notice-placeholder">
-      <i class="el-icon-loading" />正在加载{{noticeTitle}}
-    </div>
+    <loading-placeholder style="height: 184px;">正在加载{{noticeTitle}}</loading-placeholder>
   </div>
 </template>
 
 <script>
 import dayjs from 'dayjs'
+import loadingPlaceholder from './loading-placeholder'
+
 const noticeTexts = {
   fengming: '账户推广通知',
   site: '官网留言通知'
@@ -35,6 +35,7 @@ export default {
   beforeDestroy() {
     this.stopScroll = true
   },
+  components: {loadingPlaceholder},
   methods: {
     formatDate(date) {
       return dayjs(date).format('YYYY.MM.DD')

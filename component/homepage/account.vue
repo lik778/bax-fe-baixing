@@ -1,6 +1,6 @@
 <template>
   <div class="layout-container">
-    <div class="layout-left">
+    <div class="layout-left" v-if="(fengmingBalance.price && fengmingBalance.day) || sites || biaowangData">
       <h5 class="layout-header">账户概览</h5>
       <ul class="accout">
         <li class="account-item" v-if="fengmingBalance.price && fengmingBalance.day">
@@ -9,12 +9,12 @@
           <p class="desc">（可消耗 {{fengmingBalance.day}} 天）</p>
           <el-button type="primary" class="button" size="small" @click.native="() => handleCharge('bax')">立即充值</el-button>
         </li>
-        <!-- <li class="account-item">
+        <li class="account-item" v-if="biaowangData">
           <p class="title">标王推广关键词(个)</p>
-          <p class="num">{{0}}</p>
-          <p class="desc">（ {{5}} 个词即将到期）</p>
+          <p class="num">{{biaowangData.onlinePromotes}}</p>
+          <p class="desc">（ {{biaowangData.nearExpirationPromotes}} 个词即将到期）</p>
           <el-button type="primary" class="button" size="small" @click.native="() => handleCharge('biaowang')">立即充值</el-button>
-        </li> -->
+        </li>
         <li class="account-item" v-if="sites">
             <p class="title">精品官网(个)</p>
             <p class="num">{{sites.length}}</p>
@@ -25,8 +25,11 @@
             <el-button type="primary" class="button" size="small" @click.native="() => handleCharge('site')">{{sites.length === 0 ? '立即购买' : '立即续费'}}</el-button>
         </li>
       </ul>
-      <div class="placeholder" v-if="!fengmingBalance.price && !fengmingBalance.day && !sites"><i class="el-icon-loading" />正在获取数据</div>
     </div>
+    <loading-placeholder class="layout-left" v-else>
+      <h5 class="layout-header" slot="header">账户概览</h5>
+      正在获取推广数据
+    </loading-placeholder>
     <div class="layout-right">
       <h5 class="layout-header">
         账户推广通知
@@ -45,14 +48,16 @@
 import dayjs from 'dayjs'
 import store from './store'
 import Notice from './notice'
+import loadingPlaceholder from './loading-placeholder'
 
 export default {
   name: 'homepage-accout',
-  components: {Notice},
+  components: {Notice, loadingPlaceholder},
   fromMobx: {
     fengmingBalance: () => store.fengmingBalance,
     notices: () => store.notices.fengming,
-    sites: () => store.kaSiteData && store.kaSiteData.sites
+    sites: () => store.kaSiteData && store.kaSiteData.sites,
+    biaowangData: () => store.biaowangData
   },
   methods: {
     handleCharge(type) {
@@ -111,15 +116,5 @@ export default {
       margin: 20px 0;
     }
   }
-  .placeholder {
-    color: #888;
-    line-height: 189px;
-    text-align: center;
-    font-size: 18px;
-    letter-spacing: 1px;
-    & .el-icon-loading {
-      font-size: 20px;
-      margin-right: 5px;
-    }
-  }
+
 </style>

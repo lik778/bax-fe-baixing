@@ -1,12 +1,15 @@
-import { observable, toJS, action, computed } from 'mobx'
-import { getHomePageFengmingData } from 'api/fengming'
 import { baxUserLogin, kaSimpleReport } from 'api/ka'
+import { getHomePageFengmingData } from 'api/fengming'
+import { getHomePageBiaowangData, getPromotes, getCpcRanking } from 'api/biaowang'
 import { getCampaignRadar } from 'api/fengming-campaign'
+import { observable, toJS, action, computed } from 'mobx'
 
 class Store {
   @observable fengmingData = null
   @observable kaSiteData = null
   @observable campaignRadar = null
+  @observable biaowangData = null
+  @observable biaowangPromotes = null
 
   @computed get fengmingBalance() {
     const data = this.fengmingData
@@ -40,9 +43,22 @@ class Store {
       console.error(err)
     }
   }
+  @action async loadBiaowangData() {
+    try {
+      const [biaowangData, {items: biaowangPromotes}] = await Promise.all([getHomePageBiaowangData(), getPromotes({size: 5, page: 0})])
+      console.log(biaowangPromotes)
+      const promoteIds = biaowangPromotes.map(p => p.id)
+      const cpcRanks = await getCpcRanking(promoteIds)
+      this.biaowangData = biaowangData
+      this.biaowangPromotes = biaowangPromotes.map((values, key) => ({cpcRank: cpcRanks[key], ...values}))
+    } catch (err) {
+      console.error(err)
+    }
+  }
   @action initPageStore() {
     this.loadKaData()
     this.loadBaxData()
+    this.loadBiaowangData()
   }
 }
 

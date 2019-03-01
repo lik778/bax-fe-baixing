@@ -1,43 +1,46 @@
 <template>
   <div class="layout-container">
-    <div class="layout-left">
+    <div class="layout-left" v-if="biaowangData">
       <h5 class="layout-header">标王推广概览</h5>
       <div class="layout-content">
         <div class="report">
           <div class="radio-group">
-            <el-radio>今日</el-radio>
-            <el-radio>昨日</el-radio>
-            <el-radio>过去7天</el-radio>
+            <el-radio v-model="dataPrefix" label="">今日</el-radio>
+            <el-radio v-model="dataPrefix" label="thisWeek">昨日</el-radio>
+            <el-radio v-model="dataPrefix" label="yesterday">过去7天</el-radio>
           </div>
           <ul class="data-list">
             <li class="data">
-              <h6 class="title">访问量</h6>
-              <p class="num">12</p>
+              <h6 class="title">在线词个数</h6>
+              <p class="num">{{getPromoteData('promotes')}}</p>
             </li>
             <li class="data">
-              <h6 class="title">访问人数</h6>
-              <p class="num">12</p>
+              <h6 class="title">展示次数</h6>
+              <p class="num">{{getPromoteData('pv')}}</p>
             </li>
           </ul>
         </div>
         <div class="description">
           <p>与同行客户相比，您的标王推广为您多获得了</p>
-          <p><strong>5%</strong>展现次数</p>
+          <p><strong>{{getRandomPvPercent(biaowangData.onlinePromotes)}}%</strong>展现次数</p>
           <p>
             您还有标王关键词没有生效，
             <a href="javascript:;">点此查看</a>
           </p>
           <div class="actions">
-            <el-button type="primary">立即购买</el-button>
-            <el-button type="primary">立即续费</el-button>
+            <el-button type="primary" @click="$router.push({name: 'bw-query-price'})">立即购买</el-button>
+            <el-button type="primary" @click="$router.push({name: 'qwt-charge'})">立即续费</el-button>
           </div>
         </div>
       </div>
     </div>
-    <div class="layout-right">
+    <loading-placeholder v-else class="layout-left">
+      <h5 class="layout-header" slot="header">标王推广概览</h5>正在获取标王推广概览
+    </loading-placeholder>
+    <div class="layout-right" v-if="biaowangPromotes">
       <h5 class="layout-header">
         标王推广数据概览
-        <span class="action">查看详情</span>
+        <span class="action" v-if="biaowangPromotes.length" @click="$route.push({name: 'bw-plan-list'})">查看详情</span>
       </h5>
       <div class="layout-content">
         <dl class="dl-wrap">
@@ -47,26 +50,87 @@
             <span class="col">剩余天数</span>
             <span class="col action"></span>
           </dt>
-          <dd class="dd wrap">
-            <span class="col">关键词1</span>
-            <span class="col">4</span>
-            <span class="col">17/30天</span>
+          <dd class="dd wrap" v-for="p in biaowangPromotes" :key="p.id">
+            <span class="col">{{p.word}}</span>
+            <span class="col">{{p.cpcRank}}</span>
+            <span class="col">{{leftDays(p)}}/{{p.days.toFixed(1)}}</span>
             <span class="col action">续费</span>
           </dd>
         </dl>
       </div>
     </div>
+    <loading-placeholder v-else class="layout-right">
+      <h5 class="layout-header" slot="header">标王推广数据概览</h5>正在获取标王推广数据概览
+    </loading-placeholder>
   </div>
 </template>
 
 <script>
+import store from './store'
+import loadingPlaceholder from './loading-placeholder'
+
 export default {
-  name: 'homepage-biaowang'
+  name: 'homepage-biaowang',
+  data() {
+    return {
+      dataPrefix: ''
+    }
+  },
+  methods: {
+    getPromoteData(type) {
+      const { dataPrefix } = this
+      let key
+      if (dataPrefix) {
+         key = dataPrefix + type[0].toUpperCase() + type.substring(1, type.length)
+      } else if (type === 'promotes') {
+        key = 'onlinePromotes'
+      } else {
+        key = type
+      }
+      return this.biaowangData[key]
+    },
+    getRandomPvPercent(promote) {
+      const key = 'BW_PV_PERCENT'
+      const getRandomNum = ([min, max]) => Math.floor(Math.random()*(max-min+1)+min,10)
+      const lastValue = window.localStorage.getItem(key)
+      let range = [300, 400]
+      if (lastValue) {
+        const [value, timeStamp] = lastValue.split('-')
+        if (new Date(+timeStamp).toDateString() === new Date().toDateString()) {
+          return value / 10
+        }
+      }
+
+      if (promote < 3) {
+        range = [150, 200]
+      } else if (promote >= 3 && promote < 5) {
+        range = [200, 300]
+      }
+      const percent = getRandomNum(range)
+      window.localStorage.setItem(key, `${percent}-${Date.now()}`)
+      return percent / 10
+      
+    },
+    leftDays({days, startedAt}) {
+      let daysLeft = days
+      if (startedAt) {
+        // 可能是负值
+        daysLeft = days - (Date.now() - startedAt * 1000) / 86400 / 1000
+      }
+      return parseFloat(Math.max(daysLeft, 0)).toFixed(1)
+    }
+  },
+  components: {loadingPlaceholder},
+  fromMobx: {
+    biaowangData: () => store.biaowangData,
+    biaowangPromotes: () => store.biaowangPromotes && store.biaowangPromotes.slice()
+  }
 }
 </script>
 
 <style lang="postcss" scoped>
   .layout-left {
+    min-height: 284px;
     & .layout-content {
       display: flex;
     }
@@ -117,7 +181,7 @@ export default {
         color: #35A5E4;
       }
       & .actions {
-        margin-top: 16px;
+        margin-top: 22px;
         & >>> .el-button {
           min-width: 110px;
           padding: 8px 12px;
@@ -126,6 +190,7 @@ export default {
     }
   }
   .layout-right {
+    min-height: 284px;
     & .layout-content {
       margin-top: 22px;
       & .wrap {

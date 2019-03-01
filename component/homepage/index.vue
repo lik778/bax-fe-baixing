@@ -2,7 +2,7 @@
   <div class="homepage">
     <account />
     <homepage-campaign />
-    <!-- <biaowang /> -->
+    <biaowang />
     <site />
   </div>
 </template>

@@ -110,3 +110,11 @@ export async function getLogs(parmas) {
 
   return body.data
 }
+
+export async function getHomePageBiaowangData() {
+  const body = await biaowang
+    .get(`/promote/user/info`)
+    .json()
+
+  return body.data
+}
