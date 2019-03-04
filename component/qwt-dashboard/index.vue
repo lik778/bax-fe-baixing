@@ -53,9 +53,15 @@
         </span>
       </section>
 
+      <section v-if="query.checkedCampaignIds.length">
+        <aside>选中计划</aside>
+        <el-tag v-for="(id, index) in query.checkedCampaignIds" :key="index" closable @close="onTagClose(id)">{{id}}</el-tag>
+      </section>
+
       <data-detail :statistics="statistics" :summary="summary"
         :offset="offset" :total="total" :limit="limit"
         :dimension="query.dimension"
+        @switch-to-campaign-report="getCampaignReport"
         @current-change="queryStatistics">
       </data-detail>
 
@@ -89,6 +95,10 @@ import {
   SEM_PLATFORM_BAIDU,
   semPlatformOpts
 } from 'constant/fengming'
+
+import {
+  getCampaignInfo
+} from 'api/fengming'
 
 import track from 'util/track'
 
@@ -124,9 +134,7 @@ export default {
       query: {
         timeType: timeTypes[0].value,
         timeRange: [Date.now(), Date.now()],
-
-        checkedCampaigns: [],
-
+        checkedCampaignIds: [],
         dimension: DIMENSION_CAMPAIGN,
         channel: SEM_PLATFORM_BAIDU,
         timeUnit: TIME_UNIT_DAY,
@@ -147,6 +155,9 @@ export default {
     }
   },
   methods: {
+    onTagClose(cid) {
+      this.query.checkedCampaignIds.splice(this.query.checkedCampaignIds.indexOf(cid), 1)
+    },
     async queryStatistics(opts = {}) {
       const offset = opts.offset || 0
       const { query } = this
@@ -174,6 +185,7 @@ export default {
         timeUnit: query.timeUnit,
         device: query.device,
         channel: query.channel,
+        campaignIds: query.checkedCampaignIds,
 
         limit: 100,
         offset,
@@ -183,7 +195,14 @@ export default {
           : keywordFields
       }
 
+
       await store.getReport(q)
+    },
+    async getCampaignReport(campaign) {
+      this.query.channel = campaign.channel
+      this.query.device = DEVICE_ALL
+      this.query.dimension = DIMENSION_KEYWORD
+      this.query.checkedCampaignIds = [campaign.campaignId]
     },
   },
   watch: {
