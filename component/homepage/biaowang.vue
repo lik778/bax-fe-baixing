@@ -40,7 +40,7 @@
     <div class="layout-right" v-if="biaowangPromotes">
       <h5 class="layout-header">
         标王推广数据概览
-        <span class="action" v-if="biaowangPromotes.length" @click="$route.push({name: 'bw-plan-list'})">查看详情</span>
+        <span class="action" v-if="biaowangPromotes.length" @click="$router.push({name: 'bw-plan-list'})">查看详情</span>
       </h5>
       <div class="layout-content">
         <dl class="dl-wrap">
@@ -54,7 +54,8 @@
             <span class="col">{{p.word}}</span>
             <span class="col">{{p.cpcRank}}</span>
             <span class="col">{{leftDays(p)}}/{{p.days.toFixed(1)}}</span>
-            <span class="col action">续费</span>
+            <span v-if="canXufei(p)" class="col action" @click="$router.push({name: 'bw-query-price', query: {promoteId: p.id}})">续费</span>
+            <span class="col"></span>
           </dd>
         </dl>
       </div>
@@ -68,6 +69,7 @@
 <script>
 import store from './store'
 import loadingPlaceholder from './loading-placeholder'
+import { PROMOTE_STATUS_ONLINE } from 'constant/biaowang'
 
 export default {
   name: 'homepage-biaowang',
@@ -118,7 +120,10 @@ export default {
         daysLeft = days - (Date.now() - startedAt * 1000) / 86400 / 1000
       }
       return parseFloat(Math.max(daysLeft, 0)).toFixed(1)
-    }
+    },
+    canXufei(promote) {
+      return PROMOTE_STATUS_ONLINE.includes(promote.status) && this.leftDays(promote) <= 15
+    },
   },
   components: {loadingPlaceholder},
   fromMobx: {
