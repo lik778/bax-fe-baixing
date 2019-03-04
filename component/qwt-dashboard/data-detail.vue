@@ -179,6 +179,7 @@ export default {
       return a.map(i => m[String(i)]).join(',')
     },
     fmtCpcRanking,
+    f2y
   }
 }
 </script>
