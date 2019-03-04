@@ -2,7 +2,7 @@
   <div class="layout-container">
     <section-header>历史操作记录</section-header>
     <label>查询产品</label>
-    <bax-select 
+    <bax-select
       v-model="queryParmas.productType"
       :clearable="false"
       placeholder="请选择"

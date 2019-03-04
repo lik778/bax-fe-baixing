@@ -2,6 +2,12 @@
   <div class="layout-container">
     <section-header>支付订单查询</section-header>
     <div class="action-container">
+      <bax-select
+        v-model="params.productType"
+        :clearable="false"
+        placeholder="请选择"
+        :options="productTypeOpts"
+      />
       <el-date-picker
         v-model="params.dateRange"
         type="datetimerange"
@@ -19,57 +25,75 @@
       :data="orderData"
       style="width: 100%"
     >
-      <el-table-column
-        width="180"
-        label="订单编号"
-        prop="id"/>
-      <el-table-column
-        width="90"
-        align="center"
-        label="状态"
-        :formatter="({status}) => statusLabel[status]"/>
-      <el-table-column
-        width="105"
-        align="center"
-        label="充值金额"
-        :formatter="formatChargePrice"/>
-      <el-table-column
-        width="90"
-        align="center"
-        label="精品官网"
-        :formatter="formatKaSiteDuration"/>
-      <el-table-column
-        width="105"
-        align="center"
-        label="原价"
-        :formatter="({originalPrice, extra}) => formatPrice(originalPrice * genKaSiteDuration(extra))"/>
-      <el-table-column
-        width="105"
-        align="center"
-        label="优惠"
-        :formatter="({originalPrice, customerPrice, extra}) => formatPrice(originalPrice * genKaSiteDuration(extra) - customerPrice)"/>
-      <el-table-column
-        width="105"
-        align="center"
-        label="实价"
-        :formatter="({customerPrice}) => formatPrice(customerPrice)"/>
-      <el-table-column
-        width="140"
-        align="center"
-        label="创建时间"
-        :formatter="formatCreatedAt"/>
-      <el-table-column label="操作"
-        width="180"
-        align="center"
-      >
-        <div slot-scope="{row}">
-          <div class="btn-wrap" v-if="row.status === statusType.STATUS_UNPAID">
-            <a href="javascript:;" @click="payOrder(row.id)">支付</a>
-            <a href="javascript:;" @click="cancelOrder(row.id)">取消订单</a>
+      <template v-if="params.productType === PRODUCT_TYPE_FENGMING">
+        <el-table-column
+          width="180"
+          label="订单编号"
+          prop="id"/>
+        <el-table-column
+          width="90"
+          align="center"
+          label="状态"
+          :formatter="({status}) => statusLabel[status]"/>
+        <el-table-column
+          width="105"
+          align="center"
+          label="充值金额"
+          :formatter="formatChargePrice"/>
+        <el-table-column
+          width="90"
+          align="center"
+          label="精品官网"
+          :formatter="formatKaSiteDuration"/>
+        <el-table-column
+          width="105"
+          align="center"
+          label="原价"
+          :formatter="({originalPrice, extra}) => formatPrice(originalPrice * genKaSiteDuration(extra))"/>
+        <el-table-column
+          width="105"
+          align="center"
+          label="优惠"
+          :formatter="({originalPrice, customerPrice, extra}) => formatPrice(originalPrice * genKaSiteDuration(extra) - customerPrice)"/>
+        <el-table-column
+          width="105"
+          align="center"
+          label="实价"
+          :formatter="({customerPrice}) => formatPrice(customerPrice)"/>
+        <el-table-column
+          width="140"
+          align="center"
+          label="创建时间"
+          :formatter="({ createdAt }) => formatTimestamp(createdAt * 1000)"/>
+        <el-table-column label="操作"
+          width="180"
+          align="center"
+        >
+          <div slot-scope="{row}">
+            <div class="btn-wrap" v-if="row.status === statusType.STATUS_UNPAID">
+              <a href="javascript:;" @click="payOrder(row.id)">支付</a>
+              <a href="javascript:;" @click="cancelOrder(row.id)">取消订单</a>
+            </div>
+            <div v-else>-</div>
           </div>
-          <div v-else>-</div>
-        </div>
-      </el-table-column>
+        </el-table-column>
+      </template>
+      <template>
+        <el-table-column
+          width="180"
+          label="订单编号"
+          prop="tradeSeq"/>
+        <el-table-column
+          width="90"
+          align="center"
+          label="状态"
+          :formatter="({status}) => statusLabel[status]"/>
+        <el-table-column
+          width="140"
+          align="center"
+          label="创建时间"
+          :formatter="({ createdTime }) => formatTimestamp(createdTime)"/>
+      </template>
     </el-table>
     <el-pagination
       v-if="total"
@@ -87,7 +111,9 @@
 <script>
 import dayjs from 'dayjs'
 import * as api from 'api/account'
+import BaxSelect from 'com/common/select'
 import SectionHeader from 'com/common/section-header'
+import { productTypeOpts, PRODUCT_TYPE_BIAOWANG, PRODUCT_TYPE_FENGMING } from 'constant/log'
 
 const statusType = {
   STATUS_REFUND: -10,
@@ -121,8 +147,11 @@ export default {
     return {
       statusType,
       statusLabel,
+      productTypeOpts,
+      PRODUCT_TYPE_FENGMING,
 
       params: {
+        productType: PRODUCT_TYPE_BIAOWANG,
         dateRange: DEFAULT_DATE_RANGE,
         limit: ONE_PAGE_NUM,
         statuses: statusType.STATUS_UNPAID
@@ -132,7 +161,7 @@ export default {
       total: 0
     }
   },
-  components: {SectionHeader},
+  components: {SectionHeader, BaxSelect},
   methods: {
     async payOrder(orderId) {
       const url = await api.payOrder(orderId)
@@ -151,20 +180,36 @@ export default {
       this.$message.success('取消订单成功')
     },
     async fetchOrderData(isResetOffset) {
+      let data
       if (isResetOffset) this.offset = 0
       // format quey parmas
-      const { dateRange, ...otherParams } = this.params
-      const [startTs, endTs] = dateRange.map(transformUnixTimeStamp)
+      const { dateRange: originalDateRange, productType, limit, statuses } = this.params
+      const [startTs, endTs] = originalDateRange.map(transformUnixTimeStamp)
       if (!(startTs && endTs)) return
-      const queryParmas = {
+      const dateRange = {
         startTs,
-        endTs,
-        offset: this.offset,
-        ...otherParams
+        endTs
       }
-      const {total, data} = await api.queryOrder(queryParmas)
-      this.orderData = data
-      this.total = total
+      if (productType === PRODUCT_TYPE_FENGMING) {
+        data = await api.queryFengmingOrder({
+          limit,
+          statuses,
+          ...dateRange,
+          offset: this.offset
+        })
+
+      } else {
+        const page = this.offset / ONE_PAGE_NUM
+        const size = ONE_PAGE_NUM
+        data = await api.queryBiaowangOrder({
+          page,
+          size,
+          status: statuses
+        })
+      }
+      console.log(data)
+      this.orderData = data.data
+      this.total = data.total
     },
     formatPrice(price) {
       return (price / 100)
@@ -173,8 +218,8 @@ export default {
       // 这个订单如果只买了官网，没有充值，就显示“-”
       return productType === 4 ? '-' : this.formatPrice(originalPrice)
     },
-    formatCreatedAt({createdAt}) {
-      return dayjs(new Date(createdAt * 1000)).format('YY-MM-DD HH:mm')
+    formatTimestamp(timestamp) {
+      return dayjs(new Date(timestamp)).format('YY-MM-DD HH:mm')
     },
     formatKaSiteDuration({productType, extra}) {
       if (productType === 3) return '-'

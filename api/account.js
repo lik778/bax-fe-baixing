@@ -1,6 +1,6 @@
 
 import { reverseCamelcase, toCamelcase } from 'object-keys-mapping'
-import { api, trim } from './base'
+import { api, trim, biaowang } from './base'
 
 export async function getUserIdFromBxSalesId(salesId) {
   const body = await api
@@ -146,7 +146,7 @@ async function _getUserCount(query) {
   return body.data
 }
 
-export async function queryOrder(query) {
+export async function queryFengmingOrder(query) {
   const { data, meta } = await api
     .get('/order/query')
     .query(reverseCamelcase(query))
@@ -155,6 +155,17 @@ export async function queryOrder(query) {
   return {
     data: toCamelcase(data),
     total: meta.count
+  }
+}
+
+export async function queryBiaowangOrder(query) {
+  const { data } = await biaowang
+    .get('/trade/user/order')
+    .query(query)
+    .json()
+  return {
+    data: data.content,
+    total: data.totalElements
   }
 }
 

@@ -54,7 +54,7 @@
             <span class="col">{{p.word}}</span>
             <span class="col">{{p.cpcRank}}</span>
             <span class="col">{{leftDays(p)}}/{{p.days.toFixed(1)}}</span>
-            <span v-if="canXufei(p)" class="col action" @click="$router.push({name: 'bw-query-price', query: {promoteId: p.id}})">续费</span>
+            <span v-if="canXufei(p)" class="col action" @click="$router.push({name: 'bw-plan-list', params: {promote: p}})">续费</span>
             <span class="col"></span>
           </dd>
         </dl>
@@ -210,7 +210,7 @@ export default {
       }
       & .col {
         width: 25%;
-        flex: 1;
+        flex: none;
         &.action {
           cursor: pointer;
           color:  #ED7D00;
