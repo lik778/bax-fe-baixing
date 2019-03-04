@@ -15,6 +15,13 @@
         :formatter="r => (r.clickAvgPrice / 100).toFixed(2) + '元'" />
       <el-table-column label="消耗" width="120"
         :formatter="r => (r.cost / 100).toFixed(2) + '元'" />
+      <el-table-column label="关键词详情" width="140">
+      <template slot-scope="scope">
+        <p class="link" @click="switchToCampaignReport(scope.row)">
+          查看
+        </p>
+      </template>
+    </el-table-column>
     </el-table>
 
     <el-table v-else :key="2" :data="statistics">
@@ -85,6 +92,7 @@ import {
   toHumanTime,
   centToYuan
 } from 'utils'
+
 import { toFloat } from 'util/kit'
 
 const isArray = Array.isArray
@@ -132,6 +140,9 @@ export default {
     }
   },
   methods: {
+    switchToCampaignReport(campaign) {
+      this.$emit('switch-to-campaign-report', campaign)
+    },
     async onChangePrice(cid, kid, userPrice) {
       const price = (userPrice ? toFloat(userPrice) : 0) * 100
       if (price > 99 * 100 || price < 2 * 100) {
