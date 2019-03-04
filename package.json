@@ -3,12 +3,13 @@
   "private": true,
   "version": "5.4.3",
   "scripts": {
+    "start": "node tool/server.js",
+    "build": "node tool/build.js",
+    "move-file": "node tool/move-file.js",
     "upload-asset": "upyun-upload -c tool/asset.upyun.config.js -v",
     "upload": "upyun-upload -c tool/upyun.config.js -v",
-    "release": "node tool/release.js",
     "lint": "eslint . --ext .js,.vue",
-    "start": "node tool/server.js",
-    "build": "node tool/build.js"
+    "release": "npm run build && npm run upload && npm run move-file"
   },
   "repository": "https://gitlab.baixing.cn/channel/bax-fe",
   "dependencies": {
@@ -28,7 +29,7 @@
     "object-keys-mapping": "2.0.0",
     "query-string": "4.3.4",
     "rxjs": "^5.5.6",
-    "utils": "git+ssh://git@gitlab.baixing.cn:channel/fe-utils.git",
+    "utils": "git+https://oauth2:AcjyueLsS2KVPEr3KCRc@gitlab.baixing.cn/channel/fe-utils.git",
     "uuid": "3.0.1",
     "vue": "^2.5.13",
     "vue-clipboard2": "0.0.8",
