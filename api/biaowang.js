@@ -9,7 +9,6 @@ export async function queryKeywordPrice(opts = {}) {
 
   return body.data.content
 }
-
 export async function refreshKeywordPrice(keywords) {
   const requestBody = keywords.map(k => ({
     ...k,
@@ -100,4 +99,13 @@ export async function getRecentSold() {
     .json()
 
   return body.data.content
+}
+
+export async function getQiqiaobanCoupon(promoteId) {
+  const body = await biaowang
+    .post('/promote/coupon/qiqiaoban')
+    .query({promoteId})
+    .json()
+
+  return body.data
 }

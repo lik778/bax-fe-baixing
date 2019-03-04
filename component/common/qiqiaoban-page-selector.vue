@@ -42,7 +42,7 @@
         type: Boolean
       },
       // FIXME: 老官网
-      isQiqiaobanSite: {
+      isSpecialLandingpage: {
         type: Boolean,
         default: false
       }
@@ -62,9 +62,9 @@
     },
     async mounted() {
       // FIXME: 老官网
-      let currentQiqiaobanSiteOption = []
-      if (this.isQiqiaobanSite) {
-        currentQiqiaobanSiteOption = [{
+      let currentSpecialLandingpageOption = []
+      if (this.isSpecialLandingpage && this.value) {
+        currentSpecialLandingpageOption = [{
           label: this.value,
           value: this.value
         }]
@@ -77,9 +77,9 @@
       ])
 
       this.ticketCount = count
-      // FIXME: 老官网 currentQiqiaobanSiteOption
+      // FIXME: 老官网
       this.options = [
-        ...currentQiqiaobanSiteOption,
+        ...currentSpecialLandingpageOption,
         ...list.map(p => ({
           label: p.name,
           value: 'http://' + p.domain + '.mvp.baixing.com'
