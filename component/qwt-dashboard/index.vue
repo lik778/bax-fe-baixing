@@ -53,9 +53,11 @@
         </span>
       </section>
 
-      <section v-if="query.checkedCampaignIds.length">
-        <aside>选中计划</aside>
-        <el-tag v-for="(id, index) in query.checkedCampaignIds" :key="index" closable @close="onTagClose(id)">{{id}}</el-tag>
+      <section>
+        <aside>计划ID：</aside>
+        <el-input v-model.trim="searchCampaigns" size="mini" class="search" placeholder="输入计划ID，多个计划使用英文逗号分隔">
+
+        </el-input>
       </section>
 
       <data-detail :statistics="statistics" :summary="summary"
@@ -134,15 +136,19 @@ export default {
       query: {
         timeType: timeTypes[0].value,
         timeRange: [Date.now(), Date.now()],
-        checkedCampaignIds: [],
         dimension: DIMENSION_CAMPAIGN,
         channel: SEM_PLATFORM_BAIDU,
         timeUnit: TIME_UNIT_DAY,
         device: DEVICE_ALL
-      }
+      },
+
+      searchCampaigns: ''
     }
   },
   computed: {
+    checkedCampaignIds() {
+      return String(this.searchCampaigns).split(',')
+    },
     normalUserId() {
       return this.salesInfo.userId || this.userInfo.id
     },
@@ -155,12 +161,9 @@ export default {
     }
   },
   methods: {
-    onTagClose(cid) {
-      this.query.checkedCampaignIds.splice(this.query.checkedCampaignIds.indexOf(cid), 1)
-    },
     async queryStatistics(opts = {}) {
       const offset = opts.offset || 0
-      const { query } = this
+      const { query, checkedCampaignIds } = this
 
       let startAt
       let endAt
@@ -185,7 +188,7 @@ export default {
         timeUnit: query.timeUnit,
         device: query.device,
         channel: query.channel,
-        campaignIds: query.checkedCampaignIds,
+        campaignIds: checkedCampaignIds,
 
         limit: 100,
         offset,
@@ -202,17 +205,19 @@ export default {
       this.query.channel = campaign.channel
       this.query.device = DEVICE_ALL
       this.query.dimension = DIMENSION_KEYWORD
-      this.query.checkedCampaignIds = [campaign.campaignId]
+      this.searchCampaigns = campaign.campaignId
     },
   },
   watch: {
     query: {
       deep: true,
       handler: async function(v) {
-        console.log(v)
         await this.queryStatistics()
       }
     },
+    searchCampaigns () {
+      this.queryStatistics()
+    }
   },
   async mounted() {
     await this.queryStatistics()
@@ -322,5 +327,8 @@ export default {
       }
     }
   }
+}
+.search {
+  width: 300px;
 }
 </style>

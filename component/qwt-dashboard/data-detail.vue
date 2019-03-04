@@ -35,7 +35,7 @@
       <el-table-column label="出价" width="100">
         <template slot-scope="scope">
           <span v-if="scope.row.price === null">-</span>
-          <el-input v-else size="mini" :value="scope.row.price" @change="v => onChangePrice(scope.row.campaignId, scope.row.keywordId, v)"></el-input>
+          <el-input v-else size="mini" :value="centToYuan(scope.row.price)" @change="v => onChangePrice(scope.row.campaignId, scope.row.keywordId, v)"></el-input>
         </template>
       </el-table-column>
       <el-table-column label="展现" prop="shows" width="90" sortable />
