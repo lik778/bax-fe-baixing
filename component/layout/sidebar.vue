@@ -153,6 +153,9 @@ export default {
       required: true
     }
   },
+  created() {
+    this.initNavMenu()
+  },
   data() {
     return {
       version,
@@ -205,7 +208,7 @@ export default {
     }
   },
   methods: {
-    async _initNavMenu() {
+    async initNavMenu() {
       // 获取ka nav 数据
       await baxUserLogin()
       const { offlineSiteNum, canUseTicketsNum, allTicketsNum } = await kaNavigation()
