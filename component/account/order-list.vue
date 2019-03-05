@@ -22,7 +22,7 @@
       </el-radio-group>
     </div>
     <el-table
-      :data="orderData"
+      :data="params.productType === PRODUCT_TYPE_FENGMING ? fengmingOrderData: biaowangOrderData"
       style="width: 100%"
     >
       <template v-if="params.productType === PRODUCT_TYPE_FENGMING">
@@ -78,9 +78,10 @@
           </div>
         </el-table-column>
       </template>
-      <template>
+      
+      <template v-else>
         <el-table-column
-          width="180"
+          width="240"
           label="订单编号"
           prop="tradeSeq"/>
         <el-table-column
@@ -89,10 +90,37 @@
           label="状态"
           :formatter="({status}) => statusLabel[status]"/>
         <el-table-column
+          width="105"
+          align="center"
+          label="原价"
+          :formatter="({originalPrice}) => formatPrice(originalPrice)"/>
+        <el-table-column
+          width="105"
+          align="center"
+          label="优惠"
+          :formatter="({originalPrice, dealPrice}) => formatPrice(originalPrice - dealPrice) || '-'"/>
+        <el-table-column
+          width="105"
+          align="center"
+          label="实价"
+          :formatter="({dealPrice}) => formatPrice(dealPrice)"/>
+        <el-table-column
           width="140"
           align="center"
           label="创建时间"
           :formatter="({ createdTime }) => formatTimestamp(createdTime)"/>
+        <el-table-column label="操作"
+          width="180"
+          align="center"
+        >
+          <div slot-scope="{row}">
+            <div class="btn-wrap" v-if="row.status === statusType.STATUS_UNPAID">
+              <a href="javascript:;" @click="payOrder(row.id)">支付</a>
+              <a href="javascript:;" @click="cancelOrder(row.id)">取消订单</a>
+            </div>
+            <div v-else>-</div>
+          </div>
+      </el-table-column>
       </template>
     </el-table>
     <el-pagination
@@ -157,7 +185,8 @@ export default {
         statuses: statusType.STATUS_UNPAID
       },
       offset: 0,
-      orderData: [],
+      fengmingOrderData: [],
+      biaowangOrderData: [],
       total: 0
     }
   },
@@ -180,7 +209,6 @@ export default {
       this.$message.success('取消订单成功')
     },
     async fetchOrderData(isResetOffset) {
-      let data
       if (isResetOffset) this.offset = 0
       // format quey parmas
       const { dateRange: originalDateRange, productType, limit, statuses } = this.params
@@ -191,25 +219,25 @@ export default {
         endTs
       }
       if (productType === PRODUCT_TYPE_FENGMING) {
-        data = await api.queryFengmingOrder({
+        const {data, total} = await api.queryFengmingOrder({
           limit,
           statuses,
           ...dateRange,
           offset: this.offset
         })
-
+        this.fengmingOrderData = data
+        this.total = total
       } else {
         const page = this.offset / ONE_PAGE_NUM
         const size = ONE_PAGE_NUM
-        data = await api.queryBiaowangOrder({
+        const {data, total} = await api.queryBiaowangOrder({
           page,
           size,
           status: statuses
         })
+        this.biaowangOrderData = data
+        this.total = total
       }
-      console.log(data)
-      this.orderData = data.data
-      this.total = data.total
     },
     formatPrice(price) {
       return (price / 100)
@@ -248,7 +276,7 @@ export default {
     params: {
       deep: true,
       immediate: true,
-      handler() {
+      handler(val, oVal) {
         this.fetchOrderData(true)
       }
     }
