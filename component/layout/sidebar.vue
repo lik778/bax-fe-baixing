@@ -153,6 +153,9 @@ export default {
       required: true
     }
   },
+  created() {
+    this.initNavMenu()
+  },
   data() {
     return {
       version,

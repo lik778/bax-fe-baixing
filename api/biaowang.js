@@ -9,7 +9,6 @@ export async function queryKeywordPrice(opts = {}) {
 
   return body.data.content
 }
-
 export async function refreshKeywordPrice(keywords) {
   const requestBody = keywords.map(k => ({
     ...k,

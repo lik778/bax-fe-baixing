@@ -33,7 +33,7 @@
                 v-if="getProp('landingType') === LANDING_TYPE_GW"
                 :disabled="disabled"
                 :value="getProp('landingPage')"
-                :is-qiqiaoban-site="isQiqiaobanSite"
+                :is-special-landingpage="isQiqiaobanSite"
                 @change="setLandingPage">
               </qiqiaoban-page-selector>
 

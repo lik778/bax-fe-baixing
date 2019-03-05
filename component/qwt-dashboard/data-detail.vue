@@ -1,54 +1,53 @@
 
 <template>
   <div class="qwt-dashboard-data-detail">
-    <header>
-      数据详情
-    </header>
-    <main>
-      <el-table v-if="isCampaignDimension"
-        :key="1" :data="statistics">
-        <el-table-column label="日期" prop="date" width="140" />
-        <el-table-column label="推广计划" prop="campaignId" width="120" />
-        <el-table-column label="渠道" width="100"
-          :formatter="r => fmtChannel(r.channel)" />
-        <el-table-column label="设备" width="100"
-          :formatter="r => fmtDevice(r.device)" />
-        <el-table-column label="展现" prop="shows" width="90" sortable />
-        <el-table-column label="点击" prop="clicks" width="90" sortable />
-        <el-table-column label="实扣点击单价" width="160" sortable
-          :formatter="r => (r.clickAvgPrice / 100).toFixed(2) + '元'" />
-        <el-table-column label="消耗" width="120"
-          :formatter="r => (r.cost / 100).toFixed(2) + '元'" />
-        <el-table-column label="关键词详情" width="140">
-          <template slot-scope="s">
-            <p class="link" @click="switchToCampaignReport(s.row.campaignId)">
-              查看
-            </p>
-          </template>
-        </el-table-column>
-      </el-table>
-      <el-table v-else :key="2" :data="statistics">
-        <el-table-column label="日期" prop="date" width="140" />
-        <el-table-column label="关键词" prop="keyword" width="120" />
-        <el-table-column label="渠道" width="100"
-          :formatter="r => fmtChannel(r.channel)" />
-        <el-table-column label="设备" width="100"
-          :formatter="r => fmtDevice(r.device)" />
-        <el-table-column label="展现" prop="shows" width="90" sortable />
-        <el-table-column label="点击" prop="clicks" width="90" sortable />
-        <el-table-column label="实扣点击单价" width="160" sortable
-          :formatter="r => (r.clickAvgPrice / 100).toFixed(2) + '元'" />
-        <el-table-column label="消耗" width="120"
-          :formatter="r => (r.cost / 100).toFixed(2) + '元'" />
-        <el-table-column label="排名" width="120" sortable
-          :formatter="r => fmtCpcRanking(r.cpcRanking)" />
-        <el-table-column label="优化出价">
-          <template slot-scope="s">
-            <p class="link" @click="gotoUpdateCampaign(s.row.campaignId)">修改计划</p>
-          </template>
-        </el-table-column>
-      </el-table>
-    </main>
+    <el-table v-if="isCampaignDimension"
+      :key="1" :data="statistics">
+      <el-table-column label="计划ID" prop="campaignId" width="120" />
+      <el-table-column label="日期" prop="date" width="140" />
+      <el-table-column label="渠道" width="100"
+        :formatter="r => fmtChannel(r.channel)" />
+      <el-table-column label="设备" width="100"
+        :formatter="r => fmtDevice(r.device)" />
+      <el-table-column label="展现" prop="shows" width="90" sortable />
+      <el-table-column label="点击" prop="clicks" width="90" sortable />
+      <el-table-column label="实扣点击单价" width="160" sortable
+        :formatter="r => (r.clickAvgPrice / 100).toFixed(2) + '元'" />
+      <el-table-column label="消耗" width="120"
+        :formatter="r => (r.cost / 100).toFixed(2) + '元'" />
+      <el-table-column label="关键词详情" width="140">
+      <template slot-scope="scope">
+        <p class="link" @click="switchToCampaignReport(scope.row)">
+          查看
+        </p>
+      </template>
+    </el-table-column>
+    </el-table>
+
+    <el-table v-else :key="2" :data="statistics">
+      <el-table-column label="关键词" prop="keyword" width="200" />
+      <el-table-column label="日期" prop="date" width="140" />
+      <el-table-column label="计划ID" prop="campaignId" width="140" />
+      <el-table-column label="渠道" width="100"
+        :formatter="r => fmtChannel(r.channel)" />
+      <el-table-column label="设备" width="100"
+        :formatter="r => fmtDevice(r.device)" />
+      <el-table-column label="出价" width="100">
+        <template slot-scope="scope">
+          <span v-if="scope.row.price === null">-</span>
+          <el-input v-else size="mini" :value="f2y(scope.row.price)" @change="v => onChangePrice(scope.row.campaignId, scope.row.keywordId, v)"></el-input>
+        </template>
+      </el-table-column>
+      <el-table-column label="展现" prop="shows" width="90" sortable />
+      <el-table-column label="点击" prop="clicks" width="90" sortable />
+      <el-table-column label="实扣点击单价" width="160" sortable
+        :formatter="r => (r.clickAvgPrice / 100).toFixed(2) + '元'" />
+      <el-table-column label="消耗" width="120"
+        :formatter="r => (r.cost / 100).toFixed(2) + '元'" />
+      <el-table-column label="排名" width="120" sortable
+        :formatter="r => fmtCpcRanking(r.cpcRanking)" />
+    </el-table>
+
     <footer>
       <div class="total" v-if="!!statistics.length">
         <span>
@@ -74,6 +73,7 @@
 <script>
 import BaxPagination from 'com/common/pagination'
 import BaxSelect from 'com/common/select'
+import {updateCampaign} from 'api/fengming'
 
 import {
   DIMENSION_CAMPAIGN
@@ -88,10 +88,7 @@ import {
   fmtCpcRanking
 } from 'util/campaign'
 
-import {
-  toHumanTime,
-  centToYuan
-} from 'utils'
+import { toFloat, f2y } from 'util/kit'
 
 const isArray = Array.isArray
 
@@ -132,30 +129,27 @@ export default {
       return this.dimension === DIMENSION_CAMPAIGN
     }
   },
+  data() {
+    return {
+      priceUpdating: false
+    }
+  },
   methods: {
-    switchToCampaignReport(cid) {
-      this.$emit('switch-to-campaign-report', {
-        campaignId: cid
-      })
-
-      track({
-        action: 'qwt-dashboard: switch to campaign report'
-      })
+    switchToCampaignReport(campaign) {
+      this.$emit('switch-to-campaign-report', campaign)
     },
-    gotoUpdateCampaign(cid) {
-      this.$router.push({
-        name: 'qwt-update-promotion',
-        params: {
-          id: cid
-        },
-        query: {
-          target: 'keyword'
-        }
-      })
-
-      track({
-        action: 'qwt-dashboard: goto update campaign'
-      })
+    async onChangePrice(cid, kid, userPrice) {
+      const price = (userPrice ? toFloat(userPrice) : 0) * 100
+      if (price > 99 * 100 || price < 2 * 100) {
+        return this.$message.error('价格需在2-99元之间')
+      }
+      try {
+        this.priceUpdating = true
+        await updateCampaign(cid, {updatedKeywords: [{price, id: kid}]})
+        this.$message.success(`价格更新成功`)
+      } finally {
+        this.priceUpdating = false
+      }
     },
     onClickCustomColumns() {
       track({
@@ -167,12 +161,6 @@ export default {
     },
     checkVisiable(column) {
       return this.displayColumns.includes(column)
-    },
-    download() {
-      this.$emit('download')
-      track({
-        action: 'qwt-dashboard: click download'
-      })
     },
     fmtChannel(c) {
       return semPlatformCn[String(c)] || '未知'
@@ -191,8 +179,7 @@ export default {
       return a.map(i => m[String(i)]).join(',')
     },
     fmtCpcRanking,
-    toHumanTime,
-    centToYuan
+    f2y
   }
 }
 </script>

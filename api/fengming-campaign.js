@@ -1,4 +1,3 @@
-
 import { reverseCamelcase, toCamelcase } from 'object-keys-mapping'
 import { fengming, trim } from './base'
 
@@ -68,13 +67,6 @@ export async function getReport(opts = {}) {
     limit: 100,
     ...opts
   }))
-
-  if (q.export_csv) {
-    return fengming
-      .get('/data_report')
-      .query(q)
-      .json()
-  }
 
   const [body1, body2, body3] = await Promise.all([
     fengming
