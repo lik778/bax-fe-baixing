@@ -115,8 +115,8 @@
         >
           <div slot-scope="{row}">
             <div class="btn-wrap" v-if="row.status === statusType.STATUS_UNPAID">
-              <a href="javascript:;" @click="payOrder(row.id)">支付</a>
-              <a href="javascript:;" @click="cancelOrder(row.id)">取消订单</a>
+              <a href="javascript:;" @click="payOrder(row.tradeSeq, true)">支付</a>
+              <a href="javascript:;" @click="cancelOrder(row.tradeSeq, true)">取消订单</a>
             </div>
             <div v-else>-</div>
           </div>
@@ -142,6 +142,7 @@ import * as api from 'api/account'
 import BaxSelect from 'com/common/select'
 import SectionHeader from 'com/common/section-header'
 import { productTypeOpts, PRODUCT_TYPE_BIAOWANG, PRODUCT_TYPE_FENGMING } from 'constant/log'
+import { orderServiceHost } from 'config'
 
 const statusType = {
   STATUS_REFUND: -10,
@@ -192,19 +193,28 @@ export default {
   },
   components: {SectionHeader, BaxSelect},
   methods: {
-    async payOrder(orderId) {
-      const url = await api.payOrder(orderId)
+    async payOrder(orderId, isBw) {
+      let url
+      if (isBw) {
+        url = `${orderServiceHost}/pay/?tradeId=${orderId}`
+      } else {
+        url = await api.payOrder(orderId)
+      }
       this.$message.success('正在跳转支付页面')
       setTimeout(() => {
         location.href = url
       }, 800)
     },
-    async cancelOrder(orderId) {
+    async cancelOrder(orderId, isBw) {
       await this.$confirm('您确定要取消该订单吗？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '放弃'
       })
-      await api.cancelOrder(orderId)
+      if (isBw) {
+        // TODO: 取消标王
+      } else {
+        await api.cancelOrder(orderId)
+      }
       await this.fetchOrderData()
       this.$message.success('取消订单成功')
     },

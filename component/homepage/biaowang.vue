@@ -23,9 +23,9 @@
         <div class="description">
           <p>与同行客户相比，您的标王推广为您多获得了</p>
           <p><strong>{{getRandomPvPercent(biaowangData.onlinePromotes)}}%</strong>展现次数</p>
-          <p>
+          <p v-if="!!biaowangData.notOnlinePromotes">
             您还有标王关键词没有生效，
-            <a href="javascript:;">点此查看</a>
+            <a href="javascript:;" @click="$router.push({name: 'bw-plan-list', query: {status: '0,5'}})">点此查看</a>
           </p>
           <div class="actions">
             <el-button type="primary" @click="$router.push({name: 'bw-query-price'})">立即购买</el-button>
