@@ -35,7 +35,7 @@
       <el-table-column label="出价" width="100">
         <template slot-scope="scope">
           <span v-if="scope.row.price === null">-</span>
-          <el-input v-else size="mini" :value="centToYuan(scope.row.price)" @change="v => onChangePrice(scope.row.campaignId, scope.row.keywordId, v)"></el-input>
+          <el-input v-else size="mini" :value="f2y(scope.row.price)" @change="v => onChangePrice(scope.row.campaignId, scope.row.keywordId, v)"></el-input>
         </template>
       </el-table-column>
       <el-table-column label="展现" prop="shows" width="90" sortable />
@@ -88,12 +88,7 @@ import {
   fmtCpcRanking
 } from 'util/campaign'
 
-import {
-  toHumanTime,
-  centToYuan
-} from 'utils'
-
-import { toFloat } from 'util/kit'
+import { toFloat, f2y } from 'util/kit'
 
 const isArray = Array.isArray
 
@@ -184,8 +179,7 @@ export default {
       return a.map(i => m[String(i)]).join(',')
     },
     fmtCpcRanking,
-    toHumanTime,
-    centToYuan
+    f2y
   }
 }
 </script>
