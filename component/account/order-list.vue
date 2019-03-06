@@ -139,6 +139,7 @@
 <script>
 import dayjs from 'dayjs'
 import * as api from 'api/account'
+import * as biaowangApi from 'api/biaowang'
 import BaxSelect from 'com/common/select'
 import SectionHeader from 'com/common/section-header'
 import { productTypeOpts, PRODUCT_TYPE_BIAOWANG, PRODUCT_TYPE_FENGMING } from 'constant/log'
@@ -180,7 +181,7 @@ export default {
       PRODUCT_TYPE_FENGMING,
 
       params: {
-        productType: PRODUCT_TYPE_BIAOWANG,
+        productType: PRODUCT_TYPE_FENGMING,
         dateRange: DEFAULT_DATE_RANGE,
         limit: ONE_PAGE_NUM,
         statuses: statusType.STATUS_UNPAID
@@ -211,7 +212,7 @@ export default {
         cancelButtonText: '放弃'
       })
       if (isBw) {
-        // TODO: 取消标王
+        await biaowangApi.cancelOrder(orderId)
       } else {
         await api.cancelOrder(orderId)
       }
@@ -229,7 +230,7 @@ export default {
         endTs
       }
       if (productType === PRODUCT_TYPE_FENGMING) {
-        const {data, total} = await api.queryFengmingOrder({
+        const {data, total} = await api.queryOrder({
           limit,
           statuses,
           ...dateRange,
@@ -240,7 +241,7 @@ export default {
       } else {
         const page = this.offset / ONE_PAGE_NUM
         const size = ONE_PAGE_NUM
-        const {data, total} = await api.queryBiaowangOrder({
+        const {data, total} = await biaowangApi.queryOrder({
           page,
           size,
           status: statuses

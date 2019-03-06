@@ -117,3 +117,32 @@ export async function getHomePageBiaowangData() {
 
   return body.data
 }
+
+export async function getQiqiaobanCoupon(promoteId) {
+  const body = await biaowang
+    .post('/promote/coupon/qiqiaoban')
+    .query({promoteId})
+    .json()
+
+  return body.data
+}
+
+export async function cancelOrder(orderId) {
+  const body = await biaowang
+    .post(`/trade/user/order/cancel`)
+    .send({orderId})
+    .json()
+
+  return body.data
+}
+
+export async function queryOrder(query) {
+  const { data } = await biaowang
+    .get('/trade/user/order')
+    .query(query)
+    .json()
+  return {
+    data: data.content,
+    total: data.totalElements
+  }
+}

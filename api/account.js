@@ -146,7 +146,7 @@ async function _getUserCount(query) {
   return body.data
 }
 
-export async function queryFengmingOrder(query) {
+export async function queryOrder(query) {
   const { data, meta } = await api
     .get('/order/query')
     .query(reverseCamelcase(query))
@@ -155,17 +155,6 @@ export async function queryFengmingOrder(query) {
   return {
     data: toCamelcase(data),
     total: meta.count
-  }
-}
-
-export async function queryBiaowangOrder(query) {
-  const { data } = await biaowang
-    .get('/trade/user/order')
-    .query(query)
-    .json()
-  return {
-    data: data.content,
-    total: data.totalElements
   }
 }
 
