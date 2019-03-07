@@ -67,7 +67,7 @@ export default {
         case 'site':
           return this.$router.push({name: 'qwt-charge', query: {select_gw: 1}})
         case 'biaowang':
-          return this.$router.push({name: 'qwt-charge'})
+          return this.$router.push({name: 'bw-plan-list'})
       }
     }
   },

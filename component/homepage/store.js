@@ -50,7 +50,7 @@ class Store {
       const promoteIds = biaowangPromotes.map(p => p.id)
       const cpcRanks = await getCpcRanking(promoteIds)
       this.biaowangData = biaowangData
-      this.biaowangPromotes = biaowangPromotes.map((values, key) => ({cpcRank: cpcRanks[key], ...values}))
+      this.biaowangPromotes = biaowangPromotes.map((values, key) => ({cpcRank: cpcRanks[key] ? cpcRanks[key]['cpcRanking'] : '', ...values}))
     } catch (err) {
       console.error(err)
     }

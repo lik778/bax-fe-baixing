@@ -6,8 +6,8 @@
         <div class="report">
           <div class="radio-group">
             <el-radio v-model="dataPrefix" label="">今日</el-radio>
-            <el-radio v-model="dataPrefix" label="thisWeek">昨日</el-radio>
-            <el-radio v-model="dataPrefix" label="yesterday">过去7天</el-radio>
+            <el-radio v-model="dataPrefix" label="yesterday">昨日</el-radio>
+            <el-radio v-model="dataPrefix" label="thisWeek">过去7天</el-radio>
           </div>
           <ul class="data-list">
             <li class="data">
@@ -135,7 +135,7 @@ export default {
 
 <style lang="postcss" scoped>
   .layout-left {
-    min-height: 284px;
+    min-height: 274px;
     & .layout-content {
       display: flex;
     }
@@ -195,7 +195,8 @@ export default {
     }
   }
   .layout-right {
-    min-height: 284px;
+    min-height: 274px;
+    padding-bottom: 20px !important;
     & .layout-content {
       margin-top: 22px;
       & .wrap {
