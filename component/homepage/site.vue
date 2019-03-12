@@ -23,8 +23,11 @@
           <p>您当前的官网的浏览量较低，</p>
           <p>打败了<strong>{{siteBeatPercent}}%</strong>同行业客户</p>
           <p>建议您进行
-            <a href="javascript:;" @click="() => $router.push({name: 'qwt-create-promotion'})">站外推广</a>，提升官网访问量
-            <!-- 或<a href="javascript:;">标王推广</a> -->
+            <a href="javascript:;" @click="() => $router.push({name: 'qwt-create-promotion'})">站外推广</a>
+            或
+            <a href="javascript:;" @click="() => $router.push({name: 'bw-query-price'})">标王推广</a>
+            ，提升官网访问量
+            
           </p>
           <div class="actions">
             <el-button type="primary" @click="() => $router.push({name: 'qwt-charge', query: {select_gw: 1}})">购买与续费</el-button>

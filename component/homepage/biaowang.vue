@@ -5,7 +5,6 @@
       <div class="layout-content">
         <div class="report">
           <div class="radio-group">
-            <el-radio v-model="dataPrefix" label="">今日</el-radio>
             <el-radio v-model="dataPrefix" label="yesterday">昨日</el-radio>
             <el-radio v-model="dataPrefix" label="thisWeek">过去7天</el-radio>
           </div>
@@ -75,7 +74,7 @@ export default {
   name: 'homepage-biaowang',
   data() {
     return {
-      dataPrefix: ''
+      dataPrefix: 'yesterday'
     }
   },
   methods: {
