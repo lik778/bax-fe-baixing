@@ -78,7 +78,6 @@ export default {
   },
   filters: {
     formatDate(date) {
-      console.log(date)
       return dayjs(date).format('YYYY.MM.DD')
     }
   }

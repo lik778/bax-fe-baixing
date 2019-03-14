@@ -74,11 +74,6 @@ export default {
       required: true
     }
   },
-  watch: {
-    noticeList(val) {
-      console.log(val)
-    }
-  },
   computed: {
     noticeTitle() {
       return noticeTexts[this.type]

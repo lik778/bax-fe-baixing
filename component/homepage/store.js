@@ -46,7 +46,6 @@ class Store {
   @action async loadBiaowangData() {
     try {
       const [biaowangData, {items: biaowangPromotes}] = await Promise.all([getHomePageBiaowangData(), getPromotes({size: 5, page: 0})])
-      console.log(biaowangPromotes)
       const promoteIds = biaowangPromotes.map(p => p.id)
       const cpcRanks = await getCpcRanking(promoteIds)
       this.biaowangData = biaowangData

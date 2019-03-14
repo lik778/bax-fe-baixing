@@ -28,7 +28,7 @@
           </p>
           <div class="actions">
             <el-button type="primary" @click="$router.push({name: 'bw-query-price'})">立即购买</el-button>
-            <el-button type="primary" @click="$router.push({name: 'qwt-charge'})">立即续费</el-button>
+            <el-button type="primary" @click="$router.push({name: 'bw-plan-list'})">立即续费</el-button>
           </div>
         </div>
       </div>
