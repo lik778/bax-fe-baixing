@@ -59,11 +59,9 @@ export default {
   },
   watch: {
     localValue(v) {
-      console.debug('select:watch:localValue')
       this.setValue(v)
     },
     value(v) {
-      console.debug('select:watch:value', v, this.localValue)
       // multiple -> array
       if (equal(v, this.localValue)) {
         return

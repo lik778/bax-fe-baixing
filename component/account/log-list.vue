@@ -277,6 +277,12 @@ export default {
       handler(params) {
         this.load(true)
       }
+    },
+    'queryParmas.productType': {
+      handler() {
+        this.queryParmas.timelineType = ''
+        this.queryParmas.opType = ''
+      }
     }
   }
 }

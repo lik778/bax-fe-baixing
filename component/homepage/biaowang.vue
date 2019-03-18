@@ -2,7 +2,7 @@
   <div class="layout-container">
     <div class="layout-left" v-if="biaowangData">
       <h5 class="layout-header">标王推广概览</h5>
-      <div class="layout-content">
+      <div class="layout-content" v-if="biaowangData.onlinePromotes && biaowangData.notOnlinePromotes">
         <div class="report">
           <div class="radio-group">
             <el-radio v-model="dataPrefix" label="yesterday">昨日</el-radio>
@@ -19,9 +19,11 @@
             </li>
           </ul>
         </div>
-        <div class="description">
-          <p>与同行客户相比，您的标王推广为您多获得了</p>
-          <p><strong>{{getRandomPvPercent(biaowangData.onlinePromotes)}}%</strong>展现次数</p>
+        <div class="description" :class="!biaowangData.onlinePromotes ? 'mt' : ''">
+          <template v-if="biaowangData.onlinePromotes">
+            <p>与同行客户相比，您的标王推广为您多获得了</p>
+            <p><strong>{{getRandomPvPercent(biaowangData.onlinePromotes)}}%</strong>展现次数</p>
+          </template>
           <p v-if="!!biaowangData.notOnlinePromotes">
             您还有标王关键词没有生效，
             <a href="javascript:;" @click="$router.push({name: 'bw-plan-list', query: {status: '0,5'}})">点此查看</a>
@@ -32,6 +34,10 @@
           </div>
         </div>
       </div>
+      <div class="no-promote-placeholder" v-else>
+        <p class="text">您暂时没有标王推广计划，您可以</p>
+        <el-button type="primary" @click="() => $router.push({name: 'bw-query-price'})">新建标王推广计划</el-button>
+      </div>
     </div>
     <loading-placeholder v-else class="layout-left">
       <h5 class="layout-header" slot="header">标王推广概览</h5>正在获取标王推广概览
@@ -41,7 +47,7 @@
         标王推广数据概览
         <span class="action" v-if="biaowangPromotes.length" @click="$router.push({name: 'bw-plan-list'})">查看详情</span>
       </h5>
-      <div class="layout-content">
+      <div class="layout-content" v-if="biaowangPromotes.length">
         <dl class="dl-wrap">
           <dt class="dt wrap">
             <span class="col">有效关键词</span>
@@ -57,6 +63,9 @@
             <span class="col"></span>
           </dd>
         </dl>
+      </div>
+      <div class="no-promote-data-placeholder" v-else>
+        <span><i class="el-icon-info" />暂无标王推广数据概览</span>
       </div>
     </div>
     <loading-placeholder v-else class="layout-right">
@@ -133,6 +142,15 @@ export default {
 </script>
 
 <style lang="postcss" scoped>
+  @define-mixin placeholder {
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 17px;
+    color: #999;
+  }
   .layout-left {
     min-height: 274px;
     & .layout-content {
@@ -191,6 +209,9 @@ export default {
           padding: 8px 12px;
         }
       }
+      &.mt {
+        margin-top: 60px;
+      }
     }
   }
   .layout-right {
@@ -216,6 +237,19 @@ export default {
           color:  #ED7D00;
         }
       }
+    }
+  }
+  .no-promote-placeholder {
+    @mixin placeholder;
+    & > .text {
+      margin-bottom: 20px;
+    }
+  }
+  .no-promote-data-placeholder {
+    @mixin placeholder;
+    font-size: 16px;
+    & .el-icon-info {
+      margin-right: 4px;
     }
   }
 </style>
