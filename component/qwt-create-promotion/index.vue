@@ -16,6 +16,7 @@
         <div>
           <label>投放页面：</label>
           <div class="landingpage">
+            <fm-tip class="landingpage-tip" img-url="//file.baixing.net/201903/8d224eb6179a947eecbf0fde089f7ed3.png">电话接不停小妙招</fm-tip>
             <div style="margin-bottom: 10px">
               <el-radio-group v-model="landingTypeDisplay" size="small">
                 <el-radio-button v-for="option of extendLandingTypeOpts" :key="option.value" :label="option.value">{{option.label}}</el-radio-button>
@@ -62,6 +63,7 @@
       </section>
 
       <section class="creative">
+        <fm-tip class="creative-tip" position="creative" img-url="//file.baixing.net/201903/d6f4502a0e8a659b78a33fbb3713e6b9.png">创意怎么才能飘红</fm-tip>
         <header><promotion-creative-tip /> </header>
         <creative-editor
           :platforms="newPromotion.sources"
@@ -180,6 +182,7 @@ import ChargeDialog from 'com/common/charge-dialog'
 import CpcPriceTip from 'com/widget/cpc-price-tip'
 import ContractAck from 'com/widget/contract-ack'
 import wxBindModal from 'com/common/wx-bind-modal'
+import FmTip from 'com/widget/fm-tip'
 
 import dayjs from 'dayjs'
 import track from 'util/track'
@@ -257,7 +260,8 @@ export default {
     AreaSelector,
     ChargeDialog,
     ContractAck,
-    CpcPriceTip
+    CpcPriceTip,
+    FmTip
   },
   fromMobx: {
     searchRecommends: () => store.searchRecommends,
@@ -728,6 +732,24 @@ strong.red {
   margin: 0 5px;
   &.strong {
     font-size: 16px;
+  }
+}
+
+.landingpage {
+  position: relative;
+  & > .landingpage-tip {
+    position: absolute;
+    right: 0;
+    top: 20px;
+  }
+}
+
+.creative {
+  position: relative;
+  & > .creative-tip {
+    position: absolute;
+    bottom: 38px;
+    left: 660px;
   }
 }
 
