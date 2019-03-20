@@ -10,7 +10,7 @@
   <transition name="el-fade-in">
     <div class="wx-modal" v-if="modalVisible">
       <div class="img-wrap" @click="toggleWechatModalVisible(false)">
-        <img src="//file.baixing.net/201811/qrcode.png">
+        <img src="//file.baixing.net/201903/a7560ecf7d023a1fbe63101f21504652.png" width="138" height="138">
         <span class="close-btn">&times;</span>
       </div>
     </div>
@@ -34,7 +34,6 @@ export default {
   },
   methods: {
     toggleWechatModalVisible(visible) {
-      console.log(visible)
       this.modalVisible = visible
     }
   }
@@ -86,10 +85,15 @@ export default {
     top: 50%;
     left: calc(50% + 90px);
     transform: translate3d(-50%, -50%, 0);
+    background-color: #fff;
+    padding: 8px;
+    border-radius: 3px;
+    font-size: 0;
   }
   & .close-btn {
     position: absolute;
-    left: calc(50% - 13px);
+    left: 50%;
+    transform: translateX(-50%);
     bottom: -50px;
     width: 35px;
     height: 35px;

@@ -1,6 +1,6 @@
 
 import { reverseCamelcase, toCamelcase } from 'object-keys-mapping'
-import { api, trim } from './base'
+import { api, trim, biaowang } from './base'
 
 export async function getUserIdFromBxSalesId(salesId) {
   const body = await api
