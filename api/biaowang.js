@@ -72,7 +72,7 @@ export async function getPromtesByOrders(orderIds) {
     .query({orderIds})
     .json()
 
-  return body.data.content
+  return body.data
 }
 
 export async function updatePromote(opts = {}) {
@@ -101,6 +101,23 @@ export async function getRecentSold() {
   return body.data.content
 }
 
+export async function getLogs(parmas) {
+  const body = await biaowang
+    .get(`/promote/timeline/query`)
+    .query(parmas)
+    .json()
+
+  return body.data
+}
+
+export async function getHomePageBiaowangData() {
+  const body = await biaowang
+    .get(`/promote/user/info`)
+    .json()
+
+  return body.data
+}
+
 export async function getQiqiaobanCoupon(promoteId) {
   const body = await biaowang
     .post('/promote/coupon/qiqiaoban')
@@ -108,4 +125,24 @@ export async function getQiqiaobanCoupon(promoteId) {
     .json()
 
   return body.data
+}
+
+export async function cancelOrder(orderId) {
+  const body = await biaowang
+    .post(`/trade/user/order/cancel`)
+    .send({orderId})
+    .json()
+
+  return body.data
+}
+
+export async function queryOrder(query) {
+  const { data } = await biaowang
+    .get('/trade/user/order')
+    .query(query)
+    .json()
+  return {
+    data: data.content,
+    total: data.totalElements
+  }
 }

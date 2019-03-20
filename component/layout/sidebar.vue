@@ -207,6 +207,9 @@ export default {
       return allowSeeQwtPromotion(this.userInfo.roles)
     }
   },
+  mounted() {
+    this.initNavMenu()
+  },
   methods: {
     async initNavMenu() {
       // 获取ka nav 数据
