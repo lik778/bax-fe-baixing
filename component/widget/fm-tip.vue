@@ -1,11 +1,19 @@
 <template>
   <div class="fm-tip-container" @mouseover="visiable = true" @mouseleave="visiable = false">
-    <div class="image-wrap" v-show="visiable"
-      :style="position === 'creative' ? 'transform: translateY(-65%);' : ''"
+    <transition name="el-fade-in-linear">
+      <div
+        class="image-wrap" 
+        v-show="visiable"
+        :style="position === 'creative' ? 'transform: translateY(-65%);' : ''"
+      >
+        <img :src="imgUrl">
+      </div>
+    </transition>
+    <div
+      class="text"
+      @click="isStopAnimation = true"
+      :style="isStopAnimation ? 'animation-play-state: paused;' : ''"
     >
-      <img :src="imgUrl">
-    </div>
-    <div class="text">
       <slot />
     </div>
   </div>
@@ -16,7 +24,8 @@ export default {
   name: 'fm-tip',
   data () {
     return {
-      visiable: false
+      visiable: false,
+      isStopAnimation: false
     }
   },
   props: {
@@ -35,23 +44,23 @@ export default {
 <style lang="postcss" scoped>
 @keyframes tada {
   0% {
-    transform: scaleX(1)
+    transform: scaleX(1);
   }
 
   10%,20% {
-    transform: scale3d(.9,.9,.9) rotate(-3deg)
+    transform: scale3d(.9,.9,.9) rotate(-3deg);
   }
 
   30%,50%,70%,90% {
-    transform: scale3d(1.1,1.1,1.1) rotate(3deg)
+    transform: scale3d(1.1,1.1,1.1) rotate(3deg);
   }
 
   40%,60%,80% {
-    transform: scale3d(1.1,1.1,1.1) rotate(-3deg)
+    transform: scale3d(1.1,1.1,1.1) rotate(-3deg);
   }
 
   to {
-    transform: scaleX(1)
+    transform: scaleX(1);
   }
 }
 .fm-tip-container {
