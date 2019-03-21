@@ -164,6 +164,7 @@ export default {
     async queryStatistics(opts = {}) {
       const offset = opts.offset || 0
       const { query, checkedCampaignIds } = this
+      const {user_id, sales_id} = this.$route.query
 
       let startAt
       let endAt
@@ -189,6 +190,8 @@ export default {
         device: query.device,
         channel: query.channel,
         campaignIds: checkedCampaignIds,
+        user_id,
+        sales_id,
 
         limit: 100,
         offset,
