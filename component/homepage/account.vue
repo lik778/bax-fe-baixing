@@ -74,7 +74,7 @@ export default {
     isShowSection(sectionType) {
       switch (sectionType) {
         case 'fengming':
-          return this.fengmingBalance.price && this.fengmingBalance.day
+          return this.fengmingBalance.price !== null && this.fengmingBalance.day !== null
         case 'site':
           return this.sites
         case 'biaowang':
