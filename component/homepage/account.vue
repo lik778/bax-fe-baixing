@@ -1,26 +1,27 @@
-<template>
+<template> 
   <div class="layout-container">
-    <div class="layout-left" v-if="(fengmingBalance.price && fengmingBalance.day) || sites || biaowangData">
+    <div class="layout-left" v-if="isShowSection('fengming') || isShowSection('site') || isShowSection('biaowang')">
       <h5 class="layout-header">账户概览</h5>
       <ul class="accout">
-        <li class="account-item" v-if="fengmingBalance.price && fengmingBalance.day">
+        <li class="account-item" v-if="isShowSection('fengming')">
           <p class="title">站外推广余额(元)</p>
           <p class="num">{{fengmingBalance.price}}</p>
           <p class="desc">（可消耗 {{fengmingBalance.day}} 天）</p>
           <el-button type="primary" class="button" size="small" @click.native="() => handleCharge('bax')">立即充值</el-button>
         </li>
-        <li class="account-item" v-if="biaowangData">
+        <li class="account-item" v-if="isShowSection('biaowang')">
           <p class="title">标王推广关键词(个)</p>
           <p class="num">{{biaowangData.onlinePromotes}}</p>
           <p class="desc">（ {{biaowangData.nearExpirationPromotes}} 个词即将到期）</p>
           <el-button type="primary" class="button" size="small" @click.native="() => handleCharge('biaowang')">立即充值</el-button>
         </li>
-        <li class="account-item" v-if="sites">
+        <li class="account-item" v-if="isShowSection('site')">
             <p class="title">精品官网(个)</p>
             <p class="num">{{sites.length}}</p>
-            <p class="desc" v-if="sites.length">
-              （ {{sites.length > 1 ? '最早官网到期日' : '官网到期日'}} {{noExpiredSite[0].expireAt | formatDate}} ）
+            <p class="desc" v-if="noExpiredSite.length">
+              （ {{noExpiredSite.length > 1 ? '最早官网到期日' : '官网到期日'}} {{noExpiredSite[0].expireAt | formatDate}} ）
             </p>
+            <p class="desc" v-else-if="sites.length && !noExpiredSite.length">官网已经到期，请及时续费</p>
             <p class="desc" v-else>暂无精品官网</p>
             <el-button type="primary" class="button" size="small" @click.native="() => handleCharge('site')">{{sites.length === 0 ? '立即购买' : '立即续费'}}</el-button>
         </li>
@@ -68,6 +69,16 @@ export default {
           return this.$router.push({name: 'qwt-charge', query: {select_gw: 1}})
         case 'biaowang':
           return this.$router.push({name: 'bw-plan-list'})
+      }
+    },
+    isShowSection(sectionType) {
+      switch (sectionType) {
+        case 'fengming':
+          return this.fengmingBalance.price !== null && this.fengmingBalance.day !== null
+        case 'site':
+          return this.sites
+        case 'biaowang':
+          return this.biaowangData
       }
     }
   },

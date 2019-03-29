@@ -737,6 +737,7 @@ strong.red {
 
 .landingpage {
   position: relative;
+  min-width: 540px;
   & > .landingpage-tip {
     position: absolute;
     right: 0;
