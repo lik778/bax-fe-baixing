@@ -126,7 +126,7 @@ const bwRoutes = [{
   name: 'bw-edit-plan'
 }, {
   component: () => import('com/bw-plan-list'),
-  path: '/main/bw/_plan-list',
+  path: '/main/bw/plan-list',
   name: 'bw-plan-list'
 }, {
   component: () => import('com/bw-landing'),
