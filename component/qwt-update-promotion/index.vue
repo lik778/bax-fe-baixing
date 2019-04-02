@@ -1032,7 +1032,15 @@ export default {
       return opt[type]() ? 'highlight' : ''
     },
     async optimizeCreative() {
-      const campaignId = this.$route.params.id
+      const { actionTrackId, userInfo, id: campaignId } = this
+      track({
+        action: 'click-button: optimize-creative',
+        baixingId: userInfo.baixingId,
+        time: Date.now() / 1000 | 0,
+        baxId: userInfo.id,
+        actionTrackId,
+        campaignId
+      })
       const { title, content } = await getRecommandCreative({campaignId})
       if (!(title && content)) return this.$message.error('无法提供创意优化建议')
       this.promotion.creativeTitle = title
@@ -1044,6 +1052,15 @@ export default {
         .filter(w => !words.includes(w.word.toLowerCase()))
     },
     async addKeyword(type) {
+      const { actionTrackId, userInfo, id } = this
+      track({
+        action: 'click-button: add-keyword',
+        baixingId: userInfo.baixingId,
+        time: Date.now() / 1000 | 0,
+        baxId: userInfo.id,
+        actionTrackId,
+        campaignId: id
+      })
       const queryWord = this.queryWord.trim()
       let newKeywords = []
       if (type === 'single') {
