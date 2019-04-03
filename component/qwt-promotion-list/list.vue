@@ -61,13 +61,12 @@
               </td>
               <!-- 已下线的status -->
               <td class="col6">{{item.status === -1 ? '-' : parseFloat(item.avgCpcRanking).toFixed(2)}}</td>
-              <!-- FIXME: item.pause -->
               <td class="col7">
                 <a
                   class="btn"
                   href="javascript:;"
                   @click="togglePromotionStatus(item, landingPage.id, landingPage.campaignIds, item.status === CAMPAIGN_STATUS_OFFLINE || item.auditStatus === KEYWORD_CHIBI_REJECT)"
-                  :disabled="!item.pause || item.status === CAMPAIGN_STATUS_OFFLINE || item.auditStatus === KEYWORD_CHIBI_REJECT"
+                  :disabled="item.status === CAMPAIGN_STATUS_OFFLINE || item.auditStatus === KEYWORD_CHIBI_REJECT"
                 >
                   {{!!item.pause ? '投放' : '暂停'}}
                 </a>
@@ -187,15 +186,6 @@ export default {
       return bgColroObj[statusText] ? bgColroObj[statusText] : '#f5222d'
     },
     async togglePromotionStatus(campaign, landingPageId, campaignIds ,disabled) {
-      if (!campaign.pause) {
-        return this.$alert(`
-          因临时接到百度通知，系统正在维护，预计4月4日恢复，期间影响如下：<br />
-          1、站外推广报表数据延迟；<br />
-          2、站外推广投放中的计划无法直接暂停，直至今日预算消耗完毕。如有需要暂停投放的用户，可通过修改投放时间完成停投操作；<br />
-          3、标王昨日排名数据延迟；<br />
-          4、不影响新建、修改创意、充值等操作。<br />
-        `, '提示', {confirmButtonText: '确定',  dangerouslyUseHTMLString: true})
-      }
       if (disabled) return
       const typeText = campaign.pause ? '开始' : '暂停'
       await this.$confirm(`确定${typeText}投放？`, '提示', {

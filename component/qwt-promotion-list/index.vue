@@ -167,13 +167,6 @@ const formatlandingPageList = res => {
 export default {
   name: 'qwt-promotion-list',
   created() {
-    this.$alert(`
-      因临时接到百度通知，系统正在维护，预计4月4日恢复，期间影响如下：<br />
-      1、站外推广报表数据延迟；<br />
-      2、站外推广投放中的计划无法直接暂停，直至今日预算消耗完毕。如有需要暂停投放的用户，可通过修改投放时间完成停投操作；<br />
-      3、标王昨日排名数据延迟；<br />
-      4、不影响新建、修改创意、充值等操作。<br />
-    `, '通知', {confirmButtonText: '确定', dangerouslyUseHTMLString: true})
     const {statuses} = this.$route.query
     if (!!statuses) {
       this.isActionGroupExpand = true
