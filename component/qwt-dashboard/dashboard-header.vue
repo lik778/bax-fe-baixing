@@ -17,7 +17,7 @@
       <div class="split"></div>
       <div>
         <p>站外推广余额：<span class="highlight">{{f2y(data.balance)}}</span>元</p>
-        <p>预计还可消耗：<span class="highlight">{{Math.floor(data.balance/data.budget)}}</span>天</p>
+        <p>预计还可消耗：<span class="highlight">{{data.budget === 0 ? 0 : Math.floor(data.balance/data.budget)}}</span>天</p>
       </div>
       <div>
         <router-link :to="{name: 'qwt-charge'}"><el-button type="primary" plain="">充值</el-button></router-link>
