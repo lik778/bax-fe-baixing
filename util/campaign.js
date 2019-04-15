@@ -97,3 +97,18 @@ export function getCreativeContentLenLimit(platforms) {
 
   return [min, max]
 }
+
+export function validateCreative({title = '', content = ''}) {
+  function validate(text, prefix = '') {
+    const regExp = /\{([^}]+)\}/g
+    let res = regExp.exec(text)
+    while (res) {
+      if (/[^a-zA-Z0-9]/.test(res[1])) {
+        throw new Error(prefix + '通配符内包含空格或符号，请修改')
+      }
+      res = regExp.exec(text)
+    }
+  }
+  validate(title, '创意标题')
+  validate(content, '创意内容')
+}

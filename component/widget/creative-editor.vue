@@ -54,7 +54,8 @@
 import TextLimitTip from './text-limit-tip'
 import {
   getCreativeContentLenLimit,
-  getCreativeTitleLenLimit
+  getCreativeTitleLenLimit,
+  validateCreative
 } from 'util/campaign'
 
 import {
@@ -146,6 +147,7 @@ export default {
         [type]: value
       }
       try {
+        validateCreative({title: creativeValues.title, content: creativeValues.content})
         await this.checkCreative(creativeValues.title, creativeValues.content, this.platforms)
         this.$emit('error', undefined)
       } catch (e) {
