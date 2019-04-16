@@ -147,8 +147,9 @@ export default {
         [type]: value
       }
       try {
-        validateCreative({title: creativeValues.title, content: creativeValues.content})
-        await this.checkCreative(creativeValues.title, creativeValues.content, this.platforms)
+        const { platforms } = this
+        validateCreative({title: creativeValues.title, content: creativeValues.content, platforms})
+        await this.checkCreative(creativeValues.title, creativeValues.content, platforms)
         this.$emit('error', undefined)
       } catch (e) {
         this.$emit('error', e.message)

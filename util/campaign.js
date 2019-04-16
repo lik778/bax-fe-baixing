@@ -98,17 +98,61 @@ export function getCreativeContentLenLimit(platforms) {
   return [min, max]
 }
 
-export function validateCreative({title = '', content = ''}) {
-  function validate(text, prefix = '') {
-    const regExp = /\{([^}]+)\}/g
-    let res = regExp.exec(text)
-    while (res) {
-      if (/[^a-zA-Z0-9]/.test(res[1])) {
-        throw new Error(prefix + '通配符内包含空格或符号，请修改')
+const validateRules = {
+  [SEM_PLATFORM_SOGOU]: [{
+    keys: ['title'],
+    msg: '搜狗%s中关键词通配符不可连续出现，请修改',
+    regExp: /\{[^}]+\}\{/
+  }, {
+    keys: ['content'],
+    msg: '搜狗%s中最多可插入2个关键词通配符，请修改',
+    validate(text) {
+      const res = text.match(/\{[^}]+\}/g)
+      if (res && res.length > 2) {
+        return true
       }
-      res = regExp.exec(text)
+    }
+  }],
+  [SEM_PLATFORM_BAIDU]: [{
+    regExp: /\{投放地域\}/,
+    msg: '百度%s不能存在地域通识别符，请修改'
+  }],
+  default: [{
+    msg: '%s通配符内包含空格或符号，请修改',
+    validate(text) {
+      const regExp = /\{([^}]+)\}/g
+      let res = regExp.exec(text)
+      while (res) {
+        if (/[^a-zA-Z0-9\u4e00-\u9fa5]/.test(res[1])) {
+          return true
+        }
+        res = regExp.exec(text)
+      }
+    }
+  }]
+}
+export function validateCreative({title = '', content = '', platforms = []}) {
+  function validateCreative(validateRules) {
+    for (const [key, rules] of Object.entries(validateRules)) {
+      if (platforms.includes(+key) || key === 'default') {
+        rules.forEach(({keys = ['title', 'content'], msg, validate, regExp}) => {
+          const validator = regExp ? genValidator(regExp) : validate
+          if (keys.includes('title') && validator(title)) {
+            throw new Error(msg.replace('%s', '创意标题'))
+          }
+          if (keys.includes('content') && validator(content)) {
+            throw new Error(msg.replace('%s', '创意内容'))
+          }
+        })
+      }
     }
   }
-  validate(title, '创意标题')
-  validate(content, '创意内容')
+  function genValidator(regExp) {
+    return function(text) {
+      if (regExp.test(text)) {
+        return true
+      }
+    }
+  }
+  validateCreative(validateRules)
 }
