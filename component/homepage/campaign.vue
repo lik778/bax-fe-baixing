@@ -31,7 +31,7 @@
           </div>
         </div>
       </div>
-      <div class="placeholder" v-else-if="!chartOptions"><i class="el-icon-loading" />正在获取站外推广数据</div>
+      <loading-placeholder v-else-if="!chartOptions" style="height: 288px;">正在获取站外推广数据</loading-placeholder>
       <div v-else class="no-campaign-radar-placeholder">
         <p class="text">您暂时没有站外推广，您可以</p>
         <div>
@@ -80,6 +80,7 @@
 <script>
 import clone from 'clone'
 import ECharts from 'vue-echarts/components/ECharts.vue'
+import loadingPlaceholder from './loading-placeholder'
 import 'echarts/lib/component/tooltip'
 import 'echarts/lib/chart/radar'
 
@@ -161,7 +162,8 @@ const CNT_REJECTED_CODE = '-53'
 export default {
   name: 'homepage-campaign',
   components: {
-    ECharts
+    ECharts,
+    loadingPlaceholder
   },
   data() {
     return {
@@ -291,17 +293,6 @@ export default {
       & >>> .el-button {
         min-width: 110px;
         padding: 8px 12px;
-      }
-    }
-    & .placeholder {
-      color: #888;
-      line-height: 288px;
-      text-align: center;
-      font-size: 18px;
-      letter-spacing: 1px;
-      & .el-icon-loading {
-        font-size: 20px;
-        margin-right: 5px;
       }
     }
   }

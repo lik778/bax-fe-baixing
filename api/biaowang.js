@@ -9,7 +9,6 @@ export async function queryKeywordPrice(opts = {}) {
 
   return body.data.content
 }
-
 export async function refreshKeywordPrice(keywords) {
   const requestBody = keywords.map(k => ({
     ...k,
@@ -73,7 +72,7 @@ export async function getPromtesByOrders(orderIds) {
     .query({orderIds})
     .json()
 
-  return body.data.content
+  return body.data
 }
 
 export async function updatePromote(opts = {}) {
@@ -100,4 +99,50 @@ export async function getRecentSold() {
     .json()
 
   return body.data.content
+}
+
+export async function getLogs(parmas) {
+  const body = await biaowang
+    .get(`/promote/timeline/query`)
+    .query(parmas)
+    .json()
+
+  return body.data
+}
+
+export async function getHomePageBiaowangData() {
+  const body = await biaowang
+    .get(`/promote/user/info`)
+    .json()
+
+  return body.data
+}
+
+export async function getQiqiaobanCoupon(promoteId) {
+  const body = await biaowang
+    .post('/promote/coupon/qiqiaoban')
+    .query({promoteId})
+    .json()
+
+  return body.data
+}
+
+export async function cancelOrder(orderId) {
+  const body = await biaowang
+    .post(`/trade/user/order/cancel`)
+    .send({orderId})
+    .json()
+
+  return body.data
+}
+
+export async function queryOrder(query) {
+  const { data } = await biaowang
+    .get('/trade/user/order')
+    .query(query)
+    .json()
+  return {
+    data: data.content,
+    total: data.totalElements
+  }
 }

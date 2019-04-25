@@ -1,13 +1,14 @@
 <template>
   <div class="layout-container">
     <section-header>历史操作记录</section-header>
-    <!-- <label>查询产品</label>
-    <bax-select v-model="productType"
+    <label>查询产品</label>
+    <bax-select
+      v-model="queryParmas.productType"
       :clearable="false"
       placeholder="请选择"
       :options="productTypeOpts"
-      @click.native="onClickProductType">
-    </bax-select> -->
+    >
+    </bax-select>
     <label class="ml">选择查询项目</label>
     <bax-select
       v-model="queryParmas.timelineType"
@@ -37,15 +38,15 @@
       style="width: 100%">
       <el-table-column
         label="日期"
-        prop="createdAt"
         :formatter="dateFormatter"
         width="180">
       </el-table-column>
-      <!-- <el-table-column
+      <el-table-column
         label="产品"
         prop="productType"
+        :formatter="productFormatter"
         width="100">
-      </el-table-column> -->
+      </el-table-column>
       <el-table-column
         label="项目"
         prop="timelineType"
@@ -105,13 +106,17 @@ import { SEM_PLATFORM_SOGOU } from 'constant/fengming'
 import {
   fieldType,
   opTypeOpts,
-  logTypeOpts,
-  timelineTypeOpts,
+  logTypeOpts, 
+  productTypeOpts,
+  fengmingTimelineTypeOpts,
+  biaowangTimelineTypeOpts,
 
   OP_TYPE_CREATE,
   TIMELINE_TYPE_UNKNOWN,
-  // productTypeOpts
+  PRODUCT_TYPE_BIAOWANG,
+  PRODUCT_TYPE_FENGMING
 } from 'constant/log'
+
 
 
 const ONE_PAGE_NUM = 10
@@ -168,18 +173,17 @@ export default {
   data() {
     return {
       opTypeOpts,
-      timelineTypeOpts,
-      // productTypeOpts,
+      fengmingTimelineTypeOpts,
+      productTypeOpts,
 
       offset: 0,
-
       queryParmas: {
         opType: '',
         campaignId: '',
         timelineType: '',
         limit: ONE_PAGE_NUM,
         createdAt: CREATED_AT_VALUES[0],
-        // productType: '3',
+        productType: PRODUCT_TYPE_FENGMING,
       },
     }
   },
@@ -198,20 +202,39 @@ export default {
       this.offset = (page - 1) * ONE_PAGE_NUM
       this.load()
     },
-    opTypeFormatter({message: {opType}}) {
+    genMaterial(material) {
+      const {biaowang, fengming} = material
+      return this.queryParmas.productType === PRODUCT_TYPE_FENGMING ? fengming : biaowang
+    },
+    productFormatter() {
+      return this.genMaterial({biaowang: '标王', fengming: '站外推广'})
+    },
+    opTypeFormatter({opType, message}) {
+      if (message) {
+        opType = message.opType
+      }
       return opTypeOpts.find(({value}) => value === opType).label
     },
     timelineTypeFormatter({timelineType}) {
-      return timelineTypeOpts.find(({value}) => value === timelineType).label
+      let timelineTypeOpts = this.genMaterial({
+        fengming: fengmingTimelineTypeOpts,
+        biaowang: biaowangTimelineTypeOpts
+      })
+      const result = timelineTypeOpts.find(({value}) => value === timelineType)
+      return result && result.label
     },
-    dateFormatter({createdAt}) {
-      return toHumanTime(createdAt, 'YYYY-MM-DD HH:mm')
+    dateFormatter({createdAt, timestamp}) {
+      return toHumanTime(createdAt || timestamp, 'YYYY-MM-DD HH:mm')
     },
-    campaignIdFormatter({message:{campaignId}}) {
-      return campaignId
+    campaignIdFormatter({promoteId: id, message}) {
+      if (message) {
+        id = message.campaignId
+      }
+      return id
     },
     changeLogFormatter(type) {
-      return ({message}) => {
+      const fengmingFormatter  = ({message}) => {
+        if (!message) return
         const change = message.change
         const changeKeys = Object.keys(change)
         const opType = message.opType
@@ -225,6 +248,26 @@ export default {
           return genFormatLogValues(change, changeKeys, type, opType, campaignSource)
         }
       }
+      const biaowangFormatter = ({before, after, timelineType}) => {
+        if (type === 'field') {
+          const result = biaowangTimelineTypeOpts.find(({value}) => value === timelineType)
+          return result && result.label
+        }
+        if (type === 'new') return after
+        if (type === 'old') return before || '-'
+      }
+      return this.genMaterial({
+        biaowang: biaowangFormatter,
+        fengming: fengmingFormatter
+      })
+    }
+  },
+  computed: {
+    timelineTypeOpts() {
+      return this.genMaterial({
+        biaowang: biaowangTimelineTypeOpts,
+        fengming: fengmingTimelineTypeOpts
+      })
     }
   },
   watch: {
@@ -233,6 +276,12 @@ export default {
       immediate: true,
       handler(params) {
         this.load(true)
+      }
+    },
+    'queryParmas.productType': {
+      handler() {
+        this.queryParmas.timelineType = ''
+        this.queryParmas.opType = ''
       }
     }
   }

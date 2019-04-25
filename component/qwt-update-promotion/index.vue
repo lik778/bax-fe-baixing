@@ -9,6 +9,7 @@
             投放页面：
           </aside>
           <span class="landingpage" v-if="!isErrorLandingPageShow">
+            <fm-tip class="landingpage-tip" img-url="//file.baixing.net/201903/8d224eb6179a947eecbf0fde089f7ed3.png">电话接不停小妙招</fm-tip>
             <div>
               <el-button-group>
                 <el-button v-for="o of extendLandingTypeOpts" :key="o.value"
@@ -33,7 +34,7 @@
                 v-if="getProp('landingType') === LANDING_TYPE_GW"
                 :disabled="disabled"
                 :value="getProp('landingPage')"
-                :is-qiqiaoban-site="isQiqiaobanSite"
+                :is-special-landingpage="isQiqiaobanSite"
                 @change="setLandingPage">
               </qiqiaoban-page-selector>
 
@@ -72,6 +73,7 @@
         </promotion-area-limit-tip>
       </section>
       <section class="creative">
+        <fm-tip class="creative-tip" position="creative" img-url="//file.baixing.net/201903/d6f4502a0e8a659b78a33fbb3713e6b9.png">创意怎么才能飘红</fm-tip>
         <header class="top-col">
           <promotion-creative-tip :highlight="canOptimize('creative')"/>
           <el-button type="primary" class="button" size="small" @click="optimizeCreative">一键优化</el-button>
@@ -287,6 +289,8 @@ import Ka258Selector from 'com/common/ka-258-selector'
 import KeywordList from 'com/common/qwt-keyword-list'
 import AreaSelector from 'com/common/area-selector'
 import ContractAck from 'com/widget/contract-ack'
+import FmTip from 'com/widget/fm-tip'
+
 
 import { disabledDate } from 'util/element'
 import { isBaixingSales } from 'util/role'
@@ -375,7 +379,8 @@ export default {
     Ka258Selector,
     AreaSelector,
     KeywordList,
-    ContractAck
+    ContractAck,
+    FmTip
   },
   fromMobx: {
     recommendedWords: () => store.recommendedWords,
@@ -1162,6 +1167,25 @@ export default {
 
 <style lang="postcss" scoped>
 @import 'cssbase/mixin';
+
+.landingpage {
+  position: relative;
+  min-width: 540px;
+  & > .landingpage-tip {
+    position: absolute;
+    right: 0;
+    top: 20px;
+  }
+}
+
+.creative {
+  position: relative;
+  & > .creative-tip {
+    position: absolute;
+    bottom: 38px;
+    left: 660px;
+  }
+}
 
 .qiqiaoban-warning {
   margin-left: 20px;

@@ -423,6 +423,18 @@ export async function changeCampaignKeywordsPrice(campaignId, price) {
   return body.data
 }
 
+export async function getDashboardHeader() {
+  const [balance, dailyReport] = await Promise.all([
+    getCurrentBalance(),
+    _getDailySummary()
+  ])
+
+  return {
+    balance,
+    ...dailyReport
+  }
+}
+
 /**
  * private
  */

@@ -2,7 +2,7 @@
   <div class="homepage">
     <account />
     <homepage-campaign />
-    <!-- <biaowang /> -->
+    <biaowang />
     <site />
   </div>
 </template>
@@ -16,7 +16,7 @@ import Biaowang from './biaowang'
 
 export default {
   name: 'qwt-homepage',
-  created() {
+  mounted() {
     store.initPageStore()
   },
   components: {

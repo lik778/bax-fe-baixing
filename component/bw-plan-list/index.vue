@@ -287,8 +287,13 @@
       }
     },
     async mounted() {
+      const promote = this.$route.params.promote
       this.query.userId = this.salesInfo.userId
       await this.getPromotes()
+      if (promote && promote.id) {
+        // 首页续费直接加入购物车
+        this.onXufei(promote)
+      }
     },
     watch: {
       'query.keyword': function (v) {

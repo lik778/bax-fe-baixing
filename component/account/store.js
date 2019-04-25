@@ -1,7 +1,9 @@
 
 import { observable, action, toJS } from 'mobx'
+import { PRODUCT_TYPE_BIAOWANG } from 'constant/log'
 
 import * as fapi from 'api/fengming'
+import * as bapi from 'api/biaowang'
 import * as mapi from 'api/meta'
 
 const emptyQuery = {
@@ -52,9 +54,35 @@ const store = observable({
     return toJS(this._coupons)
   },
 
-  // opts: { type, time, offset, pageSize }
-  getLogs: action(async function(opts) {
-    const { total, logs } = await fapi.getLogs(opts)
+  getLogs: action(async function({productType, ...params}) {
+    let logs
+    let total
+    if (productType === PRODUCT_TYPE_BIAOWANG) {
+      const reBuildBiaowangParams = (params) => {
+        const {
+          campaignId: promoteId,
+          limit: size,
+          offset,
+          ...ohterParams
+        } = params
+
+        const page = offset / size
+
+        return {
+          page,
+          size,
+          promoteId,
+          ...ohterParams
+        }
+      }
+      const res = await bapi.getLogs(reBuildBiaowangParams(params))
+      logs = res.content
+      total = res.totalElements
+    } else {
+      const res = await fapi.getLogs(params)
+      logs = res.logs
+      total = res.total
+    }
     this.totalLogs = total
     this._logs = logs
   }),
