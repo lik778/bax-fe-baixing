@@ -22,7 +22,19 @@
         </div>
       </div>
       <div class="gw">
-        <el-checkbox v-model="gwSelected">精品官网{{f2y(gwPrice)}}元（原价：1200元）</el-checkbox>
+        <el-checkbox-group
+          v-model="gwSelected"
+          :max="1"
+        >
+          <el-checkbox
+            class="checkbox"
+            :label="product.id"
+            v-for="product in siteProducts"
+            :key="product.id"
+          >
+            {{product.name}}{{f2y(product.price)}}元（原价：{{f2y(product.originalPrice)}}元）
+          </el-checkbox>
+        </el-checkbox-group>
       </div>
       <div class="footer">
         <p>总计：<span class="price">{{f2y(totalPrice)}}</span>元</p>
@@ -51,6 +63,33 @@
 
   const storageKeyPrefix = `bw-shopping-cart-`
 
+  const siteProducts = [
+    {
+      id: 8,
+      originalPrice: 120000,
+      name: '精品官网一年',
+      price: 0,
+      discountExecPriceFunc: [
+        'p >= 0 && p < 50000 ? 0 : false',
+        'p >= 50000 && p < 500000 ? 20000 : false',
+        'p >= 500000 && p < 1000000 ? 60000 : false',
+        'p >= 1000000 ? 100000 : false'
+      ]
+    }, 
+    {
+      id: 9,
+      originalPrice: 240000,
+      name: '精品官网两年(送一年)',
+      price: 0,
+      discountExecPriceFunc: [
+        'p >= 0 && p < 50000 ? 0 : false',
+        'p >= 50000 && p < 500000 ? 60000 : false',
+        'p >= 500000 && p < 1000000 ? 120000 : false',
+        'p >= 1000000 ? 140000 : false'
+      ]
+    }
+  ]
+
   export default {
     name: 'bw-shopping-cart',
     props: {
@@ -67,7 +106,8 @@
         payUrl: '',
         DEVICE,
 
-        gwSelected: false,
+        siteProducts,
+        gwSelected: [],
         expand: false,
         loading: false,
         firstLoad: false,
@@ -76,22 +116,17 @@
     },
     computed: {
       gwPrice() {
-        if (this.keywordsPrice < 50000) {
-          return 120000
+        let price = 0
+        if (this.gwSelected[0]) {
+          price = this.siteProducts.find(({id}) => id === this.gwSelected[0]).price
         }
-        if (this.keywordsPrice < 499900) {
-          return 100000
-        }
-        if (this.keywordsPrice < 999900) {
-          return 60000
-        }
-        return 20000
+        return price
       },
       keywordsPrice() {
         return this.localItems.reduce((a, b) => a + b.price , 0)
       },
       totalPrice() {
-        return this.keywordsPrice + (this.gwSelected ? this.gwPrice : 0)
+        return this.keywordsPrice + (this.gwSelected.length > 0 ? this.gwPrice : 0)
       },
       payText() {
         return this.isUser('BAIXING_SALES') ? '生成支付链接' : '去支付'
@@ -151,6 +186,14 @@
       }
     },
     watch: {
+      keywordsPrice() {
+        this.siteProducts = this.siteProducts.map(p => ({
+          ...p,
+          price: p.originalPrice - p.discountExecPriceFunc
+            .map(execStr => new Function('p', 'return ' + execStr)(this.keywordsPrice))
+            .find(res => res !== false)
+        }))
+      },
       localItems: {
         handler: function(local) {
           const roles = normalizeRoles(this.userInfo.roles)
@@ -290,5 +333,8 @@
 .payurl {
   font-size: 14px;
   margin-top: 10px;
+}
+.checkbox {
+  margin: 0;
 }
 </style>

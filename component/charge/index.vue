@@ -10,11 +10,11 @@
           1. 选择产品 | <span class="discount-btn" @click="showDiscount = !showDiscount">查看优惠细则<i class="el-icon-question"></i></span>
         </header>
         <div class="discount-section" v-show="showDiscount">
-          <p class="discount-info">满588元：<span class="red">赠</span>送十万火急 50 元现金券 <span class="mute">(满100元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（365天）<span class="red">减</span>立减 200 元</p>
-          <p class="discount-info">满1088元：<span class="red">赠</span>送十万火急 80 元现金券 <span class="mute">(满200元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（365天）<span class="red">减</span>立减 200 元</p>
-          <p class="discount-info">满3088元：<span class="red">赠</span>送十万火急 300 元现金券 <span class="mute">(满400元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（365天）<span class="red">减</span>立减 200 元</p>
-          <p class="discount-info">满5088元：<span class="red">赠</span>送十万火急 300 元现金券 <span class="mute">(满400元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（365天）<span class="red">减</span>立减 600 元</p>
-          <p class="discount-info">满10188元：<span class="red">赠</span>送十万火急 300 元现金券 <span class="mute">(满400元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（365天）<span class="red">减</span>立减 1000 元</p>
+          <p class="discount-info">满588元：<span class="red">赠</span>送十万火急 50 元现金券 <span class="mute">(满100元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（1年）官网<span class="red">减</span>立减 200 元；购买精品官网2年【送一年】官网<span class="red">减</span>立减 600 元</p>
+          <p class="discount-info">满1088元：<span class="red">赠</span>送十万火急 80 元现金券 <span class="mute">(满200元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（1年）官网<span class="red">减</span>立减 200 元；购买精品官网2年【送一年】官网<span class="red">减</span>立减 600 元</p>
+          <p class="discount-info">满3088元：<span class="red">赠</span>送十万火急 300 元现金券 <span class="mute">(满400元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（1年）官网<span class="red">减</span>立减 200 元；购买精品官网2年【送一年】官网<span class="red">减</span>立减 600 元</p>
+          <p class="discount-info">满5088元：<span class="red">赠</span>送十万火急 300 元现金券 <span class="mute">(满400元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（1年）官网<span class="red">减</span>立减 600 元；购买精品官网2年【送一年】官网<span class="red">减</span>立减 1200 元</p>
+          <p class="discount-info">满10188元：<span class="red">赠</span>送十万火急 300 元现金券 <span class="mute">(满400元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（1年）官网<span class="red">减</span>立减 1000 元；购买精品官网2年【送一年】官网<span class="red">减</span>立减 1400 元</p>
         </div>
         <div class="charge">
           <header>选择充值推广资金包：</header>
@@ -41,6 +41,7 @@
                 :original-price="centToYuan(product.price)"
                 :price="gwPrice"
                 :checked="checkedProducts.includes(product)"
+                :is-hot="product.isHot"
                 @click.native="toggleProduct(product)"
               />
             </section>
@@ -157,7 +158,7 @@
         <footer>
           <li>推广资金使用规则：</li>
           <li>1. 该产品购买后，精品官网及推广资金不可退款，如有疑问请致电客服400-036-3650；</li>
-          <li>2. 该精品官网及推广资金自购买之日起有效期为365天，请在有效期内使用；</li>
+          <li>2. 该精品官网及推广资金自购买之日起有效期为1年，请在有效期内使用；</li>
           <li>3. 详细推广记录请在【搜索通】-【数据报表】查看。</li>
         </footer>
       </section>
@@ -267,7 +268,26 @@ const allProducts = [
     id: 8,
     productType: 4,
     price: 120000,
-    name: '精品官网'
+    discountExecPriceFunc: [
+      'p >= 0 && p < 58800 ? 0 : false',
+      'p >= 58800 && p < 508800 ? 20000 : false',
+      'p >= 508800 && p < 1018800 ? 60000 : false',
+      'p >= 1018800 ? 100000 : false'
+    ],
+    name: '精品官网一年',
+    isHot: false
+  }, {
+    id: 9,
+    productType: 4,
+    price: 240000,
+    discountExecPriceFunc: [
+      'p >= 0 && p < 58800 ? 0 : false',
+      'p >= 58800 && p < 508800 ? 60000 : false',
+      'p >= 508800 && p < 1018800 ? 120000 : false',
+      'p >= 1018800 ? 140000 : false'
+    ],
+    name: '精品官网两年【送一年】',
+    isHot: true
   }
 ]
 
@@ -326,7 +346,7 @@ export default {
   },
   computed: {
     gwPrice() {
-      const gw = this.fullCheckedProducts.find(p => p.productType ===4)
+      const gw = this.fullCheckedProducts.find(p => p.productType === 4)
       if (gw) {
         return centToYuan(gw.price)
       }
@@ -334,30 +354,34 @@ export default {
     promotionDiscount() {
       const charge = this.checkedProducts.find(p => p.productType === 3)
       if (charge) {
+        const siteProductText = !!this.fullCheckedProducts.find(({id}) => id === 8)
+          ? '一年' : '两年【送一年】'
+        const siteProduct = this.fullCheckedProducts.find(({productType}) => productType === 4)
+        const siteDiscountPrice = siteProduct && centToYuan(siteProduct.originalPrice - siteProduct.discountPrice)
         if (charge.price < 58800) {
             return `
               充值更多，可享更多优惠！
             `
           } else if (charge.price < 108800) {
             return `
-              <span class="red">赠</span>送十万火急 50 元现金券 <span class="mute">(满100元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（365天）立<span class="red">减</span> 200 元
+              <span class="red">赠</span>送十万火急 50 元现金券 <span class="mute">(满100元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（${siteProductText}）立<span class="red">减</span> ${siteDiscountPrice} 元
             `
           } else if (charge.price < 308800) {
             return `
-              <span class="red">赠</span>送十万火急 80 元现金券 <span class="mute">(满200元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（365天）立<span class="red">减</span>200 元
+              <span class="red">赠</span>送十万火急 80 元现金券 <span class="mute">(满200元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（${siteProductText}）立<span class="red">减</span> ${siteDiscountPrice} 元
             `
           }
           else if (charge.price < 508800) {
             return `
-              <span class="red">赠</span>送十万火急 300 元现金券 <span class="mute">(满400元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（365天）立<span class="red">减</span>200 元
+              <span class="red">赠</span>送十万火急 300 元现金券 <span class="mute">(满400元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（${siteProductText}）立<span class="red">减</span> ${siteDiscountPrice} 元
             `
           } else if (charge.price < 1018800) {
             return `
-              <span class="red">赠</span>送十万火急 300 元现金券 <span class="mute">(满400元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（365天）立<span class="red">减</span>600 元
+              <span class="red">赠</span>送十万火急 300 元现金券 <span class="mute">(满400元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（${siteProductText}）立<span class="red">减</span> ${siteDiscountPrice} 元
             `
           } else {
             return `
-              <span class="red">赠</span>送十万火急 300 元现金券 <span class="mute">(满400元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（365天）立<span class="red">减</span>1000 元
+              <span class="red">赠</span>送十万火急 300 元现金券 <span class="mute">(满400元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（${siteProductText}）立<span class="red">减</span> ${siteDiscountPrice} 元
             `
           }
       }
@@ -505,9 +529,13 @@ export default {
         this.checkedProducts.splice(index, 1)
       } else {
         const chargeProduct = this.checkedProducts.find(p => p.productType === 3)
+        const gwProduct = this.checkedProducts.find(p => p.productType === 4)
         if (chargeProduct && product.productType === 3) {
           const index = this.checkedProducts.indexOf(chargeProduct)
           this.checkedProducts.splice(index, 1)
+        }
+        if (gwProduct && product.productType === 4) {
+          this.checkedProducts = this.checkedProducts.filter(({productType}) => productType !== 4)
         }
         this.checkedProducts.push(product)
       }
@@ -774,14 +802,10 @@ export default {
 
         if (charge && gw) {
           let gwPrice = gw.price
-          if (charge.price < 58800) {
-          } else if (charge.price < 508800) {
-            gwPrice = gw.price - 20000
-          } else if (charge.price < 1018800) {
-            gwPrice = gw.price - 60000
-          } else {
-            gwPrice = gw.price - 100000
-          }
+          const { discountExecPriceFunc } = gw
+          gwPrice = gw.price - discountExecPriceFunc
+            .map(execStr => new Function('p', 'return ' + execStr)(charge.price))
+            .find(res => res !== false)
           this.fullCheckedProducts = checked.map(product => {
             const {id, productType, price} = product
             return {

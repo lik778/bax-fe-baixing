@@ -1,8 +1,7 @@
-
 <template>
   <div :class="{'gw-pro-widget': true, checked}"
     @click="onClick">
-    <div class="hot-flag">
+    <div class="hot-flag" v-if="isHot">
       <section>
         <main>
           热卖
@@ -15,7 +14,7 @@
       </section>
     </div>
     <header>
-      {{ title + '365天' }}
+      {{ title }}
     </header>
     <main>
       <div>
@@ -30,8 +29,8 @@
       </div>
     </main>
     <footer>
-      <span v-if="price !== undefined">{{ price + '元' }}</span>
-      <span v-if="price !== originalPrice" class="original">原价{{ originalPrice}}元</span>
+      <span v-if="price !== undefined && checked">{{ price + '元' }}</span>
+      <span v-if="price !== originalPrice" class="original">原价{{originalPrice}}元</span>
     </footer>
     <p>
       <bx-icon v-if="checked" type="check" />
@@ -51,7 +50,8 @@ export default {
     checked: Boolean,
     price: Number,
     originalPrice: Number,
-    title: String
+    title: String,
+    isHot: Boolean
   },
   methods: {
     onClick() {
@@ -74,6 +74,7 @@ export default {
   border-radius: 4px;
   border: solid 1px #ccc;
   cursor: pointer;
+  margin-right: 20px;
 
   & > header {
     @mixin center;
@@ -122,7 +123,7 @@ export default {
   width: 0;
   height: 0;
   top: -4px;
-  left: 190px;
+  left: 200px;
 
   & > section {
     width: 44px;
