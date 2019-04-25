@@ -13,7 +13,7 @@ export function fmtCpcRanking(ranking) {
     return '无昨日排名'
   }
 
-  return ranking
+  return parseFloat(ranking).toFixed(1)
 }
 
 export function mergeKeywords(preWords, newWords) {

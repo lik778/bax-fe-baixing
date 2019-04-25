@@ -31,7 +31,7 @@
           <el-table-column prop="device" label="平台" :formatter="row => deviceFormatter(row.device)" />
           <el-table-column prop="status" label="投放状态" :formatter="v => statusFormatter(v.status)" />
           <el-table-column>
-            <template slot="header" slot-scope="scope">
+            <template slot="header">
                 审核状态
                 <el-tooltip content="指您最近一次提交内容的审核状态，系统将以最近一次通过审核的版本投放。">
                   <i class="el-icon-info"></i>
@@ -44,7 +44,7 @@
               <p v-else>{{auditStatusFormatter(scope.row.auditStatus)}}</p>
             </template>
           </el-table-column>
-          <el-table-column prop="cpcRanking" label="平均排名" />
+          <el-table-column prop="cpcRanking" label="平均排名" :formatter="({cpcRanking}) => cpcRanking && fmtCpcRanking(cpcRanking)" />
           <el-table-column prop="createdAt" label="购买日期" :formatter="dateFormatter" />
           <el-table-column label="投放剩余天数">
             <template slot-scope="scope">
@@ -104,6 +104,7 @@
     normalizeRoles
   } from 'util/role'
   import flatten from 'lodash.flatten'
+  import {fmtCpcRanking} from 'util/campaign'
 
   export default {
     name: 'bw-plan-list',
@@ -192,6 +193,7 @@
       },
     },
     methods: {
+      fmtCpcRanking,
       getRandomQueryTimes() {
         let r = Math.random()
         while(r > 1 || r < .3) {
