@@ -28,9 +28,9 @@
         >
           <el-checkbox
             class="checkbox"
-            :label="product.id"
+            :label="product.shopOrderAmount"
             v-for="product in siteProducts"
-            :key="product.id"
+            :key="product.shopOrderAmount"
           >
             {{product.name}}{{f2y(product.price)}}元（原价：{{f2y(product.originalPrice)}}元）
           </el-checkbox>
@@ -65,7 +65,7 @@
 
   const siteProducts = [
     {
-      id: 8,
+      shopOrderAmount: 1,
       originalPrice: 120000,
       name: '精品官网一年',
       price: 0,
@@ -77,7 +77,7 @@
       ]
     }, 
     {
-      id: 9,
+      shopOrderAmount: 3,
       originalPrice: 240000,
       name: '精品官网两年(送一年)',
       price: 0,
@@ -118,7 +118,7 @@
       gwPrice() {
         let price = 0
         if (this.gwSelected[0]) {
-          price = this.siteProducts.find(({id}) => id === this.gwSelected[0]).price
+          price = this.siteProducts.find(({shopOrderAmount}) => shopOrderAmount === this.gwSelected[0]).price
         }
         return price
       },
@@ -160,7 +160,9 @@
         // 代理商跳转支付，url带上
         // 百姓网销售显示链接
         const {salesId, userId} = this.salesInfo
-        const preTradeId = await createPreOrder(this.localItems, this.gwSelected, userId, salesId)
+        const saleWithShopOrder = !!this.gwSelected.length
+        const shopOrderAmount = this.gwSelected[0]
+        const preTradeId = await createPreOrder(this.localItems, saleWithShopOrder, userId, salesId, shopOrderAmount)
 
         if (this.isUser('BAIXING_USER')) {
           this.localItems = []

@@ -358,32 +358,27 @@ export default {
           ? '一年' : '两年【送一年】'
         const siteProduct = this.fullCheckedProducts.find(({productType}) => productType === 4)
         const siteDiscountPrice = siteProduct && centToYuan(siteProduct.originalPrice - siteProduct.discountPrice)
+        let huojiCouponContent = ''
         if (charge.price < 58800) {
-            return `
+            huojiCouponContent =  `
               充值更多，可享更多优惠！
             `
           } else if (charge.price < 108800) {
-            return `
-              <span class="red">赠</span>送十万火急 50 元现金券 <span class="mute">(满100元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（${siteProductText}）立<span class="red">减</span> ${siteDiscountPrice} 元
+            huojiCouponContent =  `
+              <span class="red">赠</span>送十万火急 50 元现金券 <span class="mute">(满100元可用，不限城市与类目，有效期30天)；</span>
             `
           } else if (charge.price < 308800) {
-            return `
-              <span class="red">赠</span>送十万火急 80 元现金券 <span class="mute">(满200元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（${siteProductText}）立<span class="red">减</span> ${siteDiscountPrice} 元
-            `
-          }
-          else if (charge.price < 508800) {
-            return `
-              <span class="red">赠</span>送十万火急 300 元现金券 <span class="mute">(满400元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（${siteProductText}）立<span class="red">减</span> ${siteDiscountPrice} 元
-            `
-          } else if (charge.price < 1018800) {
-            return `
-              <span class="red">赠</span>送十万火急 300 元现金券 <span class="mute">(满400元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（${siteProductText}）立<span class="red">减</span> ${siteDiscountPrice} 元
+            huojiCouponContent =  `
+              <span class="red">赠</span>送十万火急 80 元现金券 <span class="mute">(满200元可用，不限城市与类目，有效期30天)；</span>
             `
           } else {
-            return `
-              <span class="red">赠</span>送十万火急 300 元现金券 <span class="mute">(满400元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（${siteProductText}）立<span class="red">减</span> ${siteDiscountPrice} 元
+            huojiCouponContent =  `
+              <span class="red">赠</span>送十万火急 300 元现金券 <span class="mute">(满400元可用，不限城市与类目，有效期30天)；</span>
             `
           }
+          return huojiCouponContent + (siteDiscountPrice
+            ? `同时购买精品官网（${siteProductText}）立<span class="red">减</span> ${siteDiscountPrice} 元`
+            : '')
       }
       return ''
     },
@@ -695,7 +690,7 @@ export default {
 
       newOrder.products = this.fullCheckedProducts.map(p => {
         return {
-          price: p.originalPrice,
+          price: p.orderPrice,
           id: p.productType // ?
         }
       })
@@ -819,13 +814,14 @@ export default {
           })
         } else {
           this.fullCheckedProducts = checked.map(product => {
-            const {id, productType, price} = product
+            const {id, productType, price, orderPrice} = product
             return {
               id,
               productType,
               name: PRODUCT[productType],
               price: price,
               originalPrice: price,
+              orderPrice: orderPrice || price,
               discountPrice: this.getDiscountPrice(productType, price)
             }
           })
