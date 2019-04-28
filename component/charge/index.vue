@@ -268,6 +268,7 @@ const allProducts = [
     id: 8,
     productType: 4,
     price: 120000,
+    orderPrice: 120000,
     discountExecPriceFunc: [
       'p >= 0 && p < 58800 ? 0 : false',
       'p >= 58800 && p < 508800 ? 20000 : false',
@@ -280,6 +281,7 @@ const allProducts = [
     id: 9,
     productType: 4,
     price: 240000,
+    orderPrice: 360000,
     discountExecPriceFunc: [
       'p >= 0 && p < 58800 ? 0 : false',
       'p >= 58800 && p < 508800 ? 60000 : false',
@@ -802,13 +804,14 @@ export default {
             .map(execStr => new Function('p', 'return ' + execStr)(charge.price))
             .find(res => res !== false)
           this.fullCheckedProducts = checked.map(product => {
-            const {id, productType, price} = product
+            const {id, productType, price, orderPrice} = product
             return {
               id,
               productType,
               name: PRODUCT[productType],
               price: productType === 4 ? gwPrice : price,
               originalPrice: price,
+              orderPrice: orderPrice || price,
               discountPrice: this.getDiscountPrice(productType, productType === 4 ? gwPrice : price)
             }
           })
