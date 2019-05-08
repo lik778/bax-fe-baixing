@@ -362,9 +362,7 @@ export default {
         const siteDiscountPrice = siteProduct && centToYuan(siteProduct.originalPrice - siteProduct.discountPrice)
         let huojiCouponContent = ''
         if (charge.price < 58800) {
-            huojiCouponContent =  `
-              充值更多，可享更多优惠！
-            `
+          return '充值更多，可享更多优惠！'
           } else if (charge.price < 108800) {
             huojiCouponContent =  `
               <span class="red">赠</span>送十万火急 50 元现金券 <span class="mute">(满100元可用，不限城市与类目，有效期30天)；</span>
