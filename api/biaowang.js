@@ -83,11 +83,11 @@ export async function updatePromote(opts = {}) {
 }
 
 // targetUserId, salesId are baxid, not baixingid
-export async function createPreOrder(items, saleWithShopOrder, targetUserId, salesId) {
+export async function createPreOrder(items, saleWithShopOrder, targetUserId, salesId, shopOrderAmount) {
   console.log(targetUserId, salesId)
   const body = await biaowang
     .post('/trade/user/order/pre')
-    .send(trim({pricingList: items, saleWithShopOrder, targetUserId, salesId}))
+    .send(trim({pricingList: items, saleWithShopOrder, targetUserId, salesId, shopOrderAmount}))
     .json()
 
   return body.data

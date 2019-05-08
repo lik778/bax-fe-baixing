@@ -42,12 +42,12 @@
         width="105"
         align="center"
         label="原价"
-        :formatter="({originalPrice, extra}) => formatPrice(originalPrice * genKaSiteDuration(extra))"/>
+        :formatter="row => formatPrice(genOriginalPrice(row) * genKaSiteDuration(row.extra))"/>
       <el-table-column
         width="105"
         align="center"
         label="优惠"
-        :formatter="({originalPrice, customerPrice, extra}) => formatPrice(originalPrice * genKaSiteDuration(extra) - customerPrice)"/>
+        :formatter="row => formatPrice(genOriginalPrice(row) * genKaSiteDuration(row.extra) - row.customerPrice)"/>
       <el-table-column
         width="105"
         align="center"
@@ -106,6 +106,7 @@ const statusLabel = {
 }
 
 const ONE_PAGE_NUM = 10
+const ONE_YEAR_QUOTA_PRICE = 120000
 
 const transformUnixTimeStamp = (date) =>  {
   return dayjs(new Date(date)).unix()
@@ -134,6 +135,10 @@ export default {
   },
   components: {SectionHeader},
   methods: {
+    genOriginalPrice({productType, originalPrice}) {
+      if (productType === 4) return ONE_YEAR_QUOTA_PRICE
+      return originalPrice
+    },
     async payOrder(orderId) {
       const url = await api.payOrder(orderId)
       this.$message.success('正在跳转支付页面')
@@ -182,17 +187,11 @@ export default {
       return `${duration}年`
     },
     genKaSiteDuration(extra) {
+      const ONE_YEAR_MILLISECOND = 31536000
       const {new_shop_duration} = JSON.parse(extra)
-      switch(new_shop_duration) {
-        case 31536000:
-          return 1
-        case 47304000:
-          return 1.5
-        case 63072000:
-          return 2
-        default:
-          return 1
-      }
+      if (!new_shop_duration) return 1
+      const result = new_shop_duration / ONE_YEAR_MILLISECOND
+      return result % 1 === 0 ? result : result.toFixed(1)
     },
     goto(page) {
       this.offset = (page - 1) * ONE_PAGE_NUM
