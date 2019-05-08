@@ -940,6 +940,7 @@ export default {
       }
 
       if (creativeContent && creativeTitle) {
+        if (this.creativeError) return Message.error(this.creativeError)
         // 变更时检测
         const platforms = [this.getProp('source')]
         const res = await checkCreativeContent({

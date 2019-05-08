@@ -217,8 +217,8 @@
             } finally {
               this.isLoading = false
             }
-          } else {
-            return false
+          } else if (isValid && this.creativeError) {
+            Message.error(this.creativeError)
           }
         })
       },
