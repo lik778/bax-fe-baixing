@@ -29,7 +29,7 @@
       </div>
     </main>
     <footer>
-      <span v-if="price !== undefined && checked">{{ price + '元' }}</span>
+      <span v-if="price !== undefined && (originalPrice === price || checked)">{{ price + '元' }}</span>
       <span v-if="price !== originalPrice" class="original">原价{{originalPrice}}元</span>
     </footer>
     <p>

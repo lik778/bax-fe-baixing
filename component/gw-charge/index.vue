@@ -1,7 +1,6 @@
 
 <template>
   <div class="gw-charge">
-    <topbar :user-info="userInfo" />
     <content>
       <step :step="step" />
       <section class="gw-product">
@@ -10,9 +9,8 @@
         </header>
         <main>
           <gw-pro-widget
-            v-if="allowSeeOldGw || i.name === '精品官网'"
-            v-for="i of realProducts" :key="i.id"
             :title="i.name"
+            v-for="i of realProducts" :key="i.id"
             :original-price="i.showPrice | centToYuan"
             :price="i.price | centToYuan"
             :checked="productChecked(i.id)"
@@ -132,6 +130,7 @@ import {
 } from 'api/meta'
 
 import {
+  allowBuyYoucaigouSite,
   allowGetOrderPayUrl,
   allowUseKaPackage,
   allowSeeOldGw,
@@ -142,7 +141,7 @@ import {
   normalizeRoles
 } from 'util/role'
 
-import store from './store'
+import store from './store' 
 
 /**
  * 备注说明:
@@ -202,8 +201,12 @@ export default {
               ...p,
               price: 100000
             }
+          } else if (this.allowSeeYoucaigouSite && p.id === 5) {
+            return {
+              ...p,
+              name: '精品官网聚合页（优采购）'
+            }
           }
-
           return p
         })
       }
@@ -227,10 +230,8 @@ export default {
       const roles = normalizeRoles(this.userInfo.roles)
       return roles.includes('BAIXING_SALES')
     },
-    allowSeeOldGw() {
-      const roles = normalizeRoles(this.userInfo.roles)
-      const { id } = this.userInfo
-      return allowSeeOldGw(roles, id)
+    allowSeeYoucaigouSite() {
+      return allowBuyYoucaigouSite(this.userInfo.id)
     },
     allowDiscount() {
       const roles = normalizeRoles(this.userInfo.roles)
