@@ -10,7 +10,7 @@ import {
 
 export function fmtCpcRanking(ranking) {
   ranking = +ranking
-  if (ranking < 1 && ranking > 5) {
+  if (ranking < 1 || ranking > 5) {
     ranking = 5
   }
   return parseFloat(ranking).toFixed(1)
