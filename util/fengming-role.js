@@ -10,6 +10,8 @@ import {
 // 优米帮: 860603
 // 测试帐号: 53470
 // 线下测试账户 93
+// 线上测试账户 39
+
 export function allowSee258(roles, uid) {
   if (isPro) {
     return [2888091, 1847989].includes(uid)
@@ -23,7 +25,7 @@ export function allowUseKaPackage(roles, uid) {
 }
 
 export function allowBuyYoucaigouSite(uid) {
-  const specialUserIds = [860603, 93]
+  const specialUserIds = [860603, 93, 39]
   return specialUserIds.includes(uid)
 }
 
