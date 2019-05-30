@@ -279,10 +279,12 @@
         return DEVICE[device]
       },
       statusFormatter(status) {
-        return Object.entries(PROMOTE_STATUS).find(arr => arr[1].includes(status))[0]
+        const res = Object.entries(PROMOTE_STATUS).find(arr => arr[1].includes(status))
+        return res && res[0]
       },
       auditStatusFormatter(auditStatus) {
-        return Object.entries(AUDIT_STATUS).find(arr => arr[1].includes(auditStatus))[0]
+        const res = Object.entries(AUDIT_STATUS).find(arr => arr[1].includes(auditStatus))
+        return res && res[0]
       },
       dateFormatter({createdAt}) {
         return dayjs(createdAt * 1000).format('YYYY-MM-DD')

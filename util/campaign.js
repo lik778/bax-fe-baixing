@@ -9,10 +9,10 @@ import {
 } from 'constant/fengming'
 
 export function fmtCpcRanking(ranking) {
-  if (ranking === 0 || ranking === -1) {
-    return '无昨日排名'
+  ranking = +ranking
+  if (ranking < 1 || ranking > 5) {
+    ranking = 5
   }
-
   return parseFloat(ranking).toFixed(1)
 }
 
