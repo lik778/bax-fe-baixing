@@ -245,7 +245,7 @@
             先去充值
           </el-button>
           <el-button type="primary"
-            :disabled="isUpdating || isSales"
+            :disabled="isSougou || isUpdating || isSales"
             @click="updatePromotion">
             更新推广
           </el-button>
@@ -455,6 +455,9 @@ export default {
     //     return this.usableBalance
     //   }
     // },
+    isSougou () {
+      return this.getProp('source') === 5
+    },
     extendLandingTypeOpts() {
       if (allowSee258(null, this.userInfo.id)) {
         return landingTypeOpts.concat([{label: '258官网', value: LANDING_TYPE_258}])

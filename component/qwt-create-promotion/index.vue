@@ -242,7 +242,7 @@ const promotionTemplate = {
   creativeContent: '',
 
   keywords: [],
-  sources: semPlatformOpts.map(opt => opt.value),
+  sources: semPlatformOpts.map(opt => opt.value).filter(value => value !== 5),
   dailyBudget: MIN_DAILY_BUDGET
 }
 
@@ -297,7 +297,7 @@ export default {
       chargeDialogVisible: false,
       areaDialogVisible: false,
 
-      semPlatformOpts,
+      semPlatformOpts: semPlatformOpts.filter(({value}) => value !== 5),
       isCreating: false,
       showPromotion: false,
       timeout: null,
