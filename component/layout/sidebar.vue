@@ -18,11 +18,37 @@
           </router-link>
         </el-menu-item>
 
-        <el-menu-item index="qwt-charge">
-          <router-link :to="{ name: 'qwt-charge' }" tag="p">
+        <el-submenu index="charge">
+          <template slot="title">
             <bx-icon type="paycircleo"></bx-icon>充值与购买
-          </router-link>
-        </el-menu-item>
+          </template>
+          <el-menu-item index="qwt-charge">
+            <router-link :to="{ name: 'qwt-charge' }" tag="p">
+              站外推广
+            </router-link>
+          </el-menu-item>
+          <el-menu-item index="seo-charge">
+            <router-link :to="{ name: 'seo-charge' }" tag="p">
+                首页宝
+            </router-link>
+          </el-menu-item>
+        </el-submenu>
+
+        <el-submenu index="seo">
+          <template slot="title">
+            <bx-icon type="paycircleo"></bx-icon>首页宝
+          </template>
+          <el-menu-item index="">
+            <router-link :to="{ name: 'seo-create-promotion' }" tag="p">
+              新建首页宝
+            </router-link>
+          </el-menu-item>
+          <el-menu-item index="seo-charge">
+            <router-link :to="{ name: 'seo-promotion-list' }" tag="p">
+              管理首页宝
+            </router-link>
+          </el-menu-item>
+        </el-submenu>
 
         <el-menu-item index="gw-charge" v-if="allowUseKaPackage">
           <p @click="toBuyKaOrGw">
@@ -136,6 +162,8 @@ import {
 import { baxUserLogin, kaNavigation } from 'api/ka'
 
 const MENU_GROUP_MAP = {
+  'charge': ['qwt-charge', 'seo-charge'],
+  'seo': ['seo-create-promotion', 'seo-promotion-list'],
   'sst': ['qwt-create-promotion', 'qwt-promotion-list'],
   'bw': ['bw-query-price', 'bw-plan-list'],
   'ssp': ['ad-list', 'material-list', 'order-list', 'user-list', 'ad-calendar']

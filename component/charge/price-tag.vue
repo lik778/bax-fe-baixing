@@ -31,11 +31,14 @@ export default {
   props: {
     editable: Boolean,
     checked: Boolean,
-    price: Number
+    price: Number,
+    minInputPrice: {
+      type: Number,
+      default: 100
+    }
   },
   data() {
     return {
-      minInputPrice: 100,
       inputPrice: ''
     }
   },
