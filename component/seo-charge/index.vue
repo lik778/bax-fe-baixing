@@ -86,7 +86,7 @@
               :loading="payInProgress"
               @click="createPreOrder"
             >
-              {{ submitButtonText }}
+              确认购买
             </button>
             <span v-if="orderPayUrl">
               <label :title="orderPayUrl">
@@ -118,6 +118,19 @@
         </el-button>
       </div>
     </el-dialog>
+
+    <div class="intro" v-show="showIntro">
+      <div class="content">
+        <div class="img"></div>
+        <div class="body">
+          <h1>搜索通首页宝产品上线</h1>
+          <p>一样的预算，更多的效果，明智的投放配比sem：seo=3:1。</p>
+          <p>高性价比的专业seo服务，不达百度首页不计费。</p>
+          <p class="highlight">每词低至8元/端/天</p>
+          <div class="round-btn" @click="showIntro = false">我知道啦</div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -151,7 +164,8 @@ import { product as PRODUCT } from 'constant/product'
 
 import { normalizeRoles } from 'util/role'
 
-import { createOrder } from 'api/fengming'
+import { createPreOrder } from 'api/seo'
+  import {orderServiceHost} from 'config'
 
 import {
   getUserIdFromBxSalesId,
@@ -238,7 +252,9 @@ export default {
       orderPayUrl: '',
 
       payInProgress: false,
-      payDialogVisible: false
+      payDialogVisible: false,
+
+      showIntro: false
     }
   },
   computed: {
@@ -299,18 +315,6 @@ export default {
 
       return this.allDiscounts
         .filter(d => types.includes(d.productType))
-    },
-    submitButtonText() {
-      const { userInfo } = this
-      if (this.isBxUser) {
-        return '确认购买'
-      }
-
-      if (allowGetOrderPayUrl(userInfo.roles)) {
-        return '生成链接'
-      }
-
-      return '确认购买'
     },
     totalPrice() {
       const p = this.fullCheckedProducts.map(i => i.discountPrice)
@@ -378,7 +382,7 @@ export default {
       await payOrders(oids)
     },
 
-    async getFinalSalesId() {
+    getFinalSalesId() {
       const { sales_id: salesId } = this.$route.query
       if (salesId) {
         return salesId
@@ -390,7 +394,7 @@ export default {
 
       return userInfo.id
     },
-    async getFinalUserId() {
+    getFinalUserId() {
       const { user_id: userId } = this.$route.query
       if (userId) {
         return userId
@@ -400,6 +404,24 @@ export default {
     },
     async createPreOrder() {
       console.log(this.fullCheckedProducts)
+
+      // balanceAmount, saleWithShopOrder, shopOrderAmount, targetUserId, salesId
+      const charge = this.fullCheckedProducts.find(p => p.productType === 3)
+      const saleWithShopOrder = !!this.fullCheckedProducts.find(p => p.productType === 4)
+      const preTradeId = await createPreOrder(
+        charge ? charge.originalPrice: 0,
+        saleWithShopOrder,
+        1,
+        this.getFinalUserId(),
+        this.getFinalSalesId()
+      )
+      if (this.isBxUser) {
+        location.href = `${orderServiceHost}/?appId=103&seq=${preTradeId}`
+      } else if (this.isAgentAccounting) {
+        location.href = `${orderServiceHost}/?appId=103&seq=${preTradeId}&agentId=${this.userInfo.id}`
+      } else if (isBxSales) {
+        this.orderPayUrl = `${orderServiceHost}/?appId=103&seq=${preTradeId}`
+      }
     },
     centToYuan
   },
@@ -470,11 +492,73 @@ export default {
         this.displayUserMobile = info.mobile
       }
     }
+
+    const key = 'seo-intro-time'
+    const lastTs = localStorage.getItem(key)
+    const now = Date.now()
+    if (!lastTs || now - lastTs > 24 * 86400 * 1000) {
+      this.showIntro = true
+      localStorage.setItem(key, now)
+    }
   }
 }
 </script>
 
 <style lang="postcss">
+.intro {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow: auto;
+  z-index: 1000;
+  background-color: rgba(0,0,0,.2);
+
+  & > .content {
+    width: 460px;
+    position: relative;
+    margin: 100px auto 50px;
+    background-color: white;
+    border-radius: 6px;
+
+    & > .img {
+      height: 132px;
+      background-image: url(http://file.baixing.net/201907/72c9added79381c68d23ef3a04089224.png);
+    }
+    & > .body {
+      text-align: center;
+      padding-bottom: 20px;
+
+      & > h1 {
+        font-size: 20px;
+        font-weight: bold;
+        margin: 25px 0;
+      }
+      & > p {
+        color: gray;
+        font-size: 14px;
+      }
+      & > p.highlight {
+        color: #FF7533;
+        font-size: 1.2em;
+        margin-bottom: 20px;
+        margin-top: 10px;
+      }
+      & > .round-btn {
+        width: 50%;
+        height: 40px;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 20px;
+        font-size: 14px;
+        margin: auto;
+        cursor: pointer;
+        color: gray;
+      }
+    }
+  }
+}
 .discount-info {
   font-size: 12px;
   margin-bottom: 10px;

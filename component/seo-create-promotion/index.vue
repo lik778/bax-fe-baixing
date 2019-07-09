@@ -22,7 +22,7 @@
       <div>
         <el-tag class="kw-tag" v-for="(kw, index) in promotion.keywords" :key="index"
           closable @close="() => {promotion.keywords.splice(index, 1)}"
-        >{{kw}}</el-tag>
+        >{{kw.word}}</el-tag>
 
         <input class="keyword-input" v-model.trim="inputKeyword" @keyup.enter="onEnter" />
       </div>
@@ -51,6 +51,8 @@
 <script>
 import QiqiaobanPageSelector from 'com/common/qiqiaoban-page-selector'
 import ContractAck from 'com/widget/contract-ack'
+import {createPromotion} from 'api/seo'
+import {KEYWORD_TYPE_USER} from 'constant/seo'
 
 export default {
   components: {
@@ -72,7 +74,7 @@ export default {
         if (this.inputKeyword.length < 6) {
           return this.$message.error('关键词字数需大于等于6')
         }
-        this.promotion.keywords.push(this.inputKeyword)
+        this.promotion.keywords.push({ source: KEYWORD_TYPE_USER, word: this.inputKeyword })
         this.inputKeyword = ''
       }
     },
@@ -83,9 +85,13 @@ export default {
       if (!this.promotion.keywords.length) {
         return this.$message.error('请选取关键词')
       }
-      this.$confirm(`您已选择关键词${this.promotion.keywords.join(', ')}进行首页宝推广`, '关键词确认')
+      this.$confirm(`您已选择关键词${this.promotion.keywords.map(k => k.word).join(', ')}进行首页宝推广`, '关键词确认')
+        .then(() => {
+          return createPromotion(this.promotion)
+        })
         .then(() => {
           this.$message.success('ok')
+          this.$router.push({name: 'seo-promotion-list'})
         })
         .catch(() => {})
     }
@@ -97,13 +103,11 @@ export default {
 .create-promotion {
   color: #6a778c;
   font-size: 14px;
+  border-radius: 4px;
 
   & > section {
-    border-radius: 4px;
-    margin-bottom: 10px;
-    background-color: #fff;
     padding: 20px;
-    box-shadow: 0 2px 9px 0 rgba(83,95,127,.1);
+    background-color: #fff;
 
     & > header {
       font-weight: bold;

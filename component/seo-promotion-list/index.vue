@@ -6,19 +6,19 @@
 
     <div class="list-header">推广落地页</div>
     <ul v-loading="loading" class="list-content">
-      <li v-for="(value, landing) in promotionsGroupByLanding" :key="landing" class="list-item">
-        <div class="top-col" @click="currentLanding === landing ? currentLanding = '' : currentLanding = landing">
+      <li v-for="item in promotionsGroupByLanding" :key="item.landingPage" class="list-item">
+        <div class="top-col" @click="currentItem === item ? currentItem = {} : currentItem = item">
           <i
             class="icon"
-            :class="landing === currentLanding ? 'el-icon-minus' : 'el-icon-plus'"
+            :class="item === currentItem ? 'el-icon-minus' : 'el-icon-plus'"
           />
-          <p class="title">{{promotionsGroupByLanding[landing].name}}</p>
+          <p class="title">{{item.landingPage}} - {{item.seoIncludedAt ? formatTime(item.seoIncludedAt) : '未收录'}}</p>
         </div>
-        <div class="batch" v-if="landing === currentLanding" >
+        <div class="batch" v-if="item === currentItem" >
           <el-button :disabled="!canBatchOpen" @click="batchOpen" type="text">批量开启</el-button>
           <el-button :disabled="!canBatchClose" @click="batchClose" type="text">批量关闭</el-button>
         </div>
-        <table v-if="landing === currentLanding" class="table-container">
+        <table v-if="item === currentItem" class="table-container">
           <thead>
             <th>多选</th>
             <th>计划id</th>
@@ -35,30 +35,53 @@
             <th>操作</th>
           </thead>
           <tbody v-if="!loading">
-            <tr v-for="promotion in currentPromotions" :key="promotion.id">
-              <td><el-checkbox :checked="checkedPromotions.includes(promotion)" @change="v => onCheck(promotion, v)" /></td>
-              <td>{{promotion.name}}</td>
-              <td>{{promotion.name}}</td>
-              <td>{{promotion.name}}</td>
-              <td>{{promotion.name}}</td>
-              <td>{{promotion.name}}</td>
-              <td>{{promotion.name}}</td>
-              <td>{{promotion.name}}</td>
-              <td>{{promotion.name}}</td>
-              <td>{{promotion.name}}</td>
-              <td>{{promotion.name}}</td>
-              <td>{{promotion.name}}</td>
-              <td></td>
-            </tr>
+            <template v-for="promotion in currentPromotions">
+
+              <tr v-for="(keyword, index) in promotion.words" :key="keyword.id">
+                <td class="checkbox" rowspan="2" v-if="index === 0"><el-checkbox :checked="checkedPromotions.includes(promotion)" @change="v => onCheck(promotion, v)" /></td>
+                <td>{{promotion.id}}</td>
+                <td>{{statusMap[keyword.status]}}</td>
+                <td>{{keyword.id}}</td>
+                <td>{{keyword.word}}</td>
+                <td>{{keywordType[keyword.source]}}</td>
+                <td>{{platform[keyword.platform]}}</td>
+                <td>{{formatTime(keyword.createdAt * 1000)}}</td>
+                <td>{{keyword.ranking}}</td>
+                <td>{{keyword.qualifiedDays}}</td>
+                <td>{{f2y(keyword.price)}}</td>
+                <td>{{f2y(keyword.totalCost)}}</td>
+                <td><el-button v-if="canUpdate(promotion)" type="text">修改</el-button></td>
+              </tr>
+            </template>
           </tbody>
         </table>
       </li>
     </ul>
+
+    <el-pagination
+      layout="total, prev, pager, next"
+      @current-change="handlePageChange"
+      :page-size="pageSize"
+      :total="total"
+    />
+
   </div>
 </template>
 
 <script>
 import TopTip from '../qwt-promotion-list/topTip'
+import  {queryPromotion, queryPromotionByIds, start, pause} from 'api/seo'
+import {
+  status as statusMap,
+  STATUS_OFFLINE,
+  STATUS_CREATED,
+  platform,
+  keywordType
+  } from 'constant/seo'
+import dayjs from 'dayjs';
+import {
+  f2y
+} from 'util'
 
 export default {
   components: {
@@ -66,35 +89,45 @@ export default {
   },
   data() {
     return {
-      promotionsGroupByLanding: {
-        1: {
-          name: '官网1',
-          campaignIds: [1,2,3]
-        },
-        2: {
-          name: '官网2',
-          campaignIds: [4,5,6]
-        },
-        3: {
-          name: '官网3',
-          campaignIds: [7,8,9]
-        }
-      },
+      promotionsGroupByLanding: [],
       checkedPromotions: [],
-      currentLanding: '',
+      currentItem: {},
       currentPromotions: [],
-      loading: false
+      loading: false,
+      total: 0,
+      currentPage: 0,
+      pageSize: 10,
+      statusMap,
+      platform,
+      keywordType
     }
   },
   computed: {
     canBatchOpen() {
-      return this.checkedPromotions.length && this.checkedPromotions.every(p => ['已下线、待投放、账户余额不足计划可以开'].includes(p))
+      return this.checkedPromotions.length && this.checkedPromotions.every(p => [STATUS_OFFLINE, STATUS_CREATED].includes(p.status))
     },
     canBatchClose() {
-      return this.checkedPromotions.length && this.checkedPromotions.every(p => ['续期词、待投放、账户余额不足的计划可以关'].includes(p))
+      return this.checkedPromotions.length && this.checkedPromotions.every(p => [STATUS_CREATED].includes(p.status) || p.isRenewed)
     }
   },
   methods: {
+    f2y,
+    formatTime(date) {
+      return dayjs(date).format('YYYY.MM.DD HH:mm')
+    },
+    canUpdate(promotion) {
+      const {createdAt, seoIncludedAt, rank} = promotion
+      const nearest = Math.max(createdAt, seoIncludedAt)
+      return dayjs(nearest).add(30, 'days').isAfter(dayjs(), 'day') && rank > 100
+    },
+    async loadPromotions() {
+      const {list, total} = await queryPromotion({page: this.currentPage, size: this.pageSize})
+      this.promotionsGroupByLanding = list
+      this.total = total
+    },
+    handlePageChange(page) {
+      this.currentPage = page
+    },
     onCheck(promotion, v) {
       if (v) {
         this.checkedPromotions.push(promotion)
@@ -103,23 +136,28 @@ export default {
         this.checkedPromotions.splice(index, 1)
       }
     },
-    batchOpen() {
-      console.log(this.checkedPromotions)
-
+    async batchOpen() {
+      await start(this.checkedPromotions.map(p => p.id))
+      await this.refreshCurrent()
     },
-    batchClose() {
-      console.log(this.checkedPromotions)
-
+    async batchClose() {
+      await pause(this.checkedPromotions.map(p => p.id))
+      await this.refreshCurrent()
+    },
+    async refreshCurrent() {
+      this.loading = true
+      this.currentPromotions = await queryPromotionByIds(this.currentItem.campaignIds)
+      console.log(this.currentPromotions)
+      this.loading = false
     }
   },
+  mounted() {
+    this.loadPromotions()
+  },
   watch: {
-    currentLanding(v) {
-      if (v) {
-        this.loading = true
-        setTimeout(() => {
-          this.currentPromotions = [{id: 1, name: '1'}, {id: 2, name: '2'}, {id: 3, name: '3'}, {id: 4, name: '4'}]
-          this.loading = false
-        }, 1000)
+    async currentItem(v) {
+      if (v.campaignIds) {
+        this.refreshCurrent()
       }
     }
   }
@@ -131,8 +169,6 @@ export default {
 .promotion-list {
   color: #666;
   border-radius: 4px;
-  margin-bottom: 10px;
-  margin-left: 12px;
   background-color: #fff;
   padding: 20px;
   box-shadow: 0 2px 9px 0 rgba(83,95,127,.1);
@@ -206,7 +242,7 @@ table {
     }
   }
   & > tbody {
-    & td:first-of-type {
+    & td.checkbox {
       padding-left: 40px;
     }
     & td {

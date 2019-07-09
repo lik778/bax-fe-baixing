@@ -8,6 +8,7 @@
       <qiqiaoban-page-selector
         :value="promotion.landingPage"
         @change="v => promotion.landingPage = v"
+        :disabled="true"
       />
     </section>
 
@@ -22,10 +23,6 @@
       </div>
 
       <div>
-        <el-tag class="kw-tag" v-for="(kw, index) in promotion.keywords" :key="index"
-          closable @close="() => {promotion.keywords.splice(index, 1)}"
-        >{{kw}}</el-tag>
-
         <input class="keyword-input" v-model.trim="inputKeyword" @keyup.enter="onEnter" />
       </div>
 
@@ -40,11 +37,10 @@
       </div>
 
       <div>
-        <p>您已选择{{promotion.keywords.length}}个自选词，将创建{{promotion.keywords.length}}个推广计划。</p>
-        <p>根据您所选择的关键词个数，预扣款{{promotion.keywords.length * 600}}元，预计可推广2个月（60天），到期将自动续费，为保证您的站点持续展现，请保持首页宝排名资金充足。</p>
+        <p>您已选择1个自选词，将创建1个推广计划。</p>
       </div>
       <contract-ack type="content-rule" />
-      <el-button type="primary" @click="onCreateClick">创建推广</el-button>
+      <el-button type="primary" @click="onUpdateClick">更新推广</el-button>
 
     </section>
   </div>
@@ -53,6 +49,7 @@
 <script>
 import QiqiaobanPageSelector from 'com/common/qiqiaoban-page-selector'
 import ContractAck from 'com/widget/contract-ack'
+import {updatePromotion, queryPromotionByIds} from 'api/seo'
 
 export default {
   components: {
@@ -62,10 +59,7 @@ export default {
   data() {
     return {
       inputKeyword: '',
-      promotion: {
-        landingPage: '',
-        keywords: []
-      }
+      promotion: {}
     }
   },
   methods: {
@@ -74,31 +68,28 @@ export default {
         if (this.inputKeyword.length < 6) {
           return this.$message.error('关键词字数需大于等于6')
         }
-        this.promotion.keywords.push(this.inputKeyword)
-        this.inputKeyword = ''
       }
     },
-    onCreateClick() {
-      if (!this.promotion.landingPage) {
-        return this.$message.error('请选择落地页')
-      }
-      if (!this.promotion.keywords.length) {
+    onUpdateClick() {
+      if (!this.inputKeyword) {
         return this.$message.error('请选取关键词')
       }
-      this.$confirm(`您已选择关键词${this.promotion.keywords.join(', ')}进行首页宝推广`, '确认更新计划')
+      this.$confirm(`您已选择关键词 ${this.inputKeyword} 进行首页宝推广`, '确认更新计划')
         .then(() => {
-          console.log(this.promotion)
-          this.$message.success('ok')
+          return updatePromotion(this.promotion.id, {newWord: this.inputKeyword})
+        })
+        .then(() => {
+          this.$message.success('更新成功')
+          this.$router.push({name: 'seo-promotion-list'})
         })
         .catch(() => {})
     }
   },
-  mounted() {
+  async mounted() {
     console.log(this.$route.params.id)
-    this.promotion = {
-      landingPage: 'http://23se.mvp.baixing.com',
-      keywords: ['asdfasf', 'lkghlkghlk']
-    }
+    this.promotion = (await queryPromotionByIds(this.$route.params.id))[0]
+    this.inputKeyword = this.promotion.words[0].word
+    console.log(this.promotion)
   }
 }
 </script>

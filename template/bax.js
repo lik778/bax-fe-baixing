@@ -206,6 +206,10 @@ const seoRoutes = [{
   component: () => import('com/seo-update-promotion'),
   path: '/main/seo/promotions/:id/update',
   name: 'seo-update-promotion'
+}, {
+  component: () => import('com/seo-landing'),
+  path: '/main/seo/landing',
+  name: 'seo-landing'
 }]
 
 export const router = new VueRouter({

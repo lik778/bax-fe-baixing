@@ -30,13 +30,7 @@ export default {
     userInfo(v) {
       if (v.id) {
         if (this.isBxUser) {
-          if (this.$route.query.orderIds) {
-            // 有新建计划
-            this.$router.push({name: 'bw-edit-plan', query: this.$route.query})
-          } else {
-            // 全是续费
-            this.$router.push({name: 'bw-plan-list'})
-          }
+          // this.$router.push({name: 'seo-promotion-list'})
         }
       }
     }
