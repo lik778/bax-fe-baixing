@@ -29,3 +29,17 @@ export const status = {
   [`${STATUS_STOPPED}`]: '停止',
   [`${STATUS_OFFLINE}`]: '下线',
 }
+export const AUDIT_STATUS_UNKNOWN = -1
+export const AUDIT_STATUS_PENDING = 0
+export const AUDIT_STATUS_PASSED = 1
+export const AUDIT_STATUS_REJECTED = 2
+
+export const auditStatus = {
+  [`${AUDIT_STATUS_UNKNOWN}`]: "未知",
+  [`${AUDIT_STATUS_PENDING}`]: "待审核",
+  [`${AUDIT_STATUS_PASSED}`]: "审核通过",
+  [`${AUDIT_STATUS_REJECTED}`]: "审核驳回"
+}
+
+
+

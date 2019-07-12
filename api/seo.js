@@ -1,6 +1,14 @@
 
 import { seo, trim } from './base'
 
+export async function getBalance() {
+  const body = await seo
+    .get('/balance')
+    .json()
+
+  return body.data
+}
+
 export async function queryPromotion(opts = {}) {
   const body = await seo
     .get('/campaigns/landing')

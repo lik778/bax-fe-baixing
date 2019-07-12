@@ -50,13 +50,15 @@
     data() {
       return {
         ticketCount: 0,
-        options: []
+        options: [],
+        list: []
       }
     },
     methods: {
       isSiteLandingType,
       onChange(v) {
         this.$emit('change', v)
+        this.$emit('change-obj', this.list.find(s => v.includes(s.domain)))
         this.$emit('input', v)
       }
     },
@@ -75,6 +77,7 @@
         getUserSites(),
         getUserTicketCount()
       ])
+      this.list = list
 
       this.ticketCount = count
       // FIXME: 老官网

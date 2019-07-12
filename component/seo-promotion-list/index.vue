@@ -1,6 +1,6 @@
 <template>
   <div class="promotion-list">
-    <header>我的首页宝推广计划</header>
+    <header>我的首页宝推广计划<small>您的首页宝推广余额为 {{f2y(balance)}} 元</small></header>
 
     <router-link :to="{name: 'seo-create-promotion'}"><el-button class="create" type="primary">新建首页宝计划</el-button></router-link>
 
@@ -23,9 +23,9 @@
             <th>多选</th>
             <th>计划id</th>
             <th><top-tip label="计划状态" tip="计划状态中待投放的状态解释：您有效的关键词推广计划不足4个，请至少创建4个关键词后开启投放" /></th>
-            <th>关键词id</th>
+            <th>审核状态</th>
             <th>关键词</th>
-            <th>关键词来源</th>
+            <!-- <th>关键词来源</th> -->
             <th>投放平台</th>
             <th>创建时间</th>
             <th><top-tip label="当前排名" tip="前10名即认为在首页;10~100名表示在上浮中;100+表示仍需优化，超过30天100+可换词"/></th>
@@ -41,9 +41,9 @@
                 <td class="checkbox" rowspan="2" v-if="index === 0"><el-checkbox :checked="checkedPromotions.includes(promotion)" @change="v => onCheck(promotion, v)" /></td>
                 <td>{{promotion.id}}</td>
                 <td>{{statusMap[keyword.status]}}</td>
-                <td>{{keyword.id}}</td>
+                <td>{{auditStatusMap[keyword.auditStatus]}}</td>
                 <td>{{keyword.word}}</td>
-                <td>{{keywordType[keyword.source]}}</td>
+                <!-- <td>{{keywordType[keyword.source]}}</td> -->
                 <td>{{platform[keyword.platform]}}</td>
                 <td>{{formatTime(keyword.createdAt * 1000)}}</td>
                 <td>{{keyword.ranking}}</td>
@@ -70,9 +70,10 @@
 
 <script>
 import TopTip from '../qwt-promotion-list/topTip'
-import  {queryPromotion, queryPromotionByIds, start, pause} from 'api/seo'
+import  {queryPromotion, queryPromotionByIds, start, pause, getBalance} from 'api/seo'
 import {
   status as statusMap,
+  auditStatus as auditStatusMap,
   STATUS_OFFLINE,
   STATUS_CREATED,
   platform,
@@ -98,8 +99,10 @@ export default {
       currentPage: 0,
       pageSize: 10,
       statusMap,
+      auditStatusMap,
       platform,
-      keywordType
+      keywordType,
+      balance: 0
     }
   },
   computed: {
@@ -111,6 +114,10 @@ export default {
     }
   },
   methods: {
+    async loadBalance() {
+      const d = await getBalance()
+      this.balance = d.balance
+    },
     f2y,
     formatTime(date) {
       return dayjs(date).format('YYYY.MM.DD HH:mm')
@@ -153,6 +160,7 @@ export default {
   },
   mounted() {
     this.loadPromotions()
+    this.loadBalance()
   },
   watch: {
     async currentItem(v) {
@@ -176,6 +184,12 @@ export default {
   & > header {
     font-weight: bold;
     margin-bottom: 20px;
+
+    & > small {
+      font-weight: normal;
+      font-size: .8em;
+      margin-left: 5px;
+    }
   }
   & .create {
     margin-bottom: 40px;

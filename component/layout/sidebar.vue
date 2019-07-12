@@ -38,12 +38,12 @@
           <template slot="title">
             <bx-icon type="paycircleo"></bx-icon>首页宝
           </template>
-          <el-menu-item index="">
+          <el-menu-item index="seo-create-promotion">
             <router-link :to="{ name: 'seo-create-promotion' }" tag="p">
               新建首页宝
             </router-link>
           </el-menu-item>
-          <el-menu-item index="seo-charge">
+          <el-menu-item index="seo-promotion-list">
             <router-link :to="{ name: 'seo-promotion-list' }" tag="p">
               管理首页宝
             </router-link>
