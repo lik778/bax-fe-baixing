@@ -12,7 +12,7 @@
             class="icon"
             :class="item === currentItem ? 'el-icon-minus' : 'el-icon-plus'"
           />
-          <p class="title">{{item.landingPage}} - {{item.seoIncludedAt ? formatTime(item.seoIncludedAt) : '未收录'}}</p>
+          <p class="title">{{item.landingPage}} - {{item.seoIncludedAt ? formatTime(item.seoIncludedAt) + '收录' : '未收录'}}</p>
         </div>
         <div class="batch" v-if="item === currentItem" >
           <el-button :disabled="!canBatchOpen" @click="batchOpen" type="text">批量开启</el-button>
@@ -28,7 +28,7 @@
             <!-- <th>关键词来源</th> -->
             <th>投放平台</th>
             <th>创建时间</th>
-            <th><top-tip label="当前排名" tip="前10名即认为在首页;10~100名表示在上浮中;100+表示仍需优化，超过30天100+可换词"/></th>
+            <th><top-tip label="最新排名" tip="前10名即认为在首页;10~100名表示在上浮中;100+表示仍需优化，超过30天100+可换词"/></th>
             <th><top-tip label="达标天数" tip="上首页即为达标，达标后产生扣费" /></th>
             <th>当前单价</th>
             <th>总扣款</th>
@@ -36,7 +36,6 @@
           </thead>
           <tbody v-if="!loading">
             <template v-for="promotion in currentPromotions">
-
               <tr v-for="(keyword, index) in promotion.words" :key="keyword.id">
                 <td class="checkbox" rowspan="2" v-if="index === 0"><el-checkbox :checked="checkedPromotions.includes(promotion)" @change="v => onCheck(promotion, v)" /></td>
                 <td>{{promotion.id}}</td>
@@ -50,7 +49,7 @@
                 <td>{{keyword.qualifiedDays}}</td>
                 <td>{{f2y(keyword.price)}}</td>
                 <td>{{f2y(keyword.totalCost)}}</td>
-                <td><el-button v-if="canUpdate(promotion)" type="text">修改</el-button></td>
+                <td rowspan="2" v-if="index === 0"><el-button v-if="canUpdate(promotion)" type="text" @click="$router.push({name: 'seo-update-promotion', params: {id: promotion.id}})">修改</el-button></td>
               </tr>
             </template>
           </tbody>
@@ -77,7 +76,8 @@ import {
   STATUS_OFFLINE,
   STATUS_CREATED,
   platform,
-  keywordType
+  keywordType,
+  AUDIT_STATUS_REJECTED
   } from 'constant/seo'
 import dayjs from 'dayjs';
 import {
@@ -123,6 +123,7 @@ export default {
       return dayjs(date).format('YYYY.MM.DD HH:mm')
     },
     canUpdate(promotion) {
+      if (promotion.auditStatus === AUDIT_STATUS_REJECTED) return true
       const {createdAt, seoIncludedAt, rank} = promotion
       const nearest = Math.max(createdAt, seoIncludedAt)
       return dayjs(nearest).add(30, 'days').isAfter(dayjs(), 'day') && rank > 100
@@ -159,6 +160,7 @@ export default {
     }
   },
   mounted() {
+    console.log(this.auditStatusMap)
     this.loadPromotions()
     this.loadBalance()
   },

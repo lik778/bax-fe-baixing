@@ -40,7 +40,7 @@
         <p>您已选择1个自选词，将创建1个推广计划。</p>
       </div>
       <contract-ack type="content-rule" />
-      <el-button type="primary" @click="onUpdateClick">更新推广</el-button>
+      <el-button class="submit" type="primary" @click="onUpdateClick">更新推广</el-button>
 
     </section>
   </div>
@@ -74,7 +74,7 @@ export default {
       if (!this.inputKeyword) {
         return this.$message.error('请选取关键词')
       }
-      this.$confirm(`您已选择关键词 ${this.inputKeyword} 进行首页宝推广`, '确认更新计划')
+      this.$confirm(`您已选择关键词【 ${this.inputKeyword}】 进行首页宝推广`, '确认更新计划')
         .then(() => {
           return updatePromotion(this.promotion.id, {newWord: this.inputKeyword})
         })
@@ -135,5 +135,7 @@ export default {
     }
   }
 }
-</style>
+.submit {
+  margin-top: 20px;
+}</style>
 
