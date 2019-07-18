@@ -36,9 +36,9 @@ export async function createPromotion(data) {
   return body.data
 }
 
-export async function pause(campaignIds) {
+export async function stop(campaignIds) {
   const body = await seo
-    .post('/campaigns/pause')
+    .post('/campaigns/stop')
     .send(campaignIds)
     .json()
 
@@ -49,6 +49,14 @@ export async function start(campaignIds) {
   const body = await seo
     .post('/campaigns/start')
     .send(campaignIds)
+    .json()
+
+  return body.data
+}
+
+export async function restart(id) {
+  const body = await seo
+    .post(`/campaigns/${id}/restart`)
     .json()
 
   return body.data

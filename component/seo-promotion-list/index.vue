@@ -12,7 +12,7 @@
             class="icon"
             :class="item === currentItem ? 'el-icon-minus' : 'el-icon-plus'"
           />
-          <p class="title">{{item.landingPage}} - {{item.seoIncludedAt ? formatTime(item.seoIncludedAt) + '收录' : '未收录'}}</p>
+          <p class="title">{{item.landingPage}} - {{item.seoIncludedAt ? formatTime(item.seoIncludedAt * 1000) + '收录' : '未收录'}}</p>
         </div>
         <div class="batch" v-if="item === currentItem" >
           <el-button :disabled="!canBatchOpen" @click="batchOpen" type="text">批量开启</el-button>
@@ -49,7 +49,10 @@
                 <td>{{keyword.qualifiedDays}}</td>
                 <td>{{f2y(keyword.price)}}</td>
                 <td>{{f2y(keyword.totalCost)}}</td>
-                <td rowspan="2" v-if="index === 0"><el-button v-if="canUpdate(promotion)" type="text" @click="$router.push({name: 'seo-update-promotion', params: {id: promotion.id}})">修改</el-button></td>
+                <td rowspan="2" v-if="index === 0">
+                  <el-button v-if="canUpdate(promotion)" type="text" @click="$router.push({name: 'seo-update-promotion', params: {id: promotion.id}})">修改</el-button>
+                  <el-button v-if="canRestart(promotion)" type="text" @click="onRestart(promotion)">重新投放</el-button>
+                </td>
               </tr>
             </template>
           </tbody>
@@ -69,7 +72,7 @@
 
 <script>
 import TopTip from '../qwt-promotion-list/topTip'
-import  {queryPromotion, queryPromotionByIds, start, pause, getBalance} from 'api/seo'
+import  {queryPromotion, queryPromotionByIds, start, stop, getBalance, restart} from 'api/seo'
 import {
   status as statusMap,
   auditStatus as auditStatusMap,
@@ -77,7 +80,8 @@ import {
   STATUS_CREATED,
   platform,
   keywordType,
-  AUDIT_STATUS_REJECTED
+  AUDIT_STATUS_REJECTED,
+  AUDIT_STATUS_PASSED
   } from 'constant/seo'
 import dayjs from 'dayjs';
 import {
@@ -107,13 +111,24 @@ export default {
   },
   computed: {
     canBatchOpen() {
-      return this.checkedPromotions.length && this.checkedPromotions.every(p => [STATUS_OFFLINE, STATUS_CREATED].includes(p.status))
+      return this.checkedPromotions.length && this.checkedPromotions.every(p => [STATUS_CREATED].includes(p.status) && p.auditStatus === AUDIT_STATUS_PASSED)
     },
     canBatchClose() {
       return this.checkedPromotions.length && this.checkedPromotions.every(p => [STATUS_CREATED].includes(p.status) || p.isRenewed)
     }
   },
   methods: {
+    async onRestart(promotion) {
+      this.$confirm(`重新投放关键词 【${promotion.words.map(k => k.word)[0]}】，将预扣款600元`, '重新投放确认')
+      .then(() => {
+        return restart(promotion.id)
+      })
+      .then(() => {
+        this.$message.success('重新投放成功')
+        return this.refreshCurrent()
+      })
+      .catch(() => {})
+    },
     async loadBalance() {
       const d = await getBalance()
       this.balance = d.balance
@@ -122,7 +137,11 @@ export default {
     formatTime(date) {
       return dayjs(date).format('YYYY.MM.DD HH:mm')
     },
+    canRestart(promotion) {
+      return promotion.status === STATUS_OFFLINE
+    },
     canUpdate(promotion) {
+      if (promotion.status === STATUS_OFFLINE) return false
       if (promotion.auditStatus === AUDIT_STATUS_REJECTED) return true
       const {createdAt, seoIncludedAt, rank} = promotion
       const nearest = Math.max(createdAt, seoIncludedAt)
@@ -146,21 +165,19 @@ export default {
     },
     async batchOpen() {
       await start(this.checkedPromotions.map(p => p.id))
-      await this.refreshCurrent()
+      return await this.refreshCurrent()
     },
     async batchClose() {
-      await pause(this.checkedPromotions.map(p => p.id))
+      await stop(this.checkedPromotions.map(p => p.id))
       await this.refreshCurrent()
     },
     async refreshCurrent() {
       this.loading = true
       this.currentPromotions = await queryPromotionByIds(this.currentItem.campaignIds)
-      console.log(this.currentPromotions)
       this.loading = false
     }
   },
   mounted() {
-    console.log(this.auditStatusMap)
     this.loadPromotions()
     this.loadBalance()
   },

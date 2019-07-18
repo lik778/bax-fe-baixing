@@ -86,7 +86,7 @@
               :loading="payInProgress"
               @click="createPreOrder"
             >
-              确认购买
+              {{submitButtonText}}
             </button>
             <span v-if="orderPayUrl">
               <label :title="orderPayUrl">
@@ -320,7 +320,19 @@ export default {
       const p = this.fullCheckedProducts.map(i => i.discountPrice)
 
       return p.reduce((a, b) => a + b, 0)
-    }
+    },
+    submitButtonText() {
+      const { userInfo } = this
+      if (this.isBxUser) {
+        return '确认购买'
+      }
+
+      if (allowGetOrderPayUrl(userInfo.roles)) {
+        return '生成链接'
+      }
+
+      return '确认购买'
+    },
   },
   methods: {
     toggleProduct (product) {
@@ -419,7 +431,7 @@ export default {
         location.href = `${orderServiceHost}/?appId=103&seq=${preTradeId}`
       } else if (this.isAgentAccounting) {
         location.href = `${orderServiceHost}/?appId=103&seq=${preTradeId}&agentId=${this.userInfo.id}`
-      } else if (isBxSales) {
+      } else if (this.isBxSales) {
         this.orderPayUrl = `${orderServiceHost}/?appId=103&seq=${preTradeId}`
       }
     },
