@@ -34,7 +34,7 @@
           </el-menu-item>
         </el-submenu>
 
-        <el-submenu index="seo">
+        <!-- <el-submenu index="seo">
           <template slot="title">
             <bx-icon type="paycircleo"></bx-icon>首页宝
           </template>
@@ -48,7 +48,7 @@
               管理首页宝
             </router-link>
           </el-menu-item>
-        </el-submenu>
+        </el-submenu> -->
 
         <el-menu-item index="gw-charge" v-if="allowUseKaPackage">
           <p @click="toBuyKaOrGw">
@@ -163,7 +163,7 @@ import { baxUserLogin, kaNavigation } from 'api/ka'
 
 const MENU_GROUP_MAP = {
   'charge': ['qwt-charge', 'seo-charge'],
-  'seo': ['seo-create-promotion', 'seo-promotion-list'],
+  // 'seo': ['seo-create-promotion', 'seo-promotion-list'],
   'sst': ['qwt-create-promotion', 'qwt-promotion-list'],
   'bw': ['bw-query-price', 'bw-plan-list'],
   'ssp': ['ad-list', 'material-list', 'order-list', 'user-list', 'ad-calendar']
