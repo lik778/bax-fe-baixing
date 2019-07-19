@@ -1,7 +1,7 @@
 <template>
-  <div v-if="isAgentAccounting">
+  <div>
     <p>
-      支付成功！如需提单，请从指南车系统重新进入搜索通系统。
+      {{text}}
     </p>
   </div>
 </template>
@@ -13,6 +13,9 @@ import {
 
 export default {
   name: 'bw-landing',
+  data() {
+    text: '支付成功！'
+  },
   props: {
     userInfo: Object
   },
@@ -30,7 +33,9 @@ export default {
     userInfo(v) {
       if (v.id) {
         if (this.isBxUser) {
-          // this.$router.push({name: 'seo-promotion-list'})
+          this.text = '支付成功！恭喜获得首页宝预售资格，新建计划功能即将开放，请及时关注站内通知。'
+        } else if (this.isAgentAccounting) {
+          this.text = '支付成功！如需提单，请从指南车系统重新进入搜索通系统。'
         }
       }
     }
