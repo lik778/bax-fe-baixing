@@ -100,7 +100,7 @@ export default {
       currentPromotions: [],
       loading: false,
       total: 0,
-      currentPage: 0,
+      currentPage: 1,
       pageSize: 10,
       statusMap,
       auditStatusMap,
@@ -148,12 +148,13 @@ export default {
       return dayjs(nearest).add(30, 'days').isAfter(dayjs(), 'day') && rank > 100
     },
     async loadPromotions() {
-      const {list, total} = await queryPromotion({page: this.currentPage, size: this.pageSize})
+      const {list, total} = await queryPromotion({page: this.currentPage - 1, size: this.pageSize})
       this.promotionsGroupByLanding = list
       this.total = total
     },
     handlePageChange(page) {
       this.currentPage = page
+      console.log(this.currentPage)
     },
     onCheck(promotion, v) {
       if (v) {
@@ -186,6 +187,9 @@ export default {
       if (v.campaignIds) {
         this.refreshCurrent()
       }
+    },
+    currentPage(v) {
+      this.loadPromotions()
     }
   }
 }
