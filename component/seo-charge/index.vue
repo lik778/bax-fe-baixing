@@ -232,6 +232,10 @@ export default {
       type: Object,
       required: true
     },
+    salesInfo: {
+      ype: Object,
+      required: true
+    },
     allAreas: {
       type: Array,
       required: true
@@ -403,8 +407,7 @@ export default {
       if (this.isBxUser) {
         return
       }
-
-      return userInfo.id
+      return this.salesInfo.salesId
     },
     getFinalUserId() {
       const { user_id: userId } = this.$route.query
@@ -412,11 +415,9 @@ export default {
         return userId
       }
 
-      return this.userInfo.id
+      return this.salesInfo.userId
     },
     async createPreOrder() {
-      console.log(this.fullCheckedProducts)
-
       // balanceAmount, saleWithShopOrder, shopOrderAmount, targetUserId, salesId
       const charge = this.fullCheckedProducts.find(p => p.productType === 3)
       const saleWithShopOrder = !!this.fullCheckedProducts.find(p => p.productType === 4)
