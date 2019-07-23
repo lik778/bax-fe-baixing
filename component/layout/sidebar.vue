@@ -27,11 +27,11 @@
               站外推广
             </router-link>
           </el-menu-item>
-          <el-menu-item index="seo-charge">
+          <!-- <el-menu-item index="seo-charge">
             <router-link :to="{ name: 'seo-charge' }" tag="p">
                 首页宝
             </router-link>
-          </el-menu-item>
+          </el-menu-item> -->
         </el-submenu>
 
         <!-- <el-submenu index="seo">
