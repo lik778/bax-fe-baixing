@@ -3,7 +3,7 @@
     <div class="white-bg">
       <header>标王关键词查价</header>
       <marquee direction="left" scrollamount="6" height="40px" scrolldelay="60"><recent-sold :allAreas="allAreas" /></marquee>
-      <main> 
+      <main>
         <div class="notice">
           <p><span><i class="red">满</i>500-4999元，</span>购买精品官网1年立<i class="red">减</i>200元；购买精品官网2年（送一年）官网<i class="red">减</i>600元；</p>
           <p><span><i class="red">满</i>5000-9999元，</span>购买精品官网1年立<i class="red">减</i>600元；购买精品官网2年（送一年）官网<i class="red">减</i>1200元；</p>
@@ -203,8 +203,6 @@ header {
   font-size: 16px;
 }
 div.bg {
-  padding: 10px 10px 30px 10px;
-  background-color: #f4f4f4;
 
   & > .white-bg {
     background-color: #fff;

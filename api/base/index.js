@@ -8,7 +8,8 @@ import {
   fengmingApiHost,
   biaowangApiHost,
   baxApiHost,
-  kaApiHost
+  kaApiHost,
+  seoApiHost
 } from 'config'
 
 import es from 'base/es'
@@ -106,6 +107,31 @@ export const biaowang = new Fetch({
       return redirect('signin', `return=${encodeURIComponent(location.pathname + location.search)}`)
     } else if (res.status === 500) {
       Message.error(`出错了，请稍后重试`)
+    } else {
+      res.clone().json().then(body => {
+        Message.error(body.message || `出错了，请稍后重试`)
+      })
+      throw new Error(res.statusText)
+    }
+  }
+})
+
+export const seo = new Fetch({
+  prefix: seoApiHost,
+  beforeRequest() {
+    es.emit('http fetch start')
+  },
+  afterResponse(res) {
+    es.emit('http fetch end')
+
+    if (res.status === 200) {
+
+    } else if (res.status === 401) {
+      Message.error('请重新登录 >_<')
+      return redirect('signin', `return=${encodeURIComponent(location.pathname + location.search)}`)
+    } else if (res.status === 403) {
+      Message.error('您没有权限，请联系搜索通团队申请首页宝购买资格')
+      throw new Error('您没有权限，请联系搜索通团队申请首页宝购买资格')
     } else {
       res.clone().json().then(body => {
         Message.error(body.message || `出错了，请稍后重试`)

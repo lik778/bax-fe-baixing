@@ -1,7 +1,7 @@
 <template>
-  <div v-if="isAgentAccounting">
+  <div>
     <p>
-      支付成功！如需提单，请从指南车系统重新进入搜索通系统。
+      {{text}}
     </p>
   </div>
 </template>
@@ -12,12 +12,18 @@ import {
 } from 'util/role'
 
 export default {
-  name: 'bw-landing',
+  name: 'seo-landing',
+  data() {
+    return {
+      text: '支付成功！'
+    }
+  },
   props: {
     userInfo: Object
   },
   computed: {
     isBxUser() {
+      console.log(this.userInfo.roles)
       const roles = normalizeRoles(this.userInfo.roles)
       return roles.includes('BAIXING_USER')
     },
@@ -29,14 +35,11 @@ export default {
   watch: {
     userInfo(v) {
       if (v.id) {
+        console.log(this.isBxUser)
         if (this.isBxUser) {
-          if (this.$route.query.orderIds) {
-            // 有新建计划
-            this.$router.push({name: 'bw-edit-plan', query: this.$route.query})
-          } else {
-            // 全是续费
-            this.$router.push({name: 'bw-plan-list'})
-          }
+          this.text = '支付成功！恭喜获得首页宝预售资格，新建计划功能即将开放，请及时关注站内通知。'
+        } else if (this.isAgentAccounting) {
+          this.text = '支付成功！如需提单，请从指南车系统重新进入搜索通系统。'
         }
       }
     }

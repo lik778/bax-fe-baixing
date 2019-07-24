@@ -133,7 +133,7 @@ export default {
       this.salesInfo.salesId = +salesId
     }
   },
-  async mounted() {
+  async created() {
     await Promise.all([
       gStore.getCurrentUser(),
       gStore.getCategories(),
@@ -211,7 +211,7 @@ export default {
     background-color: #eeeff0;
   }
   .view {
-    padding: 12px 12px 32px;
+    margin: 12px 12px 32px;
   }
 </style>
 

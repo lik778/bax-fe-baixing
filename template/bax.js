@@ -190,6 +190,30 @@ const sspRoutes = [{
   name: 'ad-calendar'
 }]
 
+const seoRoutes = [{
+  component: () => import('com/seo-charge'),
+  path: '/main/seo/charge',
+  name: 'seo-charge'
+}, {
+  component: () => import('com/seo-landing'),
+  path: '/main/seo/landing',
+  name: 'seo-landing'
+},
+// {
+//   component: () => import('com/seo-create-promotion'),
+//   path: '/main/seo/promotion/create',
+//   name: 'seo-create-promotion'
+// }, {
+//   component: () => import('com/seo-promotion-list'),
+//   path: '/main/seo/promotions',
+//   name: 'seo-promotion-list'
+// }, {
+//   component: () => import('com/seo-update-promotion'),
+//   path: '/main/seo/promotions/:id/update',
+//   name: 'seo-update-promotion'
+// }
+]
+
 export const router = new VueRouter({
   mode: 'history',
   routes: [{
@@ -217,6 +241,7 @@ export const router = new VueRouter({
   ...qwtRoutes,
   ...sspRoutes,
   ...gwRoutes,
+  ...seoRoutes,
   {
     path: '*',
     redirect: '/main'

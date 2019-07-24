@@ -757,7 +757,6 @@ strong.red {
 .qwt-create-promotion {
   font-size: 14px;
   color: #6a778c;
-  padding: 0 35px;
   width: 100%;
 
   & > main {

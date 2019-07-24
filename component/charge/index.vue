@@ -317,6 +317,10 @@ export default {
       type: Object,
       required: true
     },
+    salesInfo: {
+      type: Object,
+      required: true
+    },
     allAreas: {
       type: Array,
       required: true
@@ -641,7 +645,7 @@ export default {
 
       const {
         inputSalesId,
-        userInfo
+        salesInfo
       } = this
 
       if (inputSalesId) {
@@ -653,7 +657,7 @@ export default {
         return
       }
 
-      return userInfo.id
+      return salesInfo.salesId
     },
     async getFinalUserId() {
       const { user_id: userId } = this.$route.query
@@ -661,8 +665,7 @@ export default {
         return userId
       }
 
-      const { userInfo } = this
-      return userInfo.id
+      return this.salesInfo.userId
     },
     async createOrder() {
       const {

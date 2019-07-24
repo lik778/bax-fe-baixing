@@ -1,7 +1,7 @@
 {
   "name": "bax-fe",
   "private": true,
-  "version": "5.6.0",
+  "version": "6.0.0",
   "scripts": {
     "start": "node tool/server.js",
     "build": "node tool/build.js",

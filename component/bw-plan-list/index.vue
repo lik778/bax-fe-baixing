@@ -321,8 +321,6 @@ header {
   font-size: 16px;
 }
 div.bg {
-  padding: 10px 10px 30px 10px;
-  background-color: #f4f4f4;
 
   & > .white-bg {
     background-color: #fff;
