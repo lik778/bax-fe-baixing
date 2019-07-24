@@ -12,15 +12,18 @@ import {
 } from 'util/role'
 
 export default {
-  name: 'bw-landing',
+  name: 'seo-landing',
   data() {
-    text: '支付成功！'
+    return {
+      text: '支付成功！'
+    }
   },
   props: {
     userInfo: Object
   },
   computed: {
     isBxUser() {
+      console.log(this.userInfo.roles)
       const roles = normalizeRoles(this.userInfo.roles)
       return roles.includes('BAIXING_USER')
     },
@@ -32,6 +35,7 @@ export default {
   watch: {
     userInfo(v) {
       if (v.id) {
+        console.log(this.isBxUser)
         if (this.isBxUser) {
           this.text = '支付成功！恭喜获得首页宝预售资格，新建计划功能即将开放，请及时关注站内通知。'
         } else if (this.isAgentAccounting) {
