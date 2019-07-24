@@ -18,10 +18,9 @@ export const biaowangApiHost = isPro
   : '//bax.baixing.cn/phoenixs/api'
 
 export const seoApiHost = isPro
-  ? '//bax.baixing.com.cn/seo/api'
+  ? '//bax.baixing.com.cn/seo-api'
   // : '//172.17.5.12:8088/api/seo-service/user'
   : 'http://bax.baixing.cn/seo-api'
-
 
 export const assetHost = '//file.baixing.net/bax-fe/asset/'
 
