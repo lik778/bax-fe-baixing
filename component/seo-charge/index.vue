@@ -412,15 +412,16 @@ export default {
     },
     getFinalUserId() {
       const { user_id: userId } = this.$route.query
+      const { salesInfo, userInfo } = this
       if (userId) {
         return userId
       }
       // 进入bax时带有销售身份信息，用户信息直接在salesInfo获取
-      if (this.salesInfo.userId) {
-        return this.salesInfo.userId
+      if (salesInfo.userId) {
+        return salesInfo.userId
       }
 
-      return this.userInfo.id
+      return userInfo.id
     },
     async createPreOrder() {
       console.log(this.fullCheckedProducts)
