@@ -317,6 +317,10 @@ export default {
       type: Object,
       required: true
     },
+    salesInfo: {
+      type: Object,
+      required: true
+    },
     allAreas: {
       type: Array,
       required: true
@@ -657,11 +661,16 @@ export default {
     },
     async getFinalUserId() {
       const { user_id: userId } = this.$route.query
+      const { userInfo, salesInfo } = this
       if (userId) {
         return userId
       }
 
-      const { userInfo } = this
+      // 进入bax时带有销售身份信息，用户信息直接在salesInfo获取
+      if (salesInfo.userId) {
+        return salesInfo.userId
+      }
+
       return userInfo.id
     },
     async createOrder() {
