@@ -45,7 +45,7 @@
                 <!-- <td>{{keywordType[keyword.source]}}</td> -->
                 <td>{{platform[keyword.platform]}}</td>
                 <td>{{formatTime(keyword.createdAt * 1000)}}</td>
-                <td>{{keyword.ranking}}</td>
+                <td>{{keyword.ranking === null ? '-' : (keyword.ranking > 100 ? '100+' : keyword.ranking)}}</td>
                 <td>{{keyword.qualifiedDays}}</td>
                 <td>{{f2y(keyword.price)}}</td>
                 <td>{{f2y(keyword.totalCost)}}</td>
