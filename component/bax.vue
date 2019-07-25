@@ -133,7 +133,7 @@ export default {
       this.salesInfo.salesId = +salesId
     }
   },
-  async created() {
+  async mounted() {
     await Promise.all([
       gStore.getCurrentUser(),
       gStore.getCategories(),
