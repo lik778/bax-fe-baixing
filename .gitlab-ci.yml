@@ -1,7 +1,7 @@
 image: docker
 
-before_script:
-  - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.baixing.cn
+# before_script:
+#   - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.baixing.cn
 
 variables:
   BAX_FE_REF: registry.gitlab.baixing.cn/channel/bax-fe:${CI_BUILD_REF_NAME}-${CI_PIPELINE_ID}
@@ -18,6 +18,7 @@ build:
   tags:
     - ad
   script:
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.baixing.cn
     - docker build --pull -t $BAX_FE_REF .
     - docker push $BAX_FE_REF
 
