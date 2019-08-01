@@ -27,9 +27,9 @@
             <th class="col5">关键词</th>
             <!-- <th>关键词来源</th> -->
             <th class="col6">创建时间</th>
-            <th class="col7"><top-tip label="最新排名(PC/手机)" tip="前10名即认为在首页;10~100名表示在上浮中;100+表示仍需优化，超过30天100+可换词"/></th>
-            <th class="col8"><top-tip label="达标天数(PC/手机)" tip="上首页即为达标，达标后产生扣费" /></th>
-            <th class="col9">当前单价(每端)</th>
+            <th class="col7"><top-tip wrap-class="top-tip" label-class="label" label="最新排名<span>(PC/手机)</span>" tip="前10名即认为在首页;10~100名表示在上浮中;100+表示仍需优化，超过30天100+可换词"/></th>
+            <th class="col8"><top-tip wrap-class="top-tip" label-class="label" label="达标天数<span>(PC/手机)</span>" tip="上首页即为达标，达标后产生扣费" /></th>
+            <th class="col9">当前单价<p>(每端)</p></th>
             <th class="col10">总扣款</th>
             <th class="col11">操作</th>
           </thead>
@@ -115,7 +115,8 @@ export default {
       return this.checkedPromotions.length && this.checkedPromotions.every(p => [STATUS_CREATED].includes(p.status) && p.auditStatus === AUDIT_STATUS_PASSED)
     },
     canBatchClose() {
-      return this.checkedPromotions.length && this.checkedPromotions.every(p => [STATUS_CREATED].includes(p.status) || p.isRenewed)
+      console.log(this.checkedPromotions)
+      return this.checkedPromotions.length && this.checkedPromotions.every(p => [STATUS_CREATED].includes(p.status) || (p.isRenewed && ![STATUS_OFFLINE].includes(p.status)))
     }
   },
   methods: {
@@ -285,6 +286,16 @@ table {
   }
 }
 
+.top-tip {
+  padding-left: 20px;
+  & .label {
+    line-height: 1.3;
+    & >>> span {
+      display: block;
+    }
+  }
+}
+
 .row {
   display: flex;
   align-items: center;
@@ -293,8 +304,17 @@ table {
     text-align: center;
   }
   &.header {
+    & .col3 {
+      text-indent: 10px;
+      & >>> .el-tooltip {
+        margin-left: -2px !important;
+      }
+    }
     & .col6 {
       text-indent: 1.5em;
+    }
+    & .col9 {
+      line-height: 1.3;
     }
   }
   &.body {
@@ -314,12 +334,13 @@ table {
   width: 5%;
 }
 .col3 {
-  width: 8%;
+  width: 95px;
 }
 .col4 {
   width: 6%;
 }
 .col5 {
+  min-width: 15em;
   width: 14%;
 }
 .col6 {
@@ -328,18 +349,13 @@ table {
   width: 10%;
 }
 .col7 {
-  max-width: 150px;
-  min-width: 140px;
-  width: 12%;
+  width: 110px;
 }
 .col8 {
-  max-width: 150px;
-  min-width: 140px;
-  width: 12%;
+  width: 110px;
 }
 .col9 {
-  min-width: 98px;
-  width: 8%;
+  width: 100px;
 }
 .col10 {
   width: 7%;

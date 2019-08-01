@@ -4,7 +4,7 @@ import { renderColumnHeaderWithTip } from 'util'
 export default Vue.component('top-tip', {
   functional: true,
   render(h, context) {
-    const { tip, label } = context.props
-    return renderColumnHeaderWithTip(tip)(h, {column: {label}})
+    const { tip, label, ...otherProps } = context.props
+    return renderColumnHeaderWithTip(tip)(h, {column: {label}, ...otherProps})
   }
 })
