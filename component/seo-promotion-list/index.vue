@@ -22,13 +22,13 @@
           <thead class="row header">
             <th class="col1">多选</th>
             <th class="col2">计划id</th>
-            <th class="col3"><top-tip label="计划状态" tip="计划状态中待投放的状态解释：您有效的关键词推广计划不足4个，请至少创建4个关键词后开启投放" /></th>
+            <th class="col3"><top-tip label="计划状态" tip="待投放的状态解释：请至少开启4个审核通过的关键词进行投放" /></th>
             <th class="col4">审核状态</th>
             <th class="col5">关键词</th>
             <!-- <th>关键词来源</th> -->
             <th class="col6">创建时间</th>
-            <th class="col7"><top-tip wrap-class="top-tip" label-class="label" label="最新排名<span>(PC/手机)</span>" tip="前10名即认为在首页;10~100名表示在上浮中;100+表示仍需优化，超过30天100+可换词"/></th>
-            <th class="col8"><top-tip wrap-class="top-tip" label-class="label" label="达标天数<span>(PC/手机)</span>" tip="上首页即为达标，达标后产生扣费" /></th>
+            <th class="col7"><top-tip wrap-class="top-tip" label-class="label" label="最新排名<span>(电脑/手机)</span>" tip="前10名即认为在首页;10~100名表示在上浮中;100+表示仍需优化，超过30天100+可换词"/></th>
+            <th class="col8"><top-tip wrap-class="top-tip" label-class="label" label="达标天数<span>(电脑/手机)</span>" tip="上首页即为达标，达标后产生扣费" /></th>
             <th class="col9">当前单价<p>(每端)</p></th>
             <th class="col10">总扣款</th>
             <th class="col11">操作</th>
@@ -77,6 +77,7 @@ import  {queryPromotion, queryPromotionByIds, start, stop, getBalance, restart} 
 import {
   status as statusMap,
   auditStatus as auditStatusMap,
+  STATUS_ONLINE,
   STATUS_OFFLINE,
   STATUS_CREATED,
   platform,
@@ -127,7 +128,7 @@ export default {
       })
       .then(() => {
         this.$message.success('重新投放成功')
-        return this.refreshCurrent()
+        window.location.reload()
       })
       .catch(() => {})
     },
@@ -159,7 +160,6 @@ export default {
     },
     handlePageChange(page) {
       this.currentPage = page
-      console.log(this.currentPage)
     },
     onCheck(promotion, v) {
       if (v) {
@@ -179,8 +179,13 @@ export default {
     },
     async refreshCurrent() {
       this.loading = true
-      this.currentPromotions = await queryPromotionByIds(this.currentItem.campaignIds)
+      const currentPromotions = await queryPromotionByIds(this.currentItem.campaignIds)
+      this.currentPromotions = this.sortCurrentPromotionsByStatus(currentPromotions)
       this.loading = false
+    },
+    sortCurrentPromotionsByStatus(promotions) {
+      const sequence = [STATUS_ONLINE, STATUS_CREATED, STATUS_OFFLINE]
+      return promotions.sort((pre, next) => sequence.indexOf(pre.status) - sequence.indexOf(next.status))
     }
   },
   mounted() {

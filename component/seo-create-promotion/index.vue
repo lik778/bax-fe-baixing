@@ -99,7 +99,7 @@ export default {
       if (!this.promotion.keywords.length) {
         return this.$message.error('请选取关键词')
       }
-      this.$confirm(`您已选择关键词 【${this.promotion.keywords.map(k => k.word).join(', ')}】进行首页宝推广`, '关键词确认')
+      this.$confirm(`您已选择关键词 【${this.promotion.keywords.map(k => k.word).join(', ')}】进行首页宝推广，请在关键词审核通过后，开启至少4个关键词进行投放 `, '关键词确认')
         .then(() => {
           return createPromotion(this.promotion)
         })
