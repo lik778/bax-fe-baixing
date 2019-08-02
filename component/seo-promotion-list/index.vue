@@ -50,8 +50,8 @@
                 <td class="col9">{{f2y(keyword.price)}}</td>
                 <td class="col10">{{f2y(keyword.totalCost + promotion.words[1].totalCost) }}</td>
                 <td class="col11">
-                  <span v-if="!canUpdate(promotion) && !canRestart(promotion)">-</span>
-                  <el-button v-if="canUpdate(promotion)" type="text" @click="$router.push({name: 'seo-update-promotion', params: {id: promotion.id}})">修改</el-button>
+                  <span v-if="!canUpdate(promotion, item) && !canRestart(promotion)">-</span>
+                  <el-button v-if="canUpdate(promotion, item)" type="text" @click="$router.push({name: 'seo-update-promotion', params: {id: promotion.id}})">修改</el-button>
                   <el-button v-if="canRestart(promotion)" type="text" @click="onRestart(promotion)">重新投放</el-button>
                 </td>
               </tr>
@@ -146,12 +146,12 @@ export default {
     canRestart(promotion) {
       return promotion.status === STATUS_OFFLINE
     },
-    canUpdate(promotion) {
+    canUpdate(promotion, { seoIncludedAt }) {
       if (promotion.status === STATUS_OFFLINE) return false
       if (promotion.auditStatus === AUDIT_STATUS_REJECTED) return true
-      const {createdAt, seoIncludedAt, rank} = promotion
-      const nearest = Math.max(createdAt, seoIncludedAt)
-      return dayjs(nearest).add(30, 'days').isAfter(dayjs(), 'day') && rank > 100
+      const {words, createdAt} = promotion
+      const nearest = Math.max(createdAt, seoIncludedAt) * 1000
+      return dayjs(nearest).add(30, 'day').isBefore(dayjs(), 'day') && words.every(({ranking}) => ranking > 100 || ranking === null)
     },
     async loadPromotions() {
       const {list, total} = await queryPromotion({page: this.currentPage - 1, size: this.pageSize})
