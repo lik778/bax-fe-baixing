@@ -65,8 +65,8 @@
                 <a
                   class="btn"
                   href="javascript:;"
-                  @click="togglePromotionStatus(item, landingPage.id, landingPage.campaignIds, (item.source === 5 && !!item.pause) || item.status === CAMPAIGN_STATUS_OFFLINE || item.auditStatus === KEYWORD_CHIBI_REJECT)"
-                  :disabled="(item.source === 5 && !!item.pause) || item.status === CAMPAIGN_STATUS_OFFLINE || item.auditStatus === KEYWORD_CHIBI_REJECT"
+                  @click="togglePromotionStatus(item, landingPage.id, landingPage.campaignIds, item.status === CAMPAIGN_STATUS_OFFLINE || item.auditStatus === KEYWORD_CHIBI_REJECT)"
+                  :disabled="item.status === CAMPAIGN_STATUS_OFFLINE || item.auditStatus === KEYWORD_CHIBI_REJECT"
                 >
                   {{!!item.pause ? '投放' : '暂停'}}
                 </a>
