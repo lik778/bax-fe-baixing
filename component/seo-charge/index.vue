@@ -273,7 +273,6 @@ export default {
       if (charge) {
         const siteProduct = this.fullCheckedProducts.find(({productType}) => productType === 4)
         const siteDiscountPrice = siteProduct && centToYuan(siteProduct.originalPrice - siteProduct.discountPrice)
-        console.log(siteProduct);
 
         return  siteDiscountPrice
           ? `同时购买专业版精品官网（一年）立<span class="red">减</span> ${siteDiscountPrice} 元`
@@ -462,7 +461,6 @@ export default {
             .find(res => res !== false)
           this.fullCheckedProducts = checked.map(product => {
             const {id, productType, price} = product
-            console.log('gwPrice',discountExecPriceFunc);
             return {
               id,
               productType,
