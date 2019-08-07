@@ -4,8 +4,13 @@
     <label>我已阅读并同意遵守</label>
     <a v-if="type === 'contract'"
       v-bind:href="assetHost + 'new-baixing-sst-contract.pdf'"
+<<<<<<< HEAD
       download="百姓网搜索通用户协议.pdf">
       《百姓网搜索通用户协议》
+=======
+      download="百姓网搜索通合作协议.pdf">
+      《百姓网搜索通合作协议》
+>>>>>>> c3633cdfbcc3a15e8d1f768985c2a1c9cb72f979
     </a>
     <a v-if="type === 'content-rule'"
       v-bind:href="assetHost + 'baixing-online-promotion-content-rule.docx'"
