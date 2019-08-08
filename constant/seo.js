@@ -18,16 +18,14 @@ export const STATUS_UNKOWN = -1
 export const STATUS_CREATED = 0
 export const STATUS_ONLINE = 1
 export const STATUS_PAUSED = 2
-export const STATUS_STOPPED = 3
-export const STATUS_OFFLINE = 4
+export const STATUS_OFFLINE = 3
 
 export const status = {
   [`${STATUS_UNKOWN}`]: '未知',
   [`${STATUS_CREATED}`]: '待投放',
   [`${STATUS_ONLINE}`]: '在线',
   [`${STATUS_PAUSED}`]: '暂停',
-  [`${STATUS_STOPPED}`]: '停止',
-  [`${STATUS_OFFLINE}`]: '下线',
+  [`${STATUS_OFFLINE}`]: '下线'
 }
 export const AUDIT_STATUS_UNKNOWN = -1
 export const AUDIT_STATUS_PENDING = 0
@@ -35,11 +33,8 @@ export const AUDIT_STATUS_PASSED = 1
 export const AUDIT_STATUS_REJECTED = 2
 
 export const auditStatus = {
-  [`${AUDIT_STATUS_UNKNOWN}`]: "未知",
-  [`${AUDIT_STATUS_PENDING}`]: "待审核",
-  [`${AUDIT_STATUS_PASSED}`]: "审核通过",
-  [`${AUDIT_STATUS_REJECTED}`]: "审核驳回"
+  [`${AUDIT_STATUS_UNKNOWN}`]: '未知',
+  [`${AUDIT_STATUS_PENDING}`]: '待审核',
+  [`${AUDIT_STATUS_PASSED}`]: '审核通过',
+  [`${AUDIT_STATUS_REJECTED}`]: '审核驳回'
 }
-
-
-
