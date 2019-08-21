@@ -10,7 +10,7 @@
           1. 选择产品 | <span class="discount-btn" @click="showDiscount = !showDiscount">查看优惠细则<i class="el-icon-question"></i></span>
         </header>
         <div class="discount-section" v-show="showDiscount">
-          <p class="discount-info">满2400元：同时购买专业版精品官网（1年）<span class="red">减</span>官网立减 800 元；</p>
+          <p class="discount-info">满2400元：同时购买专业版精品官网（1年）<span class="red">减</span>官网立减 600 元；</p>
           <p class="discount-info">满4800元：同时购买专业版精品官网（1年）<span class="red">减</span>官网立减 900 元；</p>
           <p class="discount-info">满9600元：同时购买专业版精品官网（1年）<span class="red">减</span>官网立减 1500 元；</p>
         </div>
@@ -202,7 +202,7 @@ const allProducts = [
     price: 1800 * 100,
     discountExecPriceFunc: [
       'p >= 0 && p < 240000 ? 0 : false',
-      'p >= 240000 && p < 480000 ? 80000 : false',
+      'p >= 240000 && p < 480000 ? 60000 : false',
       'p >= 480000 && p < 960000 ? 90000 : false',
       'p >= 960000 ? 150000 : false'
     ],
