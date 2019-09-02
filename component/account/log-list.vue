@@ -117,6 +117,13 @@ import {
   PRODUCT_TYPE_FENGMING
 } from 'constant/log'
 
+import {
+  CAMPAIGN_STATUS_OFFLINE,
+  CAMPAIGN_STATUS_ONLINE,
+  CAMPAIGN_STATUS_ACCOUNT_BUDGET_NOT_ENOUGH,
+  CAMPAIGN_STATUS_CAMPAIGN_BUDGET_NOT_ENOUGH
+} from 'constant/fengming'
+
 
 
 const ONE_PAGE_NUM = 10
@@ -127,7 +134,7 @@ const CREATED_AT_VALUES = [
   dayjs().subtract(1, 'years').unix(),
 ]
 const DIVIDING_CHAR = '   '
-
+ 
 const genFormatLogValues = (change, keys, type, opType, campaignSource) => {
   const valueKey = type === 'old' ? 'oldValue' : 'newValue'
   return keys.map(k => {
@@ -138,7 +145,17 @@ const genFormatLogValues = (change, keys, type, opType, campaignSource) => {
       if (value.includes(null)) return '全时段'
       return value.map(timeStamp => toHumanTime(new Date(timeStamp * 1000), 'MM月DD')).join('~')
     } else if (k === 'status') {
-      return value === -10 ? '开启投放' : '暂停投放'
+      switch(value) {
+        case CAMPAIGN_STATUS_ACCOUNT_BUDGET_NOT_ENOUGH:
+        case CAMPAIGN_STATUS_CAMPAIGN_BUDGET_NOT_ENOUGH:
+          return '预算不足'
+        case CAMPAIGN_STATUS_OFFLINE:
+          return '计划下线'
+        case CAMPAIGN_STATUS_ONLINE:
+          return '开启投放'
+        default:
+          return '暂停投放'
+      }
     } else if (k === 'schedule') {
       if (campaignSource === SEM_PLATFORM_SOGOU) {
         return value.every(v => v === 3670009) ? '全部时段' : '部分时段'
@@ -241,7 +258,7 @@ export default {
         const campaignSource = message.campaignSource
         if (type === 'field') {
           return changeKeys.map(key => fieldType[key]).join(DIVIDING_CHAR)
-        } else if (type === 'old') {
+        } else if (type === 'old') { 
           if (opType === OP_TYPE_CREATE) return '-'
           return genFormatLogValues(change, changeKeys, type, opType, campaignSource)
         } else if (type === 'new') {

@@ -113,9 +113,11 @@ export const optType = {
 
 export const optTypeOpts = toOpt(optType)
 
-export const CAMPAIGN_STATUS_PENDING = -10
+export const CAMPAIGN_STATUS_PAUSE = -10
 export const CAMPAIGN_STATUS_OFFLINE = -1
 export const CAMPAIGN_STATUS_ONLINE = 100
+export const CAMPAIGN_STATUS_ACCOUNT_BUDGET_NOT_ENOUGH = -51
+export const CAMPAIGN_STATUS_CAMPAIGN_BUDGET_NOT_ENOUGH = 5
 
 export const LANDING_TYPE_AD = 0
 export const LANDING_TYPE_GW = 1
