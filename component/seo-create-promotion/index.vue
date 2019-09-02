@@ -16,7 +16,7 @@
       <div class="info">
         <p>推广关键词要求：</p>
         <p>1、自选词仅支持检索量在300以下的关键词，请前往ci.5118.com查询关键词检索量，具体见“PC检索量”、“移动检索量”两个指标，需满足检索量总和小于300</p>
-        <p>2、关键词格式：地域+行业/服务，如“上海搬家公司”，“北京家政服务公司”</p>
+        <p>2、关键词格式：地域+行业/服务，如“厦门纱窗安装公司”，“武汉老酒回收”，“重庆哪里有典当行”</p>
         <p>3、关键词字数需在 6 - 15 之间</p>
       </div>
 
@@ -99,7 +99,7 @@ export default {
       if (!this.promotion.keywords.length) {
         return this.$message.error('请选取关键词')
       }
-      this.$confirm(`您已选择关键词 【${this.promotion.keywords.map(k => k.word).join(', ')}】进行首页宝推广`, '关键词确认')
+      this.$confirm(`您已选择关键词 【${this.promotion.keywords.map(k => k.word).join(', ')}】进行首页宝推广，请在关键词审核通过后，开启至少4个关键词进行投放 `, '关键词确认')
         .then(() => {
           return createPromotion(this.promotion)
         })

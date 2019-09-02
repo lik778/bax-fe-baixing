@@ -12,45 +12,46 @@
             class="icon"
             :class="item === currentItem ? 'el-icon-minus' : 'el-icon-plus'"
           />
-          <p class="title">{{item.landingPage}} - {{item.seoIncludedAt ? formatTime(item.seoIncludedAt * 1000) + '收录' : '未收录'}}</p>
+          <p class="title">{{item.landingPage}} - {{item.seoIncludedAt ? formatTime(item.seoIncludedAt * 1000) + ' 收录' : '未收录'}}</p>
         </div>
         <div class="batch" v-if="item === currentItem" >
           <el-button :disabled="!canBatchOpen" @click="batchOpen" type="text">批量开启</el-button>
           <el-button :disabled="!canBatchClose" @click="batchClose" type="text">批量关闭</el-button>
         </div>
         <table v-if="item === currentItem" class="table-container">
-          <thead>
-            <th>多选</th>
-            <th>计划id</th>
-            <th><top-tip label="计划状态" tip="计划状态中待投放的状态解释：您有效的关键词推广计划不足4个，请至少创建4个关键词后开启投放" /></th>
-            <th>审核状态</th>
-            <th>关键词</th>
+          <thead class="row header">
+            <th class="col1">多选</th>
+            <th class="col2">计划id</th>
+            <th class="col3"><top-tip label="计划状态" tip="待投放的状态解释：请至少开启4个审核通过的关键词进行投放" /></th>
+            <th class="col4">审核状态</th>
+            <th class="col5">关键词</th>
             <!-- <th>关键词来源</th> -->
-            <th>投放平台</th>
-            <th>创建时间</th>
-            <th><top-tip label="最新排名" tip="前10名即认为在首页;10~100名表示在上浮中;100+表示仍需优化，超过30天100+可换词"/></th>
-            <th><top-tip label="达标天数" tip="上首页即为达标，达标后产生扣费" /></th>
-            <th>当前单价</th>
-            <th>总扣款</th>
-            <th>操作</th>
+            <th class="col6">创建时间</th>
+            <th class="col7"><top-tip wrap-class="top-tip" label-class="label" label="最新排名<span>(电脑/手机)</span>" tip="前10名即认为在首页;10~100名表示在上浮中;100+表示仍需优化，超过30天100+可换词"/></th>
+            <th class="col8"><top-tip wrap-class="top-tip" label-class="label" label="达标天数<span>(电脑/手机)</span>" tip="上首页即为达标，达标后产生扣费" /></th>
+            <th class="col9">当前单价<p>(每端)</p></th>
+            <th class="col10">总扣款</th>
+            <th class="col11">操作</th>
           </thead>
           <tbody v-if="!loading">
             <template v-for="promotion in currentPromotions">
-              <tr v-for="(keyword, index) in promotion.words" :key="keyword.id">
-                <td class="checkbox" rowspan="2" v-if="index === 0"><el-checkbox :checked="checkedPromotions.includes(promotion)" @change="v => onCheck(promotion, v)" /></td>
-                <td>{{promotion.id}}</td>
-                <td>{{statusMap[keyword.status]}}</td>
-                <td>{{auditStatusMap[keyword.auditStatus]}}</td>
-                <td>{{keyword.word}}</td>
+              <tr v-for="keyword in promotion.words.slice(0, 1)" :key="keyword.id" class="row body">
+                <td class="col1">
+                  <el-checkbox :checked="checkedPromotions.includes(promotion)" @change="v => onCheck(promotion, v)" />
+                </td>
+                <td class="col2">{{promotion.id}}</td>
+                <td class="col3">{{statusMap[promotion.status]}}</td>
+                <td class="col4">{{auditStatusMap[keyword.auditStatus]}}</td>
+                <td class="col5">{{keyword.word}}</td>
                 <!-- <td>{{keywordType[keyword.source]}}</td> -->
-                <td>{{platform[keyword.platform]}}</td>
-                <td>{{formatTime(keyword.createdAt * 1000)}}</td>
-                <td>{{keyword.ranking === null ? '-' : (keyword.ranking > 100 ? '100+' : keyword.ranking)}}</td>
-                <td>{{keyword.qualifiedDays}}</td>
-                <td>{{f2y(keyword.price)}}</td>
-                <td>{{f2y(keyword.totalCost)}}</td>
-                <td rowspan="2" v-if="index === 0">
-                  <el-button v-if="canUpdate(promotion)" type="text" @click="$router.push({name: 'seo-update-promotion', params: {id: promotion.id}})">修改</el-button>
+                <td class="col6">{{formatTime(keyword.createdAt * 1000)}}</td>
+                <td class="col7">{{formatRanking(keyword.ranking)}} / {{formatRanking(promotion.words[1].ranking)}}</td>
+                <td class="col8">{{keyword.qualifiedDays}} / {{promotion.words[1].qualifiedDays}}</td>
+                <td class="col9">{{f2y(keyword.price)}}</td>
+                <td class="col10">{{f2y(keyword.totalCost + promotion.words[1].totalCost) }}</td>
+                <td class="col11">
+                  <span v-if="!canUpdate(promotion, item) && !canRestart(promotion)">-</span>
+                  <el-button v-if="canUpdate(promotion, item)" type="text" @click="$router.push({name: 'seo-update-promotion', params: {id: promotion.id}})">修改</el-button>
                   <el-button v-if="canRestart(promotion)" type="text" @click="onRestart(promotion)">重新投放</el-button>
                 </td>
               </tr>
@@ -76,6 +77,7 @@ import  {queryPromotion, queryPromotionByIds, start, stop, getBalance, restart} 
 import {
   status as statusMap,
   auditStatus as auditStatusMap,
+  STATUS_ONLINE,
   STATUS_OFFLINE,
   STATUS_CREATED,
   platform,
@@ -114,7 +116,8 @@ export default {
       return this.checkedPromotions.length && this.checkedPromotions.every(p => [STATUS_CREATED].includes(p.status) && p.auditStatus === AUDIT_STATUS_PASSED)
     },
     canBatchClose() {
-      return this.checkedPromotions.length && this.checkedPromotions.every(p => [STATUS_CREATED].includes(p.status) || p.isRenewed)
+      console.log(this.checkedPromotions)
+      return this.checkedPromotions.length && this.checkedPromotions.every(p => [STATUS_CREATED].includes(p.status) || (p.isRenewed && ![STATUS_OFFLINE].includes(p.status)))
     }
   },
   methods: {
@@ -125,7 +128,7 @@ export default {
       })
       .then(() => {
         this.$message.success('重新投放成功')
-        return this.refreshCurrent()
+        window.location.reload()
       })
       .catch(() => {})
     },
@@ -137,15 +140,18 @@ export default {
     formatTime(date) {
       return dayjs(date).format('YYYY.MM.DD HH:mm')
     },
+    formatRanking(ranking) {
+      return ranking === null ? '-' : (ranking > 100 ? '100+' : ranking)
+    },
     canRestart(promotion) {
       return promotion.status === STATUS_OFFLINE
     },
-    canUpdate(promotion) {
+    canUpdate(promotion, { seoIncludedAt }) {
       if (promotion.status === STATUS_OFFLINE) return false
       if (promotion.auditStatus === AUDIT_STATUS_REJECTED) return true
-      const {createdAt, seoIncludedAt, rank} = promotion
-      const nearest = Math.max(createdAt, seoIncludedAt)
-      return dayjs(nearest).add(30, 'days').isAfter(dayjs(), 'day') && rank > 100
+      const {words, createdAt} = promotion
+      const nearest = Math.max(createdAt, seoIncludedAt) * 1000
+      return dayjs(nearest).add(30, 'day').isBefore(dayjs(), 'day') && words.every(({ranking}) => ranking > 100 || ranking === null)
     },
     async loadPromotions() {
       const {list, total} = await queryPromotion({page: this.currentPage - 1, size: this.pageSize})
@@ -154,7 +160,6 @@ export default {
     },
     handlePageChange(page) {
       this.currentPage = page
-      console.log(this.currentPage)
     },
     onCheck(promotion, v) {
       if (v) {
@@ -174,8 +179,13 @@ export default {
     },
     async refreshCurrent() {
       this.loading = true
-      this.currentPromotions = await queryPromotionByIds(this.currentItem.campaignIds)
+      const currentPromotions = await queryPromotionByIds(this.currentItem.campaignIds)
+      this.currentPromotions = this.sortCurrentPromotionsByStatus(currentPromotions)
       this.loading = false
+    },
+    sortCurrentPromotionsByStatus(promotions) {
+      const sequence = [STATUS_ONLINE, STATUS_CREATED, STATUS_OFFLINE]
+      return promotions.sort((pre, next) => sequence.indexOf(pre.status) - sequence.indexOf(next.status))
     }
   },
   mounted() {
@@ -255,7 +265,6 @@ export default {
       text-indent: 14px;
     }
     & .title {
-      width: 33%;
       margin-right: 26px;
       overflow: hidden;
       white-space: nowrap;
@@ -271,23 +280,92 @@ table {
 
   & > thead {
     font-weight: bold;
-    & > th:first-of-type {
-      padding-left: 40px;
-    }
-    & > th {
-      padding-right: 20px;
-    }
   }
   & > tbody {
-    & td.checkbox {
-      padding-left: 40px;
-    }
     & td {
       border-bottom: 1px solid #ddd;
     }
-    & > tr::hover {
+    & > tr:hover {
       background-color: #f0f0f0;
     }
   }
+}
+
+.top-tip {
+  padding-left: 20px;
+  & .label {
+    line-height: 1.3;
+    & >>> span {
+      display: block;
+    }
+  }
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  padding-left: 40px;
+  & > * {
+    text-align: center;
+  }
+  &.header {
+    & .col3 {
+      text-indent: 10px;
+      & >>> .el-tooltip {
+        margin-left: -2px !important;
+      }
+    }
+    & .col6 {
+      text-indent: 1.5em;
+    }
+    & .col9 {
+      line-height: 1.3;
+    }
+  }
+  &.body {
+    & .col1 {
+      padding-left: 8px;
+    }
+    & .col3 {
+      text-indent: -8px;
+    }
+  }
+}
+.col1 {
+  text-align: left;
+  width: 4%;
+}
+.col2 {
+  width: 5%;
+}
+.col3 {
+  width: 95px;
+}
+.col4 {
+  width: 6%;
+}
+.col5 {
+  min-width: 15em;
+  width: 14%;
+}
+.col6 {
+  min-width: 120px;
+  text-align: left;
+  width: 10%;
+}
+.col7 {
+  width: 110px;
+}
+.col8 {
+  width: 110px;
+}
+.col9 {
+  width: 100px;
+}
+.col10 {
+  width: 7%;
+}
+.col11 {
+  width: 12%;
 }
 </style>
