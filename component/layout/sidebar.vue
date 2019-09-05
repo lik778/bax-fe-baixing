@@ -12,6 +12,10 @@
         text-color="#333"
         ref="menu"
        >
+        <el-menu-item index="/ka/vendor/site" @click="goKaSuperPage" v-if="isKaSuperman">
+          <i class="el-icon-info" />
+          官网超人入口
+        </el-menu-item>
         <el-menu-item index="root">
           <router-link :to="{ name: 'root' }" tag="p">
             <bx-icon type="appstore"></bx-icon>我的搜索通
@@ -190,7 +194,9 @@ export default {
       defaultActive: null,
       defaultOpeneds: [],
       isRenderSiteLink: false,
-      isRenderSiteNavTag: false
+      isRenderSiteNavTag: false,
+
+      isKaSuperman: false
     }
   },
   watch: {
@@ -239,9 +245,12 @@ export default {
     this.initNavMenu()
   },
   methods: {
+    goKaSuperPage() {
+      location.href = '/ka/vendor/site'
+    },
     async initNavMenu() {
       // 获取ka nav 数据
-      await baxUserLogin()
+      this.isKaSuperman = ((await baxUserLogin()).data.roles || []).includes('seo_vendor')
       const { offlineSiteNum, canUseTicketsNum, allTicketsNum } = await kaNavigation()
       this.isRenderSiteNavTag = !!(offlineSiteNum || canUseTicketsNum)
       this.isRenderSiteLink = !!allTicketsNum
