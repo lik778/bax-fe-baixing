@@ -20,7 +20,7 @@
           <header>选择充值推广资金包：</header>
           <main>
             <section>
-              <price-tag v-for="(product, index) in allProducts.slice(0, 7)" :key="index"
+              <price-tag v-for="(product, index) in allProducts.slice(0, 6)" :key="index"
                 :editable="product.editable" :price="product.price"
                 :checked="checkedProducts.includes(product)"
                 @click="toggleProduct(product)"
@@ -36,7 +36,7 @@
           <main>
             <section>
               <gw-pro-widget
-                v-for="(product, index) of allProducts.slice(7)" :key="index"
+                v-for="(product, index) of allProducts.slice(6)" :key="index"
                 :title="product.name"
                 :original-price="centToYuan(product.price)"
                 :price="gwPrice"
@@ -236,10 +236,6 @@ import { redeemCoupon } from 'api/meta'
 
 const allProducts = [
   {
-    id: 1,
-    productType: 3,
-    price: 28800
-  }, {
     id: 2,
     productType: 3,
     price: 58800
@@ -693,8 +689,8 @@ export default {
       }
 
       const chargeProduct = this.checkedProducts.find(p => p.productType === 3)
-      if (chargeProduct && chargeProduct.price < 100 * 100) {
-        return Message.error('最低充值金额100元')
+      if (chargeProduct && chargeProduct.price < 500 * 100) {
+        return Message.error('最低充值金额500元')
       }
 
       newOrder.products = this.fullCheckedProducts.map(p => {
