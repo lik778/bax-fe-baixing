@@ -34,7 +34,7 @@ export default {
     price: Number,
     minInputPrice: {
       type: Number,
-      default: 100
+      default: 500
     }
   },
   data() {
