@@ -66,6 +66,14 @@ config.plugins = [
       collapseWhitespace: true,
     }
   }),
+  new HtmlWebpackPlugin({
+    filename: 'huodong.html',
+    template: 'template/huodong.html',
+    chunks: ['vendors~bax~huodong', 'huodong'],
+    minify: {
+      collapseWhitespace: true,
+    }
+  })
   // new BundleAnalyzerPlugin()
 ]
 

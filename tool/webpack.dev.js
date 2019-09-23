@@ -40,6 +40,11 @@ config.plugins = [
     template: 'template/signin.html',
     chunks: ['vendors~bax~signin', 'signin'],
   }),
+  new HtmlWebpackPlugin({
+    filename: 'huodong.html',
+    template: 'template/huodong.html',
+    chunks: ['vendors~bax~huodong', 'huodong'],
+  })
 ]
 console.log(config.module.rules)
 
