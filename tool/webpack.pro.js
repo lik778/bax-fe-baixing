@@ -53,7 +53,7 @@ config.plugins = [
   new HtmlWebpackPlugin({
     filename: 'main.html',
     template: 'template/main.html',
-    chunks: ['vendors~bax~signin', 'vendors~bax', 'bax'],
+    chunks: ['vendors~bax~huodong~signin', 'vendors~bax~signin', 'bax'],
     minify: {
       collapseWhitespace: true,
     }
@@ -61,7 +61,7 @@ config.plugins = [
   new HtmlWebpackPlugin({
     filename: 'signin.html',
     template: 'template/signin.html',
-    chunks: ['vendors~bax~signin', 'signin'],
+    chunks: ['vendors~bax~huodong~signin', 'vendors~bax~signin', 'signin'],
     minify: {
       collapseWhitespace: true,
     }
@@ -69,7 +69,7 @@ config.plugins = [
   new HtmlWebpackPlugin({
     filename: 'huodong.html',
     template: 'template/huodong.html',
-    chunks: ['vendors~bax~huodong', 'huodong'],
+    chunks: ['vendors~bax~huodong~signin', 'huodong'],
     minify: {
       collapseWhitespace: true,
     }
