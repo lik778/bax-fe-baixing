@@ -193,7 +193,7 @@ export default {
         this.offset = 0
 
         await this.queryAds({
-          adIds: [adId]
+          adId: [adId]
         })
         this.checkedAdId = this.ads[0] ? this.ads[0].adId : null
         return
