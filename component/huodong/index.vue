@@ -2,8 +2,10 @@
   <div>
       <div class='banner'>
         <div class='content'>
-          <p>活动1：凤鸣买就送</p>
-          <div class='active part1'>
+          <div class='p-bg'>
+            <p>活动1：凤鸣买就送</p>
+          </div>
+          <div class='active part1 bg'>
               <p class='tit'>购买凤鸣产品买就送&nbsp;(站外推广)</p>
               <div class='f-flex'>
                   <div v-for="(item,index) in partOneList" :key="index">
@@ -14,18 +16,22 @@
           <button class='btn'>点此立即购买</button>
         </div>
         <div class='content'>
-          <p>活动2：标王买多少送多少</p>
-          <div class='active part2'>
+          <div class='p-bg'>
+            <p>活动2：标王买多少送多少</p>
+          </div>
+          <div class='active part2 bg'>
               <p class='tit'>四种火爆套餐任你选</p>
               <p class='ps'>（注：标王欢乐/惊喜/狂欢套餐：仅限30天关键词参加，不限关键词价格，每个客户仅限购买一次；</p>
               <p class='ps'>标王大单折扣：30天、90天的关键词都可参加）</p>
               <div class='f-flex-column'>
                  <div class='row'>
                    <div class='bg-color1'>
+                      <span class="title bg-tit1"><p>标王欢乐套餐</p></span>
                       <p>500元关键词<span>买一送一</span></p>
                       <p>每日限定<span>30</span>个名额</p>
                    </div>
                    <div class='bg-color2'>
+                      <span class="title bg-tit2"><p>标王惊喜套餐</p></span>
                       <p>不限关键词价格买<span>1500送1500</span></p>
                       <p>每日限定<span>30</span>个名额</p>
                       <p class='bottom'>再+1200元可获得2年价值3600专业版官网</p>
@@ -33,15 +39,17 @@
                  </div>
                  <div class="row">
                    <div class='bg-color3'>
+                     <span class="title bg-tit3"><p>标王狂欢套餐</p></span>
                      <p>不限关键词价格<span>买3000送3000</span></p>
                      <p>每日限定<span>20</span>个名额</p>
                      <p class='bottom'>再+900元可获得2年价值3600专业版官网</p>
                    </div>
-                   <div class='bg-color4'>
+                   <div class='bg-color4 other'>
+                     <span class="title bg-tit4"><p>标王大单折扣</p></span>
                      <p><span>标王单笔订单</span></p>
-                     <p>6000-10000 <span class="m-15">8折</span></p>
+                     <p style="transform:translateX(-20px)">6000-10000 <span class="m-15">8折</span></p>
                      <p>>=10000 <span class="m-15">75折</span></p>
-                     <p class='bottom2'>再+300元可获得2年价值3600专业版官网</p>
+                     <p class='bottom'>再+300元可获得2年价值3600专业版官网</p>
                    </div>
                  </div>
               </div>
@@ -49,48 +57,34 @@
           <button class='btn'>点此立即购买</button>
         </div>
         <div class='content'>
-          <p>活动3：官网限时买一送一</p>
-          <div class='active part3'>
+          <div class='p-bg'>
+            <p>活动3：官网限时买一送一</p>
+          </div>
+          <div class='active part3 bg'>
               <p class='tit'><span>专业版官网买一年送一年</span>另搭配凤鸣/标王购买，官网大额减</p>
               <p class="color font-smaller bold"><span class="share">推荐套餐</span></p>
               <div class="f-flex wrap">
-                <div class='item bg1'>
-                  <p class="white font-normal bold p-20"><span class='topic'>爆款套餐</span></p>
-                  <div class="main">
-                    <p class="color font-n-s bold">588元凤鸣资金+</p>
-                    <p class="color font-n-s bold">3600元 2年专业版官网</p>
-                    <p class="color font-ss bold">（带SEO功能）</p>
+                <div v-for="(item,index) in partThreeList" :key="index">
+                  <div :class="item.bg" class='item'>
+                    <p class="white font-normal bold p-20"><span class='topic'> {{item.title}} </span></p>
+                    <div class="main">
+                      <p class="color font-n-s bold"> {{item.text1}} </p>
+                      <p class="color font-n-s bold"> {{item.text2}} </p>
+                      <p class="color font-ss bold"> {{item.text3}} </p>
+                    </div>
+                    <p class="font-n-s white bold p-10">双11惊爆价：<span class="xx"> {{item.price}} </span></p>
+                    <p class="font-sss"> {{item.discount}} </p>
                   </div>
-                  <p class="font-n-s white bold p-10">双11惊爆价：<span class="xx">1788元</span></p>
-                  <p class="font-sss">（价值4188元套餐  直降2400元）</p>
-                </div>
-                <div class='item bg2'>
-                  <p class="white font-normal bold p-20"><span class='topic'>人气套餐</span></p>
-                  <div class="main">
-                    <p class="color font-n-s bold">5088元凤鸣资金+</p>
-                    <p class="color font-n-s bold"> 3600元 2年专业版官网</p>
-                    <p class="color font-ss bold">（带SEO功能）</p>
-                  </div>
-                  <p class="font-n-s white bold p-10">双11惊爆价：<span class="xx">5988元</span></p>
-                  <p class="font-sss">（价值8876元套餐  直降3188元）</p>
-                </div>
-                <div class='item bg3'>
-                  <p class="white font-normal bold p-20"><span class='topic'>王炸套餐</span></p>
-                  <div class="main">
-                    <p class="color font-n-s bold">14288元凤鸣资金+</p>
-                    <p class="color font-n-s bold"> 3600元 2年专业版官网</p>
-                    <p class="color font-ss bold">（带SEO功能）</p>
-                  </div>
-                  <p class="font-n-s white bold p-10">双11惊爆价：<span class="xx">10488元</span></p>
-                  <p class="font-sss">（价值14288元套餐  直降3800元）</p>
                 </div>
               </div>
           </div>
           <button class='btn'>点此立即购买</button>
         </div>
         <div class='content'>
-          <p>活动4：全民抽奖</p>
-          <div class='active part4'>
+          <div class='p-bg'>
+            <p>活动4：全民抽奖</p>
+          </div>
+          <div class='active part4 bg'>
               <p class='tit'>购买凤鸣产品买就送&nbsp;(站外推广)</p>
               <div>
                 <div class='row'>
@@ -111,8 +105,10 @@
           <button class='btn'>点此立即购买</button>
         </div>
         <div class='content'>
-          <p>活动5：万元大奖等着你</p>
-          <div class='active part5'>
+          <div class='p-bg'>
+            <p>活动5：万元大奖等着你</p>
+          </div>
+          <div class='active part5 bg'>
               <p class='tit'>11/9-11/12 期间，购买搜索通产品</p>
               <p class='ps'>（请前往【个人中心】-【我的站内通知】查看，如有问题请拨打客服热线咨询：400-036-3650）</p>
               <div class='f-flex p-20'>
@@ -139,12 +135,13 @@
           </div>
           <button class='btn'>点此立即购买</button>
         </div>
-        <div class='content'>
+        <div class='content' style="padding-bottom:20px">
           <div class='active rules'>
             <div class='f-flex mt-0'>
-              <div class='rules-tit'>
-                <span>活动规则</span>
-                <img src="//file.baixing.net/201909/f9128f38fe653beb01f2b3816ad716fe.png" alt="">
+              <div>
+                <span class='rules-tit'>活动规则
+                   <img src="//file.baixing.net/201909/f9128f38fe653beb01f2b3816ad716fe.png" alt="">
+                </span>
               </div>
             </div>
             <div class="main">
@@ -170,7 +167,7 @@
               <div class="row">
                   <div class='yuan'><p class='num'>5</p></div>
                   <p>购买前请阅读违禁行业类目；对于违禁行业，不能进行搜索通推广，如购买后不支持退款；
-违禁行业类目见：<strong class="color">http://bax.baixing.com.cn/qa?mode=questions</strong></p>
+违禁行业类目见：<strong ><a class="color" href="http://bax.baixing.com.cn/qa?mode=questions">http://bax.baixing.com.cn/qa?mode=questions</a></strong></p>
               </div>
               <div class="row">
                   <div class='yuan'><p class='num'>6</p></div>
@@ -196,6 +193,33 @@ export default {
         '//file.baixing.net/201909/6920534b93e7a300dc3c3e599515d483.png',
         '//file.baixing.net/201909/94d4270d33b3e2b1caccd0a7dd355613.png'
       ],
+      partThreeList:[
+        {
+          bg:'bg1',
+          title:'爆款套餐',
+          text1:'588元凤鸣资金+',
+          text2:'3600元 2年专业版官网',
+          text3:'（带SEO功能）',
+          price:'1788元',
+          discount:'（价值4188元套餐  直降2400元）'
+        },{
+          bg:'bg2',
+          title:'人气套餐',
+          text1:'5088元凤鸣资金+',
+          text2:'3600元 2年专业版官网',
+          text3:'（带SEO功能）',
+          price:'5988元',
+          discount:'（价值8876元套餐  直降3188元）'         
+        },{
+          bg:'bg3',
+          title:'王炸套餐',
+          text1:'14288元凤鸣资金+',
+          text2:'3600元 2年专业版官网',
+          text3:'（带SEO功能）',
+          price:'10488元',
+          discount:'（价值14288元套餐  直降3800元）'
+        }
+      ] 
     }
   }
 }
@@ -208,16 +232,28 @@ export default {
   background: url('//file.baixing.net/201909/a5f66aefc24398db868737040c029ed0.png') top center no-repeat;
   background-size:cover;
   & .content{
-    padding-bottom: 50px;
+    padding-bottom: 100px;
     box-sizing: border-box;
+    & .p-bg{
+      display:block;
+      background: url('//file.baixing.net/201909/6abb960d577aa0a28f53fe0a3991396e.png') no-repeat;
+      background-size: cover;
+      width:900px;
+      height:60px;
+      margin:0 auto;
+    }
     & p{
       color:  var(--active-white);
       font-size: var(--font-large);
     }
+    &>.bg{
+      background: url('//file.baixing.net/201909/89406fb6d89073173c36f9f35a66967a.png') top center no-repeat;
+      background-size: cover;
+      background-color:var(--active-white);
+    }
     & .active{
       width: 900px;
       margin: 20px auto 30px auto;
-      background:  var(--active-white);
       border: 4px solid var(--active-border);
       border-radius: 15px;
       & .tit{
@@ -277,6 +313,22 @@ export default {
             display: flex;
             flex-direction: column;
             justify-content: center;
+            position: relative;
+            & .title{
+              position: absolute;
+              top:0;
+              left:0;
+              display: block;
+              width:200px;
+              height: 44px;
+              border-radius: 15px 0 30px 0;
+              color: var(--active-white);
+              line-height: 44px;
+              & p{
+                font-size: var(--font-mid);
+                transform:translateX(-10px);
+              }
+            }
             & .flex-end{
               align-self: flex-end;
             }
@@ -294,11 +346,13 @@ export default {
             & .bottom{
               font-size: var(--font-small);
               transform: translateY(30px);
+              position: absolute;
+              bottom:50px;
+              left:20px;
             }
-            & .bottom2{
-              font-size: var(--font-small);
-              transform: translateY(15px);
-            }
+          }
+          &>.other{
+            align-self: flex-start;
           }
           & .bg-color1{
             background-image: linear-gradient(163deg, #ED48FF 0%, #7E4BEF 100%);
@@ -311,6 +365,18 @@ export default {
           }
           & .bg-color4{
             background-image: linear-gradient(148deg, #87EDFF 0%, #3670F4 100%);
+          }
+          & .bg-tit1{
+            background: #863EF1;
+          }
+          & .bg-tit2{
+            background: #E3591B;
+          }
+          & .bg-tit3{
+            background: #E22E4C;
+          }
+          & .bg-tit4{
+            background: #2C75CE;
           }
         }
       }
@@ -571,17 +637,14 @@ export default {
         color: #fff;
         font-size: var(--font-normal); 
         position: relative;
-        & span{
-          z-index: 1;
-          
-        }
+        z-index:999;
         & img{
           position: absolute;
           width:140px;
           height:34px;
           top:0;
           left:-28px;
-          z-index: 1;
+          z-index: -1;
         }
       } 
       & .main{
@@ -610,6 +673,8 @@ export default {
       }
       & .color{
         color: var(--active-footer);
+        text-decoration:none;
+        cursor:pointer;
       }
       & p{
         color: var(--active-rules);
@@ -618,12 +683,13 @@ export default {
         flex:1;
       }
     }
+
   }
 }
 .banner::before{
   content: '';
   display: block;
-  height: 750px;
+  height: 900px;
 }
 p{
   text-align: center;
