@@ -1,8 +1,6 @@
 <template>
   <div>
-    <p>
-      {{text}}
-    </p>
+    支付成功！如需提单，请从指南车系统重新进入搜索通系统。
   </div>
 </template>
 
@@ -23,7 +21,6 @@ export default {
   },
   computed: {
     isBxUser() {
-      console.log(this.userInfo.roles)
       const roles = normalizeRoles(this.userInfo.roles)
       return roles.includes('BAIXING_USER')
     },
@@ -31,19 +28,18 @@ export default {
       const roles = normalizeRoles(this.userInfo.roles)
       return roles.includes('AGENT_ACCOUNTING')
     }
-  },
+  }, 
   watch: {
-    userInfo(v) {
-      if (v.id) {
-        console.log(this.isBxUser)
-        if (this.isBxUser) {
-          this.text = '支付成功！恭喜获得首页宝预售资格，新建计划功能即将开放，请及时关注站内通知。'
-        } else if (this.isAgentAccounting) {
-          this.text = '支付成功！如需提单，请从指南车系统重新进入搜索通系统。'
-        }
-      }
-    }
-  },
+    // userInfo(v) {
+    //   if (v.id) {
+    //     if (this.isBxUser) {
+    //       this.text = '支付成功！恭喜获得首页宝预售资格，新建计划功能即将开放，请及时关注站内通知。'
+    //     } else if (this.isAgentAccounting) {
+    //       this.text = '支付成功！如需提单，请从指南车系统重新进入搜索通系统。'
+    //     }
+    //   }
+    // }
+  }
 }
 </script>
 
