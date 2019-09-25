@@ -123,7 +123,9 @@
         return this.skus.slice(0, 1)[0]
       },
       recommends() {
-        return this.skus.slice(1)
+        const { skus, exactMatch } = this
+        // 推荐词关键词列表不出现精确匹配关键词
+        return skus.slice(1).filter(([{word}]) => exactMatch && exactMatch[0].word !== word)
       },
       soldCities() {
         return this.exactMatch[0].soldCities

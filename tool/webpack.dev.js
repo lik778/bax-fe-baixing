@@ -41,6 +41,5 @@ config.plugins = [
     chunks: ['vendors~bax~signin', 'signin'],
   }),
 ]
-console.log(config.module.rules)
 
 module.exports = config
