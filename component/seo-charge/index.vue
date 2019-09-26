@@ -397,34 +397,8 @@ export default {
 
       await payOrders(oids)
     },
-
-    getFinalSalesId() {
-      const { sales_id: salesId } = this.$route.query
-      if (salesId) {
-        return salesId
-      }
-
-      if (this.isBxUser) {
-        return
-      }
-
-      return this.userInfo.id
-    },
-    getFinalUserId() {
-      const { user_id: userId } = this.$route.query
-      const { salesInfo, userInfo } = this
-      if (userId) {
-        return userId
-      }
-      // 进入bax时带有销售身份信息，用户信息直接在salesInfo获取
-      if (salesInfo.userId) {
-        return salesInfo.userId
-      }
-
-      return userInfo.id
-    },
     async createPreOrder() {
-      console.log(this.fullCheckedProducts)
+      const {salesId, userId} = this.salesInfo
 
       // balanceAmount, saleWithShopOrder, shopOrderAmount, targetUserId, salesId
       const charge = this.fullCheckedProducts.find(p => p.productType === 3)
@@ -433,8 +407,8 @@ export default {
         charge ? charge.originalPrice: 0,
         saleWithShopOrder,
         1,
-        this.getFinalUserId(),
-        this.getFinalSalesId()
+        userId,
+        salesId
       )
       if (this.isBxUser) {
         location.href = `${orderServiceHost}/?appId=103&seq=${preTradeId}`
