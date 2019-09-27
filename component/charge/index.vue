@@ -10,11 +10,11 @@
           1. 选择产品 | <span class="discount-btn" @click="showDiscount = !showDiscount">查看优惠细则<i class="el-icon-question"></i></span>
         </header>
         <div class="discount-section" v-show="showDiscount">
-          <p class="discount-info">满588元：<span class="red">赠</span>送十万火急 50 元现金券 <span class="mute">(满100元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（1年）官网<span class="red">减</span>立减 200 元；购买精品官网2年【送一年】官网<span class="red">减</span>立减 600 元</p>
-          <p class="discount-info">满1088元：<span class="red">赠</span>送十万火急 80 元现金券 <span class="mute">(满200元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（1年）官网<span class="red">减</span>立减 200 元；购买精品官网2年【送一年】官网<span class="red">减</span>立减 600 元</p>
-          <p class="discount-info">满3088元：<span class="red">赠</span>送十万火急 300 元现金券 <span class="mute">(满400元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（1年）官网<span class="red">减</span>立减 200 元；购买精品官网2年【送一年】官网<span class="red">减</span>立减 600 元</p>
-          <p class="discount-info">满5088元：<span class="red">赠</span>送十万火急 300 元现金券 <span class="mute">(满400元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（1年）官网<span class="red">减</span>立减 600 元；购买精品官网2年【送一年】官网<span class="red">减</span>立减 1200 元</p>
-          <p class="discount-info">满10188元：<span class="red">赠</span>送十万火急 300 元现金券 <span class="mute">(满400元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（1年）官网<span class="red">减</span>立减 1000 元；购买精品官网2年【送一年】官网<span class="red">减</span>立减 1400 元</p>
+          <p class="discount-info">满&nbsp;588元：<span class="red">赠</span>送十万火急 &nbsp;50&nbsp; 元现金券 <span class="mute">(满100元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（1年）官网<span class="red">减</span>立减 200 元；购买精品官网2年【送一年】官网<span class="red">减</span>立减 600 元；购买精品官网专业版1年（支持首页宝推广）官网<span class="red">减</span> 600元；</p>
+          <p class="discount-info">满1088元：<span class="red">赠</span>送十万火急 &nbsp;80&nbsp; 元现金券 <span class="mute">(满200元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（1年）官网<span class="red">减</span>立减 200 元；购买精品官网2年【送一年】官网<span class="red">减</span>立减 600 元；购买精品官网专业版1年（支持首页宝推广）官网<span class="red">减</span> 600元；</p>
+          <p class="discount-info">满3088元：<span class="red">赠</span>送十万火急 300 元现金券 <span class="mute">(满400元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（1年）官网<span class="red">减</span>立减 200 元；购买精品官网2年【送一年】官网<span class="red">减</span>立减 600 元；购买精品官网专业版1年（支持首页宝推广）官网<span class="red">减</span> 600元；</p>
+          <p class="discount-info">满5088元：<span class="red">赠</span>送十万火急 300 元现金券 <span class="mute">(满400元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（1年）官网<span class="red">减</span>立减 600 元；购买精品官网2年【送一年】官网<span class="red">减</span>立减 1200 元；购买精品官网专业版1年（支持首页宝推广）官网<span class="red">减</span> 900元；</p>
+          <p class="discount-info">满10188元：<span class="red">赠</span>送十万火急 300 元现金券 <span class="mute">(满400元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（1年）官网<span class="red">减</span>立减 1000 元；购买精品官网2年【送一年】官网<span class="red">减</span>立减 1400 元；购买精品官网专业版1年（支持首页宝推广）官网<span class="red">减</span> 1500元；</p>
         </div>
         <div class="charge">
           <header>选择充值推广资金包：</header>
@@ -37,6 +37,7 @@
             <section>
               <gw-pro-widget
                 v-for="(product, index) of allProducts.slice(6)" :key="index"
+                :is-pro="product.isPro"
                 :title="product.name"
                 :original-price="centToYuan(product.price)"
                 :price="gwPrice"
@@ -284,7 +285,20 @@ const allProducts = [
       'p >= 508800 && p < 1018800 ? 120000 : false',
       'p >= 1018800 ? 140000 : false'
     ],
-    name: '精品官网两年【送一年】',
+    name: '精品官网两年【送一年】'
+  }, {
+    id: 10,
+    productType: 4,
+    isPro: true,
+    price: 180000,
+    orderPrice: 180000,
+    discountExecPriceFunc: [
+      'p >= 0 && p < 58800 ? 0 : false',
+      'p >= 58800 && p < 508800 ? 60000 : false',
+      'p >= 508800 && p < 1018800 ? 90000 : false',
+      'p >= 1018800 ? 150000 : false'
+    ],
+    name: '精品官网一年【专业版】',
     isHot: true
   }
 ]
@@ -305,7 +319,6 @@ export default {
   fromMobx: {
     usingConditions: () => store.usingConditions,
     allDiscounts: () => store.allDiscounts,
-    products: () => store.products,
     coupons: () => store.coupons
   },
   props: {
@@ -356,9 +369,8 @@ export default {
     promotionDiscount() {
       const charge = this.checkedProducts.find(p => p.productType === 3)
       if (charge) {
-        const siteProductText = !!this.fullCheckedProducts.find(({id}) => id === 8)
-          ? '一年' : '两年【送一年】'
         const siteProduct = this.fullCheckedProducts.find(({productType}) => productType === 4)
+        const siteProductText = siteProduct && siteProduct.desc.replace('精品官网', '')
         const siteDiscountPrice = siteProduct && centToYuan(siteProduct.originalPrice - siteProduct.discountPrice)
         let huojiCouponContent = ''
         if (charge.price < 58800) {
@@ -563,18 +575,17 @@ export default {
       this.empty()
       //  目前只有这一个角色可以用券
       //  FIX: 修复页面加载后没有优惠券信息 使用$watch去监听 bxUser 变化并触发coupon 更新
-      this.unBxUserWatch = this.$watch(
+      this.disposeBxUserWatch = this.$watch(
         () => this.isBxUser,
         async isBxUser => {
           if (isBxUser) {
             await store.getConditions()
             await store.getCoupons({ onlyValid: true, status: 0 })
-            this.unBxUserWatch()
+            this.disposeBxUserWatch()
           }
       }, {immediate: true})
       await Promise.all([
         store.getProductDiscounts([3, 4]), // 充值／新官网
-        store.getProducts([3,4])
       ])
     },
     getDiscountPrice(productType, price) {
@@ -807,10 +818,11 @@ export default {
             .map(execStr => new Function('p', 'return ' + execStr)(charge.price))
             .find(res => res !== false)
           this.fullCheckedProducts = checked.map(product => {
-            const {id, productType, price, orderPrice} = product
+            const {id, productType, price, orderPrice, name} = product
             return {
               id,
               productType,
+              desc: name,
               name: PRODUCT[productType],
               price: productType === 4 ? gwPrice : price,
               originalPrice: price,
@@ -820,10 +832,11 @@ export default {
           })
         } else {
           this.fullCheckedProducts = checked.map(product => {
-            const {id, productType, price, orderPrice} = product
+            const {id, productType, price, orderPrice, name} = product
             return {
               id,
               productType,
+              desc: name,
               name: PRODUCT[productType],
               price: price,
               originalPrice: price,

@@ -17,7 +17,11 @@
       {{ title }}
     </header>
     <main>
-      <div>
+      <div v-if="isPro">
+        <p>支持首页宝推广，让您的网站上百度首页 </p>
+        <p>支持SEO优化等更多专业版官网建站功能</p>
+      </div>
+      <div v-else>
         <span>
           <li>支持多端展示</li>
           <li>共享多渠道落地页</li>
@@ -47,6 +51,9 @@ export default {
     BxIcon
   },
   props: {
+    isPro: {
+      default: false
+    },
     checked: Boolean,
     price: Number,
     originalPrice: Number,
@@ -97,12 +104,11 @@ export default {
 
     & > div {
       padding: 5px 15px;
-
+      font-size: 12px;
+      color: #666666;
+      line-height: 2;
       & > span {
         & > li {
-          font-size: 12px;
-          line-height: 2;
-          color: #666666;
           list-style: unset;
         }
       }
@@ -123,7 +129,7 @@ export default {
   width: 0;
   height: 0;
   top: -4px;
-  left: 200px;
+  left: 206px;
 
   & > section {
     width: 44px;

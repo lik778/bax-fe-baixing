@@ -31,7 +31,7 @@ const store = observable({
   }),
 
   getProducts: action(async function() {
-    const products = await fapi.getProducts([4, 5])
+    const products = await fapi.getProducts([4, 5, 6])
     this._products = products
   })
 })

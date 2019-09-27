@@ -45,6 +45,10 @@
       isSpecialLandingpage: {
         type: Boolean,
         default: false
+      },
+      // 精品官网产品类型
+      productType: {
+        type: Number
       }
     },
     data() {
@@ -75,15 +79,19 @@
 
       const [list, count] = await Promise.all([
         getUserSites(),
-        getUserTicketCount()
+        getUserTicketCount({productId: this.productType})
       ])
-      this.list = list
 
+      if (this.productType) {
+        this.list = list.filter(item => item.productId === this.productType)
+      } else {
+        this.list = list
+      }
       this.ticketCount = count
       // FIXME: 老官网
       this.options = [
         ...currentSpecialLandingpageOption,
-        ...list.map(p => ({
+        ...this.list.map(p => ({
           label: p.name,
           value: 'http://' + p.domain + '.mvp.baixing.com'
         }))

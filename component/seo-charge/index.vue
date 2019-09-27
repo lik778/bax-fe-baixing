@@ -36,6 +36,7 @@
             <section>
               <gw-pro-widget
                 v-for="(product, index) of allProducts.slice(4)" :key="index"
+                :is-pro="product.isPro"
                 :title="product.name"
                 :original-price="centToYuan(product.price)"
                 :price="gwPrice"
@@ -206,7 +207,8 @@ const allProducts = [
       'p >= 480000 && p < 960000 ? 90000 : false',
       'p >= 960000 ? 150000 : false'
     ],
-    name: '专业版官网一年',
+    name: '精品官网一年【专业版】',
+    isPro: true,
     isHot: true
   }
 ]
