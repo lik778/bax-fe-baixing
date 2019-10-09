@@ -134,6 +134,15 @@ export default {
     }
   },
   async mounted() {
+    this.$alert(`
+      <p>尊敬的百姓网用户：</p>
+      <p style="text-indent: 2em;">由于百度系统升级，为了提供更加稳定和可靠的服务，搜索通【站外推广】及【标王】产品暂停投放，具体恢复时间另行通知。具体安排如下：</p>
+      <p style="text-indent: 2em;">【站外推广】所有百度计划暂停投放（360、神马、搜狗除外）且无法创建和修改，期间不会产生任何消耗。</p>
+      <p style="text-indent: 2em;">【标王】在线标王计划暂停扣除剩余时间，并且关闭购买及续费入口。</p>
+      <p style="text-indent: 2em;">对您造成的困扰我们深感歉意，也诚挚的感谢您对搜索通的关注与支持。</p>
+    `, '提示', {
+      dangerouslyUseHTMLString: true
+    })
     await Promise.all([
       gStore.getCurrentUser(),
       gStore.getCategories(),
