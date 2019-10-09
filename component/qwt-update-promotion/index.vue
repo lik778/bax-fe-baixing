@@ -245,7 +245,7 @@
             先去充值
           </el-button>
           <el-button type="primary"
-            :disabled="isUpdating || isSales"
+            :disabled="isUpdating || isSales || getProp('source') === SEM_PLATFORM_BAIDU"
             @click="updatePromotion">
             更新推广
           </el-button>

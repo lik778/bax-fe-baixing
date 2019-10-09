@@ -38,7 +38,7 @@
       </div>
       <div class="footer">
         <p>总计：<span class="price">{{f2y(totalPrice)}}</span>元</p>
-        <el-button class="checkout" type="primary" @click="checkout">{{payText}}</el-button>
+        <el-button class="checkout" :disabled="true" type="primary" @click="checkout">{{payText}}</el-button>
         <div v-if="payUrl" class="payurl">
           <label :title="payUrl">
             {{ '付款链接: ' + payUrl }}
@@ -159,6 +159,8 @@
         // 角色：普通用户跳转支付
         // 代理商跳转支付，url带上
         // 百姓网销售显示链接
+        this.$message.info('系统升级中')
+        return
         const {salesId, userId} = this.salesInfo
         const saleWithShopOrder = !!this.gwSelected.length
         const shopOrderAmount = this.gwSelected[0]
