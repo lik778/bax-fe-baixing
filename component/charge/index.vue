@@ -57,6 +57,7 @@
 
         <div class="price-list">
           <price-list
+            style="width: 666px;"
             :products="fullCheckedProducts"
             :has-discount="!!checkedProductDiscounts.length"
             :discount-infos="discountInfos"
@@ -288,7 +289,7 @@ const allProducts = [
     name: '精品官网两年【送一年】'
   }, {
     id: 10,
-    productType: 4,
+    productType: 6,
     isPro: true,
     price: 180000,
     orderPrice: 180000,
@@ -302,6 +303,14 @@ const allProducts = [
     isHot: true
   }
 ]
+
+const isGwProduct = function(productType) {
+  return productType === 4 || productType === 6
+}
+
+const isChargeProduct = function(productType) {
+  return productType === 3
+}
 
 export default {
   name: 'qwt-charge',
@@ -361,15 +370,15 @@ export default {
   },
   computed: {
     gwPrice() {
-      const gw = this.fullCheckedProducts.find(p => p.productType === 4)
+      const gw = this.fullCheckedProducts.find(p => isGwProduct(p.productType))
       if (gw) {
         return centToYuan(gw.price)
       }
     },
     promotionDiscount() {
-      const charge = this.checkedProducts.find(p => p.productType === 3)
+      const charge = this.checkedProducts.find(p => isChargeProduct(p.productType))
       if (charge) {
-        const siteProduct = this.fullCheckedProducts.find(({productType}) => productType === 4)
+        const siteProduct = this.fullCheckedProducts.find(({productType}) => isGwProduct(productType))
         const siteProductText = siteProduct && siteProduct.desc.replace('精品官网', '')
         const siteDiscountPrice = siteProduct && centToYuan(siteProduct.originalPrice - siteProduct.discountPrice)
         let huojiCouponContent = ''
@@ -395,8 +404,8 @@ export default {
       return ''
     },
     discountInfos() {
-      const charge = this.checkedProducts.find(p => p.productType === 3)
-      const gw = this.checkedProducts.find(p => p.productType === 4)
+      const charge = this.checkedProducts.find(p => isChargeProduct(p.productType))
+      const gw = this.checkedProducts.find(p => isGwProduct(p.productType))
       if (charge && !gw) {
         return this.promotionDiscount.split('；').slice(0, 1)
       } else if (charge && gw) {
@@ -533,16 +542,18 @@ export default {
     toggleProduct (product) {
       const index = this.checkedProducts.indexOf(product)
       if (index > -1) {
+        // 反选移除
         this.checkedProducts.splice(index, 1)
       } else {
-        const chargeProduct = this.checkedProducts.find(p => p.productType === 3)
-        const gwProduct = this.checkedProducts.find(p => p.productType === 4)
-        if (chargeProduct && product.productType === 3) {
+        const chargeProduct = this.checkedProducts.find(p => isChargeProduct(p.productType))
+        const gwProduct = this.checkedProducts.find(p => isGwProduct(p.productType))
+        if (chargeProduct && isChargeProduct(product.productType)) {
           const index = this.checkedProducts.indexOf(chargeProduct)
           this.checkedProducts.splice(index, 1)
         }
-        if (gwProduct && product.productType === 4) {
-          this.checkedProducts = this.checkedProducts.filter(({productType}) => productType !== 4)
+        if (gwProduct && isGwProduct(product.productType)) {
+          const index = this.checkedProducts.indexOf(gwProduct)
+          this.checkedProducts.splice(index, 1)
         }
         this.checkedProducts.push(product)
       }
@@ -699,7 +710,7 @@ export default {
         return Message.error('请选择购买的产品 ~')
       }
 
-      const chargeProduct = this.checkedProducts.find(p => p.productType === 3)
+      const chargeProduct = this.checkedProducts.find(p => isChargeProduct(p.productType))
       if (chargeProduct && chargeProduct.price < 500 * 100) {
         return Message.error('最低充值金额500元')
       }
@@ -808,8 +819,8 @@ export default {
     checkedProducts: {
       deep: true,
       handler: function (checked) {
-        const charge = checked.find(p => p.productType === 3)
-        const gw = checked.find(p => p.productType === 4)
+        const charge = checked.find(p => isChargeProduct(p.productType))
+        const gw = checked.find(p => isGwProduct(p.productType))
 
         if (charge && gw) {
           let gwPrice = gw.price
@@ -824,10 +835,10 @@ export default {
               productType,
               desc: name,
               name: PRODUCT[productType],
-              price: productType === 4 ? gwPrice : price,
+              price: isGwProduct(productType) ? gwPrice : price,
               originalPrice: price,
               orderPrice: orderPrice || price,
-              discountPrice: this.getDiscountPrice(productType, productType === 4 ? gwPrice : price)
+              discountPrice: this.getDiscountPrice(productType, isGwProduct(productType) ? gwPrice : price)
             }
           })
         } else {
@@ -1015,7 +1026,7 @@ export default {
 
   & > .coupon {
     margin-top: 20px;
-    width: 610px;
+    width: 666px;
     padding: 15px 10px 20px;
     border: solid 1px #e6e6e6;
 
@@ -1048,7 +1059,7 @@ export default {
     align-items: flex-end;
     justify-content: center;
     margin-top: 30px;
-    width: 610px;
+    width: 666px;
     padding-right: 35px;
     padding-bottom: 34px;
     border-bottom: solid 1px #e6e6e6;
