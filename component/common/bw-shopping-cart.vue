@@ -193,7 +193,6 @@
         }
         // items, targetUserId, salesId, saleWithShopOrder, shopOrderAmount, shopType
         const preTradeId = await createPreOrder(...createOrderArgs)
-        return 
         if (this.isUser('BAIXING_USER')) {
           this.localItems = []
           location.href = `${orderServiceHost}/?appId=101&seq=${preTradeId}`
