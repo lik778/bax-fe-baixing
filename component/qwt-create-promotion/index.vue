@@ -493,7 +493,7 @@ export default {
 
       if (!p.sources.length) return Message.error('请选择投放渠道')
 
-      if (p.sources.includes(SEM_PLATFORM_BAIDU)) return this.$message.error('百度渠道升级中，暂时不能创建百度渠道推广计划')
+      if (p.sources.includes(SEM_PLATFORM_BAIDU)) return this.$message.erro('百度渠道升级中，暂时不能创建百度渠道推广计划')
 
       if (p.dailyBudget < MIN_DAILY_BUDGET) {
         return Message.error(`推广日预算需大于 ${f2y(MIN_DAILY_BUDGET)} 元`)
