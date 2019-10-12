@@ -1,5 +1,5 @@
 <template>
-  <div class="cart" :class="{expand}">
+  <div class="cart bw" :class="{expand}">
     <div class="handle" @click="onHandleClick">
       <i class="el-icon-edit"></i><p>关键词购物车({{localItems.length}})</p>
     </div>
@@ -83,7 +83,7 @@
       shopType: 1,
       shopOrderAmount: 3,
       originalPrice: 240000,
-      name: '精品官网两年(送一年)',
+      name: '精品官网两年（送一年）',
       price: 0,
       discountExecPriceFunc: [
         'p >= 0 && p < 50000 ? 0 : false',
@@ -102,8 +102,8 @@
       discountExecPriceFunc: [
         'p >= 0 && p < 50000 ? 0 : false',
         'p >= 50000 && p < 500000 ? 60000 : false',
-        'p >= 500000 && p < 1000000 ? 150000 : false',
-        'p >= 1000000 ? 140000 : false'
+        'p >= 500000 && p < 1000000 ? 90000 : false',
+        'p >= 1000000 ? 150000 : false'
       ]
     }
   ]
@@ -260,6 +260,19 @@
 
 <style lang="postcss" scoped>
 @import '../../cssbase/var';
+
+.cart.bw {
+  & /deep/ .el-checkbox {
+    & + .el-checkbox {
+      margin-top: 8px;
+    }
+    display: flex;
+    align-items: center;
+  }
+  & /deep/ .el-checkbox__label {
+    white-space: normal;
+  }
+}
 
 .cart {
   position: fixed;
