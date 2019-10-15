@@ -48,7 +48,7 @@
             @error="handleCreativeError"
           />
           <el-form-item>
-            <el-button :disabled="true || isPromoteOffline" :loading="isLoading" @click="onSubmit" type="primary">{{buttonText}}</el-button>
+            <el-button :disabled="isPromoteOffline" :loading="isLoading" @click="onSubmit" type="primary">{{buttonText}}</el-button>
           </el-form-item>
         </el-form>
       </main>
