@@ -273,7 +273,7 @@ const allProducts = [
       'p >= 508800 && p < 1018800 ? 60000 : false',
       'p >= 1018800 ? 100000 : false'
     ],
-    name: '精品官网一年',
+    name: '精品官网一年【标准版】',
     isHot: false
   }, {
     id: 9,
@@ -325,7 +325,7 @@ export default {
     Coupon,
     Step
   },
-  fromMobx: {
+  fromMobx: { 
     usingConditions: () => store.usingConditions,
     allDiscounts: () => store.allDiscounts,
     coupons: () => store.coupons
@@ -596,7 +596,7 @@ export default {
           }
       }, {immediate: true})
       await Promise.all([
-        store.getProductDiscounts([3, 4]), // 充值／新官网
+        store.getProductDiscounts([3, 4, 6]), // 充值／新官网
       ])
     },
     getDiscountPrice(productType, price) {

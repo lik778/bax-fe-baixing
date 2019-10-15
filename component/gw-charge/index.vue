@@ -200,7 +200,7 @@ export default {
           if (p.id === 4) {
             return {
               ...p,
-              name: '精品官网【普通版】',
+              name: '精品官网【标准版】',
               price: 100000
             }
           } else if (this.allowSeeYoucaigouSite && p.id === 5) {
