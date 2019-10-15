@@ -20,6 +20,8 @@ export function allowSee258(roles, uid) {
 }
 
 export function allowUseKaPackage(roles, uid) {
+  // 860603 优米帮
+  // 318 康品汇
   const specialKaUserIds = [860603, 318, 47709, 53470] // 这几个比较牛逼, 特价 (1000) 买官网
   return specialKaUserIds.includes(uid)
 }
