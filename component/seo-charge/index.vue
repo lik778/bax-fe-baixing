@@ -199,7 +199,7 @@ const allProducts = [
     price: 0
   }, {
     id: 5,
-    productType: 4,
+    productType: 6,
     price: 1800 * 100,
     discountExecPriceFunc: [
       'p >= 0 && p < 240000 ? 0 : false',
