@@ -10,7 +10,8 @@
         <main>
           <gw-pro-widget
             :title="i.name"
-            v-for="i of realProducts" :key="i.id"
+            :is-pro="i.productType === 6"
+            v-for="i of realProducts.slice(0, realProducts.length -1)" :key="i.id"
             :original-price="i.showPrice | centToYuan"
             :price="i.price | centToYuan"
             :checked="productChecked(i.id)"
@@ -199,12 +200,19 @@ export default {
           if (p.id === 4) {
             return {
               ...p,
+              name: '精品官网【标准版】',
               price: 100000
             }
           } else if (this.allowSeeYoucaigouSite && p.id === 5) {
             return {
               ...p,
-              name: '精品官网聚合页（优采购）'
+              name: '精品官网聚合页【优采购】'
+            }
+          } else if (p.id === 6) {
+            return {
+              ...p,
+              name: '精品官网【专业版】',
+              price: 150000
             }
           }
           return p

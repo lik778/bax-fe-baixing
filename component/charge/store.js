@@ -14,6 +14,7 @@ const store = observable({
     return toJS(this._usingConditions)
   },
   get allDiscounts() {
+    console.log(toJS(this._allDiscounts))
     return toJS(this._allDiscounts)
   },
   get products() {
