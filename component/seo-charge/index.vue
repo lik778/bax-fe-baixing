@@ -179,6 +179,8 @@ import {
   payOrders
 } from 'api/order'
 
+const PROFESSIONAL_SITE_PRODUCT_TYPE = 6
+
 const allProducts = [
   {
     id: 1,
@@ -199,7 +201,7 @@ const allProducts = [
     price: 0
   }, {
     id: 5,
-    productType: 6,
+    productType: PROFESSIONAL_SITE_PRODUCT_TYPE,
     price: 1800 * 100,
     discountExecPriceFunc: [
       'p >= 0 && p < 240000 ? 0 : false',
@@ -265,7 +267,7 @@ export default {
   },
   computed: {
     gwPrice() {
-      const gw = this.fullCheckedProducts.find(p => p.productType === 4)
+      const gw = this.fullCheckedProducts.find(p => p.productType === PROFESSIONAL_SITE_PRODUCT_TYPE)
       if (gw) {
         return centToYuan(gw.price)
       }
@@ -273,7 +275,7 @@ export default {
     promotionDiscount() {
       const charge = this.checkedProducts.find(p => p.productType === 3)
       if (charge) {
-        const siteProduct = this.fullCheckedProducts.find(({productType}) => productType === 4)
+        const siteProduct = this.fullCheckedProducts.find(({productType}) => productType === PROFESSIONAL_SITE_PRODUCT_TYPE)
         const siteDiscountPrice = siteProduct && centToYuan(siteProduct.originalPrice - siteProduct.discountPrice)
 
         return  siteDiscountPrice
@@ -347,13 +349,13 @@ export default {
         this.checkedProducts.splice(index, 1)
       } else {
         const chargeProduct = this.checkedProducts.find(p => p.productType === 3)
-        const gwProduct = this.checkedProducts.find(p => p.productType === 4)
+        const gwProduct = this.checkedProducts.find(p => p.productType === PROFESSIONAL_SITE_PRODUCT_TYPE)
         if (chargeProduct && product.productType === 3) {
           const index = this.checkedProducts.indexOf(chargeProduct)
           this.checkedProducts.splice(index, 1)
         }
-        if (gwProduct && product.productType === 4) {
-          this.checkedProducts = this.checkedProducts.filter(({productType}) => productType !== 4)
+        if (gwProduct && product.productType === PROFESSIONAL_SITE_PRODUCT_TYPE) {
+          this.checkedProducts = this.checkedProducts.filter(({productType}) => productType !== PROFESSIONAL_SITE_PRODUCT_TYPE)
         }
         this.checkedProducts.push(product)
       }
@@ -368,8 +370,8 @@ export default {
       this.empty()
 
       await Promise.all([
-        store.getProductDiscounts([3, 4]), // 充值／新官网
-        store.getProducts([3,4])
+        store.getProductDiscounts([3, PROFESSIONAL_SITE_PRODUCT_TYPE]), // 充值／新官网
+        store.getProducts([3,PROFESSIONAL_SITE_PRODUCT_TYPE])
       ])
     },
     getDiscountPrice(productType, price) {
@@ -404,7 +406,7 @@ export default {
 
       // balanceAmount, saleWithShopOrder, shopOrderAmount, targetUserId, salesId
       const charge = this.fullCheckedProducts.find(p => p.productType === 3)
-      const saleWithShopOrder = !!this.fullCheckedProducts.find(p => p.productType === 4)
+      const saleWithShopOrder = !!this.fullCheckedProducts.find(p => p.productType === PROFESSIONAL_SITE_PRODUCT_TYPE)
       const preTradeId = await createPreOrder(
         charge ? charge.originalPrice: 0,
         saleWithShopOrder,
@@ -427,7 +429,7 @@ export default {
       deep: true,
       handler: function (checked) {
         const charge = checked.find(p => p.productType === 3)
-        const gw = checked.find(p => p.productType === 4)
+        const gw = checked.find(p => p.productType === PROFESSIONAL_SITE_PRODUCT_TYPE)
 
         if (charge && gw) {
           let gwPrice = gw.price
@@ -441,9 +443,9 @@ export default {
               id,
               productType,
               name: PRODUCT[productType],
-              price: productType === 4 ? gwPrice : price,
+              price: productType === PROFESSIONAL_SITE_PRODUCT_TYPE ? gwPrice : price,
               originalPrice: price,
-              discountPrice: this.getDiscountPrice(productType, productType === 4 ? gwPrice : price)
+              discountPrice: this.getDiscountPrice(productType, productType === PROFESSIONAL_SITE_PRODUCT_TYPE ? gwPrice : price)
             }
           })
         } else {
