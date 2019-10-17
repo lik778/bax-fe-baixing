@@ -11,7 +11,7 @@
           <gw-pro-widget
             :title="i.name"
             :is-pro="i.productType === 6"
-            v-for="i of realProducts" :key="i.id"
+            v-for="i of realProducts.slice(0, realProducts.length -1)" :key="i.id"
             :original-price="i.showPrice | centToYuan"
             :price="i.price | centToYuan"
             :checked="productChecked(i.id)"
