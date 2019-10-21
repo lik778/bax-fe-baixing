@@ -29,10 +29,10 @@
       <el-radio-button :label="genCreatedAtValues(2)">近一年</el-radio-button>
     </el-radio-group>
     <div class="input-wrap">
-      <label class="ml">计划id</label>
-      <bax-input v-model="queryParmas.campaignId" class="input" placeholder="请输入计划id" />
+      <label class="ml">{{selectByType().type}}</label>
+      <bax-input v-model="queryParmas.selectId" class="input" :placeholder="selectByType().placeholder" />
     </div>
-
+ 
     <el-table class="log-table"
       :data="logs"
       style="width: 100%">
@@ -59,8 +59,8 @@
         width="80">
       </el-table-column>
       <el-table-column
-        :formatter="campaignIdFormatter"
-        label="计划Id"
+        :formatter="selectIdFormatter"
+        :label="selectByType().type"
         width="110">
       </el-table-column>
       <el-table-column
@@ -110,6 +110,7 @@ import {
   productTypeOpts,
   fengmingTimelineTypeOpts,
   biaowangTimelineTypeOpts,
+  selectType,
 
   OP_TYPE_CREATE,
   TIMELINE_TYPE_UNKNOWN,
@@ -196,7 +197,7 @@ export default {
       offset: 0,
       queryParmas: {
         opType: '',
-        campaignId: '',
+        selectId: '',
         timelineType: '',
         limit: ONE_PAGE_NUM,
         createdAt: CREATED_AT_VALUES[0],
@@ -226,6 +227,9 @@ export default {
     productFormatter() {
       return this.genMaterial({biaowang: '标王', fengming: '站外推广'})
     },
+    selectByType() {
+      return this.genMaterial(selectType)
+    },
     opTypeFormatter({opType, message}) {
       if (message) {
         opType = message.opType
@@ -243,7 +247,7 @@ export default {
     dateFormatter({createdAt, timestamp}) {
       return toHumanTime(createdAt || timestamp, 'YYYY-MM-DD HH:mm')
     },
-    campaignIdFormatter({promoteId: id, message}) {
+    selectIdFormatter({word: id, message}){
       if (message) {
         id = message.campaignId
       }
