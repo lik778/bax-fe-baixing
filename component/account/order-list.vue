@@ -106,7 +106,8 @@ const statusLabel = {
 }
 
 const ONE_PAGE_NUM = 10
-const ONE_YEAR_QUOTA_PRICE = 120000
+const ONE_YEAR_NORMAL_QUOTA_PRICE = 120000
+const ONE_YEAR_PRO_QUOTA_PRICE = 180000
 
 const transformUnixTimeStamp = (date) =>  {
   return dayjs(new Date(date)).unix()
@@ -136,7 +137,11 @@ export default {
   components: {SectionHeader},
   methods: {
     genOriginalPrice({productType, originalPrice}) {
-      if (productType === 4) return ONE_YEAR_QUOTA_PRICE
+      if (productType === 4) {
+        return ONE_YEAR_NORMAL_QUOTA_PRICE
+      } else if (productType === 6) {
+        return ONE_YEAR_PRO_QUOTA_PRICE
+      }
       return originalPrice
     },
     async payOrder(orderId) {
