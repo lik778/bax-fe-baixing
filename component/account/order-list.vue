@@ -181,7 +181,7 @@ export default {
     },
     formatChargePrice({originalPrice, productType}) {
       // 这个订单如果只买了官网，没有充值，就显示“-”
-      return productType === 4 ? '-' : this.formatPrice(originalPrice)
+      return (productType === 4 || productType === 6) ? '-' : this.formatPrice(originalPrice)
     },
     formatCreatedAt({createdAt}) {
       return dayjs(new Date(createdAt * 1000)).format('YY-MM-DD HH:mm')
