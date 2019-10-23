@@ -185,7 +185,8 @@
         const {salesId, userId} = salesInfo
         let createOrderArgs = [localItems, userId, salesId]
         if (gwSelected.length) {
-          const { shopOrderAmount, shopType } = siteProducts.find(({id}) => id === gwSelected[0])
+          const { shopOrderAmount: oriShopOrderAmount, shopType } = siteProducts.find(({id}) => id === gwSelected[0])
+          const shopOrderAmount =  shopType === 2 ? oriShopOrderAmount * 2 : oriShopOrderAmount
           createOrderArgs = createOrderArgs.concat([true, shopOrderAmount, shopType])
         } else {
           // 不搭售官网 saleWithShopOrder false
