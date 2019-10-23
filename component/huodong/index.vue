@@ -96,7 +96,7 @@
                 </div>
                 <div class='row'>
                   <span>兑奖时间：</span>
-                  <h6>2019.11.9-2019.11.12</h6>
+                  <h6>2019.11.7-2019.11.12</h6>
                 </div>
                  <p class='contact'>（如有问题，请拨打客服热线咨询：400-036-3650）</p>
                  <img src="//file.baixing.net/201909/8f1b362f3c49bf911643eb5ff2eac313.png" alt="">
@@ -109,7 +109,7 @@
             <p>活动5：万元大奖等着你</p>
           </div>
           <div class='active part5 bg'>
-              <p class='tit'>11/9-11/12 期间，购买搜索通产品</p>
+              <p class='tit'>11/7-11/12 期间，购买搜索通产品</p>
               <p class='ps bolder'>（请前往【个人中心】-【我的站内通知】查看，如有问题请拨打客服热线咨询：400-036-3650）</p>
               <div class='f-flex p-20'>
                   <div class='item bg-one'>
