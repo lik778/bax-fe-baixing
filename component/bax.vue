@@ -24,7 +24,7 @@
       @close="toggleAddUserLeadVisible"
     />
     <!-- <huo-dong-intro :show="huoDongIntroVisible" @close="huoDongIntroVisible = false" /> -->
-    <!-- <huo-dong-btn /> -->
+    <huo-dong-btn />
     <back-to-top />
     <wechat-scan />
     <chat />
@@ -34,7 +34,7 @@
 
 <script>
 // import HuoDongIntro from './common/huodong-intro'
-// import HuoDongBtn from './common/huodong-btn'
+import HuoDongBtn from './common/huodong-btn'
 import NewUserIntro from './common/new-user-intro'
 import AddUserLead from './common/add-user-lead'
 import WechatScan from './widget/wechat-scan'
@@ -61,7 +61,7 @@ export default {
   components: {
     BwShoppingCart,
     // HuoDongIntro,
-    // HuoDongBtn,
+    HuoDongBtn,
     NewUserIntro,
     AddUserLead,
     WechatScan,
