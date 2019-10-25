@@ -1,5 +1,5 @@
 
-FROM node:lts as build-stage
+FROM registry.gitlab.baixing.cn/zbl91555/nodejs as build-stage
 
 WORKDIR /home/app
 
