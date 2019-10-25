@@ -93,11 +93,17 @@
       </section>
       <section class="keyword">
         <header class="top-col">
-          <span :class="canOptimize('keyword')">选取推广关键词</span>
+          <span :class="canOptimize('keyword')">添加推广关键词</span>
           <el-input size="small" class="input" placeholder="添加关键词" v-model="queryWord"/>
           <el-button size="small" type="warning" class="button" @click="addKeyword('single')">添加</el-button>
           <el-button size="small" type="primary" class="button" @click="addKeyword">一键拓词</el-button>
-          <strong>当前关键词数量: {{ currentKeywords.length }}个</strong>
+          <strong>当前关键词数量: {{keywordLen}}个</strong>
+        </header>
+        <header class="top-col" style="margin-top:10px">
+          <span :class="canOptimize('keyword')">搜索推广关键词</span>
+          <el-input size="small" class="input" placeholder="搜索推广关键词" v-model="searchWord"/>
+          <el-button size="small" type="warning" class="button" @click="getCampaignWordsBySearchWord">搜索</el-button>
+          <el-button size="small" type="primary" class="button" @click="getCampaignWordsDefault">取消</el-button>
         </header>
         <keyword-list
           mode="update"
@@ -412,6 +418,9 @@ export default {
 
       isUpdating: false,
       queryWord: '',
+      searchWord: '',
+      isSearchCondition:false,
+      searchKeywords:[],
       // 注: 此处逻辑比较容易出错, 此处 定义为 undefined 与 getXXXdata 处 密切相关
       // 注: 需要密切关注 更新 数据 的获取
       promotion: {
@@ -490,25 +499,29 @@ export default {
         deletedKeywords,
         newKeywords
       } = this.promotion
-      // 新增的keywords 加上原来的keywords
-      const keywords = newKeywords.map(word => ({
-        isNew: true,
-        ...word
-      })).concat(originKeywords)
-      return keywords
-        .filter(w => !deletedKeywords.map(i => i.id).includes(w.id))
-        .map(w => {
-          for (const word of updatedKeywords) {
-            if (word.id === w.id) {
-              return {
-                ...w,
-                ...word
-              }
-            }
-          }
 
-          return {...w}
-        })
+      // 新增的keywords 加上原来的keywords
+      let keywords =[];
+      if(this.isSearchCondition){
+        keywords = this.searchKeywords
+      } else {
+        keywords = newKeywords.map(word => ({
+          isNew: true,
+          ...word
+        })).concat(originKeywords)
+      }
+
+      return this.getCurrentKeywords(keywords)
+    },
+    keywordLen() {
+      let len = 0
+      const { keywords: originKeywords } = this.originPromotion
+      const { newKeywords } = this.promotion
+      if(this.isSearchCondition){
+        let keywords = newKeywords.concat(originKeywords)
+        return this.getCurrentKeywords(keywords).length
+      }
+      return this.currentKeywords.length
     },
     checkCreativeBtnDisabled() {
       const data = this.getUpdatedCreativeData()
@@ -570,6 +583,47 @@ export default {
     }
   },
   methods: {
+    getCurrentKeywords (keywords) {
+       const {
+        updatedKeywords,
+        deletedKeywords,
+      } = this.promotion
+
+      return keywords
+        .filter(w => !deletedKeywords.map(i => i.id).includes(w.id))
+        .map(w => {
+          for (const word of updatedKeywords) {
+            if (word.id === w.id) {
+              return {
+                ...w,
+                ...word
+              }
+            }
+          }
+
+          return {...w}
+        })
+    },
+    async getCampaignWordsBySearchWord(){
+      this.isSearchCondition = true
+      let searchWord = this.searchWord
+      
+      // 获取到原有以及新增中的模糊匹配关键词
+      const { keywords : originKeywords} = this.originPromotion
+      const { newKeywords } = this.promotion
+      let keywords = newKeywords.map(word =>({
+         isNew:true,
+         ...word
+      })).concat(originKeywords)
+      
+      this.searchKeywords = keywords.filter(row => row.word.indexOf(searchWord)> -1)
+    },
+    async getCampaignWordsDefault(){
+      this.searchWord = ''
+      this.isSearchCondition = false
+      this.currentKeywordsOffset = 0
+      store.setOriginKeywords()
+    },
     handleCreativeValueChange({title, content}) {
       this.promotion.creativeTitle = title
       this.promotion.creativeContent = content
@@ -1053,6 +1107,9 @@ export default {
         .filter(w => !words.includes(w.word.toLowerCase()))
     },
     async addKeyword(type) {
+      // 先取消搜索关键词，设为原来的全量关键词
+      this.getCampaignWordsDefault()
+
       const { actionTrackId, userInfo, id } = this
       track({
         action: 'click-button: add-keyword',

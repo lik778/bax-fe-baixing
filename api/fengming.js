@@ -281,6 +281,26 @@ export async function recommendByWord(word, opts) {
   return words
 }
 
+export async function recommendByWordList(word, opts) {
+  const body = await fengming
+    .post('/keyword/recommand/word-list')
+    .send(reverseCamelcase({words:word, ...opts}))
+    .json()
+
+    let result = toCamelcase(body.data)
+    if(result){
+      let { normalList, bannedList} = result
+      normalList = fmtWords(toCamelcase(normalList))
+      bannedList = fmtWords(toCamelcase(bannedList))
+      return {
+        normalList,
+        bannedList
+    }
+    return result
+  }
+}
+
+
 export async function getChangeLogs(opts) {
   const body = await fengming
     .get('/balance/changelog')

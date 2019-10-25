@@ -77,6 +77,14 @@
       <section class="keyword">
         <header>选取推广关键词</header>
         <p class="tip">建议选取20个以上关键词，关键词越多您的创意被展现的机会越多。根据当月数据，为您推荐如下关键词</p>
+        <div class="kw-add">
+          <span class="kw-add-title" @click="kwAddShow = !kwAddShow">批量添加关键词</span>
+          <template name="fade" v-if = "kwAddShow">
+            <el-input v-model="queryWordList" placeholder="批量添加关键词" size="small" class="kw-add-input"></el-input>
+            <el-button type="success" size="small" class="kw-add-btn" @click="addWordList">添加</el-button>
+            <span class="kw-add-info">请用逗号区分关键词进行批量关键词添加，如合肥家政服务公司，合肥月嫂，合肥钟点工</span>
+          </template>
+        </div>
         <div class="kw-tag-container">
           <el-tag class="kw-tag" v-for="(kw, index) in newPromotion.keywords" :key="index" closable @close="removeKeyword(index)">{{kw.word}}</el-tag>
           <el-autocomplete
@@ -160,6 +168,8 @@
       :visible="chargeDialogVisible"
       @cancel="gotoPromotionList"
     />
+    <add-keyword-result :show="kwAddResultDialog" :data="kwAddResult" 
+                        @close="kwAddResultDialog = false"></add-keyword-result>
   </div>
 </template>
 
@@ -183,6 +193,7 @@ import CpcPriceTip from 'com/widget/cpc-price-tip'
 import ContractAck from 'com/widget/contract-ack'
 import wxBindModal from 'com/common/wx-bind-modal'
 import FmTip from 'com/widget/fm-tip'
+import addKeywordResult from 'com/common/add-keyword-result'
 
 import dayjs from 'dayjs'
 import track from 'util/track'
@@ -261,7 +272,8 @@ export default {
     ChargeDialog,
     ContractAck,
     CpcPriceTip,
-    FmTip
+    FmTip,
+    addKeywordResult
   },
   fromMobx: {
     searchRecommends: () => store.searchRecommends,
@@ -286,6 +298,10 @@ export default {
       newPromotion: clone(promotionTemplate),
       actionTrackId: uuid(),
       queryWord: '',
+      queryWordList:'',
+      kwAddShow:false,
+      kwAddResultDialog:false,
+      kwAddResult: null,
       creativeError: null,
       kwPrice: 0,
       LANDING_TYPE_AD,
@@ -359,6 +375,29 @@ export default {
   },
   methods: {
     f2y,
+    async addWordList() {
+      let words = this.queryWordList.split(/[，,]]*/g)
+      words = Array.from(new Set(words)) // 数组去重
+      if(words.length>50){
+        Message.warning('每次最多支持上传50个关键词')
+        return
+      }
+      let keywords = this.newPromotion.keywords
+      for(let i=0;i<keywords.length;i++){
+        let row = keywords[i]
+        if(words.includes(row.id)){
+          Message.warning(`${row.id}该关键词已存在`)
+          return
+        }
+      }
+      
+      const {areas, sources} = this.newPromotion
+      this.kwAddResult = await store.recommendKeywordsList(words,{areas,sources})
+      let { normalList, bannedList} = this.kwAddResult
+      keywords = keywords.concat(normalList)
+      this.$set(this.newPromotion,'keywords',keywords)
+      this.kwAddResultDialog = true
+    },
     handleCreativeValueChange({title, content}) {
         this.newPromotion.creativeTitle = title
         this.newPromotion.creativeContent = content
@@ -378,7 +417,6 @@ export default {
         )
       }
     },
-
     selectRecommend(item) {
       const { keywords } = this.newPromotion
       if (keywords.find(kw => kw.word === item.word)) {
@@ -831,6 +869,21 @@ strong.red {
       cursor: pointer;
       color: rgb(21, 164, 250);
     }
+  }
+}
+.kw-add{
+  font-size: 12px;
+  & .kw-add-title{
+    color:rgb(21,164,250);
+    cursor: pointer;
+  }
+  & .kw-add-input{
+    width: 400px;
+    margin:0 10px;
+  }
+  & .kw-add-info{
+    color:#333;
+    margin-left: 10px;
   }
 }
 </style>

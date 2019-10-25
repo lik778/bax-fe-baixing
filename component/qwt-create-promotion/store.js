@@ -32,6 +32,20 @@ const store = observable({
     const words = await fapi.recommendByWord(word, opts)
     this._searchRecommends = words.slice(0, 10).map(attachDisplayPrice).map(attachValue)
   }),
+  recommendKeywordsList: action(async function(word, opts) {
+    const words = await fapi.recommendByWordList(word, opts)
+    let bannedList,normalList;
+    if(words && Array.isArray(words.bannedList)){
+      bannedList = words.bannedList.map(attachDisplayValues)
+    }
+    if(words && Array.isArray(words.normalList)){
+      normalList = words.normalList.map(attachDisplayValues)
+    }
+    return {
+      bannedList,
+      normalList
+    }
+  }),
   setCreativeWords: action(function(words) {
     // 场景: copy campaign 时, set keywords
     this._urlRecommends = words
@@ -67,6 +81,20 @@ function attachDisplayPrice(word) {
 function attachValue(word) {
   return {
     ...word,
+    value: word.word
+  }
+}
+
+function attachDisplayValues(word) {
+  const { price : serverPrice } = word
+  let price = serverPrice
+  if(serverPrice < MIN_WORD_PRICE){
+    serverPrice = MIN_WORD_PRICE
+  }
+  return {
+    ...word,
+    serverPrice,
+    price,
     value: word.word
   }
 }
