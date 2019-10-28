@@ -6,6 +6,7 @@ import * as fapi from 'api/fengming'
 import {
   MIN_WORD_PRICE
 } from 'constant/keyword'
+import {isObj} from 'util'
 
 const store = observable({
   _urlRecommends: [],
@@ -33,18 +34,15 @@ const store = observable({
     this._searchRecommends = words.slice(0, 10).map(attachDisplayPrice).map(attachValue)
   }),
   recommendKeywordsList: action(async function(word, opts) {
-    const words = await fapi.recommendByWordList(word, opts)
-    let bannedList,normalList;
-    if(words && Array.isArray(words.bannedList)){
-      bannedList = words.bannedList.map(attachDisplayValues)
+    const result = await fapi.recommendByWordList(word, opts)
+    if(result && isObj(result)){
+      for(let key in result){
+        if(Array.isArray(result[key])){
+          result[key] = result[key].map(attachDisplayValues)
+        }
+      } 
     }
-    if(words && Array.isArray(words.normalList)){
-      normalList = words.normalList.map(attachDisplayValues)
-    }
-    return {
-      bannedList,
-      normalList
-    }
+    return result
   }),
   setCreativeWords: action(function(words) {
     // 场景: copy campaign 时, set keywords

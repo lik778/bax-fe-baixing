@@ -510,18 +510,27 @@ export default {
           ...word
         })).concat(originKeywords)
       }
+      
+      return keywords
+        .filter(w => !deletedKeywords.map(i => i.id).includes(w.id))
+        .map(w => {
+          for (const word of updatedKeywords) {
+            if (word.id === w.id) {
+              return {
+                ...w,
+                ...word
+              }
+            }
+          }
 
-      return this.getCurrentKeywords(keywords)
+          return {...w}
+        })
     },
     keywordLen() {
-      let len = 0
       const { keywords: originKeywords } = this.originPromotion
-      const { newKeywords } = this.promotion
-      if(this.isSearchCondition){
-        let keywords = newKeywords.concat(originKeywords)
-        return this.getCurrentKeywords(keywords).length
-      }
-      return this.currentKeywords.length
+      const { newKeywords,deletedKeywords } = this.promotion
+      let keywords = newKeywords.concat(originKeywords)
+      return keywords.filter(w => !deletedKeywords.map(i => i.id).includes(w.id)).length
     },
     checkCreativeBtnDisabled() {
       const data = this.getUpdatedCreativeData()
@@ -583,27 +592,6 @@ export default {
     }
   },
   methods: {
-    getCurrentKeywords (keywords) {
-       const {
-        updatedKeywords,
-        deletedKeywords,
-      } = this.promotion
-
-      return keywords
-        .filter(w => !deletedKeywords.map(i => i.id).includes(w.id))
-        .map(w => {
-          for (const word of updatedKeywords) {
-            if (word.id === w.id) {
-              return {
-                ...w,
-                ...word
-              }
-            }
-          }
-
-          return {...w}
-        })
-    },
     async getCampaignWordsBySearchWord(){
       this.isSearchCondition = true
       let searchWord = this.searchWord

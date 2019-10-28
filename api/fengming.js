@@ -5,6 +5,7 @@ import qs from 'query-string'
 import {
   isPro
 } from 'config'
+import {isObj} from 'util'
 
 const isArray = Array.isArray
 
@@ -287,17 +288,13 @@ export async function recommendByWordList(word, opts) {
     .send(reverseCamelcase({words:word, ...opts}))
     .json()
 
-    let result = toCamelcase(body.data)
-    if(result){
-      let { normalList, bannedList} = result
-      normalList = fmtWords(toCamelcase(normalList))
-      bannedList = fmtWords(toCamelcase(bannedList))
-      return {
-        normalList,
-        bannedList
+  let result = toCamelcase(body.data)
+  if(result && isObj(result)){
+    for(let key in result){
+      result[key] = fmtWords(toCamelcase(result[key]))
     }
-    return result
   }
+  return result
 }
 
 
