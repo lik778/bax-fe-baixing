@@ -1,6 +1,9 @@
 <template>
-  <div class="huodong-btn">
-    <a :href="href"><img src="http://file.baixing.net/201811/629d6d1e8b0c870fdf270e057fac567f.png" alt=""></a>
+  <div class="huodong-btn" v-if="visible">
+    <span class="hide-btn" @click="visible = false">&times;</span>
+    <a :href="href" target="_blank">
+      <img src="http://file.baixing.net/201910/391757e0242319cda5caefa0ca64abea.png" alt="">
+    </a>
   </div>
 </template>
 
@@ -14,6 +17,7 @@ export default {
   },
   data() {
     return {
+      visible: true,
       href: href
     }
   },
@@ -26,11 +30,25 @@ export default {
 <style lang="postcss" scoped>
 .huodong-btn {
   position: fixed;
-  right: 0;
+  right: 55px;
   top: 50%;
-  width: 136px;
-  height: 116px;
+  width: 166px;
+  height: 166px;
   cursor: pointer;
   z-index: 100;
+}
+.hide-btn {
+  position: absolute;
+  right: -20px;
+  top: 15px;
+  width: 20px;
+  height: 20px;
+  line-height: 16px;
+  text-align: center;
+  color: #999;
+  font-size: 16px;  
+  border-radius: 50%;
+  border: 1px solid #999;
+  cursor: pointer;
 }
 </style>

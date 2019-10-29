@@ -1,5 +1,5 @@
 <template>
-  <div class="cart" :class="{expand}">
+  <div class="cart bw" :class="{expand}">
     <div class="handle" @click="onHandleClick">
       <i class="el-icon-edit"></i><p>关键词购物车({{localItems.length}})</p>
     </div>
@@ -28,9 +28,9 @@
         >
           <el-checkbox
             class="checkbox"
-            :label="product.shopOrderAmount"
+            :key="product.id"
+            :label="product.id"
             v-for="product in siteProducts"
-            :key="product.shopOrderAmount"
           >
             {{product.name}}{{f2y(product.price)}}元（原价：{{f2y(product.originalPrice)}}元）
           </el-checkbox>
@@ -65,6 +65,8 @@
 
   const siteProducts = [
     {
+      id: 1,
+      shopType: 1,
       shopOrderAmount: 1,
       originalPrice: 120000,
       name: '精品官网一年',
@@ -77,15 +79,31 @@
       ]
     }, 
     {
+      id: 2,
+      shopType: 1,
       shopOrderAmount: 3,
       originalPrice: 240000,
-      name: '精品官网两年(送一年)',
+      name: '精品官网两年（送一年）',
       price: 0,
       discountExecPriceFunc: [
         'p >= 0 && p < 50000 ? 0 : false',
         'p >= 50000 && p < 500000 ? 60000 : false',
         'p >= 500000 && p < 1000000 ? 120000 : false',
         'p >= 1000000 ? 140000 : false'
+      ]
+    },
+    {
+      id: 3,
+      shopType: 2,
+      shopOrderAmount: 1,
+      originalPrice: 180000,
+      name: '精品官网专业版一年（可用于首页宝推广）',
+      price: 0,
+      discountExecPriceFunc: [
+        'p >= 0 && p < 50000 ? 0 : false',
+        'p >= 50000 && p < 500000 ? 60000 : false',
+        'p >= 500000 && p < 1000000 ? 90000 : false',
+        'p >= 1000000 ? 150000 : false'
       ]
     }
   ]
@@ -118,7 +136,7 @@
       gwPrice() {
         let price = 0
         if (this.gwSelected[0]) {
-          price = this.siteProducts.find(({shopOrderAmount}) => shopOrderAmount === this.gwSelected[0]).price
+          price = this.siteProducts.find(({id}) => id === this.gwSelected[0]).price
         }
         return price
       },
@@ -159,11 +177,23 @@
         // 角色：普通用户跳转支付
         // 代理商跳转支付，url带上
         // 百姓网销售显示链接
-        const {salesId, userId} = this.salesInfo
-        const saleWithShopOrder = !!this.gwSelected.length
-        const shopOrderAmount = this.gwSelected[0]
-        const preTradeId = await createPreOrder(this.localItems, saleWithShopOrder, userId, salesId, shopOrderAmount)
-
+        const {
+          salesInfo,
+          gwSelected,
+          localItems
+        } = this
+        const {salesId, userId} = salesInfo
+        let createOrderArgs = [localItems, userId, salesId]
+        if (gwSelected.length) {
+          const { shopOrderAmount: oriShopOrderAmount, shopType } = siteProducts.find(({id}) => id === gwSelected[0])
+          const shopOrderAmount =  shopType === 2 ? oriShopOrderAmount * 2 : oriShopOrderAmount
+          createOrderArgs = createOrderArgs.concat([true, shopOrderAmount, shopType])
+        } else {
+          // 不搭售官网 saleWithShopOrder false
+          createOrderArgs = createOrderArgs.concat(false)
+        }
+        // items, targetUserId, salesId, saleWithShopOrder, shopOrderAmount, shopType
+        const preTradeId = await createPreOrder(...createOrderArgs)
         if (this.isUser('BAIXING_USER')) {
           this.localItems = []
           location.href = `${orderServiceHost}/?appId=101&seq=${preTradeId}`
@@ -231,6 +261,19 @@
 
 <style lang="postcss" scoped>
 @import '../../cssbase/var';
+
+.cart.bw {
+  & /deep/ .el-checkbox {
+    & + .el-checkbox {
+      margin-top: 8px;
+    }
+    display: flex;
+    align-items: center;
+  }
+  & /deep/ .el-checkbox__label {
+    white-space: normal;
+  }
+}
 
 .cart {
   position: fixed;

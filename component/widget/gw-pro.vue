@@ -2,7 +2,7 @@
   <div :class="{'gw-pro-widget': true, checked}"
     @click="onClick">
     <div class="hot-flag" v-if="isHot">
-      <section>
+      <!-- <section>
         <main>
           热卖
         </main>
@@ -11,13 +11,18 @@
             <polygon points="0,0 44,0 22,12"/>
           </svg>
         </footer>
-      </section>
+      </section> -->
+      <img src="http://file.baixing.net/201910/04254536456b9a4cba2e0dc239dbcd79.png" width="69" height="33" alt="爆款">
     </div>
     <header>
       {{ title }}
     </header>
     <main>
-      <div>
+      <div v-if="isPro">
+        <p>支持首页宝推广，让您的网站上百度首页 </p>
+        <p>支持SEO优化等更多专业版官网建站功能</p>
+      </div>
+      <div v-else>
         <span>
           <li>支持多端展示</li>
           <li>共享多渠道落地页</li>
@@ -47,6 +52,9 @@ export default {
     BxIcon
   },
   props: {
+    isPro: {
+      default: false
+    },
     checked: Boolean,
     price: Number,
     originalPrice: Number,
@@ -97,12 +105,11 @@ export default {
 
     & > div {
       padding: 5px 15px;
-
+      font-size: 12px;
+      color: #666666;
+      line-height: 2;
       & > span {
         & > li {
-          font-size: 12px;
-          line-height: 2;
-          color: #666666;
           list-style: unset;
         }
       }
@@ -122,8 +129,8 @@ export default {
   position: relative;
   width: 0;
   height: 0;
-  top: -4px;
-  left: 200px;
+  top: -9px;
+  left: 186px;
 
   & > section {
     width: 44px;
