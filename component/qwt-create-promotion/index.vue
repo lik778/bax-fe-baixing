@@ -384,7 +384,8 @@ export default {
         time: Date.now() / 1000 | 0,
         baxId: userInfo.id,
         actionTrackId,
-        keywords: JSON.stringify(normalList)
+        keywordsLen: normalList.length
+        // keywords: JSON.stringify(normalList)
       })
 
       let { keywords } = this.newPromotion

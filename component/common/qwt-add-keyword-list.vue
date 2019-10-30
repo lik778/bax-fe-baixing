@@ -117,8 +117,8 @@ export default {
       words = Array.from(new Set(words.map(row=>{
         return row.trim()
       }).filter(row=> row!== '')))
-      if(words.length>50){
-        Message.warning('每次最多支持上传50个关键词')
+      if(words.length>100){
+        Message.warning('每次最多支持上传100个关键词')
         return
       }
 
