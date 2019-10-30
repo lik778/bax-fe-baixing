@@ -97,6 +97,7 @@
           <el-input size="small" class="input" placeholder="添加关键词" v-model="queryWord"/>
           <el-button size="small" type="warning" class="button" @click="addKeyword('single')">添加</el-button>
           <el-button size="small" type="primary" class="button" @click="addKeyword">一键拓词</el-button>
+          <el-button size="small" type="primary" class="button" @click="addKeywordListDialog = true">批量添加</el-button>
           <strong>当前关键词数量: {{keywordLen}}个</strong>
         </header>
         <header class="top-col" style="margin-top:10px">
@@ -273,6 +274,9 @@
       @change="onChangeDuration"
       @hide="durationSelectorVisible = false">
     </duration-selector>
+    <qwt-add-keyword-list :show="addKeywordListDialog" :is-update-qwt="true" ref="qwtAddKeywordList"
+                          :promotion="currentPromotion" @update-keywords="updatePromotionKeywords">
+    </qwt-add-keyword-list>
   </div>
 </template>
 
@@ -296,6 +300,7 @@ import KeywordList from 'com/common/qwt-keyword-list'
 import AreaSelector from 'com/common/area-selector'
 import ContractAck from 'com/widget/contract-ack'
 import FmTip from 'com/widget/fm-tip'
+import qwtAddKeywordList from 'com/common/qwt-add-keyword-list'
 
 
 import { disabledDate } from 'util/element'
@@ -386,7 +391,8 @@ export default {
     AreaSelector,
     KeywordList,
     ContractAck,
-    FmTip
+    FmTip,
+    qwtAddKeywordList
   },
   fromMobx: {
     recommendedWords: () => store.recommendedWords,
@@ -452,7 +458,9 @@ export default {
       SEM_PLATFORM_SHENMA,
       SEM_PLATFORM_BAIDU,
       SEM_PLATFORM_SOGOU,
-      SEM_PLATFORM_QIHU
+      SEM_PLATFORM_QIHU,
+
+      addKeywordListDialog: false
     }
   },
   computed: {
@@ -532,6 +540,13 @@ export default {
       let keywords = newKeywords.concat(originKeywords)
       return keywords.filter(w => !deletedKeywords.map(i => i.id).includes(w.id)).length
     },
+    currentPromotion(){
+      let keywords = this.currentKeywords
+      return {
+        keywords,
+        campaignId: this.originPromotion.id
+      }
+    },
     checkCreativeBtnDisabled() {
       const data = this.getUpdatedCreativeData()
 
@@ -592,6 +607,26 @@ export default {
     }
   },
   methods: {
+    updatePromotionKeywords(kwAddResult){
+      this.addKeywordListDialog = false
+      if(!kwAddResult){
+        return
+      }
+      let { normalList, bannedList} = kwAddResult
+      const { actionTrackId, userInfo } = this
+      track({
+        roles: userInfo.roles.map(r => r.name).join(','),
+        action: 'click-button: add-keyword-list',
+        baixingId: userInfo.baixingId,
+        time: Date.now() / 1000 | 0,
+        baxId: userInfo.id,
+        actionTrackId,
+        keywords: JSON.stringify(normalList)
+      })
+      
+      this.promotion.newKeywords = normalList.concat(this.promotion.newKeywords)
+      this.$refs.qwtAddKeywordList.keywords = null
+    },
     async getCampaignWordsBySearchWord(){
       this.isSearchCondition = true
       let searchWord = this.searchWord
