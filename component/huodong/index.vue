@@ -59,7 +59,7 @@
         </div>
         <div class='content'>
           <div class='p-bg p-bg3'>
-            <p>活动3：官网限时买一送一</p>
+            <p>活动3：官网买一送一</p>
           </div>
           <div class='active part3 bg'>
               <p class='tit'><span>专业版官网买一年送一年</span>另搭配凤鸣/标王购买，官网大额减</p>
@@ -88,7 +88,7 @@
           <div class='active part4 bg'>
               <div>
                 <div class='row'>
-                  <span>活动时间：</span><h6>2019.11.1-2019.11.12</h6>
+                  <span>活动时间：</span><h6>2019.11.1 00:00-2019.11.12 23:59</h6>
                 </div>
                 <div class='row'>
                   <span>活动内容：</span>
@@ -96,7 +96,7 @@
                 </div>
                 <div class='row'>
                   <span>兑奖时间：</span>
-                  <h6>2019.11.7-2019.11.12</h6>
+                  <h6>2019.11.7 00:00-2019.11.12 23:59</h6>
                 </div>
                  <p class='contact'>（如有问题，请拨打客服热线咨询：400-036-3650）</p>
                  <img src="//file.baixing.net/201909/8f1b362f3c49bf911643eb5ff2eac313.png" alt="">
@@ -109,7 +109,7 @@
             <p>活动5：万元大奖等着你</p>
           </div>
           <div class='active part5 bg'>
-              <p class='tit'>11/7-11/12 期间，购买搜索通产品</p>
+              <p class='tit'>11/7 00:00-11/12 23:59 期间，购买搜索通产品</p>
               <p class='ps bolder'>（请前往【个人中心】-【我的站内通知】查看，如有问题请拨打客服热线咨询：400-036-3650）</p>
               <div class='f-flex p-20'>
                   <div class='item bg-one'>
@@ -146,7 +146,7 @@
             <div class="main">
               <div class="row">
                   <div class='yuan'><p class='num'>1</p></div>
-                  <p>活动时间：<strong class="color">10月25日-11月13日</strong></p>
+                  <p>活动时间：<strong class="color">10月25日 00:00-11月13日 23:59</strong></p>
               </div>
               <div class="row">
                   <div class='yuan'><p class='num'>2</p></div>
@@ -249,7 +249,7 @@ export default {
   background-color: #CC2F2F;
   & .banner {
     padding: 18.5% 50%;
-    background: url('//file.baixing.net/201910/7e7f99ceee308858c9b4d9ec8b43206d.png') top -18px center no-repeat;
+    background: url('//file.baixing.net/201910/08564455f30dec7128ceccf98f5d431a.png') top -18px center no-repeat;
     background-size: contain;
   }
   & .content{
