@@ -2,7 +2,7 @@
   <div class="huodong-btn" v-if="visible">
     <span class="hide-btn" @click="visible = false">&times;</span>
     <a :href="href" target="_blank">
-      <img src="http://file.baixing.net/201910/391757e0242319cda5caefa0ca64abea.png" alt="">
+      <img src="//file.baixing.net/201910/117b9ea9a3812b80e467f4dc14d9a766.png" alt="">
     </a>
   </div>
 </template>

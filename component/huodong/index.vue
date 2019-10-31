@@ -59,7 +59,7 @@
         </div>
         <div class='content'>
           <div class='p-bg p-bg3'>
-            <p>活动3：官网限时买一送一</p>
+            <p>活动3：官网买一送一</p>
           </div>
           <div class='active part3 bg'>
               <p class='tit'><span>专业版官网买一年送一年</span>另搭配凤鸣/标王购买，官网大额减</p>
@@ -146,7 +146,7 @@
             <div class="main">
               <div class="row">
                   <div class='yuan'><p class='num'>1</p></div>
-                  <p>活动时间：<strong class="color">10月25日-11月13日</strong></p>
+                  <p>活动时间：<strong class="color">10月25 零点-11月13日 23：59：59</strong></p>
               </div>
               <div class="row">
                   <div class='yuan'><p class='num'>2</p></div>
@@ -249,7 +249,7 @@ export default {
   background-color: #CC2F2F;
   & .banner {
     padding: 18.5% 50%;
-    background: url('//file.baixing.net/201910/7e7f99ceee308858c9b4d9ec8b43206d.png') top -18px center no-repeat;
+    background: url('http://file.baixing.net/201910/dfdd4532e391ef5f5d78e60ae04fd6ab.png') top -18px center no-repeat;
     background-size: contain;
   }
   & .content{
