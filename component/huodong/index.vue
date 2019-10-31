@@ -59,7 +59,7 @@
         </div>
         <div class='content'>
           <div class='p-bg p-bg3'>
-            <p>活动3：官网限时买一送一</p>
+            <p>活动3：官网买一送一</p>
           </div>
           <div class='active part3 bg'>
               <p class='tit'><span>专业版官网买一年送一年</span>另搭配凤鸣/标王购买，官网大额减</p>
