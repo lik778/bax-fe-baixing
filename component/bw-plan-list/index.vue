@@ -38,8 +38,11 @@
                 </el-tooltip>
             </template>
             <template slot-scope="scope">
-              <el-popover v-if="isRejected(scope.row.auditStatus)" :content="scope.row.auditRejectReason" placement="top" trigger="hover">
+              <el-popover v-if="isRejected(scope.row.auditStatus)" placement="top" trigger="hover">
                 <span slot="reference">{{auditStatusFormatter(scope.row.auditStatus)}}</span>
+                <div>{{scope.row.auditRejectReason}}
+                  <span class="audit-reject-review" @click="auditRejectReasonDialogVisible=true">查看常见驳回原因</span>
+                </div>
               </el-popover>
               <p v-else>{{auditStatusFormatter(scope.row.auditStatus)}}</p>
             </template>
@@ -77,6 +80,9 @@
           </el-form-item>
         </el-form>
       </el-dialog>
+      <audit-reject-reason-dialog :show="auditRejectReasonDialogVisible" 
+                                  @close="auditRejectReasonDialogVisible = false">
+      </audit-reject-reason-dialog>
     </div>
   </div>
 </template>
@@ -105,11 +111,13 @@
   } from 'util/role'
   import flatten from 'lodash.flatten'
   import {fmtCpcRanking} from 'util/campaign'
+  import auditRejectReasonDialog from 'com/common/audit-reject-reason-dialog'
 
   export default {
     name: 'bw-plan-list',
     components: {
       BaxPagination,
+      auditRejectReasonDialog
     },
     props: {
       allAreas: Array,
@@ -140,6 +148,7 @@
           days: [{required: true, message: '请选择购买天数'}],
         },
         xufeiDialogVisible: false,
+        auditRejectReasonDialogVisible: false
       }
     },
     computed: {
@@ -340,5 +349,9 @@ marquee {
   color: #C6A674;
   display: flex;
   align-items: center;
+}
+.audit-reject-review{
+  color: #FF6350;
+  cursor: pointer;
 }
 </style>
