@@ -93,11 +93,18 @@
       </section>
       <section class="keyword">
         <header class="top-col">
-          <span :class="canOptimize('keyword')">选取推广关键词</span>
+          <span :class="canOptimize('keyword')">添加推广关键词</span>
           <el-input size="small" class="input" placeholder="添加关键词" v-model="queryWord"/>
           <el-button size="small" type="warning" class="button" @click="addKeyword('single')">添加</el-button>
           <el-button size="small" type="primary" class="button" @click="addKeyword">一键拓词</el-button>
-          <strong>当前关键词数量: {{ currentKeywords.length }}个</strong>
+          <el-button size="small" type="primary" class="button" @click="addKeywordListDialog = true">批量添加</el-button>
+          <strong>当前关键词数量: {{keywordLen}}个</strong>
+        </header>
+        <header class="top-col" style="margin-top:10px">
+          <span :class="canOptimize('keyword')">搜索推广关键词</span>
+          <el-input size="small" class="input" placeholder="搜索推广关键词" v-model="searchWord"/>
+          <el-button size="small" type="warning" class="button" @click="getCampaignWordsBySearchWord">搜索</el-button>
+          <el-button size="small" type="primary" class="button" @click="getCampaignWordsDefault">取消</el-button>
         </header>
         <keyword-list
           mode="update"
@@ -267,6 +274,9 @@
       @change="onChangeDuration"
       @hide="durationSelectorVisible = false">
     </duration-selector>
+    <qwt-add-keyword-list :show="addKeywordListDialog" :is-update-qwt="true" ref="qwtAddKeywordList"
+                          :promotion="currentPromotion" @update-keywords="updatePromotionKeywords">
+    </qwt-add-keyword-list>
   </div>
 </template>
 
@@ -290,6 +300,7 @@ import KeywordList from 'com/common/qwt-keyword-list'
 import AreaSelector from 'com/common/area-selector'
 import ContractAck from 'com/widget/contract-ack'
 import FmTip from 'com/widget/fm-tip'
+import qwtAddKeywordList from 'com/common/qwt-add-keyword-list'
 
 
 import { disabledDate } from 'util/element'
@@ -380,7 +391,8 @@ export default {
     AreaSelector,
     KeywordList,
     ContractAck,
-    FmTip
+    FmTip,
+    qwtAddKeywordList
   },
   fromMobx: {
     recommendedWords: () => store.recommendedWords,
@@ -412,6 +424,9 @@ export default {
 
       isUpdating: false,
       queryWord: '',
+      searchWord: '',
+      isSearchCondition:false,
+      searchKeywords:[],
       // 注: 此处逻辑比较容易出错, 此处 定义为 undefined 与 getXXXdata 处 密切相关
       // 注: 需要密切关注 更新 数据 的获取
       promotion: {
@@ -443,7 +458,9 @@ export default {
       SEM_PLATFORM_SHENMA,
       SEM_PLATFORM_BAIDU,
       SEM_PLATFORM_SOGOU,
-      SEM_PLATFORM_QIHU
+      SEM_PLATFORM_QIHU,
+
+      addKeywordListDialog: false
     }
   },
   computed: {
@@ -490,11 +507,18 @@ export default {
         deletedKeywords,
         newKeywords
       } = this.promotion
+
       // 新增的keywords 加上原来的keywords
-      const keywords = newKeywords.map(word => ({
-        isNew: true,
-        ...word
-      })).concat(originKeywords)
+      let keywords =[];
+      if(this.isSearchCondition){
+        keywords = this.searchKeywords
+      } else {
+        keywords = newKeywords.map(word => ({
+          isNew: true,
+          ...word
+        })).concat(originKeywords)
+      }
+      
       return keywords
         .filter(w => !deletedKeywords.map(i => i.id).includes(w.id))
         .map(w => {
@@ -509,6 +533,19 @@ export default {
 
           return {...w}
         })
+    },
+    keywordLen() {
+      const { keywords: originKeywords } = this.originPromotion
+      const { newKeywords,deletedKeywords } = this.promotion
+      let keywords = newKeywords.concat(originKeywords)
+      return keywords.filter(w => !deletedKeywords.map(i => i.id).includes(w.id)).length
+    },
+    currentPromotion(){
+      let keywords = this.currentKeywords
+      return {
+        keywords,
+        campaignId: this.originPromotion.id
+      }
     },
     checkCreativeBtnDisabled() {
       const data = this.getUpdatedCreativeData()
@@ -570,6 +607,47 @@ export default {
     }
   },
   methods: {
+    updatePromotionKeywords(kwAddResult){
+      this.addKeywordListDialog = false
+      if(!kwAddResult){
+        return
+      }
+      let { normalList, bannedList} = kwAddResult
+      const { actionTrackId, userInfo } = this
+      track({
+        roles: userInfo.roles.map(r => r.name).join(','),
+        action: 'click-button: add-keyword-list',
+        baixingId: userInfo.baixingId,
+        time: Date.now() / 1000 | 0,
+        baxId: userInfo.id,
+        actionTrackId,
+        keywordsLen: normalList.length
+        // keywords: JSON.stringify(normalList)
+      })
+      
+      this.promotion.newKeywords = normalList.concat(this.promotion.newKeywords)
+      this.$refs.qwtAddKeywordList.keywords = null
+    },
+    async getCampaignWordsBySearchWord(){
+      this.isSearchCondition = true
+      let searchWord = this.searchWord
+      
+      // 获取到原有以及新增中的模糊匹配关键词
+      const { keywords : originKeywords} = this.originPromotion
+      const { newKeywords } = this.promotion
+      let keywords = newKeywords.map(word =>({
+         isNew:true,
+         ...word
+      })).concat(originKeywords)
+      
+      this.searchKeywords = keywords.filter(row => row.word.indexOf(searchWord)> -1)
+    },
+    async getCampaignWordsDefault(){
+      this.searchWord = ''
+      this.isSearchCondition = false
+      this.currentKeywordsOffset = 0
+      store.setOriginKeywords()
+    },
     handleCreativeValueChange({title, content}) {
       this.promotion.creativeTitle = title
       this.promotion.creativeContent = content
@@ -1053,6 +1131,9 @@ export default {
         .filter(w => !words.includes(w.word.toLowerCase()))
     },
     async addKeyword(type) {
+      // 先取消搜索关键词，设为原来的全量关键词
+      this.getCampaignWordsDefault()
+
       const { actionTrackId, userInfo, id } = this
       track({
         action: 'click-button: add-keyword',

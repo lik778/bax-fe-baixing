@@ -47,10 +47,8 @@
       <el-table-column>
         <template slot="header" slot-scope="col">
           {{maxPriceLabel}}<cpc-top-price-tip/>
-          <el-popover
-            placement="top"
-            v-model="popoverVisible"
-          >
+          <div style="display:block;padding-left:0">
+           <el-popover placement="top" v-model="popoverVisible">
             <div>
               <el-input placeholder="请输入关键词价格" v-model="keywordPrice" size="mini"></el-input>
               <div class="actions">
@@ -59,7 +57,8 @@
               </div>
             </div>
             <a href="javascript:;" slot="reference" class="pcice-action" @click="popoverVisible = true">批量改价</a>
-          </el-popover>
+           </el-popover>
+          </div>
         </template>
         <template slot-scope="s">
           <span class="price">
@@ -136,12 +135,13 @@ import { toFloat } from 'util/kit'
 
 const CpcTopPriceTip = Vue.extend({
   render(h) {
-    return renderColumnHeaderWithTip(cpcTopPriceTip)(h, {column: {}})
+    return renderColumnHeaderWithTip(cpcTopPriceTip)(h, 
+    {column: {},labelStyle:{display:'none'}, wrapClass:'display-inline'})
   }
 })
 const MODE_SELECT = 'select'
 const MODE_UPDATE = 'update'
-const LIMIT = 20
+const LIMIT = 10
 
 export default {
   name: 'qwt-keyword-list',
@@ -541,6 +541,12 @@ export default {
   & .el-button {
     margin-left: 6px;
   }
+}
+
+.display-inline{
+  display: inline-block !important;
+  vertical-align: middle !important;
+  line-height: 20px;
 }
 
 </style>
