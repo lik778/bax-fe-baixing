@@ -158,11 +158,11 @@ export default {
   methods: {
     ...RENDER_OPTIMIZATION_METHODS,
     isAuditReject(item){
-      let {status,detailStatusText} = item
-      const CNT_REJECTED_CODE = -53 // 审核驳回
+      let {status,detailStatusText,statusText} = item
+      const CNT_REJECTED_STR= '审核驳回' // 审核驳回
       const OFFLINE_CODE = -1
       const REJECTD_STR = '投放内容违规'
-      if(status === CNT_REJECTED_CODE){
+      if(statusText.trim()===CNT_REJECTED_STR){
         return true
       }
       if(status === OFFLINE_CODE && detailStatusText.indexOf(REJECTD_STR)> -1){
