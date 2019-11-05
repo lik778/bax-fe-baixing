@@ -41,8 +41,11 @@
               <td class="col2">
                 <span class="dot" :style="{backgroundColor: getColor(item.statusText)}" />
                 <span>{{item.statusText}}</span>
-                <el-tooltip effect="dark" placement="top"
-                  :content="item.detailStatusText">
+                <el-tooltip effect="dark" placement="top">
+                  <div slot="content">{{item.detailStatusText}}
+                    <div v-if="isAuditReject(item)" class="audit-reject-review"
+                     @click="auditRejectReasonDialogVisible=true">查看常见驳回原因</div>
+                  </div>
                   <i class="el-icon-info" />
                 </el-tooltip>
                 <a href="javascript:;" v-if="item.statusText === '账户余额不足'" @click="$router.push(`/main/qwt/charge`)">充值</a>
@@ -64,7 +67,7 @@
               <td class="col7">
                 <a
                   class="btn"
-                  href="javascript:;"
+                  href="javascript:;" 
                   @click="togglePromotionStatus(item, landingPage.id, landingPage.campaignIds, item.status === CAMPAIGN_STATUS_OFFLINE || item.auditStatus === KEYWORD_CHIBI_REJECT)"
                   :disabled="item.status === CAMPAIGN_STATUS_OFFLINE || item.auditStatus === KEYWORD_CHIBI_REJECT"
                 >
@@ -93,6 +96,9 @@
         </div>
       </div>
     </transition>
+     <audit-reject-reason-dialog :show="auditRejectReasonDialogVisible" 
+                                  @close="auditRejectReasonDialogVisible = false">
+      </audit-reject-reason-dialog>
   </div>
 </template>
 
@@ -108,6 +114,7 @@ import {
   KEYWORD_CHIBI_REJECT,
   CAMPAIGN_STATUS_OFFLINE
 } from 'constant/fengming'
+import auditRejectReasonDialog from 'com/common/audit-reject-reason-dialog'
 
 const LANGPAGE_TYPES = {
   AD: 0,
@@ -130,7 +137,8 @@ export default {
       CAMPAIGN_STATUS_OFFLINE,
 
       budgetMap: {},
-      expands: []
+      expands: [],
+      auditRejectReasonDialogVisible: false
     }
   },
   props: {
@@ -149,6 +157,19 @@ export default {
   },
   methods: {
     ...RENDER_OPTIMIZATION_METHODS,
+    isAuditReject(item){
+      let {status,detailStatusText,statusText} = item
+      const CNT_REJECTED_STR= '审核驳回' // 审核驳回
+      const OFFLINE_CODE = -1
+      const REJECTD_STR = '投放内容违规'
+      if(statusText.trim()===CNT_REJECTED_STR){
+        return true
+      }
+      if(status === OFFLINE_CODE && detailStatusText.indexOf(REJECTD_STR)> -1){
+        return true
+      }
+      return false
+    },
     reset(firstChild) {
       // 清除expands并且展开第一项
       this.expands = []
@@ -243,7 +264,10 @@ export default {
       return semPlatformCn[source]
     }
   },
-  components: {TopTip}
+  components: {
+    TopTip,
+    auditRejectReasonDialog
+  }
 }
 </script>
 
@@ -439,5 +463,10 @@ export default {
 
   table, th, td {
     border-collapse: collapse;
+  }
+  .audit-reject-review{
+    color: #15a4fa;
+    cursor: pointer;
+    margin-top: 6px;
   }
 </style>
