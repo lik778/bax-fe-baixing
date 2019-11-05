@@ -201,7 +201,8 @@ export default {
             return {
               ...p,
               name: '精品官网【标准版】',
-              price: 100000
+              price: 100000,
+              orderPackageId: 4
             }
           } else if (this.allowSeeYoucaigouSite && p.id === 5) {
             return {
@@ -212,7 +213,8 @@ export default {
             return {
               ...p,
               name: '精品官网【专业版】',
-              price: 150000
+              price: 150000,
+              orderPackageId: 5
             }
           }
           return p
@@ -375,6 +377,8 @@ export default {
         checkedProductId: id
       } = this
 
+      const checkedProduct = this.realProducts.find(product => product.id === id)
+
       if (!id) {
         return Message.error('请先选择产品')
       }
@@ -383,9 +387,9 @@ export default {
         userId: await this.getFinalUserId()
       }
 
-      if (id === 4 && this.isNiubiUser) {
+      if (checkedProduct.orderPackageId && this.isNiubiUser) {
         order.packages = [{
-          id: this.packages[0].id
+          id: checkedProduct.orderPackageId
         }]
       } else {
         order.products = [{
