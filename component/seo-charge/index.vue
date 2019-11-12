@@ -28,6 +28,7 @@
             </section>
             <div>
               <p class="discount-info" v-html="promotionDiscount"></p>
+              <p class="charge-info">新建首页宝自选词推广计划需2400元起；首页宝加速词包推广限时特惠3000元/季度，请充值足够的推广资金包，以保证计划顺利上线！</p>
             </div>
           </main>
 
@@ -45,6 +46,9 @@
                 @click.native="toggleProduct(product)"
               />
             </section>
+            <div>
+              <p class="charge-info">首页宝自选词推广的官网有效时长需6个月以上，如需进行首页宝自选词推广，请选择一年版精品官网；如需进行加速词包推广，可选择100天官网版本。</p>
+            </div>
           </main>
         </div>
       </section>
@@ -199,8 +203,22 @@ const allProducts = [
     productType: 3,
     editable: true,
     price: 0
-  }, {
+  }, 
+  {
     id: 5,
+    productType: PROFESSIONAL_SITE_PRODUCT_TYPE,
+    price: 600 * 100,
+    discountExecPriceFunc:[
+      'p >= 0 ? 30000 : false'
+    ],
+    isFixedPrice:true, //固定价格不参与满减
+    name: '精品官网：100天【专业版】',
+    productTime:'100天',
+    isPro: true,
+    isHot: false
+  },
+  {
+    id: 6,
     productType: PROFESSIONAL_SITE_PRODUCT_TYPE,
     price: 1800 * 100,
     discountExecPriceFunc: [
@@ -210,6 +228,7 @@ const allProducts = [
       'p >= 960000 ? 150000 : false'
     ],
     name: '精品官网一年送一年【专业版】',
+    productTime:'一年',
     isPro: true,
     isHot: true
   }
@@ -276,9 +295,10 @@ export default {
       const charge = this.checkedProducts.find(p => p.productType === 3)
       if (charge) {
         const siteProduct = this.fullCheckedProducts.find(({productType}) => productType === PROFESSIONAL_SITE_PRODUCT_TYPE)
+        let isFixedPrice = siteProduct && this.checkedProducts.find(product=>product.id===siteProduct.id).isFixedPrice
         const siteDiscountPrice = siteProduct && centToYuan(siteProduct.originalPrice - siteProduct.discountPrice)
 
-        return  siteDiscountPrice
+        return  (siteDiscountPrice && !isFixedPrice)
           ? `同时购买专业版精品官网（一年）立<span class="red">减</span> ${siteDiscountPrice} 元`
           : ''
       }
@@ -422,7 +442,13 @@ export default {
         this.orderPayUrl = `${orderServiceHost}/?appId=103&seq=${preTradeId}`
       }
     },
-    centToYuan
+    filterProductName({productType,productTime}){
+      if( productType !== PROFESSIONAL_SITE_PRODUCT_TYPE ){
+        return PRODUCT[productType]
+      }
+      return `${PRODUCT[productType]}【${productTime}】`
+    },
+    centToYuan,
   },
   watch: {
     checkedProducts: {
@@ -442,21 +468,31 @@ export default {
             return {
               id,
               productType,
-              name: PRODUCT[productType],
+              name: this.filterProductName(product),
               price: productType === PROFESSIONAL_SITE_PRODUCT_TYPE ? gwPrice : price,
               originalPrice: price,
               discountPrice: this.getDiscountPrice(productType, productType === PROFESSIONAL_SITE_PRODUCT_TYPE ? gwPrice : price)
             }
           })
-        } else {
+        } else{
           this.fullCheckedProducts = checked.map(product => {
-            const {id, productType, price} = product
+            let {id, productType, price:originalPrice} = product
+          
+            // 精品官网：100天固定价格不参与满减
+            let price = originalPrice
+            if( product.productType === PROFESSIONAL_SITE_PRODUCT_TYPE && product.isFixedPrice ){
+              const {discountExecPriceFunc} = product
+              let gwPrice = price - discountExecPriceFunc
+               .map(execStr => new Function('p', 'return ' + execStr)(0))
+               .find(res => res !== false)
+               price = gwPrice
+            }   
             return {
               id,
               productType,
-              name: PRODUCT[productType],
+              name: this.filterProductName(product),
               price: price,
-              originalPrice: price,
+              originalPrice: originalPrice,
               discountPrice: this.getDiscountPrice(productType, price)
             }
           })
@@ -813,5 +849,11 @@ export default {
   height: 1px;
   margin: 10px 0;
   background-color: #CFCFCF;
+}
+
+.charge-info{
+  color:#FF7533;
+  font-size: 12px;
+  margin-top: 10px;
 }
 </style>
