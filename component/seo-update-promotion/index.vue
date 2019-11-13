@@ -6,6 +6,7 @@
       <header>选择推广站点</header>
 
       <qiqiaoban-page-selector
+        :product-type="PRO_SITE_PRODUCT_TYPE"
         :value="promotion.landingPage"
         @change="v => promotion.landingPage = v"
         :disabled="true"
@@ -47,9 +48,10 @@
 </template>
 
 <script>
-import QiqiaobanPageSelector from 'com/common/qiqiaoban-page-selector'
 import ContractAck from 'com/widget/contract-ack'
+import {PRO_SITE_PRODUCT_TYPE} from 'constant/site'
 import {updatePromotion, queryPromotionByIds} from 'api/seo'
+import QiqiaobanPageSelector from 'com/common/qiqiaoban-page-selector'
 
 export default {
   components: {
@@ -58,6 +60,7 @@ export default {
   },
   data() {
     return {
+      PRO_SITE_PRODUCT_TYPE,
       inputKeyword: '',
       promotion: {}
     }

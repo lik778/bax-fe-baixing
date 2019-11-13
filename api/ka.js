@@ -16,10 +16,13 @@ export async function getUserSites(params) {
   return body.data
 }
 
-export async function getUserTicketCount(params = {status: 1}) {
+export async function getUserTicketCount(params = {}) {
   const body = await ka
     .get('/tickets')
-    .query(params)
+    .query({
+      ...params,
+      status: 1
+    })
     .json()
 
   return body.total

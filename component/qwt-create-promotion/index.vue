@@ -77,6 +77,8 @@
       <section class="keyword">
         <header>选取推广关键词</header>
         <p class="tip">建议选取20个以上关键词，关键词越多您的创意被展现的机会越多。根据当月数据，为您推荐如下关键词</p>
+        <el-button type="primary" style="margin-top:10px" size="small" 
+                   @click="addKeywordListDialog = true">批量添加关键词</el-button>
         <div class="kw-tag-container">
           <el-tag class="kw-tag" v-for="(kw, index) in newPromotion.keywords" :key="index" closable @close="removeKeyword(index)">{{kw.word}}</el-tag>
           <el-autocomplete
@@ -160,6 +162,11 @@
       :visible="chargeDialogVisible"
       @cancel="gotoPromotionList"
     />
+
+    <qwt-add-keyword-list :show="addKeywordListDialog" :is-update-qwt="false" ref="qwtAddKeywordList"
+                          :promotion="newPromotion" @update-keywords="updatePromotionKeywords">
+    </qwt-add-keyword-list>
+
   </div>
 </template>
 
@@ -183,6 +190,7 @@ import CpcPriceTip from 'com/widget/cpc-price-tip'
 import ContractAck from 'com/widget/contract-ack'
 import wxBindModal from 'com/common/wx-bind-modal'
 import FmTip from 'com/widget/fm-tip'
+import qwtAddKeywordList from 'com/common/qwt-add-keyword-list'
 
 import dayjs from 'dayjs'
 import track from 'util/track'
@@ -261,7 +269,8 @@ export default {
     ChargeDialog,
     ContractAck,
     CpcPriceTip,
-    FmTip
+    FmTip,
+    qwtAddKeywordList
   },
   fromMobx: {
     searchRecommends: () => store.searchRecommends,
@@ -303,7 +312,8 @@ export default {
       timeout: null,
 
       // PRE_IMG_PROMOTION: assetHost + 'promotion-advantage.png'
-      PRE_IMG_PROMOTION: 'http://file.baixing.net/201809/a995bf0f1707a3e98a2c82a5dc5f8ad3.png'
+      PRE_IMG_PROMOTION: 'http://file.baixing.net/201809/a995bf0f1707a3e98a2c82a5dc5f8ad3.png',
+      addKeywordListDialog:false
     }
   },
   computed: {
@@ -359,6 +369,29 @@ export default {
   },
   methods: {
     f2y,
+    updatePromotionKeywords(kwAddResult){
+      this.addKeywordListDialog = false
+
+      if(!kwAddResult){
+        return
+      }
+      let { normalList, bannedList} = kwAddResult
+      const { actionTrackId, userInfo } = this
+      track({
+        roles: userInfo.roles.map(r => r.name).join(','),
+        action: 'click-button: add-keyword-list',
+        baixingId: userInfo.baixingId,
+        time: Date.now() / 1000 | 0,
+        baxId: userInfo.id,
+        actionTrackId,
+        keywordsLen: normalList.length
+        // keywords: JSON.stringify(normalList)
+      })
+
+      let { keywords } = this.newPromotion
+      this.newPromotion.keywords = keywords.concat(normalList)
+      this.$refs.qwtAddKeywordList.keywords = null
+    },
     handleCreativeValueChange({title, content}) {
         this.newPromotion.creativeTitle = title
         this.newPromotion.creativeContent = content
@@ -378,7 +411,6 @@ export default {
         )
       }
     },
-
     selectRecommend(item) {
       const { keywords } = this.newPromotion
       if (keywords.find(kw => kw.word === item.word)) {

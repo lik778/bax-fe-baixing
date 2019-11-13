@@ -5,6 +5,7 @@ import qs from 'query-string'
 import {
   isPro
 } from 'config'
+import {isObj} from 'util'
 
 const isArray = Array.isArray
 
@@ -281,6 +282,22 @@ export async function recommendByWord(word, opts) {
   return words
 }
 
+export async function recommendByWordList(word, opts) {
+  const body = await fengming
+    .post('/keyword/recommand/word-list')
+    .send(reverseCamelcase({words:word, ...opts}))
+    .json()
+
+  let result = toCamelcase(body.data)
+  if(result && isObj(result)){
+    for(let key in result){
+      result[key] = fmtWords(toCamelcase(result[key]))
+    }
+  }
+  return result
+}
+
+
 export async function getChangeLogs(opts) {
   const body = await fengming
     .get('/balance/changelog')
@@ -406,12 +423,6 @@ export async function huodongLeads(opts) {
     .json()
 
   return body
-}
-
-export async function getServerTime() {
-  const r = await fengming.get('/product?product_types=3')
-  console.log(r.headers.get('date'))
-  return r.headers.get('date')
 }
 
 export async function changeCampaignKeywordsPrice(campaignId, price) {

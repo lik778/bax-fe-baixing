@@ -10,11 +10,11 @@
           1. 选择产品 | <span class="discount-btn" @click="showDiscount = !showDiscount">查看优惠细则<i class="el-icon-question"></i></span>
         </header>
         <div class="discount-section" v-show="showDiscount">
-          <p class="discount-info">满588元：<span class="red">赠</span>送十万火急 50 元现金券 <span class="mute">(满100元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（1年）官网<span class="red">减</span>立减 200 元；购买精品官网2年【送一年】官网<span class="red">减</span>立减 600 元</p>
-          <p class="discount-info">满1088元：<span class="red">赠</span>送十万火急 80 元现金券 <span class="mute">(满200元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（1年）官网<span class="red">减</span>立减 200 元；购买精品官网2年【送一年】官网<span class="red">减</span>立减 600 元</p>
-          <p class="discount-info">满3088元：<span class="red">赠</span>送十万火急 300 元现金券 <span class="mute">(满400元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（1年）官网<span class="red">减</span>立减 200 元；购买精品官网2年【送一年】官网<span class="red">减</span>立减 600 元</p>
-          <p class="discount-info">满5088元：<span class="red">赠</span>送十万火急 300 元现金券 <span class="mute">(满400元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（1年）官网<span class="red">减</span>立减 600 元；购买精品官网2年【送一年】官网<span class="red">减</span>立减 1200 元</p>
-          <p class="discount-info">满10188元：<span class="red">赠</span>送十万火急 300 元现金券 <span class="mute">(满400元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（1年）官网<span class="red">减</span>立减 1000 元；购买精品官网2年【送一年】官网<span class="red">减</span>立减 1400 元</p>
+          <p class="discount-info"
+            :key="index"
+            v-for="(html, index) in discountRenderHTML"
+            v-html="html"
+          />
         </div>
         <div class="charge">
           <header>选择充值推广资金包：</header>
@@ -37,6 +37,7 @@
             <section>
               <gw-pro-widget
                 v-for="(product, index) of allProducts.slice(6)" :key="index"
+                :is-pro="product.isPro"
                 :title="product.name"
                 :original-price="centToYuan(product.price)"
                 :price="gwPrice"
@@ -56,6 +57,7 @@
 
         <div class="price-list">
           <price-list
+            style="width: 666px;"
             :products="fullCheckedProducts"
             :has-discount="!!checkedProductDiscounts.length"
             :discount-infos="discountInfos"
@@ -271,7 +273,7 @@ const allProducts = [
       'p >= 508800 && p < 1018800 ? 60000 : false',
       'p >= 1018800 ? 100000 : false'
     ],
-    name: '精品官网一年',
+    name: '精品官网一年【标准版】',
     isHot: false
   }, {
     id: 9,
@@ -284,10 +286,47 @@ const allProducts = [
       'p >= 508800 && p < 1018800 ? 120000 : false',
       'p >= 1018800 ? 140000 : false'
     ],
-    name: '精品官网两年【送一年】',
+    name: '精品官网两年【送一年】'
+  }, {
+    id: 10,
+    productType: 6,
+    isPro: true,
+    price: 180000,
+    orderPrice: 180000,
+    discountExecPriceFunc: [
+      'p >= 0 && p < 58800 ? 0 : false',
+      'p >= 58800 && p < 508800 ? 60000 : false',
+      'p >= 508800 && p < 1018800 ? 90000 : false',
+      'p >= 1018800 ? 150000 : false'
+    ],
+    name: '精品官网一年送一年【专业版】',
     isHot: true
   }
 ]
+
+const isGwProduct = function(productType) {
+  return productType === 4 || productType === 6
+}
+
+const isChargeProduct = function(productType) {
+  return productType === 3
+}
+
+const discountInfo = [
+  [588, 20, 600, 80, 200, false],
+  [1088, 20, 600, 80, 200],
+  [3088, 88, 600, 300, 400],
+  [5088, 188, 900, 300, 400],
+  [10188, 500, 1500, 300, 400]
+]
+
+const discountRenderHTML = discountInfo.map(item => {
+  return item[item.length - 1] ? `<p class="discount-info">
+    满<span style="min-width: 40px;">${item[0]}</span>元：<span class="red">赠</span>送<span style="min-width: 30px;">${item[1]}</span>元站外推广资金 </span>
+    同时购买专业版精品官网一年送一年官网再<span class="red">减</span><span style="min-width: 30px;">${item[2]}</span> 元；
+    <span class="red">赠</span>送十万火急<span style="min-width: 30px;">${item[3]}</span>元现金券 (满 ${item[4]} 元可用，不限城市与类目，有效期30天)
+  </p>` : '充值更多，可享更多优惠！'
+})
 
 export default {
   name: 'qwt-charge',
@@ -302,10 +341,9 @@ export default {
     Coupon,
     Step
   },
-  fromMobx: {
+  fromMobx: { 
     usingConditions: () => store.usingConditions,
     allDiscounts: () => store.allDiscounts,
-    products: () => store.products,
     coupons: () => store.coupons
   },
   props: {
@@ -324,7 +362,9 @@ export default {
   },
   data() {
     return {
-      showDiscount: false,
+      discountRenderHTML,
+
+      showDiscount: true,
       actionTrackId: uuid(),
       currentStep: 2,
       allProducts,
@@ -348,48 +388,38 @@ export default {
   },
   computed: {
     gwPrice() {
-      const gw = this.fullCheckedProducts.find(p => p.productType === 4)
+      const gw = this.fullCheckedProducts.find(p => isGwProduct(p.productType))
       if (gw) {
         return centToYuan(gw.price)
       }
     },
     promotionDiscount() {
-      const charge = this.checkedProducts.find(p => p.productType === 3)
+      const charge = this.checkedProducts.find(p => isChargeProduct(p.productType))
       if (charge) {
-        const siteProductText = !!this.fullCheckedProducts.find(({id}) => id === 8)
-          ? '一年' : '两年【送一年】'
-        const siteProduct = this.fullCheckedProducts.find(({productType}) => productType === 4)
+        const siteProduct = this.fullCheckedProducts.find(({productType}) => isGwProduct(productType))
+        const siteProductText = siteProduct && siteProduct.desc.replace('精品官网', '')
         const siteDiscountPrice = siteProduct && centToYuan(siteProduct.originalPrice - siteProduct.discountPrice)
-        let huojiCouponContent = ''
-        if (charge.price < 58800) {
-          return '充值更多，可享更多优惠！'
-          } else if (charge.price < 108800) {
-            huojiCouponContent =  `
-              <span class="red">赠</span>送十万火急 50 元现金券 <span class="mute">(满100元可用，不限城市与类目，有效期30天)；</span>
-            `
-          } else if (charge.price < 308800) {
-            huojiCouponContent =  `
-              <span class="red">赠</span>送十万火急 80 元现金券 <span class="mute">(满200元可用，不限城市与类目，有效期30天)；</span>
-            `
-          } else {
-            huojiCouponContent =  `
-              <span class="red">赠</span>送十万火急 300 元现金券 <span class="mute">(满400元可用，不限城市与类目，有效期30天)；</span>
-            `
-          }
-          return huojiCouponContent + (siteDiscountPrice
-            ? `同时购买精品官网（${siteProductText}）立<span class="red">减</span> ${siteDiscountPrice} 元`
-            : '')
+
+        const fenToYuan = price => price * 100
+
+        const index = discountInfo.findIndex(([price], index, arr) => {
+          return charge.price >= fenToYuan(price) &&
+            charge.price < fenToYuan(arr[index + 1] ? arr[index + 1][0] : Number.MAX_SAFE_INTEGER / 1000)
+        })
+        return discountRenderHTML[index - 1 < 0 ? 0 : index]
+          .replace(/满(.*?)元：/, '')
+          .replace(/<span style="min-width.*?>(.*?)<\/span>/g, ' $1 ')
       }
       return ''
     },
     discountInfos() {
-      const charge = this.checkedProducts.find(p => p.productType === 3)
-      const gw = this.checkedProducts.find(p => p.productType === 4)
-      if (charge && !gw) {
-        return this.promotionDiscount.split('；').slice(0, 1)
-      } else if (charge && gw) {
-        return this.promotionDiscount.split('；')
-      }
+      const charge = this.checkedProducts.find(p => isChargeProduct(p.productType))
+      const gw = this.fullCheckedProducts.find(p => isGwProduct(p.productType))
+      const chargeDiscount = this.promotionDiscount
+        .replace(/<[^>]*>?/gm, '')
+        .replace(/ 同时.*?；/, '')
+        .replace(/\(.*\)/, '')
+      return [charge ? chargeDiscount : null, gw ? `同时购买${gw.name}价格立减 ${(gw.originalPrice - gw.discountPrice) / 100} 元` : null]
     },
     productSummary() {
       var a = this.checkedProducts.reduce((s, p) => {
@@ -521,16 +551,18 @@ export default {
     toggleProduct (product) {
       const index = this.checkedProducts.indexOf(product)
       if (index > -1) {
+        // 反选移除
         this.checkedProducts.splice(index, 1)
       } else {
-        const chargeProduct = this.checkedProducts.find(p => p.productType === 3)
-        const gwProduct = this.checkedProducts.find(p => p.productType === 4)
-        if (chargeProduct && product.productType === 3) {
+        const chargeProduct = this.checkedProducts.find(p => isChargeProduct(p.productType))
+        const gwProduct = this.checkedProducts.find(p => isGwProduct(p.productType))
+        if (chargeProduct && isChargeProduct(product.productType)) {
           const index = this.checkedProducts.indexOf(chargeProduct)
           this.checkedProducts.splice(index, 1)
         }
-        if (gwProduct && product.productType === 4) {
-          this.checkedProducts = this.checkedProducts.filter(({productType}) => productType !== 4)
+        if (gwProduct && isGwProduct(product.productType)) {
+          const index = this.checkedProducts.indexOf(gwProduct)
+          this.checkedProducts.splice(index, 1)
         }
         this.checkedProducts.push(product)
       }
@@ -563,18 +595,17 @@ export default {
       this.empty()
       //  目前只有这一个角色可以用券
       //  FIX: 修复页面加载后没有优惠券信息 使用$watch去监听 bxUser 变化并触发coupon 更新
-      this.unBxUserWatch = this.$watch(
+      this.disposeBxUserWatch = this.$watch(
         () => this.isBxUser,
         async isBxUser => {
           if (isBxUser) {
             await store.getConditions()
             await store.getCoupons({ onlyValid: true, status: 0 })
-            this.unBxUserWatch()
+            this.disposeBxUserWatch()
           }
       }, {immediate: true})
       await Promise.all([
-        store.getProductDiscounts([3, 4]), // 充值／新官网
-        store.getProducts([3,4])
+        store.getProductDiscounts([3, 4, 6]), // 充值／新官网
       ])
     },
     getDiscountPrice(productType, price) {
@@ -688,7 +719,7 @@ export default {
         return Message.error('请选择购买的产品 ~')
       }
 
-      const chargeProduct = this.checkedProducts.find(p => p.productType === 3)
+      const chargeProduct = this.checkedProducts.find(p => isChargeProduct(p.productType))
       if (chargeProduct && chargeProduct.price < 500 * 100) {
         return Message.error('最低充值金额500元')
       }
@@ -797,8 +828,8 @@ export default {
     checkedProducts: {
       deep: true,
       handler: function (checked) {
-        const charge = checked.find(p => p.productType === 3)
-        const gw = checked.find(p => p.productType === 4)
+        const charge = checked.find(p => isChargeProduct(p.productType))
+        const gw = checked.find(p => isGwProduct(p.productType))
 
         if (charge && gw) {
           let gwPrice = gw.price
@@ -807,23 +838,25 @@ export default {
             .map(execStr => new Function('p', 'return ' + execStr)(charge.price))
             .find(res => res !== false)
           this.fullCheckedProducts = checked.map(product => {
-            const {id, productType, price, orderPrice} = product
+            const {id, productType, price, orderPrice, name} = product
             return {
               id,
               productType,
+              desc: name,
               name: PRODUCT[productType],
-              price: productType === 4 ? gwPrice : price,
+              price: isGwProduct(productType) ? gwPrice : price,
               originalPrice: price,
               orderPrice: orderPrice || price,
-              discountPrice: this.getDiscountPrice(productType, productType === 4 ? gwPrice : price)
+              discountPrice: this.getDiscountPrice(productType, isGwProduct(productType) ? gwPrice : price)
             }
           })
         } else {
           this.fullCheckedProducts = checked.map(product => {
-            const {id, productType, price, orderPrice} = product
+            const {id, productType, price, orderPrice, name} = product
             return {
               id,
               productType,
+              desc: name,
               name: PRODUCT[productType],
               price: price,
               originalPrice: price,
@@ -898,6 +931,9 @@ export default {
 .discount-info {
   font-size: 12px;
   margin-bottom: 10px;
+  & > span {
+    text-align: center;
+  }
 
   &>span.red {
     background-color: #ff3c3c;
@@ -906,8 +942,8 @@ export default {
     margin: 0 5px;
     border-radius: 2px;
   }
-  &>span.mute {
-    color: #949292;
+  & > .mute {
+    color: #fff;
   }
 }
 </style>
@@ -931,6 +967,10 @@ export default {
   background-color: #f5f5f5;
   padding: 20px;
   margin-top: 10px;
+  color: #fff;
+  width: 1200px;
+  border-radius: 12px;
+  background: url('http://file.baixing.net/201910/e20912789e2c8ca4cb96739f972dc2ab.png');
 }
 
 .qwt-charge {
@@ -1002,7 +1042,7 @@ export default {
 
   & > .coupon {
     margin-top: 20px;
-    width: 610px;
+    width: 666px;
     padding: 15px 10px 20px;
     border: solid 1px #e6e6e6;
 
@@ -1035,7 +1075,7 @@ export default {
     align-items: flex-end;
     justify-content: center;
     margin-top: 30px;
-    width: 610px;
+    width: 666px;
     padding-right: 35px;
     padding-bottom: 34px;
     border-bottom: solid 1px #e6e6e6;
@@ -1125,7 +1165,25 @@ export default {
 }
 
 .qwt-pro-widget {
+  position: relative;
   margin: 0 30px 20px 0;
+  & + .qwt-pro-widget {
+    &:after {
+      content: '';
+      position: absolute;
+      top: -5px;
+      height: 26px;
+      left: 0;
+      right: 0;
+      background: url('http://file.baixing.net/201910/dff37305d9ffa01949d55a01cc7dad87.png') center no-repeat;
+      background-size: 83px 26px;
+    }
+  }
+  &:nth-last-child(1) {
+    &:after {
+      display: none;
+    }
+  }
 }
 
 .tip {
