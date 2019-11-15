@@ -2,7 +2,7 @@
   <div :class="{'gw-pro-widget': true, checked}"
     @click="onClick">
     <div class="hot-flag" v-if="isHot">
-      <!-- <section>
+      <section>
         <main>
           热卖
         </main>
@@ -11,8 +11,7 @@
             <polygon points="0,0 44,0 22,12"/>
           </svg>
         </footer>
-      </section> -->
-      <img src="http://file.baixing.net/201910/04254536456b9a4cba2e0dc239dbcd79.png" width="69" height="33" alt="爆款">
+      </section>
     </div>
     <header>
       {{ title }}
@@ -129,8 +128,8 @@ export default {
   position: relative;
   width: 0;
   height: 0;
-  top: -9px;
-  left: 186px;
+  top: -4px;
+  left: 206px;
 
   & > section {
     width: 44px;
