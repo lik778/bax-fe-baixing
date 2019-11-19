@@ -464,7 +464,7 @@ export default {
     },
 
     trackPromotionKeywords(promotionIds, promotion) {
-      const FHYF_SPECIAL_SOURCE = 'tfidf_vector'
+      const FHYF_SPECIAL_SOURCE = 'tfidf_fh'
       // 凤凰于飞推荐词列表
       const recommendKeywords = this.urlRecommends
         .filter(({recommandSource}) => recommandSource === FHYF_SPECIAL_SOURCE)
