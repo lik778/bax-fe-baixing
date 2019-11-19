@@ -258,3 +258,33 @@ const app = new Vue({
 })
 
 app.$mount('#bax')
+
+const currentTimestamp = +(function getServerDate() {
+  const xhr = new window.XMLHttpRequest()
+
+  xhr.open('GET', '/', false)
+  xhr.send(null)
+  const date = xhr.getResponseHeader('Date')
+  return new Date(date)
+})()
+if (+new Date('2019-11-20 23:55:00') <= currentTimestamp &&
+  +new Date('2019-11-21 5:00:00') >= currentTimestamp) {
+  document.addEventListener('DOMContentLoaded', function() {
+    const container = document.createElement('div')
+    container.innerHTML = '系统正在维护中...<br>给您带来不便，请谅解！'
+    container.style = `
+      position: fixed;
+      text-align: center;
+      font-size: 36px;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0, 0, 0, .8);
+      padding-top: 250px;
+      color: #fff;
+      z-index: 102400;
+    `
+    document.body.appendChild(container)
+  })
+}
