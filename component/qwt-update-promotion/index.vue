@@ -1008,6 +1008,11 @@ export default {
 
       const words = [...updatedKeywords, ...newKeywords]
 
+
+      if (words.length < 20) {
+        return Message.error('请至少添加20个投放关键词')
+      }
+
       for (const w of words) {
         // if (w.price * 2 < w.originPrice) {
         //   return Message.error(`关键字: ${w.word} 出价低于 ${(w.originPrice / 200).toFixed(2)}, 请调高出价`)

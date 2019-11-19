@@ -76,7 +76,7 @@
 
       <section class="keyword">
         <header>选取推广关键词</header>
-        <p class="tip">建议选取20个以上关键词，关键词越多您的创意被展现的机会越多。根据当月数据，为您推荐如下关键词</p>
+        <p class="tip">请选取20个以上关键词，关键词越多您的创意被展现的机会越多。根据当月数据，为您推荐如下关键词</p>
         <el-button type="primary" style="margin-top:10px" size="small" 
                    @click="addKeywordListDialog = true">批量添加关键词</el-button>
         <div class="kw-tag-container">
@@ -548,6 +548,17 @@ export default {
       if (!p.keywords.length) {
         return Message.error('请填写关键字')
       }
+
+      if (p.keywords.length < 20) {
+        return Message.error('请至少添加20个投放关键词')
+      }
+
+      // 这个应该是个雷！
+      // for (const w of p.keywords) {
+      //   if (w.price < MIN_WORD_PRICE || w.price > MAX_WORD_PRICE) {
+      //     return Message.error(keywordPriceTip)
+      //   }
+      // }
 
       if (!p.areas.length) {
         return Message.error('请选择投放区域')
