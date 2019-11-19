@@ -1,6 +1,7 @@
 
-import { stringify } from 'query-string'
 import uuid from 'uuid/v4'
+import { stringify } from 'query-string'
+import { reverseCamelcase } from 'object-keys-mapping'
 
 import { isPro } from 'config'
 
@@ -31,4 +32,14 @@ export default function track(opts) {
   } catch (err) {
     console.error(err)
   }
+}
+
+// 打点库标准化 （暂时只用作凤凰于飞）
+export function trackAux({action, ...opts}) {
+  if (!action) return false
+  const tracker = window.tracker
+  opts.site_id = 'bxad_baxfe'
+  opts.platform = 'desktop'
+  opts.env = isPro ? 'pro' : 'test'
+  tracker.aux(action, reverseCamelcase(opts))
 }
