@@ -267,8 +267,9 @@ const currentTimestamp = +(function getServerDate() {
   const date = xhr.getResponseHeader('Date')
   return new Date(date)
 })()
-if (+new Date('2019-11-20 23:55:00') <= currentTimestamp &&
-  +new Date('2019-11-21 5:00:00') >= currentTimestamp) {
+if (+new Date('2019-11-20 22:55:00') <= currentTimestamp &&
+  +new Date('2019-11-21 5:00:00') >= currentTimestamp &&
+  !window.localStorage.getItem('wznb')) {
   document.addEventListener('DOMContentLoaded', function() {
     const container = document.createElement('div')
     container.innerHTML = '系统正在维护中...<br>给您带来不便，请谅解！'
