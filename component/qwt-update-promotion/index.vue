@@ -999,7 +999,7 @@ export default {
       const {
         updatedKeywords = [],
         newKeywords = [],
-        deletedKeywords,
+        deletedKeywords = [],
 
         creativeContent,
         creativeTitle,
