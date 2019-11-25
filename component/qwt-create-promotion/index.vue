@@ -76,7 +76,7 @@
 
       <section class="keyword">
         <header>选取推广关键词</header>
-        <p class="tip">建议选取20个以上关键词，关键词越多您的创意被展现的机会越多。根据当月数据，为您推荐如下关键词</p>
+        <p class="tip">请选取20个以上关键词，关键词越多您的创意被展现的机会越多。根据当月数据，为您推荐如下关键词</p>
         <el-button type="primary" style="margin-top:10px" size="small" 
                    @click="addKeywordListDialog = true">批量添加关键词</el-button>
         <div class="kw-tag-container">
@@ -193,7 +193,7 @@ import FmTip from 'com/widget/fm-tip'
 import qwtAddKeywordList from 'com/common/qwt-add-keyword-list'
 
 import dayjs from 'dayjs'
-import track from 'util/track'
+import { default as track, trackAux } from 'util/track'
 
 import {
   assetHost
@@ -463,32 +463,34 @@ export default {
       this.newPromotion.creativeContent = ad.content && ad.content.slice(0, 39)
     },
 
-    trackPromotionKeywords(promotionIds) {
-      const recommendKeywordsList = this.urlRecommends
-      const allKeywordsList = clone(this.newPromotion.keywords)
-      const systemKeywordsList = []
-      const uesrKeywordsList = []
-      const dailyBudget = this.newPromotion.dailyBudget / 100
-      const date = dayjs().format('YYYY-MM-DD')
-      allKeywordsList.forEach( ({ id }) => {
-        // 表示当前关键字在系统创建的关键字数组中
-        if(recommendKeywordsList.some(item => item.id === id)) {
-          systemKeywordsList.push(id)
-        } else {
-          uesrKeywordsList.push(id)
-        }
-      })
+    trackPromotionKeywords(promotionIds, promotion) {
+      const FHYF_SPECIAL_SOURCE = 'tfidf_fh'
+      // 凤凰于飞推荐词列表
+      const recommendKeywords = this.urlRecommends
+        .filter(({recommandSource}) => recommandSource === FHYF_SPECIAL_SOURCE)
+        .map(({word}) => word)
+        .join(',')
+      
+      const selectedKeywords = promotion.keywords
+        .map(({word, recommandSource = 'user_selected'}) => `${word}=${recommandSource}`)
+        .join(',')
+      
+      const dailyBudget = promotion.dailyBudget / 100
+      const landingPage = promotion.landingPage
 
-      promotionIds.forEach(id => {
-        track({
-          action: 'record-keywords',
-          promotionId: id,
-          allKeywords: allKeywordsList.length,
-          systemKeywords: systemKeywordsList.length,
-          uesrKeywords: uesrKeywordsList.length,
-          dailyBudget,
-          date
-        })
+      trackAux({
+        action: 'record-keywords',
+
+        ids: promotionIds.join(','),
+        areas: promotion.areas.join(','),
+        landingPage: promotion.landingPage,
+        creativeTitle: promotion.creativeTitle,
+        creativeContent: promotion.creativeContent,
+        sources: promotion.sources.join(','),
+        selectedKeywords,
+        recommendKeywords,
+        dailyBudget,
+        keywordPrice: f2y(this.kwPrice) || f2y(this.recommendKwPrice)
       })
     },
 
@@ -501,6 +503,8 @@ export default {
 
       const { actionTrackId, userInfo } = this
 
+      const promotion = clone(this.newPromotion)
+
       track({
         roles: userInfo.roles.map(r => r.name).join(','),
         action: 'click-button: create-campaign',
@@ -511,16 +515,14 @@ export default {
       })
 
       try {
-        await this._createPromotion()
+        await this._createPromotion(promotion)
       } finally {
         this.isCreating = false
       }
     },
 
-    async _createPromotion() {
+    async _createPromotion(p) {
       const { currentBalance, allAreas } = this
-
-      const p = clone(this.newPromotion)
 
       if (!p.sources.length) return Message.error('请选择投放渠道')
 
@@ -547,6 +549,10 @@ export default {
         return Message.error('请填写关键字')
       }
 
+      if (p.keywords.length < 20) {
+        return Message.error('请至少添加20个投放关键词')
+      }
+
       // 这个应该是个雷！
       // for (const w of p.keywords) {
       //   if (w.price < MIN_WORD_PRICE || w.price > MAX_WORD_PRICE) {
@@ -571,9 +577,9 @@ export default {
           kw.price = this.recommendKwPrice
         })
       }
-
       const promotionIds = await createCampaign(fmtAreasInQwt(p, allAreas))
-      this.trackPromotionKeywords(promotionIds)
+      // 凤凰于飞打点
+      this.trackPromotionKeywords(promotionIds, p)
 
       Message.success('创建成功')
 

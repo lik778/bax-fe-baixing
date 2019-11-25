@@ -1,4 +1,6 @@
 
+import '../lib/trackerlib'
+
 import Homepage from 'com/homepage'
 import Bax from 'com/bax'
 
@@ -51,6 +53,11 @@ import Movue from 'movue'
 import Vue from 'vue'
 
 import Vue2Filters from 'vue2-filters'
+
+// track common data
+window.__trackerData = {
+  common: {}
+}
 
 Vue.use(Movue, { reaction })
 Vue.use(VueClipboard)
