@@ -44,7 +44,7 @@
         <p>您已选择<span class="warning">{{promotion.keywords.length}}</span>个自选词，将创建<span class="warning">{{promotion.keywords.length}}</span>个推广计划。</p>
         <p>根据您所选择的关键词个数，预扣款<span class="warning">{{promotion.keywords.length * 600}}</span>元，预计可推广<span class="warning">2个月</span>（60天），到期将自动续费，为保证您的站点持续展现，请保持首页宝排名资金充足。</p>
       </div>
-      <contract-ack type="content-rule" />
+      <contract-ack type="content-rule" ref="contract"/>
       <el-button class="submit" type="primary" @click="onCreateClick">创建推广</el-button>
 
     </section>
@@ -94,6 +94,9 @@ export default {
       }
     },
     onCreateClick() {
+      if (!this.$refs.contract.$data.isAgreement) {
+        return this.$message.error('请阅读并勾选同意服务协议，再进行下一步操作')
+      }
       if (!this.promotion.landingPage) {
         return this.$message.error('请选择落地页')
       }

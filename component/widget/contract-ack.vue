@@ -1,7 +1,7 @@
 <template>
   <h4 class="main">
-    <el-checkbox :value="true" />
-    <label>我已阅读并同意遵守</label>
+    <el-checkbox v-model="isAgreement" />
+    <label @click="() =>isAgreement = !isAgreement">我已阅读并同意遵守</label>
     <a v-if="type === 'contract'"
       v-bind:href="assetHost + 'new-baixing-sst-contract.pdf'"
       download="百姓网搜索通合作协议.pdf">
@@ -29,7 +29,8 @@ export default {
   },
   data() {
     return {
-      assetHost
+      assetHost,
+      isAgreement: false
     }
   }
 }
