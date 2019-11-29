@@ -466,10 +466,16 @@ export default {
     trackPromotionKeywords(promotionIds, promotion) {
       const FHYF_SPECIAL_SOURCE = 'tfidf_fh'
       // 凤凰于飞推荐词列表
-      const recommendKeywords = this.urlRecommends
+      const recommendKeywordsStr = this.urlRecommends
         .filter(({recommandSource}) => recommandSource === FHYF_SPECIAL_SOURCE)
         .map(({word}) => word)
         .join(',')
+
+      const recommendKeywordsList = []
+      const MAX_ATTR_LENGHT = 400
+      for (let index = 0; index * MAX_ATTR_LENGHT <= recommendKeywordsStr.length; index++) {
+        recommendKeywordsList.push(recommendKeywordsStr.slice(index * MAX_ATTR_LENGHT, (index + 1) * MAX_ATTR_LENGHT))
+      }
       
       const selectedKeywords = promotion.keywords
         .map(({word, recommandSource = 'user_selected'}) => `${word}=${recommandSource}`)
@@ -478,19 +484,21 @@ export default {
       const dailyBudget = promotion.dailyBudget / 100
       const landingPage = promotion.landingPage
 
-      trackAux({
-        action: 'record-keywords',
+      recommendKeywordsList.forEach(recommendKeywords => {
+        trackAux({
+          action: 'record-keywords',
 
-        ids: promotionIds.join(','),
-        areas: promotion.areas.join(','),
-        landingPage: promotion.landingPage,
-        creativeTitle: promotion.creativeTitle,
-        creativeContent: promotion.creativeContent,
-        sources: promotion.sources.join(','),
-        selectedKeywords,
-        recommendKeywords,
-        dailyBudget,
-        keywordPrice: f2y(this.kwPrice) || f2y(this.recommendKwPrice)
+          ids: promotionIds.join(','),
+          areas: promotion.areas.join(','),
+          landingPage: promotion.landingPage,
+          creativeTitle: promotion.creativeTitle,
+          creativeContent: promotion.creativeContent,
+          sources: promotion.sources.join(','),
+          selectedKeywords,
+          recommendKeywords,
+          dailyBudget,
+          keywordPrice: f2y(this.kwPrice) || f2y(this.recommendKwPrice)
+        })
       })
     },
 
