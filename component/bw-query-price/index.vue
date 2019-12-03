@@ -8,7 +8,7 @@
           <p v-for="(item, index) in discountInfo" :key="index">
             <strong class="name">{{item[0]}}</strong>：
             <span v-html="item[1].replace(/&%(.*?)&%/g, `<strong class='gold'>$1</strong>`)"></span>，
-            同时购买专业版精品官网1年送1年+ 官网再<i class="red">减</i> {{item[2]}} 元
+            同时购买专业版精品官网一年送半年+ 官网再<i class="red">减</i> {{item[2]}} 元
           </p>
         </div>
         <el-form :model="form" :rules="rules" label-width="120px" ref="form" label-position="left" class="form" @submit.native.prevent>
