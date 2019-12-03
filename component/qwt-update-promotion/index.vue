@@ -999,6 +999,7 @@ export default {
       const {
         updatedKeywords = [],
         newKeywords = [],
+        deletedKeywords = [],
 
         creativeContent,
         creativeTitle,
@@ -1007,6 +1008,12 @@ export default {
 
 
       const words = [...updatedKeywords, ...newKeywords]
+
+      // 关键词触发增删改都需要进行词数校验
+      if ((words.length || deletedKeywords.length)
+        && this.keywordLen < 20) {
+        return Message.error('请至少添加20个投放关键词')
+      }
 
       for (const w of words) {
         // if (w.price * 2 < w.originPrice) {

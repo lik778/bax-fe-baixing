@@ -47,6 +47,6 @@ prod-deploy:
   only:
     - master
   tags:
-    - k8s-prod
+    - aliyun-prod-deploy
   script:
     - kubectl set image -n adtech deployments --selector app=bax-fe *=$BAX_FE_REF
