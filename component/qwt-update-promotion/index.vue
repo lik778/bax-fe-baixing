@@ -246,7 +246,7 @@
           </section>
         </section>
 
-        <contract-ack type="content-rule"></contract-ack>
+        <contract-ack type="content-rule" ref="contract"></contract-ack>
         <div>
           <el-button v-if="false" type="primary">
             先去充值
@@ -947,6 +947,9 @@ export default {
       return data
     },
     async updatePromotion() {
+      if (!this.$refs.contract.$data.isAgreement) {
+        return this.$message.error('请阅读并勾选同意服务协议，再进行下一步操作')
+      }
       this.banLandPageSelected()
       if (this.isUpdating) {
         return Message.warning('正在更新中, 请稍等一会儿 ~')

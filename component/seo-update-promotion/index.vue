@@ -40,7 +40,7 @@
       <div>
         <p>您已选择1个自选词，将创建1个推广计划。</p>
       </div>
-      <contract-ack type="content-rule" />
+      <contract-ack type="content-rule" ref="contract"/>
       <el-button class="submit" type="primary" @click="onUpdateClick">更新推广</el-button>
 
     </section>
@@ -74,6 +74,9 @@ export default {
       }
     },
     onUpdateClick() {
+      if (!this.$refs.contract.$data.isAgreement) {
+        return this.$message.error('请阅读并勾选同意服务协议，再进行下一步操作')
+      }
       if (!this.inputKeyword) {
         return this.$message.error('请选取关键词')
       }
