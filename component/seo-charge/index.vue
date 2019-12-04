@@ -402,6 +402,7 @@ export default {
       await payOrders(oids)
     },
     async createPreOrder() {
+      return this.$message.error('系统紧急维护中，暂时不可购买，请稍后再试。')
       if (!this.$refs.contract.$data.isAgreement) {
         return this.$message.error('请阅读并勾选同意服务协议，再进行下一步操作')
       }
