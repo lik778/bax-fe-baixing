@@ -7,8 +7,12 @@
         <div class="notice">
           <p v-for="(item, index) in discountInfo" :key="index">
             <strong class="name">{{item[0]}}</strong>：
-            <span v-html="item[1].replace(/&%(.*?)&%/g, `<strong class='gold'>$1</strong>`)"></span>，
-            同时购买专业版精品官网一年送半年+ 官网再<i class="red">减</i> {{item[2]}} 元
+            <span v-html="item[1].replace(/&%(.*?)&%/g, `<strong class='gold'>$1</strong>`)"></span>,
+            <i class="red">加</i>{{item[2]}}元即可获得1.5年价值2700元专业版官网
+            <template v-if="item.length > 4">
+              ; <span v-html="item[3].replace(/&%(.*?)&%/g, `<strong class='gold'>$1</strong>`)"></span>,
+              <i class="red">加</i>{{item[4]}}元即可获得1.5年价值2700元专业版官网
+            </template>
           </p>
         </div>
         <el-form :model="form" :rules="rules" label-width="120px" ref="form" label-position="left" class="form" @submit.native.prevent>
@@ -85,10 +89,9 @@
   } from 'util'
 
   const discountInfo = [
-    ['标王欢乐套餐', '&%500元关键词买一送一&%', '600'],
-    ['标王惊喜套餐', '&%买1500送1500&%', '600'],
+    ['标王惊喜套餐', '&%买1500送1500&%', '1200'],
     ['标王狂欢套餐', '&%买3000送3000&%', '900'],
-    ['标王大单折扣', '标王单笔订单超过6000元享&%85&%折（>6000元）；超10000元享&%8&%折 （≥1万元）', '1500']
+    ['标王大单折扣', '标王单笔订单超过6000元享&%8.5&%折（>6000元)','900','超10000元享&%8&%折 （≥1万元）','300']
   ]
 
   export default {
