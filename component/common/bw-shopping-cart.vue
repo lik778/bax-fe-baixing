@@ -95,9 +95,9 @@
     {
       id: 3,
       shopType: 2,
-      shopOrderAmount: 1,
+      shopOrderAmount: 1.5,
       originalPrice: 180000,
-      name: '精品官网专业版一年（可用于首页宝推广）',
+      name: '精品官网专业版一年送半年（可用于首页宝推广）',
       price: 0,
       discountExecPriceFunc: [
         'p >= 0 && p < 50000 ? 0 : false',
@@ -185,8 +185,7 @@
         const {salesId, userId} = salesInfo
         let createOrderArgs = [localItems, userId, salesId]
         if (gwSelected.length) {
-          const { shopOrderAmount: oriShopOrderAmount, shopType } = siteProducts.find(({id}) => id === gwSelected[0])
-          const shopOrderAmount =  shopType === 2 ? oriShopOrderAmount * 2 : oriShopOrderAmount
+          const { shopOrderAmount, shopType } = siteProducts.find(({id}) => id === gwSelected[0])
           createOrderArgs = createOrderArgs.concat([true, shopOrderAmount, shopType])
         } else {
           // 不搭售官网 saleWithShopOrder false

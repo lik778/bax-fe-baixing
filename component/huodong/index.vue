@@ -4,78 +4,51 @@
         <div class="banner"></div>
         <div class='content'>
           <div class='p-bg p-bg1'>
-            <p>活动1：凤鸣买就送</p>
+            <p>惊喜1：凤鸣满送+线索独享权益</p>
           </div>
           <div class='active part1 bg'>
-              <p class='tit'>购买凤鸣产品买就送&nbsp;(站外推广)</p>
+              <p class='tit'>购买凤鸣产品送无门槛凤鸣资金，多买多送</p>
               <div class='f-flex' style="padding:0 33px;">
-                  <div v-for="(item,index) in partOneList" :key="index">
-                    <div><img :src="item" alt="" class='partOneImg'/></div>
+                  <div v-for="(item,index) in partOneList.slice(0, 3)" :key="index">
+                    <img :src="item" alt="" class='partOneImg'/>
                   </div>
+              </div>
+              <p class='tit'>购买凤鸣产品（站外推广）5088及以上，赠送百度拨打按钮</p>
+              <div class="bottom">
+                <div v-for="(item, index) in partOneList.slice(3)" :key="index">
+                  <img :src="item" alt="" width="100%" height="100%"/>
+                </div>
+                <div class="last">
+                  <h5>3种样式随机展示</h5>
+                  <h6>更多规则详情，请咨询专属销售</h6> 
+                </div>
               </div>
           </div>
           <button class='btn' @click="goTo('http://bax.baixing.com.cn/main/qwt/charge')">点此立即购买</button>
         </div>
         <div class='content'>
           <div class='p-bg p-bg2'>
-            <p>活动2：标王买多少送多少</p>
+            <p>惊喜2：标王尖叫爆卖</p>
           </div>
           <div class='active part2 bg'>
-              <p class='tit'>四种火爆套餐任你选</p>
-              <p class='ps bolder'>（注：标王欢乐/惊喜/狂欢套餐：仅限30天关键词参加，不限关键词价格，每个客户仅限购买一次；</p>
+              <p class='ps bolder'>（注：标王惊喜/狂欢套餐：仅限30天关键词参加，不限关键词价格，每个客户仅限购买一次；</p>
               <p class='ps bolder'>标王大单折扣：30天、90天的关键词都可参加）</p>
-              <div class='f-flex-column' style='margin:0 5px;'>
-                 <div class='row'>
-                   <div class='bg-color1'>
-                      <span class="title bg-tit1"><p>标王欢乐套餐</p></span>
-                      <p>500元关键词<span>买一送一</span></p>
-                      <p>每日限定<span>30</span>个名额</p>
-                   </div>
-                   <div class='bg-color2'>
-                      <span class="title bg-tit2"><p>标王惊喜套餐</p></span>
-                      <p>不限关键词价格买<span>1500送1500</span></p>
-                      <p>每日限定<span>30</span>个名额</p>
-                      <p class='bottom'>再+1200元可获得2年价值3600专业版官网</p>
-                   </div>
-                 </div>
-                 <div class="row">
-                   <div class='bg-color3'>
-                     <span class="title bg-tit3"><p>标王狂欢套餐</p></span>
-                     <p>不限关键词价格<span>买3000送3000</span></p>
-                     <p>每日限定<span>20</span>个名额</p>
-                     <p class='bottom'>再+900元可获得2年价值3600专业版官网</p>
-                   </div>
-                   <div class='bg-color4 other'>
-                     <span class="title bg-tit4"><p>标王大单折扣</p></span>
-                     <p><span>标王单笔订单</span></p>
-                     <p style="transform:translateX(-20px)">6000-10000 <span class="m-15">8折</span></p>
-                     <p>>=10000 <span class="m-15">75折</span></p>
-                     <p class='bottom'>再+300元可获得2年价值3600专业版官网</p>
-                   </div>
-                 </div>
+              <div class='f-flex' style='margin-top: 24px;'>
+                <img v-for="(item, index) in partTwoList" :key="index" :src="item" width="252" height="250">
               </div>
           </div>
           <button class='btn' @click="goTo('http://bax.baixing.com.cn/main/bw/query-price')">点此立即购买</button>
         </div>
         <div class='content'>
           <div class='p-bg p-bg3'>
-            <p>活动3：官网买一送一</p>
+            <p>惊喜3：专业版官网买一年送半年</p>
           </div>
           <div class='active part3 bg'>
-              <p class='tit'><span>专业版官网买一年送一年</span>另搭配凤鸣/标王购买，官网大额减</p>
+              <p class='tit'>专业版官网买一年送半年，另搭配凤鸣/标王购买，官网大额减！</p>
               <p class="color font-smaller bold"><span class="share">推荐套餐</span></p>
               <div class="f-flex wrap">
                 <div v-for="(item,index) in partThreeList" :key="index">
-                  <div :class="item.bg" class='item'>
-                    <p class="white font-normal bold p-20"><span class='topic'> {{item.title}} </span></p>
-                    <div class="main">
-                      <p class="color font-n-s bold"> {{item.text1}} </p>
-                      <p class="color font-n-s bold"> {{item.text2}} </p>
-                      <p class="color font-ss bold"> {{item.text3}} </p>
-                    </div>
-                    <p class="font-n-s white bold p-10">双11惊爆价：<span class="xx"> {{item.price}} </span></p>
-                    <p class="font-sss"> {{item.discount}} </p>
-                  </div>
+                  <img :src="item" width="252" height="210">
                 </div>
               </div>
           </div>
@@ -83,22 +56,26 @@
         </div>
         <div class='content'>
           <div class='p-bg p-bg4'>
-            <p>活动4：全民抽奖</p>
+            <p>惊喜4：全民抽奖</p>
           </div>
           <div class='active part4 bg'>
               <div>
                 <div class='row'>
-                  <span>活动时间：</span><h6>2019.11.1 00:00-2019.11.12 23:59</h6>
+                  <span>活动时间：</span><h6>12月6日 00:00-12月13日 23:59</h6>
                 </div>
                 <div class='row'>
                   <span>活动内容：</span>
-                  <h6>全站所有用户通过购买搜索通产品，新开/续费/升级VIP套餐、充值VIP一卡通、充值普通一卡通、购买城市包这5种方式消费，每1元=1积分，每500积分可兑换1次抽奖机会</h6>
+                  <h6>
+                    活动内容：百姓网全站所有用户通过购买<strong style="color:#c563b9;">搜索通产品</strong>，新开/续费/升级VIP套餐、
+                    充值VIP一卡通、充值普通一卡通、购买城市包这5种方式消费，每1元=1积分，
+                    每500积分可兑换1次抽奖机会！
+                  </h6>
                 </div>
                 <div class='row'>
                   <span>兑奖时间：</span>
-                  <h6>2019.11.7 00:00-2019.11.12 23:59</h6>
+                  <h6>12月6日 00:00-12月13日 23:59</h6>
                 </div>
-                 <p class='contact'>（如有问题，请拨打客服热线咨询：400-036-3650）</p>
+                 <p class='contact'>注：前往百姓网主会场，如有问题，请拨打客服热线咨询：400-036-3650</p>
                  <img src="//file.baixing.net/201909/8f1b362f3c49bf911643eb5ff2eac313.png" alt="">
               </div>
           </div>
@@ -106,31 +83,13 @@
         </div>
         <div class='content' style="padding-bottom:40px">
           <div class='p-bg p-bg5'>
-            <p>活动5：万元大奖等着你</p>
+            <p>惊喜5：大单送实物</p>
           </div>
           <div class='active part5 bg'>
-              <p class='tit'>11/7 00:00-11/12 23:59 期间，购买搜索通产品</p>
+              <p class='tit'>12月6日 00:00-12月13日 23:59期间，购买搜索通产品</p>
               <p class='ps bolder'>（请前往【个人中心】-【我的站内通知】查看，如有问题请拨打客服热线咨询：400-036-3650）</p>
               <div class='f-flex p-20'>
-                  <div class='item bg-one'>
-                    <p>单笔订单满<span>3万，</span></p>
-                    <p>送<span class="color">全自动加热按摩足浴盆一台</span></p>
-                    <img src="//file.baixing.net/201909/befb6acb8ac73c5c4a6d6bce5ca33921.png" alt="">
-                  </div>
-                  <div class='item bg-two'>
-                    <p>单笔订单满<span>6万，</span></p>
-                    <p>送<span class="color">智能扫地机器人一台</span></p>
-                     <img src="//file.baixing.net/201909/b08189da8776b571cc41c1f8e878384f.png" alt="">
-                  </div>
-                  <div class='item bg-three'>
-                    <p>单笔订单满<span>10万，</span></p>
-                    <p>送<span class="color">智能扫地机器人一台，</span></p>
-                    <p>再送<span class="color">1万元一卡通</span></p>
-                      <img  class='img1' src="//file.baixing.net/201909/b08189da8776b571cc41c1f8e878384f.png" alt="">
-                      <span class='yuan'>
-                        <img src="//file.baixing.net/201909/26b6840fcfd6ce01a2095395c88b5062.png" alt="">
-                      </span>
-                  </div>
+                <img v-for="(item, index) in partFiveList" width="406" height="170" :key="index" :src="item">
               </div>
           </div>
         </div>
@@ -146,22 +105,35 @@
             <div class="main">
               <div class="row">
                   <div class='yuan'><p class='num'>1</p></div>
-                  <p>活动时间：<strong class="color">10月25日 00:00-11月13日 23:59</strong></p>
+                  <p>活动时间：<strong class="color">12月5日 00：00-12日13日 23：59</strong></p>
               </div>
               <div class="row">
                   <div class='yuan'><p class='num'>2</p></div>
-                  <p>凤鸣满送无门槛现金券会直接进入个人账户，无需兑换。凤鸣享受满送现金券的订单不支持退款</p>
+                  <p>凤鸣满送资金会直接进入个人账户，无需兑换，多买多送。</p>
               </div>
               <div class="row">
                   <div class='yuan'><p class='num'>3</p></div>
-                  <p>官网买一送一活动：不限制用户和单数，一个用户可以在活动期间多次购买，均享受优惠</p>
+                  <div>
+                      购买凤鸣产品（站外推广）5088及以上，赠送百度拨打按钮。规则详情:
+                    <ul>
+                      <li>点击此拨打按钮，和点击广告逻辑相同，按CPC收费</li>
+                      <li>仅限百度侧，且3种样式随机展示，不可限制某一种； 提交的客户一定会添加，但展示结果以最终百度展示为主</li>
+                      <li>一个用户，最多可添加3条计划的电话线索</li>
+                      <li>如果凤鸣计划下线后，拨号功能也跟随下线，再次上线时没有该功能，且不再添加</li>
+                      <li>部分类目不开放拨打按钮，详情请咨询专属销售或客服</li>
+                    </ul>
+                  </div>
               </div>
               <div class="row">
                   <div class='yuan'><p class='num'>4</p></div>
-                  <p>关于标王欢乐，惊喜，狂欢套餐，将符合条件的关键词加入关键词购物车并点击“去支付”，进入标王支付页面即可看到活动最终支付的价格。
-                  例子：活动一选择两个500的关键词进入支付页面，即可用500元提单；活动二选择好总价为3000元的关键词（仅限30天，不限定关键词单价）
-                  进入支付页面，即可用1500元提单；以上所有活动客户都可以参加，但只能单独购买，无法在同一个订单内同时参加所有活动，例：用户先充
-                  值500元参加“活动一”；如果客户还想参加“活动二”需要重新购买1500元的关键词，并单独提单</p>
+                  <p>官网买一年送半年活动：不限制用户和单数，一个用户可以在活动期间多次购买，均享受优惠。</p>
+              </div>
+              <div class="row">
+                  <div class='yuan'><p class='num'>5</p></div>
+                  <p>
+                    关于标王惊喜，狂欢套餐，将符合条件的关键词加入关键词购物车并点击“去支付”，进入标王支付页面即可看到活动最终支付的价格。以上所有
+                    活动客户都可以参加，但只能单独购买，无法在同一个订单内同时参加所有活动，例：用户先充值1500元参加“活动一”；如果客户还想参加“活动二”需要重新购买3000元的关键词，并单独提单。
+                  </p>
               </div>
               <div class="row">
                   <div class='yuan'><p class='num'>5</p></div>
@@ -169,10 +141,10 @@
                   违禁行业类目见：
                   <strong ><a class="color" href="http://bax.baixing.com.cn/qa?mode=questions">http://bax.baixing.com.cn/qa?mode=questions</a></strong></p>
               </div>
-              <div class="row">
+              <!-- <div class="row">
                   <div class='yuan'><p class='num'>6</p></div>
                   <p>解释权归百姓网所有，如有疑问请致电客服<strong class="color">400-036-3650</strong></p>
-              </div>                                                                                    
+              </div>                                                                                     -->
             </div>
           </div>
         </div>
@@ -189,46 +161,36 @@ export default {
     return{
       lotteryBtnDisabled: true,
       partOneList:[
-        '//file.baixing.net/201909/56f16c3b337c8406b1089e4b0ee079cd.png',
-        '//file.baixing.net/201909/fe400a235ec484e5fadba476a710dda8.png',
-        '//file.baixing.net/201909/6920534b93e7a300dc3c3e599515d483.png',
-        '//file.baixing.net/201909/94d4270d33b3e2b1caccd0a7dd355613.png'
+        '//file.baixing.net/201911/a588419819bda155c27160aac413adf4.png',
+        '//file.baixing.net/201911/fd741f379a2c92152ec86ea366c27a28.png',
+        '//file.baixing.net/201911/45606a03d87e74ea8431e27bccc3515d.png',
+
+        '//file.baixing.net/201911/401c47f87d5ae5fc8d94370d12d73cae.png',
+        '//file.baixing.net/201911/4c19b330d713530ba8998b79ab71f98d.png',
+        '//file.baixing.net/201911/0850c9212ee4c0ebd41d1f7aec6d2a48.png'
+      ],
+      partTwoList:[
+        '//file.baixing.net/201911/ff9f506e4a7d7fd2cb762697cfe33dd8.png',
+        '//file.baixing.net/201911/049f1904ead10811c416364b718fb147.png',
+        '//file.baixing.net/201911/364621d17bc510d675424f875d73c05d.png',
       ],
       partThreeList:[
-        {
-          bg:'bg1',
-          title:'爆款套餐',
-          text1:'588元凤鸣资金+',
-          text2:'3600元 2年专业版官网',
-          text3:'（带SEO功能）',
-          price:'1788元',
-          discount:'（价值4188元套餐  直降2400元）'
-        },{
-          bg:'bg2',
-          title:'人气套餐',
-          text1:'5088元凤鸣资金+',
-          text2:'3600元 2年专业版官网',
-          text3:'（带SEO功能）',
-          price:'5988元',
-          discount:'（价值8876元套餐  直降3188元）'         
-        },{
-          bg:'bg3',
-          title:'王炸套餐',
-          text1:'10188元凤鸣资金+',
-          text2:'3600元 2年专业版官网',
-          text3:'（带SEO功能）',
-          price:'10488元',
-          discount:'（价值14288元套餐  直降3800元）'
-        }
-      ] 
+        '//file.baixing.net/201911/ab18d2eb34bc8378cbeb8ce01facb0a9.png',
+        '//file.baixing.net/201911/d924c46d84f646ca1c72050798de011b.png',
+        '//file.baixing.net/201911/72e18507d8ff4924db1b583885adbd25.png'
+      ],
+      partFiveList: [
+        '//file.baixing.net/201911/a3719bdc8aea3f731b3752226142e15f.png',
+        '//file.baixing.net/201911/e5c6f272a83e1c14859a314597bee9d6.png'
+      ]
     }
   },
   async created() {
     const date = new Date()
     if (
-      date.getMonth() === 10 &&
-      date.getDate() >= 1 &&
-      date.getDate() <= 12
+      date.getMonth() === 11 &&
+      date.getDate() >= 6 &&
+      date.getDate() <= 13
     ) {
       this.lotteryBtnDisabled = false
     }
@@ -246,10 +208,10 @@ export default {
 
 .huodong-container{
   background-size: 100% 520px;
-  background-color: #CC2F2F;
+  background-color: #C2123C;
   & .banner {
-    padding: 18.5% 50%;
-    background: url('//file.baixing.net/201910/08564455f30dec7128ceccf98f5d431a.png') top -18px center no-repeat;
+    padding: 18% 50%;
+    background: url('//file.baixing.net/201911/0d991f0c86983732f6ddae70d116347e.png') top -18px center no-repeat;
     background-size: contain;
   }
   & .content{
@@ -259,32 +221,15 @@ export default {
        font-weight: 600;
     }
     & .p-bg{
+      background-image: linear-gradient(180deg, #FFC279 0%, rgba(229,186,127,0.00) 100%);
+      border-radius: 40px;
       display:block;
-      width:900px;
-      height:60px;
+      width:600px;
+      height:80px;
+      line-height: 80px;
       margin:0 auto;
-      font-weight: 600;
+      font-size: 32px;
       letter-spacing: 2px;
-    }
-    & .p-bg1{
-      background: url('//file.baixing.net/201910/4dc6da3cb47a07fc99cc7314b647150e.png') no-repeat;
-      background-size: cover;
-    }
-    & .p-bg2{
-      background: url('http://file.baixing.net/201910/6abb960d577aa0a28f53fe0a3991396e.png') no-repeat;
-      background-size: cover;
-    } 
-    & .p-bg3{
-      background: url('//file.baixing.net/201910/56ad1ba68efe679968ad7d2f2e662016.png') no-repeat;
-      background-size: cover;
-    }
-    & .p-bg4{
-      background: url('//file.baixing.net/201910/6abb960d577aa0a28f53fe0a3991396e.png') no-repeat;
-      background-size: cover;
-    }
-    & .p-bg5{
-      background: url('//file.baixing.net/201910/40d549921e4703123a5405448b6f5bf4.png') no-repeat;
-      background-size: cover;
     }
     & p{
       color:  var(--active-white);
@@ -330,16 +275,38 @@ export default {
         justify-content: space-around;
         align-items: flex-end;
         & .partOneImg{
-          width: 124px;
-          height:auto;
+          width: 220px;
+          height: 140px;
         }
       }
     }
     & .part1{
-      height: 300px;
+      height: 630px;
+      & .bottom {
+        margin-top: -30px;
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        & > div {
+          margin-top: 20px;
+          width: 376px;
+        }
+      }
+      & .last {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+        color: rgba(141, 102, 42, .7);
+        font-size: 20px;
+        & h5 {
+          font-size: 30px;
+        }
+      }
     }
     & .part2{
-      height: 622px;
+      height: 350px;
+      padding-top: 34px;
       & .f-flex-column{
         padding: 5px 80px;
         display: flex;
@@ -430,15 +397,6 @@ export default {
       }
     }
     & .part3{
-      & .tit>span{
-        font-size:12px;
-        display: inline-block;
-        background: #FCC31B;
-        font-size: var(--font-normal);
-        padding:0 10px;
-        line-height:34px;
-        margin-right:8px;
-      }
       & .share{
         position: relative;
       }
@@ -585,6 +543,7 @@ export default {
         }
       }
       & .contact{
+        width: 276px;
         font-size: var(--font-small);
         text-align: left;
         margin-bottom: 36px;
@@ -675,7 +634,7 @@ export default {
     & .rules{
       border: none;
       box-sizing: border-box;
-      background: #BA2020;
+      background: #A50027;
       padding: 30px 50px;
       margin-bottom:100px;
       & .rules-tit{
@@ -722,6 +681,14 @@ export default {
         text-decoration:none;
         cursor:pointer;
       }
+      & > div {
+        color: var(--active-rules);
+        font-size: var(--font-smaller);
+        text-align:left;
+        & li {
+          text-indent: 1.5em;
+        }
+      }
       & p{
         color: var(--active-rules);
         font-size: var(--font-smaller);
@@ -742,11 +709,11 @@ p{
   font-weight: bold;
   outline:none;
   border:none;
-  width: 285px;
-  height: 65px;
+  width: 280px;
+  height: 64px;
   margin:0 auto;
   display: block;
-  border-radius: 9999px;
+  border-radius: 10px;
   cursor: pointer;
   &.disabled {
     cursor: not-allowed;

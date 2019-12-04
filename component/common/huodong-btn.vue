@@ -2,7 +2,7 @@
   <div class="huodong-btn" v-if="visible">
     <span class="hide-btn" @click="visible = false">&times;</span>
     <a :href="href" target="_blank">
-      <img src="//file.baixing.net/201910/117b9ea9a3812b80e467f4dc14d9a766.png" alt="">
+      <img src="//file.baixing.net/201912/7f5dc6efecad2e15c8d16021386271b7.png" width="100%" height="'100%" alt="">
     </a>
   </div>
 </template>
@@ -30,17 +30,17 @@ export default {
 <style lang="postcss" scoped>
 .huodong-btn {
   position: fixed;
-  right: 55px;
+  right: 1px;
   top: 50%;
-  width: 166px;
-  height: 166px;
+  width: 158px;
+  height: 127px;
   cursor: pointer;
   z-index: 100;
 }
 .hide-btn {
   position: absolute;
-  right: -20px;
-  top: 15px;
+  right: 6px;
+  top: -15px;
   width: 20px;
   height: 20px;
   line-height: 16px;

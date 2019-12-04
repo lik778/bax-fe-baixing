@@ -299,7 +299,7 @@ const allProducts = [
       'p >= 508800 && p < 1018800 ? 90000 : false',
       'p >= 1018800 ? 150000 : false'
     ],
-    name: '精品官网一年送一年【专业版】',
+    name: '精品官网一年送半年【专业版】',
     isHot: true
   }
 ]
@@ -314,18 +314,18 @@ const isChargeProduct = function(productType) {
 
 const discountInfo = [
   [588, 20, 600, 80, 200, false],
-  [1088, 20, 600, 80, 200],
+  [1088, 20, 600, 80, 200, false],
   [3088, 88, 600, 300, 400],
   [5088, 188, 900, 300, 400],
   [10188, 500, 1500, 300, 400]
 ]
 
-const discountRenderHTML = discountInfo.map(item => {
+const discountRenderHTML = discountInfo.map((item, index) => {
   return item[item.length - 1] ? `<p class="discount-info">
     满<span style="min-width: 40px;">${item[0]}</span>元：<span class="red">赠</span>送<span style="min-width: 30px;">${item[1]}</span>元站外推广资金 </span>
-    同时购买专业版精品官网一年送一年官网再<span class="red">减</span><span style="min-width: 30px;">${item[2]}</span> 元；
+    同时购买专业版精品官网一年送半年官网再<span class="red">减</span><span style="min-width: 30px;">${item[2]}</span> 元；
     <span class="red">赠</span>送十万火急<span style="min-width: 30px;">${item[3]}</span>元现金券 (满 ${item[4]} 元可用，不限城市与类目，有效期30天)
-  </p>` : '充值更多，可享更多优惠！'
+  </p>` : index === 0 ? '充值更多，可享更多优惠！' : ''
 })
 
 export default {
@@ -1182,7 +1182,7 @@ export default {
       background-size: 83px 26px;
     }
   }
-  &:nth-last-child(1) {
+  &:nth-last-child(1),  &:nth-child(2){
     &:after {
       display: none;
     }
