@@ -79,7 +79,7 @@
                  <img src="//file.baixing.net/201909/8f1b362f3c49bf911643eb5ff2eac313.png" alt="">
               </div>
           </div>
-          <button class='btn' :class="{disabled: lotteryBtnDisabled}" @click="() => !lotteryBtnDisabled && goTo('http://www.baixing.com/rev/lottery?activity=lottery_activity20191111')">前往参与</button>
+          <button class='btn' :class="{disabled: lotteryBtnDisabled}" @click="() => !lotteryBtnDisabled && goTo('http://shanghai.baixing.com/rev/lottery?activity=lottery_activity20191212')">前往参与</button>
         </div>
         <div class='content' style="padding-bottom:40px">
           <div class='p-bg p-bg5'>
