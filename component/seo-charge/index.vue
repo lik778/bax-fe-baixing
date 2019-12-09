@@ -21,9 +21,9 @@
               <price-tag v-for="(product, index) in allProducts.slice(0, 4)" :key="index"
                 :editable="product.editable" :price="product.price"
                 :checked="checkedProducts.includes(product)"
-                :minInputPrice="600"
+                :minInputPrice="parseInt(minInputPrice / 100)"
                 @click="toggleProduct(product)"
-                @change="v => product.price = v">
+                @change="(v)=> product.price = v">
               </price-tag>
             </section>
             <div>
@@ -170,7 +170,7 @@ import { product as PRODUCT } from 'constant/product'
 import { normalizeRoles } from 'util/role'
 
 import { createPreOrder } from 'api/seo'
-  import {orderServiceHost} from 'config'
+import {orderServiceHost} from 'config'
 
 import {
   getUserIdFromBxSalesId,
@@ -184,6 +184,8 @@ import {
 } from 'api/order'
 
 const PROFESSIONAL_SITE_PRODUCT_TYPE = 6
+const LOCK_SHORT_GW_PRICE = 3000 * 100
+const lockMessage = `短期官网仅支持本次充值${LOCK_SHORT_GW_PRICE/100}元及以上推广资金的用户购买`
 
 const allProducts = [
   {
@@ -207,6 +209,7 @@ const allProducts = [
   {
     id: 5,
     productType: PROFESSIONAL_SITE_PRODUCT_TYPE,
+    websiteSkuId: 5, // 官网sku id
     price: 600 * 100,
     discountExecPriceFunc:[
       'p >= 0 ? 30000 : false'
@@ -218,8 +221,23 @@ const allProducts = [
     isHot: false
   },
   {
+    id: 5,
+    productType: PROFESSIONAL_SITE_PRODUCT_TYPE,
+    websiteSkuId: 6,
+    price: 1200 * 100,
+    discountExecPriceFunc:[
+      'p >= 0 ? 60000 : false'
+    ],
+    isFixedPrice:true, //固定价格不参与满减
+    name: '精品官网：200天【专业版】',
+    productTime:'200天',
+    isPro: true,
+    isHot: false
+  },
+  {
     id: 6,
     productType: PROFESSIONAL_SITE_PRODUCT_TYPE,
+    websiteSkuId: 4,
     price: 1800 * 100,
     discountExecPriceFunc: [
       'p >= 0 && p < 240000 ? 0 : false',
@@ -281,7 +299,9 @@ export default {
       payInProgress: false,
       payDialogVisible: false,
 
-      showIntro: false
+      showIntro: false,
+      LOCK_SHORT_GW_PRICE,
+      minInputPrice: 600 * 100
     }
   },
   computed: {
@@ -364,12 +384,31 @@ export default {
   },
   methods: {
     toggleProduct (product) {
+      const { productType, isFixedPrice, price } = product
+      const chargeProduct = this.checkedProducts.find(p => p.productType === 3)
+      const gwProduct = this.checkedProducts.find(p => p.productType === PROFESSIONAL_SITE_PRODUCT_TYPE)
       const index = this.checkedProducts.indexOf(product)
-      if (index > -1) {
+
+      if (index > -1) { 
+        if (productType === 3 && gwProduct && gwProduct.isFixedPrice) {
+          this.$message.error(lockMessage)
+          return
+        }
         this.checkedProducts.splice(index, 1)
       } else {
-        const chargeProduct = this.checkedProducts.find(p => p.productType === 3)
-        const gwProduct = this.checkedProducts.find(p => p.productType === PROFESSIONAL_SITE_PRODUCT_TYPE)
+        if (productType === PROFESSIONAL_SITE_PRODUCT_TYPE && isFixedPrice) {
+          if (chargeProduct && chargeProduct.price < LOCK_SHORT_GW_PRICE || !chargeProduct){
+            this.$message.error(lockMessage)
+            return
+          } 
+        }
+        if (productType === 3 && price < LOCK_SHORT_GW_PRICE) {
+          if (gwProduct && gwProduct.isFixedPrice) {
+            this.$message.error(lockMessage)
+            return
+          }
+        }
+      
         if (chargeProduct && product.productType === 3) {
           const index = this.checkedProducts.indexOf(chargeProduct)
           this.checkedProducts.splice(index, 1)
@@ -422,15 +461,35 @@ export default {
       await payOrders(oids)
     },
     async createPreOrder() {
+      // 校验
+      const chargeProduct = this.checkedProducts.find(p => p.productType === 3)
+      console.log(chargeProduct)
+      const gwProduct = this.checkedProducts.find(p => p.productType === PROFESSIONAL_SITE_PRODUCT_TYPE && p.isFixedPrice)
+      if (this.checkedProducts.length <= 0) {
+        this.$message.error('商品为空')
+        return
+      }
+      if (chargeProduct && chargeProduct.price < this.minInputPrice) {
+        this.$message.error('充值金额最少为600元')
+        return
+      }
+      if (gwProduct && ( !chargeProduct || (chargeProduct && chargeProduct.price < LOCK_SHORT_GW_PRICE))) {
+        this.$message.error(lockMessage)
+        return
+      }
+      
+      // 预订单
       const {salesId, userId} = this.salesInfo
 
       // balanceAmount, saleWithShopOrder, shopOrderAmount, targetUserId, salesId
       const charge = this.fullCheckedProducts.find(p => p.productType === 3)
       const saleWithShopOrder = !!this.fullCheckedProducts.find(p => p.productType === PROFESSIONAL_SITE_PRODUCT_TYPE)
+      const gw = this.fullCheckedProducts.find(p => p.productType === PROFESSIONAL_SITE_PRODUCT_TYPE)
       const preTradeId = await createPreOrder(
         charge ? charge.originalPrice: 0,
         saleWithShopOrder,
         1,
+        gw ? gw.websiteSkuId: 0, //看二军需求
         userId,
         salesId
       )
@@ -459,7 +518,7 @@ export default {
 
         if (charge && gw) {
           let gwPrice = gw.price
-          const { discountExecPriceFunc } = gw
+          const { discountExecPriceFunc, websiteSkuId} = gw
           gwPrice = gw.price - discountExecPriceFunc
             .map(execStr => new Function('p', 'return ' + execStr)(charge.price))
             .find(res => res !== false)
@@ -471,17 +530,16 @@ export default {
               name: this.filterProductName(product),
               price: productType === PROFESSIONAL_SITE_PRODUCT_TYPE ? gwPrice : price,
               originalPrice: price,
+              websiteSkuId: product.websiteSkuId || 0, //看二军需求
               discountPrice: this.getDiscountPrice(productType, productType === PROFESSIONAL_SITE_PRODUCT_TYPE ? gwPrice : price)
             }
           })
         } else{
           this.fullCheckedProducts = checked.map(product => {
-            let {id, productType, price:originalPrice} = product
-          
-            // 精品官网：100天固定价格不参与满减
+            let { id, productType, price:originalPrice } = product
             let price = originalPrice
             if( product.productType === PROFESSIONAL_SITE_PRODUCT_TYPE && product.isFixedPrice ){
-              const {discountExecPriceFunc} = product
+              const { discountExecPriceFunc } = product
               let gwPrice = price - discountExecPriceFunc
                .map(execStr => new Function('p', 'return ' + execStr)(0))
                .find(res => res !== false)
@@ -493,6 +551,7 @@ export default {
               name: this.filterProductName(product),
               price: price,
               originalPrice: originalPrice,
+              websiteSkuId: product.websiteSkuId || 0, // 看二军需求
               discountPrice: this.getDiscountPrice(productType, price)
             }
           })

@@ -72,11 +72,90 @@ export async function updatePromotion(campaignId, data) {
 }
 
 // targetUserId, salesId are baxid, not baixingid
-export async function createPreOrder(balanceAmount, saleWithShopOrder, shopOrderAmount, targetUserId, salesId) {
+export async function createPreOrder(balanceAmount, saleWithShopOrder, shopOrderAmount, websiteSkuId, targetUserId, salesId) {
   const body = await seo
     .post('/trade/pre')
-    .send(trim({balanceAmount, saleWithShopOrder, targetUserId, salesId, shopOrderAmount}))
+    .send(trim({balanceAmount, saleWithShopOrder, websiteSkuId, targetUserId, salesId, shopOrderAmount}))
     .json()
 
+  return body.data
+}
+
+export async function getBusinessLicense() {
+  const body = await seo
+    .get('/acc/campaign/business-license')
+    .json()
+  console.log(body)
+
+  return body.data
+}
+
+export async function getPromotedWebsite() {
+  const body = await seo
+    .get('/acc/campaign/promoted-website')
+    .json()
+  
+  return body.data
+}
+
+export async function createCibaoPromotion(opts = {}){
+  const body = await seo
+    .post('/acc/campaign/create')
+    .send(opts)
+    .json()
+
+  return body.data
+}
+
+export async function updateCibaoPromotion(opts = {}) {
+  const body = await seo
+    .post('/acc/campaign/update')
+    .send(opts)
+    .json()
+
+  return body.data
+}
+
+export async function stopCibaoPromotion(id) {
+  const body = await seo
+   .get(`/acc/campaign/stop/${id}`)
+   .json()
+  return body.data
+}
+
+export async function restartCibaoPromotion(id) {
+  const body = await seo
+   .get(`/acc/campaign/restart/${id}`)
+   .json()
+  return body.data
+}
+
+export async function getCibaoPromotionByCampaignId(id) {
+  const body = await seo
+    .get(`/acc/campaign/${id}`)
+    .json()
+
+  return body.data
+}
+
+export async function getCiBaoPromotionList({size = 10 , page = 1}) {
+  const body = await seo
+    .post(`/acc/campaign/user/list`)
+    .send({
+      size,
+      page
+    })
+    .json()
+  return body.data
+}
+
+export async function renewCibaoPromotion({id,duration}){
+  const body = await seo
+    .post(`/acc/campaign/renew`)
+    .send({
+      id,
+      duration
+    })
+    .json()
   return body.data
 }

@@ -1,163 +1,198 @@
 <template>
-  <div class="create-promotion">
-    <section class="promotion-target">
-      <header>选择推广站点</header>
-
-      <qiqiaoban-page-selector
-        :product-type="PRO_SITE_PRODUCT_TYPE"
-        :value="promotion.landingPage"
-        @change-obj="v => onLandingChange(v)"
-      />
-      <p class="warning" v-if="showExpireWarning">站点6个月内将过期，请选择其他站点，或<router-link :to="{name: 'seo-charge'}">购买</router-link>新官网</p>
-    </section>
-
-    <section>
-      <header>选取推广关键词</header>
-
-      <div class="info">
-        <p>推广关键词要求：</p>
-        <p>1、自选词仅支持检索量在300以下的关键词，请前往ci.5118.com查询关键词检索量，具体见“PC检索量”、“移动检索量”两个指标，需满足检索量总和小于300</p>
-        <p>2、关键词格式：地域+行业/服务，如“厦门纱窗安装公司”，“武汉老酒回收”，“重庆哪里有典当行”</p>
-        <p>3、关键词字数需在 6 - 15 之间</p>
+  <div class="seo-create-container">
+    <header>新建首页宝推广计划<small>您的首页宝推广余额为 {{f2y(balance)}} 元</small></header>
+    <main>
+      <div class="create-item" v-for="row in list" :key="row.id">
+        <div class="hot-flag" v-if="row.isHot">
+          <img src="http://file.baixing.net/201910/04254536456b9a4cba2e0dc239dbcd79.png" width="69"
+            height="33" alt="爆款">
+        </div>
+        <div class="create-item-content" @click="handleRouterPush(row)">
+          <div class="create-title">{{row.title}}</div>
+          <div class="create-desc">{{row.desc}}</div>
+          <div class="create-btn">新建计划</div>
+        </div>
+        <div class="create-time" v-if="row.id!==SEO_CREATE_TYPE_CIBAO">
+          根据您的余额，预计可推广{{keywords}}个关键词（60天展现期）
+        </div>
+        <div class="create-time" v-else>
+          根据您的余额，预计可推广{{days}}天（单站点推广）
+        </div>
       </div>
-
-      <div>
-        <el-tag class="kw-tag" v-for="(kw, index) in promotion.keywords" :key="index"
-          closable @close="() => {promotion.keywords.splice(index, 1)}"
-        >{{kw.word}}</el-tag>
-
-        <input class="keyword-input" v-model.trim="inputKeyword" @keyup.enter="onEnter" />
-        <el-button size="small" @click="onEnter">确定</el-button>
-      </div>
-
-    </section>
-
-    <section>
-      <header>推广确认</header>
-      <div>
-        <p>首页宝推广渠道：百度</p>
-        <p>推广平台：电脑端、移动端双端推广</p>
-        <p>自选词单价：<span class="warning">5元/每词·每天·每平台</span></p>
-      </div>
-
-      <div>
-        <p>您已选择<span class="warning">{{promotion.keywords.length}}</span>个自选词，将创建<span class="warning">{{promotion.keywords.length}}</span>个推广计划。</p>
-        <p>根据您所选择的关键词个数，预扣款<span class="warning">{{promotion.keywords.length * 600}}</span>元，预计可推广<span class="warning">2个月</span>（60天），到期将自动续费，为保证您的站点持续展现，请保持首页宝排名资金充足。</p>
-      </div>
-      <contract-ack type="content-rule" />
-      <el-button class="submit" type="primary" @click="onCreateClick">创建推广</el-button>
-
-    </section>
+    </main>
   </div>
 </template>
 
 <script>
-import {createPromotion} from 'api/seo'
-import {KEYWORD_TYPE_USER} from 'constant/seo'
-import ContractAck from 'com/widget/contract-ack'
-import {PRO_SITE_PRODUCT_TYPE} from 'constant/site'
-import QiqiaobanPageSelector from 'com/common/qiqiaoban-page-selector'
-import dayjs from 'dayjs'
-
-export default {
-  components: {
-    QiqiaobanPageSelector,
-    ContractAck
+import  { getBalance, getBusinessLicense } from 'api/seo'
+import { f2y } from 'util'
+const SEO_CREATE_TYPE_ZIXUAN = 1
+const SEO_CREATE_TYPE_CIBAO = 2
+const seoCreateEntryLis = [
+  {
+    id: SEO_CREATE_TYPE_ZIXUAN,
+    title: '自选词',
+    desc: '任意自选词推广至百度首页，4词起做，不达首页不计费，每词低至8元/端/天',
+    isHot: false,
+    routerName:'seo-create-zixuan-promotion',
+    canLink: true
   },
-  data() {
+  {
+    id: SEO_CREATE_TYPE_CIBAO,
+    title: '加速词包版',
+    desc: '推广至百度、360、搜狗等6大搜索引擎，不达1000首页词不扣费',
+    isHot:true,
+    routerName:'seo-create-cibao-promotion',
+    canLink: false
+  }
+]
+export default {
+  name:'seo-create',
+  data(){
     return {
-      PRO_SITE_PRODUCT_TYPE,
-
-      inputKeyword: '',
-      promotion: {
-        landingPage: '',
-        keywords: []
-      },
-      showExpireWarning: false
+      balance: 0,
+      list:seoCreateEntryLis,
+      SEO_CREATE_TYPE_CIBAO
     }
   },
-  methods: {
-    onLandingChange(v) {
-      this.promotion.landingPage = 'http://' + v.domain + '.mvp.baixing.com'
-      this.showExpireWarning = dayjs(v.expireAt).subtract(6, 'month').isBefore(dayjs(), 'day')
+  methods:{
+    f2y,
+    async loadBalance() {
+      const d = await getBalance()
+      this.balance = d.balance
     },
-    onEnter() {
-      if (this.inputKeyword) {
-        if (this.inputKeyword.length < 6 || this.inputKeyword.length > 15) {
-          return this.$message.error('关键词字数需在 6 - 15 之间')
-        }
-        if (this.promotion.keywords.find(k => k.word === this.inputKeyword)) {
-          return this.$message.error(`请勿重复添加关键词`)
-        }
-        this.promotion.keywords.push({ source: KEYWORD_TYPE_USER, word: this.inputKeyword })
-        this.inputKeyword = ''
+    getLiensence(){
+      // mock获取营业执照接口
+      let result = {
+        hasLiensence: true,
+        url:''
+      }
+      if(result.hasLiensence){
+        this.list.find(row => row.id === SEO_CREATE_TYPE_CIBAO).canLink = true
       }
     },
-    onCreateClick() {
-      if (!this.promotion.landingPage) {
-        return this.$message.error('请选择落地页')
+    async handleRouterPush({id, routerName, canLink}){
+      if (id === SEO_CREATE_TYPE_ZIXUAN ) {
+        this.$router.push({ name: routerName })
+        return 
       }
-      if (this.showExpireWarning) {
-        return this.$message.error('不可选择6个月内过期的落地页')
-      }
-      if (!this.promotion.keywords.length) {
-        return this.$message.error('请选取关键词')
-      }
-      this.$confirm(`您已选择关键词 【${this.promotion.keywords.map(k => k.word).join(', ')}】进行首页宝推广，请在关键词审核通过后，开启至少4个关键词进行投放 `, '关键词确认')
-        .then(() => {
-          return createPromotion(this.promotion)
+
+      const h = this.$createElement
+      if (canLink) {
+        await this.$confirm('为了确保投放合规，您的营业执照会同步到新闻源站点进行备案，点击“同意”我们会同步您的资质，点击“取消”您将不能创建首页宝计划。', '提示', {
+          confirmButtonText: '同意',
+          cancelButtonText: '取消'
         })
-        .then(() => {
-          this.$message.success('创建成功')
-          this.$router.push({name: 'seo-promotion-list'})
+        this.$router.push({ name: routerName })
+      } else {
+        await this.$msgbox({
+          title:'提示',
+          message: h('div', null, [
+            h('div',null,'根据《网络安全法》规定，请提供您的营业执照后再创建首页宝加速词包计划。'),
+            h('div',{style:'margin-top:10px;'},'您尚未提交审核或未通过审核，请进行营业执照认证,如您已经通过认证审核，请关闭本弹窗后重新点击加速词包新建计划按钮。')
+          ]),
+          confirmButtonText:'前往认证'
         })
-        .catch(() => {})
+        window.open('https://www.baixing.com/bind/#bindList')
+      }
+    }
+  },
+  mounted() {
+    this.loadBalance()
+    this.getLiensence()
+  },
+  computed:{
+    keywords(){
+      return Math.floor(this.balance/600)
+    },
+    days(){
+      return Math.floor(this.balance/3000 * 90)
     }
   }
 }
 </script>
 
+
 <style lang="postcss" scoped>
-.create-promotion {
-  color: #6a778c;
-  font-size: 14px;
+.seo-create-container {
+  color: #666;
   border-radius: 4px;
+  background-color: #fff;
+  padding: 20px;
+  box-shadow: 0 2px 9px 0 rgba(83, 95, 127, 0.1);
 
-  & > section {
-    padding: 20px;
-    background-color: #fff;
+  & > header {
+    font-weight: bold;
+    margin-bottom: 20px;
 
-    & > header {
-      font-weight: bold;
-      margin-bottom: 20px;
+    & > small {
+      font-weight: normal;
+      font-size: 0.8em;
+      margin-left: 5px;
     }
+  }
 
-    & > .info {
-      font-size: 13px;
+  & > main {
+    padding: 60px;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  & .create-item {
+    width: 260px;
+    margin-right: 60px;
+    & .hot-flag {
+      position: relative;
+      width: 0;
+      height: 0;
+      top: -9px;
+      left: 186px;
     }
-
-    & > div:not(:last-of-type) {
-      margin-bottom: 20px;
-    }
-
-    & .keyword-input {
-      border: 1px solid #ff6350;
-      padding: 5px;
+    & .create-item-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-item: center;
+      width: 100%;
+      height: 160px;
+      border: 1px solid #ccc;
       border-radius: 4px;
-      width: 200px;
+      text-align: center;
+      cursor: pointer;
+      &:hover {
+        border-color: #ff8273;
+        & .create-btn {
+          background: #ff8273;
+          color: #fff;
+        }
+      }
+      & .create-title {
+        height: 48px;
+        color: #333;
+        font-weight: 600;
+        line-height: 48px;
+        border-bottom: dotted 1px #ccc;
+        font-size: 18px;
+      }
+      & .create-desc {
+        padding: 8px;
+        font-size: 13px;
+        color: #666;
+      }
+      & .create-btn {
+        height: 36px;
+        line-height: 36px;
+        color: white;
+        background: #ccc;
+        border-top: 1px dotted #ccc;
+      }
     }
-
-    & .kw-tag {
-      margin-right: 5px;
+    & .create-time {
+      font-size: 14px;
+      color: #ff8273;
+      margin-top: 10px;
     }
   }
 }
-.warning {
-  color: #FF6350;
-  margin: 0 10px;
-}
-.submit {
-  margin-top: 20px;
-}
 </style>
-
