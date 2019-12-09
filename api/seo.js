@@ -159,3 +159,12 @@ export async function renewCibaoPromotion({id,duration}){
     .json()
   return body.data
 }
+
+export async function exportCibaoPromotion(date) {
+  const body = await seo
+  .post({
+    date: date
+  })
+  .json()
+  return body.data
+}

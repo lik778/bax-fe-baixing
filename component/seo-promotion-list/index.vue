@@ -126,7 +126,7 @@
           <el-tag :type="row.status === AUDIT_STATUS_REJECTED ?'danger':
                          row.status === AUDIT_STATUS_PASSED ? 'success':
                          row.status === AUDIT_STATUS_PENDING ? 'warning':'info'">
-             {{cibaoStatus[row.status]}}
+            {{cibaoStatus[row.status]}}
           </el-tag>
         </span>
       </el-table-column>
@@ -186,7 +186,7 @@
                      @click="renewPromotion(row)">续费</el-button>
           <el-button type="text"
                      style="margin-left:4px"
-                     @click="downloadCsv(row)">导出首页词列表</el-button>
+                     @click="exportCSV(row)">导出首页词列表</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -208,7 +208,8 @@ import  {
   getBalance, 
   restart, 
   renewCibaoPromotion,
-  getCiBaoPromotionList
+  getCiBaoPromotionList,
+  exportCibaoPromotion
 } from 'api/seo'
 import {
   status as statusMap,
@@ -230,6 +231,8 @@ import {
   } from 'constant/seo'
 import dayjs from 'dayjs';
 import { f2y } from 'util'
+import { Parser }  from 'json2csv'
+import FileSaver from 'file-saver'
 
 export default {
   name:'SeoPromotionList',
@@ -341,27 +344,27 @@ export default {
       const { landingPage, duration, volume, id, achieved, renewDuration } = promotion
       const charge = chargeList.find(o => o.duration === duration && o.volume === volume).charge
       if (charge > this.balance) {
-        return this.$alert('余额不足，请前往充值', '提示', {
+        return this.$confirm('余额不足，请前往充值', '提示', {
           confirmButtonText: '确定',
-          callback: () => {
-            this.$router.push({ name: 'seo-charge'})
-          }
-        })
+          showCancelButton: false
+        }).then(res => {
+          this.$router.push({ name: 'seo-charge'})
+        }).catch(()=>{})
       }
   
       let oldPromotion = this.sites.find(v =>{
-        const landingPage = 'http://' + v.domain + '.mvp.baixing.com'
-        return landingPage.trim() === landingPage.trim()
+        const oldLandingPage = 'http://' + v.domain + '.mvp.baixing.com'
+        return landingPage.trim() === oldLandingPage.trim()
       })
-      let avaliableTime = Math.ceil(2 * duration - achieved + renewDuration) 
+      let avaliableTime = Math.ceil(2 * duration + renewDuration - achieved ) 
       const showExpireWarning = dayjs(oldPromotion.expireAt).subtract(avaliableTime, 'day').isBefore(dayjs(), 'day')
       if (showExpireWarning) {
-        return this.$alert('官网时长不足，请前往购买官网', '提示', {
+        return this.$confirm('官网时长不足，请前往购买官网', '提示', {
           confirmButtonText: '确定',
-          callback: () => {
-            this.$router.push({ name: 'seo-charge'})
-          }
-        })
+          showCancelButton: false
+        }).then(res => {
+          this.$router.push({ name: 'seo-charge'})
+        }).catch(()=>{})
       }
 
       this.$confirm(`您正在对${landingPage}站点延长加速词包的推广服务时长，
@@ -403,7 +406,6 @@ export default {
         style:{
          display:'flex',
          flexDirection:'column',
-        //  alignItem:'center'
         }
       },[
         h('div',{
@@ -418,9 +420,17 @@ export default {
         },[labelArr[1]])
       ])
     },
-    downloadCsv({id}){
-      // 根据id去获取json数据
-      // 将json转换为csv
+    exportCSV({id}){
+      // const result = await exportCibaoPromotion()
+      const fields = ['关键词', '排名'];
+      const result = []
+      const json2csvParser = new Parser({fields})
+      const csvData = json2csvParser.parse(result)
+      const filename ='mock代码'
+      const blob = new Blob(['\uFEFF' + csvData], 
+        { type: 'text/csv;charset=utf-8;' }
+      )
+      FileSaver.saveAs(blob, filename)
     }
   },
  async mounted() {
