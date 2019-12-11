@@ -10,9 +10,9 @@
           1. 选择产品 | <span class="discount-btn" @click="showDiscount = !showDiscount">查看优惠细则<i class="el-icon-question"></i></span>
         </header>
         <div class="discount-section" v-show="showDiscount">
-          <p class="discount-info">满2400元：同时购买专业版精品官网（1年）<span class="red">减</span>官网立减 600 元；</p>
-          <p class="discount-info">满4800元：同时购买专业版精品官网（1年）<span class="red">减</span>官网立减 900 元；</p>
-          <p class="discount-info">满9600元：同时购买专业版精品官网（1年）<span class="red">减</span>官网立减 1500 元；</p>
+          <p class="discount-info">满2400元：同时购买专业版精品官网一年送一年<span class="red">减</span>官网立减 600 元；</p>
+          <p class="discount-info">满4800元：同时购买专业版精品官网一年送一年<span class="red">减</span>官网立减 900 元；</p>
+          <p class="discount-info">满9600元：同时购买专业版精品官网一年送一年<span class="red">减</span>官网立减 1500 元；</p>
         </div>
         <div class="charge">
           <header>选择充值推广资金包：</header>
@@ -82,7 +82,7 @@
               {{ displayUserMobile }}
             </span>
           </section>
-          <contract-ack type="contract" />
+          <contract-ack type="contract" ref="contract" />
           <promotion-area-limit-tip :all-areas="allAreas" page="charge" />
           <section class="pay-info">
             <button
@@ -246,7 +246,7 @@ const allProducts = [
       'p >= 960000 ? 150000 : false'
     ],
     productTime:'一年',
-    name: '精品官网一年【专业版】',
+    name: '精品官网一年送半年【专业版】',
     isPro: true,
     isHot: true
   }
@@ -460,7 +460,6 @@ export default {
     async createPreOrder() {
       // 校验
       const chargeProduct = this.checkedProducts.find(p => p.productType === 3)
-      console.log(chargeProduct)
       const gwProduct = this.checkedProducts.find(p => p.productType === PROFESSIONAL_SITE_PRODUCT_TYPE && p.isFixedPrice)
       if (this.checkedProducts.length <= 0) {
         this.$message.error('商品为空')
@@ -474,8 +473,9 @@ export default {
         this.$message.error(lockMessage)
         return
       }
-      
-      // 预订单
+      if (!this.$refs.contract.$data.isAgreement) {
+        return this.$message.error('请阅读并勾选同意服务协议，再进行下一步操作')
+      }
       const {salesId, userId} = this.salesInfo
 
       // balanceAmount, saleWithShopOrder, shopOrderAmount, targetUserId, salesId

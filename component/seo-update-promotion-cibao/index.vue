@@ -74,7 +74,7 @@
         <p>预扣款：{{charge}}元（原价{{charge * 2}}元），可推广{{promotion.duration}}天，首页关键词数量{{promotion.volume}}词</p>
       </div>
 
-      <contract-ack type="content-rule" />
+      <contract-ack type="content-rule" ref="contract" />
       <el-button class="submit"
                  type="primary"
                  @click="onCreateClick">更新推广</el-button>
@@ -160,7 +160,7 @@ export default {
     },
     addKeyword() {   
       if (!this.city) {
-        this.$message.error('请先选择投放城市')
+        return this.$message.error('请先选择投放城市')
       }
       let words = this.search.trim().split(/[，,]]*/g)
       words = Array.from(new Set(words.map( row=> {
@@ -181,6 +181,7 @@ export default {
           this.promotion.keywords.push(newWord)
         }
      }
+     this.search = ''
     },
     onChangeAreas(val) { 
       this.areaDialogVisible = false
@@ -190,6 +191,9 @@ export default {
       this.city = getCnName(val[0], this.allAreas)
     },
     onCreateClick() {
+      if (!this.$refs.contract.$data.isAgreement) {
+        return this.$message.error('请阅读并勾选同意服务协议，再进行下一步操作')
+      }
       if (!this.promotion.keywords.length) {
         return this.$message.error('请新增关键词')
       }

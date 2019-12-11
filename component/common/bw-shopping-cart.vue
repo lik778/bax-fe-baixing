@@ -95,9 +95,9 @@
     {
       id: 3,
       shopType: 2,
-      shopOrderAmount: 1,
+      shopOrderAmount: 1.5,
       originalPrice: 180000,
-      name: '精品官网专业版一年（可用于首页宝推广）',
+      name: '精品官网专业版一年送半年（可用于首页宝推广）',
       price: 0,
       discountExecPriceFunc: [
         'p >= 0 && p < 50000 ? 0 : false',
@@ -182,6 +182,9 @@
           gwSelected,
           localItems
         } = this
+        // if (!window.localStorage.getItem('qatest')) {
+        //   return this.$message.error('系统紧急维护中，暂时不可购买，请稍后再试。')
+        // }
         const {salesId, userId} = salesInfo
         let createOrderArgs = [localItems, userId, salesId]
         if (gwSelected.length) {

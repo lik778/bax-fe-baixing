@@ -59,7 +59,7 @@ export const chargeList = [
   {
     duration: NINETY_DAYS,
     volume: TWO_THROUND_KEYWORD,
-    charge: 6000
+    charge: 4500
   },
   {
     duration: NINETY_DAYS,

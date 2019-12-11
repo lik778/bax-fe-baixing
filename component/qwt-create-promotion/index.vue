@@ -138,7 +138,7 @@
         <p class="tip">
           扣除其余有效计划日预算后，您的推广资金可用余额为￥{{f2y(usableBalance)}}元，可消耗<strong class="red strong">{{predictedInfo.days}}</strong>天
         </p>
-        <contract-ack type="content-rule" />
+        <contract-ack type="content-rule" ref="contract"/>
         <div>
           <el-button type="primary"
             :disabled="isCreating"
@@ -507,6 +507,9 @@ export default {
     },
 
     async createPromotion() {
+      if (!this.$refs.contract.$data.isAgreement) {
+        return this.$message.error('请阅读并勾选同意服务协议，再进行下一步操作')
+      }
       if (this.isCreating) {
         return Message.warning('正在创建中, 请稍等一小会 ~')
       }

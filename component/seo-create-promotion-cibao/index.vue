@@ -93,7 +93,7 @@
         <p>预扣款：{{charge}}元（原价{{charge * 2}}元），可推广{{promotion.duration}}天，首页关键词数量{{promotion.volume}}词</p>
       </div>
 
-      <contract-ack type="content-rule" />
+      <contract-ack type="content-rule" ref="contract" />
       <el-button class="submit"
                  type="primary"
                  @click="onCreateClick">创建推广</el-button>
@@ -222,6 +222,9 @@ export default {
       this.city = getCnName(val[0], this.allAreas)
     },
     onCreateClick() {
+      if (!this.$refs.contract.$data.isAgreement) {
+        return this.$message.error('请阅读并勾选同意服务协议，再进行下一步操作')
+      }
       if (!this.promotion.landingPage) {
         return this.$message.error('请选择落地页')
       }
