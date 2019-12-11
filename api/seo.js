@@ -1,5 +1,6 @@
 
 import { seo, trim } from './base'
+import { Message } from 'element-ui'
 
 export async function getBalance() {
   const body = await seo
@@ -85,7 +86,6 @@ export async function getBusinessLicense() {
   const body = await seo
     .get('/acc/campaign/business-license')
     .json()
-  console.log(body)
 
   return body.data
 }
@@ -94,7 +94,7 @@ export async function getPromotedWebsite() {
   const body = await seo
     .get('/acc/campaign/promoted-website')
     .json()
-  
+
   return body.data
 }
 
@@ -103,8 +103,8 @@ export async function createCibaoPromotion(opts = {}){
     .post('/acc/campaign/create')
     .send(opts)
     .json()
-
-  return body.data
+  
+  return body
 }
 
 export async function updateCibaoPromotion(opts = {}) {
@@ -113,7 +113,7 @@ export async function updateCibaoPromotion(opts = {}) {
     .send(opts)
     .json()
 
-  return body.data
+  return body
 }
 
 export async function stopCibaoPromotion(id) {

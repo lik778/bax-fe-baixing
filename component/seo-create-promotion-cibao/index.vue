@@ -114,7 +114,7 @@ import { createCibaoPromotion, getBusinessLicense, getPromotedWebsite, getBalanc
 import { KEYWORD_TYPE_USER, durations, volumes, NINETY_DAYS, ONE_THROUND_KEYWORD, chargeList} from 'constant/seo'
 import { PRO_SITE_PRODUCT_TYPE } from 'constant/site'
 import dayjs from 'dayjs'
-import { getCnName } from 'util'
+import { getCnName, f2y } from 'util'
 
 import AreaSelector from 'com/common/area-selector'
 import QiqiaobanPageSelector from 'com/common/qiqiaoban-page-selector'
@@ -171,6 +171,7 @@ export default {
     }
   },
   methods: {
+    f2y,
     async loadBalance() {
       const d = await getBalance()
       this.balance = d.balance
@@ -233,10 +234,25 @@ export default {
       if (!this.promotion.keywords.length) {
         return this.$message.error('请选取关键词')
       }
+      if (this.promotion.keywords.length < 3) {
+        return this.$message.error('计划核心关键词不能少于3个')
+      }
+      if (this.f2y(this.balance) < this.charge) {
+         return this.$confirm('余额不足，请前往充值', '提示', {
+          confirmButtonText: '确定',
+          showCancelButton: false
+        }).then(res => {
+          this.$router.push({ name: 'seo-charge'})
+        }).catch(()=>{})
+      }
 
-      createCibaoPromotion({...this.promotion}).then(res=>{
-        this.$message.success('创建成功')
-        this.$router.push({name: 'seo-promotion-list'})
+      createCibaoPromotion({...this.promotion}).then(res => {
+        if (res.message === 'success') {
+          this.$message.success('创建成功')
+          this.$router.push({name: 'seo-promotion-list'})
+        } else {
+          this.$message.error(res.message)
+        }
       })
     }
   },

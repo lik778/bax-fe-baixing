@@ -103,10 +103,10 @@ export default {
   },
   computed:{
     keywords(){
-      return Math.floor(this.balance/600)
+      return Math.floor(this.f2y(this.balance)/600)
     },
     days(){
-      return Math.floor(this.balance/3000 * 90)
+      return Math.floor(this.f2y(this.balance)/3000 * 90)
     }
   }
 }

@@ -391,21 +391,18 @@ export default {
 
       if (index > -1) { 
         if (productType === 3 && gwProduct && gwProduct.isFixedPrice) {
-          this.$message.error(lockMessage)
-          return
+          return this.$message.error(lockMessage)
         }
         this.checkedProducts.splice(index, 1)
       } else {
         if (productType === PROFESSIONAL_SITE_PRODUCT_TYPE && isFixedPrice) {
           if (chargeProduct && chargeProduct.price < LOCK_SHORT_GW_PRICE || !chargeProduct){
-            this.$message.error(lockMessage)
-            return
+            return this.$message.error(lockMessage)
           } 
         }
         if (productType === 3 && price < LOCK_SHORT_GW_PRICE) {
           if (gwProduct && gwProduct.isFixedPrice) {
-            this.$message.error(lockMessage)
-            return
+            return this.$message.error(lockMessage)
           }
         }
       

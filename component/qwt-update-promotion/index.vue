@@ -274,8 +274,12 @@
       @change="onChangeDuration"
       @hide="durationSelectorVisible = false">
     </duration-selector>
-    <qwt-add-keyword-list :show="addKeywordListDialog" :is-update-qwt="true" ref="qwtAddKeywordList"
-                          :promotion="currentPromotion" @update-keywords="updatePromotionKeywords">
+    <qwt-add-keyword-list :show="addKeywordListDialog" 
+                          :is-update-qwt="true" 
+                          ref="qwtAddKeywordList"
+                          @close="addKeywordListDialog = false"
+                          :promotion="currentPromotion" 
+                          @update-keywords="updatePromotionKeywords">
     </qwt-add-keyword-list>
   </div>
 </template>
