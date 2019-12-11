@@ -14,8 +14,9 @@
         <p>说明:</p>
         <p>核心词为城市+服务内容/产品的组合模式，城市为单选，如需添加多个城市的请分开多次提交核心词</p>
         <p>核心词仅作为首页宝加速词包拓词使用，并不代表核心词会作为推广词展示在流量平台首页</p>
-        <p>同一个计划中核心词可增加，暂不支持修改、删除核心词</p>
+        <p>同一个计划中核心词可增加，暂不支持修改、删除核心词，核心词上限1000个</p>
         <p>可批量添加关键词：请用逗号区分关键词进行批量关键词添加，如合肥家政服务公司，合肥月嫂，合肥钟点工</p>
+        <p>关键词字数限制为2-99个字</p>
       </div>
       <div class="keyword">
         <div class="keyword-pane">
@@ -158,29 +159,36 @@ export default {
     handleTagClose(tag, index) {
       this.promotion.keywords.splice(index, 1)
     },
-    addKeyword() {   
+    addKeyword() {
       if (!this.city) {
-        return this.$message.error('请先选择投放城市')
+       return this.$message.error('请先选择投放城市')
       }
       let words = this.search.trim().split(/[，,]]*/g)
       words = Array.from(new Set(words.map( row=> {
         return row.trim()
       }).filter(row => row !== '')))
-     
+
       for (let i = 0; i< words.length ; i++) {
         let w = words[i]
         if (w.length < 2 || w.length > 99) {
-          return this.$message.error('关键词字数限制2-99个')
+          this.$message.error('已过滤字数不满足2-99个的关键词')
+          words.splice(i, 1)
+          continue
         }
         const newWord = `${this.city}${w}`
-        let keywords = this.originPromotion.keywords.concat(this.promotion.keywords)
-        if (keywords.length >= 1000) {
-         return this.$message.error('每次最多支持上传1000个关键词')
+        if (this.promotion.keywords.includes(newWord)) {
+          this.$message.warning(`${newWord}该关键词已存在`)
+          words.splice(i, 1)
+          continue
+        } 
+        if (this.promotion.keywords.length >= 1000) {
+         this.$message.error('每次最多支持上传1000个关键词')
+         return this.search = ''
         }
-        if (!keywords.includes(newWord)) {
+        if (!this.promotion.keywords.includes(newWord)) {
           this.promotion.keywords.push(newWord)
         }
-     }
+      }
      this.search = ''
     },
     onChangeAreas(val) { 
@@ -267,6 +275,9 @@ export default {
         & .keyword-input {
           margin-top: 10px;
           width: 400px;
+        }
+        & .keyword-pane-tags {
+          max-width: 80%;
         }
         & .keyword-pane-tag {
           margin-bottom: 10px;

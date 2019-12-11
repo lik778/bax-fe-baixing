@@ -61,13 +61,9 @@ export default {
       const d = await getBalance()
       this.balance = d.balance
     },
-    getLiensence(){
-      // mock获取营业执照接口
-      let result = {
-        hasLiensence: true,
-        url:''
-      }
-      if(result.hasLiensence){
+    async getLiensence(){
+      const businessUrl = await getBusinessLicense()
+      if (businessUrl) {
         this.list.find(row => row.id === SEO_CREATE_TYPE_CIBAO).canLink = true
       }
     },

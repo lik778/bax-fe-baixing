@@ -40,13 +40,14 @@
                 :is-pro="product.isPro"
                 :title="product.name"
                 :original-price="centToYuan(product.price)"
-                :price="gwPrice"
+                :price="getGwPrice(product)"
                 :checked="checkedProducts.includes(product)"
                 :is-hot="product.isHot"
                 @click.native="toggleProduct(product)"
               />
             </section>
             <div>
+              <p v-if="showGwWarnInfo" class="gw-warn-info">短期官网仅支持本次充值{{LOCK_SHORT_GW_PRICE/100}}元及以上推广资金的用户购买</p>
               <p class="charge-info">首页宝自选词推广的官网有效时长需6个月以上，如需进行首页宝自选词推广，请选择一年版精品官网；如需进行加速词包推广，可选择100天官网版本。</p>
             </div>
           </main>
@@ -221,7 +222,7 @@ const allProducts = [
     isHot: false
   },
   {
-    id: 5,
+    id: 6,
     productType: PROFESSIONAL_SITE_PRODUCT_TYPE,
     websiteSkuId: 6,
     price: 1200 * 100,
@@ -235,7 +236,7 @@ const allProducts = [
     isHot: false
   },
   {
-    id: 6,
+    id: 7,
     productType: PROFESSIONAL_SITE_PRODUCT_TYPE,
     websiteSkuId: 4,
     price: 1800 * 100,
@@ -301,16 +302,11 @@ export default {
 
       showIntro: false,
       LOCK_SHORT_GW_PRICE,
-      minInputPrice: 600 * 100
+      minInputPrice: 600 * 100,
+      showGwWarnInfo: false
     }
   },
   computed: {
-    gwPrice() {
-      const gw = this.fullCheckedProducts.find(p => p.productType === PROFESSIONAL_SITE_PRODUCT_TYPE)
-      if (gw) {
-        return centToYuan(gw.price)
-      }
-    },
     promotionDiscount() {
       const charge = this.checkedProducts.find(p => p.productType === 3)
       if (charge) {
@@ -383,6 +379,13 @@ export default {
     },
   },
   methods: {
+    getGwPrice(product) {
+      const gw = this.fullCheckedProducts.find(p => p.id === product.id)
+      if (gw) {
+        return centToYuan(gw.price)
+      }
+      return 0
+    },
     toggleProduct (product) {
       const { productType, isFixedPrice, price } = product
       const chargeProduct = this.checkedProducts.find(p => p.productType === 3)
@@ -391,20 +394,25 @@ export default {
 
       if (index > -1) { 
         if (productType === 3 && gwProduct && gwProduct.isFixedPrice) {
-          return this.$message.error(lockMessage)
+          // return this.$message.error(lockMessage)
+          return this.showGwWarnInfo = true
         }
+        this.showGwWarnInfo = false
         this.checkedProducts.splice(index, 1)
       } else {
         if (productType === PROFESSIONAL_SITE_PRODUCT_TYPE && isFixedPrice) {
           if (chargeProduct && chargeProduct.price < LOCK_SHORT_GW_PRICE || !chargeProduct){
-            return this.$message.error(lockMessage)
+            // return this.$message.error(lockMessage)
+            return this.showGwWarnInfo = true
           } 
         }
         if (productType === 3 && price < LOCK_SHORT_GW_PRICE) {
           if (gwProduct && gwProduct.isFixedPrice) {
-            return this.$message.error(lockMessage)
+            // return this.$message.error(lockMessage)
+            return this.showGwWarnInfo = true
           }
         }
+        this.showGwWarnInfo = false
       
         if (chargeProduct && product.productType === 3) {
           const index = this.checkedProducts.indexOf(chargeProduct)
@@ -458,6 +466,9 @@ export default {
       await payOrders(oids)
     },
     async createPreOrder() {
+      if (!this.$refs.contract.$data.isAgreement) {
+        return this.$message.error('请阅读并勾选同意服务协议，再进行下一步操作')
+      }
       // 校验
       const chargeProduct = this.checkedProducts.find(p => p.productType === 3)
       const gwProduct = this.checkedProducts.find(p => p.productType === PROFESSIONAL_SITE_PRODUCT_TYPE && p.isFixedPrice)
@@ -472,9 +483,6 @@ export default {
       if (gwProduct && ( !chargeProduct || (chargeProduct && chargeProduct.price < LOCK_SHORT_GW_PRICE))) {
         this.$message.error(lockMessage)
         return
-      }
-      if (!this.$refs.contract.$data.isAgreement) {
-        return this.$message.error('请阅读并勾选同意服务协议，再进行下一步操作')
       }
       const {salesId, userId} = this.salesInfo
 
@@ -911,5 +919,10 @@ export default {
   color:#FF7533;
   font-size: 12px;
   margin-top: 10px;
+}
+.gw-warn-info{
+  color: red;
+  font-size : 14px;
+  margin-top: 10px
 }
 </style>
