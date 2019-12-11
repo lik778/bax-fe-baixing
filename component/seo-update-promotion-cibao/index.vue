@@ -174,7 +174,7 @@ export default {
         }
         const newWord = `${this.city}${w}`
         let keywords = this.originPromotion.keywords.concat(this.promotion.keywords)
-        if (keywords.length > 1000) {
+        if (keywords.length >= 1000) {
          return this.$message.error('每次最多支持上传1000个关键词')
         }
         if (!keywords.includes(newWord)) {

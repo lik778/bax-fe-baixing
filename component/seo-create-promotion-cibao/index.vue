@@ -206,7 +206,7 @@ export default {
           return this.$message.error('关键词字数限制2-99个')
         }
         const newWord = `${this.city}${w}`
-        if (this.promotion.keywords.length > 1000) {
+        if (this.promotion.keywords.length >= 1000) {
          return this.$message.error('每次最多支持上传1000个关键词')
         }
         if (!this.promotion.keywords.includes(newWord)) {
