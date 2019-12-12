@@ -344,7 +344,7 @@ export default {
     },
     renewPromotion(promotion) {
       const { landingPage, duration, volume, id, achieved, renewDuration } = promotion
-      const charge = chargeList.find(o => o.duration === duration && o.volume === volume)
+      const charge = chargeList.find(o => o.duration === duration && o.volume === volume).charge
       if (charge > this.balance) {
         return this.$confirm('余额不足，请前往充值', '提示', {
           confirmButtonText: '确定',

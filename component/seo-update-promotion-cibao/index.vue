@@ -57,8 +57,8 @@
               <el-tag type="primary"
                       class="keyword-pane-tag"
                       closable
-                      @close="handleTagClose"
-                      v-for="item in promotion.keywords"
+                      @close="handleTagClose(item,index)"
+                      v-for="(item,index) in promotion.keywords"
                       :key="item">{{item}}
               </el-tag>
             </template>
@@ -168,7 +168,7 @@ export default {
         return row.trim()
       }).filter(row => row !== '')))
 
-      const originKeywordsLen = this.originPromotion.keywords
+      const originKeywordsLen = this.originPromotion.keywords.length
 
       for (let i = 0; i< words.length ; i++) {
         let w = words[i]
@@ -178,7 +178,7 @@ export default {
           continue
         }
         const newWord = `${this.city}${w}`
-        if (this.promotion.keywords.includes(newWord)) {
+        if (this.promotion.keywords.includes(newWord) || this.originPromotion.keywords.includes(newWord)) {
           this.$message.warning(`${newWord}该关键词已存在`)
           words.splice(i, 1)
           continue
@@ -188,9 +188,7 @@ export default {
          this.$message.error('核心词上限为1000个')
          return this.search = ''
         }
-        if (!this.promotion.keywords.includes(newWord) && !this.originPromotion.keywords.includes(newWord)) {
-          this.promotion.keywords.push(newWord)
-        }
+        this.promotion.keywords.push(newWord)
       }
      this.search = ''
     },

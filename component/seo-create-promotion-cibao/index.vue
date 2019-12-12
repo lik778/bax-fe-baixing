@@ -218,9 +218,7 @@ export default {
          this.$message.error('每次最多支持上传1000个关键词')
          return this.search = ''
         }
-        if (!this.promotion.keywords.includes(newWord)) {
-          this.promotion.keywords.push(newWord)
-        }
+        this.promotion.keywords.push(newWord)
       }
      this.search = ''
     },
