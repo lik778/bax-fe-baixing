@@ -62,10 +62,10 @@ export default {
       this.balance = d.balance
     },
     async getLiensence(){
-      const businessUrl = await getBusinessLicense()
-      if (businessUrl) {
+      // const businessUrl = await getBusinessLicense()
+      // if (businessUrl) {
         this.list.find(row => row.id === SEO_CREATE_TYPE_CIBAO).canLink = true
-      }
+      // }
     },
     async handleRouterPush({id, routerName, canLink}){
       if (id === SEO_CREATE_TYPE_ZIXUAN ) {

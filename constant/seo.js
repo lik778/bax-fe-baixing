@@ -1,5 +1,3 @@
-import { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } from "constants"
-
 export const KEYWORD_TYPE_USER = 0
 export const KEYWORD_TYPE_RECOMMEND = 1
 
@@ -81,3 +79,7 @@ export const cibaoStatus = {
   [`${AUDIT_STATUS_PASSED}`]: '投放中',
   [`${AUDIT_STATUS_REJECTED}`]: '已下线'
 }
+
+
+export const BAIDU_TYPE = 0
+export const QIHU_360 = 1

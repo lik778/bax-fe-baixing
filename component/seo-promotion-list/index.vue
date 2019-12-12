@@ -113,7 +113,7 @@
       <el-table-column prop="landingPage"
                        label="推广落地页"
                        fixed
-                       min-width="120"></el-table-column>
+                       min-width="130"></el-table-column>
       <el-table-column prop="id"
                        align="center"
                        label="计划id"
@@ -139,19 +139,19 @@
       <el-table-column prop="createdAt"
                        align="center"
                        label="创建时间"
-                       width="120">
+                       width="126">
         <span slot-scope="{row}">{{formatTime(row.createdAt * 1000)}}</span>
       </el-table-column>
       <el-table-column prop="onlineAt"
                        align="center"
                        label="上线时间"
-                       width="120">
+                       width="126">
         <span slot-scope="{row}">{{row.onlineAt?formatTime(row.onlineAt * 1000):'--'}}</span>
       </el-table-column>
       <el-table-column prop="firstCompletionAt"
                        label="达标时间"
                        align="center"
-                       width="120">
+                       width="126">
         <span slot-scope="{row}">
           {{row.firstCompletionAt?formatTime(row.firstCompletionAt * 1000):'--'}}
         </span>
@@ -228,6 +228,8 @@ import {
   chargeList,
   cibaoStatus,
   NINETY_DAYS,
+  BAIDU_TYPE,
+  QIHU_360
   } from 'constant/seo'
 import dayjs from 'dayjs';
 import { f2y } from 'util'
@@ -342,7 +344,7 @@ export default {
     },
     renewPromotion(promotion) {
       const { landingPage, duration, volume, id, achieved, renewDuration } = promotion
-      const charge = chargeList.find(o => o.duration === duration && o.volume === volume).charge
+      const charge = chargeList.find(o => o.duration === duration && o.volume === volume)
       if (charge > this.balance) {
         return this.$confirm('余额不足，请前往充值', '提示', {
           confirmButtonText: '确定',
@@ -356,6 +358,9 @@ export default {
         const oldLandingPage = 'http://' + v.domain + '.mvp.baixing.com'
         return landingPage.trim() === oldLandingPage.trim()
       })
+      if (!oldPromotion) {
+        return this.$message.error('该官网不在用户官网列表中')
+      }
       let avaliableTime = Math.ceil(2 * duration + renewDuration - achieved ) 
       const showExpireWarning = dayjs(oldPromotion.expireAt).subtract(avaliableTime, 'day').isBefore(dayjs(), 'day')
       if (showExpireWarning) {
@@ -420,17 +425,31 @@ export default {
         },[labelArr[1]])
       ])
     },
-    exportCSV({id}){
-      // const result = await exportCibaoPromotion()
-      const fields = ['关键词', '排名'];
-      const result = []
-      const json2csvParser = new Parser({fields})
-      const csvData = json2csvParser.parse(result)
-      const filename ='mock代码'
-      const blob = new Blob(['\uFEFF' + csvData], 
-        { type: 'text/csv;charset=utf-8;' }
-      )
-      FileSaver.saveAs(blob, filename)
+    async exportCSV({id}){
+      const date = dayjs().subtract(1, 'day').format('YYYYMMDD')
+      const result = await exportCibaoPromotion({date, id})
+      const { mobileList, pcList, type } = result
+      const typeName = +type === +BAIDU_TYPE ? '百度':'360' 
+      if (!mobileList && !pcList) {
+        return this.$message.error('暂无数据，请稍后再试')
+      }
+
+      const json2csvParser = new Parser()
+      if (mobileList) {
+        const csvData = json2csvParser.parse(mobileList)
+        const filename = `${typeName}移动[待填充]${date}`
+        const blob = new Blob(['\uFEFF' + csvData], 
+          { type: 'text/csv;charset=utf-8;' })
+        FileSaver.saveAs(blob, filename)
+      }
+
+      if (pcList) {
+        const csvData = json2csvParser.parse(pcList)
+        const filename = `${typeName}pc[待填充]${date}`
+        const blob = new Blob(['\uFEFF' + csvData], 
+          { type: 'text/csv;charset=utf-8;' })
+        FileSaver.saveAs(blob, filename)
+      }
     }
   },
  async mounted() {
