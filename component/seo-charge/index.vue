@@ -48,7 +48,7 @@
             </section>
             <div>
               <p v-if="showGwWarnInfo" class="gw-warn-info">短期官网仅支持本次充值{{LOCK_SHORT_GW_PRICE/100}}元及以上推广资金的用户购买</p>
-              <p class="charge-info">首页宝自选词推广的官网有效时长需6个月以上，如需进行首页宝自选词推广，请选择一年版精品官网；如需进行加速词包推广，可选择100天官网版本。</p>
+              <p class="charge-info">首页宝自选词推广的官网有效时长需6个月以上，如需进行首页宝自选词推广，请选择一年版精品官网；如需进行加速词包推广，可选择100天或200天官网版本。</p>
             </div>
           </main>
         </div>

@@ -168,6 +168,8 @@ export default {
         return row.trim()
       }).filter(row => row !== '')))
 
+      const originKeywordsLen = this.originPromotion.keywords
+
       for (let i = 0; i< words.length ; i++) {
         let w = words[i]
         if (w.length < 2 || w.length > 99) {
@@ -181,11 +183,12 @@ export default {
           words.splice(i, 1)
           continue
         } 
-        if (this.promotion.keywords.length >= 1000) {
-         this.$message.error('每次最多支持上传1000个关键词')
+
+        if (this.promotion.keywords.length >= (1000 - originKeywordsLen)) {
+         this.$message.error('核心词上限为1000个')
          return this.search = ''
         }
-        if (!this.promotion.keywords.includes(newWord)) {
+        if (!this.promotion.keywords.includes(newWord) && !this.originPromotion.keywords.includes(newWord)) {
           this.promotion.keywords.push(newWord)
         }
       }

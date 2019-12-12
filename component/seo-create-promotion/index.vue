@@ -16,7 +16,7 @@
           根据您的余额，预计可推广{{keywords}}个关键词（60天展现期）
         </div>
         <div class="create-time" v-else>
-          根据您的余额，预计可推广{{days}}天（单站点推广）
+          根据您的余额，预计可推广{{days}}天（单站点保底1000词推广）
         </div>
       </div>
     </main>
@@ -40,7 +40,7 @@ const seoCreateEntryLis = [
   {
     id: SEO_CREATE_TYPE_CIBAO,
     title: '加速词包版',
-    desc: '推广至百度、360、搜狗等6大搜索引擎，不达1000首页词不扣费',
+    desc: '推广至百度，达标词量不够不扣费',
     isHot:true,
     routerName:'seo-create-cibao-promotion',
     canLink: false
