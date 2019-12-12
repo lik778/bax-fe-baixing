@@ -175,12 +175,14 @@ export default {
         if (w.length < 2 || w.length > 99) {
           this.$message.error('已过滤字数不满足2-99个的关键词')
           words.splice(i, 1)
+          i--
           continue
         }
         const newWord = `${this.city}${w}`
         if (this.promotion.keywords.includes(newWord) || this.originPromotion.keywords.includes(newWord)) {
           this.$message.warning(`${newWord}该关键词已存在`)
           words.splice(i, 1)
+          i--
           continue
         } 
 
