@@ -106,8 +106,7 @@ const statusLabel = {
 }
 
 const ONE_PAGE_NUM = 10
-const ONE_YEAR_NORMAL_QUOTA_PRICE = 120000
-const ONE_YEAR_PRO_QUOTA_PRICE = 180000
+const ONE_YEAR_QUOTA_PRICE = 120000
 
 const transformUnixTimeStamp = (date) =>  {
   return dayjs(new Date(date)).unix()
@@ -137,11 +136,7 @@ export default {
   components: {SectionHeader},
   methods: {
     genOriginalPrice({productType, originalPrice}) {
-      if (productType === 4) {
-        return ONE_YEAR_NORMAL_QUOTA_PRICE
-      } else if (productType === 6) {
-        return ONE_YEAR_PRO_QUOTA_PRICE
-      }
+      if (productType === 4) return ONE_YEAR_QUOTA_PRICE
       return originalPrice
     },
     async payOrder(orderId) {
@@ -181,7 +176,7 @@ export default {
     },
     formatChargePrice({originalPrice, productType}) {
       // 这个订单如果只买了官网，没有充值，就显示“-”
-      return (productType === 4 || productType === 6) ? '-' : this.formatPrice(originalPrice)
+      return productType === 4 ? '-' : this.formatPrice(originalPrice)
     },
     formatCreatedAt({createdAt}) {
       return dayjs(new Date(createdAt * 1000)).format('YY-MM-DD HH:mm')

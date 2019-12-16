@@ -227,14 +227,14 @@ const seoRoutes = [{
   component: () => import('com/seo-create-promotion-cibao'),
   path: '/main/seo/promotion/create/cibao',
   name: 'seo-create-cibao-promotion',
-  // beforeEnter: async (to, from, next) => {
-  //   const license = await getBusinessLicense()
-  //   if (license) {
-  //     next()   
-  //   } else {
-  //     Message.error('无权限访问')
-  //   }
-  // } 
+  beforeEnter: async (to, from, next) => {
+    const license = await getBusinessLicense()
+    if (license) {
+      next()   
+    } else {
+      Message.error('无权限访问')
+    }
+  } 
 },{
   component: () => import('com/seo-update-promotion-cibao'),
   path: '/main/seo/promotion/cibao/:id/update',

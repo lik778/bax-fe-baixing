@@ -61,16 +61,15 @@ export default {
       const d = await getBalance()
       this.balance = d.balance
     },
-    async getLiensence(){
-      // const businessUrl = await getBusinessLicense()
-      // if (businessUrl) {
+    async getLiensence() {
+      const businessUrl = await getBusinessLicense()
+      if (businessUrl) {
         this.list.find(row => row.id === SEO_CREATE_TYPE_CIBAO).canLink = true
-      // }
+      }
     },
     async handleRouterPush({id, routerName, canLink}){
       if (id === SEO_CREATE_TYPE_ZIXUAN ) {
-        this.$router.push({ name: routerName })
-        return 
+        return this.$router.push({ name: routerName })
       }
 
       const h = this.$createElement
@@ -93,9 +92,9 @@ export default {
       }
     }
   },
-  mounted() {
-    this.loadBalance()
-    this.getLiensence()
+  async mounted() {
+    await this.loadBalance()
+    await this.getLiensence()
   },
   computed:{
     keywords(){
