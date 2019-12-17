@@ -103,7 +103,7 @@ export async function createCibaoPromotion (opts = {}) {
     .send(opts)
     .json()
 
-  return body
+  return body.data
 }
 
 export async function updateCibaoPromotion (opts = {}) {
@@ -112,7 +112,7 @@ export async function updateCibaoPromotion (opts = {}) {
     .send(opts)
     .json()
 
-  return body
+  return body.data
 }
 
 export async function stopCibaoPromotion (id) {

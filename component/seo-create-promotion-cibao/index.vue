@@ -260,12 +260,10 @@ export default {
       }
 
       createCibaoPromotion({...this.promotion}).then(res => {
-        if (res.message === 'success') {
-          this.$message.success('创建成功')
-          this.$router.push({name: 'seo-promotion-list'})
-        } else {
-          this.$message.error(res.message)
-        }
+        this.$message.success('创建成功')
+        this.$router.push({name: 'seo-promotion-list'})
+      }).catch(() => {
+
       })
     }
   },
