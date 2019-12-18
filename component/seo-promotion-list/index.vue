@@ -342,7 +342,7 @@ export default {
       const sequence = [STATUS_ONLINE, STATUS_CREATED, STATUS_OFFLINE]
       return promotions.sort((pre, next) => sequence.indexOf(pre.status) - sequence.indexOf(next.status))
     },
-    renewPromotion(promotion) {
+    async renewPromotion(promotion) {
       const { landingPage, duration, volume, id, achieved, renewDuration } = promotion
       const charge = chargeList.find(o => o.duration === duration && o.volume === volume).charge
       if (charge > this.f2y(this.balance)) {
@@ -376,9 +376,10 @@ export default {
       此次延长时长为${duration}天，将从您的扩资金池冻结${charge}元，请确认。`, '续费申请', {
           confirmButtonText: '确定续费',
           cancelButtonText: '我在想想'
-        }).then(async () => {
-          await renewCibaoPromotion({id, duration})
-          await getCiBaoPromotionList()
+        }).then( () => {
+          return renewCibaoPromotion({id, duration})
+        }).then( () => {
+          this.getCibaoPromotionList()
         }).catch(() => {})
     },
     routerToCibaoUpdatePromotion(promotion) {
@@ -426,7 +427,7 @@ export default {
       ])
     },
     async exportCSV({id}){
-      const date = dayjs().subtract(1, 'day').format('YYYYMMDD')
+      const date = dayjs().format('YYYYMMDD')
       const result = await exportCibaoPromotion({date, id})
       const { mobileList, pcList, type } = result
       const typeName = +type === +BAIDU_TYPE ? '百度':'360' 

@@ -129,9 +129,6 @@ export const seo = new Fetch({
     } else if (res.status === 401) {
       Message.error('请重新登录 >_<')
       return redirect('signin', `return=${encodeURIComponent(location.pathname + location.search)}`)
-    } else if (res.status === 403) {
-      Message.error('您没有权限，请联系搜索通团队申请首页宝购买资格')
-      throw new Error('您没有权限，请联系搜索通团队申请首页宝购买资格')
     } else {
       res.clone().json().then(body => {
         Message.error(body.message || `出错了，请稍后重试`)
@@ -143,7 +140,7 @@ export const seo = new Fetch({
     if (body.code !== 0) {
       Message.error(body.message)
       throw new Error(body.message)
-    }
+    } 
   }
 })
 
