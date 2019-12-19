@@ -427,9 +427,9 @@ export default {
       ])
     },
     async exportCSV({id}){
-      const date = dayjs().format('YYYYMMDD')
-      const result = await exportCibaoPromotion({date, id})
-      const { mobileList, pcList, type } = result
+      const dateQuery = dayjs().format('YYYYMMDD')
+      const result = await exportCibaoPromotion({dateQuery, id})
+      const { mobileList, pcList, type, date, key } = result
       const typeName = +type === +BAIDU_TYPE ? '百度':'360' 
       if (!mobileList && !pcList) {
         return this.$message.error('暂无数据，请稍后再试')
@@ -438,7 +438,7 @@ export default {
       const json2csvParser = new Parser()
       if (mobileList) {
         const csvData = json2csvParser.parse(mobileList)
-        const filename = `${typeName}移动[待填充]${date}`
+        const filename = `${typeName}移动[${key}]${date}`
         const blob = new Blob(['\uFEFF' + csvData], 
           { type: 'text/csv;charset=utf-8;' })
         FileSaver.saveAs(blob, filename)
@@ -446,10 +446,12 @@ export default {
 
       if (pcList) {
         const csvData = json2csvParser.parse(pcList)
-        const filename = `${typeName}pc[待填充]${date}`
+        const filename= `${typeName}pc[${key}]${date}`
         const blob = new Blob(['\uFEFF' + csvData], 
           { type: 'text/csv;charset=utf-8;' })
-        FileSaver.saveAs(blob, filename)
+        setTimeout(() => {
+          FileSaver.saveAs(blob, filename)
+        },1000)
       }
     }
   },
