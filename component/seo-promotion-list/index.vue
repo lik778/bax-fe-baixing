@@ -438,7 +438,7 @@ export default {
       const json2csvParser = new Parser()
       if (mobileList) {
         const csvData = json2csvParser.parse(mobileList)
-        const filename = `${typeName}移动[${key}]${date}`
+        const filename = `${typeName}移动[${key}]${date}.csv`
         const blob = new Blob(['\uFEFF' + csvData], 
           { type: 'text/csv;charset=utf-8;' })
         FileSaver.saveAs(blob, filename)
@@ -446,7 +446,7 @@ export default {
 
       if (pcList) {
         const csvData = json2csvParser.parse(pcList)
-        const filename= `${typeName}pc[${key}]${date}`
+        const filename= `${typeName}pc[${key}]${date}.csv`
         const blob = new Blob(['\uFEFF' + csvData], 
           { type: 'text/csv;charset=utf-8;' })
         setTimeout(() => {
