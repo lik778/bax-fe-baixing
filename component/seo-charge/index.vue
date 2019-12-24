@@ -209,7 +209,7 @@ const allProducts = [
       'p >= 480000 && p < 960000 ? 90000 : false',
       'p >= 960000 ? 150000 : false'
     ],
-    name: '精品官网一年送半年【专业版】',
+    name: '精品官网一年送三个月【专业版】',
     isPro: true,
     isHot: true
   }

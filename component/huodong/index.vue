@@ -41,10 +41,10 @@
         </div>
         <div class='content'>
           <div class='p-bg p-bg3'>
-            <p>惊喜3：专业版官网买一年送半年</p>
+            <p>惊喜3：专业版官网买一年送三个月</p>
           </div>
           <div class='active part3 bg'>
-              <p class='tit'>专业版官网买一年送半年，另搭配凤鸣/标王购买，官网大额减！</p>
+              <p class='tit'>专业版官网买一年送三个月，另搭配凤鸣/标王购买，官网大额减！</p>
               <p class="color font-smaller bold"><span class="share">推荐套餐</span></p>
               <div class="f-flex wrap">
                 <div v-for="(item,index) in partThreeList" :key="index">
@@ -126,7 +126,7 @@
               </div>
               <div class="row">
                   <div class='yuan'><p class='num'>4</p></div>
-                  <p>官网买一年送半年活动：不限制用户和单数，一个用户可以在活动期间多次购买，均享受优惠。</p>
+                  <p>官网买一年送三个月活动：不限制用户和单数，一个用户可以在活动期间多次购买，均享受优惠。</p>
               </div>
               <div class="row">
                   <div class='yuan'><p class='num'>5</p></div>
