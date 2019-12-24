@@ -1039,8 +1039,8 @@ export default {
         }
       }
 
-      trackPromotionKeywords(data)
       await updateCampaign(this.id, fmtAreasInQwt(data, allAreas))
+      trackPromotionKeywords(data)
 
       Message.success('更新成功')
 
