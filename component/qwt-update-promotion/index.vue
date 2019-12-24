@@ -305,7 +305,8 @@ import qwtAddKeywordList from 'com/common/qwt-add-keyword-list'
 
 import { disabledDate } from 'util/element'
 import { isBaixingSales } from 'util/role'
-import track from 'util/track'
+import { default as track, trackAux } from 'util/track'
+
 import {
   isQwtEnableCity,
   fmtAreasInQwt,
@@ -959,17 +960,6 @@ export default {
 
       const { actionTrackId, userInfo, id } = this
 
-      track({
-        roles: userInfo.roles.map(r => r.name).join(','),
-        action: 'click-button: update-campaign',
-        baixingId: userInfo.baixingId,
-        time: Date.now() / 1000 | 0,
-        baxId: userInfo.id,
-        campaignId: id,
-        actionTrackId,
-        selectedSearchRecommends: this.promotion.newKeywords.length,
-      })
-
       try {
         await this._updatePromotion()
       } finally {
@@ -977,9 +967,9 @@ export default {
       }
     },
     async _updatePromotion() {
-      const { allAreas } = this
+      const { allAreas, trackPromotionKeywords } = this
       let data = {}
-      try {
+      try { 
         data = {
           ...this.getUpdatedCreativeData(),
           ...this.getUpdatedPromotionData(),
@@ -1050,6 +1040,7 @@ export default {
       }
 
       await updateCampaign(this.id, fmtAreasInQwt(data, allAreas))
+      trackPromotionKeywords(data)
 
       Message.success('更新成功')
 
@@ -1058,6 +1049,28 @@ export default {
       this.$router.push({
         name: 'qwt-promotion-list'
       })
+    },
+    trackPromotionKeywords({ updatedKeywords = [], newKeywords = [], deletedKeywords = [] }) {
+      // origin
+      const recommendKeywords = this._recommendKeywords
+      const getProp = this.getProp.bind(this)
+      trackAux({
+        action: 'record-promotion-keywords',
+
+        id: this.id,
+        areas: getProp('areas').join(','),
+        landingPage: getProp('landingPage'),
+        creativeTitle: getProp('creativeTitle'),
+        creativeContent: getProp('creativeContent'),
+        source: getProp('sources'),
+        dailyBudget: getProp('dailyBudget'),
+    
+        recommendKeywords: recommendKeywords.map(({word, recommandSource = 'user_selected', price}) => `${word}=${recommandSource}=${price}`).join(','),
+        newKeywords: newKeywords.map(({word, recommandSource = 'user_selected', price}) => `${word}=${recommandSource}=${price}`).join(','),
+        deletedKeywords: deletedKeywords.map(({word, price}) => `${word}=${price}`).join(','),
+        updatedKeywords: updatedKeywords.map(({word, price}) => `${word}=${price}`).join(',')
+      })
+      
     },
     async checkCreativeContent() {
       const creativeContent = this.getProp('creativeContent')
@@ -1177,6 +1190,8 @@ export default {
         const recommendKeywords = await recommendByUrl(landingPage, areas, campaignId)
         if (!recommendKeywords.length) return this.$message.info('无法提供推荐关键词')
         newKeywords = this.filterExistCurrentWords(store.fmtNewKeywordsPrice(recommendKeywords)).slice(0, 5)
+        // 一键拓词推荐关键词临时数据
+        this._recommendKeywords = (this._recommendKeywords || []).concat(newKeywords)
         if (!newKeywords.length) return this.$message.info('没有更多的关键词可以推荐啦')
       }
       this.promotion.newKeywords = newKeywords.concat(this.promotion.newKeywords)
