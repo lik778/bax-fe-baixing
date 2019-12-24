@@ -70,6 +70,11 @@ export const fieldType = {
   price: '关键词出价'
 }
 
+export const selectType =  {
+  biaowang: {type: '关键词', placeholder: '请输入关键词'},
+  fengming: {type: '计划id', placeholder: '请输入计划id'}
+}
+
 export const fengmingTimelineTypeOpts = fmtOpts(fengmingTimelineType)
 export const biaowangTimelineTypeOpts = fmtOpts(biaowangTimelineType)
 export const productTypeOpts = fmtOpts(productType)

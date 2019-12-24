@@ -5,11 +5,9 @@
       <marquee direction="left" scrollamount="6" height="40px" scrolldelay="60"><recent-sold :allAreas="allAreas" /></marquee>
       <main>
         <div class="notice">
-          <p v-for="(item, index) in discountInfo" :key="index">
-            <strong class="name">{{item[0]}}</strong>：
-            <span v-html="item[1].replace(/&%(.*?)&%/g, `<strong class='gold'>$1</strong>`)"></span>，
-            同时购买专业版精品官网一年送半年+ 官网再<i class="red">减</i> {{item[2]}} 元
-          </p>
+          <p><span><i class="red">满</i>500-4999元，</span>购买精品官网1年立<i class="red">减</i>200元；购买精品官网2年（送一年）官网<i class="red">减</i>600元；购买精品官网专业版1年（支持首页宝推广）官网<i class="red">减</i>600元；</p>
+          <p><span><i class="red">满</i>5000-9999元，</span>购买精品官网1年立<i class="red">减</i>600元；购买精品官网2年（送一年）官网<i class="red">减</i>1200元；购买精品官网专业版1年（支持首页宝推广）官网<i class="red">减</i>900元；</p>
+          <p><span><i class="red">满</i>10000元及以上，</span>购买精品官网1年立<i class="red">减</i>1000元；购买精品官网2年（送一年）官网<i class="red">减</i>1400元；购买精品官网专业版1年（支持首页宝推广）官网<i class="red">减</i>1500元；</p>
         </div>
         <el-form :model="form" :rules="rules" label-width="120px" ref="form" label-position="left" class="form" @submit.native.prevent>
           <el-form-item label="推广关键词" prop="keyword">
@@ -84,13 +82,6 @@
     getCnName
   } from 'util'
 
-  const discountInfo = [
-    ['标王欢乐套餐', '&%500元关键词买一送一&%', '600'],
-    ['标王惊喜套餐', '&%买1500送1500&%', '600'],
-    ['标王狂欢套餐', '&%买3000送3000&%', '900'],
-    ['标王大单折扣', '标王单笔订单超过6000元享&%85&%折（>6000元）；超10000元享&%8&%折 （≥1万元）', '1500']
-  ]
-
   export default {
     name: 'bw-query-price',
     components: {
@@ -110,7 +101,6 @@
     },
     data() {
       return {
-        discountInfo,
         form: {
           keyword: '',
           devices: [1, 2],
@@ -250,23 +240,14 @@ div.bg {
   margin: 0 5px;
 }
 .notice {
-  padding: 20px 30px;
-  border-radius: 15px;
-  color: #fff;
-  background: url('http://file.baixing.net/201910/e20912789e2c8ca4cb96739f972dc2ab.png');
   font-size: 13px;
   margin-bottom: 20px;
-  & >>> .gold {
-    font-weight: 300;
-    color: gold;
-    padding: 0 2px;
-  }
   & > p {
     margin-bottom: 5px;
 
-    /* & > span {
+    & > span {
       width: 145px;
-    } */
+    }
 
     & >>> .red {
       background-color: #ff3c3c;

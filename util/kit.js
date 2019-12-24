@@ -116,3 +116,7 @@ export function isSiteLandingType(landingPage) {
   const isSiteLandingTypeReg = /(\.shop|\.mvp)\.baixing\.com/i
   return isSiteLandingTypeReg.test(landingPage) || isWeishopSite(landingPage)
 }
+
+export function isObj(obj){
+  return Object.prototype.toString.call(obj) === '[object Object]'
+}

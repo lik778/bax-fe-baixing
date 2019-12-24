@@ -12,7 +12,7 @@ export function disabledDate(date) {
 }
 
 export function renderColumnHeaderWithTip(tipText) {
-  return (h, { column, labelClass, wrapClass }) => {
+  return (h, { column, labelClass, wrapClass,labelStyle}) => {
     const tip = h('el-tooltip', {
       props: {
         effect: 'dark',
@@ -35,7 +35,7 @@ export function renderColumnHeaderWithTip(tipText) {
       alignItems: 'center'
     }
     return h('div', {class: wrapClass, style: wrapStyle}, [
-      h('div', {class: labelClass, domProps: {innerHTML: column.label}}),
+      h('div', {class: labelClass,style:labelStyle,domProps: {innerHTML: column.label}}),
       tip
     ])
   }

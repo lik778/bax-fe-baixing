@@ -60,7 +60,7 @@ const store = observable({
     if (productType === PRODUCT_TYPE_BIAOWANG) {
       const reBuildBiaowangParams = (params) => {
         const {
-          campaignId: promoteId,
+          selectId: word,
           limit: size,
           offset,
           ...ohterParams
@@ -71,7 +71,7 @@ const store = observable({
         return {
           page,
           size,
-          promoteId,
+          word,
           ...ohterParams
         }
       }
@@ -79,7 +79,13 @@ const store = observable({
       logs = res.content
       total = res.totalElements
     } else {
-      const res = await fapi.getLogs(params)
+      const reBuildFengmingParams = ({selectId, ...ohterParams}) => {
+        return {
+          campaignId: selectId,
+          ...ohterParams
+        }
+      }
+      const res = await fapi.getLogs(reBuildFengmingParams(params))
       logs = res.logs
       total = res.total
     }

@@ -21,7 +21,6 @@ build:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.baixing.cn
     - docker build --pull -t $BAX_FE_REF .
     - docker push $BAX_FE_REF
-    - docker rmi $BAX_FE_REF
 
 dev-deploy:
   stage: dev-deploy
@@ -48,6 +47,6 @@ prod-deploy:
   only:
     - master
   tags:
-    - k8s-prod
+    - aliyun-prod-deploy
   script:
     - kubectl set image -n adtech deployments --selector app=bax-fe *=$BAX_FE_REF

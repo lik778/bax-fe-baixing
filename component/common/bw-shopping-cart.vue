@@ -182,6 +182,9 @@
           gwSelected,
           localItems
         } = this
+        // if (!window.localStorage.getItem('qatest')) {
+        //   return this.$message.error('系统紧急维护中，暂时不可购买，请稍后再试。')
+        // }
         const {salesId, userId} = salesInfo
         let createOrderArgs = [localItems, userId, salesId]
         if (gwSelected.length) {
