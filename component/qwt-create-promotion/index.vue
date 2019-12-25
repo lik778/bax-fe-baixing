@@ -163,8 +163,12 @@
       @cancel="gotoPromotionList"
     />
 
-    <qwt-add-keyword-list :show="addKeywordListDialog" :is-update-qwt="false" ref="qwtAddKeywordList"
-                          :promotion="newPromotion" @update-keywords="updatePromotionKeywords">
+    <qwt-add-keyword-list :show="addKeywordListDialog" 
+                          :is-update-qwt="false"
+                          ref="qwtAddKeywordList"
+                          @close="(v)=>{ addKeywordListDialog = false}" 
+                          :promotion="newPromotion"
+                          @update-keywords="updatePromotionKeywords">
     </qwt-add-keyword-list>
 
   </div>

@@ -21,13 +21,14 @@
               <price-tag v-for="(product, index) in allProducts.slice(0, 4)" :key="index"
                 :editable="product.editable" :price="product.price"
                 :checked="checkedProducts.includes(product)"
-                :minInputPrice="600"
+                :minInputPrice="parseInt(minInputPrice / 100)"
                 @click="toggleProduct(product)"
-                @change="v => product.price = v">
+                @change="(v)=> product.price = v">
               </price-tag>
             </section>
             <div>
               <p class="discount-info" v-html="promotionDiscount"></p>
+              <p class="charge-info">新建首页宝自选词推广计划需2400元起；首页宝加速词包推广限时特惠3000元起/季度，请充值足够的推广资金包，以保证计划顺利上线！</p>
             </div>
           </main>
 
@@ -39,12 +40,16 @@
                 :is-pro="product.isPro"
                 :title="product.name"
                 :original-price="centToYuan(product.price)"
-                :price="gwPrice"
+                :price="getGwPrice(product)"
                 :checked="checkedProducts.includes(product)"
                 :is-hot="product.isHot"
                 @click.native="toggleProduct(product)"
               />
             </section>
+            <div>
+              <p v-if="showGwWarnInfo" class="gw-warn-info">短期官网仅支持本次充值{{LOCK_SHORT_GW_PRICE/100}}元及以上推广资金的用户购买</p>
+              <p class="charge-info">首页宝自选词推广的官网有效时长需6个月以上，如需进行首页宝自选词推广，请选择一年版精品官网；如需进行加速词包推广，可选择100天或200天官网版本。</p>
+            </div>
           </main>
         </div>
       </section>
@@ -166,7 +171,7 @@ import { product as PRODUCT } from 'constant/product'
 import { normalizeRoles } from 'util/role'
 
 import { createPreOrder } from 'api/seo'
-  import {orderServiceHost} from 'config'
+import {orderServiceHost} from 'config'
 
 import {
   getUserIdFromBxSalesId,
@@ -179,7 +184,11 @@ import {
   payOrders
 } from 'api/order'
 
+import { SKU_GW, SKU_GW_100, SKU_GW_200} from 'constant/seo'
+
 const PROFESSIONAL_SITE_PRODUCT_TYPE = 6
+const LOCK_SHORT_GW_PRICE = 3000 * 100
+const lockMessage = `短期官网仅支持本次充值${LOCK_SHORT_GW_PRICE/100}元及以上推广资金的用户购买`
 
 const allProducts = [
   {
@@ -199,9 +208,39 @@ const allProducts = [
     productType: 3,
     editable: true,
     price: 0
-  }, {
+  }, 
+  {
     id: 5,
     productType: PROFESSIONAL_SITE_PRODUCT_TYPE,
+    websiteSkuId: SKU_GW_100, // 官网sku id
+    price: 600 * 100,
+    discountExecPriceFunc:[
+      'p >= 0 ? 30000 : false'
+    ],
+    isFixedPrice:true, //固定价格不参与满减
+    name: '精品官网：100天【专业版】',
+    productTime:'100天',
+    isPro: true,
+    isHot: false
+  },
+  {
+    id: 6,
+    productType: PROFESSIONAL_SITE_PRODUCT_TYPE,
+    websiteSkuId: SKU_GW_200,
+    price: 1200 * 100,
+    discountExecPriceFunc:[
+      'p >= 0 ? 60000 : false'
+    ],
+    isFixedPrice:true, //固定价格不参与满减
+    name: '精品官网：200天【专业版】',
+    productTime:'200天',
+    isPro: true,
+    isHot: false
+  },
+  {
+    id: 7,
+    productType: PROFESSIONAL_SITE_PRODUCT_TYPE,
+    websiteSkuId: SKU_GW,
     price: 1800 * 100,
     discountExecPriceFunc: [
       'p >= 0 && p < 240000 ? 0 : false',
@@ -262,23 +301,21 @@ export default {
       payInProgress: false,
       payDialogVisible: false,
 
-      showIntro: false
+      showIntro: false,
+      LOCK_SHORT_GW_PRICE,
+      minInputPrice: 600 * 100,
+      showGwWarnInfo: false
     }
   },
   computed: {
-    gwPrice() {
-      const gw = this.fullCheckedProducts.find(p => p.productType === PROFESSIONAL_SITE_PRODUCT_TYPE)
-      if (gw) {
-        return centToYuan(gw.price)
-      }
-    },
     promotionDiscount() {
       const charge = this.checkedProducts.find(p => p.productType === 3)
       if (charge) {
         const siteProduct = this.fullCheckedProducts.find(({productType}) => productType === PROFESSIONAL_SITE_PRODUCT_TYPE)
+        let isFixedPrice = siteProduct && this.checkedProducts.find(product=>product.id===siteProduct.id).isFixedPrice
         const siteDiscountPrice = siteProduct && centToYuan(siteProduct.originalPrice - siteProduct.discountPrice)
 
-        return  siteDiscountPrice
+        return  (siteDiscountPrice && !isFixedPrice)
           ? `同时购买专业版精品官网（一年）立<span class="red">减</span> ${siteDiscountPrice} 元`
           : ''
       }
@@ -343,13 +380,41 @@ export default {
     },
   },
   methods: {
+    getGwPrice(product) {
+      const gw = this.fullCheckedProducts.find(p => p.id === product.id)
+      if (gw) {
+        return centToYuan(gw.price)
+      }
+      return 0
+    },
     toggleProduct (product) {
+      const { productType, isFixedPrice, price } = product
+      const chargeProduct = this.checkedProducts.find(p => p.productType === 3)
+      const gwProduct = this.checkedProducts.find(p => p.productType === PROFESSIONAL_SITE_PRODUCT_TYPE)
       const index = this.checkedProducts.indexOf(product)
-      if (index > -1) {
+
+      if (index > -1) { 
+        if (productType === 3 && gwProduct && gwProduct.isFixedPrice) {
+          // return this.$message.error(lockMessage)
+          return this.showGwWarnInfo = true
+        }
+        this.showGwWarnInfo = false
         this.checkedProducts.splice(index, 1)
       } else {
-        const chargeProduct = this.checkedProducts.find(p => p.productType === 3)
-        const gwProduct = this.checkedProducts.find(p => p.productType === PROFESSIONAL_SITE_PRODUCT_TYPE)
+        if (productType === PROFESSIONAL_SITE_PRODUCT_TYPE && isFixedPrice) {
+          if (chargeProduct && chargeProduct.price < LOCK_SHORT_GW_PRICE || !chargeProduct){
+            // return this.$message.error(lockMessage)
+            return this.showGwWarnInfo = true
+          } 
+        }
+        if (productType === 3 && price < LOCK_SHORT_GW_PRICE) {
+          if (gwProduct && gwProduct.isFixedPrice) {
+            // return this.$message.error(lockMessage)
+            return this.showGwWarnInfo = true
+          }
+        }
+        this.showGwWarnInfo = false
+      
         if (chargeProduct && product.productType === 3) {
           const index = this.checkedProducts.indexOf(chargeProduct)
           this.checkedProducts.splice(index, 1)
@@ -402,21 +467,35 @@ export default {
       await payOrders(oids)
     },
     async createPreOrder() {
-      // if (!window.localStorage.getItem('qatest')) {
-      //   return this.$message.error('系统紧急维护中，暂时不可购买，请稍后再试。')
-      // }
       if (!this.$refs.contract.$data.isAgreement) {
         return this.$message.error('请阅读并勾选同意服务协议，再进行下一步操作')
+      }
+      // 校验
+      const chargeProduct = this.checkedProducts.find(p => p.productType === 3)
+      const gwProduct = this.checkedProducts.find(p => p.productType === PROFESSIONAL_SITE_PRODUCT_TYPE && p.isFixedPrice)
+      if (this.checkedProducts.length <= 0) {
+        this.$message.error('商品为空')
+        return
+      }
+      if (chargeProduct && chargeProduct.price < this.minInputPrice) {
+        this.$message.error('充值金额最少为600元')
+        return
+      }
+      if (gwProduct && ( !chargeProduct || (chargeProduct && chargeProduct.price < LOCK_SHORT_GW_PRICE))) {
+        this.$message.error(lockMessage)
+        return
       }
       const {salesId, userId} = this.salesInfo
 
       // balanceAmount, saleWithShopOrder, shopOrderAmount, targetUserId, salesId
       const charge = this.fullCheckedProducts.find(p => p.productType === 3)
       const saleWithShopOrder = !!this.fullCheckedProducts.find(p => p.productType === PROFESSIONAL_SITE_PRODUCT_TYPE)
+      const gw = this.fullCheckedProducts.find(p => p.productType === PROFESSIONAL_SITE_PRODUCT_TYPE)
       const preTradeId = await createPreOrder(
         charge ? charge.originalPrice: 0,
         saleWithShopOrder,
         1,
+        gw ? gw.websiteSkuId: 0, //看二军需求
         userId,
         salesId
       )
@@ -428,7 +507,13 @@ export default {
         this.orderPayUrl = `${orderServiceHost}/?appId=103&seq=${preTradeId}`
       }
     },
-    centToYuan
+    filterProductName({productType,productTime}){
+      if( productType !== PROFESSIONAL_SITE_PRODUCT_TYPE ){
+        return PRODUCT[productType]
+      }
+      return `${PRODUCT[productType]}【${productTime}】`
+    },
+    centToYuan,
   },
   watch: {
     checkedProducts: {
@@ -439,7 +524,7 @@ export default {
 
         if (charge && gw) {
           let gwPrice = gw.price
-          const { discountExecPriceFunc } = gw
+          const { discountExecPriceFunc, websiteSkuId} = gw
           gwPrice = gw.price - discountExecPriceFunc
             .map(execStr => new Function('p', 'return ' + execStr)(charge.price))
             .find(res => res !== false)
@@ -448,21 +533,31 @@ export default {
             return {
               id,
               productType,
-              name: PRODUCT[productType],
+              name: this.filterProductName(product),
               price: productType === PROFESSIONAL_SITE_PRODUCT_TYPE ? gwPrice : price,
               originalPrice: price,
+              websiteSkuId: product.websiteSkuId || 0, //看二军需求
               discountPrice: this.getDiscountPrice(productType, productType === PROFESSIONAL_SITE_PRODUCT_TYPE ? gwPrice : price)
             }
           })
-        } else {
+        } else{
           this.fullCheckedProducts = checked.map(product => {
-            const {id, productType, price} = product
+            let { id, productType, price:originalPrice } = product
+            let price = originalPrice
+            if( product.productType === PROFESSIONAL_SITE_PRODUCT_TYPE && product.isFixedPrice ){
+              const { discountExecPriceFunc } = product
+              let gwPrice = price - discountExecPriceFunc
+               .map(execStr => new Function('p', 'return ' + execStr)(0))
+               .find(res => res !== false)
+               price = gwPrice
+            }   
             return {
               id,
               productType,
-              name: PRODUCT[productType],
+              name: this.filterProductName(product),
               price: price,
-              originalPrice: price,
+              originalPrice: originalPrice,
+              websiteSkuId: product.websiteSkuId || 0, // 看二军需求
               discountPrice: this.getDiscountPrice(productType, price)
             }
           })
@@ -819,5 +914,16 @@ export default {
   height: 1px;
   margin: 10px 0;
   background-color: #CFCFCF;
+}
+
+.charge-info{
+  color:#FF7533;
+  font-size: 12px;
+  margin-top: 10px;
+}
+.gw-warn-info{
+  color: red;
+  font-size : 14px;
+  margin-top: 10px
 }
 </style>
