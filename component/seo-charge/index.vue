@@ -184,6 +184,8 @@ import {
   payOrders
 } from 'api/order'
 
+import { SKU_GW, SKU_GW_100, SKU_GW_200} from 'constant/seo'
+
 const PROFESSIONAL_SITE_PRODUCT_TYPE = 6
 const LOCK_SHORT_GW_PRICE = 3000 * 100
 const lockMessage = `短期官网仅支持本次充值${LOCK_SHORT_GW_PRICE/100}元及以上推广资金的用户购买`
@@ -210,7 +212,7 @@ const allProducts = [
   {
     id: 5,
     productType: PROFESSIONAL_SITE_PRODUCT_TYPE,
-    websiteSkuId: 5, // 官网sku id
+    websiteSkuId: SKU_GW_100, // 官网sku id
     price: 600 * 100,
     discountExecPriceFunc:[
       'p >= 0 ? 30000 : false'
@@ -224,7 +226,7 @@ const allProducts = [
   {
     id: 6,
     productType: PROFESSIONAL_SITE_PRODUCT_TYPE,
-    websiteSkuId: 6,
+    websiteSkuId: SKU_GW_200,
     price: 1200 * 100,
     discountExecPriceFunc:[
       'p >= 0 ? 60000 : false'
@@ -238,7 +240,7 @@ const allProducts = [
   {
     id: 7,
     productType: PROFESSIONAL_SITE_PRODUCT_TYPE,
-    websiteSkuId: 4,
+    websiteSkuId: SKU_GW,
     price: 1800 * 100,
     discountExecPriceFunc: [
       'p >= 0 && p < 240000 ? 0 : false',
