@@ -8,10 +8,10 @@
           <p v-for="(item, index) in discountInfo" :key="index">
             <strong class="name">{{item[0]}}</strong>：
             <span v-html="item[1].replace(/&%(.*?)&%/g, `<strong class='gold'>$1</strong>`)"></span>,
-            <i class="red">加</i>{{item[2]}}元即可获得1年3个月价值2340元专业版官网
+            <i class="red">加</i>{{item[2]}}元即可获得1年3个月价值2250元专业版官网
             <template v-if="item.length > 4">
               ; <span v-html="item[3].replace(/&%(.*?)&%/g, `<strong class='gold'>$1</strong>`)"></span>,
-              <i class="red">加</i>{{item[4]}}元即可获得1年3个月价值2340元专业版官网
+              <i class="red">加</i>{{item[4]}}元即可获得1年3个月价值2250元专业版官网
             </template>
           </p>
         </div>
