@@ -507,11 +507,11 @@ export default {
         this.orderPayUrl = `${orderServiceHost}/?appId=103&seq=${preTradeId}`
       }
     },
-    filterProductName({productType,productTime}){
+    filterProductName({productType,productTime}) {
       if( productType !== PROFESSIONAL_SITE_PRODUCT_TYPE ){
         return PRODUCT[productType]
       }
-      return `${PRODUCT[productType]}【${productTime}】`
+      return PRODUCT[productType] + (productTime ? `【${productTime}】` : '')
     },
     centToYuan,
   },
