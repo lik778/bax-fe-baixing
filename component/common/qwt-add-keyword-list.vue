@@ -65,9 +65,9 @@ export default {
   },
   methods:{
     handleClose() {
-      this.$parent.addKeywordListDialog = false
       this.search = ''
       this.keywords = null
+      this.$emit('close')
     },
     handleConfirm() {
       this.$emit('update-keywords',this.keywords)
@@ -130,14 +130,13 @@ export default {
       for(let i=0;i<normalList.length;i++){
         let row = normalList[i]
         if(words.includes(row.word)){
-          Message.warning(`${row.word}该关键词已存在`)
-          return
+          return Message.warning(`${row.word}该关键词已存在`)
         }
       }
       for(let i=0;i<bannedList.length;i++){
         let row = bannedList[i]
         if(words.includes(row.word)){
-          Message.warning(`因平台限制，${row.word}无法添加，请修改`)
+          return Message.warning(`因平台限制，${row.word}无法添加，请修改`)
         }
       }
 

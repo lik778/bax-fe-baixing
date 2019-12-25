@@ -5,12 +5,10 @@
       <header class="page-header">更新首页宝推广计划：# {{$route.params.id}}</header>
       <header>选择推广站点</header>
 
-      <qiqiaoban-page-selector
-        :product-type="PRO_SITE_PRODUCT_TYPE"
-        :value="promotion.landingPage"
-        @change="v => promotion.landingPage = v"
-        :disabled="true"
-      />
+      <qiqiaoban-page-selector :product-type="PRO_SITE_PRODUCT_TYPE"
+                               :value="promotion.landingPage"
+                               @change="v => promotion.landingPage = v"
+                               :disabled="true" />
     </section>
 
     <section>
@@ -24,7 +22,9 @@
       </div>
 
       <div>
-        <input class="keyword-input" v-model.trim="inputKeyword" @keyup.enter="onEnter" />
+        <input class="keyword-input"
+               v-model.trim="inputKeyword"
+               @keyup.enter="onEnter" />
       </div>
 
     </section>
@@ -42,7 +42,6 @@
       </div>
       <contract-ack type="content-rule" ref="contract"/>
       <el-button class="submit" type="primary" @click="onUpdateClick">更新推广</el-button>
-
     </section>
   </div>
 </template>
@@ -110,7 +109,7 @@ export default {
     margin-bottom: 10px;
     background-color: #fff;
     padding: 20px;
-    box-shadow: 0 2px 9px 0 rgba(83,95,127,.1);
+    box-shadow: 0 2px 9px 0 rgba(83, 95, 127, 0.1);
 
     & > .page-header {
       font-size: 1.5em;
@@ -143,5 +142,6 @@ export default {
 }
 .submit {
   margin-top: 20px;
-}</style>
+}
+</style>
 
