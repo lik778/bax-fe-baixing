@@ -83,3 +83,7 @@ export const cibaoStatus = {
 
 export const BAIDU_TYPE = 0
 export const QIHU_360 = 1
+
+export const SKU_GW = 4
+export const SKU_GW_100 = 5
+export const SKU_GW_200 = 6
