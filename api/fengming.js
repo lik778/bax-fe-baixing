@@ -425,6 +425,12 @@ export async function huodongLeads(opts) {
   return body
 }
 
+export async function getServerTime() {
+  const r = await fengming.get('/product?product_types=3')
+  console.log(r.headers.get('date'))
+  return r.headers.get('date')
+}
+
 export async function changeCampaignKeywordsPrice(campaignId, price) {
   const body = await fengming
     .post(`/campaign/${campaignId}/keyword`)
