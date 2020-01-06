@@ -17,7 +17,7 @@ export default function track(opts) {
 
     const img = new Image()
     img.id = 'bxti-' + uuid()
-    img.src = 'http://www.baixing.com/c/ev/bxad?' + stringify(opts)
+    img.src = 'https://www.baixing.com/c/ev/bxad?' + stringify(opts)
     img.style.display = 'none'
 
     document.body.appendChild(img)

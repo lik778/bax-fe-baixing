@@ -1,11 +1,11 @@
 <template>
   <div class="huodong-btn">
-    <a :href="href"><img src="http://file.baixing.net/201811/629d6d1e8b0c870fdf270e057fac567f.png" alt=""></a>
+    <a :href="href"><img src="//file.baixing.net/201811/629d6d1e8b0c870fdf270e057fac567f.png" alt=""></a>
   </div>
 </template>
 
 <script>
-const href = `http://bax.baixing.com.cn/huodong`
+const href = `//bax.baixing.com.cn/huodong`
 
 export default {
   name: 'huodong-btn',

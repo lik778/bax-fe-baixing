@@ -2,14 +2,14 @@
   <div class="huodong-intro" v-show="show">
     <a :href="href">
       <div class="center">
-        <img src="http://file.baixing.net/201811/d4dfeb04a7c1afbabe5afc5269da0f6f.png" alt="" @click="$emit('close')">
+        <img src="//file.baixing.net/201811/d4dfeb04a7c1afbabe5afc5269da0f6f.png" alt="" @click="$emit('close')">
       </div>
     </a>
   </div>
 </template>
 
 <script>
-const href = 'http://bax.baixing.com.cn/huodong'
+const href = '//bax.baixing.com.cn/huodong'
 
 export default {
   name: 'huodong-intro',

@@ -10,7 +10,7 @@
       style="width: 530px">
       <template slot="empty">
         <a class="fabu" target="_blank"
-          href="http://shanghai.baixing.com/fabu/">
+          href="//shanghai.baixing.com/fabu/">
           您当前账户无有效帖子，先去发一条吧！
         </a>
       </template>

@@ -624,7 +624,7 @@ export default {
 
     & > .img {
       height: 132px;
-      background-image: url(http://file.baixing.net/201907/72c9added79381c68d23ef3a04089224.png);
+      background-image: url('//file.baixing.net/201907/72c9added79381c68d23ef3a04089224.png');
     }
     & > .body {
       text-align: center;

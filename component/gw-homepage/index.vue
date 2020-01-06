@@ -52,7 +52,7 @@
     </div>
     <div id="modal" :style="visible ? 'display: flex' : ''">
       <div class="content-container">
-        <img src="http://file.baixing.net/201910/984676c9cd82a3d61af8b3ee15a73ed2.png" alt="精品官网功能对比" width="100%">
+        <img src="//file.baixing.net/201910/984676c9cd82a3d61af8b3ee15a73ed2.png" alt="精品官网功能对比" width="100%">
       </div>
       <div class="close-btn" @click="hideModal">&times;</div>
     </div>
