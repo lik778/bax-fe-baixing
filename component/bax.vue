@@ -1,6 +1,19 @@
 
 <template>
   <div class="container" v-loading.fullscreen="fullscreenLoading">
+    <el-dialog
+      width="578px"
+      :visible.sync="showNotice"
+      @close="handleNotificationClose"
+    >
+      <h3 slot="title">通知</h3>
+      <div style="font-size: 16px">
+        {{notice}}
+      </div>
+      <div slot="footer">
+        <el-button type="primary" @click="showNotice = false">确认</el-button>
+      </div>
+    </el-dialog>
     <Header :userInfo="currentUser"/>
     <div class="main-content">
       <router-view class="view"
@@ -56,6 +69,9 @@ import {
 import {router} from '../template/bax'
 import qs from 'query-string'
 
+const LAST_NOTIFICATION_KEY = 'LAST_NOTIFICATION'
+const ONE_DAY_DURATION_MS = 86400000
+
 export default {
   name: 'bax',
   components: {
@@ -83,8 +99,8 @@ export default {
       showNewUserIntro: false,
       newUserIntroMode: '',
       pending: 0,
-      notice: '近期因360家电维修行业被整治，目前360渠道关于家电维修的订单会全部下线，请知晓',
-      showNotice: true,
+      notice: '为了响应政府要求，确保用户投放信息的合规性，近期会对担保贷款行业进行整改，担保贷款用户暂停购买搜索通产品。',
+      showNotice: Date.now() - Number(window.localStorage.getItem(LAST_NOTIFICATION_KEY) || 0) > ONE_DAY_DURATION_MS,
       huoDongIntroVisible: !document.referrer.includes('/a/quanwangtong'),
       isBwRoute: false,
       salesInfo: {
@@ -107,6 +123,9 @@ export default {
     }
   },
   methods: {
+    handleNotificationClose() {
+      window.localStorage.setItem(LAST_NOTIFICATION_KEY, (Date.now() + ONE_DAY_DURATION_MS).toString())
+    },
     toggleAddUserLeadVisible() {
       gStore.toggleAddUserLeadVisible()
     }
