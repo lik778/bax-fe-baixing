@@ -316,7 +316,7 @@ export default {
       timeout: null,
 
       // PRE_IMG_PROMOTION: assetHost + 'promotion-advantage.png'
-      PRE_IMG_PROMOTION: 'http://file.baixing.net/201809/a995bf0f1707a3e98a2c82a5dc5f8ad3.png',
+      PRE_IMG_PROMOTION: '//file.baixing.net/201809/a995bf0f1707a3e98a2c82a5dc5f8ad3.png',
       addKeywordListDialog:false
     }
   },

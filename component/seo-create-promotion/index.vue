@@ -4,7 +4,7 @@
     <main>
       <div class="create-item" v-for="row in list" :key="row.id">
         <div class="hot-flag" v-if="row.isHot">
-          <img src="http://file.baixing.net/201910/04254536456b9a4cba2e0dc239dbcd79.png" width="69"
+          <img src="//file.baixing.net/201910/04254536456b9a4cba2e0dc239dbcd79.png" width="69"
             height="33" alt="爆款">
         </div>
         <div class="create-item-content" @click="handleRouterPush(row)">

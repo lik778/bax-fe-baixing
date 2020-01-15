@@ -97,7 +97,7 @@
       height: 50px;
       overflow: hidden;
       text-indent: -9999px;
-      background: url('http://file.baixing.net/201902/ddec176c9e5d2dd736e6d9948686ffee.png') 23px center no-repeat;
+      background: url('//file.baixing.net/201902/ddec176c9e5d2dd736e6d9948686ffee.png') 23px center no-repeat;
       background-size: 80px 35px;
     }
     & .version {
