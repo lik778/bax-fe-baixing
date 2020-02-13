@@ -5,9 +5,15 @@
       <marquee direction="left" scrollamount="6" height="40px" scrolldelay="60"><recent-sold :allAreas="allAreas" /></marquee>
       <main>
         <div class="notice">
-          <p><span><i class="red">满</i>500-4999元，</span>购买精品官网1年立<i class="red">减</i>200元；购买精品官网2年（送一年）官网<i class="red">减</i>600元；购买精品官网专业版1年（支持首页宝推广）官网<i class="red">减</i>600元；</p>
-          <p><span><i class="red">满</i>5000-9999元，</span>购买精品官网1年立<i class="red">减</i>600元；购买精品官网2年（送一年）官网<i class="red">减</i>1200元；购买精品官网专业版1年（支持首页宝推广）官网<i class="red">减</i>900元；</p>
-          <p><span><i class="red">满</i>10000元及以上，</span>购买精品官网1年立<i class="red">减</i>1000元；购买精品官网2年（送一年）官网<i class="red">减</i>1400元；购买精品官网专业版1年（支持首页宝推广）官网<i class="red">减</i>1500元；</p>
+          <p v-for="(item, index) in discountInfo" :key="index">
+            <strong class="name">{{item[0]}}</strong>：
+            <span v-html="item[1].replace(/&%(.*?)&%/g, `<strong class='gold'>$1</strong>`)"></span>,
+            <i class="red">加</i>{{item[2]}}元即可获得1年3个月价值2250元专业版官网
+            <template v-if="item.length > 4">
+              ; <span v-html="item[3].replace(/&%(.*?)&%/g, `<strong class='gold'>$1</strong>`)"></span>,
+              <i class="red">加</i>{{item[4]}}元即可获得1年3个月价值2250元专业版官网
+            </template>
+          </p>
         </div>
         <el-form :model="form" :rules="rules" label-width="120px" ref="form" label-position="left" class="form" @submit.native.prevent>
           <el-form-item label="推广关键词" prop="keyword">
@@ -82,6 +88,12 @@
     getCnName
   } from 'util'
 
+  const discountInfo = [
+    ['标王惊喜套餐', '&%买1500送1000&%', '1200'],
+    ['标王狂欢套餐', '&%买3000送2000&%', '900'],
+    ['标王大单折扣', '标王单笔订单超过6000元享&%8.5&%折（>6000元)','900','超10000元享&%8&%折 （≥1万元）','300']
+  ]
+
   export default {
     name: 'bw-query-price',
     components: {
@@ -101,6 +113,7 @@
     },
     data() {
       return {
+        discountInfo,
         form: {
           keyword: '',
           devices: [1, 2],
@@ -240,14 +253,23 @@ div.bg {
   margin: 0 5px;
 }
 .notice {
+  padding: 20px 30px;
+  border-radius: 15px;
+  color: #fff;
+  background: url('http://file.baixing.net/201910/e20912789e2c8ca4cb96739f972dc2ab.png');
   font-size: 13px;
   margin-bottom: 20px;
+  & >>> .gold {
+    font-weight: 300;
+    color: gold;
+    padding: 0 2px;
+  }
   & > p {
     margin-bottom: 5px;
 
-    & > span {
+    /* & > span {
       width: 145px;
-    }
+    } */
 
     & >>> .red {
       background-color: #ff3c3c;

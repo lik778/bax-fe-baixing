@@ -10,9 +10,9 @@
           1. 选择产品 | <span class="discount-btn" @click="showDiscount = !showDiscount">查看优惠细则<i class="el-icon-question"></i></span>
         </header>
         <div class="discount-section" v-show="showDiscount">
-          <p class="discount-info">满2400元：同时购买专业版精品官网（1年）<span class="red">减</span>官网立减 600 元；</p>
-          <p class="discount-info">满4800元：同时购买专业版精品官网（1年）<span class="red">减</span>官网立减 900 元；</p>
-          <p class="discount-info">满9600元：同时购买专业版精品官网（1年）<span class="red">减</span>官网立减 1500 元；</p>
+          <p class="discount-info">满2400元：同时购买专业版精品官网一年送一年<span class="red">减</span>官网立减 600 元；</p>
+          <p class="discount-info">满4800元：同时购买专业版精品官网一年送一年<span class="red">减</span>官网立减 900 元；</p>
+          <p class="discount-info">满9600元：同时购买专业版精品官网一年送一年<span class="red">减</span>官网立减 1500 元；</p>
         </div>
         <div class="charge">
           <header>选择充值推广资金包：</header>
@@ -248,7 +248,7 @@ const allProducts = [
       'p >= 480000 && p < 960000 ? 90000 : false',
       'p >= 960000 ? 150000 : false'
     ],
-    name: '精品官网一年【专业版】',
+    name: '精品官网一年送三个月【专业版】',
     isPro: true,
     isHot: true
   }
