@@ -240,8 +240,10 @@ div.bg {
   margin: 0 5px;
 }
 .notice {
-  padding: 15px 30px;
-  font-size: 13px;
+  font-size: 12px;
+  background-color: #f5f5f5;
+  padding: 20px;
+  margin-top: 10px;
   margin-bottom: 20px;
   & >>> .gold {
     font-weight: 300;
