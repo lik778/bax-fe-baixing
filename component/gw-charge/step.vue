@@ -26,8 +26,6 @@ export default {
       steps: [{
         name: '选择产品'
       }, {
-        name: '核对订单'
-      }, {
         name: '确认购买'
       }]
     }

@@ -102,6 +102,7 @@ input::placeholder {
   border: solid 1px #ccc;
   cursor: pointer;
   color: #333;
+  margin: 0 30px 20px 0;
 
   & > main {
     display: flex;

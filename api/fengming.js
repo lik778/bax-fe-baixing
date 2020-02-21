@@ -95,6 +95,14 @@ export async function getProducts(type = 3) {
   return toCamelcase(body.data)
 }
 
+export async function getProductList() {
+  const body = await fengming
+    .get('/products')
+    .json()
+
+  return toCamelcase(body.data)
+}
+
 export async function getProductPackages(type = 0) {
   const body = await fengming
     .get('/product/package')
@@ -285,18 +293,17 @@ export async function recommendByWord(word, opts) {
 export async function recommendByWordList(word, opts) {
   const body = await fengming
     .post('/keyword/recommand/word-list')
-    .send(reverseCamelcase({words:word, ...opts}))
+    .send(reverseCamelcase({words: word, ...opts}))
     .json()
 
   let result = toCamelcase(body.data)
-  if(result && isObj(result)){
-    for(let key in result){
+  if (result && isObj(result)) {
+    for (let key in result) {
       result[key] = fmtWords(toCamelcase(result[key]))
     }
   }
   return result
 }
-
 
 export async function getChangeLogs(opts) {
   const body = await fengming

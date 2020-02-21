@@ -159,7 +159,7 @@ const qwtRoutes = [{
   path: '/main/qwt/dashboard',
   name: 'qwt-dashboard'
 }, {
-  component: () => import('com/charge'),
+  component: () => import('com/qwt-charge'),
   path: '/main/qwt/charge',
   name: 'qwt-charge'
 }]
@@ -219,23 +219,23 @@ const seoRoutes = [{
   component: () => import('com/seo-update-promotion-zixuan'),
   path: '/main/seo/promotion/zixuan/:id/update',
   name: 'seo-update-zixuan-promotion'
-},{
+}, {
   component: () => import('com/seo-create-promotion-zixuan'),
   path: '/main/seo/promotion/create/zixuan',
   name: 'seo-create-zixuan-promotion'
-},{
+}, {
   component: () => import('com/seo-create-promotion-cibao'),
   path: '/main/seo/promotion/create/cibao',
   name: 'seo-create-cibao-promotion',
   beforeEnter: async (to, from, next) => {
     const license = await getBusinessLicense()
     if (license) {
-      next()   
+      next()
     } else {
       Message.error('无权限访问')
     }
-  } 
-},{
+  }
+}, {
   component: () => import('com/seo-update-promotion-cibao'),
   path: '/main/seo/promotion/cibao/:id/update',
   name: 'seo-update-cibao-promotion'
