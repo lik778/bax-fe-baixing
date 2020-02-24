@@ -4,9 +4,8 @@
       <section>
         <main>热卖</main>
         <footer>
-          <svg xmlns="http://www.w3.org/2000/svg"
-               version="1.1"
-               class="svg-triangle">
+          <svg xmlns="http://www.w3.org/2000/svg" version="1.1"
+            class="svg-triangle">
             <polygon points="0,0 44,0 22,12" />
           </svg>
         </footer>
@@ -14,9 +13,8 @@
     </div>
     <header>{{ title }}</header>
     <ul :class="{'desc-container': true, 'desc-pro-container': isPro}">
-      <li :class="{'desc-no-pro': !isPro}"
-          v-for="(item, index) in descArrInfo"
-          :key="index">{{item}}
+      <li :class="{'desc-no-pro': !isPro}" v-for="(item, index) in descArrInfo"
+        :key="index">{{item}}
       </li>
     </ul>
     <footer>
@@ -56,17 +54,15 @@ export default {
     isHot: {
       type: Boolean,
       default: false
-    },
-    isPro: {
-      type: Boolean,
-      default: false,
-      required: true
     }
   },
   computed: {
     descArrInfo () {
-      const arr = this.desc.split('/')
+      const arr = this.desc.split(' ')
       return arr
+    },
+    isPro () {
+      return this.descArrInfo.length === 2 ?  true: false
     }
   },
   methods: {
@@ -83,6 +79,7 @@ export default {
 @import 'cssbase/mixin';
 
 .gw-pro-widget {
+  position: relative;
   display: inline-flex;
   flex-flow: column;
   width: 260px;
@@ -150,6 +147,10 @@ export default {
     }
   }
   & > footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
     @mixin center;
     height: 36px;
     color: white;
@@ -169,11 +170,12 @@ export default {
       color: white;
     }
     & > p {
-      position: relative;
+      position: absolute;
       height: 0;
       width: 0;
       left: 266px;
       bottom: 10px;
+      right: 0;
     }
     & i.icon-check {
       @mixin center;

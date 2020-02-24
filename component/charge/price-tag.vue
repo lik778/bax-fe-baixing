@@ -35,6 +35,10 @@ export default {
     minInputPrice: {
       type: Number,
       default: 500
+    },
+    maxInputPrice: {
+      type: Number,
+      default: 99999999
     }
   },
   data() {
@@ -52,11 +56,15 @@ export default {
     onBlur() {
       const {
         minInputPrice,
+        maxInputPrice,
         inputPrice
       } = this
 
       if (inputPrice < minInputPrice) {
         return Message.error(`最低充值金额: ${minInputPrice}`)
+      }
+      if (inputPrice > maxInputPrice) {
+        return Message.error(`最高充值金额：${maxInputPrice}`)
       }
     },
     onClick(e) {

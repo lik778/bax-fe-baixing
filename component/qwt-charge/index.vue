@@ -1,5 +1,5 @@
 <template>
-  <div class="charge-container">
+  <div class="charge-container" v-loading.fullscreen.lock="fetchLoading">
     <section class="shadow">
       <step :step="0" />
     </section>
@@ -7,46 +7,46 @@
       <header>
         1. 选择产品 | <span class="discount-btn">优惠细则</span>
       </header>
-      <div class="discount-section"
-           v-show="showDiscount">
+      <div class="discount-section" v-show="showDiscount">
         <p class="discount-info">充值更多，可享更多优惠！</p>
-        <p class="discount-info"
-           :key="index"
-           v-for="(html, index) in discountInfoHTML"
-           v-html="html" />
+        <p class="discount-info" :key="index"
+          v-for="(html, index) in discountInfoHTML" v-html="html" />
       </div>
 
       <div class="charge-section">
-        <header>选择{{allProducts[FENGMING_SPU_ID].title}}：</header>
-        <main>
-          <section>
-            <price-tag v-for="(product, index) in allProducts[FENGMING_SPU_ID].selection"
-                       :key="index"
-                       :editable="Number(product.maxQuantity) !== 1"
-                       :price="product.realPrice"
-                       :checked="checkedProducts.includes(product)"
-                       @click="toggleProduct(product)"
-                       @change="v => product.realPrice = v">
-            </price-tag>
-          </section>
-        </main>
+        <template v-if="chargeSpu">
+          <header>选择{{chargeSpu.title}}：</header>
+          <main>
+            <section>
+              <price-tag v-for="(product, index) in chargeSpu.selection"
+                :key="index"
+                :editable="Number(product.maxQuantity) !== Number(product.minQuantity)"
+                :price="product.price"
+                :min-input-price="product.minQuantity"
+                :max-input-price="product.maxQuantity"
+                :checked="checkedProducts.includes(product)"
+                @click="toggleProduct(product)"
+                @change="v => handlePriceChange(product, v)">
+              </price-tag>
+            </section>
+          </main>
+        </template>
 
-        <header>选择{{allProducts[SITE_SPU_ID].title}}：
-          <span class="tip">具体官网搭售折扣及实付金额，请点击“确认购买”后前往订单确认页面查看</span>
-        </header>
-        <main>
-          <section>
-            <gw-pro-widget v-for="(product, index) of allProducts[SITE_SPU_ID].selection"
-                           :key="index"
-                           :title="product.title"
-                           :desc="product.desc"
-                           :is-hot="product.title.includes('专业版')"
-                           :is-pro="product.title.includes('专业版')"
-                           :price="centToYuan(product.realPrice)"
-                           :checked="checkedProducts.includes(product)"
-                           @click.native="toggleProduct(product)" />
-          </section>
-        </main>
+        <template v-if="siteSpu">
+          <header>选择{{siteSpu.title}}：
+            <span class="tip">具体官网搭售折扣及实付金额，请点击“确认购买”后前往订单确认页面查看</span>
+          </header>
+          <main>
+            <section>
+              <gw-pro-widget v-for="(product, index) of siteSpu.selection"
+                :key="index" :title="product.title" :desc="product.desc"
+                :is-hot="product.tags.includes('hot')"
+                :price="centToYuan(product.realPrice)"
+                :checked="checkedProducts.includes(product)"
+                @click.native="toggleProduct(product)" />
+            </section>
+          </main>
+        </template>
       </div>
     </section>
 
@@ -58,29 +58,22 @@
             {{ displayBxSalesId || userInfo.salesId }}
           </span>
           <span v-else>
-            <el-input placeholder="如有服务编号请您填写"
-                      v-model.trim="inputSalesId" />
-            <i class="el-icon-check"
-               title="检测服务编号"
-               @click="checkInputSalesId" />
+            <el-input placeholder="如有服务编号请您填写" v-model.trim="inputSalesId" />
+            <i class="el-icon-check" title="检测服务编号"
+              @click="checkInputSalesId" />
           </span>
         </section>
-        <section v-if="displayUserMobile"
-                 class="user-mobile">
+        <section v-if="displayUserMobile" class="user-mobile">
           <aside>用户手机号：</aside>
           <span>
             {{ displayUserMobile }}
           </span>
         </section>
-        <contract-ack type="contract"
-                      ref="contract" />
-        <promotion-area-limit-tip :all-areas="allAreas"
-                                  page="charge" />
+        <contract-ack type="contract" ref="contract" />
+        <promotion-area-limit-tip :all-areas="allAreas" page="charge" />
         <section class="pay-info">
-          <button v-if="!isAgentSales"
-                  class="pay-order"
-                  :loading="payInProgress"
-                  @click="createPreOrder">
+          <button v-if="!isAgentSales" class="pay-order"
+            :loading="payInProgress" @click="createPreOrder">
             {{ submitButtonText }}
           </button>
           <span v-if="orderPayUrl">
@@ -103,7 +96,7 @@
 </template>
 
 <script>
-import Step from 'com/charge/step'
+import Step from './step'
 import PriceTag from 'com/charge/price-tag'
 import GwProWidget from 'com/charge/gw-pro'
 import ContractAck from 'com/widget/contract-ack'
@@ -120,7 +113,8 @@ import { getUserIdFromBxSalesId, queryUserInfo, getUserInfo } from 'api/account'
 import { createOrder, getProductList } from 'api/fengming'
 import { SPUIDS, VENDORIDS } from 'constant/product'
 
-const { FENGMING_SPU_ID, SITE_SPU_ID, } = SPUIDS
+const { FENGMING_SPU_ID, WEBSITE_SPU_ID } = SPUIDS
+const { FENGMING_VENDOR_ID  } = VENDORIDS
 const MIN_INPUT_PRICE = 50000
 const discountInfo = [
   [588, 200, 600, 600],
@@ -136,124 +130,14 @@ const discountInfoHTML = discountInfo.map((item, index) => {
           购买精品官网专业版1年（支持首页宝推广）官网<span class="red">减</span> ${item[3]}元；</p>`
 })
 const isGwProduct = function(spuId) {
-  return spuId === SITE_SPU_ID
+  return spuId === WEBSITE_SPU_ID
 }
+
 const isChargeProduct = function(spuId) {
   return spuId === FENGMING_SPU_ID
 }
 
-const allProducts = {
-  "100001" : {
-    id: FENGMING_SPU_ID,
-    title: '充值推广资金包',
-    desc: '',
-    selection: [
-      {
-        id: '1',
-        spuId: FENGMING_SPU_ID,
-        title:'588',
-        desc: '',
-        originalPrice: 58800,
-        realPrice: 58800,
-        unit:'元',
-        maxQuantity: 1,
-        minQuantity: 1,
-      },
-      {
-        id: '2',
-        spuId: FENGMING_SPU_ID,
-        title:'1088',
-        desc: '',
-        originalPrice: 108800,
-        realPrice: 108800,
-        unit:'元',
-        maxQuantity: 1,
-        minQuantity: 1,
-      },
-      {
-        id: '3',
-        spuId: FENGMING_SPU_ID,
-        title:'3088',
-        desc: '',
-        originalPrice: 308800,
-        realPrice: 308800,
-        unit:'元',
-        maxQuantity: 1,
-        minQuantity: 1,
-      },
-      {
-        id: '4',
-        spuId: FENGMING_SPU_ID,
-        title:'5088',
-        desc: '',
-        originalPrice: 508800,
-        realPrice: 508800,
-        unit:'元',
-        maxQuantity: 1,
-        minQuantity: 1,
-      },
-      {
-        id: '5',
-        spuId: FENGMING_SPU_ID,
-        title:'10188',
-        desc: '',
-        originalPrice: 1018800,
-        realPrice: 1018800,
-        unit:'元',
-        maxQuantity: 1,
-        minQuantity: 1,
-      },
-      {
-        id: '6',
-        spuId: FENGMING_SPU_ID,
-        title:'1',
-        desc: '',
-        originalPrice: 1,
-        realPrice: 1,
-        unit:'元',
-        maxQuantity: 99999,
-        minQuantity: 1,
-      }
-    ]
-  },
-  "100002" : {
-    id: SITE_SPU_ID,
-    title: '精品官网',
-    desc: '',
-    selection: [
-      {
-        id: '7',
-        spuId: SITE_SPU_ID,
-        title:'精品官网一年【标准版】',
-        desc: '支持多端展示/支持微信分享/共享多渠道落地页/丰富媒体库',
-        originalPrice: 120000,
-        realPrice: 120000,
-        unit:'',
-        fixedQuality: ''
-      },
-      {
-        id: '8',
-        spuId: SITE_SPU_ID,
-        title: '精品官网两年【送一年】',
-        desc: '支持多端展示/支持微信分享/共享多渠道落地页/丰富媒体库',
-        originalPrice: 360000,
-        realPrice: 240000,
-        unit:'',
-        fixedQuality: ''
-      },
-      {
-        id: '9',
-        spuId: SITE_SPU_ID,
-        title: '精品官网一年【专业版】',
-        desc: '支持首页宝推广，让你的网站上百度首页/支持SEO优化等更多专业版官网建站功能',
-        originalPrice: 180000,
-        realPrice: 180000,
-        unit:'',
-        fixedQuality: ''
-      }
-    ]
-  }
-}
+
 export default {
   name: 'charge-container',
   props: {
@@ -272,10 +156,12 @@ export default {
   },
   data () {
     return {
+      fetchLoading: true,
       showDiscount: true,
       actionTrackId: uuid(),
       discountInfoHTML,
-      allProducts: allProducts,
+      siteSpu: null,
+      chargeSpu: null,
       checkedProducts: [],
 
       salesIdLocked: false,
@@ -285,10 +171,7 @@ export default {
       orderPayUrl: '',
 
       payInProgress: false,
-      payDialogVisible: false,
-
-      FENGMING_SPU_ID,
-      SITE_SPU_ID
+      payDialogVisible: false      
     }
   },
   computed: {
@@ -317,6 +200,14 @@ export default {
         return '生成链接'
       }
       return '确认购买'
+    },
+    checkedSkuList() {
+      return this.checkedProducts.map(sku => {
+        return {
+          id: sku.skuVendorId,
+          quantity: sku.quantity
+        }
+      })
     }
   },
   components: {
@@ -334,8 +225,23 @@ export default {
       select_gw: selectGw
     } = this.$route.query
 
-    // const products = await getProductList()
-    // this.allProducts = products
+    this.fetchLoading = true
+    try {
+      let products = await getProductList(FENGMING_VENDOR_ID)
+      products.forEach(spu => 
+        spu.selection.forEach(sku => {
+          sku.quantity = sku.minQuantity
+          sku.price = Math.floor(sku.minQuantity * sku.realPrice),
+          sku.spuId = spu.spuId
+        })
+      )
+      this.siteSpu = products.find(p => isGwProduct(p.spuId))
+      this.chargeSpu = products.find(p => isChargeProduct(p.spuId))
+    } catch (e) {
+      console.error(e)
+    } finally {
+      this.fetchLoading = false
+    }
 
     setTimeout(() => {
       const { userInfo, actionTrackId } = this
@@ -364,9 +270,11 @@ export default {
     })
 
     if (selectGw === 'true' || Number(selectGw) === 1) {
-      this.checkedProducts.push(this.allProducts[SITE_SPU_ID].selection[0])
+      const initSiteSku = this.siteSpu.selection.find(sku => sku.tags.includes('hot'))
+      if (initSiteSku) this.checkedProducts.push(initSiteSku)
     } else {
-      this.checkedProducts.push(this.allProducts[FENGMING_SPU_ID].selection[0])
+      const initChargeSku = this.chargeSpu.selection.find(sku => sku.tags.includes('selected'))
+      if (initChargeSku) this.checkedProducts.push(initChargeSku)
     }
 
     if (salesId) {
@@ -384,7 +292,11 @@ export default {
   },
   methods: {
     centToYuan,
-    toggleProduct(product) {
+    handlePriceChange(product, v) {
+      product.price = v
+      product.quantity = Math.floor(v / product.realPrice)
+    },
+    toggleProduct (product) {
       const index = this.checkedProducts.indexOf(product)
       if (index > -1) {
         this.checkedProducts.splice(index, 1)
@@ -410,18 +322,19 @@ export default {
         return this.$message.error('请选择购买的产品 ~')
       }
       const chargeProduct = this.checkedProducts.find(p => isChargeProduct(p.spuId))
-      if (chargeProduct && chargeProduct.realPrice < MIN_INPUT_PRICE) {
-        return this.$message.error('最低充值金额500元')
+      if (chargeProduct) {
+        const { quantity, minQuantity, maxQuantity } = chargeProduct
+        if (quantity < minQuantity) {
+          return this.$message.error(`最低充值金额：${minQuantity}`)
+        }
+        if (quantity > maxQuantity) {
+          return this.$message.error(`最高充值金额：${maxQuantity}`)
+        }
       }
-
+      
       const orderParams = {
         userId: await this.getFinalUserId(),
-        skuList: this.checkedProducts.map(p => {
-          return {
-            id: p.id,
-            quantity: Number(p.maxQuantity) === 1 ? 1 :  Math.floor(p.realPrice/100)
-          }
-        })
+        skuList: this.checkedSkuList
       }
       const sid = await this.getFinalSalesId()
       if (sid) {
@@ -458,22 +371,23 @@ export default {
           action: 'create order success',
           baixingId: userInfo.baixingId,
           time: Date.now() / 1000 | 0,
-          oids: preTradeId.join(','),
+          oids: preTradeId,
           baxId: userInfo.id,
           actionTrackId
         })
+
+        if (this.isBxUser) {
+          location.href = `${orderServiceHost}/?appId=105&seq=${preTradeId}`
+        } else if (this.isAgentAccounting) {
+          location.href = `${orderServiceHost}/?appId=105&seq=${preTradeId}&agentId=${userInfo.id}`
+        } else if (this.isBxSales) {
+          this.orderPayUrl = `${orderServiceHost}/?appId=105&seq=${preTradeId}`
+        }
+
       } catch (e) {
         console.error(e)
       } finally {
         this.payInProgress = false
-      }
-
-      if (this.isBxUser) {
-        location.href = `${orderServiceHost}/?appId=105&seq=${preTradeId}`
-      } else if (this.isAgentAccounting) {
-        location.href = `${orderServiceHost}/?appId=105&seq=${preTradeId}&agentId=${userInfo.id}`
-      } else if (this.isBxSales) {
-        this.orderPayUrl = `${orderServiceHost}/?appId=105&seq=${preTradeId}`
       }
     },
     async getFinalSalesId() {
@@ -516,8 +430,8 @@ export default {
 </script>
 
 <style lang="postcss" scoped>
-@import "../../cssbase/var";
-@import "cssbase/mixin";
+@import '../../cssbase/var';
+@import 'cssbase/mixin';
 
 .charge-container {
   & > .shadow {
@@ -557,7 +471,7 @@ export default {
       line-height: 1.5;
       color: #666666;
       & .tip {
-        color: #FF7533;
+        color: #ff7533;
         font-size: 12px;
       }
     }

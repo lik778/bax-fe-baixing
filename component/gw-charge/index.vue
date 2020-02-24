@@ -1,6 +1,6 @@
 
 <template>
-  <div class="gw-charge">
+  <div class="gw-charge" v-loading.fullscreen.lock="fetchLoading">
     <content>
       <step :step="step" />
       <section class="gw-product">
@@ -11,9 +11,8 @@
           <gw-pro-widget v-for="(product) of products" :key="product.skuId"
             :title="product.title" :desc="product.desc"
             :price="product.realPrice | centToYuan"
-            :checked="product.skuId === checkedProductId"
-            :is-pro="product.title.includes('专业版')"
-            @click.native="checkedProductId = product.skuId" />
+            :checked="product.skuVendorId === checkedSkuId"
+            @click.native="checkedSkuId = product.skuVendorId" />
         </main>
       </section>
       <section class="gw-order">
@@ -75,42 +74,10 @@ import { createOrder, getProductList } from 'api/fengming'
 import { getUserIdFromBxSalesId, queryUserInfo, getUserInfo } from 'api/account'
 import { allowBuyYoucaigouSite, allowGetOrderPayUrl } from 'util'
 import { normalizeRoles } from 'util/role'
+import { SPUIDS, VENDORIDS } from 'constant/product'
 
-const allProducts = [
-  {
-    "skuId":8001,
-    "spuId":100003,
-     title:'精品官网【标准版】',
-     desc: '支持多端展示/支持微信分享/共享多渠道落地页/丰富媒体库',
-     originalPrice: 120000,
-     realPrice: 120000,
-    "unit":"元",
-    "minQuantity":"1",
-    "maxQuantity":"1"             
-  },
-  {
-    "skuId":9001,
-    "spuId":100003,
-     title:'精品官网【优采购】',
-     desc: '支持多端展示/支持微信分享/共享多渠道落地页/丰富媒体库',
-     originalPrice: 150000,
-     realPrice: 150000,
-    "unit":"元",
-    "minQuantity":"1",
-    "maxQuantity":"1"
-  },
-  {
-    "skuId":9002,
-    "spuId":100003,
-     title: '精品官网【专业版】',
-     desc: '支持首页宝推广，让你的网站上百度首页/支持SEO优化等更多专业版官网建站功能',
-     originalPrice: 180000,
-     realPrice: 180000,
-    "unit":"元",
-    "minQuantity":"1",
-    "maxQuantity":"1"
-  }
-]
+const { FENGMING_SPU_ID, WEBSITE_SPU_ID } = SPUIDS
+const { WEBSITE_VENDOR_ID  } = VENDORIDS
 
 export default {
   name: 'gw-charge',
@@ -128,8 +95,8 @@ export default {
   },
   data() {
     return {
-      products: allProducts,
-      checkedProductId: '',
+      products: [],
+      checkedSkuId: '',
       orderPayUrl: '',
 
       salesIdLocked: false,
@@ -141,6 +108,7 @@ export default {
       inputUserId: '',
 
       step: 1,
+      fetchLoading: true,
       contractCheck: false
     }
   },
@@ -224,7 +192,7 @@ export default {
       if (!this.$refs.contract.$data.isAgreement) {
         return this.$message.error('请阅读并勾选同意服务协议，再进行下一步操作')
       }
-      const { checkedProductId: id } = this
+      const { checkedSkuId: id } = this
       if (!id) {
         return this.$message.error('请先选择产品')
       }
@@ -267,7 +235,19 @@ export default {
   async mounted() {
     const { sales_id: salesId, user_id: userId } = this.$route.query
 
-    // await getProductList()
+    this.fetchLoading = true
+    try {
+      let websiteSpuList = await getProductList(WEBSITE_VENDOR_ID)
+      this.products = websiteSpuList[0].selection
+      const initSelectedSku = this.products.find(sku => sku.tags.includes('selected'))
+      if (initSelectedSku) {
+        this.checkedSkuId = initSelectedSku.skuVendorId 
+      }
+    } catch (e) {
+      console.error(e)
+    } finally {
+      this.fetchLoading = false
+    }
 
     if (salesId) {
       const userInfo = await getUserInfo(salesId)
