@@ -84,8 +84,13 @@ import qs from 'query-string'
 
 const LAST_NOTIFICATION_KEY = 'LAST_NOTIFICATION'
 const NOTICE_TIMES_KEY = 'NOTICE_TIMES'
+
+const NOTIFICATION_DATE_RANGE = ['2020/02/25', '2020/02/28'].map(item => new Date(item))
+const notificationCanVisible = new Date() >= NOTIFICATION_DATE_RANGE[0] && new Date() <= NOTIFICATION_DATE_RANGE[1]
+
 const ONE_DAY_DURATION_MS = 86400000
 const MAX_NOTICE_TIMES = 3
+
 const getLocalstoreNumberData = function(key) {
   return Number(window.localStorage.getItem(key) || 0)
 }
@@ -117,8 +122,10 @@ export default {
       showNewUserIntro: false,
       newUserIntroMode: '',
       pending: 0,
-      showNotice: (Date.now() - getLocalstoreNumberData(LAST_NOTIFICATION_KEY) > ONE_DAY_DURATION_MS) ||
-        getLocalstoreNumberData(NOTICE_TIMES_KEY) < MAX_NOTICE_TIMES,
+      showNotice: notificationCanVisible ?
+        (Date.now() - getLocalstoreNumberData(LAST_NOTIFICATION_KEY) > ONE_DAY_DURATION_MS) ||
+          getLocalstoreNumberData(NOTICE_TIMES_KEY) < MAX_NOTICE_TIMES :
+        false,
       huoDongIntroVisible: !document.referrer.includes('/a/quanwangtong'),
       isBwRoute: false,
       salesInfo: {
@@ -170,6 +177,7 @@ export default {
     console.log('in before mount, query', this.$route.query)
   },
   created() {
+    showNotice
     // 记录销售的客户id等信息
     // 米奇跳转userId需改成user_id
     const {user_id, userId, sales_id: salesId} = qs.parse(location.search)
