@@ -7,8 +7,21 @@
       @close="handleNotificationClose"
     >
       <h3 slot="title">通知</h3>
-      <div style="font-size: 16px">
-        {{notice}}
+      <div class="notification">
+        <p>亲爱的用户，为了提供更稳定的系统服务，我们将在如下时间进行系统维护，在此期间可能对您的部分操作发生影响，但不影响广告投放和精品官网正常展示。感谢您的谅解。</p>
+        <ul>
+          <li>
+            影响时间
+            <p>1）2020-02-25  22:30 – 2020-02-25 23:00</p>
+            <p>2）2020-02-27  23:00 – 2020-02-28 02:00</p>
+          </li>
+          <li>
+            影响内容
+            <p>1）可能发生无法登录搜索通bax系统、精品官网系统的情况</p>
+            <p>2）可能发生站外推广计划、标王计划、首页宝计划、精品官网，不可进行新建、编辑、修改等操作</p>
+            <p>3）可能发生不可购买站外推广、标王、首页宝、精品官网的情况</p>
+          </li>
+        </ul>
       </div>
       <div slot="footer">
         <el-button type="primary" @click="showNotice = false">确认</el-button>
@@ -70,7 +83,12 @@ import {router} from '../template/bax'
 import qs from 'query-string'
 
 const LAST_NOTIFICATION_KEY = 'LAST_NOTIFICATION'
+const NOTICE_TIMES_KEY = 'NOTICE_TIMES'
 const ONE_DAY_DURATION_MS = 86400000
+const MAX_NOTICE_TIMES = 3
+const getLocalstoreNumberData = function(key) {
+  return Number(window.localStorage.getItem(key) || 0)
+}
 
 export default {
   name: 'bax',
@@ -99,8 +117,8 @@ export default {
       showNewUserIntro: false,
       newUserIntroMode: '',
       pending: 0,
-      notice: '为了响应政府要求，确保用户投放信息的合规性，近期会对担保贷款行业进行整改，担保贷款用户暂停购买搜索通产品。',
-      showNotice: Date.now() - Number(window.localStorage.getItem(LAST_NOTIFICATION_KEY) || 0) > ONE_DAY_DURATION_MS,
+      showNotice: (Date.now() - getLocalstoreNumberData(LAST_NOTIFICATION_KEY) > ONE_DAY_DURATION_MS) ||
+        getLocalstoreNumberData(NOTICE_TIMES_KEY) < MAX_NOTICE_TIMES,
       huoDongIntroVisible: !document.referrer.includes('/a/quanwangtong'),
       isBwRoute: false,
       salesInfo: {
@@ -124,7 +142,16 @@ export default {
   },
   methods: {
     handleNotificationClose() {
-      window.localStorage.setItem(LAST_NOTIFICATION_KEY, (Date.now() + ONE_DAY_DURATION_MS).toString())
+      const lastNotification = getLocalstoreNumberData(LAST_NOTIFICATION_KEY)
+      const noticeTimes = getLocalstoreNumberData(NOTICE_TIMES_KEY)
+
+      if (lastNotification + ONE_DAY_DURATION_MS > Date.now()) {
+        window.localStorage.setItem(NOTICE_TIMES_KEY, (noticeTimes + 1).toString())
+      } else {
+        window.localStorage.setItem(LAST_NOTIFICATION_KEY, (Date.now() + ONE_DAY_DURATION_MS).toString())
+        window.localStorage.setItem(NOTICE_TIMES_KEY, '1')
+      }
+
     },
     toggleAddUserLeadVisible() {
       gStore.toggleAddUserLeadVisible()
@@ -221,6 +248,21 @@ export default {
       color: gray;
       font-size: 1.5em;
       cursor: pointer;
+    }
+  }
+  .notification {
+    font-size: 15px;
+    & > ul {
+      padding: 20px;
+    }
+    & li {
+      list-style: disc;
+      margin-bottom: 10px;
+      & p {
+        line-height: 1.6;
+        font-size: 14px;
+        text-indent: 1.5em;
+      }
     }
   }
   .main-content {
