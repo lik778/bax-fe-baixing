@@ -177,7 +177,6 @@ export default {
     console.log('in before mount, query', this.$route.query)
   },
   created() {
-    showNotice
     // 记录销售的客户id等信息
     // 米奇跳转userId需改成user_id
     const {user_id, userId, sales_id: salesId} = qs.parse(location.search)
