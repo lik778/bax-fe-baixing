@@ -21,8 +21,7 @@
               <price-tag v-for="(product, index) in chargeSpu.selection"
                 :key="index"
                 :editable="Number(product.maxQuantity) !== Number(product.minQuantity)"
-                :price="product.price"
-                :min-input-price="product.minQuantity"
+                :price="product.price" :min-input-price="product.minQuantity"
                 :max-input-price="product.maxQuantity"
                 :checked="checkedProducts.includes(product)"
                 @click="toggleProduct(product)"
@@ -230,8 +229,8 @@ export default {
       let products = await getProductList(FENGMING_VENDOR_ID)
       products.forEach(spu => 
         spu.selection.forEach(sku => {
-          sku.quantity = sku.minQuantity
-          sku.price = Math.floor(sku.minQuantity * sku.realPrice),
+          sku.quantity = sku.minQuantity === sku.maxQuantity ? sku.minQuantity: 0
+          sku.price = sku.minQuantity === sku.maxQuantity ?  Math.floor(sku.minQuantity * sku.realPrice): 0,
           sku.spuId = spu.spuId
         })
       )
