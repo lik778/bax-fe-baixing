@@ -74,10 +74,11 @@ import { createOrder, getProductList } from 'api/fengming'
 import { getUserIdFromBxSalesId, queryUserInfo, getUserInfo } from 'api/account'
 import { allowBuyYoucaigouSite, allowGetOrderPayUrl } from 'util'
 import { normalizeRoles } from 'util/role'
-import { SPUIDS, VENDORIDS } from 'constant/product'
+import { SPUIDS, VENDORIDS, MERCHANTS } from 'constant/product'
 
 const { FENGMING_SPU_ID, WEBSITE_SPU_ID } = SPUIDS
 const { WEBSITE_VENDOR_ID  } = VENDORIDS
+const { FENG_MING_MERCHANT_ID } = MERCHANTS
 
 export default {
   name: 'gw-charge',
@@ -198,6 +199,7 @@ export default {
       }
 
       const order = {
+        merchant: FENG_MING_MERCHANT_ID,
         userId: await this.getFinalUserId(),
         skuList: [{
           id,

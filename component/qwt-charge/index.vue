@@ -110,10 +110,11 @@ import track from 'util/track'
 import uuid from 'uuid/v4'
 import { getUserIdFromBxSalesId, queryUserInfo, getUserInfo } from 'api/account'
 import { createOrder, getProductList } from 'api/fengming'
-import { SPUIDS, VENDORIDS } from 'constant/product'
+import { SPUIDS, VENDORIDS, MERCHANTS } from 'constant/product'
 
 const { FENGMING_SPU_ID, WEBSITE_SPU_ID } = SPUIDS
 const { FENGMING_VENDOR_ID  } = VENDORIDS
+const { FENG_MING_MERCHANT_ID } = MERCHANTS
 const MIN_INPUT_PRICE = 50000
 const discountInfo = [
   [588, 200, 600, 600],
@@ -219,6 +220,7 @@ export default {
   },
   async mounted() {
     const { 
+      merchant: FENG_MING_MERCHANT_ID,
       sales_id: salesId,
       user_id: userId,
       select_gw: selectGw
