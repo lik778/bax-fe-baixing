@@ -2,7 +2,7 @@
   <div class="qwt-promotion-list">
     <main class="container">
       <h2 class="header">我的站外推广计划</h2>
-      <p class="info" v-if="summary && summary.budget">您的推广资金可用余额为<span class="red">{{f2y(usableBalance)}}元</span>，预计可消耗<span class="red">{{days}}天</span>，为了保证您的广告正常投放，请及时<router-link :to="{name: 'qwt-charge'}">充值</router-link></p>
+      <p class="info" v-if="summary && summary.budget">您的推广资金可用余额为<span class="red">{{f2y(currentBalance)}}元</span>，预计可消耗<span class="red">{{days}}天</span>，为了保证您的广告正常投放，请及时<router-link :to="{name: 'qwt-charge'}">充值</router-link></p>
       <div class="action-group">
         <div class="top">
           <el-button class="button" icon="el-icon-plus" type="primary" @click="() => $router.push({name: 'qwt-create-promotion'})">新建推广计划</el-button>
@@ -119,7 +119,7 @@ import {
 } from 'api/fengming-campaign'
 
 import {
-  getUsableBalance,
+  getCurrentBalance,
   getHomepageSummary
 } from 'api/fengming'
 
@@ -202,7 +202,7 @@ export default {
 
       landingPageLoading: false,
       landingPageList: null,
-      usableBalance: null,
+      currentBalance: null,
       campaignMap: {},
       summary: null,
       totalPage: 0,
@@ -256,9 +256,9 @@ export default {
       }
     },
     async fetchSummary() {
-      const [usableBalance, summary] = await Promise.all([getUsableBalance(), getHomepageSummary()])
+      const [currentBalance, summary] = await Promise.all([getCurrentBalance(), getHomepageSummary()])
       this.summary = summary
-      this.usableBalance = usableBalance
+      this.currentBalance = currentBalance
     }
   },
   filters: {
@@ -268,7 +268,7 @@ export default {
   },
   computed: {
     days() {
-      return Math.ceil(this.usableBalance / this.summary.budget)
+      return Math.ceil(this.currentBalance / this.summary.budget)
     },
   },
   watch: {

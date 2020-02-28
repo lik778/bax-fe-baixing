@@ -1,17 +1,20 @@
 
 import { observable, action, toJS } from 'mobx'
 import { PRODUCT_TYPE_BIAOWANG } from 'constant/log'
+import { MERCHANTS } from 'constant/product'
 
 import * as fapi from 'api/fengming'
 import * as bapi from 'api/biaowang'
 import * as mapi from 'api/meta'
 
+const { FENG_MING_MERCHANT_CODE, WEBSITE_MERCHANT_CODE } = MERCHANTS
+
 const emptyQuery = {
-  fromDate: 0,
-  toDate: 0,
-  offset: 0,
-  limit: 10,
-  total: 10
+  merchantList: [FENG_MING_MERCHANT_CODE, WEBSITE_MERCHANT_CODE],
+  startDate: 0,
+  endDate: 0,
+  pageNo: 0,
+  size: 10
 }
 
 const store = observable({

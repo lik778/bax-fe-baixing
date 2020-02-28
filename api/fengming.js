@@ -228,14 +228,6 @@ export async function getCurrentBalance() {
   return body.data
 }
 
-export async function getUsableBalance() {
-  const body = await fengming
-    .get('/balance/usable')
-    .json()
-
-  return body.data
-}
-
 export async function checkCreativeContent(opts) {
   const body = await fengming
     .post('/creative/validate')

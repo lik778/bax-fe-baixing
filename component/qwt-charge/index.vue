@@ -220,7 +220,6 @@ export default {
   },
   async mounted() {
     const { 
-      merchant: FENG_MING_MERCHANT_ID,
       sales_id: salesId,
       user_id: userId,
       select_gw: selectGw
@@ -334,6 +333,7 @@ export default {
       }
       
       const orderParams = {
+        merchant: FENG_MING_MERCHANT_ID,
         userId: await this.getFinalUserId(),
         skuList: this.checkedSkuList
       }

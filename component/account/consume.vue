@@ -3,24 +3,23 @@
     <section-header>消耗查询</section-header>
     <content>
       <div>
-        <el-date-picker type="daterange"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          range-separator="-"
-          v-model="daterange" />
+        <el-date-picker type="daterange" start-placeholder="开始日期"
+          end-placeholder="结束日期" range-separator="-" v-model="daterange" />
       </div>
       <main style="width: 720px">
         <el-table :data="consumeLogs">
           <el-table-column label="日期" prop="reportDate" />
           <el-table-column label="计划" prop="campaignId" />
-          <el-table-column label="类型"
-            :formatter="r => fmtLogType(r.logType)" />
+          <el-table-column label="类型" :formatter="r => fmtLogType(r.logType)" />
           <el-table-column label="消费金额"
             :formatter="r => (r.consume / 100).toFixed(2) + '元'" />
         </el-table>
-        <bax-pagination :options="consumeQuery"
-          @current-change="onCurrentChange">
-        </bax-pagination>
+        <el-pagination class="pagination" @size-change="v => pageSize = v"
+          @current-change="v => currentPage = v" :page-size="pageSize"
+          layout="total, sizes, prev, pager, next"
+          :page-sizes="[10, 20, 50, 100]" :total="total"
+          :current-page="currentPage">
+        </el-pagination>
       </main>
     </content>
   </div>
@@ -34,7 +33,6 @@ import { toHumanTime, toTimestamp } from 'utils'
 import { changeLogType } from 'constant/log'
 import track from 'util/track'
 import dayjs from 'dayjs'
-
 import store from './store'
 
 export default {
@@ -73,11 +71,11 @@ export default {
         return store.clearConsumeLogs()
       }
 
-      const fromDate = toTimestamp(v[0])
-      const toDate = toTimestamp(v[1])
+      const startDate = toTimestamp(v[0])
+      const endDate = toTimestamp(v[1])
       await this.queryLogs({
-        fromDate,
-        toDate
+        startDate,
+        endDate
       })
 
       track({
@@ -87,8 +85,8 @@ export default {
   },
   async mounted() {
     await this.queryLogs({
-      fromDate: dayjs().startOf('day').unix(),
-      toDate: dayjs().unix()
+      startDate: dayjs().startOf('day').unix(),
+      endDate: dayjs().unix()
     })
   }
 }

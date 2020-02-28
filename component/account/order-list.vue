@@ -9,10 +9,11 @@
         end-placeholder="结束日期">
       </el-date-picker>
       <label>订单状态</label>
-      <el-radio-group v-model="params.statuses">
-        <el-radio-button :label="statusType.STATUS_UNPAID">未支付</el-radio-button>
-        <el-radio-button :label="[statusType.STATUS_PAID, statusType.STATUS_ACTIVE]">已支付</el-radio-button>
-        <el-radio-button :label="statusType.STATUS_CANCELED">已取消</el-radio-button>
+      <el-radio-group v-model="params.orderStatusList">
+        <el-radio-button :label="[orderStatusType.STATUS_UNPAID, orderStatusType.STATUS_PRE_TRADE]">未支付</el-radio-button>
+        <el-radio-button :label="[orderStatusType.STATUS_PAID]">已支付</el-radio-button>
+        <el-radio-button :label="[orderStatusType.STATUS_ORDER_CANCELED]">已取消</el-radio-button>
+        <el-radio-button :label="[orderStatusType.STATUS_ORDER_REFUND]">已退款</el-radio-button>
       </el-radio-group>
     </div>
     <el-table
@@ -27,7 +28,7 @@
         width="90"
         align="center"
         label="状态"
-        :formatter="({status}) => statusLabel[status]"/>
+        :formatter="({status}) => orderStatusLabel[status]"/>
       <el-table-column
         width="105"
         align="center"
@@ -63,7 +64,7 @@
         align="center"
       >
         <div slot-scope="{row}">
-          <div class="btn-wrap" v-if="row.status === statusType.STATUS_UNPAID">
+          <div class="btn-wrap" v-if="row.status === orderStatusType.STATUS_UNPAID">
             <a href="javascript:;" @click="payOrder(row.id)">支付</a>
             <a href="javascript:;" @click="cancelOrder(row.id)">取消订单</a>
           </div>
@@ -71,7 +72,7 @@
         </div>
       </el-table-column>
     </el-table>
-    <el-pagination
+    <!-- <el-pagination
       v-if="total"
       class="pagination"
       :total="total"
@@ -80,7 +81,7 @@
       :page-size="params.limit"
       layout="total, prev, pager, next, jumper"
     >
-    </el-pagination>
+    </el-pagination> -->
   </div>
 </template>
 
@@ -88,22 +89,7 @@
 import dayjs from 'dayjs'
 import * as api from 'api/account'
 import SectionHeader from 'com/common/section-header'
-
-const statusType = {
-  STATUS_REFUND: -10,
-  STATUS_CANCELED: -1,
-  STATUS_UNPAID: 0,
-  STATUS_PAID: 1,
-  STATUS_ACTIVE: 10
-}
-
-const statusLabel = {
-  [statusType.STATUS_REFUND]: '已退款',
-  [statusType.STATUS_CANCELED]: '已取消',
-  [statusType.STATUS_UNPAID]: '未支付',
-  [statusType.STATUS_PAID]: '已支付',
-  [statusType.STATUS_ACTIVE]: '已支付'
-}
+import { orderStatusType, orderStatusLabel} from 'constant/order'
 
 const ONE_PAGE_NUM = 10
 const ONE_YEAR_QUOTA_PRICE = 120000
@@ -120,15 +106,15 @@ export default {
   name: 'qwt-operastion-order-list',
   data() {
     return {
-      statusType,
-      statusLabel,
+      orderStatusType,
+      orderStatusLabel,
 
       params: {
         dateRange: DEFAULT_DATE_RANGE,
-        limit: ONE_PAGE_NUM,
-        statuses: statusType.STATUS_UNPAID
+        orderStatusList: [orderStatusType.STATUS_UNPAID, orderStatusType.STATUS_PRE_TRADE],
+        size: ONE_PAGE_NUM
       },
-      offset: 0,
+      pageNo: 1,
       orderData: [],
       total: 0
     }
@@ -157,19 +143,18 @@ export default {
     },
     async fetchOrderData(isResetOffset) {
       if (isResetOffset) this.offset = 0
-      // format quey parmas
       const { dateRange, ...otherParams } = this.params
-      const [startTs, endTs] = dateRange.map(transformUnixTimeStamp)
-      if (!(startTs && endTs)) return
+      const [startDate, endDate] = dateRange.map(transformUnixTimeStamp)
+      if (!(startDate && endDate)) return
       const queryParmas = {
-        startTs,
-        endTs,
-        offset: this.offset,
+        startDate,
+        endDate,
+        pageNo: this.pageNo,
         ...otherParams
       }
-      const {total, data} = await api.queryOrder(queryParmas)
-      this.orderData = data
-      this.total = total
+      const data = await api.queryOrder(queryParmas)
+      this.orderData = data.data
+      this.total = data.totalElements
     },
     formatPrice(price) {
       return (price / 100)
