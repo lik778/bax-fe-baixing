@@ -9,17 +9,15 @@
       <main style="width: 720px">
         <el-table :data="consumeLogs">
           <el-table-column label="日期" prop="createdTime" 
-            :formatter="r => toHumanTime(r.paymentTime, 'YYYY-MM-DD HH:mm')" />
+            :formatter="r => toHumanTime(r.createdTime, 'YYYY-MM-DD HH:mm')" />
           <el-table-column label="计划" prop="businessId" />
-          <el-table-column label="类型">
-            <!-- tip: 先写死，百年大计二期上线首页宝和标王之后更改 -->
-            <span>广告投放</span>
-          </el-table-column>
+          <!-- tip: 先写死，百年大计二期上线首页宝和标王之后更改 -->
+          <el-table-column label="类型" :formatter="r => '广告投放'" />
           <el-table-column label="消费金额"
             :formatter="r => (r.dealPrice / 100).toFixed(2) + '元'" />
         </el-table>
-        <el-pagination small layout="prev, pager, next"
-          :total="total" :page-size="consumeQuery.size"
+        <el-pagination class="pagniation" small layout="prev, pager, next"
+          :total="consumeQuery.total" :page-size="consumeQuery.size"
           :current-page="consumeQuery.pageNo"
           @current-change="handleCurrentChange">
         </el-pagination>
@@ -30,10 +28,8 @@
 
 <script>
 import SectionHeader from 'com/common/section-header'
-import BaxPagination from 'com/common/pagination'
 
-import { toHumanTime, toTimestamp } from 'utils'
-import { changeLogType } from 'constant/log'
+import { toHumanTime } from 'utils'
 import track from 'util/track'
 import dayjs from 'dayjs'
 import store from './store'
@@ -41,8 +37,7 @@ import store from './store'
 export default {
   name: 'qwt-account-consume',
   components: {
-    SectionHeader,
-    BaxPagination
+    SectionHeader
   },
   fromMobx: {
     consumeQuery: () => store.consumeQuery,
@@ -57,8 +52,8 @@ export default {
     }
   },
   methods: {
-    async handleCurrentChange(val) {
-      await store.getConsumeLogs({val})
+    async handleCurrentChange(pageNo) {
+      await this.queryLogs({ pageNo })
     },
     async queryLogs(q) {
       await store.getConsumeLogs(q)
@@ -70,8 +65,8 @@ export default {
       if (!(v && v.length === 2)) {
         return store.clearConsumeLogs()
       }
-      const startDate = toTimestamp(v[0])
-      const endDate = toTimestamp(v[1])
+      const startDate = dayjs(v[0]).startOf('day').unix()
+      const endDate = dayjs(v[1]).endOf('day').unix()
       await this.queryLogs({
         startDate,
         endDate
@@ -85,7 +80,7 @@ export default {
   async mounted() {
     await this.queryLogs({
       startDate: dayjs().startOf('day').unix(),
-      endDate: dayjs().unix()
+      endDate: dayjs().endOf('day').unix()
     })
   }
 }
@@ -97,6 +92,9 @@ export default {
     & > div {
       margin-bottom: 15px;
     }
+  }
+  & .pagniation {
+    margin-top: 10px;
   }
 }
 </style>

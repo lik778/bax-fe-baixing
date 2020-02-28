@@ -301,28 +301,26 @@ export async function recommendByWordList(word, opts) {
 }
 
 export async function getChangeLogs(opts) {
-  const body = await fengming
+  const { data } = await fengming
     .get('/balance/changelog')
     .query(reverseCamelcase(opts))
     .json()
 
   return {
-    total: body.data.totalElements,
-    totalPage: body.data.totalPages,
-    logs: toCamelcase(body.data.data)
+    totalElements: data.totalElements,
+    logs: toCamelcase(data.data)
   }
 }
 
 export async function getChargeLogs(opts) {
-  const body = await fengming
+  const { data } = await fengming
     .get('/balance/chargelog')
     .query(reverseCamelcase(opts))
     .json()
 
   return {
-    total: body.data.totalElements,
-    totalPage: body.data.totalPages,
-    logs: toCamelcase(body.data.data)
+    totalElements: data.totalElements,
+    logs: toCamelcase(data.data)
   }
 }
 

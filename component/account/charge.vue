@@ -16,7 +16,7 @@
           <el-table-column label="充值金额" prop="dealPrice"
             :formatter="r => (r.dealPrice) / 100 + '元'" />
         </el-table>
-        <el-pagination small layout="prev, pager, next"
+        <el-pagination small class="pagniation" layout="prev, pager, next"
           :total="chargeQuery.total" :page-size="chargeQuery.size"
           :current-page="chargeQuery.pageNo"
           @current-change="handleCurrentChange">
@@ -29,10 +29,9 @@
 <script>
 import SectionHeader from 'com/common/section-header'
 
-import { toHumanTime, toTimestamp } from 'utils'
+import { toHumanTime } from 'utils'
 import track from 'util/track'
 import dayjs from 'dayjs'
-
 import store from './store'
 
 export default {
@@ -53,8 +52,8 @@ export default {
     }
   },
   methods: {
-    async onCurrentChange({offset}) {
-      await store.getChargeLogs({offset})
+    async handleCurrentChange({pageNo}) {
+      await this.queryLogs({ pageNo })
     },
     async queryLogs(q) {
       await store.getChargeLogs(q)
@@ -66,10 +65,10 @@ export default {
       if (!(v && v.length === 2)) {
         return store.clearChargeLogs()
       }
-      const stateDate = toTimestamp(v[0])
-      const endDate = toTimestamp(v[1])
+      const startDate = dayjs(v[0]).startOf('day').unix()
+      const endDate = dayjs(v[1]).endOf('day').unix()
       await this.queryLogs({
-        stateDate,
+        startDate,
         endDate
       })
 
@@ -81,7 +80,7 @@ export default {
   async mounted() {
     await this.queryLogs({
       startDate: dayjs().startOf('day').unix(),
-      endDate: dayjs().unix()
+      endDate: dayjs().endOf('day').unix()
     })
   }
 }
@@ -93,6 +92,9 @@ export default {
     & > div {
       margin-bottom: 15px;
     }
+  }
+  & .pagniation {
+    margin-top: 10px;
   }
 }
 </style>

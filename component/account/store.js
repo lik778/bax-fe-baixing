@@ -14,7 +14,8 @@ const emptyQuery = {
   startDate: 0,
   endDate: 0,
   pageNo: 1,
-  size: 10
+  size: 1,
+  total: 10
 }
 
 const store = observable({
@@ -107,8 +108,8 @@ const store = observable({
       ...this._consumeQuery,
       ...opts
     }
-    const { logs, total } = await fapi.getChangeLogs(this.consumeQuery)
-    this._consumeQuery.total = total
+    const { totalElements, logs } = await fapi.getChangeLogs(this.consumeQuery)
+    this._consumeQuery.total = totalElements
     this._consumeLogs = logs
   }),
 
@@ -123,8 +124,8 @@ const store = observable({
       ...this._chargeQuery,
       ...opts
     }
-    const { logs, total } = await fapi.getChargeLogs(this.chargeQuery)
-    this._chargeQuery.total = total
+    const { logs, totalElements } = await fapi.getChargeLogs(this.chargeQuery)
+    this._chargeQuery.total = totalElements
     this._chargeLogs = logs
   }),
 

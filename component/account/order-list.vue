@@ -4,7 +4,7 @@
     <div class="action-container">
       <el-date-picker
         v-model="params.dateRange"
-        type="datetimerange"
+        type="daterange"
         start-placeholder="开始日期"
         end-placeholder="结束日期">
       </el-date-picker>
@@ -21,67 +21,68 @@
       style="width: 100%"
     >
       <el-table-column
-        width="180"
+        width="230"
         label="订单编号"
-        prop="id"/>
+        prop="tradeSeq"/>
+      <el-table-column
+        width="200"
+        label="产品Id"
+        prop="skuId"/>
+      <el-table-column
+        width="90"
+        align="center"
+        label="产品名称"
+        prop="skuTitle"/>
       <el-table-column
         width="90"
         align="center"
         label="状态"
+        prop="status"
         :formatter="({status}) => orderStatusLabel[status]"/>
       <el-table-column
         width="105"
         align="center"
-        label="充值金额"
-        :formatter="formatChargePrice"/>
-      <el-table-column
-        width="90"
-        align="center"
-        label="精品官网"
-        :formatter="formatKaSiteDuration"/>
-      <el-table-column
-        width="105"
-        align="center"
         label="原价"
-        :formatter="row => formatPrice(genOriginalPrice(row) * genKaSiteDuration(row.extra))"/>
+        prop="originalPrice" 
+        :formatter="row => formatPrice(row.originalPrice)"/>
       <el-table-column
         width="105"
         align="center"
         label="优惠"
-        :formatter="row => formatPrice(genOriginalPrice(row) * genKaSiteDuration(row.extra) - row.customerPrice)"/>
+        :formatter="row => formatPrice(row.reducedPrice)"/>
       <el-table-column
         width="105"
         align="center"
         label="实价"
-        :formatter="({customerPrice}) => formatPrice(customerPrice)"/>
+        :formatter="row => formatPrice(row.dealPrice)"/>
       <el-table-column
         width="140"
         align="center"
         label="创建时间"
-        :formatter="formatCreatedAt"/>
+        :formatter="row => formatTime(row.createdTime)"/>
       <el-table-column label="操作"
         width="180"
         align="center"
       >
         <div slot-scope="{row}">
-          <div class="btn-wrap" v-if="row.status === orderStatusType.STATUS_UNPAID">
-            <a href="javascript:;" @click="payOrder(row.id)">支付</a>
-            <a href="javascript:;" @click="cancelOrder(row.id)">取消订单</a>
+          <div class="btn-wrap" 
+               v-if="row.status === orderStatusType.STATUS_UNPAID || row.status === orderStatusType.STATUS_PRE_TRADE">
+            <a href="javascript:;" @click="payOrder(row.tradeSeq, row.status)">支付</a>
+            <a href="javascript:;" @click="cancelOrder(row.tradeSeq, row.status)">取消订单</a>
           </div>
           <div v-else>-</div>
         </div>
       </el-table-column>
     </el-table>
-    <!-- <el-pagination
-      v-if="total"
+    <el-pagination v-if="total"
       class="pagination"
       :total="total"
-      :current-page="Math.floor(offset / params.limit) + 1"
-      @current-change="goto"
-      :page-size="params.limit"
+      :current-page="pageNo"
+      @current-change="handleCurrentPage"
+      :page-size="params.size"
       layout="total, prev, pager, next, jumper"
     >
-    </el-pagination> -->
+    </el-pagination>
   </div>
 </template>
 
@@ -91,17 +92,13 @@ import * as api from 'api/account'
 import SectionHeader from 'com/common/section-header'
 import { orderStatusType, orderStatusLabel} from 'constant/order'
 import { MERCHANTS } from 'constant/product'
+import { orderServiceHost } from 'config'
 
 const { FENG_MING_MERCHANT_CODE, WEBSITE_MERCHANT_CODE} = MERCHANTS
 const ONE_PAGE_NUM = 10
-const ONE_YEAR_QUOTA_PRICE = 120000
-
-const transformUnixTimeStamp = (date) =>  {
-  return dayjs(new Date(date)).unix()
-}
 const DEFAULT_DATE_RANGE = [
-  dayjs(new Date()).subtract(1, 'months'),
-  new Date()
+  dayjs(new Date()).subtract(1, 'months').toDate(),
+  dayjs().toDate()
 ]
 
 export default {
@@ -110,81 +107,72 @@ export default {
     return {
       orderStatusType,
       orderStatusLabel,
-
       params: {
         merchantList:[FENG_MING_MERCHANT_CODE, WEBSITE_MERCHANT_CODE],
-        dateRange: DEFAULT_DATE_RANGE,
         orderStatusList: [orderStatusType.STATUS_UNPAID, orderStatusType.STATUS_PRE_TRADE],
-        size: ONE_PAGE_NUM
+        size: ONE_PAGE_NUM,
+        dateRange: DEFAULT_DATE_RANGE,
       },
       pageNo: 1,
-      orderData: [],
+      orderData: null,
       total: 0
     }
   },
   components: {SectionHeader},
   methods: {
-    genOriginalPrice({productType, originalPrice}) {
-      if (productType === 4) return ONE_YEAR_QUOTA_PRICE
-      return originalPrice
-    },
-    async payOrder(orderId) {
-      const url = await api.payOrder(orderId)
+    async payOrder(tradeSeq, status) {
+      const { STATUS_PRE_TRADE, STATUS_UNPAID } = this.orderStatusType
       this.$message.success('正在跳转支付页面')
+      let payUrl = ''
+      if (status === STATUS_PRE_TRADE) {
+        payUrl = `${orderServiceHost}/?tradeId=${tradeSeq}`
+      }
+      if (status === STATUS_UNPAID) {
+        payUrl = `${orderServiceHost}/?appId=105&seq=${tradeSeq}`
+      }
       setTimeout(() => {
-        location.href = url
+        location.href = payUrl
       }, 800)
     },
-    async cancelOrder(orderId) {
+    async cancelOrder(tradeSeq, status) {
       await this.$confirm('您确定要取消该订单吗？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '放弃'
       })
-      await api.cancelOrder(orderId)
+      await api.cancelOrder(tradeSeq)
       await this.fetchOrderData()
       this.$message.success('取消订单成功')
     },
     async fetchOrderData(isResetOffset) {
-      if (isResetOffset) this.offset = 0
+      if (isResetOffset) this.pageNo = 1
       const { dateRange, ...otherParams } = this.params
-      const [startDate, endDate] = dateRange.map(transformUnixTimeStamp)
-      if (!(startDate && endDate)) return
-      const queryParmas = {
-        startDate,
-        endDate,
+      let queryParmas = {
         pageNo: this.pageNo,
         ...otherParams
       }
-      const data = await api.queryOrder(queryParmas)
-      this.orderData = data.data
-      this.total = data.totalElements
+      if (dateRange) {
+        const startDate = dayjs(dateRange[0]).startOf('day').unix()
+        const endDate = dayjs(dateRange[1]).endOf('day').unix()
+        queryParmas = {
+          startDate,
+          endDate,
+          ...queryParmas
+        }
+      } 
+      const { total, data } = await api.queryOrder(queryParmas)
+      this.orderData = data
+      this.total = total
     },
     formatPrice(price) {
       return (price / 100)
     },
-    formatChargePrice({originalPrice, productType}) {
-      // 这个订单如果只买了官网，没有充值，就显示“-”
-      return productType === 4 ? '-' : this.formatPrice(originalPrice)
+    formatTime (time) {
+      return dayjs(time * 1000).format('YY-MM-DD HH:mm')
     },
-    formatCreatedAt({createdAt}) {
-      return dayjs(new Date(createdAt * 1000)).format('YY-MM-DD HH:mm')
-    },
-    formatKaSiteDuration({productType, extra}) {
-      if (productType === 3) return '-'
-      const duration = this.genKaSiteDuration(extra)
-      return `${duration}年`
-    },
-    genKaSiteDuration(extra) {
-      const ONE_YEAR_MILLISECOND = 31536000
-      const {new_shop_duration} = JSON.parse(extra)
-      if (!new_shop_duration) return 1
-      const result = new_shop_duration / ONE_YEAR_MILLISECOND
-      return result % 1 === 0 ? result : result.toFixed(1)
-    },
-    goto(page) {
-      this.offset = (page - 1) * ONE_PAGE_NUM
+    handleCurrentPage(val) {
+      this.params.pageNo = val
       this.fetchOrderData()
-    }
+    },
   },
   watch: {
     params: {
