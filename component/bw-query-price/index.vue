@@ -5,9 +5,9 @@
       <marquee direction="left" scrollamount="6" height="40px" scrolldelay="60"><recent-sold :allAreas="allAreas" /></marquee>
       <main>
         <div class="notice">
-          <p><span><i class="red">满</i>500-4999元，</span><i class="red">加</i>1200元即可获得1年3个月价值2250元的专业版官网；</p>
-          <p><span><i class="red">满</i>5000-9999元，</span><i class="red">加</i>900元即可获得1年3个月价值2250元的专业版官网；</p>
-          <p><span><i class="red">满</i>10000元及以上，</span><i class="red">加</i>300元即可获得1年3个月价值2250元的专业版官网；</p>
+          <p><span><i class="red">满</i>500-4999元，</span>购买精品官网1年立<i class="red">减</i>200元；购买精品官网2年（送一年）官网<i class="red">减</i>600元；购买精品官网专业版1年（支持首页宝推广）官网<i class="red">减</i>600元；</p>
+          <p><span><i class="red">满</i>5000-9999元，</span>购买精品官网1年立<i class="red">减</i>600元；购买精品官网2年（送一年）官网<i class="red">减</i>1200元；购买精品官网专业版1年（支持首页宝推广）官网<i class="red">减</i>900元；</p>
+          <p><span><i class="red">满</i>10000元及以上，</span>购买精品官网1年立<i class="red">减</i>1000元；购买精品官网2年（送一年）官网<i class="red">减</i>1400元；购买精品官网专业版1年（支持首页宝推广）官网<i class="red">减</i>1500元；</p>
         </div>
         <el-form :model="form" :rules="rules" label-width="120px" ref="form" label-position="left" class="form" @submit.native.prevent>
           <el-form-item label="推广关键词" prop="keyword">
@@ -240,22 +240,14 @@ div.bg {
   margin: 0 5px;
 }
 .notice {
-  font-size: 12px;
-  background-color: #f5f5f5;
-  padding: 20px;
-  margin-top: 10px;
+  font-size: 13px;
   margin-bottom: 20px;
-  & >>> .gold {
-    font-weight: 300;
-    color: gold;
-    padding: 0 2px;
-  }
   & > p {
     margin-bottom: 5px;
 
-    /* & > span {
+    & > span {
       width: 145px;
-    } */
+    }
 
     & >>> .red {
       background-color: #ff3c3c;
