@@ -140,7 +140,7 @@ export const seo = new Fetch({
     if (body.code !== 0) {
       Message.error(body.message)
       throw new Error(body.message)
-    } 
+    }
   }
 })
 

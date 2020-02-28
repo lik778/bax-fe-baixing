@@ -11,14 +11,16 @@
       </div>
       <main style="width: 560px">
         <el-table :data="chargeLogs">
-          <el-table-column label="日期" prop="id" width="240"
-            :formatter="r => toHumanTime(r.createdAt, 'YYYY-MM-DD HH:mm')" />
-          <el-table-column label="充值金额" prop="id"
-            :formatter="r => r.remark + '：' + ((r.deltaMoney + r.deltaPoint) / 100) + '元'" />
+          <el-table-column label="日期" prop="createdTime" width="240"
+            :formatter="r => toHumanTime(r.createdTime, 'YYYY-MM-DD HH:mm')" />
+          <el-table-column label="充值金额" prop="dealPrice"
+            :formatter="r => (r.dealPrice) / 100 + '元'" />
         </el-table>
-        <bax-pagination :options="chargeQuery"
-          @current-change="onCurrentChange">
-        </bax-pagination>
+        <el-pagination small layout="prev, pager, next"
+          :total="chargeQuery.total" :page-size="chargeQuery.size"
+          :current-page="chargeQuery.pageNo"
+          @current-change="handleCurrentChange">
+        </el-pagination>
       </main>
     </content>
   </div>
@@ -26,7 +28,6 @@
 
 <script>
 import SectionHeader from 'com/common/section-header'
-import BaxPagination from 'com/common/pagination'
 
 import { toHumanTime, toTimestamp } from 'utils'
 import track from 'util/track'
@@ -37,8 +38,7 @@ import store from './store'
 export default {
   name: 'qwt-account-charge',
   components: {
-    SectionHeader,
-    BaxPagination
+    SectionHeader
   },
   fromMobx: {
     chargeQuery: () => store.chargeQuery,
@@ -66,12 +66,11 @@ export default {
       if (!(v && v.length === 2)) {
         return store.clearChargeLogs()
       }
-
-      const fromDate = toTimestamp(v[0])
-      const toDate = toTimestamp(v[1])
+      const stateDate = toTimestamp(v[0])
+      const endDate = toTimestamp(v[1])
       await this.queryLogs({
-        fromDate,
-        toDate
+        stateDate,
+        endDate
       })
 
       track({
@@ -81,8 +80,8 @@ export default {
   },
   async mounted() {
     await this.queryLogs({
-      fromDate: dayjs().startOf('day').unix(),
-      toDate: dayjs().unix()
+      startDate: dayjs().startOf('day').unix(),
+      endDate: dayjs().unix()
     })
   }
 }

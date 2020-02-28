@@ -307,8 +307,9 @@ export async function getChangeLogs(opts) {
     .json()
 
   return {
-    total: body.meta.count,
-    logs: toCamelcase(body.data)
+    total: body.data.totalElements,
+    totalPage: body.data.totalPages,
+    logs: toCamelcase(body.data.data)
   }
 }
 
@@ -319,8 +320,9 @@ export async function getChargeLogs(opts) {
     .json()
 
   return {
-    total: body.meta.count,
-    logs: toCamelcase(body.data)
+    total: body.data.totalElements,
+    totalPage: body.data.totalPages,
+    logs: toCamelcase(body.data.data)
   }
 }
 

@@ -78,7 +78,7 @@ import { SPUIDS, VENDORIDS, MERCHANTS } from 'constant/product'
 
 const { FENGMING_SPU_ID, WEBSITE_SPU_ID } = SPUIDS
 const { WEBSITE_VENDOR_ID  } = VENDORIDS
-const { FENG_MING_MERCHANT_ID } = MERCHANTS
+const { FENG_MING_MERCHANT_CODE } = MERCHANTS
 
 export default {
   name: 'gw-charge',
@@ -199,7 +199,7 @@ export default {
       }
 
       const order = {
-        merchant: FENG_MING_MERCHANT_ID,
+        merchant: FENG_MING_MERCHANT_CODE,
         userId: await this.getFinalUserId(),
         skuList: [{
           id,

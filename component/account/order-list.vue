@@ -90,7 +90,9 @@ import dayjs from 'dayjs'
 import * as api from 'api/account'
 import SectionHeader from 'com/common/section-header'
 import { orderStatusType, orderStatusLabel} from 'constant/order'
+import { MERCHANTS } from 'constant/product'
 
+const { FENG_MING_MERCHANT_CODE, WEBSITE_MERCHANT_CODE} = MERCHANTS
 const ONE_PAGE_NUM = 10
 const ONE_YEAR_QUOTA_PRICE = 120000
 
@@ -110,6 +112,7 @@ export default {
       orderStatusLabel,
 
       params: {
+        merchantList:[FENG_MING_MERCHANT_CODE, WEBSITE_MERCHANT_CODE],
         dateRange: DEFAULT_DATE_RANGE,
         orderStatusList: [orderStatusType.STATUS_UNPAID, orderStatusType.STATUS_PRE_TRADE],
         size: ONE_PAGE_NUM

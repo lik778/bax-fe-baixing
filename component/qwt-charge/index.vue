@@ -114,7 +114,7 @@ import { SPUIDS, VENDORIDS, MERCHANTS } from 'constant/product'
 
 const { FENGMING_SPU_ID, WEBSITE_SPU_ID } = SPUIDS
 const { FENGMING_VENDOR_ID  } = VENDORIDS
-const { FENG_MING_MERCHANT_ID } = MERCHANTS
+const { FENG_MING_MERCHANT_CODE } = MERCHANTS
 const MIN_INPUT_PRICE = 50000
 const discountInfo = [
   [588, 200, 600, 600],
@@ -333,10 +333,11 @@ export default {
       }
       
       const orderParams = {
-        merchant: FENG_MING_MERCHANT_ID,
+        merchant: FENG_MING_MERCHANT_CODE,
         userId: await this.getFinalUserId(),
         skuList: this.checkedSkuList
       }
+      console.log(orderParams)
       const sid = await this.getFinalSalesId()
       if (sid) {
         orderParams.salesId = sid

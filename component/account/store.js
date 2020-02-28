@@ -13,7 +13,7 @@ const emptyQuery = {
   merchantList: [FENG_MING_MERCHANT_CODE, WEBSITE_MERCHANT_CODE],
   startDate: 0,
   endDate: 0,
-  pageNo: 0,
+  pageNo: 1,
   size: 10
 }
 
