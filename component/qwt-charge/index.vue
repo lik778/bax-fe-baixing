@@ -51,15 +51,10 @@
 
     <section class="order shadow panel">
       <div class="info">
-        <section class="sales-code">
+        <section class="sales-code" v-if="salesIdLocked || isBxSales">
           <aside>服务编号：</aside>
-          <span v-if="salesIdLocked || isBxSales">
+          <span>
             {{ displayBxSalesId || userInfo.salesId }}
-          </span>
-          <span v-else>
-            <el-input placeholder="如有服务编号请您填写" v-model.trim="inputSalesId" />
-            <i class="el-icon-check" title="检测服务编号"
-              @click="checkInputSalesId" />
           </span>
         </section>
         <section v-if="displayUserMobile" class="user-mobile">
@@ -108,7 +103,7 @@ import { allowGetOrderPayUrl } from 'util'
 import { orderServiceHost } from 'config'
 import track from 'util/track'
 import uuid from 'uuid/v4'
-import { getUserIdFromBxSalesId, queryUserInfo, getUserInfo } from 'api/account'
+import { queryUserInfo, getUserInfo } from 'api/account'
 import { createOrder, getProductList } from 'api/fengming'
 import { SPUIDS, VENDORIDS, MERCHANTS } from 'constant/product'
 
@@ -166,7 +161,6 @@ export default {
 
       salesIdLocked: false,
       displayBxSalesId: '',
-      inputSalesId: '',
       displayUserMobile: '',
       orderPayUrl: '',
 
@@ -337,7 +331,6 @@ export default {
         userId: await this.getFinalUserId(),
         skuList: this.checkedSkuList
       }
-      console.log(orderParams)
       const sid = await this.getFinalSalesId()
       if (sid) {
         orderParams.salesId = sid
@@ -397,11 +390,8 @@ export default {
       if (salesId) {
         return salesId
       }
-      const { inputSalesId, userInfo} = this
-      if (inputSalesId) {
-        const id = await getUserIdFromBxSalesId(inputSalesId)
-        return id
-      }
+      const { userInfo} = this
+
       if (this.isBxUser) {
         return
       }
@@ -418,14 +408,6 @@ export default {
         return salesInfo.userId
       }
       return userInfo.id
-    },
-    async checkInputSalesId() {
-      const { inputSalesId } = this
-      if (!inputSalesId) {
-        return this.$message.error('请填写销售编号')
-      }
-      await getUserIdFromBxSalesId(inputSalesId)
-      this.$message.success('销售编号可用')
     }
   }
 }

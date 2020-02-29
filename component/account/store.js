@@ -1,34 +1,12 @@
 
 import { observable, action, toJS } from 'mobx'
 import { PRODUCT_TYPE_BIAOWANG } from 'constant/log'
-import { MERCHANTS } from 'constant/product'
 
 import * as fapi from 'api/fengming'
 import * as bapi from 'api/biaowang'
 import * as mapi from 'api/meta'
 
-const { FENG_MING_MERCHANT_CODE, WEBSITE_MERCHANT_CODE } = MERCHANTS
-
-const emptyQuery = {
-  merchantList: [FENG_MING_MERCHANT_CODE, WEBSITE_MERCHANT_CODE],
-  startDate: 0,
-  endDate: 0,
-  pageNo: 1,
-  size: 1,
-  total: 10
-}
-
 const store = observable({
-  _consumeQuery: {
-    ...emptyQuery
-  },
-  _consumeLogs: [],
-
-  _chargeQuery: {
-    ...emptyQuery
-  },
-  _chargeLogs: [],
-
   _summary: {},
   _coupons: [],
 
@@ -37,19 +15,6 @@ const store = observable({
 
   get logs() {
     return toJS(this._logs)
-  },
-
-  get consumeQuery() {
-    return toJS(this._consumeQuery)
-  },
-  get consumeLogs() {
-    return toJS(this._consumeLogs)
-  },
-  get chargeQuery() {
-    return toJS(this._chargeQuery)
-  },
-  get chargeLogs() {
-    return toJS(this._chargeLogs)
   },
   get summary() {
     return toJS(this._summary)
@@ -95,38 +60,6 @@ const store = observable({
     }
     this.totalLogs = total
     this._logs = logs
-  }),
-
-  clearConsumeLogs: action(async function() {
-    this._consumeQuery = {
-      ...emptyQuery
-    }
-    this._consumeLogs = []
-  }),
-  getConsumeLogs: action(async function(opts) {
-    this._consumeQuery = {
-      ...this._consumeQuery,
-      ...opts
-    }
-    const { totalElements, logs } = await fapi.getChangeLogs(this.consumeQuery)
-    this._consumeQuery.total = totalElements
-    this._consumeLogs = logs
-  }),
-
-  clearChargeLogs: action(function() {
-    this._chargeQuery = {
-      ...emptyQuery
-    }
-    this._chargeLogs = []
-  }),
-  getChargeLogs: action(async function(opts) {
-    this._chargeQuery = {
-      ...this._chargeQuery,
-      ...opts
-    }
-    const { logs, totalElements } = await fapi.getChargeLogs(this.chargeQuery)
-    this._chargeQuery.total = totalElements
-    this._chargeLogs = logs
   }),
 
   getSummary: action(async function() {

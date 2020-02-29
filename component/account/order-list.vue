@@ -24,10 +24,10 @@
         width="230"
         label="订单编号"
         prop="tradeSeq"/>
-      <el-table-column
+      <!-- <el-table-column
         width="200"
         label="产品Id"
-        prop="skuId"/>
+        prop="skuId"/> -->
       <el-table-column
         width="90"
         align="center"
@@ -56,12 +56,13 @@
         label="实价"
         :formatter="row => formatPrice(row.dealPrice)"/>
       <el-table-column
-        width="140"
+        width="150"
         align="center"
         label="创建时间"
         :formatter="row => formatTime(row.createdTime)"/>
       <el-table-column label="操作"
         width="180"
+        fixed="right"
         align="center"
       >
         <div slot-scope="{row}">
@@ -164,13 +165,13 @@ export default {
       this.total = total
     },
     formatPrice(price) {
-      return (price / 100)
+      return `${(price / 100)}元`
     },
     formatTime (time) {
-      return dayjs(time * 1000).format('YY-MM-DD HH:mm')
+      return dayjs(time * 1000).format('YYYY-MM-DD HH:mm')
     },
     handleCurrentPage(val) {
-      this.params.pageNo = val
+      this.pageNo = val
       this.fetchOrderData()
     },
   },

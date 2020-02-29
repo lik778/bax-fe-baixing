@@ -4,10 +4,10 @@
     <content>
       <div>
         <el-date-picker type="daterange" start-placeholder="开始日期"
-          end-placeholder="结束日期" range-separator="-" v-model="daterange" />
+          end-placeholder="结束日期" range-separator="-" v-model="query.dateRange" />
       </div>
       <main style="width: 720px">
-        <el-table :data="consumeLogs">
+        <el-table :data="data">
           <el-table-column label="日期" prop="createdTime" 
             :formatter="r => toHumanTime(r.createdTime, 'YYYY-MM-DD HH:mm')" />
           <el-table-column label="计划" prop="businessId" />
@@ -17,9 +17,9 @@
             :formatter="r => (r.dealPrice / 100).toFixed(2) + '元'" />
         </el-table>
         <el-pagination class="pagniation" small layout="prev, pager, next"
-          :total="consumeQuery.total" :page-size="consumeQuery.size"
-          :current-page="consumeQuery.pageNo"
-          @current-change="handleCurrentChange">
+          :total="total" :page-size="query.size"
+          :current-page="pageNo"
+          @current-change="handleCurrentPage">
         </el-pagination>
       </main>
     </content>
@@ -28,60 +28,70 @@
 
 <script>
 import SectionHeader from 'com/common/section-header'
-
 import { toHumanTime } from 'utils'
 import track from 'util/track'
 import dayjs from 'dayjs'
-import store from './store'
+import { MERCHANTS } from 'constant/product'
+import * as api from 'api/fengming'
+
+const { FENG_MING_MERCHANT_CODE, WEBSITE_MERCHANT_CODE} = MERCHANTS
+const DEFAULT_DATE_RANGE = [
+  dayjs().startOf('day').toDate(),
+  dayjs().endOf('day').toDate()
+]
 
 export default {
   name: 'qwt-account-consume',
   components: {
     SectionHeader
   },
-  fromMobx: {
-    consumeQuery: () => store.consumeQuery,
-    consumeLogs: () => store.consumeLogs
-  },
   data() {
     return {
-      daterange: [
-        dayjs().startOf('day').toDate(),
-        dayjs().toDate()
-      ]
+      query: {
+        merchantList:[FENG_MING_MERCHANT_CODE, WEBSITE_MERCHANT_CODE],
+        size: 10,
+        dateRange: DEFAULT_DATE_RANGE,
+      },
+      total: 0,
+      pageNo: 1,
+      data: null
     }
   },
   methods: {
-    async handleCurrentChange(pageNo) {
-      await this.queryLogs({ pageNo })
+   async fetchData(isResetPageNo) {
+      if (isResetPageNo) this.pageNo = 1
+      const { dateRange, ...otherParams } = this.query
+      let queryParmas = {
+        pageNo: this.pageNo,
+        ...otherParams
+      }
+      if (dateRange) {
+        const startDate = dayjs(dateRange[0]).startOf('day').unix()
+        const endDate = dayjs(dateRange[1]).endOf('day').unix()
+        queryParmas = {
+          startDate,
+          endDate,
+          ...queryParmas
+        }
+      } 
+      const { total, logs } = await api.getChangeLogs(queryParmas)
+      this.data = logs
+      this.total = total
     },
-    async queryLogs(q) {
-      await store.getConsumeLogs(q)
+    handleCurrentPage(val) {
+      this.pageNo = val
+      this.fetchData()
     },
     toHumanTime
   },
   watch: {
-    async daterange(v) {
-      if (!(v && v.length === 2)) {
-        return store.clearConsumeLogs()
+    query: {
+      deep: true,
+      immediate: true,
+      handler() {
+        this.fetchData(true)
       }
-      const startDate = dayjs(v[0]).startOf('day').unix()
-      const endDate = dayjs(v[1]).endOf('day').unix()
-      await this.queryLogs({
-        startDate,
-        endDate
-      })
-
-      track({
-        action: 'account: consume log - change daterange'
-      })
     }
-  },
-  async mounted() {
-    await this.queryLogs({
-      startDate: dayjs().startOf('day').unix(),
-      endDate: dayjs().endOf('day').unix()
-    })
   }
 }
 </script>

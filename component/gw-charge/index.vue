@@ -18,16 +18,10 @@
       <section class="gw-order">
         <main>
           <div class="info">
-            <section class="sales-code">
+            <section class="sales-code" v-if="salesIdLocked || isBxSales">
               <aside>服务编号:</aside>
-              <span v-if="salesIdLocked || isBxSales">
+              <span>
                 {{ displayBxSalesId || userInfo.salesId }}
-              </span>
-              <span v-else>
-                <el-input v-model.trim="inputSalesId"
-                  placeholder="如有服务编号请您填写" />
-                <i class="el-icon-check" title="检测服务编号"
-                  @click="checkInputSalesId" />
               </span>
             </section>
             <section v-if="!isBxUser">
@@ -105,7 +99,6 @@ export default {
       displayBxSalesId: '',
       userIdLocked: false,
       displayUserId: '',
-      inputSalesId: '',
       inputUserId: '',
 
       step: 1,
@@ -147,26 +140,13 @@ export default {
     }
   },
   methods: {
-    async checkInputSalesId() {
-      const { inputSalesId } = this
-      if (!inputSalesId) {
-        return this.$message.error('请填写销售编号')
-      }
-      await getUserIdFromBxSalesId(inputSalesId)
-      this.$message.success('销售编号可用')
-    },
     async getFinalSalesId() {
       const { sales_id: salesId } = this.$route.query
       if (salesId) {
         return salesId
       }
 
-      const { inputSalesId, userInfo } = this
-
-      if (inputSalesId) {
-        const id = await getUserIdFromBxSalesId(inputSalesId)
-        return id
-      }
+      const { userInfo } = this
 
       if (this.isBxUser) {
         return
@@ -318,15 +298,13 @@ export default {
       margin-left: 8px;
     }
   }
-
-  & > main {
-    margin-top: 20px;
-  }
 }
 
 .gw-product {
   padding-bottom: 30px;
-
+  & > main {
+    margin-top: 20px;
+  }
   & > main > div:not(:last-child) {
     margin-right: 20px;
   }
@@ -343,14 +321,13 @@ export default {
   flex-flow: column;
   align-items: flex-end;
   justify-content: center;
-  margin-top: 30px;
   padding-bottom: 34px;
   border-bottom: solid 1px #e6e6e6;
 
   & > .sales-code {
     display: flex;
     align-items: center;
-    margin-top: 20px;
+    /* margin-top: 20px; */
     & > aside {
       font-size: 14px;
       color: #666666;

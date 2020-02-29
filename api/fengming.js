@@ -307,7 +307,7 @@ export async function getChangeLogs(opts) {
     .json()
 
   return {
-    totalElements: data.totalElements,
+    total: data.totalElements,
     logs: toCamelcase(data.data)
   }
 }
@@ -319,7 +319,7 @@ export async function getChargeLogs(opts) {
     .json()
 
   return {
-    totalElements: data.totalElements,
+    total: data.totalElements,
     logs: toCamelcase(data.data)
   }
 }
