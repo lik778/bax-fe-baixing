@@ -10,11 +10,11 @@
           1. 选择产品 | <span class="discount-btn" @click="showDiscount = !showDiscount">查看优惠细则<i class="el-icon-question"></i></span>
         </header>
         <div class="discount-section" v-show="showDiscount">
-          <p class="discount-info"
-            :key="index"
-            v-for="(html, index) in discountRenderHTML"
-            v-html="html"
-          />
+          <p class="discount-info">满&nbsp;588元：<span class="red">赠</span>送十万火急 &nbsp;50&nbsp; 元现金券 <span class="mute">(满100元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（1年）官网<span class="red">减</span>立减 200 元；购买精品官网2年【送一年】官网<span class="red">减</span>立减 600 元；购买精品官网专业版1年（支持首页宝推广）官网<span class="red">减</span> 600元；</p>
+          <p class="discount-info">满1088元：<span class="red">赠</span>送十万火急 &nbsp;80&nbsp; 元现金券 <span class="mute">(满200元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（1年）官网<span class="red">减</span>立减 200 元；购买精品官网2年【送一年】官网<span class="red">减</span>立减 600 元；购买精品官网专业版1年（支持首页宝推广）官网<span class="red">减</span> 600元；</p>
+          <p class="discount-info">满3088元：<span class="red">赠</span>送十万火急 300 元现金券 <span class="mute">(满400元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（1年）官网<span class="red">减</span>立减 200 元；购买精品官网2年【送一年】官网<span class="red">减</span>立减 600 元；购买精品官网专业版1年（支持首页宝推广）官网<span class="red">减</span> 600元；</p>
+          <p class="discount-info">满5088元：<span class="red">赠</span>送十万火急 300 元现金券 <span class="mute">(满400元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（1年）官网<span class="red">减</span>立减 600 元；购买精品官网2年【送一年】官网<span class="red">减</span>立减 1200 元；购买精品官网专业版1年（支持首页宝推广）官网<span class="red">减</span> 900元；</p>
+          <p class="discount-info">满10188元：<span class="red">赠</span>送十万火急 300 元现金券 <span class="mute">(满400元可用，不限城市与类目，有效期30天)；</span>同时购买精品官网（1年）官网<span class="red">减</span>立减 1000 元；购买精品官网2年【送一年】官网<span class="red">减</span>立减 1400 元；购买精品官网专业版1年（支持首页宝推广）官网<span class="red">减</span> 1500元；</p>
         </div>
         <div class="charge">
           <header>选择充值推广资金包：</header>
@@ -299,7 +299,7 @@ const allProducts = [
       'p >= 508800 && p < 1018800 ? 90000 : false',
       'p >= 1018800 ? 150000 : false'
     ],
-    name: '精品官网一年送三个月【专业版】',
+    name: '精品官网一年【专业版】',
     isHot: true
   }
 ]
@@ -311,22 +311,6 @@ const isGwProduct = function(productType) {
 const isChargeProduct = function(productType) {
   return productType === 3
 }
-
-const discountInfo = [
-  [588, 20, , 1200, 200, false],
-  [1088, 20, 1200, 80, 200, false],
-  [3088, 88, 1200, 300, 400],
-  [5088, 188, 900, 300, 400],
-  [10188, 500, 300, 300, 400]
-]
-
-const discountRenderHTML = discountInfo.map((item, index) => {
-  return item[item.length - 1] ? `<p class="discount-info">
-    满<span style="min-width: 40px;">${item[0]}</span>元：<span class="red">赠</span>送<span style="min-width: 30px;">${item[1]}</span>元站外推广资金；</span>
-    同时<span class="red">加</span><span style="min-width: 30px;">${item[2]} 元即可获得1年+3个月，价值 2250 元专业版官网；</span>
-    <span class="red">赠</span>送十万火急<span style="min-width: 30px;">${item[3]}</span>元现金券 (满 ${item[4]} 元可用，不限城市与类目，有效期30天)
-  </p>` : index === 0 ? '充值更多，可享更多优惠！' : ''
-})
 
 export default {
   name: 'qwt-charge',
@@ -362,9 +346,7 @@ export default {
   },
   data() {
     return {
-      discountRenderHTML,
-
-      showDiscount: true,
+      showDiscount: false,
       actionTrackId: uuid(),
       currentStep: 2,
       allProducts,
@@ -399,27 +381,36 @@ export default {
         const siteProduct = this.fullCheckedProducts.find(({productType}) => isGwProduct(productType))
         const siteProductText = siteProduct && siteProduct.desc.replace('精品官网', '')
         const siteDiscountPrice = siteProduct && centToYuan(siteProduct.originalPrice - siteProduct.discountPrice)
-
-        const fenToYuan = price => price * 100
-
-        const index = discountInfo.findIndex(([price], index, arr) => {
-          return charge.price >= fenToYuan(price) &&
-            charge.price < fenToYuan(arr[index + 1] ? arr[index + 1][0] : Number.MAX_SAFE_INTEGER / 1000)
-        })
-        return discountRenderHTML[index - 1 < 0 ? 0 : index]
-          .replace(/满(.*?)元：/, '')
-          .replace(/<span style="min-width.*?>(.*?)<\/span>/g, ' $1 ')
+        let huojiCouponContent = ''
+        if (charge.price < 58800) {
+          return '充值更多，可享更多优惠！'
+          } else if (charge.price < 108800) {
+            huojiCouponContent =  `
+              <span class="red">赠</span>送十万火急 50 元现金券 <span class="mute">(满100元可用，不限城市与类目，有效期30天)；</span>
+            `
+          } else if (charge.price < 308800) {
+            huojiCouponContent =  `
+              <span class="red">赠</span>送十万火急 80 元现金券 <span class="mute">(满200元可用，不限城市与类目，有效期30天)；</span>
+            `
+          } else {
+            huojiCouponContent =  `
+              <span class="red">赠</span>送十万火急 300 元现金券 <span class="mute">(满400元可用，不限城市与类目，有效期30天)；</span>
+            `
+          }
+          return huojiCouponContent + (siteDiscountPrice
+            ? `同时购买精品官网（${siteProductText}）立<span class="red">减</span> ${siteDiscountPrice} 元`
+            : '')
       }
       return ''
     },
     discountInfos() {
       const charge = this.checkedProducts.find(p => isChargeProduct(p.productType))
-      const gw = this.fullCheckedProducts.find(p => isGwProduct(p.productType))
-      const chargeDiscount = this.promotionDiscount
-        .replace(/<[^>]*>?/gm, '')
-        .replace(/ 同时.*?；/, '')
-        .replace(/\(.*\)/, '')
-      return [charge ? chargeDiscount : null, gw ? `同时购买${gw.name}价格立减 ${(gw.originalPrice - gw.discountPrice) / 100} 元` : null]
+      const gw = this.checkedProducts.find(p => isGwProduct(p.productType))
+      if (charge && !gw) {
+        return this.promotionDiscount.split('；').slice(0, 1)
+      } else if (charge && gw) {
+        return this.promotionDiscount.split('；')
+      }
     },
     productSummary() {
       var a = this.checkedProducts.reduce((s, p) => {
@@ -934,9 +925,6 @@ export default {
 .discount-info {
   font-size: 12px;
   margin-bottom: 10px;
-  & > span {
-    text-align: center;
-  }
 
   &>span.red {
     background-color: #ff3c3c;
@@ -945,8 +933,8 @@ export default {
     margin: 0 5px;
     border-radius: 2px;
   }
-  & > .mute {
-    color: #fff;
+  &>span.mute {
+    color: #949292;
   }
 }
 </style>
@@ -970,10 +958,6 @@ export default {
   background-color: #f5f5f5;
   padding: 20px;
   margin-top: 10px;
-  color: #fff;
-  width: 1200px;
-  border-radius: 12px;
-  background: url('http://file.baixing.net/201910/e20912789e2c8ca4cb96739f972dc2ab.png');
 }
 
 .qwt-charge {
@@ -1168,25 +1152,7 @@ export default {
 }
 
 .qwt-pro-widget {
-  position: relative;
   margin: 0 30px 20px 0;
-  & + .qwt-pro-widget {
-    &:after {
-      content: '';
-      position: absolute;
-      top: -5px;
-      height: 26px;
-      left: 0;
-      right: 0;
-      background: url('http://file.baixing.net/201910/dff37305d9ffa01949d55a01cc7dad87.png') center no-repeat;
-      background-size: 83px 26px;
-    }
-  }
-  &:nth-last-child(1),  &:nth-child(2){
-    &:after {
-      display: none;
-    }
-  }
 }
 
 .tip {
