@@ -24,7 +24,7 @@
                 :price="product.price" :min-input-price="product.minQuantity"
                 :max-input-price="product.maxQuantity"
                 :checked="checkedProducts.includes(product)"
-                @click="toggleProduct(product)"
+                @click="toggleCharge(product)"
                 @change="v => handlePriceChange(product, v)">
               </price-tag>
             </section>
@@ -42,7 +42,7 @@
                 :is-hot="product.tags.includes('hot')"
                 :price="centToYuan(product.realPrice)"
                 :checked="checkedProducts.includes(product)"
-                @click.native="toggleProduct(product)" />
+                @click.native="toggleSite(product)" />
             </section>
           </main>
         </template>
@@ -104,11 +104,10 @@ import { orderServiceHost } from 'config'
 import track from 'util/track'
 import uuid from 'uuid/v4'
 import { queryUserInfo, getUserInfo } from 'api/account'
-import { createOrder, getProductList } from 'api/fengming'
-import { SPUIDS, VENDORIDS, MERCHANTS } from 'constant/product'
+import { createOrder, getProductsByMchCode } from 'api/fengming'
+import { SPUCODES, MERCHANTS } from 'constant/product'
 
-const { FENGMING_SPU_ID, WEBSITE_SPU_ID } = SPUIDS
-const { FENGMING_VENDOR_ID  } = VENDORIDS
+const { WHOLE_SPU_CODE, GUAN_WANG_SPU_CODE } = SPUCODES
 const { FENG_MING_MERCHANT_CODE } = MERCHANTS
 const MIN_INPUT_PRICE = 50000
 const discountInfo = [
@@ -124,12 +123,12 @@ const discountInfoHTML = discountInfo.map((item, index) => {
           购买精品官网2年【送一年】官网<span class="red">减</span>立减 ${item[2]} 元；
           购买精品官网专业版1年（支持首页宝推广）官网<span class="red">减</span> ${item[3]}元；</p>`
 })
-const isGwProduct = function(spuId) {
-  return spuId === WEBSITE_SPU_ID
+const isGwProduct = function(spuCode) {
+  return spuCode === GUAN_WANG_SPU_CODE
 }
 
-const isChargeProduct = function(spuId) {
-  return spuId === FENGMING_SPU_ID
+const isChargeProduct = function(spuCode) {
+  return spuCode === WHOLE_SPU_CODE
 }
 
 
@@ -221,16 +220,16 @@ export default {
 
     this.fetchLoading = true
     try {
-      let products = await getProductList(FENGMING_VENDOR_ID)
+      let products = await getProductsByMchCode(FENG_MING_MERCHANT_CODE)
       products.forEach(spu => 
         spu.selection.forEach(sku => {
           sku.quantity = sku.minQuantity === sku.maxQuantity ? sku.minQuantity: 0
           sku.price = sku.minQuantity === sku.maxQuantity ?  Math.floor(sku.minQuantity * sku.realPrice): 0,
-          sku.spuId = spu.spuId
+          sku.spuCode = spu.spuCode
         })
       )
-      this.siteSpu = products.find(p => isGwProduct(p.spuId))
-      this.chargeSpu = products.find(p => isChargeProduct(p.spuId))
+      this.siteSpu = products.find(p => isGwProduct(p.spuCode))
+      this.chargeSpu = products.find(p => isChargeProduct(p.spuCode))
     } catch (e) {
       console.error(e)
     } finally {
@@ -290,23 +289,23 @@ export default {
       product.price = v
       product.quantity = Math.floor(v / product.realPrice)
     },
-    toggleProduct (product) {
-      const index = this.checkedProducts.indexOf(product)
+    toggleProduct(product, judgeProduct) {
+      const index = this.checkedProducts.findIndex(p => p.skuVendorId === product.skuVendorId)
       if (index > -1) {
         this.checkedProducts.splice(index, 1)
       } else {
-        const chargeProduct = this.checkedProducts.find(p => isChargeProduct(p.spuId))
-        const gwProduct = this.checkedProducts.find(p => isGwProduct(p.spuId))
-        if (chargeProduct && isChargeProduct(product.spuId)) {
-          const index = this.checkedProducts.indexOf(chargeProduct)
-          this.checkedProducts.splice(index, 1)
-        }
-        if (gwProduct && isGwProduct(product.spuId)) {
-          const index = this.checkedProducts.indexOf(gwProduct)
-          this.checkedProducts.splice(index, 1)
+        const cIdx = this.checkedProducts.findIndex(p => judgeProduct(p.spuCode))
+        if (cIdx > -1) {
+          this.checkedProducts.splice(cIdx, 1)
         }
         this.checkedProducts.push(product)
       }
+    },
+    toggleCharge(product) {
+      this.toggleProduct(product, isChargeProduct)
+    },
+    toggleSite(product) {
+      this.toggleProduct(product, isGwProduct)
     },
     async createPreOrder() {
       if (!this.$refs.contract.$data.isAgreement) {
@@ -315,7 +314,7 @@ export default {
       if (this.checkedProducts.length <= 0) {
         return this.$message.error('请选择购买的产品 ~')
       }
-      const chargeProduct = this.checkedProducts.find(p => isChargeProduct(p.spuId))
+      const chargeProduct = this.checkedProducts.find(p => isChargeProduct(p.spuCode))
       if (chargeProduct) {
         const { quantity, minQuantity, maxQuantity } = chargeProduct
         if (quantity < minQuantity) {

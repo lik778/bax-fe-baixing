@@ -95,11 +95,22 @@ export async function getProducts(type = 3) {
   return toCamelcase(body.data)
 }
 
-export async function getProductList(mchId) {
+export async function getProductsByMchId(mchId) {
   const body = await fengming
     .get('/products')
     .query(reverseCamelcase({
       mchId
+    }))
+    .json()
+
+  return toCamelcase(body.data)
+}
+
+export async function getProductsByMchCode(mchCode) {
+  const body = await fengming
+    .get('/products/merchantcode')
+    .query(reverseCamelcase({
+      mchCode
     }))
     .json()
 

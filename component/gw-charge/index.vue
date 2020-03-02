@@ -64,15 +64,13 @@ import Step from './step'
 
 import { centToYuan } from 'utils'
 import { assetHost, orderServiceHost } from 'config'
-import { createOrder, getProductList } from 'api/fengming'
+import { createOrder, getProductsByMchCode } from 'api/fengming'
 import { getUserIdFromBxSalesId, queryUserInfo, getUserInfo } from 'api/account'
 import { allowBuyYoucaigouSite, allowGetOrderPayUrl } from 'util'
 import { normalizeRoles } from 'util/role'
-import { SPUIDS, VENDORIDS, MERCHANTS } from 'constant/product'
+import { MERCHANTS } from 'constant/product'
 
-const { FENGMING_SPU_ID, WEBSITE_SPU_ID } = SPUIDS
-const { WEBSITE_VENDOR_ID  } = VENDORIDS
-const { FENG_MING_MERCHANT_CODE } = MERCHANTS
+const { WEBSITE_MERCHANT_CODE } = MERCHANTS
 
 export default {
   name: 'gw-charge',
@@ -179,7 +177,7 @@ export default {
       }
 
       const order = {
-        merchant: FENG_MING_MERCHANT_CODE,
+        merchant: WEBSITE_MERCHANT_CODE,
         userId: await this.getFinalUserId(),
         skuList: [{
           id,
@@ -219,7 +217,7 @@ export default {
 
     this.fetchLoading = true
     try {
-      let websiteSpuList = await getProductList(WEBSITE_VENDOR_ID)
+      let websiteSpuList = await getProductsByMchCode(WEBSITE_MERCHANT_CODE)
       this.products = websiteSpuList[0].selection
       const initSelectedSku = this.products.find(sku => sku.tags.includes('selected'))
       if (initSelectedSku) {
