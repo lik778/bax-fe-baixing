@@ -33,7 +33,7 @@ import dayjs from 'dayjs'
 import { SPUCODES } from 'constant/product'
 import * as api from 'api/fengming'
 
-const { FENG_MING_SPU_CODE, GUAN_WANG_SPU_CODE} = SPUCODES
+const { WHOLE_SPU_CODE } = SPUCODES
 const DEFAULT_DATE_RANGE = [
   dayjs().startOf('day').toDate(),
   dayjs().endOf('day').toDate()
@@ -47,7 +47,7 @@ export default {
   data() {
     return {
       query: {
-        accountList:[FENG_MING_SPU_CODE, GUAN_WANG_SPU_CODE],
+        accountList:[WHOLE_SPU_CODE],
         size: 10,
         dateRange: DEFAULT_DATE_RANGE,
       },

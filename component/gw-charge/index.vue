@@ -33,7 +33,14 @@
                   placeholder="用户 ID" />
               </span>
             </section>
-            <contract-ack type="website-contract" ref="contract" />
+            <section class="agreement">
+              <div v-for="agreement in agreementList" :key="agreement.id">
+                <contract :isAgreement="agreement.checked"
+                  :href="agreement.link"
+                  @click="()=> agreement.checked = !agreement.checked"
+                  :title="agreement.title" />
+              </div>
+            </section>
             <section class="submit">
               <button v-if="!isAgentSales" class="buy-btn" @click="createOrder">
                 {{ submitButtonText }}
@@ -59,7 +66,7 @@
 <script>
 import Clipboard from 'com/widget/clipboard'
 import GwProWidget from 'com/charge/gw-pro'
-import ContractAck from 'com/widget/contract-ack'
+import Contract from 'com/charge/contract'
 import Step from './step'
 
 import { centToYuan } from 'utils'
@@ -69,6 +76,7 @@ import { getUserIdFromBxSalesId, queryUserInfo, getUserInfo } from 'api/account'
 import { allowBuyYoucaigouSite, allowGetOrderPayUrl } from 'util'
 import { normalizeRoles } from 'util/role'
 import { MERCHANTS } from 'constant/product'
+import { getUniqueAgreementList } from 'util/charge'
 
 const { WEBSITE_MERCHANT_CODE } = MERCHANTS
 
@@ -78,7 +86,7 @@ export default {
     GwProWidget,
     Clipboard,
     Step,
-    ContractAck,
+    Contract,
   },
   props: {
     userInfo: {
@@ -101,7 +109,7 @@ export default {
 
       step: 1,
       fetchLoading: true,
-      contractCheck: false
+      agreementList:[]
     }
   },
   filters: {
@@ -135,6 +143,9 @@ export default {
       }
 
       return '确认购买'
+    },
+    hasUnCheckedAgreement() {
+     return this.agreementList.length ? this.agreementList.some(agreement => !agreement.checked) : true
     }
   },
   methods: {
@@ -168,7 +179,7 @@ export default {
     },
     async createOrder() {
       this.step = 1
-      if (!this.$refs.contract.$data.isAgreement) {
+      if (this.hasUnCheckedAgreement) {
         return this.$message.error('请阅读并勾选同意服务协议，再进行下一步操作')
       }
       const { checkedSkuId: id } = this
@@ -223,6 +234,8 @@ export default {
       if (initSelectedSku) {
         this.checkedSkuId = initSelectedSku.skuVendorId 
       }
+      
+      this.agreementList = getUniqueAgreementList(websiteSpuList)
     } catch (e) {
       console.error(e)
     } finally {

@@ -63,7 +63,13 @@
             {{ displayUserMobile }}
           </span>
         </section>
-        <contract-ack type="contract" ref="contract" />
+        <section class="agreement">
+          <div v-for="agreement in agreementList" :key="agreement.id">
+            <contract :isAgreement="agreement.checked" :href="agreement.link"
+              @click="() => agreement.checked = !agreement.checked"
+              :title="agreement.title" />
+          </div>
+        </section>
         <promotion-area-limit-tip :all-areas="allAreas" page="charge" />
         <section class="pay-info">
           <button v-if="!isAgentSales" class="pay-order"
@@ -93,7 +99,7 @@
 import Step from './step'
 import PriceTag from 'com/charge/price-tag'
 import GwProWidget from 'com/charge/gw-pro'
-import ContractAck from 'com/widget/contract-ack'
+import Contract from 'com/charge/contract'
 import PromotionAreaLimitTip from 'com/widget/promotion-area-limit-tip'
 import Clipboard from 'com/widget/clipboard'
 
@@ -106,6 +112,7 @@ import uuid from 'uuid/v4'
 import { queryUserInfo, getUserInfo } from 'api/account'
 import { createOrder, getProductsByMchCode } from 'api/fengming'
 import { SPUCODES, MERCHANTS } from 'constant/product'
+import { getUniqueAgreementList } from 'util/charge'
 
 const { WHOLE_SPU_CODE, GUAN_WANG_SPU_CODE } = SPUCODES
 const { FENG_MING_MERCHANT_CODE } = MERCHANTS
@@ -164,7 +171,7 @@ export default {
       orderPayUrl: '',
 
       payInProgress: false,
-      payDialogVisible: false      
+      agreementList:[]
     }
   },
   computed: {
@@ -201,13 +208,16 @@ export default {
           quantity: sku.quantity
         }
       })
+    },
+    hasUnCheckedAgreement() {
+     return this.agreementList.length ? this.agreementList.some(agreement => !agreement.checked) : true
     }
   },
   components: {
     Step,
     PriceTag,
     GwProWidget,
-    ContractAck,
+    Contract,
     PromotionAreaLimitTip,
     Clipboard
   },
@@ -230,6 +240,8 @@ export default {
       )
       this.siteSpu = products.find(p => isGwProduct(p.spuCode))
       this.chargeSpu = products.find(p => isChargeProduct(p.spuCode))
+
+      this.agreementList = getUniqueAgreementList(products)
     } catch (e) {
       console.error(e)
     } finally {
@@ -308,7 +320,7 @@ export default {
       this.toggleProduct(product, isGwProduct)
     },
     async createPreOrder() {
-      if (!this.$refs.contract.$data.isAgreement) {
+      if (this.hasUnCheckedAgreement) {
         return this.$message.error('请阅读并勾选同意服务协议，再进行下一步操作')
       }
       if (this.checkedProducts.length <= 0) {
