@@ -31,7 +31,7 @@
 const LAST_NOTIFICATION_KEY = 'LAST_NOTIFICATION'
 const NOTICE_TIMES_KEY = 'NOTICE_TIMES'
 
-const NOTIFICATION_DATE_RANGE = ['2020/02/25', '2020/03/28'].map(item => new Date(item))
+const NOTIFICATION_DATE_RANGE = ['2020/02/25', '2020/02/28'].map(item => new Date(item))
 const notificationCanVisible = new Date() >= NOTIFICATION_DATE_RANGE[0] && new Date() <= NOTIFICATION_DATE_RANGE[1]
 
 const ONE_DAY_DURATION_MS = 86400000
