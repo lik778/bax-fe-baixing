@@ -3,7 +3,7 @@
     <el-checkbox v-model="isAgreement" />
     <label @click="() =>isAgreement = !isAgreement">我已阅读并同意遵守</label>
     <a v-if="type === 'contract'"
-      v-bind:href="assetHost + 'baixing-sst-contract-2020-v1.pdf'"
+      v-bind:href="assetHost + 'baixing-sst-contract-2020-v2.pdf'"
       download="百姓网搜索通服务协议.pdf">
       《百姓网搜索通服务协议》
     </a>
