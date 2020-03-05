@@ -9,7 +9,7 @@
       <main style="width: 720px">
         <el-table :data="data">
           <el-table-column label="日期" prop="createdTime" 
-            :formatter="r => toHumanTime(r.date, 'YYYY-MM-DD HH:mm')" />
+            :formatter="r => formatDate(r.date)" />
           <el-table-column label="计划" prop="campaignId" />
           <!-- tip: 先写死，百年大计二期上线首页宝和标王之后更改 -->
           <el-table-column label="类型" :formatter="r => '广告投放'" />
@@ -28,7 +28,6 @@
 
 <script>
 import SectionHeader from 'com/common/section-header'
-import { toHumanTime } from 'utils'
 import track from 'util/track'
 import dayjs from 'dayjs'
 import * as api from 'api/fengming'
@@ -79,7 +78,9 @@ export default {
       this.pageNo = val
       this.fetchData()
     },
-    toHumanTime
+    formatDate(timestamp) {
+      return dayjs(timestamp * 1000).toDate()
+    }
   },
   watch: {
     query: {
