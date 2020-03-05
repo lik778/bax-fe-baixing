@@ -38,15 +38,28 @@
         <div v-if="skus.length" class="results">
           <div>
             <label>查询结果</label>
-            <p v-if="exactMatch[0].isSold">关键词在城市<span class="highlight">{{soldCities.map(formatArea).join(', ')}}</span>已售出。<span v-if="availableCities.length">投放在剩余城市价格： 30天 共{{f2y(exactMatch[0].price)}}元、90天 共{{f2y(exactMatch[1].price)}}元，</span>请重新输入关键词推广城市。</p>
-            <result-row v-else-if="!exactMatch[0].isSold && exactMatch[0].price" :options="exactMatch" :selected="selected" @change="onSelected" />
+            <p v-if="isSold">关键词在城市
+              <span class="highlight">{{soldCities.map(formatArea).join(', ')}}</span>已售出。
+              <span v-if="availableCities.length">
+                投放在剩余城市价格：
+                <span v-for="deviceI in exactMatch.deviceTypes" :key="deviceI.device">
+                  <span v-for="(item, index) in deviceI.priceList" :key="index">
+                    {{item.days}}天 {{DEVICE[item.device]}}共{{f2y(item.price)}}元
+                    {{index !== deviceI.priceList.length - 1 ? '、': ''}}
+                  </span>
+                </span>
+              </span>
+            </p>
+            <result-device v-else-if="!isSold" :deviceObj="exactMatch" 
+                :selected="selected" @change="onSelected" />
             <div v-else>当前标王询价量过大，暂时无法对您的查询词提供报价，请稍后再试。</div>
           </div>
-          <div v-if="recommends.length">
-            <label>推荐近似关键词</label>
-            <div>
-              <result-row v-for="item in recommends" :key="item.keyword"
-                :options="item" @change="onSelected" :selected="selected" class="result-row"/>
+          <div v-if="recommends.length" class="recommend">
+            <label class="recommend-title">推荐近似关键词</label>
+            <div class="recommend-content">
+              <div class="recommend-item" v-for="item in recommends" :key="item.word">
+                <result-device :deviceObj="item" :selected="selected" @change="onSelected" />
+              </div>
             </div>
           </div>
 
@@ -71,10 +84,11 @@
 <script>
   import AreaSelector from 'com/common/area-selector'
   import RecentSold from './recent-sold'
-  import ResultRow from './result-row'
+  import ResultDevice from './result-device'
 
   import {queryKeywordPrice} from 'api/biaowang'
   import clone from 'clone'
+  import {DEVICE} from 'constant/biaowang'
 
   import {
     f2y,
@@ -86,7 +100,7 @@
     name: 'bw-query-price',
     components: {
       AreaSelector,
-      ResultRow,
+      ResultDevice,
       RecentSold
     },
     props: {
@@ -115,8 +129,104 @@
         selected: [],
 
         areaDialogVisible: false,
-        loading: false
+        loading: false,
+        DEVICE,
       }
+    },
+    mounted() {
+      const results = [{
+        "word": "精品",
+        "cities": ["shanghai", "beijing"],
+        "priceList": [
+          {
+					  "device": 1,
+					  "soldCities": ["wuhan"],
+					  "isSold": false,
+					  "priceMap": {
+						  "30": 50000,
+              "90": 150000
+            },
+				  },
+				  {
+					  "device": 2,
+					  "soldCities": ["wuhan"],
+					  "isSold": false,
+					  "priceMap": {
+						  "30": 50000,
+						  "90": 150000
+					  }
+				  }
+			  ]
+      },{
+        "word": "在线精品",
+        "cities": ["shanghai", "beijing"],
+        "priceList": [
+          {
+					  "device": 1,
+					  "soldCities": ["wuhan"],
+					  "isSold": false,
+					  "priceMap": {
+						  "30": 50000,
+              "90": 150000
+            }
+				  },
+				  {
+					  "device": 2,
+					  "soldCities": ["wuhan"],
+					  "isSold": true,
+					  "priceMap": {
+						  "30": 50000,
+						  "90": 150000
+					  }
+				  }
+			  ]
+      },{
+        "word": "多多果园",
+        "cities": ["shanghai", "beijing"],
+        "priceList": [
+          {
+					  "device": 1,
+					  "soldCities": ["wuhan"],
+					  "isSold": false,
+					  "priceMap": {
+						  "30": 50000,
+              "90": 150000
+            }
+				  },
+				  {
+					  "device": 2,
+					  "soldCities": ["wuhan"],
+					  "isSold": true,
+					  "priceMap": {
+						  "30": 50000,
+						  "90": 150000
+					  }
+				  }
+			  ]
+      }]
+      this.skus = results.map(w => {
+        const deviceTypes = w.priceList.map(d => {
+          const priceList = Object.entries(d.priceMap).map(entry => {
+            return {
+              device: d.device,
+              word: w.word,
+              cities: w.cities,
+              soldPriceMap: d.priceMap,
+              days: entry[0],
+              price: entry[1]
+            }
+          })
+          return {
+            ...d,
+            priceList
+          }
+        })
+        return {
+          word: w.word,
+          cities: w.cities,
+          deviceTypes
+        }
+      })
     },
     computed: {
       exactMatch() {
@@ -125,23 +235,38 @@
       recommends() {
         const { skus, exactMatch } = this
         // 推荐词关键词列表不出现精确匹配关键词
-        return skus.slice(1).filter(([{word}]) => exactMatch && exactMatch[0].word !== word)
+        return skus.slice(1).filter(({word}) => exactMatch && exactMatch.word !== word)
       },
       soldCities() {
-        return this.exactMatch[0].soldCities
+        const soldCities = []
+        this.exactMatch.deviceTypes
+          .reduce((list, {soldCities}) => {
+            return list.concat(Array.isArray(soldCities) ? soldCities : [])
+          }, [])
+          .forEach(city => {
+            if (!soldCities.includes(city)) {
+              soldCities.push(city)
+            }
+          })
+        return soldCities
+      },
+      isSold() {
+        return this.exactMatch.deviceTypes.some(list => list.isSold)
       },
       availableCities() {
-        return this.exactMatch[0].cities.filter(c =>  !this.exactMatch[0].soldCities.includes(c))
+        return this.exactMatch.cities.filter(c => !this.soldCities.includes(c))
       }
     },
     methods: {
       f2y,
       onSelected(item) {
         if (this.selected.includes(item)) {
-          this.selected.splice(this.selected.indexOf(item), 1)
-          return
+          return this.selected.splice(this.selected.indexOf(item), 1)
         }
-        const inCart = this.selected.find(i => i.word === item.word && i.days !== item.days)
+
+        const inCart = this.selected
+          .find(i => i.word === item.word && i.device === item.device && i.days !== item.days)
+
         if (inCart) {
           this.selected.splice(this.selected.indexOf(inCart), 1)
         }
@@ -288,6 +413,15 @@ marquee {
 
   &:hover {
     font-weight: bold;
+  }
+}
+.recommend {
+  display: flex;
+  align-items: flex-start;
+  & .recommend-content {
+    & .recommend-item {
+      margin-bottom: 10px;
+    }
   }
 }
 </style>

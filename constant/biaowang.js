@@ -46,8 +46,8 @@ export const promoteStatusOpts = toOpt(PROMOTE_STATUS, false, true)
 
 export const DEVICE = {
   '0': '全平台',
-  '1': '电脑',
-  '2': '手机'
+  '1': '电脑端',
+  '2': '手机端'
 }
 
 export const TRADER_TYPE = {

@@ -210,7 +210,7 @@
         this.expand = !this.expand
       },
       addToCart(items) {
-        const newItems = items.filter(i => !this.localItems.some(j => j.word === i.word))
+        const newItems = items.filter(i => !this.localItems.some(j => j.word === i.word && j.device === i.device))
         if (newItems.length) {
           this.localItems.push(...clone(newItems))
         }
@@ -249,7 +249,7 @@
           const items = await refreshKeywordPrice(this.localItems)
           // 保留字段 xufei
           this.localItems = items.map(i => {
-            const one = this.localItems.find(li => li.word === i.word)
+            const one = this.localItems.find(li => li.word === i.word && li.device === i.device)
             if (one) {
               return Object.assign({}, one, i)
             }
