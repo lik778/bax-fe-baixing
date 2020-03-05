@@ -16,7 +16,7 @@ stages:
 build:
   stage: build
   tags:
-    - k8s-dev-build
+    - ad
   script:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.baixing.cn
     - docker build --pull -t $BAX_FE_REF .
