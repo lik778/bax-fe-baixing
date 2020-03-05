@@ -54,6 +54,8 @@ import Vue from 'vue'
 
 import Vue2Filters from 'vue2-filters'
 import { getBusinessLicense } from 'api/seo'
+import { allowBuyYoucaigouSite } from 'util/fengming-role'
+import { getCurrentUser } from 'api/account'
 
 // track common data
 window.__trackerData = {
@@ -121,7 +123,16 @@ const gwRoutes = [{
 }, {
   component: () => import('com/gw-charge'),
   path: '/main/gw/charge',
-  name: 'gw-charge'
+  name: 'gw-charge',
+  beforeEnter: async (to, from, next) => {
+    const userInfo = await getCurrentUser()
+    const license = await allowBuyYoucaigouSite(userInfo.id)
+    if (license) {
+      next()
+    } else {
+      Message.error('无权限访问')
+    }
+  }
 }]
 
 const bwRoutes = [{
