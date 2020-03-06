@@ -145,3 +145,12 @@ export async function queryOrder(query) {
     total: data.totalElements
   }
 }
+
+export async function queryKeywordPriceNew(opts) {
+  const body = await biaowang
+    .post('/keyword/v2/pricing/user/inquiry')
+    .send(opts)
+    .json()
+
+  return body.data
+}

@@ -86,7 +86,7 @@
   import RecentSold from './recent-sold'
   import ResultDevice from './result-device'
 
-  import {queryKeywordPrice} from 'api/biaowang'
+  import {queryKeywordPriceNew} from 'api/biaowang'
   import clone from 'clone'
   import {DEVICE} from 'constant/biaowang'
 
@@ -132,101 +132,6 @@
         loading: false,
         DEVICE,
       }
-    },
-    mounted() {
-      const results = [{
-        "word": "精品",
-        "cities": ["shanghai", "beijing"],
-        "priceList": [
-          {
-					  "device": 1,
-					  "soldCities": ["wuhan"],
-					  "isSold": false,
-					  "priceMap": {
-						  "30": 50000,
-              "90": 150000
-            },
-				  },
-				  {
-					  "device": 2,
-					  "soldCities": ["wuhan"],
-					  "isSold": false,
-					  "priceMap": {
-						  "30": 50000,
-						  "90": 150000
-					  }
-				  }
-			  ]
-      },{
-        "word": "在线精品",
-        "cities": ["shanghai", "beijing"],
-        "priceList": [
-          {
-					  "device": 1,
-					  "soldCities": ["wuhan"],
-					  "isSold": false,
-					  "priceMap": {
-						  "30": 50000,
-              "90": 150000
-            }
-				  },
-				  {
-					  "device": 2,
-					  "soldCities": ["wuhan"],
-					  "isSold": true,
-					  "priceMap": {
-						  "30": 50000,
-						  "90": 150000
-					  }
-				  }
-			  ]
-      },{
-        "word": "多多果园",
-        "cities": ["shanghai", "beijing"],
-        "priceList": [
-          {
-					  "device": 1,
-					  "soldCities": ["wuhan"],
-					  "isSold": false,
-					  "priceMap": {
-						  "30": 50000,
-              "90": 150000
-            }
-				  },
-				  {
-					  "device": 2,
-					  "soldCities": ["wuhan"],
-					  "isSold": true,
-					  "priceMap": {
-						  "30": 50000,
-						  "90": 150000
-					  }
-				  }
-			  ]
-      }]
-      this.skus = results.map(w => {
-        const deviceTypes = w.priceList.map(d => {
-          const priceList = Object.entries(d.priceMap).map(entry => {
-            return {
-              device: d.device,
-              word: w.word,
-              cities: w.cities,
-              soldPriceMap: d.priceMap,
-              days: entry[0],
-              price: entry[1]
-            }
-          })
-          return {
-            ...d,
-            priceList
-          }
-        })
-        return {
-          word: w.word,
-          cities: w.cities,
-          deviceTypes
-        }
-      })
     },
     computed: {
       exactMatch() {
@@ -290,19 +195,33 @@
             this.loading = true
             const {keyword, devices, areas} = this.form
             try {
-              const results = await queryKeywordPrice({
+              const results = await queryKeywordPriceNew({
                 word: keyword,
                 device: devices.length === 2 ? 0 : devices[0],
                 cities: areas
               })
-              this.skus = results.map(item => {
-                return Object.entries(item.soldPriceMap).map(entry => {
+              this.skus = results.map(w => {
+                const deviceTypes = w.priceList.map(d => {
+                  const priceList = Object.entries(d.priceMap).map(entry => {
+                    return {
+                      device: d.device,
+                      word: w.word,
+                      cities: w.cities,
+                      soldPriceMap: d.priceMap,
+                      days: entry[0],
+                      price: entry[1]
+                    }
+                  })
                   return {
-                    ...item,
-                    days: +entry[0],
-                    price: entry[1]
+                    ...d,
+                    priceList
                   }
                 })
+                return {
+                  word: w.word,
+                  cities: w.cities,
+                  deviceTypes
+                }
               })
             } finally {
               this.loading = false
