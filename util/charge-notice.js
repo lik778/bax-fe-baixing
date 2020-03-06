@@ -1,5 +1,5 @@
 import { MessageBox } from 'element-ui'
-import { identityBindingPage } from '../../config'
+import { identityBindingPage } from '../config'
 
 const messageBoxContent = `
 <div>
