@@ -58,7 +58,7 @@ export default {
       if (isResetPageNo) this.pageNo = 1
       const { dateRange, ...otherParams } = this.query
       let queryParmas = {
-        pageNo: this.pageNo,
+        pageNo: this.pageNo || 1,
         ...otherParams
       }
       if (dateRange) {
@@ -79,7 +79,7 @@ export default {
       this.fetchData()
     },
     formatDate(timestamp) {
-      return dayjs(timestamp * 1000).toDate()
+      return dayjs(timestamp * 1000).format("YYYY-MM-DD")
     }
   },
   watch: {

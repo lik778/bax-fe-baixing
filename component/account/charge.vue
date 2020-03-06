@@ -61,7 +61,7 @@ export default {
       if (isResetPageNo) this.pageNo = 1
       const { dateRange, ...otherParams } = this.query
       let queryParmas = {
-        pageNo: this.pageNo,
+        pageNo: this.pageNo || 1,
         ...otherParams
       }
       if (dateRange) {
