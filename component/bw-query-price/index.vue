@@ -50,7 +50,7 @@
                 </span>
               </span>
             </p>
-            <result-device v-else-if="!isSold" :deviceObj="exactMatch" 
+            <result-device v-else-if="!isSold && priceIsNotZero" :deviceObj="exactMatch" 
                 :selected="selected" @change="onSelected" />
             <div v-else>当前标王询价量过大，暂时无法对您的查询词提供报价，请稍后再试。</div>
           </div>
@@ -160,6 +160,15 @@
       },
       availableCities() {
         return this.exactMatch.cities.filter(c => !this.soldCities.includes(c))
+      },
+      priceIsNotZero() {
+        const resultArr = this.exactMatch.deviceTypes.reduce((list, {priceList}) => {
+          const arr = priceList.reduce((list, {price}) => {
+            return list.concat(price)
+          }, [])
+          return list.concat(arr)
+        }, [])
+        return !resultArr.some(price => !price)
       }
     },
     methods: {
