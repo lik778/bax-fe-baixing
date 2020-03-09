@@ -42,6 +42,8 @@
   & .label {
     color: #999;
     & .keyword {
+      display: inline-block;
+      vertical-align: top;
       width: 140px;
       color: #000;
     }

@@ -201,6 +201,7 @@
       queryPrice() {
         this.$refs.form.validate(async isValid => {
           if (isValid) {
+            this.selected = []
             this.loading = true
             const {keyword, devices, areas} = this.form
             try {

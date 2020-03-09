@@ -37,3 +37,9 @@ export default {
   }
 }
 </script>
+
+<style lang="postcss" scoped>
+.option {
+  min-width: 200px;
+}
+</style>
