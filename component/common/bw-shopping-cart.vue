@@ -54,7 +54,7 @@
 <script>
   import clone from 'clone'
   import {f2y} from 'util'
-  import {refreshKeywordPrice, createPreOrder} from 'api/biaowang'
+  import {createPreOrder, refreshKeywordPriceNew} from 'api/biaowang'
   import {normalizeRoles} from 'util/role'
   import Clipboard from 'com/widget/clipboard'
   import {getCnName} from 'util/meta'
@@ -246,7 +246,7 @@
         if (visible && this.localItems.length) {
           // 每次打开更新下关键词价格、是否已售卖
           this.loading = true
-          const items = await refreshKeywordPrice(this.localItems)
+          const items = await refreshKeywordPriceNew(this.localItems)
           // 保留字段 xufei
           this.localItems = items.map(i => {
             const one = this.localItems.find(li => li.word === i.word && li.device === i.device)

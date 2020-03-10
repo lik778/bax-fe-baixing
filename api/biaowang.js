@@ -154,3 +154,26 @@ export async function queryKeywordPriceNew(opts) {
 
   return body.data
 }
+
+export async function refreshKeywordPriceNew(keywords) {
+  const requestBody = keywords.map(k => ({
+    ...k,
+    price: {
+      [k.days]: k.price
+    }
+  }))
+  const body = await biaowang
+    .post('/keyword/v2/pricing/user/inquiry/norec')
+    .send({pricingList: requestBody})
+    .json()
+
+  const parsedBody = body.data.content.map(i => {
+    const days = keywords.find(k => k.word === i.word).days
+    return {
+      ...i,
+      price: i.soldPriceMap[days],
+      days: days
+    }
+  })
+  return parsedBody
+}

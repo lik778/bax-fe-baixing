@@ -52,7 +52,7 @@
             </p>
             <result-device v-else-if="!isSold && priceIsNotZero" :deviceObj="exactMatch" 
                 :selected="selected" @change="onSelected" />
-            <div v-else>当前标王询价量过大，暂时无法对您的查询词提供报价，请稍后再试。</div>
+            <div v-else>该关键词已售出，您可以换个词购买或者在推荐词中选择哦~~</div>
           </div>
           <div v-if="recommends.length" class="recommend">
             <label class="recommend-title">推荐近似关键词</label>
