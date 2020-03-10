@@ -168,7 +168,7 @@ export async function refreshKeywordPriceNew(keywords) {
     .json()
 
   const parsedBody = body.data.content.map(i => {
-    const days = keywords.find(k => k.word === i.word).days
+    const days = keywords.find(k => k.word === i.word && k.device === i.device).days
     return {
       ...i,
       price: i.soldPriceMap[days],
