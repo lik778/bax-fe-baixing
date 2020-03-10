@@ -38,20 +38,21 @@
         <div v-if="skus.length" class="results">
           <div>
             <label>查询结果</label>
-            <p v-if="isSold">关键词在城市
-              <span class="highlight">{{soldCities.map(formatArea).join(', ')}}</span>已售出。
-              <span v-if="availableCities.length">
-                投放在剩余城市价格：
-                <span v-for="deviceI in exactMatch.deviceTypes" :key="deviceI.device">
-                  <span v-for="(item, index) in deviceI.priceList" :key="index">
-                    {{item.days}}天 {{DEVICE[item.device]}}共{{f2y(item.price)}}元
-                    {{index !== deviceI.priceList.length - 1 ? '、': ''}}
+            <div v-if="priceIsNotZero">
+              <p v-if="isSold">关键词在城市
+                <span class="highlight">{{soldCities.map(formatArea).join(', ')}}</span>已售出。
+                  <span v-if="availableCities.length">
+                  投放在剩余城市价格：
+                  <span v-for="deviceI in exactMatch.deviceTypes" :key="deviceI.device">
+                    <span v-for="(item, index) in deviceI.priceList" :key="index">
+                      {{item.days}}天 {{DEVICE[item.device]}}共{{f2y(item.price)}}元
+                      {{index !== deviceI.priceList.length - 1 ? '、': ''}}
+                    </span>；
                   </span>
                 </span>
-              </span>
-            </p>
-            <result-device v-else-if="!isSold && priceIsNotZero" :deviceObj="exactMatch" 
-                :selected="selected" @change="onSelected" />
+              </p>
+              <result-device v-else :deviceObj="exactMatch" :selected="selected" @change="onSelected" />
+            </div>
             <div v-else>该关键词已售出，您可以换个词购买或者在推荐词中选择哦~~</div>
           </div>
           <div v-if="recommends.length" class="recommend">
