@@ -219,23 +219,23 @@ const seoRoutes = [{
   component: () => import('com/seo-update-promotion-zixuan'),
   path: '/main/seo/promotion/zixuan/:id/update',
   name: 'seo-update-zixuan-promotion'
-},{
+}, {
   component: () => import('com/seo-create-promotion-zixuan'),
   path: '/main/seo/promotion/create/zixuan',
   name: 'seo-create-zixuan-promotion'
-},{
+}, {
   component: () => import('com/seo-create-promotion-cibao'),
   path: '/main/seo/promotion/create/cibao',
   name: 'seo-create-cibao-promotion',
   beforeEnter: async (to, from, next) => {
     const license = await getBusinessLicense()
     if (license) {
-      next()   
+      next()
     } else {
       Message.error('无权限访问')
     }
-  } 
-},{
+  }
+}, {
   component: () => import('com/seo-update-promotion-cibao'),
   path: '/main/seo/promotion/cibao/:id/update',
   name: 'seo-update-cibao-promotion'
@@ -276,7 +276,20 @@ export const router = new VueRouter({
 })
 router.beforeEach((to, from, next) => {
   window.scrollTo(0, 0)
-  next()
+  if (to.query.user_id) {
+    next()
+    return
+  }
+  if (from.query.user_id) {
+    next({
+      path: to.path,
+      query: {
+        ...from.query
+      }
+    })
+  } else {
+    next()
+  }
 })
 
 const app = new Vue({
