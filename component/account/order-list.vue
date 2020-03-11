@@ -62,14 +62,13 @@
         :formatter="row => formatTime(row.createdTime)"/>
       <el-table-column label="操作"
         width="180"
-        fixed="right"
         align="center"
       >
         <div slot-scope="{row}">
           <div class="btn-wrap" 
                v-if="row.status === orderStatusType.STATUS_UNPAID || row.status === orderStatusType.STATUS_PRE_TRADE">
-            <a href="javascript:;" @click="payOrder(row.tradeSeq, row.status)">支付</a>
-            <a href="javascript:;" @click="cancelOrder(row.tradeSeq, row.status)">取消订单</a>
+            <a href="javascript:;" @click="payOrder(row.tradeSeq, row.status, row.parentId)">支付</a>
+            <a href="javascript:;" @click="cancelOrder(row.tradeSeq, row.status, row.parentId)">取消订单</a>
           </div>
           <div v-else>-</div>
         </div>
@@ -121,26 +120,29 @@ export default {
   },
   components: {SectionHeader},
   methods: {
-    async payOrder(tradeSeq, status) {
+    async payOrder(tradeSeq, status, parentTradeSeq) {
+      // 支付和取消订单实际操作的是父订单，如果parentTradeSeq为空，说明本身就是父订单，反之，子订单
+      const orderId =  parentTradeSeq || tradeSeq 
       const { STATUS_PRE_TRADE, STATUS_UNPAID } = this.orderStatusType
       this.$message.success('正在跳转支付页面')
       let payUrl = ''
       if (status === STATUS_PRE_TRADE) {
-        payUrl = `${orderServiceHost}/?tradeId=${tradeSeq}`
+        payUrl = `${orderServiceHost}/?tradeId=${orderId}`
       }
       if (status === STATUS_UNPAID) {
-        payUrl = `${orderServiceHost}/?appId=105&seq=${tradeSeq}`
+        payUrl = `${orderServiceHost}/?appId=105&seq=${orderId}`
       }
       setTimeout(() => {
         location.href = payUrl
       }, 800)
     },
-    async cancelOrder(tradeSeq, status) {
+    async cancelOrder(tradeSeq, status, parentTradeSeq) {
+      const orderId =  parentTradeSeq || tradeSeq 
       await this.$confirm('您确定要取消该订单吗？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '放弃'
       })
-      await api.cancelOrder(tradeSeq)
+      await api.cancelOrder(orderId)
       await this.fetchOrderData()
       this.$message.success('取消订单成功')
     },
