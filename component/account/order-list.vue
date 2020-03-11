@@ -23,8 +23,8 @@
       <el-table-column
         width="230"
         label="订单编号">
-        <template slot-scope="row"> 
-          <span>{{row.tradeSeq}}</span>
+        <template slot-scope="scope"> 
+          <span>{{scope.row.tradeSeq}}</span>
         </template>
       </el-table-column>
       <!-- <el-table-column
