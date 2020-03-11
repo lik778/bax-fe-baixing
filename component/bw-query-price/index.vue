@@ -174,6 +174,14 @@
     },
     methods: {
       f2y,
+      getFinalUserId() {
+        const { user_id: userId } = this.$route.query
+        if (userId) {
+          return userId
+        }
+        const { userInfo } = this
+        return userInfo.id
+      },
       onSelected(item) {
         if (this.selected.includes(item)) {
           return this.selected.splice(this.selected.indexOf(item), 1)
@@ -207,6 +215,7 @@
             const {keyword, devices, areas} = this.form
             try {
               const results = await queryKeywordPriceNew({
+                targetUserId: this.getFinalUserId(),
                 word: keyword,
                 device: devices.length === 2 ? 0 : devices[0],
                 cities: areas

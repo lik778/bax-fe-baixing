@@ -160,6 +160,14 @@
       }
     },
     methods: {
+      getFinalUserId() {
+        const { user_id: userId } = this.$route.query
+        if (userId) {
+          return userId
+        }
+        const { userInfo } = this
+        return userInfo.id
+      },
       keywordTitle(word) {
         return word.word + (word.xufei ? '(续费)' : (word.isSold ? '(已售出)' : ''))
       },
@@ -246,7 +254,9 @@
         if (visible && this.localItems.length) {
           // 每次打开更新下关键词价格、是否已售卖
           this.loading = true
-          const items = await refreshKeywordPriceNew(this.localItems)
+          const items = await refreshKeywordPriceNew(this.localItems, {
+            targetUserId: this.getFinalUserId()
+          })
           // 保留字段 xufei
           this.localItems = items.map(i => {
             const one = this.localItems.find(li => li.word === i.word && li.device === i.device)

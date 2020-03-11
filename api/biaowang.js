@@ -155,7 +155,7 @@ export async function queryKeywordPriceNew(opts) {
   return body.data
 }
 
-export async function refreshKeywordPriceNew(keywords) {
+export async function refreshKeywordPriceNew(keywords, opt) {
   const requestBody = keywords.map(k => ({
     ...k,
     price: {
@@ -164,7 +164,10 @@ export async function refreshKeywordPriceNew(keywords) {
   }))
   const body = await biaowang
     .post('/keyword/v2/pricing/user/inquiry/norec')
-    .send({pricingList: requestBody})
+    .send({
+      ...opt,
+      pricingList: requestBody
+    })
     .json()
 
   const parsedBody = body.data.content.map(i => {
