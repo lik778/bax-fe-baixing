@@ -22,18 +22,10 @@
     >
       <el-table-column
         width="230"
-        label="订单编号">
-        <template slot-scope="scope"> 
-          <span>{{scope.row.tradeSeq}}</span>
-        </template>
-      </el-table-column>
-      <!-- <el-table-column
-        width="200"
-        label="产品Id"
-        prop="skuId"/> -->
+        label="订单编号" 
+        prop="tradeSeq"/>
       <el-table-column
-        width="90"
-        align="center"
+        width="180"
         label="产品名称"
         prop="skuTitle"/>
       <el-table-column
@@ -41,7 +33,7 @@
         align="center"
         label="状态"
         prop="status"
-        :formatter="({status}) => orderStatusLabel[status]"/>
+        :formatter="({status}) => orderStatusLabelDisplay[status]"/>
       <el-table-column
         width="105"
         align="center"
@@ -93,7 +85,7 @@
 import dayjs from 'dayjs'
 import * as api from 'api/account'
 import SectionHeader from 'com/common/section-header'
-import { orderStatusType, orderStatusLabel} from 'constant/order'
+import { orderStatusType, orderStatusLabelDisplay} from 'constant/order'
 import { MERCHANTS } from 'constant/product'
 import { orderServiceHost } from 'config'
 
@@ -109,7 +101,7 @@ export default {
   data() {
     return {
       orderStatusType,
-      orderStatusLabel,
+      orderStatusLabelDisplay,
       params: {
         merchantList:[FENG_MING_MERCHANT_CODE, WEBSITE_MERCHANT_CODE],
         orderStatusList: [orderStatusType.STATUS_UNPAID, orderStatusType.STATUS_PRE_TRADE],

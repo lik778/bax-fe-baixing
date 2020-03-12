@@ -64,3 +64,11 @@ export const orderStatusLabel = {
   [orderStatusType.STATUS_ORDER_CANCELED]: '交易取消',
   [orderStatusType.STATUS_ORDER_REFUND]: '交易退款'
 }
+
+export const orderStatusLabelDisplay = {
+  [orderStatusType.STATUS_UNPAID]: '未支付',
+  [orderStatusType.STATUS_PAID]: '已支付',
+  [orderStatusType.STATUS_PRE_TRADE]: '未支付', // 预交易暂存，用户侧显示未支付
+  [orderStatusType.STATUS_ORDER_CANCELED]: '交易取消',
+  [orderStatusType.STATUS_ORDER_REFUND]: '交易退款'
+}
