@@ -10,9 +10,9 @@
           1. 选择产品 | <span class="discount-btn" @click="showDiscount = !showDiscount">查看优惠细则<i class="el-icon-question"></i></span>
         </header>
         <div class="discount-section" v-show="showDiscount">
-          <p class="discount-info">满2400元：<span class="red">加</span> 1200 元即可获得1年3个月价值2250元的专业版官网；</p>
-          <p class="discount-info">满4800元：<span class="red">加</span> 900 元即可获得1年3个月价值2250元的专业版官网；</p>
-          <p class="discount-info">满9600元：<span class="red">加</span> 300 元即可获得1年3个月价值2250元的专业版官网；</p>
+          <p class="discount-info">满2400元：<span class="red">加</span> 1200 元即可获得1年6个月价值2700元的专业版官网；</p>
+          <p class="discount-info">满4800元：<span class="red">加</span> 900 元即可获得1年6个月价值2700元的专业版官网；</p>
+          <p class="discount-info">满9600元：<span class="red">加</span> 300 元即可获得1年6个月价值2700元的专业版官网；</p>
         </div>
         <div class="charge">
           <header>选择充值推广资金包：</header>

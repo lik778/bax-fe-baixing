@@ -95,9 +95,9 @@
     {
       id: 3,
       shopType: 2,
-      shopOrderAmount: 1.25,
-      originalPrice: 180000,
-      name: '精品官网专业版一年送三个月（可用于首页宝推广）',
+      shopOrderAmount: 1.5,
+      originalPrice: 270000,
+      name: '精品官网专业版一年送六个月（可用于首页宝推广）',
       price: 0,
       discountExecPriceFunc: [
         'p >= 0 && p < 50000 ? 0 : false',

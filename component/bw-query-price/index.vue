@@ -5,9 +5,9 @@
       <marquee direction="left" scrollamount="6" height="40px" scrolldelay="60"><recent-sold :allAreas="allAreas" /></marquee>
       <main>
         <div class="notice">
-          <p><span><i class="red">满</i>500-4999元，</span><i class="red">加</i>1200元即可获得1年3个月价值2250元的专业版官网；</p>
-          <p><span><i class="red">满</i>5000-9999元，</span><i class="red">加</i>900元即可获得1年3个月价值2250元的专业版官网；</p>
-          <p><span><i class="red">满</i>10000元及以上，</span><i class="red">加</i>300元即可获得1年3个月价值2250元的专业版官网；</p>
+          <p><span><i class="red">满</i>500-4999元，</span><i class="red">加</i>1200元即可获得1年+半年价值2700元的专业版官网；</p>
+          <p><span><i class="red">满</i>5000-9999元，</span><i class="red">加</i>900元即可获得1年+半年价值2700元的专业版官网；</p>
+          <p><span><i class="red">满</i>10000元及以上，</span><i class="red">加</i>300元即可获得1年+半年价值2700元的专业版官网；</p>
         </div>
         <el-form :model="form" :rules="rules" label-width="120px" ref="form" label-position="left" class="form" @submit.native.prevent>
           <el-form-item label="推广关键词" prop="keyword">
