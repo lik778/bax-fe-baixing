@@ -276,7 +276,20 @@ export const router = new VueRouter({
 })
 router.beforeEach((to, from, next) => {
   window.scrollTo(0, 0)
-  next()
+  if (to.query.user_id) {
+    next()
+    return
+  }
+  if (from.query.user_id) {
+    next({
+      path: to.path,
+      query: {
+        ...from.query
+      }
+    })
+  } else {
+    next()
+  }
 })
 
 const app = new Vue({
