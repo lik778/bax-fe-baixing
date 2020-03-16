@@ -299,7 +299,7 @@ const allProducts = [
       'p >= 508800 && p < 1018800 ? 90000 : false',
       'p >= 1018800 ? 150000 : false'
     ],
-    name: '精品官网一年送三个月【专业版】',
+    name: '精品官网一年送六个月【专业版】',
     isHot: true
   }
 ]
@@ -1178,7 +1178,7 @@ export default {
       height: 26px;
       left: 0;
       right: 0;
-      background: url('http://file.baixing.net/201910/dff37305d9ffa01949d55a01cc7dad87.png') center no-repeat;
+      /* background: url('http://file.baixing.net/201910/dff37305d9ffa01949d55a01cc7dad87.png') center no-repeat; */
       background-size: 83px 26px;
     }
   }
