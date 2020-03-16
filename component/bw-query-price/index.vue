@@ -216,7 +216,7 @@
             try {
               const results = await queryKeywordPriceNew({
                 targetUserId: this.getFinalUserId(),
-                word: keyword,
+                word: keyword.trim(),
                 device: devices.length === 2 ? 0 : devices[0],
                 cities: areas
               })
