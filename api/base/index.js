@@ -2,6 +2,7 @@
 import 'whatwg-fetch'
 
 import { Message } from 'element-ui'
+import chargeNotice from '../../util/charge-notice'
 import Fetch from 'fetch.io'
 
 import {
@@ -24,6 +25,16 @@ export const fengming = new Fetch({
     es.emit('http fetch end')
   },
   afterJSON(body) {
+    if (
+      body.meta &&
+      body.meta.status === 400 &&
+      body.meta.code === 2010
+    ) {
+      // 没有经过身份证绑定
+      chargeNotice()
+      throw new Error('请先绑定身份认证')
+    }
+
     if (body.errors) {
       Message.error('出错啦')
       throw new Error('出错啦')
@@ -99,7 +110,6 @@ export const biaowang = new Fetch({
   },
   afterResponse(res) {
     es.emit('http fetch end')
-
     if (res.status === 200) {
 
     } else if (res.status === 401) {
@@ -112,6 +122,16 @@ export const biaowang = new Fetch({
         Message.error(body.message || `出错了，请稍后重试`)
       })
       throw new Error(res.statusText)
+    }
+  },
+  afterJSON(body) {
+    if (
+      body &&
+      body.code === 4114
+    ) {
+      // 没有经过身份证绑定
+      chargeNotice()
+      throw new Error('请先绑定身份认证')
     }
   }
 })
@@ -137,10 +157,19 @@ export const seo = new Fetch({
     }
   },
   afterJSON(body) {
+    if (
+      body &&
+      body.code === 4114
+    ) {
+      // 没有经过身份证绑定
+      chargeNotice()
+      throw new Error('请先绑定身份认证')
+    }
+
     if (body.code !== 0) {
       Message.error(body.message)
       throw new Error(body.message)
-    } 
+    }
   }
 })
 
