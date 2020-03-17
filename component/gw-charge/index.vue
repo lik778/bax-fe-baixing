@@ -18,16 +18,10 @@
       <section class="gw-order">
         <main>
           <div class="info">
-            <section class="sales-code">
+            <section class="sales-code" v-if="salesIdLocked || isBxSales">
               <aside>服务编号:</aside>
-              <span v-if="salesIdLocked || isBxSales">
+              <span>
                 {{ displayBxSalesId || userInfo.salesId }}
-              </span>
-              <span v-else>
-                <el-input v-model.trim="inputSalesId"
-                  placeholder="如有服务编号请您填写" />
-                <i class="el-icon-check" title="检测服务编号"
-                  @click="checkInputSalesId" />
               </span>
             </section>
             <section v-if="!isBxUser">
@@ -39,7 +33,14 @@
                   placeholder="用户 ID" />
               </span>
             </section>
-            <contract-ack type="website-contract" ref="contract" />
+            <section class="agreement">
+              <div v-for="agreement in agreementList" :key="agreement.id">
+                <contract :isAgreement="agreement.checked"
+                  :href="agreement.link"
+                  @click="()=> agreement.checked = !agreement.checked"
+                  :title="agreement.title" />
+              </div>
+            </section>
             <section class="submit">
               <button v-if="!isAgentSales" class="buy-btn" @click="createOrder">
                 {{ submitButtonText }}
@@ -65,19 +66,19 @@
 <script>
 import Clipboard from 'com/widget/clipboard'
 import GwProWidget from 'com/charge/gw-pro'
-import ContractAck from 'com/widget/contract-ack'
+import Contract from 'com/charge/contract'
 import Step from './step'
 
 import { centToYuan } from 'utils'
 import { assetHost, orderServiceHost } from 'config'
-import { createOrder, getProductList } from 'api/fengming'
+import { createOrder, getProductsByMchCode } from 'api/fengming'
 import { getUserIdFromBxSalesId, queryUserInfo, getUserInfo } from 'api/account'
 import { allowBuyYoucaigouSite, allowGetOrderPayUrl } from 'util'
 import { normalizeRoles } from 'util/role'
-import { SPUIDS, VENDORIDS } from 'constant/product'
+import { MERCHANTS } from 'constant/product'
+import { getUniqueAgreementList } from 'util/charge'
 
-const { FENGMING_SPU_ID, WEBSITE_SPU_ID } = SPUIDS
-const { WEBSITE_VENDOR_ID  } = VENDORIDS
+const { WEBSITE_MERCHANT_CODE } = MERCHANTS
 
 export default {
   name: 'gw-charge',
@@ -85,7 +86,7 @@ export default {
     GwProWidget,
     Clipboard,
     Step,
-    ContractAck,
+    Contract,
   },
   props: {
     userInfo: {
@@ -104,12 +105,11 @@ export default {
       displayBxSalesId: '',
       userIdLocked: false,
       displayUserId: '',
-      inputSalesId: '',
       inputUserId: '',
 
       step: 1,
       fetchLoading: true,
-      contractCheck: false
+      agreementList:[]
     }
   },
   filters: {
@@ -143,29 +143,19 @@ export default {
       }
 
       return '确认购买'
+    },
+    hasUnCheckedAgreement() {
+     return this.agreementList.length ? this.agreementList.some(agreement => !agreement.checked) : true
     }
   },
   methods: {
-    async checkInputSalesId() {
-      const { inputSalesId } = this
-      if (!inputSalesId) {
-        return this.$message.error('请填写销售编号')
-      }
-      await getUserIdFromBxSalesId(inputSalesId)
-      this.$message.success('销售编号可用')
-    },
     async getFinalSalesId() {
       const { sales_id: salesId } = this.$route.query
       if (salesId) {
         return salesId
       }
 
-      const { inputSalesId, userInfo } = this
-
-      if (inputSalesId) {
-        const id = await getUserIdFromBxSalesId(inputSalesId)
-        return id
-      }
+      const { userInfo } = this
 
       if (this.isBxUser) {
         return
@@ -189,7 +179,7 @@ export default {
     },
     async createOrder() {
       this.step = 1
-      if (!this.$refs.contract.$data.isAgreement) {
+      if (this.hasUnCheckedAgreement) {
         return this.$message.error('请阅读并勾选同意服务协议，再进行下一步操作')
       }
       const { checkedSkuId: id } = this
@@ -198,6 +188,7 @@ export default {
       }
 
       const order = {
+        merchant: WEBSITE_MERCHANT_CODE,
         userId: await this.getFinalUserId(),
         skuList: [{
           id,
@@ -237,12 +228,14 @@ export default {
 
     this.fetchLoading = true
     try {
-      let websiteSpuList = await getProductList(WEBSITE_VENDOR_ID)
+      let websiteSpuList = await getProductsByMchCode(WEBSITE_MERCHANT_CODE)
       this.products = websiteSpuList[0].selection
       const initSelectedSku = this.products.find(sku => sku.tags.includes('selected'))
       if (initSelectedSku) {
         this.checkedSkuId = initSelectedSku.skuVendorId 
       }
+      
+      this.agreementList = getUniqueAgreementList(websiteSpuList)
     } catch (e) {
       console.error(e)
     } finally {
@@ -316,15 +309,13 @@ export default {
       margin-left: 8px;
     }
   }
-
-  & > main {
-    margin-top: 20px;
-  }
 }
 
 .gw-product {
   padding-bottom: 30px;
-
+  & > main {
+    margin-top: 20px;
+  }
   & > main > div:not(:last-child) {
     margin-right: 20px;
   }
@@ -341,14 +332,13 @@ export default {
   flex-flow: column;
   align-items: flex-end;
   justify-content: center;
-  margin-top: 30px;
   padding-bottom: 34px;
   border-bottom: solid 1px #e6e6e6;
 
   & > .sales-code {
     display: flex;
     align-items: center;
-    margin-top: 20px;
+    /* margin-top: 20px; */
     & > aside {
       font-size: 14px;
       color: #666666;

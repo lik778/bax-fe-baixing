@@ -7,18 +7,20 @@
           start-placeholder="开始日期"
           end-placeholder="结束日期"
           range-separator="-"
-          v-model="daterange" />
+          v-model="query.dateRange" />
       </div>
       <main style="width: 560px">
-        <el-table :data="chargeLogs">
-          <el-table-column label="日期" prop="id" width="240"
-            :formatter="r => toHumanTime(r.createdAt, 'YYYY-MM-DD HH:mm')" />
-          <el-table-column label="充值金额" prop="id"
-            :formatter="r => r.remark + '：' + ((r.deltaMoney + r.deltaPoint) / 100) + '元'" />
+        <el-table :data="data">
+          <el-table-column label="日期" prop="createdTime" width="240"
+            :formatter="r => toHumanTime(r.createdTime, 'YYYY-MM-DD HH:mm')" />
+          <el-table-column label="充值金额" prop="dealPrice"
+            :formatter="r => (r.dealPrice) / 100 + '元'" />
         </el-table>
-        <bax-pagination :options="chargeQuery"
-          @current-change="onCurrentChange">
-        </bax-pagination>
+        <el-pagination small class="pagniation" layout="prev, pager, next"
+          :total="total" :page-size="query.size"
+          :current-page="pageNo"
+          @current-change="handleCurrentPage">
+        </el-pagination>
       </main>
     </content>
   </div>
@@ -26,64 +28,69 @@
 
 <script>
 import SectionHeader from 'com/common/section-header'
-import BaxPagination from 'com/common/pagination'
-
-import { toHumanTime, toTimestamp } from 'utils'
-import track from 'util/track'
+import { toHumanTime } from 'utils'
 import dayjs from 'dayjs'
+import { SPUCODES } from 'constant/product'
+import * as api from 'api/fengming'
 
-import store from './store'
+const { WHOLE_SPU_CODE } = SPUCODES
+const DEFAULT_DATE_RANGE = [
+  dayjs().startOf('day').toDate(),
+  dayjs().endOf('day').toDate()
+]
 
 export default {
   name: 'qwt-account-charge',
   components: {
-    SectionHeader,
-    BaxPagination
-  },
-  fromMobx: {
-    chargeQuery: () => store.chargeQuery,
-    chargeLogs: () => store.chargeLogs
+    SectionHeader
   },
   data() {
     return {
-      daterange: [
-        dayjs().startOf('day').toDate(),
-        dayjs().toDate()
-      ]
+      query: {
+        accountList:[WHOLE_SPU_CODE],
+        size: 10,
+        dateRange: DEFAULT_DATE_RANGE,
+      },
+      total: 0,
+      pageNo: 1,
+      data: null
     }
   },
   methods: {
-    async onCurrentChange({offset}) {
-      await store.getChargeLogs({offset})
+    async fetchData(isResetPageNo) {
+      if (isResetPageNo) this.pageNo = 1
+      const { dateRange, ...otherParams } = this.query
+      let queryParmas = {
+        pageNo: this.pageNo || 1,
+        ...otherParams
+      }
+      if (dateRange) {
+        const startDate = dayjs(dateRange[0]).startOf('day').unix()
+        const endDate = dayjs(dateRange[1]).endOf('day').unix()
+        queryParmas = {
+          startDate,
+          endDate,
+          ...queryParmas
+        }
+      } 
+      const { total, logs } = await api.getChargeLogs(queryParmas)
+      this.data = logs
+      this.total = total
     },
-    async queryLogs(q) {
-      await store.getChargeLogs(q)
+    handleCurrentPage(val) {
+      this.pageNo = val
+      this.fetchData()
     },
     toHumanTime
   },
   watch: {
-    async daterange(v) {
-      if (!(v && v.length === 2)) {
-        return store.clearChargeLogs()
+    query: {
+      deep: true,
+      immediate: true,
+      handler() {
+        this.fetchData(true)
       }
-
-      const fromDate = toTimestamp(v[0])
-      const toDate = toTimestamp(v[1])
-      await this.queryLogs({
-        fromDate,
-        toDate
-      })
-
-      track({
-        action: 'account: charge log - change daterange'
-      })
     }
-  },
-  async mounted() {
-    await this.queryLogs({
-      fromDate: dayjs().startOf('day').unix(),
-      toDate: dayjs().unix()
-    })
   }
 }
 </script>
@@ -94,6 +101,9 @@ export default {
     & > div {
       margin-bottom: 15px;
     }
+  }
+  & .pagniation {
+    margin-top: 10px;
   }
 }
 </style>

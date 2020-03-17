@@ -164,13 +164,13 @@
             今日还可修改<strong>{{ modifyBudgetQuota }}</strong>次）
           </span>
         </div>
-        <h3 v-if="usableBalance <= 0" class="prompt-text">
+        <h3 v-if="currentBalance <= 0" class="prompt-text">
           <!-- 扣除其余有效计划日预算后， -->
           您的推广资金可用余额为0元，请<router-link :to="{name: 'qwt-charge', query: {mode: 'charge-only'}}">充值</router-link>
         </h3>
         <h3 v-else class="prompt-text">
           <!-- 扣除其余有效计划日预算后， -->
-          您的推广资金可用余额为￥{{f2y(usableBalance)}}元，可消耗<strong>{{predictedInfo.days}}</strong>天
+          您的推广资金可用余额为￥{{f2y(currentBalance)}}元，可消耗<strong>{{predictedInfo.days}}</strong>天
         </h3>
 
         <el-button
@@ -403,8 +403,7 @@ export default {
     recommendedWords: () => store.recommendedWords,
     originPromotion: () => store.originPromotion,
     currentBalance: () => store.currentBalance,
-    timeType: () => store.timeType,
-    usableBalance: () => store.usableBalance
+    timeType: () => store.timeType
   },
   props: {
     userInfo: {
@@ -471,10 +470,10 @@ export default {
   computed: {
     // displayBlance() {
     //   // 充足情况下余额显示为真实余额+计划日消耗，不充足情况直接现实真是余额
-    //   if (this.usableBalance > this.getProp('dailyBudget') * 100) {
-    //     return this.usableBalance + this.getProp('dailyBudget') * 100
+    //   if (this.currentBalance > this.getProp('dailyBudget') * 100) {
+    //     return this.currentBalance + this.getProp('dailyBudget') * 100
     //   } else {
-    //     return this.usableBalance
+    //     return this.currentBalance
     //   }
     // },
     extendLandingTypeOpts() {
@@ -594,7 +593,7 @@ export default {
         }
       }
       const {
-        usableBalance,
+        currentBalance,
         promotion
       } = this
 
@@ -608,7 +607,7 @@ export default {
         .map(k => k.price)
 
       // 与创建时不同，这里需要加上计划原本设置的每日预算
-      return getCampaignPrediction(usableBalance, v * 100, prices)
+      return getCampaignPrediction(currentBalance, v * 100, prices)
     }
   },
   methods: {
@@ -738,8 +737,7 @@ export default {
     async initCampaignInfo() {
       await Promise.all([
         store.getCampaignInfo(this.id),
-        store.getCurrentBalance(),
-        store.getUsableBalance()
+        store.getCurrentBalance()
       ])
     },
     clickSourceTip() {

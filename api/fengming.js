@@ -95,11 +95,22 @@ export async function getProducts(type = 3) {
   return toCamelcase(body.data)
 }
 
-export async function getProductList(mchId) {
+export async function getProductsByMchId(mchId) {
   const body = await fengming
     .get('/products')
     .query(reverseCamelcase({
       mchId
+    }))
+    .json()
+
+  return toCamelcase(body.data)
+}
+
+export async function getProductsByMchCode(mchCode) {
+  const body = await fengming
+    .get('/products/merchantcode')
+    .query(reverseCamelcase({
+      mchCode
     }))
     .json()
 
@@ -228,14 +239,6 @@ export async function getCurrentBalance() {
   return body.data
 }
 
-export async function getUsableBalance() {
-  const body = await fengming
-    .get('/balance/usable')
-    .json()
-
-  return body.data
-}
-
 export async function checkCreativeContent(opts) {
   const body = await fengming
     .post('/creative/validate')
@@ -309,26 +312,26 @@ export async function recommendByWordList(word, opts) {
 }
 
 export async function getChangeLogs(opts) {
-  const body = await fengming
+  const { data } = await fengming
     .get('/balance/changelog')
     .query(reverseCamelcase(opts))
     .json()
 
   return {
-    total: body.meta.count,
-    logs: toCamelcase(body.data)
+    total: data.totalElements,
+    logs: toCamelcase(data.data)
   }
 }
 
 export async function getChargeLogs(opts) {
-  const body = await fengming
+  const { data } = await fengming
     .get('/balance/chargelog')
     .query(reverseCamelcase(opts))
     .json()
 
   return {
-    total: body.meta.count,
-    logs: toCamelcase(body.data)
+    total: data.totalElements,
+    logs: toCamelcase(data.data)
   }
 }
 

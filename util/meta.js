@@ -1,7 +1,8 @@
 
 import clone from 'clone'
-import { usingCondition } from 'constant/coupon'
+import { usingCondition, CouponTypes } from 'constant/coupon'
 import { toHumanTime } from 'utils'
+import { f2y } from 'util'
 
 const isArray = Array.isArray
 
@@ -225,6 +226,35 @@ export function displayCoupon(coupon) {
   o.packages = packages
   o.expire = expire
   return o
+}
+
+export function formatCouponRule(ruleObj) {
+  let ruleDesc = ''
+  let discountDisplay = ''
+  const { type, discount, threshold, upAmount, amount } = ruleObj
+
+  switch (type) {
+    case CouponTypes.FULL_REDUCE:
+      ruleDesc = `满${f2y(threshold || 0)}减${f2y(discount || 0)}`
+      discountDisplay = `${f2y(discount || 0)}`
+      break
+    case CouponTypes.PER_FULL_REDUCE:
+      ruleDesc = `每满${f2y(upAmount || 0)}减${f2y(discount || 0)}`
+      discountDisplay = `${f2y(discount || 0)}`
+      break
+    case CouponTypes.FULL_DISCOUNT:
+      ruleDesc = `满${f2y(threshold || 0)}打${(discount / 10).toFixed(1)}折`
+      discountDisplay = `${(discount / 10).toFixed(1)}`
+      break
+    case CouponTypes.QUOTA:
+      ruleDesc = `定额（减${f2y(amount || 0)}）`
+      discountDisplay = `${f2y(amount || 0)}`
+      break
+  }
+  return {
+    ruleDesc,
+    discountDisplay
+  }
 }
 
 /**
