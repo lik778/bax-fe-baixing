@@ -71,6 +71,7 @@ export default {
   height: 100px;
   border: 1px solid #fbce75;
   border-left: 0;
+  cursor: pointer;
   & > .discount {
     width: 88px;
     display: flex;
