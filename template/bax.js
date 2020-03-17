@@ -252,6 +252,10 @@ export const router = new VueRouter({
     path: '/main/redirect-to',
     name: 'bax-redirect-page'
   }, {
+    component: () => import('com/payment-success'),
+    path: '/main/payment-success',
+    name: 'payment-success-page'
+  }, {
     component: () => import('com/account'),
     path: '/main/account',
     name: 'account'
