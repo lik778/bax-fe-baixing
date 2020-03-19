@@ -60,6 +60,20 @@
             <template slot-scope="scope">
               <router-link v-if="!isBxSales && !isAgentAccounting" :to="{name: 'bw-edit-plan', query: {promoteId: scope.row.id}}"><el-button type="text" size="small">编辑</el-button></router-link>
               <el-button v-if="canXufei(scope.row)" size="small" type="text" @click="onXufei(scope.row)">续费</el-button>
+              <router-link :to="{name: 'bw-dashboard', query: {promoteId: scope.row.id, keyword: scope.row.word}}">
+                <el-button type="text" size="small">查看报告</el-button>
+              </router-link>
+              <span>
+                <el-button type="text" size="small">推广实况</el-button>
+                <el-tooltip effect="dark" placement="top-start">
+                  <i class="el-icon-info" style="color: rgb(151, 168, 190);cursor: pointer"></i>
+                  <div slot="content">
+                    <p>1、为您显示网民看到的平均推广实况，可能与您在百度搜索框直接搜索结果有差别, 实际结果会受地域/网络环境/机型等用户的个性化因素影响产生差异。</p>
+                    <p>2、如您购买的关键词同时推广多个城市，为您显示其中某个城市的推广实况</p>
+                    <p>3、如您的关键词刚进行推广或在近期修改过推广内容，可能暂时无法提供推广实况结果，请稍后再试</p>
+                  </div>
+                </el-tooltip>
+              </span>
             </template>
           </el-table-column>
         </el-table>

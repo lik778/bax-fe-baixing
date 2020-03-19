@@ -180,3 +180,12 @@ export async function refreshKeywordPriceNew(keywords, opt) {
   })
   return parsedBody
 }
+
+export async function getUserRanking(opts = {}) {
+  const body = await biaowang
+    .post('/promote/user/ranking')
+    .send(opts)
+    .json()
+
+  return body.data
+}
