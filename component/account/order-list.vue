@@ -25,7 +25,7 @@
         label="订单编号" 
         prop="tradeSeq"/>
       <el-table-column
-        width="180"
+        width="220"
         label="产品名称"
         prop="skuTitle"/>
       <el-table-column
@@ -39,17 +39,17 @@
         align="center"
         label="原价"
         prop="originalPrice" 
-        :formatter="row => formatPrice(row.originalPrice)"/>
+        :formatter="row => formatPrice(row.originalPrice, row.status)"/>
       <el-table-column
         width="105"
         align="center"
         label="优惠"
-        :formatter="row => formatPrice(row.reducedPrice)"/>
+        :formatter="row => formatPrice(row.reducedPrice, row.status)"/>
       <el-table-column
         width="105"
         align="center"
         label="实价"
-        :formatter="row => formatPrice(row.dealPrice)"/>
+        :formatter="row => formatPrice(row.dealPrice, row.status)"/>
       <el-table-column
         width="150"
         align="center"
@@ -116,16 +116,17 @@ export default {
   components: {SectionHeader},
   methods: {
     async payOrder(tradeSeq, status, parentTradeSeq) {
-      // 支付和取消订单实际操作的是父订单，如果parentTradeSeq为空，说明本身就是父订单，反之，子订单
+      // tip: 支付和取消订单实际操作的是父订单，
+      // 如果parentTradeSeq为空，说明本身就是父订单，反之，子订单
       const orderId =  parentTradeSeq || tradeSeq 
       const { STATUS_PRE_TRADE, STATUS_UNPAID } = this.orderStatusType
       this.$message.success('正在跳转支付页面')
       let payUrl = ''
       if (status === STATUS_PRE_TRADE) {
-        payUrl = `${orderServiceHost}/?tradeId=${orderId}`
+        payUrl = `${orderServiceHost}/?appId=105&seq=${orderId}`
       }
       if (status === STATUS_UNPAID) {
-        payUrl = `${orderServiceHost}/?appId=105&seq=${orderId}`
+        payUrl = `${orderServiceHost}/pay?tradeId=${orderId}`
       }
       setTimeout(() => {
         location.href = payUrl
@@ -161,7 +162,11 @@ export default {
       this.orderData = data
       this.total = total
     },
-    formatPrice(price) {
+    formatPrice(price, status) {
+      const { STATUS_PRE_TRADE } = this.orderStatusType
+      if (status === STATUS_PRE_TRADE && Number(price) === 0) {
+        return '--'
+      }
       return `${(price / 100)}元`
     },
     formatTime (time) {
