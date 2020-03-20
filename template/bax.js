@@ -45,6 +45,7 @@ import {
   Loading,
   MessageBox,
   Message,
+  Cascader,
   Notification
 } from 'element-ui'
 
@@ -97,6 +98,7 @@ Vue.use(Tag)
 Vue.use(Icon)
 Vue.use(Row)
 Vue.use(Col)
+Vue.use(Cascader)
 Vue.use(Progress)
 Vue.use(Card)
 
@@ -224,7 +226,7 @@ const seoRoutes = [{
   path: '/main/seo/promotion/create/zixuan',
   name: 'seo-create-zixuan-promotion'
 }, {
-  component: () => import('com/seo-create-promotion-cibao'),
+  component: () => import('com/seo-promotion-cibao/create-page'),
   path: '/main/seo/promotion/create/cibao',
   name: 'seo-create-cibao-promotion',
   beforeEnter: async (to, from, next) => {
