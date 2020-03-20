@@ -1,6 +1,6 @@
 <template>
   <div v-loading="loading">
-    <e-charts style="width: 1000px; margin-top: 20px"
+    <e-charts style="width: 100%; max-width: 1300px; margin-top: 20px"
               :options="chartOptions"></e-charts>
   </div>
 </template>
@@ -21,7 +21,7 @@ const chartOptionTmp =  {
     trigger: 'axis'
   },
   grid: {
-    left: '3%',
+    left: '4%',
     right: '4%',
     bottom: '3%',
     containLabel: true

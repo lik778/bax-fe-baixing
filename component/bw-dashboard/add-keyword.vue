@@ -2,6 +2,7 @@
   <el-dialog :visible.sync="show"
              width="964px"
              custom-class="bw-dashboard-keyword-modal"
+             @open="handleOpen"
              :before-close="handleClose">
     <div slot="title"
          class="header">
@@ -113,9 +114,18 @@ export default {
     }
   },
   methods: {
+    handleOpen() {
+      this.getPromoteList()
+      this.originalPromotes.forEach(promote => {
+        if (!this.selectedPromotes.some(item => item.id === promote.id)) {
+          this.$refs.keywordList.$emit('promote-change', promote)
+        }
+      })
+    },
     handleClose() {
       this.$emit('close', this.selectedPromotes)
       this.$refs.keywordList.$emit('clear-selection')
+      this.selectedPromotes = []
     },
     handleCurrentChange(page) {
       this.currentPage = page
@@ -143,20 +153,9 @@ export default {
   watch: {
     query: {
       deep: true,
-      immediate: true,
       handler() {
         this.currentPage = 1
         this.getPromoteList()
-      }
-    },
-    promotes: {
-      deep: true,
-      handler() {
-        this.originalPromotes.forEach(promote => {
-          if (!this.selectedPromotes.some(item => item.id === promote.id)) {
-            this.$refs.keywordList.$emit('promote-change', promote)
-          }
-        })
       }
     }
   }

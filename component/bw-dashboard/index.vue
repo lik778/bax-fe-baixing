@@ -19,7 +19,7 @@
               <keyword-list :totalPage="totalPage"
                             :can-deleted="true"
                             :all-areas="allAreas"
-                            @delete="handleDeleteCampaign"
+                            @delete="handleDeletePromote"
                             :data="promotes.slice(pageSize * (currentPage - 1), pageSize * currentPage)">
               </keyword-list>
               <el-pagination class="pagination"
@@ -27,7 +27,7 @@
                              :total="totalPage"
                              :page-size="pageSize"
                              :current-page="currentPage"
-                             @current-change="handleCurrentChange">
+                             @current-change="(val) => currentPage = val">
               </el-pagination>
             </template>
           </div>
@@ -35,6 +35,7 @@
       </el-tabs>
       <div class="date-range">
         <el-button class="date-range-panel"
+                   :class="{'date-range-panel__active': item.label === activeDaterangeLabel}"
                    v-for="item in daterangeList"
                    :key="item.label"
                    size="small"
@@ -42,6 +43,10 @@
           {{item.label}}
         </el-button>
         <el-date-picker v-model="daterange"
+                        @focus="activeDaterangeLabel = CUSTOM_DATE_RANGE_LABEL"
+                        :class="{
+                          'date-range-custom__active': activeDaterangeLabel === CUSTOM_DATE_RANGE_LABEL
+                        }"
                         :clearable="false"
                         type="daterange"
                         size="small"
@@ -51,7 +56,6 @@
         </el-date-picker>
       </div>
       <add-keyword :show="addKeywordModalShow"
-                   v-if="addKeywordModalShow"
                    ref="addKeyword"
                    @close="handleKeywordClose"
                    :total-selected-count="totalPage"
@@ -71,6 +75,8 @@ import AddKeyword from './add-keyword'
 import { getPromotes, getUserRanking } from 'api/biaowang'
 import dayjs from 'dayjs'
 import clone from 'clone'
+
+const CUSTOM_DATE_RANGE_LABEL = 'custom'
 
 const daterangeList = [
   {
@@ -135,12 +141,14 @@ export default {
       pageSize: 5,
       promotes: [],
       addKeywordModalShow: false,
-      daterangeList,
       daterange: daterangeList[0].daterange,
+      activeDaterangeLabel: daterangeList[0].label,
       chartData: {
         timeList: [],
         rankList: []
-      }
+      },
+      daterangeList,
+      CUSTOM_DATE_RANGE_LABEL
     }
   },
   computed: {
@@ -180,6 +188,7 @@ export default {
     },
     handleDateChange(item) {
       this.daterange = item.daterange
+      this.activeDaterangeLabel = item.label
     },
     async getCpcRankingData(promoteIds) {
       const daterange = this.daterange
@@ -198,14 +207,16 @@ export default {
       this.promotes = clone(newPromotes)
       this.currentPage = 1
     },
-    handleCurrentChange(val) {
-      // console.log(val)
-      this.currentPage = val
-    },
-    handleDeleteCampaign(promoteId) {
+    handleDeletePromote(promoteId) {
       let index = this.promotes.findIndex(promote => promote.id === promoteId)
       if (index > -1) {
         this.promotes.splice(index, 1)
+      }
+      const { promotes, currentPage, pageSize, totalPage} = this
+      const offset = pageSize * (currentPage - 1)
+
+      if (offset >= totalPage) {
+        this.currentPage --
       }
     }
   },
@@ -252,6 +263,14 @@ export default {
       margin-top: 40px;
       & > .date-range-panel {
         margin-right: 7px;
+        &.date-range-panel__active {
+          background: #fff;
+          border-color: #ff8273;
+          color: #ff8273;
+        }
+      }
+      & > .date-range-custom__active{
+        border-color: #ff8273;
       }
     }
   }

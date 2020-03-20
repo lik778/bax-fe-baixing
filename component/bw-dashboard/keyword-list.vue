@@ -120,7 +120,7 @@ export default {
           // 可能是负值
           daysLeft = row.days - (Date.now() - row.startedAt * 1000) / 86400 / 1000
         }
-        return Math.floor(Math.max(daysLeft, 0))
+        return parseFloat(Math.max(daysLeft, 0)).toFixed(1)
       }
     },
     getRowKeys(row) {
