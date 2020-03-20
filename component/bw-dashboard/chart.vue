@@ -1,15 +1,71 @@
 <template>
-  <div>
+  <div v-loading="loading">
     <e-charts style="width: 1000px; margin-top: 20px"
-              :options="options"></e-charts>
+              :options="chartOptions"></e-charts>
   </div>
 </template>
 
 <script>
 import ECharts from 'vue-echarts/components/ECharts.vue'
-// import loadingPlaceholder from './loading-placeholder'
 import 'echarts/lib/component/tooltip'
 import 'echarts/lib/chart/line'
+import clone from 'clone'
+import dayjs from 'dayjs'
+
+const chartOptionTmp =  {
+  title: {
+    show: true,
+    text: '平均排名'
+  },
+  tooltip: {
+    trigger: 'axis'
+  },
+  grid: {
+    left: '3%',
+    right: '4%',
+    bottom: '3%',
+    containLabel: true
+  },
+  xAxis: {
+      type: 'category',
+      boundaryGap: true,
+      data: [dayjs().format('YYYY-MM-DD')],
+      axisLine: {
+        show: false
+      },
+      axisTick: {
+        show: false
+      }
+  },
+  yAxis: {
+      type: 'value',
+      name: '平均排名',
+      nameTextStyle: {
+        color: '#333',
+        fontSize: 14
+      },
+      nameGap: 30,
+      axisLine: {
+        show: false,
+      },
+      axisTick: {
+        show: false
+      },
+      offset: 20
+  },
+  series: [{
+      data: [5],
+      type: 'line',
+      smooth: false,
+      lineStyle: {
+        color: '#5B8FF9'
+      },
+      itemStyle: {
+        color: '#5B8FF9'
+      }
+  }]
+}
+  
 
 export default {
   name: 'bw-dashboard-chart',
@@ -23,67 +79,20 @@ export default {
     }
   },
   data() {
-    let data = []
-
-    for (let i = 0; i <= 360; i++) {
-        let t = i / 180 * Math.PI
-        let r = Math.sin(2 * t) * Math.cos(2 * t)
-        data.push([r, i])
-    }
     return {
-      options: {
-        title: {
-          show: true,
-          text: '平均排名'
-        },
-        tooltip: {
-          trigger: 'axis'
-        },
-        grid: {
-          left: '3%',
-          right: '4%',
-          bottom: '3%',
-          containLabel: true
-        },
-        xAxis: {
-            type: 'category',
-            boundaryGap: true,
-            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-            axisLine: {
-              show: false
-            },
-            axisTick: {
-              show: false
-            }
-        },
-        yAxis: {
-            type: 'value',
-            name: '平均排名',
-            nameTextStyle: {
-              color: '#333',
-              fontSize: 14
-            },
-            nameGap: 30,
-            axisLine: {
-              show: false,
-            },
-            axisTick: {
-              show: false
-            },
-            offset: 20
-        },
-        series: [{
-            data: [820, 932, 901, 934, 1290, 1330, 1320],
-            type: 'line',
-            smooth: false,
-            lineStyle: {
-              color: '#5B8FF9'
-            },
-            itemStyle: {
-              color: '#5B8FF9'
-            }
-        }]
-      }
+      loading: true,
+      chartOptions: chartOptionTmp
+    }
+  },
+  watch: {
+    chartData(newVal) {
+      this.loading = true
+      let options = clone(chartOptionTmp)
+      let timeList = newVal.timeList.map((item) => dayjs(item*1000).format('YYYY-MM-DD'))
+      options.xAxis.data = timeList
+      options.series[0].data = newVal.rankList
+      this.chartOptions = options
+      this.loading = false
     }
   }
 }

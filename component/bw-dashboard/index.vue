@@ -1,6 +1,6 @@
 <template>
   <div class="bw-dashboard">
-    <dashboard-header :today-ranking="todayRanking"></dashboard-header>
+    <dashboard-header></dashboard-header>
     <div class="tip">今日数据存在一定的延时，且最近1小时内的展现数据会存在波动</div>
     <section class="keyword">
       <div class="title">推广关键词</div>
@@ -184,18 +184,13 @@ export default {
     async getCpcRankingData(promoteIds) {
       const daterange = this.daterange
       const startTime = dayjs(daterange[0]).startOf('day').unix()
-      const endTime = dayjs(daterange[1]).endOf('day').unix()
+      const endTime = dayjs(daterange[1]).startOf('day').unix()
 
-      // let chartData = await getUserRanking({
-      //   promoteList: promoteIds || this.promoteIds,
-      //   startTime,
-      //   endTime,
-      // })      
-      // mock
-      let chartData = {
-        timeList: ['2019-10-16','2019-10-17'],
-        rankList: [1, 2],
-      }
+      let chartData = await getUserRanking({
+        promoteList: promoteIds || this.promoteIds,
+        startTime,
+        endTime,
+      })
       this.chartData = chartData
     },
     handleKeywordClose(newPromotes) {

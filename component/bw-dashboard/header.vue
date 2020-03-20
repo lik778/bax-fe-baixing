@@ -40,8 +40,8 @@ export default {
   },
   mounted() {
     getUserRanking({
-      startTime: dayjs(),
-      endTime: dayjs(),
+      startTime: dayjs().unix(),
+      endTime: dayjs().unix(),
       promoteList: []
     }).then(res => {
       this.data = res
