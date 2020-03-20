@@ -3,7 +3,7 @@
 /* Element Chalk Variables */
 /* Transition
 -------------------------- */
-/* Colors
+/* Color
 -------------------------- */
 /* 53a8ff */
 /* 66b1ff */
@@ -16,15 +16,11 @@
 /* ecf5ff */
 /* Link
 -------------------------- */
-/* Background
--------------------------- */
 /* Border
--------------------------- */
-/* Box-shadow
 -------------------------- */
 /* Fill
 -------------------------- */
-/* Font
+/* Typography
 -------------------------- */
 /* Size
 -------------------------- */
@@ -38,19 +34,11 @@
 -------------------------- */
 /* Radio
 -------------------------- */
-/*
-$--radio-checked-text-color: $--color-primary !default;
-$--radio-checked-input-border-color: $--color-primary !default;
-$--radio-checked-input-fill: $--color-white !default;
-$--radio-checked-icon-color: $--color-primary !default;
-
-$--radio-input-border-color-hover: $--color-primary !default;
-*/
 /* Select
 -------------------------- */
 /* Alert
 -------------------------- */
-/* Message Box
+/* MessageBox
 -------------------------- */
 /* Message
 -------------------------- */
@@ -75,6 +63,8 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Table
 -------------------------- */
 /* Pagination
+-------------------------- */
+/* Popup
 -------------------------- */
 /* Popover
 -------------------------- */
@@ -115,6 +105,18 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Footer
 --------------------------*/
 /* Main
+--------------------------*/
+/* Timeline
+--------------------------*/
+/* Backtop
+--------------------------*/
+/* Link
+--------------------------*/
+/* Calendar
+--------------------------*/
+/* Form
+-------------------------- */
+/* Avatar
 --------------------------*/
 /* Break-point
 --------------------------*/
@@ -129,7 +131,7 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Element Chalk Variables */
 /* Transition
 -------------------------- */
-/* Colors
+/* Color
 -------------------------- */
 /* 53a8ff */
 /* 66b1ff */
@@ -142,15 +144,11 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* ecf5ff */
 /* Link
 -------------------------- */
-/* Background
--------------------------- */
 /* Border
--------------------------- */
-/* Box-shadow
 -------------------------- */
 /* Fill
 -------------------------- */
-/* Font
+/* Typography
 -------------------------- */
 /* Size
 -------------------------- */
@@ -164,19 +162,11 @@ $--radio-input-border-color-hover: $--color-primary !default;
 -------------------------- */
 /* Radio
 -------------------------- */
-/*
-$--radio-checked-text-color: $--color-primary !default;
-$--radio-checked-input-border-color: $--color-primary !default;
-$--radio-checked-input-fill: $--color-white !default;
-$--radio-checked-icon-color: $--color-primary !default;
-
-$--radio-input-border-color-hover: $--color-primary !default;
-*/
 /* Select
 -------------------------- */
 /* Alert
 -------------------------- */
-/* Message Box
+/* MessageBox
 -------------------------- */
 /* Message
 -------------------------- */
@@ -201,6 +191,8 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Table
 -------------------------- */
 /* Pagination
+-------------------------- */
+/* Popup
 -------------------------- */
 /* Popover
 -------------------------- */
@@ -242,6 +234,18 @@ $--radio-input-border-color-hover: $--color-primary !default;
 --------------------------*/
 /* Main
 --------------------------*/
+/* Timeline
+--------------------------*/
+/* Backtop
+--------------------------*/
+/* Link
+--------------------------*/
+/* Calendar
+--------------------------*/
+/* Form
+-------------------------- */
+/* Avatar
+--------------------------*/
 /* Break-point
 --------------------------*/
 .el-alert {
@@ -252,7 +256,7 @@ $--radio-input-border-color-hover: $--color-primary !default;
   box-sizing: border-box;
   border-radius: 4px;
   position: relative;
-  background-color: #fff;
+  background-color: #FFFFFF;
   overflow: hidden;
   opacity: 1;
   display: -webkit-box;
@@ -263,30 +267,48 @@ $--radio-input-border-color-hover: $--color-primary !default;
   align-items: center;
   -webkit-transition: opacity .2s;
   transition: opacity .2s; }
+  .el-alert.is-light .el-alert__closebtn {
+    color: #C0C4CC; }
+  .el-alert.is-dark .el-alert__closebtn {
+    color: #FFFFFF; }
+  .el-alert.is-dark .el-alert__description {
+    color: #FFFFFF; }
   .el-alert.is-center {
     -webkit-box-pack: center;
     -ms-flex-pack: center;
     justify-content: center; }
-  .el-alert--success {
+  .el-alert--success.is-light {
     background-color: #f0f9eb;
-    color: #67c23a; }
-    .el-alert--success .el-alert__description {
-      color: #67c23a; }
-  .el-alert--info {
+    color: #67C23A; }
+    .el-alert--success.is-light .el-alert__description {
+      color: #67C23A; }
+  .el-alert--success.is-dark {
+    background-color: #67C23A;
+    color: #FFFFFF; }
+  .el-alert--info.is-light {
     background-color: #f4f4f5;
     color: #909399; }
-    .el-alert--info .el-alert__description {
-      color: #909399; }
-  .el-alert--warning {
+  .el-alert--info.is-dark {
+    background-color: #909399;
+    color: #FFFFFF; }
+  .el-alert--info .el-alert__description {
+    color: #909399; }
+  .el-alert--warning.is-light {
     background-color: #fdf6ec;
-    color: #e6a23c; }
-    .el-alert--warning .el-alert__description {
-      color: #e6a23c; }
-  .el-alert--error {
+    color: #E6A23C; }
+    .el-alert--warning.is-light .el-alert__description {
+      color: #E6A23C; }
+  .el-alert--warning.is-dark {
+    background-color: #E6A23C;
+    color: #FFFFFF; }
+  .el-alert--error.is-light {
     background-color: #fef0f0;
-    color: #f56c6c; }
-    .el-alert--error .el-alert__description {
-      color: #f56c6c; }
+    color: #F56C6C; }
+    .el-alert--error.is-light .el-alert__description {
+      color: #F56C6C; }
+  .el-alert--error.is-dark {
+    background-color: #F56C6C;
+    color: #FFFFFF; }
   .el-alert__content {
     display: table-cell;
     padding: 0 8px; }
@@ -306,7 +328,6 @@ $--radio-input-border-color-hover: $--color-primary !default;
     margin: 5px 0 0 0; }
   .el-alert__closebtn {
     font-size: 12px;
-    color: #c0c4cc;
     opacity: 1;
     position: absolute;
     top: 12px;

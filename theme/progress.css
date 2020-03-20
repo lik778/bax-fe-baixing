@@ -3,7 +3,7 @@
 /* Element Chalk Variables */
 /* Transition
 -------------------------- */
-/* Colors
+/* Color
 -------------------------- */
 /* 53a8ff */
 /* 66b1ff */
@@ -16,15 +16,11 @@
 /* ecf5ff */
 /* Link
 -------------------------- */
-/* Background
--------------------------- */
 /* Border
--------------------------- */
-/* Box-shadow
 -------------------------- */
 /* Fill
 -------------------------- */
-/* Font
+/* Typography
 -------------------------- */
 /* Size
 -------------------------- */
@@ -38,19 +34,11 @@
 -------------------------- */
 /* Radio
 -------------------------- */
-/*
-$--radio-checked-text-color: $--color-primary !default;
-$--radio-checked-input-border-color: $--color-primary !default;
-$--radio-checked-input-fill: $--color-white !default;
-$--radio-checked-icon-color: $--color-primary !default;
-
-$--radio-input-border-color-hover: $--color-primary !default;
-*/
 /* Select
 -------------------------- */
 /* Alert
 -------------------------- */
-/* Message Box
+/* MessageBox
 -------------------------- */
 /* Message
 -------------------------- */
@@ -75,6 +63,8 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Table
 -------------------------- */
 /* Pagination
+-------------------------- */
+/* Popup
 -------------------------- */
 /* Popover
 -------------------------- */
@@ -115,6 +105,18 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Footer
 --------------------------*/
 /* Main
+--------------------------*/
+/* Timeline
+--------------------------*/
+/* Backtop
+--------------------------*/
+/* Link
+--------------------------*/
+/* Calendar
+--------------------------*/
+/* Form
+-------------------------- */
+/* Avatar
 --------------------------*/
 /* Break-point
 --------------------------*/
@@ -129,7 +131,7 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Element Chalk Variables */
 /* Transition
 -------------------------- */
-/* Colors
+/* Color
 -------------------------- */
 /* 53a8ff */
 /* 66b1ff */
@@ -142,15 +144,11 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* ecf5ff */
 /* Link
 -------------------------- */
-/* Background
--------------------------- */
 /* Border
--------------------------- */
-/* Box-shadow
 -------------------------- */
 /* Fill
 -------------------------- */
-/* Font
+/* Typography
 -------------------------- */
 /* Size
 -------------------------- */
@@ -164,19 +162,11 @@ $--radio-input-border-color-hover: $--color-primary !default;
 -------------------------- */
 /* Radio
 -------------------------- */
-/*
-$--radio-checked-text-color: $--color-primary !default;
-$--radio-checked-input-border-color: $--color-primary !default;
-$--radio-checked-input-fill: $--color-white !default;
-$--radio-checked-icon-color: $--color-primary !default;
-
-$--radio-input-border-color-hover: $--color-primary !default;
-*/
 /* Select
 -------------------------- */
 /* Alert
 -------------------------- */
-/* Message Box
+/* MessageBox
 -------------------------- */
 /* Message
 -------------------------- */
@@ -201,6 +191,8 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Table
 -------------------------- */
 /* Pagination
+-------------------------- */
+/* Popup
 -------------------------- */
 /* Popover
 -------------------------- */
@@ -241,6 +233,18 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Footer
 --------------------------*/
 /* Main
+--------------------------*/
+/* Timeline
+--------------------------*/
+/* Backtop
+--------------------------*/
+/* Link
+--------------------------*/
+/* Calendar
+--------------------------*/
+/* Form
+-------------------------- */
+/* Avatar
 --------------------------*/
 /* Break-point
 --------------------------*/
@@ -257,9 +261,9 @@ $--radio-input-border-color-hover: $--color-primary !default;
     .el-progress__text i {
       vertical-align: middle;
       display: block; }
-  .el-progress--circle {
+  .el-progress--circle, .el-progress--dashboard {
     display: inline-block; }
-    .el-progress--circle .el-progress__text {
+    .el-progress--circle .el-progress__text, .el-progress--dashboard .el-progress__text {
       position: absolute;
       top: 50%;
       left: 0;
@@ -268,7 +272,7 @@ $--radio-input-border-color-hover: $--color-primary !default;
       margin: 0;
       -webkit-transform: translate(0, -50%);
       transform: translate(0, -50%); }
-      .el-progress--circle .el-progress__text i {
+      .el-progress--circle .el-progress__text i, .el-progress--dashboard .el-progress__text i {
         vertical-align: middle;
         display: inline-block; }
   .el-progress--without-text .el-progress__text {
@@ -281,13 +285,17 @@ $--radio-input-border-color-hover: $--color-primary !default;
     padding-right: 0;
     margin-right: 0; }
   .el-progress.is-success .el-progress-bar__inner {
-    background-color: #67c23a; }
+    background-color: #67C23A; }
   .el-progress.is-success .el-progress__text {
-    color: #67c23a; }
+    color: #67C23A; }
+  .el-progress.is-warning .el-progress-bar__inner {
+    background-color: #E6A23C; }
+  .el-progress.is-warning .el-progress__text {
+    color: #E6A23C; }
   .el-progress.is-exception .el-progress-bar__inner {
-    background-color: #f56c6c; }
+    background-color: #F56C6C; }
   .el-progress.is-exception .el-progress__text {
-    color: #f56c6c; }
+    color: #F56C6C; }
 
 .el-progress-bar {
   padding-right: 50px;
@@ -300,7 +308,7 @@ $--radio-input-border-color-hover: $--color-primary !default;
   .el-progress-bar__outer {
     height: 6px;
     border-radius: 100px;
-    background-color: #ebeef5;
+    background-color: #EBEEF5;
     overflow: hidden;
     position: relative;
     vertical-align: middle; }
@@ -313,7 +321,9 @@ $--radio-input-border-color-hover: $--color-primary !default;
     text-align: right;
     border-radius: 100px;
     line-height: 1;
-    white-space: nowrap; }
+    white-space: nowrap;
+    -webkit-transition: width 0.6s ease;
+    transition: width 0.6s ease; }
     .el-progress-bar__inner::after {
       display: inline-block;
       content: "";
@@ -322,7 +332,7 @@ $--radio-input-border-color-hover: $--color-primary !default;
   .el-progress-bar__innerText {
     display: inline-block;
     vertical-align: middle;
-    color: #fff;
+    color: #FFFFFF;
     font-size: 12px;
     margin: 0 5px; }
 
