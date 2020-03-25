@@ -14,7 +14,7 @@
       v-for="item in formsRenderData"
     >
       <component
-        :class="[item.type === 'el-input' ? 'input' : 'uploder']"
+        :class="[item.type === 'el-input' ? 'input' : 'uploader']"
         :is="item.type"
         v-bind="item.props"
         v-model="form[item.key]"
@@ -63,7 +63,7 @@ const formsRenderData = [{
   rules: {
     trigger: 'blur',
     validator(rule, value, callback) {
-      if(!/^1[3|4|5|7|8][0-9]{9}$/.test(value)) {
+      if(!/^1[345789 ][0-9]{9}$/.test(value)) {
         callback(new Error('请输入正确的手机号吗'))
       } else {
         callback()
@@ -150,7 +150,7 @@ export default {
   .input {
     width: 400px;
   }
-  .uploder {
+  .uploader {
     width: 150px;
   }
   /deep/ .upload-image-wrapper {

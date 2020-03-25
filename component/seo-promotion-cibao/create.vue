@@ -51,7 +51,31 @@
       </div>
       <div class="section-inline">
         <header>服务城市</header>
-        <city-selector />
+        <area-selector
+          :visible.sync="areaSelectorVisible"
+          v-model="promotion.areas"
+        />
+        <div class="areas">
+          <tmeplate v-if="promotion.areas.length">
+            <el-tag
+              class="tag"
+              size="small"
+              :key="area.toString()"
+              type="primary"
+              v-for="area in promotion.areas"
+            >
+              {{area[area.length - 1]}}
+            </el-tag>
+          </tmeplate>
+          <span v-else>暂未选取服务城市</span>
+          <el-button
+            size="mini"
+            type="primary"
+            @click="areaSelectorVisible = true"
+          >
+            {{promotion.areas.length ? '更新' : '新增'}}
+          </el-button>
+        </div>
       </div>
       <div class="section-inline">
         <header>服务产品/内容</header>
@@ -75,11 +99,11 @@
         <div v-else>
           <el-tag
             closable
-            :key="index"
+            :key="create"
             size="small"
             type="primary"
             class="keyword-pane-tag"
-            @close="handleTagClose(item,index)"
+            @close="handleTagClose(item,create)"
             v-for="(item, index) in promotion.keywords"
           >
             {{item}}
@@ -128,9 +152,8 @@
 </template>
 
 <script>
-import dayjs from 'dayjs'
 import promotionForm from './promotion-form'
-import citySelector from 'com/common/city-selector'
+import areaSelector from 'com/common/area-selector'
 import ContractAck from 'com/widget/contract-ack'
 import { PRO_SITE_PRODUCT_TYPE } from 'constant/site'
 import QiqiaobanPageSelector from 'com/common/qiqiaoban-page-selector'
@@ -147,7 +170,10 @@ export default {
 
       search: '',
 
+      areaSelectorVisible: false,
+
       promotion: {
+        areas: [],
         info: '',
         landingPage: '',
         keywords: [],
@@ -164,7 +190,7 @@ export default {
       // this.showExistWebsite = this.existPromotionWebsite.some(o => (o.trim() === landingPage))
     },
     handleTagClose(tag, index) {
-      this.promotion.keywords.splice(index, 1)
+      this.promotion.keywords.splice(create, 1)
     },
     addKeyword() {
       let words = this.search.split(',')
@@ -173,7 +199,7 @@ export default {
       words = words
         .map(word => word.trim())
         .filter(word => word && (word.length >= 2 || word.length <= 99))
-      
+
       if (words.length !== rawWordLen) {
         this.$message.error('已过滤字数不满足2-99个的关键词')
       }
@@ -192,7 +218,7 @@ export default {
   },
   components: {
     ContractAck,
-    citySelector,
+    areaSelector,
     promotionForm,
     QiqiaobanPageSelector
   }
@@ -245,7 +271,7 @@ export default {
     }
     & /deep/ .el-input__count {
       position: absolute;
-      bottom: 0px;
+      bottom: 3px;
       right: 12px;
     }
   }
@@ -265,4 +291,3 @@ export default {
     margin-right: 20px;
   }
 </style>
-  

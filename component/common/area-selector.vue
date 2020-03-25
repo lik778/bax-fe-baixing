@@ -1,506 +1,338 @@
-
 <template>
-  <el-dialog
-    :visible="visible"
-    :close-on-click-modal="false"
-    :before-close="ok"
-    :show-close="false"
-  >
-    <main class="main">
-      <div v-if="enableChina">
-        <span @click="clickArea('quanguo')">全国</span>
-        <span>
-          <p @click="clickArea(china.id)"
-            v-bind:class="{ selected: areaChecked(china.id) }">
-            <span>中国</span>
-            <label class="tip">
-              （仅在 china.baixing.com 上线）
-            </label>
-          </p>
-        </span>
+  <div class="city-selector-container">
+    <el-dialog
+      width="820px"
+      z-index="2048"
+      :show-close="false"
+      :visible.sync="visible"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      custom-class="city-selector-dialog"
+    >
+      <div slot="title" class="header">选择地域关键词</div>
+      <div slot="default">
+        <div class="selected-areas">
+        <p class="placeholder">
+          为保证效果建议选取15个地域关键词
+          <span v-if="selectedAreas.length">（已选{{selectedAreas.length}}个）</span>
+          <el-button
+            size="mini"
+            type="primary"
+            @click="selectedAreas = []"
+            v-if="selectedAreas.length"
+          >
+            删除全部
+          </el-button>
+        </p>
+          <el-tag
+            closable
+            class="tag"
+            size="small"
+            :key="area.toString()"
+            type="primary"
+            v-for="area in selectedAreas"
+            @close="deleteArea(area)"
+          >
+            {{area[area.length - 1]}}
+          </el-tag>
+        </div>
+        <div class="active-areas">
+          <span
+            v-for="(area, index) in activeAreas"
+            @click="selectActiveArea(area)"
+          >
+            {{area === 'all' ? '全部' : area.name}}
+            <i class="el-icon-loading" v-if="isLoadingAreasData && index + 1 === activeAreas.length"></i>
+            <i class="el-icon-arrow-down" v-else></i>
+          </span>
+        </div>
+        <div class="city-list">
+          <div class="all">
+            <h6 v-if="activeAreas.length === 1">全部省份</h6>
+            <ul>
+              <li :key="area.id" v-for="area in currentAreaList">
+                <a
+                  :class="{selected: area.isLeaf && isAreaSelected(area)}"
+                  href="javascript:;"
+                  @click="selectArea(area)"
+                >
+                  {{area.name}}
+                  <span
+                    class="hint"
+                    v-show="!area.isLeaf && getAreaContainNum(area)"
+                  >
+                    {{getAreaContainNum(area)}}
+                  </span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
-      <div>
-        <span v-bind:class="{ selected: areaChecked('直辖市') }"
-          @click="clickArea('直辖市')">
-          直辖市
-        </span>
-        <span>
-          <p v-for="city in specialCities" :key="city.id"
-            v-bind:class="{ selected: areaChecked(city.id) }"
-            @click="clickArea(city.id)">
-            {{ city.label }}
-          </p>
-        </span>
+      <div slot="footer" class="footer">
+        <el-button size="small" @click="cancelSelectedCity">取消</el-button>
+        <el-button size="small" type="primary" @click="confirmSelectedCity">确定</el-button>
       </div>
-      <div v-for="(a, i) in topAreas" :key="i">
-        <span v-bind:class="{ selected: areaChecked(a.id) }"
-          @click="clickArea(a.id)">
-          {{ a.label }}
-        </span>
-        <span>
-          <p v-for="(area, i) in a.areas" :key="i"
-            v-bind:class="{ selected: areaChecked(area.id) }"
-            @click="clickArea(area.id)">
-            {{ area.label }}
-          </p>
-        </span>
-      </div>
-    </main>
-    <header slot="title" class="dialog-header">
-      <h5 class="title">区域选择</h5>
-      <div class="buttons">
-        <el-button @click="cancel">取消</el-button>
-        <el-button type="primary" @click="ok">确认</el-button>
-      </div>
-    </header>
-  </el-dialog>
+    </el-dialog>
+  </div>
 </template>
 
 <script>
-import { getDisAllowAreas } from 'util/meta'
-import isequal from 'lodash.isequal'
-import flatten from 'lodash.flatten'
+import {
+  getAllCities,
+  getAreasByCityId
+} from '../../api/ka'
 import clone from 'clone'
+import isEqual from 'lodash.isequal'
 
-const specialCities = [
-  'beijing',
-  'tianjin',
-  'shanghai',
-  'chongqing'
-]
+const formatAreaOpts = function(data, isLeaf = false) {
+  if (!Array.isArray(data)) return null
 
-/**
- * 说明:
- *   百姓网 ~ quanguo vs china
- *     - quanguo (全国), 选中所有 省, 城市
- *     - china (中国), china.baixing.com
- *   搜索通 ~ quanguo === china
- *     - 需要调用方 quanguo -> china
- */
+  return data.map(item => {
+    return {
+      ...item,
+      isLeaf,
+      value: item.name,
+      children: formatAreaOpts(item.cities, false)
+    }
+  })
+}
+
+const loadAreasData = async function(areaId) {
+  return formatAreaOpts(await getAreasByCityId(areaId), true)
+}
+
+const municipalities = ['北京', '上海', '天津', '重庆']
+const defaultActiveAreas = ['all']
 
 export default {
-  name: 'area-selector',
+  name: 'city-selector',
+  data() {
+    return {
+      selectedAreas: [],
+
+      isLoadingAreasData: false,
+
+      activeAreas: clone(defaultActiveAreas),
+      areaOpts: []
+    }
+  },
   props: {
-    enableChina: {
-      type: Boolean,
-      default: true
-    },
-    allAreas: {
+    value: {
       type: Array,
-      required: true
-    },
-    areas: {
-      type: Array,
-      required: true,
-      default: () => []
+      default: []
     },
     visible: {
       type: Boolean,
       required: true
-    },
-    type: {
-      // bx, qwt, bw
-      // 标王把省细化到城市
-      type: String,
-      default: 'bx'
-    }
-  },
-  data() {
-    return {
-      selectedAreas: [...this.areas],
-      china: {
-        label: '中国',
-        id: 'china',
-        parent: '',
-        level: 0
-      }
     }
   },
   computed: {
-    specialCities() {
-      return this.allAreas
-        .filter(a => a.areaType === 1)
-        .filter(a => specialCities.includes(a.name))
-        .map(a => ({
-          label: a.nameCn,
-          id: a.name,
-          parent: '',
-          level: 1,
-
-          areas: this.getSubAreas(a.name)
-        }))
-    },
-    disAllowAreaIds() {
-      const { allAreas } = this
-      const a = getDisAllowAreas(allAreas)
-      return a.map(i => i.id)
-    },
-    topAreas() {
-      const { disAllowAreaIds, type } = this
-
-      return this.allAreas
-        .filter(a => a.areaType === 2)
-        .filter(a => {
-          if (type === 'qwt' || type === 'bw') {
-            return !disAllowAreaIds.includes(a.id)
-          }
-
-          return true
-        })
-        .map(a => ({
-          parent: a.parent,
-          label: a.nameCn,
-          id: a.name,
-          level: 2,
-
-          areas: this.getSubAreas(a.name)
-        }))
+    currentAreaList() {
+      const {
+        areaOpts,
+        activeAreas
+      } = this
+      const activeArea = activeAreas[activeAreas.length - 1]
+      return activeArea === 'all' ? areaOpts : activeArea.children
     }
   },
   methods: {
-    getSubAreas(name) {
-      const { disAllowAreaIds, type } = this
-      return this.allAreas
-        .filter(a => {
-          // 对于全网通, 需要毙掉几个特殊的 市
-          if (type === 'qwt') {
-            return !!a.baiduCode && !!a.qihuCode && !!a.sogouCode && !disAllowAreaIds.includes(a.id)
-          }
-          if (type === 'bw') {
-            return !!a.baiduCode && !disAllowAreaIds.includes(a.id)
-          }
-
-          return true
-        })
-        .filter(a => a.parent === name)
-        .map(a => ({
-          parent: a.parent,
-          label: a.nameCn,
-          id: a.name,
-          level: 1 // 市
-        }))
+    deleteArea(area) {
+      this.selectedAreas = this.selectedAreas.filter(item => !isEqual(item, area))
     },
-    getAreaByName(name) {
-      const a = this.allAreas
-        .find(a => a.name === name) || {}
-
-      return {
-        level: a.areaType,
-        parent: a.parent,
-        label: a.nameCn,
-        id: a.name
-      }
+    selectActiveArea(area) {
+      if (area === 'all') return this.activeAreas = clone(defaultActiveAreas)
+      const { activeAreas }= this
+      const areaIndex = activeAreas.indexOf(area)
+      this.activeAreas.splice(areaIndex + 1, activeAreas.length)
     },
-    getParentName(name) {
-      const a = this.getAreaByName(name)
-      return a.parent || ''
-    },
-    removeCityFromQuanguo(city) {
-      // 城市: 非 省, china
-      let result = []
-
-      const parent = this.getParentName(city)
-
-      const topAreas = clone(this.topAreas)
-
-      if (specialCities.includes(city)) {
-        return [
-          this.china.id,
-          ...specialCities.filter(a => a !== city),
-          ...topAreas.map(a => a.id)
-        ]
-      }
-
-      result = [
-        this.china.id,
-        ...specialCities,
-        ...topAreas.filter(a => a.id !== parent).map(a => a.id)
-      ]
-
-      const topArea = topAreas.find(a => a.id === parent)
-
-      result = [
-        ...result,
-        ...topArea.areas.filter(a => a.id !== city).map(a => a.id)
-      ]
-
-      return result
-    },
-    removeCityFromProvince(city) {
-      const parent = this.getParentName(city)
-
-      const topArea = clone(this.topAreas).find(a => a.id === parent)
-
-      return topArea.areas
-        .filter(a => a.id !== city)
-        .map(a => a.id)
-    },
-    belongToProvince(city, province) {
-      const top = this.topAreas.find(a => a.id === province)
-      return top.areas.map(a => a.id).includes(city)
-    },
-    areaChecked(name) {
-      const area = this.getAreaByName(name)
-
+    async selectArea(area) {
       const {
-        parent,
-        level,
-        id
-      } = area
+        isAreaSelected,
+        makeSelectedArea,
+        isLoadingAreasData
+      } = this
 
-      const { selectedAreas } = this
-
-      const c = selectedAreas.find(a => a === 'quanguo')
-      if (c) {
-        // 全国
-        return true
-      }
-
-      if (name === 'china') {
-        return selectedAreas.includes('china')
-      }
-
-      if (name === '直辖市') {
-        const allChecked = selectedAreas
-          .filter(a => specialCities.includes(a))
-          .length === 4
-
-        return allChecked
-      }
-
-      if (level === 2) {
-        return !!selectedAreas.find(a => a === id)
-      }
-
-      if (level === 1) {
-        if (specialCities.includes(id)) {
-          // 直辖市
-          return !!selectedAreas.find(a => a === id)
+      if (isLoadingAreasData) return this.$message.warning('正在加载地域信息，请耐心等待')
+      if (area.isLeaf) {
+        const currentArea = makeSelectedArea(area)
+        if (isAreaSelected(area)) {
+          this.deleteArea(currentArea)
         } else {
-          return !!selectedAreas.find(a => a === id || a === parent)
+          // selectedAreas [省，市，区] [直辖市，区]
+          this.selectedAreas.push(currentArea)
         }
-      }
-    },
-    clickSpecialCityButton(name) {
-      const { selectedAreas } = this
-
-      if (selectedAreas.includes('quanguo')) {
         return
-      }
-
-      const allChecked = selectedAreas
-        .filter(a => specialCities.includes(a))
-        .length === 4
-
-      const areas = selectedAreas.filter(a => !specialCities.includes(a))
-
-      if (allChecked) {
-        this.selectedAreas = [...areas]
       } else {
-        this.selectedAreas = [
-          ...areas,
-          ...specialCities
-        ]
-      }
-    },
-    clickProvinceArea(name) {
-      const { selectedAreas } = this
-
-      const area = this.getAreaByName(name)
-      const { id } = area
-
-      // type - add, del
-      const type = this.areaChecked(name) ? 'del' : 'add'
-
-      if (type === 'add') {
-        this.selectedAreas = [
-          ...selectedAreas.filter(a => {
-            return !this.belongToProvince(a, id)
-          }),
-          id
-        ]
-      } else {
-        // del
-        if (selectedAreas.includes('quanguo')) {
-          this.selectedAreas = [
-            this.china.id,
-            ...this.topAreas
-              .filter(a => a.id !== id)
-              .map(a => a.id),
-            ...specialCities
-          ]
-        } else {
-          const areas = selectedAreas
-            .filter(a => {
-              if (a === id) {
-                return false
-              }
-
-              const parent = this.getParentName(a)
-
-              if (parent === id) {
-                return false
-              }
-
-              return true
-            })
-
-          this.selectedAreas = [...areas]
-        }
-      }
-    },
-    clickCityArea(name) {
-      const { selectedAreas } = this
-
-      const area = this.getAreaByName(name)
-      const { id } = area
-
-      // type - add, del
-      const type = this.areaChecked(name) ? 'del' : 'add'
-
-      if (type === 'add') {
-        this.selectedAreas = [
-          ...selectedAreas,
-          id
-        ]
-      } else {
-        // del
-        const parent = this.getParentName(id)
-
-        if (selectedAreas.includes('quanguo')) {
-          this.selectedAreas = this.removeCityFromQuanguo(id)
-        } else {
-          if (selectedAreas.includes(parent)) {
-            // 已选中省
-            this.selectedAreas = [
-              ...selectedAreas.filter(a => a !== parent),
-              ...this.removeCityFromProvince(id)
-            ]
-          } else {
-            this.selectedAreas = selectedAreas.filter(a => a !== id)
+        // use cache
+        if (!Array.isArray(area.children)) {
+          this.isLoadingAreasData = true
+          try {
+            const specialArea = {
+              isLeaf: true,
+              value: area.name,
+              name: `全${area.name}`
+            }
+            area.children = [specialArea].concat(await loadAreasData(area.id))
+          } finally {
+            this.isLoadingAreasData = false
           }
         }
       }
+      this.activeAreas.push(area)
     },
-    clickChina() {
-      const type = this.areaChecked('china') ? 'del' : 'add'
-      const { selectedAreas } = this
-
-      if (type === 'add') {
-        this.selectedAreas = [
-          ...selectedAreas,
-          'china'
-        ]
-      } else {
-        // del
-        if (selectedAreas.includes('quanguo')) {
-          this.selectedAreas = [
-            ...this.topAreas.map(a => a.id),
-            ...specialCities
-          ]
-        } else {
-          this.selectedAreas = selectedAreas.filter(a => a !== 'china')
-        }
-      }
+    confirmSelectedCity() {
+      this.$emit('input', this.selectedAreas)
+      this.closeModal()
     },
-    clickArea(name) {
-      const { selectedAreas } = this
-
-      if (name === 'quanguo') {
-        // 全国
-        if (selectedAreas.includes('quanguo')) {
-          this.selectedAreas = []
-        } else {
-          this.selectedAreas = ['quanguo']
-        }
-
-        return
-      }
-
-      if (name === 'china') {
-        return this.clickChina()
-      }
-
-      if (name === '直辖市') {
-        // 直接点击 直辖市 按钮
-        return this.clickSpecialCityButton(name)
-      }
-
-      const area = this.getAreaByName(name)
-      const { level } = area
-
-      if (level === 2) {
-        // 省
-        return this.clickProvinceArea(name)
-      }
-
-      if (level === 1) {
-        // 市
-        this.clickCityArea(name)
-      }
+    cancelSelectedCity() {
+      this.selectedAreas = clone(this.value)
+      this.closeModal()
     },
-    empty() {
-      // 一律由外部 prop 清空
-      // this.selectedAreas = []
+    closeModal() {
+      this.$emit('update:visible', false)
+      this.activeAreas = clone(defaultActiveAreas)
     },
-    cancel() {
-      this.empty()
-      this.$emit('cancel')
+    makeSelectedArea(area) {
+      const { activeAreas } = this
+      return activeAreas.length === 3
+        ? [activeAreas[1].value, activeAreas[2].value,  area.value]
+        : [activeAreas[1].value, area.value]
     },
-    ok() {
-      if (this.type === 'bw') {
-        const tmp = this.selectedAreas
-          .map(this.getAreaByName)
-          .map(a => a.level === 2 ? this.getSubAreas(a.id) : a)
-        const areas = flatten(tmp)
-          .map(a => a.id)
-        this.$emit('ok', [...areas])
-      } else {
-        this.$emit('ok', [...this.selectedAreas])
-      }
-      this.empty()
+    isAreaSelected(area) {
+      const {
+        selectedAreas,
+        makeSelectedArea
+      } = this
+      const currentArea = makeSelectedArea(area)
+      return selectedAreas.some(item => isEqual(currentArea, item))
+    },
+    getAreaContainNum(area) {
+      if (area.isLeaf) return 0
+      const {
+        activeAreas,
+        selectedAreas
+      } = this
+
+      return selectedAreas
+        .filter(item => item[activeAreas.length === 1 ? 0 : 1] === area.value)
+        .length
     }
   },
   watch: {
-    areas(v) {
-      if (isequal(v, this.selectedAreas)) {
-        return
+    value: {
+      immediate: true,
+      handler(val) {
+        this.selectedAreas = clone(val)
       }
-
-      this.selectedAreas = [...v]
-    },
-    selectedAreas (v) {
-      console.log(v)
     }
   },
-  updated() {
-    console.debug('area selector updated')
+  async created() {
+    const allCities = await getAllCities()
+    this.areaOpts = formatAreaOpts(allCities)
   }
 }
 </script>
 
-<style lang="postcss" scoped>
 
-@import './selector';
 
-.tip {
-  color: red;
-  font-size: 11px;
-}
-
-.dialog-header {
-  width: 100%;
-  display: flex;
-  text-align: center;
-  line-height: 40px;
-  & .title {
-    text-indent: 10px;
-    font-size: 18px;
-    color: #565656;
+<style lang="postcss">
+  .tag {
+    margin-right: 6px;
+    margin-bottom: 4px;
   }
-  & .buttons {
-    margin-left: auto;
-    margin-right: 26px;
+
+  .city-selector-dialog {
+    font-size: 14px;
+    line-height: 1.5;
+    padding: 20px;
+
+    & .placeholder {
+      font-size: 13px;
+      margin-bottom: 6px;
+      color: #888;
+    }
+
+    & .header {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    & .city-list {
+      & h6 {
+        font-size: 16px;
+        margin: 20px 15px;
+      }
+      & ul {
+        margin: 20px 25px;
+        display: flex;
+        flex-wrap: wrap;
+      }
+      & li {
+        margin: 0 5px 5px;
+        width: 120px;
+        overflow: hidden;
+        & > a {
+          position: relative;
+          padding: 6px 20px;
+          color: #FF6350;
+          border-radius: 2px;
+          transition: .2s all;
+          &.selected, &:hover {
+            background-color: rgba(240, 110, 110, .9);
+            color: #fff;
+          }
+        }
+        & .hint {
+          position: absolute;
+          font-size: 12px;
+          color: #fff;
+          text-align: center;
+          line-height: 14px;
+          width: 14px;
+          height: 14px;
+          top: 4px;
+          right: 4px;
+          transform: scale(.85);
+          background-color: #FF6350;
+        }
+      }
+    }
+
+    & .selected-areas {
+      padding: 10px 20px;
+      background-color: #fafafa;
+    }
+
+    & .active-areas {
+      background-color: #fafafa;
+      border-bottom: 1px solid #e6e6e6;
+      padding: 0 30px;
+      margin-bottom: 10px;
+      display: flex;
+
+      & > span {
+        margin-right: 8px;
+        cursor: pointer;
+        border-width: 1px 1px 0;
+        line-height: 29px;
+        border-radius: 2px;
+        border-color: #d9d9d9;
+        border-style: solid;
+        background-color: #fff;
+        margin-bottom: -1px;
+        display: inline-block;
+        padding: 0 15px;
+      }
+    }
+
+    & /deep/ .el-dialog__header,
+    & /deep/ .el-dialog__body,
+    & /deep/ .el-dialog__footer {
+      padding: 0;
+    }
   }
-}
+
 </style>

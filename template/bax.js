@@ -46,6 +46,7 @@ import {
   MessageBox,
   Message,
   Cascader,
+  CascaderPanel,
   Notification
 } from 'element-ui'
 
@@ -99,6 +100,7 @@ Vue.use(Icon)
 Vue.use(Row)
 Vue.use(Col)
 Vue.use(Cascader)
+Vue.use(CascaderPanel)
 Vue.use(Progress)
 Vue.use(Card)
 
@@ -226,7 +228,7 @@ const seoRoutes = [{
   path: '/main/seo/promotion/create/zixuan',
   name: 'seo-create-zixuan-promotion'
 }, {
-  component: () => import('com/seo-promotion-cibao/create-page'),
+  component: () => import('com/seo-promotion-cibao/create'),
   path: '/main/seo/promotion/create/cibao',
   name: 'seo-create-cibao-promotion',
   beforeEnter: async (to, from, next) => {
@@ -238,7 +240,7 @@ const seoRoutes = [{
     }
   }
 }, {
-  component: () => import('com/seo-update-promotion-cibao'),
+  component: () => import('com/seo-promotion-cibao/update'),
   path: '/main/seo/promotion/cibao/:id/update',
   name: 'seo-update-cibao-promotion'
 }]
