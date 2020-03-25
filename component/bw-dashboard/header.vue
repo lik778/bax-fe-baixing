@@ -35,7 +35,7 @@ export default {
   computed: {
     todayRanking() {
       if (!this.data) return 0
-      return this.data.rankList[0]
+      return this.data.rankList[0].toFixed(2)
     }
   },
   mounted() {
