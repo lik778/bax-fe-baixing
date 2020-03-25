@@ -59,7 +59,7 @@
           <el-table-column label="操作">
             <template slot-scope="scope">
               <router-link v-if="!isBxSales && !isAgentAccounting" :to="{name: 'bw-edit-plan', query: {promoteId: scope.row.id}}"><el-button type="text" size="small">编辑</el-button></router-link>
-              <el-button v-if="canXufei(scope.row)" size="small" type="text" @click="onXufei(scope.row)">续费</el-button>
+              <el-button class="xufei-btn" v-if="canXufei(scope.row)" size="small" type="text" @click="onXufei(scope.row)">续费</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -253,6 +253,22 @@
         await this.getPromotes()
       },
       async onXufei(row) {
+        // 关闭续费功能, 续费功能上线后关闭
+        const h = this.$createElement
+        this.$msgbox({
+          title: '提示',
+          message: h('p', null, '功能升级中，如需续费，请在关键词到期后重新购买。'),
+          showCancelButton: false,
+          showConfirmButton: false,
+          showClose: false,
+        })
+        const timer = setTimeout(() => {
+          this.$msgbox.close()
+          timer && clearTimeout(timer)
+        }, 3000)
+        return 
+
+        // 续费逻辑
         const {word, cities, device} = row
         if (!this.canXufei(row)) {
           return this.$message.info('到期前15天才可续费哦')
@@ -353,5 +369,9 @@ marquee {
 .audit-reject-review{
   color: #FF6350;
   cursor: pointer;
+}
+.xufei-btn {
+  cursor: not-allowed;
+  color: #999;
 }
 </style>
