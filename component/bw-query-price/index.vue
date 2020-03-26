@@ -1,5 +1,5 @@
 <template>
-  <div class="bg" v-if="!allowNotSeeBwNewPrice">
+  <div class="bg">
     <div class="white-bg">
       <header>标王关键词查价</header>
       <marquee direction="left" scrollamount="6" height="40px" scrolldelay="60"><recent-sold :allAreas="allAreas" /></marquee>

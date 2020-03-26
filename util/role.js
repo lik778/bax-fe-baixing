@@ -211,11 +211,10 @@ export function checkRoles(currentRoles, validRoles) {
 
 export function allowNotSeeBwNewPrice(roles, agentId) {
   const currentRoles = normalizeRoles(roles)
-  if (currentRoles.includes('BAIXING_USER')) {
-    return true
-  }
+  const isOnlyBaixingUser = currentRoles.includes('BAIXING_USER') && currentRoles.length === 1
+
   if (isPro) {
-    return [2067, 2070, 2071, 2083, 2094].includes(agentId)
+    return [2067, 2070, 2071, 2083, 2094].includes(agentId) && isOnlyBaixingUser
   }
-  return [1].includes(agentId)
+  return [1].includes(agentId) && isOnlyBaixingUser
 }
