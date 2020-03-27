@@ -266,7 +266,7 @@
         immediate: true,
         handler(val) {
           if (val) {
-            history.go(-1)
+            this.$router.push('/main')
           }
         }
       }
