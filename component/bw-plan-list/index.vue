@@ -154,7 +154,7 @@
     },
     computed: {
       allowNotSeeBwNewPrice() {
-        return allowNotSeeBwNewPrice(this.userInfo.roles, this.userInfo.agentId)
+        return allowNotSeeBwNewPrice(this.userInfo.roles, this.userInfo.realAgentId)
       },
       promotesDue() {
         const arr = this.promotes

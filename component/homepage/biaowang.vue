@@ -96,7 +96,7 @@ export default {
   computed: {
     allowNotSeeBwNewPrice() {
       // 外部代理商无法看到标王新建页面
-      return allowNotSeeBwNewPrice(this.userInfo.roles, this.userInfo.agentId)
+      return allowNotSeeBwNewPrice(this.userInfo.roles, this.userInfo.realAgentId)
     },
   },
   methods: {
