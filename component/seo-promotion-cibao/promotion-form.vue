@@ -1,24 +1,25 @@
 <template>
   <el-form
-    :model="form"
-    label-width="120px"
     ref="form"
+    :model="formData"
+    label-width="120px"
   >
     <el-form-item
       required
+      refs="form"
       size="small"
-      :prop="item.key"
       :key="item.key"
+      :prop="item.key"
       :rules="item.rules"
       :label="item.label"
       v-for="item in formsRenderData"
     >
       <component
-        :class="[item.type === 'el-input' ? 'input' : 'uploader']"
         :is="item.type"
         v-bind="item.props"
-        v-model="form[item.key]"
+        v-model="formData[item.key]"
         :placeholder="item.placeholder"
+        :class="[item.type === 'el-input' ? 'input' : 'uploader']"
       />
     </el-form-item>
   </el-form>
@@ -124,23 +125,28 @@ export default {
     value: Object
   },
   methods: {
-    async getValues() {
-      console.log(this.form)
-      this.$refs.form.validate((valid, ...args) => {
-        console.log(valid, args)
+    getValues() {
+      return new Promise((resolve, reject) => {
+        this.$refs.form.validate((isSuccess, value) => {
+          if (isSuccess) {
+            resolve(this.formData)
+          } else {
+            reject(value)
+          }
+        })
       })
     }
   },
   watch: {
     value(val) {
-      this.form = Object.assign(this.form, val)
+      this.formData = Object.assign(this.formData, val)
     }
   },
   data() {
     return {
       formsRenderData,
 
-      form: defaultForm
+      formData: defaultForm
     }
   }
 }

@@ -106,7 +106,7 @@ const municipalities = ['北京', '上海', '天津', '重庆']
 const defaultActiveAreas = ['all']
 
 export default {
-  name: 'city-selector',
+  name: 'areas-selector',
   data() {
     return {
       selectedAreas: [],

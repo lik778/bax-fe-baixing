@@ -3,10 +3,15 @@
     <section>
       <header>选择推广站点</header>
       <qiqiaoban-page-selector
-        :product-type="PRO_SITE_PRODUCT_TYPE"
         :value="promotion.landingPage"
         @change-obj="v => onLandingChange(v)"
+        :product-type="PRO_SITE_PRODUCT_TYPE"
       />
+      <p class="warning" v-if="showExpireWarning">
+        站点{{promotion.duration === NINETY_DAYS ? '3' :' 6'}}个月内将过期，
+        请选择其他站点，或<router-link :to="{name: 'seo-charge'}">购买</router-link>新官网
+      </p>
+      <p class="warning" v-if="showExistWebsite">该站点已创建首页宝加速词包计划，请更换</p>
     </section>
     <section>
       <div class="section-inline">
@@ -56,7 +61,7 @@
           v-model="promotion.areas"
         />
         <div class="areas">
-          <tmeplate v-if="promotion.areas.length">
+          <template v-if="promotion.areas.length">
             <el-tag
               class="tag"
               size="small"
@@ -66,7 +71,7 @@
             >
               {{area[area.length - 1]}}
             </el-tag>
-          </tmeplate>
+          </template>
           <span v-else>暂未选取服务城市</span>
           <el-button
             size="mini"
@@ -99,12 +104,12 @@
         <div v-else>
           <el-tag
             closable
-            :key="create"
+            :key="item"
             size="small"
             type="primary"
             class="keyword-pane-tag"
-            @close="handleTagClose(item,create)"
-            v-for="(item, index) in promotion.keywords"
+            @close="handleTagClose(item)"
+            v-for="item in promotion.keywords"
           >
             {{item}}
           </el-tag>
@@ -128,6 +133,7 @@
       <promotion-form
         ref="promotionForm"
         :value="{
+          ...baseInfo,
           url: promotion.landingPage
         }"
       />
@@ -137,7 +143,7 @@
       <div>
         <p>推广渠道：百度</p>
         <p>推广平台：电脑端、移动端双端推广</p>
-        <!-- <p>预扣款：{{charge}}元（原价{{charge * 2}}元），可推广{{promotion.duration}}天，首页关键词数量{{promotion.volume}}词</p> -->
+        <p>预扣款：{{charge}}元（原价{{charge * 2}}元），可推广{{promotion.duration}}天，首页关键词数量{{promotion.volume}}词</p>
       </div>
       <contract-ack type="content-rule" ref="contract" />
       <el-button
@@ -152,13 +158,31 @@
 </template>
 
 <script>
+import dayjs from 'dayjs'
 import promotionForm from './promotion-form'
-import areaSelector from 'com/common/area-selector'
 import ContractAck from 'com/widget/contract-ack'
-import { PRO_SITE_PRODUCT_TYPE } from 'constant/site'
+import areaSelector from 'com/common/area-selector'
 import QiqiaobanPageSelector from 'com/common/qiqiaoban-page-selector'
-import { KEYWORD_TYPE_USER, durations, volumes, NINETY_DAYS, ONE_THROUND_KEYWORD, chargeList} from 'constant/seo'
+import {
+  f2y
+} from 'util/kit'
 
+import {
+  PRO_SITE_PRODUCT_TYPE
+} from 'constant/site'
+
+import {
+  volumes,
+  durations,
+  chargeList,
+  NINETY_DAYS
+} from 'constant/seo'
+
+import {
+  getPromotedWebsite,
+  createCibaoPromotion,
+  getCibaoPromotionBaseInfo
+} from '../../api/seo'
 
 export default {
   name: 'seo-cibao-create-page',
@@ -168,9 +192,15 @@ export default {
       durations,
       PRO_SITE_PRODUCT_TYPE,
 
+      showExistWebsite: false,
+      showExpireWarning: false,
+
       search: '',
 
       areaSelectorVisible: false,
+
+      baseInfo: {},
+      existPromotionWebsite: [],
 
       promotion: {
         areas: [],
@@ -186,11 +216,11 @@ export default {
     onLandingChange(v) {
       const landingPage = 'http://' + v.domain + '.mvp.baixing.com'
       this.promotion.landingPage = landingPage
-      // this.showExpireWarning = dayjs(v.expireAt).subtract(3, 'month').isBefore(dayjs(), 'day')
-      // this.showExistWebsite = this.existPromotionWebsite.some(o => (o.trim() === landingPage))
+      this.showExpireWarning = dayjs(v.expireAt).subtract(3, 'month').isBefore(dayjs(), 'day')
+      this.showExistWebsite = this.existPromotionWebsite.some(o => (o.trim() === landingPage))
     },
-    handleTagClose(tag, index) {
-      this.promotion.keywords.splice(create, 1)
+    handleTagClose(tag) {
+      this.promotion.keywords = this.promotion.keywords.filter(item => tag !== item)
     },
     addKeyword() {
       let words = this.search.split(',')
@@ -211,9 +241,60 @@ export default {
       this.promotion.keywords = Array.from(new Set(this.promotion.keywords.concat(words)))
       this.search = ''
     },
-    createPromotion() {
-      const promotionFormInfo = typeof this.$refs.promotionForm.getValues === 'function' ? this.$refs.promotionForm.getValues() : null
-      // console.log(promotionFormInfo)
+    async validateAndReturnPromotionData() {
+      if (!this.$refs.contract.$data.isAgreement) {
+        throw this.$message.error('请阅读并勾选同意服务协议，再进行下一步操作')
+      }
+      if (!this.promotion.landingPage) {
+        throw this.$message.error('请选择落地页')
+      }
+      if (this.showExpireWarning) {
+        throw this.$message.error('不可选择3个月内过期的落地页')
+      }
+      if (this.showExistWebsite) {
+        throw this.$message.error('不可选择已创建首页宝加速词包计划的官网')
+      }
+      if (!this.promotion.keywords.length) {
+        throw this.$message.error('请选取关键词')
+      }
+      if (this.promotion.keywords.length < 5) {
+        throw this.$message.error('计划核心关键词不能少于5个')
+      }
+
+      if (this.promotion.areas.length < 15) {
+        throw this.$message.error('服务城市不能少于15个')
+      }
+
+      const baseInfo = await this.$refs.promotionForm.getValues()
+
+      if (f2y(this.balance) < this.charge) {
+        throw this.$confirm('余额不足，请前往充值', '提示', {
+          confirmButtonText: '确定',
+          showCancelButton: false
+        }).then(res => {
+          this.$router.push({ name: 'seo-charge'})
+        }).catch(()=>{})
+      }
+      return {
+        ...this.promotion,
+        baseInfo,
+        areas: this.promotion.areas.map(area => area.join('-'))
+      }
+    },
+    async createPromotion() {
+      const data = await this.validateAndReturnPromotionData()
+      console.log(JSON.stringify(data))
+      createCibaoPromotion(data).then(res => {
+        this.$message.success('创建成功')
+        this.$router.push({name: 'seo-promotion-list'})
+      })
+    }
+  },
+  computed: {
+    charge() {
+      const { duration, volume } = this.promotion
+      const chargeObj = chargeList.find(o => o.volume === volume && o.duration === duration)
+      return chargeObj ? chargeObj.charge : chargeList[0].charge
     }
   },
   components: {
@@ -221,6 +302,12 @@ export default {
     areaSelector,
     promotionForm,
     QiqiaobanPageSelector
+  },
+  async created() {
+    const baseInfo = await getCibaoPromotionBaseInfo()
+    this.baseInfo = baseInfo || {}
+    console.log(this.baseInfo)
+    this.existPromotionWebsite = await getPromotedWebsite()
   }
 }
 </script>

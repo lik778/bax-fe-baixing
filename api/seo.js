@@ -89,9 +89,17 @@ export async function getBusinessLicense () {
   return body.data
 }
 
-export async function getPromotedWebsite () {
+export async function getPromotedWebsite() {
   const body = await seo
     .get('/acc/campaign/promoted-website')
+    .json()
+
+  return body.data
+}
+
+export async function getCibaoPromotionBaseInfo() {
+  const body = await seo
+    .get('/acc/campaign/base-info')
     .json()
 
   return body.data

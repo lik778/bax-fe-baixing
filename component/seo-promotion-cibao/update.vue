@@ -3,9 +3,9 @@
     <section>
       <header>选择推广站点</header>
       <qiqiaoban-page-selector
-        :product-type="PRO_SITE_PRODUCT_TYPE"
+        :disabled="true"
         :value="promotion.landingPage"
-        @change-obj="v => onLandingChange(v)"
+        :product-type="PRO_SITE_PRODUCT_TYPE"
       />
     </section>
     <section>
@@ -49,14 +49,14 @@
         <p>3. 服务内容及产品关键词仅作为首页宝加速词包拓词使用，并不代表会作为推广词展示在流量平台首页</p>
         <p>4. 同一计划中的城市及服务内容产品关键词可增加，暂不支持修改、删除</p>
       </div>
-      <div class="section-inline">
+      <div class="section-inline" v-if="promotion.areas">
         <header>服务城市</header>
         <area-selector
           :visible.sync="areaSelectorVisible"
           v-model="promotion.areas"
         />
         <div class="areas">
-          <tmeplate v-if="promotion.areas.length">
+          <template v-if="promotion.areas.length">
             <el-tag
               class="tag"
               size="small"
@@ -66,7 +66,7 @@
             >
               {{area[area.length - 1]}}
             </el-tag>
-          </tmeplate>
+          </template>
           <span v-else>暂未选取服务城市</span>
           <el-button
             size="mini"
@@ -95,19 +95,31 @@
       </div>
       <div class="section-inline">
         <header>已选核心词</header>
-        <p v-if="!promotion.keywords.length">暂未选取关键词</p>
-        <div v-else>
-          <el-tag
-            closable
-            :key="create"
-            size="small"
-            type="primary"
-            class="keyword-pane-tag"
-            @close="handleTagClose(item,create)"
-            v-for="item in promotion.keywords"
-          >
-            {{item}}
-          </el-tag>
+        <div>
+          <template v-if="originPromotion && Array.isArray(originPromotion.keywords)">
+            <el-tag
+              :key="item"
+              size="mini"
+              type="primary"
+              class="keyword-pane-tag"
+              v-for="item in originPromotion.keywords"
+            >
+              {{item}}
+            </el-tag>
+          </template>
+          <template v-if="promotion.keywords && promotion.keywords.length > 0">
+            <el-tag
+              closable
+              :key="item"
+              size="mini"
+              type="primary"
+              class="keyword-pane-tag"
+              @close="handleTagClose(item)"
+              v-for="item in promotion.keywords"
+            >
+              {{item}}
+            </el-tag>
+          </template>
         </div>
       </div>
       <div class="section-inline">
@@ -128,6 +140,7 @@
       <promotion-form
         ref="promotionForm"
         :value="{
+          ...promotion.baseInfo,
           url: promotion.landingPage
         }"
       />
@@ -137,13 +150,13 @@
       <div>
         <p>推广渠道：百度</p>
         <p>推广平台：电脑端、移动端双端推广</p>
-        <!-- <p>预扣款：{{charge}}元（原价{{charge * 2}}元），可推广{{promotion.duration}}天，首页关键词数量{{promotion.volume}}词</p> -->
+        <p>预扣款：{{charge}}元（原价{{charge * 2}}元），可推广{{promotion.duration}}天，首页关键词数量{{promotion.volume}}词</p>
       </div>
       <contract-ack type="content-rule" ref="contract" />
       <el-button
         class="submit"
         type="primary"
-        @click="createPromotion"
+        @click="updatePromotion"
       >
         创建推广
       </el-button>
@@ -152,13 +165,28 @@
 </template>
 
 <script>
+  import pick from 'lodash.pick'
   import promotionForm from './promotion-form'
-  import areaSelector from 'com/common/area-selector'
   import ContractAck from 'com/widget/contract-ack'
-  import { PRO_SITE_PRODUCT_TYPE } from 'constant/site'
+  import areaSelector from 'com/common/area-selector'
   import QiqiaobanPageSelector from 'com/common/qiqiaoban-page-selector'
-  import { KEYWORD_TYPE_USER, durations, volumes, NINETY_DAYS, ONE_THROUND_KEYWORD, chargeList} from 'constant/seo'
 
+  import {
+    PRO_SITE_PRODUCT_TYPE
+  } from 'constant/site'
+
+  import {
+    volumes,
+    durations,
+    chargeList,
+    NINETY_DAYS
+  } from 'constant/seo'
+
+  import {
+    updateCibaoPromotion,
+    getCibaoPromotionByCampaignId
+  } from '../../api/seo'
+  import clone from 'clone'
 
   export default {
     name: 'seo-cibao-update-page',
@@ -171,26 +199,23 @@
         search: '',
 
         areaSelectorVisible: false,
+        originPromotion: null,
 
         promotion: {
+          id: null,
           areas: [],
           info: '',
           landingPage: '',
           keywords: [],
           duration: NINETY_DAYS,
-          volume: 1000
+          volume: 1000,
+          baseInfo: {}
         }
       }
     },
     methods: {
-      onLandingChange(v) {
-        const landingPage = 'http://' + v.domain + '.mvp.baixing.com'
-        this.promotion.landingPage = landingPage
-        // this.showExpireWarning = dayjs(v.expireAt).subtract(3, 'month').isBefore(dayjs(), 'day')
-        // this.showExistWebsite = this.existPromotionWebsite.some(o => (o.trim() === landingPage))
-      },
-      handleTagClose(tag, index) {
-        this.promotion.keywords.splice(create, 1)
+      handleTagClose(tag) {
+        this.promotion.keywords = this.promotion.keywords.filter(item => tag !== item)
       },
       addKeyword() {
         let words = this.search.split(',')
@@ -208,12 +233,53 @@
           words = words.slice(0, 1001)
         }
 
-        this.promotion.keywords = Array.from(new Set(this.promotion.keywords.concat(words)))
+        const allKeywords = [].concat(this.originPromotion.keywords, this.promotion.keywords)
+        const newKeywords = words.filter(word => allKeywords.every(item => item !== word))
+
+        this.promotion.keywords = this.promotion.keywords.concat(newKeywords)
         this.search = ''
       },
-      createPromotion() {
-        const promotionFormInfo = typeof this.$refs.promotionForm.getValues === 'function' ? this.$refs.promotionForm.getValues() : null
-        // console.log(promotionFormInfo)
+      async validateAndReturnPromotionData() {
+        if (!this.$refs.contract.$data.isAgreement) {
+          throw this.$message.error('请阅读并勾选同意服务协议，再进行下一步操作')
+        }
+        if (!this.promotion.keywords.length) {
+          throw this.$message.error('请选取关键词')
+        }
+        if (this.promotion.keywords.length < 3) {
+          throw this.$message.error('计划核心关键词不能少于3个')
+        }
+
+        const baseInfo = await this.$refs.promotionForm.getValues()
+
+        return {
+          ...this.promotion,
+          baseInfo
+        }
+      },
+      async updatePromotion() {
+        const data = await this.validateAndReturnPromotionData()
+        console.log(JSON.stringify(data))
+        updateCibaoPromotion(data).then(res => {
+          this.$message.success('更新成功')
+          this.$router.push({name: 'seo-promotion-list'})
+        })
+      },
+      async getPromotionDataById(id) {
+        const data = await getCibaoPromotionByCampaignId(id)
+        this.originPromotion = pick(data, ...Object.keys(this.promotion))
+        // 原有计划的关键词不能删除
+        this.promotion = clone({
+          ...this.originPromotion,
+          keywords: []
+        })
+      }
+    },
+    computed: {
+      charge() {
+        const { duration, volume } = this.promotion
+        const chargeObj = chargeList.find(o => o.volume === volume && o.duration === duration)
+        return chargeObj ? chargeObj.charge : chargeList[0].charge
       }
     },
     components: {
@@ -221,6 +287,10 @@
       areaSelector,
       promotionForm,
       QiqiaobanPageSelector
+    },
+    async created() {
+      this.promotion.id = this.$route.params.id
+      await this.getPromotionDataById(this.$route.params.id)
     }
   }
 </script>
