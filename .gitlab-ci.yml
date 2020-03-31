@@ -39,7 +39,6 @@ release:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.baixing.cn
     - docker build --pull -t $BAX_FE_REF .
     - docker push $BAX_FE_REF
-    - docker rmi $BAX_FE_REF
 
 dev-deploy:
   stage: dev-deploy
