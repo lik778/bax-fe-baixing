@@ -115,8 +115,6 @@ export const biaowang = new Fetch({
     } else if (res.status === 401) {
       Message.error('请重新登录 >_<')
       return redirect('signin', `return=${encodeURIComponent(location.pathname + location.search)}`)
-    } else if (res.status === 500) {
-      Message.error(`出错了，请稍后重试`)
     } else {
       res.clone().json().then(body => {
         Message.error(body.message || `出错了，请稍后重试`)
