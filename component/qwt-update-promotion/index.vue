@@ -51,7 +51,7 @@
             </div>
           </span>
           <div class="page-error-placeholder" v-else>
-            所选推广页面失效，请 <a href="javascript:;" @click="isErrorLandingPageShow = false; adSelectortype = ''">从新选择</a>
+            所选推广页面失效，请 <a href="javascript:;" @click="isErrorLandingPageShow = false; adSelectortype = ''">重新选择</a>
           </div>
         </div>
         <div>
@@ -324,7 +324,8 @@ import {
   getQiqiaobanCoupon,
   checkCreativeContent,
   getRecommandCreative,
-  changeCampaignKeywordsPrice
+  changeCampaignKeywordsPrice,
+  queryAds
 } from 'api/fengming'
 
 import {
@@ -1255,7 +1256,7 @@ export default {
 
     // 验证官网落地页是否404
     const { landingPage, landingType } = this.originPromotion
-    if (landingType === 1) {
+    if (landingType === LANDING_TYPE_GW) {
       // 将帖子选择组件的类型重置
       this.adSelectortype = ''
       const script = document.createElement('script')
@@ -1270,6 +1271,22 @@ export default {
         document.body.removeChild(script)
       })
     }
+
+    // 验证百姓帖子已经归档
+    if (landingType === LANDING_TYPE_AD) {
+      const result = await queryAds({
+        limitMvp: false,
+        adIds: this.originPromotion.landingPageId,
+        limit: 1
+      })
+      const ad = result.ads && result.ads[0]
+      if (!ad) {
+        this.isErrorLandingPageShow = true
+        this.promotion.landingPage = ''
+      }
+    }
+
+
     setTimeout(() => {
       if (this.$route.query.target === 'keyword') {
         VueScrollTo.scrollTo('.keyword', 100)
