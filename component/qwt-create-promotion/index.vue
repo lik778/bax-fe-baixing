@@ -88,7 +88,7 @@
                   type="warning"
                   @close="removeKeyword(index)">
                   {{kw.word}}
-                  {{kw.recommandSource === RECOMMAND_SOURCE_FH ? '好词': ''}}
+                  {{kw.recommandSource === RECOMMAND_SOURCE_FH ? '(好词)': ''}}
           </el-tag>
           <el-autocomplete
             v-model="queryWord"
