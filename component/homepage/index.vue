@@ -2,7 +2,7 @@
   <div class="homepage">
     <account />
     <homepage-campaign />
-    <biaowang />
+    <biaowang :userInfo="userInfo" />
     <site />
   </div>
 </template>
@@ -16,6 +16,12 @@ import Biaowang from './biaowang'
 
 export default {
   name: 'qwt-homepage',
+  props:{
+    userInfo: {
+      type: Object,
+      required: true
+    }
+  },
   mounted() {
     store.initPageStore()
   },
