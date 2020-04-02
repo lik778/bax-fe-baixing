@@ -57,6 +57,7 @@
       </div>
       <add-keyword :show="addKeywordModalShow"
                    ref="addKeyword"
+                   v-if="addKeywordModalShow"
                    @close="handleKeywordClose"
                    :total-selected-count="totalPage"
                    :all-areas="allAreas"

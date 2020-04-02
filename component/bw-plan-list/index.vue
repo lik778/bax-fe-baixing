@@ -56,7 +56,7 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="操作">
+          <el-table-column label="操作" min-width="160px">
             <template slot-scope="scope">
               <router-link v-if="!isBxSales && !isAgentAccounting" :to="{name: 'bw-edit-plan', query: {promoteId: scope.row.id}}"><el-button type="text" size="small">编辑</el-button></router-link>
               <el-button v-if="canXufei(scope.row)" size="small" type="text" @click="onXufei(scope.row)">续费</el-button>
@@ -64,7 +64,8 @@
                 <el-button type="text" size="small">查看报告</el-button>
               </router-link>
               <span>
-                <el-button type="text" size="small">推广实况</el-button>
+                <el-button type="text" slot="reference" size="small" v-if="canSeeLiveBtn(scope.row)"
+                          @click="handleLiveSituation(scope.row)">推广实况</el-button>
                 <el-tooltip effect="dark" placement="top-start">
                   <i class="el-icon-info" style="color: rgb(151, 168, 190);cursor: pointer"></i>
                   <div slot="content">
@@ -97,6 +98,21 @@
       <audit-reject-reason-dialog :show="auditRejectReasonDialogVisible" 
                                   @close="auditRejectReasonDialogVisible = false">
       </audit-reject-reason-dialog>
+      <el-dialog :visible="liveDialogVisible" 
+                 custom-class="fixed-center" 
+                 title="选择平台" 
+                 width="420px" 
+                 :show-close="false">
+        <el-radio-group v-model="liveType">
+          <el-radio v-for="item in liveDevices" :key="item.type" :label="item.type">
+            {{item.label}}
+          </el-radio>
+        </el-radio-group>
+        <span slot="footer">
+          <el-button @click="liveDialogVisible = false">取消</el-button>
+          <el-button type="primary" @click="goToLivePageByType">确定</el-button>
+        </span>
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -107,6 +123,9 @@
     promoteStatusOpts,
     auditStatusOpts,
     DEVICE,
+    DEVICE_ALL,
+    DEVICE_PC,
+    DEVICE_WAP,
     PROMOTE_STATUS,
     AUDIT_STATUS,
     AUDIT_STATUS_REJECT,
@@ -114,7 +133,7 @@
     PROMOTE_STATUS_PENDING_ONLINE,
     PROMOTE_STATUS_OFFLINE
   } from 'constant/biaowang'
-  import {getPromotes, queryKeywordPrice, getCpcRanking} from 'api/biaowang'
+  import {getPromotes, queryKeywordPrice, getCpcRanking, getUserLive} from 'api/biaowang'
   import {
     f2y,
     getCnName
@@ -126,6 +145,21 @@
   import flatten from 'lodash.flatten'
   import {fmtCpcRanking} from 'util/campaign'
   import auditRejectReasonDialog from 'com/common/audit-reject-reason-dialog'
+
+  const liveDevices = [
+    {
+      type: DEVICE_WAP,
+      label: DEVICE[DEVICE_WAP],
+      urlKey: 'wapUrl',
+      msg: '暂无手机端实况数据，请售后再试',
+    },
+    {
+      type: DEVICE_PC,
+      label: DEVICE[DEVICE_PC],
+      urlKey: 'pcUrl',
+      msg: '暂无电脑端实况数据，请稍后再试'
+    }
+  ]
 
   export default {
     name: 'bw-plan-list',
@@ -162,7 +196,12 @@
           days: [{required: true, message: '请选择购买天数'}],
         },
         xufeiDialogVisible: false,
-        auditRejectReasonDialogVisible: false
+        auditRejectReasonDialogVisible: false,
+
+        liveDialogVisible: false,
+        liveType: DEVICE_WAP,
+        liveDevices,
+        currentPromoteLive: null,
       }
     },
     computed: {
@@ -241,6 +280,9 @@
       canXufei(row) {
         return PROMOTE_STATUS_ONLINE.includes(row.status) && this.leftDays(row) <= 15
       },
+      canSeeLiveBtn(row) {
+        return PROMOTE_STATUS_ONLINE.includes(row.status)
+      },
       async getPromotes() {
         const {offset, limit, keyword: word, promoteStatusFilters, auditStatusFilters, userId} = this.query
         const {items, total} = await getPromotes({
@@ -311,6 +353,39 @@
       },
       dateFormatter({createdAt}) {
         return dayjs(createdAt * 1000).format('YYYY-MM-DD')
+      },
+      goToLivePageByType() {
+        const promote = this.currentPromoteLive
+        const currentLiveObj = this.liveDevices.find(d => d.device === promote.type)
+        const { urlKey, msg } = currentLiveObj
+        this.goToLivePage(promote[urlKey], msg)
+      },
+      goToLivePage(url, msg) {
+        if (url) {
+          window.open(url)
+        } else {
+          this.$alert(msg, '提示', {
+            showClose: false
+          })
+        }
+      },
+      async handleLiveSituation(promote) {
+        const promoteLive = await getUserLive({promoteId: promote.id})
+        const { device, pcUrl, wapUrl } = promoteLive
+
+        if (device === DEVICE_ALL) {
+          this.currentPromoteLive = promoteLive
+          this.liveDialogVisible = true
+          return 
+        } 
+        if (device === DEVICE_PC) {
+          this.goToLivePage(pcUrl, pcMsg)
+          return 
+        } 
+        if (device === DEVICE_WAP) {
+          this.goToLivePage(wapUrl, wapMsg)
+          return
+        }
       }
     },
     async mounted() {

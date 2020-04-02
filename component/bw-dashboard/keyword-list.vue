@@ -57,13 +57,19 @@ import dayjs from 'dayjs'
 export default {
   name: 'bw-dashboard-keyword-table',
   props: {
-    allAreas: {
+    allAreas: { // provide
       type: Array,
       required: true,
     },
-    data: {
+    data: {  // 提出到store中
       type: Array,
       required: true
+    },
+    originalPromotes: { // 提出到store中
+      type: Array,
+      default: () => {
+        return []
+      }
     },
     canSelected: {
       type: Boolean,
@@ -76,16 +82,17 @@ export default {
   },
   mounted() {
     if (!this.canSelected) return
-    this.$nextTick(() => {
-      this.$on('clear-selection', ()=> {
-        this.$refs.bwDashboardKeywordList.clearSelection()
-      })
-      this.$on('promote-change', (promote) => {
-        this.$refs.bwDashboardKeywordList.toggleRowSelection(promote, true)
-      })
+    this.originalPromotes.forEach(promote => {
+      this.$refs.bwDashboardKeywordList.toggleRowSelection(promote, true)
     })
   },
+  beforeDestory() {
+    this.$refs.bwDashboardKeywordList.clearSelection()
+  },
   methods: {
+    getRowKeys(row) {
+      return row.id
+    },
     handleDelete(id) {
       this.$emit('delete', id)
     },
@@ -122,9 +129,6 @@ export default {
         }
         return parseFloat(Math.max(daysLeft, 0)).toFixed(1)
       }
-    },
-    getRowKeys(row) {
-      return row.id
     }
   }
 }

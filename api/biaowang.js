@@ -189,3 +189,11 @@ export async function getUserRanking(opts = {}) {
 
   return body.data
 }
+
+export async function getUserLive(opts = {}) {
+  const body = await biaowang
+    .get('/promote/user/live')
+    .query(opts)
+    .json()
+  return body.data
+}
