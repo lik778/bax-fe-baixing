@@ -13,8 +13,8 @@
         <el-table :data="data">
           <el-table-column label="日期" prop="createdTime" width="240"
             :formatter="r => toHumanTime(r.createdTime, 'YYYY-MM-DD HH:mm')" />
-          <el-table-column label="充值金额" prop="dealPrice"
-            :formatter="r => (r.dealPrice) / 100 + '元'" />
+          <el-table-column label="充值金额" prop="originalPrice"
+            :formatter="r => (r.originalPrice) / 100 + '元'" />
         </el-table>
         <el-pagination small class="pagniation" layout="prev, pager, next"
           :total="total" :page-size="query.size"
