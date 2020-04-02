@@ -42,11 +42,11 @@ import {
   Col,
   Progress,
   Card,
+  Image,
   Loading,
   MessageBox,
   Message,
   Cascader,
-  CascaderPanel,
   Notification
 } from 'element-ui'
 
@@ -100,9 +100,9 @@ Vue.use(Icon)
 Vue.use(Row)
 Vue.use(Col)
 Vue.use(Cascader)
-Vue.use(CascaderPanel)
 Vue.use(Progress)
 Vue.use(Card)
+Vue.use(Image)
 
 Vue.use(Loading.directive)
 Vue.prototype.$loading = Loading.service

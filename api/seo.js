@@ -101,8 +101,7 @@ export async function getCibaoPromotionBaseInfo() {
   const body = await seo
     .get('/acc/campaign/base-info')
     .json()
-
-  return body.data
+  return body.data || {}
 }
 
 export async function createCibaoPromotion (opts = {}) {

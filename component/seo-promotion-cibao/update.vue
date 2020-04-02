@@ -16,6 +16,7 @@
           v-model="promotion.duration"
         >
           <el-radio-button
+            :disabled="true"
             v-for="item in durations"
             :label="item"
             :key="item"
@@ -28,6 +29,7 @@
         <header>选择首页关键词数量</header>
         <el-radio-group
           size="medium"
+          :disabled="true"
           v-model="promotion.volume"
         >
           <el-radio-button
@@ -41,7 +43,7 @@
       </div>
     </section>
     <section>
-      <header class="not-required">输入服务内容/产品关键词</header>
+      <header class="not-required">增加核心词</header>
       <div class="info">
         <div>说明:</div>
         <p>1. 请输入您主要提供服务或产品的城市及区域，地域类关键词数量建议不低于15个</p>
@@ -51,10 +53,6 @@
       </div>
       <div class="section-inline" v-if="promotion.areas">
         <header>服务城市</header>
-        <area-selector
-          :visible.sync="areaSelectorVisible"
-          v-model="promotion.areas"
-        />
         <div class="areas">
           <template v-if="promotion.areas.length">
             <el-tag
@@ -96,17 +94,6 @@
       <div class="section-inline">
         <header>已选核心词</header>
         <div>
-          <template v-if="originPromotion && Array.isArray(originPromotion.keywords)">
-            <el-tag
-              :key="item"
-              size="mini"
-              type="primary"
-              class="keyword-pane-tag"
-              v-for="item in originPromotion.keywords"
-            >
-              {{item}}
-            </el-tag>
-          </template>
           <template v-if="promotion.keywords && promotion.keywords.length > 0">
             <el-tag
               closable
@@ -130,7 +117,7 @@
           type="textarea"
           show-word-limit
           class="keyword-input"
-          v-model="promotion.info"
+          v-model="promotion.additionalInfo"
           placeholder="如您对于自身服务内容及产品有额外补充内容，请填写（字数限制0～100）"
         />
       </div>
@@ -161,11 +148,16 @@
         创建推广
       </el-button>
     </section>
+    <area-selector
+      :visible.sync="areaSelectorVisible"
+      v-model="promotion.areas"
+    />
   </div>
 </template>
 
 <script>
   import pick from 'lodash.pick'
+  import isEqual from 'lodash.isequal'
   import promotionForm from './promotion-form'
   import ContractAck from 'com/widget/contract-ack'
   import areaSelector from 'com/common/area-selector'
@@ -204,7 +196,7 @@
         promotion: {
           id: null,
           areas: [],
-          info: '',
+          additionalInfo: '',
           landingPage: '',
           keywords: [],
           duration: NINETY_DAYS,
@@ -246,11 +238,18 @@
         if (!this.promotion.keywords.length) {
           throw this.$message.error('请选取关键词')
         }
-        if (this.promotion.keywords.length < 3) {
-          throw this.$message.error('计划核心关键词不能少于3个')
+        if (this.promotion.keywords.length < 5) {
+          throw this.$message.error('计划核心关键词不能少于5个')
         }
 
-        const baseInfo = await this.$refs.promotionForm.getValues()
+        if (this.promotion.areas.length < 15) {
+          throw this.$message.error('服务城市不能少于15个')
+        }
+
+        const {
+          url,
+          ...baseInfo
+        } = await this.$refs.promotionForm.getValues()
 
         return {
           ...this.promotion,
@@ -259,7 +258,20 @@
       },
       async updatePromotion() {
         const data = await this.validateAndReturnPromotionData()
-        console.log(JSON.stringify(data))
+        const originalData = this.originPromotion
+        const requiredArgs = ['id', 'keywords']
+        // 和原始数据对比，只更新修改字段
+        for (const key in data) {
+          if (!requiredArgs.includes(key)
+              && isEqual(data[key], originalData[key])) {
+            delete data[key]
+          }
+        }
+
+        if (data.areas) {
+          data.areas = data.areas.map(area => area.join('-'))
+        }
+
         updateCibaoPromotion(data).then(res => {
           this.$message.success('更新成功')
           this.$router.push({name: 'seo-promotion-list'})
@@ -267,12 +279,9 @@
       },
       async getPromotionDataById(id) {
         const data = await getCibaoPromotionByCampaignId(id)
+        data.areas = data.areas.map(area => area.split('-'))
         this.originPromotion = pick(data, ...Object.keys(this.promotion))
-        // 原有计划的关键词不能删除
-        this.promotion = clone({
-          ...this.originPromotion,
-          keywords: []
-        })
+        this.promotion = clone(this.originPromotion)
       }
     },
     computed: {
@@ -303,6 +312,7 @@
     background-color: #fff;
     overflow: hidden;
     & > section {
+      max-width: 1000px;
       padding: 20px;
     }
     & .section-inline {

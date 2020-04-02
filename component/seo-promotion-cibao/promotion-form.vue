@@ -97,6 +97,9 @@ const formsRenderData = [{
 }, {
   key: 'logo',
   label: '客户LOGO图',
+  props: {
+    width: '140px'
+  },
   rules: getValidateRules('客户LOGO图', 'uploader'),
   placeholder: '上传与客户业务相关图即可，300KB以内',
   type: 'image-uploader'
@@ -104,7 +107,7 @@ const formsRenderData = [{
   key: 'banner',
   label: '客户Banner图',
   props: {
-    width: '150px'
+    width: '140px'
   },
   rules: getValidateRules('客户Banner图', 'uploader'),
   placeholder: '上传与客户业务相关图即可，300KB以内',

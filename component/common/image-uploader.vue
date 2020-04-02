@@ -8,11 +8,7 @@
       style="display: none;"
       @change="handleFileChange"
     />
-    <div @click="uploadFile">
-      <slot name="default">
-        <i class="el-icon-plus upload-btn" />
-      </slot>
-    </div>
+    <slot name="default"></slot>
   </div>
 </template>
 
@@ -88,6 +84,7 @@ export default {
           maxFileSize: { // kb
             default: 2048
           },
+          autoUpload: false,
           types: ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/webp']
         }
       }
@@ -132,17 +129,4 @@ export default {
 </script>
 
 <style lang="postcss" scoped>
-  .upload-btn {
-    width: 100px;
-    height: 100px;
-    border-radius: 4px;
-    border: 1px dashed #aaa;
-    cursor: pointer;
-    font-size: 38px;
-    text-align: center;
-    line-height: 100px;
-    &:hover {
-      background: #f6f6f6;
-    }
-  }
 </style>

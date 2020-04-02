@@ -83,7 +83,7 @@
         </div>
       </div>
       <div class="section-inline">
-        <header>服务产品/内容</header>
+        <header>增加核心词</header>
         <el-input
           size="small"
           v-model="search"
@@ -123,7 +123,7 @@
           type="textarea"
           show-word-limit
           class="keyword-input"
-          v-model="promotion.info"
+          v-model="promotion.additionalInfo"
           placeholder="如您对于自身服务内容及产品有额外补充内容，请填写（字数限制0～100）"
         />
       </div>
@@ -204,7 +204,7 @@ export default {
 
       promotion: {
         areas: [],
-        info: '',
+        additionalInfo: '',
         landingPage: '',
         keywords: [],
         duration: NINETY_DAYS,
@@ -304,10 +304,7 @@ export default {
     QiqiaobanPageSelector
   },
   async created() {
-    const baseInfo = await getCibaoPromotionBaseInfo()
-    this.baseInfo = baseInfo || {}
-    console.log(this.baseInfo)
-    this.existPromotionWebsite = await getPromotedWebsite()
+    [this.baseInfo, this.existPromotionWebsite] = await Promise.all([getCibaoPromotionBaseInfo(), getPromotedWebsite()])
   }
 }
 </script>
@@ -320,6 +317,7 @@ export default {
     background-color: #fff;
     overflow: hidden;
     & > section {
+      max-width: 1000px;
       padding: 20px;
     }
     & .section-inline {
@@ -361,6 +359,12 @@ export default {
       bottom: 3px;
       right: 12px;
     }
+  }
+
+  .warning {
+    color: #ff6350;
+    font-size: 14px;
+    margin-top: 6px;
   }
 
   .submit {
