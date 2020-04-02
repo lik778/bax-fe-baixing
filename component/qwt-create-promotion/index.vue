@@ -578,6 +578,11 @@ export default {
         return Message.error('请选择投放区域')
       }
 
+      const disabledArea = p.areas.find(area => !isQwtEnableCity(area, allAreas))
+      if (disabledArea) {
+        return Message.error(`计划包含无法投放的区域：${disabledArea.nameCn}`)
+      }
+
       if (this.kwPrice) {
         if (this.kwPrice < 200 || this.kwPrice > 99900) {
           return Message.error('关键词价格需在[2, 999]区间内')

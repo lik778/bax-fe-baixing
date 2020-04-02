@@ -355,8 +355,7 @@ export default {
       }
   
       let oldPromotion = this.sites.find(v =>{
-        const oldLandingPage = 'http://' + v.domain + '.mvp.baixing.com'
-        return landingPage.trim() === oldLandingPage.trim()
+        return new RegExp(`https?://${v.domain}.mvp.baixing.com`).test(landingPage)
       })
       if (!oldPromotion) {
         return this.$message.error('该官网不在用户官网列表中')

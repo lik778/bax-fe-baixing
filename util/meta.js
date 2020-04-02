@@ -19,9 +19,9 @@ export function isQwtEnableCity(name, allAreas) {
   if (!a) {
     return false
   }
-
   return !!a.baiduCode &&
     !!a.qihuCode &&
+    !!a.sogouCode &&
     !!a.isAllowed
 }
 
