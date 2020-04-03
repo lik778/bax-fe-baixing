@@ -1,3 +1,4 @@
+import {isPro} from '../config'
 
 const isArray = Array.isArray
 
@@ -206,4 +207,14 @@ export function checkRoles(currentRoles, validRoles) {
   }
 
   return valid
+}
+
+export function allowNotSeeBwNewPrice(roles, agentId) {
+  const currentRoles = normalizeRoles(roles)
+  const isOnlyBaixingUser = currentRoles.includes('BAIXING_USER') && currentRoles.length === 1
+
+  if (isPro) {
+    return [2067, 2070, 2071, 2083, 2094].includes(agentId) && isOnlyBaixingUser
+  }
+  return [1].includes(agentId) && isOnlyBaixingUser
 }

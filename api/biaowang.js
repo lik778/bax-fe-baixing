@@ -145,3 +145,38 @@ export async function queryOrder(query) {
     total: data.totalElements
   }
 }
+
+export async function queryKeywordPriceNew(opts) {
+  const body = await biaowang
+    .post('/keyword/v2/pricing/user/inquiry')
+    .send(opts)
+    .json()
+
+  return body.data
+}
+
+export async function refreshKeywordPriceNew(keywords, opt) {
+  const requestBody = keywords.map(k => ({
+    ...k,
+    price: {
+      [k.days]: k.price
+    }
+  }))
+  const body = await biaowang
+    .post('/keyword/v2/pricing/user/inquiry/norec')
+    .send({
+      ...opt,
+      pricingList: requestBody
+    })
+    .json()
+
+  const parsedBody = body.data.content.map(i => {
+    const days = keywords.find(k => k.word === i.word && k.device === i.device).days
+    return {
+      ...i,
+      price: i.soldPriceMap[days],
+      days: days
+    }
+  })
+  return parsedBody
+}
