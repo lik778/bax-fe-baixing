@@ -49,11 +49,11 @@ export default {
         this.interval = setInterval(() => {
           if (this.countdown === 1) {
             return this.$router.replace(redirectPathname[product])
-          } 
+          }
           this.countdown -= 1
         }, 1000)
       }
-    })
+    }, {deep: true})
   },
   beforeDestroy() {
     clearInterval(this.interval)
