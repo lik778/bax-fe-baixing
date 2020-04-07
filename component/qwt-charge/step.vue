@@ -1,5 +1,5 @@
 <template>
-  <bax-step :title="title" hint="账户内推广资金暂不支持购买标王，如需标王推广请直接进入标王页面进行购买" :steps="steps" :step="step" >
+  <bax-step :title="title" hint="账户内推广资金暂不支持购买标王，如需标王推广请直接进入标王页面进行购买">
   </bax-step>
 </template>
 
@@ -12,27 +12,13 @@ export default {
     BaxStep
   },
   props: {
-    mode: {
-      type: String,
-      required: true
-    },
     step: {
       type: Number,
-      required: true
     }
   },
   data() {
-    const { mode } = this
-
     return {
-      title: mode === 'buy-service' ? '套餐购买' : '资金充值',
-      steps: [{
-        name: '选择产品'
-      }, {
-        name: '核对订单'
-      }, {
-        name: '确认购买'
-      }]
+      title: '充值与购买'
     }
   }
 }

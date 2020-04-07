@@ -277,6 +277,7 @@ export default {
     padding-top: 50px;
     padding-left: 180px;
     background-color: #eeeff0;
+    overflow-x: hidden;
   }
   .view {
     margin: 12px 12px 32px;

@@ -147,21 +147,21 @@ async function _getUserCount(query) {
 }
 
 export async function queryOrder(query) {
-  const { data, meta } = await api
+  const { data } = await api
     .get('/order/query')
     .query(reverseCamelcase(query))
     .json()
 
   return {
-    data: toCamelcase(data),
-    total: meta.count
+    data: toCamelcase(data.data),
+    total: data.totalElements
   }
 }
 
-export async function cancelOrder(orderId) {
+export async function cancelOrder(tradeSeq) {
   const { data } = await api
     .post(`/order/cancel`)
-    .send(reverseCamelcase({orderId}))
+    .send(reverseCamelcase({tradeSeq}))
     .json()
 
   return data

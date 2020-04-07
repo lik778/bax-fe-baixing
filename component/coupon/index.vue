@@ -1,49 +1,21 @@
 <template>
   <div class="my-coupon">
     <main>
-      <div class="redeem">
-        <el-input
-          class="coupon-code-input"
-          placeholder="输入兑换码"
-          v-model.trim="couponCode"
-        />
-        <el-button
-          type="primary"
-          :loading="redeemInProgress"
-          @click="redeem"
-        >
-          兑换
-        </el-button>
-      </div>
       <el-tabs v-model="activeCouponTab">
         <el-tab-pane label="有效优惠券" name="first">
           <div class="coupon-list">
             <coupon
-              v-for="coupon in validCoupons"
+              v-for="coupon in coupons"
               :key="coupon.id"
-              :coupon="displayCoupon(coupon)"
+              :coupon="coupon"
               class="coupon"
-              :showBtn="true"
               @click="onCouponClick(coupon)"
             />
-            <p v-if="validCoupons.length === 0">暂无有效优惠券</p>
-          </div>
-        </el-tab-pane>
-        <el-tab-pane label="已过期或未生效" name="second">
-          <div class="coupon-list">
-            <coupon
-              v-for="coupon in invalidCoupons"
-              :key="coupon.id"
-              :coupon="displayCoupon(coupon)"
-              class="coupon"
-              @click="onCouponClick(coupon)"
-              :disabled="true" />
-              <p v-if="invalidCoupons.length === 0">
-                暂无已过期或未生效优惠券
-              </p>
+            <p v-if="coupons.length === 0">暂无有效优惠券</p>
           </div>
         </el-tab-pane>
       </el-tabs>
+      <hr />
       <footer>
         <h4>优惠券使用说明</h4>
         <ol>
@@ -60,20 +32,11 @@
 </template>
 
 <script>
-import Topbar from 'com/topbar'
-import Coupon from 'com/common/coupon'
-
-import { displayCoupon } from 'util/meta'
-
-import store from './store'
+import Coupon from './coupon'
+import { getCoupons } from 'api/meta'
 
 export default {
   name: 'qwt-coupon',
-  fromMobx: {
-    usingConditions: () => store.usingConditions,
-    validCoupons: () => store.validCoupons,
-    coupons: () => store.coupons
-  },
   props: {
     userInfo: {
       type: Object,
@@ -81,31 +44,12 @@ export default {
     }
   },
   components: {
-    Topbar,
     Coupon
   },
   data() {
     return {
-      couponCode: '',
       activeCouponTab: 'first',
-      redeemInProgress: false
-    }
-  },
-  computed: {
-    invalidCoupons() {
-      const seconds = Math.floor(Date.now() / 1000)
-      return this.coupons.filter(coupon => {
-        if (coupon.status !== 0) {
-          return true
-        }
-        if (seconds < coupon.startAt) {
-          return true
-        }
-        if (coupon.expiredAt < seconds) {
-          return true
-        }
-        return false
-      })
+      coupons: []
     }
   },
   methods: {
@@ -116,32 +60,11 @@ export default {
           mode: 'buy-service'
         }
       })
-    },
-    async redeem() {
-      this.redeemInProgress = true
-      const result = await store.redeemCoupon(this.couponCode)
-      if (result === 0) {
-        this.redeemInProgress = false
-        return this.$message.error('兑换失败')
-      }
-      this.$message.success('兑换成功')
-      this.redeemInProgress = false
-      await store.getValidCoupons()
-    },
-    displayCoupon
+    }
   },
   async mounted() {
-    await store.getConditions()
-    await store.getValidCoupons()
-  },
-  watch: {
-    async activeCouponTab(v) {
-      if (v === 'first') {
-        await store.getValidCoupons()
-      } else if (v === 'second') {
-        await store.getCoupons()
-      }
-    }
+    const {data: coupons} = await getCoupons({status: 0, limit: 100})
+    this.coupons = coupons
   }
 }
 </script>
@@ -155,26 +78,13 @@ export default {
     box-shadow: 0 2px 9px 0 rgba(83, 95, 127, .10);
   }
 }
-.topbar {
-  margin-bottom: 20px;
-}
-.redeem {
-  display: flex;
-  margin-bottom: 20px;
-
-  &>.coupon-code-input {
-    width: 200px;
-    margin-right: 10px;
-  }
-}
 
 .coupon-list {
   display: flex;
   flex-wrap: wrap;
 
-  &>.coupon {
+  & > .coupon {
     width: 300px;
-    min-height: 90px;
     margin-right: 20px;
     margin-bottom: 20px;
   }
