@@ -4,9 +4,9 @@
       <h5 class="layout-header">账户概览</h5>
       <ul class="accout">
         <li class="account-item" v-if="isShowSection('fengming')">
-          <p class="title">站外推广余额(元)</p>
+          <p class="title">推广可用余额（元) <span class="sub-title">不含冻结</span></p>
           <p class="num">{{fengmingBalance.price}}</p>
-          <p class="desc">（可消耗 {{fengmingBalance.day}} 天）</p>
+          <p class="desc">（冻结金额 {{fengmingBalance.freezeBalance}} 元）</p>
           <el-button type="primary" class="button" size="small" @click.native="() => handleCharge('bax')">立即充值</el-button>
         </li>
         <li class="account-item" v-if="isShowSection('biaowang')">
@@ -112,6 +112,11 @@ export default {
     }
     & .title {
       font-weight: 600;
+    }
+    & .sub-title {
+      font-size: 10px;
+      color: #666;
+      font-weight: 400
     }
     & .num {
       color: #FF4F49;

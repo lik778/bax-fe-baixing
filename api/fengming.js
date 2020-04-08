@@ -239,6 +239,14 @@ export async function getCurrentBalance() {
   return body.data
 }
 
+export async function getCurrentBalanceBreif() {
+  const body = await fengming
+    .get('/balance/brief')
+    .json()
+
+  return body.data
+}
+
 export async function checkCreativeContent(opts) {
   const body = await fengming
     .post('/creative/validate')
@@ -374,14 +382,15 @@ export async function getHomepageSummary() {
 }
 
 export async function getHomePageFengmingData() {
-  const [ balance, daily, notices ] = await Promise.all([
-    getCurrentBalance(),
+  const [ balanceBrief, daily, notices ] = await Promise.all([
+    getCurrentBalanceBreif(),
     _getDailySummary(),
     getFengmingNotice()
   ])
 
   return {
-    balance,
+    balance: balanceBrief.currentBalance, // tip： 兼容原有逻辑，二期更改
+    freezeBalance: balanceBrief.freezeBalance,
     notices,
     ...daily
   }

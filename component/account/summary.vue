@@ -4,7 +4,7 @@
     <el-row type="flex" justify="space-around" align="center">
       <el-col :span="1"></el-col>
       <el-col :span="4" class="column">
-        <h3>推广资金余额</h3>
+        <h3>推广资金可用余额</h3>
         <p><strong>{{summary.balance / 100}}</strong>元</p>
         <router-link :to="{name: 'qwt-charge', query: {mode: 'charge-only'}}"
           @click.native="onClickCharge">
