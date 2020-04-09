@@ -3,24 +3,24 @@
     <section-header>消耗查询</section-header>
     <content>
       <div>
-        <el-date-picker type="daterange"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          range-separator="-"
-          v-model="daterange" />
+        <el-date-picker type="daterange" start-placeholder="开始日期"
+          end-placeholder="结束日期" range-separator="-" v-model="query.dateRange" />
       </div>
       <main style="width: 720px">
-        <el-table :data="consumeLogs">
-          <el-table-column label="日期" prop="reportDate" />
+        <el-table :data="data">
+          <el-table-column label="日期" prop="createdTime" 
+            :formatter="r => formatDate(r.date)" />
           <el-table-column label="计划" prop="campaignId" />
-          <el-table-column label="类型"
-            :formatter="r => fmtLogType(r.logType)" />
+          <!-- tip: 先写死，百年大计二期上线首页宝和标王之后更改 -->
+          <el-table-column label="类型" :formatter="r => '广告投放'" />
           <el-table-column label="消费金额"
-            :formatter="r => (r.consume / 100).toFixed(2) + '元'" />
+            :formatter="r => (r.cost / 100).toFixed(2) + '元'" />
         </el-table>
-        <bax-pagination :options="consumeQuery"
-          @current-change="onCurrentChange">
-        </bax-pagination>
+        <el-pagination class="pagniation" small layout="prev, pager, next"
+          :total="total" :page-size="query.size"
+          :current-page="pageNo"
+          @current-change="handleCurrentPage">
+        </el-pagination>
       </main>
     </content>
   </div>
@@ -28,68 +28,68 @@
 
 <script>
 import SectionHeader from 'com/common/section-header'
-import BaxPagination from 'com/common/pagination'
-
-import { toHumanTime, toTimestamp } from 'utils'
-import { changeLogType } from 'constant/log'
 import track from 'util/track'
 import dayjs from 'dayjs'
+import * as api from 'api/fengming'
 
-import store from './store'
+const DEFAULT_DATE_RANGE = [
+  dayjs().startOf('day').toDate(),
+  dayjs().endOf('day').toDate()
+]
 
 export default {
   name: 'qwt-account-consume',
   components: {
-    SectionHeader,
-    BaxPagination
-  },
-  fromMobx: {
-    consumeQuery: () => store.consumeQuery,
-    consumeLogs: () => store.consumeLogs
+    SectionHeader
   },
   data() {
     return {
-      daterange: [
-        dayjs().startOf('day').toDate(),
-        dayjs().toDate()
-      ]
+      query: {
+        size: 10,
+        dateRange: DEFAULT_DATE_RANGE,
+      },
+      total: 0,
+      pageNo: 1,
+      data: null
     }
   },
   methods: {
-    async onCurrentChange({offset}) {
-      await store.getConsumeLogs({offset})
-    },
-    async queryLogs(q) {
-      await store.getConsumeLogs(q)
-    },
-    fmtLogType(n) {
-      return changeLogType[String(n)]
-    },
-    toHumanTime
-  },
-  watch: {
-    async daterange(v) {
-      if (!(v && v.length === 2)) {
-        return store.clearConsumeLogs()
+   async fetchData(isResetPageNo) {
+      if (isResetPageNo) this.pageNo = 1
+      const { dateRange, ...otherParams } = this.query
+      let queryParmas = {
+        pageNo: this.pageNo || 1,
+        ...otherParams
       }
-
-      const fromDate = toTimestamp(v[0])
-      const toDate = toTimestamp(v[1])
-      await this.queryLogs({
-        fromDate,
-        toDate
-      })
-
-      track({
-        action: 'account: consume log - change daterange'
-      })
+      if (dateRange) {
+        const startDate = dayjs(dateRange[0]).startOf('day').unix()
+        const endDate = dayjs(dateRange[1]).endOf('day').unix()
+        queryParmas = {
+          startDate,
+          endDate,
+          ...queryParmas
+        }
+      } 
+      const { total, logs } = await api.getChangeLogs(queryParmas)
+      this.data = logs
+      this.total = total
+    },
+    handleCurrentPage(val) {
+      this.pageNo = val
+      this.fetchData()
+    },
+    formatDate(timestamp) {
+      return dayjs(timestamp * 1000).format("YYYY-MM-DD")
     }
   },
-  async mounted() {
-    await this.queryLogs({
-      fromDate: dayjs().startOf('day').unix(),
-      toDate: dayjs().unix()
-    })
+  watch: {
+    query: {
+      deep: true,
+      immediate: true,
+      handler() {
+        this.fetchData(true)
+      }
+    }
   }
 }
 </script>
@@ -100,6 +100,9 @@ export default {
     & > div {
       margin-bottom: 15px;
     }
+  }
+  & .pagniation {
+    margin-top: 10px;
   }
 }
 </style>

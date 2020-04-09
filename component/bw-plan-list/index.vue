@@ -4,7 +4,7 @@
       <header>我的标王推广计划</header>
       <main>
         <router-link :to="{name: 'bw-query-price'}">
-          <el-button class="create-plan" type="primary"><i class="el-icon-plus" ></i>新建标王计划</el-button>
+          <el-button class="create-plan" type="primary" v-if="!allowNotSeeBwNewPrice"><i class="el-icon-plus" ></i>新建标王计划</el-button>
         </router-link>
         <el-form :model="query" label-width="100px" label-position="left" @submit.native.prevent >
           <el-form-item label="关键词">
@@ -30,7 +30,7 @@
           <el-table-column prop="cities" label="城市" :formatter="row => cityFormatter(row.cities)" />
           <el-table-column prop="device" label="平台" :formatter="row => deviceFormatter(row.device)" />
           <el-table-column prop="status" label="投放状态" :formatter="v => statusFormatter(v.status)" />
-          <el-table-column>
+          <el-table-column label="审核状态">
             <template slot="header">
                 审核状态
                 <el-tooltip content="指您最近一次提交内容的审核状态，系统将以最近一次通过审核的版本投放。">
@@ -59,7 +59,7 @@
           <el-table-column label="操作" min-width="160px">
             <template slot-scope="scope">
               <router-link v-if="!isBxSales && !isAgentAccounting" :to="{name: 'bw-edit-plan', query: {promoteId: scope.row.id}}"><el-button type="text" size="small">编辑</el-button></router-link>
-              <el-button v-if="canXufei(scope.row)" size="small" type="text" @click="onXufei(scope.row)">续费</el-button>
+              <el-button class="xufei-btn" v-if="canXufei(scope.row)" size="small" type="text" @click="onXufei(scope.row)">续费</el-button>
               <router-link :to="{name: 'bw-dashboard', query: {promoteId: scope.row.id, keyword: scope.row.word}}">
                 <el-button type="text" size="small">查看报告</el-button>
               </router-link>
@@ -145,6 +145,7 @@
   import flatten from 'lodash.flatten'
   import {fmtCpcRanking} from 'util/campaign'
   import auditRejectReasonDialog from 'com/common/audit-reject-reason-dialog'
+  import { allowNotSeeBwNewPrice } from 'util/role'
 
   const liveDevices = [
     {
@@ -205,6 +206,9 @@
       }
     },
     computed: {
+      allowNotSeeBwNewPrice() {
+        return allowNotSeeBwNewPrice(this.userInfo.roles, this.userInfo.realAgentId)
+      },
       promotesDue() {
         const arr = this.promotes
         .map(p => ({
@@ -309,6 +313,22 @@
         await this.getPromotes()
       },
       async onXufei(row) {
+        // 关闭续费功能, 续费功能上线后关闭
+        const h = this.$createElement
+        this.$msgbox({
+          title: '提示',
+          message: h('p', null, '功能升级中，如需续费，请在关键词到期后重新购买。'),
+          showCancelButton: false,
+          showConfirmButton: false,
+          showClose: false,
+        })
+        const timer = setTimeout(() => {
+          this.$msgbox.close()
+          timer && clearTimeout(timer)
+        }, 3000)
+        return 
+
+        // 续费逻辑
         const {word, cities, device} = row
         if (!this.canXufei(row)) {
           return this.$message.info('到期前15天才可续费哦')
@@ -442,5 +462,9 @@ marquee {
 .audit-reject-review{
   color: #FF6350;
   cursor: pointer;
+}
+.xufei-btn {
+  cursor: not-allowed;
+  color: #999;
 }
 </style>

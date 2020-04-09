@@ -12,7 +12,6 @@ const store = observable({
   _searchRecommends: [],
 
   currentBalance: 0,
-  usableBalance: 0,
   campaignsCount: 0,
 
   get searchRecommends() {
@@ -21,9 +20,6 @@ const store = observable({
   get urlRecommends() {
     return toJS(this._urlRecommends)
   },
-  getUsableBalance: action(async function() {
-    this.usableBalance = await fapi.getUsableBalance()
-  }),
   recommendByUrl: action(async function(url, areas) {
     const words = await fapi.recommendByUrl(url, areas)
     this._urlRecommends = words.map(attachDisplayPrice)

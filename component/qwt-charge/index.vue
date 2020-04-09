@@ -1,281 +1,152 @@
-
 <template>
-  <div class="qwt-charge">
-    <topbar :user-info="userInfo" :back="false">
-    </topbar>
-    <main>
-      <step :mode="mode" :step="currentStep" />
-      <section class="qwt-product">
-        <header>
-          1. 选择产品
-        </header>
-        <div v-if="mode === 'buy-service'"
-          class="package">
-          <header>
-            选择优惠套餐：
-          </header>
-          <main>
-            <qwt-pkg-widget v-for="i of packages" :key="i.id"
-              :name="i.name" :products="i.products"
-              :checked="packageChecked(i.id)"
-              @click="checkPackage(i.id)">
-            </qwt-pkg-widget>
-          </main>
-        </div>
-        <div class="charge">
-          <header>
-            叠加推广资金包：
-          </header>
-          <main>
-            <section>
-              <qwt-pro-widget v-for="i of allProducts.slice(0, 4)" :key="mode + i.id"
-                :price="i.price" :title="i.title" :editable="i.editable"
-                :highlight="mode === 'charge-only'"
-                :checked="chargeProductChecked(i.id)"
-                @click="checkChargeProduct(i.id)"
-                @set-money="setChargeMoney">
-              </qwt-pro-widget>
-            </section>
-            <section>
-              <qwt-pro-widget v-for="i of allProducts.slice(4)" :key="mode + i.id"
-                :price="i.price" :title="i.title" :editable="i.editable"
-                :highlight="mode === 'charge-only'"
-                :checked="chargeProductChecked(i.id)"
-                @click="checkChargeProduct(i.id)"
-                @set-money="setChargeMoney">
-              </qwt-pro-widget>
-            </section>
-          </main>
-        </div>
-      </section>
-
-      <section class="qwt-order">
-        <header>
-          2. 核对订单
-        </header>
-
-        <div class="price-list">
-          <price-list
-            :products="checkedProducts"
-            :has-discount="!!checkedProductDiscounts.length"
-          />
-        </div>
-
-        <div class="coupon" v-if="!allowDiscount">
-          <header>
-            <span>
-              <el-checkbox v-model="couponVisible">使用优惠券</el-checkbox>
-              <i>{{'有' + effectiveCoupons.length + '张可用优惠券'}}</i>
-            </span>
-            <span>{{'-' + (couponAmount / 100).toFixed(2) + '元'}}</span>
-          </header>
-          <div v-if="couponVisible">
-            <el-tabs v-model="activeCouponTab">
-              <el-tab-pane label="可用优惠券" name="first" class="coupon-pane">
-                <coupon
-                  v-for="coupon in effectiveCoupons"
-                  :key="coupon.id"
-                  :coupon="displayCoupon(coupon)"
-                  class="coupon"
-                  @click="onCouponClick(coupon)"
-                  :selected="selectedCoupon.includes(coupon)"/>
-                  <p v-if="effectiveCoupons.length === 0">暂无可用优惠券</p>
-              </el-tab-pane>
-              <el-tab-pane label="优惠码兑换" name="second" class="coupon-code-pane">
-                <el-input class="coupon-code-input" style="width: 200px"
-                  v-model.trim="couponCode" placeholder="输入优惠码" />
-                <el-button type="primary" style="margin-left: 16px;"
-                  @click="redeem">确认</el-button>
-              </el-tab-pane>
-            </el-tabs>
-          </div>
-        </div>
-
-        <div class="info">
-          <section class="price-summary">
-            <div>
-              <aside>百姓网余额需支付：</aside>
-              <i>{{(finalPrice / 100).toFixed(2) + '元'}}</i>
-            </div>
-          </section>
-          <section class="sales-code">
-            <aside>服务编号：</aside>
-            <span v-if="salesIdLocked || isBxSales">
-              {{ displayBxSalesId || userInfo.salesId }}
-            </span>
-            <span v-else>
-              <el-input
-                placeholder="如有服务编号请您填写"
-                v-model.trim="inputSalesId"
-              />
-              <i
-                class="el-icon-check"
-                title="检测服务编号"
-                @click="checkInputSalesId"
-              />
-            </span>
-          </section>
-          <section
-            v-if="displayUserMobile"
-            class="user-mobile"
-          >
-            <aside>用户手机号：</aside>
-            <span>
-              {{ displayUserMobile }}
-            </span>
-          </section>
-          <contract-ack type="contract" />
-          <promotion-area-limit-tip :all-areas="allAreas" page="charge" />
-          <section class="pay-info">
-            <button
-              v-if="!isAgentSales"
-              class="pay-order"
-              :loading="payInProgress"
-              @click="createOrder"
-            >
-              {{ submitButtonText }}
-            </button>
-            <span v-if="orderPayUrl">
-              <label :title="orderPayUrl">
-                {{ '付款链接: ' + orderPayUrl }}
-              </label>
-              <Clipboard :content="orderPayUrl"></Clipboard>
-            </span>
-          </section>
-        </div>
-
-        <footer>
-          <li>推广资金使用规则：</li>
-          <li>1. 该产品购买后，精品官网及推广资金不可退款，如有疑问请致电客服400-036-3650；</li>
-          <li>2. 该精品官网及推广资金自购买之日起有效期为365天，请在有效期内使用；</li>
-          <li>3. 详细推广记录请在【搜索通】-【数据报表】查看。</li>
-        </footer>
-      </section>
-    </main>
-
-    <el-dialog title="提示"
-      :visible.sync="payDialogVisible">
-      <h3 class="hint-text">订单支付成功，资金已到账！</h3>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="$router.push({name: 'account'})">
-          查看账户
-        </el-button>
-        <el-button type="primary" @click="$router.push({name: 'qwt-create-promotion'})">
-          创建投放计划
-        </el-button>
+  <div class="charge-container" v-loading.fullscreen.lock="fetchLoading">
+    <section class="shadow">
+      <step :step="0" />
+    </section>
+    <section class="product shadow panel">
+      <header>
+        1. 选择产品 | <span class="discount-btn">优惠细则</span>
+      </header>
+      <div class="discount-section" v-show="showDiscount">
+        <p class="discount-info">充值更多，可享更多优惠！</p>
+        <p class="discount-info" :key="index"
+          v-for="(html, index) in discountInfoHTML" v-html="html" />
       </div>
-    </el-dialog>
+
+      <div class="charge-section">
+        <template v-if="chargeSpu">
+          <header>选择{{chargeSpu.title}}：</header>
+          <main>
+            <section>
+              <price-tag v-for="(product, index) in chargeSpu.selection"
+                :key="index"
+                :editable="Number(product.maxQuantity) !== Number(product.minQuantity)"
+                :price="product.price" :min-input-price="product.minQuantity"
+                :max-input-price="product.maxQuantity"
+                :checked="checkedProducts.includes(product)"
+                @click="toggleCharge(product)"
+                @change="v => handlePriceChange(product, v)">
+              </price-tag>
+            </section>
+          </main>
+        </template>
+
+        <template v-if="siteSpu">
+          <header>选择{{siteSpu.title}}：
+            <span class="tip">具体官网搭售折扣及实付金额，请点击“确认购买”后前往订单确认页面查看</span>
+          </header>
+          <main>
+            <section>
+              <gw-pro-widget v-for="(product, index) of siteSpu.selection"
+                :key="index" :title="product.title" :desc="product.desc"
+                :is-hot="product.tags.includes('hot')"
+                :price="centToYuan(product.realPrice)"
+                :checked="checkedProducts.includes(product)"
+                @click.native="toggleSite(product)" />
+            </section>
+          </main>
+        </template>
+      </div>
+    </section>
+
+    <section class="order shadow panel">
+      <div class="info">
+        <section class="sales-code" v-if="salesIdLocked || isBxSales">
+          <aside>服务编号：</aside>
+          <span>
+            {{ displayBxSalesId || userInfo.salesId }}
+          </span>
+        </section>
+        <section v-if="displayUserMobile" class="user-mobile">
+          <aside>用户手机号：</aside>
+          <span>
+            {{ displayUserMobile }}
+          </span>
+        </section>
+        <section class="agreement">
+          <div v-for="agreement in agreementList" :key="agreement.id">
+            <contract :isAgreement="agreement.checked" :href="agreement.link"
+              @click="() => agreement.checked = !agreement.checked"
+              :title="agreement.title" />
+          </div>
+        </section>
+        <promotion-area-limit-tip :all-areas="allAreas" page="charge" />
+        <section class="pay-info">
+          <button v-if="!isAgentSales" class="pay-order"
+            :loading="payInProgress" @click="createPreOrder">
+            {{ submitButtonText }}
+          </button>
+          <span v-if="orderPayUrl">
+            <label :title="orderPayUrl">
+              {{ '付款链接: ' + orderPayUrl }}
+            </label>
+            <Clipboard :content="orderPayUrl"></Clipboard>
+          </span>
+        </section>
+      </div>
+
+      <footer>
+        <li>推广资金使用规则：</li>
+        <li>1. 该产品购买后，精品官网及推广资金不可退款，如有疑问请致电客服400-036-3650；</li>
+        <li>2. 该精品官网及推广资金自购买之日起有效期为1年，请在有效期内使用；</li>
+        <li>3. 详细推广记录请在【搜索通】-【数据报表】查看。</li>
+      </footer>
+    </section>
   </div>
 </template>
 
 <script>
-import PromotionAreaLimitTip from 'com/widget/promotion-area-limit-tip'
-import ContractAck from 'com/widget/contract-ack'
-import QwtPkgWidget from 'com/widget/qwt-pkg'
-import QwtProWidget from 'com/widget/qwt-pro'
-import Clipboard from 'com/widget/clipboard'
-import FlatBtn from 'com/common/flat-btn'
-import Coupon from 'com/common/coupon'
-import PriceList from './price-list'
-import Topbar from 'com/topbar'
-
-import { Message } from 'element-ui'
-import uuid from 'uuid/v4'
-
 import Step from './step'
+import PriceTag from 'com/charge/price-tag'
+import GwProWidget from 'com/charge/gw-pro'
+import Contract from 'com/charge/contract'
+import PromotionAreaLimitTip from 'com/widget/promotion-area-limit-tip'
+import Clipboard from 'com/widget/clipboard'
 
 import { centToYuan } from 'utils'
-
-import store from './store'
-
+import { normalizeRoles } from 'util/role'
+import { allowGetOrderPayUrl } from 'util'
+import { orderServiceHost } from 'config'
 import track from 'util/track'
+import uuid from 'uuid/v4'
+import { queryUserInfo, getUserInfo } from 'api/account'
+import { createOrder, getProductsByMchCode } from 'api/fengming'
+import { SPUCODES, MERCHANTS } from 'constant/product'
+import { getUniqueAgreementList } from 'util/charge'
 
-import { displayCoupon } from 'util/meta'
-
-import {
-  allowGetOrderPayUrl,
-  allowPayOrder
-} from 'util'
-
-import {
-  usingCondition
-} from 'constant/coupon'
-
-import {
-  normalizeRoles
-} from 'util/role'
-
-import {
-  createOrder
-} from 'api/fengming'
-
-import {
-  getUserIdFromBxSalesId,
-  queryUserInfo,
-  getUserInfo
-} from 'api/account'
-
-import {
-  getOrderPayUrl,
-  payOrders
-} from 'api/order'
-
-import {
-  redeemCoupon
-} from 'api/meta'
-
-/**
- * 关于推广资金的产品说明:
- *   1. 推广资金的产品只有 1 个, 客户自由定价
- *   2. 前端展示多个产品
- */
-
-const allProducts = [
-  {
-    id: 1,
-    price: 288
-  }, {
-    id: 2,
-    price: 588
-  }, {
-    id: 3,
-    price: 1088
-  }, {
-    id: 4,
-    price: 3088
-  }, {
-    id: 5,
-    title: '购买其他金额',
-    editable: true
-  }, {
-    id: 0,
-    title: '下次再充值'
-  }
+const { WHOLE_SPU_CODE, GUAN_WANG_SPU_CODE } = SPUCODES
+const { FENG_MING_MERCHANT_CODE } = MERCHANTS
+const MIN_INPUT_PRICE = 50000
+const discountInfo = [
+  [588, 200, 600, 600],
+  [1088, 200, 600, 600],
+  [3088, 200, 600, 600],
+  [5088, 600, 1200, 900],
+  [10188, 1000, 1400, 1500]
 ]
+const discountInfoHTML = discountInfo.map((item, index) => {
+  return `满<span style="min-width:40px">${item[0]}</span>元：
+          同时购买精品官网（1年）官网<span class="red">减</span>立减 ${item[1]} 元；
+          购买精品官网2年【送一年】官网<span class="red">减</span>立减 ${item[2]} 元；
+          购买精品官网专业版1年（支持首页宝推广）官网<span class="red">减</span> ${item[3]}元；</p>`
+})
+const isGwProduct = function(spuCode) {
+  return spuCode === GUAN_WANG_SPU_CODE
+}
+
+const isChargeProduct = function(spuCode) {
+  return spuCode === WHOLE_SPU_CODE
+}
+
 
 export default {
-  name: 'qwt-charge',
-  components: {
-    PromotionAreaLimitTip,
-    QwtPkgWidget,
-    QwtProWidget,
-    ContractAck,
-    Clipboard,
-    PriceList,
-    FlatBtn,
-    Topbar,
-    Coupon,
-    Step
-  },
-  fromMobx: {
-    usingConditions: () => store.usingConditions,
-    allDiscounts: () => store.allDiscounts,
-    packages: () => store.packages,
-    products: () => store.products,
-    coupons: () => store.coupons
-  },
+  name: 'charge-container',
   props: {
     userInfo: {
+      type: Object,
+      required: true
+    },
+    salesInfo: {
       type: Object,
       required: true
     },
@@ -284,78 +155,26 @@ export default {
       required: true
     }
   },
-  data() {
+  data () {
     return {
+      fetchLoading: true,
+      showDiscount: true,
       actionTrackId: uuid(),
-      currentStep: 2,
-      allProducts,
+      discountInfoHTML,
+      siteSpu: null,
+      chargeSpu: null,
+      checkedProducts: [],
 
       salesIdLocked: false,
-      displayUserMobile: '',
       displayBxSalesId: '',
-      inputSalesId: '',
-
+      displayUserMobile: '',
       orderPayUrl: '',
-      checkedPackageId: 0,
-      checkedChargeProductId: 0, // 注: 此 id 仅用于前端标记
-      chargeMoney: 0,
 
-      couponVisible: false,
-      activeCouponTab: 'first',
-      selectedCoupon: [],
-      // 支持以后使用多种优惠券
-      couponCode: '',
       payInProgress: false,
-      payDialogVisible: false
+      agreementList:[]
     }
   },
   computed: {
-    productSummary() {
-      var a = this.checkedProducts.reduce((s, p) => {
-        if (s[p.id] === undefined) {
-          s[p.id] = 0
-        }
-        s[p.id] += p.discountPrice
-        return s
-      }, {})
-      return a
-    },
-    effectiveCoupons() {
-      // 返回符合当前购买产品等条件的可用券
-      return this.coupons.filter(coupon => {
-        let products = this.checkedProducts
-        for (const condition of coupon.usingConditions) {
-          if (condition.type === usingCondition.PRODUCT_PACKAGES) {
-            products = products.filter(p => condition.productPackages.includes(p.pkgId))
-          } else if (condition.type === usingCondition.PRODUCTS) {
-            products = products.filter(p => condition.products.includes(p.id))
-          }
-        }
-        if (products.length === 0) {
-          return false
-        }
-        for (const condition of coupon.usingConditions) {
-          if (condition.type === usingCondition.ORDER_SUM_ORIGINAL_PRICE) {
-            const sum = products.reduce((s, p) => {
-              s += p.discountPrice
-              return s
-            }, 0)
-            return sum >= condition.orderSumOriginalPrice
-          }
-        }
-        return true
-      })
-    },
-    finalPrice() {
-      if (this.totalPrice >= this.couponAmount) {
-        return this.totalPrice - this.couponAmount
-      } else {
-        return 0
-      }
-    },
-    couponAmount() {
-      return this.selectedCoupon.reduce((a, b) => a + b.amount, 0)
-    },
     isAgentSales() {
       const roles = normalizeRoles(this.userInfo.roles)
       return roles.includes('AGENT_SALES')
@@ -368,413 +187,100 @@ export default {
       const roles = normalizeRoles(this.userInfo.roles)
       return roles.includes('BAIXING_SALES')
     },
-    allowDiscount() {
+    isAgentAccounting() {
       const roles = normalizeRoles(this.userInfo.roles)
       return roles.includes('AGENT_ACCOUNTING')
-    },
-    checkedProductDiscounts() {
-      if (!this.allowDiscount) {
-        return []
-      }
-
-      const types = this.checkedProducts.map(p => p.type)
-
-      return this.allDiscounts
-        .filter(d => types.includes(d.productType))
-    },
-    checkedProductDesc() {
-      const { checkedPackageId } = this
-
-      const p = this.packages.find(p => p.id === checkedPackageId)
-      const name = (p && p.name) || ''
-
-      let h1 = '0'
-      let h2 = '0'
-      let h3 = '0'
-
-      this.checkedProducts.forEach(p => {
-        if (p.name === '精品官网') {
-          h1 = p.amount
-          return
-        }
-
-        if (p.isPkg) {
-          h2 = centToYuan(p.discountPrice)
-          return
-        }
-
-        h3 = centToYuan(p.discountPrice)
-      })
-
-      return this.mode === 'charge-only' ? `推广资金：${h3}元`
-        : `${name}（精品官网：${h1}天，推广资金：${h2}元），推广资金包：${h3}元`
-    },
-    checkedProducts() {
-      const {
-        checkedChargeProductId,
-        checkedPackageId,
-        chargeMoney,
-        productType,
-        productId
-      } = this
-
-      const pkg = this.packages
-        .filter(p => p.id === checkedPackageId)
-        .pop()
-
-      let products = []
-
-      if (pkg) {
-        products = pkg.products.map(p => {
-          return {
-            discountPrice: this.getDiscountPrice(p.productType, p.price),
-            originalPrice: p.selfPriceAdjust ? p.price : p.showPrice,
-            type: p.productType,
-            amount: p.amount,
-            price: p.price,
-            name: p.name,
-            isPkg: true,
-            pkgId: checkedPackageId,
-            id: p.id
-          }
-        })
-      }
-
-      if (checkedChargeProductId && chargeMoney) {
-        products.push({
-          discountPrice: this.getDiscountPrice(productType, chargeMoney),
-          originalPrice: chargeMoney,
-          price: chargeMoney,
-          type: productType,
-          name: '推广资金包',
-          id: productId
-        })
-      }
-
-      return products
     },
     submitButtonText() {
       const { userInfo } = this
       if (this.isBxUser) {
         return '确认购买'
       }
-
       if (allowGetOrderPayUrl(userInfo.roles)) {
         return '生成链接'
       }
-
       return '确认购买'
     },
-    totalPrice() {
-      const p = this.checkedProducts.map(i => i.discountPrice)
-
-      return p.reduce((a, b) => a + b, 0)
-    },
-    productType() {
-      // TODO 目前: products.length === 1
-      return this.products.map(p => p.productType).pop()
-    },
-    productId() {
-      // TODO 目前: products.length === 1
-      return this.products.map(p => p.id).pop()
-    },
-    mode() {
-      // mode: charge-only, buy-service
-      return this.$route.query.mode || 'buy-service'
-    }
-  },
-  methods: {
-    displayCoupon,
-    onCouponClick(coupon) {
-      if (this.selectedCoupon.length) {
-        this.selectedCoupon.splice(0, 1)
-      }
-      this.selectedCoupon.splice(0, 0, coupon)
-    },
-    async redeem() {
-      if (!this.couponCode) {
-        return
-      }
-      const result = await redeemCoupon(this.couponCode)
-      if (result === 0) {
-        this.$message.error('兑换失败')
-        return
-      }
-      this.$message.success('兑换成功')
-      await store.getCoupons({ onlyValid: true, status: 0 })
-    },
-    empty() {
-      this.orderPayUrl = ''
-      this.checkedPackageId = 0
-      this.checkedChargeProductId = 0
-      this.chargeMoney = 0
-    },
-    async init() {
-      this.empty()
-
-      await Promise.all([
-        store.getProductDiscounts([1, 2, 3, 4]),
-        store.getProductPackages(0),
-        store.getProducts(3)
-      ])
-
-      setTimeout(() => {
-        const { mode } = this
-        const pkg = this.packages[0]
-        const pro = this.allProducts[0]
-
-        if (mode === 'buy-service') {
-          this.checkPackage(pkg.id)
-          this.checkChargeProduct(pro.id)
-          this.setChargeMoney(pro.price)
-        } else if (mode === 'charge-only') {
-          this.checkChargeProduct(pro.id)
-          this.setChargeMoney(pro.price)
+    checkedSkuList() {
+      return this.checkedProducts.map(sku => {
+        return {
+          id: sku.skuVendorId,
+          quantity: sku.quantity
         }
-      }, 100)
-    },
-    packageChecked(id) {
-      return this.checkedPackageId === id
-    },
-    checkPackage(id) {
-      this.checkedPackageId = id
-    },
-    chargeProductChecked(id) {
-      return this.checkedChargeProductId === id
-    },
-    checkChargeProduct(id) {
-      this.checkedChargeProductId = id
-    },
-    setChargeMoney(v) {
-      this.chargeMoney = (v * 100) | 0
-    },
-    getDiscountPrice(productType, price) {
-      if (!this.allowDiscount) {
-        return price
-      }
-
-      const discounts = this.allDiscounts
-        .filter(d => d.productType === productType)
-
-      let p = price
-
-      for (const d of discounts) {
-        p = p - ((p * d.percentage / 100) | 0)
-      }
-
-      return p | 0
-    },
-    async payOrders(oids) {
-      const {
-        userInfo
-      } = this
-
-      if (!allowPayOrder(userInfo.roles)) {
-        return
-      }
-
-      await payOrders(oids)
-    },
-    async getOrderPayUrl(oids, summary) {
-      const {
-        userInfo
-      } = this
-
-      if (!allowGetOrderPayUrl(userInfo.roles)) {
-        return
-      }
-
-      const url = await getOrderPayUrl(oids, summary)
-
-      this.orderPayUrl = url
-
-      if (this.isBxUser) {
-        setTimeout(() => {
-          location.href = url
-        }, 800)
-      }
-    },
-    async checkInputSalesId() {
-      const { inputSalesId } = this
-      if (!inputSalesId) {
-        return Message.error('请填写销售编号')
-      }
-
-      await getUserIdFromBxSalesId(inputSalesId)
-
-      Message.success('销售编号可用')
-    },
-    async getFinalSalesId() {
-      const { sales_id: salesId } = this.$route.query
-      if (salesId) {
-        return salesId
-      }
-
-      const {
-        inputSalesId,
-        userInfo
-      } = this
-
-      if (inputSalesId) {
-        const id = await getUserIdFromBxSalesId(inputSalesId)
-        return id
-      }
-
-      if (this.isBxUser) {
-        return
-      }
-
-      return userInfo.id
-    },
-    async getFinalUserId() {
-      const { user_id: userId } = this.$route.query
-      if (userId) {
-        return userId
-      }
-
-      const { userInfo } = this
-      return userInfo.id
-    },
-    async createOrder() {
-      const {
-        checkedChargeProductId,
-        checkedPackageId,
-        actionTrackId,
-        chargeMoney,
-        productId,
-        userInfo
-      } = this
-
-      const newOrder = {
-        userId: await this.getFinalUserId()
-      }
-
-      const sid = await this.getFinalSalesId()
-      if (sid) {
-        newOrder.salesId = sid
-      }
-
-      if (this.mode === 'buy-service' && !checkedPackageId) {
-        return Message.error('必须选择一个搜索通套餐包')
-      }
-
-      if (!checkedChargeProductId && !checkedPackageId) {
-        return Message.error('请选择购买的产品 ~')
-      }
-
-      if (checkedChargeProductId && chargeMoney) {
-        newOrder.products = [{
-          price: chargeMoney,
-          id: productId
-        }]
-      }
-
-      if (checkedPackageId) {
-        newOrder.packages = [{
-          id: checkedPackageId
-        }]
-      }
-
-      const codes = this.checkedProductDiscounts.map(d => d.code)
-      if (codes.length) {
-        newOrder.discountCodes = [...codes]
-      }
-
-      // 添加优惠券
-      if (this.selectedCoupon.length) {
-        newOrder.couponIds = this.selectedCoupon.map(c => c.id)
-      }
-
-      if (!this.isBxUser) {
-        try {
-          await this.$confirm('是否购买 ?', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消'
-          })
-        } catch (err) {
-          return
-        }
-      }
-
-      track({
-        roles: userInfo.roles.map(r => r.name).join(','),
-        action: 'click-button: charge',
-        baixingId: userInfo.baixingId,
-        time: Date.now() / 1000 | 0,
-        baxId: userInfo.id,
-        actionTrackId
       })
-
-      this.currentStep = 3
-
-      this.payInProgress = true
-
-      try {
-        const oids = await createOrder(newOrder)
-
-        track({
-          roles: userInfo.roles.map(r => r.name).join(','),
-          action: 'create order success',
-          baixingId: userInfo.baixingId,
-          time: Date.now() / 1000 | 0,
-          oids: oids.join(','),
-          baxId: userInfo.id,
-          actionTrackId
-        })
-
-        if (this.finalPrice !== 0) {
-          const summary = this.checkedProductDesc
-
-          await this.getOrderPayUrl(oids, summary)
-
-          await this.payOrders(oids)
-        } else {
-          this.orderPayUrl = '0元订单无需支付'
-          this.payDialogVisible = true
-        }
-        Message.success('创建订单成功')
-      } catch (e) {
-        console.error(e)
-      }
-      this.payInProgress = false
-      this.couponVisible = false
     },
-    centToYuan
-  },
-  watch: {
-    async couponVisible(v) {
-      if (v) {
-        // 必须先拿到 condition
-        await store.getConditions()
-        await store.getCoupons({ onlyValid: true, status: 0 })
-      } else {
-        this.selectedCoupon = []
-      }
-    },
-    async mode() {
-      this.init()
+    hasUnCheckedAgreement() {
+     return this.agreementList.length ? this.agreementList.some(agreement => !agreement.checked) : true
     }
+  },
+  components: {
+    Step,
+    PriceTag,
+    GwProWidget,
+    Contract,
+    PromotionAreaLimitTip,
+    Clipboard
   },
   async mounted() {
-    const {
+    const { 
       sales_id: salesId,
-      user_id: userId
+      user_id: userId,
+      select_gw: selectGw
     } = this.$route.query
 
-    await this.init()
+    this.fetchLoading = true
+    try {
+      let products = await getProductsByMchCode(FENG_MING_MERCHANT_CODE)
+      products.forEach(spu => 
+        spu.selection.forEach(sku => {
+          sku.quantity = sku.minQuantity === sku.maxQuantity ? sku.minQuantity: 0
+          sku.price = sku.minQuantity === sku.maxQuantity ?  Math.floor(sku.minQuantity * sku.realPrice): 0,
+          sku.spuCode = spu.spuCode
+        })
+      )
+      this.siteSpu = products.find(p => isGwProduct(p.spuCode))
+      this.chargeSpu = products.find(p => isChargeProduct(p.spuCode))
+
+      this.agreementList = getUniqueAgreementList(products)
+    } catch (e) {
+      console.error(e)
+    } finally {
+      this.fetchLoading = false
+    }
 
     setTimeout(() => {
       const { userInfo, actionTrackId } = this
-
       track({
         roles: userInfo.roles.map(r => r.name).join(','),
         baixingId: userInfo.baixingId,
         action: 'enter-page: charge',
-        time: Date.now() / 1000 | 0,
         baxId: userInfo.id,
         actionTrackId
       })
     }, 1200)
+
+    let clickSent = false
+    document.addEventListener('click', evt => {
+      if (!clickSent) {
+        const { userInfo, actionTrackId } = this
+        track({
+          roles: userInfo.roles.map(r => r.name).join(','),
+          action: 'clicked: charge',
+          baixingId: userInfo.baixingId,
+          baxId: userInfo.id,
+          actionTrackId
+        })
+        clickSent = true
+      }
+    })
+
+    if (selectGw === 'true' || Number(selectGw) === 1) {
+      const initSiteSku = this.siteSpu.selection.find(sku => sku.tags.includes('hot'))
+      if (initSiteSku) this.checkedProducts.push(initSiteSku)
+    } else {
+      const initChargeSku = this.chargeSpu.selection.find(sku => sku.tags.includes('selected'))
+      if (initChargeSku) this.checkedProducts.push(initChargeSku)
+    }
 
     if (salesId) {
       const userInfo = await getUserInfo(salesId)
@@ -788,128 +294,208 @@ export default {
         this.displayUserMobile = info.mobile
       }
     }
+  },
+  methods: {
+    centToYuan,
+    handlePriceChange(product, v) {
+      product.price = v
+      product.quantity = Math.floor(v / product.realPrice)
+    },
+    toggleProduct(product, judgeProduct) {
+      const index = this.checkedProducts.findIndex(p => p.skuVendorId === product.skuVendorId)
+      if (index > -1) {
+        this.checkedProducts.splice(index, 1)
+      } else {
+        const cIdx = this.checkedProducts.findIndex(p => judgeProduct(p.spuCode))
+        if (cIdx > -1) {
+          this.checkedProducts.splice(cIdx, 1)
+        }
+        this.checkedProducts.push(product)
+      }
+    },
+    toggleCharge(product) {
+      this.toggleProduct(product, isChargeProduct)
+    },
+    toggleSite(product) {
+      this.toggleProduct(product, isGwProduct)
+    },
+    async createPreOrder() {
+      if (this.hasUnCheckedAgreement) {
+        return this.$message.error('请阅读并勾选同意服务协议，再进行下一步操作')
+      }
+      if (this.checkedProducts.length <= 0) {
+        return this.$message.error('请选择购买的产品 ~')
+      }
+      const chargeProduct = this.checkedProducts.find(p => isChargeProduct(p.spuCode))
+      if (chargeProduct) {
+        const { quantity, minQuantity, maxQuantity } = chargeProduct
+        if (quantity < minQuantity) {
+          return this.$message.error(`最低充值金额：${minQuantity}`)
+        }
+        if (quantity > maxQuantity) {
+          return this.$message.error(`最高充值金额：${maxQuantity}`)
+        }
+      }
+      
+      const orderParams = {
+        merchant: FENG_MING_MERCHANT_CODE,
+        userId: await this.getFinalUserId(),
+        skuList: this.checkedSkuList
+      }
+      const sid = await this.getFinalSalesId()
+      if (sid) {
+        orderParams.salesId = sid
+      }
+
+      if (!this.isBxUser) {
+        try {
+          await this.$confirm('是否购买 ?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消'
+          })
+        } catch (err) {
+          return
+        }
+      }
+
+      const { actionTrackId, userInfo } = this
+      track({
+        roles: userInfo.roles.map(r => r.name).join(','),
+        action: 'click-button: charge',
+        baixingId: userInfo.baixingId,
+        time: Date.now() / 1000 | 0,
+        baxId: userInfo.id,
+        actionTrackId
+      })
+
+      this.payInProgress = true
+
+      try {
+        const preTradeId = await createOrder(orderParams)
+        track({
+          roles: userInfo.roles.map(r => r.name).join(','),
+          action: 'create order success',
+          baixingId: userInfo.baixingId,
+          time: Date.now() / 1000 | 0,
+          oids: preTradeId,
+          baxId: userInfo.id,
+          actionTrackId
+        })
+
+        if (this.isBxUser) {
+          location.href = `${orderServiceHost}/?appId=105&seq=${preTradeId}`
+        } else if (this.isAgentAccounting) {
+          location.href = `${orderServiceHost}/?appId=105&seq=${preTradeId}&agentId=${userInfo.id}`
+        } else if (this.isBxSales) {
+          this.orderPayUrl = `${orderServiceHost}/?appId=105&seq=${preTradeId}`
+        }
+
+      } catch (e) {
+        console.error(e)
+      } finally {
+        this.payInProgress = false
+      }
+    },
+    async getFinalSalesId() {
+      const { sales_id: salesId } = this.$route.query
+      if (salesId) {
+        return salesId
+      }
+      const { userInfo} = this
+
+      if (this.isBxUser) {
+        return
+      }
+      return userInfo.id
+    },
+    async getFinalUserId() {
+      const { user_id: userId } = this.$route.query
+      const { userInfo, salesInfo } = this
+      if (userId) {
+        return userId
+      }
+      // 进入bax时带有销售身份信息，用户信息直接在salesInfo获取
+      if (salesInfo.userId) {
+        return salesInfo.userId
+      }
+      return userInfo.id
+    }
   }
 }
 </script>
 
 <style lang="postcss" scoped>
-@import "../../cssbase/var";
-@import "cssbase/mixin";
+@import '../../cssbase/var';
+@import 'cssbase/mixin';
 
-.qwt-charge {
-  width: 100%;
-
-  & > main {
-    width: 100%;
-    padding: 10px 10px 30px 10px;
-    background: var(--qwt-c-gray);
+.charge-container {
+  & > .shadow {
+    box-shadow: 0px 2px 9px 0px rgba(83, 95, 127, 0.1);
+  }
+  & > .panel {
+    margin-top: 10px;
+    padding: 20px 0 10px 20px;
+    border-radius: 4px;
+    background: #fff;
   }
 }
-
-.qwt-product, .qwt-order {
-  margin-top: 10px;
-  padding: 20px 0 10px 20px;
-  border-radius: 4px;
-  background: white;
-}
-
-.qwt-product {
+.product {
   & > header {
     font-weight: 600;
     font-size: 14px;
     color: #333333;
+    & .discount-btn {
+      color: #ff3c3c;
+      cursor: pointer;
+      & > i {
+        margin-left: 5px;
+        font-size: 16px;
+      }
+    }
   }
-
-  & .package, & .charge {
+  & > .discount-section {
+    font-size: 12px;
+    background-color: #f5f5f5;
+    padding: 20px;
+    margin-top: 10px;
+  }
+  & > .charge-section {
+    margin-top: 10px;
     & > header {
       font-size: 14px;
       line-height: 1.5;
       color: #666666;
+      & .tip {
+        color: #ff7533;
+        font-size: 12px;
+      }
     }
-
     & > main {
       display: flex;
       flex-wrap: wrap;
-      margin-top: 20px;
-    }
-  }
-
-  & .package {
-    margin-top: 20px;
-  }
-
-  & .charge {
-    margin-top: 30px;
-
-    & > main {
+      margin: 20px 0;
       flex-flow: column;
-
       & > section {
         display: flex;
       }
     }
   }
 }
-
-.qwt-order {
-  & > header {
-    font-size: 14px;
-    font-weight: 600;
-    line-height: 1.5;
-    color: #333333;
-  }
-
-  & > .price-list {
-    margin-top: 20px;
-  }
-
-  & > .coupon {
-    margin-top: 20px;
-    width: 610px;
-    padding: 15px 10px 20px;
-    border: solid 1px #e6e6e6;
-
-    & > header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 30px 0 20px;
-
-      & > span:first-child {
-        & > i {
-          font-size: 12px;
-          color: #666666;
-        }
-      }
-
-      & > span:last-child {
-        color: #333333;
-      }
-    }
-
-    & .coupon {
-      width: 310px;
-    }
-  }
-
+.order {
   & > .info {
     display: flex;
     flex-flow: column;
     align-items: flex-end;
     justify-content: center;
-    margin-top: 30px;
-    width: 610px;
-    padding-right: 35px;
+    width: 820px;
     padding-bottom: 34px;
     border-bottom: solid 1px #e6e6e6;
-
     & > .price-summary {
       & > div:first-child {
         & > aside {
           font-size: 14px;
           color: #666666;
         }
-
         & > i {
           font-size: 22px;
           font-weight: 500;
@@ -917,21 +503,17 @@ export default {
         }
       }
     }
-
     & > .sales-code {
       display: flex;
       align-items: center;
       margin-top: 20px;
-
       & > aside {
         font-size: 14px;
         color: #666666;
       }
-
       & > span {
         display: flex;
         align-items: center;
-
         & > i {
           margin-left: 5px;
           font-size: 14px;
@@ -939,7 +521,6 @@ export default {
         }
       }
     }
-
     & > .pay-info {
       & > .pay-order {
         @mixin center;
@@ -953,28 +534,24 @@ export default {
         font-weight: 600;
         line-height: 1.29;
       }
-
       & > span {
         display: flex;
         align-items: center;
         margin-top: 10px;
         font-size: 14px;
         color: #333333;
-
         & > label {
           @mixin wordline;
           width: 320px;
         }
       }
     }
-
     & > .user-mobile {
       margin: 20px 0 0;
       font-size: 14px;
       color: #333333;
     }
   }
-
   & > footer {
     margin-top: 20px;
     font-size: 12px;
@@ -982,28 +559,25 @@ export default {
     color: #999999;
   }
 }
+</style>
 
-.qwt-pkg-widget {
-  margin-right: 30px;
-}
-
-.qwt-pro-widget {
-  margin: 0 30px 20px 0;
-}
-
-.tip {
-  margin-bottom: 10px;
-  margin-left: 5px;
+<style lang="postcss">
+.discount-info {
   font-size: 12px;
-  color: var(--c-tip-gray);
-}
+  margin-bottom: 10px;
+  & > span {
+    text-align: center;
+  }
 
-.hint-text {
-  text-align: center;
-  font-size: 1.5em;
-}
-
-.dialog-footer {
-  text-align: center;
+  & > span.red {
+    background-color: #ff3c3c;
+    color: white;
+    padding: 1px 4px;
+    margin: 0 5px;
+    border-radius: 2px;
+  }
+  & > .mute {
+    color: #fff;
+  }
 }
 </style>

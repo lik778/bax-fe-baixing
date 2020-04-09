@@ -136,7 +136,7 @@
           <p class="tip">（根据您选取的关键词，建议最低预算为<strong class="red">{{ f2y(predictedInfo.minDailyBudget) }} </strong>元）</p>
         </div>
         <p class="tip">
-          扣除其余有效计划日预算后，您的推广资金可用余额为￥{{f2y(usableBalance)}}元，可消耗<strong class="red strong">{{predictedInfo.days}}</strong>天
+          扣除其余有效计划日预算后，您的推广资金可用余额为￥{{f2y(currentBalance)}}元，可消耗<strong class="red strong">{{predictedInfo.days}}</strong>天
         </p>
         <contract-ack type="content-rule" ref="contract"/>
         <div>
@@ -282,7 +282,6 @@ export default {
 
     currentBalance: () => store.currentBalance,
     campaignsCount: () => store.campaignsCount,
-    usableBalance: () => store.usableBalance
   },
   props: {
     userInfo: {
@@ -343,7 +342,7 @@ export default {
           days: 0
         }
       }
-      const { usableBalance, newPromotion } = this
+      const { currentBalance, newPromotion } = this
 
       let prices = []
       if (this.kwPrice) {
@@ -352,7 +351,7 @@ export default {
         prices = newPromotion.keywords.map(kw => this.recommendKwPrice)
       }
 
-      const tempPredictedInfo = getCampaignPrediction(usableBalance, dailyBudget, prices)
+      const tempPredictedInfo = getCampaignPrediction(currentBalance, dailyBudget, prices)
       const sourcesLen = Math.max(1, this.newPromotion.sources.length)
       return {
         ...tempPredictedInfo,
@@ -579,6 +578,11 @@ export default {
         return Message.error('请选择投放区域')
       }
 
+      const disabledArea = p.areas.find(area => !isQwtEnableCity(area, allAreas))
+      if (disabledArea) {
+        return Message.error(`计划包含无法投放的区域：${disabledArea.nameCn}`)
+      }
+
       if (this.kwPrice) {
         if (this.kwPrice < 200 || this.kwPrice > 99900) {
           return Message.error('关键词价格需在[2, 999]区间内')
@@ -709,8 +713,7 @@ export default {
   async mounted() {
     await Promise.all([
       store.getCurrentBalance(),
-      store.getCampaignsCount(),
-      store.getUsableBalance()
+      store.getCampaignsCount()
     ])
 
     setTimeout(() => {

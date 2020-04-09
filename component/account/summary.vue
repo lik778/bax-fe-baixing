@@ -4,7 +4,7 @@
     <el-row type="flex" justify="space-around" align="center">
       <el-col :span="1"></el-col>
       <el-col :span="4" class="column">
-        <h3>推广资金余额</h3>
+        <h3>推广资金可用余额</h3>
         <p><strong>{{summary.balance / 100}}</strong>元</p>
         <router-link :to="{name: 'qwt-charge', query: {mode: 'charge-only'}}"
           @click.native="onClickCharge">
@@ -13,7 +13,7 @@
       </el-col>
       <el-col :span="4" class="column">
         <h3>可用优惠券</h3>
-        <p><span class="number">{{coupons.length}}</span>张</p>
+        <p><span class="number">{{coupons.totalElements}}</span>张</p>
         <router-link :to="{name: 'coupon'}"
           @click.native="onClickCoupon">
           <el-button type="primary">查看</el-button>

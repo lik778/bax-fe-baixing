@@ -54,6 +54,8 @@ import Vue from 'vue'
 
 import Vue2Filters from 'vue2-filters'
 import { getBusinessLicense } from 'api/seo'
+import { allowBuyYoucaigouSite } from 'util/fengming-role'
+import { getCurrentUser } from 'api/account'
 
 // track common data
 window.__trackerData = {
@@ -121,7 +123,16 @@ const gwRoutes = [{
 }, {
   component: () => import('com/gw-charge'),
   path: '/main/gw/charge',
-  name: 'gw-charge'
+  name: 'gw-charge',
+  beforeEnter: async (to, from, next) => {
+    const userInfo = await getCurrentUser()
+    const license = await allowBuyYoucaigouSite(userInfo.id)
+    if (license) {
+      next()
+    } else {
+      Message.error('无权限访问')
+    }
+  }
 }]
 
 const bwRoutes = [{
@@ -163,7 +174,7 @@ const qwtRoutes = [{
   path: '/main/qwt/dashboard',
   name: 'qwt-dashboard'
 }, {
-  component: () => import('com/charge'),
+  component: () => import('com/qwt-charge'),
   path: '/main/qwt/charge',
   name: 'qwt-charge'
 }]
@@ -255,6 +266,10 @@ export const router = new VueRouter({
     component: () => import('com/redirect'),
     path: '/main/redirect-to',
     name: 'bax-redirect-page'
+  }, {
+    component: () => import('com/payment-success'),
+    path: '/main/payment-success',
+    name: 'payment-success-page'
   }, {
     component: () => import('com/account'),
     path: '/main/account',

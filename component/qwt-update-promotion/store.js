@@ -32,9 +32,8 @@ const store = observable({
 
   _recommendedWords: [],
   currentBalance: 0,
-  usableBalance: 0,
 
-  _originKeywords:[],
+  _originKeywords: [],
 
   get originPromotion() {
     return toJS(this._originPromotion)
@@ -48,9 +47,6 @@ const store = observable({
     return toJS(this._originKeywords)
   },
 
-  getUsableBalance: action(async function() {
-    this.usableBalance = await fapi.getUsableBalance()
-  }),
   fmtNewKeywordsPrice: action(function(words) {
     return words.map(w => {
       const { price: serverPrice } = w
@@ -68,7 +64,7 @@ const store = observable({
   getCurrentBalance: action(async function() {
     this.currentBalance = await fapi.getCurrentBalance()
   }),
-  setOriginKeywords: action(function(){
+  setOriginKeywords: action(function() {
     this._originPromotion.keywords = clone(this.originKeywords)
   }),
   getCampaignInfo: action(async function(id) {

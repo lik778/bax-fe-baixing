@@ -33,3 +33,7 @@ export const upyun = {
 export const orderServiceHost = isPro
   ? 'https://trade.baixing.com'
   : 'http://trade-dev.baixing.cn'
+
+export const identityBindingPage = isPro
+  ? 'https://www.baixing.com/bind/?type=idcard'
+  : 'http://www.staging.baixing.cn/bind/?type=idcard'

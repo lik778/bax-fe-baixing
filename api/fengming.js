@@ -95,6 +95,28 @@ export async function getProducts(type = 3) {
   return toCamelcase(body.data)
 }
 
+export async function getProductsByMchId(mchId) {
+  const body = await fengming
+    .get('/products')
+    .query(reverseCamelcase({
+      mchId
+    }))
+    .json()
+
+  return toCamelcase(body.data)
+}
+
+export async function getProductsByMchCode(mchCode) {
+  const body = await fengming
+    .get('/products/merchantcode')
+    .query(reverseCamelcase({
+      mchCode
+    }))
+    .json()
+
+  return toCamelcase(body.data)
+}
+
 export async function getProductPackages(type = 0) {
   const body = await fengming
     .get('/product/package')
@@ -217,9 +239,9 @@ export async function getCurrentBalance() {
   return body.data
 }
 
-export async function getUsableBalance() {
+export async function getCurrentBalanceBreif() {
   const body = await fengming
-    .get('/balance/usable')
+    .get('/balance/brief')
     .json()
 
   return body.data
@@ -285,40 +307,39 @@ export async function recommendByWord(word, opts) {
 export async function recommendByWordList(word, opts) {
   const body = await fengming
     .post('/keyword/recommand/word-list')
-    .send(reverseCamelcase({words:word, ...opts}))
+    .send(reverseCamelcase({words: word, ...opts}))
     .json()
 
   let result = toCamelcase(body.data)
-  if(result && isObj(result)){
-    for(let key in result){
+  if (result && isObj(result)) {
+    for (let key in result) {
       result[key] = fmtWords(toCamelcase(result[key]))
     }
   }
   return result
 }
 
-
 export async function getChangeLogs(opts) {
-  const body = await fengming
+  const { data } = await fengming
     .get('/balance/changelog')
     .query(reverseCamelcase(opts))
     .json()
 
   return {
-    total: body.meta.count,
-    logs: toCamelcase(body.data)
+    total: data.totalElements,
+    logs: toCamelcase(data.data)
   }
 }
 
 export async function getChargeLogs(opts) {
-  const body = await fengming
+  const { data } = await fengming
     .get('/balance/chargelog')
     .query(reverseCamelcase(opts))
     .json()
 
   return {
-    total: body.meta.count,
-    logs: toCamelcase(body.data)
+    total: data.totalElements,
+    logs: toCamelcase(data.data)
   }
 }
 
@@ -361,14 +382,15 @@ export async function getHomepageSummary() {
 }
 
 export async function getHomePageFengmingData() {
-  const [ balance, daily, notices ] = await Promise.all([
-    getCurrentBalance(),
+  const [ balanceBrief, daily, notices ] = await Promise.all([
+    getCurrentBalanceBreif(),
     _getDailySummary(),
     getFengmingNotice()
   ])
 
   return {
-    balance,
+    balance: balanceBrief.currentBalance, // tip： 兼容原有逻辑，二期更改
+    freezeBalance: balanceBrief.freezeBalance,
     notices,
     ...daily
   }
