@@ -14,8 +14,7 @@ import dayjs from 'dayjs'
 
 const chartOptionTmp =  {
   title: {
-    show: true,
-    text: '平均排名'
+    show: false
   },
   tooltip: {
     trigger: 'axis'
@@ -28,6 +27,7 @@ const chartOptionTmp =  {
   },
   xAxis: {
       type: 'category',
+      name: '日期',
       boundaryGap: true,
       data: [dayjs().format('YYYY-MM-DD')],
       axisLine: {
@@ -76,6 +76,10 @@ export default {
     chartData: {
       type: Object,
       required: true
+    },
+    yAxisName: {
+      type: String,
+      required: true
     }
   },
   data() {
@@ -90,6 +94,7 @@ export default {
       let options = clone(chartOptionTmp)
       let timeList = newVal.timeList.map((item) => dayjs(item*1000).format('YYYY-MM-DD'))
       options.xAxis.data = timeList
+      options.yAxis.name = this.yAxisName
       options.series[0].data = newVal.rankList
       this.chartOptions = options
       this.loading = false

@@ -376,7 +376,7 @@
       },
       goToLivePageByType() {
         const promote = this.currentPromoteLive
-        const currentLiveObj = this.liveDevices.find(d => d.device === promote.type)
+        const currentLiveObj = this.liveDevices.find(d => d.type === this.liveType)
         const { urlKey, msg } = currentLiveObj
         this.goToLivePage(promote[urlKey], msg)
       },

@@ -57,15 +57,15 @@ import dayjs from 'dayjs'
 export default {
   name: 'bw-dashboard-keyword-table',
   props: {
-    allAreas: { // provide
+    allAreas: {
       type: Array,
       required: true,
     },
-    data: {  // 提出到store中
+    data: {
       type: Array,
       required: true
     },
-    originalPromotes: { // 提出到store中
+    originalPromotes: {
       type: Array,
       default: () => {
         return []

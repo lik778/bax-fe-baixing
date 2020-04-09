@@ -63,7 +63,8 @@
                    :all-areas="allAreas"
                    :original-promotes="promotes"></add-keyword>
     </section>
-    <chart :chart-data="chartData"></chart>
+    <chart :chart-data="chartData" y-axis-name="展现量"></chart>
+    <chart :chart-data="chartData" y-axis-name="平均排名"></chart>
   </div>
 </template>
 
@@ -88,14 +89,14 @@ const daterangeList = [
    ]
   },
   {
-    label: '昨天',
+    label: '昨日',
     daterange: [
      dayjs().subtract(1, 'day'),
      dayjs().subtract(1, 'day'),
    ]
   },
   {
-    label: '近7日',
+    label: '近7天',
     daterange: [
      dayjs().subtract(7, 'day').startOf('date'),
      dayjs()
@@ -168,7 +169,7 @@ export default {
       this.activeTab = 'limit'
       const {items, total} = await getPromotes({
         page: 0,
-        size: 5,
+        size: this.pageSize,
         word: keyword
       })
       this.promotes = items
