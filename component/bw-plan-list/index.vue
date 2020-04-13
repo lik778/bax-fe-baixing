@@ -104,7 +104,7 @@
                  width="420px" 
                  :show-close="false">
         <el-radio-group v-model="liveType">
-          <el-radio v-for="item in liveDevices" :key="item.type" :label="item.type">
+          <el-radio v-for="(item, key) in liveDevices" :key="key" :label="key">
             {{item.label}}
           </el-radio>
         </el-radio-group>
@@ -147,20 +147,18 @@
   import auditRejectReasonDialog from 'com/common/audit-reject-reason-dialog'
   import { allowNotSeeBwNewPrice } from 'util/role'
 
-  const liveDevices = [
-    {
-      type: DEVICE_WAP,
+  const liveDevices = {
+    [DEVICE_WAP]: {
       label: DEVICE[DEVICE_WAP],
       urlKey: 'wapUrl',
       msg: '暂无手机端实况数据，请售后再试',
     },
-    {
-      type: DEVICE_PC,
+    [DEVICE_PC]: {
       label: DEVICE[DEVICE_PC],
       urlKey: 'pcUrl',
       msg: '暂无电脑端实况数据，请稍后再试'
     }
-  ]
+  }
 
   export default {
     name: 'bw-plan-list',
@@ -376,7 +374,7 @@
       },
       goToLivePageByType() {
         const promote = this.currentPromoteLive
-        const currentLiveObj = this.liveDevices.find(d => d.type === this.liveType)
+        const currentLiveObj = this.liveDevices[this.liveType]
         const { urlKey, msg } = currentLiveObj
         this.goToLivePage(promote[urlKey], msg)
       },
@@ -399,11 +397,11 @@
           return 
         } 
         if (device === DEVICE_PC) {
-          this.goToLivePage(pcUrl, pcMsg)
+          this.goToLivePage(pcUrl, this.liveDevices[DEVICE_PC].msg)
           return 
         } 
         if (device === DEVICE_WAP) {
-          this.goToLivePage(wapUrl, wapMsg)
+          this.goToLivePage(wapUrl, this.liveDevices[DEVICE_WAP].msg)
           return
         }
       }
