@@ -91,7 +91,7 @@
       <div>
         <p>推广渠道：百度</p>
         <p>推广平台：电脑端、移动端双端推广</p>
-        <p>预扣款：{{charge}}元（原价{{charge * 2}}元），可推广{{promotion.duration}}天，首页关键词数量{{promotion.volume}}词</p>
+        <p>预扣款：{{charge}}元，可推广{{promotion.duration}}天，首页关键词数量{{promotion.volume}}词</p>
       </div>
 
       <contract-ack type="content-rule" ref="contract" />
