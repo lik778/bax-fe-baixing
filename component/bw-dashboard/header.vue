@@ -1,14 +1,14 @@
 <template>
   <div class="header">
-    <h3>今日数据</h3>
+    <h3>昨日数据</h3>
     <div>
-      <!-- <div>
+      <div>
         <p>展现（次）</p>
-        <p>0</p>
-      </div> -->
+        <p>{{data.show}}</p>
+      </div>
       <div>
         <p>平均排名</p>
-        <p>{{todayRanking}}</p>
+        <p>{{data.cpcRanking}}</p>
       </div>
       <div class="split"></div>
       <div>
@@ -22,30 +22,32 @@
 </template>
 
 <script>
-import { getUserRanking } from 'api/biaowang'
+import { getUserRanking, getUserShow } from 'api/biaowang'
 import dayjs from 'dayjs'
 
 export default {
   name: 'bw-dashboard-header',
   data() {
     return {
-      data: null,
+      data: {
+        show: 0,
+        cpcRanking: 0
+      },
     }
   },
-  computed: {
-    todayRanking() {
-      if (!this.data) return 0
-      return this.data.rankList[0].toFixed(2)
-    }
-  },
-  mounted() {
-    getUserRanking({
-      startTime: dayjs().unix(),
-      endTime: dayjs().unix(),
+  async mounted() {
+    let options = {
+      startTime: dayjs().subtract(1, 'day').unix(),
+      endTime: dayjs().subtract(1, 'day').unix(),
       promoteList: []
-    }).then(res => {
-      this.data = res
-    })
+    }
+    let [cpcRankingObj, showObj] = await Promise.all([getUserRanking(options), getUserShow(options)])
+    if (cpcRankingObj && cpcRankingObj.rankList) {
+      this.data.cpcRanking = cpcRankingObj.rankList[0]
+    }
+    if (showObj && showObj.rankList) {
+      this.data.show = showObj.rankList[0]
+    }
   }
 }
 </script>

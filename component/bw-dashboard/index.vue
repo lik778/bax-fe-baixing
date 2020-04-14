@@ -63,8 +63,8 @@
                    :all-areas="allAreas"
                    :original-promotes="promotes"></add-keyword>
     </section>
-    <chart :chart-data="chartData" y-axis-name="展现量"></chart>
-    <chart :chart-data="chartData" y-axis-name="平均排名"></chart>
+    <chart :chart-data="showChartData" y-axis-name="展现量"></chart>
+    <chart :chart-data="cpcRankingChartData" y-axis-name="平均排名"></chart>
   </div>
 </template>
 
@@ -74,7 +74,7 @@ import Chart from './chart'
 import KeywordList from './keyword-list'
 import AddKeyword from './add-keyword'
 
-import { getPromotes, getUserRanking } from 'api/biaowang'
+import { getPromotes, getUserRanking, getUserShow } from 'api/biaowang'
 import dayjs from 'dayjs'
 import clone from 'clone'
 
@@ -82,39 +82,32 @@ const CUSTOM_DATE_RANGE_LABEL = 'custom'
 
 const daterangeList = [
   {
-   label: '今日',
-   daterange: [
-     dayjs(),
-     dayjs()
-   ]
-  },
-  {
     label: '昨日',
     daterange: [
      dayjs().subtract(1, 'day'),
      dayjs().subtract(1, 'day'),
-   ]
+    ]
   },
   {
     label: '近7天',
     daterange: [
-     dayjs().subtract(7, 'day').startOf('date'),
-     dayjs()
-   ]
+     dayjs().subtract(8, 'day').startOf('date'),
+     dayjs().subtract(1, 'day'),
+    ]
   },
   {
     label: '本月',
     daterange: [
      dayjs().startOf('month'),
-     dayjs()
-   ]
+     dayjs().subtract(1, 'day')
+    ]
   },
   {
     label: '上月',
     daterange: [
      dayjs().subtract(1, 'month').startOf('month'),
      dayjs().subtract(1, 'month').endOf('month')
-   ]
+    ]
   }
 ]
 
@@ -145,9 +138,13 @@ export default {
       addKeywordModalShow: false,
       daterange: daterangeList[0].daterange,
       activeDaterangeLabel: daterangeList[0].label,
-      chartData: {
-        timeList: [],
-        rankList: []
+      cpcRankingChartData: {
+          timeList: [],
+          rankList: []
+      },
+      showChartData: {
+          timeList: [],
+          rankList: []
       },
       daterangeList,
       CUSTOM_DATE_RANGE_LABEL
@@ -173,36 +170,40 @@ export default {
         word: keyword
       })
       this.promotes = items
-      this.getCpcRankingData([promoteId])
+      this.getChartData([promoteId])
       return 
     } 
-    this.getCpcRankingData()
+    this.getChartData()
   },
   methods: {
     handleTabClick(tab) {
       const { name } = tab
       switch (name) {
         case 'noLimit':
-          return this.getCpcRankingData([])
+          return this.getChartData([])
         case 'limit':
-          return this.getCpcRankingData()
+          return this.getChartData()
       }
     },
     handleDateChange(item) {
       this.daterange = item.daterange
       this.activeDaterangeLabel = item.label
     },
-    async getCpcRankingData(promoteIds) {
+    async getChartData(promoteIds) {
       const daterange = this.daterange
       const startTime = dayjs(daterange[0]).startOf('day').unix()
       const endTime = dayjs(daterange[1]).startOf('day').unix()
-
-      let chartData = await getUserRanking({
-        promoteList: promoteIds || this.promoteIds,
+      const options = {
         startTime,
         endTime,
-      })
-      this.chartData = chartData
+        promoteIds: promoteIds || this.promoteIds
+      }
+
+      let cpcRankingChartData = await getUserRanking(options)
+      this.cpcRankingChartData = cpcRankingChartData
+
+      let showChartData = await getUserShow(options)
+      this.showChartData = showChartData
     },
     handleKeywordClose(newPromotes) {
       this.addKeywordModalShow = false
@@ -226,13 +227,13 @@ export default {
     daterange: {
       deep: true,
       handler() {
-        this.getCpcRankingData()
+        this.getChartData()
       }
     },
     promoteIds: {
       deep: true,
       handler() {
-        this.getCpcRankingData()
+        this.getChartData()
       }
     }
   }

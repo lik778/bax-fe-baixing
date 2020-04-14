@@ -74,8 +74,14 @@ export default {
   },
   props: {
     chartData: {
-      type: Object,
-      required: true
+      type: [Object],
+      required: true,
+      default: () => {
+        return {
+          timeList: [],
+          rankList: []
+        }
+      }
     },
     yAxisName: {
       type: String,

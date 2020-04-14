@@ -63,8 +63,8 @@
               <router-link :to="{name: 'bw-dashboard', query: {promoteId: scope.row.id, keyword: scope.row.word}}">
                 <el-button type="text" size="small">查看报告</el-button>
               </router-link>
-              <span>
-                <el-button type="text" slot="reference" size="small" v-if="canSeeLiveBtn(scope.row)"
+              <span v-if="canSeeLiveBtn(scope.row)">
+                <el-button type="text" slot="reference" size="small"
                           @click="handleLiveSituation(scope.row)">推广实况</el-button>
                 <el-tooltip effect="dark" placement="top-start">
                   <i class="el-icon-info" style="color: rgb(151, 168, 190);cursor: pointer"></i>

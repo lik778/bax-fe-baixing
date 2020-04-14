@@ -197,3 +197,11 @@ export async function getUserLive(opts = {}) {
     .json()
   return body.data
 }
+
+export async function getUserShow(opts = {}) {
+  const body = await biaowang
+    .post('/promote/user/show')
+    .send(opts)
+    .json()
+  return body.data
+}
