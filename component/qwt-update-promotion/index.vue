@@ -363,7 +363,8 @@ import {
 import {
   f2y,
   isQiqiaobanSite,
-  isSiteLandingType
+  isSiteLandingType,
+  getLandingpageByPageProtocol
 } from 'util/kit'
 
 import {allowSee258} from 'util/fengming-role'
@@ -1258,7 +1259,7 @@ export default {
       // 将帖子选择组件的类型重置
       this.adSelectortype = ''
       const script = document.createElement('script')
-      script.src = landingPage
+      script.src = getLandingpageByPageProtocol(landingPage)
       document.body.appendChild(script)
       script.addEventListener('error', e => {
         document.body.removeChild(script)
