@@ -10,13 +10,15 @@
         <p>平均排名</p>
         <p>{{data.rank}}</p>
       </div>
-      <div class="split"></div>
-      <div>
-        <router-link :to="{name: 'bw-query-price'}">
-          <el-button type="primary"
-                     icon="el-icon-plus">新建推广计划</el-button>
-        </router-link>
-      </div>
+      <template v-if="!allowNotSeeBwNewPrice">
+        <div class="split"></div>
+        <div>
+          <router-link :to="{name: 'bw-query-price'}">
+            <el-button type="primary"
+                       icon="el-icon-plus">新建推广计划</el-button>
+          </router-link>
+        </div>
+      </template>
     </div>
   </div>
 </template>
@@ -27,6 +29,12 @@ import dayjs from 'dayjs'
 
 export default {
   name: 'bw-dashboard-header',
+  props: {
+    allowNotSeeBwNewPrice: {
+      type: Boolean,
+      default: true
+    }
+  },
   data() {
     return {
       data: {
