@@ -16,8 +16,7 @@
                      @click="addKeywordModalShow = true">添加指定关键词</el-button>
           <div>
             <template v-if="promotes.length">
-              <keyword-list :totalPage="totalPage"
-                            :can-deleted="true"
+              <keyword-list :can-deleted="true"
                             :all-areas="allAreas"
                             @delete="handleDeletePromote"
                             :data="promotes.slice(pageSize * (currentPage - 1), pageSize * currentPage)">
@@ -59,12 +58,15 @@
                    ref="addKeyword"
                    v-if="addKeywordModalShow"
                    @close="handleKeywordClose"
-                   :total-selected-count="totalPage"
                    :all-areas="allAreas"
                    :original-promotes="promotes"></add-keyword>
     </section>
-    <chart :chart-data="showChartData" y-axis-name="展现量"></chart>
-    <chart :chart-data="cpcRankingChartData" y-axis-name="平均排名"></chart>
+    <chart v-if="showChartData && showChartData.length"
+           :chart-data="showChartData"
+           y-axis-name="展现量"></chart>
+    <chart v-if="cpcRankingChartData && cpcRankingChartData.length"
+           :chart-data="cpcRankingChartData"
+           y-axis-name="平均排名"></chart>
   </div>
 </template>
 
@@ -136,16 +138,10 @@ export default {
       pageSize: 5,
       promotes: [],
       addKeywordModalShow: false,
-      daterange: daterangeList[0].daterange,
-      activeDaterangeLabel: daterangeList[0].label,
-      cpcRankingChartData: {
-          timeList: [],
-          rankList: []
-      },
-      showChartData: {
-          timeList: [],
-          rankList: []
-      },
+      daterange: daterangeList[1].daterange,
+      activeDaterangeLabel: daterangeList[1].label,
+      cpcRankingChartData: null,
+      showChartData: null,
       daterangeList,
       CUSTOM_DATE_RANGE_LABEL
     }
@@ -272,7 +268,7 @@ export default {
           color: #ff8273;
         }
       }
-      & > .date-range-custom__active{
+      & > .date-range-custom__active {
         border-color: #ff8273;
       }
     }

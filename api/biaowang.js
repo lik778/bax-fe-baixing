@@ -187,7 +187,7 @@ export async function getUserRanking(opts = {}) {
     .send(opts)
     .json()
 
-  return body.data
+  return body.data.rankList
 }
 
 export async function getUserLive(opts = {}) {
@@ -202,6 +202,18 @@ export async function getUserShow(opts = {}) {
   const body = await biaowang
     .post('/promote/user/show')
     .send(opts)
+    .json()
+
+  return body.data.showList
+}
+
+export async function getPromotionUserCollection(opts = {}) {
+  const body = await biaowang
+    .post('/promote/user/collect')
+    .send({
+      promoteList: [],
+      ...opts
+    })
     .json()
   return body.data
 }

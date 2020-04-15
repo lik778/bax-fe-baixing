@@ -9,12 +9,16 @@
 import ECharts from 'vue-echarts/components/ECharts.vue'
 import 'echarts/lib/component/tooltip'
 import 'echarts/lib/chart/line'
-import clone from 'clone'
 import dayjs from 'dayjs'
+import clone from 'clone'
+import { DEVICE } from 'constant/biaowang'
 
 const chartOptionTmp =  {
   title: {
     show: false
+  },
+  legend: {
+    data: []
   },
   tooltip: {
     trigger: 'axis'
@@ -53,19 +57,9 @@ const chartOptionTmp =  {
       },
       offset: 20
   },
-  series: [{
-      data: [5],
-      type: 'line',
-      smooth: false,
-      lineStyle: {
-        color: '#5B8FF9'
-      },
-      itemStyle: {
-        color: '#5B8FF9'
-      }
-  }]
+  series: []
 }
-  
+
 
 export default {
   name: 'bw-dashboard-chart',
@@ -74,14 +68,8 @@ export default {
   },
   props: {
     chartData: {
-      type: [Object],
+      type: Array,
       required: true,
-      default: () => {
-        return {
-          timeList: [],
-          rankList: []
-        }
-      }
     },
     yAxisName: {
       type: String,
@@ -94,16 +82,45 @@ export default {
       chartOptions: chartOptionTmp
     }
   },
-  watch: {
-    chartData(newVal) {
+  methods: {
+     cityFormatter(cities) {
+      const max = 20
+      return cities.slice(0, max).map(
+        city => getCnName(city, this.allAreas)).join(',') + (cities.length > max 
+        ? `等${cities.length}个城市` 
+        : '')
+    },
+    getChartOptions(data) {
+      let seriesData = data.map((res) => {
+        let name = `${res.word}_${DEVICE[res.device]}`
+        return {
+          name: name,
+          type: 'line',
+          data: res.showList || res.rankList
+        }
+      })
       this.loading = true
       let options = clone(chartOptionTmp)
-      let timeList = newVal.timeList.map((item) => dayjs(item*1000).format('YYYY-MM-DD'))
+      let timeList = data[0].timeList.map((item) => dayjs(item*1000).format('YYYY-MM-DD'))
+      let legendsData = seriesData.reduce((list, item) => {
+        return list.concat(item.name)
+      }, [])
       options.xAxis.data = timeList
       options.yAxis.name = this.yAxisName
-      options.series[0].data = newVal.rankList
+      options.series = seriesData
+      console.log(legendsData)
+      options.legend.data = legendsData
       this.chartOptions = options
       this.loading = false
+    }
+  },
+  watch: {
+    chartData: {
+      deep: true,
+      immediate: true,
+      handler(data) {
+        this.getChartOptions(data)
+      }
     }
   }
 }

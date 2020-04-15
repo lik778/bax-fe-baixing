@@ -8,7 +8,7 @@
       </div>
       <div>
         <p>平均排名</p>
-        <p>{{data.cpcRanking}}</p>
+        <p>{{data.rank}}</p>
       </div>
       <div class="split"></div>
       <div>
@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import { getUserRanking, getUserShow } from 'api/biaowang'
+import { getPromotionUserCollection } from 'api/biaowang'
 import dayjs from 'dayjs'
 
 export default {
@@ -31,23 +31,13 @@ export default {
     return {
       data: {
         show: 0,
-        cpcRanking: 0
+        rank: 0
       },
     }
   },
   async mounted() {
-    let options = {
-      startTime: dayjs().subtract(1, 'day').unix(),
-      endTime: dayjs().subtract(1, 'day').unix(),
-      promoteList: []
-    }
-    let [cpcRankingObj, showObj] = await Promise.all([getUserRanking(options), getUserShow(options)])
-    if (cpcRankingObj && cpcRankingObj.rankList) {
-      this.data.cpcRanking = cpcRankingObj.rankList[0]
-    }
-    if (showObj && showObj.rankList) {
-      this.data.show = showObj.rankList[0]
-    }
+    const data = await getPromotionUserCollection({promoteList: []})
+    this.data = data
   }
 }
 </script>
