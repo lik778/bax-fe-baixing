@@ -42,6 +42,7 @@
           {{item.label}}
         </el-button>
         <el-date-picker v-model="daterange"
+                        :picker-options="triPickerOptions"
                         @focus="activeDaterangeLabel = CUSTOM_DATE_RANGE_LABEL"
                         :class="{
                           'date-range-custom__active': activeDaterangeLabel === CUSTOM_DATE_RANGE_LABEL
@@ -76,7 +77,7 @@ import Chart from './chart'
 import KeywordList from './keyword-list'
 import AddKeyword from './add-keyword'
 
-import { getPromotes, getUserRanking, getUserShow } from 'api/biaowang'
+import { getPromoteById, getUserRanking, getUserShow } from 'api/biaowang'
 import dayjs from 'dayjs'
 import clone from 'clone'
 
@@ -143,7 +144,15 @@ export default {
       cpcRankingChartData: null,
       showChartData: null,
       daterangeList,
-      CUSTOM_DATE_RANGE_LABEL
+      CUSTOM_DATE_RANGE_LABEL,
+      triPickerOptions: {
+        disabledDate(time) {
+          const timestamp = new Date(time).getTime()
+          const today = dayjs().valueOf()
+          const lastYear = dayjs().subtract(1, 'year').valueOf()
+          return timestamp > today || timestamp < lastYear
+        }
+      }
     }
   },
   computed: {
@@ -158,14 +167,10 @@ export default {
   },
   async mounted() {
     const { promoteId, keyword } = this.$route.query
-    if (promoteId && keyword) {
+    if (promoteId) {
       this.activeTab = 'limit'
-      const {items, total} = await getPromotes({
-        page: 0,
-        size: this.pageSize,
-        word: keyword
-      })
-      this.promotes = items
+      const promote = await getPromoteById(promoteId)
+      this.promotes = [promote]
       this.getChartData([promoteId])
       return 
     } 

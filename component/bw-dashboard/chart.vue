@@ -12,13 +12,13 @@ import 'echarts/lib/chart/line'
 import dayjs from 'dayjs'
 import clone from 'clone'
 import { DEVICE } from 'constant/biaowang'
+import { getCnName } from 'util'
 
 const chartOptionTmp =  {
   title: {
     show: false
   },
   legend: {
-    data: []
   },
   tooltip: {
     trigger: 'axis'
@@ -83,8 +83,8 @@ export default {
     }
   },
   methods: {
-     cityFormatter(cities) {
-      const max = 20
+    cityFormatter(cities) {
+      const max = 3
       return cities.slice(0, max).map(
         city => getCnName(city, this.allAreas)).join(',') + (cities.length > max 
         ? `等${cities.length}个城市` 
@@ -108,7 +108,6 @@ export default {
       options.xAxis.data = timeList
       options.yAxis.name = this.yAxisName
       options.series = seriesData
-      console.log(legendsData)
       options.legend.data = legendsData
       this.chartOptions = options
       this.loading = false

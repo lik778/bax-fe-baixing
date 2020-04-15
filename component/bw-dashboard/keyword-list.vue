@@ -51,7 +51,7 @@ import {
   PROMOTE_STATUS_PENDING_ONLINE,
   PROMOTE_STATUS_OFFLINE
 } from 'constant/biaowang'
- import { f2y, getCnName } from 'util'
+import { f2y, getCnName } from 'util'
 import dayjs from 'dayjs'
 
 export default {
