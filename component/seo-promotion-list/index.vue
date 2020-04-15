@@ -378,6 +378,10 @@ export default {
         }).then( () => {
           return renewCibaoPromotion({id, duration})
         }).then( () => {
+          this.$message({
+            type: 'success',
+            message: '续费成功'
+          })
           this.getCibaoPromotionList()
         }).catch(() => {})
     },
