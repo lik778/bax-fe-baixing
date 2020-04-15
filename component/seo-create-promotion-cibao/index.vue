@@ -28,7 +28,7 @@
                                :value="promotion.landingPage"
                                @change-obj="v => onLandingChange(v)" />
       <p class="warning"
-         v-if="showExpireWarning">站点{{promotion.duration === NINETY_DAYS?'3':'6'}}个月内将过期，
+         v-if="showExpireWarning">站点{{promotion.duration}}天内将过期，
          请选择其他站点，或<router-link :to="{name: 'seo-charge'}">购买</router-link>新官网
       </p>
       <p class="warning"
@@ -91,7 +91,7 @@
       <div>
         <p>推广渠道：百度</p>
         <p>推广平台：电脑端、移动端双端推广</p>
-        <p>预扣款：{{charge}}元（原价{{charge * 2}}元），可推广{{promotion.duration}}天，首页关键词数量{{promotion.volume}}词</p>
+        <p>预扣款：{{charge}}元，可推广{{promotion.duration}}天，首页关键词数量{{promotion.volume}}词</p>
       </div>
 
       <contract-ack type="content-rule" ref="contract" />
@@ -183,7 +183,7 @@ export default {
     onLandingChange(v) {
       const landingPage = 'http://' + v.domain + '.mvp.baixing.com'
       this.promotion.landingPage = landingPage
-      this.showExpireWarning = dayjs(v.expireAt).subtract(3, 'month').isBefore(dayjs(), 'day')
+      this.showExpireWarning = dayjs(v.expireAt).subtract(this.promotion.duration, 'day').isBefore(dayjs(), 'day')
       this.showExistWebsite = this.existPromotionWebsite.some(o => (o.trim() === landingPage))
     },
     handleCityClose() {
