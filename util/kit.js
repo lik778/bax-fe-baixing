@@ -117,6 +117,10 @@ export function isSiteLandingType(landingPage) {
   return isSiteLandingTypeReg.test(landingPage) || isWeishopSite(landingPage)
 }
 
-export function isObj(obj){
+export function getLandingpageByPageProtocol(landingPage) {
+  return landingPage.replace(/http:/, location.protocol)
+}
+
+export function isObj(obj) {
   return Object.prototype.toString.call(obj) === '[object Object]'
 }

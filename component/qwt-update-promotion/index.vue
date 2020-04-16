@@ -51,7 +51,7 @@
             </div>
           </span>
           <div class="page-error-placeholder" v-else>
-            所选推广页面失效，请 <a href="javascript:;" @click="isErrorLandingPageShow = false; adSelectortype = ''">从新选择</a>
+            所选推广页面失效，请 <a href="javascript:;" @click="isErrorLandingPageShow = false; adSelectortype = ''">重新选择</a>
           </div>
         </div>
         <div>
@@ -164,13 +164,13 @@
             今日还可修改<strong>{{ modifyBudgetQuota }}</strong>次）
           </span>
         </div>
-        <h3 v-if="usableBalance <= 0" class="prompt-text">
+        <h3 v-if="currentBalance <= 0" class="prompt-text">
           <!-- 扣除其余有效计划日预算后， -->
           您的推广资金可用余额为0元，请<router-link :to="{name: 'qwt-charge', query: {mode: 'charge-only'}}">充值</router-link>
         </h3>
         <h3 v-else class="prompt-text">
           <!-- 扣除其余有效计划日预算后， -->
-          您的推广资金可用余额为￥{{f2y(usableBalance)}}元，可消耗<strong>{{predictedInfo.days}}</strong>天
+          您的推广资金可用余额为￥{{f2y(currentBalance)}}元，可消耗<strong>{{predictedInfo.days}}</strong>天
         </h3>
 
         <el-button
@@ -324,7 +324,8 @@ import {
   getQiqiaobanCoupon,
   checkCreativeContent,
   getRecommandCreative,
-  changeCampaignKeywordsPrice
+  changeCampaignKeywordsPrice,
+  queryAds
 } from 'api/fengming'
 
 import {
@@ -362,7 +363,8 @@ import {
 import {
   f2y,
   isQiqiaobanSite,
-  isSiteLandingType
+  isSiteLandingType,
+  getLandingpageByPageProtocol
 } from 'util/kit'
 
 import {allowSee258} from 'util/fengming-role'
@@ -403,8 +405,7 @@ export default {
     recommendedWords: () => store.recommendedWords,
     originPromotion: () => store.originPromotion,
     currentBalance: () => store.currentBalance,
-    timeType: () => store.timeType,
-    usableBalance: () => store.usableBalance
+    timeType: () => store.timeType
   },
   props: {
     userInfo: {
@@ -471,10 +472,10 @@ export default {
   computed: {
     // displayBlance() {
     //   // 充足情况下余额显示为真实余额+计划日消耗，不充足情况直接现实真是余额
-    //   if (this.usableBalance > this.getProp('dailyBudget') * 100) {
-    //     return this.usableBalance + this.getProp('dailyBudget') * 100
+    //   if (this.currentBalance > this.getProp('dailyBudget') * 100) {
+    //     return this.currentBalance + this.getProp('dailyBudget') * 100
     //   } else {
-    //     return this.usableBalance
+    //     return this.currentBalance
     //   }
     // },
     extendLandingTypeOpts() {
@@ -594,7 +595,7 @@ export default {
         }
       }
       const {
-        usableBalance,
+        currentBalance,
         promotion
       } = this
 
@@ -608,7 +609,7 @@ export default {
         .map(k => k.price)
 
       // 与创建时不同，这里需要加上计划原本设置的每日预算
-      return getCampaignPrediction(usableBalance, v * 100, prices)
+      return getCampaignPrediction(currentBalance, v * 100, prices)
     }
   },
   methods: {
@@ -738,8 +739,7 @@ export default {
     async initCampaignInfo() {
       await Promise.all([
         store.getCampaignInfo(this.id),
-        store.getCurrentBalance(),
-        store.getUsableBalance()
+        store.getCurrentBalance()
       ])
     },
     clickSourceTip() {
@@ -1255,11 +1255,11 @@ export default {
 
     // 验证官网落地页是否404
     const { landingPage, landingType } = this.originPromotion
-    if (landingType === 1) {
+    if (landingType === LANDING_TYPE_GW) {
       // 将帖子选择组件的类型重置
       this.adSelectortype = ''
       const script = document.createElement('script')
-      script.src = landingPage
+      script.src = getLandingpageByPageProtocol(landingPage)
       document.body.appendChild(script)
       script.addEventListener('error', e => {
         document.body.removeChild(script)
@@ -1270,6 +1270,22 @@ export default {
         document.body.removeChild(script)
       })
     }
+
+    // 验证百姓帖子已经归档
+    if (landingType === LANDING_TYPE_AD) {
+      const result = await queryAds({
+        limitMvp: false,
+        adIds: this.originPromotion.landingPageId,
+        limit: 1
+      })
+      const ad = result.ads && result.ads[0]
+      if (!ad) {
+        this.isErrorLandingPageShow = true
+        this.promotion.landingPage = ''
+      }
+    }
+
+
     setTimeout(() => {
       if (this.$route.query.target === 'keyword') {
         VueScrollTo.scrollTo('.keyword', 100)

@@ -15,7 +15,8 @@ class Store {
     const data = this.fengmingData
     return {
       price: data ? (data.balance / 100).toFixed(2) : null,
-      day: data ? data.balance / data.budget | 0 : null
+      day: data ? data.balance / data.budget | 0 : null,
+      freezeBalance: data ? (data.freezeBalance / 100).toFixed(2) : null
     }
   }
 

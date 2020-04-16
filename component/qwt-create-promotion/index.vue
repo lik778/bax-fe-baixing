@@ -80,7 +80,16 @@
         <el-button type="primary" style="margin-top:10px" size="small" 
                    @click="addKeywordListDialog = true">批量添加关键词</el-button>
         <div class="kw-tag-container">
-          <el-tag class="kw-tag" v-for="(kw, index) in newPromotion.keywords" :key="index" closable @close="removeKeyword(index)">{{kw.word}}</el-tag>
+          <el-tag class="kw-tag"
+                  :class="{'kw-tag-fh': kw.recommandSource === RECOMMAND_SOURCE_FH}" 
+                  v-for="(kw, index) in newPromotion.keywords" 
+                  :key="index" 
+                  closable
+                  type="warning"
+                  @close="removeKeyword(index)">
+                  {{kw.word}}
+                  {{kw.recommandSource === RECOMMAND_SOURCE_FH ? '(好词)': ''}}
+          </el-tag>
           <el-autocomplete
             v-model="queryWord"
             :debounce="600"
@@ -136,7 +145,7 @@
           <p class="tip">（根据您选取的关键词，建议最低预算为<strong class="red">{{ f2y(predictedInfo.minDailyBudget) }} </strong>元）</p>
         </div>
         <p class="tip">
-          扣除其余有效计划日预算后，您的推广资金可用余额为￥{{f2y(usableBalance)}}元，可消耗<strong class="red strong">{{predictedInfo.days}}</strong>天
+          扣除其余有效计划日预算后，您的推广资金可用余额为￥{{f2y(currentBalance)}}元，可消耗<strong class="red strong">{{predictedInfo.days}}</strong>天
         </p>
         <contract-ack type="content-rule" ref="contract"/>
         <div>
@@ -226,7 +235,8 @@ import {
   semPlatformOpts,
   LANDING_TYPE_AD,
   LANDING_TYPE_GW,
-  LANDING_TYPE_258
+  LANDING_TYPE_258,
+  RECOMMAND_SOURCE_FH
 } from 'constant/fengming'
 
 import {allowSee258} from 'util/fengming-role'
@@ -282,7 +292,6 @@ export default {
 
     currentBalance: () => store.currentBalance,
     campaignsCount: () => store.campaignsCount,
-    usableBalance: () => store.usableBalance
   },
   props: {
     userInfo: {
@@ -305,6 +314,7 @@ export default {
       LANDING_TYPE_GW,
       LANDING_TYPE_258,
       landingTypeDisplay: LANDING_TYPE_AD,
+      RECOMMAND_SOURCE_FH,
 
       searchRecommendsVisible: false,
       chargeDialogVisible: false,
@@ -343,7 +353,7 @@ export default {
           days: 0
         }
       }
-      const { usableBalance, newPromotion } = this
+      const { currentBalance, newPromotion } = this
 
       let prices = []
       if (this.kwPrice) {
@@ -352,7 +362,7 @@ export default {
         prices = newPromotion.keywords.map(kw => this.recommendKwPrice)
       }
 
-      const tempPredictedInfo = getCampaignPrediction(usableBalance, dailyBudget, prices)
+      const tempPredictedInfo = getCampaignPrediction(currentBalance, dailyBudget, prices)
       const sourcesLen = Math.max(1, this.newPromotion.sources.length)
       return {
         ...tempPredictedInfo,
@@ -714,8 +724,7 @@ export default {
   async mounted() {
     await Promise.all([
       store.getCurrentBalance(),
-      store.getCampaignsCount(),
-      store.getUsableBalance()
+      store.getCampaignsCount()
     ])
 
     setTimeout(() => {
@@ -845,6 +854,11 @@ strong.red {
   margin-right: 5px;
   margin-top: 8px;
 }
+.kw-tag-fh {
+  color: #16B7FF;
+  background: #ecf5ff;
+  border-color: #b3d8ff;
+}
 .kw-tag-container {
   max-width: 100%;
   display: flex;
@@ -888,6 +902,20 @@ strong.red {
       margin-left: 10px;
       cursor: pointer;
       color: rgb(21, 164, 250);
+    }
+  }
+}
+</style>
+
+<style lang="postcss">
+.kw-tag-container {
+  & > .kw-tag-fh {
+    & > .el-tag__close {
+      color: #16B7FF;
+      &:hover {
+        background: #16B7FF;
+        color: #fff;
+      }
     }
   }
 }

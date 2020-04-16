@@ -12,6 +12,11 @@
       download="百姓网站外推广填写准则.docx">
       《百姓网站外推广填写准则》
     </a>
+     <a v-if="type === 'website-contract'"
+        download="百姓网精品官网入驻协议.docx"
+      :href="assetHost + 'baixing-custom-website-contract.docx'">
+      《百姓网精品官网入驻协议》
+    </a>
   </h4>
 </template>
 

@@ -18,6 +18,9 @@
         <template slot-scope="{row}">
           {{row.word}}
           <span class="new-word" v-if="row.isNew">(新)</span>
+          <span class="new-word">
+            {{row.recommandSource === RECOMMAND_SOURCE_FH ? '(好词)': ''}}
+          </span>
         </template>
       </el-table-column>
       <el-table-column v-if="showPropShow"
@@ -106,7 +109,8 @@ import {
   KEYWORD_CHIBI_PENDING,
   KEYWORD_CHIBI_REJECT,
   SEM_PLATFORM_SHENMA,
-  keywordStatus
+  keywordStatus,
+  RECOMMAND_SOURCE_FH,
 } from 'constant/fengming'
 
 import {
@@ -216,7 +220,9 @@ export default {
       keywordPriceTip,
 
       popoverVisible: false,
-      keywordPrice: ''
+      keywordPrice: '',
+
+      RECOMMAND_SOURCE_FH
     }
   },
   computed: {
