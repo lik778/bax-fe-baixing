@@ -11,9 +11,9 @@
                      v-if="canSelected" />
     <el-table-column prop="word"
                      label="关键词"
-                     min-width="160px" />
+                     min-width="140px" />
     <el-table-column label="城市"
-                     min-width="160px"
+                     min-width="140px"
                      :formatter="row => cityFormatter(row.cities)" />
     <el-table-column label="平台"
                      :formatter="row => deviceFormatter(row.device)" />
@@ -26,9 +26,17 @@
                      :formatter="dateFormatter">
     </el-table-column>
     <el-table-column label="剩余投放天数"
-                     width="160">
+                     align="center"
+                     width="110">
       <template slot-scope="scope">
-        <div>{{leftDays(scope.row)}}天(共{{scope.row.days}}天)</div>
+        <div>{{leftDays(scope.row)}}</div>
+      </template>
+    </el-table-column>
+    <el-table-column label="总天数"
+                     align="center"
+                     width="100">
+      <template slot-scope="scope">
+        <div>{{scope.row.days}}天</div>
       </template>
     </el-table-column>
     <el-table-column label="操作"
@@ -127,8 +135,9 @@ export default {
           // 可能是负值
           daysLeft = row.days - (Date.now() - row.startedAt * 1000) / 86400 / 1000
         }
-        return parseFloat(Math.max(daysLeft, 0)).toFixed(1)
+        return parseFloat(Math.max(daysLeft, 0)).toFixed(1) + '天'
       }
+      return '--'
     }
   }
 }
