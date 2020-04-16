@@ -201,7 +201,7 @@ export default {
       const options = {
         startTime,
         endTime,
-        promoteIds: promoteIds || this.promoteIds
+        promoteList: promoteIds || this.promoteIds
       }
 
       let cpcRankingChartData = await getUserRanking(options)
