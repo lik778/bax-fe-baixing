@@ -149,9 +149,9 @@ export default {
       triPickerOptions: {
         disabledDate(time) {
           const timestamp = new Date(time).getTime()
-          const today = dayjs().valueOf()
+          const yesterday = dayjs().subtract(1, 'day').valueOf()
           const lastYear = dayjs().subtract(1, 'year').valueOf()
-          return timestamp > today || timestamp < lastYear
+          return timestamp > yesterday || timestamp < lastYear
         }
       }
     }
