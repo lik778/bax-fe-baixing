@@ -44,6 +44,7 @@
     "whatwg-fetch": "^2.0.3"
   },
   "devDependencies": {
+    "@babel/compat-data": "^7.9.0",
     "@babel/core": "^7.9.0",
     "@babel/plugin-proposal-class-properties": "^7.2.3",
     "@babel/plugin-proposal-decorators": "^7.2.3",
