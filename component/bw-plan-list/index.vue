@@ -239,7 +239,7 @@
 
           localStorage.setItem(key, JSON.stringify(storageObj))
 
-          return arr.map(p => `今日 ${p.word} 关键词被查价 ${p.times} 次，如需继续投放，请在关键词到期前续费，以免被同行客户抢单`)
+          return arr.map(p => `今日 ${p.word} 关键词被查价 ${p.times} 次，如需继续投放，请在到期后尽快续费，以免被同行客户抢单`)
             .join('。 ')
         }
       },
