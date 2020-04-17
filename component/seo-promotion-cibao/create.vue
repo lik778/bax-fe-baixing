@@ -223,7 +223,7 @@ export default {
       this.promotion.keywords = this.promotion.keywords.filter(item => tag !== item)
     },
     addKeyword() {
-      let words = this.search.split(',')
+      let words = this.search.split(/[，,]/)
       const rawWordLen = words.length
 
       words = words
@@ -265,7 +265,14 @@ export default {
         throw this.$message.error('服务城市不能少于15个')
       }
 
-      const baseInfo = await this.$refs.promotionForm.getValues()
+      let baseInfo = {}
+      try {
+        baseInfo = await this.$refs.promotionForm.getValues()
+      } catch(err) {
+        const errorField = Object.values(err)[0] && Object.values(err)[0][0]
+        this.$message.error(errorField ? errorField.message : '基础信息出现错误')
+        return
+      }
 
       if (f2y(this.balance) < this.charge) {
         throw this.$confirm('余额不足，请前往充值', '提示', {
@@ -283,7 +290,6 @@ export default {
     },
     async createPromotion() {
       const data = await this.validateAndReturnPromotionData()
-      console.log(JSON.stringify(data))
       createCibaoPromotion(data).then(res => {
         this.$message.success('创建成功')
         this.$router.push({name: 'seo-promotion-list'})

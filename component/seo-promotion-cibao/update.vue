@@ -145,7 +145,7 @@
         type="primary"
         @click="updatePromotion"
       >
-        创建推广
+        更新推广
       </el-button>
     </section>
     <area-selector
@@ -210,7 +210,7 @@
         this.promotion.keywords = this.promotion.keywords.filter(item => tag !== item)
       },
       addKeyword() {
-        let words = this.search.split(',')
+        let words = this.search.split(/[，,]/)
         const rawWordLen = words.length
 
         words = words
@@ -246,14 +246,18 @@
           throw this.$message.error('服务城市不能少于15个')
         }
 
-        const {
-          url,
-          ...baseInfo
-        } = await this.$refs.promotionForm.getValues()
-
-        return {
-          ...this.promotion,
-          baseInfo
+        try {
+          const {
+            url,
+            ...baseInfo
+          } = await this.$refs.promotionForm.getValues()
+          return {
+            ...this.promotion,
+            baseInfo
+          }
+        } catch(err) {
+          const errorField = Object.values(err)[0] && Object.values(err)[0][0]
+          this.$message.error(errorField ? errorField.message : '基础信息出现错误')
         }
       },
       async updatePromotion() {
@@ -279,8 +283,17 @@
       },
       async getPromotionDataById(id) {
         const data = await getCibaoPromotionByCampaignId(id)
+        // 兼容下一期加速词包计划数据
+        if (!data.areas) {
+          data.areas = []
+          data.baseInfo = {}
+        }
+
         data.areas = data.areas.map(area => area.split('-'))
         this.originPromotion = pick(data, ...Object.keys(this.promotion))
+        this.originPromotion.areas = this.originPromotion.areas || []
+        
+
         this.promotion = clone(this.originPromotion)
       }
     },
