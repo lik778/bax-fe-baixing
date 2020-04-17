@@ -38,6 +38,7 @@
         </div>
         <div class="active-areas">
           <span
+            :key="index"
             v-for="(area, index) in activeAreas"
             @click="selectActiveArea(area)"
           >
