@@ -161,7 +161,7 @@
 import dayjs from 'dayjs'
 import promotionForm from './promotion-form'
 import ContractAck from 'com/widget/contract-ack'
-import areaSelector from 'com/common/area-selector'
+import areaSelector from 'com/common/seo-area-selector'
 import QiqiaobanPageSelector from 'com/common/qiqiaoban-page-selector'
 import {
   f2y
