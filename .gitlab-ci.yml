@@ -27,7 +27,10 @@ build:
   artifacts:
     paths:
       - view/
-  cache: {}
+  cache:
+    paths:
+      - node_modules/
+    
 
 release:
   stage: release
