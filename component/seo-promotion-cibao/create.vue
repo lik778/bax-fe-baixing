@@ -334,7 +334,7 @@ export default {
       }
       & > header {
         margin: 0;
-        width: 160px;
+        min-width: 160px;
       }
     }
     & header {
@@ -378,7 +378,7 @@ export default {
   }
 
   .keyword-pane-tag {
-    margin-left: 8px;
+    margin-right: 8px;
     margin-top: 5px;
   }
 

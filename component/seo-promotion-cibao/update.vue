@@ -261,25 +261,24 @@
         }
       },
       async updatePromotion() {
-        const data = await this.validateAndReturnPromotionData()
+        let data = await this.validateAndReturnPromotionData()
         const originalData = this.originPromotion
-        const requiredArgs = ['id', 'keywords']
-        // 和原始数据对比，只更新修改字段
-        for (const key in data) {
-          if (!requiredArgs.includes(key)
-              && isEqual(data[key], originalData[key])) {
-            delete data[key]
+
+        // 一个key变化就全量字段更新
+        const isPromotionChanged = Object.keys(data)
+          .some(key => !isEqual(data[key], originalData[key]))
+
+        if (isPromotionChanged) {
+          data = {
+            ...originalData,
+            ...data,
+            areas: data.areas.map(area => area.join('-'))
           }
+          await updateCibaoPromotion(data)
         }
+        this.$message.success('更新成功')
+        this.$router.push({name: 'seo-promotion-list'})
 
-        if (data.areas) {
-          data.areas = data.areas.map(area => area.join('-'))
-        }
-
-        updateCibaoPromotion(data).then(res => {
-          this.$message.success('更新成功')
-          this.$router.push({name: 'seo-promotion-list'})
-        })
       },
       async getPromotionDataById(id) {
         const data = await getCibaoPromotionByCampaignId(id)
@@ -336,7 +335,7 @@
       }
       & > header {
         margin: 0;
-        width: 160px;
+        min-width: 160px;
       }
     }
     & header {
@@ -374,7 +373,7 @@
   }
 
   .keyword-pane-tag {
-    margin-left: 8px;
+    margin-right: 8px;
     margin-top: 5px;
   }
 
