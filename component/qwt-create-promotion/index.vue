@@ -108,7 +108,7 @@
           <label>关键词出价<cpc-price-tip />：</label>
           <el-input type="number"
             :value="f2y(kwPrice) || f2y(recommendKwPrice)"
-            @change="onKwPriceChange"
+            @input="onKwPriceChange"
             class="input"
             size="small"
           >
