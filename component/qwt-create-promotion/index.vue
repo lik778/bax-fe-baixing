@@ -106,14 +106,11 @@
         <header>设置预算</header>
         <div class="kw-price">
           <label>关键词出价<cpc-price-tip />：</label>
-          <el-input type="number"
-            :value="f2y(kwPrice) || f2y(recommendKwPrice)"
-            @input="onKwPriceChange"
-            class="input"
-            size="small"
-          >
-            <template slot="append">元</template>
-          </el-input>
+          <bax-input :value="f2y(kwPrice) || f2y(recommendKwPrice)" 
+                     @blur="onKwPriceChange"
+                     @keyup="onKwPriceChange"
+                     class="input"
+                     size="small" />元
           <span class="tip">（关键词出价区间为 [2, 999] 元）</span>
         </div>
 
@@ -134,14 +131,11 @@
 
         <div class="budget">
           <label>单渠道日预算：</label>
-          <el-input type="number"
-            :value="f2y(newPromotion.dailyBudget)"
-            @change="onBudgetChange"
-            class="input"
-            size="small"
-          >
-            <template slot="append">元</template>
-          </el-input>
+          <bax-input :value="f2y(newPromotion.dailyBudget)" 
+                     @blur="onBudgetChange"
+                     @keyup="onBudgetChange"
+                     class="input"
+                     size="small" />元
           <p class="tip">（根据您选取的关键词，建议最低预算为<strong class="red">{{ f2y(predictedInfo.minDailyBudget) }} </strong>元）</p>
         </div>
         <p class="tip">
@@ -204,6 +198,7 @@ import ContractAck from 'com/widget/contract-ack'
 import wxBindModal from 'com/common/wx-bind-modal'
 import FmTip from 'com/widget/fm-tip'
 import qwtAddKeywordList from 'com/common/qwt-add-keyword-list'
+import BaxInput from 'com/common/bax-input'
 
 import dayjs from 'dayjs'
 import { default as track, trackAux } from 'util/track'
@@ -284,7 +279,8 @@ export default {
     ContractAck,
     CpcPriceTip,
     FmTip,
-    qwtAddKeywordList
+    qwtAddKeywordList,
+    BaxInput
   },
   fromMobx: {
     searchRecommends: () => store.searchRecommends,

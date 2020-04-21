@@ -230,10 +230,11 @@
               </label>
               <section>
                 <span>
-                  <el-input
+                  <bax-input
                     size="small"
                     :value="getProp('mobilePriceRatio')"
-                    @input="v => promotion.mobilePriceRatio = v"
+                    @blur="v => promotion.mobilePriceRatio = v"
+                    @keyup="v => promotion.mobilePriceRatio = v"
                     placeholder="默认为1"
                   />
                 </span>
@@ -305,6 +306,7 @@ import AreaSelector from 'com/common/area-selector'
 import ContractAck from 'com/widget/contract-ack'
 import FmTip from 'com/widget/fm-tip'
 import qwtAddKeywordList from 'com/common/qwt-add-keyword-list'
+import BaxInput from 'com/common/bax-input'
 
 
 import { disabledDate } from 'util/element'
@@ -399,7 +401,8 @@ export default {
     KeywordList,
     ContractAck,
     FmTip,
-    qwtAddKeywordList
+    qwtAddKeywordList,
+    BaxInput
   },
   fromMobx: {
     recommendedWords: () => store.recommendedWords,

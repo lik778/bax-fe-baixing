@@ -65,11 +65,10 @@
         </template>
         <template slot-scope="s">
           <span class="price">
-            <input class="bax-input"
-                   placeholder="单位，元"
-                   :value="f2y(getWordPrice(s.row.word))"
-                   @blur="handleWordPrice($event, s)"
-                   @keyup.enter="handleWordPrice($event, s)" />
+            <bax-input placeholder="单位，元"
+                       @blur="v => setCustomPrice(s, v)"
+                       @keyup="v => setCustomPrice(s, v)"
+                       :value="f2y(getWordPrice(s.row.word))" />
             <span v-if="showAddPrice(s.row)"
               class="add-w-price">
               <button @click="bumpPriceBy20(s.row)">
@@ -298,9 +297,6 @@ export default {
     }
   },
   methods: {
-    handleWordPrice(v, s) {
-      this.setCustomPrice(s.row, v.target.value)
-    },
     getRefuseReason(word) {
       const {refuseReason} = word.extra
       return (
@@ -560,14 +556,6 @@ export default {
   display: inline-block !important;
   vertical-align: middle !important;
   line-height: 20px;
-}
-
-.bax-input {
-  width:  100px;
-  border-radius: 4px;
-  padding: 2px 4px;
-  background: #fff;
-  border: 1px solid #ccc;
 }
 
 </style>
