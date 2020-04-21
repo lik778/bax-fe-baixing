@@ -8,7 +8,7 @@
         :product-type="PRO_SITE_PRODUCT_TYPE"
       />
       <p class="warning" v-if="showExpireWarning">
-        站点{{promotion.duration === NINETY_DAYS ? '3' :' 6'}}个月内将过期，
+        站点{{promotion.duration}}天内将过期，
         请选择其他站点，或<router-link :to="{name: 'seo-charge'}">购买</router-link>新官网
       </p>
       <p class="warning" v-if="showExistWebsite">该站点已创建首页宝加速词包计划，请更换</p>
@@ -216,7 +216,7 @@ export default {
     onLandingChange(v) {
       const landingPage = 'http://' + v.domain + '.mvp.baixing.com'
       this.promotion.landingPage = landingPage
-      this.showExpireWarning = dayjs(v.expireAt).subtract(3, 'month').isBefore(dayjs(), 'day')
+      this.showExpireWarning = dayjs(v.expireAt).subtract(this.promotion.duration, 'day').isBefore(dayjs(), 'day')
       this.showExistWebsite = this.existPromotionWebsite.some(o => (o.trim() === landingPage))
     },
     handleTagClose(tag) {
