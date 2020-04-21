@@ -17,6 +17,7 @@
       <div class="section-inline">
         <header>选择投放时长</header>
         <el-radio-group
+          @change="handleDurationChange"
           size="medium"
           v-model="promotion.duration"
         >
@@ -192,6 +193,7 @@ export default {
       durations,
       PRO_SITE_PRODUCT_TYPE,
 
+      landingInfo: null,
       showExistWebsite: false,
       showExpireWarning: false,
 
@@ -214,10 +216,15 @@ export default {
   },
   methods: {
     onLandingChange(v) {
+      this.landingInfo = v
       const landingPage = 'http://' + v.domain + '.mvp.baixing.com'
       this.promotion.landingPage = landingPage
       this.showExpireWarning = dayjs(v.expireAt).subtract(this.promotion.duration, 'day').isBefore(dayjs(), 'day')
       this.showExistWebsite = this.existPromotionWebsite.some(o => (o.trim() === landingPage))
+    },
+    handleDurationChange(duration) {
+      if (!this.landingInfo) return
+      this.showExpireWarning = dayjs(this.landingInfo.expireAt).subtract(duration, 'day').isBefore(dayjs(), 'day')
     },
     handleTagClose(tag) {
       this.promotion.keywords = this.promotion.keywords.filter(item => tag !== item)
