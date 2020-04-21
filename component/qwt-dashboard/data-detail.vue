@@ -35,7 +35,9 @@
       <el-table-column label="出价" width="100">
         <template slot-scope="scope">
           <span v-if="scope.row.price === null">-</span>
-          <el-input v-else size="mini" :value="f2y(scope.row.price)" @change="v => onChangePrice(scope.row.campaignId, scope.row.keywordId, v)"></el-input>
+          <bax-input :value="f2y(scope.row.price)" 
+                     @blur="v => onChangePrice(v, scope.row.campaignId, scope.row.keywordId)" 
+                     @keyup="v => onChangePrice(v, scope.row.campaignId, scope.row.keywordId)" />
         </template>
       </el-table-column>
       <el-table-column label="展现" prop="shows" width="90" sortable />
@@ -74,6 +76,7 @@
 import BaxPagination from 'com/common/pagination'
 import BaxSelect from 'com/common/select'
 import {updateCampaign} from 'api/fengming'
+import BaxInput from 'com/common/bax-input'
 
 import {
   DIMENSION_CAMPAIGN
@@ -96,7 +99,8 @@ export default {
   name: 'qwt-dashboard-data-detail',
   components: {
     BaxPagination,
-    BaxSelect
+    BaxSelect,
+    BaxInput
   },
   props: {
     statistics: {
@@ -138,7 +142,7 @@ export default {
     switchToCampaignReport(campaign) {
       this.$emit('switch-to-campaign-report', campaign)
     },
-    async onChangePrice(cid, kid, userPrice) {
+    async onChangePrice(userPrice, cid, kid) {
       const price = (userPrice ? toFloat(userPrice) : 0) * 100
       if (price > 99 * 100 || price < 2 * 100) {
         return this.$message.error('价格需在2-99元之间')
