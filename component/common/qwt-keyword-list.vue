@@ -67,7 +67,7 @@
           <span class="price">
             <el-input size="mini" placeholder="单位: 元"
               :value="f2y(getWordPrice(s.row.word))"
-              @change="v => setCustomPrice(s.row, v)">
+              @input="v => setCustomPrice(s.row, v)">
             </el-input>
             <span v-if="showAddPrice(s.row)"
               class="add-w-price">
