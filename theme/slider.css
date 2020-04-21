@@ -3,7 +3,7 @@
 /* Element Chalk Variables */
 /* Transition
 -------------------------- */
-/* Colors
+/* Color
 -------------------------- */
 /* 53a8ff */
 /* 66b1ff */
@@ -16,15 +16,11 @@
 /* ecf5ff */
 /* Link
 -------------------------- */
-/* Background
--------------------------- */
 /* Border
--------------------------- */
-/* Box-shadow
 -------------------------- */
 /* Fill
 -------------------------- */
-/* Font
+/* Typography
 -------------------------- */
 /* Size
 -------------------------- */
@@ -38,19 +34,11 @@
 -------------------------- */
 /* Radio
 -------------------------- */
-/*
-$--radio-checked-text-color: $--color-primary !default;
-$--radio-checked-input-border-color: $--color-primary !default;
-$--radio-checked-input-fill: $--color-white !default;
-$--radio-checked-icon-color: $--color-primary !default;
-
-$--radio-input-border-color-hover: $--color-primary !default;
-*/
 /* Select
 -------------------------- */
 /* Alert
 -------------------------- */
-/* Message Box
+/* MessageBox
 -------------------------- */
 /* Message
 -------------------------- */
@@ -75,6 +63,8 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Table
 -------------------------- */
 /* Pagination
+-------------------------- */
+/* Popup
 -------------------------- */
 /* Popover
 -------------------------- */
@@ -115,6 +105,18 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Footer
 --------------------------*/
 /* Main
+--------------------------*/
+/* Timeline
+--------------------------*/
+/* Backtop
+--------------------------*/
+/* Link
+--------------------------*/
+/* Calendar
+--------------------------*/
+/* Form
+-------------------------- */
+/* Avatar
 --------------------------*/
 /* Break-point
 --------------------------*/
@@ -131,7 +133,7 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Element Chalk Variables */
 /* Transition
 -------------------------- */
-/* Colors
+/* Color
 -------------------------- */
 /* 53a8ff */
 /* 66b1ff */
@@ -144,15 +146,11 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* ecf5ff */
 /* Link
 -------------------------- */
-/* Background
--------------------------- */
 /* Border
--------------------------- */
-/* Box-shadow
 -------------------------- */
 /* Fill
 -------------------------- */
-/* Font
+/* Typography
 -------------------------- */
 /* Size
 -------------------------- */
@@ -166,19 +164,11 @@ $--radio-input-border-color-hover: $--color-primary !default;
 -------------------------- */
 /* Radio
 -------------------------- */
-/*
-$--radio-checked-text-color: $--color-primary !default;
-$--radio-checked-input-border-color: $--color-primary !default;
-$--radio-checked-input-fill: $--color-white !default;
-$--radio-checked-icon-color: $--color-primary !default;
-
-$--radio-input-border-color-hover: $--color-primary !default;
-*/
 /* Select
 -------------------------- */
 /* Alert
 -------------------------- */
-/* Message Box
+/* MessageBox
 -------------------------- */
 /* Message
 -------------------------- */
@@ -203,6 +193,8 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Table
 -------------------------- */
 /* Pagination
+-------------------------- */
+/* Popup
 -------------------------- */
 /* Popover
 -------------------------- */
@@ -243,6 +235,18 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Footer
 --------------------------*/
 /* Main
+--------------------------*/
+/* Timeline
+--------------------------*/
+/* Backtop
+--------------------------*/
+/* Link
+--------------------------*/
+/* Calendar
+--------------------------*/
+/* Form
+-------------------------- */
+/* Avatar
 --------------------------*/
 /* Break-point
 --------------------------*/
@@ -257,7 +261,7 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Element Chalk Variables */
 /* Transition
 -------------------------- */
-/* Colors
+/* Color
 -------------------------- */
 /* 53a8ff */
 /* 66b1ff */
@@ -270,15 +274,11 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* ecf5ff */
 /* Link
 -------------------------- */
-/* Background
--------------------------- */
 /* Border
--------------------------- */
-/* Box-shadow
 -------------------------- */
 /* Fill
 -------------------------- */
-/* Font
+/* Typography
 -------------------------- */
 /* Size
 -------------------------- */
@@ -292,19 +292,11 @@ $--radio-input-border-color-hover: $--color-primary !default;
 -------------------------- */
 /* Radio
 -------------------------- */
-/*
-$--radio-checked-text-color: $--color-primary !default;
-$--radio-checked-input-border-color: $--color-primary !default;
-$--radio-checked-input-fill: $--color-white !default;
-$--radio-checked-icon-color: $--color-primary !default;
-
-$--radio-input-border-color-hover: $--color-primary !default;
-*/
 /* Select
 -------------------------- */
 /* Alert
 -------------------------- */
-/* Message Box
+/* MessageBox
 -------------------------- */
 /* Message
 -------------------------- */
@@ -329,6 +321,8 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Table
 -------------------------- */
 /* Pagination
+-------------------------- */
+/* Popup
 -------------------------- */
 /* Popover
 -------------------------- */
@@ -369,6 +363,18 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Footer
 --------------------------*/
 /* Main
+--------------------------*/
+/* Timeline
+--------------------------*/
+/* Backtop
+--------------------------*/
+/* Link
+--------------------------*/
+/* Calendar
+--------------------------*/
+/* Form
+-------------------------- */
+/* Avatar
 --------------------------*/
 /* Break-point
 --------------------------*/
@@ -377,7 +383,7 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Element Chalk Variables */
 /* Transition
 -------------------------- */
-/* Colors
+/* Color
 -------------------------- */
 /* 53a8ff */
 /* 66b1ff */
@@ -390,15 +396,11 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* ecf5ff */
 /* Link
 -------------------------- */
-/* Background
--------------------------- */
 /* Border
--------------------------- */
-/* Box-shadow
 -------------------------- */
 /* Fill
 -------------------------- */
-/* Font
+/* Typography
 -------------------------- */
 /* Size
 -------------------------- */
@@ -412,19 +414,11 @@ $--radio-input-border-color-hover: $--color-primary !default;
 -------------------------- */
 /* Radio
 -------------------------- */
-/*
-$--radio-checked-text-color: $--color-primary !default;
-$--radio-checked-input-border-color: $--color-primary !default;
-$--radio-checked-input-fill: $--color-white !default;
-$--radio-checked-icon-color: $--color-primary !default;
-
-$--radio-input-border-color-hover: $--color-primary !default;
-*/
 /* Select
 -------------------------- */
 /* Alert
 -------------------------- */
-/* Message Box
+/* MessageBox
 -------------------------- */
 /* Message
 -------------------------- */
@@ -449,6 +443,8 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Table
 -------------------------- */
 /* Pagination
+-------------------------- */
+/* Popup
 -------------------------- */
 /* Popover
 -------------------------- */
@@ -489,6 +485,18 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Footer
 --------------------------*/
 /* Main
+--------------------------*/
+/* Timeline
+--------------------------*/
+/* Backtop
+--------------------------*/
+/* Link
+--------------------------*/
+/* Calendar
+--------------------------*/
+/* Form
+-------------------------- */
+/* Avatar
 --------------------------*/
 /* Break-point
 --------------------------*/
@@ -503,7 +511,7 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Element Chalk Variables */
 /* Transition
 -------------------------- */
-/* Colors
+/* Color
 -------------------------- */
 /* 53a8ff */
 /* 66b1ff */
@@ -516,15 +524,11 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* ecf5ff */
 /* Link
 -------------------------- */
-/* Background
--------------------------- */
 /* Border
--------------------------- */
-/* Box-shadow
 -------------------------- */
 /* Fill
 -------------------------- */
-/* Font
+/* Typography
 -------------------------- */
 /* Size
 -------------------------- */
@@ -538,19 +542,11 @@ $--radio-input-border-color-hover: $--color-primary !default;
 -------------------------- */
 /* Radio
 -------------------------- */
-/*
-$--radio-checked-text-color: $--color-primary !default;
-$--radio-checked-input-border-color: $--color-primary !default;
-$--radio-checked-input-fill: $--color-white !default;
-$--radio-checked-icon-color: $--color-primary !default;
-
-$--radio-input-border-color-hover: $--color-primary !default;
-*/
 /* Select
 -------------------------- */
 /* Alert
 -------------------------- */
-/* Message Box
+/* MessageBox
 -------------------------- */
 /* Message
 -------------------------- */
@@ -575,6 +571,8 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Table
 -------------------------- */
 /* Pagination
+-------------------------- */
+/* Popup
 -------------------------- */
 /* Popover
 -------------------------- */
@@ -615,10 +613,23 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Footer
 --------------------------*/
 /* Main
+--------------------------*/
+/* Timeline
+--------------------------*/
+/* Backtop
+--------------------------*/
+/* Link
+--------------------------*/
+/* Calendar
+--------------------------*/
+/* Form
+-------------------------- */
+/* Avatar
 --------------------------*/
 /* Break-point
 --------------------------*/
 .el-textarea {
+  position: relative;
   display: inline-block;
   width: 100%;
   vertical-align: bottom;
@@ -633,34 +644,45 @@ $--radio-input-border-color-hover: $--color-primary !default;
     width: 100%;
     font-size: inherit;
     color: #606266;
-    background-color: #fff;
+    background-color: #FFFFFF;
     background-image: none;
-    border: 1px solid #dcdfe6;
+    border: 1px solid #DCDFE6;
     border-radius: 4px;
     -webkit-transition: border-color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
     transition: border-color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1); }
     .el-textarea__inner::-webkit-input-placeholder {
-      color: #c0c4cc; }
+      color: #C0C4CC; }
     .el-textarea__inner::-ms-input-placeholder {
-      color: #c0c4cc; }
+      color: #C0C4CC; }
     .el-textarea__inner::placeholder {
-      color: #c0c4cc; }
+      color: #C0C4CC; }
     .el-textarea__inner:hover {
-      border-color: #c0c4cc; }
+      border-color: #C0C4CC; }
     .el-textarea__inner:focus {
       outline: none;
       border-color: #FF6350; }
+  .el-textarea .el-input__count {
+    color: #909399;
+    background: #FFFFFF;
+    position: absolute;
+    font-size: 12px;
+    bottom: 5px;
+    right: 10px; }
   .el-textarea.is-disabled .el-textarea__inner {
-    background-color: #f5f7fa;
-    border-color: #e4e7ed;
-    color: #c0c4cc;
+    background-color: #F5F7FA;
+    border-color: #E4E7ED;
+    color: #C0C4CC;
     cursor: not-allowed; }
     .el-textarea.is-disabled .el-textarea__inner::-webkit-input-placeholder {
-      color: #c0c4cc; }
+      color: #C0C4CC; }
     .el-textarea.is-disabled .el-textarea__inner::-ms-input-placeholder {
-      color: #c0c4cc; }
+      color: #C0C4CC; }
     .el-textarea.is-disabled .el-textarea__inner::placeholder {
-      color: #c0c4cc; }
+      color: #C0C4CC; }
+  .el-textarea.is-exceed .el-textarea__inner {
+    border-color: #F56C6C; }
+  .el-textarea.is-exceed .el-input__count {
+    color: #F56C6C; }
 
 .el-input {
   position: relative;
@@ -684,20 +706,34 @@ $--radio-input-border-color-hover: $--color-primary !default;
         background: #fff;
         width: 6px; }
   .el-input .el-input__clear {
-    color: #c0c4cc;
+    color: #C0C4CC;
     font-size: 14px;
-    line-height: 16px;
     cursor: pointer;
     -webkit-transition: color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
     transition: color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1); }
     .el-input .el-input__clear:hover {
       color: #909399; }
+  .el-input .el-input__count {
+    height: 100%;
+    display: -webkit-inline-box;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    color: #909399;
+    font-size: 12px; }
+    .el-input .el-input__count .el-input__count-inner {
+      background: #FFFFFF;
+      line-height: initial;
+      display: inline-block;
+      padding: 0 5px; }
   .el-input__inner {
     -webkit-appearance: none;
-    background-color: #fff;
+    background-color: #FFFFFF;
     background-image: none;
     border-radius: 4px;
-    border: 1px solid #dcdfe6;
+    border: 1px solid #DCDFE6;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
     color: #606266;
@@ -711,13 +747,13 @@ $--radio-input-border-color-hover: $--color-primary !default;
     transition: border-color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
     width: 100%; }
     .el-input__inner::-webkit-input-placeholder {
-      color: #c0c4cc; }
+      color: #C0C4CC; }
     .el-input__inner::-ms-input-placeholder {
-      color: #c0c4cc; }
+      color: #C0C4CC; }
     .el-input__inner::placeholder {
-      color: #c0c4cc; }
+      color: #C0C4CC; }
     .el-input__inner:hover {
-      border-color: #c0c4cc; }
+      border-color: #C0C4CC; }
     .el-input__inner:focus {
       outline: none;
       border-color: #FF6350; }
@@ -727,7 +763,7 @@ $--radio-input-border-color-hover: $--color-primary !default;
     right: 5px;
     top: 0;
     text-align: center;
-    color: #c0c4cc;
+    color: #C0C4CC;
     -webkit-transition: all .3s;
     transition: all .3s;
     pointer-events: none; }
@@ -739,7 +775,7 @@ $--radio-input-border-color-hover: $--color-primary !default;
     left: 5px;
     top: 0;
     text-align: center;
-    color: #c0c4cc;
+    color: #C0C4CC;
     -webkit-transition: all .3s;
     transition: all .3s; }
   .el-input__icon {
@@ -761,18 +797,22 @@ $--radio-input-border-color-hover: $--color-primary !default;
     outline: none;
     border-color: #FF6350; }
   .el-input.is-disabled .el-input__inner {
-    background-color: #f5f7fa;
-    border-color: #e4e7ed;
-    color: #c0c4cc;
+    background-color: #F5F7FA;
+    border-color: #E4E7ED;
+    color: #C0C4CC;
     cursor: not-allowed; }
     .el-input.is-disabled .el-input__inner::-webkit-input-placeholder {
-      color: #c0c4cc; }
+      color: #C0C4CC; }
     .el-input.is-disabled .el-input__inner::-ms-input-placeholder {
-      color: #c0c4cc; }
+      color: #C0C4CC; }
     .el-input.is-disabled .el-input__inner::placeholder {
-      color: #c0c4cc; }
+      color: #C0C4CC; }
   .el-input.is-disabled .el-input__icon {
     cursor: not-allowed; }
+  .el-input.is-exceed .el-input__inner {
+    border-color: #F56C6C; }
+  .el-input.is-exceed .el-input__suffix .el-input__count {
+    color: #F56C6C; }
   .el-input--suffix .el-input__inner {
     padding-right: 30px; }
   .el-input--prefix .el-input__inner {
@@ -809,12 +849,12 @@ $--radio-input-border-color-hover: $--color-primary !default;
     vertical-align: middle;
     display: table-cell; }
   .el-input-group__append, .el-input-group__prepend {
-    background-color: #f5f7fa;
+    background-color: #F5F7FA;
     color: #909399;
     vertical-align: middle;
     display: table-cell;
     position: relative;
-    border: 1px solid #dcdfe6;
+    border: 1px solid #DCDFE6;
     border-radius: 4px;
     padding: 0 20px;
     width: 1px;
@@ -884,7 +924,7 @@ $--radio-input-border-color-hover: $--color-primary !default;
     width: 40px;
     height: auto;
     text-align: center;
-    background: #f5f7fa;
+    background: #F5F7FA;
     color: #606266;
     cursor: pointer;
     font-size: 13px; }
@@ -893,21 +933,21 @@ $--radio-input-border-color-hover: $--color-primary !default;
       .el-input-number__increase:hover:not(.is-disabled) ~ .el-input .el-input__inner:not(.is-disabled), .el-input-number__decrease:hover:not(.is-disabled) ~ .el-input .el-input__inner:not(.is-disabled) {
         border-color: #FF6350; }
     .el-input-number__increase.is-disabled, .el-input-number__decrease.is-disabled {
-      color: #c0c4cc;
+      color: #C0C4CC;
       cursor: not-allowed; }
   .el-input-number__increase {
     right: 1px;
     border-radius: 0 4px 4px 0;
-    border-left: 1px solid #dcdfe6; }
+    border-left: 1px solid #DCDFE6; }
   .el-input-number__decrease {
     left: 1px;
     border-radius: 4px 0 0 4px;
-    border-right: 1px solid #dcdfe6; }
+    border-right: 1px solid #DCDFE6; }
   .el-input-number.is-disabled .el-input-number__increase, .el-input-number.is-disabled .el-input-number__decrease {
-    border-color: #e4e7ed;
-    color: #e4e7ed; }
+    border-color: #E4E7ED;
+    color: #E4E7ED; }
     .el-input-number.is-disabled .el-input-number__increase:hover, .el-input-number.is-disabled .el-input-number__decrease:hover {
-      color: #e4e7ed;
+      color: #E4E7ED;
       cursor: not-allowed; }
   .el-input-number--medium {
     width: 200px;
@@ -956,14 +996,14 @@ $--radio-input-border-color-hover: $--color-primary !default;
       transform: scale(0.8); }
   .el-input-number.is-controls-right .el-input-number__increase {
     border-radius: 0 4px 0 0;
-    border-bottom: 1px solid #dcdfe6; }
+    border-bottom: 1px solid #DCDFE6; }
   .el-input-number.is-controls-right .el-input-number__decrease {
     right: 1px;
     bottom: 1px;
     top: auto;
     left: auto;
     border-right: none;
-    border-left: 1px solid #dcdfe6;
+    border-left: 1px solid #DCDFE6;
     border-radius: 0 0 4px 0; }
   .el-input-number.is-controls-right[class*=medium] [class*=increase], .el-input-number.is-controls-right[class*=medium] [class*=decrease] {
     line-height: 17px; }
@@ -977,7 +1017,7 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Element Chalk Variables */
 /* Transition
 -------------------------- */
-/* Colors
+/* Color
 -------------------------- */
 /* 53a8ff */
 /* 66b1ff */
@@ -990,15 +1030,11 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* ecf5ff */
 /* Link
 -------------------------- */
-/* Background
--------------------------- */
 /* Border
--------------------------- */
-/* Box-shadow
 -------------------------- */
 /* Fill
 -------------------------- */
-/* Font
+/* Typography
 -------------------------- */
 /* Size
 -------------------------- */
@@ -1012,19 +1048,11 @@ $--radio-input-border-color-hover: $--color-primary !default;
 -------------------------- */
 /* Radio
 -------------------------- */
-/*
-$--radio-checked-text-color: $--color-primary !default;
-$--radio-checked-input-border-color: $--color-primary !default;
-$--radio-checked-input-fill: $--color-white !default;
-$--radio-checked-icon-color: $--color-primary !default;
-
-$--radio-input-border-color-hover: $--color-primary !default;
-*/
 /* Select
 -------------------------- */
 /* Alert
 -------------------------- */
-/* Message Box
+/* MessageBox
 -------------------------- */
 /* Message
 -------------------------- */
@@ -1049,6 +1077,8 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Table
 -------------------------- */
 /* Pagination
+-------------------------- */
+/* Popup
 -------------------------- */
 /* Popover
 -------------------------- */
@@ -1089,6 +1119,18 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Footer
 --------------------------*/
 /* Main
+--------------------------*/
+/* Timeline
+--------------------------*/
+/* Backtop
+--------------------------*/
+/* Link
+--------------------------*/
+/* Calendar
+--------------------------*/
+/* Form
+-------------------------- */
+/* Avatar
 --------------------------*/
 /* Break-point
 --------------------------*/
@@ -1103,7 +1145,7 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Element Chalk Variables */
 /* Transition
 -------------------------- */
-/* Colors
+/* Color
 -------------------------- */
 /* 53a8ff */
 /* 66b1ff */
@@ -1116,15 +1158,11 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* ecf5ff */
 /* Link
 -------------------------- */
-/* Background
--------------------------- */
 /* Border
--------------------------- */
-/* Box-shadow
 -------------------------- */
 /* Fill
 -------------------------- */
-/* Font
+/* Typography
 -------------------------- */
 /* Size
 -------------------------- */
@@ -1138,19 +1176,11 @@ $--radio-input-border-color-hover: $--color-primary !default;
 -------------------------- */
 /* Radio
 -------------------------- */
-/*
-$--radio-checked-text-color: $--color-primary !default;
-$--radio-checked-input-border-color: $--color-primary !default;
-$--radio-checked-input-fill: $--color-white !default;
-$--radio-checked-icon-color: $--color-primary !default;
-
-$--radio-input-border-color-hover: $--color-primary !default;
-*/
 /* Select
 -------------------------- */
 /* Alert
 -------------------------- */
-/* Message Box
+/* MessageBox
 -------------------------- */
 /* Message
 -------------------------- */
@@ -1175,6 +1205,8 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Table
 -------------------------- */
 /* Pagination
+-------------------------- */
+/* Popup
 -------------------------- */
 /* Popover
 -------------------------- */
@@ -1216,6 +1248,18 @@ $--radio-input-border-color-hover: $--color-primary !default;
 --------------------------*/
 /* Main
 --------------------------*/
+/* Timeline
+--------------------------*/
+/* Backtop
+--------------------------*/
+/* Link
+--------------------------*/
+/* Calendar
+--------------------------*/
+/* Form
+-------------------------- */
+/* Avatar
+--------------------------*/
 /* Break-point
 --------------------------*/
 .el-tooltip:focus:not(.focusing), .el-tooltip:focus:hover {
@@ -1228,7 +1272,8 @@ $--radio-input-border-color-hover: $--color-primary !default;
   z-index: 2000;
   font-size: 12px;
   line-height: 1.2;
-  min-width: 10px; }
+  min-width: 10px;
+  word-wrap: break-word; }
   .el-tooltip__popper .popper__arrow,
   .el-tooltip__popper .popper__arrow::after {
     position: absolute;
@@ -1289,31 +1334,31 @@ $--radio-input-border-color-hover: $--color-primary !default;
       border-left-color: #303133; }
   .el-tooltip__popper.is-dark {
     background: #303133;
-    color: #fff; }
+    color: #FFFFFF; }
   .el-tooltip__popper.is-light {
-    background: #fff;
+    background: #FFFFFF;
     border: 1px solid #303133; }
     .el-tooltip__popper.is-light[x-placement^="top"] .popper__arrow {
       border-top-color: #303133; }
       .el-tooltip__popper.is-light[x-placement^="top"] .popper__arrow::after {
-        border-top-color: #fff; }
+        border-top-color: #FFFFFF; }
     .el-tooltip__popper.is-light[x-placement^="bottom"] .popper__arrow {
       border-bottom-color: #303133; }
       .el-tooltip__popper.is-light[x-placement^="bottom"] .popper__arrow::after {
-        border-bottom-color: #fff; }
+        border-bottom-color: #FFFFFF; }
     .el-tooltip__popper.is-light[x-placement^="left"] .popper__arrow {
       border-left-color: #303133; }
       .el-tooltip__popper.is-light[x-placement^="left"] .popper__arrow::after {
-        border-left-color: #fff; }
+        border-left-color: #FFFFFF; }
     .el-tooltip__popper.is-light[x-placement^="right"] .popper__arrow {
       border-right-color: #303133; }
       .el-tooltip__popper.is-light[x-placement^="right"] .popper__arrow::after {
-        border-right-color: #fff; }
+        border-right-color: #FFFFFF; }
 
 /* Element Chalk Variables */
 /* Transition
 -------------------------- */
-/* Colors
+/* Color
 -------------------------- */
 /* 53a8ff */
 /* 66b1ff */
@@ -1326,15 +1371,11 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* ecf5ff */
 /* Link
 -------------------------- */
-/* Background
--------------------------- */
 /* Border
--------------------------- */
-/* Box-shadow
 -------------------------- */
 /* Fill
 -------------------------- */
-/* Font
+/* Typography
 -------------------------- */
 /* Size
 -------------------------- */
@@ -1348,19 +1389,11 @@ $--radio-input-border-color-hover: $--color-primary !default;
 -------------------------- */
 /* Radio
 -------------------------- */
-/*
-$--radio-checked-text-color: $--color-primary !default;
-$--radio-checked-input-border-color: $--color-primary !default;
-$--radio-checked-input-fill: $--color-white !default;
-$--radio-checked-icon-color: $--color-primary !default;
-
-$--radio-input-border-color-hover: $--color-primary !default;
-*/
 /* Select
 -------------------------- */
 /* Alert
 -------------------------- */
-/* Message Box
+/* MessageBox
 -------------------------- */
 /* Message
 -------------------------- */
@@ -1385,6 +1418,8 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Table
 -------------------------- */
 /* Pagination
+-------------------------- */
+/* Popup
 -------------------------- */
 /* Popover
 -------------------------- */
@@ -1426,6 +1461,18 @@ $--radio-input-border-color-hover: $--color-primary !default;
 --------------------------*/
 /* Main
 --------------------------*/
+/* Timeline
+--------------------------*/
+/* Backtop
+--------------------------*/
+/* Link
+--------------------------*/
+/* Calendar
+--------------------------*/
+/* Form
+-------------------------- */
+/* Avatar
+--------------------------*/
 /* Break-point
 --------------------------*/
 .el-slider::before,
@@ -1440,7 +1487,7 @@ $--radio-input-border-color-hover: $--color-primary !default;
   width: 100%;
   height: 6px;
   margin: 16px 0;
-  background-color: #e4e7ed;
+  background-color: #E4E7ED;
   border-radius: 3px;
   position: relative;
   cursor: pointer;
@@ -1451,9 +1498,9 @@ $--radio-input-border-color-hover: $--color-primary !default;
   .el-slider__runway.disabled {
     cursor: default; }
     .el-slider__runway.disabled .el-slider__bar {
-      background-color: #c0c4cc; }
+      background-color: #C0C4CC; }
     .el-slider__runway.disabled .el-slider__button {
-      border-color: #c0c4cc; }
+      border-color: #C0C4CC; }
     .el-slider__runway.disabled .el-slider__button-wrapper:hover, .el-slider__runway.disabled .el-slider__button-wrapper.hover {
       cursor: not-allowed; }
     .el-slider__runway.disabled .el-slider__button-wrapper.dragging {
@@ -1518,7 +1565,7 @@ $--radio-input-border-color-hover: $--color-primary !default;
   width: 16px;
   height: 16px;
   border: solid 2px #FF6350;
-  background-color: #fff;
+  background-color: #FFFFFF;
   border-radius: 50%;
   -webkit-transition: .2s;
   transition: .2s;
@@ -1541,9 +1588,22 @@ $--radio-input-border-color-hover: $--color-primary !default;
   height: 6px;
   width: 6px;
   border-radius: 100%;
-  background-color: #fff;
+  background-color: #FFFFFF;
   -webkit-transform: translateX(-50%);
   transform: translateX(-50%); }
+
+.el-slider__marks {
+  top: 0;
+  left: 12px;
+  width: 18px;
+  height: 100%; }
+  .el-slider__marks-text {
+    position: absolute;
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%);
+    font-size: 14px;
+    color: #909399;
+    margin-top: 15px; }
 
 .el-slider.is-vertical {
   position: relative; }
@@ -1580,7 +1640,7 @@ $--radio-input-border-color-hover: $--color-primary !default;
       .el-slider.is-vertical.el-slider--with-input .el-slider__input .el-input-number__increase {
         top: 32px;
         margin-top: -1px;
-        border: 1px solid #dcdfe6;
+        border: 1px solid #DCDFE6;
         line-height: 20px;
         -webkit-box-sizing: border-box;
         box-sizing: border-box;
@@ -1598,7 +1658,12 @@ $--radio-input-border-color-hover: $--color-primary !default;
           border-bottom-right-radius: 0; }
       .el-slider.is-vertical.el-slider--with-input .el-slider__input:hover .el-input-number__decrease,
       .el-slider.is-vertical.el-slider--with-input .el-slider__input:hover .el-input-number__increase {
-        border-color: #c0c4cc; }
+        border-color: #C0C4CC; }
       .el-slider.is-vertical.el-slider--with-input .el-slider__input:active .el-input-number__decrease,
       .el-slider.is-vertical.el-slider--with-input .el-slider__input:active .el-input-number__increase {
         border-color: #FF6350; }
+  .el-slider.is-vertical .el-slider__marks-text {
+    margin-top: 0;
+    left: 15px;
+    -webkit-transform: translateY(50%);
+    transform: translateY(50%); }

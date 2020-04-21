@@ -1,5 +1,14 @@
 {
-  "presets": [["@babel/preset-env", {"useBuiltIns": "usage", "modules": false}]],
+  "presets": [
+    [
+      "@babel/preset-env", 
+      {
+        "useBuiltIns": "usage",
+        "modules": false,
+        "corejs": "3"
+      }
+    ]
+  ],
   "plugins": [
     "@babel/plugin-syntax-dynamic-import",
     ["@babel/plugin-proposal-decorators", {"legacy": true}],

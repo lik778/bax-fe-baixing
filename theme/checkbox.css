@@ -2,7 +2,7 @@
 /* Element Chalk Variables */
 /* Transition
 -------------------------- */
-/* Colors
+/* Color
 -------------------------- */
 /* 53a8ff */
 /* 66b1ff */
@@ -15,15 +15,11 @@
 /* ecf5ff */
 /* Link
 -------------------------- */
-/* Background
--------------------------- */
 /* Border
--------------------------- */
-/* Box-shadow
 -------------------------- */
 /* Fill
 -------------------------- */
-/* Font
+/* Typography
 -------------------------- */
 /* Size
 -------------------------- */
@@ -37,19 +33,11 @@
 -------------------------- */
 /* Radio
 -------------------------- */
-/*
-$--radio-checked-text-color: $--color-primary !default;
-$--radio-checked-input-border-color: $--color-primary !default;
-$--radio-checked-input-fill: $--color-white !default;
-$--radio-checked-icon-color: $--color-primary !default;
-
-$--radio-input-border-color-hover: $--color-primary !default;
-*/
 /* Select
 -------------------------- */
 /* Alert
 -------------------------- */
-/* Message Box
+/* MessageBox
 -------------------------- */
 /* Message
 -------------------------- */
@@ -74,6 +62,8 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Table
 -------------------------- */
 /* Pagination
+-------------------------- */
+/* Popup
 -------------------------- */
 /* Popover
 -------------------------- */
@@ -114,6 +104,18 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Footer
 --------------------------*/
 /* Main
+--------------------------*/
+/* Timeline
+--------------------------*/
+/* Backtop
+--------------------------*/
+/* Link
+--------------------------*/
+/* Calendar
+--------------------------*/
+/* Form
+-------------------------- */
+/* Avatar
 --------------------------*/
 /* Break-point
 --------------------------*/
@@ -122,7 +124,7 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Element Chalk Variables */
 /* Transition
 -------------------------- */
-/* Colors
+/* Color
 -------------------------- */
 /* 53a8ff */
 /* 66b1ff */
@@ -135,15 +137,11 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* ecf5ff */
 /* Link
 -------------------------- */
-/* Background
--------------------------- */
 /* Border
--------------------------- */
-/* Box-shadow
 -------------------------- */
 /* Fill
 -------------------------- */
-/* Font
+/* Typography
 -------------------------- */
 /* Size
 -------------------------- */
@@ -157,19 +155,11 @@ $--radio-input-border-color-hover: $--color-primary !default;
 -------------------------- */
 /* Radio
 -------------------------- */
-/*
-$--radio-checked-text-color: $--color-primary !default;
-$--radio-checked-input-border-color: $--color-primary !default;
-$--radio-checked-input-fill: $--color-white !default;
-$--radio-checked-icon-color: $--color-primary !default;
-
-$--radio-input-border-color-hover: $--color-primary !default;
-*/
 /* Select
 -------------------------- */
 /* Alert
 -------------------------- */
-/* Message Box
+/* MessageBox
 -------------------------- */
 /* Message
 -------------------------- */
@@ -194,6 +184,8 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Table
 -------------------------- */
 /* Pagination
+-------------------------- */
+/* Popup
 -------------------------- */
 /* Popover
 -------------------------- */
@@ -234,6 +226,18 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Footer
 --------------------------*/
 /* Main
+--------------------------*/
+/* Timeline
+--------------------------*/
+/* Backtop
+--------------------------*/
+/* Link
+--------------------------*/
+/* Calendar
+--------------------------*/
+/* Form
+-------------------------- */
+/* Avatar
 --------------------------*/
 /* Break-point
 --------------------------*/
@@ -248,7 +252,7 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Element Chalk Variables */
 /* Transition
 -------------------------- */
-/* Colors
+/* Color
 -------------------------- */
 /* 53a8ff */
 /* 66b1ff */
@@ -261,15 +265,11 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* ecf5ff */
 /* Link
 -------------------------- */
-/* Background
--------------------------- */
 /* Border
--------------------------- */
-/* Box-shadow
 -------------------------- */
 /* Fill
 -------------------------- */
-/* Font
+/* Typography
 -------------------------- */
 /* Size
 -------------------------- */
@@ -283,19 +283,11 @@ $--radio-input-border-color-hover: $--color-primary !default;
 -------------------------- */
 /* Radio
 -------------------------- */
-/*
-$--radio-checked-text-color: $--color-primary !default;
-$--radio-checked-input-border-color: $--color-primary !default;
-$--radio-checked-input-fill: $--color-white !default;
-$--radio-checked-icon-color: $--color-primary !default;
-
-$--radio-input-border-color-hover: $--color-primary !default;
-*/
 /* Select
 -------------------------- */
 /* Alert
 -------------------------- */
-/* Message Box
+/* MessageBox
 -------------------------- */
 /* Message
 -------------------------- */
@@ -320,6 +312,8 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Table
 -------------------------- */
 /* Pagination
+-------------------------- */
+/* Popup
 -------------------------- */
 /* Popover
 -------------------------- */
@@ -361,6 +355,18 @@ $--radio-input-border-color-hover: $--color-primary !default;
 --------------------------*/
 /* Main
 --------------------------*/
+/* Timeline
+--------------------------*/
+/* Backtop
+--------------------------*/
+/* Link
+--------------------------*/
+/* Calendar
+--------------------------*/
+/* Form
+-------------------------- */
+/* Avatar
+--------------------------*/
 /* Break-point
 --------------------------*/
 .el-checkbox {
@@ -374,11 +380,12 @@ $--radio-input-border-color-hover: $--color-primary !default;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
-  user-select: none; }
+  user-select: none;
+  margin-right: 30px; }
   .el-checkbox.is-bordered {
     padding: 9px 20px 9px 10px;
     border-radius: 4px;
-    border: 1px solid #dcdfe6;
+    border: 1px solid #DCDFE6;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
     line-height: normal;
@@ -386,7 +393,7 @@ $--radio-input-border-color-hover: $--color-primary !default;
     .el-checkbox.is-bordered.is-checked {
       border-color: #FF6350; }
     .el-checkbox.is-bordered.is-disabled {
-      border-color: #ebeef5;
+      border-color: #EBEEF5;
       cursor: not-allowed; }
     .el-checkbox.is-bordered + .el-checkbox.is-bordered {
       margin-left: 10px; }
@@ -436,26 +443,26 @@ $--radio-input-border-color-hover: $--color-primary !default;
     vertical-align: middle; }
     .el-checkbox__input.is-disabled .el-checkbox__inner {
       background-color: #edf2fc;
-      border-color: #dcdfe6;
+      border-color: #DCDFE6;
       cursor: not-allowed; }
       .el-checkbox__input.is-disabled .el-checkbox__inner::after {
         cursor: not-allowed;
-        border-color: #c0c4cc; }
+        border-color: #C0C4CC; }
       .el-checkbox__input.is-disabled .el-checkbox__inner + .el-checkbox__label {
         cursor: not-allowed; }
     .el-checkbox__input.is-disabled.is-checked .el-checkbox__inner {
-      background-color: #f2f6fc;
-      border-color: #dcdfe6; }
+      background-color: #F2F6FC;
+      border-color: #DCDFE6; }
       .el-checkbox__input.is-disabled.is-checked .el-checkbox__inner::after {
-        border-color: #c0c4cc; }
+        border-color: #C0C4CC; }
     .el-checkbox__input.is-disabled.is-indeterminate .el-checkbox__inner {
-      background-color: #f2f6fc;
-      border-color: #dcdfe6; }
+      background-color: #F2F6FC;
+      border-color: #DCDFE6; }
       .el-checkbox__input.is-disabled.is-indeterminate .el-checkbox__inner::before {
-        background-color: #c0c4cc;
-        border-color: #c0c4cc; }
+        background-color: #C0C4CC;
+        border-color: #C0C4CC; }
     .el-checkbox__input.is-disabled + span.el-checkbox__label {
-      color: #c0c4cc;
+      color: #C0C4CC;
       cursor: not-allowed; }
     .el-checkbox__input.is-checked .el-checkbox__inner {
       background-color: #FF6350;
@@ -476,7 +483,7 @@ $--radio-input-border-color-hover: $--color-primary !default;
         content: '';
         position: absolute;
         display: block;
-        background-color: #fff;
+        background-color: #FFFFFF;
         height: 2px;
         -webkit-transform: scale(0.5);
         transform: scale(0.5);
@@ -488,13 +495,13 @@ $--radio-input-border-color-hover: $--color-primary !default;
   .el-checkbox__inner {
     display: inline-block;
     position: relative;
-    border: 1px solid #dcdfe6;
+    border: 1px solid #DCDFE6;
     border-radius: 2px;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
     width: 14px;
     height: 14px;
-    background-color: #fff;
+    background-color: #FFFFFF;
     z-index: 1;
     -webkit-transition: border-color 0.25s cubic-bezier(0.71, -0.46, 0.29, 1.46), background-color 0.25s cubic-bezier(0.71, -0.46, 0.29, 1.46);
     transition: border-color 0.25s cubic-bezier(0.71, -0.46, 0.29, 1.46), background-color 0.25s cubic-bezier(0.71, -0.46, 0.29, 1.46); }
@@ -504,7 +511,7 @@ $--radio-input-border-color-hover: $--color-primary !default;
       -webkit-box-sizing: content-box;
       box-sizing: content-box;
       content: "";
-      border: 1px solid #fff;
+      border: 1px solid #FFFFFF;
       border-left: 0;
       border-top: 0;
       height: 7px;
@@ -533,8 +540,8 @@ $--radio-input-border-color-hover: $--color-primary !default;
     padding-left: 10px;
     line-height: 19px;
     font-size: 14px; }
-  .el-checkbox + .el-checkbox {
-    margin-left: 30px; }
+  .el-checkbox:last-of-type {
+    margin-right: 0; }
 
 .el-checkbox-button {
   position: relative;
@@ -546,8 +553,8 @@ $--radio-input-border-color-hover: $--color-primary !default;
     white-space: nowrap;
     vertical-align: middle;
     cursor: pointer;
-    background: #fff;
-    border: 1px solid #dcdfe6;
+    background: #FFFFFF;
+    border: 1px solid #DCDFE6;
     border-left: 0;
     color: #606266;
     -webkit-appearance: none;
@@ -580,7 +587,7 @@ $--radio-input-border-color-hover: $--color-primary !default;
     margin: 0;
     z-index: -1; }
   .el-checkbox-button.is-checked .el-checkbox-button__inner {
-    color: #fff;
+    color: #FFFFFF;
     background-color: #FF6350;
     border-color: #FF6350;
     -webkit-box-shadow: -1px 0 0 0 #ffa196;
@@ -588,17 +595,17 @@ $--radio-input-border-color-hover: $--color-primary !default;
   .el-checkbox-button.is-checked:first-child .el-checkbox-button__inner {
     border-left-color: #FF6350; }
   .el-checkbox-button.is-disabled .el-checkbox-button__inner {
-    color: #c0c4cc;
+    color: #C0C4CC;
     cursor: not-allowed;
     background-image: none;
-    background-color: #fff;
-    border-color: #ebeef5;
+    background-color: #FFFFFF;
+    border-color: #EBEEF5;
     -webkit-box-shadow: none;
     box-shadow: none; }
   .el-checkbox-button.is-disabled:first-child .el-checkbox-button__inner {
-    border-left-color: #ebeef5; }
+    border-left-color: #EBEEF5; }
   .el-checkbox-button:first-child .el-checkbox-button__inner {
-    border-left: 1px solid #dcdfe6;
+    border-left: 1px solid #DCDFE6;
     border-radius: 4px 0 0 4px;
     -webkit-box-shadow: none !important;
     box-shadow: none !important; }

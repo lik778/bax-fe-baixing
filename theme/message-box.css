@@ -3,7 +3,7 @@
 /* Element Chalk Variables */
 /* Transition
 -------------------------- */
-/* Colors
+/* Color
 -------------------------- */
 /* 53a8ff */
 /* 66b1ff */
@@ -16,15 +16,11 @@
 /* ecf5ff */
 /* Link
 -------------------------- */
-/* Background
--------------------------- */
 /* Border
--------------------------- */
-/* Box-shadow
 -------------------------- */
 /* Fill
 -------------------------- */
-/* Font
+/* Typography
 -------------------------- */
 /* Size
 -------------------------- */
@@ -38,19 +34,11 @@
 -------------------------- */
 /* Radio
 -------------------------- */
-/*
-$--radio-checked-text-color: $--color-primary !default;
-$--radio-checked-input-border-color: $--color-primary !default;
-$--radio-checked-input-fill: $--color-white !default;
-$--radio-checked-icon-color: $--color-primary !default;
-
-$--radio-input-border-color-hover: $--color-primary !default;
-*/
 /* Select
 -------------------------- */
 /* Alert
 -------------------------- */
-/* Message Box
+/* MessageBox
 -------------------------- */
 /* Message
 -------------------------- */
@@ -75,6 +63,8 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Table
 -------------------------- */
 /* Pagination
+-------------------------- */
+/* Popup
 -------------------------- */
 /* Popover
 -------------------------- */
@@ -115,6 +105,18 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Footer
 --------------------------*/
 /* Main
+--------------------------*/
+/* Timeline
+--------------------------*/
+/* Backtop
+--------------------------*/
+/* Link
+--------------------------*/
+/* Calendar
+--------------------------*/
+/* Form
+-------------------------- */
+/* Avatar
 --------------------------*/
 /* Break-point
 --------------------------*/
@@ -129,7 +131,7 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Element Chalk Variables */
 /* Transition
 -------------------------- */
-/* Colors
+/* Color
 -------------------------- */
 /* 53a8ff */
 /* 66b1ff */
@@ -142,15 +144,11 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* ecf5ff */
 /* Link
 -------------------------- */
-/* Background
--------------------------- */
 /* Border
--------------------------- */
-/* Box-shadow
 -------------------------- */
 /* Fill
 -------------------------- */
-/* Font
+/* Typography
 -------------------------- */
 /* Size
 -------------------------- */
@@ -164,19 +162,11 @@ $--radio-input-border-color-hover: $--color-primary !default;
 -------------------------- */
 /* Radio
 -------------------------- */
-/*
-$--radio-checked-text-color: $--color-primary !default;
-$--radio-checked-input-border-color: $--color-primary !default;
-$--radio-checked-input-fill: $--color-white !default;
-$--radio-checked-icon-color: $--color-primary !default;
-
-$--radio-input-border-color-hover: $--color-primary !default;
-*/
 /* Select
 -------------------------- */
 /* Alert
 -------------------------- */
-/* Message Box
+/* MessageBox
 -------------------------- */
 /* Message
 -------------------------- */
@@ -201,6 +191,8 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Table
 -------------------------- */
 /* Pagination
+-------------------------- */
+/* Popup
 -------------------------- */
 /* Popover
 -------------------------- */
@@ -241,6 +233,138 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Footer
 --------------------------*/
 /* Main
+--------------------------*/
+/* Timeline
+--------------------------*/
+/* Backtop
+--------------------------*/
+/* Link
+--------------------------*/
+/* Calendar
+--------------------------*/
+/* Form
+-------------------------- */
+/* Avatar
+--------------------------*/
+/* Break-point
+--------------------------*/
+/* Element Chalk Variables */
+/* Transition
+-------------------------- */
+/* Color
+-------------------------- */
+/* 53a8ff */
+/* 66b1ff */
+/* 79bbff */
+/* 8cc5ff */
+/* a0cfff */
+/* b3d8ff */
+/* c6e2ff */
+/* d9ecff */
+/* ecf5ff */
+/* Link
+-------------------------- */
+/* Border
+-------------------------- */
+/* Fill
+-------------------------- */
+/* Typography
+-------------------------- */
+/* Size
+-------------------------- */
+/* z-index
+-------------------------- */
+/* Disable base
+-------------------------- */
+/* Icon
+-------------------------- */
+/* Checkbox
+-------------------------- */
+/* Radio
+-------------------------- */
+/* Select
+-------------------------- */
+/* Alert
+-------------------------- */
+/* MessageBox
+-------------------------- */
+/* Message
+-------------------------- */
+/* Notification
+-------------------------- */
+/* Input
+-------------------------- */
+/* Cascader
+-------------------------- */
+/* Group
+-------------------------- */
+/* Tab
+-------------------------- */
+/* Button
+-------------------------- */
+/* cascader
+-------------------------- */
+/* Switch
+-------------------------- */
+/* Dialog
+-------------------------- */
+/* Table
+-------------------------- */
+/* Pagination
+-------------------------- */
+/* Popup
+-------------------------- */
+/* Popover
+-------------------------- */
+/* Tooltip
+-------------------------- */
+/* Tag
+-------------------------- */
+/* Tree
+-------------------------- */
+/* Dropdown
+-------------------------- */
+/* Badge
+-------------------------- */
+/* Card
+--------------------------*/
+/* Slider
+--------------------------*/
+/* Steps
+--------------------------*/
+/* Menu
+--------------------------*/
+/* Rate
+--------------------------*/
+/* DatePicker
+--------------------------*/
+/* Loading
+--------------------------*/
+/* Scrollbar
+--------------------------*/
+/* Carousel
+--------------------------*/
+/* Collapse
+--------------------------*/
+/* Transfer
+--------------------------*/
+/* Header
+  --------------------------*/
+/* Footer
+--------------------------*/
+/* Main
+--------------------------*/
+/* Timeline
+--------------------------*/
+/* Backtop
+--------------------------*/
+/* Link
+--------------------------*/
+/* Calendar
+--------------------------*/
+/* Form
+-------------------------- */
+/* Avatar
 --------------------------*/
 /* Break-point
 --------------------------*/
@@ -249,7 +373,7 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Element Chalk Variables */
 /* Transition
 -------------------------- */
-/* Colors
+/* Color
 -------------------------- */
 /* 53a8ff */
 /* 66b1ff */
@@ -262,15 +386,11 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* ecf5ff */
 /* Link
 -------------------------- */
-/* Background
--------------------------- */
 /* Border
--------------------------- */
-/* Box-shadow
 -------------------------- */
 /* Fill
 -------------------------- */
-/* Font
+/* Typography
 -------------------------- */
 /* Size
 -------------------------- */
@@ -284,19 +404,11 @@ $--radio-input-border-color-hover: $--color-primary !default;
 -------------------------- */
 /* Radio
 -------------------------- */
-/*
-$--radio-checked-text-color: $--color-primary !default;
-$--radio-checked-input-border-color: $--color-primary !default;
-$--radio-checked-input-fill: $--color-white !default;
-$--radio-checked-icon-color: $--color-primary !default;
-
-$--radio-input-border-color-hover: $--color-primary !default;
-*/
 /* Select
 -------------------------- */
 /* Alert
 -------------------------- */
-/* Message Box
+/* MessageBox
 -------------------------- */
 /* Message
 -------------------------- */
@@ -321,6 +433,8 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Table
 -------------------------- */
 /* Pagination
+-------------------------- */
+/* Popup
 -------------------------- */
 /* Popover
 -------------------------- */
@@ -361,6 +475,18 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Footer
 --------------------------*/
 /* Main
+--------------------------*/
+/* Timeline
+--------------------------*/
+/* Backtop
+--------------------------*/
+/* Link
+--------------------------*/
+/* Calendar
+--------------------------*/
+/* Form
+-------------------------- */
+/* Avatar
 --------------------------*/
 /* Break-point
 --------------------------*/
@@ -407,7 +533,7 @@ $--radio-input-border-color-hover: $--color-primary !default;
   width: 100%;
   height: 100%;
   opacity: 0.5;
-  background: #000; }
+  background: #000000; }
 
 .el-popup-parent--hidden {
   overflow: hidden; }
@@ -415,7 +541,7 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Element Chalk Variables */
 /* Transition
 -------------------------- */
-/* Colors
+/* Color
 -------------------------- */
 /* 53a8ff */
 /* 66b1ff */
@@ -428,15 +554,11 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* ecf5ff */
 /* Link
 -------------------------- */
-/* Background
--------------------------- */
 /* Border
--------------------------- */
-/* Box-shadow
 -------------------------- */
 /* Fill
 -------------------------- */
-/* Font
+/* Typography
 -------------------------- */
 /* Size
 -------------------------- */
@@ -450,19 +572,11 @@ $--radio-input-border-color-hover: $--color-primary !default;
 -------------------------- */
 /* Radio
 -------------------------- */
-/*
-$--radio-checked-text-color: $--color-primary !default;
-$--radio-checked-input-border-color: $--color-primary !default;
-$--radio-checked-input-fill: $--color-white !default;
-$--radio-checked-icon-color: $--color-primary !default;
-
-$--radio-input-border-color-hover: $--color-primary !default;
-*/
 /* Select
 -------------------------- */
 /* Alert
 -------------------------- */
-/* Message Box
+/* MessageBox
 -------------------------- */
 /* Message
 -------------------------- */
@@ -487,6 +601,8 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Table
 -------------------------- */
 /* Pagination
+-------------------------- */
+/* Popup
 -------------------------- */
 /* Popover
 -------------------------- */
@@ -527,13 +643,25 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Footer
 --------------------------*/
 /* Main
+--------------------------*/
+/* Timeline
+--------------------------*/
+/* Backtop
+--------------------------*/
+/* Link
+--------------------------*/
+/* Calendar
+--------------------------*/
+/* Form
+-------------------------- */
+/* Avatar
 --------------------------*/
 /* Break-point
 --------------------------*/
 /* Element Chalk Variables */
 /* Transition
 -------------------------- */
-/* Colors
+/* Color
 -------------------------- */
 /* 53a8ff */
 /* 66b1ff */
@@ -546,15 +674,11 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* ecf5ff */
 /* Link
 -------------------------- */
-/* Background
--------------------------- */
 /* Border
--------------------------- */
-/* Box-shadow
 -------------------------- */
 /* Fill
 -------------------------- */
-/* Font
+/* Typography
 -------------------------- */
 /* Size
 -------------------------- */
@@ -568,19 +692,11 @@ $--radio-input-border-color-hover: $--color-primary !default;
 -------------------------- */
 /* Radio
 -------------------------- */
-/*
-$--radio-checked-text-color: $--color-primary !default;
-$--radio-checked-input-border-color: $--color-primary !default;
-$--radio-checked-input-fill: $--color-white !default;
-$--radio-checked-icon-color: $--color-primary !default;
-
-$--radio-input-border-color-hover: $--color-primary !default;
-*/
 /* Select
 -------------------------- */
 /* Alert
 -------------------------- */
-/* Message Box
+/* MessageBox
 -------------------------- */
 /* Message
 -------------------------- */
@@ -605,6 +721,8 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Table
 -------------------------- */
 /* Pagination
+-------------------------- */
+/* Popup
 -------------------------- */
 /* Popover
 -------------------------- */
@@ -645,6 +763,18 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Footer
 --------------------------*/
 /* Main
+--------------------------*/
+/* Timeline
+--------------------------*/
+/* Backtop
+--------------------------*/
+/* Link
+--------------------------*/
+/* Calendar
+--------------------------*/
+/* Form
+-------------------------- */
+/* Avatar
 --------------------------*/
 /* Break-point
 --------------------------*/
@@ -653,7 +783,7 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Element Chalk Variables */
 /* Transition
 -------------------------- */
-/* Colors
+/* Color
 -------------------------- */
 /* 53a8ff */
 /* 66b1ff */
@@ -666,15 +796,11 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* ecf5ff */
 /* Link
 -------------------------- */
-/* Background
--------------------------- */
 /* Border
--------------------------- */
-/* Box-shadow
 -------------------------- */
 /* Fill
 -------------------------- */
-/* Font
+/* Typography
 -------------------------- */
 /* Size
 -------------------------- */
@@ -688,19 +814,11 @@ $--radio-input-border-color-hover: $--color-primary !default;
 -------------------------- */
 /* Radio
 -------------------------- */
-/*
-$--radio-checked-text-color: $--color-primary !default;
-$--radio-checked-input-border-color: $--color-primary !default;
-$--radio-checked-input-fill: $--color-white !default;
-$--radio-checked-icon-color: $--color-primary !default;
-
-$--radio-input-border-color-hover: $--color-primary !default;
-*/
 /* Select
 -------------------------- */
 /* Alert
 -------------------------- */
-/* Message Box
+/* MessageBox
 -------------------------- */
 /* Message
 -------------------------- */
@@ -725,6 +843,8 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Table
 -------------------------- */
 /* Pagination
+-------------------------- */
+/* Popup
 -------------------------- */
 /* Popover
 -------------------------- */
@@ -765,6 +885,18 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Footer
 --------------------------*/
 /* Main
+--------------------------*/
+/* Timeline
+--------------------------*/
+/* Backtop
+--------------------------*/
+/* Link
+--------------------------*/
+/* Calendar
+--------------------------*/
+/* Form
+-------------------------- */
+/* Avatar
 --------------------------*/
 /* Break-point
 --------------------------*/
@@ -781,9 +913,9 @@ $--radio-input-border-color-hover: $--color-primary !default;
   line-height: 1;
   white-space: nowrap;
   cursor: pointer;
-  background: #fff;
-  border: 1px solid #dcdfe6;
-  border-color: #dcdfe6;
+  background: #FFFFFF;
+  border: 1px solid #DCDFE6;
+  border-color: #DCDFE6;
   color: #606266;
   -webkit-appearance: none;
   text-align: center;
@@ -817,11 +949,11 @@ $--radio-input-border-color-hover: $--color-primary !default;
   .el-button [class*="el-icon-"] + span {
     margin-left: 5px; }
   .el-button.is-plain:hover, .el-button.is-plain:focus {
-    background: #fff;
+    background: #FFFFFF;
     border-color: #FF6350;
     color: #FF6350; }
   .el-button.is-plain:active {
-    background: #fff;
+    background: #FFFFFF;
     border-color: #e65948;
     color: #e65948;
     outline: none; }
@@ -829,17 +961,17 @@ $--radio-input-border-color-hover: $--color-primary !default;
     color: #e65948;
     border-color: #e65948; }
   .el-button.is-disabled, .el-button.is-disabled:hover, .el-button.is-disabled:focus {
-    color: #c0c4cc;
+    color: #C0C4CC;
     cursor: not-allowed;
     background-image: none;
-    background-color: #fff;
-    border-color: #ebeef5; }
+    background-color: #FFFFFF;
+    border-color: #EBEEF5; }
   .el-button.is-disabled.el-button--text {
     background-color: transparent; }
   .el-button.is-disabled.is-plain, .el-button.is-disabled.is-plain:hover, .el-button.is-disabled.is-plain:focus {
-    background-color: #fff;
-    border-color: #ebeef5;
-    color: #c0c4cc; }
+    background-color: #FFFFFF;
+    border-color: #EBEEF5;
+    color: #C0C4CC; }
   .el-button.is-loading {
     position: relative;
     pointer-events: none; }
@@ -860,24 +992,24 @@ $--radio-input-border-color-hover: $--color-primary !default;
     border-radius: 50%;
     padding: 12px; }
   .el-button--primary {
-    color: #fff;
+    color: #FFFFFF;
     background-color: #FF6350;
     border-color: #FF6350; }
     .el-button--primary:hover, .el-button--primary:focus {
       background: #ff8273;
       border-color: #ff8273;
-      color: #fff; }
+      color: #FFFFFF; }
     .el-button--primary:active {
       background: #e65948;
       border-color: #e65948;
-      color: #fff;
+      color: #FFFFFF;
       outline: none; }
     .el-button--primary.is-active {
       background: #e65948;
       border-color: #e65948;
-      color: #fff; }
+      color: #FFFFFF; }
     .el-button--primary.is-disabled, .el-button--primary.is-disabled:hover, .el-button--primary.is-disabled:focus, .el-button--primary.is-disabled:active {
-      color: #fff;
+      color: #FFFFFF;
       background-color: #ffb1a8;
       border-color: #ffb1a8; }
     .el-button--primary.is-plain {
@@ -887,149 +1019,149 @@ $--radio-input-border-color-hover: $--color-primary !default;
       .el-button--primary.is-plain:hover, .el-button--primary.is-plain:focus {
         background: #FF6350;
         border-color: #FF6350;
-        color: #fff; }
+        color: #FFFFFF; }
       .el-button--primary.is-plain:active {
         background: #e65948;
         border-color: #e65948;
-        color: #fff;
+        color: #FFFFFF;
         outline: none; }
       .el-button--primary.is-plain.is-disabled, .el-button--primary.is-plain.is-disabled:hover, .el-button--primary.is-plain.is-disabled:focus, .el-button--primary.is-plain.is-disabled:active {
         color: #ffa196;
         background-color: #ffefee;
         border-color: #ffe0dc; }
   .el-button--success {
-    color: #fff;
-    background-color: #67c23a;
-    border-color: #67c23a; }
+    color: #FFFFFF;
+    background-color: #67C23A;
+    border-color: #67C23A; }
     .el-button--success:hover, .el-button--success:focus {
       background: #85ce61;
       border-color: #85ce61;
-      color: #fff; }
+      color: #FFFFFF; }
     .el-button--success:active {
       background: #5daf34;
       border-color: #5daf34;
-      color: #fff;
+      color: #FFFFFF;
       outline: none; }
     .el-button--success.is-active {
       background: #5daf34;
       border-color: #5daf34;
-      color: #fff; }
+      color: #FFFFFF; }
     .el-button--success.is-disabled, .el-button--success.is-disabled:hover, .el-button--success.is-disabled:focus, .el-button--success.is-disabled:active {
-      color: #fff;
+      color: #FFFFFF;
       background-color: #b3e19d;
       border-color: #b3e19d; }
     .el-button--success.is-plain {
-      color: #67c23a;
+      color: #67C23A;
       background: #f0f9eb;
       border-color: #c2e7b0; }
       .el-button--success.is-plain:hover, .el-button--success.is-plain:focus {
-        background: #67c23a;
-        border-color: #67c23a;
-        color: #fff; }
+        background: #67C23A;
+        border-color: #67C23A;
+        color: #FFFFFF; }
       .el-button--success.is-plain:active {
         background: #5daf34;
         border-color: #5daf34;
-        color: #fff;
+        color: #FFFFFF;
         outline: none; }
       .el-button--success.is-plain.is-disabled, .el-button--success.is-plain.is-disabled:hover, .el-button--success.is-plain.is-disabled:focus, .el-button--success.is-plain.is-disabled:active {
         color: #a4da89;
         background-color: #f0f9eb;
         border-color: #e1f3d8; }
   .el-button--warning {
-    color: #fff;
-    background-color: #e6a23c;
-    border-color: #e6a23c; }
+    color: #FFFFFF;
+    background-color: #E6A23C;
+    border-color: #E6A23C; }
     .el-button--warning:hover, .el-button--warning:focus {
       background: #ebb563;
       border-color: #ebb563;
-      color: #fff; }
+      color: #FFFFFF; }
     .el-button--warning:active {
       background: #cf9236;
       border-color: #cf9236;
-      color: #fff;
+      color: #FFFFFF;
       outline: none; }
     .el-button--warning.is-active {
       background: #cf9236;
       border-color: #cf9236;
-      color: #fff; }
+      color: #FFFFFF; }
     .el-button--warning.is-disabled, .el-button--warning.is-disabled:hover, .el-button--warning.is-disabled:focus, .el-button--warning.is-disabled:active {
-      color: #fff;
+      color: #FFFFFF;
       background-color: #f3d19e;
       border-color: #f3d19e; }
     .el-button--warning.is-plain {
-      color: #e6a23c;
+      color: #E6A23C;
       background: #fdf6ec;
       border-color: #f5dab1; }
       .el-button--warning.is-plain:hover, .el-button--warning.is-plain:focus {
-        background: #e6a23c;
-        border-color: #e6a23c;
-        color: #fff; }
+        background: #E6A23C;
+        border-color: #E6A23C;
+        color: #FFFFFF; }
       .el-button--warning.is-plain:active {
         background: #cf9236;
         border-color: #cf9236;
-        color: #fff;
+        color: #FFFFFF;
         outline: none; }
       .el-button--warning.is-plain.is-disabled, .el-button--warning.is-plain.is-disabled:hover, .el-button--warning.is-plain.is-disabled:focus, .el-button--warning.is-plain.is-disabled:active {
         color: #f0c78a;
         background-color: #fdf6ec;
         border-color: #faecd8; }
   .el-button--danger {
-    color: #fff;
-    background-color: #f56c6c;
-    border-color: #f56c6c; }
+    color: #FFFFFF;
+    background-color: #F56C6C;
+    border-color: #F56C6C; }
     .el-button--danger:hover, .el-button--danger:focus {
       background: #f78989;
       border-color: #f78989;
-      color: #fff; }
+      color: #FFFFFF; }
     .el-button--danger:active {
       background: #dd6161;
       border-color: #dd6161;
-      color: #fff;
+      color: #FFFFFF;
       outline: none; }
     .el-button--danger.is-active {
       background: #dd6161;
       border-color: #dd6161;
-      color: #fff; }
+      color: #FFFFFF; }
     .el-button--danger.is-disabled, .el-button--danger.is-disabled:hover, .el-button--danger.is-disabled:focus, .el-button--danger.is-disabled:active {
-      color: #fff;
+      color: #FFFFFF;
       background-color: #fab6b6;
       border-color: #fab6b6; }
     .el-button--danger.is-plain {
-      color: #f56c6c;
+      color: #F56C6C;
       background: #fef0f0;
       border-color: #fbc4c4; }
       .el-button--danger.is-plain:hover, .el-button--danger.is-plain:focus {
-        background: #f56c6c;
-        border-color: #f56c6c;
-        color: #fff; }
+        background: #F56C6C;
+        border-color: #F56C6C;
+        color: #FFFFFF; }
       .el-button--danger.is-plain:active {
         background: #dd6161;
         border-color: #dd6161;
-        color: #fff;
+        color: #FFFFFF;
         outline: none; }
       .el-button--danger.is-plain.is-disabled, .el-button--danger.is-plain.is-disabled:hover, .el-button--danger.is-plain.is-disabled:focus, .el-button--danger.is-plain.is-disabled:active {
         color: #f9a7a7;
         background-color: #fef0f0;
         border-color: #fde2e2; }
   .el-button--info {
-    color: #fff;
+    color: #FFFFFF;
     background-color: #909399;
     border-color: #909399; }
     .el-button--info:hover, .el-button--info:focus {
       background: #a6a9ad;
       border-color: #a6a9ad;
-      color: #fff; }
+      color: #FFFFFF; }
     .el-button--info:active {
       background: #82848a;
       border-color: #82848a;
-      color: #fff;
+      color: #FFFFFF;
       outline: none; }
     .el-button--info.is-active {
       background: #82848a;
       border-color: #82848a;
-      color: #fff; }
+      color: #FFFFFF; }
     .el-button--info.is-disabled, .el-button--info.is-disabled:hover, .el-button--info.is-disabled:focus, .el-button--info.is-disabled:active {
-      color: #fff;
+      color: #FFFFFF;
       background-color: #c8c9cc;
       border-color: #c8c9cc; }
     .el-button--info.is-plain {
@@ -1039,11 +1171,11 @@ $--radio-input-border-color-hover: $--color-primary !default;
       .el-button--info.is-plain:hover, .el-button--info.is-plain:focus {
         background: #909399;
         border-color: #909399;
-        color: #fff; }
+        color: #FFFFFF; }
       .el-button--info.is-plain:active {
         background: #82848a;
         border-color: #82848a;
-        color: #fff;
+        color: #FFFFFF;
         outline: none; }
       .el-button--info.is-plain.is-disabled, .el-button--info.is-plain.is-disabled:hover, .el-button--info.is-plain.is-disabled:focus, .el-button--info.is-plain.is-disabled:active {
         color: #bcbec2;
@@ -1104,6 +1236,8 @@ $--radio-input-border-color-hover: $--color-primary !default;
     position: relative; }
     .el-button-group > .el-button + .el-button {
       margin-left: 0; }
+    .el-button-group > .el-button.is-disabled {
+      z-index: 1; }
     .el-button-group > .el-button:first-child {
       border-top-right-radius: 0;
       border-bottom-right-radius: 0; }
@@ -1172,7 +1306,7 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Element Chalk Variables */
 /* Transition
 -------------------------- */
-/* Colors
+/* Color
 -------------------------- */
 /* 53a8ff */
 /* 66b1ff */
@@ -1185,15 +1319,11 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* ecf5ff */
 /* Link
 -------------------------- */
-/* Background
--------------------------- */
 /* Border
--------------------------- */
-/* Box-shadow
 -------------------------- */
 /* Fill
 -------------------------- */
-/* Font
+/* Typography
 -------------------------- */
 /* Size
 -------------------------- */
@@ -1207,19 +1337,11 @@ $--radio-input-border-color-hover: $--color-primary !default;
 -------------------------- */
 /* Radio
 -------------------------- */
-/*
-$--radio-checked-text-color: $--color-primary !default;
-$--radio-checked-input-border-color: $--color-primary !default;
-$--radio-checked-input-fill: $--color-white !default;
-$--radio-checked-icon-color: $--color-primary !default;
-
-$--radio-input-border-color-hover: $--color-primary !default;
-*/
 /* Select
 -------------------------- */
 /* Alert
 -------------------------- */
-/* Message Box
+/* MessageBox
 -------------------------- */
 /* Message
 -------------------------- */
@@ -1244,6 +1366,8 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Table
 -------------------------- */
 /* Pagination
+-------------------------- */
+/* Popup
 -------------------------- */
 /* Popover
 -------------------------- */
@@ -1284,6 +1408,18 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Footer
 --------------------------*/
 /* Main
+--------------------------*/
+/* Timeline
+--------------------------*/
+/* Backtop
+--------------------------*/
+/* Link
+--------------------------*/
+/* Calendar
+--------------------------*/
+/* Form
+-------------------------- */
+/* Avatar
 --------------------------*/
 /* Break-point
 --------------------------*/
@@ -1298,7 +1434,7 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Element Chalk Variables */
 /* Transition
 -------------------------- */
-/* Colors
+/* Color
 -------------------------- */
 /* 53a8ff */
 /* 66b1ff */
@@ -1311,15 +1447,11 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* ecf5ff */
 /* Link
 -------------------------- */
-/* Background
--------------------------- */
 /* Border
--------------------------- */
-/* Box-shadow
 -------------------------- */
 /* Fill
 -------------------------- */
-/* Font
+/* Typography
 -------------------------- */
 /* Size
 -------------------------- */
@@ -1333,19 +1465,11 @@ $--radio-input-border-color-hover: $--color-primary !default;
 -------------------------- */
 /* Radio
 -------------------------- */
-/*
-$--radio-checked-text-color: $--color-primary !default;
-$--radio-checked-input-border-color: $--color-primary !default;
-$--radio-checked-input-fill: $--color-white !default;
-$--radio-checked-icon-color: $--color-primary !default;
-
-$--radio-input-border-color-hover: $--color-primary !default;
-*/
 /* Select
 -------------------------- */
 /* Alert
 -------------------------- */
-/* Message Box
+/* MessageBox
 -------------------------- */
 /* Message
 -------------------------- */
@@ -1370,6 +1494,8 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Table
 -------------------------- */
 /* Pagination
+-------------------------- */
+/* Popup
 -------------------------- */
 /* Popover
 -------------------------- */
@@ -1411,9 +1537,22 @@ $--radio-input-border-color-hover: $--color-primary !default;
 --------------------------*/
 /* Main
 --------------------------*/
+/* Timeline
+--------------------------*/
+/* Backtop
+--------------------------*/
+/* Link
+--------------------------*/
+/* Calendar
+--------------------------*/
+/* Form
+-------------------------- */
+/* Avatar
+--------------------------*/
 /* Break-point
 --------------------------*/
 .el-textarea {
+  position: relative;
   display: inline-block;
   width: 100%;
   vertical-align: bottom;
@@ -1428,34 +1567,45 @@ $--radio-input-border-color-hover: $--color-primary !default;
     width: 100%;
     font-size: inherit;
     color: #606266;
-    background-color: #fff;
+    background-color: #FFFFFF;
     background-image: none;
-    border: 1px solid #dcdfe6;
+    border: 1px solid #DCDFE6;
     border-radius: 4px;
     -webkit-transition: border-color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
     transition: border-color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1); }
     .el-textarea__inner::-webkit-input-placeholder {
-      color: #c0c4cc; }
+      color: #C0C4CC; }
     .el-textarea__inner::-ms-input-placeholder {
-      color: #c0c4cc; }
+      color: #C0C4CC; }
     .el-textarea__inner::placeholder {
-      color: #c0c4cc; }
+      color: #C0C4CC; }
     .el-textarea__inner:hover {
-      border-color: #c0c4cc; }
+      border-color: #C0C4CC; }
     .el-textarea__inner:focus {
       outline: none;
       border-color: #FF6350; }
+  .el-textarea .el-input__count {
+    color: #909399;
+    background: #FFFFFF;
+    position: absolute;
+    font-size: 12px;
+    bottom: 5px;
+    right: 10px; }
   .el-textarea.is-disabled .el-textarea__inner {
-    background-color: #f5f7fa;
-    border-color: #e4e7ed;
-    color: #c0c4cc;
+    background-color: #F5F7FA;
+    border-color: #E4E7ED;
+    color: #C0C4CC;
     cursor: not-allowed; }
     .el-textarea.is-disabled .el-textarea__inner::-webkit-input-placeholder {
-      color: #c0c4cc; }
+      color: #C0C4CC; }
     .el-textarea.is-disabled .el-textarea__inner::-ms-input-placeholder {
-      color: #c0c4cc; }
+      color: #C0C4CC; }
     .el-textarea.is-disabled .el-textarea__inner::placeholder {
-      color: #c0c4cc; }
+      color: #C0C4CC; }
+  .el-textarea.is-exceed .el-textarea__inner {
+    border-color: #F56C6C; }
+  .el-textarea.is-exceed .el-input__count {
+    color: #F56C6C; }
 
 .el-input {
   position: relative;
@@ -1479,20 +1629,34 @@ $--radio-input-border-color-hover: $--color-primary !default;
         background: #fff;
         width: 6px; }
   .el-input .el-input__clear {
-    color: #c0c4cc;
+    color: #C0C4CC;
     font-size: 14px;
-    line-height: 16px;
     cursor: pointer;
     -webkit-transition: color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
     transition: color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1); }
     .el-input .el-input__clear:hover {
       color: #909399; }
+  .el-input .el-input__count {
+    height: 100%;
+    display: -webkit-inline-box;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    color: #909399;
+    font-size: 12px; }
+    .el-input .el-input__count .el-input__count-inner {
+      background: #FFFFFF;
+      line-height: initial;
+      display: inline-block;
+      padding: 0 5px; }
   .el-input__inner {
     -webkit-appearance: none;
-    background-color: #fff;
+    background-color: #FFFFFF;
     background-image: none;
     border-radius: 4px;
-    border: 1px solid #dcdfe6;
+    border: 1px solid #DCDFE6;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
     color: #606266;
@@ -1506,13 +1670,13 @@ $--radio-input-border-color-hover: $--color-primary !default;
     transition: border-color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
     width: 100%; }
     .el-input__inner::-webkit-input-placeholder {
-      color: #c0c4cc; }
+      color: #C0C4CC; }
     .el-input__inner::-ms-input-placeholder {
-      color: #c0c4cc; }
+      color: #C0C4CC; }
     .el-input__inner::placeholder {
-      color: #c0c4cc; }
+      color: #C0C4CC; }
     .el-input__inner:hover {
-      border-color: #c0c4cc; }
+      border-color: #C0C4CC; }
     .el-input__inner:focus {
       outline: none;
       border-color: #FF6350; }
@@ -1522,7 +1686,7 @@ $--radio-input-border-color-hover: $--color-primary !default;
     right: 5px;
     top: 0;
     text-align: center;
-    color: #c0c4cc;
+    color: #C0C4CC;
     -webkit-transition: all .3s;
     transition: all .3s;
     pointer-events: none; }
@@ -1534,7 +1698,7 @@ $--radio-input-border-color-hover: $--color-primary !default;
     left: 5px;
     top: 0;
     text-align: center;
-    color: #c0c4cc;
+    color: #C0C4CC;
     -webkit-transition: all .3s;
     transition: all .3s; }
   .el-input__icon {
@@ -1556,18 +1720,22 @@ $--radio-input-border-color-hover: $--color-primary !default;
     outline: none;
     border-color: #FF6350; }
   .el-input.is-disabled .el-input__inner {
-    background-color: #f5f7fa;
-    border-color: #e4e7ed;
-    color: #c0c4cc;
+    background-color: #F5F7FA;
+    border-color: #E4E7ED;
+    color: #C0C4CC;
     cursor: not-allowed; }
     .el-input.is-disabled .el-input__inner::-webkit-input-placeholder {
-      color: #c0c4cc; }
+      color: #C0C4CC; }
     .el-input.is-disabled .el-input__inner::-ms-input-placeholder {
-      color: #c0c4cc; }
+      color: #C0C4CC; }
     .el-input.is-disabled .el-input__inner::placeholder {
-      color: #c0c4cc; }
+      color: #C0C4CC; }
   .el-input.is-disabled .el-input__icon {
     cursor: not-allowed; }
+  .el-input.is-exceed .el-input__inner {
+    border-color: #F56C6C; }
+  .el-input.is-exceed .el-input__suffix .el-input__count {
+    color: #F56C6C; }
   .el-input--suffix .el-input__inner {
     padding-right: 30px; }
   .el-input--prefix .el-input__inner {
@@ -1604,12 +1772,12 @@ $--radio-input-border-color-hover: $--color-primary !default;
     vertical-align: middle;
     display: table-cell; }
   .el-input-group__append, .el-input-group__prepend {
-    background-color: #f5f7fa;
+    background-color: #F5F7FA;
     color: #909399;
     vertical-align: middle;
     display: table-cell;
     position: relative;
-    border: 1px solid #dcdfe6;
+    border: 1px solid #DCDFE6;
     border-radius: 4px;
     padding: 0 20px;
     width: 1px;
@@ -1665,9 +1833,9 @@ $--radio-input-border-color-hover: $--color-primary !default;
   width: 420px;
   padding-bottom: 10px;
   vertical-align: middle;
-  background-color: #fff;
+  background-color: #FFFFFF;
   border-radius: 4px;
-  border: 1px solid #ebeef5;
+  border: 1px solid #EBEEF5;
   font-size: 18px;
   -webkit-box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
@@ -1713,16 +1881,17 @@ $--radio-input-border-color-hover: $--color-primary !default;
     .el-message-box__headerbtn:focus .el-message-box__close, .el-message-box__headerbtn:hover .el-message-box__close {
       color: #FF6350; }
   .el-message-box__content {
-    position: relative;
     padding: 10px 15px;
     color: #606266;
     font-size: 14px; }
+  .el-message-box__container {
+    position: relative; }
   .el-message-box__input {
     padding-top: 15px; }
     .el-message-box__input input.invalid {
-      border-color: #f56c6c; }
+      border-color: #F56C6C; }
       .el-message-box__input input.invalid:focus {
-        border-color: #f56c6c; }
+        border-color: #F56C6C; }
   .el-message-box__status {
     position: absolute;
     top: 50%;
@@ -1735,20 +1904,20 @@ $--radio-input-border-color-hover: $--color-primary !default;
       padding-left: 36px;
       padding-right: 12px; }
     .el-message-box__status.el-icon-success {
-      color: #67c23a; }
+      color: #67C23A; }
     .el-message-box__status.el-icon-info {
       color: #909399; }
     .el-message-box__status.el-icon-warning {
-      color: #e6a23c; }
+      color: #E6A23C; }
     .el-message-box__status.el-icon-error {
-      color: #f56c6c; }
+      color: #F56C6C; }
   .el-message-box__message {
     margin: 0; }
     .el-message-box__message p {
       margin: 0;
       line-height: 24px; }
   .el-message-box__errormsg {
-    color: #f56c6c;
+    color: #F56C6C;
     font-size: 12px;
     min-height: 18px;
     margin-top: 2px; }
