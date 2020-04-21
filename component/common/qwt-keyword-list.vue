@@ -51,7 +51,7 @@
         <template slot="header" slot-scope="col">
           {{maxPriceLabel}}<cpc-top-price-tip/>
           <div style="display:block;padding-left:0">
-           <el-popover placement="top" v-model="popoverVisible">
+           <el-popover placement="top" :value="popoverVisible">
             <div>
               <el-input placeholder="请输入关键词价格" v-model="keywordPrice" size="mini"></el-input>
               <div class="actions">
@@ -65,10 +65,11 @@
         </template>
         <template slot-scope="s">
           <span class="price">
-            <el-input size="mini" placeholder="单位: 元"
-              :value="f2y(getWordPrice(s.row.word))"
-              @input="v => setCustomPrice(s.row, v)">
-            </el-input>
+            <input class="bax-input"
+                   placeholder="单位，元"
+                   :value="f2y(getWordPrice(s.row.word))"
+                   @blur="handleWordPrice($event, s)"
+                   @keyup.enter="handleWordPrice($event, s)" />
             <span v-if="showAddPrice(s.row)"
               class="add-w-price">
               <button @click="bumpPriceBy20(s.row)">
@@ -113,6 +114,8 @@ import {
   RECOMMAND_SOURCE_FH,
 } from 'constant/fengming'
 
+import BaxInput from 'com/common/bax-input'
+
 import {
   keywordStatusTip,
   cpcTopPriceTip,
@@ -151,7 +154,8 @@ export default {
   name: 'qwt-keyword-list',
   components: {
     BaxPagination,
-    CpcTopPriceTip
+    CpcTopPriceTip,
+    BaxInput
   },
   props: {
     platform: {
@@ -219,8 +223,8 @@ export default {
       cpcTopPriceTip,
       keywordPriceTip,
 
-      popoverVisible: false,
       keywordPrice: '',
+      popoverVisible: false,
 
       RECOMMAND_SOURCE_FH
     }
@@ -294,6 +298,9 @@ export default {
     }
   },
   methods: {
+    handleWordPrice(v, s) {
+      this.setCustomPrice(s.row, v.target.value)
+    },
     getRefuseReason(word) {
       const {refuseReason} = word.extra
       return (
@@ -553,6 +560,14 @@ export default {
   display: inline-block !important;
   vertical-align: middle !important;
   line-height: 20px;
+}
+
+.bax-input {
+  width:  100px;
+  border-radius: 4px;
+  padding: 2px 4px;
+  background: #fff;
+  border: 1px solid #ccc;
 }
 
 </style>
