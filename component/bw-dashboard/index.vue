@@ -6,7 +6,7 @@
       <div class="title">推广关键词</div>
       <el-tabs class="bw-keyword-tabs"
                v-model="activeTab"
-               @tab-click="handleTabClick">
+               @tab-click="getChartData">
         <el-tab-pane label="不限关键词"
                      name="noLimit"></el-tab-pane>
         <el-tab-pane label="指定关键词"
@@ -175,33 +175,23 @@ export default {
       this.activeTab = 'limit'
       const promote = await getPromoteById(promoteId)
       this.promotes = [promote]
-      this.getChartData([promoteId])
-      return 
+      return
     } 
     this.getChartData()
   },
   methods: {
-    handleTabClick(tab) {
-      const { name } = tab
-      switch (name) {
-        case 'noLimit':
-          return this.getChartData([])
-        case 'limit':
-          return this.getChartData()
-      }
-    },
     handleDateChange(item) {
       this.daterange = item.daterange
       this.activeDaterangeLabel = item.label
     },
-    async getChartData(promoteIds) {
+    async getChartData() {
       const daterange = this.daterange
       const startTime = dayjs(daterange[0]).startOf('day').unix()
       const endTime = dayjs(daterange[1]).startOf('day').unix()
       const options = {
         startTime,
         endTime,
-        promoteList: promoteIds || this.promoteIds
+        promoteList: this.activeTab === 'noLimit'? [] : this.promoteIds
       }
 
       let cpcRankingChartData = await getUserRanking(options)
