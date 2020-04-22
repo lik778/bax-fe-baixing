@@ -104,7 +104,7 @@
                  width="420px" 
                  :show-close="false">
         <el-radio-group v-model="liveType">
-          <el-radio v-for="(item, key) in liveDevices" :key="key" :label="key">
+          <el-radio v-for="(item, key) in liveDevices" :key="key" :label="Number(key)">
             {{item.label}}
           </el-radio>
         </el-radio-group>
