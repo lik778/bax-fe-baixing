@@ -47,7 +47,7 @@
               <p v-else>{{auditStatusFormatter(scope.row.auditStatus)}}</p>
             </template>
           </el-table-column>
-          <el-table-column prop="cpcRanking" label="平均排名" :formatter="({cpcRanking}) => cpcRanking && fmtCpcRanking(cpcRanking)" />
+          <el-table-column prop="cpcRanking" label="昨日排名" :formatter="({cpcRanking}) => cpcRanking && fmtCpcRanking(cpcRanking)" />
           <el-table-column prop="createdAt" label="购买日期" :formatter="dateFormatter" />
           <el-table-column label="投放剩余天数">
             <template slot-scope="scope">
@@ -133,7 +133,7 @@
     PROMOTE_STATUS_PENDING_ONLINE,
     PROMOTE_STATUS_OFFLINE
   } from 'constant/biaowang'
-  import {getPromotes, queryKeywordPrice, getCpcRanking, getUserLive} from 'api/biaowang'
+  import {getPromotes, queryKeywordPrice, getCpcRanking, getUserLive, getUserRanking} from 'api/biaowang'
   import {
     f2y,
     getCnName
@@ -297,14 +297,22 @@
         this.promotes = items
         this.query.total = total
 
-        const rankings = await getCpcRanking(items.map(i => i.id))
-        this.promotes = this.promotes.map(p => {
-          const one = rankings.find(r => r.promoteId === p.id)
-          if (one) {
-            return Object.assign({}, p, {cpcRanking: parseFloat(one.cpcRanking).toFixed(2)})
-          }
-          return p
+        const yesterday = dayjs().subtract(1, 'day').unix()
+        const rankings = await getUserRanking({
+          startTime: yesterday,
+          endTime: yesterday,
+          promoteList: items.map(i => i.id)
         })
+
+        if (rankings.length) {
+          this.promotes = this.promotes.map(p => {
+            const one = rankings.find(r => r.promoteId === p.id)
+            if (one && one.rankList.length) {
+              return Object.assign({}, p, {cpcRanking: parseFloat(one.rankList[0]).toFixed(2)})
+            }
+            return p
+          })
+        }
       },
       async onCurrentChange({offset}) {
         this.query.offset = offset
