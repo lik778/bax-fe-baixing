@@ -40,7 +40,7 @@
 
         <el-submenu index="seo">
           <template slot="title">
-            <bx-icon type="paycircleo"></bx-icon>首页宝
+            <bx-icon type="sharealt"></bx-icon>首页宝
           </template>
           <el-menu-item index="seo-create-promotion">
             <router-link :to="{ name: 'seo-create-promotion' }" tag="p">
@@ -102,12 +102,26 @@
             <i v-if="isRenderSiteNavTag" class="el-icon-question" />
           </router-link>
         </el-menu-item>
-        <el-menu-item index="qwt-dashboard">
-          <router-link :to="{ name: 'qwt-dashboard' }" tag="p">
+        <el-submenu index="dashboard">
+          <template slot="title">
             <i class="el-icon-document" />数据报表
-          </router-link>
-        </el-menu-item>
-
+          </template>
+          <el-menu-item index="qwt-dashboard">
+            <router-link :to="{ name: 'qwt-dashboard'}" tag="p">
+              <i class="material-icons" 
+                 style="font-size: 16px; margin-right: 11px; vertical-align: -3px;">
+              </i>站外推广报表
+            </router-link>
+          </el-menu-item>
+          <el-menu-item index="bw-dashboard">
+            <router-link :to="{ name: 'bw-dashboard'}" tag="p">
+              <i class="material-icons" 
+                 style="font-size: 16px; margin-right: 11px; vertical-align: -3px;">
+              </i>标王推广报表
+            </router-link>
+          </el-menu-item>
+        </el-submenu>
+        
         <el-submenu index="ssp" v-show="allowSeeBxAd">
           <template slot="title">
             <i class="el-icon-message"></i>品牌广告
@@ -172,7 +186,8 @@ const MENU_GROUP_MAP = {
   'seo': ['seo-create-promotion', 'seo-promotion-list'],
   'sst': ['qwt-create-promotion', 'qwt-promotion-list'],
   'bw': ['bw-query-price', 'bw-plan-list'],
-  'ssp': ['ad-list', 'material-list', 'order-list', 'user-list', 'ad-calendar']
+  'ssp': ['ad-list', 'material-list', 'order-list', 'user-list', 'ad-calendar'],
+  'dashboard': ['qwt-dashboard', 'bw-dashboard'],
 }
 
 
@@ -298,7 +313,7 @@ export default {
   top: 50px;
   left: 0;
   bottom: 0;
-  z-index: 1;
+  z-index: 1000;
   display: flex;
   flex-flow: column;
   background: #fff;

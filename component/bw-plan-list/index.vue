@@ -56,10 +56,25 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column label="操作">
+          <el-table-column label="操作" min-width="160px">
             <template slot-scope="scope">
               <router-link v-if="!isBxSales && !isAgentAccounting" :to="{name: 'bw-edit-plan', query: {promoteId: scope.row.id}}"><el-button type="text" size="small">编辑</el-button></router-link>
               <el-button class="xufei-btn" v-if="canXufei(scope.row)" size="small" type="text" @click="onXufei(scope.row)">续费</el-button>
+              <router-link :to="{name: 'bw-dashboard', query: {promoteId: scope.row.id, keyword: scope.row.word}}">
+                <el-button type="text" size="small">查看报告</el-button>
+              </router-link>
+              <span v-if="canSeeLiveBtn(scope.row)">
+                <el-button type="text" slot="reference" size="small"
+                          @click="handleLiveSituation(scope.row)">推广实况</el-button>
+                <el-tooltip effect="dark" placement="top-start">
+                  <i class="el-icon-info" style="color: rgb(151, 168, 190);cursor: pointer"></i>
+                  <div slot="content">
+                    <p>1、为您显示网民看到的平均推广实况，可能与您在百度搜索框直接搜索结果有差别, 实际结果会受地域/网络环境/机型等用户的个性化因素影响产生差异。</p>
+                    <p>2、如您购买的关键词同时推广多个城市，为您显示其中某个城市的推广实况</p>
+                    <p>3、如您的关键词刚进行推广或在近期修改过推广内容，可能暂时无法提供推广实况结果，请稍后再试</p>
+                  </div>
+                </el-tooltip>
+              </span>
             </template>
           </el-table-column>
         </el-table>
@@ -83,6 +98,21 @@
       <audit-reject-reason-dialog :show="auditRejectReasonDialogVisible" 
                                   @close="auditRejectReasonDialogVisible = false">
       </audit-reject-reason-dialog>
+      <el-dialog :visible="liveDialogVisible" 
+                 custom-class="fixed-center" 
+                 title="选择平台" 
+                 width="420px" 
+                 :show-close="false">
+        <el-radio-group v-model="liveType">
+          <el-radio v-for="(item, key) in liveDevices" :key="key" :label="key">
+            {{item.label}}
+          </el-radio>
+        </el-radio-group>
+        <span slot="footer">
+          <el-button @click="liveDialogVisible = false">取消</el-button>
+          <el-button type="primary" @click="goToLivePageByType">确定</el-button>
+        </span>
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -93,6 +123,9 @@
     promoteStatusOpts,
     auditStatusOpts,
     DEVICE,
+    DEVICE_ALL,
+    DEVICE_PC,
+    DEVICE_WAP,
     PROMOTE_STATUS,
     AUDIT_STATUS,
     AUDIT_STATUS_REJECT,
@@ -100,7 +133,7 @@
     PROMOTE_STATUS_PENDING_ONLINE,
     PROMOTE_STATUS_OFFLINE
   } from 'constant/biaowang'
-  import {getPromotes, queryKeywordPrice, getCpcRanking} from 'api/biaowang'
+  import {getPromotes, queryKeywordPrice, getCpcRanking, getUserLive} from 'api/biaowang'
   import {
     f2y,
     getCnName
@@ -113,6 +146,19 @@
   import {fmtCpcRanking} from 'util/campaign'
   import auditRejectReasonDialog from 'com/common/audit-reject-reason-dialog'
   import { allowNotSeeBwNewPrice } from 'util/role'
+
+  const liveDevices = {
+    [DEVICE_WAP]: {
+      label: DEVICE[DEVICE_WAP],
+      urlKey: 'wapUrl',
+      msg: '暂无手机端实况数据，请售后再试',
+    },
+    [DEVICE_PC]: {
+      label: DEVICE[DEVICE_PC],
+      urlKey: 'pcUrl',
+      msg: '暂无电脑端实况数据，请稍后再试'
+    }
+  }
 
   export default {
     name: 'bw-plan-list',
@@ -149,7 +195,12 @@
           days: [{required: true, message: '请选择购买天数'}],
         },
         xufeiDialogVisible: false,
-        auditRejectReasonDialogVisible: false
+        auditRejectReasonDialogVisible: false,
+
+        liveDialogVisible: false,
+        liveType: DEVICE_WAP,
+        liveDevices,
+        currentPromoteLive: null,
       }
     },
     computed: {
@@ -188,7 +239,7 @@
 
           localStorage.setItem(key, JSON.stringify(storageObj))
 
-          return arr.map(p => `今日 ${p.word} 关键词被查价 ${p.times} 次，如需继续投放，请在关键词到期前续费，以免被同行客户抢单`)
+          return arr.map(p => `今日 ${p.word} 关键词被查价 ${p.times} 次，如需继续投放，请在到期后尽快续费，以免被同行客户抢单`)
             .join('。 ')
         }
       },
@@ -230,6 +281,9 @@
       },
       canXufei(row) {
         return PROMOTE_STATUS_ONLINE.includes(row.status) && this.leftDays(row) <= 15
+      },
+      canSeeLiveBtn(row) {
+        return PROMOTE_STATUS_ONLINE.includes(row.status)
       },
       async getPromotes() {
         const {offset, limit, keyword: word, promoteStatusFilters, auditStatusFilters, userId} = this.query
@@ -317,6 +371,39 @@
       },
       dateFormatter({createdAt}) {
         return dayjs(createdAt * 1000).format('YYYY-MM-DD')
+      },
+      goToLivePageByType() {
+        const promote = this.currentPromoteLive
+        const currentLiveObj = this.liveDevices[this.liveType]
+        const { urlKey, msg } = currentLiveObj
+        this.goToLivePage(promote[urlKey], msg)
+      },
+      goToLivePage(url, msg) {
+        if (url) {
+          window.open(url)
+        } else {
+          this.$alert(msg, '提示', {
+            showClose: false
+          })
+        }
+      },
+      async handleLiveSituation(promote) {
+        const promoteLive = await getUserLive({promoteId: promote.id})
+        const { device, pcUrl, wapUrl } = promoteLive
+
+        if (device === DEVICE_ALL) {
+          this.currentPromoteLive = promoteLive
+          this.liveDialogVisible = true
+          return 
+        } 
+        if (device === DEVICE_PC) {
+          this.goToLivePage(pcUrl, this.liveDevices[DEVICE_PC].msg)
+          return 
+        } 
+        if (device === DEVICE_WAP) {
+          this.goToLivePage(wapUrl, this.liveDevices[DEVICE_WAP].msg)
+          return
+        }
       }
     },
     async mounted() {

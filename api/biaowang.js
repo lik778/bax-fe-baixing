@@ -180,3 +180,40 @@ export async function refreshKeywordPriceNew(keywords, opt) {
   })
   return parsedBody
 }
+
+export async function getUserRanking(opts = {}) {
+  const body = await biaowang
+    .post('/promote/user/ranking')
+    .send(opts)
+    .json()
+
+  return body.data.rankList
+}
+
+export async function getUserLive(opts = {}) {
+  const body = await biaowang
+    .get('/promote/user/live')
+    .query(opts)
+    .json()
+  return body.data
+}
+
+export async function getUserShow(opts = {}) {
+  const body = await biaowang
+    .post('/promote/user/show')
+    .send(opts)
+    .json()
+
+  return body.data.showList
+}
+
+export async function getPromotionUserCollection(opts = {}) {
+  const body = await biaowang
+    .post('/promote/user/collect')
+    .send({
+      promoteList: [],
+      ...opts
+    })
+    .json()
+  return body.data
+}
