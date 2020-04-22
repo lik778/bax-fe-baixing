@@ -51,3 +51,22 @@ export async function kaNavigation() {
 
   return toCamelcase(body.data)
 }
+
+export async function getAllCities() {
+  const body = await ka
+    .get('/bx/cities')
+    .json()
+
+  return body.data
+}
+
+export async function getAreasByCityId(cityId) {
+  const body = await ka
+    .get('/bx/areas')
+    .query({
+      cityId
+    })
+    .json()
+
+  return body.data
+}

@@ -3,7 +3,7 @@
 /* Element Chalk Variables */
 /* Transition
 -------------------------- */
-/* Colors
+/* Color
 -------------------------- */
 /* 53a8ff */
 /* 66b1ff */
@@ -16,15 +16,11 @@
 /* ecf5ff */
 /* Link
 -------------------------- */
-/* Background
--------------------------- */
 /* Border
--------------------------- */
-/* Box-shadow
 -------------------------- */
 /* Fill
 -------------------------- */
-/* Font
+/* Typography
 -------------------------- */
 /* Size
 -------------------------- */
@@ -38,19 +34,11 @@
 -------------------------- */
 /* Radio
 -------------------------- */
-/*
-$--radio-checked-text-color: $--color-primary !default;
-$--radio-checked-input-border-color: $--color-primary !default;
-$--radio-checked-input-fill: $--color-white !default;
-$--radio-checked-icon-color: $--color-primary !default;
-
-$--radio-input-border-color-hover: $--color-primary !default;
-*/
 /* Select
 -------------------------- */
 /* Alert
 -------------------------- */
-/* Message Box
+/* MessageBox
 -------------------------- */
 /* Message
 -------------------------- */
@@ -75,6 +63,8 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Table
 -------------------------- */
 /* Pagination
+-------------------------- */
+/* Popup
 -------------------------- */
 /* Popover
 -------------------------- */
@@ -115,6 +105,18 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Footer
 --------------------------*/
 /* Main
+--------------------------*/
+/* Timeline
+--------------------------*/
+/* Backtop
+--------------------------*/
+/* Link
+--------------------------*/
+/* Calendar
+--------------------------*/
+/* Form
+-------------------------- */
+/* Avatar
 --------------------------*/
 /* Break-point
 --------------------------*/
@@ -129,7 +131,7 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Element Chalk Variables */
 /* Transition
 -------------------------- */
-/* Colors
+/* Color
 -------------------------- */
 /* 53a8ff */
 /* 66b1ff */
@@ -142,15 +144,11 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* ecf5ff */
 /* Link
 -------------------------- */
-/* Background
--------------------------- */
 /* Border
--------------------------- */
-/* Box-shadow
 -------------------------- */
 /* Fill
 -------------------------- */
-/* Font
+/* Typography
 -------------------------- */
 /* Size
 -------------------------- */
@@ -164,19 +162,11 @@ $--radio-input-border-color-hover: $--color-primary !default;
 -------------------------- */
 /* Radio
 -------------------------- */
-/*
-$--radio-checked-text-color: $--color-primary !default;
-$--radio-checked-input-border-color: $--color-primary !default;
-$--radio-checked-input-fill: $--color-white !default;
-$--radio-checked-icon-color: $--color-primary !default;
-
-$--radio-input-border-color-hover: $--color-primary !default;
-*/
 /* Select
 -------------------------- */
 /* Alert
 -------------------------- */
-/* Message Box
+/* MessageBox
 -------------------------- */
 /* Message
 -------------------------- */
@@ -201,6 +191,8 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Table
 -------------------------- */
 /* Pagination
+-------------------------- */
+/* Popup
 -------------------------- */
 /* Popover
 -------------------------- */
@@ -241,13 +233,25 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Footer
 --------------------------*/
 /* Main
+--------------------------*/
+/* Timeline
+--------------------------*/
+/* Backtop
+--------------------------*/
+/* Link
+--------------------------*/
+/* Calendar
+--------------------------*/
+/* Form
+-------------------------- */
+/* Avatar
 --------------------------*/
 /* Break-point
 --------------------------*/
 /* Element Chalk Variables */
 /* Transition
 -------------------------- */
-/* Colors
+/* Color
 -------------------------- */
 /* 53a8ff */
 /* 66b1ff */
@@ -260,15 +264,11 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* ecf5ff */
 /* Link
 -------------------------- */
-/* Background
--------------------------- */
 /* Border
--------------------------- */
-/* Box-shadow
 -------------------------- */
 /* Fill
 -------------------------- */
-/* Font
+/* Typography
 -------------------------- */
 /* Size
 -------------------------- */
@@ -282,19 +282,11 @@ $--radio-input-border-color-hover: $--color-primary !default;
 -------------------------- */
 /* Radio
 -------------------------- */
-/*
-$--radio-checked-text-color: $--color-primary !default;
-$--radio-checked-input-border-color: $--color-primary !default;
-$--radio-checked-input-fill: $--color-white !default;
-$--radio-checked-icon-color: $--color-primary !default;
-
-$--radio-input-border-color-hover: $--color-primary !default;
-*/
 /* Select
 -------------------------- */
 /* Alert
 -------------------------- */
-/* Message Box
+/* MessageBox
 -------------------------- */
 /* Message
 -------------------------- */
@@ -319,6 +311,8 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Table
 -------------------------- */
 /* Pagination
+-------------------------- */
+/* Popup
 -------------------------- */
 /* Popover
 -------------------------- */
@@ -359,6 +353,18 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Footer
 --------------------------*/
 /* Main
+--------------------------*/
+/* Timeline
+--------------------------*/
+/* Backtop
+--------------------------*/
+/* Link
+--------------------------*/
+/* Calendar
+--------------------------*/
+/* Form
+-------------------------- */
+/* Avatar
 --------------------------*/
 /* Break-point
 --------------------------*/
@@ -479,29 +485,37 @@ $--radio-input-border-color-hover: $--color-primary !default;
   transition: opacity 0.3s cubic-bezier(0.55, 0, 0.1, 1); }
 
 .el-collapse {
-  border-top: 1px solid #ebeef5;
-  border-bottom: 1px solid #ebeef5; }
+  border-top: 1px solid #EBEEF5;
+  border-bottom: 1px solid #EBEEF5; }
+
+.el-collapse-item.is-disabled .el-collapse-item__header {
+  color: #bbb;
+  cursor: not-allowed; }
 
 .el-collapse-item__header {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
   height: 48px;
   line-height: 48px;
-  background-color: #fff;
+  background-color: #FFFFFF;
   color: #303133;
   cursor: pointer;
-  border-bottom: 1px solid #ebeef5;
+  border-bottom: 1px solid #EBEEF5;
   font-size: 13px;
   font-weight: 500;
   -webkit-transition: border-bottom-color .3s;
   transition: border-bottom-color .3s;
   outline: none; }
   .el-collapse-item__arrow {
-    margin-right: 8px;
+    margin: 0 8px 0 auto;
     -webkit-transition: -webkit-transform .3s;
     transition: -webkit-transform .3s;
     transition: transform .3s;
     transition: transform .3s, -webkit-transform .3s;
-    float: right;
-    line-height: 48px;
     font-weight: 300; }
     .el-collapse-item__arrow.is-active {
       -webkit-transform: rotate(90deg);
@@ -513,11 +527,11 @@ $--radio-input-border-color-hover: $--color-primary !default;
 
 .el-collapse-item__wrap {
   will-change: height;
-  background-color: #fff;
+  background-color: #FFFFFF;
   overflow: hidden;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
-  border-bottom: 1px solid #ebeef5; }
+  border-bottom: 1px solid #EBEEF5; }
 
 .el-collapse-item__content {
   padding-bottom: 25px;

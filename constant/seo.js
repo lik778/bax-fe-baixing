@@ -41,7 +41,8 @@ export const auditStatus = {
 
 export const NINETY_DAYS = 90
 export const ONE_HUNDRED_EIGHT_DAYS = 180
-export const durations = [NINETY_DAYS]
+export const ONE_YEAR = 365
+export const durations = [NINETY_DAYS, ONE_HUNDRED_EIGHT_DAYS, ONE_YEAR]
 
 export const ONE_THROUND_KEYWORD = 1000
 export const TWO_THROUND_KEYWORD = 2000
@@ -57,12 +58,42 @@ export const chargeList = [
   {
     duration: NINETY_DAYS,
     volume: TWO_THROUND_KEYWORD,
-    charge: 4500
+    charge: 3900
   },
   {
     duration: NINETY_DAYS,
     volume: FIVE_THROUND_KEYWORD,
+    charge: 4800
+  },
+  {
+    duration: ONE_HUNDRED_EIGHT_DAYS,
+    volume: ONE_THROUND_KEYWORD,
+    charge: 6000
+  },
+  {
+    duration: ONE_HUNDRED_EIGHT_DAYS,
+    volume: TWO_THROUND_KEYWORD,
+    charge: 7800
+  },
+  {
+    duration: ONE_HUNDRED_EIGHT_DAYS,
+    volume: FIVE_THROUND_KEYWORD,
+    charge: 9600
+  },
+  {
+    duration: ONE_YEAR,
+    volume: ONE_THROUND_KEYWORD,
     charge: 12000
+  },
+  {
+    duration: ONE_YEAR,
+    volume: TWO_THROUND_KEYWORD,
+    charge: 15600
+  },
+  {
+    duration: ONE_YEAR,
+    volume: FIVE_THROUND_KEYWORD,
+    charge: 19200
   }
 ]
 
@@ -79,7 +110,6 @@ export const cibaoStatus = {
   [`${AUDIT_STATUS_PASSED}`]: '投放中',
   [`${AUDIT_STATUS_REJECTED}`]: '已下线'
 }
-
 
 export const BAIDU_TYPE = 0
 export const QIHU_360 = 1

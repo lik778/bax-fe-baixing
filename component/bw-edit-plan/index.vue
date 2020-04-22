@@ -57,7 +57,7 @@
 </template> 
 
 <script>
-  import {isQiqiaobanSite, isWeishopSite} from 'util/kit'
+  import {isQiqiaobanSite, isWeishopSite, getLandingpageByPageProtocol} from 'util/kit'
   import {getPromoteById, getPromtesByOrders, updatePromote, getQiqiaobanCoupon} from 'api/biaowang'
   import {landingTypeOpts, SEM_PLATFORM_BAIDU} from 'constant/fengming' 
   import {AUDIT_STATUS_REJECT, PROMOTE_STATUS_OFFLINE, PROMOTE_STATUS_PENDING_EDIT} from 'constant/biaowang'
@@ -160,7 +160,7 @@
         const { landingPage, landingType } = this.form
         if (landingType === 1 || landingType === 2) {
           const script = document.createElement('script')
-          script.src = landingPage
+          script.src = getLandingpageByPageProtocol(landingPage)
           document.body.appendChild(script)
           script.addEventListener('error', e => {
             document.body.removeChild(script)

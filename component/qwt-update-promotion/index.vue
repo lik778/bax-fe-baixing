@@ -51,7 +51,7 @@
             </div>
           </span>
           <div class="page-error-placeholder" v-else>
-            所选推广页面失效，请 <a href="javascript:;" @click="isErrorLandingPageShow = false; adSelectortype = ''">从新选择</a>
+            所选推广页面失效，请 <a href="javascript:;" @click="isErrorLandingPageShow = false; adSelectortype = ''">重新选择</a>
           </div>
         </div>
         <div>
@@ -230,10 +230,11 @@
               </label>
               <section>
                 <span>
-                  <el-input
+                  <bax-input
                     size="small"
                     :value="getProp('mobilePriceRatio')"
-                    @input="v => promotion.mobilePriceRatio = v"
+                    @blur="v => promotion.mobilePriceRatio = v"
+                    @keyup="v => promotion.mobilePriceRatio = v"
                     placeholder="默认为1"
                   />
                 </span>
@@ -305,6 +306,7 @@ import AreaSelector from 'com/common/area-selector'
 import ContractAck from 'com/widget/contract-ack'
 import FmTip from 'com/widget/fm-tip'
 import qwtAddKeywordList from 'com/common/qwt-add-keyword-list'
+import BaxInput from 'com/common/bax-input'
 
 
 import { disabledDate } from 'util/element'
@@ -324,7 +326,8 @@ import {
   getQiqiaobanCoupon,
   checkCreativeContent,
   getRecommandCreative,
-  changeCampaignKeywordsPrice
+  changeCampaignKeywordsPrice,
+  queryAds
 } from 'api/fengming'
 
 import {
@@ -362,7 +365,8 @@ import {
 import {
   f2y,
   isQiqiaobanSite,
-  isSiteLandingType
+  isSiteLandingType,
+  getLandingpageByPageProtocol
 } from 'util/kit'
 
 import {allowSee258} from 'util/fengming-role'
@@ -397,7 +401,8 @@ export default {
     KeywordList,
     ContractAck,
     FmTip,
-    qwtAddKeywordList
+    qwtAddKeywordList,
+    BaxInput
   },
   fromMobx: {
     recommendedWords: () => store.recommendedWords,
@@ -1253,11 +1258,11 @@ export default {
 
     // 验证官网落地页是否404
     const { landingPage, landingType } = this.originPromotion
-    if (landingType === 1) {
+    if (landingType === LANDING_TYPE_GW) {
       // 将帖子选择组件的类型重置
       this.adSelectortype = ''
       const script = document.createElement('script')
-      script.src = landingPage
+      script.src = getLandingpageByPageProtocol(landingPage)
       document.body.appendChild(script)
       script.addEventListener('error', e => {
         document.body.removeChild(script)
@@ -1268,6 +1273,22 @@ export default {
         document.body.removeChild(script)
       })
     }
+
+    // 验证百姓帖子已经归档
+    if (landingType === LANDING_TYPE_AD) {
+      const result = await queryAds({
+        limitMvp: false,
+        adIds: this.originPromotion.landingPageId,
+        limit: 1
+      })
+      const ad = result.ads && result.ads[0]
+      if (!ad) {
+        this.isErrorLandingPageShow = true
+        this.promotion.landingPage = ''
+      }
+    }
+
+
     setTimeout(() => {
       if (this.$route.query.target === 'keyword') {
         VueScrollTo.scrollTo('.keyword', 100)

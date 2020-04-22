@@ -3,7 +3,7 @@
 /* Element Chalk Variables */
 /* Transition
 -------------------------- */
-/* Colors
+/* Color
 -------------------------- */
 /* 53a8ff */
 /* 66b1ff */
@@ -16,15 +16,11 @@
 /* ecf5ff */
 /* Link
 -------------------------- */
-/* Background
--------------------------- */
 /* Border
--------------------------- */
-/* Box-shadow
 -------------------------- */
 /* Fill
 -------------------------- */
-/* Font
+/* Typography
 -------------------------- */
 /* Size
 -------------------------- */
@@ -38,19 +34,11 @@
 -------------------------- */
 /* Radio
 -------------------------- */
-/*
-$--radio-checked-text-color: $--color-primary !default;
-$--radio-checked-input-border-color: $--color-primary !default;
-$--radio-checked-input-fill: $--color-white !default;
-$--radio-checked-icon-color: $--color-primary !default;
-
-$--radio-input-border-color-hover: $--color-primary !default;
-*/
 /* Select
 -------------------------- */
 /* Alert
 -------------------------- */
-/* Message Box
+/* MessageBox
 -------------------------- */
 /* Message
 -------------------------- */
@@ -75,6 +63,8 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Table
 -------------------------- */
 /* Pagination
+-------------------------- */
+/* Popup
 -------------------------- */
 /* Popover
 -------------------------- */
@@ -115,6 +105,18 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Footer
 --------------------------*/
 /* Main
+--------------------------*/
+/* Timeline
+--------------------------*/
+/* Backtop
+--------------------------*/
+/* Link
+--------------------------*/
+/* Calendar
+--------------------------*/
+/* Form
+-------------------------- */
+/* Avatar
 --------------------------*/
 /* Break-point
 --------------------------*/
@@ -129,7 +131,7 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Element Chalk Variables */
 /* Transition
 -------------------------- */
-/* Colors
+/* Color
 -------------------------- */
 /* 53a8ff */
 /* 66b1ff */
@@ -142,15 +144,11 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* ecf5ff */
 /* Link
 -------------------------- */
-/* Background
--------------------------- */
 /* Border
--------------------------- */
-/* Box-shadow
 -------------------------- */
 /* Fill
 -------------------------- */
-/* Font
+/* Typography
 -------------------------- */
 /* Size
 -------------------------- */
@@ -164,19 +162,11 @@ $--radio-input-border-color-hover: $--color-primary !default;
 -------------------------- */
 /* Radio
 -------------------------- */
-/*
-$--radio-checked-text-color: $--color-primary !default;
-$--radio-checked-input-border-color: $--color-primary !default;
-$--radio-checked-input-fill: $--color-white !default;
-$--radio-checked-icon-color: $--color-primary !default;
-
-$--radio-input-border-color-hover: $--color-primary !default;
-*/
 /* Select
 -------------------------- */
 /* Alert
 -------------------------- */
-/* Message Box
+/* MessageBox
 -------------------------- */
 /* Message
 -------------------------- */
@@ -201,6 +191,8 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Table
 -------------------------- */
 /* Pagination
+-------------------------- */
+/* Popup
 -------------------------- */
 /* Popover
 -------------------------- */
@@ -241,6 +233,18 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Footer
 --------------------------*/
 /* Main
+--------------------------*/
+/* Timeline
+--------------------------*/
+/* Backtop
+--------------------------*/
+/* Link
+--------------------------*/
+/* Calendar
+--------------------------*/
+/* Form
+-------------------------- */
+/* Avatar
 --------------------------*/
 /* Break-point
 --------------------------*/
@@ -267,14 +271,14 @@ $--radio-input-border-color-hover: $--color-primary !default;
       color: #303133;
       border-color: #303133; }
     .el-step__head.is-wait {
-      color: #c0c4cc;
-      border-color: #c0c4cc; }
+      color: #C0C4CC;
+      border-color: #C0C4CC; }
     .el-step__head.is-success {
-      color: #67c23a;
-      border-color: #67c23a; }
+      color: #67C23A;
+      border-color: #67C23A; }
     .el-step__head.is-error {
-      color: #f56c6c;
-      border-color: #f56c6c; }
+      color: #F56C6C;
+      border-color: #F56C6C; }
     .el-step__head.is-finish {
       color: #FF6350;
       border-color: #FF6350; }
@@ -295,7 +299,7 @@ $--radio-input-border-color-hover: $--color-primary !default;
     font-size: 14px;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
-    background: #fff;
+    background: #FFFFFF;
     -webkit-transition: .15s ease-out;
     transition: .15s ease-out; }
     .el-step__icon.is-text {
@@ -323,7 +327,7 @@ $--radio-input-border-color-hover: $--color-primary !default;
   .el-step__line {
     position: absolute;
     border-color: inherit;
-    background-color: #c0c4cc; }
+    background-color: #C0C4CC; }
   .el-step__line-inner {
     display: block;
     border-width: 1px;
@@ -345,11 +349,11 @@ $--radio-input-border-color-hover: $--color-primary !default;
       font-weight: bold;
       color: #303133; }
     .el-step__title.is-wait {
-      color: #c0c4cc; }
+      color: #C0C4CC; }
     .el-step__title.is-success {
-      color: #67c23a; }
+      color: #67C23A; }
     .el-step__title.is-error {
-      color: #f56c6c; }
+      color: #F56C6C; }
     .el-step__title.is-finish {
       color: #FF6350; }
   .el-step__description {
@@ -361,11 +365,11 @@ $--radio-input-border-color-hover: $--color-primary !default;
     .el-step__description.is-process {
       color: #303133; }
     .el-step__description.is-wait {
-      color: #c0c4cc; }
+      color: #C0C4CC; }
     .el-step__description.is-success {
-      color: #67c23a; }
+      color: #67C23A; }
     .el-step__description.is-error {
-      color: #f56c6c; }
+      color: #F56C6C; }
     .el-step__description.is-finish {
       color: #FF6350; }
   .el-step.is-horizontal {
@@ -466,7 +470,7 @@ $--radio-input-border-color-hover: $--color-primary !default;
         position: absolute;
         height: 15px;
         width: 1px;
-        background: #c0c4cc; }
+        background: #C0C4CC; }
       .el-step.is-simple .el-step__arrow::before {
         -webkit-transform: rotate(-45deg) translateY(-4px);
         transform: rotate(-45deg) translateY(-4px);

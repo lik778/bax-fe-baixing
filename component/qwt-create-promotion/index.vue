@@ -80,7 +80,16 @@
         <el-button type="primary" style="margin-top:10px" size="small" 
                    @click="addKeywordListDialog = true">批量添加关键词</el-button>
         <div class="kw-tag-container">
-          <el-tag class="kw-tag" v-for="(kw, index) in newPromotion.keywords" :key="index" closable @close="removeKeyword(index)">{{kw.word}}</el-tag>
+          <el-tag class="kw-tag"
+                  :class="{'kw-tag-fh': kw.recommandSource === RECOMMAND_SOURCE_FH}" 
+                  v-for="(kw, index) in newPromotion.keywords" 
+                  :key="index" 
+                  closable
+                  type="warning"
+                  @close="removeKeyword(index)">
+                  {{kw.word}}
+                  {{kw.recommandSource === RECOMMAND_SOURCE_FH ? '(好词)': ''}}
+          </el-tag>
           <el-autocomplete
             v-model="queryWord"
             :debounce="600"
@@ -97,14 +106,11 @@
         <header>设置预算</header>
         <div class="kw-price">
           <label>关键词出价<cpc-price-tip />：</label>
-          <el-input type="number"
-            :value="f2y(kwPrice) || f2y(recommendKwPrice)"
-            @change="onKwPriceChange"
-            class="input"
-            size="small"
-          >
-            <template slot="append">元</template>
-          </el-input>
+          <bax-input :value="f2y(kwPrice) || f2y(recommendKwPrice)" 
+                     @blur="onKwPriceChange"
+                     @keyup="onKwPriceChange"
+                     class="input"
+                     size="small" />元
           <span class="tip">（关键词出价区间为 [2, 999] 元）</span>
         </div>
 
@@ -125,14 +131,11 @@
 
         <div class="budget">
           <label>单渠道日预算：</label>
-          <el-input type="number"
-            :value="f2y(newPromotion.dailyBudget)"
-            @change="onBudgetChange"
-            class="input"
-            size="small"
-          >
-            <template slot="append">元</template>
-          </el-input>
+          <bax-input :value="f2y(newPromotion.dailyBudget)" 
+                     @blur="onBudgetChange"
+                     @keyup="onBudgetChange"
+                     class="input"
+                     size="small" />元
           <p class="tip">（根据您选取的关键词，建议最低预算为<strong class="red">{{ f2y(predictedInfo.minDailyBudget) }} </strong>元）</p>
         </div>
         <p class="tip">
@@ -195,6 +198,7 @@ import ContractAck from 'com/widget/contract-ack'
 import wxBindModal from 'com/common/wx-bind-modal'
 import FmTip from 'com/widget/fm-tip'
 import qwtAddKeywordList from 'com/common/qwt-add-keyword-list'
+import BaxInput from 'com/common/bax-input'
 
 import dayjs from 'dayjs'
 import { default as track, trackAux } from 'util/track'
@@ -226,7 +230,8 @@ import {
   semPlatformOpts,
   LANDING_TYPE_AD,
   LANDING_TYPE_GW,
-  LANDING_TYPE_258
+  LANDING_TYPE_258,
+  RECOMMAND_SOURCE_FH
 } from 'constant/fengming'
 
 import {allowSee258} from 'util/fengming-role'
@@ -274,7 +279,8 @@ export default {
     ContractAck,
     CpcPriceTip,
     FmTip,
-    qwtAddKeywordList
+    qwtAddKeywordList,
+    BaxInput
   },
   fromMobx: {
     searchRecommends: () => store.searchRecommends,
@@ -304,6 +310,7 @@ export default {
       LANDING_TYPE_GW,
       LANDING_TYPE_258,
       landingTypeDisplay: LANDING_TYPE_AD,
+      RECOMMAND_SOURCE_FH,
 
       searchRecommendsVisible: false,
       chargeDialogVisible: false,
@@ -843,6 +850,11 @@ strong.red {
   margin-right: 5px;
   margin-top: 8px;
 }
+.kw-tag-fh {
+  color: #16B7FF;
+  background: #ecf5ff;
+  border-color: #b3d8ff;
+}
 .kw-tag-container {
   max-width: 100%;
   display: flex;
@@ -886,6 +898,20 @@ strong.red {
       margin-left: 10px;
       cursor: pointer;
       color: rgb(21, 164, 250);
+    }
+  }
+}
+</style>
+
+<style lang="postcss">
+.kw-tag-container {
+  & > .kw-tag-fh {
+    & > .el-tag__close {
+      color: #16B7FF;
+      &:hover {
+        background: #16B7FF;
+        color: #fff;
+      }
     }
   }
 }

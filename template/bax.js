@@ -42,9 +42,11 @@ import {
   Col,
   Progress,
   Card,
+  Image,
   Loading,
   MessageBox,
   Message,
+  Cascader,
   Notification
 } from 'element-ui'
 
@@ -99,8 +101,10 @@ Vue.use(Tag)
 Vue.use(Icon)
 Vue.use(Row)
 Vue.use(Col)
+Vue.use(Cascader)
 Vue.use(Progress)
 Vue.use(Card)
+Vue.use(Image)
 
 Vue.use(Loading.directive)
 Vue.prototype.$loading = Loading.service
@@ -239,7 +243,7 @@ const seoRoutes = [{
   path: '/main/seo/promotion/create/zixuan',
   name: 'seo-create-zixuan-promotion'
 }, {
-  component: () => import('com/seo-create-promotion-cibao'),
+  component: () => import('com/seo-promotion-cibao/create'),
   path: '/main/seo/promotion/create/cibao',
   name: 'seo-create-cibao-promotion',
   beforeEnter: async (to, from, next) => {
@@ -251,7 +255,7 @@ const seoRoutes = [{
     }
   }
 }, {
-  component: () => import('com/seo-update-promotion-cibao'),
+  component: () => import('com/seo-promotion-cibao/update'),
   path: '/main/seo/promotion/cibao/:id/update',
   name: 'seo-update-cibao-promotion'
 }]

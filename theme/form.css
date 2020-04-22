@@ -3,7 +3,7 @@
 /* Element Chalk Variables */
 /* Transition
 -------------------------- */
-/* Colors
+/* Color
 -------------------------- */
 /* 53a8ff */
 /* 66b1ff */
@@ -16,15 +16,11 @@
 /* ecf5ff */
 /* Link
 -------------------------- */
-/* Background
--------------------------- */
 /* Border
--------------------------- */
-/* Box-shadow
 -------------------------- */
 /* Fill
 -------------------------- */
-/* Font
+/* Typography
 -------------------------- */
 /* Size
 -------------------------- */
@@ -38,19 +34,11 @@
 -------------------------- */
 /* Radio
 -------------------------- */
-/*
-$--radio-checked-text-color: $--color-primary !default;
-$--radio-checked-input-border-color: $--color-primary !default;
-$--radio-checked-input-fill: $--color-white !default;
-$--radio-checked-icon-color: $--color-primary !default;
-
-$--radio-input-border-color-hover: $--color-primary !default;
-*/
 /* Select
 -------------------------- */
 /* Alert
 -------------------------- */
-/* Message Box
+/* MessageBox
 -------------------------- */
 /* Message
 -------------------------- */
@@ -75,6 +63,8 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Table
 -------------------------- */
 /* Pagination
+-------------------------- */
+/* Popup
 -------------------------- */
 /* Popover
 -------------------------- */
@@ -115,6 +105,18 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Footer
 --------------------------*/
 /* Main
+--------------------------*/
+/* Timeline
+--------------------------*/
+/* Backtop
+--------------------------*/
+/* Link
+--------------------------*/
+/* Calendar
+--------------------------*/
+/* Form
+-------------------------- */
+/* Avatar
 --------------------------*/
 /* Break-point
 --------------------------*/
@@ -129,7 +131,7 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Element Chalk Variables */
 /* Transition
 -------------------------- */
-/* Colors
+/* Color
 -------------------------- */
 /* 53a8ff */
 /* 66b1ff */
@@ -142,15 +144,11 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* ecf5ff */
 /* Link
 -------------------------- */
-/* Background
--------------------------- */
 /* Border
--------------------------- */
-/* Box-shadow
 -------------------------- */
 /* Fill
 -------------------------- */
-/* Font
+/* Typography
 -------------------------- */
 /* Size
 -------------------------- */
@@ -164,19 +162,11 @@ $--radio-input-border-color-hover: $--color-primary !default;
 -------------------------- */
 /* Radio
 -------------------------- */
-/*
-$--radio-checked-text-color: $--color-primary !default;
-$--radio-checked-input-border-color: $--color-primary !default;
-$--radio-checked-input-fill: $--color-white !default;
-$--radio-checked-icon-color: $--color-primary !default;
-
-$--radio-input-border-color-hover: $--color-primary !default;
-*/
 /* Select
 -------------------------- */
 /* Alert
 -------------------------- */
-/* Message Box
+/* MessageBox
 -------------------------- */
 /* Message
 -------------------------- */
@@ -201,6 +191,8 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Table
 -------------------------- */
 /* Pagination
+-------------------------- */
+/* Popup
 -------------------------- */
 /* Popover
 -------------------------- */
@@ -241,6 +233,18 @@ $--radio-input-border-color-hover: $--color-primary !default;
 /* Footer
 --------------------------*/
 /* Main
+--------------------------*/
+/* Timeline
+--------------------------*/
+/* Backtop
+--------------------------*/
+/* Link
+--------------------------*/
+/* Calendar
+--------------------------*/
+/* Form
+-------------------------- */
+/* Avatar
 --------------------------*/
 /* Break-point
 --------------------------*/
@@ -301,6 +305,11 @@ $--radio-input-border-color-hover: $--color-primary !default;
     margin-bottom: 18px; }
   .el-form-item--mini .el-form-item__error {
     padding-top: 1px; }
+  .el-form-item__label-wrap {
+    float: left; }
+    .el-form-item__label-wrap .el-form-item__label {
+      display: inline-block;
+      float: none; }
   .el-form-item__label {
     text-align: right;
     vertical-align: middle;
@@ -322,9 +331,9 @@ $--radio-input-border-color-hover: $--color-primary !default;
     .el-form-item__content::after {
       clear: both; }
     .el-form-item__content .el-input-group {
-      vertical-align: middle; }
+      vertical-align: top; }
   .el-form-item__error {
-    color: #f56c6c;
+    color: #F56C6C;
     font-size: 12px;
     line-height: 1;
     padding-top: 4px;
@@ -337,27 +346,19 @@ $--radio-input-border-color-hover: $--color-primary !default;
       left: auto;
       display: inline-block;
       margin-left: 10px; }
-  .el-form-item.is-required:not(.is-no-asterisk) > .el-form-item__label:before {
+  .el-form-item.is-required:not(.is-no-asterisk) > .el-form-item__label:before,
+  .el-form-item.is-required:not(.is-no-asterisk) .el-form-item__label-wrap > .el-form-item__label:before {
     content: '*';
-    color: #f56c6c;
+    color: #F56C6C;
     margin-right: 4px; }
   .el-form-item.is-error .el-input__inner, .el-form-item.is-error .el-input__inner:focus,
   .el-form-item.is-error .el-textarea__inner,
   .el-form-item.is-error .el-textarea__inner:focus {
-    border-color: #f56c6c; }
+    border-color: #F56C6C; }
   .el-form-item.is-error .el-input-group__append .el-input__inner,
   .el-form-item.is-error .el-input-group__prepend .el-input__inner {
     border-color: transparent; }
   .el-form-item.is-error .el-input__validateIcon {
-    color: #f56c6c; }
-  .el-form-item.is-success .el-input__inner, .el-form-item.is-success .el-input__inner:focus,
-  .el-form-item.is-success .el-textarea__inner,
-  .el-form-item.is-success .el-textarea__inner:focus {
-    border-color: #67c23a; }
-  .el-form-item.is-success .el-input-group__append .el-input__inner,
-  .el-form-item.is-success .el-input-group__prepend .el-input__inner {
-    border-color: transparent; }
-  .el-form-item.is-success .el-input__validateIcon {
-    color: #67c23a; }
+    color: #F56C6C; }
   .el-form-item--feedback .el-input__validateIcon {
     display: inline-block; }

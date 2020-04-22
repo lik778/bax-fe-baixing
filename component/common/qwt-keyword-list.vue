@@ -18,6 +18,9 @@
         <template slot-scope="{row}">
           {{row.word}}
           <span class="new-word" v-if="row.isNew">(新)</span>
+          <span class="new-word">
+            {{row.recommandSource === RECOMMAND_SOURCE_FH ? '(好词)': ''}}
+          </span>
         </template>
       </el-table-column>
       <el-table-column v-if="showPropShow"
@@ -48,7 +51,7 @@
         <template slot="header" slot-scope="col">
           {{maxPriceLabel}}<cpc-top-price-tip/>
           <div style="display:block;padding-left:0">
-           <el-popover placement="top" v-model="popoverVisible">
+           <el-popover placement="top" :value="popoverVisible">
             <div>
               <el-input placeholder="请输入关键词价格" v-model="keywordPrice" size="mini"></el-input>
               <div class="actions">
@@ -62,10 +65,10 @@
         </template>
         <template slot-scope="s">
           <span class="price">
-            <el-input size="mini" placeholder="单位: 元"
-              :value="f2y(getWordPrice(s.row.word))"
-              @change="v => setCustomPrice(s.row, v)">
-            </el-input>
+            <bax-input placeholder="单位，元"
+                       @blur="v => setCustomPrice(s, v)"
+                       @keyup="v => setCustomPrice(s, v)"
+                       :value="f2y(getWordPrice(s.row.word))" />
             <span v-if="showAddPrice(s.row)"
               class="add-w-price">
               <button @click="bumpPriceBy20(s.row)">
@@ -106,8 +109,11 @@ import {
   KEYWORD_CHIBI_PENDING,
   KEYWORD_CHIBI_REJECT,
   SEM_PLATFORM_SHENMA,
-  keywordStatus
+  keywordStatus,
+  RECOMMAND_SOURCE_FH,
 } from 'constant/fengming'
+
+import BaxInput from 'com/common/bax-input'
 
 import {
   keywordStatusTip,
@@ -147,7 +153,8 @@ export default {
   name: 'qwt-keyword-list',
   components: {
     BaxPagination,
-    CpcTopPriceTip
+    CpcTopPriceTip,
+    BaxInput
   },
   props: {
     platform: {
@@ -215,8 +222,10 @@ export default {
       cpcTopPriceTip,
       keywordPriceTip,
 
+      keywordPrice: '',
       popoverVisible: false,
-      keywordPrice: ''
+
+      RECOMMAND_SOURCE_FH
     }
   },
   computed: {
