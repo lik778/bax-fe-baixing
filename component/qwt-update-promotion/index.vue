@@ -1046,6 +1046,8 @@ export default {
         }
       }
 
+      console.log(data)
+
       await updateCampaign(this.id, fmtAreasInQwt(data, allAreas))
       trackPromotionKeywords(data)
 
@@ -1059,7 +1061,7 @@ export default {
     },
     trackPromotionKeywords({ updatedKeywords = [], newKeywords = [], deletedKeywords = [] }) {
       // origin
-      const recommendKeywords = this._recommendKeywords
+      const recommendKeywords = this._recommendKeywords || []
       const getProp = this.getProp.bind(this)
       trackAux({
         action: 'record-promotion-keywords',
