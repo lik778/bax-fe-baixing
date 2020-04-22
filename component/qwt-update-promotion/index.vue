@@ -1059,7 +1059,7 @@ export default {
     },
     trackPromotionKeywords({ updatedKeywords = [], newKeywords = [], deletedKeywords = [] }) {
       // origin
-      const recommendKeywords = this._recommendKeywords
+      const recommendKeywords = this._recommendKeywords || []
       const getProp = this.getProp.bind(this)
       trackAux({
         action: 'record-promotion-keywords',
