@@ -8,10 +8,13 @@ import {
   SEM_PLATFORM_SHENMA
 } from 'constant/fengming'
 
-export function fmtCpcRanking(ranking) {
+export function fmtCpcRanking(ranking, isFixed = true) {
   ranking = +ranking
   if (ranking < 1 || ranking > 5) {
     ranking = 5
+  }
+  if (!isFixed) {
+    return ranking
   }
   return parseFloat(ranking).toFixed(1)
 }

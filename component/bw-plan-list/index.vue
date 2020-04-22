@@ -47,7 +47,7 @@
               <p v-else>{{auditStatusFormatter(scope.row.auditStatus)}}</p>
             </template>
           </el-table-column>
-          <el-table-column prop="cpcRanking" label="昨日排名" :formatter="({cpcRanking}) => cpcRanking && fmtCpcRanking(cpcRanking)" />
+          <el-table-column prop="cpcRanking" label="昨日排名" :formatter="({cpcRanking}) => cpcRanking && fmtCpcRanking(cpcRanking, false)" />
           <el-table-column prop="createdAt" label="购买日期" :formatter="dateFormatter" />
           <el-table-column label="投放剩余天数">
             <template slot-scope="scope">
