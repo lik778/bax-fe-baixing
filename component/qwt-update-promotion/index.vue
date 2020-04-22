@@ -1046,8 +1046,6 @@ export default {
         }
       }
 
-      console.log(data)
-
       await updateCampaign(this.id, fmtAreasInQwt(data, allAreas))
       trackPromotionKeywords(data)
 
