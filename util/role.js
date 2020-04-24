@@ -214,7 +214,7 @@ export function allowNotSeeBwNewPrice(roles, agentId) {
   const isOnlyBaixingUser = currentRoles.includes('BAIXING_USER') && currentRoles.length === 1
 
   if (isPro) {
-    return [2067, 2070, 2071, 2083, 2094, 2101, 2124, 2126, 2132].includes(agentId) && isOnlyBaixingUser
+    return [2067, 2070, 2071, 2083, 2094, 2101, 2124, 2126, 2132, 2143].includes(agentId) && isOnlyBaixingUser
   }
   return [1].includes(agentId) && isOnlyBaixingUser
 }
