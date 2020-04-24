@@ -51,7 +51,7 @@
         <template slot="header" slot-scope="col">
           {{maxPriceLabel}}<cpc-top-price-tip/>
           <div style="display:block;padding-left:0">
-           <el-popover placement="top" :value="popoverVisible">
+           <el-popover placement="top" v-model="popoverVisible">
             <div>
               <el-input placeholder="请输入关键词价格" v-model="keywordPrice" size="mini"></el-input>
               <div class="actions">
@@ -59,7 +59,7 @@
                 <el-button type="primary" size="mini" @click="handleKeywordsPriceChange">确定</el-button>
               </div>
             </div>
-            <a href="javascript:;" slot="reference" class="pcice-action" @click="popoverVisible = true">批量改价</a>
+            <a href="javascript:;" slot="reference" class="pcice-action">批量改价</a>
            </el-popover>
           </div>
         </template>
@@ -366,6 +366,7 @@ export default {
         word: row.word,
         id: row.id
       })
+      this.$emit('change-offset', this.offset - 1)
     },
     getWordPrice(kw) {
       const word = this.words.find(w => w.word === kw)
