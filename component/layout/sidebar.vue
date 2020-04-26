@@ -80,7 +80,7 @@
           <template slot="title">
             <bx-icon type="sharealt"></bx-icon>标王推广
           </template>
-          <el-menu-item index="bw-query-price" v-if="!allowNotSeeBwNewPrice">
+          <el-menu-item index="bw-query-price" v-if="!userInfo.sstAgent">
             <router-link :to="{ name: 'bw-query-price' }" tag="p">
               <i class="material-icons" style="font-size: 16px; margin-right: 11px; vertical-align: -3px;"></i>新建标王推广
             </router-link>
@@ -174,9 +174,7 @@ import {
   allowQueryUsers,
   // global
   allowSeeAccount,
-  allowSeeBxAd,
-  // bw
-  allowNotSeeBwNewPrice
+  allowSeeBxAd
 } from 'util/role'
 
 import { baxUserLogin, kaNavigation } from 'api/ka'
@@ -230,10 +228,6 @@ export default {
     }
   },
   computed: {
-    allowNotSeeBwNewPrice() {
-      // 外部代理商无法看到标王新建页面
-      return allowNotSeeBwNewPrice(this.userInfo.roles, this.userInfo.realAgentId)
-    },
     allowUseKaPackage() {
       // 合并产品购买和充值后，只有几个大客户可以看到官网单独购买入口
       return allowUseKaPackage(this.userInfo.roles, this.userInfo.id)

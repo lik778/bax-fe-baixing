@@ -36,7 +36,7 @@
       </div>
       <div class="no-promote-placeholder" v-else>
         <p class="text">您暂时没有标王推广计划，您可以</p>
-        <el-button type="primary" v-if="!allowNotSeeBwNewPrice" @click="() => $router.push({name: 'bw-query-price'})">新建标王推广计划</el-button>
+        <el-button type="primary" v-if="!userInfo.sstAgent" @click="() => $router.push({name: 'bw-query-price'})">新建标王推广计划</el-button>
       </div>
     </div>
     <loading-placeholder v-else class="layout-left">
@@ -78,7 +78,6 @@
 import store from './store'
 import loadingPlaceholder from './loading-placeholder'
 import { PROMOTE_STATUS_ONLINE } from 'constant/biaowang'
-import { allowNotSeeBwNewPrice } from 'util/role'
 
 export default {
   name: 'homepage-biaowang',
@@ -92,12 +91,6 @@ export default {
     return {
       dataPrefix: 'yesterday'
     }
-  },
-  computed: {
-    allowNotSeeBwNewPrice() {
-      // 外部代理商无法看到标王新建页面
-      return allowNotSeeBwNewPrice(this.userInfo.roles, this.userInfo.realAgentId)
-    },
   },
   methods: {
     getPromoteData(type) {
