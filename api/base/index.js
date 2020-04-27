@@ -4,6 +4,7 @@ import 'whatwg-fetch'
 import { Message } from 'element-ui'
 import chargeNotice from '../../util/charge-notice'
 import Fetch from 'fetch.io'
+import sentry from '../../lib/sentry'
 
 import {
   fengmingApiHost,
@@ -37,6 +38,7 @@ export const fengming = new Fetch({
 
     if (body.errors) {
       Message.error('出错啦')
+      sentry.captureException(body)
       throw new Error('出错啦')
     }
 
@@ -49,6 +51,7 @@ export const fengming = new Fetch({
 
     if (meta.message !== 'Success') {
       Message.error(meta.message)
+      sentry.captureException(body)
       throw new Error(meta.message)
     }
   }
@@ -65,6 +68,7 @@ export const ka = new Fetch({
   afterJSON(body) {
     if (body.msg !== 'success') {
       Message.error(body.msg)
+      sentry.captureException(body)
       throw new Error(body.msg)
     }
   }
@@ -75,12 +79,13 @@ export const api = new Fetch({
   beforeRequest() {
     es.emit('http fetch start')
   },
-  afterResponse() {
+  afterResponse(res) {
     es.emit('http fetch end')
   },
   afterJSON(body) {
     if (body.errors) {
       Message.error('出错啦')
+      sentry.captureException(body)
       throw new Error('出错啦')
     }
 
@@ -93,11 +98,13 @@ export const api = new Fetch({
 
     if (meta.status === 403) {
       Message.error('你没有权限访问该页面')
+      sentry.captureException(body)
       return redirect('main')
     }
 
     if (meta.message !== 'Success') {
       Message.error(meta.message)
+      sentry.captureException(body)
       throw new Error(meta.message)
     }
   }
@@ -117,6 +124,7 @@ export const biaowang = new Fetch({
       return redirect('signin', `return=${encodeURIComponent(location.pathname + location.search)}`)
     } else {
       res.clone().json().then(body => {
+        sentry.captureException(body)
         Message.error(body.message || `出错了，请稍后重试`)
       })
       throw new Error(res.statusText)
@@ -149,6 +157,7 @@ export const seo = new Fetch({
       return redirect('signin', `return=${encodeURIComponent(location.pathname + location.search)}`)
     } else {
       res.clone().json().then(body => {
+        sentry.captureException(body)
         Message.error(body.message || `出错了，请稍后重试`)
       })
       throw new Error(res.statusText)
@@ -166,6 +175,7 @@ export const seo = new Fetch({
 
     if (body.code !== 0) {
       Message.error(body.message)
+      sentry.captureException(body)
       throw new Error(body.message)
     }
   }
