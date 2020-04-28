@@ -25,7 +25,8 @@
                 v-if="getProp('landingType') === LANDING_TYPE_AD"
                 :type="adSelectortype"
                 :disabled="disabled"
-                :all-areas="allAreas" :limit-mvp="false"
+                :all-areas="allAreas" 
+                :limit-mvp="false"
                 :selected-id="getProp('landingPageId')"
                 @select-ad="ad => onSelectAd(ad)">
               </user-ad-selector>
@@ -1287,7 +1288,6 @@ export default {
         this.promotion.landingPage = ''
       }
     }
-
 
     setTimeout(() => {
       if (this.$route.query.target === 'keyword') {
