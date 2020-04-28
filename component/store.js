@@ -3,6 +3,7 @@ import { observable, action, toJS } from 'mobx'
 
 import * as aapi from 'api/account'
 import * as mapi from 'api/meta'
+import Sentry from '../lib/sentry'
 
 const gStore = observable({
   _currentUser: {},
@@ -37,6 +38,16 @@ const gStore = observable({
       baixing_id: currentUser.baixingId,
       bax_id: currentUser.id
     }
+
+    // sentry报错添加user
+    Sentry.configureScope(scope => {
+      scope.setUser({
+        id: currentUser.baixingId,
+        name: currentUser.name,
+        mobile: currentUser.mobile,
+        baxId: currentUser.id
+      })
+    })
   }),
 
   getCategories: action(async function() {

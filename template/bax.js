@@ -1,5 +1,6 @@
 
 import '../lib/trackerlib'
+import sentry from '../lib/sentry'
 
 import Homepage from 'com/homepage'
 import Bax from 'com/bax'
@@ -62,6 +63,12 @@ import { getCurrentUser } from 'api/account'
 // track common data
 window.__trackerData = {
   common: {}
+}
+window.onerror = (e) => {
+  sentry.captureException(e)
+}
+Vue.config.errorHandler = (err, vm, info) => {
+  sentry.captureException(err)
 }
 
 Vue.use(Movue, { reaction })
