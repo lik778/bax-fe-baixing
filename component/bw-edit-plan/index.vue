@@ -21,9 +21,12 @@
                 <user-ad-selector
                   :type="adSelectorType"
                   v-if="landingTypeDisplay === 0"
-                  :all-areas="allAreas" :limit-mvp="false"
+                  :all-areas="allAreas" 
+                  :limit-mvp="false"
                   :selected-id="form.landingPageId"
                   @select-ad="onSelectAd"
+                  @landing-ad-invalid="landingAdInvalid"
+                  :original-landing-page-id="!!$route.query.promoteId && promotes[0].landingPageId"
                 />
 
                 <qiqiaoban-page-selector
@@ -153,6 +156,11 @@
       this.verifyLandingpageIsError()
     },
     methods: {
+      landingAdInvalid() {
+        this.isErrorLandingPageShow = true
+        this.form.landingPage = ''
+        this.form.landingPageId = ''
+      },
       reselectLandingpage() {
         this.isErrorLandingPageShow = false
       },

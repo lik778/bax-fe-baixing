@@ -106,6 +106,9 @@ export default {
       validator(v) {
         return [TYPE_RESELECT, ''].includes(v)
       }
+    },
+    originalLandingPageId: {
+      type: String
     }
   },
   data() {
@@ -204,6 +207,20 @@ export default {
       this.keyword = ''
 
       await this.queryAds()
+    },
+    // 验证百姓帖子已经归档
+    async judgeLandingAdInvalid() {
+      if (!this.originalLandingPageId) return
+
+      const result = await queryAds({
+        limitMvp: false,
+        adIds: [this.originalLandingPageId],
+        limit: 1
+      })
+      const ad = result.ads && result.ads[0]
+      if (!ad) {
+        this.$emit('landing-ad-invalid')
+      }
     }
   },
   watch: {
@@ -211,6 +228,9 @@ export default {
       if (this.type === TYPE_RESELECT && parseInt(now)) {
         await this.reset(MODE_SELECTED, now)
       }
+    },
+    async originalLandingPageId() {
+      await this.judgeLandingAdInvalid()
     }
   },
   async mounted() {
@@ -220,6 +240,7 @@ export default {
     } else {
       await this.reset()
     }
+    await this.judgeLandingAdInvalid()
   }
 }
 </script>
