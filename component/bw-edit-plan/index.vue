@@ -59,12 +59,13 @@
 <script>
   import {isQiqiaobanSite, isWeishopSite, getLandingpageByPageProtocol} from 'util/kit'
   import {getPromoteById, getPromtesByOrders, updatePromote, getQiqiaobanCoupon} from 'api/biaowang'
-  import {landingTypeOpts, SEM_PLATFORM_BAIDU} from 'constant/fengming' 
+  import {landingTypeOpts, SEM_PLATFORM_BAIDU, LANDING_TYPE_AD} from 'constant/fengming' 
   import {AUDIT_STATUS_REJECT, PROMOTE_STATUS_OFFLINE, PROMOTE_STATUS_PENDING_EDIT} from 'constant/biaowang'
   import {Message} from 'element-ui'
   import UserAdSelector from 'com/common/user-ad-selector'
   import CreativeEditor from 'com/widget/creative-editor'
   import QiqiaobanPageSelector from 'com/common/qiqiaoban-page-selector'
+  import {queryAds} from 'api/fengming'
 
   export default {
     name: 'bw-edit-plan',
@@ -156,8 +157,8 @@
       reselectLandingpage() {
         this.isErrorLandingPageShow = false
       },
-      verifyLandingpageIsError() {
-        const { landingPage, landingType } = this.form
+      async verifyLandingpageIsError() {
+        const { landingPage, landingType, landingPageId } = this.form
         if (landingType === 1 || landingType === 2) {
           const script = document.createElement('script')
           script.src = getLandingpageByPageProtocol(landingPage)
@@ -169,6 +170,20 @@
             this.adSelectortype = 'reselect'
           })
           this.isSpecialLandingpage = this.specialLandingpage(this.form.landingPage)
+        }
+
+        // 验证百姓帖子已经归档
+        if (landingType === LANDING_TYPE_AD && landingPageId) {
+          const result = await queryAds({
+            limitMvp: false,
+            adIds: landingPageId,
+            limit: 1
+          })
+          const ad = result.ads && result.ads[0]
+          if (!ad) {
+            this.isErrorLandingPageShow = true
+            this.form.landingPage = ''
+          }
         }
       },
       onSelectAd(ad) {
