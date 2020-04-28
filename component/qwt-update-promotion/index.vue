@@ -28,8 +28,6 @@
                 :all-areas="allAreas" 
                 :limit-mvp="false"
                 :selected-id="getProp('landingPageId')"
-                @landing-ad-invalid="landingAdInvalid"
-                :original-landing-page-id="originPromotion.landingPageId"
                 @select-ad="ad => onSelectAd(ad)">
               </user-ad-selector>
 
@@ -619,10 +617,6 @@ export default {
     }
   },
   methods: {
-    landingAdInvalid() {
-      this.isErrorLandingPageShow = true
-      this.promotion.landingPage = ''
-    },
     updatePromotionKeywords(kwAddResult){
       this.addKeywordListDialog = false
       if(!kwAddResult){
@@ -1279,6 +1273,20 @@ export default {
       script.addEventListener('load', e => {
         document.body.removeChild(script)
       })
+    }
+
+    // 验证百姓帖子已经归档
+    if (landingType === LANDING_TYPE_AD) {
+      const result = await queryAds({
+        limitMvp: false,
+        adIds: landingPageId,
+        limit: 1
+      })
+      const ad = result.ads && result.ads[0]
+      if (!ad) {
+        this.isErrorLandingPageShow = true
+        this.form.landingPage = ''
+      }
     }
 
     setTimeout(() => {
