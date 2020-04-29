@@ -195,7 +195,7 @@ export default {
         await this.queryAds({
           adId: [adId]
         })
-        this.checkedAdId = this.ads[0] ? this.ads[0].adId : null
+        this.checkedAdId = adId|| (this.ads[0] ? this.ads[0].adId : null)
         return
       }
 
