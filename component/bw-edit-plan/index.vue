@@ -36,7 +36,7 @@
               </div>
             </div>
             <div class="error-page-placeholder" v-else>
-              所选推广页面失效，请 <a href="javascript:;" @click="reselectLandingpage">从新选择</a>
+              所选推广页面失效，请 <a href="javascript:;" @click="reselectLandingpage">重新选择</a>
             </div>
           </el-form-item>
           <h3>投放物料设置</h3>
@@ -103,19 +103,10 @@
         creativeError: '',
         isLoading: false,
         showNotice: false,
+        adSelectorType: 'reselect'
       }
     },
     computed: {
-      adSelectorType: {
-      set(value) {
-        this.value = value
-      },
-      get() {
-        if (this.value !== undefined) return this.value
-        const type = this.promotes.every(p => PROMOTE_STATUS_PENDING_EDIT.includes(p.status)) ? '' : 'reselect'
-        return type
-      }
-      },
       isPromoteRejected() {
         return this.promotes.some(p => AUDIT_STATUS_REJECT.includes(p.auditStatus))
       },
@@ -152,11 +143,13 @@
       if (notice === 'true' || notice === '1') {
         this.showNotice = true
       }
+      this.adSelectorType = this.promotes.every(p => PROMOTE_STATUS_PENDING_EDIT.includes(p.status)) ? '' : 'reselect'
       this.verifyLandingpageIsError()
     },
     methods: {
       reselectLandingpage() {
         this.isErrorLandingPageShow = false
+        this.adSelectorType = ''
       },
       async verifyLandingpageIsError() {
         const { landingPage, landingType, landingPageId } = this.form
@@ -168,7 +161,6 @@
             document.body.removeChild(script)
             this.isErrorLandingPageShow = true
             this.form.landingPage = ''
-            this.adSelectortype = 'reselect'
           })
           this.isSpecialLandingpage = this.specialLandingpage(this.form.landingPage)
         }
@@ -244,7 +236,7 @@
       banLandPageSelected() {
         // 落地页404，需要更改落地页投放
         if (this.isErrorLandingPageShow && !this.form.landingPage) {
-          this.adSelectortype = 'reselect'
+          this.adSelectorType = ''
           const pageErrorPlaceholder = document.querySelector('.error-page-placeholder')
           pageErrorPlaceholder.style.borderColor = '#FF6350'
           throw this.$message.error('当前投放页面失效，请重新选择新的投放页面')
