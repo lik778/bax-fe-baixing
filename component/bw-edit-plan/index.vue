@@ -143,14 +143,13 @@
       if (notice === 'true' || notice === '1') {
         this.showNotice = true
       }
-
-      this.adSelectortype = this.promotes.every(p => PROMOTE_STATUS_PENDING_EDIT.includes(p.status)) ? '' : 'reselect'
+      this.adSelectorType = this.promotes.every(p => PROMOTE_STATUS_PENDING_EDIT.includes(p.status)) ? '' : 'reselect'
       this.verifyLandingpageIsError()
     },
     methods: {
       reselectLandingpage() {
         this.isErrorLandingPageShow = false
-        this.adSelectorType = 'reselect'
+        this.adSelectorType = ''
       },
       async verifyLandingpageIsError() {
         const { landingPage, landingType, landingPageId } = this.form
@@ -237,7 +236,7 @@
       banLandPageSelected() {
         // 落地页404，需要更改落地页投放
         if (this.isErrorLandingPageShow && !this.form.landingPage) {
-          this.adSelectorType = 'reselect'
+          this.adSelectorType = ''
           const pageErrorPlaceholder = document.querySelector('.error-page-placeholder')
           pageErrorPlaceholder.style.borderColor = '#FF6350'
           throw this.$message.error('当前投放页面失效，请重新选择新的投放页面')

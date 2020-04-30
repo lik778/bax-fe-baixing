@@ -195,7 +195,7 @@ export default {
         await this.queryAds({
           adId: [adId]
         })
-        this.checkedAdId = adId|| (this.ads[0] ? this.ads[0].adId : null)
+        this.checkedAdId = adId || (this.ads[0] ? this.ads[0].adId : null)
         return
       }
 
@@ -211,6 +211,9 @@ export default {
       if (this.type === TYPE_RESELECT && parseInt(now)) {
         await this.reset(MODE_SELECTED, now)
       }
+    },
+    async type(now, pre) {
+      await this.reset(now, this.selectedId)
     }
   },
   async mounted() {
