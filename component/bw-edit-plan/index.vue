@@ -103,7 +103,7 @@
         creativeError: '',
         isLoading: false,
         showNotice: false,
-        adSelectorType: ''
+        adSelectorType: 'reselect'
       }
     },
     computed: {
@@ -150,7 +150,7 @@
     methods: {
       reselectLandingpage() {
         this.isErrorLandingPageShow = false
-        this.adSelectorType = ''
+        this.adSelectorType = 'reselect'
       },
       async verifyLandingpageIsError() {
         const { landingPage, landingType, landingPageId } = this.form
@@ -237,7 +237,7 @@
       banLandPageSelected() {
         // 落地页404，需要更改落地页投放
         if (this.isErrorLandingPageShow && !this.form.landingPage) {
-          this.adSelectorType = ''
+          this.adSelectorType = 'reselect'
           const pageErrorPlaceholder = document.querySelector('.error-page-placeholder')
           pageErrorPlaceholder.style.borderColor = '#FF6350'
           throw this.$message.error('当前投放页面失效，请重新选择新的投放页面')
