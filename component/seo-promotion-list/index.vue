@@ -163,14 +163,16 @@
                        min-width="126">
         <span slot-scope="{row}">{{row.recentlyCompleted.pc}}/{{row.recentlyCompleted.app}}</span>
       </el-table-column>
-      <el-table-column prop="achieved"
+      <el-table-column
                        label="达标天数"
                        align="center"
-                       min-width="70"></el-table-column>
+                       min-width="70">
+        <span slot-scope="{row}">{{parseInt(row.achieved + row.freeAchieved)}}</span>     
+      </el-table-column>
       <el-table-column label="剩余推广天数"
                        align="center"
                        min-width="80">
-        <span slot-scope="{row}">{{parseInt(row.duration + row.renewDuration -row.achieved)}}</span>
+        <span slot-scope="{row}">{{parseInt(row.duration + row.freeDuration + row.renewDuration - row.achieved - row.freeAchieved)}}</span>
       </el-table-column>
       <el-table-column label="操作"
                        fixed="right"
