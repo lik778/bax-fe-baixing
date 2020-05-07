@@ -99,10 +99,16 @@ export const chargeList = [
 
 export const ZIXUAN_TYPE = 1
 export const CIBAO_TYPE = 2
-export const types = {
-  [`${ZIXUAN_TYPE}`]: '首页宝自选词版计划',
-  [`${CIBAO_TYPE}`]: '首页宝加速词包计划'
-}
+export const types = [
+  {
+    value: CIBAO_TYPE,
+    label: '首页宝加速词包计划'
+  },
+  {
+    value: ZIXUAN_TYPE,
+    label: '首页宝自选词版计划'
+  }
+]
 
 export const cibaoStatus = {
   [`${AUDIT_STATUS_UNKNOWN}`]: '未知',
