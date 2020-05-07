@@ -1,6 +1,6 @@
 <template>
   <div class="create-promotion-cibao">
-    
+
     <section class="promotion-target">
       <header>选择推广站点</header>
       <qiqiaoban-page-selector :product-type="PRO_SITE_PRODUCT_TYPE"
@@ -12,15 +12,14 @@
       <header>输入服务内容/产品关键词</header>
       <div class="info">
         <p>说明:</p>
-        <p>1. 核心词为城市+服务内容/产品的组合模式，城市为单选，如需添加多个城市的请分开多次提交核心词</p>
-        <p>2. 核心词仅作为首页宝加速词包拓词使用，并不代表核心词会作为推广词展示在流量平台首页</p>
-        <p>3. 同一个计划中核心词可增加，暂不支持修改、删除核心词，核心词上限1000个</p>
+        <p>1. 业务关键词词为城市+服务内容/产品的组合模式，城市为单选，如需添加多个城市的请分开多次提交业务关键词</p>
+        <p>2. 业务关键词仅作为首页宝加速词包拓词使用，并不代表业务关键词会作为推广词展示在流量平台首页</p>
+        <p>3. 同一个计划中业务关键词可增加，暂不支持修改、删除业务关键词，业务关键词上限1000个</p>
         <p>4. 可批量添加关键词：请用逗号区分关键词进行批量关键词添加，如合肥家政服务公司，合肥月嫂，合肥钟点工</p>
         <p>5. 关键词字数限制为2-99个字</p>
       </div>
       <div class="keyword">
         <div class="keyword-pane">
-          <div class="keyword-pane-title">增加核心词</div>
           <div class="keyword-pane-cont">
             <div>
               <label>投放城市：</label>
@@ -44,7 +43,7 @@
         </div>
         <div class="keyword-pane"
              style="margin-top: 20px">
-          <div class="keyword-pane-title">已选核心词</div>
+          <div class="keyword-pane-title">已选业务关键词</div>
           <div class="keyword-pane-tags">
             <template v-if="originPromotion && Array.isArray(originPromotion.keywords)">
               <el-tag v-for="item in originPromotion.keywords"
@@ -124,7 +123,7 @@ export default {
       originPromotion: null,
 
       promotion: {
-        landingPage: '', 
+        landingPage: '',
         keywords: [], // 新增词
         duration: 0,
         volume: 1000,
@@ -184,17 +183,17 @@ export default {
           words.splice(i, 1)
           i--
           continue
-        } 
+        }
 
         if (this.promotion.keywords.length >= (1000 - originKeywordsLen)) {
-         this.$message.error('核心词上限为1000个')
+         this.$message.error('业务关键词上限为1000个')
          return this.search = ''
         }
         this.promotion.keywords.push(newWord)
       }
      this.search = ''
     },
-    onChangeAreas(val) { 
+    onChangeAreas(val) {
       this.areaDialogVisible = false
       if (val.length > 1) {
         return this.$message.error('城市只能单选')

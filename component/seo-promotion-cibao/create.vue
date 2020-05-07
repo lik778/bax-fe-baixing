@@ -51,7 +51,7 @@
       <div class="info">
         <div>说明:</div>
         <p>1. 请输入您主要提供服务或产品的城市及区域，地域类关键词数量建议不低于15个</p>
-        <p>2. 为保证上词数量级效果，服务内容及产品关键词建议不低于5个，关键词举例：【100千瓦柴油发电机】、【公司搬迁】、【家具打包】</p>
+        <p>2. 为保证上词数量级效果，服务内容及产品关键词建议不低于5个，关键词举例：100千瓦柴油发电机，公司搬迁，家具打包等</p>
         <p>3. 服务内容及产品关键词仅作为首页宝加速词包拓词使用，并不代表会作为推广词展示在流量平台首页</p>
         <p>4. 同一计划中的城市及服务内容产品关键词可增加，暂不支持修改、删除</p>
       </div>
@@ -84,9 +84,45 @@
         </div>
       </div>
       <div class="section-inline">
-        <header>增加核心词</header>
+        <header>自填地域词</header>
+        <template v-if="promotion.customAreas.length">
+          <el-tag
+            closable
+            class="tag"
+            size="small"
+            :key="area.toString()"
+            type="primary"
+            @close="removeCustomArea(area)"
+            v-for="area in promotion.customAreas"
+          >
+            {{area}}
+          </el-tag>
+        </template>
+        <span v-else>暂未填写地域词</span>
+      </div>
+      <div class="section-inline">
+        <header class="not-required">自填地域</header>
         <el-input
           size="small"
+          v-model="areaInput"
+          class="keyword-input"
+          placeholder="请输入自填地域（单个地域词不超过8字）"
+        />
+        <el-button
+          size="small"
+          type="primary"
+          @click="addCustomAreas"
+        >
+          批量添加
+        </el-button>
+      </div>
+
+      <div class="section-inline">
+        <header class="not-required">增加业务关键词</header>
+        <el-input
+          size="small"
+          @focus="keywordHint = true"
+          @blur="keywordHint = false"
           v-model="search"
           class="keyword-input"
           placeholder="请输入服务内容或产品关键词"
@@ -99,8 +135,15 @@
           批量添加
         </el-button>
       </div>
+      <div class="info" v-if="keywordHint">
+        <div>提示：</div>
+        <p>1. 它是您提供的所有服务，或者所有产品（包括产品型号）；</p>
+        <p>2. 业务关键词不包含地域、价格、联系方式等；</p>
+        <p>3. 多个关键词可用中英文逗号隔开；</p>
+        <p>4. 如：空调维修行业可添加：空调维修，空调移机，中央空调清洗，中央空调安装等；</p>
+      </div>
       <div class="section-inline">
-        <header>已选核心词</header>
+        <header>已选业务关键词</header>
         <p v-if="!promotion.keywords.length">暂未选取关键词</p>
         <div v-else>
           <el-tag
@@ -109,7 +152,7 @@
             size="small"
             type="primary"
             class="keyword-pane-tag"
-            @close="handleTagClose(item)"
+            @close="removeKeywords(item)"
             v-for="item in promotion.keywords"
           >
             {{item}}
@@ -192,12 +235,14 @@ export default {
       volumes,
       durations,
       PRO_SITE_PRODUCT_TYPE,
+      keywordHint: false,
 
       landingInfo: null,
       showExistWebsite: false,
       showExpireWarning: false,
 
       search: '',
+      areaInput: '',
 
       areaSelectorVisible: false,
 
@@ -206,6 +251,7 @@ export default {
 
       promotion: {
         areas: [],
+        customAreas: [],
         additionalInfo: '',
         landingPage: '',
         keywords: [],
@@ -226,10 +272,14 @@ export default {
       if (!this.landingInfo) return
       this.showExpireWarning = dayjs(this.landingInfo.expireAt).subtract(duration, 'day').isBefore(dayjs(), 'day')
     },
-    handleTagClose(tag) {
+    removeCustomArea(tag) {
+      this.promotion.customAreas = this.promotion.customAreas.filter(item => tag !== item)
+    },
+    removeKeywords(tag) {
       this.promotion.keywords = this.promotion.keywords.filter(item => tag !== item)
     },
     addKeyword() {
+      if (!this.search) return false
       let words = this.search.split(/[，,]/)
       const rawWordLen = words.length
 
@@ -247,6 +297,22 @@ export default {
 
       this.promotion.keywords = Array.from(new Set(this.promotion.keywords.concat(words)))
       this.search = ''
+    },
+    addCustomAreas() {
+      if (!this.areaInput) return false
+      let areas = this.areaInput.split(/[，,]/)
+      const rawWordLen = areas.length
+
+      areas = areas
+        .map(area => area.trim())
+        .filter(area => area && (area.length >= 2 || area.length <= 8))
+      
+
+      if (areas.length !== rawWordLen) {
+        this.$message.error('已过滤字数不满足2-99个的关键词')
+      }
+      this.promotion.customAreas = [...new Set(this.promotion.customAreas.concat(areas))]
+      this.areaInput = ''
     },
     async validateAndReturnPromotionData() {
       if (!this.$refs.contract.$data.isAgreement) {
@@ -268,7 +334,7 @@ export default {
         throw this.$message.error('计划核心关键词不能少于5个')
       }
 
-      if (this.promotion.areas.length < 15) {
+      if (this.promotion.areas.length + this.promotion.customAreas.length < 15) {
         throw this.$message.error('服务城市不能少于15个')
       }
 
