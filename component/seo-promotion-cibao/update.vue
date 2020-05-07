@@ -47,7 +47,7 @@
       <div class="info">
         <div>说明:</div>
         <p>1. 请输入您主要提供服务或产品的城市及区域，地域类关键词数量建议不低于15个</p>
-        <p>2. 为保证上词数量级效果，服务内容及产品关键词建议不低于5个，关键词举例：100千瓦柴油发电机，公司搬迁，家具打包等</p>
+        <p>2. 为保证上词数量级效果，服务内容及产品关键词建议不低于10个，关键词举例：100千瓦柴油发电机，公司搬迁，家具打包等</p>
         <p>3. 服务内容及产品关键词仅作为首页宝加速词包拓词使用，并不代表会作为推广词展示在流量平台首页</p>
         <p>4. 同一计划中的城市及服务内容产品关键词可增加，暂不支持修改、删除</p>
       </div>
@@ -303,8 +303,8 @@
         if (!this.promotion.keywords.length) {
           throw this.$message.error('请选取关键词')
         }
-        if (this.promotion.keywords.length < 5) {
-          throw this.$message.error('计划核心关键词不能少于5个')
+        if (this.promotion.keywords.length < 10) {
+          throw this.$message.error('计划核心关键词不能少于10个')
         }
 
         if (this.promotion.areas.length + this.promotion.customAreas.length < 15) {
