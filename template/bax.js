@@ -57,7 +57,7 @@ import Vue from 'vue'
 
 import Vue2Filters from 'vue2-filters'
 import { getBusinessLicense } from 'api/seo'
-import { allowBuyYoucaigouSite } from 'util/fengming-role'
+import { allowUseKaPackage } from 'util/fengming-role'
 import { getCurrentUser } from 'api/account'
 
 // track common data
@@ -137,7 +137,7 @@ const gwRoutes = [{
   name: 'gw-charge',
   beforeEnter: async (to, from, next) => {
     const userInfo = await getCurrentUser()
-    const license = await allowBuyYoucaigouSite(userInfo.id)
+    const license = allowUseKaPackage('', userInfo.id)
     if (license) {
       next()
     } else {
