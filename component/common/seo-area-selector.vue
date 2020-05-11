@@ -71,6 +71,18 @@
         </div>
       </div>
       <div slot="footer" class="footer">
+        <el-button
+          type="primary"
+          size="small"
+          class="left"
+          v-if="
+            typeof activeAreas[activeAreas.length - 1] === 'object' &&
+            activeAreas[activeAreas.length - 1].children[0] &&
+            activeAreas[activeAreas.length - 1].children[0].isLeaf"
+          @click="selectAllAreas"
+        >
+          全选当前区域
+        </el-button>
         <el-button size="small" @click="cancelSelectedCity">取消</el-button>
         <el-button size="small" type="primary" @click="confirmSelectedCity">确定</el-button>
       </div>
@@ -139,6 +151,15 @@ export default {
     }
   },
   methods: {
+    selectAllAreas() {
+      const { activeAreas, selectedAreas } = this
+      const areaCommonPrefix = activeAreas.slice(1, activeAreas.length).map(area => area.name)
+      const areas = activeAreas[activeAreas.length - 1].children.map(area => areaCommonPrefix.concat(area.name))
+      this.selectedAreas = selectedAreas
+        // 过滤掉当前区域已选的
+        .filter(selected => !isEqual(selected.slice(0, -1), areaCommonPrefix))
+        .concat(areas)
+    },
     deleteArea(area) {
       this.selectedAreas = this.selectedAreas.filter(item => !isEqual(item, area))
     },
@@ -173,7 +194,7 @@ export default {
             const specialArea = {
               isLeaf: true,
               value: area.name,
-              name: `全${area.name}`
+              name: `${area.name}`
             }
             area.children = [specialArea].concat(await loadAreasData(area.id))
           } finally {
@@ -231,7 +252,7 @@ export default {
   },
   async created() {
     const allCities = await getAllCities()
-    this.areaOpts = formatAreaOpts(allCities)
+    this.areaOpts = Object.freeze(formatAreaOpts(allCities))
   }
 }
 </script>
@@ -326,6 +347,17 @@ export default {
         margin-bottom: -1px;
         display: inline-block;
         padding: 0 15px;
+      }
+    }
+
+
+    & /deep/ .el-dialog__footer {
+      & /deep/ .footer {
+        display: flex;
+      }
+      & /deep/ .left {
+        margin-left: 30px;
+        margin-right: auto;
       }
     }
 

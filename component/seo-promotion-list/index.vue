@@ -8,10 +8,10 @@
     </router-link>
     <div class="choose-type">
       <el-radio-group v-model="type">
-        <el-radio v-for="(value,label) in promotionTypes"
-                  :key="label"
-                  :label="Number(label)">
-          {{value}}
+        <el-radio v-for="({value, label}) in promotionTypes"
+                  :key="value"
+                  :label="Number(value)">
+          {{label}}
         </el-radio>
       </el-radio-group>
     </div>
@@ -260,7 +260,7 @@ export default {
       balance: 0,
 
       promotionTypes,
-      type: ZIXUAN_TYPE,
+      type: CIBAO_TYPE,
       ZIXUAN_TYPE,
       promotionCibaoList: null,
       cibaoStatus, 
@@ -463,7 +463,7 @@ export default {
  async mounted() {
     let sites = await getUserSites()
     this.sites = sites 
-    this.loadPromotions()
+    this.getResourceList()
     this.loadBalance()
   },
   watch: {
