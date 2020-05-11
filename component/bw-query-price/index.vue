@@ -90,7 +90,6 @@
   import {queryKeywordPriceNew} from 'api/biaowang'
   import clone from 'clone'
   import {DEVICE} from 'constant/biaowang'
-  import { allowNotSeeBwNewPrice } from 'util/role'
 
   import {
     f2y,
@@ -136,10 +135,6 @@
       }
     },
     computed: {
-      allowNotSeeBwNewPrice() {
-        // 外部代理商无法看到标王新建页面
-        return allowNotSeeBwNewPrice(this.userInfo.roles, this.userInfo.realAgentId)
-      },
       exactMatch() {
         return this.skus.slice(0, 1)[0]
       },
@@ -262,7 +257,7 @@
       }
     },
     watch: {
-      allowNotSeeBwNewPrice: {
+      'userInfo.sstAgent': {
         immediate: true,
         handler(val) {
           if (val) {

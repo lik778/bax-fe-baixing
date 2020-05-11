@@ -10,7 +10,7 @@
         <p>平均排名</p>
         <p>{{data.rank}}</p>
       </div>
-      <template v-if="!allowNotSeeBwNewPrice">
+      <template v-if="!sstAgent">
         <div class="split"></div>
         <div>
           <router-link :to="{name: 'bw-query-price'}">
@@ -30,7 +30,7 @@ import dayjs from 'dayjs'
 export default {
   name: 'bw-dashboard-header',
   props: {
-    allowNotSeeBwNewPrice: {
+    sstAgent: {
       type: Boolean,
       default: true
     }

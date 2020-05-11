@@ -1,6 +1,6 @@
 <template>
   <div class="bw-dashboard">
-    <dashboard-header :allow-not-see-bw-new-price="allowNotSeeBwNewPrice"></dashboard-header>
+    <dashboard-header :sst-agent="userInfo.sstAgent"></dashboard-header>
     <div class="tip">今日数据存在一定的延时，且最近1小时内的展现数据会存在波动</div>
     <section class="keyword">
       <div class="title">推广关键词</div>
@@ -78,7 +78,6 @@ import KeywordList from './keyword-list'
 import AddKeyword from './add-keyword'
 
 import { getPromoteById, getUserRanking, getUserShow } from 'api/biaowang'
-import { allowNotSeeBwNewPrice } from 'util/role'
 import dayjs from 'dayjs'
 import clone from 'clone'
 
@@ -164,10 +163,7 @@ export default {
       return this.promotes.map(({id}) => {
         return id
       }, [])
-    },
-    allowNotSeeBwNewPrice() {
-      return allowNotSeeBwNewPrice(this.userInfo.roles, this.userInfo.realAgentId)
-    },
+    }
   },
   async mounted() {
     const { promoteId, keyword } = this.$route.query

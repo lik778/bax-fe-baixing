@@ -51,12 +51,12 @@
 
     <section class="order shadow panel">
       <div class="info">
-        <section class="sales-code" v-if="salesIdLocked || isBxSales">
+        <!-- <section class="sales-code" v-if="salesIdLocked || isBxSales">
           <aside>服务编号：</aside>
           <span>
             {{ displayBxSalesId || userInfo.salesId }}
           </span>
-        </section>
+        </section> -->
         <section v-if="displayUserMobile" class="user-mobile">
           <aside>用户手机号：</aside>
           <span>
