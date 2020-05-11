@@ -234,6 +234,12 @@ export default {
       if (initSelectedSku) {
         this.checkedSkuId = initSelectedSku.skuVendorId 
       }
+
+      // 此处有坑，常理不应该用title做判断，后期通过商品聚合页更改
+      if (!allowBuyYoucaigouSite(this.userInfo.id)) {
+        let index = this.products.findIndex(o => o.title.indexOf('优采购') > -1)
+        this.products.splice(index, 1)
+      }
       
       this.agreementList = getUniqueAgreementList(websiteSpuList)
     } catch (e) {
