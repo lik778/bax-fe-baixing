@@ -29,8 +29,12 @@
         :render-header="renderWithTip(searchIndexTip)">
       </el-table-column>
       <el-table-column v-if="showPropRanking"
-        width="150" label="平均排名"
+        width="150" label="电脑端排名"
         :formatter="r => fmtCpcRanking(r.cpcRanking || -1)">
+      </el-table-column>
+      <el-table-column v-if="showPropRanking"
+        width="150" label="手机端排名"
+        :formatter="r => fmtCpcRanking(r.mobileCpcRanking || -1)">
       </el-table-column>
       <el-table-column v-if="showPropStatus"
         width="180"
@@ -323,8 +327,10 @@ export default {
     },
     showAddPrice(row) {
       // 过去24小时排名低于5或无排名的，在线的 keyword，在线的 campaign
-      const {cpcRanking, isPriceChanged, status: keywordStatus} = row
-      const show = keywordStatus === KEYWORD_STATUS_ONLINE && this.campaignOnline && !isPriceChanged && (cpcRanking > 5 || cpcRanking === 0)
+      const {cpcRanking, mobileCpcRanking, isPriceChanged, status: keywordStatus} = row
+      // 电脑端和手机端任意一端排名大于5或者无排名
+      const hasRanking = (cpcRanking > 5 || cpcRanking === 0) || (mobileCpcRanking > 5 || mobileCpcRanking === 0)
+      const show = keywordStatus === KEYWORD_STATUS_ONLINE && this.campaignOnline && !isPriceChanged && hasRanking
       if (show) {
         track({
           action: 'pv: bump-price-by-20'
