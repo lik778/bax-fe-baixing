@@ -78,7 +78,7 @@
         <header>选取推广关键词</header>
         <p class="tip">请选取20个以上关键词，关键词越多您的创意被展现的机会越多。根据当月数据，为您推荐如下关键词</p>
         <el-button type="primary" style="margin-top:10px" size="small" 
-                   @click="addKeywordListDialog = true">批量添加关键词</el-button>
+                   @click="addKeywordsDialog = true">批量添加关键词</el-button>
         <div class="kw-tag-container">
           <el-tag class="kw-tag"
                   :class="{'kw-tag-fh': kw.recommandSource === RECOMMAND_SOURCE_FH}" 
@@ -165,15 +165,16 @@
       :visible="chargeDialogVisible"
       @cancel="gotoPromotionList"
     />
-
-    <qwt-add-keyword-list :show="addKeywordListDialog" 
-                          :is-update-qwt="false"
-                          ref="qwtAddKeywordList"
-                          @close="(v)=>{ addKeywordListDialog = false}" 
-                          :promotion="newPromotion"
-                          @update-keywords="updatePromotionKeywords">
-    </qwt-add-keyword-list>
-
+    <qwt-add-keywords-dialog
+      ref="qwtAddKeywordsDialog"
+      title="批量添加关键词"
+      @close="addKeywordsDialog = false"
+      @update-keywords="updatePromotionKeywords"
+      :visible="addKeywordsDialog"
+      :original-keywords="newPromotion.keywords"
+      :areas="newPromotion.areas"
+      :sources="newPromotion.sources"
+    />
   </div>
 </template>
 
@@ -197,7 +198,7 @@ import CpcPriceTip from 'com/widget/cpc-price-tip'
 import ContractAck from 'com/widget/contract-ack'
 import wxBindModal from 'com/common/wx-bind-modal'
 import FmTip from 'com/widget/fm-tip'
-import qwtAddKeywordList from 'com/common/qwt-add-keyword-list'
+import qwtAddKeywordsDialog from 'com/common/qwt-add-keywords-dialog'
 import BaxInput from 'com/common/bax-input'
 
 import dayjs from 'dayjs'
@@ -279,7 +280,7 @@ export default {
     ContractAck,
     CpcPriceTip,
     FmTip,
-    qwtAddKeywordList,
+    qwtAddKeywordsDialog,
     BaxInput
   },
   fromMobx: {
@@ -323,7 +324,7 @@ export default {
 
       // PRE_IMG_PROMOTION: assetHost + 'promotion-advantage.png'
       PRE_IMG_PROMOTION: '//file.baixing.net/201809/a995bf0f1707a3e98a2c82a5dc5f8ad3.png',
-      addKeywordListDialog:false
+      addKeywordsDialog: false
     }
   },
   computed: {
@@ -379,14 +380,13 @@ export default {
   },
   methods: {
     f2y,
-    updatePromotionKeywords(kwAddResult){
-      this.addKeywordListDialog = false
+    updatePromotionKeywords(kwAddResult) {
+      this.addKeywordsDialog = false
 
-      if(!kwAddResult){
-        return
-      }
+      if (!kwAddResult) return
       let { normalList, bannedList} = kwAddResult
       const { actionTrackId, userInfo } = this
+
       track({
         roles: userInfo.roles.map(r => r.name).join(','),
         action: 'click-button: add-keyword-list',
@@ -394,13 +394,12 @@ export default {
         time: Date.now() / 1000 | 0,
         baxId: userInfo.id,
         actionTrackId,
-        keywordsLen: normalList.length
-        // keywords: JSON.stringify(normalList)
+        keywordsLen: normalList.length,
+        keywords: normalList.map(item => item.word).join(',')
       })
 
       let { keywords } = this.newPromotion
       this.newPromotion.keywords = keywords.concat(normalList)
-      this.$refs.qwtAddKeywordList.keywords = null
     },
     handleCreativeValueChange({title, content}) {
         this.newPromotion.creativeTitle = title
