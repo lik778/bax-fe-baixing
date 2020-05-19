@@ -55,10 +55,14 @@
 
       <section>
         <aside>计划ID：</aside>
-        <el-input v-model.trim="searchCampaigns" size="mini" class="search" placeholder="输入计划ID，多个计划使用英文逗号分隔">
-
-        </el-input>
+        <el-input v-model.trim="searchCampaigns"
+                  size="mini"
+                  ref="campaignInput"
+                  class="search"
+                  placeholder="输入计划ID，多个计划使用英文逗号分隔" />
+        <span v-if="campaignErrTip" class="err-tip">请输入计划ID, 搜索词报告计划ID只能单个查询</span>
       </section>
+
 
       <data-detail :statistics="statistics" :summary="summary"
         :offset="offset" :total="total" :limit="limit"
@@ -80,6 +84,7 @@ import { toTimestamp } from 'utils'
 import {
   DIMENSION_CAMPAIGN,
   DIMENSION_KEYWORD,
+  DIMENSION_SEARCH_KEYWORD,
   TIME_UNIT_DAY,
   DEVICE_ALL,
   DEVICE_WAP,
@@ -105,6 +110,7 @@ import {
 import track from 'util/track'
 
 import store from './store'
+import { Message } from 'element-ui'
 
 export default {
   name: 'qwt-dashboard',
@@ -142,7 +148,8 @@ export default {
         device: DEVICE_ALL
       },
 
-      searchCampaigns: ''
+      searchCampaigns: '',
+      campaignErrTip: false
     }
   },
   computed: {
@@ -162,6 +169,55 @@ export default {
   },
   methods: {
     async queryStatistics(opts = {}) {
+      const { dimension } = this.query
+      const { checkedCampaignIds } = this
+
+      await store.clearStatistics()
+      this.campaignErrTip = ''
+
+      if (dimension === DIMENSION_SEARCH_KEYWORD) {
+        if (this.searchCampaigns === '' || checkedCampaignIds.length > 1) {
+          this.$refs.campaignInput.focus()
+          this.campaignErrTip = true
+          return
+        }
+        return await this._getReportByQueryWord()
+      }
+      return await this._getReport()
+    },
+    async _getReportByQueryWord(opts = {}) {
+      const offset = opts.offset || 0
+      const { query, checkedCampaignIds } = this
+
+      let startDate
+      let endDate
+
+      if (query.timeType === 'custom') {
+        startDate = toTimestamp(query.timeRange[0], 'YYYY-MM-DD')
+        endDate = toTimestamp(query.timeRange[1], 'YYYY-MM-DD')
+      } else {
+        const t = timeTypes
+          .find(t => t.value === query.timeType)
+          .getTime()
+
+        startDate = t.startAt
+        endDate = t.endAt
+      }
+
+      const q = {
+        startDate,
+        endDate,
+
+        device: query.device,
+        channel: query.channel,
+        campaignIds: checkedCampaignIds,
+
+        limit: 10,
+        offset,
+      }
+      await store.fetchReportByQueryWord(q)
+    },
+    async _getReport(opts = {}) {
       const offset = opts.offset || 0
       const { query, checkedCampaignIds } = this
       const { userId, salesId } = this.salesInfo
@@ -190,19 +246,15 @@ export default {
         device: query.device,
         channel: query.channel,
         campaignIds: checkedCampaignIds,
-        userId,
-        salesId,
 
-        limit: 100,
+        limit: 10,
         offset,
 
         fields: query.dimension === DIMENSION_CAMPAIGN
           ? campaignFields
           : keywordFields
       }
-
-
-      await store.getReport(q)
+      await store.fetchReport(q)
     },
     async getCampaignReport(campaign) {
       this.query.channel = campaign.channel
@@ -300,6 +352,12 @@ export default {
   display: flex;
   flex-flow: column;
   max-width: 620px;
+}
+
+.err-tip {
+  margin-left: 8px;
+  color: #ff8273;
+  font-size: 12px;
 }
 
 .qwt-dashboard {

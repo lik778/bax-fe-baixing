@@ -1,7 +1,7 @@
 
 <template>
   <div class="qwt-dashboard-data-detail">
-    <el-table v-if="isCampaignDimension"
+    <el-table v-if="dimension === DIMENSION_CAMPAIGN"
       :key="1" :data="statistics">
       <el-table-column label="计划ID" prop="campaignId" width="120" />
       <el-table-column label="日期" prop="date" width="140" />
@@ -24,7 +24,7 @@
     </el-table-column>
     </el-table>
 
-    <el-table v-else :key="2" :data="statistics">
+    <el-table v-else-if="dimension === DIMENSION_KEYWORD" :key="2" :data="statistics">
       <el-table-column label="关键词" prop="keyword" width="200" />
       <el-table-column label="日期" prop="date" width="140" />
       <el-table-column label="计划ID" prop="campaignId" width="140" />
@@ -35,7 +35,8 @@
       <el-table-column label="出价" width="100">
         <template slot-scope="scope">
           <span v-if="scope.row.price === null">-</span>
-          <bax-input :value="f2y(scope.row.price)" 
+          <bax-input v-else
+                     :value="f2y(scope.row.price)"
                      @blur="v => onChangePrice(v, scope.row.campaignId, scope.row.keywordId)" 
                      @keyup="v => onChangePrice(v, scope.row.campaignId, scope.row.keywordId)" />
         </template>
@@ -48,6 +49,50 @@
         :formatter="r => (r.cost / 100).toFixed(2) + '元'" />
       <el-table-column label="排名" width="120" sortable
         :formatter="r => fmtCpcRanking(r.cpcRanking)" />
+    </el-table>
+
+    <el-table v-else :key="3" :data="statistics">
+      <el-table-column label="搜索词" prop="queryWord" width="200" />
+      <el-table-column label="日期" prop="date" width="140" />
+      <el-table-column label="计划ID" prop="campaignId" width="140" />
+      <el-table-column label="渠道" width="100"
+        :formatter="r => fmtChannel(r.channel)" />
+      <el-table-column label="展现" prop="shows" width="90" sortable />
+      <el-table-column label="点击" prop="clicks" width="90" sortable />
+      <el-table-column label="点击率" width="160" sortable
+        :formatter="r => (r.clickRate * 100).toFixed(2)+ '%'" />
+      <el-table-column label="消耗" width="120"
+        :formatter="r => (r.costs / 100).toFixed(2) + '元'" />
+      <el-table-column label="平均点击价格" width="160" sortable
+        :formatter="r => (r.clickAvgPrice / 100).toFixed(2) + '元'" />
+      <el-table-column label="操作" min-width="180">
+        <div slot-scope="scope">
+          <span>
+            <el-button type="text"
+                       size="small" 
+                      :disabled="scope.row.enableInKeywords" 
+                      @click="addKeyword(scope.row)">添加</el-button>
+            <el-tooltip effect="dark"
+                        v-if="scope.row.enableInKeywords"
+                        content="该搜索词已存在关键词中，暂不支持添加" 
+                        placement="top-start">
+              <i class="el-icon-info"></i>
+            </el-tooltip>
+          </span>
+          <span>
+            <el-button type="text"
+                       size="small"
+                       :disabled="scope.row.enableInNegativeWords" 
+                       @click="addNegativeKeyword(scope.row)">设为否定关键词</el-button>
+            <el-tooltip effect="dark"
+                        v-if="scope.row.enableInNegativeWords" 
+                        content="该搜索词已存在否定关键词中，暂不支持添加" 
+                        placement="top-start">
+              <i class="el-icon-info"></i>
+            </el-tooltip>
+          </span>
+        </div>
+      </el-table-column>
     </el-table>
 
     <footer>
@@ -79,7 +124,9 @@ import {updateCampaign} from 'api/fengming'
 import BaxInput from 'com/common/bax-input'
 
 import {
-  DIMENSION_CAMPAIGN
+  DIMENSION_CAMPAIGN,
+  DIMENSION_SEARCH_KEYWORD,
+  DIMENSION_KEYWORD
 } from 'constant/fengming-report'
 
 import {
@@ -92,6 +139,7 @@ import {
 } from 'util/campaign'
 
 import { toFloat, f2y } from 'util/kit'
+import { Message } from 'element-ui'
 
 const isArray = Array.isArray
 
@@ -128,17 +176,35 @@ export default {
       required: true
     }
   },
-  computed: {
-    isCampaignDimension() {
-      return this.dimension === DIMENSION_CAMPAIGN
-    }
-  },
   data() {
     return {
-      priceUpdating: false
+      priceUpdating: false,
+      DIMENSION_CAMPAIGN,
+      DIMENSION_KEYWORD
     }
   },
   methods: {
+    addKeyword(item) {
+      const { campaignId, queryWord } = item
+      const price = 2 * 100
+      updateCampaign(campaignId, {newKeywords: [{price, word: queryWord}]})
+        .then(res => {
+          Message({
+            type: 'success',
+            message: `成功添加 ${queryWord} 为关键词`
+          })
+        })
+    },
+    addNegativeKeyword(item) {
+      const { campaignId, queryWord } = item
+      updateCampaign(campaignId, {newNegativeKeywords: [{word: queryWord}]})
+        .then(res => {
+          Message({
+            type: 'success',
+            message: `成功添加 ${queryWord} 为否定关键词`
+          })
+        })
+    },
     switchToCampaignReport(campaign) {
       this.$emit('switch-to-campaign-report', campaign)
     },
