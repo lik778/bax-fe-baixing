@@ -149,7 +149,7 @@ export default {
       for (let i = 0; i < normalList.length; i ++) {
         let row = normalList[i]
         if (words.includes(row.word)) {
-          return Message.warning(`${row.word}该关键词已存在`)
+          return Message.warning(`${row.word}该关键词已存在关键词或否定关键词列表`)
         }
       }
       for (let i = 0; i < bannedList.length; i ++) {

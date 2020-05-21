@@ -19,6 +19,11 @@ export function fmtCpcRanking(ranking, isFixed = true) {
   return parseFloat(ranking).toFixed(1)
 }
 
+export function fmtCpcRankingToStr(ranking, isFixed) {
+  if (ranking === null) return ''
+  return String(fmtCpcRanking(ranking, isFixed))
+}
+
 export function mergeKeywords(preWords, newWords) {
   const result = preWords
 

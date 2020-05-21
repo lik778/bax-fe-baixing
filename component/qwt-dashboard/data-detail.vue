@@ -65,32 +65,25 @@
         :formatter="r => (r.costs / 100).toFixed(2) + '元'" />
       <el-table-column label="平均点击价格" width="160" sortable
         :formatter="r => (r.clickAvgPrice / 100).toFixed(2) + '元'" />
-      <el-table-column label="操作" min-width="180">
-        <div slot-scope="scope">
-          <span>
-            <el-button type="text"
-                       size="small" 
-                      :disabled="scope.row.enableInKeywords" 
-                      @click="addKeyword(scope.row)">添加</el-button>
-            <el-tooltip effect="dark"
-                        v-if="scope.row.enableInKeywords"
-                        content="该搜索词已存在关键词中，暂不支持添加" 
-                        placement="top-start">
-              <i class="el-icon-info"></i>
-            </el-tooltip>
-          </span>
-          <span>
-            <el-button type="text"
-                       size="small"
-                       :disabled="scope.row.enableInNegativeWords" 
-                       @click="addNegativeKeyword(scope.row)">设为否定关键词</el-button>
-            <el-tooltip effect="dark"
-                        v-if="scope.row.enableInNegativeWords" 
-                        content="该搜索词已存在否定关键词中，暂不支持添加" 
-                        placement="top-start">
-              <i class="el-icon-info"></i>
-            </el-tooltip>
-          </span>
+      <el-table-column min-width="180" fixed="right">
+        <span slot="header">操作
+          <promotion-keyword-tip />
+        </span>
+        <div slot-scope="{row}">
+          <el-button type="text"
+                     size="small" 
+                    :disabled="row.enableInKeywords || row.enableInNegativeWords" 
+                    @click="addKeyword(row)">添加</el-button>
+          <el-button type="text"
+                     size="small"
+                     :disabled="row.enableInNegativeWords || row.enableInKeywords" 
+                     @click="addNegativeKeyword(row)">设为否定关键词</el-button>
+          <el-tooltip effect="dark"
+                      v-if="row.enableInNegativeWords || row.enableInKeywords" 
+                      content="该搜索词已存在关键词或否定关键词中，暂不支持添加" 
+                      placement="top-start">
+            <i class="el-icon-info" style ="cursor: pointer"></i>
+          </el-tooltip>
         </div>
       </el-table-column>
     </el-table>
@@ -122,6 +115,7 @@ import BaxPagination from 'com/common/pagination'
 import BaxSelect from 'com/common/select'
 import {updateCampaign} from 'api/fengming'
 import BaxInput from 'com/common/bax-input'
+import PromotionKeywordTip from 'com/widget/promotion-keyword-tip'
 
 import {
   DIMENSION_CAMPAIGN,
@@ -148,7 +142,8 @@ export default {
   components: {
     BaxPagination,
     BaxSelect,
-    BaxInput
+    BaxInput,
+    PromotionKeywordTip
   },
   props: {
     statistics: {

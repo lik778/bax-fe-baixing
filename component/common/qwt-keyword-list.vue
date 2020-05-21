@@ -30,11 +30,11 @@
       </el-table-column>
       <el-table-column v-if="showPropRanking"
         width="150" label="电脑端排名"
-        :formatter="r => fmtCpcRanking(r.cpcRanking || -1)">
+        :formatter="r => fmtCpcRankingToStr(r.cpcRanking || -1)">
       </el-table-column>
       <el-table-column v-if="showPropRanking"
         width="150" label="手机端排名"
-        :formatter="r => fmtCpcRanking(r.mobileCpcRanking || -1)">
+        :formatter="r => fmtCpcRankingToStr(r.mobileCpcRanking || -1)">
       </el-table-column>
       <el-table-column v-if="showPropStatus"
         width="180"
@@ -132,7 +132,7 @@ import {
 } from 'constant/keyword'
 
 import {
-  fmtCpcRanking
+  fmtCpcRankingToStr
 } from 'util/campaign'
 
 import {
@@ -444,7 +444,7 @@ export default {
         id: w.id
       }
     },
-    fmtCpcRanking
+    fmtCpcRankingToStr
   },
   watch: {
     currentPage(val, pre) {

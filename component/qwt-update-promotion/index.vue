@@ -94,7 +94,9 @@
       </section>
       <section class="keyword">
         <header class="top-col">
-          <span :class="canOptimize('keyword')">添加推广关键词</span>
+          <span :class="canOptimize('keyword')">添加推广关键词
+            <promotion-keyword-tip />
+          </span>
           <el-input size="small" class="input" placeholder="添加关键词" v-model="queryWord"/>
           <el-button size="small" type="warning" class="button" @click="addKeyword('single')">添加</el-button>
           <el-button size="small" type="primary" class="button" @click="addKeyword">一键拓词</el-button>
@@ -126,7 +128,9 @@
         />
       </section>
       <section class="negative-keyword">
-        <header>设置否定关键词</header>
+        <header>设置否定关键词
+          <promotion-keyword-tip />
+        </header>
         <p class="tip">当网民的搜索词与精确否定关键词完全一致时，您的推广结果将不会展现。</p>
         <el-button class="negative-btn" type="primary" size="small" 
                    @click="addKeywordsDialog = true; isNegative = true">批量添加否定关键词</el-button>
@@ -306,7 +310,7 @@
       :is-update-qwt="true"
       :is-negative="isNegative"
       :campaign-id="currentPromotion.campaignId"
-      :original-keywords="isNegative ? currentPromotion.negativeKeywords: currentPromotion.keywords"
+      :original-keywords="currentPromotion.allKeywords"
       @update-keywords="updatePromotionKeywords"
       @close="handleKeywordsDialogClose"
     />
@@ -324,6 +328,7 @@ import PromotionAreaLimitTip from 'com/widget/promotion-area-limit-tip'
 import QiqiaobanPageSelector from 'com/common/qiqiaoban-page-selector'
 import PromotionCreativeTip from 'com/widget//promotion-creative-tip'
 import PromotionChargeTip from 'com/widget/promotion-charge-tip'
+import PromotionKeywordTip from 'com/widget/promotion-keyword-tip'
 import PromotionRuleLink from 'com/widget/promotion-rule-link'
 import DurationSelector from 'com/common/duration-selector'
 import UserAdSelector from 'com/common/user-ad-selector'
@@ -421,6 +426,7 @@ export default {
     QiqiaobanPageSelector,
     PromotionCreativeTip,
     PromotionChargeTip,
+    PromotionKeywordTip,
     PromotionRuleLink,
     DurationSelector,
     CreativeEditor,
@@ -617,9 +623,11 @@ export default {
     currentPromotion(){
       let keywords = this.currentKeywords
       let negativeKeywords = this.currentNegativeKeywords
+      let allKeywords = this.currentKeywords.concat(this.currentNegativeKeywords)
       return {
         keywords,
         negativeKeywords,
+        allKeywords,
         campaignId: this.originPromotion.id,
       }
     },
@@ -692,8 +700,10 @@ export default {
     async addNegativeKeyword(event) {
       const val = event.target.value.trim()
       if (val === '') return
-      if (this.currentNegativeKeywords.findIndex(w => w.word === val) > -1) {
-        return Message.error(`${val}该关键词已存在`)
+
+      const existKeywords = this.currentNegativeKeywords.concat(this.currentKeywords)
+      if (existKeywords.findIndex(w => w.word === val) > -1) {
+        return Message.error(`${val}该关键词已存在关键词或否定关键词列表`)
       }
       try {
         let { bannedList, normalList } = await chibiRobotAudit([val], {
