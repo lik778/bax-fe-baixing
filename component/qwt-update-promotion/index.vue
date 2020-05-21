@@ -94,7 +94,7 @@
       </section>
       <section class="keyword">
         <header class="top-col">
-          <span :class="canOptimize('keyword')">添加推广关键词
+          <span :class="canOptimize('keyword')" class="width-120">添加推广关键词
             <promotion-keyword-tip />
           </span>
           <el-input size="small" class="input" placeholder="添加关键词" v-model="queryWord"/>
@@ -105,7 +105,7 @@
           <strong>当前关键词数量: {{keywordLen}}个</strong>
         </header>
         <header class="top-col" style="margin-top:10px">
-          <span :class="canOptimize('keyword')">搜索推广关键词</span>
+          <span :class="canOptimize('keyword')" class="width-120">搜索推广关键词</span>
           <el-input size="small" class="input" placeholder="搜索推广关键词" v-model="searchWord"/>
           <el-button size="small" type="warning" class="button" @click="getCampaignWordsBySearchWord">搜索</el-button>
           <el-button size="small" type="primary" class="button" @click="getCampaignWordsDefault">取消</el-button>
@@ -1523,9 +1523,12 @@ export default {
       margin-left: 130px;
     }
   }
+  & .width-120 {
+    width: 120px;
+  }
   & .input {
     width: 200px;
-    margin-left: 32px;
+    margin-left: 20px;
     margin-right: 16px;
   }
 }
