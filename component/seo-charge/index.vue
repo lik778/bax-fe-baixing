@@ -190,22 +190,24 @@ const PROFESSIONAL_SITE_PRODUCT_TYPE = 6
 const LOCK_SHORT_GW_PRICE = 3000 * 100
 const lockMessage = `短期官网仅支持本次充值${LOCK_SHORT_GW_PRICE/100}元及以上推广资金的用户购买`
 
+const SEO_BALANCE = 7
+
 const allProducts = [
   {
     id: 1,
-    productType: 3,
+    productType: SEO_BALANCE,
     price: 2400 * 100
   }, {
     id: 2,
-    productType: 3,
+    productType: SEO_BALANCE,
     price: 4800 * 100
   }, {
     id: 3,
-    productType: 3,
+    productType: SEO_BALANCE,
     price: 9600 * 100
   }, {
     id: 4,
-    productType: 3,
+    productType: SEO_BALANCE,
     editable: true,
     price: 0
   }, 
@@ -309,7 +311,7 @@ export default {
   },
   computed: {
     promotionDiscount() {
-      const charge = this.checkedProducts.find(p => p.productType === 3)
+      const charge = this.checkedProducts.find(p => p.productType === SEO_BALANCE)
       if (charge) {
         const siteProduct = this.fullCheckedProducts.find(({productType}) => productType === PROFESSIONAL_SITE_PRODUCT_TYPE)
         let isFixedPrice = siteProduct && this.checkedProducts.find(product=>product.id===siteProduct.id).isFixedPrice
@@ -389,12 +391,12 @@ export default {
     },
     toggleProduct (product) {
       const { productType, isFixedPrice, price } = product
-      const chargeProduct = this.checkedProducts.find(p => p.productType === 3)
+      const chargeProduct = this.checkedProducts.find(p => p.productType === SEO_BALANCE)
       const gwProduct = this.checkedProducts.find(p => p.productType === PROFESSIONAL_SITE_PRODUCT_TYPE)
       const index = this.checkedProducts.indexOf(product)
 
       if (index > -1) { 
-        if (productType === 3 && gwProduct && gwProduct.isFixedPrice) {
+        if (productType === SEO_BALANCE && gwProduct && gwProduct.isFixedPrice) {
           // return this.$message.error(lockMessage)
           return this.showGwWarnInfo = true
         }
@@ -407,7 +409,7 @@ export default {
             return this.showGwWarnInfo = true
           } 
         }
-        if (productType === 3 && price < LOCK_SHORT_GW_PRICE) {
+        if (productType === SEO_BALANCE && price < LOCK_SHORT_GW_PRICE) {
           if (gwProduct && gwProduct.isFixedPrice) {
             // return this.$message.error(lockMessage)
             return this.showGwWarnInfo = true
@@ -415,7 +417,7 @@ export default {
         }
         this.showGwWarnInfo = false
       
-        if (chargeProduct && product.productType === 3) {
+        if (chargeProduct && product.productType === SEO_BALANCE) {
           const index = this.checkedProducts.indexOf(chargeProduct)
           this.checkedProducts.splice(index, 1)
         }
@@ -435,8 +437,8 @@ export default {
       this.empty()
 
       await Promise.all([
-        store.getProductDiscounts([3, PROFESSIONAL_SITE_PRODUCT_TYPE]), // 充值／新官网
-        store.getProducts([3,PROFESSIONAL_SITE_PRODUCT_TYPE])
+        store.getProductDiscounts([SEO_BALANCE, PROFESSIONAL_SITE_PRODUCT_TYPE]), // 充值／新官网
+        store.getProducts([SEO_BALANCE,PROFESSIONAL_SITE_PRODUCT_TYPE])
       ])
     },
     getDiscountPrice(productType, price) {
@@ -471,7 +473,7 @@ export default {
         return this.$message.error('请阅读并勾选同意服务协议，再进行下一步操作')
       }
       // 校验
-      const chargeProduct = this.checkedProducts.find(p => p.productType === 3)
+      const chargeProduct = this.checkedProducts.find(p => p.productType === SEO_BALANCE)
       const gwProduct = this.checkedProducts.find(p => p.productType === PROFESSIONAL_SITE_PRODUCT_TYPE && p.isFixedPrice)
       if (this.checkedProducts.length <= 0) {
         this.$message.error('商品为空')
@@ -488,7 +490,7 @@ export default {
       const {salesId, userId} = this.salesInfo
 
       // balanceAmount, saleWithShopOrder, shopOrderAmount, targetUserId, salesId
-      const charge = this.fullCheckedProducts.find(p => p.productType === 3)
+      const charge = this.fullCheckedProducts.find(p => p.productType === SEO_BALANCE)
       const saleWithShopOrder = !!this.fullCheckedProducts.find(p => p.productType === PROFESSIONAL_SITE_PRODUCT_TYPE)
       const gw = this.fullCheckedProducts.find(p => p.productType === PROFESSIONAL_SITE_PRODUCT_TYPE)
       const preTradeId = await createPreOrder(
@@ -507,7 +509,7 @@ export default {
         this.orderPayUrl = `${orderServiceHost}/?appId=103&seq=${preTradeId}`
       }
     },
-    filterProductName({productType,productTime}) {
+    filterProductName({productType, productTime}) {
       if( productType !== PROFESSIONAL_SITE_PRODUCT_TYPE ){
         return PRODUCT[productType]
       }
@@ -519,7 +521,7 @@ export default {
     checkedProducts: {
       deep: true,
       handler: function (checked) {
-        const charge = checked.find(p => p.productType === 3)
+        const charge = checked.find(p => p.productType === SEO_BALANCE)
         const gw = checked.find(p => p.productType === PROFESSIONAL_SITE_PRODUCT_TYPE)
 
         if (charge && gw) {
