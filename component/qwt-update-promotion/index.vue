@@ -130,10 +130,15 @@
       <section class="negative-keyword">
         <header>设置否定关键词
           <promotion-keyword-tip />
+          <p class="tip">当网民的搜索词与精确否定关键词完全一致时，您的推广结果将不会展现。</p>
+          <div class="top-col">
+            <el-input size="small" class="input" placeholder="请输入否定关键词" v-model="negativeKeywordSearch"/>
+            <el-button size="small" type="warning" class="button" @click="addNegativeKeyword">添加</el-button>
+            <el-button class="button" type="primary" size="small"
+                       @click="addKeywordsDialog = true; isNegative = true">批量添加否定关键词</el-button>
+            <strong>当前否定关键词数量: {{currentNegativeKeywords.length}}个</strong>
+          </div>
         </header>
-        <p class="tip">当网民的搜索词与精确否定关键词完全一致时，您的推广结果将不会展现。</p>
-        <el-button class="negative-btn" type="primary" size="small" 
-                   @click="addKeywordsDialog = true; isNegative = true">批量添加否定关键词</el-button>
         <div class="kw-tag-container">
           <el-tag class="kw-tag"
                   v-for="negative in currentNegativeKeywords"
@@ -143,12 +148,6 @@
                   @close="removeNegativeKeyword(negative)">
                   {{negative.word}}
           </el-tag>
-          <el-input class="negative-input" 
-                    size="small"
-                    clearable
-                    placeholder="请输入否定关键词"
-                    @blur="addNegativeKeyword"
-                    v-model="negativeKeywordSearch"></el-input>
         </div>
       </section>
       <section class="timing">
@@ -697,8 +696,8 @@ export default {
         this.getCampaignWordsDefault()
       }
     },
-    async addNegativeKeyword(event) {
-      const val = event.target.value.trim()
+    async addNegativeKeyword() {
+      const val = this.negativeKeywordSearch
       if (val === '') return
 
       const existKeywords = this.currentNegativeKeywords.concat(this.currentKeywords)
@@ -713,6 +712,7 @@ export default {
           return Message.error(`因平台限制，${val}无法添加，请修改`)
         }
         this.promotion.newNegativeKeywords = this.promotion.newNegativeKeywords.concat(normalList)
+        this.negativeKeywordSearch = ''
       } catch (e) {
         console.error(e)
       }
@@ -1291,7 +1291,8 @@ export default {
       this.promotion.creativeContent = content
     },
     filterExistCurrentWords(newWords) {
-      const words = this.currentKeywords.map(w => w.word.toLowerCase())
+      // 去除关键词和否定关键词
+      const words = this.currentKeywords.concat(this.currentNegativeKeywords).map(w => w.word.toLowerCase())
       return newWords
         .filter(w => !words.includes(w.word.toLowerCase()))
     },
@@ -1317,6 +1318,9 @@ export default {
         if (this.currentKeywords.find(w => w.word.toLowerCase() === queryWord.toLowerCase())) {
           return this.$message.info('当前关键词已存在关键词列表')
         }
+        if (this.currentNegativeKeywords.find(w => w.word.toLowerCase() === queryWord.toLowerCase())) {
+          return this.$message.info('当前关键词已存在否定关键词列表')
+        }
         const recommendKeywords = await recommendByWord(queryWord, {campaignId: this.originPromotion.id})
         const newKeyword = store.fmtNewKeywordsPrice(recommendKeywords).find( k => k.word === queryWord)
         if (!newKeyword) return this.$message.info('没有合适的关键词')
@@ -1334,6 +1338,7 @@ export default {
         newKeywords = this.filterExistCurrentWords(store.fmtNewKeywordsPrice(recommendKeywords)).slice(0, 5)
         // 一键拓词推荐关键词临时数据
         this._recommendKeywords = (this._recommendKeywords || []).concat(newKeywords)
+
         if (!newKeywords.length) return this.$message.info('没有更多的关键词可以推荐啦')
       }
       this.promotion.newKeywords = newKeywords.concat(this.promotion.newKeywords)
@@ -1538,9 +1543,19 @@ export default {
     font-size: 12px;
     color: #6a778c;
     margin-top: 10px;
+    font-weight: 400;
   }
-  & .negative-btn {
-    margin-top: 10px;
+  & .top-col {
+    margin-top: 18px;
+    & strong {
+      margin-left: 18px;
+      color: #666;
+      font-size: 12px;
+    }
+    & .input {
+      width: 200px;
+      margin-right: 16px;
+    }
   }
   & .kw-tag-container {
     max-width: 100%;
