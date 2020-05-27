@@ -30,11 +30,11 @@
       </el-table-column>
       <el-table-column v-if="showPropRanking"
         width="150" label="电脑端排名"
-        :formatter="r => fmtCpcRankingToStr(r.cpcRanking || -1)">
+        :formatter="r => fmtCpcRanking(r.cpcRanking || -1)">
       </el-table-column>
-      <el-table-column v-if="showPropRanking"
+      <el-table-column v-if="showPropMobileRanking"
         width="150" label="手机端排名"
-        :formatter="r => fmtCpcRankingToStr(r.mobileCpcRanking || -1)">
+        :formatter="r => fmtCpcRanking(r.mobileCpcRanking || -1)">
       </el-table-column>
       <el-table-column v-if="showPropStatus"
         width="180"
@@ -132,7 +132,7 @@ import {
 } from 'constant/keyword'
 
 import {
-  fmtCpcRankingToStr
+  fmtCpcRanking
 } from 'util/campaign'
 
 import {
@@ -209,6 +209,10 @@ export default {
       default: false
     },
     showPropRanking: {
+      type: Boolean,
+      default: false
+    },
+    showPropMobileRanking: {
       type: Boolean,
       default: false
     }
@@ -329,7 +333,7 @@ export default {
       // 过去24小时排名低于5或无排名的，在线的 keyword，在线的 campaign
       const {cpcRanking, mobileCpcRanking, isPriceChanged, status: keywordStatus} = row
       // 电脑端和手机端任意一端排名大于5或者无排名
-      const rankingLow = (cpcRanking > 5 || cpcRanking === 0) || (mobileCpcRanking > 5 || mobileCpcRanking === 0)
+      const rankingLow = (cpcRanking > 5 || cpcRanking <= 0) || (mobileCpcRanking > 5 || mobileCpcRanking >= 0)
       const show = keywordStatus === KEYWORD_STATUS_ONLINE && this.campaignOnline && !isPriceChanged && rankingLow
       if (show) {
         track({
@@ -444,7 +448,7 @@ export default {
         id: w.id
       }
     },
-    fmtCpcRankingToStr
+    fmtCpcRanking
   },
   watch: {
     currentPage(val, pre) {
