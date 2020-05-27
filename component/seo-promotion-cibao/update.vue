@@ -5,7 +5,6 @@
       <qiqiaoban-page-selector
         :disabled="true"
         :value="promotion.landingPage"
-        :product-type="PRO_SITE_PRODUCT_TYPE"
       />
     </section>
     <section>

@@ -5,7 +5,6 @@
       <qiqiaoban-page-selector
         :value="promotion.landingPage"
         @change-obj="v => onLandingChange(v)"
-        :product-type="PRO_SITE_PRODUCT_TYPE"
       />
       <p class="warning" v-if="showExpireWarning">
         站点{{promotion.duration}}天内将过期，
