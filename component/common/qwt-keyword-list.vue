@@ -333,7 +333,12 @@ export default {
       // 过去24小时排名低于5或无排名的，在线的 keyword，在线的 campaign
       const {cpcRanking, mobileCpcRanking, isPriceChanged, status: keywordStatus} = row
       // 电脑端和手机端任意一端排名大于5或者无排名
-      const rankingLow = (cpcRanking > 5 || cpcRanking <= 0) || (mobileCpcRanking > 5 || mobileCpcRanking >= 0)
+      let rankingLow = false
+      if (this.platform === SEM_PLATFORM_SHENMA) {
+        rankingLow = mobileCpcRanking > 5 || mobileCpcRanking <= 0
+      } else {
+        rankingLow = (cpcRanking > 5 || cpcRanking <= 0) || (mobileCpcRanking > 5 || mobileCpcRanking <= 0)
+      }
       const show = keywordStatus === KEYWORD_STATUS_ONLINE && this.campaignOnline && !isPriceChanged && rankingLow
       if (show) {
         track({

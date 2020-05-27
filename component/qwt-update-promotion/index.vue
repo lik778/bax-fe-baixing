@@ -119,7 +119,7 @@
           :deletable="!isSales"
           :show-prop-show="false"
           :show-prop-status="true"
-          :show-prop-ranking="originPromotion.source !== SEM_PLATFORM_SHENMA"
+          :show-prop-ranking="getProp('source') !== SEM_PLATFORM_SHENMA"
           :show-prop-mobile-ranking="true"
           :campaign-offline="isCampaignOffline"
           :campaign-online="isCampaignOnline"
