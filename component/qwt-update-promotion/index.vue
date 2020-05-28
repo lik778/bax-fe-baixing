@@ -698,7 +698,7 @@ export default {
       }
     },
     async addNegativeKeyword() {
-      const val = this.negativeKeywordSearch
+      const val = this.negativeKeywordSearch.trim()
       if (val === '') return
 
       const existKeywords = this.currentNegativeKeywords.concat(this.currentKeywords)
