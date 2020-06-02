@@ -57,6 +57,8 @@
       <el-table-column label="计划ID" prop="campaignId" width="140" />
       <el-table-column label="渠道" width="100"
         :formatter="r => fmtChannel(r.channel)" />
+      <el-table-column label="设备" width="100"
+        :formatter="r => fmtDevice(r.device)" />
       <el-table-column label="展现" prop="shows" width="90" sortable />
       <el-table-column label="点击" prop="clicks" width="90" sortable />
       <el-table-column label="点击率" width="160" sortable
