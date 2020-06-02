@@ -181,9 +181,9 @@ export default {
           this.campaignErrTip = true
           return
         }
-        return await this._getReportByQueryWord()
+        return await this._getReportByQueryWord(opts)
       }
-      return await this._getReport()
+      return await this._getReport(opts)
     },
     async _getReportByQueryWord(opts = {}) {
       const offset = opts.offset || 0
@@ -212,7 +212,7 @@ export default {
         channel: query.channel,
         campaignIds: checkedCampaignIds,
 
-        limit: 10,
+        limit: this.limit,
         offset,
       }
       await store.fetchReportByQueryWord(q)
@@ -247,7 +247,7 @@ export default {
         channel: query.channel,
         campaignIds: checkedCampaignIds,
 
-        limit: 10,
+        limit: this.limit,
         offset,
 
         fields: query.dimension === DIMENSION_CAMPAIGN

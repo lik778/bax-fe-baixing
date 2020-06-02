@@ -91,7 +91,7 @@
     </el-table>
 
     <footer>
-      <div class="total" v-if="!!statistics.length">
+      <div class="total" v-if="!!statistics.length && dimension !== DIMENSION_SEARCH_KEYWORD ">
         <span>
           <label>总展现：</label>
           <strong>{{ summary.shows }}</strong>
@@ -177,7 +177,8 @@ export default {
     return {
       priceUpdating: false,
       DIMENSION_CAMPAIGN,
-      DIMENSION_KEYWORD
+      DIMENSION_KEYWORD,
+      DIMENSION_SEARCH_KEYWORD
     }
   },
   methods: {

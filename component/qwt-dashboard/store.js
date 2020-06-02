@@ -6,7 +6,7 @@ import * as api from 'api/fengming-campaign'
 const store = observable({
   _statistics: [],
   _summary: {},
-  limit: 100,
+  limit: 10,
   offset: 0,
   total: 0,
 
