@@ -59,10 +59,19 @@
         :formatter="r => fmtChannel(r.channel)" />
       <el-table-column label="设备" width="100"
         :formatter="r => fmtDevice(r.device)" />
-      <el-table-column label="展现" prop="shows" width="90" sortable />
+      <el-table-column label="展现" prop="shows" width="90" sortable>
+        <template slot-scope="scope">
+          <span v-if="scope.row.channel === SEM_PLATFORM_SOGOU">--</span>
+          <span v-else>{{scope.row.shows}}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="点击" prop="clicks" width="90" sortable />
-      <el-table-column label="点击率" width="160" sortable
-        :formatter="r => (r.clickRate * 100).toFixed(2)+ '%'" />
+      <el-table-column label="点击率" width="160" sortable>
+        <template slot-scope="scope">
+          <span v-if="scope.row.channel === SEM_PLATFORM_SOGOU">--</span>
+          <span v-else>{{(scope.row.clickRate * 100).toFixed(2) + '%'}}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="消耗" width="120"
         :formatter="r => (r.costs / 100).toFixed(2) + '元'" />
       <el-table-column label="平均点击价格" width="160" sortable
@@ -126,7 +135,8 @@ import {
 } from 'constant/fengming-report'
 
 import {
-  semPlatformCn
+  semPlatformCn,
+  SEM_PLATFORM_SOGOU
 } from 'constant/fengming'
 
 import track from 'util/track'
@@ -178,7 +188,8 @@ export default {
       priceUpdating: false,
       DIMENSION_CAMPAIGN,
       DIMENSION_KEYWORD,
-      DIMENSION_SEARCH_KEYWORD
+      DIMENSION_SEARCH_KEYWORD,
+      SEM_PLATFORM_SOGOU
     }
   },
   methods: {
@@ -191,6 +202,7 @@ export default {
             type: 'success',
             message: `成功添加 ${queryWord} 为关键词`
           })
+          this.$emit('refresh-keyword-list')
         })
     },
     addNegativeKeyword(item) {
@@ -201,6 +213,7 @@ export default {
             type: 'success',
             message: `成功添加 ${queryWord} 为否定关键词`
           })
+          this.$emit('refresh-keyword-list')
         })
     },
     switchToCampaignReport(campaign) {

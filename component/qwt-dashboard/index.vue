@@ -68,6 +68,7 @@
         :offset="offset" :total="total" :limit="limit"
         :dimension="query.dimension"
         @switch-to-campaign-report="getCampaignReport"
+        @refresh-keyword-list="queryStatistics({offset})"
         @current-change="queryStatistics">
       </data-detail>
 
