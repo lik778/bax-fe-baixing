@@ -4,7 +4,14 @@
     <main>
       <dashboard-header />
       <section>
-        <p class="tip">搜狗渠道无法提供今天的数据；百度、360和神马渠道今天的数据存在一定延时，且最近1小时内的展现数据会存在波动。</p>
+        <p class="tip">
+          <span v-if="query.dimension === DIMENSION_SEARCH_KEYWORD">
+            搜狗和360渠道无法提供今天的数据；百度和神马渠道今天的数据存在一定延时，且最近1小时内的数据会存在波动
+          </span>
+          <span v-else>
+            搜狗渠道无法提供今天的数据；百度、360和神马渠道今天的数据存在一定延时，且最近1小时内的展现数据会存在波动
+          </span>
+        </p>
         <aside>选择渠道:</aside>
         <span>
           <i class="badge" v-for="(t, i) in semPlatformOpts" :key="i"
@@ -150,7 +157,8 @@ export default {
       },
 
       searchCampaigns: '',
-      campaignErrTip: false
+      campaignErrTip: false,
+      DIMENSION_SEARCH_KEYWORD
     }
   },
   computed: {
