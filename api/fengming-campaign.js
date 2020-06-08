@@ -110,6 +110,27 @@ export async function getReport(opts = {}) {
   }
 }
 
+export async function getDataReportByQueryWord(opts = {}) {
+  const q = reverseCamelcase(trim({
+    offset: 0,
+    limit: 10,
+    ...opts
+  }))
+  const body = await fengming
+    .get('/data_report/query_word')
+    .query({
+      ...q
+    })
+    .json()
+
+  return {
+    rows: toCamelcase(body.data.data),
+    total: body.data.totalElements,
+    offset: q.offset,
+    limit: q.limit
+  }
+}
+
 export async function getCampaignRadar() {
   const body = await fengming
     .get('/campaign/radar')

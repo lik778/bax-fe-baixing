@@ -94,15 +94,18 @@
       </section>
       <section class="keyword">
         <header class="top-col">
-          <span :class="canOptimize('keyword')">添加推广关键词</span>
+          <span :class="canOptimize('keyword')" class="width-120">添加推广关键词
+            <promotion-keyword-tip />
+          </span>
           <el-input size="small" class="input" placeholder="添加关键词" v-model="queryWord"/>
           <el-button size="small" type="warning" class="button" @click="addKeyword('single')">添加</el-button>
           <el-button size="small" type="primary" class="button" @click="addKeyword">一键拓词</el-button>
-          <el-button size="small" type="primary" class="button" @click="addKeywordListDialog = true">批量添加</el-button>
+          <el-button size="small" type="primary" class="button" 
+                     @click="addKeywordsDialog = true; isNegative = false">批量添加</el-button>
           <strong>当前关键词数量: {{keywordLen}}个</strong>
         </header>
         <header class="top-col" style="margin-top:10px">
-          <span :class="canOptimize('keyword')">搜索推广关键词</span>
+          <span :class="canOptimize('keyword')" class="width-120">搜索推广关键词</span>
           <el-input size="small" class="input" placeholder="搜索推广关键词" v-model="searchWord"/>
           <el-button size="small" type="warning" class="button" @click="getCampaignWordsBySearchWord">搜索</el-button>
           <el-button size="small" type="primary" class="button" @click="getCampaignWordsDefault">取消</el-button>
@@ -116,13 +119,37 @@
           :deletable="!isSales"
           :show-prop-show="false"
           :show-prop-status="true"
-          :show-prop-ranking="true"
+          :show-prop-ranking="getProp('source') !== SEM_PLATFORM_SHENMA"
+          :show-prop-mobile-ranking="true"
           :campaign-offline="isCampaignOffline"
           :campaign-online="isCampaignOnline"
           @update-word="updateExistWord"
           @change-offset="offset => currentKeywordsOffset = offset"
           @delete-word="handleDeleteWord"
         />
+      </section>
+      <section class="negative-keyword">
+        <header>设置否定关键词
+          <promotion-keyword-tip />
+          <p class="tip">当网民的搜索词与精确否定关键词完全一致时，您的推广结果将不会展现。</p>
+          <div class="top-col">
+            <el-input size="small" class="input" placeholder="请输入否定关键词" v-model="negativeKeywordSearch"/>
+            <el-button size="small" type="warning" class="button" @click="addNegativeKeyword">添加</el-button>
+            <el-button class="button" type="primary" size="small"
+                       @click="addKeywordsDialog = true; isNegative = true">批量添加否定关键词</el-button>
+            <strong>当前否定关键词数量: {{currentNegativeKeywords.length}}个</strong>
+          </div>
+        </header>
+        <div class="kw-tag-container">
+          <el-tag class="kw-tag"
+                  v-for="negative in currentNegativeKeywords"
+                  :key="negative.negativeWord"
+                  closable
+                  type="warning"
+                  @close="removeNegativeKeyword(negative)">
+                  {{negative.word}}
+          </el-tag>
+        </div>
       </section>
       <section class="timing">
         <header>设置时长和预算</header>
@@ -276,13 +303,17 @@
       @change="onChangeDuration"
       @hide="durationSelectorVisible = false">
     </duration-selector>
-    <qwt-add-keyword-list :show="addKeywordListDialog" 
-                          :is-update-qwt="true" 
-                          ref="qwtAddKeywordList"
-                          @close="addKeywordListDialog = false"
-                          :promotion="currentPromotion" 
-                          @update-keywords="updatePromotionKeywords">
-    </qwt-add-keyword-list>
+    <qwt-add-keywords-dialog
+      ref="qwtAddKeywordDialog"
+      :visible="addKeywordsDialog"
+      :title="isNegative? '批量添加否定关键词': '批量添加关键词'"
+      :is-update-qwt="true"
+      :is-negative="isNegative"
+      :campaign-id="currentPromotion.campaignId"
+      :original-keywords="currentPromotion.allKeywords"
+      @update-keywords="updatePromotionKeywords"
+      @close="handleKeywordsDialogClose"
+    />
   </div>
 </template>
 
@@ -297,6 +328,7 @@ import PromotionAreaLimitTip from 'com/widget/promotion-area-limit-tip'
 import QiqiaobanPageSelector from 'com/common/qiqiaoban-page-selector'
 import PromotionCreativeTip from 'com/widget//promotion-creative-tip'
 import PromotionChargeTip from 'com/widget/promotion-charge-tip'
+import PromotionKeywordTip from 'com/widget/promotion-keyword-tip'
 import PromotionRuleLink from 'com/widget/promotion-rule-link'
 import DurationSelector from 'com/common/duration-selector'
 import UserAdSelector from 'com/common/user-ad-selector'
@@ -306,7 +338,7 @@ import KeywordList from 'com/common/qwt-keyword-list'
 import AreaSelector from 'com/common/area-selector'
 import ContractAck from 'com/widget/contract-ack'
 import FmTip from 'com/widget/fm-tip'
-import qwtAddKeywordList from 'com/common/qwt-add-keyword-list'
+import qwtAddKeywordsDialog from 'com/common/qwt-add-keywords-dialog'
 import BaxInput from 'com/common/bax-input'
 
 
@@ -328,7 +360,8 @@ import {
   checkCreativeContent,
   getRecommandCreative,
   changeCampaignKeywordsPrice,
-  queryAds
+  queryAds,
+  chibiRobotAudit
 } from 'api/fengming'
 
 import {
@@ -393,6 +426,7 @@ export default {
     QiqiaobanPageSelector,
     PromotionCreativeTip,
     PromotionChargeTip,
+    PromotionKeywordTip,
     PromotionRuleLink,
     DurationSelector,
     CreativeEditor,
@@ -402,7 +436,7 @@ export default {
     KeywordList,
     ContractAck,
     FmTip,
-    qwtAddKeywordList,
+    qwtAddKeywordsDialog,
     BaxInput
   },
   fromMobx: {
@@ -453,7 +487,10 @@ export default {
         updatedKeywords: [],
         deletedKeywords: [],
         newKeywords: [],
-
+        // 否定关键词
+        updatedNegativeKeywords: [],
+        newNegativeKeywords: [],
+        deletedNegativeKeywords: [],
       },
       LANDING_TYPE_AD,
       LANDING_TYPE_GW,
@@ -470,7 +507,9 @@ export default {
       SEM_PLATFORM_SOGOU,
       SEM_PLATFORM_QIHU,
 
-      addKeywordListDialog: false
+      addKeywordsDialog: false,
+      isNegative: false,
+      negativeKeywordSearch: '',
     }
   },
   computed: {
@@ -544,6 +583,37 @@ export default {
           return {...w}
         })
     },
+    currentNegativeKeywords() {
+      const { negativeWords: originKeywords } = this.originPromotion
+      const {
+        updatedNegativeKeywords: updatedKeywords,
+        deletedNegativeKeywords: deletedKeywords,
+        newNegativeKeywords: newKeywords
+      } = this.promotion
+
+      // 新增的keywords 加上原来的keywords
+      let keywords = [];
+      keywords = originKeywords.concat(
+        newKeywords.map(word => ({
+          isNew: true,
+          ...word
+        }))
+      )
+      
+      return keywords
+        .filter(w => !deletedKeywords.map(i => i.id).includes(w.id))
+        .map(w => {
+          for (const word of updatedKeywords) {
+            if (word.id === w.id) {
+              return {
+                ...w,
+                ...word
+              }
+            }
+          }
+          return {...w}
+        })
+    },
     keywordLen() {
       const { keywords: originKeywords } = this.originPromotion
       const { newKeywords,deletedKeywords } = this.promotion
@@ -552,9 +622,13 @@ export default {
     },
     currentPromotion(){
       let keywords = this.currentKeywords
+      let negativeKeywords = this.currentNegativeKeywords
+      let allKeywords = this.currentKeywords.concat(this.currentNegativeKeywords)
       return {
         keywords,
-        campaignId: this.originPromotion.id
+        negativeKeywords,
+        allKeywords,
+        campaignId: this.originPromotion.id,
       }
     },
     checkCreativeBtnDisabled() {
@@ -617,28 +691,65 @@ export default {
     }
   },
   methods: {
-    updatePromotionKeywords(kwAddResult){
-      this.addKeywordListDialog = false
-      if(!kwAddResult){
-        return
+    handleKeywordsDialogClose() {
+      this.addKeywordsDialog = false
+      if (!this.isNegative) {
+        this.getCampaignWordsDefault()
       }
-      let { normalList, bannedList} = kwAddResult
+    },
+    async addNegativeKeyword() {
+      const val = this.negativeKeywordSearch.trim()
+      if (val === '') return
+
+      const existKeywords = this.currentNegativeKeywords.concat(this.currentKeywords)
+      if (existKeywords.findIndex(w => w.word === val) > -1) {
+        return Message.error(`${val}该关键词已存在关键词或否定关键词列表`)
+      }
+      try {
+        let { bannedList, normalList } = await chibiRobotAudit([val], {
+          campaignId: this.originPromotion.id
+        })
+        if (bannedList.length) {
+          return Message.error(`因平台限制，${val}无法添加，请修改`)
+        }
+        this.promotion.newNegativeKeywords = this.promotion.newNegativeKeywords.concat(normalList)
+        this.negativeKeywordSearch = ''
+      } catch (e) {
+        console.error(e)
+      }
+    },
+    removeNegativeKeyword(w) {
+      const {isNew, ...word} = w
+      if (!!isNew) {
+        this.promotion.newNegativeKeywords = this.promotion.newNegativeKeywords.filter(w => w.word !== word.word)
+      } else {
+        this.promotion.deletedNegativeKeywords.push(word)
+      }
+    },
+    updatePromotionKeywords(kwAddResult) {
+      this.addKeywordsDialog = false
+      if (!kwAddResult) return 
+
+      let { normalList, bannedList } = kwAddResult
       const { actionTrackId, userInfo } = this
       track({
         roles: userInfo.roles.map(r => r.name).join(','),
-        action: 'click-button: add-keyword-list',
+        action: `click-button: ${this.isNegative ? 'add-negative-keyword-list': 'add-keyword-list'}`,
         baixingId: userInfo.baixingId,
         time: Date.now() / 1000 | 0,
         baxId: userInfo.id,
         actionTrackId,
-        keywordsLen: normalList.length
-        // keywords: JSON.stringify(normalList)
+        keywordsLen: normalList.length,
+        keywords: normalList.map(item => item.word).join(',')
       })
       
-      this.promotion.newKeywords = normalList.concat(this.promotion.newKeywords)
-      this.$refs.qwtAddKeywordList.keywords = null
+      if (this.isNegative) {
+        this.promotion.newNegativeKeywords = this.promotion.newNegativeKeywords.concat(normalList)
+      } else {
+        this.promotion.newKeywords = normalList.concat(this.promotion.newKeywords)
+      }
     },
-    async getCampaignWordsBySearchWord(){
+    async getCampaignWordsBySearchWord() {
       this.isSearchCondition = true
       let searchWord = this.searchWord
       
@@ -652,7 +763,7 @@ export default {
       
       this.searchKeywords = keywords.filter(row => row.word.indexOf(searchWord)> -1)
     },
-    async getCampaignWordsDefault(){
+    async getCampaignWordsDefault() {
       this.searchWord = ''
       this.isSearchCondition = false
       this.currentKeywordsOffset = 0
@@ -955,6 +1066,29 @@ export default {
 
       return data
     },
+    getUpdatedNegativeKeywordsData() {
+      const {
+        updatedNegativeKeywords,
+        deletedNegativeKeywords,
+        newNegativeKeywords
+      } = this.promotion
+
+      const data = {}
+
+      if (updatedNegativeKeywords.length) {
+        data.updatedNegativeKeywords = [...updatedNegativeKeywords]
+      }
+
+      if (deletedNegativeKeywords.length) {
+        data.deletedNegativeKeywords = [...deletedNegativeKeywords]
+      }
+
+      if (newNegativeKeywords.length) {
+        data.newNegativeKeywords = [...newNegativeKeywords]
+      }
+
+      return data
+    },
     async updatePromotion() {
       if (!this.$refs.contract.$data.isAgreement) {
         return this.$message.error('请阅读并勾选同意服务协议，再进行下一步操作')
@@ -982,6 +1116,7 @@ export default {
           ...this.getUpdatedCreativeData(),
           ...this.getUpdatedPromotionData(),
           ...this.getUpdatedKeywordsData(),
+          ...this.getUpdatedNegativeKeywordsData(),
           mobilePriceRatio: this.promotion.mobilePriceRatio
         }
       } catch (err) {
@@ -1157,7 +1292,8 @@ export default {
       this.promotion.creativeContent = content
     },
     filterExistCurrentWords(newWords) {
-      const words = this.currentKeywords.map(w => w.word.toLowerCase())
+      // 去除关键词和否定关键词
+      const words = this.currentKeywords.concat(this.currentNegativeKeywords).map(w => w.word.toLowerCase())
       return newWords
         .filter(w => !words.includes(w.word.toLowerCase()))
     },
@@ -1183,6 +1319,9 @@ export default {
         if (this.currentKeywords.find(w => w.word.toLowerCase() === queryWord.toLowerCase())) {
           return this.$message.info('当前关键词已存在关键词列表')
         }
+        if (this.currentNegativeKeywords.find(w => w.word.toLowerCase() === queryWord.toLowerCase())) {
+          return this.$message.info('当前关键词已存在否定关键词列表')
+        }
         const recommendKeywords = await recommendByWord(queryWord, {campaignId: this.originPromotion.id})
         const newKeyword = store.fmtNewKeywordsPrice(recommendKeywords).find( k => k.word === queryWord)
         if (!newKeyword) return this.$message.info('没有合适的关键词')
@@ -1200,6 +1339,7 @@ export default {
         newKeywords = this.filterExistCurrentWords(store.fmtNewKeywordsPrice(recommendKeywords)).slice(0, 5)
         // 一键拓词推荐关键词临时数据
         this._recommendKeywords = (this._recommendKeywords || []).concat(newKeywords)
+
         if (!newKeywords.length) return this.$message.info('没有更多的关键词可以推荐啦')
       }
       this.promotion.newKeywords = newKeywords.concat(this.promotion.newKeywords)
@@ -1389,13 +1529,44 @@ export default {
       margin-left: 130px;
     }
   }
+  & .width-120 {
+    width: 120px;
+  }
   & .input {
     width: 200px;
-    margin-left: 32px;
+    margin-left: 20px;
     margin-right: 16px;
   }
 }
 
+.negative-keyword {
+  & .tip {
+    font-size: 12px;
+    color: #6a778c;
+    margin-top: 10px;
+    font-weight: 400;
+  }
+  & .top-col {
+    margin-top: 18px;
+    & strong {
+      margin-left: 18px;
+      color: #666;
+      font-size: 12px;
+    }
+    & .input {
+      width: 200px;
+      margin-right: 16px;
+    }
+  }
+  & .kw-tag-container {
+    max-width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+  }
+  & .negative-input {
+    width: 180px;
+  }
+}
 .report-link {
   margin-left: 10px;
   background-color: unset;

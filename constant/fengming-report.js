@@ -4,6 +4,7 @@ import dayjs from 'dayjs'
 export const DIMENSION_CAMPAIGN = 0
 export const DIMENSION_KEYWORD = 1
 export const DIMENSION_NONE = 2 // 这是啥意思 ? @嘟嘟噜
+export const DIMENSION_SEARCH_KEYWORD = 3
 
 export const CSV_REPORT_GENERATING = 0 // 生成中
 export const CSV_REPORT_FINISHED = 2 // 完成
@@ -17,10 +18,13 @@ export const csvReportStatus = {
 
 export const allDimensions = [{
   label: '计划维度',
-  value: 0
+  value: DIMENSION_CAMPAIGN
 }, {
   label: '关键词维度',
-  value: 1
+  value: DIMENSION_KEYWORD
+}, {
+  label: '搜索词维度',
+  value: DIMENSION_SEARCH_KEYWORD
 }]
 
 export const DEVICE_ALL = 0

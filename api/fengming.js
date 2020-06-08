@@ -319,6 +319,21 @@ export async function recommendByWordList(word, opts) {
   return result
 }
 
+export async function chibiRobotAudit(words, opts) {
+  const body = await fengming
+    .post('/chibi/robot/audit')
+    .send(reverseCamelcase({contents: words, ...opts}))
+    .json()
+
+  let result = toCamelcase(body.data)
+  if (result && isObj(result)) {
+    for (let key in result) {
+      result[key] = fmtWordsByContent(toCamelcase(result[key]))
+    }
+  }
+  return result
+}
+
 export async function getChangeLogs(opts) {
   const { data } = await fengming
     .get('/balance/changelog')
@@ -506,6 +521,18 @@ function fmtWords(words) {
 
   return words.map(w => ({
     id: w.word,
+    ...w
+  }))
+}
+
+function fmtWordsByContent(words) {
+  if (!isArray(words)) {
+    return words
+  }
+
+  return words.map(w => ({
+    id: w.content,
+    word: w.content,
     ...w
   }))
 }
