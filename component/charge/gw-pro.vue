@@ -1,7 +1,7 @@
 <template>
   <div :class="{'gw-pro-widget': true, checked}" @click="onClick">
     <div class="hot-flag" v-if="isHot">
-      <section>
+      <!-- <section>
         <main>热卖</main>
         <footer>
           <svg xmlns="http://www.w3.org/2000/svg" version="1.1"
@@ -9,7 +9,8 @@
             <polygon points="0,0 44,0 22,12" />
           </svg>
         </footer>
-      </section>
+      </section> -->
+      <img src="//file.baixing.net/202006/40c77497696c9b2cf6b50361ac0c1cde.png" width="40" alt="爆款">
     </div>
     <header>{{ title }}</header>
     <ul :class="{'desc-container': true, 'desc-pro-container': isPro}">
@@ -92,8 +93,8 @@ export default {
     position: relative;
     width: 0;
     height: 0;
-    top: -4px;
-    left: 206px;
+    top: 0px;
+    left: 216px;
 
     & > section {
       width: 44px;

@@ -67,9 +67,9 @@
     {
       id: 1,
       shopType: 1,
-      shopOrderAmount: 1,
+      shopOrderAmount: 2,
       originalPrice: 120000,
-      name: '精品官网一年',
+      name: '精品官网一年送一年',
       price: 0,
       discountExecPriceFunc: [
         'p >= 0 && p < 50000 ? 0 : false',
@@ -95,9 +95,9 @@
     {
       id: 3,
       shopType: 2,
-      shopOrderAmount: 1,
+      shopOrderAmount: 2,
       originalPrice: 180000,
-      name: '精品官网专业版一年（可用于首页宝推广）',
+      name: '精品官网专业版一年送一年（可用于首页宝推广）',
       price: 0,
       discountExecPriceFunc: [
         'p >= 0 && p < 50000 ? 0 : false',
