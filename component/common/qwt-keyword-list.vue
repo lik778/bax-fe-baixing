@@ -19,7 +19,7 @@
           {{row.word}}
           <span class="new-word" v-if="row.isNew">(新)</span>
           <span class="new-word">
-            {{row.recommandSource === RECOMMAND_SOURCE_FH ? '(好词)': ''}}
+            {{RECOMMAND_SOURCES.includes(row.recommandSource) ? '(好词)': ''}}
           </span>
         </template>
       </el-table-column>
@@ -115,6 +115,7 @@ import {
   SEM_PLATFORM_SHENMA,
   keywordStatus,
   RECOMMAND_SOURCE_FH,
+  NEW_RECOMMAND_SOURCE_FH
 } from 'constant/fengming'
 
 import BaxInput from 'com/common/bax-input'
@@ -152,6 +153,8 @@ const CpcTopPriceTip = Vue.extend({
 const MODE_SELECT = 'select'
 const MODE_UPDATE = 'update'
 const LIMIT = 10
+
+const RECOMMAND_SOURCES = [NEW_RECOMMAND_SOURCE_FH, RECOMMAND_SOURCE_FH]
 
 export default {
   name: 'qwt-keyword-list',
@@ -233,7 +236,7 @@ export default {
       keywordPrice: '',
       popoverVisible: false,
 
-      RECOMMAND_SOURCE_FH
+      RECOMMAND_SOURCES
     }
   },
   computed: {
