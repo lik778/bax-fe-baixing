@@ -53,47 +53,47 @@ export const chargeList = [
   {
     duration: NINETY_DAYS,
     volume: ONE_THROUND_KEYWORD,
-    charge: 3000
+    charge: 2988
   },
   {
     duration: NINETY_DAYS,
     volume: TWO_THROUND_KEYWORD,
-    charge: 3900
+    charge: 3988
   },
   {
     duration: NINETY_DAYS,
     volume: FIVE_THROUND_KEYWORD,
-    charge: 4800
+    charge: 4988
   },
   {
     duration: ONE_HUNDRED_EIGHT_DAYS,
     volume: ONE_THROUND_KEYWORD,
-    charge: 6000
+    charge: 5688
   },
   {
     duration: ONE_HUNDRED_EIGHT_DAYS,
     volume: TWO_THROUND_KEYWORD,
-    charge: 7800
+    charge: 7688
   },
   {
     duration: ONE_HUNDRED_EIGHT_DAYS,
     volume: FIVE_THROUND_KEYWORD,
-    charge: 9600
+    charge: 9688
   },
   {
     duration: ONE_YEAR,
     volume: ONE_THROUND_KEYWORD,
-    charge: 12000
+    charge: 10888
   },
   {
     duration: ONE_YEAR,
     volume: TWO_THROUND_KEYWORD,
-    charge: 15600
+    charge: 14688
   },
   {
     duration: ONE_YEAR,
     volume: FIVE_THROUND_KEYWORD,
-    charge: 19200
+    charge: 18888
   }
 ]
 
