@@ -67,7 +67,10 @@
                   ref="campaignInput"
                   class="search"
                   placeholder="输入计划ID，多个计划使用英文逗号分隔" />
-        <span v-if="campaignErrTip" class="err-tip">请输入计划ID, 搜索词报告计划ID只能单个查询</span>
+        <span v-if="campaignErrTip" class="err-tip">
+          <b v-if="query.dimension === DIMENSION_SEARCH_KEYWORD">请输入计划ID, 搜索词报告计划ID只能单个查询</b>
+          <b v-else>请输入数字类型的计划ID</b>
+        </span>
       </section>
 
 
@@ -185,12 +188,16 @@ export default {
       this.campaignErrTip = ''
 
       if (dimension === DIMENSION_SEARCH_KEYWORD) {
-        if (this.searchCampaigns === '' || checkedCampaignIds.length > 1) {
+        if (this.searchCampaigns === '' || checkedCampaignIds.length > 1 || checkedCampaignIds.some(o => isNaN(o))) {
           this.$refs.campaignInput.focus()
           this.campaignErrTip = true
           return
         }
         return await this._getReportByQueryWord(opts)
+      } 
+      if (this.searchCampaigns !== '' && checkedCampaignIds.some(o => isNaN(o))) {
+         this.campaignErrTip = true
+         return
       }
       return await this._getReport(opts)
     },
