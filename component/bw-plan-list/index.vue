@@ -59,7 +59,9 @@
           <el-table-column label="操作" min-width="160px">
             <template slot-scope="scope">
               <router-link v-if="!isBxSales && !isAgentAccounting" :to="{name: 'bw-edit-plan', query: {promoteId: scope.row.id}}"><el-button type="text" size="small">编辑</el-button></router-link>
-              <el-button class="xufei-btn" v-if="canXufei(scope.row)" size="small" type="text" @click="onXufei(scope.row)">续费</el-button>
+              <el-button v-if="canXufei(scope.row) && !userInfo.sstAgent" size="small" type="text"
+                         :disabled="disabledXuFeiBtn(scope.row)" 
+                         @click="onXufei(scope.row)">续费</el-button>
               <router-link :to="{name: 'bw-dashboard', query: {promoteId: scope.row.id, keyword: scope.row.word}}">
                 <el-button type="text" size="small">查看报告</el-button>
               </router-link>
@@ -133,7 +135,7 @@
     PROMOTE_STATUS_PENDING_ONLINE,
     PROMOTE_STATUS_OFFLINE
   } from 'constant/biaowang'
-  import {getPromotes, queryKeywordPrice, getCpcRanking, getUserLive, getUserRanking} from 'api/biaowang'
+  import {getPromotes, queryKeywordPriceNew, getCpcRanking, getUserLive, getUserRanking} from 'api/biaowang'
   import {
     f2y,
     getCnName
@@ -254,6 +256,14 @@
     },
     methods: {
       fmtCpcRanking,
+      getFinalUserId() {
+        const { user_id: userId } = this.$route.query
+        if (userId) {
+          return userId
+        }
+        const { userInfo } = this
+        return userInfo.id
+      },
       getRandomQueryTimes() {
         let r = Math.random()
         while(r > 1 || r < .3) {
@@ -274,6 +284,10 @@
           }
           return parseFloat(Math.max(daysLeft, 0)).toFixed(1)
         }
+      },
+      disabledXuFeiBtn(row) {
+        // tip: 时间为2020-03-27 12:16:40.213743之前的不能续费
+        return dayjs(row.createdAt * 1000).isBefore('2020-03-27 12:16:40.213743')
       },
       canXufei(row) {
         return PROMOTE_STATUS_ONLINE.includes(row.status) && this.leftDays(row) <= 15
@@ -315,27 +329,12 @@
         await this.getPromotes()
       },
       async onXufei(row) {
-        // 关闭续费功能, 续费功能上线后关闭
-        const h = this.$createElement
-        this.$msgbox({
-          title: '提示',
-          message: h('p', null, '功能升级中，如需续费，请在关键词到期后重新购买。'),
-          showCancelButton: false,
-          showConfirmButton: false,
-          showClose: false,
-        })
-        const timer = setTimeout(() => {
-          this.$msgbox.close()
-          timer && clearTimeout(timer)
-        }, 3000)
-        return 
-
-        // 续费逻辑
         const {word, cities, device} = row
         if (!this.canXufei(row)) {
           return this.$message.info('到期前15天才可续费哦')
         }
-        const result = await queryKeywordPrice({
+        const result = await queryKeywordPriceNew({
+          targetUserId: this.getFinalUserId(),
           word,
           cities,
           device
