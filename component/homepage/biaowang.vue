@@ -59,7 +59,11 @@
             <span class="col">{{p.word}}</span>
             <span class="col">{{p.cpcRank}}</span>
             <span class="col">{{leftDays(p)}}/{{p.days.toFixed(1)}}</span>
-            <span v-if="canXufei(p)" class="col action" @click="$router.push({name: 'bw-plan-list', params: {promote: p}})">续费</span>
+            <el-button v-if="canXufei(p) && !userInfo.sstAgent"
+                       :disabled="disabledXuFeiBtn(p)"  
+                       class="col renew"
+                       type="text"
+                       @click="$router.push({name: 'bw-plan-list', params: {promote: p}})">续费</el-button>
             <span class="col"></span>
           </dd>
         </dl>
@@ -78,6 +82,7 @@
 import store from './store'
 import loadingPlaceholder from './loading-placeholder'
 import { PROMOTE_STATUS_ONLINE } from 'constant/biaowang'
+import dayjs from 'dayjs'
 
 export default {
   name: 'homepage-biaowang',
@@ -93,6 +98,10 @@ export default {
     }
   },
   methods: {
+    disabledXuFeiBtn(row) {
+      // tip: 时间为2020-03-27 12:16:40.213743之前的不能续费
+      return dayjs(row.createdAt * 1000).isBefore('2020-03-27 12:16:40.213743')
+    },
     getPromoteData(type) {
       const { dataPrefix } = this
       let key
@@ -242,6 +251,13 @@ export default {
           cursor: pointer;
           color:  #ED7D00;
         }
+        &.renew {
+          padding: 0;
+          color:  #ED7D00;
+        }
+      }
+      & >>> .col.is-disabled {
+        color: #C0C4CC;
       }
     }
   }
