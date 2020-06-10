@@ -47,7 +47,7 @@ dev-deploy:
   except:
     - master
   tags:
-    - k8s-dev
+    - aliyun-k8s-dev
   script:
     - kubectl set image -n adtech deployments --selector app=bax-fe *=$BAX_FE_REF
 
@@ -56,7 +56,7 @@ dev-deploy-auto-master:
   only:
     - master
   tags:
-    - k8s-dev
+    - aliyun-k8s-dev
   script:
     - kubectl set image -n adtech deployments --selector app=bax-fe *=$BAX_FE_REF
 
