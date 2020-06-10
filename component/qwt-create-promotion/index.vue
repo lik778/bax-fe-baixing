@@ -81,14 +81,14 @@
                    @click="addKeywordsDialog = true">批量添加关键词</el-button>
         <div class="kw-tag-container">
           <el-tag class="kw-tag"
-                  :class="{'kw-tag-fh': kw.recommandSource === RECOMMAND_SOURCE_FH}" 
+                  :class="{'kw-tag-fh': RECOMMAND_SOURCES.includes(kw.recommandSource)}" 
                   v-for="(kw, index) in newPromotion.keywords" 
                   :key="index" 
                   closable
                   type="warning"
                   @close="removeKeyword(index)">
                   {{kw.word}}
-                  {{kw.recommandSource === RECOMMAND_SOURCE_FH ? '(好词)': ''}}
+                  {{RECOMMAND_SOURCES.includes(kw.recommandSource) ? '(好词)': ''}}
           </el-tag>
           <el-autocomplete
             v-model="queryWord"
@@ -232,7 +232,8 @@ import {
   LANDING_TYPE_AD,
   LANDING_TYPE_GW,
   LANDING_TYPE_258,
-  RECOMMAND_SOURCE_FH
+  RECOMMAND_SOURCE_FH,
+  NEW_RECOMMAND_SOURCE_FH
 } from 'constant/fengming'
 
 import {allowSee258} from 'util/fengming-role'
@@ -247,6 +248,8 @@ import { keywordPriceTip } from 'constant/tip'
 import store from './store'
 
 const MVP_AD = 0
+
+const RECOMMAND_SOURCES = [RECOMMAND_SOURCE_FH, NEW_RECOMMAND_SOURCE_FH]
 
 const MIN_DAILY_BUDGET = 100 * 100
 
@@ -311,7 +314,7 @@ export default {
       LANDING_TYPE_GW,
       LANDING_TYPE_258,
       landingTypeDisplay: LANDING_TYPE_AD,
-      RECOMMAND_SOURCE_FH,
+      RECOMMAND_SOURCES,
 
       searchRecommendsVisible: false,
       chargeDialogVisible: false,
@@ -473,11 +476,10 @@ export default {
     },
 
     trackPromotionKeywords(promotionIds, promotion) {
-      const FHYF_SPECIAL_SOURCE = 'tfidf_fh'
       // 凤凰于飞推荐词列表
       const recommendKeywordsStr = this.urlRecommends
-        .filter(({recommandSource}) => recommandSource === FHYF_SPECIAL_SOURCE)
-        .map(({word}) => word)
+        .filter(({recommandSource}) => RECOMMAND_SOURCES.includes(recommandSource))
+        .map(({word, recommandSource}) => `${word}_${recommandSource}`)
         .join(',')
 
       const recommendKeywordsList = []
