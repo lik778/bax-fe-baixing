@@ -132,7 +132,7 @@
               <p>抽奖日期： 2020年6月18日 00:00:00-2020年6月30日23:59:59 ，前往百姓网主会场抽奖。</p>
               <p>如有问题请拨打客服热线咨询400-036-3650。</p>
             </div>
-            <active-btn href=""
+            <active-btn href="//www.baixing.com/rev/lottery?activity=lottery_activity202006"
                         title="前往参与" />
           </div>
         </div>
