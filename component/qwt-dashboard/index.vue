@@ -204,6 +204,7 @@ export default {
     async _getReportByQueryWord(opts = {}) {
       const offset = opts.offset || 0
       const { query, checkedCampaignIds } = this
+      const { userId, salesId } = this.salesInfo
 
       let startDate
       let endDate
@@ -227,6 +228,8 @@ export default {
         device: query.device,
         channel: query.channel,
         campaignIds: checkedCampaignIds,
+        userId,
+        salesId,
 
         limit: this.limit,
         offset,
@@ -262,6 +265,8 @@ export default {
         device: query.device,
         channel: query.channel,
         campaignIds: checkedCampaignIds,
+        userId,
+        salesId,
 
         limit: this.limit,
         offset,
