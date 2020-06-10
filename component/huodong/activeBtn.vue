@@ -1,7 +1,7 @@
 <template>
   <a class='active-btn'
      target='_blank'
-     :href="href">立即抢购
+     :href="href">{{title}}
     <img src='//file.baixing.net/202006/41fe238498b3d44d53d9ac115f19dbb9.png'
          alt='三角形' />
   </a>
@@ -14,6 +14,10 @@ export default {
     href: {
       type: String,
       required: true
+    },
+    title: {
+      type: String,
+      default: '立即抢购'
     }
   }
 }
