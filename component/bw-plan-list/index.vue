@@ -339,7 +339,15 @@
           cities,
           device
         })
-        this.xufeiForm = result[0]
+
+        const priceObj = result[0].priceList[0]
+        const xufeiForm = {
+          ...result[0],
+          ...priceObj,
+          soldPriceMap: priceObj.priceMap
+        }
+
+        this.xufeiForm = xufeiForm
         this.xufeiDialogVisible = true
       },
       addToCart() {
