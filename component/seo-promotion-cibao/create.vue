@@ -196,7 +196,7 @@
         <p>推广渠道：百度</p>
         <p>推广平台：电脑端、移动端双端推广</p>
         <p>预扣款：{{charge}}元，可推广{{promotion.duration}}天，
-          首页关键词数量{{promotion.volume}}词<span class="red">{{activityVolume ? `送${activityVolume}词`: ''}}</span>
+          首页关键词数量{{promotion.volume}}词<span class="red">{{activityVolume}}</span>
         </p>
       </div>
       <contract-ack type="content-rule" ref="contract" />
@@ -239,11 +239,12 @@ import {
 } from '../../api/seo'
 
 const discountInfo = [
-  [1000, 1000],
-  [2000, 3000]
+  [1000, '送1000词'],
+  [2000, '送3000词'],
+  [5000, ', 加速词包时长和官网时长同时赠送2个月']
 ]
 const discountInfoHTML = discountInfo.map((item, index) => {
-  return `买<span>${item[0]}</span>词<span class="red">送</span>${item[1]}词；`
+  return `买<span>${item[0]}</span>词<span class="red">${item[1]}`
 })
 
 export default {
