@@ -2,7 +2,7 @@
   <div class="layout-container">
     <div class="layout-left" v-if="biaowangData">
       <h5 class="layout-header">标王推广概览</h5>
-      <div class="layout-content" v-if="biaowangData.onlinePromotes && biaowangData.notOnlinePromotes">
+      <div class="layout-content" v-if="biaowangData.onlinePromotes || biaowangData.notOnlinePromotes">
         <div class="report">
           <div class="radio-group">
             <el-radio v-model="dataPrefix" label="yesterday">昨日</el-radio>
