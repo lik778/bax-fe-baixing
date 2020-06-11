@@ -114,7 +114,7 @@
           <div class="seo-one">
             买1000词送1000词<br />买2000词送3000词<br />买5000词，加速词包时长和官网时长同时赠送2个月
           </div>
-          <active-btn href="//bax.baixing.com.cn/main/seo/promotion/create/cibao" />
+          <active-btn href="//bax.baixing.com.cn/main/seo/charge" />
         </div>
       </div>
     </div>
