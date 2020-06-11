@@ -495,9 +495,11 @@ export default {
       const dailyBudget = promotion.dailyBudget / 100
       const landingPage = promotion.landingPage
 
-      recommendKeywordsList.forEach(recommendKeywords => {
+      recommendKeywordsList.forEach((recommendKeywords, index) => {
         trackAux({
           action: 'record-keywords',
+          // 临时解决问题方案(排序字段)
+          orderId: index + 1,
 
           ids: promotionIds.join(','),
           areas: promotion.areas.join(','),
