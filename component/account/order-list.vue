@@ -30,9 +30,7 @@
                     class="child-table">
             <el-table-column label="订单编号" width="180" />
             <el-table-column label="产品名称" width="250" prop="skuName" />
-            <el-table-column label="状态" width="90" align="center">
-              <span>--</span>
-            </el-table-column>
+            <el-table-column label="状态" width="90" align="center" :formatter="() => {return '--'}" />
             <el-table-column label="原价" width="105" align="center"
                              :formatter="row => formatPrice(row.originalPrice)"
                              prop="originalPrice" />
@@ -42,9 +40,7 @@
                              prop="dealPrice"
                              :formatter="row => formatPrice(row.dealPrice)"
                              align="center" />
-            <el-table-column label="创建时间" width="150" align="center">
-              <span>--</span>
-            </el-table-column>
+            <el-table-column label="创建时间" width="150" align="center" :formatter="() => {return '--'}"/>
           </el-table>
         </template>
       </el-table-column>
