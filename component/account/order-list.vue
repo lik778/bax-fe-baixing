@@ -21,7 +21,6 @@
       :data="orderData"
       style="width: 100%"
       :row-class-name="getRowClass"
-      :tree-props="{children: 'itemVoList', hasChildren: 'hasChildren'}">
     >
       <el-table-column type="expand">
         <template slot-scope="props">
