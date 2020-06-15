@@ -125,7 +125,7 @@
       </div>
     </el-dialog>
 
-    <div class="intro" v-show="showIntro">
+    <div class="intro" v-show="false">
       <div class="content">
         <div class="img"></div>
         <div class="body">
