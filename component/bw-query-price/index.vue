@@ -7,7 +7,7 @@
         <div class="notice">
           <p><span>标王尝鲜套餐：</span>500元关键词买一送一，同时购买精品官网1年送1年+ 标准版再<i class="red">减</i>200元 / 专业版再<i class="red">减</i>600 元；</p>
           <p><span>标王惊喜套餐：</span>买1500送1500，同时购买精品官网1年送1年+ 标准版再<i class="red">减</i>200元 / 专业版再<i class="red">减</i>600 元；</p>
-          <p><span>标王狂欢套餐：</span>买3000送3000，同时购买精品官网1年送1年+ 标准版再<i class="red">减</i>元 / 专业版再<i class="red">减</i>900 元；</p>
+          <p><span>标王狂欢套餐：</span>买3000送3000，同时购买精品官网1年送1年+ 标准版再<i class="red">减</i>600元 / 专业版再<i class="red">减</i>900 元；</p>
           <p><span>标王大单折扣：</span>标王单笔订单超过10000元享8折 （≥1万元），同时购买精品官网1年送1年+ 标准版再<i class="red">减</i>1000元 / 专业版再<i class="red">减</i>1500 元；</p>
         </div>
         <el-form :model="form" :rules="rules" label-width="120px" ref="form" label-position="left" class="form" @submit.native.prevent>
