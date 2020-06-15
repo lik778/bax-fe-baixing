@@ -217,7 +217,7 @@
             try {
               const results = await queryKeywordPriceNew({
                 targetUserId: this.getFinalUserId(),
-                word: keyword.trim(),
+                word: keyword.trim().replace(/[\u200b-\u200d\uFEFF]/g, ''), //去除空格和零宽字符
                 device: devices.length === 2 ? 0 : devices[0],
                 cities: areas
               })
