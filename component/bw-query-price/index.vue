@@ -41,7 +41,7 @@
             <div v-if="priceIsNotZero">
               <p v-if="isSold">关键词在城市
                 <span class="highlight">{{soldCities.map(formatArea).join(', ')}}</span>已售出。
-                  <span v-if="availableCities.length">
+                  <!-- <span v-if="availableCities.length">
                   投放在剩余城市价格：
                   <span v-for="deviceI in exactMatch.deviceTypes" :key="deviceI.device">
                     <span v-for="(item, index) in deviceI.priceList" :key="index">
@@ -49,7 +49,7 @@
                       {{index !== deviceI.priceList.length - 1 ? '、': ''}}
                     </span>；
                   </span>
-                </span>
+                </span> -->
               </p>
               <result-device v-else :deviceObj="exactMatch" :selected="selected" @change="onSelected" />
             </div>
