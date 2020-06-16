@@ -28,7 +28,7 @@
             您还有标王关键词没有生效，
             <a href="javascript:;" @click="$router.push({name: 'bw-plan-list', query: {status: '0,5'}})">点此查看</a>
           </p>
-          <div class="actions">
+          <div class="actions" v-if="!userInfo.sstAgent">
             <el-button type="primary" @click="$router.push({name: 'bw-query-price'})">立即购买</el-button>
             <el-button type="primary" @click="$router.push({name: 'bw-plan-list'})">立即续费</el-button>
           </div>
