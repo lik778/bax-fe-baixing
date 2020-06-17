@@ -46,16 +46,17 @@
       </div>
     </section>
     <section>
-      <header class="not-required">输入服务内容/产品关键词</header>
+      <header class="not-required">推广说明</header>
       <div class="info">
         <div>说明:</div>
-        <p>1. 请输入您主要提供服务或产品的城市及自填区域，地域类关键词数量不低于15个</p>
-        <p>2. 为保证上词数量级效果，服务内容及产品关键词建议不低于10个，关键词举例：100千瓦柴油发电机，公司搬迁，家具打包等</p>
-        <p>3. 服务内容及产品关键词仅作为首页宝加速词包拓词使用，并不代表会作为推广词展示在流量平台首页</p>
-        <p>4. 同一计划中的城市及服务内容产品关键词可增加，修改</p>
+        <p>1.本产品通过A+B+C+D的方式完成拼词，拼词逻辑：A+C、B+C、C+D、A+B+C、A+C+D、B+C+D、A+B+C+D；</p>
+        <p>如：上海（A）专业（B）空调维修（C）多少钱（D）</p>
+        <p>2.A类词是”服务城市“和”自填地域词“，词数限制：A类词不低于15个；</p>
+        <p>3.C类词是业务关键词，词数限制：C类词不低于10个；</p>
+        <p>4.B/D类词根据您填写的C类词后台算法自动生成，暂不支持自定义。</p>
       </div>
       <div class="section-inline">
-        <header>服务城市</header>
+        <header>服务城市（A类词）</header>
         <area-selector
           :visible.sync="areaSelectorVisible"
           v-model="promotion.areas"
@@ -83,7 +84,7 @@
         </div>
       </div>
       <div class="section-inline">
-        <header>自填地域词</header>
+        <header>自填地域词（A类词）</header>
         <template v-if="promotion.customAreas.length">
           <el-tag
             closable
@@ -102,6 +103,8 @@
       <div class="section-inline">
         <header class="not-required">自填地域</header>
         <el-input
+          @focus="areaHint = true"
+          @blur="areaHint = false"
           size="small"
           v-model="areaInput"
           class="keyword-input"
@@ -115,9 +118,13 @@
           批量添加
         </el-button>
       </div>
+      <div class="info" v-if="areaHint">
+        <div>提示：</div>
+        <p>1.自填地域可以填写服务的具体地域、地标、路名、小区等维，如：人民广场，北京西路，东方花园小区等；</p>
+      </div>
 
       <div class="section-inline">
-        <header class="not-required">增加业务关键词</header>
+        <header class="not-required">增加业务关键词（C类词）</header>
         <el-input
           size="small"
           @focus="keywordHint = true"
@@ -136,10 +143,11 @@
       </div>
       <div class="info" v-if="keywordHint">
         <div>提示：</div>
-        <p>1. 它是您提供的所有服务，或者所有产品（包括产品型号）；</p>
-        <p>2. 业务关键词不包含地域、价格、联系方式等；</p>
-        <p>3. 多个关键词可用中英文逗号隔开；</p>
-        <p>4. 如：空调维修行业可添加：空调维修，空调移机，中央空调清洗，中央空调安装等；</p>
+        <p>1.业务关键词可参考：</p>
+        <p>&nbsp;&nbsp;&nbsp;a.产品类：可详细的把售卖的产品名称/规格/型号/颜色/大小等进行罗列。如：宠物行业会有布偶猫，白手套布偶猫，重点色布偶猫等；</p>
+        <p>&nbsp;&nbsp;&nbsp;b.服务类：可详细的提供服务类目的细分和服务的特色，如：防水补漏，或细化至酒店防水补漏，家庭防水补漏，公司防水补漏等;</p>
+        <p>2.业务关键词不包含地域，价格，联系方式；</p>
+        <p>3.多个关键词可用中英文逗号隔开。</p>
       </div>
       <div class="section-inline">
         <header>已选业务关键词</header>
@@ -234,6 +242,8 @@ export default {
       volumes,
       durations,
       PRO_SITE_PRODUCT_TYPE,
+      
+      areaHint: false,
       keywordHint: false,
 
       landingInfo: null,

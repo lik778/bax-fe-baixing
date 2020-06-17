@@ -42,13 +42,14 @@
       </div>
     </section>
     <section>
-      <header class="not-required">增加业务关键词</header>
+      <header class="not-required">推广说明</header>
       <div class="info">
         <div>说明:</div>
-        <p>1. 请输入您主要提供服务或产品的城市及自填区域，地域类关键词数量不低于15个</p>
-        <p>2. 为保证上词数量级效果，服务内容及产品关键词建议不低于10个，关键词举例：100千瓦柴油发电机，公司搬迁，家具打包等</p>
-        <p>3. 服务内容及产品关键词仅作为首页宝加速词包拓词使用，并不代表会作为推广词展示在流量平台首页</p>
-        <p>4. 同一计划中的城市及服务内容产品关键词可增加，修改</p>
+        <p>1.本产品通过A+B+C+D的方式完成拼词，拼词逻辑：A+C、B+C、C+D、A+B+C、A+C+D、B+C+D、A+B+C+D；</p>
+        <p>如：上海（A）专业（B）空调维修（C）多少钱（D）</p>
+        <p>2.A类词是”服务城市“和”自填地域词“，词数限制：A类词不低于15个；</p>
+        <p>3.C类词是业务关键词，词数限制：C类词不低于10个；</p>
+        <p>4.B/D类词根据您填写的C类词后台算法自动生成，暂不支持自定义。</p>
       </div>
       <div class="section-inline" v-if="promotion.areas">
         <header>服务城市</header>
@@ -182,6 +183,7 @@
       </div>
       <contract-ack type="content-rule" ref="contract" />
       <el-button
+        disabled
         class="submit"
         type="primary"
         @click="updatePromotion"
@@ -325,6 +327,7 @@
         }
       },
       async updatePromotion() {
+        return void 0
         let data = await this.validateAndReturnPromotionData()
         const originalData = this.originPromotion
 

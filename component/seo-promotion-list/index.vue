@@ -178,10 +178,10 @@
                        fixed="right"
                        min-width="200">
         <template slot-scope="{row}">
-          <el-button type="text"
+          <!-- <el-button type="text"
                      @click="routerToCibaoUpdatePromotion(row)"
                      :disabled="row.status !== AUDIT_STATUS_PASSED ">编辑
-          </el-button>
+          </el-button> -->
           <el-button type="text"
                      style="margin-left:4px"
                      :disabled="row.status !== AUDIT_STATUS_PASSED"
