@@ -9,6 +9,7 @@ module.exports = {
   entry: {
     signin: './template/signin',
     bax: './template/bax',
+    huodong: './template/huodong'
   },
   output: {
     path: distPath,
