@@ -2,8 +2,12 @@
 import uuid from 'uuid/v4'
 import { stringify } from 'query-string'
 import { reverseCamelcase } from 'object-keys-mapping'
-
+import Fetch from 'fetch.io'
 import { isPro } from 'config'
+
+export const recommendServiceRequestClient = new Fetch({
+  prefix: 'http://api.baixing.com.cn'
+})
 
 export default function track(opts) {
   try {
@@ -52,22 +56,21 @@ export function trackRecommendService(opts) {
     if (!opts.time) {
       opts.time = Date.now() / 1000 | 0
     }
-
-    const img = new Image()
-    img.id = 'bxti-' + uuid()
-    img.src = 'http://172.30.2.14:31183/open/keyword-recommend-service/keyword/data-record?' + stringify(reverseCamelcase(opts))
-    img.style.display = 'none'
-
-    document.body.appendChild(img)
-
-    img.onload = () => {
-      try {
-        document.querySelector('#' + img.id).remove()
-      } catch (err) {
+    recommendServiceRequestClient
+      .post('/open/keyword-recommend-service/keyword/data-record')
+      .set('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
+      .send(encode(reverseCamelcase(opts)))
+      .then(res => {
+        console.log(res)
+      })
+      .catch(err => {
         console.error(err)
-      }
-    }
+      })
   } catch (err) {
     console.error(err)
   }
+}
+
+function encode(data) {
+  return Object.entries(data).reduce((data, [key, value]) => ({...data, [key]: encodeURIComponent(value)}), {})
 }
