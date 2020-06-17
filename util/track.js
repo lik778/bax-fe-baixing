@@ -43,3 +43,31 @@ export function trackAux({action, ...opts}) {
   opts.env = isPro ? 'pro' : 'test'
   tracker.aux(action, reverseCamelcase(opts))
 }
+
+export function trackRecommendService(opts) {
+  try {
+    opts.biztype = 'bax-fhyf'
+    opts.env = isPro ? 'pro' : 'test'
+    opts.referrer = document.referrer
+    if (!opts.time) {
+      opts.time = Date.now() / 1000 | 0
+    }
+
+    const img = new Image()
+    img.id = 'bxti-' + uuid()
+    img.src = 'http://172.30.2.14:31183/open/keyword-recommend-service/keyword/data-record?' + stringify(reverseCamelcase(opts))
+    img.style.display = 'none'
+
+    document.body.appendChild(img)
+
+    img.onload = () => {
+      try {
+        document.querySelector('#' + img.id).remove()
+      } catch (err) {
+        console.error(err)
+      }
+    }
+  } catch (err) {
+    console.error(err)
+  }
+}

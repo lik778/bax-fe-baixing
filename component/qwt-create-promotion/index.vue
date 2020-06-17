@@ -202,7 +202,7 @@ import qwtAddKeywordsDialog from 'com/common/qwt-add-keywords-dialog'
 import BaxInput from 'com/common/bax-input'
 
 import dayjs from 'dayjs'
-import { default as track, trackAux } from 'util/track'
+import { default as track, trackRecommendService } from 'util/track'
 
 import {
   assetHost
@@ -477,16 +477,10 @@ export default {
 
     trackPromotionKeywords(promotionIds, promotion) {
       // 凤凰于飞推荐词列表
-      const recommendKeywordsStr = this.urlRecommends
+      const recommendKeywords = this.urlRecommends
         .filter(({recommandSource}) => RECOMMAND_SOURCES.includes(recommandSource))
         .map(({word, recommandSource}) => `${word}_${recommandSource}`)
         .join(',')
-
-      const recommendKeywordsList = []
-      const MAX_ATTR_LENGHT = 400
-      for (let index = 0; index * MAX_ATTR_LENGHT <= recommendKeywordsStr.length; index++) {
-        recommendKeywordsList.push(recommendKeywordsStr.slice(index * MAX_ATTR_LENGHT, (index + 1) * MAX_ATTR_LENGHT))
-      }
       
       const selectedKeywords = promotion.keywords
         .map(({word, recommandSource = 'user_selected'}) => `${word}=${recommandSource}`)
@@ -495,23 +489,19 @@ export default {
       const dailyBudget = promotion.dailyBudget / 100
       const landingPage = promotion.landingPage
 
-      recommendKeywordsList.forEach((recommendKeywords, index) => {
-        trackAux({
-          action: 'record-keywords',
-          // 临时解决问题方案(排序字段)
-          orderId: index + 1,
+      trackRecommendService({
+        action: 'record-keywords',
 
-          ids: promotionIds.join(','),
-          areas: promotion.areas.join(','),
-          landingPage: promotion.landingPage,
-          creativeTitle: promotion.creativeTitle,
-          creativeContent: promotion.creativeContent,
-          sources: promotion.sources.join(','),
-          selectedKeywords,
-          recommendKeywords,
-          dailyBudget,
-          keywordPrice: f2y(this.kwPrice) || f2y(this.recommendKwPrice)
-        })
+        ids: promotionIds.join(','),
+        areas: promotion.areas.join(','),
+        landingPage: promotion.landingPage,
+        creativeTitle: promotion.creativeTitle,
+        creativeContent: promotion.creativeContent,
+        sources: promotion.sources.join(','),
+        selectedKeywords,
+        recommendKeywords,
+        dailyBudget,
+        keywordPrice: f2y(this.kwPrice) || f2y(this.recommendKwPrice)
       })
     },
 
