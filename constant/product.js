@@ -25,3 +25,9 @@ export const SPUCODES = {
   GUAN_WANG_SPU_CODE: 'GUAN_WANG',
   ZHI_DAO_SPU_CODE: 'ZHI_DAO'
 }
+
+export const SKUTYPES = {
+  GOODS: 0,
+  SERVICE: 1,
+  GIFT: 2
+}

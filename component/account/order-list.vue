@@ -17,17 +17,41 @@
       </el-radio-group>
     </div>
     <el-table
+      class="order-list-parent-table"
       :data="orderData"
       style="width: 100%"
+      :row-class-name="getRowClass"
     >
+      <el-table-column type="expand">
+        <template slot-scope="props">
+          <el-table :data="props.row.itemVoList.filter(o => o.skuType === GIFT)"
+                    :show-header="false"
+                    :border="false"
+                    class="child-table">
+            <el-table-column label="订单编号" width="180" />
+            <el-table-column label="产品名称" width="250" prop="skuName" />
+            <el-table-column label="状态" width="90" align="center" :formatter="() => {return '--'}" />
+            <el-table-column label="原价" width="105" align="center"
+                             :formatter="row => formatPrice(row.originalPrice)"
+                             prop="originalPrice" />
+            <el-table-column label="优惠" width="105" align="center"
+                             :formatter="row => formatPrice(row.originalPrice - row.dealPrice)" />
+            <el-table-column label="实价" width="105"
+                             prop="dealPrice"
+                             :formatter="row => formatPrice(row.dealPrice)"
+                             align="center" />
+            <el-table-column label="创建时间" width="150" align="center" :formatter="() => {return '--'}"/>
+          </el-table>
+        </template>
+      </el-table-column>
       <el-table-column
-        width="230"
+        width="180"
         label="订单编号" 
         prop="tradeSeq"/>
       <el-table-column
-        width="220"
+        width="250"
         label="产品名称"
-        prop="skuTitle"/>
+        prop="skuName"/>
       <el-table-column
         width="90"
         align="center"
@@ -44,7 +68,7 @@
         width="105"
         align="center"
         label="优惠"
-        :formatter="row => formatPrice(row.reducedPrice, row.status)"/>
+        :formatter="row => formatPrice(row.originalPrice - row.dealPrice, row.status)"/>
       <el-table-column
         width="105"
         align="center"
@@ -69,6 +93,7 @@
         </div>
       </el-table-column>
     </el-table>
+
     <el-pagination v-if="total"
       class="pagination"
       :total="total"
@@ -86,10 +111,11 @@ import dayjs from 'dayjs'
 import * as api from 'api/account'
 import SectionHeader from 'com/common/section-header'
 import { orderStatusType, orderStatusLabelDisplay} from 'constant/order'
-import { MERCHANTS } from 'constant/product'
+import { MERCHANTS, SKUTYPES } from 'constant/product'
 import { orderServiceHost } from 'config'
 
 const { FENG_MING_MERCHANT_CODE, WEBSITE_MERCHANT_CODE} = MERCHANTS
+const { GIFT } = SKUTYPES
 const ONE_PAGE_NUM = 10
 const DEFAULT_DATE_RANGE = [
   dayjs(new Date()).subtract(1, 'months').toDate(),
@@ -110,7 +136,9 @@ export default {
       },
       pageNo: 1,
       orderData: null,
-      total: 0
+      total: 0,
+
+      GIFT
     }
   },
   components: {SectionHeader},
@@ -159,7 +187,11 @@ export default {
         }
       } 
       const { total, data } = await api.queryOrder(queryParmas)
-      this.orderData = data
+      const orderData = data.map(trade => {
+        trade.skuName = trade.itemVoList.length ?  trade.itemVoList[0].skuName : ''
+        return trade
+      })
+      this.orderData = orderData
       this.total = total
     },
     formatPrice(price, status) {
@@ -176,6 +208,9 @@ export default {
       this.pageNo = val
       this.fetchOrderData()
     },
+    getRowClass({row, index}) {
+      return !row.itemVoList.filter(o => o.skuType === GIFT).length ? 'hide-expand-row': ''
+    }
   },
   watch: {
     params: {
@@ -205,5 +240,29 @@ export default {
   }
   .pagination {
     margin-top: 20px;
+  }
+
+  >>> .order-list-parent-table {
+    & .child-table {
+      &:before {
+        display: none;
+      }
+      &.el-table .cell {
+        color: #aaa;
+      }
+      &.el-table tr:last-child {
+        & td {
+          border-bottom: 0;
+        }
+      }
+    }
+    & .el-table__expanded-cell {
+      padding: 0 50px;
+    }
+    & .hide-expand-row {
+      & .el-table__expand-icon {
+        display: none;
+      }
+    }
   }
 </style>
