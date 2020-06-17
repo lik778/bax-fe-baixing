@@ -6,7 +6,7 @@ import Fetch from 'fetch.io'
 import { isPro } from 'config'
 
 export const recommendServiceRequestClient = new Fetch({
-  prefix: 'http://api.baixing.com.cn'
+  prefix: 'https://cloud.baixing.com.cn'
 })
 
 export default function track(opts) {
