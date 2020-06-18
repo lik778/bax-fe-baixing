@@ -344,7 +344,7 @@ import BaxInput from 'com/common/bax-input'
 
 import { disabledDate } from 'util/element'
 import { isBaixingSales } from 'util/role'
-import { default as track, trackAux } from 'util/track'
+import { default as track, trackRecommendService } from 'util/track'
 
 import {
   isQwtEnableCity,
@@ -1197,7 +1197,7 @@ export default {
       // origin
       const recommendKeywords = this._recommendKeywords || []
       const getProp = this.getProp.bind(this)
-      trackAux({
+      trackRecommendService({
         action: 'record-promotion-keywords',
 
         id: this.id,
