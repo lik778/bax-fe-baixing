@@ -187,7 +187,7 @@ import {
 import { SKU_GW, SKU_GW_100, SKU_GW_200} from 'constant/seo'
 
 const PROFESSIONAL_SITE_PRODUCT_TYPE = 6
-const LOCK_SHORT_GW_PRICE = 3000 * 100
+const LOCK_SHORT_GW_PRICE = 2988 * 100
 const lockMessage = `短期官网仅支持本次充值${LOCK_SHORT_GW_PRICE/100}元及以上推广资金的用户购买`
 
 const SEO_BALANCE = 7
