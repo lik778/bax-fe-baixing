@@ -28,7 +28,7 @@
             </section>
             <div>
               <p class="discount-info" v-html="promotionDiscount"></p>
-              <p class="charge-info">新建首页宝自选词推广计划需2400元起；首页宝加速词包推广限时特惠元起{{LOCK_SHORT_GW_PRICE/100}}/季度，请充值足够的推广资金包，以保证计划顺利上线！</p>
+              <p class="charge-info">新建首页宝自选词推广计划需2400元起；首页宝加速词包推广限时特惠{{LOCK_SHORT_GW_PRICE/100}}元起/季度，请充值足够的推广资金包，以保证计划顺利上线！</p>
             </div>
           </main>
 
