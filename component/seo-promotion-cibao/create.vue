@@ -48,7 +48,6 @@
     <section>
       <header class="not-required">推广说明</header>
       <div class="info">
-        <div>说明:</div>
         <p>1.本产品通过A+B+C+D的方式完成拼词，拼词逻辑：A+C、B+C、C+D、A+B+C、A+C+D、B+C+D、A+B+C+D；</p>
         <p>如：上海（A）专业（B）空调维修（C）多少钱（D）</p>
         <p>2.A类词是”服务城市“和”自填地域词“，词数限制：A类词不低于15个；</p>
