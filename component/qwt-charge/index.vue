@@ -24,7 +24,6 @@
                 :price="product.price" :min-input-price="product.minQuantity"
                 :max-input-price="product.maxQuantity"
                 :checked="checkedProducts.includes(product)"
-                :is-hot="chargeProductIsHot(product)"
                 @click="toggleCharge(product)"
                 @change="v => handlePriceChange(product, v)">
               </price-tag>
@@ -40,7 +39,7 @@
             <section>
               <gw-pro-widget v-for="(product, index) of siteSpu.selection"
                 :key="index" :title="product.title" :desc="product.desc"
-                :is-hot="gwProductIsHot(product)"
+                :is-hot="product.tags.includes('hot')"
                 :price="centToYuan(product.realPrice)"
                 :checked="checkedProducts.includes(product)"
                 @click.native="toggleSite(product)" />
@@ -118,19 +117,18 @@ import { getUniqueAgreementList } from 'util/charge'
 const { WHOLE_SPU_CODE, GUAN_WANG_SPU_CODE } = SPUCODES
 const { FENG_MING_MERCHANT_CODE } = MERCHANTS
 const MIN_INPUT_PRICE = 50000
-
 const discountInfo = [
-  [3088, 88, 200, 600],
-  [5088, 188, 600, 900],
-  [6088, 288, 600, 900],
-  [10188, 500, 1000, 1500]
+  [588, 200, 600, 600],
+  [1088, 200, 600, 600],
+  [3088, 200, 600, 600],
+  [5088, 600, 1200, 900],
+  [10188, 1000, 1400, 1500]
 ]
-
 const discountInfoHTML = discountInfo.map((item, index) => {
   return `满<span style="min-width:40px">${item[0]}</span>元：
-          <span class="red">赠</span>送${item[1]}元凤鸣无门槛现金券；
-          同时购买精品官网1年送1年+标准版再<span class="red">减</span>${item[2]}元 
-          / 专业版再<span class="red">减</span>${item[3]}元；`
+          同时购买精品官网（1年）官网<span class="red">减</span>立减 ${item[1]} 元；
+          购买精品官网2年【送一年】官网<span class="red">减</span>立减 ${item[2]} 元；
+          购买精品官网专业版1年（支持首页宝推广）官网<span class="red">减</span> ${item[3]}元；</p>`
 })
 const isGwProduct = function(spuCode) {
   return spuCode === GUAN_WANG_SPU_CODE
@@ -299,22 +297,6 @@ export default {
   },
   methods: {
     centToYuan,
-    gwProductIsHot(product) {
-      // tip: 根据商品服务价格写死，活动之后下线
-      const priceList = [120000, 180000]
-      if (priceList.includes(Number(product.realPrice))) {
-        return true
-      }
-      return false
-    },
-    chargeProductIsHot(product) {
-      // tip: 根据商品服务价格写死，活动之后下线
-      const priceList = [308800, 508800, 1018800]
-      if (priceList.includes(product.realPrice * product.minQuantity)) {
-        return true
-      }
-      return false
-    },
     handlePriceChange(product, v) {
       product.price = v
       product.quantity = Math.floor(v / product.realPrice)

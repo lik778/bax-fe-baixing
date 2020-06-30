@@ -1,14 +1,5 @@
 <template>
   <div class="cibao-page-container">
-    <section class="choose-product">
-      <header>
-        选择产品 | <span class="discount-btn" @click="showDiscount = !showDiscount">查看优惠细则<i class="el-icon-question"></i></span>
-      </header>
-      <div class="discount-section" v-show="showDiscount">
-        <p class="discount-info" :key="index"
-           v-for="(html, index) in discountInfoHTML" v-html="html" />
-      </div>
-    </section>
     <section>
       <header>选择推广站点</header>
       <qiqiaoban-page-selector
@@ -202,9 +193,7 @@
       <div>
         <p>推广渠道：百度</p>
         <p>推广平台：电脑端、移动端双端推广</p>
-        <p>预扣款：{{charge}}元，可推广{{promotion.duration}}天，
-          首页关键词数量{{promotion.volume}}词<span class="red">{{activityVolume}}</span>
-        </p>
+        <p>预扣款：{{charge}}元，可推广{{promotion.duration}}天，首页关键词数量{{promotion.volume}}词</p>
       </div>
       <contract-ack type="content-rule" ref="contract" />
       <el-button
@@ -245,15 +234,6 @@ import {
   getCibaoPromotionBaseInfo
 } from '../../api/seo'
 
-const discountInfo = [
-  [1000, '送1000词'],
-  [2000, '送3000词'],
-  [5000, ', 加速词包时长和官网时长同时赠送2个月']
-]
-const discountInfoHTML = discountInfo.map((item, index) => {
-  return `买<span>${item[0]}</span>词<span class="red">${item[1]}`
-})
-
 export default {
   name: 'seo-cibao-create-page',
   data() {
@@ -286,11 +266,7 @@ export default {
         keywords: [],
         duration: NINETY_DAYS,
         volume: 1000
-      },
-
-      showDiscount: true,
-      discountInfo,
-      discountInfoHTML,
+      }
     }
   },
   methods: {
@@ -419,13 +395,6 @@ export default {
       const { duration, volume } = this.promotion
       const chargeObj = chargeList.find(o => o.volume === volume && o.duration === duration)
       return chargeObj ? chargeObj.charge : chargeList[0].charge
-    },
-    activityVolume() {
-      const hasExistArr = discountInfo.find(discount => discount[0] === this.promotion.volume)
-      if (hasExistArr) {
-        return hasExistArr[1]
-      }
-      return 0
     }
   },
   components: {
@@ -447,50 +416,9 @@ export default {
     border-radius: 4px;
     background-color: #fff;
     overflow: hidden;
-    & .red {
-      color: #ff3c3c;
-    }
     & > section {
       max-width: 1000px;
       padding: 20px;
-      &.choose-product {
-        padding-bottom: 0;
-        & > header::after {
-          display: none;
-        }
-      }
-      & .discount-btn {
-        color: #ff3c3c;
-        cursor: pointer;
-        & > i {
-          margin-left: 5px;
-          font-size: 16px;
-        }
-      }
-      & .discount-section {
-        font-size: 12px;
-        background-color: #f5f5f5;
-        padding: 20px;
-        margin-top: 10px;
-      }
-      & .discount-info {
-        font-size: 12px;
-        margin-bottom: 10px;
-        & > span {
-          text-align: center;
-        }
-
-        & > span.red {
-          background-color: #ff3c3c;
-          color: white;
-          padding: 1px 4px;
-          margin: 0 5px;
-          border-radius: 2px;
-        }
-        & > .mute {
-          color: #fff;
-        }
-      }
     }
     & .section-inline {
       display: flex;
