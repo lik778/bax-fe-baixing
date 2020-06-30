@@ -15,9 +15,6 @@
     <p>
       <bx-icon v-if="checked" type="check"></bx-icon>
     </p>
-    <img v-if="isHot" 
-         class="hot-img" 
-         src="//file.baixing.net/202006/1708506272c8a67e764805185647c32f.png" alt="送神券">
   </div>
 </template>
 
@@ -42,8 +39,7 @@ export default {
     maxInputPrice: {
       type: Number,
       default: 99999999
-    },
-    isHot: Boolean
+    }
   },
   data() {
     return {
@@ -109,7 +105,6 @@ input::placeholder {
 }
 
 .qwt-pro-widget {
-  position: relative;
   padding: 20px 30px;
   border-radius: 4px;
   border: solid 1px #ccc;
@@ -127,12 +122,6 @@ input::placeholder {
       text-align: center;
       cursor: pointer;
     }
-  }
-  & .hot-img {
-    position: absolute;
-    width: 46px;
-    top: 4px;
-    right: -6px;
   }
 }
 
