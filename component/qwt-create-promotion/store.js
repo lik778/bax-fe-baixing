@@ -20,8 +20,8 @@ const store = observable({
   get urlRecommends() {
     return toJS(this._urlRecommends)
   },
-  recommendByUrl: action(async function(url, areas) {
-    const words = await fapi.recommendByUrl(url, areas)
+  recommendByUrl: action(async function(landingType, url, areas) {
+    const words = await fapi.recommendByUrl(landingType, url, areas)
     this._urlRecommends = words.map(attachDisplayPrice)
   }),
   recommendByWord: action(async function(word, opts) {

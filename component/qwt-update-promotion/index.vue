@@ -1333,8 +1333,9 @@ export default {
         const landingPage = this.promotion.landingPage || this.getProp('landingPage')
         const areas = this.promotion.areas || this.getProp('areas')
         const campaignId = +this.$route.params.id
+        const landingType = this.promotion.landingType || this.getProp('landingType')
 
-        const recommendKeywords = await recommendByUrl(landingPage, areas, campaignId)
+        const recommendKeywords = await recommendByUrl(landingType, landingPage, areas, campaignId)
         if (!recommendKeywords.length) return this.$message.info('无法提供推荐关键词')
         newKeywords = this.filterExistCurrentWords(store.fmtNewKeywordsPrice(recommendKeywords)).slice(0, 5)
         // 一键拓词推荐关键词临时数据

@@ -18,7 +18,7 @@
           <div class="landingpage">
             <fm-tip class="landingpage-tip" img-url="//file.baixing.net/201903/8d224eb6179a947eecbf0fde089f7ed3.png">电话接不停小妙招</fm-tip>
             <div style="margin-bottom: 10px">
-              <el-radio-group v-model="landingTypeDisplay" size="small">
+              <el-radio-group v-model="newPromotion.landingType" size="small">
                 <el-radio-button v-for="option of extendLandingTypeOpts" :key="option.value" :label="option.value">{{option.label}}</el-radio-button>
               </el-radio-group>
             </div>
@@ -26,20 +26,20 @@
               <user-ad-selector
                 ref="userAdSelector"
                 :type="adSelectorType"
-                v-if="landingTypeDisplay === LANDING_TYPE_AD"
+                v-if="newPromotion.landingType === LANDING_TYPE_AD"
                 :all-areas="allAreas" :limit-mvp="false"
                 :selected-id="newPromotion.landingPageId"
                 @select-ad="onSelectAd"
               />
 
               <qiqiaoban-page-selector
-                v-if="landingTypeDisplay === LANDING_TYPE_GW"
+                v-if="newPromotion.landingType === LANDING_TYPE_GW"
                 :value="newPromotion.landingPage"
                 @change="v => setLanding(LANDING_TYPE_GW, v)"
               />
 
               <ka-258-selector
-                v-if="landingTypeDisplay === LANDING_TYPE_258"
+                v-if="newPromotion.landingType === LANDING_TYPE_258"
                 :value="newPromotion.landingPage"
                 @change="v => setLanding(LANDING_TYPE_258, v)"
               />
@@ -64,7 +64,11 @@
 
       <section class="creative">
         <fm-tip class="creative-tip" position="creative" img-url="//file.baixing.net/201903/d6f4502a0e8a659b78a33fbb3713e6b9.png">创意怎么才能飘红</fm-tip>
-        <header><promotion-creative-tip /> </header>
+        <header class="top-col">
+          <promotion-creative-tip />
+          <el-button v-if="newPromotion.landingType === LANDING_TYPE_GW" class="button" type="primary"
+                     size="small" @click="getRecommendKeywords">一键拓词</el-button>
+        </header>
         <creative-editor
           :platforms="newPromotion.sources"
           :title="newPromotion.creativeTitle"
@@ -313,7 +317,6 @@ export default {
       LANDING_TYPE_AD,
       LANDING_TYPE_GW,
       LANDING_TYPE_258,
-      landingTypeDisplay: LANDING_TYPE_AD,
       RECOMMAND_SOURCES,
 
       searchRecommendsVisible: false,
@@ -619,9 +622,9 @@ export default {
 
     },
 
-    async recommendByUrl(newLandingPage = this.newPromotion.landingPage, areas = this.newPromotion.areas) {
+    async recommendByUrl(landingType = this.newPromotion.landingType, newLandingPage = this.newPromotion.landingPage, areas = this.newPromotion.areas) {
       if (newLandingPage) {
-        await store.recommendByUrl(newLandingPage, areas)
+        await store.recommendByUrl(landingType, newLandingPage, areas)
         this.newPromotion.keywords = clone(this.urlRecommends)
       }
     },
@@ -707,6 +710,16 @@ export default {
       clonedPromotion.creativeContent = originPromotion.creative.content
       clonedPromotion.sources = []
       this.newPromotion = clonedPromotion
+    },
+    async getRecommendKeywords() {
+      const { creativeTitle, creativeContent, areas, landingPage } = this.newPromotion
+      if (creativeTitle === '' || creativeContent === '') {
+        return this.$message.error('请填写创意')
+      }
+      if (!landingPage) {
+        return this.$message.error('请选择官网落地页')
+      }
+      await this.recommendByUrl()
     }
   },
 
@@ -772,6 +785,12 @@ export default {
 
   destroyed() {
     clearTimeout(this.timeout)
+  },
+  watch: {
+    'newPromotion.landingType'(newVal, oldVal) {
+      this.newPromotion.landingPage = ''
+      this.newPromotion.landingPageId = ''
+    }
   }
 }
 </script>
@@ -807,6 +826,14 @@ strong.red {
     position: absolute;
     bottom: 38px;
     left: 660px;
+  }
+  & .top-col {
+    display: flex;
+    align-items: center;
+    & .button {
+      margin-left: 32px;
+      padding: 8px 25px;
+    }
   }
 }
 
