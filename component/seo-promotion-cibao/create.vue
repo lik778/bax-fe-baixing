@@ -374,7 +374,7 @@ export default {
       console.log(this.canConfirmOpen)
       this.canConfirmOpen && await this.$confirm(`
         <div>
-          <p>1.本产品属于SEO广告展示类产品吗，不支持指定词在百度首页获得展示；</p>
+          <p>1.本产品属于SEO广告展示类产品，不支持指定词在百度首页获得展示；</p>
           <p>2.请确保服务城市及业务关键词与实际相符，资料一经提交，审核通过后将不支持修改。</p>
         </div>
       `, '提示', {
