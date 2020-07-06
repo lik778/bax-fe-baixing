@@ -131,7 +131,9 @@
       <section class="negative-keyword">
         <header>设置否定关键词
           <promotion-keyword-tip />
-          <p class="tip">当网民的搜索词与精确否定关键词完全一致时，您的推广结果将不会展现。</p>
+          <p class="tip">当网民的搜索词与精确否定关键词完全一致时，您的推广结果将不会展现。
+            <span>否词个数不得超过<b class="red">{{NEGATIVE_KEYWORDS_MAX}}</b>个</span>
+          </p>
           <div class="top-col">
             <el-input size="small" class="input" placeholder="请输入否定关键词" v-model="negativeKeywordSearch"/>
             <el-button size="small" type="warning" class="button" @click="addNegativeKeyword">添加</el-button>
@@ -417,6 +419,7 @@ const sourceTipMap = {
   [SEM_PLATFORM_QIHU]: '360',
   [SEM_PLATFORM_SHENMA]: '神马'
 }
+const NEGATIVE_KEYWORDS_MAX = 200
 
 export default {
   name: 'qwt-update-promotion',
@@ -510,6 +513,8 @@ export default {
       addKeywordsDialog: false,
       isNegative: false,
       negativeKeywordSearch: '',
+
+      NEGATIVE_KEYWORDS_MAX
     }
   },
   computed: {
@@ -1150,6 +1155,9 @@ export default {
         && this.keywordLen < 20) {
         return Message.error('请至少添加20个投放关键词')
       }
+      if (this.currentNegativeKeywords.length > this.NEGATIVE_KEYWORDS_MAX ) {
+        return Message.error(`否词个数不得超过${this.NEGATIVE_KEYWORDS_MAX}个`)
+      }
 
       for (const w of words) {
         // if (w.price * 2 < w.originPrice) {
@@ -1766,5 +1774,8 @@ export default {
 
 .prompt-text {
   font-size: 12px !important;
+}
+.red {
+  color: #FF6350;
 }
 </style>
