@@ -135,7 +135,7 @@ export default {
       // 数组去重并去掉首尾的逗号
       let words = this.search.trim().split(/[，,]]*/g)
       words = Array.from(new Set(words.map(row=>{
-        return row.trim()
+        return row.trim().toLowerCase()
       }).filter(row => row !== '')))
 
       if (words.length > 100) {
@@ -148,7 +148,7 @@ export default {
       normalList = this.originalKeywords.concat(normalList)
       for (let i = 0; i < normalList.length; i ++) {
         let row = normalList[i]
-        if (words.includes(row.word)) {
+        if (words.includes(row.word.toLowerCase())) {
           return Message.warning(`${row.word}该关键词已存在关键词或否定关键词列表`)
         }
       }
