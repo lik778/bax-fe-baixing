@@ -123,3 +123,6 @@ export const QIHU_360 = 1
 export const SKU_GW = 4
 export const SKU_GW_100 = 5
 export const SKU_GW_200 = 6
+
+export const FREE_UPDATE_NUM_ONE = 1
+export const FREE_UPDATE_NUM_ZERO = 0

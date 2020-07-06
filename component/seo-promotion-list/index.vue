@@ -178,10 +178,10 @@
                        fixed="right"
                        min-width="200">
         <template slot-scope="{row}">
-          <!-- <el-button type="text"
+          <el-button type="text"
                      @click="routerToCibaoUpdatePromotion(row)"
                      :disabled="row.status !== AUDIT_STATUS_PASSED ">编辑
-          </el-button> -->
+          </el-button>
           <el-button type="text"
                      style="margin-left:4px"
                      :disabled="row.status !== AUDIT_STATUS_PASSED"
@@ -231,15 +231,25 @@ import {
   cibaoStatus,
   NINETY_DAYS,
   BAIDU_TYPE,
-  QIHU_360
+  QIHU_360,
+  FREE_UPDATE_NUM_ONE,
+  FREE_UPDATE_NUM_ZERO
   } from 'constant/seo'
 import dayjs from 'dayjs';
 import { f2y } from 'util'
 import { Parser }  from 'json2csv'
 import FileSaver from 'file-saver'
+import { default as track } from 'util/track'
+import uuid from 'uuid/v4'
 
 export default {
   name:'SeoPromotionList',
+   props: {
+    userInfo: {
+      type: Object,
+      required: true
+    }
+  },
   components: {
     TopTip
   },
@@ -267,7 +277,9 @@ export default {
       AUDIT_STATUS_PASSED,
       AUDIT_STATUS_PENDING,
       AUDIT_STATUS_REJECTED,
-      sites: null
+      sites: null,
+
+      actionTrackId: uuid(),
     }
   },
   computed: {
@@ -388,10 +400,48 @@ export default {
         }).catch(() => {})
     },
     routerToCibaoUpdatePromotion(promotion) {
+      const { freeUpdate, id } = promotion
+      const { userInfo, actionTrackId } = this
+
+      if (freeUpdate === FREE_UPDATE_NUM_ONE) {
+        return this.$confirm('每个计划在投放时间内仅有一次编辑权限，本次使用后将不能再次编辑，是否确定使用？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '我再想想'
+        }).then(() => {
+          this._routerToCibaoUpdatePromotion(id)
+          // 打点
+          track({
+            roles: userInfo.roles.map(r => r.name).join(','),
+            action: 'click-button: seo-cibao-update-one',
+            baixingId: userInfo.baixingId,
+            time: Date.now() / 1000 | 0,
+            baxId: userInfo.id,
+            campaignId: id,
+            actionTrackId
+          })
+        })
+      }
+
+      // 打点
+      track({
+        roles: userInfo.roles.map(r => r.name).join(','),
+        action: 'click-button: seo-cibao-update-zero',
+        baixingId: userInfo.baixingId,
+        time: Date.now() / 1000 | 0,
+        baxId: userInfo.id,
+        campaignId: id,
+        actionTrackId
+      })
+      this.$confirm('每个计划在投放时间内仅有一次编辑权限，当前计划的剩余编辑次数为0，不能进入编辑。', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      })
+    },
+    _routerToCibaoUpdatePromotion(id) {
       this.$router.push({
         name:'seo-update-cibao-promotion',
         params: {
-          id: promotion.id
+          id
         }
       })
     },
