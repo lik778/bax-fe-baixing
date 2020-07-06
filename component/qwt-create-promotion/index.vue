@@ -622,9 +622,18 @@ export default {
 
     },
 
-    async recommendByUrl(landingType = this.newPromotion.landingType, newLandingPage = this.newPromotion.landingPage, areas = this.newPromotion.areas) {
-      if (newLandingPage) {
-        await store.recommendByUrl(landingType, newLandingPage, areas)
+    async recommendByUrl(opts = {}) {
+      let { landingType, landingPage, areas } = this.newPromotion
+      landingPage = opts.landingPage || landingPage
+      const reqBody = {
+        ...opts,
+        url: landingPage,
+        landingType: opts.landingType || landingType,
+        areas: opts.areas || areas,
+      }
+
+      if (landingPage) {
+        await store.recommendByUrl(reqBody)
         this.newPromotion.keywords = clone(this.urlRecommends)
       }
     },
@@ -719,7 +728,11 @@ export default {
       if (!landingPage) {
         return this.$message.error('请选择官网落地页')
       }
-      await this.recommendByUrl()
+      await this.recommendByUrl({
+        landingType: LANDING_TYPE_GW,
+        creativeTitle,
+        creativeContent
+      })
     }
   },
 

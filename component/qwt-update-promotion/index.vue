@@ -1335,7 +1335,20 @@ export default {
         const campaignId = +this.$route.params.id
         const landingType = this.promotion.landingType || this.getProp('landingType')
 
-        const recommendKeywords = await recommendByUrl(landingType, landingPage, areas, campaignId)
+        const recommendBody = {
+          url: landingPage,
+          areas,
+          campaignId,
+          landingType
+        }
+        if (landingType === LANDING_TYPE_GW) {
+          Object.assign(recommendBody, {
+            create_title: this.getProp('creativeTitle'),
+            create_content: this.getProp('creativeTitle')
+          })
+        }
+
+        const recommendKeywords = await recommendByUrl(recommendBody)
         if (!recommendKeywords.length) return this.$message.info('无法提供推荐关键词')
         newKeywords = this.filterExistCurrentWords(store.fmtNewKeywordsPrice(recommendKeywords)).slice(0, 5)
         // 一键拓词推荐关键词临时数据
