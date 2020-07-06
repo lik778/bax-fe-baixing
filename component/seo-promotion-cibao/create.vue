@@ -4,6 +4,7 @@
       <header>选择推广站点</header>
       <qiqiaoban-page-selector
         :value="promotion.landingPage"
+        :display-landing-page="true"
         @change-obj="v => onLandingChange(v)"
       />
       <p class="warning" v-if="showExpireWarning">
