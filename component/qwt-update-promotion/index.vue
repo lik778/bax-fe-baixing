@@ -703,11 +703,11 @@ export default {
       }
     },
     async addNegativeKeyword() {
-      const val = this.negativeKeywordSearch.trim()
+      const val = this.negativeKeywordSearch.trim().toLowerCase()
       if (val === '') return
 
       const existKeywords = this.currentNegativeKeywords.concat(this.currentKeywords)
-      if (existKeywords.findIndex(w => w.word === val) > -1) {
+      if (existKeywords.findIndex(w => w.word.toLowerCase() === val) > -1) {
         return Message.error(`${val}该关键词已存在关键词或否定关键词列表`)
       }
       try {
