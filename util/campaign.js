@@ -187,7 +187,6 @@ export const validateKeywordRules = [
 ]
 
 export function validateKeyword(keywords = []) {
-  console.log(keywords)
   keywords.forEach(w => {
     validateKeywordRules.forEach(({ msg, validate }) => {
       if (validate(w)) {
