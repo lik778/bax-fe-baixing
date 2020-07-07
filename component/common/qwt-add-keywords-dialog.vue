@@ -60,6 +60,7 @@ import { Message} from 'element-ui'
 import { recommendByWordList, chibiRobotAudit } from 'api/fengming'
 import { isObj } from 'util'
 import { MIN_WORD_PRICE } from 'constant/keyword'
+import { validateKeyword } from 'util/campaign'
 
 export default {
   name: 'QwtAddKeywordsDialog',
@@ -137,9 +138,15 @@ export default {
       words = Array.from(new Set(words.map(row=>{
         return row.trim().toLowerCase()
       }).filter(row => row !== '')))
-
+      
       if (words.length > 100) {
         return Message.warning('每次最多支持上传100个关键词')
+      }
+
+      try {
+        validateKeyword(words)
+      } catch (e) {
+        return Message.error(e.message)
       }
 
       // 判断关键词已存在
