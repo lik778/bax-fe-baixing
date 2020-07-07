@@ -738,7 +738,7 @@ export default {
 
       const { userInfo, actionTrackId } = this
       track({
-        action: 'click-button: qwt-create-recommend-keyword',
+        action: 'click-button: create-campaign-recommend-vad',
         baixingId: userInfo.baixingId,
         time: Date.now() / 1000 | 0,
         baxId: userInfo.id,
