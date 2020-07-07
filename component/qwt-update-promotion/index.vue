@@ -395,7 +395,8 @@ import {
 import {
   checkCampaignValidTime,
   getCampaignPrediction,
-  getCampaignValidTime
+  getCampaignValidTime,
+  validateKeyword
 } from 'util/campaign'
 
 import {
@@ -703,13 +704,20 @@ export default {
       }
     },
     async addNegativeKeyword() {
-      const val = this.negativeKeywordSearch.trim().toLowerCase()
+      const val = this.negativeKeywordSearch.trim()
       if (val === '') return
 
       const existKeywords = this.currentNegativeKeywords.concat(this.currentKeywords)
-      if (existKeywords.findIndex(w => w.word.toLowerCase() === val) > -1) {
+      if (existKeywords.findIndex(w => w.word.toLowerCase() === val.toLowerCase()) > -1) {
         return Message.error(`${val}该关键词已存在关键词或否定关键词列表`)
       }
+
+      try {
+        validateKeyword([val])
+      } catch (e) {
+        return Message.error(e.message)
+      }
+
       try {
         let { bannedList, normalList } = await chibiRobotAudit([val], {
           campaignId: this.originPromotion.id
@@ -1330,6 +1338,13 @@ export default {
         if (this.currentNegativeKeywords.find(w => w.word.toLowerCase() === queryWord.toLowerCase())) {
           return this.$message.info('当前关键词已存在否定关键词列表')
         }
+        
+        try {
+          validateKeyword([queryWord])
+        } catch (e) {
+          return Message.error(e.message)
+        }
+
         const recommendKeywords = await recommendByWord(queryWord, {campaignId: this.originPromotion.id})
         const newKeyword = store.fmtNewKeywordsPrice(recommendKeywords).find( k => k.word === queryWord)
         if (!newKeyword) return this.$message.info('没有合适的关键词')
