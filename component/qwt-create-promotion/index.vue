@@ -725,13 +725,30 @@ export default {
       this.newPromotion = clonedPromotion
     },
     async getRecommendKeywords() {
-      const { creativeTitle, creativeContent, areas, landingPage } = this.newPromotion
+      const { creativeTitle, creativeContent, areas, landingPage, landingType } = this.newPromotion
       if (creativeTitle === '' || creativeContent === '') {
         return this.$message.error('请填写创意')
       }
       if (!landingPage) {
         return this.$message.error('请选择官网落地页')
       }
+      if (!areas.length) {
+        return this.$message.error('请选择投放城市')
+      }
+
+      const { userInfo, actionTrackId } = this
+      track({
+        action: 'click-button: qwt-create-recommend-keyword',
+        baixingId: userInfo.baixingId,
+        time: Date.now() / 1000 | 0,
+        baxId: userInfo.id,
+        actionTrackId,
+        landingPage,
+        landingType,
+        creativeTitle,
+        creativeContent,
+        areas
+      })
       await this.recommendByUrl({
         landingType: LANDING_TYPE_GW,
         creativeTitle,
