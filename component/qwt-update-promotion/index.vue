@@ -788,7 +788,6 @@ export default {
     },
     setLandingPage(url) {
       this.promotion.landingPage = url
-      this.promotion.areas = ['quanguo']
     },
     banLandPageSelected() {
       // 落地页404，需要更改落地页投放
@@ -1207,6 +1206,7 @@ export default {
         creativeContent: getProp('creativeContent'),
         source: getProp('sources'),
         dailyBudget: getProp('dailyBudget'),
+        landingType: getProp('landingType'),
     
         recommendKeywords: recommendKeywords.map(({word, recommandSource = 'user_selected', price}) => `${word}=${recommandSource}=${price}`).join(','),
         newKeywords: newKeywords.map(({word, recommandSource = 'user_selected', price}) => `${word}=${recommandSource}=${price}`).join(','),

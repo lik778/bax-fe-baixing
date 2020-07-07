@@ -451,7 +451,6 @@ export default {
     setLanding(type, url) {
       this.newPromotion.landingType = type
       this.newPromotion.landingPage = url
-      this.newPromotion.areas = ['quanguo']
     },
 
     async onSelectAd(ad) {
@@ -498,6 +497,7 @@ export default {
         ids: promotionIds.join(','),
         areas: promotion.areas.join(','),
         landingPage: promotion.landingPage,
+        landingType: promotion.landingType,
         creativeTitle: promotion.creativeTitle,
         creativeContent: promotion.creativeContent,
         sources: promotion.sources.join(','),
@@ -661,7 +661,9 @@ export default {
     async onChangeAreas(areas) {
       this.newPromotion.areas = [...areas]
       this.areaDialogVisible = false
-      await this.recommendByUrl()
+      if (this.newPromotion.landingType !== LANDING_TYPE_GW) {
+        await this.recommendByUrl()
+      }
     },
 
     formatterArea(name) {
@@ -673,7 +675,9 @@ export default {
       this.newPromotion.areas = [
         ...this.newPromotion.areas.filter(i => i !== c)
       ]
-      await this.recommendByUrl()
+      if (this.newPromotion.landingType !== LANDING_TYPE_GW) {
+        await this.recommendByUrl()
+      }
     },
     handleWxModalClose() {
       this.isWxModalVisible =false
