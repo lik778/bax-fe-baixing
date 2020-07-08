@@ -18,7 +18,7 @@
           <div class="landingpage">
             <fm-tip class="landingpage-tip" img-url="//file.baixing.net/201903/8d224eb6179a947eecbf0fde089f7ed3.png">电话接不停小妙招</fm-tip>
             <div style="margin-bottom: 10px">
-              <el-radio-group v-model="landingTypeDisplay" size="small">
+              <el-radio-group v-model="newPromotion.landingType" size="small">
                 <el-radio-button v-for="option of extendLandingTypeOpts" :key="option.value" :label="option.value">{{option.label}}</el-radio-button>
               </el-radio-group>
             </div>
@@ -26,20 +26,20 @@
               <user-ad-selector
                 ref="userAdSelector"
                 :type="adSelectorType"
-                v-if="landingTypeDisplay === LANDING_TYPE_AD"
+                v-if="newPromotion.landingType === LANDING_TYPE_AD"
                 :all-areas="allAreas" :limit-mvp="false"
                 :selected-id="newPromotion.landingPageId"
                 @select-ad="onSelectAd"
               />
 
               <qiqiaoban-page-selector
-                v-if="landingTypeDisplay === LANDING_TYPE_GW"
+                v-if="newPromotion.landingType === LANDING_TYPE_GW"
                 :value="newPromotion.landingPage"
                 @change="v => setLanding(LANDING_TYPE_GW, v)"
               />
 
               <ka-258-selector
-                v-if="landingTypeDisplay === LANDING_TYPE_258"
+                v-if="newPromotion.landingType === LANDING_TYPE_258"
                 :value="newPromotion.landingPage"
                 @change="v => setLanding(LANDING_TYPE_258, v)"
               />
@@ -64,7 +64,11 @@
 
       <section class="creative">
         <fm-tip class="creative-tip" position="creative" img-url="//file.baixing.net/201903/d6f4502a0e8a659b78a33fbb3713e6b9.png">创意怎么才能飘红</fm-tip>
-        <header><promotion-creative-tip /> </header>
+        <header class="top-col">
+          <promotion-creative-tip />
+          <el-button v-if="newPromotion.landingType === LANDING_TYPE_GW" class="button" type="primary"
+                     size="small" @click="getRecommendKeywords">一键拓词</el-button>
+        </header>
         <creative-editor
           :platforms="newPromotion.sources"
           :title="newPromotion.creativeTitle"
@@ -313,7 +317,6 @@ export default {
       LANDING_TYPE_AD,
       LANDING_TYPE_GW,
       LANDING_TYPE_258,
-      landingTypeDisplay: LANDING_TYPE_AD,
       RECOMMAND_SOURCES,
 
       searchRecommendsVisible: false,
@@ -448,7 +451,6 @@ export default {
     setLanding(type, url) {
       this.newPromotion.landingType = type
       this.newPromotion.landingPage = url
-      this.newPromotion.areas = ['quanguo']
     },
 
     async onSelectAd(ad) {
@@ -495,6 +497,7 @@ export default {
         ids: promotionIds.join(','),
         areas: promotion.areas.join(','),
         landingPage: promotion.landingPage,
+        landingType: promotion.landingType,
         creativeTitle: promotion.creativeTitle,
         creativeContent: promotion.creativeContent,
         sources: promotion.sources.join(','),
@@ -619,9 +622,18 @@ export default {
 
     },
 
-    async recommendByUrl(newLandingPage = this.newPromotion.landingPage, areas = this.newPromotion.areas) {
-      if (newLandingPage) {
-        await store.recommendByUrl(newLandingPage, areas)
+    async recommendByUrl(opts = {}) {
+      let { landingType, landingPage, areas } = this.newPromotion
+      landingPage = opts.landingPage || landingPage
+      const reqBody = {
+        ...opts,
+        url: landingPage,
+        landingType: opts.landingType || landingType,
+        areas: opts.areas || areas,
+      }
+
+      if (landingPage) {
+        await store.recommendByUrl(reqBody)
         this.newPromotion.keywords = clone(this.urlRecommends)
       }
     },
@@ -649,7 +661,9 @@ export default {
     async onChangeAreas(areas) {
       this.newPromotion.areas = [...areas]
       this.areaDialogVisible = false
-      await this.recommendByUrl()
+      if (this.newPromotion.landingType !== LANDING_TYPE_GW) {
+        await this.recommendByUrl()
+      }
     },
 
     formatterArea(name) {
@@ -661,7 +675,9 @@ export default {
       this.newPromotion.areas = [
         ...this.newPromotion.areas.filter(i => i !== c)
       ]
-      await this.recommendByUrl()
+      if (this.newPromotion.landingType !== LANDING_TYPE_GW) {
+        await this.recommendByUrl()
+      }
     },
     handleWxModalClose() {
       this.isWxModalVisible =false
@@ -707,6 +723,37 @@ export default {
       clonedPromotion.creativeContent = originPromotion.creative.content
       clonedPromotion.sources = []
       this.newPromotion = clonedPromotion
+    },
+    async getRecommendKeywords() {
+      const { creativeTitle, creativeContent, areas, landingPage, landingType } = this.newPromotion
+      if (creativeTitle === '' || creativeContent === '') {
+        return this.$message.error('请填写创意')
+      }
+      if (!landingPage) {
+        return this.$message.error('请选择官网落地页')
+      }
+      if (!areas.length) {
+        return this.$message.error('请选择投放城市')
+      }
+
+      const { userInfo, actionTrackId } = this
+      track({
+        action: 'click-button: create-campaign-recommend-vad',
+        baixingId: userInfo.baixingId,
+        time: Date.now() / 1000 | 0,
+        baxId: userInfo.id,
+        actionTrackId,
+        landingPage,
+        landingType,
+        creativeTitle,
+        creativeContent,
+        areas
+      })
+      await this.recommendByUrl({
+        landingType: LANDING_TYPE_GW,
+        creativeTitle,
+        creativeContent
+      })
     }
   },
 
@@ -772,6 +819,12 @@ export default {
 
   destroyed() {
     clearTimeout(this.timeout)
+  },
+  watch: {
+    'newPromotion.landingType'(newVal, oldVal) {
+      this.newPromotion.landingPage = ''
+      this.newPromotion.landingPageId = ''
+    }
   }
 }
 </script>
@@ -807,6 +860,14 @@ strong.red {
     position: absolute;
     bottom: 38px;
     left: 660px;
+  }
+  & .top-col {
+    display: flex;
+    align-items: center;
+    & .button {
+      margin-left: 32px;
+      padding: 8px 25px;
+    }
   }
 }
 

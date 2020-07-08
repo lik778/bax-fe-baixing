@@ -274,14 +274,10 @@ export async function getRecommandCreative(opts) {
 }
 
 // TODO: 添加计划id
-export async function recommendByUrl(url, areas = [], campaignId = null) {
+export async function recommendByUrl(opts) {
   const body = await fengming
     .post('/keyword/recommand/vad')
-    .send({
-      url,
-      areas,
-      campaignId
-    })
+    .send(reverseCamelcase(opts))
     .json()
 
   return fmtWords(toCamelcase(body.data))
