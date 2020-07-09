@@ -1,0 +1,125 @@
+<template>
+  <div>
+    <el-dialog :visible="visible"
+               width="820px"
+               :title="title"
+               z-index="1000"
+               @close="handleClose"
+               custom-class="keyword-input-dialog"
+               class="keyword-input">
+      <el-button slot="title"
+                 type="primary"
+                 size="small"
+                 class="area-choose-btn"
+                 v-if="displayCityArea"
+                 @click="areaSelectorVisible = true">城市选择</el-button>
+      <div class="info"
+           v-html="info"></div>
+      <el-input type="textarea"
+                class="textarea"
+                :rows="10"
+                v-model="words"
+                :placeholder="placeholder"></el-input>
+      <div slot="footer"
+           class="footer">
+        <el-button type="default"
+                   size="small"
+                   @click="handleClear">清空</el-button>
+        <el-button type="primary"
+                   size="small"
+                   @click="handleConfirm">确定</el-button>
+      </div>
+    </el-dialog>
+    <area-selector :visible.sync="areaSelectorVisible"
+                   :value="[]"
+                   @input="updateAreas" />
+  </div>
+</template>
+
+<script>
+import areaSelector from 'com/common/seo-area-selector'
+
+export default {
+  name: 'KeywordInput',
+  props: {
+    type: {
+      type: String,
+      required: true,
+      default: 'A'
+    },
+    visible: {
+      type: Boolean,
+      required: true,
+      default: false
+    },
+    title: {
+      type: String,
+      required: true
+    },
+    info: {
+      type: String,
+      required: true
+    },
+    placeholder: {
+      type: String,
+      required: true
+    }
+  },
+  computed: {
+    displayCityArea() {
+      return this.type === 'A'
+    }
+  },
+  data() {
+    return {
+      words: '',
+      areaSelectorVisible: false
+    }
+  },
+  methods: {
+    handleClose() {
+      this.$emit('close')
+    },
+    handleClear() {
+      this.words = ''
+      this.handleClose()
+    },
+    handleConfirm() {
+      this.$emit('words', {
+        words: this.words,
+        type: this.type
+      })
+      this.handleClose()
+      this.handleClear()
+    },
+    updateAreas(areas) {
+      const words = areas.map(area => {
+        return Array.isArray(area) ? area[area.length - 1] : area
+      })
+      this.words = words.join('\n')
+    }
+  },
+  components: {
+    areaSelector
+  }
+}
+</script>
+
+<style lang="postcss" scoped>
+/deep/ .keyword-input-dialog {
+  & .el-dialog__body {
+    padding: 0 20px;
+  }
+}
+.textarea {
+  margin: 10px 0;
+}
+.footer {
+}
+
+::-webkit-input-placeholder:before {
+  display: block;
+  color: #999;
+  content: '第一行文本提示 \A 第二行文本提示 \A 第三行文本提示 \A';
+}
+</style>

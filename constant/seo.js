@@ -126,3 +126,6 @@ export const SKU_GW_200 = 6
 
 export const FREE_UPDATE_NUM_ONE = 1
 export const FREE_UPDATE_NUM_ZERO = 0
+
+export const SEARCH_IMAGES_MIN = 0
+export const SEARCH_IMAGES_MAX = 40
