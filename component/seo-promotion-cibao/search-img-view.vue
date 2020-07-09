@@ -56,7 +56,7 @@ export default {
     return {
       showViewer: false,
       popoverVisible: false,
-      fileList: this.originalFileList,
+      fileList: [],
       previewInitialIndex: 0,
 
       SEARCH_IMAGES_MAX
@@ -82,6 +82,11 @@ export default {
       this.fileList.splice(index, 1)
       this.$emit('file', this.fileList)
     }
+  },
+  watch: {
+    originalFileList(newVal) {
+      this.fileList = this.fileList.concat(newVal)
+    }
   }
 }
 </script>
@@ -105,6 +110,7 @@ export default {
       border: 1px solid #c0ccda;
       border-radius: 6px;
       transition: all .5s cubic-bezier(.55,0,.1,1);
+      cursor: pointer;
       &:hover {
         & .upload-actions {
           position: absolute;

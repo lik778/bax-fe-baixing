@@ -21,6 +21,7 @@
 <script>
 import KeywordView from './view'
 import KeywordInput from './input'
+import clone from 'clone'
 
 const keywordOptions = {
   A: {
@@ -30,7 +31,7 @@ const keywordOptions = {
     info: `<p>可通过“城市选择”添加服务城市，也可以在输入框中自填地域；</p>
            <p>多个关键词换行、中英文逗号隔开；</p>
            <p>词数不低于15个。</p>`,
-    placeholder: '如:，闵行区，徐汇区，七莘路，七宝镇，...',
+    placeholder: '如:，上海，闵行区，徐汇区，七莘路，七宝镇，...',
     keywords: [],
     keywordsAlias: 'customAreas',
     wordsLimit: [15, Number.MAX_SAFE_INTEGER]
@@ -65,7 +66,7 @@ const keywordOptions = {
     inputTitle: '添加后缀词',
     info: `<p>多个关键词换行、中英文逗号隔开；</p>
            <p>词数不低于10个。</p>`,
-    placeholder: '如：电话，费用，价格，推荐，...',
+    placeholder: '如：，电话，费用，价格，推荐，...',
     keywords: [],
     keywordsAlias: 'suffixWordList',
     wordsLimit: [10, 100]
@@ -81,10 +82,22 @@ const validateKeywordLen = (typeObj) => {
 
 export default {
   name: 'Keyword',
+  props: {
+    originKeywords: {
+      type: Object,
+      required: false,
+      default() {
+        return Object.values(keywordOptions).reduce((curr, item) => {
+          curr[item.keywordsAlias] = []
+          return curr
+        }, {})
+      }
+    }
+  },
   data() {
     return {
       visible: false,
-      keywordOptions,
+      keywordOptions: clone(keywordOptions),
       activeType: 'A'
     }
   },
@@ -92,11 +105,11 @@ export default {
     KeywordInput,
     KeywordView
   },
-  // created() {
-  //   for (let key in this.keywordOptions) {
-  //     this.keywordOptions[key].placeholder = this.keywordOptions[key].placeholder.replace(/[,，]]/, '&#13;&#10;')
-  //   }
-  // },
+  created() {
+    Object.values(this.keywordOptions).map(item => {
+      this.keywordOptions[item.type].placeholder = item.placeholder.replace(/[,，]]*/g, '<br/>')
+    })
+  },
   methods: {
     getProp(prop) {
       const existKeywordObj = this.keywordOptions[this.activeType]
@@ -142,6 +155,16 @@ export default {
         curr[keywordLabel] = item.keywords
         return curr
       }, {})
+    }
+  },
+  watch: {
+    originKeywords(newVal) {
+      for (let key in this.keywordOptions) {
+        const { keywordsAlias, keywords } = this.keywordOptions[key]
+        this.keywordOptions[key].keywords = [
+          ...new Set(keywords.concat(this.originKeywords[keywordsAlias]))
+        ]
+      }
     }
   }
 }

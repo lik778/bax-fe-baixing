@@ -14,12 +14,18 @@
                  v-if="displayCityArea"
                  @click="areaSelectorVisible = true">城市选择</el-button>
       <div class="info"
-           v-html="info"></div>
-      <el-input type="textarea"
-                class="textarea"
-                :rows="10"
-                v-model="words"
-                :placeholder="placeholder"></el-input>
+           v-html="info" />
+      <div class="textarea-container">
+        <el-input type="textarea"
+                  @focus="() => displayPlaceholder = false"
+                  @blur="() => displayPlaceholder = true"
+                  class="textarea"
+                  :rows="10"
+                  v-model="words" />
+        <div class="placeholder"
+             v-if="!words && displayPlaceholder"
+             v-html="placeholder" />
+      </div>
       <div slot="footer"
            class="footer">
         <el-button type="default"
@@ -73,8 +79,14 @@ export default {
   data() {
     return {
       words: '',
-      areaSelectorVisible: false
+      areaSelectorVisible: false,
+      displayPlaceholder: true
     }
+  },
+  mounted() {
+    document
+      .querySelector('.textarea')
+      .setAttribute('placeholder', '测试，&#10;你看好')
   },
   methods: {
     handleClose() {
@@ -93,7 +105,7 @@ export default {
       this.handleClear()
     },
     updateAreas(areas) {
-      const words = areas.map(area => {
+      const words = areas.map((area) => {
         return Array.isArray(area) ? area[area.length - 1] : area
       })
       this.words = words.join('\n')
@@ -111,15 +123,18 @@ export default {
     padding: 0 20px;
   }
 }
-.textarea {
+.textarea-container {
+  position: relative;
   margin: 10px 0;
-}
-.footer {
+  & > .placeholder {
+    position: absolute;
+    z-index: 0;
+    top: 5px;
+    left: 15px;
+    font-size: 14px;
+    color: #DCDFE6;
+  }
 }
 
-::-webkit-input-placeholder:before {
-  display: block;
-  color: #999;
-  content: '第一行文本提示 \A 第二行文本提示 \A 第三行文本提示 \A';
-}
+
 </style>
