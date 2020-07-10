@@ -307,7 +307,7 @@
         this.promotes = items
         this.query.total = total
 
-        const yesterday = dayjs().subtract(1, 'day').unix()
+        const yesterday = dayjs().subtract(1, 'day').startOf('day').unix()
         const rankings = await getUserRanking({
           startTime: yesterday,
           endTime: yesterday,
@@ -318,7 +318,7 @@
           this.promotes = this.promotes.map(p => {
             const one = rankings.find(r => r.promoteId === p.id)
             if (one && one.rankList.length) {
-              return Object.assign({}, p, {cpcRanking: parseFloat(one.rankList[0]).toFixed(2)})
+              return Object.assign(p, {cpcRanking: parseFloat(one.rankList[0]).toFixed(2)})
             }
             return p
           })
