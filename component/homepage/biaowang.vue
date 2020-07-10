@@ -57,7 +57,7 @@
           </dt>
           <dd class="dd wrap" v-for="p in biaowangPromotes" :key="p.id">
             <span class="col">{{p.word}}</span>
-            <span class="col">{{p.cpcRank}}</span>
+            <span class="col">{{p.cpcRanking && fmtCpcRanking(p.cpcRanking, false)}}</span>
             <span class="col">{{leftDays(p)}}/{{p.days.toFixed(1)}}</span>
             <el-button v-if="canXufei(p) && !userInfo.sstAgent"
                        :disabled="disabledXuFeiBtn(p)"  
@@ -82,6 +82,7 @@
 import store from './store'
 import loadingPlaceholder from './loading-placeholder'
 import { PROMOTE_STATUS_ONLINE } from 'constant/biaowang'
+import {fmtCpcRanking} from 'util/campaign'
 import dayjs from 'dayjs'
 
 export default {
@@ -98,6 +99,7 @@ export default {
     }
   },
   methods: {
+    fmtCpcRanking,
     disabledXuFeiBtn(row) {
       // tip: 时间为2020-03-27 12:16:40.213743之前的不能续费
       return dayjs(row.createdAt * 1000).isBefore('2020-03-27 12:16:40.213743')
