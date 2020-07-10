@@ -1,17 +1,21 @@
 <template>
-  <div class="search-img-view" :class="{'view-border': !!fileList.length}">
-    <div class="img-wrapper" v-if="fileList.length">
-      <div class="img-panel"
+  <div class="search-img-view"
+       :class="{'view-border': !!fileList.length}">
+    <ul class="img-wrapper"
+         v-if="fileList.length">
+      <li class="img-panel"
            v-for="(file, index) in fileList"
            :key="index">
         <img class="img"
              :src="file" />
         <span class="upload-actions">
-          <i class="el-icon-zoom-in" @click="openViewer(index)"></i>
-          <i class="el-icon-delete" @click="deleteFile(index)"></i>
+          <i class="el-icon-zoom-in"
+             @click="openViewer(index)"></i>
+          <i class="el-icon-delete"
+             @click="deleteFile(index)"></i>
         </span>
-      </div>
-    </div>
+      </li>
+    </ul>
     <uploader ref="search-uploader"
               v-if="fileList.length <= SEARCH_IMAGES_MAX"
               :uploadOptions="{
@@ -56,7 +60,7 @@ export default {
     return {
       showViewer: false,
       popoverVisible: false,
-      fileList: [],
+      fileList: this.originalFileList,
       previewInitialIndex: 0,
 
       SEARCH_IMAGES_MAX
@@ -93,24 +97,27 @@ export default {
 
 <style lang="postcss" scoped>
 .search-img-view {
-  display: flex;
   &.view-border {
     border: 1px solid #ebebeb;
-    padding: 10px 20px;
+    padding: 10px 0 0 10px;
+    border-radius: 6px;
   }
   & > .img-wrapper {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
+    display: inline;
+    vertical-align: top;
     & > .img-panel {
       position: relative;
+      display: inline-block;
       margin-right: 10px;
-      width: 100px;
-      height: 100px;
+      width: 106px;
+      height: 106px;
       border: 1px solid #c0ccda;
-      border-radius: 6px;
-      transition: all .5s cubic-bezier(.55,0,.1,1);
+      transition: all 0.5s cubic-bezier(0.55, 0, 0.1, 1);
       cursor: pointer;
+      margin-bottom: 10px;
+      vertical-align: top;
+      border-radius: 6px;
+      overflow: hidden;
       &:hover {
         & .upload-actions {
           position: absolute;
@@ -121,18 +128,19 @@ export default {
           left: 0;
           bottom: 0;
           right: 0;
-          background: rgba(0, 0, 0, .5);
+          background: rgba(0, 0, 0, 0.5);
           border-radius: 6px;
         }
       }
     }
     & .img {
       width: 100%;
+      max-height: 100%;
     }
     & .upload-actions {
       display: none;
       text-align: center;
-       & > i {
+      & > i {
         font-size: 24px;
         color: #fff;
         margin-right: 10px;
@@ -141,9 +149,11 @@ export default {
     }
   }
   & > .uploader-container {
+    display: inline-block;
+    vertical-align: top;
     & .upload-btn {
-      width: 100px;
-      height: 100px;
+      width: 106px;
+      height: 106px;
       border-radius: 4px;
       border: 1px dashed #aaa;
       font-size: 38px;

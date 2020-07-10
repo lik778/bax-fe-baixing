@@ -1,13 +1,16 @@
 <template>
-  <div class="keyword-view-container">
-    <keyword-view v-for="(value, key) in keywordOptions"
-                  :key="key"
-                  :type="key"
-                  :title="value.title"
-                  :keywords="value.keywords"
-                  @edit="editKeyword"
-                  @delete="deleteKeyword"
-                  @pop-keyword-input="popKeywordInputDialog"></keyword-view>
+  <div class="keyword-container">
+    <div class="view-container">
+      <keyword-view v-for="(value, key) in keywordOptions"
+                    :key="key"
+                    :type="key"
+                    class="keyword-view"
+                    :title="value.title"
+                    :keywords="value.keywords"
+                    @edit="editKeyword"
+                    @delete="deleteKeyword"
+                    @pop-keyword-input="popKeywordInputDialog"></keyword-view>
+    </div>
     <keyword-input :visible="visible"
                    @words="updateKeywords"
                    @close="visible = false"
@@ -34,7 +37,8 @@ const keywordOptions = {
     placeholder: '如:，上海，闵行区，徐汇区，七莘路，七宝镇，...',
     keywords: [],
     keywordsAlias: 'customAreas',
-    wordsLimit: [15, Number.MAX_SAFE_INTEGER]
+    wordsLimit: [15, Number.MAX_SAFE_INTEGER],
+    wordLenLimit: [2, 8]
   },
   B: {
     type: 'B',
@@ -46,7 +50,8 @@ const keywordOptions = {
       '如：，专业的，靠谱的，周边，附近，电话，费用，价格，推荐，...',
     keywords: [],
     keywordsAlias: 'prefixWordList',
-    wordsLimit: [10, 100]
+    wordsLimit: [10, 100],
+    wordLenLimit: [2, 8]
   },
   C: {
     type: 'C',
@@ -58,7 +63,8 @@ const keywordOptions = {
       '如：，空调维修，空调移机，物品回收，黄金回收，挖掘机，推土机，...',
     keywords: [],
     keywordsAlias: 'keywords',
-    wordsLimit: [10, 100]
+    wordsLimit: [15, 100],
+    wordLenLimit: [2, 8]
   },
   D: {
     type: 'D',
@@ -69,11 +75,12 @@ const keywordOptions = {
     placeholder: '如：，电话，费用，价格，推荐，...',
     keywords: [],
     keywordsAlias: 'suffixWordList',
-    wordsLimit: [10, 100]
+    wordsLimit: [10, 100],
+    wordLenLimit: [2, 8]
   }
 }
 
-const validateKeywordLen = (typeObj) => {
+const validateKeywordsLen = (typeObj) => {
   const { wordsLimit, keywords, type } = typeObj
   const len = keywords.length
   if (len < wordsLimit[0]) return `${type}类词数限制不低于${wordsLimit[0]}`
@@ -106,8 +113,11 @@ export default {
     KeywordView
   },
   created() {
-    Object.values(this.keywordOptions).map(item => {
-      this.keywordOptions[item.type].placeholder = item.placeholder.replace(/[,，]]*/g, '<br/>')
+    Object.values(this.keywordOptions).map((item) => {
+      this.keywordOptions[item.type].placeholder = item.placeholder.replace(
+        /[,，]]*/g,
+        '<br/>'
+      )
     })
   },
   methods: {
@@ -121,12 +131,21 @@ export default {
     },
     updateKeywords(obj) {
       let { type, words } = obj
+      const wordLenLimit = this.keywordOptions[type].wordLenLimit
+
       words = words
         .trim()
         .split(/[\n，,]]*/g)
         .map((row) => row.trim())
-        .filter((row) => row !== '')
+        .filter(
+          (row) =>
+            row !== '' &&
+            row.length >= wordLenLimit[0] &&
+            row.length <= wordLenLimit[1]
+        )
+
       let keywords = this.keywordOptions[type].keywords
+
       keywords = [...new Set(words.concat(keywords))]
 
       this.keywordOptions[type].keywords = keywords
@@ -139,6 +158,10 @@ export default {
         inputValue: this.keywordOptions[type].keywords[index]
       })
         .then(({ value }) => {
+          const keywords = this.keywordOptions[type].keywords
+          if (keywords.includes(value)) {
+            return this.$message.error('已存在该关键词，请修改重新提交')
+          }
           this.keywordOptions[type].keywords.splice(index, 1, value)
         })
         .catch(() => {})
@@ -149,7 +172,7 @@ export default {
     },
     getValues() {
       return Object.values(this.keywordOptions).reduce((curr, item) => {
-        const errMsg = validateKeywordLen(item)
+        const errMsg = validateKeywordsLen(item)
         if (errMsg) throw new Error(errMsg)
         const keywordLabel = item.keywordsAlias
         curr[keywordLabel] = item.keywords
@@ -171,10 +194,10 @@ export default {
 </script>
 
 <style lang="postcss" scoped>
-.keyword-view-container {
+.view-container {
   display: flex;
   align-items: center;
-  & > div {
+  & > div:not(:last-child) {
     margin-right: 16px;
   }
 }
