@@ -17,7 +17,7 @@
       </li>
     </ul>
     <uploader ref="search-uploader"
-              v-if="fileList.length <= SEARCH_IMAGES_MAX"
+              v-if="fileList.length < SEARCH_IMAGES_MAX"
               :uploadOptions="{
                 maxFileSize: 1024,
                 types: ['image/jpeg', 'image/jpg']
