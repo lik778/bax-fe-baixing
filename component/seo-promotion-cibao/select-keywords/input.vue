@@ -83,11 +83,6 @@ export default {
       displayPlaceholder: true
     }
   },
-  mounted() {
-    document
-      .querySelector('.textarea')
-      .setAttribute('placeholder', '测试，&#10;你看好')
-  },
   methods: {
     handleClose() {
       this.$emit('close')
