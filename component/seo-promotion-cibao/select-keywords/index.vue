@@ -33,12 +33,12 @@ const keywordOptions = {
     inputTitle: '添加服务城市',
     info: `<p>可通过“城市选择”添加服务城市，也可以在输入框中自填地域；</p>
            <p>多个关键词换行、中英文逗号隔开；</p>
-           <p>词数不低于15个；</p>
+           <p>词数不少于15个，不超过500个字；</p>
            <p>单个词长度不少于2个字，不超过8个字。</p>`,
     placeholder: '如:，上海，闵行区，徐汇区，七莘路，七宝镇，...',
     keywords: [],
     keywordsAlias: 'customAreas',
-    wordsLimit: [15, Number.MAX_SAFE_INTEGER],
+    wordsLimit: [15, 500],
     wordLenLimit: [2, 8]
   },
   B: {
@@ -46,7 +46,7 @@ const keywordOptions = {
     title: '前缀词（B类词）',
     inputTitle: '添加前缀词',
     info: `<p>多个关键词换行、中英文逗号隔开；</p>
-           <p>词数不低于10个；</p>
+           <p>词数不少于10个，不超过100个字；</p>
            <p>单个词长度不少于2个字，不超过8个字。</p>`,
     placeholder:
       '如：，专业的，靠谱的，周边，附近，电话，费用，价格，推荐，...',
@@ -60,7 +60,7 @@ const keywordOptions = {
     title: '业务关键词（C类词）',
     inputTitle: '添加业务关键词',
     info: `<p>多个关键词换行、中英文逗号隔开；</p>
-           <p>词数不低于15个；</p>
+           <p>词数不少于15个，不超过100个字；</p>
            <p>单个词长度不少于2个字，不超过8个字。</p>`,
     placeholder:
       '如：，空调维修，空调移机，物品回收，黄金回收，挖掘机，推土机，...',
@@ -74,7 +74,7 @@ const keywordOptions = {
     title: '后缀词（D类词）',
     inputTitle: '添加后缀词',
     info: `<p>多个关键词换行、中英文逗号隔开；</p>
-           <p>词数不低于10个；</p>
+           <p>词数不少于10个，不超过100个字；</p>
            <p>单个词长度不少于2个字，不超过8个字。</p>`,
     placeholder: '如：，电话，费用，价格，推荐，...',
     keywords: [],

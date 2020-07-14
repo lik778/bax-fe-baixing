@@ -67,6 +67,18 @@
       </div>
     </section>
     <section>
+      <header class="not-required">补充信息</header>
+      <el-input
+        :rows="3"
+        maxlength="100"
+        type="textarea"
+        show-word-limit
+        class="keyword-input"
+        v-model="promotion.additionalInfo"
+        placeholder="如您对于自身服务内容及产品有额外补充内容，请填写（字数限制0～100）"
+      />
+    </section>
+    <section>
       <header>搜索展示</header>
       <div class="info">
         <p>1. 图片主要用于前端展示，请选择与实际业务相关的图片上传；</p>
@@ -77,7 +89,7 @@
       <search-img-view @file="handleSearchFileChange" />
     </section>
     <section>
-      <header>补充信息</header>
+      <header>基础信息</header>
       <promotion-form
         ref="promotionForm"
         :value="{
@@ -149,6 +161,7 @@ export default {
         duration: NINETY_DAYS,
         volume: 1000,
         landingPage: '',
+        additionalInfo: '',
         keywords: [],         // C类
         customAreas: [],      // A类
         prefixWordList: [],   // B类
@@ -328,9 +341,8 @@ export default {
   }
 
   .keyword-input {
-    width: 400px;
+    width: 560px;
     position: relative;
-    margin-right: 20px;
   }
   .mt-16 {
     margin-top: 16px;
