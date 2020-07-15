@@ -156,6 +156,8 @@ export default {
     },
     editKeyword(obj) {
       const { type, index } = obj
+      const wordLenLimit = this.keywordOptions[type].wordLenLimit
+
       this.$prompt('', '编辑词语', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -165,6 +167,9 @@ export default {
           const keywords = this.keywordOptions[type].keywords
           if (keywords.includes(value)) {
             return this.$message.error('已存在该关键词，请修改重新提交')
+          }
+          if (value.length < wordLenLimit[0] || value.length > wordLenLimit[1]) {
+            return this.$message.error(`单个词长度不少于${wordLenLimit[0]}个字, 不超过${wordLenLimit[1]}个字`)
           }
           this.keywordOptions[type].keywords.splice(index, 1, value)
         })
