@@ -49,6 +49,12 @@
       // 精品官网产品类型
       productType: {
         type: Number
+      },
+      // 是否显示官网url
+      displayLandingPage: {
+        type: Boolean,
+        required: false,
+        default: false
       }
     },
     data() {
@@ -96,6 +102,16 @@
           value: 'http://' + p.domain + '.mvp.baixing.com'
         }))
       ]
+
+      // 显示官网名称
+      if (this.displayLandingPage) {
+        this.options = this.options.map(({label, value}) => {
+          return {
+            label: `${label}（${value}）`,
+            value
+          }
+        })
+      }
     }
   }
 </script>
