@@ -34,7 +34,7 @@
 
 <script>
 import Uploader from '../common/image-uploader'
-import ImageViewer from 'element-ui/packages/image/src/image-viewer'
+import ImageViewer from '../common/image-viewer'
 
 export default {
   name: 'image-uploader',
