@@ -27,7 +27,14 @@
         </marquee>
         <el-table :data="promotes" border>
           <el-table-column prop="word" label="关键词" />
-          <el-table-column prop="cities" label="城市" :formatter="row => cityFormatter(row.cities)" />
+          <el-table-column prop="cities" label="城市">
+            <template slot-scope="scope">
+                <el-tooltip popper-class="city-tooltip" v-if="scope.row.cities.length > 10" class="item" effect="light" :content="cityFormatter(scope.row.cities, scope.row.cities.length)" placement="right">
+                    <p>{{ cityFormatter(scope.row.cities, 10) }}</p>
+                </el-tooltip>
+                <p v-else>{{ cityFormatter(scope.row.cities) }}</p>
+            </template>
+          </el-table-column>  
           <el-table-column prop="device" label="平台" :formatter="row => deviceFormatter(row.device)" />
           <el-table-column prop="status" label="投放状态" :formatter="v => statusFormatter(v.status)" />
           <el-table-column label="审核状态">
@@ -365,8 +372,7 @@
           }
         })
       },
-      cityFormatter(cities) {
-        const max = 20
+      cityFormatter(cities , max = 20) {
         return cities.slice(0, max).map(city => getCnName(city, this.allAreas)).join(',') + (cities.length > max ? `等${cities.length}个城市` : '')
       },
       deviceFormatter(device) {
@@ -475,5 +481,11 @@ marquee {
 .xufei-btn {
   cursor: not-allowed;
   color: #999;
+}
+</style>
+
+<style lang="postcss">
+.city-tooltip {
+  width: 200px;
 }
 </style>
