@@ -59,7 +59,7 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    background-image: url(http://s.baixing.net/img/refashion/coupon_background.png);
+    background-image: url('//s.baixing.net/img/refashion/coupon_background.png');
     background-size: cover;
     background-color: #FEC435;
     text-align: center;

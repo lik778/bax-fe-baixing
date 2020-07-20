@@ -23,3 +23,10 @@ export const sendingCondition = {
   'COUPON_CODE': 401,
   'BAIXING_CAMPAIGN': 402
 }
+
+export const CouponTypes = {
+  'FULL_REDUCE': 1,
+  'PER_FULL_REDUCE': 2,
+  'FULL_DISCOUNT': 3,
+  'QUOTA': 4
+}

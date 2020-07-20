@@ -1,4 +1,7 @@
 
+import '../lib/trackerlib'
+import sentry from '../lib/sentry'
+
 import Homepage from 'com/homepage'
 import Bax from 'com/bax'
 
@@ -40,9 +43,11 @@ import {
   Col,
   Progress,
   Card,
+  Image,
   Loading,
   MessageBox,
   Message,
+  Cascader,
   Notification
 } from 'element-ui'
 
@@ -51,6 +56,20 @@ import Movue from 'movue'
 import Vue from 'vue'
 
 import Vue2Filters from 'vue2-filters'
+import { getBusinessLicense } from 'api/seo'
+import { allowUseKaPackage } from 'util/fengming-role'
+import { getCurrentUser } from 'api/account'
+
+// track common data
+window.__trackerData = {
+  common: {}
+}
+window.onerror = (e) => {
+  sentry.captureException(e)
+}
+Vue.config.errorHandler = (err, vm, info) => {
+  sentry.captureException(err)
+}
 
 Vue.use(Movue, { reaction })
 Vue.use(VueClipboard)
@@ -89,8 +108,10 @@ Vue.use(Tag)
 Vue.use(Icon)
 Vue.use(Row)
 Vue.use(Col)
+Vue.use(Cascader)
 Vue.use(Progress)
 Vue.use(Card)
+Vue.use(Image)
 
 Vue.use(Loading.directive)
 Vue.prototype.$loading = Loading.service
@@ -113,7 +134,16 @@ const gwRoutes = [{
 }, {
   component: () => import('com/gw-charge'),
   path: '/main/gw/charge',
-  name: 'gw-charge'
+  name: 'gw-charge',
+  beforeEnter: async (to, from, next) => {
+    const userInfo = await getCurrentUser()
+    const license = allowUseKaPackage('', userInfo.id)
+    if (license) {
+      next()
+    } else {
+      Message.error('无权限访问')
+    }
+  }
 }]
 
 const bwRoutes = [{
@@ -132,6 +162,10 @@ const bwRoutes = [{
   component: () => import('com/bw-landing'),
   path: '/main/bw/landing',
   name: 'bw-landing'
+}, {
+  component: () => import('com/bw-dashboard'),
+  path: '/main/bw/dashboard',
+  name: 'bw-dashboard'
 }]
 
 const qwtRoutes = [{
@@ -151,7 +185,7 @@ const qwtRoutes = [{
   path: '/main/qwt/dashboard',
   name: 'qwt-dashboard'
 }, {
-  component: () => import('com/charge'),
+  component: () => import('com/qwt-charge'),
   path: '/main/qwt/charge',
   name: 'qwt-charge'
 }]
@@ -208,11 +242,30 @@ const seoRoutes = [{
   path: '/main/seo/promotions',
   name: 'seo-promotion-list'
 }, {
-  component: () => import('com/seo-update-promotion'),
-  path: '/main/seo/promotions/:id/update',
-  name: 'seo-update-promotion'
-}
-]
+  component: () => import('com/seo-update-promotion-zixuan'),
+  path: '/main/seo/promotion/zixuan/:id/update',
+  name: 'seo-update-zixuan-promotion'
+}, {
+  component: () => import('com/seo-create-promotion-zixuan'),
+  path: '/main/seo/promotion/create/zixuan',
+  name: 'seo-create-zixuan-promotion'
+}, {
+  component: () => import('com/seo-promotion-cibao/create'),
+  path: '/main/seo/promotion/create/cibao',
+  name: 'seo-create-cibao-promotion',
+  beforeEnter: async (to, from, next) => {
+    const license = await getBusinessLicense()
+    if (license) {
+      next()
+    } else {
+      Message.error('无权限访问')
+    }
+  }
+}, {
+  component: () => import('com/seo-promotion-cibao/update'),
+  path: '/main/seo/promotion/cibao/:id/update',
+  name: 'seo-update-cibao-promotion'
+}]
 
 export const router = new VueRouter({
   mode: 'history',
@@ -224,6 +277,10 @@ export const router = new VueRouter({
     component: () => import('com/redirect'),
     path: '/main/redirect-to',
     name: 'bax-redirect-page'
+  }, {
+    component: () => import('com/payment-success'),
+    path: '/main/payment-success',
+    name: 'payment-success-page'
   }, {
     component: () => import('com/account'),
     path: '/main/account',
@@ -249,7 +306,20 @@ export const router = new VueRouter({
 })
 router.beforeEach((to, from, next) => {
   window.scrollTo(0, 0)
-  next()
+  if (to.query.user_id) {
+    next()
+    return
+  }
+  if (from.query.user_id) {
+    next({
+      path: to.path,
+      query: {
+        ...from.query
+      }
+    })
+  } else {
+    next()
+  }
 })
 
 const app = new Vue({

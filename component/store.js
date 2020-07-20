@@ -3,6 +3,7 @@ import { observable, action, toJS } from 'mobx'
 
 import * as aapi from 'api/account'
 import * as mapi from 'api/meta'
+import Sentry from '../lib/sentry'
 
 const gStore = observable({
   _currentUser: {},
@@ -30,7 +31,23 @@ const gStore = observable({
   }),
 
   getCurrentUser: action(async function() {
-    this._currentUser = await aapi.getCurrentUser()
+    const currentUser = this._currentUser = await aapi.getCurrentUser()
+    // 打点数据中添加用户身份信息
+    window.__trackerData.common = {
+      ...window.__trackerData.common,
+      baixing_id: currentUser.baixingId,
+      bax_id: currentUser.id
+    }
+
+    // sentry报错添加user
+    Sentry.configureScope(scope => {
+      scope.setUser({
+        id: currentUser.baixingId,
+        name: currentUser.name,
+        mobile: currentUser.mobile,
+        baxId: currentUser.id
+      })
+    })
   }),
 
   getCategories: action(async function() {

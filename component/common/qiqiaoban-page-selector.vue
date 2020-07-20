@@ -10,11 +10,11 @@
       @change="onChange">
     </bax-select>
     <a v-else-if="ticketCount" target="_blank"
-      href="http://bax.baixing.com.cn/ka/main">
+      href="//bax.baixing.com.cn/ka/main">
       您已经购买了官网，点击创建！
     </a>
     <a v-else target="_blank"
-      href="http://www.baixing.com/a/quanwangtong?src=haina_topbar#five">
+      href="//www.baixing.com/a/quanwangtong?src=haina_topbar#five">
       还没官网？了解并创建！
     </a>
   </span>
@@ -49,6 +49,12 @@
       // 精品官网产品类型
       productType: {
         type: Number
+      },
+      // 是否显示官网url
+      displayLandingPage: {
+        type: Boolean,
+        required: false,
+        default: false
       }
     },
     data() {
@@ -96,6 +102,16 @@
           value: 'http://' + p.domain + '.mvp.baixing.com'
         }))
       ]
+
+      // 显示官网名称
+      if (this.displayLandingPage) {
+        this.options = this.options.map(({label, value}) => {
+          return {
+            label: `${label}（${value}）`,
+            value
+          }
+        })
+      }
     }
   }
 </script>

@@ -166,3 +166,6 @@ export function toOpt(obj, forceNumber = true, reverse = false) {
       }))
   }
 }
+
+export const RECOMMAND_SOURCE_FH = 'tfidf_fh'
+export const NEW_RECOMMAND_SOURCE_FH = 'tfidf_fh_service'

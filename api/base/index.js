@@ -2,7 +2,9 @@
 import 'whatwg-fetch'
 
 import { Message } from 'element-ui'
+import chargeNotice from '../../util/charge-notice'
 import Fetch from 'fetch.io'
+import sentry from '../../lib/sentry'
 
 import {
   fengmingApiHost,
@@ -24,6 +26,16 @@ export const fengming = new Fetch({
     es.emit('http fetch end')
   },
   afterJSON(body) {
+    if (
+      body.meta &&
+      body.meta.status === 400 &&
+      body.meta.code === 2010
+    ) {
+      // 没有经过身份证绑定
+      chargeNotice()
+      throw new Error('请先绑定身份认证')
+    }
+
     if (body.errors) {
       Message.error('出错啦')
       throw new Error('出错啦')
@@ -38,6 +50,7 @@ export const fengming = new Fetch({
 
     if (meta.message !== 'Success') {
       Message.error(meta.message)
+      sentry.captureMessage(JSON.stringify(body), 'info')
       throw new Error(meta.message)
     }
   }
@@ -54,6 +67,7 @@ export const ka = new Fetch({
   afterJSON(body) {
     if (body.msg !== 'success') {
       Message.error(body.msg)
+      sentry.captureMessage(JSON.stringify(body), 'error')
       throw new Error(body.msg)
     }
   }
@@ -87,6 +101,7 @@ export const api = new Fetch({
 
     if (meta.message !== 'Success') {
       Message.error(meta.message)
+      sentry.captureMessage(JSON.stringify(body), 'info')
       throw new Error(meta.message)
     }
   }
@@ -99,19 +114,27 @@ export const biaowang = new Fetch({
   },
   afterResponse(res) {
     es.emit('http fetch end')
-
     if (res.status === 200) {
 
     } else if (res.status === 401) {
       Message.error('请重新登录 >_<')
       return redirect('signin', `return=${encodeURIComponent(location.pathname + location.search)}`)
-    } else if (res.status === 500) {
-      Message.error(`出错了，请稍后重试`)
     } else {
       res.clone().json().then(body => {
         Message.error(body.message || `出错了，请稍后重试`)
       })
+      sentry.captureMessage(res.statusText, 'info')
       throw new Error(res.statusText)
+    }
+  },
+  afterJSON(body) {
+    if (
+      body &&
+      body.code === 4114
+    ) {
+      // 没有经过身份证绑定
+      chargeNotice()
+      throw new Error('请先绑定身份认证')
     }
   }
 })
@@ -129,14 +152,28 @@ export const seo = new Fetch({
     } else if (res.status === 401) {
       Message.error('请重新登录 >_<')
       return redirect('signin', `return=${encodeURIComponent(location.pathname + location.search)}`)
-    } else if (res.status === 403) {
-      Message.error('您没有权限，请联系搜索通团队申请首页宝购买资格')
-      throw new Error('您没有权限，请联系搜索通团队申请首页宝购买资格')
     } else {
       res.clone().json().then(body => {
         Message.error(body.message || `出错了，请稍后重试`)
       })
+      sentry.captureMessage(res.statusText, 'info')
       throw new Error(res.statusText)
+    }
+  },
+  afterJSON(body) {
+    if (
+      body &&
+      body.code === 4114
+    ) {
+      // 没有经过身份证绑定
+      chargeNotice()
+      throw new Error('请先绑定身份认证')
+    }
+
+    if (body.code !== 0) {
+      Message.error(body.message)
+      sentry.captureMessage(JSON.stringify(body), 'info')
+      throw new Error(body.message)
     }
   }
 })

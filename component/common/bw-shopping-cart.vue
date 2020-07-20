@@ -54,7 +54,7 @@
 <script>
   import clone from 'clone'
   import {f2y} from 'util'
-  import {refreshKeywordPrice, createPreOrder} from 'api/biaowang'
+  import {createPreOrder, refreshKeywordPriceNew} from 'api/biaowang'
   import {normalizeRoles} from 'util/role'
   import Clipboard from 'com/widget/clipboard'
   import {getCnName} from 'util/meta'
@@ -160,6 +160,14 @@
       }
     },
     methods: {
+      getFinalUserId() {
+        const { user_id: userId } = this.$route.query
+        if (userId) {
+          return userId
+        }
+        const { userInfo } = this
+        return userInfo.id
+      },
       keywordTitle(word) {
         return word.word + (word.xufei ? '(续费)' : (word.isSold ? '(已售出)' : ''))
       },
@@ -182,6 +190,9 @@
           gwSelected,
           localItems
         } = this
+        // if (!window.localStorage.getItem('qatest')) {
+        //   return this.$message.error('系统紧急维护中，暂时不可购买，请稍后再试。')
+        // }
         const {salesId, userId} = salesInfo
         let createOrderArgs = [localItems, userId, salesId]
         if (gwSelected.length) {
@@ -207,7 +218,7 @@
         this.expand = !this.expand
       },
       addToCart(items) {
-        const newItems = items.filter(i => !this.localItems.some(j => j.word === i.word))
+        const newItems = items.filter(i => !this.localItems.some(j => j.word === i.word && j.device === i.device))
         if (newItems.length) {
           this.localItems.push(...clone(newItems))
         }
@@ -243,10 +254,12 @@
         if (visible && this.localItems.length) {
           // 每次打开更新下关键词价格、是否已售卖
           this.loading = true
-          const items = await refreshKeywordPrice(this.localItems)
+          const items = await refreshKeywordPriceNew(this.localItems, {
+            targetUserId: this.getFinalUserId()
+          })
           // 保留字段 xufei
           this.localItems = items.map(i => {
-            const one = this.localItems.find(li => li.word === i.word)
+            const one = this.localItems.find(li => li.word === i.word && li.device === i.device)
             if (one) {
               return Object.assign({}, one, i)
             }

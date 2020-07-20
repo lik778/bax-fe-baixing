@@ -8,10 +8,13 @@ import {
   SEM_PLATFORM_SHENMA
 } from 'constant/fengming'
 
-export function fmtCpcRanking(ranking) {
+export function fmtCpcRanking(ranking, isFixed = true) {
   ranking = +ranking
   if (ranking < 1 || ranking > 5) {
     ranking = 5
+  }
+  if (!isFixed) {
+    return ranking
   }
   return parseFloat(ranking).toFixed(1)
 }
@@ -155,4 +158,40 @@ export function validateCreative({title = '', content = '', platforms = []}) {
     }
   }
   validateCreative(validateRules)
+}
+
+export const validateKeywordRules = [
+  {
+    msg: '不支持含有特殊字符%s的关键词，请修改',
+    validate(str) {
+      const reg = /^[\u4e00-\u9fa5A-Za-z0-9]+$/ig
+      return !reg.test(str)
+    }
+  },
+  {
+    msg: '关键词%s字数超过限制，请修改',
+    validate(str) {
+      const MAX_BYTE_NUM = 40
+      let len = 0
+      let reg = /[\u4e00-\u9fa5]/
+      for (let i = 0; i < str.length; i++) {
+        if (reg.test(str.charAt(i))) {
+          len += 2
+        } else {
+          len++
+        }
+      }
+      return len > MAX_BYTE_NUM
+    }
+  }
+]
+
+export function validateKeyword(keywords = []) {
+  keywords.forEach(w => {
+    validateKeywordRules.forEach(({ msg, validate }) => {
+      if (validate(w)) {
+        throw new Error(msg.replace('%s', `【${w}】`))
+      }
+    })
+  })
 }

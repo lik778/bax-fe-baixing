@@ -29,7 +29,7 @@
       </el-form-item>
       <el-form-item label="链接">
         <el-input v-model.trim="material.link"
-          placeholder="如: http://baixing.com">
+          placeholder="如: https://baixing.com">
         </el-input>
       </el-form-item>
       <el-form-item label="上传物料" required>

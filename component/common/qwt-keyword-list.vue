@@ -18,6 +18,9 @@
         <template slot-scope="{row}">
           {{row.word}}
           <span class="new-word" v-if="row.isNew">(新)</span>
+          <span class="new-word">
+            {{RECOMMAND_SOURCES.includes(row.recommandSource) ? '(好词)': ''}}
+          </span>
         </template>
       </el-table-column>
       <el-table-column v-if="showPropShow"
@@ -26,8 +29,12 @@
         :render-header="renderWithTip(searchIndexTip)">
       </el-table-column>
       <el-table-column v-if="showPropRanking"
-        width="150" label="平均排名"
+        width="150" label="电脑端排名"
         :formatter="r => fmtCpcRanking(r.cpcRanking || -1)">
+      </el-table-column>
+      <el-table-column v-if="showPropMobileRanking"
+        width="150" label="手机端排名"
+        :formatter="r => fmtCpcRanking(r.mobileCpcRanking || -1)">
       </el-table-column>
       <el-table-column v-if="showPropStatus"
         width="180"
@@ -47,10 +54,8 @@
       <el-table-column>
         <template slot="header" slot-scope="col">
           {{maxPriceLabel}}<cpc-top-price-tip/>
-          <el-popover
-            placement="top"
-            v-model="popoverVisible"
-          >
+          <div style="display:block;padding-left:0">
+           <el-popover placement="top" v-model="popoverVisible">
             <div>
               <el-input placeholder="请输入关键词价格" v-model="keywordPrice" size="mini"></el-input>
               <div class="actions">
@@ -58,15 +63,16 @@
                 <el-button type="primary" size="mini" @click="handleKeywordsPriceChange">确定</el-button>
               </div>
             </div>
-            <a href="javascript:;" slot="reference" class="pcice-action" @click="popoverVisible = true">批量改价</a>
-          </el-popover>
+            <a href="javascript:;" slot="reference" class="pcice-action">批量改价</a>
+           </el-popover>
+          </div>
         </template>
         <template slot-scope="s">
           <span class="price">
-            <el-input size="mini" placeholder="单位: 元"
-              :value="f2y(getWordPrice(s.row.word))"
-              @change="v => setCustomPrice(s.row, v)">
-            </el-input>
+            <bax-input placeholder="单位，元" 
+                       :value="f2y(getWordPrice(s.row.word))"
+                       @blur="v => setCustomPrice(s.row, v)"
+                       @keyup="v => setCustomPrice(s.row, v)" />
             <span v-if="showAddPrice(s.row)"
               class="add-w-price">
               <button @click="bumpPriceBy20(s.row)">
@@ -107,8 +113,12 @@ import {
   KEYWORD_CHIBI_PENDING,
   KEYWORD_CHIBI_REJECT,
   SEM_PLATFORM_SHENMA,
-  keywordStatus
+  keywordStatus,
+  RECOMMAND_SOURCE_FH,
+  NEW_RECOMMAND_SOURCE_FH
 } from 'constant/fengming'
+
+import BaxInput from 'com/common/bax-input'
 
 import {
   keywordStatusTip,
@@ -136,18 +146,22 @@ import { toFloat } from 'util/kit'
 
 const CpcTopPriceTip = Vue.extend({
   render(h) {
-    return renderColumnHeaderWithTip(cpcTopPriceTip)(h, {column: {}})
+    return renderColumnHeaderWithTip(cpcTopPriceTip)(h, 
+    {column: {},labelStyle:{display:'none'}, wrapClass:'display-inline'})
   }
 })
 const MODE_SELECT = 'select'
 const MODE_UPDATE = 'update'
-const LIMIT = 20
+const LIMIT = 10
+
+const RECOMMAND_SOURCES = [NEW_RECOMMAND_SOURCE_FH, RECOMMAND_SOURCE_FH]
 
 export default {
   name: 'qwt-keyword-list',
   components: {
     BaxPagination,
-    CpcTopPriceTip
+    CpcTopPriceTip,
+    BaxInput
   },
   props: {
     platform: {
@@ -200,6 +214,10 @@ export default {
     showPropRanking: {
       type: Boolean,
       default: false
+    },
+    showPropMobileRanking: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -215,8 +233,10 @@ export default {
       cpcTopPriceTip,
       keywordPriceTip,
 
+      keywordPrice: '',
       popoverVisible: false,
-      keywordPrice: ''
+
+      RECOMMAND_SOURCES
     }
   },
   computed: {
@@ -314,8 +334,15 @@ export default {
     },
     showAddPrice(row) {
       // 过去24小时排名低于5或无排名的，在线的 keyword，在线的 campaign
-      const {cpcRanking, isPriceChanged, status: keywordStatus} = row
-      const show = keywordStatus === KEYWORD_STATUS_ONLINE && this.campaignOnline && !isPriceChanged && (cpcRanking > 5 || cpcRanking === 0)
+      const {cpcRanking, mobileCpcRanking, isPriceChanged, status: keywordStatus} = row
+      // 电脑端和手机端任意一端排名大于5或者无排名
+      let rankingLow = false
+      if (this.platform === SEM_PLATFORM_SHENMA) {
+        rankingLow = mobileCpcRanking > 5 || mobileCpcRanking <= 0
+      } else {
+        rankingLow = (cpcRanking > 5 || cpcRanking <= 0) || (mobileCpcRanking > 5 || mobileCpcRanking <= 0)
+      }
+      const show = keywordStatus === KEYWORD_STATUS_ONLINE && this.campaignOnline && !isPriceChanged && rankingLow
       if (show) {
         track({
           action: 'pv: bump-price-by-20'
@@ -357,6 +384,7 @@ export default {
         word: row.word,
         id: row.id
       })
+      this.$emit('change-offset', this.offset - 1)
     },
     getWordPrice(kw) {
       const word = this.words.find(w => w.word === kw)
@@ -543,4 +571,9 @@ export default {
   }
 }
 
+.display-inline{
+  display: inline-block !important;
+  vertical-align: middle !important;
+  line-height: 20px;
+}
 </style>

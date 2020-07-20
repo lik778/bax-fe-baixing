@@ -6,25 +6,7 @@ import * as fapi from 'api/fengming'
 import * as bapi from 'api/biaowang'
 import * as mapi from 'api/meta'
 
-const emptyQuery = {
-  fromDate: 0,
-  toDate: 0,
-  offset: 0,
-  limit: 10,
-  total: 10
-}
-
 const store = observable({
-  _consumeQuery: {
-    ...emptyQuery
-  },
-  _consumeLogs: [],
-
-  _chargeQuery: {
-    ...emptyQuery
-  },
-  _chargeLogs: [],
-
   _summary: {},
   _coupons: [],
 
@@ -33,19 +15,6 @@ const store = observable({
 
   get logs() {
     return toJS(this._logs)
-  },
-
-  get consumeQuery() {
-    return toJS(this._consumeQuery)
-  },
-  get consumeLogs() {
-    return toJS(this._consumeLogs)
-  },
-  get chargeQuery() {
-    return toJS(this._chargeQuery)
-  },
-  get chargeLogs() {
-    return toJS(this._chargeLogs)
   },
   get summary() {
     return toJS(this._summary)
@@ -60,7 +29,7 @@ const store = observable({
     if (productType === PRODUCT_TYPE_BIAOWANG) {
       const reBuildBiaowangParams = (params) => {
         const {
-          campaignId: promoteId,
+          selectId: word,
           limit: size,
           offset,
           ...ohterParams
@@ -71,7 +40,7 @@ const store = observable({
         return {
           page,
           size,
-          promoteId,
+          word,
           ...ohterParams
         }
       }
@@ -79,44 +48,18 @@ const store = observable({
       logs = res.content
       total = res.totalElements
     } else {
-      const res = await fapi.getLogs(params)
+      const reBuildFengmingParams = ({selectId, ...ohterParams}) => {
+        return {
+          campaignId: selectId,
+          ...ohterParams
+        }
+      }
+      const res = await fapi.getLogs(reBuildFengmingParams(params))
       logs = res.logs
       total = res.total
     }
     this.totalLogs = total
     this._logs = logs
-  }),
-
-  clearConsumeLogs: action(async function() {
-    this._consumeQuery = {
-      ...emptyQuery
-    }
-    this._consumeLogs = []
-  }),
-  getConsumeLogs: action(async function(opts) {
-    this._consumeQuery = {
-      ...this._consumeQuery,
-      ...opts
-    }
-    const { logs, total } = await fapi.getChangeLogs(this.consumeQuery)
-    this._consumeQuery.total = total
-    this._consumeLogs = logs
-  }),
-
-  clearChargeLogs: action(function() {
-    this._chargeQuery = {
-      ...emptyQuery
-    }
-    this._chargeLogs = []
-  }),
-  getChargeLogs: action(async function(opts) {
-    this._chargeQuery = {
-      ...this._chargeQuery,
-      ...opts
-    }
-    const { logs, total } = await fapi.getChargeLogs(this.chargeQuery)
-    this._chargeQuery.total = total
-    this._chargeLogs = logs
   }),
 
   getSummary: action(async function() {

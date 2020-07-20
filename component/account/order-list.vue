@@ -4,80 +4,102 @@
     <div class="action-container">
       <el-date-picker
         v-model="params.dateRange"
-        type="datetimerange"
+        type="daterange"
         start-placeholder="开始日期"
         end-placeholder="结束日期">
       </el-date-picker>
       <label>订单状态</label>
-      <el-radio-group v-model="params.statuses">
-        <el-radio-button :label="statusType.STATUS_UNPAID">未支付</el-radio-button>
-        <el-radio-button :label="[statusType.STATUS_PAID, statusType.STATUS_ACTIVE]">已支付</el-radio-button>
-        <el-radio-button :label="statusType.STATUS_CANCELED">已取消</el-radio-button>
+      <el-radio-group v-model="params.orderStatusList">
+        <el-radio-button :label="[orderStatusType.STATUS_UNPAID, orderStatusType.STATUS_PRE_TRADE]">未支付</el-radio-button>
+        <el-radio-button :label="[orderStatusType.STATUS_PAID]">已支付</el-radio-button>
+        <el-radio-button :label="[orderStatusType.STATUS_ORDER_CANCELED]">已取消</el-radio-button>
+        <el-radio-button :label="[orderStatusType.STATUS_ORDER_REFUND]">已退款</el-radio-button>
       </el-radio-group>
     </div>
     <el-table
+      class="order-list-parent-table"
       :data="orderData"
       style="width: 100%"
+      :row-class-name="getRowClass"
     >
+      <el-table-column type="expand">
+        <template slot-scope="props">
+          <el-table :data="props.row.itemVoList.filter(o => o.skuType === GIFT)"
+                    :show-header="false"
+                    :border="false"
+                    class="child-table">
+            <el-table-column label="订单编号" width="180" />
+            <el-table-column label="产品名称" width="250" prop="skuName" />
+            <el-table-column label="状态" width="90" align="center" :formatter="() => {return '--'}" />
+            <el-table-column label="原价" width="105" align="center"
+                             :formatter="row => formatPrice(row.originalPrice)"
+                             prop="originalPrice" />
+            <el-table-column label="优惠" width="105" align="center"
+                             :formatter="row => formatPrice(row.originalPrice - row.dealPrice)" />
+            <el-table-column label="实价" width="105"
+                             prop="dealPrice"
+                             :formatter="row => formatPrice(row.dealPrice)"
+                             align="center" />
+            <el-table-column label="创建时间" width="150" align="center" :formatter="() => {return '--'}"/>
+          </el-table>
+        </template>
+      </el-table-column>
       <el-table-column
         width="180"
-        label="订单编号"
-        prop="id"/>
+        label="订单编号" 
+        prop="tradeSeq"/>
+      <el-table-column
+        width="250"
+        label="产品名称"
+        prop="skuName"/>
       <el-table-column
         width="90"
         align="center"
         label="状态"
-        :formatter="({status}) => statusLabel[status]"/>
-      <el-table-column
-        width="105"
-        align="center"
-        label="充值金额"
-        :formatter="formatChargePrice"/>
-      <el-table-column
-        width="90"
-        align="center"
-        label="精品官网"
-        :formatter="formatKaSiteDuration"/>
+        prop="status"
+        :formatter="({status}) => orderStatusLabelDisplay[status]"/>
       <el-table-column
         width="105"
         align="center"
         label="原价"
-        :formatter="row => formatPrice(genOriginalPrice(row) * genKaSiteDuration(row.extra))"/>
+        prop="originalPrice" 
+        :formatter="row => formatPrice(row.originalPrice, row.status)"/>
       <el-table-column
         width="105"
         align="center"
         label="优惠"
-        :formatter="row => formatPrice(genOriginalPrice(row) * genKaSiteDuration(row.extra) - row.customerPrice)"/>
+        :formatter="row => formatPrice(row.originalPrice - row.dealPrice, row.status)"/>
       <el-table-column
         width="105"
         align="center"
         label="实价"
-        :formatter="({customerPrice}) => formatPrice(customerPrice)"/>
+        :formatter="row => formatPrice(row.dealPrice, row.status)"/>
       <el-table-column
-        width="140"
+        width="150"
         align="center"
         label="创建时间"
-        :formatter="formatCreatedAt"/>
+        :formatter="row => formatTime(row.createdTime)"/>
       <el-table-column label="操作"
         width="180"
         align="center"
       >
         <div slot-scope="{row}">
-          <div class="btn-wrap" v-if="row.status === statusType.STATUS_UNPAID">
-            <a href="javascript:;" @click="payOrder(row.id)">支付</a>
-            <a href="javascript:;" @click="cancelOrder(row.id)">取消订单</a>
+          <div class="btn-wrap" 
+               v-if="row.status === orderStatusType.STATUS_UNPAID || row.status === orderStatusType.STATUS_PRE_TRADE">
+            <a href="javascript:;" @click="payOrder(row.tradeSeq, row.status, row.parentId)">支付</a>
+            <a href="javascript:;" @click="cancelOrder(row.tradeSeq, row.status, row.parentId)">取消订单</a>
           </div>
           <div v-else>-</div>
         </div>
       </el-table-column>
     </el-table>
-    <el-pagination
-      v-if="total"
+
+    <el-pagination v-if="total"
       class="pagination"
       :total="total"
-      :current-page="Math.floor(offset / params.limit) + 1"
-      @current-change="goto"
-      :page-size="params.limit"
+      :current-page="pageNo"
+      @current-change="handleCurrentPage"
+      :page-size="params.size"
       layout="total, prev, pager, next, jumper"
     >
     </el-pagination>
@@ -88,65 +110,58 @@
 import dayjs from 'dayjs'
 import * as api from 'api/account'
 import SectionHeader from 'com/common/section-header'
+import { orderStatusType, orderStatusLabelDisplay} from 'constant/order'
+import { MERCHANTS, SKUTYPES } from 'constant/product'
+import { orderServiceHost } from 'config'
 
-const statusType = {
-  STATUS_REFUND: -10,
-  STATUS_CANCELED: -1,
-  STATUS_UNPAID: 0,
-  STATUS_PAID: 1,
-  STATUS_ACTIVE: 10
-}
-
-const statusLabel = {
-  [statusType.STATUS_REFUND]: '已退款',
-  [statusType.STATUS_CANCELED]: '已取消',
-  [statusType.STATUS_UNPAID]: '未支付',
-  [statusType.STATUS_PAID]: '已支付',
-  [statusType.STATUS_ACTIVE]: '已支付'
-}
-
+const { FENG_MING_MERCHANT_CODE, WEBSITE_MERCHANT_CODE} = MERCHANTS
+const { GIFT } = SKUTYPES
 const ONE_PAGE_NUM = 10
-const ONE_YEAR_QUOTA_PRICE = 120000
-
-const transformUnixTimeStamp = (date) =>  {
-  return dayjs(new Date(date)).unix()
-}
 const DEFAULT_DATE_RANGE = [
-  dayjs(new Date()).subtract(1, 'months'),
-  new Date()
+  dayjs(new Date()).subtract(1, 'months').toDate(),
+  dayjs().toDate()
 ]
 
 export default {
   name: 'qwt-operastion-order-list',
   data() {
     return {
-      statusType,
-      statusLabel,
-
+      orderStatusType,
+      orderStatusLabelDisplay,
       params: {
+        merchantList:[FENG_MING_MERCHANT_CODE, WEBSITE_MERCHANT_CODE],
+        orderStatusList: [orderStatusType.STATUS_UNPAID, orderStatusType.STATUS_PRE_TRADE],
+        size: ONE_PAGE_NUM,
         dateRange: DEFAULT_DATE_RANGE,
-        limit: ONE_PAGE_NUM,
-        statuses: statusType.STATUS_UNPAID
       },
-      offset: 0,
-      orderData: [],
-      total: 0
+      pageNo: 1,
+      orderData: null,
+      total: 0,
+
+      GIFT
     }
   },
   components: {SectionHeader},
   methods: {
-    genOriginalPrice({productType, originalPrice}) {
-      if (productType === 4) return ONE_YEAR_QUOTA_PRICE
-      return originalPrice
-    },
-    async payOrder(orderId) {
-      const url = await api.payOrder(orderId)
+    async payOrder(tradeSeq, status, parentTradeSeq) {
+      // tip: 支付和取消订单实际操作的是父订单，
+      // 如果parentTradeSeq为空，说明本身就是父订单，反之，子订单
+      const orderId =  parentTradeSeq || tradeSeq 
+      const { STATUS_PRE_TRADE, STATUS_UNPAID } = this.orderStatusType
       this.$message.success('正在跳转支付页面')
+      let payUrl = ''
+      if (status === STATUS_PRE_TRADE) {
+        payUrl = `${orderServiceHost}/?appId=105&seq=${orderId}`
+      }
+      if (status === STATUS_UNPAID) {
+        payUrl = `${orderServiceHost}/pay?tradeId=${orderId}`
+      }
       setTimeout(() => {
-        location.href = url
+        location.href = payUrl
       }, 800)
     },
-    async cancelOrder(orderId) {
+    async cancelOrder(tradeSeq, status, parentTradeSeq) {
+      const orderId =  parentTradeSeq || tradeSeq 
       await this.$confirm('您确定要取消该订单吗？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '放弃'
@@ -156,46 +171,45 @@ export default {
       this.$message.success('取消订单成功')
     },
     async fetchOrderData(isResetOffset) {
-      if (isResetOffset) this.offset = 0
-      // format quey parmas
+      if (isResetOffset) this.pageNo = 1
       const { dateRange, ...otherParams } = this.params
-      const [startTs, endTs] = dateRange.map(transformUnixTimeStamp)
-      if (!(startTs && endTs)) return
-      const queryParmas = {
-        startTs,
-        endTs,
-        offset: this.offset,
+      let queryParmas = {
+        pageNo: this.pageNo || 1,
         ...otherParams
       }
-      const {total, data} = await api.queryOrder(queryParmas)
-      this.orderData = data
+      if (dateRange) {
+        const startDate = dayjs(dateRange[0]).startOf('day').unix()
+        const endDate = dayjs(dateRange[1]).endOf('day').unix()
+        queryParmas = {
+          startDate,
+          endDate,
+          ...queryParmas
+        }
+      } 
+      const { total, data } = await api.queryOrder(queryParmas)
+      const orderData = data.map(trade => {
+        trade.skuName = trade.itemVoList.length ?  trade.itemVoList[0].skuName : ''
+        return trade
+      })
+      this.orderData = orderData
       this.total = total
     },
-    formatPrice(price) {
-      return (price / 100)
+    formatPrice(price, status) {
+      const { STATUS_PRE_TRADE } = this.orderStatusType
+      if (status === STATUS_PRE_TRADE && Number(price) === 0) {
+        return '--'
+      }
+      return `${(price / 100)}元`
     },
-    formatChargePrice({originalPrice, productType}) {
-      // 这个订单如果只买了官网，没有充值，就显示“-”
-      return productType === 4 ? '-' : this.formatPrice(originalPrice)
+    formatTime (time) {
+      return dayjs(time * 1000).format('YYYY-MM-DD HH:mm')
     },
-    formatCreatedAt({createdAt}) {
-      return dayjs(new Date(createdAt * 1000)).format('YY-MM-DD HH:mm')
-    },
-    formatKaSiteDuration({productType, extra}) {
-      if (productType === 3) return '-'
-      const duration = this.genKaSiteDuration(extra)
-      return `${duration}年`
-    },
-    genKaSiteDuration(extra) {
-      const ONE_YEAR_MILLISECOND = 31536000
-      const {new_shop_duration} = JSON.parse(extra)
-      if (!new_shop_duration) return 1
-      const result = new_shop_duration / ONE_YEAR_MILLISECOND
-      return result % 1 === 0 ? result : result.toFixed(1)
-    },
-    goto(page) {
-      this.offset = (page - 1) * ONE_PAGE_NUM
+    handleCurrentPage(val) {
+      this.pageNo = val
       this.fetchOrderData()
+    },
+    getRowClass({row, index}) {
+      return !row.itemVoList.filter(o => o.skuType === GIFT).length ? 'hide-expand-row': ''
     }
   },
   watch: {
@@ -226,5 +240,29 @@ export default {
   }
   .pagination {
     margin-top: 20px;
+  }
+
+  >>> .order-list-parent-table {
+    & .child-table {
+      &:before {
+        display: none;
+      }
+      &.el-table .cell {
+        color: #aaa;
+      }
+      &.el-table tr:last-child {
+        & td {
+          border-bottom: 0;
+        }
+      }
+    }
+    & .el-table__expanded-cell {
+      padding: 0 50px;
+    }
+    & .hide-expand-row {
+      & .el-table__expand-icon {
+        display: none;
+      }
+    }
   }
 </style>

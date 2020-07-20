@@ -18,7 +18,7 @@
           <div class="landingpage">
             <fm-tip class="landingpage-tip" img-url="//file.baixing.net/201903/8d224eb6179a947eecbf0fde089f7ed3.png">电话接不停小妙招</fm-tip>
             <div style="margin-bottom: 10px">
-              <el-radio-group v-model="landingTypeDisplay" size="small">
+              <el-radio-group v-model="newPromotion.landingType" size="small">
                 <el-radio-button v-for="option of extendLandingTypeOpts" :key="option.value" :label="option.value">{{option.label}}</el-radio-button>
               </el-radio-group>
             </div>
@@ -26,20 +26,20 @@
               <user-ad-selector
                 ref="userAdSelector"
                 :type="adSelectorType"
-                v-if="landingTypeDisplay === LANDING_TYPE_AD"
+                v-if="newPromotion.landingType === LANDING_TYPE_AD"
                 :all-areas="allAreas" :limit-mvp="false"
                 :selected-id="newPromotion.landingPageId"
                 @select-ad="onSelectAd"
               />
 
               <qiqiaoban-page-selector
-                v-if="landingTypeDisplay === LANDING_TYPE_GW"
+                v-if="newPromotion.landingType === LANDING_TYPE_GW"
                 :value="newPromotion.landingPage"
                 @change="v => setLanding(LANDING_TYPE_GW, v)"
               />
 
               <ka-258-selector
-                v-if="landingTypeDisplay === LANDING_TYPE_258"
+                v-if="newPromotion.landingType === LANDING_TYPE_258"
                 :value="newPromotion.landingPage"
                 @change="v => setLanding(LANDING_TYPE_258, v)"
               />
@@ -64,7 +64,11 @@
 
       <section class="creative">
         <fm-tip class="creative-tip" position="creative" img-url="//file.baixing.net/201903/d6f4502a0e8a659b78a33fbb3713e6b9.png">创意怎么才能飘红</fm-tip>
-        <header><promotion-creative-tip /> </header>
+        <header class="top-col">
+          <promotion-creative-tip />
+          <el-button v-if="newPromotion.landingType === LANDING_TYPE_GW" class="button" type="primary"
+                     size="small" @click="getRecommendKeywords">一键拓词</el-button>
+        </header>
         <creative-editor
           :platforms="newPromotion.sources"
           :title="newPromotion.creativeTitle"
@@ -76,9 +80,20 @@
 
       <section class="keyword">
         <header>选取推广关键词</header>
-        <p class="tip">建议选取20个以上关键词，关键词越多您的创意被展现的机会越多。根据当月数据，为您推荐如下关键词</p>
+        <p class="tip">请选取20个以上关键词，关键词越多您的创意被展现的机会越多。根据当月数据，为您推荐如下关键词</p>
+        <el-button type="primary" style="margin-top:10px" size="small" 
+                   @click="addKeywordsDialog = true">批量添加关键词</el-button>
         <div class="kw-tag-container">
-          <el-tag class="kw-tag" v-for="(kw, index) in newPromotion.keywords" :key="index" closable @close="removeKeyword(index)">{{kw.word}}</el-tag>
+          <el-tag class="kw-tag"
+                  :class="{'kw-tag-fh': RECOMMAND_SOURCES.includes(kw.recommandSource)}" 
+                  v-for="(kw, index) in newPromotion.keywords" 
+                  :key="index" 
+                  closable
+                  type="warning"
+                  @close="removeKeyword(index)">
+                  {{kw.word}}
+                  {{RECOMMAND_SOURCES.includes(kw.recommandSource) ? '(好词)': ''}}
+          </el-tag>
           <el-autocomplete
             v-model="queryWord"
             :debounce="600"
@@ -95,14 +110,11 @@
         <header>设置预算</header>
         <div class="kw-price">
           <label>关键词出价<cpc-price-tip />：</label>
-          <el-input type="number"
-            :value="f2y(kwPrice) || f2y(recommendKwPrice)"
-            @change="onKwPriceChange"
-            class="input"
-            size="small"
-          >
-            <template slot="append">元</template>
-          </el-input>
+          <bax-input :value="f2y(kwPrice) || f2y(recommendKwPrice)" 
+                     @blur="onKwPriceChange"
+                     @keyup="onKwPriceChange"
+                     class="input"
+                     size="small" />元
           <span class="tip">（关键词出价区间为 [2, 999] 元）</span>
         </div>
 
@@ -123,20 +135,17 @@
 
         <div class="budget">
           <label>单渠道日预算：</label>
-          <el-input type="number"
-            :value="f2y(newPromotion.dailyBudget)"
-            @change="onBudgetChange"
-            class="input"
-            size="small"
-          >
-            <template slot="append">元</template>
-          </el-input>
+          <bax-input :value="f2y(newPromotion.dailyBudget)" 
+                     @blur="onBudgetChange"
+                     @keyup="onBudgetChange"
+                     class="input"
+                     size="small" />元
           <p class="tip">（根据您选取的关键词，建议最低预算为<strong class="red">{{ f2y(predictedInfo.minDailyBudget) }} </strong>元）</p>
         </div>
         <p class="tip">
-          扣除其余有效计划日预算后，您的推广资金可用余额为￥{{f2y(usableBalance)}}元，可消耗<strong class="red strong">{{predictedInfo.days}}</strong>天
+          扣除其余有效计划日预算后，您的推广资金可用余额为￥{{f2y(currentBalance)}}元，可消耗<strong class="red strong">{{predictedInfo.days}}</strong>天
         </p>
-        <contract-ack type="content-rule" />
+        <contract-ack type="content-rule" ref="contract"/>
         <div>
           <el-button type="primary"
             :disabled="isCreating"
@@ -159,6 +168,16 @@
     <charge-dialog
       :visible="chargeDialogVisible"
       @cancel="gotoPromotionList"
+    />
+    <qwt-add-keywords-dialog
+      ref="qwtAddKeywordsDialog"
+      title="批量添加关键词"
+      @close="addKeywordsDialog = false"
+      @update-keywords="updatePromotionKeywords"
+      :visible="addKeywordsDialog"
+      :original-keywords="newPromotion.keywords"
+      :areas="newPromotion.areas"
+      :sources="newPromotion.sources"
     />
   </div>
 </template>
@@ -183,9 +202,11 @@ import CpcPriceTip from 'com/widget/cpc-price-tip'
 import ContractAck from 'com/widget/contract-ack'
 import wxBindModal from 'com/common/wx-bind-modal'
 import FmTip from 'com/widget/fm-tip'
+import qwtAddKeywordsDialog from 'com/common/qwt-add-keywords-dialog'
+import BaxInput from 'com/common/bax-input'
 
 import dayjs from 'dayjs'
-import track from 'util/track'
+import { default as track, trackRecommendService } from 'util/track'
 
 import {
   assetHost
@@ -214,7 +235,9 @@ import {
   semPlatformOpts,
   LANDING_TYPE_AD,
   LANDING_TYPE_GW,
-  LANDING_TYPE_258
+  LANDING_TYPE_258,
+  RECOMMAND_SOURCE_FH,
+  NEW_RECOMMAND_SOURCE_FH
 } from 'constant/fengming'
 
 import {allowSee258} from 'util/fengming-role'
@@ -229,6 +252,8 @@ import { keywordPriceTip } from 'constant/tip'
 import store from './store'
 
 const MVP_AD = 0
+
+const RECOMMAND_SOURCES = [RECOMMAND_SOURCE_FH, NEW_RECOMMAND_SOURCE_FH]
 
 const MIN_DAILY_BUDGET = 100 * 100
 
@@ -261,7 +286,9 @@ export default {
     ChargeDialog,
     ContractAck,
     CpcPriceTip,
-    FmTip
+    FmTip,
+    qwtAddKeywordsDialog,
+    BaxInput
   },
   fromMobx: {
     searchRecommends: () => store.searchRecommends,
@@ -269,7 +296,6 @@ export default {
 
     currentBalance: () => store.currentBalance,
     campaignsCount: () => store.campaignsCount,
-    usableBalance: () => store.usableBalance
   },
   props: {
     userInfo: {
@@ -291,7 +317,7 @@ export default {
       LANDING_TYPE_AD,
       LANDING_TYPE_GW,
       LANDING_TYPE_258,
-      landingTypeDisplay: LANDING_TYPE_AD,
+      RECOMMAND_SOURCES,
 
       searchRecommendsVisible: false,
       chargeDialogVisible: false,
@@ -303,7 +329,8 @@ export default {
       timeout: null,
 
       // PRE_IMG_PROMOTION: assetHost + 'promotion-advantage.png'
-      PRE_IMG_PROMOTION: 'http://file.baixing.net/201809/a995bf0f1707a3e98a2c82a5dc5f8ad3.png'
+      PRE_IMG_PROMOTION: '//file.baixing.net/201809/a995bf0f1707a3e98a2c82a5dc5f8ad3.png',
+      addKeywordsDialog: false
     }
   },
   computed: {
@@ -329,7 +356,7 @@ export default {
           days: 0
         }
       }
-      const { usableBalance, newPromotion } = this
+      const { currentBalance, newPromotion } = this
 
       let prices = []
       if (this.kwPrice) {
@@ -338,7 +365,7 @@ export default {
         prices = newPromotion.keywords.map(kw => this.recommendKwPrice)
       }
 
-      const tempPredictedInfo = getCampaignPrediction(usableBalance, dailyBudget, prices)
+      const tempPredictedInfo = getCampaignPrediction(currentBalance, dailyBudget, prices)
       const sourcesLen = Math.max(1, this.newPromotion.sources.length)
       return {
         ...tempPredictedInfo,
@@ -359,6 +386,27 @@ export default {
   },
   methods: {
     f2y,
+    updatePromotionKeywords(kwAddResult) {
+      this.addKeywordsDialog = false
+
+      if (!kwAddResult) return
+      let { normalList, bannedList} = kwAddResult
+      const { actionTrackId, userInfo } = this
+
+      track({
+        roles: userInfo.roles.map(r => r.name).join(','),
+        action: 'click-button: add-keyword-list',
+        baixingId: userInfo.baixingId,
+        time: Date.now() / 1000 | 0,
+        baxId: userInfo.id,
+        actionTrackId,
+        keywordsLen: normalList.length,
+        keywords: normalList.map(item => item.word).join(',')
+      })
+
+      let { keywords } = this.newPromotion
+      this.newPromotion.keywords = keywords.concat(normalList)
+    },
     handleCreativeValueChange({title, content}) {
         this.newPromotion.creativeTitle = title
         this.newPromotion.creativeContent = content
@@ -378,7 +426,6 @@ export default {
         )
       }
     },
-
     selectRecommend(item) {
       const { keywords } = this.newPromotion
       if (keywords.find(kw => kw.word === item.word)) {
@@ -404,7 +451,6 @@ export default {
     setLanding(type, url) {
       this.newPromotion.landingType = type
       this.newPromotion.landingPage = url
-      this.newPromotion.areas = ['quanguo']
     },
 
     async onSelectAd(ad) {
@@ -431,36 +477,41 @@ export default {
       this.newPromotion.creativeContent = ad.content && ad.content.slice(0, 39)
     },
 
-    trackPromotionKeywords(promotionIds) {
-      const recommendKeywordsList = this.urlRecommends
-      const allKeywordsList = clone(this.newPromotion.keywords)
-      const systemKeywordsList = []
-      const uesrKeywordsList = []
-      const dailyBudget = this.newPromotion.dailyBudget / 100
-      const date = dayjs().format('YYYY-MM-DD')
-      allKeywordsList.forEach( ({ id }) => {
-        // 表示当前关键字在系统创建的关键字数组中
-        if(recommendKeywordsList.some(item => item.id === id)) {
-          systemKeywordsList.push(id)
-        } else {
-          uesrKeywordsList.push(id)
-        }
-      })
+    trackPromotionKeywords(promotionIds, promotion) {
+      // 凤凰于飞推荐词列表
+      const recommendKeywords = this.urlRecommends
+        .filter(({recommandSource}) => RECOMMAND_SOURCES.includes(recommandSource))
+        .map(({word, recommandSource}) => `${word}_${recommandSource}`)
+        .join(',')
+      
+      const selectedKeywords = promotion.keywords
+        .map(({word, recommandSource = 'user_selected'}) => `${word}=${recommandSource}`)
+        .join(',')
+      
+      const dailyBudget = promotion.dailyBudget / 100
+      const landingPage = promotion.landingPage
 
-      promotionIds.forEach(id => {
-        track({
-          action: 'record-keywords',
-          promotionId: id,
-          allKeywords: allKeywordsList.length,
-          systemKeywords: systemKeywordsList.length,
-          uesrKeywords: uesrKeywordsList.length,
-          dailyBudget,
-          date
-        })
+      trackRecommendService({
+        action: 'record-keywords',
+
+        ids: promotionIds.join(','),
+        areas: promotion.areas.join(','),
+        landingPage: promotion.landingPage,
+        landingType: promotion.landingType,
+        creativeTitle: promotion.creativeTitle,
+        creativeContent: promotion.creativeContent,
+        sources: promotion.sources.join(','),
+        selectedKeywords,
+        recommendKeywords,
+        dailyBudget,
+        keywordPrice: f2y(this.kwPrice) || f2y(this.recommendKwPrice)
       })
     },
 
     async createPromotion() {
+      if (!this.$refs.contract.$data.isAgreement) {
+        return this.$message.error('请阅读并勾选同意服务协议，再进行下一步操作')
+      }
       if (this.isCreating) {
         return Message.warning('正在创建中, 请稍等一小会 ~')
       }
@@ -468,6 +519,8 @@ export default {
       this.isCreating = true
 
       const { actionTrackId, userInfo } = this
+
+      const promotion = clone(this.newPromotion)
 
       track({
         roles: userInfo.roles.map(r => r.name).join(','),
@@ -479,16 +532,14 @@ export default {
       })
 
       try {
-        await this._createPromotion()
+        await this._createPromotion(promotion)
       } finally {
         this.isCreating = false
       }
     },
 
-    async _createPromotion() {
+    async _createPromotion(p) {
       const { currentBalance, allAreas } = this
-
-      const p = clone(this.newPromotion)
 
       if (!p.sources.length) return Message.error('请选择投放渠道')
 
@@ -515,6 +566,10 @@ export default {
         return Message.error('请填写关键字')
       }
 
+      if (p.keywords.length < 20) {
+        return Message.error('请至少添加20个投放关键词')
+      }
+
       // 这个应该是个雷！
       // for (const w of p.keywords) {
       //   if (w.price < MIN_WORD_PRICE || w.price > MAX_WORD_PRICE) {
@@ -524,6 +579,11 @@ export default {
 
       if (!p.areas.length) {
         return Message.error('请选择投放区域')
+      }
+
+      const disabledArea = p.areas.find(area => !isQwtEnableCity(area, allAreas))
+      if (disabledArea) {
+        return Message.error(`计划包含无法投放的区域：${disabledArea.nameCn}`)
       }
 
       if (this.kwPrice) {
@@ -539,9 +599,9 @@ export default {
           kw.price = this.recommendKwPrice
         })
       }
-
       const promotionIds = await createCampaign(fmtAreasInQwt(p, allAreas))
-      this.trackPromotionKeywords(promotionIds)
+      // 凤凰于飞打点
+      this.trackPromotionKeywords(promotionIds, p)
 
       Message.success('创建成功')
 
@@ -562,9 +622,18 @@ export default {
 
     },
 
-    async recommendByUrl(newLandingPage = this.newPromotion.landingPage, areas = this.newPromotion.areas) {
-      if (newLandingPage) {
-        await store.recommendByUrl(newLandingPage, areas)
+    async recommendByUrl(opts = {}) {
+      let { landingType, landingPage, areas } = this.newPromotion
+      landingPage = opts.landingPage || landingPage
+      const reqBody = {
+        ...opts,
+        url: landingPage,
+        landingType: opts.landingType || landingType,
+        areas: opts.areas || areas,
+      }
+
+      if (landingPage) {
+        await store.recommendByUrl(reqBody)
         this.newPromotion.keywords = clone(this.urlRecommends)
       }
     },
@@ -592,7 +661,9 @@ export default {
     async onChangeAreas(areas) {
       this.newPromotion.areas = [...areas]
       this.areaDialogVisible = false
-      await this.recommendByUrl()
+      if (this.newPromotion.landingType !== LANDING_TYPE_GW) {
+        await this.recommendByUrl()
+      }
     },
 
     formatterArea(name) {
@@ -604,7 +675,9 @@ export default {
       this.newPromotion.areas = [
         ...this.newPromotion.areas.filter(i => i !== c)
       ]
-      await this.recommendByUrl()
+      if (this.newPromotion.landingType !== LANDING_TYPE_GW) {
+        await this.recommendByUrl()
+      }
     },
     handleWxModalClose() {
       this.isWxModalVisible =false
@@ -650,14 +723,44 @@ export default {
       clonedPromotion.creativeContent = originPromotion.creative.content
       clonedPromotion.sources = []
       this.newPromotion = clonedPromotion
+    },
+    async getRecommendKeywords() {
+      const { creativeTitle, creativeContent, areas, landingPage, landingType } = this.newPromotion
+      if (creativeTitle === '' || creativeContent === '') {
+        return this.$message.error('请填写创意')
+      }
+      if (!landingPage) {
+        return this.$message.error('请选择官网落地页')
+      }
+      if (!areas.length) {
+        return this.$message.error('请选择投放城市')
+      }
+
+      const { userInfo, actionTrackId } = this
+      track({
+        action: 'click-button: create-campaign-recommend-vad',
+        baixingId: userInfo.baixingId,
+        time: Date.now() / 1000 | 0,
+        baxId: userInfo.id,
+        actionTrackId,
+        landingPage,
+        landingType,
+        creativeTitle,
+        creativeContent,
+        areas
+      })
+      await this.recommendByUrl({
+        landingType: LANDING_TYPE_GW,
+        creativeTitle,
+        creativeContent
+      })
     }
   },
 
   async mounted() {
     await Promise.all([
       store.getCurrentBalance(),
-      store.getCampaignsCount(),
-      store.getUsableBalance()
+      store.getCampaignsCount()
     ])
 
     setTimeout(() => {
@@ -716,6 +819,12 @@ export default {
 
   destroyed() {
     clearTimeout(this.timeout)
+  },
+  watch: {
+    'newPromotion.landingType'(newVal, oldVal) {
+      this.newPromotion.landingPage = ''
+      this.newPromotion.landingPageId = ''
+    }
   }
 }
 </script>
@@ -752,6 +861,14 @@ strong.red {
     bottom: 38px;
     left: 660px;
   }
+  & .top-col {
+    display: flex;
+    align-items: center;
+    & .button {
+      margin-left: 32px;
+      padding: 8px 25px;
+    }
+  }
 }
 
 .qwt-create-promotion {
@@ -786,6 +903,11 @@ strong.red {
 .kw-tag {
   margin-right: 5px;
   margin-top: 8px;
+}
+.kw-tag-fh {
+  color: #16B7FF;
+  background: #ecf5ff;
+  border-color: #b3d8ff;
 }
 .kw-tag-container {
   max-width: 100%;
@@ -830,6 +952,20 @@ strong.red {
       margin-left: 10px;
       cursor: pointer;
       color: rgb(21, 164, 250);
+    }
+  }
+}
+</style>
+
+<style lang="postcss">
+.kw-tag-container {
+  & > .kw-tag-fh {
+    & > .el-tag__close {
+      color: #16B7FF;
+      &:hover {
+        background: #16B7FF;
+        color: #fff;
+      }
     }
   }
 }

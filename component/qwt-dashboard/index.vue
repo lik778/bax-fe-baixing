@@ -4,7 +4,14 @@
     <main>
       <dashboard-header />
       <section>
-        <p class="tip">搜狗渠道无法提供今天的数据；百度、360和神马渠道今天的数据存在一定延时，且最近1小时内的展现数据会存在波动。</p>
+        <p class="tip">
+          <span v-if="query.dimension === DIMENSION_SEARCH_KEYWORD">
+            搜狗和360渠道无法提供今天的数据；百度和神马渠道今天的数据存在一定延时，且最近1小时内的数据会存在波动
+          </span>
+          <span v-else>
+            搜狗渠道无法提供今天的数据；百度、360和神马渠道今天的数据存在一定延时，且最近1小时内的展现数据会存在波动
+          </span>
+        </p>
         <aside>选择渠道:</aside>
         <span>
           <i class="badge" v-for="(t, i) in semPlatformOpts" :key="i"
@@ -55,15 +62,23 @@
 
       <section>
         <aside>计划ID：</aside>
-        <el-input v-model.trim="searchCampaigns" size="mini" class="search" placeholder="输入计划ID，多个计划使用英文逗号分隔">
-
-        </el-input>
+        <el-input v-model.trim="searchCampaigns"
+                  size="mini"
+                  ref="campaignInput"
+                  class="search"
+                  placeholder="输入计划ID，多个计划使用英文逗号分隔" />
+        <span v-if="campaignErrTip" class="err-tip">
+          <b v-if="query.dimension === DIMENSION_SEARCH_KEYWORD">请输入计划ID, 搜索词报告计划ID只能单个查询</b>
+          <b v-else>请输入数字类型的计划ID</b>
+        </span>
       </section>
+
 
       <data-detail :statistics="statistics" :summary="summary"
         :offset="offset" :total="total" :limit="limit"
         :dimension="query.dimension"
         @switch-to-campaign-report="getCampaignReport"
+        @refresh-keyword-list="queryStatistics({offset})"
         @current-change="queryStatistics">
       </data-detail>
 
@@ -80,6 +95,7 @@ import { toTimestamp } from 'utils'
 import {
   DIMENSION_CAMPAIGN,
   DIMENSION_KEYWORD,
+  DIMENSION_SEARCH_KEYWORD,
   TIME_UNIT_DAY,
   DEVICE_ALL,
   DEVICE_WAP,
@@ -105,6 +121,7 @@ import {
 import track from 'util/track'
 
 import store from './store'
+import { Message } from 'element-ui'
 
 export default {
   name: 'qwt-dashboard',
@@ -142,7 +159,9 @@ export default {
         device: DEVICE_ALL
       },
 
-      searchCampaigns: ''
+      searchCampaigns: '',
+      campaignErrTip: false,
+      DIMENSION_SEARCH_KEYWORD
     }
   },
   computed: {
@@ -162,6 +181,62 @@ export default {
   },
   methods: {
     async queryStatistics(opts = {}) {
+      const { dimension } = this.query
+      const { checkedCampaignIds } = this
+
+      await store.clearStatistics()
+      this.campaignErrTip = ''
+
+      if (dimension === DIMENSION_SEARCH_KEYWORD) {
+        if (this.searchCampaigns === '' || checkedCampaignIds.length > 1 || checkedCampaignIds.some(o => isNaN(o))) {
+          this.$refs.campaignInput.focus()
+          this.campaignErrTip = true
+          return
+        }
+        return await this._getReportByQueryWord(opts)
+      } 
+      if (this.searchCampaigns !== '' && checkedCampaignIds.some(o => isNaN(o))) {
+         this.campaignErrTip = true
+         return
+      }
+      return await this._getReport(opts)
+    },
+    async _getReportByQueryWord(opts = {}) {
+      const offset = opts.offset || 0
+      const { query, checkedCampaignIds } = this
+      const { userId, salesId } = this.salesInfo
+
+      let startDate
+      let endDate
+
+      if (query.timeType === 'custom') {
+        startDate = toTimestamp(query.timeRange[0], 'YYYY-MM-DD')
+        endDate = toTimestamp(query.timeRange[1], 'YYYY-MM-DD')
+      } else {
+        const t = timeTypes
+          .find(t => t.value === query.timeType)
+          .getTime()
+
+        startDate = t.startAt
+        endDate = t.endAt
+      }
+
+      const q = {
+        startDate,
+        endDate,
+
+        device: query.device,
+        channel: query.channel,
+        campaignIds: checkedCampaignIds,
+        userId,
+        salesId,
+
+        limit: this.limit,
+        offset,
+      }
+      await store.fetchReportByQueryWord(q)
+    },
+    async _getReport(opts = {}) {
       const offset = opts.offset || 0
       const { query, checkedCampaignIds } = this
       const { userId, salesId } = this.salesInfo
@@ -193,16 +268,14 @@ export default {
         userId,
         salesId,
 
-        limit: 100,
+        limit: this.limit,
         offset,
 
         fields: query.dimension === DIMENSION_CAMPAIGN
           ? campaignFields
           : keywordFields
       }
-
-
-      await store.getReport(q)
+      await store.fetchReport(q)
     },
     async getCampaignReport(campaign) {
       this.query.channel = campaign.channel
@@ -300,6 +373,12 @@ export default {
   display: flex;
   flex-flow: column;
   max-width: 620px;
+}
+
+.err-tip {
+  margin-left: 8px;
+  color: #ff8273;
+  font-size: 12px;
 }
 
 .qwt-dashboard {

@@ -5,6 +5,7 @@ import qs from 'query-string'
 import {
   isPro
 } from 'config'
+import {isObj} from 'util'
 
 const isArray = Array.isArray
 
@@ -88,6 +89,28 @@ export async function getProducts(type = 3) {
     .get('/product')
     .query(reverseCamelcase({
       productTypes: isArray(type) ? type.join(',') : type
+    }))
+    .json()
+
+  return toCamelcase(body.data)
+}
+
+export async function getProductsByMchId(mchId) {
+  const body = await fengming
+    .get('/products')
+    .query(reverseCamelcase({
+      mchId
+    }))
+    .json()
+
+  return toCamelcase(body.data)
+}
+
+export async function getProductsByMchCode(mchCode) {
+  const body = await fengming
+    .get('/products/merchantcode')
+    .query(reverseCamelcase({
+      mchCode
     }))
     .json()
 
@@ -216,9 +239,9 @@ export async function getCurrentBalance() {
   return body.data
 }
 
-export async function getUsableBalance() {
+export async function getCurrentBalanceBreif() {
   const body = await fengming
-    .get('/balance/usable')
+    .get('/balance/brief')
     .json()
 
   return body.data
@@ -251,14 +274,10 @@ export async function getRecommandCreative(opts) {
 }
 
 // TODO: 添加计划id
-export async function recommendByUrl(url, areas = [], campaignId = null) {
+export async function recommendByUrl(opts) {
   const body = await fengming
     .post('/keyword/recommand/vad')
-    .send({
-      url,
-      areas,
-      campaignId
-    })
+    .send(reverseCamelcase(opts))
     .json()
 
   return fmtWords(toCamelcase(body.data))
@@ -281,27 +300,57 @@ export async function recommendByWord(word, opts) {
   return words
 }
 
-export async function getChangeLogs(opts) {
+export async function recommendByWordList(word, opts) {
   const body = await fengming
+    .post('/keyword/recommand/word-list')
+    .send(reverseCamelcase({words: word, ...opts}))
+    .json()
+
+  let result = toCamelcase(body.data)
+  if (result && isObj(result)) {
+    for (let key in result) {
+      result[key] = fmtWords(toCamelcase(result[key]))
+    }
+  }
+  return result
+}
+
+export async function chibiRobotAudit(words, opts) {
+  const body = await fengming
+    .post('/chibi/robot/audit')
+    .send(reverseCamelcase({contents: words, ...opts}))
+    .json()
+
+  let result = toCamelcase(body.data)
+  if (result && isObj(result)) {
+    for (let key in result) {
+      result[key] = fmtWordsByContent(toCamelcase(result[key]))
+    }
+  }
+  return result
+}
+
+export async function getChangeLogs(opts) {
+  const { data } = await fengming
     .get('/balance/changelog')
     .query(reverseCamelcase(opts))
     .json()
 
   return {
-    total: body.meta.count,
-    logs: toCamelcase(body.data)
+    total: data.totalElements,
+    logs: toCamelcase(data.data)
   }
 }
 
 export async function getChargeLogs(opts) {
-  const body = await fengming
+  const { data } = await fengming
     .get('/balance/chargelog')
     .query(reverseCamelcase(opts))
     .json()
 
   return {
-    total: body.meta.count,
-    logs: toCamelcase(body.data)
+    total: data.totalElements,
+    logs: toCamelcase(data.data)
   }
 }
 
@@ -344,14 +393,15 @@ export async function getHomepageSummary() {
 }
 
 export async function getHomePageFengmingData() {
-  const [ balance, daily, notices ] = await Promise.all([
-    getCurrentBalance(),
+  const [ balanceBrief, daily, notices ] = await Promise.all([
+    getCurrentBalanceBreif(),
     _getDailySummary(),
     getFengmingNotice()
   ])
 
   return {
-    balance,
+    balance: balanceBrief.currentBalance, // tip： 兼容原有逻辑，二期更改
+    freezeBalance: balanceBrief.freezeBalance,
     notices,
     ...daily
   }
@@ -467,6 +517,18 @@ function fmtWords(words) {
 
   return words.map(w => ({
     id: w.word,
+    ...w
+  }))
+}
+
+function fmtWordsByContent(words) {
+  if (!isArray(words)) {
+    return words
+  }
+
+  return words.map(w => ({
+    id: w.content,
+    word: w.content,
     ...w
   }))
 }

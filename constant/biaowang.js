@@ -44,10 +44,13 @@ export const PROMOTE_STATUS = {
 
 export const promoteStatusOpts = toOpt(PROMOTE_STATUS, false, true)
 
+export const DEVICE_ALL = 0
+export const DEVICE_PC = 1
+export const DEVICE_WAP = 2
 export const DEVICE = {
-  '0': '全平台',
-  '1': '电脑',
-  '2': '手机'
+  [DEVICE_ALL]: '全平台',
+  [DEVICE_PC]: '电脑端',
+  [DEVICE_WAP]: '手机端'
 }
 
 export const TRADER_TYPE = {

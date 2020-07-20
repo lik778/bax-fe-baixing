@@ -1,8 +1,9 @@
 import { baxUserLogin, kaSimpleReport } from 'api/ka'
 import { getHomePageFengmingData } from 'api/fengming'
-import { getHomePageBiaowangData, getPromotes, getCpcRanking } from 'api/biaowang'
+import { getHomePageBiaowangData, getPromotes, getUserRanking } from 'api/biaowang'
 import { getCampaignRadar } from 'api/fengming-campaign'
 import { observable, toJS, action, computed } from 'mobx'
+import dayjs from 'dayjs'
 
 class Store {
   @observable fengmingData = null
@@ -15,7 +16,8 @@ class Store {
     const data = this.fengmingData
     return {
       price: data ? (data.balance / 100).toFixed(2) : null,
-      day: data ? data.balance / data.budget | 0 : null
+      day: data ? data.balance / data.budget | 0 : null,
+      freezeBalance: data ? (data.freezeBalance / 100).toFixed(2) : null
     }
   }
 
@@ -46,10 +48,23 @@ class Store {
   @action async loadBiaowangData() {
     try {
       const [biaowangData, {items: biaowangPromotes}] = await Promise.all([getHomePageBiaowangData(), getPromotes({size: 5, page: 0})])
-      const promoteIds = biaowangPromotes.map(p => p.id)
-      const cpcRanks = await getCpcRanking(promoteIds)
+
+      const yesterday = dayjs().subtract(1, 'day').startOf('day').unix()
+      const rankings = await getUserRanking({
+        startTime: yesterday,
+        endTime: yesterday,
+        promoteList: biaowangPromotes.map(i => i.id)
+      })
+      if (rankings.length) {
+        this.biaowangPromotes = biaowangPromotes.map(p => {
+          const one = rankings.find(r => r.promoteId === p.id)
+          if (one && one.rankList.length) {
+            return Object.assign(p, {cpcRanking: parseFloat(one.rankList[0]).toFixed(2)})
+          }
+          return p
+        })
+      }
       this.biaowangData = biaowangData
-      this.biaowangPromotes = biaowangPromotes.map((values, key) => ({cpcRank: cpcRanks[key] ? cpcRanks[key]['cpcRanking'] : '', ...values}))
     } catch (err) {
       console.error(err)
     }

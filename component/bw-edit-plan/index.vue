@@ -21,7 +21,8 @@
                 <user-ad-selector
                   :type="adSelectorType"
                   v-if="landingTypeDisplay === 0"
-                  :all-areas="allAreas" :limit-mvp="false"
+                  :all-areas="allAreas" 
+                  :limit-mvp="false"
                   :selected-id="form.landingPageId"
                   @select-ad="onSelectAd"
                 />
@@ -35,7 +36,7 @@
               </div>
             </div>
             <div class="error-page-placeholder" v-else>
-              所选推广页面失效，请 <a href="javascript:;" @click="reselectLandingpage">从新选择</a>
+              所选推广页面失效，请 <a href="javascript:;" @click="reselectLandingpage">重新选择</a>
             </div>
           </el-form-item>
           <h3>投放物料设置</h3>
@@ -57,14 +58,15 @@
 </template> 
 
 <script>
-  import {isQiqiaobanSite, isWeishopSite} from 'util/kit'
+  import {isQiqiaobanSite, isWeishopSite, getLandingpageByPageProtocol} from 'util/kit'
   import {getPromoteById, getPromtesByOrders, updatePromote, getQiqiaobanCoupon} from 'api/biaowang'
-  import {landingTypeOpts, SEM_PLATFORM_BAIDU} from 'constant/fengming' 
+  import {landingTypeOpts, SEM_PLATFORM_BAIDU, LANDING_TYPE_AD} from 'constant/fengming' 
   import {AUDIT_STATUS_REJECT, PROMOTE_STATUS_OFFLINE, PROMOTE_STATUS_PENDING_EDIT} from 'constant/biaowang'
   import {Message} from 'element-ui'
   import UserAdSelector from 'com/common/user-ad-selector'
   import CreativeEditor from 'com/widget/creative-editor'
   import QiqiaobanPageSelector from 'com/common/qiqiaoban-page-selector'
+  import {queryAds} from 'api/fengming'
 
   export default {
     name: 'bw-edit-plan',
@@ -101,19 +103,10 @@
         creativeError: '',
         isLoading: false,
         showNotice: false,
+        adSelectorType: 'reselect'
       }
     },
     computed: {
-      adSelectorType: {
-      set(value) {
-        this.value = value
-      },
-      get() {
-        if (this.value !== undefined) return this.value
-        const type = this.promotes.every(p => PROMOTE_STATUS_PENDING_EDIT.includes(p.status)) ? '' : 'reselect'
-        return type
-      }
-      },
       isPromoteRejected() {
         return this.promotes.some(p => AUDIT_STATUS_REJECT.includes(p.auditStatus))
       },
@@ -150,25 +143,40 @@
       if (notice === 'true' || notice === '1') {
         this.showNotice = true
       }
+      this.adSelectorType = this.promotes.every(p => PROMOTE_STATUS_PENDING_EDIT.includes(p.status)) ? '' : 'reselect'
       this.verifyLandingpageIsError()
     },
     methods: {
       reselectLandingpage() {
         this.isErrorLandingPageShow = false
+        this.adSelectorType = ''
       },
-      verifyLandingpageIsError() {
-        const { landingPage, landingType } = this.form
+      async verifyLandingpageIsError() {
+        const { landingPage, landingType, landingPageId } = this.form
         if (landingType === 1 || landingType === 2) {
           const script = document.createElement('script')
-          script.src = landingPage
+          script.src = getLandingpageByPageProtocol(landingPage)
           document.body.appendChild(script)
           script.addEventListener('error', e => {
             document.body.removeChild(script)
             this.isErrorLandingPageShow = true
             this.form.landingPage = ''
-            this.adSelectortype = 'reselect'
           })
           this.isSpecialLandingpage = this.specialLandingpage(this.form.landingPage)
+        }
+
+        // 验证百姓帖子已经归档
+        if (landingType === LANDING_TYPE_AD && landingPageId) {
+          const result = await queryAds({
+            limitMvp: false,
+            adIds: landingPageId,
+            limit: 1
+          })
+          const ad = result.ads && result.ads[0]
+          if (!ad) {
+            this.isErrorLandingPageShow = true
+            this.form.landingPage = ''
+          }
         }
       },
       onSelectAd(ad) {
@@ -228,7 +236,7 @@
       banLandPageSelected() {
         // 落地页404，需要更改落地页投放
         if (this.isErrorLandingPageShow && !this.form.landingPage) {
-          this.adSelectortype = 'reselect'
+          this.adSelectorType = ''
           const pageErrorPlaceholder = document.querySelector('.error-page-placeholder')
           pageErrorPlaceholder.style.borderColor = '#FF6350'
           throw this.$message.error('当前投放页面失效，请重新选择新的投放页面')

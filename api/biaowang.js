@@ -145,3 +145,75 @@ export async function queryOrder(query) {
     total: data.totalElements
   }
 }
+
+export async function queryKeywordPriceNew(opts) {
+  const body = await biaowang
+    .post('/keyword/v2/pricing/user/inquiry')
+    .send(opts)
+    .json()
+
+  return body.data
+}
+
+export async function refreshKeywordPriceNew(keywords, opt) {
+  const requestBody = keywords.map(k => ({
+    ...k,
+    price: {
+      [k.days]: k.price
+    }
+  }))
+  const body = await biaowang
+    .post('/keyword/v2/pricing/user/inquiry/norec')
+    .send({
+      ...opt,
+      pricingList: requestBody
+    })
+    .json()
+
+  const parsedBody = body.data.content.map(i => {
+    const days = keywords.find(k => k.word === i.word && k.device === i.device).days
+    return {
+      ...i,
+      price: i.soldPriceMap[days],
+      days: days
+    }
+  })
+  return parsedBody
+}
+
+export async function getUserRanking(opts = {}) {
+  const body = await biaowang
+    .post('/promote/user/ranking')
+    .send(opts)
+    .json()
+
+  return body.data.rankList
+}
+
+export async function getUserLive(opts = {}) {
+  const body = await biaowang
+    .get('/promote/user/live')
+    .query(opts)
+    .json()
+  return body.data
+}
+
+export async function getUserShow(opts = {}) {
+  const body = await biaowang
+    .post('/promote/user/show')
+    .send(opts)
+    .json()
+
+  return body.data.showList
+}
+
+export async function getPromotionUserCollection(opts = {}) {
+  const body = await biaowang
+    .post('/promote/user/collect')
+    .send({
+      promoteList: [],
+      ...opts
+    })
+    .json()
+  return body.data
+}

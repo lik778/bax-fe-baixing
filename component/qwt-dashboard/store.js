@@ -6,7 +6,7 @@ import * as api from 'api/fengming-campaign'
 const store = observable({
   _statistics: [],
   _summary: {},
-  limit: 100,
+  limit: 10,
   offset: 0,
   total: 0,
 
@@ -29,12 +29,20 @@ const store = observable({
     })
   }),
 
-  getReport: action(async function(opts) {
+  fetchReport: action(async function(opts) {
     const result = await api.getReport(opts)
     const { rows, total, offset, summary } = result
 
     this._statistics = rows
     this._summary = summary
+    this.offset = offset
+    this.total = total
+  }),
+
+  fetchReportByQueryWord: action(async function(opts) {
+    const result = await api.getDataReportByQueryWord(opts)
+    const { rows, total, offset } = result
+    this._statistics = rows
     this.offset = offset
     this.total = total
   })

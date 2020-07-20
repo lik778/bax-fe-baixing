@@ -2,7 +2,7 @@
   <div class="layout-container">
     <div class="layout-left" v-if="biaowangData">
       <h5 class="layout-header">标王推广概览</h5>
-      <div class="layout-content" v-if="biaowangData.onlinePromotes && biaowangData.notOnlinePromotes">
+      <div class="layout-content" v-if="biaowangData.onlinePromotes || biaowangData.notOnlinePromotes">
         <div class="report">
           <div class="radio-group">
             <el-radio v-model="dataPrefix" label="yesterday">昨日</el-radio>
@@ -28,7 +28,7 @@
             您还有标王关键词没有生效，
             <a href="javascript:;" @click="$router.push({name: 'bw-plan-list', query: {status: '0,5'}})">点此查看</a>
           </p>
-          <div class="actions">
+          <div class="actions" v-if="!userInfo.sstAgent">
             <el-button type="primary" @click="$router.push({name: 'bw-query-price'})">立即购买</el-button>
             <el-button type="primary" @click="$router.push({name: 'bw-plan-list'})">立即续费</el-button>
           </div>
@@ -36,7 +36,7 @@
       </div>
       <div class="no-promote-placeholder" v-else>
         <p class="text">您暂时没有标王推广计划，您可以</p>
-        <el-button type="primary" @click="() => $router.push({name: 'bw-query-price'})">新建标王推广计划</el-button>
+        <el-button type="primary" v-if="!userInfo.sstAgent" @click="() => $router.push({name: 'bw-query-price'})">新建标王推广计划</el-button>
       </div>
     </div>
     <loading-placeholder v-else class="layout-left">
@@ -57,9 +57,13 @@
           </dt>
           <dd class="dd wrap" v-for="p in biaowangPromotes" :key="p.id">
             <span class="col">{{p.word}}</span>
-            <span class="col">{{p.cpcRank}}</span>
+            <span class="col">{{p.cpcRanking && fmtCpcRanking(p.cpcRanking, false)}}</span>
             <span class="col">{{leftDays(p)}}/{{p.days.toFixed(1)}}</span>
-            <span v-if="canXufei(p)" class="col action" @click="$router.push({name: 'bw-plan-list', params: {promote: p}})">续费</span>
+            <el-button v-if="canXufei(p) && !userInfo.sstAgent"
+                       :disabled="disabledXuFeiBtn(p)"  
+                       class="col renew"
+                       type="text"
+                       @click="$router.push({name: 'bw-plan-list', params: {promote: p}})">续费</el-button>
             <span class="col"></span>
           </dd>
         </dl>
@@ -78,15 +82,28 @@
 import store from './store'
 import loadingPlaceholder from './loading-placeholder'
 import { PROMOTE_STATUS_ONLINE } from 'constant/biaowang'
+import {fmtCpcRanking} from 'util/campaign'
+import dayjs from 'dayjs'
 
 export default {
   name: 'homepage-biaowang',
+  props: {
+    userInfo: {
+      type: Object,
+      required: true
+    }
+  },
   data() {
     return {
       dataPrefix: 'yesterday'
     }
   },
   methods: {
+    fmtCpcRanking,
+    disabledXuFeiBtn(row) {
+      // tip: 时间为2020-03-27 12:16:40.213743之前的不能续费
+      return dayjs(row.createdAt * 1000).isBefore('2020-03-27 12:16:40.213743')
+    },
     getPromoteData(type) {
       const { dataPrefix } = this
       let key
@@ -236,6 +253,13 @@ export default {
           cursor: pointer;
           color:  #ED7D00;
         }
+        &.renew {
+          padding: 0;
+          color:  #ED7D00;
+        }
+      }
+      & >>> .col.is-disabled {
+        color: #C0C4CC;
       }
     }
   }

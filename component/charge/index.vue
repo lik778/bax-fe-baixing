@@ -137,7 +137,7 @@
               {{ displayUserMobile }}
             </span>
           </section>
-          <contract-ack type="contract" />
+          <contract-ack type="contract" ref="contract"/>
           <promotion-area-limit-tip :all-areas="allAreas" page="charge" />
           <section class="pay-info">
             <button
@@ -692,6 +692,9 @@ export default {
       return userInfo.id
     },
     async createOrder() {
+      if (!this.$refs.contract.$data.isAgreement) {
+        return this.$message.error('请阅读并勾选同意服务协议，再进行下一步操作')
+      }
       const {
         actionTrackId,
         userInfo

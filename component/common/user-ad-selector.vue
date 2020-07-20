@@ -10,7 +10,7 @@
       style="width: 530px">
       <template slot="empty">
         <a class="fabu" target="_blank"
-          href="http://shanghai.baixing.com/fabu/">
+          href="//shanghai.baixing.com/fabu/">
           您当前账户无有效帖子，先去发一条吧！
         </a>
       </template>
@@ -195,7 +195,7 @@ export default {
         await this.queryAds({
           adId: [adId]
         })
-        this.checkedAdId = this.ads[0] ? this.ads[0].adId : null
+        this.checkedAdId = adId || (this.ads[0] ? this.ads[0].adId : null)
         return
       }
 
@@ -211,6 +211,9 @@ export default {
       if (this.type === TYPE_RESELECT && parseInt(now)) {
         await this.reset(MODE_SELECTED, now)
       }
+    },
+    async type(now, pre) {
+      await this.reset(now, this.selectedId)
     }
   },
   async mounted() {

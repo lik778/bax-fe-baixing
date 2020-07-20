@@ -27,6 +27,7 @@
     <!-- <huo-dong-btn /> -->
     <back-to-top />
     <wechat-scan />
+    <Notification />
     <chat />
     <bw-shopping-cart ref="bwShoppingCart" :userInfo="currentUser" v-if="currentUser.id && isBwRoute" :salesInfo="salesInfo" :allAreas="allAreas"/>
   </div>
@@ -36,6 +37,7 @@
 // import HuoDongIntro from './common/huodong-intro'
 // import HuoDongBtn from './common/huodong-btn'
 import NewUserIntro from './common/new-user-intro'
+import Notification from './common/notification'
 import AddUserLead from './common/add-user-lead'
 import WechatScan from './widget/wechat-scan'
 import BackToTop from './widget/back-to-top'
@@ -56,6 +58,8 @@ import {
 import {router} from '../template/bax'
 import qs from 'query-string'
 
+
+
 export default {
   name: 'bax',
   components: {
@@ -63,6 +67,7 @@ export default {
     // HuoDongIntro,
     // HuoDongBtn,
     NewUserIntro,
+    Notification,
     AddUserLead,
     WechatScan,
     BackToTop,
@@ -83,8 +88,6 @@ export default {
       showNewUserIntro: false,
       newUserIntroMode: '',
       pending: 0,
-      notice: '近期因360家电维修行业被整治，目前360渠道关于家电维修的订单会全部下线，请知晓',
-      showNotice: true,
       huoDongIntroVisible: !document.referrer.includes('/a/quanwangtong'),
       isBwRoute: false,
       salesInfo: {
@@ -209,6 +212,7 @@ export default {
     padding-top: 50px;
     padding-left: 180px;
     background-color: #eeeff0;
+    overflow-x: hidden;
   }
   .view {
     margin: 12px 12px 32px;
