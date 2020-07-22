@@ -166,6 +166,10 @@ const bwRoutes = [{
   component: () => import('com/bw-dashboard'),
   path: '/main/bw/dashboard',
   name: 'bw-dashboard'
+}, {
+  component: () => import('com/bw-artificial'),
+  path: '/main/bw/artificial',
+  name: 'bw-artificial'
 }]
 
 const qwtRoutes = [{

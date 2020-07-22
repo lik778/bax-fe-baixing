@@ -90,6 +90,11 @@
           <el-form-item label="投放平台：">{{deviceFormatter(xufeiForm.device)}}</el-form-item>
           <el-form-item label="购买天数：" prop="days">
             <el-radio v-model="xufeiForm.days" :label="+option[0]" v-for="(option, index) in Object.entries(xufeiForm.soldPriceMap)" :key="index">{{option[0]}}天{{f2y(option[1])}}元</el-radio>
+            <el-button size="small" type="primary" @click="artificialDialogVisible = true">人工报价</el-button>
+            <el-tooltip effect="light" placement="top-start">
+              <artificial-tooltip slot="content" />
+              <i class="el-icon-info icon"></i>
+            </el-tooltip>
           </el-form-item>
           <el-form-item label="">
             <el-button @click="xufeiDialogVisible = false">取消续费</el-button>
@@ -115,12 +120,19 @@
           <el-button type="primary" @click="goToLivePageByType">确定</el-button>
         </span>
       </el-dialog>
+
+      <artificial-dialog :visible="artificialDialogVisible"
+                         @cancel="artificialDialogVisible = false"
+                         :all-areas="allAreas"
+                         :data="artificialData" />
     </div>
   </div>
 </template>
 
 <script>
   import BaxPagination from 'com/common/pagination'
+  import ArtificialTooltip from 'com/common/bw/artificial-tooltip'
+  import ArtificialDialog from 'com/common/bw/artificial-dialog'
   import {
     promoteStatusOpts,
     auditStatusOpts,
@@ -138,7 +150,8 @@
   import {getPromotes, queryKeywordPriceNew, getCpcRanking, getUserLive, getUserRanking} from 'api/biaowang'
   import {
     f2y,
-    getCnName
+    getCnName,
+    fmtAreasInBw
   } from 'util'
   import dayjs from 'dayjs'
   import {
@@ -165,7 +178,9 @@
     name: 'bw-plan-list',
     components: {
       BaxPagination,
-      auditRejectReasonDialog
+      auditRejectReasonDialog,
+      ArtificialTooltip,
+      ArtificialDialog
     },
     props: {
       allAreas: Array,
@@ -202,6 +217,7 @@
         liveType: DEVICE_WAP,
         liveDevices,
         currentPromoteLive: null,
+        artificialDialogVisible: false,
       }
     },
     computed: {
@@ -253,6 +269,18 @@
         const roles = normalizeRoles(this.userInfo.roles)
         return roles.includes('AGENT_ACCOUNTING')
       },
+      computedAreas() {
+        return fmtAreasInBw(this.xufeiForm.cities, this.allAreas)
+      },
+      artificialData() {
+        const { device, cities, word } = this.xufeiForm
+        return [{
+          computedAreas: this.computedAreas,
+          devices: [device],
+          areas: cities,
+          keyword: word
+        }]
+      }
     },
     methods: {
       fmtCpcRanking,

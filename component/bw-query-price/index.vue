@@ -38,7 +38,7 @@
         <div v-if="skus.length" class="results">
           <div>
             <label>查询结果</label>
-            <div v-if="priceIsNotZero">
+            <div class="keyword-row" v-if="priceIsNotZero">
               <p v-if="isSold">关键词在城市
                 <span class="highlight">{{soldCities.map(formatArea).join(', ')}}</span>已售出。
                   <!-- <span v-if="availableCities.length">
@@ -52,6 +52,15 @@
                 </span> -->
               </p>
               <result-device v-else :deviceObj="exactMatch" :selected="selected" @change="onSelected" />
+              <div class="artificial-container" v-if="showArtificial">
+                 <el-button type="primary" class="artificial-btn"
+                            :disabled="loading" 
+                            @click="artificialDialogVisible = true">人工报价</el-button>
+                 <el-tooltip effect="light" placement="top-start">
+                   <artificial-tooltip slot="content" />
+                   <i class="el-icon-info icon"></i>
+                 </el-tooltip>
+              </div>
             </div>
             <div v-else>该关键词已售出，您可以换个词购买或者在推荐词中选择哦~~</div>
           </div>
@@ -79,6 +88,10 @@
       @ok="onAreasChange"
       @cancel="areaDialogVisible = false"
     />
+    <artificial-dialog :visible="artificialDialogVisible"
+                       @cancel="artificialDialogVisible = false"
+                       :all-areas="allAreas"
+                       :data="artificialData" />
   </div>
 </template>
 
@@ -86,15 +99,17 @@
   import AreaSelector from 'com/common/area-selector'
   import RecentSold from './recent-sold'
   import ResultDevice from './result-device'
+  import ArtificialTooltip from 'com/common/bw/artificial-tooltip'
+  import ArtificialDialog from 'com/common/bw/artificial-dialog'
 
   import {queryKeywordPriceNew} from 'api/biaowang'
   import clone from 'clone'
-  import {DEVICE} from 'constant/biaowang'
+  import {DEVICE, PRICE_NEED_ARTIFICIAL_QUOTA, THIRTY_DAYS} from 'constant/biaowang'
 
   import {
     f2y,
-    fmtAreasInQwt,
-    getCnName
+    getCnName,
+    fmtAreasInBw
   } from 'util'
 
   export default {
@@ -102,7 +117,9 @@
     components: {
       AreaSelector,
       ResultDevice,
-      RecentSold
+      RecentSold,
+      ArtificialTooltip,
+      ArtificialDialog
     },
     props: {
       userInfo: {
@@ -130,6 +147,7 @@
         selected: [],
 
         areaDialogVisible: false,
+        artificialDialogVisible: false,
         loading: false,
         DEVICE,
       }
@@ -170,6 +188,17 @@
           return list.concat(arr)
         }, [])
         return !resultArr.some(price => !price)
+      },
+      showArtificial() {
+        return this.exactMatch.deviceTypes.some(({priceMap}) => {
+           return priceMap[THIRTY_DAYS] > PRICE_NEED_ARTIFICIAL_QUOTA
+         })
+      },
+      computedAreas() {
+        return fmtAreasInBw(this.form.areas, this.allAreas)
+      },
+      artificialData() {
+        return [Object.assign({computedAreas: this.computedAreas}, this.form)]
       }
     },
     methods: {
@@ -371,6 +400,17 @@ marquee {
     & .recommend-item {
       margin-bottom: 10px;
     }
+  }
+}
+.keyword-row {
+  display: flex;
+  align-items: center;
+  & .artificial-btn {
+    margin-left: 20px;
+  }
+  & .el-icon-info {
+    color:#6a778c;
+    cursor: pointer;
   }
 }
 </style>

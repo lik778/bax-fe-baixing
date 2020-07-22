@@ -84,3 +84,6 @@ export const TRADE_STATUS = {
   [TRADER_TYPE.TRADE_CANCELED]: '已取消',
   [TRADER_TYPE.TRADE_REFUNDED]: '已退款'
 }
+
+export const PRICE_NEED_ARTIFICIAL_QUOTA = 10000 * 100 // 后台以分为单位
+export const THIRTY_DAYS = 30
