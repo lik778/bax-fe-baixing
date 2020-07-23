@@ -1367,7 +1367,7 @@ export default {
         if (landingType === LANDING_TYPE_GW) {
           Object.assign(recommendBody, {
             create_title: this.getProp('creativeTitle'),
-            create_content: this.getProp('creativeTitle')
+            create_content: this.getProp('creativeContent')
           })
         }
 
