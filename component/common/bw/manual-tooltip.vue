@@ -12,6 +12,6 @@
 
 <script>
 export default {
-  name: 'Artificial-Tooltip'
+  name: 'ManualTooltip'
 }
 </script>

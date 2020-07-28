@@ -52,12 +52,12 @@
                 </span> -->
               </p>
               <result-device v-else :deviceObj="exactMatch" :selected="selected" @change="onSelected" />
-              <div class="artificial-container" v-if="showArtificial">
-                 <el-button type="primary" class="artificial-btn"
+              <div class="manual-container" v-if="showManualBtn">
+                 <el-button type="primary" class="manual-btn"
                             :disabled="loading" 
-                            @click="artificialDialogVisible = true">人工报价</el-button>
+                            @click="manualDialogVisible = true">人工报价</el-button>
                  <el-tooltip effect="light" placement="top-start">
-                   <artificial-tooltip slot="content" />
+                   <manual-tooltip slot="content" />
                    <i class="el-icon-info icon"></i>
                  </el-tooltip>
               </div>
@@ -88,10 +88,10 @@
       @ok="onAreasChange"
       @cancel="areaDialogVisible = false"
     />
-    <artificial-dialog :visible="artificialDialogVisible"
-                       @cancel="artificialDialogVisible = false"
-                       :all-areas="allAreas"
-                       :data="artificialData" />
+    <manual-dialog :visible="manualDialogVisible"
+                   @cancel="manualDialogVisible = false"
+                   :all-areas="allAreas"
+                   :manual-data="manualData" />
   </div>
 </template>
 
@@ -99,12 +99,12 @@
   import AreaSelector from 'com/common/area-selector'
   import RecentSold from './recent-sold'
   import ResultDevice from './result-device'
-  import ArtificialTooltip from 'com/common/bw/artificial-tooltip'
-  import ArtificialDialog from 'com/common/bw/artificial-dialog'
+  import ManualTooltip from 'com/common/bw/manual-tooltip'
+  import ManualDialog from 'com/common/bw/manual-dialog'
 
   import {queryKeywordPriceNew} from 'api/biaowang'
   import clone from 'clone'
-  import {DEVICE, PRICE_NEED_ARTIFICIAL_QUOTA, THIRTY_DAYS} from 'constant/biaowang'
+  import {DEVICE} from 'constant/biaowang'
 
   import {
     f2y,
@@ -118,8 +118,8 @@
       AreaSelector,
       ResultDevice,
       RecentSold,
-      ArtificialTooltip,
-      ArtificialDialog
+      ManualTooltip,
+      ManualDialog
     },
     props: {
       userInfo: {
@@ -147,7 +147,7 @@
         selected: [],
 
         areaDialogVisible: false,
-        artificialDialogVisible: false,
+        manualDialogVisible: false,
         loading: false,
         DEVICE,
       }
@@ -189,16 +189,28 @@
         }, [])
         return !resultArr.some(price => !price)
       },
-      showArtificial() {
-        return this.exactMatch.deviceTypes.some(({priceMap}) => {
-           return priceMap[THIRTY_DAYS] > PRICE_NEED_ARTIFICIAL_QUOTA
-         })
+      showManualBtn() {
+        if (this.isSold) return false
+        return this.exactMatch.deviceTypes.some(({enableButton, isSold}) => {
+          return true
+        })
       },
-      computedAreas() {
+      manualCities() {
         return fmtAreasInBw(this.form.areas, this.allAreas)
       },
-      artificialData() {
-        return [Object.assign({computedAreas: this.computedAreas}, this.form)]
+      manualData() {
+        const devices = this.exactMatch.deviceTypes.reduce((list, {enableButton, device}) => {
+          if (enableButton) list.push(device)
+          return list
+        }, [])
+
+        return Object.assign({}, {
+          manualCities: this.manualCities,
+          word: this.form.keyword,
+          cities: this.form.areas,
+          targetUserId: this.getFinalUserId(),
+          devices
+        })
       }
     },
     methods: {
@@ -405,7 +417,7 @@ marquee {
 .keyword-row {
   display: flex;
   align-items: center;
-  & .artificial-btn {
+  & .manual-btn {
     margin-left: 20px;
   }
   & .el-icon-info {

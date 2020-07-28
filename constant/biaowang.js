@@ -85,5 +85,5 @@ export const TRADE_STATUS = {
   [TRADER_TYPE.TRADE_REFUNDED]: '已退款'
 }
 
-export const PRICE_NEED_ARTIFICIAL_QUOTA = 10000 * 100 // 后台以分为单位
+export const PRICE_NEED_MANUAL_QUOTA = 10000 * 100 // 后台以分为单位
 export const THIRTY_DAYS = 30

@@ -90,7 +90,7 @@
           <el-form-item label="投放平台：">{{deviceFormatter(xufeiForm.device)}}</el-form-item>
           <el-form-item label="购买天数：" prop="days">
             <el-radio v-model="xufeiForm.days" :label="+option[0]" v-for="(option, index) in Object.entries(xufeiForm.soldPriceMap)" :key="index">{{option[0]}}天{{f2y(option[1])}}元</el-radio>
-            <el-button size="small" type="primary" @click="artificialDialogVisible = true">人工报价</el-button>
+            <el-button size="small" type="primary" @click="manualDialogVisible = true">人工报价</el-button>
             <el-tooltip effect="light" placement="top-start">
               <artificial-tooltip slot="content" />
               <i class="el-icon-info icon"></i>
@@ -121,18 +121,18 @@
         </span>
       </el-dialog>
 
-      <artificial-dialog :visible="artificialDialogVisible"
-                         @cancel="artificialDialogVisible = false"
-                         :all-areas="allAreas"
-                         :data="artificialData" />
+      <manual-dialog :visible="manualDialogVisible"
+                     @cancel="manualDialogVisible = false"
+                     :all-areas="allAreas"
+                     :data="manualData" />
     </div>
   </div>
 </template>
 
 <script>
   import BaxPagination from 'com/common/pagination'
-  import ArtificialTooltip from 'com/common/bw/artificial-tooltip'
-  import ArtificialDialog from 'com/common/bw/artificial-dialog'
+  import ManualTooltip from 'com/common/bw/manual-tooltip'
+  import ManualDialog from 'com/common/bw/manual-dialog'
   import {
     promoteStatusOpts,
     auditStatusOpts,
@@ -179,8 +179,8 @@
     components: {
       BaxPagination,
       auditRejectReasonDialog,
-      ArtificialTooltip,
-      ArtificialDialog
+      ManualTooltip,
+      ManualDialog
     },
     props: {
       allAreas: Array,
@@ -217,7 +217,7 @@
         liveType: DEVICE_WAP,
         liveDevices,
         currentPromoteLive: null,
-        artificialDialogVisible: false,
+        manualDialogVisible: false,
       }
     },
     computed: {
@@ -272,7 +272,7 @@
       computedAreas() {
         return fmtAreasInBw(this.xufeiForm.cities, this.allAreas)
       },
-      artificialData() {
+      manualData() {
         const { device, cities, word } = this.xufeiForm
         return [{
           computedAreas: this.computedAreas,
