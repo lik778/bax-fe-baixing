@@ -236,10 +236,13 @@ export async function getUserManualList(opts = {}) {
     ...opts
   }
 
-  const body = await biaowang
+  const { data } = await biaowang
     .get('/keyword/v2/pricing/user/manual/history')
     .query(q)
     .json()
    
-  return body.data
+  return {
+    data: data.content,
+    total: data.totalElements
+  }
 }

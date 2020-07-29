@@ -90,7 +90,7 @@
               <i class="material-icons" style="font-size: 16px; margin-right: 11px; vertical-align: -3px;"></i>管理标王推广
             </router-link>
           </el-menu-item>
-          <el-menu-item index="bw-manual">
+          <el-menu-item index="bw-manual" v-if="!userInfo.sstAgent">
             <router-link :to="{ name: 'bw-manual'}" tag="p">
               <i class="material-icons" style="font-size: 16px; margin-right: 11px; vertical-align: -3px;"></i>人工报价记录
             </router-link>

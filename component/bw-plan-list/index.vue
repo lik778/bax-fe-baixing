@@ -83,18 +83,20 @@
         <bax-pagination :options="query" @current-change="onCurrentChange" />
       </main>
 
-      <el-dialog :visible.sync="xufeiDialogVisible" title="标王续费">
+      <el-dialog :visible.sync="xufeiDialogVisible" width="600px" title="标王续费">
         <el-form :model="xufeiForm" label-width="200px" :rules="rules" ref="xufei">
           <el-form-item label="关键词：">{{xufeiForm.word}}</el-form-item>
           <el-form-item label="城市：">{{cityFormatter(xufeiForm.cities)}}</el-form-item>
           <el-form-item label="投放平台：">{{deviceFormatter(xufeiForm.device)}}</el-form-item>
           <el-form-item label="购买天数：" prop="days">
             <el-radio v-model="xufeiForm.days" :label="+option[0]" v-for="(option, index) in Object.entries(xufeiForm.soldPriceMap)" :key="index">{{option[0]}}天{{f2y(option[1])}}元</el-radio>
-            <el-button size="small" type="primary" @click="manualDialogVisible = true">人工报价</el-button>
-            <el-tooltip effect="light" placement="top-start">
-              <artificial-tooltip slot="content" />
-              <i class="el-icon-info icon"></i>
-            </el-tooltip>
+            <template v-if="showManualBtn">
+              <el-button size="small" type="primary" @click="manualDialogVisible = true">人工报价</el-button>
+              <el-tooltip effect="light" placement="top-start">
+                <manual-tooltip slot="content" />
+                <i class="el-icon-info icon"></i>
+              </el-tooltip>
+            </template>
           </el-form-item>
           <el-form-item label="">
             <el-button @click="xufeiDialogVisible = false">取消续费</el-button>
@@ -124,7 +126,7 @@
       <manual-dialog :visible="manualDialogVisible"
                      @cancel="manualDialogVisible = false"
                      :all-areas="allAreas"
-                     :data="manualData" />
+                     :manual-data="manualData" />
     </div>
   </div>
 </template>
@@ -269,17 +271,21 @@
         const roles = normalizeRoles(this.userInfo.roles)
         return roles.includes('AGENT_ACCOUNTING')
       },
-      computedAreas() {
+      showManualBtn() {
+        return this.xufeiForm.enableButton
+      },
+      manualCities() {
         return fmtAreasInBw(this.xufeiForm.cities, this.allAreas)
       },
       manualData() {
         const { device, cities, word } = this.xufeiForm
-        return [{
-          computedAreas: this.computedAreas,
-          devices: [device],
-          areas: cities,
-          keyword: word
-        }]
+        return {
+          manualCities: this.manualCities,
+          word,
+          cities,
+          targetUserId: this.getFinalUserId(),
+          devices: [device]
+        }
       }
     },
     methods: {
@@ -503,5 +509,8 @@ marquee {
 .xufei-btn {
   cursor: not-allowed;
   color: #999;
+}
+.el-icon-info {
+  cursor: pointer;
 }
 </style>

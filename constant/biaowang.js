@@ -87,3 +87,12 @@ export const TRADE_STATUS = {
 
 export const PRICE_NEED_MANUAL_QUOTA = 10000 * 100 // 后台以分为单位
 export const THIRTY_DAYS = 30
+export const NINTY_DAYS = 90
+export const DAYS_MAP = [THIRTY_DAYS, NINTY_DAYS ]
+
+export const PROMOTE_OFFERED = 1
+export const PROMOTE_UNOFFERED = 0
+export const PROMOTE_OFFER_STATUS = {
+  [PROMOTE_UNOFFERED]: '未报价',
+  [PROMOTE_OFFERED]: '已报价'
+}

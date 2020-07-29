@@ -15,8 +15,8 @@
           </el-form-item>
           <el-form-item label="推广平台" prop="devices">
             <el-checkbox-group v-model="form.devices">
-              <el-checkbox :label="1" name="type">电脑</el-checkbox>
-              <el-checkbox :label="2" name="type">手机</el-checkbox>
+              <el-checkbox :label="DEVICE_PC" name="type">电脑</el-checkbox>
+              <el-checkbox :label="DEVICE_WAP" name="type">手机</el-checkbox>
             </el-checkbox-group>
           </el-form-item>
           <el-form-item label="推广区域" prop="areas">
@@ -104,7 +104,8 @@
 
   import {queryKeywordPriceNew} from 'api/biaowang'
   import clone from 'clone'
-  import {DEVICE} from 'constant/biaowang'
+  import pick from 'lodash.pick'
+  import {DEVICE, DEVICE_ALL, DEVICE_PC, DEVICE_WAP} from 'constant/biaowang'
 
   import {
     f2y,
@@ -135,7 +136,7 @@
       return {
         form: {
           keyword: '',
-          devices: [1, 2],
+          devices: [DEVICE_PC, DEVICE_WAP],
           areas: []
         },
         rules: {
@@ -150,6 +151,8 @@
         manualDialogVisible: false,
         loading: false,
         DEVICE,
+        DEVICE_PC,
+        DEVICE_WAP
       }
     },
     computed: {
@@ -192,26 +195,40 @@
       showManualBtn() {
         if (this.isSold) return false
         return this.exactMatch.deviceTypes.some(({enableButton, isSold}) => {
-          return true
+          return enableButton
         })
       },
       manualCities() {
         return fmtAreasInBw(this.form.areas, this.allAreas)
       },
       manualData() {
-        const devices = this.exactMatch.deviceTypes.reduce((list, {enableButton, device}) => {
-          if (enableButton) list.push(device)
-          return list
-        }, [])
+        try {
+          const devices = this.exactMatch.deviceTypes.reduce((list, {enableButton, device}) => {
+            if (enableButton) list.push(device)
+            return list
+          }, [])
 
-        return Object.assign({}, {
-          manualCities: this.manualCities,
-          word: this.form.keyword,
-          cities: this.form.areas,
-          targetUserId: this.getFinalUserId(),
-          devices
-        })
+          return {
+            manualCities: this.manualCities,
+            word: this.form.keyword,
+            cities: this.form.areas,
+            targetUserId: this.getFinalUserId(),
+            devices
+          }
+        } catch(e) {
+          return {}
+        }
       }
+    },
+    mounted() {
+      let { cities, device, word } = this.$route.query
+      device = Number(device)
+
+      Object.assign(this.form, {
+        areas: cities.split('|').filter(o => o.trim() !== ''),
+        keyword: word,
+        devices: (device && [DEVICE_PC, DEVICE_WAP].includes(device)) ? [].concat(device): this.form.devices
+      })
     },
     methods: {
       f2y,
