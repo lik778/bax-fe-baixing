@@ -3,11 +3,16 @@
     <div class="white-bg">
       <header>人工报价记录</header>
       <div class="content">
-        <div class="search">
-          <el-select v-model="query.status" clearable>
-            <el-option v-for="(v,k) in PROMOTE_OFFER_STATUS" :label="v" :value="k" :key="k"></el-option>
-          </el-select>
-        </div>
+        <el-form :inline="true" :model="query" class="search">
+          <el-form-item label="关键词">
+            <el-input v-model="query.word" placeholder="请输入关键词" />
+          </el-form-item>
+          <el-form-item label="状态">
+            <el-select v-model="query.status" clearable>
+              <el-option v-for="(v,k) in PROMOTE_OFFER_STATUS" :label="v" :value="k" :key="k"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-form>
         <el-table class="record-table" :data="manualHistory">
           <el-table-column label="查询日期" prop="createdAt" :formatter="dateFormatter" />
           <el-table-column label="关键词" prop="word" />
@@ -84,6 +89,7 @@ export default {
   data() {
     return {
       query: {
+        word: '',
         status: '',
         size: 20
       },
