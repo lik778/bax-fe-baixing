@@ -1,9 +1,17 @@
 <template>
   <div>
-    <el-dialog title="提交人工报价" :visible="visible" 
+    <el-dialog title="提交查价" :visible="visible" 
                class="artificial-dialog" width="800px" @close="handleClose">
       <el-table :data="data">
         <el-table-column label="关键词" prop="word" />
+        <el-table-column label="推广区域" prop="manualCities">
+          <template slot-scope="{row}">
+            <span v-for="(name, index) in row.manualCities" :key="name">
+              {{getCnName(name, allAreas)}}
+              {{index !== (row.manualCities.length - 1)? '，': ''}}
+            </span>
+          </template>
+        </el-table-column>
         <el-table-column label="推广平台">
           <template slot-scope="{row}">
             <div v-if="row.devices.length > 1">
@@ -18,14 +26,6 @@
                 {{index !== (row.devices.length - 1) ? '，': ''}}
               </span>
             </div>
-          </template>
-        </el-table-column>
-        <el-table-column label="推广区域" prop="manualCities">
-          <template slot-scope="{row}">
-            <span v-for="(name, index) in row.manualCities" :key="name">
-              {{getCnName(name, allAreas)}}
-              {{index !== (row.manualCities.length - 1)? '，': ''}}
-            </span>
           </template>
         </el-table-column>
       </el-table>
@@ -74,7 +74,7 @@ export default {
   data() {
     return {
       DEVICE,
-      device: '0'
+      device: ''
     }
   },
   components: {

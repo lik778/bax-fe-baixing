@@ -22,6 +22,7 @@
               {{cityFormatter(row.manualCities)}}
             </span>
           </el-table-column>
+          <el-table-column label="类型" />
           <el-table-column label="状态" prop="status">
             <template slot-scope="{row}">
               <el-tag :type="row.status === PROMOTE_OFFERED ? 'success': 'warning'" v-if="!row.isExpired">

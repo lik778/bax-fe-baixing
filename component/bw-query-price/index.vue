@@ -52,10 +52,12 @@
                 </span> -->
               </p>
               <result-device v-else :deviceObj="exactMatch" :selected="selected" @change="onSelected" />
-              <div class="manual-container" v-if="showManualBtn">
+              <div class="manual-container" v-if="!isSold">
                  <el-button type="primary" class="manual-btn"
                             :disabled="loading" 
-                            @click="manualDialogVisible = true">人工报价</el-button>
+                            @click="manualDialogVisible = true">
+                            {{showManualBtn? '人工报价': '申请年单'}}
+                 </el-button>
                  <el-tooltip effect="light" placement="top-start">
                    <manual-tooltip slot="content" />
                    <i class="el-icon-info icon"></i>
@@ -213,7 +215,8 @@
             word: this.form.keyword,
             cities: this.form.areas,
             targetUserId: this.getFinalUserId(),
-            devices
+            devices: this.showManualBtn ? devices : this.form.devices,
+            isManualApply: false,  // 人工报价 or 申请年单
           }
         } catch(e) {
           return {}
