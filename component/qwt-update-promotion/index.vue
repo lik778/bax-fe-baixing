@@ -421,6 +421,8 @@ const sourceTipMap = {
   [SEM_PLATFORM_SHENMA]: '神马'
 }
 const NEGATIVE_KEYWORDS_MAX = 200
+const FHYF_USERD = 1
+const FHYF_UN_USE = 0
 
 export default {
   name: 'qwt-update-promotion',
@@ -1210,8 +1212,9 @@ export default {
     },
     trackPromotionKeywords({ updatedKeywords = [], newKeywords = [], deletedKeywords = [] }) {
       // origin
-      const recommendKeywords = this._recommendKeywords || []
+      const recommendKeywords = [...new Set(this._recommendKeywords || [])]
       const getProp = this.getProp.bind(this)
+
       trackRecommendService({
         action: 'record-promotion-keywords',
 
@@ -1223,6 +1226,7 @@ export default {
         source: getProp('sources'),
         dailyBudget: getProp('dailyBudget'),
         landingType: getProp('landingType'),
+        useRecommendKeywords: Array.isArray(this._recommendKeywords)? FHYF_USERD: FHYF_UN_USE, // 是否使用一键拓词功能
     
         recommendKeywords: recommendKeywords.map(({word, recommandSource = 'user_selected', price}) => `${word}=${recommandSource}=${price}`).join(','),
         newKeywords: newKeywords.map(({word, recommandSource = 'user_selected', price}) => `${word}=${recommandSource}=${price}`).join(','),
@@ -1372,10 +1376,11 @@ export default {
         }
 
         const recommendKeywords = await recommendByUrl(recommendBody)
+        // 一键拓词推荐关键词临时数据
+        this._recommendKeywords = (this._recommendKeywords || []).concat(recommendKeywords)
+
         if (!recommendKeywords.length) return this.$message.info('无法提供推荐关键词')
         newKeywords = this.filterExistCurrentWords(store.fmtNewKeywordsPrice(recommendKeywords)).slice(0, 5)
-        // 一键拓词推荐关键词临时数据
-        this._recommendKeywords = (this._recommendKeywords || []).concat(newKeywords)
 
         if (!newKeywords.length) return this.$message.info('没有更多的关键词可以推荐啦')
       }
