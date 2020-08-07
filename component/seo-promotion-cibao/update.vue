@@ -40,7 +40,7 @@
           点击<i class="el-icon-edit"></i>可以编辑词语，
           点击<i class="el-icon-delete"></i>可以删除词语
         </div>
-        <div class="mt-16">次数限制
+        <div class="mt-16">词数限制
           <p>A/C类词数限制不低于15词</p>
           <p>B/D类词数限制不低于10词</p>
         </div>

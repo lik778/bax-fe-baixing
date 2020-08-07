@@ -486,6 +486,6 @@ marquee {
 
 <style lang="postcss">
 .city-tooltip {
-  width: 200px;
+  width: 320px;
 }
 </style>
