@@ -221,7 +221,7 @@ export function allowNotSeeBwNewPrice(roles, agentId) {
 
 export function isSelfHelpUser(roles) {
   if (roles.length === 1) {
-    return roles[0].name_en === 'BAIXING_USER'
+    return roles[0].nameEn === 'BAIXING_USER'
   }
   return false
 }
