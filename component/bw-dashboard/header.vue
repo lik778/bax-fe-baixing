@@ -10,7 +10,7 @@
         <p>平均排名</p>
         <p>{{data.rank}}</p>
       </div>
-      <template v-if="!sstAgent">
+      <template v-if="!shAgent">
         <div class="split"></div>
         <div>
           <router-link :to="{name: 'bw-query-price'}">
@@ -30,9 +30,9 @@ import dayjs from 'dayjs'
 export default {
   name: 'bw-dashboard-header',
   props: {
-    sstAgent: {
+    shAgent: {
       type: Boolean,
-      default: true
+      default: false
     }
   },
   data() {
@@ -40,7 +40,7 @@ export default {
       data: {
         show: 0,
         rank: 0
-      },
+      }
     }
   },
   async mounted() {

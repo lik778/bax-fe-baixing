@@ -1,6 +1,6 @@
 
 import { observable, action, toJS } from 'mobx'
-
+import { isSelfHelpUser } from 'util/role'
 import * as aapi from 'api/account'
 import * as mapi from 'api/meta'
 import Sentry from '../lib/sentry'
@@ -31,7 +31,9 @@ const gStore = observable({
   }),
 
   getCurrentUser: action(async function() {
-    const currentUser = this._currentUser = await aapi.getCurrentUser()
+    const currentUser = await aapi.getCurrentUser()
+    currentUser.shAgent = isSelfHelpUser(currentUser.roles)
+    this._currentUser = currentUser
     // 打点数据中添加用户身份信息
     window.__trackerData.common = {
       ...window.__trackerData.common,

@@ -4,7 +4,7 @@
       <header>我的标王推广计划</header>
       <main>
         <router-link :to="{name: 'bw-query-price'}">
-          <el-button class="create-plan" type="primary" v-if="!userInfo.sstAgent"><i class="el-icon-plus" ></i>新建标王计划</el-button>
+          <el-button class="create-plan" type="primary" v-if="!userInfo.shAgent"><i class="el-icon-plus" ></i>新建标王计划</el-button>
         </router-link>
         <el-form :model="query" label-width="100px" label-position="left" @submit.native.prevent >
           <el-form-item label="关键词">

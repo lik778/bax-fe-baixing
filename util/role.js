@@ -218,3 +218,10 @@ export function allowNotSeeBwNewPrice(roles, agentId) {
   }
   return [1].includes(agentId) && isOnlyBaixingUser
 }
+
+export function isSelfHelpUser(roles) {
+  if (roles.length === 1) {
+    return roles[0].nameEn === 'BAIXING_USER'
+  }
+  return false
+}
