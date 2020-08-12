@@ -5,7 +5,7 @@
       <div class="content">
         <el-form :inline="true" :model="query" class="search">
           <el-form-item label="关键词">
-            <el-input v-model="query.word" placeholder="请输入关键词" />
+            <el-input v-model="query.keyword" placeholder="请输入关键词" />
           </el-form-item>
           <el-form-item label="状态">
             <el-select v-model="query.status" clearable>
@@ -14,16 +14,16 @@
           </el-form-item>
         </el-form>
         <el-table class="record-table" :data="manualHistory">
-          <el-table-column label="查询日期" prop="createdAt" :formatter="dateFormatter" />
-          <el-table-column label="关键词" prop="word" />
+          <el-table-column label="查询日期" prop="createdAt" width="120" :formatter="dateFormatter" />
+          <el-table-column label="关键词" prop="word" width="120" />
           <el-table-column label="推广平台" porp="device" width="120" :formatter="({device}) => DEVICE[device]" />
-          <el-table-column label="城市" prop="manualCities">
+          <el-table-column label="城市" prop="manualCities" min-width="120">
             <span slot-scope="{row}">
               {{cityFormatter(row.manualCities)}}
             </span>
           </el-table-column>
-          <el-table-column label="类型" />
-          <el-table-column label="状态" prop="status">
+          <el-table-column label="类型" :formatter="({applyType}) => APPLY_TYPES[applyType]" width="140" align="center" />
+          <el-table-column label="状态" prop="status" width="100" align="center">
             <template slot-scope="{row}">
               <el-tag :type="row.status === PROMOTE_OFFERED ? 'success': 'warning'" v-if="!row.isExpired">
                 {{PROMOTE_OFFER_STATUS[row.status]}}
@@ -31,17 +31,17 @@
               <el-tag v-if="row.isExpired" type="warning">已过期</el-tag>
             </template>
           </el-table-column>
-          <el-table-column label="人工报价" min-width="180">
+          <el-table-column label="人工报价" width="360">
             <el-radio-group v-if="row.status === PROMOTE_OFFERED" 
                             slot-scope="{row}" v-model="row.checkDays">
-              <el-radio v-for="(v, k) in row.soldPriceMap" 
+              <el-radio class="manual-radio" v-for="(v, k) in row.soldPriceMap" 
                         :label="k" :key="k">
-                        {{f2y(v)}}元({{k}}天)
+                        {{f2y(v)}}元（{{k}}天）
               </el-radio>
             </el-radio-group>
             <span v-else>--</span>
           </el-table-column>
-          <el-table-column label="操作" align="center">
+          <el-table-column label="操作" align="center" fixed="right">
             <template slot-scope="{row}">
               <el-button type="primary" size="small" @click="addToCart(row)" 
                          :disabled="disabledAddCartBtn(row)">加入购物车</el-button><br />
@@ -69,7 +69,8 @@ import {
   PROMOTE_OFFERED, 
   PROMOTE_UNOFFERED,
   THIRTY_DAYS,
-  DAYS_MAP
+  GET_DAYS_MAP,
+  APPLY_TYPES
 } from 'constant/biaowang'
 import { getCnName, f2y } from 'util'
 
@@ -90,7 +91,7 @@ export default {
   data() {
     return {
       query: {
-        word: '',
+        keyword: '',
         status: '',
         size: 20
       },
@@ -100,7 +101,8 @@ export default {
       DEVICE,
       PROMOTE_OFFER_STATUS,
       PROMOTE_OFFERED,
-      PROMOTE_UNOFFERED
+      PROMOTE_UNOFFERED,
+      APPLY_TYPES
     }
   },
   methods: {
@@ -108,9 +110,18 @@ export default {
     f2y,
     async getManualHistory(isResetPageNo) {
       if (isResetPageNo) this.currentPage = 0
-      let { data, total } = await getUserManualList({ ...this.query, page: this.currentPage })
+      const query = {}
+      for(let key in this.query) {
+        if (this.query[key] !== '') {
+          Object.assign(query, {
+            [key]: this.query[key]
+          }) 
+        }
+      }
+      let { data, total } = await getUserManualList({ ...query, page: this.currentPage })
+
       this.manualHistory = data.map((item) => {
-        const soldPriceMap = DAYS_MAP.reduce((curr, prev) => {
+        const soldPriceMap = GET_DAYS_MAP(item.soldType).reduce((curr, prev) => {
           return Object.assign(curr, {
             [prev]: prev / THIRTY_DAYS * item.price
           })
@@ -134,11 +145,11 @@ export default {
       return row.isExpired || row.status === PROMOTE_UNOFFERED
     },
     addToCart(row) {
-      const { cities, checkDays, device, price, word, soldPriceMap } = row
+      const { cities, checkDays, device, price, word, soldPriceMap, createdAt } = row
       if (!checkDays) {
         return this.$message.error('请选择关键词报价')
       }
-      const isExpired = dayjs().isAfter(dayjs(item.createdAt * 1000).endOf('month'))
+      const isExpired = dayjs().isAfter(dayjs(createdAt * 1000).endOf('month'))
       if (isExpired) {
         return this.$message.error('该报价查询已过期')
       }
@@ -150,6 +161,7 @@ export default {
         word,
         soldPriceMap
       }]
+      console.log(data)
       this.$parent.$refs.bwShoppingCart.addToCart(data)
     },
     goToQueryPrice(row) {
@@ -216,5 +228,10 @@ export default {
   & .record-table {
     margin-top: 40px;
   } 
+  & .manual-radio {
+    width: 160px;
+    line-height: 30px;
+    margin-right: 10px;
+  }
 }
 </style>

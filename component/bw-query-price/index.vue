@@ -52,11 +52,12 @@
                 </span> -->
               </p>
               <result-device v-else :deviceObj="exactMatch" :selected="selected" @change="onSelected" />
-              <div class="manual-container" v-if="!isSold">
+              <div class="manual-container" v-if="showManualBtn || showLongOrder">
                  <el-button type="primary" class="manual-btn"
-                            :disabled="loading" 
+                            :disabled="loading"
                             @click="manualDialogVisible = true">
-                            {{showManualBtn? '人工报价': '申请年单'}}
+                  <span v-if="showManualBtn">人工报价</span>
+                  <span v-if="!showManualBtn && showLongOrder">申请年单</span>
                  </el-button>
                  <el-tooltip effect="light" placement="top-start">
                    <manual-tooltip slot="content" />
@@ -107,7 +108,7 @@
   import {queryKeywordPriceNew} from 'api/biaowang'
   import clone from 'clone'
   import pick from 'lodash.pick'
-  import {DEVICE, DEVICE_ALL, DEVICE_PC, DEVICE_WAP} from 'constant/biaowang'
+  import {DEVICE, DEVICE_ALL, DEVICE_PC, DEVICE_WAP, ORDER_APPLY_TYPE_NOT, PRICE_NEED_MANUAL_QUOTA} from 'constant/biaowang'
 
   import {
     f2y,
@@ -159,14 +160,15 @@
     },
     computed: {
       exactMatch() {
-        return this.skus.slice(0, 1)[0]
+        return this.skus.length ? this.skus.slice(0, 1)[0] : null
       },
       recommends() {
         const { skus, exactMatch } = this
         // 推荐词关键词列表不出现精确匹配关键词
-        return skus.slice(1).filter(({word}) => exactMatch && exactMatch.word !== word)
+        return skus.length > 1 ? skus.slice(1).filter(({word}) => exactMatch && exactMatch.word !== word) : []
       },
       soldCities() {
+        if (!this.exactMatch) return []
         const soldCities = []
         this.exactMatch.deviceTypes
           .reduce((list, {soldCities}) => {
@@ -180,12 +182,15 @@
         return soldCities
       },
       isSold() {
+        if (!this.exactMatch) return false
         return this.exactMatch.deviceTypes.some(list => list.isSold)
       },
       availableCities() {
+        if (!this.exactMatch) return []
         return this.exactMatch.cities.filter(c => !this.soldCities.includes(c))
       },
       priceIsNotZero() {
+        if(!this.exactMatch) return true
         const resultArr = this.exactMatch.deviceTypes.reduce((list, {priceList}) => {
           const arr = priceList.reduce((list, {price}) => {
             return list.concat(price)
@@ -195,32 +200,46 @@
         return !resultArr.some(price => !price)
       },
       showManualBtn() {
+        if (!this.exactMatch) return false
         if (this.isSold) return false
-        return this.exactMatch.deviceTypes.some(({enableButton, isSold}) => {
-          return enableButton
+        return this.exactMatch.deviceTypes.some(({manualPriced, price}) => {
+          return !manualPriced && price >= PRICE_NEED_MANUAL_QUOTA
+        })
+      },
+      showLongOrder() {
+        if (!this.exactMatch) return false
+        if (this.isSold) return false
+        return this.exactMatch.deviceTypes.some(({orderApplyType, price}) => {
+          return Number(orderApplyType) === ORDER_APPLY_TYPE_NOT && price < PRICE_NEED_MANUAL_QUOTA
         })
       },
       manualCities() {
         return fmtAreasInBw(this.form.areas, this.allAreas)
       },
-      manualData() {
-        try {
-          const devices = this.exactMatch.deviceTypes.reduce((list, {enableButton, device}) => {
-            if (enableButton) list.push(device)
+      manualDevices() {
+        if (!this.exactMatch) return []
+        if (this.showManualBtn) {
+          return this.exactMatch.deviceTypes.reduce((list, {manualPriced, price, device}) => {
+            if (!manualPriced && price >= PRICE_NEED_MANUAL_QUOTA) list.push(device)
             return list
           }, [])
-
-          return {
-            manualCities: this.manualCities,
-            word: this.form.keyword,
-            cities: this.form.areas,
-            targetUserId: this.getFinalUserId(),
-            devices: this.showManualBtn ? devices : this.form.devices,
-            isManualApply: false,  // 人工报价 or 申请年单
-          }
-        } catch(e) {
-          return {}
         }
+        if (this.showLongOrder) {
+          return this.exactMatch.deviceTypes.reduce((list, {orderApplyType, price,device}) => {
+            if (Number(orderApplyType) === ORDER_APPLY_TYPE_NOT && price < PRICE_NEED_MANUAL_QUOTA) list.push(device)
+            return list
+          }, [])
+        }
+        return []
+      },
+      manualData() {
+        return Object.assign({}, {
+          manualCities: this.manualCities,
+          word: this.form.keyword,
+          cities: this.form.areas,
+          targetUserId: this.getFinalUserId(),
+          devices: this.manualDevices.length ? this.manualDevices : this.form.devices,
+        })
       }
     },
     mounted() {
