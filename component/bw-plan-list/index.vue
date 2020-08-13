@@ -4,7 +4,7 @@
       <header>我的标王推广计划</header>
       <main>
         <router-link :to="{name: 'bw-query-price'}">
-          <el-button class="create-plan" type="primary" v-if="!userInfo.sstAgent"><i class="el-icon-plus" ></i>新建标王计划</el-button>
+          <el-button class="create-plan" type="primary" v-if="!userInfo.shAgent"><i class="el-icon-plus" ></i>新建标王计划</el-button>
         </router-link>
         <el-form :model="query" label-width="100px" label-position="left" @submit.native.prevent >
           <el-form-item label="关键词">
@@ -27,7 +27,14 @@
         </marquee>
         <el-table :data="promotes" border>
           <el-table-column prop="word" label="关键词" />
-          <el-table-column prop="cities" label="城市" :formatter="row => cityFormatter(row.cities)" />
+          <el-table-column prop="cities" label="城市">
+            <template slot-scope="scope">
+                <el-tooltip popper-class="city-tooltip" v-if="scope.row.cities.length > 10" class="item" effect="light" :content="cityFormatter(scope.row.cities, scope.row.cities.length)" placement="right">
+                    <p>{{ cityFormatter(scope.row.cities, 10) }}</p>
+                </el-tooltip>
+                <p v-else>{{ cityFormatter(scope.row.cities) }}</p>
+            </template>
+          </el-table-column>  
           <el-table-column prop="device" label="平台" :formatter="row => deviceFormatter(row.device)" />
           <el-table-column prop="status" label="投放状态" :formatter="v => statusFormatter(v.status)" />
           <el-table-column label="审核状态">
@@ -59,7 +66,7 @@
           <el-table-column label="操作" min-width="160px">
             <template slot-scope="scope">
               <router-link v-if="!isBxSales && !isAgentAccounting" :to="{name: 'bw-edit-plan', query: {promoteId: scope.row.id}}"><el-button type="text" size="small">编辑</el-button></router-link>
-              <el-button v-if="canXufei(scope.row) && !userInfo.sstAgent" size="small" type="text"
+              <el-button v-if="canXufei(scope.row) && !userInfo.shAgent" size="small" type="text"
                          :disabled="disabledXuFeiBtn(scope.row)" 
                          @click="onXufei(scope.row)">续费</el-button>
               <router-link :to="{name: 'bw-dashboard', query: {promoteId: scope.row.id, keyword: scope.row.word}}">
@@ -409,8 +416,7 @@
           }
         })
       },
-      cityFormatter(cities) {
-        const max = 20
+      cityFormatter(cities , max = 20) {
         return cities.slice(0, max).map(city => getCnName(city, this.allAreas)).join(',') + (cities.length > max ? `等${cities.length}个城市` : '')
       },
       deviceFormatter(device) {
@@ -522,5 +528,11 @@ marquee {
 }
 .el-icon-info {
   cursor: pointer;
+}
+</style>
+
+<style lang="postcss">
+.city-tooltip {
+  width: 320px;
 }
 </style>
