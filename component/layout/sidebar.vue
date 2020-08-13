@@ -80,7 +80,7 @@
           <template slot="title">
             <bx-icon type="sharealt"></bx-icon>标王推广
           </template>
-          <el-menu-item index="bw-query-price" v-if="!userInfo.sstAgent">
+          <el-menu-item index="bw-query-price" v-if="!userInfo.shAgent">
             <router-link :to="{ name: 'bw-query-price' }" tag="p">
               <i class="material-icons" style="font-size: 16px; margin-right: 11px; vertical-align: -3px;"></i>新建标王推广
             </router-link>

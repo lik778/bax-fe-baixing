@@ -28,7 +28,7 @@
             您还有标王关键词没有生效，
             <a href="javascript:;" @click="$router.push({name: 'bw-plan-list', query: {status: '0,5'}})">点此查看</a>
           </p>
-          <div class="actions" v-if="!userInfo.sstAgent">
+          <div class="actions" v-if="!userInfo.shAgent">
             <el-button type="primary" @click="$router.push({name: 'bw-query-price'})">立即购买</el-button>
             <el-button type="primary" @click="$router.push({name: 'bw-plan-list'})">立即续费</el-button>
           </div>
@@ -36,7 +36,7 @@
       </div>
       <div class="no-promote-placeholder" v-else>
         <p class="text">您暂时没有标王推广计划，您可以</p>
-        <el-button type="primary" v-if="!userInfo.sstAgent" @click="() => $router.push({name: 'bw-query-price'})">新建标王推广计划</el-button>
+        <el-button type="primary" v-if="!userInfo.shAgent" @click="() => $router.push({name: 'bw-query-price'})">新建标王推广计划</el-button>
       </div>
     </div>
     <loading-placeholder v-else class="layout-left">
@@ -59,7 +59,7 @@
             <span class="col">{{p.word}}</span>
             <span class="col">{{p.cpcRanking && fmtCpcRanking(p.cpcRanking, false)}}</span>
             <span class="col">{{leftDays(p)}}/{{p.days.toFixed(1)}}</span>
-            <el-button v-if="canXufei(p) && !userInfo.sstAgent"
+            <el-button v-if="canXufei(p) && !userInfo.shAgent"
                        :disabled="disabledXuFeiBtn(p)"  
                        class="col renew"
                        type="text"

@@ -257,7 +257,7 @@
       }
     },
     watch: {
-      'userInfo.sstAgent': {
+      'userInfo.shAgent': {
         immediate: true,
         handler(val) {
           if (val) {
