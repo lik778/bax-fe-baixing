@@ -188,7 +188,7 @@ export default {
         this.getManualHistory(true)
       }
     },
-    'userInfo.sstAgent': {
+    'userInfo.shAgent': {
       immediate: true,
       handler(val) {
         if (val) {
