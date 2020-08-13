@@ -28,7 +28,7 @@
           </template>
           <el-menu-item index="qwt-charge">
             <router-link :to="{ name: 'qwt-charge' }" tag="p">
-              站外推广
+              充值
             </router-link>
           </el-menu-item>
           <el-menu-item index="seo-charge">
