@@ -115,7 +115,7 @@ import { createOrder, getProductsByMchCode } from 'api/fengming'
 import { SPUCODES, MERCHANTS } from 'constant/product'
 import { getUniqueAgreementList } from 'util/charge'
 
-const { WHOLE_SPU_CODE, GUAN_WANG_SPU_CODE } = SPUCODES
+const { WHOLE_SPU_CODE, GUAN_WANG_SPU_CODE, BIAO_WANG_SPU_CODE } = SPUCODES
 const { FENG_MING_MERCHANT_CODE, PHOENIXS_MERCHANT_CODE } = MERCHANTS
 const MIN_INPUT_PRICE = 50000
 const discountInfo = [
@@ -136,7 +136,7 @@ const isGwProduct = function(spuCode) {
 }
 
 const isChargeProduct = function(spuCode) {
-  return spuCode === WHOLE_SPU_CODE
+  return [WHOLE_SPU_CODE, BIAO_WANG_SPU_CODE].includes(spuCode)
 }
 
 
@@ -227,7 +227,54 @@ export default {
     Clipboard
   },
   async mounted() {
+    const { 
+        sales_id: salesId,
+        user_id: userId,
+        select_gw: selectGw
+    } = this.$route.query
+
+    setTimeout(() => {
+        const { userInfo, actionTrackId } = this
+        track({
+          roles: userInfo.roles.map(r => r.name).join(','),
+          baixingId: userInfo.baixingId,
+          action: 'enter-page: charge',
+          baxId: userInfo.id,
+          actionTrackId
+        })
+      }, 1200)
+
+    let clickSent = false
+    document.addEventListener('click', evt => {
+      if (!clickSent) {
+        const { userInfo, actionTrackId } = this
+        track({
+          roles: userInfo.roles.map(r => r.name).join(','),
+          action: 'clicked: charge',
+          baixingId: userInfo.baixingId,
+          baxId: userInfo.id,
+          actionTrackId
+        })
+        clickSent = true
+      }
+    })
+
+    if (salesId) {
+        const userInfo = await getUserInfo(salesId)
+        this.displayBxSalesId = userInfo.salesId
+        this.salesIdLocked = true
+    }
+
+    if (userId) {
+      const info = await queryUserInfo(userId)
+      if (info.mobile) {
+        this.displayUserMobile = info.mobile
+      }
+    }
+
+
     this.obtainProductByMchCode()
+    
   },
   methods: {
     centToYuan,
@@ -257,37 +304,12 @@ export default {
         this.chargeSpu = products.find(p => isChargeProduct(p.spuCode))
 
         this.agreementList = getUniqueAgreementList(products)
+        this.checkedProducts = []
       } catch (e) {
         console.error(e)
       } finally {
         this.fetchLoading = false
       }
-
-      setTimeout(() => {
-        const { userInfo, actionTrackId } = this
-        track({
-          roles: userInfo.roles.map(r => r.name).join(','),
-          baixingId: userInfo.baixingId,
-          action: 'enter-page: charge',
-          baxId: userInfo.id,
-          actionTrackId
-        })
-      }, 1200)
-
-      let clickSent = false
-      document.addEventListener('click', evt => {
-        if (!clickSent) {
-          const { userInfo, actionTrackId } = this
-          track({
-            roles: userInfo.roles.map(r => r.name).join(','),
-            action: 'clicked: charge',
-            baixingId: userInfo.baixingId,
-            baxId: userInfo.id,
-            actionTrackId
-          })
-          clickSent = true
-        }
-      })
 
       if (selectGw === 'true' || Number(selectGw) === 1) {
         const initSiteSku = this.siteSpu.selection.find(sku => sku.tags.includes('hot'))
@@ -297,18 +319,6 @@ export default {
         if (initChargeSku) this.checkedProducts.push(initChargeSku)
       }
 
-      if (salesId) {
-        const userInfo = await getUserInfo(salesId)
-        this.displayBxSalesId = userInfo.salesId
-        this.salesIdLocked = true
-      }
-
-      if (userId) {
-        const info = await queryUserInfo(userId)
-        if (info.mobile) {
-          this.displayUserMobile = info.mobile
-        }
-      }
     },
     handlePriceChange(product, v) {
       product.price = v
