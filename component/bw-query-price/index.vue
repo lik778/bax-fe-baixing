@@ -57,7 +57,7 @@
                             :disabled="loading"
                             @click="manualDialogVisible = true">
                   <span v-if="showManualBtn">人工报价</span>
-                  <span v-if="!showManualBtn && showLongOrder">申请年单</span>
+                  <span v-if="!showManualBtn && showLongOrder">申请长单</span>
                  </el-button>
                  <el-tooltip effect="light" placement="top-start">
                    <manual-tooltip slot="content" />

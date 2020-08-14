@@ -93,7 +93,7 @@ export const YEAR_DAYS = 360
 export const DAYS_MAP = [THIRTY_DAYS, NINTY_DAYS]
 export const GET_DAYS_MAP = function(soldType) {
   const isLongOrder = Number(soldType) === SOLD_TYPE_YEAR
-  return isLongOrder ? DAYS_MAP.concat([HALF_YEAR_DAYS, YEAR_DAYS]): DAYS_MAP
+  return isLongOrder ? DAYS_MAP.concat([HALF_YEAR_DAYS]): DAYS_MAP
 }
 
 export const PROMOTE_OFFERED = 2
