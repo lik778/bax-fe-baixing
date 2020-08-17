@@ -108,7 +108,16 @@
   import {queryKeywordPriceNew} from 'api/biaowang'
   import clone from 'clone'
   import pick from 'lodash.pick'
-  import {DEVICE, DEVICE_ALL, DEVICE_PC, DEVICE_WAP, ORDER_APPLY_TYPE_NOT, PRICE_NEED_MANUAL_QUOTA} from 'constant/biaowang'
+  import {
+    DEVICE, 
+    DEVICE_ALL, 
+    DEVICE_PC, 
+    DEVICE_WAP, 
+    ORDER_APPLY_TYPE_NOT, 
+    PRICE_NEED_MANUAL_QUOTA, 
+    THIRTY_DAYS,
+    GET_DAYS_MAP
+  } from 'constant/biaowang'
 
   import {
     f2y,
@@ -302,12 +311,17 @@
               })
               this.skus = results.map(w => {
                 const deviceTypes = w.priceList.map(d => {
-                  const priceList = Object.entries(d.priceMap).map(entry => {
+                  const soldPriceMap = GET_DAYS_MAP(d.orderApplyType).reduce((curr, prev) => {
+                    return Object.assign(curr, {
+                      [prev]: prev / THIRTY_DAYS * d.price
+                    })
+                  }, {})
+                  const priceList = Object.entries(soldPriceMap).map(entry => {
                     return {
                       device: d.device,
                       word: w.word,
                       cities: w.cities,
-                      soldPriceMap: d.priceMap,
+                      soldPriceMap: soldPriceMap,
                       days: entry[0],
                       price: entry[1]
                     }

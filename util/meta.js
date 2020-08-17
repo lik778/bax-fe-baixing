@@ -318,7 +318,7 @@ export function formatCategoriesOrAreas(names, allItems) {
      }
    })
    // 单省单城市
-   if (noSpecialAreas.length <= 1) {
+   if (areas.length <= 1) {
      return areas
    }
 
