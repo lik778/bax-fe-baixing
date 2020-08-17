@@ -470,8 +470,10 @@ marquee {
 .keyword-row {
   display: flex;
   align-items: center;
-  & .manual-btn {
-    margin-left: 20px;
+  & .manual-container {
+    margin-left: 16px;
+    display: flex;
+    align-items: center;
   }
   & .el-icon-info {
     color:#6a778c;
