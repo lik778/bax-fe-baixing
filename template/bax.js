@@ -318,7 +318,8 @@ router.beforeEach((to, from, next) => {
     next({
       path: to.path,
       query: {
-        ...from.query
+        user_id: from.query.user_id,
+        sales_id: from.query.sales_id
       }
     })
   } else {

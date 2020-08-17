@@ -169,6 +169,7 @@ export default {
       this.$router.push({
         name: 'bw-query-price',
         query: {
+          ...this.$route.query,
           word,
           device,
           cities: cities.join('|')
