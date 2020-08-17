@@ -59,6 +59,7 @@ import Vue2Filters from 'vue2-filters'
 import { getBusinessLicense } from 'api/seo'
 import { allowUseKaPackage } from 'util/fengming-role'
 import { getCurrentUser } from 'api/account'
+import pick from 'lodash.pick'
 
 // track common data
 window.__trackerData = {
@@ -315,12 +316,10 @@ router.beforeEach((to, from, next) => {
     return
   }
   if (from.query.user_id) {
+    const query = pick(from.query, ['user_id', 'sales_id'])
     next({
       path: to.path,
-      query: {
-        user_id: from.query.user_id,
-        sales_id: from.query.sales_id
-      }
+      query
     })
   } else {
     next()
