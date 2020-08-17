@@ -4,8 +4,16 @@
     <el-row type="flex" justify="space-around" align="center">
       <el-col :span="1"></el-col>
       <el-col :span="4" class="column">
-        <h3>推广资金可用余额</h3>
+        <h3>凤鸣投放币</h3>
         <p><strong>{{summary.balance / 100}}</strong>元</p>
+        <router-link :to="{name: 'qwt-charge', query: {mode: 'charge-only'}}"
+          @click.native="onClickCharge">
+          <el-button type="primary">充值</el-button>
+        </router-link>
+      </el-col>
+      <el-col :span="4" class="column">
+        <h3>标王投放币</h3>
+        <p><strong>6666666.66</strong>元</p>
         <router-link :to="{name: 'qwt-charge', query: {mode: 'charge-only'}}"
           @click.native="onClickCharge">
           <el-button type="primary">充值</el-button>
