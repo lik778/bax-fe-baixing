@@ -159,7 +159,9 @@
     PROMOTE_STATUS_PENDING_ONLINE,
     PROMOTE_STATUS_OFFLINE,
     PRICE_NEED_MANUAL_QUOTA,
-    ORDER_APPLY_TYPE_NOT
+    ORDER_APPLY_TYPE_NOT,
+    GET_DAYS_MAP,
+    THIRTY_DAYS
   } from 'constant/biaowang'
   import {getPromotes, queryKeywordPriceNew, getCpcRanking, getUserLive, getUserRanking} from 'api/biaowang'
   import {
@@ -392,10 +394,15 @@
         })
 
         const priceObj = result[0].priceList[0]
+        const soldPriceMap = GET_DAYS_MAP(priceObj.orderApplyType).reduce((curr, prev) => {
+          return Object.assign(curr, {
+            [prev]: prev / THIRTY_DAYS * priceObj.price
+          })
+        }, {})
         const xufeiForm = {
           ...result[0],
           ...priceObj,
-          soldPriceMap: priceObj.priceMap
+          soldPriceMap
         }
 
         this.xufeiForm = xufeiForm
