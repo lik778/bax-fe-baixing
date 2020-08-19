@@ -358,6 +358,12 @@
             this.$router.push('/main')
           }
         }
+      },
+      'form': {
+        deep: true,
+        handler() {
+          this.skus = []
+        }
       }
     }
   }

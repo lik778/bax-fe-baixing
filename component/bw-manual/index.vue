@@ -17,18 +17,19 @@
           <el-table-column label="查询日期" prop="createdAt" width="120" :formatter="dateFormatter" />
           <el-table-column label="关键词" prop="word" width="120" />
           <el-table-column label="推广平台" porp="device" width="120" :formatter="({device}) => DEVICE[device]" />
-          <el-table-column label="城市" prop="manualCities" min-width="120">
+          <el-table-column label="城市" prop="cities" min-width="120">
             <span slot-scope="{row}">
-              {{cityFormatter(row.manualCities)}}
+              {{cityFormatter(row.cities)}}
             </span>
           </el-table-column>
           <el-table-column label="类型" :formatter="({applyType}) => APPLY_TYPES[applyType]" width="140" align="center" />
-          <el-table-column label="状态" prop="status" width="100" align="center">
+          <el-table-column label="状态" prop="status" width="180">
             <template slot-scope="{row}">
               <el-tag :type="row.status === PROMOTE_OFFERED ? 'success': 'warning'" v-if="!row.isExpired">
                 {{PROMOTE_OFFER_STATUS[row.status]}}
               </el-tag>
               <el-tag v-if="row.isExpired" type="warning">已过期</el-tag>
+              <el-tag type="danger" v-if="row.applyType === APPLY_TYPE_ORDER_LONG && row.soldType === SOLD_TYPE_MONTH">不售卖长单</el-tag>
             </template>
           </el-table-column>
           <el-table-column label="人工报价" width="360">
@@ -41,10 +42,10 @@
             </el-radio-group>
             <span v-else>--</span>
           </el-table-column>
-          <el-table-column label="操作" align="center" fixed="right">
+          <el-table-column label="操作" align="center" fixed="right" width="180">
             <template slot-scope="{row}">
-              <el-button type="primary" size="small" @click="addToCart(row)" 
-                         :disabled="disabledAddCartBtn(row)">加入购物车</el-button><br />
+              <el-button type="text" size="small" @click="addToCart(row)" 
+                         :disabled="disabledAddCartBtn(row)">加入购物车</el-button>
               <el-button type="text" size="small" @click="goToQueryPrice(row)">重新查价</el-button>
             </template>
           </el-table-column>
@@ -70,7 +71,9 @@ import {
   PROMOTE_UNOFFERED,
   THIRTY_DAYS,
   GET_DAYS_MAP,
-  APPLY_TYPES
+  APPLY_TYPES,
+  APPLY_TYPE_ORDER_LONG,
+  SOLD_TYPE_MONTH
 } from 'constant/biaowang'
 import { getCnName, f2y } from 'util'
 
@@ -102,7 +105,9 @@ export default {
       PROMOTE_OFFER_STATUS,
       PROMOTE_OFFERED,
       PROMOTE_UNOFFERED,
-      APPLY_TYPES
+      APPLY_TYPES,
+      APPLY_TYPE_ORDER_LONG,
+      SOLD_TYPE_MONTH
     }
   },
   methods: {

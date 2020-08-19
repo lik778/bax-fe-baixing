@@ -4,11 +4,11 @@
                class="artificial-dialog" width="800px" @close="handleClose">
       <el-table :data="data">
         <el-table-column label="关键词" prop="word" />
-        <el-table-column label="推广区域" prop="manualCities">
+        <el-table-column label="申请城市" prop="cities">
           <template slot-scope="{row}">
-            <span v-for="(name, index) in row.manualCities" :key="name">
+            <span v-for="(name, index) in row.cities" :key="name">
               {{getCnName(name, allAreas)}}
-              {{index !== (row.manualCities.length - 1)? '，': ''}}
+              {{index !== (row.cities.length - 1)? '，': ''}}
             </span>
           </template>
         </el-table-column>
