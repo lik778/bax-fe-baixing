@@ -17,10 +17,13 @@
           <el-table-column label="查询日期" prop="createdAt" width="120" :formatter="dateFormatter" />
           <el-table-column label="关键词" prop="word" width="120" />
           <el-table-column label="推广平台" porp="device" width="120" :formatter="({device}) => DEVICE[device]" />
-          <el-table-column label="城市" prop="cities" min-width="120">
-            <span slot-scope="{row}">
-              {{cityFormatter(row.cities)}}
-            </span>
+          <el-table-column label="城市" prop="cities" min-width="180">
+            <template slot-scope="{row}">
+              <el-tooltip popper-class="city-tooltip" class="item" effect="light" 
+                          :content="cityFormatter(row.cities, row.cities.length)" placement="right">
+                <p>{{cityFormatter(row.cities, citiesMax)}}</p>
+              </el-tooltip>
+            </template>
           </el-table-column>
           <el-table-column label="类型" :formatter="({applyType}) => APPLY_TYPES[applyType]" width="140" align="center" />
           <el-table-column label="状态" prop="status" width="180">
@@ -107,7 +110,8 @@ export default {
       PROMOTE_UNOFFERED,
       APPLY_TYPES,
       APPLY_TYPE_ORDER_LONG,
-      SOLD_TYPE_MONTH
+      SOLD_TYPE_MONTH,
+      citiesMax
     }
   },
   methods: {
@@ -143,8 +147,8 @@ export default {
     dateFormatter({createdAt}) {
       return dayjs(createdAt * 1000).format('YYYY-MM-DD')
     },
-    cityFormatter(cities) {
-      return cities.slice(0, citiesMax).map(city => getCnName(city, this.allAreas)).join('，')
+    cityFormatter(cities , max = citiesMax) {
+      return cities.slice(0, max).map(city => getCnName(city, this.allAreas)).join('，') + (cities.length > max ? `等${cities.length}个城市` : '')
     },
     disabledAddCartBtn(row) {
       return row.isExpired || row.status === PROMOTE_UNOFFERED

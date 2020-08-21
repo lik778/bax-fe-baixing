@@ -4,12 +4,12 @@
                class="artificial-dialog" width="800px" @close="handleClose">
       <el-table :data="data">
         <el-table-column label="关键词" prop="word" />
-        <el-table-column label="申请城市" prop="cities">
+        <el-table-column label="推广区域" prop="cities">
           <template slot-scope="{row}">
-            <span v-for="(name, index) in row.cities" :key="name">
-              {{getCnName(name, allAreas)}}
-              {{index !== (row.cities.length - 1)? '，': ''}}
-            </span>
+            <el-tooltip popper-class="city-tooltip" class="item" effect="light" 
+              :content="cityFormatter(row.cities, row.cities.length)" placement="right">
+              <p>{{cityFormatter(row.cities, citiesMax)}}</p>
+            </el-tooltip>
           </template>
         </el-table-column>
         <el-table-column label="推广平台">
@@ -45,6 +45,8 @@ import { getCnName } from 'util'
 import { DEVICE } from 'constant/biaowang'
 import { sendUserManualApply } from 'api/biaowang'
 
+const citiesMax = 20
+
 export default {
   name: 'ManualDialog',
   props: {
@@ -74,7 +76,8 @@ export default {
   data() {
     return {
       DEVICE,
-      device: ''
+      device: '',
+      citiesMax
     }
   },
   components: {
@@ -84,6 +87,9 @@ export default {
     getCnName,
     handleClose() {
       this.$emit('cancel', false)
+    },
+    cityFormatter(cities , max = citiesMax) {
+      return cities.slice(0, max).map(city => getCnName(city, this.allAreas)).join('，') + (cities.length > max ? `等${cities.length}个城市` : '')
     },
     async handleSubmit() {
       this.handleClose()
