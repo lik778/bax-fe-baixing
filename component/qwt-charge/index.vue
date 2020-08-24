@@ -280,7 +280,11 @@ export default {
     centToYuan,
     changeProductMchCodeTab() {
       // tips: 当前页面做数据缓存 请求商品数据
+      this.siteSpu = null
+      this.chargeSpu = null
+      this.checkedProducts = []
       this.showDiscount = !(this.productTabMchCode === PHOENIXS_MERCHANT_CODE)
+      this.discountInfoHTML = this.showDiscount && discountInfoHTML
       this.obtainProductByMchCode()
     },
     async obtainProductByMchCode(code) {

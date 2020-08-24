@@ -44,7 +44,7 @@
   import Clipboard from 'com/widget/clipboard'
   import {getCnName} from 'util/meta'
   import {DEVICE} from 'constant/biaowang'
-  import {orderServiceHost} from 'config'
+  import {orderServiceHost, preKeywordPath} from 'config'
 
   const storageKeyPrefix = `bw-shopping-cart-`
 
@@ -126,12 +126,12 @@
         const preTradeId = await createPreOrder(...createOrderArgs)
         if (this.isUser('BAIXING_USER')) {
           this.localItems = []
-          location.href = `${orderServiceHost}/?appId=105&seq=${preTradeId}`
+          location.href = `${orderServiceHost}/${preKeywordPath}/?appId=105&seq=${preTradeId}`
         } else if (this.isUser('AGENT_ACCOUNTING')) {
           this.localItems = []
-          location.href = `${orderServiceHost}/?appId=105&seq=${preTradeId}&agentId=${this.userInfo.id}`
+          location.href = `${orderServiceHost}/${preKeywordPath}/?appId=105&seq=${preTradeId}&agentId=${this.userInfo.id}`
         } else if (this.isUser('BAIXING_SALES')) {
-          this.payUrl = `${orderServiceHost}/?appId=105&seq=${preTradeId}`
+          this.payUrl = `${orderServiceHost}/${preKeywordPath}/?appId=105&seq=${preTradeId}`
         }
       },
       onHandleClick() {
