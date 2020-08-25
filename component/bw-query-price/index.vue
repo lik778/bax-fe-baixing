@@ -39,18 +39,15 @@
           <div>
             <label>查询结果</label>
             <div class="keyword-row" v-if="priceIsNotZero">
-              <p v-if="isSold">关键词在城市
-                <span class="highlight">{{soldCities.map(formatArea).join(', ')}}</span>已售出。
-                  <!-- <span v-if="availableCities.length">
-                  投放在剩余城市价格：
-                  <span v-for="deviceI in exactMatch.deviceTypes" :key="deviceI.device">
-                    <span v-for="(item, index) in deviceI.priceList" :key="index">
-                      {{item.days}}天 {{DEVICE[item.device]}}共{{f2y(item.price)}}元
-                      {{index !== deviceI.priceList.length - 1 ? '、': ''}}
-                    </span>；
-                  </span>
-                </span> -->
-              </p>
+              <div v-if="isSold">
+                <div v-for="item in exactMatch.deviceTypes" :key="item.device">
+                  <p v-if="item.soldCities.length">
+                    关键词在<b class="highlight">{{DEVICE[item.device]}}</b>，
+                    城市<b class="highlight">{{item.soldCities.map(formatArea).join('，')}}</b>已售出。
+                  </p>
+                  <result-device v-else :deviceObj="exactMatchNotSoldDevices" :selected="selected" @change="onSelected" />
+                </div>
+              </div>
               <result-device v-else :deviceObj="exactMatch" :selected="selected" @change="onSelected" />
               <div class="manual-container" v-if="showManualBtn || (showLongOrder && allowSeeLongOrder(userInfo.realAgentId))">
                  <el-button type="primary" class="manual-btn"
@@ -177,27 +174,17 @@
         // 推荐词关键词列表不出现精确匹配关键词
         return skus.length > 1 ? skus.slice(1).filter(({word}) => exactMatch && exactMatch.word !== word) : []
       },
-      soldCities() {
+      exactMatchNotSoldDevices() {
         if (!this.exactMatch) return []
-        const soldCities = []
-        this.exactMatch.deviceTypes
-          .reduce((list, {soldCities}) => {
-            return list.concat(Array.isArray(soldCities) ? soldCities : [])
-          }, [])
-          .forEach(city => {
-            if (!soldCities.includes(city)) {
-              soldCities.push(city)
-            }
-          })
-        return soldCities
+        const deviceTypes = this.exactMatch.deviceTypes.filter( o => !o.isSold)
+        return {
+          ...this.exactMatch,
+          deviceTypes
+        }
       },
       isSold() {
         if (!this.exactMatch) return false
         return this.exactMatch.deviceTypes.some(list => list.isSold)
-      },
-      availableCities() {
-        if (!this.exactMatch) return []
-        return this.exactMatch.cities.filter(c => !this.soldCities.includes(c))
       },
       priceIsNotZero() {
         if(!this.exactMatch) return true
