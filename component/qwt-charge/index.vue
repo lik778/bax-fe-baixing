@@ -111,7 +111,8 @@ import { orderServiceHost } from 'config'
 import track from 'util/track'
 import uuid from 'uuid/v4'
 import { queryUserInfo, getUserInfo } from 'api/account'
-import { createOrder, getProductsByMchCode } from 'api/fengming'
+import { getProductsByMchCode } from 'api/fengming'
+import { createPreOrder } from 'api/order'
 import { SPUCODES, MERCHANTS } from 'constant/product'
 import { getUniqueAgreementList } from 'util/charge'
 
@@ -398,7 +399,7 @@ export default {
       this.payInProgress = true
 
       try {
-        const preTradeId = await createOrder(orderParams)
+        const preTradeId = await createPreOrder(orderParams)
         track({
           roles: userInfo.roles.map(r => r.name).join(','),
           action: 'create order success',

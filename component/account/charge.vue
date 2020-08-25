@@ -35,7 +35,7 @@ import SectionHeader from 'com/common/section-header'
 import { toHumanTime } from 'utils'
 import dayjs from 'dayjs'
 import { SPUCODES } from 'constant/product'
-import * as api from 'api/fengming'
+import * as api from 'api/account'
 import { addAdItemMaterial } from 'api/ad'
 
 const { WHOLE_SPU_CODE, BIAO_WANG_SPU_CODE } = SPUCODES

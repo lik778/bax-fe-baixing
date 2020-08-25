@@ -175,3 +175,23 @@ export async function payOrder(orderId) {
 
   return data
 }
+
+export async function getCurrentBalanceBreif() {
+  const body = await api
+    .get('/balance/brief')
+    .json()
+
+  return body.data
+}
+
+export async function getChargeLogs(opts) {
+  const { data } = await api
+    .get('/balance/chargelog')
+    .query(reverseCamelcase(opts))
+    .json()
+
+  return {
+    total: data.totalElements,
+    logs: toCamelcase(data.data)
+  }
+}

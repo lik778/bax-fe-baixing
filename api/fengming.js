@@ -1,6 +1,7 @@
 
 import { reverseCamelcase, toCamelcase } from 'object-keys-mapping'
 import { fengming, trim } from './base'
+import { getCurrentBalanceBreif } from './account'
 import qs from 'query-string'
 import {
   isPro
@@ -239,14 +240,6 @@ export async function getCurrentBalance() {
   return body.data
 }
 
-export async function getCurrentBalanceBreif() {
-  const body = await fengming
-    .get('/balance/brief')
-    .json()
-
-  return body.data
-}
-
 export async function checkCreativeContent(opts) {
   const body = await fengming
     .post('/creative/validate')
@@ -333,18 +326,6 @@ export async function chibiRobotAudit(words, opts) {
 export async function getChangeLogs(opts) {
   const { data } = await fengming
     .get('/balance/changelog')
-    .query(reverseCamelcase(opts))
-    .json()
-
-  return {
-    total: data.totalElements,
-    logs: toCamelcase(data.data)
-  }
-}
-
-export async function getChargeLogs(opts) {
-  const { data } = await fengming
-    .get('/balance/chargelog')
     .query(reverseCamelcase(opts))
     .json()
 
