@@ -65,7 +65,7 @@
 
 <script>
 import dayjs from 'dayjs'
-import { getUserManualList } from 'api/biaowang'
+import { getUserManualList, refreshKeywordPriceNew } from 'api/biaowang'
 import { 
   DEVICE, 
   DEVICE_ALL,
@@ -117,6 +117,14 @@ export default {
   methods: {
     getCnName,
     f2y,
+    getFinalUserId() {
+      const { user_id: userId } = this.$route.query
+      if (userId) {
+        return userId
+      }
+      const { userInfo } = this
+      return userInfo.id
+    },
     async getManualHistory(isResetPageNo) {
       if (isResetPageNo) this.currentPage = 0
       const query = {}
@@ -153,7 +161,7 @@ export default {
     disabledAddCartBtn(row) {
       return row.isExpired || row.status === PROMOTE_UNOFFERED
     },
-    addToCart(row) {
+    async addToCart(row) {
       const { cities, checkDays, device, price, word, soldPriceMap, createdAt } = row
       if (!checkDays) {
         return this.$message.error('请选择关键词报价')
@@ -170,7 +178,10 @@ export default {
         word,
         soldPriceMap
       }]
-      console.log(data)
+      // tip：打刷新接口，看词是否已售卖
+      const items = await refreshKeywordPriceNew(data, {
+        targetUserId: this.getFinalUserId()
+      })
       this.$parent.$refs.bwShoppingCart.addToCart(data)
     },
     goToQueryPrice(row) {

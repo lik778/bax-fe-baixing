@@ -49,7 +49,7 @@
                 </div>
               </div>
               <result-device v-else :deviceObj="exactMatch" :selected="selected" @change="onSelected" />
-              <div class="manual-container" v-if="showManualBtn || (showLongOrder && allowSeeLongOrder(userInfo.realAgentId))">
+              <div class="manual-container" v-if="showManualBtn || (showLongOrder && allowSeeLongOrder(userInfo.agentId))">
                  <el-button type="primary" class="manual-btn"
                             :disabled="loading"
                             @click="manualDialogVisible = true">
