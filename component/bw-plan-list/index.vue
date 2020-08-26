@@ -97,7 +97,7 @@
           <el-form-item label="投放平台：">{{deviceFormatter(xufeiForm.device)}}</el-form-item>
           <el-form-item label="购买天数：" prop="days">
             <el-radio v-model="xufeiForm.days" :label="+option[0]" v-for="(option, index) in Object.entries(xufeiForm.soldPriceMap)" :key="index">{{option[0]}}天{{f2y(option[1])}}元</el-radio>
-            <template v-if="showManualBtn || showLongOrder">
+            <template v-if="showManualBtn || (showLongOrder && allowSeeLongOrder(userInfo.agentId))">
               <el-button size="small" type="primary" @click="manualDialogVisible = true">
                 <span v-if="showManualBtn">人工报价</span>
                 <span v-if="!showManualBtn && showLongOrder">申请年单</span>
@@ -171,7 +171,7 @@
   } from 'util'
   import dayjs from 'dayjs'
   import {
-    normalizeRoles
+    normalizeRoles, allowSeeLongOrder
   } from 'util/role'
   import flatten from 'lodash.flatten'
   import {fmtCpcRanking} from 'util/campaign'
@@ -309,6 +309,7 @@
     },
     methods: {
       fmtCpcRanking,
+      allowSeeLongOrder,
       getFinalUserId() {
         const { user_id: userId } = this.$route.query
         if (userId) {
