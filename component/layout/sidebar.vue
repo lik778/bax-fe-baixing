@@ -90,6 +90,11 @@
               <i class="material-icons" style="font-size: 16px; margin-right: 11px; vertical-align: -3px;"></i>管理标王推广
             </router-link>
           </el-menu-item>
+          <el-menu-item index="bw-manual" v-if="!userInfo.shAgent">
+            <router-link :to="{ name: 'bw-manual'}" tag="p">
+              <i class="material-icons" style="font-size: 16px; margin-right: 11px; vertical-align: -3px;"></i>人工报价记录
+            </router-link>
+          </el-menu-item>
         </el-submenu>
 
         <el-menu-item index="gw-homepage">
@@ -183,7 +188,7 @@ const MENU_GROUP_MAP = {
   'charge': ['qwt-charge', 'seo-charge'],
   'seo': ['seo-create-promotion', 'seo-promotion-list'],
   'sst': ['qwt-create-promotion', 'qwt-promotion-list'],
-  'bw': ['bw-query-price', 'bw-plan-list'],
+  'bw': ['bw-query-price', 'bw-plan-list', 'bw-manual'],
   'ssp': ['ad-list', 'material-list', 'order-list', 'user-list', 'ad-calendar'],
   'dashboard': ['qwt-dashboard', 'bw-dashboard'],
 }

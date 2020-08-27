@@ -229,3 +229,10 @@ export function isSelfHelpUser(roles) {
   }
   return false
 }
+
+export function allowSeeLongOrder(agentId) {
+  if (isPro) {
+    return [2263, 196, 2296, 2143, 2192, 2193, 2181, 2182, 2183, 2184, 2185, 2186, 2187, 2188, 2189, 2190, 2101, 2124, 2253, 770, 2094, 2313, 2314, 2275, 441].includes(agentId)
+  }
+  return [183].includes(agentId)
+}

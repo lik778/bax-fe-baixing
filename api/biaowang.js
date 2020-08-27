@@ -225,3 +225,32 @@ export async function getPromotionUserCollection(opts = {}) {
     .json()
   return body.data
 }
+
+export async function sendUserManualApply(opts = {}) {
+  const body = await biaowang
+    .post('/keyword/v2/pricing/user/manual/apply')
+    .send({
+      ...opts
+    })
+    .json()
+
+  return body.data
+}
+
+export async function getUserManualList(opts = {}) {
+  const q = {
+    size: 20,
+    page: 0,
+    ...opts
+  }
+
+  const { data } = await biaowang
+    .get('/keyword/v2/pricing/user/manual/history')
+    .query(q)
+    .json()
+   
+  return {
+    data: data.content,
+    total: data.totalElements
+  }
+}
