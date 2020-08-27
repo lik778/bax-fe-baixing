@@ -6,7 +6,7 @@ import { f2y } from 'util'
 
 const isArray = Array.isArray
 
-const specialCities = [
+export const specialCities = [
   'beijing',
   'tianjin',
   'shanghai',
@@ -296,6 +296,50 @@ export function formatCategoriesOrAreas(names, allItems) {
   }).join(', ')
 }
 
+/**
+ * 
+ * @param {*} allAreas 
+ * @param {*} areas
+ * a.选择一个省（安徽）下面的一个城市（安庆），推广区域：当前城市（安庆）；
+ * b.选择一个省（安徽）下面的多个城市（安庆、蚌埠），推广区域：当前省份（安徽）；
+ * c.选择多个省（安徽、甘肃）下面的各一个城市（安徽-安庆、甘肃-白银），推广区域：当前两个省份（安徽、甘肃）；
+ * d.选择多个省（安徽、甘肃）下面的多个城市（安徽-安庆/蚌埠、甘肃-白银/定西），推广区域：当前多个省份（安徽、甘肃）；
+ * e.选择全部省下面的全部城市时，推广区域：全国；
+ */
+
+ export function fmtAreasInBw(areas, allAreas) {
+   let noSpecialAreas = []
+   let specialAreas = []
+   areas.forEach((name) => {
+     if (specialCities.includes(name)) {
+       specialAreas.push(name)
+     } else {
+       noSpecialAreas.push(name)
+     }
+   })
+   // 单省单城市
+   if (areas.length <= 1) {
+     return areas
+   }
+
+   let areaNameAndParent = noSpecialAreas.map(name => {
+     return {
+       name,
+       parent: getAreaParent(allAreas, name)
+     }
+   })
+   let areaParent = [...new Set(areaNameAndParent.map(a => a.parent))]
+
+   // 全国
+   let topAreas = allAreas.filter(o => o.parent === 'china')
+   if ((specialAreas.length + areaParent.length) === topAreas.length) {
+     return ['china']
+   }
+   
+   // 单省多城市/多省单城市/多省多城市
+   return specialAreas.concat(areaParent)
+ }
+ 
 /**
  * private
  */

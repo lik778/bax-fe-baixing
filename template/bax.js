@@ -59,6 +59,7 @@ import Vue2Filters from 'vue2-filters'
 import { getBusinessLicense } from 'api/seo'
 import { allowUseKaPackage } from 'util/fengming-role'
 import { getCurrentUser } from 'api/account'
+import pick from 'lodash.pick'
 
 // track common data
 window.__trackerData = {
@@ -166,6 +167,10 @@ const bwRoutes = [{
   component: () => import('com/bw-dashboard'),
   path: '/main/bw/dashboard',
   name: 'bw-dashboard'
+}, {
+  component: () => import('com/bw-manual'),
+  path: '/main/bw/manual',
+  name: 'bw-manual'
 }]
 
 const qwtRoutes = [{
@@ -311,11 +316,10 @@ router.beforeEach((to, from, next) => {
     return
   }
   if (from.query.user_id) {
+    const query = pick(from.query, ['user_id', 'sales_id'])
     next({
       path: to.path,
-      query: {
-        ...from.query
-      }
+      query
     })
   } else {
     next()

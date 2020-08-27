@@ -84,3 +84,39 @@ export const TRADE_STATUS = {
   [TRADER_TYPE.TRADE_CANCELED]: '已取消',
   [TRADER_TYPE.TRADE_REFUNDED]: '已退款'
 }
+
+export const PRICE_NEED_MANUAL_QUOTA = 10000 * 100 // 后台以分为单位
+export const THIRTY_DAYS = 30
+export const NINTY_DAYS = 90
+export const HALF_YEAR_DAYS = 180
+export const YEAR_DAYS = 360
+export const DAYS_MAP = [THIRTY_DAYS, NINTY_DAYS]
+export const GET_DAYS_MAP = function(soldType) {
+  const isLongOrder = Number(soldType) === SOLD_TYPE_YEAR
+  return isLongOrder ? DAYS_MAP.concat([HALF_YEAR_DAYS]): DAYS_MAP
+}
+
+export const PROMOTE_OFFERED = 2
+export const PROMOTE_UNOFFERED = 1
+export const PROMOTE_OFFER_STATUS = {
+  [PROMOTE_UNOFFERED]: '未报价',
+  [PROMOTE_OFFERED]: '已报价'
+}
+
+export const ORDER_APPLY_TYPE_NOT = 0
+export const ORDER_APPLY_TYPE_MONTH = 1
+export const ORDER_APPLY_TYPE_YEAR = 2
+
+export const APPLY_TYPE_MANUAL_PRICED = 1
+export const APPLY_TYPE_ORDER_LONG = 2
+export const APPLY_TYPES = {
+  [APPLY_TYPE_MANUAL_PRICED]: '人工报价',
+  [APPLY_TYPE_ORDER_LONG]: '申请长单'
+}
+
+export const SOLD_TYPE_MONTH = 1
+export const SOLD_TYPE_YEAR = 2
+export const SOLD_TYPES = {
+  [SOLD_TYPE_MONTH]: '月单',
+  [SOLD_TYPE_YEAR]: '年单'
+}
