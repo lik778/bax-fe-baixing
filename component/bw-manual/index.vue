@@ -32,7 +32,10 @@
                 {{PROMOTE_OFFER_STATUS[row.status]}}
               </el-tag>
               <el-tag v-if="row.isExpired" type="warning">已过期</el-tag>
-              <el-tag type="danger" v-if="row.applyType === APPLY_TYPE_ORDER_LONG && row.soldType === SOLD_TYPE_MONTH">不售卖长单</el-tag>
+              <el-tag type="danger" 
+                      v-if="row.applyType === APPLY_TYPE_ORDER_LONG && 
+                            row.soldType === SOLD_TYPE_MONTH && 
+                            row.status === PROMOTE_OFFERED ">不售卖长单</el-tag>
             </template>
           </el-table-column>
           <el-table-column label="人工报价" width="360">
