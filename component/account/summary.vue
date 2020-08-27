@@ -5,7 +5,7 @@
       <el-col :span="1"></el-col>
       <el-col :span="4" class="column">
         <h3>凤鸣投放币</h3>
-        <p><strong>{{summary.balance / 100}}</strong>元</p>
+        <p><strong>{{ balance.fengmingBalance | priceFormat }}</strong>元</p>
         <router-link :to="{name: 'qwt-charge', query: {mode: 'charge-only'}}"
           @click.native="onClickCharge">
           <el-button type="primary">充值</el-button>
@@ -13,7 +13,7 @@
       </el-col>
       <el-col :span="4" class="column">
         <h3>标王投放币</h3>
-        <p><strong>6666666.66</strong>元</p>
+        <p><strong>{{ balance.biaowangBalance | priceFormat }}</strong>元</p>
         <router-link :to="{name: 'qwt-charge', query: {mode: 'charge-only'}}"
           @click.native="onClickCharge">
           <el-button type="primary">充值</el-button>
@@ -60,8 +60,13 @@
   export default {
     name: 'account-summary',
     fromMobx: {
-      summary: () => store.summary,
+      balance: () => store.balance,
       coupons: () => store.coupons
+    },
+    filters: {
+      priceFormat(value) {
+        return value ? (value / 100).toFixed(2) : null
+      }
     },
     components: {
       SectionHeader
@@ -95,8 +100,8 @@
     },
     async mounted() {
       await Promise.all([
-        store.getSummary(),
-        store.getCoupons({ onlyValid: true, status: 0 })
+        store.getCoupons({ onlyValid: true, status: 0 }),
+        store.getBalance()
       ])
     }
   }

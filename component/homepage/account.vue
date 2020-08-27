@@ -15,12 +15,6 @@
           <p class="desc">（ {{biaowangData.nearExpirationPromotes}} 个词即将到期）</p>
           <el-button type="primary" class="button" size="small" @click.native="() => handleCharge('biaowang')">立即充值</el-button>
         </li>
-        <!-- <li class="account-item" v-if="isShowSection('biaowang')">
-          <p class="title">标王推广关键词(个)</p>
-          <p class="num">{{biaowangData.onlinePromotes}}</p>
-          <p class="desc">（ {{biaowangData.nearExpirationPromotes}} 个词即将到期）</p>
-          <el-button type="primary" class="button" size="small" @click.native="() => handleCharge('biaowang')">立即充值</el-button>
-        </li> -->
         <li class="account-item" v-if="isShowSection('site')">
             <p class="title">精品官网(个)</p>
             <p class="num">{{sites.length}}</p>
