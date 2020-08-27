@@ -1,4 +1,4 @@
-<template> 
+<template>
   <div class="layout-container">
     <div class="layout-left" v-if="isShowSection('fengming') || isShowSection('site') || isShowSection('biaowang')">
       <h5 class="layout-header">账户概览</h5>
@@ -11,7 +11,7 @@
         </li>
         <li class="account-item" v-if="isShowSection('biaowang')">
           <p class="title">标王投放币（元) </p>
-          <p class="num">6666666.66</p>
+          <p class="num">{{ biaowangBalance.price }}</p>
           <p class="desc">（ {{biaowangData.nearExpirationPromotes}} 个词即将到期）</p>
           <el-button type="primary" class="button" size="small" @click.native="() => handleCharge('biaowang')">立即充值</el-button>
         </li>
@@ -62,6 +62,7 @@ export default {
   components: {Notice, loadingPlaceholder},
   fromMobx: {
     fengmingBalance: () => store.fengmingBalance,
+    biaowangBalance: () => store.biaowangBalance,
     notices: () => store.notices.fengming,
     sites: () => store.kaSiteData && store.kaSiteData.sites,
     biaowangData: () => store.biaowangData

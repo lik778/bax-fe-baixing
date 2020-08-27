@@ -1,6 +1,6 @@
 
 import { reverseCamelcase, toCamelcase } from 'object-keys-mapping'
-import { api, trim, biaowang } from './base'
+import { api, trim } from './base'
 
 export async function getUserIdFromBxSalesId(salesId) {
   const body = await api
@@ -176,9 +176,10 @@ export async function payOrder(orderId) {
   return data
 }
 
-export async function getCurrentBalanceBreif() {
+export async function getCurrentBalanceBreif(accountType) {
   const body = await api
     .get('/balance/brief')
+    .query(reverseCamelcase({accountType}))
     .json()
 
   return body.data

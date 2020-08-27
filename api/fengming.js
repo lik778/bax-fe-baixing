@@ -7,8 +7,10 @@ import {
   isPro
 } from 'config'
 import {isObj} from 'util'
+import { SPUCODES } from 'constant/product'
 
 const isArray = Array.isArray
+const { WHOLE_SPU_CODE } = SPUCODES
 
 export async function queryAds(opts = {}) {
   const q = {
@@ -375,7 +377,7 @@ export async function getHomepageSummary() {
 
 export async function getHomePageFengmingData() {
   const [ balanceBrief, daily, notices ] = await Promise.all([
-    getCurrentBalanceBreif(),
+    getCurrentBalanceBreif(WHOLE_SPU_CODE),
     _getDailySummary(),
     getFengmingNotice()
   ])

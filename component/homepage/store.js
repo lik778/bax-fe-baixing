@@ -21,6 +21,13 @@ class Store {
     }
   }
 
+  @computed get biaowangBalance() {
+    const data = this.biaowangData
+    return {
+      price: data ? (data.biaowangBalance / 100).toFixed(2) : null
+    }
+  }
+
   @computed get notices() {
     return {
       fengming: this.fengmingData && toJS(this.fengmingData.notices),
