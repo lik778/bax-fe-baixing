@@ -111,7 +111,7 @@ import { orderServiceHost } from 'config'
 import track from 'util/track'
 import uuid from 'uuid/v4'
 import { queryUserInfo, getUserInfo } from 'api/account'
-import { getProductsByMchCode } from 'api/fengming'
+import { getProductsByMchCodes } from 'api/common'
 import { createPreOrder } from 'api/order'
 import { SPUCODES, MERCHANTS } from 'constant/product'
 import { getUniqueAgreementList } from 'util/charge'
@@ -159,7 +159,7 @@ export default {
   },
   data () {
     return {
-      productMchCodeTabs: [ 
+      productMchCodeTabs: [
         { label: '站外推广', name: FENG_MING_MERCHANT_CODE },
         { label: '标王', name: PHOENIXS_MERCHANT_CODE }
       ],
@@ -178,7 +178,9 @@ export default {
       orderPayUrl: '',
 
       payInProgress: false,
-      agreementList:[]
+      agreementList:[],
+
+      productCacheList: []
     }
   },
   computed: {
@@ -228,7 +230,7 @@ export default {
     Clipboard
   },
   async mounted() {
-    const { 
+    const {
         sales_id: salesId,
         user_id: userId,
         select_gw: selectGw
@@ -275,12 +277,11 @@ export default {
 
 
     this.obtainProductByMchCode()
-    
+
   },
   methods: {
     centToYuan,
     changeProductMchCodeTab() {
-      // tips: 当前页面做数据缓存 请求商品数据
       this.siteSpu = null
       this.chargeSpu = null
       this.checkedProducts = []
@@ -288,8 +289,8 @@ export default {
       this.discountInfoHTML = this.showDiscount && discountInfoHTML
       this.obtainProductByMchCode()
     },
-    async obtainProductByMchCode(code) {
-      const { 
+    async obtainProductByMchCode() {
+      const {
         sales_id: salesId,
         user_id: userId,
         select_gw: selectGw
@@ -297,8 +298,17 @@ export default {
 
       this.fetchLoading = true
       try {
-        let products = await getProductsByMchCode(this.productTabMchCode)
-        products.forEach(spu => 
+        let products = [];
+        let targetList = [];
+        if (this.productCacheList.length === 0) {
+          targetList = this.productCacheList = await getProductsByMchCodes([FENG_MING_MERCHANT_CODE, PHOENIXS_MERCHANT_CODE])
+        } else {
+          targetList = this.productCacheList
+        }
+        let item = targetList.find(x => x.vendorCode === this.productTabMchCode)
+        products = item && item.products || []
+
+        products.forEach(spu =>
           spu.selection.forEach(sku => {
             sku.quantity = sku.minQuantity === sku.maxQuantity ? sku.minQuantity: 0
             sku.price = sku.minQuantity === sku.maxQuantity ?  Math.floor(sku.minQuantity * sku.realPrice): 0,
@@ -364,9 +374,9 @@ export default {
           return this.$message.error(`最高充值金额：${maxQuantity}`)
         }
       }
-      
+
       const orderParams = {
-        merchant: FENG_MING_MERCHANT_CODE,
+        merchant: this.productTabMchCode,
         userId: await this.getFinalUserId(),
         skuList: this.checkedSkuList
       }
