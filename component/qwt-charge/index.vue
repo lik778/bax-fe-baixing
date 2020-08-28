@@ -5,7 +5,7 @@
     </el-tabs>
     <div class="charge-container" v-loading.fullscreen.lock="fetchLoading">
       <section class="product shadow panel">
-        <header>
+        <header v-show="showDiscount">
           <span class="discount-btn">优惠细则</span>
         </header>
         <div class="discount-section" v-show="showDiscount">
