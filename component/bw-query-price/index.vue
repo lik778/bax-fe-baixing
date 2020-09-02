@@ -12,6 +12,7 @@
         <el-form :model="form" :rules="rules" label-width="120px" ref="form" label-position="left" class="form" @submit.native.prevent>
           <el-form-item label="推广关键词" prop="keyword">
             <el-input v-model="form.keyword" style="width: 200px"/>
+            <a class="standard" href="#">查看推广规范</a>
           </el-form-item>
           <el-form-item label="推广平台" prop="devices">
             <el-checkbox-group v-model="form.devices">
@@ -60,6 +61,7 @@
                    <manual-tooltip slot="content" />
                    <i class="el-icon-info icon"></i>
                  </el-tooltip>
+                 <span class="b2b-download">仅限B2B行业申请，<a href="#" download="B2B行业列表">下载行业列表</a></span>
               </div>
             </div>
             <div v-else>该关键词已售出，您可以换个词购买或者在推荐词中选择哦~~</div>
@@ -106,12 +108,12 @@
   import clone from 'clone'
   import pick from 'lodash.pick'
   import {
-    DEVICE, 
-    DEVICE_ALL, 
-    DEVICE_PC, 
-    DEVICE_WAP, 
-    ORDER_APPLY_TYPE_NOT, 
-    PRICE_NEED_MANUAL_QUOTA, 
+    DEVICE,
+    DEVICE_ALL,
+    DEVICE_PC,
+    DEVICE_WAP,
+    ORDER_APPLY_TYPE_NOT,
+    PRICE_NEED_MANUAL_QUOTA,
     THIRTY_DAYS,
     GET_DAYS_MAP
   } from 'constant/biaowang'
@@ -473,6 +475,13 @@ marquee {
   & .el-icon-info {
     color:#6a778c;
     cursor: pointer;
+  }
+}
+.b2b-download, .b2b-download > a, .standard {
+  font-size: 12px;
+  color: #FF6350;
+  & > a {
+    text-decoration: underline;
   }
 }
 </style>
