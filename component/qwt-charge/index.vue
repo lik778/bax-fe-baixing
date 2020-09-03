@@ -132,6 +132,13 @@ const discountInfoHTML = discountInfo.map((item, index) => {
           购买精品官网2年【送一年】官网<span class="red">减</span>立减 ${item[2]} 元；
           购买精品官网专业版1年（支持首页宝推广）官网<span class="red">减</span> ${item[3]}元；</p>`
 })
+
+const biaowangDiscountInfoHTML = [`<div class="notice">
+  <p><span><i class="red">满</i>500-4999元，</span>购买精品官网1年立<i class="red">减</i>200元；购买精品官网2年（送一年）官网<i class="red">减</i>600元；购买精品官网专业版1年（支持首页宝推广）官网<i class="red">减</i>600元；</p>
+<p><span><i class="red">满</i>5000-9999元，</span>购买精品官网1年立<i class="red">减</i>600元；购买精品官网2年（送一年）官网<i class="red">减</i>1200元；购买精品官网专业版1年（支持首页宝推广）官网<i class="red">减</i>900元；</p>
+<p><span><i class="red">满</i>10000元及以上，</span>购买精品官网1年立<i class="red">减</i>1000元；购买精品官网2年（送一年）官网<i class="red">减</i>1400元；购买精品官网专业版1年（支持首页宝推广）官网<i class="red">减</i>1500元；</p>
+</div>`]
+
 const isGwProduct = function(spuCode) {
   return spuCode === GUAN_WANG_SPU_CODE
 }
@@ -285,8 +292,8 @@ export default {
       this.siteSpu = null
       this.chargeSpu = null
       this.checkedProducts = []
-      this.showDiscount = !(this.productTabMchCode === PHOENIXS_MERCHANT_CODE)
-      this.discountInfoHTML = this.showDiscount && discountInfoHTML
+      this.discountInfoHTML = this.productTabMchCode === PHOENIXS_MERCHANT_CODE ?
+        biaowangDiscountInfoHTML : discountInfoHTML
       this.obtainProductByMchCode()
     },
     async obtainProductByMchCode() {
@@ -622,6 +629,25 @@ export default {
   }
   & > .mute {
     color: #fff;
+  }
+}
+.notice {
+  font-size: 13px;
+  margin-bottom: 20px;
+  & > p {
+      margin-bottom: 5px;
+
+  & > span {
+      width: 145px;
+    }
+
+  & .red {
+      background-color: #ff3c3c;
+      color: white;
+      padding: 1px 4px;
+      margin: 0 5px;
+      border-radius: 2px;
+    }
   }
 }
 </style>
