@@ -12,6 +12,7 @@
         <el-form :model="form" :rules="rules" label-width="120px" ref="form" label-position="left" class="form" @submit.native.prevent>
           <el-form-item label="推广关键词" prop="keyword">
             <el-input v-model="form.keyword" style="width: 200px"/>
+            <a class="standard" target="_blank" href="//www.baixing.com/help/feed?id=fd53408">查看购买规则</a>
           </el-form-item>
           <el-form-item label="推广平台" prop="devices">
             <el-checkbox-group v-model="form.devices">
@@ -56,6 +57,7 @@
                   <span v-if="showManualBtn">人工报价</span>
                   <span v-if="!showManualBtn && showLongOrder">申请长单</span>
                  </el-button>
+                 <p v-if="!showManualBtn && showLongOrder" class="b2b-download">仅限B2B行业申请，<a href="http://wenda.baixing.net/sousuotong-b2b-01.xlsx" download="B2B行业列表.xlsx">查看行业列表</a></p>
                  <el-tooltip effect="light" placement="top-start">
                    <manual-tooltip slot="content" />
                    <i class="el-icon-info icon"></i>
@@ -106,12 +108,12 @@
   import clone from 'clone'
   import pick from 'lodash.pick'
   import {
-    DEVICE, 
-    DEVICE_ALL, 
-    DEVICE_PC, 
-    DEVICE_WAP, 
-    ORDER_APPLY_TYPE_NOT, 
-    PRICE_NEED_MANUAL_QUOTA, 
+    DEVICE,
+    DEVICE_ALL,
+    DEVICE_PC,
+    DEVICE_WAP,
+    ORDER_APPLY_TYPE_NOT,
+    PRICE_NEED_MANUAL_QUOTA,
     THIRTY_DAYS,
     GET_DAYS_MAP
   } from 'constant/biaowang'
@@ -466,6 +468,7 @@ marquee {
   display: flex;
   align-items: center;
   & .manual-container {
+    position: relative;
     margin-left: 16px;
     display: flex;
     align-items: center;
@@ -474,5 +477,17 @@ marquee {
     color:#6a778c;
     cursor: pointer;
   }
+}
+.b2b-download, .b2b-download > a, .standard {
+  font-size: 12px;
+  color: #FF6350;
+  & > a {
+    text-decoration: underline;
+  }
+}
+.b2b-download {
+  width: 180px;
+  position: absolute;
+  top: 50px;
 }
 </style>

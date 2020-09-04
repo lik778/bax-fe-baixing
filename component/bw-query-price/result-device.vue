@@ -5,8 +5,8 @@
     </div>
     <div>
       <div v-for="deviceI in deviceObj.deviceTypes" :key="deviceI.device">
-        <result-row :priceList="deviceI.priceList" 
-                    :selected="selected" 
+        <result-row :priceList="deviceI.priceList"
+                    :selected="selected"
                     @change="(v)=> $emit('change', v)" />
       </div>
     </div>
@@ -36,15 +36,12 @@
 
 <style lang="postcss" scoped>
 .row {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
   & .label {
     color: #999;
     & .keyword {
       display: inline-block;
       vertical-align: top;
-      width: 140px;
+      margin-bottom: 10px;
       color: #000;
     }
   }
