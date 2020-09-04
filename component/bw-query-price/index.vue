@@ -57,7 +57,7 @@
                   <span v-if="showManualBtn">人工报价</span>
                   <span v-if="!showManualBtn && showLongOrder">申请长单</span>
                  </el-button>
-                 <p class="b2b-download">仅限B2B行业申请，<a href="http://wenda.baixing.net/sousuotong-b2b-01.xlsx" download="B2B行业列表.xlsx">查看行业列表</a></p>
+                 <p v-if="!showManualBtn && showLongOrder" class="b2b-download">仅限B2B行业申请，<a href="http://wenda.baixing.net/sousuotong-b2b-01.xlsx" download="B2B行业列表.xlsx">查看行业列表</a></p>
                  <el-tooltip effect="light" placement="top-start">
                    <manual-tooltip slot="content" />
                    <i class="el-icon-info icon"></i>
