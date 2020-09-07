@@ -62,6 +62,7 @@ class Store {
         endTime: yesterday,
         promoteList: biaowangPromotes.map(i => i.id)
       })
+      this.biaowangPromotes = biaowangPromotes
       if (rankings.length) {
         this.biaowangPromotes = biaowangPromotes.map(p => {
           const one = rankings.find(r => r.promoteId === p.id)
