@@ -23,8 +23,9 @@
                 <price-tag v-for="(product, index) in chargeSpu.selection"
                   :key="index"
                   :editable="Number(product.maxQuantity) !== Number(product.minQuantity)"
-                  :price="centToYuan(product.price)" :min-input-price="centToYuan(product.minQuantity)"
-                  :max-input-price="centToYuan(product.maxQuantity)"
+                  :price="centToYuan(product.price)" 
+                  :min-input-price="centToYuan(product.minQuantity * product.realPrice)"
+                  :max-input-price="centToYuan(product.maxQuantity * product.realPrice)"
                   :checked="checkedProducts.includes(product)"
                   @click="toggleCharge(product)"
                   @change="v => handlePriceChange(product, v)">
