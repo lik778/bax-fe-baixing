@@ -9,7 +9,7 @@
     </main>
     <main v-else>
       <label>
-        {{ centToYuan(displayPrice) + '元' }}
+        {{ displayPrice + '元' }}
       </label>
     </main>
     <p>
@@ -21,7 +21,6 @@
 <script>
 import BxIcon from 'com/widget/icon'
 import { Message } from 'element-ui'
-import { centToYuan } from 'utils'
 
 export default {
   name: 'price-tag',
@@ -52,7 +51,6 @@ export default {
     },
   },
   methods: {
-    centToYuan,
     onBlur() {
       const {
         minInputPrice,
