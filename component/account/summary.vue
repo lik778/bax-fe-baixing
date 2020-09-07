@@ -65,7 +65,8 @@
     },
     filters: {
       priceFormat(value) {
-        return value ? (value / 100).toFixed(2) : null
+        const price = value / 100
+        return !isNaN(price) ? (price).toFixed(2) : null
       }
     },
     components: {
