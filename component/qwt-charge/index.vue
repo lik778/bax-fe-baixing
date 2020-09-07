@@ -207,8 +207,7 @@ export default {
       return roles.includes('AGENT_ACCOUNTING')
     },
     shAgent() {
-      const roles = normalizeRoles(this.userInfo.roles)
-      return isSelfHelpUser(roles)
+      return isSelfHelpUser(this.userInfo.roles)
     },
     submitButtonText() {
       const { userInfo } = this
