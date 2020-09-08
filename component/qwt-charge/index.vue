@@ -374,12 +374,12 @@ export default {
       }
       const chargeProduct = this.checkedProducts.find(p => isChargeProduct(p.spuCode))
       if (chargeProduct) {
-        const { quantity, minQuantity, maxQuantity } = chargeProduct
-        if (quantity < minQuantity) {
-          return this.$message.error(`最低充值金额：${minQuantity}`)
+        const { quantity, minQuantity, maxQuantity, realPrice } = chargeProduct
+        if (quantity < minQuantity ) {
+          return this.$message.error(`最低充值金额：${this.centToYuan(minQuantity * realPrice)}`)
         }
         if (quantity > maxQuantity) {
-          return this.$message.error(`最高充值金额：${maxQuantity}`)
+          return this.$message.error(`最高充值金额：${this.centToYuan(maxQuantity * realPrice)}`)
         }
       }
 
