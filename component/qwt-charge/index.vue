@@ -23,8 +23,9 @@
                 <price-tag v-for="(product, index) in chargeSpu.selection"
                   :key="index"
                   :editable="Number(product.maxQuantity) !== Number(product.minQuantity)"
-                  :price="centToYuan(product.price)" :min-input-price="centToYuan(product.minQuantity)"
-                  :max-input-price="centToYuan(product.maxQuantity)"
+                  :price="centToYuan(product.price)" 
+                  :min-input-price="centToYuan(product.minQuantity * product.realPrice)"
+                  :max-input-price="centToYuan(product.maxQuantity * product.realPrice)"
                   :checked="checkedProducts.includes(product)"
                   @click="toggleCharge(product)"
                   @change="v => handlePriceChange(product, v)">
@@ -374,12 +375,12 @@ export default {
       }
       const chargeProduct = this.checkedProducts.find(p => isChargeProduct(p.spuCode))
       if (chargeProduct) {
-        const { quantity, minQuantity, maxQuantity } = chargeProduct
-        if (quantity < minQuantity) {
-          return this.$message.error(`最低充值金额：${minQuantity}`)
+        const { quantity, minQuantity, maxQuantity, realPrice } = chargeProduct
+        if (quantity < minQuantity ) {
+          return this.$message.error(`最低充值金额：${this.centToYuan(minQuantity * realPrice)}`)
         }
         if (quantity > maxQuantity) {
-          return this.$message.error(`最高充值金额：${maxQuantity}`)
+          return this.$message.error(`最高充值金额：${this.centToYuan(maxQuantity * realPrice)}`)
         }
       }
 
