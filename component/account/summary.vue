@@ -16,7 +16,7 @@
         <p><strong>{{ balance.biaowangBalance | priceFormat }}</strong>元</p>
         <router-link :to="{name: 'qwt-charge', query: {mode: 'charge-only'}}"
           @click.native="onClickCharge">
-          <el-button type="primary">充值</el-button>
+          <div class="fake-button"></div>
         </router-link>
       </el-col>
       <el-col :span="4" class="column">
@@ -133,5 +133,9 @@
       font-weight: 600;
       color: #6a778c;
     }
+  }
+  .fake-button {
+    width: 70px;
+    height: 40px;
   }
 </style>

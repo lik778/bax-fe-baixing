@@ -50,6 +50,13 @@ export default {
       return this.inputPrice || this.price
     },
   },
+  mounted() {
+    if (this.editable) {
+      this.$bus.$on('resetPriceTagInput', () => {
+        this.inputPrice = ''
+      })
+    }
+  },
   methods: {
     onBlur() {
       const {

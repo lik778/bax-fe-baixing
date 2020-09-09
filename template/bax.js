@@ -128,6 +128,13 @@ Vue.use(Vue2Filters)
 // 该组件引入echarts，体积较大，异步加载提升用户体验
 Vue.component('homepage-campaign', () => import('../component/homepage/campaign'))
 
+// 引入eventBus
+const eventBus = {
+  install(Vue) { Vue.prototype.$bus = new Vue() }
+}
+
+Vue.use(eventBus)
+
 const gwRoutes = [{
   component: () => import('com/gw-homepage'),
   path: '/main/gw',

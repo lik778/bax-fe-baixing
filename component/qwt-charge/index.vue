@@ -294,6 +294,7 @@ export default {
       this.checkedProducts = []
       this.discountInfoHTML = this.productTabMchCode === PHOENIXS_MERCHANT_CODE ?
         biaowangDiscountInfoHTML : discountInfoHTML
+      this.$bus.$emit('resetPriceTagInput')
       this.obtainProductByMchCode()
     },
     async obtainProductByMchCode() {
