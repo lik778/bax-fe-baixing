@@ -14,9 +14,8 @@
       <el-col :span="4" class="column">
         <h3>标王投放币</h3>
         <p><strong>{{ balance.biaowangBalance | priceFormat }}</strong>元</p>
-        <router-link :to="{name: 'qwt-charge', query: {mode: 'charge-only'}}"
-          @click.native="onClickCharge">
-          <div class="fake-button"></div>
+        <router-link :to="{name: 'bw-plan-list'}">
+          <el-button type="primary">管理标王推广</el-button>
         </router-link>
       </el-col>
       <el-col :span="4" class="column">
@@ -133,9 +132,5 @@
       font-weight: 600;
       color: #6a778c;
     }
-  }
-  .fake-button {
-    width: 70px;
-    height: 40px;
   }
 </style>
