@@ -230,9 +230,14 @@ export function isSelfHelpUser(roles) {
   return false
 }
 
-export function allowSeeLongOrder(agentId) {
+export function allowSeeLongOrder(roles, agentId, salesId) {
+  const currentRoles = normalizeRoles(roles)
+  const isSales = currentRoles.includes('AGENT_SALES') || currentRoles.includes('AGENT_ACCOUNTING')
   if (isPro) {
-    return [2263, 196, 2296, 2143, 2192, 2193, 2181, 2182, 2183, 2184, 2185, 2186, 2187, 2188, 2189, 2190, 2101, 2124, 2253, 770, 2094, 2313, 2314, 2275, 441].includes(agentId)
+    const isAgentId = [2263, 196, 2296, 2143, 2192, 2193, 2181, 2182, 2183, 2184, 2185, 2186, 2187, 2188, 2189, 2190, 2101, 2124, 2253, 770, 2094, 2313, 2314, 2275, 441, 2325].includes(agentId)
+    const salesIds= ['131102','134902','134903','134904','134905','134906','134907','134908','134909','134910','134911','134912','134913','156602','102004','107601','141101','141102','143302','102407','141110','134916','134915','175501', '130007']
+    const hasSalesId =  salesIds.some(o => new RegExp(`^${o}`).test(salesId))
+    return isAgentId || (hasSalesId && isSales)
   }
   return [183].includes(agentId)
 }
