@@ -7,81 +7,24 @@
     :show-close="false"
   >
     <main class="main">
-<!--      <div v-if="enableChina">-->
-<!--        <span @click="clickArea('quanguo')">全国</span>-->
-<!--        <span>-->
-<!--          <p @click="clickArea(china.id)"-->
-<!--             v-bind:class="{ selected: areaChecked(china.id) }">-->
-<!--            <span>中国</span>-->
-<!--            <label class="tip">-->
-<!--              （仅在 china.baixing.com 上线）-->
-<!--            </label>-->
-<!--          </p>-->
-<!--        </span>-->
-<!--      </div>-->
-<!--      <div>-->
-<!--        <el-checkbox class="checkbox-item"v-model="specialCitiesChecked" @change="clickArea('直辖市')">-->
-<!--          <span v-bind:class="{ selected: areaChecked('直辖市') }">-->
-<!--            直辖市-->
-<!--          </span>-->
-<!--        </el-checkbox>-->
-<!--        <span>-->
-<!--          <p v-for="city in specialCities" :key="city.id"-->
-<!--             v-bind:class="{ selected: areaChecked(city.id) }"-->
-<!--             @click="clickArea(city.id)">-->
-<!--            {{ city.label }}-->
-<!--          </p>-->
-<!--        </span>-->
-<!--      </div>-->
-        <div>
-          <el-checkbox class="checkbox-item" v-model="specialCitiesTitleChecked" @change="specialCitiesChange">
-            <span :class="{ selected: areaChecked('直辖市') }">
-              直辖市
-            </span>
+        <div v-for="(province, i) in topAreas" :key="i">
+          <el-checkbox class="checkbox-item" v-model="province.checked" @change="provinceCheckedChange(province)">
+            <span :class="{ selected: province.checked }">{{ province.label }}</span>
           </el-checkbox>
           <span>
-            <p v-for="city in specialCities" :key="city.id"
-                :class="{ selected: city.checked }"
-               @click="specialCityChecked(city.id)">
-              <span>{{ city.label }}</span>
+            <p v-for="(area, i) in province.areas" :key="i"
+               :class="{ selected: area.checked }"
+               @click="cityChecked(area)">
+                {{ area.label }}
             </p>
           </span>
         </div>
-
-<!--        <div v-for="(a, i) in topAreas" :key="i">-->
-<!--          <el-checkbox class="checkbox-item" @change="provinceChange(a.id)">-->
-<!--            <span :class="{ selected:  areaChecked(a.id) }">{{ a.label }}</span>-->
-<!--          </el-checkbox>-->
-<!--          <span>-->
-<!--            <p v-for="(area, i) in a.areas" :key="i"-->
-<!--               :class="{ selected: areaChecked(area.id) }"-->
-<!--               @click="provinceChecked(area)">-->
-<!--                {{ area.label }}-->
-<!--            </p>-->
-<!--          </span>-->
-<!--        </div>-->
-
-
-<!--      <div v-for="(a, i) in topAreas" :key="i">-->
-<!--        <el-checkbox class="checkbox-item" v-model="a.checked" @change="clickArea(a.id)">-->
-<!--          <span v-bind:class="{ selected: areaChecked(a.id) }">-->
-<!--            {{ a.label }}-->
-<!--          </span>-->
-<!--        </el-checkbox>-->
-<!--        <span>-->
-<!--          <p v-for="(area, i) in a.areas" :key="i"-->
-<!--             v-bind:class="{ selected: areaChecked(area.id) }"-->
-<!--             @click="clickArea(area.id)">-->
-<!--            {{ area.label }}-->
-<!--          </p>-->
-<!--        </span>-->
-<!--      </div>-->
-      <div>
-        <el-checkbox class="checkbox-item" v-model="quanguoChecked" @change="clickArea('quanguo')">
-          <span>全国</span>
-        </el-checkbox>
-        <span></span>
-      </div>
+        <div>
+          <el-checkbox class="checkbox-item" v-model="quanguoChecked" @change="quanguoCheckedChange()">
+            <span>全国</span>
+          </el-checkbox>
+          <span></span>
+        </div>
     </main>
     <header slot="title" class="dialog-header">
       <h5 class="title">区域选择</h5>
@@ -94,10 +37,7 @@
 </template>
 
 <script>
-import { getDisAllowAreas } from 'util/meta'
 import isequal from 'lodash.isequal'
-import flatten from 'lodash.flatten'
-import clone from 'clone'
 
 const specialCities = [
   'beijing',
@@ -136,10 +76,7 @@ export default {
       required: true
     },
     type: {
-      // bx, qwt, bw
-      // 标王把省细化到城市
-      type: String,
-      default: 'bx'
+      type: String
     }
   },
   data() {
@@ -151,32 +88,32 @@ export default {
         parent: '',
         level: 0
       },
-      specialCitiesTitleChecked: false,
-      specialCitiesChecked: false,
-      quanguoChecked: false
+      quanguoChecked: false,
+      topAreas: []
     }
   },
-  computed: {
-    specialCities() {
-      return this.allAreas
-        .filter(a => a.areaType === 1)
-        .filter(a => specialCities.includes(a.name))
-        .map(a => ({
-          label: a.nameCn,
-          id: a.name,
-          parent: '',
-          level: 1,
+  watch: {
+    allAreas(values) {
+      this.topAreas = [
+        {
           checked: false,
-          areas: this.getSubAreas(a.name)
-        }))
-    },
-    disAllowAreaIds() {
-      const { allAreas } = this
-      const a = getDisAllowAreas(allAreas)
-      return a.map(i => i.id)
-    },
-    topAreas() {
-      return this.allAreas
+          id: "zhixiashi",
+          label: "直辖市",
+          level: 2,
+          parent: "china",
+          areas:  values
+            .filter(a => a.areaType === 1)
+            .filter(a => specialCities.includes(a.name))
+            .map(a => ({
+              label: a.nameCn,
+              id: a.name,
+              parent: 'zhixiashi',
+              level: 1,
+              checked: false,
+              areas: this.getSubAreas(a.name)
+            }))
+        },
+        ...values
         .filter(a => a.areaType === 2)
         .map(a => ({
           parent: a.parent,
@@ -185,351 +122,74 @@ export default {
           level: 2,
           checked: false,
           areas: this.getSubAreas(a.name)
-        }))
+        }))]
+    },
+    areas(v) {
+      if (isequal(v, this.selectedAreas)) {
+        return
+      }
+      this.selectedAreas = [...v]
     }
   },
   methods: {
-    specialCitiesChange(value) {
-      this.specialCities.forEach(x => x.checked = value)
-      if (value) {
-        this.selectedAreas = specialCities
-      } else {
-        this.selectedAreas = []
-      }
+    quanguoCheckedChange() {
+      this.selectedAreas = []
+      this.topAreas.forEach(p => {
+          p.checked = this.quanguoChecked
+          p.areas.forEach(c => {
+            c.checked = this.quanguoChecked
+            if (this.quanguoChecked) {
+              this.selectedAreas.push(c.id)
+            }
+          })
+      })
     },
-    specialCityChecked(id) {
-      const item = this.specialCities.find(x => x.id == id)
-      item.checked = !item.checked
-      this.specialCitiesTitleChecked = this.specialCities.filter(x => x.checked).length === this.specialCities.length
-      this.handleSelectedList(item, id)
+    provinceCheckedChange(province) {
+      province.areas.forEach(x => {
+        const { id } = x
+        x.checked = province.checked
+        if (province.checked) {
+          if (!this.selectedAreas.includes(id)) {
+            this.selectedAreas.push(id)
+          }
+        } else {
+          if (this.selectedAreas.includes(id)) {
+            const deleteIndex = this.selectedAreas.findIndex(x => x === id)
+            this.selectedAreas.splice(deleteIndex, 1)
+          }
+        }
+      })
+      this.setQuanguoChecked()
     },
-    handleSelectedList(item, id) {
-      if (item.checked) {
+    cityChecked(area) {
+      const { parent, id } = area
+      const province = this.topAreas.find(x => x.id == parent)
+      area.checked = !area.checked
+      province.checked = (province.areas.filter(x => x.checked).length === province.areas.length)
+      this.setQuanguoChecked()
+      if (area.checked) {
         this.selectedAreas.push(id)
       } else {
         const index = this.selectedAreas.findIndex(y => y == id)
         this.selectedAreas.splice(index, 1)
       }
     },
-    provinceChange(value) {
-      console.log(value)
+    setQuanguoChecked() {
+      this.quanguoChecked = (this.topAreas.filter(x => x.checked).length === this.topAreas.length)
     },
-    // provinceChecked(area) {
-    //   const { parent, id } = area
-    //   const parentItem = this.topAreas.find(x => x.id == parent)
-    //   const areaItem = parentItem.areas.find(y => y.id === id)
-    //   areaItem.checked = !areaItem.checked
-    //   this.handleSelectedList(areaItem, id)
-    // },
-
-
-
-
-
     getSubAreas(name) {
       return this.allAreas
         .filter(a => a.parent === name)
-        .map(a => ({
-          parent: a.parent,
-          label: a.nameCn,
-          id: a.name,
-          checked: false,
-          level: 1 // 市
-        }))
-    },
-    getAreaByName(name) {
-      const a = this.allAreas
-        .find(a => a.name === name) || {}
-
-      return {
-        level: a.areaType,
-        parent: a.parent,
-        label: a.nameCn,
-        id: a.name
-      }
-    },
-    getParentName(name) {
-      const a = this.getAreaByName(name)
-      return a.parent || ''
-    },
-    removeCityFromQuanguo(city) {
-      // 城市: 非 省, china
-      let result = []
-
-      const parent = this.getParentName(city)
-
-      const topAreas = clone(this.topAreas)
-
-      if (specialCities.includes(city)) {
-        return [
-          this.china.id,
-          ...specialCities.filter(a => a !== city),
-          ...topAreas.map(a => a.id)
-        ]
-      }
-
-      result = [
-        this.china.id,
-        ...specialCities,
-        ...topAreas.filter(a => a.id !== parent).map(a => a.id)
-      ]
-
-      const topArea = topAreas.find(a => a.id === parent)
-
-      result = [
-        ...result,
-        ...topArea.areas.filter(a => a.id !== city).map(a => a.id)
-      ]
-
-      return result
-    },
-    removeCityFromProvince(city) {
-      const parent = this.getParentName(city)
-
-      const topArea = clone(this.topAreas).find(a => a.id === parent)
-
-      return topArea.areas
-        .filter(a => a.id !== city)
-        .map(a => a.id)
-    },
-    belongToProvince(city, province) {
-      const top = this.topAreas.find(a => a.id === province)
-      return top.areas.map(a => a.id).includes(city)
-    },
-    areaChecked(name) {
-      const area = this.getAreaByName(name)
-      const {
-        parent,
-        level,
-        id
-      } = area
-      const { selectedAreas } = this
-
-      const c = selectedAreas.find(a => a === 'quanguo')
-      if (c) {
-        // 全国
-        return true
-      }
-
-      if (name === 'china') {
-        return selectedAreas.includes('china')
-      }
-
-      if (name === '直辖市') {
-        const allChecked = selectedAreas
-          .filter(a => specialCities.includes(a))
-          .length === 4
-        this.specialCitiesChecked = allChecked
-        this.quanguoChecked = this.quanguoChecked && allChecked
-        return allChecked
-      }
-
-      if (level === 2) {
-        return !!selectedAreas.find(a => a === id)
-      }
-
-      if (level === 1) {
-        if (specialCities.includes(id)) {
-          // 直辖市
-          return !!selectedAreas.find(a => a === id)
-        } else {
-          return !!selectedAreas.find(a => a === id || a === parent)
-        }
-      }
-    },
-    clickSpecialCityButton(name) {
-      const { selectedAreas } = this
-      if (selectedAreas.includes('quanguo')) {
-        return
-      }
-
-      const allChecked = selectedAreas
-        .filter(a => specialCities.includes(a))
-        .length === 4
-
-      const areas = selectedAreas.filter(a => !specialCities.includes(a))
-
-      if (allChecked) {
-        this.selectedAreas = [...areas]
-      } else {
-        this.selectedAreas = [
-          ...areas,
-          ...specialCities
-        ]
-      }
-    },
-    clickProvinceArea(name) {
-      const { selectedAreas } = this
-
-      const area = this.getAreaByName(name)
-      const { id } = area
-      // type - add, del
-      const type = this.areaChecked(name) ? 'del' : 'add'
-      if (type === 'add') {
-        this.selectedAreas = [
-          ...selectedAreas.filter(a => {
-            return !this.belongToProvince(a, id)
-          }),
-          id
-        ]
-      } else {
-        // del
-        this.quanguoChecked = false
-        if (selectedAreas.includes('quanguo')) {
-          this.selectedAreas = [
-            this.china.id,
-            ...this.topAreas
-              .filter(a => a.id !== id)
-              .map(a => a.id),
-            ...specialCities
-          ]
-        } else {
-          const areas = selectedAreas
-            .filter(a => {
-              if (a === id) {
-                return false
-              }
-
-              const parent = this.getParentName(a)
-
-              if (parent === id) {
-                return false
-              }
-
-              return true
-            })
-
-          this.selectedAreas = [...areas]
-        }
-      }
-    },
-    clickCityArea(name) {
-      const { selectedAreas } = this
-
-      const area = this.getAreaByName(name)
-      const { id, parent } = area
-
-      // type - add, del
-      const type = this.areaChecked(name) ? 'del' : 'add'
-      if (type === 'add') {
-        const item = this.topAreas.find(x => x.id === parent).areas.find(y => y.id == id)
-        item.checked = true
-        const hahaList = this.topAreas.find(x => x.id === parent).areas
-        if (hahaList.filter(x => x.checked).length === hahaList.length) {
-          const province = this.topAreas.find(x => x.id == parent)
-          province.checked = true
-        }
-
-        this.selectedAreas = [
-          ...selectedAreas,
-          id
-        ]
-      } else {
-        this.quanguoChecked = false
-        // del
-        const parent = this.getParentName(id)
-
-        // if (selectedAreas.includes(parent)) {
-        //   const province = this.topAreas.find(x => x.id == parent)
-        //   province.checked = false
-        // }
-
-        if (selectedAreas.includes('quanguo')) {
-          this.selectedAreas = this.removeCityFromQuanguo(id)
-        } else {
-          if (selectedAreas.includes(parent)) {
-            // 已选中省
-            this.selectedAreas = [
-              ...selectedAreas.filter(a => a !== parent),
-              ...this.removeCityFromProvince(id)
-            ]
-          } else {
-            this.selectedAreas = selectedAreas.filter(a => a !== id)
-          }
-        }
-      }
-    },
-    clickChina() {
-      const type = this.areaChecked('china') ? 'del' : 'add'
-      const { selectedAreas } = this
-
-      if (type === 'add') {
-        this.selectedAreas = [
-          ...selectedAreas,
-          'china'
-        ]
-      } else {
-        // del
-        if (selectedAreas.includes('quanguo')) {
-          this.selectedAreas = [
-            ...this.topAreas.map(a => a.id),
-            ...specialCities
-          ]
-        } else {
-          this.selectedAreas = selectedAreas.filter(a => a !== 'china')
-        }
-      }
-    },
-    clickArea(name) {
-      const { selectedAreas, quanguoChecked } = this
-      if (name === 'quanguo') {
-        // 全国
-        if (!quanguoChecked) {
-          this.selectedAreas = []
-          this.topAreas.forEach(x => x.checked = false)
-        } else {
-          this.selectedAreas = [...specialCities, ...this.topAreas.map(x => x.id)]
-          this.topAreas.forEach(x => x.checked = true)
-        }
-        return
-      }
-      if (name === 'china') {
-        return this.clickChina()
-      }
-
-      if (name === '直辖市') {
-        // 直接点击 直辖市 按钮
-        return this.clickSpecialCityButton(name)
-      }
-
-      const area = this.getAreaByName(name)
-      const { level } = area
-
-      if (level === 2) {
-        // 省
-        return this.clickProvinceArea(name)
-      }
-
-      if (level === 1) {
-        // 市
-        this.clickCityArea(name)
-      }
+        .map(a => ({ parent: a.parent, label: a.nameCn,
+          id: a.name, level: 1, checked: false }))
     },
     cancel() {
       this.$emit('cancel')
     },
     ok() {
-        const tmp = this.selectedAreas
-          .map(this.getAreaByName)
-          .map(a => a.level === 2 ? this.getSubAreas(a.id) : a)
-        const areas = flatten(tmp)
-          .map(a => a.id)
+        const areas = this.selectedAreas.concat([])
         this.$emit('ok', [...areas])
     }
-  },
-  watch: {
-    areas(v) {
-      if (isequal(v, this.selectedAreas)) {
-        return
-      }
-      this.selectedAreas = [...v]
-    },
-    selectedAreas (v) {
-      console.log(v)
-    }
-  },
-  updated() {
-    console.debug('area selector updated')
   }
 }
 </script>
