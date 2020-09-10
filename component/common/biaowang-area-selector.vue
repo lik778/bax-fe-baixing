@@ -82,12 +82,6 @@ export default {
   data() {
     return {
       selectedAreas: [...this.areas],
-      china: {
-        label: '中国',
-        id: 'china',
-        parent: '',
-        level: 0
-      },
       quanguoChecked: false,
       topAreas: []
     }
