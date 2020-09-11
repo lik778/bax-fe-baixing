@@ -286,6 +286,7 @@
         this.form.areas = [
           ...this.form.areas.filter(i => i !== area)
         ]
+        this.$bus.$emit('updateBiaowangAreaSelectorView', area)
       },
       queryPrice() {
         this.$refs.form.validate(async isValid => {

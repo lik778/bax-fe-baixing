@@ -83,6 +83,7 @@ export default {
     return {
       selectedAreas: [...this.areas],
       quanguoChecked: false,
+      cityProvinceMapping: {},
       topAreas: []
     }
   },
@@ -117,6 +118,10 @@ export default {
           checked: false,
           areas: this.getSubAreas(a.name)
         }))]
+      // 城市和city 完成mapping
+      values.forEach(v => {
+        this.cityProvinceMapping[v.id] = specialCities.includes(v.id) ? 'zhixiashi' : v.parent
+      })
     },
     areas(v) {
       if (isequal(v, this.selectedAreas)) {
@@ -124,6 +129,17 @@ export default {
       }
       this.selectedAreas = [...v]
     }
+  },
+  mounted() {
+    // 处理删除选择城市view刷新
+    this.$bus.$on('updateBiaowangAreaSelectorView', (cityId) => {
+      const provinceId = this.cityProvinceMapping[cityId]
+      const provinceItem = this.topAreas.find(x => x.id == provinceId)
+      provinceItem.checked = false
+      const cityItem = provinceItem.areas.find(x => x.id == cityId)
+      cityItem.checked = false
+      this.quanguoChecked = false
+    })
   },
   methods: {
     quanguoCheckedChange() {
