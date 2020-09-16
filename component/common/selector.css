@@ -2,7 +2,7 @@
 @import 'cssbase/mixin';
 
 @define-mixin selected {
-  background: #20a0ff;
+  background: #FF6350;
   border-radius: 3px;
   color: white;
 }
@@ -35,6 +35,7 @@
     }
 
     & > span:last-child {
+      flex: 7;
       border-left: 1px gray dashed;
       padding: 0 20px;
 
