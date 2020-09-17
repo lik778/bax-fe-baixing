@@ -458,15 +458,6 @@ export async function huodongLeads(opts) {
   return body
 }
 
-export async function getServerTime() {
-  const xhr = window.XMLHttpRequest ? new window.XMLHttpRequest()
-    : new ActiveObject("Microsoft")
-  xhr.open("GET","/main",false)
-  xhr.send(null)
-  const date = xhr.getResponseHeader("Date")
-  return new Date(date)
-}
-
 export async function changeCampaignKeywordsPrice(campaignId, price) {
   const body = await fengming
     .post(`/campaign/${campaignId}/keyword`)
