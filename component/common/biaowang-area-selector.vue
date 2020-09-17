@@ -189,6 +189,9 @@ export default {
     },
     getSubAreas(name) {
       return this.allAreas
+        .filter(a => {
+            return !!a.baiduCode && a.isAllowed === 1
+        })
         .filter(a => a.parent === name)
         .map(a => ({ parent: a.parent, label: a.nameCn,
           id: a.name, level: 1, checked: false }))
