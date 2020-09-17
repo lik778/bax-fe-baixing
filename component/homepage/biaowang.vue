@@ -15,7 +15,7 @@
             </li>
             <li class="data">
               <h6 class="title">展示次数</h6>
-              <p class="num">{{getPromoteData('pv')}}</p>
+              <el-button style="margin-top: 6px" type="primary" plain size="small" @click="$router.push({name: 'bw-dashboard'})">点击查看</el-button>
             </li>
           </ul>
         </div>

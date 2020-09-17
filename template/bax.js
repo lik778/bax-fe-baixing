@@ -132,7 +132,6 @@ Vue.component('homepage-campaign', () => import('../component/homepage/campaign'
 const eventBus = {
   install(Vue) { Vue.prototype.$bus = new Vue() }
 }
-
 Vue.use(eventBus)
 
 const gwRoutes = [{
