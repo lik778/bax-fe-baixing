@@ -24,7 +24,7 @@
       @close="toggleAddUserLeadVisible"
     />
     <!-- <huo-dong-intro :show="huoDongIntroVisible" @close="huoDongIntroVisible = false" /> -->
-    <!-- <huo-dong-btn /> -->
+    <huo-dong-btn v-if="inActivityPeriod" />
     <back-to-top />
     <wechat-scan />
     <Notification />
@@ -35,7 +35,7 @@
 
 <script>
 // import HuoDongIntro from './common/huodong-intro'
-// import HuoDongBtn from './common/huodong-btn'
+import HuoDongBtn from './common/huodong-btn'
 import NewUserIntro from './common/new-user-intro'
 import Notification from './common/notification'
 import AddUserLead from './common/add-user-lead'
@@ -47,6 +47,7 @@ import Chat from './widget/chat'
 import BwShoppingCart from './common/bw-shopping-cart'
 
 import gStore from './store'
+import aStore from './activity-store'
 
 import es from 'base/es'
 
@@ -65,7 +66,7 @@ export default {
   components: {
     BwShoppingCart,
     // HuoDongIntro,
-    // HuoDongBtn,
+    HuoDongBtn,
     NewUserIntro,
     Notification,
     AddUserLead,
@@ -78,7 +79,7 @@ export default {
   fromMobx: {
     addUserLeadVisible: () => gStore.addUserLeadVisible,
     currentUser: () => gStore.currentUser,
-
+    inActivityPeriod: () => aStore.inActivityPeriod,
     allCategories: () => gStore.allCategories,
     allAreas: () => gStore.allAreas,
     allRoles: () => gStore.allRoles

@@ -1,5 +1,5 @@
 export const activityConfig = {
-  startTime: '2020-09-22 00:00',
+  startTime: '2020-09-21 00:00',
   endTime: '2020-09-30 23:59'
 }
 
