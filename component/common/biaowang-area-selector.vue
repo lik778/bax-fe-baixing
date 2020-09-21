@@ -88,40 +88,44 @@ export default {
     }
   },
   watch: {
-    allAreas(values) {
-      this.topAreas = [
-        {
-          checked: false,
-          id: "zhixiashi",
-          label: "直辖市",
-          level: 2,
-          parent: "china",
-          areas:  values
-            .filter(a => a.areaType === 1)
-            .filter(a => specialCities.includes(a.name))
-            .map(a => ({
-              label: a.nameCn,
-              id: a.name,
-              parent: 'zhixiashi',
-              level: 1,
-              checked: false,
-              areas: this.getSubAreas(a.name)
-            }))
-        },
-        ...values
-        .filter(a => a.areaType === 2)
-        .map(a => ({
-          parent: a.parent,
-          label: a.nameCn,
-          id: a.name,
-          level: 2,
-          checked: false,
-          areas: this.getSubAreas(a.name)
-        }))]
-      // 城市和city 完成mapping
-      values.forEach(v => {
-        this.cityProvinceMapping[v.id] = specialCities.includes(v.id) ? 'zhixiashi' : v.parent
-      })
+    allAreas: {
+      immediate: true,
+      deep: true,
+      handler (values) {
+        this.topAreas = [
+          {
+            checked: false,
+            id: "zhixiashi",
+            label: "直辖市",
+            level: 2,
+            parent: "china",
+            areas:  values
+              .filter(a => a.areaType === 1)
+              .filter(a => specialCities.includes(a.name))
+              .map(a => ({
+                label: a.nameCn,
+                id: a.name,
+                parent: 'zhixiashi',
+                level: 1,
+                checked: false,
+                areas: this.getSubAreas(a.name)
+              }))
+          },
+          ...values
+          .filter(a => a.areaType === 2)
+          .map(a => ({
+            parent: a.parent,
+            label: a.nameCn,
+            id: a.name,
+            level: 2,
+            checked: false,
+            areas: this.getSubAreas(a.name)
+          }))]
+        // 城市和city 完成mapping
+        values.forEach(v => {
+          this.cityProvinceMapping[v.id] = specialCities.includes(v.id) ? 'zhixiashi' : v.parent
+        })
+      }
     },
     areas(v) {
       if (isequal(v, this.selectedAreas)) {
@@ -189,6 +193,9 @@ export default {
     },
     getSubAreas(name) {
       return this.allAreas
+        .filter(a => {
+            return !!a.baiduCode && a.isAllowed === 1
+        })
         .filter(a => a.parent === name)
         .map(a => ({ parent: a.parent, label: a.nameCn,
           id: a.name, level: 1, checked: false }))

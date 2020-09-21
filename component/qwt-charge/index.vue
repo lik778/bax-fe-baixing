@@ -23,7 +23,7 @@
                 <price-tag v-for="(product, index) in chargeSpu.selection"
                   :key="index"
                   :editable="Number(product.maxQuantity) !== Number(product.minQuantity)"
-                  :price="centToYuan(product.price)" 
+                  :price="centToYuan(product.price)"
                   :min-input-price="centToYuan(product.minQuantity * product.realPrice)"
                   :max-input-price="centToYuan(product.maxQuantity * product.realPrice)"
                   :checked="checkedProducts.includes(product)"
@@ -117,29 +117,12 @@ import { getProductsByMchCodes } from 'api/common'
 import { createPreOrder } from 'api/order'
 import { SPUCODES, MERCHANTS } from 'constant/product'
 import { getUniqueAgreementList } from 'util/charge'
+import store from '../activity-store'
 
 const { WHOLE_SPU_CODE, GUAN_WANG_SPU_CODE, BIAO_WANG_SPU_CODE } = SPUCODES
 const { FENG_MING_MERCHANT_CODE, PHOENIXS_MERCHANT_CODE } = MERCHANTS
 const MIN_INPUT_PRICE = 50000
-const discountInfo = [
-  [588, 200, 600, 600],
-  [1088, 200, 600, 600],
-  [3088, 200, 600, 600],
-  [5088, 600, 1200, 900],
-  [10188, 1000, 1400, 1500]
-]
-const discountInfoHTML = discountInfo.map((item, index) => {
-  return `满<span style="min-width:40px">${item[0]}</span>元：
-          同时购买精品官网（1年）官网<span class="red">减</span>立减 ${item[1]} 元；
-          购买精品官网2年【送一年】官网<span class="red">减</span>立减 ${item[2]} 元；
-          购买精品官网专业版1年（支持首页宝推广）官网<span class="red">减</span> ${item[3]}元；</p>`
-})
 
-const biaowangDiscountInfoHTML = [`<div class="notice">
-  <p><span><i class="red">满</i>500-4999元，</span>购买精品官网1年立<i class="red">减</i>200元；购买精品官网2年（送一年）官网<i class="red">减</i>600元；购买精品官网专业版1年（支持首页宝推广）官网<i class="red">减</i>600元；</p>
-<p><span><i class="red">满</i>5000-9999元，</span>购买精品官网1年立<i class="red">减</i>600元；购买精品官网2年（送一年）官网<i class="red">减</i>1200元；购买精品官网专业版1年（支持首页宝推广）官网<i class="red">减</i>900元；</p>
-<p><span><i class="red">满</i>10000元及以上，</span>购买精品官网1年立<i class="red">减</i>1000元；购买精品官网2年（送一年）官网<i class="red">减</i>1400元；购买精品官网专业版1年（支持首页宝推广）官网<i class="red">减</i>1500元；</p>
-</div>`]
 
 const isGwProduct = function(spuCode) {
   return spuCode === GUAN_WANG_SPU_CODE
@@ -174,7 +157,6 @@ export default {
       fetchLoading: true,
       showDiscount: true,
       actionTrackId: uuid(),
-      discountInfoHTML,
       siteSpu: null,
       chargeSpu: null,
       checkedProducts: [],
@@ -189,6 +171,9 @@ export default {
 
       productCacheList: []
     }
+  },
+  fromMobx: {
+    discountInfoHTML: () => store.discountInfoHTML,
   },
   computed: {
     isAgentSales() {
@@ -285,7 +270,6 @@ export default {
       }
     }
     this.obtainProductByMchCode()
-
   },
   methods: {
     centToYuan,
@@ -293,9 +277,8 @@ export default {
       this.siteSpu = null
       this.chargeSpu = null
       this.checkedProducts = []
-      this.discountInfoHTML = this.productTabMchCode === PHOENIXS_MERCHANT_CODE ?
-        biaowangDiscountInfoHTML : discountInfoHTML
       this.$bus.$emit('resetPriceTagInput')
+      store.setDiscountInfoHTMLFactory(this.productTabMchCode)
       this.obtainProductByMchCode()
     },
     async obtainProductByMchCode() {
@@ -304,7 +287,6 @@ export default {
         user_id: userId,
         select_gw: selectGw
       } = this.$route.query
-
       this.fetchLoading = true
       try {
         let products = [];
