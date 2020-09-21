@@ -113,23 +113,15 @@ import { queryUserInfo, getUserInfo } from 'api/account'
 import { createOrder, getProductsByMchCode } from 'api/fengming'
 import { SPUCODES, MERCHANTS } from 'constant/product'
 import { getUniqueAgreementList } from 'util/charge'
+import store from '../activity-store'
+
 
 const { WHOLE_SPU_CODE, GUAN_WANG_SPU_CODE } = SPUCODES
 const { FENG_MING_MERCHANT_CODE } = MERCHANTS
 const MIN_INPUT_PRICE = 50000
-const discountInfo = [
-  [588, 200, 600, 600],
-  [1088, 200, 600, 600],
-  [3088, 200, 600, 600],
-  [5088, 600, 1200, 900],
-  [10188, 1000, 1400, 1500]
-]
-const discountInfoHTML = discountInfo.map((item, index) => {
-  return `满<span style="min-width:40px">${item[0]}</span>元：
-          同时购买精品官网（1年）官网<span class="red">减</span>立减 ${item[1]} 元；
-          购买精品官网2年【送一年】官网<span class="red">减</span>立减 ${item[2]} 元；
-          购买精品官网专业版1年（支持首页宝推广）官网<span class="red">减</span> ${item[3]}元；</p>`
-})
+
+
+
 const isGwProduct = function(spuCode) {
   return spuCode === GUAN_WANG_SPU_CODE
 }
@@ -160,7 +152,6 @@ export default {
       fetchLoading: true,
       showDiscount: true,
       actionTrackId: uuid(),
-      discountInfoHTML,
       siteSpu: null,
       chargeSpu: null,
       checkedProducts: [],
@@ -173,6 +164,9 @@ export default {
       payInProgress: false,
       agreementList:[]
     }
+  },
+  fromMobx: {
+    discountInfoHTML: () => store.fengmingActivity.discountInfoHTML,
   },
   computed: {
     isAgentSales() {
@@ -222,7 +216,7 @@ export default {
     Clipboard
   },
   async mounted() {
-    const { 
+    const {
       sales_id: salesId,
       user_id: userId,
       select_gw: selectGw
@@ -231,7 +225,7 @@ export default {
     this.fetchLoading = true
     try {
       let products = await getProductsByMchCode(FENG_MING_MERCHANT_CODE)
-      products.forEach(spu => 
+      products.forEach(spu =>
         spu.selection.forEach(sku => {
           sku.quantity = sku.minQuantity === sku.maxQuantity ? sku.minQuantity: 0
           sku.price = sku.minQuantity === sku.maxQuantity ?  Math.floor(sku.minQuantity * sku.realPrice): 0,
@@ -336,7 +330,7 @@ export default {
           return this.$message.error(`最高充值金额：${maxQuantity}`)
         }
       }
-      
+
       const orderParams = {
         merchant: FENG_MING_MERCHANT_CODE,
         userId: await this.getFinalUserId(),

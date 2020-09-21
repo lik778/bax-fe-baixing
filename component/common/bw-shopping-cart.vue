@@ -60,6 +60,7 @@
   import {getCnName} from 'util/meta'
   import {DEVICE} from 'constant/biaowang'
   import {orderServiceHost} from 'config'
+  import store from '../activity-store'
 
   const storageKeyPrefix = `bw-shopping-cart-`
 
@@ -77,7 +78,7 @@
         'p >= 500000 && p < 1000000 ? 60000 : false',
         'p >= 1000000 ? 100000 : false'
       ]
-    }, 
+    },
     {
       id: 2,
       shopType: 1,
@@ -150,6 +151,9 @@
         return this.isUser('BAIXING_SALES') ? '生成支付链接' : '去支付'
       }
     },
+    created() {
+      this.setIActivityPeriodSiteProducts()
+    },
     mounted() {
       if (this.isUser('BAIXING_USER')) {
         const stringValue = localStorage.getItem(this.storageKey)
@@ -160,6 +164,19 @@
       }
     },
     methods: {
+      setIActivityPeriodSiteProducts() {
+        if (store.inActivityPeriod) {
+          siteProducts.forEach(s => {
+            if (s.id === 1) {
+              s.shopOrderAmount = 2
+              s.name = '精品官网一年送一年'
+            } else if (s.id === 3) {
+              s.shopOrderAmount = 2
+              s.name = '精品官网专业版一年送一年（可用于首页宝推广）'
+            }
+          })
+        }
+      },
       getFinalUserId() {
         const { user_id: userId } = this.$route.query
         if (userId) {
