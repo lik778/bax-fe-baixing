@@ -21,7 +21,9 @@ export default {
     }
   },
   mounted() {
-    this.href = href + window.location.search
+    let searchPath = window.location.search
+    if (searchPath.includes('?')) { searchPath = searchPath.replace('?', '&')  }
+    this.href = href + searchPath
   },
 }
 </script>
