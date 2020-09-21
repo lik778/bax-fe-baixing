@@ -151,8 +151,8 @@
         return this.isUser('BAIXING_SALES') ? '生成支付链接' : '去支付'
       }
     },
-    async beforeCreate() {
-      await this.setIActivityPeriodSiteProducts()
+    created() {
+      this.setIActivityPeriodSiteProducts()
     },
     mounted() {
       if (this.isUser('BAIXING_USER')) {
@@ -164,7 +164,7 @@
       }
     },
     methods: {
-      async setIActivityPeriodSiteProducts() {
+      setIActivityPeriodSiteProducts() {
         if (store.inActivityPeriod) {
           siteProducts.forEach(s => {
             if (s.id === 1) {
