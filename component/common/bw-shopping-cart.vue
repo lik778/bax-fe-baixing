@@ -152,7 +152,7 @@
       }
     },
     async beforeCreate() {
-      this.setIActivityPeriodSiteProducts()
+      await this.setIActivityPeriodSiteProducts()
     },
     mounted() {
       if (this.isUser('BAIXING_USER')) {
@@ -165,7 +165,6 @@
     },
     methods: {
       async setIActivityPeriodSiteProducts() {
-        await store.setInActivityPeriod()
         if (store.inActivityPeriod) {
           siteProducts.forEach(s => {
             if (s.id === 1) {

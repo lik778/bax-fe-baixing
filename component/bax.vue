@@ -58,6 +58,7 @@ import {
 
 import {router} from '../template/bax'
 import qs from 'query-string'
+import store from "./activity-store";
 
 
 
@@ -116,6 +117,9 @@ export default {
     }
   },
   async beforeMount() {
+    // 设置活动信息
+    await store.setFengmingActivity()
+
     // 全局只 mount 一次, 无需 remove listener
     es.addListener('http fetch start', () => {
       this.pending = this.pending + 1

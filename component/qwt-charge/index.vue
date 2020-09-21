@@ -215,9 +215,6 @@ export default {
     PromotionAreaLimitTip,
     Clipboard
   },
-  created() {
-    store.setFengmingActivity()
-  },
   async mounted() {
     const {
       sales_id: salesId,
