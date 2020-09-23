@@ -98,7 +98,7 @@
 </template>
 
 <script>
-  import AreaSelector from 'com/common/area-selector'
+  import AreaSelector from 'com/common/biaowang-area-selector'
   import RecentSold from './recent-sold'
   import ResultDevice from './result-device'
   import ManualTooltip from 'com/common/bw/manual-tooltip'
@@ -286,6 +286,7 @@
         this.form.areas = [
           ...this.form.areas.filter(i => i !== area)
         ]
+        this.$bus.$emit('updateBiaowangAreaSelectorView', area)
       },
       queryPrice() {
         this.$refs.form.validate(async isValid => {
