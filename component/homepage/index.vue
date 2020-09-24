@@ -1,7 +1,7 @@
 <template>
   <div class="homepage">
     <account />
-    <homepage-campaign />
+    <homepage-campaign :userInfo="userInfo"/>
     <biaowang :userInfo="userInfo" />
     <site />
   </div>

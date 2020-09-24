@@ -241,3 +241,19 @@ export function allowSeeLongOrder(roles, agentId, salesId) {
   }
   return [183].includes(agentId)
 }
+
+export function allowFengmingRecharge(shAgent, salesId) {
+  if (isPro) {
+    const salesIds = ['141102', '141101', '134916', '134916', '102407', '143302', '185107',
+      '185108', '173103', '173101', '175503', '175502', '175501', '102010', '102004', '159205',
+      '159105', '159502', '153205', '157406', '134915', '156602', '102211', '102910', '102210',
+      '102209', '134917', '102215', '102217', '105401', '105401', '134903', '134904', '134905',
+      '134906', '134907', '134908', '134909', '134910', '134911', '134912', '134913', '101002', '137111']
+    return shAgent || (!shAgent && !salesIds.some(o => new RegExp(`^${o}`).test(salesId)))
+  }
+  return Boolean(localStorage.getItem('allowFmRecharge'))
+}
+
+
+
+

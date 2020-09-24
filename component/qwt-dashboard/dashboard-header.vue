@@ -21,7 +21,7 @@
         <p v-else>当前账户无消耗</p>
       </div>
       <div>
-        <router-link :to="{name: 'qwt-charge'}"><el-button type="primary" plain="">充值</el-button></router-link>
+        <router-link v-if="userInfo.allowFmRecharge" :to="{name: 'qwt-charge'}"><el-button type="primary" plain="">充值</el-button></router-link>
         <router-link :to="{name: 'qwt-create-promotion'}"><el-button type="primary" icon="el-icon-plus">新建站外推广</el-button></router-link>
       </div>
     </div>
@@ -34,6 +34,7 @@ import {f2y} from 'util'
 
 export default {
   name: 'dashboard-header',
+  props: ['userInfo'],
   data() {
     return {
       data: {
