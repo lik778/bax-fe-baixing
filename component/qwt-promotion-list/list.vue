@@ -73,9 +73,7 @@
                 >
                   {{!!item.pause ? '投放' : '暂停'}}
                 </a>
-                <a href="javascript:;" class="btn" v-if="item.source === SEM_PLATFORM_SOGOU" disabled="true" >优化</a>
-                <a href="javascript:;" class="btn" v-else @click="$router.push(`/main/qwt/promotions/${item.id}/update`)">优化</a>
-                
+                <a href="javascript:;" class="btn" @click="$router.push(`/main/qwt/promotions/${item.id}/update`)">优化</a>
                 <a href="javascript:;" class="btn" @click="$router.push(`/main/qwt/promotion/create?cloneId=${item.id}`)">复制</a>
               </td>
             </tr>
@@ -114,8 +112,7 @@ import {
 import {
   semPlatformCn,
   KEYWORD_CHIBI_REJECT,
-  CAMPAIGN_STATUS_OFFLINE,
-  SEM_PLATFORM_SOGOU
+  CAMPAIGN_STATUS_OFFLINE
 } from 'constant/fengming'
 import auditRejectReasonDialog from 'com/common/audit-reject-reason-dialog'
 
@@ -138,7 +135,7 @@ export default {
       LANGPAGE_TYPES,
       KEYWORD_CHIBI_REJECT,
       CAMPAIGN_STATUS_OFFLINE,
-      SEM_PLATFORM_SOGOU,
+
       budgetMap: {},
       expands: [],
       auditRejectReasonDialogVisible: false

@@ -257,12 +257,6 @@ const RECOMMAND_SOURCES = [RECOMMAND_SOURCE_FH, NEW_RECOMMAND_SOURCE_FH]
 
 const MIN_DAILY_BUDGET = 100 * 100
 
-// 因为搜狗渠道账号, 暂时去掉搜狗账号
-const removeSogouChannel = (semPlatformOpts) => {
-    // 搜狗value=5
-    return semPlatformOpts.filter(opt => opt.value !== 5)
-}
-
 const promotionTemplate = {
   landingType: 0,
   landingPage: '',
@@ -273,7 +267,7 @@ const promotionTemplate = {
   creativeContent: '',
 
   keywords: [],
-  sources: removeSogouChannel(semPlatformOpts).map(opt => opt.value),
+  sources: semPlatformOpts.map(opt => opt.value),
   dailyBudget: MIN_DAILY_BUDGET
 }
 
@@ -329,7 +323,7 @@ export default {
       chargeDialogVisible: false,
       areaDialogVisible: false,
 
-      semPlatformOpts: removeSogouChannel(semPlatformOpts),
+      semPlatformOpts,
       isCreating: false,
       showPromotion: false,
       timeout: null,
