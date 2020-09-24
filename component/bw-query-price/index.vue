@@ -50,7 +50,7 @@
                 </div>
               </div>
               <result-device v-else :deviceObj="exactMatch" :selected="selected" @change="onSelected" />
-              <div class="manual-container" v-if="showManualBtn || (showLongOrder && allowSeeLongOrder(userInfo.roles, userInfo.agentId, userInfo.salesId))">
+              <div class="manual-container" v-if="showManualBtn || showLongOrder">
                  <el-button type="primary" class="manual-btn"
                             :disabled="loading"
                             @click="manualDialogVisible = true">
@@ -123,7 +123,6 @@
     getCnName,
     fmtAreasInBw
   } from 'util'
-  import { allowSeeLongOrder } from 'util/role'
 
   export default {
     name: 'bw-query-price',
@@ -253,7 +252,6 @@
     },
     methods: {
       f2y,
-      allowSeeLongOrder,
       getFinalUserId() {
         const { user_id: userId } = this.$route.query
         if (userId) {
