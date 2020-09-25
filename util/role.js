@@ -242,20 +242,16 @@ export function allowSeeLongOrder(roles, agentId, salesId) {
   return [183].includes(agentId)
 }
 
-export function allowFengmingRecharge(shAgent, salesId) {
-  let salesIds = null
+export function notAllowFengmingRecharge(roles, agentId) {
+  const currentRoles = normalizeRoles(roles)
+  const isOnlyBaixingUser = currentRoles.includes('BAIXING_USER') && currentRoles.length === 1
   if (isPro) {
-    salesIds = ['141102', '141101', '134916', '134916', '102407', '143302', '185107',
-      '185108', '173103', '173101', '175503', '175502', '175501', '102010', '102004', '159205',
-      '159105', '159502', '153205', '157406', '134915', '156602', '102211', '102910', '102210',
-      '102209', '134917', '102215', '102217', '105401', '105401', '134903', '134904', '134905',
-      '134906', '134907', '134908', '134909', '134910', '134911', '134912', '134913', '101002', '137111']
-  } else {
-    salesIds = ['139601']
+    return [31, 2263, 1921, 1256, 1257, 1466, 1474, 1736, 196, 1457, 2295, 2193, 2181,
+      2182, 2183, 2184, 2185, 2186, 2187, 2188, 2189, 2190, 2313, 2314, 2337, 1302,
+      2101, 2124, 770, 65, 2094, 1797, 984, 136, 139, 2070, 2071, 2275, 35, 36, 1263, 1678].includes(agentId) && isOnlyBaixingUser
   }
-  return shAgent || (!shAgent && !salesIds.some(o => new RegExp(`^${o}`).test(salesId)))
+  return [16].includes(agentId) && isOnlyBaixingUser
 }
-
 
 
 

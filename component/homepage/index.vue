@@ -1,6 +1,6 @@
 <template>
   <div class="homepage">
-    <account />
+    <account :userInfo="userInfo"/>
     <homepage-campaign :userInfo="userInfo"/>
     <biaowang :userInfo="userInfo" />
     <site />
