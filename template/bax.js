@@ -60,6 +60,8 @@ import { getBusinessLicense } from 'api/seo'
 import { allowUseKaPackage } from 'util/fengming-role'
 import { getCurrentUser } from 'api/account'
 import pick from 'lodash.pick'
+import { notAllowFengmingRecharge } from "util/role"
+
 
 // track common data
 window.__trackerData = {
@@ -198,7 +200,15 @@ const qwtRoutes = [{
 }, {
   component: () => import('com/qwt-charge'),
   path: '/main/qwt/charge',
-  name: 'qwt-charge'
+  name: 'qwt-charge',
+  beforeEnter: async (to, from, next) => {
+    const { roles, realAgentId } = await getCurrentUser()
+    if (notAllowFengmingRecharge(roles, realAgentId)) {
+      next({ name: 'qwt-promotion-list', redirect: true })
+    } else {
+      next()
+    }
+  }
 }]
 
 const sspRoutes = [{

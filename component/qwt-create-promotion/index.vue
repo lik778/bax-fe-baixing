@@ -166,7 +166,7 @@
     />
 
     <charge-dialog
-      v-if="userInfo.allowFmRecharge"
+      :userInfo="userInfo"
       :visible="chargeDialogVisible"
       @cancel="gotoPromotionList"
     />
