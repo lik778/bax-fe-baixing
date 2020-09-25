@@ -219,7 +219,7 @@ export function allowNotSeeBwNewPrice(roles, agentId) {
   return [1].includes(agentId) && isOnlyBaixingUser
 }
 
-export function isSelfHelpUser(roles) {
+export function isNormalUser(roles) {
   if (!isPro) {
     const shAgent = localStorage.getItem('shAgent')
     if (shAgent) return false
@@ -250,7 +250,7 @@ export function notAllowFengmingRecharge(roles, agentId) {
       2182, 2183, 2184, 2185, 2186, 2187, 2188, 2189, 2190, 2313, 2314, 2337, 1302,
       2101, 2124, 770, 65, 2094, 1797, 984, 136, 139, 2070, 2071, 2275, 35, 36, 1263, 1678].includes(agentId) && isOnlyBaixingUser
   }
-  return [16].includes(agentId) && isOnlyBaixingUser
+  return [50].includes(agentId) && isOnlyBaixingUser
 }
 
 
