@@ -6,7 +6,7 @@
     <main class="main">
       <bx-icon type="checkcircleo"></bx-icon>
       <strong>创建成功</strong>
-      <div v-if="!userInfo.allowFmRecharge">
+      <div v-if="userInfo.allowFmRecharge">
         <p>已进入审核，推广可用资金不足，请前去充值</p>
         <router-link style="display: block" :to="{name: 'qwt-charge', query: { mode: 'charge-only'}}">
           <button>立即充值</button>
