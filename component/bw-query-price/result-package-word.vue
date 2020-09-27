@@ -60,6 +60,7 @@ export default {
     },
   },
   mounted() {
+    console.log(this.groups)
     this.deviceObj = this.groups.reduce((total, current) => {
       current.deviceTypes.forEach(d => {
         if (!total.hasOwnProperty(d.device)) {
@@ -76,7 +77,7 @@ export default {
     getWordShows(group) {
       if (this.selectedDeviceList.length) {
         const deviceList = group.deviceTypes.filter(x => this.selectedDeviceList.includes(String(x.device)))
-        return deviceList.reduce((total, current) => ( total + current.shows ), 0)
+        return deviceList.reduce((total, current) => ( total + (current.shows * 3)), 0)
       }
     },
     getTotalWordShows() {
