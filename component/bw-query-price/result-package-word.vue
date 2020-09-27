@@ -1,16 +1,16 @@
 <template>
   <div class="row">
-    <div class="label">词组{{id + 1}}:</div>
+    <div class="label">词包{{id + 1}}:</div>
     <div>
-      <div class="package-list" v-for="group in groups">
+      <div class="package-list" v-for="(group, i) in groups">
         <span class="word">{{ group.word }}</span>
-        <span class="shows" v-if="selectedDeviceList.length">根据过去90天，{{ getWordShows(group) }}人搜索过（数据来源于历史流量）</span>
+        <span class="shows" v-if="selectedDeviceList.length">根据过去<strong>90</strong>天，<strong>{{ getWordShows(group) }}</strong>人搜索过（数据来源于历史流量）</span>
       </div>
+      <p class="tips" v-if="selectedDeviceList.length">当前<strong>词包</strong>预计<strong>90</strong>天内您将有<strong>{{ getTotalWordShows() }}</strong>广告展现（数据来源于历史流量）</p>
       <el-checkbox-group v-model="selectedDeviceList">
         <el-checkbox v-for="device in Object.keys(deviceObj)" :key="device"
                   class="option" :label="device">{{format(device, deviceObj[device])}}</el-checkbox>
       </el-checkbox-group>
-      <p class="tips" v-if="selectedDeviceList.length">提示：当前组合预计90天内您将有{{ getTotalWordShows() }}广告展现（数据来源于历史流量）</p>
     </div>
   </div>
 </template>
@@ -94,7 +94,8 @@ export default {
 <style lang="postcss" scoped>
 .row {
 & .label {
-    color: #999;
+    font-size: 18px;
+    color: #FF6350;
     margin-bottom: 15px;
 & .keyword {
     display: inline-block;
@@ -105,13 +106,30 @@ export default {
 }
 & .package-list {
     margin-bottom: 10px;
+    border-bottom: 1px solid #DCDFE6;
+    padding-bottom: 15px;
     & > .word {
-      width: 200px;
+      width: 250px;
       margin-right: 30px;
+      & strong {
+        color: #FF6350;
+      }
+    }
+    & > .shows {
+      font-size: 12px;
+    }
+    & > .shows strong {
+      font-size: 18px;
+      color: #FF6350;
     }
   }
 & .tips {
-    margin-top: 20px;
+    font-size: 14px;
+    margin-bottom: 20px;
+    & strong {
+        font-size: 18px;
+        color: #FF6350;
+    }
   }
 }
 </style>

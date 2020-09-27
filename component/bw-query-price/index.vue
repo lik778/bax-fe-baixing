@@ -488,7 +488,7 @@ marquee {
     flex: 1;
 & .package-recommend-item {
     margin-bottom: 20px;
-    border: 1px dashed #ccc;
+    border-bottom: 2px dashed #DCDFE6;
     padding: 15px;
   }
 }
