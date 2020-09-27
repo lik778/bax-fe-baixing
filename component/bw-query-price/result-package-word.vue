@@ -6,7 +6,7 @@
         <span class="word"><strong>关键词{{ i+ 1 }}</strong>：{{ group.word }}</span>
         <span class="shows" v-if="selectedDeviceList.length">根据过去<strong>90</strong>天，<strong>{{ getWordShows(group) }}</strong>人搜索过（数据来源于历史流量）</span>
       </div>
-      <p class="tips" v-if="selectedDeviceList.length">当前<strong>推荐</strong>预计<strong>90</strong>天内您将有<strong>{{ getTotalWordShows() }}</strong>广告展现（数据来源于历史流量）</p>
+      <p class="tips" v-if="selectedDeviceList.length">当前<strong>推荐</strong>预计<strong>90</strong>天内将有<strong>{{ getTotalWordShows() }}</strong>人看到您的广告（数据来源于历史流量）</p>
       <el-checkbox-group v-model="selectedDeviceList">
         <el-checkbox v-for="device in Object.keys(deviceObj)" :key="device"
                   class="option" :label="device">{{format(device, deviceObj[device])}}</el-checkbox>
