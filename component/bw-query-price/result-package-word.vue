@@ -4,7 +4,7 @@
     <div>
       <div class="package-list" v-for="(group, i) in groups">
         <span class="word"><strong>关键词{{ i+ 1 }}</strong>：{{ group.word }}</span>
-        <span class="shows" v-if="selectedDeviceList.length">根据过去<strong>90</strong>天，<strong>{{ getWordShows(group) }}</strong>人搜索过（数据来源于历史流量）</span>
+        <span class="shows" v-if="selectedDeviceList.length">过去<strong>90</strong>天，<strong>{{ getWordShows(group) }}</strong>人搜索过（数据来源于历史流量）</span>
       </div>
       <p class="tips" v-if="selectedDeviceList.length">当前<strong>推荐</strong>预计<strong>90</strong>天内将有<strong>{{ getTotalWordShows() }}</strong>人看到您的广告（数据来源于历史流量）</p>
       <el-checkbox-group v-model="selectedDeviceList">
