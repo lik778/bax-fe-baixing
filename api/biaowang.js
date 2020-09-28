@@ -163,6 +163,14 @@ export async function queryKeywordPriceNew(opts) {
   return body.data
 }
 
+export async function queryKeywordPackagePrice(opts) {
+  const body = await biaowang
+    .post('/keyword/v2/pricing/user/package/inquiry')
+    .send(opts)
+    .json()
+  return body.data
+}
+
 export async function refreshKeywordPriceNew(keywords, opt) {
   const requestBody = keywords.map(k => ({
     ...k,
@@ -248,7 +256,7 @@ export async function getUserManualList(opts = {}) {
     .get('/keyword/v2/pricing/user/manual/history')
     .query(q)
     .json()
-   
+
   return {
     data: data.content,
     total: data.totalElements

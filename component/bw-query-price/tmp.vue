@@ -4,6 +4,11 @@
       <header>标王关键词查价</header>
       <marquee direction="left" scrollamount="6" height="40px" scrolldelay="60"><recent-sold :allAreas="allAreas" /></marquee>
       <main>
+        <div class="notice">
+          <p><span><i class="red">满</i>500-4999元，</span>购买精品官网1年立<i class="red">减</i>200元；购买精品官网2年（送一年）官网<i class="red">减</i>600元；购买精品官网专业版1年（支持首页宝推广）官网<i class="red">减</i>600元；</p>
+          <p><span><i class="red">满</i>5000-9999元，</span>购买精品官网1年立<i class="red">减</i>600元；购买精品官网2年（送一年）官网<i class="red">减</i>1200元；购买精品官网专业版1年（支持首页宝推广）官网<i class="red">减</i>900元；</p>
+          <p><span><i class="red">满</i>10000元及以上，</span>购买精品官网1年立<i class="red">减</i>1000元；购买精品官网2年（送一年）官网<i class="red">减</i>1400元；购买精品官网专业版1年（支持首页宝推广）官网<i class="red">减</i>1500元；</p>
+        </div>
         <el-form :model="form" :rules="rules" label-width="120px" ref="form" label-position="left" class="form" @submit.native.prevent>
           <el-form-item label="推广关键词" prop="keyword">
             <el-input v-model="form.keyword" style="width: 200px"/>
@@ -61,14 +66,15 @@
             </div>
             <div v-else>该关键词已售出，您可以换个词购买或者在推荐词中选择哦~~</div>
           </div>
-          <div class="recommend">
-            <label class="recommend-title">推荐词包</label>
+          <div v-if="recommends.length" class="recommend">
+            <label class="recommend-title">推荐近似关键词</label>
             <div class="recommend-content">
-              <div class="package-recommend-item" v-for="(groups, i) in packageRecommends" :key="i">
-                <result-package-word :id="i" :groups="groups" :selected="selected" @change="onPackageSelected"></result-package-word>
+              <div class="recommend-item" v-for="item in recommends" :key="item.word">
+                <result-device :deviceObj="item" :selected="selected" @change="onSelected" />
               </div>
             </div>
           </div>
+
           <section v-if="selected.length">
             <p class="clear" @click="selected = []"><i class="el-icon-close"></i>清除所有选择</p>
             <el-button class="add-to-cart" type="primary" @click="addToCart">加入购物车</el-button>
@@ -97,11 +103,13 @@ import RecentSold from './recent-sold'
 import ResultDevice from './result-device'
 import ManualTooltip from 'com/common/bw/manual-tooltip'
 import ManualDialog from 'com/common/bw/manual-dialog'
-import ResultPackageWord from './result-package-word'
-import { queryKeywordPackagePrice } from 'api/biaowang'
+
+import {queryKeywordPriceNew} from 'api/biaowang'
 import clone from 'clone'
+import pick from 'lodash.pick'
 import {
   DEVICE,
+  DEVICE_ALL,
   DEVICE_PC,
   DEVICE_WAP,
   ORDER_APPLY_TYPE_NOT,
@@ -117,14 +125,13 @@ import {
 } from 'util'
 
 export default {
-  name: 'bw-package-query-price',
+  name: 'bw-query-price',
   components: {
     AreaSelector,
     ResultDevice,
     RecentSold,
     ManualTooltip,
-    ManualDialog,
-    ResultPackageWord
+    ManualDialog
   },
   props: {
     userInfo: {
@@ -150,7 +157,7 @@ export default {
       },
       skus: [],
       selected: [],
-      packageRecommends: [],
+
       areaDialogVisible: false,
       manualDialogVisible: false,
       loading: false,
@@ -266,17 +273,6 @@ export default {
       }
       this.selected.push(item)
     },
-    onPackageSelected(groupSelected) {
-      const addList = []
-      groupSelected.forEach(group => {
-        const inCart = this.selected
-          .some(i => i.word === group.word && i.device === group.device)
-        if (!inCart) { addList.push(group)  }
-      })
-      if (addList.length) {
-        this.selected.push(...addList)
-      }
-    },
     onAreasChange(areas) {
       this.form.areas = [...areas]
       this.areaDialogVisible = false
@@ -297,16 +293,13 @@ export default {
           this.loading = true
           const {keyword, devices, areas} = this.form
           try {
-            const results = await queryKeywordPackagePrice({
+            const results = await queryKeywordPriceNew({
               targetUserId: this.getFinalUserId(),
               word: keyword.trim().replace(/[\u200b-\u200d\uFEFF]/g, ''), //去除空格和零宽字符
               device: devices.length === 2 ? 0 : devices[0],
               cities: areas
             })
-            const { recommendList, cities } = results
-            const mergeWordList = [results.keyword , ...recommendList]
-
-            this.skus = mergeWordList.map(w => {
+            this.skus = results.map(w => {
               const deviceTypes = w.priceList.map(d => {
                 const soldPriceMap = GET_DAYS_MAP(d.orderApplyType).reduce((curr, prev) => {
                   return Object.assign(curr, {
@@ -317,11 +310,10 @@ export default {
                   return {
                     device: d.device,
                     word: w.word,
-                    cities,
+                    cities: w.cities,
                     soldPriceMap: soldPriceMap,
                     days: entry[0],
-                    price: entry[1],
-                    wordType: results.keyword.word === w.word ? 1 : 2
+                    price: entry[1]
                   }
                 })
                 return {
@@ -331,13 +323,10 @@ export default {
               })
               return {
                 word: w.word,
-                cities,
+                cities: w.cities,
                 deviceTypes
               }
             })
-            const cloneSkus = clone(this.skus)
-            cloneSkus.shift()
-            this.packageRecommends  = this.groupPackageRecommends(cloneSkus)
           } finally {
             this.loading = false
           }
@@ -349,19 +338,7 @@ export default {
     addToCart() {
       this.$parent.$refs.bwShoppingCart.addToCart(this.selected)
       this.selected = []
-    },
-    groupPackageRecommends(recommends) {
-      let group = []
-      const packageRecommends = []
-      for (let i = 0; i < recommends.length; i++) {
-        group.push(recommends[i])
-        if (group.length === 3) {
-          packageRecommends.push([...group])
-          group = []
-        }
-      }
-      return packageRecommends
-    },
+    }
   },
   watch: {
     'userInfo.shAgent': {
@@ -481,11 +458,8 @@ marquee {
   display: flex;
   align-items: flex-start;
 & .recommend-content {
-    flex: 1;
-& .package-recommend-item {
-    margin-bottom: 20px;
-    border-bottom: 2px dashed #DCDFE6;
-    padding: 15px;
+& .recommend-item {
+    margin-bottom: 10px;
   }
 }
 }
