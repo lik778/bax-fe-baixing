@@ -5,8 +5,8 @@
       <el-col :span="1"></el-col>
       <el-col :span="4" class="column">
         <h3>推广资金可用余额</h3>
-        <p><strong>{{summary.balance / 100}}</strong>元</p>
-        <router-link :to="{name: 'qwt-charge', query: {mode: 'charge-only'}}"
+        <p :style="{ marginBottom: userInfo.allowFmRecharge ? '10px' : '50px' }"><strong>{{summary.balance / 100}}</strong>元</p>
+        <router-link v-if="userInfo.allowFmRecharge" :to="{name: 'qwt-charge', query: {mode: 'charge-only'}}"
           @click.native="onClickCharge">
           <el-button type="primary">充值</el-button>
         </router-link>
@@ -51,6 +51,7 @@
 
   export default {
     name: 'account-summary',
+    props: ['userInfo'],
     fromMobx: {
       summary: () => store.summary,
       coupons: () => store.coupons
