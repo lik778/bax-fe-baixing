@@ -325,7 +325,8 @@ export default {
                     cities,
                     soldPriceMap: soldPriceMap,
                     days: entry[0],
-                    price: entry[1]
+                    price: entry[1],
+                    wordType: results.keyword.word === w.word ? 1 : 2
                   }
                 })
                 return {
