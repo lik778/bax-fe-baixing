@@ -60,7 +60,6 @@ export default {
     },
   },
   mounted() {
-    console.log(this.groups)
     this.deviceObj = this.groups.reduce((total, current) => {
       current.deviceTypes.forEach(d => {
         if (!total.hasOwnProperty(d.device)) {
