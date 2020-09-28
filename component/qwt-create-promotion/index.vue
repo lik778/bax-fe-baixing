@@ -81,13 +81,13 @@
       <section class="keyword">
         <header>选取推广关键词</header>
         <p class="tip">请选取20个以上关键词，关键词越多您的创意被展现的机会越多。根据当月数据，为您推荐如下关键词</p>
-        <el-button type="primary" style="margin-top:10px" size="small" 
+        <el-button type="primary" style="margin-top:10px" size="small"
                    @click="addKeywordsDialog = true">批量添加关键词</el-button>
         <div class="kw-tag-container">
           <el-tag class="kw-tag"
-                  :class="{'kw-tag-fh': RECOMMAND_SOURCES.includes(kw.recommandSource)}" 
-                  v-for="(kw, index) in newPromotion.keywords" 
-                  :key="index" 
+                  :class="{'kw-tag-fh': RECOMMAND_SOURCES.includes(kw.recommandSource)}"
+                  v-for="(kw, index) in newPromotion.keywords"
+                  :key="index"
                   closable
                   type="warning"
                   @close="removeKeyword(index)">
@@ -110,7 +110,7 @@
         <header>设置预算</header>
         <div class="kw-price">
           <label>关键词出价<cpc-price-tip />：</label>
-          <bax-input :value="f2y(kwPrice) || f2y(recommendKwPrice)" 
+          <bax-input :value="f2y(kwPrice) || f2y(recommendKwPrice)"
                      @blur="onKwPriceChange"
                      @keyup="onKwPriceChange"
                      class="input"
@@ -135,7 +135,7 @@
 
         <div class="budget">
           <label>单渠道日预算：</label>
-          <bax-input :value="f2y(newPromotion.dailyBudget)" 
+          <bax-input :value="f2y(newPromotion.dailyBudget)"
                      @blur="onBudgetChange"
                      @keyup="onBudgetChange"
                      class="input"
@@ -166,6 +166,7 @@
     />
 
     <charge-dialog
+      :userInfo="userInfo"
       :visible="chargeDialogVisible"
       @cancel="gotoPromotionList"
     />
@@ -483,11 +484,11 @@ export default {
         .filter(({recommandSource}) => RECOMMAND_SOURCES.includes(recommandSource))
         .map(({word, recommandSource}) => `${word}_${recommandSource}`)
         .join(',')
-      
+
       const selectedKeywords = promotion.keywords
         .map(({word, recommandSource = 'user_selected'}) => `${word}=${recommandSource}`)
         .join(',')
-      
+
       const dailyBudget = promotion.dailyBudget / 100
       const landingPage = promotion.landingPage
 

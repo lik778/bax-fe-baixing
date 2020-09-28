@@ -26,7 +26,7 @@
           <template slot="title">
             <bx-icon type="paycircleo"></bx-icon>充值与购买
           </template>
-          <el-menu-item index="qwt-charge">
+          <el-menu-item index="qwt-charge" v-if="userInfo.allowFmRecharge">
             <router-link :to="{ name: 'qwt-charge' }" tag="p">
               站外推广
             </router-link>
@@ -113,20 +113,20 @@
           </template>
           <el-menu-item index="qwt-dashboard">
             <router-link :to="{ name: 'qwt-dashboard'}" tag="p">
-              <i class="material-icons" 
+              <i class="material-icons"
                  style="font-size: 16px; margin-right: 11px; vertical-align: -3px;">
               </i>站外推广报表
             </router-link>
           </el-menu-item>
           <el-menu-item index="bw-dashboard">
             <router-link :to="{ name: 'bw-dashboard'}" tag="p">
-              <i class="material-icons" 
+              <i class="material-icons"
                  style="font-size: 16px; margin-right: 11px; vertical-align: -3px;">
               </i>标王推广报表
             </router-link>
           </el-menu-item>
         </el-submenu>
-        
+
         <el-submenu index="ssp" v-show="allowSeeBxAd">
           <template slot="title">
             <i class="el-icon-message"></i>品牌广告

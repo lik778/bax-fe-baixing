@@ -2,7 +2,7 @@
 <template>
   <div class="qwt-dashboard">
     <main>
-      <dashboard-header />
+      <dashboard-header :userInfo="userInfo"/>
       <section>
         <p class="tip">
           <span v-if="query.dimension === DIMENSION_SEARCH_KEYWORD">
@@ -194,7 +194,7 @@ export default {
           return
         }
         return await this._getReportByQueryWord(opts)
-      } 
+      }
       if (this.searchCampaigns !== '' && checkedCampaignIds.some(o => isNaN(o))) {
          this.campaignErrTip = true
          return
