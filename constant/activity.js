@@ -36,7 +36,7 @@ export const fengmingDiscountInfo = {
     get discountInfoHTML() {
       return this.discountInfo.map((item) => {
         return `满<span style="min-width:40px">${item[0]}</span>元：
-          ${ item[3] ? `<span class="red">赠</span>送188元凤鸣资金；` : '' }
+          ${ item[3] ? `<span class="red">赠</span>送${item[3]}元凤鸣资金；` : '' }
           同时购买精品官网1年送1年+标准版再<span class="red">减</span>${item[1]}元/
           专业版再<span class="red">减</span>${item[2]} 元；`
       })
