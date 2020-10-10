@@ -58,6 +58,7 @@
 
   export default {
     name: 'account-summary',
+    props: ['userInfo'],
     fromMobx: {
       balance: () => store.balance,
       coupons: () => store.coupons

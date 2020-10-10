@@ -48,7 +48,7 @@
                   </div>
                   <i class="el-icon-info" />
                 </el-tooltip>
-                <a href="javascript:;" v-if="item.statusText === '账户余额不足'" @click="$router.push(`/main/qwt/charge`)">充值</a>
+                <a href="javascript:;" v-if="item.statusText === '账户余额不足' && userInfo.allowFmRecharge" @click="$router.push(`/main/qwt/charge`)">充值</a>
               </td>
               <td class="col3">{{item.source | genSourceText}}</td>
               <td class="col4" v-if="budgetMap[item.id] === undefined">
@@ -67,15 +67,13 @@
               <td class="col7">
                 <a
                   class="btn"
-                  href="javascript:;" 
+                  href="javascript:;"
                   @click="togglePromotionStatus(item, landingPage.id, landingPage.campaignIds, item.status === CAMPAIGN_STATUS_OFFLINE || item.auditStatus === KEYWORD_CHIBI_REJECT)"
                   :disabled="item.status === CAMPAIGN_STATUS_OFFLINE || item.auditStatus === KEYWORD_CHIBI_REJECT"
                 >
                   {{!!item.pause ? '投放' : '暂停'}}
                 </a>
-                <a href="javascript:;" class="btn" v-if="item.source === SEM_PLATFORM_SOGOU" disabled="true" >优化</a>
-                <a href="javascript:;" class="btn" v-else @click="$router.push(`/main/qwt/promotions/${item.id}/update`)">优化</a>
-                
+                <a href="javascript:;" class="btn" @click="$router.push(`/main/qwt/promotions/${item.id}/update`)">优化</a>
                 <a href="javascript:;" class="btn" @click="$router.push(`/main/qwt/promotion/create?cloneId=${item.id}`)">复制</a>
               </td>
             </tr>
@@ -98,7 +96,7 @@
         </div>
       </div>
     </transition>
-     <audit-reject-reason-dialog :show="auditRejectReasonDialogVisible" 
+     <audit-reject-reason-dialog :show="auditRejectReasonDialogVisible"
                                   @close="auditRejectReasonDialogVisible = false">
       </audit-reject-reason-dialog>
   </div>
@@ -114,8 +112,7 @@ import {
 import {
   semPlatformCn,
   KEYWORD_CHIBI_REJECT,
-  CAMPAIGN_STATUS_OFFLINE,
-  SEM_PLATFORM_SOGOU
+  CAMPAIGN_STATUS_OFFLINE
 } from 'constant/fengming'
 import auditRejectReasonDialog from 'com/common/audit-reject-reason-dialog'
 
@@ -138,7 +135,7 @@ export default {
       LANGPAGE_TYPES,
       KEYWORD_CHIBI_REJECT,
       CAMPAIGN_STATUS_OFFLINE,
-      SEM_PLATFORM_SOGOU,
+
       budgetMap: {},
       expands: [],
       auditRejectReasonDialogVisible: false
@@ -154,6 +151,10 @@ export default {
       required: true
     },
     campaignMap: {
+      type: Object,
+      required: true
+    },
+    userInfo: {
       type: Object,
       required: true
     }

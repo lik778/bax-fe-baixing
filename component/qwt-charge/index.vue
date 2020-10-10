@@ -107,7 +107,7 @@ import PromotionAreaLimitTip from 'com/widget/promotion-area-limit-tip'
 import Clipboard from 'com/widget/clipboard'
 
 import { centToYuan } from 'utils'
-import { normalizeRoles, isSelfHelpUser } from 'util/role'
+import { normalizeRoles, isNormalUser } from 'util/role'
 import { allowGetOrderPayUrl } from 'util'
 import { orderServiceHost } from 'config'
 import track from 'util/track'
@@ -193,7 +193,7 @@ export default {
       return roles.includes('AGENT_ACCOUNTING')
     },
     shAgent() {
-      return isSelfHelpUser(this.userInfo.roles)
+      return isNormalUser(this.userInfo.roles)
     },
     submitButtonText() {
       const { userInfo } = this
@@ -230,7 +230,6 @@ export default {
         user_id: userId,
         select_gw: selectGw
     } = this.$route.query
-
     setTimeout(() => {
         const { userInfo, actionTrackId } = this
         track({
@@ -282,11 +281,7 @@ export default {
       this.obtainProductByMchCode()
     },
     async obtainProductByMchCode() {
-      const {
-        sales_id: salesId,
-        user_id: userId,
-        select_gw: selectGw
-      } = this.$route.query
+      const { selectGw } = this.$route.query
       this.fetchLoading = true
       try {
         let products = [];

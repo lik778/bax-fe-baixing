@@ -1107,18 +1107,15 @@ export default {
       if (!this.$refs.contract.$data.isAgreement) {
         return this.$message.error('请阅读并勾选同意服务协议，再进行下一步操作')
       }
-      const source = this.getProp('source')
-      if (source === SEM_PLATFORM_SOGOU) {
-        return Message.warning('搜狗渠道升级维护中，暂停服务')
-      }
-
       this.banLandPageSelected()
       if (this.isUpdating) {
         return Message.warning('正在更新中, 请稍等一会儿 ~')
       }
+
       this.isUpdating = true
 
       const { actionTrackId, userInfo, id } = this
+
       try {
         await this._updatePromotion()
       } finally {

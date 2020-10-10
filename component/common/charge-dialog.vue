@@ -1,13 +1,23 @@
 <template>
-  <el-dialog :visible="visible" width="320px"
+  <el-dialog :visible="visible" width="350px"
     class="qwt-charge-dialog"
     :close-on-click-modal="false"
     :before-close="cancel">
     <main class="main">
       <bx-icon type="checkcircleo"></bx-icon>
       <strong>创建成功</strong>
-      <p>已进入审核，推广可用资金不足，请前去充值</p>
-      <button @click="charge">立即充值</button>
+      <div v-if="userInfo.allowFmRecharge">
+        <p>已进入审核，推广可用资金不足，请前去充值</p>
+        <router-link style="display: block" :to="{name: 'qwt-charge', query: { mode: 'charge-only'}}">
+          <button>立即充值</button>
+        </router-link>
+      </div>
+      <div v-else>
+        <p>已进入审核，推广可用资金不足，请联系你的销售充值</p>
+        <router-link style="display: block" :to="{name: 'qwt-promotion-list'}">
+          <button>管理站外推广</button>
+        </router-link>
+      </div>
     </main>
   </el-dialog>
 </template>
@@ -24,17 +34,12 @@ export default {
     visible: {
       type: Boolean,
       required: true
+    },
+    userInfo: {
+      type: Object
     }
   },
   methods: {
-    charge() {
-      this.$router.push({
-        name: 'qwt-charge',
-        query: {
-          mode: 'charge-only'
-        }
-      })
-    },
     cancel() {
       this.$emit('cancel')
     }
@@ -64,12 +69,12 @@ export default {
     font-size: 14px;
   }
 
-  & > button {
+  &  button {
     @mixin center;
-    margin-top: 10px;
+    margin: 10px auto 0 auto;
     height: 28px;
-    width: 80px;
     border-radius: 14px;
+    padding: 10px;
     background: var(--qwt-c-blue);
     color: white;
     cursor: pointer;

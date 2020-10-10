@@ -2,7 +2,8 @@
   <div class="qwt-promotion-list">
     <main class="container">
       <h2 class="header">我的站外推广计划</h2>
-      <p class="info" v-if="summary && summary.budget">您的推广资金可用余额为<span class="red">{{f2y(currentBalance)}}元</span>，预计可消耗<span class="red">{{days}}天</span>，为了保证您的广告正常投放，请及时<router-link :to="{name: 'qwt-charge'}">充值</router-link></p>
+      <p class="info" v-if="summary && summary.budget">您的推广资金可用余额为<span class="red">{{f2y(currentBalance)}}元</span>，预计可消耗<span class="red">{{days}}天</span>
+        <label v-if="userInfo.allowFmRecharge" >，为了保证您的广告正常投放，请及时<router-link :to="{name: 'qwt-charge'}">充值</router-link></label>
       <div class="action-group">
         <div class="top">
           <el-button class="button" icon="el-icon-plus" type="primary" @click="() => $router.push({name: 'qwt-create-promotion'})">新建推广计划</el-button>
@@ -83,6 +84,7 @@
         :landingPageList="landingPageList"
         :landingPageLoading="landingPageLoading"
         :campaignMap="campaignMap"
+        :userInfo="userInfo"
         @expand-change="fetchPromotionList"
         @reload-promotion="fetchPromotionList"
       />
@@ -211,7 +213,7 @@ export default {
       isActionGroupExpand: true
     }
   },
-  props: ['allAreas', 'salesInfo'],
+  props: ['allAreas', 'salesInfo', 'userInfo'],
   components: {AreaSelector, List, BaxInput},
   methods: {
     f2y,

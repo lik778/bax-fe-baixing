@@ -6,8 +6,8 @@
         <li class="account-item" v-if="isShowSection('fengming')">
           <p class="title">凤鸣投放币（元) <span class="sub-title">不含冻结</span></p>
           <p class="num">{{fengmingBalance.price}}</p>
-          <p class="desc">（冻结金额 {{fengmingBalance.freezeBalance}} 元）</p>
-          <el-button type="primary" class="button" size="small" @click.native="() => handleCharge('bax')">立即充值</el-button>
+          <p class="desc" :style="{ marginBottom: userInfo.allowFmRecharge ? '' : '72px' }">（冻结金额 {{fengmingBalance.freezeBalance}} 元）</p>
+          <el-button v-if="userInfo.allowFmRecharge" type="primary" class="button" size="small" @click.native="() => handleCharge('bax')">立即充值</el-button>
         </li>
         <li class="account-item" v-if="isShowSection('biaowang')">
           <p class="title">标王投放币（元) </p>
@@ -54,6 +54,7 @@ import loadingPlaceholder from './loading-placeholder'
 export default {
   name: 'homepage-accout',
   components: {Notice, loadingPlaceholder},
+  props: ['userInfo'],
   fromMobx: {
     fengmingBalance: () => store.fengmingBalance,
     biaowangBalance: () => store.biaowangBalance,
