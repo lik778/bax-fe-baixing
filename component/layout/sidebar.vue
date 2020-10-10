@@ -96,7 +96,26 @@
             </router-link>
           </el-menu-item>
         </el-submenu>
-
+        <el-submenu index="qc">
+          <template slot="title">
+            <bx-icon type="sharealt"></bx-icon>竞价千词
+          </template>
+          <el-menu-item index="qc-query-price">
+            <router-link :to="{ name: 'qc-query-price' }" tag="p">
+              <i class="material-icons" style="font-size: 16px; margin-right: 11px; vertical-align: -3px;"></i>新建查词
+            </router-link>
+          </el-menu-item>
+          <el-menu-item index="qc-plan-list">
+            <router-link :to="{ name: 'qc-plan-list' }" tag="p">
+              <i class="material-icons" style="font-size: 16px; margin-right: 11px; vertical-align: -3px;"></i>管理推广
+            </router-link>
+          </el-menu-item>
+          <el-menu-item index="qc-word-list">
+            <router-link :to="{ name: 'qc-word-list' }" tag="p">
+              <i class="material-icons" style="font-size: 16px; margin-right: 11px; vertical-align: -3px;"></i>查词记录
+            </router-link>
+          </el-menu-item>
+        </el-submenu>
         <el-menu-item index="gw-homepage">
           <a href="/ka/main" v-if="isRenderSiteLink" style="color: inherit">
             <i class="el-icon-news" />精品官网
@@ -123,6 +142,13 @@
               <i class="material-icons"
                  style="font-size: 16px; margin-right: 11px; vertical-align: -3px;">
               </i>标王推广报表
+            </router-link>
+          </el-menu-item>
+          <el-menu-item index="qc-dashboard">
+            <router-link :to="{ name: 'qc-dashboard'}" tag="p">
+              <i class="material-icons"
+                 style="font-size: 16px; margin-right: 11px; vertical-align: -3px;">
+              </i>竞价千词报表
             </router-link>
           </el-menu-item>
         </el-submenu>
@@ -189,8 +215,9 @@ const MENU_GROUP_MAP = {
   'seo': ['seo-create-promotion', 'seo-promotion-list'],
   'sst': ['qwt-create-promotion', 'qwt-promotion-list'],
   'bw': ['bw-query-price', 'bw-plan-list', 'bw-manual'],
+  'qc': ['qc-query-price', 'qc-plan-list', 'qc-word-list'],
   'ssp': ['ad-list', 'material-list', 'order-list', 'user-list', 'ad-calendar'],
-  'dashboard': ['qwt-dashboard', 'bw-dashboard'],
+  'dashboard': ['qwt-dashboard', 'bw-dashboard', 'qc-dashboard'],
 }
 
 

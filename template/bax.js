@@ -181,6 +181,24 @@ const bwRoutes = [{
   name: 'bw-manual'
 }]
 
+const qcRoutes = [{
+  component: () => import('com/qc-query-price'),
+  path: '/main/qc/query-price',
+  name: 'qc-query-price'
+},{
+  component: () => import('com/qc-plan-list'),
+  path: '/main/qc/plan-list',
+  name: 'qc-plan-list'
+},{
+  component: () => import('com/qc-word-list'),
+  path: '/main/qc/word-list',
+  name: 'qc-word-list'
+},{
+  component: () => import('com/qc-dashboard'),
+  path: '/main/qc/dashboard',
+  name: 'qc-dashboard'
+}]
+
 const qwtRoutes = [{
   component: () => import('com/qwt-create-promotion'),
   path: '/main/qwt/promotion/create',
@@ -316,6 +334,7 @@ export const router = new VueRouter({
     name: 'notice'
   },
   ...bwRoutes,
+  ...qcRoutes,
   ...qwtRoutes,
   ...sspRoutes,
   ...gwRoutes,
