@@ -261,7 +261,6 @@ export function formatCouponRule(ruleObj) {
  * 仅用于 区域 类目
  * @params {String} name
  * @params {Array} allItems
- *
  * @returns {String}
  */
 export function getCnName(name, allItems) {
@@ -297,8 +296,8 @@ export function formatCategoriesOrAreas(names, allItems) {
 }
 
 /**
- * 
- * @param {*} allAreas 
+ *
+ * @param {*} allAreas
  * @param {*} areas
  * a.选择一个省（安徽）下面的一个城市（安庆），推广区域：当前城市（安庆）；
  * b.选择一个省（安徽）下面的多个城市（安庆、蚌埠），推广区域：当前省份（安徽）；
@@ -335,11 +334,11 @@ export function formatCategoriesOrAreas(names, allItems) {
    if ((specialAreas.length + areaParent.length) === topAreas.length) {
      return ['china']
    }
-   
+
    // 单省多城市/多省单城市/多省多城市
    return specialAreas.concat(areaParent)
  }
- 
+
 /**
  * private
  */
