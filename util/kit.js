@@ -54,6 +54,7 @@ export function getImageInfo(file) {
   })
 }
 
+/** 将”分“转换为”元“ */
 export function f2y(fen) {
   if (typeof fen === 'string') {
     fen = toFloat(fen, 0)
@@ -123,4 +124,19 @@ export function getLandingpageByPageProtocol(landingPage) {
 
 export function isObj(obj) {
   return Object.prototype.toString.call(obj) === '[object Object]'
+}
+
+/**
+ * 请求参数清洗
+ * 格式化，去除空参数
+ * TODO 深拷贝
+ */
+export function formatReqQuery(obj = {}, formators) {
+  return Object.keys(obj).reduce((ret, key) => {
+    let value = obj[key]
+    const formator = formators[key]
+    if (formator) value = formator(value)
+    if (value) ret[key] = value
+    return ret
+  }, {})
 }
