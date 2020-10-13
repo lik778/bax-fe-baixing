@@ -24,7 +24,7 @@ export default {
   name: 'notification',
   data() {
     return {
-      showNotice: !Boolean(localStorage.getItem('sn'))
+      showNotice: false
     }
   }
 }
