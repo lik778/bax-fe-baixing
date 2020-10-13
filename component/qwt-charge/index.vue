@@ -2,7 +2,7 @@
   <div>
     <el-tabs class="product-tab" v-model="productTabMchCode" @tab-click="changeProductMchCodeTab">
       <el-tab-pane :key="FENG_MING_MERCHANT_CODE"  label="站外推广" :name="FENG_MING_MERCHANT_CODE"></el-tab-pane>
-      <el-tab-pane v-if="!shAgent"  :key="PHOENIXS_MERCHANT_CODE"  label="标王" :name="PHOENIXS_MERCHANT_CODE"></el-tab-pane>
+      <el-tab-pane v-if="!userInfo.shAgent"  :key="PHOENIXS_MERCHANT_CODE"  label="标王" :name="PHOENIXS_MERCHANT_CODE"></el-tab-pane>
     </el-tabs>
     <div class="charge-container" v-loading.fullscreen.lock="fetchLoading">
       <section class="product shadow panel">
@@ -107,7 +107,7 @@ import PromotionAreaLimitTip from 'com/widget/promotion-area-limit-tip'
 import Clipboard from 'com/widget/clipboard'
 
 import { centToYuan } from 'utils'
-import { normalizeRoles, isNormalUser } from 'util/role'
+import { normalizeRoles } from 'util/role'
 import { allowGetOrderPayUrl } from 'util'
 import { orderServiceHost } from 'config'
 import track from 'util/track'
@@ -191,9 +191,6 @@ export default {
     isAgentAccounting() {
       const roles = normalizeRoles(this.userInfo.roles)
       return roles.includes('AGENT_ACCOUNTING')
-    },
-    shAgent() {
-      return isNormalUser(this.userInfo.roles)
     },
     submitButtonText() {
       const { userInfo } = this
