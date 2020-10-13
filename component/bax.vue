@@ -117,8 +117,8 @@ export default {
     }
   },
   async beforeMount() {
-    // 设置活动信息
-    await store.setFengmingActivity()
+    // 设置活动优惠信息
+    await store.setDiscountInfoHTMLFactory()
 
     // 全局只 mount 一次, 无需 remove listener
     es.addListener('http fetch start', () => {

@@ -4,11 +4,18 @@
     <el-row type="flex" justify="space-around" align="center">
       <el-col :span="1"></el-col>
       <el-col :span="4" class="column">
-        <h3>推广资金可用余额</h3>
-        <p :style="{ marginBottom: userInfo.allowFmRecharge ? '10px' : '50px' }"><strong>{{summary.balance / 100}}</strong>元</p>
-        <router-link v-if="userInfo.allowFmRecharge" :to="{name: 'qwt-charge', query: {mode: 'charge-only'}}"
+        <h3>凤鸣投放币</h3>
+        <p><strong>{{ balance.fengmingBalance | priceFormat }}</strong>元</p>
+        <router-link :to="{name: 'qwt-charge', query: {mode: 'charge-only'}}"
           @click.native="onClickCharge">
           <el-button type="primary">充值</el-button>
+        </router-link>
+      </el-col>
+      <el-col :span="4" class="column">
+        <h3>标王投放币</h3>
+        <p><strong>{{ balance.biaowangBalance | priceFormat }}</strong>元</p>
+        <router-link :to="{name: 'bw-plan-list'}">
+          <el-button type="primary">管理标王推广</el-button>
         </router-link>
       </el-col>
       <el-col :span="4" class="column">
@@ -53,8 +60,14 @@
     name: 'account-summary',
     props: ['userInfo'],
     fromMobx: {
-      summary: () => store.summary,
+      balance: () => store.balance,
       coupons: () => store.coupons
+    },
+    filters: {
+      priceFormat(value) {
+        const price = value / 100
+        return !isNaN(price) ? (price).toFixed(2) : null
+      }
     },
     components: {
       SectionHeader
@@ -88,8 +101,8 @@
     },
     async mounted() {
       await Promise.all([
-        store.getSummary(),
-        store.getCoupons({ onlyValid: true, status: 0 })
+        store.getCoupons({ onlyValid: true, status: 0 }),
+        store.getBalance()
       ])
     }
   }

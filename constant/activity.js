@@ -43,3 +43,18 @@ export const fengmingDiscountInfo = {
     }
   }
 }
+
+
+export const biaowangDiscountInfo = {
+  [COMMON_STATUS]: { // 平时文案展示
+    get discountInfoHTML() {
+      return [`<div class="notice">
+        <p><span><i class="red">满</i>500-4999元，</span>购买精品官网1年立<i class="red">减</i>200元；购买精品官网2年（送一年）官网<i class="red">减</i>600元；购买精品官网专业版1年（支持首页宝推广）官网<i class="red">减</i>600元；</p>
+        <p><span><i class="red">满</i>5000-9999元，</span>购买精品官网1年立<i class="red">减</i>600元；购买精品官网2年（送一年）官网<i class="red">减</i>1200元；购买精品官网专业版1年（支持首页宝推广）官网<i class="red">减</i>900元；</p>
+        <p><span><i class="red">满</i>10000元及以上，</span>购买精品官网1年立<i class="red">减</i>1000元；购买精品官网2年（送一年）官网<i class="red">减</i>1400元；购买精品官网专业版1年（支持首页宝推广）官网<i class="red">减</i>1500元；</p>
+      </div>`]
+    }
+  },
+  [ACTIVITY_STATUS]: {
+  }
+}

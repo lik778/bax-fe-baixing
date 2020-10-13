@@ -1,5 +1,9 @@
 
 import { biaowang, trim } from './base'
+import { getCurrentBalanceBreif } from './account'
+import { SPUCODES } from 'constant/product'
+
+const { BIAO_WANG_SPU_CODE } = SPUCODES
 
 export async function queryKeywordPrice(opts = {}) {
   const body = await biaowang
@@ -110,11 +114,15 @@ export async function getLogs(parmas) {
 }
 
 export async function getHomePageBiaowangData() {
-  const body = await biaowang
-    .get(`/promote/user/info`)
-    .json()
+  const [ biaowangBalanceBrief, body ] = await Promise.all([
+    getCurrentBalanceBreif(BIAO_WANG_SPU_CODE),
+    await biaowang.get(`/promote/user/info`).json()
+  ])
 
-  return body.data
+  return {
+    ...body.data,
+    biaowangBalance: biaowangBalanceBrief.currentBalance
+  }
 }
 
 export async function getQiqiaobanCoupon(promoteId) {

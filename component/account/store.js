@@ -5,22 +5,23 @@ import { PRODUCT_TYPE_BIAOWANG } from 'constant/log'
 import * as fapi from 'api/fengming'
 import * as bapi from 'api/biaowang'
 import * as mapi from 'api/meta'
+import * as api from 'api/account'
 
 const store = observable({
-  _summary: {},
+  _balance: {},
   _coupons: [],
-
   _logs: [],
   totalLogs: 0,
 
   get logs() {
     return toJS(this._logs)
   },
-  get summary() {
-    return toJS(this._summary)
-  },
   get coupons() {
     return toJS(this._coupons)
+  },
+
+  get balance() {
+    return toJS(this._balance)
   },
 
   getLogs: action(async function({productType, ...params}) {
@@ -62,12 +63,12 @@ const store = observable({
     this._logs = logs
   }),
 
-  getSummary: action(async function() {
-    this._summary = await fapi.getSummary()
-  }),
-
   getCoupons: action(async function(opt) {
     this._coupons = await mapi.getCoupons(opt)
+  }),
+
+  getBalance: action(async function() {
+    this._balance = await api.getCurrentAllBalanceBreif()
   })
 })
 

@@ -37,3 +37,5 @@ export const orderServiceHost = isPro
 export const identityBindingPage = isPro
   ? 'https://www.baixing.com/bind/?type=idcard'
   : 'http://www.staging.baixing.cn/bind/?type=idcard'
+
+export const preKeywordPath = 'preKeyword'

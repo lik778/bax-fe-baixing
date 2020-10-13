@@ -220,10 +220,8 @@ export function allowNotSeeBwNewPrice(roles, agentId) {
 }
 
 export function isNormalUser(roles) {
-  if (!isPro) {
-    const shAgent = localStorage.getItem('shAgent')
-    if (shAgent) return false
-  }
+  const shAgent = localStorage.getItem('shAgent')
+  if (shAgent) return false
   if (roles.length === 1) {
     return roles[0].nameEn === 'BAIXING_USER'
   }
