@@ -7,27 +7,14 @@
     :show-close="false"
   >
     <main class="main">
-      <div v-for="(province, i) in topAreas" :key="i">
-        <el-checkbox class="checkbox-item" v-model="province.checked" @change="provinceCheckedChange(province)">
-          <span :class="{ selected: province.checked }">{{ province.label }}</span>
+      <div v-for="(province, i) in provinceList" :key="i">
+        <el-checkbox class="checkbox-item" :disabled="disabledProvinceCheck(province)" v-model="province.checked" @change="provinceCheckedChange(province)">
+          <span :class="{ selected: province.checked }">{{ province.name }}</span>
         </el-checkbox>
-        <span>
-            <p v-for="(area, i) in province.areas" :key="i"
-               :class="{ selected: area.checked }"
-               @click="cityChecked(area)">
-                {{ area.label }}
-            </p>
-          </span>
-      </div>
-      <div>
-        <el-checkbox class="checkbox-item" v-model="quanguoChecked" @change="quanguoCheckedChange()">
-          <span>全国</span>
-        </el-checkbox>
-        <span></span>
       </div>
     </main>
     <header slot="title" class="dialog-header">
-      <h5 class="title">区域选择</h5>
+      <h5 class="title">区域选择<span>(仅可选择两个地区)</span></h5>
       <div class="buttons">
         <el-button @click="cancel">取消</el-button>
         <el-button type="primary" @click="ok">确认</el-button>
@@ -38,25 +25,26 @@
 
 <script>
 import isequal from 'lodash.isequal'
+import { getAllCities } from "../../api/ka"
 
-const specialCities = [
-  'beijing',
-  'tianjin',
-  'shanghai',
-  'chongqing'
-]
+
+const formatAreaOpts = (data, isLeaf = false) => {
+  if (!Array.isArray(data)) return null
+
+  return data.map(item => {
+    return {
+      ...item,
+      isLeaf,
+      checked: false,
+      value: item.name,
+      children: formatAreaOpts(item.cities, false)
+    }
+  })
+}
 
 export default {
   name: 'qc-area-selector',
   props: {
-    enableChina: {
-      type: Boolean,
-      default: true
-    },
-    allAreas: {
-      type: Array,
-      required: true
-    },
     areas: {
       type: Array,
       required: true,
@@ -65,59 +53,16 @@ export default {
     visible: {
       type: Boolean,
       required: true
-    },
-    type: {
-      type: String
     }
   },
   data() {
     return {
       selectedAreas: [...this.areas],
-      quanguoChecked: false,
-      cityProvinceMapping: {},
-      topAreas: []
+      topAreas: [],
+      provinceList: []
     }
   },
   watch: {
-    allAreas: {
-      immediate: true,
-      deep: true,
-      handler (values) {
-        this.topAreas = [
-          {
-            checked: false,
-            id: "zhixiashi",
-            label: "直辖市",
-            level: 2,
-            parent: "china",
-            areas:  values
-              .filter(a => a.areaType === 1)
-              .filter(a => specialCities.includes(a.name))
-              .map(a => ({
-                label: a.nameCn,
-                id: a.name,
-                parent: 'zhixiashi',
-                level: 1,
-                checked: false,
-                areas: this.getSubAreas(a.name)
-              }))
-          },
-          ...values
-            .filter(a => a.areaType === 2)
-            .map(a => ({
-              parent: a.parent,
-              label: a.nameCn,
-              id: a.name,
-              level: 2,
-              checked: false,
-              areas: this.getSubAreas(a.name)
-            }))]
-        // 城市和city 完成mapping
-        values.forEach(v => {
-          this.cityProvinceMapping[v.id] = specialCities.includes(v.id) ? 'zhixiashi' : v.parent
-        })
-      }
-    },
     areas(v) {
       if (isequal(v, this.selectedAreas)) {
         return
@@ -126,70 +71,28 @@ export default {
     }
   },
   mounted() {
-    // 处理删除选择城市view刷新
-    this.$bus.$on('updateBiaowangAreaSelectorView', (cityId) => {
-      const provinceId = this.cityProvinceMapping[cityId]
-      const provinceItem = this.topAreas.find(x => x.id == provinceId)
-      provinceItem.checked = false
-      const cityItem = provinceItem.areas.find(x => x.id == cityId)
-      cityItem.checked = false
-      this.quanguoChecked = false
+    this.getProvinceData()
+    this.$bus.$on('updateQcAreaSelectorView', (province) => {
+      const removeProvince = this.selectedAreas.find(x => x.name === province.name)
+      removeProvince.checked = false
     })
   },
   methods: {
-    quanguoCheckedChange() {
-      this.selectedAreas = []
-      this.topAreas.forEach(p => {
-        p.checked = this.quanguoChecked
-        p.areas.forEach(c => {
-          c.checked = this.quanguoChecked
-          if (this.quanguoChecked) {
-            this.selectedAreas.push(c.id)
-          }
-        })
-      })
+    async getProvinceData() {
+      const blackList = ['m1', 'm6'] // 新疆和西藏去掉
+      const allCities = await getAllCities()
+      this.provinceList = Object.freeze(formatAreaOpts(allCities)).filter(x => !blackList.includes(x.id))
+    },
+    disabledProvinceCheck(province) {
+      return !this.selectedAreas.map(p => p.name).includes(province.name) && this.selectedAreas.length === 2
     },
     provinceCheckedChange(province) {
-      province.areas.forEach(x => {
-        const { id } = x
-        x.checked = province.checked
-        if (province.checked) {
-          if (!this.selectedAreas.includes(id)) {
-            this.selectedAreas.push(id)
-          }
-        } else {
-          if (this.selectedAreas.includes(id)) {
-            const deleteIndex = this.selectedAreas.findIndex(x => x === id)
-            this.selectedAreas.splice(deleteIndex, 1)
-          }
-        }
-      })
-      this.setQuanguoChecked()
-    },
-    cityChecked(area) {
-      const { parent, id } = area
-      const province = this.topAreas.find(x => x.id == parent)
-      area.checked = !area.checked
-      province.checked = (province.areas.filter(x => x.checked).length === province.areas.length)
-      this.setQuanguoChecked()
-      if (area.checked) {
-        this.selectedAreas.push(id)
+      if (province.checked) {
+        this.selectedAreas.push(province)
       } else {
-        const index = this.selectedAreas.findIndex(y => y == id)
-        this.selectedAreas.splice(index, 1)
+        const index = this.selectedAreas.findIndex(x => province.name === x.name)
+        if (index > -1) {  this.selectedAreas.splice(index, 1)  }
       }
-    },
-    setQuanguoChecked() {
-      this.quanguoChecked = (this.topAreas.filter(x => x.checked).length === this.topAreas.length)
-    },
-    getSubAreas(name) {
-      return this.allAreas
-        .filter(a => {
-          return !!a.baiduCode && a.isAllowed === 1
-        })
-        .filter(a => a.parent === name)
-        .map(a => ({ parent: a.parent, label: a.nameCn,
-          id: a.name, level: 1, checked: false }))
     },
     cancel() {
       this.$emit('cancel')
@@ -203,8 +106,6 @@ export default {
 </script>
 
 <style lang="postcss" scoped>
-
-@import './selector';
 
 .tip {
   color: red;
@@ -220,6 +121,9 @@ export default {
     text-indent: 10px;
     font-size: 18px;
     color: #565656;
+    & span {
+      font-size: 14px;
+    }
   }
 & .buttons {
     margin-left: auto;
@@ -227,7 +131,19 @@ export default {
   }
 }
 
+.main:after {
+  visibility: hidden;
+  display: block;
+  font-size: 0;
+  content: " ";
+  clear: both;
+  height: 0;
+}
+
 .checkbox-item {
-  flex: 1;
+  width: 120px;
+  float: left;
+  display: inline-block;
+  margin-bottom: 20px;
 }
 </style>
