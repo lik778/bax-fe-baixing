@@ -1,7 +1,7 @@
 <template>
   <div class="bg page">
     <div class="white-bg">
-      <header>查词记录</header>
+      <header>拓词记录</header>
       <div class="content">
         <!-- 搜索表单 -->
         <el-form class="query-form" :inline="true" :model="query">
@@ -34,9 +34,9 @@
         </el-form>
         <!-- 列表 -->
         <el-table class="query-table" border :data="queryList">
-          <el-table-column label="查询日期" prop="createdAt" width="120" :formatter="dateFormatter" />
-          <el-table-column label="核心词" prop="word" width="120" />
-          <el-table-column label="城市" prop="cities" min-width="180">
+          <el-table-column label="查询日期" prop="createdAt" align="center" :formatter="dateFormatter" />
+          <el-table-column label="核心词" prop="word" align="center" width="120" />
+          <el-table-column label="城市" prop="cities" align="center">
             <template slot-scope="{row}">
               <el-tooltip
                 popper-class="city-tooltip"
@@ -48,9 +48,20 @@
               </el-tooltip>
             </template>
           </el-table-column>
-          <el-table-column label="状态" prop="status" width="180">
+          <el-table-column label="状态" prop="status" align="center">
             <template slot-scope="{row}">
-              <el-tag v-if="!row.isExpired" :type="MAP.statusToType[row.status]">
+              <el-tooltip
+                v-if="row.note"
+                popper-class="city-tooltip"
+                class="item"
+                effect="light"
+                placement="top"
+                :content="row.note" >
+                  <el-tag v-if="!row.isExpired" :type="MAP.statusToType[row.status]">
+                    {{CONST.WORD_OFFER_STATUS[row.status]}}
+                  </el-tag>
+              </el-tooltip>
+              <el-tag v-else :type="MAP.statusToType[row.status]">
                 {{CONST.WORD_OFFER_STATUS[row.status]}}
               </el-tag>
             </template>
@@ -58,18 +69,21 @@
           <el-table-column label="操作" align="center" width="180">
             <template slot-scope="{row}">
               <el-button type="text" size="small" @click="() => checkoutPreferredWordLists(row)">查看</el-button>
-              <el-button type="text" size="small" :disabled="true">去支付</el-button>
+              <el-button type="text" size="small" @click="() => goEditWordsPage(row)">修改</el-button>
+              <el-button v-if="canPayForWords" type="text" size="small" :disabled="true">去抢购</el-button>
             </template>
           </el-table-column>
         </el-table>
         <!-- 分页 -->
         <el-pagination
           class="pagniation"
-          layout="prev, pager, next"
+          layout="total,sizes,prev,pager,next"
           :total="pagination.total"
           :page-size="pagination.size"
+          :page-sizes="pagination.sizes"
           :current-page="pagination.current"
           @current-change="getQueryListWithTip"
+          @size-change="handleSizeChange"
         />
       </div>
     </div>
@@ -96,7 +110,8 @@ const fetchQueryList = async function () {
     id: i,
     word: '核心词',
     cities: ['上海','北京','杭州','深圳'],
-    status: 1
+    status: 1,
+    note: '关键词违规，请修改后尝试'
   }))
   return await {
     data,
@@ -138,7 +153,8 @@ export default {
       pagination: {
         current: 0,
         total: 0,
-        size: 20
+        size: 20,
+        sizes: [10, 20, 50, 100],
       },
       queryList: [],
       visible: {
@@ -146,6 +162,10 @@ export default {
       },
       active: {
         selectedItem: null,
+      },
+      store: {
+        saleId: null,
+        userId: null,
       }
     }
   },
@@ -154,12 +174,23 @@ export default {
       const name = this.active.selectedItem && this.active.selectedItem.word
       return name && `“${name}”的优选词`
     },
+    canPayForWords() {
+      return this.store.saleId && this.store.userId
+    }
+  },
+  created() {
+    const query = parseQuery(window.location.search)
+    const { saleId, userId } = query
+    this.store = { saleId, userId }
   },
   mounted() {
     this.getQueryList()
   },
   methods: {
-
+    handleSizeChange(size) {
+      this.pagination.size = size
+      this.getQueryListWithTip()
+    },
     async getQueryListWithTip(...args) {
       await this.getQueryList(...args)
       if (this.queryList) {
@@ -171,10 +202,11 @@ export default {
     },
     async getQueryList(page = 0) {
       const query = {
+        size: this.pagination.size,
+        page,
         ...formatReqQuery(this.query, {
           // date: val => val && +new Date(this.query.date)
         }),
-        page,
       }
       const { data, total } = (await fetchQueryList(query)) || {}
       this.queryList = data.map(x => x)
@@ -198,11 +230,20 @@ export default {
         date: '',
       }
     },
+    goEditWordsPage(row) {
+      console.log(row)
+      this.$router.push({
+        name: 'qc-query-price',
+        params: {
+          id: row.id
+        }
+      })
+    },
 
     /*********************************************************** calculation */
 
     dateFormatter({createdAt}) {
-      return dayjs(createdAt * 1000).format('YYYY-MM-DD')
+      return dayjs(createdAt * 1000).format('YYYY-MM-DD HH:MM')
     },
     cityFormatter(cities , max = 20) {
       return cities.slice(0, max).map(city => getCnName(city, this.allAreas)).join('，') + (cities.length > max ? `等${cities.length}个城市` : '')
