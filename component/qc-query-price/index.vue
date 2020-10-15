@@ -2,6 +2,7 @@
   <div class="bg">
     <div class="white-bg">
       <main>
+        <product-intro></product-intro>
         <el-form :model="form" :rules="rules" label-width="120px" ref="form" label-position="left" class="form" @submit.native.prevent>
           <el-form-item label="核心关键词" prop="keyword">
             <el-input v-model="form.keyword" style="width: 200px"/>
@@ -23,8 +24,10 @@
 </template>
 
 <script>
+import ProductIntro from "com/qc-query-price/product-intro"
 export default {
   name: "qc-query-price",
+  components: { ProductIntro },
   data() {
     return {
       form: {

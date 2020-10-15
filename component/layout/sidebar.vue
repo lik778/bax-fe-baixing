@@ -102,7 +102,7 @@
           </template>
           <el-menu-item index="qc-query-price">
             <router-link :to="{ name: 'qc-query-price' }" tag="p">
-              <i class="material-icons" style="font-size: 16px; margin-right: 11px; vertical-align: -3px;"></i>新建查词
+              <i class="material-icons" style="font-size: 16px; margin-right: 11px; vertical-align: -3px;"></i>新建订单
             </router-link>
           </el-menu-item>
           <el-menu-item index="qc-plan-list">
