@@ -105,8 +105,8 @@
               <i class="material-icons" style="font-size: 16px; margin-right: 11px; vertical-align: -3px;"></i>新建订单
             </router-link>
           </el-menu-item>
-          <el-menu-item index="qc-plan-list">
-            <router-link :to="{ name: 'qc-plan-list' }" tag="p">
+          <el-menu-item index="qc-promote-list">
+            <router-link :to="{ name: 'qc-promote-list' }" tag="p">
               <i class="material-icons" style="font-size: 16px; margin-right: 11px; vertical-align: -3px;"></i>管理推广
             </router-link>
           </el-menu-item>
@@ -215,7 +215,7 @@ const MENU_GROUP_MAP = {
   'seo': ['seo-create-promotion', 'seo-promotion-list'],
   'sst': ['qwt-create-promotion', 'qwt-promotion-list'],
   'bw': ['bw-query-price', 'bw-plan-list', 'bw-manual'],
-  'qc': ['qc-query-price', 'qc-plan-list', 'qc-word-list'],
+  'qc': ['qc-query-price', 'qc-promote-list', 'qc-word-list'],
   'ssp': ['ad-list', 'material-list', 'order-list', 'user-list', 'ad-calendar'],
   'dashboard': ['qwt-dashboard', 'bw-dashboard', 'qc-dashboard'],
 }
