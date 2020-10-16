@@ -188,9 +188,9 @@ const qcRoutes = [{
   path: '/main/qc/query-price',
   name: 'qc-query-price'
 }, {
-  component: () => import('com/qc-plan-list'),
-  path: '/main/qc/plan-list',
-  name: 'qc-plan-list'
+  component: () => import('com/qc-promote-list'),
+  path: '/main/qc/promote-list',
+  name: 'qc-promote-list'
 }, {
   component: () => import('com/qc-word-list'),
   path: '/main/qc/word-list',
