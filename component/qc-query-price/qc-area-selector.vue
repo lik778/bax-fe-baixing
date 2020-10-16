@@ -26,7 +26,7 @@
 <script>
 import isequal from 'lodash.isequal'
 import { getAllCities } from "../../api/ka"
-
+import clone from 'clone'
 
 const formatAreaOpts = (data, isLeaf = false) => {
   if (!Array.isArray(data)) return null
@@ -58,11 +58,16 @@ export default {
   data() {
     return {
       selectedAreas: [...this.areas],
-      topAreas: [],
-      provinceList: []
+      originSelectedArea: [],
+      provinceList: [],
     }
   },
   watch: {
+    visible(v) {
+      if (v) {
+        this.originSelectedArea = clone(this.selectedAreas)
+      }
+    },
     areas(v) {
       if (isequal(v, this.selectedAreas)) {
         return
@@ -95,6 +100,7 @@ export default {
       }
     },
     cancel() {
+      this.selectedAreas = this.originSelectedArea
       this.$emit('cancel')
     },
     ok() {

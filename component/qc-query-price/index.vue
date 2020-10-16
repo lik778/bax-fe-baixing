@@ -19,6 +19,7 @@
             <el-button :loading="loading" type="primary">检查</el-button>
           </el-form-item>
         </el-form>
+        <select-keywords ref="selectKeywords" />
       </main>
     </div>
     <qc-area-selector
@@ -33,10 +34,11 @@
 <script>
 import ProductIntro from "com/qc-query-price/product-intro"
 import QcAreaSelector from "com/qc-query-price/qc-area-selector"
+import SelectKeywords from './select-keywords'
 
 export default {
   name: "qc-query-price",
-  components: { ProductIntro, QcAreaSelector },
+  components: { ProductIntro, QcAreaSelector, SelectKeywords },
   props: {
     userInfo: {
       type: Object,
@@ -69,7 +71,6 @@ export default {
     },
     onAreasChange(areas) {
       this.form.areas = [...areas]
-      console.log(areas)
       this.areaDialogVisible = false
     }
   }
