@@ -1,8 +1,11 @@
 /************************************** 按照设计规范产出的 CSS */
 
-.page {
+.page,
+.page.view {
   margin: 16px;
   padding: 16px;
+  /* TODO */
+  /* min-height: calc(100% - 32px); */
   background-color: white;
 }
 

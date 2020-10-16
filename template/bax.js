@@ -73,6 +73,7 @@ window.onerror = (e) => {
 }
 Vue.config.errorHandler = (err, vm, info) => {
   sentry.captureException(err)
+  console.error(err)
 }
 
 Vue.use(Movue, { reaction })
@@ -203,6 +204,10 @@ const qcRoutes = [{
   component: () => import('com/qc-dashboard'),
   path: '/main/qc/dashboard',
   name: 'qc-dashboard'
+}, {
+  component: () => import('com/qc-creative'),
+  path: '/main/qc/creative',
+  name: 'qc-creative'
 }]
 
 const qwtRoutes = [{

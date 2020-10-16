@@ -45,3 +45,15 @@ export async function getPreferredWordsList(opts = {}) {
     total: data.length * 5
   }
 }
+
+// 获取推广物料信息
+export async function getCreative(opts = {}) {
+  return await {
+    keyword: '核心词',
+  }
+}
+
+// 创建/更新推广物料信息
+export async function saveCreative(opts = {}) {
+  return await {}
+}
