@@ -22,6 +22,9 @@ export const seoApiHost = isPro
   // : '//172.17.5.12:8088/api/seo-service/user'
   : 'http://bax.baixing.cn/seo-api'
 
+// TODO undone
+export const qcApiHost = 'http://localhost:8080/api/qianci-service/'
+
 export const assetHost = '//file.baixing.net/bax-fe/asset/'
 
 export const upyun = {

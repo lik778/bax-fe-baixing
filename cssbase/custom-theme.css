@@ -1,0 +1,37 @@
+/************************************** 按照设计规范产出的 CSS */
+
+.page {
+  margin: 16px;
+  padding: 16px;
+  background-color: white;
+}
+
+.page>header {
+  color: #666;
+  border-bottom: 1px solid #e6e6e6;
+  padding-bottom: 10px;
+  font-weight: bold;
+}
+
+.statics {
+  margin: 0 6px;
+  padding: 2px 6px;
+  background: #FFF7EB;
+  border: 1px solid #FF7D51;
+  border-radius: 1px;
+  font-size: 14px;
+  color: #FF6350;
+  text-align: center;
+}
+
+/************************************** ElementUI 修改 */
+
+.el-table__body .is-leaf {
+  height: 47px;
+  line-height: 47px;
+}
+
+// 翻页
+.el-pager .number {
+  font-weight: normal;
+}

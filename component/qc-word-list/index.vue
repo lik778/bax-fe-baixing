@@ -1,7 +1,7 @@
 <template>
   <div class="bg page">
     <div class="white-bg">
-      <header>拓词记录</header>
+      <header>查词记录</header>
       <div class="content">
         <!-- 搜索表单 -->
         <el-form class="query-form" :inline="true" :model="query">
@@ -34,21 +34,14 @@
         </el-form>
         <!-- 列表 -->
         <el-table class="query-table" border :data="queryList">
-          <el-table-column label="查询日期" prop="createdAt" align="center" :formatter="dateFormatter" />
-          <el-table-column label="核心词" prop="word" align="center" width="120" />
-          <el-table-column label="城市" prop="cities" align="center">
+          <el-table-column label="查询日期" prop="createdAt"  width="160" :formatter="dateFormatter" />
+          <el-table-column label="核心词" prop="word" width="160" />
+          <el-table-column label="推广地区" prop="cities">
             <template slot-scope="{row}">
-              <el-tooltip
-                popper-class="city-tooltip"
-                class="item"
-                effect="light"
-                placement="top"
-                :content="cityFormatter(row.cities, row.cities.length)" >
-                  <span>{{cityFormatter(row.cities, 20)}}</span>
-              </el-tooltip>
+              <span>{{row.cities.join('、')}}</span>
             </template>
           </el-table-column>
-          <el-table-column label="状态" prop="status" align="center">
+          <el-table-column label="状态" prop="status">
             <template slot-scope="{row}">
               <el-tooltip
                 v-if="row.note"
@@ -66,11 +59,12 @@
               </el-tag>
             </template>
           </el-table-column>
-          <el-table-column label="操作" align="center" width="180">
+          <el-table-column label="操作">
             <template slot-scope="{row}">
               <el-button type="text" size="small" @click="() => checkoutPreferredWordLists(row)">查看</el-button>
               <el-button type="text" size="small" @click="() => goEditWordsPage(row)">修改</el-button>
-              <el-button v-if="canPayForWords" type="text" size="small" :disabled="true">去抢购</el-button>
+              <el-button type="text" size="small" :disabled="true">去抢购</el-button>
+              <div class="page-button-group-safe-padding" />
             </template>
           </el-table-column>
         </el-table>
@@ -87,20 +81,11 @@
         />
       </div>
     </div>
-
-    <el-dialog
-      width="70%"
-      :title="preferredWordsTableTitle"
-      :visible="visible.preferredWordsTable"
-      @close="visible.preferredWordsTable = false"
-    ><preferred-words-table /></el-dialog>
   </div>
 </template>
 
 <script>
 import dayjs from 'dayjs'
-
-import PreferredWordsTable from './preferred-words-table'
 
 import { formatReqQuery, getCnName } from 'util'
 
@@ -157,9 +142,6 @@ export default {
         sizes: [10, 20, 50, 100],
       },
       queryList: [],
-      visible: {
-        preferredWordsTable: false,
-      },
       active: {
         selectedItem: null,
       },
@@ -170,10 +152,6 @@ export default {
     }
   },
   computed: {
-    preferredWordsTableTitle() {
-      const name = this.active.selectedItem && this.active.selectedItem.word
-      return name && `“${name}”的优选词`
-    },
     canPayForWords() {
       return this.store.saleId && this.store.userId
     }
@@ -220,8 +198,12 @@ export default {
     /*********************************************************** ux */
 
     checkoutPreferredWordLists(item) {
-      this.visible.preferredWordsTable = true
+      const { id } = item || {}
       this.active.selectedItem = item
+      this.$router.push({
+        name: 'qc-keyword-list',
+        params: { id }
+      })
     },
     resetQuery() {
       this.query = {
@@ -244,13 +226,7 @@ export default {
 
     dateFormatter({createdAt}) {
       return dayjs(createdAt * 1000).format('YYYY-MM-DD HH:MM')
-    },
-    cityFormatter(cities , max = 20) {
-      return cities.slice(0, max).map(city => getCnName(city, this.allAreas)).join('，') + (cities.length > max ? `等${cities.length}个城市` : '')
-    },
-  },
-  components: {
-    PreferredWordsTable
+    }
   }
 }
 </script>
@@ -267,8 +243,9 @@ export default {
   & header {
     color: #666;
     border-bottom: 1px solid #e6e6e6;
-    padding: 16px;
-    font-size: 16px;
+    margin: 0 16px;
+    padding: 16px 0;
+    font-weight: bold;
   }
 
   & .content {
@@ -283,6 +260,7 @@ export default {
     margin-top: 1em;
   }
 }
+
 .query-form {
   padding: 16px;
   background: #eff2f7;
@@ -300,5 +278,9 @@ export default {
       opacity: 0;
     }
   }
+}
+/* 防止按钮被页面右下角按钮（如扫码关注按钮）掩盖 */
+.page-button-group-safe-padding {
+  width: 45px;
 }
 </style>

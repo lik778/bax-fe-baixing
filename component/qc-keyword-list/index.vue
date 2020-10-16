@@ -1,24 +1,28 @@
 <template>
-  <div>
+  <div class="page">
+    <header>优选词列表</header>
+    <span class="description">提示：优选系统为您优选<span class="statics">{{wordCounts}}</span>个关键词（包含双端）。预估在 180 天内为您带来<span class="statics">{{pvs}}</span>展现。</span>
     <!-- 列表 -->
     <el-table class="query-table" border :data="queryList">
       <el-table-column label="创建时间" prop="createTime" width="120" :formatter="dateFormatter" />
       <el-table-column label="核心词" prop="word" width="120" />
       <el-table-column label="优选词" prop="preferredWords" />
-      <el-table-column label="操作" align="center" width="180">
+      <!-- <el-table-column label="操作" align="center" width="180">
         <template>
           <el-button type="text" size="small" :disabled="true">假装有个按钮</el-button>
         </template>
-      </el-table-column>
+      </el-table-column> -->
     </el-table>
     <!-- 分页 -->
     <el-pagination
       class="pagniation"
-      layout="prev, pager, next"
+      layout="total,sizes,prev,pager,next"
       :total="pagination.total"
       :page-size="pagination.size"
+      :page-sizes="pagination.sizes"
       :current-page="pagination.current"
-      @current-change="getQueryListWithTip"
+      @current-change="initQueryListWithTip"
+      @size-change="handleSizeChange"
     />
   </div>
 </template>
@@ -27,18 +31,7 @@
 import dayjs from 'dayjs'
 import { formatReqQuery } from 'util'
 
-const fetchQueryList = async function () {
-  const data = Array.apply(null, { length: 15 }).map((x,i) => ({
-    createTime: Math.floor(+new Date() / 1000),
-    id: i,
-    word: '核心词',
-    preferredWords: ['测试优选词','测试优选词','测试优选词','测试优选词','测试优选词'],
-  }))
-  return await {
-    data,
-    total: data.length * 5
-  }
-}
+import { getPreferredWordsList, getPreferredWordsPV } from 'api/qianci'
 
 export default {
   name: "qc-word-list",
@@ -50,15 +43,26 @@ export default {
         size: 20
       },
       queryList: [],
+      wordCounts: null,
+      pvs: null,
     }
   },
   mounted() {
-    this.getQueryList()
+    this.initQueryList()
+    this.initPreferredWordPV()
   },
   methods: {
 
-    async getQueryListWithTip(...args) {
-      await this.getQueryList(...args)
+    async initPreferredWordPV() {
+      const response = await getPreferredWordsPV()
+      const { wordCounts, pvs } = response
+
+      this.wordCounts = wordCounts
+      this.pvs = pvs
+    },
+
+    async initQueryListWithTip(...args) {
+      await this.initQueryList(...args)
       if (this.queryList) {
         this.$message({
           message: '数据获取成功',
@@ -66,20 +70,24 @@ export default {
         })
       }
     },
-    async getQueryList(page = 0) {
+    async initQueryList(page = 0) {
       const query = {
         ...formatReqQuery(this.query, {
           // date: val => val && +new Date(this.query.date)
         }),
         page,
       }
-      const { data, total } = (await fetchQueryList(query)) || {}
+      const { data, total } = (await getPreferredWordsList(query)) || {}
       this.queryList = data.map(x => x)
       this.pagination = {
         ...this.pagination,
         current: page,
         total,
       }
+    },
+    handleSizeChange(size) {
+      this.pagination.size = size
+      this.initQueryListWithTip()
     },
 
     /*********************************************************** calculation */
@@ -93,6 +101,10 @@ export default {
 </script>
 
 <style lang="postcss" scoped>
+.description {
+  margin: 32px 0;
+  color: #666;
+}
 .pagniation {
   margin-top: 1em;
 }

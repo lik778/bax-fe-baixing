@@ -60,8 +60,9 @@ import { getBusinessLicense } from 'api/seo'
 import { allowUseKaPackage } from 'util/fengming-role'
 import { getCurrentUser } from 'api/account'
 import pick from 'lodash.pick'
-import { notAllowFengmingRecharge } from "util/role"
+import { notAllowFengmingRecharge } from 'util/role'
 
+import '../cssbase/index.css'
 
 // track common data
 window.__trackerData = {
@@ -185,15 +186,20 @@ const qcRoutes = [{
   component: () => import('com/qc-query-price'),
   path: '/main/qc/query-price',
   name: 'qc-query-price'
-},{
+}, {
   component: () => import('com/qc-plan-list'),
   path: '/main/qc/plan-list',
   name: 'qc-plan-list'
-},{
+}, {
   component: () => import('com/qc-word-list'),
   path: '/main/qc/word-list',
   name: 'qc-word-list'
-},{
+}, {
+  component: () => import('com/qc-keyword-list'),
+  path: '/main/qc/keyword-list',
+  name: 'qc-keyword-list',
+  hidden: true
+}, {
   component: () => import('com/qc-dashboard'),
   path: '/main/qc/dashboard',
   name: 'qc-dashboard'

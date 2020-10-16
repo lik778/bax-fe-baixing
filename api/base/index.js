@@ -11,20 +11,26 @@ import {
   biaowangApiHost,
   baxApiHost,
   kaApiHost,
-  seoApiHost
+  seoApiHost,
+  qcApiHost
 } from 'config'
 
 import es from 'base/es'
-import {redirect} from 'util'
+import { redirect } from 'util'
 
-export const fengming = new Fetch({
-  prefix: fengmingApiHost,
+// 基础 Fetch 选项
+const baseOptions = {
   beforeRequest() {
     es.emit('http fetch start')
   },
   afterResponse() {
     es.emit('http fetch end')
-  },
+  }
+}
+
+export const fengming = new Fetch({
+  ...baseOptions,
+  prefix: fengmingApiHost,
   afterJSON(body) {
     if (
       body.meta &&
@@ -35,19 +41,16 @@ export const fengming = new Fetch({
       chargeNotice()
       throw new Error('请先绑定身份认证')
     }
-
     if (body.errors) {
       Message.error('出错啦')
       throw new Error('出错啦')
     }
 
     const meta = body.meta || {}
-
     if (meta.status === 401) {
       Message.error('请重新登录 >_<')
       return redirect('signin', `return=${encodeURIComponent(location.pathname + location.search)}`)
     }
-
     if (meta.message !== 'Success') {
       Message.error(meta.message)
       sentry.captureMessage(JSON.stringify(body), 'info')
@@ -57,13 +60,8 @@ export const fengming = new Fetch({
 })
 
 export const ka = new Fetch({
+  ...baseOptions,
   prefix: kaApiHost,
-  beforeRequest() {
-    es.emit('http fetch start')
-  },
-  afterResponse() {
-    es.emit('http fetch end')
-  },
   afterJSON(body) {
     if (body.msg !== 'success') {
       Message.error(body.msg)
@@ -74,13 +72,8 @@ export const ka = new Fetch({
 })
 
 export const api = new Fetch({
+  ...baseOptions,
   prefix: baxApiHost,
-  beforeRequest() {
-    es.emit('http fetch start')
-  },
-  afterResponse() {
-    es.emit('http fetch end')
-  },
   afterJSON(body) {
     if (body.errors) {
       Message.error('出错啦')
@@ -88,17 +81,14 @@ export const api = new Fetch({
     }
 
     const meta = body.meta || {}
-
     if (meta.status === 401) {
       Message.error('请重新登录 >_<')
       return redirect('signin', `return=${encodeURIComponent(location.pathname + location.search)}`)
     }
-
     if (meta.status === 403) {
       Message.error('你没有权限访问该页面')
       return redirect('main')
     }
-
     if (meta.message !== 'Success') {
       Message.error(meta.message)
       sentry.captureMessage(JSON.stringify(body), 'info')
@@ -108,14 +98,12 @@ export const api = new Fetch({
 })
 
 export const biaowang = new Fetch({
+  ...baseOptions,
   prefix: biaowangApiHost,
-  beforeRequest() {
-    es.emit('http fetch start')
-  },
   afterResponse(res) {
     es.emit('http fetch end')
     if (res.status === 200) {
-
+      // pass
     } else if (res.status === 401) {
       Message.error('请重新登录 >_<')
       return redirect('signin', `return=${encodeURIComponent(location.pathname + location.search)}`)
@@ -140,15 +128,12 @@ export const biaowang = new Fetch({
 })
 
 export const seo = new Fetch({
+  ...baseOptions,
   prefix: seoApiHost,
-  beforeRequest() {
-    es.emit('http fetch start')
-  },
   afterResponse(res) {
     es.emit('http fetch end')
-
     if (res.status === 200) {
-
+      // pass
     } else if (res.status === 401) {
       Message.error('请重新登录 >_<')
       return redirect('signin', `return=${encodeURIComponent(location.pathname + location.search)}`)
@@ -176,6 +161,11 @@ export const seo = new Fetch({
       throw new Error(body.message)
     }
   }
+})
+
+export const qianci = new Fetch({
+  ...baseOptions,
+  prefix: qcApiHost
 })
 
 export function trim(obj) {

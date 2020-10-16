@@ -24,9 +24,8 @@
   - `util`: 通用的 `utils`
   - `component`: `各个 components`
 
-* 关于 component 的说明
-
-  - TODO
+* 说明
+  - CSS 文件（.css 或 css in Vue）语法请使用 PostCSS 解析，如果你使用 VSCode 开发的话可以搜索“PostCSS Language Support”并将它应用为项目 CSS 文件语法解析器。
 
 * 用到的 主要 库
   - `vue`, `vue-router`
