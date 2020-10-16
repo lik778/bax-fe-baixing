@@ -26,6 +26,8 @@
 
 /************************************** ElementUI 修改 */
 
+// TODO readme.md
+
 .el-table__body .is-leaf {
   height: 47px;
   line-height: 47px;
@@ -34,4 +36,17 @@
 // 翻页
 .el-pager .number {
   font-weight: normal;
+}
+
+.el-dialog {
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.el-dialog__header {
+  padding: 0 20px;
+  height: 52px;
+  line-height: 52px;
+  font-size: 16px;
+  font-weight: bold;
 }

@@ -3,7 +3,11 @@
     <header>优选词列表</header>
     <span class="description">提示：优选系统为您优选<span class="statics">{{wordCounts}}</span>个关键词（包含双端）。预估在 180 天内为您带来<span class="statics">{{pvs}}</span>展现。</span>
     <!-- 列表 -->
-    <el-table class="query-table" border :data="queryList">
+    <el-table
+      class="query-table"
+      v-loading="loading.query"
+      border
+      :data="queryList">
       <el-table-column label="创建时间" prop="createTime" width="120" :formatter="dateFormatter" />
       <el-table-column label="核心词" prop="word" width="120" />
       <el-table-column label="优选词" prop="preferredWords" />
@@ -29,7 +33,7 @@
 
 <script>
 import dayjs from 'dayjs'
-import { formatReqQuery } from 'util'
+import { getRouteParam, formatReqQuery } from 'util'
 
 import { getPreferredWordsList, getPreferredWordsPV } from 'api/qianci'
 
@@ -37,17 +41,23 @@ export default {
   name: "qc-word-list",
   data() {
     return {
+      id: null,
       pagination: {
         current: 0,
         total: 0,
         size: 20
       },
       queryList: [],
-      wordCounts: null,
+      loading: {
+        query: false
+      },
+      wordCounts: 600,
       pvs: null,
     }
   },
   mounted() {
+    this.id = getRouteParam.bind(this)('id')
+
     this.initQueryList()
     this.initPreferredWordPV()
   },
@@ -55,9 +65,7 @@ export default {
 
     async initPreferredWordPV() {
       const response = await getPreferredWordsPV()
-      const { wordCounts, pvs } = response
-
-      this.wordCounts = wordCounts
+      const { pvs } = response
       this.pvs = pvs
     },
 
@@ -72,13 +80,15 @@ export default {
     },
     async initQueryList(page = 0) {
       const query = {
-        ...formatReqQuery(this.query, {
-          // date: val => val && +new Date(this.query.date)
-        }),
+        ...formatReqQuery(this.query),
         page,
+        id: this.id,
       }
+      this.loading.query = true
       const { data, total } = (await getPreferredWordsList(query)) || {}
       this.queryList = data.map(x => x)
+      this.loading.query = false
+
       this.pagination = {
         ...this.pagination,
         current: page,

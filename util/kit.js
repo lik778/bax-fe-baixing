@@ -140,3 +140,13 @@ export function formatReqQuery(obj = {}, formators) {
     return ret
   }, {})
 }
+
+// 睡眠函数
+export function pause(time = 1000) {
+  return new Promise(resolve => setTimeout(resolve, time))
+}
+
+// 获取路由参数
+export function getRouteParam(key) {
+  return (this.$route && this.$route.params && this.$route.params[key]) || null
+}
