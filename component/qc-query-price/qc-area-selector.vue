@@ -28,16 +28,14 @@ import isequal from 'lodash.isequal'
 import { getAllCities } from "../../api/ka"
 import clone from 'clone'
 
-const formatAreaOpts = (data, isLeaf = false) => {
+const formatAreaOpts = (data) => {
   if (!Array.isArray(data)) return null
 
   return data.map(item => {
     return {
       ...item,
-      isLeaf,
       checked: false,
-      value: item.name,
-      children: formatAreaOpts(item.cities, false)
+      value: item.name
     }
   })
 }

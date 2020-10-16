@@ -20,7 +20,7 @@
             <el-button :loading="loading" type="primary" @click="checkWord">检查</el-button>
           </el-form-item>
         </el-form>
-        <select-keywords v-if="keywordsPanelVisible" ref="selectKeywords" />
+        <select-keywords v-if="keywordsPanelVisible" ref="selectKeywords" :form="form" />
       </main>
     </div>
     <qc-area-selector

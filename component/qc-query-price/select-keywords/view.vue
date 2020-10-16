@@ -3,6 +3,7 @@
     <div class="header">
       <span>{{title}}</span>
       <i class="el-icon-circle-plus-outline"
+         v-if="isEdit"
          @click="popKeywordInputDialog"></i>
     </div>
     <div class="content">
@@ -10,7 +11,7 @@
            v-for="(word,index) in keywords"
            :key="word">
         <span class="word">{{word}}</span>
-        <span>
+        <span v-if="isEdit">
           <i class="el-icon-edit"
              @click="editWord(index)"></i>
           <i class="el-icon-delete"
@@ -18,6 +19,9 @@
         </span>
       </div>
     </div>
+    <p class="warning-text" v-if="showWarningText">
+      <i class="el-icon-warning-outline"></i>
+      低于10词，请继续添加</p>
   </div>
 </template>
 
@@ -41,6 +45,16 @@ export default {
       default() {
         return []
       }
+    },
+    isEdit: {
+      type: Boolean,
+      required: true,
+      default: false
+    }
+  },
+  computed: {
+    showWarningText() {
+      return this.keywords.length > 0 && this.keywords.length < 10 && ['B', 'D'].includes(this.type)
     }
   },
   methods: {
@@ -115,6 +129,12 @@ export default {
  }
 }
 }
+}
+& .warning-text {
+  font-size: 14px;
+  color: #FF6350;
+  position: absolute;
+  padding-top: 10px;
 }
 }
 </style>

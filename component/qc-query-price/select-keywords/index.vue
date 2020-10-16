@@ -10,8 +10,8 @@
         </div>
         <div class="mt-16">添加说明
           <p>A/C类词不支持修改</p>
-          <p>B/D类词数限制不低于10词不超过100词</p>
-          <p>单个词长度不低于2个字，不超过8个字</p>
+          <p style="color: #FF6350">B/D类词数限制不低于10词不超过100词</p>
+          <p style="color: #FF6350">单个词长度不低于2个字，不超过8个字</p>
         </div>
       </div>
     </section>
@@ -22,6 +22,7 @@
                     class="keyword-view"
                     :title="value.title"
                     :keywords="value.keywords"
+                    :isEdit="value.isEdit"
                     @edit="editKeyword"
                     @delete="deleteKeyword"
                     @pop-keyword-input="popKeywordInputDialog"></keyword-view>
@@ -33,20 +34,33 @@
                    :info="getProp('info')"
                    :title="getProp('inputTitle')"
                    :placeholder="getProp('placeholder')"></keyword-input>
-    <div class="mt-16 size-13">
+    <div class="mt-45 size-13">
       <div>组合逻辑：A+C、B+C、C+D、A+B+C、A+C+D、B+C+D、A+B+C+D；</div>
       <div>如：上海（A）专业的（B）空调维修（C）多少钱（D）</div>
     </div>
     <div class="action-area">
-      <p>当前备选词数量：<strong>3018</strong>个</p>
-      <el-button type="primary" @click="sumbitWords" size="medium">提交优选</el-button>
+      <p>当前备选词数量：<strong>{{wordNum}}</strong>个</p>
+      <p style="color: #FF6350">您的内容涉及“xxxx（风控三级标签）”“xxx（关键词）”，请修改后重新提交。</p>
+      <el-button type="primary" @click="sumbitWords" :disabled="handleDisabled" size="medium">提交优选</el-button>
     </div>
+    <el-dialog :close-on-click-modal="false"
+               :show-close="false"
+               title="提示" :visible.sync="successDialogVisible">
+      <div class="success-dialog-box">
+        <img src="//file.baixing.net/202010/d4ade9d26b0af9fee07c21665a2de323.png">
+        <p>提交成功，后台正在为您优选关键词，稍后请在 【查词记录】 ，页面查看进展。</p>
+        <router-link :to="{name: 'qc-word-list'}">
+          <el-button type="primary" size="medium">确定</el-button>
+        </router-link>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import KeywordView from './view'
 import KeywordInput from './input'
+import { getAreasByCityId } from '../../../api/ka'
 import clone from 'clone'
 
 const keywordOptions = {
@@ -62,7 +76,8 @@ const keywordOptions = {
     keywords: [],
     keywordsAlias: 'customAreas',
     wordsLimit: [15, 500],
-    wordLenLimit: [2, 8]
+    wordLenLimit: [2, 8],
+    isEdit: false
   },
   B: {
     type: 'B',
@@ -76,7 +91,8 @@ const keywordOptions = {
     keywords: [],
     keywordsAlias: 'prefixWordList',
     wordsLimit: [10, 100],
-    wordLenLimit: [2, 8]
+    wordLenLimit: [2, 8],
+    isEdit: true
   },
   C: {
     type: 'C',
@@ -90,7 +106,8 @@ const keywordOptions = {
     keywords: [],
     keywordsAlias: 'keywords',
     wordsLimit: [15, 100],
-    wordLenLimit: [2, 8]
+    wordLenLimit: [2, 8],
+    isEdit: false
   },
   D: {
     type: 'D',
@@ -103,7 +120,8 @@ const keywordOptions = {
     keywords: [],
     keywordsAlias: 'suffixWordList',
     wordsLimit: [10, 100],
-    wordLenLimit: [2, 8]
+    wordLenLimit: [2, 8],
+    isEdit: true
   }
 }
 
@@ -117,6 +135,13 @@ const validateKeywordsLen = (typeObj) => {
 export default {
   name: 'Keyword',
   props: {
+    form: {
+      type: Object,
+      required: false,
+      default() {
+        return []
+      }
+    },
     originKeywords: {
       type: Object,
       required: false,
@@ -132,14 +157,36 @@ export default {
     return {
       visible: false,
       keywordOptions: clone(keywordOptions),
-      activeType: 'A'
+      activeType: 'A',
+      successDialogVisible: false
+    }
+  },
+  computed: {
+    handleDisabled() {
+      return !(this.keywordOptions.B.keywords.length >= 10 && this.keywordOptions.D.keywords.length >= 10)
+    },
+    wordNum() {
+      const ALength = this.keywordOptions.A.keywords.length
+      const BLength = this.keywordOptions.B.keywords.length
+      const CLength = this.keywordOptions.C.keywords.length
+      const DLength = this.keywordOptions.D.keywords.length
+      return ALength * BLength + BLength * CLength + CLength * DLength + ALength * BLength * CLength
+      + ALength * CLength * DLength + BLength * CLength * DLength + ALength * BLength * CLength * DLength
     }
   },
   components: {
     KeywordInput,
     KeywordView
   },
-  created() {
+  async created() {
+    const areas = await this.getAreas()
+    Object.keys(this.keywordOptions).forEach(x => {
+      if (x === 'A') {
+        this.keywordOptions['A'].keywords = areas
+      } else if (x === 'C') {
+        this.keywordOptions['C'].keywords = [this.form.keyword]
+      }
+    })
     Object.values(this.keywordOptions).map((item) => {
       this.keywordOptions[item.type].placeholder = item.placeholder.replace(
         /[,，]]*/g,
@@ -148,6 +195,14 @@ export default {
     })
   },
   methods: {
+    async getAreas() {
+      const areas = []
+      for(let i = 0; i < this.form.areas.length; i++) {
+        let area = await getAreasByCityId(this.form.areas[i].id)
+        areas.push(...area.map(x => x.name))
+      }
+      return areas
+    },
     getProp(prop) {
       const existKeywordObj = this.keywordOptions[this.activeType]
       return existKeywordObj && existKeywordObj[prop]
@@ -212,7 +267,8 @@ export default {
       }, {})
     },
     sumbitWords() {
-      console.log('提交词')
+      // todo: 这里需要优选接口
+      this.successDialogVisible = true
     }
   },
   watch: {
@@ -270,6 +326,9 @@ export default {
   & .mt-16 {
     margin-top: 16px;
   }
+  & .mt-45 {
+    margin-top: 45px;
+  }
   & .size-13 {
     font-size: 13px;
   }
@@ -283,6 +342,17 @@ export default {
         color: #FF6350;
       }
     }
+  }
+}
+.success-dialog-box {
+  text-align: center;
+  & > img {
+    width: 42px;
+    height: 42px;
+  }
+  & > p {
+    margin-top: 20px;
+    margin-bottom: 47px;
   }
 }
 

@@ -7,12 +7,6 @@
                @close="handleClose"
                custom-class="keyword-input-dialog"
                class="keyword-input">
-      <el-button slot="title"
-                 type="primary"
-                 size="small"
-                 class="area-choose-btn"
-                 v-if="displayCityArea"
-                 @click="areaSelectorVisible = true">城市选择</el-button>
       <div class="info"
            v-html="info" />
       <div class="textarea-container">
@@ -36,14 +30,10 @@
                    @click="handleConfirm">确定</el-button>
       </div>
     </el-dialog>
-    <area-selector :visible.sync="areaSelectorVisible"
-                   :value="[]"
-                   @input="updateAreas" />
   </div>
 </template>
 
 <script>
-import areaSelector from 'com/common/seo-area-selector'
 
 export default {
   name: 'KeywordInput',
@@ -71,15 +61,9 @@ export default {
       required: true
     }
   },
-  computed: {
-    displayCityArea() {
-      return this.type === 'A'
-    }
-  },
   data() {
     return {
       words: '',
-      areaSelectorVisible: false,
       displayPlaceholder: true
     }
   },
@@ -98,16 +82,7 @@ export default {
       })
       this.handleClose()
       this.handleClear()
-    },
-    updateAreas(areas) {
-      const words = areas.map((area) => {
-        return Array.isArray(area) ? area[area.length - 1] : area
-      })
-      this.words = words.join('\n')
     }
-  },
-  components: {
-    areaSelector
   }
 }
 </script>
