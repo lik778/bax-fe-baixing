@@ -58,14 +58,16 @@ export default {
   data() {
     return {
       selectedAreas: [...this.areas],
-      originSelectedArea: [],
+      originSelectedAreas: [],
+      originProvinceList: [],
       provinceList: [],
     }
   },
   watch: {
     visible(v) {
       if (v) {
-        this.originSelectedArea = clone(this.selectedAreas)
+        this.originProvinceList = clone(this.provinceList)
+        this.originSelectedAreas = clone(this.originSelectedAreas)
       }
     },
     areas(v) {
@@ -100,7 +102,8 @@ export default {
       }
     },
     cancel() {
-      this.selectedAreas = this.originSelectedArea
+      this.provinceList = this.originProvinceList
+      this.selectedAreas = this.originSelectedAreas
       this.$emit('cancel')
     },
     ok() {

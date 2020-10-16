@@ -5,7 +5,7 @@
         <product-intro></product-intro>
         <el-form :model="form" :rules="rules" label-width="120px" ref="form" label-position="left" class="form" @submit.native.prevent>
           <el-form-item label="推广关键词" prop="keyword">
-            <el-input v-model="form.keyword" style="width: 200px"/>
+            <el-input v-model="form.keyword" style="width: 200px" maxlength="8"/>
           </el-form-item>
           <el-form-item label="推广区域" prop="areas">
             <el-tag type="success" closable class="kw-tag"
@@ -16,10 +16,11 @@
             <i class="el-icon-plus" @click="areaDialogVisible = true"></i>
           </el-form-item>
           <el-form-item>
-            <el-button :loading="loading" type="primary">检查</el-button>
+            <p class="warning-text" >{{checkWordText}}</p>
+            <el-button :loading="loading" type="primary" @click="checkWord">检查</el-button>
           </el-form-item>
         </el-form>
-        <select-keywords ref="selectKeywords" />
+        <select-keywords v-if="keywordsPanelVisible" ref="selectKeywords" />
       </main>
     </div>
     <qc-area-selector
@@ -52,16 +53,34 @@ export default {
         areas: []
       },
       rules: {
-        keyword: [{required: true, message: '请填写推广关键词'}],
-        areas: [{type: 'array', required: true, trigger: 'change', message: '请选择推广区域'}]
+        keyword: [{required: true, message: '请填写推广关键词'},
+          { validator: (rule, value, callback) => {
+              if (!/^[\u4e00-\u9fa5]{2,8}$/.test(value)) { return callback(new Error('单个词长度不少于2个字，不超过8个字且为汉字'))}
+              callback() }, trigger: 'blur' }],
+        areas: [{type: 'array', required: true, trigger: 'change', message: '请选择推广区域'},
+          { validator: (rule, value, callback) => {
+              if (value.length !== 2) { return callback(new Error('需要选择2个区域'))}
+              callback() }, trigger: 'blur' } ]
       },
       loading: false,
-      areaDialogVisible: false
+      areaDialogVisible: false,
+      keywordsPanelVisible: false,
+      checkWordText: ''
     }
   },
   methods: {
-    queryPrice() {
-      console.log('检查')
+    checkWord() {
+      this.$refs.form.validate(async isValid => {
+        if (isValid) {
+          if (true) {
+            this.keywordsPanelVisible = true
+          } else {
+            this.checkWordText = '检测核心词在所选的地区是否已被售出，如已被售出文案提示用户'
+          }
+        } else {
+          return false
+        }
+      })
     },
     removeArea(area) {
       this.form.areas = [
@@ -81,6 +100,9 @@ export default {
 div.bg {
     & > .white-bg {
         background-color: #fff;
+        & .warning-text {
+            color: #FF6350;
+        }
         & .kw-tag {
           margin-right: 10px;
         }
