@@ -126,19 +126,16 @@ export function isObj(obj) {
   return Object.prototype.toString.call(obj) === '[object Object]'
 }
 
-/**
- * 请求参数清洗
- * 格式化，去除空参数
- * TODO 深拷贝
- */
+// 去除对象的空字段
 export function formatReqQuery(obj = {}, formators = {}) {
-  return Object.keys(obj).reduce((ret, key) => {
+  const ret = Object.keys(obj).reduce((ret, key) => {
     let value = obj[key]
     const formator = formators[key]
     if (formator) value = formator(value)
     if (value) ret[key] = value
     return ret
   }, {})
+  return deepClone(ret)
 }
 
 // 睡眠函数
