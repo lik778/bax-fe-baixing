@@ -18,7 +18,24 @@
           <span>{{keyword}}</span>
         </el-form-item>
         <el-form-item label="投放页面">
-          <span>{{form.url}}</span>
+          <el-cascader
+            v-model="input.site"
+            clearable
+            :options="options.sites"
+            @change="onSelectSite"
+          />
+          <el-input
+            v-if="active.site"
+            class="payment-url-input"
+            v-model="form.url"
+            readonly
+            clearable
+          />
+          <p class="warning" v-if="visible.siteExpireWarning">
+            站点{{'xxx'}}天内将过期，
+            请选择其他站点，或<router-link :to="{name: 'seo-charge'}">购买</router-link>新官网
+          </p>
+          <p class="warning" v-if="visible.siteExistWebsite">该站点已创建首页宝加速词包计划，请更换</p>
         </el-form-item>
 
         <el-form-item><span class="header">推广物料设置</span></el-form-item>
@@ -50,8 +67,11 @@
 </template>
 
 <script>
+import dayjs from 'dayjs'
+
 import { getRouteParam } from 'util'
 
+import { getUserSites } from 'api/ka'
 import { getCreative, saveCreative } from 'api/qianci'
 
 export default {
@@ -65,25 +85,42 @@ export default {
         url: '',
         content: '',
       },
-      rules: {
-
+      input: {
+        site: null,
+      },
+      rules: {},
+      options: {
+        sites: []
+      },
+      active: {
+        site: null,
+      },
+      visible: {
+        siteExpireWarning: false,
+        siteExistWebsite: false
       }
     }
   },
   created() {
     this.id = getRouteParam.bind(this)('id')
-    this.init()
+    this.initKeyword()
+    this.initSites()
   },
   methods: {
-    // 初始化页面数据
-    async init () {
+    async initKeyword () {
       const response = await getCreative({ id: this.id })
       const { keyword } = response || {}
-
       this.keyword = keyword
       this.reGenURL()
     },
-    // 创建供应商
+    async initSites () {
+      const sites = await getUserSites()
+      this.options.sites = (sites || []).map(x => ({
+        label: x.name,
+        value: x.id,
+        raw: x
+      }))
+    },
     async create () {
       if (!this.form.title) this.$message({ type: 'error', message: '请填写投放标题' })
       if (!this.form.content) this.$message({ type: 'error', message: '请填写推广内容' })
@@ -94,9 +131,17 @@ export default {
         message: this.id ? '保存成功' : '创建成功',
       })
     },
-
+    onSelectSite(ids) {
+      const id = ids.length && ids[0]
+      const handle = this.options.sites.find(x => x.value == id)
+      // this.visible.showExpireWarning = dayjs(handle.expireAt).subtract(this.promotion.duration, 'day').isBefore(dayjs(), 'day')
+      // this.visible.showExistWebsite = this.existPromotionWebsite.some(o => (o.trim() === landingPage))
+      this.active.site = handle
+      this.input.site = ids
+      this.reGenURL()
+    },
     reGenURL() {
-      this.form.url = 'http://www.baidu.com'
+      this.form.url = 'http://' + this.active.site.raw.domain + '.mvp.baixing.com'
     }
   }
 }
@@ -111,5 +156,8 @@ export default {
 .header {
   margin-left: -120px;
   font-weight: bold;
+}
+.payment-url-input {
+  margin-top: 16px;
 }
 </style>
