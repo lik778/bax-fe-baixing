@@ -76,8 +76,7 @@ export async function saveCreative(opts = {}) {
   return await {}
 }
 
+// 创建预订单
 export async function createPreOrder(opts = {}) {
-  return await {
-    id: 'test'
-  }
+  return await 'test'
 }

@@ -7,25 +7,28 @@
     <!-- content -->
     <p class="content">核心词 <span class="keyword">“{{keyword}}”</span>，推广区域 <span class="area">“{{(provinces || []).join('、')}}”</span>的支付链接已生成。</p>
     <div class="links" style="margin-top: 2.5em">
-      <div class="copy-area" @click="copyURL">
+      <div class="copy-area">
         <el-input
           class="payment-url-input"
           v-model="url"
-          suffix-icon="el-icon-copy-document"
-          readonly
-        />
+          readonly>
+          <Clipboard
+            class="payment-url-input-icon"
+            slot="suffix"
+            :content="url"
+          />
+        </el-input>
       </div>
     </div>
     <!-- footer -->
     <div slot="footer">
-      <el-button type="primary" @click="jumpURL">前往付款</el-button>
-      <el-button @click="closeDialog">复制并关闭</el-button>
+      <el-button @click="closeDialog">关 闭</el-button>
     </div>
   </el-dialog>
 </template>
 
 <script>
-import copy from 'copy-to-clipboard'
+import Clipboard from 'com/widget/clipboard'
 
 export default {
   props: {
@@ -34,19 +37,11 @@ export default {
     provinces: Array,
     url: String
   },
+  components: {
+    Clipboard
+  },
   methods: {
-    copyURL() {
-      copy(this.link)
-      this.$message({
-        type: 'success',
-        message: '已复制到剪贴板~'
-      })
-    },
-    jumpURL() {
-      window.open(this.link)
-    },
     closeDialog() {
-      this.copyURL()
       this.$emit('onClose')
     }
   }
@@ -56,6 +51,10 @@ export default {
 <style lang="postcss" scoped>
 .copy-area {
   cursor: pointer;
+}
+.payment-url-input-icon {
+  height: 40px;
+  line-height: 40px;
 }
 >>> .el-dialog__body {
   padding: 40px 45px;
