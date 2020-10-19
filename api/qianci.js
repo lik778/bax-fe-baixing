@@ -75,3 +75,9 @@ export async function getCreative(opts = {}) {
 export async function saveCreative(opts = {}) {
   return await {}
 }
+
+export async function createPreOrder(opts = {}) {
+  return await {
+    id: 'test'
+  }
+}

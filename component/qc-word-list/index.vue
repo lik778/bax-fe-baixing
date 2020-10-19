@@ -99,7 +99,8 @@ import dayjs from 'dayjs'
 
 import PaymentDialog from './payment-dialog'
 
-import { promoteStatusMap, getStatusWith, getDisplayStatusWith, isStatusDisplayError, promoteDisplayStatusOptions } from 'constant/qianci'
+import { orderServiceHost, preKeywordPath } from 'config'
+import { createPreOrder, promoteStatusMap, getStatusWith, getDisplayStatusWith, isStatusDisplayError, promoteDisplayStatusOptions } from 'constant/qianci'
 import { getKeywordsList } from 'api/qianci'
 import { parseQuery, normalize, formatReqQuery, getCnName } from 'util'
 
@@ -109,7 +110,7 @@ export default {
     PaymentDialog
   },
   props: {
-    allAreas: Array
+    salesInfo: Object,
   },
   data() {
     return {
@@ -197,8 +198,15 @@ export default {
       }
     },
     // 生成付款 URL
-    initPaymentURL(item) {
-      return 'www.baidu.com'
+    async genPaymentURL(item) {
+      const { salesId, userId } = this.salesInfo || {}
+      const preTradeId = await createPreOrder(userId, salesId, [])
+      if (this.isUser('BAIXING_SALES')) {
+        return `${orderServiceHost}/${preKeywordPath}/?appId=105&seq=${preTradeId}`
+      }
+      if (this.isUser('AGENT_ACCOUNTING')) {
+        location.href = `${orderServiceHost}/${preKeywordPath}/?appId=105&seq=${preTradeId}&agentId=${this.userInfo.id}`
+      }
     },
 
     /*********************************************************** ux */
@@ -206,11 +214,11 @@ export default {
     selectItem(item) {
       this.active.selectedItem = item
     },
-    showPaymentDialog(item) {
+    async showPaymentDialog(item) {
       this.selectItem(item)
       this.visible.paymentDialog = true
 
-      const url = this.initPaymentURL(item)
+      const url = await this.genPaymentURL(item)
       this.active.selectedItemURL = url
     },
     goPreferredWordsListPage(item) {
