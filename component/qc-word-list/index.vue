@@ -100,8 +100,8 @@ import dayjs from 'dayjs'
 import PaymentDialog from './payment-dialog'
 
 import { orderServiceHost, preKeywordPath } from 'config'
-import { createPreOrder, promoteStatusMap, getStatusWith, getDisplayStatusWith, isStatusDisplayError, promoteDisplayStatusOptions } from 'constant/qianci'
-import { getKeywordsList } from 'api/qianci'
+import { promoteStatusMap, getStatusWith, getDisplayStatusWith, isStatusDisplayError, promoteDisplayStatusOptions } from 'constant/qianci'
+import { createPreOrder, getKeywordsList } from 'api/qianci'
 import { parseQuery, normalize, formatReqQuery, getCnName } from 'util'
 
 export default {
@@ -200,13 +200,14 @@ export default {
     // 生成付款 URL
     async genPaymentURL(item) {
       const { salesId, userId } = this.salesInfo || {}
-      const preTradeId = await createPreOrder(userId, salesId, [])
-      if (this.isUser('BAIXING_SALES')) {
-        return `${orderServiceHost}/${preKeywordPath}/?appId=105&seq=${preTradeId}`
-      }
-      if (this.isUser('AGENT_ACCOUNTING')) {
-        location.href = `${orderServiceHost}/${preKeywordPath}/?appId=105&seq=${preTradeId}&agentId=${this.userInfo.id}`
-      }
+      const preTradeId = await createPreOrder()
+      // if (this.isUser('BAIXING_SALES')) {
+      //   return `${orderServiceHost}/${preKeywordPath}/?appId=105&seq=${preTradeId}`
+      // }
+      // if (this.isUser('AGENT_ACCOUNTING')) {
+      //   location.href = `${orderServiceHost}/${preKeywordPath}/?appId=105&seq=${preTradeId}&agentId=${this.userInfo.id}`
+      // }
+      return `${orderServiceHost}/${preKeywordPath}/?appId=105&seq=${preTradeId}`
     },
 
     /*********************************************************** ux */
