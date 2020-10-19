@@ -63,15 +63,22 @@
   font-weight: normal;
 }
 
+/* el-dialog */
+
 .el-dialog {
   border-radius: 14px;
   overflow: hidden;
 }
 
-.el-dialog__header {
+.el-dialog /deep/ .el-dialog__header {
   padding: 0 20px;
   height: 52px;
   line-height: 52px;
+  background: #f9f9f9;
   font-size: 16px;
   font-weight: bold;
+}
+
+.el-dialog /deep/ .el-dialog__headerbtn {
+  top: 16px;
 }
