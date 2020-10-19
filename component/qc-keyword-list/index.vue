@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     <header>优选词列表</header>
-    <span class="description">提示：优选系统为您优选<span class="statics">{{wordCounts}}</span>个关键词（包含双端）。预估在 180 天内为您带来<span class="statics">{{pvs}}</span>展现。</span>
+    <span class="description">提示：系统为您优选<span class="statics">{{wordCounts}}</span>个关键词（包含双端）。在 180 天内预计有 <span class="statics">{{pvs}}</span> 人看到您的广告，数据来源于历史。</span>
     <!-- 列表 -->
     <el-table
       class="query-table"
@@ -25,7 +25,7 @@
       :page-size="pagination.size"
       :page-sizes="pagination.sizes"
       :current-page="pagination.current"
-      @current-change="initQueryListWithTip"
+      @current-change="getQueryListWithTip"
       @size-change="handleSizeChange"
     />
   </div>
@@ -45,7 +45,8 @@ export default {
       pagination: {
         current: 0,
         total: 0,
-        size: 20
+        size: 15,
+        sizes: [10, 15, 30, 50],
       },
       queryList: [],
       loading: {
@@ -58,19 +59,19 @@ export default {
   mounted() {
     this.id = getRouteParam.bind(this)('id')
 
-    this.initQueryList()
-    this.initPreferredWordPV()
+    this.getQueryList()
+    this.getPreferredWordPV()
   },
   methods: {
 
-    async initPreferredWordPV() {
+    async getPreferredWordPV() {
       const response = await getPreferredWordsPV()
       const { pvs } = response
       this.pvs = pvs
     },
 
-    async initQueryListWithTip(...args) {
-      await this.initQueryList(...args)
+    async getQueryListWithTip(...args) {
+      await this.getQueryList(...args)
       if (this.queryList) {
         this.$message({
           message: '数据获取成功',
@@ -78,7 +79,7 @@ export default {
         })
       }
     },
-    async initQueryList(page = 0) {
+    async getQueryList(page = 0) {
       const query = {
         ...formatReqQuery(this.query),
         page,
@@ -97,7 +98,7 @@ export default {
     },
     handleSizeChange(size) {
       this.pagination.size = size
-      this.initQueryListWithTip()
+      this.getQueryListWithTip()
     },
 
   },

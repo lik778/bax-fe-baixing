@@ -42,14 +42,14 @@ export async function getPreferredWordsPV(opts = {}) {
     .data
 }
 
-// 根据核心词获取优选词
+// 获取优选词列表
 export async function getPreferredWordsList(opts = {}) {
   if (useTestData) {
     const data = Array.apply(null, { length: 15 }).map((x, i) => ({
       createTime: Math.floor(+new Date() / 1000),
       id: String(i),
-      word: '核心词',
-      preferredWords: ['测试优选词', '测试优选词', '测试优选词', '测试优选词', '测试优选词'],
+      coreWord: '核心词',
+      expandedWord: Array.apply(null, { length: Math.floor(Math.random() * 7) + 2 }).join('测试优选词'),
     }))
     await pause()
     return await {
