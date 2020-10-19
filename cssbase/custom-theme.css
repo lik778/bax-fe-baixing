@@ -49,7 +49,7 @@
   color: #ff6350;
 }
 
-/************************************** ElementUI 修改 */
+/**************************************************************** ElementUI 修改 */
 
 // TODO readme.md
 
@@ -63,7 +63,7 @@
   font-weight: normal;
 }
 
-/* el-dialog */
+/******************************************** el-dialog */
 
 .el-dialog {
   border-radius: 14px;
@@ -81,4 +81,18 @@
 
 .el-dialog /deep/ .el-dialog__headerbtn {
   top: 16px;
+}
+
+/******************************************** el-pagination */
+
+.el-pagination {
+  & /deep/ span:not([class*=suffix]) {
+    font-size: 14px;
+  }
+  & /deep/ button {
+    font-size: 14px;
+  }
+  & /deep/ .number {
+    font-weight: normal;
+  }
 }
