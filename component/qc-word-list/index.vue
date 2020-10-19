@@ -16,7 +16,7 @@
             v-for="item in options.wordStatus"
             :label="item.label"
             :value="item.value"
-            :key="item.value"
+            :key="item.label"
           />
         </el-select>
       </el-form-item>
@@ -42,7 +42,7 @@
       <el-table-column label="状态" prop="status">
         <template slot-scope="{row}">
           <catch-error>
-            <span :class="getStatusWith('value', row.status).uiClass">{{getStatusWith('value', row.status).label}}</span>
+            <span :class="getStatusWith('value', row.status).uiClass">{{getDisplayStatusWith('value', row.status).label}}</span>
             <template v-if="isStatusDisplayError(row.status)">
               <el-tooltip placement="top" :content="row.reason">
                 <i class="error el-icon-question pointer" />
@@ -99,7 +99,7 @@ import dayjs from 'dayjs'
 
 import PaymentDialog from './payment-dialog'
 
-import { promoteStatusMap, getStatusWith, isStatusDisplayError } from 'constant/qianci'
+import { promoteStatusMap, getStatusWith, getDisplayStatusWith, isStatusDisplayError, promoteDisplayStatusOptions } from 'constant/qianci'
 import { getKeywordsList } from 'api/qianci'
 import { parseQuery, normalize, formatReqQuery, getCnName } from 'util'
 
@@ -114,6 +114,7 @@ export default {
   data() {
     return {
       getStatusWith,
+      getDisplayStatusWith,
       isStatusDisplayError,
       query: {
         keyword: '',
@@ -137,7 +138,8 @@ export default {
       },
       options: {
         wordStatus: [
-          { label: '所有状态', value: '' }
+          ...promoteDisplayStatusOptions,
+          { label: '所有状态', value: '' },
         ]
       },
       visible: {
@@ -157,6 +159,9 @@ export default {
     const query = parseQuery(window.location.search)
     const { saleId, userId } = query
     this.store = { saleId, userId }
+
+    //
+    // console.log('asdfasdf', this.getFinalUserId())
   },
   mounted() {
     this.getQueryList()

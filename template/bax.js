@@ -61,7 +61,8 @@ import { getBusinessLicense } from 'api/seo'
 import { allowUseKaPackage } from 'util/fengming-role'
 import { getCurrentUser } from 'api/account'
 import pick from 'lodash.pick'
-import { notAllowFengmingRecharge } from 'util/role'
+import { allowEnterWordListPage, notAllowFengmingRecharge } from 'util/role'
+// import { getRouteParam } from 'util'
 
 import '../cssbase/index.css'
 
@@ -221,7 +222,15 @@ const qcRoutes = [{
 }, {
   component: () => import('com/qc-word-list'),
   path: '/main/qc/word-list',
-  name: 'qc-word-list'
+  name: 'qc-word-list',
+  beforeEnter: async (to, from, next) => {
+    const { roles } = await getCurrentUser()
+    if (allowEnterWordListPage(roles)) {
+      next()
+    } else {
+      Message.error('无权限访问')
+    }
+  }
 }, {
   component: () => import('com/qc-keyword-list'),
   path: '/main/qc/keyword-list',
@@ -260,7 +269,7 @@ const qwtRoutes = [{
   beforeEnter: async (to, from, next) => {
     const { roles, realAgentId } = await getCurrentUser()
     if (notAllowFengmingRecharge(roles, realAgentId)) {
-      next({ name: 'qwt-promotion-list', redirect: true })
+      // next({ name: 'qwt-promotion-list', redirect: true })
     } else {
       next()
     }
@@ -403,5 +412,9 @@ const app = new Vue({
   render: h => h(Bax),
   router
 })
+
+// Vue.prototype.getFinalUserId = function getFinalUserId() {
+//   return getRouteParam.bind(this)('user_id') || (this.userInfo || {}).id
+// }
 
 app.$mount('#bax')
