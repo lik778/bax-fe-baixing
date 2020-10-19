@@ -76,6 +76,7 @@
     "svg-sprite-loader": "^3.6.2",
     "terser-webpack-plugin": "^1.2.2",
     "upyun-upload": "^1.0.1",
+    "vue-error-boundary": "^1.0.3",
     "vue-loader": "^15.2.6",
     "vue-template-compiler": "^2.6.11",
     "webpack": "^4.28.4",

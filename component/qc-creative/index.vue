@@ -31,11 +31,11 @@
             readonly
             clearable
           />
-          <p class="warning" v-if="visible.siteExpireWarning">
+          <p class="form-warning" v-if="visible.siteExpireWarning">
             站点{{'xxx'}}天内将过期，
             请选择其他站点，或<router-link :to="{name: 'seo-charge'}">购买</router-link>新官网
           </p>
-          <p class="warning" v-if="visible.siteExistWebsite">该站点已创建首页宝加速词包计划，请更换</p>
+          <p class="form-warning" v-if="visible.siteExistWebsite">该站点已创建首页宝加速词包计划，请更换</p>
         </el-form-item>
 
         <el-form-item><span class="header">推广物料设置</span></el-form-item>

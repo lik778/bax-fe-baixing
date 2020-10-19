@@ -8,9 +8,9 @@
       v-loading="loading.query"
       border
       :data="queryList">
-      <el-table-column label="创建时间" prop="createTime" width="120" :formatter="dateFormatter" />
-      <el-table-column label="核心词" prop="word" width="120" />
-      <el-table-column label="优选词" prop="preferredWords" />
+      <el-table-column label="创建时间" prop="createdTime" width="120" :formatter="({createTime}) => $formatter.date(createTime)" />
+      <el-table-column label="核心词" prop="coreWord" width="120" />
+      <el-table-column label="优选词" prop="expandedWord" />
       <!-- <el-table-column label="操作" align="center" width="180">
         <template>
           <el-button type="text" size="small" :disabled="true">假装有个按钮</el-button>
@@ -98,12 +98,6 @@ export default {
     handleSizeChange(size) {
       this.pagination.size = size
       this.initQueryListWithTip()
-    },
-
-    /*********************************************************** calculation */
-
-    dateFormatter({createTime}) {
-      return dayjs(createTime * 1000).format('YYYY-MM-DD')
     },
 
   },

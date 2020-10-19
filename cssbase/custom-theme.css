@@ -27,6 +27,28 @@
   text-align: center;
 }
 
+.form-warning {
+  color: #ff6350;
+  font-size: 14px;
+  margin-top: 6px;
+}
+
+.success {
+  color: #67C23A;
+}
+.info {
+  color: #35A5E4;
+}
+.tip {
+  color: #ED7D00;
+}
+.ignore {
+  color: #999999;
+}
+.error {
+  color: #ff6350;
+}
+
 /************************************** ElementUI 修改 */
 
 // TODO readme.md

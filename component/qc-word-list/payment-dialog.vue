@@ -5,7 +5,7 @@
     :visible="value"
     @close="closeDialog">
     <!-- content -->
-    <p class="content">核心词 <span class="keyword">“{{keyword}}”</span>，推广区域 <span class="area">“{{areas.join('、')}}”</span>的支付链接已生成。</p>
+    <p class="content">核心词 <span class="keyword">“{{keyword}}”</span>，推广区域 <span class="area">“{{(provinces || []).join('、')}}”</span>的支付链接已生成。</p>
     <div class="links" style="margin-top: 2.5em">
       <div class="copy-area" @click="copyURL">
         <el-input
@@ -31,7 +31,7 @@ export default {
   props: {
     value: Boolean,
     keyword: String,
-    areas: Array,
+    provinces: Array,
     url: String
   },
   methods: {

@@ -2,17 +2,21 @@
   <div class="page">
     <header>查词记录</header>
     <!-- 搜索表单 -->
-    <el-form class="query-form" :inline="true" :model="query" label-width="60px" @submit.native.prevent="() => getQueryListWithTip()">
+    <el-form class="query-form" :inline="true" :model="query" label-width="60px">
       <el-form-item label="核心词">
-        <el-input v-model="query.keyword" placeholder="请输入核心词" />
+        <el-input
+          v-model="query.keyword"
+          placeholder="请输入核心词"
+          clearable
+        />
       </el-form-item>
       <el-form-item label="状态">
         <el-select v-model="query.status" placeholder="所有状态" clearable>
           <el-option
-            v-for="(v, k) in options.wordStatus"
-            :label="v"
-            :value="k"
-            :key="k"
+            v-for="item in options.wordStatus"
+            :label="item.label"
+            :value="item.value"
+            :key="item.value"
           />
         </el-select>
       </el-form-item>
@@ -32,36 +36,38 @@
     </el-form>
     <!-- 列表 -->
     <el-table class="query-table" border :data="queryList">
-      <el-table-column label="查询日期" prop="createdAt"  width="160" :formatter="dateFormatter" />
+      <el-table-column label="查询日期" prop="createdAt"  width="160" :formatter="({ createdAt }) => $formatter.date(createdAt)" />
       <el-table-column label="核心词" prop="word" width="160" />
-      <el-table-column label="推广地区" prop="areas">
-        <template slot-scope="{row}">
-          <span>{{row.areas.join('、')}}</span>
-        </template>
-      </el-table-column>
+      <el-table-column label="推广地区" prop="provinces" :formatter="({ provinces }) => $formatter.join(provinces)" />
       <el-table-column label="状态" prop="status">
         <template slot-scope="{row}">
-          <el-tooltip
-            v-if="row.note"
-            popper-class="city-tooltip"
-            class="item"
-            effect="light"
-            placement="top"
-            :content="row.note" >
-              <el-tag v-if="!row.isExpired" :type="mapStatusToUIType(row)">
-                {{row.status}}
-              </el-tag>
-          </el-tooltip>
-          <el-tag v-else :type="mapStatusToUIType(row)">
-            {{row.status}}
-          </el-tag>
+          <catch-error>
+            <span :class="getStatusWith('value', row.status).uiClass">{{getStatusWith('value', row.status).label}}</span>
+            <template v-if="isStatusDisplayError(row.status)">
+              <el-tooltip placement="top" :content="row.reason">
+                <i class="error el-icon-question pointer" />
+              </el-tooltip>
+            </template>
+          </catch-error>
         </template>
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="{row}">
-          <el-button type="text" size="small" @click="() => goPreferredWordsListPage(row)">查看</el-button>
-          <el-button type="text" size="small" @click="() => goEditWordsPage(row)">修改</el-button>
-          <el-button type="text" size="small" @click="() => showPaymentDialog(row)">去抢购</el-button>
+          <el-button
+            class="info no-padding"
+            type="text"
+            :disabled="!enableCheckButton(row.status)"
+            @click="() => goPreferredWordsListPage(row)">查看</el-button>
+          <el-button
+            class="info no-padding"
+            type="text"
+            :disabled="!enableEditButton(row.status)"
+            @click="() => goEditWordsPage(row)">修改</el-button>
+          <el-button
+            class="tip no-padding"
+            type="text"
+            :disabled="!enablePayButton(row.status)"
+            @click="() => showPaymentDialog(row)">去抢购</el-button>
           <div class="page-button-group-safe-padding" />
         </template>
       </el-table-column>
@@ -82,7 +88,7 @@
       v-model="visible.paymentDialog"
       :url="active.selectedItemURL"
       :keyword="safeSelectedItem.word"
-      :areas="safeSelectedItem.areas"
+      :provinces="safeSelectedItem.provinces"
       @onClose="visible.paymentDialog = false"
     />
   </div>
@@ -93,8 +99,9 @@ import dayjs from 'dayjs'
 
 import PaymentDialog from './payment-dialog'
 
+import { promoteStatusMap, getStatusWith, isStatusDisplayError } from 'constant/qianci'
 import { getKeywordsList } from 'api/qianci'
-import { parseQuery, formatReqQuery, getCnName } from 'util'
+import { parseQuery, normalize, formatReqQuery, getCnName } from 'util'
 
 export default {
   name: "qc-word-list",
@@ -106,6 +113,8 @@ export default {
   },
   data() {
     return {
+      getStatusWith,
+      isStatusDisplayError,
       query: {
         keyword: '',
         status: '',
@@ -114,8 +123,8 @@ export default {
       pagination: {
         current: 0,
         total: 0,
-        size: 20,
-        sizes: [10, 20, 50, 100],
+        size: 15,
+        sizes: [10, 15, 30, 50],
       },
       queryList: [],
       active: {
@@ -127,7 +136,9 @@ export default {
         userId: null,
       },
       options: {
-        wordStatus: []
+        wordStatus: [
+          { label: '所有状态', value: '' }
+        ]
       },
       visible: {
         paymentDialog: false
@@ -168,9 +179,9 @@ export default {
       const query = {
         size: this.pagination.size,
         page,
-        ...formatReqQuery(this.query, {
-          // date: val => val && +new Date(this.query.date)
-        }),
+        ...formatReqQuery(normalize({
+          coreWord: ['keyword']
+        }, this.query )),
       }
       const { data, total } = (await getKeywordsList(query)) || {}
       this.queryList = data.map(x => x)
@@ -211,6 +222,7 @@ export default {
         status: '',
         date: '',
       }
+      this.getQueryListWithTip(0)
     },
     goEditWordsPage(row) {
       this.$router.push({
@@ -223,13 +235,30 @@ export default {
 
     /*********************************************************** calculation */
 
-    mapStatusToUIType(row) {
-      const { status, auditStatus } = row
-      return 'normal'
+    enableCheckButton(status) {
+      const p = promoteStatusMap
+      return [
+        p.EXPANDING_WORD_SUCCEED,
+        p.PENDING_PAYMENT,
+        p.UNPAID,
+        p.PAID,
+        p.UNPAID_EXPIRED,
+        p.PAYMENT_EXPIRED
+      ].includes(+status)
     },
-
-    dateFormatter({createdAt}) {
-      return dayjs(createdAt * 1000).format('YYYY-MM-DD HH:MM')
+    enableEditButton(status) {
+      const p = promoteStatusMap
+      return [
+        p.EXPANDING_WORD_FAILED,
+        p.B2B_AUDIT_FAILED
+      ].includes(+status)
+    },
+    enablePayButton(status) {
+      const p = promoteStatusMap
+      return [
+        p.EXPANDING_WORD_SUCCEED,
+        p.PENDING_PAYMENT
+      ].includes(+status)
     }
   }
 }
@@ -239,7 +268,7 @@ export default {
 .query-form {
   margin-top: 18px;
   padding: 16px;
-  background: #eff2f7;
+  background: #f5f7fa;
   border-radius: 4px;
 
   & .el-form-item {
