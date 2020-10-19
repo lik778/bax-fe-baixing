@@ -2,7 +2,7 @@
   <div class="page">
     <header>查词记录</header>
     <!-- 搜索表单 -->
-    <el-form class="query-form" :inline="true" :model="query">
+    <el-form class="query-form" :inline="true" :model="query" label-width="60px" @submit.native.prevent="() => getQueryListWithTip()">
       <el-form-item label="核心词">
         <el-input v-model="query.keyword" placeholder="请输入核心词" />
       </el-form-item>
@@ -94,7 +94,7 @@ import dayjs from 'dayjs'
 import PaymentDialog from './payment-dialog'
 
 import { getKeywordsList } from 'api/qianci'
-import { formatReqQuery, getCnName } from 'util'
+import { parseQuery, formatReqQuery, getCnName } from 'util'
 
 export default {
   name: "qc-word-list",
@@ -213,7 +213,6 @@ export default {
       }
     },
     goEditWordsPage(row) {
-      console.log(row)
       this.$router.push({
         name: 'qc-query-price',
         params: {
