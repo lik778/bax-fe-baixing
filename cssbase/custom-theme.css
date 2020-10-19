@@ -93,6 +93,7 @@
     font-size: 14px;
   }
   & /deep/ .number {
+    font-size: 15px;
     font-weight: normal;
   }
 }
