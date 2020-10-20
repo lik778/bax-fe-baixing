@@ -169,8 +169,9 @@ function deepClone(source) {
  * @example
  * normalize([{ _id: 1, ID: 1, Id: 1 }, {}]) => [{id: 1},{}]
  */
-export function normalize(adaptorDes = {}, data, saveEmptyProp = false) {
-  if (!data) return {}
+export function normalize(adaptorDes = {}, raw, saveEmptyProp = false) {
+  if (!raw) return {}
+  const data = deepClone(raw)
 
   const adaptors = Object.entries(adaptorDes).map(([key, val]) => genAttrAdaptor(key, val))
 
