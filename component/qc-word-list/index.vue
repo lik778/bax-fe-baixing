@@ -109,9 +109,6 @@ export default {
   components: {
     PaymentDialog
   },
-  props: {
-    salesInfo: Object,
-  },
   data() {
     return {
       getExpandingWordStatusWith,
@@ -134,7 +131,6 @@ export default {
         selectedItemURL: '',
       },
       store: {
-        saleId: null,
         userId: null,
       },
       options: {
@@ -152,6 +148,10 @@ export default {
     safeSelectedItem() {
       return this.active.selectedItem || {}
     },
+  },
+  created() {
+    const query = parseQuery(window.location.search)
+    this.store.userId = query.userId
   },
   mounted() {
     this.getQueryList()
@@ -188,15 +188,20 @@ export default {
     },
     // 生成付款 URL
     async genPaymentURL(item) {
-      const { salesId, userId } = this.salesInfo || {}
-      const preTradeId = await createPreOrder()
-      // if (this.isUser('BAIXING_SALES')) {
-      //   return `${orderServiceHost}/${preKeywordPath}/?appId=105&seq=${preTradeId}`
-      // }
-      // if (this.isUser('AGENT_ACCOUNTING')) {
-      //   location.href = `${orderServiceHost}/${preKeywordPath}/?appId=105&seq=${preTradeId}&agentId=${this.userInfo.id}`
-      // }
-      return `${orderServiceHost}/${preKeywordPath}/?appId=105&seq=${preTradeId}`
+      // TODO dev to pro
+      if (this.store.userId) {
+        const preTradeId = await createPreOrder({
+          promoteId: item.id,
+          targetUserId: userId
+        })
+        // if (this.isUser('BAIXING_SALES')) {
+        //   return `${orderServiceHost}/${preKeywordPath}/?appId=105&seq=${preTradeId}`
+        // }
+        // if (this.isUser('AGENT_ACCOUNTING')) {
+        //   location.href = `${orderServiceHost}/${preKeywordPath}/?appId=105&seq=${preTradeId}&agentId=${this.userInfo.id}`
+        // }
+        return `${orderServiceHost}/${preKeywordPath}/?appId=105&seq=${preTradeId}`
+      }
     },
 
     /*********************************************************** ux */
