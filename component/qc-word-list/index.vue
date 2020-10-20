@@ -43,7 +43,7 @@
         <template slot-scope="{row}">
           <catch-error>
             <span :class="getStatusWith('value', row.status).uiClass">{{getDisplayStatusWith('value', row.status).label}}</span>
-            <template v-if="isStatusDisplayError(row.status)">
+            <template v-if="isExpandingWordStatusDisplayError(row.status)">
               <el-tooltip placement="top" :content="row.reason">
                 <i class="error el-icon-question pointer" />
               </el-tooltip>
@@ -100,7 +100,7 @@ import dayjs from 'dayjs'
 import PaymentDialog from './payment-dialog'
 
 import { orderServiceHost, preKeywordPath } from 'config'
-import { promoteStatusMap, getStatusWith, getDisplayStatusWith, isStatusDisplayError, promoteDisplayStatusOptions } from 'constant/qianci'
+import { expandingWordStatusMap, getExpandingWordStatusWith, getDisplayExpandingWordStatusWith, isExpandingWordStatusDisplayError, expandingWordDisplayStatusOptions } from 'constant/qianci'
 import { createPreOrder, getKeywordsList } from 'api/qianci'
 import { parseQuery, normalize, formatReqQuery, getCnName } from 'util'
 
@@ -116,7 +116,7 @@ export default {
     return {
       getStatusWith,
       getDisplayStatusWith,
-      isStatusDisplayError,
+      isExpandingWordStatusDisplayError,
       query: {
         keyword: '',
         status: '',
@@ -140,7 +140,7 @@ export default {
       options: {
         wordStatus: [
           { label: '所有状态', value: '' },
-          ...promoteDisplayStatusOptions,
+          ...expandingWordDisplayStatusOptions,
         ]
       },
       visible: {
@@ -152,17 +152,6 @@ export default {
     safeSelectedItem() {
       return this.active.selectedItem || {}
     },
-    canPayForWords() {
-      return this.store.saleId && this.store.userId
-    }
-  },
-  created() {
-    const query = parseQuery(window.location.search)
-    const { saleId, userId } = query
-    this.store = { saleId, userId }
-
-    //
-    // console.log('asdfasdf', this.getFinalUserId())
   },
   mounted() {
     this.getQueryList()
@@ -250,7 +239,7 @@ export default {
     /*********************************************************** calculation */
 
     enableCheckButton(status) {
-      const p = promoteStatusMap
+      const p = expandingWordStatusMap
       return [
         p.EXPANDING_WORD_SUCCEED,
         p.PENDING_PAYMENT,
@@ -261,14 +250,14 @@ export default {
       ].includes(+status)
     },
     enableEditButton(status) {
-      const p = promoteStatusMap
+      const p = expandingWordStatusMap
       return [
         p.EXPANDING_WORD_FAILED,
         p.B2B_AUDIT_FAILED
       ].includes(+status)
     },
     enablePayButton(status) {
-      const p = promoteStatusMap
+      const p = expandingWordStatusMap
       return [
         p.EXPANDING_WORD_SUCCEED,
         p.PENDING_PAYMENT

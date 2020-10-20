@@ -18,6 +18,7 @@ export async function getKeywordsList(opts) {
       reason: '一条长长的失败原因是一条长长的失败原因是一条长长的失败原因是一条长长的失败原因是一条长长的失败原因是一条长长的失败原因',
       auditStatus: 1
     }))
+    await pause()
     return await {
       data,
       total: data.length * 5
@@ -79,4 +80,29 @@ export async function saveCreative(opts = {}) {
 // 创建预订单
 export async function createPreOrder(opts = {}) {
   return await 'test'
+}
+
+export async function getPromoteList(opts = {}) {
+  if (useTestData) {
+    const data = Array.apply(null, { length: 15 }).map((x, i) => ({
+      id: String(i),
+      coreWord: '核心词',
+      provinces: ['上海', '北京'],
+      platform: Math.floor(Math.random() * 3),
+      semStatus: Math.floor(Math.random() * 4),
+      status: Math.floor(Math.random() * 18),
+      tradeDate: Math.floor(+new Date() / 1000),
+      remainDate: '1787184000'
+    }))
+    await pause()
+    return await {
+      data,
+      total: data.length * 5
+    }
+  }
+  return (await qianci
+    .get('/api/sem-batch/user/promotes')
+    .query(opts)
+    .json())
+    .data
 }

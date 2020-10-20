@@ -154,7 +154,8 @@ Vue.use(Vue2Filters)
 // ElementUI formatter
 Vue.prototype.$formatter = {
   join: (arrs = [], seq = '、') => arrs.join(seq),
-  date: (time) => dayjs(time * 1000).format('YYYY-MM-DD')
+  date: (time = 0) => dayjs(time * 1000).format('YYYY-MM-DD'),
+  mapWith: (key = '', obj = {}) => obj[key]
 }
 
 // 该组件引入echarts，体积较大，异步加载提升用户体验

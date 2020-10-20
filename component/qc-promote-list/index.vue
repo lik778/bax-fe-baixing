@@ -38,30 +38,26 @@
     </el-form>
     <!-- 列表 -->
     <el-table class="query-table" border :data="queryList">
-      <el-table-column label="核心词" prop="word" width="160" />
-      <el-table-column label="推广地区" prop="areas">
-        <template slot-scope="{row}">
-          <span>{{(row.areas || []).join('、')}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="平台" prop="plat" :formatter="platformFormatter" />
+      <el-table-column label="核心词" prop="coreWord" width="160" />
+      <el-table-column label="推广地区" :formatter="({ provinces }) => $formatter.join(provinces)" />
+      <el-table-column label="平台" prop="plat" :formatter="({ platform }) => $formatter.mapWith(platform, deviceValueLabelMap)" />
       <el-table-column label="投放状态">
         <template slot-scope="{row}">
-          <el-tag :type="mapAuditStatusToType(row)">
-            {{row.status}}
-          </el-tag>
+          <catch-error>
+            <span>{{getPutInStatusWith('value', row.semStatus).label}}</span>
+          </catch-error>
         </template>
       </el-table-column>
       <el-table-column label="审核状态">
         <template slot-scope="{row}">
-          <el-tag :type="mapAuditStatusToType(row)">
-            {{row.status}}
-          </el-tag>
+          <catch-error>
+            <span :class="getExpandingWordStatusWith('value', row.status).uiClass">{{getDisplayExpandingWordStatusWith('value', row.status).label}}</span>
+          </catch-error>
         </template>
       </el-table-column>
-      <el-table-column label="购买日期" prop="buyAt" :formatter="dateFormatter" />
-      <el-table-column label="剩余投放天数" prop="expired" :formatter="restDayFormatter" />
-      <el-table-column label="操作">
+      <el-table-column label="购买日期" :formatter="({ tradeDate }) => $formatter.date(tradeDate)" />
+      <el-table-column label="剩余投放天数" :formatter="restDayFormatter" />
+      <el-table-column label="操作" width="160">
         <template slot-scope="{row}">
           <el-button type="text" size="small" @click="() => goEditCreativePage(row)">修改</el-button>
           <el-button type="text" size="small" @click="() => goChartPage(row)">查看状态</el-button>
@@ -86,17 +82,33 @@
 <script>
 import dayjs from 'dayjs'
 
-import { promoteStatusMap, getStatusWith, getDisplayStatusWith, isStatusDisplayError, promoteDisplayStatusOptions } from 'constant/qianci'
-import { getKeywordsList } from 'api/qianci'
-import { parseQuery, formatReqQuery, getCnName } from 'util'
+import {
+  getExpandingWordStatusWith,
+  getDisplayExpandingWordStatusWith,
+  deviceValueLabelMap,
+  putInStatusOptions,
+  getPutInStatusWith,
+  auditStatusOptions,
+  getAuditStatusOptions
+} from 'constant/qianci'
+
+import { getPromoteList } from 'api/qianci'
+import { parseQuery, formatReqQuery, getCnName, normalize } from 'util'
 
 export default {
   name: "qc-promote-list",
   props: {
-    allAreas: Array
+    salesInfo: Object,
   },
   data() {
     return {
+      getExpandingWordStatusWith,
+      getDisplayExpandingWordStatusWith,
+      deviceValueLabelMap,
+      putInStatusOptions,
+      getPutInStatusWith,
+      auditStatusOptions,
+      getAuditStatusOptions,
       query: {
         keyword: '',
         status: [],
@@ -105,8 +117,8 @@ export default {
       pagination: {
         current: 1,
         total: 0,
-        size: 20,
-        sizes: [10, 20, 50, 100],
+        size: 15,
+        sizes: [10, 15, 30, 50],
       },
       queryList: [],
       active: {
@@ -119,8 +131,8 @@ export default {
       },
       options: {
         wordStatus: [
-          { label: '所有状态', value: '' },
-          ...promoteDisplayStatusOptions,
+          ...putInStatusOptions,
+          ...auditStatusOptions
         ]
       },
       visible: {
@@ -159,14 +171,23 @@ export default {
       }
     },
     async getQueryList(page = 1) {
+      const { salesId, userId } = this.salesInfo || {}
       const query = {
         page: page - 1,
         size: this.pagination.size,
-        ...formatReqQuery(this.query, {
-          // date: val => val && +new Date(this.query.date)
+        userId,
+        salesId,
+        ...formatReqQuery(normalize({
+          coreWord: ['keyword']
+        }, this.query), {
+          status (vals = []) {
+            return vals
+              .map(x => getDisplayExpandingWordStatusWith('label', x))
+              .reduce((h, c) => (h.push(...c.value), h), [])
+          }
         }),
       }
-      const { data, total } = (await getKeywordsList(query)) || {}
+      const { data, total } = (await getPromoteList(query)) || {}
       this.queryList = data.map(x => x)
       this.pagination = {
         ...this.pagination,
@@ -215,15 +236,9 @@ export default {
         default: return '未知'
       }
     },
-    mapAuditStatusToType(row) {
-      const { auditStatus } = row
-      return 'normal'
-    },
-    dateFormatter({buyAt}) {
-      return dayjs(buyAt * 1000).format('YYYY-MM-DD HH:MM')
-    },
-    restDayFormatter() {
-      return '180'
+    restDayFormatter({ remainDate }) {
+      const restDays = Math.max(0, (dayjs(remainDate * 1000) - dayjs())) / (24 * 60 * 60 * 1000)
+      return parseFloat(restDays).toFixed(1)
     },
   }
 }

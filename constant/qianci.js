@@ -1,4 +1,6 @@
-// 计划状态
+/* TODO refactor */
+
+/* ************************************************* 拓词状态 */
 const p = {
   UNKNOWN: 0,
   CREATED: 1,
@@ -19,8 +21,8 @@ const p = {
   FINISHED: 16,
   CEASED: 17
 }
-export const promoteStatusMap = p
-export const promoteStatusOptions = [
+export const expandingWordStatusMap = p
+export const expandingWordStatusOptions = [
   { value: p.UNKNOWN, uiClass: 'error', label: '未知' },
   { value: p.CREATED, uiClass: '', label: '创建' },
   { value: p.EXPANDING_WORD, uiClass: '', label: '待拓词' },
@@ -41,12 +43,12 @@ export const promoteStatusOptions = [
   { value: p.CEASED, uiClass: '', label: '已停止' }
 ]
 
-export function isStatusDisplayError(status) {
-  const handle = getStatusWith('value', status)
+export function isExpandingWordStatusDisplayError(status) {
+  const handle = getExpandingWordStatusWith('value', status)
   return handle.uiClass === 'error'
 }
 
-export const promoteDisplayStatusOptions = [
+export const expandingWordDisplayStatusOptions = [
   {
     label: '优选中',
     value: [
@@ -93,20 +95,99 @@ export const promoteDisplayStatusOptions = [
 
 /**
  * @example
- * getStatusWith('value', row.status).label
+ * getExpandingWordStatusWith('value', row.status).label
  * */
-export function getStatusWith(key, val) {
-  const handle = promoteStatusOptions.find(x => x[key] === val)
+export function getExpandingWordStatusWith(key, val) {
+  const handle = expandingWordStatusOptions.find(x => x[key] === val)
   return handle || {}
 }
-export function getDisplayStatusWith(key, val) {
-  let handle = promoteDisplayStatusOptions.find(x => {
+export function getDisplayExpandingWordStatusWith(key, val) {
+  let handle = expandingWordDisplayStatusOptions.find(x => {
     return x[key] instanceof Array
       ? x[key].includes(val)
       : x[key] === val
   })
   if (handle) return handle
-  handle = getStatusWith(key, val)
+  handle = getExpandingWordStatusWith(key, val)
   if (handle) return handle
   return {}
+}
+
+/* ************************************************* 平台类型枚举 */
+
+export const deviceOptions = [{
+  label: '全部',
+  value: 0
+}, {
+  label: '电脑端',
+  value: 1
+}, {
+  label: '手机端',
+  value: 2
+}]
+
+export const deviceValueLabelMap = {
+  0: '电脑、手机',
+  1: '电脑端',
+  2: '手机端'
+}
+
+/* ************************************************* 投放状态 */
+
+export const putInStatusOptions = [
+  {
+    label: '待设置',
+    value: 0
+  },
+  {
+    label: '待投放',
+    value: 1
+  },
+  {
+    label: '投放中',
+    value: 2
+  },
+  {
+    label: '已下线',
+    value: 3
+  }
+]
+
+export function getPutInStatusWith(key, val) {
+  let handle = putInStatusOptions.find(x => {
+    return x[key] instanceof Array
+      ? x[key].includes(val)
+      : x[key] === val
+  })
+  return handle || {}
+}
+
+/* ************************************************* 物料审核状态 */
+
+export const auditStatusOptions = [
+  {
+    label: '行业待审核',
+    value: 0
+  },
+  {
+    label: '行业审核驳回',
+    value: 1
+  },
+  {
+    label: '内容待审核',
+    value: 2
+  },
+  {
+    label: '内容审核驳回',
+    value: 3
+  }
+]
+
+export function getAuditStatusOptions(key, val) {
+  let handle = auditStatusOptions.find(x => {
+    return x[key] instanceof Array
+      ? x[key].includes(val)
+      : x[key] === val
+  })
+  return handle || {}
 }
