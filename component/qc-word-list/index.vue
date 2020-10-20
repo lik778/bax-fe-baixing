@@ -42,7 +42,7 @@
       <el-table-column label="状态" prop="status">
         <template slot-scope="{row}">
           <catch-error>
-            <span :class="getStatusWith('value', row.status).uiClass">{{getDisplayStatusWith('value', row.status).label}}</span>
+            <span :class="getExpandingWordStatusWith('value', row.status).uiClass">{{getDisplayExpandingWordStatusWith('value', row.status).label}}</span>
             <template v-if="isExpandingWordStatusDisplayError(row.status)">
               <el-tooltip placement="top" :content="row.reason">
                 <i class="error el-icon-question pointer" />
@@ -114,8 +114,8 @@ export default {
   },
   data() {
     return {
-      getStatusWith,
-      getDisplayStatusWith,
+      getExpandingWordStatusWith,
+      getDisplayExpandingWordStatusWith,
       isExpandingWordStatusDisplayError,
       query: {
         keyword: '',
