@@ -183,11 +183,7 @@ export const auditStatusOptions = [
   }
 ]
 
-export function getAuditStatusOptions(key, val) {
-  let handle = auditStatusOptions.find(x => {
-    return x[key] instanceof Array
-      ? x[key].includes(val)
-      : x[key] === val
-  })
+export function getAuditStatusWith(key, val) {
+  const handle = auditStatusOptions.find(x => x[key] === val)
   return handle || {}
 }

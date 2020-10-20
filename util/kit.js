@@ -219,3 +219,15 @@ export function paginationWrapper(getList) {
     }
   }
 }
+
+// 防抖
+export function debounce(func, time = 300, ctx) {
+  let timer
+  return async (...args) => {
+    if (timer) clearTimeout(timer)
+    timer = setTimeout(() => {
+      func.apply(ctx, args)
+      timer = null
+    }, time)
+  }
+}

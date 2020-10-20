@@ -21,21 +21,8 @@
           />
         </el-checkbox-group>
       </el-form-item>
-      <div />
-      <el-form-item class="actions" label=" ">
-        <el-button
-          class="query-button"
-          type="primary"
-          @click="() => getQueryListWithTip()"
-        >查询</el-button>
-        <el-button
-          class="reset-button"
-          type="primary"
-          plain
-          @click="resetQuery"
-        >重置</el-button>
-      </el-form-item>
     </el-form>
+    <el-button class="go-chart-page-btn" type="primary" @click="goChartPage">查看计划报表</el-button>
     <!-- 列表 -->
     <el-table class="query-table" border :data="queryList">
       <el-table-column label="核心词" prop="coreWord" width="160" />
@@ -88,11 +75,11 @@ import {
   putInStatusOptions,
   getPutInStatusWith,
   auditStatusOptions,
-  getAuditStatusOptions
+  getAuditStatusWith
 } from 'constant/qianci'
 import  { getBusinessLicense } from 'api/seo'
 import { getPromoteList } from 'api/qianci'
-import { parseQuery, formatReqQuery, getCnName, normalize } from 'util'
+import { parseQuery, formatReqQuery, debounce, normalize } from 'util'
 
 export default {
   name: "qc-promote-list",
@@ -100,6 +87,7 @@ export default {
     salesInfo: Object,
   },
   data() {
+    this.debouncedGetQueryListWithTip = debounce(() => this.getQueryListWithTip(), 500)
     return {
       getExpandingWordStatusWith,
       getDisplayExpandingWordStatusWith,
@@ -107,7 +95,7 @@ export default {
       putInStatusOptions,
       getPutInStatusWith,
       auditStatusOptions,
-      getAuditStatusOptions,
+      getAuditStatusWith,
       query: {
         keyword: '',
         status: [],
@@ -150,6 +138,14 @@ export default {
       return this.store.saleId && this.store.userId
     }
   },
+  watch: {
+    query: {
+      deep: true,
+      handler() {
+        this.debouncedGetQueryListWithTip()
+      }
+    }
+  },
   created() {
     const query = parseQuery(window.location.search)
     const { saleId, userId } = query
@@ -184,8 +180,14 @@ export default {
         }, this.query), {
           status (vals = []) {
             return vals
-              .map(x => getDisplayExpandingWordStatusWith('label', x))
-              .reduce((h, c) => (h.push(...c.value), h), [])
+              .map(x =>
+                getDisplayExpandingWordStatusWith('label', x) ||
+                getAuditStatusWith('label', x))
+              .reduce((h, c) => (h.push(...(
+                c.value instanceof Array
+                  ? c.value
+                  : [c.value]
+              )), h), [])
           }
         }),
       }
@@ -276,7 +278,7 @@ export default {
 .query-form {
   margin-top: 18px;
   padding: 16px;
-  background: #eff2f7;
+  background: #f5f7fa;
   border-radius: 4px;
 
   & .el-form-item {
@@ -300,6 +302,7 @@ export default {
   }
 }
 
+.go-chart-page-btn,
 .query-table {
   margin-top: 18px;
 }
