@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import { pause } from 'util'
+import { paginationWrapper, pause } from 'util'
 import { qianci } from './base'
 
 const isDev = process.env.NODE_ENV === 'development'
@@ -43,9 +43,9 @@ export async function getPreferredWordsPV(opts = {}) {
 }
 
 // 获取优选词列表
-export async function getPreferredWordsList(opts = {}) {
+export const getPreferredWordsList = paginationWrapper(async function (opts = {}) {
   if (useTestData) {
-    const data = Array.apply(null, { length: 15 }).map((x, i) => ({
+    const data = Array.apply(null, { length: 101 }).map((x, i) => ({
       createTime: Math.floor(+new Date() / 1000),
       id: String(i),
       coreWord: '核心词',
@@ -54,15 +54,14 @@ export async function getPreferredWordsList(opts = {}) {
     await pause()
     return await {
       data,
-      total: data.length * 5
+      total: data.length
     }
   }
   return (await qianci
     .get('/api/sem-batch/promote/keyword/expandedWord')
     .query(opts)
     .json())
-    .data
-}
+})
 
 // 获取推广物料信息
 export async function getCreative(opts = {}) {

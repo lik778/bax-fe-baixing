@@ -14,10 +14,10 @@
       <el-form-item label="状态">
         <el-checkbox-group v-model="query.status">
           <el-checkbox
-            v-for="(v, k) in options.wordStatus"
-            :label="v"
-            :value="k"
-            :key="k"
+            v-for="item in options.wordStatus"
+            :label="item.label"
+            :value="item.value"
+            :key="item.label"
           />
         </el-checkbox-group>
       </el-form-item>
@@ -41,7 +41,7 @@
       <el-table-column label="核心词" prop="word" width="160" />
       <el-table-column label="推广地区" prop="areas">
         <template slot-scope="{row}">
-          <span>{{row.areas.join('、')}}</span>
+          <span>{{(row.areas || []).join('、')}}</span>
         </template>
       </el-table-column>
       <el-table-column label="平台" prop="plat" :formatter="platformFormatter" />
@@ -86,6 +86,7 @@
 <script>
 import dayjs from 'dayjs'
 
+import { promoteStatusMap, getStatusWith, getDisplayStatusWith, isStatusDisplayError, promoteDisplayStatusOptions } from 'constant/qianci'
 import { getKeywordsList } from 'api/qianci'
 import { parseQuery, formatReqQuery, getCnName } from 'util'
 
@@ -102,7 +103,7 @@ export default {
         date: '',
       },
       pagination: {
-        current: 0,
+        current: 1,
         total: 0,
         size: 20,
         sizes: [10, 20, 50, 100],
@@ -117,23 +118,9 @@ export default {
         userId: null,
       },
       options: {
-        // wordStatus: [
-        //   { label: '待设置', value: '待设置' },
-        //   { label: '待投放', value: '待投放' },
-        //   { label: '已下线', value: '已下线' },
-        //   { label: '待审核', value: '待审核' },
-        //   { label: '审核中', value: '审核中' },
-        //   { label: '审核通过', value: '审核通过' },
-        //   { label: '审核驳回', value: '审核驳回' },
-        // ]
         wordStatus: [
-          '待设置',
-          '待投放',
-          '已下线',
-          '待审核',
-          '审核中',
-          '审核通过',
-          '审核驳回',
+          { label: '所有状态', value: '' },
+          ...promoteDisplayStatusOptions,
         ]
       },
       visible: {
@@ -171,10 +158,10 @@ export default {
         })
       }
     },
-    async getQueryList(page = 0) {
+    async getQueryList(page = 1) {
       const query = {
+        page: page - 1,
         size: this.pagination.size,
-        page,
         ...formatReqQuery(this.query, {
           // date: val => val && +new Date(this.query.date)
         }),

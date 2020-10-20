@@ -9,6 +9,7 @@
       border
       :data="queryList">
       <el-table-column label="创建时间" prop="createdTime" width="120" :formatter="({createTime}) => $formatter.date(createTime)" />
+      <el-table-column label="核心词" prop="id" width="120" />
       <el-table-column label="核心词" prop="coreWord" width="120" />
       <el-table-column label="优选词" prop="expandedWord" />
       <!-- <el-table-column label="操作" align="center" width="180">
@@ -43,7 +44,7 @@ export default {
     return {
       id: null,
       pagination: {
-        current: 0,
+        current: 1,
         total: 0,
         size: 15,
         sizes: [10, 15, 30, 50],
@@ -79,11 +80,12 @@ export default {
         })
       }
     },
-    async getQueryList(page = 0) {
+    async getQueryList(page = 1) {
       const query = {
-        ...formatReqQuery(this.query),
-        page,
+        page: page - 1,
+        size: this.pagination.size,
         id: this.id,
+        ...formatReqQuery(this.query),
       }
       this.loading.query = true
       const { data, total } = (await getPreferredWordsList(query)) || {}

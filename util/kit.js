@@ -199,3 +199,22 @@ export function normalize(adaptorDes = {}, data, saveEmptyProp = false) {
     }
   }
 }
+
+// 前端分页函数
+export function paginationWrapper(getList) {
+  let responseStore = null
+
+  return async (...args) => {
+    if (!responseStore) {
+      responseStore = await getList(...args)
+    }
+    const { data = [], total = 0 } = responseStore
+    const { size = 15, page = 0 } = args[0]
+    const end = Math.min((page + 1) * size, total)
+
+    return {
+      total,
+      data: data.slice(page * size, end + 1)
+    }
+  }
+}
