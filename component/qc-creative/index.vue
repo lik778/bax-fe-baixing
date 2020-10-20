@@ -15,19 +15,19 @@
         <el-form-item><span class="header">基本信息</span></el-form-item>
 
         <el-form-item label="推广关键字">
-          <span>{{keyword}}</span>
+          <span>{{coreWord}}</span>
         </el-form-item>
         <el-form-item label="投放页面">
           <el-cascader
-            v-model="input.site"
+            v-model="form.landingPageId"
             clearable
             :options="options.sites"
             @change="onSelectSite"
           />
           <el-input
-            v-if="active.site"
+            v-if="form.landingPageId"
             class="payment-url-input"
-            v-model="form.url"
+            v-model="form.landingPage"
             readonly
             clearable
           />
@@ -42,7 +42,7 @@
 
         <el-form-item label="投放标题">
           <el-input
-            v-model="form.title"
+            v-model="form.creativeTitle"
             placeholder="请填写投放标题"
             clearable
           />
@@ -50,7 +50,7 @@
         <el-form-item label="推广内容">
           <el-input
             type="textarea"
-            v-model="form.content"
+            v-model="form.creativeContent"
             placeholder="请填写推广内容"
             clearable
             :autosize="{minRows: 5, maxRows: 8}"
@@ -58,7 +58,8 @@
         </el-form-item>
 
         <el-form-item label="">
-          <el-button type="primary" @click="create">{{id ? '保存' : '创建'}}推广计划</el-button>
+          <el-button type="primary" @click="update">保存推广计划</el-button>
+          <el-button type="warn" @click="() => $router.go(-1)">返回上一页</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -79,21 +80,16 @@ export default {
   data() {
     return {
       id: null,
-      keyword: '',
+      coreWord: '',
       form: {
-        title: '',
-        url: '',
-        content: '',
-      },
-      input: {
-        site: null,
+        landingPage: '',
+        landingPageId: null,
+        creativeTitle: '',
+        creativeContent: '',
       },
       rules: {},
       options: {
         sites: []
-      },
-      active: {
-        site: null,
       },
       visible: {
         siteExpireWarning: false,
@@ -103,45 +99,61 @@ export default {
   },
   created() {
     this.id = getRouteParam.bind(this)('id')
-    this.initKeyword()
+    this.initCreative()
     this.initSites()
   },
   methods: {
-    async initKeyword () {
+    async initCreative () {
       const response = await getCreative({ id: this.id })
-      const { keyword } = response || {}
-      this.keyword = keyword
-      this.reGenURL()
+      const {
+        coreWord,
+        landingPage,
+        landingPageId,
+        creativeTitle,
+        creativeContent,
+      } = response || {}
+      this.coreWord = coreWord
+      this.form = {
+        landingPage,
+        creativeTitle,
+        creativeContent,
+        landingPageId: String(landingPageId),
+      }
     },
     async initSites () {
       const sites = await getUserSites()
       this.options.sites = (sites || []).map(x => ({
+        ...x,
         label: x.name,
-        value: x.id,
-        raw: x
+        value: x.id
       }))
     },
-    async create () {
-      if (!this.form.title) this.$message({ type: 'error', message: '请填写投放标题' })
-      if (!this.form.content) this.$message({ type: 'error', message: '请填写推广内容' })
+    async update () {
+      if (!this.form.landingPageId) this.$message({ type: 'error', message: '请选择推广官网' })
+      if (!this.form.creativeTitle) this.$message({ type: 'error', message: '请填写投放标题' })
+      if (!this.form.creativeContent) this.$message({ type: 'error', message: '请填写推广内容' })
 
-      const response = await saveCreative({ ...this.form })
+      const query = {
+        ...this.form,
+        landingType: 3
+      }
+      const response = await saveCreative(query)
       this.$notify({
         type: 'success',
-        message: this.id ? '保存成功' : '创建成功',
+        message: '保存成功'
       })
     },
     onSelectSite(ids) {
       const id = ids.length && ids[0]
+      this.form.landingPageId = id
       const handle = this.options.sites.find(x => x.value == id)
+      this.reGenURL(handle.domain)
+
       // this.visible.showExpireWarning = dayjs(handle.expireAt).subtract(this.promotion.duration, 'day').isBefore(dayjs(), 'day')
       // this.visible.showExistWebsite = this.existPromotionWebsite.some(o => (o.trim() === landingPage))
-      this.active.site = handle
-      this.input.site = ids
-      this.reGenURL()
     },
-    reGenURL() {
-      this.form.url = 'http://' + this.active.site.raw.domain + '.mvp.baixing.com'
+    reGenURL(domain) {
+      this.form.landingPage = 'http://' + domain + '.mvp.baixing.com'
     }
   }
 }

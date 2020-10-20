@@ -60,7 +60,6 @@
       <el-table-column label="操作" width="160">
         <template slot-scope="{row}">
           <el-button :loading="checkButtonLoading(row)" type="text" size="small" @click="() => goEditCreativePage(row)">修改</el-button>
-          <el-button type="text" size="small" @click="() => goChartPage(row)">查看状态</el-button>
           <div class="page-button-group-safe-padding" />
         </template>
       </el-table-column>
@@ -214,11 +213,8 @@ export default {
     selectItem(item) {
       this.active.selectedItem = item
     },
-    goChartPage({ id }) {
-      this.$router.push({
-        name: 'qc-dashboard',
-        params: { id }
-      })
+    goChartPage() {
+      this.$router.push({ name: 'qc-dashboard' })
     },
     resetQuery() {
       this.query = {

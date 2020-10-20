@@ -19,7 +19,7 @@ export async function getKeywordsList(opts) {
       auditStatus: 1
     }))
     await pause()
-    return await {
+    return {
       data,
       total: data.length * 5
     }
@@ -33,7 +33,7 @@ export async function getKeywordsList(opts) {
 
 // 获取优选词展现数据
 export async function getPreferredWordsPV(opts = {}) {
-  return await {
+  return {
     count: Math.floor(Math.random() * 500 + 100),
     pvs: Math.floor(Math.random() * 2800 + 200)
   }
@@ -54,7 +54,7 @@ export const getPreferredWordsList = paginationWrapper(async function (opts = {}
       expandedWord: Array.apply(null, { length: Math.floor(Math.random() * 7) + 2 }).join('测试优选词'),
     }))
     await pause()
-    return await {
+    return {
       data,
       total: data.length
     }
@@ -67,14 +67,31 @@ export const getPreferredWordsList = paginationWrapper(async function (opts = {}
 
 // 获取推广物料信息
 export async function getCreative(opts = {}) {
-  return await {
-    keyword: '核心词',
+  if (useTestData) {
+    return {
+      coreWord: '测试核心词',
+      landingType: 2,
+      landingPage: 'http://laomuziji.mvp.baixing.com',
+      landingPageId: 4198,
+      creativeTitle: '测试投放标题',
+      creativeContent: '投放内容投放内容投放内容投放内容投放内容投放内容'
+    }
   }
+  return await qianci
+    .post('/api/sem-batch/user/promote/update')
+    .send(opts)
+    .json()
 }
 
-// 创建/更新推广物料信息
+// 更新推广物料信息
 export async function saveCreative(opts = {}) {
-  return await {}
+  if (useTestData) {
+    return { id: 'test' }
+  }
+  return await qianci
+    .post('/api/sem-batch/user/promote/update')
+    .send(opts)
+    .json()
 }
 
 // 创建预订单
@@ -95,7 +112,7 @@ export async function getPromoteList(opts = {}) {
       remainDate: '1787184000'
     }))
     await pause()
-    return await {
+    return {
       data,
       total: data.length * 5
     }

@@ -53,6 +53,13 @@
 
 // TODO readme.md
 
+// ？？？
+.el-table {
+  & /deep/ thead {
+    color: #666;
+  }
+}
+
 .el-table__body .is-leaf {
   height: 47px;
   line-height: 47px;
