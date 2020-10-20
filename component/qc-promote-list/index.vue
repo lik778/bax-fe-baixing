@@ -59,7 +59,7 @@
       <el-table-column label="剩余投放天数" :formatter="restDayFormatter" />
       <el-table-column label="操作" width="160">
         <template slot-scope="{row}">
-          <el-button type="text" size="small" @click="() => goEditCreativePage(row)">修改</el-button>
+          <el-button :loading="checkButtonLoading(row)" type="text" size="small" @click="() => goEditCreativePage(row)">修改</el-button>
           <el-button type="text" size="small" @click="() => goChartPage(row)">查看状态</el-button>
           <div class="page-button-group-safe-padding" />
         </template>
@@ -91,7 +91,7 @@ import {
   auditStatusOptions,
   getAuditStatusOptions
 } from 'constant/qianci'
-
+import  { getBusinessLicense } from 'api/seo'
 import { getPromoteList } from 'api/qianci'
 import { parseQuery, formatReqQuery, getCnName, normalize } from 'util'
 
@@ -137,7 +137,10 @@ export default {
       },
       visible: {
         paymentDialog: false
-      }
+      },
+      loading: {
+        checkLicense: false
+      },
     }
   },
   computed: {
@@ -195,9 +198,15 @@ export default {
         total,
       }
     },
-    // 生成付款 URL
-    initPaymentURL(item) {
-      return 'www.baidu.com'
+    async checkLicense() {
+      let businessUrl = null
+      this.loading.checkLicense = true
+      try {
+        businessUrl = await getBusinessLicense()
+      } finally {
+        setTimeout(() => this.loading.checkLicense = false, 300)
+      }
+      return !!businessUrl
     },
 
     /*********************************************************** ux */
@@ -218,17 +227,40 @@ export default {
         date: '',
       }
     },
-    goEditCreativePage(row) {
-      this.$router.push({
-        name: 'qc-creative',
-        params: {
-          id: row.id
-        }
-      })
+    async goEditCreativePage(row) {
+      this.active.selectedItem = row
+      const hasBusinessUrl = await this.checkLicense()
+      // const hasBusinessUrl = false
+      if (hasBusinessUrl) {
+        this.$router.push({
+          name: 'qc-creative',
+          params: { id: row.id }
+        })
+      } else {
+        this.$msgbox({
+          title: '提示',
+          confirmButtonText: '前往认证',
+          showCancelButton: true,
+          cancelButtonText: '取消',
+          message: this.$createElement('p', null, [
+            this.$createElement('p', null, '根据《网络安全法》规定，请认证营业执照后再进入计划编辑。'),
+            this.$createElement('p', null, '您尚未提交审核或未通过审核，请进行营业执照认证,如您已经通过认证审核，请关闭本弹窗后重新点击【编辑】。')
+          ]),
+          beforeClose(action, instance, done) {
+            if (action === 'confirm') {
+              window.open('https://www.baixing.com/bind/#bindList')
+            }
+            done()
+          }
+        })
+      }
     },
 
     /*********************************************************** calculation */
 
+    checkButtonLoading(row) {
+      return this.active.selectedItem === row && this.loading.checkLicense
+    },
     platformFormatter({ plat }) {
       switch (plat) {
         case 'pc': return '电脑'
