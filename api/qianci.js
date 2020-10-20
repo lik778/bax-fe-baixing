@@ -33,6 +33,7 @@ export async function getKeywordsList(opts) {
 // 获取优选词展现数据
 export async function getPreferredWordsPV(opts = {}) {
   return await {
+    count: Math.floor(Math.random() * 500 + 100),
     pvs: Math.floor(Math.random() * 2800 + 200)
   }
   return (await qianci

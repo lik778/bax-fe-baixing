@@ -53,7 +53,7 @@ export default {
       loading: {
         query: false
       },
-      wordCounts: 600,
+      wordCounts: null,
       pvs: null,
     }
   },
@@ -67,8 +67,9 @@ export default {
 
     async getPreferredWordPV() {
       const response = await getPreferredWordsPV()
-      const { pvs } = response
+      const { count: wordCounts = 0, pvs = 0 } = response
       this.pvs = pvs
+      this.wordCounts = wordCounts
     },
 
     async getQueryListWithTip(...args) {
