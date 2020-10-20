@@ -59,7 +59,7 @@
 
         <el-form-item label="">
           <el-button type="primary" @click="update">保存推广计划</el-button>
-          <el-button type="warn" @click="() => $router.go(-1)">返回上一页</el-button>
+          <el-button @click="() => $router.go(-1)">返回上一页</el-button>
         </el-form-item>
       </el-form>
     </div>

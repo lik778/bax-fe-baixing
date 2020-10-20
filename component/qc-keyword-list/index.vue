@@ -1,7 +1,10 @@
 <template>
   <div class="page">
     <header>优选词列表</header>
-    <span class="description">提示：系统为您优选<span class="statics">{{wordCounts}}</span>个关键词（包含双端）。在 180 天内预计有 <span class="statics">{{pvs}}</span> 人看到您的广告，数据来源于历史。</span>
+    <p class="header-info">
+      <span class="description">提示：系统为您优选<span class="statics">{{wordCounts}}</span>个关键词（包含双端）。在 180 天内预计有 <span class="statics">{{pvs}}</span> 人看到您的广告，数据来源于历史。</span>
+      <el-button type="primary" plain @click="() => $router.go(-1)">返回上一页</el-button>
+    </p>
     <!-- 列表 -->
     <el-table
       class="query-table"
@@ -111,6 +114,16 @@ export default {
 .description {
   margin: 32px 0;
   color: #666;
+}
+.header-info {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+
+  & .el-button {
+    flex-grow: 0;
+  }
 }
 .pagniation {
   margin-top: 1em;
