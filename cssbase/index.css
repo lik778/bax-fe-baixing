@@ -6,3 +6,7 @@
 @import './atomic.css';
 /* ElementUI 修改 */
 @import './custom-theme.css';
+
+body {
+  text-align: left !important;
+}

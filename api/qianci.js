@@ -139,7 +139,7 @@ export async function getWordPVsList(opts = {}) {
       id: String(i),
       coreWord: '核心词',
       crawledBy: '百度',
-      platform: Math.floor(Math.random() * 3),
+      platform: Math.floor(Math.random() * 2),
       date: Math.floor(+new Date() / 1000),
     }))
     await pause()

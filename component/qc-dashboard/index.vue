@@ -189,8 +189,22 @@ export default {
     },
     // 显示快照
     async checkSnapshotPage(item) {
+      const { platform } = item
+      let response = null
+      let customClass = null
+
       // const response = await getSnapshot(url)
-      const response = require('!!raw-loader!./snapshot.html').default
+      // const response = require('!!raw-loader!./snapshot.html').default
+      switch (platform) {
+        case 0:
+          customClass = 'snapshot-dialog-mobile'
+          response = require('!!raw-loader!./snapshot_mobile.html').default
+          break
+        case 1:
+          customClass = 'snapshot-dialog'
+          response = require('!!raw-loader!./snapshot.html').default
+          break
+      }
 
       // HTML 源码清洗，仅保留 HTML 和 CSS，a 标签不可点击
       // TODO 有全局 CSS 覆盖风险
@@ -203,15 +217,14 @@ export default {
           .replace(/(<a\s+[^>]*)href=/img, '$1')
       }
 
-      console.log(response)
       const html = secureHTML(response)
-      console.log(html)
 
       this.$alert(html, '快照详情', {
-        customClass: 'snapshot-dialog',
+        customClass,
         dangerouslyUseHTMLString: true,
         showConfirmButton: false,
-        showCancelButton: false
+        showCancelButton: false,
+        closeOnPressEscape: true
       })
     },
 
@@ -269,7 +282,8 @@ export default {
 </style>
 
 <style lang="postcss">
-.snapshot-dialog {
+.snapshot-dialog,
+.snapshot-dialog-mobile {
   position: fixed;
   top: 0;
   left: 0;
@@ -299,6 +313,12 @@ export default {
   }
   & .el-message-box__content {
     padding: 40px 0;
+  }
+}
+.snapshot-dialog-mobile {
+  & .el-message-box__content {
+    margin: 0 auto;
+    width: 425px;
   }
 }
 </style>
