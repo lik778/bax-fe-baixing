@@ -193,13 +193,21 @@ export default {
       const response = require('!!raw-loader!./snapshot.html').default
 
       // HTML 源码清洗，仅保留 HTML 和 CSS，a 标签不可点击
+      // TODO 有全局 CSS 覆盖风险
       function secureHTML(html) {
         return html
-          .split(/<script>[^<]*<\/script>/).join('')
-          .replace(/(<a\s+[^>]*)href=/gm, '$1')
+          .replace(/<!--[^-]*-->/img, '')
+          .replace(/<script[^>]*>/img, ' <!-- ')
+          .replace(/<\/script[\s]*>/img, ' --> ')
+          .replace(/<!--[^-]*-->/img, '')
+          .replace(/(<a\s+[^>]*)href=/img, '$1')
       }
 
-      this.$alert(secureHTML(response), '快照详情', {
+      console.log(response)
+      const html = secureHTML(response)
+      console.log(html)
+
+      this.$alert(html, '快照详情', {
         customClass: 'snapshot-dialog',
         dangerouslyUseHTMLString: true,
         showConfirmButton: false,

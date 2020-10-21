@@ -66,6 +66,7 @@ export default {
   }
   & .icon {
     display: block;
+    width: 100%;
     height: 100%;
     background: url('//file.baixing.net/201811/77178e618bfebbe8ba414919fb366d1e.png') no-repeat center;
     background-size: 28px 28px;
