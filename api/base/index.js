@@ -19,7 +19,7 @@ import es from 'base/es'
 import { redirect } from 'util'
 
 // 基础 Fetch 选项
-const baseOptions = {
+export const baseOptions = {
   beforeRequest() {
     es.emit('http fetch start')
   },

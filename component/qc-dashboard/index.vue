@@ -78,7 +78,7 @@ import 'echarts/lib/chart/pie'
 // TODO resize
 
 import { deviceValueLabelMap } from 'constant/qianci'
-import { getPromoteList, getWordPVsList } from 'api/qianci'
+import { getPromoteList, getWordPVsList, getSnapshot } from 'api/qianci'
 
 import pieChartOptionTmp from './pieChartOptionTmp'
 import lineChartOptionTmp from './lineChartOptionsTmp'
@@ -188,8 +188,23 @@ export default {
       }
     },
     // 显示快照
-    checkSnapshotPage(item) {
+    async checkSnapshotPage(item) {
+      // const response = await getSnapshot(url)
+      const response = require('!!raw-loader!./snapshot.html').default
 
+      // HTML 源码清洗，仅保留 HTML 和 CSS，a 标签不可点击
+      function secureHTML(html) {
+        return html
+          .split(/<script>[^<]*<\/script>/).join('')
+          .replace(/(<a\s+[^>]*)href=/gm, '$1')
+      }
+
+      this.$alert(secureHTML(response), '快照详情', {
+        customClass: 'snapshot-dialog',
+        dangerouslyUseHTMLString: true,
+        showConfirmButton: false,
+        showCancelButton: false
+      })
     },
 
     handleSizeChange(size) {
@@ -242,5 +257,40 @@ export default {
 }
 .pagniation {
   margin-top: 1em;
+}
+</style>
+
+<style lang="postcss">
+.snapshot-dialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  border-radius: 0;
+  overflow: hidden scroll;
+
+  & .el-message-box__header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    background: #eee;
+    z-index: 999;
+
+    & .el-message-box__headerbtn {
+      top: unset;
+      right: 25px;
+    }
+  }
+  & .el-message-box__content {
+    padding: 40px 0;
+  }
 }
 </style>

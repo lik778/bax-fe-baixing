@@ -1,7 +1,8 @@
 /* eslint-disable */
 
+import Fetch from 'fetch.io'
 import { paginationWrapper, pause } from 'util'
-import { qianci } from './base'
+import { qianci, baseOptions } from './base'
 
 const isDev = process.env.NODE_ENV === 'development'
 const useTestData = isDev && true
@@ -152,4 +153,16 @@ export async function getWordPVsList(opts = {}) {
     .query(opts)
     .json())
     .data
+}
+
+// 获取快照页面
+const fetchWithCORS = new Fetch({
+  ...baseOptions,
+})
+export async function getSnapshot(url) {
+  // !需要启动本地服务测试
+  if (useTestData) {
+    await fetchWithCORS.get(url)
+  }
+  return await fetchWithCORS.get(url)
 }
