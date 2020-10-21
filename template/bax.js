@@ -121,6 +121,13 @@ Vue.use(Progress)
 Vue.use(Card)
 Vue.use(Image)
 
+/**
+ * 错误回退组件
+ * @example
+ * <catch-error>
+ *   <unstable-component />
+ * </catch-error>
+ */
 Vue.component('catch-error', {
   name: 'error-boundary-with-default-handler',
   render(h) {
