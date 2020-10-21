@@ -314,6 +314,7 @@ export default {
 
   & .info {
       font-size: 13px;
+      color: inherit;
       padding-bottom: 25px;
   & > p {
       text-indent: 1em;

@@ -24,8 +24,8 @@ export const seoApiHost = isPro
 
 // TODO undone
 export const qcApiHost = isPro
-  ? 'http://localhost:8080'
-  : 'http://localhost:10888'
+  ? 'http://bax.baixing.com.cn/api/sem-batch'
+  : 'http://bax.baixing.cn/api/sem-batch'
 
 export const assetHost = '//file.baixing.net/bax-fe/asset/'
 

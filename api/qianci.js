@@ -5,6 +5,23 @@ import { qianci } from './base'
 
 const isDev = process.env.NODE_ENV === 'development'
 const useTestData = isDev && true
+// 锁词逻辑
+export async function keywordLocked(opts) {
+  return (await qianci
+    .get('/promote/keyword/locked')
+    .query(opts)
+    .json())
+    .data
+}
+
+// 优选词逻辑
+export async function createPreferredWords(opts) {
+  return (await qianci
+    .post('/promote/create')
+    .send(opts)
+    .json())
+    .data
+}
 
 // 获取查词记录
 export async function getKeywordsList(opts) {
@@ -25,7 +42,7 @@ export async function getKeywordsList(opts) {
     }
   }
   return (await qianci
-    .get('/api/sem-batch/promote/keywords')
+    .get('/promote/keywords')
     .query(opts)
     .json())
     .data
@@ -60,7 +77,7 @@ export const getPreferredWordsList = paginationWrapper(async function (opts = {}
     }
   }
   return (await qianci
-    .get('/api/sem-batch/promote/keyword/expandedWord')
+    .get('/promote/keyword/expandedWord')
     .query(opts)
     .json())
 })
@@ -78,7 +95,7 @@ export async function getCreative(opts = {}) {
     }
   }
   return await qianci
-    .post('/api/sem-batch/user/promote/update')
+    .post('/user/promote/update')
     .send(opts)
     .json()
 }
@@ -89,7 +106,7 @@ export async function saveCreative(opts = {}) {
     return { id: 'test' }
   }
   return await qianci
-    .post('/api/sem-batch/user/promote/update')
+    .post('/user/promote/update')
     .send(opts)
     .json()
 }
@@ -124,7 +141,7 @@ export async function getPromoteList(opts = {}) {
     }
   }
   return (await qianci
-    .get('/api/sem-batch/user/promotes')
+    .get('/user/promotes')
     .query(opts)
     .json())
     .data
