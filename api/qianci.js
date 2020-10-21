@@ -105,6 +105,7 @@ export async function createPreOrder(opts = {}) {
     .json()
 }
 
+// 获取推广管理列表
 export async function getPromoteList(opts = {}) {
   if (useTestData) {
     const data = Array.apply(null, { length: 15 }).map((x, i) => ({
@@ -125,6 +126,29 @@ export async function getPromoteList(opts = {}) {
   }
   return (await qianci
     .get('/api/sem-batch/user/promotes')
+    .query(opts)
+    .json())
+    .data
+}
+
+// 获取报表页计划的关键词数据列表
+export async function getWordPVsList(opts = {}) {
+  if (useTestData) {
+    const data = Array.apply(null, { length: 15 }).map((x, i) => ({
+      id: String(i),
+      coreWord: '核心词',
+      crawledBy: '百度',
+      platform: Math.floor(Math.random() * 3),
+      date: Math.floor(+new Date() / 1000),
+    }))
+    await pause()
+    return {
+      data,
+      total: data.length * 5
+    }
+  }
+  return (await qianci
+    .get('')
     .query(opts)
     .json())
     .data

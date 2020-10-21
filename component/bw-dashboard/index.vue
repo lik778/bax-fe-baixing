@@ -4,8 +4,7 @@
     <div class="tip">今日数据存在一定的延时，且最近1小时内的展现数据会存在波动</div>
     <section class="keyword">
       <div class="title">推广关键词</div>
-      <el-tabs class="bw-keyword-tabs"
-               v-model="activeTab"
+      <el-tabs v-model="activeTab"
                @tab-click="getChartData">
         <el-tab-pane label="不限关键词"
                      name="noLimit"></el-tab-pane>
@@ -172,7 +171,7 @@ export default {
       const promote = await getPromoteById(promoteId)
       this.promotes = [promote]
       return
-    } 
+    }
     this.getChartData()
   },
   methods: {
@@ -267,23 +266,6 @@ export default {
         border-color: #ff8273;
       }
     }
-  }
-}
-</style>
-
-<style lang="postcss">
-.bw-keyword-tabs {
-  font-size: 14px;
-  & .el-tabs__header {
-    margin-bottom: 20px;
-  }
-  & .el-tabs__nav-wrap {
-    &:after {
-      display: none;
-    }
-  }
-  & .el-tabs__active-bar {
-    height: 3px;
   }
 }
 </style>

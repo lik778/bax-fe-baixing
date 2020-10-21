@@ -9,13 +9,19 @@
   background-color: white;
 }
 
-.page>header {
+.page > header {
   color: #666;
   border-bottom: 1px solid #e6e6e6;
   padding-bottom: 9px;
+  font-size: 16px;
   font-weight: bold;
 }
-.page>header .side-header {
+.page > .page-section > header {
+  color: #666;
+  font-size: 14px;
+  font-weight: bold;
+}
+.page .side-header {
   margin-left: 10px;
   font-size: 12px;
   font-weight: normal;
