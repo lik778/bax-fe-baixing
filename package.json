@@ -23,6 +23,7 @@
     "echarts": "^4.0.3",
     "element-ui": "^2.13.0",
     "fetch.io": "^4.1.2",
+    "fflate": "^0.2.3",
     "file-saver": "^2.0.2",
     "json2csv": "^4.5.4",
     "lodash.flatten": "^4.4.0",

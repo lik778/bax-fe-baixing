@@ -5,18 +5,18 @@ const history = require('connect-history-api-fallback')
 const config = require('./webpack.dev')
 const express = require('express')
 const webpack = require('webpack')
-const proxyMiddleare = require('./proxy')
+const proxyMiddleware = require('./proxy')
 const bodyParser = require('body-parser')
 const { join } = require('path')
 
 const compiler = webpack(config)
 const app = express()
 
-// 处理代理逻辑
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 app.use(bodyParser.raw())
-app.use(proxyMiddleare)
+// 处理代理逻辑
+app.use(proxyMiddleware)
 
 app.use(history({
   rewrites: [{
@@ -44,6 +44,14 @@ app.use(require('webpack-dev-middleware')(compiler, {
 app.use(require('webpack-hot-middleware')(compiler))
 
 app.use(express.static(join(__dirname, '..')))
+
+// CORS
+app.all('*', function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*")
+  res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT")
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization")
+  next()
+})
 
 app.listen(3000, err => {
   if (err) {

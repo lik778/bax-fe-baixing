@@ -68,6 +68,7 @@
 </template>
 
 <script>
+import { decompressSync } from 'fflate'
 import dayjs from 'dayjs'
 import clone from 'clone'
 import ECharts from 'vue-echarts/components/ECharts.vue'
@@ -82,6 +83,26 @@ import { getPromoteList, getWordPVsList, getSnapshot } from 'api/qianci'
 
 import pieChartOptionTmp from './pieChartOptionTmp'
 import lineChartOptionTmp from './lineChartOptionsTmp'
+
+// buffer 转 string
+function buffer2string(data) {
+  let result = ''
+  for (let value of data)
+    result += String.fromCharCode(value)
+  // 防止中文乱码 https://www.cnblogs.com/justinwxt/p/12930582.html
+  return decodeURIComponent(escape(result))
+}
+
+// HTML 源码清洗，仅保留 HTML 和 CSS，a 标签不可点击
+// TODO 有全局 CSS 覆盖风险
+function secureHTML(html) {
+  return html
+    .replace(/<!--[^-]*-->/img, '')
+    .replace(/<script[^>]*>/img, ' <!-- ')
+    .replace(/<\/script[\s]*>/img, ' --> ')
+    .replace(/<!--[^-]*-->/img, '')
+    .replace(/(<a\s+[^>]*)href=/img, '$1')
+}
 
 const platformChartOptionTmp = Object.assign(clone(pieChartOptionTmp), {})
 
@@ -188,36 +209,40 @@ export default {
       }
     },
     // 显示快照
-    async checkSnapshotPage(item) {
+    async checkSnapshotPage(item = {}) {
       const { platform } = item
       let response = null
       let customClass = null
 
-      // const response = await getSnapshot(url)
-      // const response = require('!!raw-loader!./snapshot.html').default
-      switch (platform) {
-        case 0:
-          customClass = 'snapshot-dialog-mobile'
-          response = require('!!raw-loader!./snapshot_mobile.html').default
-          break
-        case 1:
-          customClass = 'snapshot-dialog'
-          response = require('!!raw-loader!./snapshot.html').default
-          break
-      }
+      // switch (platform) {
+      //   case 0:
+      //     customClass = 'snapshot-dialog-mobile'
+      //     response = require('!!raw-loader!./snapshot_mobile.html').default
+      //     break
+      //   case 1:
+      //     customClass = 'snapshot-dialog'
+      //     response = require('!!raw-loader!./snapshot.html').default
+      //     break
+      // }
 
-      // HTML 源码清洗，仅保留 HTML 和 CSS，a 标签不可点击
-      // TODO 有全局 CSS 覆盖风险
-      function secureHTML(html) {
-        return html
-          .replace(/<!--[^-]*-->/img, '')
-          .replace(/<script[^>]*>/img, ' <!-- ')
-          .replace(/<\/script[\s]*>/img, ' --> ')
-          .replace(/<!--[^-]*-->/img, '')
-          .replace(/(<a\s+[^>]*)href=/img, '$1')
-      }
+      // response = await getSnapshot()
+      // .then(res => {
+      //   console.log(res)
+      //   return res.arrayBuffer()
+      // })
 
-      const html = secureHTML(response)
+      // TODO sentry
+      const url = 'https://test-files.obs.cn-east-3.myhuaweicloud.com/snapshot.html.gz'
+      response = await fetch(url)
+        .then(res => {
+          console.log(res)
+          return res.arrayBuffer()
+        })
+      customClass = 'snapshot-dialog'
+
+      const compressed = new Uint8Array(response)
+      const decompressed = decompressSync(compressed)
+      const html = secureHTML(buffer2string(decompressed))
 
       this.$alert(html, '快照详情', {
         customClass,

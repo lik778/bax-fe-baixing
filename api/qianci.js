@@ -171,13 +171,8 @@ export async function getWordPVsList(opts = {}) {
 }
 
 // 获取快照页面
-const fetchWithCORS = new Fetch({
-  ...baseOptions,
-})
+const fetchWithoutPrefix = new Fetch({ ...baseOptions })
 export async function getSnapshot(url) {
-  // !需要启动本地服务测试
-  if (useTestData) {
-    await fetchWithCORS.get(url)
-  }
-  return await fetchWithCORS.get(url)
+  // * test file 'https://test-files.obs.cn-east-3.myhuaweicloud.com/snapshot.html.gz'
+  return await fetchWithoutPrefix.get(url)
 }
