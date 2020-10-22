@@ -17,15 +17,15 @@
 
       <div class="charts-con">
         <div class="chart-con platform-chart">
-          <e-charts :options="platformChartOptions" />
+          <e-charts ref="platformChartOptions" :options="platformChartOptions" />
         </div>
         <div class="chart-padding" />
         <div class="chart-con pvs-chart">
-          <e-charts :options="pvsChartOptions" />
+          <e-charts ref="pvsChartOptions" :options="pvsChartOptions" />
         </div>
         <div class="chart-padding" />
         <div class="chart-con visited-chart">
-          <e-charts :options="visitedChartOptions" />
+          <e-charts ref="visitedChartOptions" :options="visitedChartOptions" />
         </div>
       </div>
     </section>
@@ -76,7 +76,6 @@ import 'echarts/lib/component/legend'
 import 'echarts/lib/component/tooltip'
 import 'echarts/lib/chart/line'
 import 'echarts/lib/chart/pie'
-// TODO resize
 
 import { deviceValueLabelMap } from 'constant/qianci'
 import { getPromoteList, getWordPVsList, getSnapshot } from 'api/qianci'
@@ -181,8 +180,11 @@ export default {
   },
   async created() {
     await this.initPromoteListOptions()
-    this.initChartData()
+    this.initCharts()
     this.initPVsData()
+
+    window.addEventListener('resize', () => this.initCharts())
+    this.$on('hook:beforeDestroy', window.removeEventListener('resize', this.initCharts))
   },
   methods: {
     // 初始化推广计划列表
@@ -195,8 +197,10 @@ export default {
         this.query.promoteID = String(next.id)
       }
     },
-    async initChartData() {
-
+    initCharts() {
+      this.$refs.platformChartOptions.resize()
+      this.$refs.pvsChartOptions.resize()
+      this.$refs.visitedChartOptions.resize()
     },
     async initPVsData(page = 1) {
       const query = {}
