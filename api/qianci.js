@@ -1,7 +1,8 @@
 /* eslint-disable */
 
+import Fetch from 'fetch.io'
 import { paginationWrapper, pause } from 'util'
-import { qianci } from './base'
+import { qianci, baseOptions } from './base'
 
 const isDev = process.env.NODE_ENV === 'development'
 const useTestData = isDev && true
@@ -120,6 +121,7 @@ export async function createPreOrder(opts = {}) {
     .json()
 }
 
+// 获取推广管理列表
 export async function getPromoteList(opts = {}) {
   if (useTestData) {
     const data = Array.apply(null, { length: 15 }).map((x, i) => ({
@@ -143,4 +145,39 @@ export async function getPromoteList(opts = {}) {
     .query(opts)
     .json())
     .data
+}
+
+// 获取报表页计划的关键词数据列表
+export async function getWordPVsList(opts = {}) {
+  if (useTestData) {
+    const data = Array.apply(null, { length: 15 }).map((x, i) => ({
+      id: String(i),
+      coreWord: '核心词',
+      crawledBy: '百度',
+      platform: Math.floor(Math.random() * 2),
+      date: Math.floor(+new Date() / 1000),
+    }))
+    await pause()
+    return {
+      data,
+      total: data.length * 5
+    }
+  }
+  return (await qianci
+    .get('')
+    .query(opts)
+    .json())
+    .data
+}
+
+// 获取快照页面
+const fetchWithCORS = new Fetch({
+  ...baseOptions,
+})
+export async function getSnapshot(url) {
+  // !需要启动本地服务测试
+  if (useTestData) {
+    await fetchWithCORS.get(url)
+  }
+  return await fetchWithCORS.get(url)
 }

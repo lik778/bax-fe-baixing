@@ -9,11 +9,22 @@
   background-color: white;
 }
 
-.page>header {
+.page > header {
   color: #666;
   border-bottom: 1px solid #e6e6e6;
-  padding-bottom: 10px;
+  padding-bottom: 9px;
+  font-size: 16px;
   font-weight: bold;
+}
+.page > .page-section > header {
+  color: #666;
+  font-size: 14px;
+  font-weight: bold;
+}
+.page .side-header {
+  margin-left: 10px;
+  font-size: 12px;
+  font-weight: normal;
 }
 
 .statics {
@@ -45,6 +56,10 @@
 .ignore {
   color: #999999;
 }
+.warning {
+  color: #FFA205;
+}
+.strong,
 .error {
   color: #ff6350;
 }
@@ -104,5 +119,23 @@
   & /deep/ .number {
     font-size: 15px;
     font-weight: normal;
+  }
+}
+
+/******************************************** el-tabs */
+
+.el-tabs {
+  font-size: 14px;
+
+  & /deep/ .el-tabs__header {
+    margin-bottom: 20px;
+  }
+  & /deep/ .el-tabs__nav-wrap {
+    &:after {
+      display: none;
+    }
+  }
+  & /deep/ .el-tabs__active-bar {
+    height: 3px;
   }
 }
