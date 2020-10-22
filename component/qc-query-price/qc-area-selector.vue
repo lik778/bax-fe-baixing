@@ -69,7 +69,7 @@ export default {
     this.getProvinceData()
     this.$bus.$on('updateQcAreaSelectorView', (province) => {
       const removeProvince = this.selectedAreas.find(x => x.name === province.name)
-      removeProvince.checked = false
+      if (removeProvince) { removeProvince.checked = false }
     })
   },
   methods: {

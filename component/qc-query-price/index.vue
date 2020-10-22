@@ -69,16 +69,24 @@ export default {
       checkWordText: ''
     }
   },
+  watch: {
+    form: {
+      deep: true,
+      immediate: true,
+      handler() {
+        this.keywordsPanelVisible = false
+      }
+    }
+  },
   methods: {
     async checkWord() {
       this.$refs.form.validate(async isValid => {
         if (isValid) {
           const ret = await keywordLocked({ coreWord: this.form.keyword, provinces: this.form.areas.map(x => x.name) })
-          console.log(ret)
-          if (true) {
+          if (ret.message === 'success') {
             this.keywordsPanelVisible = true
           } else {
-            this.checkWordText = '检测核心词在所选的地区是否已被售出，如已被售出文案提示用户'
+            this.checkWordText = '检测核心词在所选的地区是否已被售出'
           }
         } else {
           return false

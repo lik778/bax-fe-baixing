@@ -58,6 +58,8 @@
 </template>
 
 <script>
+import { Message } from 'element-ui'
+import { createPreferredWords } from 'api/qianci'
 import KeywordView from './view'
 import KeywordInput from './input'
 import clone from 'clone'
@@ -180,7 +182,6 @@ export default {
   async created() {
     Object.keys(this.keywordOptions).forEach(x => {
       if (x === 'A') {
-        console.log(this.form.areas)
         this.keywordOptions['A'].keywords = this.form.areas.reduce((t, c) => {
           return t.concat(c.cities)
         }, [])
@@ -259,9 +260,16 @@ export default {
         return curr
       }, {})
     },
-    sumbitWords() {
-      // todo: 这里需要优选接口
-      this.successDialogVisible = true
+    async sumbitWords() {
+      const { keyword, areas } = this.form
+      const { code, message, data } = await createPreferredWords({ coreWord: keyword, 
+        provinces: areas.map(x => x.name), prefixWords: this.keywordOptions.B.keywords, 
+        suffixWords: this.keywordOptions.D.keywords })
+      if ([0, 200].includes(code)) {
+        this.successDialogVisible = true
+      } else {
+        Message.warning(message)
+      }
     }
   },
   watch: {
