@@ -7,20 +7,18 @@ const isDev = process.env.NODE_ENV === 'development'
 const useTestData = isDev && true
 // 锁词逻辑
 export async function keywordLocked(opts) {
-  return (await qianci
-    .get('/promote/keyword/locked')
+  return await qianci
+    .get('/promote/keyword/isLocked')
     .query(opts)
-    .json())
-    .data
+    .json()
 }
 
 // 优选词逻辑
 export async function createPreferredWords(opts) {
-  return (await qianci
+  return await qianci
     .post('/promote/create')
     .send(opts)
-    .json())
-    .data
+    .json()
 }
 
 // 获取查词记录

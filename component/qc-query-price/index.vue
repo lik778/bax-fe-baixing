@@ -70,10 +70,11 @@ export default {
     }
   },
   methods: {
-    checkWord() {
+    async checkWord() {
       this.$refs.form.validate(async isValid => {
         if (isValid) {
-          // const ret = await keywordLocked({...this.form})
+          const ret = await keywordLocked({ coreWord: this.form.keyword, provinces: this.form.areas.map(x => x.name) })
+          console.log(ret)
           if (true) {
             this.keywordsPanelVisible = true
           } else {
