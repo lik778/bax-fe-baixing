@@ -33,6 +33,7 @@
 </template>
 
 <script>
+import { keywordLocked,createPreferredWords } from "api/qianci"
 import ProductIntro from "com/qc-query-price/product-intro"
 import QcAreaSelector from "com/qc-query-price/qc-area-selector"
 import SelectKeywords from './select-keywords'
@@ -72,6 +73,7 @@ export default {
     checkWord() {
       this.$refs.form.validate(async isValid => {
         if (isValid) {
+          // const ret = await keywordLocked({...this.form})
           if (true) {
             this.keywordsPanelVisible = true
           } else {
