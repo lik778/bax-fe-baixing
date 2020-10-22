@@ -82,8 +82,8 @@ export default {
     async checkWord() {
       this.$refs.form.validate(async isValid => {
         if (isValid) {
-          const ret = await keywordLocked({ coreWord: this.form.keyword, provinces: this.form.areas.map(x => x.name) })
-          if (ret.message === 'success') {
+          const { code } = await keywordLocked({ coreWord: this.form.keyword, provinces: this.form.areas.map(x => x.name) })
+          if (code === 0) {
             this.keywordsPanelVisible = true
           } else {
             this.checkWordText = '检测核心词在所选的地区是否已被售出'

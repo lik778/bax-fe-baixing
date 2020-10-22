@@ -39,7 +39,7 @@
       <div>如：上海（A）专业的（B）空调维修（C）多少钱（D）</div>
     </div>
     <div class="action-area">
-      <p>当前备选词数量：<strong>{{wordNum}}</strong>个</p>
+      <p v-show="!handleDisabled">当前备选词数量：<strong>{{wordNum}}</strong>个</p>
       <p style="color: #FF6350">您的内容涉及“xxxx（风控三级标签）”“xxx（关键词）”，请修改后重新提交。</p>
       <el-button type="primary" @click="sumbitWords" :disabled="handleDisabled" size="medium">提交优选</el-button>
     </div>
@@ -183,6 +183,7 @@ export default {
     Object.keys(this.keywordOptions).forEach(x => {
       if (x === 'A') {
         this.keywordOptions['A'].keywords = this.form.areas.reduce((t, c) => {
+          t.push(c.name)
           return t.concat(c.cities)
         }, [])
       } else if (x === 'C') {
@@ -265,7 +266,7 @@ export default {
       const { code, message, data } = await createPreferredWords({ coreWord: keyword, 
         provinces: areas.map(x => x.name), prefixWords: this.keywordOptions.B.keywords, 
         suffixWords: this.keywordOptions.D.keywords })
-      if ([0, 200].includes(code)) {
+      if (code === 0) {
         this.successDialogVisible = true
       } else {
         Message.warning(message)
