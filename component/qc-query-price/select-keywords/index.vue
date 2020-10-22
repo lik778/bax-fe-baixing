@@ -60,7 +60,6 @@
 <script>
 import KeywordView from './view'
 import KeywordInput from './input'
-import { getAreasByCityId } from '../../../api/ka'
 import clone from 'clone'
 
 const keywordOptions = {
@@ -179,10 +178,12 @@ export default {
     KeywordView
   },
   async created() {
-    const areas = await this.getAreas()
     Object.keys(this.keywordOptions).forEach(x => {
       if (x === 'A') {
-        this.keywordOptions['A'].keywords = areas
+        console.log(this.form.areas)
+        this.keywordOptions['A'].keywords = this.form.areas.reduce((t, c) => {
+          return t.concat(c.cities)
+        }, [])
       } else if (x === 'C') {
         this.keywordOptions['C'].keywords = [this.form.keyword]
       }
@@ -195,14 +196,6 @@ export default {
     })
   },
   methods: {
-    async getAreas() {
-      const areas = []
-      for(let i = 0; i < this.form.areas.length; i++) {
-        let area = await getAreasByCityId(this.form.areas[i].id)
-        areas.push(...area.map(x => x.name))
-      }
-      return areas
-    },
     getProp(prop) {
       const existKeywordObj = this.keywordOptions[this.activeType]
       return existKeywordObj && existKeywordObj[prop]
