@@ -5,7 +5,7 @@
         <product-intro></product-intro>
         <el-form :model="form" :rules="rules" label-width="120px" ref="form" label-position="left" class="form" @submit.native.prevent>
           <el-form-item label="推广关键词" prop="keyword">
-            <el-input v-model="form.keyword" style="width: 200px" maxlength="8"/>
+            <el-input v-model="form.keyword" style="width: 200px" maxlength="10"/>
           </el-form-item>
           <el-form-item label="推广区域" prop="areas">
             <el-tag type="success" closable class="kw-tag"
@@ -56,7 +56,7 @@ export default {
       rules: {
         keyword: [{required: true, message: '请填写推广关键词'},
           { validator: (rule, value, callback) => {
-              if (!/^[\u4e00-\u9fa5]{2,8}$/.test(value)) { return callback(new Error('单个词长度不少于2个字，不超过8个字且为汉字'))}
+              if (!/^[\u4E00-\u9FA5A-Za-z0-9]{2,10}$/.test(value)) { return callback(new Error('单个词长度2-10个字'))}
               callback() }, trigger: 'blur' }],
         areas: [{type: 'array', required: true, trigger: 'change', message: '请选择推广区域'},
           { validator: (rule, value, callback) => {
