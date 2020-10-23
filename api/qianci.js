@@ -8,10 +8,18 @@ const isDev = process.env.NODE_ENV === 'development'
 const useTestData = isDev && true
 // 锁词逻辑
 export async function keywordLocked(opts) {
-  return await qianci
+  return qianci
     .get('/promote/keyword/isLocked')
     .query(opts)
     .json()
+}
+
+// 获取千词核心词
+export async function getQcAllAreas() {
+  const body = await qianci
+    .get('/area/all')
+    .json()
+  return body.data
 }
 
 // 优选词逻辑

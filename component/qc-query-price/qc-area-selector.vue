@@ -13,32 +13,22 @@
         </el-checkbox>
       </div>
     </main>
-    <header slot="title" class="dialog-header">
+    <div slot="title" class="dialog-header">
       <h5 class="title">区域选择<span>(仅可选择两个地区)</span></h5>
+    </div>
+    <div slot="footer" class="dialog-footer">
       <div class="buttons">
         <el-button @click="cancel">取消</el-button>
         <el-button type="primary" @click="ok">确认</el-button>
       </div>
-    </header>
+    </div>
   </el-dialog>
 </template>
 
 <script>
 import isequal from 'lodash.isequal'
-import { getAllCities } from "../../api/ka"
+import { getQcAllAreas } from "api/qianci"
 import clone from 'clone'
-
-const formatAreaOpts = (data) => {
-  if (!Array.isArray(data)) return null
-
-  return data.map(item => {
-    return {
-      ...item,
-      checked: false,
-      value: item.name
-    }
-  })
-}
 
 export default {
   name: 'qc-area-selector',
@@ -79,14 +69,13 @@ export default {
     this.getProvinceData()
     this.$bus.$on('updateQcAreaSelectorView', (province) => {
       const removeProvince = this.selectedAreas.find(x => x.name === province.name)
-      removeProvince.checked = false
+      if (removeProvince) { removeProvince.checked = false }
     })
   },
   methods: {
     async getProvinceData() {
-      const blackList = ['m1', 'm6'] // 新疆和西藏去掉
-      const allCities = await getAllCities()
-      this.provinceList = Object.freeze(formatAreaOpts(allCities)).filter(x => !blackList.includes(x.id))
+      const areas = await getQcAllAreas()
+      this.provinceList = Object.keys(areas).map(k => { return { name: k, checked: false, cities: areas[k]  } })
     },
     disabledProvinceCheck(province) {
       return !this.selectedAreas.map(p => p.name).includes(province.name) && this.selectedAreas.length === 2

@@ -165,7 +165,32 @@ export const seo = new Fetch({
 
 export const qianci = new Fetch({
   ...baseOptions,
-  prefix: qcApiHost
+  prefix: qcApiHost,
+  afterResponse(res) {
+    es.emit('http fetch end')
+    if (res.status === 200) {
+      // pass
+    } else if (res.status === 401) {
+      Message.error('请重新登录 >_<')
+      return redirect('signin', `return=${encodeURIComponent(location.pathname + location.search)}`)
+    } else {
+      res.clone().json().then(body => {
+        Message.error(body.message || `出错了，请稍后重试`)
+      })
+      sentry.captureMessage(res.statusText, 'info')
+      throw new Error(res.statusText)
+    }
+  },
+  afterJSON(body) {
+    if (
+      body &&
+      body.code === 4114
+    ) {
+      // 没有经过身份证绑定
+      chargeNotice()
+      throw new Error('请先绑定身份认证')
+    }
+  }
 })
 
 export function trim(obj) {

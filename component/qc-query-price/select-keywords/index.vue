@@ -39,7 +39,7 @@
       <div>如：上海（A）专业的（B）空调维修（C）多少钱（D）</div>
     </div>
     <div class="action-area">
-      <p>当前备选词数量：<strong>{{wordNum}}</strong>个</p>
+      <p v-show="!handleDisabled">当前备选词数量：<strong>{{wordNum}}</strong>个</p>
       <p style="color: #FF6350">您的内容涉及“xxxx（风控三级标签）”“xxx（关键词）”，请修改后重新提交。</p>
       <el-button type="primary" @click="sumbitWords" :disabled="handleDisabled" size="medium">提交优选</el-button>
     </div>
@@ -58,9 +58,10 @@
 </template>
 
 <script>
+import { Message } from 'element-ui'
+import { createPreferredWords } from 'api/qianci'
 import KeywordView from './view'
 import KeywordInput from './input'
-import { getAreasByCityId } from '../../../api/ka'
 import clone from 'clone'
 
 const keywordOptions = {
@@ -179,10 +180,12 @@ export default {
     KeywordView
   },
   async created() {
-    const areas = await this.getAreas()
     Object.keys(this.keywordOptions).forEach(x => {
       if (x === 'A') {
-        this.keywordOptions['A'].keywords = areas
+        this.keywordOptions['A'].keywords = this.form.areas.reduce((t, c) => {
+          t.push(c.name)
+          return t.concat(c.cities)
+        }, [])
       } else if (x === 'C') {
         this.keywordOptions['C'].keywords = [this.form.keyword]
       }
@@ -195,14 +198,6 @@ export default {
     })
   },
   methods: {
-    async getAreas() {
-      const areas = []
-      for(let i = 0; i < this.form.areas.length; i++) {
-        let area = await getAreasByCityId(this.form.areas[i].id)
-        areas.push(...area.map(x => x.name))
-      }
-      return areas
-    },
     getProp(prop) {
       const existKeywordObj = this.keywordOptions[this.activeType]
       return existKeywordObj && existKeywordObj[prop]
@@ -266,9 +261,16 @@ export default {
         return curr
       }, {})
     },
-    sumbitWords() {
-      // todo: 这里需要优选接口
-      this.successDialogVisible = true
+    async sumbitWords() {
+      const { keyword, areas } = this.form
+      const { code, message, data } = await createPreferredWords({ coreWord: keyword, 
+        provinces: areas.map(x => x.name), prefixWords: this.keywordOptions.B.keywords, 
+        suffixWords: this.keywordOptions.D.keywords })
+      if (code === 0) {
+        this.successDialogVisible = true
+      } else {
+        Message.warning(message)
+      }
     }
   },
   watch: {
