@@ -79,6 +79,7 @@ import 'echarts/lib/chart/pie'
 
 import { deviceValueLabelMap } from 'constant/qianci'
 import { getPromoteList, getWordPVsList, getSnapshot } from 'api/qianci'
+import { checkSupportShadowDOM } from 'util'
 
 import pieChartOptionTmp from './pieChartOptionTmp'
 import lineChartOptionTmp from './lineChartOptionsTmp'
@@ -93,7 +94,6 @@ function buffer2string(data) {
 }
 
 // HTML 源码清洗，仅保留 HTML 和 CSS，a 标签不可点击
-// TODO 有全局 CSS 覆盖风险
 function secureHTML(html) {
   return html
     .replace(/<!--[^-]*-->/img, '')
@@ -248,13 +248,26 @@ export default {
       const decompressed = decompressSync(compressed)
       const html = secureHTML(buffer2string(decompressed))
 
-      this.$alert(html, '快照详情', {
+      const supportShadowDOM = checkSupportShadowDOM()
+      const pageOptions = {
         customClass,
         dangerouslyUseHTMLString: true,
         showConfirmButton: false,
         showCancelButton: false,
         closeOnPressEscape: true
-      })
+      }
+      if (supportShadowDOM) {
+        this.$alert('<div class="snapshot-content" />', '快照详情', pageOptions)
+        this.$nextTick(() => {
+          const container = document.querySelector('.snapshot-content')
+          const shadow = container.attachShadow({ mode: 'open' })
+          const snapshotFix = '<style>/*这里可以放一些快照页面样式的修复代码*/</style>'
+          shadow.innerHTML = (html + snapshotFix)
+        })
+      } else {
+        this.$alert(html, '快照详情', pageOptions)
+      }
+
     },
 
     handleSizeChange(size) {
