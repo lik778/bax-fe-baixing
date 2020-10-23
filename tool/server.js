@@ -5,18 +5,9 @@ const history = require('connect-history-api-fallback')
 const config = require('./webpack.dev')
 const express = require('express')
 const webpack = require('webpack')
-const proxyMiddleware = require('./proxy')
-const bodyParser = require('body-parser')
 const { join } = require('path')
-
 const compiler = webpack(config)
 const app = express()
-
-app.use(bodyParser.urlencoded({ extended: true }))
-app.use(bodyParser.json())
-app.use(bodyParser.raw())
-// 处理代理逻辑
-app.use(proxyMiddleware)
 
 app.use(history({
   rewrites: [{
