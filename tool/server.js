@@ -45,14 +45,6 @@ app.use(require('webpack-hot-middleware')(compiler))
 
 app.use(express.static(join(__dirname, '..')))
 
-// CORS
-app.all('*', function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*")
-  res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT")
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization")
-  next()
-})
-
 app.listen(3000, err => {
   if (err) {
     return console.error(err)
