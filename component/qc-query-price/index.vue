@@ -33,6 +33,7 @@
 </template>
 
 <script>
+import { Message } from 'element-ui'
 import { keywordLocked,createPreferredWords } from "api/qianci"
 import ProductIntro from "com/qc-query-price/product-intro"
 import QcAreaSelector from "com/qc-query-price/qc-area-selector"
@@ -82,9 +83,11 @@ export default {
     async checkWord() {
       this.$refs.form.validate(async isValid => {
         if (isValid) {
-          const { code } = await keywordLocked({ coreWord: this.form.keyword, provinces: this.form.areas.map(x => x.name) })
+          const { code, message } = await keywordLocked({ coreWord: this.form.keyword, provinces: this.form.areas.map(x => x.name) })
           if (code === 0) {
             this.keywordsPanelVisible = true
+          } else if (code === 4006) {
+            Message.error(message)
           } else {
             this.checkWordText = '检测核心词在所选的地区是否已被售出'
           }
