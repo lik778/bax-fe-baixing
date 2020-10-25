@@ -83,13 +83,15 @@ export default {
     async checkWord() {
       this.$refs.form.validate(async isValid => {
         if (isValid) {
-          const { code, message } = await keywordLocked({ coreWord: this.form.keyword, provinces: this.form.areas.map(x => x.en) })
+          const { code, message, data } = await keywordLocked({ coreWord: this.form.keyword, provinces: this.form.areas.map(x => x.en) })
           if (code === 0) {
-            this.keywordsPanelVisible = true
+            if (data.locked.length === 0) {
+              this.keywordsPanelVisible = true
+            } else {
+              this.checkWordText = `检测${this.form.keyword}在所选的地区(${ data.locked.join(',') })已被售出`
+            }
           } else if (code === 4006) {
             Message.error(message)
-          } else {
-            this.checkWordText = '检测核心词在所选的地区是否已被售出'
           }
         } else {
           return false
