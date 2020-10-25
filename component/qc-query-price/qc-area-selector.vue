@@ -49,6 +49,7 @@ export default {
       originSelectedAreas: [],
       originProvinceList: [],
       provinceList: [],
+      provinceMapping: {}
     }
   },
   watch: {
@@ -74,8 +75,9 @@ export default {
   },
   methods: {
     async getProvinceData() {
-      const areas = await getQcAllAreas()
-      this.provinceList = Object.keys(areas).map(k => { return { name: k, checked: false, cities: areas[k]  } })
+      const { provinceMapping, provinces } = await getQcAllAreas()
+      this.provinceMapping = provinceMapping
+      this.provinceList = Object.keys(provinces).map(k => { return { name: k, en: provinceMapping[k], checked: false, cities: provinces[k]  } })
     },
     disabledProvinceCheck(province) {
       return !this.selectedAreas.map(p => p.name).includes(province.name) && this.selectedAreas.length === 2

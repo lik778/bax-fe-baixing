@@ -2,24 +2,24 @@
   <div class="page">
     <header>我的推广计划</header>
     <!-- 搜索表单 -->
-    <el-form class="query-form" :inline="true" :model="query" label-width="60px" @submit.native.prevent="() => getQueryListWithTip()">
+    <el-form class="query-form" :inline="true" :model="query" label-width="80px">
       <el-form-item label="核心词">
-        <el-input
-          v-model="query.keyword"
-          placeholder="请输入核心词"
-          suffix-icon="el-icon-search"
-        />
+        <el-input v-model="query.keyword" placeholder="请输入核心词" suffix-icon="el-icon-search"/>
       </el-form-item>
-      <div />
-      <el-form-item label="状态">
-        <el-checkbox-group v-model="query.status">
-          <el-checkbox
-            v-for="item in options.wordStatus"
-            :label="item.label"
-            :value="item.value"
-            :key="item.label"
-          />
-        </el-checkbox-group>
+      <el-form-item label="投放状态">
+        <el-select v-model="query.status" placeholder="请选择投放状态">
+          <el-option key="全部" label="全部" value=""/>
+          <el-option v-for="(value, key) in AUDIT_STATUS_MAPPING" :key="key" :label="value" :value="key" />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="审核状态">
+        <el-select v-model="query.auditStatus" placeholder="请选择审核状态">
+          <el-option key="全部" label="全部" value=""/>
+          <el-option v-for="(value, key) in AUDIT_STATUS_MAPPING" :key="key" :label="value" :value="key" />
+        </el-select>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="search()">查询</el-button>
       </el-form-item>
     </el-form>
     <el-button class="go-chart-page-btn" type="primary" @click="goChartPage">查看计划报表</el-button>
@@ -77,6 +77,9 @@ import {
   auditStatusOptions,
   getAuditStatusWith
 } from 'constant/qianci'
+
+import { AUDIT_STATUS_MAPPING } from 'constant/qianci1'
+
 import  { getBusinessLicense } from 'api/seo'
 import { getPromoteList } from 'api/qianci'
 import { parseQuery, formatReqQuery, debounce, normalize } from 'util'
@@ -87,7 +90,6 @@ export default {
     salesInfo: Object,
   },
   data() {
-    this.debouncedGetQueryListWithTip = debounce(() => this.getQueryListWithTip(), 500)
     return {
       getExpandingWordStatusWith,
       getDisplayExpandingWordStatusWith,
@@ -96,10 +98,12 @@ export default {
       getPutInStatusWith,
       auditStatusOptions,
       getAuditStatusWith,
+      AUDIT_STATUS_MAPPING,
       query: {
         keyword: '',
         status: [],
         date: '',
+        auditStatus: ''
       },
       pagination: {
         current: 1,
@@ -138,14 +142,6 @@ export default {
       return this.store.saleId && this.store.userId
     }
   },
-  watch: {
-    query: {
-      deep: true,
-      handler() {
-        this.debouncedGetQueryListWithTip()
-      }
-    }
-  },
   created() {
     const query = parseQuery(window.location.search)
     const { saleId, userId } = query
@@ -155,6 +151,9 @@ export default {
     this.getQueryList()
   },
   methods: {
+    search() {
+      this.getQueryListWithTip()
+    },
     handleSizeChange(size) {
       this.pagination.size = size
       this.getQueryListWithTip()
@@ -276,30 +275,9 @@ export default {
 
 <style lang="postcss" scoped>
 .query-form {
-  margin-top: 18px;
   padding: 16px;
   background: #f5f7fa;
   border-radius: 4px;
-
-  & .el-form-item {
-    margin-bottom: 0;
-  }
-
-  & .actions {
-    /* display: block; */
-    /* margin-bottom: 0; */
-
-    & >>> .el-form-item__label {
-      opacity: 0;
-    }
-  }
-
-  & .el-form-item {
-    margin-top: 1em;
-  }
-  & .el-form-item:first-child {
-    margin-top: 0;
-  }
 }
 
 .go-chart-page-btn,

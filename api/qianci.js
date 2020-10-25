@@ -16,10 +16,10 @@ export async function keywordLocked(opts) {
 
 // 获取千词核心词
 export async function getQcAllAreas() {
-  const body = await qianci
+  const { data } = await qianci
     .get('/area/all')
     .json()
-  return body.data
+  return { provinceMapping: data.cnToEnMap, provinces: data.provinceCitiesMap }
 }
 
 // 优选词逻辑

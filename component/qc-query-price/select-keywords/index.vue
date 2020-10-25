@@ -265,7 +265,7 @@ export default {
       const { keyword, areas } = this.form
       const { code, message, data } = await createPreferredWords({ coreWord: keyword, 
         provinces: areas.map(x => x.name), prefixWords: this.keywordOptions.B.keywords, 
-        suffixWords: this.keywordOptions.D.keywords })
+        suffixWords: this.keywordOptions.D.keywords, salesId: 16 }) // salesId写死了
       if (code === 0) {
         this.successDialogVisible = true
       } else {
