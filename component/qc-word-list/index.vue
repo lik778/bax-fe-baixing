@@ -140,6 +140,7 @@ export default {
       },
       store: {
         userId: null,
+        salesId: null
       },
       options: {
         wordStatus: [
@@ -159,7 +160,8 @@ export default {
   },
   created() {
     const query = parseQuery(window.location.search)
-    this.store.userId = query.userId
+    this.store.userId = query.user_id
+    this.store.salesId = query.sales_id
   },
   mounted() {
     this.getQueryList()
@@ -182,7 +184,7 @@ export default {
       const query = {
         page: page - 1,
         size: this.pagination.size,
-        salesId: this.store.userId,
+        salesId: this.store.salesId,
         ...formatReqQuery(normalize({
           coreWord: ['keyword']
         }, this.query )),
@@ -200,21 +202,16 @@ export default {
     },
     // 生成付款 URL
     async genPaymentURL(item) {
-      if (this.store.userId) {
-        const { data: preTradeId } = await createPreOrder({
-          promoteId: item.id,
-          targetUserId: this.store.userId
-        })
-        if (this.isUser('BAIXING_SALES')) {
-          return `${orderServiceHost}/${preKeywordPath}/?appId=105&seq=${preTradeId}`
-        }
-        if (this.isUser('AGENT_ACCOUNTING')) {
-          location.href = `${orderServiceHost}/${preKeywordPath}/?appId=105&seq=${preTradeId}&agentId=${this.userInfo.id}`
-        }
-        // return `${orderServiceHost}/${preKeywordPath}/?appId=105&seq=${preTradeId}`
-      } else {
-        throw new Error('Can\'t create preorder, no userId in URL')
+      const { data: preTradeId } = await createPreOrder({
+        promoteId: item.id,
+        targetUserId: this.store.userId
+      })
+      if (this.isUser('BAIXING_SALES')) {
+        return `${orderServiceHost}/${preKeywordPath}/?appId=105&seq=${preTradeId}`
       }
+      if (this.isUser('AGENT_ACCOUNTING')) {
+        location.href = `${orderServiceHost}/${preKeywordPath}/?appId=105&seq=${preTradeId}&agentId=${this.userInfo.id}`
+        }
     },
 
     /*********************************************************** ux */
