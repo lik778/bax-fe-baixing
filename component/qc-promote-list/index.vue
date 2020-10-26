@@ -69,7 +69,6 @@
 import dayjs from 'dayjs'
 
 import { AUDIT_STATUS_MAPPING, PROMOTE_STATUS_MAPPING, deviceValueLabelMap } from 'constant/qianci'
-
 import  { getBusinessLicense } from 'api/seo'
 import { getPromoteList } from 'api/qianci'
 import { parseQuery, formatReqQuery, debounce, normalize } from 'util'
@@ -110,14 +109,6 @@ export default {
       loading: {
         checkLicense: false
       },
-    }
-  },
-  computed: {
-    safeSelectedItem() {
-      return this.active.selectedItem || {}
-    },
-    canPayForWords() {
-      return this.store.saleId && this.store.userId
     }
   },
   created() {
@@ -225,13 +216,6 @@ export default {
 
     checkButtonLoading(row) {
       return this.active.selectedItem === row && this.loading.checkLicense
-    },
-    platformFormatter({ plat }) {
-      switch (plat) {
-        case 'pc': return '电脑'
-        case 'mobile': return '手机'
-        default: return '未知'
-      }
     },
     restDayFormatter({ remainDate }) {
       const restDays = Math.max(0, (dayjs(remainDate * 1000) - dayjs())) / (24 * 60 * 60 * 1000)
