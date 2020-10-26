@@ -120,12 +120,9 @@ export async function saveCreative(opts = {}) {
 
 // 创建预订单
 export async function createPreOrder(opts = {}) {
-  if (useTestData) {
-    return 'test'
-  }
   return await qianci
-    .get('/api/xxx')
-    .query(opts)
+    .post('/trade/order/pre')
+    .send(opts)
     .json()
 }
 

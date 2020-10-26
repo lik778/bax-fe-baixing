@@ -103,11 +103,15 @@ import { orderServiceHost, preKeywordPath } from 'config'
 import { expandingWordStatusMap, getExpandingWordStatusWith, getDisplayExpandingWordStatusWith, isExpandingWordStatusDisplayError, expandingWordDisplayStatusOptions } from 'constant/qianci'
 import { createPreOrder, getKeywordsList } from 'api/qianci'
 import { parseQuery, normalize, formatReqQuery } from 'util'
+import { normalizeRoles } from 'util/role'
 
 export default {
   name: "qc-word-list",
   components: {
     PaymentDialog
+  },
+  props: {
+    userInfo: Object,
   },
   data() {
     return {
@@ -188,19 +192,23 @@ export default {
     },
     // 生成付款 URL
     async genPaymentURL(item) {
-      // TODO dev to pro
       if (this.store.userId) {
-        const preTradeId = await createPreOrder({
+        // * bax-id: 1,
+        // promoteId: 8,
+        // targetUserId: 228466250
+        const { data: preTradeId } = await createPreOrder({
           promoteId: item.id,
-          targetUserId: userId
+          targetUserId: this.store.userId
         })
-        // if (this.isUser('BAIXING_SALES')) {
-        //   return `${orderServiceHost}/${preKeywordPath}/?appId=105&seq=${preTradeId}`
-        // }
-        // if (this.isUser('AGENT_ACCOUNTING')) {
-        //   location.href = `${orderServiceHost}/${preKeywordPath}/?appId=105&seq=${preTradeId}&agentId=${this.userInfo.id}`
-        // }
-        return `${orderServiceHost}/${preKeywordPath}/?appId=105&seq=${preTradeId}`
+        if (this.isUser('BAIXING_SALES')) {
+          return `${orderServiceHost}/${preKeywordPath}/?appId=105&seq=${preTradeId}`
+        }
+        if (this.isUser('AGENT_ACCOUNTING')) {
+          location.href = `${orderServiceHost}/${preKeywordPath}/?appId=105&seq=${preTradeId}&agentId=${this.userInfo.id}`
+        }
+        // return `${orderServiceHost}/${preKeywordPath}/?appId=105&seq=${preTradeId}`
+      } else {
+        throw new Error('Can\'t create preorder, no userId in URL')
       }
     },
 
@@ -267,6 +275,9 @@ export default {
         p.EXPANDING_WORD_SUCCEED,
         p.PENDING_PAYMENT
       ].includes(+status)
+    },
+    isUser(role) {
+      return normalizeRoles(this.userInfo.roles).includes(role)
     }
   }
 }
