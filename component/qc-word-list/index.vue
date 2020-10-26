@@ -268,7 +268,9 @@ export default {
       ].includes(status)
     },
     enablePayButton(status) {
-      return [].includes(status)
+      return [
+        ...getEWStatusWith('label', '待支付').value
+      ].includes(status)
     },
     isUser(role) {
       return normalizeRoles(this.userInfo.roles).includes(role)

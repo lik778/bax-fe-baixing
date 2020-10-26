@@ -40,14 +40,27 @@ export const AUDIT_STATUS_MAPPING = {
 
 /* 拓词状态 */
 export const EW = {
+  UNKNOWN: { value: 'UNKNOWN', label: '未知' },
   CREATED: { value: 'CREATED', label: '创建' },
   PENDING: { value: 'EXPANDING_WORD', label: '待拓词' },
   PENDING_MODIFY_PREFIX_SUFFIX: { value: 'PENDING_MODIFY_PREFIX_SUFFIX', label: '待修改B/D词' },
   PENDING_BIND_USER: { value: 'PENDING_BIND_USER', label: '待绑定用户' },
   PENDING_PAYMENT: { value: 'PENDING_PAYMENT', label: '待支付' },
-  PAID: { value: 'PAID', label: '已支付' }
+  PAID: { value: 'PAID', label: '已支付' },
+  PENDING_EDIT: { value: 'PENDING_EDIT', label: '待编辑物料' },
+  EDITED: { value: 'EDITED', label: '物料已编辑' },
+  ONLINE: { value: 'ONLINE', label: '已上线' },
+  ON_PROMOTE: { value: 'ON_PROMOTE', label: '投放中' },
+  FINISHED: { value: 'FINISHED', label: '已完成' },
+  CEASED: { value: 'CEASED', label: '已停止' },
+  PAUSED: { value: 'PAUSED', label: '已暂停' }
 }
-export const isExpandWordStatusError = status => status === EW.PENDING_MODIFY_PREFIX_SUFFIX.value
+export const isExpandWordStatusError = status => [
+  EW.PENDING_MODIFY_PREFIX_SUFFIX.value,
+  EW.CEASED.value,
+  EW.PAUSED.value,
+  EW.UNKNOWN.value
+].includes(status)
 export const EW_OPTIONS = [
   {
     label: '待拓词',
@@ -83,8 +96,8 @@ export function getEWStatusWith(key, val) {
       : x[key] === val
   })
   if (handle) return handle
-  const handleKey = Object.keys(EW).find(key => {
-    return EW[key][key] === val
+  const handleKey = Object.keys(EW).find(x => {
+    return EW[x][key] === val
   })
   handle = EW[handleKey]
   if (handle) return handle
