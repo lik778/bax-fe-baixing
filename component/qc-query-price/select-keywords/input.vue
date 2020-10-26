@@ -5,6 +5,7 @@
                :title="title"
                z-index="1000"
                @close="handleClose"
+               :close-on-click-modal="false"
                custom-class="keyword-input-dialog"
                class="keyword-input">
       <div class="info"

@@ -85,8 +85,7 @@ export default {
       AUDIT_STATUS_MAPPING,
       query: {
         keyword: '',
-        status: [],
-        date: '',
+        status: '',
         auditStatus: ''
       },
       pagination: {
@@ -138,15 +137,15 @@ export default {
       }
     },
     async getQueryList(page = 1) {
-      const { salesId, userId } = this.$route.query
-
+      const { salesId, userId } = this.salesInfo
+      const { auditStatus, status } = this.query
       const query = {
         page: page - 1,
         size: this.pagination.size,
         userId,
         salesId,
-        auditStatus: '',
-        semStatus: ''
+        auditStatus,
+        status
       }
 
       const content = await getPromoteList(query)
