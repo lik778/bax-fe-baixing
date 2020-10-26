@@ -32,27 +32,10 @@ export async function createPreferredWords(opts) {
 
 // 获取查词记录
 export async function getKeywordsList(opts) {
-  if (useTestData) {
-    const data = Array.apply(null, { length: 15 }).map((x, i) => ({
-      createdAt: Math.floor(+new Date() / 1000),
-      id: String(i),
-      word: '核心词',
-      provinces: ['上海', '北京'],
-      status: Math.floor(Math.random() * 18),
-      reason: '一条长长的失败原因是一条长长的失败原因是一条长长的失败原因是一条长长的失败原因是一条长长的失败原因是一条长长的失败原因',
-      auditStatus: 1
-    }))
-    await pause()
-    return {
-      data,
-      total: data.length * 5
-    }
-  }
-  return (await qianci
+  return await qianci
     .get('/promote/keywords')
     .query(opts)
-    .json())
-    .data
+    .json()
 }
 
 // 获取优选词展现数据
@@ -131,28 +114,11 @@ export async function createPreOrder(opts = {}) {
 
 // 获取推广管理列表
 export async function getPromoteList(opts = {}) {
-  if (useTestData) {
-    const data = Array.apply(null, { length: 15 }).map((x, i) => ({
-      id: String(i),
-      coreWord: '核心词',
-      provinces: ['上海', '北京'],
-      platform: Math.floor(Math.random() * 3),
-      semStatus: Math.floor(Math.random() * 4),
-      status: Math.floor(Math.random() * 18),
-      tradeDate: Math.floor(+new Date() / 1000),
-      remainDate: '1787184000'
-    }))
-    await pause()
-    return {
-      data,
-      total: data.length * 5
-    }
-  }
-  return (await qianci
-    .get('/user/promotes')
+  const body =  await qianci
+    .get('/promote/user/promotes')
     .query(opts)
-    .json())
-    .data
+    .json()
+  return body.data.content
 }
 
 // 获取报表页计划的关键词数据列表

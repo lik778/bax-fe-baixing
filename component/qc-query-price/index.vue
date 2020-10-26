@@ -37,6 +37,7 @@ import { Message } from 'element-ui'
 import { keywordLocked,createPreferredWords } from "api/qianci"
 import ProductIntro from "com/qc-query-price/product-intro"
 import QcAreaSelector from "com/qc-query-price/qc-area-selector"
+import { API_SUCCESS } from 'constant/api'
 import SelectKeywords from './select-keywords'
 
 export default {
@@ -57,7 +58,7 @@ export default {
       rules: {
         keyword: [{required: true, message: '请填写推广关键词'},
           { validator: (rule, value, callback) => {
-              if (!/^[\u4E00-\u9FA5A-Za-z0-9]{2,10}$/.test(value)) { return callback(new Error('单个词长度2-10个字'))}
+              if (!/^[\u4E00-\u9FA5A-Za-z0-9]{2,10}$/.test(value)) { return callback(new Error('非特殊字符且单个词长度2-10个字'))}
               callback() }, trigger: 'blur' }],
         areas: [{type: 'array', required: true, trigger: 'change', message: '请选择推广区域'},
           { validator: (rule, value, callback) => {
@@ -84,13 +85,15 @@ export default {
       this.$refs.form.validate(async isValid => {
         if (isValid) {
           const { code, message, data } = await keywordLocked({ coreWord: this.form.keyword, provinces: this.form.areas.map(x => x.en) })
-          if (code === 0) {
+          if (code === API_SUCCESS) {
             if (data.locked.length === 0) {
               this.keywordsPanelVisible = true
             } else {
-              this.checkWordText = `检测${this.form.keyword}在所选的地区(${ data.locked.join(',') })已被售出`
+              const keyWord = this.form.keyword
+              this.checkWordText = `检测${keyWord}在所选的地区(${ data.locked.join(',') })已被售出`
+              this.form.keyword = ''
             }
-          } else if (code === 4006) {
+          } else {
             Message.error(message)
           }
         } else {

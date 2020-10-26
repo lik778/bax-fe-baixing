@@ -9,7 +9,7 @@
       <el-form-item label="投放状态">
         <el-select v-model="query.status" placeholder="请选择投放状态">
           <el-option key="全部" label="全部" value=""/>
-          <el-option v-for="(value, key) in AUDIT_STATUS_MAPPING" :key="key" :label="value" :value="key" />
+          <el-option v-for="(value, key) in PROMOTE_STATUS_MAPPING" :key="key" :label="value" :value="key" />
         </el-select>
       </el-form-item>
       <el-form-item label="审核状态">
@@ -78,7 +78,7 @@ import {
   getAuditStatusWith
 } from 'constant/qianci'
 
-import { AUDIT_STATUS_MAPPING } from 'constant/qianci1'
+import { AUDIT_STATUS_MAPPING, PROMOTE_STATUS_MAPPING } from 'constant/qianci1'
 
 import  { getBusinessLicense } from 'api/seo'
 import { getPromoteList } from 'api/qianci'
@@ -98,6 +98,7 @@ export default {
       getPutInStatusWith,
       auditStatusOptions,
       getAuditStatusWith,
+      PROMOTE_STATUS_MAPPING,
       AUDIT_STATUS_MAPPING,
       query: {
         keyword: '',
@@ -168,34 +169,24 @@ export default {
       }
     },
     async getQueryList(page = 1) {
-      const { salesId, userId } = this.salesInfo || {}
+      const { salesId, userId } = this.$route.query
+
       const query = {
         page: page - 1,
         size: this.pagination.size,
         userId,
         salesId,
-        ...formatReqQuery(normalize({
-          coreWord: ['keyword']
-        }, this.query), {
-          status (vals = []) {
-            return vals
-              .map(x =>
-                getDisplayExpandingWordStatusWith('label', x) ||
-                getAuditStatusWith('label', x))
-              .reduce((h, c) => (h.push(...(
-                c.value instanceof Array
-                  ? c.value
-                  : [c.value]
-              )), h), [])
-          }
-        }),
+        auditStatus: '',
+        semStatus: ''
       }
-      const { data, total } = (await getPromoteList(query)) || {}
-      this.queryList = data.map(x => x)
+
+      const content = await getPromoteList(query)
+
+      this.queryList = content.map(x => x)
       this.pagination = {
         ...this.pagination,
         current: page,
-        total,
+        total: this.pagination.length,
       }
     },
     async checkLicense() {
