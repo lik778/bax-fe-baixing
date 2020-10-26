@@ -218,23 +218,6 @@ export default {
       let response = null
       let customClass = null
 
-      // switch (platform) {
-      //   case 0:
-      //     customClass = 'snapshot-dialog-mobile'
-      //     response = require('!!raw-loader!./snapshot_mobile.html').default
-      //     break
-      //   case 1:
-      //     customClass = 'snapshot-dialog'
-      //     response = require('!!raw-loader!./snapshot.html').default
-      //     break
-      // }
-
-      // response = await getSnapshot()
-      // .then(res => {
-      //   console.log(res)
-      //   return res.arrayBuffer()
-      // })
-
       // TODO sentry
       const url = 'https://test-files.obs.cn-east-3.myhuaweicloud.com/snapshot.html.gz'
       response = await fetch(url)
