@@ -12,6 +12,7 @@
           <p>A/C类词不支持修改</p>
           <p style="color: #FF6350">B/D类词数限制不低于10词不超过100词</p>
           <p style="color: #FF6350">单个词长度不低于2个字，不超过8个字</p>
+          <p style="color: #FF6350">英文字符仅支持小写，输入大写时数据会被强制更改为小写</p>
         </div>
       </div>
     </section>
@@ -40,8 +41,8 @@
     </div>
     <div class="action-area">
       <p v-show="!handleDisabled">当前备选词数量：<strong>{{wordNum}}</strong>个</p>
-      <p style="color: #FF6350">您的内容涉及“xxxx（风控三级标签）”“xxx（关键词）”，请修改后重新提交。</p>
-      <el-button type="primary" @click="sumbitWords" :disabled="handleDisabled" size="medium">提交优选</el-button>
+      <p style="color: #FF6350" v-if="errorTips">{{errorTips}}</p>
+      <el-button type="primary" :loading="submitWordsLoading" @click="sumbitWords" :disabled="handleDisabled" size="medium">{{ submitWordsLoading ? '拓词中...' : '提交优选' }}</el-button>
     </div>
     <el-dialog :close-on-click-modal="false"
                :show-close="false"
@@ -60,6 +61,7 @@
 <script>
 import { Message } from 'element-ui'
 import { createPreferredWords } from 'api/qianci'
+import { API_SUCCESS, API_CANNOT_PASS_QUALITY_CHECK } from 'constant/api'
 import KeywordView from './view'
 import KeywordInput from './input'
 import clone from 'clone'
@@ -86,7 +88,8 @@ const keywordOptions = {
     inputTitle: '添加前缀词',
     info: `<p>多个关键词换行、中英文逗号隔开；</p>
            <p>词数不少于10个，不超过100个字；</p>
-           <p>单个词长度不少于2个字，不超过8个字。</p>`,
+           <p>单个词长度不少于2个字，不超过8个字。</p>
+           <p>百度投放仅支持小写，输入大写时数据会被强制更改为小写</p>`,
     placeholder:
       '如：，专业的，靠谱的，周边，附近，电话，费用，价格，推荐，...',
     keywords: [],
@@ -99,9 +102,7 @@ const keywordOptions = {
     type: 'C',
     title: '业务关键词（C类词）',
     inputTitle: '添加业务关键词',
-    info: `<p>多个关键词换行、中英文逗号隔开；</p>
-           <p>词数不少于15个，不超过100个字；</p>
-           <p>单个词长度不少于2个字，不超过8个字。</p>`,
+    info: ``,
     placeholder:
       '如：，空调维修，空调移机，物品回收，黄金回收，挖掘机，推土机，...',
     keywords: [],
@@ -116,7 +117,8 @@ const keywordOptions = {
     inputTitle: '添加后缀词',
     info: `<p>多个关键词换行、中英文逗号隔开；</p>
            <p>词数不少于10个，不超过100个字；</p>
-           <p>单个词长度不少于2个字，不超过8个字。</p>`,
+           <p>单个词长度不少于2个字，不超过8个字。</p>
+           <p>百度投放仅支持小写，输入大写时数据会被强制更改为小写</p>`,
     placeholder: '如：，电话，费用，价格，推荐，...',
     keywords: [],
     keywordsAlias: 'suffixWordList',
@@ -159,7 +161,9 @@ export default {
       visible: false,
       keywordOptions: clone(keywordOptions),
       activeType: 'A',
-      successDialogVisible: false
+      successDialogVisible: false,
+      submitWordsLoading: false,
+      errorTips: ''
     }
   },
   computed: {
@@ -213,7 +217,7 @@ export default {
       words = words
         .trim()
         .split(/[\n，,]]*/g)
-        .map((row) => row.trim())
+        .map((row) => row.toLocaleLowerCase().trim())
         .filter(
           (row) =>
             row !== '' &&
@@ -241,6 +245,9 @@ export default {
           if (keywords.includes(value)) {
             return this.$message.error('已存在该关键词，请修改重新提交')
           }
+          if (value.toLocaleLowerCase() && keywords.map(k => k.toLocaleLowerCase()).includes(value.toLocaleLowerCase())) {
+            return this.$message.error('百度投放仅支持小写，输入大写时数据会被强制更改为小写，输入重复')
+          } 
           if (value.length < wordLenLimit[0] || value.length > wordLenLimit[1]) {
             return this.$message.error(`单个词长度不少于${wordLenLimit[0]}个字, 不超过${wordLenLimit[1]}个字`)
           }
@@ -263,14 +270,19 @@ export default {
     },
     async sumbitWords() {
       const { keyword, areas } = this.form
+      const  salesId = this.$route.query.salesId || 2
+      this.submitWordsLoading = true
       const { code, message, data } = await createPreferredWords({ coreWord: keyword, 
-        provinces: areas.map(x => x.name), prefixWords: this.keywordOptions.B.keywords, 
-        suffixWords: this.keywordOptions.D.keywords, salesId: 16 }) // salesId写死了
-      if (code === 0) {
+        provinces: areas.map(x => x.en), prefixWords: this.keywordOptions.B.keywords, 
+        suffixWords: this.keywordOptions.D.keywords, salesId  })
+      if (code === API_SUCCESS) {
         this.successDialogVisible = true
+      } else if (code === API_CANNOT_PASS_QUALITY_CHECK) {
+        this.errorTips = message
       } else {
         Message.warning(message)
       }
+      this.submitWordsLoading = false
     }
   },
   watch: {

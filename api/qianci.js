@@ -110,28 +110,11 @@ export async function createPreOrder(opts = {}) {
 
 // 获取推广管理列表
 export async function getPromoteList(opts = {}) {
-  if (useTestData) {
-    const data = Array.apply(null, { length: 15 }).map((x, i) => ({
-      id: String(i),
-      coreWord: '核心词',
-      provinces: ['上海', '北京'],
-      platform: Math.floor(Math.random() * 3),
-      semStatus: Math.floor(Math.random() * 4),
-      status: Math.floor(Math.random() * 18),
-      tradeDate: Math.floor(+new Date() / 1000),
-      remainDate: '1787184000'
-    }))
-    await pause()
-    return {
-      data,
-      total: data.length * 5
-    }
-  }
-  return (await qianci
-    .get('/user/promotes')
+  const body = await qianci
+    .get('/promote/user/promotes')
     .query(opts)
-    .json())
-    .data
+    .json()
+  return body.data.content
 }
 
 // 获取报表页计划的关键词数据列表
