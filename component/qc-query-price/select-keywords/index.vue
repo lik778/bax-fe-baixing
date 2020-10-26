@@ -154,6 +154,9 @@ export default {
           return curr
         }, {})
       }
+    },
+    salesInfo: {
+      type: Object
     }
   },
   data() {
@@ -238,6 +241,7 @@ export default {
       this.$prompt('', '编辑词语', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
+        closeOnClickModal: false,
         inputValue: this.keywordOptions[type].keywords[index]
       })
         .then(({ value }) => {
@@ -270,7 +274,7 @@ export default {
     },
     async sumbitWords() {
       const { keyword, areas } = this.form
-      const  salesId = this.$route.query.salesId || 2
+      const { salesId } = this.salesInfo
       this.submitWordsLoading = true
       const { code, message, data } = await createPreferredWords({ coreWord: keyword, 
         provinces: areas.map(x => x.en), prefixWords: this.keywordOptions.B.keywords, 

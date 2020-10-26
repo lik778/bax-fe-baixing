@@ -20,7 +20,7 @@
             <el-button :loading="loading" type="primary" @click="checkWord">检查</el-button>
           </el-form-item>
         </el-form>
-        <select-keywords v-if="keywordsPanelVisible" ref="selectKeywords" :form="form" />
+        <select-keywords v-if="keywordsPanelVisible" ref="selectKeywords" :form="form" :salesInfo="salesInfo"/>
       </main>
     </div>
     <qc-area-selector
@@ -45,6 +45,10 @@ export default {
   components: { ProductIntro, QcAreaSelector, SelectKeywords },
   props: {
     userInfo: {
+      type: Object,
+      required: true
+    },
+    salesInfo: {
       type: Object,
       required: true
     }
