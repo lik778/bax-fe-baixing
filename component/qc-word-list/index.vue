@@ -5,7 +5,7 @@
     <el-form class="query-form" :inline="true" :model="query" label-width="80px">
       <el-form-item label="核心词">
         <el-input
-          v-model="query.keyword"
+          v-model="query.coreWord"
           placeholder="请输入核心词"
           clearable
         />
@@ -123,7 +123,7 @@ export default {
       isExpandWordStatusError,
       getEWStatusWith,
       query: {
-        keyword: '',
+        coreWord: '',
         status: '',
         date: '',
       },
@@ -185,9 +185,7 @@ export default {
         page: page - 1,
         size: this.pagination.size,
         salesId: this.store.salesId,
-        ...formatReqQuery(normalize({
-          coreWord: ['keyword']
-        }, this.query )),
+        ...formatReqQuery(this.query),
       }
       const { content = [], totalElements = 0 } = (await getKeywordsList(query)) || {}
       this.queryList = content.map(x => ({
@@ -244,7 +242,7 @@ export default {
     },
     resetQuery() {
       this.query = {
-        keyword: '',
+        coreWord: '',
         status: '',
         date: '',
       }
