@@ -36,15 +36,15 @@
     </el-form>
     <!-- 列表 -->
     <el-table class="query-table" border :data="queryList">
-      <el-table-column label="查询日期" prop="createdAt"  width="160" :formatter="({ createdAt }) => $formatter.date(createdAt)" />
-      <el-table-column label="核心词" prop="word" width="160" />
+      <el-table-column label="查询日期"  width="160" :formatter="({createdTime}) => $formatter.date(createdTime)" />
+      <el-table-column label="核心词" prop="coreWord" width="160" />w
       <el-table-column label="推广地区" prop="provinces" :formatter="({ provinces }) => $formatter.join(provinces)" />
-      <el-table-column label="状态" prop="status">
+      <el-table-column label="状态">
         <template slot-scope="{row}">
           <catch-error>
-            <span :class="getExpandingWordStatusWith('value', row.status).uiClass">{{getDisplayExpandingWordStatusWith('value', row.status).label}}</span>
-            <template v-if="isExpandingWordStatusDisplayError(row.status)">
-              <el-tooltip placement="top" :content="row.reason">
+            <span :class="isExpandWordStatusError(row.status) ? 'error' : ''">{{getEWStatusWith('value', row.status).label}}</span>
+            <template v-if="isExpandWordStatusError(row.status)">
+              <el-tooltip placement="top" :content="row.reason || '失败原因未知'">
                 <i class="error el-icon-question pointer" />
               </el-tooltip>
             </template>
@@ -87,7 +87,7 @@
     <payment-dialog
       v-model="visible.paymentDialog"
       :url="active.selectedItemURL"
-      :keyword="safeSelectedItem.word"
+      :keyword="safeSelectedItem.coreWord"
       :provinces="safeSelectedItem.provinces"
       @onClose="visible.paymentDialog = false"
     />
@@ -100,9 +100,13 @@ import dayjs from 'dayjs'
 import PaymentDialog from './payment-dialog'
 
 import { orderServiceHost, preKeywordPath } from 'config'
-import { expandingWordStatusMap, getExpandingWordStatusWith, getDisplayExpandingWordStatusWith, isExpandingWordStatusDisplayError, expandingWordDisplayStatusOptions } from 'constant/qianci'
+import {
+  isExpandWordStatusError,
+  getEWStatusWith,
+  EW_OPTIONS
+} from 'constant/qianci1'
 import { createPreOrder, getKeywordsList } from 'api/qianci'
-import { parseQuery, normalize, formatReqQuery } from 'util'
+import { parseQuery, normalize, formatReqQuery, getCnName } from 'util'
 import { normalizeRoles } from 'util/role'
 
 export default {
@@ -111,13 +115,13 @@ export default {
     PaymentDialog
   },
   props: {
+    allAreas: Array,
     userInfo: Object,
   },
   data() {
     return {
-      getExpandingWordStatusWith,
-      getDisplayExpandingWordStatusWith,
-      isExpandingWordStatusDisplayError,
+      isExpandWordStatusError,
+      getEWStatusWith,
       query: {
         keyword: '',
         status: '',
@@ -140,7 +144,7 @@ export default {
       options: {
         wordStatus: [
           { label: '所有状态', value: '' },
-          ...expandingWordDisplayStatusOptions,
+          ...EW_OPTIONS,
         ]
       },
       visible: {
@@ -178,24 +182,25 @@ export default {
       const query = {
         page: page - 1,
         size: this.pagination.size,
+        salesId: this.store.userId,
         ...formatReqQuery(normalize({
           coreWord: ['keyword']
         }, this.query )),
       }
-      const { data, total } = (await getKeywordsList(query)) || {}
-      this.queryList = data.map(x => x)
+      const { content = [], totalElements = 0 } = (await getKeywordsList(query)) || {}
+      this.queryList = content.map(x => ({
+        ...x,
+        provinces: x.provinces.map(x => getCnName(x, this.allAreas))
+      }))
       this.pagination = {
         ...this.pagination,
         current: page,
-        total,
+        total: totalElements,
       }
     },
     // 生成付款 URL
     async genPaymentURL(item) {
       if (this.store.userId) {
-        // * bax-id: 1,
-        // promoteId: 8,
-        // targetUserId: 228466250
         const { data: preTradeId } = await createPreOrder({
           promoteId: item.id,
           targetUserId: this.store.userId
@@ -252,29 +257,18 @@ export default {
     /*********************************************************** calculation */
 
     enableCheckButton(status) {
-      const p = expandingWordStatusMap
       return [
-        p.EXPANDING_WORD_SUCCEED,
-        p.PENDING_PAYMENT,
-        p.UNPAID,
-        p.PAID,
-        p.UNPAID_EXPIRED,
-        p.PAYMENT_EXPIRED
-      ].includes(+status)
+        ...getEWStatusWith('label', '待支付').value
+      ].includes(status)
     },
     enableEditButton(status) {
-      const p = expandingWordStatusMap
       return [
-        p.EXPANDING_WORD_FAILED,
-        p.B2B_AUDIT_FAILED
-      ].includes(+status)
+        ...getEWStatusWith('label', '拓词失败').value,
+        ...getEWStatusWith('label', '待支付').value,
+      ].includes(status)
     },
     enablePayButton(status) {
-      const p = expandingWordStatusMap
-      return [
-        p.EXPANDING_WORD_SUCCEED,
-        p.PENDING_PAYMENT
-      ].includes(+status)
+      return [].includes(status)
     },
     isUser(role) {
       return normalizeRoles(this.userInfo.roles).includes(role)

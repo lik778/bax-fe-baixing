@@ -161,7 +161,7 @@ Vue.use(Vue2Filters)
 // ElementUI formatter
 Vue.prototype.$formatter = {
   join: (arrs = [], seq = '、') => arrs.join(seq),
-  date: (time = 0) => dayjs(time * 1000).format('YYYY-MM-DD'),
+  date: (time = '') => dayjs(time).format('YYYY-MM-DD'),
   mapWith: (key = '', obj = {}) => obj[key]
 }
 
