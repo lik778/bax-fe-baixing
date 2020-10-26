@@ -32,12 +32,11 @@ export async function createPreferredWords(opts) {
 
 // 获取查词记录
 export async function getKeywordsList(opts) {
-  if (useTestData)
-    return (await qianci
-      .get('/promote/keywords')
-      .query(opts)
-      .json())
-      .data
+  return (await qianci
+    .get('/promote/keywords')
+    .query(opts)
+    .json())
+    .data
 }
 
 // 获取优选词展现数据
