@@ -2,7 +2,7 @@
   <div class="page">
     <header>查词记录</header>
     <!-- 搜索表单 -->
-    <el-form class="query-form" :inline="true" :model="query" label-width="60px">
+    <el-form class="query-form" :inline="true" :model="query" label-width="80px">
       <el-form-item label="核心词">
         <el-input
           v-model="query.keyword"
@@ -104,7 +104,7 @@ import {
   isExpandWordStatusError,
   getEWStatusWith,
   EW_OPTIONS
-} from 'constant/qianci1'
+} from 'constant/qianci'
 import { createPreOrder, getKeywordsList } from 'api/qianci'
 import { parseQuery, normalize, formatReqQuery, getCnName } from 'util'
 import { normalizeRoles } from 'util/role'

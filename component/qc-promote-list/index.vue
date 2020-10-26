@@ -31,14 +31,14 @@
       <el-table-column label="投放状态">
         <template slot-scope="{row}">
           <catch-error>
-            <span>{{getPutInStatusWith('value', row.semStatus).label}}</span>
+            <span>{{PROMOTE_STATUS_MAPPING[row.semStatus]}}</span>
           </catch-error>
         </template>
       </el-table-column>
       <el-table-column label="审核状态">
         <template slot-scope="{row}">
           <catch-error>
-            <span :class="getExpandingWordStatusWith('value', row.status).uiClass">{{getDisplayExpandingWordStatusWith('value', row.status).label}}</span>
+            <span>{{AUDIT_STATUS_MAPPING[row.status]}}</span>
           </catch-error>
         </template>
       </el-table-column>
@@ -68,17 +68,7 @@
 <script>
 import dayjs from 'dayjs'
 
-import {
-  getExpandingWordStatusWith,
-  getDisplayExpandingWordStatusWith,
-  deviceValueLabelMap,
-  putInStatusOptions,
-  getPutInStatusWith,
-  auditStatusOptions,
-  getAuditStatusWith
-} from 'constant/qianci'
-
-import { AUDIT_STATUS_MAPPING, PROMOTE_STATUS_MAPPING } from 'constant/qianci1'
+import { AUDIT_STATUS_MAPPING, PROMOTE_STATUS_MAPPING, deviceValueLabelMap } from 'constant/qianci'
 
 import  { getBusinessLicense } from 'api/seo'
 import { getPromoteList } from 'api/qianci'
@@ -91,13 +81,7 @@ export default {
   },
   data() {
     return {
-      getExpandingWordStatusWith,
-      getDisplayExpandingWordStatusWith,
       deviceValueLabelMap,
-      putInStatusOptions,
-      getPutInStatusWith,
-      auditStatusOptions,
-      getAuditStatusWith,
       PROMOTE_STATUS_MAPPING,
       AUDIT_STATUS_MAPPING,
       query: {
@@ -120,12 +104,6 @@ export default {
       store: {
         saleId: null,
         userId: null,
-      },
-      options: {
-        wordStatus: [
-          ...putInStatusOptions,
-          ...auditStatusOptions
-        ]
       },
       visible: {
         paymentDialog: false
@@ -266,9 +244,14 @@ export default {
 
 <style lang="postcss" scoped>
 .query-form {
+  margin-top: 18px;
   padding: 16px;
   background: #f5f7fa;
   border-radius: 4px;
+
+  & .el-form-item {
+    margin-bottom: 0;
+  }
 }
 
 .go-chart-page-btn,
