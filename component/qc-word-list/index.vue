@@ -20,6 +20,19 @@
           />
         </el-select>
       </el-form-item>
+      <el-form-item class="actions" label="">
+        <el-button
+          class="query-button"
+          type="primary"
+          @click="() => getQueryListWithTip()"
+        >查询</el-button>
+        <el-button
+          class="reset-button"
+          type="primary"
+          plain
+          @click="resetQuery"
+        >重置</el-button>
+      </el-form-item>
     </el-form>
     <!-- 列表 -->
     <el-table class="query-table" border :data="queryList">
@@ -89,7 +102,7 @@ import PaymentDialog from './payment-dialog'
 import { orderServiceHost, preKeywordPath } from 'config'
 import { expandingWordStatusMap, getExpandingWordStatusWith, getDisplayExpandingWordStatusWith, isExpandingWordStatusDisplayError, expandingWordDisplayStatusOptions } from 'constant/qianci'
 import { createPreOrder, getKeywordsList } from 'api/qianci'
-import { parseQuery, normalize, formatReqQuery, debounce } from 'util'
+import { parseQuery, normalize, formatReqQuery } from 'util'
 
 export default {
   name: "qc-word-list",
@@ -97,7 +110,6 @@ export default {
     PaymentDialog
   },
   data() {
-    this.debouncedGetQueryListWithTip = debounce(() => this.getQueryListWithTip(), 500)
     return {
       getExpandingWordStatusWith,
       getDisplayExpandingWordStatusWith,
@@ -136,14 +148,6 @@ export default {
     safeSelectedItem() {
       return this.active.selectedItem || {}
     },
-  },
-  watch: {
-    query: {
-      deep: true,
-      handler() {
-        this.debouncedGetQueryListWithTip()
-      }
-    }
   },
   created() {
     const query = parseQuery(window.location.search)
@@ -227,6 +231,14 @@ export default {
           id: row.id
         }
       })
+    },
+    resetQuery() {
+      this.query = {
+        keyword: '',
+        status: '',
+        date: '',
+      }
+      this.getQueryListWithTip(0)
     },
 
     /*********************************************************** calculation */
