@@ -202,14 +202,16 @@ export function normalize(adaptorDes = {}, raw, saveEmptyProp = false) {
 }
 
 // 前端分页函数
-export function paginationWrapper(getList) {
+export function paginationWrapper(getList, dataFormat = val => val) {
   let responseStore = null
 
   return async (...args) => {
     if (!responseStore) {
-      responseStore = await getList(...args)
+      const response = await getList(...args)
+      responseStore = dataFormat(response)
+      responseStore.total = responseStore.data.length
     }
-    const { data = [], total = 0 } = responseStore
+    const { data = [], total } = responseStore
     const { size = 15, page = 0 } = args[0]
     const end = Math.min((page + 1) * size, total)
 

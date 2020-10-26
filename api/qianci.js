@@ -55,24 +55,21 @@ export async function getPreferredWordsPV(opts = {}) {
 
 // 获取优选词列表
 export const getPreferredWordsList = paginationWrapper(async function (opts = {}) {
-  if (useTestData) {
-    const data = Array.apply(null, { length: 101 }).map((x, i) => ({
-      createTime: Math.floor(+new Date() / 1000),
-      id: String(i),
-      coreWord: '核心词',
-      expandedWord: Array.apply(null, { length: Math.floor(Math.random() * 7) + 2 }).join('测试优选词'),
-    }))
-    await pause()
-    return {
-      data,
-      total: data.length
-    }
-  }
+  // * for test const id = 22
+  const id = opts.id
   return (await qianci
-    .get('/promote/keyword/expandedWord')
-    .query(opts)
+    .get(`/promote/keyword/expandedWord/${id}`)
+    .query()
     .json())
-})
+    .data
+}, resp => ({
+  ...resp,
+  data: (resp.expandedWords || []).map(x => ({
+    coreWord: resp.coreWord,
+    createdTime: resp.createdTime,
+    expandedWord: x
+  }))
+}))
 
 // 获取推广物料信息
 export async function getCreative(opts = {}) {
