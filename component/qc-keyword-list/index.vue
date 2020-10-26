@@ -31,8 +31,8 @@
 
 <script>
 import dayjs from 'dayjs'
-import { getRouteParam, formatReqQuery } from 'util'
 
+import { getRouteParam, formatReqQuery } from 'util'
 import { getPreferredWordsList, getPreferredWordsPV } from 'api/qianci'
 
 export default {
@@ -50,13 +50,14 @@ export default {
       loading: {
         query: false
       },
-      wordCounts: null,
-      pvs: null,
+      wordCounts: 0,
+      pvs: 0,
     }
   },
+  created() {
+    this.id = getRouteParam.bind(this)('promoteId')
+  },
   mounted() {
-    this.id = getRouteParam.bind(this)('id')
-
     this.getQueryList()
     this.getPreferredWordPV()
   },
@@ -64,7 +65,7 @@ export default {
 
     async getPreferredWordPV() {
       const response = await getPreferredWordsPV()
-      const { count: wordCounts = 0, pvs = 0 } = response
+      const { expandedNum: wordCounts = 0, showNum: pvs = 0 } = response
       this.pvs = pvs
       this.wordCounts = wordCounts
     },

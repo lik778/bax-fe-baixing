@@ -202,7 +202,7 @@ export default {
     async genPaymentURL(item) {
       const { data: preTradeId } = await createPreOrder({
         promoteId: item.id,
-        targetUserId: this.store.userId
+        // targetUserId: this.store.userId
       })
       if (this.isUser('BAIXING_SALES')) {
         return `${orderServiceHost}/${preKeywordPath}/?appId=105&seq=${preTradeId}`
@@ -227,10 +227,10 @@ export default {
     goPreferredWordsListPage(item) {
       const { id } = item || {}
       this.selectItem(item)
-      this.$router.push({
-        name: 'qc-keyword-list',
-        params: { id }
-      })
+      const search = window.location.search
+        ? window.location.search + `&promoteId=${id}`
+        : `?promoteId=${id}`
+      this.$router.push(`/main/qc/keyword-list` + search)
     },
     goEditWordsPage(row) {
       this.$router.push({
@@ -259,7 +259,6 @@ export default {
     enableEditButton(status) {
       return [
         ...getEWStatusWith('label', '拓词失败').value,
-        ...getEWStatusWith('label', '待支付').value,
       ].includes(status)
     },
     enablePayButton(status) {
