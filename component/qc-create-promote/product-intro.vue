@@ -3,14 +3,14 @@
     <img class="icon" src="//file.baixing.net/202010/6fb5637fec8b9c8ea1cf97afae80a1e7.png">
     <div class="intro">
       <ul class="clearfix">
-        <li>SEM千词包</li>
-        <li>精品官网:180天</li>
-        <li>SEO万词</li>
+        <li>广告位投放包</li>
+        <li>精品官网</li>
+        <li>快照位投放包</li>
       </ul>
-      <p>产品说明：1.一词一省一买  2.一词两省起卖  3.每新增一省价格</p>
+      <p>产品说明：1.广告位双端投放不低于1000个关键词；2.精品官网180天；3.快照位每日投放100条信息</p>
     </div>
     <div class="price">
-      <p>套餐价:<br/>6980元</p>
+      <p>套餐价:<br/>6980元<span class="day">(180天)</span></p>
     </div>
   </div>
 </template>
@@ -25,7 +25,7 @@ name: "product-intro"
   .box {
     position: relative;
     width: 585px;
-    height: 160px;
+    height: 190px;
     border-radius: 2px;
     border: 1px solid #FF7D51;
     margin-bottom: 60px;
@@ -83,7 +83,12 @@ name: "product-intro"
       width: 135px;
       font-size: 18px;
       color: #FF6E51;
-      padding: 55px 35px;
+      padding: 60px 35px;
+      & .day {
+        display: block;
+        font-size: 14px;
+        text-align: center;
+      }
     }
   }
   .clearfix:after {

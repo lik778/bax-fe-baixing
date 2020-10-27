@@ -28,7 +28,7 @@
       <el-table-column label="核心词" prop="coreWord" width="160" />
       <el-table-column label="推广地区" :formatter="({ provinces }) => $formatter.join(provinces)" />
       <el-table-column label="平台" prop="plat" :formatter="({ device }) => DEVICE[device]" />
-      <el-table-column label="投放状态">
+      <el-table-column label="计划状态">
         <template slot-scope="{row}">
           <catch-error>
             <span>{{PROMOTE_STATUS_MAPPING[row.status]}}</span>
@@ -46,7 +46,8 @@
       <el-table-column label="剩余投放天数" :formatter="restDayFormatter" />
       <el-table-column label="操作" width="160">
         <template slot-scope="{row}">
-          <el-button :loading="checkButtonLoading(row)" type="text" size="small" @click="() => goEditCreativePage(row)">修改</el-button>
+          <el-button :loading="checkButtonLoading(row)" type="text" size="small" @click="() => goEditCreativePage(row)">编辑</el-button>
+          <el-button type="text" size="small" >管理SEO</el-button>
           <div class="page-button-group-safe-padding" />
         </template>
       </el-table-column>

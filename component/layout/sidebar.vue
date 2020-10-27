@@ -98,7 +98,7 @@
         </el-submenu>
         <el-submenu index="qc">
           <template slot="title">
-            <bx-icon type="sharealt"></bx-icon>竞价千词
+            <bx-icon type="sharealt"></bx-icon>易慧推
           </template>
           <el-menu-item index="qc-create-promote">
             <router-link :to="{ name: 'qc-create-promote' }" tag="p">
@@ -148,7 +148,7 @@
             <router-link :to="{ name: 'qc-dashboard'}" tag="p">
               <i class="material-icons"
                  style="font-size: 16px; margin-right: 11px; vertical-align: -3px;">
-              </i>竞价千词报表
+              </i>易慧推报表
             </router-link>
           </el-menu-item>
         </el-submenu>
