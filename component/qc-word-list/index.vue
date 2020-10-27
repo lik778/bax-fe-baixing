@@ -71,6 +71,7 @@
           <el-button
             class="tip no-padding"
             type="text"
+            :loading="checkGoPayButtonLoading(row)"
             :disabled="!enablePayButton(row.status)"
             @click="() => showPaymentDialog(row)">去抢购</el-button>
           <div class="page-button-group-safe-padding" />
@@ -155,6 +156,9 @@ export default {
           ...EW_OPTIONS,
         ]
       },
+      loading: {
+        preparePay: false,
+      },
       visible: {
         paymentDialog: false
       }
@@ -207,16 +211,24 @@ export default {
     },
     // 生成付款 URL
     async genPaymentURL(item) {
-      const { data } = await createPreOrder({
-        promoteId: item.id,
-        targetUserId: this.store.userId
+      return new Promise(async (resolve, reject) => {
+        let response = null
+        try {
+          response = await createPreOrder({
+            promoteId: item.id,
+            targetUserId: this.store.userId
+          })
+        } catch (error) {
+          reject('Gen PreOrder Failed')
+        }
+        const { data } = response
+        if (this.isUser('BAIXING_SALES')) {
+          resolve(`${orderServiceHost}/${preKeywordPath}/?appId=105&seq=${data}`)
+        }
+        if (this.isUser('AGENT_ACCOUNTING')) {
+          window.location.href = `${orderServiceHost}/${preKeywordPath}/?appId=105&seq=${data}&agentId=${this.userInfo.id}`
+        }
       })
-      if (this.isUser('BAIXING_SALES')) {
-        return `${orderServiceHost}/${preKeywordPath}/?appId=105&seq=${data}`
-      }
-      if (this.isUser('AGENT_ACCOUNTING')) {
-        location.href = `${orderServiceHost}/${preKeywordPath}/?appId=105&seq=${data}&agentId=${this.userInfo.id}`
-      }
     },
 
     /*********************************************************** ux */
@@ -226,9 +238,13 @@ export default {
     },
     async showPaymentDialog(item) {
       this.selectItem(item)
+      this.loading.preparePay = true
+      try {
+        const url = await this.genPaymentURL(item)
+      } finally {
+        this.loading.preparePay = false
+      }
       this.visible.paymentDialog = true
-
-      const url = await this.genPaymentURL(item)
       this.active.selectedItemURL = url
     },
     goPreferredWordsListPage(item) {
@@ -268,6 +284,13 @@ export default {
       return [
         EW.PENDING_BIND_USER.value
       ].includes(status)
+    },
+    checkGoPayButtonLoading(item) {
+      return this.loading.preparePay && (
+        item && this.active.selectedItem
+      ) && (
+        item === this.active.selectedItem
+      )
     },
     isUser(role) {
       return normalizeRoles(this.userInfo.roles).includes(role)
