@@ -64,10 +64,10 @@ export default {
   methods: {
 
     async getPreferredWordPV() {
-      const response = await getPreferredWordsPV()
-      const { expandedNum: wordCounts = 0, showNum: pvs = 0 } = response
-      this.pvs = pvs
-      this.wordCounts = wordCounts
+      const response = await getPreferredWordsPV({ id: this.id })
+      const { expandedNum = 0, showNum = 0 } = response
+      this.pvs = showNum
+      this.wordCounts = expandedNum
     },
 
     async getQueryListWithTip(...args) {

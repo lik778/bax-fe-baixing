@@ -41,9 +41,10 @@ export async function getKeywordsList(opts) {
 
 // 获取优选词展现数据
 export async function getPreferredWordsPV(opts = {}) {
+  const id = opts.id
   return (await qianci
-    .post('/promotwe/user/ranking')
-    .send(opts)
+    .get(`/promote/keyword/show/${id}`)
+    .query()
     .json())
     .data
 }
