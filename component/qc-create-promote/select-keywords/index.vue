@@ -60,7 +60,7 @@
 
 <script>
 import { Message } from 'element-ui'
-import { createPreferredWords } from 'api/qianci'
+import { createPreferredWords, updatePromoteWords } from 'api/qianci'
 import { API_SUCCESS, API_CANNOT_PASS_QUALITY_CHECK } from 'constant/api'
 import KeywordView from './view'
 import KeywordInput from './input'
@@ -285,9 +285,14 @@ export default {
       const { keyword, areas } = this.form
       const { salesId } = this.salesInfo
       this.submitWordsLoading = true
-      const { code, message, data } = await createPreferredWords({ coreWord: keyword, 
+      const params = { coreWord: keyword, 
         provinces: areas.map(x => x.en), prefixWords: this.keywordOptions.B.keywords, 
-        suffixWords: this.keywordOptions.D.keywords, salesId  })
+        suffixWords: this.keywordOptions.D.keywords, salesId  }
+      const handleFunc = this.isEdit ? updatePromoteWords : createPreferredWords
+      if (this.isEdit) {
+         params.id = this.promote.id
+      }
+      const { code, message, data } = await handleFunc(params)
       if (code === API_SUCCESS) {
         this.successDialogVisible = true
       } else if (code === API_CANNOT_PASS_QUALITY_CHECK) {

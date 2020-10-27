@@ -39,6 +39,14 @@ export async function createPreferredWords(opts) {
     .json()
 }
 
+// 更新BD类词
+export async function updatePromoteWords(opts) {
+  return await qianci
+    .post('/promote/keyword/update')
+    .send(opts)
+    .json()
+}
+
 // 获取查词记录
 export async function getKeywordsList(opts) {
   return (await qianci
