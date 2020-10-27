@@ -49,7 +49,7 @@
                title="提示" :visible.sync="successDialogVisible">
       <div class="success-dialog-box">
         <img src="//file.baixing.net/202010/d4ade9d26b0af9fee07c21665a2de323.png">
-        <p>提交成功，后台正在为您优选关键词，稍后请在 【查词记录】 ，页面查看进展。</p>
+        <p>提交成功，后台正在为您优选关键词，稍后请在【查词记录】页面查看进展。</p>
         <router-link :to="{name: 'qc-word-list'}">
           <el-button type="primary" size="medium">确定</el-button>
         </router-link>
@@ -156,9 +156,6 @@ export default {
       }
     },
     promote: {
-      type: Object
-    },
-    allQianciAreas: {
       type: Object
     },
     salesInfo: {

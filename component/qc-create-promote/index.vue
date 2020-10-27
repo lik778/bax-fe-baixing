@@ -4,7 +4,7 @@
       <main>
         <product-intro></product-intro>
         <el-form :model="form" :rules="rules" label-width="120px" ref="form" label-position="left" class="form" @submit.native.prevent>
-          <el-form-item label="推广关键词" prop="keyword">
+          <el-form-item label="推广产品" prop="keyword">
             <el-input :disabled="isEdit" v-model="form.keyword" style="width: 200px" maxlength="10"/>
           </el-form-item>
           <el-form-item label="推广区域" prop="areas">
@@ -21,12 +21,11 @@
           </el-form-item>
         </el-form>
         <select-keywords v-if="keywordsPanelVisible" ref="selectKeywords" :promote="promote" 
-        :form="form" :salesInfo="salesInfo" :allQianciAreas="allQianciAreas" :isEdit="isEdit"/>
+        :form="form" :salesInfo="salesInfo" :isEdit="isEdit"/>
       </main>
     </div>
     <qc-area-selector
        :areas="form.areas"
-       :allQianciAreas="allQianciAreas"
        :visible="areaDialogVisible"
        @ok="onAreasChange"
        @cancel="areaDialogVisible = false"
@@ -111,6 +110,12 @@ export default {
   },
   async mounted() {
     const { id } = this.$route.query
+
+    // 获取千词地区信息
+    if (Object.keys(gStore.allQianciAreas).length === 0) {
+      gStore.getQianciAreas()
+    }
+    
     if (id) {
       this.isEdit = true
       const promote = await getPromote(id)
