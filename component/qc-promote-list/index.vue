@@ -108,7 +108,7 @@ export default {
   methods: {
     getQueryParams() {
       const params = {}
-      Object.keys(this.query).forEach(k => { 
+      Object.keys(this.query).forEach(k => {
         if (this.query[k]) {  params[k] = this.query[k] }
       })
       return params
@@ -149,13 +149,13 @@ export default {
     },
     async goEditCreativePage(row) {
       this.active.selectedItem = row
-      console.log(row)
       const hasBusinessUrl = await this.checkLicense()
       if (hasBusinessUrl) {
-        this.$router.push({
-          name: 'qc-creative',
-          params: { promoteId: row.id }
-        })
+        const id = row.id
+        const search = window.location.search
+          ? window.location.search + `&promoteId=${id}`
+          : `?promoteId=${id}`
+        this.$router.push(`/main/qc/creative` + search)
       } else {
         this.$msgbox({
           title: '提示',
