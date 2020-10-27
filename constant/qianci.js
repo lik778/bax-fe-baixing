@@ -55,6 +55,17 @@ export const EW = {
   CEASED: { value: 'CEASED', label: '已停止' },
   PAUSED: { value: 'PAUSED', label: '已暂停' }
 }
+export const UNKNOWN = 'UNKNOWN'
+export const DEVICE_ALL = 'ALL'
+export const DEVICE_PC = 'PC'
+export const DEVICE_WAP = 'WAP'
+export const DEVICE = {
+  [UNKNOWN]: '未知',
+  [DEVICE_ALL]: '全平台',
+  [DEVICE_PC]: '电脑端',
+  [DEVICE_WAP]: '手机端',
+}
+
 export const isExpandWordStatusError = status => [
   EW.PENDING_MODIFY_PREFIX_SUFFIX.value,
   EW.CEASED.value,
@@ -118,11 +129,4 @@ export function getEWStatusWith(key, val) {
   handle = EW[handleKey]
   if (handle) return handle
   return {}
-}
-
-/* 设备枚举 */
-export const deviceValueLabelMap = {
-  0: '电脑、手机',
-  1: '电脑端',
-  2: '手机端'
 }

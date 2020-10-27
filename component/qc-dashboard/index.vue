@@ -47,7 +47,7 @@
               <el-button type="text" size="small" @click="() => checkSnapshotPage(row)">查看</el-button>
             </template>
           </el-table-column>
-          <el-table-column label="端口" prop="plat" :formatter="({ platform }) => $formatter.mapWith(platform, deviceValueLabelMap)" />
+          <el-table-column label="端口" prop="plat" :formatter="({ platform }) => $formatter.mapWith(platform, DEVICE)" />
         </el-table>
         <el-pagination
           class="pagniation"
@@ -77,8 +77,8 @@ import 'echarts/lib/component/tooltip'
 import 'echarts/lib/chart/line'
 import 'echarts/lib/chart/pie'
 
-import { deviceValueLabelMap } from 'constant/qianci'
 import { getPromoteList, getWordPVsList, getSnapshot } from 'api/qianci'
+import { DEVICE } from 'constant/qianci'
 import { checkSupportShadowDOM } from 'util'
 
 import pieChartOptionTmp from './pieChartOptionTmp'
@@ -156,7 +156,6 @@ export default {
   },
   data() {
     return {
-      deviceValueLabelMap,
       query: {
         promoteID: '',
       },
@@ -176,6 +175,7 @@ export default {
       platformChartOptions: Object.assign(platformChartOptionTmp, {}),
       pvsChartOptions: Object.assign(pvsChartOptionTmp, {}),
       visitedChartOptions: Object.assign(visitedChartOptionTmp, {}),
+      DEVICE
     }
   },
   async created() {

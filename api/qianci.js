@@ -121,11 +121,15 @@ export async function createPreOrder(opts = {}) {
 
 // 获取推广管理列表
 export async function getPromoteList(opts = {}) {
-  const body = await qianci
+  const { data } = await qianci
     .get('/promote/user/promotes')
     .query(opts)
     .json()
-  return body.data.content
+
+  return {
+    content: data.content,
+    total: data.totalElements
+  }
 }
 
 // 获取报表页计划的关键词数据列表
