@@ -207,16 +207,16 @@ export default {
     },
     // 生成付款 URL
     async genPaymentURL(item) {
-      const { data: preTradeId } = await createPreOrder({
+      const { data } = await createPreOrder({
         promoteId: item.id,
-        // targetUserId: this.store.userId
+        targetUserId: this.store.userId
       })
       if (this.isUser('BAIXING_SALES')) {
-        return `${orderServiceHost}/${preKeywordPath}/?appId=105&seq=${preTradeId}`
+        return `${orderServiceHost}/${preKeywordPath}/?appId=105&seq=${data}`
       }
       if (this.isUser('AGENT_ACCOUNTING')) {
-        location.href = `${orderServiceHost}/${preKeywordPath}/?appId=105&seq=${preTradeId}&agentId=${this.userInfo.id}`
-        }
+        location.href = `${orderServiceHost}/${preKeywordPath}/?appId=105&seq=${data}&agentId=${this.userInfo.id}`
+      }
     },
 
     /*********************************************************** ux */
