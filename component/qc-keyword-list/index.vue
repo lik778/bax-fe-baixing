@@ -61,6 +61,9 @@ export default {
     this.getQueryList()
     this.getPreferredWordPV()
   },
+  beforeDestroy() {
+    getPreferredWordsList.clear()
+  },
   methods: {
 
     async getPreferredWordPV() {

@@ -59,7 +59,6 @@ export async function getPreferredWordsPV(opts = {}) {
 }
 
 // 获取优选词列表
-// FIXME 切换 router 清空数据
 export const getPreferredWordsList = paginationWrapper(async function (opts = {}) {
   // * for test const id = 22
   const id = opts.id
