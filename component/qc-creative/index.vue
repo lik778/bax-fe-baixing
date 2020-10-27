@@ -15,7 +15,7 @@
         <el-form-item><span class="header">基本信息</span></el-form-item>
 
         <el-form-item label="推广关键字" prop="coreWord">
-          <span>{{coreWord}}</span>
+          <span>{{form.coreWord}}</span>
         </el-form-item>
         <el-form-item label="投放页面" prop="landingPageId">
           <el-cascader
@@ -59,7 +59,7 @@
 
         <el-form-item label="">
           <el-button type="primary" @click="update">保存推广计划</el-button>
-          <el-button @click="() => $router.go(-1)">返回上一页</el-button>
+          <el-button @click="() => $router.go(-1)">返回管理推广列表</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -80,8 +80,8 @@ export default {
   data() {
     return {
       id: null,
-      coreWord: '',
       form: {
+        coreWord: '',
         landingPage: '',
         landingPageId: null,
         creativeTitle: '',
@@ -93,7 +93,6 @@ export default {
         creativeTitle: [
           { required: true, message: '请填写推广标题' },
           { validator: (rule, value, callback) => {
-              console.log('value : ', value)
               if (!/^[\u4E00-\u9FA5A-Za-z0-9]{9,25}$/.test(value)) callback('推广标题不能含有特殊字符，长度在 9-25 之间')
               callback()
             },
@@ -103,7 +102,6 @@ export default {
         creativeContent: [
           { required: true, message: '请填写推广内容' },
           { validator: (rule, value, callback) => {
-              console.log('value : ', value)
               if (!/^[\u4E00-\u9FA5A-Za-z0-9]{9,80}$/.test(value)) callback('推广标题不能含有特殊字符，长度在 9-80 之间')
               callback()
             },
@@ -120,13 +118,13 @@ export default {
       }
     }
   },
-  created() {
+  async created() {
     this.id = getRouteParam.bind(this)('promoteId')
     if (!this.id) {
       throw new Error('No ID on qc-creative page.')
     } else {
+      await this.initSites()
       this.initCreative()
-      this.initSites()
     }
   },
   methods: {
@@ -135,17 +133,18 @@ export default {
       const {
         coreWord,
         landingPage,
-        landingPageId,
         creativeTitle,
         creativeContent,
       } = response || {}
-      this.coreWord = coreWord
       this.form = {
+        coreWord,
         landingPage,
         creativeTitle,
-        creativeContent,
-        landingPageId: String(landingPageId),
+        creativeContent
       }
+      this.form.landingPageId = this.options.sites.find(site => (
+        landingPage === 'http://' + site.domain + '.mvp.baixing.com'
+      )).id
     },
     async initSites () {
       const sites = await getUserSites()
@@ -163,6 +162,7 @@ export default {
             landingType: 3,
             ...this.form,
           }
+          console.log('query: ', query)
           const response = await saveCreative(query)
           this.$notify({
             type: 'success',
