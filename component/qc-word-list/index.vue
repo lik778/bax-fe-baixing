@@ -266,7 +266,7 @@ export default {
     },
     enablePayButton(status) {
       return [
-        EW.PENDING_PAYMENT.value
+        EW.PENDING_BIND_USER.value
       ].includes(status)
     },
     isUser(role) {
