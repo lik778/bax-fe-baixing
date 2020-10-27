@@ -42,10 +42,15 @@
       <el-table-column label="状态">
         <template slot-scope="{row}">
           <catch-error>
-            <span :class="isExpandWordStatusError(row.status) ? 'error' : ''">{{getEWStatusWith('value', row.status).label}}</span>
             <template v-if="isExpandWordStatusError(row.status)">
+              <span class="error">{{getEWStatusWith('value', row.status).label}}</span>
               <el-tooltip placement="top" :content="row.reason || '失败原因未知'">
                 <i class="error el-icon-question pointer" />
+              </el-tooltip>
+            </template>
+            <template v-else>
+              <el-tooltip placement="top" :content="getEWStatusWith('value', row.status).tip">
+                <span>{{getEWStatusWith('value', row.status).label}}</span>
               </el-tooltip>
             </template>
           </catch-error>
