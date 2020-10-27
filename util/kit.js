@@ -145,7 +145,10 @@ export function pause(time = 1000) {
 
 // 获取路由参数
 export function getRouteParam(key) {
-  return (this.$route && this.$route.params && this.$route.params[key]) || null
+  const routeParam = (this.$route && this.$route.params && this.$route.params[key])
+  if (routeParam) return routeParam
+  const query = parseQuery(window.location.search)
+  return query[key]
 }
 
 // simple deepclone
@@ -202,13 +205,15 @@ export function normalize(adaptorDes = {}, raw, saveEmptyProp = false) {
 }
 
 // 前端分页函数
-export function paginationWrapper(getList, dataFormat = val => val) {
+export function paginationWrapper(getList, dataFormat) {
   let responseStore = null
 
   return async (...args) => {
     if (!responseStore) {
       const response = await getList(...args)
-      responseStore = dataFormat(response)
+      responseStore = dataFormat
+        ? dataFormat(response)
+        : response
       responseStore.total = responseStore.data.length
     }
     const { data = [], total } = responseStore

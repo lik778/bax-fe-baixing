@@ -421,8 +421,4 @@ const app = new Vue({
   router
 })
 
-// Vue.prototype.getFinalUserId = function getFinalUserId() {
-//   return getRouteParam.bind(this)('user_id') || (this.userInfo || {}).id
-// }
-
 app.$mount('#bax')

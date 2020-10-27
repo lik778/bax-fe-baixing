@@ -5,7 +5,7 @@
     <el-form class="query-form" :inline="true" :model="query" label-width="80px">
       <el-form-item label="核心词">
         <el-input
-          v-model="query.keyword"
+          v-model="query.coreWord"
           placeholder="请输入核心词"
           clearable
         />
@@ -36,8 +36,8 @@
     </el-form>
     <!-- 列表 -->
     <el-table class="query-table" border :data="queryList">
-      <el-table-column label="查询日期"  width="160" :formatter="({createdTime}) => $formatter.date(createdTime)" />
-      <el-table-column label="核心词" prop="coreWord" width="160" />w
+      <el-table-column label="查询日期" width="160" :formatter="({createdTime}) => $formatter.date(createdTime)" />
+      <el-table-column label="核心词" prop="coreWord" width="160" />
       <el-table-column label="推广地区" prop="provinces" :formatter="({ provinces }) => $formatter.join(provinces)" />
       <el-table-column label="状态">
         <template slot-scope="{row}">
@@ -123,7 +123,7 @@ export default {
       isExpandWordStatusError,
       getEWStatusWith,
       query: {
-        keyword: '',
+        coreWord: '',
         status: '',
         date: '',
       },
@@ -185,9 +185,7 @@ export default {
         page: page - 1,
         size: this.pagination.size,
         salesId: this.store.salesId,
-        ...formatReqQuery(normalize({
-          coreWord: ['keyword']
-        }, this.query )),
+        ...formatReqQuery(this.query),
       }
       const { content = [], totalElements = 0 } = (await getKeywordsList(query)) || {}
       this.queryList = content.map(x => ({
@@ -204,7 +202,7 @@ export default {
     async genPaymentURL(item) {
       const { data: preTradeId } = await createPreOrder({
         promoteId: item.id,
-        targetUserId: this.store.userId
+        // targetUserId: this.store.userId
       })
       if (this.isUser('BAIXING_SALES')) {
         return `${orderServiceHost}/${preKeywordPath}/?appId=105&seq=${preTradeId}`
@@ -229,10 +227,10 @@ export default {
     goPreferredWordsListPage(item) {
       const { id } = item || {}
       this.selectItem(item)
-      this.$router.push({
-        name: 'qc-keyword-list',
-        params: { id }
-      })
+      const search = window.location.search
+        ? window.location.search + `&promoteId=${id}`
+        : `?promoteId=${id}`
+      this.$router.push(`/main/qc/keyword-list` + search)
     },
     goEditWordsPage(row) {
       const { id } = row
@@ -240,7 +238,7 @@ export default {
     },
     resetQuery() {
       this.query = {
-        keyword: '',
+        coreWord: '',
         status: '',
         date: '',
       }
@@ -257,7 +255,6 @@ export default {
     enableEditButton(status) {
       return [
         ...getEWStatusWith('label', '拓词失败').value,
-        ...getEWStatusWith('label', '待支付').value,
       ].includes(status)
     },
     enablePayButton(status) {

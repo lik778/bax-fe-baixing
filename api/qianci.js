@@ -41,20 +41,15 @@ export async function createPreferredWords(opts) {
 
 // 获取查词记录
 export async function getKeywordsList(opts) {
-  if (useTestData)
-    return (await qianci
-      .get('/promote/keywords')
-      .query(opts)
-      .json())
-      .data
+  return (await qianci
+    .get('/promote/keywords')
+    .query(opts)
+    .json())
+    .data
 }
 
 // 获取优选词展现数据
 export async function getPreferredWordsPV(opts = {}) {
-  return {
-    count: Math.floor(Math.random() * 500 + 100),
-    pvs: Math.floor(Math.random() * 2800 + 200)
-  }
   return (await qianci
     .post('/promotwe/user/ranking')
     .send(opts)
@@ -63,6 +58,7 @@ export async function getPreferredWordsPV(opts = {}) {
 }
 
 // 获取优选词列表
+// FIXME 切换 router 清空数据
 export const getPreferredWordsList = paginationWrapper(async function (opts = {}) {
   // * for test const id = 22
   const id = opts.id
