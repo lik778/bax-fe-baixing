@@ -41,6 +41,9 @@ export default {
     visible: {
       type: Boolean,
       required: true
+    },
+    allQianciAreas: {
+      type: Object
     }
   },
   data() {
@@ -48,8 +51,7 @@ export default {
       selectedAreas: [...this.areas],
       originSelectedAreas: [],
       originProvinceList: [],
-      provinceList: [],
-      provinceMapping: {}
+      provinceList: []
     }
   },
   watch: {
@@ -64,21 +66,19 @@ export default {
         return
       }
       this.selectedAreas = [...v]
+    },
+    allQianciAreas(values) {
+      const { cnToEnMap, enToCnMap, provinces } = values
+      this.provinceList = Object.keys(provinces).map(k => { return { name: k, en: cnToEnMap[k], checked: false, cities: provinces[k]  } })
     }
   },
   mounted() {
-    this.getProvinceData()
     this.$bus.$on('updateQcAreaSelectorView', (province) => {
       const removeProvince = this.selectedAreas.find(x => x.name === province.name)
       if (removeProvince) { removeProvince.checked = false }
     })
   },
   methods: {
-    async getProvinceData() {
-      const { provinceMapping, provinces } = await getQcAllAreas()
-      this.provinceMapping = provinceMapping
-      this.provinceList = Object.keys(provinces).map(k => { return { name: k, en: provinceMapping[k], checked: false, cities: provinces[k]  } })
-    },
     disabledProvinceCheck(province) {
       return !this.selectedAreas.map(p => p.name).includes(province.name) && this.selectedAreas.length === 2
     },

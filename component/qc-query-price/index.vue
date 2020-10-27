@@ -5,26 +5,28 @@
         <product-intro></product-intro>
         <el-form :model="form" :rules="rules" label-width="120px" ref="form" label-position="left" class="form" @submit.native.prevent>
           <el-form-item label="推广关键词" prop="keyword">
-            <el-input v-model="form.keyword" style="width: 200px" maxlength="10"/>
+            <el-input :disabled="isEdit" v-model="form.keyword" style="width: 200px" maxlength="10"/>
           </el-form-item>
           <el-form-item label="推广区域" prop="areas">
-            <el-tag type="success" closable class="kw-tag"
+            <el-tag type="success" :closable="!isEdit" class="kw-tag"
                     v-for="area in form.areas" :key="area.name"
                     @close="removeArea(area)">
               {{ area.name }}
             </el-tag>
-            <i class="el-icon-plus" @click="areaDialogVisible = true"></i>
+            <i class="el-icon-plus" v-if="!isEdit" @click="areaDialogVisible = true"></i>
           </el-form-item>
           <el-form-item>
             <p class="warning-text" >{{checkWordText}}</p>
-            <el-button :loading="loading" type="primary" @click="checkWord">检查</el-button>
+            <el-button :disabled="isEdit" :loading="loading" type="primary" @click="checkWord">检查</el-button>
           </el-form-item>
         </el-form>
-        <select-keywords v-if="keywordsPanelVisible" ref="selectKeywords" :form="form" :salesInfo="salesInfo"/>
+        <select-keywords v-if="keywordsPanelVisible" ref="selectKeywords" :promote="promote" 
+        :form="form" :salesInfo="salesInfo" :allQianciAreas="allQianciAreas" :isEdit="isEdit"/>
       </main>
     </div>
     <qc-area-selector
        :areas="form.areas"
+       :allQianciAreas="allQianciAreas"
        :visible="areaDialogVisible"
        @ok="onAreasChange"
        @cancel="areaDialogVisible = false"
@@ -34,11 +36,12 @@
 
 <script>
 import { Message } from 'element-ui'
-import { keywordLocked,createPreferredWords } from "api/qianci"
+import { getPromote, keywordLocked,createPreferredWords } from "api/qianci"
 import ProductIntro from "com/qc-query-price/product-intro"
 import QcAreaSelector from "com/qc-query-price/qc-area-selector"
 import { API_SUCCESS } from 'constant/api'
 import SelectKeywords from './select-keywords'
+import gStore from '../store'
 
 export default {
   name: "qc-query-price",
@@ -53,8 +56,12 @@ export default {
       required: true
     }
   },
+  fromMobx: {
+    allQianciAreas: () => gStore.allQianciAreas
+  },
   data() {
     return {
+      promote: null,
       form: {
         keyword: '',
         areas: []
@@ -72,16 +79,42 @@ export default {
       loading: false,
       areaDialogVisible: false,
       keywordsPanelVisible: false,
-      checkWordText: ''
+      checkWordText: '',
+      isEdit: false
     }
   },
   watch: {
+    promote: {
+      deep: true,
+      immediate: true,
+      handler(values) {
+        if (values) {
+          this.form.keyword = values.coreWord
+          const{ enToCnMap, provinces } = this.allQianciAreas
+          this.form.areas = values.provinces.map(en => {
+            const cnName = enToCnMap[en]
+            return { name: cnName, en, checked: true, cities: provinces[cnName]  }
+          })
+          this.keywordsPanelVisible = true
+        }
+      }
+    },
     form: {
       deep: true,
       immediate: true,
       handler() {
-        this.keywordsPanelVisible = false
+        if (!this.isEdit) {
+          this.keywordsPanelVisible = false
+        }
       }
+    }
+  },
+  async mounted() {
+    const { id } = this.$route.query
+    if (id) {
+      this.isEdit = true
+      const promote = await getPromote(id)
+      this.promote = promote
     }
   },
   methods: {
@@ -92,10 +125,9 @@ export default {
           if (code === API_SUCCESS) {
             if (data.locked.length === 0) {
               this.keywordsPanelVisible = true
+              this.checkWordText = ''
             } else {
-              const keyWord = this.form.keyword
-              this.checkWordText = `检测${keyWord}在所选的地区(${ data.locked.join(',') })已被售出`
-              this.form.keyword = ''
+              this.checkWordText = `检测${this.form.keyword}在所选的地区(${ data.locked.join(',') })已被售出`
             }
           } else {
             Message.error(message)

@@ -3,13 +3,16 @@ import { observable, action, toJS } from 'mobx'
 import { isNormalUser, notAllowFengmingRecharge } from 'util/role'
 import * as aapi from 'api/account'
 import * as mapi from 'api/meta'
+import * as qapi from 'api/qianci'
 import Sentry from '../lib/sentry'
 
 const gStore = observable({
   _currentUser: {},
   _allCategories: [],
   _allAreas: [],
+  _allQianciAreas: {},
   _allRoles: [],
+  
 
   addUserLeadVisible: false,
 
@@ -25,7 +28,9 @@ const gStore = observable({
   get allRoles() {
     return toJS(this._allRoles)
   },
-
+  get allQianciAreas() {
+    return toJS(this._allQianciAreas)
+  },
   toggleAddUserLeadVisible: action(function() {
     this.addUserLeadVisible = !this.addUserLeadVisible
   }),
@@ -62,9 +67,13 @@ const gStore = observable({
     this._allAreas = await mapi.getAreas()
   }),
 
+  getQianciAreas: action(async function() {
+    this._allQianciAreas = await qapi.getQcAllAreas()
+  }),
   getRoles: action(async function() {
     this._allRoles = await aapi.getRoles()
   })
+  
 })
 
 export default gStore

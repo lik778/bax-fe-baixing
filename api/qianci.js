@@ -19,7 +19,16 @@ export async function getQcAllAreas() {
   const { data } = await qianci
     .get('/area/all')
     .json()
-  return { provinceMapping: data.cnToEnMap, provinces: data.provinceCitiesMap }
+  const { cnToEnMap, enToCnMap, provinceCitiesMap } = data
+  return { cnToEnMap, enToCnMap, provinces: provinceCitiesMap }
+}
+
+// 获取单条计划信息
+export async function getPromote(promoteId) {
+  const body = await qianci
+    .get(`/promote/keyword/${promoteId}`)
+    .json()
+  return body.data
 }
 
 // 优选词逻辑
