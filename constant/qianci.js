@@ -104,6 +104,7 @@ export function getEWStatusWith(key, val) {
   return {}
 }
 
+/* 设备枚举 */
 export const deviceValueLabelMap = {
   0: '电脑、手机',
   1: '电脑端',
