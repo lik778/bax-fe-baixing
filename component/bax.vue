@@ -146,7 +146,6 @@ export default {
       gStore.getCurrentUser(),
       gStore.getCategories(),
       gStore.getAreas(),
-      gStore.getQianciAreas(),
       gStore.getRoles()
     ])
 

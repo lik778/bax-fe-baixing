@@ -29,6 +29,7 @@
 import isequal from 'lodash.isequal'
 import { getQcAllAreas } from "api/qianci"
 import clone from 'clone'
+import gStore from '../store'
 
 export default {
   name: 'qc-area-selector',
@@ -41,9 +42,6 @@ export default {
     visible: {
       type: Boolean,
       required: true
-    },
-    allQianciAreas: {
-      type: Object
     }
   },
   data() {
@@ -54,9 +52,15 @@ export default {
       provinceList: []
     }
   },
+  fromMobx: {
+    allQianciAreas: () => gStore.allQianciAreas
+  },
   watch: {
     visible(v) {
       if (v) {
+        const { cnToEnMap, enToCnMap, provinces } = this.allQianciAreas
+        console.log(this.allQianciAreas)
+        this.provinceList = Object.keys(provinces).map(k => { return { name: k, en: cnToEnMap[k], checked: false, cities: provinces[k]  } })
         this.originProvinceList = clone(this.provinceList)
         this.originSelectedAreas = clone(this.originSelectedAreas)
       }
@@ -67,10 +71,6 @@ export default {
       }
       this.selectedAreas = [...v]
     },
-    allQianciAreas(values) {
-      const { cnToEnMap, enToCnMap, provinces } = values
-      this.provinceList = Object.keys(provinces).map(k => { return { name: k, en: cnToEnMap[k], checked: false, cities: provinces[k]  } })
-    }
   },
   mounted() {
     this.$bus.$on('updateQcAreaSelectorView', (province) => {

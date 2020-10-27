@@ -49,7 +49,7 @@
                title="提示" :visible.sync="successDialogVisible">
       <div class="success-dialog-box">
         <img src="//file.baixing.net/202010/d4ade9d26b0af9fee07c21665a2de323.png">
-        <p>提交成功，后台正在为您优选关键词，稍后请在 【查词记录】 ，页面查看进展。</p>
+        <p>提交成功，后台正在为您优选关键词，稍后请在【查词记录】页面查看进展。</p>
         <router-link :to="{name: 'qc-word-list'}">
           <el-button type="primary" size="medium">确定</el-button>
         </router-link>
@@ -60,7 +60,7 @@
 
 <script>
 import { Message } from 'element-ui'
-import { createPreferredWords } from 'api/qianci'
+import { createPreferredWords, updatePromoteWords } from 'api/qianci'
 import { API_SUCCESS, API_CANNOT_PASS_QUALITY_CHECK } from 'constant/api'
 import KeywordView from './view'
 import KeywordInput from './input'
@@ -156,9 +156,6 @@ export default {
       }
     },
     promote: {
-      type: Object
-    },
-    allQianciAreas: {
       type: Object
     },
     salesInfo: {
@@ -285,9 +282,14 @@ export default {
       const { keyword, areas } = this.form
       const { salesId } = this.salesInfo
       this.submitWordsLoading = true
-      const { code, message, data } = await createPreferredWords({ coreWord: keyword, 
+      const params = { coreWord: keyword, 
         provinces: areas.map(x => x.en), prefixWords: this.keywordOptions.B.keywords, 
-        suffixWords: this.keywordOptions.D.keywords, salesId  })
+        suffixWords: this.keywordOptions.D.keywords, salesId  }
+      const handleFunc = this.isEdit ? updatePromoteWords : createPreferredWords
+      if (this.isEdit) {
+         params.id = this.promote.id
+      }
+      const { code, message, data } = await handleFunc(params)
       if (code === API_SUCCESS) {
         this.successDialogVisible = true
       } else if (code === API_CANNOT_PASS_QUALITY_CHECK) {
