@@ -90,9 +90,12 @@ export default {
         ...formatReqQuery(this.query),
       }
       this.loading.query = true
-      const { data, total } = (await getPreferredWordsList(query)) || {}
-      this.queryList = data.map(x => x)
-      this.loading.query = false
+      try {
+        const { data, total } = (await getPreferredWordsList(query)) || {}
+        this.queryList = data.map(x => x)
+      } finally {
+        this.loading.query = false
+      }
 
       this.pagination = {
         ...this.pagination,
