@@ -111,7 +111,7 @@ export default {
   },
   methods: {
     canEditPromote(status) {
-      return [PROMOTE_STATUS_PENDING_EDIT, PROMOTE_STATUS_ON_PROMOTE].includes(status)
+      return [PROMOTE_STATUS_PENDING_EDIT, PROMOTE_STATUS_EDITED, PROMOTE_STATUS_ONLINE, PROMOTE_STATUS_ON_PROMOTE].includes(status)
     },
     canGotoWanci(status) {
       return  [PROMOTE_STATUS_EDITED, PROMOTE_STATUS_ONLINE, PROMOTE_STATUS_ON_PROMOTE].includes(status)
