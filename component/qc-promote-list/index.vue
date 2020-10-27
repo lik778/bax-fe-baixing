@@ -4,7 +4,7 @@
     <!-- 搜索表单 -->
     <el-form class="query-form" :inline="true" :model="query" label-width="80px">
       <el-form-item label="核心词">
-        <el-input v-model="query.keyword" placeholder="请输入核心词" suffix-icon="el-icon-search"/>
+        <el-input v-model="query.coreWord" placeholder="请输入核心词" suffix-icon="el-icon-search"/>
       </el-form-item>
       <el-form-item label="投放状态">
         <el-select v-model="query.status" placeholder="请选择投放状态">
@@ -27,22 +27,22 @@
     <el-table class="query-table" border :data="queryList">
       <el-table-column label="核心词" prop="coreWord" width="160" />
       <el-table-column label="推广地区" :formatter="({ provinces }) => $formatter.join(provinces)" />
-      <el-table-column label="平台" prop="plat" :formatter="({ platform }) => $formatter.mapWith(platform, deviceValueLabelMap)" />
+      <el-table-column label="平台" prop="plat" :formatter="({ device }) => DEVICE[device]" />
       <el-table-column label="投放状态">
         <template slot-scope="{row}">
           <catch-error>
-            <span>{{PROMOTE_STATUS_MAPPING[row.semStatus]}}</span>
+            <span>{{PROMOTE_STATUS_MAPPING[row.status]}}</span>
           </catch-error>
         </template>
       </el-table-column>
       <el-table-column label="审核状态">
         <template slot-scope="{row}">
           <catch-error>
-            <span>{{AUDIT_STATUS_MAPPING[row.status]}}</span>
+            <span>{{AUDIT_STATUS_MAPPING[row.auditStatus]}}</span>
           </catch-error>
         </template>
       </el-table-column>
-      <el-table-column label="购买日期" :formatter="({ tradeDate }) => $formatter.date(tradeDate)" />
+      <el-table-column label="购买日期" :formatter="({ createdTime }) => $formatter.date(createdTime)" />
       <el-table-column label="剩余投放天数" :formatter="restDayFormatter" />
       <el-table-column label="操作" width="160">
         <template slot-scope="{row}">
@@ -57,18 +57,14 @@
       layout="total,sizes,prev,pager,next"
       :total="pagination.total"
       :page-size="pagination.size"
-      :page-sizes="pagination.sizes"
-      :current-page="pagination.current"
-      @current-change="getQueryListWithTip"
-      @size-change="handleSizeChange"
+      @current-change="handleCurrentPage"
     />
   </div>
 </template>
 
 <script>
 import dayjs from 'dayjs'
-
-import { AUDIT_STATUS_MAPPING, PROMOTE_STATUS_MAPPING, deviceValueLabelMap } from 'constant/qianci'
+import { DEVICE, AUDIT_STATUS_MAPPING, PROMOTE_STATUS_MAPPING } from 'constant/qianci'
 import  { getBusinessLicense } from 'api/seo'
 import { getPromoteList } from 'api/qianci'
 import { parseQuery, formatReqQuery, debounce, normalize } from 'util'
@@ -80,28 +76,22 @@ export default {
   },
   data() {
     return {
-      deviceValueLabelMap,
       PROMOTE_STATUS_MAPPING,
       AUDIT_STATUS_MAPPING,
       query: {
-        keyword: '',
+        coreWord: '',
         status: '',
         auditStatus: ''
       },
       pagination: {
-        current: 1,
         total: 0,
+        page: 0,
         size: 15,
-        sizes: [10, 15, 30, 50],
       },
       queryList: [],
       active: {
         selectedItem: null,
         selectedItemURL: '',
-      },
-      store: {
-        saleId: null,
-        userId: null,
       },
       visible: {
         paymentDialog: false
@@ -109,53 +99,40 @@ export default {
       loading: {
         checkLicense: false
       },
+      DEVICE
     }
-  },
-  created() {
-    const query = parseQuery(window.location.search)
-    const { saleId, userId } = query
-    this.store = { saleId, userId }
   },
   mounted() {
     this.getQueryList()
   },
   methods: {
+    getQueryParams() {
+      const params = {}
+      Object.keys(this.query).forEach(k => { 
+        if (this.query[k]) {  params[k] = this.query[k] }
+      })
+      return params
+    },
+    handleCurrentPage(page) {
+      this.pagination.page = (page - 1)
+      this.getQueryList(this.getQueryParams(page))
+    },
     search() {
-      this.getQueryListWithTip()
+      this.pagination.page = 0
+      this.getQueryList(this.getQueryParams())
     },
-    handleSizeChange(size) {
-      this.pagination.size = size
-      this.getQueryListWithTip()
-    },
-    async getQueryListWithTip(...args) {
-      await this.getQueryList(...args)
-      if (this.queryList) {
-        this.$message({
-          message: '数据获取成功',
-          type: 'success'
-        })
-      }
-    },
-    async getQueryList(page = 1) {
-      const { salesId, userId } = this.salesInfo
-      const { auditStatus, status } = this.query
+    async getQueryList(params) {
+      const { sales_id: salesId, user_id: userId } = this.$route.query
       const query = {
-        page: page - 1,
         size: this.pagination.size,
+        page: this.pagination.page,
         userId,
         salesId,
-        auditStatus,
-        status
+        ...params
       }
-
-      const content = await getPromoteList(query)
-
-      this.queryList = content.map(x => x)
-      this.pagination = {
-        ...this.pagination,
-        current: page,
-        total: this.pagination.length,
-      }
+      const { total, content } = await getPromoteList(query)
+      this.queryList = content
+      this.pagination.total = total
     },
     async checkLicense() {
       let businessUrl = null
@@ -167,26 +144,13 @@ export default {
       }
       return !!businessUrl
     },
-
-    /*********************************************************** ux */
-
-    selectItem(item) {
-      this.active.selectedItem = item
-    },
     goChartPage() {
       this.$router.push({ name: 'qc-dashboard' })
     },
-    resetQuery() {
-      this.query = {
-        keyword: '',
-        status: '',
-        date: '',
-      }
-    },
     async goEditCreativePage(row) {
       this.active.selectedItem = row
+      console.log(row)
       const hasBusinessUrl = await this.checkLicense()
-      // const hasBusinessUrl = false
       if (hasBusinessUrl) {
         this.$router.push({
           name: 'qc-creative',
@@ -211,17 +175,14 @@ export default {
         })
       }
     },
-
-    /*********************************************************** calculation */
-
     checkButtonLoading(row) {
       return this.active.selectedItem === row && this.loading.checkLicense
     },
     restDayFormatter({ remainDate }) {
       const restDays = Math.max(0, (dayjs(remainDate * 1000) - dayjs())) / (24 * 60 * 60 * 1000)
       return parseFloat(restDays).toFixed(1)
-    },
-  }
+    }
+  },
 }
 </script>
 
