@@ -101,6 +101,7 @@ import PaymentDialog from './payment-dialog'
 
 import { orderServiceHost, preKeywordPath } from 'config'
 import {
+  EW,
   isExpandWordStatusError,
   getEWStatusWith,
   EW_OPTIONS
@@ -120,6 +121,7 @@ export default {
   },
   data() {
     return {
+      EW,
       isExpandWordStatusError,
       getEWStatusWith,
       query: {
@@ -259,7 +261,7 @@ export default {
     },
     enablePayButton(status) {
       return [
-        ...getEWStatusWith('label', '待支付').value
+        EW.PENDING_BIND_USER.value
       ].includes(status)
     },
     isUser(role) {
