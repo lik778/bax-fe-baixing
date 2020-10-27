@@ -207,8 +207,7 @@ export function normalize(adaptorDes = {}, raw, saveEmptyProp = false) {
 // 前端分页函数
 export function paginationWrapper(getList, dataFormat) {
   let responseStore = null
-
-  return async (...args) => {
+  const wrapperFn = async (...args) => {
     if (!responseStore) {
       const response = await getList(...args)
       responseStore = dataFormat
@@ -225,6 +224,8 @@ export function paginationWrapper(getList, dataFormat) {
       data: data.slice(page * size, end + 1)
     }
   }
+  wrapperFn.clear = () => (responseStore = null)
+  return wrapperFn
 }
 
 // 防抖

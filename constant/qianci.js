@@ -75,6 +75,7 @@ export const isExpandWordStatusError = status => [
 export const EW_OPTIONS = [
   {
     label: '待拓词',
+    tip: '系统正在为您优选词，请稍等。',
     value: [
       EW.CREATED.value,
       EW.PENDING.value
@@ -82,12 +83,14 @@ export const EW_OPTIONS = [
   },
   {
     label: '拓词失败',
+    tip: '系统优选词失败，请修改关键词后重新优选。',
     value: [
       EW.PENDING_MODIFY_PREFIX_SUFFIX.value
     ]
   },
   {
     label: '待支付',
+    tip: '系统已为你优选关键词，请查看词包详情。',
     value: [
       EW.PENDING_BIND_USER.value,
       EW.PENDING_PAYMENT.value
@@ -95,8 +98,21 @@ export const EW_OPTIONS = [
   },
   {
     label: '已支付',
+    tip: '优选词已支付，请到【管理推广】页面查看。',
     value: [
-      EW.PAID.value
+      EW.PAID.value,
+      EW.PENDING_EDIT.value,
+      EW.EDITED.value,
+      EW.ONLINE.value,
+      EW.ON_PROMOTE.value,
+      EW.FINISHED.value
+    ]
+  },
+  {
+    label: '已停止',
+    tip: '支付超时，请重新查词。',
+    value: [
+      EW.CEASED.value
     ]
   }
 ]

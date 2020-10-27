@@ -42,10 +42,15 @@
       <el-table-column label="状态">
         <template slot-scope="{row}">
           <catch-error>
-            <span :class="isExpandWordStatusError(row.status) ? 'error' : ''">{{getEWStatusWith('value', row.status).label}}</span>
             <template v-if="isExpandWordStatusError(row.status)">
+              <span class="error">{{getEWStatusWith('value', row.status).label}}</span>
               <el-tooltip placement="top" :content="row.reason || '失败原因未知'">
                 <i class="error el-icon-question pointer" />
+              </el-tooltip>
+            </template>
+            <template v-else>
+              <el-tooltip placement="top" :content="getEWStatusWith('value', row.status).tip">
+                <span>{{getEWStatusWith('value', row.status).label}}</span>
               </el-tooltip>
             </template>
           </catch-error>
@@ -101,6 +106,7 @@ import PaymentDialog from './payment-dialog'
 
 import { orderServiceHost, preKeywordPath } from 'config'
 import {
+  EW,
   isExpandWordStatusError,
   getEWStatusWith,
   EW_OPTIONS
@@ -120,6 +126,7 @@ export default {
   },
   data() {
     return {
+      EW,
       isExpandWordStatusError,
       getEWStatusWith,
       query: {
@@ -200,16 +207,16 @@ export default {
     },
     // 生成付款 URL
     async genPaymentURL(item) {
-      const { data: preTradeId } = await createPreOrder({
+      const { data } = await createPreOrder({
         promoteId: item.id,
-        // targetUserId: this.store.userId
+        targetUserId: this.store.userId
       })
       if (this.isUser('BAIXING_SALES')) {
-        return `${orderServiceHost}/${preKeywordPath}/?appId=105&seq=${preTradeId}`
+        return `${orderServiceHost}/${preKeywordPath}/?appId=105&seq=${data}`
       }
       if (this.isUser('AGENT_ACCOUNTING')) {
-        location.href = `${orderServiceHost}/${preKeywordPath}/?appId=105&seq=${preTradeId}&agentId=${this.userInfo.id}`
-        }
+        location.href = `${orderServiceHost}/${preKeywordPath}/?appId=105&seq=${data}&agentId=${this.userInfo.id}`
+      }
     },
 
     /*********************************************************** ux */
@@ -259,7 +266,7 @@ export default {
     },
     enablePayButton(status) {
       return [
-        ...getEWStatusWith('label', '待支付').value
+        EW.PENDING_BIND_USER.value
       ].includes(status)
     },
     isUser(role) {
