@@ -100,8 +100,8 @@
           <template slot="title">
             <bx-icon type="sharealt"></bx-icon>竞价千词
           </template>
-          <el-menu-item index="qc-query-price">
-            <router-link :to="{ name: 'qc-query-price' }" tag="p">
+          <el-menu-item index="qc-create-promote">
+            <router-link :to="{ name: 'qc-create-promote' }" tag="p">
               <i class="material-icons" style="font-size: 16px; margin-right: 11px; vertical-align: -3px;"></i>新建订单
             </router-link>
           </el-menu-item>
@@ -215,7 +215,7 @@ const MENU_GROUP_MAP = {
   'seo': ['seo-create-promotion', 'seo-promotion-list'],
   'sst': ['qwt-create-promotion', 'qwt-promotion-list'],
   'bw': ['bw-query-price', 'bw-plan-list', 'bw-manual'],
-  'qc': ['qc-query-price', 'qc-promote-list', 'qc-word-list'],
+  'qc': ['qc-create-promote', 'qc-promote-list', 'qc-word-list'],
   'ssp': ['ad-list', 'material-list', 'order-list', 'user-list', 'ad-calendar'],
   'dashboard': ['qwt-dashboard', 'bw-dashboard', 'qc-dashboard'],
 }

@@ -234,7 +234,7 @@ export default {
     },
     goEditWordsPage(row) {
       const { id } = row
-      this.$router.push({ name: 'qc-query-price', query: { ...this.$route.query, id } })
+      this.$router.push({ name: 'qc-create-promote', query: { ...this.$route.query, id } })
     },
     resetQuery() {
       this.query = {

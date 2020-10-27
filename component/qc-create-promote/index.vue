@@ -37,14 +37,14 @@
 <script>
 import { Message } from 'element-ui'
 import { getPromote, keywordLocked,createPreferredWords } from "api/qianci"
-import ProductIntro from "com/qc-query-price/product-intro"
-import QcAreaSelector from "com/qc-query-price/qc-area-selector"
+import ProductIntro from "com/qc-create-promote/product-intro"
+import QcAreaSelector from "com/qc-create-promote/qc-area-selector"
 import { API_SUCCESS } from 'constant/api'
 import SelectKeywords from './select-keywords'
 import gStore from '../store'
 
 export default {
-  name: "qc-query-price",
+  name: "qc-create-promote",
   components: { ProductIntro, QcAreaSelector, SelectKeywords },
   props: {
     userInfo: {
