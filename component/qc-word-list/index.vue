@@ -233,12 +233,8 @@ export default {
       this.$router.push(`/main/qc/keyword-list` + search)
     },
     goEditWordsPage(row) {
-      this.$router.push({
-        name: 'qc-query-price',
-        params: {
-          id: row.id
-        }
-      })
+      const { id } = row
+      this.$router.push({ name: 'qc-create-promote', query: { ...this.$route.query, id } })
     },
     resetQuery() {
       this.query = {

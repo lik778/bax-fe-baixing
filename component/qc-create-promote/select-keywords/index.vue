@@ -42,7 +42,7 @@
     <div class="action-area">
       <p v-show="!handleDisabled">当前备选词数量：<strong>{{wordNum}}</strong>个</p>
       <p style="color: #FF6350" v-if="errorTips">{{errorTips}}</p>
-      <el-button type="primary" :loading="submitWordsLoading" @click="sumbitWords" :disabled="handleDisabled" size="medium">{{ submitWordsLoading ? '拓词中...' : '提交优选' }}</el-button>
+      <el-button type="primary" :loading="submitWordsLoading" @click="sumbitWords" :disabled="handleDisabled" size="medium">{{ submitWordsLoading ? '拓词中...' : isEdit ? '更新优选' : '提交优选' }}</el-button>
     </div>
     <el-dialog :close-on-click-modal="false"
                :show-close="false"
@@ -155,8 +155,17 @@ export default {
         }, {})
       }
     },
+    promote: {
+      type: Object
+    },
+    allQianciAreas: {
+      type: Object
+    },
     salesInfo: {
       type: Object
+    },
+    isEdit: {
+      type: Boolean
     }
   },
   data() {
@@ -290,6 +299,18 @@ export default {
     }
   },
   watch: {
+    promote:{
+      deep: true,
+      immediate: true,
+      handler(values) {
+        if (values) {
+          const { coreWord, provinces, prefixWords, suffixWords } = values
+          this.keywordOptions.C.keywords = [ coreWord ]
+          this.keywordOptions.B.keywords = prefixWords
+          this.keywordOptions.D.keywords = suffixWords
+        }
+      }
+    },
     originKeywords(newVal) {
       for (let key in this.keywordOptions) {
         const { keywordsAlias, keywords } = this.keywordOptions[key]

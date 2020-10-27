@@ -220,9 +220,9 @@ const bwRoutes = [{
 }]
 
 const qcRoutes = [{
-  component: () => import('com/qc-query-price'),
+  component: () => import('com/qc-create-promote'),
   path: '/main/qc/query-price',
-  name: 'qc-query-price'
+  name: 'qc-create-promote'
 }, {
   component: () => import('com/qc-promote-list'),
   path: '/main/qc/promote-list',
