@@ -39,6 +39,14 @@ export async function createPreferredWords(opts) {
     .json()
 }
 
+// 获取万词地址
+export async function getWanciSeoRedirect(opts) {
+  return await qianci
+    .get('/promote/seo/redirect')
+    .query(opts)
+    .json()
+}
+
 // 更新BD类词
 export async function updatePromoteWords(opts) {
   return await qianci
@@ -86,16 +94,6 @@ export const getPreferredWordsList = paginationWrapper(async function (opts = {}
 
 // 获取推广物料信息
 export async function getCreative(opts = {}) {
-  if (useTestData) {
-    return {
-      coreWord: '测试核心词',
-      landingType: 2,
-      landingPage: 'http://laomuziji.mvp.baixing.com',
-      landingPageId: 4198,
-      creativeTitle: '测试投放标题9个字长度',
-      creativeContent: '投放内容投放内容投放内容投放内容投放内容投放内容'
-    }
-  }
   const id = opts.id
   return await qianci
     .get(`/creative/${id}`)
