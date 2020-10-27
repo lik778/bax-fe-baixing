@@ -1,23 +1,23 @@
 <template>
   <section class="page">
-    <header>我的推广计划</header>
+    <header>投放内容</header>
 
     <div class="form-wrapper">
       <el-form
         :model="form"
         :rules="rules"
+        ref="query-form"
         label-width="120px"
-        ref="form"
         label-position="left"
         class="form"
         @submit.native.prevent>
 
         <el-form-item><span class="header">基本信息</span></el-form-item>
 
-        <el-form-item label="推广关键字">
+        <el-form-item label="推广关键字" prop="coreWord">
           <span>{{coreWord}}</span>
         </el-form-item>
-        <el-form-item label="投放页面">
+        <el-form-item label="投放页面" prop="landingPageId">
           <el-cascader
             v-model="form.landingPageId"
             clearable
@@ -40,14 +40,14 @@
 
         <el-form-item><span class="header">推广物料设置</span></el-form-item>
 
-        <el-form-item label="投放标题">
+        <el-form-item label="投放标题" prop="creativeTitle">
           <el-input
             v-model="form.creativeTitle"
             placeholder="请填写投放标题"
             clearable
           />
         </el-form-item>
-        <el-form-item label="推广内容">
+        <el-form-item label="推广内容" prop="creativeContent">
           <el-input
             type="textarea"
             v-model="form.creativeContent"
@@ -87,7 +87,30 @@ export default {
         creativeTitle: '',
         creativeContent: '',
       },
-      rules: {},
+      rules: {
+        coreWord: [{ required: true, message: '哇推广关键字都没有' }],
+        landingPageId: [{ required: true, message: '请选择投放页面' }],
+        creativeTitle: [
+          { required: true, message: '请填写推广标题' },
+          { validator: (rule, value, callback) => {
+              console.log('value : ', value)
+              if (!/^[\u4E00-\u9FA5A-Za-z0-9]{9,25}$/.test(value)) callback('推广标题不能含有特殊字符，长度在 9-25 之间')
+              callback()
+            },
+            trigger: 'blur'
+          }
+        ],
+        creativeContent: [
+          { required: true, message: '请填写推广内容' },
+          { validator: (rule, value, callback) => {
+              console.log('value : ', value)
+              if (!/^[\u4E00-\u9FA5A-Za-z0-9]{9,80}$/.test(value)) callback('推广标题不能含有特殊字符，长度在 9-80 之间')
+              callback()
+            },
+            trigger: 'blur'
+          }
+        ],
+      },
       options: {
         sites: []
       },
@@ -98,9 +121,13 @@ export default {
     }
   },
   created() {
-    this.id = getRouteParam.bind(this)('id')
-    this.initCreative()
-    this.initSites()
+    this.id = getRouteParam.bind(this)('promoteId')
+    if (!this.id) {
+      throw new Error('No ID on qc-creative page.')
+    } else {
+      this.initCreative()
+      this.initSites()
+    }
   },
   methods: {
     async initCreative () {
@@ -129,31 +156,34 @@ export default {
       }))
     },
     async update () {
-      if (!this.form.landingPageId) this.$message({ type: 'error', message: '请选择推广官网' })
-      if (!this.form.creativeTitle) this.$message({ type: 'error', message: '请填写投放标题' })
-      if (!this.form.creativeContent) this.$message({ type: 'error', message: '请填写推广内容' })
-
-      const query = {
-        ...this.form,
-        landingType: 3
-      }
-      const response = await saveCreative(query)
-      this.$notify({
-        type: 'success',
-        message: '保存成功'
+      this.$refs['query-form'].validate(async isValid => {
+        if (isValid) {
+          const query = {
+            id: this.id,
+            landingType: 3,
+            ...this.form,
+          }
+          const response = await saveCreative(query)
+          this.$notify({
+            type: 'success',
+            message: '保存成功'
+          })
+        }
       })
     },
     onSelectSite(ids) {
       const id = ids.length && ids[0]
       this.form.landingPageId = id
       const handle = this.options.sites.find(x => x.value == id)
-      this.reGenURL(handle.domain)
+      this.reGenURL(handle)
 
       // this.visible.showExpireWarning = dayjs(handle.expireAt).subtract(this.promotion.duration, 'day').isBefore(dayjs(), 'day')
       // this.visible.showExistWebsite = this.existPromotionWebsite.some(o => (o.trim() === landingPage))
     },
-    reGenURL(domain) {
-      this.form.landingPage = 'http://' + domain + '.mvp.baixing.com'
+    reGenURL(site) {
+      this.form.landingPage = site
+        ? 'http://' + site.domain + '.mvp.baixing.com'
+        : ''
     }
   }
 }
@@ -168,6 +198,7 @@ export default {
 .header {
   margin-left: -120px;
   font-weight: bold;
+  color: #444;
 }
 .payment-url-input {
   margin-top: 16px;

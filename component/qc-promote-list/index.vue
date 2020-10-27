@@ -190,7 +190,7 @@ export default {
       if (hasBusinessUrl) {
         this.$router.push({
           name: 'qc-creative',
-          params: { id: row.id }
+          params: { promoteId: row.id }
         })
       } else {
         this.$msgbox({

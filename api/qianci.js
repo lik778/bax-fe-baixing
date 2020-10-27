@@ -76,23 +76,21 @@ export async function getCreative(opts = {}) {
       landingType: 2,
       landingPage: 'http://laomuziji.mvp.baixing.com',
       landingPageId: 4198,
-      creativeTitle: '测试投放标题',
+      creativeTitle: '测试投放标题9个字长度',
       creativeContent: '投放内容投放内容投放内容投放内容投放内容投放内容'
     }
   }
+  const id = opts.id
   return await qianci
-    .post('/user/promote/update')
-    .send(opts)
+    .get(`/creative/${id}`)
+    .query()
     .json()
 }
 
 // 更新推广物料信息
 export async function saveCreative(opts = {}) {
-  if (useTestData) {
-    return { id: 'test' }
-  }
   return await qianci
-    .post('/user/promote/update')
+    .post('/promote/creative/update')
     .send(opts)
     .json()
 }
