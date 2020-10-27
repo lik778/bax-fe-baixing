@@ -3,7 +3,7 @@
     <header>优选词列表</header>
     <p class="header-info">
       <span class="description">提示：系统为您优选<span class="statics">{{wordCounts}}</span>个关键词（包含双端）。在 180 天内预计有 <span class="statics">{{pvs}}</span> 人看到您的广告，数据来源于历史。</span>
-      <el-button type="primary" plain @click="() => $router.go(-1)">返回上一页</el-button>
+      <el-button type="primary" plain @click="() => $router.go(-1)">返回查词列表</el-button>
     </p>
     <!-- 列表 -->
     <el-table

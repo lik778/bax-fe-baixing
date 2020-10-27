@@ -63,7 +63,7 @@ export const DEVICE = {
   [UNKNOWN]: '未知',
   [DEVICE_ALL]: '全平台',
   [DEVICE_PC]: '电脑端',
-  [DEVICE_WAP]: '手机端',
+  [DEVICE_WAP]: '手机端'
 }
 
 export const isExpandWordStatusError = status => [
