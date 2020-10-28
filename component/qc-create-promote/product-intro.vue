@@ -1,6 +1,6 @@
 <template>
   <div class="box">
-    <img class="icon" src="//file.baixing.net/202010/6fb5637fec8b9c8ea1cf97afae80a1e7.png">
+    <img class="icon" src="//file.baixing.net/202010/b21813d15ab60ddef31d5c61b96ad52e.png">
     <div class="intro">
       <ul class="clearfix">
         <li>广告位投放包</li>
