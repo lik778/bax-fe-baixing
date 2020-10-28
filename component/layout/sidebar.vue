@@ -100,7 +100,7 @@
           <template slot="title">
             <bx-icon type="sharealt"></bx-icon>易慧推
           </template>
-          <el-menu-item index="qc-create-promote">
+          <el-menu-item index="qc-create-promote" v-if="!userInfo.shAgent">
             <router-link :to="{ name: 'qc-create-promote' }" tag="p">
               <i class="material-icons" style="font-size: 16px; margin-right: 11px; vertical-align: -3px;"></i>新建订单
             </router-link>
@@ -110,7 +110,7 @@
               <i class="material-icons" style="font-size: 16px; margin-right: 11px; vertical-align: -3px;"></i>管理推广
             </router-link>
           </el-menu-item>
-          <el-menu-item index="qc-word-list">
+          <el-menu-item index="qc-word-list" v-if="!userInfo.shAgent">
             <router-link :to="{ name: 'qc-word-list' }" tag="p">
               <i class="material-icons" style="font-size: 16px; margin-right: 11px; vertical-align: -3px;"></i>查词记录
             </router-link>

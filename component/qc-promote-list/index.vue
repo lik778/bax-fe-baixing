@@ -6,8 +6,8 @@
       <el-form-item label="核心词">
         <el-input v-model="query.coreWord" placeholder="请输入核心词" suffix-icon="el-icon-search"/>
       </el-form-item>
-      <el-form-item label="投放状态">
-        <el-select v-model="query.status" placeholder="请选择投放状态">
+      <el-form-item label="计划状态">
+        <el-select v-model="query.status" placeholder="请选择计划状态">
           <el-option key="全部" label="全部" value=""/>
           <el-option v-for="(value, key) in PROMOTE_STATUS_MAPPING" :key="key" :label="value" :value="key" />
         </el-select>
@@ -31,7 +31,7 @@
       <el-table-column label="计划状态">
         <template slot-scope="{row}">
           <catch-error>
-            <span>{{PROMOTE_STATUS_MAPPING[row.status]}}</span>
+            <span>{{PROMOTE_STATUS[row.status]}}</span>
           </catch-error>
         </template>
       </el-table-column>
@@ -46,8 +46,8 @@
       <el-table-column label="剩余投放天数" :formatter="restDayFormatter" />
       <el-table-column label="操作" width="160">
         <template slot-scope="{row}">
-          <el-button :loading="checkButtonLoading(row)" type="text" size="small" @click="() => goEditCreativePage(row)">编辑</el-button>
-          <el-button type="text" size="small" >管理SEO</el-button>
+          <el-button v-if="canEditPromote(row.status)" :loading="checkButtonLoading(row)" type="text" size="small" @click="() => goEditCreativePage(row)">编辑</el-button>
+          <el-button v-if="canGotoWanci(row.status)" type="text" size="small"  @click="() => gotoWanci(row.id)">管理SEO</el-button>
           <div class="page-button-group-safe-padding" />
         </template>
       </el-table-column>
@@ -65,9 +65,11 @@
 
 <script>
 import dayjs from 'dayjs'
-import { DEVICE, AUDIT_STATUS_MAPPING, PROMOTE_STATUS_MAPPING } from 'constant/qianci'
+import { DEVICE, AUDIT_STATUS_MAPPING, PROMOTE_STATUS_MAPPING, PROMOTE_STATUS,
+PROMOTE_STATUS_PENDING_EDIT, PROMOTE_STATUS_ON_PROMOTE, PROMOTE_STATUS_ONLINE,
+PROMOTE_STATUS_EDITED } from 'constant/qianci'
 import  { getBusinessLicense } from 'api/seo'
-import { getPromoteList } from 'api/qianci'
+import { getPromoteList, getWanciSeoRedirect } from 'api/qianci'
 import { parseQuery, formatReqQuery, debounce, normalize } from 'util'
 
 export default {
@@ -78,6 +80,7 @@ export default {
   data() {
     return {
       PROMOTE_STATUS_MAPPING,
+      PROMOTE_STATUS,
       AUDIT_STATUS_MAPPING,
       query: {
         coreWord: '',
@@ -107,6 +110,12 @@ export default {
     this.getQueryList()
   },
   methods: {
+    canEditPromote(status) {
+      return [PROMOTE_STATUS_PENDING_EDIT, PROMOTE_STATUS_EDITED, PROMOTE_STATUS_ONLINE, PROMOTE_STATUS_ON_PROMOTE].includes(status)
+    },
+    canGotoWanci(status) {
+      return  [PROMOTE_STATUS_EDITED, PROMOTE_STATUS_ONLINE, PROMOTE_STATUS_ON_PROMOTE].includes(status)
+    },
     getQueryParams() {
       const params = {}
       Object.keys(this.query).forEach(k => {
@@ -148,6 +157,10 @@ export default {
     goChartPage() {
       this.$router.push({ name: 'qc-dashboard' })
     },
+    async gotoWanci(promoteId) {
+      const link = await getWanciSeoRedirect({ promoteId })
+      window.open(link)
+    },
     async goEditCreativePage(row) {
       this.active.selectedItem = row
       const hasBusinessUrl = await this.checkLicense()
@@ -173,7 +186,7 @@ export default {
             }
             done()
           }
-        })
+        }).catch(e=>e)
       }
     },
     checkButtonLoading(row) {

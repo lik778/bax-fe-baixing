@@ -265,20 +265,3 @@ export function notAllowFengmingRecharge(roles, agentId) {
   return [50].includes(agentId) && isOnlyBaixingUser
 }
 
-/* 千词路由 */
-
-// 允许查看查词页面
-export function allowEnterWordListPage(roles) {
-  const currentRoles = normalizeRoles(roles)
-  return !isPro ? true : checkRoles(currentRoles, [
-    'AGENT_ACCOUNTING',
-    'AGENT_SALES',
-    'NORMAL_OPERATOR',
-    'BAIXING_SALES',
-    'QA_OPERATOR',
-    'DESIGN_QA_OPERATOR',
-    'DATA_OPERATOR',
-    'FENGMING_OPERATOR',
-    'VENDOR_OPERATOR'
-  ])
-}

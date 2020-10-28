@@ -61,7 +61,7 @@ import { getBusinessLicense } from 'api/seo'
 import { allowUseKaPackage } from 'util/fengming-role'
 import { getCurrentUser } from 'api/account'
 import pick from 'lodash.pick'
-import { allowEnterWordListPage, notAllowFengmingRecharge } from 'util/role'
+import { notAllowFengmingRecharge } from 'util/role'
 // import { getRouteParam } from 'util'
 
 import '../cssbase/index.css'
@@ -221,7 +221,7 @@ const bwRoutes = [{
 
 const qcRoutes = [{
   component: () => import('com/qc-create-promote'),
-  path: '/main/qc/query-price',
+  path: '/main/qc/qc-create-promote',
   name: 'qc-create-promote'
 }, {
   component: () => import('com/qc-promote-list'),
@@ -230,15 +230,7 @@ const qcRoutes = [{
 }, {
   component: () => import('com/qc-word-list'),
   path: '/main/qc/word-list',
-  name: 'qc-word-list',
-  beforeEnter: async (to, from, next) => {
-    const { roles } = await getCurrentUser()
-    if (allowEnterWordListPage(roles)) {
-      next()
-    } else {
-      Message.error('无权限访问')
-    }
-  }
+  name: 'qc-word-list'
 }, {
   component: () => import('com/qc-keyword-list'),
   path: '/main/qc/keyword-list',
@@ -277,7 +269,7 @@ const qwtRoutes = [{
   beforeEnter: async (to, from, next) => {
     const { roles, realAgentId } = await getCurrentUser()
     if (notAllowFengmingRecharge(roles, realAgentId)) {
-      // next({ name: 'qwt-promotion-list', redirect: true })
+      next({ name: 'qwt-promotion-list', redirect: true })
     } else {
       next()
     }
