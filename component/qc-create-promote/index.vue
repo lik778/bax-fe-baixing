@@ -4,7 +4,7 @@
       <main>
         <product-intro></product-intro>
         <el-form :model="form" :rules="rules" label-width="120px" ref="form" label-position="left" class="form" @submit.native.prevent>
-          <el-form-item label="推广产品" prop="keyword">
+          <el-form-item label="核心产品" prop="keyword">
             <el-input :disabled="isEdit" v-model="form.keyword" style="width: 200px" maxlength="10"/>
           </el-form-item>
           <el-form-item label="推广区域" prop="areas">
@@ -66,7 +66,7 @@ export default {
         areas: []
       },
       rules: {
-        keyword: [{required: true, message: '请填写推广关键词'},
+        keyword: [{required: true, message: '请填写核心产品'},
           { validator: (rule, value, callback) => {
               if (!/^[\u4E00-\u9FA5A-Za-z0-9]{2,10}$/.test(value)) { return callback(new Error('非特殊字符且单个词长度2-10个字'))}
               callback() }, trigger: 'blur' }],
@@ -109,13 +109,7 @@ export default {
     }
   },
   async mounted() {
-    const { id } = this.$route.query
-
-    // 获取千词地区信息
-    if (Object.keys(gStore.allQianciAreas).length === 0) {
-      gStore.getQianciAreas()
-    }
-    
+    const { id } = this.$route.query 
     if (id) {
       this.isEdit = true
       const promote = await getPromote(id)
