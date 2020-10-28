@@ -152,7 +152,7 @@ export default {
       },
       options: {
         wordStatus: [
-          { label: '所有状态', value: '' },
+          { label: '全部', value: '' },
           ...EW_OPTIONS,
         ]
       },
