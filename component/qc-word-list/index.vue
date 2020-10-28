@@ -61,7 +61,7 @@
           <el-button
             class="info no-padding"
             type="text"
-            :disabled="!enableCheckButton(row.status)"
+            :disabled="!enableCheckButton(row)"
             @click="() => goPreferredWordsListPage(row)">查看</el-button>
           <el-button
             class="info no-padding"
@@ -271,11 +271,8 @@ export default {
 
     /*********************************************************** calculation */
 
-    enableCheckButton(status) {
-      return [
-        ...getEWStatusWith('label', '待支付').value,
-        ...getEWStatusWith('label', '已支付').value
-      ].includes(status)
+    enableCheckButton(row) {
+      return !!(+row.isExpanded)
     },
     enableEditButton(status) {
       return [
