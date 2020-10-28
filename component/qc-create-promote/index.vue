@@ -110,6 +110,12 @@ export default {
   },
   async mounted() {
     const { id } = this.$route.query 
+
+    // 获取千词地区信息
+    if (Object.keys(gStore.allQianciAreas).length === 0) {
+      gStore.getQianciAreas()
+    }
+
     if (id) {
       this.isEdit = true
       const promote = await getPromote(id)
