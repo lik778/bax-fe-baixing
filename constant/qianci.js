@@ -18,7 +18,7 @@ export const PROMOTE_STATUS_MAPPING = {
 }
 
 export const PROMOTE_STATUS = {
-  [PROMOTE_PAID]: '待支付',
+  [PROMOTE_PAID]: '已支付',
   [PROMOTE_STATUS_PENDING_EDIT]: '待编辑物料',
   [PROMOTE_STATUS_EDITED]: '物料已编辑',
   [PROMOTE_STATUS_ONLINE]: '在线上',
