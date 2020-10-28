@@ -37,13 +37,18 @@
       </el-table-column>
       <el-table-column label="审核状态">
         <template slot-scope="{row}">
-          <catch-error>
-            <span>{{AUDIT_STATUS_MAPPING[row.auditStatus]}}</span>
+          <el-tooltip v-if="showAuditFailReason(row.auditStatus)" class="item" effect="dark" content="等后端传reason" placement="top-start">
+            <catch-error>
+              <span style="color: #ff3c3c">{{AUDIT_STATUS_MAPPING[row.auditStatus]}}</span>
+            </catch-error>
+          </el-tooltip>
+          <catch-error v-else>
+              <span>{{AUDIT_STATUS_MAPPING[row.auditStatus]}}</span>
           </catch-error>
         </template>
       </el-table-column>
       <el-table-column label="购买日期" :formatter="({ createdTime }) => $formatter.date(createdTime)" />
-      <el-table-column label="剩余投放天数" :formatter="restDayFormatter" />
+      <el-table-column label="剩余投放天数" prop="remainDate" />
       <el-table-column label="操作" width="160">
         <template slot-scope="{row}">
           <el-button v-if="canEditPromote(row.status)" :loading="checkButtonLoading(row)" type="text" size="small" @click="() => goEditCreativePage(row)">编辑</el-button>
@@ -55,7 +60,7 @@
     <!-- 分页 -->
     <el-pagination
       class="pagniation"
-      layout="total,sizes,prev,pager,next"
+      layout="total,prev,pager,next"
       :total="pagination.total"
       :page-size="pagination.size"
       @current-change="handleCurrentPage"
@@ -67,7 +72,8 @@
 import dayjs from 'dayjs'
 import { DEVICE, AUDIT_STATUS_MAPPING, PROMOTE_STATUS_MAPPING, PROMOTE_STATUS,
 PROMOTE_STATUS_PENDING_EDIT, PROMOTE_STATUS_ON_PROMOTE, PROMOTE_STATUS_ONLINE,
-PROMOTE_STATUS_EDITED } from 'constant/qianci'
+PROMOTE_STATUS_EDITED, AUDIT_STATUS_REJECT_B2B, AUDIT_STATUS_REJECT_SUPPLIES,
+AUDIT_STATUS_REJECT_SEM } from 'constant/qianci'
 import  { getBusinessLicense } from 'api/seo'
 import { getPromoteList, getWanciSeoRedirect } from 'api/qianci'
 import { parseQuery, formatReqQuery, debounce, normalize } from 'util'
@@ -90,7 +96,7 @@ export default {
       pagination: {
         total: 0,
         page: 0,
-        size: 15,
+        size: 5,
       },
       queryList: [],
       active: {
@@ -110,6 +116,9 @@ export default {
     this.getQueryList()
   },
   methods: {
+    showAuditFailReason(status) {
+      return [AUDIT_STATUS_REJECT_B2B, AUDIT_STATUS_REJECT_SUPPLIES, AUDIT_STATUS_REJECT_SEM].includes(status)
+    },
     canEditPromote(status) {
       return [PROMOTE_STATUS_PENDING_EDIT, PROMOTE_STATUS_EDITED, PROMOTE_STATUS_ONLINE, PROMOTE_STATUS_ON_PROMOTE].includes(status)
     },
@@ -143,6 +152,7 @@ export default {
       const { total, content } = await getPromoteList(query)
       this.queryList = content
       this.pagination.total = total
+      this.$set(this, 'pagination', this.pagination)
     },
     async checkLicense() {
       let businessUrl = null
