@@ -12,7 +12,7 @@
       border
       :data="queryList">
       <el-table-column label="创建时间" prop="createdTime" width="120" :formatter="({createdTime}) => $formatter.date(createdTime)" />
-      <el-table-column label="核心词" prop="coreWord" width="120" />
+      <el-table-column label="核心产品" prop="coreWord" width="120" />
       <el-table-column label="优选词" prop="expandedWord" />
     </el-table>
     <!-- 分页 -->

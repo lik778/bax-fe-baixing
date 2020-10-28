@@ -3,10 +3,10 @@
     <header>查词记录</header>
     <!-- 搜索表单 -->
     <el-form class="query-form" :inline="true" :model="query" label-width="80px">
-      <el-form-item label="核心词">
+      <el-form-item label="核心产品">
         <el-input
           v-model="query.coreWord"
-          placeholder="请输入核心词"
+          placeholder="请输入核心产品"
           clearable
         />
       </el-form-item>
@@ -37,7 +37,7 @@
     <!-- 列表 -->
     <el-table class="query-table" border :data="queryList">
       <el-table-column label="查询日期" width="160" :formatter="({createdTime}) => $formatter.date(createdTime)" />
-      <el-table-column label="核心词" prop="coreWord" width="160" />
+      <el-table-column label="核心产品" prop="coreWord" width="160" />
       <el-table-column label="推广地区" prop="provinces" :formatter="({ provinces }) => $formatter.join(provinces)" />
       <el-table-column label="状态">
         <template slot-scope="{row}">
@@ -61,7 +61,7 @@
           <el-button
             class="info no-padding"
             type="text"
-            :disabled="!enableCheckButton(row.status)"
+            :disabled="!enableCheckButton(row)"
             @click="() => goPreferredWordsListPage(row)">查看</el-button>
           <el-button
             class="info no-padding"
@@ -271,11 +271,8 @@ export default {
 
     /*********************************************************** calculation */
 
-    enableCheckButton(status) {
-      return [
-        ...getEWStatusWith('label', '待支付').value,
-        ...getEWStatusWith('label', '已支付').value
-      ].includes(status)
+    enableCheckButton(row) {
+      return !!(+row.isExpanded)
     },
     enableEditButton(status) {
       return [
