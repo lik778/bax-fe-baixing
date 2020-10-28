@@ -152,7 +152,7 @@ export default {
       },
       options: {
         wordStatus: [
-          { label: '所有状态', value: '' },
+          { label: '全部', value: '' },
           ...EW_OPTIONS,
         ]
       },
@@ -239,8 +239,9 @@ export default {
     async showPaymentDialog(item) {
       this.selectItem(item)
       this.loading.preparePay = true
+      let url = null
       try {
-        const url = await this.genPaymentURL(item)
+        url = await this.genPaymentURL(item)
       } finally {
         this.loading.preparePay = false
       }
@@ -272,7 +273,8 @@ export default {
 
     enableCheckButton(status) {
       return [
-        ...getEWStatusWith('label', '待支付').value
+        ...getEWStatusWith('label', '待支付').value,
+        ...getEWStatusWith('label', '已支付').value
       ].includes(status)
     },
     enableEditButton(status) {

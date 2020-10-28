@@ -58,8 +58,8 @@
         </el-form-item>
 
         <el-form-item label="">
-          <el-button type="primary" @click="update">保存推广计划</el-button>
-          <el-button @click="() => $router.go(-1)">返回管理推广列表</el-button>
+          <el-button type="primary" @click="update">更新推广计划</el-button>
+          <el-button @click="() => $router.go(-1)">返回上一页</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -93,7 +93,7 @@ export default {
         creativeTitle: [
           { required: true, message: '请填写推广标题' },
           { validator: (rule, value, callback) => {
-              if (!/^[\u4E00-\u9FA5A-Za-z0-9]{9,25}$/.test(value)) callback('推广标题不能含有特殊字符，长度在 9-25 之间')
+              if (value.length < 9 || value.length > 25) callback('推广标题长度需要在 9-25 之间')
               callback()
             },
             trigger: 'blur'
@@ -102,7 +102,7 @@ export default {
         creativeContent: [
           { required: true, message: '请填写推广内容' },
           { validator: (rule, value, callback) => {
-              if (!/^[\u4E00-\u9FA5A-Za-z0-9]{9,80}$/.test(value)) callback('推广标题不能含有特殊字符，长度在 9-80 之间')
+              if (value.length < 9 || value.length > 80) callback('推广内容长度需要在 9-80 之间')
               callback()
             },
             trigger: 'blur'
