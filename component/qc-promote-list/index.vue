@@ -96,7 +96,7 @@ export default {
       pagination: {
         total: 0,
         page: 0,
-        size: 5,
+        size: 10,
       },
       queryList: [],
       active: {
