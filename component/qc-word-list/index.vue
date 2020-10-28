@@ -273,7 +273,8 @@ export default {
 
     enableCheckButton(status) {
       return [
-        ...getEWStatusWith('label', '待支付').value
+        ...getEWStatusWith('label', '待支付').value,
+        ...getEWStatusWith('label', '已支付').value
       ].includes(status)
     },
     enableEditButton(status) {
