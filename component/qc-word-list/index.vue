@@ -239,8 +239,9 @@ export default {
     async showPaymentDialog(item) {
       this.selectItem(item)
       this.loading.preparePay = true
+      let url = null
       try {
-        const url = await this.genPaymentURL(item)
+        url = await this.genPaymentURL(item)
       } finally {
         this.loading.preparePay = false
       }
