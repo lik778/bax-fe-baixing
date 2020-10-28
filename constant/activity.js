@@ -9,8 +9,7 @@ export const ACTIVITY_STATUS = 'activity'
 export const fengmingDiscountInfo = {
   [COMMON_STATUS]: { // 平时文案展示
     discountInfo: [
-      [588, 200, 600, 600],
-      [1088, 200, 600, 600],
+      [1000, 200, 600, 600],
       [3088, 200, 600, 600],
       [5088, 600, 1200, 900],
       [10188, 1000, 1400, 1500]
