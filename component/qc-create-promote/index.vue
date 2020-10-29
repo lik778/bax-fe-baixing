@@ -21,7 +21,7 @@
           </el-form-item>
         </el-form>
         <select-keywords v-if="keywordsPanelVisible" ref="selectKeywords" :promote="promote" 
-        :form="form" :salesInfo="salesInfo" :isEdit="isEdit"/>
+        :form="form" :isEdit="isEdit"/>
       </main>
     </div>
     <qc-area-selector
@@ -47,10 +47,6 @@ export default {
   components: { ProductIntro, QcAreaSelector, SelectKeywords },
   props: {
     userInfo: {
-      type: Object,
-      required: true
-    },
-    salesInfo: {
       type: Object,
       required: true
     }
