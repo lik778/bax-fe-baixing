@@ -91,7 +91,7 @@ const keywordOptions = {
            <p>单个词长度不少于2个字，不超过8个字。</p>
            <p>百度投放仅支持小写，输入大写时数据会被强制更改为小写</p>`,
     placeholder:
-      '如：，专业的，靠谱的，周边，附近，电话，费用，价格，推荐，...',
+      '如：，A380、工业、民用、塑料、不锈钢、金属、进口、国产、靠谱、专业、……',
     keywords: [],
     keywordsAlias: 'prefixWordList',
     wordsLimit: [10, 100],
@@ -119,7 +119,7 @@ const keywordOptions = {
            <p>词数不少于10个，不超过100个字；</p>
            <p>单个词长度不少于2个字，不超过8个字。</p>
            <p>百度投放仅支持小写，输入大写时数据会被强制更改为小写</p>`,
-    placeholder: '如：，电话，费用，价格，推荐，...',
+    placeholder: '如：，价格、厂商、厂家、批发、多少钱、怎么样、……',
     keywords: [],
     keywordsAlias: 'suffixWordList',
     wordsLimit: [10, 100],
