@@ -18,6 +18,7 @@
           <span>{{form.coreWord}}</span>
         </el-form-item>
         <el-form-item label="投放页面" prop="landingPageId">
+          <!-- * 目前没有官网过期逻辑的判断，无此需求 -->
           <el-cascader
             v-model="form.landingPageId"
             clearable
@@ -31,11 +32,6 @@
             readonly
             clearable
           />
-          <p class="form-warning" v-if="visible.siteExpireWarning">
-            站点{{'xxx'}}天内将过期，
-            请选择其他站点，或<router-link :to="{name: 'seo-charge'}">购买</router-link>新官网
-          </p>
-          <p class="form-warning" v-if="visible.siteExistWebsite">该站点已创建首页宝加速词包计划，请更换</p>
         </el-form-item>
 
         <el-form-item><span class="header">推广物料设置</span></el-form-item>
@@ -181,9 +177,6 @@ export default {
       this.form.landingPageId = String(id)
       const handle = this.options.sites.find(x => x.value == id)
       this.reGenURL(handle)
-
-      // this.visible.showExpireWarning = dayjs(handle.expireAt).subtract(this.promotion.duration, 'day').isBefore(dayjs(), 'day')
-      // this.visible.showExistWebsite = this.existPromotionWebsite.some(o => (o.trim() === landingPage))
     },
     reGenURL(site) {
       this.form.landingPage = site
