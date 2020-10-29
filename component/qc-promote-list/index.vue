@@ -22,7 +22,8 @@
         <el-button type="primary" @click="search()">查询</el-button>
       </el-form-item>
     </el-form>
-    <el-button class="go-chart-page-btn" type="primary" @click="goChartPage">查看计划报表</el-button>
+    <!-- 第一版上线需隐藏报表页面 -->
+    <!-- <el-button class="go-chart-page-btn" type="primary" @click="goChartPage">查看计划报表</el-button> -->
     <!-- 列表 -->
     <el-table class="query-table" border :data="queryList">
       <el-table-column label="核心产品" prop="coreWord" width="160" />
