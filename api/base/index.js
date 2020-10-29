@@ -154,7 +154,6 @@ export const seo = new Fetch({
       chargeNotice()
       throw new Error('请先绑定身份认证')
     }
-
     if (body.code !== 0) {
       Message.error(body.message)
       sentry.captureMessage(JSON.stringify(body), 'info')
@@ -189,6 +188,10 @@ export const qianci = new Fetch({
       // 没有经过身份证绑定
       chargeNotice()
       throw new Error('请先绑定身份认证')
+    }
+    if (body && body.code !== 0) {
+      Message.error(body.message || `出错了，请稍后重试`)
+      throw new Error(body.message)
     }
   }
 })
