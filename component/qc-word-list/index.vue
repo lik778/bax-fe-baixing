@@ -44,7 +44,7 @@
           <catch-error>
             <template v-if="isExpandWordStatusError(row.status)">
               <span class="error">{{getEWStatusWith('value', row.status).label}}</span>
-              <el-tooltip placement="top" :content="row.reason || '失败原因未知'">
+              <el-tooltip placement="top" :content="row.lastFailedReason || '失败原因未知'">
                 <i class="error el-icon-question pointer" />
               </el-tooltip>
             </template>
