@@ -37,7 +37,7 @@
       </el-table-column>
       <el-table-column label="审核状态">
         <template slot-scope="{row}">
-          <el-tooltip v-if="showAuditFailReason(row.auditStatus)" class="item" effect="dark" content="等后端传reason" placement="top-start">
+          <el-tooltip v-if="showAuditFailReason(row.auditStatus)" class="item" effect="dark" :content="row.lastFailedReason" placement="top-start">
             <catch-error>
               <span style="color: #ff3c3c">{{AUDIT_STATUS_MAPPING[row.auditStatus]}}</span>
             </catch-error>
@@ -73,7 +73,7 @@ import dayjs from 'dayjs'
 import { DEVICE, AUDIT_STATUS_MAPPING, PROMOTE_STATUS_MAPPING, PROMOTE_STATUS,
 PROMOTE_STATUS_PENDING_EDIT, PROMOTE_STATUS_ON_PROMOTE, PROMOTE_STATUS_ONLINE,
 PROMOTE_STATUS_EDITED, AUDIT_STATUS_REJECT_B2B, AUDIT_STATUS_REJECT_SUPPLIES,
-AUDIT_STATUS_REJECT_SEM } from 'constant/qianci'
+AUDIT_STATUS_REJECT_SEM, AUDIT_STATUS_REJECT_KEYWORD } from 'constant/qianci'
 import  { getBusinessLicense } from 'api/seo'
 import { getPromoteList, getWanciSeoRedirect } from 'api/qianci'
 import { parseQuery, formatReqQuery, debounce, normalize } from 'util'
@@ -96,7 +96,7 @@ export default {
       pagination: {
         total: 0,
         page: 0,
-        size: 5,
+        size: 10,
       },
       queryList: [],
       active: {
@@ -117,7 +117,7 @@ export default {
   },
   methods: {
     showAuditFailReason(status) {
-      return [AUDIT_STATUS_REJECT_B2B, AUDIT_STATUS_REJECT_SUPPLIES, AUDIT_STATUS_REJECT_SEM].includes(status)
+      return [AUDIT_STATUS_REJECT_B2B, AUDIT_STATUS_REJECT_SUPPLIES, AUDIT_STATUS_REJECT_KEYWORD, AUDIT_STATUS_REJECT_SEM].includes(status)
     },
     canEditPromote(status) {
       return [PROMOTE_STATUS_PENDING_EDIT, PROMOTE_STATUS_EDITED, PROMOTE_STATUS_ONLINE, PROMOTE_STATUS_ON_PROMOTE].includes(status)
