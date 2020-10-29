@@ -42,7 +42,7 @@
     <div class="action-area">
       <p v-show="!handleDisabled">当前备选词数量：<strong>{{wordNum}}</strong>个</p>
       <p style="color: #FF6350" v-if="errorTips">{{errorTips}}</p>
-      <el-button type="primary" :loading="submitWordsLoading" @click="sumbitWords" :disabled="handleDisabled" size="medium">{{ submitWordsLoading ? '拓词中...' : isEdit ? '更新优选' : '提交优选' }}</el-button>
+      <el-button type="primary" :loading="submitWordsLoading" @click="sumbitWords" :disabled="handleDisabled || preventSumbit" size="medium">{{ submitWordsLoading ? '拓词中...' : isEdit ? '更新优选' : '提交优选' }}</el-button>
     </div>
     <el-dialog :close-on-click-modal="false"
                :show-close="false"
@@ -169,7 +169,8 @@ export default {
       activeType: 'A',
       successDialogVisible: false,
       submitWordsLoading: false,
-      errorTips: ''
+      errorTips: '',
+      preventSumbit: false
     }
   },
   computed: {
@@ -298,6 +299,12 @@ export default {
     }
   },
   watch: {
+    wordNum(newVal, oldVal) {
+      // 处理编辑逻辑
+      if (oldVal !== 0 && this.isEdit) {
+        this.preventSumbit = false
+      }
+    },
     promote:{
       deep: true,
       immediate: true,
@@ -307,6 +314,7 @@ export default {
           this.keywordOptions.C.keywords = [ coreWord ]
           this.keywordOptions.B.keywords = prefixWords
           this.keywordOptions.D.keywords = suffixWords
+          this.preventSumbit = true
         }
       }
     },
