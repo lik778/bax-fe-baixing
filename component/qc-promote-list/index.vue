@@ -51,8 +51,8 @@
       <el-table-column label="剩余投放天数" prop="remainDate" />
       <el-table-column label="操作" width="160">
         <template slot-scope="{row}">
-          <el-button v-if="canEditPromote(row.status)" :loading="checkButtonLoading(row)" type="text" size="small" @click="() => goEditCreativePage(row)">编辑</el-button>
-          <el-button v-if="canGotoWanci(row.status)" type="text" size="small"  @click="() => gotoWanci(row.id)">管理SEO</el-button>
+          <el-button :disabled="!(userInfo.shAgent && canEditPromote(row.status))" :loading="checkButtonLoading(row)" type="text" size="small" @click="() => goEditCreativePage(row)">编辑</el-button>
+          <el-button :disabled="!(userInfo.shAgent && canGotoWanci(row.status))" type="text" size="small"  @click="() => gotoWanci(row.id)">管理SEO</el-button>
           <div class="page-button-group-safe-padding" />
         </template>
       </el-table-column>
@@ -82,6 +82,7 @@ export default {
   name: "qc-promote-list",
   props: {
     salesInfo: Object,
+    userInfo: Object,
   },
   data() {
     return {
