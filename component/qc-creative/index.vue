@@ -1,5 +1,5 @@
 <template>
-  <section class="page">
+  <section class="page qc-creative-page">
     <header>投放内容</header>
 
     <div class="form-wrapper">
@@ -14,7 +14,7 @@
 
         <el-form-item><span class="header">基本信息</span></el-form-item>
 
-        <el-form-item label="推广关键字" prop="coreWord">
+        <el-form-item label="核心产品" prop="coreWord">
           <span>{{form.coreWord}}</span>
         </el-form-item>
         <el-form-item label="投放页面" prop="landingPageId">
@@ -83,12 +83,12 @@ export default {
       form: {
         coreWord: '',
         landingPage: '',
-        landingPageId: null,
+        landingPageId: '',
         creativeTitle: '',
         creativeContent: '',
       },
       rules: {
-        coreWord: [{ required: true, message: '哇推广关键字都没有' }],
+        coreWord: [{ required: true, message: '哇核心产品都没有' }],
         landingPageId: [{ required: true, message: '请选择投放页面' }],
         creativeTitle: [
           { required: true, message: '请填写推广标题' },
@@ -136,22 +136,25 @@ export default {
         creativeTitle,
         creativeContent,
       } = response || {}
-      this.form = {
-        coreWord,
-        landingPage,
-        creativeTitle,
-        creativeContent
+      this.form.coreWord = coreWord
+      this.form.creativeTitle = creativeTitle
+      this.form.creativeContent = creativeContent
+      setSite: {
+        const targetSite = this.options.sites.find(site => (
+          landingPage === 'http://' + site.domain + '.mvp.baixing.com'
+        ))
+        if (targetSite) {
+          this.form.landingPageId = String(targetSite.id)
+          this.form.landingPage = landingPage
+        }
       }
-      this.form.landingPageId = this.options.sites.find(site => (
-        landingPage === 'http://' + site.domain + '.mvp.baixing.com'
-      )).id
     },
     async initSites () {
       const sites = await getUserSites()
       this.options.sites = (sites || []).map(x => ({
         ...x,
         label: x.name,
-        value: x.id
+        value: String(x.id)
       }))
     },
     async update () {
@@ -172,8 +175,10 @@ export default {
       })
     },
     onSelectSite(ids) {
+      if (!ids) return null
+
       const id = ids.length && ids[0]
-      this.form.landingPageId = id
+      this.form.landingPageId = String(id)
       const handle = this.options.sites.find(x => x.value == id)
       this.reGenURL(handle)
 
@@ -202,5 +207,15 @@ export default {
 }
 .payment-url-input {
   margin-top: 16px;
+}
+</style>
+
+<style lang="postcss">
+/* TODO 查找 Element 级联被样式污染原因 */
+.el-cascader__dropdown {
+  & .el-scrollbar__wrap {
+    margin-bottom: 0 !important;
+    overflow: hidden scroll;
+  }
 }
 </style>

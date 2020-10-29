@@ -23,7 +23,7 @@
       :page-size="pagination.size"
       :page-sizes="pagination.sizes"
       :current-page="pagination.current"
-      @current-change="getQueryListWithTip"
+      @current-change="getQueryList"
       @size-change="handleSizeChange"
     />
   </div>
@@ -72,16 +72,6 @@ export default {
       this.pvs = showNum
       this.wordCounts = expandedNum
     },
-
-    async getQueryListWithTip(...args) {
-      await this.getQueryList(...args)
-      if (this.queryList) {
-        this.$message({
-          message: '数据获取成功',
-          type: 'success'
-        })
-      }
-    },
     async getQueryList(page = 1) {
       const query = {
         page: page - 1,
@@ -107,7 +97,7 @@ export default {
     },
     handleSizeChange(size) {
       this.pagination.size = size
-      this.getQueryListWithTip()
+      this.getQueryList()
     },
 
   },

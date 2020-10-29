@@ -24,7 +24,7 @@
         <el-button
           class="query-button"
           type="primary"
-          @click="() => getQueryListWithTip()"
+          @click="() => getQueryList()"
         >查询</el-button>
         <el-button
           class="reset-button"
@@ -86,7 +86,7 @@
       :page-size="pagination.size"
       :page-sizes="pagination.sizes"
       :current-page="pagination.current"
-      @current-change="getQueryListWithTip"
+      @current-change="getQueryList"
       @size-change="handleSizeChange"
     />
     <!-- 支付弹窗 -->
@@ -180,16 +180,7 @@ export default {
   methods: {
     handleSizeChange(size) {
       this.pagination.size = size
-      this.getQueryListWithTip()
-    },
-    async getQueryListWithTip(...args) {
-      await this.getQueryList(...args)
-      if (this.queryList) {
-        this.$message({
-          message: '数据获取成功',
-          type: 'success'
-        })
-      }
+      this.getQueryList()
     },
     async getQueryList(page = 1) {
       const query = {
@@ -266,7 +257,7 @@ export default {
         status: '',
         date: '',
       }
-      this.getQueryListWithTip(0)
+      this.getQueryList(0)
     },
 
     /*********************************************************** calculation */
