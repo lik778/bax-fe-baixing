@@ -54,7 +54,7 @@
         </el-form-item>
 
         <el-form-item label="">
-          <el-button type="primary" @click="update">更新推广计划</el-button>
+          <el-button type="primary" :loading="loading.form" @click="update">更新推广计划</el-button>
           <el-button @click="() => $router.go(-1)">返回上一页</el-button>
         </el-form-item>
       </el-form>
@@ -76,6 +76,7 @@ export default {
   data() {
     return {
       id: null,
+      isFormEdited: false,
       form: {
         coreWord: '',
         landingPage: '',
@@ -111,6 +112,18 @@ export default {
       visible: {
         siteExpireWarning: false,
         siteExistWebsite: false
+      },
+      loading: {
+        form: false
+      }
+    }
+  },
+  watch: {
+    form: {
+      deep: true,
+      immediate: false,
+      handler () {
+        this.isFormEdited = true
       }
     }
   },
@@ -141,6 +154,7 @@ export default {
         this.form.landingPageId = String(targetSite.id)
         this.form.landingPage = landingPage
       }
+      this.$nextTick(() => (this.isFormEdited = false))
     },
     async initSites () {
       const sites = await getUserSites()
@@ -151,15 +165,32 @@ export default {
       }))
     },
     async update () {
+      // 调用编辑物料会走审核。如果表单没有任何变化，则不调用接口。
+      if (!this.isFormEdited) {
+        this.loading.form = true
+        setTimeout(() => {
+          this.loading.form = false
+          this.$notify({
+            type: 'success',
+            message: '保存成功'
+          })
+        }, 1000)
+        return null
+      }
       this.$refs['query-form'].validate(async isValid => {
         if (isValid) {
+          this.loading.form = true
           const query = {
+            ...this.form,
             id: this.id,
             landingType: 3,
-            ...this.form,
           }
-          console.log('query: ', query)
-          const response = await saveCreative(query)
+          try {
+            const response = await saveCreative(query)
+          } finally {
+            setTimeout(() => (this.loading.form = false), 300)
+          }
+          this.isFormEdited = false
           this.$notify({
             type: 'success',
             message: '保存成功'
