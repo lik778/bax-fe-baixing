@@ -132,17 +132,14 @@ export default {
         creativeTitle,
         creativeContent,
       } = response || {}
+      const targetSite = this.options.sites.find(site => (landingPage || '').includes(site.domain))
+
       this.form.coreWord = coreWord
       this.form.creativeTitle = creativeTitle
       this.form.creativeContent = creativeContent
-      setSite: {
-        const targetSite = this.options.sites.find(site => (
-          landingPage === 'http://' + site.domain + '.mvp.baixing.com'
-        ))
-        if (targetSite) {
-          this.form.landingPageId = String(targetSite.id)
-          this.form.landingPage = landingPage
-        }
+      if (targetSite) {
+        this.form.landingPageId = String(targetSite.id)
+        this.form.landingPage = landingPage
       }
     },
     async initSites () {
