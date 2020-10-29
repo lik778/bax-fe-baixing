@@ -60,7 +60,16 @@ export default {
       if (v) {
         if (this.provinceList.length === 0) {
           const { cnToEnMap, provinces } = this.allQianciAreas
-          this.provinceList = Object.keys(provinces).map(k => { return { name: k, en: cnToEnMap[k], checked: false, cities: provinces[k]  } })
+          const specialCityList = ["北京", "重庆", "上海", "天津"]
+          const provinceList = []
+          Object.keys(provinces).forEach(k => {
+            if (!specialCityList.includes(k)) {
+              provinceList.push({ name: k, en: cnToEnMap[k], checked: false, cities: provinces[k]  })
+            }
+          })
+          provinceList.push(...specialCityList.map(k => { return { name: k, en: cnToEnMap[k], checked: false, cities: provinces[k] }  }))
+          console.log(provinceList)
+          this.provinceList = provinceList
         }
         this.originProvinceList = clone(this.provinceList)
         this.originSelectedAreas = clone(this.selectedAreas)
