@@ -158,9 +158,6 @@ export default {
     promote: {
       type: Object
     },
-    salesInfo: {
-      type: Object
-    },
     isEdit: {
       type: Boolean
     }
@@ -257,7 +254,7 @@ export default {
           }
           if (value.toLocaleLowerCase() && keywords.map(k => k.toLocaleLowerCase()).includes(value.toLocaleLowerCase())) {
             return this.$message.error('百度投放仅支持小写，输入大写时数据会被强制更改为小写，输入重复')
-          } 
+          }
           if (value.length < wordLenLimit[0] || value.length > wordLenLimit[1]) {
             return this.$message.error(`单个词长度不少于${wordLenLimit[0]}个字, 不超过${wordLenLimit[1]}个字`)
           }
@@ -280,10 +277,10 @@ export default {
     },
     async sumbitWords() {
       const { keyword, areas } = this.form
-      const { salesId } = this.salesInfo
+      const { sales_id: salesId } = this.$route.query
       this.submitWordsLoading = true
-      const params = { coreWord: keyword, 
-        provinces: areas.map(x => x.en), prefixWords: this.keywordOptions.B.keywords, 
+      const params = { coreWord: keyword,
+        provinces: areas.map(x => x.en), prefixWords: this.keywordOptions.B.keywords,
         suffixWords: this.keywordOptions.D.keywords, salesId  }
       const handleFunc = this.isEdit ? updatePromoteWords : createPreferredWords
       if (this.isEdit) {
