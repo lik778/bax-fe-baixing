@@ -10,19 +10,28 @@
     <!-- 展示 ABCD 词 -->
     <div class="keywords-container">
       <p class="header-info">
-        <span class="description">提示：系统从 <span class="statics">{{wordAll}} </span>个词中为您优选出 <span class="statics">{{wordCounts}}</span> 个（包含双端）关键词，预估在180天内为您带来 <span class="statics">{{pvs}}</span> 展现。</span>
+        <span class="description">提示：系统从 <span class="statics">{{wordAll}}</span>个词中为您优选出 <span class="statics">{{wordCounts}}</span> 个（包含双端）关键词，预估在180天内为您带来 <span class="statics">{{pvs}}</span> 展现。</span>
+        <span class="actions">
+          <el-button
+            type="text"
+            :icon="visible.abcd ? 'el-icon-arrow-up' : 'el-icon-arrow-down'"
+            @click="(visible.abcd = !visible.abcd)"
+          >{{visible.abcd ? '收起填写历史' : '展开填写历史'}}</el-button>
+        </span>
       </p>
-      <div class="view-container">
-        <keyword-view
-          v-for="(value, key) in keywordOptions"
-          class="keyword-view"
-          :key="key"
-          :type="key"
-          :title="value.title"
-          :keywords="value.keywords"
-          :isEdit="false"
-        />
-      </div>
+      <transition name="fold-by-height">
+        <div v-if="visible.abcd" class="view-container">
+          <keyword-view
+            v-for="(value, key) in keywordOptions"
+            class="keyword-view"
+            :key="key"
+            :type="key"
+            :title="value.title"
+            :keywords="value.keywords"
+            :isEdit="false"
+          />
+        </div>
+      </transition>
     </div>
 
     <!-- 列表 -->
@@ -83,6 +92,9 @@ export default {
       },
       wordCounts: 0,
       pvs: 0,
+      visible: {
+        abcd: false,
+      }
     }
   },
   computed: {
@@ -178,12 +190,18 @@ export default {
 </script>
 
 <style lang="postcss" scoped>
+.actions {
+  float: right;
+}
 .keywords-container {
   margin-top: 18px;
+  padding: 16px;
+  background: #f5f7fa;
   color: #6a778c;
+  border-radius: 4px;
 
   & .description {
-    color: #666;
+    color: #333;
   }
 
   & .header-info {
@@ -212,8 +230,9 @@ export default {
 }
 
 .keyword-view {
-  border: 1px solid #ddd;
+  border: 1px solid #ebeef5;
   width: 25%;
+  background: white;
 
   & > .header {
     position: relative;
@@ -268,5 +287,14 @@ export default {
       }
     }
   }
+}
+.fold-by-height-enter-active,
+.fold-by-height-leave-active {
+  transition: all .3s ease;
+}
+.fold-by-height-enter,
+.fold-by-height-leave-to {
+  transform: translateY(-15px);
+  opacity: 0;
 }
 </style>
