@@ -26,6 +26,10 @@
 </template>
 
 <script>
+/**
+ * ! 谨慎修改
+ * 这个组件在“千词新建订单”、“千词优选词列表”都有用到
+ */
 export default {
   name: 'KeywordView',
   props: {
@@ -125,8 +129,8 @@ export default {
     cursor: pointer;
     transition: all 0.2s linear;
 &:hover {
-   transform: scale(1.2);
- }
+    transform: scale(1.2);
+}
 }
 }
 }
