@@ -46,7 +46,7 @@ export default {
   },
   data() {
     return {
-      selectedAreas: [...this.areas],
+      selectedAreas: [],
       originSelectedAreas: [],
       originProvinceList: [],
       provinceList: []
@@ -58,11 +58,21 @@ export default {
   watch: {
     visible(v) {
       if (v) {
-        const { cnToEnMap, enToCnMap, provinces } = this.allQianciAreas
-        console.log(this.allQianciAreas)
-        this.provinceList = Object.keys(provinces).map(k => { return { name: k, en: cnToEnMap[k], checked: false, cities: provinces[k]  } })
+        if (this.provinceList.length === 0) {
+          const { cnToEnMap, provinces } = this.allQianciAreas
+          const specialCityList = ["北京", "重庆", "上海", "天津"]
+          const provinceList = []
+          Object.keys(provinces).forEach(k => {
+            if (!specialCityList.includes(k)) {
+              provinceList.push({ name: k, en: cnToEnMap[k], checked: false, cities: provinces[k]  })
+            }
+          })
+          provinceList.push(...specialCityList.map(k => { return { name: k, en: cnToEnMap[k], checked: false, cities: provinces[k] }  }))
+          console.log(provinceList)
+          this.provinceList = provinceList
+        }
         this.originProvinceList = clone(this.provinceList)
-        this.originSelectedAreas = clone(this.originSelectedAreas)
+        this.originSelectedAreas = clone(this.selectedAreas)
       }
     },
     areas(v) {
@@ -74,8 +84,10 @@ export default {
   },
   mounted() {
     this.$bus.$on('updateQcAreaSelectorView', (province) => {
-      const removeProvince = this.selectedAreas.find(x => x.name === province.name)
-      if (removeProvince) { removeProvince.checked = false }
+      const removeProvinceIndex = this.selectedAreas.findIndex(x => x.name === province.name)
+      this.selectedAreas.splice(removeProvinceIndex, 1)
+      const removeProvince = this.provinceList.find(x => x.name === province.name)
+      removeProvince.checked = false
     })
   },
   methods: {

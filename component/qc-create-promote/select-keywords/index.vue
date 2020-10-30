@@ -42,7 +42,7 @@
     <div class="action-area">
       <p v-show="!handleDisabled">当前备选词数量：<strong>{{wordNum}}</strong>个</p>
       <p style="color: #FF6350" v-if="errorTips">{{errorTips}}</p>
-      <el-button type="primary" :loading="submitWordsLoading" @click="sumbitWords" :disabled="handleDisabled" size="medium">{{ submitWordsLoading ? '拓词中...' : isEdit ? '更新优选' : '提交优选' }}</el-button>
+      <el-button type="primary" :loading="submitWordsLoading" @click="sumbitWords" :disabled="handleDisabled || preventSumbit" size="medium">{{ submitWordsLoading ? '拓词中...' : isEdit ? '更新优选' : '提交优选' }}</el-button>
     </div>
     <el-dialog :close-on-click-modal="false"
                :show-close="false"
@@ -91,7 +91,7 @@ const keywordOptions = {
            <p>单个词长度不少于2个字，不超过8个字。</p>
            <p>百度投放仅支持小写，输入大写时数据会被强制更改为小写</p>`,
     placeholder:
-      '如：，专业的，靠谱的，周边，附近，电话，费用，价格，推荐，...',
+      '如：，A380、工业、民用、塑料、不锈钢、金属、进口、国产、靠谱、专业、……',
     keywords: [],
     keywordsAlias: 'prefixWordList',
     wordsLimit: [10, 100],
@@ -119,7 +119,7 @@ const keywordOptions = {
            <p>词数不少于10个，不超过100个字；</p>
            <p>单个词长度不少于2个字，不超过8个字。</p>
            <p>百度投放仅支持小写，输入大写时数据会被强制更改为小写</p>`,
-    placeholder: '如：，电话，费用，价格，推荐，...',
+    placeholder: '如：，价格、厂商、厂家、批发、多少钱、怎么样、……',
     keywords: [],
     keywordsAlias: 'suffixWordList',
     wordsLimit: [10, 100],
@@ -158,9 +158,6 @@ export default {
     promote: {
       type: Object
     },
-    salesInfo: {
-      type: Object
-    },
     isEdit: {
       type: Boolean
     }
@@ -172,7 +169,8 @@ export default {
       activeType: 'A',
       successDialogVisible: false,
       submitWordsLoading: false,
-      errorTips: ''
+      errorTips: '',
+      preventSumbit: false
     }
   },
   computed: {
@@ -257,7 +255,7 @@ export default {
           }
           if (value.toLocaleLowerCase() && keywords.map(k => k.toLocaleLowerCase()).includes(value.toLocaleLowerCase())) {
             return this.$message.error('百度投放仅支持小写，输入大写时数据会被强制更改为小写，输入重复')
-          } 
+          }
           if (value.length < wordLenLimit[0] || value.length > wordLenLimit[1]) {
             return this.$message.error(`单个词长度不少于${wordLenLimit[0]}个字, 不超过${wordLenLimit[1]}个字`)
           }
@@ -280,10 +278,10 @@ export default {
     },
     async sumbitWords() {
       const { keyword, areas } = this.form
-      const { salesId } = this.salesInfo
+      const { sales_id: salesId } = this.$route.query
       this.submitWordsLoading = true
-      const params = { coreWord: keyword, 
-        provinces: areas.map(x => x.en), prefixWords: this.keywordOptions.B.keywords, 
+      const params = { coreWord: keyword,
+        provinces: areas.map(x => x.en), prefixWords: this.keywordOptions.B.keywords,
         suffixWords: this.keywordOptions.D.keywords, salesId  }
       const handleFunc = this.isEdit ? updatePromoteWords : createPreferredWords
       if (this.isEdit) {
@@ -301,6 +299,12 @@ export default {
     }
   },
   watch: {
+    wordNum(newVal, oldVal) {
+      // 处理编辑逻辑
+      if (oldVal !== 0 && this.isEdit) {
+        this.preventSumbit = false
+      }
+    },
     promote:{
       deep: true,
       immediate: true,
@@ -310,6 +314,7 @@ export default {
           this.keywordOptions.C.keywords = [ coreWord ]
           this.keywordOptions.B.keywords = prefixWords
           this.keywordOptions.D.keywords = suffixWords
+          this.preventSumbit = true
         }
       }
     },

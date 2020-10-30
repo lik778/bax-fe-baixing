@@ -18,6 +18,7 @@
           <span>{{form.coreWord}}</span>
         </el-form-item>
         <el-form-item label="投放页面" prop="landingPageId">
+          <!-- * 目前没有官网过期逻辑的判断，无此需求 -->
           <el-cascader
             v-model="form.landingPageId"
             clearable
@@ -31,11 +32,6 @@
             readonly
             clearable
           />
-          <p class="form-warning" v-if="visible.siteExpireWarning">
-            站点{{'xxx'}}天内将过期，
-            请选择其他站点，或<router-link :to="{name: 'seo-charge'}">购买</router-link>新官网
-          </p>
-          <p class="form-warning" v-if="visible.siteExistWebsite">该站点已创建首页宝加速词包计划，请更换</p>
         </el-form-item>
 
         <el-form-item><span class="header">推广物料设置</span></el-form-item>
@@ -58,7 +54,7 @@
         </el-form-item>
 
         <el-form-item label="">
-          <el-button type="primary" @click="update">更新推广计划</el-button>
+          <el-button type="primary" :loading="loading.form" @click="update">更新推广计划</el-button>
           <el-button @click="() => $router.go(-1)">返回上一页</el-button>
         </el-form-item>
       </el-form>
@@ -80,6 +76,7 @@ export default {
   data() {
     return {
       id: null,
+      isFormEdited: false,
       form: {
         coreWord: '',
         landingPage: '',
@@ -115,6 +112,18 @@ export default {
       visible: {
         siteExpireWarning: false,
         siteExistWebsite: false
+      },
+      loading: {
+        form: false
+      }
+    }
+  },
+  watch: {
+    form: {
+      deep: true,
+      immediate: false,
+      handler () {
+        this.isFormEdited = true
       }
     }
   },
@@ -136,18 +145,16 @@ export default {
         creativeTitle,
         creativeContent,
       } = response || {}
+      const targetSite = this.options.sites.find(site => (landingPage || '').includes(site.domain))
+
       this.form.coreWord = coreWord
       this.form.creativeTitle = creativeTitle
       this.form.creativeContent = creativeContent
-      setSite: {
-        const targetSite = this.options.sites.find(site => (
-          landingPage === 'http://' + site.domain + '.mvp.baixing.com'
-        ))
-        if (targetSite) {
-          this.form.landingPageId = String(targetSite.id)
-          this.form.landingPage = landingPage
-        }
+      if (targetSite) {
+        this.form.landingPageId = String(targetSite.id)
+        this.form.landingPage = landingPage
       }
+      this.$nextTick(() => (this.isFormEdited = false))
     },
     async initSites () {
       const sites = await getUserSites()
@@ -158,15 +165,32 @@ export default {
       }))
     },
     async update () {
+      // 调用编辑物料会走审核。如果表单没有任何变化，则不调用接口。
+      if (!this.isFormEdited) {
+        this.loading.form = true
+        setTimeout(() => {
+          this.loading.form = false
+          this.$notify({
+            type: 'success',
+            message: '保存成功'
+          })
+        }, 1000)
+        return null
+      }
       this.$refs['query-form'].validate(async isValid => {
         if (isValid) {
+          this.loading.form = true
           const query = {
+            ...this.form,
             id: this.id,
             landingType: 3,
-            ...this.form,
           }
-          console.log('query: ', query)
-          const response = await saveCreative(query)
+          try {
+            const response = await saveCreative(query)
+          } finally {
+            setTimeout(() => (this.loading.form = false), 300)
+          }
+          this.isFormEdited = false
           this.$notify({
             type: 'success',
             message: '保存成功'
@@ -181,9 +205,6 @@ export default {
       this.form.landingPageId = String(id)
       const handle = this.options.sites.find(x => x.value == id)
       this.reGenURL(handle)
-
-      // this.visible.showExpireWarning = dayjs(handle.expireAt).subtract(this.promotion.duration, 'day').isBefore(dayjs(), 'day')
-      // this.visible.showExistWebsite = this.existPromotionWebsite.some(o => (o.trim() === landingPage))
     },
     reGenURL(site) {
       this.form.landingPage = site

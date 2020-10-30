@@ -237,10 +237,6 @@ const qcRoutes = [{
   name: 'qc-keyword-list',
   hidden: true
 }, {
-  component: () => import('com/qc-dashboard'),
-  path: '/main/qc/dashboard',
-  name: 'qc-dashboard'
-}, {
   component: () => import('com/qc-creative'),
   path: '/main/qc/creative',
   name: 'qc-creative'

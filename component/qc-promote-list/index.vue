@@ -3,8 +3,8 @@
     <header>我的推广计划</header>
     <!-- 搜索表单 -->
     <el-form class="query-form" :inline="true" :model="query" label-width="80px">
-      <el-form-item label="核心词">
-        <el-input v-model="query.coreWord" placeholder="请输入核心词" suffix-icon="el-icon-search"/>
+      <el-form-item label="核心产品">
+        <el-input v-model="query.coreWord" placeholder="请输入核心产品" suffix-icon="el-icon-search"/>
       </el-form-item>
       <el-form-item label="计划状态">
         <el-select v-model="query.status" placeholder="请选择计划状态">
@@ -22,10 +22,11 @@
         <el-button type="primary" @click="search()">查询</el-button>
       </el-form-item>
     </el-form>
-    <el-button class="go-chart-page-btn" type="primary" @click="goChartPage">查看计划报表</el-button>
+    <!-- 第一版上线需隐藏报表页面 -->
+    <!-- <el-button class="go-chart-page-btn" type="primary" @click="goChartPage">查看计划报表</el-button> -->
     <!-- 列表 -->
     <el-table class="query-table" border :data="queryList">
-      <el-table-column label="核心词" prop="coreWord" width="160" />
+      <el-table-column label="核心产品" prop="coreWord" width="160" />
       <el-table-column label="推广地区" :formatter="({ provinces }) => $formatter.join(provinces)" />
       <el-table-column label="平台" prop="plat" :formatter="({ device }) => DEVICE[device]" />
       <el-table-column label="计划状态">
@@ -51,8 +52,8 @@
       <el-table-column label="剩余投放天数" prop="remainDate" />
       <el-table-column label="操作" width="160">
         <template slot-scope="{row}">
-          <el-button v-if="canEditPromote(row.status)" :loading="checkButtonLoading(row)" type="text" size="small" @click="() => goEditCreativePage(row)">编辑</el-button>
-          <el-button v-if="canGotoWanci(row.status)" type="text" size="small"  @click="() => gotoWanci(row.id)">管理SEO</el-button>
+          <el-button :disabled="!(userInfo.shAgent && canEditPromote(row.status))" :loading="checkButtonLoading(row)" type="text" size="small" @click="() => goEditCreativePage(row)">编辑</el-button>
+          <el-button :disabled="!(userInfo.shAgent && canGotoWanci(row.status))" type="text" size="small"  @click="() => gotoWanci(row.id)">管理SEO</el-button>
           <div class="page-button-group-safe-padding" />
         </template>
       </el-table-column>
@@ -82,6 +83,7 @@ export default {
   name: "qc-promote-list",
   props: {
     salesInfo: Object,
+    userInfo: Object,
   },
   data() {
     return {
