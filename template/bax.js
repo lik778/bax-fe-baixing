@@ -221,7 +221,7 @@ const bwRoutes = [{
 
 const qcRoutes = [{
   component: () => import('com/qc-create-promote'),
-  path: '/main/qc/qc-create-promote',
+  path: '/main/qc/create',
   name: 'qc-create-promote'
 }, {
   component: () => import('com/qc-promote-list'),
