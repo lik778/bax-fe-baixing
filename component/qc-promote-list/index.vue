@@ -3,8 +3,8 @@
     <header>我的推广计划</header>
     <!-- 搜索表单 -->
     <el-form class="query-form" :inline="true" :model="query" label-width="80px">
-      <el-form-item label="核心词">
-        <el-input v-model="query.coreWord" placeholder="请输入核心词" suffix-icon="el-icon-search"/>
+      <el-form-item label="核心产品">
+        <el-input v-model="query.coreWord" placeholder="请输入核心产品" suffix-icon="el-icon-search"/>
       </el-form-item>
       <el-form-item label="计划状态">
         <el-select v-model="query.status" placeholder="请选择计划状态">
@@ -26,7 +26,7 @@
     <!-- <el-button class="go-chart-page-btn" type="primary" @click="goChartPage">查看计划报表</el-button> -->
     <!-- 列表 -->
     <el-table class="query-table" border :data="queryList">
-      <el-table-column label="核心词" prop="coreWord" width="160" />
+      <el-table-column label="核心产品" prop="coreWord" width="160" />
       <el-table-column label="推广地区" :formatter="({ provinces }) => $formatter.join(provinces)" />
       <el-table-column label="平台" prop="plat" :formatter="({ device }) => DEVICE[device]" />
       <el-table-column label="计划状态">
