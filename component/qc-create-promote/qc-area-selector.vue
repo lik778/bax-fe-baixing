@@ -68,7 +68,6 @@ export default {
             }
           })
           provinceList.push(...specialCityList.map(k => { return { name: k, en: cnToEnMap[k], checked: false, cities: provinces[k] }  }))
-          console.log(provinceList)
           this.provinceList = provinceList
         }
         this.originProvinceList = clone(this.provinceList)

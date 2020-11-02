@@ -143,11 +143,11 @@ export default {
       this.getQueryList(this.getQueryParams())
     },
     async getQueryList(params) {
-      const { sales_id: salesId, user_id: userId } = this.$route.query
+      const { sales_id: salesId, user_id: targetUserId } = this.$route.query
       const query = {
         size: this.pagination.size,
         page: this.pagination.page,
-        userId,
+        targetUserId,
         salesId,
         ...params
       }
