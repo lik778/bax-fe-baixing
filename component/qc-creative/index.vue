@@ -138,9 +138,9 @@ export default {
   },
   methods: {
     async initCreative () {
-      const { user_id: userId, sales_id: salesId } = parseQuery(window.location.search)
+      const { user_id: targetUserId, sales_id: salesId } = parseQuery(window.location.search)
       const response = await getCreative({
-        userId,
+        targetUserId,
         salesId,
         id: this.id
       })

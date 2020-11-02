@@ -136,9 +136,9 @@ export default {
       this.wordCounts = expandedNum
     },
     async getQueryList(page = 1) {
-      const { user_id: userId, sales_id: salesId } = parseQuery(window.location.search)
+      const { user_id: targetUserId, sales_id: salesId } = parseQuery(window.location.search)
       const query = {
-        userId,
+        targetUserId,
         salesId,
         page: page - 1,
         size: this.pagination.size,

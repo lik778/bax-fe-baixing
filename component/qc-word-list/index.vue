@@ -186,7 +186,7 @@ export default {
       const query = {
         page: page - 1,
         size: this.pagination.size,
-        userId: this.store.userId,
+        targetUserId: this.store.userId,
         salesId: this.store.salesId,
         ...formatReqQuery(this.query),
       }
