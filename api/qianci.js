@@ -2,14 +2,14 @@
 
 import Fetch from 'fetch.io'
 import { paginationWrapper, pause } from 'util'
-import { qianci, baseOptions } from './base'
+import { qianci, qianci1, baseOptions } from './base'
 import { qcApiHost } from 'config'
 
 const isDev = process.env.NODE_ENV === 'development'
 const useTestData = isDev && true
 // 锁词逻辑
 export async function keywordLocked(opts) {
-  return qianci
+  return qianci1
     .get('/promote/keyword/isLocked')
     .query(opts)
     .json()
@@ -17,7 +17,7 @@ export async function keywordLocked(opts) {
 
 // 获取千词核心词
 export async function getQcAllAreas() {
-  const { data } = await qianci
+  const { data } = await qianci1
     .get('/area/all')
     .json()
   const { cnToEnMap, enToCnMap, provinceCitiesMap } = data
@@ -26,7 +26,7 @@ export async function getQcAllAreas() {
 
 // 获取单条计划信息
 export async function getPromote(promoteId) {
-  const body = await qianci
+  const body = await qianci1
     .get(`/promote/keyword/${promoteId}`)
     .json()
   return body.data
@@ -34,7 +34,7 @@ export async function getPromote(promoteId) {
 
 // 优选词逻辑
 export async function createPreferredWords(opts) {
-  return await qianci
+  return await qianci1
     .post('/promote/create')
     .send(opts)
     .json()
@@ -48,7 +48,7 @@ export function getWanciSeoRedirect(promoteId) {
 
 // 更新BD类词
 export async function updatePromoteWords(opts) {
-  return await qianci
+  return await qianci1
     .post('/promote/keyword/update')
     .send(opts)
     .json()

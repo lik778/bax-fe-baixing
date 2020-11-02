@@ -162,7 +162,7 @@ export const seo = new Fetch({
   }
 })
 
-export const qianci = new Fetch({
+export const qianciOptions = {
   ...baseOptions,
   prefix: qcApiHost,
   afterResponse(res) {
@@ -179,21 +179,20 @@ export const qianci = new Fetch({
       sentry.captureMessage(res.statusText, 'info')
       throw new Error(res.statusText)
     }
-  },
+  }
+}
+export const qianci = new Fetch({
+  ...qianciOptions,
   afterJSON(body) {
-    if (
-      body &&
-      body.code === 4114
-    ) {
-      // 没有经过身份证绑定
-      chargeNotice()
-      throw new Error('请先绑定身份认证')
-    }
     if (body && body.code !== 0) {
       Message.error(body.message || `出错了，请稍后重试`)
       throw new Error(body.message)
     }
   }
+})
+
+export const qianci1 = new Fetch({
+  ...qianciOptions
 })
 
 export function trim(obj) {
