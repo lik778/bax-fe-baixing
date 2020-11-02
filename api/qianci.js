@@ -3,6 +3,7 @@
 import Fetch from 'fetch.io'
 import { paginationWrapper, pause } from 'util'
 import { qianci, baseOptions } from './base'
+import { qcApiHost } from 'config'
 
 const isDev = process.env.NODE_ENV === 'development'
 const useTestData = isDev && true
@@ -37,6 +38,12 @@ export async function createPreferredWords(opts) {
     .post('/promote/create')
     .send(opts)
     .json()
+}
+
+
+// 获取万词地址
+export function getWanciSeoRedirect(promoteId) {
+  return `${qcApiHost}/promote/seo/redirect?promoteId=${promoteId}`
 }
 
 // 更新BD类词
