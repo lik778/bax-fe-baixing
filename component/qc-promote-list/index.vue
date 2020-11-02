@@ -53,7 +53,7 @@
       <el-table-column label="操作" width="160">
         <template slot-scope="{row}">
           <el-button :disabled="!(userInfo.shAgent && canEditPromote(row.status))" :loading="checkButtonLoading(row)" type="text" size="small" @click="() => goEditCreativePage(row)">编辑</el-button>
-          <el-button :disabled="!(userInfo.shAgent && canGotoWanci(row.status))" type="text" size="small"  @click="() => gotoWanci()">管理SEO</el-button>
+          <el-button :disabled="!(userInfo.shAgent && canGotoWanci(row.status))" type="text" size="small"  @click="() => gotoWanci(row.id)">管理SEO</el-button>
           <div class="page-button-group-safe-padding" />
         </template>
       </el-table-column>
@@ -77,7 +77,6 @@ PROMOTE_STATUS_EDITED, AUDIT_STATUS_REJECT_B2B, AUDIT_STATUS_REJECT_SUPPLIES,
 AUDIT_STATUS_REJECT_SEM, AUDIT_STATUS_REJECT_KEYWORD } from 'constant/qianci'
 import  { getBusinessLicense } from 'api/seo'
 import { getPromoteList, getWanciSeoRedirect } from 'api/qianci'
-import { parseQuery, formatReqQuery, debounce, normalize } from 'util'
 
 export default {
   name: "qc-promote-list",
@@ -169,8 +168,9 @@ export default {
     goChartPage() {
       this.$router.push({ name: 'qc-dashboard' })
     },
-    async gotoWanci() {
-      window.open('/promote/seo/redirect')
+    gotoWanci(promoteId) {
+      const link = getWanciSeoRedirect(promoteId)
+      window.open(link)
     },
     async goEditCreativePage(row) {
       this.active.selectedItem = row
