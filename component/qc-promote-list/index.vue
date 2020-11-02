@@ -53,7 +53,7 @@
       <el-table-column label="操作" width="160">
         <template slot-scope="{row}">
           <el-button :disabled="!(userInfo.shAgent && canEditPromote(row.status))" :loading="checkButtonLoading(row)" type="text" size="small" @click="() => goEditCreativePage(row)">编辑</el-button>
-          <el-button :disabled="!(userInfo.shAgent && canGotoWanci(row.status))" type="text" size="small"  @click="() => gotoWanci(row.id)">管理SEO</el-button>
+          <el-button :disabled="!(userInfo.shAgent && canGotoWanci(row.status))" type="text" size="small"  @click="() => gotoWanci()">管理SEO</el-button>
           <div class="page-button-group-safe-padding" />
         </template>
       </el-table-column>
@@ -143,11 +143,11 @@ export default {
       this.getQueryList(this.getQueryParams())
     },
     async getQueryList(params) {
-      const { sales_id: salesId, user_id: userId } = this.$route.query
+      const { sales_id: salesId, user_id: targetUserId } = this.$route.query
       const query = {
         size: this.pagination.size,
         page: this.pagination.page,
-        userId,
+        targetUserId,
         salesId,
         ...params
       }
@@ -169,9 +169,8 @@ export default {
     goChartPage() {
       this.$router.push({ name: 'qc-dashboard' })
     },
-    async gotoWanci(promoteId) {
-      const link = await getWanciSeoRedirect({ promoteId })
-      window.open(link)
+    async gotoWanci() {
+      window.open('/promote/seo/redirect')
     },
     async goEditCreativePage(row) {
       this.active.selectedItem = row

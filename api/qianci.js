@@ -39,14 +39,6 @@ export async function createPreferredWords(opts) {
     .json()
 }
 
-// 获取万词地址
-export async function getWanciSeoRedirect(opts) {
-  return await qianci
-    .get('/promote/seo/redirect')
-    .query(opts)
-    .json()
-}
-
 // 更新BD类词
 export async function updatePromoteWords(opts) {
   return await qianci

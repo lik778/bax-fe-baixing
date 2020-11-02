@@ -218,16 +218,16 @@ export default {
     },
     async sumbitWords() {
       const { keyword, areas } = this.form
-      const { sales_id: salesId } = this.$route.query
+      const { sales_id: salesId, user_id: targetUserId } = this.$route.query
       this.submitWordsLoading = true
       const params = { coreWord: keyword,
         provinces: areas.map(x => x.en), prefixWords: this.keywordOptions.B.keywords,
-        suffixWords: this.keywordOptions.D.keywords, salesId  }
+        suffixWords: this.keywordOptions.D.keywords, salesId, targetUserId  }
       const handleFunc = this.isEdit ? updatePromoteWords : createPreferredWords
       if (this.isEdit) {
          params.id = this.promote.id
       }
-      const { code, message, data } = await handleFunc(params)
+      const { code, message } = await handleFunc(params)
       if (code === API_SUCCESS) {
         this.successDialogVisible = true
       } else if (code === API_CANNOT_PASS_QUALITY_CHECK) {
@@ -250,7 +250,7 @@ export default {
       immediate: true,
       handler(values) {
         if (values) {
-          const { coreWord, provinces, prefixWords, suffixWords } = values
+          const { coreWord, prefixWords, suffixWords } = values
           this.keywordOptions.C.keywords = [ coreWord ]
           this.keywordOptions.B.keywords = prefixWords
           this.keywordOptions.D.keywords = suffixWords
