@@ -65,7 +65,7 @@ import clone from 'clone'
 import KeywordView from '../qc-create-promote/select-keywords/view'
 import keywordOptions from '../qc-create-promote/select-keywords/keyword-options'
 
-import { getRouteParam, formatReqQuery } from 'util'
+import { getRouteParam, formatReqQuery, parseQuery } from 'util'
 import { getPromote, getPreferredWordsList, getPreferredWordsPV } from 'api/qianci'
 import gStore from '../store'
 

@@ -77,9 +77,10 @@ export async function getPreferredWordsPV(opts = {}) {
 export const getPreferredWordsList = paginationWrapper(async function (opts = {}) {
   // * for test const id = 22
   const id = opts.id
+  delete opts.id
   return (await qianci
     .get(`/promote/keyword/expandedWord/${id}`)
-    .query()
+    .query(opts)
     .json())
     .data
 }, resp => ({
