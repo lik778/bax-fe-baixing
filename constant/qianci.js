@@ -49,6 +49,18 @@ export const AUDIT_STATUS_MAPPING = {
   [AUDIT_STATUS_REJECT_SEM]: 'sem代理商审核不通过',
   [AUDIT_STATUS_PASSED_SEM]: 'sem代理商审核通过'
 }
+// 91投放状态
+export const SEO_STATUS_UNBUY = "UNBUY"
+export const SEO_STATUS_BOUGHT = "BOUGHT"
+export const SEO_STATUS_CANCELED = "CANCELED"
+export const SEO_STATUS_EXPIRED = "EXPIRED"
+
+export const SEO_STATUS_MAPPING = {
+  [SEO_STATUS_UNBUY]: "未购买",
+  [SEO_STATUS_BOUGHT]: "已购买",
+  [SEO_STATUS_CANCELED]: "取消",
+  [SEO_STATUS_EXPIRED]: "过期"
+}
 
 /* 拓词状态 */
 export const EW = {
