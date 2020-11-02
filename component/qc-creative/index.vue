@@ -138,7 +138,12 @@ export default {
   },
   methods: {
     async initCreative () {
-      const response = await getCreative({ id: this.id })
+      const { user_id: userId, sales_id: salesId } = parseQuery(window.location.search)
+      const response = await getCreative({
+        userId,
+        salesId,
+        id: this.id
+      })
       const {
         coreWord,
         landingPage,
