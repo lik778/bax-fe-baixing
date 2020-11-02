@@ -100,6 +100,7 @@ export default {
           { required: true, message: '请填写推广内容' },
           { validator: (rule, value, callback) => {
               if (value.length < 9 || value.length > 80) callback('推广内容长度需要在 9-80 之间')
+              if (value === this.form.creativeTitle) callback('推广内容不能和推广标题相同')
               callback()
             },
             trigger: 'blur'
