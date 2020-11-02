@@ -5,6 +5,7 @@
 ### 开发说明
 
 * 基本流程
+  - `npm install`
   - `dev mode`: `npm start` -> `localhost:3000`
   - `发布`:
     * 首先: 更改 `package.json` 的 version, 然后 `commit`
