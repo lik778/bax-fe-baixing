@@ -39,8 +39,6 @@ const store = observable({
       if (productTabMchCode === FENG_MING_MERCHANT_CODE) {
           discountInfo = fengmingDiscountInfo
       } else if (productTabMchCode === PHOENIXS_MERCHANT_CODE) {
-          // 当前标王无活动时间
-          type = COMMON_STATUS
           discountInfo = biaowangDiscountInfo
       }
       this._discountInfoHTML = discountInfo[type]['discountInfoHTML']
