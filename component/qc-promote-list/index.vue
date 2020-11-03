@@ -15,11 +15,15 @@
       <el-form-item label="审核状态">
         <el-select v-model="query.auditStatus" placeholder="请选择审核状态">
           <el-option key="全部" label="全部" value=""/>
-          <el-option v-for="(value, key) in AUDIT_STATUS_MAPPING" :key="key" :label="value" :value="key" />
+          <el-option v-for="(item, index) in AUDIT_STATUS_OPTIONS" 
+                    :key="index" 
+                    :label="item.label" 
+                    :value="item.values" />
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="search()">查询</el-button>
+        <el-button type="primary" @click="search">查询</el-button>
+        <el-button type="primary" plain @click="reset">重置</el-button>
       </el-form-item>
     </el-form>
     <!-- 第一版上线需隐藏报表页面 -->
@@ -36,15 +40,16 @@
           </catch-error>
         </template>
       </el-table-column>
-      <el-table-column label="审核状态">
+      <el-table-column label="审核状态" min-width="200">
         <template slot-scope="{row}">
-          <el-tooltip v-if="showAuditFailReason(row.auditStatus)" class="item" effect="dark" :content="row.lastFailedReason" placement="top-start">
-            <catch-error>
-              <span style="color: #ff3c3c">{{AUDIT_STATUS_MAPPING[row.auditStatus]}}</span>
-            </catch-error>
-          </el-tooltip>
-          <catch-error v-else>
-              <span>{{AUDIT_STATUS_MAPPING[row.auditStatus]}}</span>
+          <catch-error>
+            <div v-if="showAuditFailReason(row.auditStatus)">
+              <span style="color: #ff3c3c">{{getPromoteAuditStatus("values", row.auditStatus).label}}</span>
+              <el-tooltip placement="top" :content="row.lastFailedReason || '失败原因未知'">
+                <i class="error el-icon-question pointer" />
+              </el-tooltip>
+            </div>
+            <span v-else>{{getPromoteAuditStatus("values", row.auditStatus).label}}</span>
           </catch-error>
         </template>
       </el-table-column>
@@ -53,7 +58,7 @@
       <el-table-column label="操作" width="160">
         <template slot-scope="{row}">
           <el-button :disabled="!(userInfo.shAgent && canEditPromote(row.status))" :loading="checkButtonLoading(row)" type="text" size="small" @click="() => goEditCreativePage(row)">编辑</el-button>
-          <el-button :disabled="!(userInfo.shAgent && canGotoWanci(row.seoPromoteStatus))" type="text" size="small"  @click="() => gotoWanci(row.id)">管理SEO</el-button>
+          <el-button :disabled="!(userInfo.shAgent && canGotoWanci(row.seoPromoteStatus)) || promoteStatusDisabled(row.status)" type="text" size="small"  @click="() => gotoWanci(row.id)">管理SEO</el-button>
           <div class="page-button-group-safe-padding" />
         </template>
       </el-table-column>
@@ -71,10 +76,24 @@
 
 <script>
 import dayjs from 'dayjs'
-import { DEVICE, AUDIT_STATUS_MAPPING, PROMOTE_STATUS_MAPPING, PROMOTE_STATUS,
-PROMOTE_STATUS_PENDING_EDIT, PROMOTE_STATUS_ON_PROMOTE, PROMOTE_STATUS_ONLINE,
-PROMOTE_STATUS_EDITED, AUDIT_STATUS_REJECT_B2B, AUDIT_STATUS_REJECT_SUPPLIES,
-AUDIT_STATUS_REJECT_SEM, AUDIT_STATUS_REJECT_KEYWORD, SEO_STATUS_BOUGHT } from 'constant/qianci'
+import { 
+  DEVICE,
+  PROMOTE_STATUS_MAPPING, 
+  PROMOTE_STATUS,
+  PROMOTE_STATUS_PENDING_EDIT, 
+  PROMOTE_STATUS_ON_PROMOTE, 
+  PROMOTE_STATUS_ONLINE,
+  PROMOTE_STATUS_EDITED, 
+  AUDIT_STATUS_REJECT_B2B, 
+  AUDIT_STATUS_REJECT_SUPPLIES,
+  AUDIT_STATUS_REJECT_SEM, 
+  AUDIT_STATUS_REJECT_KEYWORD, 
+  SEO_STATUS_BOUGHT,
+  PROMOTE_STATUS_FINISHED, 
+  PROMOTE_STATUS_CEASED, 
+  AUDIT_STATUS_OPTIONS,
+  getPromoteAuditStatus
+} from 'constant/qianci'
 import  { getBusinessLicense } from 'api/seo'
 import { getPromoteList, getWanciSeoRedirect } from 'api/qianci'
 
@@ -88,7 +107,7 @@ export default {
     return {
       PROMOTE_STATUS_MAPPING,
       PROMOTE_STATUS,
-      AUDIT_STATUS_MAPPING,
+      AUDIT_STATUS_OPTIONS,
       query: {
         coreWord: '',
         status: '',
@@ -117,6 +136,7 @@ export default {
     this.getQueryList()
   },
   methods: {
+    getPromoteAuditStatus,
     showAuditFailReason(status) {
       return [AUDIT_STATUS_REJECT_B2B, AUDIT_STATUS_REJECT_SUPPLIES, AUDIT_STATUS_REJECT_KEYWORD, AUDIT_STATUS_REJECT_SEM].includes(status)
     },
@@ -125,6 +145,9 @@ export default {
     },
     canGotoWanci(status) {
       return  [SEO_STATUS_BOUGHT].includes(status)
+    },
+    promoteStatusDisabled(status) {
+      return [PROMOTE_STATUS_FINISHED, PROMOTE_STATUS_CEASED].includes(status)
     },
     getQueryParams() {
       const params = {}
@@ -140,6 +163,13 @@ export default {
     search() {
       this.pagination.page = 0
       this.getQueryList(this.getQueryParams())
+    },
+    reset() {
+      this.query = {
+        coreWord: '',
+        auditStatus: '',
+        status: ''
+      }
     },
     async getQueryList(params) {
       const { sales_id: salesId, user_id: targetUserId } = this.$route.query
@@ -207,7 +237,7 @@ export default {
       const restDays = Math.max(0, (dayjs(remainDate * 1000) - dayjs())) / (24 * 60 * 60 * 1000)
       return parseFloat(restDays).toFixed(1)
     }
-  },
+  }
 }
 </script>
 

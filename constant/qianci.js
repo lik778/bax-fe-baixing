@@ -61,6 +61,44 @@ export const SEO_STATUS_MAPPING = {
   [SEO_STATUS_EXPIRED]: '过期'
 }
 
+export const AUDIT_STATUS_OPTIONS = [
+  {
+    label: 'B2B审核中',
+    values: [ AUDIT_STATUS_AUDITING_B2B ],
+    showAuditFailReason: false
+  },
+  {
+    label: 'B2B词审核通过',
+    values: [ AUDIT_STATUS_PASSED_B2B ],
+    showAuditFailReason: false
+  },
+  {
+    label: '审核中',
+    values: [ AUDIT_STATUS_AUDITING_SUPPLIES, AUDIT_STATUS_PASSED_SUPPLIES, AUDIT_STATUS_AUDITING_SEM ],
+    showAuditFailReason: false
+  },
+  {
+    label: '审核不通过',
+    values: [ AUDIT_STATUS_REJECT_B2B, AUDIT_STATUS_REJECT_SUPPLIES, AUDIT_STATUS_REJECT_KEYWORD, AUDIT_STATUS_REJECT_SEM ],
+    showAuditFailReason: true
+  },
+  {
+    label: '审核通过',
+    values: [ AUDIT_STATUS_PASSED_SEM ],
+    showAuditFailReason: false
+  }
+]
+
+export function getPromoteAuditStatus (key, val) {
+  let handle = AUDIT_STATUS_OPTIONS.find(x => {
+    return x[key] instanceof Array
+      ? x[key].includes(val)
+      : x[key] === val
+  })
+  if (handle) return handle
+  return {}
+}
+
 /* 拓词状态 */
 export const EW = {
   UNKNOWN: { value: 'UNKNOWN', label: '未知' },
