@@ -203,7 +203,7 @@ export default {
     },
     // 生成付款 URL
     async genPaymentURL(item) {
-      return new Promise(async (resolve, reject) => {
+      return await new Promise(async (resolve, reject) => {
         let response = null
         try {
           response = await createPreOrder({
@@ -213,12 +213,14 @@ export default {
         } catch (error) {
           reject('Gen PreOrder Failed')
         }
-        const { data } = response
-        if (this.isUser('BAIXING_SALES')) {
-          resolve(`${orderServiceHost}/${preKeywordPath}/?appId=105&seq=${data}`)
-        }
-        if (this.isUser('AGENT_ACCOUNTING')) {
-          window.location.href = `${orderServiceHost}/${preKeywordPath}/?appId=105&seq=${data}&agentId=${this.userInfo.id}`
+        if (response) {
+          const { data } = response
+          if (this.isUser('BAIXING_SALES')) {
+            resolve(`${orderServiceHost}/${preKeywordPath}/?appId=105&seq=${data}`)
+          }
+          if (this.isUser('AGENT_ACCOUNTING')) {
+            window.location.href = `${orderServiceHost}/${preKeywordPath}/?appId=105&seq=${data}&agentId=${this.userInfo.id}`
+          }
         }
       })
     },
