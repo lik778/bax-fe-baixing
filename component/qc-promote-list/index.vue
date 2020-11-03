@@ -53,7 +53,7 @@
       <el-table-column label="操作" width="160">
         <template slot-scope="{row}">
           <el-button :disabled="!(userInfo.shAgent && canEditPromote(row.status))" :loading="checkButtonLoading(row)" type="text" size="small" @click="() => goEditCreativePage(row)">编辑</el-button>
-          <el-button :disabled="!(userInfo.shAgent && canGotoWanci(row.seoPromoteStatus))" type="text" size="small"  @click="() => gotoWanci(row.id)">管理SEO</el-button>
+          <el-button :disabled="!(userInfo.shAgent && canGotoWanci(row.seoPromoteStatus)) || promoteStatusDisabled(row.status)" type="text" size="small"  @click="() => gotoWanci(row.id)">管理SEO</el-button>
           <div class="page-button-group-safe-padding" />
         </template>
       </el-table-column>
@@ -74,7 +74,8 @@ import dayjs from 'dayjs'
 import { DEVICE, AUDIT_STATUS_MAPPING, PROMOTE_STATUS_MAPPING, PROMOTE_STATUS,
 PROMOTE_STATUS_PENDING_EDIT, PROMOTE_STATUS_ON_PROMOTE, PROMOTE_STATUS_ONLINE,
 PROMOTE_STATUS_EDITED, AUDIT_STATUS_REJECT_B2B, AUDIT_STATUS_REJECT_SUPPLIES,
-AUDIT_STATUS_REJECT_SEM, AUDIT_STATUS_REJECT_KEYWORD, SEO_STATUS_BOUGHT } from 'constant/qianci'
+AUDIT_STATUS_REJECT_SEM, AUDIT_STATUS_REJECT_KEYWORD, SEO_STATUS_BOUGHT,
+  PROMOTE_STATUS_FINISHED, PROMOTE_STATUS_CEASED } from 'constant/qianci'
 import  { getBusinessLicense } from 'api/seo'
 import { getPromoteList, getWanciSeoRedirect } from 'api/qianci'
 
@@ -125,6 +126,9 @@ export default {
     },
     canGotoWanci(status) {
       return  [SEO_STATUS_BOUGHT].includes(status)
+    },
+    promoteStatusDisabled(status) {
+      return [PROMOTE_STATUS_FINISHED, PROMOTE_STATUS_CEASED].includes(status)
     },
     getQueryParams() {
       const params = {}
