@@ -174,6 +174,9 @@ const eventBus = {
 }
 Vue.use(eventBus)
 
+// 易慧推灰度
+window.__qc = !!localStorage.getItem("qc")
+
 const gwRoutes = [{
   component: () => import('com/gw-homepage'),
   path: '/main/gw',
@@ -219,28 +222,31 @@ const bwRoutes = [{
   name: 'bw-manual'
 }]
 
-const qcRoutes = [{
-  component: () => import('com/qc-create-promote'),
-  path: '/main/qc/create',
-  name: 'qc-create-promote'
-}, {
-  component: () => import('com/qc-promote-list'),
-  path: '/main/qc/promote-list',
-  name: 'qc-promote-list'
-}, {
-  component: () => import('com/qc-word-list'),
-  path: '/main/qc/word-list',
-  name: 'qc-word-list'
-}, {
-  component: () => import('com/qc-keyword-list'),
-  path: '/main/qc/keyword-list',
-  name: 'qc-keyword-list',
-  hidden: true
-}, {
-  component: () => import('com/qc-creative'),
-  path: '/main/qc/creative',
-  name: 'qc-creative'
-}]
+let qcRoutes = [];
+if (window.__qc) {
+  qcRoutes = [{
+    component: () => import('com/qc-create-promote'),
+    path: '/main/qc/create',
+    name: 'qc-create-promote'
+  }, {
+    component: () => import('com/qc-promote-list'),
+    path: '/main/qc/promote-list',
+    name: 'qc-promote-list'
+  }, {
+    component: () => import('com/qc-word-list'),
+    path: '/main/qc/word-list',
+    name: 'qc-word-list'
+  }, {
+    component: () => import('com/qc-keyword-list'),
+    path: '/main/qc/keyword-list',
+    name: 'qc-keyword-list',
+    hidden: true
+  }, {
+    component: () => import('com/qc-creative'),
+    path: '/main/qc/creative',
+    name: 'qc-creative'
+  }]
+}
 
 const qwtRoutes = [{
   component: () => import('com/qwt-create-promotion'),
