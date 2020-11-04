@@ -23,7 +23,7 @@ export const seoApiHost = isPro
   : 'http://bax.baixing.cn/seo-api'
 
 export const qcApiHost = isPro
-  ? 'http://bax.baixing.com.cn/api/sem-batch'
+  ? 'http://bax.baixing.com.cn/sem-batch/api/sem-batch'
   : 'http://bax.baixing.cn/sem-batch/api/sem-batch'
 
 export const assetHost = '//file.baixing.net/bax-fe/asset/'
