@@ -9,9 +9,6 @@
       </ul>
       <p>产品说明：1.广告位双端投放不低于1000个关键词；2.精品官网180天；3.快照位每日投放100条信息</p>
     </div>
-    <div class="price">
-      <p>套餐价:<br/>6980元<span class="day">(180天)</span></p>
-    </div>
   </div>
 </template>
 
@@ -39,10 +36,9 @@ name: "product-intro"
     & .intro {
       float: left;
       padding: 20px;
-      width: 448px;
+      width: 100%;
       height: 100%;
       background: #fff7ea;
-      border-right: 1px solid #FF7D51;
     }
     & .intro > ul {
       margin-top: 30px;
@@ -76,19 +72,6 @@ name: "product-intro"
       font-size: 12px;
       color: #FF7D51;
       padding-top: 20px;
-    }
-
-    & .price {
-      float: right;
-      width: 135px;
-      font-size: 18px;
-      color: #FF6E51;
-      padding: 60px 35px;
-      & .day {
-        display: block;
-        font-size: 14px;
-        text-align: center;
-      }
     }
   }
   .clearfix:after {
