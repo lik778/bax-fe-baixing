@@ -1,12 +1,11 @@
 // 投放状态
-export const PROMOTE_PAID = "PAID"
+export const PROMOTE_PAID = 'PAID'
 export const PROMOTE_STATUS_PENDING_EDIT = 'PENDING_EDIT'
 export const PROMOTE_STATUS_EDITED = 'EDITED'
 export const PROMOTE_STATUS_ONLINE = 'ONLINE'
 export const PROMOTE_STATUS_ON_PROMOTE = 'ON_PROMOTE'
 export const PROMOTE_STATUS_FINISHED = 'FINISHED'
 export const PROMOTE_STATUS_CEASED = 'CEASED'
-
 
 export const PROMOTE_STATUS_MAPPING = {
   [PROMOTE_STATUS_PENDING_EDIT]: '待编辑物料',
@@ -23,7 +22,7 @@ export const PROMOTE_STATUS = {
 }
 
 // 审核状态
-export const AUDIT_STATUS_UNKNOWN = "STATUS_UNKNOWN"
+export const AUDIT_STATUS_UNKNOWN = 'STATUS_UNKNOWN'
 export const AUDIT_STATUS_EMPTY = 'STATUS_EMPTY'
 export const AUDIT_STATUS_AUDITING_B2B = 'STATUS_AUDITING_B2B'
 export const AUDIT_STATUS_REJECT_B2B = 'STATUS_REJECT_B2B'
@@ -50,16 +49,54 @@ export const AUDIT_STATUS_MAPPING = {
   [AUDIT_STATUS_PASSED_SEM]: 'sem代理商审核通过'
 }
 // 91投放状态
-export const SEO_STATUS_UNBUY = "UNBUY"
-export const SEO_STATUS_BOUGHT = "BOUGHT"
-export const SEO_STATUS_CANCELED = "CANCELED"
-export const SEO_STATUS_EXPIRED = "EXPIRED"
+export const SEO_STATUS_UNBUY = 'UNBUY'
+export const SEO_STATUS_BOUGHT = 'BOUGHT'
+export const SEO_STATUS_CANCELED = 'CANCELED'
+export const SEO_STATUS_EXPIRED = 'EXPIRED'
 
 export const SEO_STATUS_MAPPING = {
-  [SEO_STATUS_UNBUY]: "未购买",
-  [SEO_STATUS_BOUGHT]: "已购买",
-  [SEO_STATUS_CANCELED]: "取消",
-  [SEO_STATUS_EXPIRED]: "过期"
+  [SEO_STATUS_UNBUY]: '未购买',
+  [SEO_STATUS_BOUGHT]: '已购买',
+  [SEO_STATUS_CANCELED]: '取消',
+  [SEO_STATUS_EXPIRED]: '过期'
+}
+
+export const AUDIT_STATUS_OPTIONS = [
+  {
+    label: 'B2B审核中',
+    values: [ AUDIT_STATUS_AUDITING_B2B ],
+    showAuditFailReason: false
+  },
+  {
+    label: 'B2B词审核通过',
+    values: [ AUDIT_STATUS_PASSED_B2B ],
+    showAuditFailReason: false
+  },
+  {
+    label: '审核中',
+    values: [ AUDIT_STATUS_AUDITING_SUPPLIES, AUDIT_STATUS_PASSED_SUPPLIES, AUDIT_STATUS_AUDITING_SEM ],
+    showAuditFailReason: false
+  },
+  {
+    label: '审核不通过',
+    values: [ AUDIT_STATUS_REJECT_B2B, AUDIT_STATUS_REJECT_SUPPLIES, AUDIT_STATUS_REJECT_KEYWORD, AUDIT_STATUS_REJECT_SEM ],
+    showAuditFailReason: true
+  },
+  {
+    label: '审核通过',
+    values: [ AUDIT_STATUS_PASSED_SEM ],
+    showAuditFailReason: false
+  }
+]
+
+export function getPromoteAuditStatus (key, val) {
+  let handle = AUDIT_STATUS_OPTIONS.find(x => {
+    return x[key] instanceof Array
+      ? x[key].includes(val)
+      : x[key] === val
+  })
+  if (handle) return handle
+  return {}
 }
 
 /* 拓词状态 */
@@ -154,3 +191,6 @@ export function getEWStatusWith(key, val) {
   if (handle) return handle
   return {}
 }
+
+// 千词编辑物料落地页默认 type
+export const QIANCI_LANDING_TYPE = 3

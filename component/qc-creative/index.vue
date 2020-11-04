@@ -67,7 +67,7 @@
 import dayjs from 'dayjs'
 
 import { getRouteParam } from 'util'
-
+import { QIANCI_LANDING_TYPE } from 'constant/qianci'
 import { getUserSites } from 'api/ka'
 import { getCreative, saveCreative } from 'api/qianci'
 
@@ -184,7 +184,7 @@ export default {
           const query = {
             ...this.form,
             id: this.id,
-            landingType: 3,
+            landingType: QIANCI_LANDING_TYPE,
           }
           try {
             const response = await saveCreative(query)
