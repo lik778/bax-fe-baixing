@@ -96,7 +96,26 @@
             </router-link>
           </el-menu-item>
         </el-submenu>
-
+        <el-submenu index="qc" v-if="showQc">
+          <template slot="title">
+            <bx-icon type="sharealt"></bx-icon>易慧推
+          </template>
+          <el-menu-item index="qc-create-promote" v-if="!userInfo.shAgent">
+            <router-link :to="{ name: 'qc-create-promote' }" tag="p">
+              <i class="material-icons" style="font-size: 16px; margin-right: 11px; vertical-align: -3px;"></i>新建订单
+            </router-link>
+          </el-menu-item>
+          <el-menu-item index="qc-promote-list">
+            <router-link :to="{ name: 'qc-promote-list' }" tag="p">
+              <i class="material-icons" style="font-size: 16px; margin-right: 11px; vertical-align: -3px;"></i>管理推广
+            </router-link>
+          </el-menu-item>
+          <el-menu-item index="qc-word-list" v-if="!userInfo.shAgent">
+            <router-link :to="{ name: 'qc-word-list' }" tag="p">
+              <i class="material-icons" style="font-size: 16px; margin-right: 11px; vertical-align: -3px;"></i>查词记录
+            </router-link>
+          </el-menu-item>
+        </el-submenu>
         <el-menu-item index="gw-homepage">
           <a href="/ka/main" v-if="isRenderSiteLink" style="color: inherit">
             <i class="el-icon-news" />精品官网
@@ -125,6 +144,14 @@
               </i>标王推广报表
             </router-link>
           </el-menu-item>
+          <!-- 暂时隐藏 -->
+          <!-- <el-menu-item index="qc-dashboard">
+            <router-link :to="{ name: 'qc-dashboard'}" tag="p">
+              <i class="material-icons"
+                 style="font-size: 16px; margin-right: 11px; vertical-align: -3px;">
+              </i>易慧推报表
+            </router-link>
+          </el-menu-item> -->
         </el-submenu>
 
         <el-submenu index="ssp" v-show="allowSeeBxAd">
@@ -189,8 +216,9 @@ const MENU_GROUP_MAP = {
   'seo': ['seo-create-promotion', 'seo-promotion-list'],
   'sst': ['qwt-create-promotion', 'qwt-promotion-list'],
   'bw': ['bw-query-price', 'bw-plan-list', 'bw-manual'],
+  'qc': ['qc-create-promote', 'qc-promote-list', 'qc-word-list'],
   'ssp': ['ad-list', 'material-list', 'order-list', 'user-list', 'ad-calendar'],
-  'dashboard': ['qwt-dashboard', 'bw-dashboard'],
+  'dashboard': ['qwt-dashboard', 'bw-dashboard', 'qc-dashboard'],
 }
 
 
@@ -216,7 +244,8 @@ export default {
       isRenderSiteLink: false,
       isRenderSiteNavTag: false,
 
-      isKaSuperman: false
+      isKaSuperman: false,
+      showQc: window.__qc,
     }
   },
   watch: {

@@ -5,6 +5,7 @@ import sentry from '../lib/sentry'
 import Homepage from 'com/homepage'
 import Bax from 'com/bax'
 
+import dayjs from 'dayjs'
 import VueClipboard from 'vue-clipboard2'
 import VueRouter from 'vue-router'
 import {
@@ -54,14 +55,16 @@ import {
 import { reaction } from 'mobx'
 import Movue from 'movue'
 import Vue from 'vue'
-
+import { ErrorBoundary } from 'vue-error-boundary'
 import Vue2Filters from 'vue2-filters'
 import { getBusinessLicense } from 'api/seo'
 import { allowUseKaPackage } from 'util/fengming-role'
 import { getCurrentUser } from 'api/account'
 import pick from 'lodash.pick'
-import { notAllowFengmingRecharge } from "util/role"
+import { notAllowFengmingRecharge } from 'util/role'
+// import { getRouteParam } from 'util'
 
+import '../cssbase/index.css'
 
 // track common data
 window.__trackerData = {
@@ -69,9 +72,11 @@ window.__trackerData = {
 }
 window.onerror = (e) => {
   sentry.captureException(e)
+  console.error(e)
 }
 Vue.config.errorHandler = (err, vm, info) => {
   sentry.captureException(err)
+  console.error(err)
 }
 
 Vue.use(Movue, { reaction })
@@ -116,6 +121,32 @@ Vue.use(Progress)
 Vue.use(Card)
 Vue.use(Image)
 
+/**
+ * 错误回退组件
+ * @example
+ * <catch-error>
+ *   <unstable-component />
+ * </catch-error>
+ */
+Vue.component('catch-error', {
+  name: 'error-boundary-with-default-handler',
+  render(h) {
+    const children = this.$slots.default
+    return h(ErrorBoundary, {
+      attrs: {
+        fallBack: {
+          functional: true,
+          render(h) {
+            return h('p', '数据出错啦，请刷新重新试试...')
+          }
+        },
+        ...this.$attrs
+      },
+      listeners: this.$listeners
+    }, children)
+  }
+})
+
 Vue.use(Loading.directive)
 Vue.prototype.$loading = Loading.service
 Vue.prototype.$msgbox = MessageBox
@@ -127,6 +158,13 @@ Vue.prototype.$message = Message
 
 Vue.use(Vue2Filters)
 
+// ElementUI formatter
+Vue.prototype.$formatter = {
+  join: (arrs = [], seq = '、') => arrs.join(seq),
+  date: (time = '') => dayjs(time).format('YYYY-MM-DD'),
+  mapWith: (key = '', obj = {}) => obj[key]
+}
+
 // 该组件引入echarts，体积较大，异步加载提升用户体验
 Vue.component('homepage-campaign', () => import('../component/homepage/campaign'))
 
@@ -135,6 +173,9 @@ const eventBus = {
   install(Vue) { Vue.prototype.$bus = new Vue() }
 }
 Vue.use(eventBus)
+
+// 易慧推灰度
+window.__qc = !!localStorage.getItem("qc")
 
 const gwRoutes = [{
   component: () => import('com/gw-homepage'),
@@ -180,6 +221,32 @@ const bwRoutes = [{
   path: '/main/bw/manual',
   name: 'bw-manual'
 }]
+
+let qcRoutes = [];
+if (window.__qc) {
+  qcRoutes = [{
+    component: () => import('com/qc-create-promote'),
+    path: '/main/qc/create',
+    name: 'qc-create-promote'
+  }, {
+    component: () => import('com/qc-promote-list'),
+    path: '/main/qc/promote-list',
+    name: 'qc-promote-list'
+  }, {
+    component: () => import('com/qc-word-list'),
+    path: '/main/qc/word-list',
+    name: 'qc-word-list'
+  }, {
+    component: () => import('com/qc-keyword-list'),
+    path: '/main/qc/keyword-list',
+    name: 'qc-keyword-list',
+    hidden: true
+  }, {
+    component: () => import('com/qc-creative'),
+    path: '/main/qc/creative',
+    name: 'qc-creative'
+  }]
+}
 
 const qwtRoutes = [{
   component: () => import('com/qwt-create-promotion'),
@@ -316,6 +383,7 @@ export const router = new VueRouter({
     name: 'notice'
   },
   ...bwRoutes,
+  ...qcRoutes,
   ...qwtRoutes,
   ...sspRoutes,
   ...gwRoutes,

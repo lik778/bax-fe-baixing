@@ -22,6 +22,10 @@ export const seoApiHost = isPro
   // : '//172.17.5.12:8088/api/seo-service/user'
   : 'http://bax.baixing.cn/seo-api'
 
+export const qcApiHost = isPro
+  ? 'http://bax.baixing.com.cn/api/sem-batch'
+  : 'http://bax.baixing.cn/sem-batch/api/sem-batch'
+
 export const assetHost = '//file.baixing.net/bax-fe/asset/'
 
 export const upyun = {

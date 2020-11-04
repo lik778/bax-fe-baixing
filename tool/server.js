@@ -6,7 +6,6 @@ const config = require('./webpack.dev')
 const express = require('express')
 const webpack = require('webpack')
 const { join } = require('path')
-
 const compiler = webpack(config)
 const app = express()
 
