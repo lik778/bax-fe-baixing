@@ -236,8 +236,10 @@ export function allowNotSeeBwNewPrice(roles, agentId) {
 export function isNormalUser(roles) {
   const shAgent = localStorage.getItem('shAgent')
   if (shAgent) return false
-  if (!Array.isArray(roles)) return false
-  return roles.some(o => o.nameEn === 'BAIXING_USER')
+  if (roles.length === 1) {
+    return roles[0].nameEn === 'BAIXING_USER'
+  }
+  return false
 }
 
 export function allowSeeLongOrder(roles, agentId, salesId) {
