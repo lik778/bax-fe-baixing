@@ -10,7 +10,7 @@
         </div>
         <div class="mt-16">添加说明
           <p>A/C类词不支持修改</p>
-          <p style="color: #FF6350">B/D类词数限制不低于10词不超过100词</p>
+          <p style="color: #FF6350">B/D类词数限制不低于10词不超过20词</p>
           <p style="color: #FF6350">单个词长度不低于2个字，不超过8个字</p>
           <p style="color: #FF6350">英文字符仅支持小写，输入大写时数据会被强制更改为小写</p>
         </div>
@@ -115,7 +115,11 @@ export default {
   },
   computed: {
     handleDisabled() {
-      return !(this.keywordOptions.B.keywords.length >= 10 && this.keywordOptions.D.keywords.length >= 10)
+      const Blength = this.keywordOptions.B.keywords.length
+      const limitB = this.keywordOptions.B.wordsLimit
+      const Dlength = this.keywordOptions.D.keywords.length
+      const limitD = this.keywordOptions.D.wordsLimit
+      return !(Blength >= limitB[0] && Blength <= limitB[1] && Dlength >= limitD[0] && Dlength <= limitD[1])
     },
     wordNum() {
       const ALength = this.keywordOptions.A.keywords.length
@@ -175,7 +179,6 @@ export default {
       let keywords = this.keywordOptions[type].keywords
 
       keywords = [...new Set(words.concat(keywords))]
-
       this.keywordOptions[type].keywords = keywords
     },
     editKeyword(obj) {

@@ -19,9 +19,12 @@
         </span>
       </div>
     </div>
-    <p class="warning-text" v-if="showWarningText">
+    <p class="warning-text" v-if="minShowWarningText">
       <i class="el-icon-warning-outline"></i>
-      低于10词，请继续添加</p>
+      低于10个词，请继续添加</p>
+    <p class="warning-text" v-if="maxShowWarningText">
+      <i class="el-icon-warning-outline"></i>
+      请勿超过20个关键词</p>
   </div>
 </template>
 
@@ -57,8 +60,11 @@ export default {
     }
   },
   computed: {
-    showWarningText() {
+    minShowWarningText() {
       return this.keywords.length > 0 && this.keywords.length < 10 && ['B', 'D'].includes(this.type)
+    },
+    maxShowWarningText() {
+      return this.keywords.length > 20 && ['B', 'D'].includes(this.type)
     }
   },
   methods: {
