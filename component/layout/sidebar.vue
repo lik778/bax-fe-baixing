@@ -96,7 +96,7 @@
             </router-link>
           </el-menu-item>
         </el-submenu>
-        <el-submenu index="qc" v-if="showQc">
+        <el-submenu index="qc">
           <template slot="title">
             <bx-icon type="sharealt"></bx-icon>易慧推
           </template>
@@ -245,7 +245,6 @@ export default {
       isRenderSiteNavTag: false,
 
       isKaSuperman: false,
-      showQc: window.__qc,
     }
   },
   watch: {

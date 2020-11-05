@@ -174,8 +174,6 @@ const eventBus = {
 }
 Vue.use(eventBus)
 
-// 易慧推灰度
-window.__qc = !!localStorage.getItem("qc")
 
 const gwRoutes = [{
   component: () => import('com/gw-homepage'),
@@ -222,9 +220,8 @@ const bwRoutes = [{
   name: 'bw-manual'
 }]
 
-let qcRoutes = [];
-if (window.__qc) {
-  qcRoutes = [{
+
+const qcRoutes = [{
     component: () => import('com/qc-create-promote'),
     path: '/main/qc/create',
     name: 'qc-create-promote'
@@ -245,8 +242,7 @@ if (window.__qc) {
     component: () => import('com/qc-creative'),
     path: '/main/qc/creative',
     name: 'qc-creative'
-  }]
-}
+}]
 
 const qwtRoutes = [{
   component: () => import('com/qwt-create-promotion'),
