@@ -4,12 +4,12 @@
 
     <section class="page-section" style="margin-top: 20px">
       <span style="font-size: 14px">选择推广计划：</span>
-      <el-select v-model="query.promoteID" placeholder="推广计划" clearable>
+      <el-select v-model="query.promoteID" placeholder="推广计划" clearable @change="selectPromote">
         <el-option
           v-for="item in options.promoteList"
-          :label="item.coreWord"
-          :value="item.id"
-          :key="item.id"
+          :label="item.label"
+          :value="item.value"
+          :key="item.value"
         />
       </el-select>
 
@@ -36,18 +36,20 @@
       <el-tab-pane label="所有关键字" name="allTab">
 
         <el-table class="query-table" border :data="pvsList">
-          <el-table-column label="关键词" prop="coreWord" />
-          <el-table-column label="搜索引擎" prop="crawledBy" />
+          <el-table-column label="关键词" prop="keyword" />
+          <el-table-column label="搜索引擎">
+            <template>百度</template>
+          </el-table-column>
           <el-table-column label="位置">
             <span>首页</span>
           </el-table-column>
-          <el-table-column label="快照日期" width="160" :formatter="({ date }) => $formatter.date(date)" />
+          <el-table-column label="快照日期" width="160" :formatter="({ urlTime }) => $formatter.date(urlTime)" />
           <el-table-column label="快照">
             <template slot-scope="{row}">
               <el-button type="text" size="small" @click="() => checkSnapshotPage(row)">查看</el-button>
             </template>
           </el-table-column>
-          <el-table-column label="端口" prop="plat" :formatter="({ platform }) => $formatter.mapWith(platform, DEVICE)" />
+          <el-table-column label="端口" prop="plat" :formatter="({ device }) => $formatter.mapWith(device, DEVICE)" />
         </el-table>
         <el-pagination
           class="pagniation"
@@ -77,7 +79,7 @@ import 'echarts/lib/component/tooltip'
 import 'echarts/lib/chart/line'
 import 'echarts/lib/chart/pie'
 
-import { getPromoteList, getWordPVsList, getSnapshot } from 'api/qianci'
+import { getPromoteList, getWordPVsList, getWordPVsChartData, getSnapshot } from 'api/qianci'
 import { DEVICE } from 'constant/qianci'
 import { checkSupportShadowDOM } from 'util'
 
@@ -117,7 +119,7 @@ const pvsChartOptionTmp = Object.assign(clone(lineChartOptionTmp), {
   },
   series: [{
     name: '关键词曝光量',
-    data: [820, 932, 901, 934, 1290, 1330, 1320],
+    data: [],
     type: 'line',
     symbol: 'none',
     symbolSize: 0,
@@ -139,7 +141,7 @@ const visitedChartOptionTmp = Object.assign(clone(lineChartOptionTmp), {
   },
   series: [{
     name: '最近7天访问量',
-    data: [82, 92, 71, 73, 120, 123, 97],
+    data: [],
     type: 'line',
     symbol: 'none',
     symbolSize: 0,
@@ -149,6 +151,7 @@ const visitedChartOptionTmp = Object.assign(clone(lineChartOptionTmp), {
   }]
 })
 
+// ******************************* Vue
 export default {
   name: "qc-dashboard",
   components: {
@@ -189,18 +192,51 @@ export default {
   methods: {
     // 初始化推广计划列表
     async initPromoteListOptions() {
-      const query = {}
-      const { data, total } = (await getPromoteList(query)) || {}
-      this.options.promoteList = data.map(x => x)
-      const next = data[0]
-      if (next) {
-        this.query.promoteID = String(next.id)
+      const { sales_id: salesId, user_id: targetUserId } = this.$route.query
+      // ? 要不要新加接口
+      const query = {
+        size: 999,
+        page: 0,
+        targetUserId,
+        salesId
       }
+      const { total, content } = await getPromoteList(query)
+      this.options.promoteList = content.map(x => ({
+        label: x.coreWord,
+        value: +x.id
+      }))
+      this.selectPromote(this.options.promoteList[0].value)
     },
-    initCharts() {
-      this.$refs.platformChartOptions.resize()
-      this.$refs.pvsChartOptions.resize()
-      this.$refs.visitedChartOptions.resize()
+    async initCharts() {
+      const {
+        online = {},
+        weekData = {}
+      } = await getWordPVsChartData({
+        promoteId: this.query.promoteID
+      })
+
+      const platformData = clone(this.platformChartOptions)
+      platformData.series[0].data = [
+        { name: '电脑端', value: online.web || 0 },
+        { name: '移动端', value: online.wap || 0 }
+      ]
+      this.platformChartOptions = platformData
+
+      // TODO 动画显示问题
+
+      const pvsData = clone(this.pvsChartOptions)
+      pvsData.series[0].name = '关键词曝光量'
+      pvsData.xAxis.data = weekData.map(x => x.dayTime)
+      pvsData.series[0].data = weekData.map(x => +x.shows)
+      pvsData.series[0].areaStyle.color = 'rgba(53, 165, 228, .4)'
+      this.pvsChartOptions = pvsData
+
+      const visitsData = clone(this.visitedChartOptions)
+      visitsData.series[0].name = '最近7天访问量'
+      visitsData.xAxis.data = weekData.map(x => x.dayTime)
+      visitsData.series[0].data = weekData.map(x => +x.click)
+      visitsData.series[0].areaStyle.color = 'rgba(255, 99, 80, .4)'
+      this.visitedChartOptions = visitsData
     },
     async initPVsData(page = 1) {
       const query = {}
@@ -253,6 +289,9 @@ export default {
 
     },
 
+    selectPromote(id) {
+      this.query.promoteID = +id
+    },
     handleSizeChange(size) {
       this.pagination.size = size
       this.initPVsData()

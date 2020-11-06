@@ -15,9 +15,9 @@
       <el-form-item label="审核状态">
         <el-select v-model="query.auditStatus" placeholder="请选择审核状态">
           <el-option key="全部" label="全部" value=""/>
-          <el-option v-for="(item, index) in AUDIT_STATUS_OPTIONS" 
-                    :key="index" 
-                    :label="item.label" 
+          <el-option v-for="(item, index) in AUDIT_STATUS_OPTIONS"
+                    :key="index"
+                    :label="item.label"
                     :value="item.values" />
         </el-select>
       </el-form-item>
@@ -26,8 +26,7 @@
         <el-button type="primary" plain @click="reset">重置</el-button>
       </el-form-item>
     </el-form>
-    <!-- 第一版上线需隐藏报表页面 -->
-    <!-- <el-button class="go-chart-page-btn" type="primary" @click="goChartPage">查看计划报表</el-button> -->
+    <el-button class="go-chart-page-btn" type="primary" @click="goChartPage">查看计划报表</el-button>
     <!-- 列表 -->
     <el-table class="query-table" border :data="queryList">
       <el-table-column label="核心产品" prop="coreWord" width="160" />
@@ -76,21 +75,21 @@
 
 <script>
 import dayjs from 'dayjs'
-import { 
+import {
   DEVICE,
-  PROMOTE_STATUS_MAPPING, 
+  PROMOTE_STATUS_MAPPING,
   PROMOTE_STATUS,
-  PROMOTE_STATUS_PENDING_EDIT, 
-  PROMOTE_STATUS_ON_PROMOTE, 
+  PROMOTE_STATUS_PENDING_EDIT,
+  PROMOTE_STATUS_ON_PROMOTE,
   PROMOTE_STATUS_ONLINE,
-  PROMOTE_STATUS_EDITED, 
-  AUDIT_STATUS_REJECT_B2B, 
+  PROMOTE_STATUS_EDITED,
+  AUDIT_STATUS_REJECT_B2B,
   AUDIT_STATUS_REJECT_SUPPLIES,
-  AUDIT_STATUS_REJECT_SEM, 
-  AUDIT_STATUS_REJECT_KEYWORD, 
+  AUDIT_STATUS_REJECT_SEM,
+  AUDIT_STATUS_REJECT_KEYWORD,
   SEO_STATUS_BOUGHT,
-  PROMOTE_STATUS_FINISHED, 
-  PROMOTE_STATUS_CEASED, 
+  PROMOTE_STATUS_FINISHED,
+  PROMOTE_STATUS_CEASED,
   AUDIT_STATUS_OPTIONS,
   getPromoteAuditStatus
 } from 'constant/qianci'

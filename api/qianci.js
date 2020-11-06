@@ -131,15 +131,69 @@ export async function getPromoteList(opts = {}) {
   }
 }
 
+export async function getWordPVsChartData(opts = {}) {
+  if (useTestData) {
+    await pause()
+    return {
+      online: {
+        wap: 278,
+        web: 343
+      },
+      weekData: [
+        {
+          click: 820,
+          shows: 820,
+          dayTime: '2018-09-23',
+        },
+        {
+          click: 932,
+          shows: 932,
+          dayTime: '2018-09-24',
+        },
+        {
+          click: 901,
+          shows: 901,
+          dayTime: '2018-09-25',
+        },
+        {
+          click: 934,
+          shows: 934,
+          dayTime: '2018-09-26',
+        },
+        {
+          click: 1290,
+          shows: 1290,
+          dayTime: '2018-09-27',
+        },
+        {
+          click: 1330,
+          shows: 1330,
+          dayTime: '2018-09-28',
+        },
+        {
+          click: 1320,
+          shows: 1320,
+          dayTime: '2018-09-29',
+        },
+      ]
+    }
+  }
+  return (await qianci
+    .get('/keyword/data')
+    .query(opts)
+    .json())
+    .data
+}
+
 // 获取报表页计划的关键词数据列表
 export async function getWordPVsList(opts = {}) {
   if (useTestData) {
     const data = Array.apply(null, { length: 15 }).map((x, i) => ({
       id: String(i),
-      coreWord: '核心词',
-      crawledBy: '百度',
-      platform: Math.floor(Math.random() * 2),
-      date: Math.floor(+new Date() / 1000),
+      keyword: '核心词',
+      device: ['ALL', 'PC', 'WAB'][Math.floor(Math.random() * 2)],
+      url: 'www.baidu.com',
+      urlTime: Math.floor(+new Date() / 1000),
     }))
     await pause()
     return {

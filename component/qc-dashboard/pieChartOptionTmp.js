@@ -21,11 +21,11 @@ export default {
       data: [
         {
           name: '电脑端',
-          value: 335
+          value: 0
         },
         {
           name: '移动端',
-          value: 87
+          value: 0
         }
       ]
     }
