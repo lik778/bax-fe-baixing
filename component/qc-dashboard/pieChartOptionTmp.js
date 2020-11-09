@@ -9,10 +9,12 @@ export default {
       radius: ['45%', '75%'],
       label: {
         show: true,
-        padding: 10,
+        formatter: '{b}',
+        backgroundColor: 'white',
+        borderColor: '#ddd',
+        borderWidth: 1,
         borderRadius: 2,
-        borderWidth: 1
-        // borderColor: '#888'
+        padding: [8, 6],
       },
       labelLine: {
         show: true
