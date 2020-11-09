@@ -201,15 +201,9 @@ export default {
   },
   async created() {
     const { user_id: targetUserId, sales_id: salesId } = parseQuery(window.location.search)
-    this.store = {
-      targetUserId,
-      salesId
-    }
-
+    this.store = { targetUserId, salesId }
     await this.initPromoteListOptions()
-    // TODO chart resize
-    // window.addEventListener('resize', () => this.initCharts())
-    // this.$on('hook:beforeDestroy', window.removeEventListener('resize', this.initCharts))
+    this.listenChartResize()
   },
   methods: {
     // 初始化推广计划列表
@@ -271,8 +265,6 @@ export default {
       ]
       platformData.title.text = `${+online.web + online.wap}个`
       this.platformChartOptions = platformData
-
-      // TODO 动画显示问题
 
       const pvsData = clone(this.pvsChartOptions)
       pvsData.series[0].name = '关键词曝光量'
@@ -374,6 +366,10 @@ export default {
     handleSizeChange(size) {
       this.pagination.size = size
       this.initPVsData()
+    },
+    listenChartResize() {
+      window && window.addEventListener('resize', () => this.initCharts())
+      this.$on('hook:beforeDestroy', window.removeEventListener('resize', this.initCharts))
     }
   }
 }
