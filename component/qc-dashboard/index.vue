@@ -182,6 +182,7 @@ export default {
       loading: {
         charts: false
       },
+      store: {},
       pvsList: [],
       platformChartOptions: Object.assign(platformChartOptionTmp, {}),
       pvsChartOptions: Object.assign(pvsChartOptionTmp, {}),
@@ -198,6 +199,12 @@ export default {
     }
   },
   async created() {
+    const { user_id: targetUserId, sales_id: salesId } = parseQuery(window.location.search)
+    this.store = {
+      targetUserId,
+      salesId
+    }
+
     await this.initPromoteListOptions()
     // TODO chart resize
     // window.addEventListener('resize', () => this.initCharts())
@@ -223,10 +230,15 @@ export default {
       this.selectPromote(this.options.promoteList[0].value)
     },
     async initCharts() {
+      const { targetUserId, salesId } = this.store
       this.loading.charts = true
       let response = null
       try {
-        response = await getWordPVsChartData({ promoteId: this.query.promoteID })
+        response = await getWordPVsChartData({
+          targetUserId,
+          salesId,
+          promoteId: this.query.promoteID
+        })
       } catch(error) {
         this.visible.showNoPVsDataTip = true
       } finally {
@@ -274,10 +286,12 @@ export default {
       this.visitedChartOptions = visitsData
     },
     async initPVsData(page = 1) {
-      const query = {
+      const { targetUserId, salesId } = this.store
+      const { content = [], numberOfElements = 0 } = (await getWordPVsList({
+        targetUserId,
+        salesId,
         promoteId: this.query.promoteID
-      }
-      const { content = [], numberOfElements = 0 } = (await getWordPVsList(query)) || {}
+      })) || {}
       this.pvsList = content.map(x => x)
       this.pagination = {
         ...this.pagination,
