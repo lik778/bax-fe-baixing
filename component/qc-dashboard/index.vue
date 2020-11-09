@@ -81,7 +81,7 @@ import 'echarts/lib/chart/pie'
 
 import { getPromoteList, getWordPVsList, getWordPVsChartData, getSnapshot } from 'api/qianci'
 import { DEVICE } from 'constant/qianci'
-import { checkSupportShadowDOM } from 'util'
+import { checkSupportShadowDOM, parseQuery } from 'util'
 
 import pieChartOptionTmp from './pieChartOptionTmp'
 import lineChartOptionTmp from './lineChartOptionsTmp'
@@ -251,11 +251,12 @@ export default {
 
       const platformData = clone(this.platformChartOptions)
       // 确保饼图中至少有一个像素的数据
-      online.web = +online.web || 1
-      online.wap = +online.wap || 1
+      const displayOnline = clone(online)
+      displayOnline.web = +online.web || 1
+      displayOnline.wap = +online.wap || 1
       platformData.series[0].data = [
-        { name: '电脑端', value: online.web || 0 },
-        { name: '移动端', value: online.wap || 0 }
+        { name: `电脑端: ${online.web}`, value: displayOnline.web },
+        { name: `移动端: ${online.wap}`, value: displayOnline.wap }
       ]
       this.platformChartOptions = platformData
 
