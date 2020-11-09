@@ -28,16 +28,7 @@ export default {
         show: true
       },
       color: ['#35a5e4', '#ffa205'],
-      data: [
-        {
-          name: '电脑端',
-          value: 0
-        },
-        {
-          name: '移动端',
-          value: 0
-        }
-      ]
+      data: []
     }
   ]
 }
