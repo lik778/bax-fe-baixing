@@ -46,7 +46,7 @@
           <el-table-column label="快照日期" width="160" :formatter="({ urlTime }) => $formatter.date(urlTime)" />
           <el-table-column label="快照">
             <template slot-scope="{row}">
-              <el-button type="text" size="small" @click="() => checkSnapshotPage(row)">查看</el-button>
+              <el-button :disabled="!row.url" type="text" size="small" @click="() => checkSnapshotPage(row)">查看</el-button>
             </template>
           </el-table-column>
           <el-table-column label="端口" prop="plat" :formatter="({ device }) => $formatter.mapWith(device, DEVICE)" />
