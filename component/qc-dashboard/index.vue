@@ -35,7 +35,7 @@
     <el-tabs class="words-pvs-tabs" v-model="active.tab">
       <el-tab-pane label="所有关键字" name="allTab">
 
-        <el-table class="query-table" border :data="pvsList">
+        <el-table class="query-table" border :data="displayedShowList">
           <el-table-column label="关键词" prop="keyword" />
           <el-table-column label="搜索引擎">
             <template>百度</template>
@@ -179,6 +179,9 @@ export default {
       visible: {
         showNoPVsDataTip: false,
       },
+      loading: {
+        charts: false
+      },
       pvsList: [],
       platformChartOptions: Object.assign(platformChartOptionTmp, {}),
       pvsChartOptions: Object.assign(pvsChartOptionTmp, {}),
@@ -187,16 +190,11 @@ export default {
       NO_PVS_TIP
     }
   },
-  watch: {
-    'query.promoteID': {
-      handler(n, o) {
-        if (n) {
-          const showNoPVsDataTip = (dayjs(this.options.promoteList.find(x => x.id == n).createdTime) - dayjs()) < -1 * (3600 * 24 * 8)
-          if (showNoPVsDataTip) {
-            this.visible.showNoPVsDataTip = true
-          }
-        }
-      }
+  computed: {
+    displayedShowList() {
+      return this.loading.charts
+        ? []
+        : this.pvsList
     }
   },
   async created() {
@@ -225,12 +223,16 @@ export default {
       this.selectPromote(this.options.promoteList[0].value)
     },
     async initCharts() {
-      const {
-        online = {},
-        weekData = []
-      } = await getWordPVsChartData({
-        promoteId: this.query.promoteID
-      })
+      this.loading.charts = true
+      let response = null
+      try {
+        response = await getWordPVsChartData({ promoteId: this.query.promoteID })
+      } catch(error) {
+        this.visible.showNoPVsDataTip = true
+      } finally {
+        this.loading.charts = false
+      }
+      const { online = {}, weekData = [] } = response || {}
       const hasWeekData = weekData.length
 
       // TODO 饼图 label 不能省略
@@ -333,15 +335,8 @@ export default {
     selectPromote(id) {
       this.query.promoteID = +id
       this.$nextTick(() => {
-        if (!this.visible.showNoPVsDataTip) {
-          this.initCharts()
-          this.initPVsData()
-        } else {
-          this.$message({
-            message: NO_PVS_TIP,
-            type: 'warning'
-          })
-        }
+        this.initCharts()
+        this.initPVsData()
       })
     },
     handleSizeChange(size) {
