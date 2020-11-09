@@ -10,7 +10,7 @@
     <!-- 展示 ABCD 词 -->
     <div class="keywords-container">
       <p class="header-info">
-        <span class="description">提示：系统从 <span class="statics">{{wordAll}}</span>个词中为您优选出 <span class="statics">{{wordCounts}}</span> 个（包含双端）关键词，预估在180天内为您带来 <span class="statics">{{pvs}}</span> 展现。</span>
+        <span class="description">提示：系统从 <statics :loading="loading.pvs" :value="wordAll" /> 个词中为您优选出 <statics :loading="loading.pvs" :value="wordCounts" /> 个（包含双端）关键词，预估在180天内为您带来 <statics :loading="loading.pvs" :value="pvs" /> 展现。</span>
         <span class="actions">
           <el-button
             type="text"
@@ -62,16 +62,20 @@
 import dayjs from 'dayjs'
 import clone from 'clone'
 
+import Statics from '../common/statics'
 import KeywordView from '../qc-create-promote/select-keywords/view'
 import keywordOptions from '../qc-create-promote/select-keywords/keyword-options'
 
-import { getRouteParam, formatReqQuery, parseQuery } from 'util'
+import { getRouteParam, formatReqQuery, parseQuery, qcWordAll } from 'util'
 import { getPromote, getPreferredWordsList, getPreferredWordsPV } from 'api/qianci'
 import gStore from '../store'
 
 export default {
   name: "qc-word-list",
-  components: { KeywordView },
+  components: {
+    KeywordView,
+    Statics,
+  },
   fromMobx: {
     allQianciAreas: () => gStore.allQianciAreas
   },
@@ -88,7 +92,8 @@ export default {
       keywordOptions: clone(keywordOptions),
       promote: {},
       loading: {
-        query: false
+        query: false,
+        pvs: false,
       },
       wordCounts: 0,
       pvs: 0,
@@ -99,12 +104,10 @@ export default {
   },
   computed: {
     wordAll() {
-      const ALength = this.keywordOptions.A.keywords.length
-      const BLength = this.keywordOptions.B.keywords.length
-      const CLength = this.keywordOptions.C.keywords.length
-      const DLength = this.keywordOptions.D.keywords.length
-      return ALength * BLength + BLength * CLength + CLength * DLength + ALength * BLength * CLength
-      + ALength * CLength * DLength + BLength * CLength * DLength + ALength * BLength * CLength * DLength
+      const lens = ['A', 'B', 'C', 'D']
+        .reduce((h, c) => (h[c] = this.keywordOptions[c].keywords.length, h), {})
+
+      return qcWordAll(lens)
     }
   },
   async created() {
@@ -130,8 +133,14 @@ export default {
   methods: {
 
     async getPreferredWordPV() {
-      const response = await getPreferredWordsPV({ id: this.id })
-      const { expandedNum = 0, showNum = 0 } = response
+      this.loading.pvs = true
+      let response = null
+      try {
+        response = await getPreferredWordsPV({ id: this.id })
+      } finally {
+        setTimeout(() => this.loading.pvs = false, 300)
+      }
+      const { expandedNum = 0, showNum = 0 } = response || {}
       this.pvs = showNum
       this.wordCounts = expandedNum
     },
