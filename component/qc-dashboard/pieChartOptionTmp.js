@@ -1,6 +1,10 @@
 export default {
   title: {
-    show: false
+    show: true,
+    text: '平台词数',
+    subtext: '当前在线词数',
+    left: 'center',
+    top: 'center'
   },
   series: [
     {
@@ -14,7 +18,7 @@ export default {
         borderColor: '#ddd',
         borderWidth: 1,
         borderRadius: 2,
-        padding: [8, 6],
+        padding: [8, 6]
       },
       labelLine: {
         show: true

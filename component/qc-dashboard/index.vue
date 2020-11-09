@@ -255,9 +255,24 @@ export default {
       displayOnline.web = +online.web || 1
       displayOnline.wap = +online.wap || 1
       platformData.series[0].data = [
-        { name: `电脑端: ${online.web}`, value: displayOnline.web },
-        { name: `移动端: ${online.wap}`, value: displayOnline.wap }
+        {
+          name: `电脑端: ${online.web}`,
+          value: displayOnline.web,
+          label: {
+            borderColor: '#35a5e4',
+          }
+        },
+        {
+          name: `移动端: ${online.wap}`,
+          value: displayOnline.wap,
+          label: {
+            borderColor: '#ffa205',
+          }
+        }
       ]
+      // FIXME title 不显示？
+      platformData.title.text = `${+online.web + online.wap}个`
+      console.log(platformData)
       this.platformChartOptions = platformData
 
       // TODO 动画显示问题
