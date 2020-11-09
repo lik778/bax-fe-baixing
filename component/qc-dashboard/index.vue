@@ -81,7 +81,13 @@ import 'echarts/lib/chart/pie'
 import 'echarts/lib/component/title'
 
 import { getPromoteList, getWordPVsList, getWordPVsChartData, getSnapshot } from 'api/qianci'
-import { DEVICE_DASHBOARD } from 'constant/qianci'
+import {
+  PROMOTE_STATUS_PENDING_EDIT,
+  PROMOTE_STATUS_EDITED,
+  PROMOTE_STATUS_ONLINE,
+  PROMOTE_STATUS_ON_PROMOTE,
+  DEVICE_DASHBOARD
+} from 'constant/qianci'
 import { checkSupportShadowDOM, parseQuery } from 'util'
 
 import pieChartOptionTmp from './pieChartOptionTmp'
@@ -214,7 +220,13 @@ export default {
         size: 999,
         page: 0,
         targetUserId,
-        salesId
+        salesId,
+        status: [
+          PROMOTE_STATUS_PENDING_EDIT,
+          PROMOTE_STATUS_EDITED,
+          PROMOTE_STATUS_ONLINE,
+          PROMOTE_STATUS_ON_PROMOTE,
+        ]
       }
       const { total, content } = await getPromoteList(query)
       this.options.promoteList = content.map(x => ({
