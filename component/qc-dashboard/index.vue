@@ -274,12 +274,12 @@ export default {
       const query = {
         promoteId: this.query.promoteID
       }
-      const { data, total } = (await getWordPVsList(query)) || {}
-      this.pvsList = data.map(x => x)
+      const { content = [], numberOfElements = 0 } = (await getWordPVsList(query)) || {}
+      this.pvsList = content.map(x => x)
       this.pagination = {
         ...this.pagination,
         current: page,
-        total,
+        total: numberOfElements,
       }
     },
     // 显示快照
