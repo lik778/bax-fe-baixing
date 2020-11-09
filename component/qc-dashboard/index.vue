@@ -172,7 +172,7 @@ export default {
         promoteList: []
       },
       pagination: {
-        current: 1,
+        current: 0,
         total: 0,
         size: 15,
         sizes: [10, 15, 30, 50],
@@ -298,9 +298,11 @@ export default {
       visitsData.series[0].areaStyle.color = 'rgba(255, 99, 80, .4)'
       this.visitedChartOptions = visitsData
     },
-    async initPVsData(page = 1) {
+    async initPVsData(page = 0) {
       const { targetUserId, salesId } = this.store
-      const { content = [], numberOfElements = 0 } = (await getWordPVsList({
+      const { content = [], totalElements = 0 } = (await getWordPVsList({
+        pageNumber: page,
+        pageSize: this.pagination.size,
         targetUserId,
         salesId,
         promoteId: this.query.promoteID
@@ -309,7 +311,7 @@ export default {
       this.pagination = {
         ...this.pagination,
         current: page,
-        total: numberOfElements,
+        total: totalElements,
       }
     },
     // 显示快照
