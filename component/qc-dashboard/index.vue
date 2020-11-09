@@ -238,6 +238,9 @@ export default {
       // TODO 饼图 label 不能省略
 
       const platformData = clone(this.platformChartOptions)
+      // 确保饼图中至少有一个像素的数据
+      online.web = +online.web || 1
+      online.wap = +online.wap || 1
       platformData.series[0].data = [
         { name: '电脑端', value: online.web || 0 },
         { name: '移动端', value: online.wap || 0 }
