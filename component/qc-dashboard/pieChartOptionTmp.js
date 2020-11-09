@@ -4,7 +4,11 @@ export default {
     text: '平台词数',
     subtext: '当前在线词数',
     left: 'center',
-    top: 'center'
+    top: '43%',
+    textStyle: {
+      fontSize: 16,
+      lineHeight: 10
+    }
   },
   series: [
     {

@@ -78,6 +78,7 @@ import 'echarts/lib/component/legend'
 import 'echarts/lib/component/tooltip'
 import 'echarts/lib/chart/line'
 import 'echarts/lib/chart/pie'
+import 'echarts/lib/component/title'
 
 import { getPromoteList, getWordPVsList, getWordPVsChartData, getSnapshot } from 'api/qianci'
 import { DEVICE } from 'constant/qianci'
@@ -247,8 +248,6 @@ export default {
       const { online = {}, weekData = [] } = response || {}
       const hasWeekData = weekData.length
 
-      // TODO 饼图 label 不能省略
-
       const platformData = clone(this.platformChartOptions)
       // 确保饼图中至少有一个像素的数据
       const displayOnline = clone(online)
@@ -270,9 +269,7 @@ export default {
           }
         }
       ]
-      // FIXME title 不显示？
       platformData.title.text = `${+online.web + online.wap}个`
-      console.log(platformData)
       this.platformChartOptions = platformData
 
       // TODO 动画显示问题
