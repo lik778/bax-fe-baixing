@@ -49,7 +49,7 @@
               <el-button :disabled="!row.url" type="text" size="small" @click="() => checkSnapshotPage(row)">查看</el-button>
             </template>
           </el-table-column>
-          <el-table-column label="端口" prop="plat" :formatter="({ device }) => $formatter.mapWith(device, DEVICE)" />
+          <el-table-column label="端口" prop="plat" :formatter="({ device }) => $formatter.mapWith(device, DEVICE_DASHBOARD)" />
         </el-table>
         <el-pagination
           class="pagniation"
@@ -81,7 +81,7 @@ import 'echarts/lib/chart/pie'
 import 'echarts/lib/component/title'
 
 import { getPromoteList, getWordPVsList, getWordPVsChartData, getSnapshot } from 'api/qianci'
-import { DEVICE } from 'constant/qianci'
+import { DEVICE_DASHBOARD } from 'constant/qianci'
 import { checkSupportShadowDOM, parseQuery } from 'util'
 
 import pieChartOptionTmp from './pieChartOptionTmp'
@@ -188,7 +188,7 @@ export default {
       platformChartOptions: Object.assign(platformChartOptionTmp, {}),
       pvsChartOptions: Object.assign(pvsChartOptionTmp, {}),
       visitedChartOptions: Object.assign(visitedChartOptionTmp, {}),
-      DEVICE,
+      DEVICE_DASHBOARD,
       NO_PVS_TIP
     }
   },
@@ -318,16 +318,16 @@ export default {
       let response = null
       let customClass = null
 
-      switch (device) {
-        case 'PC':
+      switch (+device) {
+        case 1:
           customClass = 'snapshot-dialog'
           break
-        case 'WAP':
+        case 2:
           customClass = 'snapshot-dialog-mobile'
           break
       }
 
-      // * for test
+      // * for test web
       // url = 'https://test-files.obs.cn-east-3.myhuaweicloud.com/snapshot.html.gz'
 
       response = await fetch(url)

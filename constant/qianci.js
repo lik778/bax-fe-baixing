@@ -64,32 +64,32 @@ export const SEO_STATUS_MAPPING = {
 export const AUDIT_STATUS_OPTIONS = [
   {
     label: 'B2B审核中',
-    values: [ AUDIT_STATUS_AUDITING_B2B ],
+    values: [AUDIT_STATUS_AUDITING_B2B],
     showAuditFailReason: false
   },
   {
     label: 'B2B词审核通过',
-    values: [ AUDIT_STATUS_PASSED_B2B ],
+    values: [AUDIT_STATUS_PASSED_B2B],
     showAuditFailReason: false
   },
   {
     label: '审核中',
-    values: [ AUDIT_STATUS_AUDITING_SUPPLIES, AUDIT_STATUS_PASSED_SUPPLIES, AUDIT_STATUS_AUDITING_SEM ],
+    values: [AUDIT_STATUS_AUDITING_SUPPLIES, AUDIT_STATUS_PASSED_SUPPLIES, AUDIT_STATUS_AUDITING_SEM],
     showAuditFailReason: false
   },
   {
     label: '审核不通过',
-    values: [ AUDIT_STATUS_REJECT_B2B, AUDIT_STATUS_REJECT_SUPPLIES, AUDIT_STATUS_REJECT_KEYWORD, AUDIT_STATUS_REJECT_SEM ],
+    values: [AUDIT_STATUS_REJECT_B2B, AUDIT_STATUS_REJECT_SUPPLIES, AUDIT_STATUS_REJECT_KEYWORD, AUDIT_STATUS_REJECT_SEM],
     showAuditFailReason: true
   },
   {
     label: '审核通过',
-    values: [ AUDIT_STATUS_PASSED_SEM ],
+    values: [AUDIT_STATUS_PASSED_SEM],
     showAuditFailReason: false
   }
 ]
 
-export function getPromoteAuditStatus (key, val) {
+export function getPromoteAuditStatus(key, val) {
   let handle = AUDIT_STATUS_OPTIONS.find(x => {
     return x[key] instanceof Array
       ? x[key].includes(val)
@@ -125,6 +125,13 @@ export const DEVICE = {
   [DEVICE_ALL]: '全平台',
   [DEVICE_PC]: '电脑端',
   [DEVICE_WAP]: '手机端'
+}
+
+export const DEVICE_DASHBOARD_PC = 1
+export const DEVICE_DASHBOARD_WAP = 2
+export const DEVICE_DASHBOARD = {
+  1: '电脑端',
+  2: '手机端'
 }
 
 export const isExpandWordStatusError = status => [
