@@ -216,6 +216,8 @@ export default {
       })
       const hasWeekData = weekData.length
 
+      // TODO 饼图 label 不能省略
+
       const platformData = clone(this.platformChartOptions)
       platformData.series[0].data = [
         { name: '电脑端', value: online.web || 0 },
@@ -250,7 +252,9 @@ export default {
       this.visitedChartOptions = visitsData
     },
     async initPVsData(page = 1) {
-      const query = {}
+      const query = {
+        promoteId: this.query.promoteID
+      }
       const { data, total } = (await getWordPVsList(query)) || {}
       this.pvsList = data.map(x => x)
       this.pagination = {
@@ -261,18 +265,27 @@ export default {
     },
     // 显示快照
     async checkSnapshotPage(item = {}) {
-      const { device } = item
+      let { device, url } = item
       let response = null
       let customClass = null
 
-      // TODO sentry
-      const url = 'https://test-files.obs.cn-east-3.myhuaweicloud.com/snapshot.html.gz'
+      switch (device) {
+        case 'PC':
+          customClass = 'snapshot-dialog'
+          break
+        case 'WAP':
+          customClass = 'snapshot-dialog-mobile'
+          break
+      }
+
+      // * for test
+      // url = 'https://test-files.obs.cn-east-3.myhuaweicloud.com/snapshot.html.gz'
+
       response = await fetch(url)
         .then(res => {
           console.log(res)
           return res.arrayBuffer()
         })
-      customClass = 'snapshot-dialog'
 
       const compressed = new Uint8Array(response)
       const decompressed = decompressSync(compressed)
@@ -295,6 +308,7 @@ export default {
           shadow.innerHTML = (html + snapshotFix)
         })
       } else {
+        // TODO 用 iframe 做 backup
         this.$alert(html, '快照详情', pageOptions)
       }
 

@@ -131,69 +131,10 @@ export async function getPromoteList(opts = {}) {
   }
 }
 
+// 获取报表页图表接口
 export async function getWordPVsChartData(opts = {}) {
-  if (useTestData) {
-    await pause()
-    return {
-      online: {
-        wap: 278,
-        web: 343
-      },
-      weekData: [
-        {
-          // click: 820,
-          // shows: 820,
-          click: 0,
-          shows: 0,
-          dayTime: '2018-09-23',
-        },
-        {
-          // click: 932,
-          // shows: 932,
-          click: 0,
-          shows: 0,
-          dayTime: '2018-09-24',
-        },
-        {
-          // click: 901,
-          // shows: 901,
-          click: 0,
-          shows: 0,
-          dayTime: '2018-09-25',
-        },
-        {
-          // click: 934,
-          // shows: 934,
-          click: 0,
-          shows: 0,
-          dayTime: '2018-09-26',
-        },
-        {
-          // click: 1290,
-          // shows: 1290,
-          click: 0,
-          shows: 0,
-          dayTime: '2018-09-27',
-        },
-        {
-          // click: 1330,
-          // shows: 1330,
-          click: 0,
-          shows: 0,
-          dayTime: '2018-09-28',
-        },
-        {
-          // click: 1320,
-          // shows: 1320,
-          click: 0,
-          shows: 0,
-          dayTime: '2018-09-29',
-        },
-      ]
-    }
-  }
   return (await qianci
-    .get('/keyword/data')
+    .get('/promote/keyword/data')
     .query(opts)
     .json())
     .data
@@ -201,22 +142,8 @@ export async function getWordPVsChartData(opts = {}) {
 
 // 获取报表页计划的关键词数据列表
 export async function getWordPVsList(opts = {}) {
-  if (useTestData) {
-    const data = Array.apply(null, { length: 15 }).map((x, i) => ({
-      id: String(i),
-      keyword: '核心词',
-      device: ['ALL', 'PC', 'WAB'][Math.floor(Math.random() * 2)],
-      url: 'www.baidu.com',
-      urlTime: Math.floor(+new Date() / 1000),
-    }))
-    await pause()
-    return {
-      data,
-      total: data.length * 5
-    }
-  }
   return (await qianci
-    .get('')
+    .get('/promote/keyword/report')
     .query(opts)
     .json())
     .data
