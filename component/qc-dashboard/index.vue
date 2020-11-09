@@ -249,7 +249,7 @@ export default {
       const pvsData = clone(this.pvsChartOptions)
       pvsData.series[0].name = '关键词曝光量'
       if (hasWeekData) {
-        pvsData.xAxis.data = weekData.map(x => x.dayTime)
+        pvsData.xAxis.data = weekData.map(x => dayjs(x.dayTime ? String(x.dayTime).replace(/^(\d{4})(\d{2})(\d{2]})$/g, '$1-$2-$3') : '').format('YYYY-MM-DD'))
         pvsData.series[0].data = weekData.map(x => +x.shows)
       } else {
         pvsData.xAxis.data = [dayjs().format('YYYY-MM-DD')]
@@ -261,7 +261,7 @@ export default {
       const visitsData = clone(this.visitedChartOptions)
       visitsData.series[0].name = '最近7天访问量'
       if (hasWeekData) {
-        visitsData.xAxis.data = weekData.map(x => x.dayTime)
+        visitsData.xAxis.data = weekData.map(x => dayjs(x.dayTime ? String(x.dayTime).replace(/^(\d{4})(\d{2})(\d{2]})$/g, '$1-$2-$3') : '').format('YYYY-MM-DD'))
         visitsData.series[0].data = weekData.map(x => +x.click)
       } else {
         visitsData.xAxis.data = [dayjs().format('YYYY-MM-DD')]
