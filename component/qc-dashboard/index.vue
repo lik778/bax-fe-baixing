@@ -178,7 +178,7 @@ export default {
         promoteList: []
       },
       pagination: {
-        current: 0,
+        current: 1,
         total: 0,
         size: 15,
         sizes: [10, 15, 30, 50],
@@ -302,11 +302,11 @@ export default {
       visitsData.series[0].areaStyle.color = 'rgba(255, 99, 80, .4)'
       this.visitedChartOptions = visitsData
     },
-    async initPVsData(page = 0) {
+    async initPVsData(page = 1) {
       const { targetUserId, salesId } = this.store
       const { content = [], totalElements = 0 } = (await getWordPVsList({
-        pageNumber: page,
-        pageSize: this.pagination.size,
+        page: page - 1,
+        size: this.pagination.size,
         targetUserId,
         salesId,
         promoteId: this.query.promoteID
