@@ -13,7 +13,7 @@
         />
       </el-select>
 
-      <header class="chart-header">搜索引擎查询比例<span class="side-header strong">(当前投放时间太短，请8天后查看)</span></header>
+      <header class="chart-header">搜索引擎查询比例<span v-if="visible.showNoPVsDataTip" class="side-header strong">({{NO_PVS_TIP}})</span></header>
 
       <div class="charts-con">
         <div class="chart-con platform-chart">
@@ -151,6 +151,8 @@ const visitedChartOptionTmp = Object.assign(clone(lineChartOptionTmp), {
   }]
 })
 
+const NO_PVS_TIP = '当前投放时间太短，请8天后查看'
+
 // ******************************* Vue
 export default {
   name: "qc-dashboard",
@@ -174,20 +176,34 @@ export default {
         size: 15,
         sizes: [10, 15, 30, 50],
       },
+      visible: {
+        showNoPVsDataTip: false,
+      },
       pvsList: [],
       platformChartOptions: Object.assign(platformChartOptionTmp, {}),
       pvsChartOptions: Object.assign(pvsChartOptionTmp, {}),
       visitedChartOptions: Object.assign(visitedChartOptionTmp, {}),
-      DEVICE
+      DEVICE,
+      NO_PVS_TIP
+    }
+  },
+  watch: {
+    'query.promoteID': {
+      handler(n, o) {
+        if (n) {
+          const showNoPVsDataTip = (dayjs(this.options.promoteList.find(x => x.id == n).createdTime) - dayjs()) < -1 * (3600 * 24 * 8)
+          if (showNoPVsDataTip) {
+            this.visible.showNoPVsDataTip = true
+          }
+        }
+      }
     }
   },
   async created() {
     await this.initPromoteListOptions()
-    this.initCharts()
-    this.initPVsData()
-
-    window.addEventListener('resize', () => this.initCharts())
-    this.$on('hook:beforeDestroy', window.removeEventListener('resize', this.initCharts))
+    // TODO chart resize
+    // window.addEventListener('resize', () => this.initCharts())
+    // this.$on('hook:beforeDestroy', window.removeEventListener('resize', this.initCharts))
   },
   methods: {
     // 初始化推广计划列表
@@ -202,6 +218,7 @@ export default {
       }
       const { total, content } = await getPromoteList(query)
       this.options.promoteList = content.map(x => ({
+        ...x,
         label: x.coreWord,
         value: +x.id
       }))
@@ -316,6 +333,17 @@ export default {
 
     selectPromote(id) {
       this.query.promoteID = +id
+      this.$nextTick(() => {
+        if (!this.visible.showNoPVsDataTip) {
+          this.initCharts()
+          this.initPVsData()
+        } else {
+          this.$message({
+            message: NO_PVS_TIP,
+            type: 'warning'
+          })
+        }
+      })
     },
     handleSizeChange(size) {
       this.pagination.size = size
