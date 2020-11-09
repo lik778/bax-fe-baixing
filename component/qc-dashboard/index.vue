@@ -210,10 +210,11 @@ export default {
     async initCharts() {
       const {
         online = {},
-        weekData = {}
+        weekData = []
       } = await getWordPVsChartData({
         promoteId: this.query.promoteID
       })
+      const hasWeekData = weekData.length
 
       const platformData = clone(this.platformChartOptions)
       platformData.series[0].data = [
@@ -226,15 +227,25 @@ export default {
 
       const pvsData = clone(this.pvsChartOptions)
       pvsData.series[0].name = '关键词曝光量'
-      pvsData.xAxis.data = weekData.map(x => x.dayTime)
-      pvsData.series[0].data = weekData.map(x => +x.shows)
+      if (hasWeekData) {
+        pvsData.xAxis.data = weekData.map(x => x.dayTime)
+        pvsData.series[0].data = weekData.map(x => +x.shows)
+      } else {
+        pvsData.xAxis.data = [dayjs().format('YYYY-MM-DD')]
+        pvsData.series[0].data = [0]
+      }
       pvsData.series[0].areaStyle.color = 'rgba(53, 165, 228, .4)'
       this.pvsChartOptions = pvsData
 
       const visitsData = clone(this.visitedChartOptions)
       visitsData.series[0].name = '最近7天访问量'
-      visitsData.xAxis.data = weekData.map(x => x.dayTime)
-      visitsData.series[0].data = weekData.map(x => +x.click)
+      if (hasWeekData) {
+        visitsData.xAxis.data = weekData.map(x => x.dayTime)
+        visitsData.series[0].data = weekData.map(x => +x.click)
+      } else {
+        visitsData.xAxis.data = [dayjs().format('YYYY-MM-DD')]
+        visitsData.series[0].data = [0]
+      }
       visitsData.series[0].areaStyle.color = 'rgba(255, 99, 80, .4)'
       this.visitedChartOptions = visitsData
     },
@@ -250,7 +261,7 @@ export default {
     },
     // 显示快照
     async checkSnapshotPage(item = {}) {
-      const { platform } = item
+      const { device } = item
       let response = null
       let customClass = null
 
