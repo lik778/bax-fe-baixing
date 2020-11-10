@@ -2,9 +2,8 @@
   <div class="page">
     <header>数据概览<span class="side-header warning">每日数据统计存在一定延时</span></header>
 
-    <el-button @click="() => checkSnapshotPage({
-      url: 'http://sem.baixing.net/dev2725.html'
-    })">TEST</el-button>
+    <!-- test snapshot -->
+    <!-- <el-button @click="() => checkSnapshotPage({ url: 'http://sem.baixing.net/dev2725.html' })">TEST</el-button> -->
 
     <section class="page-section" style="margin-top: 20px">
       <span style="font-size: 14px">选择推广计划：</span>
@@ -405,9 +404,12 @@ export default {
         this.$alert(html, '快照详情', pageOptions)
       }
 
-      // remove clicble link
+      // 防止链接可点击
       this.$nextTick(() => {
-        // TODO
+        const container = document.querySelector('.' + wrapperClass)
+        if (container) {
+          [...(container.shadowRoot || container).querySelectorAll('a')].map(a => a.removeAttribute('href'))
+        }
       })
 
     },
