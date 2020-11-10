@@ -41,6 +41,7 @@ export default {
   },
   yAxis: {
     type: 'value',
+    minInterval: 1,
     axisLine: {
       show: false
     },

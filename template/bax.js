@@ -161,7 +161,7 @@ Vue.use(Vue2Filters)
 // ElementUI formatter
 Vue.prototype.$formatter = {
   join: (arrs = [], seq = '、') => arrs.join(seq),
-  date: (time = '') => dayjs(time).format('YYYY-MM-DD'),
+  date: (time = '') => !time ? time : dayjs(time).format('YYYY-MM-DD'),
   mapWith: (key = '', obj = {}) => obj[key]
 }
 
@@ -220,28 +220,31 @@ const bwRoutes = [{
   name: 'bw-manual'
 }]
 
-
 const qcRoutes = [{
-    component: () => import('com/qc-create-promote'),
-    path: '/main/qc/create',
-    name: 'qc-create-promote'
-  }, {
-    component: () => import('com/qc-promote-list'),
-    path: '/main/qc/promote-list',
-    name: 'qc-promote-list'
-  }, {
-    component: () => import('com/qc-word-list'),
-    path: '/main/qc/word-list',
-    name: 'qc-word-list'
-  }, {
-    component: () => import('com/qc-keyword-list'),
-    path: '/main/qc/keyword-list',
-    name: 'qc-keyword-list',
-    hidden: true
-  }, {
-    component: () => import('com/qc-creative'),
-    path: '/main/qc/creative',
-    name: 'qc-creative'
+  component: () => import('com/qc-create-promote'),
+  path: '/main/qc/create',
+  name: 'qc-create-promote'
+}, {
+  component: () => import('com/qc-promote-list'),
+  path: '/main/qc/promote-list',
+  name: 'qc-promote-list'
+}, {
+  component: () => import('com/qc-word-list'),
+  path: '/main/qc/word-list',
+  name: 'qc-word-list'
+}, {
+  component: () => import('com/qc-keyword-list'),
+  path: '/main/qc/keyword-list',
+  name: 'qc-keyword-list',
+  hidden: true
+}, {
+  component: () => import('com/qc-creative'),
+  path: '/main/qc/creative',
+  name: 'qc-creative'
+}, {
+  component: () => import('com/qc-dashboard'),
+  path: '/main/qc/dashboard',
+  name: 'qc-dashboard'
 }]
 
 const qwtRoutes = [{

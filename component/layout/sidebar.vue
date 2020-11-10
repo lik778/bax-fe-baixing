@@ -144,14 +144,13 @@
               </i>标王推广报表
             </router-link>
           </el-menu-item>
-          <!-- 暂时隐藏 -->
-          <!-- <el-menu-item index="qc-dashboard">
+          <el-menu-item index="qc-dashboard">
             <router-link :to="{ name: 'qc-dashboard'}" tag="p">
               <i class="material-icons"
                  style="font-size: 16px; margin-right: 11px; vertical-align: -3px;">
               </i>易慧推报表
             </router-link>
-          </el-menu-item> -->
+          </el-menu-item>
         </el-submenu>
 
         <el-submenu index="ssp" v-show="allowSeeBxAd">

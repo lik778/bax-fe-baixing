@@ -1,6 +1,14 @@
 export default {
   title: {
-    show: false
+    show: true,
+    text: '平台词数',
+    subtext: '当前在线词数',
+    left: 'center',
+    top: '43%',
+    textStyle: {
+      fontSize: 16,
+      lineHeight: 10
+    }
   },
   series: [
     {
@@ -9,25 +17,18 @@ export default {
       radius: ['45%', '75%'],
       label: {
         show: true,
-        padding: 10,
+        formatter: '{b}',
+        backgroundColor: 'white',
+        borderColor: '#ddd',
+        borderWidth: 1,
         borderRadius: 2,
-        borderWidth: 1
-        // borderColor: '#888'
+        padding: [8, 6]
       },
       labelLine: {
         show: true
       },
       color: ['#35a5e4', '#ffa205'],
-      data: [
-        {
-          name: '电脑端',
-          value: 335
-        },
-        {
-          name: '移动端',
-          value: 87
-        }
-      ]
+      data: []
     }
   ]
 }
