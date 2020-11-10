@@ -1,6 +1,6 @@
 <template>
   <div class="page">
-    <header>数据概览<span class="side-header warning">今日数据存在一定延时，且最近1小时内的展现数据会存在波动</span></header>
+    <header>数据概览<span class="side-header warning">每日数据统计存在一定延时</span></header>
 
     <section class="page-section" style="margin-top: 20px">
       <span style="font-size: 14px">选择推广计划：</span>
