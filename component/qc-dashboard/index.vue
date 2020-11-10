@@ -3,7 +3,8 @@
     <header>数据概览<span class="side-header warning">每日数据统计存在一定延时</span></header>
 
     <!-- test snapshot -->
-    <!-- <el-button @click="() => checkSnapshotPage({ url: 'http://sem.baixing.net/dev2725.html' })">TEST</el-button> -->
+    <!-- <el-button @click="() => checkSnapshotPage({ device: 1, url: 'http://sem.baixing.net/dev2725.html' })">PC</el-button>
+    <el-button @click="() => checkSnapshotPage({ device: 2, url: 'http://sem.baixing.net/dev6040.html' })">WAP</el-button> -->
 
     <section class="page-section" style="margin-top: 20px">
       <span style="font-size: 14px">选择推广计划：</span>
@@ -350,21 +351,17 @@ export default {
       let customClass = null
 
       switch (+device) {
+        case 1:
+          customClass = 'snapshot-dialog'
+          break
         case 2:
           customClass = 'snapshot-dialog-mobile'
-          break
-        case 1:
-        default:
-          customClass = 'snapshot-dialog'
           break
       }
 
       const isURLGziped = /\.gz$/.test(url)
       if (isURLGziped) {
-        response = await fetch(url)
-          .then(res => {
-            return res.arrayBuffer()
-          })
+        response = await fetch(url).then(res => res.arrayBuffer())
         const compressed = new Uint8Array(response)
         const decompressed = decompressSync(compressed)
         html = secureHTML(buffer2string(decompressed))
@@ -384,18 +381,26 @@ export default {
         showCancelButton: false,
         closeOnPressEscape: true
       }
+
+      // Wrapper 类名
       const randomID = String(Math.random()).slice(-6)
       const wrapperClass = `snapshot-content-${randomID}`
+
+      // 快照样式修复
+      // FIXME 也许是 secureHTML 时把某些样式代码意外去掉了，所以才加 modHDStyle 修复
+      const modHDStyle = '#page-hd{position: static;background-color: #fff;visibility: visible;text-align: center;}'
+      const snapshotFix = `<style>/*这里可以放一些快照页面样式的修复代码*/${modHDStyle}</style>`
+      html += snapshotFix
+
       if (supportShadowDOM) {
         this.$alert(`<div class="${wrapperClass}" />`, '快照详情', pageOptions)
         this.$nextTick(() => {
           try {
             const container = document.querySelector('.' + wrapperClass)
             const shadow = container.attachShadow({ mode: 'open' })
-            const snapshotFix = '<style>/*这里可以放一些快照页面样式的修复代码*/</style>'
-            shadow.innerHTML = (html + snapshotFix)
+            shadow.innerHTML = (html)
           } catch (error) {
-            this.$alert(html + snapshotFix, '快照详情', pageOptions)
+            this.$alert(html, '快照详情', pageOptions)
             throw new Error(error)
           }
         })
