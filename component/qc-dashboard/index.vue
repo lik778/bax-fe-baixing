@@ -39,7 +39,7 @@
           class="query-table"
           border
           :data="displayedShowList"
-          :empty-text="NO_PVS_TIP"
+          :empty-text="loading.showNoListData ? NO_PVS_TIP : '...'"
           :span-method="paddingNoData"
         >
           <el-table-column label="关键词" prop="keyword" />
@@ -343,26 +343,32 @@ export default {
     // 显示快照
     async checkSnapshotPage(item = {}) {
       let { device, url } = item
-      let response = null
+      let response = null, html = null
       let customClass = null
 
       switch (+device) {
-        case 1:
-          customClass = 'snapshot-dialog'
-          break
         case 2:
           customClass = 'snapshot-dialog-mobile'
           break
+        case 1:
+        default:
+          customClass = 'snapshot-dialog'
+          break
       }
 
-      response = await fetch(url)
-        .then(res => {
-          return res.arrayBuffer()
-        })
-
-      const compressed = new Uint8Array(response)
-      const decompressed = decompressSync(compressed)
-      const html = secureHTML(buffer2string(decompressed))
+      const isURLGziped = /\.gz$/.test(url)
+      if (isURLGziped) {
+        response = await fetch(url)
+          .then(res => {
+            return res.arrayBuffer()
+          })
+        const compressed = new Uint8Array(response)
+        const decompressed = decompressSync(compressed)
+        html = secureHTML(buffer2string(decompressed))
+      } else {
+        // ungziped backup
+        html = await fetch(url).then(data => data.text())
+      }
 
       const supportShadowDOM = checkSupportShadowDOM()
       const pageOptions = {

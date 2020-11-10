@@ -147,6 +147,7 @@ export async function getWordPVsList(opts = {}) {
   //     keyword: '核心词',
   //     device: [1, 2][Math.floor(Math.random() * 1)],
   //     url: 'https://test-files.obs.cn-east-3.myhuaweicloud.com/snapshot.html.gz',
+  //     url: 'https://test-files.obs.cn-east-3.myhuaweicloud.com/snapshot.html',
   //     urlTime: Math.floor(+new Date()),
   //     rank: (Math.random() < .5)
   //       ? 1
