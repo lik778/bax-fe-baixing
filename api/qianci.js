@@ -141,24 +141,23 @@ export async function getWordPVsChartData(opts = {}) {
 
 // 获取报表页计划的关键词数据列表
 export async function getWordPVsList(opts = {}) {
-  if (useTestData) {
-    const data = Array.apply(null, { length: 15 }).map((x, i) => ({
-      id: String(i),
-      keyword: '核心词',
-      device: [1, 2][Math.floor(Math.random() * 1)],
-      url: (Math.random() < .5)
-        ? 'www.baidu.com'
-        : '',
-      urlTime: (Math.random() < .5)
-        ? Math.floor(+new Date())
-        : '',
-    }))
-    await pause()
-    return {
-      content: data,
-      totalElements: data.length * 5
-    }
-  }
+  // if (useTestData) {
+  //   const data = Array.apply(null, { length: 15 }).map((x, i) => ({
+  //     id: String(i),
+  //     keyword: '核心词',
+  //     device: [1, 2][Math.floor(Math.random() * 1)],
+  //     url: 'https://test-files.obs.cn-east-3.myhuaweicloud.com/snapshot.html.gz',
+  //     urlTime: Math.floor(+new Date()),
+  //     rank: (Math.random() < .5)
+  //       ? 1
+  //       : 0,
+  //   }))
+  //   await pause()
+  //   return {
+  //     content: data,
+  //     totalElements: data.length * 5
+  //   }
+  // }
   return (await qianci
     .get('/promote/keyword/report')
     .query(opts)

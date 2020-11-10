@@ -13,7 +13,7 @@
         />
       </el-select>
 
-      <header class="chart-header">搜索引擎查询比例<span v-if="visible.showNoPVsDataTip" class="side-header strong">({{NO_PVS_TIP}})</span></header>
+      <header class="chart-header">搜索引擎查询比例<span v-if="visible.showNoChartData" class="side-header strong">({{NO_PVS_TIP}})</span></header>
 
       <div class="charts-con">
         <div class="chart-con platform-chart">
@@ -35,21 +35,27 @@
     <el-tabs class="words-pvs-tabs" v-model="active.tab">
       <el-tab-pane label="所有关键字" name="allTab">
 
-        <el-table class="query-table" border :data="displayedShowList" :span-method="paddingNoData">
+        <el-table
+          class="query-table"
+          border
+          :data="displayedShowList"
+          :empty-text="NO_PVS_TIP"
+          :span-method="paddingNoData"
+        >
           <el-table-column label="关键词" prop="keyword" />
           <el-table-column label="搜索引擎">
             <template>百度</template>
           </el-table-column>
           <el-table-column label="位置">
             <template slot-scope="{row}">
-              <span v-if="row.urlTime">首页</span>
+              <span v-if="row.rank">首页</span>
               <p v-else>优选中，请稍后...</p>
             </template>
           </el-table-column>
           <el-table-column label="快照日期" width="160" :formatter="({ urlTime }) => $formatter.date(urlTime)" />
           <el-table-column label="快照">
             <template slot-scope="{row}">
-              <el-button :disabled="!row.url || !row.urlTime" type="text" size="small" @click="() => checkSnapshotPage(row)">查看</el-button>
+              <el-button :disabled="!row.url || !+row.rank" type="text" size="small" @click="() => checkSnapshotPage(row)">查看</el-button>
             </template>
           </el-table-column>
           <el-table-column label="端口" prop="plat" :formatter="({ device }) => $formatter.mapWith(device, DEVICE_DASHBOARD)" />
@@ -187,7 +193,8 @@ export default {
         sizes: [10, 15, 30, 50],
       },
       visible: {
-        showNoPVsDataTip: false,
+        showNoChartData: false,
+        showNoListData: false
       },
       loading: {
         charts: false
@@ -241,16 +248,19 @@ export default {
     },
     async initCharts() {
       const { targetUserId, salesId } = this.store
-      this.loading.charts = true
+      const query = {
+        targetUserId,
+        salesId,
+        promoteId: this.query.promoteID
+      }
       let response = null
       try {
-        response = await getWordPVsChartData({
-          targetUserId,
-          salesId,
-          promoteId: this.query.promoteID
-        })
+        this.loading.charts = true
+        this.visible.showNoChartData = false
+        response = await getWordPVsChartData(query)
       } catch(error) {
-        this.visible.showNoPVsDataTip = true
+        this.visible.showNoChartData = true
+        throw new Error(error)
       } finally {
         this.loading.charts = false
       }
@@ -307,13 +317,22 @@ export default {
     },
     async initPVsData(page = 1) {
       const { targetUserId, salesId } = this.store
-      const { content = [], totalElements = 0 } = (await getWordPVsList({
+      const query = {
         page: page - 1,
         size: this.pagination.size,
         targetUserId,
         salesId,
         promoteId: this.query.promoteID
-      })) || {}
+      }
+      let response = null
+      try {
+        this.loading.showNoListData = false
+        response = await getWordPVsList(query)
+      } catch(error) {
+        this.loading.showNoListData = true
+        throw new Error(error)
+      }
+      const { content = [], totalElements = 0 } = response || {}
       this.pvsList = content.map(x => x)
       this.pagination = {
         ...this.pagination,
@@ -335,9 +354,6 @@ export default {
           customClass = 'snapshot-dialog-mobile'
           break
       }
-
-      // * for test web
-      // url = 'https://test-files.obs.cn-east-3.myhuaweicloud.com/snapshot.html.gz'
 
       response = await fetch(url)
         .then(res => {
@@ -387,7 +403,7 @@ export default {
       this.$on('hook:beforeDestroy', window.removeEventListener('resize', this.initCharts))
     },
     paddingNoData({ row, rowIndex, columnIndex }) {
-      const isDisabled = !row.urlTime
+      const isDisabled = !+row.rank
       if (isDisabled) {
         if (columnIndex == 2) {
           return {
@@ -448,6 +464,10 @@ export default {
 }
 .pagniation {
   margin-top: 1em;
+}
+.el-table /deep/ .el-table__empty-text {
+  height: 235px;
+  line-height: 235px;
 }
 </style>
 
