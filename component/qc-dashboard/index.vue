@@ -35,18 +35,21 @@
     <el-tabs class="words-pvs-tabs" v-model="active.tab">
       <el-tab-pane label="所有关键字" name="allTab">
 
-        <el-table class="query-table" border :data="displayedShowList">
+        <el-table class="query-table" border :data="displayedShowList" :span-method="paddingNoData">
           <el-table-column label="关键词" prop="keyword" />
           <el-table-column label="搜索引擎">
             <template>百度</template>
           </el-table-column>
           <el-table-column label="位置">
-            <span>首页</span>
+            <template slot-scope="{row}">
+              <span v-if="row.urlTime">首页</span>
+              <p v-else>优选中，请稍后...</p>
+            </template>
           </el-table-column>
           <el-table-column label="快照日期" width="160" :formatter="({ urlTime }) => $formatter.date(urlTime)" />
           <el-table-column label="快照">
             <template slot-scope="{row}">
-              <el-button :disabled="!row.url" type="text" size="small" @click="() => checkSnapshotPage(row)">查看</el-button>
+              <el-button :disabled="!row.url || !row.urlTime" type="text" size="small" @click="() => checkSnapshotPage(row)">查看</el-button>
             </template>
           </el-table-column>
           <el-table-column label="端口" prop="plat" :formatter="({ device }) => $formatter.mapWith(device, DEVICE_DASHBOARD)" />
@@ -382,6 +385,22 @@ export default {
     listenChartResize() {
       window && window.addEventListener('resize', () => this.initCharts())
       this.$on('hook:beforeDestroy', window.removeEventListener('resize', this.initCharts))
+    },
+    paddingNoData({ row, rowIndex, columnIndex }) {
+      const isDisabled = !row.urlTime
+      if (isDisabled) {
+        if (columnIndex == 2) {
+          return {
+            colspan: 3,
+            rowspan: 1,
+          }
+        } else if (columnIndex == 3 || columnIndex == 4) {
+          return {
+            colspan: 0,
+            rowspan: 0,
+          }
+        }
+      }
     }
   }
 }

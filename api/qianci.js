@@ -40,7 +40,6 @@ export async function createPreferredWords(opts) {
     .json()
 }
 
-
 // 获取万词地址
 export function getWanciSeoRedirect(promoteId) {
   return `${qcApiHost}/promote/seo/redirect?promoteId=${promoteId}`
@@ -142,6 +141,24 @@ export async function getWordPVsChartData(opts = {}) {
 
 // 获取报表页计划的关键词数据列表
 export async function getWordPVsList(opts = {}) {
+  if (useTestData) {
+    const data = Array.apply(null, { length: 15 }).map((x, i) => ({
+      id: String(i),
+      keyword: '核心词',
+      device: [1, 2][Math.floor(Math.random() * 1)],
+      url: (Math.random() < .5)
+        ? 'www.baidu.com'
+        : '',
+      urlTime: (Math.random() < .5)
+        ? Math.floor(+new Date())
+        : '',
+    }))
+    await pause()
+    return {
+      content: data,
+      totalElements: data.length * 5
+    }
+  }
   return (await qianci
     .get('/promote/keyword/report')
     .query(opts)
