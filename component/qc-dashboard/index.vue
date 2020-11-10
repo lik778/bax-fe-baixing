@@ -2,6 +2,10 @@
   <div class="page">
     <header>数据概览<span class="side-header warning">每日数据统计存在一定延时</span></header>
 
+    <el-button @click="() => checkSnapshotPage({
+      url: 'http://sem.baixing.net/dev2725.html'
+    })">TEST</el-button>
+
     <section class="page-section" style="margin-top: 20px">
       <span style="font-size: 14px">选择推广计划：</span>
       <el-select v-model="query.promoteID" placeholder="推广计划" clearable @change="selectPromote">
@@ -111,7 +115,7 @@ function buffer2string(data) {
   return decodeURIComponent(escape(result))
 }
 
-// HTML 源码清洗，仅保留 HTML 和 CSS，a 标签不可点击
+// HTML 源码清洗，仅保留 HTML 和 CSS
 function secureHTML(html) {
   return html
     .replace(/<!--[^-]*-->/img, '')
@@ -367,8 +371,11 @@ export default {
         html = secureHTML(buffer2string(decompressed))
       } else {
         // ungziped backup
-        html = await fetch(url).then(data => data.text())
+        response = await fetch(url).then(data => data.text())
+        html = secureHTML(response)
       }
+
+      // console.log('html: ', html)
 
       const supportShadowDOM = checkSupportShadowDOM()
       const pageOptions = {
@@ -378,18 +385,30 @@ export default {
         showCancelButton: false,
         closeOnPressEscape: true
       }
+      const randomID = String(Math.random()).slice(-6)
+      const wrapperClass = `snapshot-content-${randomID}`
       if (supportShadowDOM) {
-        this.$alert('<div class="snapshot-content" />', '快照详情', pageOptions)
+        this.$alert(`<div class="${wrapperClass}" />`, '快照详情', pageOptions)
         this.$nextTick(() => {
-          const container = document.querySelector('.snapshot-content')
-          const shadow = container.attachShadow({ mode: 'open' })
-          const snapshotFix = '<style>/*这里可以放一些快照页面样式的修复代码*/</style>'
-          shadow.innerHTML = (html + snapshotFix)
+          try {
+            const container = document.querySelector('.' + wrapperClass)
+            const shadow = container.attachShadow({ mode: 'open' })
+            const snapshotFix = '<style>/*这里可以放一些快照页面样式的修复代码*/</style>'
+            shadow.innerHTML = (html + snapshotFix)
+          } catch (error) {
+            this.$alert(html + snapshotFix, '快照详情', pageOptions)
+            throw new Error(error)
+          }
         })
       } else {
         // TODO 用 iframe 做 backup
         this.$alert(html, '快照详情', pageOptions)
       }
+
+      // remove clicble link
+      this.$nextTick(() => {
+        // TODO
+      })
 
     },
 
