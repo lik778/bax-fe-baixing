@@ -607,7 +607,7 @@ export default {
 }
 </script>
 
-<style lang="postcss">
+<style lang="postcss" scoped>
 .intro {
   position: fixed;
   top: 0;
