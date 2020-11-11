@@ -36,6 +36,8 @@
 
 <script>
 
+const WORD_REG = /^[\u4e00-\u9fa5a-zA-Z0-9]+$/
+
 export default {
   name: 'KeywordInput',
   props: {
@@ -77,6 +79,9 @@ export default {
       this.handleClose()
     },
     handleConfirm() {
+      if (!WORD_REG.test(this.words)) {
+        return this.$message.error(`${this.type}类只支持中文、英文字母和数字`)
+      }
       this.$emit('words', {
         words: this.words,
         type: this.type
