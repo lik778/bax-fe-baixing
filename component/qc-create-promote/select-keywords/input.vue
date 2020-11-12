@@ -36,7 +36,7 @@
 
 <script>
 
-const WORD_REG = /^[\u4e00-\u9fa5a-zA-Z0-9]+$/
+const WORD_REG = /^[\u4e00-\u9fa5a-zA-Z0-9\n，,]+$/
 
 export default {
   name: 'KeywordInput',
