@@ -388,11 +388,15 @@ export default {
 
       // 快照样式修复
       // FIXME 也许是 secureHTML 时把某些样式代码意外去掉了，所以才加 modHDStyle 修复
-      const modHDStyle = '#page-hd{position: static;background-color: #fff;visibility: visible;text-align: center;}'
+      const modHDStyle = '#page-hd{position:static;background-color:#fff;visibility:visible;text-align:center}'
       const snapshotFix = `<style>/*这里可以放一些快照页面样式的修复代码*/${modHDStyle}</style>`
       html += snapshotFix
 
-      if (supportShadowDOM) {
+      // 使用 ShadowDOM 防止样式污染，
+      // 可换作 iframe 做备选方案
+      if (!supportShadowDOM) {
+        this.$alert(html, '快照详情', pageOptions)
+      } else {
         this.$alert(`<div class="${wrapperClass}" />`, '快照详情', pageOptions)
         this.$nextTick(() => {
           try {
@@ -404,9 +408,6 @@ export default {
             throw new Error(error)
           }
         })
-      } else {
-        // TODO 用 iframe 做 backup
-        this.$alert(html, '快照详情', pageOptions)
       }
 
       // 防止链接可点击

@@ -15,14 +15,18 @@ export default {
       name: '访问来源',
       type: 'pie',
       radius: ['45%', '75%'],
+      // radius: ['50%', '92%'],
       label: {
-        show: true,
-        formatter: '{b}',
+        // position: 'inner'
+        formatter: '{richri|{b}}',
         backgroundColor: 'white',
         borderColor: '#ddd',
         borderWidth: 1,
         borderRadius: 2,
-        padding: [8, 6]
+        margin: 20,
+        padding: [8, 6],
+        alignTo: 'edge',
+        rich: {}
       },
       labelLine: {
         show: true
