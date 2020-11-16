@@ -34,7 +34,7 @@
           <a class="link-btn"
             @click="$router.push({
               name: 'qc-keyword-list', 
-              query: { promoteId: row.id, ...this.$route.query }
+              query: { promoteId: row.id, ...$route.query }
             })">
             {{row.coreWord}}
           </a>
