@@ -19,9 +19,10 @@
           <main>
             <section>
               <price-tag v-for="(product, index) in allProducts.slice(0, 4)" :key="index"
-                :editable="product.editable" :price="product.price"
+                :editable="product.editable" 
+                :price="centToYuan(product.price)"
                 :checked="checkedProducts.includes(product)"
-                :minInputPrice="parseInt(minInputPrice / 100)"
+                :minInputPrice="centToYuan(minInputPrice)"
                 @click="toggleProduct(product)"
                 @change="(v)=> product.price = v">
               </price-tag>
@@ -606,7 +607,7 @@ export default {
 }
 </script>
 
-<style lang="postcss">
+<style lang="postcss" scoped>
 .intro {
   position: fixed;
   top: 0;

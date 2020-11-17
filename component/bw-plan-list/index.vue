@@ -66,7 +66,7 @@
           <el-table-column label="操作" min-width="160px">
             <template slot-scope="scope">
               <router-link v-if="!isBxSales && !isAgentAccounting" :to="{name: 'bw-edit-plan', query: {promoteId: scope.row.id}}"><el-button type="text" size="small">编辑</el-button></router-link>
-              <el-button v-if="canXufei(scope.row) && !userInfo.sstAgent" size="small" type="text"
+              <el-button v-if="canXufei(scope.row) && !userInfo.shAgent" size="small" type="text"
                          :disabled="disabledXuFeiBtn(scope.row)" 
                          @click="onXufei(scope.row)">续费</el-button>
               <router-link :to="{name: 'bw-dashboard', query: {promoteId: scope.row.id, keyword: scope.row.word}}">
@@ -90,13 +90,23 @@
         <bax-pagination :options="query" @current-change="onCurrentChange" />
       </main>
 
-      <el-dialog :visible.sync="xufeiDialogVisible" title="标王续费">
+      <el-dialog :visible.sync="xufeiDialogVisible" width="600px" title="标王续费">
         <el-form :model="xufeiForm" label-width="200px" :rules="rules" ref="xufei">
           <el-form-item label="关键词：">{{xufeiForm.word}}</el-form-item>
           <el-form-item label="城市：">{{cityFormatter(xufeiForm.cities)}}</el-form-item>
           <el-form-item label="投放平台：">{{deviceFormatter(xufeiForm.device)}}</el-form-item>
           <el-form-item label="购买天数：" prop="days">
             <el-radio v-model="xufeiForm.days" :label="+option[0]" v-for="(option, index) in Object.entries(xufeiForm.soldPriceMap)" :key="index">{{option[0]}}天{{f2y(option[1])}}元</el-radio>
+            <template v-if="showManualBtn || showLongOrder">
+              <el-button size="small" type="primary" @click="manualDialogVisible = true">
+                <span v-if="showManualBtn">人工报价</span>
+                <span v-if="!showManualBtn && showLongOrder">申请年单</span>
+              </el-button>
+              <el-tooltip effect="light" placement="top-start">
+                <manual-tooltip slot="content" />
+                <i class="el-icon-info icon"></i>
+              </el-tooltip>
+            </template>
           </el-form-item>
           <el-form-item label="">
             <el-button @click="xufeiDialogVisible = false">取消续费</el-button>
@@ -122,12 +132,19 @@
           <el-button type="primary" @click="goToLivePageByType">确定</el-button>
         </span>
       </el-dialog>
+
+      <manual-dialog :visible="manualDialogVisible"
+                     @cancel="manualDialogVisible = false"
+                     :all-areas="allAreas"
+                     :manual-data="manualData" />
     </div>
   </div>
 </template>
 
 <script>
   import BaxPagination from 'com/common/pagination'
+  import ManualTooltip from 'com/common/bw/manual-tooltip'
+  import ManualDialog from 'com/common/bw/manual-dialog'
   import {
     promoteStatusOpts,
     auditStatusOpts,
@@ -140,17 +157,20 @@
     AUDIT_STATUS_REJECT,
     PROMOTE_STATUS_ONLINE,
     PROMOTE_STATUS_PENDING_ONLINE,
-    PROMOTE_STATUS_OFFLINE
+    PROMOTE_STATUS_OFFLINE,
+    PRICE_NEED_MANUAL_QUOTA,
+    ORDER_APPLY_TYPE_NOT,
+    GET_DAYS_MAP,
+    THIRTY_DAYS
   } from 'constant/biaowang'
   import {getPromotes, queryKeywordPriceNew, getCpcRanking, getUserLive, getUserRanking} from 'api/biaowang'
   import {
     f2y,
-    getCnName
+    getCnName,
+    fmtAreasInBw
   } from 'util'
   import dayjs from 'dayjs'
-  import {
-    normalizeRoles
-  } from 'util/role'
+  import { normalizeRoles } from 'util/role'
   import flatten from 'lodash.flatten'
   import {fmtCpcRanking} from 'util/campaign'
   import auditRejectReasonDialog from 'com/common/audit-reject-reason-dialog'
@@ -172,7 +192,9 @@
     name: 'bw-plan-list',
     components: {
       BaxPagination,
-      auditRejectReasonDialog
+      auditRejectReasonDialog,
+      ManualTooltip,
+      ManualDialog
     },
     props: {
       allAreas: Array,
@@ -209,6 +231,7 @@
         liveType: DEVICE_WAP,
         liveDevices,
         currentPromoteLive: null,
+        manualDialogVisible: false,
       }
     },
     computed: {
@@ -260,6 +283,27 @@
         const roles = normalizeRoles(this.userInfo.roles)
         return roles.includes('AGENT_ACCOUNTING')
       },
+      showManualBtn() {
+        const { manualPriced, price } = this.xufeiForm
+        return !manualPriced && price >= PRICE_NEED_MANUAL_QUOTA
+      },
+      showLongOrder() {
+        const { orderApplyType, price } = this.xufeiForm
+        return orderApplyType === ORDER_APPLY_TYPE_NOT && price < PRICE_NEED_MANUAL_QUOTA
+      },
+      manualCities() {
+        return fmtAreasInBw(this.xufeiForm.cities, this.allAreas)
+      },
+      manualData() {
+        const { device, cities, word } = this.xufeiForm
+        return {
+          manualCities: this.manualCities,
+          word,
+          cities,
+          targetUserId: this.getFinalUserId(),
+          devices: [device]
+        }
+      }
     },
     methods: {
       fmtCpcRanking,
@@ -348,10 +392,15 @@
         })
 
         const priceObj = result[0].priceList[0]
+        const soldPriceMap = GET_DAYS_MAP(priceObj.orderApplyType).reduce((curr, prev) => {
+          return Object.assign(curr, {
+            [prev]: prev / THIRTY_DAYS * priceObj.price
+          })
+        }, {})
         const xufeiForm = {
           ...result[0],
           ...priceObj,
-          soldPriceMap: priceObj.priceMap
+          soldPriceMap
         }
 
         this.xufeiForm = xufeiForm
@@ -481,6 +530,9 @@ marquee {
 .xufei-btn {
   cursor: not-allowed;
   color: #999;
+}
+.el-icon-info {
+  cursor: pointer;
 }
 </style>
 

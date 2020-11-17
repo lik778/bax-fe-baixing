@@ -136,3 +136,12 @@ async function _getOrderCount(query) {
 
   return body.data
 }
+
+export async function createPreOrder(order) {
+  const body = await api
+    .post('/order/pre/create')
+    .send(reverseCamelcase(order))
+    .json()
+
+  return body.data
+}

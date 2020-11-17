@@ -21,6 +21,13 @@ class Store {
     }
   }
 
+  @computed get biaowangBalance() {
+    const data = this.biaowangData
+    return {
+      price: data ? (data.biaowangBalance / 100).toFixed(2) : null
+    }
+  }
+
   @computed get notices() {
     return {
       fengming: this.fengmingData && toJS(this.fengmingData.notices),
@@ -55,6 +62,7 @@ class Store {
         endTime: yesterday,
         promoteList: biaowangPromotes.map(i => i.id)
       })
+      this.biaowangPromotes = biaowangPromotes
       if (rankings.length) {
         this.biaowangPromotes = biaowangPromotes.map(p => {
           const one = rankings.find(r => r.promoteId === p.id)

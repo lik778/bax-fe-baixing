@@ -3,8 +3,9 @@
   <i class="el-icon-document"
     v-clipboard:copy="content"
     v-clipboard:success="onCopySuccess"
-    v-clipboard:error="onCopyError">
-  </i>
+    v-clipboard:error="onCopyError"
+    title="复制"
+  />
 </template>
 
 <script>

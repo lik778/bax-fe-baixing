@@ -1,6 +1,20 @@
-import {isPro} from '../config'
+import { isPro } from '../config'
 
 const isArray = Array.isArray
+
+// eslint-disable-next-line no-unused-vars
+const ROLES_ENUM = [
+  { name: '代理商提单员', name_en: 'AGENT_ACCOUNTING' },
+  { name: '代理商销售', name_en: 'AGENT_SALES' },
+  { name: '运营', name_en: 'NORMAL_OPERATOR' },
+  { name: '自建销售', name_en: 'BAIXING_SALES' },
+  { name: '百姓用户', name_en: 'BAIXING_USER' },
+  { name: '产品审核', name_en: 'QA_OPERATOR' },
+  { name: '设计审核', name_en: 'DESIGN_QA_OPERATOR' },
+  { name: '数据运营', name_en: 'DATA_OPERATOR' },
+  { name: '凤鸣运营', name_en: 'FENGMING_OPERATOR' },
+  { name: '供应商审核', name_en: 'VENDOR_OPERATOR' }
+]
 
 // global
 
@@ -219,9 +233,35 @@ export function allowNotSeeBwNewPrice(roles, agentId) {
   return [1].includes(agentId) && isOnlyBaixingUser
 }
 
-export function isSelfHelpUser(roles) {
+export function isNormalUser(roles) {
+  const shAgent = localStorage.getItem('shAgent')
+  if (shAgent) return false
   if (roles.length === 1) {
     return roles[0].nameEn === 'BAIXING_USER'
   }
   return false
 }
+
+export function allowSeeLongOrder(roles, agentId, salesId) {
+  const currentRoles = normalizeRoles(roles)
+  const isSales = currentRoles.includes('AGENT_SALES') || currentRoles.includes('AGENT_ACCOUNTING')
+  if (isPro) {
+    const isAgentId = [2263, 196, 2296, 2143, 2192, 2193, 2181, 2182, 2183, 2184, 2185, 2186, 2187, 2188, 2189, 2190, 2101, 2124, 2253, 770, 2094, 2313, 2314, 2275, 441, 2325].includes(agentId)
+    const salesIds = ['131102', '134902', '134903', '134904', '134905', '134906', '134907', '134908', '134909', '134910', '134911', '134912', '134913', '156602', '102004', '107601', '141101', '141102', '143302', '102407', '141110', '134916', '134915', '175501', '130007', '156603', '102209', '102210', '105401', '134917', '159502', '159105', '185107', '185108', '173103', '177109', '177106', '173101', '185101', '155116', '102102', '155305', '151001', '121202', '151003', '153901', '176805', '130008']
+    const hasSalesId = salesIds.some(o => new RegExp(`^${o}`).test(salesId))
+    return isAgentId || (hasSalesId && isSales)
+  }
+  return [183].includes(agentId)
+}
+
+export function notAllowFengmingRecharge(roles, agentId) {
+  const currentRoles = normalizeRoles(roles)
+  const isOnlyBaixingUser = currentRoles.includes('BAIXING_USER') && currentRoles.length === 1
+  if (isPro) {
+    return [31, 2263, 1921, 1256, 1257, 1466, 1474, 1736, 196, 1457, 2295, 2193, 2181,
+      2182, 2183, 2184, 2185, 2186, 2187, 2188, 2189, 2190, 2313, 2314, 2337, 1302,
+      2101, 2124, 770, 65, 2094, 1797, 984, 136, 139, 2070, 2071, 2275, 35, 36, 1263, 1678].includes(agentId) && isOnlyBaixingUser
+  }
+  return [50].includes(agentId) && isOnlyBaixingUser
+}
+

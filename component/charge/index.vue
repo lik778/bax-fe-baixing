@@ -215,7 +215,7 @@ import { product as PRODUCT } from 'constant/product'
 
 import { normalizeRoles } from 'util/role'
 
-import { createOrder } from 'api/fengming'
+import { createPreOrder } from 'api/order'
 
 import {
   getUserIdFromBxSalesId,
@@ -760,7 +760,7 @@ export default {
       this.payInProgress = true
 
       try {
-        const oids = await createOrder(newOrder)
+        const oids = await createPreOrder(newOrder)
 
         track({
           roles: userInfo.roles.map(r => r.name).join(','),

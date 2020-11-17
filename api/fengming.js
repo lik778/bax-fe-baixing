@@ -1,13 +1,16 @@
 
 import { reverseCamelcase, toCamelcase } from 'object-keys-mapping'
 import { fengming, trim } from './base'
+import { getCurrentBalanceBreif } from './account'
 import qs from 'query-string'
 import {
   isPro
 } from 'config'
 import {isObj} from 'util'
+import { SPUCODES } from 'constant/product'
 
 const isArray = Array.isArray
+const { WHOLE_SPU_CODE } = SPUCODES
 
 export async function queryAds(opts = {}) {
   const q = {
@@ -239,14 +242,6 @@ export async function getCurrentBalance() {
   return body.data
 }
 
-export async function getCurrentBalanceBreif() {
-  const body = await fengming
-    .get('/balance/brief')
-    .json()
-
-  return body.data
-}
-
 export async function checkCreativeContent(opts) {
   const body = await fengming
     .post('/creative/validate')
@@ -342,18 +337,6 @@ export async function getChangeLogs(opts) {
   }
 }
 
-export async function getChargeLogs(opts) {
-  const { data } = await fengming
-    .get('/balance/chargelog')
-    .query(reverseCamelcase(opts))
-    .json()
-
-  return {
-    total: data.totalElements,
-    logs: toCamelcase(data.data)
-  }
-}
-
 export async function getLogs(queryParmas = {}) {
   const { meta, data } = await fengming
     .get('/timeline/query')
@@ -394,7 +377,7 @@ export async function getHomepageSummary() {
 
 export async function getHomePageFengmingData() {
   const [ balanceBrief, daily, notices ] = await Promise.all([
-    getCurrentBalanceBreif(),
+    getCurrentBalanceBreif(WHOLE_SPU_CODE),
     _getDailySummary(),
     getFengmingNotice()
   ])
@@ -456,12 +439,6 @@ export async function huodongLeads(opts) {
     .json()
 
   return body
-}
-
-export async function getServerTime() {
-  const r = await fengming.get('/product?product_types=3')
-  console.log(r.headers.get('date'))
-  return r.headers.get('date')
 }
 
 export async function changeCampaignKeywordsPrice(campaignId, price) {

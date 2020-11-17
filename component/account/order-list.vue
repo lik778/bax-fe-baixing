@@ -5,6 +5,7 @@
       <el-date-picker
         v-model="params.dateRange"
         type="daterange"
+        style="width: 250px"
         start-placeholder="开始日期"
         end-placeholder="结束日期">
       </el-date-picker>
@@ -15,6 +16,10 @@
         <el-radio-button :label="[orderStatusType.STATUS_ORDER_CANCELED]">已取消</el-radio-button>
         <el-radio-button :label="[orderStatusType.STATUS_ORDER_REFUND]">已退款</el-radio-button>
       </el-radio-group>
+      <label>查询产品</label>
+      <el-select v-model="params.merchantList" clearable placeholder="请选择产品">
+        <el-option v-for="(value, key) in PRODUCTS" :key="key" :label="value" :value="key" />
+      </el-select>
     </div>
     <el-table
       class="order-list-parent-table"
@@ -46,7 +51,7 @@
       </el-table-column>
       <el-table-column
         width="180"
-        label="订单编号" 
+        label="订单编号"
         prop="tradeSeq"/>
       <el-table-column
         width="250"
@@ -62,7 +67,7 @@
         width="105"
         align="center"
         label="原价"
-        prop="originalPrice" 
+        prop="originalPrice"
         :formatter="row => formatPrice(row.originalPrice, row.status)"/>
       <el-table-column
         width="105"
@@ -84,7 +89,7 @@
         align="center"
       >
         <div slot-scope="{row}">
-          <div class="btn-wrap" 
+          <div class="btn-wrap"
                v-if="row.status === orderStatusType.STATUS_UNPAID || row.status === orderStatusType.STATUS_PRE_TRADE">
             <a href="javascript:;" @click="payOrder(row.tradeSeq, row.status, row.parentId)">支付</a>
             <a href="javascript:;" @click="cancelOrder(row.tradeSeq, row.status, row.parentId)">取消订单</a>
@@ -114,13 +119,17 @@ import { orderStatusType, orderStatusLabelDisplay} from 'constant/order'
 import { MERCHANTS, SKUTYPES } from 'constant/product'
 import { orderServiceHost } from 'config'
 
-const { FENG_MING_MERCHANT_CODE, WEBSITE_MERCHANT_CODE} = MERCHANTS
+const { FENG_MING_MERCHANT_CODE, WEBSITE_MERCHANT_CODE, PHOENIXS_MERCHANT_CODE} = MERCHANTS
 const { GIFT } = SKUTYPES
 const ONE_PAGE_NUM = 10
 const DEFAULT_DATE_RANGE = [
   dayjs(new Date()).subtract(1, 'months').toDate(),
   dayjs().toDate()
 ]
+const PRODUCTS = {
+  [FENG_MING_MERCHANT_CODE]: '站外推广',
+  [PHOENIXS_MERCHANT_CODE]: '标王'
+}
 
 export default {
   name: 'qwt-operastion-order-list',
@@ -129,7 +138,7 @@ export default {
       orderStatusType,
       orderStatusLabelDisplay,
       params: {
-        merchantList:[FENG_MING_MERCHANT_CODE, WEBSITE_MERCHANT_CODE],
+        merchantList: '',
         orderStatusList: [orderStatusType.STATUS_UNPAID, orderStatusType.STATUS_PRE_TRADE],
         size: ONE_PAGE_NUM,
         dateRange: DEFAULT_DATE_RANGE,
@@ -138,7 +147,8 @@ export default {
       orderData: null,
       total: 0,
 
-      GIFT
+      GIFT,
+      PRODUCTS
     }
   },
   components: {SectionHeader},
@@ -146,7 +156,7 @@ export default {
     async payOrder(tradeSeq, status, parentTradeSeq) {
       // tip: 支付和取消订单实际操作的是父订单，
       // 如果parentTradeSeq为空，说明本身就是父订单，反之，子订单
-      const orderId =  parentTradeSeq || tradeSeq 
+      const orderId =  parentTradeSeq || tradeSeq
       const { STATUS_PRE_TRADE, STATUS_UNPAID } = this.orderStatusType
       this.$message.success('正在跳转支付页面')
       let payUrl = ''
@@ -161,7 +171,7 @@ export default {
       }, 800)
     },
     async cancelOrder(tradeSeq, status, parentTradeSeq) {
-      const orderId =  parentTradeSeq || tradeSeq 
+      const orderId =  parentTradeSeq || tradeSeq
       await this.$confirm('您确定要取消该订单吗？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '放弃'
@@ -172,10 +182,11 @@ export default {
     },
     async fetchOrderData(isResetOffset) {
       if (isResetOffset) this.pageNo = 1
-      const { dateRange, ...otherParams } = this.params
+      const { dateRange, merchantList, ...otherParams } = this.params
       let queryParmas = {
         pageNo: this.pageNo || 1,
-        ...otherParams
+        ...otherParams,
+        merchantList: merchantList || Object.keys(PRODUCTS)
       }
       if (dateRange) {
         const startDate = dayjs(dateRange[0]).startOf('day').unix()
@@ -185,7 +196,7 @@ export default {
           endDate,
           ...queryParmas
         }
-      } 
+      }
       const { total, data } = await api.queryOrder(queryParmas)
       const orderData = data.map(trade => {
         trade.skuName = trade.itemVoList.length ?  trade.itemVoList[0].skuName : ''
@@ -229,7 +240,7 @@ export default {
   .action-container {
     margin-bottom: 20px;
     & > label {
-      margin-left: 40px;
+      margin-left: 20px;
       margin-right: 15px;
     }
   }

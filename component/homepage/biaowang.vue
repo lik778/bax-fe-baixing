@@ -15,7 +15,7 @@
             </li>
             <li class="data">
               <h6 class="title">展示次数</h6>
-              <p class="num">{{getPromoteData('pv')}}</p>
+              <el-button style="margin-top: 6px" type="primary" plain size="small" @click="$router.push({name: 'bw-dashboard'})">点击查看</el-button>
             </li>
           </ul>
         </div>
@@ -28,9 +28,8 @@
             您还有标王关键词没有生效，
             <a href="javascript:;" @click="$router.push({name: 'bw-plan-list', query: {status: '0,5'}})">点此查看</a>
           </p>
-          <div class="actions" v-if="!userInfo.shAgent">
-            <el-button type="primary" @click="$router.push({name: 'bw-query-price'})">立即购买</el-button>
-            <el-button type="primary" @click="$router.push({name: 'bw-plan-list'})">立即续费</el-button>
+          <div class="actions">
+            <el-button type="primary" @click="$router.push({name: 'bw-plan-list'})">管理标王推广</el-button>
           </div>
         </div>
       </div>
@@ -60,7 +59,7 @@
             <span class="col">{{p.cpcRanking && fmtCpcRanking(p.cpcRanking, false)}}</span>
             <span class="col">{{leftDays(p)}}/{{p.days.toFixed(1)}}</span>
             <el-button v-if="canXufei(p) && !userInfo.shAgent"
-                       :disabled="disabledXuFeiBtn(p)"  
+                       :disabled="disabledXuFeiBtn(p)"
                        class="col renew"
                        type="text"
                        @click="$router.push({name: 'bw-plan-list', params: {promote: p}})">续费</el-button>
@@ -136,7 +135,7 @@ export default {
       const percent = getRandomNum(range)
       window.localStorage.setItem(key, `${percent}-${Date.now()}`)
       return percent / 10
-      
+
     },
     leftDays({days, startedAt}) {
       let daysLeft = days

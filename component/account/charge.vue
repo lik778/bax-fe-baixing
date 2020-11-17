@@ -8,6 +8,10 @@
           end-placeholder="结束日期"
           range-separator="-"
           v-model="query.dateRange" />
+        <label>查询产品</label>
+        <el-select v-model="query.accountList" clearable placeholder="请选择产品">
+          <el-option v-for="(value, key) in PRODUCTS" :key="key" :label="value" :value="key" />
+        </el-select>
       </div>
       <main style="width: 560px">
         <el-table :data="data">
@@ -15,6 +19,8 @@
             :formatter="r => toHumanTime(r.createdTime, 'YYYY-MM-DD HH:mm')" />
           <el-table-column label="充值金额" prop="originalPrice"
             :formatter="r => (r.originalPrice) / 100 + '元'" />
+          <el-table-column label="产品类型" prop="spuCode"
+             :formatter="r => PRODUCTS[r.spuCode]"/>
         </el-table>
         <el-pagination small class="pagniation" layout="prev, pager, next"
           :total="total" :page-size="query.size"
@@ -31,13 +37,19 @@ import SectionHeader from 'com/common/section-header'
 import { toHumanTime } from 'utils'
 import dayjs from 'dayjs'
 import { SPUCODES } from 'constant/product'
-import * as api from 'api/fengming'
+import * as api from 'api/account'
+import { addAdItemMaterial } from 'api/ad'
 
-const { WHOLE_SPU_CODE } = SPUCODES
+const { WHOLE_SPU_CODE, BIAO_WANG_SPU_CODE } = SPUCODES
 const DEFAULT_DATE_RANGE = [
   dayjs().startOf('day').toDate(),
   dayjs().endOf('day').toDate()
 ]
+
+const PRODUCTS = {
+  [WHOLE_SPU_CODE]: '站外推广',
+  [BIAO_WANG_SPU_CODE]: '标王'
+}
 
 export default {
   name: 'qwt-account-charge',
@@ -47,10 +59,11 @@ export default {
   data() {
     return {
       query: {
-        accountList:[WHOLE_SPU_CODE],
+        accountList: '',
         size: 10,
         dateRange: DEFAULT_DATE_RANGE,
       },
+      PRODUCTS,
       total: 0,
       pageNo: 1,
       data: null
@@ -59,10 +72,11 @@ export default {
   methods: {
     async fetchData(isResetPageNo) {
       if (isResetPageNo) this.pageNo = 1
-      const { dateRange, ...otherParams } = this.query
+      let { dateRange, accountList,  ...otherParams } = this.query
       let queryParmas = {
         pageNo: this.pageNo || 1,
-        ...otherParams
+        ...otherParams,
+        accountList: accountList || Object.keys(PRODUCTS)
       }
       if (dateRange) {
         const startDate = dayjs(dateRange[0]).startOf('day').unix()
@@ -72,7 +86,7 @@ export default {
           endDate,
           ...queryParmas
         }
-      } 
+      }
       const { total, logs } = await api.getChargeLogs(queryParmas)
       this.data = logs
       this.total = total
@@ -100,6 +114,10 @@ export default {
   & > content {
     & > div {
       margin-bottom: 15px;
+    }
+    & label {
+      margin-left: 30px;
+      margin-right: 10px;
     }
   }
   & .pagniation {

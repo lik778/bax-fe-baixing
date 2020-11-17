@@ -1,102 +1,105 @@
 <template>
-  <div class="charge-container" v-loading.fullscreen.lock="fetchLoading">
-    <section class="shadow">
-      <step :step="0" />
-    </section>
-    <section class="product shadow panel">
-      <header>
-        1. 选择产品 | <span class="discount-btn">优惠细则</span>
-      </header>
-      <div class="discount-section" v-show="showDiscount">
-        <p class="discount-info">充值更多，可享更多优惠！</p>
-        <p class="discount-info" :key="index"
-          v-for="(html, index) in discountInfoHTML" v-html="html" />
-      </div>
+  <div>
+    <el-tabs class="product-tab" v-model="productTabMchCode" @tab-click="changeProductMchCodeTab">
+      <el-tab-pane :key="FENG_MING_MERCHANT_CODE"  label="站外推广" :name="FENG_MING_MERCHANT_CODE"></el-tab-pane>
+      <el-tab-pane v-if="!userInfo.shAgent"  :key="PHOENIXS_MERCHANT_CODE"  label="标王" :name="PHOENIXS_MERCHANT_CODE"></el-tab-pane>
+    </el-tabs>
+    <div class="charge-container" v-loading.fullscreen.lock="fetchLoading">
+      <section class="product shadow panel">
+        <header v-show="showDiscount">
+          <span class="discount-btn">优惠细则</span>
+        </header>
+        <div class="discount-section" v-show="showDiscount">
+          <p class="discount-info">充值更多，可享更多优惠！</p>
+          <p class="discount-info" :key="index"
+            v-for="(html, index) in discountInfoHTML" v-html="html" />
+        </div>
 
-      <div class="charge-section">
-        <template v-if="chargeSpu">
-          <header>选择{{chargeSpu.title}}：</header>
-          <main>
-            <section>
-              <price-tag v-for="(product, index) in chargeSpu.selection"
-                :key="index"
-                :editable="Number(product.maxQuantity) !== Number(product.minQuantity)"
-                :price="product.price" :min-input-price="product.minQuantity"
-                :max-input-price="product.maxQuantity"
-                :checked="checkedProducts.includes(product)"
-                @click="toggleCharge(product)"
-                @change="v => handlePriceChange(product, v)">
-              </price-tag>
-            </section>
-          </main>
-        </template>
+        <div class="charge-section">
+          <template v-if="chargeSpu">
+            <header>选择{{chargeSpu.title}}：</header>
+            <main>
+              <section>
+                <price-tag v-for="(product, index) in chargeSpu.selection"
+                  :key="index"
+                  :editable="Number(product.maxQuantity) !== Number(product.minQuantity)"
+                  :price="centToYuan(product.price)"
+                  :min-input-price="centToYuan(product.minQuantity * product.realPrice)"
+                  :max-input-price="centToYuan(product.maxQuantity * product.realPrice)"
+                  :checked="checkedProducts.includes(product)"
+                  @click="toggleCharge(product)"
+                  @change="v => handlePriceChange(product, v)">
+                </price-tag>
+              </section>
+            </main>
+          </template>
 
-        <template v-if="siteSpu">
-          <header>选择{{siteSpu.title}}：
-            <span class="tip">具体官网搭售折扣及实付金额，请点击“确认购买”后前往订单确认页面查看</span>
-          </header>
-          <main>
-            <section>
-              <gw-pro-widget v-for="(product, index) of siteSpu.selection"
-                :key="index" :title="product.title" :desc="product.desc"
-                :is-hot="product.tags.includes('hot')"
-                :price="centToYuan(product.realPrice)"
-                :checked="checkedProducts.includes(product)"
-                @click.native="toggleSite(product)" />
-            </section>
-          </main>
-        </template>
-      </div>
-    </section>
+          <template v-if="siteSpu">
+            <header>选择{{siteSpu.title}}：
+              <span class="tip">具体官网搭售折扣及实付金额，请点击“确认购买”后前往订单确认页面查看</span>
+            </header>
+            <main>
+              <section>
+                <gw-pro-widget v-for="(product, index) of siteSpu.selection"
+                  :key="index" :title="product.title" :desc="product.desc"
+                  :is-hot="product.tags.includes('hot')"
+                  :price="centToYuan(product.realPrice)"
+                  :checked="checkedProducts.includes(product)"
+                  @click.native="toggleSite(product)" />
+              </section>
+            </main>
+          </template>
+        </div>
+      </section>
 
-    <section class="order shadow panel">
-      <div class="info">
-        <!-- <section class="sales-code" v-if="salesIdLocked || isBxSales">
-          <aside>服务编号：</aside>
-          <span>
-            {{ displayBxSalesId || userInfo.salesId }}
-          </span>
-        </section> -->
-        <section v-if="displayUserMobile" class="user-mobile">
-          <aside>用户手机号：</aside>
-          <span>
-            {{ displayUserMobile }}
-          </span>
-        </section>
-        <section class="agreement">
-          <div v-for="agreement in agreementList" :key="agreement.id">
-            <contract :isAgreement="agreement.checked" :href="agreement.link"
-              @click="() => agreement.checked = !agreement.checked"
-              :title="agreement.title" />
-          </div>
-        </section>
-        <promotion-area-limit-tip :all-areas="allAreas" page="charge" />
-        <section class="pay-info">
-          <button v-if="!isAgentSales" class="pay-order"
-            :loading="payInProgress" @click="createPreOrder">
-            {{ submitButtonText }}
-          </button>
-          <span v-if="orderPayUrl">
-            <label :title="orderPayUrl">
-              {{ '付款链接: ' + orderPayUrl }}
-            </label>
-            <Clipboard :content="orderPayUrl"></Clipboard>
-          </span>
-        </section>
-      </div>
+      <section class="order shadow panel">
+        <div class="info">
+          <!-- <section class="sales-code" v-if="salesIdLocked || isBxSales">
+            <aside>服务编号：</aside>
+            <span>
+              {{ displayBxSalesId || userInfo.salesId }}
+            </span>
+          </section> -->
+          <section v-if="displayUserMobile" class="user-mobile">
+            <aside>用户手机号：</aside>
+            <span>
+              {{ displayUserMobile }}
+            </span>
+          </section>
+          <section class="agreement">
+            <div v-for="agreement in agreementList" :key="agreement.id">
+              <contract :isAgreement="agreement.checked" :href="agreement.link"
+                @click="() => agreement.checked = !agreement.checked"
+                :title="agreement.title" />
+            </div>
+          </section>
+          <promotion-area-limit-tip :all-areas="allAreas" page="charge" />
+          <section class="pay-info">
+            <button v-if="!isAgentSales" class="pay-order"
+              :loading="payInProgress" @click="createPreOrder">
+              {{ submitButtonText }}
+            </button>
+            <span v-if="orderPayUrl">
+              <label :title="orderPayUrl">
+                {{ '付款链接: ' + orderPayUrl }}
+              </label>
+              <Clipboard :content="orderPayUrl"></Clipboard>
+            </span>
+          </section>
+        </div>
 
-      <footer>
-        <li>推广资金使用规则：</li>
-        <li>1. 该产品购买后，精品官网及推广资金不可退款，如有疑问请致电客服400-036-3650；</li>
-        <li>2. 该精品官网及推广资金自购买之日起有效期为1年，请在有效期内使用；</li>
-        <li>3. 详细推广记录请在【搜索通】-【数据报表】查看。</li>
-      </footer>
-    </section>
+        <footer>
+          <li>推广资金使用规则：</li>
+          <li>1. 该产品购买后，精品官网及推广资金不可退款，如有疑问请致电客服400-036-3650；</li>
+          <li>2. 该精品官网及推广资金自购买之日起有效期为1年，请在有效期内使用；</li>
+          <li>3. 详细推广记录请在【搜索通】-【数据报表】查看。</li>
+        </footer>
+      </section>
+    </div>
   </div>
 </template>
 
 <script>
-import Step from './step'
 import PriceTag from 'com/charge/price-tag'
 import GwProWidget from 'com/charge/gw-pro'
 import Contract from 'com/charge/contract'
@@ -110,32 +113,23 @@ import { orderServiceHost } from 'config'
 import track from 'util/track'
 import uuid from 'uuid/v4'
 import { queryUserInfo, getUserInfo } from 'api/account'
-import { createOrder, getProductsByMchCode } from 'api/fengming'
+import { getProductsByMchCodes } from 'api/common'
+import { createPreOrder } from 'api/order'
 import { SPUCODES, MERCHANTS } from 'constant/product'
 import { getUniqueAgreementList } from 'util/charge'
+import store from '../activity-store'
 
-const { WHOLE_SPU_CODE, GUAN_WANG_SPU_CODE } = SPUCODES
-const { FENG_MING_MERCHANT_CODE } = MERCHANTS
+const { WHOLE_SPU_CODE, GUAN_WANG_SPU_CODE, BIAO_WANG_SPU_CODE } = SPUCODES
+const { FENG_MING_MERCHANT_CODE, PHOENIXS_MERCHANT_CODE } = MERCHANTS
 const MIN_INPUT_PRICE = 50000
-const discountInfo = [
-  [588, 200, 600, 600],
-  [1088, 200, 600, 600],
-  [3088, 200, 600, 600],
-  [5088, 600, 1200, 900],
-  [10188, 1000, 1400, 1500]
-]
-const discountInfoHTML = discountInfo.map((item, index) => {
-  return `满<span style="min-width:40px">${item[0]}</span>元：
-          同时购买精品官网（1年）官网<span class="red">减</span>立减 ${item[1]} 元；
-          购买精品官网2年【送一年】官网<span class="red">减</span>立减 ${item[2]} 元；
-          购买精品官网专业版1年（支持首页宝推广）官网<span class="red">减</span> ${item[3]}元；</p>`
-})
+
+
 const isGwProduct = function(spuCode) {
   return spuCode === GUAN_WANG_SPU_CODE
 }
 
 const isChargeProduct = function(spuCode) {
-  return spuCode === WHOLE_SPU_CODE
+  return [WHOLE_SPU_CODE, BIAO_WANG_SPU_CODE].includes(spuCode)
 }
 
 
@@ -157,10 +151,12 @@ export default {
   },
   data () {
     return {
+      productTabMchCode: FENG_MING_MERCHANT_CODE,
+      FENG_MING_MERCHANT_CODE,
+      PHOENIXS_MERCHANT_CODE,
       fetchLoading: true,
       showDiscount: true,
       actionTrackId: uuid(),
-      discountInfoHTML,
       siteSpu: null,
       chargeSpu: null,
       checkedProducts: [],
@@ -171,8 +167,13 @@ export default {
       orderPayUrl: '',
 
       payInProgress: false,
-      agreementList:[]
+      agreementList:[],
+
+      productCacheList: []
     }
+  },
+  fromMobx: {
+    discountInfoHTML: () => store.discountInfoHTML,
   },
   computed: {
     isAgentSales() {
@@ -214,7 +215,6 @@ export default {
     }
   },
   components: {
-    Step,
     PriceTag,
     GwProWidget,
     Contract,
@@ -222,42 +222,21 @@ export default {
     Clipboard
   },
   async mounted() {
-    const { 
-      sales_id: salesId,
-      user_id: userId,
-      select_gw: selectGw
+    const {
+        sales_id: salesId,
+        user_id: userId,
+        select_gw: selectGw
     } = this.$route.query
-
-    this.fetchLoading = true
-    try {
-      let products = await getProductsByMchCode(FENG_MING_MERCHANT_CODE)
-      products.forEach(spu => 
-        spu.selection.forEach(sku => {
-          sku.quantity = sku.minQuantity === sku.maxQuantity ? sku.minQuantity: 0
-          sku.price = sku.minQuantity === sku.maxQuantity ?  Math.floor(sku.minQuantity * sku.realPrice): 0,
-          sku.spuCode = spu.spuCode
-        })
-      )
-      this.siteSpu = products.find(p => isGwProduct(p.spuCode))
-      this.chargeSpu = products.find(p => isChargeProduct(p.spuCode))
-
-      this.agreementList = getUniqueAgreementList(products)
-    } catch (e) {
-      console.error(e)
-    } finally {
-      this.fetchLoading = false
-    }
-
     setTimeout(() => {
-      const { userInfo, actionTrackId } = this
-      track({
-        roles: userInfo.roles.map(r => r.name).join(','),
-        baixingId: userInfo.baixingId,
-        action: 'enter-page: charge',
-        baxId: userInfo.id,
-        actionTrackId
-      })
-    }, 1200)
+        const { userInfo, actionTrackId } = this
+        track({
+          roles: userInfo.roles.map(r => r.name).join(','),
+          baixingId: userInfo.baixingId,
+          action: 'enter-page: charge',
+          baxId: userInfo.id,
+          actionTrackId
+        })
+      }, 1200)
 
     let clickSent = false
     document.addEventListener('click', evt => {
@@ -274,18 +253,10 @@ export default {
       }
     })
 
-    if (selectGw === 'true' || Number(selectGw) === 1) {
-      const initSiteSku = this.siteSpu.selection.find(sku => sku.tags.includes('hot'))
-      if (initSiteSku) this.checkedProducts.push(initSiteSku)
-    } else {
-      const initChargeSku = this.chargeSpu.selection.find(sku => sku.tags.includes('selected'))
-      if (initChargeSku) this.checkedProducts.push(initChargeSku)
-    }
-
     if (salesId) {
-      const userInfo = await getUserInfo(salesId)
-      this.displayBxSalesId = userInfo.salesId
-      this.salesIdLocked = true
+        const userInfo = await getUserInfo(salesId)
+        this.displayBxSalesId = userInfo.salesId
+        this.salesIdLocked = true
     }
 
     if (userId) {
@@ -294,9 +265,59 @@ export default {
         this.displayUserMobile = info.mobile
       }
     }
+    this.obtainProductByMchCode()
   },
   methods: {
     centToYuan,
+    changeProductMchCodeTab() {
+      this.siteSpu = null
+      this.chargeSpu = null
+      this.checkedProducts = []
+      this.$bus.$emit('resetPriceTagInput')
+      store.setDiscountInfoHTMLFactory(this.productTabMchCode)
+      this.obtainProductByMchCode()
+    },
+    async obtainProductByMchCode() {
+      const { selectGw } = this.$route.query
+      this.fetchLoading = true
+      try {
+        let products = [];
+        let targetList = [];
+        if (this.productCacheList.length === 0) {
+          targetList = this.productCacheList = await getProductsByMchCodes([FENG_MING_MERCHANT_CODE, PHOENIXS_MERCHANT_CODE])
+        } else {
+          targetList = this.productCacheList
+        }
+        let item = targetList.find(x => x.vendorCode === this.productTabMchCode)
+        products = item && item.products || []
+
+        products.forEach(spu =>
+          spu.selection.forEach(sku => {
+            sku.quantity = sku.minQuantity === sku.maxQuantity ? sku.minQuantity: 0
+            sku.price = sku.minQuantity === sku.maxQuantity ?  Math.floor(sku.minQuantity * sku.realPrice): 0,
+            sku.spuCode = spu.spuCode
+          })
+        )
+        this.siteSpu = products.find(p => isGwProduct(p.spuCode))
+        this.chargeSpu = products.find(p => isChargeProduct(p.spuCode))
+
+        this.agreementList = getUniqueAgreementList(products)
+        this.checkedProducts = []
+      } catch (e) {
+        console.error(e)
+      } finally {
+        this.fetchLoading = false
+      }
+
+      if (selectGw === 'true' || Number(selectGw) === 1) {
+        const initSiteSku = this.siteSpu.selection.find(sku => sku.tags.includes('hot'))
+        if (initSiteSku) this.checkedProducts.push(initSiteSku)
+      } else {
+        const initChargeSku = this.chargeSpu &&  this.chargeSpu.selection.find(sku => sku.tags.includes('selected'))
+        if (initChargeSku) this.checkedProducts.push(initChargeSku)
+      }
+
+    },
     handlePriceChange(product, v) {
       product.price = v
       product.quantity = Math.floor(v / product.realPrice)
@@ -328,17 +349,17 @@ export default {
       }
       const chargeProduct = this.checkedProducts.find(p => isChargeProduct(p.spuCode))
       if (chargeProduct) {
-        const { quantity, minQuantity, maxQuantity } = chargeProduct
-        if (quantity < minQuantity) {
-          return this.$message.error(`最低充值金额：${minQuantity}`)
+        const { quantity, minQuantity, maxQuantity, realPrice } = chargeProduct
+        if (quantity < minQuantity ) {
+          return this.$message.error(`最低充值金额：${this.centToYuan(minQuantity * realPrice)}`)
         }
         if (quantity > maxQuantity) {
-          return this.$message.error(`最高充值金额：${maxQuantity}`)
+          return this.$message.error(`最高充值金额：${this.centToYuan(maxQuantity * realPrice)}`)
         }
       }
-      
+
       const orderParams = {
-        merchant: FENG_MING_MERCHANT_CODE,
+        merchant: this.productTabMchCode,
         userId: await this.getFinalUserId(),
         skuList: this.checkedSkuList
       }
@@ -371,7 +392,7 @@ export default {
       this.payInProgress = true
 
       try {
-        const preTradeId = await createOrder(orderParams)
+        const preTradeId = await createPreOrder(orderParams)
         track({
           roles: userInfo.roles.map(r => r.name).join(','),
           action: 'create order success',
@@ -427,6 +448,12 @@ export default {
 <style lang="postcss" scoped>
 @import '../../cssbase/var';
 @import 'cssbase/mixin';
+
+.product-tab {
+  background: #fff;
+  padding-left: 20px;
+  box-sizing: border-box;
+}
 
 .charge-container {
   & > .shadow {
@@ -578,6 +605,25 @@ export default {
   }
   & > .mute {
     color: #fff;
+  }
+}
+.notice {
+  font-size: 13px;
+  margin-bottom: 20px;
+  & > p {
+      margin-bottom: 5px;
+
+  & > span {
+      width: 145px;
+    }
+
+  & .red {
+      background-color: #ff3c3c;
+      color: white;
+      padding: 1px 4px;
+      margin: 0 5px;
+      border-radius: 2px;
+    }
   }
 }
 </style>

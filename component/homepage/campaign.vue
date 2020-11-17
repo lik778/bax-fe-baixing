@@ -36,7 +36,7 @@
         <p class="text">您暂时没有站外推广，您可以</p>
         <div>
           <el-button type="primary" @click="() => $router.push({name: 'qwt-create-promotion'})">新建站外推广</el-button>
-          <el-button type="primary" @click="() => $router.push({name: 'qwt-charge'})">充值推广资金</el-button>
+          <el-button v-if="userInfo.allowFmRecharge"  type="primary" @click="() => $router.push({name: 'qwt-charge'})">充值推广资金</el-button>
         </div>
       </div>
     </div>
@@ -165,6 +165,7 @@ export default {
     ECharts,
     loadingPlaceholder
   },
+  props: ['userInfo'],
   data() {
     return {
       chartOptions: null,

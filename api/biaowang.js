@@ -1,5 +1,9 @@
 
 import { biaowang, trim } from './base'
+import { getCurrentBalanceBreif } from './account'
+import { SPUCODES } from 'constant/product'
+
+const { BIAO_WANG_SPU_CODE } = SPUCODES
 
 export async function queryKeywordPrice(opts = {}) {
   const body = await biaowang
@@ -110,11 +114,15 @@ export async function getLogs(parmas) {
 }
 
 export async function getHomePageBiaowangData() {
-  const body = await biaowang
-    .get(`/promote/user/info`)
-    .json()
+  const [ biaowangBalanceBrief, body ] = await Promise.all([
+    getCurrentBalanceBreif(BIAO_WANG_SPU_CODE),
+    await biaowang.get(`/promote/user/info`).json()
+  ])
 
-  return body.data
+  return {
+    ...body.data,
+    biaowangBalance: biaowangBalanceBrief.currentBalance
+  }
 }
 
 export async function getQiqiaobanCoupon(promoteId) {
@@ -152,6 +160,14 @@ export async function queryKeywordPriceNew(opts) {
     .send(opts)
     .json()
 
+  return body.data
+}
+
+export async function queryKeywordPackagePrice(opts) {
+  const body = await biaowang
+    .post('/keyword/v2/pricing/user/package/inquiry')
+    .send(opts)
+    .json()
   return body.data
 }
 
@@ -216,4 +232,33 @@ export async function getPromotionUserCollection(opts = {}) {
     })
     .json()
   return body.data
+}
+
+export async function sendUserManualApply(opts = {}) {
+  const body = await biaowang
+    .post('/keyword/v2/pricing/user/manual/apply')
+    .send({
+      ...opts
+    })
+    .json()
+
+  return body.data
+}
+
+export async function getUserManualList(opts = {}) {
+  const q = {
+    size: 20,
+    page: 0,
+    ...opts
+  }
+
+  const { data } = await biaowang
+    .get('/keyword/v2/pricing/user/manual/history')
+    .query(q)
+    .json()
+
+  return {
+    data: data.content,
+    total: data.totalElements
+  }
 }

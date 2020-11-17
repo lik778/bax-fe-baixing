@@ -71,7 +71,8 @@ import Step from './step'
 
 import { centToYuan } from 'utils'
 import { assetHost, orderServiceHost } from 'config'
-import { createOrder, getProductsByMchCode } from 'api/fengming'
+import { getProductsByMchCode } from 'api/fengming'
+import { createPreOrder } from 'api/order'
 import { getUserIdFromBxSalesId, queryUserInfo, getUserInfo } from 'api/account'
 import { allowBuyYoucaigouSite, allowGetOrderPayUrl } from 'util'
 import { normalizeRoles } from 'util/role'
@@ -212,7 +213,7 @@ export default {
         }
       }
 
-      const preTradeId = await createOrder(order)
+      const preTradeId = await createPreOrder(order)
       if (this.isBxUser) {
         location.href = `${orderServiceHost}/?appId=105&seq=${preTradeId}`
       } else if (this.isAgentAccounting) {

@@ -1,19 +1,19 @@
-<template> 
+<template>
   <div class="layout-container">
     <div class="layout-left" v-if="isShowSection('fengming') || isShowSection('site') || isShowSection('biaowang')">
       <h5 class="layout-header">账户概览</h5>
       <ul class="accout">
         <li class="account-item" v-if="isShowSection('fengming')">
-          <p class="title">推广可用余额（元) <span class="sub-title">不含冻结</span></p>
+          <p class="title">凤鸣投放币（元) <span class="sub-title">不含冻结</span></p>
           <p class="num">{{fengmingBalance.price}}</p>
-          <p class="desc">（冻结金额 {{fengmingBalance.freezeBalance}} 元）</p>
-          <el-button type="primary" class="button" size="small" @click.native="() => handleCharge('bax')">立即充值</el-button>
+          <p class="desc" :style="{ marginBottom: userInfo.allowFmRecharge ? '' : '72px' }">（冻结金额 {{fengmingBalance.freezeBalance}} 元）</p>
+          <el-button v-if="userInfo.allowFmRecharge" type="primary" class="button" size="small" @click.native="() => handleCharge('bax')">立即充值</el-button>
         </li>
         <li class="account-item" v-if="isShowSection('biaowang')">
-          <p class="title">标王推广关键词(个)</p>
-          <p class="num">{{biaowangData.onlinePromotes}}</p>
+          <p class="title">标王投放币（元) </p>
+          <p class="num">{{ biaowangBalance.price }}</p>
           <p class="desc">（ {{biaowangData.nearExpirationPromotes}} 个词即将到期）</p>
-          <el-button type="primary" class="button" size="small" @click.native="() => handleCharge('biaowang')">立即充值</el-button>
+          <el-button type="primary" class="button" size="small" @click.native="() => handleCharge('biaowang')">管理标王推广</el-button>
         </li>
         <li class="account-item" v-if="isShowSection('site')">
             <p class="title">精品官网(个)</p>
@@ -54,8 +54,10 @@ import loadingPlaceholder from './loading-placeholder'
 export default {
   name: 'homepage-accout',
   components: {Notice, loadingPlaceholder},
+  props: ['userInfo'],
   fromMobx: {
     fengmingBalance: () => store.fengmingBalance,
+    biaowangBalance: () => store.biaowangBalance,
     notices: () => store.notices.fengming,
     sites: () => store.kaSiteData && store.kaSiteData.sites,
     biaowangData: () => store.biaowangData
@@ -68,7 +70,7 @@ export default {
         case 'site':
           return this.$router.push({name: 'qwt-charge', query: {select_gw: 1}})
         case 'biaowang':
-          return this.$router.push({name: 'bw-plan-list'})
+          return this.$router.push({ name: 'bw-plan-list' })
       }
     },
     isShowSection(sectionType) {

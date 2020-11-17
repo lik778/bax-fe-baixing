@@ -1,6 +1,9 @@
 
 import { reverseCamelcase, toCamelcase } from 'object-keys-mapping'
-import { api, trim, biaowang } from './base'
+import { api, trim } from './base'
+import { SPUCODES } from 'constant/product'
+
+const { WHOLE_SPU_CODE, BIAO_WANG_SPU_CODE } = SPUCODES
 
 export async function getUserIdFromBxSalesId(salesId) {
   const body = await api
@@ -174,4 +177,36 @@ export async function payOrder(orderId) {
     .json()
 
   return data
+}
+
+export async function getCurrentBalanceBreif(accountType) {
+  const body = await api
+    .get('/balance/brief')
+    .query(reverseCamelcase({accountType}))
+    .json()
+
+  return body.data
+}
+
+export async function getChargeLogs(opts) {
+  const { data } = await api
+    .get('/balance/chargelog')
+    .query(reverseCamelcase(opts))
+    .json()
+
+  return {
+    total: data.totalElements,
+    logs: toCamelcase(data.data)
+  }
+}
+
+export async function getCurrentAllBalanceBreif() {
+  const [ fengmingBalanceBrief, biaowangBalanceBrief ] = await Promise.all([
+    getCurrentBalanceBreif(WHOLE_SPU_CODE),
+    getCurrentBalanceBreif(BIAO_WANG_SPU_CODE)
+  ])
+  return {
+    fengmingBalance: fengmingBalanceBrief.currentBalance,
+    biaowangBalance: biaowangBalanceBrief.currentBalance
+  }
 }

@@ -3,7 +3,7 @@
   <div class="account-container">
     <main>
       <h1 class="title">{{ userInfo.name }}，欢迎回来</h1>
-      <account-summary />
+      <account-summary :userInfo="userInfo"/>
       <consume />
       <charge />
       <log-list :all-areas="allAreas"/>
@@ -42,7 +42,6 @@ export default {
   },
   mounted() {
     const { userInfo } = this
-
     track({
       action: 'account: enter page',
       baixingId: userInfo.baixingId,
