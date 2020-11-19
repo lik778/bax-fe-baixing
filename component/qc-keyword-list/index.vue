@@ -1,5 +1,7 @@
 <template>
   <div class="page">
+    <!-- 测试 -->
+    <el-button type="primary" @click="download">测试下载</el-button>
     <!-- Header -->
     <header>
       优选词列表
@@ -61,6 +63,8 @@
 <script>
 import dayjs from 'dayjs'
 import clone from 'clone'
+import { Parser }  from 'json2csv'
+import FileSaver from 'file-saver'
 
 import Statics from '../common/statics'
 import KeywordView from '../qc-create-promote/select-keywords/view'
@@ -126,7 +130,6 @@ export default {
     this.getPreferredWordPV()
     this.getQueryList()
     this.$on('hook:beforeDestroy', () => {
-      // 清除前端分页存储的数据
       getPreferredWordsList.clear()
     })
   },
@@ -152,7 +155,7 @@ export default {
         page: page - 1,
         size: this.pagination.size,
         id: this.id,
-        ...formatReqQuery(this.query),
+        ...formatReqQuery(this.query)
       }
       this.loading.query = true
       let response
@@ -195,6 +198,20 @@ export default {
     handleSizeChange(size) {
       this.pagination.size = size
       this.getQueryList()
+    },
+    download() {
+      const { user_id: targetUserId, sales_id: salesId } = parseQuery(window.location.search)
+      const { coreWord, createdTime } = this.promote
+
+      function washCSVList(list) {
+        return list
+      }
+
+      const { data: list } = getPreferredWordsList.getAll()
+      const csvData = (new Parser).parse(washCSVList(list))
+      const filename = `优选词列表 - ${coreWord} - ${dayjs(createdTime).format('YYYY/MM/DD')}.csv`
+      const blob = new Blob(['\uFEFF' + csvData], { type: 'text/csv;charset=utf-8;' })
+      FileSaver.saveAs(blob, filename)
     },
 
   },

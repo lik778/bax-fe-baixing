@@ -224,7 +224,17 @@ export function paginationWrapper(getList, dataFormat) {
       data: data.slice(page * size, end + 1)
     }
   }
+
+  // API 获取所有数据
+  wrapperFn.getAll = () => ({
+    data: responseStore.data,
+    total: responseStore.data.length
+  })
+  // API 清空数据
+  // * 页面上需要显式清空数据防止内存泄漏
+  // TODO refactor
   wrapperFn.clear = () => (responseStore = null)
+
   return wrapperFn
 }
 
