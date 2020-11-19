@@ -167,7 +167,7 @@ export default {
 
       words = words
         .trim()
-        .split(/[\n，,]]*/g)
+        .split(/[\n，,\s]]*/g)
         .map((row) => row.toLocaleLowerCase().trim())
         .filter(
           (row) =>
