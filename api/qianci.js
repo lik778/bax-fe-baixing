@@ -6,14 +6,6 @@ import { qianci, qianci1, baseOptions } from './base'
 import { qcApiHost } from 'config'
 
 const isDev = process.env.NODE_ENV === 'development'
-const useTestData = isDev && true
-// 锁词逻辑
-export async function keywordLocked(opts) {
-  return qianci1
-    .get('/promote/keyword/isLocked')
-    .query(opts)
-    .json()
-}
 
 // 获取千词核心词
 export async function getQcAllAreas() {

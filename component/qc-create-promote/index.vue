@@ -16,11 +16,10 @@
             <i class="el-icon-plus" v-if="!isEdit" @click="areaDialogVisible = true"></i>
           </el-form-item>
           <el-form-item>
-            <p class="warning-text" >{{checkWordText}}</p>
             <el-button :disabled="isEdit" :loading="loading" type="primary" @click="checkWord">检查</el-button>
           </el-form-item>
         </el-form>
-        <select-keywords v-if="keywordsPanelVisible" ref="selectKeywords" :promote="promote" 
+        <select-keywords v-if="keywordsPanelVisible" ref="selectKeywords" :promote="promote"
         :form="form" :isEdit="isEdit"/>
       </main>
     </div>
@@ -35,7 +34,7 @@
 
 <script>
 import { Message } from 'element-ui'
-import { getPromote, keywordLocked,createPreferredWords } from "api/qianci"
+import { getPromote, createPreferredWords } from "api/qianci"
 import ProductIntro from "com/qc-create-promote/product-intro"
 import QcAreaSelector from "com/qc-create-promote/qc-area-selector"
 import { API_SUCCESS } from 'constant/api'
@@ -74,7 +73,6 @@ export default {
       loading: false,
       areaDialogVisible: false,
       keywordsPanelVisible: false,
-      checkWordText: '',
       isEdit: false
     }
   },
@@ -105,7 +103,7 @@ export default {
     }
   },
   async mounted() {
-    const { id } = this.$route.query 
+    const { id } = this.$route.query
 
     // 获取千词地区信息
     if (Object.keys(gStore.allQianciAreas).length === 0) {
@@ -122,19 +120,7 @@ export default {
     async checkWord() {
       this.$refs.form.validate(async isValid => {
         if (isValid) {
-          const { code, message, data } = await keywordLocked({ coreWord: this.form.keyword, provinces: this.form.areas.map(x => x.en) })
-          if (code === API_SUCCESS) {
-            if (data.locked.length === 0) {
-              this.keywordsPanelVisible = true
-              this.checkWordText = ''
-            } else {
-              this.checkWordText = `检测${this.form.keyword}在所选的地区(${ data.locked.join(',') })已被售出`
-            }
-          } else {
-            Message.error(message)
-          }
-        } else {
-          return false
+          this.keywordsPanelVisible = true
         }
       })
     },
