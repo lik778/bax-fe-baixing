@@ -127,11 +127,11 @@ export const DEVICE = {
   [DEVICE_WAP]: '手机端'
 }
 
-export const DEVICE_DASHBOARD_PC = 1
-export const DEVICE_DASHBOARD_WAP = 2
+export const DEVICE_DASHBOARD_WAP = 1
+export const DEVICE_DASHBOARD_WEB = 2
 export const DEVICE_DASHBOARD = {
-  1: '电脑端',
-  2: '手机端'
+  [DEVICE_DASHBOARD_WAP]: '电脑端',
+  [DEVICE_DASHBOARD_WEB]: '手机端'
 }
 
 export const isExpandWordStatusError = status => [
