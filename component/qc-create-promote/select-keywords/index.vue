@@ -228,7 +228,7 @@ export default {
         suffixWords: this.keywordOptions.D.keywords, salesId, targetUserId  }
       const handleFunc = this.isEdit ? updatePromoteWords : createPreferredWords
       if (this.isEdit) {
-         params.id = this.promote.id
+        params.id = this.promote.id
       }
       const { code, message } = await handleFunc(params)
       if (code === API_SUCCESS) {
