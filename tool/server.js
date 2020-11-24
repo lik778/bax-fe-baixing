@@ -36,10 +36,11 @@ app.use(require('webpack-hot-middleware')(compiler))
 
 app.use(express.static(join(__dirname, '..')))
 
-app.listen(3000, err => {
+const { port } = require('./server-config')
+app.listen(port, err => {
   if (err) {
     return console.error(err)
   }
 
-  console.info('Listening at http://localhost:3000')
+  console.info('Listening at http://localhost:port')
 })
