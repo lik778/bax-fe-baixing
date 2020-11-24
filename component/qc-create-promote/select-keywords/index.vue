@@ -126,7 +126,7 @@ export default {
       const BLength = this.keywordOptions.B.keywords.length
       const CLength = this.keywordOptions.C.keywords.length
       const DLength = this.keywordOptions.D.keywords.length
-      return ALength * BLength + BLength * CLength + CLength * DLength + ALength * BLength * CLength
+      return ALength * CLength + BLength * CLength + CLength * DLength + ALength * BLength * CLength
       + ALength * CLength * DLength + BLength * CLength * DLength + ALength * BLength * CLength * DLength
     }
   },
