@@ -42,5 +42,5 @@ app.listen(port, err => {
     return console.error(err)
   }
 
-  console.info('Listening at http://localhost:port')
+  console.info('Listening at http://localhost:' + port)
 })
