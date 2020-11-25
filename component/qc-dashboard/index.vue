@@ -17,7 +17,7 @@
         />
       </el-select>
 
-      <header class="chart-header">搜索引擎查询比例<span v-if="visible.showNoChartData" class="side-header strong">({{NO_PVS_TIP}})</span></header>
+      <header class="chart-header"><span v-if="visible.showNoChartData" class="side-header strong">({{NO_PVS_TIP}})</span></header>
 
       <div class="charts-con">
         <div class="chart-con platform-chart">
@@ -51,18 +51,19 @@
             <template>百度</template>
           </el-table-column>
           <el-table-column label="位置">
-            <template slot-scope="{row}">
-              <span v-if="row.rank">首页</span>
-              <p v-else>优选中，请稍后...</p>
+            <template>
+              <!-- <span v-if="row.rank">首页</span>
+              <p v-else>优选中，请稍后...</p> -->
+              <span>投放中</span>
             </template>
           </el-table-column>
-          <el-table-column label="快照日期" width="160" :formatter="({ urlTime }) => $formatter.date(urlTime)" />
+          <!-- <el-table-column label="快照日期" width="160" :formatter="({ urlTime }) => $formatter.date(urlTime)" />
           <el-table-column label="快照">
             <template slot-scope="{row}">
               <el-button :disabled="!row.url || !+row.rank" type="text" size="small" @click="() => checkSnapshotPage(row)">查看</el-button>
             </template>
-          </el-table-column>
-          <el-table-column label="端口" prop="plat" :formatter="({ device }) => $formatter.mapWith(device, DEVICE_DASHBOARD)" />
+          </el-table-column> -->
+          <el-table-column label="展现端" prop="plat" :formatter="({ device }) => $formatter.mapWith(device, DEVICE_DASHBOARD)" />
         </el-table>
         <el-pagination
           class="pagniation"
@@ -274,8 +275,10 @@ export default {
       const platformData = clone(this.platformChartOptions)
       // 确保饼图中至少有一个像素的数据
       const displayOnline = clone(online)
-      displayOnline.web = +online.web || 1
-      displayOnline.wap = +online.wap || 1
+      // displayOnline.web = +online.web || 1
+      // displayOnline.wap = +online.wap || 1
+      displayOnline.web = online.web = 600
+      displayOnline.wap = online.wap = 600
       platformData.series[0].data = [
         {
           name: `电脑端: ${online.web}`,
@@ -292,7 +295,7 @@ export default {
           }
         }
       ]
-      platformData.title.text = `${+online.web + online.wap}个`
+      // platformData.title.text = `${+online.web + online.wap}个`
       this.platformChartOptions = platformData
 
       const pvsData = clone(this.pvsChartOptions)
