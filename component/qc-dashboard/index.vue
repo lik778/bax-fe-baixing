@@ -52,16 +52,16 @@
           </el-table-column>
           <el-table-column label="位置">
             <template slot-scope="{row}">
-              <span v-if="row.rank">首页</span>
+              <span v-if="row.rank">投放中</span>
               <p v-else>优选中，请稍后...</p>
             </template>
           </el-table-column>
-          <el-table-column label="快照日期" width="160" :formatter="({ urlTime }) => $formatter.date(urlTime)" />
+          <!-- <el-table-column label="快照日期" width="160" :formatter="({ urlTime }) => $formatter.date(urlTime)" />
           <el-table-column label="快照">
             <template slot-scope="{row}">
               <el-button :disabled="!row.url || !+row.rank" type="text" size="small" @click="() => checkSnapshotPage(row)">查看</el-button>
             </template>
-          </el-table-column>
+          </el-table-column> -->
           <el-table-column label="端口" prop="plat" :formatter="({ device }) => $formatter.mapWith(device, DEVICE_DASHBOARD)" />
         </el-table>
         <el-pagination
@@ -292,7 +292,7 @@ export default {
           }
         }
       ]
-      platformData.title.text = `${+online.web + online.wap}个`
+      // platformData.title.text = `${+online.web + online.wap}个`
       this.platformChartOptions = platformData
 
       const pvsData = clone(this.pvsChartOptions)
