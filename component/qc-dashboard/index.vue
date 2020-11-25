@@ -44,7 +44,6 @@
           border
           :data="displayedShowList"
           :empty-text="loading.showNoListData ? NO_PVS_TIP : '...'"
-          :span-method="paddingNoData"
         >
           <el-table-column label="关键词" prop="keyword" />
           <el-table-column label="搜索引擎">
