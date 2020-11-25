@@ -295,6 +295,7 @@ export default {
         }
       ]
       // platformData.title.text = `${+online.web + online.wap}个`
+      platformData.title.text = '1200个'
       this.platformChartOptions = platformData
 
       const pvsData = clone(this.pvsChartOptions)
