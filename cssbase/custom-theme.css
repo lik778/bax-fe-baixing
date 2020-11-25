@@ -1,3 +1,5 @@
+/* TODO 待整理，和项目内 Element 主题样式合并 */
+
 /************************************** 按照设计规范产出的 CSS */
 
 .page,
@@ -30,11 +32,11 @@
 .statics {
   margin: 0 6px;
   padding: 2px 6px;
-  background: #FFF7EB;
-  border: 1px solid #FF7D51;
+  background: #fff7eb;
+  border: 1px solid #ff7d51;
   border-radius: 1px;
   font-size: 14px;
-  color: #FF6350;
+  color: #ff6350;
   text-align: center;
 }
 
@@ -45,23 +47,35 @@
 }
 
 .success {
-  color: #67C23A;
+  color: #67c23a;
 }
 .info {
-  color: #35A5E4;
+  color: #35a5e4;
 }
 .tip {
-  color: #ED7D00;
+  color: #ed7d00;
 }
 .ignore {
   color: #999999;
 }
 .warning {
-  color: #FFA205;
+  color: #ffa205;
 }
 .strong,
 .error {
   color: #ff6350;
+}
+
+/**************************************************************** Transition */
+
+.fold-by-height-enter-active,
+.fold-by-height-leave-active {
+  transition: all 0.3s ease;
+}
+.fold-by-height-enter,
+.fold-by-height-leave-to {
+  transform: translateY(-15px);
+  opacity: 0;
 }
 
 /**************************************************************** ElementUI 修改 */
@@ -110,7 +124,7 @@
 /******************************************** el-pagination */
 
 .el-pagination {
-  & /deep/ span:not([class*=suffix]) {
+  & /deep/ span:not([class*="suffix"]) {
     font-size: 14px;
   }
   & /deep/ button {

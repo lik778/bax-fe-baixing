@@ -19,32 +19,60 @@
         </div>
       </div>
     </section>
-    <div class="view-container">
-      <keyword-view
-        v-for="(value, key) in keywordOptions"
-        :key="key"
-        :type="key"
-        class="keyword-view"
-        :title="value.title"
-        :keywords="value.keywords"
-        :isEdit="value.isEdit"
-        @edit="editKeyword"
-        @delete="deleteKeyword"
-        @pop-keyword-input="popKeywordInputDialog"
-      ></keyword-view>
-    </div>
-    <keyword-input
-      :visible="visible"
-      @words="updateKeywords"
-      @close="visible = false"
-      :type="activeType"
-      :info="getProp('info')"
-      :title="getProp('inputTitle')"
-      :placeholder="getProp('placeholder')"
-    ></keyword-input>
-    <div class="mt-45 size-13">
-      <div>组合逻辑：A+C、B+C、C+D、A+B+C、A+C+D、B+C+D、A+B+C+D；</div>
-      <div>如：上海（A）专业的（B）空调维修（C）多少钱（D）</div>
+    <!-- TODO refactor form.keywords[idx] -->
+    <div
+      class="b-d-input-con"
+      v-for="(opts, idx) in keywordOptions"
+      :key="idx + '-' + form.keywords[idx]"
+    >
+      <div class="con-title" v-if="form.keywords.length > 1">
+        <span v-html="genConTitle(form.keywords[idx], idx)" />
+        <span class="actions">
+          <el-button
+            type="text"
+            :icon="
+              visible.keywordsIDX[idx]
+                ? 'el-icon-arrow-up'
+                : 'el-icon-arrow-down'
+            "
+            @click="() => openOneWordInputView(idx)"
+            >{{ visible.keywordsIDX[idx] ? "收起" : "展开" }}</el-button
+          >
+        </span>
+      </div>
+      <transition name="fold-by-height">
+        <div v-show="visible.keywordsIDX[idx]">
+          <div class="view-container">
+            <keyword-view
+              v-for="(value, key) in opts"
+              class="keyword-view"
+              :key="key"
+              :type="key"
+              :title="value.title"
+              :keywords="value.keywords"
+              :isEdit="value.isEdit"
+              @edit="(...args) => editKeyword(idx, ...args)"
+              @delete="(...args) => deleteKeyword(idx, ...args)"
+              @pop-keyword-input="
+                (...args) => popKeywordInputDialog(idx, ...args)
+              "
+            ></keyword-view>
+          </div>
+          <keyword-input
+            :visible="visible.input"
+            :type="activeType"
+            :info="getProp(idx, 'info')"
+            :title="getProp(idx, 'inputTitle')"
+            :placeholder="getProp(idx, 'placeholder')"
+            @words="(...args) => updateKeywords(idx, ...args)"
+            @close="visible.input = false"
+          />
+          <div class="expand-tip size-13">
+            <div>组合逻辑：A+C、B+C、C+D、A+B+C、A+C+D、B+C+D、A+B+C+D；</div>
+            <div>如：上海（A）专业的（B）空调维修（C）多少钱（D）</div>
+          </div>
+        </div>
+      </transition>
     </div>
     <div class="action-area">
       <p v-show="!handleDisabled">
@@ -67,7 +95,7 @@
       :close-on-click-modal="false"
       :show-close="false"
       title="提示"
-      :visible.sync="successDialogVisible"
+      :visible.sync="visible.successDialog"
     >
       <div class="success-dialog-box">
         <img
@@ -93,8 +121,9 @@ import { API_SUCCESS, API_CANNOT_PASS_QUALITY_CHECK } from "constant/api";
 import KeywordView from "./view";
 import KeywordInput from "./input";
 import keywordOptions from "./keyword-options";
+import { qcWordAll } from "util";
 
-const validateKeywordsLen = typeObj => {
+const validatekeywordsLen = typeObj => {
   const { wordsLimit, keywords, type } = typeObj;
   const len = keywords.length;
   if (len < wordsLimit[0]) return `${type}类词数限制不低于${wordsLimit[0]}`;
@@ -130,10 +159,17 @@ export default {
   },
   data() {
     return {
-      visible: false,
-      keywordOptions: clone(keywordOptions),
+      visible: {
+        input: false,
+        keywordsIDX: {
+          0: true,
+          1: false,
+          2: false
+        },
+        successDialog: false
+      },
+      keywordOptions: [],
       activeType: "A",
-      successDialogVisible: false,
       submitWordsLoading: false,
       errorTips: "",
       preventSumbit: false
@@ -141,67 +177,73 @@ export default {
   },
   computed: {
     handleDisabled() {
-      const Blength = this.keywordOptions.B.keywords.length;
-      const limitB = this.keywordOptions.B.wordsLimit;
-      const Dlength = this.keywordOptions.D.keywords.length;
-      const limitD = this.keywordOptions.D.wordsLimit;
-      return !(
-        Blength >= limitB[0] &&
-        Blength <= limitB[1] &&
-        Dlength >= limitD[0] &&
-        Dlength <= limitD[1]
-      );
+      const isDisabled = opts => {
+        const Blength = opts.B.keywords.length;
+        const limitB = opts.B.wordsLimit;
+        const Dlength = opts.D.keywords.length;
+        const limitD = opts.D.wordsLimit;
+        return !(
+          Blength >= limitB[0] &&
+          Blength <= limitB[1] &&
+          Dlength >= limitD[0] &&
+          Dlength <= limitD[1]
+        );
+      };
+      return !!this.keywordOptions.find(x => isDisabled(x));
     },
     wordNum() {
-      const ALength = this.keywordOptions.A.keywords.length;
-      const BLength = this.keywordOptions.B.keywords.length;
-      const CLength = this.keywordOptions.C.keywords.length;
-      const DLength = this.keywordOptions.D.keywords.length;
-      return (
-        ALength * BLength +
-        BLength * CLength +
-        CLength * DLength +
-        ALength * BLength * CLength +
-        ALength * CLength * DLength +
-        BLength * CLength * DLength +
-        ALength * BLength * CLength * DLength
-      );
+      const countOne = x =>
+        qcWordAll(
+          ["A", "B", "C", "D"].reduce(
+            (h, c) => ((h[c] = x[c].keywords.length), h),
+            {}
+          )
+        );
+      return this.keywordOptions.reduce((h, c) => h + countOne(c), 0);
     }
   },
   components: {
     KeywordInput,
     KeywordView
   },
-  async created() {
-    Object.keys(this.keywordOptions).forEach(x => {
-      if (x === "A") {
-        this.keywordOptions["A"].keywords = this.form.areas.reduce((t, c) => {
-          t.push(c.name);
-          return t.concat(c.cities);
-        }, []);
-      } else if (x === "C") {
-        this.keywordOptions["C"].keywords = [this.form.keywords];
-      }
-    });
-    Object.values(this.keywordOptions).map(item => {
-      this.keywordOptions[item.type].placeholder = item.placeholder.replace(
-        /[,，]]*/g,
-        "<br/>"
-      );
-    });
+  created() {
+    this.initKeywordOptions();
   },
   methods: {
-    getProp(prop) {
-      const existKeywordObj = this.keywordOptions[this.activeType];
+    initKeywordOptions() {
+      this.keywordOptions = (this.form.keywords || [])
+        .map(x => clone(keywordOptions))
+        .map((opts, idx) => {
+          Object.keys(opts).forEach(x => {
+            if (x === "A") {
+              opts.A.keywords = this.form.areas.reduce((t, c) => {
+                t.push(c.name);
+                return t.concat(c.cities);
+              }, []);
+            } else if (x === "C") {
+              opts.C.keywords = [this.form.keywords[idx]];
+            }
+          });
+          Object.values(opts).map(item => {
+            opts[item.type].placeholder = item.placeholder.replace(
+              /[,，]]*/g,
+              "<br/>"
+            );
+          });
+          return opts;
+        });
+    },
+    getProp(idx, prop) {
+      const existKeywordObj = this.keywordOptions[idx][this.activeType];
       return existKeywordObj && existKeywordObj[prop];
     },
-    popKeywordInputDialog(type) {
-      this.visible = true;
+    popKeywordInputDialog(idx, type) {
+      this.visible.input = true;
       this.activeType = type;
     },
-    updateKeywords(obj) {
+    updateKeywords(idx, obj) {
       let { type, words } = obj;
-      const wordLenLimit = this.keywordOptions[type].wordLenLimit;
+      const wordLenLimit = this.keywordOptions[idx][type].wordLenLimit;
 
       words = words
         .trim()
@@ -214,23 +256,23 @@ export default {
             row.length <= wordLenLimit[1]
         );
 
-      let keywords = this.keywordOptions[type].keywords;
+      let keywords = this.keywordOptions[idx][type].keywords;
 
       keywords = [...new Set(words.concat(keywords))];
-      this.keywordOptions[type].keywords = keywords;
+      this.keywordOptions[idx][type].keywords = keywords;
     },
-    editKeyword(obj) {
+    editKeyword(idx, obj) {
       const { type, index } = obj;
-      const wordLenLimit = this.keywordOptions[type].wordLenLimit;
+      const wordLenLimit = this.keywordOptions[idx][type].wordLenLimit;
 
       this.$prompt("", "编辑词语", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         closeOnClickModal: false,
-        inputValue: this.keywordOptions[type].keywords[index]
+        inputValue: this.keywordOptions[idx][type].keywords[index]
       })
         .then(({ value }) => {
-          const keywords = this.keywordOptions[type].keywords;
+          const keywords = this.keywordOptions[idx][type].keywords;
           if (keywords.includes(value)) {
             return this.$message.error("已存在该关键词，请修改重新提交");
           }
@@ -252,22 +294,13 @@ export default {
               `单个词长度不少于${wordLenLimit[0]}个字, 不超过${wordLenLimit[1]}个字`
             );
           }
-          this.keywordOptions[type].keywords.splice(index, 1, value);
+          this.keywordOptions[idx][type].keywords.splice(index, 1, value);
         })
         .catch(() => {});
     },
-    deleteKeyword(obj) {
+    deleteKeyword(idx, obj) {
       const { type, index } = obj;
-      this.keywordOptions[type].keywords.splice(index, 1);
-    },
-    getValues() {
-      return Object.values(this.keywordOptions).reduce((curr, item) => {
-        const errMsg = validateKeywordsLen(item);
-        if (errMsg) throw new Error(errMsg);
-        const keywordLabel = item.keywordsAlias;
-        curr[keywordLabel] = item.keywords;
-        return curr;
-      }, {});
+      this.keywordOptions[idx][type].keywords.splice(index, 1);
     },
     async sumbitWords() {
       const { keyword, areas } = this.form;
@@ -289,13 +322,29 @@ export default {
       }
       const { code, message } = await handleFunc(params);
       if (code === API_SUCCESS) {
-        this.successDialogVisible = true;
+        this.visible.successDialog = true;
       } else if (code === API_CANNOT_PASS_QUALITY_CHECK) {
         this.errorTips = message;
       } else {
         Message.warning(message);
       }
       this.submitWordsLoading = false;
+    },
+    genConTitle(word, idx) {
+      return `<div>${idx +
+        1}、请填写关键词 <span class="warning">${word}</span> 的（B/D) 类词：</div>`;
+    },
+    openOneWordInputView(idx) {
+      const enableMulti = true;
+      if (enableMulti) {
+        this.visible.keywordsIDX[idx] = !this.visible.keywordsIDX[idx];
+      } else {
+        this.visible.keywordsIDX = Object.keys(this.visible.keywordsIDX).reduce(
+          (h, c) => ((h[c] = false), h),
+          {}
+        );
+        this.visible.keywordsIDX[idx] = true;
+      }
     }
   },
   watch: {
@@ -309,13 +358,14 @@ export default {
       deep: true,
       immediate: true,
       handler(values) {
-        if (values) {
-          const { coreWord, prefixWords, suffixWords } = values;
-          this.keywordOptions.C.keywords = [coreWord];
-          this.keywordOptions.B.keywords = prefixWords;
-          this.keywordOptions.D.keywords = suffixWords;
-          this.preventSumbit = true;
-        }
+        // TODO
+        // if (values) {
+        //   const { coreWord, prefixWords, suffixWords } = values;
+        //   this.keywordOptions.C.keywords = [coreWord];
+        //   this.keywordOptions.B.keywords = prefixWords;
+        //   this.keywordOptions.D.keywords = suffixWords;
+        //   this.preventSumbit = true;
+        // }
       }
     },
     originKeywords(newVal) {
@@ -331,9 +381,22 @@ export default {
 </script>
 
 <style lang="postcss" scoped>
+.b-d-input-con {
+  margin-top: 30px;
+
+  & .actions {
+    margin-left: 1em;
+
+    & > .el-button {
+      color: #00a5ff;
+    }
+  }
+}
 .view-container {
   display: flex;
   align-items: center;
+  margin-top: 14px;
+
   & > div:not(:last-child) {
     margin-right: 16px;
   }
@@ -361,7 +424,6 @@ export default {
   & .info {
     font-size: 13px;
     color: inherit;
-    padding-bottom: 25px;
     & > p {
       text-indent: 1em;
     }
@@ -373,8 +435,8 @@ export default {
   & .mt-16 {
     margin-top: 16px;
   }
-  & .mt-45 {
-    margin-top: 45px;
+  & .expand-tip {
+    margin-top: 33px;
   }
   & .size-13 {
     font-size: 13px;
