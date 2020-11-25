@@ -24,10 +24,10 @@
       </main>
     </div>
     <qc-area-selector
-       :areas="form.areas"
-       :visible="areaDialogVisible"
-       @ok="onAreasChange"
-       @cancel="areaDialogVisible = false"
+      :areas="form.areas"
+      :visible="areaDialogVisible"
+      @ok="onAreasChange"
+      @cancel="areaDialogVisible = false"
     />
   </div>
 </template>
