@@ -1,7 +1,7 @@
 export default {
   title: {
     show: true,
-    text: '1200个',
+    text: '--个',
     subtext: '优选关键词正在\n投放百度中',
     left: 'center',
     top: '40%',
