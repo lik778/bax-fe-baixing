@@ -21,6 +21,7 @@
               :key="item.id"
               @click="() => selectType(item.id)"
             >
+              <div class="hotsale-icon" v-if="item.id == 2">NEW</div>
               <div class="card-title">{{ item.title }}</div>
               <div class="card-tip">{{ item.info }}</div>
             </div>
@@ -338,6 +339,7 @@ div.bg {
   margin-bottom: 36px;
 }
 .type-card {
+  position: relative;
   display: inline-block;
   margin-top: 10px;
   margin-left: 28px;
@@ -353,6 +355,22 @@ div.bg {
     margin-left: 0;
   }
 
+  & > .hotsale-icon {
+    position: absolute;
+    top: -7px;
+    right: 6px;
+    width: 48px;
+    height: 32px;
+    line-height: 23px;
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAiCAMAAAAqN3oYAAABBVBMVEUAAAC+SEG6RS21Pie3Piq7Sjq5QzC7Tye2QCa1PiW2QCe1QSi2RSy0PSW1PiW2Pia2PyW0Pya2Pie2QCmyQybGQI67QUW7Qjm1PybLQ7nCQnvOQLnLSMfJRrDOPqTCTa/LQJq/TaC9R2fAQFu+WuTHTMrCVNi3aPu3afzFTse+VdHPPKrBUL++Wc68SoW9UqLLPYC3Z+bKSLfKSMvLR8nEUtrFUNjHTNLMRcfAWeXHTtTIS9DGT9bCVd/JSc3PQL++W+nBVuHBV+PDU9zJSs6/Wue7YPHMRMW8X++9Xu3DVN26YvS9XevNQ8POQsK5ZPbQP73RPbq3ZvrNRMS+XOrSO7fLSMoTLDc7AAAAM3RSTlMAAwssGAgPBiEzJhURSU5DPjhUHRqhY1ou4Yzw5s3GtrafdXX58e/m5d/d3crBinBwUlLt/twKAAACO0lEQVQ4y43U6XbaMBAF4HqR990sCU3Spvu+EUIChJJSQgADDVDe/1E6Ix1JYNcn+Le+c680kp/gpxz8wWIGTELUAz5CTEQoyPd3q9VquVzOZnd395MsGwxG19e/bm9upsNh6/Ky1+u0u93f/ebJD0KNQoy3KBCgmHBxC6KFotNpt1E0L04MooAwDX0n4z7LNoPRiIkpywDAxMWVbpgKhHgWkHwrWou3anNxZXkEievIjAnNEKK1L8Zrx0Wi6trqMQFki2Ku6SojEFIQcusoaKv1XBKZsX9YPSGaIMbzxUKQGRAQE5qBIXwgKLpMYK3FT0lQyBFCrRKxQ/IjnHIhD2uM4o8gVGxkBgiZwbY+p0ISmrFBURxIn2cgeRAEN4IZQOTxSsH2gUISlgEkl9EFscWtM7FHsuy/I+zzgSAB8PBXElYrJ+TNWtCtg5CEi+IIZQYKTuAmf/38Sl6TVj5DirNvcJPZe7HD+vkHvCbF+y4P62O1HtrsvZiq7tiRn7x49mZIhRyhPKynz18mfmQ7umoq9O3rlhZHfpB8+dTbGeFWXJOzRhL4UaxZOr59IGDciqXZcegHtfP3KIBwsTiu1gI/jG3NqrggFP4fMzw9dTQ7CgMo+FoMZI2FgjCyNSfVPYOYVHCkYpRzhAXrjVMmTht1LHTkYIAqwK7y3JQVTGrVYyiUsEKp6+XWC6QQVRT0g8AXhVSiFECxoB3HdrFQufLcSmpZaaWkUElBw/OMfKFHokxCTBFwqCpd/w8mE/YTkb+nhgAAAABJRU5ErkJggg==);
+    background-size: 100%;
+    background-repeat: no-repeat;
+    color: white;
+    font-size: 10px;
+    font-style: italic;
+    font-weight: 500;
+    text-indent: -2px;
+  }
   & > .card-title {
     height: 35px;
     line-height: 35px;
