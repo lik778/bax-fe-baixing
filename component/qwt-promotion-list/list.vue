@@ -79,9 +79,9 @@
             </tr>
           </tbody>
           <tr class="table-loading-mask" v-if="!campaignMap[landingPage.id]">
-             <td colspan="7">
-                <i class="el-icon-loading icon" />正在努力加载中
-             </td>
+            <td colspan="7">
+              <i class="el-icon-loading icon" />正在努力加载中
+            </td>
           </tr>
         </table>
       </li>
@@ -96,9 +96,10 @@
         </div>
       </div>
     </transition>
-     <audit-reject-reason-dialog :show="auditRejectReasonDialogVisible"
-                                  @close="auditRejectReasonDialogVisible = false">
-      </audit-reject-reason-dialog>
+    <audit-reject-reason-dialog 
+      :show="auditRejectReasonDialogVisible"
+      @close="auditRejectReasonDialogVisible = false">
+    </audit-reject-reason-dialog>
   </div>
 </template>
 

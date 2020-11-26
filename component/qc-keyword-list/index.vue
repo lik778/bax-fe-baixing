@@ -400,13 +400,4 @@ export default {
     }
   }
 }
-.fold-by-height-enter-active,
-.fold-by-height-leave-active {
-  transition: all .3s ease;
-}
-.fold-by-height-enter,
-.fold-by-height-leave-to {
-  transform: translateY(-15px);
-  opacity: 0;
-}
 </style>

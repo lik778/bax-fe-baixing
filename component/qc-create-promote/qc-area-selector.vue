@@ -34,6 +34,7 @@ import gStore from '../store'
 export default {
   name: 'qc-area-selector',
   props: {
+    maxAreaLength: Number,
     areas: {
       type: Array,
       required: true,
@@ -91,7 +92,7 @@ export default {
   },
   methods: {
     disabledProvinceCheck(province) {
-      return !this.selectedAreas.map(p => p.name).includes(province.name) && this.selectedAreas.length === 2
+      return !this.selectedAreas.map(p => p.name).includes(province.name) && this.selectedAreas.length === this.maxAreaLength
     },
     provinceCheckedChange(province) {
       if (province.checked) {
