@@ -252,38 +252,6 @@ export default {
       const promote = await getPromote(id);
       this.promote = promote;
     }
-
-    /* for test */
-    this.selectType(2);
-    this.selectKeyword("一光");
-    this.selectKeyword("二军");
-    this.selectKeyword("三叠");
-    this.onAreasChange([
-      {
-        name: "山东",
-        en: "shandong",
-        checked: true,
-        cities: [
-          "东营",
-          "德州",
-          "滨州",
-          "莱芜",
-          "济南",
-          "临沂",
-          "济宁",
-          "菏泽",
-          "聊城",
-          "青岛",
-          "泰安",
-          "日照",
-          "烟台",
-          "潍坊",
-          "淄博",
-          "威海",
-          "枣庄"
-        ]
-      }
-    ]);
   },
   methods: {
     selectType(newType) {
