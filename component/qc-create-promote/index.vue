@@ -12,7 +12,6 @@
           class="form"
           @submit.native.prevent
         >
-          <!-- TODO 上新标志 -->
           <!-- 选择推广类型 -->
           <el-form-item label="推广类型" prop="type">
             <div
@@ -113,6 +112,10 @@ import { getPromote, createPreferredWords } from "api/qianci";
 import ProductIntro from "com/qc-create-promote/product-intro";
 import QcAreaSelector from "com/qc-create-promote/qc-area-selector";
 import { API_SUCCESS } from "constant/api";
+import {
+  ONE_WORD_TWO_PROVINCE,
+  THREE_WORD_ONE_PROVINCE
+} from "constant/qianci";
 import SelectKeywords from "./select-keywords";
 import gStore from "../store";
 
@@ -166,12 +169,12 @@ export default {
           {
             title: "一词两省",
             info: "支持首页宝推广，让您的网站上百度首页",
-            id: 1
+            id: ONE_WORD_TWO_PROVINCE
           },
           {
             title: "三词一省",
             info: "支持 SEO 优化等更多专业版官网建站功能",
-            id: 2
+            id: THREE_WORD_ONE_PROVINCE
           }
         ]
       }
@@ -183,8 +186,8 @@ export default {
     },
     maxKeywordLength() {
       return {
-        1: 1,
-        2: 3
+        [ONE_WORD_TWO_PROVINCE]: 1,
+        [THREE_WORD_ONE_PROVINCE]: 3
       }[this.form.type];
     },
     restKeywordLength() {
@@ -192,8 +195,8 @@ export default {
     },
     maxAreaLength() {
       return {
-        1: 2,
-        2: 1
+        [ONE_WORD_TWO_PROVINCE]: 2,
+        [THREE_WORD_ONE_PROVINCE]: 1
       }[this.form.type];
     },
     restAreaLength() {
@@ -212,8 +215,11 @@ export default {
         if (n) {
           const { coreWordInfos = [] } = n;
           const keywords = coreWordInfos.map(x => x.coreWord);
-          // TODO 有木有枚举？
-          this.form.type = keywords.length === 3 ? 2 : 1;
+          // TODO refactor
+          this.form.type =
+            keywords.length === 3
+              ? [THREE_WORD_ONE_PROVINCE]
+              : [ONE_WORD_TWO_PROVINCE];
           this.form.keywords = keywords;
           const { enToCnMap, provinces } = this.allQianciAreas;
           this.form.areas = n.provinces.map(en => {

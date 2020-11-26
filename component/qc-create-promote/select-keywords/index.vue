@@ -84,7 +84,7 @@
         type="primary"
         :loading="loading.submit"
         @click="sumbitWords"
-        :disabled="handleDisabled || preventSumbit"
+        :disabled="handleDisabled || isNotEdited"
         size="medium"
         >{{
           loading.submit ? "拓词中..." : isEdit ? "更新优选" : "提交优选"
@@ -177,8 +177,7 @@ export default {
       loading: {
         submit: false
       },
-      errorTips: "",
-      preventSumbit: false
+      errorTips: ""
     };
   },
   computed: {
@@ -206,6 +205,21 @@ export default {
           )
         );
       return this.keywordOptions.reduce((h, c) => h + countOne(c), 0);
+    },
+    // 没有改动则不能提交
+    isNotEdited() {
+      const isArrEqual = (a, b) =>
+        a.length === b.length && !a.find(x => !b.includes(x));
+      const isEdited =
+        this.isEdit &&
+        this.keywordOptions.find((opts, idx) => {
+          const infos = this.promote.coreWordInfos;
+          return (
+            !isArrEqual(opts.B.keywords, infos[idx].prefixWords) ||
+            !isArrEqual(opts.D.keywords, infos[idx].suffixWords)
+          );
+        });
+      return this.isEdit ? !isEdited : false;
     }
   },
   components: {
@@ -312,7 +326,7 @@ export default {
     },
     async sumbitWords() {
       const { sales_id: salesId, user_id: targetUserId } = this.$route.query;
-      const { keywords, areas } = this.form;
+      const { type, keywords, areas } = this.form;
       const coreWordInfos = Array(this.keywordOptions.length)
         .fill("")
         .map((x, idx) => ({
@@ -321,6 +335,7 @@ export default {
           suffixWords: this.keywordOptions[idx].D.keywords
         }));
       const params = {
+        skuType: type,
         provinces: areas.map(x => x.en),
         coreWordInfos,
         salesId,
@@ -367,12 +382,6 @@ export default {
     }
   },
   watch: {
-    wordNum(newVal, oldVal) {
-      // 处理编辑逻辑
-      if (oldVal !== 0 && this.isEdit) {
-        this.preventSumbit = false;
-      }
-    },
     promote: {
       deep: true,
       immediate: true,
@@ -388,7 +397,6 @@ export default {
               opts.D.keywords = [...suffixWords];
               return opts;
             });
-          this.preventSumbit = true;
         }
       }
     },
