@@ -35,6 +35,7 @@
                 style="width: 200px"
                 maxlength="10"
                 @keypress.enter.native="(e, val) => selectKeyword(val)"
+                @focus="tip.keyword = ''"
               />
               <el-button
                 class="confirm-keyword-btn"
@@ -161,12 +162,12 @@ export default {
       options: {
         types: [
           {
-            title: "两省一词",
+            title: "一词两省",
             info: "支持首页宝推广，让您的网站上百度首页",
             id: 1
           },
           {
-            title: "一省三词",
+            title: "三词一省",
             info: "支持 SEO 优化等更多专业版官网建站功能",
             id: 2
           }
@@ -230,13 +231,6 @@ export default {
           this.keywordsPanelVisible = false;
         }
       }
-    },
-    "form.keywords": {
-      deep: true,
-      immediate: true,
-      handler(n) {
-        this.ruleKeyword();
-      }
     }
   },
   async mounted() {
@@ -257,10 +251,13 @@ export default {
     selectType(newType) {
       this.form.type = newType;
       this.initFormVals();
-      this.ruleKeyword();
     },
     selectKeyword(value = this.input.keyword) {
-      if (value && this.restKeywordLength > 0) {
+      const valid =
+        value &&
+        this.restKeywordLength > 0 &&
+        !this.form.keywords.includes(value);
+      if (valid) {
         this.form.keywords.push(value);
         this.input.keyword = "";
       }
@@ -273,7 +270,8 @@ export default {
     },
     async checkWord() {
       this.$refs.form.validate(async isValid => {
-        if (isValid && this.ruleKeyword()) {
+        const isKeywordValid = this.validKeywords();
+        if (isValid && isKeywordValid) {
           this.keywordsPanelVisible = true;
         }
       });
@@ -286,7 +284,16 @@ export default {
       this.form.areas = [...areas];
       this.areaDialogVisible = false;
     },
-    ruleKeyword() {
+    validKeywords() {
+      if (
+        this.form.keywords.find(
+          x => !/^[\u4E00-\u9FA5A-Za-z0-9]{2,10}$/.test(x)
+        )
+      ) {
+        this.tip.keyword =
+          "核心词不能是特殊字符，单个核心词长度限制为 2-10 个字";
+        return false;
+      }
       if (this.isTypeSelected) {
         this.tip.keyword = this.restKeywordLength
           ? `您还需输入 ${this.restKeywordLength} 个关键词`
