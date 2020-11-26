@@ -328,7 +328,13 @@ export default {
       const handleFunc = this.isEdit
         ? updatePromoteWords
         : createPreferredWords;
-      const { code, message } = await handleFunc(params);
+      let response = null;
+      try {
+        response = await handleFunc(params);
+      } catch (err) {
+        this.loading.submit = false;
+      }
+      const { code, message } = response || {};
       if (code === API_SUCCESS) {
         this.visible.successDialog = true;
       } else if (code === API_CANNOT_PASS_QUALITY_CHECK) {
@@ -336,7 +342,6 @@ export default {
       } else {
         Message.warning(message);
       }
-      this.loading.submit = false;
     },
     genConTitle(word, idx) {
       return `<div>${idx +
@@ -365,15 +370,20 @@ export default {
     promote: {
       deep: true,
       immediate: true,
-      handler(values) {
-        // TODO
-        // if (values) {
-        //   const { coreWord, prefixWords, suffixWords } = values;
-        //   this.keywordOptions.C.keywords = [coreWord];
-        //   this.keywordOptions.B.keywords = prefixWords;
-        //   this.keywordOptions.D.keywords = suffixWords;
-        //   this.preventSumbit = true;
-        // }
+      handler(n) {
+        if (n) {
+          const { coreWordInfos = [] } = n;
+          this.keywordOptions = coreWordInfos
+            .map(x => clone(keywordOptions))
+            .map(opts => {
+              const { coreWord, prefixWords, suffixWords } = opts;
+              opts.C.keywords = [coreWord];
+              opts.B.keywords = prefixWords;
+              opts.D.keywords = suffixWords;
+              return opts;
+            });
+          this.preventSumbit = true;
+        }
       }
     },
     originKeywords(newVal) {

@@ -201,11 +201,15 @@ export default {
     promote: {
       deep: true,
       immediate: true,
-      handler(values) {
-        if (values) {
-          this.form.keywords = values.coreWord;
+      handler(n) {
+        if (n) {
+          const { coreWordInfos = [] } = n;
+          const keywords = coreWordInfos.map(x => x.coreWord);
+          // TODO 有木有枚举？
+          this.form.type = keywords.length === 3 ? 2 : 1;
+          this.form.keywords = keywords;
           const { enToCnMap, provinces } = this.allQianciAreas;
-          this.form.areas = values.provinces.map(en => {
+          this.form.areas = n.provinces.map(en => {
             const cnName = enToCnMap[en];
             return {
               name: cnName,
