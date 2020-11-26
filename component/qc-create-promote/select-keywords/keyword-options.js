@@ -12,7 +12,7 @@ export default {
            <p>单个词长度不少于2个字，不超过8个字。</p>`,
     placeholder: '如:，上海，闵行区，徐汇区，七莘路，七宝镇，...',
     keywords: [],
-    keywordsAlias: 'customAreas',
+    keywordsAlias: 'provinces',
     wordsLimit: [15, 500],
     wordLenLimit: [2, 8],
     isEdit: false
@@ -28,7 +28,7 @@ export default {
     placeholder:
       '如：，A380、工业、民用、塑料、不锈钢、金属、进口、国产、靠谱、专业、……',
     keywords: [],
-    keywordsAlias: 'prefixWordList',
+    keywordsAlias: 'prefixWords',
     wordsLimit: [10, 20],
     wordLenLimit: [2, 8],
     isEdit: true
@@ -41,7 +41,7 @@ export default {
     placeholder:
       '如：，空调维修，空调移机，物品回收，黄金回收，挖掘机，推土机，...',
     keywords: [],
-    keywordsAlias: 'keywords',
+    keywordsAlias: 'coreWord',
     wordsLimit: [15, 100],
     wordLenLimit: [2, 8],
     isEdit: false
@@ -56,7 +56,7 @@ export default {
            <p>百度投放仅支持小写，输入大写时数据会被强制更改为小写。</p>`,
     placeholder: '如：，价格、厂商、厂家、批发、多少钱、怎么样、……',
     keywords: [],
-    keywordsAlias: 'suffixWordList',
+    keywordsAlias: 'suffixWords',
     wordsLimit: [10, 20],
     wordLenLimit: [2, 8],
     isEdit: true

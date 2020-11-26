@@ -1,13 +1,20 @@
 export default {
   title: {
     show: true,
-    text: '平台词数',
-    subtext: '当前在线词数',
+    text: '--个',
+    subtext: '优选关键词正在\n投放百度中',
     left: 'center',
-    top: '43%',
+    top: '40%',
     textStyle: {
       fontSize: 16,
-      lineHeight: 10
+      lineHeight: 10,
+      color: '#FF6350',
+      fontWeight: 'normal'
+    },
+    subtextStyle: {
+      fontSize: 12,
+      lineHeight: 14,
+      color: '#666'
     }
   },
   series: [
