@@ -1,5 +1,5 @@
 <template>
-  <div class="bg">
+  <div class="page-create-promote bg" :class="isEdit ? 'is-edit' : 'is-create'">
     <div class="white-bg">
       <main>
         <product-intro></product-intro>
@@ -16,10 +16,10 @@
           <!-- 选择推广类型 -->
           <el-form-item label="推广类型" prop="type">
             <div
-              v-for="item in options.types"
+              v-for="item in displayTypes"
               :class="['type-card', form.type == item.id ? 'active' : '']"
               :key="item.id"
-              @click="() => selectType(item.id)"
+              @click="() => (isEdit ? '' : selectType(item.id))"
             >
               <div class="hotsale-icon" v-if="item.id == 2">NEW</div>
               <div class="card-title">{{ item.title }}</div>
@@ -30,10 +30,11 @@
           <!-- 关键词与区域选择 -->
           <template v-if="isTypeSelected">
             <el-form-item label="推广关键词">
+              <!-- TODO fix click -->
               <el-input
-                :disabled="isEdit || restKeywordLength <= 0"
+                :disabled="restKeywordLength <= 0"
                 v-model="input.keyword"
-                style="width: 200px"
+                class="input-keyword"
                 maxlength="10"
                 @keypress.enter.native="(e, val) => selectKeyword(val)"
                 @focus="tip.keyword = ''"
@@ -53,7 +54,7 @@
                 <el-tag
                   v-for="(word, idx) in form.keywords"
                   class="keyword-tag"
-                  closable
+                  :closable="!isEdit"
                   :key="idx"
                   @close="() => removeKeyword(word)"
                   >{{ word }}</el-tag
@@ -197,6 +198,10 @@ export default {
     },
     restAreaLength() {
       return this.maxAreaLength - this.form.areas.length;
+    },
+    displayTypes() {
+      const raw = this.options.types;
+      return this.isEdit ? raw.filter(x => x.id == this.form.type) : raw;
     }
   },
   watch: {
@@ -217,7 +222,7 @@ export default {
               name: cnName,
               en,
               checked: true,
-              cities: provinces[cnName]
+              cities: [...provinces[cnName]]
             };
           });
           this.keywordsPanelVisible = true;
@@ -313,7 +318,7 @@ export default {
 </script>
 
 <style lang="postcss" scoped>
-div.bg {
+.page-create-promote {
   & > .white-bg {
     background-color: #fff;
     & .warning-text {
@@ -332,6 +337,15 @@ div.bg {
       font-size: 18px;
       vertical-align: middle;
       cursor: pointer;
+    }
+  }
+
+  &.is-edit {
+    & .keywords-con {
+      margin-top: 0;
+    }
+    & .input-keyword {
+      display: none;
     }
   }
 }
@@ -412,6 +426,9 @@ div.bg {
       color: white;
     }
   }
+}
+.input-keyword {
+  width: 200px;
 }
 .confirm-keyword-btn {
   margin-left: 12px;

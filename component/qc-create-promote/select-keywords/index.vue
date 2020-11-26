@@ -213,18 +213,20 @@ export default {
     KeywordView
   },
   created() {
-    this.initKeywordOptions();
+    this.initKeywordOptions(!!this.isEdit);
   },
   methods: {
-    initKeywordOptions() {
+    initKeywordOptions(reuse = false) {
       this.keywordOptions = (this.form.keywords || [])
-        .map(x => clone(keywordOptions))
+        .map((x, idx) =>
+          reuse ? this.keywordOptions[idx] : clone(keywordOptions)
+        )
         .map((opts, idx) => {
           Object.keys(opts).forEach(x => {
             if (x === "A") {
               opts.A.keywords = this.form.areas.reduce((t, c) => {
                 t.push(c.name);
-                return t.concat(c.cities);
+                return t.concat([...c.cities]);
               }, []);
             } else if (x === "C") {
               opts.C.keywords = [this.form.keywords[idx]];
@@ -313,10 +315,10 @@ export default {
       const { keywords, areas } = this.form;
       const coreWordInfos = Array(this.keywordOptions.length)
         .fill("")
-        .map((x, i) => ({
-          coreWord: keywords[i],
-          prefixWords: this.keywordOptions[i].B.keywords,
-          suffixWords: this.keywordOptions[i].D.keywords
+        .map((x, idx) => ({
+          coreWord: keywords[idx],
+          prefixWords: this.keywordOptions[idx].B.keywords,
+          suffixWords: this.keywordOptions[idx].D.keywords
         }));
       const params = {
         provinces: areas.map(x => x.en),
@@ -335,7 +337,7 @@ export default {
       let response = null;
       try {
         response = await handleFunc(params);
-      } catch (err) {
+      } finally {
         this.loading.submit = false;
       }
       const { code, message } = response || {};
@@ -379,11 +381,11 @@ export default {
           const { coreWordInfos = [] } = n;
           this.keywordOptions = coreWordInfos
             .map(x => clone(keywordOptions))
-            .map(opts => {
-              const { coreWord, prefixWords, suffixWords } = opts;
+            .map((opts, idx) => {
+              const { coreWord, prefixWords, suffixWords } = coreWordInfos[idx];
               opts.C.keywords = [coreWord];
-              opts.B.keywords = prefixWords;
-              opts.D.keywords = suffixWords;
+              opts.B.keywords = [...prefixWords];
+              opts.D.keywords = [...suffixWords];
               return opts;
             });
           this.preventSumbit = true;
