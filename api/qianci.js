@@ -4,6 +4,7 @@ import Fetch from 'fetch.io'
 import { paginationWrapper, pause } from 'util'
 import { qianci, qianci1, baseOptions } from './base'
 import { qcApiHost } from 'config'
+import clone from 'clone'
 
 // 获取千词核心词
 export async function getQcAllAreas() {
@@ -74,11 +75,7 @@ export const getPreferredWordsList = paginationWrapper(async function (opts = {}
     .data
 }, resp => ({
   ...resp,
-  data: (resp.expandedWords || []).map(x => ({
-    coreWord: resp.coreWord,
-    createdTime: resp.createdTime,
-    expandedWord: x
-  }))
+  data: (clone(resp.expandedWords) || []).sort((a, b) => a.length - b.length)
 }))
 
 // 获取推广物料信息

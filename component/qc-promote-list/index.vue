@@ -29,7 +29,7 @@
     <el-button class="go-chart-page-btn" type="primary" @click="goChartPage">查看计划报表</el-button>
     <!-- 列表 -->
     <el-table class="query-table" border :data="queryList">
-      <el-table-column label="核心产品" prop="coreWord" width="160" />
+      <el-table-column label="核心产品" prop="coreWords" width="160" :formatter="({coreWords}) => coreWords.join(',')" />
       <el-table-column label="推广地区" :formatter="({ provinces }) => $formatter.join(provinces)" />
       <el-table-column label="平台" prop="plat" :formatter="({ device }) => DEVICE[device]" />
       <el-table-column label="计划状态">

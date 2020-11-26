@@ -1,7 +1,5 @@
 <template>
   <div class="page">
-    <!-- 测试 -->
-    <el-button type="primary" @click="download">测试下载</el-button>
     <!-- Header -->
     <header>
       优选词列表
@@ -12,7 +10,11 @@
     <!-- 展示 ABCD 词 -->
     <div class="keywords-container">
       <p class="header-info">
-        <span class="description">提示：系统从 <statics :loading="loading.pvs" :value="wordAll" /> 个词中为您优选出 <statics :loading="loading.pvs" :value="wordCounts" /> 个（包含双端）关键词，预估在180天内为您带来 <statics :loading="loading.pvs" :value="pvs" /> 展现。</span>
+        <span class="description">提示：系统从 
+          <statics :loading="loading.pvs" :value="wordAll" /> 个词中为您优选出 
+          <statics :loading="loading.pvs" :value="wordCounts" /> 个（包含双端）关键词，预估在180天内为您带来 
+          <statics :loading="loading.pvs" :value="pvs" /> 展现。
+        </span>
         <span class="actions">
           <el-button
             type="text"
@@ -22,30 +24,41 @@
         </span>
       </p>
       <transition name="fold-by-height">
-        <div v-if="visible.abcd" class="view-container">
-          <keyword-view
-            v-for="(value, key) in keywordOptions"
-            class="keyword-view"
-            :key="key"
-            :type="key"
-            :title="value.title"
-            :keywords="value.keywords"
-            :isEdit="false"
-          />
-        </div>
+        <el-collapse v-if="visible.abcd && keywordOptionsList.length > 0" 
+                     v-model="activeCoreWord">
+          <el-collapse-item v-for="(item, index) in keywordOptionsList" :key="index" :title="'查看' + item.coreWord">
+            <div class="view-container">
+              <keyword-view
+                v-for="(value, key) in item.keywordOptions"
+                class="keyword-view"
+                :key="key"
+                :type="key"
+                :title="value.title"
+                :keywords="value.keywords"
+                :isEdit="false"
+              />
+            </div>
+          </el-collapse-item>
+        </el-collapse>
       </transition>
     </div>
 
     <!-- 列表 -->
-    <el-table
-      class="query-table"
-      v-loading="loading.query"
-      border
-      :data="queryList">
-      <el-table-column label="创建时间" prop="createdTime" width="120" :formatter="({createdTime}) => $formatter.date(createdTime)" />
-      <el-table-column label="核心产品" prop="coreWord" width="120" />
-      <el-table-column label="优选词" prop="expandedWord" />
-    </el-table>
+    <div class="expanded-words-container">
+      <div class="info">
+        <div class="info-detail">
+          <span>创建时间：{{$formatter.date(expandedInfo.createdTime)}}&nbsp;&nbsp;</span>
+          <span>核心产品：{{expandedInfo.coreWords.join(',')}}</span>
+        </div>
+         <el-button class="download" type="primary" @click="download" size="small">一键导出</el-button>
+      </div>
+      <div class="list">
+        <div class="item" v-for="item in expandedInfo.data" :key="item">
+          {{item}}
+        </div>
+      </div>
+    </div>
+
     <!-- 分页 -->
     <el-pagination
       class="pagniation"
@@ -89,11 +102,17 @@ export default {
       pagination: {
         current: 1,
         total: 0,
-        size: 15,
-        sizes: [10, 15, 30, 50],
+        size: 60,
+        sizes: [40, 60, 80, 100],
+      },
+      activeCoreWord: '',
+      expandedInfo: {
+        createdTime: '',
+        coreWords: [],
+        data: []
       },
       queryList: [],
-      keywordOptions: clone(keywordOptions),
+      keywordOptionsList: [],
       promote: {},
       loading: {
         query: false,
@@ -108,10 +127,12 @@ export default {
   },
   computed: {
     wordAll() {
-      const lens = ['A', 'B', 'C', 'D']
-        .reduce((h, c) => (h[c] = this.keywordOptions[c].keywords.length, h), {})
-
-      return qcWordAll(lens)
+      const types = ['A', 'B', 'C', 'D']
+      const res = this.keywordOptionsList.reduce((curr, {type, keywordOptions}) => {
+        const lens = types.reduce((h, c) => (h[c] = keywordOptions[c].keywords.length, h), {})
+        return curr + qcWordAll(lens)
+      }, 0)
+      return res
     }
   },
   async created() {
@@ -134,7 +155,6 @@ export default {
     })
   },
   methods: {
-
     async getPreferredWordPV() {
       this.loading.pvs = true
       let response = null
@@ -143,7 +163,13 @@ export default {
       } finally {
         setTimeout(() => this.loading.pvs = false, 300)
       }
-      const { expandedNum = 0, showNum = 0 } = response || {}
+     
+      let showNum = 0
+      let expandedNum = 0
+      response.forEach(item => {
+        showNum += item.showNum
+        expandedNum += item.expandedNum
+      })
       this.pvs = showNum
       this.wordCounts = expandedNum
     },
@@ -161,8 +187,8 @@ export default {
       let response
       try {
         response = (await getPreferredWordsList(query)) || {}
-        const { data } = response
-        this.queryList = data.map(x => x)
+        const { data, createdTime, coreWords } = response
+        Object.assign(this.expandedInfo, response)
       } finally {
         this.loading.query = false
       }
@@ -175,25 +201,42 @@ export default {
     },
     async initPromote() {
       this.promote = await getPromote(this.id)
-      const {
-        coreWord = '',
-        provinces = [],
-        prefixWords = [],
-        suffixWords = []
-      } = this.promote
+      const { coreWordInfos = [], provinces = [] } = this.promote
 
       const{ enToCnMap, provinces: provincesStore } = this.allQianciAreas
       const areas = provinces.map(en => {
         const cnName = enToCnMap[en]
         return { name: cnName, en, checked: true, cities: provincesStore[cnName]  }
       })
-      this.keywordOptions['A'].keywords = areas.reduce((t, c) => {
+
+      const keywordProvinces = areas.reduce((t, c) => {
         t.push(c.name)
         return t.concat(c.cities)
       }, [])
-      this.keywordOptions['B'].keywords = [...prefixWords]
-      this.keywordOptions['C'].keywords = [coreWord]
-      this.keywordOptions['D'].keywords = [...suffixWords]
+
+      this.keywordOptionsList = coreWordInfos.map(item => {
+        return {
+          ...item,
+          provinces: keywordProvinces
+        }
+      }).reduce((currO, item) => {
+        const options = clone(keywordOptions)
+        let res = Object.entries(keywordOptions).reduce((currI, [type, option]) => {
+          const keywords = item[option.keywordsAlias] || []
+          Object.assign(options, {
+            [type]: {
+              ...option,
+              keywords: [].concat(keywords)
+            }
+          })
+          return options
+        }, {})
+
+        return currO.concat({
+          coreWord: item.coreWord,
+          keywordOptions: res
+        })
+      }, [])
     },
     handleSizeChange(size) {
       this.pagination.size = size
@@ -204,21 +247,26 @@ export default {
       const { coreWord, createdTime } = this.promote
 
       function washCSVList(list) {
-        return list
+        return list.map(item => {
+          return {
+            name: item
+          }
+        })
       }
 
       const { data: list } = getPreferredWordsList.getAll()
-      const csvData = (new Parser).parse(washCSVList(list))
+      const csvData = new Parser().parse(washCSVList(list))
       const filename = `优选词列表 - ${coreWord} - ${dayjs(createdTime).format('YYYY/MM/DD')}.csv`
       const blob = new Blob(['\uFEFF' + csvData], { type: 'text/csv;charset=utf-8;' })
       FileSaver.saveAs(blob, filename)
-    },
-
+    }
   },
 }
 </script>
 
 <style lang="postcss" scoped>
+@import "../../cssbase/var.css";
+
 .actions {
   float: right;
 }
@@ -228,6 +276,7 @@ export default {
   background: #f5f7fa;
   color: #6a778c;
   border-radius: 4px;
+  font-size: 14px;
 
   & .description {
     color: #333;
@@ -253,7 +302,41 @@ export default {
     }
   }
 }
-.query-table,
+
+.expanded-words-container {
+  margin-top: 18px;
+  color: #333;
+  font-weight: 500;
+  font-size: 14px;
+  border-top: var(--border-base);
+  border-left: var(--border-base);
+  & > .info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f2f2f2;
+    padding: 10px 12px;
+    border-bottom: var(--border-base);
+    border-right: var(--border-base);
+  }
+  & > .list {
+    display: flex;
+    flex-wrap: wrap;
+    & > .item {
+      width: 25%;
+      padding: 12px;
+      line-height: 20px;
+      border-bottom: var(--border-base);
+      border-right: var(--border-base);
+    }
+  }
+}
+
+.pag-container {
+  display: flex;
+  align-items: center;
+}
+
 .pagniation {
   margin-top: 18px;
 }
