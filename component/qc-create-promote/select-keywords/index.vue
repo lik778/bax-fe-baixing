@@ -59,13 +59,13 @@
             ></keyword-view>
           </div>
           <keyword-input
-            :visible="visible.input"
+            :visible="visible.input[idx]"
             :type="activeType"
             :info="getProp(idx, 'info')"
             :title="getProp(idx, 'inputTitle')"
             :placeholder="getProp(idx, 'placeholder')"
             @words="(...args) => updateKeywords(idx, ...args)"
-            @close="visible.input = false"
+            @close="visible.input[idx] = false"
           />
           <div class="expand-tip size-13">
             <div>组合逻辑：A+C、B+C、C+D、A+B+C、A+C+D、B+C+D、A+B+C+D；</div>
@@ -160,7 +160,11 @@ export default {
   data() {
     return {
       visible: {
-        input: false,
+        input: {
+          0: false,
+          1: false,
+          2: false
+        },
         keywordsIDX: {
           0: true,
           1: false,
@@ -240,7 +244,7 @@ export default {
       return existKeywordObj && existKeywordObj[prop];
     },
     popKeywordInputDialog(idx, type) {
-      this.visible.input = true;
+      this.visible.input[idx] = true;
       this.activeType = type;
     },
     updateKeywords(idx, obj) {
