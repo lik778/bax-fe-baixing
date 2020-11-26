@@ -24,22 +24,23 @@
         </span>
       </p>
       <transition name="fold-by-height">
-        <el-collapse v-if="visible.abcd && keywordOptionsList.length > 0" 
-                     v-model="activeCoreWord">
-          <el-collapse-item v-for="(item, index) in keywordOptionsList" :key="index" :title="'查看' + item.coreWord">
-            <div class="view-container">
-              <keyword-view
-                v-for="(value, key) in item.keywordOptions"
-                class="keyword-view"
-                :key="key"
-                :type="key"
-                :title="value.title"
-                :keywords="value.keywords"
-                :isEdit="false"
-              />
-            </div>
-          </el-collapse-item>
-        </el-collapse>
+        <el-tabs v-if="visible.abcd && keywordOptionsList.length"
+                 v-model="activeCoreWord">
+          <el-tab-pane :label="item.coreWord"
+                       :name="item.coreWord"
+                       v-for="item in keywordOptionsList"
+                       :title="item.coreWord"
+                       :key="item.coreWord"
+                       class="view-container">
+            <keyword-view v-for="(value, key) in item.keywordOptions"
+                          class="keyword-view"
+                          :key="key"
+                          :type="key"
+                          :title="value.title"
+                          :keywords="value.keywords"
+                          :isEdit="false" />
+          </el-tab-pane>
+        </el-tabs>
       </transition>
     </div>
 
@@ -50,11 +51,11 @@
           <span>创建时间：{{$formatter.date(expandedInfo.createdTime)}}&nbsp;&nbsp;</span>
           <span>核心产品：{{expandedInfo.coreWords.join(',')}}</span>
         </div>
-         <el-button class="download" type="primary" @click="download" size="small">一键导出</el-button>
+         <el-button class="download" type="primary" @click="download">一键导出</el-button>
       </div>
       <div class="list">
-        <div class="item" v-for="item in expandedInfo.data" :key="item">
-          {{item}}
+        <div class="item" v-for="(item, index) in expandedInfo.data" :key="index">
+          <span class="item-inner">{{item}}</span>
         </div>
       </div>
     </div>
@@ -209,6 +210,7 @@ export default {
         return { name: cnName, en, checked: true, cities: provincesStore[cnName]  }
       })
 
+      // 封装keywordOptionsList
       const keywordProvinces = areas.reduce((t, c) => {
         t.push(c.name)
         return t.concat(c.cities)
@@ -237,6 +239,8 @@ export default {
           keywordOptions: res
         })
       }, [])
+
+      this.activeCoreWord = this.keywordOptionsList[0].coreWord
     },
     handleSizeChange(size) {
       this.pagination.size = size
@@ -244,19 +248,20 @@ export default {
     },
     download() {
       const { user_id: targetUserId, sales_id: salesId } = parseQuery(window.location.search)
-      const { coreWord, createdTime } = this.promote
+      const { createdTime } = this.promote
+      const coreWords = this.expandedInfo.coreWords.join(',')
 
       function washCSVList(list) {
         return list.map(item => {
           return {
-            name: item
+            keyword: item
           }
         })
       }
 
       const { data: list } = getPreferredWordsList.getAll()
       const csvData = new Parser().parse(washCSVList(list))
-      const filename = `优选词列表 - ${coreWord} - ${dayjs(createdTime).format('YYYY/MM/DD')}.csv`
+      const filename = `优选词列表 - ${coreWords} - ${dayjs(createdTime).format('YYYY/MM/DD')}.csv`
       const blob = new Blob(['\uFEFF' + csvData], { type: 'text/csv;charset=utf-8;' })
       FileSaver.saveAs(blob, filename)
     }
@@ -294,7 +299,6 @@ export default {
   }
 
   & .view-container {
-    margin-top: 18px;
     display: flex;
     align-items: center;
     & > div:not(:last-child) {
@@ -328,6 +332,14 @@ export default {
       line-height: 20px;
       border-bottom: var(--border-base);
       border-right: var(--border-base);
+      & > .item-inner {
+        display: -webkit-box;
+        max-height: 40px;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
     }
   }
 }

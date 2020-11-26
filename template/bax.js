@@ -49,9 +49,7 @@ import {
   MessageBox,
   Message,
   Cascader,
-  Notification,
-  Collapse,
-  CollapseItem
+  Notification
 } from 'element-ui'
 
 import { reaction } from 'mobx'
@@ -122,8 +120,6 @@ Vue.use(Cascader)
 Vue.use(Progress)
 Vue.use(Card)
 Vue.use(Image)
-Vue.use(Collapse)
-Vue.use(CollapseItem)
 
 /**
  * 错误回退组件
