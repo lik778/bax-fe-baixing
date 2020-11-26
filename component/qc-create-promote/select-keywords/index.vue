@@ -82,12 +82,12 @@
       <p style="color: #FF6350" v-if="errorTips">{{ errorTips }}</p>
       <el-button
         type="primary"
-        :loading="submitWordsLoading"
+        :loading="loading.submit"
         @click="sumbitWords"
         :disabled="handleDisabled || preventSumbit"
         size="medium"
         >{{
-          submitWordsLoading ? "拓词中..." : isEdit ? "更新优选" : "提交优选"
+          loading.submit ? "拓词中..." : isEdit ? "更新优选" : "提交优选"
         }}</el-button
       >
     </div>
@@ -170,7 +170,9 @@ export default {
       },
       keywordOptions: [],
       activeType: "A",
-      submitWordsLoading: false,
+      loading: {
+        submit: false
+      },
       errorTips: "",
       preventSumbit: false
     };
@@ -303,23 +305,29 @@ export default {
       this.keywordOptions[idx][type].keywords.splice(index, 1);
     },
     async sumbitWords() {
-      const { keyword, areas } = this.form;
       const { sales_id: salesId, user_id: targetUserId } = this.$route.query;
-      this.submitWordsLoading = true;
+      const { keywords, areas } = this.form;
+      const coreWordInfos = Array(this.keywordOptions.length)
+        .fill("")
+        .map((x, i) => ({
+          coreWord: keywords[i],
+          prefixWords: this.keywordOptions[i].B.keywords,
+          suffixWords: this.keywordOptions[i].D.keywords
+        }));
       const params = {
-        coreWord: keyword,
         provinces: areas.map(x => x.en),
-        prefixWords: this.keywordOptions.B.keywords,
-        suffixWords: this.keywordOptions.D.keywords,
+        coreWordInfos,
         salesId,
         targetUserId
       };
-      const handleFunc = this.isEdit
-        ? updatePromoteWords
-        : createPreferredWords;
+
+      this.loading.submit = true;
       if (this.isEdit) {
         params.id = this.promote.id;
       }
+      const handleFunc = this.isEdit
+        ? updatePromoteWords
+        : createPreferredWords;
       const { code, message } = await handleFunc(params);
       if (code === API_SUCCESS) {
         this.visible.successDialog = true;
@@ -328,7 +336,7 @@ export default {
       } else {
         Message.warning(message);
       }
-      this.submitWordsLoading = false;
+      this.loading.submit = false;
     },
     genConTitle(word, idx) {
       return `<div>${idx +
