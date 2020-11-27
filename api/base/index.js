@@ -4,7 +4,6 @@ import 'whatwg-fetch'
 import { Message } from 'element-ui'
 import chargeNotice from '../../util/charge-notice'
 import Fetch from 'fetch.io'
-import sentry from '../../lib/sentry'
 
 import {
   fengmingApiHost,
@@ -53,7 +52,6 @@ export const fengming = new Fetch({
     }
     if (meta.message !== 'Success') {
       Message.error(meta.message)
-      sentry.captureMessage(JSON.stringify(body), 'info')
       throw new Error(meta.message)
     }
   }
@@ -65,7 +63,6 @@ export const ka = new Fetch({
   afterJSON(body) {
     if (body.msg !== 'success') {
       Message.error(body.msg)
-      sentry.captureMessage(JSON.stringify(body), 'error')
       throw new Error(body.msg)
     }
   }
@@ -91,7 +88,6 @@ export const api = new Fetch({
     }
     if (meta.message !== 'Success') {
       Message.error(meta.message)
-      sentry.captureMessage(JSON.stringify(body), 'info')
       throw new Error(meta.message)
     }
   }
@@ -111,7 +107,6 @@ export const biaowang = new Fetch({
       res.clone().json().then(body => {
         Message.error(body.message || `出错了，请稍后重试`)
       })
-      sentry.captureMessage(res.statusText, 'info')
       throw new Error(res.statusText)
     }
   },
@@ -141,7 +136,6 @@ export const seo = new Fetch({
       res.clone().json().then(body => {
         Message.error(body.message || `出错了，请稍后重试`)
       })
-      sentry.captureMessage(res.statusText, 'info')
       throw new Error(res.statusText)
     }
   },
@@ -156,7 +150,6 @@ export const seo = new Fetch({
     }
     if (body.code !== 0) {
       Message.error(body.message)
-      sentry.captureMessage(JSON.stringify(body), 'info')
       throw new Error(body.message)
     }
   }
@@ -176,7 +169,6 @@ export const qianciOptions = {
       res.clone().json().then(body => {
         Message.error(body.message || `出错了，请稍后重试`)
       })
-      sentry.captureMessage(res.statusText, 'info')
       throw new Error(res.statusText)
     }
   }
