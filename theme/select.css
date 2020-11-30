@@ -1,6 +1,8 @@
+@charset "UTF-8";
 /* BEM support Func
  -------------------------- */
 /* Element Chalk Variables */
+/* !想修改主题文件，请参考 Readme.md，勿直接改动此文件 */
 /* Transition
 -------------------------- */
 /* Color
@@ -129,6 +131,7 @@
 /* BEM
  -------------------------- */
 /* Element Chalk Variables */
+/* !想修改主题文件，请参考 Readme.md，勿直接改动此文件 */
 /* Transition
 -------------------------- */
 /* Color
@@ -251,6 +254,7 @@
 /* BEM support Func
  -------------------------- */
 /* Element Chalk Variables */
+/* !想修改主题文件，请参考 Readme.md，勿直接改动此文件 */
 /* Transition
 -------------------------- */
 /* Color
@@ -379,6 +383,7 @@
 /* BEM
  -------------------------- */
 /* Element Chalk Variables */
+/* !想修改主题文件，请参考 Readme.md，勿直接改动此文件 */
 /* Transition
 -------------------------- */
 /* Color
@@ -501,6 +506,7 @@
 /* BEM support Func
  -------------------------- */
 /* Element Chalk Variables */
+/* !想修改主题文件，请参考 Readme.md，勿直接改动此文件 */
 /* Transition
 -------------------------- */
 /* Color
@@ -629,6 +635,7 @@
 /* BEM
  -------------------------- */
 /* Element Chalk Variables */
+/* !想修改主题文件，请参考 Readme.md，勿直接改动此文件 */
 /* Transition
 -------------------------- */
 /* Color
@@ -875,6 +882,7 @@
 /* BEM support Func
  -------------------------- */
 /* Element Chalk Variables */
+/* !想修改主题文件，请参考 Readme.md，勿直接改动此文件 */
 /* Transition
 -------------------------- */
 /* Color
@@ -1003,6 +1011,7 @@
 /* BEM
  -------------------------- */
 /* Element Chalk Variables */
+/* !想修改主题文件，请参考 Readme.md，勿直接改动此文件 */
 /* Transition
 -------------------------- */
 /* Color
@@ -1146,6 +1155,8 @@
     transition: border-color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1); }
     .el-textarea__inner::-webkit-input-placeholder {
       color: #C0C4CC; }
+    .el-textarea__inner::-moz-placeholder {
+      color: #C0C4CC; }
     .el-textarea__inner::-ms-input-placeholder {
       color: #C0C4CC; }
     .el-textarea__inner::placeholder {
@@ -1168,6 +1179,8 @@
     color: #C0C4CC;
     cursor: not-allowed; }
     .el-textarea.is-disabled .el-textarea__inner::-webkit-input-placeholder {
+      color: #C0C4CC; }
+    .el-textarea.is-disabled .el-textarea__inner::-moz-placeholder {
       color: #C0C4CC; }
     .el-textarea.is-disabled .el-textarea__inner::-ms-input-placeholder {
       color: #C0C4CC; }
@@ -1242,6 +1255,8 @@
     width: 100%; }
     .el-input__inner::-webkit-input-placeholder {
       color: #C0C4CC; }
+    .el-input__inner::-moz-placeholder {
+      color: #C0C4CC; }
     .el-input__inner::-ms-input-placeholder {
       color: #C0C4CC; }
     .el-input__inner::placeholder {
@@ -1296,6 +1311,8 @@
     color: #C0C4CC;
     cursor: not-allowed; }
     .el-input.is-disabled .el-input__inner::-webkit-input-placeholder {
+      color: #C0C4CC; }
+    .el-input.is-disabled .el-input__inner::-moz-placeholder {
       color: #C0C4CC; }
     .el-input.is-disabled .el-input__inner::-ms-input-placeholder {
       color: #C0C4CC; }
@@ -1402,6 +1419,7 @@
 /* BEM support Func
  -------------------------- */
 /* Element Chalk Variables */
+/* !想修改主题文件，请参考 Readme.md，勿直接改动此文件 */
 /* Transition
 -------------------------- */
 /* Color
@@ -1530,6 +1548,7 @@
 /* BEM
  -------------------------- */
 /* Element Chalk Variables */
+/* !想修改主题文件，请参考 Readme.md，勿直接改动此文件 */
 /* Transition
 -------------------------- */
 /* Color
@@ -1865,6 +1884,7 @@
 /* BEM support Func
  -------------------------- */
 /* Element Chalk Variables */
+/* !想修改主题文件，请参考 Readme.md，勿直接改动此文件 */
 /* Transition
 -------------------------- */
 /* Color
@@ -1993,6 +2013,7 @@
 /* BEM
  -------------------------- */
 /* Element Chalk Variables */
+/* !想修改主题文件，请参考 Readme.md，勿直接改动此文件 */
 /* Transition
 -------------------------- */
 /* Color
@@ -2139,6 +2160,7 @@
 /* BEM support Func
  -------------------------- */
 /* Element Chalk Variables */
+/* !想修改主题文件，请参考 Readme.md，勿直接改动此文件 */
 /* Transition
 -------------------------- */
 /* Color
@@ -2267,6 +2289,7 @@
 /* BEM
  -------------------------- */
 /* Element Chalk Variables */
+/* !想修改主题文件，请参考 Readme.md，勿直接改动此文件 */
 /* Transition
 -------------------------- */
 /* Color
@@ -2416,6 +2439,7 @@
 /* BEM support Func
  -------------------------- */
 /* Element Chalk Variables */
+/* !想修改主题文件，请参考 Readme.md，勿直接改动此文件 */
 /* Transition
 -------------------------- */
 /* Color
@@ -2544,6 +2568,7 @@
 /* BEM
  -------------------------- */
 /* Element Chalk Variables */
+/* !想修改主题文件，请参考 Readme.md，勿直接改动此文件 */
 /* Transition
 -------------------------- */
 /* Color

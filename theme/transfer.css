@@ -2,6 +2,7 @@
 /* BEM support Func
  -------------------------- */
 /* Element Chalk Variables */
+/* !想修改主题文件，请参考 Readme.md，勿直接改动此文件 */
 /* Transition
 -------------------------- */
 /* Color
@@ -130,6 +131,7 @@
 /* BEM
  -------------------------- */
 /* Element Chalk Variables */
+/* !想修改主题文件，请参考 Readme.md，勿直接改动此文件 */
 /* Transition
 -------------------------- */
 /* Color
@@ -252,6 +254,7 @@
 /* BEM support Func
  -------------------------- */
 /* Element Chalk Variables */
+/* !想修改主题文件，请参考 Readme.md，勿直接改动此文件 */
 /* Transition
 -------------------------- */
 /* Color
@@ -380,6 +383,7 @@
 /* BEM
  -------------------------- */
 /* Element Chalk Variables */
+/* !想修改主题文件，请参考 Readme.md，勿直接改动此文件 */
 /* Transition
 -------------------------- */
 /* Color
@@ -523,6 +527,8 @@
     transition: border-color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1); }
     .el-textarea__inner::-webkit-input-placeholder {
       color: #C0C4CC; }
+    .el-textarea__inner::-moz-placeholder {
+      color: #C0C4CC; }
     .el-textarea__inner::-ms-input-placeholder {
       color: #C0C4CC; }
     .el-textarea__inner::placeholder {
@@ -545,6 +551,8 @@
     color: #C0C4CC;
     cursor: not-allowed; }
     .el-textarea.is-disabled .el-textarea__inner::-webkit-input-placeholder {
+      color: #C0C4CC; }
+    .el-textarea.is-disabled .el-textarea__inner::-moz-placeholder {
       color: #C0C4CC; }
     .el-textarea.is-disabled .el-textarea__inner::-ms-input-placeholder {
       color: #C0C4CC; }
@@ -619,6 +627,8 @@
     width: 100%; }
     .el-input__inner::-webkit-input-placeholder {
       color: #C0C4CC; }
+    .el-input__inner::-moz-placeholder {
+      color: #C0C4CC; }
     .el-input__inner::-ms-input-placeholder {
       color: #C0C4CC; }
     .el-input__inner::placeholder {
@@ -673,6 +683,8 @@
     color: #C0C4CC;
     cursor: not-allowed; }
     .el-input.is-disabled .el-input__inner::-webkit-input-placeholder {
+      color: #C0C4CC; }
+    .el-input.is-disabled .el-input__inner::-moz-placeholder {
       color: #C0C4CC; }
     .el-input.is-disabled .el-input__inner::-ms-input-placeholder {
       color: #C0C4CC; }
@@ -777,6 +789,7 @@
   height: 0; }
 
 /* Element Chalk Variables */
+/* !想修改主题文件，请参考 Readme.md，勿直接改动此文件 */
 /* Transition
 -------------------------- */
 /* Color
@@ -897,6 +910,7 @@
 /* Break-point
 --------------------------*/
 /* Element Chalk Variables */
+/* !想修改主题文件，请参考 Readme.md，勿直接改动此文件 */
 /* Transition
 -------------------------- */
 /* Color
@@ -1019,6 +1033,7 @@
 /* BEM support Func
  -------------------------- */
 /* Element Chalk Variables */
+/* !想修改主题文件，请参考 Readme.md，勿直接改动此文件 */
 /* Transition
 -------------------------- */
 /* Color
@@ -1540,6 +1555,7 @@
     border-right-color: rgba(255, 255, 255, 0.5); }
 
 /* Element Chalk Variables */
+/* !想修改主题文件，请参考 Readme.md，勿直接改动此文件 */
 /* Transition
 -------------------------- */
 /* Color
@@ -1662,6 +1678,7 @@
 /* BEM support Func
  -------------------------- */
 /* Element Chalk Variables */
+/* !想修改主题文件，请参考 Readme.md，勿直接改动此文件 */
 /* Transition
 -------------------------- */
 /* Color
@@ -1790,6 +1807,7 @@
 /* BEM
  -------------------------- */
 /* Element Chalk Variables */
+/* !想修改主题文件，请参考 Readme.md，勿直接改动此文件 */
 /* Transition
 -------------------------- */
 /* Color
@@ -2239,10 +2257,9 @@
     height: 30px;
     line-height: 30px;
     padding-left: 15px;
-    display: block; }
+    display: block !important; }
     .el-transfer-panel__item + .el-transfer-panel__item {
-      margin-left: 0;
-      display: block !important; }
+      margin-left: 0; }
     .el-transfer-panel__item.el-checkbox {
       color: #606266; }
     .el-transfer-panel__item:hover {
