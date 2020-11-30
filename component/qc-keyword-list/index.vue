@@ -164,13 +164,7 @@ export default {
       } finally {
         setTimeout(() => this.loading.pvs = false, 300)
       }
-     
-      let showNum = 0
-      let expandedNum = 0
-      response.forEach(item => {
-        showNum += item.showNum
-        expandedNum += item.expandedNum
-      })
+      const { expandedNum = 0, showNum = 0 } = response || {}
       this.pvs = showNum
       this.wordCounts = expandedNum
     },
