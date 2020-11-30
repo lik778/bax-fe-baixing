@@ -102,13 +102,14 @@ export default {
 .textarea-container {
   position: relative;
   margin: 10px 0;
-& > .placeholder {
+  & > .placeholder {
     position: absolute;
     z-index: 0;
     top: 5px;
     left: 15px;
     font-size: 14px;
     color: #DCDFE6;
+    pointer-events: none;
   }
 }
 
