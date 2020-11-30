@@ -42,7 +42,7 @@
                 class="confirm-keyword-btn"
                 v-if="input.keyword"
                 type="text"
-                @click="selectKeyword"
+                @click="(e, val) => selectKeyword(val)"
                 >确定</el-button
               >
               <span v-if="tip.keyword" class="confirm-keyword-tip">
@@ -443,6 +443,10 @@ export default {
   font-weight: 500;
   line-height: 0;
   color: #ff6350;
+
+  &:hover {
+    opacity: 0.9;
+  }
 }
 .confirm-keyword-tip {
   color: #ff6350;
