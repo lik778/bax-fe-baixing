@@ -140,7 +140,7 @@ export default {
       form: {
         keywords: [],
         areas: [],
-        type: null
+        type: ONE_WORD_TWO_PROVINCE
       },
       rules: {
         areas: [
