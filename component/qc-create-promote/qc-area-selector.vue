@@ -20,7 +20,9 @@
       </div>
     </main>
     <div slot="title" class="dialog-header">
-      <h5 class="title">区域选择<span>(仅可选择两个地区)</span></h5>
+      <h5 class="title">
+        区域选择<span>(仅可选择{{ getNumberCN(maxAreaLength) }}个地区)</span>
+      </h5>
     </div>
     <div slot="footer" class="dialog-footer">
       <div class="buttons">
@@ -36,6 +38,13 @@ import isequal from "lodash.isequal";
 import { getQcAllAreas } from "api/qianci";
 import clone from "clone";
 import gStore from "../store";
+
+function getNumberCN(n) {
+  return {
+    1: "一",
+    2: "两"
+  }[n];
+}
 
 export default {
   name: "qc-area-selector",
@@ -53,6 +62,7 @@ export default {
   },
   data() {
     return {
+      getNumberCN,
       selectedAreas: [],
       originSelectedAreas: [],
       originProvinceList: [],
