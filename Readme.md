@@ -33,10 +33,13 @@
   - `rxjs` -> TODO: `vue-rx`
   - `postcss`: `css` 部分 只使用了 `postcss-cssnext`, `postcss-import`, `postcss-mixins`
 
-### 关于 element ui 的样式文件
+### 修改默认样式
 
-* copy `//unpkg.com/element-ui/lib/theme-default/index.css` (这是被墙的 >_<)
-* css中 `fonts/element-icons.woff`
-* css中 `fonts/element-icons.ttf` 传一下, 改一下
+修改样式步骤如下：
 
-* 修改element配置样式：修改根目录的element-theme.scss 并执行 `et -c ./element-theme.scss`
+1. 修改根目录的 custom-theme.scss
+2. 执行 npm run theme
+
+npm run theme 其实是调用 element-ui 提供的主题工具去生成新的组件样式文件。
+
+如果对需要改动的变量不熟悉，可以参考 element-variables.scss 看看有哪些变量可以改动。请勿直接改动 element-variables.scss。

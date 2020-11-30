@@ -9,7 +9,8 @@
     "upload-asset": "upyun-upload -c tool/asset.upyun.config.js -v",
     "upload": "upyun-upload -c tool/upyun.config.js -v",
     "lint": "eslint . --ext .js,.vue",
-    "release": "npm run build && npm run upload && npm run move-file"
+    "release": "npm run build && npm run upload && npm run move-file",
+    "theme": "node ./theme.js"
   },
   "repository": "https://gitlab.baixing.cn/channel/bax-fe",
   "dependencies": {
