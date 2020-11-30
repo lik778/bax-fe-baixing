@@ -317,6 +317,9 @@ export default {
     },
     initFormVals() {
       this.form.keywords = [];
+      this.form.areas.map(area =>
+        this.$bus.$emit("updateQcAreaSelectorView", area)
+      );
       this.form.areas = [];
     }
   }

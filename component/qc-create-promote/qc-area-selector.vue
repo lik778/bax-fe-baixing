@@ -1,4 +1,3 @@
-
 <template>
   <el-dialog
     :visible="visible"
@@ -8,8 +7,15 @@
   >
     <main class="main">
       <div v-for="(province, i) in provinceList" :key="i">
-        <el-checkbox class="checkbox-item" :disabled="disabledProvinceCheck(province)" v-model="province.checked" @change="provinceCheckedChange(province)">
-          <span :class="{ selected: province.checked }">{{ province.name }}</span>
+        <el-checkbox
+          class="checkbox-item"
+          :disabled="disabledProvinceCheck(province)"
+          v-model="province.checked"
+          @change="provinceCheckedChange(province)"
+        >
+          <span :class="{ selected: province.checked }">{{
+            province.name
+          }}</span>
         </el-checkbox>
       </div>
     </main>
@@ -26,13 +32,13 @@
 </template>
 
 <script>
-import isequal from 'lodash.isequal'
-import { getQcAllAreas } from "api/qianci"
-import clone from 'clone'
-import gStore from '../store'
+import isequal from "lodash.isequal";
+import { getQcAllAreas } from "api/qianci";
+import clone from "clone";
+import gStore from "../store";
 
 export default {
-  name: 'qc-area-selector',
+  name: "qc-area-selector",
   props: {
     maxAreaLength: Number,
     areas: {
@@ -51,7 +57,7 @@ export default {
       originSelectedAreas: [],
       originProvinceList: [],
       provinceList: []
-    }
+    };
   },
   fromMobx: {
     allQianciAreas: () => gStore.allQianciAreas
@@ -60,63 +66,88 @@ export default {
     visible(v) {
       if (v) {
         if (this.provinceList.length === 0) {
-          const { cnToEnMap, provinces } = this.allQianciAreas
-          const specialCityList = ["北京", "重庆", "上海", "天津"]
-          const provinceList = []
+          const { cnToEnMap, provinces } = this.allQianciAreas;
+          const specialCityList = ["北京", "重庆", "上海", "天津"];
+          const provinceList = [];
           Object.keys(provinces).forEach(k => {
             if (!specialCityList.includes(k)) {
-              provinceList.push({ name: k, en: cnToEnMap[k], checked: false, cities: provinces[k]  })
+              provinceList.push({
+                name: k,
+                en: cnToEnMap[k],
+                checked: false,
+                cities: provinces[k]
+              });
             }
-          })
-          provinceList.push(...specialCityList.map(k => { return { name: k, en: cnToEnMap[k], checked: false, cities: provinces[k] }  }))
-          this.provinceList = provinceList
+          });
+          provinceList.push(
+            ...specialCityList.map(k => {
+              return {
+                name: k,
+                en: cnToEnMap[k],
+                checked: false,
+                cities: provinces[k]
+              };
+            })
+          );
+          this.provinceList = provinceList;
         }
-        this.originProvinceList = clone(this.provinceList)
-        this.originSelectedAreas = clone(this.selectedAreas)
+        this.originProvinceList = clone(this.provinceList);
+        this.originSelectedAreas = clone(this.selectedAreas);
       }
     },
     areas(v) {
+      console.log(v, this.selectedAreas);
       if (isequal(v, this.selectedAreas)) {
-        return
+        return;
       }
-      this.selectedAreas = [...v]
-    },
+      this.selectedAreas = [...v];
+    }
   },
   mounted() {
-    this.$bus.$on('updateQcAreaSelectorView', (province) => {
-      const removeProvinceIndex = this.selectedAreas.findIndex(x => x.name === province.name)
-      this.selectedAreas.splice(removeProvinceIndex, 1)
-      const removeProvince = this.provinceList.find(x => x.name === province.name)
-      removeProvince.checked = false
-    })
+    this.$bus.$on("updateQcAreaSelectorView", province => {
+      const removeProvinceIndex = this.selectedAreas.findIndex(
+        x => x.name === province.name
+      );
+      this.selectedAreas.splice(removeProvinceIndex, 1);
+      const removeProvince = this.provinceList.find(
+        x => x.name === province.name
+      );
+      removeProvince.checked = false;
+    });
   },
   methods: {
     disabledProvinceCheck(province) {
-      return !this.selectedAreas.map(p => p.name).includes(province.name) && this.selectedAreas.length === this.maxAreaLength
+      return (
+        !this.selectedAreas.map(p => p.name).includes(province.name) &&
+        this.selectedAreas.length === this.maxAreaLength
+      );
     },
     provinceCheckedChange(province) {
       if (province.checked) {
-        this.selectedAreas.push(province)
+        this.selectedAreas.push(province);
       } else {
-        const index = this.selectedAreas.findIndex(x => province.name === x.name)
-        if (index > -1) {  this.selectedAreas.splice(index, 1)  }
+        const index = this.selectedAreas.findIndex(
+          x => province.name === x.name
+        );
+        if (index > -1) {
+          this.selectedAreas.splice(index, 1);
+        }
       }
     },
     cancel() {
-      this.provinceList = this.originProvinceList
-      this.selectedAreas = this.originSelectedAreas
-      this.$emit('cancel')
+      this.provinceList = this.originProvinceList;
+      this.selectedAreas = this.originSelectedAreas;
+      this.$emit("cancel");
     },
     ok() {
-      const areas = this.selectedAreas.concat([])
-      this.$emit('ok', [...areas])
+      const areas = this.selectedAreas.concat([]);
+      this.$emit("ok", [...areas]);
     }
   }
-}
+};
 </script>
 
 <style lang="postcss" scoped>
-
 .tip {
   color: red;
   font-size: 11px;
@@ -127,7 +158,7 @@ export default {
   display: flex;
   text-align: center;
   line-height: 40px;
-& .title {
+  & .title {
     text-indent: 10px;
     font-size: 18px;
     color: #565656;
@@ -135,7 +166,7 @@ export default {
       font-size: 14px;
     }
   }
-& .buttons {
+  & .buttons {
     margin-left: auto;
     margin-right: 26px;
   }
