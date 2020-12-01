@@ -24,6 +24,7 @@ const StyleLoaders = [
       plugins: [
         require('postcss-import')(),
         require('postcss-mixins')(),
+        require('postcss-css-variables')(),
         require('postcss-cssnext')()
       ]
     }
