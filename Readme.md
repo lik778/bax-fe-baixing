@@ -37,7 +37,7 @@
 
 修改样式步骤如下：
 
-1. 修改根目录的 custom-theme.scss
+1. 修改根目录的 element-variables.scss
 2. 执行 npm run theme
 
 npm run theme 其实是调用 element-ui 提供的主题工具去生成新的组件样式文件。
