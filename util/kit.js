@@ -251,9 +251,3 @@ export function debounce(func, time = 300, ctx) {
     }, time)
   }
 }
-
-// 检测是否支持 ShadowDOM（WebComponents V1）
-export function checkSupportShadowDOM() {
-  const $div = document.createElement('div')
-  return !!($div && $div.attachShadow)
-}
