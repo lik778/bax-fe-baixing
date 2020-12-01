@@ -79,7 +79,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 * {
   font-family: PingFangSC-Regular, "Open Sans", "Microsoft YaHei", 微软雅黑,
     STHeiti, "WenQuanYi Micro Hei", SimSun, sans-serif;

@@ -196,7 +196,7 @@ export default {
   }
 }
 </style>
-<style>
+<style lang="scss">
 .mute {
   color: #949292;
 }

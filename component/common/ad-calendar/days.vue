@@ -55,7 +55,7 @@ function hitRanges(day, ranges) {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 
 section {
   display: flex;

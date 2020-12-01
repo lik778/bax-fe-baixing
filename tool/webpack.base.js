@@ -17,17 +17,6 @@ const StyleLoaders = [
       import: false,
       importLoaders: 1
     }
-  },
-  {
-    loader: 'postcss-loader',
-    options: {
-      plugins: [
-        require('postcss-import')(),
-        require('postcss-mixins')(),
-        require('postcss-css-variables')(),
-        require('postcss-cssnext')()
-      ]
-    }
   }
 ]
 

@@ -162,7 +162,7 @@ export default {
 }
 </style>
 
-<style>
+<style lang="scss">
 .qwt-copy-campaign-dialog {
   & .el-dialog__body {
     padding-top: 0;

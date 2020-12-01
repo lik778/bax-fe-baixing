@@ -79,7 +79,7 @@ export default {
 }
 </style>
 
-<style>
+<style lang="scss">
 .qwt-charge-dialog {
   & .el-icon-close {
     position: relative;
