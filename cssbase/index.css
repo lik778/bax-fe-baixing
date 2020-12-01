@@ -1,10 +1,71 @@
-/* TODO refactor */
-
 /* 变量定义 */
 @import "./var.css";
 /* 函数和混合 */
 @import "./mixin.css";
-/* 最小功能类，如 .warning、.error */
-@import "./atomic.css";
-/* ElementUI 修改 */
-@import "./custom-theme.css";
+
+/********************************* Atomics 最小功能类 */
+
+.pointer {
+  cursor: pointer;
+}
+
+.no-padding {
+  padding: 0;
+}
+
+/********************************* Transitions 动画与渐变 */
+
+.fold-by-height-enter-active,
+.fold-by-height-leave-active {
+  transition: all 0.3s ease;
+}
+.fold-by-height-enter,
+.fold-by-height-leave-to {
+  transform: translateY(-15px);
+  opacity: 0;
+}
+
+/********************************* 按照设计规范产出、和页面结构相关的 CSS */
+/* 目前只应用到了易慧推相关页面 */
+
+.page,
+.page.view {
+  margin: 16px;
+  padding: 16px;
+  background-color: white;
+}
+
+.page > header {
+  color: #444;
+  border-bottom: 1px solid #e6e6e6;
+  padding-bottom: 9px;
+  font-size: 16px;
+  font-weight: bold;
+}
+.page > .page-section > header {
+  color: #444;
+  font-size: 14px;
+  font-weight: bold;
+}
+.page .side-header {
+  margin-left: 10px;
+  font-size: 12px;
+  font-weight: normal;
+}
+
+.statics {
+  margin: 0 6px;
+  padding: 2px 6px;
+  background: #fff7eb;
+  border: 1px solid #ff7d51;
+  border-radius: 1px;
+  font-size: 14px;
+  color: #ff6350;
+  text-align: center;
+}
+
+.form-warning {
+  color: #ff6350;
+  font-size: 14px;
+  margin-top: 6px;
+}

@@ -51,6 +51,8 @@ import {
   Cascader,
   Notification
 } from 'element-ui'
+import '../cssbase/element-ui.scss'
+import '../cssbase/index.css'
 
 import { reaction } from 'mobx'
 import Movue from 'movue'
@@ -62,9 +64,6 @@ import { allowUseKaPackage } from 'util/fengming-role'
 import { getCurrentUser } from 'api/account'
 import pick from 'lodash.pick'
 import { notAllowFengmingRecharge } from 'util/role'
-// import { getRouteParam } from 'util'
-
-import '../cssbase/index.css'
 
 // track common data
 window.__trackerData = {

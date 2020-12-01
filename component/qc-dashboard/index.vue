@@ -1,6 +1,6 @@
 <template>
   <div class="page">
-    <header>数据概览<span class="side-header warning">每日数据统计存在一定延时</span></header>
+    <header>数据概览<span class="side-header c-warning">每日数据统计存在一定延时</span></header>
 
     <!-- test snapshot -->
     <!-- <el-button @click="() => checkSnapshotPage({ device: 1, url: 'https://test-files.obs.cn-east-3.myhuaweicloud.com/dailiyun_web.html' })">PC</el-button>
@@ -18,7 +18,7 @@
         />
       </el-select>
 
-      <header class="chart-header"><span v-if="visible.showNoChartData" class="side-header strong">({{NO_PVS_TIP}})</span></header>
+      <header class="chart-header"><span v-if="visible.showNoChartData" class="side-header c-strong">({{NO_PVS_TIP}})</span></header>
 
       <div class="charts-con">
         <div class="chart-con platform-chart">
@@ -35,7 +35,7 @@
       </div>
     </section>
 
-    <header class="pvs-tabs-header">推广关键字<span class="side-header">近<span class="strong" style="margin: 0 0 0 1px">7日</span>关键词效果</span></header>
+    <header class="pvs-tabs-header">推广关键字<span class="side-header">近<span class="c-strong" style="margin: 0 0 0 1px">7日</span>关键词效果</span></header>
 
     <el-tabs class="words-pvs-tabs" v-model="active.tab">
       <el-tab-pane label="所有关键字" name="allTab">

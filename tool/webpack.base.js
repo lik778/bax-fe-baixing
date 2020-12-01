@@ -7,6 +7,29 @@ const env = process.env.NODE_ENV
 
 console.log(env)
 
+const StyleLoaders = [
+  env === 'production'
+    ? MiniCssExtractPlugin.loader
+    : 'vue-style-loader',
+  {
+    loader: 'css-loader',
+    options: {
+      import: false,
+      importLoaders: 1
+    }
+  },
+  {
+    loader: 'postcss-loader',
+    options: {
+      plugins: [
+        require('postcss-import')(),
+        require('postcss-mixins')(),
+        require('postcss-cssnext')()
+      ]
+    }
+  }
+]
+
 module.exports = {
   entry: {
     signin: './template/signin',
@@ -29,27 +52,17 @@ module.exports = {
         loader: 'babel-loader',
         exclude: file => /node_modules/.test(file)
       }, {
-        test: /css$/,
+        test: /[^s]css$/,
         use: [
-          env === 'production'
-            ? MiniCssExtractPlugin.loader
-            : 'vue-style-loader',
+          ...StyleLoaders,
+        ]
+      },
+      {
+        test: /\.scss$/,
+        use: [
+          ...StyleLoaders,
           {
-            loader: 'css-loader',
-            options: {
-              import: false,
-              importLoaders: 1
-            }
-          },
-          {
-            loader: 'postcss-loader',
-            options: {
-              plugins: [
-                require('postcss-import')(),
-                require('postcss-mixins')(),
-                require('postcss-cssnext')()
-              ]
-            }
+            loader: "sass-loader"
           }
         ]
       },

@@ -366,7 +366,7 @@ export default {
     },
     genConTitle(word, idx) {
       return `<div>${idx +
-        1}、请填写关键词 <span class="warning">${word}</span> 的（B/D) 类词：</div>`;
+        1}、请填写关键词 <span class="c-warning">${word}</span> 的（B/D) 类词：</div>`;
     },
     openOneWordInputView(idx) {
       const enableMulti = true;
