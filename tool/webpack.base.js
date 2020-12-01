@@ -7,19 +7,6 @@ const env = process.env.NODE_ENV
 
 console.log(env)
 
-const StyleLoaders = [
-  env === 'production'
-    ? MiniCssExtractPlugin.loader
-    : 'vue-style-loader',
-  {
-    loader: 'css-loader',
-    options: {
-      import: false,
-      importLoaders: 1
-    }
-  }
-]
-
 module.exports = {
   entry: {
     signin: './template/signin',
@@ -41,16 +28,20 @@ module.exports = {
         test: /\.js$/,
         loader: 'babel-loader',
         exclude: file => /node_modules/.test(file)
-      }, {
-        test: /[^s]css$/,
-        use: [
-          ...StyleLoaders,
-        ]
       },
       {
         test: /\.scss$/,
         use: [
-          ...StyleLoaders,
+          env === 'production'
+            ? MiniCssExtractPlugin.loader
+            : 'vue-style-loader',
+          {
+            loader: 'css-loader',
+            options: {
+              import: false,
+              importLoaders: 1
+            }
+          },
           {
             loader: "sass-loader"
           },
