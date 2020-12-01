@@ -95,7 +95,7 @@
     <payment-dialog
       v-model="visible.paymentDialog"
       :url="active.selectedItemURL"
-      :keyword="safeSelectedItem.coreWord"
+      :core-words="safeSelectedItem.coreWords || []"
       :provinces="safeSelectedItem.provinces"
       @onClose="visible.paymentDialog = false"
     />

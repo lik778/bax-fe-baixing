@@ -5,7 +5,7 @@
     :visible="value"
     @close="closeDialog">
     <!-- content -->
-    <p class="content">核心产品 <span class="keyword">“{{keyword}}”</span>，推广区域 <span class="area">“{{(provinces || []).join('、')}}”</span>的支付链接已生成。</p>
+    <p class="content">核心产品 <span class="keyword">“{{coreWords.join(',')}}”</span>，推广区域 <span class="area">“{{(provinces || []).join('、')}}”</span>的支付链接已生成。</p>
     <div class="links" style="margin-top: 2.5em">
       <div class="copy-area">
         <el-input
@@ -33,7 +33,7 @@ import Clipboard from 'com/widget/clipboard'
 export default {
   props: {
     value: Boolean,
-    keyword: String,
+    coreWords: Array,
     provinces: Array,
     url: String
   },
