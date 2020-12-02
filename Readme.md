@@ -2,11 +2,6 @@
 
 搜索通前端界面，集成了易慧推、凤鸣、标王、精品官网、站内广告等产品。
 
-## TODO
-
-* Husky + Git Commit Message
-* Huksy + Version Control
-
 ## 配置
 
 ### 代码格式化
@@ -84,3 +79,9 @@ git config --global core.safecrlf false
 * css中 `fonts/element-icons.ttf` 传一下, 改一下
 
 * 修改element配置样式：修改根目录的element-theme.scss 并执行 `et -c ./element-theme.scss`
+
+## TODO
+
+* Husky + Git Commit Message
+* Huksy + Version Control
+* Sentry 不能精准捕获最后一个元素的点击

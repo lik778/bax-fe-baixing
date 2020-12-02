@@ -279,7 +279,7 @@ export default {
         this.form.keywords.findIndex((x) => x === wordToRemove),
         1
       )
-      this.validKeywords(true)
+      this.validKeywords(this.form.keywords, true)
     },
     async checkWord() {
       this.$refs.form.validate(async (isValid) => {
