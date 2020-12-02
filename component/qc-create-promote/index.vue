@@ -20,7 +20,9 @@
               :key="item.id"
               @click="() => (isEdit ? '' : selectType(item.id))"
             >
-              <div class="hotsale-icon" v-if="item.id == 2">NEW</div>
+              <div class="hotsale-icon" v-if="item.id == options.types[1].id">
+                NEW
+              </div>
               <div class="card-title">{{ item.title }}</div>
               <div class="card-tip">{{ item.info }}</div>
             </div>
