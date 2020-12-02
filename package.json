@@ -8,7 +8,6 @@
     "move-file": "node tool/move-file.js",
     "upload-asset": "upyun-upload -c tool/asset.upyun.config.js -v",
     "upload": "upyun-upload -c tool/upyun.config.js -v",
-    "lint": "eslint . --ext .js,.vue",
     "release": "npm run build && npm run upload && npm run move-file"
   },
   "repository": "https://gitlab.baixing.cn/channel/bax-fe",
@@ -60,7 +59,13 @@
     "css-loader": "^0.28.11",
     "element-theme": "^2.0.1",
     "element-theme-chalk": "^2.13.0",
-    "eslint-config-ok": "github:haoxins/eslint-config",
+    "eslint": "^7.14.0",
+    "eslint-config-prettier": "^6.15.0",
+    "eslint-config-standard": "^16.0.2",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "eslint-plugin-promise": "^4.2.1",
     "express": "^4.16.2",
     "file-loader": "^3.0.1",
     "html-webpack-plugin": "^3.2.0",
@@ -71,6 +76,7 @@
     "postcss-import": "^11.1.0",
     "postcss-loader": "^2.1.6",
     "postcss-mixins": "^6.2.0",
+    "prettier": "2.2.1",
     "rimraf": "^2.6.2",
     "style-loader": "^0.20.2",
     "svg-sprite-loader": "^3.6.2",
@@ -85,10 +91,5 @@
     "webpack-dev-middleware": "^2.0.6",
     "webpack-hot-middleware": "^2.21.0",
     "webpack-merge": "^4.1.2"
-  },
-  "eslintConfig": {
-    "extends": [
-      "ok"
-    ]
   }
 }
