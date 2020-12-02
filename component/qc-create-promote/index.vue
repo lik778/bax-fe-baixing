@@ -282,7 +282,7 @@ export default {
         this.form.keywords.findIndex(x => x === wordToRemove),
         1
       );
-      this.validKeywords();
+      this.validKeywords(true);
     },
     async checkWord() {
       this.$refs.form.validate(async isValid => {
@@ -300,7 +300,7 @@ export default {
       this.form.areas = [...areas];
       this.areaDialogVisible = false;
     },
-    validKeywords(words = this.form.keywords, validLen = false) {
+    validKeywords(words = this.form.keywords, validLen = true) {
       if (words.find(x => !/^[\u4E00-\u9FA5A-Za-z0-9]{2,10}$/.test(x))) {
         this.tip.keyword =
           "核心词不能是特殊字符，单个核心词长度限制为 2-10 个字";
