@@ -115,7 +115,7 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 .artificial-dialog {
   & .tips {
     margin-top: 30px;

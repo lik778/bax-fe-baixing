@@ -157,7 +157,7 @@ export default {
 };
 </script>
 
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 .tip {
   color: red;
   font-size: 11px;

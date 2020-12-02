@@ -154,7 +154,7 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 .bw-dashboard-keyword-modal {
   & .header {
     display: flex;
@@ -190,7 +190,7 @@ export default {
 }
 </style>
 
-<style lang="postcss">
+<style lang="scss">
 .bw-dashboard-keyword-modal {
   & > .el-dialog__header {
     padding: 0;

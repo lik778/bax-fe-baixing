@@ -13,8 +13,7 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
-
+<style lang="scss" scoped>
 footer {
   color: #717d91;
   font-size: 13px;
@@ -25,5 +24,4 @@ footer {
     cursor: pointer;
   }
 }
-
 </style>

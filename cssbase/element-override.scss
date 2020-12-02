@@ -1,13 +1,3 @@
-$--color-primary: #ff6350;
-$--table-font-color: #666;
-$--pagination-font-size: 14px;
-$--tab-font-size: 14px;
-
-/* 改变 icon 字体路径变量，必需 */
-$--font-path: "~element-ui/lib/theme-chalk/fonts";
-
-@import "~element-ui/packages/theme-chalk/src/index";
-
 /************************************************************** Element UI 覆盖 */
 
 /******************************************** el-pagination */

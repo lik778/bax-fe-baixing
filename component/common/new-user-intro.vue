@@ -147,18 +147,16 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
-@import '../../cssbase/mixin';
-
+<style lang="scss" scoped>
 .new-user-intro {
-  @mixin center;
+  @include center;
   position: fixed;
   z-index: 1000;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(41, 41, 41, 0.7);;
+  background: rgba(41, 41, 41, 0.7);
 }
 
 .new-user-intro.hide {
@@ -172,7 +170,8 @@ export default {
   width: 630px;
   height: 550px;
   padding-left: 10px;
-  background: url('//file.baixing.net/bax-fe/asset/shenma-intro-bg.png') no-repeat;
+  background: url("//file.baixing.net/bax-fe/asset/shenma-intro-bg.png")
+    no-repeat;
 
   & > i {
     position: relative;
@@ -263,7 +262,8 @@ export default {
   }
 }
 
-.step-1, .step-2 {
+.step-1,
+.step-2 {
   display: flex;
   flex-flow: column;
   align-items: center;
@@ -280,7 +280,7 @@ export default {
   }
 
   & > footer {
-    @mixin center;
+    @include center;
     width: 791px;
     height: 33px;
     border-radius: 16px;
@@ -373,7 +373,7 @@ export default {
     }
 
     & > div {
-      @mixin center;
+      @include center;
       margin-top: 26px;
       font-size: 14px;
       color: #fcb057;

@@ -51,8 +51,7 @@ import {
   Cascader,
   Notification
 } from 'element-ui'
-import '../cssbase/element-ui.scss'
-import '../cssbase/index.css'
+import '../cssbase/index.scss'
 
 import { reaction } from 'mobx'
 import Movue from 'movue'
@@ -172,7 +171,6 @@ const eventBus = {
   install(Vue) { Vue.prototype.$bus = new Vue() }
 }
 Vue.use(eventBus)
-
 
 const gwRoutes = [{
   component: () => import('com/gw-homepage'),

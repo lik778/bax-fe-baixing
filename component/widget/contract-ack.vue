@@ -41,8 +41,7 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
-
+<style lang="scss" scoped>
 .main {
   margin-top: 30px;
   font-size: 14px;
@@ -57,6 +56,4 @@ export default {
     cursor: pointer;
   }
 }
-
 </style>
-

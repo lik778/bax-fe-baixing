@@ -316,11 +316,8 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
-@import '../../cssbase/var';
-:root {
-  --active-bg: #FFF7EB;
-}
+<style lang="scss" scoped>
+$active-bg: #fff7eb;
 
 .iconfont {
   margin-right: 13px;
@@ -352,26 +349,27 @@ export default {
 }
 
 .sidebar {
-  & >>> .el-menu-item {
+  & /deep/ .el-menu-item {
     height: 48px;
     line-height: 48px;
     min-width: unset;
     padding-right: 0;
     &:hover {
-      background-color: var(--active-bg) !important;
+      background-color: $active-bg !important;
     }
     &.is-active {
-      background-color: var(--active-bg) !important;
+      background-color: $active-bg !important;
     }
   }
-  & >>> .el-submenu__title {
+  & /deep/ .el-submenu__title {
     height: 48px;
     line-height: 48px;
     &:hover {
-      background-color: var(--active-bg) !important;
+      background-color: $active-bg !important;
     }
   }
-  & >>> .el-icon-news, & >>> .el-icon-document {
+  & /deep/ .el-icon-news,
+  & /deep/ .el-icon-document {
     text-align: left;
     margin-right: 1px;
     font-size: 16px;

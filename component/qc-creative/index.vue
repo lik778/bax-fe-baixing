@@ -216,7 +216,7 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 .form-wrapper {
   margin-top: 36px;
   padding-left: 20px;
@@ -232,7 +232,7 @@ export default {
 }
 </style>
 
-<style lang="postcss">
+<style lang="scss">
 /* TODO 查找 Element 级联被样式污染原因 */
 .el-cascader__dropdown {
   & .el-scrollbar__wrap {

@@ -106,9 +106,7 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
-@import '../../cssbase/var';
-
+<style lang="scss" scoped>
 .title {
   display: flex;
   justify-content: center;
@@ -118,7 +116,7 @@ export default {
 
   & > i {
     margin-right: 10px;
-    color: var(--qwt-c-blue);
+    color: $qwt-c-blue;
     font-size: 22px;
   }
 }
@@ -144,7 +142,7 @@ export default {
     }
 
     & > i.icon-checkcircle {
-      color: var(--qwt-c-blue);
+      color: $qwt-c-blue;
     }
 
     & > i.icon-circle {

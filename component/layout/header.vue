@@ -79,97 +79,98 @@
   }
 </script>
 
-<style lang="postcss" scoped>
-  .header {
-    position: fixed;
-    z-index: 998;
-    display: flex;
-    align-items: center;
-    top: 0;
-    left: 0;
-    width: 100%;
+<style lang="scss" scoped>
+.header {
+  position: fixed;
+  z-index: 998;
+  display: flex;
+  align-items: center;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 50px;
+  background-image: linear-gradient(-179deg, #ff4d4d 0%, #ff8955 100%);
+  box-shadow: 0 2px 9px 0 rgba(83, 95, 127, 0.1);
+  & .logo {
+    flex: none;
+    width: 108px;
     height: 50px;
-    background-image: linear-gradient(-179deg, #FF4D4D 0%, #FF8955 100%);
-    box-shadow: 0 2px 9px 0 rgba(83,95,127,0.10);
-    & .logo {
-      flex: none;
-      width: 108px;
-      height: 50px;
-      overflow: hidden;
-      text-indent: -9999px;
-      background: url('//file.baixing.net/201902/ddec176c9e5d2dd736e6d9948686ffee.png') 23px center no-repeat;
-      background-size: 80px 35px;
+    overflow: hidden;
+    text-indent: -9999px;
+    background: url("//file.baixing.net/201902/ddec176c9e5d2dd736e6d9948686ffee.png")
+      23px center no-repeat;
+    background-size: 80px 35px;
+  }
+  & .version {
+    color: #fff;
+    font-size: 13px;
+    margin-left: 8px;
+    margin-top: 13px;
+  }
+  & .nav {
+    margin-left: auto;
+    font-size: 14px;
+    padding-right: 20px;
+    color: #fff;
+  }
+  & .nav-item {
+    position: relative;
+    padding: 0 25px;
+    float: left;
+    cursor: pointer;
+    &:not(.menu) {
+      border-right: 1px solid #fff;
     }
-    & .version {
-      color: #fff;
-      font-size: 13px;
-      margin-left: 8px;
-      margin-top: 13px;
+    &.menu {
+      text-align: right;
+      min-width: 150px;
     }
-    & .nav {
-      margin-left: auto;
-      font-size: 14px;
-      padding-right: 20px;
-      color: #fff;
+  }
+  & .menu-group {
+    position: absolute;
+    top: 30px;
+    right: 24px;
+    line-height: 45px;
+    color: #333;
+    text-align: left;
+    background-color: #fff;
+    border-radius: 3px;
+    border: 1px solid #eee;
+    z-index: 100;
+    &.help {
+      right: 4px;
     }
-    & .nav-item {
-      position: relative;
-      padding: 0 25px;
-      float: left;
-      cursor: pointer;
-      &:not(.menu) {
-        border-right: 1px solid #fff;
-      }
-      &.menu {
-        text-align: right;
-        min-width: 150px;
-      }
-    }
-    & .menu-group {
+    &:before {
+      content: "";
       position: absolute;
-      top: 30px;
-      right: 24px;
-      line-height: 45px;
-      color: #333;
-      text-align: left;
-      background-color: #fff;
-      border-radius: 3px;
-      border: 1px solid #eee;
-      z-index: 100;
-      &.help {
-        right: 4px;
-      }
-      &:before {
-        content: '';
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
-        top: -16px;
-        border: 9px solid transparent;
-        border-bottom-color: #fff;
-      }
-      &:after {
-        content: '';
-        position: absolute;
-        top: -20px;
-        left: -50px;
-        right: -30px;
-        height: 22px;
-        z-index: -1;
-      }
-      & .menu-item {
+      left: 50%;
+      transform: translateX(-50%);
+      top: -16px;
+      border: 9px solid transparent;
+      border-bottom-color: #fff;
+    }
+    &:after {
+      content: "";
+      position: absolute;
+      top: -20px;
+      left: -50px;
+      right: -30px;
+      height: 22px;
+      z-index: -1;
+    }
+    & .menu-item {
+      padding: 0 20px;
+      letter-spacing: 1px;
+      &.link {
+        display: block;
+        color: #333;
         padding: 0 20px;
-        letter-spacing: 1px;
-        &.link {
-          display: block;
-          color: #333;
-          padding: 0 20px;
-        }
-        &:hover {
-          color: #FF6350;
-          background-color: #FFF7EB;
-        }
+      }
+      &:hover {
+        color: #ff6350;
+        background-color: #fff7eb;
       }
     }
   }
+}
 </style>

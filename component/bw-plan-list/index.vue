@@ -495,20 +495,19 @@
   }
 </script>
 
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 header {
   color: #666;
-  border-bottom: 1px solid #E6E6E6;
+  border-bottom: 1px solid #e6e6e6;
   padding: 15px;
   font-size: 16px;
 }
 div.bg {
-
   & > .white-bg {
     background-color: #fff;
 
     & > main {
-      box-shadow: 0px 2px 9px 0px rgba(83, 95, 127, .1);
+      box-shadow: 0px 2px 9px 0px rgba(83, 95, 127, 0.1);
       min-height: 700px;
       padding: 45px 60px;
     }
@@ -518,13 +517,13 @@ div.bg {
   margin-bottom: 35px;
 }
 marquee {
-  background-color: #FFF7EB;
-  color: #C6A674;
+  background-color: #fff7eb;
+  color: #c6a674;
   display: flex;
   align-items: center;
 }
-.audit-reject-review{
-  color: #FF6350;
+.audit-reject-review {
+  color: #ff6350;
   cursor: pointer;
 }
 .xufei-btn {
@@ -536,7 +535,7 @@ marquee {
 }
 </style>
 
-<style lang="postcss">
+<style lang="scss">
 .city-tooltip {
   width: 320px;
 }

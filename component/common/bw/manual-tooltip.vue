@@ -16,10 +16,8 @@ export default {
 }
 </script>
 
-
-<style lang="postcss" scoped>
-  .str-color {
-    color: #FF6350;
-  }
-
+<style lang="scss" scoped>
+.str-color {
+  color: #ff6350;
+}
 </style>

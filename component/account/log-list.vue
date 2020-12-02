@@ -309,15 +309,16 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 .layout-container {
-  & >>> .el-select {
+  & /deep/ .el-select {
     width: 110px;
   }
   & .ml {
     margin-left: 20px;
   }
-  & .el-select, & .el-input {
+  & .el-select,
+  & .el-input {
     margin-left: 8px;
   }
 }

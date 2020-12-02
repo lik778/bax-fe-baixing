@@ -91,28 +91,28 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 .row {
-& .label {
+  & .label {
     font-size: 18px;
-    color: #FF6350;
+    color: #ff6350;
     margin-bottom: 15px;
-& .keyword {
-    display: inline-block;
-    vertical-align: top;
-    margin-bottom: 10px;
-    color: #000;
+    & .keyword {
+      display: inline-block;
+      vertical-align: top;
+      margin-bottom: 10px;
+      color: #000;
+    }
   }
-}
-& .package-list {
+  & .package-list {
     margin-bottom: 10px;
-    border-bottom: 1px solid #DCDFE6;
+    border-bottom: 1px solid #dcdfe6;
     padding-bottom: 15px;
     & > .word {
       width: 250px;
       margin-right: 30px;
       & strong {
-        color: #FF6350;
+        color: #ff6350;
       }
     }
     & > .shows {
@@ -120,15 +120,15 @@ export default {
     }
     & > .shows strong {
       font-size: 18px;
-      color: #FF6350;
+      color: #ff6350;
     }
   }
-& .tips {
+  & .tips {
     font-size: 14px;
     margin-bottom: 20px;
     & strong {
-        font-size: 18px;
-        color: #FF6350;
+      font-size: 18px;
+      color: #ff6350;
     }
   }
 }

@@ -238,7 +238,7 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 .el-dialog__body {
   & > div {
     margin: 10px 0;

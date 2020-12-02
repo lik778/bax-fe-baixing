@@ -311,12 +311,9 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
-@import '../../cssbase/var';
-@import 'cssbase/mixin';
-
+<style lang="scss" scoped>
 .add-campaign-btn {
-  @mixin center;
+  @include center;
   display: inline-flex;
   width: 84px;
   height: 22px;
@@ -337,12 +334,12 @@ export default {
 
 .tip {
   font-size: 12px;
-  color: var(--c-tip-gray);
+  color: #717d91;
   margin-bottom: 20px;
 }
 
 .badge {
-  @mixin center;
+  @include center;
   height: 24px;
   min-width: 74px;
   margin-right: 30px;
@@ -356,7 +353,7 @@ export default {
   color: #6a778c;
 
   &[aria-checked="true"] {
-    background: var(--qwt-c-orange) !important;
+    background: $qwt-c-orange !important;
     color: white !important;
   }
 }

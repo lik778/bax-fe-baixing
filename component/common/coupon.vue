@@ -45,7 +45,7 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 .coupon {
   position: relative;
   display: flex;
@@ -59,74 +59,72 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    background-image: url('//s.baixing.net/img/refashion/coupon_background.png');
+    background-image: url("//s.baixing.net/img/refashion/coupon_background.png");
     background-size: cover;
-    background-color: #FEC435;
+    background-color: #fec435;
     text-align: center;
     color: white;
     position: relative;
 
-    &>h2 {
+    & > h2 {
       margin: 0;
       font-size: 1.5em;
     }
 
-    &>.desc {
-      font-size: .8em;
+    & > .desc {
+      font-size: 0.8em;
     }
   }
 
-  &>.detail {
-    border: 1px solid #FEC435;
-    border-left: 2px dashed #FEC435;
+  & > .detail {
+    border: 1px solid #fec435;
+    border-left: 2px dashed #fec435;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
     flex-grow: 1;
-    &>.type {
+    & > .type {
       font-size: 1em;
       margin: 2px;
     }
-    &>.date {
-      font-size: .8em;
+    & > .date {
+      font-size: 0.8em;
       color: gray;
     }
-    &>.btn-use {
-      font-size: .8em;
-      color: #FDB335;
+    & > .btn-use {
+      font-size: 0.8em;
+      color: #fdb335;
       padding: 0 10px;
-      border: 1px solid #FDB335;
+      border: 1px solid #fdb335;
       border-radius: 30px;
       margin: 5px auto;
-
     }
   }
 }
 .coupon.selected {
-  border: 2px solid #BD8D04;
+  border: 2px solid #bd8d04;
 
-  &>.detail {
+  & > .detail {
     border-top-color: transparent;
     border-right-color: transparent;
     border-bottom-color: transparent;
   }
-
 }
 .coupon.selected::after {
-  content: '';
+  content: "";
   position: absolute;
   right: 0;
   bottom: 0;
   width: 0;
   height: 0;
-  border-right: 10px solid #BD8D04;
-  border-bottom: 10px solid #BD8D04;
+  border-right: 10px solid #bd8d04;
+  border-bottom: 10px solid #bd8d04;
   border-left: 10px solid transparent;
   border-top: 10px solid transparent;
 }
 .coupon.selected::before {
-  content: '√';
+  content: "√";
   position: absolute;
   right: 2px;
   bottom: -4px;
@@ -139,12 +137,12 @@ export default {
 .coupon.disabled {
   cursor: not-allowed;
 
-  &>.brief {
+  & > .brief {
     background-image: none;
-    background-color: #CFCFCF;
+    background-color: #cfcfcf;
   }
-  &>.detail {
-    color: #CFCFCF;
+  & > .detail {
+    color: #cfcfcf;
     border: 1px solid;
     border-left: 2px dashed;
   }

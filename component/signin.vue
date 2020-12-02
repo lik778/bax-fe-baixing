@@ -80,12 +80,60 @@ export default {
 </script>
 
 <style>
-@import 'cssbase/reset';
+* {
+  font-family: PingFangSC-Regular, "Open Sans", "Microsoft YaHei", 微软雅黑,
+    STHeiti, "WenQuanYi Micro Hei", SimSun, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+  vertical-align: baseline;
+  box-sizing: border-box;
+  font-size: 100%;
+  outline: 0;
+  padding: 0;
+  margin: 0;
+  border: 0;
+}
+
+html {
+  font-family: "Hiragino Sans GB", helvetica, tahoma, arial, sans-serif;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+a {
+  background-color: transparent;
+  text-decoration: none;
+}
+
+i {
+  font-style: normal;
+}
+
+ul,
+li {
+  list-style: none;
+}
+
+a,
+span,
+aside,
+label,
+strong {
+  display: inline-block;
+}
+
+textarea {
+  resize: none;
+}
+
+dialog {
+  margin: auto;
+}
 </style>
 
-<style scoped>
-@import 'cssbase/mixin';
-
+<style lang="scss" scoped>
 .box {
   display: grid;
   grid-template-rows: 40px 55px 55px;
@@ -101,7 +149,7 @@ export default {
   padding: 15px 20px 0;
   border-radius: 5px;
   border-radius: 4px;
-  background: rgba(216, 216, 216, 0.30);
+  background: rgba(216, 216, 216, 0.3);
 
   & > p {
     grid-area: title;
@@ -114,7 +162,7 @@ export default {
     height: 36px;
     padding: 0 5px;
     border: 1px solid #979797;
-    box-shadow: inset 0 1px 3px 0 rgba(0,0,0,0.50);
+    box-shadow: inset 0 1px 3px 0 rgba(0, 0, 0, 0.5);
     border-radius: 4px;
     font-size: 14px;
     color: #afafaf;
@@ -129,7 +177,7 @@ export default {
   }
 
   & > a {
-    @mixin center;
+    @include center;
     grid-area: bxLogin;
     justify-self: end;
     width: 120px;
@@ -141,7 +189,7 @@ export default {
   }
 
   & > span {
-    @mixin center;
+    @include center;
     grid-area: submit;
     justify-self: end;
     width: 100px;
@@ -163,12 +211,12 @@ main {
   height: 100%;
   min-width: 960px;
   padding-right: 36px;
-  background: url('//file.baixing.net/bax-fe/asset/signin-bg.jpg');
+  background: url("//file.baixing.net/bax-fe/asset/signin-bg.jpg");
   background-repeat: no-repeat;
   background-size: cover;
 
   & > header {
-    @mixin center;
+    @include center;
     margin-bottom: 60px;
     width: 420px;
     font-family: Arial Black;

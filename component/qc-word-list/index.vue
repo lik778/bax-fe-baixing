@@ -302,7 +302,7 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 .query-form {
   margin-top: 18px;
   padding: 16px;
@@ -317,7 +317,7 @@ export default {
     /* display: block; */
     /* margin-bottom: 0; */
 
-    & >>> .el-form-item__label {
+    & /deep/ .el-form-item__label {
       opacity: 0;
     }
   }

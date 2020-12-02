@@ -243,7 +243,7 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 .cibao-page-container {
   color: #6a778c;
   font-size: 14px;
@@ -273,7 +273,7 @@ export default {
       display: none;
     }
     &:after {
-      content: '*';
+      content: "*";
       position: absolute;
       color: red;
       font-size: 12px;

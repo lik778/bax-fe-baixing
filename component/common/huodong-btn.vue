@@ -28,7 +28,7 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 .huodong-btn {
   position: fixed;
   right: 0;

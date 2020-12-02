@@ -30,23 +30,23 @@ export default {
 }
 </script>
 
-<style scoped lang="postcss">
-  .notification {
-    font-size: 15px;
+<style scoped lang="scss">
+.notification {
+  font-size: 15px;
 
-    & > ul {
-      padding: 20px;
-    }
+  & > ul {
+    padding: 20px;
+  }
 
-    & li {
-      list-style: disc;
-      margin-bottom: 10px;
+  & li {
+    list-style: disc;
+    margin-bottom: 10px;
 
-      & p {
-        line-height: 1.6;
-        font-size: 14px;
-        text-indent: 1.5em;
-      }
+    & p {
+      line-height: 1.6;
+      font-size: 14px;
+      text-indent: 1.5em;
     }
   }
+}
 </style>

@@ -12,8 +12,8 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
-	.el-icon-question {
-		cursor: pointer;
-	}
+<style lang="scss" scoped>
+.el-icon-question {
+  cursor: pointer;
+}
 </style>

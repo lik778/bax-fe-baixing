@@ -48,7 +48,7 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 .copy-area {
   cursor: pointer;
 }
@@ -56,10 +56,10 @@ export default {
   height: 40px;
   line-height: 40px;
 }
->>> .el-dialog__body {
+/deep/ .el-dialog__body {
   padding: 40px 45px;
 }
->>> .el-dialog__footer {
+/deep/ .el-dialog__footer {
   padding: 10px 40px 30px 40px;
 }
 </style>

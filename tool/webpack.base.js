@@ -64,7 +64,16 @@ module.exports = {
           ...StyleLoaders,
           {
             loader: "sass-loader"
-          }
+          },
+          {
+            loader: 'sass-resources-loader',
+            options: {
+              resources: [
+                './cssbase/vars.scss',
+                './cssbase/mixins.scss',
+              ]
+            },
+          },
         ]
       },
       {

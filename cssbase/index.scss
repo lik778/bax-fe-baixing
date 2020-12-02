@@ -1,7 +1,24 @@
-/* 变量定义 */
-@import "./var.css";
-/* 函数和混合 */
-@import "./mixin.css";
+@import "./theme.scss";
+@import "./element-override.scss";
+
+.c-success {
+  color: $c-success;
+}
+.c-info {
+  color: $c-info;
+}
+.c-tip {
+  color: $c-tip;
+}
+.c-ignore {
+  color: $c-ignore;
+}
+.c-warning {
+  color: $c-warning;
+}
+.c-strong {
+  color: $c-strong;
+}
 
 /********************************* Atomics 最小功能类 */
 

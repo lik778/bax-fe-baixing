@@ -35,26 +35,26 @@ export default {
 }
 </script>
 
-<style scoped lang="postcss">
-  .notice-list {
-    padding: 30px 20px;
-    background-color: #fff;
-    border-radius: 4px;
-    box-shadow: 0 2px 9px 0 rgba(83, 95, 127, .10);
-  }
-  .notice-item {
-    padding-top: 16px;
-    padding-bottom: 8px;
-    padding-right: 20px;
-    border-bottom: 1px solid #f0f0f0;
-  }
-  .content {
-    color: #333;
-    font-size: 16px;
-  }
-  .date {
-    color: #aaa;
-    font-size: 13px;
-    text-align: right;
-  }
+<style scoped lang="scss">
+.notice-list {
+  padding: 30px 20px;
+  background-color: #fff;
+  border-radius: 4px;
+  box-shadow: 0 2px 9px 0 rgba(83, 95, 127, 0.1);
+}
+.notice-item {
+  padding-top: 16px;
+  padding-bottom: 8px;
+  padding-right: 20px;
+  border-bottom: 1px solid #f0f0f0;
+}
+.content {
+  color: #333;
+  font-size: 16px;
+}
+.date {
+  color: #aaa;
+  font-size: 13px;
+  text-align: right;
+}
 </style>

@@ -456,15 +456,15 @@ export default {
   }
 }
 </script>
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 .chart-header {
   margin-top: 30px;
 }
 .pvs-tabs-header {
-  margin-top: 30px
+  margin-top: 30px;
 }
 .words-pvs-tabs {
-  margin-top: .5em;
+  margin-top: 0.5em;
 }
 .charts-con {
   display: flex;
@@ -482,8 +482,8 @@ export default {
   /* background: #f2f2f2; */
 
   & .echarts,
-  & .echarts>div,
-  & .echarts>div>canvas {
+  & .echarts > div,
+  & .echarts > div > canvas {
     width: 100%;
     height: 100%;
   }
@@ -506,7 +506,7 @@ export default {
 }
 </style>
 
-<style lang="postcss">
+<style lang="scss">
 .snapshot-dialog,
 .snapshot-dialog-mobile {
   position: fixed;

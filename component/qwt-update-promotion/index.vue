@@ -1494,9 +1494,7 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
-@import 'cssbase/mixin';
-
+<style lang="scss" scoped>
 .landingpage {
   position: relative;
   min-width: 540px;
@@ -1633,7 +1631,7 @@ export default {
   padding: 0 35px;
   width: 100%;
   & .highlight {
-    color: #B66969 !important;
+    color: #b66969 !important;
     font-weight: 600;
   }
   & > main {
@@ -1651,7 +1649,7 @@ export default {
       margin-bottom: 10px;
       background-color: #fff;
       padding: 20px;
-      box-shadow: 0 2px 9px 0 rgba(83,95,127,0.10);
+      box-shadow: 0 2px 9px 0 rgba(83, 95, 127, 0.1);
       &:last-child {
         padding-bottom: 40px;
       }
@@ -1810,6 +1808,6 @@ export default {
   font-size: 12px !important;
 }
 .red {
-  color: #FF6350;
+  color: #ff6350;
 }
 </style>
