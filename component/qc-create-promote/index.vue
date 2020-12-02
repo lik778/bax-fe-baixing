@@ -30,7 +30,7 @@
 
           <!-- 关键词与区域选择 -->
           <template v-if="isTypeSelected">
-            <el-form-item label="推广关键词">
+            <el-form-item label="核心产品">
               <!-- TODO fix click -->
               <el-input
                 :disabled="restKeywordLength <= 0"
@@ -164,13 +164,13 @@ export default {
       options: {
         types: [
           {
-            title: '一词两省',
-            info: '支持首页宝推广，让您的网站上百度首页',
+            title: '两省一核',
+            info: '支持在两个省（或直辖市）投放一个核心产品',
             id: ONE_WORD_TWO_PROVINCE,
           },
           {
-            title: '三词一省',
-            info: '支持 SEO 优化等更多专业版官网建站功能',
+            title: '一省三核',
+            info: '支持在一个省（或直辖市）投放三个核心产品',
             id: THREE_WORD_ONE_PROVINCE,
           },
         ],
@@ -299,8 +299,7 @@ export default {
     },
     validKeywords(words = this.form.keywords, validLen = true) {
       if (words.find((x) => !/^[\u4E00-\u9FA5A-Za-z0-9]{2,10}$/.test(x))) {
-        this.tip.keyword =
-          '核心词不能是特殊字符，单个核心词长度限制为 2-10 个字'
+        this.tip.keyword = '核心产品不能是特殊字符，单个词长度限制为 2-10 个字'
         return false
       }
       if (!validLen) {
@@ -365,7 +364,7 @@ export default {
   display: inline-block;
   margin-top: 10px;
   margin-left: 28px;
-  width: 245px;
+  width: 260px;
   height: 100px;
   border: solid 1px #ccc;
   border-radius: 4px;
