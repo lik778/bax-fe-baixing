@@ -2,6 +2,11 @@
 
 搜索通前端界面，集成了易慧推、凤鸣、标王、精品官网、站内广告等产品。
 
+## TODO
+
+* Husky + Git Commit Message
+* Huksy + Version Control
+
 ## 配置
 
 ### 代码格式化
@@ -38,6 +43,7 @@
 ```shell
 git config --global core.autocrlf false
 git config --global core.eol lf
+git config --global core.safecrlf false
 ```
 
 ## 开发
