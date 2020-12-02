@@ -1,8 +1,28 @@
-### bax fe
+# 搜索通
 
-搜索通的用户界面，集成了凤鸣、标王、精品官网、站内广告等产品
+搜索通前端界面，集成了易慧推、凤鸣、标王、精品官网、站内广告等产品。
 
-### 开发说明
+## 配置
+
+### 代码格式化
+
+* [ESLint](https://eslint.org/docs/user-guide/getting-started) + [Prettier](https://prettier.io/) + [EditorConfig](https://editorconfig.org/)
+
+格式化工具说明：
+
+* 无论你是 VSCode 或是 Gitlab 在线编辑器，无需安装插件，仅通过项目 EditorConfig 文本文件即可实现字符集、换行等基本的代码格式行为约束。
+* Prettier 用于格式化代码，支持 JS、CSS 等常见代码类型。
+* ESLint 通过解析 JS、分析 AST，以发现编辑器无法发现的潜在的代码问题与异味。
+
+可以发现，从代码规范上来看，EditorConfig、Prettier、ESLint 三者一步一步更向严格靠拢。不过无需担心，严格的检测带来了代码的整洁，帮助阅读代码的人快速理解与定位。“保证所有代码看起来都像一个人编写的”是一个神圣的目标。
+
+三者可能有一些重叠的部分，不过通过[插件](https://github.com/prettier/eslint-plugin-prettier)，解决了格式化功能重叠的问题。火箭随时可以发射，长官！
+
+格式化流程：
+
+// TOOD
+
+## 开发
 
 * 基本流程
   - `npm install`
