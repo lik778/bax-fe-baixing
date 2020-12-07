@@ -37,15 +37,17 @@
     <!-- 列表 -->
     <el-table class="query-table" border :data="queryList">
       <el-table-column label="查询日期" width="160" :formatter="({createdTime}) => $formatter.date(createdTime)" />
-      <el-table-column label="核心产品" prop="coreWord" width="160" />
+      <el-table-column label="核心产品" width="160" :formatter="({coreWordInfos}) => getCoreWords(coreWordInfos) " />
       <el-table-column label="推广地区" prop="provinces" :formatter="({ provinces }) => $formatter.join(provinces)" />
       <el-table-column label="状态">
         <template slot-scope="{row}">
           <catch-error>
             <template v-if="isExpandWordStatusError(row.status)">
-              <span class="error">{{getEWStatusWith('value', row.status).label}}</span>
               <el-tooltip placement="top" :content="row.lastFailedReason || '失败原因未知'">
-                <i class="error el-icon-question pointer" />
+                <span>
+                  <span class="error">{{getEWStatusWith('value', row.status).label}}</span>
+                  <i class="error el-icon-question pointer" />
+                </span>
               </el-tooltip>
             </template>
             <template v-else>
@@ -93,7 +95,7 @@
     <payment-dialog
       v-model="visible.paymentDialog"
       :url="active.selectedItemURL"
-      :keyword="safeSelectedItem.coreWord"
+      :core-words="safeSelectedItem.coreWords || []"
       :provinces="safeSelectedItem.provinces"
       @onClose="visible.paymentDialog = false"
     />
@@ -178,6 +180,14 @@ export default {
     this.getQueryList()
   },
   methods: {
+    getCoreWords(coreWordInfos) {
+      if (Array.isArray(coreWordInfos)) {
+        return coreWordInfos.reduce((cur, prev, index) => {
+          return cur + `${prev.coreWord.trim()}` + `${index !== coreWordInfos.length - 1 ? ', ' : ''}`
+        }, '')
+      }
+      return ''
+    },
     handleSizeChange(size) {
       this.pagination.size = size
       this.getQueryList()

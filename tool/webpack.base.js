@@ -5,10 +5,13 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin')
 
 const env = process.env.NODE_ENV
 
+console.log(env)
+
 module.exports = {
   entry: {
     signin: './template/signin',
     bax: './template/bax',
+    huodong: './template/huodong'
   },
   output: {
     path: distPath,

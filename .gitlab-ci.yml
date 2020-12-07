@@ -13,7 +13,6 @@ stages:
   - dev-deploy
   - prod-deploy
 
-
 build:
   stage: build
   image: node
@@ -33,7 +32,6 @@ build:
   artifacts:
     paths:
       - view/
-
 
 release:
   stage: release

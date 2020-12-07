@@ -11,7 +11,7 @@
       <el-select v-model="query.promoteID" placeholder="推广计划" clearable @change="selectPromote">
         <el-option
           v-for="item in options.promoteList"
-          :label="item.label"
+          :label="Array.isArray(item.coreWords) ? item.coreWords.join(','): item.value"
           :value="item.value"
           :key="item.value"
         />

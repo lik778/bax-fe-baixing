@@ -489,7 +489,7 @@ export default {
         color: var(--active-primary);
       }
       & .font-mid{
-        font-size: var(-font-mid);
+        font-size: var(--font-mid);
       }
       & .font-normal{
         font-size: var(--font-normal);

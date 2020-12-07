@@ -29,14 +29,14 @@
     <el-button class="go-chart-page-btn" type="primary" @click="goChartPage">查看计划报表</el-button>
     <!-- 列表 -->
     <el-table class="query-table" border :data="queryList">
-      <el-table-column label="核心产品" prop="coreWord" width="160">
+      <el-table-column label="核心产品" prop="coreWords" width="160">
         <template slot-scope="{row}">
           <a class="link-btn"
             @click="$router.push({
               name: 'qc-keyword-list', 
               query: { promoteId: row.id, ...$route.query }
             })">
-            {{row.coreWord}}
+            {{row.coreWords.join(',')}}
           </a>
         </template>
       </el-table-column>
@@ -53,9 +53,11 @@
         <template slot-scope="{row}">
           <catch-error>
             <div v-if="showAuditFailReason(row.auditStatus)">
-              <span style="color: #ff3c3c">{{getPromoteAuditStatus("values", row.auditStatus).label}}</span>
               <el-tooltip placement="top" :content="row.lastFailedReason || '失败原因未知'">
-                <i class="error el-icon-question pointer" />
+                <span>
+                  <span style="color: #ff3c3c">{{getPromoteAuditStatus("values", row.auditStatus).label}}</span>
+                  <i class="error el-icon-question pointer" />
+                </span>
               </el-tooltip>
             </div>
             <span v-else>{{getPromoteAuditStatus("values", row.auditStatus).label}}</span>

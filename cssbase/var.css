@@ -9,4 +9,23 @@
   --qwt-c-yellow: #ffb74d;
   --qwt-c-blue: #15a4fa;
   --qwt-c-gray: #f4f4f4;
+
+  /* 易慧推 */
+  --border-base: 1px solid #dbdbdb;
+
+  /* 双十一活动页 */
+  --active-primary:#D12700;
+  --active-white:#ffffff;
+  --active-bg-btn: #FFE815;
+  --active-border:#FFC200;
+  --active-rules:#FF8D8D;
+  --active-footer:#FCAE24;
+  --active-smaller: 12px;
+
+  --font-large: 32px; 
+  --font-mid: 24px;
+  --font-normal: 20px;
+  --font-n-s: 18px;
+  --font-small: 16px;
+  --font-smaller: 12px;
 }

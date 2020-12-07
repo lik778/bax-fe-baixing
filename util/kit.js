@@ -208,8 +208,9 @@ export function normalize(adaptorDes = {}, raw, saveEmptyProp = false) {
 export function paginationWrapper(getList, dataFormat) {
   let responseStore = null
   const wrapperFn = async (...args) => {
+    let response
     if (!responseStore) {
-      const response = await getList(...args)
+      response = await getList(...args)
       responseStore = dataFormat
         ? dataFormat(response)
         : response
@@ -220,11 +221,22 @@ export function paginationWrapper(getList, dataFormat) {
     const end = Math.min((page + 1) * size, total)
 
     return {
+      ...response,
       total,
-      data: data.slice(page * size, end + 1)
+      data: data.slice(page * size, end)
     }
   }
+
+  // API 获取所有数据
+  wrapperFn.getAll = () => ({
+    data: responseStore.data,
+    total: responseStore.data.length
+  })
+  // API 清空数据
+  // * 页面上需要显式清空数据防止内存泄漏
+  // TODO refactor
   wrapperFn.clear = () => (responseStore = null)
+
   return wrapperFn
 }
 
