@@ -36,7 +36,7 @@
 
 <script>
 
-const WORD_REG = /^[\u4e00-\u9fa5a-zA-Z0-9\n，,]+$/
+const WORD_REG = /^[\u4e00-\u9fa5a-zA-Z0-9\n，,\s]+$/
 
 export default {
   name: 'KeywordInput',
@@ -102,13 +102,14 @@ export default {
 .textarea-container {
   position: relative;
   margin: 10px 0;
-& > .placeholder {
+  & > .placeholder {
     position: absolute;
     z-index: 0;
     top: 5px;
     left: 15px;
     font-size: 14px;
     color: #DCDFE6;
+    pointer-events: none;
   }
 }
 

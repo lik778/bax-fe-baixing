@@ -127,11 +127,11 @@ export const DEVICE = {
   [DEVICE_WAP]: '手机端'
 }
 
-export const DEVICE_DASHBOARD_PC = 1
-export const DEVICE_DASHBOARD_WAP = 2
+export const DEVICE_DASHBOARD_WAP = 1
+export const DEVICE_DASHBOARD_WEB = 2
 export const DEVICE_DASHBOARD = {
-  1: '电脑端',
-  2: '手机端'
+  [DEVICE_DASHBOARD_WAP]: '电脑端',
+  [DEVICE_DASHBOARD_WEB]: '手机端'
 }
 
 export const isExpandWordStatusError = status => [
@@ -201,3 +201,11 @@ export function getEWStatusWith(key, val) {
 
 // 千词编辑物料落地页默认 type
 export const QIANCI_LANDING_TYPE = 3
+
+/* 千词套餐类型 */
+export const ONE_WORD_TWO_PROVINCE = 'ONE_WORD_TWO_PROVINCE'
+export const THREE_WORD_ONE_PROVINCE = 'THREE_WORD_ONE_PROVINCE'
+export const PACKAGE_TYPE = {
+  [ONE_WORD_TWO_PROVINCE]: 'ONE_WORD_TWO_PROVINCE',
+  [THREE_WORD_ONE_PROVINCE]: 'THREE_WORD_ONE_PROVINCE'
+}

@@ -10,7 +10,11 @@
     <!-- 展示 ABCD 词 -->
     <div class="keywords-container">
       <p class="header-info">
-        <span class="description">提示：系统从 <statics :loading="loading.pvs" :value="wordAll" /> 个词中为您优选出 <statics :loading="loading.pvs" :value="wordCounts" /> 个（包含双端）关键词，预估在180天内为您带来 <statics :loading="loading.pvs" :value="pvs" /> 展现。</span>
+        <span class="description">提示：系统从 
+          <statics :loading="loading.pvs" :value="wordAll" /> 个词中为您优选出 
+          <statics :loading="loading.pvs" :value="wordCounts" /> 个（包含双端）关键词，预估在180天内为您带来 
+          <statics :loading="loading.pvs" :value="pvs" /> 展现。
+        </span>
         <span class="actions">
           <el-button
             type="text"
@@ -20,30 +24,42 @@
         </span>
       </p>
       <transition name="fold-by-height">
-        <div v-if="visible.abcd" class="view-container">
-          <keyword-view
-            v-for="(value, key) in keywordOptions"
-            class="keyword-view"
-            :key="key"
-            :type="key"
-            :title="value.title"
-            :keywords="value.keywords"
-            :isEdit="false"
-          />
-        </div>
+        <el-tabs v-if="visible.abcd && keywordOptionsList.length"
+                 v-model="activeCoreWord">
+          <el-tab-pane :label="item.coreWord"
+                       :name="item.coreWord"
+                       v-for="item in keywordOptionsList"
+                       :title="item.coreWord"
+                       :key="item.coreWord"
+                       class="view-container">
+            <keyword-view v-for="(value, key) in item.keywordOptions"
+                          class="keyword-view"
+                          :key="key"
+                          :type="key"
+                          :title="value.title"
+                          :keywords="value.keywords"
+                          :isEdit="false" />
+          </el-tab-pane>
+        </el-tabs>
       </transition>
     </div>
 
     <!-- 列表 -->
-    <el-table
-      class="query-table"
-      v-loading="loading.query"
-      border
-      :data="queryList">
-      <el-table-column label="创建时间" prop="createdTime" width="120" :formatter="({createdTime}) => $formatter.date(createdTime)" />
-      <el-table-column label="核心产品" prop="coreWord" width="120" />
-      <el-table-column label="优选词" prop="expandedWord" />
-    </el-table>
+    <div class="expanded-words-container">
+      <div class="info">
+        <div class="info-detail">
+          <span>创建时间：{{$formatter.date(expandedInfo.createdTime)}}&nbsp;&nbsp;</span>
+          <span>核心产品：{{expandedInfo.coreWords.join(',')}}</span>
+        </div>
+         <el-button class="download" type="primary" @click="download">一键导出</el-button>
+      </div>
+      <div class="list">
+        <div class="item" v-for="(item, index) in expandedInfo.data" :key="index">
+          <span class="item-inner">{{item}}</span>
+        </div>
+      </div>
+    </div>
+
     <!-- 分页 -->
     <el-pagination
       class="pagniation"
@@ -61,6 +77,8 @@
 <script>
 import dayjs from 'dayjs'
 import clone from 'clone'
+import { Parser }  from 'json2csv'
+import FileSaver from 'file-saver'
 
 import Statics from '../common/statics'
 import KeywordView from '../qc-create-promote/select-keywords/view'
@@ -85,11 +103,17 @@ export default {
       pagination: {
         current: 1,
         total: 0,
-        size: 15,
-        sizes: [10, 15, 30, 50],
+        size: 60,
+        sizes: [40, 60, 80, 100],
+      },
+      activeCoreWord: '',
+      expandedInfo: {
+        createdTime: '',
+        coreWords: [],
+        data: []
       },
       queryList: [],
-      keywordOptions: clone(keywordOptions),
+      keywordOptionsList: [],
       promote: {},
       loading: {
         query: false,
@@ -104,10 +128,12 @@ export default {
   },
   computed: {
     wordAll() {
-      const lens = ['A', 'B', 'C', 'D']
-        .reduce((h, c) => (h[c] = this.keywordOptions[c].keywords.length, h), {})
-
-      return qcWordAll(lens)
+      const types = ['A', 'B', 'C', 'D']
+      const res = this.keywordOptionsList.reduce((curr, {type, keywordOptions}) => {
+        const lens = types.reduce((h, c) => (h[c] = keywordOptions[c].keywords.length, h), {})
+        return curr + qcWordAll(lens)
+      }, 0)
+      return res
     }
   },
   async created() {
@@ -126,12 +152,10 @@ export default {
     this.getPreferredWordPV()
     this.getQueryList()
     this.$on('hook:beforeDestroy', () => {
-      // 清除前端分页存储的数据
       getPreferredWordsList.clear()
     })
   },
   methods: {
-
     async getPreferredWordPV() {
       this.loading.pvs = true
       let response = null
@@ -152,14 +176,14 @@ export default {
         page: page - 1,
         size: this.pagination.size,
         id: this.id,
-        ...formatReqQuery(this.query),
+        ...formatReqQuery(this.query)
       }
       this.loading.query = true
       let response
       try {
         response = (await getPreferredWordsList(query)) || {}
-        const { data } = response
-        this.queryList = data.map(x => x)
+        const { data, createdTime, coreWords } = response
+        Object.assign(this.expandedInfo, response)
       } finally {
         this.loading.query = false
       }
@@ -172,36 +196,76 @@ export default {
     },
     async initPromote() {
       this.promote = await getPromote(this.id)
-      const {
-        coreWord = '',
-        provinces = [],
-        prefixWords = [],
-        suffixWords = []
-      } = this.promote
+      const { coreWordInfos = [], provinces = [] } = this.promote
 
       const{ enToCnMap, provinces: provincesStore } = this.allQianciAreas
       const areas = provinces.map(en => {
         const cnName = enToCnMap[en]
         return { name: cnName, en, checked: true, cities: provincesStore[cnName]  }
       })
-      this.keywordOptions['A'].keywords = areas.reduce((t, c) => {
+
+      // 封装keywordOptionsList
+      const keywordProvinces = areas.reduce((t, c) => {
         t.push(c.name)
         return t.concat(c.cities)
       }, [])
-      this.keywordOptions['B'].keywords = [...prefixWords]
-      this.keywordOptions['C'].keywords = [coreWord]
-      this.keywordOptions['D'].keywords = [...suffixWords]
+
+      this.keywordOptionsList = coreWordInfos.map(item => {
+        return {
+          ...item,
+          provinces: keywordProvinces
+        }
+      }).reduce((currO, item) => {
+        const options = clone(keywordOptions)
+        let res = Object.entries(keywordOptions).reduce((currI, [type, option]) => {
+          const keywords = item[option.keywordsAlias] || []
+          Object.assign(options, {
+            [type]: {
+              ...option,
+              keywords: [].concat(keywords)
+            }
+          })
+          return options
+        }, {})
+
+        return currO.concat({
+          coreWord: item.coreWord,
+          keywordOptions: res
+        })
+      }, [])
+
+      this.activeCoreWord = this.keywordOptionsList[0].coreWord
     },
     handleSizeChange(size) {
       this.pagination.size = size
       this.getQueryList()
     },
+    download() {
+      const { user_id: targetUserId, sales_id: salesId } = parseQuery(window.location.search)
+      const { createdTime } = this.promote
+      const coreWords = this.expandedInfo.coreWords.join(',')
 
+      function washCSVList(list) {
+        return list.map(item => {
+          return {
+            keyword: item
+          }
+        })
+      }
+
+      const { data: list } = getPreferredWordsList.getAll()
+      const csvData = new Parser().parse(washCSVList(list))
+      const filename = `优选词列表 - ${coreWords} - ${dayjs(createdTime).format('YYYY/MM/DD')}.csv`
+      const blob = new Blob(['\uFEFF' + csvData], { type: 'text/csv;charset=utf-8;' })
+      FileSaver.saveAs(blob, filename)
+    }
   },
 }
 </script>
 
 <style lang="postcss" scoped>
+@import "../../cssbase/var.css";
+
 .actions {
   float: right;
 }
@@ -211,6 +275,7 @@ export default {
   background: #f5f7fa;
   color: #6a778c;
   border-radius: 4px;
+  font-size: 14px;
 
   & .description {
     color: #333;
@@ -228,7 +293,6 @@ export default {
   }
 
   & .view-container {
-    margin-top: 18px;
     display: flex;
     align-items: center;
     & > div:not(:last-child) {
@@ -236,7 +300,49 @@ export default {
     }
   }
 }
-.query-table,
+
+.expanded-words-container {
+  margin-top: 18px;
+  color: #333;
+  font-weight: 500;
+  font-size: 14px;
+  border-top: var(--border-base);
+  border-left: var(--border-base);
+  & > .info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f2f2f2;
+    padding: 10px 12px;
+    border-bottom: var(--border-base);
+    border-right: var(--border-base);
+  }
+  & > .list {
+    display: flex;
+    flex-wrap: wrap;
+    & > .item {
+      width: 25%;
+      padding: 12px;
+      line-height: 20px;
+      border-bottom: var(--border-base);
+      border-right: var(--border-base);
+      & > .item-inner {
+        display: -webkit-box;
+        max-height: 40px;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+}
+
+.pag-container {
+  display: flex;
+  align-items: center;
+}
+
 .pagniation {
   margin-top: 18px;
 }
@@ -299,14 +405,5 @@ export default {
       }
     }
   }
-}
-.fold-by-height-enter-active,
-.fold-by-height-leave-active {
-  transition: all .3s ease;
-}
-.fold-by-height-enter,
-.fold-by-height-leave-to {
-  transform: translateY(-15px);
-  opacity: 0;
 }
 </style>

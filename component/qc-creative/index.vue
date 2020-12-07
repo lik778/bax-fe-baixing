@@ -14,8 +14,8 @@
 
         <el-form-item><span class="header">基本信息</span></el-form-item>
 
-        <el-form-item label="核心产品" prop="coreWord">
-          <span>{{form.coreWord}}</span>
+        <el-form-item label="核心产品" prop="coreWords">
+          <span>{{form.coreWords.join(',')}}</span>
         </el-form-item>
         <el-form-item label="投放页面" prop="landingPageId">
           <!-- * 目前没有官网过期逻辑的判断，无此需求 -->
@@ -78,14 +78,14 @@ export default {
       id: null,
       isFormEdited: false,
       form: {
-        coreWord: '',
+        coreWords: [],
         landingPage: '',
         landingPageId: '',
         creativeTitle: '',
         creativeContent: '',
       },
       rules: {
-        coreWord: [{ required: true, message: '哇核心产品都没有' }],
+        coreWords: [{ type: 'array', required: true, message: '哇核心产品都没有' }],
         landingPageId: [{ required: true, message: '请选择投放页面' }],
         creativeTitle: [
           { required: true, message: '请填写推广标题' },
@@ -141,14 +141,14 @@ export default {
     async initCreative () {
       const response = await getCreative({ id: this.id })
       const {
-        coreWord,
+        coreWords,
         landingPage,
         creativeTitle,
         creativeContent,
       } = response || {}
       const targetSite = this.options.sites.find(site => (landingPage || '').includes(site.domain))
 
-      this.form.coreWord = coreWord
+      this.form.coreWords = coreWords
       this.form.creativeTitle = creativeTitle
       this.form.creativeContent = creativeContent
       if (targetSite) {
