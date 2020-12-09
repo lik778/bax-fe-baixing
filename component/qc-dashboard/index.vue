@@ -34,6 +34,16 @@
         >
       </header>
 
+      <!-- 图表标题 -->
+      <div class="charts-con charts-title-con">
+        <div class="chart-con platform-chart">优选词投放量</div>
+        <div class="chart-padding" />
+        <div class="chart-con pvs-chart">优选词曝光量</div>
+        <div class="chart-padding" />
+        <div class="chart-con visited-chart">优选词点击量</div>
+      </div>
+
+      <!-- 图表 -->
       <div class="charts-con">
         <div class="chart-con platform-chart">
           <e-charts
@@ -48,6 +58,25 @@
         <div class="chart-padding" />
         <div class="chart-con visited-chart">
           <e-charts ref="visitedChartOptions" :options="visitedChartOptions" />
+        </div>
+      </div>
+
+      <!-- 图表副标题 -->
+      <div class="charts-con charts-footer-con">
+        <div class="chart-con platform-chart"></div>
+        <div class="chart-padding" />
+        <div class="chart-con pvs-chart">
+          昨日新增
+          <span class="static-num pvs-add-num"
+            >2312<i class="el-icon-top"
+          /></span>
+        </div>
+        <div class="chart-padding" />
+        <div class="chart-con visited-chart">
+          昨日新增
+          <span class="static-num pvs-add-num"
+            >2343<i class="el-icon-top"
+          /></span>
         </div>
       </div>
     </section>
@@ -72,18 +101,8 @@
             <template>百度</template>
           </el-table-column>
           <el-table-column label="位置">
-            <template>
-              <!-- <span v-if="row.rank">首页</span>
-              <p v-else>优选中，请稍后...</p> -->
-              <span>投放中</span>
-            </template>
+            <span>投放中</span>
           </el-table-column>
-          <!-- <el-table-column label="快照日期" width="160" :formatter="({ urlTime }) => $formatter.date(urlTime)" />
-          <el-table-column label="快照">
-            <template slot-scope="{row}">
-              <el-button :disabled="!row.url || !+row.rank" type="text" size="small" @click="() => checkSnapshotPage(row)">查看</el-button>
-            </template>
-          </el-table-column> -->
           <el-table-column
             label="展现端"
             prop="plat"
@@ -99,7 +118,7 @@
           :page-size="pagination.size"
           :page-sizes="pagination.sizes"
           :current-page="pagination.current"
-          @current-change="initPVsData"
+          @current-change="initListData"
           @size-change="handleSizeChange"
         />
       </el-tab-pane>
@@ -110,13 +129,12 @@
 
 <script>
 import { decompressSync } from 'fflate'
-import dayjs from 'dayjs'
 import clone from 'clone'
 import ECharts from 'vue-echarts/components/ECharts.vue'
+import 'echarts/lib/chart/pie'
+import 'echarts-liquidfill'
 import 'echarts/lib/component/legend'
 import 'echarts/lib/component/tooltip'
-import 'echarts/lib/chart/line'
-import 'echarts/lib/chart/pie'
 import 'echarts/lib/component/title'
 
 import { getPromoteList, getWordPVsList, getWordPVsChartData } from 'api/qianci'
@@ -130,7 +148,7 @@ import {
 import { checkSupportShadowDOM, parseQuery } from 'util'
 
 import pieChartOptionTmp from './pieChartOptionTmp'
-import lineChartOptionTmp from './lineChartOptionsTmp'
+import liquidChartOptionTmp from './liquidChartOptionTmp'
 
 // buffer 转 string
 function buffer2string(data) {
@@ -151,54 +169,19 @@ function secureHTML(html) {
 }
 
 const platformChartOptionTmp = Object.assign(clone(pieChartOptionTmp), {})
+const pvsChartOptionTmp = ((x) => {
+  x.series[0].color = ['#80c2fb', '#6caaf8', '#80c2fb']
+  x.series[0].outline.itemStyle.borderColor = '#35a5e4'
+  x.series[0].backgroundStyle.color = '#f4f9ff'
+  return x
+})(clone(liquidChartOptionTmp))
 
-const pvsChartOptionTmp = Object.assign(clone(lineChartOptionTmp), {
-  color: 'rgba(53, 165, 228, 1)',
-  legend: {
-    left: 5,
-    selectedMode: false,
-    icon: 'path://M0 0h120v20H0z',
-    textStyle: {
-      color: 'rgba(53, 165, 228, 1)',
-    },
-  },
-  series: [
-    {
-      name: '关键词曝光量',
-      data: [],
-      type: 'line',
-      symbol: 'none',
-      symbolSize: 0,
-      areaStyle: {
-        color: 'rgba(53, 165, 228, .4)',
-      },
-    },
-  ],
-})
-
-const visitedChartOptionTmp = Object.assign(clone(lineChartOptionTmp), {
-  color: 'rgba(255, 99, 80, 1)',
-  legend: {
-    left: 5,
-    selectedMode: false,
-    icon: 'path://M0 0h120v20H0z',
-    textStyle: {
-      color: 'rgba(255, 99, 80, 1)',
-    },
-  },
-  series: [
-    {
-      name: '最近7天访问量',
-      data: [],
-      type: 'line',
-      symbol: 'none',
-      symbolSize: 0,
-      areaStyle: {
-        color: 'rgba(255, 99, 80, .4)',
-      },
-    },
-  ],
-})
+const visitedChartOptionTmp = ((x) => {
+  x.series[0].color = ['#fd8b6b', '#fb6755', '#fd8b6b']
+  x.series[0].outline.itemStyle.borderColor = '#fb6755'
+  x.series[0].backgroundStyle.color = '#fef4f4'
+  return x
+})(clone(liquidChartOptionTmp))
 
 const NO_PVS_TIP = '当前投放时间太短，请8天后查看'
 
@@ -235,8 +218,8 @@ export default {
       store: {},
       pvsList: [],
       platformChartOptions: Object.assign(platformChartOptionTmp, {}),
-      pvsChartOptions: Object.assign(pvsChartOptionTmp, {}),
-      visitedChartOptions: Object.assign(visitedChartOptionTmp, {}),
+      pvsChartOptions: pvsChartOptionTmp,
+      visitedChartOptions: visitedChartOptionTmp,
       DEVICE_DASHBOARD,
       NO_PVS_TIP,
     }
@@ -258,7 +241,6 @@ export default {
     // 初始化推广计划列表
     async initPromoteListOptions() {
       const { sales_id: salesId, user_id: targetUserId } = this.$route.query
-      // ? 要不要新加接口
       const query = {
         size: 999,
         page: 0,
@@ -297,14 +279,11 @@ export default {
       } finally {
         this.loading.charts = false
       }
-      const { online = {}, weekData = [] } = response || {}
-      const hasWeekData = weekData.length
+      const { online = {} /* TODO: 接口联调 */ } = response || {}
 
       const platformData = clone(this.platformChartOptions)
       // 确保饼图中至少有一个像素的数据
       const displayOnline = clone(online)
-      // displayOnline.web = +online.web || 1
-      // displayOnline.wap = +online.wap || 1
       displayOnline.web = online.web = 600
       displayOnline.wap = online.wap = 600
       platformData.series[0].data = [
@@ -327,49 +306,19 @@ export default {
       platformData.title.text = '1200个'
       this.platformChartOptions = platformData
 
+      const liquidChartDatas = [23132, 4324]
       const pvsData = clone(this.pvsChartOptions)
-      pvsData.series[0].name = '关键词曝光量'
-      if (hasWeekData) {
-        pvsData.xAxis.data = weekData.map((x) =>
-          dayjs(
-            x.dayTime
-              ? String(x.dayTime).replace(
-                  /^(\d{4})(\d{2})(\d{2]})$/g,
-                  '$1-$2-$3'
-                )
-              : ''
-          ).format('YYYY-MM-DD')
-        )
-        pvsData.series[0].data = weekData.map((x) => +x.shows)
-      } else {
-        pvsData.xAxis.data = [dayjs().format('YYYY-MM-DD')]
-        pvsData.series[0].data = [0]
-      }
-      pvsData.series[0].areaStyle.color = 'rgba(53, 165, 228, .4)'
-      this.pvsChartOptions = pvsData
-
       const visitsData = clone(this.visitedChartOptions)
-      visitsData.series[0].name = '最近7天访问量'
-      if (hasWeekData) {
-        visitsData.xAxis.data = weekData.map((x) =>
-          dayjs(
-            x.dayTime
-              ? String(x.dayTime).replace(
-                  /^(\d{4})(\d{2})(\d{2]})$/g,
-                  '$1-$2-$3'
-                )
-              : ''
-          ).format('YYYY-MM-DD')
-        )
-        visitsData.series[0].data = weekData.map((x) => +x.click)
-      } else {
-        visitsData.xAxis.data = [dayjs().format('YYYY-MM-DD')]
-        visitsData.series[0].data = [0]
-      }
-      visitsData.series[0].areaStyle.color = 'rgba(255, 99, 80, .4)'
+
+      ;[pvsData, visitsData].forEach((d, i) => {
+        d.series[0].label.formatter = function () {
+          return liquidChartDatas[i] + ' {sub|次}'
+        }
+      })
+      this.pvsChartOptions = pvsData
       this.visitedChartOptions = visitsData
     },
-    async initPVsData(page = 1) {
+    async initListData(page = 1) {
       const { targetUserId, salesId } = this.store
       const query = {
         page: page - 1,
@@ -477,35 +426,20 @@ export default {
       this.query.promoteID = +id
       this.$nextTick(() => {
         this.initCharts()
-        this.initPVsData()
+        this.initListData()
       })
     },
     handleSizeChange(size) {
       this.pagination.size = size
-      this.initPVsData()
+      this.initListData()
     },
     listenChartResize() {
-      window && window.addEventListener('resize', () => this.initCharts())
-      this.$on(
-        'hook:beforeDestroy',
-        window.removeEventListener('resize', this.initCharts)
-      )
-    },
-    paddingNoData({ row, rowIndex, columnIndex }) {
-      const isDisabled = !+row.rank
-      if (isDisabled) {
-        if (columnIndex === 2) {
-          return {
-            colspan: 3,
-            rowspan: 1,
-          }
-        } else if (columnIndex === 3 || columnIndex === 4) {
-          return {
-            colspan: 0,
-            rowspan: 0,
-          }
-        }
-      }
+      // FIXME: 响应式图表
+      // window && window.addEventListener('resize', () => this.initCharts())
+      // this.$on(
+      //   'hook:beforeDestroy',
+      //   window.removeEventListener('resize', this.initCharts)
+      // )
     },
   },
 }
@@ -533,7 +467,8 @@ export default {
 .chart-con {
   flex-grow: 1;
   height: 235px;
-  /* background: #f2f2f2; */
+  text-align: center;
+  font-weight: 500;
 
   & .echarts,
   & .echarts > div,
@@ -542,14 +477,32 @@ export default {
     height: 100%;
   }
 }
+.charts-title-con .chart-con {
+  height: 1em;
+}
+.charts-footer-con .chart-con {
+  margin-top: 0;
+  height: 1em;
+  font-size: 12px;
+  font-weight: thin;
+
+  & i {
+    font-size: 14px;
+    font-weight: bold;
+  }
+  & .static-num {
+    color: #ff6350;
+  }
+}
+
 .platform-chart {
-  width: 26%;
+  width: 50%;
 }
 .pvs-chart {
-  width: 32%;
+  width: 24%;
 }
 .visited-chart {
-  width: 32%;
+  width: 24%;
 }
 .pagniation {
   margin-top: 1em;
