@@ -68,14 +68,14 @@
         <div class="chart-con pvs-chart">
           昨日新增
           <span class="static-num pvs-add-num"
-            >2312<i class="el-icon-top"
+            >{{ chartData.pvsAdd }}<i class="el-icon-top"
           /></span>
         </div>
         <div class="chart-padding" />
         <div class="chart-con visited-chart">
           昨日新增
           <span class="static-num pvs-add-num"
-            >2343<i class="el-icon-top"
+            >{{ chartData.visitAdd }}<i class="el-icon-top"
           /></span>
         </div>
       </div>
@@ -202,6 +202,10 @@ export default {
       options: {
         promoteList: [],
       },
+      chartData: {
+        pvsAdd: 0,
+        visitAdd: 0,
+      },
       pagination: {
         current: 1,
         total: 0,
@@ -267,6 +271,7 @@ export default {
         targetUserId,
         salesId,
         promoteId: this.query.promoteID,
+        // promoteId: 1046,
       }
       let response = null
       try {
@@ -279,7 +284,13 @@ export default {
       } finally {
         this.loading.charts = false
       }
-      const { online = {} /* TODO: 接口联调 */ } = response || {}
+      const {
+        online = {},
+        clickCount = { totalCount: 0, yesterdayCount: 0 },
+        visitCount = { totalCount: 0, yesterdayCount: 0 },
+      } = response || {}
+
+      /* 饼图 */
 
       const platformData = clone(this.platformChartOptions)
       // 确保饼图中至少有一个像素的数据
@@ -306,10 +317,10 @@ export default {
       platformData.title.text = '1200个'
       this.platformChartOptions = platformData
 
-      const liquidChartDatas = [23132, 4324]
+      /* 水球图 */
+      const liquidChartDatas = [visitCount.totalCount, clickCount.totalCount]
       const pvsData = clone(this.pvsChartOptions)
       const visitsData = clone(this.visitedChartOptions)
-
       ;[pvsData, visitsData].forEach((d, i) => {
         d.series[0].label.formatter = function () {
           return liquidChartDatas[i] + ' {sub|次}'
@@ -317,6 +328,10 @@ export default {
       })
       this.pvsChartOptions = pvsData
       this.visitedChartOptions = visitsData
+      this.chartData = {
+        pvsAdd: visitCount.yesterdayCount,
+        visitAdd: clickCount.yesterdayCount,
+      }
     },
     async initListData(page = 1) {
       const { targetUserId, salesId } = this.store
@@ -326,6 +341,7 @@ export default {
         targetUserId,
         salesId,
         promoteId: this.query.promoteID,
+        // promoteId: 1046,
       }
       let response = null
       try {
