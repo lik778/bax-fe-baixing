@@ -3,7 +3,7 @@ export default {
     {
       type: 'liquidFill',
       radius: '75%',
-      data: [0.43, 0.45, 0.42],
+      data: [],
       color: ['#80c2fb', '#6caaf8', '#80c2fb'],
       amplitude: '3%',
       waveAnimation: 1800,

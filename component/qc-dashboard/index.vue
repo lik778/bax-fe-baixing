@@ -270,8 +270,8 @@ export default {
       const query = {
         targetUserId,
         salesId,
-        promoteId: this.query.promoteID,
-        // promoteId: 1046,
+        // promoteId: this.query.promoteID,
+        promoteId: 1046,
       }
       let response = null
       try {
@@ -319,11 +319,25 @@ export default {
 
       /* 水球图 */
       const liquidChartDatas = [visitCount.totalCount, clickCount.totalCount]
+      const yesterdayCount = [
+        visitCount.yesterdayCount,
+        clickCount.yesterdayCount,
+      ]
       const pvsData = clone(this.pvsChartOptions)
       const visitsData = clone(this.visitedChartOptions)
       ;[pvsData, visitsData].forEach((d, i) => {
+        const yesterday = yesterdayCount[i]
+        const total = liquidChartDatas[i]
+        if (yesterday === 0) {
+          d.series[0].amplitude = '1%'
+        }
+        if (total === 0) {
+          d.series[0].data = [0.13, 0.14, 0.12]
+        } else {
+          d.series[0].data = [0.43, 0.45, 0.42]
+        }
         d.series[0].label.formatter = function () {
-          return liquidChartDatas[i] + ' {sub|次}'
+          return total + ' {sub|次}'
         }
       })
       this.pvsChartOptions = pvsData
@@ -340,8 +354,8 @@ export default {
         size: this.pagination.size,
         targetUserId,
         salesId,
-        promoteId: this.query.promoteID,
-        // promoteId: 1046,
+        // promoteId: this.query.promoteID,
+        promoteId: 1046,
       }
       let response = null
       try {
