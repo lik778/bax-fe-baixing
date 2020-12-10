@@ -270,8 +270,8 @@ export default {
       const query = {
         targetUserId,
         salesId,
-        // promoteId: this.query.promoteID,
-        promoteId: 1046,
+        promoteId: this.query.promoteID,
+        // promoteId: 1046,
       }
       let response = null
       try {
@@ -354,8 +354,8 @@ export default {
         size: this.pagination.size,
         targetUserId,
         salesId,
-        // promoteId: this.query.promoteID,
-        promoteId: 1046,
+        promoteId: this.query.promoteID,
+        // promoteId: 1046,
       }
       let response = null
       try {
