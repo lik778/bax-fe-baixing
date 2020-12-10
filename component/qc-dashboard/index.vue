@@ -274,29 +274,32 @@ export default {
         // promoteId: 1046,
       }
       let response = null
+      let pieChartTitle = '1620个'
+      let online = { web: 0, wap: 0 }
+      let clickCount = { totalCount: 0, yesterdayCount: 0 }
+      let visitCount = { totalCount: 0, yesterdayCount: 0 }
       try {
         this.loading.charts = true
         this.visible.showNoChartData = false
         response = await getWordPVsChartData(query)
+        online = { web: 810, wap: 810 }
+        clickCount = response.clickCount
+        visitCount = response.visitCount
       } catch (error) {
+        pieChartTitle = '---个'
+        online = { web: 0, wap: 0 }
         this.visible.showNoChartData = true
-        throw new Error(error)
       } finally {
         this.loading.charts = false
       }
-      const {
-        online = {},
-        clickCount = { totalCount: 0, yesterdayCount: 0 },
-        visitCount = { totalCount: 0, yesterdayCount: 0 },
-      } = response || {}
 
       /* 饼图 */
 
       const platformData = clone(this.platformChartOptions)
       // 确保饼图中至少有一个像素的数据
       const displayOnline = clone(online)
-      displayOnline.web = online.web = 810
-      displayOnline.wap = online.wap = 810
+      displayOnline.web = online.web
+      displayOnline.wap = online.wap
       platformData.series[0].data = [
         {
           name: `电脑端: ${online.web}`,
@@ -314,7 +317,7 @@ export default {
         },
       ]
       // platformData.title.text = `${+online.web + online.wap}个`
-      platformData.title.text = '1620个'
+      platformData.title.text = pieChartTitle
       this.platformChartOptions = platformData
 
       /* 水球图 */
@@ -363,7 +366,6 @@ export default {
         response = await getWordPVsList(query)
       } catch (error) {
         this.loading.showNoListData = true
-        throw new Error(error)
       }
       const { content = [], totalElements = 0 } = response || {}
       this.pvsList = content.map((x) => x)
