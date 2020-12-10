@@ -11,9 +11,9 @@
         <div class="mt-16">
           添加说明
           <p>A/C类词不支持修改</p>
-          <p style="color: #FF6350">B/D类词数限制不低于10词不超过20词</p>
-          <p style="color: #FF6350">单个词长度不低于2个字，不超过8个字</p>
-          <p style="color: #FF6350">
+          <p style="color: #ff6350">B/D类词数限制不低于10词不超过20词</p>
+          <p style="color: #ff6350">单个词长度不低于2个字，不超过8个字</p>
+          <p style="color: #ff6350">
             英文字符仅支持小写，输入大写时数据会被强制更改为小写
           </p>
         </div>
@@ -36,7 +36,7 @@
                 : 'el-icon-arrow-down'
             "
             @click="() => openOneWordInputView(idx)"
-            >{{ visible.keywordsIDX[idx] ? "收起" : "展开" }}</el-button
+            >{{ visible.keywordsIDX[idx] ? '收起' : '展开' }}</el-button
           >
         </span>
       </div>
@@ -79,7 +79,7 @@
         当前备选词数量：<strong>{{ wordNum }}</strong
         >个
       </p>
-      <p style="color: #FF6350" v-if="errorTips">{{ errorTips }}</p>
+      <p style="color: #ff6350" v-if="errorTips">{{ errorTips }}</p>
       <el-button
         type="primary"
         :loading="loading.submit"
@@ -87,7 +87,7 @@
         :disabled="handleDisabled || isNotEdited"
         size="medium"
         >{{
-          loading.submit ? "拓词中..." : isEdit ? "更新优选" : "提交优选"
+          loading.submit ? '拓词中...' : isEdit ? '更新优选' : '提交优选'
         }}</el-button
       >
     </div>
@@ -113,49 +113,42 @@
 </template>
 
 <script>
-import { Message } from "element-ui";
-import clone from "clone";
+import { Message } from 'element-ui'
+import clone from 'clone'
 
-import { createPreferredWords, updatePromoteWords } from "api/qianci";
-import { API_SUCCESS, API_CANNOT_PASS_QUALITY_CHECK } from "constant/api";
-import KeywordView from "./view";
-import KeywordInput from "./input";
-import keywordOptions from "./keyword-options";
-import { qcWordAll } from "util";
-
-const validatekeywordsLen = typeObj => {
-  const { wordsLimit, keywords, type } = typeObj;
-  const len = keywords.length;
-  if (len < wordsLimit[0]) return `${type}类词数限制不低于${wordsLimit[0]}`;
-  if (len > wordsLimit[1]) return `${type}类词数限制不高于${wordsLimit[1]}`;
-};
+import { createPreferredWords, updatePromoteWords } from 'api/qianci'
+import { API_SUCCESS, API_CANNOT_PASS_QUALITY_CHECK } from 'constant/api'
+import KeywordView from './view'
+import KeywordInput from './input'
+import keywordOptions from './keyword-options'
+import { qcWordAll } from 'util'
 
 export default {
-  name: "Keyword",
+  name: 'Keyword',
   props: {
     form: {
       type: Object,
       required: false,
       default() {
-        return [];
-      }
+        return []
+      },
     },
     originKeywords: {
       type: Object,
       required: false,
       default() {
         return Object.values(keywordOptions).reduce((curr, item) => {
-          curr[item.keywordsAlias] = [];
-          return curr;
-        }, {});
-      }
+          curr[item.keywordsAlias] = []
+          return curr
+        }, {})
+      },
     },
     promote: {
-      type: Object
+      type: Object,
     },
     isEdit: {
-      type: Boolean
-    }
+      type: Boolean,
+    },
   },
   data() {
     return {
@@ -163,71 +156,71 @@ export default {
         input: {
           0: false,
           1: false,
-          2: false
+          2: false,
         },
         keywordsIDX: {
           0: true,
           1: false,
-          2: false
+          2: false,
         },
-        successDialog: false
+        successDialog: false,
       },
       keywordOptions: [],
-      activeType: "A",
+      activeType: 'A',
       loading: {
-        submit: false
+        submit: false,
       },
-      errorTips: ""
-    };
+      errorTips: '',
+    }
   },
   computed: {
     handleDisabled() {
-      const isDisabled = opts => {
-        const Blength = opts.B.keywords.length;
-        const limitB = opts.B.wordsLimit;
-        const Dlength = opts.D.keywords.length;
-        const limitD = opts.D.wordsLimit;
+      const isDisabled = (opts) => {
+        const Blength = opts.B.keywords.length
+        const limitB = opts.B.wordsLimit
+        const Dlength = opts.D.keywords.length
+        const limitD = opts.D.wordsLimit
         return !(
           Blength >= limitB[0] &&
           Blength <= limitB[1] &&
           Dlength >= limitD[0] &&
           Dlength <= limitD[1]
-        );
-      };
-      return !!this.keywordOptions.find(x => isDisabled(x));
+        )
+      }
+      return !!this.keywordOptions.find((x) => isDisabled(x))
     },
     wordNum() {
-      const countOne = x =>
+      const countOne = (x) =>
         qcWordAll(
-          ["A", "B", "C", "D"].reduce(
-            (h, c) => ((h[c] = x[c].keywords.length), h),
-            {}
-          )
-        );
-      return this.keywordOptions.reduce((h, c) => h + countOne(c), 0);
+          ['A', 'B', 'C', 'D'].reduce((h, c) => {
+            h[c] = x[c].keywords.length
+            return h
+          }, {})
+        )
+      return this.keywordOptions.reduce((h, c) => h + countOne(c), 0)
     },
     // 没有改动则不能提交
     isNotEdited() {
       const isArrEqual = (a, b) =>
-        a.length === b.length && !a.find(x => !b.includes(x));
+        a.length === b.length && !a.find((x) => !b.includes(x))
       const isEdited =
         this.isEdit &&
         this.keywordOptions.find((opts, idx) => {
-          const infos = this.promote.coreWordInfos;
+          const infos = this.promote.coreWordInfos
           return (
             !isArrEqual(opts.B.keywords, infos[idx].prefixWords) ||
             !isArrEqual(opts.D.keywords, infos[idx].suffixWords)
-          );
-        });
-      return this.isEdit ? !isEdited : false;
-    }
+          )
+        })
+      return this.isEdit ? !isEdited : false
+    },
   },
   components: {
     KeywordInput,
-    KeywordView
+    KeywordView,
   },
   created() {
-    this.initKeywordOptions(!!this.isEdit);
+    this.initKeywordOptions(!!this.isEdit)
   },
   methods: {
     initKeywordOptions(reuse = false) {
@@ -236,77 +229,77 @@ export default {
           reuse ? this.keywordOptions[idx] : clone(keywordOptions)
         )
         .map((opts, idx) => {
-          Object.keys(opts).forEach(x => {
-            if (x === "A") {
+          Object.keys(opts).forEach((x) => {
+            if (x === 'A') {
               opts.A.keywords = this.form.areas.reduce((t, c) => {
-                t.push(c.name);
-                return t.concat([...c.cities]);
-              }, []);
-            } else if (x === "C") {
-              opts.C.keywords = [this.form.keywords[idx]];
+                t.push(c.name)
+                return t.concat([...c.cities])
+              }, [])
+            } else if (x === 'C') {
+              opts.C.keywords = [this.form.keywords[idx]]
             }
-          });
-          Object.values(opts).map(item => {
+          })
+          Object.values(opts).forEach((item) => {
             opts[item.type].placeholder = item.placeholder.replace(
               /[,，]]*/g,
-              "<br/>"
-            );
-          });
-          return opts;
-        });
+              '<br/>'
+            )
+          })
+          return opts
+        })
     },
     getProp(idx, prop) {
-      const existKeywordObj = this.keywordOptions[idx][this.activeType];
-      return existKeywordObj && existKeywordObj[prop];
+      const existKeywordObj = this.keywordOptions[idx][this.activeType]
+      return existKeywordObj && existKeywordObj[prop]
     },
     popKeywordInputDialog(idx, type) {
-      this.visible.input[idx] = true;
-      this.activeType = type;
+      this.visible.input[idx] = true
+      this.activeType = type
     },
     updateKeywords(idx, obj) {
-      let { type, words } = obj;
-      const wordLenLimit = this.keywordOptions[idx][type].wordLenLimit;
+      let { type, words } = obj
+      const wordLenLimit = this.keywordOptions[idx][type].wordLenLimit
 
       words = words
         .trim()
         .split(/[\n，,\s]]*/g)
-        .map(row => row.toLocaleLowerCase().trim())
+        .map((row) => row.toLocaleLowerCase().trim())
         .filter(
-          row =>
-            row !== "" &&
+          (row) =>
+            row !== '' &&
             row.length >= wordLenLimit[0] &&
             row.length <= wordLenLimit[1]
-        );
+        )
 
-      let keywords = this.keywordOptions[idx][type].keywords;
+      let keywords = this.keywordOptions[idx][type].keywords
 
-      keywords = [...new Set(words.concat(keywords))];
-      this.keywordOptions[idx][type].keywords = keywords;
+      keywords = [...new Set(words.concat(keywords))]
+      this.keywordOptions[idx][type].keywords = keywords
     },
     editKeyword(idx, obj) {
-      const { type, index } = obj;
-      const wordLenLimit = this.keywordOptions[idx][type].wordLenLimit;
+      const { type, index } = obj
+      const wordLenLimit = this.keywordOptions[idx][type].wordLenLimit
 
-      this.$prompt("", "编辑词语", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
+      this.$prompt('', '编辑词语', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
         closeOnClickModal: false,
-        inputValue: this.keywordOptions[idx][type].keywords[index]
+        inputValue: this.keywordOptions[idx][type].keywords[index],
       })
         .then(({ value }) => {
-          const keywords = this.keywordOptions[idx][type].keywords;
+          const keywords = this.keywordOptions[idx][type].keywords
           if (keywords.includes(value)) {
-            return this.$message.error("已存在该关键词，请修改重新提交");
+            return this.$message.error('已存在该关键词，请修改重新提交')
           }
           if (
             value.toLocaleLowerCase() &&
             keywords
-              .map(k => k.toLocaleLowerCase())
+              .map((k) => k.toLocaleLowerCase())
               .includes(value.toLocaleLowerCase())
           ) {
             return this.$message.error(
-              "百度投放仅支持小写，输入大写时数据会被强制更改为小写，输入重复"
-            );
+              '百度投放仅支持小写，输入大写时数据会被强制更改为小写，输入重复'
+            )
           }
           if (
             value.length < wordLenLimit[0] ||
@@ -314,72 +307,74 @@ export default {
           ) {
             return this.$message.error(
               `单个词长度不少于${wordLenLimit[0]}个字, 不超过${wordLenLimit[1]}个字`
-            );
+            )
           }
-          this.keywordOptions[idx][type].keywords.splice(index, 1, value);
+          this.keywordOptions[idx][type].keywords.splice(index, 1, value)
         })
-        .catch(() => {});
+        .catch(() => {})
     },
     deleteKeyword(idx, obj) {
-      const { type, index } = obj;
-      this.keywordOptions[idx][type].keywords.splice(index, 1);
+      const { type, index } = obj
+      this.keywordOptions[idx][type].keywords.splice(index, 1)
     },
     async sumbitWords() {
-      const { sales_id: salesId, user_id: targetUserId } = this.$route.query;
-      const { type, keywords, areas } = this.form;
+      const { sales_id: salesId, user_id: targetUserId } = this.$route.query
+      const { type, keywords, areas } = this.form
       const coreWordInfos = Array(this.keywordOptions.length)
-        .fill("")
+        .fill('')
         .map((x, idx) => ({
           coreWord: keywords[idx],
           prefixWords: this.keywordOptions[idx].B.keywords,
-          suffixWords: this.keywordOptions[idx].D.keywords
-        }));
+          suffixWords: this.keywordOptions[idx].D.keywords,
+        }))
       const params = {
         skuType: type,
-        provinces: areas.map(x => x.en),
+        provinces: areas.map((x) => x.en),
         coreWordInfos,
         salesId,
-        targetUserId
-      };
+        targetUserId,
+      }
 
-      this.loading.submit = true;
+      this.loading.submit = true
       if (this.isEdit) {
-        params.id = this.promote.id;
+        params.id = this.promote.id
       }
-      const handleFunc = this.isEdit
-        ? updatePromoteWords
-        : createPreferredWords;
-      let response = null;
+      const handleFunc = this.isEdit ? updatePromoteWords : createPreferredWords
+      let response = null
       try {
-        response = await handleFunc(params);
+        response = await handleFunc(params)
       } finally {
-        this.loading.submit = false;
+        this.loading.submit = false
       }
-      const { code, message } = response || {};
+      const { code, message } = response || {}
       if (code === API_SUCCESS) {
-        this.visible.successDialog = true;
+        this.visible.successDialog = true
       } else if (code === API_CANNOT_PASS_QUALITY_CHECK) {
-        this.errorTips = message;
+        this.errorTips = message
       } else {
-        Message.warning(message);
+        Message.warning(message)
       }
     },
     genConTitle(word, idx) {
-      return `<div>${idx +
-        1}、请填写关键词 <span class="warning">${word}</span> 的（B/D) 类词：</div>`;
+      return `<div>${
+        idx + 1
+      }、请填写关键词 <span class="warning">${word}</span> 的（B/D) 类词：</div>`
     },
     openOneWordInputView(idx) {
-      const enableMulti = true;
+      const enableMulti = true
       if (enableMulti) {
-        this.visible.keywordsIDX[idx] = !this.visible.keywordsIDX[idx];
+        this.visible.keywordsIDX[idx] = !this.visible.keywordsIDX[idx]
       } else {
         this.visible.keywordsIDX = Object.keys(this.visible.keywordsIDX).reduce(
-          (h, c) => ((h[c] = false), h),
+          (h, c) => {
+            h[c] = false
+            return h
+          },
           {}
-        );
-        this.visible.keywordsIDX[idx] = true;
+        )
+        this.visible.keywordsIDX[idx] = true
       }
-    }
+    },
   },
   watch: {
     promote: {
@@ -387,29 +382,29 @@ export default {
       immediate: true,
       handler(n) {
         if (n) {
-          const { coreWordInfos = [] } = n;
+          const { coreWordInfos = [] } = n
           this.keywordOptions = coreWordInfos
-            .map(x => clone(keywordOptions))
+            .map((x) => clone(keywordOptions))
             .map((opts, idx) => {
-              const { coreWord, prefixWords, suffixWords } = coreWordInfos[idx];
-              opts.C.keywords = [coreWord];
-              opts.B.keywords = [...prefixWords];
-              opts.D.keywords = [...suffixWords];
-              return opts;
-            });
+              const { coreWord, prefixWords, suffixWords } = coreWordInfos[idx]
+              opts.C.keywords = [coreWord]
+              opts.B.keywords = [...prefixWords]
+              opts.D.keywords = [...suffixWords]
+              return opts
+            })
         }
-      }
+      },
     },
     originKeywords(newVal) {
-      for (let key in this.keywordOptions) {
-        const { keywordsAlias, keywords } = this.keywordOptions[key];
+      Object.keys(this.keywordOptions).forEach((key) => {
+        const { keywordsAlias, keywords } = this.keywordOptions[key]
         this.keywordOptions[key].keywords = [
-          ...new Set(keywords.concat(this.originKeywords[keywordsAlias]))
-        ];
-      }
-    }
-  }
-};
+          ...new Set(keywords.concat(this.originKeywords[keywordsAlias])),
+        ]
+      })
+    },
+  },
+}
 </script>
 
 <style lang="postcss" scoped>
@@ -444,7 +439,7 @@ export default {
       display: none;
     }
     &:after {
-      content: "*";
+      content: '*';
       position: absolute;
       color: red;
       font-size: 12px;
