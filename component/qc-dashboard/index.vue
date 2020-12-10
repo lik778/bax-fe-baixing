@@ -295,8 +295,8 @@ export default {
       const platformData = clone(this.platformChartOptions)
       // 确保饼图中至少有一个像素的数据
       const displayOnline = clone(online)
-      displayOnline.web = online.web = 600
-      displayOnline.wap = online.wap = 600
+      displayOnline.web = online.web = 810
+      displayOnline.wap = online.wap = 810
       platformData.series[0].data = [
         {
           name: `电脑端: ${online.web}`,
@@ -314,7 +314,7 @@ export default {
         },
       ]
       // platformData.title.text = `${+online.web + online.wap}个`
-      platformData.title.text = '1200个'
+      platformData.title.text = '1620个'
       this.platformChartOptions = platformData
 
       /* 水球图 */
