@@ -1,6 +1,8 @@
 <template>
   <div class="page">
-    <header>数据概览<span class="side-header warning">每日数据统计存在一定延时</span></header>
+    <header>
+      数据概览<span class="side-header warning">每日数据统计存在一定延时</span>
+    </header>
 
     <!-- test snapshot -->
     <!-- <el-button @click="() => checkSnapshotPage({ device: 1, url: 'http://sem.baixing.net/dev2725.html' })">PC</el-button>
@@ -8,20 +10,46 @@
 
     <section class="page-section" style="margin-top: 20px">
       <span style="font-size: 14px">选择推广计划：</span>
-      <el-select v-model="query.promoteID" placeholder="推广计划" clearable @change="selectPromote">
+      <el-select
+        v-model="query.promoteID"
+        placeholder="推广计划"
+        clearable
+        @change="selectPromote"
+      >
         <el-option
           v-for="item in options.promoteList"
-          :label="Array.isArray(item.coreWords) ? item.coreWords.join(','): item.value"
+          :label="
+            Array.isArray(item.coreWords)
+              ? item.coreWords.join(',')
+              : item.value
+          "
           :value="item.value"
           :key="item.value"
         />
       </el-select>
 
-      <header class="chart-header"><span v-if="visible.showNoChartData" class="side-header strong">({{NO_PVS_TIP}})</span></header>
+      <header class="chart-header">
+        <span v-if="visible.showNoChartData" class="side-header strong"
+          >({{ NO_PVS_TIP }})</span
+        >
+      </header>
 
+      <!-- 图表标题 -->
+      <div class="charts-con charts-title-con">
+        <div class="chart-con platform-chart">优选词投放量</div>
+        <div class="chart-padding" />
+        <div class="chart-con pvs-chart">优选词曝光量</div>
+        <div class="chart-padding" />
+        <div class="chart-con visited-chart">优选词点击量</div>
+      </div>
+
+      <!-- 图表 -->
       <div class="charts-con">
         <div class="chart-con platform-chart">
-          <e-charts ref="platformChartOptions" :options="platformChartOptions" />
+          <e-charts
+            ref="platformChartOptions"
+            :options="platformChartOptions"
+          />
         </div>
         <div class="chart-padding" />
         <div class="chart-con pvs-chart">
@@ -32,13 +60,36 @@
           <e-charts ref="visitedChartOptions" :options="visitedChartOptions" />
         </div>
       </div>
+
+      <!-- 图表副标题 -->
+      <div class="charts-con charts-footer-con">
+        <div class="chart-con platform-chart"></div>
+        <div class="chart-padding" />
+        <div class="chart-con pvs-chart">
+          昨日新增
+          <span class="static-num pvs-add-num"
+            >{{ chartData.pvsAdd }}<i class="el-icon-top"
+          /></span>
+        </div>
+        <div class="chart-padding" />
+        <div class="chart-con visited-chart">
+          昨日新增
+          <span class="static-num pvs-add-num"
+            >{{ chartData.visitAdd }}<i class="el-icon-top"
+          /></span>
+        </div>
+      </div>
     </section>
 
-    <header class="pvs-tabs-header">推广关键字<span class="side-header">近<span class="strong" style="margin: 0 0 0 1px">7日</span>关键词效果</span></header>
+    <header class="pvs-tabs-header">
+      推广关键字<span class="side-header"
+        >近<span class="strong" style="margin: 0 0 0 1px">7日</span
+        >关键词效果</span
+      >
+    </header>
 
     <el-tabs class="words-pvs-tabs" v-model="active.tab">
       <el-tab-pane label="所有关键字" name="allTab">
-
         <el-table
           class="query-table"
           border
@@ -50,19 +101,15 @@
             <template>百度</template>
           </el-table-column>
           <el-table-column label="位置">
-            <template>
-              <!-- <span v-if="row.rank">首页</span>
-              <p v-else>优选中，请稍后...</p> -->
-              <span>投放中</span>
-            </template>
+            <span>投放中</span>
           </el-table-column>
-          <!-- <el-table-column label="快照日期" width="160" :formatter="({ urlTime }) => $formatter.date(urlTime)" />
-          <el-table-column label="快照">
-            <template slot-scope="{row}">
-              <el-button :disabled="!row.url || !+row.rank" type="text" size="small" @click="() => checkSnapshotPage(row)">查看</el-button>
-            </template>
-          </el-table-column> -->
-          <el-table-column label="展现端" prop="plat" :formatter="({ device }) => $formatter.mapWith(device, DEVICE_DASHBOARD)" />
+          <el-table-column
+            label="展现端"
+            prop="plat"
+            :formatter="
+              ({ device }) => $formatter.mapWith(device, DEVICE_DASHBOARD)
+            "
+          />
         </el-table>
         <el-pagination
           class="pagniation"
@@ -71,46 +118,42 @@
           :page-size="pagination.size"
           :page-sizes="pagination.sizes"
           :current-page="pagination.current"
-          @current-change="initPVsData"
+          @current-change="initListData"
           @size-change="handleSizeChange"
         />
-
       </el-tab-pane>
       <el-tab-pane label="指定关键字" disabled />
     </el-tabs>
-
   </div>
 </template>
 
 <script>
 import { decompressSync } from 'fflate'
-import dayjs from 'dayjs'
 import clone from 'clone'
 import ECharts from 'vue-echarts/components/ECharts.vue'
+import 'echarts/lib/chart/pie'
+import 'echarts-liquidfill'
 import 'echarts/lib/component/legend'
 import 'echarts/lib/component/tooltip'
-import 'echarts/lib/chart/line'
-import 'echarts/lib/chart/pie'
 import 'echarts/lib/component/title'
 
-import { getPromoteList, getWordPVsList, getWordPVsChartData, getSnapshot } from 'api/qianci'
+import { getPromoteList, getWordPVsList, getWordPVsChartData } from 'api/qianci'
 import {
   PROMOTE_STATUS_PENDING_EDIT,
   PROMOTE_STATUS_EDITED,
   PROMOTE_STATUS_ONLINE,
   PROMOTE_STATUS_ON_PROMOTE,
-  DEVICE_DASHBOARD
+  DEVICE_DASHBOARD,
 } from 'constant/qianci'
 import { checkSupportShadowDOM, parseQuery } from 'util'
 
 import pieChartOptionTmp from './pieChartOptionTmp'
-import lineChartOptionTmp from './lineChartOptionsTmp'
+import liquidChartOptionTmp from './liquidChartOptionTmp'
 
 // buffer 转 string
 function buffer2string(data) {
   let result = ''
-  for (let value of data)
-    result += String.fromCharCode(value)
+  for (const value of data) result += String.fromCharCode(value)
   // 防止中文乱码 https://www.cnblogs.com/justinwxt/p/12930582.html
   return decodeURIComponent(escape(result))
 }
@@ -118,66 +161,35 @@ function buffer2string(data) {
 // HTML 源码清洗，仅保留 HTML 和 CSS
 function secureHTML(html) {
   return html
-    .replace(/<!--[^-]*-->/img, '')
-    .replace(/<script[^>]*>/img, ' <!-- ')
-    .replace(/<\/script[\s]*>/img, ' --> ')
-    .replace(/<!--[^-]*-->/img, '')
-    .replace(/(<a\s+[^>]*)href=/img, '$1')
+    .replace(/<!--[^-]*-->/gim, '')
+    .replace(/<script[^>]*>/gim, ' <!-- ')
+    .replace(/<\/script[\s]*>/gim, ' --> ')
+    .replace(/<!--[^-]*-->/gim, '')
+    .replace(/(<a\s+[^>]*)href=/gim, '$1')
 }
 
 const platformChartOptionTmp = Object.assign(clone(pieChartOptionTmp), {})
+const pvsChartOptionTmp = ((x) => {
+  x.series[0].color = ['#80c2fb', '#6caaf8', '#80c2fb']
+  x.series[0].outline.itemStyle.borderColor = '#35a5e4'
+  x.series[0].backgroundStyle.color = '#f4f9ff'
+  return x
+})(clone(liquidChartOptionTmp))
 
-const pvsChartOptionTmp = Object.assign(clone(lineChartOptionTmp), {
-  color: 'rgba(53, 165, 228, 1)',
-  legend: {
-    left: 5,
-    selectedMode: false,
-    icon: 'path://M0 0h120v20H0z',
-    textStyle: {
-      color: 'rgba(53, 165, 228, 1)'
-    }
-  },
-  series: [{
-    name: '关键词曝光量',
-    data: [],
-    type: 'line',
-    symbol: 'none',
-    symbolSize: 0,
-    areaStyle: {
-      color: 'rgba(53, 165, 228, .4)'
-    }
-  }]
-})
-
-const visitedChartOptionTmp = Object.assign(clone(lineChartOptionTmp), {
-  color: 'rgba(255, 99, 80, 1)',
-  legend: {
-    left: 5,
-    selectedMode: false,
-    icon: 'path://M0 0h120v20H0z',
-    textStyle: {
-      color: 'rgba(255, 99, 80, 1)'
-    }
-  },
-  series: [{
-    name: '最近7天访问量',
-    data: [],
-    type: 'line',
-    symbol: 'none',
-    symbolSize: 0,
-    areaStyle: {
-      color: 'rgba(255, 99, 80, .4)'
-    }
-  }]
-})
+const visitedChartOptionTmp = ((x) => {
+  x.series[0].color = ['#fd8b6b', '#fb6755', '#fd8b6b']
+  x.series[0].outline.itemStyle.borderColor = '#fb6755'
+  x.series[0].backgroundStyle.color = '#fef4f4'
+  return x
+})(clone(liquidChartOptionTmp))
 
 const NO_PVS_TIP = '当前投放时间太短，请8天后查看'
 
 // ******************************* Vue
 export default {
-  name: "qc-dashboard",
+  name: 'qc-dashboard',
   components: {
-    ECharts
+    ECharts,
   },
   data() {
     return {
@@ -185,10 +197,14 @@ export default {
         promoteID: '',
       },
       active: {
-        tab: 'allTab'
+        tab: 'allTab',
       },
       options: {
-        promoteList: []
+        promoteList: [],
+      },
+      chartData: {
+        pvsAdd: 0,
+        visitAdd: 0,
       },
       pagination: {
         current: 1,
@@ -198,29 +214,29 @@ export default {
       },
       visible: {
         showNoChartData: false,
-        showNoListData: false
+        showNoListData: false,
       },
       loading: {
-        charts: false
+        charts: false,
       },
       store: {},
       pvsList: [],
       platformChartOptions: Object.assign(platformChartOptionTmp, {}),
-      pvsChartOptions: Object.assign(pvsChartOptionTmp, {}),
-      visitedChartOptions: Object.assign(visitedChartOptionTmp, {}),
+      pvsChartOptions: pvsChartOptionTmp,
+      visitedChartOptions: visitedChartOptionTmp,
       DEVICE_DASHBOARD,
-      NO_PVS_TIP
+      NO_PVS_TIP,
     }
   },
   computed: {
     displayedShowList() {
-      return this.loading.charts
-        ? []
-        : this.pvsList
-    }
+      return this.loading.charts ? [] : this.pvsList
+    },
   },
   async created() {
-    const { user_id: targetUserId, sales_id: salesId } = parseQuery(window.location.search)
+    const { user_id: targetUserId, sales_id: salesId } = parseQuery(
+      window.location.search
+    )
     this.store = { targetUserId, salesId }
     await this.initPromoteListOptions()
     this.listenChartResize()
@@ -229,7 +245,6 @@ export default {
     // 初始化推广计划列表
     async initPromoteListOptions() {
       const { sales_id: salesId, user_id: targetUserId } = this.$route.query
-      // ? 要不要新加接口
       const query = {
         size: 999,
         page: 0,
@@ -240,13 +255,13 @@ export default {
           PROMOTE_STATUS_EDITED,
           PROMOTE_STATUS_ONLINE,
           PROMOTE_STATUS_ON_PROMOTE,
-        ]
+        ],
       }
-      const { total, content } = await getPromoteList(query)
-      this.options.promoteList = content.map(x => ({
+      const { content } = await getPromoteList(query)
+      this.options.promoteList = content.map((x) => ({
         ...x,
         label: x.coreWord,
-        value: +x.id
+        value: +x.id,
       }))
       this.selectPromote(this.options.promoteList[0].value)
     },
@@ -255,92 +270,105 @@ export default {
       const query = {
         targetUserId,
         salesId,
-        promoteId: this.query.promoteID
+        promoteId: this.query.promoteID,
+        // promoteId: 1046,
       }
       let response = null
+      let pieChartTitle = '1200个'
+      let online = { web: 0, wap: 0 }
+      let clickCount = { totalCount: 0, yesterdayCount: 0 }
+      let visitCount = { totalCount: 0, yesterdayCount: 0 }
       try {
         this.loading.charts = true
         this.visible.showNoChartData = false
         response = await getWordPVsChartData(query)
-      } catch(error) {
+        online = { web: 600, wap: 600 }
+        clickCount = response.clickCount
+        visitCount = response.visitCount
+      } catch (error) {
+        pieChartTitle = '---个'
+        online = { web: 0, wap: 0 }
         this.visible.showNoChartData = true
-        throw new Error(error)
       } finally {
         this.loading.charts = false
       }
-      const { online = {}, weekData = [] } = response || {}
-      const hasWeekData = weekData.length
+
+      /* 饼图 */
 
       const platformData = clone(this.platformChartOptions)
       // 确保饼图中至少有一个像素的数据
       const displayOnline = clone(online)
-      // displayOnline.web = +online.web || 1
-      // displayOnline.wap = +online.wap || 1
-      displayOnline.web = online.web = 600
-      displayOnline.wap = online.wap = 600
+      displayOnline.web = online.web
+      displayOnline.wap = online.wap
       platformData.series[0].data = [
         {
           name: `电脑端: ${online.web}`,
           value: displayOnline.web,
           label: {
             borderColor: '#35a5e4',
-          }
+          },
         },
         {
           name: `移动端: ${online.wap}`,
           value: displayOnline.wap,
           label: {
             borderColor: '#ffa205',
-          }
-        }
+          },
+        },
       ]
       // platformData.title.text = `${+online.web + online.wap}个`
-      platformData.title.text = '1200个'
+      platformData.title.text = pieChartTitle
       this.platformChartOptions = platformData
 
+      /* 水球图 */
+      const liquidChartDatas = [visitCount.totalCount, clickCount.totalCount]
+      const yesterdayCount = [
+        visitCount.yesterdayCount,
+        clickCount.yesterdayCount,
+      ]
       const pvsData = clone(this.pvsChartOptions)
-      pvsData.series[0].name = '关键词曝光量'
-      if (hasWeekData) {
-        pvsData.xAxis.data = weekData.map(x => dayjs(x.dayTime ? String(x.dayTime).replace(/^(\d{4})(\d{2})(\d{2]})$/g, '$1-$2-$3') : '').format('YYYY-MM-DD'))
-        pvsData.series[0].data = weekData.map(x => +x.shows)
-      } else {
-        pvsData.xAxis.data = [dayjs().format('YYYY-MM-DD')]
-        pvsData.series[0].data = [0]
-      }
-      pvsData.series[0].areaStyle.color = 'rgba(53, 165, 228, .4)'
-      this.pvsChartOptions = pvsData
-
       const visitsData = clone(this.visitedChartOptions)
-      visitsData.series[0].name = '最近7天访问量'
-      if (hasWeekData) {
-        visitsData.xAxis.data = weekData.map(x => dayjs(x.dayTime ? String(x.dayTime).replace(/^(\d{4})(\d{2})(\d{2]})$/g, '$1-$2-$3') : '').format('YYYY-MM-DD'))
-        visitsData.series[0].data = weekData.map(x => +x.click)
-      } else {
-        visitsData.xAxis.data = [dayjs().format('YYYY-MM-DD')]
-        visitsData.series[0].data = [0]
-      }
-      visitsData.series[0].areaStyle.color = 'rgba(255, 99, 80, .4)'
+      ;[pvsData, visitsData].forEach((d, i) => {
+        const yesterday = yesterdayCount[i]
+        const total = liquidChartDatas[i]
+        if (yesterday === 0) {
+          d.series[0].amplitude = '1%'
+        }
+        if (total === 0) {
+          d.series[0].data = [0.13, 0.14, 0.12]
+        } else {
+          d.series[0].data = [0.43, 0.45, 0.42]
+        }
+        d.series[0].label.formatter = function () {
+          return total + ' {sub|次}'
+        }
+      })
+      this.pvsChartOptions = pvsData
       this.visitedChartOptions = visitsData
+      this.chartData = {
+        pvsAdd: visitCount.yesterdayCount,
+        visitAdd: clickCount.yesterdayCount,
+      }
     },
-    async initPVsData(page = 1) {
+    async initListData(page = 1) {
       const { targetUserId, salesId } = this.store
       const query = {
         page: page - 1,
         size: this.pagination.size,
         targetUserId,
         salesId,
-        promoteId: this.query.promoteID
+        promoteId: this.query.promoteID,
+        // promoteId: 1046,
       }
       let response = null
       try {
         this.loading.showNoListData = false
         response = await getWordPVsList(query)
-      } catch(error) {
+      } catch (error) {
         this.loading.showNoListData = true
-        throw new Error(error)
       }
       const { content = [], totalElements = 0 } = response || {}
-      this.pvsList = content.map(x => x)
+      this.pvsList = content.map((x) => x)
       this.pagination = {
         ...this.pagination,
         current: page,
@@ -349,8 +377,9 @@ export default {
     },
     // 显示快照
     async checkSnapshotPage(item = {}) {
-      let { device, url } = item
-      let response = null, html = null
+      const { device, url } = item
+      let response = null
+      let html = null
       let customClass = null
 
       switch (+device) {
@@ -364,13 +393,13 @@ export default {
 
       const isURLGziped = /\.gz$/.test(url)
       if (isURLGziped) {
-        response = await fetch(url).then(res => res.arrayBuffer())
+        response = await fetch(url).then((res) => res.arrayBuffer())
         const compressed = new Uint8Array(response)
         const decompressed = decompressSync(compressed)
         html = secureHTML(buffer2string(decompressed))
       } else {
         // ungziped backup
-        response = await fetch(url).then(data => data.text())
+        response = await fetch(url).then((data) => data.text())
         html = secureHTML(response)
       }
 
@@ -382,7 +411,7 @@ export default {
         dangerouslyUseHTMLString: true,
         showConfirmButton: false,
         showCancelButton: false,
-        closeOnPressEscape: true
+        closeOnPressEscape: true,
       }
 
       // Wrapper 类名
@@ -391,7 +420,8 @@ export default {
 
       // 快照样式修复
       // FIXME 也许是 secureHTML 时把某些样式代码意外去掉了，所以才加 modHDStyle 修复
-      const modHDStyle = '#page-hd{position:static;background-color:#fff;visibility:visible;text-align:center}'
+      const modHDStyle =
+        '#page-hd{position:static;background-color:#fff;visibility:visible;text-align:center}'
       const snapshotFix = `<style>/*这里可以放一些快照页面样式的修复代码*/${modHDStyle}</style>`
       html += snapshotFix
 
@@ -405,7 +435,7 @@ export default {
           try {
             const container = document.querySelector('.' + wrapperClass)
             const shadow = container.attachShadow({ mode: 'open' })
-            shadow.innerHTML = (html)
+            shadow.innerHTML = html
           } catch (error) {
             this.$alert(html, '快照详情', pageOptions)
             throw new Error(error)
@@ -417,44 +447,33 @@ export default {
       this.$nextTick(() => {
         const container = document.querySelector('.' + wrapperClass)
         if (container) {
-          [...(container.shadowRoot || container).querySelectorAll('a')].map(a => a.removeAttribute('href'))
+          ;[
+            ...(container.shadowRoot || container).querySelectorAll('a'),
+          ].map((a) => a.removeAttribute('href'))
         }
       })
-
     },
 
     selectPromote(id) {
       this.query.promoteID = +id
       this.$nextTick(() => {
         this.initCharts()
-        this.initPVsData()
+        this.initListData()
       })
     },
     handleSizeChange(size) {
       this.pagination.size = size
-      this.initPVsData()
+      this.initListData()
     },
     listenChartResize() {
-      window && window.addEventListener('resize', () => this.initCharts())
-      this.$on('hook:beforeDestroy', window.removeEventListener('resize', this.initCharts))
+      // FIXME: 响应式图表
+      // window && window.addEventListener('resize', () => this.initCharts())
+      // this.$on(
+      //   'hook:beforeDestroy',
+      //   window.removeEventListener('resize', this.initCharts)
+      // )
     },
-    paddingNoData({ row, rowIndex, columnIndex }) {
-      const isDisabled = !+row.rank
-      if (isDisabled) {
-        if (columnIndex == 2) {
-          return {
-            colspan: 3,
-            rowspan: 1,
-          }
-        } else if (columnIndex == 3 || columnIndex == 4) {
-          return {
-            colspan: 0,
-            rowspan: 0,
-          }
-        }
-      }
-    }
-  }
+  },
 }
 </script>
 <style lang="postcss" scoped>
@@ -462,10 +481,10 @@ export default {
   margin-top: 30px;
 }
 .pvs-tabs-header {
-  margin-top: 30px
+  margin-top: 30px;
 }
 .words-pvs-tabs {
-  margin-top: .5em;
+  margin-top: 0.5em;
 }
 .charts-con {
   display: flex;
@@ -480,23 +499,42 @@ export default {
 .chart-con {
   flex-grow: 1;
   height: 235px;
-  /* background: #f2f2f2; */
+  text-align: center;
+  font-weight: 500;
 
   & .echarts,
-  & .echarts>div,
-  & .echarts>div>canvas {
+  & .echarts > div,
+  & .echarts > div > canvas {
     width: 100%;
     height: 100%;
   }
 }
+.charts-title-con .chart-con {
+  height: 1em;
+}
+.charts-footer-con .chart-con {
+  margin-top: 0;
+  height: 1em;
+  font-size: 12px;
+  font-weight: thin;
+
+  & i {
+    font-size: 14px;
+    font-weight: bold;
+  }
+  & .static-num {
+    color: #ff6350;
+  }
+}
+
 .platform-chart {
-  width: 26%;
+  width: 50%;
 }
 .pvs-chart {
-  width: 32%;
+  width: 24%;
 }
 .visited-chart {
-  width: 32%;
+  width: 24%;
 }
 .pagniation {
   margin-top: 1em;
