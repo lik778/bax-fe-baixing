@@ -6,6 +6,8 @@ export default {
       data: [],
       color: ['#80c2fb', '#6caaf8', '#80c2fb'],
       amplitude: '3%',
+      silent: true,
+      period: (value, index) => Math.floor(Math.random() * index * 2000) + 1000,
       waveAnimation: 1800,
       itemStyle: {
         shadowBlur: 0,
