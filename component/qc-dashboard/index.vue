@@ -13,7 +13,6 @@
       <el-select
         v-model="query.promoteID"
         placeholder="推广计划"
-        clearable
         @change="selectPromote"
       >
         <el-option
