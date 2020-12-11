@@ -283,9 +283,6 @@ export default {
         online = { web: 600, wap: 600 }
         clickCount = response.clickCount
         visitCount = response.visitCount
-
-        clickCount = { totalCount: 3242, yesterdayCount: 3420 }
-        visitCount = { totalCount: 3242, yesterdayCount: 3420 }
       } catch (error) {
         this.visible.showNoChartData = true
       } finally {
