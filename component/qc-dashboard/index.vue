@@ -43,7 +43,7 @@
       </div>
 
       <!-- 图表 -->
-      <div class="charts-con">
+      <div class="charts-con charts-echarts-con">
         <div class="chart-con platform-chart">
           <e-charts
             ref="platformChartOptions"
@@ -283,6 +283,9 @@ export default {
         online = { web: 600, wap: 600 }
         clickCount = response.clickCount
         visitCount = response.visitCount
+
+        clickCount = { totalCount: 3242, yesterdayCount: 3420 }
+        visitCount = { totalCount: 3242, yesterdayCount: 3420 }
       } catch (error) {
         this.visible.showNoChartData = true
       } finally {
@@ -485,7 +488,7 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-top: 13px;
+  margin-top: 20px;
 }
 .chart-padding {
   width: 40px;
@@ -504,12 +507,16 @@ export default {
     height: 100%;
   }
 }
+.charts-echarts-con {
+  margin-top: 13px;
+}
+.charts-footer-con {
+  margin-top: 0;
+}
 .charts-title-con .chart-con {
-  margin-top: 30px;
   height: 1em;
 }
 .charts-footer-con .chart-con {
-  margin-top: -10px;
   height: 1em;
   color: #999;
   font-size: 12px;
@@ -521,6 +528,7 @@ export default {
     vertical-align: bottom;
   }
   & .static-num {
+    margin-left: 7px;
     color: #ff6350;
   }
 }
