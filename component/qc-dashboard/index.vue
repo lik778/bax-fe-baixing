@@ -274,8 +274,7 @@ export default {
         // promoteId: 1046,
       }
       let response = null
-      let pieChartTitle = '1200个'
-      let online = { web: 0, wap: 0 }
+      let online = { web: 600, wap: 600 }
       let clickCount = { totalCount: 0, yesterdayCount: 0 }
       let visitCount = { totalCount: 0, yesterdayCount: 0 }
       try {
@@ -286,8 +285,6 @@ export default {
         clickCount = response.clickCount
         visitCount = response.visitCount
       } catch (error) {
-        pieChartTitle = '---个'
-        online = { web: 0, wap: 0 }
         this.visible.showNoChartData = true
       } finally {
         this.loading.charts = false
@@ -316,8 +313,7 @@ export default {
           },
         },
       ]
-      // platformData.title.text = `${+online.web + online.wap}个`
-      platformData.title.text = pieChartTitle
+      platformData.title.text = '1200个'
       this.platformChartOptions = platformData
 
       /* 水球图 */
