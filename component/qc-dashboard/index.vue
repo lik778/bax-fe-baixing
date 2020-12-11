@@ -490,7 +490,7 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-top: 20px;
+  margin-top: 13px;
 }
 .chart-padding {
   width: 40px;
@@ -510,17 +510,20 @@ export default {
   }
 }
 .charts-title-con .chart-con {
+  margin-top: 30px;
   height: 1em;
 }
 .charts-footer-con .chart-con {
-  margin-top: 0;
+  margin-top: -10px;
   height: 1em;
+  color: #999;
   font-size: 12px;
   font-weight: thin;
 
   & i {
-    font-size: 14px;
+    font-size: 16px;
     font-weight: bold;
+    vertical-align: bottom;
   }
   & .static-num {
     color: #ff6350;
