@@ -13,7 +13,6 @@
       <el-select
         v-model="query.promoteID"
         placeholder="推广计划"
-        clearable
         @change="selectPromote"
       >
         <el-option
@@ -44,7 +43,7 @@
       </div>
 
       <!-- 图表 -->
-      <div class="charts-con">
+      <div class="charts-con charts-echarts-con">
         <div class="chart-con platform-chart">
           <e-charts
             ref="platformChartOptions"
@@ -274,8 +273,7 @@ export default {
         // promoteId: 1046,
       }
       let response = null
-      let pieChartTitle = '1200个'
-      let online = { web: 0, wap: 0 }
+      let online = { web: 600, wap: 600 }
       let clickCount = { totalCount: 0, yesterdayCount: 0 }
       let visitCount = { totalCount: 0, yesterdayCount: 0 }
       try {
@@ -286,8 +284,6 @@ export default {
         clickCount = response.clickCount
         visitCount = response.visitCount
       } catch (error) {
-        pieChartTitle = '---个'
-        online = { web: 0, wap: 0 }
         this.visible.showNoChartData = true
       } finally {
         this.loading.charts = false
@@ -316,8 +312,7 @@ export default {
           },
         },
       ]
-      // platformData.title.text = `${+online.web + online.wap}个`
-      platformData.title.text = pieChartTitle
+      platformData.title.text = '1200个'
       this.platformChartOptions = platformData
 
       /* 水球图 */
@@ -509,20 +504,28 @@ export default {
     height: 100%;
   }
 }
+.charts-echarts-con {
+  margin-top: 13px;
+}
+.charts-footer-con {
+  margin-top: 0;
+}
 .charts-title-con .chart-con {
   height: 1em;
 }
 .charts-footer-con .chart-con {
-  margin-top: 0;
   height: 1em;
+  color: #999;
   font-size: 12px;
   font-weight: thin;
 
   & i {
-    font-size: 14px;
+    font-size: 16px;
     font-weight: bold;
+    vertical-align: bottom;
   }
   & .static-num {
+    margin-left: 7px;
     color: #ff6350;
   }
 }
