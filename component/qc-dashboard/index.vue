@@ -43,7 +43,7 @@
       </div>
 
       <!-- 图表 -->
-      <div class="charts-con">
+      <div class="charts-con charts-echarts-con">
         <div class="chart-con platform-chart">
           <e-charts
             ref="platformChartOptions"
@@ -284,6 +284,7 @@ export default {
         this.setLiquidFillChart(visitCount, clickCount)
       } catch (error) {
         this.visible.showNoChartData = true
+        this.setLiquidFillChart(visitCount, clickCount)
       } finally {
         this.loading.charts = false
         this.setPieChart()
@@ -504,20 +505,28 @@ export default {
     height: 100%;
   }
 }
+.charts-echarts-con {
+  margin-top: 13px;
+}
+.charts-footer-con {
+  margin-top: 0;
+}
 .charts-title-con .chart-con {
   height: 1em;
 }
 .charts-footer-con .chart-con {
-  margin-top: 0;
   height: 1em;
+  color: #999;
   font-size: 12px;
   font-weight: thin;
 
   & i {
-    font-size: 14px;
+    font-size: 16px;
     font-weight: bold;
+    vertical-align: bottom;
   }
   & .static-num {
+    margin-left: 7px;
     color: #ff6350;
   }
 }
