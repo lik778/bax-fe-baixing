@@ -13,7 +13,6 @@
       <el-select
         v-model="query.promoteID"
         placeholder="推广计划"
-        clearable
         @change="selectPromote"
       >
         <el-option
@@ -274,27 +273,24 @@ export default {
         // promoteId: 1046,
       }
       let response = null
-      let pieChartTitle = '1620个'
-      let online = { web: 0, wap: 0 }
       let clickCount = { totalCount: 0, yesterdayCount: 0 }
       let visitCount = { totalCount: 0, yesterdayCount: 0 }
       try {
         this.loading.charts = true
         this.visible.showNoChartData = false
         response = await getWordPVsChartData(query)
-        online = { web: 810, wap: 810 }
         clickCount = response.clickCount
         visitCount = response.visitCount
+        this.setLiquidFillChart(visitCount, clickCount)
       } catch (error) {
-        pieChartTitle = '---个'
-        online = { web: 0, wap: 0 }
         this.visible.showNoChartData = true
       } finally {
         this.loading.charts = false
+        this.setPieChart()
       }
-
-      /* 饼图 */
-
+    },
+    setPieChart() {
+      const online = { web: 810, wap: 810 }
       const platformData = clone(this.platformChartOptions)
       // 确保饼图中至少有一个像素的数据
       const displayOnline = clone(online)
@@ -316,11 +312,10 @@ export default {
           },
         },
       ]
-      // platformData.title.text = `${+online.web + online.wap}个`
-      platformData.title.text = pieChartTitle
+      platformData.title.text = '1620个'
       this.platformChartOptions = platformData
-
-      /* 水球图 */
+    },
+    setLiquidFillChart(visitCount, clickCount) {
       const liquidChartDatas = [visitCount.totalCount, clickCount.totalCount]
       const yesterdayCount = [
         visitCount.yesterdayCount,
