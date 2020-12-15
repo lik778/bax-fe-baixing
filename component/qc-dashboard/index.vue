@@ -136,7 +136,12 @@ import 'echarts/lib/component/legend'
 import 'echarts/lib/component/tooltip'
 import 'echarts/lib/component/title'
 
-import { getPromoteList, getWordPVsList, getWordPVsChartData } from 'api/qianci'
+import {
+  getPromoteList,
+  getWordPVsList,
+  getWordPVsChartData,
+  getPreferredWordsPV,
+} from 'api/qianci'
 import {
   PROMOTE_STATUS_PENDING_EDIT,
   PROMOTE_STATUS_EDITED,
@@ -238,6 +243,8 @@ export default {
     )
     this.store = { targetUserId, salesId }
     await this.initPromoteListOptions()
+    this.selectPromote(this.options.promoteList[0].value)
+    this.initPieChart()
     this.listenChartResize()
   },
   methods: {
@@ -262,9 +269,8 @@ export default {
         label: x.coreWord,
         value: +x.id,
       }))
-      this.selectPromote(this.options.promoteList[0].value)
     },
-    async initCharts() {
+    async initLiquidChart() {
       const { targetUserId, salesId } = this.store
       const query = {
         targetUserId,
@@ -287,11 +293,15 @@ export default {
         this.setLiquidFillChart(visitCount, clickCount)
       } finally {
         this.loading.charts = false
-        this.setPieChart()
       }
     },
-    setPieChart() {
-      const online = { web: 810, wap: 810 }
+    async initPieChart() {
+      const response = await getPreferredWordsPV({ id: this.query.promoteID })
+      const { expandedNum = 0 } = response || {}
+      const online = {}
+      online.wap = Math.floor(expandedNum / 2)
+      online.web = expandedNum - online.wap
+
       const platformData = clone(this.platformChartOptions)
       // 确保饼图中至少有一个像素的数据
       const displayOnline = clone(online)
@@ -313,7 +323,7 @@ export default {
           },
         },
       ]
-      platformData.title.text = '1620个'
+      platformData.title.text = `${online.web + online.wap}个`
       this.platformChartOptions = platformData
     },
     setLiquidFillChart(visitCount, clickCount) {
@@ -453,7 +463,8 @@ export default {
     selectPromote(id) {
       this.query.promoteID = +id
       this.$nextTick(() => {
-        this.initCharts()
+        this.initLiquidChart()
+        this.initPieChart()
         this.initListData()
       })
     },
@@ -463,10 +474,10 @@ export default {
     },
     listenChartResize() {
       // FIXME: 响应式图表
-      // window && window.addEventListener('resize', () => this.initCharts())
+      // window && window.addEventListener('resize', () => this.initLiquidChart())
       // this.$on(
       //   'hook:beforeDestroy',
-      //   window.removeEventListener('resize', this.initCharts)
+      //   window.removeEventListener('resize', this.initLiquidChart)
       // )
     },
   },
