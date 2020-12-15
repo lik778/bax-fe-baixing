@@ -4,7 +4,6 @@
  */
 export function qcWordAll(wordsMap) {
   return (
-    wordsMap.A * wordsMap.B +
     wordsMap.B * wordsMap.C +
     wordsMap.A * wordsMap.B * wordsMap.C +
     wordsMap.A * wordsMap.C * wordsMap.D +
