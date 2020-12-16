@@ -25,8 +25,7 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
-
+<style lang="scss" scoped>
 i {
   margin-left: 10px;
   cursor: pointer;

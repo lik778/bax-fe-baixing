@@ -224,14 +224,13 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 .bw-manual {
-  
   &.bg {
     & > .white-bg {
       background-color: #fff;
       & > main {
-        box-shadow: 0px 2px 9px 0px rgba(83, 95, 127, .1);
+        box-shadow: 0px 2px 9px 0px rgba(83, 95, 127, 0.1);
         min-height: 700px;
         padding: 45px 60px;
       }
@@ -240,7 +239,7 @@ export default {
 
   & header {
     color: #666;
-    border-bottom: 1px solid #E6E6E6;
+    border-bottom: 1px solid #e6e6e6;
     padding: 15px;
     font-size: 16px;
   }
@@ -251,7 +250,7 @@ export default {
 
   & .record-table {
     margin-top: 40px;
-  } 
+  }
   & .manual-radio {
     width: 160px;
     line-height: 30px;

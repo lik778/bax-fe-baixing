@@ -359,32 +359,29 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
-@import '../../cssbase/var';
-
+<style lang="scss" scoped>
 header {
   color: #666;
-  border-bottom: 1px solid #E6E6E6;
+  border-bottom: 1px solid #e6e6e6;
   padding: 15px;
   font-size: 16px;
 }
 div.bg {
-
-& > .white-bg {
+  & > .white-bg {
     background-color: #fff;
 
-& > main {
-    box-shadow: 0px 2px 9px 0px rgba(83, 95, 127, .1);
-    min-height: 700px;
-    padding: 45px 60px;
+    & > main {
+      box-shadow: 0px 2px 9px 0px rgba(83, 95, 127, 0.1);
+      min-height: 700px;
+      padding: 45px 60px;
+    }
   }
-}
 }
 .kw-tag {
   margin-right: 10px;
 }
 .clear {
-  color: var(--qwt-c-orange);
+  color: $qwt-c-orange;
   margin: 10px 0;
   cursor: pointer;
   margin-left: 120px;
@@ -406,42 +403,42 @@ div.bg {
 .notice {
   font-size: 13px;
   margin-bottom: 20px;
-& > p {
+  & > p {
     margin-bottom: 5px;
 
-& > span {
-    width: 145px;
-  }
+    & > span {
+      width: 145px;
+    }
 
-& >>> .red {
-    background-color: #ff3c3c;
-    color: white;
-    padding: 1px 4px;
-    margin: 0 5px;
-    border-radius: 2px;
+    & /deep/ .red {
+      background-color: #ff3c3c;
+      color: white;
+      padding: 1px 4px;
+      margin: 0 5px;
+      border-radius: 2px;
+    }
   }
-}
 }
 .results {
-& > div {
+  & > div {
     display: flex;
     align-items: flex-start;
     margin-bottom: 20px;
 
-& > label {
-    width: 120px;
-    vertical-align: middle;
-    float: left;
-    font-size: 14px;
-    color: #606266;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
+    & > label {
+      width: 120px;
+      vertical-align: middle;
+      float: left;
+      font-size: 14px;
+      color: #606266;
+      -webkit-box-sizing: border-box;
+      box-sizing: border-box;
+    }
   }
 }
-}
 marquee {
-  background-color: #FFF7EB;
-  color: #C6A674;
+  background-color: #fff7eb;
+  color: #c6a674;
   display: flex;
   align-items: center;
 }
@@ -450,37 +447,39 @@ marquee {
   font-size: 1.2em;
   padding: 10px;
 
-&:hover {
-   font-weight: bold;
- }
+  &:hover {
+    font-weight: bold;
+  }
 }
 .recommend {
   display: flex;
   align-items: flex-start;
-& .recommend-content {
-& .recommend-item {
-    margin-bottom: 10px;
+  & .recommend-content {
+    & .recommend-item {
+      margin-bottom: 10px;
+    }
   }
-}
 }
 .keyword-row {
   display: flex;
   align-items: center;
-& .manual-container {
+  & .manual-container {
     position: relative;
     margin-left: 16px;
     display: flex;
     align-items: center;
   }
-& .el-icon-info {
-    color:#6a778c;
+  & .el-icon-info {
+    color: #6a778c;
     cursor: pointer;
   }
 }
-.b2b-download, .b2b-download > a, .standard {
+.b2b-download,
+.b2b-download > a,
+.standard {
   font-size: 12px;
-  color: #FF6350;
-& > a {
+  color: #ff6350;
+  & > a {
     text-decoration: underline;
   }
 }

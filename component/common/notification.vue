@@ -31,19 +31,22 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  .notification {
-    font-size: 15px;
-    & > ul {
-      padding: 20px;
-    }
-    & li {
-      list-style: disc;
-      margin-bottom: 10px;
-      & p {
-        line-height: 1.6;
-        font-size: 14px;
-        text-indent: 1.5em;
-      }
+.notification {
+  font-size: 15px;
+
+  & > ul {
+    padding: 20px;
+  }
+
+  & li {
+    list-style: disc;
+    margin-bottom: 10px;
+
+    & p {
+      line-height: 1.6;
+      font-size: 14px;
+      text-indent: 1.5em;
     }
   }
+}
 </style>

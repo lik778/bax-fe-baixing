@@ -120,14 +120,9 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
-@import '../../cssbase/mixin';
-@import 'cssbase/mixin';
-
-@mixin filter-item;
-
+<style lang="scss" scoped>
 .material-header {
-  @mixin top-filter;
+  @include top-filter;
 
   & > div {
     display: flex;
@@ -136,9 +131,6 @@ export default {
     & > span {
       display: flex;
       flex-grow: 0.5;
-
-      & > div:last-child {
-      }
     }
 
     & > span:last-child {

@@ -607,7 +607,7 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 .intro {
   position: fixed;
   top: 0;
@@ -616,7 +616,7 @@ export default {
   right: 0;
   overflow: auto;
   z-index: 1000;
-  background-color: rgba(0,0,0,.2);
+  background-color: rgba(0, 0, 0, 0.2);
 
   & > .content {
     width: 460px;
@@ -627,7 +627,7 @@ export default {
 
     & > .img {
       height: 132px;
-      background-image: url('//file.baixing.net/201907/72c9added79381c68d23ef3a04089224.png');
+      background-image: url("//file.baixing.net/201907/72c9added79381c68d23ef3a04089224.png");
     }
     & > .body {
       text-align: center;
@@ -643,7 +643,7 @@ export default {
         font-size: 14px;
       }
       & > p.highlight {
-        color: #FF7533;
+        color: #ff7533;
         font-size: 1.2em;
         margin-bottom: 20px;
         margin-top: 10px;
@@ -666,23 +666,20 @@ export default {
   font-size: 12px;
   margin-bottom: 10px;
 
-  &>span.red {
+  & > span.red {
     background-color: #ff3c3c;
     color: white;
     padding: 1px 4px;
     margin: 0 5px;
     border-radius: 2px;
   }
-  &>span.mute {
+  & > span.mute {
     color: #949292;
   }
 }
 </style>
 
-<style lang="postcss" scoped>
-@import "../../cssbase/var";
-@import "cssbase/mixin";
-
+<style lang="scss" scoped>
 .discount-btn {
   color: #ff3c3c;
   cursor: pointer;
@@ -705,11 +702,12 @@ export default {
 
   & > main {
     width: 100%;
-    background: var(--qwt-c-gray);
+    background: $qwt-c-gray;
   }
 }
 
-.qwt-product, .qwt-order {
+.qwt-product,
+.qwt-order {
   margin-top: 10px;
   padding: 20px 0 10px 20px;
   border-radius: 4px;
@@ -723,7 +721,8 @@ export default {
     color: #333333;
   }
 
-  & .package, & .charge {
+  & .package,
+  & .charge {
     & > header {
       font-size: 14px;
       line-height: 1.5;
@@ -846,7 +845,7 @@ export default {
 
     & > .pay-info {
       & > .pay-order {
-        @mixin center;
+        @include center;
         width: 110px;
         height: 35px;
         margin-top: 30px;
@@ -866,7 +865,7 @@ export default {
         color: #333333;
 
         & > label {
-          @mixin wordline;
+          @include wordline;
           width: 320px;
         }
       }
@@ -899,7 +898,7 @@ export default {
   margin-bottom: 10px;
   margin-left: 5px;
   font-size: 12px;
-  color: var(--c-tip-gray);
+  color: #717d91;
 }
 
 .hint-text {
@@ -911,22 +910,22 @@ export default {
   text-align: center;
 }
 .shadow {
-  box-shadow: 0px 2px 9px 0px rgba(83,95,127,0.1);
+  box-shadow: 0px 2px 9px 0px rgba(83, 95, 127, 0.1);
 }
 .hr {
   height: 1px;
   margin: 10px 0;
-  background-color: #CFCFCF;
+  background-color: #cfcfcf;
 }
 
-.charge-info{
-  color:#FF7533;
+.charge-info {
+  color: #ff7533;
   font-size: 12px;
   margin-top: 10px;
 }
-.gw-warn-info{
+.gw-warn-info {
   color: red;
-  font-size : 14px;
-  margin-top: 10px
+  font-size: 14px;
+  margin-top: 10px;
 }
 </style>

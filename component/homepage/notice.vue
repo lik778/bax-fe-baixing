@@ -90,44 +90,51 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
-  .homepage-notices {
-    margin-top: 15px;
-    overflow-y: hidden;
-    &::-webkit-scrollbar { width: 0 !important }
-    &.element { -ms-overflow-style: none; }
-    &.element { overflow: -moz-scrollbars-none; }
+<style lang="scss" scoped>
+.homepage-notices {
+  margin-top: 15px;
+  overflow-y: hidden;
+  &::-webkit-scrollbar {
+    width: 0 !important;
   }
-  .notice-list {
-    color: #666;
-    font-size: 14px;
-    padding-bottom: 30px;
-    & .notice-item {
-      text-indent: 1em;
-      margin-top: 20px;
-      overflow : hidden;
-      text-overflow: ellipsis;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      padding-right: 1em;
-    }
-    & .footer {
-      margin-top: 30px;
-      font-size: 13px;
-      color: #999;
-      text-align: center;
-    }
+  &.element {
+    -ms-overflow-style: none;
   }
-  .notice-placeholder {
-    height: 184px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  &.element {
+    overflow: -moz-scrollbars-none;
+  }
+}
+.notice-list {
+  color: #666;
+  font-size: 14px;
+  padding-bottom: 30px;
+  & .notice-item {
+    text-indent: 1em;
+    margin-top: 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    padding-right: 1em;
+  }
+  & .footer {
+    margin-top: 30px;
+    font-size: 13px;
     color: #999;
-    font-size: 16px;
-    & .el-icon-info, & .el-icon-loading {
-      margin-right: 4px;
-    }
+    text-align: center;
   }
+}
+.notice-placeholder {
+  height: 184px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+  font-size: 16px;
+  & .el-icon-info,
+  & .el-icon-loading {
+    margin-right: 4px;
+  }
+}
 </style>

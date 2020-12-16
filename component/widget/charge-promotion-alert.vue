@@ -38,9 +38,7 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
-@import '../../cssbase/var';
-
+<style lang="scss" scoped>
 @keyframes rock {
   0% {
     transform: rotate(-3deg);
@@ -71,7 +69,7 @@ export default {
   width: 290px;
   height: 230px;
 
-  border: solid 1px var(--c-main-blue);
+  border: solid 1px $c-main-blue;
   border-radius: 4px;
 
   animation: rock 0.6s 3 alternate;
@@ -84,7 +82,7 @@ export default {
     padding: 0 10px;
     font-size: 14px;
     color: white;
-    background: var(--c-main-blue);
+    background: $c-main-blue;
   }
 
   & > content {

@@ -264,4 +264,3 @@ export function notAllowFengmingRecharge(roles, agentId) {
   }
   return [50].includes(agentId) && isOnlyBaixingUser
 }
-

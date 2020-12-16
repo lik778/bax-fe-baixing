@@ -28,8 +28,9 @@ module.exports = {
         test: /\.js$/,
         loader: 'babel-loader',
         exclude: file => /node_modules/.test(file)
-      }, {
-        test: /css$/,
+      },
+      {
+        test: /\.scss$/,
         use: [
           env === 'production'
             ? MiniCssExtractPlugin.loader
@@ -42,15 +43,17 @@ module.exports = {
             }
           },
           {
-            loader: 'postcss-loader',
+            loader: "sass-loader"
+          },
+          {
+            loader: 'sass-resources-loader',
             options: {
-              plugins: [
-                require('postcss-import')(),
-                require('postcss-mixins')(),
-                require('postcss-cssnext')()
+              resources: [
+                './cssbase/vars.scss',
+                './cssbase/mixins.scss',
               ]
-            }
-          }
+            },
+          },
         ]
       },
       {

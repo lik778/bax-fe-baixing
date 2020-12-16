@@ -227,10 +227,7 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
-@import '../../cssbase/var';
-@import 'cssbase/mixin';
-
+<style lang="scss" scoped>
 .center {
   display: inline-flex;
   justify-content: center;
@@ -240,26 +237,26 @@ export default {
 
 .fabu {
   cursor: pointer;
-  color: var(--qwt-c-orange);
+  color: $qwt-c-orange;
   font-size: 14px;
 }
 
 .fabu:visited {
-  color: var(--qwt-c-orange);
+  color: $qwt-c-orange;
 }
 
 .line {
-  @mixin wordline;
+  @include wordline;
 }
 
 .op {
   & > a {
     cursor: pointer;
-    color: var(--qwt-c-orange);
+    color: $qwt-c-orange;
   }
 
   & > a:visited {
-    color: var(--qwt-c-orange);
+    color: $qwt-c-orange;
   }
 }
 

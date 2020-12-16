@@ -72,11 +72,9 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
-
+<style lang="scss" scoped>
 .tip {
   color: red;
   padding-left: 80px;
 }
-
 </style>

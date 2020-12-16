@@ -445,10 +445,7 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
-@import '../../cssbase/var';
-@import 'cssbase/mixin';
-
+<style lang="scss" scoped>
 .product-tab {
   background: #fff;
   padding-left: 20px;
@@ -550,7 +547,7 @@ export default {
     }
     & > .pay-info {
       & > .pay-order {
-        @mixin center;
+        @include center;
         width: 110px;
         height: 35px;
         margin-top: 30px;
@@ -568,7 +565,7 @@ export default {
         font-size: 14px;
         color: #333333;
         & > label {
-          @mixin wordline;
+          @include wordline;
           width: 320px;
         }
       }
@@ -588,7 +585,7 @@ export default {
 }
 </style>
 
-<style lang="postcss">
+<style lang="scss">
 .discount-info {
   font-size: 12px;
   margin-bottom: 10px;
@@ -611,13 +608,13 @@ export default {
   font-size: 13px;
   margin-bottom: 20px;
   & > p {
-      margin-bottom: 5px;
+    margin-bottom: 5px;
 
-  & > span {
+    & > span {
       width: 145px;
     }
 
-  & .red {
+    & .red {
       background-color: #ff3c3c;
       color: white;
       padding: 1px 4px;

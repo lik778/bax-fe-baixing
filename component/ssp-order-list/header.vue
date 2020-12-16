@@ -212,12 +212,7 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
-@import '../../cssbase/mixin';
-@import 'cssbase/mixin';
-
-@mixin filter-item;
-
+<style lang="scss" scoped>
 .order-header {
   & > section:first-child {
     display: flex;
@@ -237,7 +232,7 @@ export default {
   }
 
   & > section:nth-child(2) {
-    @mixin top-filter;
+    @include top-filter;
 
     & > div {
       display: flex;

@@ -61,17 +61,17 @@
       <el-table-column label="操作">
         <template slot-scope="{row}">
           <el-button
-            class="info no-padding"
+            class="c-info no-padding"
             type="text"
             :disabled="!enableCheckButton(row)"
             @click="() => goPreferredWordsListPage(row)">查看</el-button>
           <el-button
-            class="info no-padding"
+            class="c-info no-padding"
             type="text"
             :disabled="!enableEditButton(row.status)"
             @click="() => goEditWordsPage(row)">修改</el-button>
           <el-button
-            class="tip no-padding"
+            class="c-tip no-padding"
             type="text"
             :loading="checkGoPayButtonLoading(row)"
             :disabled="!enablePayButton(row.status)"
@@ -302,7 +302,7 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 .query-form {
   margin-top: 18px;
   padding: 16px;
@@ -317,7 +317,7 @@ export default {
     /* display: block; */
     /* margin-bottom: 0; */
 
-    & >>> .el-form-item__label {
+    & /deep/ .el-form-item__label {
       opacity: 0;
     }
   }

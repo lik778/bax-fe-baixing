@@ -67,7 +67,7 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 .user {
   padding: 0 35px;
   width: 100%;

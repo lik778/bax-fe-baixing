@@ -11,7 +11,7 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 .tip {
   width: 350px;
   color: red;

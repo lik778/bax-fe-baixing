@@ -40,12 +40,12 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 .audit-reject-reason-dialog {
   & .content {
     padding: 0 20px 0 10px;
     line-height: 20px;
-    & li{
+    & li {
       margin-bottom: 8px;
       list-style: decimal inside;
       text-align: justify;

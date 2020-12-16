@@ -204,15 +204,12 @@ export default {
 }
 </script>
 
-<style scoped>
-
-@import 'cssbase/mixin';
-
+<style lang="scss" scoped>
 .calendar {
   padding: 30px;
 
   & > div {
-    @mixin center;
+    @include center;
     margin: 10px 0;
     font-size: 18px;
     color: gray;
@@ -267,7 +264,7 @@ export default {
         align-items: center;
 
         & > label {
-          @mixin wordline;
+          @include wordline;
           display: flex;
           align-items: center;
           padding: 0 10px;
@@ -284,5 +281,4 @@ export default {
     }
   }
 }
-
 </style>

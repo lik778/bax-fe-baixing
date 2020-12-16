@@ -143,10 +143,7 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
-@import '../../cssbase/mixin';
-@import '../../cssbase/var';
-
+<style lang="scss" scoped>
 .topbar {
   display: flex;
   justify-content: space-between;
@@ -177,7 +174,7 @@ export default {
 }
 
 .el-dropdown-link {
-  color: var(--qwt-c-blue);
+  color: $qwt-c-blue;
 }
 
 .help {

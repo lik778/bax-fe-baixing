@@ -230,7 +230,7 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 .bw-dashboard {
   background-color: #fff;
   border-radius: 4px;

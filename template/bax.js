@@ -1,4 +1,3 @@
-
 import '../lib/trackerlib'
 import sentry from '../lib/sentry'
 
@@ -49,8 +48,9 @@ import {
   MessageBox,
   Message,
   Cascader,
-  Notification
+  Notification,
 } from 'element-ui'
+import '../cssbase/index.scss'
 
 import { reaction } from 'mobx'
 import Movue from 'movue'
@@ -64,12 +64,11 @@ import pick from 'lodash.pick'
 import { notAllowFengmingRecharge } from 'util/role'
 import { parseQuery, stringifyQuery } from 'util'
 
-import '../cssbase/index.css'
 import clone from 'clone'
 
 // track common data
 window.__trackerData = {
-  common: {}
+  common: {},
 }
 window.onerror = (e) => {
   sentry.captureException(e)
@@ -133,19 +132,23 @@ Vue.component('catch-error', {
   name: 'error-boundary-with-default-handler',
   render(h) {
     const children = this.$slots.default
-    return h(ErrorBoundary, {
-      attrs: {
-        fallBack: {
-          functional: true,
-          render(h) {
-            return h('p', '数据出错啦，请刷新重新试试...')
-          }
+    return h(
+      ErrorBoundary,
+      {
+        attrs: {
+          fallBack: {
+            functional: true,
+            render(h) {
+              return h('p', '数据出错啦，请刷新重新试试...')
+            },
+          },
+          ...this.$attrs,
         },
-        ...this.$attrs
+        listeners: this.$listeners,
       },
-      listeners: this.$listeners
-    }, children)
-  }
+      children
+    )
+  },
 })
 
 Vue.use(Loading.directive)
@@ -162,16 +165,21 @@ Vue.use(Vue2Filters)
 // ElementUI formatter
 Vue.prototype.$formatter = {
   join: (arrs = [], seq = '、') => arrs.join(seq),
-  date: (time = '') => !time ? time : dayjs(time).format('YYYY-MM-DD'),
-  mapWith: (key = '', obj = {}) => obj[key]
+  date: (time = '') => (!time ? time : dayjs(time).format('YYYY-MM-DD')),
+  mapWith: (key = '', obj = {}) => obj[key],
 }
 
 // 该组件引入echarts，体积较大，异步加载提升用户体验
-Vue.component('homepage-campaign', () => import('../component/homepage/campaign'))
+// eslint-disable-line
+Vue.component('homepage-campaign', () =>
+  import('../component/homepage/campaign')
+)
 
 // 引入eventBus
 const eventBus = {
-  install(Vue) { Vue.prototype.$bus = new Vue() }
+  install(Vue) {
+    Vue.prototype.$bus = new Vue()
+  },
 }
 Vue.use(eventBus)
 
@@ -179,7 +187,10 @@ Vue.use(eventBus)
 function getExtraRoute(route) {
   let newRoute = typeof route === 'string' ? route : clone(route)
   if (window.location) {
-    const querys = pick(parseQuery(window.location.search), ['user_id', 'sales_id'])
+    const querys = pick(parseQuery(window.location.search), [
+      'user_id',
+      'sales_id',
+    ])
     if (typeof newRoute === 'string') {
       if (route.indexOf('?') > -1) {
         newRoute += `&${stringifyQuery(querys)}`
@@ -191,8 +202,8 @@ function getExtraRoute(route) {
         ...route,
         query: {
           ...route.query,
-          ...querys
-        }
+          ...querys,
+        },
       }
     }
   }
@@ -200,239 +211,285 @@ function getExtraRoute(route) {
 }
 const routerPush = VueRouter.prototype.push
 VueRouter.prototype.push = function push(route) {
-  return routerPush.call(this, getExtraRoute(route)).catch(error => {
+  return routerPush.call(this, getExtraRoute(route)).catch((error) => {
     console.log(error)
   })
 }
 const routerReplace = VueRouter.prototype.replace
 VueRouter.prototype.replace = function replace() {
-  return routerReplace.call(this, getExtraRoute(route)).catch(error => {
+  return routerReplace.call(this, getExtraRoute(route)).catch((error) => {
     console.log(error)
   })
 }
 
+const gwRoutes = [
+  {
+    component: () => import('com/gw-homepage'),
+    path: '/main/gw',
+    name: 'gw-homepage',
+  },
+  {
+    component: () => import('com/gw-charge'),
+    path: '/main/gw/charge',
+    name: 'gw-charge',
+    beforeEnter: async (to, from, next) => {
+      const userInfo = await getCurrentUser()
+      const license = allowUseKaPackage('', userInfo.id)
+      if (license) {
+        next()
+      } else {
+        Message.error('无权限访问')
+      }
+    },
+  },
+]
 
-const gwRoutes = [{
-  component: () => import('com/gw-homepage'),
-  path: '/main/gw',
-  name: 'gw-homepage'
-}, {
-  component: () => import('com/gw-charge'),
-  path: '/main/gw/charge',
-  name: 'gw-charge',
-  beforeEnter: async (to, from, next) => {
-    const userInfo = await getCurrentUser()
-    const license = allowUseKaPackage('', userInfo.id)
-    if (license) {
-      next()
-    } else {
-      Message.error('无权限访问')
-    }
-  }
-}]
+const bwRoutes = [
+  {
+    component: () => import('com/bw-query-price'),
+    path: '/main/bw/query-price',
+    name: 'bw-query-price',
+  },
+  {
+    component: () => import('com/bw-edit-plan'),
+    path: '/main/bw/edit-plan',
+    name: 'bw-edit-plan',
+  },
+  {
+    component: () => import('com/bw-plan-list'),
+    path: '/main/bw/plan-list',
+    name: 'bw-plan-list',
+  },
+  {
+    component: () => import('com/bw-landing'),
+    path: '/main/bw/landing',
+    name: 'bw-landing',
+  },
+  {
+    component: () => import('com/bw-dashboard'),
+    path: '/main/bw/dashboard',
+    name: 'bw-dashboard',
+  },
+  {
+    component: () => import('com/bw-manual'),
+    path: '/main/bw/manual',
+    name: 'bw-manual',
+  },
+]
 
-const bwRoutes = [{
-  component: () => import('com/bw-query-price'),
-  path: '/main/bw/query-price',
-  name: 'bw-query-price'
-}, {
-  component: () => import('com/bw-edit-plan'),
-  path: '/main/bw/edit-plan',
-  name: 'bw-edit-plan'
-}, {
-  component: () => import('com/bw-plan-list'),
-  path: '/main/bw/plan-list',
-  name: 'bw-plan-list'
-}, {
-  component: () => import('com/bw-landing'),
-  path: '/main/bw/landing',
-  name: 'bw-landing'
-}, {
-  component: () => import('com/bw-dashboard'),
-  path: '/main/bw/dashboard',
-  name: 'bw-dashboard'
-}, {
-  component: () => import('com/bw-manual'),
-  path: '/main/bw/manual',
-  name: 'bw-manual'
-}]
+const qcRoutes = [
+  {
+    component: () => import('com/qc-create-promote'),
+    path: '/main/qc/create',
+    name: 'qc-create-promote',
+  },
+  {
+    component: () => import('com/qc-promote-list'),
+    path: '/main/qc/promote-list',
+    name: 'qc-promote-list',
+  },
+  {
+    component: () => import('com/qc-word-list'),
+    path: '/main/qc/word-list',
+    name: 'qc-word-list',
+  },
+  {
+    component: () => import('com/qc-keyword-list'),
+    path: '/main/qc/keyword-list',
+    name: 'qc-keyword-list',
+    hidden: true,
+  },
+  {
+    component: () => import('com/qc-creative'),
+    path: '/main/qc/creative',
+    name: 'qc-creative',
+  },
+  {
+    component: () => import('com/qc-dashboard'),
+    path: '/main/qc/dashboard',
+    name: 'qc-dashboard',
+  },
+]
 
-const qcRoutes = [{
-  component: () => import('com/qc-create-promote'),
-  path: '/main/qc/create',
-  name: 'qc-create-promote'
-}, {
-  component: () => import('com/qc-promote-list'),
-  path: '/main/qc/promote-list',
-  name: 'qc-promote-list'
-}, {
-  component: () => import('com/qc-word-list'),
-  path: '/main/qc/word-list',
-  name: 'qc-word-list'
-}, {
-  component: () => import('com/qc-keyword-list'),
-  path: '/main/qc/keyword-list',
-  name: 'qc-keyword-list',
-  hidden: true
-}, {
-  component: () => import('com/qc-creative'),
-  path: '/main/qc/creative',
-  name: 'qc-creative'
-}, {
-  component: () => import('com/qc-dashboard'),
-  path: '/main/qc/dashboard',
-  name: 'qc-dashboard'
-}]
+const qwtRoutes = [
+  {
+    component: () => import('com/qwt-create-promotion'),
+    path: '/main/qwt/promotion/create',
+    name: 'qwt-create-promotion',
+  },
+  {
+    component: () => import('com/qwt-update-promotion'),
+    path: '/main/qwt/promotions/:id/update',
+    name: 'qwt-update-promotion',
+  },
+  {
+    component: () => import('com/qwt-promotion-list'),
+    path: '/main/qwt/promotions',
+    name: 'qwt-promotion-list',
+  },
+  {
+    component: () => import('com/qwt-dashboard'),
+    path: '/main/qwt/dashboard',
+    name: 'qwt-dashboard',
+  },
+  {
+    component: () => import('com/qwt-charge'),
+    path: '/main/qwt/charge',
+    name: 'qwt-charge',
+    beforeEnter: async (to, from, next) => {
+      const { roles, realAgentId } = await getCurrentUser()
+      if (notAllowFengmingRecharge(roles, realAgentId)) {
+        next({ name: 'qwt-promotion-list', redirect: true })
+      } else {
+        next()
+      }
+    },
+  },
+]
 
-const qwtRoutes = [{
-  component: () => import('com/qwt-create-promotion'),
-  path: '/main/qwt/promotion/create',
-  name: 'qwt-create-promotion'
-}, {
-  component: () => import('com/qwt-update-promotion'),
-  path: '/main/qwt/promotions/:id/update',
-  name: 'qwt-update-promotion'
-}, {
-  component: () => import('com/qwt-promotion-list'),
-  path: '/main/qwt/promotions',
-  name: 'qwt-promotion-list'
-}, {
-  component: () => import('com/qwt-dashboard'),
-  path: '/main/qwt/dashboard',
-  name: 'qwt-dashboard'
-}, {
-  component: () => import('com/qwt-charge'),
-  path: '/main/qwt/charge',
-  name: 'qwt-charge',
-  beforeEnter: async (to, from, next) => {
-    const { roles, realAgentId } = await getCurrentUser()
-    if (notAllowFengmingRecharge(roles, realAgentId)) {
-      next({ name: 'qwt-promotion-list', redirect: true })
-    } else {
-      next()
-    }
-  }
-}]
+const sspRoutes = [
+  {
+    component: () => import('com/ssp-ad-list'),
+    path: '/main/ads',
+    name: 'ad-list',
+  },
+  {
+    component: () => import('com/ssp-material-info'),
+    path: '/main/materials/:id',
+    name: 'material-info',
+  },
+  {
+    component: () => import('com/ssp-material-list'),
+    path: '/main/materials',
+    name: 'material-list',
+  },
+  {
+    component: () => import('com/ssp-order-create'),
+    path: '/main/order/create',
+    name: 'create-order',
+  },
+  {
+    component: () => import('com/ssp-order-info'),
+    path: '/main/orders/:id',
+    name: 'order-info',
+  },
+  {
+    component: () => import('com/ssp-order-list'),
+    path: '/main/orders',
+    name: 'order-list',
+  },
+  {
+    component: () => import('com/ssp-user-list'),
+    path: '/main/users',
+    name: 'user-list',
+  },
+  {
+    component: () => import('com/ssp-ad-calendar'),
+    path: '/main/ad-calendar',
+    name: 'ad-calendar',
+  },
+]
 
-const sspRoutes = [{
-  component: () => import('com/ssp-ad-list'),
-  path: '/main/ads',
-  name: 'ad-list'
-}, {
-  component: () => import('com/ssp-material-info'),
-  path: '/main/materials/:id',
-  name: 'material-info'
-}, {
-  component: () => import('com/ssp-material-list'),
-  path: '/main/materials',
-  name: 'material-list'
-}, {
-  component: () => import('com/ssp-order-create'),
-  path: '/main/order/create',
-  name: 'create-order'
-}, {
-  component: () => import('com/ssp-order-info'),
-  path: '/main/orders/:id',
-  name: 'order-info'
-}, {
-  component: () => import('com/ssp-order-list'),
-  path: '/main/orders',
-  name: 'order-list'
-}, {
-  component: () => import('com/ssp-user-list'),
-  path: '/main/users',
-  name: 'user-list'
-}, {
-  component: () => import('com/ssp-ad-calendar'),
-  path: '/main/ad-calendar',
-  name: 'ad-calendar'
-}]
-
-const seoRoutes = [{
-  component: () => import('com/seo-charge'),
-  path: '/main/seo/charge',
-  name: 'seo-charge'
-}, {
-  component: () => import('com/seo-landing'),
-  path: '/main/seo/landing',
-  name: 'seo-landing'
-},
-{
-  component: () => import('com/seo-create-promotion'),
-  path: '/main/seo/promotion/create',
-  name: 'seo-create-promotion'
-}, {
-  component: () => import('com/seo-promotion-list'),
-  path: '/main/seo/promotions',
-  name: 'seo-promotion-list'
-}, {
-  component: () => import('com/seo-update-promotion-zixuan'),
-  path: '/main/seo/promotion/zixuan/:id/update',
-  name: 'seo-update-zixuan-promotion'
-}, {
-  component: () => import('com/seo-create-promotion-zixuan'),
-  path: '/main/seo/promotion/create/zixuan',
-  name: 'seo-create-zixuan-promotion'
-}, {
-  component: () => import('com/seo-promotion-cibao/create'),
-  path: '/main/seo/promotion/create/cibao',
-  name: 'seo-create-cibao-promotion',
-  beforeEnter: async (to, from, next) => {
-    const license = await getBusinessLicense()
-    if (license) {
-      next()
-    } else {
-      Message.error('无权限访问')
-    }
-  }
-}, {
-  component: () => import('com/seo-promotion-cibao/update'),
-  path: '/main/seo/promotion/cibao/:id/update',
-  name: 'seo-update-cibao-promotion'
-}]
+const seoRoutes = [
+  {
+    component: () => import('com/seo-charge'),
+    path: '/main/seo/charge',
+    name: 'seo-charge',
+  },
+  {
+    component: () => import('com/seo-landing'),
+    path: '/main/seo/landing',
+    name: 'seo-landing',
+  },
+  {
+    component: () => import('com/seo-create-promotion'),
+    path: '/main/seo/promotion/create',
+    name: 'seo-create-promotion',
+  },
+  {
+    component: () => import('com/seo-promotion-list'),
+    path: '/main/seo/promotions',
+    name: 'seo-promotion-list',
+  },
+  {
+    component: () => import('com/seo-update-promotion-zixuan'),
+    path: '/main/seo/promotion/zixuan/:id/update',
+    name: 'seo-update-zixuan-promotion',
+  },
+  {
+    component: () => import('com/seo-create-promotion-zixuan'),
+    path: '/main/seo/promotion/create/zixuan',
+    name: 'seo-create-zixuan-promotion',
+  },
+  {
+    component: () => import('com/seo-promotion-cibao/create'),
+    path: '/main/seo/promotion/create/cibao',
+    name: 'seo-create-cibao-promotion',
+    beforeEnter: async (to, from, next) => {
+      const license = await getBusinessLicense()
+      if (license) {
+        next()
+      } else {
+        Message.error('无权限访问')
+      }
+    },
+  },
+  {
+    component: () => import('com/seo-promotion-cibao/update'),
+    path: '/main/seo/promotion/cibao/:id/update',
+    name: 'seo-update-cibao-promotion',
+  },
+]
 
 export const router = new VueRouter({
   mode: 'history',
-  routes: [{
-    component: Homepage,
-    path: '/main',
-    name: 'root'
-  }, {
-    component: () => import('com/redirect'),
-    path: '/main/redirect-to',
-    name: 'bax-redirect-page'
-  }, {
-    component: () => import('com/payment-success'),
-    path: '/main/payment-success',
-    name: 'payment-success-page'
-  }, {
-    component: () => import('com/account'),
-    path: '/main/account',
-    name: 'account'
-  }, {
-    component: () => import('com/coupon'),
-    path: '/main/coupon',
-    name: 'coupon'
-  }, {
-    component: () => import('com/notice'),
-    path: '/main/notice',
-    name: 'notice'
-  },
-  ...bwRoutes,
-  ...qcRoutes,
-  ...qwtRoutes,
-  ...sspRoutes,
-  ...gwRoutes,
-  ...seoRoutes,
-  {
-    path: '*',
-    redirect: '/main'
-  }]
+  routes: [
+    {
+      component: Homepage,
+      path: '/main',
+      name: 'root',
+    },
+    {
+      component: () => import('com/redirect'),
+      path: '/main/redirect-to',
+      name: 'bax-redirect-page',
+    },
+    {
+      component: () => import('com/payment-success'),
+      path: '/main/payment-success',
+      name: 'payment-success-page',
+    },
+    {
+      component: () => import('com/account'),
+      path: '/main/account',
+      name: 'account',
+    },
+    {
+      component: () => import('com/coupon'),
+      path: '/main/coupon',
+      name: 'coupon',
+    },
+    {
+      component: () => import('com/notice'),
+      path: '/main/notice',
+      name: 'notice',
+    },
+    ...bwRoutes,
+    ...qcRoutes,
+    ...qwtRoutes,
+    ...sspRoutes,
+    ...gwRoutes,
+    ...seoRoutes,
+    {
+      path: '*',
+      redirect: '/main',
+    },
+  ],
 })
 
 const app = new Vue({
-  render: h => h(Bax),
-  router
+  render: (h) => h(Bax),
+  router,
 })
 
 app.$mount('#bax')
