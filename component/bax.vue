@@ -216,6 +216,7 @@ export default {
     padding-left: 180px;
     background-color: #eeeff0;
     overflow-x: hidden;
+    scroll-behavior: smooth;
   }
   .view {
     margin: 12px 12px 32px;
