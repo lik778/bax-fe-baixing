@@ -234,7 +234,7 @@ export default {
     }
   },
   mounted() {
-    let { cities, device, word } = this.$route.query
+    let { cities = '', device, word } = this.$route.query
     device = Number(device)
 
     Object.assign(this.form, {

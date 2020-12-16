@@ -7,7 +7,9 @@ import * as qapi from 'api/qianci'
 import Sentry from '../lib/sentry'
 
 const gStore = observable({
-  _currentUser: {},
+  _currentUser: {
+    roles: []
+  },
   _allCategories: [],
   _allAreas: [],
   _allQianciAreas: {},
@@ -36,27 +38,38 @@ const gStore = observable({
   }),
 
   getCurrentUser: action(async function() {
-    const currentUser = await aapi.getCurrentUser()
-    const { roles, realAgentId } = currentUser
-    currentUser.shAgent = isNormalUser(roles)
-    currentUser.allowFmRecharge = !notAllowFengmingRecharge(roles, realAgentId)
-    this._currentUser = currentUser
-    // 打点数据中添加用户身份信息
-    window.__trackerData.common = {
-      ...window.__trackerData.common,
-      baixing_id: currentUser.baixingId,
-      bax_id: currentUser.id
-    }
+    try {
+      const currentUser = await aapi.getCurrentUser()
+      const { roles = [], realAgentId } = currentUser
 
-    // sentry报错添加user
-    Sentry.configureScope(scope => {
-      scope.setUser({
-        id: currentUser.baixingId,
-        name: currentUser.name,
-        mobile: currentUser.mobile,
-        baxId: currentUser.id
+      currentUser.shAgent = isNormalUser(roles)
+      currentUser.allowFmRecharge = !notAllowFengmingRecharge(
+        roles,
+        realAgentId
+      )
+
+      this._currentUser = currentUser
+      // 打点数据中添加用户身份信息
+      window.__trackerData.common = {
+        ...window.__trackerData.common,
+        baixing_id: currentUser.baixingId,
+        bax_id: currentUser.id,
+      }
+
+      // sentry报错添加user
+      Sentry.configureScope((scope) => {
+        scope.setUser({
+          id: currentUser.baixingId,
+          name: currentUser.name,
+          mobile: currentUser.mobile,
+          baxId: currentUser.id,
+        })
       })
-    })
+    } catch (noPermissionError) {
+      // 先在 Sentry 验证一段时间再将抛错移除
+      console.error(noPermissionError)
+      throw new Error('登录失败')
+    }
   }),
 
   getCategories: action(async function() {

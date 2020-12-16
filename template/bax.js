@@ -62,9 +62,10 @@ import { allowUseKaPackage } from 'util/fengming-role'
 import { getCurrentUser } from 'api/account'
 import pick from 'lodash.pick'
 import { notAllowFengmingRecharge } from 'util/role'
-// import { getRouteParam } from 'util'
+import { parseQuery, stringifyQuery } from 'util'
 
 import '../cssbase/index.css'
+import clone from 'clone'
 
 // track common data
 window.__trackerData = {
@@ -173,6 +174,42 @@ const eventBus = {
   install(Vue) { Vue.prototype.$bus = new Vue() }
 }
 Vue.use(eventBus)
+
+// 重写router push和replace方法, 放入user_id和sales_id
+function getExtraRoute(route) {
+  let newRoute = typeof route === 'string' ? route : clone(route)
+  if (window.location) {
+    const querys = pick(parseQuery(window.location.search), ['user_id', 'sales_id'])
+    if (typeof newRoute === 'string') {
+      if (route.indexOf('?') > -1) {
+        newRoute += `&${stringifyQuery(querys)}`
+      } else {
+        newRoute += `?${stringifyQuery(querys)}`
+      }
+    } else {
+      newRoute = {
+        ...route,
+        query: {
+          ...route.query,
+          ...querys
+        }
+      }
+    }
+  }
+  return newRoute
+}
+const routerPush = VueRouter.prototype.push
+VueRouter.prototype.push = function push(route) {
+  return routerPush.call(this, getExtraRoute(route)).catch(error => {
+    console.log(error)
+  })
+}
+const routerReplace = VueRouter.prototype.replace
+VueRouter.prototype.replace = function replace() {
+  return routerReplace.call(this, getExtraRoute(route)).catch(error => {
+    console.log(error)
+  })
+}
 
 
 const gwRoutes = [{
@@ -391,22 +428,6 @@ export const router = new VueRouter({
     path: '*',
     redirect: '/main'
   }]
-})
-router.beforeEach((to, from, next) => {
-  window.scrollTo(0, 0)
-  if (to.query.user_id) {
-    next()
-    return
-  }
-  if (from.query.user_id) {
-    const query = pick(from.query, ['user_id', 'sales_id'])
-    next({
-      path: to.path,
-      query
-    })
-  } else {
-    next()
-  }
 })
 
 const app = new Vue({
