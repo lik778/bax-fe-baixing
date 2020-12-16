@@ -88,6 +88,14 @@ export function parseQuery(queryString) {
   return query
 }
 
+export function stringifyQuery(res, separator = '&') {
+  if (isString(res)) return res
+  if (!isObj) return ''
+  return Object.entries(res).reduce((curr, [key, val]) => {
+    return curr.concat(`${(key)}=${(val)}`)
+  }, []).join('&')
+}
+
 export function redirect(p, qs) {
   if (!p.startsWith('/')) {
     p = '/' + p
@@ -124,6 +132,10 @@ export function getLandingpageByPageProtocol(landingPage) {
 
 export function isObj(obj) {
   return Object.prototype.toString.call(obj) === '[object Object]'
+}
+
+export function isString(obj) {
+  return Object.prototype.toString.call(obj) === '[object String]'
 }
 
 // 去除对象的空字段

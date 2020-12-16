@@ -117,13 +117,17 @@ export default {
     this.$bus.$on("updateQcAreaSelectorView", province => {
       const removeProvinceIndex = this.selectedAreas.findIndex(
         x => x.name === province.name
-      );
-      this.selectedAreas.splice(removeProvinceIndex, 1);
+      )
+      if (removeProvinceIndex !== -1) {
+        this.selectedAreas.splice(removeProvinceIndex, 1)
+      }
       const removeProvince = this.provinceList.find(
         x => x.name === province.name
-      );
-      removeProvince.checked = false;
-    });
+      )
+      if (removeProvince) {
+        removeProvince.checked = false
+      }
+    })
   },
   methods: {
     disabledProvinceCheck(province) {
