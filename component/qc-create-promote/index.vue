@@ -80,6 +80,7 @@
               />
             </el-form-item>
             <el-form-item>
+              <h3 ref="keyword-input-title-with-padding"></h3>
               <el-button
                 class="check-word-btn"
                 :disabled="isEdit"
@@ -286,6 +287,14 @@ export default {
         const isKeywordValid = this.validKeywords()
         if (isValid && isKeywordValid) {
           this.keywordsPanelVisible = true
+          this.$nextTick(() => {
+            try {
+              const target = this.$refs['keyword-input-title-with-padding']
+              target.scrollIntoView && target.scrollIntoView()
+            } catch (error) {
+              console.error(error)
+            }
+          })
         }
       })
     },

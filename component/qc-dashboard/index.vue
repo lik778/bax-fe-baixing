@@ -136,7 +136,12 @@ import 'echarts/lib/component/legend'
 import 'echarts/lib/component/tooltip'
 import 'echarts/lib/component/title'
 
-import { getPromoteList, getWordPVsList, getWordPVsChartData } from 'api/qianci'
+import {
+  getPromoteList,
+  getWordPVsList,
+  getWordPVsChartData,
+  getPreferredWordsPV,
+} from 'api/qianci'
 import {
   PROMOTE_STATUS_PENDING_EDIT,
   PROMOTE_STATUS_EDITED,
@@ -238,6 +243,8 @@ export default {
     )
     this.store = { targetUserId, salesId }
     await this.initPromoteListOptions()
+    this.selectPromote(this.options.promoteList[0].value)
+    this.initPieChart()
     this.listenChartResize()
   },
   methods: {
@@ -262,9 +269,8 @@ export default {
         label: x.coreWord,
         value: +x.id,
       }))
-      this.selectPromote(this.options.promoteList[0].value)
     },
-    async initCharts() {
+    async initLiquidChart() {
       const { targetUserId, salesId } = this.store
       const query = {
         targetUserId,
@@ -273,23 +279,28 @@ export default {
         // promoteId: 1046,
       }
       let response = null
-      let online = { web: 600, wap: 600 }
       let clickCount = { totalCount: 0, yesterdayCount: 0 }
       let visitCount = { totalCount: 0, yesterdayCount: 0 }
       try {
         this.loading.charts = true
         this.visible.showNoChartData = false
         response = await getWordPVsChartData(query)
-        online = { web: 600, wap: 600 }
         clickCount = response.clickCount
         visitCount = response.visitCount
+        this.setLiquidFillChart(visitCount, clickCount)
       } catch (error) {
         this.visible.showNoChartData = true
+        this.setLiquidFillChart(visitCount, clickCount)
       } finally {
         this.loading.charts = false
       }
-
-      /* 饼图 */
+    },
+    async initPieChart() {
+      const response = await getPreferredWordsPV({ id: this.query.promoteID })
+      const { expandedNum = 0 } = response || {}
+      const online = {}
+      online.wap = Math.floor(expandedNum / 2)
+      online.web = expandedNum - online.wap
 
       const platformData = clone(this.platformChartOptions)
       // 确保饼图中至少有一个像素的数据
@@ -312,10 +323,10 @@ export default {
           },
         },
       ]
-      platformData.title.text = '1200个'
+      platformData.title.text = `${online.web + online.wap}个`
       this.platformChartOptions = platformData
-
-      /* 水球图 */
+    },
+    setLiquidFillChart(visitCount, clickCount) {
       const liquidChartDatas = [visitCount.totalCount, clickCount.totalCount]
       const yesterdayCount = [
         visitCount.yesterdayCount,
@@ -452,7 +463,8 @@ export default {
     selectPromote(id) {
       this.query.promoteID = +id
       this.$nextTick(() => {
-        this.initCharts()
+        this.initLiquidChart()
+        this.initPieChart()
         this.initListData()
       })
     },
@@ -462,10 +474,10 @@ export default {
     },
     listenChartResize() {
       // FIXME: 响应式图表
-      // window && window.addEventListener('resize', () => this.initCharts())
+      // window && window.addEventListener('resize', () => this.initLiquidChart())
       // this.$on(
       //   'hook:beforeDestroy',
-      //   window.removeEventListener('resize', this.initCharts)
+      //   window.removeEventListener('resize', this.initLiquidChart)
       // )
     },
   },
