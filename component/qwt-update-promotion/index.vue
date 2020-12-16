@@ -592,7 +592,7 @@ export default {
         })
     },
     currentNegativeKeywords() {
-      const { negativeWords: originKeywords } = this.originPromotion
+      const { negativeWords: originKeywords = [] } = this.originPromotion
       const {
         updatedNegativeKeywords: updatedKeywords,
         deletedNegativeKeywords: deletedKeywords,
