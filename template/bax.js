@@ -1,4 +1,3 @@
-/*eslint-disable*/
 import '../lib/trackerlib'
 import sentry from '../lib/sentry'
 
@@ -169,7 +168,6 @@ Vue.prototype.$formatter = {
 }
 
 // 该组件引入echarts，体积较大，异步加载提升用户体验
-// eslint-disable-next-line
 Vue.component('homepage-campaign', () => import('../component/homepage/campaign'))
 
 // 引入eventBus
