@@ -29,9 +29,11 @@ import { isPro } from 'config'
 
 import {
   allowVerifyAd,
-  parseQuery,
-  redirectTo
+  parseQuery
 } from 'util'
+import {
+  redirectTo
+} from 'utils'
 
 import {
   getCurrentUser,
