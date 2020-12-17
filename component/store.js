@@ -1,4 +1,3 @@
-
 import { observable, action, toJS } from 'mobx'
 import { isNormalUser, notAllowFengmingRecharge } from 'util/role'
 import * as aapi from 'api/account'
@@ -8,13 +7,12 @@ import Sentry from '../lib/sentry'
 
 const gStore = observable({
   _currentUser: {
-    roles: []
+    roles: [],
   },
   _allCategories: [],
   _allAreas: [],
   _allQianciAreas: {},
   _allRoles: [],
-  
 
   addUserLeadVisible: false,
 
@@ -33,11 +31,11 @@ const gStore = observable({
   get allQianciAreas() {
     return toJS(this._allQianciAreas)
   },
-  toggleAddUserLeadVisible: action(function() {
+  toggleAddUserLeadVisible: action(function () {
     this.addUserLeadVisible = !this.addUserLeadVisible
   }),
 
-  getCurrentUser: action(async function() {
+  getCurrentUser: action(async function () {
     try {
       const currentUser = await aapi.getCurrentUser()
       const { roles = [], realAgentId } = currentUser
@@ -66,27 +64,24 @@ const gStore = observable({
         })
       })
     } catch (noPermissionError) {
-      // 先在 Sentry 验证一段时间再将抛错移除
       console.error(noPermissionError)
-      throw new Error('登录失败')
     }
   }),
 
-  getCategories: action(async function() {
+  getCategories: action(async function () {
     this._allCategories = await mapi.getCategories()
   }),
 
-  getAreas: action(async function() {
+  getAreas: action(async function () {
     this._allAreas = await mapi.getAreas()
   }),
 
-  getQianciAreas: action(async function() {
+  getQianciAreas: action(async function () {
     this._allQianciAreas = await qapi.getQcAllAreas()
   }),
-  getRoles: action(async function() {
+  getRoles: action(async function () {
     this._allRoles = await aapi.getRoles()
-  })
-  
+  }),
 })
 
 export default gStore
