@@ -244,9 +244,11 @@ export default {
     )
     this.store = { targetUserId, salesId }
     await this.initPromoteListOptions()
-    this.selectPromote(this.options.promoteList[0].value)
-    this.initPieChart()
-    this.listenChartResize()
+    if (this.options.promoteList.length) {
+      this.selectPromote(this.options.promoteList[0].value)
+      this.initPieChart()
+      this.listenChartResize()
+    }
   },
   methods: {
     // 初始化推广计划列表
@@ -423,7 +425,7 @@ export default {
       const wrapperClass = `snapshot-content-${randomID}`
 
       // 快照样式修复
-      let snapshotFix = `<style>/*这里可以放一些快照页面样式的修复代码*/</style>`
+      const snapshotFix = `<style>/*这里可以放一些快照页面样式的修复代码*/</style>`
       html += snapshotFix
 
       const style =
