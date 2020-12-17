@@ -24,7 +24,7 @@
         prop="ipAddress"
         :formatter="({ ipAddress }) => formatterIP(ipAddress)"
       />
-      <el-table-column label="访问界面" prop="websiteUrl" min-width="200">
+      <el-table-column label="访问界面" prop="websiteUrl" min-width="200" show-overflow-tooltip>
         <template slot-scope="{ row }">
           <a class="link" :href="row.websiteUrl" target="_blank">{{
             row.websiteUrl
@@ -36,7 +36,7 @@
           <span v-if="row.cost_status === INVALID_VISITOR_STATUS" class="red"
             >重复点击（不扣费）</span
           >
-          <span v-else>{{ row.cost }}元</span>
+          <span v-else>{{ $formatter.f2y(row.cost) }}元</span>
         </template>
       </el-table-column>
     </el-table>
@@ -96,9 +96,9 @@ export default {
     formatterTimestamp(timestamp, date = true) {
       if (!timestamp) return 0
       if (date) {
-        return dayjs(timestamp * 1000).format('YYYY-MM-DD')
+        return dayjs(timestamp).format('YYYY-MM-DD')
       }
-      return dayjs(timestamp * 1000).format('HH:mm')
+      return dayjs(timestamp).format('HH:mm')
     },
     async handleDeductDetail() {
       const { rows, total } = await getDeductDetail({
@@ -106,7 +106,7 @@ export default {
         offset: this.offset,
         limit: this.limit,
         startDate: dayjs().subtract(8, 'day').startOf('date').unix(),
-        endDate: dayjs().subtract(1, 'day').startOf('date').unix(),
+        endDate: dayjs().subtract(1, 'day').endOf('date').unix(),
       })
       this.data = rows
       this.total = total
@@ -148,6 +148,16 @@ export default {
   }
   & .red {
     color: #ff6350;
+  }
+}
+</style>
+
+<style lang="postcss">
+.visitor-detail {
+  & th, & td {
+    & .cell {
+      padding: 0 18px !important;
+    }
   }
 }
 </style>

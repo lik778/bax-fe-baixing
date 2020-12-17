@@ -1,4 +1,4 @@
-
+/*eslint-disable*/
 import '../lib/trackerlib'
 import sentry from '../lib/sentry'
 
@@ -66,6 +66,7 @@ import { parseQuery, stringifyQuery } from 'util'
 
 import '../cssbase/index.css'
 import clone from 'clone'
+import { f2y } from 'util'
 
 // track common data
 window.__trackerData = {
@@ -163,10 +164,12 @@ Vue.use(Vue2Filters)
 Vue.prototype.$formatter = {
   join: (arrs = [], seq = '、') => arrs.join(seq),
   date: (time = '') => !time ? time : dayjs(time).format('YYYY-MM-DD'),
-  mapWith: (key = '', obj = {}) => obj[key]
+  mapWith: (key = '', obj = {}) => obj[key],
+  f2y: f2y
 }
 
 // 该组件引入echarts，体积较大，异步加载提升用户体验
+// eslint-disable-next-line
 Vue.component('homepage-campaign', () => import('../component/homepage/campaign'))
 
 // 引入eventBus

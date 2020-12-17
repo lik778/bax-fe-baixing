@@ -15,21 +15,21 @@
         <span>扣费统计</span>
         <span class="tip"
           >(按点击扣费，当前计划实扣点击单价为
-          <span class="red">{{ toFixedNum(deductInfo.unitPrice, 1) }}元</span>)
+          <span class="red">{{ $formatter.f2y(deductInfo.unitPrice) }}元</span>)
         </span>
       </div>
       <div class="detail">
         <div class="detail-item">
           <div class="title">近7天消耗（元）</div>
           <div class="cost">
-            {{ toFixedNum(deductInfo.lastSevenDaysConsumption, 2) }}
+            {{ $formatter.f2y(deductInfo.lastSevenDaysConsumption) }}
           </div>
         </div>
         <div class="split"></div>
         <div class="detail-item">
           <div class="title">昨日消耗（元）</div>
           <div class="cost">
-            {{ toFixedNum(deductInfo.yesterdayConsumption, 2) }}
+            {{ $formatter.f2y(deductInfo.yesterdayConsumption) }}
           </div>
         </div>
       </div>
@@ -68,14 +68,7 @@ export default {
       },
     }
   },
-  async mounted() {
-    await this.handleValidateCampaigns()
-  },
   methods: {
-    toFixedNum(num, decimal = 2) {
-      if (isNaN(num)) return num
-      return Number(num).toFixed(decimal)
-    },
     async getFinalUserId() {
       const { user_id: userId } = this.$route.query
       if (userId) return userId
@@ -83,6 +76,7 @@ export default {
     },
     async handleValidateCampaigns() {
       const uid = await this.getFinalUserId()
+      if (!uid) return
       this.campaignIds = await getValidateCampaigns(uid)
       this.campaignId = this.campaignIds[0].id
     },
@@ -95,6 +89,13 @@ export default {
     },
   },
   watch: {
+    userInfo: {
+      immediate: true,
+      deep: true,
+      handler(newVal) {
+        this.handleValidateCampaigns()
+      }
+    },
     campaignId(newVal) {
       this.handleDeductStatistic()
     },
@@ -107,7 +108,6 @@ export default {
 
 .visitor {
   color: #666;
-  max-width: 1200px;
   & > .select {
     & > .select-campaign {
       margin: 0 8px 0 18px;
