@@ -24,7 +24,12 @@
         prop="ipAddress"
         :formatter="({ ipAddress }) => formatterIP(ipAddress)"
       />
-      <el-table-column label="访问界面" prop="websiteUrl" min-width="200" show-overflow-tooltip>
+      <el-table-column
+        label="访问界面"
+        prop="websiteUrl"
+        min-width="200"
+        show-overflow-tooltip
+      >
         <template slot-scope="{ row }">
           <a class="link" :href="row.websiteUrl" target="_blank">{{
             row.websiteUrl
@@ -141,7 +146,6 @@ export default {
   }
   & > .pagination-container {
     margin-top: 26px;
-    float: right;
   }
   & .link {
     color: #35a5e4;
@@ -154,7 +158,8 @@ export default {
 
 <style lang="postcss">
 .visitor-detail {
-  & th, & td {
+  & th,
+  & td {
     & .cell {
       padding: 0 18px !important;
     }
