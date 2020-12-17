@@ -11,7 +11,7 @@
         active-text-color="#FF6350"
         text-color="#333"
         ref="menu"
-       >
+      >
         <el-menu-item index="/ka/vendor/site" @click="goKaSuperPage" v-if="isKaSuperman">
           <i class="el-icon-info" />
           官网超人入口
@@ -33,7 +33,7 @@
           </el-menu-item>
           <el-menu-item index="seo-charge">
             <router-link :to="{ name: 'seo-charge' }" tag="p">
-                首页宝
+              首页宝
             </router-link>
           </el-menu-item>
         </el-submenu>
@@ -82,17 +82,17 @@
           </template>
           <el-menu-item index="bw-query-price" v-if="!userInfo.shAgent">
             <router-link :to="{ name: 'bw-query-price' }" tag="p">
-              <i class="material-icons" style="font-size: 16px; margin-right: 11px; vertical-align: -3px;"></i>新建标王推广
+              新建标王推广
             </router-link>
           </el-menu-item>
           <el-menu-item index="bw-plan-list">
             <router-link :to="{ name: 'bw-plan-list' }" tag="p">
-              <i class="material-icons" style="font-size: 16px; margin-right: 11px; vertical-align: -3px;"></i>管理标王推广
+              管理标王推广
             </router-link>
           </el-menu-item>
           <el-menu-item index="bw-manual" v-if="!userInfo.shAgent">
             <router-link :to="{ name: 'bw-manual'}" tag="p">
-              <i class="material-icons" style="font-size: 16px; margin-right: 11px; vertical-align: -3px;"></i>人工报价记录
+              人工报价记录
             </router-link>
           </el-menu-item>
         </el-submenu>
@@ -102,17 +102,17 @@
           </template>
           <el-menu-item index="qc-create-promote" v-if="!userInfo.shAgent">
             <router-link :to="{ name: 'qc-create-promote' }" tag="p">
-              <i class="material-icons" style="font-size: 16px; margin-right: 11px; vertical-align: -3px;"></i>新建订单
+              新建订单
             </router-link>
           </el-menu-item>
           <el-menu-item index="qc-promote-list">
             <router-link :to="{ name: 'qc-promote-list' }" tag="p">
-              <i class="material-icons" style="font-size: 16px; margin-right: 11px; vertical-align: -3px;"></i>管理推广
+              管理推广
             </router-link>
           </el-menu-item>
           <el-menu-item index="qc-word-list" v-if="!userInfo.shAgent">
             <router-link :to="{ name: 'qc-word-list' }" tag="p">
-              <i class="material-icons" style="font-size: 16px; margin-right: 11px; vertical-align: -3px;"></i>查词记录
+              查词记录
             </router-link>
           </el-menu-item>
         </el-submenu>
@@ -132,23 +132,17 @@
           </template>
           <el-menu-item index="qwt-dashboard">
             <router-link :to="{ name: 'qwt-dashboard'}" tag="p">
-              <i class="material-icons"
-                 style="font-size: 16px; margin-right: 11px; vertical-align: -3px;">
-              </i>站外推广报表
+              站外推广报表
             </router-link>
           </el-menu-item>
           <el-menu-item index="bw-dashboard">
             <router-link :to="{ name: 'bw-dashboard'}" tag="p">
-              <i class="material-icons"
-                 style="font-size: 16px; margin-right: 11px; vertical-align: -3px;">
-              </i>标王推广报表
+              标王推广报表
             </router-link>
           </el-menu-item>
           <el-menu-item index="qc-dashboard">
             <router-link :to="{ name: 'qc-dashboard'}" tag="p">
-              <i class="material-icons"
-                 style="font-size: 16px; margin-right: 11px; vertical-align: -3px;">
-              </i>易慧推报表
+              易慧推报表
             </router-link>
           </el-menu-item>
         </el-submenu>
@@ -379,6 +373,10 @@ $active-bg: #fff7eb;
     margin-left: -3px;
     color: rgb(255, 99, 80);
     font-size: 16px;
+  }
+
+  ul.el-menu.el-menu--inline > .el-menu-item > * {
+    padding-left: 8px;
   }
 }
 </style>
