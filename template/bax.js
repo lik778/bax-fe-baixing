@@ -216,7 +216,7 @@ VueRouter.prototype.push = function push(route) {
   })
 }
 const routerReplace = VueRouter.prototype.replace
-VueRouter.prototype.replace = function replace() {
+VueRouter.prototype.replace = function replace(route) {
   return routerReplace.call(this, getExtraRoute(route)).catch((error) => {
     console.log(error)
   })
