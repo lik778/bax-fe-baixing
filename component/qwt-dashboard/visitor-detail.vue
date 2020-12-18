@@ -38,7 +38,9 @@
       </el-table-column>
       <el-table-column label="扣费" prop="cost" min-width="140">
         <template slot-scope="{ row }">
-          <span v-if="row.cost_status === INVALID_VISITOR_STATUS" class="red"
+          <span
+            v-if="Number(row.costStatus) === INVALID_VISITOR_STATUS"
+            class="red"
             >重复点击（不扣费）</span
           >
           <span v-else>{{ $formatter.f2y(row.cost) }}元</span>
@@ -141,6 +143,7 @@ export default {
 
 <style lang="postcss" scoped>
 .visitor-detail {
+  margin-left: 18px;
   & > .info {
     padding: 0 0 18px 18px;
   }
