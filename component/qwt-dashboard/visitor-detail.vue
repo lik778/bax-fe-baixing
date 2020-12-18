@@ -151,7 +151,11 @@ export default {
     margin-top: 26px;
   }
   & .link {
+    display: block;
     color: #35a5e4;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   & .red {
     color: #ff6350;
