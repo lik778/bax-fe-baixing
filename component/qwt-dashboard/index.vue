@@ -209,7 +209,7 @@ export default {
       let startDate
       let endDate
 
-      if (query.timeType === 'custom') {
+      if (query.timeRange && query.timeType === 'custom') {
         startDate = toTimestamp(query.timeRange[0], 'YYYY-MM-DD')
         endDate = toTimestamp(query.timeRange[1], 'YYYY-MM-DD')
       } else {
@@ -240,11 +240,12 @@ export default {
       const offset = opts.offset || 0
       const { query, checkedCampaignIds } = this
       const { userId, salesId } = this.salesInfo
+      console.log(query.timeRange)
 
       let startAt
       let endAt
 
-      if (query.timeType === 'custom') {
+      if (query.timeRange && query.timeType === 'custom') {
         startAt = toTimestamp(query.timeRange[0], 'YYYY-MM-DD')
         endAt = toTimestamp(query.timeRange[1], 'YYYY-MM-DD')
       } else {
