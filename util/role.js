@@ -233,7 +233,7 @@ export function allowNotSeeBwNewPrice(roles, agentId) {
   return [1].includes(agentId) && isOnlyBaixingUser
 }
 
-export function isNormalUser(roles) {
+export function isNormalUser(roles = []) {
   const shAgent = localStorage.getItem('shAgent')
   if (shAgent) return false
   if (roles.length === 1) {
