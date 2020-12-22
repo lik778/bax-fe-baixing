@@ -103,9 +103,7 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
-@import '../../cssbase/var';
-
+<style lang="scss" scoped>
 .visitor {
   color: #666;
   & > .select {
