@@ -157,122 +157,122 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
-  @define-mixin placeholder {
-    height: 80%;
+<style lang="scss" scoped>
+@mixin placeholder {
+  height: 80%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 17px;
+  color: #999;
+}
+.layout-left {
+  min-height: 274px;
+  & .layout-content {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    font-size: 17px;
-    color: #999;
   }
-  .layout-left {
-    min-height: 274px;
-    & .layout-content {
+  & .layout-content {
+    margin-bottom: 28px;
+  }
+  & .report {
+    width: 45%;
+    flex: 9;
+    & .radio-group {
       display: flex;
-    }
-    & .layout-content {
-      margin-bottom: 28px;
-    }
-    & .report {
-      width: 45%;
-      flex: 9;
-      & .radio-group {
-        display: flex;
-        width: 70%;
-        justify-content: space-around;
-        margin: 40px auto;
-        & >>> .el-radio__label {
-          font-weight: 600;
-        }
-      }
-      & .data-list {
-        display: flex;
-      }
-      & .data {
-        padding: 6px 0;
-        text-align: center;
-        line-height: 2;
-        width: 100%;
-        & ~ .data {
-          border-left: 1px solid #e6e6e6;
-        }
-        & .num {
-          font-size: 24px;
-          color: #FF4F49;
-          font-weight: 600;
-        }
-      }
-    }
-    & .description {
-      width: 55%;
-      flex: 10;
-      margin-top: 34px;
-      line-height: 28px;
-      & strong {
-        font-size: 24px;
-        color: #FF4F49;
-        margin: 0 4px;
-      }
-      & a {
-        color: #35A5E4;
-      }
-      & .actions {
-        margin-top: 22px;
-        & >>> .el-button {
-          min-width: 110px;
-          padding: 8px 12px;
-        }
-      }
-      &.mt {
-        margin-top: 60px;
-      }
-    }
-  }
-  .layout-right {
-    min-height: 274px;
-    padding-bottom: 20px !important;
-    & .layout-content {
-      margin-top: 22px;
-      & .wrap {
-        display: flex;
-        text-align: center;
-        margin: 16px 0;
-      }
-      & .dt {
+      width: 70%;
+      justify-content: space-around;
+      margin: 40px auto;
+      & /deep/ .el-radio__label {
         font-weight: 600;
       }
-      & .dd {
+    }
+    & .data-list {
+      display: flex;
+    }
+    & .data {
+      padding: 6px 0;
+      text-align: center;
+      line-height: 2;
+      width: 100%;
+      & ~ .data {
+        border-left: 1px solid #e6e6e6;
       }
-      & .col {
-        width: 25%;
-        flex: none;
-        &.action {
-          cursor: pointer;
-          color:  #ED7D00;
-        }
-        &.renew {
-          padding: 0;
-          color:  #ED7D00;
-        }
-      }
-      & >>> .col.is-disabled {
-        color: #C0C4CC;
+      & .num {
+        font-size: 24px;
+        color: #ff4f49;
+        font-weight: 600;
       }
     }
   }
-  .no-promote-placeholder {
-    @mixin placeholder;
-    & > .text {
-      margin-bottom: 20px;
+  & .description {
+    width: 55%;
+    flex: 10;
+    margin-top: 34px;
+    line-height: 28px;
+    & strong {
+      font-size: 24px;
+      color: #ff4f49;
+      margin: 0 4px;
+    }
+    & a {
+      color: #35a5e4;
+    }
+    & .actions {
+      margin-top: 22px;
+      & /deep/ .el-button {
+        min-width: 110px;
+        padding: 8px 12px;
+      }
+    }
+    &.mt {
+      margin-top: 60px;
     }
   }
-  .no-promote-data-placeholder {
-    @mixin placeholder;
-    font-size: 16px;
-    & .el-icon-info {
-      margin-right: 4px;
+}
+.layout-right {
+  min-height: 274px;
+  padding-bottom: 20px !important;
+  & .layout-content {
+    margin-top: 22px;
+    & .wrap {
+      display: flex;
+      text-align: center;
+      margin: 16px 0;
+    }
+    & .dt {
+      font-weight: 600;
+    }
+    & .dd {
+    }
+    & .col {
+      width: 25%;
+      flex: none;
+      &.action {
+        cursor: pointer;
+        color: #ed7d00;
+      }
+      &.renew {
+        padding: 0;
+        color: #ed7d00;
+      }
+    }
+    & /deep/ .col.is-disabled {
+      color: #c0c4cc;
     }
   }
+}
+.no-promote-placeholder {
+  @include placeholder;
+  & > .text {
+    margin-bottom: 20px;
+  }
+}
+.no-promote-data-placeholder {
+  @include placeholder;
+  font-size: 16px;
+  & .el-icon-info {
+    margin-right: 4px;
+  }
+}
 </style>

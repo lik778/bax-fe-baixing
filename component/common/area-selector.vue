@@ -479,7 +479,7 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 
 @import './selector';
 

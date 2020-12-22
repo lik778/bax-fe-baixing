@@ -66,27 +66,27 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
-  .payment-success-page-container {
-    background-color: #fff;
-    padding-top: 90px;
-    margin: 0;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    font-size: 24px;
-    letter-spacing: 0.1em;
+<style lang="scss" scoped>
+.payment-success-page-container {
+  background-color: #fff;
+  padding-top: 90px;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  font-size: 24px;
+  letter-spacing: 0.1em;
 
-    & > .icon {
-      margin-bottom: 24px;
-      font-size: 72px;
-      color: rgb(255, 99, 80);
-    }
-
-    & .desc {
-      color: #666;
-      font-size: 15px;
-      margin-top: 10px;
-    }
+  & > .icon {
+    margin-bottom: 24px;
+    font-size: 72px;
+    color: rgb(255, 99, 80);
   }
+
+  & .desc {
+    color: #666;
+    font-size: 15px;
+    margin-top: 10px;
+  }
+}
 </style>

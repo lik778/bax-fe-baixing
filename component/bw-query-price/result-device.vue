@@ -45,7 +45,7 @@
   }
 </script>
 
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 .row {
   & .label {
     color: #999;
@@ -60,9 +60,9 @@
       font-size: 12px;
       color: #000;
       margin-left: 15px;
-      &  strong {
+      & strong {
         font-size: 18px;
-        color: #FF6350;
+        color: #ff6350;
       }
     }
   }

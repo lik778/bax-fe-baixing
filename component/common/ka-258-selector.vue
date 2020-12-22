@@ -30,7 +30,7 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 .selector {
   display: flex;
   align-items: center;

@@ -235,45 +235,44 @@ export default {
 }
 </script>
 
-<style scoped lang="postcss">
-  @import "../../cssbase/var.css";
-  .action-container {
-    margin-bottom: 20px;
-    & > label {
-      margin-left: 20px;
-      margin-right: 15px;
-    }
+<style lang="scss" scoped>
+.action-container {
+  margin-bottom: 20px;
+  & > label {
+    margin-left: 20px;
+    margin-right: 15px;
   }
-  .btn-wrap {
-    & > a {
-      color: var(--qwt-c-blue);
-    }
+}
+.btn-wrap {
+  & > a {
+    color: $qwt-c-blue;
   }
-  .pagination {
-    margin-top: 20px;
-  }
+}
+.pagination {
+  margin-top: 20px;
+}
 
-  >>> .order-list-parent-table {
-    & .child-table {
-      &:before {
-        display: none;
-      }
-      &.el-table .cell {
-        color: #aaa;
-      }
-      &.el-table tr:last-child {
-        & td {
-          border-bottom: 0;
-        }
-      }
+/deep/ .order-list-parent-table {
+  & .child-table {
+    &:before {
+      display: none;
     }
-    & .el-table__expanded-cell {
-      padding: 0 50px;
+    &.el-table .cell {
+      color: #aaa;
     }
-    & .hide-expand-row {
-      & .el-table__expand-icon {
-        display: none;
+    &.el-table tr:last-child {
+      & td {
+        border-bottom: 0;
       }
     }
   }
+  & .el-table__expanded-cell {
+    padding: 0 50px;
+  }
+  & .hide-expand-row {
+    & .el-table__expand-icon {
+      display: none;
+    }
+  }
+}
 </style>

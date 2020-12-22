@@ -201,7 +201,7 @@ export async function getChargeLogs(opts) {
 }
 
 export async function getCurrentAllBalanceBreif() {
-  const [ fengmingBalanceBrief, biaowangBalanceBrief ] = await Promise.all([
+  const [ fengmingBalanceBrief = {}, biaowangBalanceBrief = {} ] = await Promise.all([
     getCurrentBalanceBreif(WHOLE_SPU_CODE),
     getCurrentBalanceBreif(BIAO_WANG_SPU_CODE)
   ])

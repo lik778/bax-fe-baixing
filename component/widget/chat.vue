@@ -174,7 +174,7 @@ function highlight(msg, keywords) {
 
 </script>
 
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 .chat-button {
   position: fixed;
   bottom: 100px;
@@ -194,13 +194,13 @@ function highlight(msg, keywords) {
 .chat-container {
   z-index: 100;
   position: fixed;
-  bottom: 20px ;
+  bottom: 20px;
   right: 90px;
   width: 600px;
   height: 500px;
   border: 1px solid #eee;
   background-color: #f9f9f9;
-  box-shadow: 0 2px 15px 0 rgba(0,0,0,.1);
+  box-shadow: 0 2px 15px 0 rgba(0, 0, 0, 0.1);
 
   & > .header {
     position: absolute;
@@ -208,7 +208,7 @@ function highlight(msg, keywords) {
     width: 100%;
     height: 56px;
     background-color: #fff;
-    box-shadow: 0 4px 10px 0 rgba(0,0,0, .08);
+    box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.08);
 
     & > .title {
       margin-left: 20px;
@@ -258,35 +258,37 @@ function highlight(msg, keywords) {
           color: #fff;
         }
 
-        &.promote >>> p.link {
+        &.promote /deep/ p.link {
           color: #5482c4;
           cursor: pointer;
 
           & > em {
-            color: #FF7533;
+            color: #ff7533;
             font-style: normal;
           }
         }
 
         &.answer {
-          & >>> table th, & >>> table td {
+          & /deep/ table th,
+          & /deep/ table td {
             border: 1px solid gray;
           }
 
-          & >>> img {
+          & /deep/ img {
             max-width: 500px;
             margin: 5px;
           }
-          & >>> ol, & >>> ul {
+          & /deep/ ol,
+          & /deep/ ul {
             padding-left: 20px;
           }
-          & >>> ol > li, & >>> ul > li {
+          & /deep/ ol > li,
+          & /deep/ ul > li {
             list-style: disc;
           }
         }
       }
     }
-
   }
 
   & > .footer {
@@ -306,7 +308,7 @@ function highlight(msg, keywords) {
       border: 1px solid #eee;
       height: 40px;
       padding-left: 20px;
-      background: #F9F9F9;
+      background: #f9f9f9;
       border-radius: 4px;
       font-size: 14px;
     }
@@ -324,4 +326,3 @@ function highlight(msg, keywords) {
   }
 }
 </style>
-

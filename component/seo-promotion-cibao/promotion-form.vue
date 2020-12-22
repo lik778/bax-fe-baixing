@@ -155,22 +155,22 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
-  .input {
-    width: 400px;
-  }
-  .uploader {
-    width: 150px;
-  }
-  /deep/ .upload-image-wrapper {
-    cursor: pointer;
-    & > img {
-      border: 1px dashed transparent;
-      border-radius: 4px;
-      padding: 5px;
-      &:hover {
-        border-color: #999;
-      }
+<style lang="scss" scoped>
+.input {
+  width: 400px;
+}
+.uploader {
+  width: 150px;
+}
+/deep/ .upload-image-wrapper {
+  cursor: pointer;
+  & > img {
+    border: 1px dashed transparent;
+    border-radius: 4px;
+    padding: 5px;
+    &:hover {
+      border-color: #999;
     }
   }
+}
 </style>

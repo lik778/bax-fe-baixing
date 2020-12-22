@@ -63,11 +63,10 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 .keyword-view {
   border: 1px solid #ddd;
   width: 25%;
-  min-width: ;
   & > .header {
     position: relative;
     text-align: center;

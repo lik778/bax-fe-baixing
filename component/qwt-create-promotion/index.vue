@@ -830,9 +830,7 @@ export default {
 }
 </script>
 
-<style scoped lang="postcss">
-@import 'cssbase/mixin';
-
+<style scoped lang="scss">
 .input {
   width: 150px;
 }
@@ -883,7 +881,7 @@ strong.red {
       margin-bottom: 10px;
       background-color: #fff;
       padding: 20px;
-      box-shadow: 0 2px 9px 0 rgba(83,95,127,0.10);
+      box-shadow: 0 2px 9px 0 rgba(83, 95, 127, 0.1);
       &:last-child {
         padding-bottom: 40px;
       }
@@ -906,7 +904,7 @@ strong.red {
   margin-top: 8px;
 }
 .kw-tag-fh {
-  color: #16B7FF;
+  color: #16b7ff;
   background: #ecf5ff;
   border-color: #b3d8ff;
 }
@@ -914,7 +912,7 @@ strong.red {
   max-width: 100%;
   display: flex;
   flex-wrap: wrap;
-  & /deep/ .el-input__inner{
+  & /deep/ .el-input__inner {
     margin-top: 8px;
   }
 }
@@ -941,9 +939,9 @@ strong.red {
   }
 }
 .promotion-target {
-  & > header  {
+  & > header {
     & > p {
-      font-size: .88em;
+      font-size: 0.88em;
       color: #333;
       display: inline-block;
       margin-left: 20px;
@@ -958,13 +956,13 @@ strong.red {
 }
 </style>
 
-<style lang="postcss">
+<style lang="scss">
 .kw-tag-container {
   & > .kw-tag-fh {
     & > .el-tag__close {
-      color: #16B7FF;
+      color: #16b7ff;
       &:hover {
-        background: #16B7FF;
+        background: #16b7ff;
         color: #fff;
       }
     }

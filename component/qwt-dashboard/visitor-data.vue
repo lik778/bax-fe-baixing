@@ -94,7 +94,7 @@ export default {
       deep: true,
       handler(newVal) {
         this.handleValidateCampaigns()
-      }
+      },
     },
     campaignId(newVal) {
       this.handleDeductStatistic()

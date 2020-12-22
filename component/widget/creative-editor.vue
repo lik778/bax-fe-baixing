@@ -184,7 +184,7 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 .editor {
   padding-bottom: 10px;
 
@@ -218,5 +218,4 @@ export default {
     margin-left: 10px;
   }
 }
-
 </style>

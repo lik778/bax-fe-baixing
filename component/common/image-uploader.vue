@@ -19,11 +19,7 @@ import { upyun } from 'config'
 import { extname } from 'path'
 import { getUpyunToken } from 'api/material'
 
-const {
-  filehost: upyunFileHost,
-  host: upyunHost,
-  bucket
-} = upyun
+const { filehost: upyunFileHost, host: upyunHost, bucket } = upyun
 
 const request = new Fetch({
   mode: 'cors',
@@ -31,16 +27,15 @@ const request = new Fetch({
   prefix: upyunHost
 })
 
-
 async function uploadFile(file) {
-    if (!file) {
-      return
-    }
+  if (!file) {
+    return
+  }
 
   const ext = extname(file.name)
   const name = 'sst-img' + uuid() + ext
 
-  const expiration = (Date.now() / 1000 | 0) + 15 * 60
+  const expiration = ((Date.now() / 1000) | 0) + 15 * 60
   const { policy, sign } = await getUpyunToken({
     saveKey: name,
     expiration,
@@ -81,11 +76,18 @@ export default {
       type: Object,
       default() {
         return {
-          maxFileSize: { // kb
+          maxFileSize: {
+            // kb
             default: 2048
           },
           autoUpload: false,
-          types: ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/webp']
+          types: [
+            'image/jpeg',
+            'image/png',
+            'image/jpg',
+            'image/gif',
+            'image/webp'
+          ]
         }
       }
     },
@@ -114,7 +116,7 @@ export default {
         this.loading = true
         const uploadResult = await Promise.all(files.map(uploadFile))
         this.$emit('upload-success', uploadResult)
-      } catch(err) {
+      } catch (err) {
         this.$emit('upload-failed', err)
         console.error(err)
       } finally {
@@ -127,6 +129,3 @@ export default {
   }
 }
 </script>
-
-<style lang="postcss" scoped>
-</style>

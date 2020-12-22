@@ -47,17 +47,14 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
-@import '../../cssbase/var';
-@import 'cssbase/mixin';
-
+<style lang="scss" scoped>
 .main {
   display: flex;
   flex-flow: column;
   align-items: center;
 
   & > i {
-    color: var(--qwt-c-blue);
+    color: $qwt-c-blue;
     font-size: 28px;
   }
 
@@ -69,20 +66,20 @@ export default {
     font-size: 14px;
   }
 
-  &  button {
-    @mixin center;
+  & button {
+    @include center;
     margin: 10px auto 0 auto;
     height: 28px;
     border-radius: 14px;
     padding: 10px;
-    background: var(--qwt-c-blue);
+    background: $qwt-c-blue;
     color: white;
     cursor: pointer;
   }
 }
 </style>
 
-<style>
+<style lang="scss">
 .qwt-charge-dialog {
   & .el-icon-close {
     position: relative;

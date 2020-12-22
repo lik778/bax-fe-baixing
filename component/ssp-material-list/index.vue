@@ -1,6 +1,6 @@
 
 <template>
-  <div class="material">
+  <div class="page">
     <topbar :userInfo="userInfo">
       <label slot="title">物料管理</label>
     </topbar>
@@ -43,10 +43,3 @@ export default {
   }
 }
 </script>
-
-<style lang="postcss" scoped>
-.material {
-  padding: 0 35px;
-  width: 100%;
-}
-</style>
