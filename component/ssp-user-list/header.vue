@@ -92,6 +92,7 @@ export default {
 
 <style lang="scss" scoped>
 .user-header {
+  @include filter-item;
 
   & > div {
     display: flex;

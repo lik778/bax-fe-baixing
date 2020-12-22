@@ -272,6 +272,8 @@ export default {
 
 .ad-calendar-header {
   @include top-filter;
+  @include filter-item;
+
   padding: 0 0 15px;
   width: 100%;
 

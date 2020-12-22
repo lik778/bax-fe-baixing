@@ -123,6 +123,7 @@ export default {
 <style lang="scss" scoped>
 .material-header {
   @include top-filter;
+  @include filter-item;
 
   & > div {
     display: flex;

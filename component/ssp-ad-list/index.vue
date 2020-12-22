@@ -1,6 +1,5 @@
-
 <template>
-  <div class="ad">
+  <div class="page">
     <topbar :userInfo="userInfo">
       <label slot="title">投放管理</label>
     </topbar>
@@ -64,10 +63,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-.ad {
-  padding: 0 35px;
-  width: 100%;
-}
-</style>

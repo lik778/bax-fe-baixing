@@ -168,6 +168,8 @@ export default {
 
 <style lang="scss" scoped>
 .ad-header {
+  @include filter-item;
+  
   & > section:first-child {
     display: flex;
     align-items: center;

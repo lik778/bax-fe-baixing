@@ -214,6 +214,8 @@ export default {
 
 <style lang="scss" scoped>
 .order-header {
+  @include filter-item;
+  
   & > section:first-child {
     display: flex;
     justify-content: space-between;
