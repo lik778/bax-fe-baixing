@@ -1,4 +1,3 @@
-
 export function getPagination(total, offset, limit) {
   const currentPage = Math.floor(offset / limit) + 1
   const totalPage = Math.ceil(total / limit)
@@ -7,12 +6,12 @@ export function getPagination(total, offset, limit) {
     currentPage,
     totalPage,
     limit,
-    total
+    total,
   }
 }
 
 export function getImageSizeWarnTip(imgWidth, imgHeight, adWidth, adHeight) {
-  if ((imgHeight < adHeight) || (imgWidth < adWidth)) {
+  if (imgHeight < adHeight || imgWidth < adWidth) {
     return `图片尺寸较小, 会影响效果哟~ (广告位: ${adWidth}*${adHeight}, 图片: ${imgWidth}*${imgHeight})`
   }
   if ((imgWidth / imgHeight).toFixed(2) !== (adWidth / adHeight).toFixed(2)) {
@@ -29,7 +28,7 @@ export function getImageInfo(file) {
       img.onload = () => {
         resolve({
           height: img.height,
-          width: img.width
+          width: img.width,
         })
       }
       img.src = file
@@ -45,7 +44,7 @@ export function getImageInfo(file) {
     img.onload = () => {
       resolve({
         height: img.height,
-        width: img.width
+        width: img.width,
       })
     }
     img.src = URL.createObjectURL(file)
@@ -63,6 +62,7 @@ export function f2y(fen) {
 }
 
 export function toFloat(str, f = 2) {
+  if (!isString(str)) str = String(str)
   const i = parseFloat(str).toFixed(f)
 
   if (i === 'NaN') {
@@ -79,10 +79,13 @@ export function toFloat(str, f = 2) {
 }
 
 export function parseQuery(queryString) {
-  var query = {}
-  var pairs = (queryString[0] === '?' ? queryString.substr(1) : queryString).split('&')
-  for (var i = 0; i < pairs.length; i++) {
-    var pair = pairs[i].split('=')
+  const query = {}
+  const pairs = (queryString[0] === '?'
+    ? queryString.substr(1)
+    : queryString
+  ).split('&')
+  for (let i = 0; i < pairs.length; i++) {
+    const pair = pairs[i].split('=')
     query[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || '')
   }
   return query
@@ -91,9 +94,11 @@ export function parseQuery(queryString) {
 export function stringifyQuery(res, separator = '&') {
   if (isString(res)) return res
   if (!isObj) return ''
-  return Object.entries(res).reduce((curr, [key, val]) => {
-    return curr.concat(`${(key)}=${(val)}`)
-  }, []).join('&')
+  return Object.entries(res)
+    .reduce((curr, [key, val]) => {
+      return curr.concat(`${key}=${val}`)
+    }, [])
+    .join('&')
 }
 
 export function redirect(p, qs) {
@@ -152,12 +157,13 @@ export function formatReqQuery(obj = {}, formators = {}) {
 
 // 睡眠函数
 export function pause(time = 1000) {
-  return new Promise(resolve => setTimeout(resolve, time))
+  return new Promise((resolve) => setTimeout(resolve, time))
 }
 
 // 获取路由参数
 export function getRouteParam(key) {
-  const routeParam = (this.$route && this.$route.params && this.$route.params[key])
+  const routeParam =
+    this.$route && this.$route.params && this.$route.params[key]
   if (routeParam) return routeParam
   const query = parseQuery(window.location.search)
   return query[key]
@@ -166,7 +172,7 @@ export function getRouteParam(key) {
 // simple deepclone
 function deepClone(source) {
   const targetObj = source instanceof Array ? [] : {}
-  Object.keys(source).forEach(keys => {
+  Object.keys(source).forEach((keys) => {
     if (source[keys] && typeof source[keys] === 'object') {
       targetObj[keys] = deepClone(source[keys])
     } else {
@@ -188,11 +194,12 @@ export function normalize(adaptorDes = {}, raw, saveEmptyProp = false) {
   if (!raw) return {}
   const data = deepClone(raw)
 
-  const adaptors = Object.entries(adaptorDes).map(([key, val]) => genAttrAdaptor(key, val))
+  const adaptors = Object.entries(adaptorDes).map(([key, val]) =>
+    genAttrAdaptor(key, val)
+  )
 
-  const normedData = data instanceof Array
-    ? data.map(x => normalize(x))
-    : wash(data, adaptors)
+  const normedData =
+    data instanceof Array ? data.map((x) => normalize(x)) : wash(data, adaptors)
 
   const ret = deepClone(normedData)
 
@@ -205,10 +212,10 @@ export function normalize(adaptorDes = {}, raw, saveEmptyProp = false) {
 
   // 将所有规格不同的 keys 转换为一致的 key
   function genAttrAdaptor(targetKey, ...keys) {
-    return obj => {
-      const res = keys.map(key => obj[key]).find(x => x)
+    return (obj) => {
+      const res = keys.map((key) => obj[key]).find((x) => x)
       if (res || saveEmptyProp) {
-        keys.map(key => delete obj[key])
+        keys.map((key) => delete obj[key])
         obj[targetKey] = res
       }
       return obj
@@ -223,9 +230,7 @@ export function paginationWrapper(getList, dataFormat) {
     let response
     if (!responseStore) {
       response = await getList(...args)
-      responseStore = dataFormat
-        ? dataFormat(response)
-        : response
+      responseStore = dataFormat ? dataFormat(response) : response
       responseStore.total = responseStore.data.length
     }
     const { data = [], total } = responseStore
@@ -235,14 +240,14 @@ export function paginationWrapper(getList, dataFormat) {
     return {
       ...response,
       total,
-      data: data.slice(page * size, end)
+      data: data.slice(page * size, end),
     }
   }
 
   // API 获取所有数据
   wrapperFn.getAll = () => ({
     data: responseStore.data,
-    total: responseStore.data.length
+    total: responseStore.data.length,
   })
   // API 清空数据
   // * 页面上需要显式清空数据防止内存泄漏
