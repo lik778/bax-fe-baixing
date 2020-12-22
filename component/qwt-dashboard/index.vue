@@ -3,7 +3,7 @@
     <el-tab-pane label="推广数据来源" name="report">
       <summary-data :user-info="userInfo" :sales-info="salesInfo" />
     </el-tab-pane>
-    <el-tab-pane label="访客来源分析" name="visitor" v-if="ipReportShow">
+    <el-tab-pane label="访客来源分析" name="visitor">
       <visitor-data :user-info="userInfo" v-if="activeTab === 'visitor'" />
     </el-tab-pane>
   </el-tabs>
@@ -23,7 +23,6 @@ export default {
   data() {
     return {
       activeTab: 'report',
-      ipReportShow: false,
     }
   },
   components: {
@@ -31,7 +30,6 @@ export default {
     VisitorData,
   },
   async mounted() {
-    this.ipReportShow = localStorage.getItem('ipReportShow')
     setTimeout(() => {
       const { userInfo } = this
       track({

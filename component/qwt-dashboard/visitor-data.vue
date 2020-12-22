@@ -20,14 +20,24 @@
       </div>
       <div class="detail">
         <div class="detail-item">
-          <div class="title">近7天消耗（元）</div>
+          <div class="title">
+            近7天消耗（元）
+            <el-tooltip
+              class="item"
+              effect="dark"
+              content="数据来源：T-1天"
+              placement="top-start"
+            >
+              <i class="el-icon-question" />
+            </el-tooltip>
+          </div>
           <div class="cost">
             {{ $formatter.f2y(deductInfo.lastSevenDaysConsumption) }}
           </div>
         </div>
         <div class="split"></div>
         <div class="detail-item">
-          <div class="title">昨日消耗（元）</div>
+          <div class="title">昨日消耗(元）</div>
           <div class="cost">
             {{ $formatter.f2y(deductInfo.yesterdayConsumption) }}
           </div>
@@ -94,7 +104,7 @@ export default {
       deep: true,
       handler(newVal) {
         this.handleValidateCampaigns()
-      }
+      },
     },
     campaignId(newVal) {
       this.handleDeductStatistic()
@@ -151,6 +161,9 @@ export default {
         margin-top: 6px;
         font-size: 24px;
         font-weight: 600;
+      }
+      & .el-icon-question {
+        cursor: pointer;
       }
     }
   }
