@@ -59,7 +59,6 @@ git config --global core.safecrlf false
   - `/base`: `event store`, 临时的, 后面应该会整合到 `rx`
   - `/config`: `config`
   - `/constant`: `constant`
-  - `/cssbase`: `css var`, `css mixin`, 注意: `node_modules` 里也有 `cssbase`
   - `template`: `dev html template`
   - `view`: `online html template`
   - `tool`: 各种配置文件
@@ -69,7 +68,3 @@ git config --global core.safecrlf false
 - 用到的 主要 库
   - `vue`, `vue-router`
   - `rxjs` -> TODO: `vue-rx`
-
-## TODO
-
-- Sentry 不能精准捕获最后一个元素的点击
