@@ -209,5 +209,5 @@ export const PACKAGE_TYPE = {
   [THREE_WORD_ONE_PROVINCE]: 'THREE_WORD_ONE_PROVINCE',
 }
 
-export const SEO_WAN_CI_91 = '0'
-export const SEO_QIAN_CI_INSTATION = '1'
+export const SEO_WAN_CI_91 = 'WAN_CI_91'
+export const SEO_QIAN_CI_INSTATION = 'QIAN_CI_INSTATION'

@@ -124,7 +124,7 @@
             size="small"
             @click="() => gotoSeo(row.id, row.seoType)"
           >
-            <span v-if="String(row.seoType) === SEO_WAN_CI_91">管理SEO</span>
+            <span v-if="row.seoType === SEO_WAN_CI_91">管理SEO</span>
             <span v-else>管理店铺</span>
           </el-button>
           <div class="page-button-group-safe-padding" />
@@ -281,7 +281,7 @@ export default {
       this.$router.push({ name: 'qc-dashboard' })
     },
     gotoSeo(promoteId, seoType) {
-      if (String(seoType) === SEO_WAN_CI_91) {
+      if (seoType === SEO_WAN_CI_91) {
         const link = getWanciSeoRedirect(promoteId)
         window.open(link)
         return
