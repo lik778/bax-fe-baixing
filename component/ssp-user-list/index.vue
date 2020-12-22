@@ -1,6 +1,6 @@
 
 <template>
-  <div class="user">
+  <div class="page">
     <topbar :userInfo="userInfo">
       <label slot="title">客户管理</label>
     </topbar>
@@ -66,10 +66,3 @@ export default {
   }
 }
 </script>
-
-<style lang="postcss" scoped>
-.user {
-  padding: 0 35px;
-  width: 100%;
-}
-</style>

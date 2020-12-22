@@ -202,7 +202,7 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 .view-container {
   display: flex;
   align-items: center;

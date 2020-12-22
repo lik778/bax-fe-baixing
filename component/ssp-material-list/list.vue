@@ -85,7 +85,7 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 .material-list {
   margin-top: 16px;
 

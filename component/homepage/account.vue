@@ -97,43 +97,42 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
-  .accout {
-    display: flex;
-    align-items: center;
-    color: #666;
-    font-size: 14px;
-    text-align: center;
-    padding-top: 30px;
-    line-clamp: 1;
-    & .account-item {
-      flex: 1;
-      &:not(:last-of-type) {
-        border-right: 1px solid #e6e6e6;
-      }
-    }
-    & .title {
-      font-weight: 600;
-    }
-    & .sub-title {
-      font-size: 10px;
-      color: #666;
-      font-weight: 400
-    }
-    & .num {
-      color: #FF4F49;
-      font-weight: 600;
-      font-size: 24px;
-      line-height: 50px;
-    }
-    & .desc {
-      font-size: 12px;
-    }
-    & .button {
-      width: 110px;
-      height: 32px;
-      margin: 20px 0;
+<style lang="scss" scoped>
+.accout {
+  display: flex;
+  align-items: center;
+  color: #666;
+  font-size: 14px;
+  text-align: center;
+  padding-top: 30px;
+  line-clamp: 1;
+  & .account-item {
+    flex: 1;
+    &:not(:last-of-type) {
+      border-right: 1px solid #e6e6e6;
     }
   }
-
+  & .title {
+    font-weight: 600;
+  }
+  & .sub-title {
+    font-size: 10px;
+    color: #666;
+    font-weight: 400;
+  }
+  & .num {
+    color: #ff4f49;
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 50px;
+  }
+  & .desc {
+    font-size: 12px;
+  }
+  & .button {
+    width: 110px;
+    height: 32px;
+    margin: 20px 0;
+  }
+}
 </style>

@@ -38,7 +38,7 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 div {
   margin-bottom: 10px;
   font-size: 12px;

@@ -18,68 +18,68 @@ name: "product-intro"
 }
 </script>
 
-<style lang="postcss" scoped>
-  .box {
+<style lang="scss" scoped>
+.box {
+  position: relative;
+  width: 585px;
+  height: 190px;
+  border-radius: 2px;
+  border: 1px solid #ff7d51;
+  margin-bottom: 60px;
+  & .icon {
+    position: absolute;
+    left: -8px;
+    top: -8px;
+    height: 40px;
+  }
+
+  & .intro {
+    float: left;
+    padding: 20px;
+    width: 100%;
+    height: 100%;
+    background: #fff7ea;
+  }
+  & .intro > ul {
+    margin-top: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px dashed #ff7d51;
+  }
+  & .intro > ul li {
     position: relative;
-    width: 585px;
-    height: 190px;
-    border-radius: 2px;
-    border: 1px solid #FF7D51;
-    margin-bottom: 60px;
-    & .icon {
-      position: absolute;
-      left: -8px;
-      top: -8px;
-      height: 40px;
-    }
-
-    & .intro {
-      float: left;
-      padding: 20px;
-      width: 100%;
-      height: 100%;
-      background: #fff7ea;
-    }
-    & .intro > ul {
-      margin-top: 30px;
-      padding-bottom: 20px;
-      border-bottom: 1px dashed #FF7D51;
-    }
-    & .intro > ul li {
-      position: relative;
-      color: #FF7D51;
-      float: left;
-      margin-right: 25px;
-      padding-left: 5px;
-    }
-    & .intro > ul li::before {
-      position: absolute;
-      left: -5px;
-      top: 9px;
-      display: inline-block;
-      content: '';
-      width: 4px;
-      height: 4px;
-      background: #FF7D51;
-      border-radius: 100%;
-    }
-
-    & .intro > ul li:last-child {
-      margin-right: 0;
-    }
-
-    & .intro > p {
-      font-size: 12px;
-      color: #FF7D51;
-      padding-top: 20px;
-    }
+    color: #ff7d51;
+    float: left;
+    margin-right: 25px;
+    padding-left: 5px;
   }
-  .clearfix:after {
-    visibility: hidden;
-    display: block;
-    font-size: 0;
-    content: " ";
-    clear: both;
-    height: 0;
+  & .intro > ul li::before {
+    position: absolute;
+    left: -5px;
+    top: 9px;
+    display: inline-block;
+    content: "";
+    width: 4px;
+    height: 4px;
+    background: #ff7d51;
+    border-radius: 100%;
   }
+
+  & .intro > ul li:last-child {
+    margin-right: 0;
+  }
+
+  & .intro > p {
+    font-size: 12px;
+    color: #ff7d51;
+    padding-top: 20px;
+  }
+}
+.clearfix:after {
+  visibility: hidden;
+  display: block;
+  font-size: 0;
+  content: " ";
+  clear: both;
+  height: 0;
+}
 </style>

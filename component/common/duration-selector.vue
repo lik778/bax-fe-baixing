@@ -298,11 +298,10 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
-@import 'cssbase/mixin';
-
-.on, .off {
-  @mixin center;
+<style lang="scss" scoped>
+.on,
+.off {
+  @include center;
   width: 20px;
   height: 20px;
   border-radius: 4px;
@@ -340,7 +339,8 @@ export default {
     & > div {
       margin: 0 5px;
 
-      & > div, & > p {
+      & > div,
+      & > p {
         margin-top: 10px;
       }
     }
@@ -364,7 +364,7 @@ export default {
     align-items: center;
 
     & > span {
-      @mixin center;
+      @include center;
       width: 260px;
 
       & > label {

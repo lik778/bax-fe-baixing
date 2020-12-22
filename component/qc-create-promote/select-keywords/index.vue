@@ -407,7 +407,7 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 .b-d-input-con {
   margin-top: 30px;
 

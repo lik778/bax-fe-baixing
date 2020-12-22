@@ -116,10 +116,7 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
-@import '../../cssbase/mixin';
-@import 'cssbase/mixin';
-
+<style lang="scss" scoped>
 .el-input {
   width: 118px;
   height: 34px;
@@ -135,7 +132,7 @@ export default {
   cursor: pointer;
 
   & > main {
-    @mixin center;
+    @include center;
     flex-grow: 1;
     color: #666666;
 
@@ -151,7 +148,7 @@ export default {
   }
 
   & > footer {
-    @mixin center;
+    @include center;
     height: 40px;
     color: #666666;
     border-top: 1px dotted #ffb74d;
@@ -183,7 +180,7 @@ export default {
   }
 
   & i.icon-check {
-    @mixin center;
+    @include center;
     float: right;
     width: 20px;
     height: 20px;

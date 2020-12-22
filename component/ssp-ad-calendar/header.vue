@@ -261,14 +261,9 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
-@import '../../cssbase/mixin';
-@import 'cssbase/mixin';
-
-@mixin filter-item;
-
+<style lang="scss" scoped>
 .el-icon-plus {
-  @mixin icon-btn;
+  @include icon-btn;
 }
 
 .el-tag {
@@ -276,7 +271,9 @@ export default {
 }
 
 .ad-calendar-header {
-  @mixin top-filter;
+  @include top-filter;
+  @include filter-item;
+
   padding: 0 0 15px;
   width: 100%;
 
@@ -285,19 +282,18 @@ export default {
     align-items: center;
   }
 
-  & > div:nth-child(1), & > div:nth-child(2) {
+  & > div:nth-child(1),
+  & > div:nth-child(2) {
     & > span {
       display: flex;
       flex-grow: 0.5;
       height: unset;
       width: unset;
-
-      & > div:last-child {
-      }
     }
   }
 
-  & > div:nth-child(3), & > div:nth-child(4) {
+  & > div:nth-child(3),
+  & > div:nth-child(4) {
     & > span {
       height: unset;
       width: unset;

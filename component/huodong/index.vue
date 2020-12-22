@@ -1,5 +1,4 @@
 <template>
-  <div>
       <div class='banner'>
         <div class='content'>
           <div class='p-bg'>
@@ -177,9 +176,6 @@
           </div>
         </div>
       </div>
-  </div>
-
-
 </template>
 
 <script>
@@ -225,8 +221,21 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
-@import "../../cssbase/var.css";
+<style lang="scss" scoped>
+
+$active-primary: #d12700;
+$active-white: #ffffff;
+$active-bg__btn: #ffe815;
+$active-border: #ffc200;
+$active-rules: #ff8d8d;
+$active-footer: #fcae24;
+$active-smaller: 12px;
+$font-large: 32px;
+$font-mid: 24px;
+$font-normal: 20px;
+$font-n__s: 18px;
+$font-small: 16px;
+$font-smaller: 12px;
 
 .banner{
   background: url('//file.baixing.net/201909/a5f66aefc24398db868737040c029ed0.png') top center no-repeat;
@@ -243,23 +252,23 @@ export default {
       margin:0 auto;
     }
     & p{
-      color:  var(--active-white);
-      font-size: var(--font-large);
+      color:  $active-white;
+      font-size: $font-large;
     }
     &>.bg{
       background: url('//file.baixing.net/201909/89406fb6d89073173c36f9f35a66967a.png') top center no-repeat;
       background-size: cover;
-      background-color:var(--active-white);
+      background-color:$active-white;
     }
     & .active{
       width: 900px;
       margin: 20px auto 30px auto;
-      border: 4px solid var(--active-border);
+      border: 4px solid $active-border;
       border-radius: 15px;
       & .tit{
         margin:28px 0 28px 0;
-        color:  var(--active-primary);
-        font-size: var(--font-normal);
+        color:  $active-primary;
+        font-size: $font-normal;
         font-weight: bold;
       }
       & .tit::before{
@@ -267,7 +276,7 @@ export default {
         display: inline-block;
         width: 80px;
         height: 2px;
-        background:  var(--active-primary);
+        background:  $active-primary;
         transform: translateY(-6px);
         margin-right: 25px;
       }
@@ -276,7 +285,7 @@ export default {
         display: inline-block;
         width: 80px;
         height: 2px;
-        background:  var(--active-primary);
+        background:  $active-primary;
         transform: translateY(-6px);
         margin-left: 25px;
       }
@@ -322,10 +331,10 @@ export default {
               width:200px;
               height: 44px;
               border-radius: 15px 0 30px 0;
-              color: var(--active-white);
+              color: $active-white;
               line-height: 44px;
               & p{
-                font-size: var(--font-mid);
+                font-size: $font-mid;
                 transform:translateX(-10px);
               }
             }
@@ -333,18 +342,18 @@ export default {
               align-self: flex-end;
             }
             & p{
-              font-size: var(--font-n-s);
+              font-size: $font-n__s;
               &>span{
                 margin:0 8px;
                 font-weight:400;
-                font-size: var(--font-mid);
+                font-size: $font-mid;
               }
               &>.m-15{
                 margin-left: 25px;
               }
             }
             & .bottom{
-              font-size: var(--font-small);
+              font-size: $font-small;
               transform: translateY(30px);
               position: absolute;
               bottom:50px;
@@ -381,8 +390,8 @@ export default {
         }
       }
       & .ps{
-         font-size: var(--font-small);
-         color: var(--active-primary);
+         font-size: $font-small;
+         color: $active-primary;
       }
     }
     & .part3{
@@ -390,7 +399,7 @@ export default {
         font-size:12px;
         display: inline-block;
         background: #FCC31B;
-        font-size: var(--font-normal);
+        font-size: $font-normal;
         padding:0 10px;
         line-height:34px;
         margin-right:8px;
@@ -466,7 +475,7 @@ export default {
           justify-content: space-around;
         }
         & .xx{
-          font-size: var(--font-mid);
+          font-size: $font-mid;
         }
       }
       & .wrap{
@@ -483,16 +492,16 @@ export default {
         background-image: linear-gradient(163deg, #ED48FF 0%, #7641EA 100%);
       }
       & .white{
-        color: var(--active-white);
+        color: $active-white;
       }
       & .color{
-        color: var(--active-primary);
+        color: $active-primary;
       }
       & .font-mid{
-        font-size: var(--font-mid);
+        font-size: $font-mid;
       }
       & .font-normal{
-        font-size: var(--font-normal);
+        font-size: $font-normal;
       }
       & .font-ss{
         font-size:14px;
@@ -501,10 +510,10 @@ export default {
         font-size: 12px;
       }
       & .font-smaller{
-        font-size: var(--font-small);
+        font-size: $font-small;
       }
       & .font-n-s{
-        font-size: var(--font-n-s);
+        font-size: $font-n__s;
       }
       & .bold{
         font-weight: bold;
@@ -528,20 +537,20 @@ export default {
       & .row{
         display: flex;
         & h6{
-          color: var(--active-white);
-          font-size: var(--font-normal);
+          color: $active-white;
+          font-size: $font-normal;
           font-weight: 400;
           margin-bottom:34px;
           flex: 1;
         }
         & span{
           display: block;
-          color: var(--active-white);
-          font-size: var(--font-n-s);
+          color: $active-white;
+          font-size: $font-n__s;
         }
       }
       & .contact{
-        font-size: var(--font-small);
+        font-size: $font-small;
         text-align: left;
         margin-bottom: 36px;
       }
@@ -556,8 +565,8 @@ export default {
     }
     & .part5{
       & .ps{
-         font-size: var(--font-small);
-         color: var(--active-primary);
+         font-size: $font-small;
+         color: $active-primary;
          transform: translateY(-10px);
       }
       & .p-20{
@@ -572,18 +581,18 @@ export default {
         position: relative;
         
         & p{
-          font-size: var(--font-n-s);
+          font-size: $font-n__s;
           text-align:left;
           margin-bottom:10px;
           white-space: nowrap;
           letter-spacing:1px;
           & span{
-            font-size: var(--font-mid);
+            font-size: $font-mid;
           }
           & .color{
-            font-size: var(--font-n-s);
+            font-size: $font-n__s;
             font-weight: bold;
-            color: var(--active-bg-btn);
+            color: $active-bg__btn;
           }
         }
         & img{
@@ -635,7 +644,7 @@ export default {
         display: inline-block;
         margin: 0 auto;
         color: #fff;
-        font-size: var(--font-normal); 
+        font-size: $font-normal; 
         position: relative;
         z-index:999;
         & img{
@@ -657,7 +666,7 @@ export default {
           width:18px;
           height:18px;
           border-radius: 50%;
-          background:var(--active-footer);
+          background:$active-footer;
           margin-right:10px;
           transform: translateY(3px);
           & .num{
@@ -672,13 +681,13 @@ export default {
         margin-top:0;
       }
       & .color{
-        color: var(--active-footer);
+        color: $active-footer;
         text-decoration:none;
         cursor:pointer;
       }
       & p{
-        color: var(--active-rules);
-        font-size: var(--active-smaller);
+        color: $active-rules;
+        font-size: $active-smaller;
         text-align:left;
         flex:1;
       }
@@ -695,9 +704,9 @@ p{
   text-align: center;
 }
 .btn{
-  background: var(--active-bg-btn);
-  color: var(--active-primary);
-  font-size: var(--font-mid);
+  background: $active-bg__btn;
+  color: $active-primary;
+  font-size: $font-mid;
   font-weight: bold;
   outline:none;
   border:none;

@@ -183,9 +183,7 @@
   }
 </script>
 
-<style lang="postcss" scoped>
-@import '../../cssbase/var';
-
+<style lang="scss" scoped>
 .cart.bw {
   & /deep/ .el-checkbox {
     & + .el-checkbox {
@@ -206,24 +204,24 @@
   width: 390px;
   top: 55px;
   display: flex;
-  transition: right .2s;
+  transition: right 0.2s;
 
   & > .handle {
     width: 45px;
     height: 240px;
-    background-color: var(--qwt-c-orange);
+    background-color: $qwt-c-orange;
     color: #fff;
     border-radius: 8px 0 0 8px;
     font-size: 20px;
     padding: 10px 12px;
-    box-shadow: 0 2px 16px 0 rgba(0,0,0,.2);
+    box-shadow: 0 2px 16px 0 rgba(0, 0, 0, 0.2);
     cursor: pointer;
   }
 
   & > .main {
     background-color: #fff;
     padding: 10px;
-    box-shadow: 0 2px 16px 0 rgba(0,0,0,.2);
+    box-shadow: 0 2px 16px 0 rgba(0, 0, 0, 0.2);
     display: flex;
     flex-direction: column;
     flex: 1;
@@ -240,7 +238,7 @@
       flex-direction: column;
 
       &.sold > div > .keyword {
-        color: #999
+        color: #999;
       }
 
       & > div {
@@ -254,8 +252,8 @@
           width: 120px;
         }
 
-        & >>> .el-icon-close {
-          color: var(--qwt-c-orange);
+        & /deep/ .el-icon-close {
+          color: $qwt-c-orange;
           cursor: pointer;
         }
         & > p > label {

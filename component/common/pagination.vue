@@ -42,13 +42,9 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
-
-@import 'cssbase/mixin';
-
+<style lang="scss" scoped>
 .bax-pagination {
-  @mixin center;
+  @include center;
   padding: 10px 0 40px;
 }
-
 </style>

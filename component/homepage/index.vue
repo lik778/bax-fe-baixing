@@ -33,8 +33,8 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
-  @define-mixin layout-base {
+<style lang="scss" scoped>
+  @mixin layout-base {
     border-radius: 4px;
     box-shadow: 0 2px 9px 0 rgba(83,95,127,0.10);
     background-color: #fff;
@@ -50,16 +50,16 @@ export default {
       &:not(:first-of-type) {
         margin-top: 10px;
       }
-      & >>> .layout-left {
+      & /deep/ .layout-left {
         flex-basis: 62%;
         margin-right: 10px;
-        @mixin layout-base;
+        @include layout-base;
       }
-      & >>> .layout-right {
+      & /deep/ .layout-right {
         flex-basis: 38%;
-        @mixin layout-base;
+        @include layout-base;
       }
-      & >>> .layout-header {
+      & /deep/ .layout-header {
         width: 100%;
         height: 42px;
         line-height: 42px;

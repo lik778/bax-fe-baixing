@@ -45,12 +45,12 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 .order {
   width: 100%;
   padding: 25px;
   border-radius: 4px;
   background-color: #fff;
-  box-shadow: 0 2px 9px 0 rgba(83, 95, 127, .10);
+  box-shadow: 0 2px 9px 0 rgba(83, 95, 127, 0.1);
 }
 </style>

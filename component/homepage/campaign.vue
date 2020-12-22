@@ -227,139 +227,139 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
- @define-mixin placeholder {
+<style lang="scss" scoped>
+@mixin placeholder {
+  display: flex;
+  height: 288px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #999;
+}
+.layout-left {
+  & .layout-content {
     display: flex;
-    height: 288px;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    color: #999;
+    min-height: 288px;
   }
-  .layout-left {
-    & .layout-content {
-      display: flex;
-      min-height: 288px;
+  & .chart {
+    width: 55%;
+    flex: 1;
+    & /deep/ .echarts {
+      width: 100%;
+      height: 100%;
     }
-    & .chart {
-      width: 55%;
-      flex: 1;
-      & >>> .echarts {
-        width: 100%;
-        height: 100%;
+  }
+  & .description {
+    width: 45%;
+    flex: 1;
+    padding-top: 25px;
+    line-height: 36px;
+    letter-spacing: 1px;
+    & strong {
+      font-size: 24px;
+      font-weight: 600;
+      color: #ff6350;
+      margin: 0 4px;
+    }
+    & a {
+      letter-spacing: 0;
+      color: #35a5e4;
+    }
+  }
+  & .optimization {
+    line-height: 1.6;
+    margin-top: 22px;
+    & .title {
+      font-weight: 600;
+    }
+    & .keyword {
+      display: inline-block;
+      font-size: 13px;
+      margin-top: 8px;
+      margin-right: 8px;
+      padding: 3px 6px;
+      color: #b66969;
+      background-color: #fff5f5;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: color, background-color 0.1s;
+      &:hover {
+        background-color: #ffe0e0;
+        color: #b64949;
       }
     }
-    & .description {
-      width: 45%;
-      flex: 1;
-      padding-top: 25px;
-      line-height: 36px;
-      letter-spacing: 1px;
-      & strong {
+  }
+  & .actions {
+    margin-top: 25px;
+    & /deep/ .el-button {
+      min-width: 110px;
+      padding: 8px 12px;
+    }
+  }
+}
+.layout-right {
+  & .radio-group {
+    display: flex;
+    justify-content: space-around;
+    width: 66%;
+    max-width: 350px;
+    margin: 32px auto;
+    & /deep/ .el-radio__label {
+      font-weight: 600;
+    }
+  }
+  & .reports {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    &:after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate3d(-50%, -50%, 0);
+      background-color: #fff;
+      height: 16%;
+      width: 18%;
+      z-index: 1;
+    }
+    & > .report {
+      flex: 1 0 50%;
+      height: 110px;
+      text-align: center;
+      padding-top: 14px;
+      line-height: 2;
+      & .num {
+        color: #ff4f49;
         font-size: 24px;
         font-weight: 600;
-        color: #FF6350;
-        margin: 0 4px;
       }
-      & a {
-        letter-spacing: 0;
-        color: #35A5E4;
+      &:nth-of-type(2n + 1) {
+        border-right: 1px solid #e6e6e6;
       }
-    }
-    & .optimization {
-      line-height: 1.6;
-      margin-top: 22px;
-      & .title {
-        font-weight: 600;
+      &:nth-of-type(1) {
+        border-bottom: 1px solid #e6e6e6;
       }
-      & .keyword {
-        display: inline-block;
-        font-size: 13px;
-        margin-top: 8px;
-        margin-right: 8px;
-        padding: 3px 6px;
-        color: #B66969;
-        background-color: #FFF5F5;
-        border-radius: 2px;
-        cursor: pointer;
-        transition: color, background-color .1s;
-        &:hover {
-          background-color: #ffe0e0;
-          color: #B64949;
-        }
-      }
-    }
-    & .actions {
-      margin-top: 25px;
-      & >>> .el-button {
-        min-width: 110px;
-        padding: 8px 12px;
+      &:nth-of-type(2) {
+        border-bottom: 1px solid #e6e6e6;
       }
     }
   }
-  .layout-right {
-    & .radio-group {
-      display: flex;
-      justify-content: space-around;
-      width: 66%;
-      max-width: 350px;
-      margin: 32px auto;
-      & >>> .el-radio__label {
-        font-weight: 600;
-      }
-    }
-    & .reports {
-      position: relative;
-      display: flex;
-      flex-wrap: wrap;
-      &:after {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate3d(-50%, -50%, 0);
-        background-color: #fff;
-        height: 16%;
-        width: 18%;
-        z-index: 1;
-      }
-      & > .report {
-        flex: 1 0 50%;
-        height: 110px;
-        text-align: center;
-        padding-top: 14px;
-        line-height: 2;
-        & .num {
-          color: #FF4F49;
-          font-size: 24px;
-          font-weight: 600;
-        }
-        &:nth-of-type(2n + 1) {
-          border-right: 1px solid #e6e6e6;
-        }
-        &:nth-of-type(1) {
-          border-bottom: 1px solid #e6e6e6;
-        }
-        &:nth-of-type(2) {
-          border-bottom: 1px solid #e6e6e6;
-        }
-      }
-    }
-  }
+}
 
-  .no-campaign-data-placeholder {
-    @mixin placeholder;
-    font-size: 16px;
-    & .el-icon-info {
-      margin-right: 4px;
-    }
+.no-campaign-data-placeholder {
+  @include placeholder;
+  font-size: 16px;
+  & .el-icon-info {
+    margin-right: 4px;
   }
+}
 
-  .no-campaign-radar-placeholder {
-    @mixin placeholder;
-    font-size: 17px;
-    & .text {
-      margin-bottom: 20px;
-    }
+.no-campaign-radar-placeholder {
+  @include placeholder;
+  font-size: 17px;
+  & .text {
+    margin-bottom: 20px;
   }
+}
 </style>

@@ -1,7 +1,11 @@
 <template>
   <div class="wx-modal" v-show="visible">
     <div class="img-wrap">
-      <img width="100%" height="100%" src="//file.baixing.net/201902/a037414f359b035df7ce5a020085d6a4.png">
+      <img
+        width="100%"
+        height="100%"
+        src="//file.baixing.net/201902/a037414f359b035df7ce5a020085d6a4.png"
+      />
       <span class="close-btn" @click="handleWxModalClose">知道啦</span>
     </div>
   </div>
@@ -9,24 +13,24 @@
 
 <script>
 export default {
-  data () {
+  data() {
     return {
       visible: false
-    }
+    };
   },
   props: {
     closeCb: [Function]
   },
   methods: {
     handleWxModalClose() {
-      this.visible = false
-      this.closeCb()
+      this.visible = false;
+      this.closeCb();
     }
   }
-}
+};
 </script>
 
-<style scoped lang="postcss">
+<style scoped lang="scss">
 .wx-modal {
   position: fixed;
   top: 0;
@@ -35,7 +39,7 @@ export default {
   right: 0;
   z-index: 1024;
   background-size: 381px 440px;
-  background-color: rgba(0, 0, 0, .5);
+  background-color: rgba(0, 0, 0, 0.5);
   & .img-wrap {
     position: absolute;
     z-index: 1;
@@ -57,8 +61,8 @@ export default {
     line-height: 32px;
     text-align: center;
     border-radius: 32px;
-    color: #FF6220;
-    border: 1px solid #FFBB9A;
+    color: #ff6220;
+    border: 1px solid #ffbb9a;
     cursor: pointer;
   }
 }

@@ -10,16 +10,13 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
-@import '../../cssbase/mixin';
-@import '../../cssbase/var';
-
+<style lang="scss" scoped>
 span {
-  @mixin center;
+  @include center;
   margin-left: 5px;
 
   & > a {
-    color: var(--c-main-blue);
+    color: $c-main-blue;
     font-size: 14px;
   }
 }

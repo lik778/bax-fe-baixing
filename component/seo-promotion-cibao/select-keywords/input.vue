@@ -112,7 +112,7 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 /deep/ .keyword-input-dialog {
   & .el-dialog__body {
     padding: 0 20px;
@@ -127,9 +127,7 @@ export default {
     top: 5px;
     left: 15px;
     font-size: 14px;
-    color: #DCDFE6;
+    color: #dcdfe6;
   }
 }
-
-
 </style>

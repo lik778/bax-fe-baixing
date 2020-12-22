@@ -31,12 +31,10 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
-
+<style lang="scss" scoped>
 i {
   margin-left: 5px;
   font-size: 20px;
   cursor: pointer;
 }
-
 </style>

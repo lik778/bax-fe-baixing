@@ -123,68 +123,70 @@
   }
 </script>
 
-<style lang="postcss" scoped>
-  .el-progress--circle {
-    display: inline-block;
-  }
-  .el-progress {
-    position: relative;
-    line-height: 1;
-  }
-  .el-progress--circle .el-progress__text {
-    position: absolute;
-    top: 50%;
-    left: 0;
-    width: 100%;
-    text-align: center;
-    margin: 0;
-    -ms-transform: translate(0,-50%);
-    transform: translate(0,-50%);
-  }
-  .el-progress__text {
-    font-size: 14px;
-    color: #48576a;
-    display: inline-block;
-    vertical-align: middle;
-    margin-left: 10px;
-    line-height: 1;
-  }
-  .el-progress--text-inside .el-progress-bar {
-    padding-right: 0;
-    margin-right: 0;
-  }
-  .el-progress-bar {
-    padding-right: 50px;
-    width: 100%;
-    margin-right: -55px;
-    box-sizing: border-box;
-  }
-  .el-progress-bar, .el-progress-bar__innerText, .el-spinner {
-    display: inline-block;
-    vertical-align: middle;
-  }
-  .el-progress-bar__outer {
-        height: 6px;
-    border-radius: 100px;
-    background-color: #e4e8f1;
-    overflow: hidden;
-    position: relative;
-    vertical-align: middle;
-  }
- .el-progress-bar__inner {
-    position: absolute;
-    left: 0;
-    top: 0;
-    height: 100%;
-    background-color: #20a0ff;
-    text-align: right;
-    border-radius: 100px;
-    line-height: 1;
-    transition: width .6s;
- }
- .el-progress-bar__innerText {
+<style lang="scss" scoped>
+.el-progress--circle {
+  display: inline-block;
+}
+.el-progress {
+  position: relative;
+  line-height: 1;
+}
+.el-progress--circle .el-progress__text {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  margin: 0;
+  -ms-transform: translate(0, -50%);
+  transform: translate(0, -50%);
+}
+.el-progress__text {
+  font-size: 14px;
+  color: #48576a;
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 10px;
+  line-height: 1;
+}
+.el-progress--text-inside .el-progress-bar {
+  padding-right: 0;
+  margin-right: 0;
+}
+.el-progress-bar {
+  padding-right: 50px;
+  width: 100%;
+  margin-right: -55px;
+  box-sizing: border-box;
+}
+.el-progress-bar,
+.el-progress-bar__innerText,
+.el-spinner {
+  display: inline-block;
+  vertical-align: middle;
+}
+.el-progress-bar__outer {
+  height: 6px;
+  border-radius: 100px;
+  background-color: #e4e8f1;
+  overflow: hidden;
+  position: relative;
+  vertical-align: middle;
+}
+.el-progress-bar__inner {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  background-color: #20a0ff;
+  text-align: right;
+  border-radius: 100px;
+  line-height: 1;
+  transition: width 0.6s;
+}
+.el-progress-bar__innerText {
   color: #fff;
-    font-size: 12px;
-    margin: 0 5px;
- }
+  font-size: 12px;
+  margin: 0 5px;
+}
 </style>

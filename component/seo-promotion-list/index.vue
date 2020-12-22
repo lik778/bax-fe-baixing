@@ -533,7 +533,7 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 .promotion-list {
   color: #666;
   border-radius: 4px;
@@ -625,7 +625,7 @@ table {
   padding-left: 20px;
   & .label {
     line-height: 1.3;
-    & >>> span {
+    & /deep/ span {
       display: block;
     }
   }
@@ -641,7 +641,7 @@ table {
   &.header {
     & .col3 {
       text-indent: 10px;
-      & >>> .el-tooltip {
+      & /deep/ .el-tooltip {
         margin-left: -2px !important;
       }
     }
@@ -700,7 +700,7 @@ table {
 }
 </style>
 
-<style lang="postcss">
+<style lang="scss">
 .cibao-table {
   border: 1px solid #e9e9e9;
   border-bottom: 0;

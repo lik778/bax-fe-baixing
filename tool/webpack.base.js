@@ -1,4 +1,4 @@
-
+const path = require('path')
 const { distPath } = require('./config')
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
@@ -6,6 +6,17 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const env = process.env.NODE_ENV
 
 console.log(env)
+
+const cssLoaders = [
+  env === 'production' ? MiniCssExtractPlugin.loader : 'vue-style-loader',
+  {
+    loader: 'css-loader',
+    options: {
+      import: false,
+      importLoaders: 1
+    }
+  }
+]
 
 module.exports = {
   entry: {
@@ -28,29 +39,29 @@ module.exports = {
         test: /\.js$/,
         loader: 'babel-loader',
         exclude: file => /node_modules/.test(file)
-      }, {
-        test: /css$/,
+      },
+      {
+        test: /\.css$/,
         use: [
-          env === 'production'
-            ? MiniCssExtractPlugin.loader
-            : 'vue-style-loader',
+          ...cssLoaders
+        ]
+      },
+      {
+        test: /\.scss$/,
+        use: [
+          ...cssLoaders,
           {
-            loader: 'css-loader',
-            options: {
-              import: false,
-              importLoaders: 1
-            }
+            loader: "sass-loader"
           },
           {
-            loader: 'postcss-loader',
+            loader: 'sass-resources-loader',
             options: {
-              plugins: [
-                require('postcss-import')(),
-                require('postcss-mixins')(),
-                require('postcss-cssnext')()
+              resources: [
+                './cssbase/vars.scss',
+                './cssbase/mixins.scss',
               ]
-            }
-          }
+            },
+          },
         ]
       },
       {

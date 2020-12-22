@@ -1,6 +1,5 @@
-
 <template>
-  <div class="material-info">
+  <div class="page">
     <topbar :userInfo="userInfo">
       <label slot="title">物料详情</label>
     </topbar>
@@ -58,16 +57,11 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 .img {
   max-width: 400px;
   max-height: 400px;
   object-fit: contain;
   cursor: pointer;
-}
-
-.material-info {
-  padding: 0 35px;
-  width: 100%;
 }
 </style>

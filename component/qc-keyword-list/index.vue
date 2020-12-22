@@ -263,8 +263,8 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
-@import "../../cssbase/var.css";
+<style lang="scss" scoped>
+$border-base: 1px solid #dbdbdb;
 
 .actions {
   float: right;
@@ -306,16 +306,16 @@ export default {
   color: #333;
   font-weight: 500;
   font-size: 14px;
-  border-top: var(--border-base);
-  border-left: var(--border-base);
+  border-top: $border-base;
+  border-left: $border-base;
   & > .info {
     display: flex;
     align-items: center;
     justify-content: space-between;
     background: #f2f2f2;
     padding: 10px 12px;
-    border-bottom: var(--border-base);
-    border-right: var(--border-base);
+    border-bottom: $border-base;
+    border-right: $border-base;
   }
   & > .list {
     display: flex;
@@ -324,8 +324,8 @@ export default {
       width: 25%;
       padding: 12px;
       line-height: 20px;
-      border-bottom: var(--border-base);
-      border-right: var(--border-base);
+      border-bottom: $border-base;
+      border-right: $border-base;
       & > .item-inner {
         display: -webkit-box;
         max-height: 40px;

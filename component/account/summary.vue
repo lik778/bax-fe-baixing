@@ -108,30 +108,30 @@
   }
 </script>
 
-<style lang="postcss" scoped>
-  .column {
-    display: flex;
-    flex-flow: column;
-    align-items: center;
-    justify-content: center;
-  }
-  p {
-    margin: 10px 0;
-  }
-  .multi {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-  }
-  .btn {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
+<style lang="scss" scoped>
+.column {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  justify-content: center;
+}
+p {
+  margin: 10px 0;
+}
+.multi {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+.btn {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
 
-    & > span {
-      font-weight: 600;
-      color: #6a778c;
-    }
+  & > span {
+    font-weight: 600;
+    color: #6a778c;
   }
+}
 </style>

@@ -100,8 +100,7 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
-
+<style lang="scss" scoped>
 .uploader {
   display: flex;
   align-items: center;
@@ -113,5 +112,4 @@ export default {
   font-size: 12px;
   line-height: 14px;
 }
-
 </style>

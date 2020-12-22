@@ -44,7 +44,7 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 div {
   height: 100%;
   display: flex;

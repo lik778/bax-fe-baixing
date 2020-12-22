@@ -5,8 +5,9 @@
     </header>
 
     <!-- test snapshot -->
-    <!-- <el-button @click="() => checkSnapshotPage({ device: 1, url: 'http://sem.baixing.net/dev2725.html' })">PC</el-button>
-    <el-button @click="() => checkSnapshotPage({ device: 2, url: 'http://sem.baixing.net/dev6040.html' })">WAP</el-button> -->
+    <!-- <el-button @click="() => checkSnapshotPage({ device: 1, url: 'https://test-files.obs.cn-east-3.myhuaweicloud.com/dailiyun_web.html' })">PC</el-button>
+    <el-button @click="() => checkSnapshotPage({ device: 2, url: 'https://test-files.obs.cn-east-3.myhuaweicloud.com/dailiyun_wap.html' })">WAP</el-button>
+    <el-button @click="() => checkSnapshotPage({ device: 2, url: 'http://sem.baixing.net/sem_testy32454.html' })">WAP</el-button> -->
 
     <section class="page-section" style="margin-top: 20px">
       <span style="font-size: 14px">选择推广计划：</span>
@@ -149,7 +150,7 @@ import {
   PROMOTE_STATUS_ON_PROMOTE,
   DEVICE_DASHBOARD,
 } from 'constant/qianci'
-import { checkSupportShadowDOM, parseQuery } from 'util'
+import { parseQuery } from 'util'
 
 import pieChartOptionTmp from './pieChartOptionTmp'
 import liquidChartOptionTmp from './liquidChartOptionTmp'
@@ -243,9 +244,11 @@ export default {
     )
     this.store = { targetUserId, salesId }
     await this.initPromoteListOptions()
-    this.selectPromote(this.options.promoteList[0].value)
-    this.initPieChart()
-    this.listenChartResize()
+    if (this.options.promoteList.length) {
+      this.selectPromote(this.options.promoteList[0].value)
+      this.initPieChart()
+      this.listenChartResize()
+    }
   },
   methods: {
     // 初始化推广计划列表
@@ -409,9 +412,6 @@ export default {
         html = secureHTML(response)
       }
 
-      // console.log('html: ', html)
-
-      const supportShadowDOM = checkSupportShadowDOM()
       const pageOptions = {
         customClass,
         dangerouslyUseHTMLString: true,
@@ -425,37 +425,41 @@ export default {
       const wrapperClass = `snapshot-content-${randomID}`
 
       // 快照样式修复
-      // FIXME 也许是 secureHTML 时把某些样式代码意外去掉了，所以才加 modHDStyle 修复
-      const modHDStyle =
-        '#page-hd{position:static;background-color:#fff;visibility:visible;text-align:center}'
-      const snapshotFix = `<style>/*这里可以放一些快照页面样式的修复代码*/${modHDStyle}</style>`
+      const snapshotFix = `<style>/*这里可以放一些快照页面样式的修复代码*/</style>`
       html += snapshotFix
 
-      // 使用 ShadowDOM 防止样式污染，
-      // 可换作 iframe 做备选方案
-      if (!supportShadowDOM) {
-        this.$alert(html, '快照详情', pageOptions)
-      } else {
-        this.$alert(`<div class="${wrapperClass}" />`, '快照详情', pageOptions)
-        this.$nextTick(() => {
-          try {
-            const container = document.querySelector('.' + wrapperClass)
-            const shadow = container.attachShadow({ mode: 'open' })
-            shadow.innerHTML = html
-          } catch (error) {
-            this.$alert(html, '快照详情', pageOptions)
-            throw new Error(error)
-          }
-        })
-      }
+      const style =
+        customClass === 'snapshot-dialog'
+          ? `width: 100vw; height: calc(100vh - 40px)`
+          : `width: 425px; height: calc(100vh - 40px); margin-top: 39px`
+
+      const $iframe = this.$createElement('iframe', {
+        attrs: {
+          frameborder: 0,
+        },
+        domProps: {
+          src: url,
+          srcdoc: html,
+          style,
+        },
+      })
+      this.$alert($iframe, pageOptions)
 
       // 防止链接可点击
       this.$nextTick(() => {
         const container = document.querySelector('.' + wrapperClass)
         if (container) {
-          ;[
-            ...(container.shadowRoot || container).querySelectorAll('a'),
-          ].map((a) => a.removeAttribute('href'))
+          try {
+            ;[
+              ...(
+                container.shadowRoot ||
+                container.document ||
+                container
+              ).querySelectorAll('a'),
+            ].map((a) => a.removeAttribute('href'))
+          } catch (error) {
+            throw new Error('removeAttribute-href 出错')
+          }
         }
       })
     },
@@ -483,7 +487,7 @@ export default {
   },
 }
 </script>
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 .chart-header {
   margin-top: 30px;
 }
@@ -560,7 +564,7 @@ export default {
 }
 </style>
 
-<style lang="postcss">
+<style lang="scss">
 .snapshot-dialog,
 .snapshot-dialog-mobile {
   position: fixed;
@@ -591,12 +595,18 @@ export default {
     }
   }
   & .el-message-box__content {
-    padding: 40px 0;
+    padding: 0px;
+    padding-top: 40px;
+    overflow: hidden;
+  }
+  & .el-message-box__btns {
+    display: none;
   }
 }
 .snapshot-dialog-mobile {
   & .el-message-box__content {
     margin: 0 auto;
+    padding: 0;
     width: 425px;
   }
 }

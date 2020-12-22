@@ -61,7 +61,7 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 .ad-calendar {
   padding: 0 35px;
   width: 100%;
