@@ -64,20 +64,41 @@ import pick from 'lodash.pick'
 import { notAllowFengmingRecharge } from 'util/role'
 import { parseQuery, stringifyQuery } from 'util'
 
+import gStore from '../component/store'
+
 import clone from 'clone'
 
 // track common data
 window.__trackerData = {
   common: {},
 }
-window.onerror = (e) => {
-  sentry.captureException(e)
+// 用户获取用户登录信息的 Vue 示例
+const $vueForGetMobx = new Vue({
+  functional: true,
+  fromMobx: {
+    currentUser: () => gStore.currentUser,
+  },
+})
+/**
+ * 错误上报
+ * * 忽略未登录用户的错误上报（如接口抛错、接口抛错导致的数据异常抛错等）
+ * * 其它忽略配置见 lib/sentry.js
+ */
+function errorHandler(e) {
+  let currentUser = null
+  try {
+    currentUser = $vueForGetMobx.$options.fromMobx.currentUser()
+  } finally {
+    // 静默处理
+  }
+  const isLogin = currentUser && currentUser.id
+  if (isLogin) {
+    sentry.captureException(e)
+  }
   console.error(e)
 }
-Vue.config.errorHandler = (err, vm, info) => {
-  sentry.captureException(err)
-  console.error(err)
-}
+window.onerror = errorHandler
+Vue.config.errorHandler = errorHandler
 
 Vue.use(Movue, { reaction })
 Vue.use(VueClipboard)
