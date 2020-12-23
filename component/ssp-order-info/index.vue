@@ -220,9 +220,7 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
-@import 'cssbase/mixin';
-
+<style lang="scss" scoped>
 .discount {
   display: flex;
   align-items: center;
@@ -257,7 +255,7 @@ export default {
   }
 
   & > span {
-    @mixin wordline;
+    @include wordline;
     width: 200px;
   }
 

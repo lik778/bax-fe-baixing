@@ -64,7 +64,7 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 .coupon {
   display: flex;
   width: 280px;
@@ -131,7 +131,7 @@ export default {
   cursor: not-allowed;
   border-color: #d4d4d4;
   & > .discount {
-    background-image: linear-gradient(167deg, #EAEAEA 0%, #898989 100%);
+    background-image: linear-gradient(167deg, #eaeaea 0%, #898989 100%);
   }
   & > .detail {
     color: #999;
@@ -147,17 +147,17 @@ export default {
 }
 .coupon.selected {
   position: relative;
-  border: 2px solid #FF1D62;
+  border: 2px solid #ff1d62;
 }
 .coupon.selected::after {
-  content: '';
+  content: "";
   position: absolute;
   right: 0;
   bottom: 0;
   width: 0;
   height: 0;
-  border-right: 10px solid #FF1D62;
-  border-bottom: 10px solid #FF1D62;
+  border-right: 10px solid #ff1d62;
+  border-bottom: 10px solid #ff1d62;
   border-left: 10px solid transparent;
   border-top: 10px solid transparent;
 }
@@ -168,7 +168,7 @@ export default {
   width: 5px;
   height: 10px;
   border-style: solid;
-  border-width: 0 2PX 2PX 0;
+  border-width: 0 2px 2px 0;
   content: " ";
   transform: rotate(45deg);
   z-index: 999;

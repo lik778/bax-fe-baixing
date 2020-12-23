@@ -99,7 +99,7 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 .create-promotion {
   color: #6a778c;
   font-size: 14px;
@@ -144,4 +144,3 @@ export default {
   margin-top: 20px;
 }
 </style>
-

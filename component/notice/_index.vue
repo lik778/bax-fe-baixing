@@ -17,7 +17,7 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 .wrapper {
   width: 100%;
   display: flex;

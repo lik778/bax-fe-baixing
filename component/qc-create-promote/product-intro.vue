@@ -23,7 +23,7 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 .box {
   position: relative;
   width: 585px;
@@ -62,7 +62,7 @@ export default {
     left: -5px;
     top: 9px;
     display: inline-block;
-    content: '';
+    content: "";
     width: 4px;
     height: 4px;
     background: #ff7d51;
@@ -83,7 +83,7 @@ export default {
   visibility: hidden;
   display: block;
   font-size: 0;
-  content: ' ';
+  content: " ";
   clear: both;
   height: 0;
 }

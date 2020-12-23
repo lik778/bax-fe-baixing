@@ -1,9 +1,11 @@
-
 <template>
-  <el-dialog title="新增用户" :visible="visible"
+  <el-dialog
+    title="新增用户"
+    :visible="visible"
     :close-on-click-modal="false"
     :before-close="cancel"
-    width="420px">
+    width="420px"
+  >
     <el-form ref="form" :model="user" label-width="120px">
       <el-form-item label="名称" required>
         <el-input v-model="user.name"></el-input>
@@ -15,8 +17,7 @@
         <el-input v-model="user.mobile"></el-input>
       </el-form-item>
       <el-form-item label="角色" required>
-        <bax-select :options="roleOpts" multiple
-          v-model="user.roles">
+        <bax-select :options="roleOpts" multiple v-model="user.roles">
         </bax-select>
       </el-form-item>
     </el-form>
@@ -67,8 +68,7 @@ export default {
   },
   computed: {
     roleOpts() {
-      const roles = (this.userInfo.roles || [])
-        .map(r => r.nameEn)
+      const roles = (this.userInfo.roles || []).map(r => r.nameEn)
 
       return this.allRoles
         .filter(r => {
@@ -125,7 +125,3 @@ export default {
   }
 }
 </script>
-
-<style lang="postcss" scoped>
-
-</style>

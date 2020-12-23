@@ -7,7 +7,7 @@
   </div>
 </template>
 
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 .loading-content {
   display: flex;
   justify-content: center;

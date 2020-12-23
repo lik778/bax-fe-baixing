@@ -33,12 +33,9 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
-@import "../../cssbase/var";
-@import "cssbase/mixin";
-
+<style lang="scss" scoped>
 .huodong-intro {
-  @mixin center;
+  @include center;
   position: fixed;
   z-index: 1000;
   top: 0;
@@ -56,8 +53,8 @@ export default {
       width: 260px;
       height: 50px;
       border-radius: 4px;
-      background-color: #FFD500;
-      color: #5F00C9;
+      background-color: #ffd500;
+      color: #5f00c9;
       line-height: 50px;
       text-align: center;
     }

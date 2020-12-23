@@ -79,40 +79,40 @@ export default {
 }
 </script>
 
-<style scoped lang="postcss">
-  .upload-image-wrapper {
-    position: relative;
-    & > .popover {
-      z-index: 1;
-      position: absolute;
-      display: flex;
-      background-color: rgba(0, 0, 0, .6);
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      overflow: hidden;
-      align-items: center;
-      justify-content: center;
-      border-radius: 6px;
-      & > i {
-        font-size: 28px;
-        color: #fff;
-        margin-right: 10px;
-      }
+<style scoped lang="scss">
+.upload-image-wrapper {
+  position: relative;
+  & > .popover {
+    z-index: 1;
+    position: absolute;
+    display: flex;
+    background-color: rgba(0, 0, 0, 0.6);
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    overflow: hidden;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    & > i {
+      font-size: 28px;
+      color: #fff;
+      margin-right: 10px;
     }
   }
-  .upload-btn {
-    width: 100px;
-    height: 100px;
-    border-radius: 4px;
-    border: 1px dashed #aaa;
-    font-size: 38px;
-    text-align: center;
-    line-height: 100px;
-    cursor: pointer;
-    &:hover {
-      background: #f6f6f6;
-    }
+}
+.upload-btn {
+  width: 100px;
+  height: 100px;
+  border-radius: 4px;
+  border: 1px dashed #aaa;
+  font-size: 38px;
+  text-align: center;
+  line-height: 100px;
+  cursor: pointer;
+  &:hover {
+    background: #f6f6f6;
   }
+}
 </style>

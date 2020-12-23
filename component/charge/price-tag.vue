@@ -94,10 +94,7 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
-@import '../../cssbase/mixin';
-@import 'cssbase/mixin';
-
+<style lang="scss" scoped>
 input {
   width: 70px;
   height: 24px;
@@ -131,8 +128,8 @@ input::placeholder {
 }
 
 .qwt-pro-widget.checked {
-  border: 1px solid #FF7533;
-  background-color: #FF7533;
+  border: 1px solid #ff7533;
+  background-color: #ff7533;
   color: white;
   position: relative;
 
@@ -145,7 +142,7 @@ input::placeholder {
   }
 
   & i.icon-check {
-    @mixin center;
+    @include center;
     float: right;
     width: 20px;
     height: 20px;

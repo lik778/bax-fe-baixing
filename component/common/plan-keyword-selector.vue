@@ -317,7 +317,7 @@ function overlap(arr1, arr2) {
 }
 </script>
 
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 .tree-node {
   display: flex;
   align-items: center;
@@ -347,9 +347,10 @@ function overlap(arr1, arr2) {
   & > span {
     width: 200px;
     border: 1px solid #d1dbe5;
-    box-shadow: 0 2px 4px rgba(0,0,0,.12), 0 0 6px rgba(0,0,0,.04);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
 
-    & > header, & > footer {
+    & > header,
+    & > footer {
       display: flex;
       align-items: center;
       height: 36px;

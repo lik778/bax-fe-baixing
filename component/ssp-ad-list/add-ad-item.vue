@@ -136,13 +136,12 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 .items {
   & > div {
     display: flex;
     justify-content: space-between;
     align-items: center;
-
   }
 
   & > div:last-child {

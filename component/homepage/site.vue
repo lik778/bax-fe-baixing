@@ -99,83 +99,83 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
-  .layout-left {
-    & .layout-content {
+<style lang="scss" scoped>
+.layout-left {
+  & .layout-content {
+    display: flex;
+  }
+  & .layout-content {
+    margin-bottom: 28px;
+  }
+  & .report {
+    width: 45%;
+    flex: 9;
+    & .radio-group {
+      display: flex;
+      width: 70%;
+      justify-content: space-around;
+      margin: 40px auto;
+      & /deep/ .el-radio__label {
+        font-weight: 600;
+      }
+    }
+    & .data-list {
       display: flex;
     }
-    & .layout-content {
-      margin-bottom: 28px;
-    }
-    & .report {
-      width: 45%;
-      flex: 9;
-      & .radio-group {
-        display: flex;
-        width: 70%;
-        justify-content: space-around;
-        margin: 40px auto;
-        & >>> .el-radio__label {
-          font-weight: 600;
-        }
+    & .data {
+      padding: 6px 0;
+      text-align: center;
+      line-height: 2;
+      width: 100%;
+      & ~ .data {
+        border-left: 1px solid #e6e6e6;
       }
-      & .data-list {
-        display: flex;
-      }
-      & .data {
-        padding: 6px 0;
-        text-align: center;
-        line-height: 2;
-        width: 100%;
-        & ~ .data {
-          border-left: 1px solid #e6e6e6;
-        }
-        & .num {
-          font-size: 24px;
-          color: #FF4F49;
-          font-weight: 600;
-        }
-      }
-    }
-    & .description {
-      width: 55%;
-      flex: 10;
-      margin-top: 34px;
-      line-height: 28px;
-      & strong {
+      & .num {
         font-size: 24px;
-        color: #FF4F49;
-        margin: 0 4px;
-      }
-      & a {
-        color: #35A5E4;
-      }
-      & .actions {
-        margin-top: 16px;
-        & >>> .el-button {
-          min-width: 110px;
-          padding: 8px 12px;
-        }
+        color: #ff4f49;
+        font-weight: 600;
       }
     }
   }
-  .notice {
-    text-indent: 0;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 5;
-    -webkit-box-orient: vertical;
-  }
-  .no-site-placeholder {
-    height: 80%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    font-size: 17px;
-    color: #999;
-    & > .text {
-      margin-bottom: 20px;
+  & .description {
+    width: 55%;
+    flex: 10;
+    margin-top: 34px;
+    line-height: 28px;
+    & strong {
+      font-size: 24px;
+      color: #ff4f49;
+      margin: 0 4px;
+    }
+    & a {
+      color: #35a5e4;
+    }
+    & .actions {
+      margin-top: 16px;
+      & /deep/ .el-button {
+        min-width: 110px;
+        padding: 8px 12px;
+      }
     }
   }
+}
+.notice {
+  text-indent: 0;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+}
+.no-site-placeholder {
+  height: 80%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 17px;
+  color: #999;
+  & > .text {
+    margin-bottom: 20px;
+  }
+}
 </style>

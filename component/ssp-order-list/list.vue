@@ -147,15 +147,13 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
-@import '../../cssbase/var';
-
+<style lang="scss" scoped>
 section {
   margin-top: 16px;
 }
 
 a {
   cursor: pointer;
-  color: var(--c-main-blue);
+  color: $c-main-blue;
 }
 </style>

@@ -38,7 +38,7 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 .option {
   min-width: 200px;
 }

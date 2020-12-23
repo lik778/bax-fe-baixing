@@ -12,8 +12,7 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
-
+<style lang="scss" scoped>
 footer {
   margin: 10px 0;
 
@@ -23,5 +22,4 @@ footer {
     line-height: 1.69;
   }
 }
-
 </style>

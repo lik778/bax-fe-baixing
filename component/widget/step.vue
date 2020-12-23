@@ -67,10 +67,7 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
-@import '../../cssbase/mixin';
-@import '../../cssbase/var';
-
+<style lang="scss" scoped>
 .step {
   display: flex;
   align-items: center;
@@ -100,7 +97,7 @@ export default {
     align-items: center;
 
     & i {
-      @mixin center;
+      @include center;
       width: 23px;
       height: 23px;
       margin-right: 20px;
@@ -111,13 +108,13 @@ export default {
     }
 
     & .iconfont.icon-check {
-      color: var(--qwt-c-blue);
-      border-color: var(--qwt-c-blue);
+      color: $qwt-c-blue;
+      border-color: $qwt-c-blue;
       padding-top: 3px;
     }
 
     & .ing {
-      background: var(--qwt-c-blue);
+      background: $qwt-c-blue;
       border-color: white;
       color: white;
     }
@@ -131,7 +128,7 @@ export default {
       width: 46px;
       height: 1px;
       margin: 0 12px;
-      border-bottom: 1px dotted var(--qwt-c-blue);
+      border-bottom: 1px dotted $qwt-c-blue;
     }
   }
 }

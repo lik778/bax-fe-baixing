@@ -333,7 +333,7 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 .page-create-promote {
   & > .white-bg {
     background-color: #fff;

@@ -116,15 +116,16 @@
   }
 </script>
 
-<style lang="postcss" scoped>
-  .qiqiaoban-page-selector {
-    width: 560px;
-  }
+<style lang="scss" scoped>
+.qiqiaoban-page-selector {
+  width: 560px;
+}
 
-  a, a:visited {
-    margin-left: 20px;
-    font-size: 14px;
-    color: red;
-    cursor: pointer;
-  }
+a,
+a:visited {
+  margin-left: 20px;
+  font-size: 14px;
+  color: red;
+  cursor: pointer;
+}
 </style>

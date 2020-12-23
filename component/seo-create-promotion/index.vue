@@ -107,8 +107,7 @@ export default {
 }
 </script>
 
-
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 .seo-create-container {
   color: #666;
   border-radius: 4px;

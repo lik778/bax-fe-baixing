@@ -81,11 +81,7 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
-
-@import '../../cssbase/mixin';
-@import 'cssbase/mixin';
-
+<style lang="scss" scoped>
 .qwt-pkg-widget {
   display: inline-flex;
   flex-flow: column;
@@ -133,7 +129,7 @@ export default {
   }
 
   & > header {
-    @mixin center;
+    @include center;
     height: 42px;
     border-bottom: 1px dotted #ffb74d;
     color: #333333;
@@ -157,7 +153,7 @@ export default {
   }
 
   & > footer {
-    @mixin center;
+    @include center;
     height: 41px;
     color: white;
     background: #ffb74d;
@@ -199,7 +195,7 @@ export default {
   }
 
   & i.icon-check {
-    @mixin center;
+    @include center;
     float: right;
     width: 20px;
     height: 20px;
@@ -211,5 +207,4 @@ export default {
     border: 2px solid white;
   }
 }
-
 </style>

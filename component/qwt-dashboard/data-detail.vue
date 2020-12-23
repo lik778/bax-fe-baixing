@@ -265,19 +265,16 @@ export default {
 }
 </script>
 
-<style>
-@import '../../cssbase/var';
-@import 'cssbase/mixin';
-
+<style lang="scss">
 .qwt-dashboard-data-detail .link {
-  @mixin center;
+  @include center;
   max-width: 70px;
-  color: var(--qwt-c-blue);
+  color: $qwt-c-blue;
   cursor: pointer;
 }
 </style>
 
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 .total {
   padding: 10px 5px;
 

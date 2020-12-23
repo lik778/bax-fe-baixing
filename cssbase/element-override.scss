@@ -1,0 +1,47 @@
+/************************************************************** Element UI 覆盖 */
+
+/******************************************** el-pagination */
+
+.el-pagination {
+  & /deep/ .number {
+    font-size: 15px;
+    font-weight: normal;
+  }
+}
+
+/******************************************** el-dialog */
+
+.el-dialog {
+  border-radius: 14px;
+  overflow: hidden;
+
+  & /deep/ .el-dialog__header {
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    height: 52px;
+    line-height: 52px;
+    background: #f9f9f9;
+    font-size: 16px;
+    font-weight: bold;
+  }
+  & /deep/ .el-dialog__headerbtn {
+    top: 16px;
+  }
+}
+
+/******************************************** el-tabs */
+
+.el-tabs {
+  & /deep/ .el-tabs__header {
+    margin-bottom: 20px;
+  }
+  & /deep/ .el-tabs__nav-wrap {
+    &:after {
+      display: none;
+    }
+  }
+  & /deep/ .el-tabs__active-bar {
+    height: 3px;
+  }
+}

@@ -11,7 +11,7 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 .btn {
   font-size: 14px;
   color: #15a4fa;

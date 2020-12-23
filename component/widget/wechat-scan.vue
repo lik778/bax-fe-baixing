@@ -40,8 +40,7 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
-
+<style lang="scss" scoped>
 .wechat-scan {
   position: fixed;
   bottom: 150px;
@@ -62,13 +61,14 @@ export default {
     line-height: 20px;
     display: block;
     font-size: 16px;
-    color: #F75353;
+    color: #f75353;
   }
   & .icon {
     display: block;
     width: 100%;
     height: 100%;
-    background: url('//file.baixing.net/201811/77178e618bfebbe8ba414919fb366d1e.png') no-repeat center;
+    background: url("//file.baixing.net/201811/77178e618bfebbe8ba414919fb366d1e.png")
+      no-repeat center;
     background-size: 28px 28px;
   }
 }
@@ -79,7 +79,7 @@ export default {
   height: 100%;
   left: 0;
   width: 100%;
-  background-color: rgba(0, 0, 0, .5);
+  background-color: rgba(0, 0, 0, 0.5);
   z-index: 1024;
   & .img-wrap {
     position: absolute;

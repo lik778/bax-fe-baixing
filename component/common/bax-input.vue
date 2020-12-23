@@ -34,9 +34,9 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 .bax-input {
-  width:  120px;
+  width: 120px;
   border-radius: 4px;
   padding: 4px 6px;
   background: #fff;

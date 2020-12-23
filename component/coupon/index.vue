@@ -69,13 +69,13 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 .my-coupon {
   & > main {
     background-color: #fff;
     padding: 25px;
     border-radius: 4px;
-    box-shadow: 0 2px 9px 0 rgba(83, 95, 127, .10);
+    box-shadow: 0 2px 9px 0 rgba(83, 95, 127, 0.1);
   }
 }
 

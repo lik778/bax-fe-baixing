@@ -48,10 +48,7 @@ export default {
 }
 </script>
 
-<style scoped>
-
-@import 'cssbase/mixin';
-
+<style lang="scss" scoped>
 span {
   display: flex;
   flex-flow: column;
@@ -60,7 +57,7 @@ span {
     display: flex;
 
     & > p {
-      @mixin center;
+      @include center;
 
       width: 28px;
       height: 28px;
@@ -79,5 +76,4 @@ span {
     margin-top: 3px;
   }
 }
-
 </style>

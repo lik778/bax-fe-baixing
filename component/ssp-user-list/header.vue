@@ -90,13 +90,9 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
-@import '../../cssbase/mixin';
-@import 'cssbase/mixin';
-
-@mixin filter-item;
-
+<style lang="scss" scoped>
 .user-header {
+  @include filter-item;
 
   & > div {
     display: flex;
@@ -109,7 +105,7 @@ export default {
 
   & > div:last-child {
     justify-content: space-around;
-    @mixin top-filter;
+    @include top-filter;
     padding: 0 30px 15px 0;
 
     & > span {

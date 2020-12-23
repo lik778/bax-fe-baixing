@@ -95,7 +95,7 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 .search-img-view {
   &.view-border {
     border: 1px solid #ebebeb;

@@ -543,12 +543,9 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
-@import '../../cssbase/mixin';
-@import '../../cssbase/var';
-
+<style lang="scss" scoped>
 .el-icon-plus {
-  @mixin icon-btn;
+  @include icon-btn;
 }
 
 .el-tag {
@@ -570,7 +567,7 @@ export default {
     }
   }
 
-  & a[name=ad-conflict] {
+  & a[name="ad-conflict"] {
     margin-top: 50px;
   }
 
@@ -578,7 +575,8 @@ export default {
     margin-left: 5px;
     font-size: 14px;
 
-    & i, & label {
+    & i,
+    & label {
       color: red;
     }
 

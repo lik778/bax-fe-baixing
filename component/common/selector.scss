@@ -1,8 +1,5 @@
-
-@import 'cssbase/mixin';
-
-@define-mixin selected {
-  background: #FF6350;
+@mixin selected {
+  background: #ff6350;
   border-radius: 3px;
   color: white;
 }
@@ -30,7 +27,7 @@
       cursor: pointer;
 
       &.selected {
-        @mixin selected;
+        @include selected;
       }
     }
 
@@ -47,7 +44,7 @@
         cursor: pointer;
 
         &.selected {
-          @mixin selected;
+          @include selected;
         }
       }
     }
