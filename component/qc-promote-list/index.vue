@@ -165,6 +165,7 @@ import {
 } from 'constant/qianci'
 import { getBusinessLicense } from 'api/seo'
 import { getPromoteList, getWanciSeoRedirect } from 'api/qianci'
+import { isPro } from 'config'
 
 export default {
   name: 'qc-promote-list',
@@ -286,7 +287,10 @@ export default {
         window.open(link)
         return
       }
-      window.open('http://shop.baixing.com/management/')
+      const shopLink = isPro
+        ? '//shop.baixing.com/management/'
+        : '//shop-test.baixing.cn/management/'
+      window.open(shopLink)
     },
     async goEditCreativePage(row) {
       this.active.selectedItem = row
