@@ -1,6 +1,6 @@
 export const activityConfig = {
-  startTime: '2020-12-08 00:00:00',
-  endTime: '2020-12-16 23:59:59'
+  startTime: '2020-12-28 00:00:00',
+  endTime: '2020-12-31 23:59:59'
 }
 
 export const COMMON_STATUS = 'common'
@@ -28,8 +28,8 @@ export const fengmingDiscountInfo = {
       [1000, 200, 600],
       [3088, 200, 600],
       [5088, 600, 900],
-      [6088, 600, 900, 188],
-      [10188, 1000, 1500, 388]
+      [6088, 600, 900, 200],
+      [10188, 1000, 1500, 500]
     ],
     get discountInfoHTML() {
       return this.discountInfo.map((item) => {
@@ -54,7 +54,6 @@ export const biaowangDiscountInfo = {
     }
   },
   [ACTIVITY_STATUS]: {  // 活动文案
-
     get discountInfoHTML() {
       return [`<div class="notice">
         <p><span><i class="red">满</i>500-4999元，</span>同时购买精品官网1年送1年 标准版再<i class="red">减</i>200元/ 专业版再<i class="red">减</i>600 元；</p>
