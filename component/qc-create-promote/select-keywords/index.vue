@@ -69,7 +69,7 @@
           />
           <div class="expand-tip size-13">
             <div>组合逻辑：B+C、A+B+C、A+C+D、B+C+D、A+B+C+D；</div>
-            <div>如：上海（A）专业的（B）空调维修（C）多少钱（D）</div>
+            <div>如：上海（A）专业的（B）撕碎机（C）多少钱（D）</div>
           </div>
         </div>
       </transition>
