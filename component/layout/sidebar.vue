@@ -31,22 +31,24 @@
               充值
             </router-link>
           </el-menu-item>
-          <el-menu-item index="seo-charge">
+          <!-- 下掉，暂时隐藏，等主站上线时候可以把路由和组件相关代码删除 -->
+          <!-- <el-menu-item index="seo-charge">
             <router-link :to="{ name: 'seo-charge' }" tag="p">
               首页宝
             </router-link>
-          </el-menu-item>
+          </el-menu-item> -->
         </el-submenu>
 
         <el-submenu index="seo">
           <template slot="title">
             <bx-icon type="sharealt"></bx-icon>首页宝
           </template>
-          <el-menu-item index="seo-create-promotion">
+          <!-- 下掉，暂时隐藏，等主站上线时候可以把路由和组件相关代码删除 -->
+          <!-- <el-menu-item index="seo-create-promotion">
             <router-link :to="{ name: 'seo-create-promotion' }" tag="p">
               新建首页宝
             </router-link>
-          </el-menu-item>
+          </el-menu-item> -->
           <el-menu-item index="seo-promotion-list">
             <router-link :to="{ name: 'seo-promotion-list' }" tag="p">
               管理首页宝
