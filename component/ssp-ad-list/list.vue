@@ -350,9 +350,7 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
-@import '../../cssbase/var';
-
+<style lang="scss" scoped>
 .center {
   display: flex;
   justify-content: center;
@@ -371,7 +369,7 @@ export default {
 }
 
 a {
-  color: var(--c-main-blue);
+  color: $c-main-blue;
   cursor: pointer;
 }
 

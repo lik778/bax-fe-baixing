@@ -73,11 +73,7 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
-@import '../../cssbase/mixin';
-@import '../../cssbase/var';
-@import 'cssbase/mixin';
-
+<style lang="scss" scoped>
 .gw-pro-widget {
   position: relative;
   display: inline-flex;
@@ -100,7 +96,7 @@ export default {
       height: 50px;
 
       & > main {
-        @mixin center;
+        @include center;
         height: 20px;
         background: #ff3c3c;
         font-size: 12px;
@@ -121,7 +117,7 @@ export default {
     }
   }
   & > header {
-    @mixin center;
+    @include center;
     height: 42px;
     color: #333333;
     font-weight: 500;
@@ -151,7 +147,7 @@ export default {
     bottom: 0;
     left: 0;
     width: 100%;
-    @mixin center;
+    @include center;
     height: 36px;
     color: white;
     background: #ccc;
@@ -163,10 +159,10 @@ export default {
     }
   }
   &.checked {
-    border: solid 1px var(--qwt-c-orange);
+    border: solid 1px $qwt-c-orange;
     & > footer {
-      border-top: 1px dotted var(--qwt-c-orange);
-      background: var(--qwt-c-orange);
+      border-top: 1px dotted $qwt-c-orange;
+      background: $qwt-c-orange;
       color: white;
     }
     & > p {
@@ -178,7 +174,7 @@ export default {
       right: 0;
     }
     & i.icon-check {
-      @mixin center;
+      @include center;
       float: right;
       width: 20px;
       height: 20px;

@@ -211,9 +211,8 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
-
-@import './selector';
+<style lang="scss" scoped>
+@import "./selector";
 
 .tip {
   color: red;
@@ -225,12 +224,12 @@ export default {
   display: flex;
   text-align: center;
   line-height: 40px;
-& .title {
+  & .title {
     text-indent: 10px;
     font-size: 18px;
     color: #565656;
   }
-& .buttons {
+  & .buttons {
     margin-left: auto;
     margin-right: 26px;
   }

@@ -50,7 +50,7 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 .header {
   color: #717d91;
   background-color: #eff2f7;

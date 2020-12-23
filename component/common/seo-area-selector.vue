@@ -257,115 +257,112 @@ export default {
 }
 </script>
 
+<style lang="scss">
+.tag {
+  margin-right: 6px;
+  margin-bottom: 4px;
+}
 
+.city-selector-dialog {
+  font-size: 14px;
+  line-height: 1.5;
+  padding: 20px;
 
-<style lang="postcss">
-  .tag {
-    margin-right: 6px;
-    margin-bottom: 4px;
+  & .placeholder {
+    font-size: 13px;
+    margin-bottom: 6px;
+    color: #888;
   }
 
-  .city-selector-dialog {
-    font-size: 14px;
-    line-height: 1.5;
-    padding: 20px;
+  & .header {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 16px;
+  }
 
-    & .placeholder {
-      font-size: 13px;
-      margin-bottom: 6px;
-      color: #888;
-    }
-
-    & .header {
+  & .city-list {
+    & h6 {
       font-size: 16px;
-      font-weight: 600;
-      margin-bottom: 16px;
+      margin: 20px 15px;
     }
-
-    & .city-list {
-      & h6 {
-        font-size: 16px;
-        margin: 20px 15px;
-      }
-      & ul {
-        margin: 20px 25px;
-        display: flex;
-        flex-wrap: wrap;
-      }
-      & li {
-        margin: 0 5px 5px;
-        width: 120px;
-        overflow: hidden;
-        & > a {
-          position: relative;
-          padding: 6px 20px;
-          color: #FF6350;
-          border-radius: 2px;
-          transition: .2s all;
-          &.selected, &:hover {
-            background-color: rgba(240, 110, 110, .9);
-            color: #fff;
-          }
-        }
-        & .hint {
-          position: absolute;
-          font-size: 12px;
-          color: #fff;
-          text-align: center;
-          line-height: 14px;
-          width: 14px;
-          height: 14px;
-          top: 4px;
-          right: 4px;
-          transform: scale(.85);
-          background-color: #FF6350;
-        }
-      }
-    }
-
-    & .selected-areas {
-      padding: 10px 20px;
-      background-color: #fafafa;
-    }
-
-    & .active-areas {
-      background-color: #fafafa;
-      border-bottom: 1px solid #e6e6e6;
-      padding: 0 30px;
-      margin-bottom: 10px;
+    & ul {
+      margin: 20px 25px;
       display: flex;
-
-      & > span {
-        margin-right: 8px;
-        cursor: pointer;
-        border-width: 1px 1px 0;
-        line-height: 29px;
+      flex-wrap: wrap;
+    }
+    & li {
+      margin: 0 5px 5px;
+      width: 120px;
+      overflow: hidden;
+      & > a {
+        position: relative;
+        padding: 6px 20px;
+        color: #ff6350;
         border-radius: 2px;
-        border-color: #d9d9d9;
-        border-style: solid;
-        background-color: #fff;
-        margin-bottom: -1px;
-        display: inline-block;
-        padding: 0 15px;
+        transition: 0.2s all;
+        &.selected,
+        &:hover {
+          background-color: rgba(240, 110, 110, 0.9);
+          color: #fff;
+        }
       }
-    }
-
-
-    & /deep/ .el-dialog__footer {
-      & /deep/ .footer {
-        display: flex;
+      & .hint {
+        position: absolute;
+        font-size: 12px;
+        color: #fff;
+        text-align: center;
+        line-height: 14px;
+        width: 14px;
+        height: 14px;
+        top: 4px;
+        right: 4px;
+        transform: scale(0.85);
+        background-color: #ff6350;
       }
-      & /deep/ .left {
-        margin-left: 30px;
-        margin-right: auto;
-      }
-    }
-
-    & /deep/ .el-dialog__header,
-    & /deep/ .el-dialog__body,
-    & /deep/ .el-dialog__footer {
-      padding: 0;
     }
   }
 
+  & .selected-areas {
+    padding: 10px 20px;
+    background-color: #fafafa;
+  }
+
+  & .active-areas {
+    background-color: #fafafa;
+    border-bottom: 1px solid #e6e6e6;
+    padding: 0 30px;
+    margin-bottom: 10px;
+    display: flex;
+
+    & > span {
+      margin-right: 8px;
+      cursor: pointer;
+      border-width: 1px 1px 0;
+      line-height: 29px;
+      border-radius: 2px;
+      border-color: #d9d9d9;
+      border-style: solid;
+      background-color: #fff;
+      margin-bottom: -1px;
+      display: inline-block;
+      padding: 0 15px;
+    }
+  }
+
+  & /deep/ .el-dialog__footer {
+    & /deep/ .footer {
+      display: flex;
+    }
+    & /deep/ .left {
+      margin-left: 30px;
+      margin-right: auto;
+    }
+  }
+
+  & /deep/ .el-dialog__header,
+  & /deep/ .el-dialog__body,
+  & /deep/ .el-dialog__footer {
+    padding: 0;
+  }
+}
 </style>

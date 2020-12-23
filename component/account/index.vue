@@ -51,7 +51,7 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 .account-container {
   padding: 0 35px;
   width: 100%;

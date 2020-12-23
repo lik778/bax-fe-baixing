@@ -17,8 +17,7 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
-
+<style lang="scss" scoped>
 .back-to-top {
   position: fixed;
   bottom: 50px;
@@ -35,5 +34,4 @@ export default {
   border-radius: 4px;
   z-index: 100;
 }
-
 </style>

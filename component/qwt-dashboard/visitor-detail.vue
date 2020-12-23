@@ -141,7 +141,7 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 .visitor-detail {
   margin-left: 18px;
   & > .info {
@@ -163,7 +163,7 @@ export default {
 }
 </style>
 
-<style lang="postcss">
+<style lang="scss">
 .visitor-detail {
   & th,
   & td {

@@ -87,64 +87,63 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 .keyword-view {
   border: 1px solid #ddd;
   width: 25%;
-  min-width: ;
-& > .header {
+  & > .header {
     position: relative;
     text-align: center;
     height: 40px;
     line-height: 40px;
-& > i {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    right: 10px;
-    font-size: 22px;
-    cursor: pointer;
+    & > i {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      right: 10px;
+      font-size: 22px;
+      cursor: pointer;
+    }
   }
-}
-& > .content {
+  & > .content {
     height: 340px;
     padding: 10px 16px;
     border-top: 1px solid #ddd;
     line-height: 26px;
     overflow: auto;
-& > .empty {
-    height: 100%;
-    width: 90%;
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #ccc;
-    font-size: 13px;
+    & > .empty {
+      height: 100%;
+      width: 90%;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ccc;
+      font-size: 13px;
+    }
+    & > .item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      & > .word {
+        flex: 1;
+      }
+      & i {
+        font-size: 16px;
+        margin-left: 10px;
+        cursor: pointer;
+        transition: all 0.2s linear;
+        &:hover {
+          transform: scale(1.2);
+        }
+      }
+    }
   }
-& > .item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-& > .word {
-    flex: 1;
+  & .warning-text {
+    font-size: 14px;
+    color: #ff6350;
+    position: absolute;
+    padding-top: 10px;
   }
-& i {
-    font-size: 16px;
-    margin-left: 10px;
-    cursor: pointer;
-    transition: all 0.2s linear;
-&:hover {
-    transform: scale(1.2);
-}
-}
-}
-}
-& .warning-text {
-  font-size: 14px;
-  color: #FF6350;
-  position: absolute;
-  padding-top: 10px;
-}
 }
 </style>

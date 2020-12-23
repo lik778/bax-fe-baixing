@@ -40,23 +40,28 @@ export default {
 }
 </script>
 
-
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 @keyframes tada {
   0% {
     transform: scaleX(1);
   }
 
-  10%,20% {
-    transform: scale3d(.9,.9,.9) rotate(-3deg);
+  10%,
+  20% {
+    transform: scale3d(0.9, 0.9, 0.9) rotate(-3deg);
   }
 
-  30%,50%,70%,90% {
-    transform: scale3d(1.1,1.1,1.1) rotate(3deg);
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: scale3d(1.1, 1.1, 1.1) rotate(3deg);
   }
 
-  40%,60%,80% {
-    transform: scale3d(1.1,1.1,1.1) rotate(-3deg);
+  40%,
+  60%,
+  80% {
+    transform: scale3d(1.1, 1.1, 1.1) rotate(-3deg);
   }
 
   to {

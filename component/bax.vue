@@ -191,7 +191,7 @@ export default {
 }
 </script>
 
-<style scoped lang="postcss">
+<style lang="scss" scoped>
   .notice {
     display: flex;
     position: fixed;
@@ -223,9 +223,51 @@ export default {
   }
 </style>
 
-<style lang="postcss">
-@import 'cssbase/reset';
-@import 'cssbase/mixin';
+<style lang="scss">
+* {
+  font-family: PingFangSC-Regular, 'Open Sans', 'Microsoft YaHei', 微软雅黑, STHeiti, 'WenQuanYi Micro Hei', SimSun, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+  vertical-align: baseline;
+  box-sizing: border-box;
+  font-size: 100%;
+  outline: 0;
+  padding: 0;
+  margin: 0;
+  border: 0;
+}
+
+html {
+  font-family: 'Hiragino Sans GB', helvetica, tahoma, arial, sans-serif;
+}
+
+html, body {
+  height: 100%;
+}
+
+a {
+  background-color: transparent;
+  text-decoration: none;
+}
+
+i {
+  font-style: normal;
+}
+
+ul, li {
+  list-style: none;
+}
+
+a, span, aside, label, strong {
+  display: inline-block;
+}
+
+textarea {
+  resize: none;
+}
+
+dialog {
+  margin: auto;
+}
 
 body > .container {
   display: block;

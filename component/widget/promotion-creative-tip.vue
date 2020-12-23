@@ -29,7 +29,7 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 .el-button--primary {
   margin-left: 10px;
   background-color: unset;
@@ -44,7 +44,7 @@ i {
   color: #6a778c;
 }
 .highlight {
-  color: #B66969 !important;
+  color: #b66969 !important;
   font-weight: 600;
 }
 </style>

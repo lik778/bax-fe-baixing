@@ -1,5 +1,6 @@
 npm-debug.log
 node_modules/
+node_modules_old/
 .DS_Store
 .vscode/
 dist/

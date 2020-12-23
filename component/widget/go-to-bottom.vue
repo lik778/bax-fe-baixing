@@ -49,12 +49,9 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
-
-@import 'cssbase/mixin';
-
+<style lang="scss" scoped>
 .go-to-buttom {
-  @mixin center;
+  @include center;
 
   position: fixed;
   top: 80px;
@@ -74,5 +71,4 @@ export default {
     opacity: 1;
   }
 }
-
 </style>

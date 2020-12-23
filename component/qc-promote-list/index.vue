@@ -252,7 +252,7 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 .query-form {
   margin-top: 18px;
   padding: 16px;
@@ -279,7 +279,7 @@ export default {
 }
 
 .link-btn {
-  color: #35A5E4;
+  color: #35a5e4;
   cursor: pointer;
 }
 </style>

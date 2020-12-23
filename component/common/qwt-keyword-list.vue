@@ -478,14 +478,13 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
-@import "../../cssbase/var.css";
+<style lang="scss" scoped>
 .qwt-keyword-list {
   display: flex;
   flex-flow: column;
   max-width: 1150px;
 
-  & >>> .new-word {]
+  & /deep/ .new-word {
     font-size: 12px;
     color: #ff4401;
   }
@@ -559,11 +558,11 @@ export default {
 .pcice-action {
   font-size: 13px;
   font-weight: 300;
-  color: var(--qwt-c-orange);
+  color: $qwt-c-orange;
 }
 
 .actions {
-  margin-top:  8px;
+  margin-top: 8px;
   display: flex;
   justify-content: flex-end;
   & .el-button {
@@ -571,7 +570,7 @@ export default {
   }
 }
 
-.display-inline{
+.display-inline {
   display: inline-block !important;
   vertical-align: middle !important;
   line-height: 20px;

@@ -268,12 +268,9 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
-@import '../../cssbase/var';
-@import 'cssbase/mixin';
-
+<style lang="scss" scoped>
 .buy-btn {
-  @mixin center;
+  @include center;
   width: 110px;
   height: 35px;
   margin-top: 20px;
@@ -292,7 +289,7 @@ export default {
     width: 100%;
     min-height: calc(100% - 50px);
     padding: 10px 10px 30px;
-    background: var(--qwt-c-gray);
+    background: $qwt-c-gray;
   }
 }
 
@@ -374,7 +371,7 @@ export default {
 
   & > section.terms {
     & > a {
-      color: var(--qwt-c-blue);
+      color: $qwt-c-blue;
     }
   }
 
@@ -382,7 +379,7 @@ export default {
     & > span {
       font-size: 22px;
       font-weight: 500;
-      color: var(--qwt-c-orange);
+      color: $qwt-c-orange;
     }
   }
 }
@@ -407,7 +404,7 @@ export default {
   font-size: 12px;
 
   & > label {
-    @mixin wordline;
+    @include wordline;
     width: 280px;
   }
 }

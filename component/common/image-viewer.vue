@@ -308,7 +308,7 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
 .el-image__inner,
 .el-image__placeholder,
 .el-image__error {
@@ -450,7 +450,6 @@ export default {
   animation: image-viewer-fade-out 0.3s;
 }
 
-
 @keyframes image-viewer-fade-in {
   0% {
     transform: translate3d(0, -20px, 0);
@@ -461,7 +460,6 @@ export default {
     opacity: 1;
   }
 }
-
 
 @keyframes image-viewer-fade-out {
   0% {

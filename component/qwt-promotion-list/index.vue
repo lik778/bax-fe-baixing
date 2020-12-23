@@ -288,7 +288,7 @@ export default {
 }
 </script>
 
-<style lang="postcss" scoped>
+<style lang="scss" scoped>
   .container {
     padding: 20px;
     background-color: #fff;
@@ -296,7 +296,7 @@ export default {
     box-shadow: 0 2px 9px 0 rgba(83, 95, 127, .10);
     color: #666;
     font-size: 14px;
-    & >>> .el-pagination {
+    & /deep/ .el-pagination {
       display: flex;
       justify-content: center;
     }
