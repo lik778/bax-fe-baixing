@@ -62,7 +62,7 @@ import { allowUseKaPackage } from 'util/fengming-role'
 import { getCurrentUser } from 'api/account'
 import pick from 'lodash.pick'
 import { notAllowFengmingRecharge } from 'util/role'
-import { parseQuery, stringifyQuery } from 'util'
+import { parseQuery, stringifyQuery, f2y } from 'util'
 
 import gStore from '../component/store'
 
@@ -188,6 +188,7 @@ Vue.prototype.$formatter = {
   join: (arrs = [], seq = '、') => arrs.join(seq),
   date: (time = '') => (!time ? time : dayjs(time).format('YYYY-MM-DD')),
   mapWith: (key = '', obj = {}) => obj[key],
+  f2y,
 }
 
 // 该组件引入echarts，体积较大，异步加载提升用户体验
