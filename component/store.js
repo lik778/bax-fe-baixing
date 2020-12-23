@@ -11,10 +11,7 @@ const gStore = observable({
   },
   _allCategories: [],
   _allAreas: [],
-  _allQianciAreas: {
-    cnToEnMap: {},
-    provinces: {},
-  },
+  _allQianciAreas: {},
   _allRoles: [],
 
   addUserLeadVisible: false,
