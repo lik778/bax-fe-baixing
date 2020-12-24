@@ -1,11 +1,7 @@
 <template>
   <div class="promotion-list">
     <header>我的首页宝推广计划<small>您的首页宝推广余额为 {{f2y(balance)}} 元</small></header>
-
-    <router-link :to="{name: 'seo-create-promotion'}">
-      <el-button class="create"
-                 type="primary">新建首页宝计划</el-button>
-    </router-link>
+    
     <div class="choose-type">
       <el-radio-group v-model="type">
         <el-radio v-for="({value, label}) in promotionTypes"
