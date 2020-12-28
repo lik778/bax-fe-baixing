@@ -1,20 +1,19 @@
 module.exports = {
   env: {
     browser: true,
-    es6: true,
+    es2021: true
   },
-  extends: ['standard', 'prettier', 'plugin:prettier/recommended'],
-  globals: {
-    Atomics: 'readonly',
-    SharedArrayBuffer: 'readonly',
-  },
-  parser: 'vue-eslint-parser',
+  extends: [
+    'plugin:vue/essential',
+    'standard'
+  ],
   parserOptions: {
-    parser: 'babel-eslint',
-    ecmaVersion: 2018,
-    sourceType: 'module',
+    ecmaVersion: 12,
+    sourceType: 'module'
   },
+  plugins: [
+    'vue'
+  ],
   rules: {
-    'prettier/prettier': 'warn',
-  },
+  }
 }
