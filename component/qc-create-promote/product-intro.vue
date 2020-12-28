@@ -1,20 +1,25 @@
 <template>
   <div class="box">
-    <img class="icon" src="//file.baixing.net/202010/b21813d15ab60ddef31d5c61b96ad52e.png">
+    <img
+      class="icon"
+      src="//file.baixing.net/202010/b21813d15ab60ddef31d5c61b96ad52e.png"
+    />
     <div class="intro">
       <ul class="clearfix">
         <li>广告位投放包</li>
         <li>精品官网</li>
-        <li>快照位投放包</li>
+        <li>营销站群</li>
       </ul>
-      <p>产品说明：1.广告位双端投放不低于1000个关键词；2.精品官网180天；3.快照位每日投放100条信息</p>
+      <p>
+        产品说明：1.广告位双端投放不低于1000个关键词；2.精品官网180天；3.用户独享的高权重站群域名180天
+      </p>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-name: "product-intro"
+  name: 'product-intro',
 }
 </script>
 
