@@ -74,7 +74,7 @@ export default {
       default: true
     }
   },
-  data() {
+  data () {
     return {
       pwdDialogVisible: false,
       confirmPassword: '',
@@ -82,7 +82,7 @@ export default {
     }
   },
   methods: {
-    async onDropdownCmd(cmd) {
+    async onDropdownCmd (cmd) {
       switch (cmd) {
         case 'changePwd':
           this.pwdDialogVisible = true
@@ -93,7 +93,7 @@ export default {
           break
       }
     },
-    async changePassword() {
+    async changePassword () {
       const {
         confirmPassword,
         newPassword,
@@ -118,7 +118,7 @@ export default {
 
       Message.success('修改成功')
     },
-    help() {
+    help () {
       gStore.toggleAddUserLeadVisible()
       const { userInfo } = this
 
@@ -128,15 +128,15 @@ export default {
         baxId: userInfo.id
       })
     },
-    empty() {
+    empty () {
       this.confirmPassword = ''
       this.newPassword = ''
     },
-    cancel() {
+    cancel () {
       this.pwdDialogVisible = false
       this.empty()
     },
-    goBack() {
+    goBack () {
       window.history.back()
     }
   }

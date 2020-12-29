@@ -10,13 +10,13 @@
 <script>
 export default {
   name: 'bax-go-to-bottom-btn',
-  data() {
+  data () {
     return {
       show: false
     }
   },
   computed: {
-    height() {
+    height () {
       return Math.max(
         document.documentElement.clientHeight,
         document.documentElement.scrollHeight,
@@ -26,7 +26,7 @@ export default {
     }
   },
   methods: {
-    onscroll() {
+    onscroll () {
       const { height } = this
 
       if (height > 1200 && window.pageYOffset > 120 &&
@@ -36,14 +36,14 @@ export default {
         this.show = false
       }
     },
-    gotoBottom() {
+    gotoBottom () {
       window.scrollTo(window.pageXOffset, this.height)
     }
   },
-  mounted() {
+  mounted () {
     window.addEventListener('scroll', this.onscroll)
   },
-  destroyed() {
+  destroyed () {
     window.removeEventListener('scroll', this.onscroll)
   }
 }

@@ -36,7 +36,7 @@ export default {
       validator: v => v === 'price'
     }
   },
-  data() {
+  data () {
     return {
       localValue: this.type === 'price'
         ? this.centToYuan(this.value)
@@ -45,20 +45,20 @@ export default {
     }
   },
   computed: {
-    displayValue() {
+    displayValue () {
       return this.type === 'price'
         ? commafy(this.localValue) + '元'
         : this.localValue
     }
   },
   methods: {
-    onChange(v) {
+    onChange (v) {
       this.localValue = v
     },
-    centToYuan(n) {
+    centToYuan (n) {
       return (n / 100).toFixed(2)
     },
-    ok() {
+    ok () {
       const v = this.type === 'price'
         ? this.localValue * 100
         : this.localValue
@@ -72,7 +72,7 @@ export default {
     }
   },
   watch: {
-    value(v) {
+    value (v) {
       this.mode = 'view'
       this.localValue = this.type === 'price'
         ? this.centToYuan(v)

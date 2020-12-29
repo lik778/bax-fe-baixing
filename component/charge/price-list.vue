@@ -49,11 +49,11 @@ export default {
     }
   },
   computed: {
-    total() {
+    total () {
       const p = this.products.map(i => i.discountPrice)
       return p.reduce((a, b) => a + b, 0)
     },
-    originTotal() {
+    originTotal () {
       const p = this.products.map(i => i.originalPrice)
       return p.reduce((a, b) => a + b, 0)
     }

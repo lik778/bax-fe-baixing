@@ -34,8 +34,6 @@
 </template>
 
 <script>
-// import HuoDongIntro from './common/huodong-intro'
-import HuoDongBtn from './common/huodong-btn'
 import NewUserIntro from './common/new-user-intro'
 import Notification from './common/notification'
 import AddUserLead from './common/add-user-lead'
@@ -56,18 +54,13 @@ import {
   normalizeRoles
 } from 'util/role'
 
-import {router} from '../template/bax'
+import { router } from '../template/bax'
 import qs from 'query-string'
-import store from "./activity-store";
-
-
 
 export default {
   name: 'bax',
   components: {
     BwShoppingCart,
-    // HuoDongIntro,
-    HuoDongBtn,
     NewUserIntro,
     Notification,
     AddUserLead,
@@ -85,7 +78,7 @@ export default {
     allAreas: () => gStore.allAreas,
     allRoles: () => gStore.allRoles
   },
-  data() {
+  data () {
     return {
       showNewUserIntro: false,
       newUserIntroMode: '',
@@ -95,14 +88,14 @@ export default {
       salesInfo: {
         salesId: '',
         userId: ''
-      },
+      }
     }
   },
   computed: {
-    fullscreenLoading() {
+    fullscreenLoading () {
       return this.pending > 0
     },
-    topCategories() {
+    topCategories () {
       return this.allCategories
         .filter(c => c.level === 1)
         .map(c => ({
@@ -112,13 +105,13 @@ export default {
     }
   },
   methods: {
-    toggleAddUserLeadVisible() {
+    toggleAddUserLeadVisible () {
       gStore.toggleAddUserLeadVisible()
     }
   },
-  async beforeMount() {
+  async beforeMount () {
     // 设置活动优惠信息
-    await store.setDiscountInfoHTMLFactory()
+    await aStore.setDiscountInfoHTMLFactory()
 
     // 全局只 mount 一次, 无需 remove listener
     es.addListener('http fetch start', () => {
@@ -129,17 +122,19 @@ export default {
       this.pending = this.pending - 1
     })
   },
-  created() {
+  created () {
     // 记录销售的客户id等信息
     // 米奇跳转userId需改成user_id
-    const {user_id, userId, sales_id: salesId} = qs.parse(location.search)
+    // eslint-disable-next-line
+    const { user_id, userId, sales_id: salesId } = qs.parse(location.search)
+    // eslint-disable-next-line
     const uid = userId || user_id
     if (uid && salesId) {
       this.salesInfo.userId = +uid
       this.salesInfo.salesId = +salesId
     }
   },
-  async mounted() {
+  async mounted () {
     await Promise.all([
       gStore.getCurrentUser(),
       gStore.getCategories(),

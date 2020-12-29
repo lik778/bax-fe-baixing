@@ -105,7 +105,7 @@ export default {
       default: 'bx'
     }
   },
-  data() {
+  data () {
     return {
       selectedAreas: [...this.areas],
       china: {
@@ -117,7 +117,7 @@ export default {
     }
   },
   computed: {
-    specialCities() {
+    specialCities () {
       return this.allAreas
         .filter(a => a.areaType === 1)
         .filter(a => specialCities.includes(a.name))
@@ -130,12 +130,12 @@ export default {
           areas: this.getSubAreas(a.name)
         }))
     },
-    disAllowAreaIds() {
+    disAllowAreaIds () {
       const { allAreas } = this
       const a = getDisAllowAreas(allAreas)
       return a.map(i => i.id)
     },
-    topAreas() {
+    topAreas () {
       const { disAllowAreaIds, type } = this
 
       return this.allAreas
@@ -158,7 +158,7 @@ export default {
     }
   },
   methods: {
-    getSubAreas(name) {
+    getSubAreas (name) {
       const { disAllowAreaIds, type } = this
       return this.allAreas
         .filter(a => {
@@ -180,7 +180,7 @@ export default {
           level: 1 // 市
         }))
     },
-    getAreaByName(name) {
+    getAreaByName (name) {
       const a = this.allAreas
         .find(a => a.name === name) || {}
 
@@ -191,11 +191,11 @@ export default {
         id: a.name
       }
     },
-    getParentName(name) {
+    getParentName (name) {
       const a = this.getAreaByName(name)
       return a.parent || ''
     },
-    removeCityFromQuanguo(city) {
+    removeCityFromQuanguo (city) {
       // 城市: 非 省, china
       let result = []
 
@@ -226,7 +226,7 @@ export default {
 
       return result
     },
-    removeCityFromProvince(city) {
+    removeCityFromProvince (city) {
       const parent = this.getParentName(city)
 
       const topArea = clone(this.topAreas).find(a => a.id === parent)
@@ -235,11 +235,11 @@ export default {
         .filter(a => a.id !== city)
         .map(a => a.id)
     },
-    belongToProvince(city, province) {
+    belongToProvince (city, province) {
       const top = this.topAreas.find(a => a.id === province)
       return top.areas.map(a => a.id).includes(city)
     },
-    areaChecked(name) {
+    areaChecked (name) {
       const area = this.getAreaByName(name)
 
       const {
@@ -281,7 +281,7 @@ export default {
         }
       }
     },
-    clickSpecialCityButton(name) {
+    clickSpecialCityButton (name) {
       const { selectedAreas } = this
 
       if (selectedAreas.includes('quanguo')) {
@@ -303,7 +303,7 @@ export default {
         ]
       }
     },
-    clickProvinceArea(name) {
+    clickProvinceArea (name) {
       const { selectedAreas } = this
 
       const area = this.getAreaByName(name)
@@ -349,7 +349,7 @@ export default {
         }
       }
     },
-    clickCityArea(name) {
+    clickCityArea (name) {
       const { selectedAreas } = this
 
       const area = this.getAreaByName(name)
@@ -382,7 +382,7 @@ export default {
         }
       }
     },
-    clickChina() {
+    clickChina () {
       const type = this.areaChecked('china') ? 'del' : 'add'
       const { selectedAreas } = this
 
@@ -403,7 +403,7 @@ export default {
         }
       }
     },
-    clickArea(name) {
+    clickArea (name) {
       const { selectedAreas } = this
 
       if (name === 'quanguo') {
@@ -439,15 +439,15 @@ export default {
         this.clickCityArea(name)
       }
     },
-    empty() {
+    empty () {
       // 一律由外部 prop 清空
       // this.selectedAreas = []
     },
-    cancel() {
+    cancel () {
       this.empty()
       this.$emit('cancel')
     },
-    ok() {
+    ok () {
       if (this.type === 'bw') {
         const tmp = this.selectedAreas
           .map(this.getAreaByName)
@@ -462,7 +462,7 @@ export default {
     }
   },
   watch: {
-    areas(v) {
+    areas (v) {
       if (isequal(v, this.selectedAreas)) {
         return
       }
@@ -473,7 +473,7 @@ export default {
       console.log(v)
     }
   },
-  updated() {
+  updated () {
     console.debug('area selector updated')
   }
 }

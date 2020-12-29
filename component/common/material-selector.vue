@@ -32,18 +32,18 @@ export default {
       type: [String, Number, Array]
     }
   },
-  data() {
+  data () {
     return {
       localValue: this.value,
       materials: []
     }
   },
   methods: {
-    query(v) {
+    query (v) {
       console.debug('query', v)
       this.throttle.next(v)
     },
-    setValue(v) {
+    setValue (v) {
       this.$emit('change', v)
       this.$emit('input', v)
 
@@ -53,16 +53,16 @@ export default {
 
       this.localValue = v
     },
-    async queryMaterials(v) {
-      const { materials = [] } = await getMaterials({name: v})
+    async queryMaterials (v) {
+      const { materials = [] } = await getMaterials({ name: v })
       this.materials = materials
     }
   },
   watch: {
-    localValue(v) {
+    localValue (v) {
       this.setValue(v)
     },
-    value(v) {
+    value (v) {
       if (v === this.localValue) {
         return
       }
@@ -73,20 +73,20 @@ export default {
     }
   },
   computed: {
-    mOpts() {
+    mOpts () {
       return this.materials.map(m => ({
         label: m.name,
         value: m.id
       }))
     }
   },
-  beforeMount() {
+  beforeMount () {
     this.throttle = new Subject().debounceTime(800)
   },
-  beforeDestroy() {
+  beforeDestroy () {
     this.throttle.unsubscribe()
   },
-  async mounted() {
+  async mounted () {
     this.throttle.subscribe(this.queryMaterials)
     await this.queryMaterials()
   }

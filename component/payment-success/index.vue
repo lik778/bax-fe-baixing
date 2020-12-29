@@ -15,6 +15,10 @@
 import gStore from '../store'
 import { MERCHANTS } from 'constant/product'
 
+import {
+  normalizeRoles
+} from 'util/role'
+
 const { FENG_MING_MERCHANT_CODE, PHOENIXS_MERCHANT_CODE, SEO_MERCHANT_CODE, QIAN_CI_MERCHANT_CODE } = MERCHANTS
 const redirectPathname = {
   [FENG_MING_MERCHANT_CODE]: '/main/qwt/promotions',
@@ -23,13 +27,9 @@ const redirectPathname = {
   [QIAN_CI_MERCHANT_CODE]: '/main/qc/promote-list'
 }
 
-import {
-  normalizeRoles
-} from 'util/role'
-
 export default {
   name: 'payment-success',
-  data() {
+  data () {
     return {
       isAgent: false,
       countdown: null,
@@ -57,9 +57,9 @@ export default {
           this.countdown -= 1
         }, 1000)
       }
-    }, {deep: true})
+    }, { deep: true })
   },
-  beforeDestroy() {
+  beforeDestroy () {
     clearInterval(this.interval)
     this.disposeWatcher && this.disposeWatcher()
   }

@@ -35,7 +35,7 @@ export default {
     BxIcon
   },
   props: {
-    checked:{
+    checked: {
       type: Boolean,
       required: true
     },
@@ -62,11 +62,11 @@ export default {
       return arr
     },
     isPro () {
-      return this.descArrInfo.length === 2 ?  true: false
+      return this.descArrInfo.length === 2
     }
   },
   methods: {
-    onClick() {
+    onClick () {
       this.$emit('click')
     }
   }

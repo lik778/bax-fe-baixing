@@ -33,13 +33,13 @@ export default {
       default: () => 'text'
     }
   },
-  data() {
+  data () {
     return {
       localValue: this.value
     }
   },
   methods: {
-    setValue(v) {
+    setValue (v) {
       console.debug('input: set value')
       this.$emit('change', v)
       this.$emit('input', v)
@@ -52,11 +52,11 @@ export default {
     }
   },
   watch: {
-    localValue(v) {
+    localValue (v) {
       console.debug('input:watch:localValue')
       this.throttle.next(v)
     },
-    value(v) {
+    value (v) {
       console.debug('input:watch:value', v, this.localValue)
       if (v === this.localValue) {
         return
@@ -65,13 +65,13 @@ export default {
       this.localValue = v
     }
   },
-  beforeMount() {
+  beforeMount () {
     this.throttle = new Subject().debounceTime(600)
   },
-  beforeDestroy() {
+  beforeDestroy () {
     this.throttle.unsubscribe()
   },
-  async mounted() {
+  async mounted () {
     this.throttle.subscribe(this.setValue)
   }
 }

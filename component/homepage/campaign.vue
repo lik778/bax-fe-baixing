@@ -90,12 +90,12 @@ import {
 } from 'constant/fengming'
 
 const OPTIMIZABLE_POINTS = [
-  {key: 'dailyBudget', text: '账户余额', routerKey: 'charge'},
-  {key: 'cntSrc', text: '渠道', routerKey: campaignOptimization.STATUS_OPT_SOURCE},
-  {key: 'kwCtr', text: '创意', routerKey: campaignOptimization.STATUS_OPT_CREATIVE},
-  {key: 'cntNonDefault', text: '投放设置', routerKey: campaignOptimization.STATUS_OPT_SETTING},
-  {key: 'kwPrice', text: '出价', routerKey: campaignOptimization.STATUS_OPT_PRICE},
-  {key: 'avgCntKw', text: '关键词', routerKey: campaignOptimization.STATUS_OPT_KEYWORD}
+  { key: 'dailyBudget', text: '账户余额', routerKey: 'charge' },
+  { key: 'cntSrc', text: '渠道', routerKey: campaignOptimization.STATUS_OPT_SOURCE },
+  { key: 'kwCtr', text: '创意', routerKey: campaignOptimization.STATUS_OPT_CREATIVE },
+  { key: 'cntNonDefault', text: '投放设置', routerKey: campaignOptimization.STATUS_OPT_SETTING },
+  { key: 'kwPrice', text: '出价', routerKey: campaignOptimization.STATUS_OPT_PRICE },
+  { key: 'avgCntKw', text: '关键词', routerKey: campaignOptimization.STATUS_OPT_KEYWORD }
 ]
 
 const formatPrice = (p) => {
@@ -108,12 +108,12 @@ const chartOptionsTmpl = {
   },
   tooltip: {
     trigger: 'item',
-    backgroundColor : 'rgba(53, 165, 228, 0.8)'
+    backgroundColor: 'rgba(53, 165, 228, 0.8)'
   },
   radar: [
     {
-      indicator: OPTIMIZABLE_POINTS.map(({text}) => ({text, max: 100})),
-      center: ['45%','55%'],
+      indicator: OPTIMIZABLE_POINTS.map(({ text }) => ({ text, max: 100 })),
+      center: ['45%', '55%'],
       radius: '70%',
       axisLine: {
         lineStyle: {
@@ -152,9 +152,9 @@ const chartOptionsTmpl = {
 }
 
 const genChartOptions = value => {
-    const opt = clone(chartOptionsTmpl)
-    opt.series[0].data[0].value = value
-    return Object.freeze(opt)
+  const opt = clone(chartOptionsTmpl)
+  opt.series[0].data[0].value = value
+  return Object.freeze(opt)
 }
 
 const CNT_REJECTED_CODE = '-53'
@@ -166,7 +166,7 @@ export default {
     loadingPlaceholder
   },
   props: ['userInfo'],
-  data() {
+  data () {
     return {
       chartOptions: null,
       reportPrefix: '',
@@ -180,7 +180,7 @@ export default {
     campaignRadar: () => store.campaignRadar
   },
   computed: {
-    reportData() {
+    reportData () {
       const prefix = this.reportPrefix
       const data = this.fengmingData
       if (!data) return [0, 0, 0, 0]
@@ -191,34 +191,41 @@ export default {
       }
       return keys.map(k => data[k.toLowerCase()])
     },
-    optimizablePoints() {
+    optimizablePoints () {
       const scores = this.radarScores
       return OPTIMIZABLE_POINTS.filter((_, index) => {
         if (scores[index] < 60) return true
+        return false
       })
     },
-    hasCampaign() {
+    hasCampaign () {
       return this.campaignRadar && this.campaignRadar.cntCampaign > 0
     }
   },
   methods: {
     formatPrice,
-    handlePointClick(key) {
-      if (key === 'charge') return this.$router.push({name: 'qwt-charge'})
-      this.$router.push({name: 'qwt-promotion-list', query: {
-        statuses: key
-      }})
+    handlePointClick (key) {
+      if (key === 'charge') return this.$router.push({ name: 'qwt-charge' })
+      this.$router.push({
+        name: 'qwt-promotion-list',
+        query: {
+          statuses: key
+        }
+      })
     },
-    goPromotionList() {
-      this.$router.push({name: 'qwt-promotion-list', query: {
-        statuses: CNT_REJECTED_CODE
-      }})
+    goPromotionList () {
+      this.$router.push({
+        name: 'qwt-promotion-list',
+        query: {
+          statuses: CNT_REJECTED_CODE
+        }
+      })
     }
   },
   watch: {
-    campaignRadar(val) {
+    campaignRadar (val) {
       if (!val) return
-      const radarScores = this.radarScores = OPTIMIZABLE_POINTS.map(({key}) => parseInt(val[key]))
+      const radarScores = this.radarScores = OPTIMIZABLE_POINTS.map(({ key }) => parseInt(val[key]))
       this.chartOptions = genChartOptions(radarScores)
       this.avgScore = (radarScores.reduce((t, s) => t + s, 0) / radarScores.length).toFixed(1)
       this.higherThan = (val.higherThan * 100).toFixed(1)

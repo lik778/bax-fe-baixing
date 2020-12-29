@@ -45,17 +45,17 @@ export default {
     price: Number,
     title: String
   },
-  data() {
+  data () {
     return {
       minInputPrice: 100,
       inputPrice: ''
     }
   },
   computed: {
-    displayPrice() {
+    displayPrice () {
       return this.inputPrice || this.price
     },
-    hasPrice() {
+    hasPrice () {
       const { title } = this
 
       if (title === '下次再充值') {
@@ -68,19 +68,19 @@ export default {
 
       return true
     },
-    showFooter() {
+    showFooter () {
       return !['下次再充值'].includes(this.title)
     },
-    footer() {
+    footer () {
       return this.mode === 'input' ? '自定义推广资金包' : '推广资金包'
     },
-    mode() {
+    mode () {
       const { title } = this
       return title === '购买其他金额' ? 'input' : 'normal'
     }
   },
   methods: {
-    onInputPrice(v) {
+    onInputPrice (v) {
       const p = parseInt(v)
       if (p < this.minInputPrice) {
         return
@@ -88,7 +88,7 @@ export default {
 
       this.$emit('set-money', p)
     },
-    onBlur() {
+    onBlur () {
       const {
         minInputPrice,
         inputPrice
@@ -98,7 +98,7 @@ export default {
         return Message.error(`最低充值金额: ${minInputPrice}`)
       }
     },
-    onClick() {
+    onClick () {
       this.$emit('click')
 
       if (this.hasPrice) {

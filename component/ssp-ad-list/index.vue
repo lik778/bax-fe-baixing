@@ -55,9 +55,9 @@ export default {
       required: true
     }
   },
-  async mounted() {
+  async mounted () {
     await Promise.all([
-      store.getAdItems({...this.query}),
+      store.getAdItems({ ...this.query }),
       store.getAds()
     ])
   }
