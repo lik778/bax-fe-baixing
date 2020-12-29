@@ -17,7 +17,7 @@ import {
 
 export default {
   name: 'bax-cpc-price-tip',
-  data() {
+  data () {
     return {
       tips: cpcPriceTip.split('\n')
     }

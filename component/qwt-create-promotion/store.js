@@ -14,40 +14,40 @@ const store = observable({
   currentBalance: 0,
   campaignsCount: 0,
 
-  get searchRecommends() {
+  get searchRecommends () {
     return toJS(this._searchRecommends)
   },
-  get urlRecommends() {
+  get urlRecommends () {
     return toJS(this._urlRecommends)
   },
-  recommendByUrl: action(async function(opts = {}) {
+  recommendByUrl: action(async function (opts = {}) {
     const words = await fapi.recommendByUrl(opts)
     this._urlRecommends = words.map(attachDisplayPrice)
   }),
-  recommendByWord: action(async function(word, opts) {
+  recommendByWord: action(async function (word, opts) {
     const words = await fapi.recommendByWord(word, opts)
     this._searchRecommends = words.slice(0, 10).map(attachDisplayPrice).map(attachValue)
   }),
-  setCreativeWords: action(function(words) {
+  setCreativeWords: action(function (words) {
     // 场景: copy campaign 时, set keywords
     this._urlRecommends = words
   }),
-  getCurrentBalance: action(async function() {
+  getCurrentBalance: action(async function () {
     this.currentBalance = await fapi.getCurrentBalance()
   }),
-  getCampaignsCount: action(async function() {
+  getCampaignsCount: action(async function () {
     this.campaignsCount = fapi.getCurrentCampaignCount()
   }),
-  clearStore: action(function() {
+  clearStore: action(function () {
     this._searchRecommends = []
     this._urlRecommends = []
   }),
-  getCampaignInfo(campaignId) {
+  getCampaignInfo (campaignId) {
     return fapi.getCampaignInfo(campaignId)
   }
 })
 
-function attachDisplayPrice(word) {
+function attachDisplayPrice (word) {
   const { price: serverPrice } = word
   let price = serverPrice * 1.2
   if (price < MIN_WORD_PRICE) {
@@ -60,7 +60,7 @@ function attachDisplayPrice(word) {
   }
 }
 
-function attachValue(word) {
+function attachValue (word) {
   return {
     ...word,
     value: word.word

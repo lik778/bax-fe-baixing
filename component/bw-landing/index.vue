@@ -17,30 +17,30 @@ export default {
     userInfo: Object
   },
   computed: {
-    isBxUser() {
+    isBxUser () {
       const roles = normalizeRoles(this.userInfo.roles)
       return roles.includes('BAIXING_USER')
     },
-    isAgentAccounting() {
+    isAgentAccounting () {
       const roles = normalizeRoles(this.userInfo.roles)
       return roles.includes('AGENT_ACCOUNTING')
     }
   },
   watch: {
-    userInfo(v) {
+    userInfo (v) {
       if (v.id) {
         if (this.isBxUser) {
           if (this.$route.query.orderIds) {
             // 有新建计划
-            this.$router.push({name: 'bw-edit-plan', query: this.$route.query})
+            this.$router.push({ name: 'bw-edit-plan', query: this.$route.query })
           } else {
             // 全是续费
-            this.$router.push({name: 'bw-plan-list'})
+            this.$router.push({ name: 'bw-plan-list' })
           }
         }
       }
     }
-  },
+  }
 }
 </script>
 

@@ -40,7 +40,7 @@ export default {
       required: true
     }
   },
-  mounted() {
+  mounted () {
     const { userInfo } = this
     track({
       action: 'account: enter page',

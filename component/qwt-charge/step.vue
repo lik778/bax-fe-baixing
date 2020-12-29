@@ -13,10 +13,10 @@ export default {
   },
   props: {
     step: {
-      type: Number,
+      type: Number
     }
   },
-  data() {
+  data () {
     return {
       title: '充值与购买'
     }

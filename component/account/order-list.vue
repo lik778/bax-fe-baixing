@@ -115,11 +115,11 @@
 import dayjs from 'dayjs'
 import * as api from 'api/account'
 import SectionHeader from 'com/common/section-header'
-import { orderStatusType, orderStatusLabelDisplay} from 'constant/order'
+import { orderStatusType, orderStatusLabelDisplay } from 'constant/order'
 import { MERCHANTS, SKUTYPES } from 'constant/product'
 import { orderServiceHost } from 'config'
 
-const { FENG_MING_MERCHANT_CODE, WEBSITE_MERCHANT_CODE, PHOENIXS_MERCHANT_CODE} = MERCHANTS
+const { FENG_MING_MERCHANT_CODE, PHOENIXS_MERCHANT_CODE } = MERCHANTS
 const { GIFT } = SKUTYPES
 const ONE_PAGE_NUM = 10
 const DEFAULT_DATE_RANGE = [
@@ -133,7 +133,7 @@ const PRODUCTS = {
 
 export default {
   name: 'qwt-operastion-order-list',
-  data() {
+  data () {
     return {
       orderStatusType,
       orderStatusLabelDisplay,
@@ -141,7 +141,7 @@ export default {
         merchantList: '',
         orderStatusList: [orderStatusType.STATUS_UNPAID, orderStatusType.STATUS_PRE_TRADE],
         size: ONE_PAGE_NUM,
-        dateRange: DEFAULT_DATE_RANGE,
+        dateRange: DEFAULT_DATE_RANGE
       },
       pageNo: 1,
       orderData: null,
@@ -151,12 +151,12 @@ export default {
       PRODUCTS
     }
   },
-  components: {SectionHeader},
+  components: { SectionHeader },
   methods: {
-    async payOrder(tradeSeq, status, parentTradeSeq) {
+    async payOrder (tradeSeq, status, parentTradeSeq) {
       // tip: 支付和取消订单实际操作的是父订单，
       // 如果parentTradeSeq为空，说明本身就是父订单，反之，子订单
-      const orderId =  parentTradeSeq || tradeSeq
+      const orderId = parentTradeSeq || tradeSeq
       const { STATUS_PRE_TRADE, STATUS_UNPAID } = this.orderStatusType
       this.$message.success('正在跳转支付页面')
       let payUrl = ''
@@ -170,8 +170,8 @@ export default {
         location.href = payUrl
       }, 800)
     },
-    async cancelOrder(tradeSeq, status, parentTradeSeq) {
-      const orderId =  parentTradeSeq || tradeSeq
+    async cancelOrder (tradeSeq, status, parentTradeSeq) {
+      const orderId = parentTradeSeq || tradeSeq
       await this.$confirm('您确定要取消该订单吗？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '放弃'
@@ -180,7 +180,7 @@ export default {
       await this.fetchOrderData()
       this.$message.success('取消订单成功')
     },
-    async fetchOrderData(isResetOffset) {
+    async fetchOrderData (isResetOffset) {
       if (isResetOffset) this.pageNo = 1
       const { dateRange, merchantList, ...otherParams } = this.params
       let queryParmas = {
@@ -199,13 +199,13 @@ export default {
       }
       const { total, data } = await api.queryOrder(queryParmas)
       const orderData = data.map(trade => {
-        trade.skuName = trade.itemVoList.length ?  trade.itemVoList[0].skuName : ''
+        trade.skuName = trade.itemVoList.length ? trade.itemVoList[0].skuName : ''
         return trade
       })
       this.orderData = orderData
       this.total = total
     },
-    formatPrice(price, status) {
+    formatPrice (price, status) {
       const { STATUS_PRE_TRADE } = this.orderStatusType
       if (status === STATUS_PRE_TRADE && Number(price) === 0) {
         return '--'
@@ -215,19 +215,19 @@ export default {
     formatTime (time) {
       return dayjs(time * 1000).format('YYYY-MM-DD HH:mm')
     },
-    handleCurrentPage(val) {
+    handleCurrentPage (val) {
       this.pageNo = val
       this.fetchOrderData()
     },
-    getRowClass({row, index}) {
-      return !row.itemVoList.filter(o => o.skuType === GIFT).length ? 'hide-expand-row': ''
+    getRowClass ({ row, index }) {
+      return !row.itemVoList.filter(o => o.skuType === GIFT).length ? 'hide-expand-row' : ''
     }
   },
   watch: {
     params: {
       deep: true,
       immediate: true,
-      handler() {
+      handler () {
         this.fetchOrderData(true)
       }
     }

@@ -20,16 +20,13 @@
 import OrderHeader from './header'
 import OrderList from './list'
 
-import Topbar from 'com/topbar'
-
 import store from './store'
 
 export default {
   name: 'order',
   components: {
     OrderHeader,
-    OrderList,
-    Topbar
+    OrderList
   },
   fromMobx: {
     showMoreFilters: () => store.showMoreFilters,

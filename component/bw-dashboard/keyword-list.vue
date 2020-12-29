@@ -59,7 +59,7 @@ import {
   PROMOTE_STATUS_PENDING_ONLINE,
   PROMOTE_STATUS_OFFLINE
 } from 'constant/biaowang'
-import { f2y, getCnName } from 'util'
+import { getCnName } from 'util'
 import dayjs from 'dayjs'
 
 export default {
@@ -67,7 +67,7 @@ export default {
   props: {
     allAreas: {
       type: Array,
-      required: true,
+      required: true
     },
     data: {
       type: Array,
@@ -88,47 +88,47 @@ export default {
       default: false
     }
   },
-  mounted() {
+  mounted () {
     if (!this.canSelected) return
     this.originalPromotes.forEach(promote => {
       this.$refs.bwDashboardKeywordList.toggleRowSelection(promote, true)
     })
   },
-  beforeDestory() {
+  beforeDestory () {
     this.$refs.bwDashboardKeywordList.clearSelection()
   },
   methods: {
-    getRowKeys(row) {
+    getRowKeys (row) {
       return row.id
     },
-    handleDelete(id) {
+    handleDelete (id) {
       this.$emit('delete', id)
     },
-    handleSelectionChange(val) {
+    handleSelectionChange (val) {
       this.$emit('selection-change', val)
     },
-    cityFormatter(cities) {
+    cityFormatter (cities) {
       const max = 20
       return cities.slice(0, max).map(
-        city => getCnName(city, this.allAreas)).join(',') + (cities.length > max 
-        ? `等${cities.length}个城市` 
+        city => getCnName(city, this.allAreas)).join(',') + (cities.length > max
+        ? `等${cities.length}个城市`
         : '')
     },
-    deviceFormatter(device) {
+    deviceFormatter (device) {
       return DEVICE[device]
     },
-    statusFormatter(status) {
+    statusFormatter (status) {
       const res = Object.entries(PROMOTE_STATUS).find(arr => arr[1].includes(status))
       return res && res[0]
     },
-    auditStatusFormatter(auditStatus) {
+    auditStatusFormatter (auditStatus) {
       const res = Object.entries(AUDIT_STATUS).find(arr => arr[1].includes(auditStatus))
       return res && res[0]
     },
-    dateFormatter({createdAt}) {
+    dateFormatter ({ createdAt }) {
       return dayjs(createdAt * 1000).format('YYYY-MM-DD')
     },
-    leftDays(row) {
+    leftDays (row) {
       if (!PROMOTE_STATUS_PENDING_ONLINE.concat(PROMOTE_STATUS_OFFLINE).includes(row.status)) {
         let daysLeft = row.days
         if (row.startedAt) {

@@ -13,7 +13,7 @@ export const specialCities = [
   'chongqing'
 ]
 
-export function isQwtEnableCity(name, allAreas) {
+export function isQwtEnableCity (name, allAreas) {
   const a = allAreas.find(i => i.name === name)
 
   if (!a) {
@@ -25,7 +25,7 @@ export function isQwtEnableCity(name, allAreas) {
     !!a.isAllowed
 }
 
-export function getDisAllowAreasDesc(allAreas) {
+export function getDisAllowAreasDesc (allAreas) {
   const areas = getDisAllowAreas(allAreas)
 
   if (areas.length) {
@@ -36,7 +36,7 @@ export function getDisAllowAreasDesc(allAreas) {
   return ''
 }
 
-export function getDisAllowAreas(allAreas) {
+export function getDisAllowAreas (allAreas) {
   const disAllowAreas = allAreas.filter(a => a.isAllowed === 0)
   const topAreas = disAllowAreas.filter(a => a.areaType === 2)
   const mainAreas = disAllowAreas
@@ -55,7 +55,7 @@ export function getDisAllowAreas(allAreas) {
  *     cities: ['quanguo'] -> ['china']
  *     areas: ['quanguo'] -> ['china']
  */
-export function fmtAreasInQwt(opts, allAreas) {
+export function fmtAreasInQwt (opts, allAreas) {
   const result = clone(opts)
 
   let items = ['china']
@@ -102,7 +102,7 @@ export function fmtAreasInQwt(opts, allAreas) {
  *     areas: ['quanguo'] -> undefined
  *     将 areas 中的省份展开为下属的全部市
  */
-export function fmtCategoriesAndAreasInOpts(opts, allAreas) {
+export function fmtCategoriesAndAreasInOpts (opts, allAreas) {
   const result = clone(opts)
 
   if (isArray(opts.categories) && opts.categories.includes('all-categories')) {
@@ -127,17 +127,17 @@ export function fmtCategoriesAndAreasInOpts(opts, allAreas) {
   return result
 }
 
-export function filterCategories(allCategories, categories = []) {
+export function filterCategories (allCategories, categories = []) {
   if (categories.length === 0) {
     return []
   }
   // 目前: category 仅两级
   return allCategories
     .filter(c => categories.includes(c.name) || categories.includes(c.parent))
-    .map(c => ({...c}))
+    .map(c => ({ ...c }))
 }
 
-export function filterAreas(allAreas, areas = []) {
+export function filterAreas (allAreas, areas = []) {
   if (areas.length === 0) {
     return []
   }
@@ -148,16 +148,16 @@ export function filterAreas(allAreas, areas = []) {
         // 全国, 省
         return areas.includes(a.name)
       }
-
       if (a.areaType === 1) {
         // 市 (包括直辖市)
         return areas.includes(a.name) || areas.includes(a.parent)
       }
+      return false
     })
-    .map(a => ({...a}))
+    .map(a => ({ ...a }))
 }
 
-export function getCategoryParent(allCategories, name) {
+export function getCategoryParent (allCategories, name) {
   // 目前: 层级仅 2 层
   let result = ''
 
@@ -170,7 +170,7 @@ export function getCategoryParent(allCategories, name) {
   return result
 }
 
-export function getAreaParent(allAreas, name) {
+export function getAreaParent (allAreas, name) {
   let result = ''
 
   allAreas.forEach(a => {
@@ -182,11 +182,11 @@ export function getAreaParent(allAreas, name) {
   return result
 }
 
-export function displayCoupon(coupon) {
+export function displayCoupon (coupon) {
   let priceLimit = coupon.usingConditions.filter(c => c.type === usingCondition.ORDER_SUM_ORIGINAL_PRICE)
 
   if (priceLimit.length) {
-    priceLimit = `满${priceLimit[0]['orderSumOriginalPrice'] / 100}元可用`
+    priceLimit = `满${priceLimit[0].orderSumOriginalPrice / 100}元可用`
   } else {
     priceLimit = ''
   }
@@ -197,9 +197,9 @@ export function displayCoupon(coupon) {
   let packages = '任何套餐可用'
   let discountRatio = null
 
-  let productConditions = coupon.usingConditions.filter(c => c.type === usingCondition.PRODUCTS)
-  let packageConditions = coupon.usingConditions.filter(c => c.type === usingCondition.PRODUCT_PACKAGES)
-  let discountConditions = coupon.usingConditions.filter(c => c.type === usingCondition.ORDER_DISCOUNT_PRICE_RATIO)
+  const productConditions = coupon.usingConditions.filter(c => c.type === usingCondition.PRODUCTS)
+  const packageConditions = coupon.usingConditions.filter(c => c.type === usingCondition.PRODUCT_PACKAGES)
+  const discountConditions = coupon.usingConditions.filter(c => c.type === usingCondition.ORDER_DISCOUNT_PRICE_RATIO)
 
   if (productConditions.length) {
     products = productConditions[0].products
@@ -228,7 +228,7 @@ export function displayCoupon(coupon) {
   return o
 }
 
-export function formatCouponRule(ruleObj) {
+export function formatCouponRule (ruleObj) {
   let ruleDesc = ''
   let discountDisplay = ''
   const { type, discount, threshold, upAmount, amount } = ruleObj
@@ -263,7 +263,7 @@ export function formatCouponRule(ruleObj) {
  * @params {Array} allItems
  * @returns {String}
  */
-export function getCnName(name, allItems) {
+export function getCnName (name, allItems) {
   if (name === 'all-categories') {
     return '全类目'
   }
@@ -285,7 +285,7 @@ export function getCnName(name, allItems) {
   return result
 }
 
-export function formatCategoriesOrAreas(names, allItems) {
+export function formatCategoriesOrAreas (names, allItems) {
   if (!isArray(names)) {
     return '无'
   }
@@ -306,38 +306,38 @@ export function formatCategoriesOrAreas(names, allItems) {
  * e.选择全部省下面的全部城市时，推广区域：全国；
  */
 
- export function fmtAreasInBw(areas, allAreas) {
-   let noSpecialAreas = []
-   let specialAreas = []
-   areas.forEach((name) => {
-     if (specialCities.includes(name)) {
-       specialAreas.push(name)
-     } else {
-       noSpecialAreas.push(name)
-     }
-   })
-   // 单省单城市
-   if (areas.length <= 1) {
-     return areas
-   }
+export function fmtAreasInBw (areas, allAreas) {
+  const noSpecialAreas = []
+  const specialAreas = []
+  areas.forEach((name) => {
+    if (specialCities.includes(name)) {
+      specialAreas.push(name)
+    } else {
+      noSpecialAreas.push(name)
+    }
+  })
+  // 单省单城市
+  if (areas.length <= 1) {
+    return areas
+  }
 
-   let areaNameAndParent = noSpecialAreas.map(name => {
-     return {
-       name,
-       parent: getAreaParent(allAreas, name)
-     }
-   })
-   let areaParent = [...new Set(areaNameAndParent.map(a => a.parent))]
+  const areaNameAndParent = noSpecialAreas.map(name => {
+    return {
+      name,
+      parent: getAreaParent(allAreas, name)
+    }
+  })
+  const areaParent = [...new Set(areaNameAndParent.map(a => a.parent))]
 
-   // 全国
-   let topAreas = allAreas.filter(o => o.parent === 'china')
-   if ((specialAreas.length + areaParent.length) === topAreas.length) {
-     return ['china']
-   }
+  // 全国
+  const topAreas = allAreas.filter(o => o.parent === 'china')
+  if ((specialAreas.length + areaParent.length) === topAreas.length) {
+    return ['china']
+  }
 
-   // 单省多城市/多省单城市/多省多城市
-   return specialAreas.concat(areaParent)
- }
+  // 单省多城市/多省单城市/多省多城市
+  return specialAreas.concat(areaParent)
+}
 
 /**
  * private
@@ -346,7 +346,7 @@ export function formatCategoriesOrAreas(names, allItems) {
 /**
  * 说明: 因为与 banana 交互的 miss, 后期需要把 省 展开为 市
  */
-function flattenProvinceAreas(names, allAreas) {
+function flattenProvinceAreas (names, allAreas) {
   let result = []
   const allProvinces = allAreas
     .filter(a => a.areaType === 2)

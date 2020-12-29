@@ -2,7 +2,7 @@
 import { reverseCamelcase, toCamelcase } from 'object-keys-mapping'
 import { api, trim } from './base'
 
-export async function createAdItem(item) {
+export async function createAdItem (item) {
   const body = await api
     .post('/ad/item')
     .send(reverseCamelcase(item))
@@ -11,7 +11,7 @@ export async function createAdItem(item) {
   return body
 }
 
-export async function pauseAdItem(id, opts = {}) {
+export async function pauseAdItem (id, opts = {}) {
   const body = await api
     .post(`/ad/item/${id}/pause`)
     .send(reverseCamelcase(opts))
@@ -20,7 +20,7 @@ export async function pauseAdItem(id, opts = {}) {
   return body
 }
 
-export async function continueAdItem(id, opts = {}) {
+export async function continueAdItem (id, opts = {}) {
   const body = await api
     .post(`/ad/item/${id}/continue`)
     .send(reverseCamelcase(opts))
@@ -29,7 +29,7 @@ export async function continueAdItem(id, opts = {}) {
   return body
 }
 
-export async function getAdPrice(aid, opts = {}) {
+export async function getAdPrice (aid, opts = {}) {
   const body = await api
     .get(`/ad/${aid}/price`)
     .query(reverseCamelcase(opts))
@@ -38,7 +38,7 @@ export async function getAdPrice(aid, opts = {}) {
   return toCamelcase(body.data)
 }
 
-export async function getAds() {
+export async function getAds () {
   const body = await api
     .get('/ad/meta')
     .json()
@@ -48,7 +48,7 @@ export async function getAds() {
   }
 }
 
-export async function getAdItems(opts = {}) {
+export async function getAdItems (opts = {}) {
   const query = trim({
     offset: 0,
     limit: 20,
@@ -69,7 +69,7 @@ export async function getAdItems(opts = {}) {
   }
 }
 
-export async function addAdItemMaterial(itemId, data) {
+export async function addAdItemMaterial (itemId, data) {
   const body = await api
     .post(`/ad/item/${itemId}/material/new`)
     .send(reverseCamelcase(data))
@@ -78,16 +78,16 @@ export async function addAdItemMaterial(itemId, data) {
   return body
 }
 
-export async function setAdItemMaterial(itemId, materialId) {
+export async function setAdItemMaterial (itemId, materialId) {
   const body = await api
     .post(`/ad/item/${itemId}/material/existed`)
-    .send(reverseCamelcase({materialId}))
+    .send(reverseCamelcase({ materialId }))
     .json()
 
   return body
 }
 
-export async function verifyAdItem(id, status, opts = {}) {
+export async function verifyAdItem (id, status, opts = {}) {
   if (status === 'pass') {
     const body = await api
       .post(`/ad/item/${id}/verify/pass`)
@@ -110,7 +110,7 @@ export async function verifyAdItem(id, status, opts = {}) {
  * private
  */
 
-async function _getAdItems(opts) {
+async function _getAdItems (opts) {
   const body = await api
     .get('/ad/item')
     .query(reverseCamelcase(opts))
@@ -126,7 +126,7 @@ async function _getAdItems(opts) {
   })
 }
 
-async function _getAdItemCount(opts) {
+async function _getAdItemCount (opts) {
   const body = await api
     .get('/ad/item/count')
     .query(reverseCamelcase(opts))

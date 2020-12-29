@@ -34,18 +34,18 @@ export default {
       type: [String, Number, Array]
     }
   },
-  data() {
+  data () {
     return {
       localValue: this.value,
       users: []
     }
   },
   methods: {
-    query(v) {
+    query (v) {
       console.debug('query', v)
       this.throttle.next(v)
     },
-    setValue(v) {
+    setValue (v) {
       this.$emit('change', v)
       this.$emit('input', v)
 
@@ -55,11 +55,11 @@ export default {
 
       this.localValue = v
     },
-    async appendUsers(params = {}) {
+    async appendUsers (params = {}) {
       const { userId } = params
 
       if (userId) {
-        const { users = [] } = await getUsers({userId})
+        const { users = [] } = await getUsers({ userId })
 
         this.users = [
           ...users,
@@ -67,16 +67,16 @@ export default {
         ]
       }
     },
-    async queryUsers(mobile) {
+    async queryUsers (mobile) {
       const { users = [] } = await getUsers({ mobile })
       this.users = users
     }
   },
   watch: {
-    localValue(v) {
+    localValue (v) {
       this.setValue(v)
     },
-    value(v) {
+    value (v) {
       if (v === this.localValue) {
         return
       }
@@ -87,21 +87,21 @@ export default {
     }
   },
   computed: {
-    userOpts() {
+    userOpts () {
       return this.users.map(u => ({
         label: u.name,
         value: u.id
       }))
     }
   },
-  beforeMount() {
+  beforeMount () {
     this.throttle = new Subject().debounceTime(800)
   },
-  beforeDestroy() {
+  beforeDestroy () {
     es.removeListener('new user created', this.appendUsers)
     this.throttle.unsubscribe()
   },
-  async mounted() {
+  async mounted () {
     es.addListener('new user created', this.appendUsers)
 
     this.throttle.subscribe(this.queryUsers)

@@ -81,7 +81,7 @@
 import store from './store'
 import loadingPlaceholder from './loading-placeholder'
 import { PROMOTE_STATUS_ONLINE } from 'constant/biaowang'
-import {fmtCpcRanking} from 'util/campaign'
+import { fmtCpcRanking } from 'util/campaign'
 import dayjs from 'dayjs'
 
 export default {
@@ -92,22 +92,22 @@ export default {
       required: true
     }
   },
-  data() {
+  data () {
     return {
       dataPrefix: 'yesterday'
     }
   },
   methods: {
     fmtCpcRanking,
-    disabledXuFeiBtn(row) {
+    disabledXuFeiBtn (row) {
       // tip: 时间为2020-03-27 12:16:40.213743之前的不能续费
       return dayjs(row.createdAt * 1000).isBefore('2020-03-27 12:16:40.213743')
     },
-    getPromoteData(type) {
+    getPromoteData (type) {
       const { dataPrefix } = this
       let key
       if (dataPrefix) {
-         key = dataPrefix + type[0].toUpperCase() + type.substring(1, type.length)
+        key = dataPrefix + type[0].toUpperCase() + type.substring(1, type.length)
       } else if (type === 'promotes') {
         key = 'onlinePromotes'
       } else {
@@ -115,9 +115,9 @@ export default {
       }
       return this.biaowangData[key]
     },
-    getRandomPvPercent(promote) {
+    getRandomPvPercent (promote) {
       const key = 'BW_PV_PERCENT'
-      const getRandomNum = ([min, max]) => Math.floor(Math.random()*(max-min+1)+min,10)
+      const getRandomNum = ([min, max]) => Math.floor(Math.random() * (max - min + 1) + min, 10)
       const lastValue = window.localStorage.getItem(key)
       let range = [300, 400]
       if (lastValue) {
@@ -135,9 +135,8 @@ export default {
       const percent = getRandomNum(range)
       window.localStorage.setItem(key, `${percent}-${Date.now()}`)
       return percent / 10
-
     },
-    leftDays({days, startedAt}) {
+    leftDays ({ days, startedAt }) {
       let daysLeft = days
       if (startedAt) {
         // 可能是负值
@@ -145,11 +144,11 @@ export default {
       }
       return parseFloat(Math.max(daysLeft, 0)).toFixed(1)
     },
-    canXufei(promote) {
+    canXufei (promote) {
       return PROMOTE_STATUS_ONLINE.includes(promote.status) && this.leftDays(promote) <= 15
-    },
+    }
   },
-  components: {loadingPlaceholder},
+  components: { loadingPlaceholder },
   fromMobx: {
     biaowangData: () => store.biaowangData,
     biaowangPromotes: () => store.biaowangPromotes && store.biaowangPromotes.slice()

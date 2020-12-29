@@ -53,7 +53,7 @@ import loadingPlaceholder from './loading-placeholder'
 
 export default {
   name: 'homepage-accout',
-  components: {Notice, loadingPlaceholder},
+  components: { Notice, loadingPlaceholder },
   props: ['userInfo'],
   fromMobx: {
     fengmingBalance: () => store.fengmingBalance,
@@ -63,17 +63,17 @@ export default {
     biaowangData: () => store.biaowangData
   },
   methods: {
-    handleCharge(type) {
-      switch(type) {
+    handleCharge (type) {
+      switch (type) {
         case 'bax':
-          return this.$router.push({name: 'qwt-charge'})
+          return this.$router.push({ name: 'qwt-charge' })
         case 'site':
-          return this.$router.push({name: 'qwt-charge', query: {select_gw: 1}})
+          return this.$router.push({ name: 'qwt-charge', query: { select_gw: 1 } })
         case 'biaowang':
           return this.$router.push({ name: 'bw-plan-list' })
       }
     },
-    isShowSection(sectionType) {
+    isShowSection (sectionType) {
       switch (sectionType) {
         case 'fengming':
           return this.fengmingBalance.price !== null && this.fengmingBalance.day !== null
@@ -85,12 +85,12 @@ export default {
     }
   },
   computed: {
-    noExpiredSite() {
+    noExpiredSite () {
       return this.sites.filter(site => +new Date(site.expireAt) - +new Date() > 0)
     }
   },
   filters: {
-    formatDate(date) {
+    formatDate (date) {
       return dayjs(date).format('YYYY.MM.DD')
     }
   }

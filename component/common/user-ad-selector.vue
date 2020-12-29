@@ -103,12 +103,12 @@ export default {
     },
     type: {
       type: String,
-      validator(v) {
+      validator (v) {
         return [TYPE_RESELECT, ''].includes(v)
       }
     }
   },
-  data() {
+  data () {
     return {
       MODE_SELECTED,
 
@@ -124,24 +124,24 @@ export default {
     }
   },
   computed: {
-    isModeSelected() {
+    isModeSelected () {
       return this.mode === MODE_SELECTED
     }
   },
   methods: {
-    async onKeywordChange(k) {
+    async onKeywordChange (k) {
       this.keyword = k
       this.offset = 0
 
       await this.queryAds()
     },
-    async onCurrentChange(opts) {
+    async onCurrentChange (opts) {
       const { offset } = opts
       this.offset = offset
 
       await this.queryAds()
     },
-    async queryAds(opts = {}) {
+    async queryAds (opts = {}) {
       const { limitMvp, keyword, offset, limit } = this
 
       const t = Date.now()
@@ -163,7 +163,7 @@ export default {
         this.checkedAdId = defaultAdId
       }
     },
-    async onSelectAd(notEmitSelected) {
+    async onSelectAd (notEmitSelected) {
       if (!this.checkedAdId) {
         return
       }
@@ -177,16 +177,16 @@ export default {
 
       await this.reset(MODE_SELECTED, this.checkedAdId)
     },
-    async onCancel() {
+    async onCancel () {
       if (this.selectedId) {
         await this.reset(MODE_SELECTED, this.selectedId)
       }
     },
-    fmtCity(c) {
+    fmtCity (c) {
       const { allAreas } = this
       return getCnName(c, allAreas)
     },
-    async reset(mode, adId) {
+    async reset (mode, adId) {
       if (mode === MODE_SELECTED) {
         this.mode = MODE_SELECTED
         this.keyword = ''
@@ -207,16 +207,16 @@ export default {
     }
   },
   watch: {
-    async selectedId(now, pre) {
+    async selectedId (now, pre) {
       if (this.type === TYPE_RESELECT && parseInt(now)) {
         await this.reset(MODE_SELECTED, now)
       }
     },
-    async type(now, pre) {
+    async type (now, pre) {
       await this.reset(now, this.selectedId)
     }
   },
-  async mounted() {
+  async mounted () {
     const { selectedId, type } = this
     if (type === TYPE_RESELECT) {
       await this.reset(MODE_SELECTED, selectedId)

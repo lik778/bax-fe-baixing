@@ -10,7 +10,7 @@
 export default {
   name: 'bax-back-to-top-btn',
   methods: {
-    gotoTop() {
+    gotoTop () {
       window.scrollTo(window.pageYOffset, 0)
     }
   }
