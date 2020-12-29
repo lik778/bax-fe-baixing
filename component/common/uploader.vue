@@ -43,16 +43,16 @@ export default {
       default: () => {}
     }
   },
-  data() {
+  data () {
     return {
       tip: ''
     }
   },
   methods: {
-    selectFile() {
+    selectFile () {
       this.$refs.file.click()
     },
-    async uploadFile(e) {
+    async uploadFile (e) {
       const file = this.$refs.file.files[0]
 
       if (!file) {

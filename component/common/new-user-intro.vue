@@ -101,12 +101,12 @@ export default {
     mode: {
       type: String,
       required: false,
-      validator(v) {
+      validator (v) {
         return ['', 'shenma'].includes(v)
       }
     }
   },
-  data() {
+  data () {
     return {
       step1studentImg: assetHost + 'new-user-intro-1-student.png',
       step1btnImg: assetHost + 'new-user-intro-1-next-btn.png',
@@ -122,23 +122,23 @@ export default {
     }
   },
   methods: {
-    async close() {
+    async close () {
       this.$emit('close')
       await markNotNew()
     },
-    createPromotion() {
+    createPromotion () {
       this.close()
       this.$router.push({
         name: 'qwt-create-promotion'
       })
     },
-    charge() {
+    charge () {
       this.close()
       this.$router.push({
         name: 'qwt-charge'
       })
     },
-    async help() {
+    async help () {
       this.close()
 
       await gStore.toggleAddUserLeadVisible()

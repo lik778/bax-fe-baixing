@@ -129,52 +129,52 @@ export default {
     form: {
       type: Object,
       required: false,
-      default() {
-        return []
-      },
+      default () {
+        return {}
+      }
     },
     originKeywords: {
       type: Object,
       required: false,
-      default() {
+      default () {
         return Object.values(keywordOptions).reduce((curr, item) => {
           curr[item.keywordsAlias] = []
           return curr
         }, {})
-      },
+      }
     },
     promote: {
-      type: Object,
+      type: Object
     },
     isEdit: {
-      type: Boolean,
-    },
+      type: Boolean
+    }
   },
-  data() {
+  data () {
     return {
       visible: {
         input: {
           0: false,
           1: false,
-          2: false,
+          2: false
         },
         keywordsIDX: {
           0: true,
           1: false,
-          2: false,
+          2: false
         },
-        successDialog: false,
+        successDialog: false
       },
       keywordOptions: [],
       activeType: 'A',
       loading: {
-        submit: false,
+        submit: false
       },
-      errorTips: '',
+      errorTips: ''
     }
   },
   computed: {
-    handleDisabled() {
+    handleDisabled () {
       const isDisabled = (opts) => {
         const Blength = opts.B.keywords.length
         const limitB = opts.B.wordsLimit
@@ -189,7 +189,7 @@ export default {
       }
       return !!this.keywordOptions.find((x) => isDisabled(x))
     },
-    wordNum() {
+    wordNum () {
       const countOne = (x) =>
         qcWordAll(
           ['A', 'B', 'C', 'D'].reduce((h, c) => {
@@ -200,7 +200,7 @@ export default {
       return this.keywordOptions.reduce((h, c) => h + countOne(c), 0)
     },
     // 没有改动则不能提交
-    isNotEdited() {
+    isNotEdited () {
       const isArrEqual = (a, b) =>
         a.length === b.length && !a.find((x) => !b.includes(x))
       const isEdited =
@@ -213,17 +213,17 @@ export default {
           )
         })
       return this.isEdit ? !isEdited : false
-    },
+    }
   },
   components: {
     KeywordInput,
-    KeywordView,
+    KeywordView
   },
-  created() {
+  created () {
     this.initKeywordOptions(!!this.isEdit)
   },
   methods: {
-    initKeywordOptions(reuse = false) {
+    initKeywordOptions (reuse = false) {
       this.keywordOptions = (this.form.keywords || [])
         .map((x, idx) =>
           reuse ? this.keywordOptions[idx] : clone(keywordOptions)
@@ -248,15 +248,15 @@ export default {
           return opts
         })
     },
-    getProp(idx, prop) {
+    getProp (idx, prop) {
       const existKeywordObj = this.keywordOptions[idx][this.activeType]
       return existKeywordObj && existKeywordObj[prop]
     },
-    popKeywordInputDialog(idx, type) {
+    popKeywordInputDialog (idx, type) {
       this.visible.input[idx] = true
       this.activeType = type
     },
-    updateKeywords(idx, obj) {
+    updateKeywords (idx, obj) {
       let { type, words } = obj
       const wordLenLimit = this.keywordOptions[idx][type].wordLenLimit
 
@@ -276,7 +276,7 @@ export default {
       keywords = [...new Set(words.concat(keywords))]
       this.keywordOptions[idx][type].keywords = keywords
     },
-    editKeyword(idx, obj) {
+    editKeyword (idx, obj) {
       const { type, index } = obj
       const wordLenLimit = this.keywordOptions[idx][type].wordLenLimit
 
@@ -284,7 +284,7 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         closeOnClickModal: false,
-        inputValue: this.keywordOptions[idx][type].keywords[index],
+        inputValue: this.keywordOptions[idx][type].keywords[index]
       })
         .then(({ value }) => {
           const keywords = this.keywordOptions[idx][type].keywords
@@ -313,11 +313,11 @@ export default {
         })
         .catch(() => {})
     },
-    deleteKeyword(idx, obj) {
+    deleteKeyword (idx, obj) {
       const { type, index } = obj
       this.keywordOptions[idx][type].keywords.splice(index, 1)
     },
-    async sumbitWords() {
+    async sumbitWords () {
       const { sales_id: salesId, user_id: targetUserId } = this.$route.query
       const { type, keywords, areas } = this.form
       const coreWordInfos = Array(this.keywordOptions.length)
@@ -325,14 +325,14 @@ export default {
         .map((x, idx) => ({
           coreWord: keywords[idx],
           prefixWords: this.keywordOptions[idx].B.keywords,
-          suffixWords: this.keywordOptions[idx].D.keywords,
+          suffixWords: this.keywordOptions[idx].D.keywords
         }))
       const params = {
         skuType: type,
         provinces: areas.map((x) => x.en),
         coreWordInfos,
         salesId,
-        targetUserId,
+        targetUserId
       }
 
       this.loading.submit = true
@@ -355,12 +355,12 @@ export default {
         Message.warning(message)
       }
     },
-    genConTitle(word, idx) {
+    genConTitle (word, idx) {
       return `<div>${
         idx + 1
       }、请填写关键词 <span class="warning">${word}</span> 的（B/D) 类词：</div>`
     },
-    openOneWordInputView(idx) {
+    openOneWordInputView (idx) {
       const enableMulti = true
       if (enableMulti) {
         this.visible.keywordsIDX[idx] = !this.visible.keywordsIDX[idx]
@@ -374,13 +374,13 @@ export default {
         )
         this.visible.keywordsIDX[idx] = true
       }
-    },
+    }
   },
   watch: {
     promote: {
       deep: true,
       immediate: true,
-      handler(n) {
+      handler (n) {
         if (n) {
           const { coreWordInfos = [] } = n
           this.keywordOptions = coreWordInfos
@@ -393,17 +393,17 @@ export default {
               return opts
             })
         }
-      },
+      }
     },
-    originKeywords(newVal) {
+    originKeywords (newVal) {
       Object.keys(this.keywordOptions).forEach((key) => {
         const { keywordsAlias, keywords } = this.keywordOptions[key]
         this.keywordOptions[key].keywords = [
-          ...new Set(keywords.concat(this.originKeywords[keywordsAlias])),
+          ...new Set(keywords.concat(this.originKeywords[keywordsAlias]))
         ]
       })
-    },
-  },
+    }
+  }
 }
 </script>
 

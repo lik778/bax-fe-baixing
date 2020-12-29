@@ -38,25 +38,25 @@ export default {
     keywords: {
       type: Array,
       required: true,
-      default() {
+      default () {
         return []
       }
     }
   },
   methods: {
-    editWord(index) {
+    editWord (index) {
       this.$emit('edit', {
         type: this.type,
         index
       })
     },
-    deleteWord(index) {
+    deleteWord (index) {
       this.$emit('delete', {
         type: this.type,
         index
       })
     },
-    popKeywordInputDialog() {
+    popKeywordInputDialog () {
       this.$emit('pop-keyword-input', this.type)
     }
   }

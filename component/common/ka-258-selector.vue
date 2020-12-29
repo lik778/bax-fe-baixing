@@ -14,19 +14,19 @@ export default {
     value: String,
     disabled: Boolean
   },
-  data() {
+  data () {
     return {
       kaHost
     }
   },
   computed: {
-    path() {
+    path () {
       if (!this.value.includes(kaHost)) {
         return ''
       }
       return this.value.slice(kaHost.length)
     }
-  },
+  }
 }
 </script>
 

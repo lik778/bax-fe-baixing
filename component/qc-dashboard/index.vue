@@ -141,14 +141,14 @@ import {
   getPromoteList,
   getWordPVsList,
   getWordPVsChartData,
-  getPreferredWordsPV,
+  getPreferredWordsPV
 } from 'api/qianci'
 import {
   PROMOTE_STATUS_PENDING_EDIT,
   PROMOTE_STATUS_EDITED,
   PROMOTE_STATUS_ONLINE,
   PROMOTE_STATUS_ON_PROMOTE,
-  DEVICE_DASHBOARD,
+  DEVICE_DASHBOARD
 } from 'constant/qianci'
 import { parseQuery } from 'util'
 
@@ -156,7 +156,7 @@ import pieChartOptionTmp from './pieChartOptionTmp'
 import liquidChartOptionTmp from './liquidChartOptionTmp'
 
 // buffer 转 string
-function buffer2string(data) {
+function buffer2string (data) {
   let result = ''
   for (const value of data) result += String.fromCharCode(value)
   // 防止中文乱码 https://www.cnblogs.com/justinwxt/p/12930582.html
@@ -164,7 +164,7 @@ function buffer2string(data) {
 }
 
 // HTML 源码清洗，仅保留 HTML 和 CSS
-function secureHTML(html) {
+function secureHTML (html) {
   return html
     .replace(/<!--[^-]*-->/gim, '')
     .replace(/<script[^>]*>/gim, ' <!-- ')
@@ -194,35 +194,35 @@ const NO_PVS_TIP = '当前投放时间太短，请8天后查看'
 export default {
   name: 'qc-dashboard',
   components: {
-    ECharts,
+    ECharts
   },
-  data() {
+  data () {
     return {
       query: {
-        promoteID: '',
+        promoteID: ''
       },
       active: {
-        tab: 'allTab',
+        tab: 'allTab'
       },
       options: {
-        promoteList: [],
+        promoteList: []
       },
       chartData: {
         pvsAdd: 0,
-        visitAdd: 0,
+        visitAdd: 0
       },
       pagination: {
         current: 1,
         total: 0,
         size: 15,
-        sizes: [10, 15, 30, 50],
+        sizes: [10, 15, 30, 50]
       },
       visible: {
         showNoChartData: false,
-        showNoListData: false,
+        showNoListData: false
       },
       loading: {
-        charts: false,
+        charts: false
       },
       store: {},
       pvsList: [],
@@ -230,15 +230,15 @@ export default {
       pvsChartOptions: pvsChartOptionTmp,
       visitedChartOptions: visitedChartOptionTmp,
       DEVICE_DASHBOARD,
-      NO_PVS_TIP,
+      NO_PVS_TIP
     }
   },
   computed: {
-    displayedShowList() {
+    displayedShowList () {
       return this.loading.charts ? [] : this.pvsList
-    },
+    }
   },
-  async created() {
+  async created () {
     const { user_id: targetUserId, sales_id: salesId } = parseQuery(
       window.location.search
     )
@@ -252,7 +252,7 @@ export default {
   },
   methods: {
     // 初始化推广计划列表
-    async initPromoteListOptions() {
+    async initPromoteListOptions () {
       const { sales_id: salesId, user_id: targetUserId } = this.$route.query
       const query = {
         size: 999,
@@ -263,22 +263,22 @@ export default {
           PROMOTE_STATUS_PENDING_EDIT,
           PROMOTE_STATUS_EDITED,
           PROMOTE_STATUS_ONLINE,
-          PROMOTE_STATUS_ON_PROMOTE,
-        ],
+          PROMOTE_STATUS_ON_PROMOTE
+        ]
       }
       const { content } = await getPromoteList(query)
       this.options.promoteList = content.map((x) => ({
         ...x,
         label: x.coreWord,
-        value: +x.id,
+        value: +x.id
       }))
     },
-    async initLiquidChart() {
+    async initLiquidChart () {
       const { targetUserId, salesId } = this.store
       const query = {
         targetUserId,
         salesId,
-        promoteId: this.query.promoteID,
+        promoteId: this.query.promoteID
         // promoteId: 1046,
       }
       let response = null
@@ -298,7 +298,7 @@ export default {
         this.loading.charts = false
       }
     },
-    async initPieChart() {
+    async initPieChart () {
       const response = await getPreferredWordsPV({ id: this.query.promoteID })
       const { expandedNum = 0 } = response || {}
       const online = {}
@@ -315,25 +315,25 @@ export default {
           name: `电脑端: ${online.web}`,
           value: displayOnline.web,
           label: {
-            borderColor: '#35a5e4',
-          },
+            borderColor: '#35a5e4'
+          }
         },
         {
           name: `移动端: ${online.wap}`,
           value: displayOnline.wap,
           label: {
-            borderColor: '#ffa205',
-          },
-        },
+            borderColor: '#ffa205'
+          }
+        }
       ]
       platformData.title.text = `${online.web + online.wap}个`
       this.platformChartOptions = platformData
     },
-    setLiquidFillChart(visitCount, clickCount) {
+    setLiquidFillChart (visitCount, clickCount) {
       const liquidChartDatas = [visitCount.totalCount, clickCount.totalCount]
       const yesterdayCount = [
         visitCount.yesterdayCount,
-        clickCount.yesterdayCount,
+        clickCount.yesterdayCount
       ]
       const pvsData = clone(this.pvsChartOptions)
       const visitsData = clone(this.visitedChartOptions)
@@ -356,17 +356,17 @@ export default {
       this.visitedChartOptions = visitsData
       this.chartData = {
         pvsAdd: visitCount.yesterdayCount,
-        visitAdd: clickCount.yesterdayCount,
+        visitAdd: clickCount.yesterdayCount
       }
     },
-    async initListData(page = 1) {
+    async initListData (page = 1) {
       const { targetUserId, salesId } = this.store
       const query = {
         page: page - 1,
         size: this.pagination.size,
         targetUserId,
         salesId,
-        promoteId: this.query.promoteID,
+        promoteId: this.query.promoteID
         // promoteId: 1046,
       }
       let response = null
@@ -381,11 +381,11 @@ export default {
       this.pagination = {
         ...this.pagination,
         current: page,
-        total: totalElements,
+        total: totalElements
       }
     },
     // 显示快照
-    async checkSnapshotPage(item = {}) {
+    async checkSnapshotPage (item = {}) {
       const { device, url } = item
       let response = null
       let html = null
@@ -417,7 +417,7 @@ export default {
         dangerouslyUseHTMLString: true,
         showConfirmButton: false,
         showCancelButton: false,
-        closeOnPressEscape: true,
+        closeOnPressEscape: true
       }
 
       // Wrapper 类名
@@ -425,23 +425,23 @@ export default {
       const wrapperClass = `snapshot-content-${randomID}`
 
       // 快照样式修复
-      const snapshotFix = `<style>/*这里可以放一些快照页面样式的修复代码*/</style>`
+      const snapshotFix = '<style>/*这里可以放一些快照页面样式的修复代码*/</style>'
       html += snapshotFix
 
       const style =
         customClass === 'snapshot-dialog'
-          ? `width: 100vw; height: calc(100vh - 40px)`
-          : `width: 425px; height: calc(100vh - 40px); margin-top: 39px`
+          ? 'width: 100vw; height: calc(100vh - 40px)'
+          : 'width: 425px; height: calc(100vh - 40px); margin-top: 39px'
 
       const $iframe = this.$createElement('iframe', {
         attrs: {
-          frameborder: 0,
+          frameborder: 0
         },
         domProps: {
           src: url,
           srcdoc: html,
-          style,
-        },
+          style
+        }
       })
       this.$alert($iframe, pageOptions)
 
@@ -455,7 +455,7 @@ export default {
                 container.shadowRoot ||
                 container.document ||
                 container
-              ).querySelectorAll('a'),
+              ).querySelectorAll('a')
             ].map((a) => a.removeAttribute('href'))
           } catch (error) {
             throw new Error('removeAttribute-href 出错')
@@ -464,7 +464,7 @@ export default {
       })
     },
 
-    selectPromote(id) {
+    selectPromote (id) {
       this.query.promoteID = +id
       this.$nextTick(() => {
         this.initLiquidChart()
@@ -472,19 +472,19 @@ export default {
         this.initListData()
       })
     },
-    handleSizeChange(size) {
+    handleSizeChange (size) {
       this.pagination.size = size
       this.initListData()
     },
-    listenChartResize() {
+    listenChartResize () {
       // FIXME: 响应式图表
       // window && window.addEventListener('resize', () => this.initLiquidChart())
       // this.$on(
       //   'hook:beforeDestroy',
       //   window.removeEventListener('resize', this.initLiquidChart)
       // )
-    },
-  },
+    }
+  }
 }
 </script>
 <style lang="scss" scoped>

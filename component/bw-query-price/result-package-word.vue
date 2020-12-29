@@ -2,7 +2,7 @@
   <div class="row">
     <div class="label">推荐{{id + 1}}:</div>
     <div>
-      <div class="package-list" v-for="(group, i) in groups">
+      <div class="package-list" v-for="(group, i) in groups" :key="i">
         <span class="word"><strong>关键词{{ i+ 1 }}</strong>：{{ group.word }}</span>
         <span class="shows" v-if="selectedDeviceList.length">过去<strong>90</strong>天，<strong>{{ getWordShows(group) }}</strong>人搜索过（数据来源于历史流量）</span>
       </div>
@@ -16,12 +16,12 @@
 </template>
 
 <script>
-import {f2y} from 'util'
-import {DEVICE} from 'constant/biaowang'
+import { f2y } from 'util'
+import { DEVICE } from 'constant/biaowang'
 
 export default {
   name: 'result-device',
-  data() {
+  data () {
     return {
       deviceObj: {},
       selectedDevice: null,
@@ -29,7 +29,7 @@ export default {
     }
   },
   watch: {
-    selectedDeviceList(list) {
+    selectedDeviceList (list) {
       if (list.length) {
         const groupSelected = []
         this.groups.forEach(group => {
@@ -40,7 +40,7 @@ export default {
         this.$emit('change', groupSelected)
       }
     },
-    selected(val) {
+    selected (val) {
       if (val.length === 0) {
         this.selectedDeviceList = []
       }
@@ -57,34 +57,35 @@ export default {
     selected: {
       type: Array,
       required: true
-    },
+    }
   },
-  mounted() {
+  mounted () {
     this.deviceObj = this.groups.reduce((total, current) => {
       current.deviceTypes.forEach(d => {
+        // eslint-disable-next-line
         if (!total.hasOwnProperty(d.device)) {
           total[d.device] = { price: 0, shows: 0 }
         }
         // hardcode: 这边直接用30天数据x3
-        total[d.device]['price'] += (d.price * 3)
-        total[d.device]['shows'] += (d.shows * 3)
+        total[d.device].price += (d.price * 3)
+        total[d.device].shows += (d.shows * 3)
       })
       return total
     }, {})
   },
   methods: {
-    getWordShows(group) {
+    getWordShows (group) {
       if (this.selectedDeviceList.length) {
         const deviceList = group.deviceTypes.filter(x => this.selectedDeviceList.includes(String(x.device)))
-        return deviceList.reduce((total, current) => ( total + (current.shows * 3)), 0)
+        return deviceList.reduce((total, current) => (total + (current.shows * 3)), 0)
       }
     },
-    getTotalWordShows() {
+    getTotalWordShows () {
       if (this.selectedDeviceList.length) {
         return this.selectedDeviceList.reduce((total, current) => (total + this.deviceObj[current].shows), 0)
       }
     },
-    format(device, option) {
+    format (device, option) {
       return `${f2y(option.price)} 元 （90天、${DEVICE[device]}）`
     }
   }

@@ -27,7 +27,7 @@
             或
             <a href="javascript:;" @click="() => $router.push({name: 'bw-query-price'})">标王推广</a>
             ，提升官网访问量
-            
+
           </p>
           <div class="actions">
             <el-button type="primary" @click="() => $router.push({name: 'qwt-charge', query: {select_gw: 1}})">购买与续费</el-button>
@@ -60,15 +60,14 @@
 import store from './store'
 import Notice from './notice'
 
-
 export default {
   name: 'homepage-site',
-  data() {
+  data () {
     return {
       selectedReportKey: 'yesterday'
     }
   },
-  components: {Notice},
+  components: { Notice },
   fromMobx: {
     isHasSite: () => store.kaSiteData && !!store.kaSiteData.sites.length,
     kaSiteReports: () => store.kaSiteData ? store.kaSiteData.reports : {},
@@ -76,15 +75,15 @@ export default {
     notices: () => store.notices.kaSite
   },
   computed: {
-    selectedReport() {
-      return this.kaSiteReports[this.selectedReportKey] || {pv: 0, uv: 0}
+    selectedReport () {
+      return this.kaSiteReports[this.selectedReportKey] || { pv: 0, uv: 0 }
     }
   },
   methods: {
-    goKaSiteLList() {
+    goKaSiteLList () {
       window.location.href = '/ka/main'
     },
-    handleMoreBtnClick() {
+    handleMoreBtnClick () {
       const notices = this.notices
       if (notices.length === 1) {
         // 跳转到站点的留言列表

@@ -136,7 +136,7 @@ export default {
       required: true
     }
   },
-  data() {
+  data () {
     return {
       form: {
         keyword: '',
@@ -144,9 +144,9 @@ export default {
         areas: []
       },
       rules: {
-        keyword: [{required: true, message: '请填写推广关键词'}],
-        devices: [{type: 'array', required: true, message: '请选择推广平台'}],
-        areas: [{type: 'array', required: true, trigger: 'change', message: '请选择推广区域'}]
+        keyword: [{ required: true, message: '请填写推广关键词' }],
+        devices: [{ type: 'array', required: true, message: '请选择推广平台' }],
+        areas: [{ type: 'array', required: true, trigger: 'change', message: '请选择推广区域' }]
       },
       skus: [],
       selected: [],
@@ -160,92 +160,92 @@ export default {
     }
   },
   computed: {
-    exactMatch() {
+    exactMatch () {
       return this.skus.length ? this.skus.slice(0, 1)[0] : null
     },
-    recommends() {
+    recommends () {
       const { skus, exactMatch } = this
       // 推荐词关键词列表不出现精确匹配关键词
-      return skus.length > 1 ? skus.slice(1).filter(({word}) => exactMatch && exactMatch.word !== word) : []
+      return skus.length > 1 ? skus.slice(1).filter(({ word }) => exactMatch && exactMatch.word !== word) : []
     },
-    exactMatchNotSoldDevices() {
+    exactMatchNotSoldDevices () {
       if (!this.exactMatch) return []
-      const deviceTypes = this.exactMatch.deviceTypes.filter( o => !o.isSold)
+      const deviceTypes = this.exactMatch.deviceTypes.filter(o => !o.isSold)
       return {
         ...this.exactMatch,
         deviceTypes
       }
     },
-    isSold() {
+    isSold () {
       if (!this.exactMatch) return false
       return this.exactMatch.deviceTypes.some(list => list.isSold)
     },
-    priceIsNotZero() {
-      if(!this.exactMatch) return true
-      const resultArr = this.exactMatch.deviceTypes.reduce((list, {priceList}) => {
-        const arr = priceList.reduce((list, {price}) => {
+    priceIsNotZero () {
+      if (!this.exactMatch) return true
+      const resultArr = this.exactMatch.deviceTypes.reduce((list, { priceList }) => {
+        const arr = priceList.reduce((list, { price }) => {
           return list.concat(price)
         }, [])
         return list.concat(arr)
       }, [])
       return !resultArr.some(price => !price)
     },
-    showManualBtn() {
+    showManualBtn () {
       if (!this.exactMatch) return false
       if (this.isSold) return false
-      return this.exactMatch.deviceTypes.some(({manualPriced, price}) => {
+      return this.exactMatch.deviceTypes.some(({ manualPriced, price }) => {
         return !manualPriced && price >= PRICE_NEED_MANUAL_QUOTA
       })
     },
-    showLongOrder() {
+    showLongOrder () {
       if (!this.exactMatch) return false
       if (this.isSold) return false
-      return this.exactMatch.deviceTypes.some(({orderApplyType, price}) => {
+      return this.exactMatch.deviceTypes.some(({ orderApplyType, price }) => {
         return Number(orderApplyType) === ORDER_APPLY_TYPE_NOT && price < PRICE_NEED_MANUAL_QUOTA
       })
     },
-    manualCities() {
+    manualCities () {
       return fmtAreasInBw(this.form.areas, this.allAreas)
     },
-    manualDevices() {
+    manualDevices () {
       if (!this.exactMatch) return []
       if (this.showManualBtn) {
-        return this.exactMatch.deviceTypes.reduce((list, {manualPriced, price, device}) => {
+        return this.exactMatch.deviceTypes.reduce((list, { manualPriced, price, device }) => {
           if (!manualPriced && price >= PRICE_NEED_MANUAL_QUOTA) list.push(device)
           return list
         }, [])
       }
       if (this.showLongOrder) {
-        return this.exactMatch.deviceTypes.reduce((list, {orderApplyType, price,device}) => {
+        return this.exactMatch.deviceTypes.reduce((list, { orderApplyType, price, device }) => {
           if (Number(orderApplyType) === ORDER_APPLY_TYPE_NOT && price < PRICE_NEED_MANUAL_QUOTA) list.push(device)
           return list
         }, [])
       }
       return []
     },
-    manualData() {
+    manualData () {
       return Object.assign({}, {
         manualCities: this.manualCities,
         word: this.form.keyword,
         cities: this.form.areas,
         targetUserId: this.getFinalUserId(),
-        devices: this.manualDevices.length ? this.manualDevices : this.form.devices,
+        devices: this.manualDevices.length ? this.manualDevices : this.form.devices
       })
     }
   },
-  mounted() {
+  mounted () {
     let { cities = '', device, word } = this.$route.query
     device = Number(device)
 
     Object.assign(this.form, {
       areas: cities.split('|').filter(o => o.trim() !== ''),
       keyword: word,
-      devices: (device && [DEVICE_PC, DEVICE_WAP].includes(device)) ? [].concat(device): this.form.devices
+      devices: (device && [DEVICE_PC, DEVICE_WAP].includes(device)) ? [].concat(device) : this.form.devices
     })
   },
   methods: {
     f2y,
-    getFinalUserId() {
+    getFinalUserId () {
       const { user_id: userId } = this.$route.query
       if (userId) {
         return userId
@@ -253,7 +253,7 @@ export default {
       const { userInfo } = this
       return userInfo.id
     },
-    onSelected(item) {
+    onSelected (item) {
       if (this.selected.includes(item)) {
         return this.selected.splice(this.selected.indexOf(item), 1)
       }
@@ -266,45 +266,45 @@ export default {
       }
       this.selected.push(item)
     },
-    onPackageSelected(groupSelected) {
+    onPackageSelected (groupSelected) {
       const addList = []
       groupSelected.forEach(group => {
         const inCart = this.selected
           .some(i => i.word === group.word && i.device === group.device)
-        if (!inCart) { addList.push(group)  }
+        if (!inCart) { addList.push(group) }
       })
       if (addList.length) {
         this.selected.push(...addList)
       }
     },
-    onAreasChange(areas) {
+    onAreasChange (areas) {
       this.form.areas = [...areas]
       this.areaDialogVisible = false
     },
-    formatArea(name) {
+    formatArea (name) {
       return getCnName(name, this.allAreas)
     },
-    removeArea(area) {
+    removeArea (area) {
       this.form.areas = [
         ...this.form.areas.filter(i => i !== area)
       ]
       this.$bus.$emit('updateBiaowangAreaSelectorView', area)
     },
-    queryPrice() {
+    queryPrice () {
       this.$refs.form.validate(async isValid => {
         if (isValid) {
           this.selected = []
           this.loading = true
-          const {keyword, devices, areas} = this.form
+          const { keyword, devices, areas } = this.form
           try {
             const results = await queryKeywordPackagePrice({
               targetUserId: this.getFinalUserId(),
-              word: keyword.trim().replace(/[\u200b-\u200d\uFEFF]/g, ''), //去除空格和零宽字符
+              word: keyword.trim().replace(/[\u200b-\u200d\uFEFF]/g, ''), // 去除空格和零宽字符
               device: devices.length === 2 ? 0 : devices[0],
               cities: areas
             })
             const { recommendList, cities } = results
-            const mergeWordList = [results.keyword , ...recommendList]
+            const mergeWordList = [results.keyword, ...recommendList]
 
             this.skus = mergeWordList.map(w => {
               const deviceTypes = w.priceList.map(d => {
@@ -337,7 +337,7 @@ export default {
             })
             const cloneSkus = clone(this.skus)
             cloneSkus.shift()
-            this.packageRecommends  = this.groupPackageRecommends(cloneSkus)
+            this.packageRecommends = this.groupPackageRecommends(cloneSkus)
           } finally {
             this.loading = false
           }
@@ -346,11 +346,11 @@ export default {
         }
       })
     },
-    addToCart() {
+    addToCart () {
       this.$parent.$refs.bwShoppingCart.addToCart(this.selected)
       this.selected = []
     },
-    groupPackageRecommends(recommends) {
+    groupPackageRecommends (recommends) {
       let group = []
       const packageRecommends = []
       for (let i = 0; i < recommends.length; i++) {
@@ -361,20 +361,20 @@ export default {
         }
       }
       return packageRecommends
-    },
+    }
   },
   watch: {
     'userInfo.shAgent': {
       immediate: true,
-      handler(val) {
+      handler (val) {
         if (val) {
           this.$router.push('/main')
         }
       }
     },
-    'form': {
+    form: {
       deep: true,
-      handler() {
+      handler () {
         this.skus = []
       }
     }
