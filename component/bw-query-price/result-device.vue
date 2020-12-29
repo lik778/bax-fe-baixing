@@ -3,7 +3,7 @@
     <div class="label">关键词:
       <span class="keyword">{{deviceObj.word}}</span>
       <p class="tips">过去<strong>90</strong>天，
-        <label v-for="(devicetType, i) in deviceObj.deviceTypes" :key="i">
+        <label v-for="(devicetType, index) in deviceObj.deviceTypes" :key="index">
           <strong>{{ devicetType.shows * 3 }}</strong>人{{DEVICE[devicetType.device]}}搜索过&nbsp;
         </label><span>（数据来源于历史流量）</span>
       </p>

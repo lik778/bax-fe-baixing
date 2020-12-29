@@ -24,6 +24,15 @@
             </el-tag>
             <i class="el-icon-plus" @click="areaDialogVisible = true"></i>
           </el-form-item>
+          <el-form-item label="用户所在地">
+            <el-tag type="success" closable class="kw-tag"
+                    v-for="area in form.coreCities" :key="area"
+                    @close="removeCoreCities(area)"
+            >
+              {{ formatArea(area) }}
+            </el-tag>
+            <i class="el-icon-plus" @click="coreCitiesDialogVisible = true"></i>
+          </el-form-item>
           <el-form-item>
             <el-button @click="queryPrice" :loading="loading" type="primary">查价</el-button>
           </el-form-item>
@@ -88,6 +97,12 @@
                    @cancel="manualDialogVisible = false"
                    :all-areas="allAreas"
                    :manual-data="manualData" />
+    <core-cities-dialog :visible="coreCitiesDialogVisible"
+                        @cancel="coreCitiesDialogVisible = false"
+                        @confirm="handleCoreCitiesConfirm"
+                        :all-areas="allAreas"
+                        :origin-core-cities="form.coreCities"
+                        :areas="form.areas" />
   </div>
 </template>
 
@@ -97,6 +112,7 @@ import RecentSold from './recent-sold'
 import ResultDevice from './result-device'
 import ManualTooltip from 'com/common/bw/manual-tooltip'
 import ManualDialog from 'com/common/bw/manual-dialog'
+import CoreCitiesDialog from 'com/common/bw/core-cities-dialog'
 import ResultPackageWord from './result-package-word'
 import { queryKeywordPackagePrice } from 'api/biaowang'
 import clone from 'clone'
@@ -124,7 +140,8 @@ export default {
     RecentSold,
     ManualTooltip,
     ManualDialog,
-    ResultPackageWord
+    ResultPackageWord,
+    CoreCitiesDialog
   },
   props: {
     userInfo: {
@@ -141,7 +158,8 @@ export default {
       form: {
         keyword: '',
         devices: [DEVICE_PC, DEVICE_WAP],
-        areas: []
+        areas: [],
+        coreCities: []
       },
       rules: {
         keyword: [{ required: true, message: '请填写推广关键词' }],
@@ -156,7 +174,9 @@ export default {
       loading: false,
       DEVICE,
       DEVICE_PC,
-      DEVICE_WAP
+      DEVICE_WAP,
+
+      coreCitiesDialogVisible: false
     }
   },
   computed: {
@@ -245,6 +265,10 @@ export default {
   },
   methods: {
     f2y,
+    handleCoreCitiesConfirm (coreCities) {
+      this.form.coreCities = coreCities
+      this.coreCitiesDialogVisible = false
+    },
     getFinalUserId () {
       const { user_id: userId } = this.$route.query
       if (userId) {
@@ -279,16 +303,22 @@ export default {
     },
     onAreasChange (areas) {
       this.form.areas = [...areas]
+      // 用户所在地和推广区域联动
+      this.form.coreCities = this.form.coreCities.filter(i => areas.includes(i))
       this.areaDialogVisible = false
     },
     formatArea (name) {
       return getCnName(name, this.allAreas)
     },
     removeArea (area) {
-      this.form.areas = [
-        ...this.form.areas.filter(i => i !== area)
-      ]
+      this.form.areas = this.form.areas.filter(i => i !== area)
+      // 用户所在地和推广区域联动
+      this.form.coreCities = this.form.coreCities.filter(i => i !== area)
+      // 更新视图
       this.$bus.$emit('updateBiaowangAreaSelectorView', area)
+    },
+    removeCoreCities (area) {
+      this.form.coreCities = this.form.coreCities.filter(i => i !== area)
     },
     queryPrice () {
       this.$refs.form.validate(async isValid => {
@@ -321,7 +351,8 @@ export default {
                     soldPriceMap: soldPriceMap,
                     days: entry[0],
                     price: entry[1],
-                    wordType: results.keyword.word === w.word ? 1 : 2
+                    wordType: results.keyword.word === w.word ? 1 : 2,
+                    coreCities: this.form.coreCities
                   }
                 })
                 return {
