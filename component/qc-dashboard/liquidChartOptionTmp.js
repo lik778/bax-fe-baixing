@@ -10,10 +10,10 @@ export default {
       period: (value, index) => Math.floor(Math.random() * index * 2000) + 1000,
       waveAnimation: 1800,
       itemStyle: {
-        shadowBlur: 0,
+        shadowBlur: 0
       },
       label: {
-        formatter() {
+        formatter () {
           return '{num|---} {sub|次}'
         },
         position: ['52%', '32%'],
@@ -22,27 +22,27 @@ export default {
         fontWeight: 'normal',
         rich: {
           num: {
-            fontSize: 14,
+            fontSize: 14
           },
           sub: {
             fontSize: 12,
-            verticalAlign: 'bottom',
-          },
-        },
+            verticalAlign: 'bottom'
+          }
+        }
       },
       outline: {
         borderDistance: 0,
         itemStyle: {
           borderWidth: 7,
           borderColor: '#35a5e4',
-          shadowBlur: 0,
-        },
+          shadowBlur: 0
+        }
       },
       backgroundStyle: {
         color: '#f4f9ff',
         borderColor: 'white',
-        borderWidth: 8,
-      },
-    },
-  ],
+        borderWidth: 8
+      }
+    }
+  ]
 }

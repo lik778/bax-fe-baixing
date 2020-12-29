@@ -1,6 +1,5 @@
-const path = require('path')
 const { distPath } = require('./config')
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
 
 const env = process.env.NODE_ENV
@@ -34,7 +33,7 @@ module.exports = {
     rules: [
       {
         test: /\.vue$/,
-        loader: 'vue-loader',
+        loader: 'vue-loader'
       }, {
         test: /\.js$/,
         loader: 'babel-loader',
@@ -51,33 +50,33 @@ module.exports = {
         use: [
           ...cssLoaders,
           {
-            loader: "sass-loader"
+            loader: 'sass-loader'
           },
           {
             loader: 'sass-resources-loader',
             options: {
               resources: [
                 './cssbase/vars.scss',
-                './cssbase/mixins.scss',
+                './cssbase/mixins.scss'
               ]
-            },
-          },
+            }
+          }
         ]
       },
       {
         test: /\.(eot|woff|ttf)$/,
-        loader: "file-loader"
+        loader: 'file-loader'
       }
     ]
   },
   resolve: {
     alias: {
-      'vue$': 'vue/dist/vue.esm.js',
+      vue$: 'vue/dist/vue.esm.js'
     },
     extensions: ['.js', '.vue', '.css']
   },
   devtool: '#source-map',
   plugins: [
-    new VueLoaderPlugin(),
+    new VueLoaderPlugin()
   ]
 }
