@@ -100,7 +100,6 @@
       height="525px"
       :visible.sync="visible.selectIndustryDialog"
       :contents="industryInfoArr"
-      :placeholder="['','该行业下暂无细分类目，请选择一级行业']"
       :value="form.industry"
       @confirm="selectIndustry"
     />
@@ -330,6 +329,7 @@ export default {
       }
     },
     onAreasChange (areas) {
+      console.log('onAreasChange：', areas)
       this.form.areas = [...areas]
       this.areaDialogVisible = false
     },
