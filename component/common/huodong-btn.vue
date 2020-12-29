@@ -7,24 +7,24 @@
 </template>
 
 <script>
-const href = `https://www.baixing.com/rev/lottery?activity=lottery_activity20201212`
+const href = 'https://www.baixing.com/rev/lottery?activity=lottery_activity20201212'
 
 export default {
   name: 'huodong-btn',
   props: {
     show: Boolean
   },
-  data() {
+  data () {
     return {
       visible: true,
       href: href
     }
   },
-  mounted() {
+  mounted () {
     let searchPath = window.location.search
-    if (searchPath.includes('?')) { searchPath = searchPath.replace('?', '&')  }
+    if (searchPath.includes('?')) { searchPath = searchPath.replace('?', '&') }
     this.href = href + searchPath
-  },
+  }
 }
 </script>
 

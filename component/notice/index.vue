@@ -19,16 +19,16 @@ import { getFengmingNotice } from 'api/fengming'
 
 export default {
   name: 'qwt-notice',
-  async created() {
+  async created () {
     this.noticeList = await getFengmingNotice()
   },
-  data() {
+  data () {
     return {
       noticeList: null
     }
   },
   filters: {
-    fmtTime(ts) {
+    fmtTime (ts) {
       return dayjs(new Date(ts * 1000)).format('YYYY-MM-DD hh:mm')
     }
   }

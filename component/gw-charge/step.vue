@@ -20,7 +20,7 @@ export default {
       required: true
     }
   },
-  data() {
+  data () {
     return {
       title: '官网购买',
       steps: [{

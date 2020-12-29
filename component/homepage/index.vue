@@ -16,13 +16,13 @@ import Biaowang from './biaowang'
 
 export default {
   name: 'qwt-homepage',
-  props:{
+  props: {
     userInfo: {
       type: Object,
       required: true
     }
   },
-  mounted() {
+  mounted () {
     store.initPageStore()
   },
   components: {

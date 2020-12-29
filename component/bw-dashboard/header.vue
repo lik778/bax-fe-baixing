@@ -25,7 +25,6 @@
 
 <script>
 import { getPromotionUserCollection } from 'api/biaowang'
-import dayjs from 'dayjs'
 
 export default {
   name: 'bw-dashboard-header',
@@ -35,7 +34,7 @@ export default {
       default: false
     }
   },
-  data() {
+  data () {
     return {
       data: {
         show: 0,
@@ -43,8 +42,8 @@ export default {
       }
     }
   },
-  async mounted() {
-    const data = await getPromotionUserCollection({promoteList: []})
+  async mounted () {
+    const data = await getPromotionUserCollection({ promoteList: [] })
     this.data = data
   }
 }

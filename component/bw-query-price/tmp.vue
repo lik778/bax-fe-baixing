@@ -4,23 +4,12 @@
       <header>标王关键词查价</header>
       <marquee direction="left" scrollamount="6" height="40px" scrolldelay="60"><recent-sold :allAreas="allAreas" /></marquee>
       <main>
+        <div class="notice">
+          <p><span><i class="red">满</i>500-4999元，</span>购买精品官网1年立<i class="red">减</i>200元；购买精品官网2年（送一年）官网<i class="red">减</i>600元；购买精品官网专业版1年（支持首页宝推广）官网<i class="red">减</i>600元；</p>
+          <p><span><i class="red">满</i>5000-9999元，</span>购买精品官网1年立<i class="red">减</i>600元；购买精品官网2年（送一年）官网<i class="red">减</i>1200元；购买精品官网专业版1年（支持首页宝推广）官网<i class="red">减</i>900元；</p>
+          <p><span><i class="red">满</i>10000元及以上，</span>购买精品官网1年立<i class="red">减</i>1000元；购买精品官网2年（送一年）官网<i class="red">减</i>1400元；购买精品官网专业版1年（支持首页宝推广）官网<i class="red">减</i>1500元；</p>
+        </div>
         <el-form :model="form" :rules="rules" label-width="120px" ref="form" label-position="left" class="form" @submit.native.prevent>
-          <el-form-item label="选择行业" prop="industry">
-            <el-tag
-              v-for="item in form.industry"
-              :key="item"
-              class="kw-tag"
-              type="success"
-              closable
-              @close="() => removeIndustry(item)">
-              {{ item }}
-            </el-tag>
-            <i
-              v-if="canSelectIndustry"
-              class="el-icon-plus"
-              @click="visible.selectIndustryDialog = true"
-            />
-          </el-form-item>
           <el-form-item label="推广关键词" prop="keyword">
             <el-input v-model="form.keyword" style="width: 200px"/>
             <a class="standard" target="_blank" href="//www.baixing.com/help/feed?id=fd53408">查看购买规则</a>
@@ -41,7 +30,7 @@
             <i class="el-icon-plus" @click="areaDialogVisible = true"></i>
           </el-form-item>
           <el-form-item>
-            <el-button @click="handleQueryPrice" :loading="loading" type="primary">查价</el-button>
+            <el-button @click="queryPrice" :loading="loading" type="primary">查价</el-button>
           </el-form-item>
         </el-form>
 
@@ -62,11 +51,9 @@
               </div>
               <result-device v-else :deviceObj="exactMatch" :selected="selected" @change="onSelected" />
               <div class="manual-container" v-if="showManualBtn || showLongOrder">
-                <el-button
-                  type="primary"
-                  class="manual-btn"
-                  :disabled="loading"
-                  @click="manualDialogVisible = true">
+                <el-button type="primary" class="manual-btn"
+                           :disabled="loading"
+                           @click="manualDialogVisible = true">
                   <span v-if="showManualBtn">人工报价</span>
                   <span v-if="!showManualBtn && showLongOrder">申请长单</span>
                 </el-button>
@@ -79,14 +66,15 @@
             </div>
             <div v-else>该关键词已售出，您可以换个词购买或者在推荐词中选择哦~~</div>
           </div>
-          <div class="recommend">
-            <label class="recommend-title">推荐词包</label>
+          <div v-if="recommends.length" class="recommend">
+            <label class="recommend-title">推荐近似关键词</label>
             <div class="recommend-content">
-              <div class="package-recommend-item" v-for="(groups, i) in packageRecommends" :key="i">
-                <result-package-word :id="i" :groups="groups" :selected="selected" @change="onPackageSelected"></result-package-word>
+              <div class="recommend-item" v-for="item in recommends" :key="item.word">
+                <result-device :deviceObj="item" :selected="selected" @change="onSelected" />
               </div>
             </div>
           </div>
+
           <section v-if="selected.length">
             <p class="clear" @click="selected = []"><i class="el-icon-close"></i>清除所有选择</p>
             <el-button class="add-to-cart" type="primary" @click="addToCart">加入购物车</el-button>
@@ -95,41 +83,28 @@
       </main>
     </div>
 
-    <selector-dialog
-      title="行业选择"
-      height="525px"
-      :visible.sync="visible.selectIndustryDialog"
-      :contents="industryInfoArr"
-      :value="form.industry"
-      @confirm="selectIndustry"
+    <area-selector type="bw" :all-areas="allAreas"
+                   :areas="form.areas"
+                   :visible="areaDialogVisible"
+                   :enable-china="false"
+                   @ok="onAreasChange"
+                   @cancel="areaDialogVisible = false"
     />
-    <area-selector
-      type="bw" :all-areas="allAreas"
-      :areas="form.areas"
-      :visible="areaDialogVisible"
-      :enable-china="false"
-      @ok="onAreasChange"
-      @cancel="areaDialogVisible = false"
-    />
-    <manual-dialog
-      :visible="manualDialogVisible"
-      :all-areas="allAreas"
-      :manual-data="manualData"
-      @cancel="manualDialogVisible = false"
-    />
+    <manual-dialog :visible="manualDialogVisible"
+                   @cancel="manualDialogVisible = false"
+                   :all-areas="allAreas"
+                   :manual-data="manualData" />
   </div>
 </template>
 
 <script>
-import SelectorDialog from 'com/common/selector-dialog'
 import AreaSelector from 'com/common/biaowang-area-selector'
 import RecentSold from './recent-sold'
 import ResultDevice from './result-device'
 import ManualTooltip from 'com/common/bw/manual-tooltip'
 import ManualDialog from 'com/common/bw/manual-dialog'
-import ResultPackageWord from './result-package-word'
-import { queryBWIndustry, sendSelectedIndustryToBW, queryKeywordPackagePrice } from 'api/biaowang'
-import clone from 'clone'
+
+import { queryKeywordPriceNew } from 'api/biaowang'
 import {
   DEVICE,
   DEVICE_PC,
@@ -147,15 +122,13 @@ import {
 } from 'util'
 
 export default {
-  name: 'bw-package-query-price',
+  name: 'bw-query-price',
   components: {
-    SelectorDialog,
     AreaSelector,
     ResultDevice,
     RecentSold,
     ManualTooltip,
-    ManualDialog,
-    ResultPackageWord
+    ManualDialog
   },
   props: {
     userInfo: {
@@ -172,34 +145,25 @@ export default {
       form: {
         keyword: '',
         devices: [DEVICE_PC, DEVICE_WAP],
-        areas: [],
-        industry: []
+        areas: []
       },
       rules: {
-        industry: [{ type: 'array', required: true, trigger: 'change', message: '请填写行业' }],
-        keyword: [{ required: true, trigger: 'blur', message: '请填写推广关键词' }],
+        keyword: [{ required: true, message: '请填写推广关键词' }],
         devices: [{ type: 'array', required: true, message: '请选择推广平台' }],
         areas: [{ type: 'array', required: true, trigger: 'change', message: '请选择推广区域' }]
       },
       skus: [],
       selected: [],
-      packageRecommends: [],
+
       areaDialogVisible: false,
       manualDialogVisible: false,
       loading: false,
-      industryInfo: null,
-      visible: {
-        selectIndustryDialog: false
-      },
       DEVICE,
       DEVICE_PC,
       DEVICE_WAP
     }
   },
   computed: {
-    canSelectIndustry () {
-      return this.form.industry && this.form.industry.length === 0
-    },
     exactMatch () {
       return this.skus.length ? this.skus.slice(0, 1)[0] : null
     },
@@ -271,21 +235,10 @@ export default {
         targetUserId: this.getFinalUserId(),
         devices: this.manualDevices.length ? this.manualDevices : this.form.devices
       })
-    },
-    industryInfoArr () {
-      return this.industryInfo
-        ? this.industryInfo.reduce((h, c) => {
-            h.push([[c.title], [...c.content]])
-            return h
-          }, [])
-        : []
     }
   },
-  async created () {
-    this.industryInfo = await queryBWIndustry()
-  },
   mounted () {
-    let { cities = '', device, word } = this.$route.query
+    let { cities, device, word } = this.$route.query
     device = Number(device)
 
     Object.assign(this.form, {
@@ -317,17 +270,6 @@ export default {
       }
       this.selected.push(item)
     },
-    onPackageSelected (groupSelected) {
-      const addList = []
-      groupSelected.forEach(group => {
-        const inCart = this.selected
-          .some(i => i.word === group.word && i.device === group.device)
-        if (!inCart) { addList.push(group) }
-      })
-      if (addList.length) {
-        this.selected.push(...addList)
-      }
-    },
     onAreasChange (areas) {
       this.form.areas = [...areas]
       this.areaDialogVisible = false
@@ -341,91 +283,58 @@ export default {
       ]
       this.$bus.$emit('updateBiaowangAreaSelectorView', area)
     },
-    removeIndustry (val) {
-      this.form.industry.splice(
-        this.form.industry.findIndex(x => x === val), 1
-      )
-    },
-    selectIndustry (val) {
-      this.form.industry = val || []
-    },
-    handleQueryPrice () {
+    queryPrice () {
       this.$refs.form.validate(async isValid => {
         if (isValid) {
-          this.queryPrice()
-          this.sendIndustryInfo()
-        }
-      })
-    },
-    // 查价时需把数据打给数据组
-    sendIndustryInfo () {
-      sendSelectedIndustryToBW()
-    },
-    async queryPrice () {
-      this.selected = []
-      this.loading = true
-      const { keyword, devices, areas } = this.form
-      try {
-        const results = await queryKeywordPackagePrice({
-          targetUserId: this.getFinalUserId(),
-          word: keyword.trim().replace(/[\u200b-\u200d\uFEFF]/g, ''), // 去除空格和零宽字符
-          device: devices.length === 2 ? 0 : devices[0],
-          cities: areas
-        })
-        const { recommendList, cities } = results
-        const mergeWordList = [results.keyword, ...recommendList]
-
-        this.skus = mergeWordList.map(w => {
-          const deviceTypes = w.priceList.map(d => {
-            const soldPriceMap = GET_DAYS_MAP(d.orderApplyType).reduce((curr, prev) => {
-              return Object.assign(curr, {
-                [prev]: prev / THIRTY_DAYS * d.price
+          this.selected = []
+          this.loading = true
+          const { keyword, devices, areas } = this.form
+          try {
+            const results = await queryKeywordPriceNew({
+              targetUserId: this.getFinalUserId(),
+              word: keyword.trim().replace(/[\u200b-\u200d\uFEFF]/g, ''), // 去除空格和零宽字符
+              device: devices.length === 2 ? 0 : devices[0],
+              cities: areas
+            })
+            this.skus = results.map(w => {
+              const deviceTypes = w.priceList.map(d => {
+                const soldPriceMap = GET_DAYS_MAP(d.orderApplyType).reduce((curr, prev) => {
+                  return Object.assign(curr, {
+                    [prev]: prev / THIRTY_DAYS * d.price
+                  })
+                }, {})
+                const priceList = Object.entries(soldPriceMap).map(entry => {
+                  return {
+                    device: d.device,
+                    word: w.word,
+                    cities: w.cities,
+                    soldPriceMap: soldPriceMap,
+                    days: entry[0],
+                    price: entry[1]
+                  }
+                })
+                return {
+                  ...d,
+                  priceList
+                }
               })
-            }, {})
-            const priceList = Object.entries(soldPriceMap).map(entry => {
               return {
-                device: d.device,
                 word: w.word,
-                cities,
-                soldPriceMap: soldPriceMap,
-                days: entry[0],
-                price: entry[1],
-                wordType: results.keyword.word === w.word ? 1 : 2
+                cities: w.cities,
+                deviceTypes
               }
             })
-            return {
-              ...d,
-              priceList
-            }
-          })
-          return {
-            word: w.word,
-            cities,
-            deviceTypes
+          } finally {
+            this.loading = false
           }
-        })
-        const cloneSkus = clone(this.skus)
-        cloneSkus.shift()
-        this.packageRecommends = this.groupPackageRecommends(cloneSkus)
-      } finally {
-        this.loading = false
-      }
+        } else {
+          return false
+        }
+      })
     },
     addToCart () {
       this.$parent.$refs.bwShoppingCart.addToCart(this.selected)
       this.selected = []
-    },
-    groupPackageRecommends (recommends) {
-      let group = []
-      const packageRecommends = []
-      for (let i = 0; i < recommends.length; i++) {
-        group.push(recommends[i])
-        if (group.length === 3) {
-          packageRecommends.push([...group])
-          group = []
-        }
-      }
-      return packageRecommends
     }
   },
   watch: {
@@ -543,11 +452,8 @@ marquee {
   display: flex;
   align-items: flex-start;
   & .recommend-content {
-    flex: 1;
-    & .package-recommend-item {
-      margin-bottom: 20px;
-      border-bottom: 2px dashed #dcdfe6;
-      padding: 15px;
+    & .recommend-item {
+      margin-bottom: 10px;
     }
   }
 }

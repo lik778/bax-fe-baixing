@@ -250,7 +250,7 @@ export default {
       required: true
     }
   },
-  data() {
+  data () {
     return {
       sspOrderTypeOpts: [...sspOrderTypeOpts],
 
@@ -270,13 +270,13 @@ export default {
     }
   },
   computed: {
-    adOpts() {
+    adOpts () {
       return this.ads.map(ad => ({
         label: ad.name || ad.slotCode,
         value: ad.id
       }))
     },
-    adPriceDiscount() {
+    adPriceDiscount () {
       const { adPrice } = this
       if (adPrice && adPrice.discountCodes &&
         adPrice.discountCodes.length) {
@@ -287,7 +287,7 @@ export default {
 
       return ''
     },
-    adExampleImg() {
+    adExampleImg () {
       const adId = this.newOrder.adId
 
       if (!adId) {
@@ -298,38 +298,38 @@ export default {
 
       return ad.exampleImg
     },
-    currentRoles() {
+    currentRoles () {
       const { userInfo } = this
 
       const { roles = [] } = userInfo
 
       return roles.map(r => r.nameEn)
     },
-    allowAddOrder() {
+    allowAddOrder () {
       return allowAddOrder(this.currentRoles)
     },
-    allowAddUser() {
+    allowAddUser () {
       return allowAddUser(this.currentRoles)
     },
-    isOnlyAgentSales() {
+    isOnlyAgentSales () {
       return onlyAgentSales(this.currentRoles)
     },
-    isAgentSales() {
+    isAgentSales () {
       return this.currentRoles.includes('AGENT_SALES')
     },
-    isOperator() {
+    isOperator () {
       return this.currentRoles.includes('NORMAL_OPERATOR')
     },
-    isAgentAccounting() {
+    isAgentAccounting () {
       return this.currentRoles.includes('AGENT_ACCOUNTING')
     },
-    isBxSales() {
+    isBxSales () {
       return this.currentRoles.includes('BAIXING_SALES')
     },
-    contractDocx() {
+    contractDocx () {
       return assetHost + 'baixing-online-promotion-contract.docx'
     },
-    topTitle() {
+    topTitle () {
       if (this.isOnlyAgentSales) {
         return '广告查价'
       }
@@ -338,46 +338,46 @@ export default {
     }
   },
   filters: {
-    price(v) {
+    price (v) {
       return '￥' + centToYuan(v)
     }
   },
   methods: {
-    formatterCategory(name) {
+    formatterCategory (name) {
       const { allCategories } = this
       return getCnName(name, allCategories)
     },
-    formatterArea(name) {
+    formatterArea (name) {
       const { allAreas } = this
       return getCnName(name, allAreas)
     },
-    removeCategory(c) {
+    removeCategory (c) {
       this.newOrder.categories = [
         ...this.newOrder.categories.filter(i => i !== c)
       ]
     },
-    removeArea(a) {
+    removeArea (a) {
       this.newOrder.cities = [
         ...this.newOrder.cities.filter(c => c !== a)
       ]
     },
-    onChangeOrderCategories(v) {
+    onChangeOrderCategories (v) {
       this.categoryDialogVisible = false
       this.newOrder.categories = v
     },
-    onChangeOrderAreas(v) {
+    onChangeOrderAreas (v) {
       this.areaDialogVisible = false
       this.newOrder.cities = v
     },
-    onUserCreated({userId}) {
+    onUserCreated ({ userId }) {
       es.emit('new user created', {
         userId
       })
     },
-    onAdConflict() {
+    onAdConflict () {
       this.adCalendarConflicting = true
     },
-    async queryAdCalendar(newOrder) {
+    async queryAdCalendar (newOrder) {
       const { allAreas } = this
 
       const {
@@ -413,7 +413,7 @@ export default {
         adId
       }, allAreas))
     },
-    async queryAdPrice(newOrder) {
+    async queryAdPrice (newOrder) {
       const { allAreas } = this
 
       const {
@@ -439,7 +439,7 @@ export default {
         await store.getAdPrice(opts.adId, fmtCategoriesAndAreasInOpts(opts, allAreas))
       }
     },
-    empty() {
+    empty () {
       this.newOrder = clone(emptyOrder)
       this.salesDisplayName = ''
       this.salesIdLocked = false
@@ -447,7 +447,7 @@ export default {
       this.clientDisplayName = ''
       store.clearStore()
     },
-    async onSubmit() {
+    async onSubmit () {
       const { newOrder, userInfo, adPrice, allAreas } = this
 
       const data = {
@@ -498,7 +498,7 @@ export default {
   },
   watch: {
     newOrder: {
-      async handler(newOrder) {
+      async handler (newOrder) {
         await Promise.all([
           this.queryAdPrice(newOrder),
           this.queryAdCalendar(newOrder)
@@ -507,7 +507,7 @@ export default {
       deep: true
     }
   },
-  async mounted() {
+  async mounted () {
     await store.getAds()
 
     // 从指南车、米奇跳过来时会带上参数。两者自动登录的用户角色不同
@@ -533,11 +533,11 @@ export default {
       }
     }
   },
-  beforeDestroy() {
+  beforeDestroy () {
     // 场景: 未提交
     this.empty()
   },
-  updated() {
+  updated () {
     console.debug('updated - create order')
   }
 }

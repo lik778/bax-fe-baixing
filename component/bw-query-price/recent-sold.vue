@@ -13,13 +13,13 @@ export default {
   props: {
     allAreas: Array
   },
-  data() {
+  data () {
     return {
       words: []
     }
   },
   computed: {
-    text() {
+    text () {
       return this.words
         .map(
           item =>
@@ -32,14 +32,14 @@ export default {
     }
   },
   methods: {
-    formatCities(cities, count) {
+    formatCities (cities, count) {
       return (
         cities.map(city => getCnName(city, this.allAreas)).join(',') +
         (count > cities.length ? `等${count}个城市` : '')
       )
     }
   },
-  async mounted() {
+  async mounted () {
     this.words = await getRecentSold()
   }
 }

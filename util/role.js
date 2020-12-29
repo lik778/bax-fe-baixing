@@ -18,7 +18,7 @@ const ROLES_ENUM = [
 
 // global
 
-export function allowSeeAccount(roles) {
+export function allowSeeAccount (roles) {
   const currentRoles = normalizeRoles(roles)
 
   return checkRoles(currentRoles, [
@@ -26,7 +26,7 @@ export function allowSeeAccount(roles) {
   ])
 }
 
-export function allowSeeBxAd(roles) {
+export function allowSeeBxAd (roles) {
   // 只要 role 不仅仅是 BAIXING_USER 即可
   const currentRoles = normalizeRoles(roles)
 
@@ -40,7 +40,7 @@ export function allowSeeBxAd(roles) {
 
 // order
 
-export function allowPayOrder(roles) {
+export function allowPayOrder (roles) {
   const currentRoles = normalizeRoles(roles)
 
   return checkRoles(currentRoles, [
@@ -48,7 +48,7 @@ export function allowPayOrder(roles) {
   ])
 }
 
-export function allowQueryOrders(roles) {
+export function allowQueryOrders (roles) {
   const currentRoles = normalizeRoles(roles)
 
   return checkRoles(currentRoles, [
@@ -60,7 +60,7 @@ export function allowQueryOrders(roles) {
   ])
 }
 
-export function allowAddOrder(roles) {
+export function allowAddOrder (roles) {
   const currentRoles = normalizeRoles(roles)
 
   return checkRoles(currentRoles, [
@@ -72,7 +72,7 @@ export function allowAddOrder(roles) {
 
 // user
 
-export function allowAddUser(roles) {
+export function allowAddUser (roles) {
   const currentRoles = normalizeRoles(roles)
 
   return checkRoles(currentRoles, [
@@ -83,7 +83,7 @@ export function allowAddUser(roles) {
   ])
 }
 
-export function allowQueryUsers(roles) {
+export function allowQueryUsers (roles) {
   const currentRoles = normalizeRoles(roles)
 
   return checkRoles(currentRoles, [
@@ -96,7 +96,7 @@ export function allowQueryUsers(roles) {
 
 // material
 
-export function allowAddMaterial(roles) {
+export function allowAddMaterial (roles) {
   const currentRoles = normalizeRoles(roles)
 
   return checkRoles(currentRoles, [
@@ -107,7 +107,7 @@ export function allowAddMaterial(roles) {
   ])
 }
 
-export function allowQueryMaterials(roles) {
+export function allowQueryMaterials (roles) {
   const currentRoles = normalizeRoles(roles)
 
   return checkRoles(currentRoles, [
@@ -118,7 +118,7 @@ export function allowQueryMaterials(roles) {
   ])
 }
 
-export function allowUpdateMaterial(roles) {
+export function allowUpdateMaterial (roles) {
   const currentRoles = normalizeRoles(roles)
 
   return checkRoles(currentRoles, [
@@ -131,7 +131,7 @@ export function allowUpdateMaterial(roles) {
 
 // ad
 
-export function allowQueryAdItems(roles) {
+export function allowQueryAdItems (roles) {
   const currentRoles = normalizeRoles(roles)
 
   return checkRoles(currentRoles, [
@@ -144,7 +144,7 @@ export function allowQueryAdItems(roles) {
   ])
 }
 
-export function allowAddAdItem(roles) {
+export function allowAddAdItem (roles) {
   const currentRoles = normalizeRoles(roles)
 
   return checkRoles(currentRoles, [
@@ -154,7 +154,7 @@ export function allowAddAdItem(roles) {
   ])
 }
 
-export function allowVerifyAd(roles) {
+export function allowVerifyAd (roles) {
   const currentRoles = normalizeRoles(roles)
 
   return checkRoles(currentRoles, [
@@ -163,7 +163,7 @@ export function allowVerifyAd(roles) {
   ])
 }
 
-export function allowPauseAd(roles) {
+export function allowPauseAd (roles) {
   const currentRoles = normalizeRoles(roles)
 
   return checkRoles(currentRoles, [
@@ -171,7 +171,7 @@ export function allowPauseAd(roles) {
   ])
 }
 
-export function allowContinueAd(roles) {
+export function allowContinueAd (roles) {
   const currentRoles = normalizeRoles(roles)
 
   return checkRoles(currentRoles, [
@@ -179,7 +179,7 @@ export function allowContinueAd(roles) {
   ])
 }
 
-export function isBaixingSales(roles) {
+export function isBaixingSales (roles) {
   const currentRoles = normalizeRoles(roles)
 
   return checkRoles(currentRoles, [
@@ -187,7 +187,7 @@ export function isBaixingSales(roles) {
   ])
 }
 
-export function onlyAgentSales(roles) {
+export function onlyAgentSales (roles) {
   const currentRoles = normalizeRoles(roles)
 
   const isAgentAccounting = currentRoles.includes('AGENT_ACCOUNTING')
@@ -196,7 +196,7 @@ export function onlyAgentSales(roles) {
   return isAgentSales && !isAgentAccounting
 }
 
-export function normalizeRoles(roles) {
+export function normalizeRoles (roles) {
   if (!isArray(roles)) {
     return []
   }
@@ -210,10 +210,10 @@ export function normalizeRoles(roles) {
   })
 }
 
-export function checkRoles(currentRoles, validRoles) {
+export function checkRoles (currentRoles, validRoles) {
   let valid = false
 
-  for (let r of validRoles) {
+  for (const r of validRoles) {
     if (currentRoles.includes(r)) {
       valid = true
       break
@@ -223,7 +223,7 @@ export function checkRoles(currentRoles, validRoles) {
   return valid
 }
 
-export function allowNotSeeBwNewPrice(roles, agentId) {
+export function allowNotSeeBwNewPrice (roles, agentId) {
   const currentRoles = normalizeRoles(roles)
   const isOnlyBaixingUser = currentRoles.includes('BAIXING_USER') && currentRoles.length === 1
 
@@ -233,7 +233,7 @@ export function allowNotSeeBwNewPrice(roles, agentId) {
   return [1].includes(agentId) && isOnlyBaixingUser
 }
 
-export function isNormalUser(roles = []) {
+export function isNormalUser (roles = []) {
   const shAgent = localStorage.getItem('shAgent')
   if (shAgent) return false
   if (roles.length === 1) {
@@ -242,7 +242,7 @@ export function isNormalUser(roles = []) {
   return false
 }
 
-export function allowSeeLongOrder(roles, agentId, salesId) {
+export function allowSeeLongOrder (roles, agentId, salesId) {
   const currentRoles = normalizeRoles(roles)
   const isSales = currentRoles.includes('AGENT_SALES') || currentRoles.includes('AGENT_ACCOUNTING')
   if (isPro) {
@@ -254,7 +254,7 @@ export function allowSeeLongOrder(roles, agentId, salesId) {
   return [183].includes(agentId)
 }
 
-export function notAllowFengmingRecharge(roles, agentId) {
+export function notAllowFengmingRecharge (roles, agentId) {
   const currentRoles = normalizeRoles(roles)
   const isOnlyBaixingUser = currentRoles.includes('BAIXING_USER') && currentRoles.length === 1
   if (isPro) {

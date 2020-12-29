@@ -21,19 +21,19 @@
 <script>
 export default {
   name: 'wechat-scan-btn',
-  data() {
+  data () {
     return {
       iconVisible: true,
       modalVisible: false
     }
   },
-  mounted() {
+  mounted () {
     setInterval(() => {
       this.iconVisible = !this.iconVisible
     }, 3000)
   },
   methods: {
-    toggleWechatModalVisible(visible) {
+    toggleWechatModalVisible (visible) {
       this.modalVisible = visible
     }
   }

@@ -9,19 +9,19 @@ const store = observable({
   },
   _logs: [],
 
-  get orderInfo() {
+  get orderInfo () {
     return toJS(this._orderInfo)
   },
 
-  get logs() {
+  get logs () {
     return toJS(this._logs)
   },
 
-  getOrderLogs: action(async function(id) {
+  getOrderLogs: action(async function (id) {
     this._logs = await oapi.getOrderLogs(id)
   }),
 
-  getOrderInfo: action(async function(id) {
+  getOrderInfo: action(async function (id) {
     this._orderInfo = await oapi.getOrderInfo(id)
   })
 })

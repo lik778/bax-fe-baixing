@@ -71,7 +71,7 @@ export default {
     }
   },
   computed: {
-    timeRange() {
+    timeRange () {
       const {
         createdAtFrom,
         createdAtTo
@@ -88,13 +88,13 @@ export default {
     }
   },
   methods: {
-    async queryMaterialItems(opts) {
+    async queryMaterialItems (opts) {
       await store.getMaterials({
         ...this.query,
         ...opts
       })
     },
-    async queryByTimeRange(v = []) {
+    async queryByTimeRange (v = []) {
       const [start, end] = v
 
       if (!start && !end) {

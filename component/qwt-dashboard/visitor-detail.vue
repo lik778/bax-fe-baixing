@@ -67,7 +67,7 @@ import dayjs from 'dayjs'
 import {
   VISITOR_SOURCES,
   getVisitorLabel,
-  INVALID_VISITOR_STATUS,
+  INVALID_VISITOR_STATUS
 } from 'constant/fengming-report'
 
 export default {
@@ -75,10 +75,10 @@ export default {
   props: {
     campaignId: {
       type: [String, Number],
-      required: true,
-    },
+      required: true
+    }
   },
-  data() {
+  data () {
     return {
       data: null,
       offset: 0,
@@ -86,58 +86,58 @@ export default {
       total: 0,
 
       VISITOR_SOURCES,
-      INVALID_VISITOR_STATUS,
+      INVALID_VISITOR_STATUS
     }
   },
   computed: {
-    currentPage() {
+    currentPage () {
       const { offset, limit } = this
       return Math.floor(offset / limit) + 1
-    },
+    }
   },
   methods: {
     getVisitorLabel,
-    formatterIP(ip) {
+    formatterIP (ip) {
       return `${ip.split('.').slice(0, -1).join('.')}.*`
     },
-    formatterTimestamp(timestamp, date = true) {
+    formatterTimestamp (timestamp, date = true) {
       if (!timestamp) return 0
       if (date) {
         return dayjs(timestamp).format('YYYY-MM-DD')
       }
       return dayjs(timestamp).format('HH:mm')
     },
-    async handleDeductDetail() {
+    async handleDeductDetail () {
       const { rows, total } = await getDeductDetail({
         campaignId: this.campaignId,
         offset: this.offset,
         limit: this.limit,
         startDate: dayjs().subtract(8, 'day').startOf('date').unix(),
-        endDate: dayjs().subtract(1, 'day').endOf('date').unix(),
+        endDate: dayjs().subtract(1, 'day').endOf('date').unix()
       })
       this.data = rows
       this.total = total
     },
-    handleSizeChange(val) {
+    handleSizeChange (val) {
       this.offset = 0
       this.limit = val
       this.handleDeductDetail()
     },
-    handleCurrentChange(val) {
+    handleCurrentChange (val) {
       this.offset = this.limit * (val - 1)
       this.handleDeductDetail()
-    },
+    }
   },
   watch: {
     campaignId: {
       immediate: true,
-      handler(newVal) {
+      handler (newVal) {
         if (newVal) {
           this.handleDeductDetail()
         }
-      },
-    },
-  },
+      }
+    }
+  }
 }
 </script>
 

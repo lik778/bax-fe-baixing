@@ -98,7 +98,7 @@ import {
 import clone from 'clone'
 import isEqual from 'lodash.isequal'
 
-const formatAreaOpts = function(data, isLeaf = false) {
+const formatAreaOpts = function (data, isLeaf = false) {
   if (!Array.isArray(data)) return null
 
   return data.map(item => {
@@ -111,16 +111,15 @@ const formatAreaOpts = function(data, isLeaf = false) {
   })
 }
 
-const loadAreasData = async function(areaId) {
+const loadAreasData = async function (areaId) {
   return formatAreaOpts(await getAreasByCityId(areaId), true)
 }
 
-const municipalities = ['北京', '上海', '天津', '重庆']
 const defaultActiveAreas = ['all']
 
 export default {
   name: 'areas-selector',
-  data() {
+  data () {
     return {
       selectedAreas: [],
 
@@ -133,7 +132,9 @@ export default {
   props: {
     value: {
       type: Array,
-      default: []
+      default () {
+        return []
+      }
     },
     visible: {
       type: Boolean,
@@ -141,7 +142,7 @@ export default {
     }
   },
   computed: {
-    currentAreaList() {
+    currentAreaList () {
       const {
         areaOpts,
         activeAreas
@@ -151,7 +152,7 @@ export default {
     }
   },
   methods: {
-    selectAllAreas() {
+    selectAllAreas () {
       const { activeAreas, selectedAreas } = this
       const areaCommonPrefix = activeAreas.slice(1, activeAreas.length).map(area => area.name)
       const areas = activeAreas[activeAreas.length - 1].children.map(area => areaCommonPrefix.concat(area.name))
@@ -160,16 +161,19 @@ export default {
         .filter(selected => !isEqual(selected.slice(0, -1), areaCommonPrefix))
         .concat(areas)
     },
-    deleteArea(area) {
+    deleteArea (area) {
       this.selectedAreas = this.selectedAreas.filter(item => !isEqual(item, area))
     },
-    selectActiveArea(area) {
-      if (area === 'all') return this.activeAreas = clone(defaultActiveAreas)
-      const { activeAreas }= this
+    selectActiveArea (area) {
+      if (area === 'all') {
+        this.activeAreas = clone(defaultActiveAreas)
+        return this.activeAreas
+      }
+      const { activeAreas } = this
       const areaIndex = activeAreas.indexOf(area)
       this.activeAreas.splice(areaIndex + 1, activeAreas.length)
     },
-    async selectArea(area) {
+    async selectArea (area) {
       const {
         isAreaSelected,
         makeSelectedArea,
@@ -204,25 +208,25 @@ export default {
       }
       this.activeAreas.push(area)
     },
-    confirmSelectedCity() {
+    confirmSelectedCity () {
       this.$emit('input', this.selectedAreas)
       this.closeModal()
     },
-    cancelSelectedCity() {
+    cancelSelectedCity () {
       this.selectedAreas = clone(this.value)
       this.closeModal()
     },
-    closeModal() {
+    closeModal () {
       this.$emit('update:visible', false)
       this.activeAreas = clone(defaultActiveAreas)
     },
-    makeSelectedArea(area) {
+    makeSelectedArea (area) {
       const { activeAreas } = this
       return activeAreas.length === 3
-        ? [activeAreas[1].value, activeAreas[2].value,  area.value]
+        ? [activeAreas[1].value, activeAreas[2].value, area.value]
         : [activeAreas[1].value, area.value]
     },
-    isAreaSelected(area) {
+    isAreaSelected (area) {
       const {
         selectedAreas,
         makeSelectedArea
@@ -230,7 +234,7 @@ export default {
       const currentArea = makeSelectedArea(area)
       return selectedAreas.some(item => isEqual(currentArea, item))
     },
-    getAreaContainNum(area) {
+    getAreaContainNum (area) {
       if (area.isLeaf) return 0
       const {
         activeAreas,
@@ -245,12 +249,12 @@ export default {
   watch: {
     value: {
       immediate: true,
-      handler(val) {
+      handler (val) {
         this.selectedAreas = clone(val)
       }
     }
   },
-  async created() {
+  async created () {
     const allCities = await getAllCities()
     this.areaOpts = Object.freeze(formatAreaOpts(allCities))
   }

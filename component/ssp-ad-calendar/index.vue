@@ -52,10 +52,10 @@ export default {
       required: true
     }
   },
-  beforeDestroy() {
+  beforeDestroy () {
     store.clearStore()
   },
-  async mounted() {
+  async mounted () {
     await store.getAds()
   }
 }

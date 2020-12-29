@@ -63,19 +63,19 @@ export default {
     }
   },
   filters: {
-    materialType(t) {
+    materialType (t) {
       return materialType[String(t)]
     }
   },
   methods: {
-    async onCurrentChange({offset}) {
+    async onCurrentChange ({ offset }) {
       const q = {
         ...this.query,
         offset
       }
       await store.getMaterials(q)
     },
-    gotoMaterialInfo(id) {
+    gotoMaterialInfo (id) {
       this.$router.push({
         name: 'material-info',
         params: { id }

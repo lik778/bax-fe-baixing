@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import  { getBalance, getBusinessLicense } from 'api/seo'
+import { getBalance, getBusinessLicense } from 'api/seo'
 import { f2y } from 'util'
 const SEO_CREATE_TYPE_ZIXUAN = 1
 const SEO_CREATE_TYPE_CIBAO = 2
@@ -34,41 +34,41 @@ const seoCreateEntryLis = [
     title: '自选词',
     desc: '任意自选词推广至百度首页，4词起做，不达首页不计费，每词低至8元/端/天',
     isHot: false,
-    routerName:'seo-create-zixuan-promotion',
+    routerName: 'seo-create-zixuan-promotion',
     canLink: true
   },
   {
     id: SEO_CREATE_TYPE_CIBAO,
     title: '加速词包版',
     desc: '推广至百度，达标词量不够不扣费',
-    isHot:true,
-    routerName:'seo-create-cibao-promotion',
+    isHot: true,
+    routerName: 'seo-create-cibao-promotion',
     canLink: false
   }
 ]
 export default {
-  name:'seo-create',
-  data(){
+  name: 'seo-create',
+  data () {
     return {
       balance: 0,
-      list:seoCreateEntryLis,
+      list: seoCreateEntryLis,
       SEO_CREATE_TYPE_CIBAO
     }
   },
-  methods:{
+  methods: {
     f2y,
-    async loadBalance() {
+    async loadBalance () {
       const d = await getBalance()
       this.balance = d.balance
     },
-    async getLiensence() {
+    async getLiensence () {
       const businessUrl = await getBusinessLicense()
       if (businessUrl) {
         this.list.find(row => row.id === SEO_CREATE_TYPE_CIBAO).canLink = true
       }
     },
-    async handleRouterPush({id, routerName, canLink}){
-      if (id === SEO_CREATE_TYPE_ZIXUAN ) {
+    async handleRouterPush ({ id, routerName, canLink }) {
+      if (id === SEO_CREATE_TYPE_ZIXUAN) {
         return this.$router.push({ name: routerName })
       }
 
@@ -81,27 +81,27 @@ export default {
         this.$router.push({ name: routerName })
       } else {
         await this.$msgbox({
-          title:'提示',
+          title: '提示',
           message: h('div', null, [
-            h('div',null,'根据《网络安全法》规定，请提供您的营业执照后再创建首页宝加速词包计划。'),
-            h('div',{style:'margin-top:10px;'},'您尚未提交审核或未通过审核，请进行营业执照认证,如您已经通过认证审核，请关闭本弹窗后重新点击加速词包新建计划按钮。')
+            h('div', null, '根据《网络安全法》规定，请提供您的营业执照后再创建首页宝加速词包计划。'),
+            h('div', { style: 'margin-top:10px;' }, '您尚未提交审核或未通过审核，请进行营业执照认证,如您已经通过认证审核，请关闭本弹窗后重新点击加速词包新建计划按钮。')
           ]),
-          confirmButtonText:'前往认证'
+          confirmButtonText: '前往认证'
         })
         window.open('https://www.baixing.com/bind/#bindList')
       }
     }
   },
-  async mounted() {
+  async mounted () {
     await this.loadBalance()
     await this.getLiensence()
   },
-  computed:{
-    keywords(){
-      return Math.floor(this.f2y(this.balance)/600)
+  computed: {
+    keywords () {
+      return Math.floor(this.f2y(this.balance) / 600)
     },
-    days(){
-      return Math.floor(this.f2y(this.balance)/3000 * 90)
+    days () {
+      return Math.floor(this.f2y(this.balance) / 3000 * 90)
     }
   }
 }
