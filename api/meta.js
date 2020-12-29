@@ -3,7 +3,7 @@ import { fengming, api } from './base'
 
 const isArray = Array.isArray
 
-export async function getProductDiscounts(type) {
+export async function getProductDiscounts (type) {
   if (isArray(type)) {
     const arr = await Promise.all(type.map((t) => _getProductDiscounts(t)))
     return arr.reduce((a, b) => [...(a || []), ...(b || [])], [])
@@ -13,11 +13,11 @@ export async function getProductDiscounts(type) {
   }
 }
 
-export async function getCategories(levels = [1, 2]) {
+export async function getCategories (levels = [1, 2]) {
   const body = await api
     .get('/meta/categories')
     .query({
-      levels: levels.join(','),
+      levels: levels.join(',')
     })
     .json()
 
@@ -26,11 +26,11 @@ export async function getCategories(levels = [1, 2]) {
   return categories.map((c) => ({
     ...c,
     value: c.name,
-    label: c.nameCn,
+    label: c.nameCn
   }))
 }
 
-export async function getAreas() {
+export async function getAreas () {
   // fengming vs bax (前者多几个字段)
   const body = await fengming.get('/meta/areas').json()
 
@@ -39,15 +39,15 @@ export async function getAreas() {
   return cities.map((c) => ({
     ...c,
     value: c.name,
-    label: c.nameCn,
+    label: c.nameCn
   }))
 }
 
-export async function getCoupons(opt = {}) {
+export async function getCoupons (opt = {}) {
   const option = {
     offset: 0,
     limit: 100,
-    ...opt,
+    ...opt
   }
   const body = await api
     .get('/meta/coupon')
@@ -57,13 +57,13 @@ export async function getCoupons(opt = {}) {
   return toCamelcase(body.data)
 }
 
-export async function redeemCoupon(code) {
+export async function redeemCoupon (code) {
   const body = await api.post('/meta/coupon/apply').send({ code }).json()
 
   return body.data
 }
 
-export async function getCondition() {
+export async function getCondition () {
   const body = await api.get('/meta/coupon/condition').json()
 
   return toCamelcase(body.data)
@@ -73,11 +73,11 @@ export async function getCondition() {
  * private
  */
 
-async function _getProductDiscounts(type) {
+async function _getProductDiscounts (type) {
   const body = await api
     .get('/meta/template/discount')
     .query({
-      product_type: type,
+      product_type: type
     })
     .json()
 

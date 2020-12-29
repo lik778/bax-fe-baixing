@@ -37,7 +37,7 @@ export default {
     type: 'C',
     title: '业务关键词（C类词）',
     inputTitle: '添加业务关键词',
-    info: ``,
+    info: '',
     placeholder:
       '如：，空调维修，空调移机，物品回收，黄金回收，挖掘机，推土机，...',
     keywords: [],
