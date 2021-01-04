@@ -1456,7 +1456,7 @@ export default {
         limit: 1
       })
       const ad = result.ads && result.ads[0]
-      if (ad && ad.adId === this.originPromotion.landingPageId) return
+      if (ad && String(ad.adId) === String(this.originPromotion.landingPageId)) return
       this.isErrorLandingPageShow = true
       this.promotion.landingPage = ''
     }

@@ -173,7 +173,7 @@ export default {
           limit: 1
         })
         const ad = result.ads && result.ads[0]
-        if (ad && ad.adId === String(landingPageId)) return
+        if (ad && String(ad.adId) === String(landingPageId)) return
         this.isErrorLandingPageShow = true
         this.form.landingPage = ''
       }

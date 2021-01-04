@@ -692,7 +692,7 @@ export default {
           limit: 1
         })
         ad = result.ads && result.ads[0]
-        if (ad && ad.adId === String(originPromotion.landingPageId)) {
+        if (ad && String(ad.adId) === String(originPromotion.landingPageId)) {
           clonedPromotion.landingPage = ad.url
           await this.$refs.userAdSelector.reset('selected', ad.adId)
         }
