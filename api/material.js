@@ -2,7 +2,7 @@
 import { reverseCamelcase, toCamelcase } from 'object-keys-mapping'
 import { api, trim } from './base'
 
-export async function getMaterials (opts = {}) {
+export async function getMaterials(opts = {}) {
   const query = trim({
     offset: 0,
     limit: 20,
@@ -23,7 +23,7 @@ export async function getMaterials (opts = {}) {
   }
 }
 
-export async function getMaterial (id) {
+export async function getMaterial(id) {
   const body = await api
     .get(`/material/${id}`)
     .json()
@@ -31,7 +31,7 @@ export async function getMaterial (id) {
   return toCamelcase(body.data)
 }
 
-export async function getUpyunToken (opts) {
+export async function getUpyunToken(opts) {
   const body = await api
     .get('/material/upyun/token')
     .query(reverseCamelcase(opts))
@@ -43,7 +43,7 @@ export async function getUpyunToken (opts) {
 /**
  * @returns {String}
  */
-export async function getQiniuToken () {
+export async function getQiniuToken() {
   const body = await api
     .get('/material/qiniu/token')
     .json()
@@ -54,7 +54,7 @@ export async function getQiniuToken () {
 /**
  * private
  */
-async function _getMaterials (opts = {}) {
+async function _getMaterials(opts = {}) {
   const body = await api
     .get('/material')
     .query(reverseCamelcase(opts))
@@ -67,7 +67,7 @@ async function _getMaterials (opts = {}) {
  * @param {*} opts
  * @returns {Number}
  */
-async function getMaterialCount (opts = {}) {
+async function getMaterialCount(opts = {}) {
   const body = await api
     .get('/material/count')
     .query(reverseCamelcase(opts))

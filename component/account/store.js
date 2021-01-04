@@ -13,18 +13,18 @@ const store = observable({
   _logs: [],
   totalLogs: 0,
 
-  get logs () {
+  get logs() {
     return toJS(this._logs)
   },
-  get coupons () {
+  get coupons() {
     return toJS(this._coupons)
   },
 
-  get balance () {
+  get balance() {
     return toJS(this._balance)
   },
 
-  getLogs: action(async function ({ productType, ...params }) {
+  getLogs: action(async function({productType, ...params}) {
     let logs
     let total
     if (productType === PRODUCT_TYPE_BIAOWANG) {
@@ -49,7 +49,7 @@ const store = observable({
       logs = res.content
       total = res.totalElements
     } else {
-      const reBuildFengmingParams = ({ selectId, ...ohterParams }) => {
+      const reBuildFengmingParams = ({selectId, ...ohterParams}) => {
         return {
           campaignId: selectId,
           ...ohterParams
@@ -63,11 +63,11 @@ const store = observable({
     this._logs = logs
   }),
 
-  getCoupons: action(async function (opt) {
+  getCoupons: action(async function(opt) {
     this._coupons = await mapi.getCoupons(opt)
   }),
 
-  getBalance: action(async function () {
+  getBalance: action(async function() {
     this._balance = await api.getCurrentAllBalanceBreif()
   })
 })

@@ -20,11 +20,11 @@ export default {
     }
   },
   methods: {
-    onCopySuccess () {
+    onCopySuccess() {
       Message.success('已复制到剪切板')
       this.$emit('success')
     },
-    onCopyError () {
+    onCopyError() {
       Message.error('复制到剪切板失败')
     }
   }

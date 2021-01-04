@@ -3,7 +3,7 @@
     <h2>精品官网</h2>
     <h4>快速建立个性化网站，提供专业品牌形象</h4>
     <ul class="list">
-      <li class="title">产品优势：</li>
+      <li class="title">产品优势：</li> 
       <li>
         <span class="list-num">1</span>
         海量模板，一键套用，极速生成
@@ -21,7 +21,7 @@
         维护便利：自己可及时修改网站内容，7*24小时安全监控
       </li>
     </ul>
-
+        
     <div class="gw-compare">
       <div class="item normal">
         <div class="header">
@@ -63,7 +63,7 @@
 import { baxUserLogin, getUserTicketCount } from 'api/ka'
 export default {
   name: 'gw-homepage',
-  data () {
+  data() {
     return {
       ticketCount: 0,
 
@@ -72,7 +72,7 @@ export default {
       professionalSite: ['海量模版，素材工厂，一键生成', '多端展示，多类型组件', '微信留言', '数据监控', '支持SEO及诊断优化', '友情链接']
     }
   },
-  async created () {
+  async created() {
     await baxUserLogin()
     this.ticketCount = await getUserTicketCount({})
     if (this.ticketCount) {
@@ -80,16 +80,16 @@ export default {
     }
   },
   methods: {
-    showModal () {
+    showModal() {
       this.visible = true
       document.body.style = 'overflow-y: hidden;'
     },
-    hideModal () {
+    hideModal() {
       this.visible = false
       document.body.style = 'overflow-y: auto;'
     },
-    goChargePage () {
-      this.$router.push({ name: 'qwt-charge', query: { select_gw: true } })
+    goChargePage() {
+      this.$router.push({name: 'qwt-charge', query: {select_gw: true}})
     }
   }
 }
@@ -195,7 +195,7 @@ export default {
   color: #fff;
   border: 2px solid #fff;
   text-align: center;
-    text-align: center;
+    text-align: center;	
   text-align: center;
   cursor: pointer;
   transform: translateY(-20px);

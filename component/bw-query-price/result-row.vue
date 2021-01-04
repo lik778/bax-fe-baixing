@@ -6,8 +6,8 @@
 </template>
 
 <script>
-import { f2y } from 'util'
-import { DEVICE } from 'constant/biaowang'
+import {f2y} from 'util'
+import {DEVICE} from 'constant/biaowang'
 
 export default {
   name: 'result-row',
@@ -22,17 +22,16 @@ export default {
     }
   },
   computed: {
-    // eslint-disable-next-line
     selectedValues () {
-      for (let i = 0; i < this.priceList.length; i++) {
-        if (this.selected.includes(this.priceList[i])) {
+      for (let i =0; i < this.priceList.length; i ++) {
+        if (this.selected.includes(this.priceList[i])){
           return this.priceList[i]
         }
       }
     }
   },
   methods: {
-    format (option) {
+    format(option) {
       return `${f2y(option.price)} 元 (${option.days}天、${DEVICE[option.device]})`
     }
   }

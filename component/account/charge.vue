@@ -38,6 +38,7 @@ import { toHumanTime } from 'utils'
 import dayjs from 'dayjs'
 import { SPUCODES } from 'constant/product'
 import * as api from 'api/account'
+import { addAdItemMaterial } from 'api/ad'
 
 const { WHOLE_SPU_CODE, BIAO_WANG_SPU_CODE } = SPUCODES
 const DEFAULT_DATE_RANGE = [
@@ -55,12 +56,12 @@ export default {
   components: {
     SectionHeader
   },
-  data () {
+  data() {
     return {
       query: {
         accountList: '',
         size: 10,
-        dateRange: DEFAULT_DATE_RANGE
+        dateRange: DEFAULT_DATE_RANGE,
       },
       PRODUCTS,
       total: 0,
@@ -69,9 +70,9 @@ export default {
     }
   },
   methods: {
-    async fetchData (isResetPageNo) {
+    async fetchData(isResetPageNo) {
       if (isResetPageNo) this.pageNo = 1
-      const { dateRange, accountList, ...otherParams } = this.query
+      let { dateRange, accountList,  ...otherParams } = this.query
       let queryParmas = {
         pageNo: this.pageNo || 1,
         ...otherParams,
@@ -90,7 +91,7 @@ export default {
       this.data = logs
       this.total = total
     },
-    handleCurrentPage (val) {
+    handleCurrentPage(val) {
       this.pageNo = val
       this.fetchData()
     },
@@ -100,7 +101,7 @@ export default {
     query: {
       deep: true,
       immediate: true,
-      handler () {
+      handler() {
         this.fetchData(true)
       }
     }
@@ -124,3 +125,4 @@ export default {
   }
 }
 </style>
+

@@ -24,23 +24,23 @@ const store = observable({
 
   _ads: [],
 
-  get query () {
+  get query() {
     return toJS(this._query)
   },
 
-  get orders () {
+  get orders() {
     return toJS(this._orders)
   },
 
-  get ads () {
+  get ads() {
     return toJS(this._ads)
   },
 
-  switchShowMoreFilters: action(async function () {
+  switchShowMoreFilters: action(async function() {
     this.showMoreFilters = !this.showMoreFilters
   }),
 
-  getOrders: action(async function (opts) {
+  getOrders: action(async function(opts) {
     const {
       orders = [],
       query = {}

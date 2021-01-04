@@ -51,13 +51,13 @@ export default {
       required: true
     }
   },
-  data () {
+  data() {
     return {
       selectedCategories: [...this.categories]
     }
   },
   computed: {
-    topCategories () {
+    topCategories() {
       return this.allCategories
         .filter(c => c.level === 1)
         .map(c => ({
@@ -70,17 +70,17 @@ export default {
     }
   },
   methods: {
-    removeCategoryFromTopCategory (topId, mainId) {
+    removeCategoryFromTopCategory(topId, mainId) {
       const top = this.topCategories.find(t => t.id === topId)
 
       return top.categories.filter(c => c.id !== mainId).map(c => c.id)
     },
-    belongToTopCategory (category, topId) {
+    belongToTopCategory(category, topId) {
       const top = this.topCategories.find(t => t.id === topId)
 
       return top.categories.map(c => c.id).includes(category)
     },
-    getMainCategories (topId) {
+    getMainCategories(topId) {
       return this.allCategories
         .filter(c => c.level === 2 && c.belongsToFirst === topId)
         .map(c => ({
@@ -90,7 +90,7 @@ export default {
           id: c.id
         }))
     },
-    getCategoryByName (id) {
+    getCategoryByName(id) {
       const c = this.allCategories.find(c => c.name === id)
 
       return {
@@ -100,7 +100,7 @@ export default {
         id: c.id
       }
     },
-    categoryChecked (id) {
+    categoryChecked(id) {
       const category = this.getCategoryByName(id)
 
       const {
@@ -122,7 +122,7 @@ export default {
         return !!selectedCategories.find(c => c === id || c === parent)
       }
     },
-    clickTopCategory (id) {
+    clickTopCategory(id) {
       const type = this.categoryChecked(id) ? 'del' : 'add'
       const { selectedCategories } = this
 
@@ -148,7 +148,7 @@ export default {
         }
       }
     },
-    clickMainCategory (id) {
+    clickMainCategory(id) {
       const type = this.categoryChecked(id) ? 'del' : 'add'
       const category = this.getCategoryByName(id)
       const { selectedCategories } = this
@@ -190,7 +190,7 @@ export default {
         }
       }
     },
-    clickCategory (id) {
+    clickCategory(id) {
       const { selectedCategories } = this
 
       if (id === 'all-categories') {
@@ -213,21 +213,21 @@ export default {
         this.clickMainCategory(id)
       }
     },
-    empty () {
+    empty() {
       // 一律由外部 prop 清空
       // this.selectedCategories = []
     },
-    cancel () {
+    cancel() {
       this.empty()
       this.$emit('cancel')
     },
-    ok () {
+    ok() {
       this.$emit('ok', [...this.selectedCategories])
       this.empty()
     }
   },
   watch: {
-    categories (v) {
+    categories(v) {
       if (isequal(v, this.selectedCategories)) {
         return
       }
@@ -235,7 +235,7 @@ export default {
       this.selectedCategories = [...v]
     }
   },
-  updated () {
+  updated() {
     console.debug('category selector updated')
   }
 }

@@ -123,13 +123,13 @@ import {
   allDevices,
   timeTypes,
   campaignFields,
-  keywordFields
+  keywordFields,
 } from 'constant/fengming-report'
 
 import {
   SEM_PLATFORM_SHENMA,
   SEM_PLATFORM_BAIDU,
-  semPlatformOpts
+  semPlatformOpts,
 } from 'constant/fengming'
 
 import store from './store'
@@ -138,20 +138,20 @@ export default {
   name: 'SummaryData',
   components: {
     DataDetail,
-    DashboardHeader
+    DashboardHeader,
   },
   fromMobx: {
     statistics: () => store.statistics,
     summary: () => store.summary,
     offset: () => store.offset,
     limit: () => store.limit,
-    total: () => store.total
+    total: () => store.total,
   },
   props: {
     userInfo: Object,
-    salesInfo: Object
+    salesInfo: Object,
   },
-  data () {
+  data() {
     return {
       SEM_PLATFORM_SHENMA,
       DEVICE_WAP,
@@ -167,31 +167,31 @@ export default {
         dimension: DIMENSION_CAMPAIGN,
         channel: SEM_PLATFORM_BAIDU,
         timeUnit: TIME_UNIT_DAY,
-        device: DEVICE_ALL
+        device: DEVICE_ALL,
       },
 
       searchCampaigns: '',
       campaignErrTip: false,
-      DIMENSION_SEARCH_KEYWORD
+      DIMENSION_SEARCH_KEYWORD,
     }
   },
   computed: {
-    checkedCampaignIds () {
+    checkedCampaignIds() {
       return String(this.searchCampaigns).split(',')
     },
-    normalUserId () {
+    normalUserId() {
       return this.salesInfo.userId || this.userInfo.id
     },
-    allDevices () {
+    allDevices() {
       if (this.query.channel === SEM_PLATFORM_SHENMA) {
         return allDevices.filter((d) => d.value === DEVICE_ALL)
       }
 
       return allDevices
-    }
+    },
   },
   methods: {
-    async queryStatistics (opts = {}) {
+    async queryStatistics(opts = {}) {
       const { dimension } = this.query
       const { checkedCampaignIds } = this
 
@@ -219,7 +219,7 @@ export default {
       }
       return await this._getReport(opts)
     },
-    async _getReportByQueryWord (opts = {}) {
+    async _getReportByQueryWord(opts = {}) {
       const offset = opts.offset || 0
       const { query, checkedCampaignIds } = this
       const { userId, salesId } = this.salesInfo
@@ -248,11 +248,11 @@ export default {
         salesId,
 
         limit: this.limit,
-        offset
+        offset,
       }
       await store.fetchReportByQueryWord(q)
     },
-    async _getReport (opts = {}) {
+    async _getReport(opts = {}) {
       const offset = opts.offset || 0
       const { query, checkedCampaignIds } = this
       const { userId, salesId } = this.salesInfo
@@ -288,31 +288,31 @@ export default {
         fields:
           query.dimension === DIMENSION_CAMPAIGN
             ? campaignFields
-            : keywordFields
+            : keywordFields,
       }
       await store.fetchReport(q)
     },
-    async getCampaignReport (campaign) {
+    async getCampaignReport(campaign) {
       this.query.channel = campaign.channel
       this.query.device = DEVICE_ALL
       this.query.dimension = DIMENSION_KEYWORD
       this.searchCampaigns = campaign.campaignId
-    }
+    },
   },
   watch: {
     query: {
       deep: true,
       handler: async function (v) {
         await this.queryStatistics()
-      }
+      },
     },
-    searchCampaigns () {
+    searchCampaigns() {
       this.queryStatistics()
-    }
+    },
   },
-  async mounted () {
+  async mounted() {
     await this.queryStatistics()
-  }
+  },
 }
 </script>
 

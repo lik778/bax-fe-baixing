@@ -46,14 +46,14 @@ export default {
   components: {
     Coupon
   },
-  data () {
+  data() {
     return {
       activeCouponTab: 'first',
       coupons: []
     }
   },
   methods: {
-    onCouponClick () {
+    onCouponClick() {
       this.$router.push({
         name: 'qwt-charge',
         query: {
@@ -62,8 +62,8 @@ export default {
       })
     }
   },
-  async mounted () {
-    const { data: coupons } = await getCoupons({ status: 0, limit: 100 })
+  async mounted() {
+    const {data: coupons} = await getCoupons({status: 0, limit: 100})
     this.coupons = coupons
   }
 }

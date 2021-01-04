@@ -64,6 +64,8 @@
 </template>
 
 <script>
+import dayjs from 'dayjs'
+
 import { getRouteParam } from 'util'
 import { QIANCI_LANDING_TYPE } from 'constant/qianci'
 import { getUserSites } from 'api/ka'
@@ -71,7 +73,7 @@ import { getCreative, saveCreative } from 'api/qianci'
 
 export default {
   name: 'creative-manage',
-  data () {
+  data() {
     return {
       id: null,
       isFormEdited: false,
@@ -80,16 +82,15 @@ export default {
         landingPage: '',
         landingPageId: '',
         creativeTitle: '',
-        creativeContent: ''
+        creativeContent: '',
       },
       rules: {
         coreWords: [{ type: 'array', required: true, message: '哇核心产品都没有' }],
         landingPageId: [{ required: true, message: '请选择投放页面' }],
         creativeTitle: [
           { required: true, message: '请填写推广标题' },
-          {
-            validator: (rule, value, callback) => {
-              if (value.length < 9 || value.length > 25) callback(new Error('推广标题长度需要在 9-25 之间'))
+          { validator: (rule, value, callback) => {
+              if (value.length < 9 || value.length > 25) callback('推广标题长度需要在 9-25 之间')
               callback()
             },
             trigger: 'blur'
@@ -97,15 +98,14 @@ export default {
         ],
         creativeContent: [
           { required: true, message: '请填写推广内容' },
-          {
-            validator: (rule, value, callback) => {
-              if (value.length < 9 || value.length > 80) callback(new Error('推广内容长度需要在 9-80 之间'))
-              if (value === this.form.creativeTitle) callback(new Error('推广内容不能和推广标题相同'))
+          { validator: (rule, value, callback) => {
+              if (value.length < 9 || value.length > 80) callback('推广内容长度需要在 9-80 之间')
+              if (value === this.form.creativeTitle) callback('推广内容不能和推广标题相同')
               callback()
             },
             trigger: 'blur'
           }
-        ]
+        ],
       },
       options: {
         sites: []
@@ -128,7 +128,7 @@ export default {
       }
     }
   },
-  async created () {
+  async created() {
     this.id = getRouteParam.bind(this)('promoteId')
     if (!this.id) {
       throw new Error('No ID on qc-creative page.')
@@ -144,7 +144,7 @@ export default {
         coreWords,
         landingPage,
         creativeTitle,
-        creativeContent
+        creativeContent,
       } = response || {}
       const targetSite = this.options.sites.find(site => (landingPage || '').includes(site.domain))
 
@@ -184,10 +184,10 @@ export default {
           const query = {
             ...this.form,
             id: this.id,
-            landingType: QIANCI_LANDING_TYPE
+            landingType: QIANCI_LANDING_TYPE,
           }
           try {
-            await saveCreative(query)
+            const response = await saveCreative(query)
           } finally {
             setTimeout(() => (this.loading.form = false), 300)
           }
@@ -199,15 +199,15 @@ export default {
         }
       })
     },
-    onSelectSite (ids) {
+    onSelectSite(ids) {
       if (!ids) return null
 
       const id = ids.length && ids[0]
       this.form.landingPageId = String(id)
-      const handle = this.options.sites.find(x => String(x.value) === String(id))
+      const handle = this.options.sites.find(x => x.value == id)
       this.reGenURL(handle)
     },
-    reGenURL (site) {
+    reGenURL(site) {
       this.form.landingPage = site
         ? 'http://' + site.domain + '.mvp.baixing.com'
         : ''

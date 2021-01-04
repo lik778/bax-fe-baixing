@@ -101,18 +101,18 @@ export default {
     }
   },
   computed: {
-    allowPayOrder () {
+    allowPayOrder() {
       return allowPayOrder(this.userInfo.roles)
     }
   },
   filters: {
-    orderStatus (s) {
+    orderStatus(s) {
       return sspOrderStatus[String(s)]
     },
     toHumanTime
   },
   methods: {
-    async cancel (id) {
+    async cancel(id) {
       try {
         await this.$confirm(`确认取消订单: ${id} ?`)
       } catch (err) {
@@ -123,7 +123,7 @@ export default {
       await store.getOrders()
       Message.success('已取消订单')
     },
-    async pay (id) {
+    async pay(id) {
       try {
         await this.$confirm(`确认支付订单: ${id} ?`)
       } catch (err) {
@@ -134,15 +134,15 @@ export default {
       await store.getOrders()
       Message.success('支付成功')
     },
-    async onCurrentChange ({ offset }) {
-      await store.getOrders({ offset })
+    async onCurrentChange({offset}) {
+      await store.getOrders({offset})
     },
-    formatOrderType (row) {
+    formatOrderType(row) {
       return sspOrderType[String(row.orderType)]
     }
   },
-  async mounted () {
-    await store.getOrders({ ...this.query })
+  async mounted() {
+    await store.getOrders({...this.query})
   }
 }
 </script>

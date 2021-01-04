@@ -50,14 +50,14 @@ export default {
       type: [Number, String]
     }
   },
-  data () {
+  data() {
     return {
       httpReqPending: false,
       allCampaigns: []
     }
   },
   methods: {
-    async initData () {
+    async initData() {
       const { userId, channel } = this
       // 正常用户单一渠道: 推广 10 个不到 (此处简化处理, 一次性拉取)
       if (userId && typeof channel === 'number') {
@@ -69,41 +69,41 @@ export default {
         })
       }
     },
-    onCheckCampaign (campaign) {
+    onCheckCampaign(campaign) {
       if (this.campaignChecked(campaign.id)) {
         this.$emit('remove-campaign', campaign)
       } else {
         this.$emit('select-campaign', campaign)
       }
     },
-    campaignChecked (id) {
+    campaignChecked(id) {
       return this.campaignIds.includes(id)
     },
-    empty () {
+    empty() {
       this.allCampaigns = []
       this.allKeywords = {}
     },
-    cancel () {
+    cancel() {
       this.$emit('ok')
     },
-    ok () {
+    ok() {
       this.$emit('ok')
     }
   },
   watch: {
-    async channel (val, pre) {
+    async channel(val, pre) {
       if (typeof val === 'number' &&
         val !== pre) {
         await this.initData()
       }
     },
-    async userId (val, pre) {
+    async userId(val, pre) {
       if (val && val !== pre) {
         await this.initData()
       }
     }
   },
-  async mounted () {
+  async mounted() {
     await this.initData()
   }
 }
