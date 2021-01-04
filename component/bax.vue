@@ -24,7 +24,7 @@
       @close="toggleAddUserLeadVisible"
     />
     <!-- <huo-dong-intro :show="huoDongIntroVisible" @close="huoDongIntroVisible = false" /> -->
-    <huo-dong-btn v-if="inActivityPeriod" />
+    <!-- <huo-dong-btn v-if="inActivityPeriod" /> -->
     <back-to-top />
     <wechat-scan />
     <Notification />
