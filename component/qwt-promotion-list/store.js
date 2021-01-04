@@ -21,21 +21,20 @@ class Store {
   @observable summary = null
 
   @action
-  async fetchPromotionList (id, campaignIds, isForceUpdate) {
+  async fetchPromotionList(id, campaignIds, isForceUpdate) {
     // 判断是否已经存在
     const campaignMap = this.campaignMap
     const campaignMapKeys = Object.keys(campaignMap)
     if (isForceUpdate || !campaignMapKeys.includes(id)) {
-      const campaigns = await getCurrentCampaigns({ ...this.queryParams, campaignIds })
+      const campaigns = await getCurrentCampaigns({...this.queryParams, campaignIds})
       this.campaignMap = Object.freeze({
         ...campaignMap,
         [id]: campaigns
       })
     }
   }
-
   @action
-  async fetchlandingPageList (queryParams) {
+  async fetchlandingPageList(queryParams) {
     this.landingPageLoading = true
     try {
       const result = await getCampaignLanding(queryParams)
@@ -46,9 +45,8 @@ class Store {
       this.landingPageLoading = false
     }
   }
-
   @action
-  async fetchSummary () {
+  async fetchSummary() {
     this.summary = await getHomepageSummary()
   }
 }

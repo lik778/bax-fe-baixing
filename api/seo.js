@@ -1,7 +1,7 @@
 
 import { seo, trim } from './base'
 
-export async function getBalance () {
+export async function getBalance() {
   const body = await seo
     .get('/balance')
     .json()
@@ -9,7 +9,7 @@ export async function getBalance () {
   return body.data
 }
 
-export async function queryPromotion (opts = {}) {
+export async function queryPromotion(opts = {}) {
   const body = await seo
     .get('/campaigns/landing')
     .query(opts)
@@ -18,7 +18,7 @@ export async function queryPromotion (opts = {}) {
   return body.data
 }
 
-export async function queryPromotionByIds (campaignIds) {
+export async function queryPromotionByIds(campaignIds) {
   const body = await seo
     .get('/campaigns')
     .query({ campaignIds })
@@ -27,7 +27,7 @@ export async function queryPromotionByIds (campaignIds) {
   return body.data
 }
 
-export async function createPromotion (data) {
+export async function createPromotion(data) {
   const body = await seo
     .post('/campaigns')
     .send(data)
@@ -36,7 +36,7 @@ export async function createPromotion (data) {
   return body.data
 }
 
-export async function stop (campaignIds) {
+export async function stop(campaignIds) {
   const body = await seo
     .post('/campaigns/stop')
     .send(campaignIds)
@@ -45,7 +45,7 @@ export async function stop (campaignIds) {
   return body.data
 }
 
-export async function start (campaignIds) {
+export async function start(campaignIds) {
   const body = await seo
     .post('/campaigns/start')
     .send(campaignIds)
@@ -54,7 +54,7 @@ export async function start (campaignIds) {
   return body.data
 }
 
-export async function restart (id) {
+export async function restart(id) {
   const body = await seo
     .post(`/campaigns/${id}/restart`)
     .json()
@@ -62,7 +62,7 @@ export async function restart (id) {
   return body.data
 }
 
-export async function updatePromotion (campaignId, data) {
+export async function updatePromotion(campaignId, data) {
   const body = await seo
     .post(`/campaigns/${campaignId}`)
     .send(data)
@@ -72,7 +72,7 @@ export async function updatePromotion (campaignId, data) {
 }
 
 // targetUserId, salesId are baxid, not baixingid
-export async function createPreOrder (balanceAmount, saleWithShopOrder, shopOrderAmount, websiteSkuId, targetUserId, salesId) {
+export async function createPreOrder(balanceAmount, saleWithShopOrder, shopOrderAmount, websiteSkuId, targetUserId, salesId) {
   const body = await seo
     .post('/trade/pre')
     .send(trim({ balanceAmount, saleWithShopOrder, websiteSkuId, targetUserId, salesId, shopOrderAmount }))
@@ -81,7 +81,7 @@ export async function createPreOrder (balanceAmount, saleWithShopOrder, shopOrde
   return body.data
 }
 
-export async function getBusinessLicense () {
+export async function getBusinessLicense() {
   const body = await seo
     .get('/acc/campaign/business-license')
     .json()
@@ -89,7 +89,7 @@ export async function getBusinessLicense () {
   return body.data
 }
 
-export async function getPromotedWebsite () {
+export async function getPromotedWebsite() {
   const body = await seo
     .get('/acc/campaign/promoted-website')
     .json()
@@ -97,14 +97,14 @@ export async function getPromotedWebsite () {
   return body.data
 }
 
-export async function getCibaoPromotionBaseInfo () {
+export async function getCibaoPromotionBaseInfo() {
   const body = await seo
     .get('/acc/campaign/base-info')
     .json()
   return body.data || {}
 }
 
-export async function createCibaoPromotion (opts = {}) {
+export async function createCibaoPromotion(opts = {}) {
   const body = await seo
     .post('/acc/campaign/create')
     .send(opts)
@@ -113,7 +113,7 @@ export async function createCibaoPromotion (opts = {}) {
   return body.data
 }
 
-export async function updateCibaoPromotion (opts = {}) {
+export async function updateCibaoPromotion(opts = {}) {
   const body = await seo
     .post('/acc/campaign/update')
     .send(opts)
@@ -122,21 +122,21 @@ export async function updateCibaoPromotion (opts = {}) {
   return body.data
 }
 
-export async function stopCibaoPromotion (id) {
+export async function stopCibaoPromotion(id) {
   const body = await seo
     .get(`/acc/campaign/stop/${id}`)
     .json()
   return body.data
 }
 
-export async function restartCibaoPromotion (id) {
+export async function restartCibaoPromotion(id) {
   const body = await seo
     .get(`/acc/campaign/restart/${id}`)
     .json()
   return body.data
 }
 
-export async function getCibaoPromotionByCampaignId (id) {
+export async function getCibaoPromotionByCampaignId(id) {
   const body = await seo
     .get(`/acc/campaign/${id}`)
     .json()
@@ -144,9 +144,9 @@ export async function getCibaoPromotionByCampaignId (id) {
   return body.data
 }
 
-export async function getCiBaoPromotionList ({ size = 10, page = 1 }) {
+export async function getCiBaoPromotionList({ size = 10, page = 1 }) {
   const body = await seo
-    .post('/acc/campaign/user/list')
+    .post(`/acc/campaign/user/list`)
     .send({
       size,
       page
@@ -155,9 +155,9 @@ export async function getCiBaoPromotionList ({ size = 10, page = 1 }) {
   return body.data
 }
 
-export async function renewCibaoPromotion ({ id, duration }) {
+export async function renewCibaoPromotion({ id, duration }) {
   const body = await seo
-    .post('/acc/campaign/renew')
+    .post(`/acc/campaign/renew`)
     .send({
       id,
       duration
@@ -166,9 +166,9 @@ export async function renewCibaoPromotion ({ id, duration }) {
   return body.data
 }
 
-export async function exportCibaoPromotion ({ date, id }) {
+export async function exportCibaoPromotion({ date, id }) {
   const body = await seo
-    .post('/acc/campaign/export')
+    .post(`/acc/campaign/export`)
     .send({
       date,
       id

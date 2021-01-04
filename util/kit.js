@@ -1,4 +1,4 @@
-export function getPagination (total, offset, limit) {
+export function getPagination(total, offset, limit) {
   const currentPage = Math.floor(offset / limit) + 1
   const totalPage = Math.ceil(total / limit)
 
@@ -6,11 +6,11 @@ export function getPagination (total, offset, limit) {
     currentPage,
     totalPage,
     limit,
-    total
+    total,
   }
 }
 
-export function getImageSizeWarnTip (imgWidth, imgHeight, adWidth, adHeight) {
+export function getImageSizeWarnTip(imgWidth, imgHeight, adWidth, adHeight) {
   if (imgHeight < adHeight || imgWidth < adWidth) {
     return `图片尺寸较小, 会影响效果哟~ (广告位: ${adWidth}*${adHeight}, 图片: ${imgWidth}*${imgHeight})`
   }
@@ -20,7 +20,7 @@ export function getImageSizeWarnTip (imgWidth, imgHeight, adWidth, adHeight) {
   return ''
 }
 
-export function getImageInfo (file) {
+export function getImageInfo(file) {
   if (typeof file === 'string') {
     // file -> url
     return new Promise((resolve, reject) => {
@@ -28,7 +28,7 @@ export function getImageInfo (file) {
       img.onload = () => {
         resolve({
           height: img.height,
-          width: img.width
+          width: img.width,
         })
       }
       img.src = file
@@ -44,7 +44,7 @@ export function getImageInfo (file) {
     img.onload = () => {
       resolve({
         height: img.height,
-        width: img.width
+        width: img.width,
       })
     }
     img.src = URL.createObjectURL(file)
@@ -54,14 +54,14 @@ export function getImageInfo (file) {
 }
 
 /** 将”分“转换为”元“ */
-export function f2y (fen) {
+export function f2y(fen) {
   if (typeof fen === 'string') {
     fen = toFloat(fen, 0)
   }
   return fen / 100
 }
 
-export function toFloat (str, f = 2) {
+export function toFloat(str, f = 2) {
   if (!isString(str)) str = String(str)
   const i = parseFloat(str).toFixed(f)
 
@@ -78,7 +78,7 @@ export function toFloat (str, f = 2) {
   return n
 }
 
-export function parseQuery (queryString) {
+export function parseQuery(queryString) {
   const query = {}
   const pairs = (queryString[0] === '?'
     ? queryString.substr(1)
@@ -91,7 +91,7 @@ export function parseQuery (queryString) {
   return query
 }
 
-export function stringifyQuery (res, separator = '&') {
+export function stringifyQuery(res, separator = '&') {
   if (isString(res)) return res
   if (!isObj) return ''
   return Object.entries(res)
@@ -101,7 +101,7 @@ export function stringifyQuery (res, separator = '&') {
     .join('&')
 }
 
-export function redirect (p, qs) {
+export function redirect(p, qs) {
   if (!p.startsWith('/')) {
     p = '/' + p
   }
@@ -116,35 +116,35 @@ export function redirect (p, qs) {
   }
 }
 
-export function isQiqiaobanSite (siteUrl) {
+export function isQiqiaobanSite(siteUrl) {
   const regExp = /\.shop\.baixing/i
   return regExp.test(siteUrl)
 }
 
-export function isWeishopSite (siteUrl) {
+export function isWeishopSite(siteUrl) {
   const regExp = /baixing\.com\/(m\/)?weishop/i
   return regExp.test(siteUrl)
 }
 
-export function isSiteLandingType (landingPage) {
+export function isSiteLandingType(landingPage) {
   const isSiteLandingTypeReg = /(\.shop|\.mvp)\.baixing\.com/i
   return isSiteLandingTypeReg.test(landingPage) || isWeishopSite(landingPage)
 }
 
-export function getLandingpageByPageProtocol (landingPage) {
+export function getLandingpageByPageProtocol(landingPage) {
   return landingPage.replace(/http:/, location.protocol)
 }
 
-export function isObj (obj) {
+export function isObj(obj) {
   return Object.prototype.toString.call(obj) === '[object Object]'
 }
 
-export function isString (obj) {
+export function isString(obj) {
   return Object.prototype.toString.call(obj) === '[object String]'
 }
 
 // 去除对象的空字段
-export function formatReqQuery (obj = {}, formators = {}) {
+export function formatReqQuery(obj = {}, formators = {}) {
   const ret = Object.keys(obj).reduce((ret, key) => {
     let value = obj[key]
     const formator = formators[key]
@@ -156,12 +156,12 @@ export function formatReqQuery (obj = {}, formators = {}) {
 }
 
 // 睡眠函数
-export function pause (time = 1000) {
+export function pause(time = 1000) {
   return new Promise((resolve) => setTimeout(resolve, time))
 }
 
 // 获取路由参数
-export function getRouteParam (key) {
+export function getRouteParam(key) {
   const routeParam =
     this.$route && this.$route.params && this.$route.params[key]
   if (routeParam) return routeParam
@@ -170,7 +170,7 @@ export function getRouteParam (key) {
 }
 
 // simple deepclone
-function deepClone (source) {
+function deepClone(source) {
   const targetObj = source instanceof Array ? [] : {}
   Object.keys(source).forEach((keys) => {
     if (source[keys] && typeof source[keys] === 'object') {
@@ -190,7 +190,7 @@ function deepClone (source) {
  * @example
  * normalize([{ _id: 1, ID: 1, Id: 1 }, {}]) => [{id: 1},{}]
  */
-export function normalize (adaptorDes = {}, raw, saveEmptyProp = false) {
+export function normalize(adaptorDes = {}, raw, saveEmptyProp = false) {
   if (!raw) return {}
   const data = deepClone(raw)
 
@@ -206,12 +206,12 @@ export function normalize (adaptorDes = {}, raw, saveEmptyProp = false) {
   return ret
 
   // compose
-  function wash (data, handlers) {
+  function wash(data, handlers) {
     return handlers.reduce((data, handler) => handler(data), data)
   }
 
   // 将所有规格不同的 keys 转换为一致的 key
-  function genAttrAdaptor (targetKey, ...keys) {
+  function genAttrAdaptor(targetKey, ...keys) {
     return (obj) => {
       const res = keys.map((key) => obj[key]).find((x) => x)
       if (res || saveEmptyProp) {
@@ -224,7 +224,7 @@ export function normalize (adaptorDes = {}, raw, saveEmptyProp = false) {
 }
 
 // 前端分页函数
-export function paginationWrapper (getList, dataFormat) {
+export function paginationWrapper(getList, dataFormat) {
   let responseStore = null
   const wrapperFn = async (...args) => {
     let response
@@ -240,14 +240,14 @@ export function paginationWrapper (getList, dataFormat) {
     return {
       ...response,
       total,
-      data: data.slice(page * size, end)
+      data: data.slice(page * size, end),
     }
   }
 
   // API 获取所有数据
   wrapperFn.getAll = () => ({
     data: responseStore.data,
-    total: responseStore.data.length
+    total: responseStore.data.length,
   })
   // API 清空数据
   // * 页面上需要显式清空数据防止内存泄漏
@@ -258,7 +258,7 @@ export function paginationWrapper (getList, dataFormat) {
 }
 
 // 防抖
-export function debounce (func, time = 300, ctx) {
+export function debounce(func, time = 300, ctx) {
   let timer
   return async (...args) => {
     if (timer) clearTimeout(timer)

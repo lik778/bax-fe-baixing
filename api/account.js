@@ -5,7 +5,7 @@ import { SPUCODES } from 'constant/product'
 
 const { WHOLE_SPU_CODE, BIAO_WANG_SPU_CODE } = SPUCODES
 
-export async function getUserIdFromBxSalesId (salesId) {
+export async function getUserIdFromBxSalesId(salesId) {
   const body = await api
     .get('/user/sales')
     .query({
@@ -16,14 +16,14 @@ export async function getUserIdFromBxSalesId (salesId) {
   return body.data
 }
 
-export async function markNotNew () {
+export async function markNotNew() {
   await api
     .post('/user/not_new')
     .send({})
     .json()
 }
 
-export async function getCurrentUser () {
+export async function getCurrentUser() {
   const body = await api
     .get('/user/current')
     .json()
@@ -31,16 +31,16 @@ export async function getCurrentUser () {
   return toCamelcase(body.data)
 }
 
-export async function loginLocal (id = 2) {
+export async function loginLocal(id = 2) {
   const body = await api
     .get('/user/login/local')
-    .send({ user_id: id })
+    .send({user_id: id})
     .json()
 
   return body
 }
 
-export async function login (email, password) {
+export async function login(email, password) {
   const body = await api
     .post('/user/login')
     .send({
@@ -52,7 +52,7 @@ export async function login (email, password) {
   return body
 }
 
-export async function logout () {
+export async function logout() {
   const body = await api
     .post('/user/logout')
     .json()
@@ -60,7 +60,7 @@ export async function logout () {
   return body
 }
 
-export async function getRoles () {
+export async function getRoles() {
   const body = await api
     .get('/user/role')
     .json()
@@ -68,7 +68,7 @@ export async function getRoles () {
   return toCamelcase(body.data)
 }
 
-export async function getUsers (opts = {}) {
+export async function getUsers(opts = {}) {
   const query = trim({
     offset: 0,
     limit: 20,
@@ -89,7 +89,7 @@ export async function getUsers (opts = {}) {
   }
 }
 
-export async function updateUserInfo (uid, info) {
+export async function updateUserInfo(uid, info) {
   const body = await api
     .post(`/user/${uid}`)
     .send(info)
@@ -98,7 +98,7 @@ export async function updateUserInfo (uid, info) {
   return body
 }
 
-export async function queryUserInfo (uid) {
+export async function queryUserInfo(uid) {
   const body = await api
     .get(`/user/${uid}`)
     .json()
@@ -106,7 +106,7 @@ export async function queryUserInfo (uid) {
   return toCamelcase(body.data)
 }
 
-export async function getUserInfo (uid) {
+export async function getUserInfo(uid) {
   const users = await _getUsers({
     userId: uid
   })
@@ -116,7 +116,7 @@ export async function getUserInfo (uid) {
   return user
 }
 
-export async function createUser (user) {
+export async function createUser(user) {
   const body = await api
     .post('/user')
     .send(reverseCamelcase(user))
@@ -131,7 +131,7 @@ export async function createUser (user) {
  * private
  */
 
-async function _getUsers (query) {
+async function _getUsers(query) {
   const body = await api
     .get('/user')
     .query(reverseCamelcase(query))
@@ -140,7 +140,7 @@ async function _getUsers (query) {
   return toCamelcase(body.data)
 }
 
-async function _getUserCount (query) {
+async function _getUserCount(query) {
   const body = await api
     .get('/user/count')
     .query(reverseCamelcase(query))
@@ -149,7 +149,7 @@ async function _getUserCount (query) {
   return body.data
 }
 
-export async function queryOrder (query) {
+export async function queryOrder(query) {
   const { data } = await api
     .get('/order/query')
     .query(reverseCamelcase(query))
@@ -161,34 +161,34 @@ export async function queryOrder (query) {
   }
 }
 
-export async function cancelOrder (tradeSeq) {
+export async function cancelOrder(tradeSeq) {
   const { data } = await api
-    .post('/order/cancel')
-    .send(reverseCamelcase({ tradeSeq }))
+    .post(`/order/cancel`)
+    .send(reverseCamelcase({tradeSeq}))
     .json()
 
   return data
 }
 
-export async function payOrder (orderId) {
+export async function payOrder(orderId) {
   const { data } = await api
     .get('/order/pay_url')
-    .query(reverseCamelcase({ orderId }))
+    .query(reverseCamelcase({orderId}))
     .json()
 
   return data
 }
 
-export async function getCurrentBalanceBreif (accountType) {
+export async function getCurrentBalanceBreif(accountType) {
   const body = await api
     .get('/balance/brief')
-    .query(reverseCamelcase({ accountType }))
+    .query(reverseCamelcase({accountType}))
     .json()
 
   return body.data
 }
 
-export async function getChargeLogs (opts) {
+export async function getChargeLogs(opts) {
   const { data } = await api
     .get('/balance/chargelog')
     .query(reverseCamelcase(opts))
@@ -200,8 +200,8 @@ export async function getChargeLogs (opts) {
   }
 }
 
-export async function getCurrentAllBalanceBreif () {
-  const [fengmingBalanceBrief = {}, biaowangBalanceBrief = {}] = await Promise.all([
+export async function getCurrentAllBalanceBreif() {
+  const [ fengmingBalanceBrief = {}, biaowangBalanceBrief = {} ] = await Promise.all([
     getCurrentBalanceBreif(WHOLE_SPU_CODE),
     getCurrentBalanceBreif(BIAO_WANG_SPU_CODE)
   ])

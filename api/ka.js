@@ -2,7 +2,7 @@
 import { ka } from './base'
 import { toCamelcase } from 'object-keys-mapping'
 
-export async function getUserSites (params) {
+export async function getUserSites(params) {
   const body = await ka
     .get('/sites')
     .query({
@@ -16,7 +16,7 @@ export async function getUserSites (params) {
   return body.data
 }
 
-export async function getUserTicketCount (params = {}) {
+export async function getUserTicketCount(params = {}) {
   const body = await ka
     .get('/tickets')
     .query({
@@ -28,7 +28,7 @@ export async function getUserTicketCount (params = {}) {
   return body.total
 }
 
-export async function baxUserLogin () {
+export async function baxUserLogin() {
   const body = await ka
     .get('/bax/user/login')
     .json()
@@ -36,7 +36,7 @@ export async function baxUserLogin () {
   return body
 }
 
-export async function kaSimpleReport () {
+export async function kaSimpleReport() {
   const body = await ka
     .get('/bax/user/simple-report')
     .json()
@@ -44,7 +44,7 @@ export async function kaSimpleReport () {
   return toCamelcase(body.data)
 }
 
-export async function kaNavigation () {
+export async function kaNavigation() {
   const body = await ka
     .get('/bax/user/navigation')
     .json()
@@ -52,7 +52,7 @@ export async function kaNavigation () {
   return toCamelcase(body.data)
 }
 
-export async function getAllCities () {
+export async function getAllCities() {
   const body = await ka
     .get('/bx/cities')
     .json()
@@ -60,7 +60,7 @@ export async function getAllCities () {
   return body.data
 }
 
-export async function getAreasByCityId (cityId) {
+export async function getAreasByCityId(cityId) {
   const body = await ka
     .get('/bx/areas')
     .query({
