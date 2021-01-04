@@ -52,9 +52,7 @@
         </template>
       </el-table-column>
       <el-table-column>
-        <!-- 删除 slot-scope 后会有稀奇古怪的问题 -->
-        <!-- eslint-disable-next-line -->
-        <template slot="header" slot-scope="col">
+        <template slot="header">
           {{maxPriceLabel}}<cpc-top-price-tip/>
           <div style="display:block;padding-left:0">
            <el-popover placement="top" v-model="popoverVisible">

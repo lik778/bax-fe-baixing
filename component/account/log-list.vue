@@ -130,7 +130,7 @@ const DIVIDING_CHAR = '   '
 
 const genFormatLogValues = (change, keys, type, opType, campaignSource) => {
   const valueKey = type === 'old' ? 'oldValue' : 'newValue'
-  return keys.map(k => {
+  return keys.forEach(k => {
     const value = opType === OP_TYPE_CREATE ? change[k] : change[k][valueKey]
     if (k === 'price' || k === 'dailyBudget') {
       return (value / 100).toFixed(2)
@@ -160,7 +160,6 @@ const genFormatLogValues = (change, keys, type, opType, campaignSource) => {
     } else if (k in fieldType) {
       return value
     }
-    return undefined
   }).join(DIVIDING_CHAR)
 }
 
