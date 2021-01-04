@@ -174,7 +174,7 @@ export async function queryKeywordPackagePrice (opts) {
 // 把查价信息打给数据组
 export async function sendSelectedIndustryToBW (query) {
   return await biaowang
-    .post('/xxx')
+    .post('/api/keyword/v2/pricing/user/keywordIndustry')
     .send(query)
     .json()
 }
@@ -312,11 +312,12 @@ export async function queryBWIndustry () {
     }
   ]
 
-  // return await biaowang
-  //   .post('/xxx')
-  //   .send()
-  //   .join()
-  //   .data
+  // eslint-disable-next-line
+  return await biaowang
+    .post('/api/keyword/v2/pricing/user/inqueryAllIndustry')
+    .send()
+    .join()
+    .data
 }
 
 export async function refreshKeywordPriceNew (keywords, opt) {

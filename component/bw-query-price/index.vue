@@ -359,7 +359,10 @@ export default {
     },
     // 查价时需把数据打给数据组
     sendIndustryInfo () {
-      sendSelectedIndustryToBW()
+      sendSelectedIndustryToBW({
+        secondIndustryNameCn: this.form.industry[0],
+        keyword: this.form.keyword
+      })
     },
     async queryPrice () {
       this.selected = []
