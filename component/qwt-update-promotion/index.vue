@@ -1461,14 +1461,13 @@ export default {
     if (landingType === LANDING_TYPE_AD) {
       const result = await queryAds({
         limitMvp: false,
-        adIds: this.originPromotion.landingPageId,
+        adId: this.originPromotion.landingPageId,
         limit: 1
       })
       const ad = result.ads && result.ads[0]
-      if (!ad) {
-        this.isErrorLandingPageShow = true
-        this.promotion.landingPage = ''
-      }
+      if (ad && String(ad.adId) === String(this.originPromotion.landingPageId)) return
+      this.isErrorLandingPageShow = true
+      this.promotion.landingPage = ''
     }
 
     setTimeout(() => {

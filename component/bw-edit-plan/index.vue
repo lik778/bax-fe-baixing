@@ -169,14 +169,14 @@
         if (landingType === LANDING_TYPE_AD && landingPageId) {
           const result = await queryAds({
             limitMvp: false,
-            adIds: landingPageId,
+            adId: landingPageId,
             limit: 1
           })
+          
           const ad = result.ads && result.ads[0]
-          if (!ad) {
-            this.isErrorLandingPageShow = true
-            this.form.landingPage = ''
-          }
+          if (ad && String(ad.adId) === String(landingPageId)) return
+          this.isErrorLandingPageShow = true
+          this.form.landingPage = ''
         }
       },
       onSelectAd(ad) {

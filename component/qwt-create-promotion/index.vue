@@ -706,11 +706,11 @@ export default {
         // 官网
         const result = await queryAds({
           limitMvp: false,
-          adIds: [originPromotion.landingPageId],
+          adId: originPromotion.landingPageId,
           limit: 1
         })
         ad = result.ads && result.ads[0]
-        if (ad) {
+        if (ad && String(ad.adId) === String(originPromotion.landingPageId)) {
           clonedPromotion.landingPage = ad.url
           await this.$refs.userAdSelector.reset('selected', ad.adId)
         }
@@ -804,11 +804,11 @@ export default {
     if (adId) {
       const result = await queryAds({
         limitMvp: false,
-        adIds: [adId],
+        adId: adId,
         limit: 1
       })
       const ad = result.ads && result.ads[0]
-      if (ad) {
+      if (ad && ad.adId === String(adId)) {
         await this.onSelectAd(ad)
       }
     }
