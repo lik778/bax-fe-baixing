@@ -28,11 +28,11 @@ export default {
       required: true
     },
     steps: {
-      type: Array
+      type: Array,
       // required: true
     },
     step: {
-      type: Number
+      type: Number,
       // required: true
     },
     hint: {
@@ -41,7 +41,7 @@ export default {
     }
   },
   methods: {
-    getIconClass (n) {
+    getIconClass(n) {
       const { step } = this
 
       if (n < step) {
@@ -54,7 +54,7 @@ export default {
 
       return ''
     },
-    getIconContent (n) {
+    getIconContent(n) {
       const { step } = this
 
       if (n >= step) {

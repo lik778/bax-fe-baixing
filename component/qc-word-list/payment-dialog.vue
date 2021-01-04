@@ -1,5 +1,4 @@
 <template>
-  <!-- eslint-disable -->
   <el-dialog
     title="提示"
     width="47%"
@@ -42,7 +41,7 @@ export default {
     Clipboard
   },
   methods: {
-    closeDialog () {
+    closeDialog() {
       this.$emit('onClose')
     }
   }

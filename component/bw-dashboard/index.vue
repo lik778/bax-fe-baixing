@@ -86,29 +86,29 @@ const daterangeList = [
   {
     label: '昨日',
     daterange: [
-      dayjs().subtract(1, 'day'),
-      dayjs().subtract(1, 'day')
+     dayjs().subtract(1, 'day'),
+     dayjs().subtract(1, 'day'),
     ]
   },
   {
     label: '近7天',
     daterange: [
-      dayjs().subtract(8, 'day').startOf('date'),
-      dayjs().subtract(1, 'day')
+     dayjs().subtract(8, 'day').startOf('date'),
+     dayjs().subtract(1, 'day'),
     ]
   },
   {
     label: '本月',
     daterange: [
-      dayjs().startOf('month'),
-      dayjs().subtract(1, 'day')
+     dayjs().startOf('month'),
+     dayjs().subtract(1, 'day')
     ]
   },
   {
     label: '上月',
     daterange: [
-      dayjs().subtract(1, 'month').startOf('month'),
-      dayjs().subtract(1, 'month').endOf('month')
+     dayjs().subtract(1, 'month').startOf('month'),
+     dayjs().subtract(1, 'month').endOf('month')
     ]
   }
 ]
@@ -131,7 +131,7 @@ export default {
       required: true
     }
   },
-  data () {
+  data() {
     return {
       activeTab: 'noLimit',
       currentPage: 1,
@@ -145,7 +145,7 @@ export default {
       daterangeList,
       CUSTOM_DATE_RANGE_LABEL,
       triPickerOptions: {
-        disabledDate (time) {
+        disabledDate(time) {
           const timestamp = new Date(time).getTime()
           const yesterday = dayjs().subtract(1, 'day').valueOf()
           const lastYear = dayjs().subtract(1, 'year').valueOf()
@@ -155,17 +155,17 @@ export default {
     }
   },
   computed: {
-    totalPage () {
+    totalPage() {
       return this.promotes.length
     },
-    promoteIds () {
-      return this.promotes.map(({ id }) => {
+    promoteIds() {
+      return this.promotes.map(({id}) => {
         return id
       }, [])
     }
   },
-  async mounted () {
-    const { promoteId } = this.$route.query
+  async mounted() {
+    const { promoteId, keyword } = this.$route.query
     if (promoteId) {
       this.activeTab = 'limit'
       const promote = await getPromoteById(promoteId)
@@ -175,54 +175,54 @@ export default {
     this.getChartData()
   },
   methods: {
-    handleDateChange (item) {
+    handleDateChange(item) {
       this.daterange = item.daterange
       this.activeDaterangeLabel = item.label
     },
-    async getChartData () {
+    async getChartData() {
       const daterange = this.daterange
       const startTime = dayjs(daterange[0]).startOf('day').unix()
       const endTime = dayjs(daterange[1]).startOf('day').unix()
       const options = {
         startTime,
         endTime,
-        promoteList: this.activeTab === 'noLimit' ? [] : this.promoteIds
+        promoteList: this.activeTab === 'noLimit'? [] : this.promoteIds
       }
 
-      const cpcRankingChartData = await getUserRanking(options)
+      let cpcRankingChartData = await getUserRanking(options)
       this.cpcRankingChartData = cpcRankingChartData
 
-      const showChartData = await getUserShow(options)
+      let showChartData = await getUserShow(options)
       this.showChartData = showChartData
     },
-    handleKeywordClose (newPromotes) {
+    handleKeywordClose(newPromotes) {
       this.addKeywordModalShow = false
       this.promotes = clone(newPromotes)
       this.currentPage = 1
     },
-    handleDeletePromote (promoteId) {
-      const index = this.promotes.findIndex(promote => promote.id === promoteId)
+    handleDeletePromote(promoteId) {
+      let index = this.promotes.findIndex(promote => promote.id === promoteId)
       if (index > -1) {
         this.promotes.splice(index, 1)
       }
-      const { currentPage, pageSize, totalPage } = this
+      const { promotes, currentPage, pageSize, totalPage} = this
       const offset = pageSize * (currentPage - 1)
 
       if (offset >= totalPage) {
-        this.currentPage--
+        this.currentPage --
       }
     }
   },
   watch: {
     daterange: {
       deep: true,
-      handler () {
+      handler() {
         this.getChartData()
       }
     },
     promoteIds: {
       deep: true,
-      handler () {
+      handler() {
         this.getChartData()
       }
     }

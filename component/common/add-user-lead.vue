@@ -38,23 +38,23 @@ export default {
       required: true
     }
   },
-  data () {
+  data() {
     return {
       loaded: false,
       mobile: ''
     }
   },
   methods: {
-    close () {
+    close() {
       this.$emit('close')
       this.$router.push({
         name: 'root'
       })
     },
-    cancel () {
+    cancel() {
       this.close()
     },
-    async submit () {
+    async submit() {
       const { mobile } = this
 
       Message.success('提交成功！我们的顾问会尽快与您联系哟~')
@@ -71,7 +71,7 @@ export default {
     }
   },
   watch: {
-    userInfo (info) {
+    userInfo(info) {
       if (this.loaded) {
         return
       }

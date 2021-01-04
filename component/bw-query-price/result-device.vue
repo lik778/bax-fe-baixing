@@ -3,7 +3,7 @@
     <div class="label">关键词:
       <span class="keyword">{{deviceObj.word}}</span>
       <p class="tips">过去<strong>90</strong>天，
-        <label v-for="(devicetType, i) in deviceObj.deviceTypes" :key="i">
+        <label v-for="devicetType in deviceObj.deviceTypes">
           <strong>{{ devicetType.shows * 3 }}</strong>人{{DEVICE[devicetType.device]}}搜索过&nbsp;
         </label><span>（数据来源于历史流量）</span>
       </p>
@@ -19,30 +19,30 @@
 </template>
 
 <script>
-import ResultRow from './result-row'
-import { DEVICE } from 'constant/biaowang'
+  import ResultRow from './result-row'
+  import {DEVICE} from 'constant/biaowang'
 
-export default {
-  name: 'result-device',
-  props: {
-    deviceObj: {
-      type: Object,
-      required: true
+  export default {
+    name: 'result-device',
+    props: {
+      deviceObj: {
+        type: Object,
+        required: true
+      },
+      selected: {
+        type: Array,
+        required: true
+      }
     },
-    selected: {
-      type: Array,
-      required: true
+    data() {
+      return {
+        DEVICE
+      }
+    },
+    components: {
+      ResultRow
     }
-  },
-  data () {
-    return {
-      DEVICE
-    }
-  },
-  components: {
-    ResultRow
   }
-}
 </script>
 
 <style lang="scss" scoped>

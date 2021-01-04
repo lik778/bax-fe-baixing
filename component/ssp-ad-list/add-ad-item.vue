@@ -74,7 +74,7 @@ export default {
       required: true
     }
   },
-  data () {
+  data() {
     return {
       categories: [],
       areas: [],
@@ -82,26 +82,26 @@ export default {
     }
   },
   computed: {
-    categoryOpts () {
+    categoryOpts() {
       const categories = [...this.oldCategories]
       return filterCategories(this.allCategories, categories)
     },
-    areaOpts () {
+    areaOpts() {
       const areas = [...this.oldAreas]
       return filterAreas(this.allAreas, areas)
     }
   },
   methods: {
-    empty () {
+    empty() {
       this.categories = []
       this.areas = []
       this.name = ''
     },
-    cancel () {
+    cancel() {
       this.empty()
       this.$emit('hide')
     },
-    async submit () {
+    async submit() {
       const {
         categories,
         areas,

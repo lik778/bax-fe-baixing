@@ -25,11 +25,11 @@ export default {
     }
   },
   computed: {
-    warning () {
+    warning() {
       const { current, rest, min } = this
       return rest < 0 || (current && current < min)
     },
-    text () {
+    text() {
       const { current, rest, min } = this
 
       if (current && (current < min)) {

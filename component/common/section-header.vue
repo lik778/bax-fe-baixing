@@ -6,8 +6,8 @@
 
 <script>
 export default {
-  name: 'section-header'
-}
+  name: "section-header"
+};
 </script>
 
 <style lang="scss" scoped>

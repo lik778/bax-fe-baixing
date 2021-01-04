@@ -1,6 +1,5 @@
 
 <template>
-  <!-- eslint-disable -->
   <header class="ad-header">
     <section>
       <span>
@@ -85,7 +84,7 @@ export default {
       required: true
     }
   },
-  data () {
+  data() {
     const range = this.query.timeRange || ''
     const [s, e] = range.split(',')
 
@@ -103,13 +102,13 @@ export default {
     }
   },
   computed: {
-    adStatusOpts () {
+    adStatusOpts() {
       return Object.keys(adStatus).map((key) => ({
         label: adStatus[key],
         value: key
       }))
     },
-    adOpts () {
+    adOpts() {
       return this.ads.map(ad => ({
         label: ad.name || ad.slotCode,
         value: ad.id
@@ -117,31 +116,31 @@ export default {
     }
   },
   methods: {
-    switchShowMoreFilters () {
+    switchShowMoreFilters() {
       store.switchShowMoreFilters()
     },
-    async queryAdItems (v, p) {
+    async queryAdItems(v, p) {
       if (v === p) {
         return
       }
 
-      await store.getAdItems({ ...this.query })
+      await store.getAdItems({...this.query})
     }
   },
   watch: {
-    'query.customerId': async function (v, p) {
+    'query.customerId': async function(v, p) {
       await this.queryAdItems(v, p)
     },
-    'query.orderId': async function (v, p) {
+    'query.orderId': async function(v, p) {
       await this.queryAdItems(v, p)
     },
-    'query.status': async function (v, p) {
+    'query.status': async function(v, p) {
       await this.queryAdItems(v, p)
     },
-    'query.adId': async function (v, p) {
+    'query.adId': async function(v, p) {
       await this.queryAdItems(v, p)
     },
-    timeRange: async function (v = []) {
+    'timeRange': async function(v = []) {
       const [start, end] = v
 
       if (!start && !end) {
@@ -170,7 +169,7 @@ export default {
 <style lang="scss" scoped>
 .ad-header {
   @include filter-item;
-
+  
   & > section:first-child {
     display: flex;
     align-items: center;

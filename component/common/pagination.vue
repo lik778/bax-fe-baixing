@@ -19,24 +19,24 @@ export default {
     }
   },
   computed: {
-    offset: function () {
+    offset: function() {
       return this.options.offset
     },
-    total: function () {
+    total: function() {
       return this.options.total
     },
-    limit: function () {
+    limit: function() {
       return this.options.limit
     },
-    current () {
+    current() {
       const { offset, limit } = this
       return Math.floor(offset / limit) + 1
     }
   },
   methods: {
-    handleCurrentChange (page) {
+    handleCurrentChange(page) {
       const offset = this.limit * (page - 1)
-      this.$emit('current-change', { offset, page })
+      this.$emit('current-change', {offset, page})
     }
   }
 }

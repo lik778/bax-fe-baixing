@@ -34,7 +34,7 @@
                 </el-tooltip>
                 <p v-else>{{ cityFormatter(scope.row.cities) }}</p>
             </template>
-          </el-table-column>
+          </el-table-column>  
           <el-table-column prop="device" label="平台" :formatter="row => deviceFormatter(row.device)" />
           <el-table-column prop="status" label="投放状态" :formatter="v => statusFormatter(v.status)" />
           <el-table-column label="审核状态">
@@ -67,7 +67,7 @@
             <template slot-scope="scope">
               <router-link v-if="!isBxSales && !isAgentAccounting" :to="{name: 'bw-edit-plan', query: {promoteId: scope.row.id}}"><el-button type="text" size="small">编辑</el-button></router-link>
               <el-button v-if="canXufei(scope.row) && !userInfo.shAgent" size="small" type="text"
-                         :disabled="disabledXuFeiBtn(scope.row)"
+                         :disabled="disabledXuFeiBtn(scope.row)" 
                          @click="onXufei(scope.row)">续费</el-button>
               <router-link :to="{name: 'bw-dashboard', query: {promoteId: scope.row.id, keyword: scope.row.word}}">
                 <el-button type="text" size="small">查看报告</el-button>
@@ -114,13 +114,13 @@
           </el-form-item>
         </el-form>
       </el-dialog>
-      <audit-reject-reason-dialog :show="auditRejectReasonDialogVisible"
+      <audit-reject-reason-dialog :show="auditRejectReasonDialogVisible" 
                                   @close="auditRejectReasonDialogVisible = false">
       </audit-reject-reason-dialog>
-      <el-dialog :visible="liveDialogVisible"
-                 custom-class="fixed-center"
-                 title="选择平台"
-                 width="420px"
+      <el-dialog :visible="liveDialogVisible" 
+                 custom-class="fixed-center" 
+                 title="选择平台" 
+                 width="420px" 
                  :show-close="false">
         <el-radio-group v-model="liveType">
           <el-radio v-for="(item, key) in liveDevices" :key="key" :label="Number(key)">
@@ -142,358 +142,357 @@
 </template>
 
 <script>
-import BaxPagination from 'com/common/pagination'
-import ManualTooltip from 'com/common/bw/manual-tooltip'
-import ManualDialog from 'com/common/bw/manual-dialog'
-import {
-  promoteStatusOpts,
-  auditStatusOpts,
-  DEVICE,
-  DEVICE_ALL,
-  DEVICE_PC,
-  DEVICE_WAP,
-  PROMOTE_STATUS,
-  AUDIT_STATUS,
-  AUDIT_STATUS_REJECT,
-  PROMOTE_STATUS_ONLINE,
-  PROMOTE_STATUS_PENDING_ONLINE,
-  PROMOTE_STATUS_OFFLINE,
-  PRICE_NEED_MANUAL_QUOTA,
-  ORDER_APPLY_TYPE_NOT,
-  GET_DAYS_MAP,
-  THIRTY_DAYS
-} from 'constant/biaowang'
-import { getPromotes, queryKeywordPriceNew, getUserLive, getUserRanking } from 'api/biaowang'
-import {
-  f2y,
-  getCnName,
-  fmtAreasInBw
-} from 'util'
-import dayjs from 'dayjs'
-import { normalizeRoles } from 'util/role'
-import flatten from 'lodash.flatten'
-import { fmtCpcRanking } from 'util/campaign'
-import auditRejectReasonDialog from 'com/common/audit-reject-reason-dialog'
+  import BaxPagination from 'com/common/pagination'
+  import ManualTooltip from 'com/common/bw/manual-tooltip'
+  import ManualDialog from 'com/common/bw/manual-dialog'
+  import {
+    promoteStatusOpts,
+    auditStatusOpts,
+    DEVICE,
+    DEVICE_ALL,
+    DEVICE_PC,
+    DEVICE_WAP,
+    PROMOTE_STATUS,
+    AUDIT_STATUS,
+    AUDIT_STATUS_REJECT,
+    PROMOTE_STATUS_ONLINE,
+    PROMOTE_STATUS_PENDING_ONLINE,
+    PROMOTE_STATUS_OFFLINE,
+    PRICE_NEED_MANUAL_QUOTA,
+    ORDER_APPLY_TYPE_NOT,
+    GET_DAYS_MAP,
+    THIRTY_DAYS
+  } from 'constant/biaowang'
+  import {getPromotes, queryKeywordPriceNew, getCpcRanking, getUserLive, getUserRanking} from 'api/biaowang'
+  import {
+    f2y,
+    getCnName,
+    fmtAreasInBw
+  } from 'util'
+  import dayjs from 'dayjs'
+  import { normalizeRoles } from 'util/role'
+  import flatten from 'lodash.flatten'
+  import {fmtCpcRanking} from 'util/campaign'
+  import auditRejectReasonDialog from 'com/common/audit-reject-reason-dialog'
 
-const liveDevices = {
-  [DEVICE_WAP]: {
-    label: DEVICE[DEVICE_WAP],
-    urlKey: 'wapUrl',
-    msg: '暂无手机端实况数据，请售后再试'
-  },
-  [DEVICE_PC]: {
-    label: DEVICE[DEVICE_PC],
-    urlKey: 'pcUrl',
-    msg: '暂无电脑端实况数据，请稍后再试'
-  }
-}
-
-export default {
-  name: 'bw-plan-list',
-  components: {
-    BaxPagination,
-    auditRejectReasonDialog,
-    ManualTooltip,
-    ManualDialog
-  },
-  props: {
-    allAreas: Array,
-    salesInfo: Object,
-    userInfo: Object
-  },
-  data () {
-    return {
-      promoteStatusOpts,
-      auditStatusOpts,
-      query: {
-        keyword: '',
-        promoteStatusFilters: [],
-        auditStatusFilters: [],
-        offset: 0,
-        limit: 20,
-        total: 0
-      },
-      promotes: [],
-      xufeiForm: {
-        word: '',
-        cities: [],
-        device: 0,
-        soldPriceMap: {},
-        days: null
-      },
-      rules: {
-        days: [{ required: true, message: '请选择购买天数' }]
-      },
-      xufeiDialogVisible: false,
-      auditRejectReasonDialogVisible: false,
-
-      liveDialogVisible: false,
-      liveType: DEVICE_WAP,
-      liveDevices,
-      currentPromoteLive: null,
-      manualDialogVisible: false
+  const liveDevices = {
+    [DEVICE_WAP]: {
+      label: DEVICE[DEVICE_WAP],
+      urlKey: 'wapUrl',
+      msg: '暂无手机端实况数据，请售后再试',
+    },
+    [DEVICE_PC]: {
+      label: DEVICE[DEVICE_PC],
+      urlKey: 'pcUrl',
+      msg: '暂无电脑端实况数据，请稍后再试'
     }
-  },
-  computed: {
-    promotesDue () {
-      const arr = this.promotes
+  }
+
+  export default {
+    name: 'bw-plan-list',
+    components: {
+      BaxPagination,
+      auditRejectReasonDialog,
+      ManualTooltip,
+      ManualDialog
+    },
+    props: {
+      allAreas: Array,
+      salesInfo: Object,
+      userInfo: Object
+    },
+    data() {
+      return {
+        promoteStatusOpts,
+        auditStatusOpts,
+        query: {
+          keyword: '',
+          promoteStatusFilters: [],
+          auditStatusFilters: [],
+          offset: 0,
+          limit: 20,
+          total: 0,
+        },
+        promotes: [],
+        xufeiForm: {
+          word: '',
+          cities: [],
+          device: 0,
+          soldPriceMap: {},
+          days: null
+        },
+        rules: {
+          days: [{required: true, message: '请选择购买天数'}],
+        },
+        xufeiDialogVisible: false,
+        auditRejectReasonDialogVisible: false,
+
+        liveDialogVisible: false,
+        liveType: DEVICE_WAP,
+        liveDevices,
+        currentPromoteLive: null,
+        manualDialogVisible: false,
+      }
+    },
+    computed: {
+      promotesDue() {
+        const arr = this.promotes
         .map(p => ({
           id: p.id,
           word: p.word,
           leftDays: this.leftDays(p)
         }))
         .filter(p => p.leftDays)
-      return arr
-        .sort((a, b) => a.leftDays - b.leftDays)
-    },
-    // eslint-disable-next-line
-    promotesDueText () {
-      const key = 'bw-word-query-times'
-      const raw = localStorage.getItem(key)
-      let times = {}
-      if (raw) {
-        times = JSON.parse(raw)
-      }
-      const dateStr = dayjs().format('YYYY-MM-DD')
-
-      if (this.promotesDue.length) {
-        const arr = this.promotesDue
-          .slice(0, 3)
-          .map(p => ({
-            ...p,
-            times: dateStr === times.date ? (times[p.id] || this.getRandomQueryTimes()) : this.getRandomQueryTimes()
-          }))
-        const storageObj = Object.assign(times, arr.reduce((s, a) => { s[a.id] = a.times; return s }, {}))
-        storageObj.date = dateStr
-
-        localStorage.setItem(key, JSON.stringify(storageObj))
-
-        return arr.map(p => `今日 ${p.word} 关键词被查价 ${p.times} 次，如需继续投放，请在到期后尽快续费，以免被同行客户抢单`)
-          .join('。 ')
-      }
-    },
-    isBxUser () {
-      const roles = normalizeRoles(this.userInfo.roles)
-      return roles.includes('BAIXING_USER')
-    },
-    isBxSales () {
-      const roles = normalizeRoles(this.userInfo.roles)
-      return roles.includes('BAIXING_SALES')
-    },
-    isAgentAccounting () {
-      const roles = normalizeRoles(this.userInfo.roles)
-      return roles.includes('AGENT_ACCOUNTING')
-    },
-    showManualBtn () {
-      const { manualPriced, price } = this.xufeiForm
-      return !manualPriced && price >= PRICE_NEED_MANUAL_QUOTA
-    },
-    showLongOrder () {
-      const { orderApplyType, price } = this.xufeiForm
-      return orderApplyType === ORDER_APPLY_TYPE_NOT && price < PRICE_NEED_MANUAL_QUOTA
-    },
-    manualCities () {
-      return fmtAreasInBw(this.xufeiForm.cities, this.allAreas)
-    },
-    manualData () {
-      const { device, cities, word } = this.xufeiForm
-      return {
-        manualCities: this.manualCities,
-        word,
-        cities,
-        targetUserId: this.getFinalUserId(),
-        devices: [device]
-      }
-    }
-  },
-  methods: {
-    fmtCpcRanking,
-    getFinalUserId () {
-      const { user_id: userId } = this.$route.query
-      if (userId) {
-        return userId
-      }
-      const { userInfo } = this
-      return userInfo.id
-    },
-    getRandomQueryTimes () {
-      let r = Math.random()
-      while (r > 1 || r < 0.3) {
-        r = Math.random()
-      }
-      return Math.floor(r * 10)
-    },
-    isRejected (status) {
-      return AUDIT_STATUS_REJECT.includes(status)
-    },
-    f2y,
-    leftDays (row) {
-      if (!PROMOTE_STATUS_PENDING_ONLINE.concat(PROMOTE_STATUS_OFFLINE).includes(row.status)) {
-        let daysLeft = row.days
-        if (row.startedAt) {
-          // 可能是负值
-          daysLeft = row.days - (Date.now() - row.startedAt * 1000) / 86400 / 1000
+        return arr
+          .sort((a, b) => a.leftDays - b.leftDays)
+      },
+      promotesDueText() {
+        const key = 'bw-word-query-times'
+        const raw = localStorage.getItem(key)
+        let times = {}
+        if (raw) {
+          times = JSON.parse(raw)
         }
-        return parseFloat(Math.max(daysLeft, 0)).toFixed(1)
+        const dateStr = dayjs().format('YYYY-MM-DD')
+
+        if (this.promotesDue.length) {
+          const arr = this.promotesDue
+            .slice(0, 3)
+            .map(p => ({
+              ...p,
+              times: dateStr === times.date ? (times[p.id] || this.getRandomQueryTimes()) : this.getRandomQueryTimes()
+            }))
+          const storageObj = Object.assign(times, arr.reduce((s, a) => {s[a.id] = a.times; return s}, {}))
+          storageObj.date = dateStr
+
+          localStorage.setItem(key, JSON.stringify(storageObj))
+
+          return arr.map(p => `今日 ${p.word} 关键词被查价 ${p.times} 次，如需继续投放，请在到期后尽快续费，以免被同行客户抢单`)
+            .join('。 ')
+        }
+      },
+      isBxUser() {
+        const roles = normalizeRoles(this.userInfo.roles)
+        return roles.includes('BAIXING_USER')
+      },
+      isBxSales() {
+        const roles = normalizeRoles(this.userInfo.roles)
+        return roles.includes('BAIXING_SALES')
+      },
+      isAgentAccounting() {
+        const roles = normalizeRoles(this.userInfo.roles)
+        return roles.includes('AGENT_ACCOUNTING')
+      },
+      showManualBtn() {
+        const { manualPriced, price } = this.xufeiForm
+        return !manualPriced && price >= PRICE_NEED_MANUAL_QUOTA
+      },
+      showLongOrder() {
+        const { orderApplyType, price } = this.xufeiForm
+        return orderApplyType === ORDER_APPLY_TYPE_NOT && price < PRICE_NEED_MANUAL_QUOTA
+      },
+      manualCities() {
+        return fmtAreasInBw(this.xufeiForm.cities, this.allAreas)
+      },
+      manualData() {
+        const { device, cities, word } = this.xufeiForm
+        return {
+          manualCities: this.manualCities,
+          word,
+          cities,
+          targetUserId: this.getFinalUserId(),
+          devices: [device]
+        }
       }
     },
-    disabledXuFeiBtn (row) {
-      // tip: 时间为2020-03-27 12:16:40.213743之前的不能续费
-      return dayjs(row.createdAt * 1000).isBefore('2020-03-27 12:16:40.213743')
-    },
-    canXufei (row) {
-      return PROMOTE_STATUS_ONLINE.includes(row.status) && this.leftDays(row) <= 15
-    },
-    canSeeLiveBtn (row) {
-      return PROMOTE_STATUS_ONLINE.includes(row.status)
-    },
-    async getPromotes () {
-      const { offset, limit, keyword: word, promoteStatusFilters, auditStatusFilters, userId } = this.query
-      const { items, total } = await getPromotes({
-        page: offset / limit,
-        size: limit,
-        word,
-        userId,
-        status: flatten(promoteStatusFilters),
-        auditStatus: flatten(auditStatusFilters)
-      })
-      this.promotes = items
-      this.query.total = total
-
-      const yesterday = dayjs().subtract(1, 'day').startOf('day').unix()
-      const rankings = await getUserRanking({
-        startTime: yesterday,
-        endTime: yesterday,
-        promoteList: items.map(i => i.id)
-      })
-
-      if (rankings.length) {
-        this.promotes = this.promotes.map(p => {
-          const one = rankings.find(r => r.promoteId === p.id)
-          if (one && one.rankList.length) {
-            return Object.assign(p, { cpcRanking: parseFloat(one.rankList[0]).toFixed(2) })
+    methods: {
+      fmtCpcRanking,
+      getFinalUserId() {
+        const { user_id: userId } = this.$route.query
+        if (userId) {
+          return userId
+        }
+        const { userInfo } = this
+        return userInfo.id
+      },
+      getRandomQueryTimes() {
+        let r = Math.random()
+        while(r > 1 || r < .3) {
+          r = Math.random()
+        }
+        return Math.floor(r * 10)
+      },
+      isRejected(status) {
+        return AUDIT_STATUS_REJECT.includes(status)
+      },
+      f2y,
+      leftDays(row) {
+        if (!PROMOTE_STATUS_PENDING_ONLINE.concat(PROMOTE_STATUS_OFFLINE).includes(row.status)) {
+          let daysLeft = row.days
+          if (row.startedAt) {
+            // 可能是负值
+            daysLeft = row.days - (Date.now() - row.startedAt * 1000) / 86400 / 1000
           }
-          return p
+          return parseFloat(Math.max(daysLeft, 0)).toFixed(1)
+        }
+      },
+      disabledXuFeiBtn(row) {
+        // tip: 时间为2020-03-27 12:16:40.213743之前的不能续费
+        return dayjs(row.createdAt * 1000).isBefore('2020-03-27 12:16:40.213743')
+      },
+      canXufei(row) {
+        return PROMOTE_STATUS_ONLINE.includes(row.status) && this.leftDays(row) <= 15
+      },
+      canSeeLiveBtn(row) {
+        return PROMOTE_STATUS_ONLINE.includes(row.status)
+      },
+      async getPromotes() {
+        const {offset, limit, keyword: word, promoteStatusFilters, auditStatusFilters, userId} = this.query
+        const {items, total} = await getPromotes({
+          page: offset / limit,
+          size: limit, word,
+          userId,
+          status: flatten(promoteStatusFilters),
+          auditStatus: flatten(auditStatusFilters)
         })
-      }
-    },
-    async onCurrentChange ({ offset }) {
-      this.query.offset = offset
-      await this.getPromotes()
-    },
-    async onXufei (row) {
-      const { word, cities, device } = row
-      if (!this.canXufei(row)) {
-        return this.$message.info('到期前15天才可续费哦')
-      }
-      const result = await queryKeywordPriceNew({
-        targetUserId: this.getFinalUserId(),
-        word,
-        cities,
-        device
-      })
+        this.promotes = items
+        this.query.total = total
 
-      const priceObj = result[0].priceList[0]
-      const soldPriceMap = GET_DAYS_MAP(priceObj.orderApplyType).reduce((curr, prev) => {
-        return Object.assign(curr, {
-          [prev]: prev / THIRTY_DAYS * priceObj.price
+        const yesterday = dayjs().subtract(1, 'day').startOf('day').unix()
+        const rankings = await getUserRanking({
+          startTime: yesterday,
+          endTime: yesterday,
+          promoteList: items.map(i => i.id)
         })
-      }, {})
-      const xufeiForm = {
-        ...result[0],
-        ...priceObj,
-        soldPriceMap
-      }
 
-      this.xufeiForm = xufeiForm
-      this.xufeiDialogVisible = true
-    },
-    addToCart () {
-      this.$refs.xufei.validate(isValid => {
-        if (isValid) {
-          const item = {
-            ...this.xufeiForm,
-            price: this.xufeiForm.soldPriceMap[this.xufeiForm.days],
-            xufei: true
+        if (rankings.length) {
+          this.promotes = this.promotes.map(p => {
+            const one = rankings.find(r => r.promoteId === p.id)
+            if (one && one.rankList.length) {
+              return Object.assign(p, {cpcRanking: parseFloat(one.rankList[0]).toFixed(2)})
+            }
+            return p
+          })
+        }
+      },
+      async onCurrentChange({offset}) {
+        this.query.offset = offset
+        await this.getPromotes()
+      },
+      async onXufei(row) {
+        const {word, cities, device} = row
+        if (!this.canXufei(row)) {
+          return this.$message.info('到期前15天才可续费哦')
+        }
+        const result = await queryKeywordPriceNew({
+          targetUserId: this.getFinalUserId(),
+          word,
+          cities,
+          device
+        })
+
+        const priceObj = result[0].priceList[0]
+        const soldPriceMap = GET_DAYS_MAP(priceObj.orderApplyType).reduce((curr, prev) => {
+          return Object.assign(curr, {
+            [prev]: prev / THIRTY_DAYS * priceObj.price
+          })
+        }, {})
+        const xufeiForm = {
+          ...result[0],
+          ...priceObj,
+          soldPriceMap
+        }
+
+        this.xufeiForm = xufeiForm
+        this.xufeiDialogVisible = true
+      },
+      addToCart() {
+        this.$refs.xufei.validate(isValid => {
+          if (isValid) {
+            const item = {
+              ...this.xufeiForm,
+              price: this.xufeiForm.soldPriceMap[this.xufeiForm.days],
+              xufei: true
+            }
+            this.$parent.$refs.bwShoppingCart.addToCart([item])
+            this.xufeiDialogVisible = false
+          } else {
+            return false
           }
-          this.$parent.$refs.bwShoppingCart.addToCart([item])
-          this.xufeiDialogVisible = false
+        })
+      },
+      cityFormatter(cities , max = 20) {
+        return cities.slice(0, max).map(city => getCnName(city, this.allAreas)).join(',') + (cities.length > max ? `等${cities.length}个城市` : '')
+      },
+      deviceFormatter(device) {
+        return DEVICE[device]
+      },
+      statusFormatter(status) {
+        const res = Object.entries(PROMOTE_STATUS).find(arr => arr[1].includes(status))
+        return res && res[0]
+      },
+      auditStatusFormatter(auditStatus) {
+        const res = Object.entries(AUDIT_STATUS).find(arr => arr[1].includes(auditStatus))
+        return res && res[0]
+      },
+      dateFormatter({createdAt}) {
+        return dayjs(createdAt * 1000).format('YYYY-MM-DD')
+      },
+      goToLivePageByType() {
+        const promote = this.currentPromoteLive
+        const currentLiveObj = this.liveDevices[this.liveType]
+        const { urlKey, msg } = currentLiveObj
+        this.goToLivePage(promote[urlKey], msg)
+      },
+      goToLivePage(url, msg) {
+        if (url) {
+          window.open(url)
         } else {
-          return false
+          this.$alert(msg, '提示', {
+            showClose: false
+          })
         }
-      })
-    },
-    cityFormatter (cities, max = 20) {
-      return cities.slice(0, max).map(city => getCnName(city, this.allAreas)).join(',') + (cities.length > max ? `等${cities.length}个城市` : '')
-    },
-    deviceFormatter (device) {
-      return DEVICE[device]
-    },
-    statusFormatter (status) {
-      const res = Object.entries(PROMOTE_STATUS).find(arr => arr[1].includes(status))
-      return res && res[0]
-    },
-    auditStatusFormatter (auditStatus) {
-      const res = Object.entries(AUDIT_STATUS).find(arr => arr[1].includes(auditStatus))
-      return res && res[0]
-    },
-    dateFormatter ({ createdAt }) {
-      return dayjs(createdAt * 1000).format('YYYY-MM-DD')
-    },
-    goToLivePageByType () {
-      const promote = this.currentPromoteLive
-      const currentLiveObj = this.liveDevices[this.liveType]
-      const { urlKey, msg } = currentLiveObj
-      this.goToLivePage(promote[urlKey], msg)
-    },
-    goToLivePage (url, msg) {
-      if (url) {
-        window.open(url)
-      } else {
-        this.$alert(msg, '提示', {
-          showClose: false
-        })
-      }
-    },
-    async handleLiveSituation (promote) {
-      const promoteLive = await getUserLive({ promoteId: promote.id })
-      const { device, pcUrl, wapUrl } = promoteLive
+      },
+      async handleLiveSituation(promote) {
+        const promoteLive = await getUserLive({promoteId: promote.id})
+        const { device, pcUrl, wapUrl } = promoteLive
 
-      if (device === DEVICE_ALL) {
-        this.currentPromoteLive = promoteLive
-        this.liveDialogVisible = true
-        return
+        if (device === DEVICE_ALL) {
+          this.currentPromoteLive = promoteLive
+          this.liveDialogVisible = true
+          return 
+        } 
+        if (device === DEVICE_PC) {
+          this.goToLivePage(pcUrl, this.liveDevices[DEVICE_PC].msg)
+          return 
+        } 
+        if (device === DEVICE_WAP) {
+          this.goToLivePage(wapUrl, this.liveDevices[DEVICE_WAP].msg)
+          return
+        }
       }
-      if (device === DEVICE_PC) {
-        this.goToLivePage(pcUrl, this.liveDevices[DEVICE_PC].msg)
-        return
-      }
-      if (device === DEVICE_WAP) {
-        this.goToLivePage(wapUrl, this.liveDevices[DEVICE_WAP].msg)
-      }
-    }
-  },
-  async mounted () {
-    const promote = this.$route.params.promote
-    this.query.userId = this.salesInfo.userId
-    await this.getPromotes()
-    if (promote && promote.id) {
-      // 首页续费直接加入购物车
-      this.onXufei(promote)
-    }
-  },
-  watch: {
-    'query.keyword': function (v) {
-      this.getPromotes()
     },
-    'query.promoteStatusFilters': function (v) {
-      this.getPromotes()
+    async mounted() {
+      const promote = this.$route.params.promote
+      this.query.userId = this.salesInfo.userId
+      await this.getPromotes()
+      if (promote && promote.id) {
+        // 首页续费直接加入购物车
+        this.onXufei(promote)
+      }
     },
-    'query.auditStatusFilters': function (v) {
-      this.getPromotes()
+    watch: {
+      'query.keyword': function (v) {
+        this.getPromotes()
+      },
+      'query.promoteStatusFilters': function (v) {
+        this.getPromotes()
+      },
+      'query.auditStatusFilters': function (v) {
+        this.getPromotes()
+      },
     }
   }
-}
 </script>
 
 <style lang="scss" scoped>

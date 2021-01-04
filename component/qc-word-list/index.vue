@@ -103,6 +103,8 @@
 </template>
 
 <script>
+import dayjs from 'dayjs'
+
 import PaymentDialog from './payment-dialog'
 
 import { orderServiceHost, preKeywordPath } from 'config'
@@ -113,19 +115,19 @@ import {
   EW_OPTIONS
 } from 'constant/qianci'
 import { createPreOrder, getKeywordsList } from 'api/qianci'
-import { parseQuery, formatReqQuery, getCnName } from 'util'
+import { parseQuery, normalize, formatReqQuery, getCnName } from 'util'
 import { normalizeRoles } from 'util/role'
 
 export default {
-  name: 'qc-word-list',
+  name: "qc-word-list",
   components: {
     PaymentDialog
   },
   props: {
     allAreas: Array,
-    userInfo: Object
+    userInfo: Object,
   },
-  data () {
+  data() {
     return {
       EW,
       isExpandWordStatusError,
@@ -133,18 +135,18 @@ export default {
       query: {
         coreWord: '',
         status: '',
-        date: ''
+        date: '',
       },
       pagination: {
         current: 1,
         total: 0,
         size: 15,
-        sizes: [10, 15, 30, 50]
+        sizes: [10, 15, 30, 50],
       },
       queryList: [],
       active: {
         selectedItem: null,
-        selectedItemURL: ''
+        selectedItemURL: '',
       },
       store: {
         userId: null,
@@ -153,11 +155,11 @@ export default {
       options: {
         wordStatus: [
           { label: '全部', value: '' },
-          ...EW_OPTIONS
+          ...EW_OPTIONS,
         ]
       },
       loading: {
-        preparePay: false
+        preparePay: false,
       },
       visible: {
         paymentDialog: false
@@ -165,20 +167,20 @@ export default {
     }
   },
   computed: {
-    safeSelectedItem () {
+    safeSelectedItem() {
       return this.active.selectedItem || {}
-    }
+    },
   },
-  created () {
+  created() {
     const query = parseQuery(window.location.search)
     this.store.userId = query.user_id
     this.store.salesId = query.sales_id
   },
-  mounted () {
+  mounted() {
     this.getQueryList()
   },
   methods: {
-    getCoreWords (coreWordInfos) {
+    getCoreWords(coreWordInfos) {
       if (Array.isArray(coreWordInfos)) {
         return coreWordInfos.reduce((cur, prev, index) => {
           return cur + `${prev.coreWord.trim()}` + `${index !== coreWordInfos.length - 1 ? ', ' : ''}`
@@ -186,17 +188,17 @@ export default {
       }
       return ''
     },
-    handleSizeChange (size) {
+    handleSizeChange(size) {
       this.pagination.size = size
       this.getQueryList()
     },
-    async getQueryList (page = 1) {
+    async getQueryList(page = 1) {
       const query = {
         page: page - 1,
         size: this.pagination.size,
         targetUserId: this.store.userId,
         salesId: this.store.salesId,
-        ...formatReqQuery(this.query)
+        ...formatReqQuery(this.query),
       }
       const { content = [], totalElements = 0 } = (await getKeywordsList(query)) || {}
       this.queryList = content.map(x => ({
@@ -206,12 +208,11 @@ export default {
       this.pagination = {
         ...this.pagination,
         current: page,
-        total: totalElements
+        total: totalElements,
       }
     },
     // 生成付款 URL
-    async genPaymentURL (item) {
-      // eslint-disable-next-line no-async-promise-executor
+    async genPaymentURL(item) {
       return await new Promise(async (resolve, reject) => {
         let response = null
         try {
@@ -220,7 +221,7 @@ export default {
             targetUserId: this.store.userId
           })
         } catch (error) {
-          reject(new Error('Gen PreOrder Failed'))
+          reject('Gen PreOrder Failed')
         }
         if (response) {
           const { data } = response
@@ -234,12 +235,12 @@ export default {
       })
     },
 
-    /** ********************************************************* ux */
+    /*********************************************************** ux */
 
-    selectItem (item) {
+    selectItem(item) {
       this.active.selectedItem = item
     },
-    async showPaymentDialog (item) {
+    async showPaymentDialog(item) {
       this.selectItem(item)
       this.loading.preparePay = true
       let url = null
@@ -251,50 +252,50 @@ export default {
       this.visible.paymentDialog = true
       this.active.selectedItemURL = url
     },
-    goPreferredWordsListPage (item) {
+    goPreferredWordsListPage(item) {
       const { id } = item || {}
       this.selectItem(item)
       const search = window.location.search
         ? window.location.search + `&promoteId=${id}`
         : `?promoteId=${id}`
-      this.$router.push('/main/qc/keyword-list' + search)
+      this.$router.push(`/main/qc/keyword-list` + search)
     },
-    goEditWordsPage (row) {
+    goEditWordsPage(row) {
       const { id } = row
       this.$router.push({ name: 'qc-create-promote', query: { ...this.$route.query, id } })
     },
-    resetQuery () {
+    resetQuery() {
       this.query = {
         coreWord: '',
         status: '',
-        date: ''
+        date: '',
       }
       this.getQueryList(0)
     },
 
-    /** ********************************************************* calculation */
+    /*********************************************************** calculation */
 
-    enableCheckButton (row) {
+    enableCheckButton(row) {
       return !!(+row.isExpanded)
     },
-    enableEditButton (status) {
+    enableEditButton(status) {
       return [
-        ...getEWStatusWith('label', '拓词失败').value
+        ...getEWStatusWith('label', '拓词失败').value,
       ].includes(status)
     },
-    enablePayButton (status) {
+    enablePayButton(status) {
       return [
         EW.PENDING_BIND_USER.value
       ].includes(status)
     },
-    checkGoPayButtonLoading (item) {
+    checkGoPayButtonLoading(item) {
       return this.loading.preparePay && (
         item && this.active.selectedItem
       ) && (
         item === this.active.selectedItem
       )
     },
-    isUser (role) {
+    isUser(role) {
       return normalizeRoles(this.userInfo.roles).includes(role)
     }
   }
