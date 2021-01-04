@@ -31,7 +31,7 @@ export default {
     }
   },
   computed: {
-    items () {
+    items() {
       return this.days.map(day => ({
         checked: hitRanges(day, this.ranges)
       }))
@@ -39,7 +39,7 @@ export default {
   }
 }
 
-function hitRanges (day, ranges) {
+function hitRanges(day, ranges) {
   const m = dayjs(day, 'YYYY-MM-DD')
   const start = m.startOf('day').unix()
   const end = m.endOf('day').unix()

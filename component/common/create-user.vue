@@ -58,7 +58,7 @@ export default {
       required: true
     }
   },
-  data () {
+  data() {
     return {
       user: clone(emptyUser)
     }
@@ -67,7 +67,7 @@ export default {
     BaxSelect
   },
   computed: {
-    roleOpts () {
+    roleOpts() {
       const roles = (this.userInfo.roles || []).map(r => r.nameEn)
 
       return this.allRoles
@@ -93,10 +93,10 @@ export default {
     }
   },
   methods: {
-    empty () {
+    empty() {
       this.user = clone(emptyUser)
     },
-    async submit () {
+    async submit() {
       const { user } = this
 
       if (!user.name) {
@@ -118,7 +118,7 @@ export default {
       })
       this.$emit('hide')
     },
-    async cancel () {
+    async cancel() {
       this.empty()
       this.$emit('hide')
     }

@@ -51,61 +51,61 @@
 </template>
 
 <script>
-import SectionHeader from 'com/common/section-header'
-import store from './store'
+  import SectionHeader from 'com/common/section-header'
+  import store from './store'
 
-import track from 'util/track'
+  import track from 'util/track'
 
-export default {
-  name: 'account-summary',
-  props: ['userInfo'],
-  fromMobx: {
-    balance: () => store.balance,
-    coupons: () => store.coupons
-  },
-  filters: {
-    priceFormat (value) {
-      const price = value / 100
-      return !isNaN(price) ? (price).toFixed(2) : null
+  export default {
+    name: 'account-summary',
+    props: ['userInfo'],
+    fromMobx: {
+      balance: () => store.balance,
+      coupons: () => store.coupons
+    },
+    filters: {
+      priceFormat(value) {
+        const price = value / 100
+        return !isNaN(price) ? (price).toFixed(2) : null
+      }
+    },
+    components: {
+      SectionHeader
+    },
+    methods: {
+      onClickCreateCampaign() {
+        track({
+          action: 'account: click create campaign'
+        })
+      },
+      // onClickMvpCampaignList() {
+      //   track({
+      //     action: 'account: click query mvp campaigns'
+      //   })
+      // },
+      onClickCampaignList() {
+        track({
+          action: 'account: click query campaigns'
+        })
+      },
+      onClickCoupon() {
+        track({
+          action: 'account: click coupon'
+        })
+      },
+      onClickCharge() {
+        track({
+          action: 'account: click charge'
+        })
+      }
+    },
+    async mounted() {
+      await Promise.all([
+        store.getCoupons({ onlyValid: true, status: 0 }),
+        store.getBalance()
+      ])
     }
-  },
-  components: {
-    SectionHeader
-  },
-  methods: {
-    onClickCreateCampaign () {
-      track({
-        action: 'account: click create campaign'
-      })
-    },
-    // onClickMvpCampaignList() {
-    //   track({
-    //     action: 'account: click query mvp campaigns'
-    //   })
-    // },
-    onClickCampaignList () {
-      track({
-        action: 'account: click query campaigns'
-      })
-    },
-    onClickCoupon () {
-      track({
-        action: 'account: click coupon'
-      })
-    },
-    onClickCharge () {
-      track({
-        action: 'account: click charge'
-      })
-    }
-  },
-  async mounted () {
-    await Promise.all([
-      store.getCoupons({ onlyValid: true, status: 0 }),
-      store.getBalance()
-    ])
   }
-}
 </script>
 
 <style lang="scss" scoped>

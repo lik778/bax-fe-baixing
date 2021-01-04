@@ -28,9 +28,9 @@
 <script>
 import ImageUploader from './uploader'
 
-function getValidateRules (message, type = 'input') {
+function getValidateRules(message, type = 'input') {
   return {
-    message: type === 'uploader' ? `请上传${message}` : `${message}不能为空`,
+    message: type === 'uploader' ? `请上传${message}` :`${message}不能为空`,
     required: true,
     trigger: 'blur'
   }
@@ -63,8 +63,8 @@ const formsRenderData = [{
   placeholder: '填写手机号，如：13000001234',
   rules: {
     trigger: 'blur',
-    validator (rule, value, callback) {
-      if (!/^1[345789 ][0-9]{9}$/.test(value)) {
+    validator(rule, value, callback) {
+      if(!/^1[345789 ][0-9]{9}$/.test(value)) {
         callback(new Error('请输入正确的手机号吗'))
       } else {
         callback()
@@ -87,11 +87,11 @@ const formsRenderData = [{
   placeholder: '100字以上。直接复制截取客户网站部分简介即可',
   rules: [
     getValidateRules('公司简介'),
-    { type: 'string', min: 100, trigger: 'blur', message: '公司简介需要填写100字以上' }
+    {type: 'string', min: 100, trigger: 'blur', message: '公司简介需要填写100字以上'}
   ],
   props: {
     type: 'textarea',
-    autosize: { minRows: 3, maxRows: 6 }
+    autosize: {minRows: 3, maxRows: 6}
   },
   type: 'el-input'
 }, {
@@ -123,12 +123,12 @@ const defaultForm = formsRenderData.reduce((res, item) => {
 
 export default {
   name: 'cibao-promotion-form',
-  components: { ImageUploader },
+  components: {ImageUploader},
   props: {
     value: Object
   },
   methods: {
-    getValues () {
+    getValues() {
       return new Promise((resolve, reject) => {
         this.$refs.form.validate((isSuccess, value) => {
           if (isSuccess) {
@@ -141,11 +141,11 @@ export default {
     }
   },
   watch: {
-    value (val) {
+    value(val) {
       this.formData = Object.assign(this.formData, val)
     }
   },
-  data () {
+  data() {
     return {
       formsRenderData,
 

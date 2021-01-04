@@ -49,7 +49,7 @@ export default {
     keywords: {
       type: Array,
       required: true,
-      default () {
+      default() {
         return []
       }
     },
@@ -60,27 +60,27 @@ export default {
     }
   },
   computed: {
-    minShowWarningText () {
+    minShowWarningText() {
       return this.keywords.length > 0 && this.keywords.length < 10 && ['B', 'D'].includes(this.type)
     },
-    maxShowWarningText () {
+    maxShowWarningText() {
       return this.keywords.length > 20 && ['B', 'D'].includes(this.type)
     }
   },
   methods: {
-    editWord (index) {
+    editWord(index) {
       this.$emit('edit', {
         type: this.type,
         index
       })
     },
-    deleteWord (index) {
+    deleteWord(index) {
       this.$emit('delete', {
         type: this.type,
         index
       })
     },
-    popKeywordInputDialog () {
+    popKeywordInputDialog() {
       this.$emit('pop-keyword-input', this.type)
     }
   }

@@ -61,11 +61,11 @@ export default {
     }
   },
   computed: {
-    salesPrice () {
+    salesPrice() {
       const a = this.products.map(p => p.price)
       return centToYuan(a[0] + a[1])
     },
-    chargePrice () {
+    chargePrice() {
       const p = this.products
         .filter(i => i.name === '推广资金')
         .pop()
@@ -74,7 +74,7 @@ export default {
     }
   },
   methods: {
-    onClick () {
+    onClick() {
       this.$emit('click')
     }
   }

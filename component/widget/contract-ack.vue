@@ -32,7 +32,7 @@ export default {
       default: 'contract'
     }
   },
-  data () {
+  data() {
     return {
       assetHost,
       isAgreement: false

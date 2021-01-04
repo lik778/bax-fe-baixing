@@ -46,11 +46,11 @@ export default {
     }
   },
   methods: {
-    getMType (s) {
+    getMType(s) {
       return materialType[String(s)]
     }
   },
-  async mounted () {
+  async mounted() {
     const id = this.$route.params.id
     await store.getMaterial(id)
   }

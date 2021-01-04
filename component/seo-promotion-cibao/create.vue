@@ -112,30 +112,31 @@
 </template>
 
 <script>
-import dayjs from 'dayjs'
-import promotionForm from './promotion-form'
-import ContractAck from 'com/widget/contract-ack'
-import QiqiaobanPageSelector from 'com/common/qiqiaoban-page-selector'
-import SearchImgView from './search-img-view'
-import SelectKeywords from './select-keywords'
-import { f2y } from 'util/kit'
-import { PRO_SITE_PRODUCT_TYPE } from 'constant/site'
+import dayjs from "dayjs";
+import promotionForm from "./promotion-form";
+import ContractAck from "com/widget/contract-ack";
+import QiqiaobanPageSelector from "com/common/qiqiaoban-page-selector";
+import SearchImgView from "./search-img-view";
+import SelectKeywords from "./select-keywords";
+import { f2y } from "util/kit";
+import { PRO_SITE_PRODUCT_TYPE } from "constant/site";
 import {
   volumes,
   durations,
   chargeList,
   NINETY_DAYS,
+  SEARCH_IMAGES_MIN,
   SEARCH_IMAGES_MAX
-} from 'constant/seo'
+} from "constant/seo";
 import {
   getPromotedWebsite,
   createCibaoPromotion,
   getCibaoPromotionBaseInfo
-} from '../../api/seo'
+} from "../../api/seo";
 
 export default {
-  name: 'seo-cibao-create-page',
-  data () {
+  name: "seo-cibao-create-page",
+  data() {
     return {
       volumes,
       durations,
@@ -153,8 +154,8 @@ export default {
       promotion: {
         duration: NINETY_DAYS,
         volume: 1000,
-        landingPage: '',
-        additionalInfo: '',
+        landingPage: "",
+        additionalInfo: "",
         keywords: [], // C类
         customAreas: [], // A类
         prefixWordList: [], // B类
@@ -162,76 +163,76 @@ export default {
 
         images: [] // 搜索通图片列表
       }
-    }
+    };
   },
   methods: {
-    onLandingChange (v) {
-      this.landingInfo = v
-      const landingPage = 'http://' + v.domain + '.mvp.baixing.com'
-      this.promotion.landingPage = landingPage
+    onLandingChange(v) {
+      this.landingInfo = v;
+      const landingPage = "http://" + v.domain + ".mvp.baixing.com";
+      this.promotion.landingPage = landingPage;
       this.showExpireWarning = dayjs(v.expireAt)
-        .subtract(this.promotion.duration, 'day')
-        .isBefore(dayjs(), 'day')
+        .subtract(this.promotion.duration, "day")
+        .isBefore(dayjs(), "day");
       this.showExistWebsite = this.existPromotionWebsite.some(
         o => o.trim() === landingPage
-      )
+      );
     },
-    handleDurationChange (duration) {
-      if (!this.landingInfo) return
+    handleDurationChange(duration) {
+      if (!this.landingInfo) return;
       this.showExpireWarning = dayjs(this.landingInfo.expireAt)
-        .subtract(duration, 'day')
-        .isBefore(dayjs(), 'day')
+        .subtract(duration, "day")
+        .isBefore(dayjs(), "day");
     },
-    handleSearchFileChange (fileList) {
-      this.promotion.images = fileList
+    handleSearchFileChange(fileList) {
+      this.promotion.images = fileList;
     },
-    async validateAndReturnPromotionData () {
+    async validateAndReturnPromotionData() {
       if (!this.$refs.contract.$data.isAgreement) {
-        throw this.$message.error('请阅读并勾选同意服务协议，再进行下一步操作')
+        throw this.$message.error("请阅读并勾选同意服务协议，再进行下一步操作");
       }
       if (!this.promotion.landingPage) {
-        throw this.$message.error('请选择落地页')
+        throw this.$message.error("请选择落地页");
       }
       if (this.showExpireWarning) {
-        throw this.$message.error('不可选择3个月内过期的落地页')
+        throw this.$message.error("不可选择3个月内过期的落地页");
       }
       if (this.showExistWebsite) {
-        throw this.$message.error('不可选择已创建首页宝加速词包计划的官网')
+        throw this.$message.error("不可选择已创建首页宝加速词包计划的官网");
       }
 
-      let baseInfo = {}
+      let baseInfo = {};
       try {
-        baseInfo = await this.$refs.promotionForm.getValues()
+        baseInfo = await this.$refs.promotionForm.getValues();
       } catch (err) {
-        const errorField = Object.values(err)[0] && Object.values(err)[0][0]
+        const errorField = Object.values(err)[0] && Object.values(err)[0][0];
         throw this.$message.error(
-          errorField ? errorField.message : '基础信息出现错误'
-        )
+          errorField ? errorField.message : "基础信息出现错误"
+        );
       }
 
       try {
-        const selectKeywords = await this.$refs.selectKeywords.getValues()
-        Object.assign(this.promotion, selectKeywords)
+        const selectKeywords = await this.$refs.selectKeywords.getValues();
+        Object.assign(this.promotion, selectKeywords);
       } catch (err) {
-        throw this.$message.error(err.message)
+        throw this.$message.error(err.message);
       }
 
       if (f2y(this.balance) < this.charge) {
-        throw this.$confirm('余额不足，请前往充值', '提示', {
-          confirmButtonText: '确定',
+        throw this.$confirm("余额不足，请前往充值", "提示", {
+          confirmButtonText: "确定",
           showCancelButton: false
         })
           .then(res => {
-            this.$router.push({ name: 'seo-charge' })
+            this.$router.push({ name: "seo-charge" });
           })
-          .catch(() => {})
+          .catch(() => {});
       }
       return {
         ...this.promotion,
         baseInfo
-      }
+      };
     },
-    async createPromotion () {
+    async createPromotion() {
       this.canConfirmOpen &&
         (await this.$confirm(
           `
@@ -241,28 +242,28 @@ export default {
           <p>3.资料提交后需要7~30天优化期，上词效果请耐心等待。</p>
         </div>
       `,
-          '提示',
+          "提示",
           {
             dangerouslyUseHTMLString: true,
-            confirmButtonText: '确认提交',
-            cancelButtonText: '我再想想'
+            confirmButtonText: "确认提交",
+            cancelButtonText: "我再想想"
           }
-        ))
-      this.canConfirmOpen = false
-      const data = await this.validateAndReturnPromotionData()
+        ));
+      this.canConfirmOpen = false;
+      const data = await this.validateAndReturnPromotionData();
       createCibaoPromotion(data).then(res => {
-        this.$message.success('创建成功')
-        this.$router.push({ name: 'seo-promotion-list' })
-      })
+        this.$message.success("创建成功");
+        this.$router.push({ name: "seo-promotion-list" });
+      });
     }
   },
   computed: {
-    charge () {
-      const { duration, volume } = this.promotion
+    charge() {
+      const { duration, volume } = this.promotion;
       const chargeObj = chargeList.find(
         o => o.volume === volume && o.duration === duration
-      )
-      return chargeObj ? chargeObj.charge : chargeList[0].charge
+      );
+      return chargeObj ? chargeObj.charge : chargeList[0].charge;
     }
   },
   components: {
@@ -272,13 +273,13 @@ export default {
     SearchImgView,
     SelectKeywords
   },
-  async created () {
+  async created() {
     [this.baseInfo, this.existPromotionWebsite] = await Promise.all([
       getCibaoPromotionBaseInfo(),
       getPromotedWebsite()
-    ])
+    ]);
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>

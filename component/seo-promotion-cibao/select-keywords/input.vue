@@ -72,11 +72,11 @@ export default {
     }
   },
   computed: {
-    displayCityArea () {
+    displayCityArea() {
       return this.type === 'A'
     }
   },
-  data () {
+  data() {
     return {
       words: '',
       areaSelectorVisible: false,
@@ -84,14 +84,14 @@ export default {
     }
   },
   methods: {
-    handleClose () {
+    handleClose() {
       this.$emit('close')
     },
-    handleClear () {
+    handleClear() {
       this.words = ''
       this.handleClose()
     },
-    handleConfirm () {
+    handleConfirm() {
       this.$emit('words', {
         words: this.words,
         type: this.type
@@ -99,7 +99,7 @@ export default {
       this.handleClose()
       this.handleClear()
     },
-    updateAreas (areas) {
+    updateAreas(areas) {
       const words = areas.map((area) => {
         return Array.isArray(area) ? area[area.length - 1] : area
       })

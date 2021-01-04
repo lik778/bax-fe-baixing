@@ -21,7 +21,7 @@
                 <user-ad-selector
                   :type="adSelectorType"
                   v-if="landingTypeDisplay === 0"
-                  :all-areas="allAreas"
+                  :all-areas="allAreas" 
                   :limit-mvp="false"
                   :selected-id="form.landingPageId"
                   @select-ad="onSelectAd"
@@ -55,199 +55,199 @@
       </main>
     </div>
   </div>
-</template>
+</template> 
 
 <script>
-import { isQiqiaobanSite, isWeishopSite, getLandingpageByPageProtocol } from 'util/kit'
-import { getPromoteById, getPromtesByOrders, updatePromote, getQiqiaobanCoupon } from 'api/biaowang'
-import { landingTypeOpts, SEM_PLATFORM_BAIDU, LANDING_TYPE_AD } from 'constant/fengming'
-import { AUDIT_STATUS_REJECT, PROMOTE_STATUS_OFFLINE, PROMOTE_STATUS_PENDING_EDIT } from 'constant/biaowang'
-import { Message } from 'element-ui'
-import UserAdSelector from 'com/common/user-ad-selector'
-import CreativeEditor from 'com/widget/creative-editor'
-import QiqiaobanPageSelector from 'com/common/qiqiaoban-page-selector'
-import { queryAds } from 'api/fengming'
+  import {isQiqiaobanSite, isWeishopSite, getLandingpageByPageProtocol} from 'util/kit'
+  import {getPromoteById, getPromtesByOrders, updatePromote, getQiqiaobanCoupon} from 'api/biaowang'
+  import {landingTypeOpts, SEM_PLATFORM_BAIDU, LANDING_TYPE_AD} from 'constant/fengming' 
+  import {AUDIT_STATUS_REJECT, PROMOTE_STATUS_OFFLINE, PROMOTE_STATUS_PENDING_EDIT} from 'constant/biaowang'
+  import {Message} from 'element-ui'
+  import UserAdSelector from 'com/common/user-ad-selector'
+  import CreativeEditor from 'com/widget/creative-editor'
+  import QiqiaobanPageSelector from 'com/common/qiqiaoban-page-selector'
+  import {queryAds} from 'api/fengming'
 
-export default {
-  name: 'bw-edit-plan',
-  props: {
-    allAreas: Array
-  },
-  components: {
-    UserAdSelector,
-    CreativeEditor,
-    QiqiaobanPageSelector
-  },
-  data () {
-    return {
-      SEM_PLATFORM_BAIDU,
-      promotes: [],
-      landingTypeDisplay: 0,
-      isErrorLandingPageShow: false,
-      isSpecialLandingpage: false,
-      form: {
-        promoteIds: [],
-        landingType: 0,
-        landingPageId: '',
-        landingPage: '',
-        creativeTitle: '',
-        creativeContent: ''
+  export default {
+    name: 'bw-edit-plan',
+    props: {
+      allAreas: Array
+    },
+    components: {
+      UserAdSelector,
+      CreativeEditor,
+      QiqiaobanPageSelector
+    },
+    data() {
+      return {
+        SEM_PLATFORM_BAIDU,
+        promotes: [],
+        landingTypeDisplay: 0,
+        isErrorLandingPageShow: false,
+        isSpecialLandingpage: false,
+        form: {
+          promoteIds: [],
+          landingType: 0,
+          landingPageId: '',
+          landingPage: '',
+          creativeTitle: '',
+          creativeContent: '',
+        },
+        rules: {
+          promoteIds: [{required: true, message: '请勾选关键词'}],
+          landingPage: [{required: true, message: '请选择投放页面'}]
+        },
+        buttonText: '创建标王计划',
+
+        landingTypeOpts,
+        creativeError: '',
+        isLoading: false,
+        showNotice: false,
+        adSelectorType: 'reselect'
+      }
+    },
+    computed: {
+      isPromoteRejected() {
+        return this.promotes.some(p => AUDIT_STATUS_REJECT.includes(p.auditStatus))
       },
-      rules: {
-        promoteIds: [{ required: true, message: '请勾选关键词' }],
-        landingPage: [{ required: true, message: '请选择投放页面' }]
+      rejectReason() {
+        return this.promotes.map(p => p.auditRejectReason).join(',')
       },
-      buttonText: '创建标王计划',
-
-      landingTypeOpts,
-      creativeError: '',
-      isLoading: false,
-      showNotice: false,
-      adSelectorType: 'reselect'
-    }
-  },
-  computed: {
-    isPromoteRejected () {
-      return this.promotes.some(p => AUDIT_STATUS_REJECT.includes(p.auditStatus))
-    },
-    rejectReason () {
-      return this.promotes.map(p => p.auditRejectReason).join(',')
-    },
-    isPromoteOffline () {
-      return this.promotes.some(p => PROMOTE_STATUS_OFFLINE.includes(p.status))
-    }
-  },
-  async mounted () {
-    const { promoteId, orderIds: orderIdsString, notice } = this.$route.query
-    if (promoteId) {
-      const onePromote = await getPromoteById(promoteId)
-      this.promotes = [onePromote]
-      const { landingType, landingPage, landingPageId, creativeTitle, creativeContent } = onePromote
-      this.form = {
-        promoteIds: [+promoteId],
-        landingType: landingType || 0,
-        landingPage,
-        creativeTitle: creativeTitle || '',
-        creativeContent: creativeContent || '',
-        landingPageId: landingPageId || ''
+      isPromoteOffline() {
+        return this.promotes.some(p => PROMOTE_STATUS_OFFLINE.includes(p.status))
       }
-      this.landingTypeDisplay = landingType || 0
-      this.buttonText = '更新标王计划'
-    }
-    if (orderIdsString) {
-      const orderIds = orderIdsString.split(',')
-      this.promotes = await getPromtesByOrders(orderIds)
-      this.form.promoteIds = this.promotes.map(p => p.id)
-      this.buttonText = '创建标王计划'
-    }
-    if (notice === 'true' || notice === '1') {
-      this.showNotice = true
-    }
-    this.adSelectorType = this.promotes.every(p => PROMOTE_STATUS_PENDING_EDIT.includes(p.status)) ? '' : 'reselect'
-    this.verifyLandingpageIsError()
-  },
-  methods: {
-    reselectLandingpage () {
-      this.isErrorLandingPageShow = false
-      this.adSelectorType = ''
     },
-    async verifyLandingpageIsError () {
-      const { landingPage, landingType, landingPageId } = this.form
-      if (landingType === 1 || landingType === 2) {
-        const script = document.createElement('script')
-        script.src = getLandingpageByPageProtocol(landingPage)
-        document.body.appendChild(script)
-        script.addEventListener('error', e => {
-          document.body.removeChild(script)
-          this.isErrorLandingPageShow = true
-          this.form.landingPage = ''
-        })
-        this.isSpecialLandingpage = this.specialLandingpage(this.form.landingPage)
-      }
-
-      // 验证百姓帖子已经归档
-      if (landingType === LANDING_TYPE_AD && landingPageId) {
-        const result = await queryAds({
-          limitMvp: false,
-          adIds: landingPageId,
-          limit: 1
-        })
-        const ad = result.ads && result.ads[0]
-        if (!ad) {
-          this.isErrorLandingPageShow = true
-          this.form.landingPage = ''
+    async mounted() {
+      const {promoteId, orderIds: orderIdsString, notice} = this.$route.query
+      if (promoteId) {
+        const onePromote = await getPromoteById(promoteId)
+        this.promotes = [onePromote]
+        const {landingType, landingPage, landingPageId, creativeTitle, creativeContent} = onePromote
+        this.form = {
+          promoteIds: [+promoteId],
+          landingType: landingType || 0,
+          landingPage,
+          creativeTitle: creativeTitle || '',
+          creativeContent: creativeContent || '',
+          landingPageId: landingPageId || ''
         }
+        this.landingTypeDisplay = landingType || 0
+        this.buttonText = '更新标王计划'
       }
-    },
-    onSelectAd (ad) {
-      this.form.landingType = 0
-      this.form.landingPageId = ad.adId
-      this.form.landingPage = ad.url
-
-      this.form.creativeTitle = ad.title && ad.title.slice(0, 24)
-      this.form.creativeContent = ad.content && ad.content.slice(0, 39)
-    },
-    async goChargeKaSite () {
-      await getQiqiaobanCoupon(this.$route.query.promoteId)
-      setTimeout(() => {
-        this.$router.push('/main/qwt/charge?select_gw=1')
-      }, 300)
-    },
-    onQiqiaobanChange (v) {
-      this.form.landingType = 1
-      this.form.landingPage = v
-      this.form.landingPageId = ''
-
-      this.form.creativeTitle = ''
-      this.form.creativeContent = ''
-    },
-    handleCreativeError (message) {
-      if (message) Message.error(message)
-      this.creativeError = message
-    },
-    handleCreativeValueChange ({ title, content }) {
-      this.form.creativeTitle = title
-      this.form.creativeContent = content
-    },
-    onSubmit () {
-      try {
-        this.banLandPageSelected()
-      } catch (e) {
-        return
+      if (orderIdsString) {
+        const orderIds = orderIdsString.split(',')
+        this.promotes = await getPromtesByOrders(orderIds)
+        this.form.promoteIds = this.promotes.map(p => p.id)
+        this.buttonText = '创建标王计划'
       }
-      this.$refs.form.validate(async isValid => {
-        if (isValid && !this.creativeError) {
-          this.isLoading = true
-          try {
-            await updatePromote(this.form)
-            Message.success('更新推广成功')
-            this.$router.push({ name: 'bw-plan-list' })
-          } finally {
-            this.isLoading = false
-          }
-        } else if (isValid && this.creativeError) {
-          Message.error(this.creativeError)
-        }
-      })
+      if (notice === 'true' || notice === '1') {
+        this.showNotice = true
+      }
+      this.adSelectorType = this.promotes.every(p => PROMOTE_STATUS_PENDING_EDIT.includes(p.status)) ? '' : 'reselect'
+      this.verifyLandingpageIsError()
     },
-    specialLandingpage (siteUrl) {
-      return isQiqiaobanSite(siteUrl) || isWeishopSite(siteUrl)
-    },
-    banLandPageSelected () {
-      // 落地页404，需要更改落地页投放
-      if (this.isErrorLandingPageShow && !this.form.landingPage) {
+    methods: {
+      reselectLandingpage() {
+        this.isErrorLandingPageShow = false
         this.adSelectorType = ''
-        const pageErrorPlaceholder = document.querySelector('.error-page-placeholder')
-        pageErrorPlaceholder.style.borderColor = '#FF6350'
-        throw this.$message.error('当前投放页面失效，请重新选择新的投放页面')
-      }
-      // 已经下线计划且当前落地页为老官网或微站 不允许修改投放计划
-      if (this.isSpecialLandingpage && this.isPromoteOffline) {
-        throw this.$message.error('当前计划已下线，不能更新推广计划')
-      }
+      },
+      async verifyLandingpageIsError() {
+        const { landingPage, landingType, landingPageId } = this.form
+        if (landingType === 1 || landingType === 2) {
+          const script = document.createElement('script')
+          script.src = getLandingpageByPageProtocol(landingPage)
+          document.body.appendChild(script)
+          script.addEventListener('error', e => {
+            document.body.removeChild(script)
+            this.isErrorLandingPageShow = true
+            this.form.landingPage = ''
+          })
+          this.isSpecialLandingpage = this.specialLandingpage(this.form.landingPage)
+        }
+
+        // 验证百姓帖子已经归档
+        if (landingType === LANDING_TYPE_AD && landingPageId) {
+          const result = await queryAds({
+            limitMvp: false,
+            adIds: landingPageId,
+            limit: 1
+          })
+          const ad = result.ads && result.ads[0]
+          if (!ad) {
+            this.isErrorLandingPageShow = true
+            this.form.landingPage = ''
+          }
+        }
+      },
+      onSelectAd(ad) {
+        this.form.landingType = 0
+        this.form.landingPageId = ad.adId
+        this.form.landingPage = ad.url
+
+        this.form.creativeTitle = ad.title && ad.title.slice(0, 24)
+        this.form.creativeContent = ad.content && ad.content.slice(0, 39)
+      },
+      async goChargeKaSite() {
+        await getQiqiaobanCoupon(this.$route.query.promoteId)
+        setTimeout(() => {
+          this.$router.push('/main/qwt/charge?select_gw=1')
+        }, 300)
+      },
+      onQiqiaobanChange(v) {
+        this.form.landingType = 1
+        this.form.landingPage = v
+        this.form.landingPageId = ''
+
+        this.form.creativeTitle = ''
+        this.form.creativeContent = ''
+      },
+      handleCreativeError(message) {
+        if(message) Message.error(message)
+        this.creativeError = message
+      },
+      handleCreativeValueChange({title, content}) {
+        this.form.creativeTitle = title
+        this.form.creativeContent = content
+      },
+      onSubmit() {
+        try {
+          this.banLandPageSelected()
+        } catch(e) {
+          return
+        }
+        this.$refs.form.validate(async isValid => {
+          if (isValid && !this.creativeError) {
+            this.isLoading = true
+            try {
+              await updatePromote(this.form)
+              Message.success('更新推广成功')
+              this.$router.push({name: 'bw-plan-list'})
+            } finally {
+              this.isLoading = false
+            }
+          } else if (isValid && this.creativeError) {
+            Message.error(this.creativeError)
+          }
+        })
+      },
+      specialLandingpage(siteUrl) {
+        return isQiqiaobanSite(siteUrl) || isWeishopSite(siteUrl)
+      },
+      banLandPageSelected() {
+        // 落地页404，需要更改落地页投放
+        if (this.isErrorLandingPageShow && !this.form.landingPage) {
+          this.adSelectorType = ''
+          const pageErrorPlaceholder = document.querySelector('.error-page-placeholder')
+          pageErrorPlaceholder.style.borderColor = '#FF6350'
+          throw this.$message.error('当前投放页面失效，请重新选择新的投放页面')
+        }
+        // 已经下线计划且当前落地页为老官网或微站 不允许修改投放计划
+        if (this.isSpecialLandingpage && this.isPromoteOffline) {
+          throw this.$message.error('当前计划已下线，不能更新推广计划')
+        }
+      },
     }
   }
-}
 </script>
 
 <style lang="scss" scoped>

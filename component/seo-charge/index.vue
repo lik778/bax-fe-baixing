@@ -19,7 +19,7 @@
           <main>
             <section>
               <price-tag v-for="(product, index) in allProducts.slice(0, 4)" :key="index"
-                :editable="product.editable"
+                :editable="product.editable" 
                 :price="centToYuan(product.price)"
                 :checked="checkedProducts.includes(product)"
                 :minInputPrice="centToYuan(minInputPrice)"
@@ -145,16 +145,22 @@
 import PromotionAreaLimitTip from 'com/widget/promotion-area-limit-tip'
 import ContractAck from 'com/widget/contract-ack'
 import Clipboard from 'com/widget/clipboard'
+import FlatBtn from 'com/common/flat-btn'
 import GwProWidget from 'com/widget/gw-pro'
 import BaxStep from 'com/widget/step'
 import PriceList from '../charge/price-list'
 import PriceTag from '../charge/price-tag'
 
+import { Message } from 'element-ui'
 import uuid from 'uuid/v4'
 
 import { centToYuan } from 'utils'
 
 import store from './store'
+
+import track from 'util/track'
+
+import { displayCoupon } from 'util/meta'
 
 import {
   allowGetOrderPayUrl,
@@ -166,22 +172,24 @@ import { product as PRODUCT } from 'constant/product'
 import { normalizeRoles } from 'util/role'
 
 import { createPreOrder } from 'api/seo'
-import { orderServiceHost } from 'config'
+import {orderServiceHost} from 'config'
 
 import {
+  getUserIdFromBxSalesId,
   queryUserInfo,
   getUserInfo
 } from 'api/account'
 
 import {
+  getOrderPayUrl,
   payOrders
 } from 'api/order'
 
-import { SKU_GW, SKU_GW_100, SKU_GW_200 } from 'constant/seo'
+import { SKU_GW, SKU_GW_100, SKU_GW_200} from 'constant/seo'
 
 const PROFESSIONAL_SITE_PRODUCT_TYPE = 6
 const LOCK_SHORT_GW_PRICE = 2988 * 100
-const lockMessage = `短期官网仅支持本次充值${LOCK_SHORT_GW_PRICE / 100}元及以上推广资金的用户购买`
+const lockMessage = `短期官网仅支持本次充值${LOCK_SHORT_GW_PRICE/100}元及以上推广资金的用户购买`
 
 const SEO_BALANCE = 7
 
@@ -203,18 +211,18 @@ const allProducts = [
     productType: SEO_BALANCE,
     editable: true,
     price: 0
-  },
+  }, 
   {
     id: 5,
     productType: PROFESSIONAL_SITE_PRODUCT_TYPE,
     websiteSkuId: SKU_GW_100, // 官网sku id
     price: 600 * 100,
-    discountExecPriceFunc: [
+    discountExecPriceFunc:[
       'p >= 0 ? 30000 : false'
     ],
-    isFixedPrice: true, // 固定价格不参与满减
+    isFixedPrice:true, //固定价格不参与满减
     name: '精品官网：100天【专业版】',
-    productTime: '100天',
+    productTime:'100天',
     isPro: true,
     isHot: false
   },
@@ -223,12 +231,12 @@ const allProducts = [
     productType: PROFESSIONAL_SITE_PRODUCT_TYPE,
     websiteSkuId: SKU_GW_200,
     price: 1200 * 100,
-    discountExecPriceFunc: [
+    discountExecPriceFunc:[
       'p >= 0 ? 60000 : false'
     ],
-    isFixedPrice: true, // 固定价格不参与满减
+    isFixedPrice:true, //固定价格不参与满减
     name: '精品官网：200天【专业版】',
-    productTime: '200天',
+    productTime:'200天',
     isPro: true,
     isHot: false
   },
@@ -258,11 +266,12 @@ export default {
     Clipboard,
     PriceList,
     PriceTag,
-    BaxStep
+    BaxStep,
+    FlatBtn,
   },
   fromMobx: {
     allDiscounts: () => store.allDiscounts,
-    products: () => store.products
+    products: () => store.products,
   },
   props: {
     userInfo: {
@@ -278,7 +287,7 @@ export default {
       required: true
     }
   },
-  data () {
+  data() {
     return {
       showDiscount: true,
       actionTrackId: uuid(),
@@ -302,21 +311,21 @@ export default {
     }
   },
   computed: {
-    promotionDiscount () {
+    promotionDiscount() {
       const charge = this.checkedProducts.find(p => p.productType === SEO_BALANCE)
       if (charge) {
-        const siteProduct = this.fullCheckedProducts.find(({ productType }) => productType === PROFESSIONAL_SITE_PRODUCT_TYPE)
-        const isFixedPrice = siteProduct && this.checkedProducts.find(product => product.id === siteProduct.id).isFixedPrice
+        const siteProduct = this.fullCheckedProducts.find(({productType}) => productType === PROFESSIONAL_SITE_PRODUCT_TYPE)
+        let isFixedPrice = siteProduct && this.checkedProducts.find(product=>product.id===siteProduct.id).isFixedPrice
         const siteDiscountPrice = siteProduct && centToYuan(siteProduct.originalPrice - siteProduct.discountPrice)
 
-        return (siteDiscountPrice && !isFixedPrice)
+        return  (siteDiscountPrice && !isFixedPrice)
           ? `同时购买专业版精品官网（一年）立<span class="red">减</span> ${siteDiscountPrice} 元`
           : ''
       }
       return ''
     },
-    productSummary () {
-      const a = this.checkedProducts.reduce((s, p) => {
+    productSummary() {
+      var a = this.checkedProducts.reduce((s, p) => {
         if (s[p.id] === undefined) {
           s[p.id] = 0
         }
@@ -326,26 +335,26 @@ export default {
       return a
     },
     // 减去各选中产品对应的券金额
-    finalPrice () {
+    finalPrice() {
       return this.totalPrice
     },
-    isAgentSales () {
+    isAgentSales() {
       const roles = normalizeRoles(this.userInfo.roles)
       return roles.includes('AGENT_SALES')
     },
-    isBxUser () {
+    isBxUser() {
       const roles = normalizeRoles(this.userInfo.roles)
       return roles.includes('BAIXING_USER')
     },
-    isBxSales () {
+    isBxSales() {
       const roles = normalizeRoles(this.userInfo.roles)
       return roles.includes('BAIXING_SALES')
     },
-    isAgentAccounting () {
+    isAgentAccounting() {
       const roles = normalizeRoles(this.userInfo.roles)
       return roles.includes('AGENT_ACCOUNTING')
     },
-    checkedProductDiscounts () {
+    checkedProductDiscounts() {
       if (!this.isAgentAccounting) {
         return []
       }
@@ -355,12 +364,12 @@ export default {
       return this.allDiscounts
         .filter(d => types.includes(d.productType))
     },
-    totalPrice () {
+    totalPrice() {
       const p = this.fullCheckedProducts.map(i => i.discountPrice)
 
       return p.reduce((a, b) => a + b, 0)
     },
-    submitButtonText () {
+    submitButtonText() {
       const { userInfo } = this
       if (this.isBxUser) {
         return '确认购买'
@@ -371,10 +380,10 @@ export default {
       }
 
       return '确认购买'
-    }
+    },
   },
   methods: {
-    getGwPrice (product) {
+    getGwPrice(product) {
       const gw = this.fullCheckedProducts.find(p => p.id === product.id)
       if (gw) {
         return centToYuan(gw.price)
@@ -387,53 +396,53 @@ export default {
       const gwProduct = this.checkedProducts.find(p => p.productType === PROFESSIONAL_SITE_PRODUCT_TYPE)
       const index = this.checkedProducts.indexOf(product)
 
-      if (index > -1) {
+      if (index > -1) { 
         if (productType === SEO_BALANCE && gwProduct && gwProduct.isFixedPrice) {
-          this.showGwWarnInfo = true
-          return this.showGwWarnInfo
+          // return this.$message.error(lockMessage)
+          return this.showGwWarnInfo = true
         }
         this.showGwWarnInfo = false
         this.checkedProducts.splice(index, 1)
       } else {
         if (productType === PROFESSIONAL_SITE_PRODUCT_TYPE && isFixedPrice) {
-          if (chargeProduct ? chargeProduct.price < LOCK_SHORT_GW_PRICE : !chargeProduct) {
-            this.showGwWarnInfo = true
-            return this.showGwWarnInfo
-          }
+          if (chargeProduct && chargeProduct.price < LOCK_SHORT_GW_PRICE || !chargeProduct){
+            // return this.$message.error(lockMessage)
+            return this.showGwWarnInfo = true
+          } 
         }
         if (productType === SEO_BALANCE && price < LOCK_SHORT_GW_PRICE) {
           if (gwProduct && gwProduct.isFixedPrice) {
-            this.showGwWarnInfo = true
-            return this.showGwWarnInfo
+            // return this.$message.error(lockMessage)
+            return this.showGwWarnInfo = true
           }
         }
         this.showGwWarnInfo = false
-
+      
         if (chargeProduct && product.productType === SEO_BALANCE) {
           const index = this.checkedProducts.indexOf(chargeProduct)
           this.checkedProducts.splice(index, 1)
         }
         if (gwProduct && product.productType === PROFESSIONAL_SITE_PRODUCT_TYPE) {
-          this.checkedProducts = this.checkedProducts.filter(({ productType }) => productType !== PROFESSIONAL_SITE_PRODUCT_TYPE)
+          this.checkedProducts = this.checkedProducts.filter(({productType}) => productType !== PROFESSIONAL_SITE_PRODUCT_TYPE)
         }
         this.checkedProducts.push(product)
       }
     },
-    empty () {
+    empty() {
       this.orderPayUrl = ''
       this.checkedPackageId = 0
       this.checkedChargeProductId = 0
       this.chargeMoney = 0
     },
-    async init () {
+    async init() {
       this.empty()
 
       await Promise.all([
         store.getProductDiscounts([SEO_BALANCE, PROFESSIONAL_SITE_PRODUCT_TYPE]), // 充值／新官网
-        store.getProducts([SEO_BALANCE, PROFESSIONAL_SITE_PRODUCT_TYPE])
+        store.getProducts([SEO_BALANCE,PROFESSIONAL_SITE_PRODUCT_TYPE])
       ])
     },
-    getDiscountPrice (productType, price) {
+    getDiscountPrice(productType, price) {
       if (!this.isAgentAccounting) {
         return price
       }
@@ -449,7 +458,7 @@ export default {
 
       return p | 0
     },
-    async payOrders (oids) {
+    async payOrders(oids) {
       const {
         userInfo
       } = this
@@ -460,7 +469,7 @@ export default {
 
       await payOrders(oids)
     },
-    async createPreOrder () {
+    async createPreOrder() {
       if (!this.$refs.contract.$data.isAgreement) {
         return this.$message.error('请阅读并勾选同意服务协议，再进行下一步操作')
       }
@@ -475,21 +484,21 @@ export default {
         this.$message.error('充值金额最少为600元')
         return
       }
-      if (gwProduct && (!chargeProduct || (chargeProduct && chargeProduct.price < LOCK_SHORT_GW_PRICE))) {
+      if (gwProduct && ( !chargeProduct || (chargeProduct && chargeProduct.price < LOCK_SHORT_GW_PRICE))) {
         this.$message.error(lockMessage)
         return
       }
-      const { salesId, userId } = this.salesInfo
+      const {salesId, userId} = this.salesInfo
 
       // balanceAmount, saleWithShopOrder, shopOrderAmount, targetUserId, salesId
       const charge = this.fullCheckedProducts.find(p => p.productType === SEO_BALANCE)
       const saleWithShopOrder = !!this.fullCheckedProducts.find(p => p.productType === PROFESSIONAL_SITE_PRODUCT_TYPE)
       const gw = this.fullCheckedProducts.find(p => p.productType === PROFESSIONAL_SITE_PRODUCT_TYPE)
       const preTradeId = await createPreOrder(
-        charge ? charge.originalPrice : 0,
+        charge ? charge.originalPrice: 0,
         saleWithShopOrder,
         1,
-        gw ? gw.websiteSkuId : 0, // 看二军需求
+        gw ? gw.websiteSkuId: 0, //看二军需求
         userId,
         salesId
       )
@@ -501,13 +510,13 @@ export default {
         this.orderPayUrl = `${orderServiceHost}/?appId=103&seq=${preTradeId}`
       }
     },
-    filterProductName ({ productType, productTime }) {
-      if (productType !== PROFESSIONAL_SITE_PRODUCT_TYPE) {
+    filterProductName({productType, productTime}) {
+      if( productType !== PROFESSIONAL_SITE_PRODUCT_TYPE ){
         return PRODUCT[productType]
       }
       return PRODUCT[productType] + (productTime ? `【${productTime}】` : '')
     },
-    centToYuan
+    centToYuan,
   },
   watch: {
     checkedProducts: {
@@ -518,35 +527,33 @@ export default {
 
         if (charge && gw) {
           let gwPrice = gw.price
-          const { discountExecPriceFunc } = gw
+          const { discountExecPriceFunc, websiteSkuId} = gw
           gwPrice = gw.price - discountExecPriceFunc
-            // eslint-disable-next-line
             .map(execStr => new Function('p', 'return ' + execStr)(charge.price))
             .find(res => res !== false)
           this.fullCheckedProducts = checked.map(product => {
-            const { id, productType, price } = product
+            const {id, productType, price} = product
             return {
               id,
               productType,
               name: this.filterProductName(product),
               price: productType === PROFESSIONAL_SITE_PRODUCT_TYPE ? gwPrice : price,
               originalPrice: price,
-              websiteSkuId: product.websiteSkuId || 0, // 看二军需求
+              websiteSkuId: product.websiteSkuId || 0, //看二军需求
               discountPrice: this.getDiscountPrice(productType, productType === PROFESSIONAL_SITE_PRODUCT_TYPE ? gwPrice : price)
             }
           })
-        } else {
+        } else{
           this.fullCheckedProducts = checked.map(product => {
-            const { id, productType, price: originalPrice } = product
+            let { id, productType, price:originalPrice } = product
             let price = originalPrice
-            if (product.productType === PROFESSIONAL_SITE_PRODUCT_TYPE && product.isFixedPrice) {
+            if( product.productType === PROFESSIONAL_SITE_PRODUCT_TYPE && product.isFixedPrice ){
               const { discountExecPriceFunc } = product
-              const gwPrice = price - discountExecPriceFunc
-                // eslint-disable-next-line
-                .map(execStr => new Function('p', 'return ' + execStr)(0))
-                .find(res => res !== false)
-              price = gwPrice
-            }
+              let gwPrice = price - discountExecPriceFunc
+               .map(execStr => new Function('p', 'return ' + execStr)(0))
+               .find(res => res !== false)
+               price = gwPrice
+            }   
             return {
               id,
               productType,
@@ -561,7 +568,7 @@ export default {
       }
     }
   },
-  async mounted () {
+  async mounted() {
     const {
       sales_id: salesId,
       user_id: userId,

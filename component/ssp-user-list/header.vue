@@ -69,7 +69,7 @@ export default {
     }
   },
   computed: {
-    roleOpts () {
+    roleOpts() {
       return this.allRoles.map(r => ({
         value: String(r.id),
         label: r.name
@@ -77,10 +77,10 @@ export default {
     }
   },
   methods: {
-    addUser () {
+    addUser() {
       this.$emit('create-user')
     },
-    async queryUsers (opts) {
+    async queryUsers(opts) {
       await store.getUsers({
         ...this.query,
         ...opts

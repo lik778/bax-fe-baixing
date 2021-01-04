@@ -5,7 +5,7 @@
 <script>
 export default {
   name: 'bax-redirect-page',
-  mounted () {
+  mounted() {
     // why ? 同一页 强制 dom destroy
     // vue router -> key = fullpath 有点问题
     console.debug('redirect to ...')

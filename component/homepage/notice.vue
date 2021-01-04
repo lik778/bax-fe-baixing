@@ -32,15 +32,15 @@ const noticeTexts = {
 
 export default {
   name: 'homepage-notices',
-  beforeDestroy () {
+  beforeDestroy() {
     this.stopScroll = true
   },
-  components: { loadingPlaceholder },
+  components: {loadingPlaceholder},
   methods: {
-    formatDate (date) {
+    formatDate(date) {
       return dayjs(date).format('YYYY.MM.DD')
     },
-    execContainerScroll () {
+    execContainerScroll() {
       const containerRef = this.$refs.container
       const containerHeight = containerRef.clientHeight
       const listHeght = containerRef.querySelector('.notice-list').clientHeight
@@ -66,7 +66,7 @@ export default {
     height: [Number, String],
     type: {
       required: true,
-      validator (value) {
+      validator(value) {
         return ['fengming', 'site'].indexOf(value) !== -1
       }
     },
@@ -75,12 +75,12 @@ export default {
     }
   },
   computed: {
-    noticeTitle () {
+    noticeTitle() {
       return noticeTexts[this.type]
     }
   },
   watch: {
-    async noticeList (val) {
+    async noticeList(val) {
       if (val && val.length) {
         await this.$nextTick()
         this.execContainerScroll()

@@ -20,20 +20,20 @@ const INFO_LIST = [
   '禁止发布其他任何违反国家法律法规的推广内容;'
 ]
 export default {
-  props: {
-    show: {
+  props:{
+    show:{
       type: Boolean,
       required: true,
       default: false
     }
   },
-  data () {
+  data(){
     return {
       infoList: INFO_LIST
     }
   },
-  methods: {
-    handleClose () {
+  methods:{
+    handleClose(){
       this.$emit('close')
     }
   }
