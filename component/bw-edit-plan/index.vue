@@ -169,7 +169,7 @@
         if (landingType === LANDING_TYPE_AD && landingPageId) {
           const result = await queryAds({
             limitMvp: false,
-            adIds: landingPageId,
+            adId: landingPageId,
             limit: 1
           })
           
