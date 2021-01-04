@@ -16,15 +16,15 @@ const store = observable({
   _query: { ...defaultQuery },
   _users: [],
 
-  get query () {
+  get query() {
     return toJS(this._query)
   },
 
-  get users () {
+  get users() {
     return toJS(this._users)
   },
 
-  getUsers: action(async function (opts) {
+  getUsers: action(async function(opts) {
     const { users = [], query = {} } = await aapi.getUsers(opts)
 
     this._users = users

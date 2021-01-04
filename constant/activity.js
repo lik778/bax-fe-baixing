@@ -14,7 +14,7 @@ export const fengmingDiscountInfo = {
       [5088, 600, 1200, 900],
       [10188, 1000, 1400, 1500]
     ],
-    get discountInfoHTML () {
+    get discountInfoHTML() {
       return this.discountInfo.map((item) => {
         return `满<span style="min-width:40px">${item[0]}</span>元：
           同时购买精品官网（1年）官网<span class="red">减</span>立减 ${item[1]} 元；
@@ -31,10 +31,10 @@ export const fengmingDiscountInfo = {
       [6088, 600, 900, 200],
       [10188, 1000, 1500, 500]
     ],
-    get discountInfoHTML () {
+    get discountInfoHTML() {
       return this.discountInfo.map((item) => {
         return `满<span style="min-width:40px">${item[0]}</span>元：
-          ${item[3] ? `<span class="red">赠</span>送${item[3]}元凤鸣资金；` : ''}
+          ${ item[3] ? `<span class="red">赠</span>送${item[3]}元凤鸣资金；` : '' }
           同时购买精品官网1年送1年+标准版再<span class="red">减</span>${item[1]}元/
           专业版再<span class="red">减</span>${item[2]} 元；`
       })
@@ -42,9 +42,10 @@ export const fengmingDiscountInfo = {
   }
 }
 
+
 export const biaowangDiscountInfo = {
   [COMMON_STATUS]: { // 平时文案展示
-    get discountInfoHTML () {
+    get discountInfoHTML() {
       return [`<div class="notice">
         <p><span><i class="red">满</i>500-4999元，</span>购买精品官网1年立<i class="red">减</i>200元；购买精品官网2年（送一年）官网<i class="red">减</i>600元；购买精品官网专业版1年官网<i class="red">减</i>600元；</p>
         <p><span><i class="red">满</i>5000-9999元，</span>购买精品官网1年立<i class="red">减</i>600元；购买精品官网2年（送一年）官网<i class="red">减</i>1200元；购买精品官网专业版1年官网<i class="red">减</i>900元；</p>
@@ -52,8 +53,8 @@ export const biaowangDiscountInfo = {
       </div>`]
     }
   },
-  [ACTIVITY_STATUS]: { // 活动文案
-    get discountInfoHTML () {
+  [ACTIVITY_STATUS]: {  // 活动文案
+    get discountInfoHTML() {
       return [`<div class="notice">
         <p><span><i class="red">满</i>500-4999元，</span>同时购买精品官网1年送1年 标准版再<i class="red">减</i>200元/ 专业版再<i class="red">减</i>600 元；</p>
         <p><span><i class="red">满</i>5000-9999元，</span>同时购买精品官网1年送1年 标准版再<i class="red">减</i>600元/ 专业版再<i class="red">减</i>900 元；</p>

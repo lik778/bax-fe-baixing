@@ -1,4 +1,4 @@
-export function getUniqueAgreementList (vendorList) {
+export function getUniqueAgreementList(vendorList) {
   const agreementList = []
   vendorList
     .reduce((list, { selection }) => {

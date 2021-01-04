@@ -25,32 +25,32 @@ const store = observable({
   _materials: [],
   _ads: [],
 
-  get query () {
+  get query() {
     return toJS(this._query)
   },
 
-  get items () {
+  get items() {
     return toJS(this._items)
   },
 
-  get materials () {
+  get materials() {
     return toJS(this._materials)
   },
 
-  get ads () {
+  get ads() {
     return toJS(this._ads)
   },
 
-  switchShowMoreFilters: action(function () {
+  switchShowMoreFilters: action(function() {
     this.showMoreFilters = !this.showMoreFilters
   }),
 
-  getMaterials: action(async function (opts) {
+  getMaterials: action(async function(opts) {
     const { materials = [] } = await mapi.getMaterials(opts)
     this._materials = materials
   }),
 
-  getAdItems: action(async function (opts) {
+  getAdItems: action(async function(opts) {
     const { items = [], query = {} } = await aapi.getAdItems(opts)
     this._items = items
     this._query = {
@@ -59,7 +59,7 @@ const store = observable({
     }
   }),
 
-  getAds: action(async function () {
+  getAds: action(async function() {
     const { ads = [] } = await aapi.getAds()
     this._ads = ads
   })
