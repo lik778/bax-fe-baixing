@@ -44,7 +44,7 @@ export default {
     }
   },
   methods: {
-    async onCurrentChange ({ offset }) {
+    async onCurrentChange({offset}) {
       const q = {
         ...this.query,
         offset
@@ -53,8 +53,8 @@ export default {
       await store.getUsers(q)
     }
   },
-  async mounted () {
-    await store.getUsers({ ...this.query })
+  async mounted() {
+    await store.getUsers({...this.query})
   }
 }
 </script>

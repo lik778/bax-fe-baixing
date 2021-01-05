@@ -18,26 +18,26 @@ export default {
   name: 'qwt-dashboard',
   props: {
     userInfo: Object,
-    salesInfo: Object
+    salesInfo: Object,
   },
-  data () {
+  data() {
     return {
-      activeTab: 'report'
+      activeTab: 'report',
     }
   },
   components: {
     SummaryData,
-    VisitorData
+    VisitorData,
   },
-  async mounted () {
+  async mounted() {
     setTimeout(() => {
       const { userInfo } = this
       track({
         action: 'qwt-dashboard: enter page',
         baixingId: userInfo.baixingId,
-        baxId: userInfo.id
+        baxId: userInfo.id,
       })
     }, 1200)
-  }
+  },
 }
 </script>

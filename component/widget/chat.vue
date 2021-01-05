@@ -29,13 +29,13 @@
 </template>
 
 <script>
-import { sendQuestion } from 'api/fengming'
+import {sendQuestion} from 'api/fengming'
 
 const keywords = [
   '站外推广', '充值', '买', '购买', '收费', '扣费', '行业', '限制', '创建', '建', '创意', '多久', '多少钱', '出价', '价格', '扣费', '关键词', '审核', '不通过', '官网', '预算', '状态', '余额不足', '不足', '修改', '改'
 ]
 const selectedQuestions = [
-  'Q：什么是搜索通？', 'Q：搜索通有什么产品？', 'Q：怎么充值？在哪里买？', 'Q：什么是站外推广？', 'Q：站外推广如何收费？', 'Q: 什么是精品官网？', 'Q: 精品官网在哪里买?'
+  "Q：什么是搜索通？", "Q：搜索通有什么产品？", "Q：怎么充值？在哪里买？","Q：什么是站外推广？","Q：站外推广如何收费？", "Q: 什么是精品官网？","Q: 精品官网在哪里买?"
 ]
 export default {
 
@@ -56,14 +56,14 @@ export default {
     send () {
       if (!this.userInput) return
 
-      this.messages.push({ message: this.userInput, type: 'user' })
-      const input = this.userInput
+      this.messages.push({message: this.userInput, type: 'user'})
+      let input = this.userInput
       this.userInput = ''
 
       sendQuestion(input)
 
       // extract keywords
-      const inputKeywords = keywords.filter(k => input.includes(k))
+      let inputKeywords = keywords.filter(k => input.includes(k))
 
       setTimeout(() => {
         let message = this.questions
@@ -73,16 +73,16 @@ export default {
           .join('')
 
         if (message) {
-          message = '<p>匹配到以下问题，点击任意一项</p>' + message
+          message = `<p>匹配到以下问题，点击任意一项</p>` + message
         } else {
           message = getRandom(this.questions, 5).map(wrapQuestion).join('')
-          message = '<p>没有检索到与您问题匹配的答案，您可能关心如下问题:</p>' + message
+          message = `<p>没有检索到与您问题匹配的答案，您可能关心如下问题:</p>` + message
         }
 
-        this.messages.push({ message, type: 'promote' })
+        this.messages.push({message, type: 'promote'})
       }, 500)
     },
-    async initChat () {
+    async initChat() {
       this.visible = true
       // 如果qa为初始值{}时，加载数据
       if (Object.keys(this.qa).length) return
@@ -109,8 +109,8 @@ export default {
       this.qa = getQa(html, ids)
 
       let message = selectedQuestions.map(wrapQuestion).join('')
-      message = '<p>您可能关心以下问题</p>' + message
-      this.messages.push({ message, type: 'promote' })
+      message = `<p>您可能关心以下问题</p>` + message
+      this.messages.push({message, type: 'promote'})
 
       this.$refs.content.addEventListener('click', evt => {
         if (evt.target.parentElement.classList.contains('promote') ||
@@ -118,16 +118,16 @@ export default {
           // click P or EM
           const q = evt.target.nodeName === 'P' ? evt.target.innerText : evt.target.parentElement.innerText
           const a = this.qa[q]
-          this.messages.push({ message: q, type: 'user' })
+          this.messages.push({message: q, type: 'user'})
           setTimeout(() => {
-            this.messages.push({ message: a, type: 'answer' })
-          }, 500)
+            this.messages.push({message: a, type: 'answer'})
+          }, 500);
         }
       })
     }
   },
   watch: {
-    messages () {
+    messages() {
       this.$nextTick(() => {
         const content = this.$refs.content
         content.scrollTop = content.scrollHeight
@@ -135,13 +135,13 @@ export default {
     }
   }
 }
-function getQa (dom, ids) {
-  const qa = {}
-  for (const id of ids) {
+function getQa(dom, ids) {
+  let qa = {}
+  for(let id of ids) {
     const section = dom.querySelector(id)
     if (section) {
       const questions = section.querySelectorAll('.doc-question')
-      for (const q of questions) {
+      for (let q of questions) {
         const key = q.innerHTML.trim()
         const value = q.nextElementSibling.innerHTML
         qa[key] = value
@@ -151,22 +151,22 @@ function getQa (dom, ids) {
   return qa
 }
 
-function wrapQuestion (q) {
+function wrapQuestion(q) {
   return `<p class="link" >${q}</p>`
 }
 
-function getRandom (array, n) {
+function getRandom(array, n) {
   if (array.length === 0) return array
-  const r = []
-  for (let i = 0; i < n; i++) {
+  let r = []
+  for (let i=0; i<n; i++) {
     r.push(array[Math.floor(Math.random() * array.length)])
   }
   return r
 }
 
-function highlight (msg, keywords) {
+function highlight(msg, keywords) {
   let r = msg
-  for (const keyword of keywords) {
+  for (let keyword of keywords) {
     r = r.replace(new RegExp(keyword, 'g'), '<em>' + keyword + '</em>')
   }
   return r

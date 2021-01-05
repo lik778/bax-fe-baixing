@@ -207,14 +207,15 @@ import {
 import { baxUserLogin, kaNavigation } from 'api/ka'
 
 const MENU_GROUP_MAP = {
-  charge: ['qwt-charge', 'seo-charge'],
-  seo: ['seo-create-promotion', 'seo-promotion-list'],
-  sst: ['qwt-create-promotion', 'qwt-promotion-list'],
-  bw: ['bw-query-price', 'bw-plan-list', 'bw-manual'],
-  qc: ['qc-create-promote', 'qc-promote-list', 'qc-word-list'],
-  ssp: ['ad-list', 'material-list', 'order-list', 'user-list', 'ad-calendar'],
-  dashboard: ['qwt-dashboard', 'bw-dashboard', 'qc-dashboard']
+  'charge': ['qwt-charge', 'seo-charge'],
+  'seo': ['seo-create-promotion', 'seo-promotion-list'],
+  'sst': ['qwt-create-promotion', 'qwt-promotion-list'],
+  'bw': ['bw-query-price', 'bw-plan-list', 'bw-manual'],
+  'qc': ['qc-create-promote', 'qc-promote-list', 'qc-word-list'],
+  'ssp': ['ad-list', 'material-list', 'order-list', 'user-list', 'ad-calendar'],
+  'dashboard': ['qwt-dashboard', 'bw-dashboard', 'qc-dashboard'],
 }
+
 
 export default {
   name: 'sidebar',
@@ -227,10 +228,10 @@ export default {
       required: true
     }
   },
-  created () {
+  created() {
     this.initNavMenu()
   },
-  data () {
+  data() {
     return {
       version,
       defaultActive: null,
@@ -238,16 +239,16 @@ export default {
       isRenderSiteLink: false,
       isRenderSiteNavTag: false,
 
-      isKaSuperman: false
+      isKaSuperman: false,
     }
   },
   watch: {
-    $route (route) {
+    $route(route) {
       this.defaultOpeneds = Object
         .entries(MENU_GROUP_MAP)
-        .reduce((defaultOpeneds, [groupIndex, group]) => {
-          if (group.some(item => item === route.name)) {
-            return defaultOpeneds.concat(groupIndex)
+        .reduce((defaultOpeneds, [group_index, group]) => {
+          if(group.some(item => item === route.name)) {
+            return defaultOpeneds.concat(group_index)
           }
           return defaultOpeneds
         }, [])
@@ -255,49 +256,49 @@ export default {
     }
   },
   computed: {
-    allowUseKaPackage () {
+    allowUseKaPackage() {
       // 合并产品购买和充值后，只有几个大客户可以看到官网单独购买入口
       return allowUseKaPackage(this.userInfo.roles, this.userInfo.id)
     },
-    allowQueryMaterials () {
+    allowQueryMaterials() {
       return allowQueryMaterials(this.userInfo.roles)
     },
-    allowQueryAdItems () {
+    allowQueryAdItems() {
       return allowQueryAdItems(this.userInfo.roles)
     },
-    allowQueryOrders () {
+    allowQueryOrders() {
       return allowQueryOrders(this.userInfo.roles)
     },
-    allowQueryUsers () {
+    allowQueryUsers() {
       return allowQueryUsers(this.userInfo.roles)
     },
     // allow see bx ad ...
-    allowSeeAccount () {
+    allowSeeAccount() {
       return allowSeeAccount(this.userInfo.roles)
     },
-    allowSeeBxAd () {
+    allowSeeBxAd() {
       return allowSeeBxAd(this.userInfo.roles)
     },
     // allow see qwt ...
-    allowSeeQwtPromotion () {
+    allowSeeQwtPromotion() {
       return allowSeeQwtPromotion(this.userInfo.roles)
     }
   },
-  mounted () {
+  mounted() {
     this.initNavMenu()
   },
   methods: {
-    goKaSuperPage () {
+    goKaSuperPage() {
       location.href = '/ka/vendor/site'
     },
-    async initNavMenu () {
+    async initNavMenu() {
       // 获取ka nav 数据
       this.isKaSuperman = ((await baxUserLogin()).data.roles || []).includes('seo_vendor')
       const { offlineSiteNum, canUseTicketsNum, allTicketsNum } = await kaNavigation()
       this.isRenderSiteNavTag = !!(offlineSiteNum || canUseTicketsNum)
       this.isRenderSiteLink = !!allTicketsNum
     },
-    toBuyKaOrGw () {
+    toBuyKaOrGw() {
       const q = this.$route.query
 
       this.$router.push({

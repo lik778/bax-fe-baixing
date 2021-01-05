@@ -12,7 +12,7 @@ class Store {
   @observable biaowangData = null
   @observable biaowangPromotes = null
 
-  @computed get fengmingBalance () {
+  @computed get fengmingBalance() {
     const data = this.fengmingData
     return {
       price: data ? (data.balance / 100).toFixed(2) : null,
@@ -21,21 +21,20 @@ class Store {
     }
   }
 
-  @computed get biaowangBalance () {
+  @computed get biaowangBalance() {
     const data = this.biaowangData
     return {
       price: data ? (data.biaowangBalance / 100).toFixed(2) : null
     }
   }
 
-  @computed get notices () {
+  @computed get notices() {
     return {
       fengming: this.fengmingData && toJS(this.fengmingData.notices),
       kaSite: this.kaSiteData && toJS(this.kaSiteData.messages)
     }
   }
-
-  @action async loadBaxData () {
+  @action async loadBaxData() {
     try {
       const [fengmingData, campaignRadar] = await Promise.all([getHomePageFengmingData(), getCampaignRadar()])
       this.fengmingData = fengmingData
@@ -44,8 +43,7 @@ class Store {
       console.error(err)
     }
   }
-
-  @action async loadKaData () {
+  @action async loadKaData() {
     try {
       await baxUserLogin()
       const kaSiteData = await kaSimpleReport()
@@ -54,10 +52,9 @@ class Store {
       console.error(err)
     }
   }
-
-  @action async loadBiaowangData () {
+  @action async loadBiaowangData() {
     try {
-      const [biaowangData, { items: biaowangPromotes }] = await Promise.all([getHomePageBiaowangData(), getPromotes({ size: 5, page: 0 })])
+      const [biaowangData, {items: biaowangPromotes}] = await Promise.all([getHomePageBiaowangData(), getPromotes({size: 5, page: 0})])
 
       const yesterday = dayjs().subtract(1, 'day').startOf('day').unix()
       const rankings = await getUserRanking({
@@ -70,7 +67,7 @@ class Store {
         this.biaowangPromotes = biaowangPromotes.map(p => {
           const one = rankings.find(r => r.promoteId === p.id)
           if (one && one.rankList.length) {
-            return Object.assign(p, { cpcRanking: parseFloat(one.rankList[0]).toFixed(2) })
+            return Object.assign(p, {cpcRanking: parseFloat(one.rankList[0]).toFixed(2)})
           }
           return p
         })
@@ -80,8 +77,7 @@ class Store {
       console.error(err)
     }
   }
-
-  @action initPageStore () {
+  @action initPageStore() {
     this.loadKaData()
     this.loadBaxData()
     this.loadBiaowangData()

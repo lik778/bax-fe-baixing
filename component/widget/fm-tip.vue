@@ -2,7 +2,7 @@
   <div class="fm-tip-container" @mouseover="visiable = true" @mouseleave="visiable = false">
     <transition name="el-fade-in-linear">
       <div
-        class="image-wrap"
+        class="image-wrap" 
         v-show="visiable"
         :style="position === 'creative' ? 'transform: translateY(-65%);' : ''"
       >

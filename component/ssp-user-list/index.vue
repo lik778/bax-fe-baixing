@@ -54,13 +54,13 @@ export default {
       required: true
     }
   },
-  data () {
+  data() {
     return {
       showCreateUserDialog: false
     }
   },
   methods: {
-    async onCreateUser () {
+    async onCreateUser() {
       await store.getUsers()
     }
   }

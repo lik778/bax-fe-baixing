@@ -1,6 +1,6 @@
 
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin")
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const TerserPlugin = require('terser-webpack-plugin')
 const merge = require('webpack-merge')
@@ -20,7 +20,7 @@ const config = merge(base, {
         terserOptions: {
           output: {
             comments: false
-          }
+          },
         }
       }),
       new OptimizeCSSAssetsPlugin({})
@@ -33,7 +33,7 @@ const config = merge(base, {
       maxAsyncRequests: 5,
       maxInitialRequests: 3,
       automaticNameDelimiter: '~',
-      name: true
+      name: true,
     }
   },
   output: {
@@ -47,15 +47,15 @@ config.plugins = [
   ...config.plugins,
   new webpack.EnvironmentPlugin(['NODE_ENV']),
   new MiniCssExtractPlugin({
-    filename: '[name].[hash].css',
-    chunkFilename: '[id].[hash].css'
+    filename: "[name].[hash].css",
+    chunkFilename: "[id].[hash].css"
   }),
   new HtmlWebpackPlugin({
     filename: 'main.html',
     template: 'template/main.html',
     chunks: ['vendors~bax~huodong~signin', 'vendors~bax~signin', 'bax'],
     minify: {
-      collapseWhitespace: true
+      collapseWhitespace: true,
     }
   }),
   new HtmlWebpackPlugin({
@@ -63,7 +63,7 @@ config.plugins = [
     template: 'template/signin.html',
     chunks: ['vendors~bax~huodong~signin', 'vendors~bax~signin', 'signin'],
     minify: {
-      collapseWhitespace: true
+      collapseWhitespace: true,
     }
   }),
   new HtmlWebpackPlugin({
@@ -71,7 +71,7 @@ config.plugins = [
     template: 'template/huodong.html',
     chunks: ['vendors~bax~huodong~signin', 'huodong'],
     minify: {
-      collapseWhitespace: true
+      collapseWhitespace: true,
     }
   })
   // new BundleAnalyzerPlugin()

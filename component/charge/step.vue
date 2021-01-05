@@ -13,13 +13,13 @@ export default {
   },
   props: {
     step: {
-      type: Number
+      type: Number,
       // required: true
     }
   },
-  data () {
+  data() {
     return {
-      title: '充值与购买'
+      title: '充值与购买',
       // steps: [{
       //   name: '选择产品'
       // }, {

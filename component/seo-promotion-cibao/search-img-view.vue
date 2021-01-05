@@ -56,7 +56,7 @@ export default {
       }
     }
   },
-  data () {
+  data() {
     return {
       showViewer: false,
       popoverVisible: false,
@@ -68,27 +68,27 @@ export default {
   },
 
   methods: {
-    handleUploadSuccess (urls) {
+    handleUploadSuccess(urls) {
       this.fileList = this.fileList.concat(urls)
       this.$emit('file', this.fileList)
     },
-    uploadFile () {
+    uploadFile() {
       this.$refs['search-uploader'].uploadFile()
     },
-    openViewer (index) {
+    openViewer(index) {
       this.previewInitialIndex = index
       this.showViewer = true
     },
-    closeViewer () {
+    closeViewer() {
       this.showViewer = false
     },
-    deleteFile (index) {
+    deleteFile(index) {
       this.fileList.splice(index, 1)
       this.$emit('file', this.fileList)
     }
   },
   watch: {
-    originalFileList (newVal) {
+    originalFileList(newVal) {
       this.fileList = this.fileList.concat(newVal)
     }
   }

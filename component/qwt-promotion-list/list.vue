@@ -96,7 +96,7 @@
         </div>
       </div>
     </transition>
-    <audit-reject-reason-dialog
+    <audit-reject-reason-dialog 
       :show="auditRejectReasonDialogVisible"
       @close="auditRejectReasonDialogVisible = false">
     </audit-reject-reason-dialog>
@@ -122,16 +122,16 @@ const LANGPAGE_TYPES = {
   SITE: 1
 }
 const RENDER_OPTIMIZATION_METHODS = {
-  isRenderSources (num) {
+  isRenderSources(num) {
     return num < 2
   },
-  isRenderKw () {
+  isRenderKw() {
   }
 }
 
 export default {
   name: 'promotion-list',
-  data () {
+  data() {
     return {
       LANGPAGE_TYPES,
       KEYWORD_CHIBI_REJECT,
@@ -162,27 +162,27 @@ export default {
   },
   methods: {
     ...RENDER_OPTIMIZATION_METHODS,
-    isAuditReject (item) {
-      const { status, detailStatusText, statusText } = item
-      const CNT_REJECTED_STR = '审核驳回' // 审核驳回
+    isAuditReject(item){
+      let {status,detailStatusText,statusText} = item
+      const CNT_REJECTED_STR= '审核驳回' // 审核驳回
       const OFFLINE_CODE = -1
       const REJECTD_STR = '投放内容违规'
-      if (statusText.trim() === CNT_REJECTED_STR) {
+      if(statusText.trim()===CNT_REJECTED_STR){
         return true
       }
-      if (status === OFFLINE_CODE && detailStatusText.indexOf(REJECTD_STR) > -1) {
+      if(status === OFFLINE_CODE && detailStatusText.indexOf(REJECTD_STR)> -1){
         return true
       }
       return false
     },
-    reset (firstChild) {
+    reset(firstChild) {
       // 清除expands并且展开第一项
       this.expands = []
       if (firstChild) {
         this.toggleTableExpand(firstChild.id, firstChild.campaignIds)
       }
     },
-    toggleTableExpand (id, campaignIds) {
+    toggleTableExpand(id, campaignIds) {
       const index = this.expands.indexOf(id)
       if (index === -1) {
         this.$emit('expand-change', id, campaignIds)
@@ -192,7 +192,7 @@ export default {
         this.expands.splice(index, 1)
       }
     },
-    toggleBudgetInputDisplay (id, dailyBudget, isDeleted) {
+    toggleBudgetInputDisplay(id, dailyBudget, isDeleted) {
       const budgetMap = this.budgetMap
       if (budgetMap[id] === undefined) {
         this.budgetMap = {
@@ -201,17 +201,17 @@ export default {
         }
       }
     },
-    isExistInExpands (id) {
+    isExistInExpands(id) {
       return this.expands.includes(id)
     },
-    getColor (statusText) {
+    getColor(statusText) {
       const bgColroObj = {
-        推广中: '#52c41a',
-        已下线: 'rgba(0, 0, 0, 0.25)'
+        '推广中': '#52c41a',
+        '已下线': 'rgba(0, 0, 0, 0.25)'
       }
       return bgColroObj[statusText] ? bgColroObj[statusText] : '#f5222d'
     },
-    async togglePromotionStatus (campaign, landingPageId, campaignIds, disabled) {
+    async togglePromotionStatus(campaign, landingPageId, campaignIds ,disabled) {
       if (disabled) return
       const typeText = campaign.pause ? '开始' : '暂停'
       await this.$confirm(`确定${typeText}投放？`, '提示', {
@@ -219,16 +219,16 @@ export default {
         cancelButtonText: '取消'
       })
       if (campaign.pause === 1) {
-        await activeCampaigns([campaign.id])
+       await activeCampaigns([campaign.id])
       } else {
         await pauseCampaigns([campaign.id])
       }
       this.$emit('reload-promotion', landingPageId, campaignIds, true)
     },
-    fmtLandingPageBudget (id) {
+    fmtLandingPageBudget(id) {
       return this.budgetMap[id] / 100
     },
-    async modifyBudget (id, landingPageId, campaignIds) {
+    async modifyBudget(id, landingPageId, campaignIds) {
       const budget = this.budgetMap[id]
       if (!(budget > 0 && budget < 10000000)) {
         return this.$message.error('请设置合理的预算')
@@ -245,27 +245,27 @@ export default {
       }
       this.$message.success('今日预算修改成功')
     },
-    handleBudgetInput (id, value) {
+    handleBudgetInput(id, value) {
       this.budgetMap = {
         ...this.budgetMap,
         [id]: value.replace(/[^0-9.]/g, '') * 100
       }
     },
-    fmtPrice (price) {
+    fmtPrice(price) {
       return (price / 100).toFixed(2)
     }
   },
   watch: {
     landingPageList: {
       immediate: true,
-      handler (val) {
+      handler(val) {
         // 当list的数据变化的时候，进行reset操作
         this.reset(val[0])
       }
     }
   },
   filters: {
-    genSourceText (source) {
+    genSourceText(source) {
       return semPlatformCn[source]
     }
   },

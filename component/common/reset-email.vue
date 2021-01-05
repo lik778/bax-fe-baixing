@@ -36,19 +36,19 @@ export default {
       default: -1
     }
   },
-  data () {
+  data() {
     return {
       email: ''
     }
   },
   methods: {
-    empty () {
+    empty() {
       this.email = ''
     },
-    cancel () {
+    cancel() {
       this.empty()
     },
-    async submit () {
+    async submit() {
       const {
         email,
         uid

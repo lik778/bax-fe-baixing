@@ -102,7 +102,7 @@ export default {
       required: true
     }
   },
-  data () {
+  data() {
     return {
       discount: '',
       payUrl: ''
@@ -110,30 +110,30 @@ export default {
   },
   filters: {
     toHumanTime,
-    price (s) {
+    price(s) {
       return commafy(centToYuan(s)) + ' 元'
     }
   },
   computed: {
-    allowGetOrderPayUrl () {
+    allowGetOrderPayUrl() {
       return allowGetOrderPayUrl(this.userInfo.roles)
     },
-    allowPayOrder () {
+    allowPayOrder() {
       const ok = allowPayOrder(this.userInfo.roles)
       return ok && this.unpaied
     },
-    unpaied () {
+    unpaied() {
       const { orderInfo } = this
       return orderInfo && orderInfo.order &&
         orderInfo.order.status === 0
     },
-    isOperator () {
+    isOperator() {
       const roles = this.userInfo.roles || []
       return roles.map(r => r.nameEn).includes('NORMAL_OPERATOR')
     }
   },
   methods: {
-    async initOrderInfo () {
+    async initOrderInfo() {
       const orderId = this.$route.params.id
       await Promise.all([
         store.getOrderInfo(orderId),
@@ -149,7 +149,7 @@ export default {
         this.payUrl = url
       }
     },
-    async changeDiscount () {
+    async changeDiscount() {
       const { discount } = this
       const amount = (discount | 0) * 100 | 0
 
@@ -165,7 +165,7 @@ export default {
 
       this.discount = ''
     },
-    async payOrder () {
+    async payOrder() {
       const orderId = this.$route.params.id
 
       try {
@@ -180,7 +180,7 @@ export default {
 
       await this.initOrderInfo()
     },
-    addRelatedOrder () {
+    addRelatedOrder() {
       const id = this.$route.params.id
 
       this.$router.push({
@@ -190,7 +190,7 @@ export default {
         }
       })
     },
-    gotoRelatedOrder () {
+    gotoRelatedOrder() {
       const id = this.orderInfo.order.relatedOrderId
 
       this.$router.push({
@@ -200,18 +200,18 @@ export default {
         }
       })
     },
-    onCopySuccess () {
+    onCopySuccess() {
       Message.success('复制成功')
     },
-    onCopyError () {
+    onCopyError() {
       Message.error('复制失败')
     }
   },
-  async mounted () {
+  async mounted() {
     await this.initOrderInfo()
   },
   watch: {
-    '$route.params.id': async function (v, p) {
+    '$route.params.id': async function(v, p) {
       if (v !== p) {
         await this.initOrderInfo()
       }

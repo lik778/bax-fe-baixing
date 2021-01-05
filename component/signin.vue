@@ -42,7 +42,7 @@ import {
 
 export default {
   name: 'signin',
-  data () {
+  data() {
     return {
       password: '',
       email: '',
@@ -55,7 +55,7 @@ export default {
     this.redirectHref = isPro ? `https://www.baixing.com/fengming/bax?redirect_url=${returnUrl}` : `http://www.zhubailin.baixing.cn/fengming/bax?redirect_url=${returnUrl}`
   },
   methods: {
-    async login () {
+    async login() {
       const { password, email } = this
       if (!password || !email) {
         return alert('请输入邮箱和密码哟 >_<')

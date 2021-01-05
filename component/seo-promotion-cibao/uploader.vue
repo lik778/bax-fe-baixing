@@ -42,7 +42,7 @@ export default {
     Uploader,
     ImageViewer
   },
-  data () {
+  data() {
     return {
       url: '',
       showViewer: false,
@@ -57,21 +57,21 @@ export default {
     value: String
   },
   computed: {
-    imageUrl () {
+    imageUrl() {
       return this.url || this.value
     }
   },
   methods: {
-    uploadFile () {
+    uploadFile() {
       this.$refs.uploader.uploadFile()
     },
-    openViewer () {
+    openViewer() {
       this.showViewer = true
     },
-    closeViewer () {
+    closeViewer() {
       this.showViewer = false
     },
-    handleUploadSuccess (urls) {
+    handleUploadSuccess(urls) {
       this.url = urls[0]
       this.$emit('input', this.url)
     }

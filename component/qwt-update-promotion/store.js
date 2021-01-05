@@ -36,19 +36,19 @@ const store = observable({
 
   _originKeywords: [],
 
-  get originPromotion () {
+  get originPromotion() {
     return toJS(this._originPromotion)
   },
 
-  get recommendedWords () {
+  get recommendedWords() {
     return toJS(this._recommendedWords)
   },
 
-  get originKeywords () {
+  get originKeywords() {
     return toJS(this._originKeywords)
   },
 
-  fmtNewKeywordsPrice: action(function (words) {
+  fmtNewKeywordsPrice: action(function(words) {
     return words.map(w => {
       const { price: serverPrice } = w
       let price = serverPrice * 1.2
@@ -62,13 +62,13 @@ const store = observable({
       }
     })
   }),
-  getCurrentBalance: action(async function () {
+  getCurrentBalance: action(async function() {
     this.currentBalance = await fapi.getCurrentBalance()
   }),
-  setOriginKeywords: action(function () {
+  setOriginKeywords: action(function() {
     this._originPromotion.keywords = clone(this.originKeywords)
   }),
-  getCampaignInfo: action(async function (id) {
+  getCampaignInfo: action(async function(id) {
     const info = await fapi.getCampaignInfo(id)
 
     let timeType = ''
@@ -117,10 +117,10 @@ const store = observable({
     }
     this.timeType = timeType
   }),
-  setTimeType: action(function (timeType) {
+  setTimeType: action(function(timeType) {
     this.timeType = timeType
   }),
-  clearStore: action(function () {
+  clearStore: action(function() {
     this._originPromotion = clone(emptyPromotion)
     this._recommendedWords = []
     this.timeType = ''

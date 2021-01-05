@@ -171,7 +171,7 @@
               <div class="row">
                   <div class='yuan'><p class='num'>6</p></div>
                   <p>解释权归百姓网所有，如有疑问请致电客服<strong class="color">400-036-3650</strong></p>
-              </div>
+              </div>                                                                                    
             </div>
           </div>
         </div>
@@ -181,41 +181,41 @@
 <script>
 export default {
   name: 'active-page',
-  data () {
-    return {
-      partOneList: [
+  data(){
+    return{
+      partOneList:[
         '//file.baixing.net/201909/56f16c3b337c8406b1089e4b0ee079cd.png',
         '//file.baixing.net/201909/fe400a235ec484e5fadba476a710dda8.png',
         '//file.baixing.net/201909/6920534b93e7a300dc3c3e599515d483.png',
         '//file.baixing.net/201909/94d4270d33b3e2b1caccd0a7dd355613.png'
       ],
-      partThreeList: [
+      partThreeList:[
         {
-          bg: 'bg1',
-          title: '爆款套餐',
-          text1: '588元凤鸣资金+',
-          text2: '3600元 2年专业版官网',
-          text3: '（带SEO功能）',
-          price: '1788元',
-          discount: '（价值4188元套餐  直降2400元）'
-        }, {
-          bg: 'bg2',
-          title: '人气套餐',
-          text1: '5088元凤鸣资金+',
-          text2: '3600元 2年专业版官网',
-          text3: '（带SEO功能）',
-          price: '5988元',
-          discount: '（价值8876元套餐  直降3188元）'
-        }, {
-          bg: 'bg3',
-          title: '王炸套餐',
-          text1: '14288元凤鸣资金+',
-          text2: '3600元 2年专业版官网',
-          text3: '（带SEO功能）',
-          price: '10488元',
-          discount: '（价值14288元套餐  直降3800元）'
+          bg:'bg1',
+          title:'爆款套餐',
+          text1:'588元凤鸣资金+',
+          text2:'3600元 2年专业版官网',
+          text3:'（带SEO功能）',
+          price:'1788元',
+          discount:'（价值4188元套餐  直降2400元）'
+        },{
+          bg:'bg2',
+          title:'人气套餐',
+          text1:'5088元凤鸣资金+',
+          text2:'3600元 2年专业版官网',
+          text3:'（带SEO功能）',
+          price:'5988元',
+          discount:'（价值8876元套餐  直降3188元）'         
+        },{
+          bg:'bg3',
+          title:'王炸套餐',
+          text1:'14288元凤鸣资金+',
+          text2:'3600元 2年专业版官网',
+          text3:'（带SEO功能）',
+          price:'10488元',
+          discount:'（价值14288元套餐  直降3800元）'
         }
-      ]
+      ] 
     }
   }
 }
@@ -415,7 +415,7 @@ $font-smaller: 12px;
         width:3px;
         top:3px;
         left:-20px;
-        background-image: linear-gradient(180deg, #FFCF71 0%, #FF3EA5 100%);
+        background-image: linear-gradient(180deg, #FFCF71 0%, #FF3EA5 100%);        
       }
       & .share::after{
         position: absolute;
@@ -425,7 +425,7 @@ $font-smaller: 12px;
         width:3px;
         top:3px;
         right:-20px;
-        background-image: linear-gradient(180deg, #FFCF71 0%, #FF3EA5 100%);
+        background-image: linear-gradient(180deg, #FFCF71 0%, #FF3EA5 100%);        
       }
       & .item{
         width:252px;
@@ -579,7 +579,7 @@ $font-smaller: 12px;
         padding:20px 10px;
         box-sizing: border-box;
         position: relative;
-
+        
         & p{
           font-size: $font-n__s;
           text-align:left;
@@ -644,7 +644,7 @@ $font-smaller: 12px;
         display: inline-block;
         margin: 0 auto;
         color: #fff;
-        font-size: $font-normal;
+        font-size: $font-normal; 
         position: relative;
         z-index:999;
         & img{
@@ -655,7 +655,7 @@ $font-smaller: 12px;
           left:-28px;
           z-index: -1;
         }
-      }
+      } 
       & .main{
         margin-top:50px;
         & .row{
@@ -717,5 +717,6 @@ p{
   border-radius: 9999px;
   cursor: pointer;
 }
+
 
 </style>

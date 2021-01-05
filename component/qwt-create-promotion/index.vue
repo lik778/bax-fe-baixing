@@ -193,6 +193,7 @@ import PromotionCreativeTip from 'com/widget//promotion-creative-tip'
 import PromotionAreaLimitTip from 'com/widget/promotion-area-limit-tip'
 import QiqiaobanPageSelector from 'com/common/qiqiaoban-page-selector'
 import PromotionChargeTip from 'com/widget/promotion-charge-tip'
+import PromotionRuleLink from 'com/widget/promotion-rule-link'
 import UserAdSelector from 'com/common/user-ad-selector'
 import CreativeEditor from 'com/widget/creative-editor'
 import Ka258Selector from 'com/common/ka-258-selector'
@@ -205,7 +206,12 @@ import FmTip from 'com/widget/fm-tip'
 import qwtAddKeywordsDialog from 'com/common/qwt-add-keywords-dialog'
 import BaxInput from 'com/common/bax-input'
 
-import track, { trackRecommendService } from 'util/track'
+import dayjs from 'dayjs'
+import { default as track, trackRecommendService } from 'util/track'
+
+import {
+  assetHost
+} from 'config'
 
 import {
   f2y,
@@ -218,7 +224,9 @@ import {
 
 import {
   createCampaign
-  ,
+} from 'api/fengming'
+
+import {
   queryAds
 } from 'api/fengming'
 
@@ -233,7 +241,14 @@ import {
   NEW_RECOMMAND_SOURCE_FH
 } from 'constant/fengming'
 
-import { allowSee258 } from 'util/fengming-role'
+import {allowSee258} from 'util/fengming-role'
+
+import {
+  MIN_WORD_PRICE,
+  MAX_WORD_PRICE
+} from 'constant/keyword'
+
+import { keywordPriceTip } from 'constant/tip'
 
 import store from './store'
 
@@ -264,6 +279,7 @@ export default {
     PromotionAreaLimitTip,
     QiqiaobanPageSelector,
     PromotionChargeTip,
+    PromotionRuleLink,
     UserAdSelector,
     CreativeEditor,
     Ka258Selector,
@@ -280,7 +296,7 @@ export default {
     urlRecommends: () => store.urlRecommends,
 
     currentBalance: () => store.currentBalance,
-    campaignsCount: () => store.campaignsCount
+    campaignsCount: () => store.campaignsCount,
   },
   props: {
     userInfo: {
@@ -292,7 +308,7 @@ export default {
       required: true
     }
   },
-  data () {
+  data() {
     return {
       newPromotion: clone(promotionTemplate),
       actionTrackId: uuid(),
@@ -319,20 +335,20 @@ export default {
     }
   },
   computed: {
-    extendLandingTypeOpts () {
+    extendLandingTypeOpts() {
       if (allowSee258(null, this.userInfo.id)) {
-        return landingTypeOpts.concat([{ label: '258官网', value: LANDING_TYPE_258 }])
+        return landingTypeOpts.concat([{label: '258官网', value: LANDING_TYPE_258}])
       }
       return landingTypeOpts
     },
-    isShenmaChecked () {
+    isShenmaChecked() {
       return this.newPromotion.sources.includes(SEM_PLATFORM_SHENMA)
     },
 
-    adSelectorType () {
+    adSelectorType() {
       return this.$route.query.adId ? 'reselect' : ''
     },
-    predictedInfo () {
+    predictedInfo() {
       const dailyBudget = this.newPromotion.dailyBudget
 
       if (!dailyBudget) {
@@ -354,11 +370,11 @@ export default {
       const sourcesLen = Math.max(1, this.newPromotion.sources.length)
       return {
         ...tempPredictedInfo,
-        days: (tempPredictedInfo.days / sourcesLen) | 0
+        days:  (tempPredictedInfo.days / sourcesLen) | 0
       }
     },
 
-    recommendKwPrice () {
+    recommendKwPrice() {
       // 复制推荐词价格取平均值
       if (this.$route.query.cloneId) {
         const keywords = this.newPromotion.keywords
@@ -371,11 +387,11 @@ export default {
   },
   methods: {
     f2y,
-    updatePromotionKeywords (kwAddResult) {
+    updatePromotionKeywords(kwAddResult) {
       this.addKeywordsDialog = false
 
       if (!kwAddResult) return
-      const { normalList } = kwAddResult
+      let { normalList, bannedList} = kwAddResult
       const { actionTrackId, userInfo } = this
 
       track({
@@ -389,29 +405,29 @@ export default {
         keywords: normalList.map(item => item.word).join(',')
       })
 
-      const { keywords } = this.newPromotion
+      let { keywords } = this.newPromotion
       this.newPromotion.keywords = keywords.concat(normalList)
     },
-    handleCreativeValueChange ({ title, content }) {
-      this.newPromotion.creativeTitle = title
-      this.newPromotion.creativeContent = content
+    handleCreativeValueChange({title, content}) {
+        this.newPromotion.creativeTitle = title
+        this.newPromotion.creativeContent = content
     },
-    handleCreativeError (message) {
-      if (message) Message.error(message)
+    handleCreativeError(message) {
+      if(message) Message.error(message)
       this.creativeError = message
     },
-    fetchRecommends (query, cb) {
+    fetchRecommends(query, cb) {
       query = query.trim()
       if (query) {
-        const { areas, sources } = this.newPromotion
-        store.recommendByWord(query, { areas, sources }).then(
+        const {areas, sources} = this.newPromotion
+        store.recommendByWord(query, {areas, sources}).then(
           () => {
             cb(this.searchRecommends)
           }
         )
       }
     },
-    selectRecommend (item) {
+    selectRecommend(item) {
       const { keywords } = this.newPromotion
       if (keywords.find(kw => kw.word === item.word)) {
         Message.warning('该关键词已存在')
@@ -421,24 +437,24 @@ export default {
       }
     },
 
-    removeKeyword (index) {
+    removeKeyword(index) {
       this.newPromotion.keywords.splice(index, 1)
     },
 
-    onKwPriceChange (val) {
+    onKwPriceChange(val) {
       this.kwPrice = toFloat(val) * 100
     },
 
-    onBudgetChange (val) {
+    onBudgetChange(val) {
       this.newPromotion.dailyBudget = toFloat(val) * 100
     },
 
-    setLanding (type, url) {
+    setLanding(type, url) {
       this.newPromotion.landingType = type
       this.newPromotion.landingPage = url
     },
 
-    async onSelectAd (ad) {
+    async onSelectAd(ad) {
       // 【凤鸣】落地页选择搬家、金融类帖子的计划渠道默认不选中神马
       const categories = ['banjia', 'jinrongfuwu', 'licaifuwu', 'kuaijijianzhi']
       if (categories.includes(ad.category) && this.newPromotion.sources.includes(SEM_PLATFORM_SHENMA)) {
@@ -462,18 +478,19 @@ export default {
       this.newPromotion.creativeContent = ad.content && ad.content.slice(0, 39)
     },
 
-    trackPromotionKeywords (promotionIds, promotion) {
+    trackPromotionKeywords(promotionIds, promotion) {
       // 凤凰于飞推荐词列表
       const recommendKeywords = this.urlRecommends
-        .filter(({ recommandSource }) => RECOMMAND_SOURCES.includes(recommandSource))
-        .map(({ word, recommandSource }) => `${word}_${recommandSource}`)
+        .filter(({recommandSource}) => RECOMMAND_SOURCES.includes(recommandSource))
+        .map(({word, recommandSource}) => `${word}_${recommandSource}`)
         .join(',')
 
       const selectedKeywords = promotion.keywords
-        .map(({ word, recommandSource = 'user_selected' }) => `${word}=${recommandSource}`)
+        .map(({word, recommandSource = 'user_selected'}) => `${word}=${recommandSource}`)
         .join(',')
 
       const dailyBudget = promotion.dailyBudget / 100
+      const landingPage = promotion.landingPage
 
       trackRecommendService({
         action: 'record-keywords',
@@ -492,7 +509,7 @@ export default {
       })
     },
 
-    async createPromotion () {
+    async createPromotion() {
       if (!this.$refs.contract.$data.isAgreement) {
         return this.$message.error('请阅读并勾选同意服务协议，再进行下一步操作')
       }
@@ -522,7 +539,7 @@ export default {
       }
     },
 
-    async _createPromotion (p) {
+    async _createPromotion(p) {
       const { currentBalance, allAreas } = this
 
       if (!p.sources.length) return Message.error('请选择投放渠道')
@@ -603,16 +620,17 @@ export default {
           this.gotoPromotionList()
         }, 1000)
       }
+
     },
 
-    async recommendByUrl (opts = {}) {
+    async recommendByUrl(opts = {}) {
       let { landingType, landingPage, areas } = this.newPromotion
       landingPage = opts.landingPage || landingPage
       const reqBody = {
         ...opts,
         url: landingPage,
         landingType: opts.landingType || landingType,
-        areas: opts.areas || areas
+        areas: opts.areas || areas,
       }
 
       if (landingPage) {
@@ -620,7 +638,7 @@ export default {
         this.newPromotion.keywords = clone(this.urlRecommends)
       }
     },
-    gotoPromotionList () {
+    gotoPromotionList() {
       this.chargeDialogVisible = false
 
       this.$router.push({
@@ -628,7 +646,7 @@ export default {
       })
     },
 
-    onLandingTypeChange (typeId) {
+    onLandingTypeChange(typeId) {
       const { landingType } = this.newPromotion
       if (landingType === typeId) {
         return
@@ -641,7 +659,7 @@ export default {
       }
     },
 
-    async onChangeAreas (areas) {
+    async onChangeAreas(areas) {
       this.newPromotion.areas = [...areas]
       this.areaDialogVisible = false
       if (this.newPromotion.landingType !== LANDING_TYPE_GW) {
@@ -649,12 +667,12 @@ export default {
       }
     },
 
-    formatterArea (name) {
+    formatterArea(name) {
       const { allAreas } = this
       return getCnName(name, allAreas)
     },
 
-    async removeArea (c) {
+    async removeArea(c) {
       this.newPromotion.areas = [
         ...this.newPromotion.areas.filter(i => i !== c)
       ]
@@ -662,10 +680,10 @@ export default {
         await this.recommendByUrl()
       }
     },
-    handleWxModalClose () {
-      this.isWxModalVisible = false
+    handleWxModalClose() {
+      this.isWxModalVisible =false
     },
-    openWxModal () {
+    openWxModal() {
       const ModalConstructor = Vue.extend(wxBindModal)
       this.modalInstance = new ModalConstructor({
         el: document.createElement('div')
@@ -679,7 +697,7 @@ export default {
       })
     },
 
-    async cloneCampaignById (campaignId) {
+    async cloneCampaignById(campaignId) {
       const originPromotion = await store.getCampaignInfo(campaignId)
       const clonedPromotion = {}
       let ad = null
@@ -688,16 +706,16 @@ export default {
         // 官网
         const result = await queryAds({
           limitMvp: false,
-          adIds: [originPromotion.landingPageId],
+          adId: originPromotion.landingPageId,
           limit: 1
         })
         ad = result.ads && result.ads[0]
-        if (ad) {
+        if (ad && String(ad.adId) === String(originPromotion.landingPageId)) {
           clonedPromotion.landingPage = ad.url
           await this.$refs.userAdSelector.reset('selected', ad.adId)
         }
       }
-      Object.keys(promotionTemplate).forEach(key => {
+      Object.keys(promotionTemplate).map(key => {
         if (ad && key === 'landingPage') return
         clonedPromotion[key] = originPromotion[key]
       })
@@ -707,7 +725,7 @@ export default {
       clonedPromotion.sources = []
       this.newPromotion = clonedPromotion
     },
-    async getRecommendKeywords () {
+    async getRecommendKeywords() {
       const { creativeTitle, creativeContent, areas, landingPage, landingType } = this.newPromotion
       if (creativeTitle === '' || creativeContent === '') {
         return this.$message.error('请填写创意')
@@ -740,7 +758,7 @@ export default {
     }
   },
 
-  async mounted () {
+  async mounted() {
     await Promise.all([
       store.getCurrentBalance(),
       store.getCampaignsCount()
@@ -786,25 +804,25 @@ export default {
     if (adId) {
       const result = await queryAds({
         limitMvp: false,
-        adIds: [adId],
+        adId: adId,
         limit: 1
       })
       const ad = result.ads && result.ads[0]
-      if (ad) {
+      if (ad && ad.adId === String(adId)) {
         await this.onSelectAd(ad)
       }
     }
   },
 
-  beforeDestroy () {
+  beforeDestroy() {
     store.clearStore()
   },
 
-  destroyed () {
+  destroyed() {
     clearTimeout(this.timeout)
   },
   watch: {
-    'newPromotion.landingType' (newVal, oldVal) {
+    'newPromotion.landingType'(newVal, oldVal) {
       this.newPromotion.landingPage = ''
       this.newPromotion.landingPageId = ''
     }

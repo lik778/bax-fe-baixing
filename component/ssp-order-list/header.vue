@@ -120,7 +120,7 @@ export default {
       required: true
     }
   },
-  data () {
+  data() {
     return {
       orderStatusOpts: [
         ...orderStatusOpts
@@ -128,7 +128,7 @@ export default {
     }
   },
   computed: {
-    onlineTimeRange () {
+    onlineTimeRange() {
       const {
         timeRange = ''
       } = this.query
@@ -143,7 +143,7 @@ export default {
 
       return []
     },
-    createTimeRange () {
+    createTimeRange() {
       const {
         createdAtFrom,
         createdAtTo
@@ -158,41 +158,39 @@ export default {
 
       return []
     },
-    allowAddOrder () {
+    allowAddOrder() {
       return allowAddOrder(this.userInfo.roles)
     },
-    isOnlyAgentSales () {
+    isOnlyAgentSales() {
       const roles = normalizeRoles(this.userInfo.roles)
       return onlyAgentSales(roles)
     }
   },
   methods: {
-    gotoCreateOrder () {
+    gotoCreateOrder() {
       this.$router.push({
         name: 'create-order'
       })
     },
-    switchShowMoreFilters () {
+    switchShowMoreFilters() {
       store.switchShowMoreFilters()
     },
-    async queryOrders (opts) {
+    async queryOrders(opts) {
       await store.getOrders({
         ...this.query,
         ...opts
       })
     },
-    async queryOrdersByTimeRange (range, type) {
+    async queryOrdersByTimeRange(range, type) {
       const [start, end] = range || []
 
       if (!start && !end) {
-        const q = type === 'create'
-          ? {
-              createdAtFrom: '',
-              createdAtTo: ''
-            }
-          : {
-              timeRange: ''
-            }
+        const q = type === 'create' ? {
+          createdAtFrom: '',
+          createdAtTo: ''
+        } : {
+          timeRange: ''
+        }
         await this.queryOrders(q)
         return
       }
@@ -200,14 +198,12 @@ export default {
       const s = toTimestamp(start, 'YYYY-MM-DD')
       const e = toTimestamp(end, 'YYYY-MM-DD')
       if (s && e && e > s) {
-        const q = type === 'create'
-          ? {
-              createdAtFrom: s,
-              createdAtTo: e
-            }
-          : {
-              timeRange: s + ',' + e
-            }
+        const q = type === 'create' ? {
+          createdAtFrom: s,
+          createdAtTo: e
+        } : {
+          timeRange: s + ',' + e
+        }
 
         await this.queryOrders(q)
       }
@@ -219,7 +215,7 @@ export default {
 <style lang="scss" scoped>
 .order-header {
   @include filter-item;
-
+  
   & > section:first-child {
     display: flex;
     justify-content: space-between;

@@ -9,7 +9,7 @@ export const recommendServiceRequestClient = new Fetch({
   prefix: 'https://cloud.baixing.com.cn'
 })
 
-export default function track (opts) {
+export default function track(opts) {
   try {
     opts.biztype = 'bax-qwt'
     opts.env = isPro ? 'pro' : 'test'
@@ -39,7 +39,7 @@ export default function track (opts) {
 }
 
 // 打点库标准化 （暂时只用作凤凰于飞）
-export function trackAux ({ action, ...opts }) {
+export function trackAux({action, ...opts}) {
   if (!action) return false
   const tracker = window.tracker
   opts.site_id = 'bxad_baxfe'
@@ -48,7 +48,7 @@ export function trackAux ({ action, ...opts }) {
   tracker.aux(action, reverseCamelcase(opts))
 }
 
-export function trackRecommendService (opts) {
+export function trackRecommendService(opts) {
   try {
     opts.biztype = 'bax-fhyf'
     opts.env = isPro ? 'pro' : 'test'
@@ -71,6 +71,6 @@ export function trackRecommendService (opts) {
   }
 }
 
-function encode (data) {
-  return Object.entries(data).reduce((data, [key, value]) => ({ ...data, [key]: encodeURIComponent(value) }), {})
+function encode(data) {
+  return Object.entries(data).reduce((data, [key, value]) => ({...data, [key]: encodeURIComponent(value)}), {})
 }

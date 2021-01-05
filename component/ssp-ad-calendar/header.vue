@@ -136,7 +136,7 @@ export default {
       required: true
     }
   },
-  data () {
+  data() {
     return {
       categoryDialogVisible: false,
       areaDialogVisible: false,
@@ -150,7 +150,7 @@ export default {
     }
   },
   computed: {
-    sspOrderTypeOpts () {
+    sspOrderTypeOpts() {
       const roles = normalizeRoles(this.userInfo.roles)
 
       const isSales = checkRoles(roles, [
@@ -167,7 +167,7 @@ export default {
         ...sspOrderTypeOpts
       ]
     },
-    adOpts () {
+    adOpts() {
       return this.allAds.map(ad => ({
         label: ad.name || ad.slotCode,
         value: ad.id
@@ -175,33 +175,33 @@ export default {
     }
   },
   methods: {
-    formatterCategory (name) {
+    formatterCategory(name) {
       const { allCategories } = this
       return getCnName(name, allCategories)
     },
-    formatterArea (name) {
+    formatterArea(name) {
       const { allAreas } = this
       return getCnName(name, allAreas)
     },
-    removeCategory (c) {
+    removeCategory(c) {
       this.categories = [
         ...this.categories.filter(i => i !== c)
       ]
     },
-    removeArea (a) {
+    removeArea(a) {
       this.areas = [
         ...this.areas.filter(c => c !== a)
       ]
     },
-    onChangeCategories (v) {
+    onChangeCategories(v) {
       this.categoryDialogVisible = false
       this.categories = v
     },
-    onChangeAreas (v) {
+    onChangeAreas(v) {
       this.areaDialogVisible = false
       this.areas = v
     },
-    async queryCalendar (v, p) {
+    async queryCalendar(v, p) {
       const {
         sspOrderType,
         categories,
@@ -239,22 +239,22 @@ export default {
     }
   },
   watch: {
-    sspOrderType: async function (v, p) {
+    sspOrderType: async function(v, p) {
       await this.queryCalendar(v, p)
     },
-    categories: async function (v, p) {
+    categories: async function(v, p) {
       await this.queryCalendar(v, p)
     },
-    areas: async function (v, p) {
+    areas: async function(v, p) {
       await this.queryCalendar(v, p)
     },
-    startAt: async function (v, p) {
+    startAt: async function(v, p) {
       await this.queryCalendar(v, p)
     },
-    endAt: async function (v, p) {
+    endAt: async function(v, p) {
       await this.queryCalendar(v, p)
     },
-    adId: async function (v, p) {
+    adId: async function(v, p) {
       await this.queryCalendar(v, p)
     }
   }

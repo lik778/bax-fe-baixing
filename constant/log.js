@@ -27,33 +27,33 @@ const fmtOpts = (type) => {
 
 export const fengmingTimelineType = {
   // [TIMELINE_TYPE_BALANCE]: '余额',
-  不限: '',
-  计划: TIMELINE_TYPE_CAMPAIGN,
-  创意: TIMELINE_TYPE_CREATIVE,
-  关键词: TIMELINE_TYPE_KEYWORD
+  '不限': '',
+  '计划': TIMELINE_TYPE_CAMPAIGN,
+  '创意': TIMELINE_TYPE_CREATIVE,
+  '关键词': TIMELINE_TYPE_KEYWORD
 }
 
 export const biaowangTimelineType = {
-  不限: '',
-  落地页: TYPE_LANDING_PAGE,
-  创意标题: TYPE_CREATIVE_TITLE,
-  创意内容: TYPE_CREATIVE_CONTENT
+  '不限': '',
+  '落地页': TYPE_LANDING_PAGE,
+  '创意标题': TYPE_CREATIVE_TITLE,
+  '创意内容': TYPE_CREATIVE_CONTENT
 }
 
 const productType = {
-  标王: PRODUCT_TYPE_BIAOWANG,
-  站外推广: PRODUCT_TYPE_FENGMING
+  '标王': PRODUCT_TYPE_BIAOWANG,
+  '站外推广': PRODUCT_TYPE_FENGMING
 }
 
 const opType = {
-  不限: '',
-  创建: OP_TYPE_CREATE,
-  变更: OP_TYPE_UPDATE
+  '不限': '',
+  '创建': OP_TYPE_CREATE,
+  '变更': OP_TYPE_UPDATE
 }
 
 export const changeLogType = {
-  2: '广告投放',
-  5: '智能投放'
+  '2': '广告投放',
+  '5': '智能投放'
 }
 
 export const fieldType = {
@@ -70,9 +70,9 @@ export const fieldType = {
   price: '关键词出价'
 }
 
-export const selectType = {
-  biaowang: { type: '关键词', placeholder: '请输入关键词' },
-  fengming: { type: '计划id', placeholder: '请输入计划id' }
+export const selectType =  {
+  biaowang: {type: '关键词', placeholder: '请输入关键词'},
+  fengming: {type: '计划id', placeholder: '请输入计划id'}
 }
 
 export const fengmingTimelineTypeOpts = fmtOpts(fengmingTimelineType)

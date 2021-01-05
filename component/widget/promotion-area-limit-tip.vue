@@ -27,7 +27,7 @@ export default {
     }
   },
   computed: {
-    disAllowDesc () {
+    disAllowDesc() {
       if (this.selectedAreas && this.selectedAreas.length) {
         return ''
       }

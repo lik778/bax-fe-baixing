@@ -25,13 +25,13 @@
 <script>
 export default {
   name: 'qwt-charge-promotion-alert',
-  data () {
+  data() {
     return {
       closed: false
     }
   },
   methods: {
-    close () {
+    close() {
       this.closed = true
     }
   }
