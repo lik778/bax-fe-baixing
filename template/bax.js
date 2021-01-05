@@ -81,22 +81,17 @@ const $vueForGetMobx = new Vue({
   }
 })
 /**
- * 错误上报
+ * 错误上报逻辑
+ * ! 暂时不过滤未登录用户的上报（查 currentUser 可能出现的问题）
  * * 忽略未登录用户的错误上报（如接口抛错、接口抛错导致的数据异常抛错等）
  * * 其它忽略配置见 lib/sentry.js
  */
 function errorHandler (e) {
-  let currentUser = null
-  try {
-    currentUser = $vueForGetMobx.$options.fromMobx.currentUser()
-  } finally {
-    // 静默处理
-  }
+  const currentUser = $vueForGetMobx.$options.fromMobx.currentUser()
   const isLogin = currentUser && currentUser.id
-  if (isLogin) {
-    sentry.captureException(e)
-  }
-  console.error(e)
+  isLogin
+    ? sentry.captureException(e)
+    : sentry.captureException(e)
 }
 window.onerror = errorHandler
 Vue.config.errorHandler = errorHandler
