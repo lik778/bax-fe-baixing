@@ -24,7 +24,7 @@
             </el-tag>
             <i class="el-icon-plus" @click="areaDialogVisible = true"></i>
           </el-form-item>
-          <el-form-item label="用户所在地">
+          <el-form-item label="用户所在地" v-if="form.areas.length">
             <el-tag type="success" closable class="kw-tag"
                     v-for="area in form.coreCities" :key="area"
                     @close="removeCoreCities(area)"
