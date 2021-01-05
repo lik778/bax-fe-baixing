@@ -273,9 +273,9 @@ export default {
       })
     },
     industryInfoArr () {
-      return this.industryInfo
+      return (this.industryInfo && this.industryInfo.length > 0)
         ? this.industryInfo.reduce((h, c) => {
-            h.push([[c.title], [...c.content]])
+            h.push([[c.nameCn], (c.secondIndustryResponses || []).map(x => x.nameCn)])
             return h
           }, [])
         : []
@@ -360,6 +360,7 @@ export default {
     // 查价时需把数据打给数据组
     sendIndustryInfo () {
       sendSelectedIndustryToBW({
+        targetUserId: this.getFinalUserId(),
         secondIndustryNameCn: this.form.industry[0],
         keyword: this.form.keyword
       })
