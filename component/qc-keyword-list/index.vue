@@ -48,7 +48,7 @@
     <div class="expanded-words-container">
       <div class="info">
         <div class="info-detail">
-          <span>创建时间：{{$formatter.date(expandedInfo.createdTime)}}&nbsp;&nbsp;</span>
+          <span>创建时间：{{$formatter.date(expandedInfo.createdTime * 1000)}}&nbsp;&nbsp;</span>
           <span>核心产品：{{expandedInfo.coreWords.join(',')}}</span>
         </div>
          <el-button class="download" type="primary" @click="download">一键导出</el-button>

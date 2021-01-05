@@ -102,7 +102,7 @@
       </el-table-column>
       <el-table-column
         label="购买日期"
-        :formatter="({ createdTime }) => $formatter.date(createdTime)"
+        :formatter="({ paidTime }) => $formatter.date(paidTime * 1000)"
       />
       <el-table-column label="剩余投放天数" prop="remainDays" />
       <el-table-column label="操作" width="160">
