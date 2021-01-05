@@ -8,7 +8,7 @@ import {
   SEM_PLATFORM_SHENMA
 } from 'constant/fengming'
 
-export function fmtCpcRanking (ranking, isFixed = true) {
+export function fmtCpcRanking(ranking, isFixed = true) {
   ranking = +ranking
   if (ranking < 1 || ranking > 5) {
     ranking = 5
@@ -19,7 +19,7 @@ export function fmtCpcRanking (ranking, isFixed = true) {
   return parseFloat(ranking).toFixed(1)
 }
 
-export function mergeKeywords (preWords, newWords) {
+export function mergeKeywords(preWords, newWords) {
   const result = preWords
 
   newWords.forEach(w => {
@@ -35,7 +35,7 @@ export function mergeKeywords (preWords, newWords) {
 /*
   availableBalance: 此刻账户余额扣除今日所有在线计划剩余预算后的余额
 */
-export function getCampaignPrediction (availableBalance, dailyBudget, prices) {
+export function getCampaignPrediction(availableBalance, dailyBudget, prices) {
   const prediction = {
     minDailyBudget: 10000,
     days: 0
@@ -51,7 +51,7 @@ export function getCampaignPrediction (availableBalance, dailyBudget, prices) {
 
 const oneDay = 24 * 60 * 60 - 1 // sec
 
-export function checkCampaignValidTime (range) {
+export function checkCampaignValidTime(range) {
   if (!range || range.length !== 2) {
     return 'invalid'
   }
@@ -63,7 +63,7 @@ export function checkCampaignValidTime (range) {
   return 'custom'
 }
 
-export function getCampaignValidTime (range) {
+export function getCampaignValidTime(range) {
   if (range[0] === null || range[1] === null) {
     return [null, null] // 长期
   }
@@ -74,7 +74,7 @@ export function getCampaignValidTime (range) {
   ]
 }
 
-export function getCreativeTitleLenLimit (platforms) {
+export function getCreativeTitleLenLimit(platforms) {
   let min = 9
   let max = 25
   if (platforms.length === 1 && platforms.includes(SEM_PLATFORM_SHENMA)) {
@@ -86,7 +86,7 @@ export function getCreativeTitleLenLimit (platforms) {
   return [min, max]
 }
 
-export function getCreativeContentLenLimit (platforms) {
+export function getCreativeContentLenLimit(platforms) {
   let min = 9
   let max = 40
   if (platforms.includes(SEM_PLATFORM_SHENMA) && !platforms.includes(SEM_PLATFORM_QIHU) && !platforms.includes(SEM_PLATFORM_SOGOU)) {
@@ -109,7 +109,7 @@ const validateRules = {
   }, {
     keys: ['content'],
     msg: '搜狗%s中最多可插入2个关键词通配符，请修改',
-    validate (text) {
+    validate(text) {
       const res = text.match(/\{[^}]+\}/g)
       if (res && res.length > 2) {
         return true
@@ -122,7 +122,7 @@ const validateRules = {
   }],
   default: [{
     msg: '%s通配符内包含空格或符号，请修改',
-    validate (text) {
+    validate(text) {
       const regExp = /\{([^}]+)\}/g
       let res = regExp.exec(text)
       while (res) {
@@ -134,11 +134,11 @@ const validateRules = {
     }
   }]
 }
-export function validateCreative ({ title = '', content = '', platforms = [] }) {
-  function validateCreative (validateRules) {
+export function validateCreative({title = '', content = '', platforms = []}) {
+  function validateCreative(validateRules) {
     for (const [key, rules] of Object.entries(validateRules)) {
       if (platforms.includes(+key) || key === 'default') {
-        rules.forEach(({ keys = ['title', 'content'], msg, validate, regExp }) => {
+        rules.forEach(({keys = ['title', 'content'], msg, validate, regExp}) => {
           const validator = regExp ? genValidator(regExp) : validate
           if (keys.includes('title') && validator(title)) {
             throw new Error(msg.replace('%s', '创意标题'))
@@ -150,8 +150,8 @@ export function validateCreative ({ title = '', content = '', platforms = [] }) 
       }
     }
   }
-  function genValidator (regExp) {
-    return function (text) {
+  function genValidator(regExp) {
+    return function(text) {
       if (regExp.test(text)) {
         return true
       }
@@ -163,17 +163,17 @@ export function validateCreative ({ title = '', content = '', platforms = [] }) 
 export const validateKeywordRules = [
   {
     msg: '不支持含有特殊字符%s的关键词，请修改',
-    validate (str) {
+    validate(str) {
       const reg = /^[\u4e00-\u9fa5A-Za-z0-9]+$/ig
       return !reg.test(str)
     }
   },
   {
     msg: '关键词%s字数超过限制，请修改',
-    validate (str) {
+    validate(str) {
       const MAX_BYTE_NUM = 40
       let len = 0
-      const reg = /[\u4e00-\u9fa5]/
+      let reg = /[\u4e00-\u9fa5]/
       for (let i = 0; i < str.length; i++) {
         if (reg.test(str.charAt(i))) {
           len += 2
@@ -186,7 +186,7 @@ export const validateKeywordRules = [
   }
 ]
 
-export function validateKeyword (keywords = []) {
+export function validateKeyword(keywords = []) {
   keywords.forEach(w => {
     validateKeywordRules.forEach(({ msg, validate }) => {
       if (validate(w)) {

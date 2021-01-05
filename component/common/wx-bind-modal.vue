@@ -13,21 +13,21 @@
 
 <script>
 export default {
-  data () {
+  data() {
     return {
       visible: false
-    }
+    };
   },
   props: {
     closeCb: [Function]
   },
   methods: {
-    handleWxModalClose () {
-      this.visible = false
-      this.closeCb()
+    handleWxModalClose() {
+      this.visible = false;
+      this.closeCb();
     }
   }
-}
+};
 </script>
 
 <style scoped lang="scss">

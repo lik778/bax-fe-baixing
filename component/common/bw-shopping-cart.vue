@@ -37,150 +37,150 @@
 </template>
 
 <script>
-import clone from 'clone'
-import { f2y } from 'util'
-import { createPreOrder, refreshKeywordPriceNew } from 'api/biaowang'
-import { normalizeRoles } from 'util/role'
-import Clipboard from 'com/widget/clipboard'
-import { getCnName } from 'util/meta'
-import { DEVICE } from 'constant/biaowang'
-import { orderServiceHost, preKeywordPath } from 'config'
+  import clone from 'clone'
+  import {f2y} from 'util'
+  import {createPreOrder, refreshKeywordPriceNew} from 'api/biaowang'
+  import {normalizeRoles} from 'util/role'
+  import Clipboard from 'com/widget/clipboard'
+  import {getCnName} from 'util/meta'
+  import {DEVICE} from 'constant/biaowang'
+  import {orderServiceHost, preKeywordPath} from 'config'
 
-const storageKeyPrefix = 'bw-shopping-cart-'
+  const storageKeyPrefix = `bw-shopping-cart-`
 
-export default {
-  name: 'bw-shopping-cart',
-  props: {
-    userInfo: Object,
-    salesInfo: Object,
-    allAreas: Array
-  },
-  components: {
-    Clipboard
-  },
-  data () {
-    return {
-      localItems: [],
-      payUrl: '',
-      DEVICE,
+  export default {
+    name: 'bw-shopping-cart',
+    props: {
+      userInfo: Object,
+      salesInfo: Object,
+      allAreas: Array
+    },
+    components: {
+      Clipboard
+    },
+    data() {
+      return {
+        localItems: [],
+        payUrl: '',
+        DEVICE,
 
-      expand: false,
-      loading: false,
-      firstLoad: false,
-      storageKey: storageKeyPrefix + this.userInfo.id
-    }
-  },
-  computed: {
-    totalPrice () {
-      return this.localItems.reduce((a, b) => a + b.price, 0)
-    },
-    payText () {
-      return this.isUser('BAIXING_SALES') ? '生成支付链接' : '去支付'
-    }
-  },
-  mounted () {
-    if (this.isUser('BAIXING_USER')) {
-      const stringValue = localStorage.getItem(this.storageKey)
-      if (stringValue) {
-        this.localItems = JSON.parse(stringValue)
-        this.firstLoad = true
-      }
-    }
-  },
-  methods: {
-    getFinalUserId () {
-      const { user_id: userId } = this.$route.query
-      if (userId) {
-        return userId
-      }
-      const { userInfo } = this
-      return userInfo.id
-    },
-    keywordTitle (word) {
-      return word.word + (word.xufei ? '(续费)' : (word.isSold ? '(已售出)' : ''))
-    },
-    cityFormatter (cities, max) {
-      return cities.slice(0, max).map(city => getCnName(city, this.allAreas)).join(',') + (cities.length > max ? `等${cities.length}个城市` : '')
-    },
-    f2y,
-    isUser (roleString) {
-      return normalizeRoles(this.userInfo.roles).includes(roleString)
-    },
-    remove (index) {
-      this.localItems.splice(index, 1)
-    },
-    async checkout () {
-      // 角色：普通用户跳转支付
-      // 代理商跳转支付，url带上
-      // 百姓网销售显示链接
-      const {
-        salesInfo,
-        localItems
-      } = this
-      const { salesId, userId } = salesInfo
-      const createOrderArgs = [localItems, userId, salesId]
-
-      // items, targetUserId, salesId
-      // TODO: 后期还需对接接口
-      const preTradeId = await createPreOrder(...createOrderArgs)
-      if (this.isUser('BAIXING_USER')) {
-        this.localItems = []
-        location.href = `${orderServiceHost}/${preKeywordPath}/?appId=105&seq=${preTradeId}`
-      } else if (this.isUser('AGENT_ACCOUNTING')) {
-        this.localItems = []
-        location.href = `${orderServiceHost}/${preKeywordPath}/?appId=105&seq=${preTradeId}&agentId=${this.userInfo.id}`
-      } else if (this.isUser('BAIXING_SALES')) {
-        this.payUrl = `${orderServiceHost}/${preKeywordPath}/?appId=105&seq=${preTradeId}`
+        expand: false,
+        loading: false,
+        firstLoad: false,
+        storageKey: storageKeyPrefix + this.userInfo.id
       }
     },
-    onHandleClick () {
-      this.expand = !this.expand
-    },
-    addToCart (items) {
-      const newItems = items.filter(i => !this.localItems.some(j => j.word === i.word && j.device === i.device))
-      if (newItems.length) {
-        this.localItems.push(...clone(newItems))
-      }
-    },
-    onCopy () {
-      this.localItems = []
-    }
-  },
-  watch: {
-    localItems: {
-      handler: function (local) {
-        normalizeRoles(this.userInfo.roles)
-        // 销售会代不同的用户操作，所以不读取本地购物车数据
-        if (this.isUser('BAIXING_USER')) {
-          localStorage.setItem(this.storageKey, JSON.stringify(local))
-        }
-        if (!this.firstLoad) {
-          this.expand = true
-        }
-        this.firstLoad = false
+    computed: {
+      totalPrice() {
+        return this.localItems.reduce((a, b) => a + b.price , 0)
       },
-      deep: true
+      payText() {
+        return this.isUser('BAIXING_SALES') ? '生成支付链接' : '去支付'
+      }
     },
-    async expand (visible) {
-      if (visible && this.localItems.length) {
-        // 每次打开更新下关键词价格、是否已售卖
-        this.loading = true
-        const items = await refreshKeywordPriceNew(this.localItems, {
-          targetUserId: this.getFinalUserId()
-        })
-        // 保留字段 xufei
-        this.localItems = items.map(i => {
-          const one = this.localItems.find(li => li.word === i.word && li.device === i.device)
-          if (one) {
-            return Object.assign({}, one, i)
+    mounted() {
+      if (this.isUser('BAIXING_USER')) {
+        const stringValue = localStorage.getItem(this.storageKey)
+        if (stringValue) {
+          this.localItems = JSON.parse(stringValue)
+          this.firstLoad = true
+        }
+      }
+    },
+    methods: {
+      getFinalUserId() {
+        const { user_id: userId } = this.$route.query
+        if (userId) {
+          return userId
+        }
+        const { userInfo } = this
+        return userInfo.id
+      },
+      keywordTitle(word) {
+        return word.word + (word.xufei ? '(续费)' : (word.isSold ? '(已售出)' : ''))
+      },
+      cityFormatter(cities, max) {
+        return cities.slice(0, max).map(city => getCnName(city, this.allAreas)).join(',') + (cities.length > max ? `等${cities.length}个城市` : '')
+      },
+      f2y,
+      isUser(roleString) {
+        return normalizeRoles(this.userInfo.roles).includes(roleString)
+      },
+      remove(index) {
+        this.localItems.splice(index, 1)
+      },
+      async checkout() {
+        // 角色：普通用户跳转支付
+        // 代理商跳转支付，url带上
+        // 百姓网销售显示链接
+        const {
+          salesInfo,
+          gwSelected,
+          localItems
+        } = this
+        const {salesId, userId} = salesInfo
+        let createOrderArgs = [localItems, userId, salesId]
+
+        // items, targetUserId, salesId
+        // TODO: 后期还需对接接口
+        const preTradeId = await createPreOrder(...createOrderArgs)
+        if (this.isUser('BAIXING_USER')) {
+          this.localItems = []
+          location.href = `${orderServiceHost}/${preKeywordPath}/?appId=105&seq=${preTradeId}`
+        } else if (this.isUser('AGENT_ACCOUNTING')) {
+          this.localItems = []
+          location.href = `${orderServiceHost}/${preKeywordPath}/?appId=105&seq=${preTradeId}&agentId=${this.userInfo.id}`
+        } else if (this.isUser('BAIXING_SALES')) {
+          this.payUrl = `${orderServiceHost}/${preKeywordPath}/?appId=105&seq=${preTradeId}`
+        }
+      },
+      onHandleClick() {
+        this.expand = !this.expand
+      },
+      addToCart(items) {
+        const newItems = items.filter(i => !this.localItems.some(j => j.word === i.word && j.device === i.device))
+        if (newItems.length) {
+          this.localItems.push(...clone(newItems))
+        }
+      },
+      onCopy() {
+        this.localItems = []
+      }
+    },
+    watch: {
+      localItems: {
+        handler: function(local) {
+          const roles = normalizeRoles(this.userInfo.roles)
+          // 销售会代不同的用户操作，所以不读取本地购物车数据
+          if (this.isUser('BAIXING_USER')) {
+            localStorage.setItem(this.storageKey, JSON.stringify(local))
           }
-          return undefined
-        })
-        this.loading = false
+          if (!this.firstLoad) {
+            this.expand = true
+          }
+          this.firstLoad = false
+        },
+        deep: true
+      },
+      async expand(visible) {
+        if (visible && this.localItems.length) {
+          // 每次打开更新下关键词价格、是否已售卖
+          this.loading = true
+          const items = await refreshKeywordPriceNew(this.localItems, {
+            targetUserId: this.getFinalUserId()
+          })
+          // 保留字段 xufei
+          this.localItems = items.map(i => {
+            const one = this.localItems.find(li => li.word === i.word && li.device === i.device)
+            if (one) {
+              return Object.assign({}, one, i)
+            }
+          })
+          this.loading = false
+        }
       }
     }
   }
-}
 </script>
 
 <style lang="scss" scoped>

@@ -10,9 +10,9 @@
     <!-- 展示 ABCD 词 -->
     <div class="keywords-container">
       <p class="header-info">
-        <span class="description">提示：系统从
-          <statics :loading="loading.pvs" :value="wordAll" /> 个词中为您优选出
-          <statics :loading="loading.pvs" :value="wordCounts" /> 个（包含双端）关键词，预估在180天内为您带来
+        <span class="description">提示：系统从 
+          <statics :loading="loading.pvs" :value="wordAll" /> 个词中为您优选出 
+          <statics :loading="loading.pvs" :value="wordCounts" /> 个（包含双端）关键词，预估在180天内为您带来 
           <statics :loading="loading.pvs" :value="pvs" /> 展现。
         </span>
         <span class="actions">
@@ -48,7 +48,7 @@
     <div class="expanded-words-container">
       <div class="info">
         <div class="info-detail">
-          <span>创建时间：{{$formatter.date(expandedInfo.createdTime)}}&nbsp;&nbsp;</span>
+          <span>创建时间：{{$formatter.date(expandedInfo.createdTime * 1000)}}&nbsp;&nbsp;</span>
           <span>核心产品：{{expandedInfo.coreWords.join(',')}}</span>
         </div>
          <el-button class="download" type="primary" @click="download">一键导出</el-button>
@@ -77,7 +77,7 @@
 <script>
 import dayjs from 'dayjs'
 import clone from 'clone'
-import { Parser } from 'json2csv'
+import { Parser }  from 'json2csv'
 import FileSaver from 'file-saver'
 
 import Statics from '../common/statics'
@@ -89,22 +89,22 @@ import { getPromote, getPreferredWordsList, getPreferredWordsPV } from 'api/qian
 import gStore from '../store'
 
 export default {
-  name: 'qc-word-list',
+  name: "qc-word-list",
   components: {
     KeywordView,
-    Statics
+    Statics,
   },
   fromMobx: {
     allQianciAreas: () => gStore.allQianciAreas
   },
-  data () {
+  data() {
     return {
       id: null,
       pagination: {
         current: 1,
         total: 0,
         size: 60,
-        sizes: [40, 60, 80, 100]
+        sizes: [40, 60, 80, 100],
       },
       activeCoreWord: '',
       expandedInfo: {
@@ -117,29 +117,26 @@ export default {
       promote: {},
       loading: {
         query: false,
-        pvs: false
+        pvs: false,
       },
       wordCounts: 0,
       pvs: 0,
       visible: {
-        abcd: false
+        abcd: false,
       }
     }
   },
   computed: {
-    wordAll () {
+    wordAll() {
       const types = ['A', 'B', 'C', 'D']
-      const res = this.keywordOptionsList.reduce((curr, { type, keywordOptions }) => {
-        const lens = types.reduce((h, c) => {
-          h[c] = keywordOptions[c].keywords.length
-          return h
-        }, {})
+      const res = this.keywordOptionsList.reduce((curr, {type, keywordOptions}) => {
+        const lens = types.reduce((h, c) => (h[c] = keywordOptions[c].keywords.length, h), {})
         return curr + qcWordAll(lens)
       }, 0)
       return res
     }
   },
-  async created () {
+  async created() {
     this.id = getRouteParam.bind(this)('promoteId')
     if (!this.id) {
       throw new Error('No ID on qc-creative page.')
@@ -151,7 +148,7 @@ export default {
       this.initPromote()
     }
   },
-  mounted () {
+  mounted() {
     this.getPreferredWordPV()
     this.getQueryList()
     this.$on('hook:beforeDestroy', () => {
@@ -159,19 +156,19 @@ export default {
     })
   },
   methods: {
-    async getPreferredWordPV () {
+    async getPreferredWordPV() {
       this.loading.pvs = true
       let response = null
       try {
         response = await getPreferredWordsPV({ id: this.id })
       } finally {
-        setTimeout(() => { this.loading.pvs = false }, 300)
+        setTimeout(() => this.loading.pvs = false, 300)
       }
       const { expandedNum = 0, showNum = 0 } = response || {}
       this.pvs = showNum
       this.wordCounts = expandedNum
     },
-    async getQueryList (page = 1) {
+    async getQueryList(page = 1) {
       const { user_id: targetUserId, sales_id: salesId } = parseQuery(window.location.search)
       const query = {
         targetUserId,
@@ -185,6 +182,7 @@ export default {
       let response
       try {
         response = (await getPreferredWordsList(query)) || {}
+        const { data, createdTime, coreWords } = response
         Object.assign(this.expandedInfo, response)
       } finally {
         this.loading.query = false
@@ -193,17 +191,17 @@ export default {
       this.pagination = {
         ...this.pagination,
         current: page,
-        total
+        total,
       }
     },
-    async initPromote () {
+    async initPromote() {
       this.promote = await getPromote(this.id)
       const { coreWordInfos = [], provinces = [] } = this.promote
 
-      const { enToCnMap, provinces: provincesStore } = this.allQianciAreas
+      const{ enToCnMap, provinces: provincesStore } = this.allQianciAreas
       const areas = provinces.map(en => {
         const cnName = enToCnMap[en]
-        return { name: cnName, en, checked: true, cities: provincesStore[cnName] }
+        return { name: cnName, en, checked: true, cities: provincesStore[cnName]  }
       })
 
       // 封装keywordOptionsList
@@ -219,7 +217,7 @@ export default {
         }
       }).reduce((currO, item) => {
         const options = clone(keywordOptions)
-        const res = Object.entries(keywordOptions).reduce((currI, [type, option]) => {
+        let res = Object.entries(keywordOptions).reduce((currI, [type, option]) => {
           const keywords = item[option.keywordsAlias] || []
           Object.assign(options, {
             [type]: {
@@ -238,15 +236,16 @@ export default {
 
       this.activeCoreWord = this.keywordOptionsList[0].coreWord
     },
-    handleSizeChange (size) {
+    handleSizeChange(size) {
       this.pagination.size = size
       this.getQueryList()
     },
-    download () {
+    download() {
+      const { user_id: targetUserId, sales_id: salesId } = parseQuery(window.location.search)
       const { createdTime } = this.promote
       const coreWords = this.expandedInfo.coreWords.join(',')
 
-      function washCSVList (list) {
+      function washCSVList(list) {
         return list.map(item => {
           return {
             keyword: item
@@ -260,7 +259,7 @@ export default {
       const blob = new Blob(['\uFEFF' + csvData], { type: 'text/csv;charset=utf-8;' })
       FileSaver.saveAs(blob, filename)
     }
-  }
+  },
 }
 </script>
 

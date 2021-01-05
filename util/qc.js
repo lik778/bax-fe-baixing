@@ -2,7 +2,7 @@
  * 计算千词的 ABCD 词的个数
  * @param {Object} wordsMap，形如 {A:[],B:[],C:[],D:[]}
  */
-export function qcWordAll (wordsMap) {
+export function qcWordAll(wordsMap) {
   return (
     wordsMap.B * wordsMap.C +
     wordsMap.A * wordsMap.B * wordsMap.C +

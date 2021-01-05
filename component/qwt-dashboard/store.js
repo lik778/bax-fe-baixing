@@ -10,26 +10,26 @@ const store = observable({
   offset: 0,
   total: 0,
 
-  get statistics () {
+  get statistics() {
     return toJS(this._statistics)
   },
 
-  get summary () {
+  get summary() {
     return toJS(this._summary)
   },
 
-  clearStatistics: action(function () {
+  clearStatistics: action(function() {
     this._statistics = []
   }),
 
-  downloadCsv: action(function (opts) {
+  downloadCsv: action(function(opts) {
     return api.getReport({
       ...opts,
       exportCsv: 1
     })
   }),
 
-  fetchReport: action(async function (opts) {
+  fetchReport: action(async function(opts) {
     const result = await api.getReport(opts)
     const { rows, total, offset, summary } = result
 
@@ -39,7 +39,7 @@ const store = observable({
     this.total = total
   }),
 
-  fetchReportByQueryWord: action(async function (opts) {
+  fetchReportByQueryWord: action(async function(opts) {
     const result = await api.getDataReportByQueryWord(opts)
     const { rows, total, offset } = result
     this._statistics = rows

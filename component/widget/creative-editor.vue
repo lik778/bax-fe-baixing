@@ -64,8 +64,9 @@ import {
 
 import {
   CREATIVE_STATUS_REJECT,
-  CREATIVE_STATUS_PENDING
+  CREATIVE_STATUS_PENDING,
 } from 'constant/fengming'
+
 
 export default {
   name: 'qwt-creative-editor',
@@ -107,28 +108,28 @@ export default {
     }
   },
   computed: {
-    titleMinLen () {
+    titleMinLen() {
       const { platforms } = this
       return getCreativeTitleLenLimit(platforms)[0]
     },
-    titleMaxLen () {
+    titleMaxLen() {
       const { platforms } = this
       return getCreativeTitleLenLimit(platforms)[1]
     },
-    contentMinLen () {
+    contentMinLen() {
       const { platforms } = this
       return getCreativeContentLenLimit(platforms)[0]
     },
-    contentMaxLen () {
+    contentMaxLen() {
       const { platforms } = this
       return getCreativeContentLenLimit(platforms)[1]
     }
   },
   methods: {
-    onInput (type, value) {
+    onInput(type, value) {
       const defaultCreativeValues = {
-        title: this.title,
-        content: this.content
+          title: this.title,
+          content: this.content
       }
       const creativeValues = {
         ...defaultCreativeValues,
@@ -136,10 +137,10 @@ export default {
       }
       this.$emit('change', creativeValues)
     },
-    async onCreativeChange (type, value) {
+    async onCreativeChange(type, value) {
       const defaultCreativeValues = {
-        title: this.title,
-        content: this.content
+          title: this.title,
+          content: this.content
       }
       const creativeValues = {
         ...defaultCreativeValues,
@@ -147,17 +148,17 @@ export default {
       }
       try {
         const { platforms } = this
-        validateCreative({ title: creativeValues.title, content: creativeValues.content, platforms })
+        validateCreative({title: creativeValues.title, content: creativeValues.content, platforms})
         await this.checkCreative(creativeValues.title, creativeValues.content, platforms)
         this.$emit('error', undefined)
       } catch (e) {
         this.$emit('error', e.message)
       }
     },
-    async checkCreative (title, content, platforms) {
+    async checkCreative(title, content, platforms) {
       if (!title || !content) {
         return
-      } else if (this.titleMinLen > title.length || this.titleMaxLen < title.length) {
+      } else if(this.titleMinLen > title.length || this.titleMaxLen < title.length) {
         return
       } else if (this.contentMinLen > content.length || this.contentMaxLen < content.length) {
         return

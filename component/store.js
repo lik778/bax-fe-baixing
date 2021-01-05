@@ -7,7 +7,7 @@ import Sentry from '../lib/sentry'
 
 const gStore = observable({
   _currentUser: {
-    roles: []
+    roles: [],
   },
   _allCategories: [],
   _allAreas: [],
@@ -16,19 +16,19 @@ const gStore = observable({
 
   addUserLeadVisible: false,
 
-  get currentUser () {
+  get currentUser() {
     return toJS(this._currentUser)
   },
-  get allCategories () {
+  get allCategories() {
     return toJS(this._allCategories)
   },
-  get allAreas () {
+  get allAreas() {
     return toJS(this._allAreas)
   },
-  get allRoles () {
+  get allRoles() {
     return toJS(this._allRoles)
   },
-  get allQianciAreas () {
+  get allQianciAreas() {
     return toJS(this._allQianciAreas)
   },
   toggleAddUserLeadVisible: action(function () {
@@ -51,7 +51,7 @@ const gStore = observable({
       window.__trackerData.common = {
         ...window.__trackerData.common,
         baixing_id: currentUser.baixingId,
-        bax_id: currentUser.id
+        bax_id: currentUser.id,
       }
 
       // sentry报错添加user
@@ -60,7 +60,7 @@ const gStore = observable({
           id: currentUser.baixingId,
           name: currentUser.name,
           mobile: currentUser.mobile,
-          baxId: currentUser.id
+          baxId: currentUser.id,
         })
       })
     } catch (noPermissionError) {
@@ -81,7 +81,7 @@ const gStore = observable({
   }),
   getRoles: action(async function () {
     this._allRoles = await aapi.getRoles()
-  })
+  }),
 })
 
 export default gStore

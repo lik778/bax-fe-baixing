@@ -25,7 +25,7 @@ rm(config.distPath, err => {
       modules: false,
       children: false,
       chunks: false,
-      chunkModules: false
+      chunkModules: false,
     }) + '\n\n')
 
     console.info('😎 Build complete.')

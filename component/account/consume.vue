@@ -8,7 +8,7 @@
       </div>
       <main style="width: 720px">
         <el-table :data="data">
-          <el-table-column label="日期" prop="createdTime"
+          <el-table-column label="日期" prop="createdTime" 
             :formatter="r => formatDate(r.date)" />
           <el-table-column label="计划" prop="campaignId" />
           <!-- tip: 先写死，百年大计二期上线首页宝和标王之后更改 -->
@@ -28,6 +28,7 @@
 
 <script>
 import SectionHeader from 'com/common/section-header'
+import track from 'util/track'
 import dayjs from 'dayjs'
 import * as api from 'api/fengming'
 
@@ -41,11 +42,11 @@ export default {
   components: {
     SectionHeader
   },
-  data () {
+  data() {
     return {
       query: {
         size: 10,
-        dateRange: DEFAULT_DATE_RANGE
+        dateRange: DEFAULT_DATE_RANGE,
       },
       total: 0,
       pageNo: 1,
@@ -53,7 +54,7 @@ export default {
     }
   },
   methods: {
-    async fetchData (isResetPageNo) {
+   async fetchData(isResetPageNo) {
       if (isResetPageNo) this.pageNo = 1
       const { dateRange, ...otherParams } = this.query
       let queryParmas = {
@@ -68,24 +69,24 @@ export default {
           endDate,
           ...queryParmas
         }
-      }
+      } 
       const { total, logs } = await api.getChangeLogs(queryParmas)
       this.data = logs
       this.total = total
     },
-    handleCurrentPage (val) {
+    handleCurrentPage(val) {
       this.pageNo = val
       this.fetchData()
     },
-    formatDate (timestamp) {
-      return dayjs(timestamp * 1000).format('YYYY-MM-DD')
+    formatDate(timestamp) {
+      return dayjs(timestamp * 1000).format("YYYY-MM-DD")
     }
   },
   watch: {
     query: {
       deep: true,
       immediate: true,
-      handler () {
+      handler() {
         this.fetchData(true)
       }
     }

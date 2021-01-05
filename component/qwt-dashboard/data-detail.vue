@@ -37,7 +37,7 @@
           <span v-if="scope.row.price === null">-</span>
           <bax-input v-else
                      :value="f2y(scope.row.price)"
-                     @blur="v => onChangePrice(v, scope.row.campaignId, scope.row.keywordId)"
+                     @blur="v => onChangePrice(v, scope.row.campaignId, scope.row.keywordId)" 
                      @keyup="v => onChangePrice(v, scope.row.campaignId, scope.row.keywordId)" />
         </template>
       </el-table-column>
@@ -82,16 +82,16 @@
         </span>
         <div slot-scope="{row}">
           <el-button type="text"
-                     size="small"
-                    :disabled="row.enableInKeywords || row.enableInNegativeWords"
+                     size="small" 
+                    :disabled="row.enableInKeywords || row.enableInNegativeWords" 
                     @click="addKeyword(row)">添加</el-button>
           <el-button type="text"
                      size="small"
-                     :disabled="row.enableInNegativeWords || row.enableInKeywords"
+                     :disabled="row.enableInNegativeWords || row.enableInKeywords" 
                      @click="addNegativeKeyword(row)">设为否定关键词</el-button>
           <el-tooltip effect="dark"
-                      v-if="row.enableInNegativeWords || row.enableInKeywords"
-                      content="该搜索词已存在关键词或否定关键词中，暂不支持添加"
+                      v-if="row.enableInNegativeWords || row.enableInKeywords" 
+                      content="该搜索词已存在关键词或否定关键词中，暂不支持添加" 
                       placement="top-start">
             <i class="el-icon-info" style ="cursor: pointer"></i>
           </el-tooltip>
@@ -123,7 +123,8 @@
 
 <script>
 import BaxPagination from 'com/common/pagination'
-import { updateCampaign } from 'api/fengming'
+import BaxSelect from 'com/common/select'
+import {updateCampaign} from 'api/fengming'
 import BaxInput from 'com/common/bax-input'
 import PromotionKeywordTip from 'com/widget/promotion-keyword-tip'
 
@@ -152,6 +153,7 @@ export default {
   name: 'qwt-dashboard-data-detail',
   components: {
     BaxPagination,
+    BaxSelect,
     BaxInput,
     PromotionKeywordTip
   },
@@ -181,7 +183,7 @@ export default {
       required: true
     }
   },
-  data () {
+  data() {
     return {
       priceUpdating: false,
       DIMENSION_CAMPAIGN,
@@ -191,10 +193,10 @@ export default {
     }
   },
   methods: {
-    addKeyword (item) {
+    addKeyword(item) {
       const { campaignId, queryWord } = item
       const price = 2 * 100
-      updateCampaign(campaignId, { newKeywords: [{ price, word: queryWord }] })
+      updateCampaign(campaignId, {newKeywords: [{price, word: queryWord}]})
         .then(res => {
           Message({
             type: 'success',
@@ -203,9 +205,9 @@ export default {
           this.$emit('refresh-keyword-list')
         })
     },
-    addNegativeKeyword (item) {
+    addNegativeKeyword(item) {
       const { campaignId, queryWord } = item
-      updateCampaign(campaignId, { newNegativeKeywords: [{ word: queryWord }] })
+      updateCampaign(campaignId, {newNegativeKeywords: [{word: queryWord}]})
         .then(res => {
           Message({
             type: 'success',
@@ -214,41 +216,41 @@ export default {
           this.$emit('refresh-keyword-list')
         })
     },
-    switchToCampaignReport (campaign) {
+    switchToCampaignReport(campaign) {
       this.$emit('switch-to-campaign-report', campaign)
     },
-    async onChangePrice (userPrice, cid, kid) {
+    async onChangePrice(userPrice, cid, kid) {
       const price = (userPrice ? toFloat(userPrice) : 0) * 100
       if (price > 99 * 100 || price < 2 * 100) {
         return this.$message.error('价格需在2-99元之间')
       }
       try {
         this.priceUpdating = true
-        await updateCampaign(cid, { updatedKeywords: [{ price, id: kid }] })
-        this.$message.success('价格更新成功')
+        await updateCampaign(cid, {updatedKeywords: [{price, id: kid}]})
+        this.$message.success(`价格更新成功`)
       } finally {
         this.priceUpdating = false
       }
     },
-    onClickCustomColumns () {
+    onClickCustomColumns() {
       track({
         action: 'qwt-dashboard: click set custom columns'
       })
     },
-    onCurrentChange (opts) {
+    onCurrentChange(opts) {
       this.$emit('current-change', opts)
     },
-    checkVisiable (column) {
+    checkVisiable(column) {
       return this.displayColumns.includes(column)
     },
-    fmtChannel (c) {
+    fmtChannel(c) {
       return semPlatformCn[String(c)] || '未知'
     },
-    fmtDevice (a) {
+    fmtDevice(a) {
       const m = {
-        0: '电脑，手机',
-        1: '电脑',
-        2: '手机'
+        '0': '电脑，手机',
+        '1': '电脑',
+        '2': '手机'
       }
 
       if (!isArray(a)) {

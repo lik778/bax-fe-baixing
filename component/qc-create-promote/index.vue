@@ -123,22 +123,22 @@ export default {
   props: {
     userInfo: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   fromMobx: {
-    allQianciAreas: () => gStore.allQianciAreas
+    allQianciAreas: () => gStore.allQianciAreas,
   },
-  data () {
+  data() {
     return {
       promote: null,
       input: {
-        keyword: ''
+        keyword: '',
       },
       form: {
         keywords: [],
         areas: [],
-        type: ONE_WORD_TWO_PROVINCE
+        type: ONE_WORD_TWO_PROVINCE,
       },
       rules: {
         areas: [
@@ -151,12 +151,12 @@ export default {
               }
               callback()
             },
-            trigger: ['change', 'blur']
-          }
-        ]
+            trigger: ['change', 'blur'],
+          },
+        ],
       },
       tip: {
-        keyword: ''
+        keyword: '',
       },
       loading: false,
       areaDialogVisible: false,
@@ -167,49 +167,49 @@ export default {
           {
             title: '两省一核',
             info: '支持在两个省（或直辖市）投放一个核心产品',
-            id: ONE_WORD_TWO_PROVINCE
+            id: ONE_WORD_TWO_PROVINCE,
           },
           {
             title: '一省三核',
             info: '支持在一个省（或直辖市）投放三个核心产品',
-            id: THREE_WORD_ONE_PROVINCE
-          }
-        ]
-      }
+            id: THREE_WORD_ONE_PROVINCE,
+          },
+        ],
+      },
     }
   },
   computed: {
-    isTypeSelected () {
+    isTypeSelected() {
       return !!this.form.type
     },
-    maxKeywordLength () {
+    maxKeywordLength() {
       return {
         [ONE_WORD_TWO_PROVINCE]: 1,
-        [THREE_WORD_ONE_PROVINCE]: 3
+        [THREE_WORD_ONE_PROVINCE]: 3,
       }[this.form.type]
     },
-    restKeywordLength () {
+    restKeywordLength() {
       return this.maxKeywordLength - this.form.keywords.length
     },
-    maxAreaLength () {
+    maxAreaLength() {
       return {
         [ONE_WORD_TWO_PROVINCE]: 2,
-        [THREE_WORD_ONE_PROVINCE]: 1
+        [THREE_WORD_ONE_PROVINCE]: 1,
       }[this.form.type]
     },
-    restAreaLength () {
+    restAreaLength() {
       return this.maxAreaLength - this.form.areas.length
     },
-    displayTypes () {
+    displayTypes() {
       const raw = this.options.types
       return this.isEdit ? raw.filter((x) => x.id === this.form.type) : raw
-    }
+    },
   },
   watch: {
     promote: {
       deep: true,
       immediate: true,
-      handler (n) {
+      handler(n) {
         if (n) {
           const { coreWordInfos = [] } = n
           const keywords = coreWordInfos.map((x) => x.coreWord)
@@ -226,24 +226,24 @@ export default {
               name: cnName,
               en,
               checked: true,
-              cities: [...provinces[cnName]]
+              cities: [...provinces[cnName]],
             }
           })
           this.keywordsPanelVisible = true
         }
-      }
+      },
     },
     form: {
       deep: true,
       immediate: true,
-      handler (n, o) {
+      handler(n, o) {
         if (!this.isEdit) {
           this.keywordsPanelVisible = false
         }
-      }
-    }
+      },
+    },
   },
-  async mounted () {
+  async mounted() {
     const { id } = this.$route.query
 
     // 获取千词地区信息
@@ -258,12 +258,12 @@ export default {
     }
   },
   methods: {
-    selectType (newType) {
+    selectType(newType) {
       this.form.type = newType
       this.tip.keyword = ''
       this.initFormVals()
     },
-    selectKeyword (value = this.input.keyword) {
+    selectKeyword(value = this.input.keyword) {
       const valid =
         value &&
         this.restKeywordLength > 0 &&
@@ -275,14 +275,14 @@ export default {
         this.tip.keyword = ''
       }
     },
-    removeKeyword (wordToRemove) {
+    removeKeyword(wordToRemove) {
       this.form.keywords.splice(
         this.form.keywords.findIndex((x) => x === wordToRemove),
         1
       )
       this.validKeywords(this.form.keywords, true)
     },
-    async checkWord () {
+    async checkWord() {
       this.$refs.form.validate(async (isValid) => {
         const isKeywordValid = this.validKeywords()
         if (isValid && isKeywordValid) {
@@ -298,15 +298,15 @@ export default {
         }
       })
     },
-    removeArea (area) {
+    removeArea(area) {
       this.form.areas = this.form.areas.filter((i) => i.name !== area.name)
       this.$bus.$emit('updateQcAreaSelectorView', area)
     },
-    onAreasChange (areas) {
+    onAreasChange(areas) {
       this.form.areas = [...areas]
       this.areaDialogVisible = false
     },
-    validKeywords (words = this.form.keywords, validLen = true) {
+    validKeywords(words = this.form.keywords, validLen = true) {
       if (words.find((x) => !/^[\u4E00-\u9FA5A-Za-z0-9]{2,10}$/.test(x))) {
         this.tip.keyword = '核心产品不能是特殊字符，单个词长度限制为 2-10 个字'
         return false
@@ -322,14 +322,14 @@ export default {
       }
       return false
     },
-    initFormVals () {
+    initFormVals() {
       this.form.keywords = []
       this.form.areas.map((area) =>
         this.$bus.$emit('updateQcAreaSelectorView', area)
       )
       this.form.areas = []
-    }
-  }
+    },
+  },
 }
 </script>
 

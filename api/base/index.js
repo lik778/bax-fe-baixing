@@ -19,10 +19,10 @@ import { redirect } from 'util'
 
 // 基础 Fetch 选项
 export const baseOptions = {
-  beforeRequest () {
+  beforeRequest() {
     es.emit('http fetch start')
   },
-  afterResponse () {
+  afterResponse() {
     es.emit('http fetch end')
   }
 }
@@ -30,7 +30,7 @@ export const baseOptions = {
 export const fengming = new Fetch({
   ...baseOptions,
   prefix: fengmingApiHost,
-  afterJSON (body) {
+  afterJSON(body) {
     if (
       body.meta &&
       body.meta.status === 400 &&
@@ -60,7 +60,7 @@ export const fengming = new Fetch({
 export const ka = new Fetch({
   ...baseOptions,
   prefix: kaApiHost,
-  afterJSON (body) {
+  afterJSON(body) {
     if (body.msg !== 'success') {
       Message.error(body.msg)
       throw new Error(body.msg)
@@ -71,7 +71,7 @@ export const ka = new Fetch({
 export const api = new Fetch({
   ...baseOptions,
   prefix: baxApiHost,
-  afterJSON (body) {
+  afterJSON(body) {
     if (body.errors) {
       Message.error('出错啦')
       throw new Error('出错啦')
@@ -96,7 +96,7 @@ export const api = new Fetch({
 export const biaowang = new Fetch({
   ...baseOptions,
   prefix: biaowangApiHost,
-  afterResponse (res) {
+  afterResponse(res) {
     es.emit('http fetch end')
     if (res.status === 200) {
       // pass
@@ -105,12 +105,12 @@ export const biaowang = new Fetch({
       return redirect('signin', `return=${encodeURIComponent(location.pathname + location.search)}`)
     } else {
       res.clone().json().then(body => {
-        Message.error(body.message || '出错了，请稍后重试')
+        Message.error(body.message || `出错了，请稍后重试`)
       })
       throw new Error(res.statusText)
     }
   },
-  afterJSON (body) {
+  afterJSON(body) {
     if (
       body &&
       body.code === 4114
@@ -125,7 +125,7 @@ export const biaowang = new Fetch({
 export const seo = new Fetch({
   ...baseOptions,
   prefix: seoApiHost,
-  afterResponse (res) {
+  afterResponse(res) {
     es.emit('http fetch end')
     if (res.status === 200) {
       // pass
@@ -134,12 +134,12 @@ export const seo = new Fetch({
       return redirect('signin', `return=${encodeURIComponent(location.pathname + location.search)}`)
     } else {
       res.clone().json().then(body => {
-        Message.error(body.message || '出错了，请稍后重试')
+        Message.error(body.message || `出错了，请稍后重试`)
       })
       throw new Error(res.statusText)
     }
   },
-  afterJSON (body) {
+  afterJSON(body) {
     if (
       body &&
       body.code === 4114
@@ -158,7 +158,7 @@ export const seo = new Fetch({
 export const qianciOptions = {
   ...baseOptions,
   prefix: qcApiHost,
-  afterResponse (res) {
+  afterResponse(res) {
     es.emit('http fetch end')
     if (res.status === 200) {
       // pass
@@ -167,7 +167,7 @@ export const qianciOptions = {
       return redirect('signin', `return=${encodeURIComponent(location.pathname + location.search)}`)
     } else {
       res.clone().json().then(body => {
-        Message.error(body.message || '出错了，请稍后重试')
+        Message.error(body.message || `出错了，请稍后重试`)
       })
       throw new Error(res.statusText)
     }
@@ -175,9 +175,9 @@ export const qianciOptions = {
 }
 export const qianci = new Fetch({
   ...qianciOptions,
-  afterJSON (body) {
+  afterJSON(body) {
     if (body && body.code !== 0) {
-      Message.error(body.message || '出错了，请稍后重试')
+      Message.error(body.message || `出错了，请稍后重试`)
       throw new Error(body.message)
     }
   }
@@ -187,7 +187,7 @@ export const qianci1 = new Fetch({
   ...qianciOptions
 })
 
-export function trim (obj) {
+export function trim(obj) {
   const result = {}
   // only for - query filter
   for (const k of Object.keys(obj)) {

@@ -19,7 +19,7 @@
           <el-table-column label="推广平台" porp="device" width="120" :formatter="({device}) => DEVICE[device]" />
           <el-table-column label="城市" prop="cities" min-width="180">
             <template slot-scope="{row}">
-              <el-tooltip popper-class="city-tooltip" class="item" effect="light"
+              <el-tooltip popper-class="city-tooltip" class="item" effect="light" 
                           :content="cityFormatter(row.cities, row.cities.length)" placement="right">
                 <p>{{cityFormatter(row.cities, citiesMax)}}</p>
               </el-tooltip>
@@ -32,16 +32,16 @@
                 {{PROMOTE_OFFER_STATUS[row.status]}}
               </el-tag>
               <el-tag v-if="row.isExpired" type="warning">已过期</el-tag>
-              <el-tag type="danger"
-                      v-if="row.applyType === APPLY_TYPE_ORDER_LONG &&
-                            row.soldType === SOLD_TYPE_MONTH &&
+              <el-tag type="danger" 
+                      v-if="row.applyType === APPLY_TYPE_ORDER_LONG && 
+                            row.soldType === SOLD_TYPE_MONTH && 
                             row.status === PROMOTE_OFFERED ">不售卖长单</el-tag>
             </template>
           </el-table-column>
           <el-table-column label="人工报价" width="360">
-            <el-radio-group v-if="row.status === PROMOTE_OFFERED"
+            <el-radio-group v-if="row.status === PROMOTE_OFFERED" 
                             slot-scope="{row}" v-model="row.checkDays">
-              <el-radio class="manual-radio" v-for="(v, k) in row.soldPriceMap"
+              <el-radio class="manual-radio" v-for="(v, k) in row.soldPriceMap" 
                         :label="k" :key="k">
                         {{f2y(v)}}元（{{k}}天）
               </el-radio>
@@ -50,7 +50,7 @@
           </el-table-column>
           <el-table-column label="操作" align="center" fixed="right" width="180">
             <template slot-scope="{row}">
-              <el-button type="text" size="small" @click="addToCart(row)"
+              <el-button type="text" size="small" @click="addToCart(row)" 
                          :disabled="disabledAddCartBtn(row)">加入购物车</el-button>
               <el-button type="text" size="small" @click="goToQueryPrice(row)">重新查价</el-button>
             </template>
@@ -69,10 +69,11 @@
 <script>
 import dayjs from 'dayjs'
 import { getUserManualList, refreshKeywordPriceNew } from 'api/biaowang'
-import {
-  DEVICE,
-  PROMOTE_OFFER_STATUS,
-  PROMOTE_OFFERED,
+import { 
+  DEVICE, 
+  DEVICE_ALL,
+  PROMOTE_OFFER_STATUS, 
+  PROMOTE_OFFERED, 
   PROMOTE_UNOFFERED,
   THIRTY_DAYS,
   GET_DAYS_MAP,
@@ -96,7 +97,7 @@ export default {
       required: true
     }
   },
-  data () {
+  data() {
     return {
       query: {
         keyword: '',
@@ -119,7 +120,7 @@ export default {
   methods: {
     getCnName,
     f2y,
-    getFinalUserId () {
+    getFinalUserId() {
       const { user_id: userId } = this.$route.query
       if (userId) {
         return userId
@@ -127,17 +128,17 @@ export default {
       const { userInfo } = this
       return userInfo.id
     },
-    async getManualHistory (isResetPageNo) {
+    async getManualHistory(isResetPageNo) {
       if (isResetPageNo) this.currentPage = 0
       const query = {}
-      for (const key in this.query) {
+      for(let key in this.query) {
         if (this.query[key] !== '') {
           Object.assign(query, {
             [key]: this.query[key]
-          })
+          }) 
         }
       }
-      const { data, total } = await getUserManualList({ ...query, page: this.currentPage })
+      let { data, total } = await getUserManualList({ ...query, page: this.currentPage })
 
       this.manualHistory = data.map((item) => {
         const soldPriceMap = GET_DAYS_MAP(item.soldType).reduce((curr, prev) => {
@@ -154,16 +155,16 @@ export default {
       })
       this.total = total
     },
-    dateFormatter ({ createdAt }) {
+    dateFormatter({createdAt}) {
       return dayjs(createdAt * 1000).format('YYYY-MM-DD')
     },
-    cityFormatter (cities, max = citiesMax) {
+    cityFormatter(cities , max = citiesMax) {
       return cities.slice(0, max).map(city => getCnName(city, this.allAreas)).join('，') + (cities.length > max ? `等${cities.length}个城市` : '')
     },
-    disabledAddCartBtn (row) {
+    disabledAddCartBtn(row) {
       return row.isExpired || row.status === PROMOTE_UNOFFERED
     },
-    async addToCart (row) {
+    async addToCart(row) {
       const { cities, checkDays, device, price, word, soldPriceMap, createdAt } = row
       if (!checkDays) {
         return this.$message.error('请选择关键词报价')
@@ -181,12 +182,12 @@ export default {
         soldPriceMap
       }]
       // tip：打刷新接口，看词是否已售卖
-      await refreshKeywordPriceNew(data, {
+      const items = await refreshKeywordPriceNew(data, {
         targetUserId: this.getFinalUserId()
       })
       this.$parent.$refs.bwShoppingCart.addToCart(data)
     },
-    goToQueryPrice (row) {
+    goToQueryPrice(row) {
       const { word, device, cities } = row
       this.$router.push({
         name: 'bw-query-price',
@@ -198,7 +199,7 @@ export default {
         }
       })
     },
-    handleCurrentPage (val) {
+    handleCurrentPage(val) {
       this.currentPage = val
       this.getManualHistory()
     }
@@ -207,13 +208,13 @@ export default {
     query: {
       immediate: true,
       deep: true,
-      handler () {
+      handler() {
         this.getManualHistory(true)
       }
     },
     'userInfo.shAgent': {
       immediate: true,
-      handler (val) {
+      handler(val) {
         if (val) {
           this.$router.push('/main')
         }

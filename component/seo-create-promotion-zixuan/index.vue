@@ -62,10 +62,10 @@
 </template>
 
 <script>
-import { createPromotion } from 'api/seo'
-import { KEYWORD_TYPE_USER } from 'constant/seo'
+import {createPromotion} from 'api/seo'
+import {KEYWORD_TYPE_USER} from 'constant/seo'
 import ContractAck from 'com/widget/contract-ack'
-import { PRO_SITE_PRODUCT_TYPE } from 'constant/site'
+import {PRO_SITE_PRODUCT_TYPE} from 'constant/site'
 import QiqiaobanPageSelector from 'com/common/qiqiaoban-page-selector'
 import dayjs from 'dayjs'
 
@@ -74,7 +74,7 @@ export default {
     QiqiaobanPageSelector,
     ContractAck
   },
-  data () {
+  data() {
     return {
       PRO_SITE_PRODUCT_TYPE,
 
@@ -87,23 +87,23 @@ export default {
     }
   },
   methods: {
-    onLandingChange (v) {
+    onLandingChange(v) {
       this.promotion.landingPage = 'http://' + v.domain + '.mvp.baixing.com'
       this.showExpireWarning = dayjs(v.expireAt).subtract(6, 'month').isBefore(dayjs(), 'day')
     },
-    onEnter () {
+    onEnter() {
       if (this.inputKeyword) {
         if (this.inputKeyword.length < 6 || this.inputKeyword.length > 15) {
           return this.$message.error('关键词字数需在 6 - 15 之间')
         }
         if (this.promotion.keywords.find(k => k.word === this.inputKeyword)) {
-          return this.$message.error('请勿重复添加关键词')
+          return this.$message.error(`请勿重复添加关键词`)
         }
         this.promotion.keywords.push({ source: KEYWORD_TYPE_USER, word: this.inputKeyword })
         this.inputKeyword = ''
       }
     },
-    onCreateClick () {
+    onCreateClick() {
       if (!this.promotion.landingPage) {
         return this.$message.error('请选择落地页')
       }
@@ -119,7 +119,7 @@ export default {
         })
         .then(() => {
           this.$message.success('创建成功')
-          this.$router.push({ name: 'seo-promotion-list' })
+          this.$router.push({name: 'seo-promotion-list'})
         })
         .catch(() => {})
     }

@@ -19,15 +19,13 @@
               <label>{{ `推广：${campaign.id}` }}</label>
             </div>
             <div>
-              <template v-if="showKeyword">
-                <li class="tree-node"
-                  v-for="keyword in campaign.keywords"
-                  :key="'k' + campaign.id + keyword.id"
-                  @click="onCheckKeyword(keyword, {}, 'select')">
-                  <el-checkbox></el-checkbox>
-                  <label>{{ fmtWord(keyword.word) }}</label>
-                </li>
-              </template>
+              <li v-if="showKeyword" class="tree-node"
+                v-for="keyword in campaign.keywords"
+                :key="'k' + campaign.id + keyword.id"
+                @click="onCheckKeyword(keyword, {}, 'select')">
+                <el-checkbox></el-checkbox>
+                <label>{{ fmtWord(keyword.word) }}</label>
+              </li>
             </div>
           </li>
         </content>
@@ -47,15 +45,13 @@
               <label>{{ `推广：${campaign.id}` }}</label>
             </div>
             <div>
-              <template v-if="showKeyword">
-                <li class="tree-node"
-                  v-for="keyword in campaign.keywords"
-                  :key="'k' + campaign.id + keyword.id"
-                  @click="onCheckKeyword(keyword, campaign, 'remove')">
-                  <el-checkbox :checked="true"></el-checkbox>
-                  <label>{{ fmtWord(keyword.word) }}</label>
-                </li>
-              </template>
+              <li v-if="showKeyword" class="tree-node"
+                v-for="keyword in campaign.keywords"
+                :key="'k' + campaign.id + keyword.id"
+                @click="onCheckKeyword(keyword, campaign, 'remove')">
+                <el-checkbox :checked="true"></el-checkbox>
+                <label>{{ fmtWord(keyword.word) }}</label>
+              </li>
             </div>
           </li>
         </content>
@@ -112,7 +108,7 @@ export default {
       type: [Number, String]
     }
   },
-  data () {
+  data() {
     return {
       httpReqPending: false,
 
@@ -122,12 +118,12 @@ export default {
     }
   },
   computed: {
-    showKeyword () {
+    showKeyword() {
       return this.dimension === DIMENSION_KEYWORD
     }
   },
   methods: {
-    async initData () {
+    async initData() {
       const { userId, channel } = this
       // 正常用户单一渠道: 推广 10 个不到 (此处简化处理, 一次性拉取)
       if (userId && typeof channel === 'number') {
@@ -139,7 +135,7 @@ export default {
         })
       }
     },
-    async onClickCampaign (id) {
+    async onClickCampaign(id) {
       const campaign = this.allCampaigns.find(c => c.id === id)
 
       if (!campaign.keywords) {
@@ -153,7 +149,7 @@ export default {
         this.$forceUpdate()
       }
     },
-    getRightCampaigns () {
+    getRightCampaigns() {
       const { campaignIds, keywordIds } = this
 
       return this.allCampaigns.map(c => {
@@ -177,7 +173,7 @@ export default {
         return overlap(kids, keywordIds)
       })
     },
-    getLeftCampaigns () {
+    getLeftCampaigns() {
       const { campaignIds, keywordIds } = this
 
       return this.allCampaigns.map(c => {
@@ -197,20 +193,20 @@ export default {
         return !overlap(kids, keywordIds)
       })
     },
-    onCheckCampaign (campaign, type) {
+    onCheckCampaign(campaign, type) {
       if (this.dimension === DIMENSION_KEYWORD) {
         if (type === 'left') {
           if (campaign.keywords && campaign.keywords.length) {
             campaign.keywords.forEach(k => {
               if (!this.keywordIds.includes(k.id)) {
-                this.$emit('select-keyword', { ...k })
+                this.$emit('select-keyword', {...k})
               }
             })
           }
         } else if (type === 'right') {
           if (campaign.keywords && campaign.keywords.length) {
             campaign.keywords.forEach(k => {
-              this.$emit('remove-keyword', { ...k })
+              this.$emit('remove-keyword', {...k})
             })
           }
         }
@@ -227,11 +223,11 @@ export default {
       // 无论 选中/删除 campaign, 删除下属 所有 keywords
       if (campaign.keywords && campaign.keywords.length) {
         campaign.keywords.forEach(k => {
-          this.$emit('remove-keyword', { ...k })
+          this.$emit('remove-keyword', {...k})
         })
       }
     },
-    onCheckKeyword (keyword, campaign = {}, action) {
+    onCheckKeyword(keyword, campaign = {}, action) {
       const cid = campaign.id
 
       if (cid && this.campaignChecked(cid)) {
@@ -240,11 +236,11 @@ export default {
         campaign.keywords.forEach(k => {
           if (keyword.id === k.id) {
             // remove
-            this.$emit('remove-keyword', { ...k })
+            this.$emit('remove-keyword', {...k})
           } else {
             // select
             if (!this.keywordChecked(keyword.id)) {
-              this.$emit('select-keyword', { ...k })
+              this.$emit('select-keyword', {...k})
             }
           }
         })
@@ -252,62 +248,62 @@ export default {
       }
 
       if (action === 'remove') {
-        this.$emit('remove-keyword', { ...keyword })
+        this.$emit('remove-keyword', {...keyword})
       } else {
         if (!this.keywordChecked(keyword.id)) {
-          this.$emit('select-keyword', { ...keyword })
+          this.$emit('select-keyword', {...keyword})
         }
       }
     },
-    campaignChecked (id) {
+    campaignChecked(id) {
       return this.campaignIds.includes(id)
     },
-    keywordChecked (id) {
+    keywordChecked(id) {
       return this.keywordIds.includes(id)
     },
-    fmtWord (w) {
+    fmtWord(w) {
       if (w.length > 9) {
         return w.slice(0, 9) + '...'
       }
 
       return w
     },
-    empty () {
+    empty() {
       this.allCampaigns = []
       this.allKeywords = {}
     },
-    cancel () {
+    cancel() {
       this.$emit('ok')
     },
-    ok () {
+    ok() {
       this.$emit('ok')
     }
   },
   watch: {
-    dimension (val, pre) {
+    dimension(val, pre) {
       if (typeof val === 'number' &&
         val !== pre) {
         this.$emit('clear')
       }
     },
-    async channel (val, pre) {
+    async channel(val, pre) {
       if (typeof val === 'number' &&
         val !== pre) {
         await this.initData()
       }
     },
-    async userId (val, pre) {
+    async userId(val, pre) {
       if (val && val !== pre) {
         await this.initData()
       }
     }
   },
-  async mounted () {
+  async mounted() {
     await this.initData()
   }
 }
 
-function overlap (arr1, arr2) {
+function overlap(arr1, arr2) {
   let result = false
 
   for (const a of arr1) {

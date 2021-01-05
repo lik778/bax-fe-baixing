@@ -63,7 +63,7 @@ export default {
       required: true
     }
   },
-  data () {
+  data() {
     return {
       checkedPlatform: allPlatforms
         .filter(n => n !== this.platform)
@@ -71,7 +71,7 @@ export default {
     }
   },
   computed: {
-    platforms () {
+    platforms() {
       return allPlatforms
         .filter(n => n !== this.platform)
         .map(i => ({
@@ -79,25 +79,25 @@ export default {
           name: semPlatformCn[String(i)]
         }))
     },
-    title () {
+    title() {
       const { platform } = this
       const cn = semPlatformCn[String(platform)]
       return `${cn}渠道创建成功`
     }
   },
   methods: {
-    getPlatformIcon (p) {
+    getPlatformIcon(p) {
       return p === this.checkedPlatform
         ? 'checkcircle'
         : 'circle'
     },
-    onClickPlatform (p) {
+    onClickPlatform(p) {
       this.checkedPlatform = p
     },
-    cancel () {
+    cancel() {
       this.$emit('cancel')
     },
-    copy () {
+    copy() {
       this.$emit('copy', {
         platform: this.checkedPlatform
       })
@@ -169,3 +169,4 @@ export default {
   }
 }
 </style>
+

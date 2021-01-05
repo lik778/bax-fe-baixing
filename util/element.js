@@ -5,14 +5,14 @@ import {
   now
 } from 'utils'
 
-export function disabledDate (date) {
+export function disabledDate(date) {
   const today = now('YYYY-MM-DD')
   const d = toHumanTime(date, 'YYYY-MM-DD')
   return toTimestamp(d) < toTimestamp(today)
 }
 
-export function renderColumnHeaderWithTip (tipText) {
-  return (h, { column, labelClass, wrapClass, labelStyle }) => {
+export function renderColumnHeaderWithTip(tipText) {
+  return (h, { column, labelClass, wrapClass,labelStyle}) => {
     const tip = h('el-tooltip', {
       props: {
         effect: 'dark',
@@ -34,8 +34,8 @@ export function renderColumnHeaderWithTip (tipText) {
       display: 'flex',
       alignItems: 'center'
     }
-    return h('div', { class: wrapClass, style: wrapStyle }, [
-      h('div', { class: labelClass, style: labelStyle, domProps: { innerHTML: column.label } }),
+    return h('div', {class: wrapClass, style: wrapStyle}, [
+      h('div', {class: labelClass,style:labelStyle,domProps: {innerHTML: column.label}}),
       tip
     ])
   }

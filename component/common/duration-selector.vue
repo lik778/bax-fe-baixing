@@ -88,7 +88,7 @@ export default {
       default: 'all'
     }
   },
-  data () {
+  data() {
     return {
       days: ['一', '二', '三', '四', '五', '六', '日'],
       // key: value -> 'day-hour': true/false
@@ -97,7 +97,7 @@ export default {
     }
   },
   computed: {
-    tips () {
+    tips() {
       const { platform } = this
 
       switch (platform) {
@@ -132,7 +132,7 @@ export default {
           ]
       }
     },
-    durations () {
+    durations() {
       switch (this.platform) {
         case SEM_PLATFORM_SOGOU:
           return [
@@ -153,7 +153,7 @@ export default {
     }
   },
   methods: {
-    initClickedFlags (schedule) {
+    initClickedFlags(schedule) {
       if (!schedule) {
         // clear
         this.clickedFlags = {}
@@ -187,7 +187,7 @@ export default {
         }
       }
     },
-    getCheckedDurations () {
+    getCheckedDurations() {
       const g = (new Array(7)).fill()
         .map(() => [...(new Array(24)).fill(false)])
 
@@ -205,7 +205,7 @@ export default {
         return parseInt(s, 2)
       })
     },
-    flagChecked (day, hour) {
+    flagChecked(day, hour) {
       const v = this.clickedFlags[day + '-' + hour]
       if (typeof v === 'boolean') {
         return v
@@ -213,7 +213,7 @@ export default {
 
       return false
     },
-    columnChecked (hour) {
+    columnChecked(hour) {
       const flags = this.clickedFlags
       const a = Object.keys(flags)
         .filter(k => {
@@ -223,7 +223,7 @@ export default {
 
       return a.length === 7
     },
-    rowChecked (day) {
+    rowChecked(day) {
       const flags = this.clickedFlags
       const a = Object.keys(flags)
         .filter(k => {
@@ -233,11 +233,11 @@ export default {
 
       return a.length === this.durations.length
     },
-    clickFlag (day, hour) {
+    clickFlag(day, hour) {
       this.clickedFlags[day + '-' + hour] = !this.flagChecked(day, hour)
       this.$forceUpdate()
     },
-    clickColumn (hour) {
+    clickColumn(hour) {
       const allChecked = this.columnChecked(hour)
       const len = this.days.length
 
@@ -247,7 +247,7 @@ export default {
 
       this.$forceUpdate()
     },
-    clickRow (day) {
+    clickRow(day) {
       const { durations } = this
       const allChecked = this.rowChecked(day)
       const len = durations.length
@@ -258,19 +258,19 @@ export default {
 
       this.$forceUpdate()
     },
-    checkAll () {
+    checkAll() {
       this.initClickedFlags('all')
       this.$forceUpdate()
     },
-    reset () {
+    reset() {
       this.initClickedFlags(this.schedule)
       this.$forceUpdate()
     },
-    cancel () {
+    cancel() {
       this.reset()
       this.$emit('hide')
     },
-    ok () {
+    ok() {
       const durations = this.getCheckedDurations()
       if (durations.reduce((a, b) => a + b, 0) === 0) {
         return Message.error('投放时段不能为空')
@@ -281,18 +281,18 @@ export default {
     }
   },
   watch: {
-    platform (now, pre) {
+    platform(now, pre) {
       if (now !== pre) {
         this.initClickedFlags(this.schedule)
       }
     },
-    schedule (now, pre) {
+    schedule(now, pre) {
       if (now !== pre) {
         this.initClickedFlags(now)
       }
     }
   },
-  mounted () {
+  mounted() {
     this.initClickedFlags(this.schedule)
   }
 }

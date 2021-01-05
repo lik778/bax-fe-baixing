@@ -25,7 +25,7 @@
                 v-if="getProp('landingType') === LANDING_TYPE_AD"
                 :type="adSelectortype"
                 :disabled="disabled"
-                :all-areas="allAreas"
+                :all-areas="allAreas" 
                 :limit-mvp="false"
                 :selected-id="getProp('landingPageId')"
                 @select-ad="ad => onSelectAd(ad)">
@@ -100,7 +100,7 @@
           <el-input size="small" class="input" placeholder="添加关键词" v-model="queryWord"/>
           <el-button size="small" type="warning" class="button" @click="addKeyword('single')">添加</el-button>
           <el-button size="small" type="primary" class="button" @click="addKeyword">一键拓词</el-button>
-          <el-button size="small" type="primary" class="button"
+          <el-button size="small" type="primary" class="button" 
                      @click="addKeywordsDialog = true; isNegative = false">批量添加</el-button>
           <strong>当前关键词数量: {{keywordLen}}个</strong>
         </header>
@@ -331,6 +331,7 @@ import QiqiaobanPageSelector from 'com/common/qiqiaoban-page-selector'
 import PromotionCreativeTip from 'com/widget//promotion-creative-tip'
 import PromotionChargeTip from 'com/widget/promotion-charge-tip'
 import PromotionKeywordTip from 'com/widget/promotion-keyword-tip'
+import PromotionRuleLink from 'com/widget/promotion-rule-link'
 import DurationSelector from 'com/common/duration-selector'
 import UserAdSelector from 'com/common/user-ad-selector'
 import CreativeEditor from 'com/widget/creative-editor'
@@ -342,9 +343,10 @@ import FmTip from 'com/widget/fm-tip'
 import qwtAddKeywordsDialog from 'com/common/qwt-add-keywords-dialog'
 import BaxInput from 'com/common/bax-input'
 
+
 import { disabledDate } from 'util/element'
 import { isBaixingSales } from 'util/role'
-import track, { trackRecommendService } from 'util/track'
+import { default as track, trackRecommendService } from 'util/track'
 
 import {
   isQwtEnableCity,
@@ -365,6 +367,7 @@ import {
 } from 'api/fengming'
 
 import {
+  CREATIVE_STATUS_REJECT,
   CREATIVE_STATUS_PENDING,
   CAMPAIGN_STATUS_OFFLINE,
   CAMPAIGN_STATUS_ONLINE,
@@ -403,7 +406,7 @@ import {
   getLandingpageByPageProtocol
 } from 'util/kit'
 
-import { allowSee258 } from 'util/fengming-role'
+import {allowSee258} from 'util/fengming-role'
 
 import store from './store'
 
@@ -430,6 +433,7 @@ export default {
     PromotionCreativeTip,
     PromotionChargeTip,
     PromotionKeywordTip,
+    PromotionRuleLink,
     DurationSelector,
     CreativeEditor,
     UserAdSelector,
@@ -457,7 +461,7 @@ export default {
       required: true
     }
   },
-  data () {
+  data() {
     return {
       creativeError: null,
       sourceTipMap, // 投放渠道
@@ -471,8 +475,8 @@ export default {
       isUpdating: false,
       queryWord: '',
       searchWord: '',
-      isSearchCondition: false,
-      searchKeywords: [],
+      isSearchCondition:false,
+      searchKeywords:[],
       // 注: 此处逻辑比较容易出错, 此处 定义为 undefined 与 getXXXdata 处 密切相关
       // 注: 需要密切关注 更新 数据 的获取
       promotion: {
@@ -492,7 +496,7 @@ export default {
         // 否定关键词
         updatedNegativeKeywords: [],
         newNegativeKeywords: [],
-        deletedNegativeKeywords: []
+        deletedNegativeKeywords: [],
       },
       LANDING_TYPE_AD,
       LANDING_TYPE_GW,
@@ -525,13 +529,13 @@ export default {
     //     return this.currentBalance
     //   }
     // },
-    extendLandingTypeOpts () {
+    extendLandingTypeOpts() {
       if (allowSee258(null, this.userInfo.id)) {
-        return landingTypeOpts.concat([{ label: '258官网', value: LANDING_TYPE_258 }])
+        return landingTypeOpts.concat([{label: '258官网', value: LANDING_TYPE_258}])
       }
       return landingTypeOpts
     },
-    modifyBudgetQuota () {
+    modifyBudgetQuota() {
       const n = this.getProp('budgetModificationCount') | 0
       let q = 5 - n
       if (q < 0) {
@@ -540,20 +544,20 @@ export default {
 
       return q
     },
-    isSales () {
+    isSales() {
       return isBaixingSales(this.userInfo.roles)
     },
-    disabled () {
+    disabled() {
       const source = this.getProp('source') // 渠道
       const creativeAuditing = this.creativeAuditing // 审核中
 
       // 审核中：神马，百度，360落地页和创意应该可以修改；搜狗无法修改
-      if (source === SEM_PLATFORM_SOGOU && creativeAuditing) {
+      if(source === SEM_PLATFORM_SOGOU && creativeAuditing) {
         return true
       }
       return false
     },
-    currentKeywords () {
+    currentKeywords() {
       const { keywords: originKeywords } = this.originPromotion
       const {
         updatedKeywords,
@@ -562,8 +566,8 @@ export default {
       } = this.promotion
 
       // 新增的keywords 加上原来的keywords
-      let keywords = []
-      if (this.isSearchCondition) {
+      let keywords =[];
+      if(this.isSearchCondition){
         keywords = this.searchKeywords
       } else {
         keywords = newKeywords.map(word => ({
@@ -571,7 +575,7 @@ export default {
           ...word
         })).concat(originKeywords)
       }
-
+      
       return keywords
         .filter(w => !deletedKeywords.map(i => i.id).includes(w.id))
         .map(w => {
@@ -584,10 +588,10 @@ export default {
             }
           }
 
-          return { ...w }
+          return {...w}
         })
     },
-    currentNegativeKeywords () {
+    currentNegativeKeywords() {
       const { negativeWords: originKeywords = [] } = this.originPromotion
       const {
         updatedNegativeKeywords: updatedKeywords,
@@ -596,14 +600,14 @@ export default {
       } = this.promotion
 
       // 新增的keywords 加上原来的keywords
-      let keywords = []
+      let keywords = [];
       keywords = originKeywords.concat(
         newKeywords.map(word => ({
           isNew: true,
           ...word
         }))
       )
-
+      
       return keywords
         .filter(w => !deletedKeywords.map(i => i.id).includes(w.id))
         .map(w => {
@@ -615,27 +619,27 @@ export default {
               }
             }
           }
-          return { ...w }
+          return {...w}
         })
     },
-    keywordLen () {
+    keywordLen() {
       const { keywords: originKeywords } = this.originPromotion
-      const { newKeywords, deletedKeywords } = this.promotion
-      const keywords = newKeywords.concat(originKeywords)
+      const { newKeywords,deletedKeywords } = this.promotion
+      let keywords = newKeywords.concat(originKeywords)
       return keywords.filter(w => !deletedKeywords.map(i => i.id).includes(w.id)).length
     },
-    currentPromotion () {
-      const keywords = this.currentKeywords
-      const negativeKeywords = this.currentNegativeKeywords
-      const allKeywords = this.currentKeywords.concat(this.currentNegativeKeywords)
+    currentPromotion(){
+      let keywords = this.currentKeywords
+      let negativeKeywords = this.currentNegativeKeywords
+      let allKeywords = this.currentKeywords.concat(this.currentNegativeKeywords)
       return {
         keywords,
         negativeKeywords,
         allKeywords,
-        campaignId: this.originPromotion.id
+        campaignId: this.originPromotion.id,
       }
     },
-    checkCreativeBtnDisabled () {
+    checkCreativeBtnDisabled() {
       const data = this.getUpdatedCreativeData()
 
       if (data.creativeTitle || data.creativeContent) {
@@ -651,24 +655,24 @@ export default {
         return false
       }
     },
-    creativeAuditing () {
+    creativeAuditing() {
       return this.originPromotion.auditStatus === CREATIVE_STATUS_PENDING
     },
-    isCampaignOffline () {
+    isCampaignOffline() {
       const {
         status
       } = this.originPromotion
 
       return status === CAMPAIGN_STATUS_OFFLINE
     },
-    isCampaignOnline () {
+    isCampaignOnline() {
       const { status } = this.originPromotion
       return status === CAMPAIGN_STATUS_ONLINE
     },
-    id () {
+    id() {
       return this.$route.params.id
     },
-    predictedInfo () {
+    predictedInfo() {
       const v = this.getProp('dailyBudget')
       if (!v) {
         return {
@@ -695,13 +699,13 @@ export default {
     }
   },
   methods: {
-    handleKeywordsDialogClose () {
+    handleKeywordsDialogClose() {
       this.addKeywordsDialog = false
       if (!this.isNegative) {
         this.getCampaignWordsDefault()
       }
     },
-    async addNegativeKeyword () {
+    async addNegativeKeyword() {
       const val = this.negativeKeywordSearch.trim()
       if (val === '') return
 
@@ -717,7 +721,7 @@ export default {
       }
 
       try {
-        const { bannedList, normalList } = await chibiRobotAudit([val], {
+        let { bannedList, normalList } = await chibiRobotAudit([val], {
           campaignId: this.originPromotion.id
         })
         if (bannedList.length) {
@@ -729,23 +733,23 @@ export default {
         console.error(e)
       }
     },
-    removeNegativeKeyword (w) {
-      const { isNew, ...word } = w
-      if (isNew) {
+    removeNegativeKeyword(w) {
+      const {isNew, ...word} = w
+      if (!!isNew) {
         this.promotion.newNegativeKeywords = this.promotion.newNegativeKeywords.filter(w => w.word !== word.word)
       } else {
         this.promotion.deletedNegativeKeywords.push(word)
       }
     },
-    updatePromotionKeywords (kwAddResult) {
+    updatePromotionKeywords(kwAddResult) {
       this.addKeywordsDialog = false
-      if (!kwAddResult) return
+      if (!kwAddResult) return 
 
-      const { normalList } = kwAddResult
+      let { normalList, bannedList } = kwAddResult
       const { actionTrackId, userInfo } = this
       track({
         roles: userInfo.roles.map(r => r.name).join(','),
-        action: `click-button: ${this.isNegative ? 'add-negative-keyword-list' : 'add-keyword-list'}`,
+        action: `click-button: ${this.isNegative ? 'add-negative-keyword-list': 'add-keyword-list'}`,
         baixingId: userInfo.baixingId,
         time: Date.now() / 1000 | 0,
         baxId: userInfo.id,
@@ -753,71 +757,72 @@ export default {
         keywordsLen: normalList.length,
         keywords: normalList.map(item => item.word).join(',')
       })
-
+      
       if (this.isNegative) {
         this.promotion.newNegativeKeywords = this.promotion.newNegativeKeywords.concat(normalList)
       } else {
         this.promotion.newKeywords = normalList.concat(this.promotion.newKeywords)
       }
     },
-    async getCampaignWordsBySearchWord () {
+    async getCampaignWordsBySearchWord() {
       this.isSearchCondition = true
-      const searchWord = this.searchWord
-
+      let searchWord = this.searchWord
+      
       // 获取到原有以及新增中的模糊匹配关键词
-      const { keywords: originKeywords } = this.originPromotion
+      const { keywords : originKeywords} = this.originPromotion
       const { newKeywords } = this.promotion
-      const keywords = newKeywords.map(word => ({
-        isNew: true,
-        ...word
+      let keywords = newKeywords.map(word =>({
+         isNew:true,
+         ...word
       })).concat(originKeywords)
-
-      this.searchKeywords = keywords.filter(row => row.word.indexOf(searchWord) > -1)
+      
+      this.searchKeywords = keywords.filter(row => row.word.indexOf(searchWord)> -1)
     },
-    async getCampaignWordsDefault () {
+    async getCampaignWordsDefault() {
       this.searchWord = ''
       this.isSearchCondition = false
       this.currentKeywordsOffset = 0
       store.setOriginKeywords()
     },
-    handleCreativeValueChange ({ title, content }) {
+    handleCreativeValueChange({title, content}) {
       this.promotion.creativeTitle = title
       this.promotion.creativeContent = content
     },
-    async goChargeKaSite () {
+    async goChargeKaSite() {
       await getQiqiaobanCoupon(this.id)
       setTimeout(() => {
         this.$router.push('/main/qwt/charge?select_gw=1')
       }, 300)
     },
-    handleCreativeError (message) {
-      if (message) Message.error(message)
+    handleCreativeError(message) {
+      if(message) Message.error(message)
       this.creativeError = message
     },
-    toggleDisplaySettingArea () {
+    toggleDisplaySettingArea() {
       this.moreSettingDisplay = !this.moreSettingDisplay
     },
-    setLandingPage (url) {
+    setLandingPage(url) {
       this.promotion.landingPage = url
     },
-    banLandPageSelected () {
+    banLandPageSelected() {
       // 落地页404，需要更改落地页投放
       if (this.isErrorLandingPageShow && (!this.promotion.landingPage || this.promotion.landingPage === this.originPromotion.landingPage)) {
         this.adSelectortype = ''
         const pageErrorPlaceholder = document.querySelector('.page-error-placeholder')
         pageErrorPlaceholder.scrollIntoViewIfNeeded()
-        pageErrorPlaceholder.style.borderColor = '#ff4401'
+        pageErrorPlaceholder.style.borderColor = "#ff4401"
         throw this.$message.error('当前投放页面失效，请重新选择新的投放页面')
       }
       // 已经下线计划当前落地页为老官网且 没有重选新落地页
-      if (this.isQiqiaobanSite && this.isCampaignOffline && (!this.promotion.landingPage || isQiqiaobanSite(this.promotion.landingPage))) {
+      if(this.isQiqiaobanSite && this.isCampaignOffline && (!this.promotion.landingPage || isQiqiaobanSite(this.promotion.landingPage))) {
         this.adSelectortype = ''
         const landingpage = document.querySelector('.landingpage')
         landingpage.scrollIntoViewIfNeeded()
         throw this.$message.error('当前所选落地页无效，请修改推广计划的投放页面')
       }
     },
-    async onSelectAd (ad) {
+    async onSelectAd(ad) {
+
       const { allAreas } = this
 
       this.promotion.category = ad.category
@@ -827,14 +832,14 @@ export default {
       this.promotion.landingPageId = ad.adId
       this.promotion.landingPage = ad.url
     },
-    getCurrentSchedule () {
+    getCurrentSchedule() {
       const schedule = this.getProp('schedule')
 
       return Array.isArray(schedule)
         ? schedule.join(',')
         : schedule
     },
-    getDurationType () {
+    getDurationType() {
       const schedule = this.getProp('schedule')
 
       if (!schedule) {
@@ -850,26 +855,26 @@ export default {
 
       return sum < 117440505 ? '部分时段' : '全时段'
     },
-    onChangeDuration (durations) {
+    onChangeDuration(durations) {
       this.promotion.schedule = durations
     },
-    getProp (prop) {
+    getProp(prop) {
       if (typeof this.promotion[prop] !== 'undefined') {
         return this.promotion[prop]
       }
 
       return this.originPromotion[prop]
     },
-    async initCampaignInfo () {
+    async initCampaignInfo() {
       await Promise.all([
         store.getCampaignInfo(this.id),
         store.getCurrentBalance()
       ])
     },
-    clickSourceTip () {
+    clickSourceTip() {
       Message.warning('投放渠道不能修改')
     },
-    clickLandingType (type) {
+    clickLandingType(type) {
       if (this.disabled) {
         return Message.warning('审核中, 无法修改')
       }
@@ -884,7 +889,7 @@ export default {
         this.promotion.landingPage = undefined
       }
     },
-    updateExistWord (word) {
+    updateExistWord(word) {
       const {
         newKeywords,
         updatedKeywords
@@ -898,7 +903,7 @@ export default {
               ...word
             }
           } else {
-            return { ...w }
+            return {...w}
           }
         })
       } else {
@@ -912,7 +917,7 @@ export default {
                 price: word.price
               }
             } else {
-              return { ...w }
+              return {...w}
             }
           })
         } else {
@@ -922,7 +927,7 @@ export default {
         }
       }
     },
-    getUpdatedCreativeData () {
+    getUpdatedCreativeData() {
       const {
         creativeContent: originCreativeContent,
         creativeTitle: originCreativeTitle,
@@ -978,7 +983,7 @@ export default {
 
       return result
     },
-    getUpdatedValidTime () {
+    getUpdatedValidTime() {
       const {
         timeRange: originTimeRange, // 说明: 参见 store 的处理
         validTime: originValidTime // validTime 为格式化的 timeRange
@@ -1013,7 +1018,7 @@ export default {
       }
       // no change, no return
     },
-    getUpdatedPromotionData () {
+    getUpdatedPromotionData() {
       const {
         dailyBudget, // 元
         schedule,
@@ -1052,7 +1057,7 @@ export default {
 
       return data
     },
-    getUpdatedKeywordsData () {
+    getUpdatedKeywordsData() {
       const {
         updatedKeywords,
         deletedKeywords,
@@ -1075,7 +1080,7 @@ export default {
 
       return data
     },
-    getUpdatedNegativeKeywordsData () {
+    getUpdatedNegativeKeywordsData() {
       const {
         updatedNegativeKeywords,
         deletedNegativeKeywords,
@@ -1098,7 +1103,7 @@ export default {
 
       return data
     },
-    async updatePromotion () {
+    async updatePromotion() {
       if (!this.$refs.contract.$data.isAgreement) {
         return this.$message.error('请阅读并勾选同意服务协议，再进行下一步操作')
       }
@@ -1109,16 +1114,18 @@ export default {
 
       this.isUpdating = true
 
+      const { actionTrackId, userInfo, id } = this
+
       try {
         await this._updatePromotion()
       } finally {
         this.isUpdating = false
       }
     },
-    async _updatePromotion () {
+    async _updatePromotion() {
       const { allAreas, trackPromotionKeywords } = this
       let data = {}
-      try {
+      try { 
         data = {
           ...this.getUpdatedCreativeData(),
           ...this.getUpdatedPromotionData(),
@@ -1149,14 +1156,15 @@ export default {
         mobilePriceRatio
       } = data
 
+
       const words = [...updatedKeywords, ...newKeywords]
 
       // 关键词触发增删改都需要进行词数校验
-      if ((words.length || deletedKeywords.length) &&
-        this.keywordLen < 20) {
+      if ((words.length || deletedKeywords.length)
+        && this.keywordLen < 20) {
         return Message.error('请至少添加20个投放关键词')
       }
-      if (this.currentNegativeKeywords.length > this.NEGATIVE_KEYWORDS_MAX) {
+      if (this.currentNegativeKeywords.length > this.NEGATIVE_KEYWORDS_MAX ) {
         return Message.error(`否词个数不得超过${this.NEGATIVE_KEYWORDS_MAX}个`)
       }
 
@@ -1184,9 +1192,9 @@ export default {
         }
       }
 
-      if (mobilePriceRatio !== undefined) {
+      if(mobilePriceRatio !== undefined) {
         const ratio = +(Number(mobilePriceRatio).toFixed(2))
-        if (!(ratio >= 0.1 && ratio <= 9.9)) {
+        if(!(ratio >= 0.1 && ratio <= 9.9)) {
           return Message.error('投放移动端的出价比率应在0.1 ~ 9.9之间')
         }
       }
@@ -1202,7 +1210,7 @@ export default {
         name: 'qwt-promotion-list'
       })
     },
-    trackPromotionKeywords ({ updatedKeywords = [], newKeywords = [], deletedKeywords = [] }) {
+    trackPromotionKeywords({ updatedKeywords = [], newKeywords = [], deletedKeywords = [] }) {
       // origin
       const recommendKeywords = [...new Set(this._recommendKeywords || [])]
       const getProp = this.getProp.bind(this)
@@ -1218,15 +1226,16 @@ export default {
         source: getProp('sources'),
         dailyBudget: getProp('dailyBudget'),
         landingType: getProp('landingType'),
-        useRecommendKeywords: Array.isArray(this._recommendKeywords) ? FHYF_USERD : FHYF_UN_USE, // 是否使用一键拓词功能
-
-        recommendKeywords: recommendKeywords.map(({ word, recommandSource = 'user_selected', price }) => `${word}=${recommandSource}=${price}`).join(','),
-        newKeywords: newKeywords.map(({ word, recommandSource = 'user_selected', price }) => `${word}=${recommandSource}=${price}`).join(','),
-        deletedKeywords: deletedKeywords.map(({ word, price }) => `${word}=${price}`).join(','),
-        updatedKeywords: updatedKeywords.map(({ word, price }) => `${word}=${price}`).join(',')
+        useRecommendKeywords: Array.isArray(this._recommendKeywords)? FHYF_USERD: FHYF_UN_USE, // 是否使用一键拓词功能
+    
+        recommendKeywords: recommendKeywords.map(({word, recommandSource = 'user_selected', price}) => `${word}=${recommandSource}=${price}`).join(','),
+        newKeywords: newKeywords.map(({word, recommandSource = 'user_selected', price}) => `${word}=${recommandSource}=${price}`).join(','),
+        deletedKeywords: deletedKeywords.map(({word, price}) => `${word}=${price}`).join(','),
+        updatedKeywords: updatedKeywords.map(({word, price}) => `${word}=${price}`).join(',')
       })
+      
     },
-    async checkCreativeContent () {
+    async checkCreativeContent() {
       const creativeContent = this.getProp('creativeContent')
       const creativeTitle = this.getProp('creativeTitle')
       const platform = this.getProp('source')
@@ -1247,7 +1256,7 @@ export default {
         Message.error(data.hint)
       }
     },
-    gotoReportPage () {
+    gotoReportPage() {
       const { id } = this
 
       this.$router.push({
@@ -1258,36 +1267,36 @@ export default {
         }
       })
     },
-    onChangeAreas (areas) {
+    onChangeAreas(areas) {
       this.promotion.areas = [...areas]
       this.areaDialogVisible = false
     },
-    formatterArea (name) {
+    formatterArea(name) {
       const { allAreas } = this
       return getCnName(name, allAreas)
     },
-    removeArea (c) {
+    removeArea(c) {
       this.promotion.areas = [
         ...this.getProp('areas').filter(i => i !== c)
       ]
     },
-    setTimeType (type) {
+    setTimeType(type) {
       store.setTimeType(type)
     },
-    canOptimize (type) {
-      const expandMoreSettingArea = () => { this.moreSettingDisplay = true }
+    canOptimize(type) {
+      const expandMoreSettingArea = () => this.moreSettingDisplay = true
       const opt = {
         creative: () => this.originPromotion.ctrMark,
         keyword: () => this.originPromotion.kwMark || this.originPromotion.priceMark,
         time: () => this.timeType === 'custom' && expandMoreSettingArea(),
         duration: () => this.getDurationType() === '部分时段' && expandMoreSettingArea(),
         ratio:
-          () => !(!this.getProp('mobilePriceRatio') || this.getProp('mobilePriceRatio') === 1 || +this.promotion.mobilePriceRatio === 1) &&
-          expandMoreSettingArea()
+          () =>!(!this.getProp('mobilePriceRatio') || this.getProp('mobilePriceRatio') === 1 || +this.promotion.mobilePriceRatio === 1)
+          && expandMoreSettingArea()
       }
       return opt[type]() ? 'highlight' : ''
     },
-    async optimizeCreative () {
+    async optimizeCreative() {
       const { actionTrackId, userInfo, id: campaignId } = this
       track({
         action: 'click-button: optimize-creative',
@@ -1297,18 +1306,18 @@ export default {
         actionTrackId,
         campaignId
       })
-      const { title, content } = await getRecommandCreative({ campaignId })
+      const { title, content } = await getRecommandCreative({campaignId})
       if (!(title && content)) return this.$message.error('无法提供创意优化建议')
       this.promotion.creativeTitle = title
       this.promotion.creativeContent = content
     },
-    filterExistCurrentWords (newWords) {
+    filterExistCurrentWords(newWords) {
       // 去除关键词和否定关键词
       const words = this.currentKeywords.concat(this.currentNegativeKeywords).map(w => w.word.toLowerCase())
       return newWords
         .filter(w => !words.includes(w.word.toLowerCase()))
     },
-    async addKeyword (type) {
+    async addKeyword(type) {
       // 先取消搜索关键词，设为原来的全量关键词
       this.getCampaignWordsDefault()
 
@@ -1333,15 +1342,15 @@ export default {
         if (this.currentNegativeKeywords.find(w => w.word.toLowerCase() === queryWord.toLowerCase())) {
           return this.$message.info('当前关键词已存在否定关键词列表')
         }
-
+        
         try {
           validateKeyword([queryWord])
         } catch (e) {
           return Message.error(e.message)
         }
 
-        const recommendKeywords = await recommendByWord(queryWord, { campaignId: this.originPromotion.id })
-        const newKeyword = store.fmtNewKeywordsPrice(recommendKeywords).find(k => k.word === queryWord)
+        const recommendKeywords = await recommendByWord(queryWord, {campaignId: this.originPromotion.id})
+        const newKeyword = store.fmtNewKeywordsPrice(recommendKeywords).find( k => k.word === queryWord)
         if (!newKeyword) return this.$message.info('没有合适的关键词')
 
         newKeywords = [newKeyword]
@@ -1377,19 +1386,19 @@ export default {
       }
       this.promotion.newKeywords = newKeywords.concat(this.promotion.newKeywords)
     },
-    handleDeleteWord (w) {
-      const { isNew, ...word } = w
-      if (isNew) {
+    handleDeleteWord(w) {
+      const {isNew, ...word} = w
+      if (!!isNew) {
         this.promotion.newKeywords = this.promotion.newKeywords.filter(w => w.word !== word.word)
       } else {
         this.promotion.deletedKeywords.push(word)
       }
     },
-    async changeKeywordsPrice (keywordsPrice) {
+    async changeKeywordsPrice(keywordsPrice) {
       const price = keywordsPrice * 100
       const campaignId = +this.$route.params.id
       if (price < 200 || price > 99900) {
-        throw new Error('关键词有效出价区间为[2, 999]元，请调整出价')
+        throw '关键词有效出价区间为[2, 999]元，请调整出价'
       }
       await changeCampaignKeywordsPrice(campaignId, price)
       this.originPromotion.keywords.forEach(word => {
@@ -1408,26 +1417,26 @@ export default {
     f2y
   },
   watch: {
-    'originPromotion' ({ landingPage, landingType }) {
+    'originPromotion'({landingPage, landingType}) {
       if (landingType === 1) {
         this.isQiqiaobanSite = isQiqiaobanSite(landingPage)
       }
     },
-    '$route.params.id': async function (v, p) {
+    '$route.params.id': async function(v, p) {
       if (v !== p) {
         await this.initCampaignInfo()
       }
     },
-    'promotion.deletedKeywords' (deletedKws) {
+    'promotion.deletedKeywords'(deletedKws) {
       // 删除的时候有可能批量改价过，所以要把在deletedKeywords中的关键字从updatedKeywords中过滤
       this.promotion.updatedKeywords =
         this.promotion.updatedKeywords.filter(w => !deletedKws.some(dw => dw.word === w.word))
     }
   },
-  async beforeDestroy () {
+  async beforeDestroy() {
     await store.clearStore()
   },
-  async mounted () {
+  async mounted() {
     await this.initCampaignInfo()
 
     // 验证官网落地页是否404
@@ -1452,14 +1461,13 @@ export default {
     if (landingType === LANDING_TYPE_AD) {
       const result = await queryAds({
         limitMvp: false,
-        adIds: this.originPromotion.landingPageId,
+        adId: this.originPromotion.landingPageId,
         limit: 1
       })
       const ad = result.ads && result.ads[0]
-      if (!ad) {
-        this.isErrorLandingPageShow = true
-        this.promotion.landingPage = ''
-      }
+      if (ad && String(ad.adId) === String(this.originPromotion.landingPageId)) return
+      this.isErrorLandingPageShow = true
+      this.promotion.landingPage = ''
     }
 
     setTimeout(() => {

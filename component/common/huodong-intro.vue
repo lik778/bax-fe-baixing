@@ -16,20 +16,20 @@ export default {
   props: {
     show: Boolean
   },
-  data () {
+  data() {
     return {
       href: href
     }
   },
-  mounted () {
+  mounted() {
     this.href = href + window.location.search
     const self = this
-    document.querySelector('.huodong-intro').addEventListener('click', function (e) {
+    document.querySelector('.huodong-intro').addEventListener('click', function(e) {
       if (e.target.tagName !== 'IMG') {
         self.$emit('close')
       }
     })
-  }
+  },
 }
 </script>
 

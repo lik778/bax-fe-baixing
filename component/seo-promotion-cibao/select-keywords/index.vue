@@ -97,7 +97,7 @@ export default {
     originKeywords: {
       type: Object,
       required: false,
-      default () {
+      default() {
         return Object.values(keywordOptions).reduce((curr, item) => {
           curr[item.keywordsAlias] = []
           return curr
@@ -105,7 +105,7 @@ export default {
       }
     }
   },
-  data () {
+  data() {
     return {
       visible: false,
       keywordOptions: clone(keywordOptions),
@@ -116,8 +116,8 @@ export default {
     KeywordInput,
     KeywordView
   },
-  created () {
-    Object.values(this.keywordOptions).forEach((item) => {
+  created() {
+    Object.values(this.keywordOptions).map((item) => {
       this.keywordOptions[item.type].placeholder = item.placeholder.replace(
         /[,，]]*/g,
         '<br/>'
@@ -125,15 +125,15 @@ export default {
     })
   },
   methods: {
-    getProp (prop) {
+    getProp(prop) {
       const existKeywordObj = this.keywordOptions[this.activeType]
       return existKeywordObj && existKeywordObj[prop]
     },
-    popKeywordInputDialog (type) {
+    popKeywordInputDialog(type) {
       this.visible = true
       this.activeType = type
     },
-    updateKeywords (obj) {
+    updateKeywords(obj) {
       let { type, words } = obj
       const wordLenLimit = this.keywordOptions[type].wordLenLimit
 
@@ -154,7 +154,7 @@ export default {
 
       this.keywordOptions[type].keywords = keywords
     },
-    editKeyword (obj) {
+    editKeyword(obj) {
       const { type, index } = obj
       const wordLenLimit = this.keywordOptions[type].wordLenLimit
 
@@ -175,11 +175,11 @@ export default {
         })
         .catch(() => {})
     },
-    deleteKeyword (obj) {
+    deleteKeyword(obj) {
       const { type, index } = obj
       this.keywordOptions[type].keywords.splice(index, 1)
     },
-    getValues () {
+    getValues() {
       return Object.values(this.keywordOptions).reduce((curr, item) => {
         const errMsg = validateKeywordsLen(item)
         if (errMsg) throw new Error(errMsg)
@@ -190,8 +190,8 @@ export default {
     }
   },
   watch: {
-    originKeywords (newVal) {
-      for (const key in this.keywordOptions) {
+    originKeywords(newVal) {
+      for (let key in this.keywordOptions) {
         const { keywordsAlias, keywords } = this.keywordOptions[key]
         this.keywordOptions[key].keywords = [
           ...new Set(keywords.concat(this.originKeywords[keywordsAlias]))

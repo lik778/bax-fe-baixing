@@ -20,15 +20,15 @@ export default {
     },
     size: {
       type: String,
-      default: 'small'
+      default: 'small',
     }
   },
   methods: {
-    onBlur (event) {
+    onBlur(event) {
       this.$emit('blur', event.target.value)
     },
-    onKeyUp (event) {
-      this.$emit('keyup', event.target.value)
+    onKeyUp(event) {
+      this.$emit('keyup',event.target.value)
     }
   }
 }
