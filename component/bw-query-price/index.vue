@@ -368,7 +368,7 @@ export default {
             })
             const cloneSkus = clone(this.skus)
             cloneSkus.shift()
-            this.packageRecommends  = this.groupPackageRecommends(cloneSkus)
+            this.packageRecommends = this.groupPackageRecommends(cloneSkus)
           } finally {
             this.loading = false
           }
