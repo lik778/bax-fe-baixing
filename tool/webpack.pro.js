@@ -48,7 +48,8 @@ config.plugins = [
   new webpack.EnvironmentPlugin(['NODE_ENV']),
   new MiniCssExtractPlugin({
     filename: "[name].[hash].css",
-    chunkFilename: "[id].[hash].css"
+    chunkFilename: "[id].[hash].css",
+    ignoreOrder: true
   }),
   new HtmlWebpackPlugin({
     filename: 'main.html',
