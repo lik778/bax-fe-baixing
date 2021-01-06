@@ -171,7 +171,24 @@ export async function queryKeywordPackagePrice(opts) {
   return body.data
 }
 
-export async function refreshKeywordPriceNew(keywords, opt) {
+// 把查价信息打给数据组
+export async function sendSelectedIndustryToBW (query) {
+  return await biaowang
+    .post('/keyword/v2/pricing/user/keywordIndustry')
+    .send(query)
+    .json()
+}
+
+// 获取标王查价时需选择的行业信息
+export async function queryBWIndustry () {
+  return (await biaowang
+    .get('/keyword/v2/pricing/user/inquiryAllIndustry')
+    .query()
+    .json())
+    .data
+}
+
+export async function refreshKeywordPriceNew (keywords, opt) {
   const requestBody = keywords.map(k => ({
     ...k,
     price: {
