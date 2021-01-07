@@ -11,7 +11,7 @@ import {
 
 export default {
   name: 'seo-landing',
-  data() {
+  data () {
     return {
       text: '支付成功！'
     }
@@ -20,15 +20,15 @@ export default {
     userInfo: Object
   },
   computed: {
-    isBxUser() {
+    isBxUser () {
       const roles = normalizeRoles(this.userInfo.roles)
       return roles.includes('BAIXING_USER')
     },
-    isAgentAccounting() {
+    isAgentAccounting () {
       const roles = normalizeRoles(this.userInfo.roles)
       return roles.includes('AGENT_ACCOUNTING')
     }
-  }, 
+  },
   watch: {
     // userInfo(v) {
     //   if (v.id) {

@@ -126,7 +126,7 @@ import clone from 'clone'
 
 export default {
   name: 'seo-cibao-update-page',
-  data() {
+  data () {
     return {
       volumes,
       durations,
@@ -152,10 +152,10 @@ export default {
     }
   },
   methods: {
-    handleSearchFileChange(fileList) {
+    handleSearchFileChange (fileList) {
       this.promotion.images = fileList
     },
-    async validateAndReturnPromotionData() {
+    async validateAndReturnPromotionData () {
       if (!this.$refs.contract.$data.isAgreement) {
         throw this.$message.error('请阅读并勾选同意服务协议，再进行下一步操作')
       }
@@ -163,7 +163,7 @@ export default {
       let baseInfo = {}
       try {
         baseInfo = await this.$refs.promotionForm.getValues()
-      } catch(err) {
+      } catch (err) {
         const errorField = Object.values(err)[0] && Object.values(err)[0][0]
         throw this.$message.error(errorField ? errorField.message : '基础信息出现错误')
       }
@@ -180,7 +180,7 @@ export default {
         baseInfo
       }
     },
-    async updatePromotion() {
+    async updatePromotion () {
       this.canConfirmOpen && await this.$confirm(`
         <div>
           <p>1.本次提交会更新上次提交的关键词，最新上词以提交版本为准；</p>
@@ -193,30 +193,30 @@ export default {
         cancelButtonText: '我再想想'
       })
       this.canConfirmOpen = false
-      let data = await this.validateAndReturnPromotionData()
-      
+      const data = await this.validateAndReturnPromotionData()
+
       console.log(data)
 
       updateCibaoPromotion(data).then(res => {
         this.$message.success('更新成功')
-        this.$router.push({name: 'seo-promotion-list'})
+        this.$router.push({ name: 'seo-promotion-list' })
       })
     },
-    async getPromotionDataById(id) {
+    async getPromotionDataById (id) {
       const data = await getCibaoPromotionByCampaignId(id)
       this.originPromotion = pick(data, ...Object.keys(this.promotion))
       this.promotion = clone(this.originPromotion)
     }
   },
   computed: {
-    charge() {
+    charge () {
       const { duration, volume } = this.promotion
       const chargeObj = chargeList.find(
         (o) => o.volume === volume && o.duration === duration
       )
       return chargeObj ? chargeObj.charge : chargeList[0].charge
     },
-    originKeywords() {
+    originKeywords () {
       const keys = [
         'customAreas',
         'prefixWordList',
@@ -225,7 +225,7 @@ export default {
       ]
       return pick(this.originPromotion, keys)
     },
-    originalFileList() {
+    originalFileList () {
       return (this.originPromotion && this.originPromotion.images) || []
     }
   },
@@ -236,7 +236,7 @@ export default {
     SearchImgView,
     SelectKeywords
   },
-  async created() {
+  async created () {
     this.promotion.id = this.$route.params.id
     await this.getPromotionDataById(this.$route.params.id)
   }

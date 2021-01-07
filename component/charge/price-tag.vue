@@ -40,17 +40,17 @@ export default {
       default: 99999999
     }
   },
-  data() {
+  data () {
     return {
       inputPrice: ''
     }
   },
   computed: {
-    displayPrice() {
+    displayPrice () {
       return this.inputPrice || this.price
-    },
+    }
   },
-  mounted() {
+  mounted () {
     if (this.editable) {
       this.$bus.$on('resetPriceTagInput', () => {
         this.inputPrice = ''
@@ -58,7 +58,7 @@ export default {
     }
   },
   methods: {
-    onBlur() {
+    onBlur () {
       const {
         minInputPrice,
         maxInputPrice,
@@ -72,7 +72,7 @@ export default {
         return Message.error(`最高充值金额：${maxInputPrice}`)
       }
     },
-    onClick(e) {
+    onClick (e) {
       if (!this.checked) {
         if (this.editable) {
           this.$refs.input.focus()
@@ -83,7 +83,6 @@ export default {
           this.$emit('click')
         }
       }
-
     }
   },
   watch: {

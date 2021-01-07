@@ -64,21 +64,21 @@ export default {
       required: true
     }
   },
-  data() {
+  data () {
     return {
       words: '',
       displayPlaceholder: true
     }
   },
   methods: {
-    handleClose() {
+    handleClose () {
       this.$emit('close')
     },
-    handleClear() {
+    handleClear () {
       this.words = ''
       this.handleClose()
     },
-    handleConfirm() {
+    handleConfirm () {
       if (!WORD_REG.test(this.words)) {
         return this.$message.error(`${this.type}类只支持中文、英文字母和数字`)
       }

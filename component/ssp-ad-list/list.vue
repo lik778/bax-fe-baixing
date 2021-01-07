@@ -193,7 +193,7 @@ export default {
       required: true
     }
   },
-  data() {
+  data () {
     return {
       addMaterialDialogVisible: false,
       addAdItemDialogVisible: false,
@@ -203,46 +203,46 @@ export default {
     }
   },
   computed: {
-    currentRoles() {
+    currentRoles () {
       return (this.userInfo.roles || [])
         .map(r => r.nameEn)
     },
-    allowUpdateMaterial() {
+    allowUpdateMaterial () {
       return allowUpdateMaterial(this.userInfo.roles)
     },
-    allowAddMaterial() {
+    allowAddMaterial () {
       return allowAddMaterial(this.userInfo.roles)
     },
-    allowContinueAd() {
+    allowContinueAd () {
       return allowContinueAd(this.userInfo.roles)
     },
-    allowAddAdItem() {
+    allowAddAdItem () {
       return allowAddAdItem(this.userInfo.roles)
     },
-    allowPauseAd() {
+    allowPauseAd () {
       return allowPauseAd(this.userInfo.roles)
     },
-    allowVerify() {
+    allowVerify () {
       return allowVerifyAd(this.userInfo.roles)
     }
   },
   filters: {
-    adItemStatus(s) {
+    adItemStatus (s) {
       return adStatus[String(s)]
     },
-    date(v) {
+    date (v) {
       return toHumanTime(v, 'MM月DD日')
     },
     toHumanTime
   },
   methods: {
-    async onAddMaterialSuccess() {
-      await store.getAdItems({...this.query})
+    async onAddMaterialSuccess () {
+      await store.getAdItems({ ...this.query })
     },
-    async onAddAdItemSuccess() {
+    async onAddAdItemSuccess () {
       await store.getAdItems()
     },
-    async onContinueAd(id, name) {
+    async onContinueAd (id, name) {
       try {
         await this.$confirm(`确认继续投放: ${name}`)
       } catch (err) {
@@ -251,11 +251,11 @@ export default {
 
       await continueAdItem(id)
 
-      await store.getAdItems({...this.query})
+      await store.getAdItems({ ...this.query })
 
       Message.success('修改成功')
     },
-    async onPauseAd(id, name) {
+    async onPauseAd (id, name) {
       let reason = ''
 
       try {
@@ -273,11 +273,11 @@ export default {
         reason
       })
 
-      await store.getAdItems({...this.query})
+      await store.getAdItems({ ...this.query })
 
       Message.success('修改成功')
     },
-    allowVerifyAdItem(status) {
+    allowVerifyAdItem (status) {
       if (status === 0) {
         return this.currentRoles.includes('QA_OPERATOR')
       }
@@ -288,18 +288,18 @@ export default {
 
       return false
     },
-    showAddAdItemDialog(id, item) {
+    showAddAdItemDialog (id, item) {
       this.addAdItemDialogVisible = true
 
       this.currentItem = clone(item)
       this.currentItemId = id
     },
-    showAddMaterialDialog(id, item) {
+    showAddMaterialDialog (id, item) {
       this.addMaterialDialogVisible = true
       this.currentItem = clone(item)
       this.currentItemId = id
     },
-    async onCurrentChange({offset}) {
+    async onCurrentChange ({ offset }) {
       const q = {
         ...this.query,
         offset
@@ -307,7 +307,7 @@ export default {
 
       await store.getAdItems(q)
     },
-    async rejectAdItem(id) {
+    async rejectAdItem (id) {
       this.currentItem = {}
       this.currentItemId = id
 
@@ -332,16 +332,16 @@ export default {
 
       await store.getAdItems()
     },
-    async passAdItem(gid) {
+    async passAdItem (gid) {
       await verifyAdItem(gid, 'pass')
       await store.getAdItems()
     },
-    formatterCategory(row) {
+    formatterCategory (row) {
       const { allCategories } = this
       const { categories } = row
       return formatCategoriesOrAreas(categories, allCategories)
     },
-    formatterArea(row) {
+    formatterArea (row) {
       const { allAreas } = this
       const { areas } = row
       return formatCategoriesOrAreas(areas, allAreas)

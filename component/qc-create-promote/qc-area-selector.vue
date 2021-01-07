@@ -34,20 +34,19 @@
 </template>
 
 <script>
-import isequal from "lodash.isequal";
-import { getQcAllAreas } from "api/qianci";
-import clone from "clone";
-import gStore from "../store";
+import isequal from 'lodash.isequal'
+import clone from 'clone'
+import gStore from '../store'
 
-function getNumberCN(n) {
+function getNumberCN (n) {
   return {
-    1: "一",
-    2: "两"
-  }[n];
+    1: '一',
+    2: '两'
+  }[n]
 }
 
 export default {
-  name: "qc-area-selector",
+  name: 'qc-area-selector',
   props: {
     maxAreaLength: Number,
     areas: {
@@ -60,25 +59,25 @@ export default {
       required: true
     }
   },
-  data() {
+  data () {
     return {
       getNumberCN,
       selectedAreas: [],
       originSelectedAreas: [],
       originProvinceList: [],
       provinceList: []
-    };
+    }
   },
   fromMobx: {
     allQianciAreas: () => gStore.allQianciAreas
   },
   watch: {
-    visible(v) {
+    visible (v) {
       if (v) {
         if (this.provinceList.length === 0) {
-          const { cnToEnMap, provinces } = this.allQianciAreas;
-          const specialCityList = ["北京", "重庆", "上海", "天津"];
-          const provinceList = [];
+          const { cnToEnMap, provinces } = this.allQianciAreas
+          const specialCityList = ['北京', '重庆', '上海', '天津']
+          const provinceList = []
           Object.keys(provinces).forEach(k => {
             if (!specialCityList.includes(k)) {
               provinceList.push({
@@ -86,9 +85,9 @@ export default {
                 en: cnToEnMap[k],
                 checked: false,
                 cities: provinces[k]
-              });
+              })
             }
-          });
+          })
           provinceList.push(
             ...specialCityList.map(k => {
               return {
@@ -96,25 +95,25 @@ export default {
                 en: cnToEnMap[k],
                 checked: false,
                 cities: provinces[k]
-              };
+              }
             })
-          );
-          this.provinceList = provinceList;
+          )
+          this.provinceList = provinceList
         }
-        this.originProvinceList = clone(this.provinceList);
-        this.originSelectedAreas = clone(this.selectedAreas);
+        this.originProvinceList = clone(this.provinceList)
+        this.originSelectedAreas = clone(this.selectedAreas)
       }
     },
-    areas(v) {
-      console.log(v, this.selectedAreas);
+    areas (v) {
+      console.log(v, this.selectedAreas)
       if (isequal(v, this.selectedAreas)) {
-        return;
+        return
       }
-      this.selectedAreas = [...v];
+      this.selectedAreas = [...v]
     }
   },
-  mounted() {
-    this.$bus.$on("updateQcAreaSelectorView", province => {
+  mounted () {
+    this.$bus.$on('updateQcAreaSelectorView', province => {
       const removeProvinceIndex = this.selectedAreas.findIndex(
         x => x.name === province.name
       )
@@ -130,35 +129,35 @@ export default {
     })
   },
   methods: {
-    disabledProvinceCheck(province) {
+    disabledProvinceCheck (province) {
       return (
         !this.selectedAreas.map(p => p.name).includes(province.name) &&
         this.selectedAreas.length === this.maxAreaLength
-      );
+      )
     },
-    provinceCheckedChange(province) {
+    provinceCheckedChange (province) {
       if (province.checked) {
-        this.selectedAreas.push(province);
+        this.selectedAreas.push(province)
       } else {
         const index = this.selectedAreas.findIndex(
           x => province.name === x.name
-        );
+        )
         if (index > -1) {
-          this.selectedAreas.splice(index, 1);
+          this.selectedAreas.splice(index, 1)
         }
       }
     },
-    cancel() {
-      this.provinceList = this.originProvinceList;
-      this.selectedAreas = this.originSelectedAreas;
-      this.$emit("cancel");
+    cancel () {
+      this.provinceList = this.originProvinceList
+      this.selectedAreas = this.originSelectedAreas
+      this.$emit('cancel')
     },
-    ok() {
-      const areas = this.selectedAreas.concat([]);
-      this.$emit("ok", [...areas]);
+    ok () {
+      const areas = this.selectedAreas.concat([])
+      this.$emit('ok', [...areas])
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>

@@ -67,7 +67,6 @@
 import KeywordList from './keyword-list'
 import { promoteStatusOpts, auditStatusOpts } from 'constant/biaowang'
 import { getPromotes } from 'api/biaowang'
-import clone from 'clone'
 
 export default {
   name: 'bw-dashboard-add-keyword',
@@ -75,12 +74,12 @@ export default {
     show: {
       type: Boolean,
       required: true,
-      default: true,
+      default: true
     },
     originalPromotes: {
       type: Array,
       required: true,
-      default() {
+      default () {
         return []
       }
     },
@@ -98,35 +97,35 @@ export default {
         word: '',
         promoteStatusFilters: [],
         auditStatusFilters: [],
-        size: 5,
+        size: 5
       },
       currentPage: 1,
       totalPage: 0,
       promotes: [],
       selectedPromotes: [],
       promoteStatusOpts,
-      auditStatusOpts,
+      auditStatusOpts
     }
   },
   computed: {
-    selectedCount() {
+    selectedCount () {
       return this.selectedPromotes.length
     }
   },
   methods: {
-    handleClose() {
+    handleClose () {
       this.$emit('close', this.selectedPromotes)
       this.selectedPromotes = []
     },
-    handleCurrentChange(page) {
+    handleCurrentChange (page) {
       this.currentPage = page
       this.getPromoteList()
     },
-    async getPromoteList(page) {
-      const {size, word, promoteStatusFilters, auditStatusFilters} = this.query
-      const {items, total} = await getPromotes({
+    async getPromoteList (page) {
+      const { size, word, promoteStatusFilters, auditStatusFilters } = this.query
+      const { items, total } = await getPromotes({
         page: this.currentPage - 1,
-        size, 
+        size,
         word,
         status: promoteStatusFilters,
         auditStatus: auditStatusFilters
@@ -134,10 +133,10 @@ export default {
       this.promotes = items
       this.totalPage = total
     },
-    handleSelectionChange(newCampaigns) {
+    handleSelectionChange (newCampaigns) {
       this.selectedPromotes = newCampaigns
     },
-    getRowKeys(row) {
+    getRowKeys (row) {
       return row.id
     }
   },
@@ -145,7 +144,7 @@ export default {
     query: {
       deep: true,
       immediate: true,
-      handler() {
+      handler () {
         this.currentPage = 1
         this.getPromoteList()
       }

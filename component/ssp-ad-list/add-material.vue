@@ -111,9 +111,9 @@ export default {
       default: () => {}
     }
   },
-  data() {
+  data () {
     return {
-      material: {...emptyMaterial},
+      material: { ...emptyMaterial },
       createMaterial: false,
       imageSizeWarnTip: '',
       materialId: '',
@@ -121,13 +121,13 @@ export default {
     }
   },
   computed: {
-    moptions() {
+    moptions () {
       return this.materials.map(m => ({
         label: m.name + ' ' + (m.slot || ''),
         value: m.id
       }))
     },
-    adSizeTip() {
+    adSizeTip () {
       const { width: w, height: h } = this.ad || {}
       if (w && h) {
         return `广告位规格: ${w} * ${h}`
@@ -137,7 +137,7 @@ export default {
     }
   },
   methods: {
-    async onSelectMaterial(v) {
+    async onSelectMaterial (v) {
       if (!v) {
         // clear
         this.material = clone(emptyMaterial)
@@ -165,29 +165,29 @@ export default {
         this.imageSizeWarnTip = ''
       }
     },
-    onUploadSuccess(url) {
+    onUploadSuccess (url) {
       this.createMaterial = true
       this.material.url = url
       this.loading = false
     },
-    empty() {
-      this.material = {...emptyMaterial}
+    empty () {
+      this.material = { ...emptyMaterial }
       this.createMaterial = false
       this.imageSizeWarnTip = ''
       this.materialId = ''
       this.loading = false
       this.$emit('hide')
     },
-    cancel() {
+    cancel () {
       this.empty()
     },
-    onQueryMaterials(v) {
+    onQueryMaterials (v) {
       this.throttle.next(v)
     },
-    async queryMaterials(v) {
-      await store.getMaterials({name: v})
+    async queryMaterials (v) {
+      await store.getMaterials({ name: v })
     },
-    async submit() {
+    async submit () {
       const {
         createMaterial,
         material,
@@ -221,17 +221,17 @@ export default {
     }
   },
   watch: {
-    materialId(v) {
+    materialId (v) {
       this.onSelectMaterial(v)
     }
   },
-  beforeMount() {
+  beforeMount () {
     this.throttle = new Subject().debounceTime(800)
   },
-  beforeDestroy() {
+  beforeDestroy () {
     this.throttle.unsubscribe()
   },
-  async mounted() {
+  async mounted () {
     this.throttle.subscribe(this.queryMaterials)
     await store.getMaterials()
   }

@@ -8,7 +8,7 @@ const messageBoxContent = `
 </div>
 `
 
-function chargeNotice() {
+function chargeNotice () {
   MessageBox.alert(messageBoxContent, '提示', {
     dangerouslyUseHTMLString: true,
     closeOnClickModal: false,

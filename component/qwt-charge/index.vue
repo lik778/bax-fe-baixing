@@ -121,17 +121,14 @@ import store from '../activity-store'
 
 const { WHOLE_SPU_CODE, GUAN_WANG_SPU_CODE, BIAO_WANG_SPU_CODE } = SPUCODES
 const { FENG_MING_MERCHANT_CODE, PHOENIXS_MERCHANT_CODE } = MERCHANTS
-const MIN_INPUT_PRICE = 50000
 
-
-const isGwProduct = function(spuCode) {
+const isGwProduct = function (spuCode) {
   return spuCode === GUAN_WANG_SPU_CODE
 }
 
-const isChargeProduct = function(spuCode) {
+const isChargeProduct = function (spuCode) {
   return [WHOLE_SPU_CODE, BIAO_WANG_SPU_CODE].includes(spuCode)
 }
-
 
 export default {
   name: 'charge-container',
@@ -167,32 +164,32 @@ export default {
       orderPayUrl: '',
 
       payInProgress: false,
-      agreementList:[],
+      agreementList: [],
 
       productCacheList: []
     }
   },
   fromMobx: {
-    discountInfoHTML: () => store.discountInfoHTML,
+    discountInfoHTML: () => store.discountInfoHTML
   },
   computed: {
-    isAgentSales() {
+    isAgentSales () {
       const roles = normalizeRoles(this.userInfo.roles)
       return roles.includes('AGENT_SALES')
     },
-    isBxUser() {
+    isBxUser () {
       const roles = normalizeRoles(this.userInfo.roles)
       return roles.includes('BAIXING_USER')
     },
-    isBxSales() {
+    isBxSales () {
       const roles = normalizeRoles(this.userInfo.roles)
       return roles.includes('BAIXING_SALES')
     },
-    isAgentAccounting() {
+    isAgentAccounting () {
       const roles = normalizeRoles(this.userInfo.roles)
       return roles.includes('AGENT_ACCOUNTING')
     },
-    submitButtonText() {
+    submitButtonText () {
       const { userInfo } = this
       if (this.isBxUser) {
         return '确认购买'
@@ -202,7 +199,7 @@ export default {
       }
       return '确认购买'
     },
-    checkedSkuList() {
+    checkedSkuList () {
       return this.checkedProducts.map(sku => {
         return {
           id: sku.skuVendorId,
@@ -210,8 +207,8 @@ export default {
         }
       })
     },
-    hasUnCheckedAgreement() {
-     return this.agreementList.length ? this.agreementList.some(agreement => !agreement.checked) : true
+    hasUnCheckedAgreement () {
+      return this.agreementList.length ? this.agreementList.some(agreement => !agreement.checked) : true
     }
   },
   components: {
@@ -221,22 +218,21 @@ export default {
     PromotionAreaLimitTip,
     Clipboard
   },
-  async mounted() {
+  async mounted () {
     const {
-        sales_id: salesId,
-        user_id: userId,
-        select_gw: selectGw
+      sales_id: salesId,
+      user_id: userId
     } = this.$route.query
     setTimeout(() => {
-        const { userInfo, actionTrackId } = this
-        track({
-          roles: userInfo.roles.map(r => r.name).join(','),
-          baixingId: userInfo.baixingId,
-          action: 'enter-page: charge',
-          baxId: userInfo.id,
-          actionTrackId
-        })
-      }, 1200)
+      const { userInfo, actionTrackId } = this
+      track({
+        roles: userInfo.roles.map(r => r.name).join(','),
+        baixingId: userInfo.baixingId,
+        action: 'enter-page: charge',
+        baxId: userInfo.id,
+        actionTrackId
+      })
+    }, 1200)
 
     let clickSent = false
     document.addEventListener('click', evt => {
@@ -254,9 +250,9 @@ export default {
     })
 
     if (salesId) {
-        const userInfo = await getUserInfo(salesId)
-        this.displayBxSalesId = userInfo.salesId
-        this.salesIdLocked = true
+      const userInfo = await getUserInfo(salesId)
+      this.displayBxSalesId = userInfo.salesId
+      this.salesIdLocked = true
     }
 
     if (userId) {
@@ -269,7 +265,7 @@ export default {
   },
   methods: {
     centToYuan,
-    changeProductMchCodeTab() {
+    changeProductMchCodeTab () {
       this.siteSpu = null
       this.chargeSpu = null
       this.checkedProducts = []
@@ -277,24 +273,24 @@ export default {
       store.setDiscountInfoHTMLFactory(this.productTabMchCode)
       this.obtainProductByMchCode()
     },
-    async obtainProductByMchCode() {
+    async obtainProductByMchCode () {
       const { selectGw } = this.$route.query
       this.fetchLoading = true
       try {
-        let products = [];
-        let targetList = [];
+        let products = []
+        let targetList = []
         if (this.productCacheList.length === 0) {
           targetList = this.productCacheList = await getProductsByMchCodes([FENG_MING_MERCHANT_CODE, PHOENIXS_MERCHANT_CODE])
         } else {
           targetList = this.productCacheList
         }
-        let item = targetList.find(x => x.vendorCode === this.productTabMchCode)
-        products = item && item.products || []
+        const item = targetList.find(x => x.vendorCode === this.productTabMchCode)
+        products = item ? item.products : []
 
         products.forEach(spu =>
           spu.selection.forEach(sku => {
-            sku.quantity = sku.minQuantity === sku.maxQuantity ? sku.minQuantity: 0
-            sku.price = sku.minQuantity === sku.maxQuantity ?  Math.floor(sku.minQuantity * sku.realPrice): 0,
+            sku.quantity = sku.minQuantity === sku.maxQuantity ? sku.minQuantity : 0
+            sku.price = sku.minQuantity === sku.maxQuantity ? Math.floor(sku.minQuantity * sku.realPrice) : 0
             sku.spuCode = spu.spuCode
           })
         )
@@ -313,16 +309,15 @@ export default {
         const initSiteSku = this.siteSpu.selection.find(sku => sku.tags.includes('hot'))
         if (initSiteSku) this.checkedProducts.push(initSiteSku)
       } else {
-        const initChargeSku = this.chargeSpu &&  this.chargeSpu.selection.find(sku => sku.tags.includes('selected'))
+        const initChargeSku = this.chargeSpu && this.chargeSpu.selection.find(sku => sku.tags.includes('selected'))
         if (initChargeSku) this.checkedProducts.push(initChargeSku)
       }
-
     },
-    handlePriceChange(product, v) {
+    handlePriceChange (product, v) {
       product.price = v
       product.quantity = Math.floor(v / product.realPrice)
     },
-    toggleProduct(product, judgeProduct) {
+    toggleProduct (product, judgeProduct) {
       const index = this.checkedProducts.findIndex(p => p.skuVendorId === product.skuVendorId)
       if (index > -1) {
         this.checkedProducts.splice(index, 1)
@@ -334,13 +329,13 @@ export default {
         this.checkedProducts.push(product)
       }
     },
-    toggleCharge(product) {
+    toggleCharge (product) {
       this.toggleProduct(product, isChargeProduct)
     },
-    toggleSite(product) {
+    toggleSite (product) {
       this.toggleProduct(product, isGwProduct)
     },
-    async createPreOrder() {
+    async createPreOrder () {
       if (this.hasUnCheckedAgreement) {
         return this.$message.error('请阅读并勾选同意服务协议，再进行下一步操作')
       }
@@ -350,7 +345,7 @@ export default {
       const chargeProduct = this.checkedProducts.find(p => isChargeProduct(p.spuCode))
       if (chargeProduct) {
         const { quantity, minQuantity, maxQuantity, realPrice } = chargeProduct
-        if (quantity < minQuantity ) {
+        if (quantity < minQuantity) {
           return this.$message.error(`最低充值金额：${this.centToYuan(minQuantity * realPrice)}`)
         }
         if (quantity > maxQuantity) {
@@ -410,26 +405,25 @@ export default {
         } else if (this.isBxSales) {
           this.orderPayUrl = `${orderServiceHost}/?appId=105&seq=${preTradeId}`
         }
-
       } catch (e) {
         console.error(e)
       } finally {
         this.payInProgress = false
       }
     },
-    async getFinalSalesId() {
+    async getFinalSalesId () {
       const { sales_id: salesId } = this.$route.query
       if (salesId) {
         return salesId
       }
-      const { userInfo} = this
+      const { userInfo } = this
 
       if (this.isBxUser) {
         return
       }
       return userInfo.id
     },
-    async getFinalUserId() {
+    async getFinalUserId () {
       const { user_id: userId } = this.$route.query
       const { userInfo, salesInfo } = this
       if (userId) {

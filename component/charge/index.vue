@@ -185,7 +185,6 @@
 import PromotionAreaLimitTip from 'com/widget/promotion-area-limit-tip'
 import ContractAck from 'com/widget/contract-ack'
 import Clipboard from 'com/widget/clipboard'
-import FlatBtn from 'com/common/flat-btn'
 import GwProWidget from 'com/widget/gw-pro'
 import Coupon from 'com/common/coupon'
 import PriceList from './price-list'
@@ -215,18 +214,17 @@ import { product as PRODUCT } from 'constant/product'
 
 import { normalizeRoles } from 'util/role'
 
-import { createPreOrder } from 'api/order'
+import {
+  createPreOrder,
+  getOrderPayUrl,
+  payOrders
+} from 'api/order'
 
 import {
   getUserIdFromBxSalesId,
   queryUserInfo,
   getUserInfo
 } from 'api/account'
-
-import {
-  getOrderPayUrl,
-  payOrders
-} from 'api/order'
 
 import { redeemCoupon } from 'api/meta'
 
@@ -304,11 +302,11 @@ const allProducts = [
   }
 ]
 
-const isGwProduct = function(productType) {
+const isGwProduct = function (productType) {
   return productType === 4 || productType === 6
 }
 
-const isChargeProduct = function(productType) {
+const isChargeProduct = function (productType) {
   return productType === 3
 }
 
@@ -321,11 +319,10 @@ export default {
     Clipboard,
     PriceList,
     PriceTag,
-    FlatBtn,
     Coupon,
     Step
   },
-  fromMobx: { 
+  fromMobx: {
     usingConditions: () => store.usingConditions,
     allDiscounts: () => store.allDiscounts,
     coupons: () => store.coupons
@@ -344,7 +341,7 @@ export default {
       required: true
     }
   },
-  data() {
+  data () {
     return {
       showDiscount: false,
       actionTrackId: uuid(),
@@ -369,41 +366,43 @@ export default {
     }
   },
   computed: {
-    gwPrice() {
+    // eslint-disable-next-line
+    gwPrice () {
       const gw = this.fullCheckedProducts.find(p => isGwProduct(p.productType))
       if (gw) {
         return centToYuan(gw.price)
       }
     },
-    promotionDiscount() {
+    promotionDiscount () {
       const charge = this.checkedProducts.find(p => isChargeProduct(p.productType))
       if (charge) {
-        const siteProduct = this.fullCheckedProducts.find(({productType}) => isGwProduct(productType))
+        const siteProduct = this.fullCheckedProducts.find(({ productType }) => isGwProduct(productType))
         const siteProductText = siteProduct && siteProduct.desc.replace('精品官网', '')
         const siteDiscountPrice = siteProduct && centToYuan(siteProduct.originalPrice - siteProduct.discountPrice)
         let huojiCouponContent = ''
         if (charge.price < 58800) {
           return '充值更多，可享更多优惠！'
-          } else if (charge.price < 108800) {
-            huojiCouponContent =  `
+        } else if (charge.price < 108800) {
+          huojiCouponContent = `
               <span class="red">赠</span>送十万火急 50 元现金券 <span class="mute">(满100元可用，不限城市与类目，有效期30天)；</span>
             `
-          } else if (charge.price < 308800) {
-            huojiCouponContent =  `
+        } else if (charge.price < 308800) {
+          huojiCouponContent = `
               <span class="red">赠</span>送十万火急 80 元现金券 <span class="mute">(满200元可用，不限城市与类目，有效期30天)；</span>
             `
-          } else {
-            huojiCouponContent =  `
+        } else {
+          huojiCouponContent = `
               <span class="red">赠</span>送十万火急 300 元现金券 <span class="mute">(满400元可用，不限城市与类目，有效期30天)；</span>
             `
-          }
-          return huojiCouponContent + (siteDiscountPrice
-            ? `同时购买精品官网（${siteProductText}）立<span class="red">减</span> ${siteDiscountPrice} 元`
-            : '')
+        }
+        return huojiCouponContent + (siteDiscountPrice
+          ? `同时购买精品官网（${siteProductText}）立<span class="red">减</span> ${siteDiscountPrice} 元`
+          : '')
       }
       return ''
     },
-    discountInfos() {
+    // eslint-disable-next-line
+    discountInfos () {
       const charge = this.checkedProducts.find(p => isChargeProduct(p.productType))
       const gw = this.checkedProducts.find(p => isGwProduct(p.productType))
       if (charge && !gw) {
@@ -412,8 +411,8 @@ export default {
         return this.promotionDiscount.split('；')
       }
     },
-    productSummary() {
-      var a = this.checkedProducts.reduce((s, p) => {
+    productSummary () {
+      const a = this.checkedProducts.reduce((s, p) => {
         if (s[p.id] === undefined) {
           s[p.id] = 0
         }
@@ -422,7 +421,7 @@ export default {
       }, {})
       return a
     },
-    effectiveCoupons() {
+    effectiveCoupons () {
       // 返回符合当前购买产品等条件的可用券
       return this.coupons.filter(coupon => {
         let products = this.fullCheckedProducts
@@ -448,18 +447,18 @@ export default {
         return true
       })
     },
-    ineffectiveCoupons() {
+    ineffectiveCoupons () {
       return this.coupons.filter(coupon => !this.effectiveCoupons.includes(coupon))
     },
     // 减去各选中产品对应的券金额
-    finalPrice() {
+    finalPrice () {
       if (this.totalPrice >= this.couponAmount) {
         return this.totalPrice - this.couponAmount
       } else {
         return 0
       }
     },
-    couponAmount() {
+    couponAmount () {
       if (!this.selectedCoupon.length) return 0
 
       const coupon = this.selectedCoupon[0]
@@ -468,48 +467,48 @@ export default {
       let productSum = 0
       let sum = 0
 
-      for (let condition of coupon.usingConditions) {
+      for (const condition of coupon.usingConditions) {
         if (condition.type === usingCondition.PRODUCTS) {
           products = this.fullCheckedProducts.filter(p => condition.products.includes(p.productType))
         }
       }
-      productSum = products.reduce((s, p) => {s += p.discountPrice; return s}, 0)
+      productSum = products.reduce((s, p) => { s += p.discountPrice; return s }, 0)
       sum = productSum > coupon.amount ? coupon.amount : productSum
 
-      for (let condition of coupon.usingConditions) {
+      for (const condition of coupon.usingConditions) {
         if (condition.type === usingCondition.ORDER_SUM_ORIGINAL_PRICE) {
-          productSum = products.reduce((s, p) => {s += p.discountPrice; return s}, 0)
+          productSum = products.reduce((s, p) => { s += p.discountPrice; return s }, 0)
           sum = productSum > coupon.amount ? coupon.amount : productSum
         }
       }
 
-      for (let condition of coupon.usingConditions) {
+      for (const condition of coupon.usingConditions) {
         if (condition.type === usingCondition.ORDER_DISCOUNT_PRICE_RATIO) {
           const discountRatio = condition.orderSumOriginalPriceRatio
-          productSum = products.reduce((s, p) => {s += p.discountPrice; return s}, 0)
+          productSum = products.reduce((s, p) => { s += p.discountPrice; return s }, 0)
           sum = productSum * discountRatio / 100
         }
       }
 
       return sum
     },
-    isAgentSales() {
+    isAgentSales () {
       const roles = normalizeRoles(this.userInfo.roles)
       return roles.includes('AGENT_SALES')
     },
-    isBxUser() {
+    isBxUser () {
       const roles = normalizeRoles(this.userInfo.roles)
       return roles.includes('BAIXING_USER')
     },
-    isBxSales() {
+    isBxSales () {
       const roles = normalizeRoles(this.userInfo.roles)
       return roles.includes('BAIXING_SALES')
     },
-    isAgentAccounting() {
+    isAgentAccounting () {
       const roles = normalizeRoles(this.userInfo.roles)
       return roles.includes('AGENT_ACCOUNTING')
     },
-    checkedProductDiscounts() {
+    checkedProductDiscounts () {
       if (!this.isAgentAccounting) {
         return []
       }
@@ -519,7 +518,7 @@ export default {
       return this.allDiscounts
         .filter(d => types.includes(d.productType))
     },
-    submitButtonText() {
+    submitButtonText () {
       const { userInfo } = this
       if (this.isBxUser) {
         return '确认购买'
@@ -531,7 +530,7 @@ export default {
 
       return '确认购买'
     },
-    totalPrice() {
+    totalPrice () {
       const p = this.fullCheckedProducts.map(i => i.discountPrice)
 
       return p.reduce((a, b) => a + b, 0)
@@ -558,13 +557,13 @@ export default {
         this.checkedProducts.push(product)
       }
     },
-    onCouponClick(coupon) {
+    onCouponClick (coupon) {
       if (this.selectedCoupon.length) {
         this.selectedCoupon.splice(0, 1)
       }
       this.selectedCoupon.splice(0, 0, coupon)
     },
-    async redeem() {
+    async redeem () {
       if (!this.couponCode) {
         return
       }
@@ -576,13 +575,13 @@ export default {
       this.$message.success('兑换成功')
       await store.getCoupons({ onlyValid: true, status: 0 })
     },
-    empty() {
+    empty () {
       this.orderPayUrl = ''
       this.checkedPackageId = 0
       this.checkedChargeProductId = 0
       this.chargeMoney = 0
     },
-    async init() {
+    async init () {
       this.empty()
       //  目前只有这一个角色可以用券
       //  FIX: 修复页面加载后没有优惠券信息 使用$watch去监听 bxUser 变化并触发coupon 更新
@@ -594,12 +593,12 @@ export default {
             await store.getCoupons({ onlyValid: true, status: 0 })
             this.disposeBxUserWatch()
           }
-      }, {immediate: true})
+        }, { immediate: true })
       await Promise.all([
-        store.getProductDiscounts([3, 4, 6]), // 充值／新官网
+        store.getProductDiscounts([3, 4, 6]) // 充值／新官网
       ])
     },
-    getDiscountPrice(productType, price) {
+    getDiscountPrice (productType, price) {
       if (!this.isAgentAccounting) {
         return price
       }
@@ -615,7 +614,7 @@ export default {
 
       return p | 0
     },
-    async payOrders(oids) {
+    async payOrders (oids) {
       const {
         userInfo
       } = this
@@ -626,7 +625,7 @@ export default {
 
       await payOrders(oids)
     },
-    async getOrderPayUrl(oids, summary) {
+    async getOrderPayUrl (oids, summary) {
       const {
         userInfo
       } = this
@@ -645,7 +644,7 @@ export default {
         }, 800)
       }
     },
-    async checkInputSalesId() {
+    async checkInputSalesId () {
       const { inputSalesId } = this
       if (!inputSalesId) {
         return Message.error('请填写销售编号')
@@ -655,7 +654,7 @@ export default {
 
       Message.success('销售编号可用')
     },
-    async getFinalSalesId() {
+    async getFinalSalesId () {
       const { sales_id: salesId } = this.$route.query
       if (salesId) {
         return salesId
@@ -677,7 +676,7 @@ export default {
 
       return userInfo.id
     },
-    async getFinalUserId() {
+    async getFinalUserId () {
       const { user_id: userId } = this.$route.query
       const { userInfo, salesInfo } = this
       if (userId) {
@@ -691,7 +690,7 @@ export default {
 
       return userInfo.id
     },
-    async createOrder() {
+    async createOrder () {
       if (!this.$refs.contract.$data.isAgreement) {
         return this.$message.error('请阅读并勾选同意服务协议，再进行下一步操作')
       }
@@ -788,10 +787,10 @@ export default {
       this.couponVisible = false
     },
     // 选中最合适的coupon
-    selectDefaultCoupon() {
+    selectDefaultCoupon () {
       if (this.effectiveCoupons.length) {
         let theOne = this.effectiveCoupons[0]
-        for(let coupon of this.effectiveCoupons) {
+        for (const coupon of this.effectiveCoupons) {
           if (coupon.amount > theOne.amount) {
             theOne = coupon
           } else if (coupon.amount === theOne.amount && coupon.expiredAt < theOne.expiredAt) {
@@ -804,13 +803,13 @@ export default {
     centToYuan
   },
   watch: {
-    fullCheckedProducts(v) {
+    fullCheckedProducts (v) {
       this.selectDefaultCoupon()
     },
-    coupons() {
+    coupons () {
       this.selectDefaultCoupon()
     },
-    async couponVisible(v) {
+    async couponVisible (v) {
       if (v) {
         // 必须先拿到 condition
         await store.getConditions()
@@ -829,10 +828,11 @@ export default {
           let gwPrice = gw.price
           const { discountExecPriceFunc } = gw
           gwPrice = gw.price - discountExecPriceFunc
+            // eslint-disable-next-line
             .map(execStr => new Function('p', 'return ' + execStr)(charge.price))
             .find(res => res !== false)
           this.fullCheckedProducts = checked.map(product => {
-            const {id, productType, price, orderPrice, name} = product
+            const { id, productType, price, orderPrice, name } = product
             return {
               id,
               productType,
@@ -846,7 +846,7 @@ export default {
           })
         } else {
           this.fullCheckedProducts = checked.map(product => {
-            const {id, productType, price, orderPrice, name} = product
+            const { id, productType, price, orderPrice, name } = product
             return {
               id,
               productType,
@@ -862,7 +862,7 @@ export default {
       }
     }
   },
-  async mounted() {
+  async mounted () {
     const {
       sales_id: salesId,
       user_id: userId,

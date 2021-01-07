@@ -161,7 +161,7 @@ import {
   PROMOTE_STATUS_CEASED,
   AUDIT_STATUS_OPTIONS,
   getPromoteAuditStatus,
-  SEO_WAN_CI_91,
+  SEO_WAN_CI_91
 } from 'constant/qianci'
 import { getBusinessLicense } from 'api/seo'
 import { getPromoteList, getWanciSeoRedirect } from 'api/qianci'
@@ -171,9 +171,9 @@ export default {
   name: 'qc-promote-list',
   props: {
     salesInfo: Object,
-    userInfo: Object,
+    userInfo: Object
   },
-  data() {
+  data () {
     return {
       PROMOTE_STATUS_MAPPING,
       PROMOTE_STATUS,
@@ -181,56 +181,56 @@ export default {
       query: {
         coreWord: '',
         status: '',
-        auditStatus: '',
+        auditStatus: ''
       },
       pagination: {
         total: 0,
         page: 0,
-        size: 10,
+        size: 10
       },
       queryList: [],
       active: {
         selectedItem: null,
-        selectedItemURL: '',
+        selectedItemURL: ''
       },
       visible: {
-        paymentDialog: false,
+        paymentDialog: false
       },
       loading: {
-        checkLicense: false,
+        checkLicense: false
       },
       DEVICE,
-      SEO_WAN_CI_91,
+      SEO_WAN_CI_91
     }
   },
-  mounted() {
+  mounted () {
     this.getQueryList()
   },
   methods: {
     getPromoteAuditStatus,
-    showAuditFailReason(status) {
+    showAuditFailReason (status) {
       return [
         AUDIT_STATUS_REJECT_B2B,
         AUDIT_STATUS_REJECT_SUPPLIES,
         AUDIT_STATUS_REJECT_KEYWORD,
-        AUDIT_STATUS_REJECT_SEM,
+        AUDIT_STATUS_REJECT_SEM
       ].includes(status)
     },
-    canEditPromote(status) {
+    canEditPromote (status) {
       return [
         PROMOTE_STATUS_PENDING_EDIT,
         PROMOTE_STATUS_EDITED,
         PROMOTE_STATUS_ONLINE,
-        PROMOTE_STATUS_ON_PROMOTE,
+        PROMOTE_STATUS_ON_PROMOTE
       ].includes(status)
     },
-    canGotoSeo(status) {
+    canGotoSeo (status) {
       return [SEO_STATUS_BOUGHT].includes(status)
     },
-    promoteStatusDisabled(status) {
+    promoteStatusDisabled (status) {
       return [PROMOTE_STATUS_FINISHED, PROMOTE_STATUS_CEASED].includes(status)
     },
-    getQueryParams() {
+    getQueryParams () {
       const params = {}
       Object.keys(this.query).forEach((k) => {
         if (this.query[k]) {
@@ -239,36 +239,36 @@ export default {
       })
       return params
     },
-    handleCurrentPage(page) {
+    handleCurrentPage (page) {
       this.pagination.page = page - 1
       this.getQueryList(this.getQueryParams(page))
     },
-    search() {
+    search () {
       this.pagination.page = 0
       this.getQueryList(this.getQueryParams())
     },
-    reset() {
+    reset () {
       this.query = {
         coreWord: '',
         auditStatus: '',
-        status: '',
+        status: ''
       }
     },
-    async getQueryList(params) {
+    async getQueryList (params) {
       const { sales_id: salesId, user_id: targetUserId } = this.$route.query
       const query = {
         size: this.pagination.size,
         page: this.pagination.page,
         targetUserId,
         salesId,
-        ...params,
+        ...params
       }
       const { total, content } = await getPromoteList(query)
       this.queryList = content
       this.pagination.total = total
       this.$set(this, 'pagination', this.pagination)
     },
-    async checkLicense() {
+    async checkLicense () {
       let businessUrl = null
       this.loading.checkLicense = true
       try {
@@ -278,10 +278,10 @@ export default {
       }
       return !!businessUrl
     },
-    goChartPage() {
+    goChartPage () {
       this.$router.push({ name: 'qc-dashboard' })
     },
-    gotoSeo(promoteId, seoType) {
+    gotoSeo (promoteId, seoType) {
       if (seoType === SEO_WAN_CI_91) {
         const link = getWanciSeoRedirect(promoteId)
         window.open(link)
@@ -292,7 +292,7 @@ export default {
         : '//shop-test.baixing.cn/management/'
       window.open(shopLink)
     },
-    async goEditCreativePage(row) {
+    async goEditCreativePage (row) {
       this.active.selectedItem = row
       const hasBusinessUrl = await this.checkLicense()
       if (hasBusinessUrl) {
@@ -300,7 +300,7 @@ export default {
         const search = window.location.search
           ? window.location.search + `&promoteId=${id}`
           : `?promoteId=${id}`
-        this.$router.push(`/main/qc/creative` + search)
+        this.$router.push('/main/qc/creative' + search)
       } else {
         this.$msgbox({
           title: '提示',
@@ -317,26 +317,26 @@ export default {
               'p',
               null,
               '您尚未提交审核或未通过审核，请进行营业执照认证,如您已经通过认证审核，请关闭本弹窗后重新点击【编辑】。'
-            ),
+            )
           ]),
-          beforeClose(action, instance, done) {
+          beforeClose (action, instance, done) {
             if (action === 'confirm') {
               window.open('https://www.baixing.com/bind/#bindList')
             }
             done()
-          },
+          }
         }).catch((e) => e)
       }
     },
-    checkButtonLoading(row) {
+    checkButtonLoading (row) {
       return this.active.selectedItem === row && this.loading.checkLicense
     },
-    restDayFormatter({ remainDate }) {
+    restDayFormatter ({ remainDate }) {
       const restDays =
         Math.max(0, dayjs(remainDate * 1000) - dayjs()) / (24 * 60 * 60 * 1000)
       return parseFloat(restDays).toFixed(1)
-    },
-  },
+    }
+  }
 }
 </script>
 

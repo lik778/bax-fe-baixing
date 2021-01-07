@@ -52,6 +52,8 @@
         </template>
       </el-table-column>
       <el-table-column>
+        <!-- 删除 slot-scope 后会有稀奇古怪的问题 -->
+        <!-- eslint-disable-next-line -->
         <template slot="header" slot-scope="col">
           {{maxPriceLabel}}<cpc-top-price-tip/>
           <div style="display:block;padding-left:0">
@@ -69,7 +71,7 @@
         </template>
         <template slot-scope="s">
           <span class="price">
-            <bax-input placeholder="单位，元" 
+            <bax-input placeholder="单位，元"
                        :value="f2y(getWordPrice(s.row.word))"
                        @blur="v => setCustomPrice(s.row, v)"
                        @keyup="v => setCustomPrice(s.row, v)" />
@@ -109,9 +111,6 @@ import BaxPagination from 'com/common/pagination'
 
 import {
   KEYWORD_STATUS_ONLINE,
-  KEYWORD_STATUS_REFUSE,
-  KEYWORD_CHIBI_PENDING,
-  KEYWORD_CHIBI_REJECT,
   SEM_PLATFORM_SHENMA,
   keywordStatus,
   RECOMMAND_SOURCE_FH,
@@ -145,9 +144,9 @@ import track from 'util/track'
 import { toFloat } from 'util/kit'
 
 const CpcTopPriceTip = Vue.extend({
-  render(h) {
-    return renderColumnHeaderWithTip(cpcTopPriceTip)(h, 
-    {column: {},labelStyle:{display:'none'}, wrapClass:'display-inline'})
+  render (h) {
+    return renderColumnHeaderWithTip(cpcTopPriceTip)(h,
+      { column: {}, labelStyle: { display: 'none' }, wrapClass: 'display-inline' })
   }
 })
 const MODE_SELECT = 'select'
@@ -220,7 +219,7 @@ export default {
       default: false
     }
   },
-  data() {
+  data () {
     return {
       preWordsLength: 0,
       curWordsLength: 0,
@@ -240,11 +239,11 @@ export default {
     }
   },
   computed: {
-    simpleShoppingCart() {
+    simpleShoppingCart () {
       const joined = this.selectedWords.map(item => item.word).join(',')
       return joined.length > 100 ? joined.slice(0, 100) + '...' : joined
     },
-    isCurrentHasChecked() {
+    isCurrentHasChecked () {
       // 有选中
       const cids = this.rows.map(r => r.id)
       const sids = this.selectedWords.map(r => r.id)
@@ -264,7 +263,7 @@ export default {
 
       return yes
     },
-    isCurrentAllChecked() {
+    isCurrentAllChecked () {
       // 全部选中
       const cids = this.rows.map(r => r.id)
       const sids = this.selectedWords.map(r => r.id)
@@ -284,39 +283,39 @@ export default {
 
       return yes
     },
-    maxPriceLabel() {
+    maxPriceLabel () {
       if (this.platform === SEM_PLATFORM_SHENMA) {
         return '移动端出价(元/次点击)'
       }
 
       return '电脑端最高出价(元/次点击)'
     },
-    currentPage() {
+    currentPage () {
       return this.offset / LIMIT | 0 // 0, 1, 2
     },
-    pagination() {
+    pagination () {
       return {
         limit: LIMIT,
         offset: this.offset,
         total: this.words.length
       }
     },
-    rows() {
+    rows () {
       const { currentPage } = this
       const start = currentPage * LIMIT
       return this.words.slice(start, start + LIMIT)
     }
   },
   methods: {
-    getRefuseReason(word) {
-      const {refuseReason} = word.extra
+    getRefuseReason (word) {
+      const { refuseReason } = word.extra
       return (
         typeof refuseReason === 'string'
-        ? refuseReason
-        : refuseReason.message
-        ) || '审核驳回'
+          ? refuseReason
+          : refuseReason.message
+      ) || '审核驳回'
     },
-    async handleKeywordsPriceChange() {
+    async handleKeywordsPriceChange () {
       const keywordPrice = this.keywordPrice.trim()
       if (!keywordPrice) return
       try {
@@ -324,17 +323,17 @@ export default {
         this.$message.success(res)
         this.popoverVisible = false
         this.keywordPrice = ''
-      } catch(err) {
+      } catch (err) {
         console.log(err)
         this.$message.error(err)
       }
     },
-    f2y(price) {
+    f2y (price) {
       return (price / 100).toFixed(2)
     },
-    showAddPrice(row) {
+    showAddPrice (row) {
       // 过去24小时排名低于5或无排名的，在线的 keyword，在线的 campaign
-      const {cpcRanking, mobileCpcRanking, isPriceChanged, status: keywordStatus} = row
+      const { cpcRanking, mobileCpcRanking, isPriceChanged, status: keywordStatus } = row
       // 电脑端和手机端任意一端排名大于5或者无排名
       let rankingLow = false
       if (this.platform === SEM_PLATFORM_SHENMA) {
@@ -350,7 +349,7 @@ export default {
       }
       return show
     },
-    renderSwitchAllHeader(h) {
+    renderSwitchAllHeader (h) {
       const checked = this.isCurrentHasChecked
       const cids = this.rows.map(r => r.id)
 
@@ -374,32 +373,32 @@ export default {
       })
     },
     renderWithTip: renderColumnHeaderWithTip,
-    onCurrentChange({offset}) {
+    onCurrentChange ({ offset }) {
       this.$emit('change-offset', offset)
     },
-    deleteWord(row) {
+    deleteWord (row) {
       this.$emit('delete-word', {
-        isNew:  row.isNew,
+        isNew: row.isNew,
         price: row.price,
         word: row.word,
         id: row.id
       })
       this.$emit('change-offset', this.offset - 1)
     },
-    getWordPrice(kw) {
+    getWordPrice (kw) {
       const word = this.words.find(w => w.word === kw)
       return word.price
     },
-    isValidPrice(row) {
+    isValidPrice (row) {
       const finalPrice = this.getWordPrice(row.word)
       return finalPrice >= MIN_WORD_PRICE && finalPrice <= MAX_WORD_PRICE
     },
-    wordChecked(word) {
+    wordChecked (word) {
       return this.selectedWords
         .map(w => w.word)
         .includes(word.word)
     },
-    onCheckWord(word) {
+    onCheckWord (word) {
       let words = []
       if (this.wordChecked(word)) {
         words = this.selectedWords
@@ -409,7 +408,7 @@ export default {
       }
       this.$emit('select-words', words)
     },
-    mergeSelectedWords(rows) {
+    mergeSelectedWords (rows) {
       const preSelectedWords = this.selectedWords
       const ws = preSelectedWords.map(w => w.word)
       const newSelectedWords = rows
@@ -425,8 +424,8 @@ export default {
         selectedWords.map(w => w.word))
       this.$emit('select-words', selectedWords)
     },
-    setCustomPrice({serverPrice, word, id}, v) {
-      let price = (v ? toFloat(v) : 0) * 100
+    setCustomPrice ({ serverPrice, word, id }, v) {
+      const price = (v ? toFloat(v) : 0) * 100
       this.$emit('update-word', {
         price,
         serverPrice,
@@ -434,20 +433,20 @@ export default {
         id
       })
     },
-    bumpPriceBy20(row) {
+    bumpPriceBy20 (row) {
       track({
         action: 'click-button: bump-price-by-20'
       })
       this.setCustomPrice(row, f2y(this.getWordPrice(row.word)) * 1.2)
     },
-    fmtStatus(row) {
+    fmtStatus (row) {
       if (this.campaignOffline) {
         return '-'
       }
 
       return keywordStatus[String(row.status)] || '未知'
     },
-    fmtWord(w) {
+    fmtWord (w) {
       return {
         price: this.getWordPrice(w.word),
         recommandSource: w.recommandSource,
@@ -459,7 +458,7 @@ export default {
     fmtCpcRanking
   },
   watch: {
-    currentPage(val, pre) {
+    currentPage (val, pre) {
       if (val !== this.prePage) {
         this.prePage = pre
       }
@@ -468,7 +467,7 @@ export default {
         this.$emit('operated-pages', this.userOperatedPages)
       }
     },
-    words(v) {
+    words (v) {
       if (v && v.length && v.length > this.curWordsLength) {
         this.preWordsLength = this.curWordsLength
         this.curWordsLength = v.length

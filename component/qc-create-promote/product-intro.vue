@@ -19,7 +19,7 @@
 
 <script>
 export default {
-  name: 'product-intro',
+  name: 'product-intro'
 }
 </script>
 

@@ -108,7 +108,7 @@
 </template>
 
 <script>
-import { getCnName } from 'util'
+import { getCnName, f2y } from 'util'
 
 import List from './list'
 import { toCamelcase } from 'object-keys-mapping'
@@ -125,8 +125,6 @@ import {
   getHomepageSummary
 } from 'api/fengming'
 
-import {f2y} from 'util'
-
 import {
   semPlatformOpts as SOURCES_OPTS,
   campaignOptimization
@@ -136,22 +134,22 @@ const CNT_REJECTED_CODE = '-53'
 
 const CAMPAIGN_STATUS_OPTS = Object.freeze(
   [
-    {label: '推广中/审核中', value: '100'},
-    {label: '计划预算不足', value: '5'},
-    {label: '账户余额不足', value: '-51'},
-    {label: '已暂停', value: '-10,-50'},
-    {label: '已下线', value: '-1'},
-    {label: '审核驳回', value: '-53'}
+    { label: '推广中/审核中', value: '100' },
+    { label: '计划预算不足', value: '5' },
+    { label: '账户余额不足', value: '-51' },
+    { label: '已暂停', value: '-10,-50' },
+    { label: '已下线', value: '-1' },
+    { label: '审核驳回', value: '-53' }
   ]
 )
 
 const CAMPAIGN_OPTIMIZATION_OPTS = Object.freeze(
   [
-    {label: '创意', value: campaignOptimization.STATUS_OPT_CREATIVE},
-    {label: '关键词', value: campaignOptimization.STATUS_OPT_KEYWORD},
-    {label: '渠道', value: campaignOptimization.STATUS_OPT_SOURCE},
-    {label: '出价', value: campaignOptimization.STATUS_OPT_PRICE},
-    {label: '投放设置', value: campaignOptimization.STATUS_OPT_SETTING}
+    { label: '创意', value: campaignOptimization.STATUS_OPT_CREATIVE },
+    { label: '关键词', value: campaignOptimization.STATUS_OPT_KEYWORD },
+    { label: '渠道', value: campaignOptimization.STATUS_OPT_SOURCE },
+    { label: '出价', value: campaignOptimization.STATUS_OPT_PRICE },
+    { label: '投放设置', value: campaignOptimization.STATUS_OPT_SETTING }
   ]
 )
 
@@ -160,17 +158,17 @@ const ONE_PAGE_NUM = 10
 const formatlandingPageList = res => {
   return Object.entries(res).reduce((list, [k, v]) => {
     return list.concat({
-    ...v,
-    id: k
-  })
+      ...v,
+      id: k
+    })
   }, [])
 }
 
 export default {
   name: 'qwt-promotion-list',
-  created() {
-    const {statuses} = this.$route.query
-    if (!!statuses) {
+  created () {
+    const { statuses } = this.$route.query
+    if (statuses) {
       this.isActionGroupExpand = true
       // 从首页未审核处点击进来的
       if (statuses === CNT_REJECTED_CODE) {
@@ -179,13 +177,13 @@ export default {
         this.queryParams.statuses.push(statuses)
       }
     }
-    if(this.salesInfo.userId)  {
+    if (this.salesInfo.userId) {
       this.queryParams.userId = this.salesInfo.userId
     }
     this.fetchSummary()
     this.fetchlandingPageList()
   },
-  data() {
+  data () {
     return {
       ONE_PAGE_NUM,
       SOURCES_OPTS,
@@ -214,22 +212,21 @@ export default {
     }
   },
   props: ['allAreas', 'salesInfo', 'userInfo'],
-  components: {AreaSelector, List, BaxInput},
+  components: { AreaSelector, List, BaxInput },
   methods: {
     f2y,
-    handlePageChange(page) {
+    handlePageChange (page) {
       this.queryParams.offset = (page - 1) * ONE_PAGE_NUM
       this.fetchlandingPageList()
     },
-    handleSelectArea(areas) {
-
+    handleSelectArea (areas) {
       this.queryParams.areas = areas
       this.areaDialogVisible = false
     },
-    removeSelectedArea(area) {
+    removeSelectedArea (area) {
       this.queryParams.areas = this.queryParams.areas.filter(a => a !== area)
     },
-    async fetchlandingPageList() {
+    async fetchlandingPageList () {
       this.landingPageLoading = true
       // 重置campaignMap
       this.campaignMap = {}
@@ -239,44 +236,44 @@ export default {
         this.totalPage = total
         // toCamelcase 插件有个坑（当object的key值为url格式时，转换对象的key有问题）
         this.landingPageList = Object.freeze(toCamelcase(formatlandingPageList(pageList)))
-      } catch(err) {
+      } catch (err) {
         console.error(err)
       } finally {
         this.landingPageLoading = false
       }
     },
-    async fetchPromotionList(id, campaignIds, isForceUpdate) {
+    async fetchPromotionList (id, campaignIds, isForceUpdate) {
       // 判断是否已经存在
       const campaignMap = this.campaignMap
       const campaignMapKeys = Object.keys(campaignMap)
       if (isForceUpdate || !campaignMapKeys.includes(id)) {
-        const campaigns = await getCurrentCampaigns({...this.queryParams, campaignIds})
+        const campaigns = await getCurrentCampaigns({ ...this.queryParams, campaignIds })
         this.campaignMap = Object.freeze({
           ...campaignMap,
           [id]: campaigns
         })
       }
     },
-    async fetchSummary() {
+    async fetchSummary () {
       const [currentBalance, summary] = await Promise.all([getCurrentBalance(), getHomepageSummary()])
       this.summary = summary
       this.currentBalance = currentBalance
     }
   },
   filters: {
-    transformCityName(name, allAreas) {
+    transformCityName (name, allAreas) {
       return getCnName(name, allAreas)
     }
   },
   computed: {
-    days() {
+    days () {
       return Math.ceil(this.currentBalance / this.summary.budget)
-    },
+    }
   },
   watch: {
     queryParams: {
       deep: true,
-      handler(val) {
+      handler (val) {
         if (!val.campaignId || /^[0-9]+$/.test(val.campaignId)) {
           this.fetchlandingPageList()
         } else {
