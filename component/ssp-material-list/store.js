@@ -19,15 +19,15 @@ const store = observable({
   _query: { ...defaultQuery },
   _materials: [],
 
-  get materials() {
+  get materials () {
     return toJS(this._materials)
   },
 
-  get query() {
+  get query () {
     return toJS(this._query)
   },
 
-  getMaterials: action(async function(opts) {
+  getMaterials: action(async function (opts) {
     const { materials = [], query = {} } = await mapi.getMaterials(opts)
     this._materials = materials
     this._query = {

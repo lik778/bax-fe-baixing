@@ -39,13 +39,13 @@ export default {
     disabled: Boolean,
     size: String
   },
-  data() {
+  data () {
     return {
       localValue: this.value
     }
   },
   methods: {
-    setValue(v) {
+    setValue (v) {
       console.debug('select: set value')
       this.$emit('change', v)
       this.$emit('input', v)
@@ -58,10 +58,10 @@ export default {
     }
   },
   watch: {
-    localValue(v) {
+    localValue (v) {
       this.setValue(v)
     },
-    value(v) {
+    value (v) {
       // multiple -> array
       if (equal(v, this.localValue)) {
         return

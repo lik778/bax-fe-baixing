@@ -20,7 +20,7 @@ import {
 
 export default {
   name: 'bax-promotion-creative-tip',
-  data() {
+  data () {
     return {
       tips: campaignCreativeTooltip.split('\n')
     }

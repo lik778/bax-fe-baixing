@@ -1,7 +1,7 @@
 <template>
   <div class="promotion-list">
     <header>我的首页宝推广计划<small>您的首页宝推广余额为 {{f2y(balance)}} 元</small></header>
-    
+
     <div class="choose-type">
       <el-radio-group v-model="type">
         <el-radio v-for="({value, label}) in promotionTypes"
@@ -163,7 +163,7 @@
                        label="达标天数"
                        align="center"
                        min-width="70">
-        <span slot-scope="{row}">{{parseInt(row.achieved + row.freeAchieved)}}</span>     
+        <span slot-scope="{row}">{{parseInt(row.achieved + row.freeAchieved)}}</span>
       </el-table-column>
       <el-table-column label="剩余推广天数"
                        align="center"
@@ -198,13 +198,13 @@
 <script>
 import TopTip from '../qwt-promotion-list/topTip'
 import { getUserSites } from 'api/ka'
-import  { 
+import {
   queryPromotion,
-  queryPromotionByIds, 
-  start, 
-  stop, 
-  getBalance, 
-  restart, 
+  queryPromotionByIds,
+  start,
+  stop,
+  getBalance,
+  restart,
   renewCibaoPromotion,
   getCiBaoPromotionList,
   exportCibaoPromotion
@@ -225,22 +225,19 @@ import {
   types as promotionTypes,
   chargeList,
   cibaoStatus,
-  NINETY_DAYS,
   BAIDU_TYPE,
-  QIHU_360,
-  FREE_UPDATE_NUM_ONE,
-  FREE_UPDATE_NUM_ZERO
-  } from 'constant/seo'
-import dayjs from 'dayjs';
+  FREE_UPDATE_NUM_ONE
+} from 'constant/seo'
+import dayjs from 'dayjs'
 import { f2y } from 'util'
-import { Parser }  from 'json2csv'
+import { Parser } from 'json2csv'
 import FileSaver from 'file-saver'
-import { default as track } from 'util/track'
+import track from 'util/track'
 import uuid from 'uuid/v4'
 
 export default {
-  name:'SeoPromotionList',
-   props: {
+  name: 'SeoPromotionList',
+  props: {
     userInfo: {
       type: Object,
       required: true
@@ -249,7 +246,7 @@ export default {
   components: {
     TopTip
   },
-  data() {
+  data () {
     return {
       promotionsGroupByLanding: [],
       checkedPromotions: [],
@@ -269,64 +266,64 @@ export default {
       type: CIBAO_TYPE,
       ZIXUAN_TYPE,
       promotionCibaoList: null,
-      cibaoStatus, 
+      cibaoStatus,
       AUDIT_STATUS_PASSED,
       AUDIT_STATUS_PENDING,
       AUDIT_STATUS_REJECTED,
       sites: null,
 
-      actionTrackId: uuid(),
+      actionTrackId: uuid()
     }
   },
   computed: {
-    canBatchOpen() {
+    canBatchOpen () {
       return this.checkedPromotions.length && this.checkedPromotions.every(p => [STATUS_CREATED].includes(p.status) && p.auditStatus === AUDIT_STATUS_PASSED)
     },
-    canBatchClose() {
+    canBatchClose () {
       console.log(this.checkedPromotions)
       return this.checkedPromotions.length && this.checkedPromotions.every(p => [STATUS_CREATED].includes(p.status) || (p.isRenewed && ![STATUS_OFFLINE].includes(p.status)))
     }
   },
   methods: {
-    async onRestart(promotion) {
+    async onRestart (promotion) {
       this.$confirm(`重新投放关键词 【${promotion.words.map(k => k.word)[0]}】，将预扣款600元`, '重新投放确认')
-      .then(() => {
-        return restart(promotion.id)
-      })
-      .then(() => {
-        this.$message.success('重新投放成功')
-        window.location.reload()
-      })
-      .catch(() => {})
+        .then(() => {
+          return restart(promotion.id)
+        })
+        .then(() => {
+          this.$message.success('重新投放成功')
+          window.location.reload()
+        })
+        .catch(() => {})
     },
-    async loadBalance() {
+    async loadBalance () {
       const d = await getBalance()
       this.balance = d.balance
     },
     f2y,
-    formatTime(date) {
+    formatTime (date) {
       return dayjs(date).format('YYYY.MM.DD HH:mm')
     },
-    formatRanking(ranking) {
+    formatRanking (ranking) {
       return ranking === null ? '-' : (ranking > 100 ? '100+' : ranking)
     },
-    canRestart(promotion) {
+    canRestart (promotion) {
       return promotion.status === STATUS_OFFLINE
     },
-    canUpdate(promotion) {
+    canUpdate (promotion) {
       if (promotion.status === STATUS_OFFLINE) return false
       if (promotion.auditStatus === AUDIT_STATUS_REJECTED) return true
       return promotion.isModifiable
     },
-    async loadPromotions() {
-      const {list, total} = await queryPromotion({page: this.currentPage - 1, size: this.pageSize})
+    async loadPromotions () {
+      const { list, total } = await queryPromotion({ page: this.currentPage - 1, size: this.pageSize })
       this.promotionsGroupByLanding = list
       this.total = total
     },
-    handlePageChange(page) {
+    handlePageChange (page) {
       this.currentPage = page
     },
-    onCheck(promotion, v) {
+    onCheck (promotion, v) {
       if (v) {
         this.checkedPromotions.push(promotion)
       } else {
@@ -334,25 +331,25 @@ export default {
         this.checkedPromotions.splice(index, 1)
       }
     },
-    async batchOpen() {
+    async batchOpen () {
       await start(this.checkedPromotions.map(p => p.id))
       return await this.refreshCurrent()
     },
-    async batchClose() {
+    async batchClose () {
       await stop(this.checkedPromotions.map(p => p.id))
       await this.refreshCurrent()
     },
-    async refreshCurrent() {
+    async refreshCurrent () {
       this.loading = true
       const currentPromotions = await queryPromotionByIds(this.currentItem.campaignIds)
       this.currentPromotions = this.sortCurrentPromotionsByStatus(currentPromotions)
       this.loading = false
     },
-    sortCurrentPromotionsByStatus(promotions) {
+    sortCurrentPromotionsByStatus (promotions) {
       const sequence = [STATUS_ONLINE, STATUS_CREATED, STATUS_OFFLINE]
       return promotions.sort((pre, next) => sequence.indexOf(pre.status) - sequence.indexOf(next.status))
     },
-    async renewPromotion(promotion) {
+    async renewPromotion (promotion) {
       const { landingPage, duration, volume, id, achieved, renewDuration } = promotion
       const charge = chargeList.find(o => o.duration === duration && o.volume === volume).charge
       if (charge > this.f2y(this.balance)) {
@@ -360,42 +357,42 @@ export default {
           confirmButtonText: '确定',
           showCancelButton: false
         }).then(res => {
-          this.$router.push({ name: 'seo-charge'})
-        }).catch(()=>{})
+          this.$router.push({ name: 'seo-charge' })
+        }).catch(() => {})
       }
-  
-      let oldPromotion = this.sites.find(v =>{
+
+      const oldPromotion = this.sites.find(v => {
         return new RegExp(`https?://${v.domain}.mvp.baixing.com`).test(landingPage)
       })
       if (!oldPromotion) {
         return this.$message.error('该官网不在用户官网列表中')
       }
-      let avaliableTime = Math.ceil(2 * duration + renewDuration - achieved ) 
+      const avaliableTime = Math.ceil(2 * duration + renewDuration - achieved)
       const showExpireWarning = dayjs(oldPromotion.expireAt).subtract(avaliableTime, 'day').isBefore(dayjs(), 'day')
       if (showExpireWarning) {
         return this.$confirm('官网时长不足，请前往购买官网', '提示', {
           confirmButtonText: '确定',
           showCancelButton: false
         }).then(res => {
-          this.$router.push({ name: 'seo-charge'})
-        }).catch(()=>{})
+          this.$router.push({ name: 'seo-charge' })
+        }).catch(() => {})
       }
 
       this.$confirm(`您正在对${landingPage}站点延长加速词包的推广服务时长，
       此次延长时长为${duration}天，将从您的扩资金池冻结${charge}元，请确认。`, '续费申请', {
-          confirmButtonText: '确定续费',
-          cancelButtonText: '我在想想'
-        }).then( () => {
-          return renewCibaoPromotion({id, duration})
-        }).then( () => {
-          this.$message({
-            type: 'success',
-            message: '续费成功'
-          })
-          this.getCibaoPromotionList()
-        }).catch(() => {})
+        confirmButtonText: '确定续费',
+        cancelButtonText: '我在想想'
+      }).then(() => {
+        return renewCibaoPromotion({ id, duration })
+      }).then(() => {
+        this.$message({
+          type: 'success',
+          message: '续费成功'
+        })
+        this.getCibaoPromotionList()
+      }).catch(() => {})
     },
-    routerToCibaoUpdatePromotion(promotion) {
+    routerToCibaoUpdatePromotion (promotion) {
       const { freeUpdate, id } = promotion
       const { userInfo, actionTrackId } = this
 
@@ -433,15 +430,15 @@ export default {
         cancelButtonText: '取消'
       })
     },
-    _routerToCibaoUpdatePromotion(id) {
+    _routerToCibaoUpdatePromotion (id) {
       this.$router.push({
-        name:'seo-update-cibao-promotion',
+        name: 'seo-update-cibao-promotion',
         params: {
           id
         }
       })
     },
-    async getCibaoPromotionList() {
+    async getCibaoPromotionList () {
       const { list, total } = await getCiBaoPromotionList({
         size: this.pageSize,
         page: this.currentPage
@@ -449,39 +446,39 @@ export default {
       this.promotionCibaoList = list
       this.total = total
     },
-    getResourceList() {
+    getResourceList () {
       if (this.type === CIBAO_TYPE) {
         this.getCibaoPromotionList()
       } else {
         this.loadPromotions()
       }
     },
-    renderHeader(h,{column,index}) {
-      let label = column.label;
-      let labelArr = label.split('^^');
-      return h('div',{
-        style:{
-         display:'flex',
-         flexDirection:'column',
+    renderHeader (h, { column, index }) {
+      const label = column.label
+      const labelArr = label.split('^^')
+      return h('div', {
+        style: {
+          display: 'flex',
+          flexDirection: 'column'
         }
-      },[
-        h('div',{
-          style: {
-            lineHeight: 1.5
-          }
-        },[labelArr[0]]),
+      }, [
         h('div', {
           style: {
             lineHeight: 1.5
           }
-        },[labelArr[1]])
+        }, [labelArr[0]]),
+        h('div', {
+          style: {
+            lineHeight: 1.5
+          }
+        }, [labelArr[1]])
       ])
     },
-    async exportCSV({id}){
+    async exportCSV ({ id }) {
       const dateQuery = dayjs().format('YYYYMMDD')
-      const result = await exportCibaoPromotion({dateQuery, id})
+      const result = await exportCibaoPromotion({ dateQuery, id })
       const { mobileList, pcList, type, date, key } = result
-      const typeName = +type === +BAIDU_TYPE ? '百度':'360' 
+      const typeName = +type === +BAIDU_TYPE ? '百度' : '360'
       if (!mobileList && !pcList) {
         return this.$message.error('暂无数据，请稍后再试')
       }
@@ -490,35 +487,35 @@ export default {
       if (mobileList) {
         const csvData = json2csvParser.parse(mobileList)
         const filename = `${typeName}移动[${key}]${date}.csv`
-        const blob = new Blob(['\uFEFF' + csvData], 
+        const blob = new Blob(['\uFEFF' + csvData],
           { type: 'text/csv;charset=utf-8;' })
         FileSaver.saveAs(blob, filename)
       }
 
       if (pcList) {
         const csvData = json2csvParser.parse(pcList)
-        const filename= `${typeName}pc[${key}]${date}.csv`
-        const blob = new Blob(['\uFEFF' + csvData], 
+        const filename = `${typeName}pc[${key}]${date}.csv`
+        const blob = new Blob(['\uFEFF' + csvData],
           { type: 'text/csv;charset=utf-8;' })
         setTimeout(() => {
           FileSaver.saveAs(blob, filename)
-        },1000)
+        }, 1000)
       }
     }
   },
- async mounted() {
-    let sites = await getUserSites()
-    this.sites = sites 
+  async mounted () {
+    const sites = await getUserSites()
+    this.sites = sites
     this.getResourceList()
     this.loadBalance()
   },
   watch: {
-    async currentItem(v) {
+    async currentItem (v) {
       if (v.campaignIds) {
         this.refreshCurrent()
       }
     },
-    currentPage(v) {
+    currentPage (v) {
       this.getResourceList()
     },
     type (newVal, oldVal) {

@@ -6,13 +6,13 @@ import qs from 'query-string'
 import {
   isPro
 } from 'config'
-import {isObj} from 'util'
+import { isObj } from 'util'
 import { SPUCODES } from 'constant/product'
 
 const isArray = Array.isArray
 const { WHOLE_SPU_CODE } = SPUCODES
 
-export async function queryAds(opts = {}) {
+export async function queryAds (opts = {}) {
   const q = {
     offset: 0,
     limit: 3,
@@ -42,7 +42,7 @@ export async function queryAds(opts = {}) {
   }
 }
 
-export async function updateCampaignDailyBudget(opts) {
+export async function updateCampaignDailyBudget (opts) {
   const body = await fengming
     .post('/campaign/daily_budget')
     .send(reverseCamelcase(opts))
@@ -51,7 +51,7 @@ export async function updateCampaignDailyBudget(opts) {
   return body
 }
 
-export async function updateCampaignRatio(opts) {
+export async function updateCampaignRatio (opts) {
   const body = await fengming
     .post('/campaign/ratio')
     .send(reverseCamelcase(opts))
@@ -60,7 +60,7 @@ export async function updateCampaignRatio(opts) {
   return body
 }
 
-export async function updateCampaignTimeRange(opts) {
+export async function updateCampaignTimeRange (opts) {
   const body = await fengming
     .post('/campaign/valid_time')
     .send(reverseCamelcase(opts))
@@ -69,7 +69,7 @@ export async function updateCampaignTimeRange(opts) {
   return body
 }
 
-export async function addUserLead(opts) {
+export async function addUserLead (opts) {
   const body = await fengming
     .post('/new_user_leads')
     .send(reverseCamelcase(opts))
@@ -78,7 +78,7 @@ export async function addUserLead(opts) {
   return body
 }
 
-export async function createOrder(order) {
+export async function createOrder (order) {
   const body = await fengming
     .post('/order')
     .send(reverseCamelcase(order))
@@ -87,7 +87,7 @@ export async function createOrder(order) {
   return body.data
 }
 
-export async function getProducts(type = 3) {
+export async function getProducts (type = 3) {
   const body = await fengming
     .get('/product')
     .query(reverseCamelcase({
@@ -98,7 +98,7 @@ export async function getProducts(type = 3) {
   return toCamelcase(body.data)
 }
 
-export async function getProductsByMchId(mchId) {
+export async function getProductsByMchId (mchId) {
   const body = await fengming
     .get('/products')
     .query(reverseCamelcase({
@@ -109,7 +109,7 @@ export async function getProductsByMchId(mchId) {
   return toCamelcase(body.data)
 }
 
-export async function getProductsByMchCode(mchCode) {
+export async function getProductsByMchCode (mchCode) {
   const body = await fengming
     .get('/products/merchantcode')
     .query(reverseCamelcase({
@@ -120,7 +120,7 @@ export async function getProductsByMchCode(mchCode) {
   return toCamelcase(body.data)
 }
 
-export async function getProductPackages(type = 0) {
+export async function getProductPackages (type = 0) {
   const body = await fengming
     .get('/product/package')
     .query({
@@ -131,7 +131,7 @@ export async function getProductPackages(type = 0) {
   return toCamelcase(body.data)
 }
 
-export async function getCampaignInfo(id) {
+export async function getCampaignInfo (id) {
   const body = await fengming
     .get(`/campaign/${id}`)
     .json()
@@ -151,7 +151,7 @@ export async function getCampaignInfo(id) {
   return campaign
 }
 
-export async function updateCampaign(id, data) {
+export async function updateCampaign (id, data) {
   const body = await fengming
     .post(`/campaign/${id}`)
     .send(reverseCamelcase(data))
@@ -160,7 +160,7 @@ export async function updateCampaign(id, data) {
   return body
 }
 
-export async function createCampaign(data) {
+export async function createCampaign (data) {
   const body = await fengming
     .post('/campaign/create')
     .send(reverseCamelcase(data))
@@ -169,7 +169,7 @@ export async function createCampaign(data) {
   return body.data
 }
 
-export async function activeCampaigns(ids) {
+export async function activeCampaigns (ids) {
   const body = await fengming
     .post('/campaign/pause')
     .send(reverseCamelcase({
@@ -181,7 +181,7 @@ export async function activeCampaigns(ids) {
   return body
 }
 
-export async function pauseCampaigns(ids) {
+export async function pauseCampaigns (ids) {
   const body = await fengming
     .post('/campaign/pause')
     .send(reverseCamelcase({
@@ -193,7 +193,7 @@ export async function pauseCampaigns(ids) {
   return body
 }
 
-export async function getCurrentCampaigns(opts) {
+export async function getCurrentCampaigns (opts) {
   const query = reverseCamelcase(trim({
     offset: 0,
     limit: 20,
@@ -234,7 +234,7 @@ export async function getCurrentCampaigns(opts) {
   }
 }
 
-export async function getCurrentBalance() {
+export async function getCurrentBalance () {
   const body = await fengming
     .get('/balance/current')
     .json()
@@ -242,7 +242,7 @@ export async function getCurrentBalance() {
   return body.data
 }
 
-export async function checkCreativeContent(opts) {
+export async function checkCreativeContent (opts) {
   const body = await fengming
     .post('/creative/validate')
     .send(reverseCamelcase(opts))
@@ -251,7 +251,7 @@ export async function checkCreativeContent(opts) {
   return body.data
 }
 
-export async function getQiqiaobanPageList() {
+export async function getQiqiaobanPageList () {
   const body = await fengming
     .get('/creative/url/qiqiaoban')
     .json()
@@ -259,7 +259,7 @@ export async function getQiqiaobanPageList() {
   return toCamelcase(body.data)
 }
 
-export async function getRecommandCreative(opts) {
+export async function getRecommandCreative (opts) {
   const body = await fengming
     .get('/creative/recommand')
     .query(reverseCamelcase(opts))
@@ -269,7 +269,7 @@ export async function getRecommandCreative(opts) {
 }
 
 // TODO: 添加计划id
-export async function recommendByUrl(opts) {
+export async function recommendByUrl (opts) {
   const body = await fengming
     .post('/keyword/recommand/vad')
     .send(reverseCamelcase(opts))
@@ -278,10 +278,10 @@ export async function recommendByUrl(opts) {
   return fmtWords(toCamelcase(body.data))
 }
 
-export async function recommendByWord(word, opts) {
+export async function recommendByWord (word, opts) {
   const body = await fengming
     .post('/keyword/recommand/word')
-    .send(reverseCamelcase({word, ...opts}))
+    .send(reverseCamelcase({ word, ...opts }))
     .json()
 
   const words = fmtWords(toCamelcase(body.data))
@@ -295,37 +295,37 @@ export async function recommendByWord(word, opts) {
   return words
 }
 
-export async function recommendByWordList(word, opts) {
+export async function recommendByWordList (word, opts) {
   const body = await fengming
     .post('/keyword/recommand/word-list')
-    .send(reverseCamelcase({words: word, ...opts}))
+    .send(reverseCamelcase({ words: word, ...opts }))
     .json()
 
-  let result = toCamelcase(body.data)
+  const result = toCamelcase(body.data)
   if (result && isObj(result)) {
-    for (let key in result) {
+    for (const key in result) {
       result[key] = fmtWords(toCamelcase(result[key]))
     }
   }
   return result
 }
 
-export async function chibiRobotAudit(words, opts) {
+export async function chibiRobotAudit (words, opts) {
   const body = await fengming
     .post('/chibi/robot/audit')
-    .send(reverseCamelcase({contents: words, ...opts}))
+    .send(reverseCamelcase({ contents: words, ...opts }))
     .json()
 
-  let result = toCamelcase(body.data)
+  const result = toCamelcase(body.data)
   if (result && isObj(result)) {
-    for (let key in result) {
+    for (const key in result) {
       result[key] = fmtWordsByContent(toCamelcase(result[key]))
     }
   }
   return result
 }
 
-export async function getChangeLogs(opts) {
+export async function getChangeLogs (opts) {
   const { data } = await fengming
     .get('/balance/changelog')
     .query(reverseCamelcase(opts))
@@ -337,7 +337,7 @@ export async function getChangeLogs(opts) {
   }
 }
 
-export async function getLogs(queryParmas = {}) {
+export async function getLogs (queryParmas = {}) {
   const { meta, data } = await fengming
     .get('/timeline/query')
     .query(reverseCamelcase(queryParmas))
@@ -349,8 +349,8 @@ export async function getLogs(queryParmas = {}) {
   })
 }
 
-export async function getSummary() {
-  const [ balance, daily ] = await Promise.all([
+export async function getSummary () {
+  const [balance, daily] = await Promise.all([
     getCurrentBalance(),
     _getDailySummary()
   ])
@@ -361,8 +361,8 @@ export async function getSummary() {
   }
 }
 
-export async function getHomepageSummary() {
-  const [ campaignCount, balance, daily ] = await Promise.all([
+export async function getHomepageSummary () {
+  const [campaignCount, balance, daily] = await Promise.all([
     getCurrentCampaignCount(),
     getCurrentBalance(),
     _getDailySummary()
@@ -375,8 +375,8 @@ export async function getHomepageSummary() {
   }
 }
 
-export async function getHomePageFengmingData() {
-  const [ balanceBrief, daily, notices ] = await Promise.all([
+export async function getHomePageFengmingData () {
+  const [balanceBrief, daily, notices] = await Promise.all([
     getCurrentBalanceBreif(WHOLE_SPU_CODE),
     _getDailySummary(),
     getFengmingNotice()
@@ -390,7 +390,7 @@ export async function getHomePageFengmingData() {
   }
 }
 
-export async function getFengmingNotice(opts) {
+export async function getFengmingNotice (opts) {
   const body = await fengming
     .get('/dashboard/notice')
     .query(opts)
@@ -399,16 +399,16 @@ export async function getFengmingNotice(opts) {
   return body.data
 }
 
-export async function getQiqiaobanCoupon(campaignId) {
+export async function getQiqiaobanCoupon (campaignId) {
   const body = await fengming
     .get('/coupon/qiqiaoban')
-    .query(reverseCamelcase({campaignId}))
+    .query(reverseCamelcase({ campaignId }))
     .json()
 
   return body.data
 }
 
-export async function getCurrentCampaignCount(opts) {
+export async function getCurrentCampaignCount (opts) {
   const body = await fengming
     .get('/campaign/current/count')
     .query(opts)
@@ -417,16 +417,16 @@ export async function getCurrentCampaignCount(opts) {
   return body.data
 }
 
-export async function sendQuestion(content) {
+export async function sendQuestion (content) {
   const body = await fengming
     .post('/qa')
-    .send({content})
+    .send({ content })
     .json()
 
   return body.data
 }
 
-export async function huodongLeads(opts) {
+export async function huodongLeads (opts) {
   const option = {
     contactName: '无',
     sourceType: 50,
@@ -435,22 +435,22 @@ export async function huodongLeads(opts) {
   }
   const body = await fengming
     .post('/crm_leads')
-    .send(reverseCamelcase({data: option}))
+    .send(reverseCamelcase({ data: option }))
     .json()
 
   return body
 }
 
-export async function changeCampaignKeywordsPrice(campaignId, price) {
+export async function changeCampaignKeywordsPrice (campaignId, price) {
   const body = await fengming
     .post(`/campaign/${campaignId}/keyword`)
-    .send({price})
+    .send({ price })
     .json()
 
   return body.data
 }
 
-export async function getDashboardHeader() {
+export async function getDashboardHeader () {
   const [balance, dailyReport] = await Promise.all([
     getCurrentBalance(),
     _getDailySummary()
@@ -466,7 +466,7 @@ export async function getDashboardHeader() {
  * private
  */
 
-async function _getCurrentCampaigns(opts) {
+async function _getCurrentCampaigns (opts) {
   const body = await fengming
     .get('/campaign/current')
     .query(opts)
@@ -475,7 +475,7 @@ async function _getCurrentCampaigns(opts) {
   return toCamelcase(body.data)
 }
 
-async function _getDailySummary() {
+async function _getDailySummary () {
   const body = await fengming
     .get('/campaign/daily_simple_report')
     .json()
@@ -487,7 +487,7 @@ async function _getDailySummary() {
  * private
  */
 
-function fmtWords(words) {
+function fmtWords (words) {
   if (!isArray(words)) {
     return words
   }
@@ -498,7 +498,7 @@ function fmtWords(words) {
   }))
 }
 
-function fmtWordsByContent(words) {
+function fmtWordsByContent (words) {
   if (!isArray(words)) {
     return words
   }

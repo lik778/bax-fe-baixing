@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import { Message} from 'element-ui'
+import { Message } from 'element-ui'
 
 import { recommendByWordList, chibiRobotAudit } from 'api/fengming'
 import { isObj } from 'util'
@@ -71,7 +71,7 @@ export default {
     },
     visible: {
       type: Boolean,
-      required: true,
+      required: true
     },
     isNegative: {
       type: Boolean,
@@ -110,24 +110,24 @@ export default {
         normalList: [],
         bannedList: []
       },
-      search: '',
+      search: ''
     }
   },
   methods: {
-    handleConfirm() {
+    handleConfirm () {
       this.$emit('update-keywords', this.keywords)
     },
-    handleClose() {
+    handleClose () {
       this.search = ''
       this.getInitKeywords()
       this.$emit('close')
     },
-    getInitKeywords() {
-      for (let key in this.keywords) {
+    getInitKeywords () {
+      for (const key in this.keywords) {
         this.keywords[key] = []
       }
     },
-    async addWordList() {
+    async addWordList () {
       // 空字符校验
       if (this.search.trim() === '') {
         return Message.warning('还未添加关键词')
@@ -135,10 +135,10 @@ export default {
 
       // 数组去重并去掉首尾的逗号
       let words = this.search.trim().split(/[，,]]*/g)
-      words = Array.from(new Set(words.map(row=>{
+      words = Array.from(new Set(words.map(row => {
         return row.trim().toLowerCase()
       }).filter(row => row !== '')))
-      
+
       if (words.length > 100) {
         return Message.warning('每次最多支持上传100个关键词')
       }
@@ -151,31 +151,31 @@ export default {
 
       // 判断关键词已存在
       let normalList = (this.keywords && this.keywords.normalList) || []
-      let bannedList = (this.keywords && this.keywords.bannedList) || []
+      const bannedList = (this.keywords && this.keywords.bannedList) || []
       normalList = this.originalKeywords.concat(normalList)
-      for (let i = 0; i < normalList.length; i ++) {
-        let row = normalList[i]
+      for (let i = 0; i < normalList.length; i++) {
+        const row = normalList[i]
         if (words.includes(row.word.toLowerCase())) {
           return Message.warning(`${row.word}该关键词已存在关键词或否定关键词列表`)
         }
       }
-      for (let i = 0; i < bannedList.length; i ++) {
-        let row = bannedList[i]
+      for (let i = 0; i < bannedList.length; i++) {
+        const row = bannedList[i]
         if (words.includes(row.word)) {
           return Message.warning(`因平台限制，${row.word}无法添加，请修改`)
         }
       }
 
       // 拼接关键词
-      let newKeywords = await this.fetchWords(words)
-      for (let key in this.keywords) {
+      const newKeywords = await this.fetchWords(words)
+      for (const key in this.keywords) {
         this.keywords[key] = this.keywords[key].concat(newKeywords[key])
       }
       this.search = ''
     },
-    async fetchWords(words) {
+    async fetchWords (words) {
       if (this.isNegative) {
-        return await this._fetchNegativeKeywords(words, { 
+        return await this._fetchNegativeKeywords(words, {
           campaignId: this.campaignId,
           sources: this.sources
         })
@@ -194,7 +194,7 @@ export default {
     async _fetchKeywords (words, opts) {
       const result = await recommendByWordList(words, opts)
       if (result && isObj(result)) {
-        for (let key in result) {
+        for (const key in result) {
           if (Array.isArray(result[key])) {
             result[key] = result[key].map(word => {
               const { price: serverPrice } = word
@@ -205,16 +205,16 @@ export default {
               return {
                 ...word,
                 serverPrice,
-                price,// override price, price is display value
+                price, // override price, price is display value
                 value: word.word
               }
             })
           }
-        } 
+        }
       }
       return result
     },
-    async _fetchNegativeKeywords(words, opts) {
+    async _fetchNegativeKeywords (words, opts) {
       const result = await chibiRobotAudit(words, opts)
       return result
     }

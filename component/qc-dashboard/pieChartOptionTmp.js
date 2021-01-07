@@ -9,13 +9,13 @@ export default {
       fontSize: 16,
       lineHeight: 10,
       color: '#FF6350',
-      fontWeight: 'normal',
+      fontWeight: 'normal'
     },
     subtextStyle: {
       fontSize: 12,
       lineHeight: 14,
-      color: '#666',
-    },
+      color: '#666'
+    }
   },
   series: [
     {
@@ -33,13 +33,13 @@ export default {
         margin: 20,
         padding: [8, 6],
         // alignTo: 'edge',
-        rich: {},
+        rich: {}
       },
       labelLine: {
-        show: true,
+        show: true
       },
       color: ['#35a5e4', '#ffa205'],
-      data: [],
-    },
-  ],
+      data: []
+    }
+  ]
 }

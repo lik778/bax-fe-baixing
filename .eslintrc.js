@@ -8,8 +8,12 @@ module.exports = {
     'standard'
   ],
   parserOptions: {
+    parser: 'babel-eslint',
     ecmaVersion: 12,
-    sourceType: 'module'
+    sourceType: 'module',
+    ecmaFeatures: {
+      legacyDecorators: true
+    }
   },
   plugins: [
     'vue'

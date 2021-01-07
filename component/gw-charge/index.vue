@@ -70,10 +70,10 @@ import Contract from 'com/charge/contract'
 import Step from './step'
 
 import { centToYuan } from 'utils'
-import { assetHost, orderServiceHost } from 'config'
+import { orderServiceHost } from 'config'
 import { getProductsByMchCode } from 'api/fengming'
 import { createPreOrder } from 'api/order'
-import { getUserIdFromBxSalesId, queryUserInfo, getUserInfo } from 'api/account'
+import { queryUserInfo, getUserInfo } from 'api/account'
 import { allowBuyYoucaigouSite, allowGetOrderPayUrl } from 'util'
 import { normalizeRoles } from 'util/role'
 import { MERCHANTS } from 'constant/product'
@@ -87,7 +87,7 @@ export default {
     GwProWidget,
     Clipboard,
     Step,
-    Contract,
+    Contract
   },
   props: {
     userInfo: {
@@ -95,7 +95,7 @@ export default {
       required: true
     }
   },
-  data() {
+  data () {
     return {
       products: [],
       checkedSkuId: '',
@@ -110,30 +110,30 @@ export default {
 
       step: 1,
       fetchLoading: true,
-      agreementList:[]
+      agreementList: []
     }
   },
   filters: {
     centToYuan
   },
   computed: {
-    isAgentSales() {
+    isAgentSales () {
       const roles = normalizeRoles(this.userInfo.roles)
       return roles.includes('AGENT_SALES')
     },
-    isBxUser() {
+    isBxUser () {
       const roles = normalizeRoles(this.userInfo.roles)
       return roles.includes('BAIXING_USER')
     },
-    isBxSales() {
+    isBxSales () {
       const roles = normalizeRoles(this.userInfo.roles)
       return roles.includes('BAIXING_SALES')
     },
-    isAgentAccounting() {
+    isAgentAccounting () {
       const roles = normalizeRoles(this.userInfo.roles)
       return roles.includes('AGENT_ACCOUNTING')
     },
-    submitButtonText() {
+    submitButtonText () {
       const { userInfo } = this
       if (this.isBxUser) {
         return '确认购买'
@@ -145,12 +145,12 @@ export default {
 
       return '确认购买'
     },
-    hasUnCheckedAgreement() {
-     return this.agreementList.length ? this.agreementList.some(agreement => !agreement.checked) : true
+    hasUnCheckedAgreement () {
+      return this.agreementList.length ? this.agreementList.some(agreement => !agreement.checked) : true
     }
   },
   methods: {
-    async getFinalSalesId() {
+    async getFinalSalesId () {
       const { sales_id: salesId } = this.$route.query
       if (salesId) {
         return salesId
@@ -164,7 +164,7 @@ export default {
 
       return userInfo.id
     },
-    async getFinalUserId() {
+    async getFinalUserId () {
       const { user_id: userId } = this.$route.query
       if (userId) {
         return userId
@@ -178,7 +178,7 @@ export default {
       const { userInfo } = this
       return userInfo.id
     },
-    async createOrder() {
+    async createOrder () {
       this.step = 1
       if (this.hasUnCheckedAgreement) {
         return this.$message.error('请阅读并勾选同意服务协议，再进行下一步操作')
@@ -217,31 +217,31 @@ export default {
       if (this.isBxUser) {
         location.href = `${orderServiceHost}/?appId=105&seq=${preTradeId}`
       } else if (this.isAgentAccounting) {
-        location.href = `${orderServiceHost}/?appId=105&seq=${preTradeId}&agentId=${userInfo.id}`
+        location.href = `${orderServiceHost}/?appId=105&seq=${preTradeId}&agentId=${this.userInfo.id}`
       } else if (this.isBxSales) {
         this.orderPayUrl = `${orderServiceHost}/?appId=105&seq=${preTradeId}`
       }
       this.$message.success('创建订单成功')
     }
   },
-  async mounted() {
+  async mounted () {
     const { sales_id: salesId, user_id: userId } = this.$route.query
 
     this.fetchLoading = true
     try {
-      let websiteSpuList = await getProductsByMchCode(WEBSITE_MERCHANT_CODE)
+      const websiteSpuList = await getProductsByMchCode(WEBSITE_MERCHANT_CODE)
       this.products = websiteSpuList[0].selection
       const initSelectedSku = this.products.find(sku => sku.tags.includes('selected'))
       if (initSelectedSku) {
-        this.checkedSkuId = initSelectedSku.skuVendorId 
+        this.checkedSkuId = initSelectedSku.skuVendorId
       }
 
       // 此处有坑，常理不应该用title做判断，后期通过商品聚合页更改
       if (!allowBuyYoucaigouSite(this.userInfo.id)) {
-        let index = this.products.findIndex(o => o.title.indexOf('优采购') > -1)
+        const index = this.products.findIndex(o => o.title.indexOf('优采购') > -1)
         this.products.splice(index, 1)
       }
-      
+
       this.agreementList = getUniqueAgreementList(websiteSpuList)
     } catch (e) {
       console.error(e)

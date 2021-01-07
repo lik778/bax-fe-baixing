@@ -25,7 +25,7 @@ export default {
     }
   },
   filters: {
-    orderStatus(s) {
+    orderStatus (s) {
       return sspOrderStatus[String(s)]
     },
     toHumanTime

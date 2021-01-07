@@ -1,4 +1,4 @@
-import {toOpt} from './fengming'
+import { toOpt } from './fengming'
 
 const _AUDIT_STATUS_REJECT_FROM_QUALITY_ROBOT = -11
 const _AUDIT_STATUS_REJECT_FROM_QUALITY = -12
@@ -16,10 +16,10 @@ export const AUDIT_STATUS_PASS = [_AUDIT_STATUS_PASSED_SEM]
 export const AUDIT_STATUS_REJECT = [_AUDIT_STATUS_REJECT_FROM_QUALITY_ROBOT, _AUDIT_STATUS_REJECT_FROM_QUALITY, _AUDIT_STATUS_REJECT_FROM_QUALITY_WITH_KEYWORD, _AUDIT_STATUS_REJECT_FROM_SEM]
 
 export const AUDIT_STATUS = {
-  '待审核': AUDIT_STATUS_PENDING_AUDIT,
-  '审核中': AUDIT_STATUS_AUDITING,
-  '审核通过': AUDIT_STATUS_PASS,
-  '审核驳回': AUDIT_STATUS_REJECT
+  待审核: AUDIT_STATUS_PENDING_AUDIT,
+  审核中: AUDIT_STATUS_AUDITING,
+  审核通过: AUDIT_STATUS_PASS,
+  审核驳回: AUDIT_STATUS_REJECT
 }
 
 export const auditStatusOpts = toOpt(AUDIT_STATUS, false, true)
@@ -36,10 +36,10 @@ export const PROMOTE_STATUS_ONLINE = [_PROMOTE_STATUS_STARTED]
 export const PROMOTE_STATUS_OFFLINE = [_PROMOTE_STATUS_FINISHED, _PROMOTE_STATUS_FREEZED]
 
 export const PROMOTE_STATUS = {
-  '待设置': PROMOTE_STATUS_PENDING_EDIT,
-  '待投放': PROMOTE_STATUS_PENDING_ONLINE,
-  '投放中': PROMOTE_STATUS_ONLINE,
-  '已下线': PROMOTE_STATUS_OFFLINE
+  待设置: PROMOTE_STATUS_PENDING_EDIT,
+  待投放: PROMOTE_STATUS_PENDING_ONLINE,
+  投放中: PROMOTE_STATUS_ONLINE,
+  已下线: PROMOTE_STATUS_OFFLINE
 }
 
 export const promoteStatusOpts = toOpt(PROMOTE_STATUS, false, true)
@@ -91,9 +91,9 @@ export const NINTY_DAYS = 90
 export const HALF_YEAR_DAYS = 180
 export const YEAR_DAYS = 360
 export const DAYS_MAP = [THIRTY_DAYS, NINTY_DAYS]
-export const GET_DAYS_MAP = function(soldType) {
+export const GET_DAYS_MAP = function (soldType) {
   const isLongOrder = Number(soldType) === SOLD_TYPE_YEAR
-  return isLongOrder ? DAYS_MAP.concat([HALF_YEAR_DAYS]): DAYS_MAP
+  return isLongOrder ? DAYS_MAP.concat([HALF_YEAR_DAYS]) : DAYS_MAP
 }
 
 export const PROMOTE_OFFERED = 2

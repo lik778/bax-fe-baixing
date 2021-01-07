@@ -19,10 +19,9 @@
 
 <script>
 
-
 export default {
   name: 'notification',
-  data() {
+  data () {
     return {
       showNotice: false
     }

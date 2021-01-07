@@ -41,42 +41,37 @@
 </template>
 
 <script>
-  import { isPro } from 'config'
-  import { redirectTo } from 'utils'
-  import { logout } from 'api/account'
-  import { version } from '../../package.json'
-  import AddUserLead from 'com/common/add-user-lead'
+import { redirectTo } from 'utils'
+import { logout } from 'api/account'
+import { version } from '../../package.json'
+import AddUserLead from 'com/common/add-user-lead'
 
-  export default {
-    name: 'layout-header',
-    data () {
-      return {
-        version,
-        isMenuVisible: false,
-        isHelpVisible: false,
-        isDialogVisible: false
-      }
-    },
-    components: {AddUserLead},
-    props: ['userInfo'],
-    methods: {
-      async handleMenuClick(e) {
-        switch(e.target.dataset.command) {
-          case 'account':
-            return this.$router.push({name: 'account'})
-          // case 'back':
-          //   const redirectUrl = isPro ? '//www.baixing.com/w/posts' : 'http://www.qatest1.baixing.cn/w/posts'
-          //   window.location.href = redirectUrl
-          //   return
-          case 'logout':
-            await logout()
-            return redirectTo('signin')
-          default:
-            this.isMenuVisible = false
-        }
+export default {
+  name: 'layout-header',
+  data () {
+    return {
+      version,
+      isMenuVisible: false,
+      isHelpVisible: false,
+      isDialogVisible: false
+    }
+  },
+  components: { AddUserLead },
+  props: ['userInfo'],
+  methods: {
+    async handleMenuClick (e) {
+      switch (e.target.dataset.command) {
+        case 'account':
+          return this.$router.push({ name: 'account' })
+        case 'logout':
+          await logout()
+          return redirectTo('signin')
+        default:
+          this.isMenuVisible = false
       }
     }
   }
+}
 </script>
 
 <style lang="scss" scoped>

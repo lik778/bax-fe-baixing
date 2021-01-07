@@ -45,17 +45,17 @@ export default {
       default: false
     }
   },
-  data() {
+  data () {
     return {
-      CouponTypes,
+      CouponTypes
     }
   },
   methods: {
     formatCouponRule,
-    formatTime(timestamp) {
+    formatTime (timestamp) {
       return dayjs(timestamp * 1000).format('YYYY.MM.DD')
     },
-    onClick() {
+    onClick () {
       if (!this.disabled) {
         this.$emit('click')
       }
