@@ -79,7 +79,7 @@ export default {
       type: String
     }
   },
-  data() {
+  data () {
     return {
       selectedAreas: [...this.areas],
       quanguoChecked: false,
@@ -95,11 +95,11 @@ export default {
         this.topAreas = [
           {
             checked: false,
-            id: "zhixiashi",
-            label: "直辖市",
+            id: 'zhixiashi',
+            label: '直辖市',
             level: 2,
-            parent: "china",
-            areas:  values
+            parent: 'china',
+            areas: values
               .filter(a => a.areaType === 1)
               .filter(a => specialCities.includes(a.name))
               .map(a => ({
@@ -112,53 +112,53 @@ export default {
               }))
           },
           ...values
-          .filter(a => a.areaType === 2)
-          .map(a => ({
-            parent: a.parent,
-            label: a.nameCn,
-            id: a.name,
-            level: 2,
-            checked: false,
-            areas: this.getSubAreas(a.name)
-          }))]
+            .filter(a => a.areaType === 2)
+            .map(a => ({
+              parent: a.parent,
+              label: a.nameCn,
+              id: a.name,
+              level: 2,
+              checked: false,
+              areas: this.getSubAreas(a.name)
+            }))]
         // 城市和city 完成mapping
         values.forEach(v => {
           this.cityProvinceMapping[v.id] = specialCities.includes(v.id) ? 'zhixiashi' : v.parent
         })
       }
     },
-    areas(v) {
+    areas (v) {
       if (isequal(v, this.selectedAreas)) {
         return
       }
       this.selectedAreas = [...v]
     }
   },
-  mounted() {
+  mounted () {
     // 处理删除选择城市view刷新
     this.$bus.$on('updateBiaowangAreaSelectorView', (cityId) => {
       const provinceId = this.cityProvinceMapping[cityId]
-      const provinceItem = this.topAreas.find(x => x.id == provinceId)
+      const provinceItem = this.topAreas.find(x => String(x.id) === String(provinceId))
       provinceItem.checked = false
-      const cityItem = provinceItem.areas.find(x => x.id == cityId)
+      const cityItem = provinceItem.areas.find(x => String(x.id) === String(cityId))
       cityItem.checked = false
       this.quanguoChecked = false
     })
   },
   methods: {
-    quanguoCheckedChange() {
+    quanguoCheckedChange () {
       this.selectedAreas = []
       this.topAreas.forEach(p => {
-          p.checked = this.quanguoChecked
-          p.areas.forEach(c => {
-            c.checked = this.quanguoChecked
-            if (this.quanguoChecked) {
-              this.selectedAreas.push(c.id)
-            }
-          })
+        p.checked = this.quanguoChecked
+        p.areas.forEach(c => {
+          c.checked = this.quanguoChecked
+          if (this.quanguoChecked) {
+            this.selectedAreas.push(c.id)
+          }
+        })
       })
     },
-    provinceCheckedChange(province) {
+    provinceCheckedChange (province) {
       province.areas.forEach(x => {
         const { id } = x
         x.checked = province.checked
@@ -175,37 +175,42 @@ export default {
       })
       this.setQuanguoChecked()
     },
-    cityChecked(area) {
+    cityChecked (area) {
       const { parent, id } = area
-      const province = this.topAreas.find(x => x.id == parent)
+      const province = this.topAreas.find(x => String(x.id) === String(parent))
       area.checked = !area.checked
       province.checked = (province.areas.filter(x => x.checked).length === province.areas.length)
       this.setQuanguoChecked()
       if (area.checked) {
         this.selectedAreas.push(id)
       } else {
-        const index = this.selectedAreas.findIndex(y => y == id)
+        const index = this.selectedAreas.findIndex(y => String(y) === String(id))
         this.selectedAreas.splice(index, 1)
       }
     },
-    setQuanguoChecked() {
+    setQuanguoChecked () {
       this.quanguoChecked = (this.topAreas.filter(x => x.checked).length === this.topAreas.length)
     },
-    getSubAreas(name) {
+    getSubAreas (name) {
       return this.allAreas
         .filter(a => {
-            return !!a.baiduCode && a.isAllowed === 1
+          return !!a.baiduCode && a.isAllowed === 1
         })
         .filter(a => a.parent === name)
-        .map(a => ({ parent: a.parent, label: a.nameCn,
-          id: a.name, level: 1, checked: false }))
+        .map(a => ({
+          parent: a.parent,
+          label: a.nameCn,
+          id: a.name,
+          level: 1,
+          checked: false
+        }))
     },
-    cancel() {
+    cancel () {
       this.$emit('cancel')
     },
-    ok() {
-        const areas = this.selectedAreas.concat([])
-        this.$emit('ok', [...areas])
+    ok () {
+      const areas = this.selectedAreas.concat([])
+      this.$emit('ok', [...areas])
     }
   }
 }

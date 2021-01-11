@@ -36,7 +36,7 @@ export default {
     }
   },
   methods: {
-    onClick() {
+    onClick () {
       if (!this.disabled) {
         this.$emit('click')
       }

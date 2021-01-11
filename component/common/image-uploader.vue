@@ -27,7 +27,7 @@ const request = new Fetch({
   prefix: upyunHost
 })
 
-async function uploadFile(file) {
+async function uploadFile (file) {
   if (!file) {
     return
   }
@@ -55,11 +55,11 @@ async function uploadFile(file) {
   return upyunFileHost + filePath
 }
 
-const checkUploadFiles = function(files, options) {
+const checkUploadFiles = function (files, options) {
   return new Promise(resolve => {
     files.forEach(file => {
       if (file > options.maxFileSize * 1024) {
-        resolve([`超过最大上传的文件大小${maxFileSize}`])
+        resolve([`超过最大上传的文件大小${options.maxFileSize}`])
       }
       if (!options.types.includes(file.type)) {
         resolve(['不支持上传的文件格式'])
@@ -74,7 +74,7 @@ export default {
   props: {
     uploadOptions: {
       type: Object,
-      default() {
+      default () {
         return {
           maxFileSize: {
             // kb
@@ -96,13 +96,13 @@ export default {
       default: false
     }
   },
-  data() {
+  data () {
     return {
       loading: false
     }
   },
   methods: {
-    async handleFileChange(e) {
+    async handleFileChange (e) {
       const { uploadOptions } = this
       const files = Array.from(e.target.files)
       if (!files.length) return
@@ -123,7 +123,7 @@ export default {
         this.loading = false
       }
     },
-    uploadFile() {
+    uploadFile () {
       this.$refs.file.click()
     }
   }

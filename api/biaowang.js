@@ -5,7 +5,7 @@ import { SPUCODES } from 'constant/product'
 
 const { BIAO_WANG_SPU_CODE } = SPUCODES
 
-export async function queryKeywordPrice(opts = {}) {
+export async function queryKeywordPrice (opts = {}) {
   const body = await biaowang
     .post('/keyword/pricing/user/inquiry')
     .send(opts)
@@ -13,7 +13,7 @@ export async function queryKeywordPrice(opts = {}) {
 
   return body.data.content
 }
-export async function refreshKeywordPrice(keywords) {
+export async function refreshKeywordPrice (keywords) {
   const requestBody = keywords.map(k => ({
     ...k,
     price: {
@@ -22,7 +22,7 @@ export async function refreshKeywordPrice(keywords) {
   }))
   const body = await biaowang
     .post('/keyword/pricing/user/inquiry/norec')
-    .send({pricingList: requestBody})
+    .send({ pricingList: requestBody })
     .json()
 
   const parsedBody = body.data.content.map(i => {
@@ -36,7 +36,7 @@ export async function refreshKeywordPrice(keywords) {
   return parsedBody
 }
 
-export async function getPromotes(opts = {}) {
+export async function getPromotes (opts = {}) {
   const q = {
     size: 20,
     page: 0,
@@ -53,16 +53,16 @@ export async function getPromotes(opts = {}) {
   }
 }
 
-export async function getCpcRanking(promoteIds = []) {
+export async function getCpcRanking (promoteIds = []) {
   const body = await biaowang
     .get('/promote/user/cpc_ranking')
-    .query({promoteIds})
+    .query({ promoteIds })
     .json()
 
   return body.data
 }
 
-export async function getPromoteById(id) {
+export async function getPromoteById (id) {
   const body = await biaowang
     .get(`/promote/user/${id}`)
     .json()
@@ -70,16 +70,16 @@ export async function getPromoteById(id) {
   return body.data
 }
 
-export async function getPromtesByOrders(orderIds) {
+export async function getPromtesByOrders (orderIds) {
   const body = await biaowang
-    .get(`/promote/user/order`)
-    .query({orderIds})
+    .get('/promote/user/order')
+    .query({ orderIds })
     .json()
 
   return body.data
 }
 
-export async function updatePromote(opts = {}) {
+export async function updatePromote (opts = {}) {
   return biaowang
     .post('/promote/user/info')
     .send(opts)
@@ -87,36 +87,36 @@ export async function updatePromote(opts = {}) {
 }
 
 // targetUserId, salesId are baxid, not baixingid
-export async function createPreOrder(items, targetUserId, salesId, saleWithShopOrder, shopOrderAmount, shopType) {
+export async function createPreOrder (items, targetUserId, salesId, saleWithShopOrder, shopOrderAmount, shopType) {
   const body = await biaowang
     .post('/trade/user/order/pre')
-    .send(trim({pricingList: items, targetUserId, salesId, saleWithShopOrder, shopOrderAmount, shopType}))
+    .send(trim({ pricingList: items, targetUserId, salesId, saleWithShopOrder, shopOrderAmount, shopType }))
     .json()
 
   return body.data
 }
 
-export async function getRecentSold() {
+export async function getRecentSold () {
   const body = await biaowang
-    .get(`/promote/user/global/promote`)
+    .get('/promote/user/global/promote')
     .json()
 
   return body.data.content
 }
 
-export async function getLogs(parmas) {
+export async function getLogs (parmas) {
   const body = await biaowang
-    .get(`/promote/timeline/query`)
+    .get('/promote/timeline/query')
     .query(parmas)
     .json()
 
   return body.data
 }
 
-export async function getHomePageBiaowangData() {
-  const [ biaowangBalanceBrief, body ] = await Promise.all([
+export async function getHomePageBiaowangData () {
+  const [biaowangBalanceBrief, body] = await Promise.all([
     getCurrentBalanceBreif(BIAO_WANG_SPU_CODE),
-    await biaowang.get(`/promote/user/info`).json()
+    await biaowang.get('/promote/user/info').json()
   ])
 
   return {
@@ -125,25 +125,25 @@ export async function getHomePageBiaowangData() {
   }
 }
 
-export async function getQiqiaobanCoupon(promoteId) {
+export async function getQiqiaobanCoupon (promoteId) {
   const body = await biaowang
     .post('/promote/coupon/qiqiaoban')
-    .query({promoteId})
+    .query({ promoteId })
     .json()
 
   return body.data
 }
 
-export async function cancelOrder(orderId) {
+export async function cancelOrder (orderId) {
   const body = await biaowang
-    .post(`/trade/user/order/cancel`)
-    .send({orderId})
+    .post('/trade/user/order/cancel')
+    .send({ orderId })
     .json()
 
   return body.data
 }
 
-export async function queryOrder(query) {
+export async function queryOrder (query) {
   const { data } = await biaowang
     .get('/trade/user/order')
     .query(query)
@@ -154,7 +154,7 @@ export async function queryOrder(query) {
   }
 }
 
-export async function queryKeywordPriceNew(opts) {
+export async function queryKeywordPriceNew (opts) {
   const body = await biaowang
     .post('/keyword/v2/pricing/user/inquiry')
     .send(opts)
@@ -163,7 +163,7 @@ export async function queryKeywordPriceNew(opts) {
   return body.data
 }
 
-export async function queryKeywordPackagePrice(opts) {
+export async function queryKeywordPackagePrice (opts) {
   const body = await biaowang
     .post('/keyword/v2/pricing/user/package/inquiry')
     .send(opts)
@@ -217,7 +217,7 @@ export async function refreshKeywordPriceNew (keywords, opt) {
   return parsedBody
 }
 
-export async function getUserRanking(opts = {}) {
+export async function getUserRanking (opts = {}) {
   const body = await biaowang
     .post('/promote/user/ranking')
     .send(opts)
@@ -226,7 +226,7 @@ export async function getUserRanking(opts = {}) {
   return body.data.rankList
 }
 
-export async function getUserLive(opts = {}) {
+export async function getUserLive (opts = {}) {
   const body = await biaowang
     .get('/promote/user/live')
     .query(opts)
@@ -234,7 +234,7 @@ export async function getUserLive(opts = {}) {
   return body.data
 }
 
-export async function getUserShow(opts = {}) {
+export async function getUserShow (opts = {}) {
   const body = await biaowang
     .post('/promote/user/show')
     .send(opts)
@@ -243,7 +243,7 @@ export async function getUserShow(opts = {}) {
   return body.data.showList
 }
 
-export async function getPromotionUserCollection(opts = {}) {
+export async function getPromotionUserCollection (opts = {}) {
   const body = await biaowang
     .post('/promote/user/collect')
     .send({
@@ -254,7 +254,7 @@ export async function getPromotionUserCollection(opts = {}) {
   return body.data
 }
 
-export async function sendUserManualApply(opts = {}) {
+export async function sendUserManualApply (opts = {}) {
   const body = await biaowang
     .post('/keyword/v2/pricing/user/manual/apply')
     .send({
@@ -265,7 +265,7 @@ export async function sendUserManualApply(opts = {}) {
   return body.data
 }
 
-export async function getUserManualList(opts = {}) {
+export async function getUserManualList (opts = {}) {
   const q = {
     size: 20,
     page: 0,

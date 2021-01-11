@@ -4,7 +4,7 @@ import { api, trim } from './base'
 
 const isArray = Array.isArray
 
-export async function getCalendar(opts = {}) {
+export async function getCalendar (opts = {}) {
   const body = await api
     .get('/order/calendar')
     .query(reverseCamelcase(opts))
@@ -15,7 +15,7 @@ export async function getCalendar(opts = {}) {
   }
 }
 
-export async function cancelOrder(oid) {
+export async function cancelOrder (oid) {
   const body = await api
     .post(`/order/${oid}/cancel`)
     .send({})
@@ -24,7 +24,7 @@ export async function cancelOrder(oid) {
   return body
 }
 
-export async function createOrder(order) {
+export async function createOrder (order) {
   const body = await api
     .post('/order')
     .send(reverseCamelcase(order))
@@ -33,7 +33,7 @@ export async function createOrder(order) {
   return body.data
 }
 
-export async function getOrderLogs(id) {
+export async function getOrderLogs (id) {
   const body = await api
     .get(`/order/${id}/log`)
     .json()
@@ -41,7 +41,7 @@ export async function getOrderLogs(id) {
   return toCamelcase(body.data)
 }
 
-export async function getOrderInfo(id) {
+export async function getOrderInfo (id) {
   const body = await api
     .get(`/order/${id}`)
     .json()
@@ -49,7 +49,7 @@ export async function getOrderInfo(id) {
   return toCamelcase(body.data)
 }
 
-export async function getOrders(opts = {}) {
+export async function getOrders (opts = {}) {
   const query = trim({
     offset: 0,
     limit: 20,
@@ -70,7 +70,7 @@ export async function getOrders(opts = {}) {
   }
 }
 
-export async function changeOrderDiscount(oid, data) {
+export async function changeOrderDiscount (oid, data) {
   const body = await api
     .post(`/order/${oid}/discount`)
     .send(reverseCamelcase(data))
@@ -79,7 +79,7 @@ export async function changeOrderDiscount(oid, data) {
   return body
 }
 
-export async function getOrderPayUrl(oids, summary = '') {
+export async function getOrderPayUrl (oids, summary = '') {
   if (!isArray(oids)) {
     oids = [oids]
   }
@@ -95,7 +95,7 @@ export async function getOrderPayUrl(oids, summary = '') {
   return body.data
 }
 
-export async function payOrders(oids) {
+export async function payOrders (oids) {
   const body = await api
     .post('/order/pay/agent/multi')
     .send(reverseCamelcase({
@@ -106,7 +106,7 @@ export async function payOrders(oids) {
   return body
 }
 
-export async function payOrder(oid) {
+export async function payOrder (oid) {
   const body = await api
     .post(`/order/${oid}/pay/agent`)
     .send({})
@@ -119,7 +119,7 @@ export async function payOrder(oid) {
  * private
  */
 
-async function _getOrders(query) {
+async function _getOrders (query) {
   const body = await api
     .get('/order')
     .query(reverseCamelcase(query))
@@ -128,7 +128,7 @@ async function _getOrders(query) {
   return toCamelcase(body.data)
 }
 
-async function _getOrderCount(query) {
+async function _getOrderCount (query) {
   const body = await api
     .get('/order/count')
     .query(reverseCamelcase(query))
@@ -137,7 +137,7 @@ async function _getOrderCount(query) {
   return body.data
 }
 
-export async function createPreOrder(order) {
+export async function createPreOrder (order) {
   const body = await api
     .post('/order/pre/create')
     .send(reverseCamelcase(order))

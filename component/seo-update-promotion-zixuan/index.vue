@@ -48,8 +48,8 @@
 
 <script>
 import ContractAck from 'com/widget/contract-ack'
-import {PRO_SITE_PRODUCT_TYPE} from 'constant/site'
-import {updatePromotion, queryPromotionByIds} from 'api/seo'
+import { PRO_SITE_PRODUCT_TYPE } from 'constant/site'
+import { updatePromotion, queryPromotionByIds } from 'api/seo'
 import QiqiaobanPageSelector from 'com/common/qiqiaoban-page-selector'
 
 export default {
@@ -57,7 +57,7 @@ export default {
     QiqiaobanPageSelector,
     ContractAck
   },
-  data() {
+  data () {
     return {
       PRO_SITE_PRODUCT_TYPE,
       inputKeyword: '',
@@ -65,14 +65,14 @@ export default {
     }
   },
   methods: {
-    onEnter() {
+    onEnter () {
       if (this.inputKeyword) {
         if (this.inputKeyword.length < 6) {
           return this.$message.error('关键词字数需大于等于6')
         }
       }
     },
-    onUpdateClick() {
+    onUpdateClick () {
       if (!this.$refs.contract.$data.isAgreement) {
         return this.$message.error('请阅读并勾选同意服务协议，再进行下一步操作')
       }
@@ -81,16 +81,16 @@ export default {
       }
       this.$confirm(`您已选择关键词【 ${this.inputKeyword}】 进行首页宝推广`, '确认更新计划')
         .then(() => {
-          return updatePromotion(this.promotion.id, {newWord: this.inputKeyword})
+          return updatePromotion(this.promotion.id, { newWord: this.inputKeyword })
         })
         .then(() => {
           this.$message.success('更新成功')
-          this.$router.push({name: 'seo-promotion-list'})
+          this.$router.push({ name: 'seo-promotion-list' })
         })
         .catch(() => {})
     }
   },
-  async mounted() {
+  async mounted () {
     console.log(this.$route.params.id)
     this.promotion = (await queryPromotionByIds(this.$route.params.id))[0]
     this.inputKeyword = this.promotion.words[0].word

@@ -30,12 +30,12 @@
 
 <script>
 import * as api from 'api/fengming'
-import {f2y} from 'util'
+import { f2y } from 'util'
 
 export default {
   name: 'dashboard-header',
   props: ['userInfo'],
-  data() {
+  data () {
     return {
       data: {
       }
@@ -44,10 +44,10 @@ export default {
   methods: {
     f2y
   },
-  async mounted() {
+  async mounted () {
     this.data = await api.getDashboardHeader()
     console.log(this.data)
-  },
+  }
 }
 </script>
 

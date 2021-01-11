@@ -36,7 +36,7 @@ export default {
       required: true
     }
   },
-  async mounted() {
+  async mounted () {
     await store.getMaterials({
       ...this.query
     })

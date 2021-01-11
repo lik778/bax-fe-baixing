@@ -19,30 +19,30 @@
 </template>
 
 <script>
-  import ResultRow from './result-row'
-  import {DEVICE} from 'constant/biaowang'
+import ResultRow from './result-row'
+import { DEVICE } from 'constant/biaowang'
 
-  export default {
-    name: 'result-device',
-    props: {
-      deviceObj: {
-        type: Object,
-        required: true
-      },
-      selected: {
-        type: Array,
-        required: true
-      }
+export default {
+  name: 'result-device',
+  props: {
+    deviceObj: {
+      type: Object,
+      required: true
     },
-    data() {
-      return {
-        DEVICE
-      }
-    },
-    components: {
-      ResultRow
+    selected: {
+      type: Array,
+      required: true
     }
+  },
+  data () {
+    return {
+      DEVICE
+    }
+  },
+  components: {
+    ResultRow
   }
+}
 </script>
 
 <style lang="scss" scoped>

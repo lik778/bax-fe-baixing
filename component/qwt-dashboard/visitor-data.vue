@@ -59,57 +59,57 @@ import VisitorDetail from './visitor-detail'
 export default {
   name: 'VisitorData',
   components: {
-    VisitorDetail,
+    VisitorDetail
   },
   props: {
     userInfo: {
       type: Object,
-      required: true,
-    },
+      required: true
+    }
   },
-  data() {
+  data () {
     return {
       campaignId: '',
       campaignIds: [],
       deductInfo: {
         lastSevenDaysConsumption: 0,
         yesterdayConsumption: 0,
-        unitPrice: 0,
-      },
+        unitPrice: 0
+      }
     }
   },
   methods: {
-    async getFinalUserId() {
+    async getFinalUserId () {
       const { user_id: userId } = this.$route.query
       if (userId) return userId
       return this.userInfo && this.userInfo.id
     },
-    async handleValidateCampaigns() {
+    async handleValidateCampaigns () {
       const uid = await this.getFinalUserId()
       if (!uid) return
       this.campaignIds = await getValidateCampaigns(uid)
       this.campaignId = this.campaignIds[0].id
     },
-    async handleDeductStatistic() {
+    async handleDeductStatistic () {
       const res = await getDeductStatistic(this.campaignId)
       this.deductInfo = {
         ...this.deductInfo,
-        ...res,
+        ...res
       }
-    },
+    }
   },
   watch: {
     userInfo: {
       immediate: true,
       deep: true,
-      handler(newVal) {
+      handler (newVal) {
         this.handleValidateCampaigns()
-      },
+      }
     },
-    campaignId(newVal) {
+    campaignId (newVal) {
       this.handleDeductStatistic()
-    },
-  },
+    }
+  }
 }
 </script>
 

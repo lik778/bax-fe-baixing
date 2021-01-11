@@ -69,12 +69,12 @@ export default {
     DaysTip,
     Days
   },
-  data() {
+  data () {
     return {
     }
   },
   computed: {
-    validCategories() {
+    validCategories () {
       const {
         allCategories,
         options
@@ -99,7 +99,7 @@ export default {
         return [...pre, ...items]
       }, [])
     },
-    validAreas() {
+    validAreas () {
       const {
         allAreas,
         options
@@ -122,7 +122,7 @@ export default {
         return [...pre, ...items]
       }, [])
     },
-    rows() {
+    rows () {
       const {
         allCategories,
         allAreas,
@@ -170,7 +170,7 @@ export default {
 
       return rows
     },
-    days() {
+    days () {
       const { options } = this
       const seconds = (options.end - options.start) || 0
       const num = ((seconds / 60 / 60 / 24) + 1) | 0
@@ -184,21 +184,21 @@ export default {
 
       return days
     },
-    hasData() {
+    hasData () {
       return !!this.rows.length
     }
   },
   methods: {
-    formatCategory(v) {
+    formatCategory (v) {
       const { allCategories } = this
       return getCnName(v, allCategories)
     },
-    formatArea(v) {
+    formatArea (v) {
       const { allAreas } = this
       return getCnName(v, allAreas)
     }
   },
-  updated() {
+  updated () {
     console.debug('ad calendar updated')
   }
 }

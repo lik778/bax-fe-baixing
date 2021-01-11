@@ -15,28 +15,28 @@ const store = observable({
   _orders: [],
   _ads: [],
 
-  get calendarOptions() {
+  get calendarOptions () {
     return toJS(this._calendarOptions)
   },
 
-  get orders() {
+  get orders () {
     return toJS(this._orders)
   },
 
-  get ads() {
+  get ads () {
     return toJS(this._ads)
   },
 
-  setCalendarOptions: action(function(opts) {
+  setCalendarOptions: action(function (opts) {
     this._calendarOptions = clone(opts)
   }),
 
-  getCalendar: action(async function(opts) {
+  getCalendar: action(async function (opts) {
     const { orders = [] } = await oapi.getCalendar(opts)
     this._orders = orders
   }),
 
-  clearStore: action(function() {
+  clearStore: action(function () {
     this._calendarOptions = {
       categories: [],
       areas: [],
@@ -46,7 +46,7 @@ const store = observable({
     this._orders = []
   }),
 
-  getAds: action(async function() {
+  getAds: action(async function () {
     const { ads = [] } = await aapi.getAds()
     this._ads = ads
   })

@@ -26,20 +26,20 @@ export default {
     }
   },
   filters: {
-    date(s) {
+    date (s) {
       return dayjs(s, 'YYYY-MM-DD').date()
     },
-    day(s) {
+    day (s) {
       const d = dayjs(s, 'YYYY-MM-DD').day()
 
       const m = {
-        '0': '日',
-        '1': '一',
-        '2': '二',
-        '3': '三',
-        '4': '四',
-        '5': '五',
-        '6': '六'
+        0: '日',
+        1: '一',
+        2: '二',
+        3: '三',
+        4: '四',
+        5: '五',
+        6: '六'
       }
 
       return m[String(d)] || d

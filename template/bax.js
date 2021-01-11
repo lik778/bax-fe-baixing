@@ -49,7 +49,7 @@ import {
   MessageBox,
   Message,
   Cascader,
-  Notification,
+  Notification
 } from 'element-ui'
 import '../cssbase/index.scss'
 
@@ -71,14 +71,14 @@ import clone from 'clone'
 
 // track common data
 window.__trackerData = {
-  common: {},
+  common: {}
 }
 // 用户获取用户登录信息的 Vue 示例
 const $vueForGetMobx = new Vue({
   functional: true,
   fromMobx: {
-    currentUser: () => gStore.currentUser,
-  },
+    currentUser: () => gStore.currentUser
+  }
 })
 /**
  * 错误上报逻辑
@@ -148,7 +148,7 @@ Vue.use(Image)
  */
 Vue.component('catch-error', {
   name: 'error-boundary-with-default-handler',
-  render(h) {
+  render (h) {
     const children = this.$slots.default
     return h(
       ErrorBoundary,
@@ -156,17 +156,17 @@ Vue.component('catch-error', {
         attrs: {
           fallBack: {
             functional: true,
-            render(h) {
+            render (h) {
               return h('p', '数据出错啦，请刷新重新试试...')
-            },
+            }
           },
-          ...this.$attrs,
+          ...this.$attrs
         },
-        listeners: this.$listeners,
+        listeners: this.$listeners
       },
       children
     )
-  },
+  }
 })
 
 Vue.use(Loading.directive)
@@ -185,7 +185,7 @@ Vue.prototype.$formatter = {
   join: (arrs = [], seq = '、') => arrs.join(seq),
   date: (time = '') => (!time ? time : dayjs(time).format('YYYY-MM-DD')),
   mapWith: (key = '', obj = {}) => obj[key],
-  f2y,
+  f2y
 }
 
 // 该组件引入echarts，体积较大，异步加载提升用户体验
@@ -195,19 +195,19 @@ Vue.component('homepage-campaign', () =>
 
 // 引入eventBus
 const eventBus = {
-  install(Vue) {
+  install (Vue) {
     Vue.prototype.$bus = new Vue()
-  },
+  }
 }
 Vue.use(eventBus)
 
 // 重写router push和replace方法, 放入user_id和sales_id
-function getExtraRoute(route) {
+function getExtraRoute (route) {
   let newRoute = typeof route === 'string' ? route : clone(route)
   if (window.location) {
     const querys = pick(parseQuery(window.location.search), [
       'user_id',
-      'sales_id',
+      'sales_id'
     ])
     if (typeof newRoute === 'string') {
       if (route.indexOf('?') > -1) {
@@ -220,21 +220,21 @@ function getExtraRoute(route) {
         ...route,
         query: {
           ...route.query,
-          ...querys,
-        },
+          ...querys
+        }
       }
     }
   }
   return newRoute
 }
 const routerPush = VueRouter.prototype.push
-VueRouter.prototype.push = function push(route) {
+VueRouter.prototype.push = function push (route) {
   return routerPush.call(this, getExtraRoute(route)).catch((error) => {
     console.log(error)
   })
 }
 const routerReplace = VueRouter.prototype.replace
-VueRouter.prototype.replace = function replace(route) {
+VueRouter.prototype.replace = function replace (route) {
   return routerReplace.call(this, getExtraRoute(route)).catch((error) => {
     console.log(error)
   })
@@ -244,7 +244,7 @@ const gwRoutes = [
   {
     component: () => import('com/gw-homepage'),
     path: '/main/gw',
-    name: 'gw-homepage',
+    name: 'gw-homepage'
   },
   {
     component: () => import('com/gw-charge'),
@@ -258,97 +258,97 @@ const gwRoutes = [
       } else {
         Message.error('无权限访问')
       }
-    },
-  },
+    }
+  }
 ]
 
 const bwRoutes = [
   {
     component: () => import('com/bw-query-price'),
     path: '/main/bw/query-price',
-    name: 'bw-query-price',
+    name: 'bw-query-price'
   },
   {
     component: () => import('com/bw-edit-plan'),
     path: '/main/bw/edit-plan',
-    name: 'bw-edit-plan',
+    name: 'bw-edit-plan'
   },
   {
     component: () => import('com/bw-plan-list'),
     path: '/main/bw/plan-list',
-    name: 'bw-plan-list',
+    name: 'bw-plan-list'
   },
   {
     component: () => import('com/bw-landing'),
     path: '/main/bw/landing',
-    name: 'bw-landing',
+    name: 'bw-landing'
   },
   {
     component: () => import('com/bw-dashboard'),
     path: '/main/bw/dashboard',
-    name: 'bw-dashboard',
+    name: 'bw-dashboard'
   },
   {
     component: () => import('com/bw-manual'),
     path: '/main/bw/manual',
-    name: 'bw-manual',
-  },
+    name: 'bw-manual'
+  }
 ]
 
 const qcRoutes = [
   {
     component: () => import('com/qc-create-promote'),
     path: '/main/qc/create',
-    name: 'qc-create-promote',
+    name: 'qc-create-promote'
   },
   {
     component: () => import('com/qc-promote-list'),
     path: '/main/qc/promote-list',
-    name: 'qc-promote-list',
+    name: 'qc-promote-list'
   },
   {
     component: () => import('com/qc-word-list'),
     path: '/main/qc/word-list',
-    name: 'qc-word-list',
+    name: 'qc-word-list'
   },
   {
     component: () => import('com/qc-keyword-list'),
     path: '/main/qc/keyword-list',
     name: 'qc-keyword-list',
-    hidden: true,
+    hidden: true
   },
   {
     component: () => import('com/qc-creative'),
     path: '/main/qc/creative',
-    name: 'qc-creative',
+    name: 'qc-creative'
   },
   {
     component: () => import('com/qc-dashboard'),
     path: '/main/qc/dashboard',
-    name: 'qc-dashboard',
-  },
+    name: 'qc-dashboard'
+  }
 ]
 
 const qwtRoutes = [
   {
     component: () => import('com/qwt-create-promotion'),
     path: '/main/qwt/promotion/create',
-    name: 'qwt-create-promotion',
+    name: 'qwt-create-promotion'
   },
   {
     component: () => import('com/qwt-update-promotion'),
     path: '/main/qwt/promotions/:id/update',
-    name: 'qwt-update-promotion',
+    name: 'qwt-update-promotion'
   },
   {
     component: () => import('com/qwt-promotion-list'),
     path: '/main/qwt/promotions',
-    name: 'qwt-promotion-list',
+    name: 'qwt-promotion-list'
   },
   {
     component: () => import('com/qwt-dashboard'),
     path: '/main/qwt/dashboard',
-    name: 'qwt-dashboard',
+    name: 'qwt-dashboard'
   },
   {
     component: () => import('com/qwt-charge'),
@@ -361,83 +361,83 @@ const qwtRoutes = [
       } else {
         next()
       }
-    },
-  },
+    }
+  }
 ]
 
 const sspRoutes = [
   {
     component: () => import('com/ssp-ad-list'),
     path: '/main/ads',
-    name: 'ad-list',
+    name: 'ad-list'
   },
   {
     component: () => import('com/ssp-material-info'),
     path: '/main/materials/:id',
-    name: 'material-info',
+    name: 'material-info'
   },
   {
     component: () => import('com/ssp-material-list'),
     path: '/main/materials',
-    name: 'material-list',
+    name: 'material-list'
   },
   {
     component: () => import('com/ssp-order-create'),
     path: '/main/order/create',
-    name: 'create-order',
+    name: 'create-order'
   },
   {
     component: () => import('com/ssp-order-info'),
     path: '/main/orders/:id',
-    name: 'order-info',
+    name: 'order-info'
   },
   {
     component: () => import('com/ssp-order-list'),
     path: '/main/orders',
-    name: 'order-list',
+    name: 'order-list'
   },
   {
     component: () => import('com/ssp-user-list'),
     path: '/main/users',
-    name: 'user-list',
+    name: 'user-list'
   },
   {
     component: () => import('com/ssp-ad-calendar'),
     path: '/main/ad-calendar',
-    name: 'ad-calendar',
-  },
+    name: 'ad-calendar'
+  }
 ]
 
 const seoRoutes = [
   {
     component: () => import('com/seo-charge'),
     path: '/main/seo/charge',
-    name: 'seo-charge',
+    name: 'seo-charge'
   },
   {
     component: () => import('com/seo-landing'),
     path: '/main/seo/landing',
-    name: 'seo-landing',
+    name: 'seo-landing'
   },
   {
     component: () => import('com/seo-create-promotion'),
     path: '/main/seo/promotion/create',
-    name: 'seo-create-promotion',
+    name: 'seo-create-promotion'
   },
   {
     component: () => import('com/seo-promotion-list'),
     path: '/main/seo/promotions',
-    name: 'seo-promotion-list',
+    name: 'seo-promotion-list'
   },
   {
     component: () => import('com/seo-update-promotion-zixuan'),
     path: '/main/seo/promotion/zixuan/:id/update',
-    name: 'seo-update-zixuan-promotion',
+    name: 'seo-update-zixuan-promotion'
   },
   {
     component: () => import('com/seo-create-promotion-zixuan'),
     path: '/main/seo/promotion/create/zixuan',
-    name: 'seo-create-zixuan-promotion',
+    name: 'seo-create-zixuan-promotion'
   },
   {
     component: () => import('com/seo-promotion-cibao/create'),
@@ -450,13 +450,13 @@ const seoRoutes = [
       } else {
         Message.error('无权限访问')
       }
-    },
+    }
   },
   {
     component: () => import('com/seo-promotion-cibao/update'),
     path: '/main/seo/promotion/cibao/:id/update',
-    name: 'seo-update-cibao-promotion',
-  },
+    name: 'seo-update-cibao-promotion'
+  }
 ]
 
 export const router = new VueRouter({
@@ -465,32 +465,32 @@ export const router = new VueRouter({
     {
       component: Homepage,
       path: '/main',
-      name: 'root',
+      name: 'root'
     },
     {
       component: () => import('com/redirect'),
       path: '/main/redirect-to',
-      name: 'bax-redirect-page',
+      name: 'bax-redirect-page'
     },
     {
       component: () => import('com/payment-success'),
       path: '/main/payment-success',
-      name: 'payment-success-page',
+      name: 'payment-success-page'
     },
     {
       component: () => import('com/account'),
       path: '/main/account',
-      name: 'account',
+      name: 'account'
     },
     {
       component: () => import('com/coupon'),
       path: '/main/coupon',
-      name: 'coupon',
+      name: 'coupon'
     },
     {
       component: () => import('com/notice'),
       path: '/main/notice',
-      name: 'notice',
+      name: 'notice'
     },
     ...bwRoutes,
     ...qcRoutes,
@@ -500,14 +500,14 @@ export const router = new VueRouter({
     ...seoRoutes,
     {
       path: '*',
-      redirect: '/main',
-    },
-  ],
+      redirect: '/main'
+    }
+  ]
 })
 
 const app = new Vue({
   render: (h) => h(Bax),
-  router,
+  router
 })
 
 app.$mount('#bax')
