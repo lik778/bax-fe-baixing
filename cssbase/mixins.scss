@@ -1,5 +1,11 @@
 /* Atomic */
 
+@mixin btn-selected {
+  background: #ff6350;
+  border-radius: 3px;
+  color: white;
+}
+
 @mixin wordblock {
   text-overflow: ellipsis;
   word-break: break-all;

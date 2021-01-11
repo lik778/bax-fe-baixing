@@ -3,7 +3,7 @@
   <el-dialog
     :visible="visible"
     :close-on-click-modal="false"
-    :before-close="ok"
+    :before-close="cancel"
     :show-close="false"
   >
     <main class="main">

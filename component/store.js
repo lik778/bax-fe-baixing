@@ -36,36 +36,32 @@ const gStore = observable({
   }),
 
   getCurrentUser: action(async function () {
-    try {
-      const currentUser = await aapi.getCurrentUser()
-      const { roles = [], realAgentId } = currentUser
+    const currentUser = await aapi.getCurrentUser()
+    const { roles = [], realAgentId } = currentUser
 
-      currentUser.shAgent = isNormalUser(roles)
-      currentUser.allowFmRecharge = !notAllowFengmingRecharge(
-        roles,
-        realAgentId
-      )
+    currentUser.shAgent = isNormalUser(roles)
+    currentUser.allowFmRecharge = !notAllowFengmingRecharge(
+      roles,
+      realAgentId
+    )
 
-      this._currentUser = currentUser
-      // 打点数据中添加用户身份信息
-      window.__trackerData.common = {
-        ...window.__trackerData.common,
-        baixing_id: currentUser.baixingId,
-        bax_id: currentUser.id
-      }
-
-      // sentry报错添加user
-      Sentry.configureScope((scope) => {
-        scope.setUser({
-          id: currentUser.baixingId,
-          name: currentUser.name,
-          mobile: currentUser.mobile,
-          baxId: currentUser.id
-        })
-      })
-    } catch (noPermissionError) {
-      console.error(noPermissionError)
+    this._currentUser = currentUser
+    // 打点数据中添加用户身份信息
+    window.__trackerData.common = {
+      ...window.__trackerData.common,
+      baixing_id: currentUser.baixingId,
+      bax_id: currentUser.id
     }
+
+    // sentry报错添加user
+    Sentry.configureScope((scope) => {
+      scope.setUser({
+        id: currentUser.baixingId,
+        name: currentUser.name,
+        mobile: currentUser.mobile,
+        baxId: currentUser.id
+      })
+    })
   }),
 
   getCategories: action(async function () {
