@@ -105,6 +105,7 @@
           <baidu-expand-words-dialog
             v-if="baiduExpandWordsDialogVisible"
             :visible.sync="baiduExpandWordsDialogVisible"
+            :extra-query="{ campaign_id: currentPromotion.campaignId }"
             @confirm="addBaiduWords"
           />
           <strong>当前关键词数量: {{keywordLen}}个</strong>

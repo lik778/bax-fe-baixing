@@ -110,7 +110,11 @@ import { formatReqQuery } from 'util'
 
 export default {
   props: {
-    visible: Boolean
+    visible: Boolean,
+    extraQuery: {
+      type: Object,
+      default: null
+    }
   },
   data () {
     return {
@@ -172,7 +176,8 @@ export default {
         size: this.pagination.size,
         id: this.id,
         ...formatReqQuery(this.sortConfig),
-        ...formatReqQuery(this.queryForm)
+        ...formatReqQuery(this.queryForm),
+        ...formatReqQuery(this.extraQuery)
       }
       try {
         const { data, total } = await queryBaiduExpandWords({ ...query })
