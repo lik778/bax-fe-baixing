@@ -12,13 +12,11 @@ const { WHOLE_SPU_CODE } = SPUCODES
 
 // 查询百度规划师拓词
 export const queryBaiduExpandWords = paginationWrapper(
-  async (opts) => {
-    return (await fengming
-      .post('/keyword/recommand-details/word')
-      .send(reverseCamelcase(opts))
-      .json())
-      .data
-  }
+  async (opts) => (await fengming
+    .post('/keyword/recommand-details/word')
+    .send(reverseCamelcase(opts))
+    .json())
+    .data
 )
 
 export async function queryAds (opts = {}) {

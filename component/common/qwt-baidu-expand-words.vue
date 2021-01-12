@@ -52,13 +52,15 @@
       class="query-table"
       :border="true"
       :data="tableData"
+      @sort-change="handleSortChange"
       @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="48" />
       <el-table-column label="关键词" prop="keyword" />
       <el-table-column label="流量特点" prop="show_reasons" />
-      <el-table-column label="指导价" prop="price" />
-      <el-table-column label="预估月均展现" prop="pv" />
-      <el-table-column label="预估月均点击" prop="click" />
+      <el-table-column label="指导价" sortable="custom" prop="price" />
+      <el-table-column label="预估月均展现" sortable="custom" prop="pv" />
+      <el-table-column label="预估月均点击" sortable="custom" prop="click" />
+      <el-table-column label="激烈竞争程度" prop="competition" />
       <el-table-column label="操作" width="100">
         <template slot-scope="{row}">
           <el-button
@@ -120,6 +122,10 @@ export default {
       },
       tableData: [],
       selectedWords: [],
+      sortConfig: {
+        prop: '',
+        order: ''
+      },
       pagination: {
         current: 1,
         total: 0,
@@ -154,6 +160,7 @@ export default {
       if (!this.queryForm.word) {
         return this.$message.error('请填写查询关键词')
       }
+      this.sortConfig = {}
       this.clearSelection()
       this.getQueryList()
     },
@@ -164,6 +171,7 @@ export default {
         page: page - 1,
         size: this.pagination.size,
         id: this.id,
+        ...formatReqQuery(this.sortConfig),
         ...formatReqQuery(this.queryForm)
       }
       try {
@@ -215,6 +223,12 @@ export default {
 
     closeModal () {
       this.$emit('update:visible', false)
+    },
+    handleSortChange (val) {
+      console.log(val)
+      const { prop, order } = val
+      this.sortConfig = { prop, order }
+      this.getQueryList()
     },
     handleConfirm () {
       this.$emit('confirm', this.toEmitValue)
