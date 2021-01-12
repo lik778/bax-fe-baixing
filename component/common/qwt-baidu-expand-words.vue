@@ -25,6 +25,7 @@
         <el-button
           type="primary"
           size="mini"
+          :loading="loading.query"
           @click="query"
         >搜索</el-button>
       </el-form-item>
