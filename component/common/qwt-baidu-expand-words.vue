@@ -113,7 +113,7 @@ export default {
     visible: Boolean,
     extraQuery: {
       type: Object,
-      default: null
+      default: () => {}
     }
   },
   data () {
@@ -155,6 +155,9 @@ export default {
     toEmitValue () {
       return [...this.selectedWords.map(x => x)]
     }
+  },
+  beforeDestroy () {
+    queryBaiduExpandWords.clear()
   },
   methods: {
 
@@ -230,7 +233,6 @@ export default {
       this.$emit('update:visible', false)
     },
     handleSortChange (val) {
-      console.log(val)
       const { prop, order } = val
       this.sortConfig = { prop, order }
       this.getQueryList()
