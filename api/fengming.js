@@ -3,14 +3,21 @@ import { reverseCamelcase, toCamelcase } from 'object-keys-mapping'
 import { fengming, trim } from './base'
 import { getCurrentBalanceBreif } from './account'
 import qs from 'query-string'
-import {
-  isPro
-} from 'config'
-import { isObj } from 'util'
+import { isPro } from 'config'
+import { paginationWrapper, isObj } from 'util'
 import { SPUCODES } from 'constant/product'
 
 const isArray = Array.isArray
 const { WHOLE_SPU_CODE } = SPUCODES
+
+// 查询百度规划师拓词
+export const queryBaiduExpandWords = paginationWrapper(
+  async (opts) => (await fengming
+    .post('/keyword/recommand-details/word')
+    .send(reverseCamelcase(opts))
+    .json())
+    .data
+)
 
 export async function queryAds (opts = {}) {
   const q = {
