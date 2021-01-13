@@ -174,10 +174,21 @@ export default {
 
     /* 页面逻辑 */
 
-    query () {
-      if (!this.queryForm.word) {
-        return this.$message.error('请填写查询关键词')
+    validQueryWord () {
+      const { word = '' } = this.queryForm
+      if (!word) {
+        this.$message.error('请填写查询关键词')
+        return false
       }
+      if (word.length > 32) {
+        this.$message.error('关键词长度过长，请限制在 32 个字以内再重试')
+        return false
+      }
+      return true
+    },
+    query () {
+      if (!this.validQueryWord()) return
+
       this.sortConfig = {}
       this.clearSelection()
       this.getQueryList()
