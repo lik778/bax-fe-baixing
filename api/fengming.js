@@ -16,7 +16,13 @@ export const queryBaiduExpandWords = paginationWrapper(
     .post('/keyword/recommand-details/word')
     .send(reverseCamelcase(opts))
     .json())
-    .data
+    .data,
+  resp => ({
+    data: (resp || []).map(x => ({
+      ...x,
+      keyword: x.word
+    }))
+  })
 )
 
 export async function queryAds (opts = {}) {

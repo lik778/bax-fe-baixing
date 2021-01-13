@@ -204,6 +204,8 @@ export default {
           current: page,
           total
         }
+      } catch (error) {
+        return this.$message.error('网络错误，请稍后重试')
       } finally {
         this.loading.query = false
 
