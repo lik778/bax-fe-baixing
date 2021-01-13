@@ -5,7 +5,7 @@
     :append-to-body="true"
     :visible="visible"
     :show-close="true"
-    :close-on-click-modal="true"
+    :close-on-click-modal="false"
     :before-close="closeModal">
     <!-- confirm -->
     <span slot="footer" class="dialog-footer">
@@ -49,6 +49,7 @@
     </div>
     <!-- table -->
     <el-table
+      v-loading="loading.query"
       ref="table"
       class="query-table"
       :border="true"
@@ -145,7 +146,7 @@ export default {
       pagination: {
         current: 1,
         total: 0,
-        size: 6
+        size: 5
       },
       loading: {
         query: false
@@ -187,12 +188,13 @@ export default {
       }
       return true
     },
-    query () {
+    async query () {
       if (!this.validQueryWord()) return
 
+      queryBaiduExpandWords.clear()
       this.sortConfig = {}
       this.clearSelection()
-      this.getQueryList()
+      await this.getQueryList()
 
       track({
         action: 'click-button: search-baidu-keywords',
@@ -214,15 +216,18 @@ export default {
         ...formatReqQuery(this.extraQuery)
       }
       try {
-        const { data, total } = await queryBaiduExpandWords({ ...query })
+        const { data = [], total } = await queryBaiduExpandWords({ ...query })
         this.tableData = data
         this.pagination = {
           ...this.pagination,
           current: page,
           total
         }
+        if (this.tableData.length === 0) {
+          this.$message.info('搜索结果为空')
+        }
       } catch (error) {
-        return this.$message.error('网络错误，请稍后重试')
+        // return this.$message.error('网络错误，请稍后重试')
       } finally {
         this.loading.query = false
 
