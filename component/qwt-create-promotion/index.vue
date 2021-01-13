@@ -87,12 +87,16 @@
           type="primary"
           style="margin-top:10px"
           size="small"
+          :disabled="!newPromotion.areas.length"
           @click="baiduExpandWordsDialogVisible = true">
-          百度规划师拓词工具
+          规划师拓词工具
         </el-button>
         <baidu-expand-words-dialog
           v-if="baiduExpandWordsDialogVisible"
           :visible.sync="baiduExpandWordsDialogVisible"
+          :extra-query="{
+            areas: newPromotion.areas
+          }"
           @confirm="addBaiduWords"
         />
         <div class="kw-tag-container">

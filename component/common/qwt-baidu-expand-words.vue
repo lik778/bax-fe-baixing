@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    title="百度规划师拓词工具"
+    title="规划师拓词工具"
     width="70%"
     :append-to-body="true"
     :visible="visible"
@@ -62,11 +62,12 @@
       <el-table-column
         label="指导价（元）"
         sortable="custom"
+        min-width="130"
         prop="price"
         :formatter="({price})=>$formatter.f2y(price)"
       />
-      <el-table-column label="预估月均展现" sortable="custom" prop="pv" />
-      <el-table-column label="预估月均点击" sortable="custom" prop="click" />
+      <el-table-column label="预估月均展现" sortable="custom" min-width="130" prop="pv" />
+      <el-table-column label="预估月均点击" sortable="custom" min-width="130" prop="click" />
       <el-table-column label="激烈竞争程度" prop="competition" />
       <el-table-column label="操作" width="100">
         <template slot-scope="{row}">

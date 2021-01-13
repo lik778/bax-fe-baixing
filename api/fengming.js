@@ -10,7 +10,7 @@ import { SPUCODES } from 'constant/product'
 const isArray = Array.isArray
 const { WHOLE_SPU_CODE } = SPUCODES
 
-// 查询百度规划师拓词
+// 查询规划师拓词
 export const queryBaiduExpandWords = paginationWrapper(
   async (opts) => (await fengming
     .post('/keyword/recommand-details/word')

@@ -101,11 +101,14 @@
           <el-button size="small" type="warning" class="button" @click="addKeyword('single')">添加</el-button>
           <el-button size="small" type="primary" class="button" @click="addKeyword">一键拓词</el-button>
           <el-button size="small" type="primary" class="button" @click="addKeywordsDialog = true; isNegative = false">批量添加</el-button>
-          <el-button size="small" type="primary" class="button" @click="baiduExpandWordsDialogVisible = true">百度规划师拓词工具</el-button>
+          <el-button size="small" type="primary" class="button" :disabled="getProp('areas').length===0" @click="baiduExpandWordsDialogVisible = true">规划师拓词工具</el-button>
           <baidu-expand-words-dialog
             v-if="baiduExpandWordsDialogVisible"
             :visible.sync="baiduExpandWordsDialogVisible"
-            :extra-query="{ campaign_id: currentPromotion.campaignId }"
+            :extra-query="{
+              campaign_id: currentPromotion.campaignId,
+              areas: getProp('areas')
+            }"
             @confirm="addBaiduWords"
           />
           <strong>当前关键词数量: {{keywordLen}}个</strong>
