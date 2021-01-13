@@ -107,6 +107,9 @@
 import { queryBaiduExpandWords } from 'api/fengming'
 
 import { formatReqQuery } from 'util'
+import track from 'util/track'
+
+import gStore from '../store'
 
 export default {
   props: {
@@ -115,6 +118,9 @@ export default {
       type: Object,
       default: () => {}
     }
+  },
+  fromMobx: {
+    currentUser: () => gStore.currentUser
   },
   data () {
     return {
@@ -170,6 +176,14 @@ export default {
       this.sortConfig = {}
       this.clearSelection()
       this.getQueryList()
+
+      track({
+        action: 'click-button: search-baidu-keywords',
+        baixingId: this.currentUser.baixingId,
+        baxId: this.currentUser.id,
+        time: Date.now() / 1000 | 0,
+        searchWord: this.queryForm.word
+      })
     },
     async getQueryList (page = 1) {
       this.loading.query = true
