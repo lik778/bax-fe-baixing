@@ -12,7 +12,7 @@
       <el-button type="primary" @click="handleConfirm">确定</el-button>
     </span>
     <!-- query form -->
-    <el-form :model="queryForm" :rules="rules" ref="queryForm" :inline="true">
+    <el-form :model="queryForm" :rules="rules" ref="queryForm" :inline="true" @submit.native.prevent>
       <el-form-item>
         <el-input
           class="search-input"
@@ -26,6 +26,7 @@
           type="primary"
           size="mini"
           :loading="loading.query"
+          @keyup.enter="query"
           @click="query"
         >搜索</el-button>
       </el-form-item>
