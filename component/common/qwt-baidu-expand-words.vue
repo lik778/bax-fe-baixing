@@ -57,7 +57,12 @@
       <el-table-column type="selection" width="48" />
       <el-table-column label="关键词" prop="keyword" />
       <el-table-column label="流量特点" prop="show_reasons" />
-      <el-table-column label="指导价" sortable="custom" prop="price" />
+      <el-table-column
+        label="指导价（元）"
+        sortable="custom"
+        prop="price"
+        :formatter="({price})=>$formatter.f2y(price)"
+      />
       <el-table-column label="预估月均展现" sortable="custom" prop="pv" />
       <el-table-column label="预估月均点击" sortable="custom" prop="click" />
       <el-table-column label="激烈竞争程度" prop="competition" />
