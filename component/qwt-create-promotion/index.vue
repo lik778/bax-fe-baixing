@@ -87,8 +87,7 @@
           type="primary"
           style="margin-top:10px"
           size="small"
-          :disabled="!newPromotion.areas.length"
-          @click="baiduExpandWordsDialogVisible = true">
+          @click="showBaiduExpandWordDialog">
           规划师拓词工具
         </el-button>
         <baidu-expand-words-dialog
@@ -402,6 +401,13 @@ export default {
           this.newPromotion.keywords.push(newWord)
         }
       }
+    },
+    showBaiduExpandWordDialog () {
+      if (!this.newPromotion.areas.length) {
+        this.$message.error('请先选择投放城市')
+        return false
+      }
+      this.baiduExpandWordsDialogVisible = true
     },
     addBaiduWords (words) {
       const bridge = x => ({

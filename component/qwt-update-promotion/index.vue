@@ -101,7 +101,7 @@
           <el-button size="small" type="warning" class="button" @click="addKeyword('single')">添加</el-button>
           <el-button size="small" type="primary" class="button" @click="addKeyword">一键拓词</el-button>
           <el-button size="small" type="primary" class="button" @click="addKeywordsDialog = true; isNegative = false">批量添加</el-button>
-          <el-button size="small" type="primary" class="button" :disabled="getProp('areas').length===0" @click="baiduExpandWordsDialogVisible = true">规划师拓词工具</el-button>
+          <el-button size="small" type="primary" class="button" @click="showBaiduExpandWordDialog">规划师拓词工具</el-button>
           <baidu-expand-words-dialog
             v-if="baiduExpandWordsDialogVisible"
             :visible.sync="baiduExpandWordsDialogVisible"
@@ -762,6 +762,13 @@ export default {
           this.promotion.newKeywords.push(newWord)
         }
       }
+    },
+    showBaiduExpandWordDialog () {
+      if (this.getProp('areas').length === 0) {
+        this.$message.error('请先选择投放城市')
+        return false
+      }
+      this.baiduExpandWordsDialogVisible = true
     },
     addBaiduWords (words) {
       const bridge = x => ({
