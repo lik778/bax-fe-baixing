@@ -91,7 +91,7 @@
       <el-table-column v-if="showMatchType" min-width="230">
         <!-- eslint-disable-next-line -->
         <template slot="header" slot-scope="col">
-          匹配方式(可设置<b class="primary-color">{{maxMatchTypeExactCount}}</b>个精准匹配)
+          匹配方式(可设置<b class="primary-color">{{matchTypeRemainExactCount}}</b>个精准匹配)
           <el-tooltip effect="dark" placement="top">
             <div slot="content" class="match-pattern-tip-container">
               <div class="panel">
@@ -142,7 +142,7 @@
             <el-option v-for="item in MATCH_TYPE_OPTS"
                        :key="item.value"
                        :label="item.label"
-                       :disabled="String(item.value) === String(MATCH_TYPE_EXACT) && matchTypeExactCount >= maxMatchTypeExactCount"
+                       :disabled="String(item.value) === String(MATCH_TYPE_EXACT) && matchTypeRemainExactCount <= 0"
                        :value="item.value" />
           </el-select>
         </span>
@@ -384,11 +384,10 @@ export default {
     wordLen () {
       return this.words.length
     },
-    maxMatchTypeExactCount () {
-      return getMatchTypeObj(this.wordLen).count(this.wordLen)
-    },
-    matchTypeExactCount () {
-      return this.words.filter(o => o.matchType === MATCH_TYPE_EXACT).length
+    matchTypeRemainExactCount () {
+      const maxCount = getMatchTypeObj(this.wordLen).count(this.wordLen)
+      const currentCount = this.words.filter(o => o.matchType === MATCH_TYPE_EXACT).length
+      return maxCount - currentCount
     }
   },
   methods: {
@@ -409,8 +408,7 @@ export default {
         this.popoverVisible = false
         this.keywordPrice = ''
       } catch (err) {
-        console.log(err)
-        this.$message.error(err)
+        this.$message.error(err.message)
       }
     },
     async handleMatchTypeChange () {
@@ -419,8 +417,7 @@ export default {
         this.$message.success(res)
         this.matchTypePopVisible = false
       } catch (err) {
-        console.log(err)
-        this.$message.error(err)
+        this.$message.error(err.message)
       }
     },
     handleColMatchTypeChange ({ word, id }, v) {
