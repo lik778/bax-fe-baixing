@@ -1,4 +1,3 @@
-
 /**
  * 赤壁状态对用户不可知
  *   - 关键词, 创意, 推广
@@ -169,3 +168,55 @@ export function toOpt (obj, forceNumber = true, reverse = false) {
 
 export const RECOMMAND_SOURCE_FH = 'tfidf_fh'
 export const NEW_RECOMMAND_SOURCE_FH = 'tfidf_fh_service'
+
+export const MATCH_TYPE_EXACT = 1
+export const MATCH_TYPE_PHRASE = 2
+export const MATCH_TYPE_SMART = 3
+
+export const MATCH_TYPE_OPTS = [
+  {
+    label: '短语匹配',
+    value: MATCH_TYPE_PHRASE
+  },
+  {
+    label: '智能匹配',
+    value: MATCH_TYPE_SMART
+  },
+  {
+    label: '精准匹配',
+    value: MATCH_TYPE_EXACT
+  }
+]
+
+// fm精准匹配策略
+export const matchTypeTipAndCount = [
+  {
+    minKeywordCount: 0,
+    maxKeywordCount: 29,
+    errTip: '计划中关键词数不足30，提升至30个以上时可设置精确匹配',
+    count: () => {
+      return 0
+    }
+  },
+  {
+    minKeywordCount: 30,
+    maxKeywordCount: 99,
+    errTip: '精确匹配的设置数量已超过系统限制，更改失败。',
+    count: (wordLen) => {
+      return Math.ceil(wordLen * 0.1)
+    }
+  },
+  {
+    minKeywordCount: 100,
+    maxKeywordCount: 10000000,
+    errTip: '精确匹配的设置数量已超过系统限制，更改失败。',
+    count: () => {
+      return 10
+    }
+  }
+]
+
+export const getMatchTypeObj = (wordLen) => {
+  const tempObj = matchTypeTipAndCount.find(o => wordLen >= o.minKeywordCount && wordLen <= o.maxKeywordCount)
+  return tempObj || matchTypeTipAndCount[0]
+}

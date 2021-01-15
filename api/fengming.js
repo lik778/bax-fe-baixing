@@ -462,6 +462,15 @@ export async function getDashboardHeader () {
   }
 }
 
+export async function changeCampaignKeywordsMatchType (campaignId, matchType) {
+  const body = await fengming
+    .post(`/campaign/${campaignId}/keyword`)
+    .send({ matchType })
+    .json()
+
+  return body.data
+}
+
 /**
  * private
  */

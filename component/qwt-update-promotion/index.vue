@@ -110,6 +110,9 @@
           <el-button size="small" type="warning" class="button" @click="getCampaignWordsBySearchWord">搜索</el-button>
           <el-button size="small" type="primary" class="button" @click="getCampaignWordsDefault">取消</el-button>
         </header>
+        <p class="tip">为保证流量，单计划内的关键词数≥<b class="red">30</b>个才能选择精确匹配方式；
+        单个计划最多可设置<b class="red">10</b>个精确匹配。
+        </p>
         <keyword-list
           mode="update"
           :platform="getProp('source')"
@@ -360,6 +363,7 @@ import {
   checkCreativeContent,
   getRecommandCreative,
   changeCampaignKeywordsPrice,
+  changeCampaignKeywordsMatchType,
   queryAds,
   chibiRobotAudit
 } from 'api/fengming'
@@ -377,7 +381,11 @@ import {
   LANDING_TYPE_GW,
   LANDING_TYPE_258,
 
-  landingTypeOpts
+  landingTypeOpts,
+
+  MATCH_TYPE_PHRASE,
+  MATCH_TYPE_EXACT,
+  getMatchTypeObj
 } from 'constant/fengming'
 
 import {
@@ -517,14 +525,6 @@ export default {
     }
   },
   computed: {
-    // displayBlance() {
-    //   // 充足情况下余额显示为真实余额+计划日消耗，不充足情况直接现实真是余额
-    //   if (this.currentBalance > this.getProp('dailyBudget') * 100) {
-    //     return this.currentBalance + this.getProp('dailyBudget') * 100
-    //   } else {
-    //     return this.currentBalance
-    //   }
-    // },
     extendLandingTypeOpts () {
       if (allowSee258(null, this.userInfo.id)) {
         return landingTypeOpts.concat([{ label: '258官网', value: LANDING_TYPE_258 }])
@@ -909,7 +909,7 @@ export default {
             if (w.word === word.word) {
               return {
                 ...w,
-                price: word.price
+                [word.changeTag]: word[word.changeTag]
               }
             } else {
               return { ...w }
@@ -1160,6 +1160,14 @@ export default {
         return Message.error(`否词个数不得超过${this.NEGATIVE_KEYWORDS_MAX}个`)
       }
 
+      // 检测精准匹配数量是否超过系统值
+      const allWordLen = this.currentKeywords.length
+      const maxMatchTypeExactCount = getMatchTypeObj(allWordLen).count(allWordLen)
+      const currentMatchTypeExactCount = this.currentKeywords.filter(o => o.matchType === MATCH_TYPE_EXACT).length
+      if (currentMatchTypeExactCount > maxMatchTypeExactCount) {
+        return Message.error('精确匹配的设置数量已超过系统限制，更改失败')
+      }
+
       for (const w of words) {
         // if (w.price * 2 < w.originPrice) {
         //   return Message.error(`关键字: ${w.word} 出价低于 ${(w.originPrice / 200).toFixed(2)}, 请调高出价`)
@@ -1395,7 +1403,8 @@ export default {
       this.originPromotion.keywords.forEach(word => {
         this.updateExistWord({
           ...word,
-          price
+          price,
+          changeTag: 'price'
         })
       })
       this.promotion.newKeywords = this.promotion.newKeywords.map(word => ({
@@ -1403,6 +1412,22 @@ export default {
         price
       }))
       return '关键词批量改价成功'
+    },
+    async changeKeywordsMatchType (matchType) {
+      const campaignId = +this.$route.params.id
+      await changeCampaignKeywordsMatchType(campaignId, matchType)
+      this.originPromotion.keywords.forEach(word => {
+        this.updateExistWord({
+          ...word,
+          matchType,
+          changeTag: 'matchType'
+        })
+      })
+      this.promotion.newKeywords = this.promotion.newKeywords.map(word => ({
+        ...word,
+        matchType
+      }))
+      return '匹配方式批量修改成功'
     },
     disabledDate,
     f2y
@@ -1422,6 +1447,16 @@ export default {
       // 删除的时候有可能批量改价过，所以要把在deletedKeywords中的关键字从updatedKeywords中过滤
       this.promotion.updatedKeywords =
         this.promotion.updatedKeywords.filter(w => !deletedKws.some(dw => dw.word === w.word))
+    },
+    'promotion.newKeywords' (newV, oldV) {
+      if (newV.length > oldV.length) {
+        this.promotion.newKeywords = this.promotion.newKeywords.map(o => {
+          return {
+            ...o,
+            matchType: o.matchType || MATCH_TYPE_PHRASE
+          }
+        })
+      }
     }
   },
   async beforeDestroy () {
@@ -1545,6 +1580,12 @@ export default {
 }
 
 .keyword {
+  & .tip {
+    font-size: 12px;
+    color: #6a778c;
+    margin-top: 20px;
+    font-weight: 400;
+  }
   & .top-col {
     display: flex;
     align-items: center;
