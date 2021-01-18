@@ -31,22 +31,6 @@
         >搜索</el-button>
       </el-form-item>
     </el-form>
-    <!-- table top btns -->
-    <div class="table-actions">
-      <span style="padding: 10px 0">
-        <span v-if="selection.length">当前选中：
-          <el-tooltip effect="light" placement="top-start">
-            <span slot="content">{{selectionWordsName.join('，')}}</span>
-            <span style="cursor: pointer"><span class="c-main">{{selection.length}}</span> 条</span>
-          </el-tooltip>
-        </span>
-        <span v-else>当前无选中</span>
-      </span>
-      <template v-if="selection.length">
-        <el-divider direction="vertical" />
-        <el-button type="primary" size="mini" @click="multySelectWords">批量添加</el-button>
-      </template>
-    </div>
     <!-- table -->
     <el-table
       v-loading="loading.query"
@@ -69,20 +53,6 @@
       <el-table-column label="预估月均展现" sortable="custom" min-width="130" prop="pv" />
       <el-table-column label="预估月均点击" sortable="custom" min-width="130" prop="click" />
       <el-table-column label="激烈竞争程度" prop="competition" />
-      <el-table-column label="操作" width="100">
-        <template slot-scope="{row}">
-          <el-button
-            v-if="!isWordSelected(row)"
-            class="c-main no-padding"
-            type="text"
-            @click="() => selectWord(row)">添加</el-button>
-          <el-button
-            v-else
-            class="no-padding"
-            type="text"
-            disabled>已添加</el-button>
-        </template>
-      </el-table-column>
     </el-table>
     <!-- pagination -->
     <el-pagination
@@ -103,7 +73,7 @@
             type="success"
             closable>
             {{ item.keyword }}
-            <i class="el-icon-close" @click="unSelectWord(item)" />
+            <i class="el-icon-close" @click="deleteWord(item)" />
           </div>
         </transition>
       </template>
@@ -160,12 +130,6 @@ export default {
     }
   },
   computed: {
-    selectionWordsName () {
-      return this.selection.map(x => x.keyword)
-    },
-    selectedWordsName () {
-      return this.selectedWords.map(x => x.keyword)
-    },
     toEmitValue () {
       return [...this.selectedWords.map(x => x)]
     }
@@ -261,9 +225,9 @@ export default {
         }
       }
     },
-    multySelectWords () {
-      this.selectWord([...this.selection])
-      this.clearSelection()
+    deleteWord (item) {
+      this.maintainSelection(this.currentSelection, [], [item])
+      this.maintainSelection(this.selection, [], [item])
     },
 
     /* 页面交互 */
@@ -309,6 +273,7 @@ export default {
         const cur = add.pop()
         if (!selection.find(x => this.isSameKeyword(x, cur))) {
           selection.push(cur)
+          this.selectWord(cur)
         }
       }
       while (del.length) {
@@ -316,6 +281,7 @@ export default {
         const idx = selection.findIndex(x => this.isSameKeyword(x, cur))
         if (idx !== -1) {
           selection.splice(idx, 1)
+          this.unSelectWord(cur)
         }
       }
     },
