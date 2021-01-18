@@ -8,6 +8,7 @@ import dayjs from 'dayjs'
 import VueClipboard from 'vue-clipboard2'
 import VueRouter from 'vue-router'
 import {
+  Divider,
   Scrollbar,
   Pagination,
   Dialog,
@@ -100,6 +101,7 @@ Vue.use(Movue, { reaction })
 Vue.use(VueClipboard)
 Vue.use(VueRouter)
 
+Vue.use(Divider)
 Vue.use(Scrollbar)
 Vue.use(Pagination)
 Vue.use(Dialog)

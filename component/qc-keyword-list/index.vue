@@ -51,7 +51,7 @@
           <span>创建时间：{{$formatter.date(expandedInfo.createdTime * 1000)}}&nbsp;&nbsp;</span>
           <span>核心产品：{{expandedInfo.coreWords.join(',')}}</span>
         </div>
-         <el-button class="download" type="primary" @click="download">一键导出</el-button>
+        <el-button class="download" type="primary" @click="download">一键导出</el-button>
       </div>
       <div class="list">
         <div class="item" v-for="(item, index) in expandedInfo.data" :key="index">

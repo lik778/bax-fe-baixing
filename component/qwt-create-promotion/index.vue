@@ -83,6 +83,21 @@
         <p class="tip">请选取20个以上关键词，关键词越多您的创意被展现的机会越多。根据当月数据，为您推荐如下关键词</p>
         <el-button type="primary" style="margin-top:10px" size="small"
                    @click="addKeywordsDialog = true">批量添加关键词</el-button>
+        <el-button
+          type="primary"
+          style="margin-top:10px"
+          size="small"
+          @click="showBaiduExpandWordDialog">
+          规划师拓词工具
+        </el-button>
+        <baidu-expand-words-dialog
+          v-if="baiduExpandWordsDialogVisible"
+          :visible.sync="baiduExpandWordsDialogVisible"
+          :extra-query="{
+            areas: newPromotion.areas
+          }"
+          @confirm="addBaiduWords"
+        />
         <div class="kw-tag-container">
           <el-tag class="kw-tag"
                   :class="{'kw-tag-fh': RECOMMAND_SOURCES.includes(kw.recommandSource)}"
@@ -189,6 +204,7 @@ import { Message } from 'element-ui'
 import uuid from 'uuid/v4'
 import clone from 'clone'
 
+import BaiduExpandWordsDialog from 'com/common/qwt-baidu-expand-words'
 import PromotionCreativeTip from 'com/widget//promotion-creative-tip'
 import PromotionAreaLimitTip from 'com/widget/promotion-area-limit-tip'
 import QiqiaobanPageSelector from 'com/common/qiqiaoban-page-selector'
@@ -217,8 +233,7 @@ import {
 } from 'util'
 
 import {
-  createCampaign
-  ,
+  createCampaign,
   queryAds
 } from 'api/fengming'
 
@@ -260,6 +275,7 @@ const promotionTemplate = {
 export default {
   name: 'qwt-create-promotion',
   components: {
+    BaiduExpandWordsDialog,
     PromotionCreativeTip,
     PromotionAreaLimitTip,
     QiqiaobanPageSelector,
@@ -307,6 +323,7 @@ export default {
       searchRecommendsVisible: false,
       chargeDialogVisible: false,
       areaDialogVisible: false,
+      baiduExpandWordsDialogVisible: false,
 
       semPlatformOpts,
       isCreating: false,
@@ -371,13 +388,42 @@ export default {
   },
   methods: {
     f2y,
+    isSameKeyword (a, b) {
+      const compareKeys = ['word']
+      return compareKeys.every(k => a[k] === b[k])
+    },
+    addKeywords (words = []) {
+      words = words instanceof Array ? [...words] : [words]
+      const { keywords } = this.newPromotion
+      while (words.length) {
+        const newWord = words.pop()
+        if (!keywords.find(x => this.isSameKeyword(x, newWord))) {
+          this.newPromotion.keywords.push(newWord)
+        }
+      }
+    },
+    showBaiduExpandWordDialog () {
+      if (!this.newPromotion.areas.length) {
+        this.$message.error('请先选择投放城市')
+        return false
+      }
+      this.baiduExpandWordsDialogVisible = true
+    },
+    addBaiduWords (words) {
+      const bridge = x => ({
+        word: x.keyword,
+        price: x.price
+      })
+      this.addKeywords(words.map(x => bridge(x)))
+    },
     updatePromotionKeywords (kwAddResult) {
       this.addKeywordsDialog = false
-
       if (!kwAddResult) return
-      const { normalList } = kwAddResult
-      const { actionTrackId, userInfo } = this
 
+      const { normalList } = kwAddResult
+      this.addKeywords(normalList)
+
+      const { actionTrackId, userInfo } = this
       track({
         roles: userInfo.roles.map(r => r.name).join(','),
         action: 'click-button: add-keyword-list',
@@ -388,9 +434,6 @@ export default {
         keywordsLen: normalList.length,
         keywords: normalList.map(item => item.word).join(',')
       })
-
-      const { keywords } = this.newPromotion
-      this.newPromotion.keywords = keywords.concat(normalList)
     },
     handleCreativeValueChange ({ title, content }) {
       this.newPromotion.creativeTitle = title

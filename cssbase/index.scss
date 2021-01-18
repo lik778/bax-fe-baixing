@@ -4,6 +4,9 @@
 .c-success {
   color: $c-success;
 }
+.c-main {
+  color: $c-main;
+}
 .c-info {
   color: $c-info;
 }
@@ -44,6 +47,7 @@
 
 /********************************* 按照设计规范产出、和页面结构相关的 CSS */
 /* 目前只应用到了易慧推相关页面 */
+/* 如果涉及 ElementUI 修改，请写道 element-override.scss 中 */
 
 .page,
 .page.view {

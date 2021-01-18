@@ -100,8 +100,17 @@
           <el-input size="small" class="input" placeholder="添加关键词" v-model="queryWord"/>
           <el-button size="small" type="warning" class="button" @click="addKeyword('single')">添加</el-button>
           <el-button size="small" type="primary" class="button" @click="addKeyword">一键拓词</el-button>
-          <el-button size="small" type="primary" class="button"
-                     @click="addKeywordsDialog = true; isNegative = false">批量添加</el-button>
+          <el-button size="small" type="primary" class="button" @click="addKeywordsDialog = true; isNegative = false">批量添加</el-button>
+          <el-button size="small" type="primary" class="button" @click="showBaiduExpandWordDialog">规划师拓词工具</el-button>
+          <baidu-expand-words-dialog
+            v-if="baiduExpandWordsDialogVisible"
+            :visible.sync="baiduExpandWordsDialogVisible"
+            :extra-query="{
+              campaign_id: currentPromotion.campaignId,
+              areas: getProp('areas')
+            }"
+            @confirm="addBaiduWords"
+          />
           <strong>当前关键词数量: {{keywordLen}}个</strong>
         </header>
         <header class="top-col" style="margin-top:10px">
@@ -328,6 +337,7 @@ import { Message } from 'element-ui'
 import isEqual from 'lodash.isequal'
 import uuid from 'uuid/v4'
 
+import BaiduExpandWordsDialog from 'com/common/qwt-baidu-expand-words'
 import PromotionMobileRatioTip from 'com/widget/promotion-mobile-ratio-tip'
 import PromotionAreaLimitTip from 'com/widget/promotion-area-limit-tip'
 import QiqiaobanPageSelector from 'com/common/qiqiaoban-page-selector'
@@ -432,6 +442,7 @@ const FHYF_UN_USE = 0
 export default {
   name: 'qwt-update-promotion',
   components: {
+    BaiduExpandWordsDialog,
     PromotionMobileRatioTip,
     PromotionAreaLimitTip,
     QiqiaobanPageSelector,
@@ -520,6 +531,7 @@ export default {
       addKeywordsDialog: false,
       isNegative: false,
       negativeKeywordSearch: '',
+      baiduExpandWordsDialogVisible: false,
 
       NEGATIVE_KEYWORDS_MAX
     }
@@ -737,11 +749,45 @@ export default {
         this.promotion.deletedNegativeKeywords.push(word)
       }
     },
+    isSameKeyword (a, b) {
+      const compareKeys = ['word']
+      return compareKeys.every(k => a[k] === b[k])
+    },
+    addKeywords (words = []) {
+      words = words instanceof Array ? [...words] : [words]
+      const { newKeywords } = this.promotion
+      while (words.length) {
+        const newWord = words.pop()
+        if (!newKeywords.find(x => this.isSameKeyword(x, newWord))) {
+          this.promotion.newKeywords.push(newWord)
+        }
+      }
+    },
+    showBaiduExpandWordDialog () {
+      if (this.getProp('areas').length === 0) {
+        this.$message.error('请先选择投放城市')
+        return false
+      }
+      this.baiduExpandWordsDialogVisible = true
+    },
+    addBaiduWords (words) {
+      const bridge = x => ({
+        word: x.keyword,
+        price: x.price
+      })
+      this.addKeywords(words.map(x => bridge(x)))
+    },
     updatePromotionKeywords (kwAddResult) {
       this.addKeywordsDialog = false
       if (!kwAddResult) return
 
       const { normalList } = kwAddResult
+      if (this.isNegative) {
+        this.promotion.newNegativeKeywords = this.promotion.newNegativeKeywords.concat(normalList)
+      } else {
+        this.addKeywords(normalList)
+      }
+
       const { actionTrackId, userInfo } = this
       track({
         roles: userInfo.roles.map(r => r.name).join(','),
@@ -753,12 +799,6 @@ export default {
         keywordsLen: normalList.length,
         keywords: normalList.map(item => item.word).join(',')
       })
-
-      if (this.isNegative) {
-        this.promotion.newNegativeKeywords = this.promotion.newNegativeKeywords.concat(normalList)
-      } else {
-        this.promotion.newKeywords = normalList.concat(this.promotion.newKeywords)
-      }
     },
     async getCampaignWordsBySearchWord () {
       this.isSearchCondition = true

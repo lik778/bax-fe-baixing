@@ -223,7 +223,11 @@ export function normalize (adaptorDes = {}, raw, saveEmptyProp = false) {
   }
 }
 
-// 前端分页函数
+/**
+ * 前端分页函数
+ * @param {async function} getList 用于请求以获取所有数据的接口
+ * @param {*} dataFormat getList 接口返回的格式化函数
+ */
 export function paginationWrapper (getList, dataFormat) {
   let responseStore = null
   const wrapperFn = async (...args) => {
@@ -234,13 +238,38 @@ export function paginationWrapper (getList, dataFormat) {
       responseStore.total = responseStore.data.length
     }
     const { data = [], total } = responseStore
-    const { size = 15, page = 0 } = args[0]
+    const copiedData = [...data]
+    const { size = 15, page = 0, prop, order } = args[0]
     const end = Math.min((page + 1) * size, total)
+
+    /* 排序字段处理 */
+
+    const shouldSort = prop && order
+    const sortBy = {
+      number: (a, b, order) => a === b ? 0 : order * (a < b ? -1 : 1),
+      dict: (a, b, order) => a === b ? 0 : order * (a < b ? -1 : 1)
+    }
+    const orderEnum = {
+      ascending: 1,
+      descending: -1
+    }
+    // eslint-disable-next-line multiline-ternary
+    const sortFn = !shouldSort ? undefined : (a, b) => {
+      const sortOrder = orderEnum[order] || orderEnum.ascending
+      const va = a[prop]
+      const vb = b[prop]
+      const isNumber = +va === va
+      return isNumber
+        ? sortBy.number(va, vb, sortOrder)
+        : sortBy.dict(va, vb, sortOrder)
+    }
 
     return {
       ...response,
       total,
-      data: data.slice(page * size, end)
+      data: copiedData
+        .sort(sortFn)
+        .slice(page * size, end)
     }
   }
 
