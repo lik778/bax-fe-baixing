@@ -7,14 +7,14 @@
     </div>
 
     <el-table row-key="word" :data="rows">
-      <el-table-column v-if="selectable" width="40"
+      <el-table-column v-if="selectable" width="40" key="selectable"
         :render-header="renderSwitchAllHeader">
         <template slot-scope="s">
           <el-checkbox :value="wordChecked(s.row)"
             @change="onCheckWord(s.row)" />
         </template>
       </el-table-column>
-      <el-table-column label="关键词" min-width="140">
+      <el-table-column label="关键词" min-width="140" key="word">
         <template slot-scope="{row}">
           {{row.word}}
           <span class="new-word" v-if="row.isNew">(新)</span>
@@ -24,19 +24,23 @@
         </template>
       </el-table-column>
       <el-table-column v-if="showPropShow"
+        key="show"
         prop="show" width="200"
         label="日均搜索指数"
         :render-header="renderWithTip(searchIndexTip)">
       </el-table-column>
       <el-table-column v-if="showPropRanking"
+        key="cpcRanking"
         min-width="120" label="电脑端排名"
         :formatter="r => fmtCpcRanking(r.cpcRanking || -1)">
       </el-table-column>
       <el-table-column v-if="showPropMobileRanking"
+        key="mobileCpcRanking"
         min-width="120" label="手机端排名"
         :formatter="r => fmtCpcRanking(r.mobileCpcRanking || -1)">
       </el-table-column>
       <el-table-column v-if="showPropStatus"
+        key="status"
         min-width="120"
         label="关键词状态"
         :render-header="renderWithTip(keywordStatusTip)">
@@ -51,7 +55,7 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column min-width="220">
+      <el-table-column min-width="220" key="price">
         <!-- 删除 slot-scope 后会有稀奇古怪的问题 -->
         <!-- eslint-disable-next-line -->
         <template slot="header" slot-scope="col">
@@ -88,7 +92,7 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column v-if="showMatchType" min-width="230">
+      <el-table-column v-if="showMatchType" min-width="230" key="matchType">
         <!-- eslint-disable-next-line -->
         <template slot="header" slot-scope="col">
           匹配方式(可设置<b class="primary-color">{{matchTypeRemainExactCount}}</b>个精准匹配)
@@ -147,7 +151,7 @@
           </el-select>
         </span>
       </el-table-column>
-      <el-table-column v-if="deletable" label="操作" width="80">
+      <el-table-column v-if="deletable" label="操作" width="80" key="deletable">
         <template slot-scope="s">
           <el-button size="mini" type="danger"
             @click="deleteWord(s.row)">
@@ -171,7 +175,6 @@ import BaxPagination from 'com/common/pagination'
 import {
   KEYWORD_STATUS_ONLINE,
   SEM_PLATFORM_SHENMA,
-  SEM_PLATFORM_BAIDU,
   keywordStatus,
   RECOMMAND_SOURCE_FH,
   NEW_RECOMMAND_SOURCE_FH,
@@ -285,6 +288,10 @@ export default {
     showPropMobileRanking: {
       type: Boolean,
       default: false
+    },
+    showMatchType: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -377,9 +384,6 @@ export default {
       const { currentPage } = this
       const start = currentPage * LIMIT
       return this.words.slice(start, start + LIMIT)
-    },
-    showMatchType () {
-      return String(this.platform) === String(SEM_PLATFORM_BAIDU)
     },
     wordLen () {
       return this.words.length
@@ -478,13 +482,34 @@ export default {
       this.$emit('change-offset', offset)
     },
     deleteWord (row) {
+      if (this.matchTypeRemainExactCount <= 0 && String(row.matchType) !== String(MATCH_TYPE_EXACT)) {
+        const h = this.$createElement
+        const words = this.words.reduce((curr, prev) => {
+          if (String(prev.matchType) === String(MATCH_TYPE_EXACT)) {
+            return curr.concat(prev.word)
+          }
+          return curr
+        }, [])
+        this.$msgbox({
+          title: '提示',
+          message: h('div', null, [
+            h('div', null, '操作失败，请先减少精确匹配方式的关键词后再重新操作。'),
+            h('div', { style: 'marginTop: 10px' }, [
+              h('span', null, '已设置精确匹配的关键词：'),
+              h('span', { style: 'color: #ff4401' }, words.join('，'))
+            ])
+          ])
+        })
+        return
+      }
       this.$emit('delete-word', {
         isNew: row.isNew,
         price: row.price,
         word: row.word,
         id: row.id
       })
-      this.$emit('change-offset', this.offset - 1)
+      const offset = this.offset - 1 > 0 ? this.offset : 0
+      this.$emit('change-offset', offset)
     },
     getWordPrice (kw) {
       const word = this.words.find(w => w.word === kw)

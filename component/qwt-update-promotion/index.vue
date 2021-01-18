@@ -119,7 +119,7 @@
           <el-button size="small" type="warning" class="button" @click="getCampaignWordsBySearchWord">搜索</el-button>
           <el-button size="small" type="primary" class="button" @click="getCampaignWordsDefault">取消</el-button>
         </header>
-        <p class="tip">为保证流量，单计划内的关键词数≥<b class="red">30</b>个才能选择精确匹配方式；
+        <p class="tip" v-if="getProp('source') === SEM_PLATFORM_BAIDU">为保证流量，单计划内的关键词数≥<b class="red">30</b>个才能选择精确匹配方式；
         单个计划最多可设置<b class="red">10</b>个精确匹配。
         </p>
         <keyword-list
@@ -133,6 +133,7 @@
           :show-prop-status="true"
           :show-prop-ranking="getProp('source') !== SEM_PLATFORM_SHENMA"
           :show-prop-mobile-ranking="true"
+          :show-match-type="getProp('source') === SEM_PLATFORM_BAIDU"
           :campaign-offline="isCampaignOffline"
           :campaign-online="isCampaignOnline"
           @update-word="updateExistWord"
@@ -759,7 +760,7 @@ export default {
       while (words.length) {
         const newWord = words.pop()
         if (!newKeywords.find(x => this.isSameKeyword(x, newWord))) {
-          this.promotion.newKeywords.push(newWord)
+          this.promotion.newKeywords = [newWord].concat(this.promotion.newKeywords)
         }
       }
     },
@@ -1488,9 +1489,12 @@ export default {
       this.promotion.updatedKeywords =
         this.promotion.updatedKeywords.filter(w => !deletedKws.some(dw => dw.word === w.word))
     },
-    'promotion.newKeywords' (newV, oldV) {
-      if (newV.length > oldV.length) {
-        this.promotion.newKeywords = this.promotion.newKeywords.map(o => {
+    'promotion.newKeywords': {
+      immediate: true,
+      deep: true,
+      handler (newV, oldV) {
+        if (newV.length === oldV.length) return
+        this.promotion.newKeywords = newV.map(o => {
           return {
             ...o,
             matchType: o.matchType || MATCH_TYPE_PHRASE
