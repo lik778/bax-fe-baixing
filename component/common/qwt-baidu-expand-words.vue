@@ -36,6 +36,7 @@
       v-loading="loading.query"
       ref="table"
       class="query-table"
+      height="360"
       :border="true"
       :data="tableData"
       @sort-change="handleSortChange"
@@ -46,13 +47,14 @@
       <el-table-column
         label="指导价（元）"
         sortable="custom"
-        min-width="130"
+        width="130"
+        align="center"
         prop="price"
         :formatter="({price})=>$formatter.f2y(price)"
       />
-      <el-table-column label="预估月均展现" sortable="custom" min-width="130" prop="pv" />
-      <el-table-column label="预估月均点击" sortable="custom" min-width="130" prop="click" />
-      <el-table-column label="激烈竞争程度" prop="competition" />
+      <el-table-column label="预估月均展现" sortable="custom" width="130" align="center" prop="pv" />
+      <el-table-column label="预估月均点击" sortable="custom" width="130" align="center" prop="click" />
+      <el-table-column label="激烈竞争程度" prop="competition" width="115" align="center" />
     </el-table>
     <!-- pagination -->
     <el-pagination
@@ -117,7 +119,7 @@ export default {
       pagination: {
         current: 1,
         total: 0,
-        size: 5
+        size: 15
       },
       loading: {
         query: false
@@ -226,8 +228,19 @@ export default {
       }
     },
     deleteWord (item) {
-      this.maintainSelection(this.currentSelection, [], [item])
-      this.maintainSelection(this.selection, [], [item])
+      const currentPageItem = this.selection.find(x =>
+        this.isSameKeyword(x, item) &&
+        this.tableData.find(y => this.isSameKeyword(y, item))
+      )
+      // 如果在 Table 当前页找到相同项，
+      // 那么直接调 ElementUI 触发 selection 变动的 API 就好，
+      // 没找到的话，需要手动维护 selection 的变动
+      if (currentPageItem) {
+        this.$refs.table.toggleRowSelection(item)
+      } else {
+        this.maintainSelection(this.currentSelection, [], [item])
+        this.maintainSelection(this.selection, [], [item])
+      }
     },
 
     /* 页面交互 */
