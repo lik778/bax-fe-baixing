@@ -391,7 +391,8 @@ export default {
     matchTypeRemainExactCount () {
       const maxCount = getMatchTypeObj(this.wordLen).count(this.wordLen)
       const currentCount = this.words.filter(o => o.matchType === MATCH_TYPE_EXACT).length
-      return maxCount - currentCount
+      const count = maxCount - currentCount
+      return count > 0 ? count : 0
     }
   },
   methods: {
@@ -482,25 +483,33 @@ export default {
       this.$emit('change-offset', offset)
     },
     deleteWord (row) {
-      if (this.matchTypeRemainExactCount <= 0 && String(row.matchType) !== String(MATCH_TYPE_EXACT)) {
-        const h = this.$createElement
-        const words = this.words.reduce((curr, prev) => {
-          if (String(prev.matchType) === String(MATCH_TYPE_EXACT)) {
-            return curr.concat(prev.word)
-          }
-          return curr
-        }, [])
-        this.$msgbox({
-          title: '提示',
-          message: h('div', null, [
-            h('div', null, '操作失败，请先减少精确匹配方式的关键词后再重新操作。'),
-            h('div', { style: 'marginTop: 10px' }, [
-              h('span', null, '已设置精确匹配的关键词：'),
-              h('span', { style: 'color: #ff4401' }, words.join('，'))
+      if (this.showMatchType) {
+        // 删除之后的精准匹配的最大值和当前值
+        const maxCount = getMatchTypeObj(this.wordLen - 1).count(this.wordLen - 1)
+        let currentCount = this.words.filter(o => o.matchType === MATCH_TYPE_EXACT).length
+        if (String(row.matchType) === String(MATCH_TYPE_EXACT)) {
+          currentCount--
+        }
+        if (maxCount < currentCount) {
+          const h = this.$createElement
+          const words = this.words.reduce((curr, prev) => {
+            if (String(prev.matchType) === String(MATCH_TYPE_EXACT)) {
+              return curr.concat(prev.word)
+            }
+            return curr
+          }, [])
+          this.$msgbox({
+            title: '提示',
+            message: h('div', null, [
+              h('div', null, '操作失败，请先减少精确匹配方式的关键词后再重新操作。'),
+              h('div', { style: 'marginTop: 10px' }, [
+                h('span', null, '已设置精确匹配的关键词：'),
+                h('span', { style: 'color: #ff4401' }, words.join('，'))
+              ])
             ])
-          ])
-        })
-        return
+          })
+          return
+        }
       }
       this.$emit('delete-word', {
         isNew: row.isNew,
