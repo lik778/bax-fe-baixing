@@ -100,8 +100,17 @@
           <el-input size="small" class="input" placeholder="添加关键词" v-model="queryWord"/>
           <el-button size="small" type="warning" class="button" @click="addKeyword('single')">添加</el-button>
           <el-button size="small" type="primary" class="button" @click="addKeyword">一键拓词</el-button>
-          <el-button size="small" type="primary" class="button"
-                     @click="addKeywordsDialog = true; isNegative = false">批量添加</el-button>
+          <el-button size="small" type="primary" class="button" @click="addKeywordsDialog = true; isNegative = false">批量添加</el-button>
+          <el-button size="small" type="primary" class="button" @click="showBaiduExpandWordDialog">规划师拓词工具</el-button>
+          <baidu-expand-words-dialog
+            v-if="baiduExpandWordsDialogVisible"
+            :visible.sync="baiduExpandWordsDialogVisible"
+            :extra-query="{
+              campaign_id: currentPromotion.campaignId,
+              areas: getProp('areas')
+            }"
+            @confirm="addBaiduWords"
+          />
           <strong>当前关键词数量: {{keywordLen}}个</strong>
         </header>
         <header class="top-col" style="margin-top:10px">
@@ -110,6 +119,9 @@
           <el-button size="small" type="warning" class="button" @click="getCampaignWordsBySearchWord">搜索</el-button>
           <el-button size="small" type="primary" class="button" @click="getCampaignWordsDefault">取消</el-button>
         </header>
+        <p class="tip" v-if="getProp('source') === SEM_PLATFORM_BAIDU">为保证流量，单计划内的关键词数≥<b class="red">30</b>个才能选择精确匹配方式；
+        单个计划最多可设置<b class="red">10</b>个精确匹配。
+        </p>
         <keyword-list
           mode="update"
           :platform="getProp('source')"
@@ -121,6 +133,7 @@
           :show-prop-status="true"
           :show-prop-ranking="getProp('source') !== SEM_PLATFORM_SHENMA"
           :show-prop-mobile-ranking="true"
+          :show-match-type="getProp('source') === SEM_PLATFORM_BAIDU"
           :campaign-offline="isCampaignOffline"
           :campaign-online="isCampaignOnline"
           @update-word="updateExistWord"
@@ -325,6 +338,7 @@ import { Message } from 'element-ui'
 import isEqual from 'lodash.isequal'
 import uuid from 'uuid/v4'
 
+import BaiduExpandWordsDialog from 'com/common/qwt-baidu-expand-words'
 import PromotionMobileRatioTip from 'com/widget/promotion-mobile-ratio-tip'
 import PromotionAreaLimitTip from 'com/widget/promotion-area-limit-tip'
 import QiqiaobanPageSelector from 'com/common/qiqiaoban-page-selector'
@@ -360,6 +374,7 @@ import {
   checkCreativeContent,
   getRecommandCreative,
   changeCampaignKeywordsPrice,
+  changeCampaignKeywordsMatchType,
   queryAds,
   chibiRobotAudit
 } from 'api/fengming'
@@ -377,7 +392,11 @@ import {
   LANDING_TYPE_GW,
   LANDING_TYPE_258,
 
-  landingTypeOpts
+  landingTypeOpts,
+
+  MATCH_TYPE_PHRASE,
+  MATCH_TYPE_EXACT,
+  getMatchTypeObj
 } from 'constant/fengming'
 
 import {
@@ -424,6 +443,7 @@ const FHYF_UN_USE = 0
 export default {
   name: 'qwt-update-promotion',
   components: {
+    BaiduExpandWordsDialog,
     PromotionMobileRatioTip,
     PromotionAreaLimitTip,
     QiqiaobanPageSelector,
@@ -512,19 +532,12 @@ export default {
       addKeywordsDialog: false,
       isNegative: false,
       negativeKeywordSearch: '',
+      baiduExpandWordsDialogVisible: false,
 
       NEGATIVE_KEYWORDS_MAX
     }
   },
   computed: {
-    // displayBlance() {
-    //   // 充足情况下余额显示为真实余额+计划日消耗，不充足情况直接现实真是余额
-    //   if (this.currentBalance > this.getProp('dailyBudget') * 100) {
-    //     return this.currentBalance + this.getProp('dailyBudget') * 100
-    //   } else {
-    //     return this.currentBalance
-    //   }
-    // },
     extendLandingTypeOpts () {
       if (allowSee258(null, this.userInfo.id)) {
         return landingTypeOpts.concat([{ label: '258官网', value: LANDING_TYPE_258 }])
@@ -737,11 +750,45 @@ export default {
         this.promotion.deletedNegativeKeywords.push(word)
       }
     },
+    isSameKeyword (a, b) {
+      const compareKeys = ['word']
+      return compareKeys.every(k => a[k] === b[k])
+    },
+    addKeywords (words = []) {
+      words = words instanceof Array ? [...words] : [words]
+      const { newKeywords } = this.promotion
+      while (words.length) {
+        const newWord = words.pop()
+        if (!newKeywords.find(x => this.isSameKeyword(x, newWord))) {
+          this.promotion.newKeywords = [newWord].concat(this.promotion.newKeywords)
+        }
+      }
+    },
+    showBaiduExpandWordDialog () {
+      if (this.getProp('areas').length === 0) {
+        this.$message.error('请先选择投放城市')
+        return false
+      }
+      this.baiduExpandWordsDialogVisible = true
+    },
+    addBaiduWords (words) {
+      const bridge = x => ({
+        word: x.keyword,
+        price: x.price
+      })
+      this.addKeywords(words.map(x => bridge(x)))
+    },
     updatePromotionKeywords (kwAddResult) {
       this.addKeywordsDialog = false
       if (!kwAddResult) return
 
       const { normalList } = kwAddResult
+      if (this.isNegative) {
+        this.promotion.newNegativeKeywords = this.promotion.newNegativeKeywords.concat(normalList)
+      } else {
+        this.addKeywords(normalList)
+      }
+
       const { actionTrackId, userInfo } = this
       track({
         roles: userInfo.roles.map(r => r.name).join(','),
@@ -753,12 +800,6 @@ export default {
         keywordsLen: normalList.length,
         keywords: normalList.map(item => item.word).join(',')
       })
-
-      if (this.isNegative) {
-        this.promotion.newNegativeKeywords = this.promotion.newNegativeKeywords.concat(normalList)
-      } else {
-        this.promotion.newKeywords = normalList.concat(this.promotion.newKeywords)
-      }
     },
     async getCampaignWordsBySearchWord () {
       this.isSearchCondition = true
@@ -909,7 +950,7 @@ export default {
             if (w.word === word.word) {
               return {
                 ...w,
-                price: word.price
+                [word.changeTag]: word[word.changeTag]
               }
             } else {
               return { ...w }
@@ -1160,6 +1201,14 @@ export default {
         return Message.error(`否词个数不得超过${this.NEGATIVE_KEYWORDS_MAX}个`)
       }
 
+      // 检测精准匹配数量是否超过系统值
+      const allWordLen = this.currentKeywords.length
+      const maxMatchTypeExactCount = getMatchTypeObj(allWordLen).count(allWordLen)
+      const currentMatchTypeExactCount = this.currentKeywords.filter(o => o.matchType === MATCH_TYPE_EXACT).length
+      if (currentMatchTypeExactCount > maxMatchTypeExactCount) {
+        return Message.error('精确匹配的设置数量已超过系统限制，更改失败')
+      }
+
       for (const w of words) {
         // if (w.price * 2 < w.originPrice) {
         //   return Message.error(`关键字: ${w.word} 出价低于 ${(w.originPrice / 200).toFixed(2)}, 请调高出价`)
@@ -1395,7 +1444,8 @@ export default {
       this.originPromotion.keywords.forEach(word => {
         this.updateExistWord({
           ...word,
-          price
+          price,
+          changeTag: 'price'
         })
       })
       this.promotion.newKeywords = this.promotion.newKeywords.map(word => ({
@@ -1403,6 +1453,22 @@ export default {
         price
       }))
       return '关键词批量改价成功'
+    },
+    async changeKeywordsMatchType (matchType) {
+      const campaignId = +this.$route.params.id
+      await changeCampaignKeywordsMatchType(campaignId, matchType)
+      this.originPromotion.keywords.forEach(word => {
+        this.updateExistWord({
+          ...word,
+          matchType,
+          changeTag: 'matchType'
+        })
+      })
+      this.promotion.newKeywords = this.promotion.newKeywords.map(word => ({
+        ...word,
+        matchType
+      }))
+      return '匹配方式批量修改成功'
     },
     disabledDate,
     f2y
@@ -1422,6 +1488,19 @@ export default {
       // 删除的时候有可能批量改价过，所以要把在deletedKeywords中的关键字从updatedKeywords中过滤
       this.promotion.updatedKeywords =
         this.promotion.updatedKeywords.filter(w => !deletedKws.some(dw => dw.word === w.word))
+    },
+    'promotion.newKeywords': {
+      immediate: true,
+      deep: true,
+      handler (newV, oldV) {
+        if (newV.length === oldV.length) return
+        this.promotion.newKeywords = newV.map(o => {
+          return {
+            ...o,
+            matchType: o.matchType || MATCH_TYPE_PHRASE
+          }
+        })
+      }
     }
   },
   async beforeDestroy () {
@@ -1545,6 +1624,12 @@ export default {
 }
 
 .keyword {
+  & .tip {
+    font-size: 12px;
+    color: #6a778c;
+    margin-top: 20px;
+    font-weight: 400;
+  }
   & .top-col {
     display: flex;
     align-items: center;

@@ -42,6 +42,7 @@
           placeholder="选择日期"
           format="yyyy-MM-dd"
           v-model="query.timeRange"
+          :picker-options="triPickerOptions"
         >
         </el-date-picker>
       </span>
@@ -108,6 +109,7 @@
 <script>
 import DashboardHeader from './dashboard-header'
 import DataDetail from './data-detail'
+import dayjs from 'dayjs'
 
 import { toTimestamp } from 'utils'
 
@@ -172,7 +174,15 @@ export default {
 
       searchCampaigns: '',
       campaignErrTip: false,
-      DIMENSION_SEARCH_KEYWORD
+      DIMENSION_SEARCH_KEYWORD,
+      triPickerOptions: {
+        disabledDate (time) {
+          const timestamp = new Date(time).getTime()
+          const today = dayjs().startOf(1, 'day').valueOf()
+          const lastYear = dayjs().subtract(1, 'year').valueOf()
+          return timestamp > today || timestamp < lastYear
+        }
+      }
     }
   },
   computed: {

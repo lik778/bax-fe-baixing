@@ -7,14 +7,14 @@
     </div>
 
     <el-table row-key="word" :data="rows">
-      <el-table-column v-if="selectable" width="40"
+      <el-table-column v-if="selectable" width="40" key="selectable"
         :render-header="renderSwitchAllHeader">
         <template slot-scope="s">
           <el-checkbox :value="wordChecked(s.row)"
             @change="onCheckWord(s.row)" />
         </template>
       </el-table-column>
-      <el-table-column label="关键词" width="220">
+      <el-table-column label="关键词" min-width="140" key="word">
         <template slot-scope="{row}">
           {{row.word}}
           <span class="new-word" v-if="row.isNew">(新)</span>
@@ -24,20 +24,24 @@
         </template>
       </el-table-column>
       <el-table-column v-if="showPropShow"
+        key="show"
         prop="show" width="200"
         label="日均搜索指数"
         :render-header="renderWithTip(searchIndexTip)">
       </el-table-column>
       <el-table-column v-if="showPropRanking"
-        width="150" label="电脑端排名"
+        key="cpcRanking"
+        min-width="120" label="电脑端排名"
         :formatter="r => fmtCpcRanking(r.cpcRanking || -1)">
       </el-table-column>
       <el-table-column v-if="showPropMobileRanking"
-        width="150" label="手机端排名"
+        key="mobileCpcRanking"
+        min-width="120" label="手机端排名"
         :formatter="r => fmtCpcRanking(r.mobileCpcRanking || -1)">
       </el-table-column>
       <el-table-column v-if="showPropStatus"
-        width="180"
+        key="status"
+        min-width="120"
         label="关键词状态"
         :render-header="renderWithTip(keywordStatusTip)">
         <template slot-scope="s">
@@ -51,12 +55,12 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column>
+      <el-table-column min-width="220" key="price">
         <!-- 删除 slot-scope 后会有稀奇古怪的问题 -->
         <!-- eslint-disable-next-line -->
         <template slot="header" slot-scope="col">
           {{maxPriceLabel}}<cpc-top-price-tip/>
-          <div style="display:block;padding-left:0">
+          <div class="popover-block">
            <el-popover placement="top" v-model="popoverVisible">
             <div>
               <el-input placeholder="请输入关键词价格" v-model="keywordPrice" size="mini"></el-input>
@@ -88,7 +92,66 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column v-if="deletable" label="操作" width="80">
+      <el-table-column v-if="showMatchType" min-width="230" key="matchType">
+        <!-- eslint-disable-next-line -->
+        <template slot="header" slot-scope="col">
+          匹配方式(可设置<b class="primary-color">{{matchTypeRemainExactCount}}</b>个精准匹配)
+          <el-tooltip effect="dark" placement="top">
+            <div slot="content" class="match-pattern-tip-container">
+              <div class="panel">
+                <div>智能匹配：（流量通道-大）</div>
+                <div>您提交的关键词，会被系统智能识别并匹配出搜索意图相关的用户搜索词。</div>
+              </div>
+              <div class="panel">
+                <div>短语匹配：（流量通道-中）</div>
+                <div>提交的关键词或关键词的同义变体， 会被包含在用户搜索词中，或是在意思一致的前提下， 于搜索词的前中后插入或变换顺序。</div>
+              </div>
+              <div class="panel">
+                <div>精确匹配：（流量通道-小）</div>
+                <div>广告主提交的关键词及关键词的同义变体，会与用户的搜索词一致。</div>
+              </div>
+              <div class="panel">
+                <span class="primary-color"><i class="el-icon-warning" style="margin-right: 4px" />提示：</span>
+                为了保障您的基本流量和广告效果，系统会智能限制计划可设置精确匹配的关键词数。
+              </div>
+            </div>
+            <i class="el-icon-question" />
+          </el-tooltip>
+          <div class="popover-block">
+            <el-popover placement="top" v-model="matchTypePopVisible">
+              <div>
+                <el-radio-group v-model="matchType" placeholder="请选择匹配模式" size="mini">
+                  <el-radio class="match-radio"
+                            v-for="item in MATCH_TYPE_OPTS.slice(0, MATCH_TYPE_OPTS.length - 1)"
+                            :key="item.value"
+                            :label="item.value">
+                    {{item.label}}
+                  </el-radio>
+                </el-radio-group>
+                <div class="actions">
+                  <el-button size="mini" @click="matchTypePopVisible = false">取消</el-button>
+                  <el-button type="primary" size="mini" @click="handleMatchTypeChange">确定</el-button>
+                </div>
+              </div>
+              <a href="javascript:;" slot="reference" class="pcice-action">批量修改</a>
+            </el-popover>
+          </div>
+        </template>
+        <span slot-scope="s" class="match-type">
+          <el-select :value="s.row.matchType"
+                     placeholder="请选择匹配模式"
+                     size="small"
+                     class="match-type-select"
+                     @change="v => handleColMatchTypeChange(s.row, v)">
+            <el-option v-for="item in MATCH_TYPE_OPTS"
+                       :key="item.value"
+                       :label="item.label"
+                       :disabled="String(item.value) === String(MATCH_TYPE_EXACT) && matchTypeRemainExactCount <= 0"
+                       :value="item.value" />
+          </el-select>
+        </span>
+      </el-table-column>
+      <el-table-column v-if="deletable" label="操作" width="80" key="deletable">
         <template slot-scope="s">
           <el-button size="mini" type="danger"
             @click="deleteWord(s.row)">
@@ -114,7 +177,11 @@ import {
   SEM_PLATFORM_SHENMA,
   keywordStatus,
   RECOMMAND_SOURCE_FH,
-  NEW_RECOMMAND_SOURCE_FH
+  NEW_RECOMMAND_SOURCE_FH,
+  MATCH_TYPE_PHRASE,
+  MATCH_TYPE_OPTS,
+  MATCH_TYPE_EXACT,
+  getMatchTypeObj
 } from 'constant/fengming'
 
 import BaxInput from 'com/common/bax-input'
@@ -149,6 +216,7 @@ const CpcTopPriceTip = Vue.extend({
       { column: {}, labelStyle: { display: 'none' }, wrapClass: 'display-inline' })
   }
 })
+
 const MODE_SELECT = 'select'
 const MODE_UPDATE = 'update'
 const LIMIT = 10
@@ -176,7 +244,10 @@ export default {
     },
     words: {
       type: Array,
-      required: true
+      required: true,
+      default: () => {
+        return []
+      }
     },
     selectedWords: {
       type: Array,
@@ -217,6 +288,10 @@ export default {
     showPropMobileRanking: {
       type: Boolean,
       default: false
+    },
+    showMatchType: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -235,7 +310,12 @@ export default {
       keywordPrice: '',
       popoverVisible: false,
 
-      RECOMMAND_SOURCES
+      matchTypePopVisible: false,
+      matchType: MATCH_TYPE_PHRASE,
+
+      RECOMMAND_SOURCES,
+      MATCH_TYPE_OPTS,
+      MATCH_TYPE_EXACT
     }
   },
   computed: {
@@ -304,6 +384,15 @@ export default {
       const { currentPage } = this
       const start = currentPage * LIMIT
       return this.words.slice(start, start + LIMIT)
+    },
+    wordLen () {
+      return this.words.length
+    },
+    matchTypeRemainExactCount () {
+      const maxCount = getMatchTypeObj(this.wordLen).count(this.wordLen)
+      const currentCount = this.words.filter(o => o.matchType === MATCH_TYPE_EXACT).length
+      const count = maxCount - currentCount
+      return count > 0 ? count : 0
     }
   },
   methods: {
@@ -324,9 +413,26 @@ export default {
         this.popoverVisible = false
         this.keywordPrice = ''
       } catch (err) {
-        console.log(err)
-        this.$message.error(err)
+        this.$message.error(err.message)
       }
+    },
+    async handleMatchTypeChange () {
+      try {
+        const res = await this.$parent.changeKeywordsMatchType(this.matchType)
+        this.$message.success(res)
+        this.matchTypePopVisible = false
+      } catch (err) {
+        this.$message.error(err.message)
+      }
+    },
+    handleColMatchTypeChange ({ word, id }, v) {
+      this.$emit('update-word', {
+        word,
+        matchType: v,
+        id,
+        // 更新keyword的哪个字段
+        changeTag: 'matchType'
+      })
     },
     f2y (price) {
       return (price / 100).toFixed(2)
@@ -377,13 +483,42 @@ export default {
       this.$emit('change-offset', offset)
     },
     deleteWord (row) {
+      if (this.showMatchType) {
+        // 删除之后的精准匹配的最大值和当前值
+        const maxCount = getMatchTypeObj(this.wordLen - 1).count(this.wordLen - 1)
+        let currentCount = this.words.filter(o => o.matchType === MATCH_TYPE_EXACT).length
+        if (String(row.matchType) === String(MATCH_TYPE_EXACT)) {
+          currentCount--
+        }
+        if (maxCount < currentCount) {
+          const h = this.$createElement
+          const words = this.words.reduce((curr, prev) => {
+            if (String(prev.matchType) === String(MATCH_TYPE_EXACT)) {
+              return curr.concat(prev.word)
+            }
+            return curr
+          }, [])
+          this.$msgbox({
+            title: '提示',
+            message: h('div', null, [
+              h('div', null, '操作失败，请先减少精确匹配方式的关键词后再重新操作。'),
+              h('div', { style: 'marginTop: 10px' }, [
+                h('span', null, '已设置精确匹配的关键词：'),
+                h('span', { style: 'color: #ff4401' }, words.join('，'))
+              ])
+            ])
+          })
+          return
+        }
+      }
       this.$emit('delete-word', {
         isNew: row.isNew,
         price: row.price,
         word: row.word,
         id: row.id
       })
-      this.$emit('change-offset', this.offset - 1)
+      const offset = this.offset - 1 > 0 ? this.offset : 0
+      this.$emit('change-offset', offset)
     },
     getWordPrice (kw) {
       const word = this.words.find(w => w.word === kw)
@@ -430,7 +565,9 @@ export default {
         price,
         serverPrice,
         word,
-        id
+        id,
+        // 更新keyword的哪个字段
+        changeTag: 'price'
       })
     },
     bumpPriceBy20 (row) {
@@ -538,12 +675,17 @@ export default {
   }
 }
 
-.price {
+.price, .match-type{
   display: flex;
   align-items: center;
 
   & > .el-input {
-    width: 140px;
+    width: 120px;
+  }
+  & > .match-type-select {
+    & /deep/ .el-input {
+       width: 120px;
+    }
   }
 
   & > label {
@@ -573,5 +715,30 @@ export default {
   display: inline-block !important;
   vertical-align: middle !important;
   line-height: 20px;
+}
+
+.match-pattern-tip-container {
+  .panel {
+    margin: 6px 0;
+  }
+}
+
+.el-icon-question {
+  cursor: help;
+  margin-left: 5px;
+  font-size: 12px;
+  color: rgb(151, 168, 190);
+}
+
+.primary-color {
+  color: $--color-primary;
+}
+.match-radio {
+  display: block;
+  margin-bottom: 10px;
+}
+.popover-block {
+  display: block;
+  padding-left: 0;
 }
 </style>

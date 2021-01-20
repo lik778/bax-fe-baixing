@@ -12,6 +12,12 @@ import {
   toHumanTime
 } from 'utils'
 
+import {
+  SEM_PLATFORM_BAIDU,
+  MATCH_TYPE_OPTS,
+  MATCH_TYPE_PHRASE
+} from 'constant/fengming'
+
 const emptyPromotion = {
   creativeContent: '',
   creativeTitle: '',
@@ -105,6 +111,13 @@ const store = observable({
       info.creative = undefined
     }
     info.keywords = info.keywords.map(kw => {
+      if (String(info.source) === String(SEM_PLATFORM_BAIDU) && (!MATCH_TYPE_OPTS.find(o => String(o.value) === String(kw.matchType)))) {
+        return {
+          ...kw,
+          serverPrice: kw.price,
+          matchType: MATCH_TYPE_PHRASE
+        }
+      }
       return {
         ...kw,
         serverPrice: kw.price

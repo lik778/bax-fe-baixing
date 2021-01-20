@@ -45,3 +45,11 @@
     height: 3px;
   }
 }
+
+/******************************************** el-input */
+
+.el-input {
+  & /deep/ .el-input__inner {
+    border-radius: 1px;
+  }
+}
