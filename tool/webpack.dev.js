@@ -1,28 +1,39 @@
-
 const base = require('./webpack.base')
 const merge = require('webpack-merge')
 const webpack = require('webpack')
-const { join } = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-
-const isArray = Array.isArray
 
 const config = merge(base, {
   mode: 'development',
   devtool: 'cheap-module-eval-source-map',
   devServer: {
-    historyApiFallback: true,
-    noInfo: true
+    noInfo: true,
+    clientLogLevel: 'error',
+    hot: true,
+    compress: true,
+    host: 'localhost',
+    port: require('./server-config').port,
+    open: false,
+    overlay: { warnings: false, errors: true },
+    quiet: false,
+    stats: 'errors-only',
+    historyApiFallback: {
+      rewrites: [
+        {
+          from: /^\/signin/,
+          to: '/dist/signin.html'
+        },
+        {
+          from: /^\/main/,
+          to: '/dist/main.html'
+        },
+        {
+          from: /^\/huodong/,
+          to: '/dist/huodong.html'
+        }
+      ]
+    }
   }
-})
-
-Object.keys(config.entry).forEach((key) => {
-  const a = isArray(config.entry[key]) ? config.entry[key] : [config.entry[key]]
-
-  config.entry[key] = [
-    join(__dirname, 'dev-client'),
-    ...a
-  ]
 })
 
 config.plugins = [
