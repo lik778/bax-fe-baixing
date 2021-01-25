@@ -242,6 +242,13 @@ export default {
         return [MODE_SELECT, MODE_UPDATE].includes(v)
       }
     },
+    allWords: {
+      type: Array,
+      required: true,
+      default: () => {
+        return []
+      }
+    },
     words: {
       type: Array,
       required: true,
@@ -386,11 +393,11 @@ export default {
       return this.words.slice(start, start + LIMIT)
     },
     wordLen () {
-      return this.words.length
+      return this.allWords.length
     },
     matchTypeRemainExactCount () {
       const maxCount = getMatchTypeObj(this.wordLen).count(this.wordLen)
-      const currentCount = this.words.filter(o => o.matchType === MATCH_TYPE_EXACT).length
+      const currentCount = this.allWords.filter(o => o.matchType === MATCH_TYPE_EXACT).length
       const count = maxCount - currentCount
       return count > 0 ? count : 0
     }
@@ -486,13 +493,13 @@ export default {
       if (this.showMatchType) {
         // 删除之后的精准匹配的最大值和当前值
         const maxCount = getMatchTypeObj(this.wordLen - 1).count(this.wordLen - 1)
-        let currentCount = this.words.filter(o => o.matchType === MATCH_TYPE_EXACT).length
+        let currentCount = this.allWords.filter(o => o.matchType === MATCH_TYPE_EXACT).length
         if (String(row.matchType) === String(MATCH_TYPE_EXACT)) {
           currentCount--
         }
         if (maxCount < currentCount) {
           const h = this.$createElement
-          const words = this.words.reduce((curr, prev) => {
+          const words = this.allWords.reduce((curr, prev) => {
             if (String(prev.matchType) === String(MATCH_TYPE_EXACT)) {
               return curr.concat(prev.word)
             }

@@ -126,6 +126,7 @@
           mode="update"
           :platform="getProp('source')"
           :words="currentKeywords"
+          :all-words="allKeywords"
           :offset="currentKeywordsOffset"
           :selectable="false"
           :deletable="!isSales"
@@ -565,6 +566,33 @@ export default {
         return true
       }
       return false
+    },
+    allKeywords () {
+      const { keywords: originKeywords } = this.originPromotion
+      const {
+        updatedKeywords,
+        deletedKeywords,
+        newKeywords
+      } = this.promotion
+
+      const keywords = newKeywords.map(word => ({
+        isNew: true,
+        ...word
+      })).concat(originKeywords)
+      return keywords
+        .filter(w => !deletedKeywords.map(i => i.id).includes(w.id))
+        .map(w => {
+          for (const word of updatedKeywords) {
+            if (word.id === w.id) {
+              return {
+                ...w,
+                ...word
+              }
+            }
+          }
+
+          return { ...w }
+        })
     },
     currentKeywords () {
       const { keywords: originKeywords } = this.originPromotion
