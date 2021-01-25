@@ -958,6 +958,20 @@ export default {
         newKeywords,
         updatedKeywords
       } = this.promotion
+
+      // 搜索关键词数据未同步
+      if (this.isSearchCondition) {
+        this.searchKeywords = this.searchKeywords.map(w => {
+          if (word.word === w.word) {
+            return {
+              ...w,
+              ...word
+            }
+          } else {
+            return { ...w }
+          }
+        })
+      }
       // 更新的关键词是新增加的关键词
       if (newKeywords.some(w => word.word === w.word)) {
         this.promotion.newKeywords = newKeywords.map(w => {
@@ -1460,6 +1474,9 @@ export default {
         this.promotion.newKeywords = this.promotion.newKeywords.filter(w => w.word !== word.word)
       } else {
         this.promotion.deletedKeywords.push(word)
+      }
+      if (this.isSearchCondition) {
+        this.getCampaignWordsBySearchWord()
       }
     },
     async changeKeywordsPrice (keywordsPrice) {
