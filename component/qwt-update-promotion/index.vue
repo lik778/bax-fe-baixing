@@ -126,6 +126,8 @@
           mode="update"
           :platform="getProp('source')"
           :words="currentKeywords"
+          :is-search-condition="isSearchCondition"
+          :search-word="searchWord"
           :offset="currentKeywordsOffset"
           :selectable="false"
           :deletable="!isSales"
@@ -492,7 +494,6 @@ export default {
       queryWord: '',
       searchWord: '',
       isSearchCondition: false,
-      searchKeywords: [],
       // 注: 此处逻辑比较容易出错, 此处 定义为 undefined 与 getXXXdata 处 密切相关
       // 注: 需要密切关注 更新 数据 的获取
       promotion: {
@@ -574,16 +575,10 @@ export default {
         newKeywords
       } = this.promotion
 
-      // 新增的keywords 加上原来的keywords
-      let keywords = []
-      if (this.isSearchCondition) {
-        keywords = this.searchKeywords
-      } else {
-        keywords = newKeywords.map(word => ({
-          isNew: true,
-          ...word
-        })).concat(originKeywords)
-      }
+      const keywords = newKeywords.map(word => ({
+        isNew: true,
+        ...word
+      })).concat(originKeywords)
 
       return keywords
         .filter(w => !deletedKeywords.map(i => i.id).includes(w.id))
@@ -803,17 +798,7 @@ export default {
     },
     async getCampaignWordsBySearchWord () {
       this.isSearchCondition = true
-      const searchWord = this.searchWord
-
-      // 获取到原有以及新增中的模糊匹配关键词
-      const { keywords: originKeywords } = this.originPromotion
-      const { newKeywords } = this.promotion
-      const keywords = newKeywords.map(word => ({
-        isNew: true,
-        ...word
-      })).concat(originKeywords)
-
-      this.searchKeywords = keywords.filter(row => row.word.indexOf(searchWord) > -1)
+      this.currentKeywordsOffset = 0
     },
     async getCampaignWordsDefault () {
       this.searchWord = ''
@@ -930,6 +915,7 @@ export default {
         newKeywords,
         updatedKeywords
       } = this.promotion
+
       // 更新的关键词是新增加的关键词
       if (newKeywords.some(w => word.word === w.word)) {
         this.promotion.newKeywords = newKeywords.map(w => {
@@ -1432,6 +1418,9 @@ export default {
         this.promotion.newKeywords = this.promotion.newKeywords.filter(w => w.word !== word.word)
       } else {
         this.promotion.deletedKeywords.push(word)
+      }
+      if (this.isSearchCondition) {
+        this.getCampaignWordsBySearchWord()
       }
     },
     async changeKeywordsPrice (keywordsPrice) {

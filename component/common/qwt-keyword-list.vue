@@ -292,6 +292,14 @@ export default {
     showMatchType: {
       type: Boolean,
       default: false
+    },
+    isSearchCondition: {
+      type: Boolean,
+      default: false
+    },
+    searchWord: {
+      type: String,
+      default: ''
     }
   },
   data () {
@@ -377,12 +385,15 @@ export default {
       return {
         limit: LIMIT,
         offset: this.offset,
-        total: this.words.length
+        total: this.isSearchCondition ? this.searchKeywords.length : this.words.length
       }
     },
     rows () {
       const { currentPage } = this
       const start = currentPage * LIMIT
+      if (this.isSearchCondition) {
+        return this.searchKeywords.slice(start, start + LIMIT)
+      }
       return this.words.slice(start, start + LIMIT)
     },
     wordLen () {
@@ -393,6 +404,12 @@ export default {
       const currentCount = this.words.filter(o => o.matchType === MATCH_TYPE_EXACT).length
       const count = maxCount - currentCount
       return count > 0 ? count : 0
+    },
+    searchKeywords () {
+      if (this.isSearchCondition) {
+        return this.words.filter(row => row.word.indexOf(this.searchWord) > -1)
+      }
+      return []
     }
   },
   methods: {
@@ -517,7 +534,8 @@ export default {
         word: row.word,
         id: row.id
       })
-      const offset = this.offset - 1 > 0 ? this.offset : 0
+      let offset = this.offset - 1 > 0 ? this.offset : 0
+      offset = offset === this.pagination.total - 1 ? offset - 1 : offset
       this.$emit('change-offset', offset)
     },
     getWordPrice (kw) {
