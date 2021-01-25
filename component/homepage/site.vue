@@ -1,6 +1,6 @@
 <template>
   <div class="layout-container">
-    <div class="layout-left">
+    <!-- <div class="layout-left">
       <h5 class="layout-header">精品官网概览</h5>
       <div class="layout-content" v-if="isHasSite">
         <div class="report">
@@ -39,8 +39,8 @@
         <p class="text">您暂时没有开通精品官网，您可以</p>
         <el-button type="primary" @click="() => $router.push({name: 'qwt-charge', query: {select_gw: 1}})">购买精品官网</el-button>
       </div>
-    </div>
-    <div class="layout-right">
+    </div> -->
+    <div class="layout-left">
       <h5 class="layout-header">
         官网留言通知
         <span class="action" v-if="notices && notices.length" @click="handleMoreBtnClick">更多</span>
