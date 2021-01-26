@@ -87,12 +87,15 @@ const $vueForGetMobx = new Vue({
  * * 忽略未登录用户的错误上报（如接口抛错、接口抛错导致的数据异常抛错等）
  * * 其它忽略配置见 lib/sentry.js
  */
-function errorHandler (e) {
+function errorHandler (error) {
+  // 兼容老代码中的 throw this.$message.error 写法
+  if (error && error._data && error._data.message) return
+
   const currentUser = $vueForGetMobx.$options.fromMobx.currentUser()
   const isLogin = currentUser && currentUser.id
   isLogin
-    ? sentry.captureException(e)
-    : sentry.captureException(e)
+    ? sentry.captureException(error)
+    : sentry.captureException(error)
 }
 window.onerror = errorHandler
 Vue.config.errorHandler = errorHandler
