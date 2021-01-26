@@ -1375,7 +1375,7 @@ export default {
           return Message.error(e.message)
         }
 
-        const recommendKeywords = await recommendByWord(queryWord, { campaignId: this.originPromotion.id })
+        const recommendKeywords = (await recommendByWord(queryWord, { campaignId: this.originPromotion.id })) || []
         const newKeyword = store.fmtNewKeywordsPrice(recommendKeywords).find(k => k.word === queryWord)
         if (!newKeyword) return this.$message.info('没有合适的关键词')
 
