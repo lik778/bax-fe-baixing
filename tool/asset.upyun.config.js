@@ -1,7 +1,7 @@
 
 // 切记: 不可 build 进前端 js
 
-const { join } = require('path')
+const path = require('path')
 
 module.exports = {
   operator: 'attach',
@@ -9,7 +9,7 @@ module.exports = {
   tasks: [{
     prefix: 'bax-fe/',
     bucket: 'attachments',
-    rename: origin => join('asset', origin),
-    directory: join(__dirname, '../asset')
+    rename: origin => path.posix.join('asset', origin),
+    directory: path.posix.join(__dirname, '../asset')
   }]
 }
