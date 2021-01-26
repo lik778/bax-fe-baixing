@@ -1482,6 +1482,7 @@ export default {
       immediate: true,
       deep: true,
       handler (newV, oldV) {
+        if (!newV || !oldV) return
         if (newV.length === oldV.length) return
         this.promotion.newKeywords = newV.map(o => {
           return {
