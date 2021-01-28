@@ -178,6 +178,9 @@ export default {
         })
         this.loading = false
       }
+    },
+    loading (val) {
+      this.$bus.$emit('shoppingCartLoading', val)
     }
   }
 }
