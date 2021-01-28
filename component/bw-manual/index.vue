@@ -12,6 +12,9 @@
               <el-option v-for="(v,k) in PROMOTE_OFFER_STATUS" :label="v" :value="k" :key="k"></el-option>
             </el-select>
           </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="handleAddToCartAll">批量加入购物车</el-button>
+          </el-form-item>
         </el-form>
         <el-table class="record-table" :data="manualHistory">
           <el-table-column label="查询日期" prop="createdAt" width="120" :formatter="dateFormatter" />
@@ -81,6 +84,7 @@ import {
   SOLD_TYPE_MONTH
 } from 'constant/biaowang'
 import { getCnName, f2y } from 'util'
+import pick from 'lodash.pick'
 
 const citiesMax = 20
 
@@ -163,6 +167,24 @@ export default {
     disabledAddCartBtn (row) {
       return row.isExpired || row.status === PROMOTE_UNOFFERED
     },
+    async handleAddToCartAll () {
+      const tempArr = this.manualHistory.filter(o => o.checkDays && !(dayjs().isAfter(dayjs(o.createdAt * 1000).endOf('month'))))
+      if (!tempArr.length) {
+        return this.$message.error('清选择关键词报价')
+      }
+      const data = tempArr.map(o => {
+        return {
+          ...pick(o, ['cities', 'device', 'price', 'word', 'soldPriceMap']),
+          days: o.checkDays
+        }
+      })
+      await refreshKeywordPriceNew(data, {
+        targetUserId: this.getFinalUserId()
+      })
+      if (!this.$parent.$refs.bwShoppingCart.loading) {
+        this.$parent.$refs.bwShoppingCart.addToCart(data)
+      }
+    },
     async addToCart (row) {
       const { cities, checkDays, device, price, word, soldPriceMap, createdAt } = row
       if (!checkDays) {
@@ -184,7 +206,9 @@ export default {
       await refreshKeywordPriceNew(data, {
         targetUserId: this.getFinalUserId()
       })
-      this.$parent.$refs.bwShoppingCart.addToCart(data)
+      if (!this.$parent.$refs.bwShoppingCart.loading) {
+        this.$parent.$refs.bwShoppingCart.addToCart(data)
+      }
     },
     goToQueryPrice (row) {
       const { word, device, cities } = row
