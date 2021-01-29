@@ -283,22 +283,20 @@ export default {
       this.validKeywords(this.form.keywords, true)
     },
     async checkWord () {
-      this.$message.warning('易慧推拓词、交易系统临时关闭，' +
-        '系统恢复后，我们将第一时间开放，对您造成任何不便，我们深表歉意。')
-      // this.$refs.form.validate(async (isValid) => {
-      //   const isKeywordValid = this.validKeywords()
-      //   if (isValid && isKeywordValid) {
-      //     this.keywordsPanelVisible = true
-      //     this.$nextTick(() => {
-      //       try {
-      //         const target = this.$refs['keyword-input-title-with-padding']
-      //         target.scrollIntoView && target.scrollIntoView()
-      //       } catch (error) {
-      //         console.error(error)
-      //       }
-      //     })
-      //   }
-      // })
+      this.$refs.form.validate(async (isValid) => {
+        const isKeywordValid = this.validKeywords()
+        if (isValid && isKeywordValid) {
+          this.keywordsPanelVisible = true
+          this.$nextTick(() => {
+            try {
+              const target = this.$refs['keyword-input-title-with-padding']
+              target.scrollIntoView && target.scrollIntoView()
+            } catch (error) {
+              console.error(error)
+            }
+          })
+        }
+      })
     },
     removeArea (area) {
       this.form.areas = this.form.areas.filter((i) => i.name !== area.name)
