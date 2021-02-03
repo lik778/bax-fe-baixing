@@ -5,7 +5,7 @@
       class="qiqiaoban-page-selector"
       placeholder="请选择投放官网"
       :disabled="disabled"
-      :value="isSiteLandingType(value) ? value : ''"
+      :value="isSiteLandingType(value) ? computedVal : ''"
       :options="options"
       @change="onChange">
     </bax-select>
@@ -55,6 +55,11 @@ export default {
       type: Boolean,
       required: false,
       default: false
+    }
+  },
+  computed: {
+    computedVal () {
+      return this.value.split('?')[0]
     }
   },
   data () {
