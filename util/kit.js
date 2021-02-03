@@ -297,3 +297,44 @@ export function debounce (func, time = 300, ctx) {
     }, time)
   }
 }
+
+/** 获取当前 IP，并缓存 */
+let storedIP = null
+export function getIP () {
+  // TODO backup address
+  const urls = [
+    '//icanhazip.com',
+    '//api.myip.com',
+    '//txt.go.sohu.com/ip/soip'
+  ]
+  return new Promise((resolve, reject) => {
+    if (storedIP) return resolve(storedIP)
+
+    ;(async function run () {
+      const url = urls.shift()
+      if (!url) return reject(new Error('Can\'t get IP'))
+
+      // try next url when fetch error
+      let ipRes
+      try {
+        ipRes = await fetch(url).then(res => res.text())
+      } catch (fetchError) {
+        return await run()
+      }
+      // ipv4 or ipv6
+      const ipMatch = ipRes.match && (
+        ipRes.match(/(\d+\.){3}(\d+)/g) ||
+        ipRes.match(/([0-9a-zA-Z]+:){7}([0-9a-zA-Z]+)/g)
+      )
+
+      // try next url when not matched
+      const ip = ipMatch && ipMatch[0]
+      if (!ip) {
+        return await run()
+      } else {
+        storedIP = ip
+        return resolve(ip)
+      }
+    })()
+  })
+}
