@@ -12,6 +12,9 @@
               <el-option v-for="(v,k) in PROMOTE_OFFER_STATUS" :label="v" :value="k" :key="k"></el-option>
             </el-select>
           </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="handleAddToCartAll" :loading="loading">批量加入购物车</el-button>
+          </el-form-item>
         </el-form>
         <el-table class="record-table" :data="manualHistory">
           <el-table-column label="查询日期" prop="createdAt" width="120" :formatter="dateFormatter" />
@@ -81,6 +84,7 @@ import {
   SOLD_TYPE_MONTH
 } from 'constant/biaowang'
 import { getCnName, f2y } from 'util'
+import pick from 'lodash.pick'
 
 const citiesMax = 20
 
@@ -113,7 +117,19 @@ export default {
       APPLY_TYPES,
       APPLY_TYPE_ORDER_LONG,
       SOLD_TYPE_MONTH,
-      citiesMax
+      citiesMax,
+      loadingBtn: false,
+      loadingCart: false
+    }
+  },
+  mounted () {
+    this.$bus.$on('shoppingCartLoading', (loading) => {
+      this.loadingCart = loading
+    })
+  },
+  computed: {
+    loading () {
+      return this.loadingBtn || this.loadingCart
     }
   },
   methods: {
@@ -161,7 +177,27 @@ export default {
       return cities.slice(0, max).map(city => getCnName(city, this.allAreas)).join('，') + (cities.length > max ? `等${cities.length}个城市` : '')
     },
     disabledAddCartBtn (row) {
-      return row.isExpired || row.status === PROMOTE_UNOFFERED
+      return row.isExpired || row.status === PROMOTE_UNOFFERED || this.loading
+    },
+    async handleAddToCartAll () {
+      const tempArr = this.manualHistory.filter(o => o.checkDays && !(dayjs().isAfter(dayjs(o.createdAt * 1000).endOf('month'))))
+      if (!tempArr.length) {
+        return this.$message.error('清选择关键词报价')
+      }
+      this.loadingBtn = true
+      const data = tempArr.map(o => {
+        return {
+          ...pick(o, ['cities', 'device', 'price', 'word', 'soldPriceMap']),
+          days: o.checkDays
+        }
+      })
+
+      await refreshKeywordPriceNew(data, {
+        targetUserId: this.getFinalUserId()
+      })
+      this.loadingBtn = false
+
+      this.$parent.$refs.bwShoppingCart.addToCart(data)
     },
     async addToCart (row) {
       const { cities, checkDays, device, price, word, soldPriceMap, createdAt } = row
@@ -180,10 +216,13 @@ export default {
         word,
         soldPriceMap
       }]
-      // tip：打刷新接口，看词是否已售卖
+
+      this.loadingBtn = true
       await refreshKeywordPriceNew(data, {
         targetUserId: this.getFinalUserId()
       })
+      this.loadingBtn = false
+
       this.$parent.$refs.bwShoppingCart.addToCart(data)
     },
     goToQueryPrice (row) {
