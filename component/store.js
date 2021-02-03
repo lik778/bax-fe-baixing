@@ -1,4 +1,5 @@
 import { observable, action, toJS } from 'mobx'
+import { getIP } from 'util'
 import { isNormalUser, notAllowFengmingRecharge } from 'util/role'
 import * as aapi from 'api/account'
 import * as mapi from 'api/meta'
@@ -53,15 +54,23 @@ const gStore = observable({
       bax_id: currentUser.id
     }
 
-    // sentry报错添加user
-    Sentry.configureScope((scope) => {
-      scope.setUser({
-        id: currentUser.baixingId,
-        name: currentUser.name,
-        mobile: currentUser.mobile,
-        baxId: currentUser.id
+    // Sentry 添加用户身份信息
+    let ip
+    try {
+      ip = await getIP()
+    } catch (noIP) {
+      ip = 'unknown'
+    } finally {
+      Sentry.configureScope((scope) => {
+        scope.setUser({
+          ip_address: ip,
+          id: currentUser.baixingId,
+          name: currentUser.name,
+          mobile: currentUser.mobile,
+          baxId: currentUser.id
+        })
       })
-    })
+    }
   }),
 
   getCategories: action(async function () {
