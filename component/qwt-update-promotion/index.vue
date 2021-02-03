@@ -428,6 +428,8 @@ import { allowSee258 } from 'util/fengming-role'
 
 import store from './store'
 
+import { isPro } from 'config'
+
 const isArray = Array.isArray
 
 const MIN_DAILY_BUDGET = 100 * 100
@@ -1505,7 +1507,10 @@ export default {
       // 将帖子选择组件的类型重置
       this.adSelectortype = ''
       const script = document.createElement('script')
-      script.src = getLandingpageByPageProtocol(landingPage)
+      const res = /\/\/([\w-]+)\./i.exec(landingPage)
+      const [, domain] = res
+      const url = `http://${domain}.mvp.baixing.${isPro ? 'com' : 'cn'}`
+      script.src = getLandingpageByPageProtocol(url)
       document.body.appendChild(script)
       script.addEventListener('error', e => {
         document.body.removeChild(script)
