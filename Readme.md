@@ -68,3 +68,7 @@ git config --global core.safecrlf false
 - 用到的 主要 库
   - `vue`, `vue-router`
   - `rxjs` -> TODO: `vue-rx`
+
+## TODO
+
+* 关闭了 Webpack 不必要的输出提升热更新速度，但是现在热更新结束后没有提示
