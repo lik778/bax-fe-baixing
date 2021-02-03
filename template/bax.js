@@ -64,7 +64,7 @@ import { allowUseKaPackage } from 'util/fengming-role'
 import { getCurrentUser } from 'api/account'
 import pick from 'lodash.pick'
 import { notAllowFengmingRecharge } from 'util/role'
-import { parseQuery, stringifyQuery, f2y } from 'util'
+import { getIP, parseQuery, stringifyQuery, f2y } from 'util'
 
 import gStore from '../component/store'
 
@@ -82,10 +82,34 @@ const $vueForGetMobx = new Vue({
   }
 })
 /**
+ * 获取当前浏览器 IP 地址并配置到 Sentry 上传参数
+ */
+let storedScopeIP
+// 缓冲器，防止短时间内重复的报错导致重复请求获取 IP 接口
+let setSentryScopePending
+function setSentryScopeIP () {
+  setSentryScopePending = new Promise(resolve => {
+    console.log('storedIP : ', storedScopeIP)
+    if (!storedScopeIP) {
+      getIP().then(ip => {
+        // console.log('getIP : ', ip)
+        storedScopeIP = ip
+        sentry.configureScope(scope => {
+          scope.setUser({ ip_address: ip })
+        })
+        resolve()
+      // eslint-disable-next-line node/handle-callback-err
+      }).catch(error => {
+        // continue upload error
+        resolve()
+      })
+    } else {
+      resolve()
+    }
+  })
+}
+/**
  * 错误上报逻辑
- * ! 暂时不过滤未登录用户的上报（查 currentUser 可能出现的问题）
- * * 忽略未登录用户的错误上报（如接口抛错、接口抛错导致的数据异常抛错等）
- * * 其它忽略配置见 lib/sentry.js
  */
 function errorHandler (error) {
   // 兼容老代码中的 throw this.$message.error 写法
@@ -93,9 +117,14 @@ function errorHandler (error) {
 
   const currentUser = $vueForGetMobx.$options.fromMobx.currentUser()
   const isLogin = currentUser && currentUser.id
-  isLogin
-    ? sentry.captureException(error)
-    : sentry.captureException(error)
+  if (!isLogin) return
+
+  !setSentryScopePending && setSentryScopeIP()
+  setSentryScopePending.then(() => {
+    // console.log('upload error: ', error, storedScopeIP)
+    sentry.captureException(error)
+    setSentryScopePending = null
+  })
 }
 window.onerror = errorHandler
 Vue.config.errorHandler = errorHandler
