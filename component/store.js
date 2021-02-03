@@ -61,7 +61,6 @@ const gStore = observable({
     } catch (noIP) {
       ip = 'unknown'
     } finally {
-      console.log('ip:', ip)
       Sentry.configureScope((scope) => {
         scope.setUser({
           ip_address: ip,
