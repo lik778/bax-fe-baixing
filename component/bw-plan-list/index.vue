@@ -179,7 +179,7 @@ const liveDevices = {
   [DEVICE_WAP]: {
     label: DEVICE[DEVICE_WAP],
     urlKey: 'wapUrl',
-    msg: '暂无手机端实况数据，请售后再试'
+    msg: '手机端实况展现升级中，请以实际展现情况为准'
   },
   [DEVICE_PC]: {
     label: DEVICE[DEVICE_PC],
