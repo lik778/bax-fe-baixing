@@ -338,3 +338,16 @@ export function getIP () {
     })()
   })
 }
+
+// 设置异步任务的最小时间（用来设置 Loading 效果的最小时间）
+export async function minTime (promise, time = 800) {
+  const start = +new Date()
+  const res = await promise()
+  const end = +new Date()
+  return await new Promise(resolve => {
+    const sleepTime = Math.max(0, time - (end - start))
+    setTimeout(() => {
+      resolve(res)
+    }, sleepTime)
+  })
+}

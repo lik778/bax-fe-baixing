@@ -23,6 +23,7 @@
 <script>
 import BaxSelect from './select'
 import { queryMvipShops } from 'api/mvip'
+import { minTime } from 'util/kit'
 
 export default {
   name: 'mvip-selector',
@@ -59,7 +60,7 @@ export default {
       let response
       try {
         this.loading = true
-        response = await queryMvipShops()
+        response = await minTime(queryMvipShops)
       } catch (error) {
         response = {}
       } finally {
@@ -98,12 +99,14 @@ export default {
 .mvip-selector {
   width: 560px;
 }
-.loading-info {
-  color: #C0C4CC;
-}
 p {
   margin-left: 10px;
   font-size: 14px;
   color: ff6350;
+  height: 40px;
+  line-height: 40px;
+}
+.loading-info {
+  color: #C0C4CC;
 }
 </style>
