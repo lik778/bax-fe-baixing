@@ -15,6 +15,18 @@ export const CREATIVE_CHIBI_ACCEPT = 10
 export const KEYWORD_STATUS_REFUSE = -10
 export const KEYWORD_STATUS_ONLINE = 0
 
+// 优选推店铺状态枚举
+export const mvipShopStatus = {
+  0: 'INIT',
+  1: 'ONLINE',
+  2: 'OFFLINE_SENSITIVE',
+  3: 'DELETE',
+  4: 'OFFLINE_SHOP_OPERATION',
+  5: 'REFUND',
+  6: 'EXPIRED'
+}
+export const isMvipShopStatusValid = ss => [mvipShopStatus[0], mvipShopStatus[1]].includes(ss)
+
 // 针对用户显示做了简化
 export const keywordStatus = {
   0: '投放中',
@@ -121,10 +133,12 @@ export const CAMPAIGN_STATUS_CAMPAIGN_BUDGET_NOT_ENOUGH = 5
 export const LANDING_TYPE_AD = 0
 export const LANDING_TYPE_GW = 1
 export const LANDING_TYPE_258 = 5
+export const LANDING_TYPE_STORE = 999999 // TODO refactor
 
 export const landingType = {
   [`${LANDING_TYPE_AD}`]: '帖子',
-  [`${LANDING_TYPE_GW}`]: '官网'
+  [`${LANDING_TYPE_GW}`]: '官网',
+  [`${LANDING_TYPE_STORE}`]: '店铺'
 }
 
 export const campaignOptimization = {

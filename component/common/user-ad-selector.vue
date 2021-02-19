@@ -99,7 +99,7 @@ export default {
       required: true
     },
     selectedId: {
-      type: String
+      type: [String, Number]
     },
     type: {
       type: String,

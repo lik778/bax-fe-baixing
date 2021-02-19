@@ -30,7 +30,12 @@
                 :selected-id="getProp('landingPageId')"
                 @select-ad="ad => onSelectAd(ad)">
               </user-ad-selector>
-
+              <mvip-selector
+                v-if="getProp('landingType') === LANDING_TYPE_STORE"
+                :disabled="disabled"
+                :initValue="getProp('landingPageId')"
+                @change="setLandingPageAndID">
+              </mvip-selector>
               <qiqiaoban-page-selector
                 v-if="getProp('landingType') === LANDING_TYPE_GW"
                 :disabled="disabled"
@@ -38,14 +43,12 @@
                 :is-special-landingpage="isQiqiaobanSite"
                 @change="setLandingPage">
               </qiqiaoban-page-selector>
-
               <ka-258-selector
                 v-if="getProp('landingType') === LANDING_TYPE_258"
                 :disabled="disabled"
                 :value="getProp('landingPage')"
                 @change="setLandingPage"
               />
-
               <p v-if="disabled" class="authing-tip">
                 您的推广在审核中，审核通过后可修改落地页，感谢配合！
               </p>
@@ -349,6 +352,7 @@ import PromotionChargeTip from 'com/widget/promotion-charge-tip'
 import PromotionKeywordTip from 'com/widget/promotion-keyword-tip'
 import DurationSelector from 'com/common/duration-selector'
 import UserAdSelector from 'com/common/user-ad-selector'
+import MvipSelector from 'com/common/mvip-selector'
 import CreativeEditor from 'com/widget/creative-editor'
 import Ka258Selector from 'com/common/ka-258-selector'
 import KeywordList from 'com/common/qwt-keyword-list'
@@ -392,6 +396,7 @@ import {
   LANDING_TYPE_AD,
   LANDING_TYPE_GW,
   LANDING_TYPE_258,
+  LANDING_TYPE_STORE,
 
   landingTypeOpts,
 
@@ -457,6 +462,7 @@ export default {
     DurationSelector,
     CreativeEditor,
     UserAdSelector,
+    MvipSelector,
     Ka258Selector,
     AreaSelector,
     KeywordList,
@@ -520,6 +526,7 @@ export default {
       LANDING_TYPE_AD,
       LANDING_TYPE_GW,
       LANDING_TYPE_258,
+      LANDING_TYPE_STORE,
 
       moreSettingDisplay: false,
       // 是否为老官网
@@ -826,6 +833,10 @@ export default {
     setLandingPage (url) {
       this.promotion.landingPage = url
     },
+    setLandingPageAndID (url, id) {
+      this.setLandingPage(url)
+      this.promotion.landingPageId = id
+    },
     banLandPageSelected () {
       // 落地页404，需要更改落地页投放
       if (this.isErrorLandingPageShow && (!this.promotion.landingPage || this.promotion.landingPage === this.originPromotion.landingPage)) {
@@ -959,45 +970,38 @@ export default {
       const {
         creativeContent,
         creativeTitle,
-
         landingPage
       } = this.promotion
 
-      const changed = (now, ori) => {
-        if (now === undefined) {
-          return false
-        }
-
-        return now !== ori
+      const changed = (now, origin) => {
+        return now === undefined
+          ? now !== origin
+          : false
       }
 
       if (creativeContent === '') {
         throw new Error('请填写推广内容')
       }
-
       if (creativeTitle === '') {
         throw new Error('请填写推广标题')
       }
-
       if (landingPage === '') {
         throw new Error('请填写投放页面')
       }
 
       const result = {}
-
       if (changed(creativeContent, originCreativeContent) ||
         changed(creativeTitle, originCreativeTitle)) {
         result.creativeContent = this.getProp('creativeContent')
         result.creativeTitle = this.getProp('creativeTitle')
       }
-
       if (changed(landingPage, originLandingPage)) {
         // 忽略如下情形: 改了 type, 不改 page
         //   - changed(landingType, originLandingType)
         result.landingType = this.getProp('landingType')
         result.landingPage = this.getProp('landingPage')
+        result.landingPageId = this.getProp('landingPageId')
       }
-
       // FIX: 修复 landingPage landingType 错误
       if (landingPage) {
         result.landingType = isSiteLandingType(landingPage) ? 1 : 0
