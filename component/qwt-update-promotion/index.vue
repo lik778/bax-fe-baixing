@@ -377,8 +377,7 @@ import {
   getRecommandCreative,
   changeCampaignKeywordsPrice,
   changeCampaignKeywordsMatchType,
-  queryAds,
-  chibiRobotAudit
+  queryAds
 } from 'api/fengming'
 
 import {
@@ -398,7 +397,8 @@ import {
 
   MATCH_TYPE_PHRASE,
   MATCH_TYPE_EXACT,
-  getMatchTypeObj
+  getMatchTypeObj,
+  filterBannedListByContent
 } from 'constant/fengming'
 
 import {
@@ -727,9 +727,7 @@ export default {
       }
 
       try {
-        const { bannedList, normalList } = await chibiRobotAudit([val], {
-          campaignId: this.originPromotion.id
-        })
+        const { bannedList, normalList } = await filterBannedListByContent([val])
         if (bannedList.length) {
           return Message.error(`因平台限制，${val}无法添加，请修改`)
         }

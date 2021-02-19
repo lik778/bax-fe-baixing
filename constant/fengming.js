@@ -220,3 +220,15 @@ export const getMatchTypeObj = (wordLen) => {
   const tempObj = matchTypeTipAndCount.find(o => wordLen >= o.minKeywordCount && wordLen <= o.maxKeywordCount)
   return tempObj || matchTypeTipAndCount[0]
 }
+
+export function filterBannedListByContent (words) {
+  const normalList = words.map(w => ({
+    id: w,
+    word: w,
+    content: w
+  }))
+  return {
+    bannedList: [],
+    normalList
+  }
+}

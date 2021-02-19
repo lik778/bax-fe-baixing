@@ -57,10 +57,11 @@
 <script>
 import { Message } from 'element-ui'
 
-import { recommendByWordList, chibiRobotAudit } from 'api/fengming'
+import { recommendByWordList } from 'api/fengming'
 import { isObj } from 'util'
 import { MIN_WORD_PRICE } from 'constant/keyword'
 import { validateKeyword } from 'util/campaign'
+import { filterBannedListByContent } from 'constant/fengming'
 
 export default {
   name: 'QwtAddKeywordsDialog',
@@ -214,8 +215,8 @@ export default {
       }
       return result
     },
-    async _fetchNegativeKeywords (words, opts) {
-      const result = await chibiRobotAudit(words, opts)
+    async _fetchNegativeKeywords (words) {
+      const result = await filterBannedListByContent(words)
       return result
     }
   }
