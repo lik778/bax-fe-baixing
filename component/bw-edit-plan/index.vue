@@ -26,12 +26,16 @@
                   :selected-id="form.landingPageId"
                   @select-ad="onSelectAd"
                 />
-
                 <qiqiaoban-page-selector
                   v-if="landingTypeDisplay === 1 || landingTypeDisplay === 2"
                   :value="form.landingPage"
                   :is-special-landingpage="isSpecialLandingpage"
                   @change="onQiqiaobanChange"
+                />
+                <mvip-selector
+                  v-if="landingTypeDisplay === LANDING_TYPE_STORE"
+                  :initValue="form.landingPageId"
+                  @change="onSelectStore"
                 />
               </div>
             </div>
@@ -60,12 +64,17 @@
 <script>
 import { isQiqiaobanSite, isWeishopSite, getLandingpageByPageProtocol } from 'util/kit'
 import { getPromoteById, getPromtesByOrders, updatePromote, getQiqiaobanCoupon } from 'api/biaowang'
-import { landingTypeOpts, SEM_PLATFORM_BAIDU, LANDING_TYPE_AD } from 'constant/fengming'
-import { AUDIT_STATUS_REJECT, PROMOTE_STATUS_OFFLINE, PROMOTE_STATUS_PENDING_EDIT } from 'constant/biaowang'
+import { landingTypeOpts, SEM_PLATFORM_BAIDU, LANDING_TYPE_AD, LANDING_TYPE_STORE } from 'constant/fengming'
+import {
+  AUDIT_STATUS_REJECT,
+  PROMOTE_STATUS_OFFLINE,
+  PROMOTE_STATUS_PENDING_EDIT
+} from 'constant/biaowang'
 import { Message } from 'element-ui'
 import UserAdSelector from 'com/common/user-ad-selector'
 import CreativeEditor from 'com/widget/creative-editor'
 import QiqiaobanPageSelector from 'com/common/qiqiaoban-page-selector'
+import MvipSelector from 'com/common/mvip-selector'
 import { queryAds } from 'api/fengming'
 
 export default {
@@ -76,11 +85,14 @@ export default {
   components: {
     UserAdSelector,
     CreativeEditor,
-    QiqiaobanPageSelector
+    QiqiaobanPageSelector,
+    MvipSelector
   },
   data () {
     return {
       SEM_PLATFORM_BAIDU,
+      LANDING_TYPE_AD,
+      LANDING_TYPE_STORE,
       promotes: [],
       landingTypeDisplay: 0,
       isErrorLandingPageShow: false,
@@ -199,6 +211,11 @@ export default {
 
       this.form.creativeTitle = ''
       this.form.creativeContent = ''
+    },
+    onSelectStore (url, id) {
+      this.form.landingType = LANDING_TYPE_STORE
+      this.form.landingPageId = id
+      this.form.landingPage = url
     },
     handleCreativeError (message) {
       if (message) Message.error(message)
