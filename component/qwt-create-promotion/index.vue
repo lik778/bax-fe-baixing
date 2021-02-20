@@ -31,19 +31,21 @@
                 :selected-id="newPromotion.landingPageId"
                 @select-ad="onSelectAd"
               />
-
               <qiqiaoban-page-selector
                 v-if="newPromotion.landingType === LANDING_TYPE_GW"
                 :value="newPromotion.landingPage"
                 @change="v => setLanding(LANDING_TYPE_GW, v)"
               />
-
               <ka-258-selector
                 v-if="newPromotion.landingType === LANDING_TYPE_258"
                 :value="newPromotion.landingPage"
                 @change="v => setLanding(LANDING_TYPE_258, v)"
               />
-
+              <mvip-selector
+                v-if="newPromotion.landingType === LANDING_TYPE_STORE"
+                :initValue="newPromotion.landingPageId"
+                @change="(...args) => setLandingAndID(LANDING_TYPE_STORE, ...args)"
+              />
             </div>
           </div>
         </div>
@@ -212,6 +214,7 @@ import PromotionChargeTip from 'com/widget/promotion-charge-tip'
 import UserAdSelector from 'com/common/user-ad-selector'
 import CreativeEditor from 'com/widget/creative-editor'
 import Ka258Selector from 'com/common/ka-258-selector'
+import MvipSelector from 'com/common/mvip-selector'
 import AreaSelector from 'com/common/area-selector'
 import ChargeDialog from 'com/common/charge-dialog'
 import CpcPriceTip from 'com/widget/cpc-price-tip'
@@ -244,6 +247,7 @@ import {
   LANDING_TYPE_AD,
   LANDING_TYPE_GW,
   LANDING_TYPE_258,
+  LANDING_TYPE_STORE,
   RECOMMAND_SOURCE_FH,
   NEW_RECOMMAND_SOURCE_FH
 } from 'constant/fengming'
@@ -279,6 +283,7 @@ export default {
     PromotionCreativeTip,
     PromotionAreaLimitTip,
     QiqiaobanPageSelector,
+    MvipSelector,
     PromotionChargeTip,
     UserAdSelector,
     CreativeEditor,
@@ -318,6 +323,7 @@ export default {
       LANDING_TYPE_AD,
       LANDING_TYPE_GW,
       LANDING_TYPE_258,
+      LANDING_TYPE_STORE,
       RECOMMAND_SOURCES,
 
       searchRecommendsVisible: false,
@@ -479,6 +485,12 @@ export default {
     setLanding (type, url) {
       this.newPromotion.landingType = type
       this.newPromotion.landingPage = url
+    },
+
+    setLandingAndID (type, url, id) {
+      console.log(type, url, id)
+      this.setLanding(type, url)
+      this.newPromotion.landingPageId = id
     },
 
     async onSelectAd (ad) {
