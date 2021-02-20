@@ -974,7 +974,7 @@ export default {
       } = this.promotion
 
       const changed = (now, origin) => {
-        return now === undefined
+        return now !== undefined
           ? now !== origin
           : false
       }
@@ -1000,11 +1000,14 @@ export default {
         //   - changed(landingType, originLandingType)
         result.landingType = this.getProp('landingType')
         result.landingPage = this.getProp('landingPage')
-        result.landingPageId = this.getProp('landingPageId')
+        // 只有选择店铺时需要传 landingPageId 字段
+        if (this.getProp('landingType') === this.LANDING_TYPE_STORE) {
+          result.landingPageId = this.getProp('landingPageId')
+        }
       }
       // FIX: 修复 landingPage landingType 错误
-      if (landingPage) {
-        result.landingType = isSiteLandingType(landingPage) ? 1 : 0
+      if (landingPage && isSiteLandingType(landingPage)) {
+        result.landingType = this.LANDING_TYPE_GW
       }
 
       return result
