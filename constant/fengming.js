@@ -1,3 +1,5 @@
+import { toOpt } from 'util/kit'
+
 /**
  * 赤壁状态对用户不可知
  *   - 关键词, 创意, 推广
@@ -161,23 +163,6 @@ export const DEVICE_PC = 0
 export const device = {
   0: 'PC',
   1: 'WAP'
-}
-
-// 把 key 是数字, value 是 label 的对象转换成对象的 array
-export function toOpt (obj, forceNumber = true, reverse = false) {
-  if (reverse) {
-    return Object.keys(obj)
-      .map(key => ({
-        label: key,
-        value: obj[key]
-      }))
-  } else {
-    return Object.keys(obj)
-      .map(key => ({
-        label: obj[key],
-        value: forceNumber ? (key | 0) : key
-      }))
-  }
 }
 
 export const RECOMMAND_SOURCE_FH = 'tfidf_fh'

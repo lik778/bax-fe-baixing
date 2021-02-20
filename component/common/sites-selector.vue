@@ -19,11 +19,11 @@
 
 <script>
 import BaxSelect from './select'
-import { queryMvipShops } from 'api/mvip'
+import { getUserSites } from 'api/ka'
 import { minTime } from 'util/kit'
 
 export default {
-  name: 'mvip-selector',
+  name: 'sites-selector',
   components: {
     BaxSelect
   },
@@ -47,34 +47,33 @@ export default {
     }
   },
   async mounted () {
-    await this.getMvipShops()
+    await this.inits()
     if (this.initValue) {
-      this.checkIsCurStoreValid()
+      this.checkIsValid()
     }
   },
   methods: {
-    async getMvipShops () {
-      let response
+    async inits () {
+      let sites
       try {
         this.loading = true
-        response = await minTime(queryMvipShops)
+        sites = await minTime(getUserSites)
       } catch (error) {
-        response = {}
+        sites = []
       } finally {
         this.loading = false
       }
-      const { data = [] } = response
-      this.list = data
+      this.list = sites
       this.options = this.list.map(x => ({
         label: x.name,
         value: +x.id
       }))
     },
-    findStoreByID (id) {
+    findSiteByID (id) {
       return this.list.find(x => +x.id === +id)
     },
-    checkIsCurStoreValid (id = this.initValue) {
-      const find = this.findStoreByID(id)
+    checkIsValid (id = this.initValue) {
+      const find = this.findSiteByID(id)
       if (find) {
         if (+this.value !== +id) {
           this.value = +id
@@ -85,10 +84,15 @@ export default {
       return find
     },
     onChange (v) {
-      const find = this.checkIsCurStoreValid(v)
+      const find = this.checkIsValid(v)
       if (find) {
-        this.$emit('change', find.url, find.id)
+        this.$emit('change', this.validURL(find), find.id)
       }
+    },
+    validURL (site) {
+      return site
+        ? 'http://' + site.domain + '.mvp.baixing.com'
+        : ''
     }
   }
 }
