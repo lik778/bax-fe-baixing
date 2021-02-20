@@ -70,7 +70,7 @@ export default {
       this.list = data
       this.options = this.list.map(x => ({
         label: x.name,
-        value: x.id
+        value: +x.id
       }))
     },
     findStoreByID (id) {
@@ -79,7 +79,9 @@ export default {
     checkIsCurStoreValid (id = this.initValue) {
       const find = this.findStoreByID(id)
       if (find) {
-        this.value = id
+        if (+this.value !== +id) {
+          this.value = +id
+        }
       } else {
         this.isCurStoreInValid = true
       }
