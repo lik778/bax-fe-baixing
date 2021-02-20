@@ -29,7 +29,7 @@
         </el-form-item>
         <el-form-item
           v-if="form.landingType"
-          label="投放页面"
+          label="投放地址"
           prop="landingPageId"
           key="landingPageId">
           <sites-selector
