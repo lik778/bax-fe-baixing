@@ -558,7 +558,6 @@ export default {
       this.isCreating = true
 
       const { actionTrackId, userInfo } = this
-
       const promotion = clone(this.newPromotion)
 
       track({
@@ -638,6 +637,11 @@ export default {
           kw.price = this.recommendKwPrice
         })
       }
+
+      if (!p.landingPageId) {
+        delete p.landingPageId
+      }
+
       const promotionIds = await createCampaign(fmtAreasInQwt(p, allAreas))
       // 凤凰于飞打点
       this.trackPromotionKeywords(promotionIds, p)
