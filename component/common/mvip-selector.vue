@@ -5,6 +5,7 @@
       <i class="el-icon-loading" /> 正在载入...
     </p>
     <template v-else>
+      <p v-if="isInitialValueInvalid" class="warning">所选店铺已失效，请重新选择！</p>
       <bax-select v-if="options.length"
         class="selector"
         :disabled="disabled"
@@ -44,6 +45,11 @@ export default {
       loading: false,
       list: [],
       options: []
+    }
+  },
+  computed: {
+    isInitialValueInvalid () {
+      return !this.loading && (this.initValue && !this.value)
     }
   },
   async mounted () {
@@ -107,5 +113,8 @@ p {
 }
 .loading-info {
   color: #C0C4CC;
+}
+.warning {
+  color: #ff6350;
 }
 </style>
