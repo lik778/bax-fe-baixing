@@ -10,6 +10,7 @@
         :disabled="disabled"
         :value="value"
         :options="options"
+        :clearable="false"
         @change="onChange">
       </bax-select>
       <p v-else>暂无数据</p>

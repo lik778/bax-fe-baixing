@@ -96,6 +96,8 @@ export default {
       const find = this.checkIsCurStoreValid(v)
       if (find) {
         this.$emit('change', find.url, find.id)
+      } else {
+        this.$emit('change', '', '')
       }
     }
   }

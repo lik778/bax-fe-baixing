@@ -201,15 +201,15 @@ export function getEWStatusWith (key, val) {
 }
 
 // 千词编辑物料落地页默认 type
-export const LANDING_TYPE_QIANCI = 3
-export const LANDING_TYPE_STORE = 5
+export const LANDING_TYPE_GUAN_WANG = 'GUAN_WANG'
+export const LANDING_TYPE_STORE = 'SHOP_SITE'
 
 export const landingType = {
-  [`${LANDING_TYPE_QIANCI}`]: '官网',
+  [`${LANDING_TYPE_GUAN_WANG}`]: '官网',
   [`${LANDING_TYPE_STORE}`]: '店铺'
 }
 
-export const landingTypeOpts = toOpt(landingType)
+export const landingTypeOpts = toOpt(landingType, false)
 
 /* 千词套餐类型 */
 export const ONE_WORD_TWO_PROVINCE = 'ONE_WORD_TWO_PROVINCE'

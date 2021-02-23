@@ -18,7 +18,10 @@
           <span class="keyword">{{form.coreWords.join(',')}}</span>
         </el-form-item>
         <el-form-item label="投放类型" prop="landingType">
-          <el-radio-group v-model="form.landingType">
+          <el-radio-group
+            v-model="form.landingType"
+            @change="clearLandingInput"
+          >
             <el-radio-button
               v-for="option of landingTypeOpts"
               class="landing-page-type-selector"
@@ -33,7 +36,7 @@
           prop="landingPageId"
           key="landingPageId">
           <sites-selector
-            v-if="form.landingType === LANDING_TYPE_QIANCI"
+            v-if="form.landingType === LANDING_TYPE_GUAN_WANG"
             :initValue="form.landingPageId"
             @change="setLanding"
           />
@@ -76,7 +79,7 @@
 
 <script>
 import { getRouteParam } from 'util'
-import { LANDING_TYPE_QIANCI, LANDING_TYPE_STORE, landingTypeOpts } from 'constant/qianci'
+import { LANDING_TYPE_GUAN_WANG, LANDING_TYPE_STORE, landingTypeOpts } from 'constant/qianci'
 import { getCreative, saveCreative } from 'api/qianci'
 import SitesSelector from 'com/common/sites-selector'
 import MvipSelector from 'com/common/mvip-selector'
@@ -89,7 +92,7 @@ export default {
   },
   data () {
     return {
-      LANDING_TYPE_QIANCI,
+      LANDING_TYPE_GUAN_WANG,
       LANDING_TYPE_STORE,
       landingTypeOpts,
 
@@ -97,7 +100,7 @@ export default {
       isFormEdited: false,
       form: {
         coreWords: [],
-        landingType: LANDING_TYPE_QIANCI,
+        landingType: LANDING_TYPE_GUAN_WANG,
         landingPage: '',
         landingPageId: '',
         creativeTitle: '',
@@ -105,7 +108,8 @@ export default {
       },
       rules: {
         coreWords: [{ type: 'array', required: true, message: '哇核心产品都没有' }],
-        landingType: [{ required: true, message: '请选择投放落地页类型' }],
+        landingType: [{ required: true, message: '请选择投放页面类型' }],
+        landingPage: [{ required: true, message: '请选择投放页面' }],
         landingPageId: [{ required: true, message: '请选择投放页面' }],
         creativeTitle: [
           { required: true, message: '请填写推广标题' },
@@ -145,7 +149,8 @@ export default {
     form: {
       deep: true,
       immediate: false,
-      handler () {
+      handler (v) {
+        // console.log(v)
         this.isFormEdited = true
       }
     }
@@ -174,8 +179,8 @@ export default {
       // const coreWords = ['cestest']
       // const creativeTitle = 'testtesttesttest'
       // const creativeContent = 'testtesttesttesttesttesttesttest'
-      // const landingPageId = 88
-      // const landingPage = 'www.baidu.com'
+      // const landingPageId = 176
+      // const landingPage = 'http://shop-test.baixing.cn/aaaa/'
       // const landingType = LANDING_TYPE_STORE
 
       this.form.coreWords = coreWords
@@ -185,9 +190,12 @@ export default {
       this.form.landingPage = landingPage || ''
       this.form.landingType = landingType
 
-      console.log('this.form: ', this.form)
+      // console.log('this.form: ', this.form)
 
       this.$nextTick(() => (this.isFormEdited = false))
+    },
+    clearLandingInput () {
+      this.setLanding('', '')
     },
     setLanding (url, id) {
       this.form.landingPage = url
