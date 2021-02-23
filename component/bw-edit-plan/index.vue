@@ -34,7 +34,7 @@
                 />
                 <mvip-selector
                   v-if="landingTypeDisplay === LANDING_TYPE_STORE"
-                  :initValue="form.landingPageId"
+                  :initValue="landingTypeDisplay === LANDING_TYPE_STORE && form.landingPageId || ''"
                   @change="onSelectStore"
                 />
               </div>

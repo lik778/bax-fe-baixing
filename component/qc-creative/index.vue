@@ -39,7 +39,7 @@
           />
           <mvip-selector
             v-if="form.landingType === LANDING_TYPE_STORE"
-            :initValue="form.landingPageId"
+            :initValue="form.landingType === LANDING_TYPE_STORE && form.landingPageId || ''"
             @change="setLanding"
           />
         </el-form-item>
