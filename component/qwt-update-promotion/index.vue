@@ -928,10 +928,8 @@ export default {
       }
 
       this.promotion.landingType = type
-
-      if ([1, 4].includes(type)) {
-        this.promotion.landingPage = undefined
-      }
+      this.promotion.landingPage = ''
+      this.promotion.landingPageId = ''
     },
     updateExistWord (word) {
       const {

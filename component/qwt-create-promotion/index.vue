@@ -18,7 +18,7 @@
           <div class="landingpage">
             <fm-tip class="landingpage-tip" img-url="//file.baixing.net/201903/8d224eb6179a947eecbf0fde089f7ed3.png">电话接不停小妙招</fm-tip>
             <div style="margin-bottom: 10px">
-              <el-radio-group v-model="newPromotion.landingType" size="small">
+              <el-radio-group v-model="newPromotion.landingType" @change="clearLandingInput" size="small">
                 <el-radio-button v-for="option of extendLandingTypeOpts" :key="option.value" :label="option.value">{{option.label}}</el-radio-button>
               </el-radio-group>
             </div>
@@ -491,6 +491,11 @@ export default {
       console.log(type, url, id)
       this.setLanding(type, url)
       this.newPromotion.landingPageId = id
+    },
+
+    clearLandingInput () {
+      this.newPromotion.landingPage = ''
+      this.newPromotion.landingPageId = ''
     },
 
     async onSelectAd (ad) {

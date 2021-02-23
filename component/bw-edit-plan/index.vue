@@ -12,7 +12,7 @@
           <el-form-item label="投放页面" prop="landingPage">
             <div v-if="!isErrorLandingPageShow">
               <div class="landing-type">
-                <el-radio-group v-model="landingTypeDisplay" size="small">
+                <el-radio-group v-model="landingTypeDisplay" @click="clearLandingInput" size="small">
                   <el-radio-button v-for="option of landingTypeOpts" :key="option.value" :label="option.value">{{option.label}}</el-radio-button>
                 </el-radio-group>
                 <a v-if="isSpecialLandingpage" href="javascript:;" class="qiqiaoban-warning" @click="goChargeKaSite">升级新精品官网，搜索通替你付一半</a>
@@ -224,6 +224,10 @@ export default {
         this.form.landingPage = ''
         this.form.landingType = type
       }
+    },
+    clearLandingInput () {
+      this.form.landingPage = ''
+      this.form.landingPageId = ''
     },
     handleCreativeError (message) {
       if (message) Message.error(message)
