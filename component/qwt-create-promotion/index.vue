@@ -672,7 +672,7 @@ export default {
       if ([
         LANDING_TYPE_AD,
         LANDING_TYPE_258
-      ].includes(this.newPromotion.type)) {
+      ].includes(this.newPromotion.landingType)) {
         await this.recommendByUrl()
       }
     },
