@@ -488,7 +488,6 @@ export default {
     },
 
     setLandingAndID (type, url, id) {
-      console.log(type, url, id)
       this.setLanding(type, url)
       this.newPromotion.landingPageId = id
     },
@@ -668,7 +667,15 @@ export default {
         }, 1000)
       }
     },
-
+    // 如果落地页类型为帖子（或 258 官网），则会在选择城市后自动推荐关键词
+    async checkRecommendByURL () {
+      if ([
+        LANDING_TYPE_AD,
+        LANDING_TYPE_258
+      ].includes(this.newPromotion.type)) {
+        await this.recommendByUrl()
+      }
+    },
     async recommendByUrl (opts = {}) {
       let { landingType, landingPage, areas } = this.newPromotion
       landingPage = opts.landingPage || landingPage
@@ -708,9 +715,7 @@ export default {
     async onChangeAreas (areas) {
       this.newPromotion.areas = [...areas]
       this.areaDialogVisible = false
-      if (this.newPromotion.landingType !== LANDING_TYPE_GW) {
-        await this.recommendByUrl()
-      }
+      await this.checkRecommendByURL()
     },
 
     formatterArea (name) {
@@ -722,9 +727,7 @@ export default {
       this.newPromotion.areas = [
         ...this.newPromotion.areas.filter(i => i !== c)
       ]
-      if (this.newPromotion.landingType !== LANDING_TYPE_GW) {
-        await this.recommendByUrl()
-      }
+      await this.checkRecommendByURL()
     },
     handleWxModalClose () {
       this.isWxModalVisible = false
