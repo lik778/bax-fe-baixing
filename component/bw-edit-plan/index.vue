@@ -36,6 +36,7 @@
                   v-if="landingTypeDisplay === LANDING_TYPE_STORE"
                   :initValue="landingTypeDisplay === LANDING_TYPE_STORE && form.landingPageId || ''"
                   @change="onSelectStore"
+                  @validChange="isValid => setLandingPageValidity(LANDING_TYPE_STORE, isValid)"
                 />
               </div>
             </div>
@@ -216,6 +217,13 @@ export default {
       this.form.landingType = LANDING_TYPE_STORE
       this.form.landingPageId = id
       this.form.landingPage = url
+    },
+    setLandingPageValidity (type, isValid) {
+      this.adSelectortype = ''
+      if (!isValid) {
+        this.form.landingPage = ''
+        this.form.landingType = type
+      }
     },
     handleCreativeError (message) {
       if (message) Message.error(message)

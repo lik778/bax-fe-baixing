@@ -41,6 +41,7 @@
             v-if="form.landingType === LANDING_TYPE_STORE"
             :initValue="form.landingType === LANDING_TYPE_STORE && form.landingPageId || ''"
             @change="setLanding"
+            @validChange="isValid => setLandingPageValidity(LANDING_TYPE_STORE, isValid)"
           />
         </el-form-item>
 
@@ -96,7 +97,7 @@ export default {
       isFormEdited: false,
       form: {
         coreWords: [],
-        landingType: null,
+        landingType: LANDING_TYPE_QIANCI,
         landingPage: '',
         landingPageId: '',
         creativeTitle: '',
@@ -162,21 +163,41 @@ export default {
       const response = await getCreative({ id: this.id })
       const {
         coreWords,
+        landingType,
         landingPage,
         landingPageId,
         creativeTitle,
         creativeContent
       } = response || {}
+
+      // * for test
+      // const coreWords = ['cestest']
+      // const creativeTitle = 'testtesttesttest'
+      // const creativeContent = 'testtesttesttesttesttesttesttest'
+      // const landingPageId = 88
+      // const landingPage = 'www.baidu.com'
+      // const landingType = LANDING_TYPE_STORE
+
       this.form.coreWords = coreWords
       this.form.creativeTitle = creativeTitle || ''
       this.form.creativeContent = creativeContent || ''
       this.form.landingPageId = landingPageId || ''
       this.form.landingPage = landingPage || ''
+      this.form.landingType = landingType
+
+      console.log('this.form: ', this.form)
+
       this.$nextTick(() => (this.isFormEdited = false))
     },
     setLanding (url, id) {
       this.form.landingPage = url
       this.form.landingPageId = id
+    },
+    setLandingPageValidity (type, isValid) {
+      if (!isValid) {
+        this.form.landingPage = ''
+        this.form.landingType = type
+      }
     },
     async update () {
       // 调用编辑物料会走审核。如果表单没有任何变化，则不调用接口。
