@@ -33,8 +33,9 @@
               <mvip-selector
                 v-if="getProp('landingType') === LANDING_TYPE_STORE"
                 :disabled="disabled"
-                :initValue="getProp('landingPageId')"
-                @change="setLandingPageAndID">
+                :initValue="getProp('landingType') === LANDING_TYPE_STORE && getProp('landingPageId') || ''"
+                @change="setLandingPageAndID"
+                @validChange="isValid => setLandingPageValidity(LANDING_TYPE_STORE, isValid)">
               </mvip-selector>
               <qiqiaoban-page-selector
                 v-if="getProp('landingType') === LANDING_TYPE_GW"
@@ -837,7 +838,15 @@ export default {
       this.setLandingPage(url)
       this.promotion.landingPageId = id
     },
+    setLandingPageValidity (type, isValid) {
+      this.adSelectortype = ''
+      if (!isValid) {
+        this.promotion.landingPage = ''
+        this.promotion.landingType = type
+      }
+    },
     banLandPageSelected () {
+      console.log(this.promotion)
       // 落地页404，需要更改落地页投放
       if (this.isErrorLandingPageShow && (!this.promotion.landingPage || this.promotion.landingPage === this.originPromotion.landingPage)) {
         this.adSelectortype = ''
@@ -852,6 +861,9 @@ export default {
         const landingpage = document.querySelector('.landingpage')
         landingpage.scrollIntoViewIfNeeded()
         throw this.$message.error('当前所选落地页无效，请修改推广计划的投放页面')
+      }
+      if (this.promotion.landingType === LANDING_TYPE_STORE && !this.promotion.landingPage) {
+        throw this.$message.error('当前所选店铺无效，请求该推广计划的投放页面')
       }
     },
     async onSelectAd (ad) {
@@ -1470,6 +1482,9 @@ export default {
     f2y
   },
   watch: {
+    isErrorLandingPageShow (n, o) {
+      console.log(n, o)
+    },
     'originPromotion' ({ landingPage, landingType }) {
       if (landingType === 1) {
         this.isQiqiaobanSite = isQiqiaobanSite(landingPage)
@@ -1506,11 +1521,16 @@ export default {
   async mounted () {
     await this.initCampaignInfo()
 
-    // 验证官网落地页是否404
     const { landingPage, landingType } = this.originPromotion
-    if (landingType === LANDING_TYPE_GW) {
-      // 将帖子选择组件的类型重置
+
+    // 默认不是选中帖子时，将帖子选择组件的类型重置
+    // 开始在莫名其妙的代码上堆新的莫名奇妙的代码
+    if (landingType !== LANDING_TYPE_AD) {
       this.adSelectortype = ''
+    }
+
+    // 验证官网落地页是否404
+    if (landingType === LANDING_TYPE_GW) {
       const script = document.createElement('script')
       const res = /\/\/([\w-]+)\./i.exec(landingPage)
       const [, domain] = res

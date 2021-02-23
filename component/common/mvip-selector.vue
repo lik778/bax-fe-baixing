@@ -5,7 +5,7 @@
       <i class="el-icon-loading" /> 正在载入...
     </p>
     <template v-else>
-      <p v-if="isInitialValueInvalid" class="warning">所选店铺已失效，请重新选择！</p>
+      <p v-if="isValueInvalid" class="warning">所选店铺已失效，请重新选择！</p>
       <bax-select v-if="options.length"
         class="selector"
         :disabled="disabled"
@@ -48,8 +48,10 @@ export default {
     }
   },
   computed: {
-    isInitialValueInvalid () {
-      return !this.loading && (this.initValue && !this.value)
+    isValueInvalid () {
+      const isInvalid = !this.loading && (this.initValue && !this.value)
+      this.$emit('validChange', !isInvalid)
+      return isInvalid
     }
   },
   async mounted () {
