@@ -12,15 +12,15 @@
           <el-form-item label="投放页面" prop="landingPage">
             <div v-if="!isErrorLandingPageShow">
               <div class="landing-type">
-                <el-radio-group v-model="landingTypeDisplay" @click="clearLandingInput" size="small">
+                <el-radio-group v-model="landingTypeDisplayProxy" @change="clearLandingPage" size="small">
                   <el-radio-button v-for="option of landingTypeOpts" :key="option.value" :label="option.value">{{option.label}}</el-radio-button>
                 </el-radio-group>
                 <a v-if="isSpecialLandingpage" href="javascript:;" class="qiqiaoban-warning" @click="goChargeKaSite">升级新精品官网，搜索通替你付一半</a>
               </div>
               <div class="landing-page">
                 <user-ad-selector
+                  v-if="landingTypeDisplay === LANDING_TYPE_AD"
                   :type="adSelectorType"
-                  v-if="landingTypeDisplay === 0"
                   :all-areas="allAreas"
                   :limit-mvp="false"
                   :selected-id="form.landingPageId"
@@ -34,7 +34,7 @@
                 />
                 <mvip-selector
                   v-if="landingTypeDisplay === LANDING_TYPE_STORE"
-                  :initValue="landingTypeDisplay === LANDING_TYPE_STORE && form.landingPageId || ''"
+                  :initValue="form.landingPageId"
                   @change="onSelectStore"
                   @validChange="isValid => setLandingPageValidity(LANDING_TYPE_STORE, isValid)"
                 />
@@ -95,7 +95,8 @@ export default {
       LANDING_TYPE_AD,
       LANDING_TYPE_STORE,
       promotes: [],
-      landingTypeDisplay: 0,
+      landingTypeDisplay: null,
+      landingTypeDisplayProxy: 0,
       isErrorLandingPageShow: false,
       isSpecialLandingpage: false,
       form: {
@@ -108,7 +109,7 @@ export default {
       },
       rules: {
         promoteIds: [{ required: true, message: '请勾选关键词' }],
-        landingPage: [{ required: true, message: '请选择投放页面' }]
+        landingPage: [{ required: true, message: '请选择投放页面', trigger: 'blur' }]
       },
       buttonText: '创建标王计划',
 
@@ -130,6 +131,14 @@ export default {
       return this.promotes.some(p => PROMOTE_STATUS_OFFLINE.includes(p.status))
     }
   },
+  watch: {
+    // TODO refactor
+    landingTypeDisplayProxy (n) {
+      this.$nextTick(() => {
+        this.landingTypeDisplay = n
+      })
+    }
+  },
   async mounted () {
     const { promoteId, orderIds: orderIdsString, notice } = this.$route.query
     if (promoteId) {
@@ -144,7 +153,7 @@ export default {
         creativeContent: creativeContent || '',
         landingPageId: landingPageId || ''
       }
-      this.landingTypeDisplay = landingType || 0
+      this.landingTypeDisplayProxy = landingType || 0
       this.buttonText = '更新标王计划'
     }
     if (orderIdsString) {
@@ -225,7 +234,7 @@ export default {
         this.form.landingType = type
       }
     },
-    clearLandingInput () {
+    clearLandingPage () {
       this.form.landingPage = ''
       this.form.landingPageId = ''
     },
