@@ -319,7 +319,7 @@ export default {
     },
     async sumbitWords () {
       const { sales_id: salesId, user_id: targetUserId } = this.$route.query
-      const { type, keywords, areas, productId } = this.form
+      const { type, keywords, areas, skuId } = this.form
       const coreWordInfos = Array(this.keywordOptions.length)
         .fill('')
         .map((x, idx) => ({
@@ -333,7 +333,7 @@ export default {
         coreWordInfos,
         salesId,
         targetUserId,
-        productId
+        skuId
       }
 
       this.loading.submit = true

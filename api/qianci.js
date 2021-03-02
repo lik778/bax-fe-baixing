@@ -141,3 +141,13 @@ export async function getSnapshot(url) {
   // * test file 'https://test-files.obs.cn-east-3.myhuaweicloud.com/snapshot.html.gz'
   return await fetchWithoutPrefix.get(url)
 }
+
+
+// 获取易慧推套餐
+export async function getPackageList(opts) {
+  return (await qianci
+    .get('/package/list')
+    .query(opts)
+    .json())
+    .data
+}

@@ -212,5 +212,5 @@ export const PACKAGE_TYPE = {
 export const SEO_WAN_CI_91 = 'WAN_CI_91'
 export const SEO_QIAN_CI_INSTATION = 'QIAN_CI_INSTATION'
 
-export const PRODUCT_OPTIMIZED = 1
-export const PRODUCT_EXPERIENCE = 2
+export const SKU_OPTIMIZED = 1
+export const SKU_EXPERIENCE = 2

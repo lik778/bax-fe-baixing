@@ -13,27 +13,27 @@
           @submit.native.prevent
         >
           <!-- 选择套餐 -->
-          <el-form-item label="套餐版本" prop="productId">
+          <el-form-item label="套餐版本" prop="skuId">
             <div class="package-container">
               <div
-                v-for="item in displayProducts"
-                :class="['type-card', form.productId == item.id ? 'active' : '']"
+                v-for="item in displaySkuList"
+                :class="['type-card', form.skuId == item.skuId ? 'active' : '']"
                 :key="item.id"
-                @click="() => (isEdit ? '' : toggleProduct(item))"
+                @click="() => (isEdit ? '' : toggleSku(item))"
               >
                 <div class="hotsale-icon" v-if="item.isHot" />
                 <div class="card-title">
-                  <span class="title">{{item.title}}</span>
-                  ({{PACKAGE_TYPE[item.type]}}) | {{item.days}}天
+                  <span class="title">{{item.name}}</span>
+                  ({{PACKAGE_TYPE[item.skuType]}}) | {{item.duration}}天
                 </div>
                 <div class="card-attrs">
-                  <div class="item" v-for="attr in item.attrs" :key="attr.name">
+                  <div class="item" v-for="attr in item.productShowDetail" :key="attr.name">
                     <span class="name">{{attr.name}}</span>
-                    <span class="num">{{attr.num}}{{attr.unit}}</span>
+                    <span class="num">{{attr.numUnit}}</span>
                     <span class="optimi-num" v-if="attr.extra">{{attr.extra}}</span>
                   </div>
                 </div>
-                <div class="price">¥{{item.price}}<span class="unit">元</span></div>
+                <div class="price">¥{{$formatter.f2y(item.price)}}<span class="unit">元</span></div>
               </div>
             </div>
           </el-form-item>
@@ -120,9 +120,9 @@
 </template>
 
 <script>
-import { getPromote } from 'api/qianci'
+import { getPromote, getPackageList } from 'api/qianci'
 import QcAreaSelector from 'com/qc-create-promote/qc-area-selector'
-import { ONE_WORD_TWO_PROVINCE, THREE_WORD_ONE_PROVINCE, PACKAGE_TYPE, PRODUCT_OPTIMIZED, PRODUCT_EXPERIENCE } from 'constant/qianci'
+import { ONE_WORD_TWO_PROVINCE, THREE_WORD_ONE_PROVINCE, PACKAGE_TYPE, SKU_OPTIMIZED } from 'constant/qianci'
 import SelectKeywords from './select-keywords'
 import gStore from '../store'
 
@@ -147,7 +147,7 @@ export default {
       form: {
         keywords: [],
         areas: [],
-        productId: PRODUCT_OPTIMIZED,
+        skuId: SKU_OPTIMIZED,
         type: ONE_WORD_TWO_PROVINCE
       },
       rules: {
@@ -173,64 +173,7 @@ export default {
       keywordsPanelVisible: false,
       isEdit: false,
       options: {
-        products: [
-          {
-            title: '臻选版',
-            type: ONE_WORD_TWO_PROVINCE,
-            days: 180,
-            price: 13800,
-            isHot: true,
-            id: PRODUCT_OPTIMIZED,
-            attrs: [
-              {
-                name: '百度竞价词.双端投放',
-                num: '1000',
-                unit: '个',
-                extra: '20个臻选词'
-              },
-              {
-                name: '高权重独享域名',
-                num: '1',
-                unit: '个',
-                extra: ''
-              },
-              {
-                name: 'AI发文',
-                num: '50',
-                unit: '篇',
-                extra: ''
-              },
-              {
-                name: '百度快照词.双端投放',
-                num: '200',
-                unit: '个',
-                extra: ''
-              }
-            ]
-          },
-          {
-            title: '体验版',
-            type: ONE_WORD_TWO_PROVINCE,
-            days: 180,
-            price: 6980,
-            isHot: false,
-            id: PRODUCT_EXPERIENCE,
-            attrs: [
-              {
-                name: '百度竞价词.双端投放',
-                num: '1000',
-                unit: '个',
-                extra: ''
-              },
-              {
-                name: '高权重独享域名',
-                num: '1',
-                unit: '个',
-                extra: ''
-              }
-            ]
-          }
-        ]
+        skuList: []
       },
       PACKAGE_TYPE
     }
@@ -257,8 +200,8 @@ export default {
     restAreaLength () {
       return this.maxAreaLength - this.form.areas.length
     },
-    displayProducts () {
-      const raw = this.options.products
+    displaySkuList () {
+      const raw = this.options.skuList || []
       return this.isEdit ? raw.filter((x) => x.id === this.form.type) : raw
     }
   },
@@ -301,6 +244,8 @@ export default {
     }
   },
   async mounted () {
+    // 获取产品列表
+    this.options.skuList = ((await getPackageList()) || []).sort(o => o.order)
     const { id } = this.$route.query
 
     // 获取千词地区信息
@@ -315,9 +260,9 @@ export default {
     }
   },
   methods: {
-    toggleProduct (product) {
-      this.form.productId = product.id
-      this.form.type = product.type
+    toggleSku (product) {
+      this.form.skuId = product.skuId
+      this.form.type = product.skuType
       this.tip.keyword = ''
       this.initFormVals()
     },
