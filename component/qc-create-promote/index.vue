@@ -202,7 +202,7 @@ export default {
     },
     displaySkuList () {
       const raw = this.options.skuList || []
-      return this.isEdit ? raw.filter((x) => x.id === this.form.type) : raw
+      return this.isEdit ? raw.filter((x) => x.skuId === this.form.skuId) : raw
     }
   },
   watch: {
@@ -245,7 +245,13 @@ export default {
   },
   async mounted () {
     // 获取产品列表
-    this.options.skuList = ((await getPackageList()) || []).sort(o => o.order)
+    const skuList = (await getPackageList()) || []
+    skuList.sort((a, b) => a.order - b.order)
+
+    this.options.skuList = skuList.map(sku => {
+      sku.productShowDetail.sort((a, b) => a.order - b.order)
+      return sku
+    })
     const { id } = this.$route.query
 
     // 获取千词地区信息
@@ -257,6 +263,8 @@ export default {
       this.isEdit = true
       const promote = await getPromote(id)
       this.promote = promote
+      this.form.skuId = promote.skuId
+      this.form.type = (skuList.find(o => o.skuId === this.form.skuId) || {}).skuType
     }
   },
   methods: {
