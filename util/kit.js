@@ -338,3 +338,43 @@ export function getIP () {
     })()
   })
 }
+
+/**
+ * 设置异步任务的最小时间（用来设置 Loading 效果的最小时间）
+ * @param {Promise} promise 异步任务
+ * @param {Number} time=800 最小完成时间
+ * @param {Number} threshold=50 触发阈值，只有超过阈值才会走最小完成时间，否则立即返回
+ */
+export async function minTime (promise, time = 800, threshold = 50) {
+  const start = +new Date()
+  const res = await promise()
+  const end = +new Date()
+  return await new Promise(resolve => {
+    const consumeTime = time - (end - start)
+    if (consumeTime > 0 && consumeTime < threshold) {
+      resolve(res)
+    } else {
+      const sleepTime = Math.max(0, consumeTime)
+      setTimeout(() => {
+        resolve(res)
+      }, sleepTime)
+    }
+  })
+}
+
+// 对象转 Select Options
+export function toOpt (obj, forceNumber = true, reverse = false) {
+  if (reverse) {
+    return Object.keys(obj)
+      .map(key => ({
+        label: key,
+        value: obj[key]
+      }))
+  } else {
+    return Object.keys(obj)
+      .map(key => ({
+        label: obj[key],
+        value: forceNumber ? (key | 0) : key
+      }))
+  }
+}

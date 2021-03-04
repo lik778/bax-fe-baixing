@@ -18,7 +18,7 @@
           <div class="landingpage">
             <fm-tip class="landingpage-tip" img-url="//file.baixing.net/201903/8d224eb6179a947eecbf0fde089f7ed3.png">电话接不停小妙招</fm-tip>
             <div style="margin-bottom: 10px">
-              <el-radio-group v-model="newPromotion.landingType" size="small">
+              <el-radio-group v-model="newPromotion.landingType" @change="clearLandingInput" size="small">
                 <el-radio-button v-for="option of extendLandingTypeOpts" :key="option.value" :label="option.value">{{option.label}}</el-radio-button>
               </el-radio-group>
             </div>
@@ -31,19 +31,21 @@
                 :selected-id="newPromotion.landingPageId"
                 @select-ad="onSelectAd"
               />
-
               <qiqiaoban-page-selector
                 v-if="newPromotion.landingType === LANDING_TYPE_GW"
                 :value="newPromotion.landingPage"
                 @change="v => setLanding(LANDING_TYPE_GW, v)"
               />
-
               <ka-258-selector
                 v-if="newPromotion.landingType === LANDING_TYPE_258"
                 :value="newPromotion.landingPage"
                 @change="v => setLanding(LANDING_TYPE_258, v)"
               />
-
+              <mvip-selector
+                v-if="newPromotion.landingType === LANDING_TYPE_STORE"
+                :initValue="newPromotion.landingPageId"
+                @change="(...args) => setLandingAndID(LANDING_TYPE_STORE, ...args)"
+              />
             </div>
           </div>
         </div>
@@ -212,6 +214,7 @@ import PromotionChargeTip from 'com/widget/promotion-charge-tip'
 import UserAdSelector from 'com/common/user-ad-selector'
 import CreativeEditor from 'com/widget/creative-editor'
 import Ka258Selector from 'com/common/ka-258-selector'
+import MvipSelector from 'com/common/mvip-selector'
 import AreaSelector from 'com/common/area-selector'
 import ChargeDialog from 'com/common/charge-dialog'
 import CpcPriceTip from 'com/widget/cpc-price-tip'
@@ -244,6 +247,7 @@ import {
   LANDING_TYPE_AD,
   LANDING_TYPE_GW,
   LANDING_TYPE_258,
+  LANDING_TYPE_STORE,
   RECOMMAND_SOURCE_FH,
   NEW_RECOMMAND_SOURCE_FH
 } from 'constant/fengming'
@@ -279,6 +283,7 @@ export default {
     PromotionCreativeTip,
     PromotionAreaLimitTip,
     QiqiaobanPageSelector,
+    MvipSelector,
     PromotionChargeTip,
     UserAdSelector,
     CreativeEditor,
@@ -318,6 +323,7 @@ export default {
       LANDING_TYPE_AD,
       LANDING_TYPE_GW,
       LANDING_TYPE_258,
+      LANDING_TYPE_STORE,
       RECOMMAND_SOURCES,
 
       searchRecommendsVisible: false,
@@ -481,6 +487,16 @@ export default {
       this.newPromotion.landingPage = url
     },
 
+    setLandingAndID (type, url, id) {
+      this.setLanding(type, url)
+      this.newPromotion.landingPageId = id
+    },
+
+    clearLandingInput () {
+      this.newPromotion.landingPage = ''
+      this.newPromotion.landingPageId = ''
+    },
+
     async onSelectAd (ad) {
       // 【凤鸣】落地页选择搬家、金融类帖子的计划渠道默认不选中神马
       const categories = ['banjia', 'jinrongfuwu', 'licaifuwu', 'kuaijijianzhi']
@@ -546,7 +562,6 @@ export default {
       this.isCreating = true
 
       const { actionTrackId, userInfo } = this
-
       const promotion = clone(this.newPromotion)
 
       track({
@@ -626,6 +641,11 @@ export default {
           kw.price = this.recommendKwPrice
         })
       }
+
+      if (!p.landingPageId) {
+        delete p.landingPageId
+      }
+
       const promotionIds = await createCampaign(fmtAreasInQwt(p, allAreas))
       // 凤凰于飞打点
       this.trackPromotionKeywords(promotionIds, p)
@@ -647,7 +667,15 @@ export default {
         }, 1000)
       }
     },
-
+    // 如果落地页类型为帖子（或 258 官网），则会在选择城市后自动推荐关键词
+    async checkRecommendByURL () {
+      if ([
+        LANDING_TYPE_AD,
+        LANDING_TYPE_258
+      ].includes(this.newPromotion.landingType)) {
+        await this.recommendByUrl()
+      }
+    },
     async recommendByUrl (opts = {}) {
       let { landingType, landingPage, areas } = this.newPromotion
       landingPage = opts.landingPage || landingPage
@@ -687,9 +715,7 @@ export default {
     async onChangeAreas (areas) {
       this.newPromotion.areas = [...areas]
       this.areaDialogVisible = false
-      if (this.newPromotion.landingType !== LANDING_TYPE_GW) {
-        await this.recommendByUrl()
-      }
+      await this.checkRecommendByURL()
     },
 
     formatterArea (name) {
@@ -701,9 +727,7 @@ export default {
       this.newPromotion.areas = [
         ...this.newPromotion.areas.filter(i => i !== c)
       ]
-      if (this.newPromotion.landingType !== LANDING_TYPE_GW) {
-        await this.recommendByUrl()
-      }
+      await this.checkRecommendByURL()
     },
     handleWxModalClose () {
       this.isWxModalVisible = false

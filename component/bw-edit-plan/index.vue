@@ -12,26 +12,31 @@
           <el-form-item label="投放页面" prop="landingPage">
             <div v-if="!isErrorLandingPageShow">
               <div class="landing-type">
-                <el-radio-group v-model="landingTypeDisplay" size="small">
+                <el-radio-group v-model="landingTypeDisplayProxy" @change="clearLandingPage" size="small">
                   <el-radio-button v-for="option of landingTypeOpts" :key="option.value" :label="option.value">{{option.label}}</el-radio-button>
                 </el-radio-group>
                 <a v-if="isSpecialLandingpage" href="javascript:;" class="qiqiaoban-warning" @click="goChargeKaSite">升级新精品官网，搜索通替你付一半</a>
               </div>
               <div class="landing-page">
                 <user-ad-selector
+                  v-if="landingTypeDisplay === LANDING_TYPE_AD"
                   :type="adSelectorType"
-                  v-if="landingTypeDisplay === 0"
                   :all-areas="allAreas"
                   :limit-mvp="false"
                   :selected-id="form.landingPageId"
                   @select-ad="onSelectAd"
                 />
-
                 <qiqiaoban-page-selector
                   v-if="landingTypeDisplay === 1 || landingTypeDisplay === 2"
                   :value="form.landingPage"
                   :is-special-landingpage="isSpecialLandingpage"
                   @change="onQiqiaobanChange"
+                />
+                <mvip-selector
+                  v-if="landingTypeDisplay === LANDING_TYPE_STORE"
+                  :initValue="form.landingPageId"
+                  @change="onSelectStore"
+                  @validChange="isValid => setLandingPageValidity(LANDING_TYPE_STORE, isValid)"
                 />
               </div>
             </div>
@@ -60,12 +65,17 @@
 <script>
 import { isQiqiaobanSite, isWeishopSite, getLandingpageByPageProtocol } from 'util/kit'
 import { getPromoteById, getPromtesByOrders, updatePromote, getQiqiaobanCoupon } from 'api/biaowang'
-import { landingTypeOpts, SEM_PLATFORM_BAIDU, LANDING_TYPE_AD } from 'constant/fengming'
-import { AUDIT_STATUS_REJECT, PROMOTE_STATUS_OFFLINE, PROMOTE_STATUS_PENDING_EDIT } from 'constant/biaowang'
+import { landingTypeOpts, SEM_PLATFORM_BAIDU, LANDING_TYPE_AD, LANDING_TYPE_STORE } from 'constant/fengming'
+import {
+  AUDIT_STATUS_REJECT,
+  PROMOTE_STATUS_OFFLINE,
+  PROMOTE_STATUS_PENDING_EDIT
+} from 'constant/biaowang'
 import { Message } from 'element-ui'
 import UserAdSelector from 'com/common/user-ad-selector'
 import CreativeEditor from 'com/widget/creative-editor'
 import QiqiaobanPageSelector from 'com/common/qiqiaoban-page-selector'
+import MvipSelector from 'com/common/mvip-selector'
 import { queryAds } from 'api/fengming'
 
 export default {
@@ -76,13 +86,17 @@ export default {
   components: {
     UserAdSelector,
     CreativeEditor,
-    QiqiaobanPageSelector
+    QiqiaobanPageSelector,
+    MvipSelector
   },
   data () {
     return {
       SEM_PLATFORM_BAIDU,
+      LANDING_TYPE_AD,
+      LANDING_TYPE_STORE,
       promotes: [],
-      landingTypeDisplay: 0,
+      landingTypeDisplay: null,
+      landingTypeDisplayProxy: 0,
       isErrorLandingPageShow: false,
       isSpecialLandingpage: false,
       form: {
@@ -95,7 +109,7 @@ export default {
       },
       rules: {
         promoteIds: [{ required: true, message: '请勾选关键词' }],
-        landingPage: [{ required: true, message: '请选择投放页面' }]
+        landingPage: [{ required: true, message: '请选择投放页面', trigger: 'blur' }]
       },
       buttonText: '创建标王计划',
 
@@ -117,6 +131,14 @@ export default {
       return this.promotes.some(p => PROMOTE_STATUS_OFFLINE.includes(p.status))
     }
   },
+  watch: {
+    // TODO refactor
+    landingTypeDisplayProxy (n) {
+      this.$nextTick(() => {
+        this.landingTypeDisplay = n
+      })
+    }
+  },
   async mounted () {
     const { promoteId, orderIds: orderIdsString, notice } = this.$route.query
     if (promoteId) {
@@ -131,7 +153,7 @@ export default {
         creativeContent: creativeContent || '',
         landingPageId: landingPageId || ''
       }
-      this.landingTypeDisplay = landingType || 0
+      this.landingTypeDisplayProxy = landingType || 0
       this.buttonText = '更新标王计划'
     }
     if (orderIdsString) {
@@ -199,6 +221,22 @@ export default {
 
       this.form.creativeTitle = ''
       this.form.creativeContent = ''
+    },
+    onSelectStore (url, id) {
+      this.form.landingType = LANDING_TYPE_STORE
+      this.form.landingPageId = id
+      this.form.landingPage = url
+    },
+    setLandingPageValidity (type, isValid) {
+      this.adSelectortype = ''
+      if (!isValid) {
+        this.form.landingPage = ''
+        this.form.landingType = type
+      }
+    },
+    clearLandingPage () {
+      this.form.landingPage = ''
+      this.form.landingPageId = ''
     },
     handleCreativeError (message) {
       if (message) Message.error(message)
