@@ -21,7 +21,7 @@
                 :key="item.id"
                 @click="() => (isEdit ? '' : toggleSku(item))"
               >
-                <div class="hotsale-icon" v-if="item.isHot" />
+                <div class="hotsale-icon" v-if="item.enableHot" />
                 <div class="card-title">
                   <span class="title">{{item.name}}</span>
                   ({{PACKAGE_TYPE[item.skuType]}}) | {{item.duration}}天
