@@ -1,4 +1,4 @@
-import { toOpt } from './fengming'
+import { toOpt } from 'util/kit'
 
 const _AUDIT_STATUS_REJECT_FROM_QUALITY_ROBOT = -11
 const _AUDIT_STATUS_REJECT_FROM_QUALITY = -12

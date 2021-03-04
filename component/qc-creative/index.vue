@@ -15,22 +15,36 @@
         <el-form-item><span class="header">基本信息</span></el-form-item>
 
         <el-form-item label="核心产品" prop="coreWords">
-          <span>{{form.coreWords.join(',')}}</span>
+          <span class="keyword">{{form.coreWords.join(',')}}</span>
         </el-form-item>
-        <el-form-item label="投放页面" prop="landingPageId">
-          <!-- * 目前没有官网过期逻辑的判断，无此需求 -->
-          <el-cascader
-            v-model="form.landingPageId"
-            clearable
-            :options="options.sites"
-            @change="onSelectSite"
+        <el-form-item label="投放类型" prop="landingType">
+          <el-radio-group
+            v-model="form.landingType"
+            @change="clearLandingInput"
+          >
+            <el-radio-button
+              v-for="option of landingTypeOpts"
+              class="landing-page-type-selector"
+              :key="option.value"
+              :label="option.value"
+            >{{option.label}}</el-radio-button>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item
+          v-if="form.landingType"
+          label="投放地址"
+          prop="landingPageId"
+          key="landingPageId">
+          <sites-selector
+            v-if="form.landingType === LANDING_TYPE_GUAN_WANG"
+            :initValue="form.landingPageId"
+            @change="setLanding"
           />
-          <el-input
-            v-if="form.landingPageId"
-            class="payment-url-input"
-            v-model="form.landingPage"
-            readonly
-            clearable
+          <mvip-selector
+            v-if="form.landingType === LANDING_TYPE_STORE"
+            :initValue="form.landingType === LANDING_TYPE_STORE && form.landingPageId || ''"
+            @change="setLanding"
+            @validChange="isValid => setLandingPageValidity(LANDING_TYPE_STORE, isValid)"
           />
         </el-form-item>
 
@@ -65,18 +79,28 @@
 
 <script>
 import { getRouteParam } from 'util'
-import { QIANCI_LANDING_TYPE } from 'constant/qianci'
-import { getUserSites } from 'api/ka'
+import { LANDING_TYPE_GUAN_WANG, LANDING_TYPE_STORE, landingTypeOpts } from 'constant/qianci'
 import { getCreative, saveCreative } from 'api/qianci'
+import SitesSelector from 'com/common/sites-selector'
+import MvipSelector from 'com/common/mvip-selector'
 
 export default {
   name: 'creative-manage',
+  components: {
+    SitesSelector,
+    MvipSelector
+  },
   data () {
     return {
+      LANDING_TYPE_GUAN_WANG,
+      LANDING_TYPE_STORE,
+      landingTypeOpts,
+
       id: null,
       isFormEdited: false,
       form: {
         coreWords: [],
+        landingType: LANDING_TYPE_GUAN_WANG,
         landingPage: '',
         landingPageId: '',
         creativeTitle: '',
@@ -84,6 +108,8 @@ export default {
       },
       rules: {
         coreWords: [{ type: 'array', required: true, message: '哇核心产品都没有' }],
+        landingType: [{ required: true, message: '请选择投放页面类型' }],
+        landingPage: [{ required: true, message: '请选择投放页面' }],
         landingPageId: [{ required: true, message: '请选择投放页面' }],
         creativeTitle: [
           { required: true, message: '请填写推广标题' },
@@ -123,7 +149,8 @@ export default {
     form: {
       deep: true,
       immediate: false,
-      handler () {
+      handler (v) {
+        // console.log(v)
         this.isFormEdited = true
       }
     }
@@ -133,7 +160,6 @@ export default {
     if (!this.id) {
       throw new Error('No ID on qc-creative page.')
     } else {
-      await this.initSites()
       this.initCreative()
     }
   },
@@ -142,28 +168,44 @@ export default {
       const response = await getCreative({ id: this.id })
       const {
         coreWords,
+        landingType,
         landingPage,
+        landingPageId,
         creativeTitle,
         creativeContent
       } = response || {}
-      const targetSite = this.options.sites.find(site => (landingPage || '').includes(site.domain))
+
+      // * for test
+      // const coreWords = ['cestest']
+      // const creativeTitle = 'testtesttesttest'
+      // const creativeContent = 'testtesttesttesttesttesttesttest'
+      // const landingPageId = 176
+      // const landingPage = 'http://shop-test.baixing.cn/aaaa/'
+      // const landingType = LANDING_TYPE_STORE
 
       this.form.coreWords = coreWords
-      this.form.creativeTitle = creativeTitle
-      this.form.creativeContent = creativeContent
-      if (targetSite) {
-        this.form.landingPageId = String(targetSite.id)
-        this.form.landingPage = landingPage
-      }
+      this.form.creativeTitle = creativeTitle || ''
+      this.form.creativeContent = creativeContent || ''
+      this.form.landingPageId = landingPageId || ''
+      this.form.landingPage = landingPage || ''
+      this.form.landingType = landingType
+
+      // console.log('this.form: ', this.form)
+
       this.$nextTick(() => (this.isFormEdited = false))
     },
-    async initSites () {
-      const sites = await getUserSites()
-      this.options.sites = (sites || []).map(x => ({
-        ...x,
-        label: x.name,
-        value: String(x.id)
-      }))
+    clearLandingInput () {
+      this.setLanding('', '')
+    },
+    setLanding (url, id) {
+      this.form.landingPage = url
+      this.form.landingPageId = id
+    },
+    setLandingPageValidity (type, isValid) {
+      if (!isValid) {
+        this.form.landingPage = ''
+        this.form.landingType = type
+      }
     },
     async update () {
       // 调用编辑物料会走审核。如果表单没有任何变化，则不调用接口。
@@ -183,8 +225,7 @@ export default {
           this.loading.form = true
           const query = {
             ...this.form,
-            id: this.id,
-            landingType: QIANCI_LANDING_TYPE
+            id: this.id
           }
           try {
             await saveCreative(query)
@@ -198,19 +239,6 @@ export default {
           })
         }
       })
-    },
-    onSelectSite (ids) {
-      if (!ids) return null
-
-      const id = ids.length && ids[0]
-      this.form.landingPageId = String(id)
-      const handle = this.options.sites.find(x => String(x.value) === String(id))
-      this.reGenURL(handle)
-    },
-    reGenURL (site) {
-      this.form.landingPage = site
-        ? 'http://' + site.domain + '.mvp.baixing.com'
-        : ''
     }
   }
 }
@@ -229,6 +257,20 @@ export default {
 }
 .payment-url-input {
   margin-top: 16px;
+  .el-input__inner {
+    color: #888;
+  }
+}
+.el-form {
+  .keyword {
+    font-weight: bold;
+  }
+  .landing-page-type-selector {
+    cursor: pointer;
+  }
+  .el-form-item:last-child {
+    margin-top: 35px;
+  }
 }
 </style>
 

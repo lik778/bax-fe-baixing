@@ -1,3 +1,5 @@
+import { toOpt } from 'util/kit'
+
 // 投放状态
 export const PROMOTE_PAID = 'PAID'
 export const PROMOTE_STATUS_PENDING_EDIT = 'PENDING_EDIT'
@@ -199,7 +201,15 @@ export function getEWStatusWith (key, val) {
 }
 
 // 千词编辑物料落地页默认 type
-export const QIANCI_LANDING_TYPE = 3
+export const LANDING_TYPE_GUAN_WANG = 'GUAN_WANG'
+export const LANDING_TYPE_STORE = 'SHOP_SITE'
+
+export const landingType = {
+  [`${LANDING_TYPE_GUAN_WANG}`]: '官网',
+  [`${LANDING_TYPE_STORE}`]: '店铺'
+}
+
+export const landingTypeOpts = toOpt(landingType, false)
 
 /* 千词套餐类型 */
 export const ONE_WORD_TWO_PROVINCE = 'ONE_WORD_TWO_PROVINCE'

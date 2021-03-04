@@ -30,7 +30,13 @@
                 :selected-id="getProp('landingPageId')"
                 @select-ad="ad => onSelectAd(ad)">
               </user-ad-selector>
-
+              <mvip-selector
+                v-if="getProp('landingType') === LANDING_TYPE_STORE"
+                :disabled="disabled"
+                :initValue="getProp('landingType') === LANDING_TYPE_STORE && getProp('landingPageId') || ''"
+                @change="setLandingPageAndID"
+                @validChange="isValid => setLandingPageValidity(LANDING_TYPE_STORE, isValid)">
+              </mvip-selector>
               <qiqiaoban-page-selector
                 v-if="getProp('landingType') === LANDING_TYPE_GW"
                 :disabled="disabled"
@@ -38,14 +44,12 @@
                 :is-special-landingpage="isQiqiaobanSite"
                 @change="setLandingPage">
               </qiqiaoban-page-selector>
-
               <ka-258-selector
                 v-if="getProp('landingType') === LANDING_TYPE_258"
                 :disabled="disabled"
                 :value="getProp('landingPage')"
                 @change="setLandingPage"
               />
-
               <p v-if="disabled" class="authing-tip">
                 您的推广在审核中，审核通过后可修改落地页，感谢配合！
               </p>
@@ -349,6 +353,7 @@ import PromotionChargeTip from 'com/widget/promotion-charge-tip'
 import PromotionKeywordTip from 'com/widget/promotion-keyword-tip'
 import DurationSelector from 'com/common/duration-selector'
 import UserAdSelector from 'com/common/user-ad-selector'
+import MvipSelector from 'com/common/mvip-selector'
 import CreativeEditor from 'com/widget/creative-editor'
 import Ka258Selector from 'com/common/ka-258-selector'
 import KeywordList from 'com/common/qwt-keyword-list'
@@ -392,6 +397,7 @@ import {
   LANDING_TYPE_AD,
   LANDING_TYPE_GW,
   LANDING_TYPE_258,
+  LANDING_TYPE_STORE,
 
   landingTypeOpts,
 
@@ -457,6 +463,7 @@ export default {
     DurationSelector,
     CreativeEditor,
     UserAdSelector,
+    MvipSelector,
     Ka258Selector,
     AreaSelector,
     KeywordList,
@@ -520,6 +527,7 @@ export default {
       LANDING_TYPE_AD,
       LANDING_TYPE_GW,
       LANDING_TYPE_258,
+      LANDING_TYPE_STORE,
 
       moreSettingDisplay: false,
       // 是否为老官网
@@ -826,7 +834,19 @@ export default {
     setLandingPage (url) {
       this.promotion.landingPage = url
     },
+    setLandingPageAndID (url, id) {
+      this.setLandingPage(url)
+      this.promotion.landingPageId = id
+    },
+    setLandingPageValidity (type, isValid) {
+      this.adSelectortype = ''
+      if (!isValid) {
+        this.promotion.landingPage = ''
+        this.promotion.landingType = type
+      }
+    },
     banLandPageSelected () {
+      console.log(this.promotion)
       // 落地页404，需要更改落地页投放
       if (this.isErrorLandingPageShow && (!this.promotion.landingPage || this.promotion.landingPage === this.originPromotion.landingPage)) {
         this.adSelectortype = ''
@@ -841,6 +861,9 @@ export default {
         const landingpage = document.querySelector('.landingpage')
         landingpage.scrollIntoViewIfNeeded()
         throw this.$message.error('当前所选落地页无效，请修改推广计划的投放页面')
+      }
+      if (this.promotion.landingType === LANDING_TYPE_STORE && !this.promotion.landingPage) {
+        throw this.$message.error('当前所选店铺无效，请求该推广计划的投放页面')
       }
     },
     async onSelectAd (ad) {
@@ -905,10 +928,8 @@ export default {
       }
 
       this.promotion.landingType = type
-
-      if ([1, 4].includes(type)) {
-        this.promotion.landingPage = undefined
-      }
+      this.promotion.landingPage = ''
+      this.promotion.landingPageId = ''
     },
     updateExistWord (word) {
       const {
@@ -959,48 +980,44 @@ export default {
       const {
         creativeContent,
         creativeTitle,
-
         landingPage
       } = this.promotion
 
-      const changed = (now, ori) => {
-        if (now === undefined) {
-          return false
-        }
-
-        return now !== ori
+      const changed = (now, origin) => {
+        return now !== undefined
+          ? now !== origin
+          : false
       }
 
       if (creativeContent === '') {
         throw new Error('请填写推广内容')
       }
-
       if (creativeTitle === '') {
         throw new Error('请填写推广标题')
       }
-
       if (landingPage === '') {
         throw new Error('请填写投放页面')
       }
 
       const result = {}
-
       if (changed(creativeContent, originCreativeContent) ||
         changed(creativeTitle, originCreativeTitle)) {
         result.creativeContent = this.getProp('creativeContent')
         result.creativeTitle = this.getProp('creativeTitle')
       }
-
       if (changed(landingPage, originLandingPage)) {
         // 忽略如下情形: 改了 type, 不改 page
         //   - changed(landingType, originLandingType)
         result.landingType = this.getProp('landingType')
         result.landingPage = this.getProp('landingPage')
+        // 只有选择店铺时需要传 landingPageId 字段
+        if (this.getProp('landingType') === this.LANDING_TYPE_STORE) {
+          result.landingPageId = this.getProp('landingPageId')
+        }
       }
-
       // FIX: 修复 landingPage landingType 错误
-      if (landingPage) {
-        result.landingType = isSiteLandingType(landingPage) ? 1 : 0
+      if (landingPage && isSiteLandingType(landingPage)) {
+        result.landingType = this.LANDING_TYPE_GW
       }
 
       return result
@@ -1463,6 +1480,9 @@ export default {
     f2y
   },
   watch: {
+    isErrorLandingPageShow (n, o) {
+      console.log(n, o)
+    },
     'originPromotion' ({ landingPage, landingType }) {
       if (landingType === 1) {
         this.isQiqiaobanSite = isQiqiaobanSite(landingPage)
@@ -1499,11 +1519,16 @@ export default {
   async mounted () {
     await this.initCampaignInfo()
 
-    // 验证官网落地页是否404
     const { landingPage, landingType } = this.originPromotion
-    if (landingType === LANDING_TYPE_GW) {
-      // 将帖子选择组件的类型重置
+
+    // 默认不是选中帖子时，将帖子选择组件的类型重置
+    // 开始在莫名其妙的代码上堆新的莫名奇妙的代码
+    if (landingType !== LANDING_TYPE_AD) {
       this.adSelectortype = ''
+    }
+
+    // 验证官网落地页是否404
+    if (landingType === LANDING_TYPE_GW) {
       const script = document.createElement('script')
       const res = /\/\/([\w-]+)\./i.exec(landingPage)
       const [, domain] = res

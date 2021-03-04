@@ -10,8 +10,9 @@
             @click="toggleTableExpand(landingPage.id, landingPage.campaignIds)"
           />
           <span class="title">{{landingPage.name}}</span>
-          <strong class="type" v-if="landingPage.type === LANGPAGE_TYPES.AD">帖</strong>
-          <strong class="type" v-if="landingPage.type === LANGPAGE_TYPES.SITE">官</strong>
+          <strong class="type" v-if="landingPage.type === LANDING_TYPE_AD">帖</strong>
+          <strong class="type" v-if="landingPage.type === LANDING_TYPE_GW">官</strong>
+          <strong class="type" v-if="landingPage.type === LANDING_TYPE_STORE">店</strong>
           <strong class="hint" v-if="isRenderSources(landingPage.sources)">渠</strong>
         </div>
         <table class="table-container" v-if="isExistInExpands(landingPage.id)" border="none">
@@ -113,14 +114,13 @@ import {
 import {
   semPlatformCn,
   KEYWORD_CHIBI_REJECT,
-  CAMPAIGN_STATUS_OFFLINE
+  CAMPAIGN_STATUS_OFFLINE,
+  LANDING_TYPE_AD,
+  LANDING_TYPE_GW,
+  LANDING_TYPE_STORE
 } from 'constant/fengming'
 import auditRejectReasonDialog from 'com/common/audit-reject-reason-dialog'
 
-const LANGPAGE_TYPES = {
-  AD: 0,
-  SITE: 1
-}
 const RENDER_OPTIMIZATION_METHODS = {
   isRenderSources (num) {
     return num < 2
@@ -133,10 +133,11 @@ export default {
   name: 'promotion-list',
   data () {
     return {
-      LANGPAGE_TYPES,
       KEYWORD_CHIBI_REJECT,
       CAMPAIGN_STATUS_OFFLINE,
-
+      LANDING_TYPE_AD,
+      LANDING_TYPE_GW,
+      LANDING_TYPE_STORE,
       budgetMap: {},
       expands: [],
       auditRejectReasonDialogVisible: false
