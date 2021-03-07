@@ -402,7 +402,7 @@ export default {
   display: inline-block;
   margin-top: 10px;
   margin-left: 28px;
-  width: 270px;
+  width: 276px;
   height: 260px;
   border: solid 1px #ccc;
   border-radius: 4px;
@@ -461,7 +461,7 @@ export default {
       & > .optimi-num {
         color: #ff6350;
         background: #FFF7EB;
-        padding: 1px 2px;
+        padding: 4px 6px;
       }
     }
     .optimi-num {
