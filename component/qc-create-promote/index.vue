@@ -105,7 +105,7 @@
 
         <!-- 关键词录入 -->
         <template v-if="keywordsPanelVisible">
-          <select-keywords :promote="promote" :form="form" :isEdit="isEdit" />
+          <select-keywords :promote="promote" :form="form" :isEdit="isEdit" :expand-types="expandTypes" />
         </template>
       </main>
     </div>
@@ -147,8 +147,8 @@ export default {
       form: {
         keywords: [],
         areas: [],
-        skuId: SKU_OPTIMIZED,
-        type: ONE_WORD_TWO_PROVINCE
+        skuId: '',
+        type: ''
       },
       rules: {
         areas: [
@@ -168,6 +168,7 @@ export default {
       tip: {
         keyword: ''
       },
+      expandTypes: [],
       loading: false,
       areaDialogVisible: false,
       keywordsPanelVisible: false,
@@ -252,8 +253,13 @@ export default {
       sku.productShowDetail.sort((a, b) => a.order - b.order)
       return sku
     })
-    const { id } = this.$route.query
+    // 初始化form中skuId和type
+    const initSku = skuList.find(o => o.skuId === SKU_OPTIMIZED) || {}
+    this.form.skuId = initSku.skuId || SKU_OPTIMIZED
+    this.form.type = initSku.skuType || ONE_WORD_TWO_PROVINCE
+    this.expandTypes = initSku.expandTypes
 
+    const { id } = this.$route.query
     // 获取千词地区信息
     if (Object.keys(gStore.allQianciAreas).length === 0) {
       gStore.getQianciAreas()
@@ -271,6 +277,7 @@ export default {
     toggleSku (product) {
       this.form.skuId = product.skuId
       this.form.type = product.skuType
+      this.expandTypes = product.expandTypes
       this.tip.keyword = ''
       this.initFormVals()
     },

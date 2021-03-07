@@ -151,3 +151,12 @@ export async function getPackageList(opts) {
     .json())
     .data
 }
+
+// 根据产品id获取产品详情
+export async function getPackageById(id) {
+  return (await qianci
+    .get(`/package/${id}`)
+    .query()
+    .json())
+    .data
+}

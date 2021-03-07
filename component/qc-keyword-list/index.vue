@@ -85,7 +85,7 @@ import KeywordView from '../qc-create-promote/select-keywords/view'
 import keywordOptions from '../qc-create-promote/select-keywords/keyword-options'
 
 import { getRouteParam, formatReqQuery, parseQuery, qcWordAll } from 'util'
-import { getPromote, getPreferredWordsList, getPreferredWordsPV } from 'api/qianci'
+import { getPromote, getPreferredWordsList, getPreferredWordsPV, getPackageById } from 'api/qianci'
 import gStore from '../store'
 
 export default {
@@ -123,7 +123,8 @@ export default {
       pvs: 0,
       visible: {
         abcd: false
-      }
+      },
+      expandTypes: []
     }
   },
   computed: {
@@ -134,7 +135,7 @@ export default {
           h[c] = keywordOptions[c].keywords.length
           return h
         }, {})
-        return curr + qcWordAll(lens)
+        return curr + qcWordAll(lens, this.expandTypes)
       }, 0)
       return res
     }
@@ -198,13 +199,18 @@ export default {
     },
     async initPromote () {
       this.promote = await getPromote(this.id)
-      const { coreWordInfos = [], provinces = [] } = this.promote
+      const { coreWordInfos = [], provinces = [], skuId } = this.promote
 
       const { enToCnMap, provinces: provincesStore } = this.allQianciAreas
       const areas = provinces.map(en => {
         const cnName = enToCnMap[en]
         return { name: cnName, en, checked: true, cities: provincesStore[cnName] }
       })
+
+      // 根据skuId获取组词策略
+      const product = (await getPackageById(skuId)) || {}
+      const expandTypes = (product.expandTypes || []).map(rule => rule.toUpperCase())
+      this.expandTypes = expandTypes
 
       // 封装keywordOptionsList
       const keywordProvinces = areas.reduce((t, c) => {
@@ -256,7 +262,7 @@ export default {
 
       const { data: list } = getPreferredWordsList.getAll()
       const csvData = new Parser().parse(washCSVList(list))
-      const filename = `优选词列表 - ${coreWords} - ${dayjs(createdTime).format('YYYY/MM/DD')}.csv`
+      const filename = `优选词列表 - ${coreWords} - ${dayjs(createdTime * 1000).format('YYYY/MM/DD')}.csv`
       const blob = new Blob(['\uFEFF' + csvData], { type: 'text/csv;charset=utf-8;' })
       FileSaver.saveAs(blob, filename)
     }
