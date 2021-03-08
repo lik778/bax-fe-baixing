@@ -207,8 +207,10 @@ export default {
         return { name: cnName, en, checked: true, cities: provincesStore[cnName] }
       })
 
-      // 根据skuId获取组词策略
-      const product = (await getPackageById(skuId)) || {}
+      // 根据skuId获取组词策略, 兼容老计划给默认值
+      const product = (await getPackageById(skuId)) || {
+        expandTypes: ['BC', 'ABC', 'ACD', 'BCD', 'ABCD']
+      }
       const expandTypes = (product.expandTypes || []).map(rule => rule.toUpperCase())
       this.expandTypes = expandTypes
 

@@ -257,7 +257,7 @@ export default {
     const initSku = skuList.find(o => o.skuId === SKU_OPTIMIZED) || {}
     this.form.skuId = initSku.skuId || SKU_OPTIMIZED
     this.form.type = initSku.skuType || ONE_WORD_TWO_PROVINCE
-    this.expandTypes = initSku.expandTypes
+    this.expandTypes = initSku.expandTypes || []
 
     const { id } = this.$route.query
     // 获取千词地区信息
