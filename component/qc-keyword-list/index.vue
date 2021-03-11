@@ -258,7 +258,8 @@ export default {
       function washCSVList (list) {
         return list.map(item => {
           return {
-            keyword: item
+            关键词: item.keyword,
+            类别: item.ifShowTag ? item.tag : ''
           }
         })
       }
