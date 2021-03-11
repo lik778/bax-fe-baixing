@@ -1,6 +1,6 @@
 export const activityConfig = {
-  startTime: '2020-12-28 00:00:00',
-  endTime: '2020-12-31 23:59:59'
+  startTime: '2021-03-09 00:00:00',
+  endTime: '2021-04-31 23:59:59'
 }
 
 export const COMMON_STATUS = 'common'
@@ -28,8 +28,9 @@ export const fengmingDiscountInfo = {
       [1000, 200, 600],
       [3088, 200, 600],
       [5088, 600, 900],
-      [6088, 600, 900, 200],
-      [10188, 1000, 1500, 500]
+      [6088, 600, 900, 188],
+      [10188, 1000, 1500, 388],
+      [20000, 1000, 1500, 888]
     ],
     get discountInfoHTML () {
       return this.discountInfo.map((item) => {

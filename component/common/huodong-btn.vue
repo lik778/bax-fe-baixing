@@ -1,13 +1,13 @@
 <template>
   <div class="huodong-btn">
     <a target="_blank" :href="href" >
-      <img src="//file.baixing.net/202012/4be4f245307b4d7c0e5810aaf58b45a8.png">
+      <img src="//file.baixing.net/202103/47a52ee00de019077e11b45e9f6ad537.png">
     </a>
   </div>
 </template>
 
 <script>
-const href = 'https://www.baixing.com/rev/lottery?activity=lottery_activity20201212'
+const href = 'https://www.baixing.com/rev/lottery?activity=lottery_activity16thAnniversary'
 
 export default {
   name: 'huodong-btn',
