@@ -259,7 +259,7 @@ export default {
         return list.map(item => {
           return {
             关键词: item.keyword,
-            类别: item.ifShowTag ? item.tag : ''
+            类别: item.ifShowTag ? item.tag : '普通词'
           }
         })
       }
