@@ -1,6 +1,6 @@
 export const activityConfig = {
-  startTime: '2021-03-09 00:00:00',
-  endTime: '2021-04-31 23:59:59'
+  startTime: '2021-03-23 00:00:00',
+  endTime: '2021-03-31 23:59:59'
 }
 
 export const COMMON_STATUS = 'common'
