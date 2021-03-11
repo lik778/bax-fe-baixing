@@ -55,7 +55,8 @@
       </div>
       <div class="list">
         <div class="item" v-for="(item, index) in expandedInfo.data" :key="index">
-          <span class="item-inner">{{item}}</span>
+          <span class="item-inner">{{item.keyword}}</span>
+          <span class="item-tag" v-if="item.ifShowTag">{{item.tag}}</span>
         </div>
       </div>
     </div>
@@ -330,6 +331,9 @@ $border-base: 1px solid #dbdbdb;
     display: flex;
     flex-wrap: wrap;
     & > .item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       width: 25%;
       padding: 12px;
       line-height: 20px;
@@ -342,6 +346,13 @@ $border-base: 1px solid #dbdbdb;
         -webkit-box-orient: vertical;
         overflow: hidden;
         text-overflow: ellipsis;
+      }
+      & > .item-tag {
+        padding: 4px 5px;
+        background: #fff7eb;
+        font-size: 12px;
+        color: #ff6350;
+        text-align: center
       }
     }
   }

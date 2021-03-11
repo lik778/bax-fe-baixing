@@ -75,7 +75,7 @@ export const getPreferredWordsList = paginationWrapper(async function (opts = {}
     .data
 }, resp => ({
   ...resp,
-  data: (clone(resp.expandedWords) || []).sort((a, b) => a.length - b.length)
+  data: clone(resp.expandedWordList)
 }))
 
 // 获取推广物料信息
