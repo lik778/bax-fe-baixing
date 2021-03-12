@@ -55,7 +55,8 @@
       </div>
       <div class="list">
         <div class="item" v-for="(item, index) in expandedInfo.data" :key="index">
-          <span class="item-inner">{{item}}</span>
+          <span class="item-inner">{{item.keyword}}</span>
+          <span class="item-tag" v-if="item.ifShowTag">{{item.tag}}</span>
         </div>
       </div>
     </div>
@@ -85,7 +86,7 @@ import KeywordView from '../qc-create-promote/select-keywords/view'
 import keywordOptions from '../qc-create-promote/select-keywords/keyword-options'
 
 import { getRouteParam, formatReqQuery, parseQuery, qcWordAll } from 'util'
-import { getPromote, getPreferredWordsList, getPreferredWordsPV } from 'api/qianci'
+import { getPromote, getPreferredWordsList, getPreferredWordsPV, getPackageById } from 'api/qianci'
 import gStore from '../store'
 
 export default {
@@ -123,7 +124,8 @@ export default {
       pvs: 0,
       visible: {
         abcd: false
-      }
+      },
+      expandTypes: []
     }
   },
   computed: {
@@ -134,7 +136,7 @@ export default {
           h[c] = keywordOptions[c].keywords.length
           return h
         }, {})
-        return curr + qcWordAll(lens)
+        return curr + qcWordAll(lens, this.expandTypes)
       }, 0)
       return res
     }
@@ -198,13 +200,20 @@ export default {
     },
     async initPromote () {
       this.promote = await getPromote(this.id)
-      const { coreWordInfos = [], provinces = [] } = this.promote
+      const { coreWordInfos = [], provinces = [], skuId } = this.promote
 
       const { enToCnMap, provinces: provincesStore } = this.allQianciAreas
       const areas = provinces.map(en => {
         const cnName = enToCnMap[en]
         return { name: cnName, en, checked: true, cities: provincesStore[cnName] }
       })
+
+      // 根据skuId获取组词策略, 兼容老计划给默认值
+      const product = (await getPackageById(skuId)) || {
+        expandTypes: ['BC', 'ABC', 'ACD', 'BCD', 'ABCD']
+      }
+      const expandTypes = (product.expandTypes || []).map(rule => rule.toUpperCase())
+      this.expandTypes = expandTypes
 
       // 封装keywordOptionsList
       const keywordProvinces = areas.reduce((t, c) => {
@@ -249,14 +258,15 @@ export default {
       function washCSVList (list) {
         return list.map(item => {
           return {
-            keyword: item
+            关键词: item.keyword,
+            类别: item.ifShowTag ? item.tag : '普通词'
           }
         })
       }
 
       const { data: list } = getPreferredWordsList.getAll()
       const csvData = new Parser().parse(washCSVList(list))
-      const filename = `优选词列表 - ${coreWords} - ${dayjs(createdTime).format('YYYY/MM/DD')}.csv`
+      const filename = `优选词列表 - ${coreWords} - ${dayjs(createdTime * 1000).format('YYYY/MM/DD')}.csv`
       const blob = new Blob(['\uFEFF' + csvData], { type: 'text/csv;charset=utf-8;' })
       FileSaver.saveAs(blob, filename)
     }
@@ -322,6 +332,9 @@ $border-base: 1px solid #dbdbdb;
     display: flex;
     flex-wrap: wrap;
     & > .item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       width: 25%;
       padding: 12px;
       line-height: 20px;
@@ -334,6 +347,13 @@ $border-base: 1px solid #dbdbdb;
         -webkit-box-orient: vertical;
         overflow: hidden;
         text-overflow: ellipsis;
+      }
+      & > .item-tag {
+        padding: 4px 5px;
+        background: #fff7eb;
+        font-size: 12px;
+        color: #ff6350;
+        text-align: center
       }
     }
   }

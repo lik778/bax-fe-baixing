@@ -269,6 +269,7 @@ export default {
       this.$set(this, 'pagination', this.pagination)
     },
     async checkLicense () {
+      if (!isPro) return true
       let businessUrl = null
       this.loading.checkLicense = true
       try {

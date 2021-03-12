@@ -68,7 +68,7 @@
             @close="visible.input[idx] = false"
           />
           <div class="expand-tip size-13">
-            <div>组合逻辑：B+C、A+B+C、A+C+D、B+C+D、A+B+C+D；</div>
+            <div>组合逻辑：{{combineRulesStr}}；</div>
             <div>如：上海（A）专业的（B）撕碎机（C）多少钱（D）</div>
           </div>
         </div>
@@ -133,6 +133,13 @@ export default {
         return {}
       }
     },
+    expandTypes: {
+      type: Array,
+      required: true,
+      default () {
+        return []
+      }
+    },
     originKeywords: {
       type: Object,
       required: false,
@@ -195,7 +202,7 @@ export default {
           ['A', 'B', 'C', 'D'].reduce((h, c) => {
             h[c] = x[c].keywords.length
             return h
-          }, {})
+          }, {}), this.combineRules
         )
       return this.keywordOptions.reduce((h, c) => h + countOne(c), 0)
     },
@@ -213,6 +220,18 @@ export default {
           )
         })
       return this.isEdit ? !isEdited : false
+    },
+    combineRules () {
+      try {
+        return this.expandTypes.map(rule => rule.toUpperCase())
+      } catch (e) {
+        return ['BC', 'ABC', 'ACD', 'BCD', 'ABCD']
+      }
+    },
+    combineRulesStr () {
+      return this.combineRules.map(rule => {
+        return rule.split('').join('+')
+      }).join('、')
     }
   },
   components: {
@@ -319,7 +338,7 @@ export default {
     },
     async sumbitWords () {
       const { sales_id: salesId, user_id: targetUserId } = this.$route.query
-      const { type, keywords, areas } = this.form
+      const { type, keywords, areas, skuId } = this.form
       const coreWordInfos = Array(this.keywordOptions.length)
         .fill('')
         .map((x, idx) => ({
@@ -332,7 +351,8 @@ export default {
         provinces: areas.map((x) => x.en),
         coreWordInfos,
         salesId,
-        targetUserId
+        targetUserId,
+        skuId
       }
 
       this.loading.submit = true

@@ -215,9 +215,12 @@ export const landingTypeOpts = toOpt(landingType, false)
 export const ONE_WORD_TWO_PROVINCE = 'ONE_WORD_TWO_PROVINCE'
 export const THREE_WORD_ONE_PROVINCE = 'THREE_WORD_ONE_PROVINCE'
 export const PACKAGE_TYPE = {
-  [ONE_WORD_TWO_PROVINCE]: 'ONE_WORD_TWO_PROVINCE',
-  [THREE_WORD_ONE_PROVINCE]: 'THREE_WORD_ONE_PROVINCE'
+  [ONE_WORD_TWO_PROVINCE]: '两省一词',
+  [THREE_WORD_ONE_PROVINCE]: '一省三词'
 }
 
 export const SEO_WAN_CI_91 = 'WAN_CI_91'
 export const SEO_QIAN_CI_INSTATION = 'QIAN_CI_INSTATION'
+
+export const SKU_OPTIMIZED = 1
+export const SKU_EXPERIENCE = 2

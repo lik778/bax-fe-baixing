@@ -75,7 +75,7 @@ export const getPreferredWordsList = paginationWrapper(async function (opts = {}
     .data
 }, resp => ({
   ...resp,
-  data: (clone(resp.expandedWords) || []).sort((a, b) => a.length - b.length)
+  data: clone(resp.expandedWordList)
 }))
 
 // 获取推广物料信息
@@ -140,4 +140,23 @@ const fetchWithoutPrefix = new Fetch({ ...baseOptions })
 export async function getSnapshot(url) {
   // * test file 'https://test-files.obs.cn-east-3.myhuaweicloud.com/snapshot.html.gz'
   return await fetchWithoutPrefix.get(url)
+}
+
+
+// 获取易慧推套餐
+export async function getPackageList(opts) {
+  return (await qianci
+    .get('/package/list')
+    .query(opts)
+    .json())
+    .data
+}
+
+// 根据产品id获取产品详情
+export async function getPackageById(id) {
+  return (await qianci
+    .get(`/package/${id}`)
+    .query()
+    .json())
+    .data
 }
