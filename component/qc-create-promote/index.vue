@@ -33,7 +33,7 @@
                     <span class="optimi-num" v-if="attr.extra">{{attr.extra}}</span>
                   </div>
                 </div>
-                <div class="price">¥{{$formatter.f2y(item.price)}}<span class="unit">元</span></div>
+                <!-- <div class="price">¥{{$formatter.f2y(item.price)}}<span class="unit">元</span></div> -->
               </div>
             </div>
           </el-form-item>
