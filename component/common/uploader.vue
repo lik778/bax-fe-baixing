@@ -2,7 +2,9 @@
 <template>
   <div class="uploader">
     <input type="file" ref="file" @change="uploadFile" hidden />
-    <el-button @click="selectFile">+</el-button>
+    <slot>
+      <el-button @click="selectFile">+</el-button>
+    </slot>
     <p class="tip" v-if="tip">
       {{ tip }}
     </p>
