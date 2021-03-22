@@ -14,7 +14,26 @@
         <div class="pc-con con">
           <div class="header">
             <span class="title">电脑端</span>
-            <span class="preview-tip">展现样式</span>
+            <el-popover
+              placement="bottom-start"
+              trigger="click"
+              :popper-class="[typename, 'ad-preview-popover']">
+              <div class="ad-preview pc-preview">
+                <div class="title">多图组件，图文结合，更丰富的信息呈现</div>
+                <div class="creative-con">
+                  <img class="creative-image" src="https://baxing-lionad.oss-cn-shanghai.aliyuncs.com/spark.png" />
+                  <div class="creative-text">
+                    快速帮助您提升图片数量、质量、降低客户管理成本，提升相关性深度，展示品牌、业务、优势等信息。
+                  </div>
+                </div>
+                <div class="footer">
+                  <span class="url">baixing.com</span>
+                  <span class="btn-like">评价</span>
+                  <span class="btn-like">广告</span>
+                </div>
+              </div>
+              <span class="preview-tip" slot="reference">展现样式</span>
+            </el-popover>
           </div>
           <div class="content">
             <div class="images-con">
@@ -42,7 +61,26 @@
         <div class="wap-con con">
           <div class="header">
             <span class="title">手机端</span>
-            <span class="preview-tip">展现样式</span>
+            <el-popover
+              placement="bottom-end"
+              trigger="click"
+              :popper-class="[typename, 'ad-preview-popover']">
+              <div class="ad-preview wap-preview">
+                <div class="title">多图组件，图文结合，更丰富的信息呈现</div>
+                <div class="creative-con">
+                  <img class="creative-image" src="https://baxing-lionad.oss-cn-shanghai.aliyuncs.com/spark.png" />
+                  <div class="creative-text">
+                    快速帮助您提升图片数量、质量、降低客户管理成本，提升相关性深度，展示品牌、业务、优势等信息。
+                  </div>
+                </div>
+                <div class="footer">
+                  <span class="url">baixing.com</span>
+                  <span class="btn-like">评价</span>
+                  <span class="btn-like">广告</span>
+                </div>
+              </div>
+              <span class="preview-tip" slot="reference">展现样式</span>
+            </el-popover>
           </div>
           <div class="content">
             <div class="images-con">
@@ -88,7 +126,7 @@ const MATERIAL_PIC_TYPE = {
 
 export default {
   name: 'qwt-material-pictures-editor',
-  component: {
+  components: {
     Uploader
   },
   data () {
@@ -154,6 +192,13 @@ export default {
         pc: '比例1.61:1，最小323*200，每组需上传4张图片',
         wap: '比例1:1，最小200*200，每组需上传3张图片，'
       }
+    },
+    typename () {
+      return {
+        [this.MATERIAL_PIC_TYPE.NO_PIC]: 'no-pic',
+        [this.MATERIAL_PIC_TYPE.BIG_PIC]: 'big-pic',
+        [this.MATERIAL_PIC_TYPE.PIC_SETS]: 'pic-sets'
+      }[this.forms.type]
     }
   },
   methods: {
@@ -250,6 +295,7 @@ export default {
     gap: 11px;
 
     .upload-btn {
+      align-self: flex-start;
       padding: 0;
       width: 79px;
       height: 79px;
@@ -277,6 +323,87 @@ export default {
     font-size: 12px;
     color: #999;
     text-align: center;
+  }
+}
+</style>
+
+<style lang="scss">
+.ad-preview-popover {
+  padding: 0;
+  border: 0;
+  border-radius: 0px;
+
+  &.big-pic {
+    .pc-preview {
+      .creative-con {
+        width: 475px;
+        height: 110px;
+
+        .creative-image {
+          width: 168px;
+          height: 95px;
+        }
+      }
+    }
+    .wap-preview {
+      .creative-con {
+        flex-direction: column;
+        padding: 0;
+        width: 388px;
+        background: unset;
+
+        .creative-image {
+          width: 388px;
+          height: 136px;
+        }
+        .creative-text {
+          padding: 0 7px;
+        }
+      }
+    }
+  }
+
+  .ad-preview {
+    display: flex;
+    flex-direction: column;
+    padding: 6px;
+    width: 100%;
+    background: #a2a2a2;
+
+    .title {
+      padding-left: 7px;
+      line-height: 37px;
+      color: #333;
+    }
+    .creative-con {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 8px;
+      background: white;
+
+      .creative-image {
+        flex-shrink: 0;
+      }
+      .creative-text {
+        font-size: 14px;
+        color: #5b5b5b;
+      }
+    }
+    .footer {
+      height: 35px;
+      line-height: 45px;
+      font-size: 12px;
+      color: #666;
+
+      .url {
+        margin-left: 7px;;
+        margin-right: 13px;
+      }
+      .btn-like {
+        margin-right: 7px;
+      }
+    }
   }
 }
 </style>
