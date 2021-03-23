@@ -254,13 +254,18 @@ export function allowSeeLongOrder (roles, agentId, salesId) {
   return [183].includes(agentId)
 }
 
-export function notAllowFengmingRecharge (roles, agentId) {
+export function notAllowFengmingRecharge (roles, agentId, salesId) {
   const currentRoles = normalizeRoles(roles)
   const isOnlyBaixingUser = currentRoles.includes('BAIXING_USER') && currentRoles.length === 1
+  const isSales = currentRoles.includes('AGENT_SALES') || currentRoles.includes('AGENT_ACCOUNTING')
   if (isPro) {
-    return [31, 2263, 1921, 1256, 1257, 1466, 1474, 1736, 196, 1457, 2295, 2193, 2181,
+    const isAgentId = [31, 2263, 1921, 1256, 1257, 1466, 1474, 1736, 196, 1457, 2295, 2193, 2181,
       2182, 2183, 2184, 2185, 2186, 2187, 2188, 2189, 2190, 2313, 2314, 2337, 1302,
       2101, 2124, 770, 65, 2094, 1797, 984, 136, 139, 2070, 2071, 2275, 35, 36, 1263, 1678].includes(agentId) && isOnlyBaixingUser
+    const salesIds = ['102917', '102918', '102919', '102920', '102921', '102922', '150125',
+      '125501', '151609', '153617', '151015', '151003', '151501', '153304', '153902', '102103', '121201']
+    const hasSalesId = salesIds.some(o => new RegExp(`^${o}`).test(salesId))
+    return isAgentId || (isSales && hasSalesId)
   }
-  return [50].includes(agentId) && isOnlyBaixingUser
+  return ([50].includes(agentId) && isOnlyBaixingUser) || [5064].includes(salesId)
 }
