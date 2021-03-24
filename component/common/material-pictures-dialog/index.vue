@@ -99,11 +99,9 @@ export default {
         pc: [
           'https://baxing-lionad.oss-cn-shanghai.aliyuncs.com/spark.png',
           'https://baxing-lionad.oss-cn-shanghai.aliyuncs.com/spark.png',
-          'https://baxing-lionad.oss-cn-shanghai.aliyuncs.com/spark.png',
           'https://baxing-lionad.oss-cn-shanghai.aliyuncs.com/spark.png'
         ],
         wap: [
-          'https://baxing-lionad.oss-cn-shanghai.aliyuncs.com/spark.png',
           'https://baxing-lionad.oss-cn-shanghai.aliyuncs.com/spark.png',
           'https://baxing-lionad.oss-cn-shanghai.aliyuncs.com/spark.png'
         ]

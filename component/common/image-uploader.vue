@@ -4,8 +4,8 @@
       hidden
       ref="file"
       type="file"
-      :multiple="multiple"
       style="display: none;"
+      :multiple="multiple"
       @change="handleFileChange"
     />
     <slot name="default"></slot>
@@ -94,7 +94,8 @@ export default {
     multiple: {
       type: Boolean,
       default: false
-    }
+    },
+    beforeUpload: Function
   },
   data () {
     return {
@@ -103,9 +104,17 @@ export default {
   },
   methods: {
     async handleFileChange (e) {
-      const { uploadOptions } = this
-      const files = Array.from(e.target.files)
+      const { uploadOptions, beforeUpload } = this
+      const wash = beforeUpload || (async _ => _)
+      // TODO refactor await of
+      const files = await Promise.all(
+        Array.from(e.target.files).map(async x => {
+          return await wash(x)
+        })
+      ).then(list => list)
       if (!files.length) return
+
+      console.log(files)
 
       const [error] = await checkUploadFiles(files, uploadOptions)
       if (error) {

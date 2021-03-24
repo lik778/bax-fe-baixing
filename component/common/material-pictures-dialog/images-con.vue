@@ -2,7 +2,7 @@
   <div class="images-con">
     <!-- 上传按钮 -->
     <uploader
-      ref="search-uploader"
+      ref="uploader"
       class="uploader-container"
       :uploadOptions="{
         maxFileSize: 2048,
@@ -22,12 +22,12 @@
     <div class="images">
       <div
         class="image-wrapper"
-        v-for="(imageURL, idx) in fileList"
-        :key="imageURL+idx"
-      >
-        <img class="image" :src="imageURL"/>
+        v-for="(src, idx) in fileList"
+        :key="src+idx">
+        <img class="image" :src="src"/>
         <span class="upload-actions">
-          <i class="el-icon el-icon-delete" @click="deleteFile(idx)"></i>
+          <i class="el-icon el-icon-scissors" @click="clipFile(src, idx)" />
+          <i class="el-icon el-icon-delete" @click="deleteFile(idx)" />
         </span>
       </div>
     </div>
@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import Uploader from 'com/common/image-uploader'
+import Uploader from 'com/common/image-uploader-with-crop'
 export default {
   name: 'SearchImgView',
   components: {
@@ -55,18 +55,26 @@ export default {
       fileList: this.value
     }
   },
-
+  watch: {
+    fileList (newValue) {
+      this.$emit('change', newValue)
+    }
+  },
   methods: {
     handleUploadSuccess (urls) {
       this.fileList = this.fileList.concat(urls)
-      this.$emit('change', this.fileList)
     },
     uploadFile () {
-      this.$refs['search-uploader'].uploadFile()
+      this.$refs.uploader.uploadFile()
+    },
+    clipFile (src, idx) {
+      console.log(src, idx)
     },
     deleteFile (index) {
       this.fileList.splice(index, 1)
-      this.$emit('change', this.fileList)
+    },
+    result (res) {
+      console.log('res: ', res)
     }
   }
 }
@@ -90,6 +98,10 @@ export default {
     font-weight: lighter;
     line-height: 0;
     cursor: pointer;
+
+    &.is-disabled {
+      cursor: not-allowed;
+    }
   }
   .images {
     display: flex;
@@ -117,7 +129,6 @@ export default {
   padding: 0 .3em;
   height: 1.5em;
   background: rgba(0, 0, 0, 0.5);
-  border-radius: 6px;
   color: white;
 
   .el-icon {
