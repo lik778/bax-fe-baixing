@@ -18,9 +18,9 @@
               placement="bottom-start"
               trigger="click"
               popper-class="ad-preview-popover">
-              <material-preview
+              <preview
                 classname="pc-preview"
-                src="https://baxing-lionad.oss-cn-shanghai.aliyuncs.com/spark.png"
+                :srcs="forms.pc"
                 :type="typename"
               />
               <span class="preview-tip" slot="reference">展现样式</span>
@@ -55,9 +55,9 @@
               placement="bottom-end"
               trigger="click"
               popper-class="ad-preview-popover">
-              <material-preview
+              <preview
                 classname="wap-preview"
-                src="https://baxing-lionad.oss-cn-shanghai.aliyuncs.com/spark.png"
+                :srcs="forms.wap"
                 :type="typename"
               />
               <span class="preview-tip" slot="reference">展现样式</span>
@@ -96,7 +96,7 @@ import {
   CREATIVE_STATUS_PENDING
 } from 'constant/fengming'
 import Uploader from 'com/common/uploader'
-import MaterialPreview from './material-preview'
+import Preview from './preview'
 
 // 图集类型枚举
 const MATERIAL_PIC_TYPE = {
@@ -109,7 +109,7 @@ export default {
   name: 'qwt-material-pictures-editor',
   components: {
     Uploader,
-    MaterialPreview
+    Preview
   },
   data () {
     return {
@@ -335,5 +335,10 @@ export default {
   padding: 0;
   border: 0;
   border-radius: 0px;
+
+  .popper__arrow,
+  .popper__arrow::after {
+    border-bottom-color: #a2a2a2;
+  }
 }
 </style>

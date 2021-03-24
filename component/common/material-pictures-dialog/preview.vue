@@ -3,7 +3,12 @@
     <div class="title">多图组件，图文结合，更丰富的信息呈现</div>
     <div class="creative-con">
       <div class="creative-image-wrapper">
-        <img class="creative-image" :src="src" />
+        <img
+          v-for="src in srcs"
+          class="creative-image"
+          :src="src"
+          :key="src"
+        />
       </div>
       <div class="creative-text">
         快速帮助您提升图片数量、质量、降低客户管理成本，提升相关性深度，展示品牌、业务、优势等信息。
@@ -19,7 +24,7 @@
 
 <script>
 export default {
-  props: ['src', 'type', 'classname'],
+  props: ['srcs', 'type', 'classname'],
   computed: {
     classnames () {
       return ['material-preview', this.type || '', this.classname || ''].join(' ')
@@ -37,20 +42,26 @@ export default {
   width: 100%;
   background: #a2a2a2;
 
+  &.wap-preview {
+    .title {
+      padding-left: 9px;
+    }
+    .creative-text {
+      padding: 0 9px;
+    }
+  }
+
   .title {
     padding-left: 7px;
     line-height: 37px;
     color: #333;
   }
   .creative-con {
-    display: flex;
-    justify-content: space-between;
-    gap: 8px;
-    padding: 8px;
-    background: white;
-
     .creative-image-wrapper {
       display: flex;
+      padding: 6px 8px;
+      justify-content: space-between;
+      gap: 8px;
       background: white;
     }
     .creative-image {
@@ -80,9 +91,16 @@ export default {
 .big-pic {
   &.pc-preview {
     .creative-con {
+      display: flex;
+      padding: 6px 8px;
+      gap: 8px;
       width: 475px;
       height: 110px;
+      background: white;
 
+      .creative-image-wrapper {
+        padding: 0;
+      }
       .creative-image {
         width: 168px;
         height: 95px;
@@ -100,14 +118,51 @@ export default {
       flex-direction: column;
       padding: 0;
       width: 388px;
-      background: unset;
 
-      .creative-image-wrapper {
-        padding: 6px 8px;
-      }
       .creative-image {
         width: 372px;
         height: 124px;
+      }
+      .creative-text {
+        padding: 0 7px;
+      }
+    }
+  }
+}
+.pic-sets {
+  &.pc-preview {
+    .creative-con {
+      width: 300px;
+
+      .creative-image-wrapper {
+        flex-wrap: wrap;
+        gap: 4px;
+      }
+      .creative-image {
+        width: 140px;
+        height: 79px;
+      }
+      .creative-text {
+        padding: 0 7px;
+      }
+    }
+  }
+  &.wap-preview {
+    .title {
+      font-size: 16px;
+    }
+    .creative-con {
+      flex-wrap: wrap;
+      padding: 0;
+      width: 350px;
+      background: unset;
+
+      .creative-image-wrapper {
+        gap: 4px;
+      }
+      .creative-image {
+        width: 108px;
+        height: 108px;
       }
       .creative-text {
         padding: 0 7px;
