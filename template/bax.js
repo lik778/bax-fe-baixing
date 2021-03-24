@@ -343,6 +343,16 @@ const qwtRoutes = [
     name: 'qwt-update-promotion'
   },
   {
+    component: () => import('com/qwt-group'),
+    path: '/main/qwt/group/create',
+    name: 'qwt-create-group'
+  },
+  {
+    component: () => import('com/qwt-group'),
+    path: '/main/qwt/group/:id/update',
+    name: 'qwt-update-group'
+  },
+  {
     component: () => import('com/qwt-promotion-list'),
     path: '/main/qwt/promotions',
     name: 'qwt-promotion-list'

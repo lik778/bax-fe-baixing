@@ -65,7 +65,7 @@ export function checkCampaignValidTime (range) {
 
 export function getCampaignValidTime (range) {
   if (range[0] === null || range[1] === null) {
-    return [null, null] // 长期
+    return [null, null]
   }
 
   return [
