@@ -49,6 +49,10 @@ export default {
     padding: 8px;
     background: white;
 
+    .creative-image-wrapper {
+      display: flex;
+      background: white;
+    }
     .creative-image {
       flex-shrink: 0;
     }
@@ -86,15 +90,24 @@ export default {
     }
   }
   &.wap-preview {
+    width: 406px;
+    height: 272px;
+
+    .title {
+      font-size: 16px;
+    }
     .creative-con {
       flex-direction: column;
       padding: 0;
       width: 388px;
       background: unset;
 
+      .creative-image-wrapper {
+        padding: 6px 8px;
+      }
       .creative-image {
-        width: 388px;
-        height: 136px;
+        width: 372px;
+        height: 124px;
       }
       .creative-text {
         padding: 0 7px;

@@ -316,9 +316,5 @@ export default {
   padding: 0;
   border: 0;
   border-radius: 0px;
-
-  .creative-image-wrapper {
-    background: white;
-  }
 }
 </style>
