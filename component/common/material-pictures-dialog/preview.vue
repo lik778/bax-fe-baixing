@@ -4,10 +4,10 @@
     <div class="creative-con">
       <div class="creative-image-wrapper">
         <img
-          v-for="src in srcs"
+          v-for="(src, idx) in srcs"
           class="creative-image"
           :src="src"
-          :key="src"
+          :key="src+idx"
         />
       </div>
       <div class="creative-text">

@@ -27,21 +27,10 @@
             </el-popover>
           </div>
           <div class="content">
-            <div class="images-con ">
-              <uploader>
-                <el-button class="upload-btn" :disabled="disableByLimit('pc')">
-                  <i class="el-icon el-icon-plus" />
-                </el-button>
-              </uploader>
-              <div class="images">
-                <img
-                  v-for="(imageURL, idx) in forms.pc"
-                  class="image"
-                  :src="imageURL"
-                  :key="'' + idx + imageURL"
-                />
-              </div>
-            </div>
+            <images-con
+              v-model="forms.pc"
+              :limit="curLimit('pc')"
+            />
             <div class="tip-con">
               <p v-text="typeLimitTips.pc" />
               <p>支持JPG、PNG格式</p>
@@ -64,21 +53,10 @@
             </el-popover>
           </div>
           <div class="content">
-            <div class="images-con">
-              <uploader>
-                <el-button class="upload-btn" :disabled="disableByLimit('wap')">
-                  <i class="el-icon el-icon-plus" />
-                </el-button>
-              </uploader>
-              <div class="images">
-                <img
-                  v-for="(imageURL, idx) in forms.wap"
-                  class="image"
-                  :src="imageURL"
-                  :key="'' + idx + imageURL"
-                />
-              </div>
-            </div>
+            <images-con
+              v-model="forms.wap"
+              :limit="curLimit('wap')"
+            />
             <div class="tip-con">
               <p v-text="typeLimitTips.wap" />
               <p>支持JPG、PNG格式</p>
@@ -95,7 +73,7 @@ import {
   CREATIVE_STATUS_REJECT,
   CREATIVE_STATUS_PENDING
 } from 'constant/fengming'
-import Uploader from 'com/common/uploader'
+import ImagesCon from './images-con'
 import Preview from './preview'
 
 // 图集类型枚举
@@ -108,7 +86,7 @@ const MATERIAL_PIC_TYPE = {
 export default {
   name: 'qwt-material-pictures-editor',
   components: {
-    Uploader,
+    ImagesCon,
     Preview
   },
   data () {
@@ -171,6 +149,9 @@ export default {
       // todo 删除 OSS 上的图片
       this.forms.pc = []
       this.forms.wap = []
+    },
+    handleUpload (fileList) {
+      console.log('fileList: ', fileList)
     },
 
     /* Calculation */
@@ -265,34 +246,6 @@ export default {
     border: 1px solid #DBDBDB;
     border-radius: 2px;
   }
-  .images-con {
-    display: flex;
-    gap: 11px;
-
-    .upload-btn {
-      align-self: flex-start;
-      padding: 0;
-      width: 79px;
-      height: 79px;
-      border: none;
-      outline: none;
-      border-radius: 2px;
-      background: #F2F2F2;
-      font-size: 27px;
-      font-weight: lighter;
-      line-height: 0;
-      cursor: pointer;
-    }
-    .images {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 5px 11px;
-    }
-    .image {
-      border-radius: 2px;
-      background: #f2f2f2;
-    }
-  }
   .tip-con {
     margin-top: 30px;
     font-size: 12px;
@@ -302,13 +255,13 @@ export default {
 }
 .pc-con {
   &.big-pic {
-    .image {
+    /deep/ .image {
       width: 140px;
       height: 79px;
     }
   }
   &.pic-sets {
-    .image {
+    /deep/ .image {
       width: 128px;
       height: 79px;
     }
@@ -316,13 +269,13 @@ export default {
 }
 .wap-con {
   &.big-pic {
-    .image {
+    /deep/ .image {
       width: 237px;
       height: 79px;
     }
   }
   &.pic-sets {
-    .image {
+    /deep/ .image {
       width: 79px;
       height: 79px;
     }
