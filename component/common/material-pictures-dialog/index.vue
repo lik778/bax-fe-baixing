@@ -11,7 +11,7 @@
       </el-radio-group>
       <div />
       <div class="picture-container" v-if="showPicContainer">
-        <div class="pc-con con">
+        <div class="pc-con con" :class="[typename].join(' ')">
           <div class="header">
             <span class="title">电脑端</span>
             <el-popover
@@ -27,7 +27,7 @@
             </el-popover>
           </div>
           <div class="content">
-            <div class="images-con">
+            <div class="images-con ">
               <uploader>
                 <el-button class="upload-btn" :disabled="disableByLimit('pc')">
                   <i class="el-icon el-icon-plus" />
@@ -38,7 +38,6 @@
                   v-for="(imageURL, idx) in forms.pc"
                   class="image"
                   :src="imageURL"
-                  :style="typeLimitImageStyle.pc"
                   :key="'' + idx + imageURL"
                 />
               </div>
@@ -49,7 +48,7 @@
             </div>
           </div>
         </div>
-        <div class="wap-con con">
+        <div class="wap-con con" :class="[typename].join(' ')">
           <div class="header">
             <span class="title">手机端</span>
             <el-popover
@@ -76,7 +75,6 @@
                   v-for="(imageURL, idx) in forms.wap"
                   class="image"
                   :src="imageURL"
-                  :style="typeLimitImageStyle.wap"
                   :key="'' + idx + imageURL"
                 />
               </div>
@@ -119,7 +117,7 @@ export default {
       CREATIVE_STATUS_REJECT,
       CREATIVE_STATUS_PENDING,
       forms: {
-        type: 2,
+        type: 3,
         pc: [
           'https://baxing-lionad.oss-cn-shanghai.aliyuncs.com/spark.png',
           'https://baxing-lionad.oss-cn-shanghai.aliyuncs.com/spark.png',
@@ -154,37 +152,6 @@ export default {
         MATERIAL_PIC_TYPE.BIG_PIC,
         MATERIAL_PIC_TYPE.PIC_SETS
       ].includes(this.forms.type)
-    },
-    typeLimitImageStyle () {
-      let pcWidth, pcHeight
-      let wapWidth, wapHeight
-      switch (this.forms.type) {
-        case this.MATERIAL_PIC_TYPE.NO_PIC:
-          pcWidth = pcHeight = wapWidth = wapHeight = '0px'
-          break
-        case this.MATERIAL_PIC_TYPE.BIG_PIC:
-          pcWidth = '140px'
-          pcHeight = '79px'
-          wapWidth = '237px'
-          wapHeight = '79px'
-          break
-        case this.MATERIAL_PIC_TYPE.PIC_SETS:
-          pcWidth = '128px'
-          pcHeight = '79px'
-          wapWidth = '79px'
-          wapHeight = '79px'
-          break
-      }
-      return {
-        pc: {
-          width: pcWidth,
-          height: pcHeight
-        },
-        wap: {
-          width: wapWidth,
-          height: wapHeight
-        }
-      }
     },
     typeConfig () {
       return this.config[this.forms.type]
@@ -331,6 +298,34 @@ export default {
     font-size: 12px;
     color: #999;
     text-align: center;
+  }
+}
+.pc-con {
+  &.big-pic {
+    .image {
+      width: 140px;
+      height: 79px;
+    }
+  }
+  &.pic-sets {
+    .image {
+      width: 128px;
+      height: 79px;
+    }
+  }
+}
+.wap-con {
+  &.big-pic {
+    .image {
+      width: 237px;
+      height: 79px;
+    }
+  }
+  &.pic-sets {
+    .image {
+      width: 79px;
+      height: 79px;
+    }
   }
 }
 </style>
