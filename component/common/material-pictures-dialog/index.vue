@@ -29,7 +29,7 @@
           <div class="content">
             <div class="images-con">
               <uploader>
-                <el-button class="upload-btn">
+                <el-button class="upload-btn" :disabled="disableByLimit('pc')">
                   <i class="el-icon el-icon-plus" />
                 </el-button>
               </uploader>
@@ -67,7 +67,7 @@
           <div class="content">
             <div class="images-con">
               <uploader>
-                <el-button class="upload-btn">
+                <el-button class="upload-btn" :disabled="disableByLimit('wap')">
                   <i class="el-icon el-icon-plus" />
                 </el-button>
               </uploader>
@@ -123,6 +123,7 @@ export default {
         pc: [
           'https://baxing-lionad.oss-cn-shanghai.aliyuncs.com/spark.png',
           'https://baxing-lionad.oss-cn-shanghai.aliyuncs.com/spark.png',
+          'https://baxing-lionad.oss-cn-shanghai.aliyuncs.com/spark.png',
           'https://baxing-lionad.oss-cn-shanghai.aliyuncs.com/spark.png'
         ],
         wap: [
@@ -130,14 +131,28 @@ export default {
           'https://baxing-lionad.oss-cn-shanghai.aliyuncs.com/spark.png',
           'https://baxing-lionad.oss-cn-shanghai.aliyuncs.com/spark.png'
         ]
+      },
+      config: {
+        [MATERIAL_PIC_TYPE.NO_PIC]: {
+          extraClass: 'no-pic',
+          limit: { wap: 0, pc: 0 }
+        },
+        [MATERIAL_PIC_TYPE.BIG_PIC]: {
+          extraClass: 'big-pic',
+          limit: { wap: 1, pc: 1 }
+        },
+        [MATERIAL_PIC_TYPE.PIC_SETS]: {
+          extraClass: 'pic-sets',
+          limit: { wap: 3, pc: 4 }
+        }
       }
     }
   },
   computed: {
     showPicContainer () {
       return [
-        this.MATERIAL_PIC_TYPE.BIG_PIC,
-        this.MATERIAL_PIC_TYPE.PIC_SETS
+        MATERIAL_PIC_TYPE.BIG_PIC,
+        MATERIAL_PIC_TYPE.PIC_SETS
       ].includes(this.forms.type)
     },
     typeLimitImageStyle () {
@@ -171,18 +186,17 @@ export default {
         }
       }
     },
+    typeConfig () {
+      return this.config[this.forms.type]
+    },
+    typename () {
+      return this.typeConfig.extraClass
+    },
     typeLimitTips () {
       return {
         pc: '比例1.61:1，最小323*200，每组需上传4张图片',
         wap: '比例1:1，最小200*200，每组需上传3张图片，'
       }
-    },
-    typename () {
-      return {
-        [this.MATERIAL_PIC_TYPE.NO_PIC]: 'no-pic',
-        [this.MATERIAL_PIC_TYPE.BIG_PIC]: 'big-pic',
-        [this.MATERIAL_PIC_TYPE.PIC_SETS]: 'pic-sets'
-      }[this.forms.type]
     }
   },
   methods: {
@@ -190,6 +204,16 @@ export default {
       // todo 删除 OSS 上的图片
       this.forms.pc = []
       this.forms.wap = []
+    },
+
+    /* Calculation */
+
+    curLimit (type) {
+      return this.typeConfig.limit[type]
+    },
+    disableByLimit (type) {
+      const formsLength = this.forms[type].length
+      return formsLength >= this.curLimit(type)
     }
   }
 }
