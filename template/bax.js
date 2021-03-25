@@ -347,6 +347,17 @@ const qwtRoutes = [
     path: '/main/qwt/promotions',
     name: 'qwt-promotion-list'
   },
+  // 开发备用
+  {
+    component: () => import('com/qwt-update-promotion-list'),
+    path: '/main/qwt/promotions/update',
+    name: 'qwt-update-promotion-list'
+  },
+  {
+    component: () => import('com/qwt-update-promotion-list'),
+    path: '/main/qwt/promotions/update/:id',
+    name: 'qwt-promotion-unit-update'
+  },
   {
     component: () => import('com/qwt-dashboard'),
     path: '/main/qwt/dashboard',
