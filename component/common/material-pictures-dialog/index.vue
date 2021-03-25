@@ -193,8 +193,7 @@ export default {
     },
     typeLimitTips (type) {
       const { minWidth, minHeight, ratio } = this.pixelRatioLimit(type)
-      const { countLimit } = this.picNumLimit(type)
-      return `比例 ${ratio}，最小 ${minWidth}*${minHeight}，每组需上传${countLimit}张图片`
+      return `比例 ${ratio}，最小 ${minWidth}*${minHeight}，每组需上传 ${this.picNumLimit(type)} 张图片`
     }
   }
 }
