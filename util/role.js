@@ -263,5 +263,5 @@ export function notAllowFengmingRecharge (roles, agentId) {
       2101, 2124, 770, 65, 2094, 1797, 984, 136, 139, 2070, 2071, 2275, 35, 36, 1263, 1678,
       2435, 2449, 2450, 2451, 2495, 2512, 2553, 2144, 2420, 2550, 2332, 2443, 2491, 1779, 69, 2471, 77].includes(agentId) && isOnlyBaixingUser
   }
-  return ([50].includes(agentId) && isOnlyBaixingUser)
+  return [50].includes(agentId) && isOnlyBaixingUser
 }

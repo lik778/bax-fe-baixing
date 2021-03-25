@@ -39,6 +39,7 @@ const gStore = observable({
   getCurrentUser: action(async function () {
     const currentUser = await aapi.getCurrentUser()
     const { roles = [], realAgentId } = currentUser
+
     currentUser.shAgent = isNormalUser(roles)
     currentUser.allowFmRecharge = !notAllowFengmingRecharge(
       roles,
