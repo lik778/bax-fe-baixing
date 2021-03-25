@@ -2,6 +2,7 @@
   <div class="images-con">
     <!-- 上传按钮 -->
     <uploader
+      v-bind="$attrs"
       ref="uploader"
       class="uploader-container"
       :uploadOptions="{
@@ -36,6 +37,13 @@
 
 <script>
 import Uploader from 'com/common/image-uploader-with-crop'
+
+const simpEqual = (arr1, arr2) => {
+  const lengthEqual = arr1.length === arr2.length
+  const itemsEqual = !arr1.find((x, xi) => arr2[xi] !== x)
+  return lengthEqual && itemsEqual
+}
+
 export default {
   name: 'SearchImgView',
   components: {
@@ -56,8 +64,13 @@ export default {
     }
   },
   watch: {
+    value (newVal) {
+      this.fileList = newVal
+    },
     fileList (newValue) {
-      this.$emit('change', newValue)
+      if (!simpEqual(newValue, this.value)) {
+        this.$emit('change', newValue)
+      }
     }
   },
   methods: {

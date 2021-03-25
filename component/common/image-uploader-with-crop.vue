@@ -14,10 +14,10 @@
       :visible="visible.clipDialog">
       <vue-croppie
         ref="croppieRef"
-        :enableOrientation="true"
-        :mouseWheelZoom="true"
-        :boundary="{ width: 600, height: 400}"
-        :viewport="{ width: 140, height: 79, type: 'square' }"
+        :showZoomer="true"
+        :enableResize="false"
+        :boundary="{ width: 600, height: 400 }"
+        :viewport="viewport"
         @result="result"
       />
       <img v-bind:src="cropped">
@@ -51,8 +51,10 @@ export default {
   components: {
     Uploader
   },
+  props: ['cropOptions'],
   data () {
     return {
+      viewport: this.cropOptions || {},
       cropped: null,
       resResolve: '',
       visible: {
@@ -60,9 +62,13 @@ export default {
       }
     }
   },
+  watch: {
+    cropOptions (newVal) {
+      this.viewport = newVal || {}
+    }
+  },
   methods: {
     result (output) {
-      console.log('output: ', output)
       this.cropped = output
     },
     async crop (file) {

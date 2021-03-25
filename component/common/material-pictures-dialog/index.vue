@@ -29,11 +29,15 @@
           <div class="content">
             <images-con
               v-model="forms.pc"
-              :limit="curLimit('pc')"
+              :limit="picNumLimit('pc')"
+              :cropOptions="{
+                width: pixelRatioLimit('pc').minWidth,
+                height: pixelRatioLimit('pc').minHeight,
+              }"
             />
             <div class="tip-con">
-              <p v-text="typeLimitTips.pc" />
-              <p>支持JPG、PNG格式</p>
+              <p v-text="typeLimitTips('pc')" />
+              <p>{{formatTip}}</p>
             </div>
           </div>
         </div>
@@ -55,11 +59,15 @@
           <div class="content">
             <images-con
               v-model="forms.wap"
-              :limit="curLimit('wap')"
+              :limit="picNumLimit('wap')"
+              :cropOptions="{
+                width: pixelRatioLimit('wap').minWidth,
+                height: pixelRatioLimit('wap').minHeight,
+              }"
             />
             <div class="tip-con">
-              <p v-text="typeLimitTips.wap" />
-              <p>支持JPG、PNG格式</p>
+              <p v-text="typeLimitTips('wap')" />
+              <p>{{formatTip}}</p>
             </div>
           </div>
         </div>
@@ -106,18 +114,43 @@ export default {
           'https://baxing-lionad.oss-cn-shanghai.aliyuncs.com/spark.png'
         ]
       },
+      formatTip: '支持 JPG、PNG 格式；2MB 以内',
       config: {
         [MATERIAL_PIC_TYPE.NO_PIC]: {
           extraClass: 'no-pic',
-          limit: { wap: 0, pc: 0 }
+          countLimit: { wap: 0, pc: 0 }
         },
         [MATERIAL_PIC_TYPE.BIG_PIC]: {
           extraClass: 'big-pic',
-          limit: { wap: 1, pc: 1 }
+          countLimit: { wap: 1, pc: 1 },
+          pixelLimit: {
+            pc: {
+              minWidth: 800,
+              minHeight: 267,
+              ratio: '3:1'
+            },
+            wap: {
+              minWidth: 518,
+              minHeight: 292,
+              ratio: '1.77:1'
+            }
+          }
         },
         [MATERIAL_PIC_TYPE.PIC_SETS]: {
           extraClass: 'pic-sets',
-          limit: { wap: 3, pc: 4 }
+          countLimit: { wap: 3, pc: 4 },
+          pixelLimit: {
+            pc: {
+              minWidth: 323,
+              minHeight: 200,
+              ratio: '1.61:1'
+            },
+            wap: {
+              minWidth: 200,
+              minHeight: 200,
+              ratio: '1:1'
+            }
+          }
         }
       }
     }
@@ -134,12 +167,6 @@ export default {
     },
     typename () {
       return this.typeConfig.extraClass
-    },
-    typeLimitTips () {
-      return {
-        pc: '比例1.61:1，最小323*200，每组需上传4张图片',
-        wap: '比例1:1，最小200*200，每组需上传3张图片，'
-      }
     }
   },
   methods: {
@@ -154,12 +181,20 @@ export default {
 
     /* Calculation */
 
-    curLimit (type) {
-      return this.typeConfig.limit[type]
+    picNumLimit (type) {
+      return this.typeConfig.countLimit[type]
+    },
+    pixelRatioLimit (type) {
+      return this.typeConfig.pixelLimit[type]
     },
     disableByLimit (type) {
       const formsLength = this.forms[type].length
-      return formsLength >= this.curLimit(type)
+      return formsLength >= this.picNumLimit(type)
+    },
+    typeLimitTips (type) {
+      const { minWidth, minHeight, ratio } = this.pixelRatioLimit(type)
+      const { countLimit } = this.picNumLimit(type)
+      return `比例 ${ratio}，最小 ${minWidth}*${minHeight}，每组需上传${countLimit}张图片`
     }
   }
 }
