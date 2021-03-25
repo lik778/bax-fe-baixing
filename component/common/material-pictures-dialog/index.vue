@@ -15,6 +15,7 @@
           <div class="header">
             <span class="title">电脑端</span>
             <el-popover
+              v-if="!validatePCError"
               placement="bottom-start"
               trigger="click"
               popper-class="ad-preview-popover">
@@ -45,6 +46,7 @@
           <div class="header">
             <span class="title">手机端</span>
             <el-popover
+              v-if="!validateWAPError"
               placement="bottom-end"
               trigger="click"
               popper-class="ad-preview-popover">
@@ -167,6 +169,23 @@ export default {
     },
     typename () {
       return this.typeConfig.extraClass
+    },
+    validatePCError () {
+      const restCount = this.typeConfig.countLimit.pc - this.forms.pc.length
+      if (restCount) {
+        return `请再上传${restCount}张电脑端图片`
+      }
+      return null
+    },
+    validateWAPError () {
+      const restCount = this.typeConfig.countLimit.wap - this.forms.wap.length
+      if (restCount) {
+        return `请再上传${restCount}张手机端图片`
+      }
+      return null
+    },
+    validateError () {
+      return this.validatePCError || this.validateWAPError
     }
   },
   methods: {
