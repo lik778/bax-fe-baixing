@@ -96,6 +96,15 @@
           @error="handleCreativeError"
         />
       </section>
+      <section>
+        <header class="top-col">
+          创意配图
+        </header>
+        <material-pictures-dialog
+          v-model="materialPictures"
+          :initValue="materialPicturesInits"
+        />
+      </section>
       <section class="keyword">
         <header class="top-col">
           <span :class="canOptimize('keyword')" class="width-120">添加推广关键词
@@ -344,6 +353,7 @@ import { Message } from 'element-ui'
 import isEqual from 'lodash.isequal'
 import uuid from 'uuid/v4'
 
+import MaterialPicturesDialog from 'com/common/material-pictures-dialog'
 import BaiduExpandWordsDialog from 'com/common/qwt-baidu-expand-words'
 import PromotionMobileRatioTip from 'com/widget/promotion-mobile-ratio-tip'
 import PromotionAreaLimitTip from 'com/widget/promotion-area-limit-tip'
@@ -382,7 +392,9 @@ import {
   getRecommandCreative,
   changeCampaignKeywordsPrice,
   changeCampaignKeywordsMatchType,
-  queryAds
+  queryAds,
+  getMaterialPictures,
+  updateMaterialPictures
 } from 'api/fengming'
 
 import {
@@ -453,6 +465,7 @@ const FHYF_UN_USE = 0
 export default {
   name: 'qwt-update-promotion',
   components: {
+    MaterialPicturesDialog,
     BaiduExpandWordsDialog,
     PromotionMobileRatioTip,
     PromotionAreaLimitTip,
@@ -524,6 +537,8 @@ export default {
         newNegativeKeywords: [],
         deletedNegativeKeywords: []
       },
+      materialPictures: {},
+      materialPicturesInits: {},
       LANDING_TYPE_AD,
       LANDING_TYPE_GW,
       LANDING_TYPE_258,
@@ -915,6 +930,13 @@ export default {
         store.getCurrentBalance()
       ])
     },
+    async initMaterialPictures () {
+      this.materialPicturesInits = {}
+      // ! do not delete
+      // this.materialPicturesInits = await getMaterialPictures({
+      //   campaignId: this.id
+      // })
+    },
     clickSourceTip () {
       Message.warning('投放渠道不能修改')
     },
@@ -1143,6 +1165,9 @@ export default {
       return data
     },
     async updatePromotion () {
+      if (!this.materialPictures.isValid) {
+        return this.$message.error('请按要求上传创意配图')
+      }
       if (!this.$refs.contract.$data.isAgreement) {
         return this.$message.error('请阅读并勾选同意服务协议，再进行下一步操作')
       }
@@ -1155,9 +1180,19 @@ export default {
 
       try {
         await this._updatePromotion()
+        await this._updateMaterialPictures()
       } finally {
         this.isUpdating = false
       }
+    },
+    async _updateMaterialPictures () {
+      await updateMaterialPictures({
+        campaign_id: this.id,
+        delete_images: []
+          .concat(this.materialPictures.del.wap)
+          .concat(this.materialPictures.del.pc),
+        new_images: this.materialPictures.add
+      })
     },
     async _updatePromotion () {
       const { allAreas, trackPromotionKeywords } = this
@@ -1518,6 +1553,8 @@ export default {
   },
   async mounted () {
     await this.initCampaignInfo()
+
+    this.initMaterialPictures()
 
     const { landingPage, landingType } = this.originPromotion
 

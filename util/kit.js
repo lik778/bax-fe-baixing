@@ -170,7 +170,7 @@ export function getRouteParam (key) {
 }
 
 // simple deepclone
-function deepClone (source) {
+export function deepClone (source) {
   const targetObj = source instanceof Array ? [] : {}
   Object.keys(source).forEach((keys) => {
     if (source[keys] && typeof source[keys] === 'object') {

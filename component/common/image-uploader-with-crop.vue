@@ -90,7 +90,7 @@ export default {
     async confirmCrop () {
       this.$refs.croppieRef.result({
         type: 'base64',
-        size: { width: 140, height: 79 },
+        size: this.cropOptions,
         format: 'jpeg'
       }, output => {
         const { u8arr, mime } = base64ToImgBin(output)

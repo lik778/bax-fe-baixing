@@ -1,5 +1,5 @@
 <template>
-  <section class="editor">
+  <section class="material-pictures-editor">
     <aside class="label">
       推广内容:
     </aside>
@@ -85,6 +85,7 @@ import {
 } from 'constant/fengming'
 import ImagesCon from './images-con'
 import Preview from './preview'
+import { deepClone } from 'util'
 
 // 图集类型枚举
 const MATERIAL_PIC_TYPE = {
@@ -94,7 +95,23 @@ const MATERIAL_PIC_TYPE = {
 }
 
 export default {
-  name: 'qwt-material-pictures-editor',
+  name: 'material-pictures-editor',
+  props: {
+    value: Object,
+    initValue: {
+      default () {
+        return {
+          type: 1,
+          pc: [],
+          wap: []
+        }
+      }
+    }
+  },
+  model: {
+    prop: 'value',
+    event: 'change'
+  },
   components: {
     ImagesCon,
     Preview
@@ -105,16 +122,9 @@ export default {
       CREATIVE_STATUS_REJECT,
       CREATIVE_STATUS_PENDING,
       forms: {
-        type: 3,
-        pc: [
-          'https://baxing-lionad.oss-cn-shanghai.aliyuncs.com/spark.png',
-          'https://baxing-lionad.oss-cn-shanghai.aliyuncs.com/spark.png',
-          'https://baxing-lionad.oss-cn-shanghai.aliyuncs.com/spark.png'
-        ],
-        wap: [
-          'https://baxing-lionad.oss-cn-shanghai.aliyuncs.com/spark.png',
-          'https://baxing-lionad.oss-cn-shanghai.aliyuncs.com/spark.png'
-        ]
+        type: 0,
+        pc: [],
+        wap: []
       },
       formatTip: '支持 JPG、PNG 格式；2MB 以内',
       config: {
@@ -127,14 +137,14 @@ export default {
           countLimit: { wap: 1, pc: 1 },
           pixelLimit: {
             pc: {
-              minWidth: 800,
-              minHeight: 267,
-              ratio: '3:1'
-            },
-            wap: {
               minWidth: 518,
               minHeight: 292,
               ratio: '1.77:1'
+            },
+            wap: {
+              minWidth: 800,
+              minHeight: 267,
+              ratio: '3:1'
             }
           }
         },
@@ -184,8 +194,23 @@ export default {
       }
       return null
     },
-    validateError () {
+    isValidateError () {
       return this.validatePCError || this.validateWAPError
+    }
+  },
+  watch: {
+    initValue (newVal = {}) {
+      this.forms = {
+        type: newVal.type || MATERIAL_PIC_TYPE.NO_PIC,
+        pc: newVal?.pc?.length > 1 ? deepClone(newVal.pc) : [],
+        wap: newVal?.wap?.length > 1 ? deepClone(newVal.wap) : []
+      }
+    },
+    forms: {
+      deep: true,
+      handler (newValue) {
+        this.$emit('change', this.genData(newValue))
+      }
     }
   },
   methods: {
@@ -194,8 +219,33 @@ export default {
       this.forms.pc = []
       this.forms.wap = []
     },
-    handleUpload (fileList) {
-      console.log('fileList: ', fileList)
+    genData (forms = this.forms) {
+      const inits = this.initValue
+      const hasError = this.isValidateError
+      if (hasError) {
+        return {
+          isValid: false
+        }
+      } else {
+        const add = {
+          pc: forms.pc.filter(x => !(inits.pc || []).find(y => x.url === y.url)),
+          wap: forms.wap.filter(x => !(inits.wap || []).find(y => x.url === y.url))
+        }
+        const del = {
+          pc: (inits.pc || [])
+            .filter(x => !forms.pc.find(y => y.url === x.url))
+            .map(x => x.id),
+          wap: (inits.wap || [])
+            .filter(x => !forms.wap.find(y => y.url === x.url))
+            .map(x => x.id)
+        }
+        return {
+          isValid: true,
+          type: forms.type,
+          add,
+          del
+        }
+      }
     },
 
     /* Calculation */
@@ -219,7 +269,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.editor {
+.material-pictures-editor {
   display: flex;
   margin: 20px 0;
 

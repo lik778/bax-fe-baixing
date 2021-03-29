@@ -10,8 +10,7 @@
         types: ['image/jpeg', 'image/jpg', 'image/png']
       }"
       :multiple="true"
-      @upload-success="handleUploadSuccess"
-    >
+      @upload-success="handleUploadSuccess">
       <el-button
         class="upload-btn"
         :disabled="fileList.length >= limit"
@@ -22,12 +21,12 @@
     <!-- 图片容器 -->
     <div class="images">
       <div
+        v-for="(image, idx) in fileList"
         class="image-wrapper"
-        v-for="(src, idx) in fileList"
-        :key="src+idx">
-        <img class="image" :src="src"/>
+        :key="image.url+idx">
+        <img class="image" :src="image.url"/>
         <span class="upload-actions">
-          <i class="el-icon el-icon-scissors" @click="clipFile(src, idx)" />
+          <!-- <i class="el-icon el-icon-scissors" @click="clipFile(image.url, idx)" /> -->
           <i class="el-icon el-icon-delete" @click="deleteFile(idx)" />
         </span>
       </div>
@@ -37,12 +36,7 @@
 
 <script>
 import Uploader from 'com/common/image-uploader-with-crop'
-
-const simpEqual = (arr1, arr2) => {
-  const lengthEqual = arr1.length === arr2.length
-  const itemsEqual = !arr1.find((x, xi) => arr2[xi] !== x)
-  return lengthEqual && itemsEqual
-}
+import { deepClone } from 'util'
 
 export default {
   name: 'SearchImgView',
@@ -50,8 +44,8 @@ export default {
     Uploader
   },
   props: {
-    limit: Number,
-    value: Array
+    value: Array,
+    limit: Number
   },
   model: {
     prop: 'value',
@@ -60,34 +54,32 @@ export default {
   data () {
     return {
       popoverVisible: false,
-      fileList: this.value
+      fileList: deepClone(this.value || [])
     }
   },
   watch: {
-    value (newVal) {
-      this.fileList = newVal
-    },
-    fileList (newValue) {
-      if (!simpEqual(newValue, this.value)) {
+    fileList: {
+      deep: true,
+      handler (newValue) {
         this.$emit('change', newValue)
       }
     }
   },
   methods: {
-    handleUploadSuccess (urls) {
-      this.fileList = this.fileList.concat(urls)
+    handleUploadSuccess (url) {
+      this.fileList.push({
+        desc: String(+new Date()) + String(Math.random()).slice(-6),
+        url
+      })
     },
     uploadFile () {
       this.$refs.uploader.uploadFile()
     },
-    clipFile (src, idx) {
-      console.log(src, idx)
-    },
+    // clipFile (src, idx) {
+    //   console.log(src, idx)
+    // },
     deleteFile (index) {
       this.fileList.splice(index, 1)
-    },
-    result (res) {
-      console.log('res: ', res)
     }
   }
 }

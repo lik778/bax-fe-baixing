@@ -114,8 +114,6 @@ export default {
       ).then(list => list)
       if (!files.length) return
 
-      console.log(files)
-
       const [error] = await checkUploadFiles(files, uploadOptions)
       if (error) {
         return this.$message.error(error)

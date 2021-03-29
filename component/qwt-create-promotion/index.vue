@@ -80,13 +80,6 @@
         />
       </section>
 
-      <section>
-        <header class="top-col">
-          创意配图
-        </header>
-        <material-pictures-dialog v-model="materialPictures" />
-      </section>
-
       <section class="keyword">
         <header>选取推广关键词</header>
         <p class="tip">请选取20个以上关键词，关键词越多您的创意被展现的机会越多。根据当月数据，为您推荐如下关键词</p>
@@ -213,7 +206,6 @@ import { Message } from 'element-ui'
 import uuid from 'uuid/v4'
 import clone from 'clone'
 
-import MaterialPicturesDialog from 'com/common/material-pictures-dialog'
 import BaiduExpandWordsDialog from 'com/common/qwt-baidu-expand-words'
 import PromotionCreativeTip from 'com/widget//promotion-creative-tip'
 import PromotionAreaLimitTip from 'com/widget/promotion-area-limit-tip'
@@ -287,7 +279,6 @@ const promotionTemplate = {
 export default {
   name: 'qwt-create-promotion',
   components: {
-    MaterialPicturesDialog,
     BaiduExpandWordsDialog,
     PromotionCreativeTip,
     PromotionAreaLimitTip,
@@ -334,17 +325,6 @@ export default {
       LANDING_TYPE_258,
       LANDING_TYPE_STORE,
       RECOMMAND_SOURCES,
-      materialPictures: {
-        type: 1,
-        pc: [
-          'https://www.pc-url-1.png',
-          'https://www.pc-url-2.png'
-        ],
-        wap: [
-          'https://www.url-1.png',
-          'https://www.url-2.png'
-        ]
-      },
 
       searchRecommendsVisible: false,
       chargeDialogVisible: false,
