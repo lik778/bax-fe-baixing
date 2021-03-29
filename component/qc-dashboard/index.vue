@@ -285,8 +285,8 @@ export default {
       const query = {
         targetUserId,
         salesId,
-        // promoteId: this.query.promoteID
-        promoteId: 103445
+        promoteId: this.query.promoteID
+        // promoteId: 103445
       }
       let response = null
       let clickCount = { totalCount: 0, yesterdayCount: 0 }
@@ -373,8 +373,8 @@ export default {
         size: this.pagination.size,
         targetUserId,
         salesId,
-        // promoteId: this.query.promoteID
-        promoteId: 103445
+        promoteId: this.query.promoteID
+        // promoteId: 103445
       }
       let response = null
       try {
