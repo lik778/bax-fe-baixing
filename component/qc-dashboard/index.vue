@@ -253,8 +253,8 @@ export default {
     await this.initPromoteListOptions()
     if (this.options.promoteList.length) {
       this.selectPromote(this.options.promoteList[0].value)
-      this.initPieChart()
-      this.listenChartResize()
+      // this.initPieChart()
+      // this.listenChartResize()
     }
   },
   methods: {
@@ -474,8 +474,8 @@ export default {
     selectPromote (id) {
       this.query.promoteID = +id
       this.$nextTick(() => {
-        this.initLiquidChart()
-        this.initPieChart()
+        // this.initLiquidChart()
+        // this.initPieChart()
         this.initListData()
       })
     },
