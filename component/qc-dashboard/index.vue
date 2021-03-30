@@ -95,7 +95,7 @@
           class="query-table"
           border
           :data="displayedShowList"
-          :empty-text="loading.showNoListData ? NO_PVS_TIP : '...'"
+          empty-text="暂无数据，预计在计划投放1~3天后会同步数据报表，请等待"
         >
           <el-table-column label="关键词" prop="keyword" />
           <el-table-column label="搜索引擎">
