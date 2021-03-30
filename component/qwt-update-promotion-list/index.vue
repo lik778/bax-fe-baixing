@@ -178,7 +178,7 @@
                     <router-link
                       class="view"
                       :to="{
-                        name: 'qwt-update-promotion-list',
+                        name: 'qwt-promotion-list',
                         query: { id: scope.row.id },
                       }"
                     >查看</router-link>
@@ -428,7 +428,7 @@ const formatlandingPageList = (res) => {
 }
 
 export default {
-  name: 'qwt-update-promotion-list',
+  name: 'qwt-promotion-list',
   created () {
     const {
       query: { id }
@@ -588,7 +588,7 @@ export default {
         query: { id }
       } = this.$route
       if (id && tab.index === '0') {
-        this.$router.push({ name: 'qwt-update-promotion-list', query })
+        this.$router.push({ name: 'qwt-promotion-list', query })
       }
     },
 

@@ -355,7 +355,7 @@ const qwtRoutes = [
   {
     component: () => import('com/qwt-update-promotion-list'),
     path: '/main/qwt/promotions',
-    name: 'qwt-update-promotion-list'
+    name: 'qwt-promotion-list'
   },
   {
     component: () => import('com/qwt-dashboard'),
