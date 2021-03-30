@@ -382,14 +382,12 @@ export default {
       this.form.industry = val || []
     },
     handleQueryPrice () {
-      this.$message.warning('系统临时维护中，标王查价、交易系统临时关闭，' +
-        '系统恢复后，我们将第一时间开放，对您造成任何不便，我们深表歉意。')
-      // this.$refs.form.validate(async isValid => {
-      //   if (isValid) {
-      //     this.queryPrice()
-      //     this.sendIndustryInfo()
-      //   }
-      // })
+      this.$refs.form.validate(async isValid => {
+        if (isValid) {
+          this.queryPrice()
+          this.sendIndustryInfo()
+        }
+      })
     },
     // 查价时需把数据打给数据组
     sendIndustryInfo () {
