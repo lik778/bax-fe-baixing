@@ -343,16 +343,16 @@ const qwtRoutes = [
     name: 'qwt-update-promotion'
   },
   {
-    component: () => import('com/qwt-promotion-list'),
+    component: () => import('com/qwt-update-promotion-list'),
     path: '/main/qwt/promotions',
     name: 'qwt-promotion-list'
   },
   // 开发备用
-  {
-    component: () => import('com/qwt-update-promotion-list'),
-    path: '/main/qwt/promotions/update',
-    name: 'qwt-update-promotion-list'
-  },
+  // {
+  //   component: () => import('com/qwt-update-promotion-list'),
+  //   path: '/main/qwt/promotions/update',
+  //   name: 'qwt-update-promotion-list'
+  // },
   {
     component: () => import('com/qwt-update-promotion-list'),
     path: '/main/qwt/promotions/update/:id',
