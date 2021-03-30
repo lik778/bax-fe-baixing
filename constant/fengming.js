@@ -165,6 +165,26 @@ export const device = {
   1: 'WAP'
 }
 
+export const MIN_DAILY_BUDGET = 100
+
+export const TIME_TYPE_CUSTOM = 'custom'
+export const TIME_TYPE_LONG = 'long'
+export const TIME_TYPE_OPTS = {
+  [TIME_TYPE_LONG]: '长期投放',
+  [TIME_TYPE_CUSTOM]: '定时投放'
+}
+
+export const DURATION_TYPE_ALL = 'all'
+export const DURATION_TYPE_PART = 'part'
+export const SOGOU_MAX_DURATION = 3670009
+export const EXCLUDE_SOGOU_MAX_DURATION = 117440505
+export const DURATION_TYPE_OPTS = {
+  [DURATION_TYPE_ALL]: '全时段',
+  [DURATION_TYPE_PART]: '部分时段'
+}
+
+export const NEGATIVE_KEYWORDS_MAX = 200
+
 export const RECOMMAND_SOURCE_FH = 'tfidf_fh'
 export const NEW_RECOMMAND_SOURCE_FH = 'tfidf_fh_service'
 
