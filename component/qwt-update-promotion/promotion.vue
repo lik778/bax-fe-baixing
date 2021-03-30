@@ -1,7 +1,7 @@
 <template>
   <div class="promotion">
     <section>
-      <div class="desc">投放城市</div>
+      <div class="desc align-self">投放城市</div>
       <div class="cont">
         <el-tag
           type="primary"
@@ -29,7 +29,7 @@
       <div class="cont">
         <el-input
           class="budget-input"
-          size="small"
+          size="medium"
           :disabled="isSales || !modifyBudgetQuota"
           :value="promotion.dailyBudget"
           @input="onChangeDaliyBudget"
@@ -54,9 +54,9 @@
       <div class="cont">
         {{ DURATION_TYPE_OPTS[getDurationType()]}}
         <el-button
-          size="small"
           class="duration-type"
           type="primary"
+          size="medium"
           plain
           @click="durationSelectorVisible = true"
           >设置</el-button
@@ -69,7 +69,7 @@
         <el-button-group>
           <el-button
             :disabled="isSales"
-            size="small"
+            size="medium"
             v-for="(val, key) in TIME_TYPE_OPTS"
             :key="key"
             @click="onChangeTimeType(key)"
@@ -79,11 +79,11 @@
           </el-button>
         </el-button-group>
         <el-date-picker
-          size="small"
           class="time-range-picker"
           v-if="timeType === TIME_TYPE_CUSTOM"
           :value="promotion.validTime"
           @input="onValidTimeChange"
+          size="medium"
           :disabled="isSales"
           :picker-options="{ disabledDate }"
           type="daterange"
@@ -91,6 +91,21 @@
           start-placeholder="开始日期"
           end-placeholder="结束日期"
         />
+      </div>
+    </section>
+
+    <section>
+      <div class="desc align-self">设置否词
+        <el-tooltip
+          content="当网民的搜索词与精确否定关键词完全一致时，您的推广结果将不会展现"
+          placement="top-start">
+          <i class="el-icon-question" />
+        </el-tooltip>
+      </div>
+      <div class="cont">
+         <negative-words-comp
+          :negative-words="promotion.negativeWords"
+          @change="(type, data) => emitPromtionData(type, data)" />
       </div>
     </section>
 
@@ -110,7 +125,7 @@
       :visible="durationSelectorVisible"
       :platform="Number(promotion.source)"
       :schedule="getCurrentSchedule()"
-      @change="onChangeDuration"
+      @change="(durations) => emitPromtionData('schedule', durations)"
       @hide="durationSelectorVisible = false"
     >
     </duration-selector>
@@ -120,6 +135,7 @@
 <script>
 import AreaSelector from 'com/common/area-selector'
 import DurationSelector from 'com/common/duration-selector'
+import NegativeWordsComp from 'com/common/qwt/negative-words'
 
 import { getCnName } from 'util/meta'
 import { disabledDate } from 'util/element'
@@ -204,22 +220,22 @@ export default {
       }
       return sum < EXCLUDE_SOGOU_MAX_DURATION ? DURATION_TYPE_PART : DURATION_TYPE_ALL
     },
+    emitPromtionData (type, data) {
+      this.$emit('update-promotion', type, data)
+    },
     onChangeAreas (areas) {
-      this.$emit('update-promotion', 'areas', areas)
+      this.emitPromtionData('areas', areas)
       this.areaDialogVisible = false
     },
     onRemoveArea (area) {
-      this.$emit('update-promotion', 'areas', this.promotion.areas.filter(i => i !== area))
+      this.emitPromtionData('areas', this.promotion.areas.filter(i => i !== area))
     },
     onChangeDaliyBudget (val) {
       if (isNaN(val)) return
-      this.$emit('update-promotion', 'dailyBudget', val)
-    },
-    onChangeDuration (durations) {
-      this.$emit('update-promotion', 'schedule', durations)
+      this.emitPromtionData('dailyBudget', val)
     },
     onValidTimeChange (val) {
-      this.$emit('update-promotion', 'validTime', val)
+      this.emitPromtionData('validTime', val)
     },
     onChangeTimeType (val) {
       this.timeType = val
@@ -232,7 +248,8 @@ export default {
   },
   components: {
     AreaSelector,
-    DurationSelector
+    DurationSelector,
+    NegativeWordsComp
   }
 }
 </script>
@@ -246,10 +263,17 @@ export default {
     &:not(:last-child) {
       margin-bottom: 20px;
     }
+    .el-icon-question {
+      cursor: pointer;
+    }
     .desc {
       flex-shrink: 0;
       width: 100px;
       margin-right: 10px;
+      &.align-self {
+        align-self: flex-start;
+        margin-top: 6px;
+      }
     }
     .cont {
       flex: 1;

@@ -73,6 +73,10 @@ export default {
     TextLimitTip
   },
   props: {
+    idx: {
+      type: Number,
+      required: true
+    },
     disabled: {
       type: Boolean,
       default: false
@@ -132,7 +136,8 @@ export default {
       }
       const creativeValues = {
         ...defaultCreativeValues,
-        [type]: value
+        [type]: value,
+        idx: this.idx
       }
       this.$emit('change', creativeValues)
     },

@@ -17,16 +17,6 @@
       </div>
     </div>
 
-    <!-- 否词 -->
-    <div class="module">
-      <div class="content">
-        <negative-words-comp
-          :campaign-id="campaignId"
-          :negative-words="promotion.negativeWords"
-          @update-promotion="updatePromotionData" />
-      </div>
-    </div>
-
     <!-- 单元设置 -->
     <div class="module">
       <h4>单元设置</h4>
@@ -34,7 +24,7 @@
         <el-button
           @click="handleGoGroup"
           type="primary"
-          size="small"
+          size="medium"
           class="add-group-btn">
           <i class="el-icon-plus" />
           新增单元
@@ -62,7 +52,6 @@
 <script>
 import PromotionComp from './promotion'
 import GroupTableComp from 'com/common/qwt/group-table'
-import NegativeWordsComp from 'com/common/qwt/negative-words'
 import ContractAck from 'com/widget/contract-ack'
 import PromotionChargeTip from 'com/widget/promotion-charge-tip'
 
@@ -80,7 +69,6 @@ export default {
   components: {
     PromotionComp,
     GroupTableComp,
-    NegativeWordsComp,
     ContractAck,
     PromotionChargeTip
   },

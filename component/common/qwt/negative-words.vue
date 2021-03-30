@@ -1,21 +1,11 @@
 <template>
   <div class="negative-words">
-    <div class="title">
-      设置否定关键词
-      <el-tooltip content="请注意，否词和关键词不能重复" placement="top">
-        <i class="el-icon-question" />
-      </el-tooltip>
-    </div>
-    <p class="tip">
-      当网民的搜索词与精确否定关键词完全一致时，您的推广结果将不会展现。
-      <span>否词个数不得超过<b class="red">{{ NEGATIVE_KEYWORDS_MAX }}</b>个</span>
-    </p>
     <div class="search">
-      <el-input class="input" size="small" v-model="word" placeholder="请输入标题（字数限制9～25个字）"/>
-      <el-button class="btn" type="primary" size="small" @click="addNegativeWords">添加否定关键词</el-button>
-      <strong class="num">当前否定关键词数量: <b class="red">{{ negativeWords.length }}</b>个</strong>
+      <el-input class="input" size="medium" v-model="word" placeholder="请输入标题（字数限制9～25个字）"/>
+      <el-button class="btn" type="primary" size="medium" @click="addNegativeWords">添加否定关键词</el-button>
+      <span class="num">(否词关键词个数不得超过<strong>{{ NEGATIVE_KEYWORDS_MAX }}</strong>个, 当前否词数量: <strong>{{ negativeWords.length }}</strong>个）</span>
     </div>
-    <div class="res">
+    <div class="res" v-if="negativeWords.length">
       <el-tag class="tag" type="primary" v-for="item in negativeWords" :key="item.word"
         @close="removeNegativeWord(item)" closable>
         {{ item.word }}
@@ -44,10 +34,6 @@ export default {
       default: () => {
         return []
       }
-    },
-    campaignId: {
-      type: String,
-      required: true
     }
   },
   data () {
@@ -74,14 +60,16 @@ export default {
         validateKeyword([val])
       } catch (e) {
         return this.$message.error(e.message)
+      } finally {
+        this.word = ''
       }
-      this.$emit('update-promotion', 'negativeWords', [{ word: val }].concat(this.negativeWords))
+      this.$emit('change', 'negativeWords', [{ word: val }].concat(this.negativeWords))
     },
     removeNegativeWord (w) {
-      this.$emit('update-promotion', 'negativeWords', this.negativeWords.filter(o => o.word !== w.word))
+      this.$emit('change', 'negativeWords', this.negativeWords.filter(o => o.word !== w.word))
     },
     updateNegativeWords (words) {
-      this.$emit('update-promotion', 'negativeWords', words.concat(this.negativeWords))
+      this.$emit('change', 'negativeWords', words.concat(this.negativeWords))
     }
   },
   components: {
@@ -100,7 +88,7 @@ export default {
     }
   }
   .search {
-    margin-top: 20px;
+    // margin-top: 20px;
     .input {
       width: 240px;
       margin-right: 14px;
@@ -109,15 +97,14 @@ export default {
       font-size: 12px;
       font-weight: 400;
       margin-left: 10px;
+      > strong {
+        color: $c-strong;
+      }
     }
-  }
-  .red {
-    color: $c-strong;
   }
   .tip {
     font-size: 12px;
     color: #6a778c;
-    margin-top: 20px;
   }
   .res {
     margin-top: 20px;
