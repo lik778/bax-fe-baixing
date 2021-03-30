@@ -120,6 +120,8 @@ export default {
   }
   .content {
     margin-top: 20px;
+    max-height: 300px;
+    overflow-y: auto;
     .tag {
       margin-right: 5px;
       margin-bottom: 5px;

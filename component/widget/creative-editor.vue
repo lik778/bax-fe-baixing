@@ -75,7 +75,7 @@ export default {
   props: {
     idx: {
       type: Number,
-      required: true
+      required: false
     },
     disabled: {
       type: Boolean,

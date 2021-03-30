@@ -29,7 +29,7 @@
       <div class="cont">
         <el-input
           class="budget-input"
-          size="medium"
+          size="small"
           :disabled="isSales || !modifyBudgetQuota"
           :value="promotion.dailyBudget"
           @input="onChangeDaliyBudget"
@@ -56,7 +56,7 @@
         <el-button
           class="duration-type"
           type="primary"
-          size="medium"
+          size="small"
           plain
           @click="durationSelectorVisible = true"
           >设置</el-button
@@ -69,7 +69,7 @@
         <el-button-group>
           <el-button
             :disabled="isSales"
-            size="medium"
+            size="small"
             v-for="(val, key) in TIME_TYPE_OPTS"
             :key="key"
             @click="onChangeTimeType(key)"
@@ -83,7 +83,7 @@
           v-if="timeType === TIME_TYPE_CUSTOM"
           :value="promotion.validTime"
           @input="onValidTimeChange"
-          size="medium"
+          size="small"
           :disabled="isSales"
           :picker-options="{ disabledDate }"
           type="daterange"
@@ -105,7 +105,7 @@
       <div class="cont">
          <negative-words-comp
           :negative-words="promotion.negativeWords"
-          @change="(type, data) => emitPromtionData(type, data)" />
+          @update-negative-words="(data) => emitPromtionData('negativeWords', data)" />
       </div>
     </section>
 
@@ -127,8 +127,7 @@
       :schedule="getCurrentSchedule()"
       @change="(durations) => emitPromtionData('schedule', durations)"
       @hide="durationSelectorVisible = false"
-    >
-    </duration-selector>
+    />
   </div>
 </template>
 
@@ -198,7 +197,7 @@ export default {
     },
     consumeDays () {
       if (!this.promotion.dailyBudget) return 0
-      return Math.floor(this.currentBalance / this.promotion.dailyBudget)
+      return Math.floor(this.currentBalance / (this.promotion.dailyBudget * 100))
     }
   },
   methods: {
@@ -232,6 +231,7 @@ export default {
     },
     onChangeDaliyBudget (val) {
       if (isNaN(val)) return
+      if (val * 100 > this.currentBalance) return
       this.emitPromtionData('dailyBudget', val)
     },
     onValidTimeChange (val) {

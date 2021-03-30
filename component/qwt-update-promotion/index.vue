@@ -12,6 +12,7 @@
           :all-areas="allAreas"
           :promotion="promotion"
           :current-balance="currentBalance"
+          @update-negative-words="(negativeWords) => updatePromotionData('negativeWords', negativeWords)"
           @update-promotion="updatePromotionData"
         />
       </div>
@@ -24,7 +25,7 @@
         <el-button
           @click="handleGoGroup"
           type="primary"
-          size="medium"
+          size="small"
           class="add-group-btn">
           <i class="el-icon-plus" />
           新增单元
@@ -132,11 +133,13 @@ export default {
       return status === CAMPAIGN_STATUS_OFFLINE
     }
   },
-  async created () {
+  async mounted () {
+    // TODO: 打点需求
     await this.initCampaignInfo()
   },
   methods: {
     async getCampaignInfo () {
+      // TODO: 根据计划id获取计划详情
       const info = await getCampaignInfo(this.campaignId)
       info.dailyBudget = info.dailyBudget / 100
       if (info.timeRange && info.timeRange.length && info.timeRange[0] !== null && info.timeRange[1] !== null) {
@@ -180,7 +183,6 @@ export default {
 
       // TODO: 调用updateCampaign接口
       // TODO: 是否要做打点
-      console.log(data)
       this.$router.push({ name: 'qwt-promotion-list' })
     },
     validatePromotionData () {
