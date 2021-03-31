@@ -29,7 +29,7 @@
       <el-radio-button :label="genCreatedAtValues(2)">近一年</el-radio-button>
     </el-radio-group>
     <div class="input-wrap">
-      <label class="ml">{{selectByType().type}}</label>
+      <label>{{selectByType().type}}</label>
       <bax-input v-model="queryParmas.selectId" class="input" :placeholder="selectByType().placeholder" />
     </div>
 
