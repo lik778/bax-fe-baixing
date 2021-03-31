@@ -30,6 +30,7 @@
         :status-text="detailStatusText"
         @change="handleCreativeValueChange"
         @error="handleCreativeError"
+        @validate-len-change="handleValidateLenChange"
       />
     </el-tab-pane>
   </el-tabs>
@@ -113,9 +114,30 @@ export default {
         }
       })
     },
-    handleCreativeError (msg) {
-      if (msg) this.$message.error(msg)
-      this.$emit('creative-error', msg)
+    handleCreativeError (msg, idx) {
+      const creativeObj = this.creatives[idx]
+      if (msg) {
+        this.$message.error(msg)
+      }
+      this.$emit('update-creatives', {
+        type: 'update',
+        idx,
+        data: {
+          ...creativeObj,
+          msg
+        }
+      })
+    },
+    handleValidateLenChange (isValid, idx) {
+      const creativeObj = this.creatives[idx]
+      this.$emit('update-creatives', {
+        type: 'update',
+        idx,
+        data: {
+          ...creativeObj,
+          lenValid: isValid
+        }
+      })
     }
   },
   components: {

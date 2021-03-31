@@ -26,13 +26,15 @@ export default {
   name: 'mobile-price-ratio',
   props: {
     value: {
-      type: Number,
+      type: [Number, String],
       required: true,
       default: 1
     }
   },
   methods: {
     changeMobilePriceRatio (val) {
+      if (isNaN(val)) return
+      if (val < 0) return
       this.$emit('change', val)
     }
   }

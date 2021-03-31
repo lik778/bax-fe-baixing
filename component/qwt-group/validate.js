@@ -9,7 +9,7 @@ const GROUP_NAME_MAX = 6
 const GROUP_NAME_MIN = 1
 const KEYWORDS_MIN = 20
 
-const descriptor = {
+const commonDescriptor = {
   landingType: {
     message: 'hi, 投放类型不能为空',
     type: 'number',
@@ -62,6 +62,9 @@ const descriptor = {
     if (!value.length) return new Error('还为添加创意信息')
     if (value.some(o => o.title === '')) return new Error('请填写推广标题')
     if (value.some(o => o.content === '')) return new Error('请填写推广内容')
+    if (value.some(o => !o.lenValid)) return new Error('创意内容不符合要求: 创意标题长度太短, 创意内容长度太短')
+    const errVal = value.find(o => !!o.msg)
+    if (errVal) return new Error(errVal.msg)
     return true
   },
   keywords (rule, value) {
@@ -79,5 +82,18 @@ const descriptor = {
   }
 }
 
-const validator = new Schema(descriptor)
-export default validator
+const createDescriptor = {
+  ...commonDescriptor,
+  price (rule, value) {
+    if (!value) return new Error('还未填写关键词出价哦！')
+    if (value > 99 * 100 || value < 2 * 100) return new Error('关键词价格需在[2, 999]区间内')
+    return true
+  }
+}
+
+const updateDescriptor = {
+  ...commonDescriptor
+}
+
+export const createValidator = new Schema(createDescriptor)
+export const updateValidator = new Schema(updateDescriptor)

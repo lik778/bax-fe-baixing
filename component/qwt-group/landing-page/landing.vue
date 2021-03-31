@@ -10,7 +10,7 @@
       <el-button
         v-for="o of LANDING_TYPE_OPTS"
         :key="o.value"
-        :type="group.landingType === o.value ? 'primary' : ''"
+        :type="landingType === o.value ? 'primary' : ''"
         @click="clickLandingType(o.value)"
       >
         {{ o.label }}
@@ -20,25 +20,26 @@
       <user-ad-selector
         ref="userAdSelector"
         :type="adSelectorType"
-        v-if="group.landingType === LANDING_TYPE_AD"
-        :all-areas="$attrs.allAreas"
+        v-if="landingType === LANDING_TYPE_AD"
+        :all-areas="allAreas"
         :limit-mvp="false"
-        :selected-id="group.landingPageId"
-        @select-ad="(ad) => emitUpdateGroup(LANDING_TYPE_AD, ad.id, ad.url)"
+        :selected-id="landingPageId"
+        @select-ad="(ad) => emitUpdateGroup(LANDING_TYPE_AD, ad.url, ad.adId)"
         @valid-change="(isValid) => setLandingPageValidity(LANDING_TYPE_AD, isValid)"
       />
       <gw-page-selector
-        v-if="group.landingType === LANDING_TYPE_GW"
-        :value="group.landingPage"
+        v-if="landingType === LANDING_TYPE_GW"
+        :value="landingPage"
         @change="v => emitUpdateGroup(LANDING_TYPE_GW, v)"
         @valid-change="(isValid) => setLandingPageValidity(LANDING_TYPE_GW, isValid)"
       />
       <mvip-selector
-        v-if="group.landingType === LANDING_TYPE_STORE"
-        :initValue="group.landingPage"
+        v-if="landingType === LANDING_TYPE_STORE"
+        :initValue="landingPage"
         @change="(url, id) => emitUpdateGroup(LANDING_TYPE_STORE, url, id)"
         @validChange="(isValid) => setLandingPageValidity(LANDING_TYPE_STORE, isValid)"
       />
+      <p v-if="disabled" class="authing-tip">您的推广在审核中，审核通过后可修改落地页，感谢配合！</p>
     </div>
   </div>
 </template>
@@ -58,7 +59,32 @@ import {
 
 export default {
   name: 'landing',
-  props: ['group'],
+  props: {
+    allAreas: {
+      type: Array,
+      required: true,
+      default () {
+        return []
+      }
+    },
+    landingType: {
+      type: Number,
+      required: true
+    },
+    landingPage: {
+      type: String,
+      required: true
+    },
+    landingPageId: {
+      type: [Number, String],
+      required: true
+    },
+    disabled: {
+      type: Boolean,
+      required: false,
+      default: false
+    }
+  },
   data () {
     return {
       adSelectorType: '',
@@ -71,7 +97,7 @@ export default {
     }
   },
   mounted () {
-    if (this.group.landingType !== LANDING_TYPE_AD) {
+    if (this.landingType !== LANDING_TYPE_AD) {
       this.adSelectortype = ''
     }
   },
@@ -87,7 +113,7 @@ export default {
       })
     },
     clickLandingType (val) {
-      if (this.group.landingType === val) return
+      if (this.landingType === val) return
       this.adSelectorType = ''
       this.emitUpdateGroup(val)
     }

@@ -12,8 +12,10 @@
     <section>
       <div class="landing desc">投放页面：</div>
       <landing-comp
-        v-bind="$attrs"
-        :group="group"
+        :landing-type="group.landingType"
+        :landing-page="group.landingPage"
+        :landing-page-id="group.landingPageId"
+        :all-areas="allAreas"
         v-on="$listeners"
       />
     </section>
@@ -32,6 +34,9 @@ export default {
       default: () => {
         return {}
       }
+    },
+    allAreas: {
+      type: Array
     }
   },
   methods: {

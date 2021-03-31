@@ -1,13 +1,19 @@
 <template>
   <div class="qwt-create-group">
     <section>
-      <header>推广目标设置</header>
+      <header>推广目标设置
+        <p class="target-tip">
+            按点击付费，展现免费，100元一键投放百度，神马等多渠道
+            <el-popover trigger="hover">
+              <img src="//file.baixing.net/201809/a995bf0f1707a3e98a2c82a5dc5f8ad3.png" width="638" height="405">
+              <a slot="reference" class="">查看详情</a>
+            </el-popover>
+          </p>
+      </header>
       <div class="content">
         <landing-page-comp
           :group="group"
-          :is-edit="false"
-          :promotion="promotion"
-          :allAreas="allAreas"
+          :all-areas="allAreas"
           @change-name="(name) => updateGroupData('name', name)"
           @change-landing="(args) => updateGroupData(args)"
         />
@@ -53,6 +59,11 @@
       </div>
     </section>
     <section>
+      <cpc-price-comp
+        style="margin-bottom: 10px"
+        :value="group.price"
+        @change="(val) => updateGroupData('price', val)"
+      />
       <mobile-price-ratio-comp
         :value="group.mobilePriceRatio"
         @change="(val) => updateGroupData('mobilePriceRatio', val)"
@@ -75,6 +86,9 @@ import KeywordComp from './keyword/create'
 import NegativeKeywordComp from 'com/common/qwt/negative-words'
 import ContractAckComp from 'com/widget/contract-ack'
 import MobilePriceRatioComp from './mobile-price-ratio'
+import CpcPriceComp from './cpc-price'
+
+import { createValidator } from './validate'
 
 export default {
   name: 'qwt-create-group',
@@ -88,7 +102,7 @@ export default {
     return {
       promotion: {
         source: 0,
-        campaignId: '', // 计划id
+        campaignId: 4012, // 计划id
         areas: []
       },
       group: {
@@ -99,16 +113,16 @@ export default {
         status: '',
         auditStatus: 0,
         detailStatusText: '',
-        creatives: [
-          {
-            title: '',
-            content: ''
-          }
-        ],
+        creatives: [{
+          title: '',
+          content: ''
+        }],
         negativeWords: [],
         mobilePriceRatio: 1,
-        keywords: []
-      }
+        keywords: [],
+        price: 2
+      },
+      isUpdating: false
     }
   },
   components: {
@@ -118,7 +132,8 @@ export default {
     KeywordComp,
     NegativeKeywordComp,
     ContractAckComp,
-    MobilePriceRatioComp
+    MobilePriceRatioComp,
+    CpcPriceComp
   },
   methods: {
     updateGroupData (type, data) {
@@ -149,9 +164,32 @@ export default {
           return keywords.splice(idx, 1)
       }
     },
+    async validateGroup () {
+      if (!this.$refs.contract.$data.isAgreement) {
+        throw new Error('请阅读并勾选同意服务协议，再进行下一步操作')
+      }
+      if (this.isUpdating) {
+        throw new Error('正在更新中, 请稍等一会儿 ~')
+      }
+
+      try {
+        await createValidator.validate(this.group)
+      } catch (e) {
+        throw new Error(e.errors[0].message)
+      }
+    },
     async addGroup () {
-      // TODO: 新建单元数据校验
-      // TODO: 新建单元接口对接
+      try {
+        await this.validateGroup()
+        this.isUpdating = true
+        // TODO: 新建单元接口对接
+
+        this.$router.push({ name: 'qwt-update-promotion', params: { id: this.promotion.campaignId } })
+      } catch (e) {
+        return this.$message.error(e.message)
+      } finally {
+        this.isUpdating = false
+      }
     }
   }
 }
@@ -170,6 +208,18 @@ export default {
       color: #6a778c;
       font-weight: 700;
       font-size: 14px;
+      .target-tip {
+        font-size: .88em;
+        color: #333;
+        display: inline-block;
+        margin-left: 20px;
+        font-weight: 400;
+        a {
+          margin-left: 10px;
+          cursor: pointer;
+          color: #15a4fa;
+        }
+      }
     }
     > .content {
       font-size: 14px;
