@@ -28,6 +28,7 @@
       <div class="desc">渠道单日预算</div>
       <div class="cont">
         <el-input
+          type="number"
           class="budget-input"
           size="small"
           :disabled="isSales || !modifyBudgetQuota"
@@ -136,7 +137,7 @@ import AreaSelector from 'com/common/area-selector'
 import DurationSelector from 'com/common/duration-selector'
 import NegativeWordsComp from 'com/common/qwt/negative-words'
 
-import { getCnName } from 'util/meta'
+import { getCnName, isQwtEnableCity } from 'util/meta'
 import { disabledDate } from 'util/element'
 import {
   semPlatformCn,
@@ -178,7 +179,7 @@ export default {
   },
   data () {
     return {
-      timeType: this.promotion.validTime.length ? TIME_TYPE_CUSTOM : TIME_TYPE_LONG,
+      timeType: TIME_TYPE_LONG,
       areaDialogVisible: false,
       durationSelectorVisible: false,
 
@@ -188,10 +189,6 @@ export default {
       TIME_TYPE_CUSTOM,
       DURATION_TYPE_OPTS
     }
-  },
-  mounted () {
-    // tip: 解决validTime开始为空的情况
-    if (this.timeType === TIME_TYPE_LONG) this.onChangeTimeType(this.timeType)
   },
   computed: {
     modifyBudgetQuota () {
@@ -227,7 +224,9 @@ export default {
       this.$emit('update-promotion', type, data)
     },
     onChangeAreas (areas) {
-      this.emitPromtionData('areas', areas)
+      // tip: 过滤百度无法投放的城市
+      const qwtEnableAreas = areas.filter(o => isQwtEnableCity(o, this.allAreas))
+      this.emitPromtionData('areas', qwtEnableAreas)
       this.areaDialogVisible = false
     },
     onRemoveArea (area) {
@@ -236,7 +235,8 @@ export default {
     onChangeDaliyBudget (val) {
       if (isNaN(val)) return
       if (val * 100 > this.currentBalance) return
-      this.emitPromtionData('dailyBudget', val)
+      if (val < 0) return
+      this.emitPromtionData('dailyBudget', Number(val))
     },
     onValidTimeChange (val) {
       this.emitPromtionData('validTime', val)
@@ -248,6 +248,15 @@ export default {
         validTime = [null, null]
       }
       this.onValidTimeChange(validTime)
+    }
+  },
+  watch: {
+    'promotion.validTime' (v) {
+      if (v.length && v[0] === null) {
+        this.timeType = TIME_TYPE_LONG
+      } else {
+        this.timeType = TIME_TYPE_CUSTOM
+      }
     }
   },
   components: {

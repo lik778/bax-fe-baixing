@@ -62,8 +62,10 @@ import clone from 'clone'
 import pick from 'lodash.pick'
 import { toHumanTime } from 'utils'
 import isEqual from 'lodash.isequal'
-import { MIN_DAILY_BUDGET, CAMPAIGN_STATUS_OFFLINE } from 'constant/fengming'
+import { CAMPAIGN_STATUS_OFFLINE } from 'constant/fengming'
 import { getCampaignValidTime } from 'util/campaign'
+
+import validator from './validate'
 
 const emptyPromtion = {
   status: 0,
@@ -168,7 +170,7 @@ export default {
           toHumanTime(info.timeRange[1], 'YYYY-MM-DD')
         ]
       } else {
-        info.validTime = []
+        info.validTime = [null, null]
       }
       return info
     },
@@ -183,9 +185,9 @@ export default {
     },
     updateGroupData (row) {
     },
-    updatePromotion () {
+    async updatePromotion () {
       try {
-        this.validatePromotionData()
+        await this.validatePromotion()
         this.isUpdating = true
         this._updatePromotion()
       } catch (e) {
@@ -205,25 +207,18 @@ export default {
       // TODO: 是否要做打点
       this.$router.push({ name: 'qwt-promotion-list' })
     },
-    validatePromotionData () {
-      const { areas, dailyBudget, validTime } = this.promotion
+    async validatePromotion () {
       if (!this.$refs.contract.$data.isAgreement) {
         throw new Error('请阅读并勾选同意服务协议，再进行下一步操作')
       }
       if (this.isUpdating) {
         throw new Error('正在更新中, 请稍等一会儿 ~')
       }
-      if (!areas.length) {
-        throw new Error('请选择投放区域')
-      }
-      if (dailyBudget * 100 < MIN_DAILY_BUDGET) {
-        throw new Error(`推广日预算需大于 ${this.$formatter.f2y(MIN_DAILY_BUDGET)} 元`)
-      }
-      if (dailyBudget > 10000000) {
-        throw new Error('推广日预算太高啦！您咋这么土豪呢~')
-      }
-      if (!validTime.length) {
-        throw new Error('请填写投放日期或选择长期投放')
+
+      try {
+        await validator.validate(this.promotion)
+      } catch (e) {
+        throw new Error(e.errors[0].message)
       }
     },
     getUpdatedPromotionData () {

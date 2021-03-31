@@ -115,7 +115,7 @@ export default {
     },
     handleCreativeError (msg) {
       if (msg) this.$message.error(msg)
-      this.creativeError = msg
+      this.$emit('creative-error', msg)
     }
   },
   components: {
