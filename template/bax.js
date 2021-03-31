@@ -353,7 +353,7 @@ const qwtRoutes = [
     name: 'qwt-update-group'
   },
   {
-    component: () => import('com/qwt-promotion-list'),
+    component: () => import('com/qwt-update-promotion-list'),
     path: '/main/qwt/promotions',
     name: 'qwt-promotion-list'
   },
