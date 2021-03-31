@@ -72,7 +72,7 @@ export const fieldType = {
 
 export const selectType = {
   biaowang: { type: '关键词', placeholder: '请输入关键词' },
-  fengming: { type: '计划id', placeholder: '请输入计划id' }
+  fengming: { type: '计划ID', placeholder: '请输入计划ID' }
 }
 
 export const fengmingTimelineTypeOpts = fmtOpts(fengmingTimelineType)

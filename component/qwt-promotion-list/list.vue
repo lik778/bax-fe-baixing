@@ -19,7 +19,7 @@
           <thead>
             <tr class="tr">
               <th class="col1">
-                <span class="t">计划id</span>
+                <span class="t">计划ID</span>
                 优化项
               </th>
               <th class="col2">状态</th>
