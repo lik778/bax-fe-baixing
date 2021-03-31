@@ -12,17 +12,23 @@
     <label class="ml">选择查询项目</label>
     <bax-select
       v-model="queryParmas.timelineType"
-      :clearable="false"
       placeholder="请选择查询项目"
-      :options="timelineTypeOpts">
-    </bax-select>
+      :clearable="false"
+      :options="timelineTypeOpts"
+    />
+    <bax-select
+      v-if="isSelectedFengming"
+      v-model="queryParmas.timelineSubtype"
+      :clearable="false"
+      :options="fengmingTimelineSubtypeOpts"
+    />
     <label class="ml">选择查询类型</label>
     <bax-select
-      :clearable="false"
-      placeholder="请选择查询类型"
       v-model="queryParmas.opType"
-      :options="opTypeOpts">
-    </bax-select>
+      placeholder="请选择查询类型"
+      :clearable="false"
+      :options="opTypeOpts"
+    />
     <el-radio-group v-model="queryParmas.createdAt" class="radio">
       <el-radio-button :label="genCreatedAtValues(0)">近一个月</el-radio-button>
       <el-radio-button :label="genCreatedAtValues(1)">近三个月</el-radio-button>
@@ -113,6 +119,7 @@ import {
   opTypeOpts,
   productTypeOpts,
   fengmingTimelineTypeOpts,
+  fengmingTimelineSubtypeOpts,
   biaowangTimelineTypeOpts,
   selectType,
   OP_TYPE_CREATE,
@@ -185,13 +192,14 @@ export default {
     return {
       opTypeOpts,
       fengmingTimelineTypeOpts,
+      fengmingTimelineSubtypeOpts,
       productTypeOpts,
-
       offset: 0,
       queryParmas: {
         opType: '',
         selectId: '',
         timelineType: '',
+        timelineSubtype: '',
         limit: ONE_PAGE_NUM,
         createdAt: CREATED_AT_VALUES[0],
         productType: PRODUCT_TYPE_FENGMING
@@ -202,16 +210,19 @@ export default {
     genCreatedAtValues (index) {
       return CREATED_AT_VALUES[index]
     },
-    async load (isResetOffset) {
+    async initData (isResetOffset) {
       if (isResetOffset) this.offset = 0
+      const params = {
+        ...this.queryParmas
+      }
       await store.getLogs({
-        ...this.queryParmas,
+        ...params,
         offset: this.offset
       })
     },
     goto (page) {
       this.offset = (page - 1) * ONE_PAGE_NUM
-      this.load()
+      this.initData()
     },
     genMaterial (material) {
       const { biaowang, fengming } = material
@@ -277,6 +288,10 @@ export default {
     }
   },
   computed: {
+    isSelectedFengming () {
+      const productType = this.queryParmas.productType
+      return productType === PRODUCT_TYPE_FENGMING
+    },
     timelineTypeOpts () {
       return this.genMaterial({
         biaowang: biaowangTimelineTypeOpts,
@@ -288,8 +303,8 @@ export default {
     queryParmas: {
       deep: true,
       immediate: true,
-      handler (params) {
-        this.load(true)
+      handler () {
+        this.initData(true)
       }
     },
     'queryParmas.productType': {
