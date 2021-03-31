@@ -1,61 +1,76 @@
 <template>
   <div class="keywords-container">
-    <p class="tip">
-      请选取<b class="red">20</b>个以上关键词，关键词越多您的创意被展现的机会越多。根据当月数据，为您推荐如下关键词
-    </p>
-    <div class="search">
-      <el-input v-model="word" @blur="handleWordBlur" class="input" size="small" placeholder="添加自定义词"  />
-      <el-button type="primary" size="small" @click="handleAddKeywords">添加关键词</el-button>
-      <el-button type="primary" size="small" plain>规划拓词工具</el-button>
+    <div class="pane">
+      <header>添加推广关键词</header>
+      <search-comp
+        v-bind="$attrs"
+        v-on="$listeners"
+      />
+    </div>
+    <div class="pane">
+      <header>搜索推广关键词</header>
+      <el-input v-model="search" size="small" class="input" placeholder="请输入关键词查询" />
+      <el-button size="small" type="primary" @click="searchKeyword">搜索</el-button>
     </div>
 
-    <!-- 添加关键词模态框 -->
-    <keyword-dialog-comp
-      @close="keywordDialogVisible = false"
-      :visible="keywordDialogVisible"
-      />
-    <!-- 规划拓词模态框 -->
+    <keyword-list-comp />
   </div>
 </template>
 
 <script>
-import KeywordDialogComp from './keyword-dialog'
+import SearchComp from './search'
+import KeywordListComp from './keyword-list'
 
 export default {
-  name: 'qwt-keywords',
+  name: 'qwt-update-keyword',
+  props: {
+
+  },
   data () {
     return {
-      word: '',
-      keywordDialogVisible: false
+      search: '',
+      activeName: 'origin',
+      keywords: [
+        {
+          word: '',
+          pcAvg: '',
+          mobileAvg: '',
+          status: '',
+          price: ''
+        }
+      ]
     }
   },
   methods: {
-    handleWordBlur () {
-    },
-    handleAddKeywords () {
-      this.keywordDialogVisible = true
+    searchKeyword () {
+
     }
   },
   components: {
-    KeywordDialogComp
+    SearchComp,
+    KeywordListComp
   }
 }
 </script>
 
 <style lang="scss" scoped>
 .keywords-container {
-  > .tip {
-    font-size: 12px;
-    color: #6a778c;
+  .pane {
+    display: flex;
+    align-items: center;
+    &:not(:first-child) {
+      margin-top: 10px;
+    }
+    > header {
+      flex: 0 0 120px;
+    }
+    .input {
+      width: 240px;
+      margin-right: 6px;
+    }
   }
-  .search {
+  .tabs {
     margin-top: 20px;
-  }
-  .red {
-    color: $c-strong;
-  }
-  .input {
-    width: 240px;
   }
 }
 </style>

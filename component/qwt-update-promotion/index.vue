@@ -1,5 +1,5 @@
 <template>
-  <div class="promotion-update" v-if="originPromotion">
+  <div class="promotion-update">
     <div class="module">
       <h3>推广计划：{{ campaignId }}</h3>
     </div>
@@ -65,6 +65,16 @@ import isEqual from 'lodash.isequal'
 import { MIN_DAILY_BUDGET, CAMPAIGN_STATUS_OFFLINE } from 'constant/fengming'
 import { getCampaignValidTime } from 'util/campaign'
 
+const emptyPromtion = {
+  status: 0,
+  source: 0,
+  areas: [],
+  budgetModificationCount: 0,
+  schedule: [],
+  dailyBudget: 0,
+  validTime: []
+}
+
 export default {
   name: 'qwt-update-promotion',
   components: {
@@ -92,7 +102,7 @@ export default {
   data () {
     return {
       originPromotion: null, // 计划原始数据
-      promotion: null, // 当前计划
+      promotion: emptyPromtion, // 当前计划
       currentBalance: 0,
 
       isUpdating: false,
@@ -135,7 +145,17 @@ export default {
   },
   async mounted () {
     // TODO: 打点需求
-    await this.initCampaignInfo()
+    const loadingInstance = this.$loading({
+      lock: true,
+      target: '.promotion-update',
+      text: '正在加载中...',
+      spinner: 'el-icon-loading'
+    })
+    try {
+      await this.initCampaignInfo()
+    } finally {
+      loadingInstance.close()
+    }
   },
   methods: {
     async getCampaignInfo () {
@@ -256,7 +276,6 @@ export default {
 <style lang="scss" scoped>
 .promotion-update {
   margin: 14px;
-  min-height: calc(100% - 50px);
   .module {
     padding: 0 24px;
     background: #fff;

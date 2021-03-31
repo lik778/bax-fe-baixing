@@ -1,5 +1,5 @@
 <template>
-  <div class="qwt-create-group">
+  <div class="qwt-update-group" v-if="group">
     <section>
       <header>推广目标设置</header>
       <div class="content">
@@ -8,10 +8,12 @@
           :is-edit="false"
           :promotion="promotion"
           :allAreas="allAreas"
-          @update-group="updateGroupData"
+          @change-name="(name) => updateGroupData('name', name)"
+          @change-landing="(args) => updateGroupData(args)"
         />
       </div>
     </section>
+
     <section>
       <header>推广物料设置<creative-tip-comp /></header>
       <div class="content">
@@ -24,15 +26,22 @@
         />
       </div>
     </section>
+
     <section>
-      <header>选取推广关键词</header>
+      <header>关键词管理（当前计划还可添加<strong>{{ keywordRemain }}</strong>个关键词）</header>
       <div class="content">
         <keyword-comp
-          :group="group"
-          :keywords="group.keywords"
+          :campaign-id="promotion.campaignId"
+          :areas="promotion.areas"
+          :sources="[promotion.source]"
+          :updated-keywords="group.updatedKeywords"
+          :deleted-keywords="group.deletedKeywords"
+          :new-keywords="group.newKeywords"
+          @update-keywords="updateKeywords"
         />
       </div>
     </section>
+
     <section>
       <header>设置否定关键词
         <el-tooltip content="请注意，否词和关键词不能重复" placement="top">
@@ -42,30 +51,24 @@
       <div class="content">
         <negative-keyword-comp
           :negative-words="group.negativeWords"
-          @update-promotion="updateGroupData"
+          @update-negative-words="(negativeWords) => updateGroupData('negativeWords', negativeWords)"
         />
       </div>
     </section>
+
     <section>
-      <div class="mobile-ratio">
-        移动端出价比例
-        <el-tooltip>
-          <div slot="content">
-            <div>移动端最高出价 = 电脑端CPC最高出价 * 移动端出价比例</div>
-            <div>示例：若某关键词电脑端出价设为1.00元，移动出价比例为2，则该关键词在移动设备上的出价为2.00元</div>
-          </div>
-          <i class="el-icon-question" />
-        </el-tooltip>
-        <el-input class="input" size="small" v-model="group.mobilePriceRatio" placeholder="默认为1" />
-        <span class="tip">（请输入0.1-9.9之间的数字）</span>
-      </div>
+      <mobile-price-ratio-comp
+        :value="group.mobilePriceRatio"
+        @change="(val) => updateGroupData('mobilePriceRatio', val)"
+      />
       <contract-ack-comp
         class="contract-ack"
         type="content-rule"
         ref="contract"
       />
-      <el-button class="add-group-btn" type="primary">新增单元</el-button>
+      <el-button class="add-group-btn" type="primary" @click="updateGroup">新增单元</el-button>
     </section>
+
   </div>
 </template>
 
@@ -76,21 +79,29 @@ import CreativeTipComp from './creative/creative-tip'
 import KeywordComp from './keyword/update'
 import NegativeKeywordComp from 'com/common/qwt/negative-words'
 import ContractAckComp from 'com/widget/contract-ack'
+import MobilePriceRatioComp from './mobile-price-ratio'
+
+import clone from 'clone'
 
 export default {
   name: 'qwt-update-group',
   props: {
     allAreas: {
       type: Array,
-      required: true
+      required: true,
+      default () {
+        return []
+      }
     }
   },
   data () {
     return {
       promotion: {
-        source: 0
+        source: 0,
+        campaignId: '',
+        areas: []
       },
-      group: {
+      originGroup: {
         landingType: 0,
         landingPage: '',
         landingPageId: '',
@@ -100,24 +111,34 @@ export default {
         detailStatusText: '',
         creatives: [
           {
-            title: '',
-            content: ''
+            id: 1,
+            title: 'nihao',
+            content: 'ceshi'
           }
         ],
         negativeWords: [],
         mobilePriceRatio: 1
-      }
+      },
+      group: null
     }
   },
-  components: {
-    LandingPageComp,
-    CreativeComp,
-    CreativeTipComp,
-    KeywordComp,
-    NegativeKeywordComp,
-    ContractAckComp
+  computed: {
+    keywordRemain () {
+      return 0
+    }
+  },
+  mounted () {
+    this.group = {
+      ...clone(this.originGroup),
+      updatedKeywords: [],
+      deletedKeywords: [],
+      newKeywords: []
+    }
   },
   methods: {
+    getProp () {
+
+    },
     updateGroupData (type, data) {
       if (typeof type === 'string') {
         this.group[type] = data
@@ -125,7 +146,7 @@ export default {
       }
       Object.assign(this.group, type)
     },
-    updateCreatives (type, idx, data) {
+    updateCreatives ({ type, idx, data }) {
       const creatives = this.group.creatives
       switch (type) {
         case 'add':
@@ -136,15 +157,26 @@ export default {
           return creatives.splice(idx, 1, data)
       }
     },
-    validateGroup (type, isValid) {
-
+    updateKeywords () {},
+    updateGroup () {
+      // TODO 编辑单元数据校验
+      // TODO 编辑单元接口请求
     }
+  },
+  components: {
+    LandingPageComp,
+    CreativeComp,
+    CreativeTipComp,
+    KeywordComp,
+    NegativeKeywordComp,
+    ContractAckComp,
+    MobilePriceRatioComp
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.qwt-create-group {
+.qwt-update-group {
   > section {
     background: #fff;
     border-radius: 4px;
@@ -167,14 +199,8 @@ export default {
     .add-group-btn {
       margin-top: 20px;
     }
-    > .mobile-ratio {
-      > .input {
-        width: 240px;
-        margin: 0 10px;
-      }
-      > .tip {
-        font-size: 12px;
-      }
+    strong {
+      color: $c-strong;
     }
   }
 }

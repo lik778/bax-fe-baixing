@@ -36,7 +36,7 @@ export default {
   },
   methods: {
     changeGroupName (val) {
-      this.$emit('update-group', 'name', val)
+      this.$emit('change-name', val)
     }
   },
   components: {

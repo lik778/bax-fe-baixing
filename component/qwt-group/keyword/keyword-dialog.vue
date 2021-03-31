@@ -16,6 +16,7 @@
         <el-button class="add-btn"
                    type="primary"
                    size="small"
+                   :loading="loading"
                    @click="addWordList">批量添加</el-button>
       </div>
       <div class="tip">提示: 请用逗号区分关键词进行批量关键词添加，如合肥家政服务公司，合肥月嫂，合肥钟点工</div>
@@ -55,8 +56,6 @@
 </template>
 
 <script>
-import { Message } from 'element-ui'
-
 import { recommendByWordList } from 'api/fengming'
 import { isObj } from 'util'
 import { MIN_WORD_PRICE } from 'constant/keyword'
@@ -69,24 +68,11 @@ export default {
       type: Boolean,
       required: true
     },
-    isEdit: {
-      type: Boolean,
-      default: false
-    },
-    areas: {
-      type: Array,
-      default: () => {
-        return []
-      }
-    },
     sources: {
       type: Array,
       default: () => {
         return []
       }
-    },
-    campaignId: {
-      type: Number
     },
     originalKeywords: {
       type: Array,
@@ -102,18 +88,19 @@ export default {
         normalList: [],
         bannedList: []
       },
+      loading: false,
       search: ''
     }
   },
   methods: {
     handleConfirm () {
-      this.$emit('update-keywords', this.keywords.normalList)
+      this.$emit('update', this.keywords.normalList)
       this.handleClose()
     },
     handleClose () {
+      this.$emit('update:visible', false)
       this.search = ''
       this.getInitKeywords()
-      this.$emit('update:visible', false)
     },
     getInitKeywords () {
       for (const key in this.keywords) {
@@ -123,7 +110,7 @@ export default {
     async addWordList () {
       // 空字符校验
       if (this.search.trim() === '') {
-        return Message.warning('还未添加关键词')
+        return this.$message.warning('还未添加关键词')
       }
 
       // 数组去重并去掉首尾的逗号
@@ -133,29 +120,22 @@ export default {
       }).filter(row => row !== '')))
 
       if (words.length > 100) {
-        return Message.warning('每次最多支持上传100个关键词')
+        return this.$message.warning('每次最多支持上传100个关键词')
       }
 
       try {
         validateKeyword(words)
       } catch (e) {
-        return Message.error(e.message)
+        return this.$message.error(e.message)
       }
 
       // 判断关键词已存在
       let normalList = (this.keywords && this.keywords.normalList) || []
-      const bannedList = (this.keywords && this.keywords.bannedList) || []
       normalList = this.originalKeywords.concat(normalList)
       for (let i = 0; i < normalList.length; i++) {
         const row = normalList[i]
         if (words.includes(row.word.toLowerCase())) {
-          return Message.warning(`${row.word}该关键词已存在关键词或否定关键词列表`)
-        }
-      }
-      for (let i = 0; i < bannedList.length; i++) {
-        const row = bannedList[i]
-        if (words.includes(row.word)) {
-          return Message.warning(`因平台限制，${row.word}无法添加，请修改`)
+          return this.$message.warning(`${row.word}该关键词已存在关键词或否定关键词列表`)
         }
       }
 
@@ -166,20 +146,8 @@ export default {
       }
       this.search = ''
     },
-    async fetchWords (words) {
-      if (this.isEdit) {
-        return await this._fetchKeywords(words, {
-          campaignId: this.campaignId
-        })
-      } else {
-        return await this._fetchKeywords(words, {
-          areas: this.areas,
-          sources: this.sources
-        })
-      }
-    },
-    async _fetchKeywords (words, opts) {
-      const result = await recommendByWordList(words, opts)
+    async fetchWords (words, sources) {
+      const result = await recommendByWordList(words, { sources })
       if (result && isObj(result)) {
         for (const key in result) {
           if (Array.isArray(result[key])) {
@@ -207,34 +175,36 @@ export default {
 
 <style lang="scss" scoped>
 .keywords-dialog {
-  & .header {
-    & .search-container {
+  .header {
+    .search-container {
       display: flex;
       align-items: center;
     }
-    & .search {
+    .search {
       width: 300px;
     }
-    & .add-btn {
+    .add-btn {
       margin-left: 20px;
     }
-    & .tip {
+    .tip {
       font-size: 12px;
       margin-top: 10px;
       color: #ff7533;
     }
   }
-  & .content {
+  .content {
     margin-top: 20px;
-    & .sec {
+    max-height: 300px;
+    overflow-y: auto;
+    .sec {
       font-weight: bold;
       font-size: 14px;
       margin-top: 20px;
     }
-    & .sec-title {
+    .sec-title {
       margin-bottom: 10px;
     }
-    & .tag-item {
+    .tag-item {
       margin-right: 5px;
       margin-top: 8px;
     }

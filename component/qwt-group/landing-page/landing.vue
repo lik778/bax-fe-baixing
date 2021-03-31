@@ -80,7 +80,7 @@ export default {
       this.$emit('valid', 'page', isValid)
     },
     emitUpdateGroup (type, page, pageId) {
-      return this.$emit('update-group', {
+      return this.$emit('change-landing', {
         landingType: type,
         landingPage: page || '',
         landingPageId: pageId || ''

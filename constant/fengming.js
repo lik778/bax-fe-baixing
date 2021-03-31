@@ -188,6 +188,8 @@ export const NEGATIVE_KEYWORDS_MAX = 200
 export const RECOMMAND_SOURCE_FH = 'tfidf_fh'
 export const NEW_RECOMMAND_SOURCE_FH = 'tfidf_fh_service'
 
+export const RECOMMAND_SOURCES = [NEW_RECOMMAND_SOURCE_FH, RECOMMAND_SOURCE_FH]
+
 export const MATCH_TYPE_EXACT = 1
 export const MATCH_TYPE_PHRASE = 2
 export const MATCH_TYPE_SMART = 3

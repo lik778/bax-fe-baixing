@@ -8,10 +8,12 @@
           :is-edit="false"
           :promotion="promotion"
           :allAreas="allAreas"
-          @update-group="updateGroupData"
+          @change-name="(name) => updateGroupData('name', name)"
+          @change-landing="(args) => updateGroupData(args)"
         />
       </div>
     </section>
+
     <section>
       <header>推广物料设置<creative-tip-comp /></header>
       <div class="content">
@@ -20,7 +22,6 @@
           :audit-status="group.auditStatus"
           :detail-status-text="group.detailStatusText"
           :creatives="group.creatives"
-          @update-group="updateGroupData"
           @update-creatives="updateCreatives"
         />
       </div>
@@ -30,8 +31,11 @@
       <div class="content">
         <keyword-comp
           :group="group"
+          :campaign-id="promotion.campaignId"
+          :areas="promotion.areas"
+          :sources="[promotion.source]"
           :keywords="group.keywords"
-          @update-group="updateGroupData"
+          @update-keywords="updateKeywords"
         />
       </div>
     </section>
@@ -44,23 +48,15 @@
       <div class="content">
         <negative-keyword-comp
           :negative-words="group.negativeWords"
-          @update-promotion="updateGroupData"
+          @update-negative-words="(negativeWords) => updateGroupData('negativeWords', negativeWords)"
         />
       </div>
     </section>
     <section>
-      <div class="mobile-ratio">
-        移动端出价比例
-        <el-tooltip>
-          <div slot="content">
-            <div>移动端最高出价 = 电脑端CPC最高出价 * 移动端出价比例</div>
-            <div>示例：若某关键词电脑端出价设为1.00元，移动出价比例为2，则该关键词在移动设备上的出价为2.00元</div>
-          </div>
-          <i class="el-icon-question" />
-        </el-tooltip>
-        <el-input class="input" size="small" v-model="group.mobilePriceRatio" placeholder="默认为1" />
-        <span class="tip">（请输入0.1-9.9之间的数字）</span>
-      </div>
+      <mobile-price-ratio-comp
+        :value="group.mobilePriceRatio"
+        @change="(val) => updateGroupData('mobilePriceRatio', val)"
+      />
       <contract-ack-comp
         class="contract-ack"
         type="content-rule"
@@ -78,6 +74,7 @@ import CreativeTipComp from './creative/creative-tip'
 import KeywordComp from './keyword/create'
 import NegativeKeywordComp from 'com/common/qwt/negative-words'
 import ContractAckComp from 'com/widget/contract-ack'
+import MobilePriceRatioComp from './mobile-price-ratio'
 
 export default {
   name: 'qwt-create-group',
@@ -90,7 +87,9 @@ export default {
   data () {
     return {
       promotion: {
-        source: 0
+        source: 0,
+        campaignId: '', // 计划id
+        areas: []
       },
       group: {
         landingType: 0,
@@ -118,9 +117,8 @@ export default {
     CreativeTipComp,
     KeywordComp,
     NegativeKeywordComp,
-    ContractAckComp
-  },
-  mounted () {
+    ContractAckComp,
+    MobilePriceRatioComp
   },
   methods: {
     updateGroupData (type, data) {
@@ -130,7 +128,7 @@ export default {
       }
       Object.assign(this.group, type)
     },
-    updateCreatives (type, idx, data) {
+    updateCreatives ({ type, idx, data }) {
       const creatives = this.group.creatives
       switch (type) {
         case 'add':
@@ -141,7 +139,19 @@ export default {
           return creatives.splice(idx, 1, data)
       }
     },
+    updateKeywords ({ type, idx, data }) {
+      const keywords = this.group.keywords
+      switch (type) {
+        case 'add':
+          this.group.keywords = data.concat(keywords)
+          return
+        case 'remove':
+          return keywords.splice(idx, 1)
+      }
+    },
     async addGroup () {
+      // TODO: 新建单元数据校验
+      // TODO: 新建单元接口对接
     }
   }
 }
@@ -170,15 +180,6 @@ export default {
     }
     .add-group-btn {
       margin-top: 20px;
-    }
-    > .mobile-ratio {
-      > .input {
-        width: 240px;
-        margin: 0 10px;
-      }
-      > .tip {
-        font-size: 12px;
-      }
     }
   }
 }

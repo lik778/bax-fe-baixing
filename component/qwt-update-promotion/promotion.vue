@@ -189,6 +189,10 @@ export default {
       DURATION_TYPE_OPTS
     }
   },
+  mounted () {
+    // tip: 解决validTime开始为空的情况
+    if (this.timeType === TIME_TYPE_LONG) this.onChangeTimeType(this.timeType)
+  },
   computed: {
     modifyBudgetQuota () {
       const n = Math.floor(this.promotion.budgetModificationCount)

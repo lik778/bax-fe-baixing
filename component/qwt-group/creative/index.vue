@@ -87,11 +87,7 @@ export default {
     handleTabsAdd () {
       if (this.creatives.length >= MAX_CREATIVE_LEN) return this.$message.error('最多只能增加3条创意')
       const newTabName = String(this.creatives.length + 1)
-      this.$emit('update-group', 'creatives', this.creatives.concat([{
-        title: '',
-        content: ''
-      }]))
-      // this.$emit('update-creatives', 'add')
+      this.$emit('update-creatives', { type: 'add' })
       this.activeName = newTabName
     },
     handleTabsRemove (targetName) {
@@ -100,21 +96,22 @@ export default {
       const currIdx = parseInt(targetName)
       resIdx = this.creatives.length === currIdx ? currIdx - 1 : currIdx
       this.activeName = String(resIdx)
-
-      this.$emit('update-group', 'creatives', this.creatives
-        .slice(0, currIdx - 1)
-        .concat(this.creatives.slice(currIdx)))
-      // this.$emit('update-creatives', 'remove', parseInt(resIdex) -1)
+      this.$emit('update-creatives', {
+        type: 'remove',
+        idx: parseInt(resIdx) - 1
+      })
     },
     handleCreativeValueChange ({ title, content, idx }) {
       const creativeObj = this.creatives[idx]
-      const creatives = this.creatives.slice(0, idx).concat([creativeObj, this.creatives.slice(idx + 1)])
-      this.$emit('update-group', 'creatives', creatives)
-      // this.$emit('update-creatives', 'update', idx, {
-      //   ...creativeObj,
-      //   title,
-      //   content
-      // })
+      this.$emit('update-creatives', {
+        type: 'update',
+        idx,
+        data: {
+          ...creativeObj,
+          title,
+          content
+        }
+      })
     },
     handleCreativeError (msg) {
       if (msg) this.$message.error(msg)
