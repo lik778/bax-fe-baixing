@@ -39,9 +39,7 @@
       <bax-input v-model="queryParmas.selectId" class="input" :placeholder="selectByType().placeholder" />
     </div>
 
-    <el-table class="log-table"
-      :data="logs"
-      style="width: 100%">
+    <el-table class="log-table" :data="logs" style="width: 100%">
       <el-table-column
         label="日期"
         :formatter="dateFormatter"
@@ -60,6 +58,14 @@
         width="90">
       </el-table-column>
       <el-table-column
+        v-if="isSelectedFengming"
+        label="模块"
+        key="timelineSubtype"
+        prop="timelineSubtype"
+        :formatter="timelineSubtypeFormatter"
+        width="90">
+      </el-table-column>
+      <el-table-column
         label="类型"
         :formatter="opTypeFormatter"
         width="80">
@@ -70,22 +76,26 @@
         width="110">
       </el-table-column>
       <el-table-column
+        v-if="isSelectedFengming"
+        label="单元"
+        key="groupID"
+        prop="groupId"
+        width="90">
+      </el-table-column>
+      <el-table-column
         :formatter="changeLogFormatter('field')"
         label="变更字段"
-        align="center"
-        width="260">
+        align="center">
       </el-table-column>
       <el-table-column
         :formatter="changeLogFormatter('old')"
         label="变更前"
-        align="center"
-        width="180">
+        align="center">
       </el-table-column>
       <el-table-column
         :formatter="changeLogFormatter('new')"
         label="变更后"
-        align="center"
-        width="180">
+        align="center">
       </el-table-column>
     </el-table>
     <el-pagination
@@ -247,6 +257,10 @@ export default {
       })
       const result = timelineTypeOpts.find(({ value }) => value === timelineType)
       return result && result.label
+    },
+    timelineSubtypeFormatter ({ timelineSubtype }) {
+      const find = fengmingTimelineSubtypeOpts.find(x => x.value === timelineSubtype)
+      return find && find.label
     },
     dateFormatter ({ createdAt, timestamp }) {
       return toHumanTime(createdAt || timestamp, 'YYYY-MM-DD HH:mm')
