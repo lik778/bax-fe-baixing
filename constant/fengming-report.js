@@ -4,6 +4,7 @@ export const DIMENSION_CAMPAIGN = 0
 export const DIMENSION_KEYWORD = 1
 export const DIMENSION_NONE = 2 // 这是啥意思 ? @嘟嘟噜
 export const DIMENSION_SEARCH_KEYWORD = 3
+export const DIMENSION_GROUP = 4
 
 export const CSV_REPORT_GENERATING = 0 // 生成中
 export const CSV_REPORT_FINISHED = 2 // 完成
@@ -19,6 +20,10 @@ export const allDimensions = [
   {
     label: '计划维度',
     value: DIMENSION_CAMPAIGN
+  },
+  {
+    label: '单元维度',
+    value: DIMENSION_GROUP
   },
   {
     label: '关键词维度',

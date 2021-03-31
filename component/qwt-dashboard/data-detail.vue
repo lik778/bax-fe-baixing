@@ -1,8 +1,9 @@
 
 <template>
   <div class="qwt-dashboard-data-detail">
-    <el-table v-if="dimension === DIMENSION_CAMPAIGN"
-      :key="1" :data="statistics">
+
+    <!-- 计划维度表格 -->
+    <el-table v-if="dimension === DIMENSION_CAMPAIGN" :data="statistics" :key="DIMENSION_CAMPAIGN">
       <el-table-column label="计划ID" prop="campaignId" width="120" />
       <el-table-column label="日期" prop="date" width="140" />
       <el-table-column label="渠道" width="100"
@@ -15,16 +16,43 @@
         :formatter="r => (r.clickAvgPrice / 100).toFixed(2) + '元'" />
       <el-table-column label="消耗" width="120"
         :formatter="r => (r.cost / 100).toFixed(2) + '元'" />
-      <el-table-column label="关键词详情" width="140">
-      <template slot-scope="scope">
-        <p class="link" @click="switchToCampaignReport(scope.row)">
-          查看
-        </p>
-      </template>
-    </el-table-column>
+      <el-table-column label="单元详情" width="140">
+        <template slot-scope="scope">
+          <p class="link" @click="$emit('switch-to-group-report', scope.row)">
+            查看
+          </p>
+        </template>
+      </el-table-column>
     </el-table>
 
-    <el-table v-else-if="dimension === DIMENSION_KEYWORD" :key="2" :data="statistics">
+    <!-- 单元维度表格 -->
+    <el-table v-else-if="dimension === DIMENSION_GROUP" :data="statistics" :key="DIMENSION_GROUP">
+      <el-table-column label="单元名称" prop="groupName" width="140" />
+      <el-table-column label="日期" prop="date" width="140" />
+      <el-table-column label="计划ID" prop="campaignId" width="140" />
+      <el-table-column label="渠道" width="100"
+        :formatter="r => fmtChannel(r.channel)" />
+      <el-table-column label="设备" width="100"
+        :formatter="r => fmtDevice(r.device)" />
+      <el-table-column label="展现" prop="shows" width="90" sortable />
+      <el-table-column label="点击" prop="clicks" width="90" sortable />
+      <el-table-column label="实扣点击单价" width="160" sortable
+        :formatter="r => (r.clickAvgPrice / 100).toFixed(2) + '元'" />
+      <el-table-column label="消耗" width="120"
+        :formatter="r => (r.cost / 100).toFixed(2) + '元'" />
+      <el-table-column label="排名" width="120" sortable
+        :formatter="r => fmtCpcRanking(r.cpcRanking)" />
+      <el-table-column label="关键词详情" width="140">
+        <template slot-scope="scope">
+          <p class="link" @click="$emit('switch-to-campaign-report', scope.row)">
+            查看
+          </p>
+        </template>
+      </el-table-column>
+    </el-table>
+
+    <!-- 关键词维度表格 -->
+    <el-table v-else-if="dimension === DIMENSION_KEYWORD" :data="statistics" :key="DIMENSION_KEYWORD">
       <el-table-column label="关键词" prop="keyword" width="200" />
       <el-table-column label="日期" prop="date" width="140" />
       <el-table-column label="计划ID" prop="campaignId" width="140" />
@@ -49,11 +77,22 @@
         :formatter="r => (r.cost / 100).toFixed(2) + '元'" />
       <el-table-column label="排名" width="120" sortable
         :formatter="r => fmtCpcRanking(r.cpcRanking)" />
+      <el-table-column min-width="180" fixed="right">
+        <span slot="header">操作
+          <promotion-keyword-tip />
+        </span>
+        <el-button type="text"
+                  size="small"
+                  :disabled="row.enableInNegativeWords || row.enableInKeywords"
+                  @click="addGroupNegativeKeyword(row)">设为单元否词</el-button>
+      </el-table-column>
     </el-table>
 
-    <el-table v-else :key="3" :data="statistics">
+    <!-- 搜索词维度表格 -->
+    <el-table v-else :data="statistics" :key="DIMENSION_KEYWORD">
       <el-table-column label="搜索词" prop="queryWord" width="200" />
       <el-table-column label="日期" prop="date" width="140" />
+      <el-table-column label="单元名称" prop="groupName" width="200" />
       <el-table-column label="计划ID" prop="campaignId" width="140" />
       <el-table-column label="渠道" width="100"
         :formatter="r => fmtChannel(r.channel)" />
@@ -83,12 +122,12 @@
         <div slot-scope="{row}">
           <el-button type="text"
                      size="small"
-                    :disabled="row.enableInKeywords || row.enableInNegativeWords"
+                    :disabled="row.enableInNegativeWords || row.enableInKeywords"
                     @click="addKeyword(row)">添加</el-button>
           <el-button type="text"
                      size="small"
                      :disabled="row.enableInNegativeWords || row.enableInKeywords"
-                     @click="addNegativeKeyword(row)">设为否定关键词</el-button>
+                     @click="addCampaignNegativeKeyword(row)">设为计划否词</el-button>
           <el-tooltip effect="dark"
                       v-if="row.enableInNegativeWords || row.enableInKeywords"
                       content="该搜索词已存在关键词或否定关键词中，暂不支持添加"
@@ -126,23 +165,20 @@ import BaxPagination from 'com/common/pagination'
 import { updateCampaign } from 'api/fengming'
 import BaxInput from 'com/common/bax-input'
 import PromotionKeywordTip from 'com/widget/promotion-keyword-tip'
-
 import {
   DIMENSION_CAMPAIGN,
+  DIMENSION_GROUP,
   DIMENSION_SEARCH_KEYWORD,
   DIMENSION_KEYWORD
 } from 'constant/fengming-report'
-
 import {
   semPlatformCn,
   SEM_PLATFORM_SOGOU
 } from 'constant/fengming'
-
-import track from 'util/track'
 import {
   fmtCpcRanking
 } from 'util/campaign'
-
+import track from 'util/track'
 import { toFloat, f2y } from 'util/kit'
 import { Message } from 'element-ui'
 
@@ -185,6 +221,7 @@ export default {
     return {
       priceUpdating: false,
       DIMENSION_CAMPAIGN,
+      DIMENSION_GROUP,
       DIMENSION_KEYWORD,
       DIMENSION_SEARCH_KEYWORD,
       SEM_PLATFORM_SOGOU
@@ -203,19 +240,19 @@ export default {
           this.$emit('refresh-keyword-list')
         })
     },
-    addNegativeKeyword (item) {
+    addGourpNegativeKeyword (item) {
+
+    },
+    addCampaignNegativeKeyword (item) {
       const { campaignId, queryWord } = item
       updateCampaign(campaignId, { newNegativeKeywords: [{ word: queryWord }] })
-        .then(res => {
+        .then(() => {
           Message({
             type: 'success',
             message: `成功添加 ${queryWord} 为否定关键词`
           })
           this.$emit('refresh-keyword-list')
         })
-    },
-    switchToCampaignReport (campaign) {
-      this.$emit('switch-to-campaign-report', campaign)
     },
     async onChangePrice (userPrice, cid, kid) {
       const price = (userPrice ? toFloat(userPrice) : 0) * 100
