@@ -11,7 +11,8 @@ import {
   baxApiHost,
   kaApiHost,
   seoApiHost,
-  qcApiHost
+  qcApiHost,
+  b2bApiHost
 } from 'config'
 
 import es from 'base/es'
@@ -185,6 +186,18 @@ export const qianci = new Fetch({
 
 export const qianci1 = new Fetch({
   ...qianciOptions
+})
+
+export const b2b = new Fetch({
+  ...baseOptions,
+  prefix: b2bApiHost(),
+  afterJSON (body) {
+    const { errors } = body
+    if (errors) {
+      Message.error('出错啦')
+      throw new Error('出错啦')
+    }
+  }
 })
 
 export function trim (obj) {

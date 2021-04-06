@@ -62,14 +62,21 @@
                 {{ tip.keyword }}</span
               >
               <div class="keywords-con">
-                <el-tag
-                  v-for="(word, idx) in form.keywords"
-                  class="keyword-tag"
-                  :closable="!isEdit"
-                  :key="idx"
-                  @close="() => removeKeyword(word)"
-                  >{{ word }}</el-tag
-                >
+                  <el-tooltip
+                    effect="light"
+                    v-for="(word, idx) in form.keywords"
+                    :value="isFirstQuery"
+                    :key="idx"
+                    placement="right-start"
+                    :content="word.prompt">
+                    <el-tag
+                      class="keyword-tag"
+                      :closable="!isEdit"
+                      @close="() => removeKeyword(word.value)"
+                      >
+                      {{ word.value }}
+                    </el-tag >
+                  </el-tooltip>
               </div>
             </el-form-item>
             <el-form-item label="推广区域" prop="areas">
@@ -121,6 +128,7 @@
 
 <script>
 import { getPromote, getPackageList } from 'api/qianci'
+import { b2bQuery } from 'api/b2b'
 import QcAreaSelector from 'com/qc-create-promote/qc-area-selector'
 import { ONE_WORD_TWO_PROVINCE, THREE_WORD_ONE_PROVINCE, PACKAGE_TYPE, SKU_OPTIMIZED } from 'constant/qianci'
 import SelectKeywords from './select-keywords'
@@ -140,6 +148,7 @@ export default {
   },
   data () {
     return {
+      isFirstQuery: false,
       promote: null,
       input: {
         keyword: ''
@@ -281,14 +290,35 @@ export default {
       this.tip.keyword = ''
       this.initFormVals()
     },
-    selectKeyword (value = this.input.keyword) {
+    async selectKeyword (value = this.input.keyword) {
+      const loading = this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
       const valid =
         value &&
         this.restKeywordLength > 0 &&
         !this.form.keywords.includes(value) &&
         this.validKeywords([value], false)
       if (valid) {
-        this.form.keywords.push(value)
+        const params = {
+          word: value
+        }
+        const result = await b2bQuery(params)
+        loading.close()
+        const { code, prompt } = result
+        this.form.keywords.push({
+          code: code,
+          value: value,
+          prompt: prompt
+        })
+        this.isFirstQuery = true
+        const timer = setTimeout(() => {
+          this.isFirstQuery = false
+          clearTimeout(timer)
+        }, 3000)
         this.input.keyword = ''
         this.tip.keyword = ''
       }
@@ -325,7 +355,7 @@ export default {
       this.areaDialogVisible = false
     },
     validKeywords (words = this.form.keywords, validLen = true) {
-      if (words.find((x) => !/^[\u4E00-\u9FA5A-Za-z0-9]{2,10}$/.test(x))) {
+      if (words.find((x) => !/^[\u4E00-\u9FA5A-Za-z0-9]{2,10}$/.test(x.value))) {
         this.tip.keyword = '核心产品不能是特殊字符，单个词长度限制为 2-10 个字'
         return false
       }

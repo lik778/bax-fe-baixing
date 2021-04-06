@@ -43,3 +43,12 @@ export const identityBindingPage = isPro
   : 'http://www.staging.baixing.cn/bind/?type=idcard'
 
 export const preKeywordPath = 'preKeyword'
+
+export const b2bApiHost = () => {
+  const env = process.env.NODE_ENV
+  if (env === 'development') {
+    return `${window.origin}/b2b`
+  } else {
+    return isPro ? '//squat.baixing.com.cn' : '//172.30.2.14:31643'
+  }
+}

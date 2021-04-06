@@ -17,6 +17,15 @@ const config = merge(base, {
     overlay: { warnings: false, errors: true },
     quiet: false,
     stats: 'errors-only',
+    proxy: {
+      '/b2b': {
+        target: 'http://172.30.2.14:31643',
+        pathRewrite: {
+          '^/b2b': '/'
+        },
+        changeOrigin: true
+      }
+    },
     historyApiFallback: {
       rewrites: [
         {
