@@ -13,7 +13,7 @@
       @upload-success="handleUploadSuccess">
       <el-button
         class="upload-btn"
-        :disabled="fileList.length >= limit"
+        :disabled="value.length >= limit"
         @click="$evt => uploadFile()">
         <i class="el-icon el-icon-plus" />
       </el-button>
@@ -21,7 +21,7 @@
     <!-- 图片容器 -->
     <div class="images">
       <div
-        v-for="(image, idx) in fileList"
+        v-for="(image, idx) in value"
         class="image-wrapper"
         :key="image.url+idx">
         <img class="image" :src="image.url"/>
@@ -44,7 +44,7 @@
 
 <script>
 import Uploader from 'com/common/image-uploader-with-crop'
-import { deepClone, base64ToBin } from 'util'
+import { base64ToBin } from 'util'
 
 export default {
   name: 'SearchImgView',
@@ -61,12 +61,11 @@ export default {
   },
   data () {
     return {
-      popoverVisible: false,
-      fileList: deepClone(this.value || [])
+      popoverVisible: false
     }
   },
   watch: {
-    fileList: {
+    value: {
       deep: true,
       handler (newValue) {
         this.$emit('change', newValue)
@@ -75,16 +74,16 @@ export default {
   },
   methods: {
     handleUploadSuccess (url) {
-      this.fileList.push({
+      this.$emit('change', this.value.concat([{
         desc: String(+new Date()) + String(Math.random()).slice(-6),
         url: url[0]
-      })
+      }]))
     },
     uploadFile (...args) {
       this.$refs.uploader.uploadFile(...args)
     },
     deleteFile (index) {
-      this.fileList.splice(index, 1)
+      this.$emit('change', [...this.value].splice(index, 1))
     },
     clipFile (url, idx) {
       const $img = new Image()

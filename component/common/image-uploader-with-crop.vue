@@ -60,7 +60,6 @@ export default {
   watch: {
     cropOptions (newVal) {
       this.viewport = newVal || {}
-      console.log('this.viewport: ', this.viewport)
     }
   },
   methods: {
