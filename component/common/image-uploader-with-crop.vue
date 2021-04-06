@@ -11,12 +11,13 @@
     <el-dialog
       title="裁剪"
       append-to-body
+      :width="(boundary.width + 75) + 'px'"
       :visible="visible.clipDialog">
       <vue-croppie
         ref="croppieRef"
         :showZoomer="true"
         :enableResize="false"
-        :boundary="{ width: 600, height: 400 }"
+        :boundary="boundary"
         :viewport="viewport"
       />
       <span slot="footer" class="dialog-footer">
@@ -45,9 +46,21 @@ export default {
       }
     }
   },
+  computed: {
+    boundary () {
+      const max = 1080
+      const min = 100
+      const safe = n => Math.max(Math.min(n, max), min)
+      return {
+        width: safe(this.viewport.width * 2),
+        height: safe(this.viewport.height * 2)
+      }
+    }
+  },
   watch: {
     cropOptions (newVal) {
       this.viewport = newVal || {}
+      console.log('this.viewport: ', this.viewport)
     }
   },
   methods: {
