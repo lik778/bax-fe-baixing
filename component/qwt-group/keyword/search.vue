@@ -9,7 +9,7 @@
     <keyword-dialog
       :visible.sync="keywordDialogVisible"
       :original-keywords="keywords"
-      :sources="$attrs.sources"
+      :sources="sources"
       @update="handleAddKeywords"
     />
 
@@ -17,8 +17,8 @@
     <baidu-expand-words-dialog
       :visible.sync="baiduExpandWordsDialogVisible"
       :extra-query="{
-        campaign_id: $attrs.campaignId,
-        areas: $attrs.areas
+        campaign_id: campaignId,
+        areas: areas
       }"
       @confirm="handleAddKeywords"
     />
@@ -32,11 +32,11 @@ import { validateKeyword } from 'util/campaign'
 
 export default {
   name: 'keyword-search',
+  props: ['keywords', 'sources', 'campaignId', 'areas'],
   components: {
     KeywordDialog,
     BaiduExpandWordsDialog
   },
-  props: ['keywords'],
   data () {
     return {
       word: '',

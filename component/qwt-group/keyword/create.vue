@@ -4,7 +4,9 @@
       请选取<strong>20</strong>个以上关键词，关键词越多您的创意被展现的机会越多。根据当月数据，为您推荐如下关键词
     </p>
     <search-comp
-      v-bind="$attrs"
+      :campaign-id="campaignId"
+      :areas="areas"
+      :sources="sources"
       v-on="$listeners"
       :keywords="keywords"
     />
@@ -38,6 +40,24 @@ export default {
       default () {
         return []
       }
+    },
+    areas: {
+      type: Array,
+      required: true,
+      default () {
+        return []
+      }
+    },
+    sources: {
+      type: Array,
+      required: true,
+      default () {
+        return []
+      }
+    },
+    campaignId: {
+      type: [String, Number],
+      required: true
     }
   },
   data () {

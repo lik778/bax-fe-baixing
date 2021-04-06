@@ -86,7 +86,7 @@ const createDescriptor = {
   ...commonDescriptor,
   price (rule, value) {
     if (!value) return new Error('还未填写关键词出价哦！')
-    if (value > 99 * 100 || value < 2 * 100) return new Error('关键词价格需在[2, 999]区间内')
+    if (value > 99 || value < 2) return new Error('关键词价格需在[2, 999]区间内')
     return true
   }
 }

@@ -36,7 +36,6 @@
       <header>选取推广关键词</header>
       <div class="content">
         <keyword-comp
-          :group="group"
           :campaign-id="promotion.campaignId"
           :areas="promotion.areas"
           :sources="[promotion.source]"

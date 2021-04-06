@@ -5,7 +5,6 @@
       <div class="content">
         <landing-page-comp
           :group="group"
-          :is-edit="false"
           :promotion="promotion"
           :allAreas="allAreas"
           @change-name="(name) => updateGroupData('name', name)"
@@ -34,9 +33,15 @@
           :campaign-id="promotion.campaignId"
           :areas="promotion.areas"
           :sources="[promotion.source]"
-          :updated-keywords="group.updatedKeywords"
-          :deleted-keywords="group.deletedKeywords"
-          :new-keywords="group.newKeywords"
+          :keywords="keywords"
+          @update-keywords="updateKeywords"
+        />
+        <keyword-list-comp
+          :platform="promotion.source"
+          :show-prop-ranking="promotion.source !== SEM_PLATFORM_SHENMA"
+          :group-offline="originGroup.status === CAMPAIGN_STATUS_OFFLINE"
+          :group-online="originGroup.status === CAMPAIGN_STATUS_ONLINE"
+          :keywords="keywords"
           @update-keywords="updateKeywords"
         />
       </div>
@@ -80,7 +85,9 @@ import KeywordComp from './keyword/update'
 import NegativeKeywordComp from 'com/common/qwt/negative-words'
 import ContractAckComp from 'com/widget/contract-ack'
 import MobilePriceRatioComp from './mobile-price-ratio'
+import KeywordListComp from './keyword/keyword-list'
 
+import { SEM_PLATFORM_SHENMA, SEM_PLATFORM_BAIDU, CAMPAIGN_STATUS_OFFLINE, CAMPAIGN_STATUS_ONLINE } from 'constant/fengming'
 import clone from 'clone'
 
 export default {
@@ -96,6 +103,11 @@ export default {
   },
   data () {
     return {
+      SEM_PLATFORM_SHENMA,
+      SEM_PLATFORM_BAIDU,
+      CAMPAIGN_STATUS_OFFLINE,
+      CAMPAIGN_STATUS_ONLINE,
+
       promotion: {
         source: 0,
         campaignId: '',
@@ -119,25 +131,45 @@ export default {
         negativeWords: [],
         mobilePriceRatio: 1
       },
-      group: null
+      originKeywords: [],
+      group: {
+        landingType: undefined,
+        landingPage: undefined,
+        landingPageId: undefined,
+
+        updatedKeywords: [],
+        deletedKeywords: [],
+        newKeywords: [],
+
+        updatedNegativeKeywords: [],
+        newNegativeKeywords: [],
+        deletedNegativeKeywords: [],
+
+        updatedCreatives: [],
+        deletedCreatives: [],
+        newCreatives: []
+      }
     }
   },
   computed: {
+    keywords () {
+      return []
+    },
     keywordRemain () {
       return 0
     }
   },
   mounted () {
-    this.group = {
-      ...clone(this.originGroup),
-      updatedKeywords: [],
-      deletedKeywords: [],
-      newKeywords: []
-    }
+    // TODO: 接口获取group信息
+    // TODO: 接口获取keywords信息
+    this.group = clone(this.originGroup)
   },
   methods: {
-    getProp () {
-
+    getProp (prop) {
+      if (typeof this.group[prop] !== 'undefined') {
+        return this.group[prop]
+      }
+      return this.group[prop]
     },
     updateGroupData (type, data) {
       if (typeof type === 'string') {
@@ -157,7 +189,8 @@ export default {
           return creatives.splice(idx, 1, data)
       }
     },
-    updateKeywords () {},
+    updateKeywords ({ type, data }) {
+    },
     updateGroup () {
       // TODO 编辑单元数据校验
       // TODO 编辑单元接口请求
@@ -170,7 +203,8 @@ export default {
     KeywordComp,
     NegativeKeywordComp,
     ContractAckComp,
-    MobilePriceRatioComp
+    MobilePriceRatioComp,
+    KeywordListComp
   }
 }
 </script>

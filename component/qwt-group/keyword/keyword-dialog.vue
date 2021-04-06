@@ -60,6 +60,7 @@ import { recommendByWordList } from 'api/fengming'
 import { isObj } from 'util'
 import { MIN_WORD_PRICE } from 'constant/keyword'
 import { validateKeyword } from 'util/campaign'
+import { MATCH_TYPE_PHRASE } from 'constant/fengming'
 
 export default {
   name: 'QwtAddKeywordsDialog',
@@ -76,7 +77,7 @@ export default {
     },
     originalKeywords: {
       type: Array,
-      required: true,
+      required: false,
       default: () => {
         return []
       }
@@ -161,7 +162,8 @@ export default {
                 ...word,
                 serverPrice,
                 price, // override price, price is display value
-                value: word.word
+                value: word.word,
+                matchType: MATCH_TYPE_PHRASE
               }
             })
           }

@@ -3,7 +3,9 @@
     <div class="pane">
       <header>添加推广关键词</header>
       <search-comp
-        v-bind="$attrs"
+        :campaign-id="campaignId"
+        :areas="areas"
+        :sources="sources"
         v-on="$listeners"
       />
     </div>
@@ -12,33 +14,42 @@
       <el-input v-model="search" size="small" class="input" placeholder="请输入关键词查询" />
       <el-button size="small" type="primary" @click="searchKeyword">搜索</el-button>
     </div>
-
-    <keyword-list-comp />
   </div>
 </template>
 
 <script>
 import SearchComp from './search'
-import KeywordListComp from './keyword-list'
 
 export default {
   name: 'qwt-update-keyword',
   props: {
-
+    keywords: {
+      type: Array,
+      required: true
+    },
+    areas: {
+      type: Array,
+      required: true,
+      default () {
+        return []
+      }
+    },
+    sources: {
+      type: Array,
+      required: true,
+      default () {
+        return []
+      }
+    },
+    campaignId: {
+      type: [String, Number],
+      required: true
+    }
   },
   data () {
     return {
       search: '',
-      activeName: 'origin',
-      keywords: [
-        {
-          word: '',
-          pcAvg: '',
-          mobileAvg: '',
-          status: '',
-          price: ''
-        }
-      ]
+      activeName: 'origin'
     }
   },
   methods: {
@@ -47,8 +58,7 @@ export default {
     }
   },
   components: {
-    SearchComp,
-    KeywordListComp
+    SearchComp
   }
 }
 </script>
