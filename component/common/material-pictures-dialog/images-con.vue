@@ -26,8 +26,16 @@
         :key="image.url+idx">
         <img class="image" :src="image.url"/>
         <span class="upload-actions">
-          <i class="el-icon el-icon-scissors" @click="clipFile(image.url, idx)" />
-          <i class="el-icon el-icon-delete" @click="deleteFile(idx)" />
+          <i
+            class="el-icon el-icon-scissors"
+            title="裁剪"
+            @click="clipFile(image.url, idx)"
+          />
+          <i
+            class="el-icon el-icon-delete"
+            title="删除"
+            @click="deleteFile(idx)"
+          />
         </span>
       </div>
     </div>

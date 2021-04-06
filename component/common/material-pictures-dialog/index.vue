@@ -398,9 +398,11 @@ export default {
   border: 0;
   border-radius: 0px;
 
-  .popper__arrow,
-  .popper__arrow::after {
-    border-bottom-color: #a2a2a2;
+  &.el-popper {
+    .popper__arrow,
+    .popper__arrow::after {
+      border-bottom-color: #a2a2a2;
+    }
   }
 }
 </style>
