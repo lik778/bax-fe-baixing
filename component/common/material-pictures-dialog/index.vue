@@ -122,7 +122,7 @@ export default {
       CREATIVE_STATUS_REJECT,
       CREATIVE_STATUS_PENDING,
       forms: {
-        type: 0,
+        type: 1,
         pc: [],
         wap: []
       },
@@ -205,6 +205,14 @@ export default {
         pc: newVal?.pc?.length > 1 ? deepClone(newVal.pc) : [],
         wap: newVal?.wap?.length > 1 ? deepClone(newVal.wap) : []
       }
+      // * for test suppose
+      // this.forms = {
+      //   type: 2,
+      //   pc: [{
+      //     url: '//file.baixing.net/sst-img172b2392-1167-49f2-a1f3-1b361e5ad2cc'
+      //   }],
+      //   wap: []
+      // }
     },
     forms: {
       deep: true,

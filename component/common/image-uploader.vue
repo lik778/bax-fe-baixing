@@ -4,7 +4,7 @@
       hidden
       ref="file"
       type="file"
-      style="display: none;"
+      style="display: none"
       :multiple="multiple"
       @change="handleFileChange"
     />
@@ -99,7 +99,8 @@ export default {
   },
   data () {
     return {
-      loading: false
+      loading: false,
+      callback: null
     }
   },
   methods: {
@@ -123,15 +124,34 @@ export default {
         this.loading = true
         const uploadResult = await Promise.all(files.map(uploadFile))
         this.$emit('upload-success', uploadResult)
+        this.callback && this.callback({
+          res: uploadResult,
+          isSuccess: true
+        })
       } catch (err) {
         this.$emit('upload-failed', err)
+        this.callback && this.callback({
+          isSuccess: false,
+          err
+        })
         console.error(err)
       } finally {
         this.loading = false
       }
     },
-    uploadFile () {
-      this.$refs.file.click()
+    uploadFile (files, callback) {
+      this.callback = callback
+      if (!files) {
+        this.$refs.file.click()
+      } else {
+        this.handleFileChange({
+          target: {
+            files: files instanceof Array
+              ? files
+              : [files]
+          }
+        })
+      }
     }
   }
 }

@@ -18,9 +18,7 @@
         :enableResize="false"
         :boundary="{ width: 600, height: 400 }"
         :viewport="viewport"
-        @result="result"
       />
-      <img v-bind:src="cropped">
       <span slot="footer" class="dialog-footer">
         <el-button @click="closeClipDialog">取 消</el-button>
         <el-button type="primary" @click="confirmCrop">确 定</el-button>
@@ -31,21 +29,7 @@
 
 <script>
 import Uploader from 'com/common/image-uploader'
-
-const base64ToImgBin = url => {
-  const arr = url.split(',')
-  const mime = arr[0].match(/:(.*?);/)[1]
-  const bstr = atob(arr[1])
-  let n = bstr.length
-  const u8arr = new Uint8Array(n)
-  while (n--) {
-    u8arr[n] = bstr.charCodeAt(n)
-  }
-  return {
-    u8arr,
-    mime
-  }
-}
+import { base64ToBin } from 'util'
 
 export default {
   components: {
@@ -55,7 +39,6 @@ export default {
   data () {
     return {
       viewport: this.cropOptions || {},
-      cropped: null,
       resResolve: '',
       visible: {
         clipDialog: false
@@ -68,21 +51,21 @@ export default {
     }
   },
   methods: {
-    result (output) {
-      this.cropped = output
-    },
     async crop (file) {
       return await new Promise(resolve => {
         const reader = new FileReader()
         reader.onload = e => {
           const res = e.target.result
           this.visible.clipDialog = true
-          this.$nextTick(async () => {
+          this.resResolve = resolve
+          this.$nextTick(() => {
             this.$refs.croppieRef.bind({
               url: res
             })
-            this.resResolve = resolve
           })
+        }
+        reader.onerror = err => {
+          throw new Error(err)
         }
         reader.readAsDataURL(file)
       })
@@ -93,9 +76,9 @@ export default {
         size: this.cropOptions,
         format: 'jpeg'
       }, output => {
-        const { u8arr, mime } = base64ToImgBin(output)
+        const { u8arr, mime } = base64ToBin(output)
         this.resResolve(
-          new File([u8arr], 'test', {
+          new File([u8arr], '图片', {
             type: mime
           })
         )
@@ -105,8 +88,8 @@ export default {
     closeClipDialog () {
       this.visible.clipDialog = false
     },
-    uploadFile () {
-      this.$refs.rawUploader.uploadFile()
+    uploadFile (...args) {
+      this.$refs.rawUploader.uploadFile(...args)
     }
   }
 }

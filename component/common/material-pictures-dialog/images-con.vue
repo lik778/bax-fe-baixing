@@ -14,7 +14,7 @@
       <el-button
         class="upload-btn"
         :disabled="fileList.length >= limit"
-        @click="uploadFile">
+        @click="$evt => uploadFile()">
         <i class="el-icon el-icon-plus" />
       </el-button>
     </uploader>
@@ -26,7 +26,7 @@
         :key="image.url+idx">
         <img class="image" :src="image.url"/>
         <span class="upload-actions">
-          <!-- <i class="el-icon el-icon-scissors" @click="clipFile(image.url, idx)" /> -->
+          <i class="el-icon el-icon-scissors" @click="clipFile(image.url, idx)" />
           <i class="el-icon el-icon-delete" @click="deleteFile(idx)" />
         </span>
       </div>
@@ -36,7 +36,7 @@
 
 <script>
 import Uploader from 'com/common/image-uploader-with-crop'
-import { deepClone } from 'util'
+import { deepClone, base64ToBin } from 'util'
 
 export default {
   name: 'SearchImgView',
@@ -69,17 +69,37 @@ export default {
     handleUploadSuccess (url) {
       this.fileList.push({
         desc: String(+new Date()) + String(Math.random()).slice(-6),
-        url
+        url: url[0]
       })
     },
-    uploadFile () {
-      this.$refs.uploader.uploadFile()
+    uploadFile (...args) {
+      this.$refs.uploader.uploadFile(...args)
     },
-    // clipFile (src, idx) {
-    //   console.log(src, idx)
-    // },
     deleteFile (index) {
       this.fileList.splice(index, 1)
+    },
+    clipFile (url, idx) {
+      const $img = new Image()
+      $img.onerror = err => {
+        throw new Error(err)
+      }
+      $img.onload = _ => {
+        const { width, height } = $img
+        const $cvs = document.createElement('canvas')
+        $cvs.width = width
+        $cvs.height = height
+        const ctx = $cvs.getContext('2d')
+        ctx.drawImage($img, 0, 0, width, height)
+        const { u8arr, mime } = base64ToBin($cvs.toDataURL())
+        const newFile = new File([u8arr], '图片', { type: mime })
+        this.uploadFile(newFile, ({ isSuccess }) => {
+          if (isSuccess) {
+            this.deleteFile(idx)
+          }
+        })
+      }
+      $img.setAttribute('crossOrigin', 'Anonymous')
+      $img.src = url
     }
   }
 }
