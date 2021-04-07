@@ -195,28 +195,28 @@ export default {
 
     &:hover {
       .actions {
-        bottom: 0;
-      }
-      .status-bar {
-        bottom: -1.65em;
+        opacity: 1;
       }
     }
     .actions {
       position: absolute;
       display: flex;
+      justify-content: center;
       align-items: center;
-      justify-content: flex-start;
+      top: 0;
       left: 0;
-      bottom: -1.65em;
+      bottom: 0;
       right: 0;
       padding: 0 .3em;
-      height: 1.65em;
+      width: 100%;
+      height: 100%;
       background: rgba(0, 0, 0, 0.5);
       color: white;
-      transition: bottom .2s;
+      opacity: 0;
+      transition: .2s;
 
       .el-icon {
-        padding: 3.5px;
+        padding: 0 3.5px;
         cursor: pointer;
       }
     }
@@ -227,8 +227,8 @@ export default {
       display: flex;
       justify-content: space-between;
       width: 100%;
-      height: 1.65em;
-      line-height: 1.65em;
+      height: 1.5em;
+      line-height: 1.5em;
       color: white;
       font-size: 12px;
       text-align: left;
@@ -265,7 +265,7 @@ export default {
       display: inline-block;
       flex-shrink: 0;
       width: 55px;
-      height: 1.65em;
+      height: 1.5em;
       text-align: center;
     }
   }
