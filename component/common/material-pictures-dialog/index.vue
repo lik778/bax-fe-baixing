@@ -81,18 +81,14 @@
 <script>
 import {
   CREATIVE_STATUS_REJECT,
-  CREATIVE_STATUS_PENDING
+  CREATIVE_STATUS_PENDING,
+  MATERIAL_PIC_TYPE,
+  MATERIAL_PIC_STATUS,
+  MATERIAL_PIC_AUDIT_TYPE
 } from 'constant/fengming'
 import ImagesCon from './images-con'
 import Preview from './preview'
 import { deepClone } from 'util'
-
-// 图集类型枚举
-const MATERIAL_PIC_TYPE = {
-  NO_PIC: 0,
-  BIG_PIC: 1,
-  PIC_SETS: 2
-}
 
 export default {
   name: 'material-pictures-editor',
@@ -121,6 +117,8 @@ export default {
       MATERIAL_PIC_TYPE,
       CREATIVE_STATUS_REJECT,
       CREATIVE_STATUS_PENDING,
+      MATERIAL_PIC_STATUS,
+      MATERIAL_PIC_AUDIT_TYPE,
       forms: {
         type: 1,
         pc: [],
@@ -209,7 +207,9 @@ export default {
       // this.forms = {
       //   type: 2,
       //   pc: [{
-      //     url: '//file.baixing.net/sst-img172b2392-1167-49f2-a1f3-1b361e5ad2cc'
+      //     url: '//file.baixing.net/sst-img172b2392-1167-49f2-a1f3-1b361e5ad2cc',
+      //     desc: 'asdfasdfoiaj;f',
+      //     status: MATERIAL_PIC_STATUS.STATUS_ONLINE
       //   }],
       //   wap: []
       // }

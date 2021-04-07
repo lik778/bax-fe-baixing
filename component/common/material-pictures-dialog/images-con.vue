@@ -25,7 +25,16 @@
         class="image-wrapper"
         :key="image.url+idx">
         <img class="image" :src="image.url"/>
-        <span class="upload-actions">
+        <span class="status-bar" :class="getStatusClass(image.status)">
+          <span class="image-name" v-text="image.desc" />
+          <span class="status-text" />
+        </span>
+        <span class="actions">
+          <i
+            class="el-icon el-icon-edit"
+            title="重命名"
+            @click="renameFile(image, idx)"
+          />
           <i
             class="el-icon el-icon-scissors"
             title="裁剪"
@@ -43,6 +52,11 @@
 </template>
 
 <script>
+import {
+  MATERIAL_PIC_TYPE,
+  MATERIAL_PIC_STATUS,
+  MATERIAL_PIC_AUDIT_TYPE
+} from 'constant/fengming'
 import Uploader from 'com/common/image-uploader-with-crop'
 import { base64ToBin } from 'util'
 
@@ -61,7 +75,10 @@ export default {
   },
   data () {
     return {
-      popoverVisible: false
+      popoverVisible: false,
+      MATERIAL_PIC_TYPE,
+      MATERIAL_PIC_STATUS,
+      MATERIAL_PIC_AUDIT_TYPE
     }
   },
   watch: {
@@ -82,8 +99,17 @@ export default {
     uploadFile (...args) {
       this.$refs.uploader.uploadFile(...args)
     },
-    deleteFile (index) {
-      this.$emit('change', [...this.value].splice(index, 1))
+    deleteFile (idx) {
+      this.$emit('change', [...this.value].splice(idx, 1))
+    },
+    renameFile (image) {
+      this.$prompt('请输入图片名称', '重命名', {
+        inputValue: image.desc,
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      }).then(({ value }) => {
+        image.desc = value
+      })
     },
     clipFile (url, idx) {
       const $img = new Image()
@@ -107,6 +133,22 @@ export default {
       }
       $img.setAttribute('crossOrigin', 'Anonymous')
       $img.src = url
+    },
+
+    /* Calculation */
+
+    getStatusClass (s) {
+      const statusIDX = [
+        this.MATERIAL_PIC_AUDIT_TYPE.AUDITING,
+        this.MATERIAL_PIC_AUDIT_TYPE.SUCCESS,
+        this.MATERIAL_PIC_AUDIT_TYPE.FAILED
+      ].findIndex(x => x.includes(s))
+
+      return [
+        'auditing',
+        'success',
+        'failed'
+      ][statusIDX]
     }
   }
 }
@@ -145,27 +187,86 @@ export default {
     display: flex;
     border-radius: 2px;
     background: #f2f2f2;
+    overflow: hidden;
+
+    &:hover {
+      .actions {
+        bottom: 0;
+      }
+      .status-bar {
+        bottom: -1.65em;
+      }
+    }
+    .actions {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      left: 0;
+      bottom: -1.65em;
+      right: 0;
+      padding: 0 .3em;
+      height: 1.65em;
+      background: rgba(0, 0, 0, 0.5);
+      color: white;
+      transition: bottom .2s;
+
+      .el-icon {
+        padding: 3.5px;
+        cursor: pointer;
+      }
+    }
+    .status-bar {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      height: 1.65em;
+      line-height: 1.65em;
+      color: white;
+      font-size: 12px;
+      text-align: left;
+      transition: bottom .2s;
+
+      &.auditing {
+        background: #35a5e4;
+        .status-text::after {
+          content: '审核中';
+        }
+      }
+      &.success {
+        background: #62b345;
+        .status-text::after {
+          content: '审核成功';
+        }
+      }
+      &.auditing {
+        background: #ff6350;
+        .status-text::after {
+          content: '审核失败';
+        }
+      }
+    }
+    .image-name {
+      display: inline-block;
+      padding: 0 .3em;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      word-break: break-all;
+      flex-shrink: 1;
+    }
+    .status-text {
+      display: inline-block;
+      flex-shrink: 0;
+      width: 55px;
+      height: 1.65em;
+      text-align: center;
+    }
   }
   .image {
     border-radius: 2px;
-  }
-}
-.upload-actions {
-  position: absolute;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  padding: 0 .3em;
-  height: 1.5em;
-  background: rgba(0, 0, 0, 0.5);
-  color: white;
-
-  .el-icon {
-    padding: 3px;
-    cursor: pointer;
   }
 }
 </style>

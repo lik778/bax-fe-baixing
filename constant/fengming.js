@@ -231,3 +231,34 @@ export function filterBannedListByContent (words) {
     normalList
   }
 }
+
+// 物料图片类型枚举
+export const MATERIAL_PIC_TYPE = {
+  NO_PIC: 0,
+  BIG_PIC: 1,
+  PIC_SETS: 2
+}
+
+// 物料图片状态枚举
+export const MATERIAL_PIC_STATUS = {
+  STATUS_PENDING_CREATE: 1,
+  STATUS_AUDITING: 2,
+  STATUS_ONLINE: 0,
+  STATUS_PENDING_DELETE: -2,
+  STATUS_DELETED: -1
+}
+
+// 物料图片审核类型枚举
+export const MATERIAL_PIC_AUDIT_TYPE = {
+  AUDITING: [
+    MATERIAL_PIC_STATUS.STATUS_PENDING_CREATE,
+    MATERIAL_PIC_STATUS.STATUS_AUDITING
+  ],
+  SUCCESS: [
+    MATERIAL_PIC_STATUS.STATUS_ONLINE
+  ],
+  FAILED: [
+    MATERIAL_PIC_STATUS.STATUS_PENDING_DELETE,
+    MATERIAL_PIC_STATUS.STATUS_DELETED
+  ]
+}
