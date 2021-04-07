@@ -37,13 +37,22 @@
     <section>
       <header>关键词管理（当前计划还可添加<strong>{{ keywordRemain }}</strong>个关键词）</header>
       <div class="content">
-        <keyword-comp
-          :campaign-id="promotion.id"
-          :areas="promotion.areas"
-          :sources="[promotion.source]"
-          :keywords="keywords"
-          @add-keywords="(words) => keywords = words.concat(keywords)"
-        />
+        <div class="keywords-container">
+          <div class="pane">
+            <header>添加推广关键词</header>
+            <search-comp
+              :campaign-id="promotion.id"
+              :areas="promotion.areas"
+              :sources="[promotion.source]"
+              :origin-keywords="keywords.concat(group.negativeWords)"
+              @add-keywords="(words) => words.concat(keywords)"
+            />
+          </div>
+          <div class="pane">
+            <header>搜索推广关键词</header>
+            <el-input v-model="searchWord" class="input" placeholder="请输入关键词查询"/>
+          </div>
+        </div>
         <keyword-list-comp
           :platform="promotion.source"
           :show-prop-ranking="promotion.source !== SEM_PLATFORM_SHENMA"
@@ -51,6 +60,7 @@
           :group-online="originGroup.status === CAMPAIGN_STATUS_ONLINE"
           :keywords="keywords"
           :group-id="groupId"
+          :search-word="searchWord"
           @update-origin-keywords="(changeTag, v) => originKeywords.map(o => ({ ...o, [changeTag]: v }))"
           @update-keywords="(words) => (keywords = words)"
           @remove-keywords="(idx) => keywords.splice(idx, 1)"
@@ -94,7 +104,7 @@ import LandingComp from './landing-page'
 import LandingPageComp from './landing-page/landing'
 import CreativeComp from './creative'
 import CreativeTipComp from './creative/creative-tip'
-import KeywordComp from './keyword/update'
+import SearchComp from './keyword/search'
 import NegativeKeywordComp from 'com/common/qwt/negative-words'
 import ContractAckComp from 'com/widget/contract-ack'
 import MobilePriceRatioComp from './mobile-price-ratio'
@@ -130,7 +140,10 @@ export default {
       group: null,
       originKeywords: [],
       keywords: [],
-      isUpdating: false
+      isUpdating: false,
+
+      isSearchCondition: false,
+      searchWord: ''
     }
   },
   computed: {
@@ -209,7 +222,7 @@ export default {
     LandingPageComp,
     CreativeComp,
     CreativeTipComp,
-    KeywordComp,
+    SearchComp,
     NegativeKeywordComp,
     ContractAckComp,
     MobilePriceRatioComp,
@@ -244,6 +257,26 @@ export default {
     }
     strong {
       color: $c-strong;
+    }
+  }
+
+  .keywords-container {
+    .pane {
+      display: flex;
+      align-items: center;
+      &:not(:first-child) {
+        margin-top: 10px;
+      }
+      > header {
+        flex: 0 0 120px;
+      }
+      .input {
+        width: 240px;
+        margin-right: 6px;
+      }
+    }
+    .tabs {
+      margin-top: 20px;
     }
   }
 }

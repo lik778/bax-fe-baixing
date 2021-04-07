@@ -28,11 +28,39 @@
 <script>
 import KeywordDialog from './keyword-dialog'
 import BaiduExpandWordsDialog from 'com/common/qwt-baidu-expand-words'
+
 import { validateKeyword } from 'util/campaign'
+import { recommendByWord } from 'api/fengming'
+import { fmtNewKeywordsPrice } from 'util/group'
 
 export default {
   name: 'keyword-search',
-  props: ['keywords', 'sources', 'campaignId', 'areas'],
+  props: {
+    keywords: {
+      type: Array,
+      default () {
+        return []
+      }
+    },
+    areas: {
+      type: Array,
+      required: true,
+      default () {
+        return []
+      }
+    },
+    sources: {
+      type: Array,
+      required: true,
+      default () {
+        return []
+      }
+    },
+    campaignId: {
+      type: [String, Number],
+      required: true
+    }
+  },
   components: {
     KeywordDialog,
     BaiduExpandWordsDialog
@@ -45,7 +73,7 @@ export default {
     }
   },
   methods: {
-    handleAddKeyword () {
+    async handleAddKeyword () {
       const val = this.word.trim()
       if (val === '') {
         this.keywordDialogVisible = true
@@ -63,7 +91,13 @@ export default {
       } finally {
         this.word = ''
       }
-      this.$emit('add-keywords', [{ word: val, isNew: true }])
+
+      // TODO: 做打点
+      // TODO: campaignId是否要更换为groupId
+      const recommendKeywords = (await recommendByWord(val, { groupId: this.groupId })) || []
+      const newKeywords = fmtNewKeywordsPrice(recommendKeywords)
+      if (!newKeywords.length) return this.$message.info('没有合适的关键词')
+      this.$emit('add-keywords', newKeywords.map(o => ({ ...o, isNew: true })))
     },
     recommendKeywords () {
       // TODO: 逻辑待定，太混乱了

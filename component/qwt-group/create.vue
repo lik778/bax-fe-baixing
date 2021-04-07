@@ -99,6 +99,8 @@ import MobilePriceRatioComp from './mobile-price-ratio'
 import CpcPriceComp from './cpc-price'
 
 import { createValidator } from './validate'
+import { emptyGroup } from 'constant/fengming'
+import clone from 'clone'
 
 export default {
   name: 'qwt-create-group',
@@ -115,23 +117,7 @@ export default {
         campaignId: 4012, // 计划id
         areas: []
       },
-      group: {
-        landingType: 0,
-        landingPage: '',
-        landingPageId: '',
-        name: '',
-        status: '',
-        auditStatus: 0, // TODO: 放在creative里面
-        detailStatusText: '', // TODO: 放在creative里面
-        creatives: [{
-          title: '',
-          content: ''
-        }],
-        negativeWords: [],
-        mobilePriceRatio: 1,
-        keywords: [],
-        price: 2
-      },
+      group: clone(emptyGroup),
       isUpdating: false
     }
   },

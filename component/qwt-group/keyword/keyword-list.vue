@@ -1,32 +1,29 @@
 <template>
   <div class="keyword-list">
     <el-table :data="rows">
-      <el-table-column label="关键词" key="word">
+      <el-table-column label="关键词" key="word" min-width="140">
         <template slot-scope="{ row }">
           <span>{{ row.word }}</span>
           <span class="new-word" v-if="row.isNew">(新)</span>
           <span class="del-word" v-if="row.isDel">(删除)</span>
-          <span class="updated-word" v-if="row.isUpdated">(修改)</span>
-          <span
-            class="good-word"
-            v-if="RECOMMAND_SOURCES.includes(row.recommandSource)"
-          >
-          (好词)
-          </span>
+          <span class="updated-word" v-if="row.isUpdated">(更改)</span>
+          <span class="good-word" v-if="RECOMMAND_SOURCES.includes(row.recommandSource)"> (好词)</span>
         </template>
       </el-table-column>
       <el-table-column
         label="电脑端排名"
+        min-width="120px"
         key="cpcRanking"
         v-if="showPropRanking"
         :formatter="(r) => fmtCpcRanking(r.cpcRanking || -1)"
       />
       <el-table-column
         label="手机端排名"
+        min-width="120px"
         key="mobileCpcRanking"
         :formatter="(r) => fmtCpcRanking(r.mobileCpcRanking || -1)"
       />
-      <el-table-column key="status">
+      <el-table-column key="status" min-width="120px">
         <table-header-tip
           slot="header"
           label-html="关键词状态"
@@ -69,6 +66,7 @@
                 <el-button
                   type="primary"
                   size="mini"
+                  :loading="loading"
                   @click="changeAllWordPrice"
                 >
                 确定
@@ -83,6 +81,7 @@
         <div slot-scope="{ row }">
           <span class="price">
             <bax-input
+              :disabled="row.isDel"
               placeholder="单位，元"
               :value="$formatter.f2y(row.price)"
               @blur="(v) => setCustomPrice(row, v)"
@@ -96,7 +95,7 @@
           </span>
         </div>
       </el-table-column>
-      <el-table-column key="matchType" min-width="220">
+      <el-table-column key="matchType" min-width="220" v-if="showMatchType">
         <!-- eslint-disable-next-line -->
         <div slot="header" slot-scope="col">
           <table-header-tip
@@ -126,6 +125,7 @@
                 <el-button
                   type="primary"
                   size="mini"
+                  :loading="loading"
                   @click="changeAllMatchType"
                 >
                   确定
@@ -140,6 +140,7 @@
         <div slot-scope="{ row }" class="match-type">
           <el-select
             :value="row.matchType"
+            :disabled="row.isDel"
             placeholder="请选择匹配模式"
             size="small"
             class="match-type-select"
@@ -160,11 +161,17 @@
       </el-table-column>
       <el-table-column label="操作" key="deletable">
         <div slot-scope="{ row }">
-          <el-button
-            type="danger"
-            size="mini"
-            @click="emitUpdateKeyword({ ...row, isDel: true }, !!row.isNew)">
-            删除
+          <el-button type="danger"
+                     size="mini"
+                     v-if="!row.isDel"
+                     @click="deleteWord(row)">删除
+          </el-button>
+          <el-button v-else type="success" size="mini" plain @click="emitUpdateKeyword({
+            ...row,
+            matchType: row.matchType === MATCH_TYPE_EXACT ? MATCH_TYPE_PHRASE: row.matchType,
+            isDel: false
+          })">
+            恢复
           </el-button>
         </div>
       </el-table-column>
@@ -172,7 +179,7 @@
     <footer>
       <bax-pagination
         :options="pagination"
-        @current-change="({ offset }) => (offset = offset)"
+        @current-change="onCurrentChange"
       />
     </footer>
   </div>
@@ -194,7 +201,8 @@ import {
   KEYWORD_STATUS_ONLINE,
   MATCH_TYPE_OPTS,
   MATCH_TYPE_EXACT,
-  MATCH_TYPE_PHRASE
+  MATCH_TYPE_PHRASE,
+  getMatchTypeObj
 } from 'constant/fengming'
 import { keywordStatusTip, cpcTopPriceTip, matchTypeTip, keywordPriceTip } from 'constant/tip'
 import { MIN_WORD_PRICE, MAX_WORD_PRICE } from 'constant/keyword'
@@ -221,6 +229,10 @@ export default {
       type: Boolean,
       default: true
     },
+    showMatchType: {
+      type: Boolean,
+      default: false
+    },
     groupOffline: {
       type: Boolean,
       default: false
@@ -232,9 +244,16 @@ export default {
     groupId: {
       type: [String, Number],
       required: true
+    },
+    searchWord: {
+      type: String,
+      default: ''
     }
   },
   computed: {
+    isSearchCondition () {
+      return !!this.searchWord
+    },
     maxPriceLabel () {
       if (this.platform === SEM_PLATFORM_SHENMA) return '移动端出价(元/次点击)'
       return '电脑端最高出价(元/次点击)'
@@ -245,6 +264,9 @@ export default {
     rows () {
       const { currentPage } = this
       const start = currentPage * LIMIT
+      if (this.isSearchCondition) {
+        return this.searchKeywords.slice(start, start + LIMIT)
+      }
       return this.keywords.slice(start, start + LIMIT)
     },
     currentPage () {
@@ -254,22 +276,34 @@ export default {
       return {
         limit: LIMIT,
         offset: this.offset,
-        total: this.keywords.length
+        total: this.isSearchCondition ? this.searchKeywords.length : this.keywords.length
       }
+    },
+    wordLen () {
+      return this.keywords.filter(o => !o.isDel).length
+    },
+    matchTypeRemainExactCount () {
+      const maxCount = getMatchTypeObj(this.wordLen).count(this.wordLen)
+      const currentCount = this.keywords.filter(o => o.matchType === MATCH_TYPE_EXACT).length
+      const count = maxCount - currentCount
+      return count > 0 ? count : 0
+    },
+    searchKeywords () {
+      if (this.isSearchCondition) {
+        return this.keywords.filter(row => row.word.indexOf(this.searchWord) > -1)
+      }
+      return []
     }
-  },
-  mounted () {
-    // TODO: 根据单元id获取关键词详情
   },
   data () {
     return {
       offset: 0,
       keywordPrice: '',
       matchType: MATCH_TYPE_PHRASE,
-      matchTypeRemainExactCount: 0,
 
       pricePopoverVisible: false,
       matchTypePopVisible: false,
+      loading: false,
 
       // 常量
       keywordStatusTip,
@@ -279,14 +313,15 @@ export default {
       KEYWORD_CHIBI_REJECT,
       RECOMMAND_SOURCES,
       MATCH_TYPE_OPTS,
-      MATCH_TYPE_EXACT
+      MATCH_TYPE_EXACT,
+      MATCH_TYPE_PHRASE
     }
   },
   methods: {
     fmtCpcRanking,
     fmtStatus (row) {
-      if (this.groupOffline) return '-'
-      return keywordStatus[String(row.status)] || '未知'
+      if (this.groupOffline) return '--'
+      return keywordStatus[String(row.status)] || '--'
     },
     getRefuseReason (word) {
       const { refuseReason } = word.extra
@@ -312,7 +347,7 @@ export default {
     },
     setCustomPrice (item, v) {
       const price = (v ? toFloat(v) : 0) * 100
-      this.emitUpdateKeyword({ item, price })
+      this.emitUpdateKeyword({ ...item, price })
     },
     bumpPriceBy20 (row) {
       track({
@@ -351,19 +386,74 @@ export default {
         return this.$message.error(`关键词有效出价区间为[${MIN_WORD_PRICE / 100}, ${MAX_WORD_PRICE / 100}]元，请调整出价`)
       }
 
-      this.emitUpdateKeywords('price', price)
-      this.$emit('update-origin-keywords', 'price', price)
-      await changeCampaignKeywordsPrice(this.groupId, price)
-
-      this.$message.success('关键词批量改价成功')
+      try {
+        this.loading = true
+        await changeCampaignKeywordsPrice(this.groupId, price)
+        this.emitUpdateKeywords('price', price)
+        this.$emit('update-origin-keywords', 'price', price)
+        this.$message.success('关键词批量改价成功')
+      } finally {
+        this.pricePopoverVisible = false
+        this.loading = false
+      }
     },
     async changeAllMatchType () {
       const matchType = this.matchType
 
-      this.emitUpdateKeyword('matchType', matchType)
-      this.$emit('update-origin-keywords', 'matchType', matchType)
-      await changeCampaignKeywordsMatchType(this.groupId, matchType)
-      this.$message.success('匹配方式批量修改成功')
+      try {
+        this.loading = true
+        await changeCampaignKeywordsMatchType(this.groupId, matchType)
+        this.emitUpdateKeywords('matchType', matchType)
+        this.$emit('update-origin-keywords', 'matchType', matchType)
+        this.$message.success('匹配方式批量修改成功')
+      } finally {
+        this.loading = false
+        this.matchTypePopVisible = false
+      }
+    },
+    onCurrentChange ({ offset }) {
+      this.offset = offset
+    },
+    deleteWord (row) {
+      if (this.showMatchType) {
+        // 删除之后的精准匹配的最大值和当前值
+        const maxCount = getMatchTypeObj(this.wordLen - 1).count(this.wordLen - 1)
+        let currentCount = this.keywords.filter(o => o.matchType === MATCH_TYPE_EXACT && !o.isDel).length
+        if (String(row.matchType) === String(MATCH_TYPE_EXACT)) {
+          currentCount--
+        }
+        if (maxCount < currentCount) {
+          const h = this.$createElement
+          const words = this.keywords.reduce((curr, prev) => {
+            if (String(prev.matchType) === String(MATCH_TYPE_EXACT) && !prev.isDel) {
+              return curr.concat(prev.word)
+            }
+            return curr
+          }, [])
+          this.$msgbox({
+            title: '提示',
+            message: h('div', null, [
+              h('div', null, '操作失败，请先减少精确匹配方式的关键词后再重新操作。'),
+              h('div', { style: 'marginTop: 10px' }, [
+                h('span', null, '已设置精确匹配的关键词：'),
+                h('span', { style: 'color: #ff4401' }, words.join('，'))
+              ])
+            ])
+          })
+          return
+        }
+      }
+      if (row.isNew) {
+        let offset = this.offset - 1 > 0 ? this.offset : 0
+        offset = offset === this.pagination.total - 1 ? offset - 1 : offset
+        this.offset = offset
+      }
+      this.emitUpdateKeyword({ ...row, isDel: true }, !!row.isNew)
+    }
+  },
+  watch: {
+    searchWord () {
+      this.offset = 0
     }
   },
   components: {
@@ -383,11 +473,11 @@ export default {
     font-size: 12px;
   }
   .del-word {
-    color: $c-main;
+    color: $c-success;
     font-size: 12px;
   }
   .updated-word {
-    color: $c-success;
+    color: $c-info;
     font-size: 12px;
   }
   .good-word {
@@ -401,10 +491,18 @@ export default {
   }
   .price,
   .match-type {
-    & > .match-type-select {
-      & /deep/ .el-input {
+    display: flex;
+    align-items: center;
+    > .match-type-select {
+      /deep/ .el-input {
         width: 120px;
       }
+    }
+    > label {
+      margin-left: 10px;
+      font-size: 12px;
+      color: $c-main;
+      max-width: 180px;
     }
   }
 }

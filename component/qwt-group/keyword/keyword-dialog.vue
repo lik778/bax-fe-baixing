@@ -17,7 +17,10 @@
                    :loading="loading"
                    @click="addWordList">批量添加</el-button>
       </div>
-      <div class="tip">提示: 请用逗号区分关键词进行批量关键词添加，如合肥家政服务公司，合肥月嫂，合肥钟点工</div>
+      <div class="tip">提示:
+        <p>1、请用逗号区分关键词进行批量关键词添加，如合肥家政服务公司，合肥月嫂，合肥钟点工</p>
+        <p>2、如关键词已存在，会自动过滤掉存在的内容</p>
+      </div>
     </div>
     <div class="content">
       <div class="sec"
@@ -55,12 +58,11 @@
 <script>
 import { recommendByWordList } from 'api/fengming'
 import { isObj } from 'util'
-import { MIN_WORD_PRICE } from 'constant/keyword'
 import { validateKeyword } from 'util/campaign'
-import { MATCH_TYPE_PHRASE } from 'constant/fengming'
+import { fmtNewKeywordsPrice } from 'util/group'
 
 export default {
-  name: 'QwtAddKeywordsDialog',
+  name: 'qwt-keyword-dialog',
   props: {
     visible: {
       type: Boolean,
@@ -127,44 +129,28 @@ export default {
         return this.$message.error(e.message)
       }
 
-      // 判断关键词已存在
-      let normalList = (this.keywords && this.keywords.normalList) || []
-      normalList = this.originalKeywords.concat(normalList)
-      for (let i = 0; i < normalList.length; i++) {
-        const row = normalList[i]
-        if (words.includes(row.word.toLowerCase())) {
-          return this.$message.warning(`${row.word}该关键词已存在关键词或否定关键词列表`)
-        }
-      }
+      // 本地校验：是否在单元的关键词和否词已有列表中, 存在直接过滤
+      const normalList = (this.keywords && this.keywords.normalList) || []
+      const originalKeywords = this.originalKeywords.concat(normalList)
+      const newWords = words.filter(
+        x => !originalKeywords.find(o => o.word.toLowerCase() === x.word.toLowerCase())
+      )
+
+      // TODO: 接口获取关键词是否已存在，并告知存在的列表（后端新增接口）
+      // TODO: 如果关键词已存在，直接过滤
 
       // 拼接关键词
-      const newKeywords = await this.fetchWords(words)
+      const newKeywords = await this.fetchWords(newWords)
       for (const key in this.keywords) {
-        this.keywords[key] = this.keywords[key].concat(newKeywords[key])
+        this.keywords[key] = [...new Set(this.keywords[key].concat(newKeywords[key]))]
       }
       this.search = ''
     },
     async fetchWords (words, sources) {
       const result = await recommendByWordList(words, { sources })
-      if (result && isObj(result)) {
-        for (const key in result) {
-          if (Array.isArray(result[key])) {
-            result[key] = result[key].map(word => {
-              const { price: serverPrice } = word
-              let price = serverPrice
-              if (price < MIN_WORD_PRICE) {
-                price = MIN_WORD_PRICE
-              }
-              return {
-                ...word,
-                serverPrice,
-                price, // override price, price is display value
-                value: word.word,
-                matchType: MATCH_TYPE_PHRASE
-              }
-            })
-          }
-        }
+      if (!(result && isObj(result))) return
+      for (const key in result) {
+        result[key] = fmtNewKeywordsPrice(result[key])
       }
       return result
     }

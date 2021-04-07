@@ -253,3 +253,19 @@ export function filterBannedListByContent (words) {
     normalList
   }
 }
+
+export const emptyGroup = {
+  landingType: 0,
+  landingPage: '',
+  landingPageId: '',
+  name: '',
+  status: '',
+  creatives: [{
+    title: '',
+    content: ''
+  }],
+  negativeWords: [],
+  mobilePriceRatio: 1,
+  keywords: [],
+  price: 2
+}
