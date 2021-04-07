@@ -89,9 +89,9 @@ import { deepClone } from 'util'
 
 // 图集类型枚举
 const MATERIAL_PIC_TYPE = {
-  NO_PIC: 1,
-  BIG_PIC: 2,
-  PIC_SETS: 3
+  NO_PIC: 0,
+  BIG_PIC: 1,
+  PIC_SETS: 2
 }
 
 export default {
