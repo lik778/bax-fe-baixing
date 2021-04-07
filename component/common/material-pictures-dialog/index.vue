@@ -201,7 +201,7 @@ export default {
   watch: {
     initValue (newVal = {}) {
       this.forms = {
-        type: newVal.type || MATERIAL_PIC_TYPE.NO_PIC,
+        type: newVal.image_type || MATERIAL_PIC_TYPE.NO_PIC,
         pc: newVal?.pc?.length > 1 ? deepClone(newVal.pc) : [],
         wap: newVal?.wap?.length > 1 ? deepClone(newVal.wap) : []
       }

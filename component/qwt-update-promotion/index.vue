@@ -104,6 +104,15 @@
           v-model="materialPictures"
           :initValue="materialPicturesInits"
         />
+        <transition name="el-fade-in-out">
+          <el-button
+            v-if="isMaterialChanged"
+            class="update-material-button"
+            type="primary"
+            size="small"
+            @click="_updateMaterialPictures"
+          >更新创意配图</el-button>
+        </transition>
       </section>
       <section class="keyword">
         <header class="top-col">
@@ -539,6 +548,8 @@ export default {
       },
       materialPictures: {},
       materialPicturesInits: {},
+      isMaterialChanged: false,
+      isMaterialChangeLock: false,
       LANDING_TYPE_AD,
       LANDING_TYPE_GW,
       LANDING_TYPE_258,
@@ -931,11 +942,14 @@ export default {
       ])
     },
     async initMaterialPictures () {
-      this.materialPicturesInits = {}
-      // ! do not delete
-      // this.materialPicturesInits = await getMaterialPictures({
-      //   campaignId: this.id
-      // })
+      this.isMaterialChanged = false
+      this.isMaterialChangeLock = true
+      this.materialPicturesInits = await getMaterialPictures({
+        campaignId: this.id
+      })
+      this.$nextTick(() => {
+        this.isMaterialChangeLock = false
+      })
     },
     clickSourceTip () {
       Message.warning('投放渠道不能修改')
@@ -1165,36 +1179,48 @@ export default {
       return data
     },
     async updatePromotion () {
-      if (!this.materialPictures.isValid) {
-        return this.$message.error('请按要求上传创意配图')
-      }
       if (!this.$refs.contract.$data.isAgreement) {
         return this.$message.error('请阅读并勾选同意服务协议，再进行下一步操作')
       }
-      this.banLandPageSelected()
       if (this.isUpdating) {
         return Message.warning('正在更新中, 请稍等一会儿 ~')
       }
-
       this.isUpdating = true
-
       try {
-        await this._updatePromotion()
         await this._updateMaterialPictures()
+        await this._updatePromotion()
       } finally {
         this.isUpdating = false
       }
     },
+    validMaterialPictures () {
+      if (!this.materialPictures.isValid) {
+        return this.$message.error('请按要求上传创意配图')
+      }
+    },
     async _updateMaterialPictures () {
-      await updateMaterialPictures({
-        campaign_id: this.id,
-        delete_images: []
-          .concat(this.materialPictures.del.wap)
-          .concat(this.materialPictures.del.pc),
-        new_images: this.materialPictures.add
-      })
+      const validMaterialPicError = this.validMaterialPictures()
+      if (validMaterialPicError) {
+        return validMaterialPicError
+      }
+      if (!this.isMaterialChanged) {
+        return null
+      }
+      try {
+        await updateMaterialPictures({
+          campaign_id: this.id,
+          image_type: this.materialPictures.type,
+          delete_images: []
+            .concat(this.materialPictures.del.wap)
+            .concat(this.materialPictures.del.pc),
+          new_images: this.materialPictures.add
+        })
+      } finally {
+        this.isMaterialChanged = false
+      }
     },
     async _updatePromotion () {
+      this.banLandPageSelected()
       const { allAreas, trackPromotionKeywords } = this
       let data = {}
       try {
@@ -1517,6 +1543,11 @@ export default {
   watch: {
     isErrorLandingPageShow (n, o) {
       console.log(n, o)
+    },
+    materialPictures (n, o) {
+      if (!this.isMaterialChangeLock) {
+        this.isMaterialChanged = true
+      }
     },
     'originPromotion' ({ landingPage, landingType }) {
       if (landingType === 1) {
@@ -1932,6 +1963,9 @@ export default {
       }
     }
   }
+}
+.update-material-button {
+  margin-left: 90px;
 }
 
 .prompt-text {
