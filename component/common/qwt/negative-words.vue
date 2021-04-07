@@ -1,13 +1,13 @@
 <template>
   <div class="negative-words">
     <div class="search">
-      <el-input class="input" size="small" v-model="word" placeholder="请输入标题（字数限制9～25个字）"/>
-      <el-button class="btn" type="primary" size="small" @click="addNegativeWords">添加否定关键词</el-button>
+      <el-input class="input" v-model="word" placeholder="请输入标题（字数限制9～25个字）"/>
+      <el-button class="btn" type="primary" @click="addNegativeWords">添加否定关键词</el-button>
       <span class="num">(否词关键词个数不得超过<strong>{{ NEGATIVE_KEYWORDS_MAX }}</strong>个, 当前否词数量: <strong>{{ negativeWords.length }}</strong>个）</span>
     </div>
     <div class="res" v-if="negativeWords.length">
-      <el-tag class="tag" type="primary" v-for="item in negativeWords" :key="item.word"
-        @close="removeNegativeWord(item)" closable>
+      <el-tag class="tag" type="primary" v-for="(item, idx) in negativeWords" :key="item.word"
+        @close="removeNegativeWord(idx)" closable>
         {{ item.word }}
       </el-tag>
     </div>
@@ -66,13 +66,13 @@ export default {
       } finally {
         this.word = ''
       }
-      this.$emit('update-negative-words', [{ word: val }].concat(this.negativeWords))
+      this.$emit('add-negative-words', [{ word: val }])
     },
-    removeNegativeWord (w) {
-      this.$emit('update-negative-words', this.negativeWords.filter(o => o.word !== w.word))
+    removeNegativeWord (idx) {
+      this.$emit('remove-negative-words', idx)
     },
     updateNegativeWords (words) {
-      this.$emit('update-negative-words', words.concat(this.negativeWords))
+      this.$emit('add-negative-words', words)
     }
   },
   components: {

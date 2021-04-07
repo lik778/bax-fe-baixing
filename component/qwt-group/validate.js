@@ -10,6 +10,14 @@ const GROUP_NAME_MIN = 1
 const KEYWORDS_MIN = 20
 
 const commonDescriptor = {
+  name: {
+    message: '单元名称字数限制1～6个',
+    type: 'string',
+    required: true,
+    validator: (rule, value) => {
+      return (value.length >= GROUP_NAME_MIN && value.length <= GROUP_NAME_MAX)
+    }
+  },
   landingType: {
     message: 'hi, 投放类型不能为空',
     type: 'number',
@@ -35,14 +43,6 @@ const commonDescriptor = {
         return !!value
       }
       return true
-    }
-  },
-  name: {
-    message: '单元名称字数限制1～6个',
-    type: 'string',
-    required: true,
-    validator: (rule, value) => {
-      return (value.length >= GROUP_NAME_MIN && value.length <= GROUP_NAME_MAX)
     }
   },
   mobilePriceRatio: {
@@ -86,7 +86,7 @@ const createDescriptor = {
   ...commonDescriptor,
   price (rule, value) {
     if (!value) return new Error('还未填写关键词出价哦！')
-    if (value > 99 || value < 2) return new Error('关键词价格需在[2, 999]区间内')
+    if (value > MAX_WORD_PRICE / 100 || value < MIN_WORD_PRICE / 100) return new Error('关键词价格需在[2, 999]区间内')
     return true
   }
 }

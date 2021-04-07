@@ -3,13 +3,19 @@
     <section>
       <header>推广目标设置</header>
       <div class="content">
-        <landing-page-comp
-          :group="group"
-          :promotion="promotion"
-          :allAreas="allAreas"
-          @change-name="(name) => updateGroupData('name', name)"
-          @change-landing="(args) => updateGroupData(args)"
-        />
+        <landing-comp
+          :value="group.name"
+          @change="(name) => updateGroupData('name', name)"
+        >
+          <landing-page-comp
+            :all-areas="allAreas"
+            :landing-type="group.landingType"
+            :landing-page="group.landingPage"
+            :landing-page-id="group.landingPageId"
+            :disabled="false"
+            @change-landing="(args) => updateGroupData(args)"
+          />
+        </landing-comp>
       </div>
     </section>
 
@@ -21,7 +27,9 @@
           :audit-status="group.auditStatus"
           :detail-status-text="group.detailStatusText"
           :creatives="group.creatives"
-          @update-creatives="updateCreatives"
+          @add-creatives="() => group.creatives.push({ title: '', content: '' })"
+          @remove-creatives="(idx) => group.creatives.splice(idx, 1)"
+          @update-creatives="(idx, newData) => group.creatives.splice(idx, 1, newData)"
         />
       </div>
     </section>
@@ -30,11 +38,11 @@
       <header>关键词管理（当前计划还可添加<strong>{{ keywordRemain }}</strong>个关键词）</header>
       <div class="content">
         <keyword-comp
-          :campaign-id="promotion.campaignId"
+          :campaign-id="promotion.id"
           :areas="promotion.areas"
           :sources="[promotion.source]"
           :keywords="keywords"
-          @update-keywords="updateKeywords"
+          @add-keywords="(words) => keywords = words.concat(keywords)"
         />
         <keyword-list-comp
           :platform="promotion.source"
@@ -42,7 +50,10 @@
           :group-offline="originGroup.status === CAMPAIGN_STATUS_OFFLINE"
           :group-online="originGroup.status === CAMPAIGN_STATUS_ONLINE"
           :keywords="keywords"
-          @update-keywords="updateKeywords"
+          :group-id="groupId"
+          @update-origin-keywords="(changeTag, v) => originKeywords.map(o => ({ ...o, [changeTag]: v }))"
+          @update-keywords="(words) => (keywords = words)"
+          @remove-keywords="(idx) => keywords.splice(idx, 1)"
         />
       </div>
     </section>
@@ -56,7 +67,8 @@
       <div class="content">
         <negative-keyword-comp
           :negative-words="group.negativeWords"
-          @update-negative-words="(negativeWords) => updateGroupData('negativeWords', negativeWords)"
+          @add-negative-words="(words) => group.negativeWords = words.concat(group.negativeWords)"
+          @remove-negative-words="(idx) => group.negativeWords.splice(idx, 1)"
         />
       </div>
     </section>
@@ -78,7 +90,8 @@
 </template>
 
 <script>
-import LandingPageComp from './landing-page'
+import LandingComp from './landing-page'
+import LandingPageComp from './landing-page/landing'
 import CreativeComp from './creative'
 import CreativeTipComp from './creative/creative-tip'
 import KeywordComp from './keyword/update'
@@ -89,6 +102,10 @@ import KeywordListComp from './keyword/keyword-list'
 
 import { SEM_PLATFORM_SHENMA, SEM_PLATFORM_BAIDU, CAMPAIGN_STATUS_OFFLINE, CAMPAIGN_STATUS_ONLINE } from 'constant/fengming'
 import clone from 'clone'
+import pick from 'lodash.pick'
+import { updateValidator } from './validate'
+
+import { getCampaignInfo } from 'api/fengming'
 
 export default {
   name: 'qwt-update-group',
@@ -108,69 +125,39 @@ export default {
       CAMPAIGN_STATUS_OFFLINE,
       CAMPAIGN_STATUS_ONLINE,
 
-      promotion: {
-        source: 0,
-        campaignId: '',
-        areas: []
-      },
-      originGroup: {
-        landingType: 0,
-        landingPage: '',
-        landingPageId: '',
-        name: '',
-        status: '',
-        auditStatus: 0,
-        detailStatusText: '',
-        creatives: [
-          {
-            id: 1,
-            title: 'nihao',
-            content: 'ceshi'
-          }
-        ],
-        negativeWords: [],
-        mobilePriceRatio: 1
-      },
+      promotion: null,
+      originGroup: null,
+      group: null,
       originKeywords: [],
-      group: {
-        landingType: undefined,
-        landingPage: undefined,
-        landingPageId: undefined,
-
-        updatedKeywords: [],
-        deletedKeywords: [],
-        newKeywords: [],
-
-        updatedNegativeKeywords: [],
-        newNegativeKeywords: [],
-        deletedNegativeKeywords: [],
-
-        updatedCreatives: [],
-        deletedCreatives: [],
-        newCreatives: []
-      }
+      keywords: [],
+      isUpdating: false
     }
   },
   computed: {
-    keywords () {
-      return []
-    },
     keywordRemain () {
       return 0
+    },
+    groupId () {
+      // TODO 放开注释，删除mock 4012
+      // return this.$route.params.id
+      return 4012
     }
   },
-  mounted () {
+  async mounted () {
+    // TODO mock 信息开始，后期删除
+    const res = await getCampaignInfo(4012)
+    this.originGroup = pick(res, ['landingType', 'landingPage', 'landingPageId', 'name', 'status', 'auditStatus', 'detailStatusText', 'creative', 'negativeWords', 'mobilePriceRatio'])
+    this.originGroup.creatives = [res.creative]
+    this.originKeywords = res.keywords
+    // TODO: 接口获取promotion信息
     // TODO: 接口获取group信息
     // TODO: 接口获取keywords信息
+    this.promotion = pick(res, ['source', 'areas', 'id'])
     this.group = clone(this.originGroup)
+    this.keywords = clone(this.originKeywords)
+    // TODO mock信息结束，后期删除
   },
   methods: {
-    getProp (prop) {
-      if (typeof this.group[prop] !== 'undefined') {
-        return this.group[prop]
-      }
-      return this.group[prop]
-    },
     updateGroupData (type, data) {
       if (typeof type === 'string') {
         this.group[type] = data
@@ -189,14 +176,36 @@ export default {
           return creatives.splice(idx, 1, data)
       }
     },
-    updateKeywords ({ type, data }) {
+    async validateGroup () {
+      if (!this.$refs.contract.$data.isAgreement) {
+        throw new Error('请阅读并勾选同意服务协议，再进行下一步操作')
+      }
+      if (this.isUpdating) {
+        throw new Error('正在更新中, 请稍等一会儿 ~')
+      }
+
+      try {
+        await updateValidator.validate(this.group)
+      } catch (e) {
+        throw new Error(e.errors[0].message)
+      }
     },
-    updateGroup () {
-      // TODO 编辑单元数据校验
-      // TODO 编辑单元接口请求
+    async updateGroup () {
+      try {
+        await this.validateGroup()
+        this.isUpdating = true
+        // TODO 获取修改单元数据
+        // TODO 编辑单元接口请求
+        this.$router.push({ name: 'qwt-update-promotion', params: { id: this.promotion.campaignId } })
+      } catch (e) {
+        return this.$message.error(e.message)
+      } finally {
+        this.isUpdating = false
+      }
     }
   },
   components: {
+    LandingComp,
     LandingPageComp,
     CreativeComp,
     CreativeTipComp,

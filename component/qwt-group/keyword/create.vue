@@ -67,10 +67,7 @@ export default {
   },
   methods: {
     removeKeyword (idx) {
-      this.$emit('update-keywords', {
-        type: 'remove',
-        idx
-      })
+      this.$emit('remove-keywords', idx)
     }
   },
   components: {

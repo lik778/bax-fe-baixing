@@ -4,8 +4,7 @@
     <el-input :value="value"
               placeholder="默认为3"
               @input="handleInput"
-              class="input"
-              size="small" />元
+              class="input" />元
     <span class="tip">（关键词出价区间为 [2, 999] 元）</span>
   </div>
 </template>

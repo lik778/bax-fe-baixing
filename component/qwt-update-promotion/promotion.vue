@@ -30,7 +30,6 @@
         <el-input
           type="number"
           class="budget-input"
-          size="small"
           :disabled="isSales || !modifyBudgetQuota"
           :value="promotion.dailyBudget"
           @input="onChangeDaliyBudget"
@@ -57,7 +56,6 @@
         <el-button
           class="duration-type"
           type="primary"
-          size="small"
           plain
           @click="durationSelectorVisible = true"
           >设置</el-button
@@ -70,7 +68,6 @@
         <el-button-group>
           <el-button
             :disabled="isSales"
-            size="small"
             v-for="(val, key) in TIME_TYPE_OPTS"
             :key="key"
             @click="onChangeTimeType(key)"
@@ -84,7 +81,6 @@
           v-if="timeType === TIME_TYPE_CUSTOM"
           :value="promotion.validTime"
           @input="onValidTimeChange"
-          size="small"
           :disabled="isSales"
           :picker-options="{ disabledDate }"
           type="daterange"
@@ -106,7 +102,7 @@
       <div class="cont">
          <negative-words-comp
           :negative-words="promotion.negativeWords"
-          @update-negative-words="(data) => emitPromtionData('negativeWords', data)" />
+          v-on="$listeners" />
       </div>
     </section>
 

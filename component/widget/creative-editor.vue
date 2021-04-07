@@ -13,7 +13,6 @@
             :value="title"
             @change="onCreativeChange('title', $event)"
             @input="onInput('title', $event)"
-            size="small"
           />
         </text-limit-tip>
         <p class="auditing-prompt" v-if="creativeStatus === CREATIVE_STATUS_REJECT">

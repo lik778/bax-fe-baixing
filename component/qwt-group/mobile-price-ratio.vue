@@ -12,7 +12,6 @@
     </el-tooltip>
     <el-input
       class="input"
-      size="small"
       :value="value"
       @input="changeMobilePriceRatio"
       placeholder="默认为1"

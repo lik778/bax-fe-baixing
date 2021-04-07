@@ -12,8 +12,9 @@
           :all-areas="allAreas"
           :promotion="promotion"
           :current-balance="currentBalance"
-          @update-negative-words="(negativeWords) => updatePromotionData('negativeWords', negativeWords)"
-          @update-promotion="updatePromotionData"
+          @add-negative-words="(words) =>(promotion.negativeWords = words.concat(promotion.negativeWords))"
+          @remove-negative-words="(idx) => promotion.negativeWords.splice(idx, 1)"
+          @update-promotion="(type, data) => (promotion[type] = data)"
         />
       </div>
     </div>
@@ -25,8 +26,8 @@
         <el-button
           @click="handleGoGroup"
           type="primary"
-          size="small"
-          class="add-group-btn">
+          class="add-group-btn"
+        >
           <i class="el-icon-plus" />
           新增单元
         </el-button>
@@ -41,7 +42,12 @@
     <div class="module">
       <div class="content">
         <contract-ack class="contract-ack" type="content-rule" ref="contract" />
-        <el-button class="update-btn" type="primary" :disabled="isUpdating || isSales" @click="updatePromotion">
+        <el-button
+          class="update-btn"
+          type="primary"
+          :disabled="isUpdating || isSales"
+          @click="updatePromotion"
+        >
           更新推广
         </el-button>
         <promotion-charge-tip />
@@ -74,7 +80,8 @@ const emptyPromtion = {
   budgetModificationCount: 0,
   schedule: [],
   dailyBudget: 0,
-  validTime: []
+  validTime: [],
+  negativeWords: []
 }
 
 export default {
@@ -179,9 +186,6 @@ export default {
       this.promotion = pick(clone(this.originPromotion), ['areas', 'dailyBudget', 'validTime', 'negativeWords', 'schedule', 'budgetModificationCount', 'source'])
       this.currentBalance = await getCurrentBalance()
       // TODO: 获取所有单元详情
-    },
-    updatePromotionData (type, data) {
-      this.promotion[type] = data
     },
     updateGroupData (row) {
     },

@@ -4,48 +4,32 @@
       <div class="desc">单元名称：</div>
       <el-input
         class="input"
-        :value="group.name"
+        :value="value"
         @input="changeGroupName"
         placeholder="请输入单元名称"
       />
     </section>
     <section>
       <div class="landing desc">投放页面：</div>
-      <landing-comp
-        :landing-type="group.landingType"
-        :landing-page="group.landingPage"
-        :landing-page-id="group.landingPageId"
-        :all-areas="allAreas"
-        v-on="$listeners"
-      />
+      <slot />
     </section>
   </div>
 </template>
 
 <script>
-import LandingComp from './landing'
-
 export default {
   name: 'landing-page-comp',
   props: {
-    group: {
-      type: Object,
+    value: {
+      type: String,
       required: true,
-      default: () => {
-        return {}
-      }
-    },
-    allAreas: {
-      type: Array
+      default: ''
     }
   },
   methods: {
     changeGroupName (val) {
-      this.$emit('change-name', val)
+      this.$emit('change', val)
     }
-  },
-  components: {
-    LandingComp
   }
 }
 </script>

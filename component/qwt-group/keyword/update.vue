@@ -11,8 +11,8 @@
     </div>
     <div class="pane">
       <header>搜索推广关键词</header>
-      <el-input v-model="search" size="small" class="input" placeholder="请输入关键词查询" />
-      <el-button size="small" type="primary" @click="searchKeyword">搜索</el-button>
+      <el-input v-model="search" class="input" placeholder="请输入关键词查询" />
+      <el-button type="primary" @click="searchKeyword">搜索</el-button>
     </div>
   </div>
 </template>

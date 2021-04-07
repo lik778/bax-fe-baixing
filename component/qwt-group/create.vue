@@ -11,12 +11,18 @@
           </p>
       </header>
       <div class="content">
-        <landing-page-comp
-          :group="group"
-          :all-areas="allAreas"
-          @change-name="(name) => updateGroupData('name', name)"
-          @change-landing="(args) => updateGroupData(args)"
-        />
+        <landing-comp
+          :value="group.name"
+          @change="(val) => updateGroupData('name', val)"
+        >
+          <landing-page-comp
+            :all-areas="allAreas"
+            :landing-type="group.landingType"
+            :landing-page="group.landingPage"
+            :landing-page-id="group.landingPageId"
+            @change-landing="(args) => updateGroupData(args)"
+          />
+        </landing-comp>
       </div>
     </section>
 
@@ -28,7 +34,9 @@
           :audit-status="group.auditStatus"
           :detail-status-text="group.detailStatusText"
           :creatives="group.creatives"
-          @update-creatives="updateCreatives"
+          @add-creatives="() => group.creatives.push({ title: '', content: '' })"
+          @remove-creatives="(idx) => group.creatives.splice(idx, 1)"
+          @update-creatives="(idx, newData) => group.creatives.splice(idx, 1, newData)"
         />
       </div>
     </section>
@@ -40,7 +48,8 @@
           :areas="promotion.areas"
           :sources="[promotion.source]"
           :keywords="group.keywords"
-          @update-keywords="updateKeywords"
+          @add-keywords="(words) => group.keywords = words.concat(group.keywords)"
+          @remove-keywords="(idx) => group.keywords.splice(idx, 1)"
         />
       </div>
     </section>
@@ -53,7 +62,8 @@
       <div class="content">
         <negative-keyword-comp
           :negative-words="group.negativeWords"
-          @update-negative-words="(negativeWords) => updateGroupData('negativeWords', negativeWords)"
+          @add-negative-words="(words) => group.negativeWords = words.concat(group.negativeWords)"
+          @remove-negative-words="(idx) => group.negativeWords.splice(idx, 1)"
         />
       </div>
     </section>
@@ -78,7 +88,8 @@
 </template>
 
 <script>
-import LandingPageComp from './landing-page'
+import LandingComp from './landing-page'
+import LandingPageComp from './landing-page/landing'
 import CreativeComp from './creative'
 import CreativeTipComp from './creative/creative-tip'
 import KeywordComp from './keyword/create'
@@ -110,8 +121,8 @@ export default {
         landingPageId: '',
         name: '',
         status: '',
-        auditStatus: 0,
-        detailStatusText: '',
+        auditStatus: 0, // TODO: 放在creative里面
+        detailStatusText: '', // TODO: 放在creative里面
         creatives: [{
           title: '',
           content: ''
@@ -125,6 +136,7 @@ export default {
     }
   },
   components: {
+    LandingComp,
     LandingPageComp,
     CreativeComp,
     CreativeTipComp,
@@ -134,6 +146,9 @@ export default {
     MobilePriceRatioComp,
     CpcPriceComp
   },
+  mounted () {
+    // TODO: 获取计划信息
+  },
   methods: {
     updateGroupData (type, data) {
       if (typeof type === 'string') {
@@ -141,27 +156,6 @@ export default {
         return
       }
       Object.assign(this.group, type)
-    },
-    updateCreatives ({ type, idx, data }) {
-      const creatives = this.group.creatives
-      switch (type) {
-        case 'add':
-          return creatives.push({ title: '', content: '' })
-        case 'remove':
-          return creatives.splice(idx, 1)
-        case 'update':
-          return creatives.splice(idx, 1, data)
-      }
-    },
-    updateKeywords ({ type, idx, data }) {
-      const keywords = this.group.keywords
-      switch (type) {
-        case 'add':
-          this.group.keywords = data.concat(keywords)
-          return
-        case 'remove':
-          return keywords.splice(idx, 1)
-      }
     },
     async validateGroup () {
       if (!this.$refs.contract.$data.isAgreement) {

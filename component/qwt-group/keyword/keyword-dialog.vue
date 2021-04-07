@@ -11,11 +11,9 @@
       <div class="search-container">
         <el-input class="search"
                   placeholder="请批量添加关键词"
-                  size="small"
                   v-model="search"></el-input>
         <el-button class="add-btn"
                    type="primary"
-                   size="small"
                    :loading="loading"
                    @click="addWordList">批量添加</el-button>
       </div>
@@ -48,8 +46,7 @@
     <span slot="footer"
           class="footer">
       <el-button type="primary"
-                 @click="handleConfirm"
-                 size="small">确认
+                 @click="handleConfirm">确认
       </el-button>
     </span>
   </el-dialog>

@@ -88,7 +88,7 @@ export default {
     handleTabsAdd () {
       if (this.creatives.length >= MAX_CREATIVE_LEN) return this.$message.error('最多只能增加3条创意')
       const newTabName = String(this.creatives.length + 1)
-      this.$emit('update-creatives', { type: 'add' })
+      this.$emit('add-creatives')
       this.activeName = newTabName
     },
     handleTabsRemove (targetName) {
@@ -97,21 +97,14 @@ export default {
       const currIdx = parseInt(targetName)
       resIdx = this.creatives.length === currIdx ? currIdx - 1 : currIdx
       this.activeName = String(resIdx)
-      this.$emit('update-creatives', {
-        type: 'remove',
-        idx: parseInt(resIdx) - 1
-      })
+      this.$emit('remove-creatives', parseInt(resIdx) - 1)
     },
     handleCreativeValueChange ({ title, content, idx }) {
       const creativeObj = this.creatives[idx]
-      this.$emit('update-creatives', {
-        type: 'update',
-        idx,
-        data: {
-          ...creativeObj,
-          title,
-          content
-        }
+      this.$emit('update-creatives', idx, {
+        ...creativeObj,
+        title,
+        content
       })
     },
     handleCreativeError (msg, idx) {
@@ -119,24 +112,16 @@ export default {
       if (msg) {
         this.$message.error(msg)
       }
-      this.$emit('update-creatives', {
-        type: 'update',
-        idx,
-        data: {
-          ...creativeObj,
-          msg
-        }
+      this.$emit('update-creatives', idx, {
+        ...creativeObj,
+        msg
       })
     },
     handleValidateLenChange (isValid, idx) {
       const creativeObj = this.creatives[idx]
-      this.$emit('update-creatives', {
-        type: 'update',
-        idx,
-        data: {
-          ...creativeObj,
-          lenValid: isValid
-        }
+      this.$emit('update-creatives', idx, {
+        ...creativeObj,
+        lenValid: isValid
       })
     }
   },

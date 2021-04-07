@@ -1,9 +1,9 @@
 <template>
   <div class="search">
-    <el-input v-model="word" class="input" size="small" placeholder="添加自定义词"  />
-    <el-button type="primary" size="small" @click="handleAddKeyword">添加关键词</el-button>
-    <el-button type="primary" size="small" plain @click="recommendKeywords">一键拓词</el-button>
-    <el-button type="primary" size="small" plain @click="baiduExpandWordsDialogVisible = true">规划拓词工具</el-button>
+    <el-input v-model="word" class="input" placeholder="添加自定义词"  />
+    <el-button type="primary" @click="handleAddKeyword">添加关键词</el-button>
+    <el-button type="primary" plain @click="recommendKeywords">一键拓词</el-button>
+    <el-button type="primary" plain @click="baiduExpandWordsDialogVisible = true">规划拓词工具</el-button>
 
     <!-- 添加关键词模态框 -->
     <keyword-dialog
@@ -63,19 +63,13 @@ export default {
       } finally {
         this.word = ''
       }
-      this.$emit('update-keywords', {
-        type: 'add',
-        data: [{ word: val }]
-      })
+      this.$emit('add-keywords', [{ word: val, isNew: true }])
     },
     recommendKeywords () {
       // TODO: 逻辑待定，太混乱了
     },
     handleAddKeywords (words) {
-      this.$emit('update-keywords', {
-        type: 'add',
-        data: words
-      })
+      this.$emit('add-keywords', words.map(o => ({ ...o, isNew: true })))
     }
   }
 }
