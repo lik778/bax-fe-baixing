@@ -41,6 +41,9 @@ export default {
     return {
       viewport: this.cropOptions || {},
       resResolve: '',
+      store: {
+        imageName: ''
+      },
       visible: {
         clipDialog: false
       }
@@ -64,6 +67,7 @@ export default {
   },
   methods: {
     async crop (file) {
+      this.store.imageName = file.name
       return await new Promise(resolve => {
         const reader = new FileReader()
         reader.onload = e => {
@@ -90,7 +94,7 @@ export default {
       }, output => {
         const { u8arr, mime } = base64ToBin(output)
         this.resResolve(
-          new File([u8arr], '图片', {
+          new File([u8arr], this.store.imageName, {
             type: mime
           })
         )

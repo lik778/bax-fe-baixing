@@ -38,7 +38,7 @@
           <i
             class="el-icon el-icon-scissors"
             title="裁剪"
-            @click="clipFile(image.url, idx)"
+            @click="clipFile(image, idx)"
           />
           <i
             class="el-icon el-icon-delete"
@@ -115,7 +115,7 @@ export default {
         image.desc = value
       })
     },
-    clipFile (url, idx) {
+    clipFile (img, idx) {
       const $img = new Image()
       $img.onerror = err => {
         throw new Error(err)
@@ -128,7 +128,7 @@ export default {
         const ctx = $cvs.getContext('2d')
         ctx.drawImage($img, 0, 0, width, height)
         const { u8arr, mime } = base64ToBin($cvs.toDataURL())
-        const newFile = new File([u8arr], '图片', { type: mime })
+        const newFile = new File([u8arr], img.desc, { type: mime })
         this.uploadFile(newFile, ({ isSuccess }) => {
           if (isSuccess) {
             this.deleteFile(idx)
@@ -136,7 +136,7 @@ export default {
         })
       }
       $img.setAttribute('crossOrigin', 'Anonymous')
-      $img.src = url
+      $img.src = img.url
     },
 
     /* Calculation */
