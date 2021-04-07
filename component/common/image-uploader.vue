@@ -121,9 +121,13 @@ export default {
       }
       this.$emit('before-upload', e.target.files)
       try {
+        console.log(files)
         this.loading = true
         const uploadResult = await Promise.all(files.map(uploadFile))
-        this.$emit('upload-success', uploadResult)
+        this.$emit('upload-success', uploadResult.map((url, idx) => ({
+          filename: files[idx].name,
+          url
+        })))
         this.callback && this.callback({
           res: uploadResult,
           isSuccess: true

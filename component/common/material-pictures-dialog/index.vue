@@ -1,7 +1,7 @@
 <template>
   <section class="material-pictures-editor">
     <aside class="label">
-      推广内容:
+      创意配图:
     </aside>
     <span>
       <el-radio-group v-model="forms.type" @change="clearPictures">
@@ -120,7 +120,7 @@ export default {
       MATERIAL_PIC_STATUS,
       MATERIAL_PIC_AUDIT_TYPE,
       forms: {
-        type: 1,
+        type: null,
         pc: [],
         wap: []
       },
@@ -200,8 +200,8 @@ export default {
     initValue (newVal = {}) {
       this.forms = {
         type: newVal.image_type || MATERIAL_PIC_TYPE.NO_PIC,
-        pc: newVal?.pc?.length > 1 ? deepClone(newVal.pc) : [],
-        wap: newVal?.wap?.length > 1 ? deepClone(newVal.wap) : []
+        pc: (newVal?.pc?.length >= 1) ? deepClone(newVal.pc) : [],
+        wap: (newVal?.wap?.length >= 1) ? deepClone(newVal.wap) : []
       }
       // * for test suppose
       // this.forms = {

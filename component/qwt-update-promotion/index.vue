@@ -944,9 +944,9 @@ export default {
     async initMaterialPictures () {
       this.isMaterialChanged = false
       this.isMaterialChangeLock = true
-      this.materialPicturesInits = await getMaterialPictures({
+      this.materialPicturesInits = (await getMaterialPictures({
         campaignId: this.id
-      })
+      })).data
       this.$nextTick(() => {
         this.isMaterialChangeLock = false
       })
@@ -1187,8 +1187,10 @@ export default {
       }
       this.isUpdating = true
       try {
-        await this._updateMaterialPictures()
-        await this._updatePromotion()
+        const updateError = await this._updateMaterialPictures()
+        if (!updateError) {
+          await this._updatePromotion()
+        }
       } finally {
         this.isUpdating = false
       }
@@ -1203,8 +1205,9 @@ export default {
       if (validMaterialPicError) {
         return validMaterialPicError
       }
-      if (!this.isMaterialChanged) {
-        return null
+      const notChangedError = !this.isMaterialChanged
+      if (notChangedError) {
+        return notChangedError
       }
       try {
         await updateMaterialPictures({
@@ -1215,6 +1218,7 @@ export default {
             .concat(this.materialPictures.del.pc),
           new_images: this.materialPictures.add
         })
+        Message.success('更新创意配图成功')
       } finally {
         this.isMaterialChanged = false
       }
@@ -1307,7 +1311,7 @@ export default {
       await updateCampaign(this.id, fmtAreasInQwt(data, allAreas))
       trackPromotionKeywords(data)
 
-      Message.success('更新成功')
+      Message.success('更新计划成功')
 
       await store.clearStore()
 

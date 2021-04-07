@@ -90,11 +90,15 @@ export default {
     }
   },
   methods: {
-    handleUploadSuccess (url) {
-      this.$emit('change', this.value.concat([{
-        desc: String(+new Date()) + String(Math.random()).slice(-6),
-        url: url[0]
-      }]))
+    handleUploadSuccess (results) {
+      results.forEach(res => {
+        const getRandName = () => String(+new Date()) + String(Math.random()).slice(-6)
+        this.$emit('change', this.value.concat([{
+          url: res.url,
+          desc: res.filename || getRandName(),
+          status: MATERIAL_PIC_STATUS.STATUS_PENDING_CREATE
+        }]))
+      })
     },
     uploadFile (...args) {
       this.$refs.uploader.uploadFile(...args)
@@ -201,7 +205,7 @@ export default {
       position: absolute;
       display: flex;
       align-items: center;
-      justify-content: flex-end;
+      justify-content: flex-start;
       left: 0;
       bottom: -1.65em;
       right: 0;
@@ -242,7 +246,7 @@ export default {
           content: '审核成功';
         }
       }
-      &.auditing {
+      &.failed {
         background: #ff6350;
         .status-text::after {
           content: '审核失败';
