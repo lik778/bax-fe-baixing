@@ -96,7 +96,7 @@
           @error="handleCreativeError"
         />
       </section>
-      <section>
+      <section v-if="getProp('source') === SEM_PLATFORM_BAIDU">
         <header class="top-col">
           创意配图
         </header>
@@ -1587,6 +1587,7 @@ export default {
     await store.clearStore()
   },
   async mounted () {
+    console.log(this.currentPromotion)
     await this.initCampaignInfo()
 
     this.initMaterialPictures()
