@@ -1,27 +1,27 @@
 <template>
   <div class="search">
-    <el-input v-model="word" class="input" placeholder="添加自定义词"  />
-    <el-button type="primary" @click="handleAddKeyword">添加关键词</el-button>
-    <el-button type="primary" plain @click="recommendKeywords">一键拓词</el-button>
-    <el-button type="primary" plain @click="baiduExpandWordsDialogVisible = true">规划拓词工具</el-button>
+    <el-input v-model="word"
+              class="input"
+              placeholder="添加自定义词" />
+    <el-button type="primary"
+               @click="handleAddKeyword">添加关键词</el-button>
+    <el-button type="primary"
+               plain
+               @click="recommendKeywords">一键拓词</el-button>
+    <el-button type="primary"
+               plain
+               @click="baiduExpandWordsDialogVisible = true">规划拓词工具</el-button>
 
     <!-- 添加关键词模态框 -->
-    <keyword-dialog
-      :visible.sync="keywordDialogVisible"
-      :original-keywords="keywords"
-      :sources="sources"
-      @update="handleAddKeywords"
-    />
+    <keyword-dialog :visible.sync="keywordDialogVisible"
+                    :original-keywords="keywords"
+                    :sources="sources"
+                    @update="handleAddKeywords" />
 
     <!-- 规划拓词模态框 -->
-    <baidu-expand-words-dialog
-      :visible.sync="baiduExpandWordsDialogVisible"
-      :extra-query="{
-        campaign_id: campaignId,
-        areas: areas
-      }"
-      @confirm="handleAddKeywords"
-    />
+    <baidu-expand-words-dialog :visible.sync="baiduExpandWordsDialogVisible"
+                               :extra-query="{ campaign_id: campaignId, areas: areas }"
+                               @confirm="handleAddKeywords" />
   </div>
 </template>
 

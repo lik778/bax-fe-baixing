@@ -1,37 +1,29 @@
 <template>
-  <el-tabs
-    type="card"
-    class="creative"
-    v-model="activeName"
-    editable
-    @tab-add="handleTabsAdd"
-    @tab-remove="handleTabsRemove"
-  >
-    <el-tab-pane
-      v-for="(item, index) in creatives"
-      :label="'创意' + (index + 1)"
-      :key="index"
-      :name="String(index + 1)"
-      class="creative-pane"
-    >
-      <fm-tip
-        class="creative-tip"
-        position="creative-pane"
-        img-url="//file.baixing.net/201903/d6f4502a0e8a659b78a33fbb3713e6b9.png"
-      >创意怎么才能飘红</fm-tip
-      >
-      <creative-editor
-        :disabled="disabled"
-        :platforms="[source]"
-        :idx="index"
-        :title="item.title"
-        :content="item.content"
-        :creative-status="auditStatus"
-        :status-text="detailStatusText"
-        @change="handleCreativeValueChange"
-        @error="handleCreativeError"
-        @validate-len-change="handleValidateLenChange"
-      />
+  <el-tabs type="card"
+           class="creative"
+           v-model="activeName"
+           editable
+           @tab-add="handleTabsAdd"
+           @tab-remove="handleTabsRemove">
+    <el-tab-pane v-for="(item, index) in creatives"
+                 :label="'创意' + (index + 1)"
+                 :key="index"
+                 :name="String(index + 1)"
+                 class="creative-pane">
+      <fm-tip class="creative-tip"
+              position="creative-pane"
+              img-url="//file.baixing.net/201903/d6f4502a0e8a659b78a33fbb3713e6b9.png">创意怎么才能飘红
+      </fm-tip>
+      <creative-editor :disabled="disabled"
+                       :platforms="[source]"
+                       :idx="index"
+                       :title="item.title"
+                       :content="item.content"
+                       :creative-status="auditStatus"
+                       :status-text="detailStatusText"
+                       @change="handleCreativeValueChange"
+                       @error="handleCreativeError"
+                       @validate-len-change="handleValidateLenChange" />
     </el-tab-pane>
   </el-tabs>
 </template>

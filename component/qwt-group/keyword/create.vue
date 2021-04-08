@@ -3,14 +3,13 @@
     <p class="tip">
       请选取<strong>20</strong>个以上关键词，关键词越多您的创意被展现的机会越多。根据当月数据，为您推荐如下关键词
     </p>
-    <search-comp
-      :campaign-id="campaignId"
-      :areas="areas"
-      :sources="sources"
-      v-on="$listeners"
-      :keywords="keywords"
-    />
-    <div class="res" v-if="keywords.length">
+    <search-comp :campaign-id="campaignId"
+                 :areas="areas"
+                 :sources="sources"
+                 v-on="$listeners"
+                 :keywords="keywords" />
+    <div class="res"
+         v-if="keywords.length">
       <el-tag class="tag"
               :class="{'tag-fh': RECOMMAND_SOURCES.includes(kw.recommandSource)}"
               v-for="(kw, index) in keywords"

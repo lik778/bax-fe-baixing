@@ -2,12 +2,10 @@
   <div class="container">
     <section>
       <div class="desc">单元名称：</div>
-      <el-input
-        class="input"
-        :value="value"
-        @input="changeGroupName"
-        placeholder="请输入单元名称"
-      />
+      <el-input class="input"
+                :value="value"
+                @input="changeGroupName"
+                placeholder="请输入单元名称" />
     </section>
     <section>
       <div class="landing desc">投放页面：</div>

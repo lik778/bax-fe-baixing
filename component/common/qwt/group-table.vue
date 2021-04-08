@@ -1,19 +1,31 @@
 <template>
-  <el-table class="group-table" :data="groupData" border>
-    <el-table-column prop="name" label="单元名称" align="center" />
+  <el-table class="group-table"
+            :data="groupData"
+            border>
+    <el-table-column prop="name"
+                     label="单元名称"
+                     align="center" />
     <!-- <el-table-column prop="campaignId" label="所属计划" align="center" /> -->
     <!-- <el-table-column prop="source" label="渠道" align="center" /> -->
     <!-- TODO: 投放状态需要枚举，并为不一样的状态添加不一样的颜色，见设计稿 -->
-    <el-table-column prop="status" label="投放状态" align="center">
+    <el-table-column prop="status"
+                     label="投放状态"
+                     align="center">
       <template slot-scope="{row}">{{ row.status }}</template>
     </el-table-column>
     <!-- TODO: 见设计稿 -->
-    <el-table-column prop="avg" label="关键词平均排名" align="center" />
-    <el-table-column label="操作" align="center">
+    <el-table-column prop="avg"
+                     label="关键词平均排名"
+                     align="center" />
+    <el-table-column label="操作"
+                     align="center">
       <template slot-scope="{row}">
-        <span class="btn" @click="pauseGroup(row)">暂停</span>
-        <span class="btn" @click="optimizeGroup(row)">优化</span>
-        <span class="btn" @click="copyGroup(row)">复制</span>
+        <span class="btn"
+              @click="pauseGroup(row)">暂停</span>
+        <span class="btn"
+              @click="optimizeGroup(row)">优化</span>
+        <span class="btn"
+              @click="copyGroup(row)">复制</span>
       </template>
     </el-table-column>
   </el-table>

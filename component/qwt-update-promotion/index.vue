@@ -7,15 +7,13 @@
     <div class="module">
       <h4>计划设置</h4>
       <div class="content">
-        <promotion-comp
-          :is-sales="isSales"
-          :all-areas="allAreas"
-          :promotion="promotion"
-          :current-balance="currentBalance"
-          @add-negative-words="(words) =>(promotion.negativeWords = words.concat(promotion.negativeWords))"
-          @remove-negative-words="(idx) => promotion.negativeWords.splice(idx, 1)"
-          @update-promotion="(type, data) => (promotion[type] = data)"
-        />
+        <promotion-comp :is-sales="isSales"
+                        :all-areas="allAreas"
+                        :promotion="promotion"
+                        :current-balance="currentBalance"
+                        @add-negative-words="(words) =>(promotion.negativeWords = words.concat(promotion.negativeWords))"
+                        @remove-negative-words="(idx) => promotion.negativeWords.splice(idx, 1)"
+                        @update-promotion="(type, data) => (promotion[type] = data)" />
       </div>
     </div>
 
@@ -23,31 +21,27 @@
     <div class="module">
       <h4>单元设置</h4>
       <div class="content">
-        <el-button
-          @click="handleGoGroup"
-          type="primary"
-          class="add-group-btn"
-        >
+        <el-button @click="handleGoGroup"
+                   type="primary"
+                   class="add-group-btn">
           <i class="el-icon-plus" />
           新增单元
         </el-button>
-        <group-table-comp
-          :group-data="groupData"
-          @update-group-data="updateGroupData"
-        />
+        <group-table-comp :group-data="groupData"
+                          @update-group-data="updateGroupData" />
       </div>
     </div>
 
     <!-- 更新推广 -->
     <div class="module">
       <div class="content">
-        <contract-ack class="contract-ack" type="content-rule" ref="contract" />
-        <el-button
-          class="update-btn"
-          type="primary"
-          :disabled="isUpdating || isSales"
-          @click="updatePromotion"
-        >
+        <contract-ack class="contract-ack"
+                      type="content-rule"
+                      ref="contract" />
+        <el-button class="update-btn"
+                   type="primary"
+                   :disabled="isUpdating || isSales"
+                   @click="updatePromotion">
           更新推广
         </el-button>
         <promotion-charge-tip />

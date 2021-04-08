@@ -3,21 +3,17 @@
     <section>
       <div class="desc align-self">投放城市</div>
       <div class="cont">
-        <el-tag
-          type="primary"
-          class="area-tag"
-          :closable="!isSales"
-          v-for="area in promotion.areas"
-          :key="area"
-          @close="onRemoveArea(area)"
-        >
+        <el-tag type="primary"
+                class="area-tag"
+                :closable="!isSales"
+                v-for="area in promotion.areas"
+                :key="area"
+                @close="onRemoveArea(area)">
           {{ formatterArea(area) }}
         </el-tag>
-        <i
-          class="el-icon-plus"
-          v-if="!isSales"
-          @click="areaDialogVisible = true"
-        />
+        <i class="el-icon-plus"
+           v-if="!isSales"
+           @click="areaDialogVisible = true" />
       </div>
     </section>
     <section>
@@ -27,25 +23,20 @@
     <section>
       <div class="desc">渠道单日预算</div>
       <div class="cont">
-        <el-input
-          type="number"
-          class="budget-input"
-          :disabled="isSales || !modifyBudgetQuota"
-          :value="promotion.dailyBudget"
-          @input="onChangeDaliyBudget"
-        />
-        <span class="budget-tip" v-if="currentBalance <= 0">
-          （您的推广资金可用余额为0元，请<router-link
-            :to="{ name: 'qwt-charge', query: { mode: 'charge-only' } }"
-            >充值</router-link
-          >）
+        <el-input type="number"
+                  class="budget-input"
+                  :disabled="isSales || !modifyBudgetQuota"
+                  :value="promotion.dailyBudget"
+                  @input="onChangeDaliyBudget" />
+        <span class="budget-tip"
+              v-if="currentBalance <= 0">
+          （您的推广资金可用余额为0元，请<router-link :to="{ name: 'qwt-charge', query: { mode: 'charge-only' } }">
+            充值</router-link>）
         </span>
-        <span class="budget-tip" v-else>
-          (您的推广资金可用余额为<strong
-            >￥{{ $formatter.f2y(currentBalance) }}</strong
-          >元， 可消耗<strong>{{ consumeDays }}</strong
-          >天，今日可修改<strong>{{ modifyBudgetQuota }}</strong
-          >次)
+        <span class="budget-tip"
+              v-else>
+          (您的推广资金可用余额为<strong>￥{{ $formatter.f2y(currentBalance) }}</strong>元，
+          可消耗<strong>{{ consumeDays }}</strong>天，今日可修改<strong>{{ modifyBudgetQuota }}</strong>次)
         </span>
       </div>
     </section>
@@ -53,78 +44,65 @@
       <div class="desc">投放时段</div>
       <div class="cont">
         {{ DURATION_TYPE_OPTS[getDurationType()]}}
-        <el-button
-          class="duration-type"
-          type="primary"
-          plain
-          @click="durationSelectorVisible = true"
-          >设置</el-button
-        >
+        <el-button class="duration-type"
+                   type="primary"
+                   plain
+                   @click="durationSelectorVisible = true">设置</el-button>
       </div>
     </section>
     <section>
       <div class="desc">投放时间</div>
       <div class="cont">
         <el-button-group>
-          <el-button
-            :disabled="isSales"
-            v-for="(val, key) in TIME_TYPE_OPTS"
-            :key="key"
-            @click="onChangeTimeType(key)"
-            :type="timeType === key ? 'primary' : ''"
-          >
+          <el-button :disabled="isSales"
+                     v-for="(val, key) in TIME_TYPE_OPTS"
+                     :key="key"
+                     @click="onChangeTimeType(key)"
+                     :type="timeType === key ? 'primary' : ''">
             {{ val }}
           </el-button>
         </el-button-group>
-        <el-date-picker
-          class="time-range-picker"
-          v-if="timeType === TIME_TYPE_CUSTOM"
-          :value="promotion.validTime"
-          @input="onValidTimeChange"
-          :disabled="isSales"
-          :picker-options="{ disabledDate }"
-          type="daterange"
-          range-separator="至"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-        />
+        <el-date-picker class="time-range-picker"
+                        v-if="timeType === TIME_TYPE_CUSTOM"
+                        :value="promotion.validTime"
+                        @input="onValidTimeChange"
+                        :disabled="isSales"
+                        :picker-options="{ disabledDate }"
+                        type="daterange"
+                        range-separator="至"
+                        start-placeholder="开始日期"
+                        end-placeholder="结束日期" />
       </div>
     </section>
 
     <section>
       <div class="desc align-self">设置否词
-        <el-tooltip
-          content="当网民的搜索词与精确否定关键词完全一致时，您的推广结果将不会展现"
-          placement="top-start">
+        <el-tooltip content="当网民的搜索词与精确否定关键词完全一致时，您的推广结果将不会展现"
+                    placement="top-start">
           <i class="el-icon-question" />
         </el-tooltip>
       </div>
       <div class="cont">
-         <negative-words-comp
-          :negative-words="promotion.negativeWords"
-          v-on="$listeners" />
+        <negative-words-comp :negative-words="promotion.negativeWords"
+                             v-on="$listeners" />
       </div>
     </section>
 
     <!-- 城市选择器 -->
-    <area-selector
-      :all-areas="allAreas"
-      :areas="promotion.areas"
-      type="qwt"
-      :visible="areaDialogVisible"
-      :enable-china="false"
-      @ok="onChangeAreas"
-      @cancel="areaDialogVisible = false"
-    />
+    <area-selector :all-areas="allAreas"
+                   :areas="promotion.areas"
+                   type="qwt"
+                   :visible="areaDialogVisible"
+                   :enable-china="false"
+                   @ok="onChangeAreas"
+                   @cancel="areaDialogVisible = false" />
 
     <!-- 投放时段设置 -->
-    <duration-selector
-      :visible="durationSelectorVisible"
-      :platform="Number(promotion.source)"
-      :schedule="getCurrentSchedule()"
-      @change="(durations) => emitPromtionData('schedule', durations)"
-      @hide="durationSelectorVisible = false"
-    />
+    <duration-selector :visible="durationSelectorVisible"
+                       :platform="Number(promotion.source)"
+                       :schedule="getCurrentSchedule()"
+                       @change="(durations) => emitPromtionData('schedule', durations)"
+                       @hide="durationSelectorVisible = false" />
   </div>
 </template>
 

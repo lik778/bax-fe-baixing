@@ -1,41 +1,40 @@
 <template>
   <div class="keyword-list">
     <el-table :data="rows">
-      <el-table-column label="关键词" key="word" min-width="140">
+      <el-table-column label="关键词"
+                       key="word"
+                       min-width="140">
         <template slot-scope="{ row }">
           <span>{{ row.word }}</span>
-          <span class="new-word" v-if="row.isNew">(新)</span>
-          <span class="del-word" v-if="row.isDel">(删除)</span>
-          <span class="updated-word" v-if="row.isUpdated">(更改)</span>
-          <span class="good-word" v-if="RECOMMAND_SOURCES.includes(row.recommandSource)"> (好词)</span>
+          <span class="new-word"
+                v-if="row.isNew">(新)</span>
+          <span class="del-word"
+                v-if="row.isDel">(删除)</span>
+          <span class="updated-word"
+                v-if="row.isUpdated">(更改)</span>
+          <span class="good-word"
+                v-if="RECOMMAND_SOURCES.includes(row.recommandSource)">(好词)</span>
         </template>
       </el-table-column>
-      <el-table-column
-        label="电脑端排名"
-        min-width="120px"
-        key="cpcRanking"
-        v-if="showPropRanking"
-        :formatter="(r) => fmtCpcRanking(r.cpcRanking || -1)"
-      />
-      <el-table-column
-        label="手机端排名"
-        min-width="120px"
-        key="mobileCpcRanking"
-        :formatter="(r) => fmtCpcRanking(r.mobileCpcRanking || -1)"
-      />
-      <el-table-column key="status" min-width="120px">
-        <table-header-tip
-          slot="header"
-          label-html="关键词状态"
-          :tip-html="keywordStatusTip"
-        />
+      <el-table-column label="电脑端排名"
+                       min-width="120px"
+                       key="cpcRanking"
+                       v-if="showPropRanking"
+                       :formatter="(r) => fmtCpcRanking(r.cpcRanking || -1)" />
+      <el-table-column label="手机端排名"
+                       min-width="120px"
+                       key="mobileCpcRanking"
+                       :formatter="(r) => fmtCpcRanking(r.mobileCpcRanking || -1)" />
+      <el-table-column key="status"
+                       min-width="120px">
+        <table-header-tip slot="header"
+                          label-html="关键词状态"
+                          :tip-html="keywordStatusTip" />
         <div slot-scope="{ row }">
-          <el-tooltip
-            v-if="row.status === KEYWORD_CHIBI_REJECT"
-            placement="top"
-            effect="dark"
-            :content="getRefuseReason(row)"
-          >
+          <el-tooltip v-if="row.status === KEYWORD_CHIBI_REJECT"
+                      placement="top"
+                      effect="dark"
+                      :content="getRefuseReason(row)">
             <span>
               <span style="color: #ff3c3c">{{ fmtStatus(row) }}</span>
               <i class="error el-icon-question pointer" />
@@ -44,50 +43,45 @@
           <label v-else>{{ fmtStatus(row) }}</label>
         </div>
       </el-table-column>
-      <el-table-column key="price" min-width="220">
+      <el-table-column key="price"
+                       min-width="220">
         <!-- 删除 slot-scope 后会有稀奇古怪的问题 -->
         <!-- eslint-disable-next-line -->
         <div slot="header" slot-scope="col">
-          <table-header-tip
-            :label-html="maxPriceLabel"
-            :tip-html="cpcTopPriceTip"
-          />
-          <el-popover placement="top" v-model="pricePopoverVisible">
+          <table-header-tip :label-html="maxPriceLabel"
+                            :tip-html="cpcTopPriceTip" />
+          <el-popover placement="top"
+                      v-model="pricePopoverVisible">
             <div>
-              <el-input
-                placeholder="请输入关键词价格"
-                v-model="keywordPrice"
-                size="mini"
-              />
+              <el-input placeholder="请输入关键词价格"
+                        v-model="keywordPrice"
+                        size="mini" />
               <div class="actions">
-                <el-button size="mini" @click="pricePopoverVisible = false">
-                  取消
+                <el-button size="mini"
+                           @click="pricePopoverVisible = false">取消
                 </el-button>
-                <el-button
-                  type="primary"
-                  size="mini"
-                  :loading="loading"
-                  @click="changeAllWordPrice"
-                >
-                确定
+                <el-button type="primary"
+                           size="mini"
+                           :loading="loading"
+                           @click="changeAllWordPrice">确定
                 </el-button>
               </div>
             </div>
-            <a href="javascript:;" slot="reference" class="price-action">
-              批量改价
+            <a href="javascript:;"
+               slot="reference"
+               class="price-action">批量改价
             </a>
           </el-popover>
         </div>
         <div slot-scope="{ row }">
           <span class="price">
-            <bax-input
-              :disabled="row.isDel"
-              placeholder="单位，元"
-              :value="$formatter.f2y(row.price)"
-              @blur="(v) => setCustomPrice(row, v)"
-              @keyup="(v) => setCustomPrice(row, v)"
-            />
-            <span v-if="showAddPrice(row)" class="add-w-price">
+            <bax-input :disabled="row.isDel"
+                       placeholder="单位，元"
+                       :value="$formatter.f2y(row.price)"
+                       @blur="(v) => setCustomPrice(row, v)"
+                       @keyup="(v) => setCustomPrice(row, v)" />
+            <span v-if="showAddPrice(row)"
+                  class="add-w-price">
               <button @click="bumpPriceBy20(row)">提价20%</button>
               <label>获得更高排名</label>
             </span>
@@ -95,92 +89,82 @@
           </span>
         </div>
       </el-table-column>
-      <el-table-column key="matchType" min-width="220" v-if="showMatchType">
+      <el-table-column key="matchType"
+                       min-width="220"
+                       v-if="showMatchType">
         <!-- eslint-disable-next-line -->
         <div slot="header" slot-scope="col">
-          <table-header-tip
-            :label-html="matchTypeLabel"
-            :tip-html="matchTypeTip"
-          />
-          <el-popover placement="top" v-model="matchTypePopVisible">
+          <table-header-tip :label-html="matchTypeLabel"
+                            :tip-html="matchTypeTip" />
+          <el-popover placement="top"
+                      v-model="matchTypePopVisible">
             <div>
-              <el-radio-group
-                v-model="matchType"
-                placeholder="请选择匹配模式"
-                size="mini"
-              >
-                <el-radio
-                  class="match-radio"
-                  v-for="item in MATCH_TYPE_OPTS.slice(0,MATCH_TYPE_OPTS.length - 1)"
-                  :key="item.value"
-                  :label="item.value"
-                >
-                  {{ item.label }}
+              <el-radio-group v-model="matchType"
+                              placeholder="请选择匹配模式"
+                              size="mini">
+                <el-radio class="match-radio"
+                          v-for="item in MATCH_TYPE_OPTS.slice(0,MATCH_TYPE_OPTS.length - 1)"
+                          :key="item.value"
+                          :label="item.value">{{ item.label }}
                 </el-radio>
               </el-radio-group>
               <div class="actions">
-                <el-button size="mini" @click="matchTypePopVisible = false">
-                  取消
+                <el-button size="mini"
+                           @click="matchTypePopVisible = false">取消
                 </el-button>
-                <el-button
-                  type="primary"
-                  size="mini"
-                  :loading="loading"
-                  @click="changeAllMatchType"
-                >
-                  确定
+                <el-button type="primary"
+                           size="mini"
+                           :loading="loading"
+                           @click="changeAllMatchType">确定
                 </el-button>
               </div>
             </div>
-            <a href="javascript:;" slot="reference" class="price-action">
-              批量修改
+            <a href="javascript:;"
+               slot="reference"
+               class="price-action">批量修改
             </a>
           </el-popover>
         </div>
-        <div slot-scope="{ row }" class="match-type">
-          <el-select
-            :value="row.matchType"
-            :disabled="row.isDel"
-            placeholder="请选择匹配模式"
-            size="small"
-            class="match-type-select"
-            @change="(v) => emitUpdateKeyword({ ...row, matchType: v })"
-          >
-            <el-option
-              v-for="item in MATCH_TYPE_OPTS"
-              :key="item.value"
-              :label="item.label"
-              :disabled="
-                String(item.value) === String(MATCH_TYPE_EXACT) &&
-                matchTypeRemainExactCount <= 0
-              "
-              :value="item.value"
-            />
+        <div slot-scope="{ row }"
+             class="match-type">
+          <el-select :value="row.matchType"
+                     :disabled="row.isDel"
+                     placeholder="请选择匹配模式"
+                     size="small"
+                     class="match-type-select"
+                     @change="(v) => emitUpdateKeyword({ ...row, matchType: v })">
+            <el-option v-for="item in MATCH_TYPE_OPTS"
+                       :key="item.value"
+                       :label="item.label"
+                       :disabled="String(item.value) === String(MATCH_TYPE_EXACT) && matchTypeRemainExactCount <= 0"
+                       :value="item.value" />
           </el-select>
         </div>
       </el-table-column>
-      <el-table-column label="操作" key="deletable">
+      <el-table-column label="操作"
+                       key="deletable">
         <div slot-scope="{ row }">
           <el-button type="danger"
                      size="mini"
                      v-if="!row.isDel"
                      @click="deleteWord(row)">删除
           </el-button>
-          <el-button v-else type="success" size="mini" plain @click="emitUpdateKeyword({
-            ...row,
-            matchType: row.matchType === MATCH_TYPE_EXACT ? MATCH_TYPE_PHRASE: row.matchType,
-            isDel: false
-          })">
-            恢复
+          <el-button v-else
+                     type="success"
+                     size="mini"
+                     plain
+                     @click="emitUpdateKeyword({
+                        ...row,
+                        matchType: row.matchType === MATCH_TYPE_EXACT ? MATCH_TYPE_PHRASE: row.matchType,
+                        isDel: false
+                    })">恢复
           </el-button>
         </div>
       </el-table-column>
     </el-table>
     <footer>
-      <bax-pagination
-        :options="pagination"
-        @current-change="onCurrentChange"
-      />
+      <bax-pagination :options="pagination"
+                      @current-change="onCurrentChange" />
     </footer>
   </div>
 </template>

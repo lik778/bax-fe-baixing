@@ -1,6 +1,8 @@
 <template>
   <div class="cpc-price">
-    <span>关键词出价<cpc-price-tip /></span>
+    <span>关键词出价
+      <cpc-price-tip />
+    </span>
     <el-input :value="value"
               placeholder="默认为3"
               @input="handleInput"
