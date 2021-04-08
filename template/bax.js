@@ -45,6 +45,7 @@ import {
   Row,
   Col,
   Progress,
+  Popconfirm,
   Card,
   Image,
   Loading,
@@ -139,6 +140,7 @@ Vue.use(Row)
 Vue.use(Col)
 Vue.use(Cascader)
 Vue.use(Progress)
+Vue.use(Popconfirm)
 Vue.use(Card)
 Vue.use(Image)
 

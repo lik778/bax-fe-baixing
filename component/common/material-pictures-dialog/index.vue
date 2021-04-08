@@ -4,7 +4,7 @@
       创意配图:
     </aside>
     <span>
-      <el-radio-group v-model="forms.type" @change="clearPictures">
+      <el-radio-group v-model="forms.type" @change="confirmClearPictures">
         <el-radio :label="MATERIAL_PIC_TYPE.NO_PIC">无图</el-radio>
         <el-radio :label="MATERIAL_PIC_TYPE.BIG_PIC">大图</el-radio>
         <el-radio :label="MATERIAL_PIC_TYPE.PIC_SETS">图集</el-radio>
@@ -124,6 +124,9 @@ export default {
         pc: [],
         wap: []
       },
+      store: {
+        type: null
+      },
       formatTip: '支持 JPG、PNG 格式；2MB 以内',
       config: {
         [MATERIAL_PIC_TYPE.NO_PIC]: {
@@ -170,10 +173,10 @@ export default {
       return [
         MATERIAL_PIC_TYPE.BIG_PIC,
         MATERIAL_PIC_TYPE.PIC_SETS
-      ].includes(this.forms.type)
+      ].includes(this.store.type)
     },
     typeConfig () {
-      return this.config[this.forms.type]
+      return this.config[this.store.type]
     },
     typename () {
       return this.typeConfig.extraClass
@@ -198,21 +201,13 @@ export default {
   },
   watch: {
     initValue (newVal = {}) {
+      const type = newVal.image_type || MATERIAL_PIC_TYPE.NO_PIC
+      this.store.type = type
       this.forms = {
-        type: newVal.image_type || MATERIAL_PIC_TYPE.NO_PIC,
+        type,
         pc: (newVal?.pc?.length >= 1) ? deepClone(newVal.pc) : [],
         wap: (newVal?.wap?.length >= 1) ? deepClone(newVal.wap) : []
       }
-      // * for test suppose
-      // this.forms = {
-      //   type: 2,
-      //   pc: [{
-      //     url: '//file.baixing.net/sst-img172b2392-1167-49f2-a1f3-1b361e5ad2cc',
-      //     desc: 'asdfasdfoiaj;f',
-      //     status: MATERIAL_PIC_STATUS.STATUS_ONLINE
-      //   }],
-      //   wap: []
-      // }
     },
     forms: {
       deep: true,
@@ -222,6 +217,22 @@ export default {
     }
   },
   methods: {
+    confirmClearPictures (newVal) {
+      const { pc, wap } = this.forms
+      const shouldConfirm = pc.length || wap.length
+      if (shouldConfirm) {
+        this.$confirm('将删除当前已上传的图片', '确认')
+          .then(() => {
+            this.store.type = newVal
+            this.clearPictures()
+          })
+          .catch(() => {
+            this.forms.type = this.store.type
+          })
+      } else {
+        this.store.type = newVal
+      }
+    },
     clearPictures () {
       // todo 删除 OSS 上的图片
       this.forms.pc = []
