@@ -38,7 +38,7 @@
           <i
             class="el-icon el-icon-scissors"
             title="裁剪"
-            @click="clipFile(image, idx)"
+            @click="cropFile(image, idx)"
           />
           <i
             class="el-icon el-icon-delete"
@@ -104,7 +104,9 @@ export default {
       this.$refs.uploader.uploadFile(...args)
     },
     deleteFile (idx) {
-      this.$emit('change', [...this.value].splice(idx, 1))
+      const newArr = [...this.value]
+      newArr.splice(idx, 1)
+      this.$emit('change', newArr)
     },
     renameFile (image) {
       this.$prompt('请输入图片名称', '重命名', {
@@ -115,7 +117,7 @@ export default {
         image.desc = value
       })
     },
-    clipFile (img, idx) {
+    cropFile (img, idx) {
       const $img = new Image()
       $img.onerror = err => {
         throw new Error(err)
