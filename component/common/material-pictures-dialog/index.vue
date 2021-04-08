@@ -30,6 +30,7 @@
           <div class="content">
             <images-con
               v-model="forms.pc"
+              :key="forms.type"
               :limit="picNumLimit('pc')"
               :cropOptions="{
                 width: pixelRatioLimit('pc').minWidth,
@@ -61,6 +62,7 @@
           <div class="content">
             <images-con
               v-model="forms.wap"
+              :key="forms.type"
               :limit="picNumLimit('wap')"
               :cropOptions="{
                 width: pixelRatioLimit('wap').minWidth,
