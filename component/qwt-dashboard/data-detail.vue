@@ -64,9 +64,10 @@
         <template slot-scope="scope">
           <span v-if="scope.row.price === null">-</span>
           <bax-input v-else
-                     :value="f2y(scope.row.price)"
-                     @blur="v => onChangePrice(v, scope.row.campaignId, scope.row.keywordId)"
-                     @keyup="v => onChangePrice(v, scope.row.campaignId, scope.row.keywordId)" />
+            :value="f2y(scope.row.price)"
+            @blur="v => onChangePrice(v, scope.row.campaignId, scope.row.keywordId)"
+            @keyup="v => onChangePrice(v, scope.row.campaignId, scope.row.keywordId)"
+          />
         </template>
       </el-table-column>
       <el-table-column label="展现" prop="shows" width="90" sortable />
@@ -81,10 +82,12 @@
         <span slot="header">操作
           <promotion-keyword-tip />
         </span>
-        <el-button type="text"
-                  size="small"
-                  :disabled="row.enableInNegativeWords || row.enableInKeywords"
-                  @click="addGroupNegativeKeyword(row)">设为单元否词</el-button>
+        <el-button
+          type="text"
+          size="small"
+          :disabled="row.enableInNegativeWords || row.enableInKeywords"
+          @click="addGroupNegativeKeyword(row)"
+        >设为单元否词</el-button>
       </el-table-column>
     </el-table>
 
@@ -120,18 +123,23 @@
           <promotion-keyword-tip />
         </span>
         <div slot-scope="{row}">
-          <el-button type="text"
-                     size="small"
-                    :disabled="row.enableInNegativeWords || row.enableInKeywords"
-                    @click="addKeyword(row)">添加</el-button>
-          <el-button type="text"
-                     size="small"
-                     :disabled="row.enableInNegativeWords || row.enableInKeywords"
-                     @click="addCampaignNegativeKeyword(row)">设为计划否词</el-button>
-          <el-tooltip effect="dark"
-                      v-if="row.enableInNegativeWords || row.enableInKeywords"
-                      content="该搜索词已存在关键词或否定关键词中，暂不支持添加"
-                      placement="top-start">
+          <el-button
+            type="text"
+            size="small"
+            :disabled="row.enableInNegativeWords || row.enableInKeywords"
+            @click="addKeyword(row)"
+          >添加</el-button>
+          <el-button
+            type="text"
+            size="small"
+            :disabled="row.enableInNegativeWords || row.enableInKeywords"
+            @click="addCampaignNegativeKeyword(row)"
+          >设为计划否词</el-button>
+          <el-tooltip
+            effect="dark"
+            v-if="row.enableInNegativeWords || row.enableInKeywords"
+            content="该搜索词已存在关键词或否定关键词中，暂不支持添加"
+            placement="top-start">
             <i class="el-icon-info" style ="cursor: pointer"></i>
           </el-tooltip>
         </div>
