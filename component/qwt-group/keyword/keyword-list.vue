@@ -27,7 +27,7 @@
                        :formatter="(r) => fmtCpcRanking(r.mobileCpcRanking || -1)" />
       <el-table-column key="status"
                        min-width="120px">
-        <table-header-tip slot="header"
+        <header-tip-comp slot="header"
                           label-html="关键词状态"
                           :tip-html="keywordStatusTip" />
         <div slot-scope="{ row }">
@@ -48,7 +48,7 @@
         <!-- 删除 slot-scope 后会有稀奇古怪的问题 -->
         <!-- eslint-disable-next-line -->
         <div slot="header" slot-scope="col">
-          <table-header-tip :label-html="maxPriceLabel"
+          <header-tip-comp :label-html="maxPriceLabel"
                             :tip-html="cpcTopPriceTip" />
           <el-popover placement="top"
                       v-model="pricePopoverVisible">
@@ -94,7 +94,7 @@
                        v-if="showMatchType">
         <!-- eslint-disable-next-line -->
         <div slot="header" slot-scope="col">
-          <table-header-tip :label-html="matchTypeLabel"
+          <header-tip-comp :label-html="matchTypeLabel"
                             :tip-html="matchTypeTip" />
           <el-popover placement="top"
                       v-model="matchTypePopVisible">
@@ -170,7 +170,7 @@
 </template>
 
 <script>
-import TableHeaderTip from 'com/common/table-header-tip'
+import HeaderTipComp from 'com/common/header-tip'
 import BaxInput from 'com/common/bax-input'
 import BaxPagination from 'com/common/pagination'
 
@@ -192,12 +192,20 @@ import { keywordStatusTip, cpcTopPriceTip, matchTypeTip, keywordPriceTip } from 
 import { MIN_WORD_PRICE, MAX_WORD_PRICE } from 'constant/keyword'
 import { toFloat } from 'util/kit'
 import track from 'util/track'
+import clone from 'clone'
 
 const LIMIT = 10
 
 export default {
   name: 'keyword-list',
   props: {
+    originKeywords: {
+      type: Array,
+      required: true,
+      default () {
+        return []
+      }
+    },
     keywords: {
       type: Array,
       required: true,
@@ -343,11 +351,19 @@ export default {
       const finalPrice = row.price
       return finalPrice >= MIN_WORD_PRICE && finalPrice <= MAX_WORD_PRICE
     },
-    emitUpdateKeyword (newWord, isRemove = false) {
-      const idx = this.keywords.findIndex(o => o.word === newWord.word)
+    emitUpdateKeyword (itemWord, isRemove = false) {
+      const idx = this.keywords.findIndex(o => o.word === itemWord.word)
       if (idx === -1) return
       if (isRemove) {
         return this.$emit('remove-keywords', idx)
+      }
+
+      const existWord = this.originKeywords.find(o => o.word.toLowerCase() === itemWord.word.toLowerCase())
+      let newWord = clone(itemWord)
+      // TIP 原有关键词列表有，并且价格和匹配模式有一个不一致，表示更新啦
+      if (existWord) {
+        const isEqual = (existWord.price === newWord.price) && (existWord.matchType === newWord.matchType)
+        newWord = { ...clone(itemWord), isUpdated: !isEqual }
       }
       const keywords = this.keywords
         .slice(0, idx)
@@ -441,7 +457,7 @@ export default {
     }
   },
   components: {
-    TableHeaderTip,
+    HeaderTipComp,
     BaxInput,
     BaxPagination
   }

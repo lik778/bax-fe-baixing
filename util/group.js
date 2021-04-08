@@ -16,3 +16,18 @@ export function fmtNewKeywordsPrice (words) {
     }
   })
 }
+
+export function filterExistCurrentWords (originKeywords, newWords) {
+  const words = originKeywords.map(w => w.word.toLowerCase())
+  return newWords.filter(w => !words.includes(w.word.toLowerCase()))
+}
+
+export function getKeyByLen (arr, obj, key) {
+  if (!Array.isArray(arr)) return obj
+  if (arr.length) {
+    return {
+      ...obj,
+      key: arr
+    }
+  }
+}

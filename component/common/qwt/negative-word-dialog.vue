@@ -37,6 +37,7 @@
 <script>
 import { validateKeyword } from 'util/campaign'
 import { NEGATIVE_KEYWORDS_MAX } from 'constant/fengming'
+import { filterExistCurrentWords } from 'util/group'
 
 export default {
   name: 'negative-word-dialog',
@@ -47,6 +48,10 @@ export default {
       default: () => {
         return []
       }
+    },
+    allWords: {
+      type: Array,
+      required: true
     },
     visible: {
       type: Boolean,
@@ -76,22 +81,26 @@ export default {
 
       // 数组去重并去掉首尾的逗号
       let words = this.search.trim().split(/[，,]]*/g)
-      words = Array.from(new Set(words
+      words = [...new Set(words
         .map(row => row.trim().toLowerCase())
-        .filter(row => !this.negativeWords.find(o => o.word.toLowerCase() === row) && row !== '')
-      ))
+        .filter(row => row !== '')
+      )]
 
       if (words.concat(this.negativeWords).length > NEGATIVE_KEYWORDS_MAX) {
         return this.$message.error(`否词个数不得超过${NEGATIVE_KEYWORDS_MAX}`)
       }
+      // 计划上否词，单元否词和关键词都不能重复, 重复直接过滤
+      const newWords = filterExistCurrentWords(this.allWords, words)
+
+      // TODO: 根据接口获取当前keyword是否已存在否词或关键词列表，重复直接过滤
 
       try {
-        validateKeyword(words)
+        validateKeyword(newWords)
       } catch (e) {
         return this.$message.error(e.message)
       }
 
-      this.words = words.map(o => {
+      this.words = newWords.map(o => {
         return { word: o }
       })
     }

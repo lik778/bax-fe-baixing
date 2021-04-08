@@ -1,18 +1,19 @@
 <template>
   <div class="keywords-container">
     <p class="tip">
-      请选取<strong>20</strong>个以上关键词，关键词越多您的创意被展现的机会越多。根据当月数据，为您推荐如下关键词
+      请选取<strong>20</strong>个以上关键词，关键词越多您的创意被展现的机会越多。
+      当前单元关键词数量<strong>{{originKeywords.length}}</strong>个
     </p>
     <search-comp :campaign-id="campaignId"
                  :areas="areas"
                  :sources="sources"
                  v-on="$listeners"
-                 :keywords="keywords" />
+                 :origin-keywords="originKeywords" />
     <div class="res"
-         v-if="keywords.length">
+         v-if="originKeywords.length">
       <el-tag class="tag"
               :class="{'tag-fh': RECOMMAND_SOURCES.includes(kw.recommandSource)}"
-              v-for="(kw, index) in keywords"
+              v-for="(kw, index) in originKeywords"
               :key="index"
               closable
               type="warning"
@@ -33,7 +34,7 @@ const RECOMMAND_SOURCES = [RECOMMAND_SOURCE_FH, NEW_RECOMMAND_SOURCE_FH]
 export default {
   name: 'qwt-create-keyword',
   props: {
-    keywords: {
+    originKeywords: {
       type: Array,
       required: true,
       default () {
@@ -86,6 +87,7 @@ export default {
   }
   strong {
     color: $c-strong;
+    font-size: 14px;
   }
   .res {
     margin-top: 20px;

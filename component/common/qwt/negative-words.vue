@@ -7,7 +7,7 @@
       <el-button class="btn"
                  type="primary"
                  @click="addNegativeWords">添加否定关键词</el-button>
-      <span class="num">(否词关键词个数不得超过<strong>{{ NEGATIVE_KEYWORDS_MAX }}</strong>个, 当前否词数量:
+      <span class="num" v-if="showTip">(否词关键词个数不得超过<strong>{{ NEGATIVE_KEYWORDS_MAX }}</strong>个, 当前否词数量:
         <strong>{{ negativeWords.length }}</strong>个）</span>
     </div>
     <div class="res"
@@ -21,6 +21,7 @@
       </el-tag>
     </div>
     <negative-words-dialog :visible="negativeWordsDialogVisible"
+                           :all-words="allWords"
                            @close="negativeWordsDialogVisible = false"
                            @update-negative-words="updateNegativeWords"
                            :negative-words="negativeWords" />
@@ -32,16 +33,28 @@ import negativeWordsDialog from 'com/common/qwt/negative-word-dialog'
 
 import { NEGATIVE_KEYWORDS_MAX } from 'constant/fengming'
 import { validateKeyword } from 'util/campaign'
+import { filterExistCurrentWords } from 'util/group'
 
 export default {
   name: 'negative-words',
   props: {
+    allWords: {
+      type: Array,
+      required: true,
+      default () {
+        return []
+      }
+    },
     negativeWords: {
       type: Array,
       required: true,
       default: () => {
         return []
       }
+    },
+    showTip: {
+      type: Boolean,
+      default: true
     }
   },
   data () {
@@ -63,10 +76,11 @@ export default {
         return this.$message.error(`否定关键词个数不能超过${NEGATIVE_KEYWORDS_MAX}`)
       }
 
-      const existWord = this.negativeWords.find(o => o.word.toLowerCase() === val.toLowerCase())
-      if (existWord) {
-        return this.$message.error(`已存在该否定关键词：${val}`)
-      }
+      const newWords = filterExistCurrentWords(this.allWords, [{ word: val }])
+      if (!newWords.length) return this.$message.error(`已存在该关键词或否定关键词：${val}`)
+
+      // TODO: 打接口获取已有的关键词列表
+
       try {
         validateKeyword([val])
       } catch (e) {

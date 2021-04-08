@@ -31,8 +31,6 @@
       </header>
       <div class="content">
         <creative-comp :source="promotion.source"
-                       :audit-status="group.auditStatus"
-                       :detail-status-text="group.detailStatusText"
                        :creatives="group.creatives"
                        @add-creatives="() => group.creatives.push({ title: '', content: '' })"
                        @remove-creatives="(idx) => group.creatives.splice(idx, 1)"
@@ -45,7 +43,7 @@
         <keyword-comp :campaign-id="promotion.campaignId"
                       :areas="promotion.areas"
                       :sources="[promotion.source]"
-                      :keywords="group.keywords"
+                      :origin-keywords="group.keywords.concat(group.negativeWords)"
                       @add-keywords="(words) => group.keywords = words.concat(group.keywords)"
                       @remove-keywords="(idx) => group.keywords.splice(idx, 1)" />
       </div>
@@ -58,7 +56,13 @@
         </el-tooltip>
       </header>
       <div class="content">
+        <p class="tip" style="margin-bottom: 20px">
+          当网民的搜索词与精确否定关键词完全一致时，您的推广结果将不会展现。 否词个数不得超过 <strong>{{ NEGATIVE_KEYWORDS_MAX }}</strong>个,
+          当前否定关键词数量: <strong>{{ group.negativeWords.length }}</strong>个
+        </p>
         <negative-keyword-comp :negative-words="group.negativeWords"
+                               :show-tip="false"
+                               :all-words="group.negativeWords.concat(group.keywords)"
                                @add-negative-words="(words) => group.negativeWords = words.concat(group.negativeWords)"
                                @remove-negative-words="(idx) => group.negativeWords.splice(idx, 1)" />
       </div>
@@ -91,7 +95,7 @@ import MobilePriceRatioComp from './mobile-price-ratio'
 import CpcPriceComp from './cpc-price'
 
 import { createValidator } from './validate'
-import { emptyGroup } from 'constant/fengming'
+import { emptyGroup, NEGATIVE_KEYWORDS_MAX } from 'constant/fengming'
 import clone from 'clone'
 
 export default {
@@ -110,7 +114,9 @@ export default {
         areas: []
       },
       group: clone(emptyGroup),
-      isUpdating: false
+      isUpdating: false,
+
+      NEGATIVE_KEYWORDS_MAX
     }
   },
   components: {
@@ -144,7 +150,7 @@ export default {
       }
 
       try {
-        await createValidator.validate(this.group)
+        await createValidator.validate(this.group, { first: true })
       } catch (e) {
         throw new Error(e.errors[0].message)
       }
@@ -155,7 +161,10 @@ export default {
         this.isUpdating = true
         // TODO: 新建单元接口对接
 
-        this.$router.push({ name: 'qwt-update-promotion', params: { id: this.promotion.campaignId } })
+        this.$router.push({
+          name: 'qwt-update-promotion',
+          params: { id: this.promotion.campaignId }
+        })
       } catch (e) {
         return this.$message.error(e.message)
       } finally {
@@ -201,6 +210,14 @@ export default {
     }
     .add-group-btn {
       margin-top: 20px;
+    }
+    .tip {
+      font-size: 12px;
+      color: #6a778c;
+    }
+    strong {
+      color: $c-strong;
+      font-size: 14px;
     }
   }
 }

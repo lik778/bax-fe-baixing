@@ -21,7 +21,7 @@
         <p class="auditing-prompt" v-else-if="creativeStatus === CREATIVE_STATUS_PENDING">
           您的推广物料正在审核中，预计审核时间3个工作日内，请您耐心等待。
         </p>
-        <p class="auditing-prompt" v-else-if="campaignOffline">
+        <p class="auditing-prompt" v-else-if="groupOffline">
           您当前的计划已下线，请重新开启投放。
         </p>
       </span>
@@ -74,7 +74,6 @@ export default {
   props: {
     idx: {
       type: Number,
-      required: false,
       default: 0
     },
     disabled: {
@@ -99,7 +98,7 @@ export default {
     statusText: {
       type: String
     },
-    campaignOffline: {
+    groupOffline: {
       type: Boolean,
       default: false
     }
