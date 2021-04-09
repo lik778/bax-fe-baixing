@@ -8,7 +8,7 @@
                  :areas="areas"
                  :sources="sources"
                  v-on="$listeners"
-                 :origin-keywords="originKeywords" />
+                 :all-words="allWords" />
     <div class="res"
          v-if="originKeywords.length">
       <el-tag class="tag"
@@ -34,6 +34,13 @@ const RECOMMAND_SOURCES = [RECOMMAND_SOURCE_FH, NEW_RECOMMAND_SOURCE_FH]
 export default {
   name: 'qwt-create-keyword',
   props: {
+    allWords: {
+      type: Array,
+      required: true,
+      default () {
+        return []
+      }
+    },
     originKeywords: {
       type: Array,
       required: true,

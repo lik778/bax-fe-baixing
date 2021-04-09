@@ -12,20 +12,18 @@
       </el-button>
     </el-button-group>
     <div class="cont">
-      <user-ad-selector ref="userAdSelector"
-                        :type="adSelectorType"
-                        v-if="landingType === LANDING_TYPE_AD"
+      <user-ad-selector v-if="landingType === LANDING_TYPE_AD"
                         :all-areas="allAreas"
                         :limit-mvp="false"
                         :selected-id="landingPageId"
                         @select-ad="(ad) => emitUpdateGroup(LANDING_TYPE_AD, ad.url, ad.adId)"
                         @valid-change="(isValid) => setLandingPageValidity(LANDING_TYPE_AD, isValid)" />
       <gw-page-selector v-if="landingType === LANDING_TYPE_GW"
-                        :value="landingPage"
+                        :init-value="landingPage"
                         @change="v => emitUpdateGroup(LANDING_TYPE_GW, v)"
                         @valid-change="(isValid) => setLandingPageValidity(LANDING_TYPE_GW, isValid)" />
       <mvip-selector v-if="landingType === LANDING_TYPE_STORE"
-                     :initValue="landingPage"
+                     :initValue="landingPageId || ''"
                      @change="(url, id) => emitUpdateGroup(LANDING_TYPE_STORE, url, id)"
                      @validChange="(isValid) => setLandingPageValidity(LANDING_TYPE_STORE, isValid)" />
       <p v-if="disabled"
@@ -36,7 +34,7 @@
 
 <script>
 import FmTip from 'com/widget/fm-tip'
-import UserAdSelector from 'com/common/user-ad-selector'
+import UserAdSelector from 'com/common/ad-selector'
 import GwPageSelector from 'com/common/gw-page-selector'
 import MvipSelector from 'com/common/mvip-selector'
 
@@ -77,23 +75,15 @@ export default {
   },
   data () {
     return {
-      adSelectorType: '',
-      isErrorPage: false,
-
       LANDING_TYPE_OPTS: landingTypeOpts,
       LANDING_TYPE_AD,
       LANDING_TYPE_GW,
       LANDING_TYPE_STORE
     }
   },
-  mounted () {
-    if (this.landingType !== LANDING_TYPE_AD) {
-      this.adSelectortype = ''
-    }
-  },
   methods: {
     setLandingPageValidity (type, isValid) {
-      this.$emit('valid', 'page', isValid)
+      this.$emit('valid', isValid)
     },
     emitUpdateGroup (type, page, pageId) {
       return this.$emit('change-landing', {
@@ -103,8 +93,8 @@ export default {
       })
     },
     clickLandingType (val) {
+      if (this.disabled) return this.$message.warning('审核中，无法修改')
       if (this.landingType === val) return
-      this.adSelectorType = ''
       this.emitUpdateGroup(val)
     }
   },

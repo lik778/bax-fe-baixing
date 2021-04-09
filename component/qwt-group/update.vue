@@ -11,6 +11,7 @@
                              :landing-page="group.landingPage"
                              :landing-page-id="group.landingPageId"
                              :disabled="false"
+                             @valid="(isValid) => { isErrorPage = !isValid }"
                              @change-landing="(args) => updateGroupData(args)" />
         </landing-comp>
       </div>
@@ -30,7 +31,7 @@
     </section>
 
     <section>
-      <header>关键词管理（当前计划还可添加<strong>{{ keywordRemain }}</strong>个关键词）</header>
+      <header>关键词管理（当前计划还可添加<strong>{{ keywordRemainCount }}</strong>个关键词）</header>
       <div class="content">
         <div class="keywords-container">
           <div class="pane">
@@ -98,7 +99,7 @@
                          ref="contract" />
       <el-button class="add-group-btn"
                  type="primary"
-                 @click="updateGroup">新增单元</el-button>
+                 @click="updateGroup">更新单元</el-button>
     </section>
 
   </div>
@@ -168,29 +169,37 @@ export default {
       group: emptyGroup,
       originKeywords: [],
       keywords: [],
+
       isUpdating: false,
+      isErrorPage: false,
 
       isSearchCondition: false,
-      searchWord: ''
+      searchWord: '',
+
+      campaignKeywordLen: 0
     }
   },
   computed: {
-    keywordRemain () {
-      return 0
+    keywordRemainCount () {
+      const newKeywords = this.keywords.filter(o => o.isNew)
+      const deletedKeywords = this.keywords.filter(o => o.isDel)
+      return this.campaignKeywordLen + newKeywords.length - deletedKeywords.length
     },
     groupId () {
       // TODO 放开注释，删除mock 4012
       // return this.$route.params.id
-      return 4012
+      return 4022
     }
   },
   async mounted () {
     // TODO mock 信息开始，后期删除
     const res = await getCampaignInfo(this.groupId)
     this.originGroup = pick(res, ['landingType', 'landingPage', 'landingPageId', 'name', 'status', 'auditStatus', 'detailStatusText', 'creative', 'negativeWords', 'mobilePriceRatio'])
+    this.originKeywords = res.keywords
     this.originGroup.creatives = [res.creative]
     this.originGroup.name = 'cesh'
-    this.originKeywords = res.keywords
+    this.originGroup.landingPageId = 1360318557
+    this.originGroup.landingType = 0
     // TODO: 接口获取promotion信息
     // TODO: 接口获取group信息
     // TODO: 接口获取keywords信息
@@ -198,11 +207,10 @@ export default {
     this.group = clone(this.originGroup)
     this.keywords = clone(this.originKeywords)
     // TODO mock信息结束，后期删除
+    // TODO: 获取当前计划关键词数量（接口获取）
   },
   methods: {
     updateGroupData (type, data) {
-      console.log(type)
-      console.log(data)
       if (typeof type === 'string') {
         this.group[type] = data
         return
@@ -227,6 +235,9 @@ export default {
     async validateGroup () {
       if (!this.$refs.contract.$data.isAgreement) {
         throw new Error('请阅读并勾选同意服务协议，再进行下一步操作')
+      }
+      if (this.isErrorPage) {
+        throw new Error('当前投放页面失效，请重新选择新的投放页面')
       }
       if (this.isUpdating) {
         throw new Error('正在更新中, 请稍等一会儿 ~')

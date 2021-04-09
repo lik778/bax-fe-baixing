@@ -43,7 +43,8 @@
         <keyword-comp :campaign-id="promotion.campaignId"
                       :areas="promotion.areas"
                       :sources="[promotion.source]"
-                      :origin-keywords="group.keywords.concat(group.negativeWords)"
+                      :origin-keywords="group.keywords"
+                      :all-words="group.keywords.concat(group.negativeWords)"
                       @add-keywords="(words) => group.keywords = words.concat(group.keywords)"
                       @remove-keywords="(idx) => group.keywords.splice(idx, 1)" />
       </div>

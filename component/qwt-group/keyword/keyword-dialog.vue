@@ -59,7 +59,7 @@
 import { recommendByWordList } from 'api/fengming'
 import { isObj } from 'util'
 import { validateKeyword } from 'util/campaign'
-import { filterExistCurrentWords, fmtNewKeywordsPrice } from 'util/group'
+import { fmtNewKeywordsPrice } from 'util/group'
 
 export default {
   name: 'qwt-keyword-dialog',
@@ -132,7 +132,8 @@ export default {
       // 本地校验：是否在单元的关键词和否词已有列表中, 存在直接过滤
       const normalList = (this.keywords && this.keywords.normalList) || []
       const allWords = this.allWords.concat(normalList)
-      const newWords = filterExistCurrentWords(allWords, words)
+      const newWords = words.filter(x => !allWords.find(o => o.word.toLowerCase() === x.toLowerCase()))
+      if (!newWords.length) return this.$message.info('关键词已存在关键词或否词列表中，请更换关键词')
 
       // TODO: 接口获取关键词是否已存在，并告知存在的列表（后端新增接口）
       // TODO: 如果关键词已存在，直接过滤

@@ -4,7 +4,7 @@
       <i class="el-icon-loading" /> 正在载入...
     </p>
     <template v-else>
-      <p class="invalid" v-if="isValInvalid">所选官网已失效，请重新选择！</p>
+      <p class="invalid" v-if="isValueInvalid">所选官网已失效，请重新选择！</p>
       <bax-select
         v-if="options.length"
         class="gw-page-selector"
@@ -45,7 +45,7 @@ export default {
     BaxSelect
   },
   props: {
-    value: {
+    initValue: {
       type: String
     },
     disabled: {
@@ -64,42 +64,45 @@ export default {
     computedVal () {
       return this.value.split('?')[0]
     },
-    isValInvalid () {
-      const isInvalid = !this.loading && (this.value && this.validePageExpire(this.value))
+    isValueInvalid () {
+      const isInvalid = !this.loading && (this.initValue && !this.value)
       this.$emit('valid-change', !isInvalid)
       return isInvalid
     }
   },
   data () {
     return {
+      value: '',
       ticketCount: 0,
-      loading: true,
       list: [],
-      options: []
+      options: [],
+
+      loading: true
     }
   },
   async mounted () {
     await this.getGwPages()
-    if (this.value) {
-      this.validePageExpire(this.value)
+    if (this.initValue) {
+      const isValid = this.checkIsCurStoreValid(this.initValue)
+      if (isValid) this.value = this.initValue
     }
   },
   methods: {
     isSiteLandingType,
-    validePageExpired (url) {
+    checkIsCurStoreValid (url = this.initValue) {
       if (!GW_URL_REG.test(url)) return false
       const [, domain] = GW_URL_REG.exec(url)
       const currGwObj = this.list.find(o => o.domain === domain)
-      return !currGwObj
+      return !!currGwObj
     },
     onChange (url) {
-      if (this.validePageExpired(url)) return
+      this.value = url
       this.$emit('change', url)
     },
     async getGwPages () {
-      this.loading = true
       let response = {}
       try {
+        this.loading = true
         response = await Promise.all([
           getUserSites(),
           getUserTicketCount({ productId: this.productType })

@@ -363,7 +363,7 @@ export default {
       // TIP 原有关键词列表有，并且价格和匹配模式有一个不一致，表示更新啦
       if (existWord) {
         const isEqual = (existWord.price === newWord.price) && (existWord.matchType === newWord.matchType)
-        newWord = { ...clone(itemWord), isUpdated: !isEqual }
+        newWord = { ...clone(itemWord), isUpdated: !isEqual && !newWord.isDel }
       }
       const keywords = this.keywords
         .slice(0, idx)

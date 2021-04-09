@@ -84,6 +84,7 @@
       </div>
       <div class="cont">
         <negative-words-comp :negative-words="promotion.negativeWords"
+                             :all-words="promotion.negativeWords.concat(promotion.keywords)"
                              v-on="$listeners" />
       </div>
     </section>
