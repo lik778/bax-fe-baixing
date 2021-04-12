@@ -1237,7 +1237,7 @@ export default {
       }
 
       try {
-        const errors = await updateMaterialPictures({
+        const res = await updateMaterialPictures({
           campaign_id: this.id,
           image_type: this.materialPictures.type,
           delete_images: []
@@ -1245,13 +1245,14 @@ export default {
             .concat(this.materialPictures.del.pc),
           new_images: this.materialPictures.add
         })
+        const errors = res?.data || []
 
         // * for test suppose
         // const errors = [{
         //   url: 'http://file.baixing.net/sst-imgceac6164-f298-4b53-9467-083a8e7e85b5.jpg'
         // }]
 
-        if (errors) {
+        if (errors.length) {
           // eslint-disable-next-line camelcase
           const { image_type, pc, wap } = this.materialPicturesInits
           ;[...pc, ...wap].forEach(img => {
@@ -1265,6 +1266,8 @@ export default {
           await this.initMaterialPictures()
           Message.success('更新创意配图成功')
         }
+      } catch (error) {
+        console.error(error)
       } finally {
         this.isMaterialChanged = false
       }
@@ -1607,8 +1610,9 @@ export default {
         }
         const { pc, wap } = n._raw || {}
         const { pc: pcRaw, wap: wapRaw } = this.materialPicturesInitsRaw
+
         const isChanged = hasChange(pcRaw, pc) || hasChange(wapRaw, wap)
-        console.log(isChanged, hasChange(pcRaw, pc), hasChange(wapRaw, wap), pcRaw, pc)
+        // console.log(isChanged, hasChange(pcRaw, pc), hasChange(wapRaw, wap), pcRaw, pc)
         this.isMaterialChanged = isChanged
       }
     },
