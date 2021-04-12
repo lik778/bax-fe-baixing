@@ -423,7 +423,9 @@ import {
   MATCH_TYPE_PHRASE,
   MATCH_TYPE_EXACT,
   getMatchTypeObj,
-  filterBannedListByContent
+  filterBannedListByContent,
+
+  MATERIAL_PIC_STATUS
 } from 'constant/fengming'
 
 import {
@@ -941,15 +943,15 @@ export default {
         store.getCurrentBalance()
       ])
     },
-    async initMaterialPictures () {
+    async initMaterialPictures (inits) {
       this.isMaterialChanged = false
       this.isMaterialChangeLock = true
-      this.materialPicturesInits = (await getMaterialPictures({
+      this.materialPicturesInits = inits || (await getMaterialPictures({
         campaignId: this.id
       })).data
 
       // * for test suppose
-      // this.materialPicturesInits = {
+      // this.materialPicturesInits = inits || {
       //   image_type: 1,
       //   pc: [{
       //     id: 'adfasdf',
@@ -1228,12 +1230,9 @@ export default {
       if (validMaterialPicError) {
         return validMaterialPicError
       }
-      const notChangedError = !this.isMaterialChanged
-      if (notChangedError) {
-        return notChangedError
-      }
+
       try {
-        await updateMaterialPictures({
+        const errors = await updateMaterialPictures({
           campaign_id: this.id,
           image_type: this.materialPictures.type,
           delete_images: []
@@ -1241,8 +1240,26 @@ export default {
             .concat(this.materialPictures.del.pc),
           new_images: this.materialPictures.add
         })
-        await this.initMaterialPictures()
-        Message.success('更新创意配图成功')
+
+        // * for test suppose
+        // const errors = [{
+        //   url: 'http://file.baixing.net/sst-imgceac6164-f298-4b53-9467-083a8e7e85b5.jpg'
+        // }]
+
+        if (errors) {
+          // eslint-disable-next-line camelcase
+          const { image_type, pc, wap } = this.materialPicturesInits
+          ;[...pc, ...wap].forEach(img => {
+            if (errors.find(x => x.url === img.url)) {
+              img.status = MATERIAL_PIC_STATUS.STATUS_DELETED
+            }
+          })
+          this.initMaterialPictures({ image_type, pc, wap })
+          return Message.error('部分图片审核失败，请检查图片并重新上传')
+        } else {
+          await this.initMaterialPictures()
+          Message.success('更新创意配图成功')
+        }
       } finally {
         this.isMaterialChanged = false
       }
