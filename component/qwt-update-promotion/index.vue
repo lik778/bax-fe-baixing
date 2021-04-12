@@ -947,7 +947,8 @@ export default {
       this.materialPicturesInits = (await getMaterialPictures({
         campaignId: this.id
       })).data
-      // // * for test suppose
+
+      // * for test suppose
       // this.materialPicturesInits = {
       //   image_type: 1,
       //   pc: [{
@@ -961,6 +962,7 @@ export default {
       //     url: 'http://file.baixing.net/sst-imgceac6164-f298-4b53-9467-083a8e7e85b5.jpg'
       //   }]
       // }
+
       // eslint-disable-next-line camelcase
       const { image_type, pc, wap } = this.materialPicturesInits
       this.materialPicturesInitsRaw = {
@@ -1239,6 +1241,7 @@ export default {
             .concat(this.materialPictures.del.pc),
           new_images: this.materialPictures.add
         })
+        await this.initMaterialPictures()
         Message.success('更新创意配图成功')
       } finally {
         this.isMaterialChanged = false
