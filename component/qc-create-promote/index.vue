@@ -127,8 +127,7 @@
 </template>
 
 <script>
-import { getPromote, getPackageList } from 'api/qianci'
-import { b2bQuery } from 'api/b2b'
+import { getPromote, getPackageList, checkCoreWord } from 'api/qianci'
 import QcAreaSelector from 'com/qc-create-promote/qc-area-selector'
 import { ONE_WORD_TWO_PROVINCE, THREE_WORD_ONE_PROVINCE, PACKAGE_TYPE, SKU_OPTIMIZED } from 'constant/qianci'
 import SelectKeywords from './select-keywords'
@@ -304,9 +303,9 @@ export default {
         this.validKeywords([value], false)
       if (valid) {
         const params = {
-          word: value
+          coreWord: value
         }
-        const result = await b2bQuery(params)
+        const result = await checkCoreWord(params)
         loading.close()
         const { code, prompt } = result
         this.form.keywords.push({

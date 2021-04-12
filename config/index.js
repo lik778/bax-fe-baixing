@@ -1,6 +1,6 @@
 
 export const isPro = location.hostname.includes('bax.baixing.com.cn')
-
+const env = process.env.NODE_ENV
 export const fengmingApiHost = isPro
   ? '//bax.baixing.com.cn/fengmingx-api'
   : '//bax.baixing.cn/fengmingx'
@@ -24,7 +24,7 @@ export const seoApiHost = isPro
 
 export const qcApiHost = isPro
   ? 'http://bax.baixing.com.cn/api/sem-batch'
-  : 'http://bax.baixing.cn/sem-batch/api/sem-batch'
+  : (env === 'development' ? `${window.origin}/devApi/api/sem-batch` : 'http://bax.baixing.cn/sem-batch/api/sem-batch')
 
 export const assetHost = '//file.baixing.net/bax-fe/asset/'
 
@@ -45,7 +45,6 @@ export const identityBindingPage = isPro
 export const preKeywordPath = 'preKeyword'
 
 export const b2bApiHost = () => {
-  const env = process.env.NODE_ENV
   if (env === 'development') {
     return `${window.origin}/b2b`
   } else {

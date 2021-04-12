@@ -18,10 +18,10 @@ const config = merge(base, {
     quiet: false,
     stats: 'errors-only',
     proxy: {
-      '/b2b': {
-        target: 'http://172.30.2.14:31643',
+      '/devApi': {
+        target: 'http://172.17.13.192:8080',
         pathRewrite: {
-          '^/b2b': '/'
+          '^/devApi': '/'
         },
         changeOrigin: true
       }
