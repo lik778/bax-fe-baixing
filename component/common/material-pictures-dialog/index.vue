@@ -265,7 +265,7 @@ export default {
       }
     },
     restoreToInits () {
-      const { type, pc, wap } = this.formsRaw
+      const { type, pc = [], wap = [] } = this.formsRaw
       this.forms = {
         type,
         pc: [...pc],

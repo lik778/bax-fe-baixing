@@ -952,6 +952,11 @@ export default {
 
       // * for test suppose
       // this.materialPicturesInits = inits || {
+      //   image_type: 0,
+      //   pc: [],
+      //   wap: []
+      // }
+      // this.materialPicturesInits = inits || {
       //   image_type: 1,
       //   pc: [{
       //     id: 'adfasdf',
@@ -966,7 +971,7 @@ export default {
       // }
 
       // eslint-disable-next-line camelcase
-      const { image_type, pc, wap } = this.materialPicturesInits
+      const { image_type, pc = [], wap = [] } = this.materialPicturesInits
       this.materialPicturesInitsRaw = {
         image_type,
         pc: [...pc],
@@ -1603,6 +1608,7 @@ export default {
         const { pc, wap } = n._raw || {}
         const { pc: pcRaw, wap: wapRaw } = this.materialPicturesInitsRaw
         const isChanged = hasChange(pcRaw, pc) || hasChange(wapRaw, wap)
+        console.log(isChanged, hasChange(pcRaw, pc), hasChange(wapRaw, wap), pcRaw, pc)
         this.isMaterialChanged = isChanged
       }
     },
