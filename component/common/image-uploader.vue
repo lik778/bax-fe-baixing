@@ -42,7 +42,11 @@ async function uploadFile (file) {
     bucket
   })
 
-  const { url: filePath } = await request
+  const {
+    code,
+    message,
+    url: filePath
+  } = await request
     .post('/' + bucket)
     .append('file', file)
     .append('bucket', bucket)
@@ -52,7 +56,11 @@ async function uploadFile (file) {
     .append('expiration', expiration)
     .json()
 
-  return upyunFileHost + filePath
+  if (code === 200) {
+    return upyunFileHost + filePath
+  } else {
+    throw new Error(message)
+  }
 }
 
 const checkUploadFiles = function (files, options) {
@@ -121,7 +129,7 @@ export default {
       }
       this.$emit('before-upload', e.target.files)
       try {
-        console.log(files)
+        // console.log(files)
         this.loading = true
         const uploadResult = await Promise.all(files.map(uploadFile))
         this.$emit('upload-success', uploadResult.map((url, idx) => ({
