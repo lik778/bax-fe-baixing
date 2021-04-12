@@ -1266,10 +1266,10 @@ export default {
           await this.initMaterialPictures()
           Message.success('更新创意配图成功')
         }
+        this.isMaterialChanged = false
       } catch (error) {
         console.error(error)
-      } finally {
-        this.isMaterialChanged = false
+        return Message.error('审核系统暂不可用，请稍后重试')
       }
     },
     async _updatePromotion () {

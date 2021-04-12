@@ -35,11 +35,12 @@
             title="重命名"
             @click="renameFile(image, idx)"
           />
-          <i
+          <!-- FIXME need file 问题 -->
+          <!-- <i
             class="el-icon el-icon-scissors"
             title="裁剪"
             @click="cropFile(image, idx)"
-          />
+          /> -->
           <i
             class="el-icon el-icon-delete"
             title="删除"
@@ -90,15 +91,17 @@ export default {
     }
   },
   methods: {
-    handleUploadSuccess (results) {
-      results.forEach(res => {
-        const getRandName = () => String(+new Date()) + String(Math.random()).slice(-6)
-        this.$emit('change', this.value.concat([{
-          url: res.url,
-          desc: res.filename || getRandName(),
-          status: MATERIAL_PIC_STATUS.STATUS_PENDING_CREATE
-        }]))
-      })
+    handleUploadSuccess (res) {
+      const results = res instanceof Array ? res : [res]
+      const getRandName = () => String(+new Date()) + String(Math.random()).slice(-6)
+
+      const newImages = results.map(x => ({
+        url: x.url,
+        desc: x.filename || getRandName(),
+        status: MATERIAL_PIC_STATUS.STATUS_PENDING_CREATE
+      }))
+      // console.log([...this.value].concat(newImages))
+      this.$emit('change', [...this.value].concat(newImages))
     },
     uploadFile (...args) {
       this.$refs.uploader.uploadFile(...args)

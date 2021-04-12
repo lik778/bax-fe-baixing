@@ -16,7 +16,6 @@
 import uuid from 'uuid/v4'
 import Fetch from 'fetch.io'
 import { upyun } from 'config'
-import { extname } from 'path'
 import { getUpyunToken } from 'api/material'
 
 const { filehost: upyunFileHost, host: upyunHost, bucket } = upyun
@@ -31,9 +30,10 @@ async function uploadFile (file) {
   if (!file) {
     return
   }
-
-  const ext = extname(file.name)
+  const ext = '.' + (file.type || '/jpeg').split('/')[1]
   const name = 'sst-img' + uuid() + ext
+
+  console.log(ext, name, file)
 
   const expiration = ((Date.now() / 1000) | 0) + 15 * 60
   const { policy, sign } = await getUpyunToken({
@@ -151,17 +151,15 @@ export default {
         this.loading = false
       }
     },
-    uploadFile (files, callback) {
+    uploadFile (f = [], callback) {
+      const files = f instanceof Array ? f : [f]
       this.callback = callback
-      if (!files) {
+
+      if (files.length === 0) {
         this.$refs.file.click()
       } else {
         this.handleFileChange({
-          target: {
-            files: files instanceof Array
-              ? files
-              : [files]
-          }
+          target: { files }
         })
       }
     }
