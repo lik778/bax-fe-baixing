@@ -140,9 +140,9 @@ export default {
           countLimit: { wap: 1, pc: 1 },
           pixelLimit: {
             pc: {
-              minWidth: 518,
-              minHeight: 292,
-              ratio: '1.77:1'
+              minWidth: 800,
+              minHeight: 267,
+              ratio: '3:1'
             },
             wap: {
               minWidth: 800,
@@ -378,7 +378,7 @@ export default {
 .pc-con {
   &.big-pic {
     /deep/ .image {
-      width: 140px;
+      width: 237px;
       height: 79px;
     }
   }
