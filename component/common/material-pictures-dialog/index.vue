@@ -90,7 +90,7 @@ import {
 } from 'constant/fengming'
 import ImagesCon from './images-con'
 import Preview from './preview'
-import { deepClone } from 'util'
+import { deepClone, isArrHasSameValue } from 'util'
 
 export default {
   name: 'material-pictures-editor',
@@ -99,7 +99,7 @@ export default {
     initValue: {
       default () {
         return {
-          type: 1,
+          image_type: 1,
           pc: [],
           wap: []
         }
@@ -126,6 +126,7 @@ export default {
         pc: [],
         wap: []
       },
+      formsRaw: {},
       store: {
         type: null
       },
@@ -210,6 +211,11 @@ export default {
         pc: (newVal?.pc?.length >= 1) ? deepClone(newVal.pc) : [],
         wap: (newVal?.wap?.length >= 1) ? deepClone(newVal.wap) : []
       }
+      this.formsRaw = {
+        type,
+        pc: [...this.forms.pc],
+        wap: [...this.forms.wap]
+      }
     },
     forms: {
       deep: true,
@@ -220,19 +226,50 @@ export default {
   },
   methods: {
     confirmClearPictures (newVal) {
+      const isEqual = (arrA, arrB) => {
+        const isSameImage = (x, y) => {
+          /* eslint-disable */
+          return x.url === y.url &&
+            x.id == y.id &&
+            x.desc == y.desc
+          /* eslint-enable */
+        }
+        return isArrHasSameValue(arrA, arrB, isSameImage)
+      }
+
       const { pc, wap } = this.forms
-      const shouldConfirm = pc.length || wap.length
-      if (shouldConfirm) {
-        this.$confirm('将删除当前已上传的图片', '确认')
+      const { pc: pcRaw, wap: wapRaw } = this.formsRaw
+
+      const changeFromInitsType = this.store.type === this.formsRaw.type
+      const changeToInitsType = newVal === this.formsRaw.type
+      // TODO refactor 逻辑优化
+      const isChanged = changeToInitsType
+        ? (pc.length || wap.length)
+        : changeFromInitsType
+          ? (!isEqual(pcRaw, pc) || !isEqual(wapRaw, wap))
+          : (pc.length || wap.length)
+      if (isChanged) {
+        this.$confirm('当前修改将被丢弃！', '确认')
           .then(() => {
             this.store.type = newVal
             this.clearPictures()
+            changeToInitsType && this.restoreToInits()
           })
           .catch(() => {
             this.forms.type = this.store.type
           })
       } else {
+        this.clearPictures()
         this.store.type = newVal
+        changeToInitsType && this.restoreToInits()
+      }
+    },
+    restoreToInits () {
+      const { type, pc, wap } = this.formsRaw
+      this.forms = {
+        type,
+        pc: [...pc],
+        wap: [...wap]
       }
     },
     clearPictures () {
@@ -261,6 +298,7 @@ export default {
             .map(x => x.id)
         }
         return {
+          _raw: this.forms,
           isValid: true,
           type: forms.type,
           add,

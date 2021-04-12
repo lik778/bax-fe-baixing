@@ -104,15 +104,13 @@
           v-model="materialPictures"
           :initValue="materialPicturesInits"
         />
-        <transition name="el-fade-in-out">
-          <el-button
-            v-if="isMaterialChanged"
-            class="update-material-button"
-            type="primary"
-            size="small"
-            @click="_updateMaterialPictures"
-          >更新创意配图</el-button>
-        </transition>
+        <el-button
+          v-if="isMaterialChanged"
+          class="update-material-button"
+          type="primary"
+          size="small"
+          @click="_updateMaterialPictures"
+        >更新创意配图</el-button>
       </section>
       <section class="keyword">
         <header class="top-col">
@@ -448,7 +446,8 @@ import {
   f2y,
   isQiqiaobanSite,
   isSiteLandingType,
-  getLandingpageByPageProtocol
+  getLandingpageByPageProtocol,
+  isArrHasSameValue
 } from 'util/kit'
 
 import { allowSee258 } from 'util/fengming-role'
@@ -548,6 +547,7 @@ export default {
       },
       materialPictures: {},
       materialPicturesInits: {},
+      materialPicturesInitsRaw: null,
       isMaterialChanged: false,
       isMaterialChangeLock: false,
       LANDING_TYPE_AD,
@@ -947,6 +947,27 @@ export default {
       this.materialPicturesInits = (await getMaterialPictures({
         campaignId: this.id
       })).data
+      // // * for test suppose
+      // this.materialPicturesInits = {
+      //   image_type: 1,
+      //   pc: [{
+      //     id: 'adfasdf',
+      //     desc: 'asdfasdf',
+      //     url: 'http://file.baixing.net/sst-imgceac6164-f298-4b53-9467-083a8e7e85b5.jpg'
+      //   }],
+      //   wap: [{
+      //     id: 'adfasdf',
+      //     desc: 'asdfasdf',
+      //     url: 'http://file.baixing.net/sst-imgceac6164-f298-4b53-9467-083a8e7e85b5.jpg'
+      //   }]
+      // }
+      // eslint-disable-next-line camelcase
+      const { image_type, pc, wap } = this.materialPicturesInits
+      this.materialPicturesInitsRaw = {
+        image_type,
+        pc: [...pc],
+        wap: [...wap]
+      }
       this.$nextTick(() => {
         this.isMaterialChangeLock = false
       })
@@ -1548,9 +1569,21 @@ export default {
     isErrorLandingPageShow (n, o) {
       console.log(n, o)
     },
-    materialPictures (n, o) {
+    materialPictures (n) {
       if (!this.isMaterialChangeLock) {
-        this.isMaterialChanged = true
+        const hasChange = (a, b) => {
+          return !isArrHasSameValue(a, b, (x, y) => {
+            /* eslint-disable */
+            return x.url === y.url &&
+              x.id == y.id &&
+              x.desc == y.desc
+            /* eslint-enable */
+          })
+        }
+        const { pc, wap } = n._raw || {}
+        const { pc: pcRaw, wap: wapRaw } = this.materialPicturesInitsRaw
+        const isChanged = hasChange(pcRaw, pc) || hasChange(wapRaw, wap)
+        this.isMaterialChanged = isChanged
       }
     },
     'originPromotion' ({ landingPage, landingType }) {

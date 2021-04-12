@@ -393,3 +393,10 @@ export function toOpt (obj, forceNumber = true, reverse = false) {
       }))
   }
 }
+
+// 判断数组的值是否相等
+export const isArrHasSameValue = (arrA = [], arrB = [], isSame = (a, b) => a === b) => {
+  const isSameLen = arrA.length === arrB.length
+  const sameContent = () => arrA.every((x, i) => isSame(x, arrB[i]))
+  return isSameLen && sameContent()
+}

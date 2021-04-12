@@ -102,7 +102,8 @@ export default {
         padding: 0;
       }
       .creative-image {
-        width: 168px;
+        width: 295px;
+        // width: 168px;
         height: 95px;
       }
     }
