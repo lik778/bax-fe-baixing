@@ -111,13 +111,18 @@ export default {
       newArr.splice(idx, 1)
       this.$emit('change', newArr)
     },
-    renameFile (image) {
+    renameFile (image, idx) {
       this.$prompt('请输入图片名称', '重命名', {
         inputValue: image.desc,
         confirmButtonText: '确定',
         cancelButtonText: '取消'
       }).then(({ value }) => {
-        image.desc = value
+        const newArr = [...this.value]
+        const newImage = { ...image }
+        newImage.desc = value
+        delete newImage.id
+        newArr.splice(idx, 1, newImage)
+        this.$emit('change', newArr)
       })
     },
     cropFile (img, idx) {

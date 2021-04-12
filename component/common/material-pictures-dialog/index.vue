@@ -278,24 +278,23 @@ export default {
       this.forms.wap = []
     },
     genData (forms = this.forms) {
-      const inits = this.initValue
+      const { pc = [], wap = [] } = this.initValue
       const hasError = this.isValidateError
       if (hasError) {
         return {
           isValid: false
         }
       } else {
+        const isNewImageFromRaw = raw => x => !x.id || !raw.find(y => x.url === y.url)
+        const isToDeleteImageFromRaw = raw => x => !raw.find(y => (y.url === x.url) && y.id)
+
         const add = {
-          pc: forms.pc.filter(x => !(inits.pc || []).find(y => x.url === y.url)),
-          wap: forms.wap.filter(x => !(inits.wap || []).find(y => x.url === y.url))
+          pc: forms.pc.filter(isNewImageFromRaw(pc)),
+          wap: forms.wap.filter(isNewImageFromRaw(wap))
         }
         const del = {
-          pc: (inits.pc || [])
-            .filter(x => !forms.pc.find(y => y.url === x.url))
-            .map(x => x.id),
-          wap: (inits.wap || [])
-            .filter(x => !forms.wap.find(y => y.url === x.url))
-            .map(x => x.id)
+          pc: pc.filter(isToDeleteImageFromRaw(forms.pc)).map(x => x.id),
+          wap: wap.filter(isToDeleteImageFromRaw(forms.wap)).map(x => x.id)
         }
         return {
           _raw: this.forms,
