@@ -1254,14 +1254,17 @@ export default {
 
         if (errors.length) {
           // eslint-disable-next-line camelcase
-          const { image_type, pc, wap } = this.materialPicturesInits
+          const { type, pc = [], wap = [] } = this.materialPictures._raw
+          let lastErrorReason = null
           ;[...pc, ...wap].forEach(img => {
-            if (errors.find(x => x.url === img.url)) {
+            const findFirstError = errors.find(x => x.url === img.url)
+            if (findFirstError) {
               img.status = MATERIAL_PIC_STATUS.STATUS_DELETED
+              lastErrorReason = findFirstError.reject_message || '部分图片审核失败，请检查并重新上传'
             }
           })
-          this.initMaterialPictures({ image_type, pc, wap })
-          return Message.error('部分图片审核失败，请检查图片并重新上传')
+          this.initMaterialPictures({ image_type: type, pc, wap })
+          return Message.error(lastErrorReason)
         } else {
           await this.initMaterialPictures()
           Message.success('更新创意配图成功')
