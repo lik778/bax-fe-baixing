@@ -24,7 +24,7 @@ export const seoApiHost = isPro
 
 export const qcApiHost = isPro
   ? 'http://bax.baixing.com.cn/api/sem-batch'
-  : (env === 'development' ? `${window.origin}/devApi/api/sem-batch` : 'http://bax.baixing.cn/sem-batch/api/sem-batch')
+  : 'http://bax.baixing.cn/sem-batch/api/sem-batch'
 
 export const assetHost = '//file.baixing.net/bax-fe/asset/'
 
