@@ -115,7 +115,8 @@ export default {
       this.$prompt('请输入图片名称', '重命名', {
         inputValue: image.desc,
         confirmButtonText: '确定',
-        cancelButtonText: '取消'
+        cancelButtonText: '取消',
+        closeOnClickModal: false
       }).then(({ value }) => {
         const newArr = [...this.value]
         const newImage = { ...image }
