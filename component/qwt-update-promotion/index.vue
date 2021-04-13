@@ -1268,8 +1268,7 @@ export default {
         }
         this.isMaterialChanged = false
       } catch (error) {
-        console.error(error)
-        return Message.error('审核系统暂不可用，请稍后重试')
+        return console.error(error)
       }
     },
     async _updatePromotion () {
