@@ -95,11 +95,16 @@ export default {
       const results = res instanceof Array ? res : [res]
       const getRandName = () => String(+new Date()) + String(Math.random()).slice(-6)
 
+      const removeExt = s => {
+        return s.split(/.[^.]+$/)[0] || s
+      }
+
       const newImages = results.map(x => ({
         url: x.url,
-        desc: x.filename || getRandName(),
+        desc: removeExt(x.filename) || getRandName(),
         status: MATERIAL_PIC_STATUS.STATUS_PENDING_CREATE
       }))
+
       // console.log([...this.value].concat(newImages))
       this.$emit('change', [...this.value].concat(newImages))
     },
