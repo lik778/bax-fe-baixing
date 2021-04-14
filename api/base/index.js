@@ -190,7 +190,7 @@ export const qianci1 = new Fetch({
 
 export const b2b = new Fetch({
   ...baseOptions,
-  prefix: b2bApiHost(),
+  prefix: b2bApiHost,
   afterJSON (body) {
     const { errors } = body
     if (errors) {
