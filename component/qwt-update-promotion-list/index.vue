@@ -545,7 +545,7 @@ export default {
       queryParams: {
         unitName: '',
         areas: [],
-        statuses: CAMPAIGN_STATUS_OPTS.map((s) => s.value),
+        statuses: CAMPAIGN_STATUS_OPTS.map((s) => s.value).join(',').split(',').map(n => parseInt(n)),
         source: [],
         offset: 0,
         limit: ONE_PAGE_NUM,
