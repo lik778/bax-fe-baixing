@@ -32,10 +32,10 @@ const config = merge(base, {
           from: /^\/signin/,
           to: '/dist/signin.html'
         },
-        // {
-        //   from: /^\/main/,
-        //   to: '/dist/main.html'
-        // },
+        {
+          from: /^\/main/,
+          to: '/dist/main.html'
+        },
         {
           from: /^\/huodong/,
           to: '/dist/huodong.html'
