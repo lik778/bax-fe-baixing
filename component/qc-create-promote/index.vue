@@ -290,21 +290,23 @@ export default {
       this.initFormVals()
     },
     async selectKeyword (value = this.input.keyword) {
-      const loading = this.$loading({
-        lock: true,
-        text: 'Loading',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      })
       const valid =
         value &&
         this.restKeywordLength > 0 &&
         !this.form.keywords.includes(value) &&
         this.validKeywords([value], false)
       if (valid) {
+        const loading = this.$loading({
+          lock: true,
+          text: 'Loading',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)'
+        })
         const params = {
           coreWord: value
         }
+        this.input.keyword = ''
+        this.tip.keyword = ''
         const result = await checkCoreWord(params)
         loading.close()
         const { code, prompt } = result
@@ -318,8 +320,6 @@ export default {
           this.isFirstQuery = false
           clearTimeout(timer)
         }, 3000)
-        this.input.keyword = ''
-        this.tip.keyword = ''
       }
     },
     removeKeyword (wordToRemove) {
@@ -331,7 +331,7 @@ export default {
     },
     async checkWord () {
       this.$refs.form.validate(async (isValid) => {
-        const isKeywordValid = this.validKeywords()
+        const isKeywordValid = this.validKeywords([this.form.keywords.value], false)
         if (isValid && isKeywordValid) {
           this.keywordsPanelVisible = true
           this.$nextTick(() => {
@@ -354,7 +354,7 @@ export default {
       this.areaDialogVisible = false
     },
     validKeywords (words = this.form.keywords, validLen = true) {
-      if (words.find((x) => !/^[\u4E00-\u9FA5A-Za-z0-9]{2,10}$/.test(x.value))) {
+      if (words.find((x) => !/^[\u4E00-\u9FA5A-Za-z0-9]{2,10}$/.test(x))) {
         this.tip.keyword = '核心产品不能是特殊字符，单个词长度限制为 2-10 个字'
         return false
       }
