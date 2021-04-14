@@ -145,6 +145,14 @@ export async function getCampaignLanding (query) {
   }
 }
 
+export async function getCampaignList (params) {
+  const body = await fengming
+    .post('/campaign/info')
+    .send(params)
+    .json()
+  return body.data
+}
+
 export async function getCurrentCampaigns (query) {
   const body = await fengming
     .get('/campaign/current')

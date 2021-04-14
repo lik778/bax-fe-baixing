@@ -407,7 +407,7 @@ import {
 import { toCamelcase } from 'object-keys-mapping'
 import AreaSelector from 'com/common/area-selector'
 import BaxInput from 'com/common/input'
-import { getCampaignLanding, getCurrentCampaigns } from 'api/fengming-campaign'
+import { getCurrentCampaigns, getCampaignList } from 'api/fengming-campaign'
 import {
   getCurrentBalance,
   getHomepageSummary,
@@ -620,7 +620,9 @@ export default {
       // 重置campaignMap
       this.campaignMap = {}
       try {
-        const result = await getCampaignLanding(this.queryParams)
+        console.log(this.queryParams)
+        const result = await getCampaignList(this.queryParams)
+        // const result = await getCampaignLanding(this.queryParams)
         const { total, ...pageList } = result
         this.totalPage = total
         // toCamelcase 插件有个坑（当object的key值为url格式时，转换对象的key有问题）

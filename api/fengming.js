@@ -484,14 +484,6 @@ export async function changeCampaignKeywordsMatchType (campaignId, matchType) {
   return body.data
 }
 
-export async function getCampaignList (params) {
-  const body = await fengming
-    .post('/campaign/info')
-    .send(params)
-    .json()
-  return body.data
-}
-
 /**
  * private
  */
