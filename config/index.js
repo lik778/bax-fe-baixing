@@ -3,7 +3,7 @@ export const isPro = location.hostname.includes('bax.baixing.com.cn')
 
 export const fengmingApiHost = isPro
   ? '//bax.baixing.com.cn/fengmingx-api'
-  : '//bax.baixing.cn/fengmingx'
+  : `${window.origin}/devApi`
 
 export const baxApiHost = isPro
   ? '//bax.baixing.com.cn/bax-api'
