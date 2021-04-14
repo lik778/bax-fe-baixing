@@ -11,6 +11,7 @@ stages:
   - release
   - dev-deploy-auto-master
   - dev-deploy
+  - test-deploy
   - prod-deploy
 
 build:
@@ -52,6 +53,16 @@ dev-deploy:
   script:
     - kubectl set image -n adtech deployments --selector app=bax-fe *=$BAX_FE_REF
 
+test-deploy:
+  stage: test-deploy
+  when: manual
+  except:
+    - master
+  tags:
+    - aliyun-k8s-dev
+  script:
+    - kubectl set image -n test-adtech deployments --selector app=bax-fe *=$BAX_FE_REF
+
 dev-deploy-auto-master:
   stage: dev-deploy-auto-master
   only:
@@ -60,6 +71,7 @@ dev-deploy-auto-master:
     - aliyun-k8s-dev
   script:
     - kubectl set image -n adtech deployments --selector app=bax-fe *=$BAX_FE_REF
+
 
 prod-deploy:
   stage: prod-deploy
