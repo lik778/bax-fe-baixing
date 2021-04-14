@@ -37,7 +37,6 @@
 <script>
 import { validateKeyword } from 'util/campaign'
 import { NEGATIVE_KEYWORDS_MAX } from 'constant/fengming'
-import { filterExistCurrentWords } from 'util/group'
 
 export default {
   name: 'negative-word-dialog',
@@ -90,7 +89,8 @@ export default {
         return this.$message.error(`否词个数不得超过${NEGATIVE_KEYWORDS_MAX}`)
       }
       // 计划上否词，单元否词和关键词都不能重复, 重复直接过滤
-      const newWords = filterExistCurrentWords(this.allWords, words)
+      const newWords = words.filter(x => !this.allWords.find(o => o.word.toLowerCase() === x.toLowerCase()))
+      if (!newWords.length) return this.$message.info('关键词已存在关键词或否词列表中，请更换关键词')
 
       // TODO: 根据接口获取当前keyword是否已存在否词或关键词列表，重复直接过滤
 

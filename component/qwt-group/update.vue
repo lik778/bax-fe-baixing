@@ -38,8 +38,8 @@
             <header>添加推广关键词</header>
             <search-comp :campaign-id="promotion.id"
                          :areas="promotion.areas"
-                         :landing-page="promotion.landingPage"
-                         :landing-type="promotion.landingType"
+                         :landing-page="group.landingPage"
+                         :landing-type="group.landingType"
                          :sources="[promotion.source]"
                          :all-words="keywords.concat(group.negativeWords)"
                          @track="handleTrackByAction"

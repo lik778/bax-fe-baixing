@@ -5,8 +5,6 @@
     <el-table-column prop="name"
                      label="单元名称"
                      align="center" />
-    <!-- <el-table-column prop="campaignId" label="所属计划" align="center" /> -->
-    <!-- <el-table-column prop="source" label="渠道" align="center" /> -->
     <!-- TODO: 投放状态需要枚举，并为不一样的状态添加不一样的颜色，见设计稿 -->
     <el-table-column prop="status"
                      label="投放状态"
@@ -32,24 +30,24 @@
 </template>
 
 <script>
+import { getAllGroups } from 'api/fengming'
+
 export default {
-  funtional: true,
-  name: 'qwt-promotion-group-table',
+  name: 'group-table',
   props: {
-    displayColumns: {
-      type: Array,
-      required: false,
-      default: () => {
-        return ['name', 'campaignId', 'source', 'status', 'semStatus', 'avg']
-      }
-    },
-    groupData: {
-      type: Array,
-      required: true,
-      default: () => {
-        return []
-      }
+    campaignId: {
+      type: [String, Number],
+      required: true
     }
+  },
+  data () {
+    return {
+      groupData: null
+    }
+  },
+  async mounted () {
+    const data = await getAllGroups({ campaignId: this.campaignId })
+    this.groupData = data
   },
   methods: {
     pauseGroup (group) {
@@ -58,18 +56,22 @@ export default {
         cancelButtonText: '取消'
       }).then(res => {
         // TODO 打接口暂停投放，
-        // this.$emit事件发送
+        // TODO 暂停之后更改投放状态
       }).catch(err => {
         console.error(err)
       })
     },
     optimizeGroup (group) {
-      this.$router.push({ name: 'qwt-update-group', params: { id: group.campaignId } })
+      this.$router.push({
+        name: 'qwt-update-group',
+        params: { id: group.campaignId }
+      })
     },
     copyGroup (group) {
-      // TODO: 调用接口，生成单元信息,返回单元id
-      const id = 0
-      this.$route.push({ name: 'qwt-update-group', params: { id } })
+      this.$route.push({
+        name: 'qwt-update-group',
+        params: { cloneId: group.id }
+      })
     }
   }
 }

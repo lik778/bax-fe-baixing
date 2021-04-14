@@ -96,6 +96,7 @@ import MobilePriceRatioComp from './mobile-price-ratio'
 import CpcPriceComp from './cpc-price'
 
 import { createValidator } from './validate'
+import { createGroup } from 'api/fengming'
 import { emptyGroup, NEGATIVE_KEYWORDS_MAX } from 'constant/fengming'
 import clone from 'clone'
 
@@ -132,7 +133,9 @@ export default {
     CpcPriceComp
   },
   mounted () {
+    const campaignId = this.$route.query.campaignId
     // TODO: 获取计划信息
+    this.promotion.campaignId = campaignId
   },
   methods: {
     updateGroupData (type, data) {
@@ -160,7 +163,10 @@ export default {
       try {
         await this.validateGroup()
         this.isUpdating = true
-        // TODO: 新建单元接口对接
+        await createGroup({
+          ...this.group,
+          campaignId: this.promotion.campaignId
+        })
 
         this.$router.push({
           name: 'qwt-update-promotion',

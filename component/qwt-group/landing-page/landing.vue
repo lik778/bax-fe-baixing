@@ -89,7 +89,7 @@ export default {
       return this.$emit('change-landing', {
         landingType: type,
         landingPage: page || '',
-        landingPageId: pageId || ''
+        landingPageId: pageId || 0
       })
     },
     clickLandingType (val) {

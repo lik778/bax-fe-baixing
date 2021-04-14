@@ -27,8 +27,7 @@
           <i class="el-icon-plus" />
           新增单元
         </el-button>
-        <group-table-comp :group-data="groupData"
-                          @update-group-data="updateGroupData" />
+        <group-table-comp :campaign-id="campaignId" />
       </div>
     </div>
 
@@ -52,7 +51,7 @@
 
 <script>
 import PromotionComp from './promotion'
-import GroupTableComp from 'com/common/qwt/group-table'
+import GroupTableComp from './group-table'
 import ContractAck from 'com/widget/contract-ack'
 import PromotionChargeTip from 'com/widget/promotion-charge-tip'
 
@@ -64,6 +63,8 @@ import { toHumanTime } from 'utils'
 import isEqual from 'lodash.isequal'
 import { CAMPAIGN_STATUS_OFFLINE } from 'constant/fengming'
 import { getCampaignValidTime } from 'util/campaign'
+import track from 'util/track'
+import uuid from 'uuid/v4'
 
 import validator from './validate'
 
@@ -109,29 +110,7 @@ export default {
       currentBalance: 0,
 
       isUpdating: false,
-      groupData: [
-        {
-          id: 1,
-          name: '轿车推广',
-          status: '投放中',
-          semStatus: '创',
-          avg: 0.00
-        },
-        {
-          id: 1,
-          name: '轿车推广',
-          status: '投放中',
-          semStatus: '创',
-          avg: 0.00
-        },
-        {
-          id: 1,
-          name: '轿车推广',
-          status: '投放中',
-          semStatus: '创',
-          avg: 0.00
-        }
-      ]
+      actionTrackId: uuid()
     }
   },
   computed: {
@@ -147,7 +126,6 @@ export default {
     }
   },
   async mounted () {
-    // TODO: 打点需求
     const loadingInstance = this.$loading({
       lock: true,
       target: '.promotion-update',
@@ -159,8 +137,23 @@ export default {
     } finally {
       loadingInstance.close()
     }
+
+    this.handleTrack('enter-page: update-campaign')
   },
   methods: {
+    handleTrack (action) {
+      const { actionTrackId, userInfo, id } = this
+
+      track({
+        roles: userInfo.roles.map(r => r.name).join(','),
+        action,
+        baixingId: userInfo.baixingId,
+        time: Date.now() / 1000 | 0,
+        baxId: userInfo.id,
+        campaignId: id,
+        actionTrackId
+      })
+    },
     async getCampaignInfo () {
       // TODO: 根据计划id获取计划详情
       const info = await getCampaignInfo(this.campaignId)
@@ -180,8 +173,6 @@ export default {
       this.promotion = pick(clone(this.originPromotion), ['areas', 'dailyBudget', 'validTime', 'negativeWords', 'schedule', 'budgetModificationCount', 'source'])
       this.currentBalance = await getCurrentBalance()
       // TODO: 获取所有单元详情
-    },
-    updateGroupData (row) {
     },
     async updatePromotion () {
       try {
@@ -255,7 +246,7 @@ export default {
       return data
     },
     handleGoGroup () {
-      this.$router.push({ name: 'qwt-create-group' })
+      this.$router.push({ name: 'qwt-create-group', query: { campaignId: this.campaignId } })
     }
   },
   watch: {
