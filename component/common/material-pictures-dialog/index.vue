@@ -199,7 +199,7 @@ export default {
       return null
     },
     isValidateError () {
-      return this.validatePCError || this.validateWAPError
+      return this.validatePCError && this.validateWAPError
     }
   },
   watch: {
