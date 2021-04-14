@@ -10,7 +10,14 @@
           </aside>
           <span class="landingpage" v-if="!isErrorLandingPageShow">
             <fm-tip class="landingpage-tip" img-url="//file.baixing.net/201903/8d224eb6179a947eecbf0fde089f7ed3.png">电话接不停小妙招</fm-tip>
-            <div>
+            <div v-if="getProp('landingType') === TYPE_BAIDU_JIMUYU">
+               <el-tag
+                 effect="dark">
+                基木鱼
+              </el-tag>
+              <p class="landing-page-link">投放页面：<a :href="getProp('landingPage')">{{getProp('landingPage')}}</a></p>
+            </div>
+            <div v-else>
               <el-button-group>
                 <el-button v-for="o of extendLandingTypeOpts" :key="o.value"
                   :type="getProp('landingType') === o.value ? 'primary' : ''"
@@ -424,8 +431,8 @@ import {
   MATCH_TYPE_EXACT,
   getMatchTypeObj,
   filterBannedListByContent,
-
-  MATERIAL_PIC_STATUS
+  MATERIAL_PIC_STATUS,
+  TYPE_BAIDU_JIMUYU
 } from 'constant/fengming'
 
 import {
@@ -556,7 +563,7 @@ export default {
       LANDING_TYPE_GW,
       LANDING_TYPE_258,
       LANDING_TYPE_STORE,
-
+      TYPE_BAIDU_JIMUYU,
       moreSettingDisplay: false,
       // 是否为老官网
       isQiqiaobanSite: false,
@@ -1727,6 +1734,19 @@ export default {
     position: absolute;
     right: 0;
     top: 20px;
+  }
+  .landing-page-link{
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+    a{
+      color: #222;
+      cursor: pointer;
+      width: 540px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
   }
 }
 
