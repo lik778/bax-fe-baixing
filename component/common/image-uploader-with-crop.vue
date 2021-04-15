@@ -11,6 +11,7 @@
     <el-dialog
       title="裁剪"
       append-to-body
+      :show-close="false"
       :width="(boundary.width + 75) + 'px'"
       :visible="visible.clipDialog">
       <vue-croppie
