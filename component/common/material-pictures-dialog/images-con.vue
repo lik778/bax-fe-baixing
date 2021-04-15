@@ -61,6 +61,8 @@ import {
 import Uploader from 'com/common/image-uploader-with-crop'
 import { base64ToBin } from 'util'
 
+const MAX_IMAGE_NAME_LEN = 12
+
 export default {
   name: 'SearchImgView',
   components: {
@@ -98,10 +100,11 @@ export default {
       const removeExt = s => {
         return s.split(/.[^.]+$/)[0] || s
       }
+      const toMaxLen = (s = '') => s.slice(0, MAX_IMAGE_NAME_LEN)
 
       const newImages = results.map(x => ({
         url: x.url,
-        desc: removeExt(x.filename) || getRandName(),
+        desc: toMaxLen(removeExt(x.filename) || getRandName()),
         status: MATERIAL_PIC_STATUS.STATUS_PENDING_CREATE
       }))
 
@@ -121,7 +124,10 @@ export default {
         inputValue: image.desc,
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        closeOnClickModal: false
+        closeOnClickModal: false,
+        inputValidator (value = '') {
+          return value.length <= 12 || `图片名称长度限制为${MAX_IMAGE_NAME_LEN}个字符`
+        }
       }).then(({ value }) => {
         const newArr = [...this.value]
         const newImage = { ...image }
