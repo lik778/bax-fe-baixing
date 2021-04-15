@@ -333,7 +333,7 @@ export default {
     },
     async checkWord () {
       this.$refs.form.validate(async (isValid) => {
-        const isKeywordValid = this.validKeywords([this.form.keywords.value], false)
+        const isKeywordValid = this.validKeywords([this.form.keywords.value], true)
         if (isValid && isKeywordValid) {
           this.keywordsPanelVisible = true
           this.$nextTick(() => {
