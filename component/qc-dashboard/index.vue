@@ -102,7 +102,7 @@
             <template>百度</template>
           </el-table-column>
           <el-table-column label="位置">
-            <span>投放中</span>
+            <span>首页</span>
           </el-table-column>
           <el-table-column
             label="展现端"
