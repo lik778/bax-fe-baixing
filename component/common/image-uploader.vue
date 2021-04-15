@@ -5,6 +5,7 @@
       ref="file"
       type="file"
       style="display: none"
+      accept="image/png,image/gif,image/jpeg"
       :multiple="multiple"
       @change="handleFileChange"
     />
