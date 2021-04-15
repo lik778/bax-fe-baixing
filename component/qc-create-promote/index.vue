@@ -69,13 +69,15 @@
                     :key="idx"
                     placement="right-start"
                     :content="word.prompt">
-                    <el-tag
-                      class="keyword-tag"
-                      :closable="!isEdit"
-                      @close="() => removeKeyword(word.value)"
-                      >
-                      {{ word.value }}
-                    </el-tag >
+                      <el-tag
+                        class="keyword-tag"
+                        :closable="!isEdit"
+                        @close="() => removeKeyword(word.value)"
+                        >
+                        {{ word.value }}
+                        <i v-if="form.keywords[0].code === '2'" class="el-icon-error icon icon-error" />
+                        <i v-if="form.keywords[0].code === '0'" class="el-icon-warning icon icon-warning"/>
+                      </el-tag >
                   </el-tooltip>
               </div>
             </el-form-item>
@@ -568,14 +570,26 @@ export default {
 }
 .keywords-con {
   margin-top: 13px;
-
   & > .keyword-tag {
     margin-left: 10px;
     color: #00a5ff;
     border-color: #00a5ff;
     background: #eef9ff;
     font-size: 14px;
-
+    position: relative;
+    .icon{
+      position: absolute;
+      margin-top: -7px;
+      margin-right: -4px;
+      right: 0;
+      background-color: #fff;
+    }
+    .icon-error{
+      color: #F56C6C;
+    }
+    .icon-warning{
+      color: #E6A23C;
+    }
     &:first-child {
       margin-left: 0;
     }
