@@ -85,6 +85,11 @@ export default {
           throw new Error(err)
         }
         reader.readAsDataURL(file)
+      }).catch(error => {
+        console.error(error)
+        this.visible.clipDialog = false
+        this.$message.error('文件读取失败，请换一张图片重试')
+        throw new Error(error)
       })
     },
     async confirmCrop () {

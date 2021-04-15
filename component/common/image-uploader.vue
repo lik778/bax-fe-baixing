@@ -68,13 +68,16 @@ const checkUploadFiles = function (files, options) {
   return new Promise(resolve => {
     files.forEach(file => {
       if (file > options.maxFileSize * 1024) {
-        resolve([`超过最大上传的文件大小${options.maxFileSize}`])
+        resolve([`超过最大上传的图片大小${options.maxFileSize}`])
       }
       if (!options.types.includes(file.type)) {
-        resolve(['不支持上传的文件格式'])
+        resolve(['图片解析失败，请换张图片再试试'])
       }
     })
     resolve([null, 'success'])
+  }).catch(error => {
+    console.error('error')
+    throw new Error(error)
   })
 }
 
