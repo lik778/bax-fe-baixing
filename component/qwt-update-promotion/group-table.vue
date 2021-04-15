@@ -19,7 +19,7 @@
                      align="center">
       <template slot-scope="{row}">
         <span class="btn"
-              @click="pauseGroup(row)">暂停</span>
+              @click="operateGroup(row)">暂停</span>
         <span class="btn"
               @click="optimizeGroup(row)">优化</span>
         <span class="btn"
@@ -46,11 +46,16 @@ export default {
     }
   },
   async mounted () {
-    const data = await getAllGroups({ campaignId: this.campaignId })
+    // tip 单计划最多有10个单元，一次性获取所有
+    const { data = [] } = await getAllGroups({
+      campaignId: this.campaignId,
+      offset: 0,
+      limit: 100
+    })
     this.groupData = data
   },
   methods: {
-    pauseGroup (group) {
+    operateGroup (group) {
       this.$alert('确定暂停投放？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消'

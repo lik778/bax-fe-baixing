@@ -527,7 +527,7 @@ export async function updateGroup (id, data) {
     .send(reverseCamelcase(data))
     .json()
 
-  return body
+  return body.data
 }
 
 /**
@@ -542,7 +542,7 @@ export async function getKeywordsByGroupId (groupId) {
     }))
     .join()
 
-  return body
+  return body.data
 }
 
 /**
@@ -557,7 +557,7 @@ export async function getCampaignKeywordsCount (campaignId) {
     }))
     .json()
 
-  return body
+  return body.data
 }
 
 /**
@@ -571,7 +571,7 @@ export async function getWordsExistInCampaign (data) {
     .send(reverseCamelcase(data))
     .json()
 
-  return body
+  return body.data
 }
 
 /**
@@ -589,7 +589,7 @@ export async function getAllCampaigns (opts) {
     .send(reverseCamelcase(opts))
     .json()
 
-  return body
+  return body.data
 }
 
 /**
@@ -608,7 +608,7 @@ export async function getAllGroups (opts) {
     .send(reverseCamelcase(opts))
     .json()
 
-  return body
+  return body.data
 }
 
 /**
@@ -618,6 +618,40 @@ export async function getAllGroups (opts) {
 export async function getGroupDetailByGroupId (groupId) {
   const body = await fengming
     .get(`/group/${groupId}`)
+    .json()
+
+  return body.data
+}
+
+/**
+ * 激活单元
+ * @param {array} groupIds
+ * @param {number} pause
+ */
+export async function activeGroups (ids) {
+  const body = await fengming
+    .post('/group/pause')
+    .send(reverseCamelcase({
+      groupIds: [...ids],
+      pause: 0
+    }))
+    .json()
+
+  return body
+}
+
+/**
+ * 暂停单元
+ * @param {array} groupIds
+ * @param {number} pause
+ */
+export async function pauseGroups (ids) {
+  const body = await fengming
+    .post('/group/pause')
+    .send(reverseCamelcase({
+      groupIds: [...ids],
+      pause: 1
+    }))
     .json()
 
   return body
