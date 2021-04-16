@@ -12,14 +12,19 @@
       <template slot-scope="{row}">{{ row.status }}</template>
     </el-table-column>
     <!-- TODO: 见设计稿 -->
-    <el-table-column prop="avg"
+    <el-table-column prop="avgCpcRanking"
                      label="关键词平均排名"
                      align="center" />
     <el-table-column label="操作"
                      align="center">
       <template slot-scope="{row}">
+        <!-- TODO: 待后端确认状态 -->
         <span class="btn"
-              @click="operateGroup(row)">暂停</span>
+              v-if="true"
+              @click="pauseGroup(row)">暂停</span>
+        <span class="btn"
+              v-if="false"
+              @click="activeGroup(row)">开启</span>
         <span class="btn"
               @click="optimizeGroup(row)">优化</span>
         <span class="btn"
@@ -30,7 +35,7 @@
 </template>
 
 <script>
-import { getAllGroups } from 'api/fengming'
+import { getAllGroups, activeGroups, pauseGroups } from 'api/fengming'
 
 export default {
   name: 'group-table',
@@ -55,21 +60,28 @@ export default {
     this.groupData = data
   },
   methods: {
-    operateGroup (group) {
-      this.$alert('确定暂停投放？', '提示', {
+    async pauseGroup (group) {
+      await this.$alert('确定暂停投放？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消'
-      }).then(res => {
-        // TODO 打接口暂停投放，
-        // TODO 暂停之后更改投放状态
-      }).catch(err => {
-        console.error(err)
       })
+      await pauseGroups([group.id])
+      // TODO 暂停之后更改投放状态, 待后端确认状态
+      group.status = 2
+    },
+    async activeGroup (group) {
+      await this.$alert('确定暂停投放？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      })
+      await activeGroups([group.id])
+      // TODO 暂停之后更改投放状态，待后端确认状态
+      group.status = 1
     },
     optimizeGroup (group) {
       this.$router.push({
         name: 'qwt-update-group',
-        params: { id: group.campaignId }
+        params: { id: group.id }
       })
     },
     copyGroup (group) {

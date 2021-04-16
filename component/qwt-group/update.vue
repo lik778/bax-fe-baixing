@@ -1,6 +1,5 @@
 <template>
-  <div class="qwt-update-group"
-       v-if="group">
+  <div class="qwt-update-group">
     <section>
       <header>推广目标设置</header>
       <div class="content">
@@ -36,13 +35,13 @@
         <div class="keywords-container">
           <div class="pane">
             <header>添加推广关键词</header>
-            <search-comp :campaign-id="promotion.id"
+            <search-comp :promotion-id="promotion.id"
                          :areas="promotion.areas"
                          :landing-page="group.landingPage"
                          :landing-type="group.landingType"
                          :sources="[promotion.source]"
                          :all-words="keywords.concat(group.negativeWords)"
-                         @track="handleTrackByAction"
+                         @track="(action, opts) => handleTrack(action, opts)"
                          @add-keywords="handleAddKeywords" />
           </div>
           <div class="pane">
@@ -86,6 +85,7 @@
         <negative-keyword-comp :negative-words="group.negativeWords"
                                :all-words="group.negativeWords.concat(keywords)"
                                :show-tip="false"
+                               @track="(action, opts) => handleTrack(action, opts)"
                                @add-negative-words="(words) => group.negativeWords = words.concat(group.negativeWords)"
                                @remove-negative-words="(idx) => group.negativeWords.splice(idx, 1)" />
       </div>
@@ -122,22 +122,22 @@ import {
   CAMPAIGN_STATUS_OFFLINE,
   CAMPAIGN_STATUS_ONLINE,
   NEGATIVE_KEYWORDS_MAX,
-  emptyGroup
+  emptyGroup,
+  emptyCampaign,
+  KEYWORDS_MAX
 } from 'constant/fengming'
 import clone from 'clone'
-import pick from 'lodash.pick'
 import uuid from 'uuid/v4'
 import { updateValidator } from './validate'
 import track from 'util/track'
 import { filterExistCurrentWords } from 'util/group'
 
-import { getCampaignInfo } from 'api/fengming'
-
-const emptyPromotion = {
-  id: 0,
-  source: 0,
-  areas: []
-}
+import {
+  getCampaignKeywordsCount,
+  getKeywordsByGroupId,
+  getGroupDetailByGroupId,
+  updateGroup
+} from 'api/fengming'
 
 export default {
   name: 'qwt-update-group',
@@ -164,7 +164,7 @@ export default {
       CAMPAIGN_STATUS_ONLINE,
       NEGATIVE_KEYWORDS_MAX,
 
-      promotion: emptyPromotion,
+      promotion: emptyCampaign,
       originGroup: emptyGroup,
       group: emptyGroup,
       originKeywords: [],
@@ -183,31 +183,34 @@ export default {
     keywordRemainCount () {
       const newKeywords = this.keywords.filter(o => o.isNew)
       const deletedKeywords = this.keywords.filter(o => o.isDel)
-      return this.campaignKeywordLen + newKeywords.length - deletedKeywords.length
+      return KEYWORDS_MAX - (this.campaignKeywordLen + newKeywords.length - deletedKeywords.length)
     },
     groupId () {
-      // TODO 放开注释，删除mock 4012
-      // return this.$route.params.id
-      return 4022
+      return this.$route.params.id
     }
   },
   async mounted () {
-    // TODO mock 信息开始，后期删除
-    const res = await getCampaignInfo(this.groupId)
-    this.originGroup = pick(res, ['landingType', 'landingPage', 'landingPageId', 'name', 'status', 'auditStatus', 'detailStatusText', 'creative', 'negativeWords', 'mobilePriceRatio'])
-    this.originKeywords = res.keywords
-    this.originGroup.creatives = [res.creative]
-    this.originGroup.name = 'cesh'
-    this.originGroup.landingPageId = 1360318557
-    this.originGroup.landingType = 0
-    // TODO: 接口获取promotion信息
-    // TODO: 接口获取group信息
-    // TODO: 接口获取keywords信息
-    this.promotion = pick(res, ['source', 'areas', 'id'])
-    this.group = clone(this.originGroup)
-    this.keywords = clone(this.originKeywords)
-    // TODO mock信息结束，后期删除
-    // TODO: 获取当前计划关键词数量（接口获取）
+    const loadingInstance = this.$loading({
+      lock: true,
+      target: '.qwt-update-group',
+      text: '正在加载中...',
+      spinner: 'el-icon-loading'
+    })
+    try {
+      const originGroup = await getGroupDetailByGroupId(this.groupId)
+      this.originGroup = originGroup
+      this.promotion = clone(this.originGroup.promotion)
+      this.group = clone(this.originGroup)
+
+      this.originKeywords = await getKeywordsByGroupId(this.groupId)
+      this.keywords = clone(this.originKeywords)
+
+      this.campaignKeywordLen = await getCampaignKeywordsCount(this.promotion.id)
+    } finally {
+      loadingInstance.close()
+    }
+
+    this.handleTrack('enter-page: update-group')
   },
   methods: {
     updateGroupData (type, data) {
@@ -217,7 +220,7 @@ export default {
       }
       Object.assign(this.group, type)
     },
-    handleTrackByAction (action) {
+    handleTrack (action, opts = {}) {
       const { userInfo, actionTrackId } = this
       track({
         action,
@@ -225,7 +228,8 @@ export default {
         time: Date.now() / 1000 | 0,
         baxId: userInfo.id,
         actionTrackId,
-        campaignId: this.promotion.id
+        campaignId: this.promotion.id,
+        ...opts
       })
     },
     handleAddKeywords (words) {
@@ -253,14 +257,14 @@ export default {
       try {
         await this.validateGroup()
         this.isUpdating = true
-        this._updateGroup()
+        await this._updateGroup()
       } catch (e) {
         return this.$message.error(e.message)
       } finally {
         this.isUpdating = false
       }
     },
-    _updateGroup () {
+    async _updateGroup () {
       const data = {}
       Object.assign(data, {
         ...this.getUpdatedLandingData(),
@@ -269,9 +273,14 @@ export default {
         ...this.getUpdatedKeywordData()
       })
 
-      // TODO 编辑单元接口请求
-      // TODO: 是否要做打点
-      this.$router.push({ name: 'qwt-update-promotion', params: { id: this.promotion.id } })
+      await updateGroup(this.groupId, data)
+
+      this.handleTrack('leave-page: update-group')
+
+      this.$router.push({
+        name: 'qwt-update-promotion',
+        params: { id: this.promotion.id }
+      })
     },
     getUpdatedLandingData () {
       const data = {}
@@ -286,7 +295,7 @@ export default {
       const { negativeWords } = this.group
       const originNegativeWords = this.originGroup.negativeWords
       const newNegativeKeywords = filterExistCurrentWords(originNegativeWords, negativeWords)
-      const deletedNegativeKeywords = filterExistCurrentWords(negativeWords, originNegativeWords)
+      const deletedNegativeKeywords = (filterExistCurrentWords(negativeWords, originNegativeWords) || []).map(o => o.id)
       if (newNegativeKeywords.length) data.newNegativeKeywords = newNegativeKeywords
       if (deletedNegativeKeywords.length) data.deletedNegativeKeywords = deletedNegativeKeywords
       return data
@@ -296,7 +305,7 @@ export default {
       const { creatives } = this.group
       const originCreatives = this.originGroup.creatives
       const newCreatives = creatives.filter(o => !o.id)
-      const deletedCreatives = originCreatives.filter(o => !creatives.find(x => x.id === o.id))
+      const deletedCreatives = originCreatives.filter(o => !creatives.find(x => x.id === o.id)).map(o => o.id)
       const updatedCreatives = originCreatives.filter(
         o => creatives.find(x => x.id === o.id && (x.title !== o.title || x.content !== o.content)))
 
@@ -308,7 +317,7 @@ export default {
     getUpdatedKeywordData () {
       const data = {}
       const newKeywords = this.keywords.filter(o => o.isNew)
-      const deletedKeywords = this.keywords.filter(o => o.isDel)
+      const deletedKeywords = this.keywords.filter(o => o.isDel).map(o => o.id)
       const updatedKeywords = this.keywords.filter(o => o.isUpdated)
       if (newKeywords.length) data.newKeywords = newKeywords
       if (deletedKeywords.length) data.deletedKeywords = deletedKeywords

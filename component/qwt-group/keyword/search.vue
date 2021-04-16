@@ -17,6 +17,8 @@
     <!-- 添加关键词模态框 -->
     <keyword-dialog :visible.sync="keywordDialogVisible"
                     :all-words="allWords"
+                    :campaign-id="campaignId"
+                    :group-id="groupId"
                     :sources="sources"
                     @update="handleAddKeywords" />
 
@@ -33,7 +35,7 @@ import BaiduExpandWordsDialog from 'com/common/qwt-baidu-expand-words'
 
 import { validateKeyword } from 'util/campaign'
 import { recommendByWord, recommendByUrl } from 'api/fengming'
-import { fmtNewKeywordsPrice, filterExistCurrentWords } from 'util/group'
+import { fmtNewKeywordsPrice, filterExistCurrentWords, getNotExistWords } from 'util/group'
 
 export default {
   name: 'keyword-search',
@@ -60,8 +62,10 @@ export default {
       }
     },
     campaignId: {
-      type: [String, Number],
-      required: true
+      type: [String, Number]
+    },
+    groupId: {
+      type: [String, Number]
     },
     landingType: {
       type: Number
@@ -87,7 +91,7 @@ export default {
     }
   },
   mounted () {
-    // 一键拓词推荐关键词临时数据
+    // TODO: 一键拓词推荐关键词临时数据
     this._recommendKeywords = []
   },
   methods: {
@@ -98,14 +102,15 @@ export default {
         return
       }
 
-      // 本地校验：是否已存在关键词或否词
-      const newWords = filterExistCurrentWords(this.allWords, [{ word: val }])
-      if (!newWords.length) return this.$message.error(`已存在关键词或否定关键词：${val}`)
-
-      // TODO: 根据接口获取当前keyword是否已存在否词或关键词列表
-
-      // 打点
-      this.$emit('track', 'click-button: add-keyword')
+      try {
+        const isRemoteQuery = !!(this.campaignId || this.groupId)
+        await getNotExistWords(this.allWords, [val], isRemoteQuery, {
+          groupId: this.groupId,
+          campaignId: this.campaignId
+        })
+      } catch (e) {
+        return this.$message.info(e.message)
+      }
 
       try {
         this.loading.addBtn = true
@@ -121,6 +126,8 @@ export default {
         this.loading.addBtn = false
         this.word = ''
       }
+
+      this.$emit('track', 'click-button: add-keyword')
     },
     async recommendKeywords () {
       const { landingType, landingPage, areas, campaignId } = this
@@ -155,6 +162,11 @@ export default {
     },
     handleAddKeywords (words) {
       this.$emit('add-keywords', words.map(o => ({ ...o, isNew: true })))
+
+      this.$emit('track', 'click-button: add-keyword-list', {
+        keywordsLen: words.length,
+        keywords: words.map(o => o.word).join(',')
+      })
     }
   }
 }

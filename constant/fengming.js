@@ -271,3 +271,5 @@ export const emptyGroup = {
   keywords: [],
   price: 2
 }
+
+export const KEYWORDS_MAX = 5000

@@ -38,13 +38,14 @@
       </div>
     </section>
     <section>
-      <header>选取推广关键词</header>
+      <header>选取推广关键词（当前计划还可添加<strong>{{keywordRemainCount}}</strong>个关键词）</header>
       <div class="content">
-        <keyword-comp :campaign-id="promotion.campaignId"
+        <keyword-comp :campaign-id="promotion.id"
                       :areas="promotion.areas"
                       :sources="[promotion.source]"
                       :origin-keywords="group.keywords"
                       :all-words="group.keywords.concat(group.negativeWords)"
+                      @track="(action, opts) => handleTrack(action, opts)"
                       @add-keywords="(words) => group.keywords = words.concat(group.keywords)"
                       @remove-keywords="(idx) => group.keywords.splice(idx, 1)" />
       </div>
@@ -57,12 +58,14 @@
         </el-tooltip>
       </header>
       <div class="content">
-        <p class="tip" style="margin-bottom: 20px">
+        <p class="tip"
+           style="margin-bottom: 20px">
           当网民的搜索词与精确否定关键词完全一致时，您的推广结果将不会展现。 否词个数不得超过 <strong>{{ NEGATIVE_KEYWORDS_MAX }}</strong>个,
           当前否定关键词数量: <strong>{{ group.negativeWords.length }}</strong>个
         </p>
         <negative-keyword-comp :negative-words="group.negativeWords"
                                :show-tip="false"
+                               @track="(action, opts) => handleTrack(action, opts)"
                                :all-words="group.negativeWords.concat(group.keywords)"
                                @add-negative-words="(words) => group.negativeWords = words.concat(group.negativeWords)"
                                @remove-negative-words="(idx) => group.negativeWords.splice(idx, 1)" />
@@ -96,13 +99,26 @@ import MobilePriceRatioComp from './mobile-price-ratio'
 import CpcPriceComp from './cpc-price'
 
 import { createValidator } from './validate'
-import { createGroup } from 'api/fengming'
-import { emptyGroup, NEGATIVE_KEYWORDS_MAX } from 'constant/fengming'
+import { createGroup, getCampaignInfo, getCampaignKeywordsCount } from 'api/fengming'
+import { emptyGroup, NEGATIVE_KEYWORDS_MAX, KEYWORDS_MAX } from 'constant/fengming'
 import clone from 'clone'
+import pick from 'lodash.pick'
+import track from 'util/track'
+import uuid from 'uuid/v4'
+
+const emptyPromotion = {
+  id: 0,
+  source: 0,
+  areas: []
+}
 
 export default {
   name: 'qwt-create-group',
   props: {
+    userInfo: {
+      type: Object,
+      required: true
+    },
     allAreas: {
       type: Array,
       required: true
@@ -110,34 +126,48 @@ export default {
   },
   data () {
     return {
-      promotion: {
-        source: 0,
-        campaignId: 4012, // 计划id
-        areas: []
-      },
+      promotion: emptyPromotion,
       group: clone(emptyGroup),
       isUpdating: false,
 
-      NEGATIVE_KEYWORDS_MAX
+      NEGATIVE_KEYWORDS_MAX,
+      actionTrackId: uuid(),
+
+      campaignKeywordLen: 0
     }
   },
-  components: {
-    LandingComp,
-    LandingPageComp,
-    CreativeComp,
-    CreativeTipComp,
-    KeywordComp,
-    NegativeKeywordComp,
-    ContractAckComp,
-    MobilePriceRatioComp,
-    CpcPriceComp
+  computed: {
+    keywordRemainCount () {
+      const newLen = this.group.keywords.length
+      return KEYWORDS_MAX - (this.campaignKeywordLen + newLen)
+    },
+    campaignId () {
+      return this.$route.query.campaignId
+    }
   },
-  mounted () {
-    const campaignId = this.$route.query.campaignId
-    // TODO: 获取计划信息
-    this.promotion.campaignId = campaignId
+  async mounted () {
+    // TODO: 获取计划信息, 待后端接口是否要修改
+    const promotion = await getCampaignInfo(this.campaignId)
+    this.promotion = pick(promotion, ['id', 'source', 'areas'])
+
+    this.handleTrack('enter-page: create-group')
+
+    this.campaignKeywordLen = await getCampaignKeywordsCount(this.campaignId)
   },
   methods: {
+    handleTrack (action, opts = {}) {
+      const { actionTrackId, userInfo } = this
+      track({
+        roles: userInfo.roles.map(r => r.name).join(','),
+        action: action,
+        baixingId: userInfo.baixingId,
+        time: Date.now() / 1000 | 0,
+        baxId: userInfo.id,
+        campaignId: this.promotion.id,
+        actionTrackId,
+        ...opts
+      })
+    },
     updateGroupData (type, data) {
       if (typeof type === 'string') {
         this.group[type] = data
@@ -165,12 +195,14 @@ export default {
         this.isUpdating = true
         await createGroup({
           ...this.group,
-          campaignId: this.promotion.campaignId
+          campaignId: this.promotion.id
         })
+
+        this.handleTrack('leave-page: create-group')
 
         this.$router.push({
           name: 'qwt-update-promotion',
-          params: { id: this.promotion.campaignId }
+          params: { id: this.promotion.id }
         })
       } catch (e) {
         return this.$message.error(e.message)
@@ -178,6 +210,17 @@ export default {
         this.isUpdating = false
       }
     }
+  },
+  components: {
+    LandingComp,
+    LandingPageComp,
+    CreativeComp,
+    CreativeTipComp,
+    KeywordComp,
+    NegativeKeywordComp,
+    ContractAckComp,
+    MobilePriceRatioComp,
+    CpcPriceComp
   }
 }
 </script>

@@ -540,7 +540,7 @@ export async function getKeywordsByGroupId (groupId) {
     .query(reverseCamelcase({
       groupId
     }))
-    .join()
+    .json()
 
   return body.data
 }
@@ -563,15 +563,16 @@ export async function getCampaignKeywordsCount (campaignId) {
 /**
  * 根据单元id获取关键词或否定关键词是否已在（计划关键词、单元关键词、单元否词）中
  * @param {number} group_id
+ * @param {number} campaign_id
  * @param {array} keywords
  */
-export async function getWordsExistInCampaign (data) {
+export async function getWordsExistInGroupOrCampaign (data) {
   const body = await fengming
     .post('/keyword/check_keywords_in_words')
     .send(reverseCamelcase(data))
     .json()
 
-  return body.data
+  return (body.data || []).map(o => o.toLowerCase())
 }
 
 /**
@@ -608,7 +609,7 @@ export async function getAllGroups (opts) {
     .send(reverseCamelcase(opts))
     .json()
 
-  return body.data
+  return toCamelcase(body.data)
 }
 
 /**
@@ -620,7 +621,7 @@ export async function getGroupDetailByGroupId (groupId) {
     .get(`/group/${groupId}`)
     .json()
 
-  return body.data
+  return toCamelcase(body.data)
 }
 
 /**

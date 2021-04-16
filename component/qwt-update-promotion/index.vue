@@ -56,7 +56,7 @@ import ContractAck from 'com/widget/contract-ack'
 import PromotionChargeTip from 'com/widget/promotion-charge-tip'
 
 import { isBaixingSales } from 'util/role'
-import { getCurrentBalance, getCampaignInfo } from 'api/fengming'
+import { getCurrentBalance, getCampaignInfo, updateCampaign } from 'api/fengming'
 import clone from 'clone'
 import pick from 'lodash.pick'
 import { toHumanTime } from 'utils'
@@ -105,8 +105,8 @@ export default {
   },
   data () {
     return {
-      originPromotion: null, // 计划原始数据
-      promotion: emptyPromtion, // 当前计划
+      originPromotion: emptyPromtion,
+      promotion: emptyPromtion,
       currentBalance: 0,
 
       isUpdating: false,
@@ -142,7 +142,7 @@ export default {
   },
   methods: {
     handleTrack (action) {
-      const { actionTrackId, userInfo, id } = this
+      const { actionTrackId, userInfo } = this
 
       track({
         roles: userInfo.roles.map(r => r.name).join(','),
@@ -150,7 +150,7 @@ export default {
         baixingId: userInfo.baixingId,
         time: Date.now() / 1000 | 0,
         baxId: userInfo.id,
-        campaignId: id,
+        campaignId: this.campaignId,
         actionTrackId
       })
     },
@@ -172,7 +172,6 @@ export default {
       this.originPromotion = await this.getCampaignInfo()
       this.promotion = pick(clone(this.originPromotion), ['areas', 'dailyBudget', 'validTime', 'negativeWords', 'schedule', 'budgetModificationCount', 'source'])
       this.currentBalance = await getCurrentBalance()
-      // TODO: 获取所有单元详情
     },
     async updatePromotion () {
       try {
@@ -185,15 +184,18 @@ export default {
         this.isUpdating = false
       }
     },
-    _updatePromotion () {
+    async _updatePromotion () {
       const data = {}
       Object.assign(data, {
         ...this.getUpdatedPromotionData(),
         ...this.getUpdatedNegativeWordData()
       })
 
-      // TODO: 调用updateCampaign接口
-      // TODO: 是否要做打点
+      // TODO: 更新计划接口是否要更改，待后端确认
+      await updateCampaign(this.campaignId, data)
+
+      this.handleTrack('leave-page: update-campaign')
+
       this.$router.push({ name: 'qwt-promotion-list' })
     },
     async validatePromotion () {
@@ -240,13 +242,16 @@ export default {
       const { negativeWords } = this.promotion
       const originNegativeWords = this.originPromotion.negativeWords
       const newNegativeKeywords = negativeWords.filter(x => !originNegativeWords.find(o => o.word === x.word))
-      const deletedNegativeKeywords = originNegativeWords.filter(x => !negativeWords.find(o => o.word === x.word))
+      const deletedNegativeKeywords = originNegativeWords.filter(x => !negativeWords.find(o => o.word === x.word)).map(i => i.id)
       if (newNegativeKeywords.length) data.newNegativeKeywords = newNegativeKeywords
       if (deletedNegativeKeywords.length) data.deletedNegativeKeywords = deletedNegativeKeywords
       return data
     },
     handleGoGroup () {
-      this.$router.push({ name: 'qwt-create-group', query: { campaignId: this.campaignId } })
+      this.$router.push({
+        name: 'qwt-create-group',
+        query: { campaignId: this.campaignId }
+      })
     }
   },
   watch: {

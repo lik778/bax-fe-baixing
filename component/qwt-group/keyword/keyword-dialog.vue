@@ -59,7 +59,7 @@
 import { recommendByWordList } from 'api/fengming'
 import { isObj } from 'util'
 import { validateKeyword } from 'util/campaign'
-import { fmtNewKeywordsPrice } from 'util/group'
+import { fmtNewKeywordsPrice, getNotExistWords } from 'util/group'
 
 export default {
   name: 'qwt-keyword-dialog',
@@ -76,10 +76,15 @@ export default {
     },
     allWords: {
       type: Array,
-      required: false,
       default: () => {
         return []
       }
+    },
+    groupId: {
+      type: [String, Number]
+    },
+    campaignId: {
+      type: [String, Number]
     }
   },
   data () {
@@ -125,28 +130,30 @@ export default {
 
       try {
         validateKeyword(words)
+        const normalList = (this.keywords && this.keywords.normalList) || []
+        const allWords = this.allWords.concat(normalList)
+        const isRemoteQuery = !!(this.campaignId || this.groupId)
+        // 校验是否已存在
+        const newWords = await getNotExistWords(allWords, words, isRemoteQuery, {
+          groupId: this.groupId,
+          campaignId: this.campaignId
+        })
+
+        // 拼接关键词
+        const newKeywords = await this.fetchWords(newWords)
+        for (const key in this.keywords) {
+          this.keywords[key] = [...new Set(this.keywords[key].concat(newKeywords[key]))]
+        }
+        this.search = ''
       } catch (e) {
         return this.$message.error(e.message)
       }
-
-      // 本地校验：是否在单元的关键词和否词已有列表中, 存在直接过滤
-      const normalList = (this.keywords && this.keywords.normalList) || []
-      const allWords = this.allWords.concat(normalList)
-      const newWords = words.filter(x => !allWords.find(o => o.word.toLowerCase() === x.toLowerCase()))
-      if (!newWords.length) return this.$message.info('关键词已存在关键词或否词列表中，请更换关键词')
-
-      // TODO: 接口获取关键词是否已存在，并告知存在的列表（后端新增接口）
-      // TODO: 如果关键词已存在，直接过滤
-
-      // 拼接关键词
-      const newKeywords = await this.fetchWords(newWords)
-      for (const key in this.keywords) {
-        this.keywords[key] = [...new Set(this.keywords[key].concat(newKeywords[key]))]
-      }
-      this.search = ''
     },
-    async fetchWords (words, sources) {
-      const result = await recommendByWordList(words, { sources })
+    async fetchWords (words) {
+      const queryOpts = {}
+      if (this.sources.length) queryOpts.sources = this.sources
+      // TODO: campaign_id是否要更换为group_id
+      const result = await recommendByWordList(words, { campaignId: this.campaignId })
       if (!(result && isObj(result))) return
       for (const key in result) {
         result[key] = fmtNewKeywordsPrice(result[key])

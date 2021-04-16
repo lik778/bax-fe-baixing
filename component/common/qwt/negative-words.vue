@@ -34,6 +34,7 @@ import negativeWordsDialog from 'com/common/qwt/negative-word-dialog'
 import { NEGATIVE_KEYWORDS_MAX } from 'constant/fengming'
 import { validateKeyword } from 'util/campaign'
 import { filterExistCurrentWords } from 'util/group'
+import { getWordsExistInGroup } from 'api/fengming'
 
 export default {
   name: 'negative-words',
@@ -66,7 +67,7 @@ export default {
     }
   },
   methods: {
-    addNegativeWords () {
+    async addNegativeWords () {
       const val = this.word.trim()
       if (val === '') {
         this.negativeWordsDialogVisible = true
@@ -80,6 +81,11 @@ export default {
       if (!newWords.length) return this.$message.error(`已存在该关键词或否定关键词：${val}`)
 
       // TODO: 打接口获取已有的关键词列表
+      const a = await getWordsExistInGroup({
+        groupId: this.groupId,
+        keywords: newWords
+      })
+      console.log(a)
 
       try {
         validateKeyword([val])
@@ -89,12 +95,19 @@ export default {
         this.word = ''
       }
       this.$emit('add-negative-words', [{ word: val }])
+
+      this.$emit('track', 'click-button: add-negative-keyword')
     },
     removeNegativeWord (idx) {
       this.$emit('remove-negative-words', idx)
     },
     updateNegativeWords (words) {
       this.$emit('add-negative-words', words)
+
+      this.$emit('track', 'click-button: add-negative-keyword-list', {
+        negativeWordsLen: words.length,
+        negativeWords: words.map(o => o.word).join(',')
+      })
     }
   },
   components: {

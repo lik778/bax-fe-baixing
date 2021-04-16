@@ -16,7 +16,7 @@
               v-for="(kw, index) in originKeywords"
               :key="index"
               closable
-              type="warning"
+              type="primary"
               @close="removeKeyword(index)">
         {{ kw.word }}
         {{ RECOMMAND_SOURCES.includes(kw.recommandSource) ? '(好词)': '' }}
@@ -63,8 +63,7 @@ export default {
       }
     },
     campaignId: {
-      type: [String, Number],
-      required: true
+      type: [String, Number]
     }
   },
   data () {
