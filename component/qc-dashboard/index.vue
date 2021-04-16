@@ -432,7 +432,8 @@ export default {
       const wrapperClass = `snapshot-content-${randomID}`
 
       // 快照样式修复
-      const snapshotFix = '<style>/*这里可以放一些快照页面样式的修复代码*/</style>'
+      /* 这里可以放一些快照页面样式的修复代码 */
+      const snapshotFix = '<style>#modal-style { display: none }</style>'
       html += snapshotFix
 
       const style =
