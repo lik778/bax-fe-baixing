@@ -282,7 +282,9 @@ export default {
       const hasError = this.isValidateError
       if (hasError) {
         return {
-          isValid: false
+          isValid: false,
+          isValidPC: !this.validatePCError,
+          isValidWAP: !this.validateWAPError
         }
       } else {
         const isNewImageFromRaw = raw => x => !x.id || !raw.find(y => x.url === y.url)
@@ -299,6 +301,8 @@ export default {
         return {
           _raw: this.forms,
           isValid: true,
+          isValidPC: !this.validatePCError,
+          isValidWAP: !this.validateWAPError,
           type: forms.type,
           add,
           del

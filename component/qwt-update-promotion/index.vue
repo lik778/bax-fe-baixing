@@ -1235,6 +1235,23 @@ export default {
     validMaterialPictures () {
       if (!this.materialPictures.isValid) {
         return this.$message.error('请按要求上传创意配图')
+      } else {
+        const validPC = this.materialPictures.isValidPC
+        const validWAP = this.materialPictures.isValidWAP
+        const saveBoth = validPC && validWAP
+
+        if (!saveBoth) {
+          const { pc = [], wap = [] } = this.materialPictures._raw
+          const hasPCContents = pc.length
+          const hasWAPContents = wap.length
+
+          if (validPC && hasWAPContents) {
+            return this.$message.error('手机端图片数量不满足系统要求，请补充完整或清空后再提交')
+          }
+          if (validWAP && hasPCContents) {
+            return this.$message.error('电脑端图片数量不满足系统要求，请补充完整或清空后再提交')
+          }
+        }
       }
     },
     async _updateMaterialPictures () {
