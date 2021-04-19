@@ -4,6 +4,7 @@
       ref="rawUploader"
       v-bind="$attrs"
       v-on="$listeners"
+      :multiple="false"
       :beforeUpload="crop">
       <slot />
     </uploader>
