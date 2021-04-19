@@ -121,132 +121,7 @@
                 </el-checkbox-group>
               </div>
             </div>
-
-            <el-table
-              cell-class-name="bax-cell"
-              v-loading="landingPageLoading"
-              element-loading-text="拼命加载中"
-              element-loading-spinner="el-icon-loading"
-              row-key="id"
-              :data="tableData"
-              style="width: 100%"
-            >
-              <el-table-column
-                v-for="item in columns"
-                :key="item.id"
-                :prop="item.prop"
-                :label="item.lable"
-                :width="item.width"
-                :formatter="item.formatter"
-                align="center"
-              >
-                <template slot-scope="scope">
-                  <el-popover
-                    v-if="item.prop === 'status_text'"
-                    trigger="hover"
-                    placement="top"
-                  >
-                    <p>您的推广在{{ scope.row.status_text}}中</p>
-                    <span
-                      slot="reference"
-                      class="name-wrapper"
-                    >
-                      {{ scope.row.status_text }}
-                    </span>
-                  </el-popover>
-                  <span v-if="item.prop === 'opt'">{{
-                    filterOptimization(scope.row)
-                  }}</span>
-                  <span v-if="item.prop != 'opt' && item.prop != 'status_text'">{{ scope.row[item.prop] }}</span>
-                </template>
-              </el-table-column>
-              <el-table-column
-                prop="unit"
-                label="单元"
-                align="center"
-                width="300"
-              >
-                <template slot-scope="scope">
-                  <div class="unit-wrapper">
-                    <p class="unit-cell">
-                      <span
-                        class="unit-item"
-                        v-for="unit in scope.row.unit"
-                        :key="unit.value"
-                      >{{ unit.label }}、</span>
-                    </p>
-                    <router-link
-                      class="view"
-                      :to="{
-                        name: 'qwt-promotion-list',
-                        query: { id: scope.row.id },
-                      }"
-                    >查看</router-link>
-                  </div>
-                </template>
-              </el-table-column>
-              <el-table-column
-                prop="daily_budget"
-                label="今日预算"
-                align="center"
-                width="150"
-              >
-                <template slot-scope="scope">
-                  <span
-                    class="edite-wrapper"
-                    v-if="scope.row.id === dailyBudget.id"
-                  >
-                    <el-input v-model="dailyBudget.value"></el-input>
-                    <el-button
-                      type="text"
-                      @click="modifyBudget(scope.row)"
-                    >确定</el-button>
-                  </span>
-                  <span v-else>
-                    <span>{{ (scope.row.daily_budget / 100).toFixed(2) }}</span>
-                    <el-button
-                      type="text"
-                      @click="editeBudget(scope.row)"
-                    >修改</el-button>
-                  </span>
-                </template>
-              </el-table-column>
-              <el-table-column
-                prop="daily_budget"
-                label="今日消耗"
-                align="center"
-              >
-              </el-table-column>
-              <el-table-column
-                prop=""
-                label="操作"
-                align="center"
-                width="150"
-              >
-                <template slot-scope="scope">
-                  <el-button
-                    type="text"
-                    @click="
-                      () => {
-                        console.log(scope.row);
-                      }
-                    "
-                  >暂停</el-button>
-                  <router-link :to="{
-                      name: 'qwt-update-promotion',
-                      params: { id: scope.row.id },
-                    }">优化</router-link>
-                  <el-button
-                    type="text"
-                    @click="
-                      () => {
-                        console.log(scope.row);
-                      }
-                    "
-                  >复制</el-button>
-                </template>
-              </el-table-column>
-            </el-table>
+            <promotionTable :modifyBudget="modifyBudget" :list="promotionList" :loading="landingPageLoading" />
           </el-tab-pane>
           <el-tab-pane
             label="单元"
@@ -323,53 +198,7 @@
                 v-model="queryParams.unitName"
               />
             </div>
-
-            <el-table
-              cell-class-name="bax-cell"
-              :data="unitData"
-              row-key="id"
-              v-loading="landingPageLoading"
-              element-loading-text="拼命加载中"
-              element-loading-spinner="el-icon-loading"
-            >
-              <el-table-column
-                align="center"
-                v-for="item in unitColums"
-                :key="item.id"
-                :prop="item.prop"
-                :label="item.label"
-                :formatter="item.formatter"
-              ></el-table-column>
-
-              <el-table-column
-                align="center"
-                prop=""
-                label="操作"
-              >
-                <template slot-scope="scope">
-                  <el-button
-                    type="text"
-                    @click="
-                      () => {
-                        console.log(scope.row);
-                      }
-                    "
-                  >暂停</el-button>
-                  <router-link :to="{
-                      name: 'qwt-update-promotion',
-                      params: { id: scope.row.id },
-                    }">优化</router-link>
-                  <el-button
-                    type="text"
-                    @click="
-                      () => {
-                        console.log(scope.row);
-                      }
-                    "
-                  >复制</el-button>
-                </template>
-              </el-table-column>
-            </el-table>
+            <groupTable :list="groupList" :loading="landingPageLoading"/>
           </el-tab-pane>
         </el-tabs>
       </div>
@@ -393,21 +222,19 @@
 </template>
 
 <script>
+import promotionTable from './components/promotion-table'
+import groupTable from './components/group-table'
 import { getCnName, f2y } from 'util'
 import pick from 'lodash.pick'
 import {
   CAMPAIGN_STATUS_OPTS,
   options,
-  unitData,
-  unitColums,
-  CAMPAIGN_OPTIMIZATION_OPTS,
-  columns,
-  filterOptimization
+  CAMPAIGN_OPTIMIZATION_OPTS
 } from './constant'
 // import { toCamelcase } from 'object-keys-mapping'
 import AreaSelector from 'com/common/area-selector'
 import BaxInput from 'com/common/input'
-import { getCurrentCampaigns, getCampaignList } from 'api/fengming-campaign'
+import { getCampaignList, getGroupList } from 'api/fengming-campaign'
 import {
   getCurrentBalance,
   getHomepageSummary,
@@ -418,14 +245,6 @@ import {
 } from 'constant/fengming'
 const CNT_REJECTED_CODE = '-53'
 const ONE_PAGE_NUM = 10
-// const formatlandingPageList = (res) => {
-//   return Object.entries(res).reduce((list, [k, v]) => {
-//     return list.concat({
-//       ...v,
-//       id: k
-//     })
-//   }, [])
-// }
 
 export default {
   name: 'qwt-promotion-list',
@@ -434,11 +253,6 @@ export default {
       query: { id }
     } = this.$route
     const { statuses } = this.$route.query
-    if (id) {
-      // 从某个计划点击进来
-      this.activeName = 'unit'
-      this.queryParams.value = id
-    }
     if (statuses) {
       this.isActionGroupExpand = true
       // 从首页未审核处点击进来的
@@ -451,8 +265,19 @@ export default {
     if (this.salesInfo.userId) {
       this.queryParams.userId = this.salesInfo.userId
     }
-    this.fetchSummary()
-    this.fetchlandingPageList()
+    if (id) {
+      // 从某个计划点击进来
+      this.activeName = 'unit'
+      this.queryParams.value = id
+      this.fetchGroupList()
+    } else {
+      if (this.activeName === 'plan') {
+        this.fetchlandingPageList()
+      } else {
+        this.fetchGroupList()
+      }
+    }
+    // this.fetchSummary()
   },
   data () {
     return {
@@ -461,87 +286,12 @@ export default {
       CAMPAIGN_STATUS_OPTS,
       CAMPAIGN_OPTIMIZATION_OPTS,
       options,
-      unitData,
-      unitColums,
       dailyBudget: {
         id: '',
         value: 0
       },
-      tableData: [
-        {
-          id: 1,
-          ctrMark: false,
-          priceMark: false,
-          kwMark: true,
-          defaultMark: false,
-          status_text: '审核中',
-          source: 0,
-          daily_budget: 1000,
-          unit: [
-            {
-              id: 1,
-              label: '推广'
-            },
-            {
-              id: 2,
-              label: '推广2'
-            },
-            {
-              id: 2,
-              label: '推广2'
-            },
-            {
-              id: 2,
-              label: '推广2'
-            },
-            {
-              id: 2,
-              label: '推广2'
-            }
-          ]
-        },
-        {
-          id: 2,
-          ctrMark: false,
-          priceMark: true,
-          kwMark: false,
-          defaultMark: false,
-          status_text: '审核中',
-          source: 5,
-          daily_budget: 1000,
-          unit: [
-            {
-              id: 1,
-              label: '推广'
-            },
-            {
-              id: 2,
-              label: '推广2'
-            }
-          ]
-        },
-        {
-          id: 3,
-          ctrMark: true,
-          priceMark: false,
-          kwMark: false,
-          defaultMark: false,
-          status_text: '审核中',
-          source: 0,
-          daily_budget: 1000,
-          unit: [
-            {
-              id: 1,
-              label: '推广'
-            },
-            {
-              id: 2,
-              label: '推广2'
-            }
-          ]
-        }
-      ],
-      columns,
+      groupList: [],
+      promotionList: [],
       queryParams: {
         unitName: '',
         areas: [],
@@ -564,16 +314,16 @@ export default {
     }
   },
   props: ['allAreas', 'salesInfo', 'userInfo'],
-  components: { AreaSelector, BaxInput },
+  components: { AreaSelector, BaxInput, promotionTable, groupTable },
   methods: {
-    filterOptimization,
     f2y,
-    handleEdit (row) {
-      console.log(row)
-    },
     handlePageChange (page) {
       this.queryParams.offset = (page - 1) * ONE_PAGE_NUM
-      this.fetchlandingPageList()
+      if (this.activeName === 'plan') {
+        this.fetchlandingPageList()
+      } else {
+        this.fetchGroupList()
+      }
     },
     handleSelectArea (areas) {
       this.queryParams.areas = areas
@@ -583,6 +333,7 @@ export default {
       this.queryParams.areas = this.queryParams.areas.filter((a) => a !== area)
     },
     toggleTab (tab) {
+      this.queryParams.offset = 0
       const query = pick(this.$route.query, ['userId', 'salesId'])
       const {
         query: { id }
@@ -590,29 +341,20 @@ export default {
       if (id && tab.index === '0') {
         this.$router.push({ name: 'qwt-promotion-list', query })
       }
-    },
-
-    async editeBudget (row) {
-      this.dailyBudget = {
-        id: row.id,
-        value: (row.daily_budget / 100).toFixed(2)
+      if (tab.index === '1') {
+        this.fetchGroupList()
       }
     },
-    async modifyBudget (id, landingPageId, campaignIds) {
-      const budget = this.budgetMap[id]
-      if (!(budget > 0 && budget < 10000000)) {
+    async modifyBudget (dailyBudget) {
+      const { id, value } = dailyBudget
+      if (!(value > 0 && value < 10000000)) {
         return this.$message.error('请设置合理的预算')
       }
       const opts = {
         campaignIds: [id],
-        dailyBudget: budget
+        dailyBudget: 200
       }
       await updateCampaignDailyBudget(opts)
-      this.$emit('reload-promotion', landingPageId, campaignIds, true)
-      this.budgetMap = {
-        ...this.budgetMap,
-        [id]: undefined
-      }
       this.$message.success('今日预算修改成功')
     },
     async fetchlandingPageList () {
@@ -621,35 +363,31 @@ export default {
       this.campaignMap = {}
       try {
         const result = await getCampaignList(this.queryParams)
-        // const result = await getCampaignLanding(this.queryParams)
         const { total, data } = result
         this.totalPage = total
-        // toCamelcase 插件有个坑（当object的key值为url格式时，转换对象的key有问题）
-        // this.landingPageList = Object.freeze(
-        //   toCamelcase(formatlandingPageList(pageList))
-        // )
-        this.tableData = data
-        console.log('==', this.tableData)
-        // console.log('==', this.landingPageList)
+        this.promotionList = data
       } catch (err) {
         console.error(err)
       } finally {
         this.landingPageLoading = false
       }
     },
-    async fetchPromotionList (id, campaignIds, isForceUpdate) {
-      // 判断是否已经存在
-      const campaignMap = this.campaignMap
-      const campaignMapKeys = Object.keys(campaignMap)
-      if (isForceUpdate || !campaignMapKeys.includes(id)) {
-        const campaigns = await getCurrentCampaigns({
-          ...this.queryParams,
-          campaignIds
-        })
-        this.campaignMap = Object.freeze({
-          ...campaignMap,
-          [id]: campaigns
-        })
+    async fetchGroupList () {
+      const { query: { id } } = this.$route
+      this.landingPageLoading = true
+      let params = this.queryParams
+      if (id) {
+        params = { ...{ campaign_id: id }, ...params }
+      }
+      try {
+        const result = await getGroupList(params)
+        const { total, data } = result
+        this.totalPage = total
+        this.groupList = data
+      } catch (error) {
+        console.error(error)
+      } finally {
+        this.landingPageLoading = false
       }
     },
     async fetchSummary () {
@@ -794,29 +532,6 @@ export default {
   & > .red {
     color: red;
     margin: 0 5px;
-  }
-}
-
-.bax-cell {
-  a {
-    color: #35a5e4;
-  }
-  .el-button--text {
-    color: #35a5e4;
-  }
-  .unit-wrapper {
-    display: flex;
-    align-items: center;
-  }
-  .unit-cell {
-    width: 140px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  .edite-wrapper {
-    display: flex;
-    align-items: center;
   }
 }
 </style>

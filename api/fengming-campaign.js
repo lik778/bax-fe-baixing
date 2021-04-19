@@ -153,6 +153,14 @@ export async function getCampaignList (params) {
   return body.data
 }
 
+export async function getGroupList (params) {
+  const body = await fengming
+    .post('/group/info')
+    .send(params)
+    .json()
+  return body.data
+}
+
 export async function getCurrentCampaigns (query) {
   const body = await fengming
     .get('/campaign/current')

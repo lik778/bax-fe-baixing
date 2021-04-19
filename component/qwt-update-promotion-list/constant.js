@@ -19,16 +19,16 @@ const OPTIMIZATION = Object.freeze({
   defaultMark: '设'
 })
 const filterOptimization = (row) => {
-  if (row.kwMark) {
+  if (row.kw_mark) {
     return '词'
   }
-  if (row.priceMark) {
+  if (row.price_mark) {
     return '价'
   }
-  if (row.ctrMark) {
+  if (row.ctr_mark) {
     return '创'
   }
-  if (row.defaultMark) {
+  if (row.default_mark) {
     return '设'
   }
 }
@@ -84,10 +84,7 @@ const columns = [
     prop: 'source',
     lable: '渠道',
     template: false,
-    formatter: (row, column, cellValue) => {
-      console.log('--', cellValue)
-      return semPlatformCn[cellValue]
-    }
+    formatter: (row, column, cellValue) => semPlatformCn[cellValue]
   }
 ]
 const unitData = [
