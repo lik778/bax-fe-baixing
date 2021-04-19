@@ -103,7 +103,7 @@
           @error="handleCreativeError"
         />
       </section>
-      <section v-if="getProp('source') === SEM_PLATFORM_BAIDU">
+      <section v-if="enableMaterialPictures">
         <header class="top-col">
           创意配图
         </header>
@@ -584,6 +584,9 @@ export default {
     }
   },
   computed: {
+    enableMaterialPictures () {
+      return this.getProp('source') === SEM_PLATFORM_BAIDU
+    },
     extendLandingTypeOpts () {
       if (allowSee258(null, this.userInfo.id)) {
         return landingTypeOpts.concat([{ label: '258官网', value: LANDING_TYPE_258 }])
@@ -596,7 +599,6 @@ export default {
       if (q < 0) {
         q = 0
       }
-
       return q
     },
     isSales () {
@@ -1224,8 +1226,12 @@ export default {
       }
       this.isUpdating = true
       try {
-        const updateError = await this._updateMaterialPictures()
-        if (!updateError) {
+        if (this.enableMaterialPictures) {
+          const updateMaterialPicturesError = await this._updateMaterialPictures()
+          if (!updateMaterialPicturesError) {
+            await this._updatePromotion()
+          }
+        } else {
           await this._updatePromotion()
         }
       } finally {
