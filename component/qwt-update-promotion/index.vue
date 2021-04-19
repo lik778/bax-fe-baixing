@@ -1685,7 +1685,9 @@ export default {
     console.log(this.currentPromotion)
     await this.initCampaignInfo()
 
-    this.initMaterialPictures()
+    if (this.enableMaterialPictures) {
+      this.initMaterialPictures()
+    }
 
     const { landingPage, landingType } = this.originPromotion
 
