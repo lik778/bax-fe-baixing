@@ -99,11 +99,18 @@ import MobilePriceRatioComp from './mobile-price-ratio'
 import CpcPriceComp from './cpc-price'
 
 import { createValidator } from './validate'
-import { createGroup, getCampaignInfo, getCampaignKeywordsCount } from 'api/fengming'
+import {
+  createGroup,
+  getCampaignInfo,
+  getCampaignKeywordsCount,
+  getGroupDetailByGroupId,
+  getKeywordsByGroupId
+} from 'api/fengming'
 import { emptyGroup, NEGATIVE_KEYWORDS_MAX, KEYWORDS_MAX } from 'constant/fengming'
 import clone from 'clone'
 import pick from 'lodash.pick'
 import track from 'util/track'
+import { toFloat } from 'util'
 import uuid from 'uuid/v4'
 
 const emptyPromotion = {
@@ -142,19 +149,47 @@ export default {
       return KEYWORDS_MAX - (this.campaignKeywordLen + newLen)
     },
     campaignId () {
-      return this.$route.query.campaignId
+      return this.promotion.id || this.$route.query.campaignId
     }
   },
   async mounted () {
-    // TODO: 获取计划信息, 待后端接口是否要修改
-    const promotion = await getCampaignInfo(this.campaignId)
-    this.promotion = pick(promotion, ['id', 'source', 'areas'])
-
     this.handleTrack('enter-page: create-group')
 
+    // 复制进入
+    const cloneId = this.$route.query.cloneId
+    if (cloneId) {
+      await this.cloneGroupById(cloneId)
+    } else {
+      const promotion = await getCampaignInfo(this.campaignId)
+      this.promotion = pick(promotion, ['id', 'source', 'areas'])
+    }
     this.campaignKeywordLen = await getCampaignKeywordsCount(this.campaignId)
   },
   methods: {
+    async cloneGroupById (groupId) {
+      const originGroup = await getGroupDetailByGroupId(groupId)
+      const originKeywords = await getKeywordsByGroupId(groupId)
+      this.promotion = this.group.campaign
+
+      const price = this.recommendKwPrice()
+
+      const keywords = originKeywords.map(o => ({ ...o, price }))
+      this.group = {
+        ...originGroup,
+        price,
+        keywords
+      }
+    },
+    recommendKwPrice () {
+      const keywords = this.promotion.keywords
+      // 复制推荐词价格取平均值
+      if (this.$route.query.cloneId) {
+        const sum = keywords.reduce((total, kw) => total + kw.price, 0)
+        return Math.min(Math.max(200, toFloat(sum / keywords.length)), 99900)
+      }
+      const max = Math.max.apply(null, keywords.map(kw => kw.price))
+      return Math.min(Math.max(200, toFloat(max, 0)), 99900)
+    },
     handleTrack (action, opts = {}) {
       const { actionTrackId, userInfo } = this
       track({
@@ -210,6 +245,7 @@ export default {
         this.isUpdating = false
       }
     }
+    // TODO: 凤凰于飞打点
   },
   components: {
     LandingComp,

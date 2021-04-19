@@ -19,15 +19,15 @@
                      align="center">
       <template slot-scope="{row}">
         <!-- TODO: 待后端确认状态 -->
-        <span class="btn"
+        <span :class="{btn: true, disabled: isSales }"
               v-if="true"
               @click="pauseGroup(row)">暂停</span>
-        <span class="btn"
+        <span :class="{btn: true, disabled: isSales }"
               v-if="false"
               @click="activeGroup(row)">开启</span>
         <span class="btn"
               @click="optimizeGroup(row)">优化</span>
-        <span class="btn"
+        <span :class="{btn: true, disabled: isSales }"
               @click="copyGroup(row)">复制</span>
       </template>
     </el-table-column>
@@ -43,6 +43,10 @@ export default {
     campaignId: {
       type: [String, Number],
       required: true
+    },
+    isSales: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -85,9 +89,9 @@ export default {
       })
     },
     copyGroup (group) {
-      this.$route.push({
-        name: 'qwt-update-group',
-        params: { cloneId: group.id }
+      this.$router.push({
+        name: 'qwt-create-group',
+        query: { cloneId: group.id }
       })
     }
   }
@@ -101,6 +105,13 @@ export default {
     cursor: pointer;
     &:not(:first-child) {
       margin-left: 6px;
+    }
+    &.disabled {
+      color: #c0c4cc;
+      cursor: not-allowed;
+      background-image: none;
+      background-color: #fff;
+      border-color: #ebeef5;
     }
   }
 }

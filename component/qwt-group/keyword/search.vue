@@ -73,6 +73,12 @@ export default {
     landingPage: {
       type: String,
       default: ''
+    },
+    creatives: {
+      type: Array,
+      default: () => {
+        return []
+      }
     }
   },
   components: {
@@ -90,10 +96,6 @@ export default {
       }
     }
   },
-  mounted () {
-    // TODO: 一键拓词推荐关键词临时数据
-    this._recommendKeywords = []
-  },
   methods: {
     async handleAddKeyword () {
       const val = this.word.trim()
@@ -103,19 +105,17 @@ export default {
       }
 
       try {
+        // 校验关键词是否满足条件
+        validateKeyword([val])
+
+        // 校验关键词是否已存在
         const isRemoteQuery = !!(this.campaignId || this.groupId)
         await getNotExistWords(this.allWords, [val], isRemoteQuery, {
           groupId: this.groupId,
           campaignId: this.campaignId
         })
-      } catch (e) {
-        return this.$message.info(e.message)
-      }
 
-      try {
         this.loading.addBtn = true
-        validateKeyword([val])
-        // TODO: campaignId 是否要更换为groupId
         const recommendKeywords = (await recommendByWord(val, { campaignId: this.campaignId })) || []
         const newKeywords = fmtNewKeywordsPrice(recommendKeywords).find(k => k.word === val)
         if (!newKeywords) return this.$message.info('没有合适的关键词')
@@ -130,30 +130,27 @@ export default {
       this.$emit('track', 'click-button: add-keyword')
     },
     async recommendKeywords () {
-      const { landingType, landingPage, areas, campaignId } = this
+      const { landingType, landingPage, areas } = this
       const recommendBody = {
         url: landingPage,
         areas,
-        campaignId,
-        landingType
+        landingType,
+        creativeTitle: this.creatives[0].title,
+        creativeContent: this.creatives[0].content
       }
-      // TODO: 针对官网做了创意标题和创意内容的传递，本期是否要做
+
       try {
         this.loading.recommendBtn = true
         const recommendKeywords = await recommendByUrl(recommendBody)
-        this._recommendKeywords = this._recommendKeywords.concat(recommendKeywords)
         if (!recommendKeywords.length) return this.$message.info('无法提供推荐关键词')
 
-        // 每次选取5个推荐词
+        // tip 每次选取5个推荐词
         const newKeywords = filterExistCurrentWords(this.allWords, fmtNewKeywordsPrice(recommendKeywords)).slice(0, 5)
-
-        // TODO: 根据接口获取当前keyword是否已存在否词或关键词列表
 
         if (!newKeywords.length) return this.$message.info('没有更多的关键词可以推荐啦')
         this.$emit('add-keywords', newKeywords.map(o => ({ ...o, isNew: true })))
 
-        // TODO: 凤凰于飞打点，查看凤凰于飞的使用情况（请教于飞）
-        // this.$emit('track-recommend', this._recommendKeywords)
+        this.$emit('track-recommend', recommendKeywords)
       } catch (e) {
         return this.$message.error(e.message)
       } finally {

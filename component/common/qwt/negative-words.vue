@@ -6,6 +6,8 @@
                 placeholder="请输入标题（字数限制9～25个字）" />
       <el-button class="btn"
                  type="primary"
+                 :disabled="isSales"
+                 :loading="loading"
                  @click="addNegativeWords">添加否定关键词</el-button>
       <span class="num" v-if="showTip">(否词关键词个数不得超过<strong>{{ NEGATIVE_KEYWORDS_MAX }}</strong>个, 当前否词数量:
         <strong>{{ negativeWords.length }}</strong>个）</span>
@@ -22,6 +24,8 @@
     </div>
     <negative-words-dialog :visible="negativeWordsDialogVisible"
                            :all-words="allWords"
+                           :campaigin-id="campaignId"
+                           :group-id="groupId"
                            @close="negativeWordsDialogVisible = false"
                            @update-negative-words="updateNegativeWords"
                            :negative-words="negativeWords" />
@@ -33,8 +37,7 @@ import negativeWordsDialog from 'com/common/qwt/negative-word-dialog'
 
 import { NEGATIVE_KEYWORDS_MAX } from 'constant/fengming'
 import { validateKeyword } from 'util/campaign'
-import { filterExistCurrentWords } from 'util/group'
-import { getWordsExistInGroup } from 'api/fengming'
+import { getNotExistWords } from 'util/group'
 
 export default {
   name: 'negative-words',
@@ -53,15 +56,26 @@ export default {
         return []
       }
     },
+    campaignId: {
+      type: [String, Number]
+    },
+    groupId: {
+      type: [String, Number]
+    },
     showTip: {
       type: Boolean,
       default: true
+    },
+    isSales: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
     return {
       word: '',
       negativeWordsDialogVisible: false,
+      loading: false,
 
       NEGATIVE_KEYWORDS_MAX
     }
@@ -77,26 +91,24 @@ export default {
         return this.$message.error(`否定关键词个数不能超过${NEGATIVE_KEYWORDS_MAX}`)
       }
 
-      const newWords = filterExistCurrentWords(this.allWords, [{ word: val }])
-      if (!newWords.length) return this.$message.error(`已存在该关键词或否定关键词：${val}`)
-
-      // TODO: 打接口获取已有的关键词列表
-      const a = await getWordsExistInGroup({
-        groupId: this.groupId,
-        keywords: newWords
-      })
-      console.log(a)
+      this.loading = true
 
       try {
         validateKeyword([val])
+        const isRemoteQuery = !!(this.campaignId || this.groupId)
+        // 校验是否已存在
+        await getNotExistWords(this.allWords, [val], isRemoteQuery, {
+          groupId: this.groupId,
+          campaignId: this.campaignId
+        })
+        this.$emit('add-negative-words', [{ word: val }])
+        this.$emit('track', 'click-button: add-negative-keyword')
       } catch (e) {
         return this.$message.error(e.message)
       } finally {
         this.word = ''
+        this.loading = false
       }
-      this.$emit('add-negative-words', [{ word: val }])
-
-      this.$emit('track', 'click-button: add-negative-keyword')
     },
     removeNegativeWord (idx) {
       this.$emit('remove-negative-words', idx)

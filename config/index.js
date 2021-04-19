@@ -24,7 +24,7 @@ const development = {
 }
 
 const local = {
-  fengmingApiHost: 'http://172.17.5.8:8000',
+  fengmingApiHost: 'http://localhost:8000',
   baxApiHost: '//bax.baixing.cn/bax',
   kaApiHost: '//bax.baixing.cn/ka/api/admin',
   biaowangApiHost: '//bax.baixing.cn/phoenixs/api',
@@ -61,3 +61,5 @@ export const identityBindingPage = config.identityBindingPage
 export const assetHost = config.assetHost
 export const upyun = config.upyun
 export const preKeywordPath = config.preKeywordPath
+
+export default config

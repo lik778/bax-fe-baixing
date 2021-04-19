@@ -37,6 +37,7 @@
 <script>
 import { validateKeyword } from 'util/campaign'
 import { NEGATIVE_KEYWORDS_MAX } from 'constant/fengming'
+import { getNotExistWords } from 'util/group'
 
 export default {
   name: 'negative-word-dialog',
@@ -55,6 +56,12 @@ export default {
     visible: {
       type: Boolean,
       required: true
+    },
+    campaignId: {
+      type: [String, Number]
+    },
+    groupId: {
+      type: [String, Number]
     }
   },
   data () {
@@ -73,7 +80,7 @@ export default {
       this.search = ''
       this.words = []
     },
-    addWords () {
+    async addWords () {
       if (this.search.trim() === '') {
         return this.$message.warning('还未添加关键词')
       }
@@ -88,21 +95,23 @@ export default {
       if (words.concat(this.negativeWords).length > NEGATIVE_KEYWORDS_MAX) {
         return this.$message.error(`否词个数不得超过${NEGATIVE_KEYWORDS_MAX}`)
       }
-      // 计划上否词，单元否词和关键词都不能重复, 重复直接过滤
-      const newWords = words.filter(x => !this.allWords.find(o => o.word.toLowerCase() === x.toLowerCase()))
-      if (!newWords.length) return this.$message.info('关键词已存在关键词或否词列表中，请更换关键词')
-
-      // TODO: 根据接口获取当前keyword是否已存在否词或关键词列表，重复直接过滤
 
       try {
-        validateKeyword(newWords)
+        validateKeyword(words)
+
+        // 校验是否已存在
+        const isRemoteQuery = !!(this.campaignId || this.groupId)
+        const newWords = await getNotExistWords(this.allWords, words, isRemoteQuery, {
+          groupId: this.groupId,
+          campaignId: this.campaignId
+        })
+
+        this.words = newWords.map(o => {
+          return { word: o }
+        })
       } catch (e) {
         return this.$message.error(e.message)
       }
-
-      this.words = newWords.map(o => {
-        return { word: o }
-      })
     }
   }
 }

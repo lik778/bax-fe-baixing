@@ -39,14 +39,14 @@ export async function getNotExistWords (
   let resWords = newWords.filter(w => !words.includes(w.toLowerCase()))
 
   // 接口校验： (计划关键词、单元否词、单元关键词)
-  if (isRemoteQuery) {
+  if (isRemoteQuery && resWords.length) {
     const existWords = (await getWordsExistInGroupOrCampaign({
       ...queryOpts,
       keywords: resWords
     }) || []).map(o => o.toLowerCase())
     resWords = resWords.filter(w => !existWords.includes(w.toLowerCase()))
   }
-  console.log(resWords)
+
   if (!resWords.length) throw new Error('关键词已存在关键词或否词列表中，请更换关键词')
   return resWords
 }

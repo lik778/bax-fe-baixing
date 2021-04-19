@@ -7,13 +7,20 @@
     <div class="module">
       <h4>计划设置</h4>
       <div class="content">
-        <promotion-comp :is-sales="isSales"
-                        :all-areas="allAreas"
+        <promotion-comp :all-areas="allAreas"
+                        :is-sales="isSales"
                         :promotion="promotion"
                         :current-balance="currentBalance"
-                        @add-negative-words="(words) =>(promotion.negativeWords = words.concat(promotion.negativeWords))"
-                        @remove-negative-words="(idx) => promotion.negativeWords.splice(idx, 1)"
-                        @update-promotion="(type, data) => (promotion[type] = data)" />
+                        @update-promotion="(type, data) => (promotion[type] = data)">
+          <negative-words-comp :negative-words="promotion.negativeWords"
+                               :all-words="promotion.negativeWords"
+                               :campaign-id="campaignId"
+                               :is-sales="isSales"
+                               @track="(action, opts) => handleTrack(action, opts)"
+                               @add-negative-words="(words) =>(promotion.negativeWords = words.concat(promotion.negativeWords))"
+                               @remove-negative-words="(idx) => promotion.negativeWords.splice(idx, 1)"
+                               slot="negative" />
+        </promotion-comp>
       </div>
     </div>
 
@@ -23,11 +30,13 @@
       <div class="content">
         <el-button @click="handleGoGroup"
                    type="primary"
+                   :disabled="isSales"
                    class="add-group-btn">
           <i class="el-icon-plus" />
           新增单元
         </el-button>
-        <group-table-comp :campaign-id="campaignId" />
+        <group-table-comp :campaign-id="campaignId"
+                          :is-sales="isSales" />
       </div>
     </div>
 
@@ -54,6 +63,7 @@ import PromotionComp from './promotion'
 import GroupTableComp from './group-table'
 import ContractAck from 'com/widget/contract-ack'
 import PromotionChargeTip from 'com/widget/promotion-charge-tip'
+import NegativeWordsComp from 'com/common/qwt/negative-words'
 
 import { isBaixingSales } from 'util/role'
 import { getCurrentBalance, getCampaignInfo, updateCampaign } from 'api/fengming'
@@ -63,6 +73,7 @@ import { toHumanTime } from 'utils'
 import isEqual from 'lodash.isequal'
 import { CAMPAIGN_STATUS_OFFLINE } from 'constant/fengming'
 import { getCampaignValidTime } from 'util/campaign'
+import { filterExistCurrentWords } from 'util/group'
 import track from 'util/track'
 import uuid from 'uuid/v4'
 
@@ -85,7 +96,8 @@ export default {
     PromotionComp,
     GroupTableComp,
     ContractAck,
-    PromotionChargeTip
+    PromotionChargeTip,
+    NegativeWordsComp
   },
   props: {
     userInfo: {
@@ -155,7 +167,6 @@ export default {
       })
     },
     async getCampaignInfo () {
-      // TODO: 根据计划id获取计划详情
       const info = await getCampaignInfo(this.campaignId)
       info.dailyBudget = info.dailyBudget / 100
       if (info.timeRange && info.timeRange.length && info.timeRange[0] !== null && info.timeRange[1] !== null) {
@@ -191,7 +202,6 @@ export default {
         ...this.getUpdatedNegativeWordData()
       })
 
-      // TODO: 更新计划接口是否要更改，待后端确认
       await updateCampaign(this.campaignId, data)
 
       this.handleTrack('leave-page: update-campaign')
@@ -213,11 +223,17 @@ export default {
       }
     },
     getUpdatedPromotionData () {
+      function isScheduleChange (originArr, arr) {
+        for (let i = 0; i < originArr.length; i++) {
+          if (originArr[i] !== arr[i]) return true
+        }
+        return false
+      }
+
       const data = {}
       const { areas, dailyBudget, schedule, validTime } = this.promotion
 
-      const areasUnion = [...new Set([...areas, this.originPromotion.areas])]
-      if (areasUnion.length !== areas.length) {
+      if (!isEqual(areas, this.originPromotion.areas)) {
         data.areas = areas
       }
 
@@ -225,8 +241,7 @@ export default {
         data.dailyBudget = dailyBudget * 100
       }
 
-      const scheduleUnion = [...new Set([...schedule, this.originPromotion.schedule])]
-      if (scheduleUnion.length !== schedule.length) {
+      if (isScheduleChange(this.originPromotion.schedule, schedule)) {
         data.schedule = schedule
       }
 
@@ -241,8 +256,8 @@ export default {
       const data = {}
       const { negativeWords } = this.promotion
       const originNegativeWords = this.originPromotion.negativeWords
-      const newNegativeKeywords = negativeWords.filter(x => !originNegativeWords.find(o => o.word === x.word))
-      const deletedNegativeKeywords = originNegativeWords.filter(x => !negativeWords.find(o => o.word === x.word)).map(i => i.id)
+      const newNegativeKeywords = filterExistCurrentWords(originNegativeWords, negativeWords)
+      const deletedNegativeKeywords = filterExistCurrentWords(negativeWords, originNegativeWords)
       if (newNegativeKeywords.length) data.newNegativeKeywords = newNegativeKeywords
       if (deletedNegativeKeywords.length) data.deletedNegativeKeywords = deletedNegativeKeywords
       return data

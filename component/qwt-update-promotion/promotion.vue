@@ -11,8 +11,7 @@
                 @close="onRemoveArea(area)">
           {{ formatterArea(area) }}
         </el-tag>
-        <i class="el-icon-plus"
-           v-if="!isSales"
+        <i class="el-icon-plus" v-if="!isSales"
            @click="areaDialogVisible = true" />
       </div>
     </section>
@@ -25,7 +24,7 @@
       <div class="cont">
         <el-input type="number"
                   class="budget-input"
-                  :disabled="isSales || !modifyBudgetQuota"
+                  :disabled="!modifyBudgetQuota || isSales"
                   :value="promotion.dailyBudget"
                   @input="onChangeDaliyBudget" />
         <span class="budget-tip"
@@ -47,6 +46,7 @@
         <el-button class="duration-type"
                    type="primary"
                    plain
+                   :disabled="isSales"
                    @click="durationSelectorVisible = true">设置</el-button>
       </div>
     </section>
@@ -54,9 +54,9 @@
       <div class="desc">投放时间</div>
       <div class="cont">
         <el-button-group>
-          <el-button :disabled="isSales"
-                     v-for="(val, key) in TIME_TYPE_OPTS"
+          <el-button v-for="(val, key) in TIME_TYPE_OPTS"
                      :key="key"
+                     :disabled="isSales"
                      @click="onChangeTimeType(key)"
                      :type="timeType === key ? 'primary' : ''">
             {{ val }}
@@ -83,9 +83,7 @@
         </el-tooltip>
       </div>
       <div class="cont">
-        <negative-words-comp :negative-words="promotion.negativeWords"
-                             :all-words="promotion.negativeWords.concat(promotion.keywords)"
-                             v-on="$listeners" />
+        <slot name="negative" />
       </div>
     </section>
 
@@ -110,7 +108,6 @@
 <script>
 import AreaSelector from 'com/common/area-selector'
 import DurationSelector from 'com/common/duration-selector'
-import NegativeWordsComp from 'com/common/qwt/negative-words'
 
 import { getCnName, isQwtEnableCity } from 'util/meta'
 import { disabledDate } from 'util/element'
@@ -136,8 +133,7 @@ export default {
     },
     isSales: {
       type: Boolean,
-      required: true,
-      default: true
+      default: false
     },
     promotion: {
       type: Object,
@@ -236,8 +232,7 @@ export default {
   },
   components: {
     AreaSelector,
-    DurationSelector,
-    NegativeWordsComp
+    DurationSelector
   }
 }
 </script>

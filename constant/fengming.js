@@ -261,7 +261,6 @@ export const emptyGroup = {
   landingPage: '',
   landingPageId: '',
   name: '',
-  status: '',
   creatives: [{
     title: '',
     content: ''
@@ -273,3 +272,6 @@ export const emptyGroup = {
 }
 
 export const KEYWORDS_MAX = 5000
+
+export const FHYF_USERD = 1
+export const FHYF_UN_USE = 0

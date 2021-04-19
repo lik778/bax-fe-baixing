@@ -40,8 +40,10 @@
                          :landing-page="group.landingPage"
                          :landing-type="group.landingType"
                          :sources="[promotion.source]"
+                         :creatives="group.creatives"
                          :all-words="keywords.concat(group.negativeWords)"
                          @track="(action, opts) => handleTrack(action, opts)"
+                         @track-recommend="(arr) => getRecommendData"
                          @add-keywords="handleAddKeywords" />
           </div>
           <div class="pane">
@@ -124,12 +126,14 @@ import {
   NEGATIVE_KEYWORDS_MAX,
   emptyGroup,
   emptyCampaign,
-  KEYWORDS_MAX
+  KEYWORDS_MAX,
+  FHYF_USERD,
+  FHYF_UN_USE
 } from 'constant/fengming'
 import clone from 'clone'
 import uuid from 'uuid/v4'
 import { updateValidator } from './validate'
-import track from 'util/track'
+import track, { trackRecommendService } from 'util/track'
 import { filterExistCurrentWords } from 'util/group'
 
 import {
@@ -176,17 +180,25 @@ export default {
       isSearchCondition: false,
       searchWord: '',
 
-      campaignKeywordLen: 0
+      campaignKeywordLen: 0,
+      recommendList: null
     }
   },
   computed: {
     keywordRemainCount () {
-      const newKeywords = this.keywords.filter(o => o.isNew)
-      const deletedKeywords = this.keywords.filter(o => o.isDel)
-      return KEYWORDS_MAX - (this.campaignKeywordLen + newKeywords.length - deletedKeywords.length)
+      return KEYWORDS_MAX - (this.campaignKeywordLen + this.newKeywords.length - this.deletedKeywords.length)
     },
     groupId () {
       return this.$route.params.id
+    },
+    newKeywords () {
+      return this.keywords.filter(o => o.isNew)
+    },
+    deletedKeywords () {
+      return this.keywords.filter(o => o.isDel)
+    },
+    updatedKeywords () {
+      return this.keywords.filter(o => o.isUpdated)
     }
   },
   async mounted () {
@@ -199,7 +211,7 @@ export default {
     try {
       const originGroup = await getGroupDetailByGroupId(this.groupId)
       this.originGroup = originGroup
-      this.promotion = clone(this.originGroup.promotion)
+      this.promotion = clone(this.originGroup.campaign)
       this.group = clone(this.originGroup)
 
       this.originKeywords = await getKeywordsByGroupId(this.groupId)
@@ -220,6 +232,33 @@ export default {
       }
       Object.assign(this.group, type)
     },
+    getRecommendData (arr) {
+      this.recommendList = (this.recommendList || []).concat(arr)
+    },
+    trackPromotionKeywords () {
+      // TODO: 确认一下是否要打点
+      const recommendKeywords = [...new Set(this.recommendKeywords || [])]
+
+      trackRecommendService({
+        action: 'record-promotion-keywords',
+
+        id: this.id,
+        areas: this.promotion.areas,
+        landingPage: this.group.landingPage,
+        creativeTitle: this.group.creatives[0].title,
+        creativeContent: this.group.creatives[0].content,
+        source: this.promotion.source,
+        dailyBudget: this.promotion.dailyBudget,
+        landingType: this.group.landingType,
+        useRecommendKeywords: Array.isArray(this._recommendKeywords) ? FHYF_USERD : FHYF_UN_USE, // 是否使用一键拓词功能
+
+        recommendKeywords: recommendKeywords.map(({ word, recommandSource = 'user_selected', price }) => `${word}=${recommandSource}=${price}`).join(','),
+        newKeywords: this.newKeywords.map(({ word, recommandSource = 'user_selected', price }) => `${word}=${recommandSource}=${price}`).join(','),
+        deletedKeywords: this.deletedKeywords.map(({ word, price }) => `${word}=${price}`).join(','),
+        updatedKeywords: this.updatedKeywords.map(({ word, price }) => `${word}=${price}`).join(',')
+      })
+    },
+
     handleTrack (action, opts = {}) {
       const { userInfo, actionTrackId } = this
       track({
@@ -258,6 +297,7 @@ export default {
         await this.validateGroup()
         this.isUpdating = true
         await this._updateGroup()
+        await trackRecommendService()
       } catch (e) {
         return this.$message.error(e.message)
       } finally {
@@ -284,10 +324,11 @@ export default {
     },
     getUpdatedLandingData () {
       const data = {}
-      const { landingPage, landingType, landingPageId } = this
+      const { landingPage, landingType, landingPageId, mobilePriceRatio } = this
       if (landingType !== this.originGroup.landingType) data.landingType = landingType
       if (landingPage !== this.originGroup.landingPage) data.landingPage = landingPage
       if (landingPageId !== this.originGroup.landingPageId) data.landingPageId = landingPageId
+      if (mobilePriceRatio !== this.originGroup.mobilePriceRatio) data.mobilePriceRatio = mobilePriceRatio
       return data
     },
     getUpdatedNegativeWordData () {
@@ -316,12 +357,9 @@ export default {
     },
     getUpdatedKeywordData () {
       const data = {}
-      const newKeywords = this.keywords.filter(o => o.isNew)
-      const deletedKeywords = this.keywords.filter(o => o.isDel).map(o => o.id)
-      const updatedKeywords = this.keywords.filter(o => o.isUpdated)
-      if (newKeywords.length) data.newKeywords = newKeywords
-      if (deletedKeywords.length) data.deletedKeywords = deletedKeywords
-      if (updatedKeywords.length) data.updatedKeywords = updatedKeywords
+      if (this.newKeywords.length) data.newKeywords = this.newKeywords
+      if (this.deletedKeywords.length) data.deletedKeywords = this.deletedKeywords
+      if (this.updatedKeywords.length) data.updatedKeywords = this.updatedKeywords
       return data
     }
   },

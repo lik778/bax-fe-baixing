@@ -152,7 +152,6 @@ export default {
     async fetchWords (words) {
       const queryOpts = {}
       if (this.sources.length) queryOpts.sources = this.sources
-      // TODO: campaign_id是否要更换为group_id
       const result = await recommendByWordList(words, { campaignId: this.campaignId })
       if (!(result && isObj(result))) return
       for (const key in result) {
