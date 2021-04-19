@@ -17,6 +17,15 @@ const config = merge(base, {
     overlay: { warnings: false, errors: true },
     quiet: false,
     stats: 'errors-only',
+    proxy: {
+      '/devApi': {
+        target: 'http://172.17.13.192:8080',
+        pathRewrite: {
+          '^/devApi': '/'
+        },
+        changeOrigin: true
+      }
+    },
     historyApiFallback: {
       rewrites: [
         {

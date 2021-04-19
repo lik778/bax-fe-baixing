@@ -62,14 +62,28 @@
                 {{ tip.keyword }}</span
               >
               <div class="keywords-con">
-                <el-tag
-                  v-for="(word, idx) in form.keywords"
-                  class="keyword-tag"
-                  :closable="!isEdit"
-                  :key="idx"
-                  @close="() => removeKeyword(word)"
-                  >{{ word }}</el-tag
-                >
+                  <el-tooltip
+                    effect="light"
+                    v-for="(word, idx) in form.keywords"
+                    :key="idx"
+                    placement="right"
+                    :content="word.prompt"
+                   >
+                      <el-tag
+                        class="keyword-tag"
+                        :closable="!isEdit"
+                        @close="() => removeKeyword(word.value)"
+                        >
+                        {{ word.value }}
+                        <i v-if="form.keywords[0].code === '2'" class="el-icon-error icon icon-error" />
+                        <i v-if="form.keywords[0].code === '0'" class="el-icon-warning icon icon-warning"/>
+                      </el-tag >
+                  </el-tooltip>
+                  <transition name="fade">
+                    <div v-if="isFirstQuery" class="bax-tooltip">
+                      <span v-for="(word, idx) in form.keywords" :key="idx">{{word.prompt}}</span>
+                    </div>
+                  </transition>
               </div>
             </el-form-item>
             <el-form-item label="推广区域" prop="areas">
@@ -120,7 +134,7 @@
 </template>
 
 <script>
-import { getPromote, getPackageList } from 'api/qianci'
+import { getPromote, getPackageList, checkCoreWord } from 'api/qianci'
 import QcAreaSelector from 'com/qc-create-promote/qc-area-selector'
 import { ONE_WORD_TWO_PROVINCE, THREE_WORD_ONE_PROVINCE, PACKAGE_TYPE, SKU_OPTIMIZED } from 'constant/qianci'
 import SelectKeywords from './select-keywords'
@@ -140,6 +154,7 @@ export default {
   },
   data () {
     return {
+      isFirstQuery: false,
       promote: null,
       input: {
         keyword: ''
@@ -281,16 +296,38 @@ export default {
       this.tip.keyword = ''
       this.initFormVals()
     },
-    selectKeyword (value = this.input.keyword) {
+    async selectKeyword (value = this.input.keyword) {
       const valid =
         value &&
         this.restKeywordLength > 0 &&
         !this.form.keywords.includes(value) &&
         this.validKeywords([value], false)
       if (valid) {
-        this.form.keywords.push(value)
+        const loading = this.$loading({
+          lock: true,
+          text: 'Loading',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)'
+        })
+        const params = {
+          coreWord: value
+        }
         this.input.keyword = ''
         this.tip.keyword = ''
+        const result = await checkCoreWord(params)
+        loading.close()
+        const { code, prompt } = result
+        this.form.keywords.push({
+          code: code,
+          value: value,
+          prompt: prompt
+        })
+        this.isFirstQuery = true
+        let timer = setTimeout(() => {
+          this.isFirstQuery = false
+          timer = null
+          clearTimeout(timer)
+        }, 3000)
       }
     },
     removeKeyword (wordToRemove) {
@@ -302,7 +339,7 @@ export default {
     },
     async checkWord () {
       this.$refs.form.validate(async (isValid) => {
-        const isKeywordValid = this.validKeywords()
+        const isKeywordValid = this.validKeywords([this.form.keywords.value], true)
         if (isValid && isKeywordValid) {
           this.keywordsPanelVisible = true
           this.$nextTick(() => {
@@ -539,14 +576,62 @@ export default {
 }
 .keywords-con {
   margin-top: 13px;
-
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity .5s;
+  }
+  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+    opacity: 0;
+  }
+  .bax-tooltip{
+    display: inline-block;
+    border: 1px solid #333;
+    padding: 0;
+    border-radius: 3px;
+    margin-left: 10px;
+    font-size: 12px;
+    position: relative;
+    span{
+      position: relative;
+      z-index: 3;
+      background-color: #fff;
+      border-radius: 3px;
+      padding: 8px;
+      line-height: 16px;
+    }
+    &::after{
+      position: absolute;
+      content: '';
+      width: 10px;
+      height: 10px;
+      border: 1px solid #333;
+      display: inline-block;
+      left: 0;
+      top: 40%;
+      margin-left: -6px;
+      transform: rotate(45deg);
+      background-color: #fff;
+    }
+  }
   & > .keyword-tag {
     margin-left: 10px;
     color: #00a5ff;
     border-color: #00a5ff;
     background: #eef9ff;
     font-size: 14px;
-
+    position: relative;
+    .icon{
+      position: absolute;
+      margin-top: -7px;
+      margin-right: -4px;
+      right: 0;
+      background-color: #fff;
+    }
+    .icon-error{
+      color: #F56C6C;
+    }
+    .icon-warning{
+      color: #E6A23C;
+    }
     &:first-child {
       margin-left: 0;
     }
@@ -566,4 +651,5 @@ export default {
   height: 32px;
   line-height: 0px;
 }
+
 </style>
