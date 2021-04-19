@@ -65,10 +65,10 @@
                   <el-tooltip
                     effect="light"
                     v-for="(word, idx) in form.keywords"
-                    :value="isFirstQuery"
                     :key="idx"
-                    placement="right-start"
-                    :content="word.prompt">
+                    placement="right"
+                    :content="word.prompt"
+                   >
                       <el-tag
                         class="keyword-tag"
                         :closable="!isEdit"
@@ -79,6 +79,11 @@
                         <i v-if="form.keywords[0].code === '0'" class="el-icon-warning icon icon-warning"/>
                       </el-tag >
                   </el-tooltip>
+                  <transition name="fade">
+                    <div v-if="isFirstQuery" class="bax-tooltip">
+                      <span v-for="(word, idx) in form.keywords" :key="idx">{{word.prompt}}</span>
+                    </div>
+                  </transition>
               </div>
             </el-form-item>
             <el-form-item label="推广区域" prop="areas">
@@ -318,8 +323,9 @@ export default {
           prompt: prompt
         })
         this.isFirstQuery = true
-        const timer = setTimeout(() => {
+        let timer = setTimeout(() => {
           this.isFirstQuery = false
+          timer = null
           clearTimeout(timer)
         }, 3000)
       }
@@ -570,6 +576,42 @@ export default {
 }
 .keywords-con {
   margin-top: 13px;
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity .5s;
+  }
+  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+    opacity: 0;
+  }
+  .bax-tooltip{
+    display: inline-block;
+    border: 1px solid #333;
+    padding: 0;
+    border-radius: 3px;
+    margin-left: 10px;
+    font-size: 12px;
+    position: relative;
+    span{
+      position: relative;
+      z-index: 3;
+      background-color: #fff;
+      border-radius: 3px;
+      padding: 8px;
+      line-height: 16px;
+    }
+    &::after{
+      position: absolute;
+      content: '';
+      width: 10px;
+      height: 10px;
+      border: 1px solid #333;
+      display: inline-block;
+      left: 0;
+      top: 40%;
+      margin-left: -6px;
+      transform: rotate(45deg);
+      background-color: #fff;
+    }
+  }
   & > .keyword-tag {
     margin-left: 10px;
     color: #00a5ff;
@@ -609,4 +651,5 @@ export default {
   height: 32px;
   line-height: 0px;
 }
+
 </style>
