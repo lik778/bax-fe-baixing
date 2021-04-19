@@ -166,15 +166,17 @@ export default {
     getStatusClass (s) {
       const statusIDX = [
         this.MATERIAL_PIC_AUDIT_TYPE.AUDITING,
-        this.MATERIAL_PIC_AUDIT_TYPE.SUCCESS,
-        this.MATERIAL_PIC_AUDIT_TYPE.FAILED
+        this.MATERIAL_PIC_AUDIT_TYPE.FAILED,
+        this.MATERIAL_PIC_AUDIT_TYPE.ONLINE,
+        this.MATERIAL_PIC_AUDIT_TYPE.OFFLINE
       ].findIndex(x => x.includes(s))
 
       return [
         'auditing',
-        'success',
-        'failed'
-      ][statusIDX]
+        'failed',
+        'online',
+        'offline'
+      ][statusIDX] || ''
     }
   }
 }
@@ -262,10 +264,16 @@ export default {
           content: '审核中';
         }
       }
-      &.success {
+      &.online {
         background: #62b345;
         .status-text::after {
-          content: '审核成功';
+          content: '已生效';
+        }
+      }
+      &.offline {
+        background: #ff6350;
+        .status-text::after {
+          content: '已下线';
         }
       }
       &.failed {
