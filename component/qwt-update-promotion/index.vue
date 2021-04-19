@@ -1283,7 +1283,7 @@ export default {
           ;[...pc, ...wap].forEach(img => {
             const findFirstError = errors.find(x => x.url === img.url)
             if (findFirstError) {
-              img.status = MATERIAL_PIC_STATUS.STATUS_DELETED
+              img.status = MATERIAL_PIC_STATUS.STATUS_CHIBI_REJECT
               lastErrorReason = findFirstError.reject_message || '部分图片审核失败，请检查并重新上传'
             }
           })
