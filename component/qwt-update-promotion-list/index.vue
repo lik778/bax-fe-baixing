@@ -146,7 +146,7 @@
                     trigger="hover"
                     placement="top"
                   >
-                    <p>您的推广在{{ scope.row.status_text }}中</p>
+                    <p>您的推广在{{ scope.row.status_text}}中</p>
                     <span
                       slot="reference"
                       class="name-wrapper"
@@ -404,7 +404,7 @@ import {
   columns,
   filterOptimization
 } from './constant'
-import { toCamelcase } from 'object-keys-mapping'
+// import { toCamelcase } from 'object-keys-mapping'
 import AreaSelector from 'com/common/area-selector'
 import BaxInput from 'com/common/input'
 import { getCurrentCampaigns, getCampaignList } from 'api/fengming-campaign'
@@ -418,14 +418,14 @@ import {
 } from 'constant/fengming'
 const CNT_REJECTED_CODE = '-53'
 const ONE_PAGE_NUM = 10
-const formatlandingPageList = (res) => {
-  return Object.entries(res).reduce((list, [k, v]) => {
-    return list.concat({
-      ...v,
-      id: k
-    })
-  }, [])
-}
+// const formatlandingPageList = (res) => {
+//   return Object.entries(res).reduce((list, [k, v]) => {
+//     return list.concat({
+//       ...v,
+//       id: k
+//     })
+//   }, [])
+// }
 
 export default {
   name: 'qwt-promotion-list',
@@ -620,15 +620,17 @@ export default {
       // 重置campaignMap
       this.campaignMap = {}
       try {
-        console.log(this.queryParams)
         const result = await getCampaignList(this.queryParams)
         // const result = await getCampaignLanding(this.queryParams)
-        const { total, ...pageList } = result
+        const { total, data } = result
         this.totalPage = total
         // toCamelcase 插件有个坑（当object的key值为url格式时，转换对象的key有问题）
-        this.landingPageList = Object.freeze(
-          toCamelcase(formatlandingPageList(pageList))
-        )
+        // this.landingPageList = Object.freeze(
+        //   toCamelcase(formatlandingPageList(pageList))
+        // )
+        this.tableData = data
+        console.log('==', this.tableData)
+        // console.log('==', this.landingPageList)
       } catch (err) {
         console.error(err)
       } finally {

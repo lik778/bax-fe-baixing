@@ -1,7 +1,7 @@
 
 import {
   campaignOptimization,
-  semPlatformOpts
+  semPlatformCn
 } from 'constant/fengming'
 const CAMPAIGN_OPTIMIZATION_OPTS = Object.freeze(
   [
@@ -84,7 +84,10 @@ const columns = [
     prop: 'source',
     lable: '渠道',
     template: false,
-    formatter: (row, column, cellValue) => semPlatformOpts.filter(item => item.value === cellValue)[0].label
+    formatter: (row, column, cellValue) => {
+      console.log('--', cellValue)
+      return semPlatformCn[cellValue]
+    }
   }
 ]
 const unitData = [
