@@ -189,12 +189,18 @@ export default {
       if (restCount) {
         return `请再上传${restCount}张电脑端图片`
       }
+      if (this.forms.pc.find(x => MATERIAL_PIC_AUDIT_TYPE.FAILED.includes(x.status))) {
+        return '电脑端仍有审核失败的图片'
+      }
       return null
     },
     validateWAPError () {
       const restCount = this.typeConfig.countLimit.wap - this.forms.wap.length
       if (restCount) {
         return `请再上传${restCount}张手机端图片`
+      }
+      if (this.forms.wap.find(x => MATERIAL_PIC_AUDIT_TYPE.FAILED.includes(x.status))) {
+        return '手机端仍有审核失败的图片'
       }
       return null
     },
@@ -284,7 +290,9 @@ export default {
         return {
           isValid: false,
           isValidPC: !this.validatePCError,
-          isValidWAP: !this.validateWAPError
+          isValidWAP: !this.validateWAPError,
+          validPCReason: this.validatePCError,
+          validWAPReason: this.validateWAPError
         }
       } else {
         const isNewImageFromRaw = raw => x => !x.id || !raw.find(y => x.url === y.url)
@@ -303,6 +311,8 @@ export default {
           isValid: true,
           isValidPC: !this.validatePCError,
           isValidWAP: !this.validateWAPError,
+          validPCReason: this.validatePCError,
+          validWAPReason: this.validateWAPError,
           type: forms.type,
           add,
           del

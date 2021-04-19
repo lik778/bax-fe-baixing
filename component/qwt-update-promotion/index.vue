@@ -1240,7 +1240,9 @@ export default {
     },
     validMaterialPictures () {
       if (!this.materialPictures.isValid) {
-        return this.$message.error('请按要求上传创意配图')
+        const { validPCReason, validWAPReason } = this.materialPictures
+        const errMsg = validPCReason || validWAPReason || '请按要求上传创意配图'
+        return this.$message.error(errMsg)
       } else {
         const validPC = this.materialPictures.isValidPC
         const validWAP = this.materialPictures.isValidWAP
