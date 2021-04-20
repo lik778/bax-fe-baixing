@@ -78,7 +78,7 @@
                   </span>
                 </template>
             </el-table-column>
-            <el-table-column prop="daily_budget" label="今日消耗" align="center" />
+            <el-table-column prop="today_cost" label="今日消耗" align="center" />
             <el-table-column
                 prop=""
                 label="操作"
@@ -146,10 +146,14 @@ export default {
   },
   methods: {
     async editeBudget (row) {
+      console.log(row.id)
       this.dailyBudget = {
         id: row.id,
         value: (row.daily_budget / 100).toFixed(2)
       }
+    },
+    updateBudgetEditeStatus () {
+      this.dailyBudget.id = undefined
     }
   }
 }

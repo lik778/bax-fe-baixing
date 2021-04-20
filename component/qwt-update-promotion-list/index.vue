@@ -1,243 +1,42 @@
 <template>
   <div class="qwt-promotion-list">
-    <div class="top-tips">
-      <p
-        class="info"
-        v-if="summary && summary.budget"
-      >
-        您的推广资金可用余额为<span class="red">{{ f2y(currentBalance) }}元</span>，预计可消耗<span class="red">{{ days }}天</span>
-        <label v-if="userInfo.allowFmRecharge">为了保证您的广告正常投放，请及时<router-link :to="{ name: 'qwt-charge' }">充值</router-link></label>
-      </p>
-    </div>
+    <topTips :userInfo="userInfo" />
     <main class="container">
       <h2 class="header">我的站外推广计划</h2>
       <div class="action-group">
         <div class="top">
-          <el-button
-            class="button"
-            icon="el-icon-plus"
-            type="primary"
-            @click="() => $router.push({ name: 'qwt-create-promotion' })"
-          >新建推广计划</el-button>
-          <a
-            href="javascript:;"
-            class="expand-button"
-            @click="isActionGroupExpand = !isActionGroupExpand"
-          >
+          <el-button class="button" icon="el-icon-plus" type="primary" @click="() => $router.push({ name: 'qwt-create-promotion' })">新建推广计划</el-button>
+          <a href="javascript:;" class="expand-button" @click="isActionGroupExpand = !isActionGroupExpand" >
             更多筛选
-            <i
-              class="icon"
-              :class="
-                isActionGroupExpand ? 'el-icon-arrow-up' : 'el-icon-arrow-down'
-              "
-            />
+            <i class="icon" :class=" isActionGroupExpand ? 'el-icon-arrow-up' : 'el-icon-arrow-down'" />
           </a>
         </div>
-        <el-tabs
-          v-model="activeName"
-          @tab-click="toggleTab"
-          type="card"
-        >
-          <el-tab-pane
-            label="计划"
-            name="plan"
-          >
-            <div v-show="isActionGroupExpand">
-              <div class="column">
-                <span class="title">计划id</span>
-                <el-select
-                  v-model="queryParams.value"
-                  placeholder="请选择"
-                >
-                  <el-option
-                    v-for="item in options"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  >
-                  </el-option>
-                </el-select>
-              </div>
-              <div class="column">
-                <h6 class="title">投放状态</h6>
-                <div class="checkbox-group">
-                  <el-checkbox-group v-model="queryParams.statuses">
-                    <el-checkbox
-                      class="checkbox"
-                      v-for="c in CAMPAIGN_STATUS_OPTS"
-                      :key="c.value"
-                      :label="c.value"
-                    >
-                      {{ c.label }}
-                    </el-checkbox>
-                  </el-checkbox-group>
-                </div>
-              </div>
-              <div class="column source">
-                <h6 class="title">渠道来源</h6>
-                <div class="checkbox-group">
-                  <el-checkbox-group v-model="queryParams.source">
-                    <el-checkbox
-                      class="checkbox"
-                      v-for="c in SOURCES_OPTS"
-                      :key="c.value"
-                      :label="c.value"
-                    >
-                      {{ c.label }}
-                    </el-checkbox>
-                  </el-checkbox-group>
-                </div>
-              </div>
-              <div class="column area">
-                <span class="title">投放区域</span>
-                <el-tag
-                  v-for="a in queryParams.areas"
-                  @close="removeSelectedArea(a)"
-                  :key="a"
-                  type="danger"
-                  :closable="true"
-                  class="tag"
-                >
-                  {{ a | transformCityName(allAreas) }}
-                </el-tag>
-                <i
-                  class="el-icon-plus icon"
-                  @click="areaDialogVisible = true"
-                />
-              </div>
-            </div>
-            <div class="column">
-              <h6 class="title hightlight">投放优化</h6>
-              <div class="checkbox-group">
-                <el-checkbox-group v-model="queryParams.statuses">
-                  <el-checkbox
-                    class="checkbox"
-                    v-for="c in CAMPAIGN_OPTIMIZATION_OPTS"
-                    :key="c.value"
-                    :label="c.value"
-                  >
-                    {{ c.label }}
-                  </el-checkbox>
-                </el-checkbox-group>
-              </div>
-            </div>
-            <promotionTable :modifyBudget="modifyBudget" :list="promotionList" :loading="landingPageLoading" />
+        <el-tabs v-model="activeName" @tab-click="toggleTab" type="card" >
+          <el-tab-pane label="计划" name="plan" >
+            <baxForm @fetchData="(args)=> fetchlandingPageList({ ...args })" :formData="queryParams" :allAreas="allAreas" :fetchData="fetchlandingPageList" :isActionGroupExpand="isActionGroupExpand" :tab="activeName"/>
+            <promotionTable ref="promoteTable" :modifyBudget="modifyBudget" :list="promotionList" :loading="landingPageLoading" />
           </el-tab-pane>
-          <el-tab-pane
-            label="单元"
-            name="unit"
-          >
-            <div v-show="isActionGroupExpand">
-              <div class="column">
-                <span class="title">计划id</span>
-                <el-select
-                  v-model="queryParams.value"
-                  placeholder="请选择"
-                >
-                  <el-option
-                    v-for="item in options"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  >
-                  </el-option>
-                </el-select>
-              </div>
-              <div class="column">
-                <h6 class="title">投放状态</h6>
-                <div class="checkbox-group">
-                  <el-checkbox-group v-model="queryParams.statuses">
-                    <el-checkbox
-                      class="checkbox"
-                      v-for="c in CAMPAIGN_STATUS_OPTS"
-                      :key="c.value"
-                      :label="c.value"
-                    >
-                      {{ c.label }}
-                    </el-checkbox>
-                  </el-checkbox-group>
-                </div>
-              </div>
-              <div class="column source">
-                <h6 class="title">渠道来源</h6>
-                <div class="checkbox-group">
-                  <el-checkbox-group v-model="queryParams.source">
-                    <el-checkbox
-                      class="checkbox"
-                      v-for="c in SOURCES_OPTS"
-                      :key="c.value"
-                      :label="c.value"
-                    >
-                      {{ c.label }}
-                    </el-checkbox>
-                  </el-checkbox-group>
-                </div>
-              </div>
-            </div>
-            <div class="column">
-              <h6 class="title hightlight">投放优化</h6>
-              <div class="checkbox-group">
-                <el-checkbox-group v-model="queryParams.statuses">
-                  <el-checkbox
-                    class="checkbox"
-                    v-for="c in CAMPAIGN_OPTIMIZATION_OPTS"
-                    :key="c.value"
-                    :label="c.value"
-                  >
-                    {{ c.label }}
-                  </el-checkbox>
-                </el-checkbox-group>
-              </div>
-            </div>
-            <div class="column">
-              <span class="title">单元名称</span>
-              <bax-input
-                class="input"
-                placeholder="请输入单元名称"
-                suffix-icon="el-icon-search"
-                v-model="queryParams.unitName"
-              />
-            </div>
+          <el-tab-pane label="单元" name="group" >
+            <baxForm :formData="queryParams" :allAreas="allAreas" :fetchData="fetchGroupList" :isActionGroupExpand="isActionGroupExpand" :tab="activeName" />
             <groupTable :list="groupList" :loading="landingPageLoading"/>
           </el-tab-pane>
         </el-tabs>
       </div>
-      <el-pagination
-        layout="total, prev, pager, next"
-        @current-change="handlePageChange"
-        :page-size="ONE_PAGE_NUM"
-        :total="totalPage"
-      />
+      <el-pagination layout="total, prev, pager, next"  @current-change="handlePageChange" :page-size="ONE_PAGE_NUM" :total="totalPage" />
     </main>
-    <area-selector
-      type="qwt"
-      :areas="queryParams.areas"
-      :all-areas="allAreas"
-      :visible="areaDialogVisible"
-      :enable-china="false"
-      @ok="handleSelectArea"
-      @cancel="areaDialogVisible = false"
-    />
   </div>
 </template>
 
 <script>
-import promotionTable from './components/promotion-table'
-import groupTable from './components/group-table'
-import { getCnName, f2y } from 'util'
+import { groupTable, promotionTable, topTips, baxForm } from './components'
 import pick from 'lodash.pick'
 import {
   CAMPAIGN_STATUS_OPTS,
   options,
   CAMPAIGN_OPTIMIZATION_OPTS
 } from './constant'
-// import { toCamelcase } from 'object-keys-mapping'
-import AreaSelector from 'com/common/area-selector'
-import BaxInput from 'com/common/input'
 import { getCampaignList, getGroupList } from 'api/fengming-campaign'
 import {
-  getCurrentBalance,
-  getHomepageSummary,
   updateCampaignDailyBudget
 } from 'api/fengming'
 import {
@@ -248,27 +47,15 @@ const ONE_PAGE_NUM = 10
 
 export default {
   name: 'qwt-promotion-list',
-  created () {
-    const {
-      query: { id }
-    } = this.$route
-    const { statuses } = this.$route.query
+  mounted () {
+    console.log('==', this.queryParams)
+    const { query: { id, statuses } } = this.$route
     if (statuses) {
       this.isActionGroupExpand = true
-      // 从首页未审核处点击进来的
-      if (statuses === CNT_REJECTED_CODE) {
-        this.queryParams.statuses = [CNT_REJECTED_CODE]
-      } else {
-        this.queryParams.statuses.push(statuses)
-      }
-    }
-    if (this.salesInfo.userId) {
-      this.queryParams.userId = this.salesInfo.userId
     }
     if (id) {
       // 从某个计划点击进来
-      this.activeName = 'unit'
-      this.queryParams.value = id
+      this.activeName = 'group'
       this.fetchGroupList()
     } else {
       if (this.activeName === 'plan') {
@@ -277,7 +64,6 @@ export default {
         this.fetchGroupList()
       }
     }
-    // this.fetchSummary()
   },
   data () {
     return {
@@ -286,16 +72,12 @@ export default {
       CAMPAIGN_STATUS_OPTS,
       CAMPAIGN_OPTIMIZATION_OPTS,
       options,
-      dailyBudget: {
-        id: '',
-        value: 0
-      },
       groupList: [],
       promotionList: [],
       queryParams: {
-        unitName: '',
+        groupName: '',
         areas: [],
-        statuses: CAMPAIGN_STATUS_OPTS.map((s) => s.value).join(',').split(',').map(n => parseInt(n)),
+        statuses: CAMPAIGN_STATUS_OPTS.map(s => s.value),
         source: [],
         offset: 0,
         limit: ONE_PAGE_NUM,
@@ -303,9 +85,7 @@ export default {
         value: 1
       },
       landingPageLoading: false,
-      landingPageList: null,
       currentBalance: null,
-      campaignMap: {},
       summary: null,
       totalPage: 0,
       activeName: 'plan',
@@ -314,9 +94,14 @@ export default {
     }
   },
   props: ['allAreas', 'salesInfo', 'userInfo'],
-  components: { AreaSelector, BaxInput, promotionTable, groupTable },
+  components: { promotionTable, groupTable, topTips, baxForm },
   methods: {
-    f2y,
+    getqueryParams (formData) {
+      this.queryParams = formData
+    },
+    fetchData (args = {}) {
+      // const res = Object.assign({}, this.form1, this.form2, args)
+    },
     handlePageChange (page) {
       this.queryParams.offset = (page - 1) * ONE_PAGE_NUM
       if (this.activeName === 'plan') {
@@ -325,19 +110,10 @@ export default {
         this.fetchGroupList()
       }
     },
-    handleSelectArea (areas) {
-      this.queryParams.areas = areas
-      this.areaDialogVisible = false
-    },
-    removeSelectedArea (area) {
-      this.queryParams.areas = this.queryParams.areas.filter((a) => a !== area)
-    },
     toggleTab (tab) {
       this.queryParams.offset = 0
       const query = pick(this.$route.query, ['userId', 'salesId'])
-      const {
-        query: { id }
-      } = this.$route
+      const { query: { id } } = this.$route
       if (id && tab.index === '0') {
         this.$router.push({ name: 'qwt-promotion-list', query })
       }
@@ -352,17 +128,29 @@ export default {
       }
       const opts = {
         campaignIds: [id],
-        dailyBudget: 200
+        dailyBudget: parseFloat(value) * 100
       }
       await updateCampaignDailyBudget(opts)
+      this.fetchlandingPageList()
+      this.$refs.promoteTable.updateBudgetEditeStatus()
       this.$message.success('今日预算修改成功')
     },
-    async fetchlandingPageList () {
+    async fetchlandingPageList (params = this.queryParams) {
+      if (this.salesInfo.userId) {
+        params.userId = this.salesInfo.userId
+      }
+      const { query: { statuses } } = this.$route
+      // 从首页未审核处点击进来的
+      if (statuses === CNT_REJECTED_CODE) {
+        params.statuses = [CNT_REJECTED_CODE]
+      } else if (statuses) {
+        params.statuses.push(statuses)
+      }
+      params.statuses = params.statuses.join(',').split(',').map(n => parseInt(n))
       this.landingPageLoading = true
-      // 重置campaignMap
-      this.campaignMap = {}
+      console.log('params', params)
       try {
-        const result = await getCampaignList(this.queryParams)
+        const result = await getCampaignList({ ...params })
         const { total, data } = result
         this.totalPage = total
         this.promotionList = data
@@ -372,12 +160,14 @@ export default {
         this.landingPageLoading = false
       }
     },
-    async fetchGroupList () {
+    async fetchGroupList (params = this.queryParams) {
+      if (this.salesInfo.userId) {
+        params.userId = this.salesInfo.userId
+      }
       const { query: { id } } = this.$route
       this.landingPageLoading = true
-      let params = this.queryParams
       if (id) {
-        params = { ...{ campaign_id: id }, ...params }
+        params = { ...{ campaign_id: id }, ...params, ...this.queryParams }
       }
       try {
         const result = await getGroupList(params)
@@ -389,50 +179,12 @@ export default {
       } finally {
         this.landingPageLoading = false
       }
-    },
-    async fetchSummary () {
-      const [currentBalance, summary] = await Promise.all([
-        getCurrentBalance(),
-        getHomepageSummary()
-      ])
-      this.summary = summary
-      this.currentBalance = currentBalance
-    }
-  },
-  filters: {
-    transformCityName (name, allAreas) {
-      return getCnName(name, allAreas)
-    }
-  },
-  computed: {
-    days () {
-      return Math.ceil(this.currentBalance / this.summary.budget)
-    }
-  },
-  watch: {
-    queryParams: {
-      deep: true,
-      handler (val) {
-        if (!val.campaignId || /^[0-9]+$/.test(val.campaignId)) {
-          this.fetchlandingPageList()
-        } else {
-          this.$message.error('您要查询的计划id格式不正确')
-        }
-      }
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.top-tips {
-  background-color: #fff7eb;
-  color: #bd975f;
-  font-size: 14px;
-  padding: 5px 0 5px 30px;
-  margin-bottom: 5px;
-  border-radius: 2px;
-}
 .container {
   padding: 20px;
   background-color: #fff;
@@ -468,70 +220,6 @@ export default {
       margin-left: 10px;
       color: #666;
     }
-  }
-  & .column {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    text-align: left;
-    margin-bottom: 25px;
-    &.source {
-      margin-bottom: 17px;
-    }
-    &.area .title {
-      margin: 15px 0 5px;
-    }
-    & .title {
-      font-weight: 600;
-      text-align: left;
-      width: 11%;
-      height: 100%;
-      max-width: 165px;
-      flex: none;
-      &.hightlight {
-        color: #b66969;
-      }
-    }
-    & .input {
-      width: 27%;
-      max-width: 380px;
-      height: 38px;
-    }
-    & .checkbox-group {
-      flex: 1;
-    }
-    & .icon {
-      height: 100%;
-      width: 50px;
-      font-size: 20px;
-      color: #333;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-    & .tag {
-      margin-right: 5px;
-      margin-top: 8px;
-      font-size: 13px;
-      &:last-of-type {
-        margin-right: 12px;
-      }
-    }
-  }
-}
-
-.table-wrapper {
-  background-color: rgba(255, 255, 255, 0.9);
-}
-
-.info {
-  font-size: 14px;
-  & > a {
-    margin-left: 4px;
-    color: #35a5e4;
-  }
-  & > .red {
-    color: red;
-    margin: 0 5px;
   }
 }
 </style>
