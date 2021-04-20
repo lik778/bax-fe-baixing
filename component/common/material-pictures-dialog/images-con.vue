@@ -133,6 +133,7 @@ export default {
         const newImage = { ...image }
         newImage.desc = value
         delete newImage.id
+        newImage.status = MATERIAL_PIC_STATUS.STATUS_PENDING_CHIBI
         newArr.splice(idx, 1, newImage)
         this.$emit('change', newArr)
       })
@@ -165,10 +166,10 @@ export default {
 
     getStatusClass (s) {
       const statusIDX = [
-        this.MATERIAL_PIC_AUDIT_TYPE.AUDITING,
-        this.MATERIAL_PIC_AUDIT_TYPE.FAILED,
-        this.MATERIAL_PIC_AUDIT_TYPE.ONLINE,
-        this.MATERIAL_PIC_AUDIT_TYPE.OFFLINE
+        MATERIAL_PIC_AUDIT_TYPE.AUDITING,
+        MATERIAL_PIC_AUDIT_TYPE.FAILED,
+        MATERIAL_PIC_AUDIT_TYPE.ONLINE,
+        MATERIAL_PIC_AUDIT_TYPE.OFFLINE
       ].findIndex(x => x.includes(s))
 
       return [
