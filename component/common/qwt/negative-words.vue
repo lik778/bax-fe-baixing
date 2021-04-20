@@ -24,7 +24,7 @@
     </div>
     <negative-words-dialog :visible="negativeWordsDialogVisible"
                            :all-words="allWords"
-                           :campaigin-id="campaignId"
+                           :campaign-id="campaignId"
                            :group-id="groupId"
                            @close="negativeWordsDialogVisible = false"
                            @update-negative-words="updateNegativeWords"

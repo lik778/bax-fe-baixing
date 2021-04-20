@@ -1,41 +1,50 @@
 <template>
-  <el-table class="group-table"
-            :data="groupData"
-            border>
-    <el-table-column prop="name"
-                     label="单元名称"
-                     align="center" />
-    <!-- TODO: 投放状态需要枚举，并为不一样的状态添加不一样的颜色，见设计稿 -->
-    <el-table-column prop="status"
-                     label="投放状态"
-                     align="center">
-      <template slot-scope="{row}">{{ row.status }}</template>
-    </el-table-column>
-    <!-- TODO: 见设计稿 -->
-    <el-table-column prop="avgCpcRanking"
-                     label="关键词平均排名"
-                     align="center" />
-    <el-table-column label="操作"
-                     align="center">
-      <template slot-scope="{row}">
-        <!-- TODO: 待后端确认状态 -->
-        <span :class="{btn: true, disabled: isSales }"
-              v-if="true"
-              @click="pauseGroup(row)">暂停</span>
-        <span :class="{btn: true, disabled: isSales }"
-              v-if="false"
-              @click="activeGroup(row)">开启</span>
-        <span class="btn"
-              @click="optimizeGroup(row)">优化</span>
-        <span :class="{btn: true, disabled: isSales }"
-              @click="copyGroup(row)">复制</span>
-      </template>
-    </el-table-column>
-  </el-table>
+  <div>
+    <el-button @click="handleGoGroup"
+               type="primary"
+               :disabled="isSales || (groupData && groupData.length >= GROUP_MAX)"
+               class="add-group-btn">
+      <i class="el-icon-plus" />新增单元
+    </el-button>
+    <el-table class="group-table"
+              :data="groupData"
+              border>
+      <el-table-column prop="name"
+                       label="单元名称"
+                       align="center" />
+      <!-- TODO: 投放状态需要枚举，并为不一样的状态添加不一样的颜色，见设计稿 -->
+      <el-table-column prop="status"
+                       label="投放状态"
+                       align="center">
+        <template slot-scope="{row}">{{ row.status }}</template>
+      </el-table-column>
+      <!-- TODO: 见设计稿 -->
+      <el-table-column prop="avgCpcRanking"
+                       label="关键词平均排名"
+                       align="center" />
+      <el-table-column label="操作"
+                       align="center">
+        <template slot-scope="{row}">
+          <!-- TODO: 待后端确认状态 -->
+          <span :class="{btn: true, disabled: isSales }"
+                v-if="true"
+                @click="pauseGroup(row)">暂停</span>
+          <span :class="{btn: true, disabled: isSales }"
+                v-if="false"
+                @click="activeGroup(row)">开启</span>
+          <span class="btn"
+                @click="optimizeGroup(row)">优化</span>
+          <span :class="{btn: true, disabled: isSales }"
+                @click="copyGroup(row)">复制</span>
+        </template>
+      </el-table-column>
+    </el-table>
+  </div>
 </template>
 
 <script>
 import { getAllGroups, activeGroups, pauseGroups } from 'api/fengming'
+import { GROUP_MAX } from 'constant/fengming'
 
 export default {
   name: 'group-table',
@@ -51,7 +60,8 @@ export default {
   },
   data () {
     return {
-      groupData: null
+      groupData: null,
+      GROUP_MAX
     }
   },
   async mounted () {
@@ -93,6 +103,12 @@ export default {
         name: 'qwt-create-group',
         query: { cloneId: group.id }
       })
+    },
+    handleGoGroup () {
+      this.$router.push({
+        name: 'qwt-create-group',
+        query: { campaignId: this.campaignId }
+      })
     }
   }
 }
@@ -114,5 +130,12 @@ export default {
       border-color: #ebeef5;
     }
   }
+}
+
+.add-group-btn {
+  margin-bottom: 20px;
+}
+.el-icon-plus {
+  margin-right: 4px;
 }
 </style>

@@ -28,13 +28,6 @@
     <div class="module">
       <h4>单元设置</h4>
       <div class="content">
-        <el-button @click="handleGoGroup"
-                   type="primary"
-                   :disabled="isSales"
-                   class="add-group-btn">
-          <i class="el-icon-plus" />
-          新增单元
-        </el-button>
         <group-table-comp :campaign-id="campaignId"
                           :is-sales="isSales" />
       </div>
@@ -233,11 +226,9 @@ export default {
       const data = {}
       const { areas, dailyBudget, schedule, validTime } = this.promotion
 
-      if (!isEqual(areas, this.originPromotion.areas)) {
+      // tip: dailyBudget和areas要么都传，要么都不传（呀呀呀，为啥啊？）
+      if (!isEqual(areas, this.originPromotion.areas) || dailyBudget !== this.originPromotion.dailyBudget) {
         data.areas = areas
-      }
-
-      if (dailyBudget !== this.originPromotion.dailyBudget) {
         data.dailyBudget = dailyBudget * 100
       }
 
@@ -261,12 +252,6 @@ export default {
       if (newNegativeKeywords.length) data.newNegativeKeywords = newNegativeKeywords
       if (deletedNegativeKeywords.length) data.deletedNegativeKeywords = deletedNegativeKeywords
       return data
-    },
-    handleGoGroup () {
-      this.$router.push({
-        name: 'qwt-create-group',
-        query: { campaignId: this.campaignId }
-      })
     }
   },
   watch: {
@@ -305,12 +290,6 @@ export default {
     .content {
       padding: 20px 0;
       max-width: 1200px;
-      .add-group-btn {
-        margin-bottom: 20px;
-      }
-      .el-icon-plus {
-        margin-right: 4px;
-      }
       .contract-ack {
         margin-top: 0;
       }

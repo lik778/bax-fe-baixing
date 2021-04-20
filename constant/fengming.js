@@ -275,3 +275,5 @@ export const KEYWORDS_MAX = 5000
 
 export const FHYF_USERD = 1
 export const FHYF_UN_USE = 0
+
+export const GROUP_MAX = 10
