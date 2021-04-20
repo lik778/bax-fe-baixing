@@ -116,6 +116,7 @@
           class="update-material-button"
           type="primary"
           size="small"
+          :loading="loading.materialPictures"
           @click="_updateMaterialPictures"
         >更新创意配图</el-button>
       </section>
@@ -554,6 +555,9 @@ export default {
         newNegativeKeywords: [],
         deletedNegativeKeywords: []
       },
+      loading: {
+        materialPictures: false
+      },
       materialPictures: {},
       materialPicturesInits: {},
       materialPicturesInitsRaw: null,
@@ -961,22 +965,25 @@ export default {
 
       // * for test suppose
       // this.materialPicturesInits = inits || {
-      //   image_type: 0,
-      //   pc: [],
-      //   wap: []
-      // }
-      // this.materialPicturesInits = inits || {
       //   image_type: 1,
-      //   pc: [{
-      //     id: 'adfasdf',
-      //     desc: 'asdfasdf',
-      //     url: 'http://file.baixing.net/sst-imgceac6164-f298-4b53-9467-083a8e7e85b5.jpg'
-      //   }],
-      //   wap: [{
-      //     id: 'adfasdf',
-      //     desc: 'asdfasdf',
-      //     url: 'http://file.baixing.net/sst-imgceac6164-f298-4b53-9467-083a8e7e85b5.jpg'
-      //   }]
+      //   pc: [
+      //     {
+      //       image_type: 1,
+      //       id: 210,
+      //       desc: '【オリジナル】「THE ',
+      //       status: 11,
+      //       url: 'http://file.baixing.net/sst-img4cda6578-02b1-4264-82f4-10fa968dd587.jpeg'
+      //     }
+      //   ],
+      //   wap: [
+      //     {
+      //       image_type: 1,
+      //       id: 212,
+      //       desc: '12',
+      //       status: 11,
+      //       url: 'http://file.baixing.net/sst-imgdbe434fb-324a-46c4-abfd-2282d35d37c7.jpeg'
+      //     }
+      //   ]
       // }
 
       // eslint-disable-next-line camelcase
@@ -1268,6 +1275,7 @@ export default {
         return validMaterialPicError
       }
 
+      this.loading.materialPictures = true
       try {
         const res = await updateMaterialPictures({
           campaign_id: this.id,
@@ -1281,7 +1289,8 @@ export default {
 
         // * for test suppose
         // const errors = [{
-        //   url: 'http://file.baixing.net/sst-imgceac6164-f298-4b53-9467-083a8e7e85b5.jpg'
+        //   url: 'http://file.baixing.net/sst-imgdbe434fb-324a-46c4-abfd-2282d35d37c7.jpeg',
+        //   reject_message: '内容涉黄'
         // }]
 
         if (errors.length) {
@@ -1292,18 +1301,24 @@ export default {
             const findFirstError = errors.find(x => x.url === img.url)
             if (findFirstError) {
               img.status = MATERIAL_PIC_STATUS.STATUS_CHIBI_REJECT
-              lastErrorReason = findFirstError.reject_message || '部分图片审核失败，请检查并重新上传'
+              lastErrorReason = findFirstError.reject_message
             }
           })
-          this.initMaterialPictures({ image_type: type, pc, wap })
-          return Message.error(lastErrorReason)
+          this.initMaterialPictures({
+            image_type: type,
+            pc,
+            wap
+          })
+          return this.$message.error(lastErrorReason || '部分图片审核失败，请检查并重新上传')
         } else {
           await this.initMaterialPictures()
-          Message.success('更新创意配图成功')
+          this.$message.success('更新创意配图成功')
         }
         this.isMaterialChanged = false
       } catch (error) {
-        return console.error(error)
+        return console.error('_updateMaterialPictures: ', error)
+      } finally {
+        this.loading.materialPictures = false
       }
     },
     async _updatePromotion () {
