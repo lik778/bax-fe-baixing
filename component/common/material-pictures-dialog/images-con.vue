@@ -104,8 +104,8 @@ export default {
 
       const newImages = results.map(x => ({
         url: x.url,
-        desc: toMaxLen(removeExt(x.filename) || getRandName()),
-        status: MATERIAL_PIC_STATUS.STATUS_PENDING_CREATE
+        desc: toMaxLen(removeExt(x.filename) || getRandName())
+        // status: MATERIAL_PIC_STATUS.STATUS_PENDING_CREATE
       }))
 
       // console.log([...this.value].concat(newImages))
@@ -133,7 +133,7 @@ export default {
         const newImage = { ...image }
         newImage.desc = value
         delete newImage.id
-        newImage.status = MATERIAL_PIC_STATUS.STATUS_PENDING_CHIBI
+        delete newImage.status
         newArr.splice(idx, 1, newImage)
         this.$emit('change', newArr)
       })
@@ -254,10 +254,11 @@ export default {
       width: 100%;
       height: 1.5em;
       line-height: 1.5em;
+      background: rgba(0,0,0,0.3);
       color: white;
       font-size: 12px;
       text-align: left;
-      transition: bottom .2s;
+      transition: .2s;
 
       &.auditing {
         background: #35a5e4;
