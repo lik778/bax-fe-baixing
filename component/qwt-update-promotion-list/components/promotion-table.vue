@@ -46,7 +46,7 @@
                       class="view"
                       :to="{
                         name: 'qwt-promotion-list',
-                        query: { id: scope.row.id },
+                        query: {...{id: scope.row.id, ...$route.query}},
                       }"
                     >查看</router-link>
                   </div>
@@ -64,10 +64,9 @@
                     v-if="scope.row.id === dailyBudget.id"
                   >
                     <el-input v-model="dailyBudget.value"></el-input>
-                    <el-button
-                      type="text"
-                      @click="modifyBudget(dailyBudget)"
-                    >确定</el-button>
+                    <el-popconfirm title="确定要修改预算吗?" @confirm="modifyBudget(dailyBudget)">
+                      <el-button slot="reference" type="text">确定</el-button>
+                    </el-popconfirm>
                   </span>
                   <span v-else>
                     <span>{{ (scope.row.daily_budget / 100).toFixed(2) }}</span>
@@ -86,14 +85,9 @@
                 width="150"
               >
                 <template slot-scope="scope">
-                  <el-button
-                    type="text"
-                    @click="
-                      () => {
-                        console.log(scope.row);
-                      }
-                    "
-                  >暂停</el-button>
+                  <el-popconfirm title="确定要暂停吗?" @confirm="pausePromote(scope.row.id)">
+                    <el-button slot="reference" type="text">暂停</el-button>
+                  </el-popconfirm>
                   <router-link :to="{
                       name: 'qwt-update-promotion',
                       params: { id: scope.row.id },
@@ -127,11 +121,6 @@ export default {
       type: Boolean,
       required: true,
       default: false
-    },
-    modifyBudget: {
-      type: Function,
-      required: true,
-      default: () => {}
     }
   },
   data () {
@@ -146,7 +135,6 @@ export default {
   },
   methods: {
     async editeBudget (row) {
-      console.log(row.id)
       this.dailyBudget = {
         id: row.id,
         value: (row.daily_budget / 100).toFixed(2)
@@ -154,6 +142,12 @@ export default {
     },
     updateBudgetEditeStatus () {
       this.dailyBudget.id = undefined
+    },
+    modifyBudget () {
+      this.$emit('modifyBudget', this.dailyBudget)
+    },
+    pausePromote (id) {
+      this.$emit('pause', id)
     }
   }
 }

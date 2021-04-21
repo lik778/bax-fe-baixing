@@ -13,11 +13,11 @@
         </div>
         <el-tabs v-model="activeName" @tab-click="toggleTab" type="card" >
           <el-tab-pane label="计划" name="plan" >
-            <baxForm @fetchData="(args)=> fetchlandingPageList({ ...args })" :formData="queryParams" :allAreas="allAreas" :fetchData="fetchlandingPageList" :isActionGroupExpand="isActionGroupExpand" :tab="activeName"/>
-            <promotionTable ref="promoteTable" :modifyBudget="modifyBudget" :list="promotionList" :loading="landingPageLoading" />
+            <baxForm :promotions="promotionIds" :formData="queryParams" :allAreas="allAreas" @fetchData="editFormData" :isActionGroupExpand="isActionGroupExpand" :tab="activeName"/>
+            <promotionTable @pause="pausePromote" ref="promoteTable" @modifyBudget="modifyBudget" :list="promotionList" :loading="landingPageLoading" />
           </el-tab-pane>
           <el-tab-pane label="单元" name="group" >
-            <baxForm :formData="queryParams" :allAreas="allAreas" :fetchData="fetchGroupList" :isActionGroupExpand="isActionGroupExpand" :tab="activeName" />
+            <baxForm :promotions="promotionIds" :formData="queryParams" :allAreas="allAreas" @fetchData="editFormData" :isActionGroupExpand="isActionGroupExpand" :tab="activeName" />
             <groupTable :list="groupList" :loading="landingPageLoading"/>
           </el-tab-pane>
         </el-tabs>
@@ -30,32 +30,35 @@
 <script>
 import { groupTable, promotionTable, topTips, baxForm } from './components'
 import pick from 'lodash.pick'
-import {
-  CAMPAIGN_STATUS_OPTS,
-  options,
-  CAMPAIGN_OPTIMIZATION_OPTS
-} from './constant'
-import { getCampaignList, getGroupList } from 'api/fengming-campaign'
-import {
-  updateCampaignDailyBudget
-} from 'api/fengming'
-import {
-  semPlatformOpts as SOURCES_OPTS
-} from 'constant/fengming'
+import clone from 'clone'
+import { CAMPAIGN_STATUS_OPTS, CAMPAIGN_OPTIMIZATION_OPTS } from './constant'
+import { getCampaignList, getGroupList, getCampaignIds } from 'api/fengming-campaign'
+import { updateCampaignDailyBudget, pauseCampaigns } from 'api/fengming'
+import { semPlatformOpts as SOURCES_OPTS } from 'constant/fengming'
 const CNT_REJECTED_CODE = '-53'
 const ONE_PAGE_NUM = 10
-
 export default {
   name: 'qwt-promotion-list',
-  mounted () {
-    console.log('==', this.queryParams)
+  async mounted () {
     const { query: { id, statuses } } = this.$route
     if (statuses) {
       this.isActionGroupExpand = true
     }
+    // 从首页未审核处点击进来的
+    if (statuses === CNT_REJECTED_CODE) {
+      this.queryParams.statuses = [CNT_REJECTED_CODE]
+    } else if (statuses) {
+      this.queryParams.statuses.push(statuses)
+    }
+    if (this.salesInfo.userId) {
+      this.queryParams.userId = this.salesInfo.userId
+    }
+    const result = await getCampaignIds()
+    this.promotionIds = result
     if (id) {
       // 从某个计划点击进来
       this.activeName = 'group'
+      this.queryParams.campaign_id = id
       this.fetchGroupList()
     } else {
       if (this.activeName === 'plan') {
@@ -71,18 +74,20 @@ export default {
       SOURCES_OPTS,
       CAMPAIGN_STATUS_OPTS,
       CAMPAIGN_OPTIMIZATION_OPTS,
-      options,
       groupList: [],
       promotionList: [],
+      promotionIds: [],
+      campaignId: 0,
       queryParams: {
-        groupName: '',
+        group_name: '',
         areas: [],
         statuses: CAMPAIGN_STATUS_OPTS.map(s => s.value),
         source: [],
         offset: 0,
         limit: ONE_PAGE_NUM,
         userId: '',
-        value: 1
+        value: 1,
+        campaign_id: 0
       },
       landingPageLoading: false,
       currentBalance: null,
@@ -96,12 +101,6 @@ export default {
   props: ['allAreas', 'salesInfo', 'userInfo'],
   components: { promotionTable, groupTable, topTips, baxForm },
   methods: {
-    getqueryParams (formData) {
-      this.queryParams = formData
-    },
-    fetchData (args = {}) {
-      // const res = Object.assign({}, this.form1, this.form2, args)
-    },
     handlePageChange (page) {
       this.queryParams.offset = (page - 1) * ONE_PAGE_NUM
       if (this.activeName === 'plan') {
@@ -116,6 +115,9 @@ export default {
       const { query: { id } } = this.$route
       if (id && tab.index === '0') {
         this.$router.push({ name: 'qwt-promotion-list', query })
+      }
+      if (!id && tab.index === '0') {
+        this.fetchlandingPageList()
       }
       if (tab.index === '1') {
         this.fetchGroupList()
@@ -135,20 +137,9 @@ export default {
       this.$refs.promoteTable.updateBudgetEditeStatus()
       this.$message.success('今日预算修改成功')
     },
-    async fetchlandingPageList (params = this.queryParams) {
-      if (this.salesInfo.userId) {
-        params.userId = this.salesInfo.userId
-      }
-      const { query: { statuses } } = this.$route
-      // 从首页未审核处点击进来的
-      if (statuses === CNT_REJECTED_CODE) {
-        params.statuses = [CNT_REJECTED_CODE]
-      } else if (statuses) {
-        params.statuses.push(statuses)
-      }
+    async fetchlandingPageList (params = clone(this.queryParams)) {
       params.statuses = params.statuses.join(',').split(',').map(n => parseInt(n))
       this.landingPageLoading = true
-      console.log('params', params)
       try {
         const result = await getCampaignList({ ...params })
         const { total, data } = result
@@ -160,15 +151,9 @@ export default {
         this.landingPageLoading = false
       }
     },
-    async fetchGroupList (params = this.queryParams) {
-      if (this.salesInfo.userId) {
-        params.userId = this.salesInfo.userId
-      }
-      const { query: { id } } = this.$route
+    async fetchGroupList (params = clone(this.queryParams)) {
+      params.statuses = params.statuses.join(',').split(',').map(n => parseInt(n))
       this.landingPageLoading = true
-      if (id) {
-        params = { ...{ campaign_id: id }, ...params, ...this.queryParams }
-      }
       try {
         const result = await getGroupList(params)
         const { total, data } = result
@@ -179,6 +164,20 @@ export default {
       } finally {
         this.landingPageLoading = false
       }
+    },
+    editFormData (params) {
+      const { value, key } = params
+      this.queryParams[key] = value
+      if (this.activeName === 'plan') {
+        this.fetchlandingPageList()
+      } else {
+        this.fetchGroupList()
+      }
+    },
+    async pausePromote (ids) {
+      await pauseCampaigns([ids])
+      this.$message.success('已暂停投放')
+      this.fetchlandingPageList()
     }
   }
 }

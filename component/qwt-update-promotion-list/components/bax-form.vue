@@ -2,33 +2,37 @@
 <div>
   <el-form
     label-position="left"
-    ref="form"
     :model="form"
     label-width="100px"
   >
     <div v-show="isActionGroupExpand">
       <el-form-item label="计划id">
-        <baxSelect
-          :selectOptions="options"
-          key="value"
-          label="label"
-          value="value"
-        />
+        <el-select
+            v-model="form.campaign_id"
+            placeholder="请选择"
+            @change="(value) => handleChange(value, 'campaign_id')"
+        >
+            <el-option
+                v-for="item in promotions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value" />
+        </el-select>
       </el-form-item>
       <el-form-item label="投放状态">
-        <el-checkbox-group :value="form.statuses" @change="handleChange">
+        <el-checkbox-group v-model="form.statuses" @change="(value) => handleChange(value, 'statuses')">
           <el-checkbox
             class="checkbox"
             v-for="c in CAMPAIGN_STATUS_OPTS"
             :key="c.value"
             :label="c.value"
           >
-            {{ c.label }}
+          {{c.label}}
           </el-checkbox>
         </el-checkbox-group>
       </el-form-item>
       <el-form-item label="渠道涞源">
-        <el-checkbox-group v-model="form.source">
+        <el-checkbox-group v-model="form.source" @change="(value) => handleChange(value, 'source')">
           <el-checkbox
             class="checkbox"
             v-for="c in SOURCES_OPTS"
@@ -54,7 +58,7 @@
       </el-form-item>
     </div>
     <el-form-item label="投放优化">
-      <el-checkbox-group v-model="form.statuses">
+      <el-checkbox-group v-model="form.statuses" @change="(value) => handleChange(value, 'statuses')">
         <el-checkbox
           class="checkbox"
           v-for="c in CAMPAIGN_OPTIMIZATION_OPTS"
@@ -66,7 +70,7 @@
       </el-checkbox-group>
     </el-form-item>
     <el-form-item label="单元名称" v-if="tab === 'group'">
-      <el-input v-model="form.groupName"></el-input>
+      <el-input v-model="form.group_name" @input="debounceInput"></el-input>
     </el-form-item>
   </el-form>
   <areaSelector
@@ -84,14 +88,13 @@
 <script>
 import { CAMPAIGN_STATUS_OPTS, options, CAMPAIGN_OPTIMIZATION_OPTS } from '../constant'
 import { semPlatformOpts as SOURCES_OPTS } from 'constant/fengming'
-import baxSelect from './bax-select'
 import areaSelector from 'com/common/area-selector'
 import { getCnName } from 'util'
-import clone from 'clone'
+import debounce from 'lodash.debounce'
 
 export default {
   name: 'bax-form',
-  components: { baxSelect, areaSelector },
+  components: { areaSelector },
   props: {
     selectOptions: {
       type: Array,
@@ -122,6 +125,16 @@ export default {
       type: Object,
       require: true,
       default: () => {}
+    },
+    promotions: {
+      type: Array,
+      require: true,
+      default: () => []
+    },
+    campaignId: {
+      type: Number,
+      require: true,
+      default: 0
     }
   },
   data () {
@@ -131,40 +144,39 @@ export default {
       SOURCES_OPTS,
       CAMPAIGN_STATUS_OPTS,
       areaDialogVisible: false,
-      form: this.formData
+      form: this.formData,
+      debounce
     }
   },
   methods: {
-    handleChange (e) {
-      console.log(e)
+    debounceInput: debounce(function (value) {
+      this.$emit('fetchData', { value, key: 'group_name' })
+    }, 500),
+    handleChange (value, key) {
+      this.$emit('fetchData', { value, key })
     },
     removeSelectedArea (area) {
       this.form.areas = this.form.areas.filter((a) => a !== area)
+      const params = { value: this.form.areas, key: 'areas' }
+      this.$emit('fetchData', params)
     },
     handleSelectArea (areas) {
       this.form.areas = areas
       this.areaDialogVisible = false
+      const params = { value: areas, key: 'areas' }
+      this.$emit('fetchData', params)
     }
   },
   filters: {
     transformCityName (name, allAreas) {
       return getCnName(name, allAreas)
     }
-  },
-  watch: {
-    form: {
-      deep: true,
-      handler (val) {
-        if (!val.campaignId || /^[0-9]+$/.test(val.campaignId)) {
-          const params = clone(val)
-          params.statuses = params.statuses.join(',').split(',').map(n => parseInt(n))
-          //   this.fetchData(params)
-          this.$emit('update-params', params)
-        } else {
-          this.$message.error('您要查询的计划id格式不正确')
-        }
-      }
-    }
   }
 }
 </script>
+
+<style scoped>
+  .el-input{
+      width: 40%;
+  }
+</style>

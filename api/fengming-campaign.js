@@ -148,9 +148,26 @@ export async function getCampaignLanding (query) {
 export async function getCampaignList (params) {
   const body = await fengming
     .post('/campaign/info')
-    .send(params)
+    .query(params)
     .json()
   return body.data
+}
+
+export async function getCampaignIds (params) {
+  const body = await fengming
+    .get('/campaign/ids')
+    .send(params)
+    .json()
+  const data = [{ value: 0, label: '全部' }]
+  console.log(body.data)
+  body.data.map(id => {
+    data.push({
+      value: id,
+      label: `计划${id}`
+    })
+    return true
+  })
+  return data
 }
 
 export async function getGroupList (params) {

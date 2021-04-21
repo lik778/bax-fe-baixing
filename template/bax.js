@@ -50,7 +50,8 @@ import {
   MessageBox,
   Message,
   Cascader,
-  Notification
+  Notification,
+  Popconfirm
 } from 'element-ui'
 import '../cssbase/index.scss'
 
@@ -140,6 +141,7 @@ Vue.use(Cascader)
 Vue.use(Progress)
 Vue.use(Card)
 Vue.use(Image)
+Vue.use(Popconfirm)
 
 /**
  * 错误回退组件
