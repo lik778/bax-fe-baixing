@@ -36,14 +36,9 @@
                 width="150"
               >
                 <template slot-scope="scope">
-                  <el-button
-                    type="text"
-                    @click="
-                      () => {
-                        console.log(scope.row);
-                      }
-                    "
-                  >暂停</el-button>
+                  <el-popconfirm title="确定要暂停吗?" @confirm="pausePromote(scope.row.id)">
+                    <el-button slot="reference" type="text">暂停</el-button>
+                  </el-popconfirm>
                   <router-link :to="{
                       name: 'qwt-update-promotion',
                       params: { id: scope.row.id },
@@ -82,6 +77,11 @@ export default {
     return {
       filterOptimization,
       semPlatformCn
+    }
+  },
+  methods: {
+    pausePromote (id) {
+      this.$emit('pause', id)
     }
   }
 }

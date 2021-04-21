@@ -88,18 +88,8 @@
                   <el-popconfirm title="确定要暂停吗?" @confirm="pausePromote(scope.row.id)">
                     <el-button slot="reference" type="text">暂停</el-button>
                   </el-popconfirm>
-                  <router-link :to="{
-                      name: 'qwt-update-promotion',
-                      params: { id: scope.row.id },
-                    }">优化</router-link>
-                  <el-button
-                    type="text"
-                    @click="
-                      () => {
-                        console.log(scope.row);
-                      }
-                    "
-                  >复制</el-button>
+                  <router-link :to="{ name: 'qwt-update-promotion', params: { id: scope.row.id }}">优化</router-link>
+                  <router-link :to="{name: 'qwt-create-promotion', query: {...$route.query, ...{ cloneId: scope.row.id}}}">复制</router-link>
                 </template>
             </el-table-column>
         </el-table>

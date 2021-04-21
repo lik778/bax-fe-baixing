@@ -18,7 +18,7 @@
           </el-tab-pane>
           <el-tab-pane label="单元" name="group" >
             <baxForm :promotions="promotionIds" :formData="queryParams" :allAreas="allAreas" @fetchData="editFormData" :isActionGroupExpand="isActionGroupExpand" :tab="activeName" />
-            <groupTable :list="groupList" :loading="landingPageLoading"/>
+            <groupTable @pause="pauseGroup" :list="groupList" :loading="landingPageLoading"/>
           </el-tab-pane>
         </el-tabs>
       </div>
@@ -33,7 +33,7 @@ import pick from 'lodash.pick'
 import clone from 'clone'
 import { CAMPAIGN_STATUS_OPTS, CAMPAIGN_OPTIMIZATION_OPTS } from './constant'
 import { getCampaignList, getGroupList, getCampaignIds } from 'api/fengming-campaign'
-import { updateCampaignDailyBudget, pauseCampaigns } from 'api/fengming'
+import { updateCampaignDailyBudget, pauseCampaigns, pauseGroup } from 'api/fengming'
 import { semPlatformOpts as SOURCES_OPTS } from 'constant/fengming'
 const CNT_REJECTED_CODE = '-53'
 const ONE_PAGE_NUM = 10
@@ -178,6 +178,11 @@ export default {
       await pauseCampaigns([ids])
       this.$message.success('已暂停投放')
       this.fetchlandingPageList()
+    },
+    async pauseGroup (ids) {
+      await pauseGroup([ids])
+      this.$message.success('已暂停投放')
+      this.fetchGroupList()
     }
   }
 }

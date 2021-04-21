@@ -134,7 +134,7 @@ export default {
     campaignId: {
       type: Number,
       require: true,
-      default: 0
+      default: null
     }
   },
   data () {
