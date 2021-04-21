@@ -25,7 +25,9 @@
         class="image-wrapper"
         :key="image.url+idx">
         <img class="image" :src="image.url"/>
-        <span class="status-bar" :class="getStatusClass(image.status)">
+        <span class="status-bar"
+          v-if="showImageStatusBar(image)"
+          :class="getStatusClass(image.status)">
           <span class="image-name" v-text="image.desc" />
           <span class="status-text" />
         </span>
@@ -95,17 +97,9 @@ export default {
   methods: {
     handleUploadSuccess (res) {
       const results = res instanceof Array ? res : [res]
-      const getRandName = () => String(+new Date()) + String(Math.random()).slice(-6)
-
-      const removeExt = s => {
-        return s.split(/.[^.]+$/)[0] || s
-      }
-      const toMaxLen = (s = '') => s.slice(0, MAX_IMAGE_NAME_LEN)
-
       const newImages = results.map(x => ({
         url: x.url,
-        desc: toMaxLen(removeExt(x.filename) || getRandName())
-        // status: MATERIAL_PIC_STATUS.STATUS_PENDING_CREATE
+        desc: ''
       }))
 
       // console.log([...this.value].concat(newImages))
@@ -163,6 +157,11 @@ export default {
     },
 
     /* Calculation */
+
+    showImageStatusBar (image) {
+      const { desc = '', status = '' } = image
+      return desc || String(status || '').length
+    },
 
     getStatusClass (s) {
       const statusIDX = [
