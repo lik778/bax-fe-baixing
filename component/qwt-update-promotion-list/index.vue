@@ -39,35 +39,8 @@ const CNT_REJECTED_CODE = '-53'
 const ONE_PAGE_NUM = 10
 export default {
   name: 'qwt-promotion-list',
-  async mounted () {
-    const { query: { id, statuses } } = this.$route
-    if (statuses) {
-      this.isActionGroupExpand = true
-    }
-    // 从首页未审核处点击进来的
-    if (statuses === CNT_REJECTED_CODE) {
-      this.queryParams.statuses = [CNT_REJECTED_CODE]
-    } else if (statuses) {
-      this.queryParams.statuses.push(statuses)
-    }
-    if (this.salesInfo.userId) {
-      this.queryParams.userId = this.salesInfo.userId
-    }
-    const result = await getCampaignIds()
-    this.promotionIds = result
-    if (id) {
-      // 从某个计划点击进来
-      this.activeName = 'group'
-      this.queryParams.campaign_id = id
-      this.fetchGroupList()
-    } else {
-      if (this.activeName === 'plan') {
-        this.fetchlandingPageList()
-      } else {
-        this.fetchGroupList()
-      }
-    }
-  },
+  components: { promotionTable, groupTable, topTips, baxForm },
+  props: ['allAreas', 'salesInfo', 'userInfo'],
   data () {
     return {
       ONE_PAGE_NUM,
@@ -98,8 +71,35 @@ export default {
       isActionGroupExpand: true
     }
   },
-  props: ['allAreas', 'salesInfo', 'userInfo'],
-  components: { promotionTable, groupTable, topTips, baxForm },
+  async mounted () {
+    const { query: { id, statuses } } = this.$route
+    if (statuses) {
+      this.isActionGroupExpand = true
+    }
+    // 从首页未审核处点击进来的
+    if (statuses === CNT_REJECTED_CODE) {
+      this.queryParams.statuses = [CNT_REJECTED_CODE]
+    } else if (statuses) {
+      this.queryParams.statuses.push(statuses)
+    }
+    if (this.salesInfo.userId) {
+      this.queryParams.userId = this.salesInfo.userId
+    }
+    const result = await getCampaignIds()
+    this.promotionIds = result
+    if (id) {
+      // 从某个计划点击进来
+      this.activeName = 'group'
+      this.queryParams.campaign_id = id
+      this.fetchGroupList()
+    } else {
+      if (this.activeName === 'plan') {
+        this.fetchlandingPageList()
+      } else {
+        this.fetchGroupList()
+      }
+    }
+  },
   methods: {
     handlePageChange (page) {
       this.queryParams.offset = (page - 1) * ONE_PAGE_NUM
