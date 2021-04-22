@@ -28,15 +28,15 @@
         <span class="status-bar"
           v-if="showImageStatusBar(image)"
           :class="getStatusClass(image.status)">
-          <span class="image-name" v-text="image.desc" />
+          <span class="image-name" />
           <span class="status-text" />
         </span>
         <span class="actions">
-          <i
+          <!-- <i
             class="el-icon el-icon-edit"
             title="重命名"
             @click="renameFile(image, idx)"
-          />
+          /> -->
           <!-- FIXME need file 问题 -->
           <!-- <i
             class="el-icon el-icon-scissors"
@@ -159,8 +159,7 @@ export default {
     /* Calculation */
 
     showImageStatusBar (image) {
-      const { desc = '', status = '' } = image
-      return desc || String(status || '').length
+      return image?.status != null
     },
 
     getStatusClass (s) {
