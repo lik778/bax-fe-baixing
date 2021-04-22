@@ -86,3 +86,29 @@ export default {
   }
 }
 </script>
+<style lang="scss" scoped>
+  .bax-cell {
+  a {
+    color: #35a5e4;
+  }
+  .el-button--text {
+    color: #35a5e4;
+  }
+  .unit-wrapper {
+    display: flex;
+    align-items: center;
+  }
+  .unit-cell {
+    width: 140px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: flex;
+    justify-content: flex-end;
+  }
+  .edite-wrapper {
+    display: flex;
+    align-items: center;
+  }
+}
+</style>
