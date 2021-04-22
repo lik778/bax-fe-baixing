@@ -1305,19 +1305,14 @@ export default {
 
         if (errors.length) {
           // eslint-disable-next-line camelcase
-          const { type, pc = [], wap = [] } = this.materialPictures._raw
+          const { pc = [], wap = [] } = this.materialPictures._raw
           let lastErrorReason = null
           ;[...pc, ...wap].forEach(img => {
             const findFirstError = errors.find(x => x.url === img.url)
             if (findFirstError) {
-              img.status = MATERIAL_PIC_STATUS.STATUS_CHIBI_REJECT
+              this.$set(img, 'status', MATERIAL_PIC_STATUS.STATUS_CHIBI_REJECT)
               lastErrorReason = findFirstError.reject_message
             }
-          })
-          this.initMaterialPictures({
-            image_type: type,
-            pc,
-            wap
           })
           return this.$message.error(lastErrorReason || '部分图片审核失败，请检查并重新上传')
         } else {
