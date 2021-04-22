@@ -1,21 +1,34 @@
 <template>
   <div class="negative-words">
     <div class="search">
-      <el-input class="input" size="medium" v-model="word" placeholder="请输入标题（字数限制9～25个字）"/>
-      <el-button class="btn" type="primary" size="medium" @click="addNegativeWords">添加否定关键词</el-button>
-      <span class="num">(否词关键词个数不得超过<strong>{{ NEGATIVE_KEYWORDS_MAX }}</strong>个, 当前否词数量: <strong>{{ negativeWords.length }}</strong>个）</span>
+      <el-input class="input"
+                v-model="word"
+                placeholder="请输入标题（字数限制9～25个字）" />
+      <el-button class="btn"
+                 type="primary"
+                 :disabled="isSales"
+                 :loading="loading"
+                 @click="addNegativeWords">添加否定关键词</el-button>
+      <span class="num" v-if="showTip">(否词关键词个数不得超过<strong>{{ NEGATIVE_KEYWORDS_MAX }}</strong>个, 当前否词数量:
+        <strong>{{ negativeWords.length }}</strong>个）</span>
     </div>
-    <div class="res" v-if="negativeWords.length">
-      <el-tag class="tag" type="primary" v-for="item in negativeWords" :key="item.word"
-        @close="removeNegativeWord(item)" closable>
-        {{ item.word }}
+    <div class="res"
+         v-if="negativeWords.length">
+      <el-tag class="tag"
+              type="primary"
+              v-for="(item, idx) in negativeWords"
+              :key="item.word"
+              @close="removeNegativeWord(idx)"
+              closable>{{ item.word }}
       </el-tag>
     </div>
-    <negative-words-dialog
-      :visible="negativeWordsDialogVisible"
-      @close="negativeWordsDialogVisible = false"
-      @update-negative-words="updateNegativeWords"
-      :negative-words="negativeWords" />
+    <negative-words-dialog :visible="negativeWordsDialogVisible"
+                           :all-words="allWords"
+                           :campaigin-id="campaignId"
+                           :group-id="groupId"
+                           @close="negativeWordsDialogVisible = false"
+                           @update-negative-words="updateNegativeWords"
+                           :negative-words="negativeWords" />
   </div>
 </template>
 
@@ -24,52 +37,89 @@ import negativeWordsDialog from 'com/common/qwt/negative-word-dialog'
 
 import { NEGATIVE_KEYWORDS_MAX } from 'constant/fengming'
 import { validateKeyword } from 'util/campaign'
+import { getNotExistWords } from 'util/group'
 
 export default {
   name: 'negative-words',
   props: {
+    allWords: {
+      type: Array,
+      required: true,
+      default () {
+        return []
+      }
+    },
     negativeWords: {
       type: Array,
       required: true,
       default: () => {
         return []
       }
+    },
+    campaignId: {
+      type: [String, Number]
+    },
+    groupId: {
+      type: [String, Number]
+    },
+    showTip: {
+      type: Boolean,
+      default: true
+    },
+    isSales: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
     return {
       word: '',
       negativeWordsDialogVisible: false,
+      loading: false,
 
       NEGATIVE_KEYWORDS_MAX
     }
   },
   methods: {
-    addNegativeWords () {
+    async addNegativeWords () {
       const val = this.word.trim()
       if (val === '') {
         this.negativeWordsDialogVisible = true
         return
       }
-
-      const existWord = this.negativeWords.find(o => o.word.toLowerCase() === val.toLowerCase())
-      if (existWord) {
-        return this.$message.error(`已存在该否定关键词：${val}`)
+      if (this.negativeWords.length + 1 > NEGATIVE_KEYWORDS_MAX) {
+        return this.$message.error(`否定关键词个数不能超过${NEGATIVE_KEYWORDS_MAX}`)
       }
+
+      this.loading = true
+
       try {
         validateKeyword([val])
+        const isRemoteQuery = !!(this.campaignId || this.groupId)
+        // 校验是否已存在
+        await getNotExistWords(this.allWords, [val], isRemoteQuery, {
+          groupId: this.groupId,
+          campaignId: this.campaignId
+        })
+        this.$emit('add-negative-words', [{ word: val }])
+        this.$emit('track', 'click-button: add-negative-keyword')
       } catch (e) {
         return this.$message.error(e.message)
       } finally {
         this.word = ''
+        this.loading = false
       }
-      this.$emit('change', 'negativeWords', [{ word: val }].concat(this.negativeWords))
     },
-    removeNegativeWord (w) {
-      this.$emit('change', 'negativeWords', this.negativeWords.filter(o => o.word !== w.word))
+    removeNegativeWord (idx) {
+      this.$emit('remove-negative-words', idx)
     },
     updateNegativeWords (words) {
-      this.$emit('change', 'negativeWords', words.concat(this.negativeWords))
+      this.$emit('add-negative-words', words)
+
+      this.$emit('track', 'click-button: add-negative-keyword-list', {
+        negativeWordsLen: words.length,
+        negativeWords: words.map(o => o.word).join(',')
+      })
     }
   },
   components: {

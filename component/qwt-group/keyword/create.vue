@@ -1,57 +1,61 @@
 <template>
   <div class="keywords-container">
     <p class="tip">
-      请选取<strong>20</strong>个以上关键词，关键词越多您的创意被展现的机会越多。根据当月数据，为您推荐如下关键词
+      请选取<strong>20</strong>个以上关键词，关键词越多您的创意被展现的机会越多。
+      当前单元关键词数量<strong>{{originKeywords.length}}</strong>个
     </p>
-    <div class="search">
-      <el-input v-model="word" class="input" size="medium" placeholder="添加自定义词"  />
-      <el-button type="primary" size="medium" @click="handleAddKeywords">添加关键词</el-button>
-      <el-button type="primary" size="medium" plain @click="baiduExpandWordsDialogVisible = true">规划拓词工具</el-button>
-    </div>
-
-    <div class="res" v-if="keywords.length">
+    <search-comp :campaign-id="campaignId"
+                 :areas="areas"
+                 :sources="sources"
+                 v-on="$listeners"
+                 :all-words="allWords" />
+    <div class="res"
+         v-if="originKeywords.length">
       <el-tag class="tag"
               :class="{'tag-fh': RECOMMAND_SOURCES.includes(kw.recommandSource)}"
-              v-for="(kw, index) in keywords"
+              v-for="(kw, index) in originKeywords"
               :key="index"
               closable
+              type="primary"
               @close="removeKeyword(index)">
-        {{kw.word}}
-        {{RECOMMAND_SOURCES.includes(kw.recommandSource) ? '(好词)': ''}}
+        {{ kw.word }}
+        {{ RECOMMAND_SOURCES.includes(kw.recommandSource) ? '(好词)': '' }}
       </el-tag>
     </div>
-
-    <!-- 添加关键词模态框 -->
-    <keyword-dialog
-      :visible.sync="keywordDialogVisible"
-      :original-keywords="keywords"
-      @update-keywords="updateWords"
-      />
-    <!-- 规划拓词模态框 -->
-    <baidu-expand-words-dialog
-      :visible.sync="baiduExpandWordsDialogVisible"
-      :extra-query="{
-        campaign_id: campaignId,
-        areas: areas
-      }"
-      @confirm="addBaiduWords"
-    />
-
   </div>
 </template>
 
 <script>
-import KeywordDialog from './keyword-dialog'
-import BaiduExpandWordsDialog from 'com/common/qwt-baidu-expand-words'
+import SearchComp from './search'
 
 import { RECOMMAND_SOURCE_FH, NEW_RECOMMAND_SOURCE_FH } from 'constant/fengming'
-import { validateKeyword } from 'util/campaign'
 const RECOMMAND_SOURCES = [RECOMMAND_SOURCE_FH, NEW_RECOMMAND_SOURCE_FH]
 
 export default {
   name: 'qwt-create-keyword',
   props: {
-    keywords: {
+    allWords: {
+      type: Array,
+      required: true,
+      default () {
+        return []
+      }
+    },
+    originKeywords: {
+      type: Array,
+      required: true,
+      default () {
+        return []
+      }
+    },
+    areas: {
+      type: Array,
+      required: true,
+      default () {
+        return []
+      }
+    },
+    sources: {
       type: Array,
       required: true,
       default () {
@@ -59,52 +63,21 @@ export default {
       }
     },
     campaignId: {
-      type: Number
-    },
-    areas: {
-      type: Array
+      type: [String, Number]
     }
   },
   data () {
     return {
-      word: '',
-      keywordDialogVisible: false,
-      baiduExpandWordsDialogVisible: false,
-
       RECOMMAND_SOURCES
     }
   },
   methods: {
-    handleAddKeywords () {
-      const val = this.word.trim()
-      if (val === '') {
-        this.keywordDialogVisible = true
-        return
-      }
-
-      const existWord = this.keywords.find(o => o.word.toLowerCase() === val.toLowerCase())
-      if (existWord) {
-        return this.$message.error(`已存在该否定关键词：${val}`)
-      }
-      try {
-        validateKeyword([val])
-      } catch (e) {
-        return this.$message.error(e.message)
-      } finally {
-        this.word = ''
-      }
-      this.$emit('update-group', 'keywords', [{ word: val }].concat(this.keywords))
-    },
-    updateWords (words) {
-      this.$emit('update-group', 'keywords', words.concat(this.keywords))
-    },
-    addBaiduWords (words) {
-      this.$emit('update-group', 'keywords', words.concat(this.keywords))
+    removeKeyword (idx) {
+      this.$emit('remove-keywords', idx)
     }
   },
   components: {
-    KeywordDialog,
-    BaiduExpandWordsDialog
+    SearchComp
   }
 }
 </script>
@@ -120,9 +93,7 @@ export default {
   }
   strong {
     color: $c-strong;
-  }
-  .input {
-    width: 240px;
+    font-size: 14px;
   }
   .res {
     margin-top: 20px;

@@ -37,6 +37,7 @@
 <script>
 import { validateKeyword } from 'util/campaign'
 import { NEGATIVE_KEYWORDS_MAX } from 'constant/fengming'
+import { getNotExistWords } from 'util/group'
 
 export default {
   name: 'negative-word-dialog',
@@ -48,9 +49,19 @@ export default {
         return []
       }
     },
+    allWords: {
+      type: Array,
+      required: true
+    },
     visible: {
       type: Boolean,
       required: true
+    },
+    campaignId: {
+      type: [String, Number]
+    },
+    groupId: {
+      type: [String, Number]
     }
   },
   data () {
@@ -69,17 +80,17 @@ export default {
       this.search = ''
       this.words = []
     },
-    addWords () {
+    async addWords () {
       if (this.search.trim() === '') {
         return this.$message.warning('还未添加关键词')
       }
 
       // 数组去重并去掉首尾的逗号
       let words = this.search.trim().split(/[，,]]*/g)
-      words = Array.from(new Set(words
+      words = [...new Set(words
         .map(row => row.trim().toLowerCase())
-        .filter(row => !this.negativeWords.find(o => o.word.toLowerCase() === row) && row !== '')
-      ))
+        .filter(row => row !== '')
+      )]
 
       if (words.concat(this.negativeWords).length > NEGATIVE_KEYWORDS_MAX) {
         return this.$message.error(`否词个数不得超过${NEGATIVE_KEYWORDS_MAX}`)
@@ -87,13 +98,20 @@ export default {
 
       try {
         validateKeyword(words)
+
+        // 校验是否已存在
+        const isRemoteQuery = !!(this.campaignId || this.groupId)
+        const newWords = await getNotExistWords(this.allWords, words, isRemoteQuery, {
+          groupId: this.groupId,
+          campaignId: this.campaignId
+        })
+
+        this.words = newWords.map(o => {
+          return { word: o }
+        })
       } catch (e) {
         return this.$message.error(e.message)
       }
-
-      this.words = words.map(o => {
-        return { word: o }
-      })
     }
   }
 }
@@ -120,6 +138,8 @@ export default {
   }
   .content {
     margin-top: 20px;
+    max-height: 300px;
+    overflow-y: auto;
     .tag {
       margin-right: 5px;
       margin-bottom: 5px;

@@ -693,7 +693,7 @@ export default {
   }
 }
 
-.price, .match-type{
+.price, .match-type {
   display: flex;
   align-items: center;
 

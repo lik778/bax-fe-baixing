@@ -11,14 +11,16 @@
       <div class="search-container">
         <el-input class="search"
                   placeholder="请批量添加关键词"
-                  size="small"
                   v-model="search"></el-input>
         <el-button class="add-btn"
                    type="primary"
-                   size="small"
+                   :loading="loading"
                    @click="addWordList">批量添加</el-button>
       </div>
-      <div class="tip">提示: 请用逗号区分关键词进行批量关键词添加，如合肥家政服务公司，合肥月嫂，合肥钟点工</div>
+      <div class="tip">提示:
+        <p>1、请用逗号区分关键词进行批量关键词添加，如合肥家政服务公司，合肥月嫂，合肥钟点工</p>
+        <p>2、如关键词已存在，会自动过滤掉存在的内容</p>
+      </div>
     </div>
     <div class="content">
       <div class="sec"
@@ -47,37 +49,24 @@
     <span slot="footer"
           class="footer">
       <el-button type="primary"
-                 @click="handleConfirm"
-                 size="small">确认
+                 @click="handleConfirm">确认
       </el-button>
     </span>
   </el-dialog>
 </template>
 
 <script>
-import { Message } from 'element-ui'
-
 import { recommendByWordList } from 'api/fengming'
 import { isObj } from 'util'
-import { MIN_WORD_PRICE } from 'constant/keyword'
 import { validateKeyword } from 'util/campaign'
+import { fmtNewKeywordsPrice, getNotExistWords } from 'util/group'
 
 export default {
-  name: 'QwtAddKeywordsDialog',
+  name: 'qwt-keyword-dialog',
   props: {
     visible: {
       type: Boolean,
       required: true
-    },
-    isEdit: {
-      type: Boolean,
-      default: false
-    },
-    areas: {
-      type: Array,
-      default: () => {
-        return []
-      }
     },
     sources: {
       type: Array,
@@ -85,15 +74,17 @@ export default {
         return []
       }
     },
-    campaignId: {
-      type: Number
-    },
-    originalKeywords: {
+    allWords: {
       type: Array,
-      required: true,
       default: () => {
         return []
       }
+    },
+    groupId: {
+      type: [String, Number]
+    },
+    campaignId: {
+      type: [String, Number]
     }
   },
   data () {
@@ -102,18 +93,19 @@ export default {
         normalList: [],
         bannedList: []
       },
+      loading: false,
       search: ''
     }
   },
   methods: {
     handleConfirm () {
-      this.$emit('update-keywords', this.keywords.normalList)
+      this.$emit('update', this.keywords.normalList)
       this.handleClose()
     },
     handleClose () {
+      this.$emit('update:visible', false)
       this.search = ''
       this.getInitKeywords()
-      this.$emit('update:visible', false)
     },
     getInitKeywords () {
       for (const key in this.keywords) {
@@ -123,7 +115,7 @@ export default {
     async addWordList () {
       // 空字符校验
       if (this.search.trim() === '') {
-        return Message.warning('还未添加关键词')
+        return this.$message.warning('还未添加关键词')
       }
 
       // 数组去重并去掉首尾的逗号
@@ -133,71 +125,37 @@ export default {
       }).filter(row => row !== '')))
 
       if (words.length > 100) {
-        return Message.warning('每次最多支持上传100个关键词')
+        return this.$message.warning('每次最多支持上传100个关键词')
       }
 
       try {
         validateKeyword(words)
-      } catch (e) {
-        return Message.error(e.message)
-      }
-
-      // 判断关键词已存在
-      let normalList = (this.keywords && this.keywords.normalList) || []
-      const bannedList = (this.keywords && this.keywords.bannedList) || []
-      normalList = this.originalKeywords.concat(normalList)
-      for (let i = 0; i < normalList.length; i++) {
-        const row = normalList[i]
-        if (words.includes(row.word.toLowerCase())) {
-          return Message.warning(`${row.word}该关键词已存在关键词或否定关键词列表`)
-        }
-      }
-      for (let i = 0; i < bannedList.length; i++) {
-        const row = bannedList[i]
-        if (words.includes(row.word)) {
-          return Message.warning(`因平台限制，${row.word}无法添加，请修改`)
-        }
-      }
-
-      // 拼接关键词
-      const newKeywords = await this.fetchWords(words)
-      for (const key in this.keywords) {
-        this.keywords[key] = this.keywords[key].concat(newKeywords[key])
-      }
-      this.search = ''
-    },
-    async fetchWords (words) {
-      if (this.isEdit) {
-        return await this._fetchKeywords(words, {
+        const normalList = (this.keywords && this.keywords.normalList) || []
+        const allWords = this.allWords.concat(normalList)
+        const isRemoteQuery = !!(this.campaignId || this.groupId)
+        // 校验是否已存在
+        const newWords = await getNotExistWords(allWords, words, isRemoteQuery, {
+          groupId: this.groupId,
           campaignId: this.campaignId
         })
-      } else {
-        return await this._fetchKeywords(words, {
-          areas: this.areas,
-          sources: this.sources
-        })
+
+        // 拼接关键词
+        const newKeywords = await this.fetchWords(newWords)
+        for (const key in this.keywords) {
+          this.keywords[key] = [...new Set(this.keywords[key].concat(newKeywords[key]))]
+        }
+        this.search = ''
+      } catch (e) {
+        return this.$message.error(e.message)
       }
     },
-    async _fetchKeywords (words, opts) {
-      const result = await recommendByWordList(words, opts)
-      if (result && isObj(result)) {
-        for (const key in result) {
-          if (Array.isArray(result[key])) {
-            result[key] = result[key].map(word => {
-              const { price: serverPrice } = word
-              let price = serverPrice
-              if (price < MIN_WORD_PRICE) {
-                price = MIN_WORD_PRICE
-              }
-              return {
-                ...word,
-                serverPrice,
-                price, // override price, price is display value
-                value: word.word
-              }
-            })
-          }
-        }
+    async fetchWords (words) {
+      const queryOpts = {}
+      if (this.sources.length) queryOpts.sources = this.sources
+      const result = await recommendByWordList(words, { campaignId: this.campaignId })
+      if (!(result && isObj(result))) return
+      for (const key in result) {
+        result[key] = fmtNewKeywordsPrice(result[key])
       }
       return result
     }
@@ -207,34 +165,36 @@ export default {
 
 <style lang="scss" scoped>
 .keywords-dialog {
-  & .header {
-    & .search-container {
+  .header {
+    .search-container {
       display: flex;
       align-items: center;
     }
-    & .search {
+    .search {
       width: 300px;
     }
-    & .add-btn {
+    .add-btn {
       margin-left: 20px;
     }
-    & .tip {
+    .tip {
       font-size: 12px;
       margin-top: 10px;
       color: #ff7533;
     }
   }
-  & .content {
+  .content {
     margin-top: 20px;
-    & .sec {
+    max-height: 300px;
+    overflow-y: auto;
+    .sec {
       font-weight: bold;
       font-size: 14px;
       margin-top: 20px;
     }
-    & .sec-title {
+    .sec-title {
       margin-bottom: 10px;
     }
-    & .tag-item {
+    .tag-item {
       margin-right: 5px;
       margin-top: 8px;
     }
