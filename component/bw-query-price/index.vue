@@ -615,5 +615,6 @@ marquee {
   width: 180px;
   position: absolute;
   top: 50px;
+  left: -20px;
 }
 </style>
