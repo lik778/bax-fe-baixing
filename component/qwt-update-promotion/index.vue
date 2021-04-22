@@ -105,7 +105,13 @@
       </section>
       <section v-if="enableMaterialPictures">
         <header class="top-col">
-          创意配图
+          <span>创意配图</span>
+          <el-tooltip
+            v-if="isCurPromotionPaused"
+            placement="top"
+            content="当前计划已下线。重启计划后，创意配图会一并生效">
+              <i class="el-icon-question"></i>
+          </el-tooltip>
         </header>
         <material-pictures-dialog
           v-model="materialPictures"
@@ -588,6 +594,9 @@ export default {
     }
   },
   computed: {
+    isCurPromotionPaused () {
+      return this.getProp('pause') === 1
+    },
     enableMaterialPictures () {
       return this.getProp('source') === SEM_PLATFORM_BAIDU
     },
