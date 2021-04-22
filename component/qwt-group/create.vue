@@ -40,14 +40,19 @@
     <section>
       <header>选取推广关键词（当前计划还可添加<strong>{{keywordRemainCount}}</strong>个关键词）</header>
       <div class="content">
-        <keyword-comp :campaign-id="promotion.id"
-                      :areas="promotion.areas"
-                      :sources="[promotion.source]"
-                      :origin-keywords="group.keywords"
-                      :all-words="group.keywords.concat(group.negativeWords)"
-                      @track="(action, opts) => handleTrack(action, opts)"
-                      @add-keywords="(words) => group.keywords = words.concat(group.keywords)"
-                      @remove-keywords="(idx) => group.keywords.splice(idx, 1)" />
+        <keyword-comp :keywords="group.keywords"
+                      @remove-keywords="(idx) => group.keywords.splice(idx, 1)">
+          <search-comp :campaign-id="promotion.id"
+                       :areas="promotion.areas"
+                       :sources="[promotion.source]"
+                       :landing-type="group.landingType"
+                       :landing-page="group.landingPage"
+                       :creatives="group.creatives"
+                       :all-words="group.keywords.concat(group.negativeWords)"
+                       @track="(action, opts) => handleTrack(action, opts)"
+                       @add-keywords="handleAddKeywords"
+                       slot="search" />
+        </keyword-comp>
       </div>
     </section>
     <section>
@@ -65,6 +70,7 @@
         </p>
         <negative-keyword-comp :negative-words="group.negativeWords"
                                :show-tip="false"
+                               :campaign-id="promotion.id"
                                @track="(action, opts) => handleTrack(action, opts)"
                                :all-words="group.negativeWords.concat(group.keywords)"
                                @add-negative-words="(words) => group.negativeWords = words.concat(group.negativeWords)"
@@ -97,6 +103,7 @@ import NegativeKeywordComp from 'com/common/qwt/negative-words'
 import ContractAckComp from 'com/widget/contract-ack'
 import MobilePriceRatioComp from './mobile-price-ratio'
 import CpcPriceComp from './cpc-price'
+import SearchComp from './keyword/search'
 
 import { createValidator } from './validate'
 import {
@@ -106,12 +113,14 @@ import {
   getGroupDetailByGroupId,
   getKeywordsByGroupId
 } from 'api/fengming'
-import { emptyGroup, NEGATIVE_KEYWORDS_MAX, KEYWORDS_MAX } from 'constant/fengming'
+import { emptyGroup, NEGATIVE_KEYWORDS_MAX, KEYWORDS_MAX, RECOMMAND_SOURCES } from 'constant/fengming'
 import clone from 'clone'
 import pick from 'lodash.pick'
-import track from 'util/track'
+import track, { trackRecommendService } from 'util/track'
 import { toFloat } from 'util'
 import uuid from 'uuid/v4'
+import { MAX_WORD_PRICE, MIN_WORD_PRICE } from 'constant/keyword'
+import { f2y } from 'util/kit'
 
 const emptyPromotion = {
   id: 0,
@@ -140,7 +149,8 @@ export default {
       NEGATIVE_KEYWORDS_MAX,
       actionTrackId: uuid(),
 
-      campaignKeywordLen: 0
+      campaignKeywordLen: 0,
+      urlRecommends: []
     }
   },
   computed: {
@@ -155,40 +165,51 @@ export default {
   async mounted () {
     this.handleTrack('enter-page: create-group')
 
-    // 复制进入
-    const cloneId = this.$route.query.cloneId
-    if (cloneId) {
-      await this.cloneGroupById(cloneId)
-    } else {
-      const promotion = await getCampaignInfo(this.campaignId)
-      this.promotion = pick(promotion, ['id', 'source', 'areas'])
+    const loadingInstance = this.$loading({
+      lock: true,
+      target: '.qwt-create-group',
+      text: '正在加载中...',
+      spinner: 'el-icon-loading'
+    })
+    try {
+      // 复制进入
+      const cloneId = this.$route.query.cloneId
+      if (cloneId) {
+        await this.cloneGroupById(cloneId)
+      } else {
+        const promotion = await getCampaignInfo(this.campaignId)
+        this.promotion = pick(promotion, ['id', 'source', 'areas'])
+      }
+      this.campaignKeywordLen = await getCampaignKeywordsCount(this.campaignId)
+    } finally {
+      loadingInstance.close()
     }
-    this.campaignKeywordLen = await getCampaignKeywordsCount(this.campaignId)
   },
   methods: {
     async cloneGroupById (groupId) {
       const originGroup = await getGroupDetailByGroupId(groupId)
       const originKeywords = await getKeywordsByGroupId(groupId)
-      this.promotion = this.group.campaign
 
-      const price = this.recommendKwPrice()
-
+      const price = this.recommendKwPrice(originKeywords)
       const keywords = originKeywords.map(o => ({ ...o, price }))
+      const group = pick(originGroup, ['creatives', 'landingPage', 'landingType', 'landingPageId', 'mobilePriceRatio', 'name', 'negativeWords'])
+
       this.group = {
-        ...originGroup,
-        price,
+        ...clone(group),
+        price: f2y(price),
         keywords
       }
+
+      this.promotion = clone(originGroup.campaign)
     },
-    recommendKwPrice () {
-      const keywords = this.promotion.keywords
+    recommendKwPrice (keywords) {
       // 复制推荐词价格取平均值
       if (this.$route.query.cloneId) {
         const sum = keywords.reduce((total, kw) => total + kw.price, 0)
-        return Math.min(Math.max(200, toFloat(sum / keywords.length)), 99900)
+        return Math.min(Math.max(MIN_WORD_PRICE, toFloat(sum / keywords.length)), MAX_WORD_PRICE)
       }
       const max = Math.max.apply(null, keywords.map(kw => kw.price))
-      return Math.min(Math.max(200, toFloat(max, 0)), 99900)
+      return Math.min(Math.max(MIN_WORD_PRICE, toFloat(max, 0)), MAX_WORD_PRICE)
     },
     handleTrack (action, opts = {}) {
       const { actionTrackId, userInfo } = this
@@ -244,8 +265,41 @@ export default {
       } finally {
         this.isUpdating = false
       }
+    },
+    handleAddKeywords (words, isRecommend) {
+      this.group.keywords = words.concat(this.group.keywords)
+      if (isRecommend) {
+        this.urlRecommends = words.concat(this.urlRecommends)
+      }
+    },
+    trackPromotionKeywords () {
+      // TODO: 凤凰于飞打点 action是否要更改
+      const { keywords, landingPage, landingType, creativeTitle, creativeContent } = this.group
+      const { areas, source, id: promotionId } = this.promotion
+      const recommendKeywords = this.urlRecommends
+        .filter(({ recommandSource }) => RECOMMAND_SOURCES.includes(recommandSource))
+        .map(({ word, recommandSource }) => `${word}_${recommandSource}`)
+        .join(',')
+
+      const selectedKeywords = keywords
+        .map(({ word, recommandSource = 'user_selected' }) => `${word}=${recommandSource}`)
+        .join(',')
+
+      trackRecommendService({
+        action: 'record-keywords-group',
+
+        ids: promotionId,
+        areas: areas.join(','),
+        landingPage: landingPage,
+        landingType: landingType,
+        creativeTitle: creativeTitle,
+        creativeContent: creativeContent,
+        sources: source,
+        selectedKeywords,
+        recommendKeywords,
+        keywordPrice: f2y(this.kwPrice) || f2y(this.recommendKwPrice)
+      })
     }
-    // TODO: 凤凰于飞打点
   },
   components: {
     LandingComp,
@@ -256,7 +310,8 @@ export default {
     NegativeKeywordComp,
     ContractAckComp,
     MobilePriceRatioComp,
-    CpcPriceComp
+    CpcPriceComp,
+    SearchComp
   }
 }
 </script>

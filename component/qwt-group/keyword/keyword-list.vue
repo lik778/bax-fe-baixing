@@ -174,7 +174,7 @@ import HeaderTipComp from 'com/common/header-tip'
 import BaxInput from 'com/common/bax-input'
 import BaxPagination from 'com/common/pagination'
 
-import { changeCampaignKeywordsPrice, changeCampaignKeywordsMatchType } from 'api/fengming'
+import { changeGroupKeywordsPrice, changeGroupKeywordsMatchType } from 'api/fengming'
 
 import { fmtCpcRanking } from 'util/campaign'
 import {
@@ -388,7 +388,7 @@ export default {
 
       try {
         this.loading = true
-        await changeCampaignKeywordsPrice(this.groupId, price)
+        await changeGroupKeywordsPrice(this.groupId, price)
         this.emitUpdateKeywords('price', price)
         this.$emit('update-origin-keywords', 'price', price)
         this.$message.success('关键词批量改价成功')
@@ -402,7 +402,7 @@ export default {
 
       try {
         this.loading = true
-        await changeCampaignKeywordsMatchType(this.groupId, matchType)
+        await changeGroupKeywordsMatchType(this.groupId, matchType)
         this.emitUpdateKeywords('matchType', matchType)
         this.$emit('update-origin-keywords', 'matchType', matchType)
         this.$message.success('匹配方式批量修改成功')

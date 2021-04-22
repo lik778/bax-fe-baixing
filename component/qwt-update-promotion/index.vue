@@ -131,6 +131,8 @@ export default {
     }
   },
   async mounted () {
+    this.handleTrack('enter-page: update-campaign')
+
     const loadingInstance = this.$loading({
       lock: true,
       target: '.promotion-update',
@@ -142,8 +144,6 @@ export default {
     } finally {
       loadingInstance.close()
     }
-
-    this.handleTrack('enter-page: update-campaign')
   },
   methods: {
     handleTrack (action) {

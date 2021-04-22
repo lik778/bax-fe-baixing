@@ -2,7 +2,7 @@
   <div>
     <el-button @click="handleGoGroup"
                type="primary"
-               :disabled="isSales || (groupData && groupData.length >= GROUP_MAX)"
+               :disabled="disabled"
                class="add-group-btn">
       <i class="el-icon-plus" />新增单元
     </el-button>
@@ -26,16 +26,24 @@
                        align="center">
         <template slot-scope="{row}">
           <!-- TODO: 待后端确认状态 -->
-          <span :class="{btn: true, disabled: isSales }"
-                v-if="true"
-                @click="pauseGroup(row)">暂停</span>
-          <span :class="{btn: true, disabled: isSales }"
-                v-if="false"
-                @click="activeGroup(row)">开启</span>
-          <span class="btn"
-                @click="optimizeGroup(row)">优化</span>
-          <span :class="{btn: true, disabled: isSales }"
-                @click="copyGroup(row)">复制</span>
+          <el-button class="btn"
+                     :disabled="isSales"
+                     :class="{disabled: isSales}"
+                     v-if="true"
+                     @click="pauseGroup(row)">暂停</el-button>
+          <el-button class="btn"
+                     :disabled="isSales"
+                     :class="{disabled: isSales}"
+                     v-if="false"
+                     @click="activeGroup(row)">开启</el-button>
+          <el-button class="btn"
+                     :class="{disabled: isSales}"
+                     :disabled="isSales"
+                     @click="optimizeGroup(row)">优化</el-button>
+          <el-button class="btn"
+                     :class="{disabled}"
+                     :disabled="disabled"
+                     @click="copyGroup(row)">复制</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -62,6 +70,11 @@ export default {
     return {
       groupData: null,
       GROUP_MAX
+    }
+  },
+  computed: {
+    disabled () {
+      return this.isSales || (this.groupData && this.groupData.length >= GROUP_MAX)
     }
   },
   async mounted () {
@@ -119,6 +132,8 @@ export default {
   .btn {
     color: $c-info;
     cursor: pointer;
+    padding: 0;
+    border: 0;
     &:not(:first-child) {
       margin-left: 6px;
     }

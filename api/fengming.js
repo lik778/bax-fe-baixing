@@ -149,19 +149,7 @@ export async function getCampaignInfo (id) {
     .get(`/campaign/${id}`)
     .json()
 
-  const campaign = toCamelcase(body.data)
-
-  if (!campaign.landingPageId) {
-    // why ? 不想多说什么了, 呵呵
-    if (campaign.landingPage && campaign.landingPage.includes('vad_id')) {
-      const search = (new URL(campaign.landingPage)).search
-      const o = qs.parse(search)
-      if (o.vad_id) {
-        campaign.landingPageId = o.vad_id
-      }
-    }
-  }
-  return campaign
+  return toCamelcase(body.data)
 }
 
 export async function updateCampaign (id, data) {
@@ -542,7 +530,7 @@ export async function getKeywordsByGroupId (groupId) {
     }))
     .json()
 
-  return body.data
+  return toCamelcase(body.data)
 }
 
 /**
@@ -590,7 +578,7 @@ export async function getAllCampaigns (opts) {
     .send(reverseCamelcase(opts))
     .json()
 
-  return body.data
+  return toCamelcase(body.data)
 }
 
 /**
@@ -621,7 +609,20 @@ export async function getGroupDetailByGroupId (groupId) {
     .get(`/group/${groupId}`)
     .json()
 
-  return toCamelcase(body.data)
+  const group = toCamelcase(body.data)
+
+  if (!group.landingPageId) {
+    // why ? 不想多说什么了, 呵呵
+    if (group.landingPage && group.landingPage.includes('vad_id')) {
+      const search = (new URL(group.landingPage)).search
+      const o = qs.parse(search)
+      if (o.vad_id) {
+        group.landingPageId = o.vad_id
+      }
+    }
+  }
+
+  return group
 }
 
 /**
@@ -656,6 +657,34 @@ export async function pauseGroups (ids) {
     .json()
 
   return body
+}
+
+/**
+ * 单元接口批量改价
+ * @param {number} groupId
+ * @param {number} price
+ */
+export async function changeGroupKeywordsPrice (groupId, price) {
+  const body = await fengming
+    .post(`/group/${groupId}/keyword`)
+    .send({ price })
+    .json()
+
+  return body.data
+}
+
+/**
+ * 单元接口批量匹配模式
+ * @param {number} groupId
+ * @param {number} matchType
+ */
+export async function changeGroupKeywordsMatchType (groupId, matchType) {
+  const body = await fengming
+    .post(`/group/${groupId}/keyword_match`)
+    .send(reverseCamelcase({ matchType }))
+    .json()
+
+  return body.data
 }
 
 /**

@@ -35,7 +35,8 @@
         <div class="keywords-container">
           <div class="pane">
             <header>添加推广关键词</header>
-            <search-comp :promotion-id="promotion.id"
+            <search-comp :campaign-id="promotion.id"
+                         :group-id="groupId"
                          :areas="promotion.areas"
                          :landing-page="group.landingPage"
                          :landing-type="group.landingType"
@@ -52,7 +53,9 @@
                       class="input"
                       placeholder="请输入关键词查询" />
           </div>
-          <p class="tip" style="margin-top: 20px" v-if="promotion.source === SEM_PLATFORM_BAIDU">
+          <p class="tip"
+             style="margin-top: 20px"
+             v-if="promotion.source === SEM_PLATFORM_BAIDU">
             为保证流量，单计划内的关键词数≥<strong>30</strong>个才能选择精确匹配方式；
             单个计划最多可设置<strong>10</strong>个精确匹配。
           </p>
@@ -60,13 +63,14 @@
         <keyword-list-comp ref="keywordListComp"
                            :platform="promotion.source"
                            :show-prop-ranking="promotion.source !== SEM_PLATFORM_SHENMA"
+                           :show-match-type="promotion.source === SEM_PLATFORM_BAIDU"
                            :group-offline="originGroup.status === CAMPAIGN_STATUS_OFFLINE"
                            :group-online="originGroup.status === CAMPAIGN_STATUS_ONLINE"
                            :keywords="keywords"
                            :group-id="groupId"
                            :origin-keywords="originKeywords"
                            :search-word="searchWord"
-                           @update-origin-keywords="(changeTag, v) => originKeywords.map(o => ({ ...o, [changeTag]: v }))"
+                           @update-origin-keywords="(changeTag, v) => originKeywords = originKeywords.map(o => ({ ...o, [changeTag]: v }))"
                            @update-keywords="(words) => (keywords = words)"
                            @remove-keywords="(idx) => keywords.splice(idx, 1)" />
       </div>
@@ -80,7 +84,8 @@
         </el-tooltip>
       </header>
       <div class="content">
-        <p class="tip" style="margin-bottom: 20px">
+        <p class="tip"
+           style="margin-bottom: 20px">
           当网民的搜索词与精确否定关键词完全一致时，您的推广结果将不会展现。 否词个数不得超过 <strong>{{ NEGATIVE_KEYWORDS_MAX }}</strong>个,
           当前否定关键词数量: <strong>{{ group.negativeWords.length }}</strong>个
         </p>
@@ -358,7 +363,7 @@ export default {
     getUpdatedKeywordData () {
       const data = {}
       if (this.newKeywords.length) data.newKeywords = this.newKeywords
-      if (this.deletedKeywords.length) data.deletedKeywords = this.deletedKeywords
+      if (this.deletedKeywords.length) data.deletedKeywords = this.deletedKeywords.map(o => o.id)
       if (this.updatedKeywords.length) data.updatedKeywords = this.updatedKeywords
       return data
     }
