@@ -35,19 +35,19 @@
                 align="center"
                 width="150"
               >
-                <template slot-scope="scope">
-                  <el-popconfirm title="确定要暂停吗?" @confirm="pausePromote(scope.row.id)">
-                    <el-button slot="reference" type="text">暂停</el-button>
+                <template slot-scope="{row}">
+                  <el-popconfirm :title="`确定要${!row.pause ? `暂停投放` : '开始投放'}吗？`" @confirm="confirm(row)">
+                    <el-button slot="reference" type="text">{{!row.pause ? `暂停` : '投放'}}</el-button>
                   </el-popconfirm>
                   <router-link :to="{
                       name: 'qwt-update-promotion',
-                      params: { id: scope.row.id },
+                      params: { id: row.id },
                     }">优化</router-link>
                   <el-button
                     type="text"
                     @click="
                       () => {
-                        console.log(scope.row);
+                        console.log(row);
                       }
                     "
                   >复制</el-button>
@@ -82,6 +82,13 @@ export default {
   methods: {
     pausePromote (id) {
       this.$emit('pause', id)
+    },
+    confirm ({ pause, id }) {
+      if (pause) {
+        this.$emit('active', id)
+      } else {
+        this.$emit('pause', id)
+      }
     }
   }
 }

@@ -24,7 +24,7 @@ const development = {
 }
 
 const local = {
-  fengmingApiHost: 'http://localhost:8000',
+  fengmingApiHost: `${window.origin}/devApi`,
   baxApiHost: '//bax.baixing.cn/bax',
   kaApiHost: '//bax.baixing.cn/ka/api/admin',
   biaowangApiHost: '//bax.baixing.cn/phoenixs/api',

@@ -14,11 +14,11 @@
         <el-tabs v-model="activeName" @tab-click="toggleTab" type="card" >
           <el-tab-pane label="计划" name="plan" >
             <baxForm :promotions="promotionIds" :formData="queryParams" :allAreas="allAreas" @fetchData="editFormData" :isActionGroupExpand="isActionGroupExpand" :tab="activeName"/>
-            <promotionTable @pause="pausePromote" ref="promoteTable" @modifyBudget="modifyBudget" :list="promotionList" :loading="landingPageLoading" />
+            <promotionTable @active="activeCampaigns" @pause="pausePromote" ref="promoteTable" @modifyBudget="modifyBudget" :list="promotionList" :loading="landingPageLoading" />
           </el-tab-pane>
           <el-tab-pane label="单元" name="group" >
             <baxForm :promotions="promotionIds" :formData="queryParams" :allAreas="allAreas" @fetchData="editFormData" :isActionGroupExpand="isActionGroupExpand" :tab="activeName" />
-            <groupTable @pause="pauseGroup" :list="groupList" :loading="landingPageLoading"/>
+            <groupTable @active="activeGroup" @pause="pauseGroup" :list="groupList" :loading="landingPageLoading"/>
           </el-tab-pane>
         </el-tabs>
       </div>
@@ -33,7 +33,7 @@ import pick from 'lodash.pick'
 import clone from 'clone'
 import { CAMPAIGN_STATUS_OPTS, CAMPAIGN_OPTIMIZATION_OPTS } from './constant'
 import { getCampaignList, getGroupList, getCampaignIds } from 'api/fengming-campaign'
-import { updateCampaignDailyBudget, pauseCampaigns, pauseGroup } from 'api/fengming'
+import { updateCampaignDailyBudget, pauseCampaigns, pauseGroup, activeCampaigns, activeGroup } from 'api/fengming'
 import { semPlatformOpts as SOURCES_OPTS } from 'constant/fengming'
 const CNT_REJECTED_CODE = '-53'
 const ONE_PAGE_NUM = 10
@@ -179,9 +179,19 @@ export default {
       this.$message.success('已暂停投放')
       this.fetchlandingPageList()
     },
+    async activeCampaigns (ids) {
+      await activeCampaigns([ids])
+      this.$message.success('已开启投放')
+      this.fetchlandingPageList()
+    },
     async pauseGroup (ids) {
       await pauseGroup([ids])
       this.$message.success('已暂停投放')
+      this.fetchGroupList()
+    },
+    async activeGroup (ids) {
+      await activeGroup([ids])
+      this.$message.success('已开启投放')
       this.fetchGroupList()
     }
   }
