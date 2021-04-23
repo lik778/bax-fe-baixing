@@ -8,6 +8,7 @@ const production = {
   biaowangApiHost: '//bax.baixing.com.cn/phoenixs/api',
   seoApiHost: '//bax.baixing.com.cn/seo-api',
   qcApiHost: 'http://bax.baixing.com.cn/api/sem-batch',
+  b2bApiHost: '//squat.baixing.com.cn',
   orderServiceHost: 'https://trade.baixing.com',
   identityBindingPage: 'https://www.baixing.com/bind/?type=idcard'
 }
@@ -19,6 +20,7 @@ const development = {
   biaowangApiHost: '/phoenixs/api',
   seoApiHost: '/seo-api',
   qcApiHost: '/sem-batch/api/sem-batch',
+  b2bApiHost: '/b2b',
   orderServiceHost: 'http://trade-dev.baixing.cn',
   identityBindingPage: 'http://www.staging.baixing.cn/bind/?type=idcard'
 }
@@ -30,6 +32,7 @@ const local = {
   biaowangApiHost: '//bax.baixing.cn/phoenixs/api',
   seoApiHost: 'http://bax.baixing.cn/seo-api',
   qcApiHost: 'http://bax.baixing.cn/sem-batch/api/sem-batch',
+  b2bApiHost: '//172.30.2.14:31643',
   orderServiceHost: 'http://trade-dev.baixing.cn',
   identityBindingPage: 'http://www.staging.baixing.cn/bind/?type=idcard'
 }
@@ -61,3 +64,4 @@ export const identityBindingPage = config.identityBindingPage
 export const assetHost = config.assetHost
 export const upyun = config.upyun
 export const preKeywordPath = config.preKeywordPath
+export const b2bApiHost = config.b2bApiHost
