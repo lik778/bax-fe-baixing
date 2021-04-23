@@ -10,6 +10,22 @@ import { SPUCODES } from 'constant/product'
 const isArray = Array.isArray
 const { WHOLE_SPU_CODE } = SPUCODES
 
+// 获取创意配图物料
+export async function getMaterialPictures (opts) {
+  return await fengming
+    .get(`/creative/${opts.campaignId}/image`)
+    .json()
+}
+
+// 更新创意配图物料
+export async function updateMaterialPictures (opts) {
+  // console.log('opts: ', opts)
+  return await fengming
+    .post('/creative/image')
+    .send(reverseCamelcase(opts))
+    .json()
+}
+
 // 查询规划师拓词
 export const queryBaiduExpandWords = paginationWrapper(
   async (opts) => (await fengming

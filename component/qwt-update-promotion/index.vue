@@ -103,6 +103,29 @@
           @error="handleCreativeError"
         />
       </section>
+      <section v-if="enableMaterialPictures">
+        <header class="top-col">
+          <span>创意配图</span>
+          <el-tooltip
+            v-if="isCurPromotionPaused"
+            placement="top"
+            content="当前计划已下线。重启计划后，创意配图会一并生效">
+              <i class="el-icon-question"></i>
+          </el-tooltip>
+        </header>
+        <material-pictures-dialog
+          v-model="materialPictures"
+          :initValue="materialPicturesInits"
+        />
+        <el-button
+          v-if="isMaterialChanged"
+          class="update-material-button"
+          type="primary"
+          size="small"
+          :loading="loading.materialPictures"
+          @click="_updateMaterialPictures"
+        >更新创意配图</el-button>
+      </section>
       <section class="keyword">
         <header class="top-col">
           <span :class="canOptimize('keyword')" class="width-120">添加推广关键词
@@ -351,6 +374,7 @@ import { Message } from 'element-ui'
 import isEqual from 'lodash.isequal'
 import uuid from 'uuid/v4'
 
+import MaterialPicturesDialog from 'com/common/material-pictures-dialog'
 import BaiduExpandWordsDialog from 'com/common/qwt-baidu-expand-words'
 import PromotionMobileRatioTip from 'com/widget/promotion-mobile-ratio-tip'
 import PromotionAreaLimitTip from 'com/widget/promotion-area-limit-tip'
@@ -389,7 +413,9 @@ import {
   getRecommandCreative,
   changeCampaignKeywordsPrice,
   changeCampaignKeywordsMatchType,
-  queryAds
+  queryAds,
+  getMaterialPictures,
+  updateMaterialPictures
 } from 'api/fengming'
 
 import {
@@ -412,6 +438,7 @@ import {
   MATCH_TYPE_EXACT,
   getMatchTypeObj,
   filterBannedListByContent,
+  MATERIAL_PIC_STATUS,
   TYPE_BAIDU_JIMUYU
 } from 'constant/fengming'
 
@@ -435,7 +462,8 @@ import {
   f2y,
   isQiqiaobanSite,
   isSiteLandingType,
-  getLandingpageByPageProtocol
+  getLandingpageByPageProtocol,
+  isArrHasSameValue
 } from 'util/kit'
 
 import { allowSee258 } from 'util/fengming-role'
@@ -461,6 +489,7 @@ const FHYF_UN_USE = 0
 export default {
   name: 'qwt-update-promotion',
   components: {
+    MaterialPicturesDialog,
     BaiduExpandWordsDialog,
     PromotionMobileRatioTip,
     PromotionAreaLimitTip,
@@ -532,6 +561,14 @@ export default {
         newNegativeKeywords: [],
         deletedNegativeKeywords: []
       },
+      loading: {
+        materialPictures: false
+      },
+      materialPictures: {},
+      materialPicturesInits: {},
+      materialPicturesInitsRaw: null,
+      isMaterialChanged: false,
+      isMaterialChangeLock: false,
       LANDING_TYPE_AD,
       LANDING_TYPE_GW,
       LANDING_TYPE_258,
@@ -557,6 +594,12 @@ export default {
     }
   },
   computed: {
+    isCurPromotionPaused () {
+      return this.getProp('pause') === 1
+    },
+    enableMaterialPictures () {
+      return this.getProp('source') === SEM_PLATFORM_BAIDU
+    },
     extendLandingTypeOpts () {
       if (allowSee258(null, this.userInfo.id)) {
         return landingTypeOpts.concat([{ label: '258官网', value: LANDING_TYPE_258 }])
@@ -569,7 +612,6 @@ export default {
       if (q < 0) {
         q = 0
       }
-
       return q
     },
     isSales () {
@@ -923,6 +965,47 @@ export default {
         store.getCurrentBalance()
       ])
     },
+    async initMaterialPictures (inits) {
+      this.isMaterialChanged = false
+      this.isMaterialChangeLock = true
+      this.materialPicturesInits = inits || (await getMaterialPictures({
+        campaignId: this.id
+      })).data
+
+      // * for test suppose
+      // this.materialPicturesInits = inits || {
+      //   image_type: 1,
+      //   pc: [
+      //     {
+      //       image_type: 1,
+      //       id: 210,
+      //       desc: '【オリジナル】「THE ',
+      //       status: 11,
+      //       url: 'http://file.baixing.net/sst-img4cda6578-02b1-4264-82f4-10fa968dd587.jpeg'
+      //     }
+      //   ],
+      //   wap: [
+      //     {
+      //       image_type: 1,
+      //       id: 212,
+      //       desc: '12',
+      //       status: 11,
+      //       url: 'http://file.baixing.net/sst-imgdbe434fb-324a-46c4-abfd-2282d35d37c7.jpeg'
+      //     }
+      //   ]
+      // }
+
+      // eslint-disable-next-line camelcase
+      const { image_type, pc = [], wap = [] } = this.materialPicturesInits
+      this.materialPicturesInitsRaw = {
+        image_type,
+        pc: [...pc],
+        wap: [...wap]
+      }
+      this.$nextTick(() => {
+        this.isMaterialChangeLock = false
+      })
+    },
     clickSourceTip () {
       Message.warning('投放渠道不能修改')
     },
@@ -1154,20 +1237,97 @@ export default {
       if (!this.$refs.contract.$data.isAgreement) {
         return this.$message.error('请阅读并勾选同意服务协议，再进行下一步操作')
       }
-      this.banLandPageSelected()
       if (this.isUpdating) {
         return Message.warning('正在更新中, 请稍等一会儿 ~')
       }
-
       this.isUpdating = true
-
       try {
-        await this._updatePromotion()
+        if (this.enableMaterialPictures) {
+          const updateMaterialPicturesError = await this._updateMaterialPictures()
+          if (!updateMaterialPicturesError) {
+            await this._updatePromotion()
+          }
+        } else {
+          await this._updatePromotion()
+        }
       } finally {
         this.isUpdating = false
       }
     },
+    validMaterialPictures () {
+      if (!this.materialPictures.isValid) {
+        // const { validPCReason, validWAPReason } = this.materialPictures
+        // const errMsg = validPCReason || validWAPReason || '请按要求上传创意配图'
+        const errMsg = '请按要求上传创意配图'
+        return this.$message.error(errMsg)
+      } else {
+        const isValidPC = this.materialPictures.isValidPC
+        const isValidWAP = this.materialPictures.isValidWAP
+        const isSaveBoth = isValidPC && isValidWAP
+
+        if (!isSaveBoth) {
+          const { pc = [], wap = [] } = this.materialPictures._raw
+          const hasPCContents = pc.length
+          const hasWAPContents = wap.length
+
+          if (isValidPC && hasWAPContents) {
+            return this.$message.error('手机端图片审核失败或数量不满足系统要求，请检查后重新提交')
+          }
+          if (isValidWAP && hasPCContents) {
+            return this.$message.error('电脑端图片审核失败或数量不满足系统要求，请检查后重新提交')
+          }
+        }
+      }
+    },
+    async _updateMaterialPictures () {
+      const validMaterialPicError = this.validMaterialPictures()
+      if (validMaterialPicError) {
+        return validMaterialPicError
+      }
+
+      this.loading.materialPictures = true
+      try {
+        const res = await updateMaterialPictures({
+          campaign_id: this.id,
+          image_type: this.materialPictures.type,
+          delete_images: []
+            .concat(this.materialPictures.del.wap)
+            .concat(this.materialPictures.del.pc),
+          new_images: this.materialPictures.add
+        })
+        const errors = res?.data || []
+
+        // * for test suppose
+        // const errors = [{
+        //   url: 'http://file.baixing.net/sst-imgdbe434fb-324a-46c4-abfd-2282d35d37c7.jpeg',
+        //   reject_message: '内容涉黄'
+        // }]
+
+        if (errors.length) {
+          // eslint-disable-next-line camelcase
+          const { pc = [], wap = [] } = this.materialPictures._raw
+          let lastErrorReason = null
+          ;[...pc, ...wap].forEach(img => {
+            const findFirstError = errors.find(x => x.url === img.url)
+            if (findFirstError) {
+              this.$set(img, 'status', MATERIAL_PIC_STATUS.STATUS_CHIBI_REJECT)
+              lastErrorReason = findFirstError.reject_message
+            }
+          })
+          return this.$message.error(lastErrorReason || '部分图片审核失败，请检查并重新上传')
+        } else {
+          await this.initMaterialPictures()
+          this.$message.success('更新创意配图成功')
+        }
+        this.isMaterialChanged = false
+      } catch (error) {
+        return console.error('_updateMaterialPictures: ', error)
+      } finally {
+        this.loading.materialPictures = false
+      }
+    },
     async _updatePromotion () {
+      this.banLandPageSelected()
       const { allAreas, trackPromotionKeywords } = this
       let data = {}
       try {
@@ -1254,7 +1414,7 @@ export default {
       await updateCampaign(this.id, fmtAreasInQwt(data, allAreas))
       trackPromotionKeywords(data)
 
-      Message.success('更新成功')
+      Message.success('更新计划成功')
 
       await store.clearStore()
 
@@ -1491,6 +1651,25 @@ export default {
     isErrorLandingPageShow (n, o) {
       console.log(n, o)
     },
+    materialPictures (n) {
+      if (!this.isMaterialChangeLock) {
+        const hasChange = (a, b) => {
+          return !isArrHasSameValue(a, b, (x, y) => {
+            /* eslint-disable */
+            return x.url === y.url &&
+              x.id == y.id &&
+              x.desc == y.desc
+            /* eslint-enable */
+          })
+        }
+        const { pc, wap } = n._raw || {}
+        const { pc: pcRaw, wap: wapRaw } = this.materialPicturesInitsRaw
+
+        const isChanged = hasChange(pcRaw, pc) || hasChange(wapRaw, wap)
+        // console.log(isChanged, hasChange(pcRaw, pc), hasChange(wapRaw, wap), pcRaw, pc)
+        this.isMaterialChanged = isChanged
+      }
+    },
     'originPromotion' ({ landingPage, landingType }) {
       if (landingType === 1) {
         this.isQiqiaobanSite = isQiqiaobanSite(landingPage)
@@ -1525,7 +1704,12 @@ export default {
     await store.clearStore()
   },
   async mounted () {
+    console.log(this.currentPromotion)
     await this.initCampaignInfo()
+
+    if (this.enableMaterialPictures) {
+      this.initMaterialPictures()
+    }
 
     const { landingPage, landingType } = this.originPromotion
 
@@ -1916,6 +2100,9 @@ export default {
       }
     }
   }
+}
+.update-material-button {
+  margin-left: 90px;
 }
 
 .prompt-text {

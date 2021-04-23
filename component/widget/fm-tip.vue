@@ -6,7 +6,9 @@
         v-show="visiable"
         :style="position === 'creative' ? 'transform: translateY(-65%);' : ''"
       >
-        <img :src="imgUrl">
+        <slot name="float-content">
+          <img :src="imgUrl">
+        </slot>
       </div>
     </transition>
     <div

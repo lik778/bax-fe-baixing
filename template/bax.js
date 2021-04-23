@@ -6,6 +6,7 @@ import Bax from 'com/bax'
 
 import dayjs from 'dayjs'
 import VueClipboard from 'vue-clipboard2'
+import VueCroppie from 'vue-croppie'
 import VueRouter from 'vue-router'
 import {
   Divider,
@@ -44,6 +45,7 @@ import {
   Row,
   Col,
   Progress,
+  Popconfirm,
   Card,
   Image,
   Loading,
@@ -53,7 +55,6 @@ import {
   Notification
 } from 'element-ui'
 import '../cssbase/index.scss'
-
 import { reaction } from 'mobx'
 import Movue from 'movue'
 import Vue from 'vue'
@@ -97,6 +98,7 @@ function errorHandler (error) {
 window.onerror = errorHandler
 Vue.config.errorHandler = errorHandler
 
+Vue.use(VueCroppie)
 Vue.use(Movue, { reaction })
 Vue.use(VueClipboard)
 Vue.use(VueRouter)
@@ -138,6 +140,7 @@ Vue.use(Row)
 Vue.use(Col)
 Vue.use(Cascader)
 Vue.use(Progress)
+Vue.use(Popconfirm)
 Vue.use(Card)
 Vue.use(Image)
 
