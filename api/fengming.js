@@ -190,7 +190,17 @@ export async function pauseCampaigns (ids) {
       pause: 1
     }))
     .json()
+  return body
+}
 
+export async function pauseGroup (ids) {
+  const body = await fengming
+    .post('/group/pause')
+    .send(reverseCamelcase({
+      group_ids: [...ids],
+      pause: 0
+    }))
+    .json()
   return body
 }
 
