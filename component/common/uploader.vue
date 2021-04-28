@@ -2,7 +2,7 @@
 <template>
   <div class="uploader">
     <input type="file" ref="file" @change="uploadFile" hidden />
-    <el-button @click="selectFile">+</el-button>
+    <upload-button :selectFile="selectFile" />
     <p class="tip" v-if="tip">
       {{ tip }}
     </p>
@@ -37,6 +37,27 @@ const request = new Fetch({
 
 export default {
   name: 'uploader',
+  components: {
+    UploadButton: {
+      props: ['selectFile'],
+      render (h) {
+        const selectFile = this.$props.selectFile
+        const slotsDefault = this.$parent?.$slots?.default
+        return slotsDefault && (slotsDefault.length > 0)
+          ? slotsDefault[0]
+          // ? h(slotsDefault[0], {
+          //   nativeOn: {
+          //     click: selectFile
+          //   }
+          // })
+          : h('el-button', {
+            nativeOn: {
+              click: selectFile
+            }
+          }, '+')
+      }
+    }
+  },
   props: {
     sizeLimit: {
       type: Object,

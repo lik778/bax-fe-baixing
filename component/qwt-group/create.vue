@@ -37,6 +37,32 @@
                        @update-creatives="(idx, newData) => group.creatives.splice(idx, 1, newData)" />
       </div>
     </section>
+
+    <section v-if="enableMaterialPictures">
+      <header>创意配图
+        <el-tooltip
+          v-if="isCurPromotionOrGroupPaused"
+          placement="top"
+          content="当前计划已下线。重启计划后，创意配图会一并生效">
+            <i class="el-icon-question"></i>
+        </el-tooltip>
+      </header>
+      <div class="content">
+        <material-pictures-comp
+          v-model="materialPictures"
+          :initValue="materialPicturesInits"
+        />
+        <el-button
+          v-if="isMaterialChanged"
+          class="update-material-button"
+          type="primary"
+          size="small"
+          :loading="loading.materialPictures"
+          @click="_updateMaterialPictures"
+        >更新创意配图</el-button>
+      </div>
+    </section>
+
     <section>
       <header>选取推广关键词（当前计划还可添加<strong>{{keywordRemainCount}}</strong>个关键词）</header>
       <div class="content">
@@ -50,6 +76,7 @@
                       @remove-keywords="(idx) => group.keywords.splice(idx, 1)" />
       </div>
     </section>
+
     <section>
       <header>设置否定关键词
         <el-tooltip content="请注意，否词和关键词不能重复"
@@ -97,6 +124,7 @@ import NegativeKeywordComp from 'com/common/qwt/negative-words'
 import ContractAckComp from 'com/widget/contract-ack'
 import MobilePriceRatioComp from './mobile-price-ratio'
 import CpcPriceComp from './cpc-price'
+import MaterialPicturesComp from 'com/common/material-pictures-dialog'
 
 import { createValidator } from './validate'
 import {
@@ -104,13 +132,21 @@ import {
   getCampaignInfo,
   getCampaignKeywordsCount,
   getGroupDetailByGroupId,
-  getKeywordsByGroupId
+  getKeywordsByGroupId,
+  getMaterialPictures,
+  updateMaterialPictures
 } from 'api/fengming'
-import { emptyGroup, NEGATIVE_KEYWORDS_MAX, KEYWORDS_MAX } from 'constant/fengming'
+import {
+  emptyGroup,
+  NEGATIVE_KEYWORDS_MAX,
+  KEYWORDS_MAX,
+  // SEM_PLATFORM_BAIDU,
+  MATERIAL_PIC_STATUS
+} from 'constant/fengming'
 import clone from 'clone'
 import pick from 'lodash.pick'
 import track from 'util/track'
-import { toFloat } from 'util'
+import { toFloat, isArrHasSameValue } from 'util'
 import uuid from 'uuid/v4'
 
 const emptyPromotion = {
@@ -133,17 +169,31 @@ export default {
   },
   data () {
     return {
+      NEGATIVE_KEYWORDS_MAX,
       promotion: emptyPromotion,
       group: clone(emptyGroup),
-      isUpdating: false,
-
-      NEGATIVE_KEYWORDS_MAX,
       actionTrackId: uuid(),
-
-      campaignKeywordLen: 0
+      campaignKeywordLen: 0,
+      loading: {
+        updateGroup: false,
+        materialPictures: false
+      },
+      materialPictures: {},
+      materialPicturesInits: {},
+      materialPicturesInitsRaw: null,
+      isMaterialChanged: false,
+      isMaterialChangeLock: false
     }
   },
   computed: {
+    isCurPromotionOrGroupPaused () {
+      // return this.promotion.pause === 1 || this.group.pause === 1
+      return true
+    },
+    enableMaterialPictures () {
+      // return this.promotion.source === SEM_PLATFORM_BAIDU
+      return true
+    },
     keywordRemainCount () {
       const newLen = this.group.keywords.length
       return KEYWORDS_MAX - (this.campaignKeywordLen + newLen)
@@ -152,9 +202,31 @@ export default {
       return this.promotion.id || this.$route.query.campaignId
     }
   },
+  watch: {
+    // 记录创意配图内容是否修改
+    materialPictures (n) {
+      if (!this.isMaterialChangeLock) {
+        const hasChange = (a, b) => {
+          return !isArrHasSameValue(a, b, (x, y) => {
+            /* eslint-disable */
+            return x.url === y.url &&
+              x.id == y.id &&
+              x.desc == y.desc
+            /* eslint-enable */
+          })
+        }
+        const { pc, wap } = n._raw || {}
+        const { pc: pcRaw, wap: wapRaw } = this.materialPicturesInitsRaw
+
+        const isChanged = hasChange(pcRaw, pc) || hasChange(wapRaw, wap)
+        this.isMaterialChanged = isChanged
+      }
+    }
+  },
   async mounted () {
     this.handleTrack('enter-page: create-group')
 
+    // TODO 复制过来的创意配图怎么处理？
     // 复制进入
     const cloneId = this.$route.query.cloneId
     if (cloneId) {
@@ -164,6 +236,10 @@ export default {
       this.promotion = pick(promotion, ['id', 'source', 'areas'])
     }
     this.campaignKeywordLen = await getCampaignKeywordsCount(this.campaignId)
+
+    if (this.enableMaterialPictures) {
+      this.initMaterialPictures()
+    }
   },
   methods: {
     async cloneGroupById (groupId) {
@@ -179,6 +255,24 @@ export default {
         price,
         keywords
       }
+    },
+    async initMaterialPictures (inits) {
+      this.isMaterialChanged = false
+      this.isMaterialChangeLock = true
+      this.materialPicturesInits = inits || (await getMaterialPictures({
+        campaignId: this.id
+      })).data
+
+      // eslint-disable-next-line camelcase
+      const { image_type, pc = [], wap = [] } = this.materialPicturesInits
+      this.materialPicturesInitsRaw = {
+        image_type,
+        pc: [...pc],
+        wap: [...wap]
+      }
+      this.$nextTick(() => {
+        this.isMaterialChangeLock = false
+      })
     },
     recommendKwPrice () {
       const keywords = this.promotion.keywords
@@ -214,7 +308,7 @@ export default {
       if (!this.$refs.contract.$data.isAgreement) {
         throw new Error('请阅读并勾选同意服务协议，再进行下一步操作')
       }
-      if (this.isUpdating) {
+      if (this.loading.updateGroup) {
         throw new Error('正在更新中, 请稍等一会儿 ~')
       }
 
@@ -224,10 +318,68 @@ export default {
         throw new Error(e.errors[0].message)
       }
     },
+    validMaterialPictures () {
+      if (!this.materialPictures.isValid) {
+        throw new Error('请按要求上传创意配图')
+      } else {
+        const isValidPC = this.materialPictures.isValidPC
+        const isValidWAP = this.materialPictures.isValidWAP
+        const isSaveBoth = isValidPC && isValidWAP
+
+        if (!isSaveBoth) {
+          const { pc = [], wap = [] } = this.materialPictures._raw
+          const hasPCContents = pc.length
+          const hasWAPContents = wap.length
+
+          if (isValidPC && hasWAPContents) {
+            throw new Error('手机端图片审核失败或数量不满足系统要求，请检查后重新提交')
+          }
+          if (isValidWAP && hasPCContents) {
+            throw new Error('电脑端图片审核失败或数量不满足系统要求，请检查后重新提交')
+          }
+        }
+      }
+    },
+    async _updateMaterialPictures () {
+      this.validMaterialPictures()
+
+      const res = await updateMaterialPictures({
+        group_id: this.group.id,
+        image_type: this.materialPictures.type,
+        delete_images: []
+          .concat(this.materialPictures.del.wap)
+          .concat(this.materialPictures.del.pc),
+        new_images: this.materialPictures.add
+      })
+      const errors = res?.data || []
+
+      if (errors.length) {
+        const { pc = [], wap = [] } = this.materialPictures._raw
+        let lastErrorReason = null
+        ;[...pc, ...wap].forEach(img => {
+          const findFirstError = errors.find(x => x.url === img.url)
+          if (findFirstError) {
+            this.$set(img, 'status', MATERIAL_PIC_STATUS.STATUS_CHIBI_REJECT)
+            lastErrorReason = findFirstError.reject_message
+          }
+        })
+        throw new Error(lastErrorReason || '部分图片审核失败，请检查并重新上传')
+      } else {
+        await this.initMaterialPictures()
+        this.$message.success('更新创意配图成功')
+      }
+      this.isMaterialChanged = false
+    },
     async addGroup () {
       try {
         await this.validateGroup()
-        this.isUpdating = true
+        this.loading.updateGroup = true
+
+        if (this.enableMaterialPictures) {
+          this.loading.materialPictures = true
+          await this._updateMaterialPictures()
+        }
+
         await createGroup({
           ...this.group,
           campaignId: this.promotion.id
@@ -242,7 +394,8 @@ export default {
       } catch (e) {
         return this.$message.error(e.message)
       } finally {
-        this.isUpdating = false
+        this.loading.updateGroup = false
+        this.loading.materialPictures = false
       }
     }
     // TODO: 凤凰于飞打点
@@ -256,7 +409,8 @@ export default {
     NegativeKeywordComp,
     ContractAckComp,
     MobilePriceRatioComp,
-    CpcPriceComp
+    CpcPriceComp,
+    MaterialPicturesComp
   }
 }
 </script>
@@ -305,6 +459,9 @@ export default {
       color: $c-strong;
       font-size: 14px;
     }
+  }
+  .update-material-button {
+    margin-left: 90px;
   }
 }
 </style>
