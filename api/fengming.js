@@ -307,7 +307,7 @@ export async function getRecommandCreative (opts) {
   return toCamelcase(body.data)
 }
 
-// TODO: 添加计划id
+// TODO: 添加计划ID
 export async function recommendByUrl (opts) {
   const body = await fengming
     .post('/keyword/recommand/vad')

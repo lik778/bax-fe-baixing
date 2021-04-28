@@ -98,6 +98,7 @@
       :total="total"
       :limit="limit"
       :dimension="query.dimension"
+      @switch-to-group-report="getGroupReport"
       @switch-to-campaign-report="getCampaignReport"
       @refresh-keyword-list="queryStatistics({ offset })"
       @current-change="queryStatistics"
@@ -115,6 +116,7 @@ import { toTimestamp } from 'utils'
 
 import {
   DIMENSION_CAMPAIGN,
+  DIMENSION_GROUP,
   DIMENSION_KEYWORD,
   DIMENSION_SEARCH_KEYWORD,
   TIME_UNIT_DAY,
@@ -283,7 +285,6 @@ export default {
       const q = {
         startAt,
         endAt,
-
         dataDimension: query.dimension,
         timeUnit: query.timeUnit,
         device: query.device,
@@ -291,16 +292,19 @@ export default {
         campaignIds: checkedCampaignIds,
         userId,
         salesId,
-
         limit: this.limit,
         offset,
-
-        fields:
-          query.dimension === DIMENSION_CAMPAIGN
-            ? campaignFields
-            : keywordFields
+        fields: query.dimension === DIMENSION_CAMPAIGN
+          ? campaignFields
+          : keywordFields
       }
       await store.fetchReport(q)
+    },
+    async getGroupReport (campaign) {
+      this.query.channel = campaign.channel
+      this.query.device = DEVICE_ALL
+      this.query.dimension = DIMENSION_GROUP
+      this.searchCampaigns = campaign.campaignId
     },
     async getCampaignReport (campaign) {
       this.query.channel = campaign.channel
@@ -312,7 +316,7 @@ export default {
   watch: {
     query: {
       deep: true,
-      handler: async function (v) {
+      handler: async function () {
         await this.queryStatistics()
       }
     },
