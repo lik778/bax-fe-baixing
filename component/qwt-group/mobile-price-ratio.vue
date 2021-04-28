@@ -10,13 +10,10 @@
       </div>
       <i class="el-icon-question" />
     </el-tooltip>
-    <el-input
-      class="input"
-      size="small"
-      :value="value"
-      @input="changeMobilePriceRatio"
-      placeholder="默认为1"
-    />
+    <el-input class="input"
+              :value="value"
+              @input="changeMobilePriceRatio"
+              placeholder="默认为1" />
     <span class="tip">（请输入0.1-9.9之间的数字）</span>
   </div>
 </template>
@@ -26,13 +23,15 @@ export default {
   name: 'mobile-price-ratio',
   props: {
     value: {
-      type: Number,
+      type: [Number, String],
       required: true,
       default: 1
     }
   },
   methods: {
     changeMobilePriceRatio (val) {
+      if (isNaN(val)) return
+      if (val < 0) return
       this.$emit('change', val)
     }
   }

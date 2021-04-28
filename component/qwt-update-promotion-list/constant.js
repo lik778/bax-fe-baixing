@@ -1,7 +1,6 @@
 
 import {
-  campaignOptimization,
-  semPlatformOpts
+  campaignOptimization
 } from 'constant/fengming'
 const CAMPAIGN_OPTIMIZATION_OPTS = Object.freeze(
   [
@@ -19,17 +18,21 @@ const OPTIMIZATION = Object.freeze({
   defaultMark: '设'
 })
 const filterOptimization = (row) => {
-  if (row.kwMark) {
+  const { kw_mark: kwMark, price_mark: priceMark, ctr_mark: ctrMark, default_mark: defaultMark } = row
+  if (kwMark) {
     return '词'
   }
-  if (row.priceMark) {
+  if (priceMark) {
     return '价'
   }
-  if (row.ctrMark) {
+  if (ctrMark) {
     return '创'
   }
-  if (row.defaultMark) {
+  if (defaultMark) {
     return '设'
+  }
+  if (!kwMark && !priceMark && !ctrMark && !defaultMark) {
+    return '-'
   }
 }
 const CAMPAIGN_STATUS_OPTS = Object.freeze(
@@ -58,80 +61,10 @@ const options = [{
   value: 5,
   label: '计划5'
 }]
-
-const columns = [
-  {
-    id: 0,
-    prop: 'id',
-    lable: '计划id',
-    template: false
-  },
-  {
-    id: 1,
-    prop: 'opt',
-    lable: '优化项',
-    formatter: row => filterOptimization(row),
-    template: false
-  },
-  {
-    id: 2,
-    prop: 'status_text',
-    lable: '状态',
-    template: false
-  },
-  {
-    id: 3,
-    prop: 'source',
-    lable: '渠道',
-    template: false,
-    formatter: (row, column, cellValue) => semPlatformOpts.filter(item => item.value === cellValue)[0].label
-  }
-]
-const unitData = [
-  {
-    id: 0,
-    name: '单元1',
-    promotion: '计划1',
-    source: [],
-    status: 0,
-    youhua: '词',
-    word: 0.00
-  }
-]
-const unitColums = [
-  {
-    prop: 'name',
-    label: '单元名称'
-  },
-  {
-    prop: 'promotion',
-    label: '所属计划'
-  },
-  {
-    prop: 'source',
-    label: '渠道'
-  },
-  {
-    prop: 'status',
-    label: '投放状态'
-  },
-  {
-    prop: '',
-    label: '投放优化',
-    formatter: row => filterOptimization(row)
-  },
-  {
-    prop: 'word',
-    label: '关键词平均排名'
-  }
-]
 export {
   CAMPAIGN_OPTIMIZATION_OPTS,
   CAMPAIGN_STATUS_OPTS,
   options,
   OPTIMIZATION,
-  columns,
-  unitData,
-  unitColums,
   filterOptimization
 }

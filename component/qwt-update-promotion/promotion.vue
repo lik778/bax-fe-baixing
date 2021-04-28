@@ -3,21 +3,16 @@
     <section>
       <div class="desc align-self">投放城市</div>
       <div class="cont">
-        <el-tag
-          type="primary"
-          class="area-tag"
-          :closable="!isSales"
-          v-for="area in promotion.areas"
-          :key="area"
-          @close="onRemoveArea(area)"
-        >
+        <el-tag type="primary"
+                class="area-tag"
+                :closable="!isSales"
+                v-for="area in promotion.areas"
+                :key="area"
+                @close="onRemoveArea(area)">
           {{ formatterArea(area) }}
         </el-tag>
-        <i
-          class="el-icon-plus"
-          v-if="!isSales"
-          @click="areaDialogVisible = true"
-        />
+        <i class="el-icon-plus" v-if="!isSales"
+           @click="areaDialogVisible = true" />
       </div>
     </section>
     <section>
@@ -27,25 +22,20 @@
     <section>
       <div class="desc">渠道单日预算</div>
       <div class="cont">
-        <el-input
-          class="budget-input"
-          size="small"
-          :disabled="isSales || !modifyBudgetQuota"
-          :value="promotion.dailyBudget"
-          @input="onChangeDaliyBudget"
-        />
-        <span class="budget-tip" v-if="currentBalance <= 0">
-          （您的推广资金可用余额为0元，请<router-link
-            :to="{ name: 'qwt-charge', query: { mode: 'charge-only' } }"
-            >充值</router-link
-          >）
+        <el-input type="number"
+                  class="budget-input"
+                  :disabled="!modifyBudgetQuota || isSales"
+                  :value="promotion.dailyBudget"
+                  @input="onChangeDaliyBudget" />
+        <span class="budget-tip"
+              v-if="currentBalance <= 0">
+          （您的推广资金可用余额为0元，请<router-link :to="{ name: 'qwt-charge', query: { mode: 'charge-only' } }">
+            充值</router-link>）
         </span>
-        <span class="budget-tip" v-else>
-          (您的推广资金可用余额为<strong
-            >￥{{ $formatter.f2y(currentBalance) }}</strong
-          >元， 可消耗<strong>{{ consumeDays }}</strong
-          >天，今日可修改<strong>{{ modifyBudgetQuota }}</strong
-          >次)
+        <span class="budget-tip"
+              v-else>
+          (您的推广资金可用余额为<strong>￥{{ $formatter.f2y(currentBalance) }}</strong>元，
+          可消耗<strong>{{ consumeDays }}</strong>天，今日可修改<strong>{{ modifyBudgetQuota }}</strong>次)
         </span>
       </div>
     </section>
@@ -53,90 +43,73 @@
       <div class="desc">投放时段</div>
       <div class="cont">
         {{ DURATION_TYPE_OPTS[getDurationType()]}}
-        <el-button
-          class="duration-type"
-          type="primary"
-          size="small"
-          plain
-          @click="durationSelectorVisible = true"
-          >设置</el-button
-        >
+        <el-button class="duration-type"
+                   type="primary"
+                   plain
+                   :disabled="isSales"
+                   @click="durationSelectorVisible = true">设置</el-button>
       </div>
     </section>
     <section>
       <div class="desc">投放时间</div>
       <div class="cont">
         <el-button-group>
-          <el-button
-            :disabled="isSales"
-            size="small"
-            v-for="(val, key) in TIME_TYPE_OPTS"
-            :key="key"
-            @click="onChangeTimeType(key)"
-            :type="timeType === key ? 'primary' : ''"
-          >
+          <el-button v-for="(val, key) in TIME_TYPE_OPTS"
+                     :key="key"
+                     :disabled="isSales"
+                     @click="onChangeTimeType(key)"
+                     :type="timeType === key ? 'primary' : ''">
             {{ val }}
           </el-button>
         </el-button-group>
-        <el-date-picker
-          class="time-range-picker"
-          v-if="timeType === TIME_TYPE_CUSTOM"
-          :value="promotion.validTime"
-          @input="onValidTimeChange"
-          size="small"
-          :disabled="isSales"
-          :picker-options="{ disabledDate }"
-          type="daterange"
-          range-separator="至"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-        />
+        <el-date-picker class="time-range-picker"
+                        v-if="timeType === TIME_TYPE_CUSTOM"
+                        :value="promotion.validTime"
+                        @input="onValidTimeChange"
+                        :disabled="isSales"
+                        :picker-options="{ disabledDate }"
+                        type="daterange"
+                        range-separator="至"
+                        start-placeholder="开始日期"
+                        end-placeholder="结束日期" />
       </div>
     </section>
 
     <section>
       <div class="desc align-self">设置否词
-        <el-tooltip
-          content="当网民的搜索词与精确否定关键词完全一致时，您的推广结果将不会展现"
-          placement="top-start">
+        <el-tooltip content="当网民的搜索词与精确否定关键词完全一致时，您的推广结果将不会展现"
+                    placement="top-start">
           <i class="el-icon-question" />
         </el-tooltip>
       </div>
       <div class="cont">
-         <negative-words-comp
-          :negative-words="promotion.negativeWords"
-          @update-negative-words="(data) => emitPromtionData('negativeWords', data)" />
+        <slot name="negative" />
       </div>
     </section>
 
     <!-- 城市选择器 -->
-    <area-selector
-      :all-areas="allAreas"
-      :areas="promotion.areas"
-      type="qwt"
-      :visible="areaDialogVisible"
-      :enable-china="false"
-      @ok="onChangeAreas"
-      @cancel="areaDialogVisible = false"
-    />
+    <area-selector :all-areas="allAreas"
+                   :areas="promotion.areas"
+                   type="qwt"
+                   :visible="areaDialogVisible"
+                   :enable-china="false"
+                   @ok="onChangeAreas"
+                   @cancel="areaDialogVisible = false" />
 
     <!-- 投放时段设置 -->
-    <duration-selector
-      :visible="durationSelectorVisible"
-      :platform="Number(promotion.source)"
-      :schedule="getCurrentSchedule()"
-      @change="(durations) => emitPromtionData('schedule', durations)"
-      @hide="durationSelectorVisible = false"
-    />
+    <duration-selector :visible="durationSelectorVisible"
+                       :platform="Number(promotion.source)"
+                       :schedule="getCurrentSchedule()"
+                       @change="(durations) => emitPromtionData('schedule', durations)"
+                       @hide="durationSelectorVisible = false" />
   </div>
 </template>
 
 <script>
 import AreaSelector from 'com/common/area-selector'
 import DurationSelector from 'com/common/duration-selector'
-import NegativeWordsComp from 'com/common/qwt/negative-words'
 
-import { getCnName } from 'util/meta'
+import { getCnName, isQwtEnableCity } from 'util/meta'
 import { disabledDate } from 'util/element'
 import {
   semPlatformCn,
@@ -160,8 +133,7 @@ export default {
     },
     isSales: {
       type: Boolean,
-      required: true,
-      default: true
+      default: false
     },
     promotion: {
       type: Object,
@@ -178,7 +150,7 @@ export default {
   },
   data () {
     return {
-      timeType: this.promotion.validTime.length ? TIME_TYPE_CUSTOM : TIME_TYPE_LONG,
+      timeType: TIME_TYPE_LONG,
       areaDialogVisible: false,
       durationSelectorVisible: false,
 
@@ -188,10 +160,6 @@ export default {
       TIME_TYPE_CUSTOM,
       DURATION_TYPE_OPTS
     }
-  },
-  mounted () {
-    // tip: 解决validTime开始为空的情况
-    if (this.timeType === TIME_TYPE_LONG) this.onChangeTimeType(this.timeType)
   },
   computed: {
     modifyBudgetQuota () {
@@ -227,7 +195,9 @@ export default {
       this.$emit('update-promotion', type, data)
     },
     onChangeAreas (areas) {
-      this.emitPromtionData('areas', areas)
+      // tip: 过滤百度无法投放的城市
+      const qwtEnableAreas = areas.filter(o => isQwtEnableCity(o, this.allAreas))
+      this.emitPromtionData('areas', qwtEnableAreas)
       this.areaDialogVisible = false
     },
     onRemoveArea (area) {
@@ -236,7 +206,8 @@ export default {
     onChangeDaliyBudget (val) {
       if (isNaN(val)) return
       if (val * 100 > this.currentBalance) return
-      this.emitPromtionData('dailyBudget', val)
+      if (val < 0) return
+      this.emitPromtionData('dailyBudget', Number(val))
     },
     onValidTimeChange (val) {
       this.emitPromtionData('validTime', val)
@@ -250,10 +221,18 @@ export default {
       this.onValidTimeChange(validTime)
     }
   },
+  watch: {
+    'promotion.validTime' (v) {
+      if (v.length && v[0] === null) {
+        this.timeType = TIME_TYPE_LONG
+      } else {
+        this.timeType = TIME_TYPE_CUSTOM
+      }
+    }
+  },
   components: {
     AreaSelector,
-    DurationSelector,
-    NegativeWordsComp
+    DurationSelector
   }
 }
 </script>

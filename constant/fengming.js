@@ -17,6 +17,8 @@ export const CREATIVE_CHIBI_ACCEPT = 10
 export const KEYWORD_STATUS_REFUSE = -10
 export const KEYWORD_STATUS_ONLINE = 0
 
+export const TYPE_BAIDU_JIMUYU = 7 // 百度基木鱼
+
 // 优选推店铺状态枚举
 export const mvipShopStatus = {
   0: 'INIT',
@@ -253,3 +255,23 @@ export function filterBannedListByContent (words) {
     normalList
   }
 }
+
+export const emptyGroup = {
+  landingType: 0,
+  landingPage: '',
+  landingPageId: '',
+  name: '',
+  creatives: [{
+    title: '',
+    content: ''
+  }],
+  negativeWords: [],
+  mobilePriceRatio: 1,
+  keywords: [],
+  price: 2
+}
+
+export const KEYWORDS_MAX = 5000
+
+export const FHYF_USERD = 1
+export const FHYF_UN_USE = 0

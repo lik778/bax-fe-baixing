@@ -7,14 +7,20 @@
     <div class="module">
       <h4>计划设置</h4>
       <div class="content">
-        <promotion-comp
-          :is-sales="isSales"
-          :all-areas="allAreas"
-          :promotion="promotion"
-          :current-balance="currentBalance"
-          @update-negative-words="(negativeWords) => updatePromotionData('negativeWords', negativeWords)"
-          @update-promotion="updatePromotionData"
-        />
+        <promotion-comp :all-areas="allAreas"
+                        :is-sales="isSales"
+                        :promotion="promotion"
+                        :current-balance="currentBalance"
+                        @update-promotion="(type, data) => (promotion[type] = data)">
+          <negative-words-comp :negative-words="promotion.negativeWords"
+                               :all-words="promotion.negativeWords"
+                               :campaign-id="campaignId"
+                               :is-sales="isSales"
+                               @track="(action, opts) => handleTrack(action, opts)"
+                               @add-negative-words="(words) =>(promotion.negativeWords = words.concat(promotion.negativeWords))"
+                               @remove-negative-words="(idx) => promotion.negativeWords.splice(idx, 1)"
+                               slot="negative" />
+        </promotion-comp>
       </div>
     </div>
 
@@ -22,26 +28,28 @@
     <div class="module">
       <h4>单元设置</h4>
       <div class="content">
-        <el-button
-          @click="handleGoGroup"
-          type="primary"
-          size="small"
-          class="add-group-btn">
+        <el-button @click="handleGoGroup"
+                   type="primary"
+                   :disabled="isSales"
+                   class="add-group-btn">
           <i class="el-icon-plus" />
           新增单元
         </el-button>
-        <group-table-comp
-          :group-data="groupData"
-          @update-group-data="updateGroupData"
-        />
+        <group-table-comp :campaign-id="campaignId"
+                          :is-sales="isSales" />
       </div>
     </div>
 
     <!-- 更新推广 -->
     <div class="module">
       <div class="content">
-        <contract-ack class="contract-ack" type="content-rule" ref="contract" />
-        <el-button class="update-btn" type="primary" :disabled="isUpdating || isSales" @click="updatePromotion">
+        <contract-ack class="contract-ack"
+                      type="content-rule"
+                      ref="contract" />
+        <el-button class="update-btn"
+                   type="primary"
+                   :disabled="isUpdating || isSales"
+                   @click="updatePromotion">
           更新推广
         </el-button>
         <promotion-charge-tip />
@@ -52,18 +60,24 @@
 
 <script>
 import PromotionComp from './promotion'
-import GroupTableComp from 'com/common/qwt/group-table'
+import GroupTableComp from './group-table'
 import ContractAck from 'com/widget/contract-ack'
 import PromotionChargeTip from 'com/widget/promotion-charge-tip'
+import NegativeWordsComp from 'com/common/qwt/negative-words'
 
 import { isBaixingSales } from 'util/role'
-import { getCurrentBalance, getCampaignInfo } from 'api/fengming'
+import { getCurrentBalance, getCampaignInfo, updateCampaign } from 'api/fengming'
 import clone from 'clone'
 import pick from 'lodash.pick'
 import { toHumanTime } from 'utils'
 import isEqual from 'lodash.isequal'
-import { MIN_DAILY_BUDGET, CAMPAIGN_STATUS_OFFLINE } from 'constant/fengming'
+import { CAMPAIGN_STATUS_OFFLINE } from 'constant/fengming'
 import { getCampaignValidTime } from 'util/campaign'
+import { filterExistCurrentWords } from 'util/group'
+import track from 'util/track'
+import uuid from 'uuid/v4'
+
+import validator from './validate'
 
 const emptyPromtion = {
   status: 0,
@@ -72,7 +86,8 @@ const emptyPromtion = {
   budgetModificationCount: 0,
   schedule: [],
   dailyBudget: 0,
-  validTime: []
+  validTime: [],
+  negativeWords: []
 }
 
 export default {
@@ -81,7 +96,8 @@ export default {
     PromotionComp,
     GroupTableComp,
     ContractAck,
-    PromotionChargeTip
+    PromotionChargeTip,
+    NegativeWordsComp
   },
   props: {
     userInfo: {
@@ -101,34 +117,12 @@ export default {
   },
   data () {
     return {
-      originPromotion: null, // 计划原始数据
-      promotion: emptyPromtion, // 当前计划
+      originPromotion: emptyPromtion,
+      promotion: emptyPromtion,
       currentBalance: 0,
 
       isUpdating: false,
-      groupData: [
-        {
-          id: 1,
-          name: '轿车推广',
-          status: '投放中',
-          semStatus: '创',
-          avg: 0.00
-        },
-        {
-          id: 1,
-          name: '轿车推广',
-          status: '投放中',
-          semStatus: '创',
-          avg: 0.00
-        },
-        {
-          id: 1,
-          name: '轿车推广',
-          status: '投放中',
-          semStatus: '创',
-          avg: 0.00
-        }
-      ]
+      actionTrackId: uuid()
     }
   },
   computed: {
@@ -144,7 +138,6 @@ export default {
     }
   },
   async mounted () {
-    // TODO: 打点需求
     const loadingInstance = this.$loading({
       lock: true,
       target: '.promotion-update',
@@ -156,10 +149,24 @@ export default {
     } finally {
       loadingInstance.close()
     }
+
+    this.handleTrack('enter-page: update-campaign')
   },
   methods: {
+    handleTrack (action) {
+      const { actionTrackId, userInfo } = this
+
+      track({
+        roles: userInfo.roles.map(r => r.name).join(','),
+        action,
+        baixingId: userInfo.baixingId,
+        time: Date.now() / 1000 | 0,
+        baxId: userInfo.id,
+        campaignId: this.campaignId,
+        actionTrackId
+      })
+    },
     async getCampaignInfo () {
-      // TODO: 根据计划id获取计划详情
       const info = await getCampaignInfo(this.campaignId)
       info.dailyBudget = info.dailyBudget / 100
       if (info.timeRange && info.timeRange.length && info.timeRange[0] !== null && info.timeRange[1] !== null) {
@@ -168,7 +175,7 @@ export default {
           toHumanTime(info.timeRange[1], 'YYYY-MM-DD')
         ]
       } else {
-        info.validTime = []
+        info.validTime = [null, null]
       }
       return info
     },
@@ -176,16 +183,10 @@ export default {
       this.originPromotion = await this.getCampaignInfo()
       this.promotion = pick(clone(this.originPromotion), ['areas', 'dailyBudget', 'validTime', 'negativeWords', 'schedule', 'budgetModificationCount', 'source'])
       this.currentBalance = await getCurrentBalance()
-      // TODO: 获取所有单元详情
     },
-    updatePromotionData (type, data) {
-      this.promotion[type] = data
-    },
-    updateGroupData (row) {
-    },
-    updatePromotion () {
+    async updatePromotion () {
       try {
-        this.validatePromotionData()
+        await this.validatePromotion()
         this.isUpdating = true
         this._updatePromotion()
       } catch (e) {
@@ -194,44 +195,45 @@ export default {
         this.isUpdating = false
       }
     },
-    _updatePromotion () {
+    async _updatePromotion () {
       const data = {}
       Object.assign(data, {
         ...this.getUpdatedPromotionData(),
         ...this.getUpdatedNegativeWordData()
       })
 
-      // TODO: 调用updateCampaign接口
-      // TODO: 是否要做打点
+      await updateCampaign(this.campaignId, data)
+
+      this.handleTrack('leave-page: update-campaign')
+
       this.$router.push({ name: 'qwt-promotion-list' })
     },
-    validatePromotionData () {
-      const { areas, dailyBudget, validTime } = this.promotion
+    async validatePromotion () {
       if (!this.$refs.contract.$data.isAgreement) {
         throw new Error('请阅读并勾选同意服务协议，再进行下一步操作')
       }
       if (this.isUpdating) {
         throw new Error('正在更新中, 请稍等一会儿 ~')
       }
-      if (!areas.length) {
-        throw new Error('请选择投放区域')
-      }
-      if (dailyBudget * 100 < MIN_DAILY_BUDGET) {
-        throw new Error(`推广日预算需大于 ${this.$formatter.f2y(MIN_DAILY_BUDGET)} 元`)
-      }
-      if (dailyBudget > 10000000) {
-        throw new Error('推广日预算太高啦！您咋这么土豪呢~')
-      }
-      if (!validTime.length) {
-        throw new Error('请填写投放日期或选择长期投放')
+
+      try {
+        await validator.validate(this.promotion)
+      } catch (e) {
+        throw new Error(e.errors[0].message)
       }
     },
     getUpdatedPromotionData () {
+      function isScheduleChange (originArr, arr) {
+        for (let i = 0; i < originArr.length; i++) {
+          if (originArr[i] !== arr[i]) return true
+        }
+        return false
+      }
+
       const data = {}
       const { areas, dailyBudget, schedule, validTime } = this.promotion
 
-      const areasUnion = [...new Set([...areas, this.originPromotion.areas])]
-      if (areasUnion.length !== areas.length) {
+      if (!isEqual(areas, this.originPromotion.areas)) {
         data.areas = areas
       }
 
@@ -239,8 +241,7 @@ export default {
         data.dailyBudget = dailyBudget * 100
       }
 
-      const scheduleUnion = [...new Set([...schedule, this.originPromotion.schedule])]
-      if (scheduleUnion.length !== schedule.length) {
+      if (isScheduleChange(this.originPromotion.schedule, schedule)) {
         data.schedule = schedule
       }
 
@@ -255,14 +256,17 @@ export default {
       const data = {}
       const { negativeWords } = this.promotion
       const originNegativeWords = this.originPromotion.negativeWords
-      const newNegativeKeywords = negativeWords.filter(x => !originNegativeWords.find(o => o.word === x.word))
-      const deletedNegativeKeywords = originNegativeWords.filter(x => !negativeWords.find(o => o.word === x.word))
+      const newNegativeKeywords = filterExistCurrentWords(originNegativeWords, negativeWords)
+      const deletedNegativeKeywords = filterExistCurrentWords(negativeWords, originNegativeWords)
       if (newNegativeKeywords.length) data.newNegativeKeywords = newNegativeKeywords
       if (deletedNegativeKeywords.length) data.deletedNegativeKeywords = deletedNegativeKeywords
       return data
     },
     handleGoGroup () {
-      this.$router.push({ name: 'qwt-create-group' })
+      this.$router.push({
+        name: 'qwt-create-group',
+        query: { campaignId: this.campaignId }
+      })
     }
   },
   watch: {

@@ -281,8 +281,8 @@ body > .container {
   }
 }
 
-// .el-loading-mask {
-//   background-color: transparent !important;
-//   height: 173px;
-// }
+.el-loading-mask {
+  background-color: transparent !important;
+  height: 173px;
+}
 </style>

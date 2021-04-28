@@ -1,84 +1,131 @@
 <template>
   <div class="qwt-create-group">
     <section>
-      <header>推广目标设置</header>
+      <header>推广目标设置
+        <p class="target-tip">
+          按点击付费，展现免费，100元一键投放百度，神马等多渠道
+          <el-popover trigger="hover">
+            <img src="//file.baixing.net/201809/a995bf0f1707a3e98a2c82a5dc5f8ad3.png"
+                 width="638"
+                 height="405">
+            <a slot="reference"
+               class="">查看详情</a>
+          </el-popover>
+        </p>
+      </header>
       <div class="content">
-        <landing-page-comp
-          :group="group"
-          :is-edit="false"
-          :promotion="promotion"
-          :allAreas="allAreas"
-          @change-name="(name) => updateGroupData('name', name)"
-          @change-landing="(args) => updateGroupData(args)"
-        />
+        <landing-comp :value="group.name"
+                      @change="(val) => updateGroupData('name', val)">
+          <landing-page-comp :all-areas="allAreas"
+                             :landing-type="group.landingType"
+                             :landing-page="group.landingPage"
+                             :landing-page-id="group.landingPageId"
+                             @change-landing="(args) => updateGroupData(args)" />
+        </landing-comp>
       </div>
     </section>
 
     <section>
-      <header>推广物料设置<creative-tip-comp /></header>
+      <header>推广物料设置
+        <creative-tip-comp />
+      </header>
       <div class="content">
-        <creative-comp
-          :source="promotion.source"
-          :audit-status="group.auditStatus"
-          :detail-status-text="group.detailStatusText"
-          :creatives="group.creatives"
-          @update-creatives="updateCreatives"
-        />
+        <creative-comp :source="promotion.source"
+                       :creatives="group.creatives"
+                       @add-creatives="() => group.creatives.push({ title: '', content: '' })"
+                       @remove-creatives="(idx) => group.creatives.splice(idx, 1)"
+                       @update-creatives="(idx, newData) => group.creatives.splice(idx, 1, newData)" />
       </div>
     </section>
     <section>
-      <header>选取推广关键词</header>
+      <header>选取推广关键词（当前计划还可添加<strong>{{keywordRemainCount}}</strong>个关键词）</header>
       <div class="content">
-        <keyword-comp
-          :group="group"
-          :campaign-id="promotion.campaignId"
-          :areas="promotion.areas"
-          :sources="[promotion.source]"
-          :keywords="group.keywords"
-          @update-keywords="updateKeywords"
-        />
+        <keyword-comp :campaign-id="promotion.id"
+                      :areas="promotion.areas"
+                      :sources="[promotion.source]"
+                      :origin-keywords="group.keywords"
+                      :all-words="group.keywords.concat(group.negativeWords)"
+                      @track="(action, opts) => handleTrack(action, opts)"
+                      @add-keywords="(words) => group.keywords = words.concat(group.keywords)"
+                      @remove-keywords="(idx) => group.keywords.splice(idx, 1)" />
       </div>
     </section>
     <section>
       <header>设置否定关键词
-        <el-tooltip content="请注意，否词和关键词不能重复" placement="top">
+        <el-tooltip content="请注意，否词和关键词不能重复"
+                    placement="top">
           <i class="el-icon-question" />
         </el-tooltip>
       </header>
       <div class="content">
-        <negative-keyword-comp
-          :negative-words="group.negativeWords"
-          @update-negative-words="(negativeWords) => updateGroupData('negativeWords', negativeWords)"
-        />
+        <p class="tip"
+           style="margin-bottom: 20px">
+          当网民的搜索词与精确否定关键词完全一致时，您的推广结果将不会展现。 否词个数不得超过 <strong>{{ NEGATIVE_KEYWORDS_MAX }}</strong>个,
+          当前否定关键词数量: <strong>{{ group.negativeWords.length }}</strong>个
+        </p>
+        <negative-keyword-comp :negative-words="group.negativeWords"
+                               :show-tip="false"
+                               @track="(action, opts) => handleTrack(action, opts)"
+                               :all-words="group.negativeWords.concat(group.keywords)"
+                               @add-negative-words="(words) => group.negativeWords = words.concat(group.negativeWords)"
+                               @remove-negative-words="(idx) => group.negativeWords.splice(idx, 1)" />
       </div>
     </section>
     <section>
-      <mobile-price-ratio-comp
-        :value="group.mobilePriceRatio"
-        @change="(val) => updateGroupData('mobilePriceRatio', val)"
-      />
-      <contract-ack-comp
-        class="contract-ack"
-        type="content-rule"
-        ref="contract"
-      />
-      <el-button class="add-group-btn" type="primary" @click="addGroup">新增单元</el-button>
+      <cpc-price-comp style="margin-bottom: 10px"
+                      :value="group.price"
+                      @change="(val) => updateGroupData('price', val)" />
+      <mobile-price-ratio-comp :value="group.mobilePriceRatio"
+                               @change="(val) => updateGroupData('mobilePriceRatio', val)" />
+      <contract-ack-comp class="contract-ack"
+                         type="content-rule"
+                         ref="contract" />
+      <el-button class="add-group-btn"
+                 type="primary"
+                 @click="addGroup">新增单元</el-button>
     </section>
   </div>
 </template>
 
 <script>
-import LandingPageComp from './landing-page'
+import LandingComp from './landing-page'
+import LandingPageComp from './landing-page/landing'
 import CreativeComp from './creative'
 import CreativeTipComp from './creative/creative-tip'
 import KeywordComp from './keyword/create'
 import NegativeKeywordComp from 'com/common/qwt/negative-words'
 import ContractAckComp from 'com/widget/contract-ack'
 import MobilePriceRatioComp from './mobile-price-ratio'
+import CpcPriceComp from './cpc-price'
+
+import { createValidator } from './validate'
+import {
+  createGroup,
+  getCampaignInfo,
+  getCampaignKeywordsCount,
+  getGroupDetailByGroupId,
+  getKeywordsByGroupId
+} from 'api/fengming'
+import { emptyGroup, NEGATIVE_KEYWORDS_MAX, KEYWORDS_MAX } from 'constant/fengming'
+import clone from 'clone'
+import pick from 'lodash.pick'
+import track from 'util/track'
+import { toFloat } from 'util'
+import uuid from 'uuid/v4'
+
+const emptyPromotion = {
+  id: 0,
+  source: 0,
+  areas: []
+}
 
 export default {
   name: 'qwt-create-group',
   props: {
+    userInfo: {
+      type: Object,
+      required: true
+    },
     allAreas: {
       type: Array,
       required: true
@@ -86,41 +133,76 @@ export default {
   },
   data () {
     return {
-      promotion: {
-        source: 0,
-        campaignId: '', // 计划id
-        areas: []
-      },
-      group: {
-        landingType: 0,
-        landingPage: '',
-        landingPageId: '',
-        name: '',
-        status: '',
-        auditStatus: 0,
-        detailStatusText: '',
-        creatives: [
-          {
-            title: '',
-            content: ''
-          }
-        ],
-        negativeWords: [],
-        mobilePriceRatio: 1,
-        keywords: []
-      }
+      promotion: emptyPromotion,
+      group: clone(emptyGroup),
+      isUpdating: false,
+
+      NEGATIVE_KEYWORDS_MAX,
+      actionTrackId: uuid(),
+
+      campaignKeywordLen: 0
     }
   },
-  components: {
-    LandingPageComp,
-    CreativeComp,
-    CreativeTipComp,
-    KeywordComp,
-    NegativeKeywordComp,
-    ContractAckComp,
-    MobilePriceRatioComp
+  computed: {
+    keywordRemainCount () {
+      const newLen = this.group.keywords.length
+      return KEYWORDS_MAX - (this.campaignKeywordLen + newLen)
+    },
+    campaignId () {
+      return this.promotion.id || this.$route.query.campaignId
+    }
+  },
+  async mounted () {
+    this.handleTrack('enter-page: create-group')
+
+    // 复制进入
+    const cloneId = this.$route.query.cloneId
+    if (cloneId) {
+      await this.cloneGroupById(cloneId)
+    } else {
+      const promotion = await getCampaignInfo(this.campaignId)
+      this.promotion = pick(promotion, ['id', 'source', 'areas'])
+    }
+    this.campaignKeywordLen = await getCampaignKeywordsCount(this.campaignId)
   },
   methods: {
+    async cloneGroupById (groupId) {
+      const originGroup = await getGroupDetailByGroupId(groupId)
+      const originKeywords = await getKeywordsByGroupId(groupId)
+      this.promotion = this.group.campaign
+
+      const price = this.recommendKwPrice()
+
+      const keywords = originKeywords.map(o => ({ ...o, price }))
+      this.group = {
+        ...originGroup,
+        price,
+        keywords
+      }
+    },
+    recommendKwPrice () {
+      const keywords = this.promotion.keywords
+      // 复制推荐词价格取平均值
+      if (this.$route.query.cloneId) {
+        const sum = keywords.reduce((total, kw) => total + kw.price, 0)
+        return Math.min(Math.max(200, toFloat(sum / keywords.length)), 99900)
+      }
+      const max = Math.max.apply(null, keywords.map(kw => kw.price))
+      return Math.min(Math.max(200, toFloat(max, 0)), 99900)
+    },
+    handleTrack (action, opts = {}) {
+      const { actionTrackId, userInfo } = this
+      track({
+        roles: userInfo.roles.map(r => r.name).join(','),
+        action: action,
+        baixingId: userInfo.baixingId,
+        time: Date.now() / 1000 | 0,
+        baxId: userInfo.id,
+        campaignId: this.promotion.id,
+        actionTrackId,
+        ...opts
+      })
+    },
     updateGroupData (type, data) {
       if (typeof type === 'string') {
         this.group[type] = data
@@ -128,31 +210,53 @@ export default {
       }
       Object.assign(this.group, type)
     },
-    updateCreatives ({ type, idx, data }) {
-      const creatives = this.group.creatives
-      switch (type) {
-        case 'add':
-          return creatives.push({ title: '', content: '' })
-        case 'remove':
-          return creatives.splice(idx, 1)
-        case 'update':
-          return creatives.splice(idx, 1, data)
+    async validateGroup () {
+      if (!this.$refs.contract.$data.isAgreement) {
+        throw new Error('请阅读并勾选同意服务协议，再进行下一步操作')
       }
-    },
-    updateKeywords ({ type, idx, data }) {
-      const keywords = this.group.keywords
-      switch (type) {
-        case 'add':
-          this.group.keywords = data.concat(keywords)
-          return
-        case 'remove':
-          return keywords.splice(idx, 1)
+      if (this.isUpdating) {
+        throw new Error('正在更新中, 请稍等一会儿 ~')
+      }
+
+      try {
+        await createValidator.validate(this.group, { first: true })
+      } catch (e) {
+        throw new Error(e.errors[0].message)
       }
     },
     async addGroup () {
-      // TODO: 新建单元数据校验
-      // TODO: 新建单元接口对接
+      try {
+        await this.validateGroup()
+        this.isUpdating = true
+        await createGroup({
+          ...this.group,
+          campaignId: this.promotion.id
+        })
+
+        this.handleTrack('leave-page: create-group')
+
+        this.$router.push({
+          name: 'qwt-update-promotion',
+          params: { id: this.promotion.id }
+        })
+      } catch (e) {
+        return this.$message.error(e.message)
+      } finally {
+        this.isUpdating = false
+      }
     }
+    // TODO: 凤凰于飞打点
+  },
+  components: {
+    LandingComp,
+    LandingPageComp,
+    CreativeComp,
+    CreativeTipComp,
+    KeywordComp,
+    NegativeKeywordComp,
+    ContractAckComp,
+    MobilePriceRatioComp,
+    CpcPriceComp
   }
 }
 </script>
@@ -170,6 +274,18 @@ export default {
       color: #6a778c;
       font-weight: 700;
       font-size: 14px;
+      .target-tip {
+        font-size: 0.88em;
+        color: #333;
+        display: inline-block;
+        margin-left: 20px;
+        font-weight: 400;
+        a {
+          margin-left: 10px;
+          cursor: pointer;
+          color: #15a4fa;
+        }
+      }
     }
     > .content {
       font-size: 14px;
@@ -180,6 +296,14 @@ export default {
     }
     .add-group-btn {
       margin-top: 20px;
+    }
+    .tip {
+      font-size: 12px;
+      color: #6a778c;
+    }
+    strong {
+      color: $c-strong;
+      font-size: 14px;
     }
   }
 }

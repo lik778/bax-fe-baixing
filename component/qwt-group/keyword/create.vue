@@ -1,20 +1,22 @@
 <template>
   <div class="keywords-container">
     <p class="tip">
-      请选取<strong>20</strong>个以上关键词，关键词越多您的创意被展现的机会越多。根据当月数据，为您推荐如下关键词
+      请选取<strong>20</strong>个以上关键词，关键词越多您的创意被展现的机会越多。
+      当前单元关键词数量<strong>{{originKeywords.length}}</strong>个
     </p>
-    <search-comp
-      v-bind="$attrs"
-      v-on="$listeners"
-      :keywords="keywords"
-    />
-    <div class="res" v-if="keywords.length">
+    <search-comp :campaign-id="campaignId"
+                 :areas="areas"
+                 :sources="sources"
+                 v-on="$listeners"
+                 :all-words="allWords" />
+    <div class="res"
+         v-if="originKeywords.length">
       <el-tag class="tag"
               :class="{'tag-fh': RECOMMAND_SOURCES.includes(kw.recommandSource)}"
-              v-for="(kw, index) in keywords"
+              v-for="(kw, index) in originKeywords"
               :key="index"
               closable
-              type="warning"
+              type="primary"
               @close="removeKeyword(index)">
         {{ kw.word }}
         {{ RECOMMAND_SOURCES.includes(kw.recommandSource) ? '(好词)': '' }}
@@ -32,12 +34,36 @@ const RECOMMAND_SOURCES = [RECOMMAND_SOURCE_FH, NEW_RECOMMAND_SOURCE_FH]
 export default {
   name: 'qwt-create-keyword',
   props: {
-    keywords: {
+    allWords: {
       type: Array,
       required: true,
       default () {
         return []
       }
+    },
+    originKeywords: {
+      type: Array,
+      required: true,
+      default () {
+        return []
+      }
+    },
+    areas: {
+      type: Array,
+      required: true,
+      default () {
+        return []
+      }
+    },
+    sources: {
+      type: Array,
+      required: true,
+      default () {
+        return []
+      }
+    },
+    campaignId: {
+      type: [String, Number]
     }
   },
   data () {
@@ -47,10 +73,7 @@ export default {
   },
   methods: {
     removeKeyword (idx) {
-      this.$emit('update-keywords', {
-        type: 'remove',
-        idx
-      })
+      this.$emit('remove-keywords', idx)
     }
   },
   components: {
@@ -70,6 +93,7 @@ export default {
   }
   strong {
     color: $c-strong;
+    font-size: 14px;
   }
   .res {
     margin-top: 20px;

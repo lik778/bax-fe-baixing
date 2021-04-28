@@ -1,38 +1,35 @@
 <template>
-  <el-tabs
-    type="card"
-    class="creative"
-    v-model="activeName"
-    editable
-    @tab-add="handleTabsAdd"
-    @tab-remove="handleTabsRemove"
-  >
-    <el-tab-pane
-      v-for="(item, index) in creatives"
-      :label="'创意' + (index + 1)"
-      :key="index"
-      :name="String(index + 1)"
-      class="creative-pane"
-    >
-      <fm-tip
-        class="creative-tip"
-        position="creative-pane"
-        img-url="//file.baixing.net/201903/d6f4502a0e8a659b78a33fbb3713e6b9.png"
-      >创意怎么才能飘红</fm-tip
-      >
-      <creative-editor
-        :disabled="disabled"
-        :platforms="[source]"
-        :idx="index"
-        :title="item.title"
-        :content="item.content"
-        :creative-status="auditStatus"
-        :status-text="detailStatusText"
-        @change="handleCreativeValueChange"
-        @error="handleCreativeError"
-      />
-    </el-tab-pane>
-  </el-tabs>
+  <div class="creative-container">
+    <fm-tip class="creative-tip"
+            position="creative"
+            img-url="//file.baixing.net/201903/d6f4502a0e8a659b78a33fbb3713e6b9.png">创意怎么才能飘红
+    </fm-tip>
+    <el-tabs type="card"
+             class="creative"
+             v-model="activeName"
+             editable
+             @tab-add="handleTabsAdd"
+             @tab-remove="handleTabsRemove">
+      <el-tab-pane v-for="(item, index) in creatives"
+                   :label="'创意' + (index + 1)"
+                   :key="index"
+                   :name="String(index + 1)"
+                   class="creative-pane">
+        <!-- TODO: 此处的auditStatus和detailStatusText待确认（后端确认） -->
+        <creative-editor :disabled="getDisabled(item)"
+                         :platforms="[source]"
+                         :idx="index"
+                         :title="item.title"
+                         :content="item.content"
+                         :creative-status="item.auditStatus"
+                         :status-text="item.detailStatusText"
+                         :group-offline="groupOffline"
+                         @change="handleCreativeValueChange"
+                         @error="handleCreativeError"
+                         @validate-len-change="handleValidateLenChange" />
+      </el-tab-pane>
+    </el-tabs>
+  </div>
 </template>
 
 <script>
@@ -50,12 +47,6 @@ export default {
       type: Number,
       required: true
     },
-    auditStatus: {
-      type: Number
-    },
-    detailStatusText: {
-      type: String
-    },
     creatives: {
       type: Array,
       required: true,
@@ -65,6 +56,10 @@ export default {
           content: ''
         }]
       }
+    },
+    groupOffline: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -72,22 +67,18 @@ export default {
       activeName: '1'
     }
   },
-  computed: {
-    creativeAuditing () {
-      return this.auditStatus === CREATIVE_STATUS_PENDING
-    },
-    disabled () {
-      const { source } = this.source
-      // TIP 审核中：神马，百度，360落地页和创意应该可以修改；搜狗无法修改
-      if (source === SEM_PLATFORM_SOGOU && this.creativeAuditing) return true
-      return false
-    }
-  },
   methods: {
+    getDisabled (item) {
+      const { source } = this.source
+      const creativeAuditing = item.auditStatus === CREATIVE_STATUS_PENDING
+      // TIP 审核中：神马，百度，360落地页和创意应该可以修改；搜狗无法修改
+      if (source === SEM_PLATFORM_SOGOU && creativeAuditing) return true
+      return false
+    },
     handleTabsAdd () {
       if (this.creatives.length >= MAX_CREATIVE_LEN) return this.$message.error('最多只能增加3条创意')
       const newTabName = String(this.creatives.length + 1)
-      this.$emit('update-creatives', { type: 'add' })
+      this.$emit('add-creatives')
       this.activeName = newTabName
     },
     handleTabsRemove (targetName) {
@@ -96,26 +87,32 @@ export default {
       const currIdx = parseInt(targetName)
       resIdx = this.creatives.length === currIdx ? currIdx - 1 : currIdx
       this.activeName = String(resIdx)
-      this.$emit('update-creatives', {
-        type: 'remove',
-        idx: parseInt(resIdx) - 1
-      })
+      this.$emit('remove-creatives', parseInt(resIdx) - 1)
     },
     handleCreativeValueChange ({ title, content, idx }) {
       const creativeObj = this.creatives[idx]
-      this.$emit('update-creatives', {
-        type: 'update',
-        idx,
-        data: {
-          ...creativeObj,
-          title,
-          content
-        }
+      this.$emit('update-creatives', idx, {
+        ...creativeObj,
+        title,
+        content
       })
     },
-    handleCreativeError (msg) {
-      if (msg) this.$message.error(msg)
-      this.creativeError = msg
+    handleCreativeError (msg, idx) {
+      const creativeObj = this.creatives[idx]
+      if (msg) {
+        this.$message.error(msg)
+      }
+      this.$emit('update-creatives', idx, {
+        ...creativeObj,
+        msg
+      })
+    },
+    handleValidateLenChange (isValid, idx) {
+      const creativeObj = this.creatives[idx]
+      this.$emit('update-creatives', idx, {
+        ...creativeObj,
+        lenValid: isValid
+      })
     }
   },
   components: {
@@ -126,7 +123,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.creative {
+.creative-container {
+  position: relative;
   /deep/ .el-tabs__new-tab {
     border: 1px solid $c-tip;
     height: 22px;
@@ -134,13 +132,11 @@ export default {
     color: $c-tip;
     font-size: 18px;
   }
-  .creative-pane {
-    position: relative;
-    .creative-tip {
-      position: absolute;
-      bottom: 40px;
-      left: 650px;
-    }
+  .creative-tip {
+    position: absolute;
+    bottom: 40px;
+    left: 650px;
+    z-index: 1;
   }
 }
 </style>

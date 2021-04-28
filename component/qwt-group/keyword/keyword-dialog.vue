@@ -11,15 +11,16 @@
       <div class="search-container">
         <el-input class="search"
                   placeholder="请批量添加关键词"
-                  size="small"
                   v-model="search"></el-input>
         <el-button class="add-btn"
                    type="primary"
-                   size="small"
                    :loading="loading"
                    @click="addWordList">批量添加</el-button>
       </div>
-      <div class="tip">提示: 请用逗号区分关键词进行批量关键词添加，如合肥家政服务公司，合肥月嫂，合肥钟点工</div>
+      <div class="tip">提示:
+        <p>1、请用逗号区分关键词进行批量关键词添加，如合肥家政服务公司，合肥月嫂，合肥钟点工</p>
+        <p>2、如关键词已存在，会自动过滤掉存在的内容</p>
+      </div>
     </div>
     <div class="content">
       <div class="sec"
@@ -48,8 +49,7 @@
     <span slot="footer"
           class="footer">
       <el-button type="primary"
-                 @click="handleConfirm"
-                 size="small">确认
+                 @click="handleConfirm">确认
       </el-button>
     </span>
   </el-dialog>
@@ -58,11 +58,11 @@
 <script>
 import { recommendByWordList } from 'api/fengming'
 import { isObj } from 'util'
-import { MIN_WORD_PRICE } from 'constant/keyword'
 import { validateKeyword } from 'util/campaign'
+import { fmtNewKeywordsPrice, getNotExistWords } from 'util/group'
 
 export default {
-  name: 'QwtAddKeywordsDialog',
+  name: 'qwt-keyword-dialog',
   props: {
     visible: {
       type: Boolean,
@@ -74,12 +74,17 @@ export default {
         return []
       }
     },
-    originalKeywords: {
+    allWords: {
       type: Array,
-      required: true,
       default: () => {
         return []
       }
+    },
+    groupId: {
+      type: [String, Number]
+    },
+    campaignId: {
+      type: [String, Number]
     }
   },
   data () {
@@ -125,47 +130,32 @@ export default {
 
       try {
         validateKeyword(words)
+        const normalList = (this.keywords && this.keywords.normalList) || []
+        const allWords = this.allWords.concat(normalList)
+        const isRemoteQuery = !!(this.campaignId || this.groupId)
+        // 校验是否已存在
+        const newWords = await getNotExistWords(allWords, words, isRemoteQuery, {
+          groupId: this.groupId,
+          campaignId: this.campaignId
+        })
+
+        // 拼接关键词
+        const newKeywords = await this.fetchWords(newWords)
+        for (const key in this.keywords) {
+          this.keywords[key] = [...new Set(this.keywords[key].concat(newKeywords[key]))]
+        }
+        this.search = ''
       } catch (e) {
         return this.$message.error(e.message)
       }
-
-      // 判断关键词已存在
-      let normalList = (this.keywords && this.keywords.normalList) || []
-      normalList = this.originalKeywords.concat(normalList)
-      for (let i = 0; i < normalList.length; i++) {
-        const row = normalList[i]
-        if (words.includes(row.word.toLowerCase())) {
-          return this.$message.warning(`${row.word}该关键词已存在关键词或否定关键词列表`)
-        }
-      }
-
-      // 拼接关键词
-      const newKeywords = await this.fetchWords(words)
-      for (const key in this.keywords) {
-        this.keywords[key] = this.keywords[key].concat(newKeywords[key])
-      }
-      this.search = ''
     },
-    async fetchWords (words, sources) {
-      const result = await recommendByWordList(words, { sources })
-      if (result && isObj(result)) {
-        for (const key in result) {
-          if (Array.isArray(result[key])) {
-            result[key] = result[key].map(word => {
-              const { price: serverPrice } = word
-              let price = serverPrice
-              if (price < MIN_WORD_PRICE) {
-                price = MIN_WORD_PRICE
-              }
-              return {
-                ...word,
-                serverPrice,
-                price, // override price, price is display value
-                value: word.word
-              }
-            })
-          }
-        }
+    async fetchWords (words) {
+      const queryOpts = {}
+      if (this.sources.length) queryOpts.sources = this.sources
+      const result = await recommendByWordList(words, { campaignId: this.campaignId })
+      if (!(result && isObj(result))) return
+      for (const key in result) {
+        result[key] = fmtNewKeywordsPrice(result[key])
       }
       return result
     }

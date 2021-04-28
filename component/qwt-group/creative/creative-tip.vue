@@ -2,7 +2,8 @@
 <template>
   <el-tooltip placement="right">
     <ul slot="content">
-      <li v-for="(tip, i) in tips" :key="i">
+      <li v-for="(tip, i) in tips"
+          :key="i">
         {{ tip }}
       </li>
     </ul>
