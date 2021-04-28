@@ -125,7 +125,16 @@ export default {
 <style lang="scss" scoped>
 .creative-container {
   position: relative;
+
+  /deep/ .el-tabs__header {
+    display: flex;
+    flex-direction: row;
+  }
+  /deep/ .el-tabs__nav-wrap {
+    order: 1;
+  }
   /deep/ .el-tabs__new-tab {
+    order: 2;
     border: 1px solid $c-tip;
     height: 22px;
     width: 22px;
