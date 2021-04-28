@@ -13,7 +13,6 @@
 import track from 'util/track'
 import SummaryData from './summary-data'
 import VisitorData from './visitor-data'
-
 export default {
   name: 'qwt-dashboard',
   props: {
