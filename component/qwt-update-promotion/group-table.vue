@@ -17,13 +17,13 @@
                        align="center">
         <template slot-scope="{row}">
           <span v-if="row.frontGroupStatus !== GROUP_STATUS_REJECT"
-                :class="[row.frontGroupStatus].type || 'warning'">
+                :class="GROUP_STATUSES[row.frontGroupStatus].type || 'warning'">
             {{row.frontGroupStatusDesc}}
           </span>
           <el-tooltip v-else
                       placement="top-start"
                       :content="row.frontCampaignStatusDetails">
-            <span :class="[row.frontGroupStatus].type || 'warning'">
+            <span :class="GROUP_STATUSES[row.frontGroupStatus].type || 'warning'">
               {{row.frontGroupStatusDesc}}
             </span>
             <i class="el-icon-info danger" />
@@ -34,7 +34,7 @@
                        label="计划状态"
                        align="center">
         <template slot-scope="{row}">
-          <span :class="[row.frontCampaignStatus].type || 'warning'">
+          <span :class="GROUP_STATUSES[row.frontCampaignStatus].type || 'warning'">
             {{row.frontCampaignStatusDesc}}
           </span>
         </template>
