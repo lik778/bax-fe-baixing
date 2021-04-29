@@ -7,7 +7,6 @@
     <el-tabs type="card"
              class="creative-tab"
              v-model="activeName"
-             editable
              @tab-add="handleTabsAdd"
              @tab-remove="handleTabsRemove">
       <el-tab-pane v-for="(item, index) in creatives"

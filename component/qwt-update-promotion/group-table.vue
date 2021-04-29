@@ -12,29 +12,48 @@
       <el-table-column prop="name"
                        label="单元名称"
                        align="center" />
-      <!-- TODO: 投放状态需要枚举，并为不一样的状态添加不一样的颜色，见设计稿 -->
-      <el-table-column prop="status"
-                       label="投放状态"
+      <el-table-column prop="frontGroupStatus"
+                       label="单元状态"
                        align="center">
-        <template slot-scope="{row}">{{ row.status }}</template>
+        <template slot-scope="{row}">
+          <span v-if="row.frontGroupStatus !== GROUP_STATUS_REJECT"
+                :class="[row.frontGroupStatus].type || 'warning'">
+            {{row.frontGroupStatusDesc}}
+          </span>
+          <el-tooltip v-else
+                      placement="top-start"
+                      :content="row.frontCampaignStatusDetails">
+            <span :class="[row.frontGroupStatus].type || 'warning'">
+              {{row.frontGroupStatusDesc}}
+            </span>
+            <i class="el-icon-info danger" />
+          </el-tooltip>
+        </template>
       </el-table-column>
-      <!-- TODO: 见设计稿 -->
+      <el-table-column prop="frontCampaignStatus"
+                       label="计划状态"
+                       align="center">
+        <template slot-scope="{row}">
+          <span :class="[row.frontCampaignStatus].type || 'warning'">
+            {{row.frontCampaignStatusDesc}}
+          </span>
+        </template>
+      </el-table-column>
       <el-table-column prop="avgCpcRanking"
                        label="关键词平均排名"
                        align="center" />
       <el-table-column label="操作"
                        align="center">
         <template slot-scope="{row}">
-          <!-- TODO: 待后端确认状态 -->
           <el-button class="btn"
                      :disabled="isSales"
                      :class="{disabled: isSales}"
-                     v-if="true"
+                     v-if="row.frontGroupStatus !== GROUP_STATUS_REJECT"
                      @click="pauseGroup(row)">暂停</el-button>
           <el-button class="btn"
                      :disabled="isSales"
                      :class="{disabled: isSales}"
-                     v-if="false"
+                     v-else
                      @click="activeGroup(row)">开启</el-button>
           <el-button class="btn"
                      :class="{disabled: isSales}"
@@ -52,7 +71,7 @@
 
 <script>
 import { getAllGroups, activeGroups, pauseGroups } from 'api/fengming'
-import { GROUP_MAX } from 'constant/fengming'
+import { GROUP_MAX, CAMPAIGN_STATUSES, GROUP_STATUSES, GROUP_STATUS_REJECT, GROUP_STATUS_ONLINE } from 'constant/fengming'
 
 export default {
   name: 'group-table',
@@ -69,7 +88,11 @@ export default {
   data () {
     return {
       groupData: null,
-      GROUP_MAX
+
+      GROUP_MAX,
+      CAMPAIGN_STATUSES,
+      GROUP_STATUSES,
+      GROUP_STATUS_REJECT
     }
   },
   computed: {
@@ -93,17 +116,15 @@ export default {
         cancelButtonText: '取消'
       })
       await pauseGroups([group.id])
-      // TODO 暂停之后更改投放状态, 待后端确认状态
-      group.status = 2
+      group.frontGroupStatus = GROUP_STATUS_REJECT
     },
     async activeGroup (group) {
-      await this.$alert('确定暂停投放？', '提示', {
+      await this.$alert('确定开启投放？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消'
       })
       await activeGroups([group.id])
-      // TODO 暂停之后更改投放状态，待后端确认状态
-      group.status = 1
+      group.frontGroupStatus = GROUP_STATUS_ONLINE
     },
     optimizeGroup (group) {
       this.$router.push({
@@ -129,6 +150,18 @@ export default {
 
 <style lang="scss" scoped>
 .group-table {
+  .warning {
+    color: $c-warning;
+    font-size: 13px;
+  }
+  .success {
+    color: $c-success;
+    font-size: 13px;
+  }
+  .danger {
+    color: $c-strong;
+    font-size: 13px;
+  }
   .btn {
     color: $c-info;
     cursor: pointer;

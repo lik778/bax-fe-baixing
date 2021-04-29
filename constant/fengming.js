@@ -89,26 +89,6 @@ export const creativeStatus = {
   10: '推广中'
 }
 
-export const CAMPAIGN_AUDIT_AUTHING = 0
-export const CAMPAIGN_AUDIT_OFFLINE = -1
-
-export const campaignAuditStatus = {
-  '-10': '审核驳回',
-  '-1': '下线',
-  0: '审核中',
-  10: '审核通过'
-}
-
-export const campaignStatus = {
-  100: '有效',
-  5: '计划预算不足',
-  0: '审核中', // mvp
-  '-1': '下线',
-  '-10': '暂停投放',
-  '-50': '不在投放期',
-  '-51': '账户余额不足'
-}
-
 export const expectedBudget = {
   1: '50以下',
   2: '51-100',
@@ -128,12 +108,6 @@ export const optType = {
 
 export const optTypeOpts = toOpt(optType)
 
-export const CAMPAIGN_STATUS_PAUSE = -10
-export const CAMPAIGN_STATUS_OFFLINE = -1
-export const CAMPAIGN_STATUS_ONLINE = 100
-export const CAMPAIGN_STATUS_ACCOUNT_BUDGET_NOT_ENOUGH = -51
-export const CAMPAIGN_STATUS_CAMPAIGN_BUDGET_NOT_ENOUGH = 5
-
 export const LANDING_TYPE_AD = 0
 export const LANDING_TYPE_GW = 1
 export const LANDING_TYPE_258 = 5
@@ -152,10 +126,7 @@ export const campaignOptimization = {
   STATUS_OPT_PRICE: 103,
   STATUS_OPT_SETTING: 104,
   STATUS_OPT_KEYWORD: 105
-
 }
-
-export const campaignStatusOpts = toOpt(campaignStatus)
 
 export const landingTypeOpts = toOpt(landingType)
 
@@ -277,3 +248,70 @@ export const FHYF_USERD = 1
 export const FHYF_UN_USE = 0
 
 export const GROUP_MAX = 10
+
+/** 计划状态 */
+export const CAMPAIGN_STATUS_ONLINE = 1
+export const CAMPAIGN_STATUS_OFFLINE = 2
+export const CAMPAIGN_STATUS_PAUSE = 3
+export const CAMPAIGN_STATUS_ACCOUNT_BUDGET_NOT_ENOUGH = 4
+export const CAMPAIGN_STATUS_CAMPAIGN_BUDGET_NOT_ENOUGH = 5
+export const CAMPAIGN_STATUS_INVALID_DATE = 6
+
+export const CAMPAIGN_STATUSES = {
+  [CAMPAIGN_STATUS_ONLINE]: {
+    label: '投放中',
+    type: 'success'
+  },
+  [CAMPAIGN_STATUS_OFFLINE]: {
+    label: '下线',
+    type: 'danger'
+  },
+  [CAMPAIGN_STATUS_PAUSE]: {
+    label: '暂停',
+    type: 'warning'
+  },
+  [CAMPAIGN_STATUS_ACCOUNT_BUDGET_NOT_ENOUGH]: {
+    label: '余额不足',
+    type: 'warning'
+  },
+  [CAMPAIGN_STATUS_CAMPAIGN_BUDGET_NOT_ENOUGH]: {
+    label: '日预算不足',
+    type: 'warning'
+  },
+  [CAMPAIGN_STATUS_INVALID_DATE]: {
+    label: '非投放时间',
+    type: 'warning'
+  }
+}
+
+/**
+ * 单元状态
+ */
+export const GROUP_STATUS_ONLINE = 1
+export const GROUP_STATUS_OFFLINE = 2
+export const GROUP_STATUS_PAUSE = 3
+export const GROUP_STATUS_PENDING_AUDIT = 4
+export const GROUP_STATUS_REJECT = 5
+
+export const GROUP_STATUSES = {
+  [GROUP_STATUS_ONLINE]: {
+    label: '有效',
+    type: 'success'
+  },
+  [GROUP_STATUS_OFFLINE]: {
+    label: '下线',
+    type: 'danger'
+  },
+  [GROUP_STATUS_PAUSE]: {
+    label: '暂停',
+    type: 'warning'
+  },
+  [GROUP_STATUS_PENDING_AUDIT]: {
+    label: '审核中',
+    type: 'warning'
+  },
+  [GROUP_STATUS_REJECT]: {
+    label: '审核驳回',
+    type: 'danger'
+  }
+}
