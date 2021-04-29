@@ -10,18 +10,18 @@
         >
             <el-table-column prop="id" label="计划" align="center" />
             <el-table-column prop="opt" label="优化项" align="center" :formatter="(row) => filterOptimization(row)"/>
-            <el-table-column prop="status_text" label="状态" align="center">
+            <el-table-column prop="front_campaign_status_desc" label="状态" align="center">
                 <template slot-scope="scope">
                   <el-popover
                     trigger="hover"
                     placement="top"
                   >
-                    <p>您的推广在{{ scope.row.status_text}}中</p>
+                    <p>您的推广在{{ scope.row.front_campaign_status_desc}}中</p>
                     <span
                       slot="reference"
                       class="name-wrapper"
                     >
-                      {{ scope.row.status_text }}
+                      {{ scope.row.front_campaign_status_desc }}
                     </span>
                   </el-popover>
                 </template>

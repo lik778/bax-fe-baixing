@@ -20,7 +20,6 @@
                     <p>您的推广在{{ row.front_group_status_desc}}中</p>
                     <span
                       slot="reference"
-                      :class="getColor(row)"
                     >
                       {{ row.front_group_status_desc }}
                     </span>
@@ -43,14 +42,10 @@
                       name: 'qwt-update-promotion',
                       params: { id: row.id },
                     }">优化</router-link>
-                  <el-button
-                    type="text"
-                    @click="
-                      () => {
-                        console.log(row);
-                      }
-                    "
-                  >复制</el-button>
+                  <router-link :to="{
+                    name: 'qwt-create-group',
+                    query: { cloneId: row.id }
+                  }">复制</router-link>
                 </template>
             </el-table-column>
         </el-table>

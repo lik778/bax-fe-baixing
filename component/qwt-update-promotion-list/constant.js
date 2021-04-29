@@ -45,26 +45,9 @@ const CAMPAIGN_STATUS_OPTS = Object.freeze(
     { label: '审核驳回', value: '-53' }
   ]
 )
-const options = [{
-  value: 1,
-  label: '计划1'
-}, {
-  value: 2,
-  label: '计划2'
-}, {
-  value: 3,
-  label: '计划3'
-}, {
-  value: 4,
-  label: '计划4'
-}, {
-  value: 5,
-  label: '计划5'
-}]
 export {
   CAMPAIGN_OPTIMIZATION_OPTS,
   CAMPAIGN_STATUS_OPTS,
-  options,
   OPTIMIZATION,
   filterOptimization
 }
