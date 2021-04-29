@@ -16,7 +16,7 @@ stages:
 
 build:
   stage: build
-  image: node
+  image: node:12.2
   tags:
     - k8s-dev-build
   cache:
@@ -26,8 +26,8 @@ build:
   before_script:
     - npm set registry https://registry.npm.taobao.org
     - npm set disturl https://npm.taobao.org/dist
-    # - npm ci --cache .npm --prefer-offline
-    - npm install
+    - npm ci --cache .npm --prefer-offline
+    # - npm install
   script:
     - npm run release
   artifacts:
