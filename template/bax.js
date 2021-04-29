@@ -488,6 +488,11 @@ export const router = new VueRouter({
       name: 'account'
     },
     {
+      component: () => import('com/role'),
+      path: '/main/role',
+      name: 'role'
+    },
+    {
       component: () => import('com/coupon'),
       path: '/main/coupon',
       name: 'coupon'
