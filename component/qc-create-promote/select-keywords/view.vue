@@ -9,8 +9,8 @@
     <div class="content">
       <div class="item"
            v-for="(word,index) in keywords"
-           :key="word">
-        <span class="word">{{word}}</span>
+           :key="index">
+        <span class="word">{{word.value || word}}</span>
         <span v-if="isEdit">
           <i class="el-icon-edit"
              @click="editWord(index)"></i>

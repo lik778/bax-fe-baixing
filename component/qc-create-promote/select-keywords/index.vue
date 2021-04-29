@@ -47,7 +47,7 @@
               v-for="(value, key) in opts"
               class="keyword-view"
               :key="key"
-              :type="key"
+              :type="value.type"
               :title="value.title"
               :keywords="value.keywords"
               :isEdit="value.isEdit"
@@ -342,7 +342,7 @@ export default {
       const coreWordInfos = Array(this.keywordOptions.length)
         .fill('')
         .map((x, idx) => ({
-          coreWord: keywords[idx],
+          coreWord: keywords[idx].value,
           prefixWords: this.keywordOptions[idx].B.keywords,
           suffixWords: this.keywordOptions[idx].D.keywords
         }))

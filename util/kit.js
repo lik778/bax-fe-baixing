@@ -53,6 +53,21 @@ export function getImageInfo (file) {
   })
 }
 
+export const base64ToBin = base64 => {
+  const arr = base64.split(',')
+  const mime = arr[0].match(/:(.*?);/)[1]
+  const bstr = atob(arr[1])
+  let n = bstr.length
+  const u8arr = new Uint8Array(n)
+  while (n--) {
+    u8arr[n] = bstr.charCodeAt(n)
+  }
+  return {
+    u8arr,
+    mime
+  }
+}
+
 /** 将”分“转换为”元“ */
 export function f2y (fen) {
   if (typeof fen === 'string') {
@@ -170,7 +185,7 @@ export function getRouteParam (key) {
 }
 
 // simple deepclone
-function deepClone (source) {
+export function deepClone (source) {
   const targetObj = source instanceof Array ? [] : {}
   Object.keys(source).forEach((keys) => {
     if (source[keys] && typeof source[keys] === 'object') {
@@ -377,4 +392,11 @@ export function toOpt (obj, forceNumber = true, reverse = false) {
         value: forceNumber ? (key | 0) : key
       }))
   }
+}
+
+// 判断数组的值是否相等
+export const isArrHasSameValue = (arrA = [], arrB = [], isSame = (a, b) => a === b) => {
+  const isSameLen = arrA.length === arrB.length
+  const sameContent = () => arrA.every((x, i) => isSame(x, arrB[i]))
+  return isSameLen && sameContent()
 }

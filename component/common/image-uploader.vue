@@ -4,8 +4,9 @@
       hidden
       ref="file"
       type="file"
+      style="display: none"
+      accept="image/png,image/gif,image/jpeg"
       :multiple="multiple"
-      style="display: none;"
       @change="handleFileChange"
     />
     <slot name="default"></slot>
@@ -16,7 +17,6 @@
 import uuid from 'uuid/v4'
 import Fetch from 'fetch.io'
 import { upyun } from 'config'
-import { extname } from 'path'
 import { getUpyunToken } from 'api/material'
 
 const { filehost: upyunFileHost, host: upyunHost, bucket } = upyun
@@ -31,9 +31,10 @@ async function uploadFile (file) {
   if (!file) {
     return
   }
-
-  const ext = extname(file.name)
+  const ext = '.' + (file.type || '/jpeg').split('/')[1]
   const name = 'sst-img' + uuid() + ext
+
+  console.log(ext, name, file)
 
   const expiration = ((Date.now() / 1000) | 0) + 15 * 60
   const { policy, sign } = await getUpyunToken({
@@ -42,7 +43,11 @@ async function uploadFile (file) {
     bucket
   })
 
-  const { url: filePath } = await request
+  const {
+    code,
+    message,
+    url: filePath
+  } = await request
     .post('/' + bucket)
     .append('file', file)
     .append('bucket', bucket)
@@ -52,20 +57,27 @@ async function uploadFile (file) {
     .append('expiration', expiration)
     .json()
 
-  return upyunFileHost + filePath
+  if (code === 200) {
+    return upyunFileHost + filePath
+  } else {
+    throw new Error(message)
+  }
 }
 
 const checkUploadFiles = function (files, options) {
   return new Promise(resolve => {
     files.forEach(file => {
       if (file > options.maxFileSize * 1024) {
-        resolve([`超过最大上传的文件大小${options.maxFileSize}`])
+        resolve([`超过最大上传的图片大小${options.maxFileSize}`])
       }
       if (!options.types.includes(file.type)) {
-        resolve(['不支持上传的文件格式'])
+        resolve(['图片解析失败，请换张图片再试试'])
       }
     })
     resolve([null, 'success'])
+  }).catch(error => {
+    console.error('error')
+    throw new Error(error)
   })
 }
 
@@ -94,17 +106,25 @@ export default {
     multiple: {
       type: Boolean,
       default: false
-    }
+    },
+    beforeUpload: Function
   },
   data () {
     return {
-      loading: false
+      loading: false,
+      callback: null
     }
   },
   methods: {
     async handleFileChange (e) {
-      const { uploadOptions } = this
-      const files = Array.from(e.target.files)
+      const { uploadOptions, beforeUpload } = this
+      const wash = beforeUpload || (async _ => _)
+      // TODO refactor await of
+      const files = await Promise.all(
+        Array.from(e.target.files).map(async x => {
+          return await wash(x)
+        })
+      ).then(list => list)
       if (!files.length) return
 
       const [error] = await checkUploadFiles(files, uploadOptions)
@@ -113,18 +133,39 @@ export default {
       }
       this.$emit('before-upload', e.target.files)
       try {
+        // console.log(files)
         this.loading = true
         const uploadResult = await Promise.all(files.map(uploadFile))
-        this.$emit('upload-success', uploadResult)
+        this.$emit('upload-success', uploadResult.map((url, idx) => ({
+          filename: files[idx].name,
+          url
+        })))
+        this.callback && this.callback({
+          res: uploadResult,
+          isSuccess: true
+        })
       } catch (err) {
         this.$emit('upload-failed', err)
+        this.callback && this.callback({
+          isSuccess: false,
+          err
+        })
         console.error(err)
       } finally {
         this.loading = false
       }
     },
-    uploadFile () {
-      this.$refs.file.click()
+    uploadFile (f = [], callback) {
+      const files = f instanceof Array ? f : [f]
+      this.callback = callback
+
+      if (files.length === 0) {
+        this.$refs.file.click()
+      } else {
+        this.handleFileChange({
+          target: { files }
+        })
+      }
     }
   }
 }

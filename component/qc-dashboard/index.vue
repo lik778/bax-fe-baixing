@@ -102,7 +102,7 @@
             <template>百度</template>
           </el-table-column>
           <el-table-column label="位置">
-            <span>投放中</span>
+            <span>首页</span>
           </el-table-column>
           <el-table-column
             label="展现端"
@@ -432,7 +432,7 @@ export default {
       const wrapperClass = `snapshot-content-${randomID}`
 
       // 快照样式修复
-      const snapshotFix = '<style>/*这里可以放一些快照页面样式的修复代码*/</style>'
+      const snapshotFix = '<style>#modal-style,.find-style { display: none } #content_left > div { z-index: unset !important; }</style>'
       html += snapshotFix
 
       const style =

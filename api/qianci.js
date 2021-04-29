@@ -163,3 +163,8 @@ export async function getPackageById(id) {
     .json())
     .data
 }
+
+//核心词b2b审核
+export async function checkCoreWord(params) {
+  return (await qianci.get(`/promote/keyword/checkCoreWord`).query(params).json()).data
+}

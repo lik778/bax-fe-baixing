@@ -295,12 +295,12 @@ export default {
       })
     },
     industryInfoArr () {
-      return (this.industryInfo && this.industryInfo.length > 0)
-        ? this.industryInfo.reduce((h, c) => {
-            h.push([[c.nameCn], (c.secondIndustryResponses || []).map(x => x.nameCn)])
-            return h
-          }, [])
-        : []
+      return !(this.industryInfo && this.industryInfo.length > 0)
+        ? []
+        : this.industryInfo.reduce((h, c) => {
+          h.push([[c.nameCn], (c.secondIndustryResponses || []).map(x => x.nameCn)])
+          return h
+        }, [])
     }
   },
   async created () {
@@ -615,5 +615,6 @@ marquee {
   width: 180px;
   position: absolute;
   top: 50px;
+  left: -20px;
 }
 </style>
