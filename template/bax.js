@@ -52,7 +52,8 @@ import {
   MessageBox,
   Message,
   Cascader,
-  Notification
+  Notification,
+  Drawer
 } from 'element-ui'
 import '../cssbase/index.scss'
 import { reaction } from 'mobx'
@@ -143,6 +144,7 @@ Vue.use(Progress)
 Vue.use(Popconfirm)
 Vue.use(Card)
 Vue.use(Image)
+Vue.use(Drawer)
 
 /**
  * 错误回退组件
