@@ -11,24 +11,24 @@
             <el-table-column prop="name" label="单元名称" align="center" />
             <el-table-column prop="campaign_id" label="所属计划" align="center" />
             <el-table-column prop="source" label="渠道" align="center" :formatter="(row, column, cellValue) => semPlatformCn[cellValue]" />
-            <el-table-column prop="status_text" label="状态" align="center">
-                <template slot-scope="scope">
+            <el-table-column prop="front_group_status_desc" label="状态" align="center">
+                <template slot-scope="{ row }">
                   <el-popover
                     trigger="hover"
                     placement="top"
                   >
-                    <p>您的推广在{{ scope.row.status_text}}中</p>
+                    <p>您的推广在{{ row.front_group_status_desc}}中</p>
                     <span
                       slot="reference"
-                      class="name-wrapper"
+                      :class="getColor(row)"
                     >
-                      {{ scope.row.status_text }}
+                      {{ row.front_group_status_desc }}
                     </span>
                   </el-popover>
                 </template>
             </el-table-column>
             <el-table-column prop="opt" label="优化项" align="center" :formatter="(row) => filterOptimization(row)"/>
-            <el-table-column prop="avg_cpc_ranking" label="关键词平均排名" />
+            <el-table-column prop="avg_cpc_ranking" label="关键词平均排名" align="center" :formatter="(row) => parseFloat(row.avg_cpc_ranking).toFixed(2)" />
             <el-table-column
                 prop=""
                 label="操作"
@@ -90,11 +90,13 @@ export default {
         this.$emit('pause', id)
       }
     }
+    // getColor ({ front_group_status }) {
+    // }
   }
 }
 </script>
 <style lang="scss" scoped>
-  .bax-cell {
+.bax-cell {
   a {
     color: #35a5e4;
   }
@@ -116,6 +118,9 @@ export default {
   .edite-wrapper {
     display: flex;
     align-items: center;
+  }
+  .redColor{
+    color: red;
   }
 }
 </style>
