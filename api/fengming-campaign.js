@@ -148,9 +148,9 @@ export async function getCampaignLanding (query) {
 export async function getCampaignList (params) {
   const body = await fengming
     .post('/campaign/info')
-    .query(params)
+    .query(reverseCamelcase(params))
     .json()
-  return body.data
+  return toCamelcase(body.data)
 }
 
 export async function getCampaignIds (params) {

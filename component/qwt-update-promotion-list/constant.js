@@ -20,7 +20,7 @@ const OPTIMIZATION = Object.freeze({
   defaultMark: '设'
 })
 const filterOptimization = (row) => {
-  const { kw_mark: kwMark, price_mark: priceMark, ctr_mark: ctrMark, default_mark: defaultMark } = row
+  const { kwMark, priceMark, ctrMark, defaultMark } = row
   if (kwMark) {
     return '词'
   }
@@ -37,8 +37,67 @@ const filterOptimization = (row) => {
     return '-'
   }
 }
-const CAMPAIGN_STATUS_OPTS = Object.freeze(Object.keys(CAMPAIGN_STATUSES))
-const GROUP_STATUSES_OPTS = Object.freeze(Object.keys(GROUP_STATUSES))
+
+// 计划筛选项
+const STATUS_OFFLINE = -1 // 计划下线
+const STATUS_INVALID_DATE = -50 // 无效的投放期
+const STATUS_ACCOUNT_BUDGET_NOT_ENOUGH = -51 // 账户余额不足
+const STATUS_INVALID_REGION = -52 // 无效的投放区域
+const STATUS_PAUSE = -10 // 计划暂停
+// const STATUS_MIGRATE_PAUSE = -11 // 迁框计划暂停
+const STATUS_CAMPAIGN_BUDGET_NOT_ENOUGH = 5 // 计划日预算不足
+const STATUS_ONLINE = 100 // 计划投放中
+const CAMPAIGN_STATUS_OPTS = Object.freeze([
+  {
+    label: '计划下线',
+    value: STATUS_OFFLINE
+  },
+  {
+    label: '无效的投放期',
+    value: STATUS_INVALID_DATE
+  },
+  {
+    label: '账户余额不足',
+    value: STATUS_ACCOUNT_BUDGET_NOT_ENOUGH
+  },
+  {
+    label: '无效的投放区域',
+    value: STATUS_INVALID_REGION
+  },
+  {
+    label: '计划暂停',
+    value: STATUS_PAUSE
+  },
+  {
+    label: '计划日预算不足',
+    value: STATUS_CAMPAIGN_BUDGET_NOT_ENOUGH
+  },
+  {
+    label: '计划投放中',
+    value: STATUS_ONLINE
+  }
+])
+
+// 单元筛选项
+const STATUS_REJECT = -20 // 审核驳回
+const GROUP_STATUSES_OPTS = Object.freeze([
+  {
+    label: '下线',
+    value: STATUS_OFFLINE
+  },
+  {
+    label: '暂停',
+    value: STATUS_PAUSE
+  },
+  {
+    label: '审核驳回',
+    value: STATUS_REJECT
+  },
+  {
+    label: '推广中',
+    value: STATUS_ONLINE
+  }
+])
 export {
   CAMPAIGN_OPTIMIZATION_OPTS,
   CAMPAIGN_STATUS_OPTS,

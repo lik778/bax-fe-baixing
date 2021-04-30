@@ -75,7 +75,7 @@ export default {
       queryParams: {
         group_name: '',
         areas: [],
-        statuses: CAMPAIGN_STATUS_OPTS,
+        statuses: CAMPAIGN_STATUS_OPTS.map(c => c.value),
         source: [],
         offset: 0,
         limit: ONE_PAGE_NUM,
@@ -139,11 +139,11 @@ export default {
       }
       if (!id && tab.index === '0') {
         this.fetchlandingPageList()
-        this.queryParams.statuses = CAMPAIGN_STATUS_OPTS
+        this.queryParams.statuses = CAMPAIGN_STATUS_OPTS.map(c => c.value)
       }
       if (tab.index === '1') {
         this.fetchGroupList()
-        this.queryParams.statuses = GROUP_STATUSES_OPTS
+        this.queryParams.statuses = GROUP_STATUSES_OPTS.map(c => c.value)
       }
     },
     async modifyBudget (dailyBudget) {

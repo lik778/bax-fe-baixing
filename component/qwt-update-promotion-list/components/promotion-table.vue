@@ -10,18 +10,18 @@
         >
             <el-table-column prop="id" label="计划" align="center" />
             <el-table-column prop="opt" label="优化项" align="center" :formatter="(row) => filterOptimization(row)"/>
-            <el-table-column prop="front_campaign_status_desc" label="状态" align="center">
-                <template slot-scope="scope">
+            <el-table-column prop="frontCampaignStatus" label="状态" align="center">
+                <template slot-scope="{ row }">
                   <el-popover
                     trigger="hover"
                     placement="top"
                   >
-                    <p>您的推广在{{ scope.row.front_campaign_status_desc}}中</p>
+                    <p>{{ row.frontCampaignStatusDetails}}</p>
                     <span
                       slot="reference"
-                      class="name-wrapper"
+                      :class="CAMPAIGN_STATUSES[row.frontCampaignStatus].type || 'warning'"
                     >
-                      {{ scope.row.front_campaign_status_desc }}
+                      {{ row.frontCampaignStatusDesc }}
                     </span>
                   </el-popover>
                 </template>
@@ -53,7 +53,7 @@
                 </template>
               </el-table-column>
             <el-table-column
-                prop="daily_budget"
+                prop="dailyBudget"
                 label="今日预算"
                 align="center"
                 width="150"
@@ -69,7 +69,7 @@
                     </el-popconfirm>
                   </span>
                   <span v-else>
-                    <span>{{ (scope.row.daily_budget / 100).toFixed(2) }}</span>
+                    <span>{{ (scope.row.dailyBudget / 100).toFixed(2) }}</span>
                     <el-button
                       type="text"
                       @click="editeBudget(scope.row)"
@@ -77,7 +77,7 @@
                   </span>
                 </template>
             </el-table-column>
-            <el-table-column prop="today_cost" label="今日消耗" align="center" />
+            <el-table-column prop="todayCost" label="今日消耗" align="center" />
             <el-table-column
                 prop=""
                 label="操作"
@@ -97,7 +97,7 @@
 </template>
 
 <script>
-import { semPlatformCn } from 'constant/fengming'
+import { semPlatformCn, CAMPAIGN_STATUSES } from 'constant/fengming'
 import { filterOptimization } from '../constant'
 export default {
   name: 'promotionTable',
@@ -113,10 +113,14 @@ export default {
       default: false
     }
   },
+  created () {
+    console.log(this.list)
+  },
   data () {
     return {
       semPlatformCn,
       filterOptimization,
+      CAMPAIGN_STATUSES,
       dailyBudget: {
         id: '',
         value: 0
@@ -127,7 +131,7 @@ export default {
     async editeBudget (row) {
       this.dailyBudget = {
         id: row.id,
-        value: (row.daily_budget / 100).toFixed(2)
+        value: (row.dailyBudget / 100).toFixed(2)
       }
     },
     updateBudgetEditeStatus () {
@@ -149,6 +153,18 @@ export default {
 
 <style lang="scss" scoped>
   .bax-cell {
+    .warning {
+    color: $c-warning;
+    font-size: 13px;
+  }
+  .success {
+    color: $c-success;
+    font-size: 13px;
+  }
+  .danger {
+    color: $c-strong;
+    font-size: 13px;
+  }
   a {
     color: #35a5e4;
   }

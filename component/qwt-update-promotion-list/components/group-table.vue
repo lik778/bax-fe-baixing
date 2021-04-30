@@ -19,7 +19,7 @@
                   </span>
                   <el-tooltip v-else
                               placement="top-start"
-                              :content="row.frontCampaignStatusDetails">
+                              :content="row.frontGroupStatusDetails">
                     <span :class="GROUP_STATUSES[row.frontGroupStatus].type || 'warning'">
                       {{row.frontGroupStatusDesc}}
                     </span>
@@ -36,7 +36,7 @@
                 width="150"
               >
                 <template slot-scope="{row}">
-                  <el-popconfirm :title="`确定要${!row.pause ? `暂停投放` : '开始投放'}吗？`" @confirm="confirm(row)">
+                  <el-popconfirm title="确定要暂停投放吗？" @confirm="pause(row)">
                     <el-button slot="reference" type="text">{{!row.pause ? `暂停` : '投放'}}</el-button>
                   </el-popconfirm>
                   <router-link :to="{
@@ -53,7 +53,7 @@
     </div>
 </template>
 <script>
-import { semPlatformCn } from 'constant/fengming'
+import { semPlatformCn, GROUP_STATUS_REJECT } from 'constant/fengming'
 import { filterOptimization, GROUP_STATUSES } from '../constant'
 export default {
   name: 'group-table',
@@ -73,7 +73,8 @@ export default {
     return {
       filterOptimization,
       semPlatformCn,
-      GROUP_STATUSES
+      GROUP_STATUSES,
+      GROUP_STATUS_REJECT
     }
   },
   methods: {

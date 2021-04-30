@@ -23,11 +23,11 @@
         <el-checkbox-group v-model="form.statuses" @change="(value) => handleChange(value, 'statuses')">
           <el-checkbox
             class="checkbox"
-            v-for="key in statusOpts"
-            :key="key"
-            :label="key"
+            v-for="c in statusOpts"
+            :key="c.value"
+            :label="c.value"
           >
-          {{ statusOrigin[key].label }}
+          {{ c.label }}
           </el-checkbox>
         </el-checkbox-group>
       </el-form-item>
