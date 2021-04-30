@@ -148,7 +148,7 @@ import {
   emptyGroup,
   NEGATIVE_KEYWORDS_MAX,
   KEYWORDS_MAX,
-  // SEM_PLATFORM_BAIDU,
+  SEM_PLATFORM_BAIDU,
   RECOMMAND_SOURCES,
   MATERIAL_PIC_STATUS
 } from 'constant/fengming'
@@ -204,8 +204,10 @@ export default {
       return true
     },
     enableMaterialPictures () {
-      // return this.promotion.source === SEM_PLATFORM_BAIDU
-      return true
+      /* 渠道非百度或复制单元时不能展示创意配图 */
+      const isBaidu = this.promotion.source === SEM_PLATFORM_BAIDU
+      const hasCloneID = !!this.$route.query.cloneId
+      return isBaidu && !hasCloneID
     },
     keywordRemainCount () {
       const newLen = this.group.keywords.length
@@ -253,13 +255,12 @@ export default {
       } else {
         const promotion = await getCampaignInfo(this.campaignId)
         this.promotion = pick(promotion, ['id', 'source', 'areas'])
+
+        if (this.enableMaterialPictures) {
+          this.initMaterialPictures()
+        }
       }
       this.campaignKeywordLen = await getCampaignKeywordsCount(this.campaignId)
-
-      // TODO 复制过来的创意配图怎么处理？
-      if (this.enableMaterialPictures) {
-        this.initMaterialPictures()
-      }
     } catch (error) {
       console.error('error:', error)
     } finally {
