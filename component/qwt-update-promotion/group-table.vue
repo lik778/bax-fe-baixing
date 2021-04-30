@@ -1,41 +1,77 @@
 <template>
-  <el-table class="group-table"
-            :data="groupData"
-            border>
-    <el-table-column prop="name"
-                     label="单元名称"
-                     align="center" />
-    <!-- TODO: 投放状态需要枚举，并为不一样的状态添加不一样的颜色，见设计稿 -->
-    <el-table-column prop="status"
-                     label="投放状态"
-                     align="center">
-      <template slot-scope="{row}">{{ row.status }}</template>
-    </el-table-column>
-    <!-- TODO: 见设计稿 -->
-    <el-table-column prop="avgCpcRanking"
-                     label="关键词平均排名"
-                     align="center" />
-    <el-table-column label="操作"
-                     align="center">
-      <template slot-scope="{row}">
-        <!-- TODO: 待后端确认状态 -->
-        <span :class="{btn: true, disabled: isSales }"
-              v-if="true"
-              @click="pauseGroup(row)">暂停</span>
-        <span :class="{btn: true, disabled: isSales }"
-              v-if="false"
-              @click="activeGroup(row)">开启</span>
-        <span class="btn"
-              @click="optimizeGroup(row)">优化</span>
-        <span :class="{btn: true, disabled: isSales }"
-              @click="copyGroup(row)">复制</span>
-      </template>
-    </el-table-column>
-  </el-table>
+  <div>
+    <el-button @click="handleGoGroup"
+               type="primary"
+               :disabled="disabled"
+               class="add-group-btn">
+      <i class="el-icon-plus" />新增单元
+    </el-button>
+    <el-table class="group-table"
+              :data="groupData"
+              border>
+      <el-table-column prop="name"
+                       label="单元名称"
+                       align="center" />
+      <el-table-column prop="frontGroupStatus"
+                       label="单元状态"
+                       align="center">
+        <template slot-scope="{row}">
+          <span v-if="row.frontGroupStatus !== GROUP_STATUS_REJECT"
+                :class="GROUP_STATUSES[row.frontGroupStatus].type || 'warning'">
+            {{row.frontGroupStatusDesc}}
+          </span>
+          <el-tooltip v-else
+                      placement="top-start"
+                      :content="row.frontCampaignStatusDetails">
+            <span :class="GROUP_STATUSES[row.frontGroupStatus].type || 'warning'">
+              {{row.frontGroupStatusDesc}}
+            </span>
+            <i class="el-icon-info danger" />
+          </el-tooltip>
+        </template>
+      </el-table-column>
+      <el-table-column prop="frontCampaignStatus"
+                       label="计划状态"
+                       align="center">
+        <template slot-scope="{row}">
+          <span :class="GROUP_STATUSES[row.frontCampaignStatus].type || 'warning'">
+            {{row.frontCampaignStatusDesc}}
+          </span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="avgCpcRanking"
+                       label="关键词平均排名"
+                       align="center" />
+      <el-table-column label="操作"
+                       align="center">
+        <template slot-scope="{row}">
+          <el-button class="btn"
+                     :disabled="isSales"
+                     :class="{disabled: isSales}"
+                     v-if="row.frontGroupStatus !== GROUP_STATUS_REJECT"
+                     @click="pauseGroup(row)">暂停</el-button>
+          <el-button class="btn"
+                     :disabled="isSales"
+                     :class="{disabled: isSales}"
+                     v-else
+                     @click="activeGroup(row)">开启</el-button>
+          <el-button class="btn"
+                     :class="{disabled: isSales}"
+                     :disabled="isSales"
+                     @click="optimizeGroup(row)">优化</el-button>
+          <el-button class="btn"
+                     :class="{disabled}"
+                     :disabled="disabled"
+                     @click="copyGroup(row)">复制</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+  </div>
 </template>
 
 <script>
 import { getAllGroups, activeGroups, pauseGroups } from 'api/fengming'
+import { GROUP_MAX, CAMPAIGN_STATUSES, GROUP_STATUSES, GROUP_STATUS_REJECT, GROUP_STATUS_ONLINE } from 'constant/fengming'
 
 export default {
   name: 'group-table',
@@ -51,7 +87,17 @@ export default {
   },
   data () {
     return {
-      groupData: null
+      groupData: null,
+
+      GROUP_MAX,
+      CAMPAIGN_STATUSES,
+      GROUP_STATUSES,
+      GROUP_STATUS_REJECT
+    }
+  },
+  computed: {
+    disabled () {
+      return this.isSales || (this.groupData && this.groupData.length >= GROUP_MAX)
     }
   },
   async mounted () {
@@ -70,17 +116,15 @@ export default {
         cancelButtonText: '取消'
       })
       await pauseGroups([group.id])
-      // TODO 暂停之后更改投放状态, 待后端确认状态
-      group.status = 2
+      group.frontGroupStatus = GROUP_STATUS_REJECT
     },
     async activeGroup (group) {
-      await this.$alert('确定暂停投放？', '提示', {
+      await this.$alert('确定开启投放？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消'
       })
       await activeGroups([group.id])
-      // TODO 暂停之后更改投放状态，待后端确认状态
-      group.status = 1
+      group.frontGroupStatus = GROUP_STATUS_ONLINE
     },
     optimizeGroup (group) {
       this.$router.push({
@@ -93,6 +137,12 @@ export default {
         name: 'qwt-create-group',
         query: { cloneId: group.id }
       })
+    },
+    handleGoGroup () {
+      this.$router.push({
+        name: 'qwt-create-group',
+        query: { campaignId: this.campaignId }
+      })
     }
   }
 }
@@ -100,9 +150,23 @@ export default {
 
 <style lang="scss" scoped>
 .group-table {
+  .warning {
+    color: $c-warning;
+    font-size: 13px;
+  }
+  .success {
+    color: $c-success;
+    font-size: 13px;
+  }
+  .danger {
+    color: $c-strong;
+    font-size: 13px;
+  }
   .btn {
     color: $c-info;
     cursor: pointer;
+    padding: 0;
+    border: 0;
     &:not(:first-child) {
       margin-left: 6px;
     }
@@ -114,5 +178,12 @@ export default {
       border-color: #ebeef5;
     }
   }
+}
+
+.add-group-btn {
+  margin-bottom: 20px;
+}
+.el-icon-plus {
+  margin-right: 4px;
 }
 </style>

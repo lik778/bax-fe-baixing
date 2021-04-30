@@ -1,6 +1,6 @@
 
 import Schema from 'async-validator'
-import { LANDING_TYPE_AD, LANDING_TYPE_GW, LANDING_TYPE_STORE, MATCH_TYPE_EXACT, NEGATIVE_KEYWORDS_MAX } from 'constant/fengming'
+import { LANDING_TYPE_AD, LANDING_TYPE_GW, LANDING_TYPE_STORE, MATCH_TYPE_EXACT, NEGATIVE_KEYWORDS_MAX, getMatchTypeObj } from 'constant/fengming'
 import { MIN_WORD_PRICE, MAX_WORD_PRICE } from 'constant/keyword'
 import { keywordPriceTip } from 'constant/tip'
 
@@ -69,8 +69,8 @@ const commonDescriptor = {
   },
   keywords (rule, value) {
     if (value.length < KEYWORDS_MIN) return new Error('请至少添加20个关键词')
-    // TODO: 动态获取精确匹配的最大值
-    const maxMatchTypeExactCount = 20
+    const wordLen = value.filter(o => !o.isDel).length
+    const maxMatchTypeExactCount = getMatchTypeObj(wordLen).count(wordLen)
     const currMatchTypeExactCount = value.filter(o => o.matchType === MATCH_TYPE_EXACT).length
     if (currMatchTypeExactCount > maxMatchTypeExactCount) return new Error('精确匹配的设置已超过系统限制，请修改')
     if (value.some(o => o.price < MIN_WORD_PRICE || o.price > MAX_WORD_PRICE)) return new Error(keywordPriceTip)

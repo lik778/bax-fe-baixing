@@ -5,16 +5,15 @@
             img-url="//file.baixing.net/201903/d6f4502a0e8a659b78a33fbb3713e6b9.png">创意怎么才能飘红
     </fm-tip>
     <el-tabs type="card"
-             class="creative"
+             class="creative-tab"
              v-model="activeName"
-             editable
              @tab-add="handleTabsAdd"
              @tab-remove="handleTabsRemove">
       <el-tab-pane v-for="(item, index) in creatives"
                    :label="'创意' + (index + 1)"
                    :key="index"
                    :name="String(index + 1)"
-                   class="creative-pane">
+                   class="creative-panel">
         <!-- TODO: 此处的auditStatus和detailStatusText待确认（后端确认） -->
         <creative-editor :disabled="getDisabled(item)"
                          :platforms="[source]"
@@ -125,12 +124,31 @@ export default {
 <style lang="scss" scoped>
 .creative-container {
   position: relative;
-  /deep/ .el-tabs__new-tab {
-    border: 1px solid $c-tip;
-    height: 22px;
-    width: 22px;
-    color: $c-tip;
-    font-size: 18px;
+
+  .creative-tab {
+    /deep/ .el-tabs__nav {
+      border-radius: 4px 0 0 0;
+    }
+    /deep/ .el-tabs__header {
+      display: flex;
+    }
+
+    /deep/ .el-tabs__new-tab {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      order: 1;
+      width: 100px;
+      height: 40px;
+      border: 1px solid #d3dce6;
+      margin: 0;
+      border-left: 0;
+      border-bottom: 0;
+      border-top-left-radius: 0;
+      .el-icon-plus {
+        font-size: 30px;
+      }
+    }
   }
   .creative-tip {
     position: absolute;

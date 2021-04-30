@@ -130,13 +130,19 @@ export default {
       this.$emit('track', 'click-button: add-keyword')
     },
     async recommendKeywords () {
-      const { landingType, landingPage, areas } = this
+      const { landingType, landingPage, areas, creatives } = this
       const recommendBody = {
         url: landingPage,
         areas,
         landingType,
-        creativeTitle: this.creatives[0].title,
-        creativeContent: this.creatives[0].content
+        creativeTitle: creatives[0].title,
+        creativeContent: creatives[0].content
+      }
+      if (recommendBody.creativeTitle === '' || recommendBody.creativeContent === '') {
+        return this.$message.error('请填写创意')
+      }
+      if (!landingPage) {
+        return this.$message.error('请选择官网落地页')
       }
 
       try {
@@ -158,7 +164,7 @@ export default {
       }
     },
     handleAddKeywords (words) {
-      this.$emit('add-keywords', words.map(o => ({ ...o, isNew: true })))
+      this.$emit('add-keywords', words.map(o => ({ ...o, isNew: true })), true)
 
       this.$emit('track', 'click-button: add-keyword-list', {
         keywordsLen: words.length,

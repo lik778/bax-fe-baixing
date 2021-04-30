@@ -14,6 +14,7 @@
                   v-model="search" />
         <el-button class="add-btn"
                    type="primary"
+                   :loading="loading"
                    @click="addWords">批量添加</el-button>
       </div>
       <div class="tip">提示: 请用逗号区分关键词进行批量关键词添加，如合肥家政服务公司，合肥月嫂，合肥钟点工</div>
@@ -67,7 +68,8 @@ export default {
   data () {
     return {
       search: '',
-      words: []
+      words: [],
+      loading: false
     }
   },
   methods: {
@@ -97,6 +99,7 @@ export default {
       }
 
       try {
+        this.loading = true
         validateKeyword(words)
 
         // 校验是否已存在
@@ -111,6 +114,8 @@ export default {
         })
       } catch (e) {
         return this.$message.error(e.message)
+      } finally {
+        this.loading = false
       }
     }
   }

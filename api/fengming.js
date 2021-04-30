@@ -10,6 +10,22 @@ import { SPUCODES } from 'constant/product'
 const isArray = Array.isArray
 const { WHOLE_SPU_CODE } = SPUCODES
 
+// 获取创意配图物料
+export async function getMaterialPictures (opts) {
+  return await fengming
+    .get(`/creative/${opts.campaignId}/image`)
+    .json()
+}
+
+// 更新创意配图物料
+export async function updateMaterialPictures (opts) {
+  // console.log('opts: ', opts)
+  return await fengming
+    .post('/creative/image')
+    .send(reverseCamelcase(opts))
+    .json()
+}
+
 // 查询规划师拓词
 export const queryBaiduExpandWords = paginationWrapper(
   async (opts) => (await fengming
@@ -149,19 +165,7 @@ export async function getCampaignInfo (id) {
     .get(`/campaign/${id}`)
     .json()
 
-  const campaign = toCamelcase(body.data)
-
-  if (!campaign.landingPageId) {
-    // why ? 不想多说什么了, 呵呵
-    if (campaign.landingPage && campaign.landingPage.includes('vad_id')) {
-      const search = (new URL(campaign.landingPage)).search
-      const o = qs.parse(search)
-      if (o.vad_id) {
-        campaign.landingPageId = o.vad_id
-      }
-    }
-  }
-  return campaign
+  return toCamelcase(body.data)
 }
 
 export async function updateCampaign (id, data) {
@@ -563,7 +567,7 @@ export async function getKeywordsByGroupId (groupId) {
     }))
     .json()
 
-  return body.data
+  return toCamelcase(body.data)
 }
 
 /**
@@ -611,7 +615,7 @@ export async function getAllCampaigns (opts) {
     .send(reverseCamelcase(opts))
     .json()
 
-  return body.data
+  return toCamelcase(body.data)
 }
 
 /**
@@ -642,7 +646,20 @@ export async function getGroupDetailByGroupId (groupId) {
     .get(`/group/${groupId}`)
     .json()
 
-  return toCamelcase(body.data)
+  const group = toCamelcase(body.data)
+
+  if (!group.landingPageId) {
+    // why ? 不想多说什么了, 呵呵
+    if (group.landingPage && group.landingPage.includes('vad_id')) {
+      const search = (new URL(group.landingPage)).search
+      const o = qs.parse(search)
+      if (o.vad_id) {
+        group.landingPageId = o.vad_id
+      }
+    }
+  }
+
+  return group
 }
 
 /**
@@ -677,6 +694,34 @@ export async function pauseGroups (ids) {
     .json()
 
   return body
+}
+
+/**
+ * 单元接口批量改价
+ * @param {number} groupId
+ * @param {number} price
+ */
+export async function changeGroupKeywordsPrice (groupId, price) {
+  const body = await fengming
+    .post(`/group/${groupId}/keyword`)
+    .send({ price })
+    .json()
+
+  return body.data
+}
+
+/**
+ * 单元接口批量匹配模式
+ * @param {number} groupId
+ * @param {number} matchType
+ */
+export async function changeGroupKeywordsMatchType (groupId, matchType) {
+  const body = await fengming
+    .post(`/group/${groupId}/keyword_match`)
+    .send(reverseCamelcase({ matchType }))
+    .json()
+
+  return body.data
 }
 
 /**
