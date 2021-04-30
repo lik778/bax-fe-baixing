@@ -1,6 +1,8 @@
 
 import {
-  campaignOptimization
+  campaignOptimization,
+  CAMPAIGN_STATUSES,
+  GROUP_STATUSES
 } from 'constant/fengming'
 const CAMPAIGN_OPTIMIZATION_OPTS = Object.freeze(
   [
@@ -35,19 +37,14 @@ const filterOptimization = (row) => {
     return '-'
   }
 }
-const CAMPAIGN_STATUS_OPTS = Object.freeze(
-  [
-    { label: '推广中/审核中', value: '100' },
-    { label: '计划预算不足', value: '5' },
-    { label: '账户余额不足', value: '-51' },
-    { label: '已暂停', value: '-10,-50' },
-    { label: '已下线', value: '-1' },
-    { label: '审核驳回', value: '-53' }
-  ]
-)
+const CAMPAIGN_STATUS_OPTS = Object.freeze(Object.keys(CAMPAIGN_STATUSES))
+const GROUP_STATUSES_OPTS = Object.freeze(Object.keys(GROUP_STATUSES))
 export {
   CAMPAIGN_OPTIMIZATION_OPTS,
   CAMPAIGN_STATUS_OPTS,
+  GROUP_STATUSES_OPTS,
   OPTIMIZATION,
+  CAMPAIGN_STATUSES,
+  GROUP_STATUSES,
   filterOptimization
 }

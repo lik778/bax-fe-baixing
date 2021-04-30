@@ -9,25 +9,26 @@
             v-loading="loading"
         >
             <el-table-column prop="name" label="单元名称" align="center" />
-            <el-table-column prop="campaign_id" label="所属计划" align="center" />
+            <el-table-column prop="campaignId" label="所属计划" align="center" />
             <el-table-column prop="source" label="渠道" align="center" :formatter="(row, column, cellValue) => semPlatformCn[cellValue]" />
-            <el-table-column prop="front_group_status_desc" label="状态" align="center">
+            <el-table-column prop="frontGroupStatusDesc" label="状态" align="center">
                 <template slot-scope="{ row }">
-                  <el-popover
-                    trigger="hover"
-                    placement="top"
-                  >
-                    <p>您的推广在{{ row.front_group_status_desc}}中</p>
-                    <span
-                      slot="reference"
-                    >
-                      {{ row.front_group_status_desc }}
+                  <span v-if="row.frontGroupStatus !== GROUP_STATUS_REJECT"
+                  :class="GROUP_STATUSES[row.frontGroupStatus].type || 'warning'">
+                    {{row.frontGroupStatusDesc}}
+                  </span>
+                  <el-tooltip v-else
+                              placement="top-start"
+                              :content="row.frontCampaignStatusDetails">
+                    <span :class="GROUP_STATUSES[row.frontGroupStatus].type || 'warning'">
+                      {{row.frontGroupStatusDesc}}
                     </span>
-                  </el-popover>
+                    <i class="el-icon-info danger" />
+                  </el-tooltip>
                 </template>
             </el-table-column>
             <el-table-column prop="opt" label="优化项" align="center" :formatter="(row) => filterOptimization(row)"/>
-            <el-table-column prop="avg_cpc_ranking" label="关键词平均排名" align="center" :formatter="(row) => parseFloat(row.avg_cpc_ranking).toFixed(2)" />
+            <el-table-column prop="avgCpcRanking" label="关键词平均排名" align="center" :formatter="(row) => parseFloat(row.avgCpcRanking).toFixed(2)" />
             <el-table-column
                 prop=""
                 label="操作"
@@ -53,7 +54,7 @@
 </template>
 <script>
 import { semPlatformCn } from 'constant/fengming'
-import { filterOptimization } from '../constant'
+import { filterOptimization, GROUP_STATUSES } from '../constant'
 export default {
   name: 'group-table',
   props: {
@@ -71,7 +72,8 @@ export default {
   data () {
     return {
       filterOptimization,
-      semPlatformCn
+      semPlatformCn,
+      GROUP_STATUSES
     }
   },
   methods: {
@@ -92,6 +94,18 @@ export default {
 </script>
 <style lang="scss" scoped>
 .bax-cell {
+  .warning {
+    color: $c-warning;
+    font-size: 13px;
+  }
+  .success {
+    color: $c-success;
+    font-size: 13px;
+  }
+  .danger {
+    color: $c-strong;
+    font-size: 13px;
+  }
   a {
     color: #35a5e4;
   }
