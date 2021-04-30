@@ -13,13 +13,12 @@ const { WHOLE_SPU_CODE } = SPUCODES
 // 获取创意配图物料
 export async function getMaterialPictures (opts) {
   return await fengming
-    .get(`/creative/${opts.campaignId}/image`)
+    .get(`/creative/${opts.groupId}/image`)
     .json()
 }
 
 // 更新创意配图物料
 export async function updateMaterialPictures (opts) {
-  // console.log('opts: ', opts)
   return await fengming
     .post('/creative/image')
     .send(reverseCamelcase(opts))
