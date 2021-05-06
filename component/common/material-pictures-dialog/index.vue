@@ -179,9 +179,7 @@ export default {
       ].includes(this.store.type)
     },
     typeConfig () {
-      return this.store.type
-        ? this.config[this.store.type]
-        : {}
+      return this.config[this.store.type]
     },
     typename () {
       return this.typeConfig.extraClass

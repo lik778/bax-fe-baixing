@@ -32,7 +32,7 @@ async function uploadFile (file) {
     return
   }
   const ext = '.' + (file.type || '/jpeg').split('/')[1]
-  const name = 'sst-img' + uuid() + ext
+  const name = 'qwt-group-img-' + uuid() + ext
 
   console.log(ext, name, file)
 
