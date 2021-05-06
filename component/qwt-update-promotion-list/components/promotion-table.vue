@@ -38,9 +38,9 @@
                     <p class="unit-cell">
                       <span
                         class="unit-item"
-                        v-for="group in scope.row.groups"
+                        v-for="(group, index) in scope.row.groups"
                         :key="group.id"
-                      >{{ group.name }}、</span>
+                      >{{ group.name }}{{index != scope.row.groups.length-1 ? '、' : ''}}</span>
                     </p>
                     <router-link
                       class="view"
@@ -182,6 +182,7 @@ export default {
     white-space: nowrap;
     display: flex;
     justify-content: flex-end;
+    margin-right: 10px;
   }
   .edite-wrapper {
     display: flex;
