@@ -168,7 +168,7 @@ export default {
       return KEYWORDS_MAX - (this.campaignKeywordLen + newLen)
     },
     campaignId () {
-      return this.promotion.id || this.$route.query.campaignId
+      return this.promotion.id || parseInt(this.$route.query.campaignId)
     }
   },
   async mounted () {

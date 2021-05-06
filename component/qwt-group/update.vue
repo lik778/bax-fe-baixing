@@ -115,6 +115,8 @@
           当前否定关键词数量: <strong>{{ group.negativeWords.length }}</strong>个
         </p>
         <negative-keyword-comp :negative-words="group.negativeWords"
+                               :campaign-id="promotion.id"
+                               :group-id="groupId"
                                :all-words="group.negativeWords.concat(keywords)"
                                :show-tip="false"
                                @track="(action, opts) => handleTrack(action, opts)"
@@ -233,11 +235,10 @@ export default {
       return KEYWORDS_MAX - (this.campaignKeywordLen + this.newKeywords.length - this.deletedKeywords.length)
     },
     groupId () {
-      return this.$route.params.id
+      return parseInt(this.$route.params.id) || this.originGroup.id
     },
     // TODO
     isCurPromotionOrGroupPaused () {
-      console.log(this.promotion, this.group)
       return this.promotion.pause === 1 || this.group.pause === 1
     },
     enableMaterialPictures () {
