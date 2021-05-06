@@ -3,7 +3,7 @@
     <div class="search">
       <el-input class="input"
                 v-model="word"
-                placeholder="请输入标题（字数限制9～25个字）" />
+                placeholder="请输入否词" />
       <el-button class="btn"
                  type="primary"
                  :disabled="isSales"
