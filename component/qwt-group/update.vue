@@ -402,7 +402,7 @@ export default {
         }
         await this._updateGroup()
 
-        await trackRecommendService()
+        // await trackRecommendService()
       } catch (e) {
         return this.$message.error(e.message)
       } finally {
@@ -483,7 +483,7 @@ export default {
     },
     getUpdatedLandingData () {
       const data = {}
-      const { landingPage, landingType, landingPageId, mobilePriceRatio } = this
+      const { landingPage, landingType, landingPageId, mobilePriceRatio } = this.group
       if (landingType !== this.originGroup.landingType) data.landingType = landingType
       if (landingPage !== this.originGroup.landingPage) data.landingPage = landingPage
       if (landingPageId !== this.originGroup.landingPageId) data.landingPageId = landingPageId
