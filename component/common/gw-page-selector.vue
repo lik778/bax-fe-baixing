@@ -36,6 +36,7 @@
 import BaxSelect from './select'
 import { isSiteLandingType } from 'util/kit'
 import { getUserTicketCount, getUserSites } from 'api/ka'
+import { isPro } from 'config/index.js'
 
 const GW_URL_REG = /\/\/([\w-]+)\./i
 
@@ -122,7 +123,7 @@ export default {
     getGwOptions (list) {
       let options = list.map(p => ({
         label: p.name,
-        value: `http://${p.domain}.mvp.baixing.com`
+        value: `http://${p.domain}.mvp.baixing.${isPro ? 'com' : 'cn'}`
       }))
       if (this.displayLandingPage) {
         options = options.map(({ label, value }) => ({
