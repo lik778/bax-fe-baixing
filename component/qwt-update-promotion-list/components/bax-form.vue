@@ -57,7 +57,7 @@
         <i class="el-icon-plus icon" @click="areaDialogVisible = true" />
       </el-form-item>
     </div>
-    <el-form-item label="投放优化">
+    <!-- <el-form-item label="投放优化">
       <el-checkbox-group v-model="form.statuses" @change="(value) => handleChange(value, 'statuses')">
         <el-checkbox
           class="checkbox"
@@ -68,7 +68,7 @@
           {{ c.label }}
         </el-checkbox>
       </el-checkbox-group>
-    </el-form-item>
+    </el-form-item> -->
     <el-form-item label="单元名称" v-if="tab === 'group'">
       <el-input v-model="form.group_name" @input="debounceInput"></el-input>
     </el-form-item>
