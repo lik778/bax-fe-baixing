@@ -9,7 +9,7 @@
             v-loading="loading"
         >
             <el-table-column prop="id" label="计划" align="center" />
-            <el-table-column prop="opt" label="优化项" align="center" :formatter="(row) => filterOptimization(row)"/>
+            <!-- <el-table-column prop="opt" label="优化项" align="center" :formatter="(row) => filterOptimization(row)"/> -->
             <el-table-column prop="frontCampaignStatus" label="状态" align="center">
                 <template slot-scope="{ row }">
                   <el-popover

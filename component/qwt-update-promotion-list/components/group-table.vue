@@ -40,7 +40,7 @@
                     <el-button slot="reference" type="text">{{!row.pause ? `暂停` : '投放'}}</el-button>
                   </el-popconfirm>
                   <router-link :to="{
-                      name: 'qwt-update-promotion',
+                      name: 'qwt-update-group',
                       params: { id: row.id },
                     }">优化</router-link>
                   <router-link :to="{
