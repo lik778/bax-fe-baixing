@@ -10,18 +10,18 @@
         >
             <el-table-column prop="id" label="计划" align="center" />
             <el-table-column prop="opt" label="优化项" align="center" :formatter="(row) => filterOptimization(row)"/>
-            <el-table-column prop="status_text" label="状态" align="center">
-                <template slot-scope="scope">
+            <el-table-column prop="frontCampaignStatus" label="状态" align="center">
+                <template slot-scope="{ row }">
                   <el-popover
                     trigger="hover"
                     placement="top"
                   >
-                    <p>您的推广在{{ scope.row.status_text}}中</p>
+                    <p>{{ row.frontCampaignStatusDetails}}</p>
                     <span
                       slot="reference"
-                      class="name-wrapper"
+                      :class="CAMPAIGN_STATUSES[row.frontCampaignStatus].type || 'warning'"
                     >
-                      {{ scope.row.status_text }}
+                      {{ row.frontCampaignStatusDesc }}
                     </span>
                   </el-popover>
                 </template>
@@ -53,7 +53,7 @@
                 </template>
               </el-table-column>
             <el-table-column
-                prop="daily_budget"
+                prop="dailyBudget"
                 label="今日预算"
                 align="center"
                 width="150"
@@ -69,7 +69,7 @@
                     </el-popconfirm>
                   </span>
                   <span v-else>
-                    <span>{{ (scope.row.daily_budget / 100).toFixed(2) }}</span>
+                    <span>{{ (scope.row.dailyBudget / 100).toFixed(2) }}</span>
                     <el-button
                       type="text"
                       @click="editeBudget(scope.row)"
@@ -77,19 +77,19 @@
                   </span>
                 </template>
             </el-table-column>
-            <el-table-column prop="today_cost" label="今日消耗" align="center" />
+            <el-table-column prop="todayCost" label="今日消耗" align="center" />
             <el-table-column
                 prop=""
                 label="操作"
                 align="center"
                 width="150"
               >
-                <template slot-scope="scope">
-                  <el-popconfirm title="确定要暂停吗?" @confirm="pausePromote(scope.row.id)">
-                    <el-button slot="reference" type="text">暂停</el-button>
+                <template slot-scope="{ row }">
+                  <el-popconfirm :title="`确定要${!row.pause ? `暂停投放` : '开始投放'}吗？`" @confirm="confirm(row)">
+                    <el-button slot="reference" type="text">{{!row.pause ? `暂停` : '投放'}}</el-button>
                   </el-popconfirm>
-                  <router-link :to="{ name: 'qwt-update-promotion', params: { id: scope.row.id }}">优化</router-link>
-                  <router-link :to="{name: 'qwt-create-promotion', query: {...$route.query, ...{ cloneId: scope.row.id}}}">复制</router-link>
+                  <router-link :to="{ name: 'qwt-update-promotion', params: { id: row.id }}">优化</router-link>
+                  <router-link :to="{name: 'qwt-create-promotion', query: {...$route.query, ...{ cloneId: row.id}}}">复制</router-link>
                 </template>
             </el-table-column>
         </el-table>
@@ -97,7 +97,7 @@
 </template>
 
 <script>
-import { semPlatformCn } from 'constant/fengming'
+import { semPlatformCn, CAMPAIGN_STATUSES } from 'constant/fengming'
 import { filterOptimization } from '../constant'
 export default {
   name: 'promotionTable',
@@ -113,10 +113,14 @@ export default {
       default: false
     }
   },
+  created () {
+    console.log(this.list)
+  },
   data () {
     return {
       semPlatformCn,
       filterOptimization,
+      CAMPAIGN_STATUSES,
       dailyBudget: {
         id: '',
         value: 0
@@ -127,7 +131,7 @@ export default {
     async editeBudget (row) {
       this.dailyBudget = {
         id: row.id,
-        value: (row.daily_budget / 100).toFixed(2)
+        value: (row.dailyBudget / 100).toFixed(2)
       }
     },
     updateBudgetEditeStatus () {
@@ -136,8 +140,12 @@ export default {
     modifyBudget () {
       this.$emit('modifyBudget', this.dailyBudget)
     },
-    pausePromote (id) {
-      this.$emit('pause', id)
+    confirm ({ pause, id }) {
+      if (pause) {
+        this.$emit('active', id)
+      } else {
+        this.$emit('pause', id)
+      }
     }
   }
 }
@@ -145,6 +153,18 @@ export default {
 
 <style lang="scss" scoped>
   .bax-cell {
+    .warning {
+    color: $c-warning;
+    font-size: 13px;
+  }
+  .success {
+    color: $c-success;
+    font-size: 13px;
+  }
+  .danger {
+    color: $c-strong;
+    font-size: 13px;
+  }
   a {
     color: #35a5e4;
   }

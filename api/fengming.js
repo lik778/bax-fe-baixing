@@ -213,6 +213,17 @@ export async function pauseGroup (ids) {
     .post('/group/pause')
     .send(reverseCamelcase({
       group_ids: [...ids],
+      pause: 1
+    }))
+    .json()
+  return body
+}
+
+export async function activeGroup (ids) {
+  const body = await fengming
+    .post('/group/pause')
+    .send(reverseCamelcase({
+      group_ids: [...ids],
       pause: 0
     }))
     .json()

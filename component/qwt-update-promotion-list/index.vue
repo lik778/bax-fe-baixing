@@ -13,12 +13,30 @@
         </div>
         <el-tabs v-model="activeName" @tab-click="toggleTab" type="card" >
           <el-tab-pane label="计划" name="plan" >
-            <baxForm :promotions="promotionIds" :formData="queryParams" :allAreas="allAreas" @fetchData="editFormData" :isActionGroupExpand="isActionGroupExpand" :tab="activeName"/>
-            <promotionTable @pause="pausePromote" ref="promoteTable" @modifyBudget="modifyBudget" :list="promotionList" :loading="landingPageLoading" />
+            <baxForm
+              :promotions="promotionIds"
+              :formData="queryParams"
+              :allAreas="allAreas"
+              @fetchData="editFormData"
+              :isActionGroupExpand="isActionGroupExpand"
+              :tab="activeName"
+              :statusOpts="CAMPAIGN_STATUS_OPTS"
+              :statusOrigin="CAMPAIGN_STATUSES"
+            />
+            <promotionTable @active="activeCampaigns" @pause="pausePromote" ref="promoteTable" @modifyBudget="modifyBudget" :list="promotionList" :loading="landingPageLoading" />
           </el-tab-pane>
           <el-tab-pane label="单元" name="group" >
-            <baxForm :promotions="promotionIds" :formData="queryParams" :allAreas="allAreas" @fetchData="editFormData" :isActionGroupExpand="isActionGroupExpand" :tab="activeName" />
-            <groupTable @pause="pauseGroup" :list="groupList" :loading="landingPageLoading"/>
+            <baxForm
+              :promotions="promotionIds"
+              :formData="queryParams"
+              :allAreas="allAreas"
+              @fetchData="editFormData"
+              :isActionGroupExpand="isActionGroupExpand"
+              :tab="activeName"
+              :statusOpts="GROUP_STATUSES_OPTS"
+              :statusOrigin="GROUP_STATUSES"
+            />
+            <groupTable @active="activeGroup" @pause="pauseGroup" :list="groupList" :loading="landingPageLoading"/>
           </el-tab-pane>
         </el-tabs>
       </div>
@@ -31,9 +49,9 @@
 import { groupTable, promotionTable, topTips, baxForm } from './components'
 import pick from 'lodash.pick'
 import clone from 'clone'
-import { CAMPAIGN_STATUS_OPTS, CAMPAIGN_OPTIMIZATION_OPTS } from './constant'
+import { CAMPAIGN_STATUS_OPTS, CAMPAIGN_STATUSES, CAMPAIGN_OPTIMIZATION_OPTS, GROUP_STATUSES_OPTS, GROUP_STATUSES } from './constant'
 import { getCampaignList, getGroupList, getCampaignIds } from 'api/fengming-campaign'
-import { updateCampaignDailyBudget, pauseCampaigns, pauseGroup } from 'api/fengming'
+import { updateCampaignDailyBudget, pauseCampaigns, pauseGroup, activeCampaigns, activeGroup } from 'api/fengming'
 import { semPlatformOpts as SOURCES_OPTS } from 'constant/fengming'
 const CNT_REJECTED_CODE = '-53'
 const ONE_PAGE_NUM = 10
@@ -47,6 +65,9 @@ export default {
       SOURCES_OPTS,
       CAMPAIGN_STATUS_OPTS,
       CAMPAIGN_OPTIMIZATION_OPTS,
+      CAMPAIGN_STATUSES,
+      GROUP_STATUSES_OPTS,
+      GROUP_STATUSES,
       groupList: [],
       promotionList: [],
       promotionIds: [],
@@ -54,7 +75,7 @@ export default {
       queryParams: {
         group_name: '',
         areas: [],
-        statuses: CAMPAIGN_STATUS_OPTS.map(s => s.value),
+        statuses: CAMPAIGN_STATUS_OPTS.map(c => c.value),
         source: [],
         offset: 0,
         limit: ONE_PAGE_NUM,
@@ -118,9 +139,11 @@ export default {
       }
       if (!id && tab.index === '0') {
         this.fetchlandingPageList()
+        this.queryParams.statuses = CAMPAIGN_STATUS_OPTS.map(c => c.value)
       }
       if (tab.index === '1') {
         this.fetchGroupList()
+        this.queryParams.statuses = GROUP_STATUSES_OPTS.map(c => c.value)
       }
     },
     async modifyBudget (dailyBudget) {
@@ -138,7 +161,6 @@ export default {
       this.$message.success('今日预算修改成功')
     },
     async fetchlandingPageList (params = clone(this.queryParams)) {
-      params.statuses = params.statuses.join(',').split(',').map(n => parseInt(n))
       this.landingPageLoading = true
       try {
         const result = await getCampaignList({ ...params })
@@ -152,7 +174,6 @@ export default {
       }
     },
     async fetchGroupList (params = clone(this.queryParams)) {
-      params.statuses = params.statuses.join(',').split(',').map(n => parseInt(n))
       this.landingPageLoading = true
       try {
         const result = await getGroupList(params)
@@ -179,9 +200,19 @@ export default {
       this.$message.success('已暂停投放')
       this.fetchlandingPageList()
     },
+    async activeCampaigns (ids) {
+      await activeCampaigns([ids])
+      this.$message.success('已开启投放')
+      this.fetchlandingPageList()
+    },
     async pauseGroup (ids) {
       await pauseGroup([ids])
       this.$message.success('已暂停投放')
+      this.fetchGroupList()
+    },
+    async activeGroup (ids) {
+      await activeGroup([ids])
+      this.$message.success('已开启投放')
       this.fetchGroupList()
     }
   }

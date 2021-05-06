@@ -148,9 +148,9 @@ export async function getCampaignLanding (query) {
 export async function getCampaignList (params) {
   const body = await fengming
     .post('/campaign/info')
-    .query(params)
+    .query(reverseCamelcase(params))
     .json()
-  return body.data
+  return toCamelcase(body.data)
 }
 
 export async function getCampaignIds (params) {
@@ -159,7 +159,6 @@ export async function getCampaignIds (params) {
     .send(params)
     .json()
   const data = [{ value: 0, label: '全部' }]
-  console.log(body.data)
   body.data.map(id => {
     data.push({
       value: id,
@@ -175,7 +174,7 @@ export async function getGroupList (params) {
     .post('/group/info')
     .send(params)
     .json()
-  return body.data
+  return toCamelcase(body.data)
 }
 
 export async function getCurrentCampaigns (query) {

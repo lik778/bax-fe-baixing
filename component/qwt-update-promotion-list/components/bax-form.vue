@@ -23,11 +23,11 @@
         <el-checkbox-group v-model="form.statuses" @change="(value) => handleChange(value, 'statuses')">
           <el-checkbox
             class="checkbox"
-            v-for="c in CAMPAIGN_STATUS_OPTS"
+            v-for="c in statusOpts"
             :key="c.value"
             :label="c.value"
           >
-          {{c.label}}
+          {{ c.label }}
           </el-checkbox>
         </el-checkbox-group>
       </el-form-item>
@@ -86,7 +86,7 @@
 </template>
 
 <script>
-import { CAMPAIGN_STATUS_OPTS, options, CAMPAIGN_OPTIMIZATION_OPTS } from '../constant'
+import { options, CAMPAIGN_OPTIMIZATION_OPTS } from '../constant'
 import { semPlatformOpts as SOURCES_OPTS } from 'constant/fengming'
 import areaSelector from 'com/common/area-selector'
 import { getCnName } from 'util'
@@ -135,6 +135,16 @@ export default {
       type: Number,
       require: true,
       default: null
+    },
+    statusOpts: {
+      type: Array,
+      require: true,
+      default: () => []
+    },
+    statusOrigin: {
+      type: Object,
+      require: true,
+      default: () => {}
     }
   },
   data () {
@@ -142,7 +152,6 @@ export default {
       CAMPAIGN_OPTIMIZATION_OPTS,
       options,
       SOURCES_OPTS,
-      CAMPAIGN_STATUS_OPTS,
       areaDialogVisible: false,
       form: this.formData,
       debounce
