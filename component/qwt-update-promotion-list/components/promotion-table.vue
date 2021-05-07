@@ -82,7 +82,7 @@
               >
                 <template slot-scope="{ row }">
                   <el-popconfirm :title="`确定要${!row.pause ? `暂停投放` : '开始投放'}吗？`" @confirm="confirm(row)">
-                    <el-button slot="reference" type="text">{{!row.pause ? `暂停` : '投放'}}</el-button>
+                    <el-button :disabled="row.frontCampaignStatus === CAMPAIGN_STATUS_OFFLINE" slot="reference" type="text">{{!row.pause ? `暂停` : '投放'}}</el-button>
                   </el-popconfirm>
                   <router-link :to="{ name: 'qwt-update-promotion', params: { id: row.id }}">优化</router-link>
                 </template>
@@ -92,7 +92,7 @@
 </template>
 
 <script>
-import { semPlatformCn, CAMPAIGN_STATUSES } from 'constant/fengming'
+import { semPlatformCn, CAMPAIGN_STATUSES, CAMPAIGN_STATUS_OFFLINE } from 'constant/fengming'
 import { filterOptimization } from '../constant'
 export default {
   name: 'promotionTable',
@@ -116,6 +116,7 @@ export default {
       semPlatformCn,
       filterOptimization,
       CAMPAIGN_STATUSES,
+      CAMPAIGN_STATUS_OFFLINE,
       dailyBudget: {
         id: '',
         value: 0
