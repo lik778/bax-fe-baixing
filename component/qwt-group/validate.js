@@ -52,7 +52,7 @@ const commonDescriptor = {
     validator: (rule, value) => {
       if (!value) return false
       const ratio = +(Number(value).toFixed(2))
-      if (!ratio >= 0.1 && ratio <= 9.9) {
+      if (!(ratio >= 0.1 && ratio <= 9.9)) {
         return false
       }
       return true
