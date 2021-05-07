@@ -35,13 +35,9 @@
                 >
                 <template slot-scope="scope">
                   <div class="unit-wrapper">
-                    <p class="unit-cell">
-                      <span
-                        class="unit-item"
-                        v-for="(group, index) in scope.row.groups"
-                        :key="group.id"
-                      >{{ group.name }}{{index != scope.row.groups.length-1 ? '、' : ''}}</span>
-                    </p>
+                    <span class="unit-cell">
+                      {{scope.row.groups.map(c => c.name).join('、')}}
+                    </span>
                     <router-link
                       class="view"
                       :to="{
@@ -77,7 +73,7 @@
                   </span>
                 </template>
             </el-table-column>
-            <el-table-column prop="todayCost" label="今日消耗" align="center" :formatter="(row, column, cellValue) => cellValue === 0 ? '-' : fmtPrice(cellValue)"  />
+            <el-table-column prop="todayCost" label="今日消耗" align="center" :formatter="(row, column, cellValue) => cellValue === 0 ? '-' : $formatter.f2y(cellValue)"  />
             <el-table-column
                 prop=""
                 label="操作"

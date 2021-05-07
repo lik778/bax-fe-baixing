@@ -87,9 +87,6 @@ export default {
       } else {
         this.$emit('pause', id)
       }
-    },
-    fmtPrice (price) {
-      return (price / 100).toFixed(2)
     }
   }
 }
