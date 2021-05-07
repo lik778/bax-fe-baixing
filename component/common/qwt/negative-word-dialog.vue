@@ -104,7 +104,7 @@ export default {
 
         // 校验是否已存在
         const isRemoteQuery = !!(this.campaignId || this.groupId)
-        const newWords = await getNotExistWords(this.allWords, words, isRemoteQuery, {
+        const newWords = await getNotExistWords(this.allWords, words, isRemoteQuery, true, {
           groupId: this.groupId,
           campaignId: this.campaignId
         })

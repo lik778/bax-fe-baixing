@@ -134,7 +134,7 @@ export default {
         const allWords = this.allWords.concat(normalList)
         const isRemoteQuery = !!(this.campaignId || this.groupId)
         // 校验是否已存在
-        const newWords = await getNotExistWords(allWords, words, isRemoteQuery, {
+        const newWords = await getNotExistWords(allWords, words, isRemoteQuery, false, {
           groupId: this.groupId,
           campaignId: this.campaignId
         })

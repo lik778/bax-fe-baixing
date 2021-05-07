@@ -32,6 +32,7 @@ export async function getNotExistWords (
   allWords = [], // [{word: '1'}]
   newWords = [], // ['1', '2']
   isRemoteQuery = true,
+  isNegativeWords = false,
   queryOpts = {}
 ) {
   // 本地校验：（单元否词、单元关键词）直接过滤
@@ -42,7 +43,7 @@ export async function getNotExistWords (
   if (isRemoteQuery && resWords.length) {
     const existWords = (await getWordsExistInGroupOrCampaign({
       ...queryOpts,
-      keywords: resWords
+      [isNegativeWords ? 'negativeWords' : 'keywords']: resWords
     }) || []).map(o => o.toLowerCase())
     resWords = resWords.filter(w => !existWords.includes(w.toLowerCase()))
   }

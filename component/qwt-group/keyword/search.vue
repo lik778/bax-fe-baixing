@@ -110,7 +110,7 @@ export default {
 
         // 校验关键词是否已存在
         const isRemoteQuery = !!(this.campaignId || this.groupId)
-        await getNotExistWords(this.allWords, [val], isRemoteQuery, {
+        await getNotExistWords(this.allWords, [val], isRemoteQuery, false, {
           groupId: this.groupId,
           campaignId: this.campaignId
         })
