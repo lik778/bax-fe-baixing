@@ -180,6 +180,8 @@ import {
   updateMaterialPictures
 } from 'api/fengming'
 
+const GW_URL_REG = /\/\/([\w-]+)\./i
+
 export default {
   name: 'qwt-update-group',
   props: {
@@ -402,7 +404,7 @@ export default {
         }
         await this._updateGroup()
 
-        await trackRecommendService()
+        // await trackRecommendService()
       } catch (e) {
         return this.$message.error(e.message)
       } finally {
@@ -483,9 +485,11 @@ export default {
     },
     getUpdatedLandingData () {
       const data = {}
-      const { landingPage, landingType, landingPageId, mobilePriceRatio } = this
+      const { landingPage, landingType, landingPageId, mobilePriceRatio } = this.group
+      const [, domain] = GW_URL_REG.exec(landingPage)
+      const [, initDomain] = GW_URL_REG.exec(this.originGroup.landingPage)
       if (landingType !== this.originGroup.landingType) data.landingType = landingType
-      if (landingPage !== this.originGroup.landingPage) data.landingPage = landingPage
+      if (domain !== initDomain) data.landingPage = landingPage
       if (landingPageId !== this.originGroup.landingPageId) data.landingPageId = landingPageId
       if (mobilePriceRatio !== this.originGroup.mobilePriceRatio) data.mobilePriceRatio = mobilePriceRatio
       return data

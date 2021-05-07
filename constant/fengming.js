@@ -186,22 +186,22 @@ export const MATCH_TYPE_OPTS = [
 export const matchTypeTipAndCount = [
   {
     minKeywordCount: 0,
-    maxKeywordCount: 29,
-    errTip: '计划中关键词数不足30，提升至30个以上时可设置精确匹配',
+    maxKeywordCount: 19,
+    errTip: '计划中关键词数不足20，提升至20个以上时可设置精确匹配',
     count: () => {
       return 0
     }
   },
   {
-    minKeywordCount: 30,
-    maxKeywordCount: 99,
+    minKeywordCount: 20,
+    maxKeywordCount: 89,
     errTip: '精确匹配的设置数量已超过系统限制，更改失败。',
     count: (wordLen) => {
       return Math.ceil(wordLen * 0.1)
     }
   },
   {
-    minKeywordCount: 100,
+    minKeywordCount: 90,
     maxKeywordCount: 10000000,
     errTip: '精确匹配的设置数量已超过系统限制，更改失败。',
     count: () => {
