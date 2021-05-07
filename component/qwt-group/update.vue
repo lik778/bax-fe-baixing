@@ -81,7 +81,7 @@
           <p class="tip"
              style="margin-top: 20px"
              v-if="promotion.source === SEM_PLATFORM_BAIDU">
-            为保证流量，单计划内的关键词数≥<strong>30</strong>个才能选择精确匹配方式；
+            为保证流量，单计划内的关键词数≥<strong>20</strong>个才能选择精确匹配方式；
             单个计划最多可设置<strong>10</strong>个精确匹配。
           </p>
         </div>
