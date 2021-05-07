@@ -404,6 +404,8 @@ export default {
         }
         await this._updateGroup()
 
+        this.$message.success('单元更新成功')
+
         // await trackRecommendService()
       } catch (e) {
         return this.$message.error(e.message)
@@ -511,8 +513,8 @@ export default {
       const originCreatives = this.originGroup.creatives
       const newCreatives = creatives.filter(o => !o.id)
       const deletedCreatives = originCreatives.filter(o => !creatives.find(x => x.id === o.id)).map(o => o.id)
-      const updatedCreatives = originCreatives.filter(
-        o => creatives.find(x => x.id === o.id && (x.title !== o.title || x.content !== o.content)))
+      const updatedCreatives = creatives.filter(
+        o => originCreatives.find(x => x.id === o.id && (x.title !== o.title || x.content !== o.content)))
 
       if (newCreatives.length) data.newCreatives = newCreatives
       if (deletedCreatives.length) data.deletedCreatives = deletedCreatives

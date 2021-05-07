@@ -266,6 +266,8 @@ export default {
           campaignId: this.promotion.id
         })
 
+        this.$message.success('创建计划成功')
+
         this.handleTrack('leave-page: create-group')
 
         this.$router.push({
