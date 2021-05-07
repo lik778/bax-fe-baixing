@@ -37,7 +37,7 @@
               >
                 <template slot-scope="{row}">
                   <el-popconfirm title="确定要暂停投放吗？" @confirm="pause(row)">
-                    <el-button slot="reference" type="text">{{!row.pause ? `暂停` : '投放'}}</el-button>
+                    <el-button slot="reference" :disabled="row.frontCampaignStatus === CAMPAIGN_STATUS_OFFLINE || row.frontGroupStatus === GROUP_STATUS_OFFLINE" type="text">{{!row.pause ? `暂停` : '投放'}}</el-button>
                   </el-popconfirm>
                   <router-link :to="{
                       name: 'qwt-update-group',
@@ -53,7 +53,7 @@
     </div>
 </template>
 <script>
-import { semPlatformCn, GROUP_STATUS_REJECT } from 'constant/fengming'
+import { semPlatformCn, GROUP_STATUS_REJECT, GROUP_STATUS_OFFLINE, CAMPAIGN_STATUS_OFFLINE } from 'constant/fengming'
 import { filterOptimization, GROUP_STATUSES } from '../constant'
 export default {
   name: 'group-table',
@@ -74,7 +74,9 @@ export default {
       filterOptimization,
       semPlatformCn,
       GROUP_STATUSES,
-      GROUP_STATUS_REJECT
+      GROUP_STATUS_REJECT,
+      CAMPAIGN_STATUS_OFFLINE,
+      GROUP_STATUS_OFFLINE
     }
   },
   methods: {
