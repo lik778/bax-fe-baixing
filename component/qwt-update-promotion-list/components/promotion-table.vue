@@ -77,7 +77,7 @@
                   </span>
                 </template>
             </el-table-column>
-            <el-table-column prop="todayCost" label="今日消耗" align="center" :formatter="(row, column, cellValue) => cellValue === 0 ? '-' : fmtPrice(cellValue)"  />
+            <el-table-column prop="todayCost" label="今日消耗" align="center" :formatter="(row, column, cellValue) => cellValue === 0 ? '-' : $formatter.f2y(cellValue)"  />
             <el-table-column
                 prop=""
                 label="操作"
