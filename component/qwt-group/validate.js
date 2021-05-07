@@ -59,7 +59,7 @@ const commonDescriptor = {
     }
   },
   creatives (rule, value) {
-    if (!value.length) return new Error('还为添加创意信息')
+    if (!value.length) return new Error('还未添加创意信息')
     if (value.some(o => o.title === '')) return new Error('请填写推广标题')
     if (value.some(o => o.content === '')) return new Error('请填写推广内容')
     if (value.some(o => !o.lenValid)) return new Error('创意内容不符合要求: 创意标题长度太短, 创意内容长度太短')

@@ -485,13 +485,14 @@ export default {
     },
     getUpdatedLandingData () {
       const data = {}
-      const { landingPage, landingType, landingPageId, mobilePriceRatio } = this.group
+      const { landingPage, landingType, landingPageId, mobilePriceRatio, name } = this.group
       const [, domain] = GW_URL_REG.exec(landingPage)
       const [, initDomain] = GW_URL_REG.exec(this.originGroup.landingPage)
       if (landingType !== this.originGroup.landingType) data.landingType = landingType
       if (domain !== initDomain) data.landingPage = landingPage
       if (landingPageId !== this.originGroup.landingPageId) data.landingPageId = landingPageId
       if (mobilePriceRatio !== this.originGroup.mobilePriceRatio) data.mobilePriceRatio = mobilePriceRatio
+      if (name !== this.originGroup.name) data.name = name
       return data
     },
     getUpdatedNegativeWordData () {
