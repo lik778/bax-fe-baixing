@@ -35,13 +35,9 @@
                 >
                 <template slot-scope="scope">
                   <div class="unit-wrapper">
-                    <p class="unit-cell">
-                      <span
-                        class="unit-item"
-                        v-for="(group, index) in scope.row.groups"
-                        :key="group.id"
-                      >{{ group.name }}{{index != scope.row.groups.length-1 ? '、' : ''}}</span>
-                    </p>
+                    <span class="unit-cell">
+                      {{scope.row.groups.map(c => c.name).join('、')}}
+                    </span>
                     <router-link
                       class="view"
                       :to="{
