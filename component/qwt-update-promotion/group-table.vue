@@ -15,16 +15,16 @@
       <el-table-column prop="frontGroupStatus"
                        label="单元状态"
                        align="center">
-        <template slot-scope="{row}">
+        <template slot-scope="{ row }">
           <span v-if="row.frontGroupStatus !== GROUP_STATUS_REJECT"
                 :class="GROUP_STATUSES[row.frontGroupStatus].type || 'warning'">
-            {{row.frontGroupStatusDesc}}
+            {{ row.frontGroupStatusDesc }}
           </span>
           <el-tooltip v-else
                       placement="top-start"
                       :content="row.frontCampaignStatusDetails">
             <span :class="GROUP_STATUSES[row.frontGroupStatus].type || 'warning'">
-              {{row.frontGroupStatusDesc}}
+              {{ row.frontGroupStatusDesc }}
             </span>
             <i class="el-icon-info danger" />
           </el-tooltip>
@@ -33,9 +33,9 @@
       <el-table-column prop="frontCampaignStatus"
                        label="计划状态"
                        align="center">
-        <template slot-scope="{row}">
+        <template slot-scope="{ row }">
           <span :class="GROUP_STATUSES[row.frontCampaignStatus].type || 'warning'">
-            {{row.frontCampaignStatusDesc}}
+            {{ row.frontCampaignStatusDesc }}
           </span>
         </template>
       </el-table-column>
@@ -44,23 +44,26 @@
                        align="center" />
       <el-table-column label="操作"
                        align="center">
-        <template slot-scope="{row}">
+        <template slot-scope="{ row }">
           <el-button class="btn"
-                     :disabled="isSales"
-                     :class="{disabled: isSales}"
-                     v-if="row.frontGroupStatus !== GROUP_STATUS_REJECT"
-                     @click="pauseGroup(row)">暂停</el-button>
+                     type="text"
+                     :disabled="
+                      isSales ||
+                      (row.frontCampaignStatus === CAMPAIGN_STATUS_OFFLINE &&
+                      row.frontGroupStatus === GROUP_STATUS_OFFLINE)
+                     "
+                     :class="{ disabled: isSales }"
+                     @click="toggleGroupStatus(row)">
+            {{ !!row.pause ? "开启" : "暂停" }}
+          </el-button>
           <el-button class="btn"
-                     :disabled="isSales"
-                     :class="{disabled: isSales}"
-                     v-else
-                     @click="activeGroup(row)">开启</el-button>
-          <el-button class="btn"
-                     :class="{disabled: isSales}"
+                     type="text"
+                     :class="{ disabled: isSales }"
                      :disabled="isSales"
                      @click="optimizeGroup(row)">优化</el-button>
           <el-button class="btn"
-                     :class="{disabled}"
+                     type="text"
+                     :class="{ disabled }"
                      :disabled="disabled"
                      @click="copyGroup(row)">复制</el-button>
         </template>
@@ -71,7 +74,14 @@
 
 <script>
 import { getAllGroups, activeGroups, pauseGroups } from 'api/fengming'
-import { GROUP_MAX, CAMPAIGN_STATUSES, GROUP_STATUSES, GROUP_STATUS_REJECT, GROUP_STATUS_ONLINE } from 'constant/fengming'
+import {
+  GROUP_MAX,
+  CAMPAIGN_STATUSES,
+  GROUP_STATUSES,
+  GROUP_STATUS_REJECT,
+  CAMPAIGN_STATUS_OFFLINE,
+  GROUP_STATUS_OFFLINE
+} from 'constant/fengming'
 
 export default {
   name: 'group-table',
@@ -92,39 +102,43 @@ export default {
       GROUP_MAX,
       CAMPAIGN_STATUSES,
       GROUP_STATUSES,
-      GROUP_STATUS_REJECT
+      GROUP_STATUS_REJECT,
+      CAMPAIGN_STATUS_OFFLINE,
+      GROUP_STATUS_OFFLINE
     }
   },
   computed: {
     disabled () {
-      return this.isSales || (this.groupData && this.groupData.length >= GROUP_MAX)
+      return (
+        this.isSales || (this.groupData && this.groupData.length >= GROUP_MAX)
+      )
     }
   },
   async mounted () {
-    // tip 单计划最多有10个单元，一次性获取所有
-    const { data = [] } = await getAllGroups({
-      campaignId: this.campaignId,
-      offset: 0,
-      limit: 100
-    })
-    this.groupData = data
+    this.getAllGroups()
   },
   methods: {
-    async pauseGroup (group) {
-      await this.$alert('确定暂停投放？', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消'
+    // tip 单计划最多有10个单元，一次性获取所有
+    async getAllGroups () {
+      const { data = [] } = await getAllGroups({
+        campaignId: this.campaignId,
+        offset: 0,
+        limit: 100
       })
-      await pauseGroups([group.id])
-      group.frontGroupStatus = GROUP_STATUS_REJECT
+      this.groupData = data
     },
-    async activeGroup (group) {
-      await this.$alert('确定开启投放？', '提示', {
+    async toggleGroupStatus (group) {
+      const typeText = group.pause ? '开启' : '暂停'
+      await this.$confirm(`确定${typeText}投放？`, '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消'
       })
-      await activeGroups([group.id])
-      group.frontGroupStatus = GROUP_STATUS_ONLINE
+      if (group.pause === 1) {
+        await activeGroups([group.id])
+      } else {
+        await pauseGroups([group.id])
+      }
+      await this.getAllGroups()
     },
     optimizeGroup (group) {
       this.$router.push({
