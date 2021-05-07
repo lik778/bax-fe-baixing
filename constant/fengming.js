@@ -17,8 +17,6 @@ export const CREATIVE_CHIBI_ACCEPT = 10
 export const KEYWORD_STATUS_REFUSE = -10
 export const KEYWORD_STATUS_ONLINE = 0
 
-export const TYPE_BAIDU_JIMUYU = 7 // 百度基木鱼
-
 // 优选推店铺状态枚举
 export const mvipShopStatus = {
   0: 'INIT',
@@ -112,6 +110,7 @@ export const LANDING_TYPE_AD = 0
 export const LANDING_TYPE_GW = 1
 export const LANDING_TYPE_258 = 5
 export const LANDING_TYPE_STORE = 6
+export const LANDING_TYPE_BAIDU_JIMUYU = 7 // 百度基木鱼
 
 export const landingType = {
   [`${LANDING_TYPE_AD}`]: '帖子',

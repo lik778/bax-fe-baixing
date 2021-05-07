@@ -4,31 +4,39 @@
             img-url="//file.baixing.net/201903/8d224eb6179a947eecbf0fde089f7ed3.png">
       电话接不停小妙招
     </fm-tip>
-    <el-button-group>
-      <el-button v-for="o of LANDING_TYPE_OPTS"
-                 :key="o.value"
-                 :type="landingType === o.value ? 'primary' : ''"
-                 @click="clickLandingType(o.value)">{{ o.label }}
-      </el-button>
-    </el-button-group>
-    <div class="cont">
-      <user-ad-selector v-if="landingType === LANDING_TYPE_AD"
-                        :all-areas="allAreas"
-                        :limit-mvp="false"
-                        :selected-id="landingPageId"
-                        @select-ad="(ad) => emitUpdateGroup(LANDING_TYPE_AD, ad.url, ad.adId)"
-                        @valid-change="(isValid) => setLandingPageValidity(LANDING_TYPE_AD, isValid)" />
-      <gw-page-selector v-if="landingType === LANDING_TYPE_GW"
-                        :init-value="landingPage"
-                        @change="v => emitUpdateGroup(LANDING_TYPE_GW, v)"
-                        @valid-change="(isValid) => setLandingPageValidity(LANDING_TYPE_GW, isValid)" />
-      <mvip-selector v-if="landingType === LANDING_TYPE_STORE"
-                     :initValue="landingPageId || ''"
-                     @change="(url, id) => emitUpdateGroup(LANDING_TYPE_STORE, url, id)"
-                     @validChange="(isValid) => setLandingPageValidity(LANDING_TYPE_STORE, isValid)" />
-      <p v-if="disabled"
-         class="authing-tip">您的推广在审核中，审核通过后可修改落地页，感谢配合！</p>
+    <div v-if="landingType === LANDING_TYPE_BAIDU_JIMUYU">
+      <el-tag effect="dark">基木鱼</el-tag>
+      <p class="landing-page-link">投放页面：
+        <a :href="landingPage">{{landingPage}}</a>
+      </p>
     </div>
+    <template v-else>
+      <el-button-group>
+        <el-button v-for="o of LANDING_TYPE_OPTS"
+                   :key="o.value"
+                   :type="landingType === o.value ? 'primary' : ''"
+                   @click="clickLandingType(o.value)">{{ o.label }}
+        </el-button>
+      </el-button-group>
+      <div class="cont">
+        <user-ad-selector v-if="landingType === LANDING_TYPE_AD"
+                          :all-areas="allAreas"
+                          :limit-mvp="false"
+                          :selected-id="landingPageId"
+                          @select-ad="(ad) => emitUpdateGroup(LANDING_TYPE_AD, ad.url, ad.adId)"
+                          @valid-change="(isValid) => setLandingPageValidity(LANDING_TYPE_AD, isValid)" />
+        <gw-page-selector v-if="landingType === LANDING_TYPE_GW"
+                          :init-value="landingPage"
+                          @change="v => emitUpdateGroup(LANDING_TYPE_GW, v)"
+                          @valid-change="(isValid) => setLandingPageValidity(LANDING_TYPE_GW, isValid)" />
+        <mvip-selector v-if="landingType === LANDING_TYPE_STORE"
+                       :initValue="landingPageId || ''"
+                       @change="(url, id) => emitUpdateGroup(LANDING_TYPE_STORE, url, id)"
+                       @validChange="(isValid) => setLandingPageValidity(LANDING_TYPE_STORE, isValid)" />
+        <p v-if="disabled"
+           class="authing-tip">您的推广在审核中，审核通过后可修改落地页，感谢配合！</p>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -42,7 +50,8 @@ import {
   landingTypeOpts,
   LANDING_TYPE_AD,
   LANDING_TYPE_STORE,
-  LANDING_TYPE_GW
+  LANDING_TYPE_GW,
+  LANDING_TYPE_BAIDU_JIMUYU
 } from 'constant/fengming'
 
 export default {
@@ -78,7 +87,8 @@ export default {
       LANDING_TYPE_OPTS: landingTypeOpts,
       LANDING_TYPE_AD,
       LANDING_TYPE_GW,
-      LANDING_TYPE_STORE
+      LANDING_TYPE_STORE,
+      LANDING_TYPE_BAIDU_JIMUYU
     }
   },
   methods: {
@@ -119,6 +129,20 @@ export default {
   > .cont {
     margin-top: 20px;
   }
+  .landing-page-link{
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+    a{
+      color: #222;
+      cursor: pointer;
+      width: 540px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
 }
 .page-error-placeholder {
   border: 1px solid #eee;
