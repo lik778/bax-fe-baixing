@@ -49,8 +49,8 @@
                      type="text"
                      :disabled="
                       isSales ||
-                      (row.frontCampaignStatus === CAMPAIGN_STATUS_OFFLINE &&
-                      row.frontGroupStatus === GROUP_STATUS_OFFLINE)
+                      row.frontCampaignStatus === CAMPAIGN_STATUS_OFFLINE ||
+                      row.frontGroupStatus === GROUP_STATUS_OFFLINE
                      "
                      :class="{ disabled: isSales }"
                      @click="toggleGroupStatus(row)">
@@ -59,7 +59,10 @@
           <el-button class="btn"
                      type="text"
                      :class="{ disabled: isSales }"
-                     :disabled="isSales"
+                     :disabled="
+                      isSales ||
+                      row.frontCampaignStatus === CAMPAIGN_STATUS_OFFLINE
+                     "
                      @click="optimizeGroup(row)">优化</el-button>
           <el-button class="btn"
                      type="text"
