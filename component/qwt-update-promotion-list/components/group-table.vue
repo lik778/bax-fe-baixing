@@ -27,7 +27,7 @@
                   </el-tooltip>
                 </template>
             </el-table-column>
-            <el-table-column prop="opt" label="优化项" align="center" :formatter="(row) => filterOptimization(row)"/>
+            <!-- <el-table-column prop="opt" label="优化项" align="center" :formatter="(row) => filterOptimization(row)"/> -->
             <el-table-column prop="avgCpcRanking" label="关键词平均排名" align="center" :formatter="(row) => parseFloat(row.avgCpcRanking).toFixed(2)" />
             <el-table-column
                 prop=""
@@ -87,9 +87,10 @@ export default {
       } else {
         this.$emit('pause', id)
       }
+    },
+    fmtPrice (price) {
+      return (price / 100).toFixed(2)
     }
-    // getColor ({ front_group_status }) {
-    // }
   }
 }
 </script>

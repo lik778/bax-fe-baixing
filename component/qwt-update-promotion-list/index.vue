@@ -80,7 +80,6 @@ export default {
         offset: 0,
         limit: ONE_PAGE_NUM,
         userId: '',
-        value: 1,
         campaign_id: 0
       },
       landingPageLoading: false,
@@ -110,13 +109,16 @@ export default {
     this.promotionIds = result
     if (id) {
       // 从某个计划点击进来
+      this.queryParams.statuses = GROUP_STATUSES_OPTS.map(c => c.value)
       this.activeName = 'group'
       this.queryParams.campaign_id = id
       this.fetchGroupList()
     } else {
       if (this.activeName === 'plan') {
+        this.queryParams.statuses = CAMPAIGN_STATUS_OPTS.map(c => c.value)
         this.fetchlandingPageList()
       } else {
+        this.queryParams.statuses = GROUP_STATUSES_OPTS.map(c => c.value)
         this.fetchGroupList()
       }
     }

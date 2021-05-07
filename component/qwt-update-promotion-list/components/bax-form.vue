@@ -31,7 +31,7 @@
           </el-checkbox>
         </el-checkbox-group>
       </el-form-item>
-      <el-form-item label="渠道涞源">
+      <el-form-item label="渠道来源">
         <el-checkbox-group v-model="form.source" @change="(value) => handleChange(value, 'source')">
           <el-checkbox
             class="checkbox"
