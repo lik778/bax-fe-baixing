@@ -94,7 +94,7 @@ const GROUP_STATUSES_OPTS = Object.freeze([
     value: STATUS_REJECT
   },
   {
-    label: '推广中',
+    label: '推广中/审核中',
     value: STATUS_ONLINE
   }
 ])
