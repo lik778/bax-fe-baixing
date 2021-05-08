@@ -83,7 +83,8 @@
       <cpc-price-comp style="margin-bottom: 10px"
                       :value="group.price"
                       @change="(val) => updateGroupData('price', val)" />
-      <mobile-price-ratio-comp :value="group.mobilePriceRatio"
+      <mobile-price-ratio-comp v-if="promotion.source !== SEM_PLATFORM_SHENMA"
+                               :value="group.mobilePriceRatio"
                                @change="(val) => updateGroupData('mobilePriceRatio', val)" />
       <contract-ack-comp class="contract-ack"
                          type="content-rule"
@@ -120,7 +121,8 @@ import {
   emptyGroup,
   NEGATIVE_KEYWORDS_MAX,
   KEYWORDS_MAX,
-  RECOMMAND_SOURCES
+  RECOMMAND_SOURCES,
+  SEM_PLATFORM_SHENMA
 } from 'constant/fengming'
 import clone from 'clone'
 import pick from 'lodash.pick'
@@ -150,6 +152,8 @@ export default {
   data () {
     return {
       NEGATIVE_KEYWORDS_MAX,
+      SEM_PLATFORM_SHENMA,
+
       promotion: emptyPromotion,
       group: clone(emptyGroup),
       actionTrackId: uuid(),
@@ -251,7 +255,10 @@ export default {
       }
 
       try {
-        await createValidator.validate(this.group, { first: true })
+        await createValidator.validate({
+          ...this.group,
+          promotion: this.promotion
+        }, { first: true })
       } catch (e) {
         throw new Error(e.errors[0].message)
       }

@@ -126,7 +126,8 @@
     </section>
 
     <section>
-      <mobile-price-ratio-comp :value="group.mobilePriceRatio"
+      <mobile-price-ratio-comp v-if="promotion.source !== SEM_PLATFORM_SHENMA"
+                               :value="group.mobilePriceRatio"
                                @change="(val) => updateGroupData('mobilePriceRatio', val)" />
       <contract-ack-comp class="contract-ack"
                          type="content-rule"
@@ -386,7 +387,11 @@ export default {
       }
 
       try {
-        await updateValidator.validate({ ...this.group, keywords: this.keywords }, { first: true })
+        await updateValidator.validate({
+          ...this.group,
+          keywords: this.keywords,
+          promotion: this.promotion
+        }, { first: true })
       } catch (e) {
         throw new Error(e.errors[0].message)
       }
