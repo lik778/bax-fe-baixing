@@ -140,12 +140,12 @@ export default {
         this.$router.push({ name: 'qwt-promotion-list', query })
       }
       if (!id && tab.index === '0') {
-        this.fetchlandingPageList()
         this.queryParams.statuses = CAMPAIGN_STATUS_OPTS.map(c => c.value)
+        this.fetchlandingPageList()
       }
       if (tab.index === '1') {
-        this.fetchGroupList()
         this.queryParams.statuses = GROUP_STATUSES_OPTS.map(c => c.value)
+        this.fetchGroupList()
       }
     },
     async modifyBudget (dailyBudget) {
