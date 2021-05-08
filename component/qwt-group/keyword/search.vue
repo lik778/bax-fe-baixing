@@ -3,9 +3,11 @@
     <el-input v-model="word"
               class="input"
               placeholder="添加自定义词" />
-    <el-button type="primary"
+    <el-button type="warning"
                :loading="loading.addBtn"
-               @click="handleAddKeyword">添加关键词</el-button>
+               @click="handleAddKeyword">添加</el-button>
+    <el-button type="primary"
+               @click="keywordDialogVisible = true">添加关键词</el-button>
     <el-button type="primary"
                plain
                :loading="loading.recommendBtn"
@@ -99,10 +101,7 @@ export default {
   methods: {
     async handleAddKeyword () {
       const val = this.word.trim()
-      if (val === '') {
-        this.keywordDialogVisible = true
-        return
-      }
+      if (val === '') return
 
       try {
         // 校验关键词是否满足条件
