@@ -17,14 +17,16 @@
                   :class="GROUP_STATUSES[row.frontGroupStatus].type || 'warning'">
                     {{row.frontGroupStatusDesc}}
                   </span>
-                  <el-tooltip v-else
+                  <template v-else>
+                     <span :class="GROUP_STATUSES[row.frontGroupStatus].type || 'warning'">
+                      {{row.frontGroupStatusDesc}}
+                     </span>
+                     <el-tooltip
                               placement="top-start"
                               :content="row.frontGroupStatusDetails">
-                    <span :class="GROUP_STATUSES[row.frontGroupStatus].type || 'warning'">
-                      {{row.frontGroupStatusDesc}}
-                    </span>
                     <i class="el-icon-info danger" />
                   </el-tooltip>
+                  </template>
                 </template>
             </el-table-column>
             <!-- <el-table-column prop="opt" label="优化项" align="center" :formatter="(row) => filterOptimization(row)"/> -->
