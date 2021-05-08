@@ -255,6 +255,7 @@ export const CAMPAIGN_STATUS_PAUSE = 3
 export const CAMPAIGN_STATUS_ACCOUNT_BUDGET_NOT_ENOUGH = 4
 export const CAMPAIGN_STATUS_CAMPAIGN_BUDGET_NOT_ENOUGH = 5
 export const CAMPAIGN_STATUS_INVALID_DATE = 6
+export const CAMPAIGN_STATUS_INVALID_AREAS = 7
 
 export const CAMPAIGN_STATUSES = {
   [CAMPAIGN_STATUS_ONLINE]: {
@@ -279,6 +280,10 @@ export const CAMPAIGN_STATUSES = {
   },
   [CAMPAIGN_STATUS_INVALID_DATE]: {
     label: '非投放时间',
+    type: 'warning'
+  },
+  [CAMPAIGN_STATUS_INVALID_AREAS]: {
+    label: '非投放区域',
     type: 'warning'
   }
 }
