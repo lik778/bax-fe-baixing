@@ -177,6 +177,7 @@ export default {
     text-overflow: ellipsis;
     white-space: nowrap;
     margin-right: 10px;
+    text-align: right;
   }
   .edite-wrapper {
     display: flex;
