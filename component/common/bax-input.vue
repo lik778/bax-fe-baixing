@@ -2,6 +2,7 @@
   <input class="bax-input"
          :placeholder="placeholder"
          :value="value"
+         :disabled="disabled"
          @blur="onBlur"
          @keyup.enter="onKeyUp" />
 </template>
@@ -10,6 +11,10 @@
 export default {
   name: 'bax-input',
   props: {
+    disabled: {
+      type: Boolean,
+      default: false
+    },
     value: {
       type: [String, Number],
       default: ''
@@ -39,7 +44,6 @@ export default {
   width: 120px;
   border-radius: 4px;
   padding: 4px 6px;
-  background: #fff;
   border: 1px solid #eee;
   &::placeholder {
     font-size: 12px;

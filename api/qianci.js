@@ -127,13 +127,16 @@ export async function getWordPVsChartData(opts = {}) {
 }
 
 // 获取报表页计划的关键词数据列表
+// /promote/keyword/report
 export async function getWordPVsList(opts = {}) {
   return (await qianci
-    .get('/promote/keyword/report')
+    .get('/promote/keyword/getKeyWordRank')
     .query(opts)
     .json())
     .data
 }
+
+
 
 // 获取快照页面
 const fetchWithoutPrefix = new Fetch({ ...baseOptions })
@@ -159,4 +162,9 @@ export async function getPackageById(id) {
     .query()
     .json())
     .data
+}
+
+//核心词b2b审核
+export async function checkCoreWord(params) {
+  return (await qianci.get(`/promote/keyword/checkCoreWord`).query(params).json()).data
 }

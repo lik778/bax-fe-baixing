@@ -87,26 +87,6 @@ export const creativeStatus = {
   10: '推广中'
 }
 
-export const CAMPAIGN_AUDIT_AUTHING = 0
-export const CAMPAIGN_AUDIT_OFFLINE = -1
-
-export const campaignAuditStatus = {
-  '-10': '审核驳回',
-  '-1': '下线',
-  0: '审核中',
-  10: '审核通过'
-}
-
-export const campaignStatus = {
-  100: '有效',
-  5: '计划预算不足',
-  0: '审核中', // mvp
-  '-1': '下线',
-  '-10': '暂停投放',
-  '-50': '不在投放期',
-  '-51': '账户余额不足'
-}
-
 export const expectedBudget = {
   1: '50以下',
   2: '51-100',
@@ -126,16 +106,11 @@ export const optType = {
 
 export const optTypeOpts = toOpt(optType)
 
-export const CAMPAIGN_STATUS_PAUSE = -10
-export const CAMPAIGN_STATUS_OFFLINE = -1
-export const CAMPAIGN_STATUS_ONLINE = 100
-export const CAMPAIGN_STATUS_ACCOUNT_BUDGET_NOT_ENOUGH = -51
-export const CAMPAIGN_STATUS_CAMPAIGN_BUDGET_NOT_ENOUGH = 5
-
 export const LANDING_TYPE_AD = 0
 export const LANDING_TYPE_GW = 1
 export const LANDING_TYPE_258 = 5
 export const LANDING_TYPE_STORE = 6
+export const LANDING_TYPE_BAIDU_JIMUYU = 7 // 百度基木鱼
 
 export const landingType = {
   [`${LANDING_TYPE_AD}`]: '帖子',
@@ -150,10 +125,7 @@ export const campaignOptimization = {
   STATUS_OPT_PRICE: 103,
   STATUS_OPT_SETTING: 104,
   STATUS_OPT_KEYWORD: 105
-
 }
-
-export const campaignStatusOpts = toOpt(campaignStatus)
 
 export const landingTypeOpts = toOpt(landingType)
 
@@ -165,8 +137,30 @@ export const device = {
   1: 'WAP'
 }
 
+export const MIN_DAILY_BUDGET = 100
+
+export const TIME_TYPE_CUSTOM = 'custom'
+export const TIME_TYPE_LONG = 'long'
+export const TIME_TYPE_OPTS = {
+  [TIME_TYPE_LONG]: '长期投放',
+  [TIME_TYPE_CUSTOM]: '定时投放'
+}
+
+export const DURATION_TYPE_ALL = 'all'
+export const DURATION_TYPE_PART = 'part'
+export const SOGOU_MAX_DURATION = 3670009
+export const EXCLUDE_SOGOU_MAX_DURATION = 117440505
+export const DURATION_TYPE_OPTS = {
+  [DURATION_TYPE_ALL]: '全时段',
+  [DURATION_TYPE_PART]: '部分时段'
+}
+
+export const NEGATIVE_KEYWORDS_MAX = 200
+
 export const RECOMMAND_SOURCE_FH = 'tfidf_fh'
 export const NEW_RECOMMAND_SOURCE_FH = 'tfidf_fh_service'
+
+export const RECOMMAND_SOURCES = [NEW_RECOMMAND_SOURCE_FH, RECOMMAND_SOURCE_FH]
 
 export const MATCH_TYPE_EXACT = 1
 export const MATCH_TYPE_PHRASE = 2
@@ -191,22 +185,22 @@ export const MATCH_TYPE_OPTS = [
 export const matchTypeTipAndCount = [
   {
     minKeywordCount: 0,
-    maxKeywordCount: 29,
-    errTip: '计划中关键词数不足30，提升至30个以上时可设置精确匹配',
+    maxKeywordCount: 19,
+    errTip: '计划中关键词数不足20，提升至20个以上时可设置精确匹配',
     count: () => {
       return 0
     }
   },
   {
-    minKeywordCount: 30,
-    maxKeywordCount: 99,
+    minKeywordCount: 20,
+    maxKeywordCount: 89,
     errTip: '精确匹配的设置数量已超过系统限制，更改失败。',
     count: (wordLen) => {
       return Math.ceil(wordLen * 0.1)
     }
   },
   {
-    minKeywordCount: 100,
+    minKeywordCount: 90,
     maxKeywordCount: 10000000,
     errTip: '精确匹配的设置数量已超过系统限制，更改失败。',
     count: () => {
@@ -230,4 +224,134 @@ export function filterBannedListByContent (words) {
     bannedList: [],
     normalList
   }
+}
+
+export const emptyGroup = {
+  landingType: 0,
+  landingPage: '',
+  landingPageId: '',
+  name: '',
+  creatives: [{
+    title: '',
+    content: ''
+  }],
+  negativeWords: [],
+  mobilePriceRatio: 1,
+  keywords: [],
+  price: 2
+}
+
+export const KEYWORDS_MAX = 5000
+
+export const FHYF_USERD = 1
+export const FHYF_UN_USE = 0
+
+export const GROUP_MAX = 10
+
+/** 计划状态 */
+export const CAMPAIGN_STATUS_ONLINE = 1
+export const CAMPAIGN_STATUS_OFFLINE = 2
+export const CAMPAIGN_STATUS_PAUSE = 3
+export const CAMPAIGN_STATUS_ACCOUNT_BUDGET_NOT_ENOUGH = 4
+export const CAMPAIGN_STATUS_CAMPAIGN_BUDGET_NOT_ENOUGH = 5
+export const CAMPAIGN_STATUS_INVALID_DATE = 6
+
+export const CAMPAIGN_STATUSES = {
+  [CAMPAIGN_STATUS_ONLINE]: {
+    label: '投放中',
+    type: 'success'
+  },
+  [CAMPAIGN_STATUS_OFFLINE]: {
+    label: '下线',
+    type: 'danger'
+  },
+  [CAMPAIGN_STATUS_PAUSE]: {
+    label: '暂停',
+    type: 'warning'
+  },
+  [CAMPAIGN_STATUS_ACCOUNT_BUDGET_NOT_ENOUGH]: {
+    label: '余额不足',
+    type: 'warning'
+  },
+  [CAMPAIGN_STATUS_CAMPAIGN_BUDGET_NOT_ENOUGH]: {
+    label: '日预算不足',
+    type: 'warning'
+  },
+  [CAMPAIGN_STATUS_INVALID_DATE]: {
+    label: '非投放时间',
+    type: 'warning'
+  }
+}
+
+/**
+ * 单元状态
+ */
+export const GROUP_STATUS_ONLINE = 1
+export const GROUP_STATUS_OFFLINE = 2
+export const GROUP_STATUS_PAUSE = 3
+export const GROUP_STATUS_PENDING_AUDIT = 4
+export const GROUP_STATUS_REJECT = 5
+
+export const GROUP_STATUSES = {
+  [GROUP_STATUS_ONLINE]: {
+    label: '有效',
+    type: 'success'
+  },
+  [GROUP_STATUS_OFFLINE]: {
+    label: '下线',
+    type: 'danger'
+  },
+  [GROUP_STATUS_PAUSE]: {
+    label: '暂停',
+    type: 'warning'
+  },
+  [GROUP_STATUS_PENDING_AUDIT]: {
+    label: '审核中',
+    type: 'warning'
+  },
+  [GROUP_STATUS_REJECT]: {
+    label: '审核驳回',
+    type: 'danger'
+  }
+}
+
+// 物料图片类型枚举
+export const MATERIAL_PIC_TYPE = {
+  NO_PIC: 0,
+  BIG_PIC: 1,
+  PIC_SETS: 2
+}
+
+// 物料图片状态枚举
+export const MATERIAL_PIC_STATUS = {
+  STATUS_PENDING_CHIBI: 1,
+  STATUS_CHIBI_AUDITING: 2,
+  STATUS_PENDING_CREATE: 11,
+  STATUS_AUDITING: 13,
+  STATUS_CHIBI_REJECT: -10,
+  STATUS_AUDIT_REJECT: 5,
+  STATUS_PENDING_DELETE: -2,
+  STATUS_DELETED: -1,
+  STATUS_ONLINE: 0,
+  STATUS_CASCADE_OFFLINE: 3
+}
+
+// 物料图片审核类型枚举
+export const MATERIAL_PIC_AUDIT_TYPE = {
+  AUDITING: [
+    MATERIAL_PIC_STATUS.STATUS_PENDING_CHIBI,
+    MATERIAL_PIC_STATUS.STATUS_CHIBI_AUDITING,
+    MATERIAL_PIC_STATUS.STATUS_PENDING_CREATE,
+    MATERIAL_PIC_STATUS.STATUS_AUDITING
+  ],
+  FAILED: [
+    MATERIAL_PIC_STATUS.STATUS_CHIBI_REJECT,
+    MATERIAL_PIC_STATUS.STATUS_AUDIT_REJECT
+  ],
+  ONLINE: [
+    MATERIAL_PIC_STATUS.STATUS_ONLINE
+  ],
+  OFFLINE: [
+    MATERIAL_PIC_STATUS.STATUS_CASCADE_OFFLINE
+  ]
 }

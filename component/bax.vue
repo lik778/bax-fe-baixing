@@ -209,6 +209,7 @@ export default {
   }
   .main-content {
     width: 100%;
+    min-width: 1366px;
     padding-top: 50px;
     padding-left: 180px;
     background-color: #eeeff0;

@@ -145,6 +145,38 @@ export async function getCampaignLanding (query) {
   }
 }
 
+export async function getCampaignList (params) {
+  const body = await fengming
+    .post('/campaign/info')
+    .query(reverseCamelcase(params))
+    .json()
+  return toCamelcase(body.data)
+}
+
+export async function getCampaignIds (params) {
+  const body = await fengming
+    .get('/campaign/ids')
+    .send(params)
+    .json()
+  const data = [{ value: 0, label: '全部' }]
+  body.data.map(id => {
+    data.push({
+      value: id,
+      label: `计划${id}`
+    })
+    return true
+  })
+  return data
+}
+
+export async function getGroupList (params) {
+  const body = await fengming
+    .post('/group/info')
+    .send(params)
+    .json()
+  return toCamelcase(body.data)
+}
+
 export async function getCurrentCampaigns (query) {
   const body = await fengming
     .get('/campaign/current')

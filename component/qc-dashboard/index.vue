@@ -28,23 +28,23 @@
         />
       </el-select>
 
-      <header class="chart-header">
+      <!-- <header class="chart-header">
         <span v-if="visible.showNoChartData" class="side-header strong"
           >({{ NO_PVS_TIP }})</span
         >
-      </header>
+      </header> -->
 
       <!-- 图表标题 -->
-      <div class="charts-con charts-title-con">
+      <!-- <div class="charts-con charts-title-con">
         <div class="chart-con platform-chart">优选词投放量</div>
         <div class="chart-padding" />
         <div class="chart-con pvs-chart">优选词曝光量</div>
         <div class="chart-padding" />
         <div class="chart-con visited-chart">优选词点击量</div>
-      </div>
+      </div> -->
 
       <!-- 图表 -->
-      <div class="charts-con charts-echarts-con">
+      <!-- <div class="charts-con charts-echarts-con">
         <div class="chart-con platform-chart">
           <e-charts
             ref="platformChartOptions"
@@ -59,10 +59,10 @@
         <div class="chart-con visited-chart">
           <e-charts ref="visitedChartOptions" :options="visitedChartOptions" />
         </div>
-      </div>
+      </div> -->
 
       <!-- 图表副标题 -->
-      <div class="charts-con charts-footer-con">
+      <!-- <div class="charts-con charts-footer-con">
         <div class="chart-con platform-chart"></div>
         <div class="chart-padding" />
         <div class="chart-con pvs-chart">
@@ -78,14 +78,15 @@
             >{{ chartData.visitAdd }}<i class="el-icon-top"
           /></span>
         </div>
-      </div>
+      </div> -->
     </section>
 
     <header class="pvs-tabs-header">
-      推广关键字<span class="side-header"
+      推广关键字
+      <!-- <span class="side-header"
         >近<span class="strong" style="margin: 0 0 0 1px">7日</span
         >关键词效果</span
-      >
+      > -->
     </header>
 
     <el-tabs class="words-pvs-tabs" v-model="active.tab">
@@ -94,14 +95,14 @@
           class="query-table"
           border
           :data="displayedShowList"
-          :empty-text="loading.showNoListData ? NO_PVS_TIP : '...'"
+          empty-text="暂无数据，预计在计划投放1~3天后会同步数据报表，请等待"
         >
           <el-table-column label="关键词" prop="keyword" />
           <el-table-column label="搜索引擎">
             <template>百度</template>
           </el-table-column>
           <el-table-column label="位置">
-            <span>投放中</span>
+            <span>首页</span>
           </el-table-column>
           <el-table-column
             label="展现端"
@@ -110,6 +111,12 @@
               ({ device }) => $formatter.mapWith(device, DEVICE_DASHBOARD)
             "
           />
+          <el-table-column prop="days" label="检测时间"/>
+          <el-table-column label="实况">
+            <template slot-scope="scope">
+              <el-button @click="checkSnapshotPage(scope.row)">查看</el-button>
+            </template>
+          </el-table-column>
         </el-table>
         <el-pagination
           class="pagniation"
@@ -130,7 +137,7 @@
 <script>
 import { decompressSync } from 'fflate'
 import clone from 'clone'
-import ECharts from 'vue-echarts/components/ECharts.vue'
+// import ECharts from 'vue-echarts/components/ECharts.vue'
 import 'echarts/lib/chart/pie'
 import 'echarts-liquidfill'
 import 'echarts/lib/component/legend'
@@ -194,7 +201,7 @@ const NO_PVS_TIP = '当前投放时间太短，请8天后查看'
 export default {
   name: 'qc-dashboard',
   components: {
-    ECharts
+    // ECharts
   },
   data () {
     return {
@@ -246,8 +253,8 @@ export default {
     await this.initPromoteListOptions()
     if (this.options.promoteList.length) {
       this.selectPromote(this.options.promoteList[0].value)
-      this.initPieChart()
-      this.listenChartResize()
+      // this.initPieChart()
+      // this.listenChartResize()
     }
   },
   methods: {
@@ -279,7 +286,7 @@ export default {
         targetUserId,
         salesId,
         promoteId: this.query.promoteID
-        // promoteId: 1046,
+        // promoteId: 103445
       }
       let response = null
       let clickCount = { totalCount: 0, yesterdayCount: 0 }
@@ -367,7 +374,7 @@ export default {
         targetUserId,
         salesId,
         promoteId: this.query.promoteID
-        // promoteId: 1046,
+        // promoteId: 103445
       }
       let response = null
       try {
@@ -386,7 +393,7 @@ export default {
     },
     // 显示快照
     async checkSnapshotPage (item = {}) {
-      const { device, url } = item
+      const { device, url = 'https://test-files.obs.cn-east-3.myhuaweicloud.com/dailiyun_web.html' } = item
       let response = null
       let html = null
       let customClass = null
@@ -425,7 +432,7 @@ export default {
       const wrapperClass = `snapshot-content-${randomID}`
 
       // 快照样式修复
-      const snapshotFix = '<style>/*这里可以放一些快照页面样式的修复代码*/</style>'
+      const snapshotFix = '<style>#modal-style,.find-style { display: none } #content_left > div { z-index: unset !important; }</style>'
       html += snapshotFix
 
       const style =
@@ -467,8 +474,8 @@ export default {
     selectPromote (id) {
       this.query.promoteID = +id
       this.$nextTick(() => {
-        this.initLiquidChart()
-        this.initPieChart()
+        // this.initLiquidChart()
+        // this.initPieChart()
         this.initListData()
       })
     },
