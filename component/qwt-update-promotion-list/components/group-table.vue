@@ -36,7 +36,7 @@
                 width="150"
               >
                 <template slot-scope="{row}">
-                  <el-popconfirm title="确定要暂停投放吗？" @confirm="pause(row)">
+                  <el-popconfirm :title="`确定要${!row.pause ? `暂停投放` : '开始投放'}吗？`" @confirm="pauseGroup(row.id)">
                     <el-button slot="reference" :disabled="row.frontCampaignStatus === CAMPAIGN_STATUS_OFFLINE || row.frontGroupStatus === GROUP_STATUS_OFFLINE" type="text">{{!row.pause ? `暂停` : '投放'}}</el-button>
                   </el-popconfirm>
                   <router-link :to="{
@@ -80,7 +80,7 @@ export default {
     }
   },
   methods: {
-    pausePromote (id) {
+    pauseGroup (id) {
       this.$emit('pause', id)
     },
     confirm ({ pause, id }) {
