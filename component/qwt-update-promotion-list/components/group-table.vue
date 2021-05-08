@@ -8,7 +8,7 @@
             row-key="id"
             v-loading="loading"
         >
-            <el-table-column prop="name" label="单元名称" align="center" />
+            <el-table-column prop="name" label="单元名称" align="center" :show-overflow-tooltip="true" />
             <el-table-column prop="campaignId" label="所属计划" align="center" />
             <el-table-column prop="source" label="渠道" align="center" :formatter="(row, column, cellValue) => semPlatformCn[cellValue]" />
             <el-table-column prop="frontGroupStatusDesc" label="状态" align="center">
