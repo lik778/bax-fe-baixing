@@ -35,9 +35,9 @@
                 >
                 <template slot-scope="scope">
                   <div class="unit-wrapper">
-                    <span class="unit-cell">
+                    <p class="unit-cell">
                       {{scope.row.groups.map(c => c.name).join('、')}}
-                    </span>
+                    </p>
                     <router-link
                       class="view"
                       :to="{
@@ -176,8 +176,6 @@ export default {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    display: flex;
-    justify-content: flex-end;
     margin-right: 10px;
   }
   .edite-wrapper {
