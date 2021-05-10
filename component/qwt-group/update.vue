@@ -425,6 +425,17 @@ export default {
       }
     },
     async _updateMaterialPictures () {
+      const isChanged = !![
+        this.materialPictures.del.wap,
+        this.materialPictures.del.pc,
+        this.materialPictures.add.wap,
+        this.materialPictures.add.pc
+      ].find(x => x.length)
+
+      if (!isChanged) {
+        return
+      }
+
       const res = await updateMaterialPictures({
         groupId: this.groupId,
         imageType: this.materialPictures.type,
@@ -434,6 +445,7 @@ export default {
         ],
         newImages: this.materialPictures.add
       })
+
       const errors = res?.data || []
 
       if (errors.length) {
