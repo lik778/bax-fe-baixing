@@ -19,7 +19,7 @@
             <fm-tip class="landingpage-tip" img-url="//file.baixing.net/201903/8d224eb6179a947eecbf0fde089f7ed3.png">电话接不停小妙招</fm-tip>
             <div style="margin-bottom: 10px">
               <el-radio-group v-model="newPromotion.landingType" @change="clearLandingInput" size="small">
-                <el-radio-button v-for="option of extendLandingTypeOpts" :key="option.value" :label="option.value">{{option.label}}</el-radio-button>
+                <el-radio-button v-for="option of landingTypeOpts" :key="option.value" :label="option.value">{{option.label}}</el-radio-button>
               </el-radio-group>
             </div>
             <div>
@@ -246,8 +246,6 @@ import {
   NEW_RECOMMAND_SOURCE_FH
 } from 'constant/fengming'
 
-import { allowSee258 } from 'util/fengming-role'
-
 import store from './store'
 
 const MVP_AD = 0
@@ -331,16 +329,12 @@ export default {
 
       // PRE_IMG_PROMOTION: assetHost + 'promotion-advantage.png'
       PRE_IMG_PROMOTION: '//file.baixing.net/201809/a995bf0f1707a3e98a2c82a5dc5f8ad3.png',
-      addKeywordsDialog: false
+      addKeywordsDialog: false,
+
+      landingTypeOpts
     }
   },
   computed: {
-    extendLandingTypeOpts () {
-      if (allowSee258(null, this.userInfo.id)) {
-        return landingTypeOpts.concat([{ label: '258官网', value: LANDING_TYPE_258 }])
-      }
-      return landingTypeOpts
-    },
     isShenmaChecked () {
       return this.newPromotion.sources.includes(SEM_PLATFORM_SHENMA)
     },
