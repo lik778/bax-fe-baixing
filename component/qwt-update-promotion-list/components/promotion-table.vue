@@ -19,7 +19,7 @@
                     <p>{{ row.frontCampaignStatusDetails}}</p>
                     <span
                       slot="reference"
-                      :class="CAMPAIGN_STATUSES[row.frontCampaignStatus].type || 'warning'"
+                      :class="(CAMPAIGN_STATUSES[row.frontCampaignStatus] && CAMPAIGN_STATUSES[row.frontCampaignStatus].type) || 'warning'"
                     >
                       {{ row.frontCampaignStatusDesc }}
                     </span>
