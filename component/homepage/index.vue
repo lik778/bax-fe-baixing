@@ -1,7 +1,8 @@
 <template>
   <div class="homepage">
     <account :userInfo="userInfo"/>
-    <homepage-campaign :userInfo="userInfo"/>
+    <!-- 暂时禁用站外推广诊断和站外推广数据概览，等待业务规划 -->
+    <!-- <homepage-campaign :userInfo="userInfo"/> -->
     <biaowang :userInfo="userInfo" />
     <site />
   </div>
