@@ -31,26 +31,15 @@
 
     <section v-if="enableMaterialPictures">
       <header>创意配图
-        <el-tooltip
-          v-if="isCurPromotionOrGroupPaused"
-          placement="top"
-          content="当前计划已下线。重启计划后，创意配图会一并生效">
-            <i class="el-icon-question"></i>
+        <el-tooltip v-if="isCurPromotionOrGroupPaused"
+                    placement="top"
+                    content="当前计划已下线。重启计划后，创意配图会一并生效">
+          <i class="el-icon-question"></i>
         </el-tooltip>
       </header>
       <div class="content">
-        <material-pictures-comp
-          v-model="materialPictures"
-          :initValue="materialPicturesInits"
-        />
-        <el-button
-          v-if="isMaterialChanged"
-          class="update-material-button"
-          type="primary"
-          size="small"
-          :loading="loading.materialPictures"
-          @click="_updateMaterialPictures"
-        >更新创意配图</el-button>
+        <material-pictures-comp v-model="materialPictures"
+                                :initValue="materialPicturesInits"/>
       </div>
     </section>
 
@@ -134,7 +123,8 @@
                          ref="contract" />
       <el-button class="add-group-btn"
                  type="primary"
-                 @click="updateGroup">更新单元</el-button>
+                 :loading="lock.materialPictures || lock.group"
+                 @click="updateMaterialThenGroup">更新单元</el-button>
     </section>
 
   </div>
@@ -168,7 +158,6 @@ import {
 import clone from 'clone'
 import uuid from 'uuid/v4'
 import { updateValidator } from './validate'
-import { isArrHasSameValue } from 'util'
 import track, { trackRecommendService } from 'util/track'
 import { filterExistCurrentWords } from 'util/group'
 
@@ -212,7 +201,6 @@ export default {
       originKeywords: [],
       keywords: [],
 
-      isUpdating: false,
       isErrorPage: false,
 
       isSearchCondition: false,
@@ -221,14 +209,13 @@ export default {
       campaignKeywordLen: 0,
       recommendList: null,
 
-      loading: {
+      lock: {
+        group: false,
         materialPictures: false
       },
       materialPictures: {},
       materialPicturesInits: {},
-      materialPicturesInitsRaw: null,
-      isMaterialChanged: false,
-      isMaterialChangeLock: false
+      materialPicturesInitsRaw: null
     }
   },
   computed: {
@@ -256,27 +243,6 @@ export default {
     },
     updatedKeywords () {
       return this.keywords.filter(o => o.isUpdated)
-    }
-  },
-  watch: {
-    // 记录创意配图内容是否修改
-    materialPictures (n) {
-      if (!this.isMaterialChangeLock) {
-        const hasChange = (a, b) => {
-          return !isArrHasSameValue(a, b, (x, y) => {
-            /* eslint-disable */
-            return x.url === y.url &&
-              x.id == y.id &&
-              x.desc == y.desc
-            /* eslint-enable */
-          })
-        }
-        const { pc, wap } = n._raw || {}
-        const { pc: pcRaw, wap: wapRaw } = this.materialPicturesInitsRaw
-
-        const isChanged = hasChange(pcRaw, pc) || hasChange(wapRaw, wap)
-        this.isMaterialChanged = isChanged
-      }
     }
   },
   async mounted () {
@@ -308,8 +274,6 @@ export default {
   },
   methods: {
     async initMaterialPictures (inits) {
-      this.isMaterialChanged = false
-      this.isMaterialChangeLock = true
       this.materialPicturesInits = inits || (await getMaterialPictures({
         groupId: this.groupId
       })).data
@@ -321,9 +285,6 @@ export default {
         pc: [...pc],
         wap: [...wap]
       }
-      this.$nextTick(() => {
-        this.isMaterialChangeLock = false
-      })
     },
     updateGroupData (type, data) {
       if (typeof type === 'string') {
@@ -375,15 +336,20 @@ export default {
       this.keywords = words.concat(this.keywords)
       this.$refs.keywordListComp.$data.offset = 0
     },
+    async updateMaterialThenGroup () {
+      try {
+        await this.updateMaterialPictures()
+        await this.updateGroup()
+      } catch (e) {
+        this.$message.error(e.message)
+      }
+    },
     async validateGroup () {
       if (!this.$refs.contract.$data.isAgreement) {
         throw new Error('请阅读并勾选同意服务协议，再进行下一步操作')
       }
       if (this.isErrorPage) {
         throw new Error('当前投放页面失效，请重新选择新的投放页面')
-      }
-      if (this.isUpdating) {
-        throw new Error('正在更新中, 请稍等一会儿 ~')
       }
 
       try {
@@ -397,24 +363,14 @@ export default {
       }
     },
     async updateGroup () {
+      this.lock.group = true
       try {
         await this.validateGroup()
-        this.isUpdating = true
-
-        if (this.enableMaterialPictures) {
-          this.loading.materialPictures = true
-          await this._updateMaterialPictures()
-        }
         await this._updateGroup()
-
         this.$message.success('单元更新成功')
-
         // await trackRecommendService()
-      } catch (e) {
-        return this.$message.error(e.message)
       } finally {
-        this.isUpdating = false
-        this.loading.materialPictures = false
+        this.lock.group = false
       }
     },
     async _updateGroup () {
@@ -457,9 +413,18 @@ export default {
         }
       }
     },
+    async updateMaterialPictures () {
+      if (this.enableMaterialPictures) {
+        this.lock.materialPictures = true
+        try {
+          this.validMaterialPictures()
+          await this._updateMaterialPictures()
+        } finally {
+          this.lock.materialPictures = false
+        }
+      }
+    },
     async _updateMaterialPictures () {
-      this.validMaterialPictures()
-
       const res = await updateMaterialPictures({
         groupId: this.groupId,
         imageType: this.materialPictures.type,
@@ -484,9 +449,7 @@ export default {
         throw new Error(lastErrorReason || '部分图片审核失败，请检查并重新上传')
       } else {
         await this.initMaterialPictures()
-        this.$message.success('更新创意配图成功')
       }
-      this.isMaterialChanged = false
     },
     getUpdatedLandingData () {
       const data = {}
