@@ -30,11 +30,7 @@ export const fengmingTimelineType = {
   // [TIMELINE_TYPE_BALANCE]: '余额',
   不限: '',
   计划: TIMELINE_TYPE_CAMPAIGN,
-  单元: TIMELINE_TYPE_GROUP
-}
-
-export const fengmingTimelineSubtype = {
-  不限: '',
+  单元: TIMELINE_TYPE_GROUP,
   创意: TIMELINE_TYPE_CREATIVE,
   关键词: TIMELINE_TYPE_KEYWORD
 }
@@ -82,7 +78,6 @@ export const selectType = {
 }
 
 export const fengmingTimelineTypeOpts = fmtOpts(fengmingTimelineType)
-export const fengmingTimelineSubtypeOpts = fmtOpts(fengmingTimelineSubtype)
 export const biaowangTimelineTypeOpts = fmtOpts(biaowangTimelineType)
 export const productTypeOpts = fmtOpts(productType)
 export const opTypeOpts = fmtOpts(opType)

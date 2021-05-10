@@ -16,12 +16,6 @@
       :clearable="false"
       :options="timelineTypeOpts"
     />
-    <bax-select
-      v-if="isSelectedFengming"
-      v-model="queryParmas.timelineSubtype"
-      :clearable="false"
-      :options="fengmingTimelineSubtypeOpts"
-    />
     <label class="ml">选择查询类型</label>
     <bax-select
       v-model="queryParmas.opType"
@@ -55,14 +49,6 @@
         label="项目"
         prop="timelineType"
         :formatter="timelineTypeFormatter"
-        width="90">
-      </el-table-column>
-      <el-table-column
-        v-if="isSelectedFengming"
-        label="模块"
-        key="timelineSubtype"
-        prop="timelineSubtype"
-        :formatter="timelineSubtypeFormatter"
         width="90">
       </el-table-column>
       <el-table-column
@@ -129,7 +115,6 @@ import {
   opTypeOpts,
   productTypeOpts,
   fengmingTimelineTypeOpts,
-  fengmingTimelineSubtypeOpts,
   biaowangTimelineTypeOpts,
   selectType,
   OP_TYPE_CREATE,
@@ -202,14 +187,12 @@ export default {
     return {
       opTypeOpts,
       fengmingTimelineTypeOpts,
-      fengmingTimelineSubtypeOpts,
       productTypeOpts,
       offset: 0,
       queryParmas: {
         opType: '',
         selectId: '',
         timelineType: '',
-        timelineSubtype: '',
         limit: ONE_PAGE_NUM,
         createdAt: CREATED_AT_VALUES[0],
         productType: PRODUCT_TYPE_FENGMING
@@ -257,10 +240,6 @@ export default {
       })
       const result = timelineTypeOpts.find(({ value }) => value === timelineType)
       return result && result.label
-    },
-    timelineSubtypeFormatter ({ timelineSubtype }) {
-      const find = fengmingTimelineSubtypeOpts.find(x => x.value === timelineSubtype)
-      return find && find.label
     },
     dateFormatter ({ createdAt, timestamp }) {
       return toHumanTime(createdAt || timestamp, 'YYYY-MM-DD HH:mm')
