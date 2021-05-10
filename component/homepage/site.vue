@@ -1,45 +1,5 @@
 <template>
   <div class="layout-container">
-    <!-- <div class="layout-left">
-      <h5 class="layout-header">精品官网概览</h5>
-      <div class="layout-content" v-if="isHasSite">
-        <div class="report">
-          <div class="radio-group">
-            <el-radio v-model="selectedReportKey" label="yesterday">昨日</el-radio>
-            <el-radio v-model="selectedReportKey" label="weekly">过去7天</el-radio>
-          </div>
-          <ul class="data-list">
-            <li class="data">
-              <h6 class="title">访问量</h6>
-              <p class="num">{{selectedReport.pv}}</p>
-            </li>
-            <li class="data">
-              <h6 class="title">访问人数</h6>
-              <p class="num">{{selectedReport.uv}}</p>
-            </li>
-          </ul>
-        </div>
-        <div class="description">
-          <p>您当前的官网的浏览量较低，</p>
-          <p>打败了<strong>{{siteBeatPercent}}%</strong>同行业客户</p>
-          <p>建议您进行
-            <a href="javascript:;" @click="() => $router.push({name: 'qwt-create-promotion'})">站外推广</a>
-            或
-            <a href="javascript:;" @click="() => $router.push({name: 'bw-query-price'})">标王推广</a>
-            ，提升官网访问量
-
-          </p>
-          <div class="actions">
-            <el-button type="primary" @click="() => $router.push({name: 'qwt-charge', query: {select_gw: 1}})">购买与续费</el-button>
-            <el-button type="primary" @click="goKaSiteLList">查看详情</el-button>
-          </div>
-        </div>
-      </div>
-      <div class="no-site-placeholder" v-else>
-        <p class="text">您暂时没有开通精品官网，您可以</p>
-        <el-button type="primary" @click="() => $router.push({name: 'qwt-charge', query: {select_gw: 1}})">购买精品官网</el-button>
-      </div>
-    </div> -->
     <div class="layout-left">
       <h5 class="layout-header">
         官网留言通知
@@ -71,7 +31,6 @@ export default {
   fromMobx: {
     isHasSite: () => store.kaSiteData && !!store.kaSiteData.sites.length,
     kaSiteReports: () => store.kaSiteData ? store.kaSiteData.reports : {},
-    siteBeatPercent: () => store.fengmingData && store.fengmingData.beatPeerPercent.toFixed(1),
     notices: () => store.notices.kaSite
   },
   computed: {
