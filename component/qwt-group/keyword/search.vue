@@ -7,8 +7,9 @@
                :loading="loading.addBtn"
                @click="handleAddKeyword">添加</el-button>
     <el-button type="primary"
-               @click="keywordDialogVisible = true">添加关键词</el-button>
+               @click="keywordDialogVisible = true">批量添加关键词</el-button>
     <el-button type="primary"
+               v-if="landingType !== LANDING_TYPE_STORE"
                plain
                :loading="loading.recommendBtn"
                @click="recommendKeywords">一键拓词</el-button>
@@ -38,6 +39,7 @@ import BaiduExpandWordsDialog from 'com/common/qwt-baidu-expand-words'
 import { validateKeyword } from 'util/campaign'
 import { recommendByWord, recommendByUrl } from 'api/fengming'
 import { fmtNewKeywordsPrice, filterExistCurrentWords, getNotExistWords } from 'util/group'
+import { LANDING_TYPE_STORE } from 'constant/fengming'
 
 export default {
   name: 'keyword-search',
@@ -89,6 +91,8 @@ export default {
   },
   data () {
     return {
+      LANDING_TYPE_STORE,
+
       word: '',
       keywordDialogVisible: false,
       baiduExpandWordsDialogVisible: false,

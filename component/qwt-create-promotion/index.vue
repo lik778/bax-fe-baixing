@@ -36,11 +36,6 @@
                 :value="newPromotion.landingPage"
                 @change="v => setLanding(LANDING_TYPE_GW, v)"
               />
-              <ka-258-selector
-                v-if="newPromotion.landingType === LANDING_TYPE_258"
-                :value="newPromotion.landingPage"
-                @change="v => setLanding(LANDING_TYPE_258, v)"
-              />
               <mvip-selector
                 v-if="newPromotion.landingType === LANDING_TYPE_STORE"
                 :initValue="newPromotion.landingPageId"
@@ -213,7 +208,6 @@ import QiqiaobanPageSelector from 'com/common/qiqiaoban-page-selector'
 import PromotionChargeTip from 'com/widget/promotion-charge-tip'
 import UserAdSelector from 'com/common/user-ad-selector'
 import CreativeEditor from 'com/widget/creative-editor'
-import Ka258Selector from 'com/common/ka-258-selector'
 import MvipSelector from 'com/common/mvip-selector'
 import AreaSelector from 'com/common/area-selector'
 import ChargeDialog from 'com/common/charge-dialog'
@@ -287,7 +281,6 @@ export default {
     PromotionChargeTip,
     UserAdSelector,
     CreativeEditor,
-    Ka258Selector,
     AreaSelector,
     ChargeDialog,
     ContractAck,
