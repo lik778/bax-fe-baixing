@@ -41,10 +41,7 @@
                   <el-popconfirm :title="`确定要${!row.pause ? `暂停投放` : '开始投放'}吗？`" @confirm="confirm(row)">
                     <el-button slot="reference" :disabled="row.frontCampaignStatus === CAMPAIGN_STATUS_OFFLINE || row.frontGroupStatus === GROUP_STATUS_OFFLINE" type="text">{{!row.pause ? `暂停` : '投放'}}</el-button>
                   </el-popconfirm>
-                  <router-link :to="{
-                      name: 'qwt-update-group',
-                      params: { id: row.id },
-                    }">优化</router-link>
+                  <el-button type="text" @click="optimizeGroup(row)" :disabled="row.frontCampaignStatus === CAMPAIGN_STATUS_OFFLINE || row.frontGroupStatus === GROUP_STATUS_OFFLINE">优化</el-button>
                   <router-link :to="{
                     name: 'qwt-create-group',
                     query: { cloneId: row.id }
@@ -88,6 +85,12 @@ export default {
       } else {
         this.$emit('pause', id)
       }
+    },
+    optimizeGroup (group) {
+      this.$router.push({
+        name: 'qwt-update-group',
+        params: { id: group.id }
+      })
     }
   }
 }

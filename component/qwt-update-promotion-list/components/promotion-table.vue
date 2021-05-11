@@ -84,7 +84,7 @@
                   <el-popconfirm :title="`确定要${!row.pause ? `暂停投放` : '开始投放'}吗？`" @confirm="confirm(row)">
                     <el-button :disabled="row.frontCampaignStatus === CAMPAIGN_STATUS_OFFLINE" slot="reference" type="text">{{!row.pause ? `暂停` : '投放'}}</el-button>
                   </el-popconfirm>
-                  <router-link :to="{ name: 'qwt-update-promotion', params: { id: row.id }}">优化</router-link>
+                  <el-button type="text" @click="optimizePromote(row)" :disabled="row.frontCampaignStatus === CAMPAIGN_STATUS_OFFLINE">优化</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -124,6 +124,12 @@ export default {
     }
   },
   methods: {
+    optimizePromote (promote) {
+      this.$router.push({
+        name: 'qwt-update-promotion',
+        params: { id: promote.id }
+      })
+    },
     async editeBudget (row) {
       this.dailyBudget = {
         id: row.id,
