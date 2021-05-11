@@ -128,12 +128,6 @@ export async function getDataReportByQueryWord (opts = {}) {
   }
 }
 
-export async function getCampaignRadar () {
-  const body = await fengming.get('/campaign/radar').json()
-
-  return toCamelcase(body.data)
-}
-
 export async function getCampaignList (params) {
   const body = await fengming
     .post('/campaign/info')
