@@ -11,7 +11,7 @@
             <el-table-column prop="name" label="单元名称" align="center" :show-overflow-tooltip="true" />
             <el-table-column prop="campaignId" label="所属计划" align="center" />
             <el-table-column prop="source" label="渠道" align="center" :formatter="(row, column, cellValue) => semPlatformCn[cellValue]" />
-            <el-table-column prop="frontGroupStatusDesc" label="状态" align="center">
+            <el-table-column prop="frontGroupStatusDesc" label="单元状态" align="center">
                 <template slot-scope="{ row }">
                   <span v-if="row.frontGroupStatus !== GROUP_STATUS_REJECT"
                   :class="GROUP_STATUSES[row.frontGroupStatus].type || 'warning'">
@@ -29,6 +29,15 @@
                   </template>
                 </template>
             </el-table-column>
+            <el-table-column prop="frontCampaignStatus"
+                       label="计划状态"
+                       align="center">
+              <template slot-scope="{ row }">
+                <span :class="CAMPAIGN_STATUSES[row.frontCampaignStatus].type || 'warning'">
+                  {{ row.frontCampaignStatusDesc }}
+                </span>
+              </template>
+            </el-table-column>
             <!-- <el-table-column prop="opt" label="优化项" align="center" :formatter="(row) => filterOptimization(row)"/> -->
             <el-table-column prop="avgCpcRanking" label="关键词平均排名" align="center" :formatter="(row) => parseFloat(row.avgCpcRanking).toFixed(2)" />
             <el-table-column
@@ -41,10 +50,7 @@
                   <el-popconfirm :title="`确定要${!row.pause ? `暂停投放` : '开始投放'}吗？`" @confirm="confirm(row)">
                     <el-button slot="reference" :disabled="row.frontCampaignStatus === CAMPAIGN_STATUS_OFFLINE || row.frontGroupStatus === GROUP_STATUS_OFFLINE" type="text">{{!row.pause ? `暂停` : '投放'}}</el-button>
                   </el-popconfirm>
-                  <router-link :to="{
-                      name: 'qwt-update-group',
-                      params: { id: row.id },
-                    }">优化</router-link>
+                  <el-button type="text" @click="optimizeGroup(row)" :disabled="row.frontCampaignStatus === CAMPAIGN_STATUS_OFFLINE || row.frontGroupStatus === GROUP_STATUS_OFFLINE">优化</el-button>
                   <router-link :to="{
                     name: 'qwt-create-group',
                     query: { cloneId: row.id }
@@ -55,7 +61,7 @@
     </div>
 </template>
 <script>
-import { semPlatformCn, GROUP_STATUS_REJECT, GROUP_STATUS_OFFLINE, CAMPAIGN_STATUS_OFFLINE } from 'constant/fengming'
+import { semPlatformCn, GROUP_STATUS_REJECT, GROUP_STATUS_OFFLINE, CAMPAIGN_STATUS_OFFLINE, CAMPAIGN_STATUSES } from 'constant/fengming'
 import { filterOptimization, GROUP_STATUSES } from '../constant'
 export default {
   name: 'group-table',
@@ -73,6 +79,7 @@ export default {
   },
   data () {
     return {
+      CAMPAIGN_STATUSES,
       filterOptimization,
       semPlatformCn,
       GROUP_STATUSES,
@@ -88,6 +95,12 @@ export default {
       } else {
         this.$emit('pause', id)
       }
+    },
+    optimizeGroup (group) {
+      this.$router.push({
+        name: 'qwt-update-group',
+        params: { id: group.id }
+      })
     }
   }
 }

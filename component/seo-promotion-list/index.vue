@@ -196,7 +196,7 @@
 </template>
 
 <script>
-import TopTip from '../qwt-promotion-list/topTip'
+import TopTip from './topTip'
 import { getUserSites } from 'api/ka'
 import {
   queryPromotion,
