@@ -21,7 +21,6 @@
     <keyword-dialog :visible.sync="keywordDialogVisible"
                     :all-words="allWords"
                     :campaign-id="campaignId"
-                    :group-id="groupId"
                     :sources="sources"
                     @update="handleAddKeywords" />
 
@@ -69,9 +68,6 @@ export default {
     campaignId: {
       type: [String, Number]
     },
-    groupId: {
-      type: [String, Number]
-    },
     landingType: {
       type: Number
     },
@@ -113,11 +109,7 @@ export default {
         validateKeyword([val])
 
         // 校验关键词是否已存在
-        const isRemoteQuery = !!(this.campaignId || this.groupId)
-        await getNotExistWords(this.allWords, [val], isRemoteQuery, false, {
-          groupId: this.groupId,
-          campaignId: this.campaignId
-        })
+        getNotExistWords(this.allWords, [val])
 
         this.loading.addBtn = true
         const recommendKeywords = (await recommendByWord(val, { campaignId: this.campaignId })) || []

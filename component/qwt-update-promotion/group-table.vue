@@ -33,8 +33,8 @@
                     :content="row.frontCampaignStatusDetails">
           <span :class="GROUP_STATUSES[row.frontGroupStatus].type || 'warning'">
             {{ row.frontGroupStatusDesc }}
+             <i class="el-icon-info danger" />
           </span>
-          <i class="el-icon-info danger" />
         </el-tooltip>
       </template>
     </el-table-column>
@@ -43,7 +43,7 @@
                      label="计划状态"
                      align="center">
       <template slot-scope="{ row }">
-        <span :class="GROUP_STATUSES[row.frontCampaignStatus].type || 'warning'">
+        <span :class="CAMPAIGN_STATUSES[row.frontCampaignStatus].type || 'warning'">
           {{ row.frontCampaignStatusDesc }}
         </span>
       </template>
