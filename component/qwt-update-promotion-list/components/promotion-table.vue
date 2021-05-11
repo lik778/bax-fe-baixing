@@ -84,7 +84,7 @@
                   <el-popconfirm :title="`确定要${!row.pause ? `暂停投放` : '开始投放'}吗？`" @confirm="confirm(row)">
                     <el-button :disabled="row.frontCampaignStatus === CAMPAIGN_STATUS_OFFLINE" slot="reference" type="text">{{!row.pause ? `暂停` : '投放'}}</el-button>
                   </el-popconfirm>
-                  <el-button type="text" @click="optimizePromote(row)" :disabled="row.frontCampaignStatus === CAMPAIGN_STATUS_OFFLINE">优化</el-button>
+                  <el-button type="text" @click="optimizePromote(row)">优化</el-button>
                 </template>
             </el-table-column>
         </el-table>
