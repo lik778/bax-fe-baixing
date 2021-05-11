@@ -101,10 +101,6 @@ export default {
         return ['name', 'campaignId', 'source', 'frontGroupStatus', 'frontCampaignStatus', 'avgCpcRanking']
       }
     },
-    campaignId: {
-      type: [String, Number],
-      required: true
-    },
     isSales: {
       type: Boolean,
       default: false
