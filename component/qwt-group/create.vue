@@ -72,7 +72,6 @@
         </p>
         <negative-keyword-comp :negative-words="group.negativeWords"
                                :show-tip="false"
-                               :campaign-id="promotion.id"
                                @track="(action, opts) => handleTrack(action, opts)"
                                :all-words="group.negativeWords.concat(group.keywords)"
                                @add-negative-words="(words) => group.negativeWords = words.concat(group.negativeWords)"

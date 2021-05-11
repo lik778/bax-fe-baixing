@@ -29,8 +29,6 @@
     </div>
     <negative-words-dialog :visible="negativeWordsDialogVisible"
                            :all-words="allWords"
-                           :campaign-id="campaignId"
-                           :group-id="groupId"
                            @close="negativeWordsDialogVisible = false"
                            @update-negative-words="updateNegativeWords"
                            :negative-words="negativeWords" />
@@ -60,12 +58,6 @@ export default {
       default: () => {
         return []
       }
-    },
-    campaignId: {
-      type: [String, Number]
-    },
-    groupId: {
-      type: [String, Number]
     },
     showTip: {
       type: Boolean,
@@ -97,12 +89,9 @@ export default {
 
       try {
         validateKeyword([val])
-        const isRemoteQuery = !!(this.campaignId || this.groupId)
-        // 校验是否已存在
-        await getNotExistWords(this.allWords, [val], isRemoteQuery, true, {
-          groupId: this.groupId,
-          campaignId: this.campaignId
-        })
+
+        getNotExistWords(this.allWords, [val])
+
         this.$emit('add-negative-words', [{ word: val }])
         this.$emit('track', 'click-button: add-negative-keyword')
       } catch (e) {

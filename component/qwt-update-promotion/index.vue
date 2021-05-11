@@ -14,7 +14,6 @@
                         @update-promotion="(type, data) => (promotion[type] = data)">
           <negative-words-comp :negative-words="promotion.negativeWords"
                                :all-words="promotion.negativeWords"
-                               :campaign-id="campaignId"
                                :is-sales="isSales"
                                @track="(action, opts) => handleTrack(action, opts)"
                                @add-negative-words="(words) =>(promotion.negativeWords = words.concat(promotion.negativeWords))"

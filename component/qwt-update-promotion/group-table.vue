@@ -33,8 +33,8 @@
                     :content="row.frontCampaignStatusDetails">
           <span :class="GROUP_STATUSES[row.frontGroupStatus].type || 'warning'">
             {{ row.frontGroupStatusDesc }}
+             <i class="el-icon-info danger" />
           </span>
-          <i class="el-icon-info danger" />
         </el-tooltip>
       </template>
     </el-table-column>

@@ -80,9 +80,6 @@ export default {
         return []
       }
     },
-    groupId: {
-      type: [String, Number]
-    },
     campaignId: {
       type: [String, Number]
     }
@@ -132,12 +129,8 @@ export default {
         validateKeyword(words)
         const normalList = (this.keywords && this.keywords.normalList) || []
         const allWords = this.allWords.concat(normalList)
-        const isRemoteQuery = !!(this.campaignId || this.groupId)
         // 校验是否已存在
-        const newWords = await getNotExistWords(allWords, words, isRemoteQuery, false, {
-          groupId: this.groupId,
-          campaignId: this.campaignId
-        })
+        const newWords = getNotExistWords(allWords, words)
 
         // 拼接关键词
         const newKeywords = await this.fetchWords(newWords)

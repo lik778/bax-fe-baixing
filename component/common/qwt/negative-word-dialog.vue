@@ -57,12 +57,6 @@ export default {
     visible: {
       type: Boolean,
       required: true
-    },
-    campaignId: {
-      type: [String, Number]
-    },
-    groupId: {
-      type: [String, Number]
     }
   },
   data () {
@@ -102,12 +96,7 @@ export default {
         this.loading = true
         validateKeyword(words)
 
-        // 校验是否已存在
-        const isRemoteQuery = !!(this.campaignId || this.groupId)
-        const newWords = await getNotExistWords(this.allWords, words, isRemoteQuery, true, {
-          groupId: this.groupId,
-          campaignId: this.campaignId
-        })
+        const newWords = getNotExistWords(this.allWords, words)
 
         this.words = newWords.map(o => {
           return { word: o }

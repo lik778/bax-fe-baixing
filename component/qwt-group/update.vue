@@ -50,7 +50,6 @@
           <div class="pane">
             <header>添加推广关键词</header>
             <search-comp :campaign-id="promotion.id"
-                         :group-id="groupId"
                          :areas="promotion.areas"
                          :landing-page="group.landingPage"
                          :landing-type="group.landingType"
@@ -103,8 +102,6 @@
           当前否定关键词数量: <strong>{{ group.negativeWords.length }}</strong>个
         </p>
         <negative-keyword-comp :negative-words="group.negativeWords"
-                               :campaign-id="promotion.id"
-                               :group-id="groupId"
                                :all-words="group.negativeWords.concat(keywords)"
                                :show-tip="false"
                                @track="(action, opts) => handleTrack(action, opts)"
