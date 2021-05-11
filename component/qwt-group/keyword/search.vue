@@ -26,9 +26,10 @@
                     @update="handleAddKeywords" />
 
     <!-- 规划拓词模态框 -->
-    <baidu-expand-words-dialog :visible.sync="baiduExpandWordsDialogVisible"
+    <baidu-expand-words-dialog v-if="baiduExpandWordsDialogVisible"
+                               :visible.sync="baiduExpandWordsDialogVisible"
                                :extra-query="{ campaign_id: campaignId, areas: areas }"
-                               @confirm="handleAddKeywords" />
+                               @confirm="handleAddBaiduKeyWords" />
   </div>
 </template>
 
@@ -165,6 +166,10 @@ export default {
       } finally {
         this.loading.recommendBtn = false
       }
+    },
+    handleAddBaiduKeyWords (words) {
+      const newWords = filterExistCurrentWords(this.allWords, words)
+      this.handleAddKeywords(newWords)
     },
     handleAddKeywords (words) {
       this.$emit('add-keywords', words.map(o => ({ ...o, isNew: true })), true)
