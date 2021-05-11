@@ -1,94 +1,106 @@
 <template>
-  <div>
-    <el-button @click="handleGoGroup"
-               type="primary"
-               :disabled="disabled"
-               class="add-group-btn">
-      <i class="el-icon-plus" />新增单元
-    </el-button>
-    <el-table class="group-table"
-              :data="groupData"
-              border>
-      <el-table-column prop="name"
-                       label="单元名称"
-                       align="center" />
-      <el-table-column prop="frontGroupStatus"
-                       label="单元状态"
-                       align="center">
-        <template slot-scope="{ row }">
-          <span v-if="row.frontGroupStatus !== GROUP_STATUS_REJECT"
-                :class="GROUP_STATUSES[row.frontGroupStatus].type || 'warning'">
+  <el-table class="group-table"
+            cell-class-name="bax-cell"
+            :data="groupData">
+    <el-table-column prop="name"
+                     v-if="showColumns.includes('name')"
+                     label="单元名称"
+                     align="center"
+                     :show-overflow-tooltip="true" />
+    <el-table-column prop="campaignId"
+                     v-if="showColumns.includes('campaignId')"
+                     label="所属计划"
+                     align="center" />
+    <el-table-column prop="source"
+                     v-if="showColumns.includes('source')"
+                     label="渠道"
+                     align="center"
+                     :formatter="(row, column, cellValue) => semPlatformCn[cellValue]" />
+    <el-table-column prop="frontGroupStatus"
+                     v-if="showColumns.includes('frontGroupStatus')"
+                     label="单元状态"
+                     align="center">
+      <template slot-scope="{ row }">
+        <span v-if="row.frontGroupStatus !== GROUP_STATUS_REJECT"
+              :class="GROUP_STATUSES[row.frontGroupStatus].type || 'warning'">
+          {{ row.frontGroupStatusDesc }}
+        </span>
+        <el-tooltip v-else
+                    placement="top-start"
+                    :content="row.frontCampaignStatusDetails">
+          <span :class="GROUP_STATUSES[row.frontGroupStatus].type || 'warning'">
             {{ row.frontGroupStatusDesc }}
           </span>
-          <el-tooltip v-else
-                      placement="top-start"
-                      :content="row.frontCampaignStatusDetails">
-            <span :class="GROUP_STATUSES[row.frontGroupStatus].type || 'warning'">
-              {{ row.frontGroupStatusDesc }}
-            </span>
-            <i class="el-icon-info danger" />
-          </el-tooltip>
-        </template>
-      </el-table-column>
-      <el-table-column prop="frontCampaignStatus"
-                       label="计划状态"
-                       align="center">
-        <template slot-scope="{ row }">
-          <span :class="GROUP_STATUSES[row.frontCampaignStatus].type || 'warning'">
-            {{ row.frontCampaignStatusDesc }}
-          </span>
-        </template>
-      </el-table-column>
-      <el-table-column prop="avgCpcRanking"
-                       label="关键词平均排名"
-                       align="center" />
-      <el-table-column label="操作"
-                       align="center">
-        <template slot-scope="{ row }">
-          <el-button class="btn"
-                     type="text"
-                     :disabled="
+          <i class="el-icon-info danger" />
+        </el-tooltip>
+      </template>
+    </el-table-column>
+    <el-table-column prop="frontCampaignStatus"
+                     v-if="showColumns.includes('frontCampaignStatus')"
+                     label="计划状态"
+                     align="center">
+      <template slot-scope="{ row }">
+        <span :class="GROUP_STATUSES[row.frontCampaignStatus].type || 'warning'">
+          {{ row.frontCampaignStatusDesc }}
+        </span>
+      </template>
+    </el-table-column>
+    <el-table-column prop="avgCpcRanking"
+                     v-if="showColumns.includes('avgCpcRanking')"
+                     label="关键词平均排名"
+                     align="center" />
+    <el-table-column label="操作"
+                     align="center">
+      <template slot-scope="{ row }">
+        <el-button type="text"
+                   :disabled="
                       isSales ||
                       row.frontCampaignStatus === CAMPAIGN_STATUS_OFFLINE ||
                       row.frontGroupStatus === GROUP_STATUS_OFFLINE
                      "
-                     :class="{ disabled: isSales }"
-                     @click="toggleGroupStatus(row)">
-            {{ !!row.pause ? "开启" : "暂停" }}
-          </el-button>
-          <el-button class="btn"
-                     type="text"
-                     :class="{ disabled: isSales }"
-                     :disabled="
+                   @click="toggleGroupStatus(row)">
+          {{ !!row.pause ? "开启" : "暂停" }}
+        </el-button>
+        <el-button type="text"
+                   :disabled="
                       isSales ||
                       row.frontCampaignStatus === CAMPAIGN_STATUS_OFFLINE
-                     "
-                     @click="optimizeGroup(row)">优化</el-button>
-          <el-button class="btn"
-                     type="text"
-                     :class="{ disabled }"
-                     :disabled="disabled"
-                     @click="copyGroup(row)">复制</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-  </div>
+                    "
+                   @click="optimizeGroup(row)">优化</el-button>
+        <el-button type="text"
+                   :disabled="
+                      isSales ||
+                      row.frontCampaignStatus === CAMPAIGN_STATUS_OFFLINE ||
+                      (groupData && groupData.length >= GROUP_MAX)
+                    "
+                   @click="copyGroup(row)">复制</el-button>
+      </template>
+    </el-table-column>
+  </el-table>
 </template>
 
 <script>
-import { getAllGroups, activeGroups, pauseGroups } from 'api/fengming'
+import { activeGroups, pauseGroups } from 'api/fengming'
 import {
   GROUP_MAX,
   CAMPAIGN_STATUSES,
   GROUP_STATUSES,
   GROUP_STATUS_REJECT,
   CAMPAIGN_STATUS_OFFLINE,
-  GROUP_STATUS_OFFLINE
+  GROUP_STATUS_OFFLINE,
+  semPlatformCn
 } from 'constant/fengming'
 
 export default {
   name: 'group-table',
   props: {
+    showColumns: {
+      type: Array,
+      required: false,
+      default () {
+        return ['name', 'campaignId', 'source', 'frontGroupStatus', 'frontCampaignStatus', 'avgCpcRanking']
+      }
+    },
     campaignId: {
       type: [String, Number],
       required: true
@@ -96,40 +108,27 @@ export default {
     isSales: {
       type: Boolean,
       default: false
+    },
+    groupData: {
+      tyep: Array,
+      required: true,
+      default () {
+        return []
+      }
     }
   },
   data () {
     return {
-      groupData: null,
-
       GROUP_MAX,
       CAMPAIGN_STATUSES,
       GROUP_STATUSES,
       GROUP_STATUS_REJECT,
       CAMPAIGN_STATUS_OFFLINE,
-      GROUP_STATUS_OFFLINE
+      GROUP_STATUS_OFFLINE,
+      semPlatformCn
     }
-  },
-  computed: {
-    disabled () {
-      return (
-        this.isSales || (this.groupData && this.groupData.length >= GROUP_MAX)
-      )
-    }
-  },
-  async mounted () {
-    this.getAllGroups()
   },
   methods: {
-    // tip 单计划最多有10个单元，一次性获取所有
-    async getAllGroups () {
-      const { data = [] } = await getAllGroups({
-        campaignId: this.campaignId,
-        offset: 0,
-        limit: 100
-      })
-      this.groupData = data
-    },
     async toggleGroupStatus (group) {
       const typeText = group.pause ? '开启' : '暂停'
       await this.$confirm(`确定${typeText}投放？`, '提示', {
@@ -141,7 +140,7 @@ export default {
       } else {
         await pauseGroups([group.id])
       }
-      await this.getAllGroups()
+      this.$emit('update-group-data')
     },
     optimizeGroup (group) {
       this.$router.push({
@@ -153,12 +152,6 @@ export default {
       this.$router.push({
         name: 'qwt-create-group',
         query: { cloneId: group.id }
-      })
-    },
-    handleGoGroup () {
-      this.$router.push({
-        name: 'qwt-create-group',
-        query: { campaignId: this.campaignId }
       })
     }
   }
@@ -179,28 +172,11 @@ export default {
     color: $c-strong;
     font-size: 13px;
   }
-  .btn {
-    color: $c-info;
-    cursor: pointer;
-    padding: 0;
-    border: 0;
-    &:not(:first-child) {
-      margin-left: 6px;
-    }
-    &.disabled {
-      color: #c0c4cc;
-      cursor: not-allowed;
-      background-image: none;
-      background-color: #fff;
-      border-color: #ebeef5;
+  .bax-cell {
+    .el-button--text {
+      color: $c-info;
+      padding: 0;
     }
   }
-}
-
-.add-group-btn {
-  margin-bottom: 20px;
-}
-.el-icon-plus {
-  margin-right: 4px;
 }
 </style>

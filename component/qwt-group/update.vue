@@ -58,7 +58,6 @@
                          :creatives="group.creatives"
                          :all-words="keywords.concat(group.negativeWords)"
                          @track="(action, opts) => handleTrack(action, opts)"
-                         @track-recommend="(arr) => getRecommendData"
                          @add-keywords="handleAddKeywords" />
           </div>
           <div class="pane">
@@ -78,7 +77,7 @@
                            :platform="promotion.source"
                            :show-prop-ranking="promotion.source !== SEM_PLATFORM_SHENMA"
                            :show-match-type="promotion.source === SEM_PLATFORM_BAIDU"
-                           :group-offline="originGroup.status === CAMPAIGN_STATUS_OFFLINE"
+                           :group-offline="isCampaignOffline"
                            :group-online="originGroup.status === CAMPAIGN_STATUS_ONLINE"
                            :keywords="keywords"
                            :group-id="groupId"
@@ -123,6 +122,7 @@
                          ref="contract" />
       <el-button class="add-group-btn"
                  type="primary"
+                 :disabled="updateGroupBtnDisabled"
                  :loading="lock.materialPictures || lock.group"
                  @click="updateMaterialThenGroup">更新单元</el-button>
     </section>
@@ -151,15 +151,14 @@ import {
   emptyGroup,
   emptyCampaign,
   KEYWORDS_MAX,
-  FHYF_USERD,
-  FHYF_UN_USE,
   MATERIAL_PIC_STATUS
 } from 'constant/fengming'
 import clone from 'clone'
 import uuid from 'uuid/v4'
 import { updateValidator } from './validate'
-import track, { trackRecommendService } from 'util/track'
+import track from 'util/track'
 import { filterExistCurrentWords } from 'util/group'
+import { isBaixingSales } from 'util/role'
 
 import {
   getCampaignKeywordsCount,
@@ -207,7 +206,6 @@ export default {
       searchWord: '',
 
       campaignKeywordLen: 0,
-      recommendList: null,
 
       lock: {
         group: false,
@@ -243,6 +241,18 @@ export default {
     },
     updatedKeywords () {
       return this.keywords.filter(o => o.isUpdated)
+    },
+    isSales () {
+      return isBaixingSales(this.userInfo.roles)
+    },
+    isCampaignOffline () {
+      return this.originGroup.status === CAMPAIGN_STATUS_OFFLINE
+    },
+    updateGroupBtnDisabled () {
+      if (this.promotion.source === SEM_PLATFORM_SHENMA) {
+        return this.isSales || this.isCampaignOffline
+      }
+      return false
     }
   },
   async mounted () {
@@ -293,32 +303,6 @@ export default {
       }
       Object.assign(this.group, type)
     },
-    getRecommendData (arr) {
-      this.recommendList = (this.recommendList || []).concat(arr)
-    },
-    trackPromotionKeywords () {
-      // TODO: 确认一下是否要打点
-      const recommendKeywords = [...new Set(this.recommendKeywords || [])]
-
-      trackRecommendService({
-        action: 'record-promotion-keywords',
-
-        id: this.id,
-        areas: this.promotion.areas,
-        landingPage: this.group.landingPage,
-        creativeTitle: this.group.creatives[0].title,
-        creativeContent: this.group.creatives[0].content,
-        source: this.promotion.source,
-        dailyBudget: this.promotion.dailyBudget,
-        landingType: this.group.landingType,
-        useRecommendKeywords: Array.isArray(this._recommendKeywords) ? FHYF_USERD : FHYF_UN_USE, // 是否使用一键拓词功能
-
-        recommendKeywords: recommendKeywords.map(({ word, recommandSource = 'user_selected', price }) => `${word}=${recommandSource}=${price}`).join(','),
-        newKeywords: this.newKeywords.map(({ word, recommandSource = 'user_selected', price }) => `${word}=${recommandSource}=${price}`).join(','),
-        deletedKeywords: this.deletedKeywords.map(({ word, price }) => `${word}=${price}`).join(','),
-        updatedKeywords: this.updatedKeywords.map(({ word, price }) => `${word}=${price}`).join(',')
-      })
-    },
 
     handleTrack (action, opts = {}) {
       const { userInfo, actionTrackId } = this
@@ -368,7 +352,6 @@ export default {
         await this.validateGroup()
         await this._updateGroup()
         this.$message.success('单元更新成功')
-        // await trackRecommendService()
       } finally {
         this.lock.group = false
       }

@@ -91,6 +91,7 @@
                          ref="contract" />
       <el-button class="add-group-btn"
                  type="primary"
+                 :disabled="loading.updateGroup || isSales"
                  @click="addGroup">新增单元</el-button>
     </section>
   </div>
@@ -116,20 +117,17 @@ import {
   getGroupDetailByGroupId,
   getKeywordsByGroupId
 } from 'api/fengming'
-import track, { trackRecommendService } from 'util/track'
+import track from 'util/track'
 import {
   emptyGroup,
   NEGATIVE_KEYWORDS_MAX,
   KEYWORDS_MAX,
-  RECOMMAND_SOURCES,
   SEM_PLATFORM_SHENMA
 } from 'constant/fengming'
 import clone from 'clone'
 import pick from 'lodash.pick'
-import { toFloat } from 'util'
 import uuid from 'uuid/v4'
-import { MAX_WORD_PRICE, MIN_WORD_PRICE } from 'constant/keyword'
-import { f2y } from 'util/kit'
+import { isBaixingSales } from 'util/role'
 
 const emptyPromotion = {
   id: 0,
@@ -159,7 +157,6 @@ export default {
       actionTrackId: uuid(),
 
       campaignKeywordLen: 0,
-      urlRecommends: [],
 
       loading: {
         updateGroup: false
@@ -173,6 +170,12 @@ export default {
     },
     campaignId () {
       return this.promotion.id || parseInt(this.$route.query.campaignId)
+    },
+    isSales () {
+      return isBaixingSales(this.userInfo.roles)
+    },
+    isCampaignOffline () {
+      return false
     }
   },
   async mounted () {
@@ -203,28 +206,16 @@ export default {
   methods: {
     async cloneGroupById (groupId) {
       const originGroup = await getGroupDetailByGroupId(groupId)
-      const originKeywords = await getKeywordsByGroupId(groupId)
-
-      const price = this.recommendKwPrice(originKeywords)
-      const keywords = originKeywords.map(o => ({ ...o, price }))
-      const group = pick(originGroup, ['creatives', 'landingPage', 'landingType', 'landingPageId', 'mobilePriceRatio', 'name', 'negativeWords'])
+      const keywords = await getKeywordsByGroupId(groupId)
+      const group = pick(originGroup, ['creatives', 'landingPage', 'landingType', 'landingPageId', 'mobilePriceRatio', 'negativeWords'])
 
       this.group = {
-        ...clone(group),
-        price: f2y(price),
+        ...emptyGroup,
+        ...group,
         keywords
       }
 
       this.promotion = clone(originGroup.campaign)
-    },
-    recommendKwPrice (keywords) {
-      // 复制推荐词价格取平均值
-      if (this.$route.query.cloneId) {
-        const sum = keywords.reduce((total, kw) => total + kw.price, 0)
-        return Math.min(Math.max(MIN_WORD_PRICE, toFloat(sum / keywords.length)), MAX_WORD_PRICE)
-      }
-      const max = Math.max.apply(null, keywords.map(kw => kw.price))
-      return Math.min(Math.max(MIN_WORD_PRICE, toFloat(max, 0)), MAX_WORD_PRICE)
     },
     handleTrack (action, opts = {}) {
       const { actionTrackId, userInfo } = this
@@ -287,39 +278,8 @@ export default {
         this.loading.updateGroup = false
       }
     },
-    handleAddKeywords (words, isRecommend) {
+    handleAddKeywords (words) {
       this.group.keywords = words.concat(this.group.keywords)
-      if (isRecommend) {
-        this.urlRecommends = words.concat(this.urlRecommends)
-      }
-    },
-    trackPromotionKeywords () {
-      // TODO: 凤凰于飞打点 action是否要更改
-      const { keywords, landingPage, landingType, creativeTitle, creativeContent } = this.group
-      const { areas, source, id: promotionId } = this.promotion
-      const recommendKeywords = this.urlRecommends
-        .filter(({ recommandSource }) => RECOMMAND_SOURCES.includes(recommandSource))
-        .map(({ word, recommandSource }) => `${word}_${recommandSource}`)
-        .join(',')
-
-      const selectedKeywords = keywords
-        .map(({ word, recommandSource = 'user_selected' }) => `${word}=${recommandSource}`)
-        .join(',')
-
-      trackRecommendService({
-        action: 'record-keywords-group',
-
-        ids: promotionId,
-        areas: areas.join(','),
-        landingPage: landingPage,
-        landingType: landingType,
-        creativeTitle: creativeTitle,
-        creativeContent: creativeContent,
-        sources: source,
-        selectedKeywords,
-        recommendKeywords,
-        keywordPrice: f2y(this.kwPrice) || f2y(this.recommendKwPrice)
-      })
     }
   },
   components: {
