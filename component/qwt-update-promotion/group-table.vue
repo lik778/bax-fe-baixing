@@ -1,6 +1,9 @@
 <template>
   <el-table class="group-table"
             cell-class-name="bax-cell"
+            v-loading="loading"
+            element-loading-text="拼命加载中"
+            element-loading-spinner="el-icon-loading"
             :data="groupData">
     <el-table-column prop="name"
                      v-if="showColumns.includes('name')"
@@ -40,7 +43,7 @@
                      label="计划状态"
                      align="center">
       <template slot-scope="{ row }">
-        <span :class="GROUP_STATUSES[row.frontCampaignStatus].type || 'warning'">
+        <span :class="CAMPAIGN_STATUSES[row.frontCampaignStatus].type || 'warning'">
           {{ row.frontCampaignStatusDesc }}
         </span>
       </template>
@@ -100,6 +103,11 @@ export default {
       default () {
         return ['name', 'campaignId', 'source', 'frontGroupStatus', 'frontCampaignStatus', 'avgCpcRanking']
       }
+    },
+    loading: {
+      type: Boolean,
+      required: false,
+      default: false
     },
     isSales: {
       type: Boolean,
