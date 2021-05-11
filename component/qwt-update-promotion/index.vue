@@ -30,13 +30,14 @@
       <div class="content">
         <el-button @click="handleGoGroup"
                    type="primary"
+                   :disabled="isSales || (groupData && groupData.length >= GROUP_MAX)"
                    class="add-group-btn">
           <i class="el-icon-plus" />新增单元
         </el-button>
         <group-table-comp :show-columns="['name', 'frontGroupStatus', 'frontCampaignStatus', 'avgCpcRanking']"
                           :group-data="groupData"
                           @update-group-data="getGroupData()"
-                          :campaign-id="campaignId"
+                          :loading="loading.fetchGroup"
                           :is-sales="isSales" />
       </div>
     </div>
@@ -49,7 +50,7 @@
                       ref="contract" />
         <el-button class="update-btn"
                    type="primary"
-                   :disabled="isUpdating || isSales"
+                   :disabled="loading.updateCampaign || isSales"
                    @click="updatePromotion">
           更新推广
         </el-button>
@@ -72,7 +73,7 @@ import clone from 'clone'
 import pick from 'lodash.pick'
 import { toHumanTime } from 'utils'
 import isEqual from 'lodash.isequal'
-import { CAMPAIGN_STATUS_OFFLINE } from 'constant/fengming'
+import { CAMPAIGN_STATUS_OFFLINE, GROUP_MAX } from 'constant/fengming'
 import { getCampaignValidTime } from 'util/campaign'
 import { filterExistCurrentWords } from 'util/group'
 import track from 'util/track'
@@ -123,8 +124,13 @@ export default {
       currentBalance: 0,
       groupData: [],
 
-      isUpdating: false,
-      actionTrackId: uuid()
+      loading: {
+        updateCampaign: false,
+        fetchGroup: false
+      },
+      actionTrackId: uuid(),
+
+      GROUP_MAX
     }
   },
   computed: {
@@ -182,12 +188,17 @@ export default {
       return info
     },
     async getGroupData () {
-      const { data = [] } = await getAllGroups({
-        campaignId: this.campaignId,
-        offset: 0,
-        limit: 100
-      })
-      this.groupData = data
+      try {
+        this.loading.fetchGroup = true
+        const { data = [] } = await getAllGroups({
+          campaignId: this.campaignId,
+          offset: 0,
+          limit: 100
+        })
+        this.groupData = data
+      } finally {
+        this.loading.fetchGroup = false
+      }
     },
     async initCampaignInfo () {
       this.originPromotion = await this.getCampaignInfo()
@@ -198,12 +209,12 @@ export default {
     async updatePromotion () {
       try {
         await this.validatePromotion()
-        this.isUpdating = true
+        this.loading.updateCampaign = true
         this._updatePromotion()
       } catch (e) {
         return this.$message.error(e.message)
       } finally {
-        this.isUpdating = false
+        this.loading.updateCampaign = false
       }
     },
     async _updatePromotion () {
@@ -223,7 +234,7 @@ export default {
       if (!this.$refs.contract.$data.isAgreement) {
         throw new Error('请阅读并勾选同意服务协议，再进行下一步操作')
       }
-      if (this.isUpdating) {
+      if (this.loading.updateCampaign) {
         throw new Error('正在更新中, 请稍等一会儿 ~')
       }
 

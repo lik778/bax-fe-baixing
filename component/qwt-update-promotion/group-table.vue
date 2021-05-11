@@ -1,6 +1,9 @@
 <template>
   <el-table class="group-table"
             cell-class-name="bax-cell"
+            v-loading="loading"
+            element-loading-text="拼命加载中"
+            element-loading-spinner="el-icon-loading"
             :data="groupData">
     <el-table-column prop="name"
                      v-if="showColumns.includes('name')"
@@ -101,9 +104,10 @@ export default {
         return ['name', 'campaignId', 'source', 'frontGroupStatus', 'frontCampaignStatus', 'avgCpcRanking']
       }
     },
-    campaignId: {
-      type: [String, Number],
-      required: true
+    loading: {
+      type: Boolean,
+      required: false,
+      default: false
     },
     isSales: {
       type: Boolean,
