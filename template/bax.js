@@ -194,11 +194,6 @@ Vue.prototype.$formatter = {
   f2y
 }
 
-// 该组件引入echarts，体积较大，异步加载提升用户体验
-Vue.component('homepage-campaign', () =>
-  import('../component/homepage/campaign')
-)
-
 // 引入eventBus
 const eventBus = {
   install (Vue) {

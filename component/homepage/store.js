@@ -1,14 +1,12 @@
 import { baxUserLogin, kaSimpleReport } from 'api/ka'
 import { getHomePageFengmingData } from 'api/fengming'
 import { getHomePageBiaowangData, getPromotes, getUserRanking } from 'api/biaowang'
-import { getCampaignRadar } from 'api/fengming-campaign'
 import { observable, toJS, action, computed } from 'mobx'
 import dayjs from 'dayjs'
 
 class Store {
   @observable fengmingData = null
   @observable kaSiteData = null
-  @observable campaignRadar = null
   @observable biaowangData = null
   @observable biaowangPromotes = null
 
@@ -37,9 +35,8 @@ class Store {
 
   @action async loadBaxData () {
     try {
-      const [fengmingData, campaignRadar] = await Promise.all([getHomePageFengmingData(), getCampaignRadar()])
+      const fengmingData = await getHomePageFengmingData()
       this.fengmingData = fengmingData
-      this.campaignRadar = campaignRadar
     } catch (err) {
       console.error(err)
     }
