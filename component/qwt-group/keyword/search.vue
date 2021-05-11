@@ -159,8 +159,6 @@ export default {
 
         if (!newKeywords.length) return this.$message.info('没有更多的关键词可以推荐啦')
         this.$emit('add-keywords', newKeywords.map(o => ({ ...o, isNew: true })))
-
-        this.$emit('track-recommend', recommendKeywords)
       } catch (e) {
         return this.$message.error(e.message)
       } finally {

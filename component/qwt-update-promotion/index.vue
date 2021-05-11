@@ -28,7 +28,15 @@
     <div class="module">
       <h4>单元设置</h4>
       <div class="content">
-        <group-table-comp :campaign-id="campaignId"
+        <el-button @click="handleGoGroup"
+                   type="primary"
+                   class="add-group-btn">
+          <i class="el-icon-plus" />新增单元
+        </el-button>
+        <group-table-comp :show-columns="['name', 'frontGroupStatus', 'frontCampaignStatus', 'avgCpcRanking']"
+                          :group-data="groupData"
+                          @update-group-data="getGroupData()"
+                          :campaign-id="campaignId"
                           :is-sales="isSales" />
       </div>
     </div>
@@ -59,7 +67,7 @@ import PromotionChargeTip from 'com/widget/promotion-charge-tip'
 import NegativeWordsComp from 'com/common/qwt/negative-words'
 
 import { isBaixingSales } from 'util/role'
-import { getCurrentBalance, getCampaignInfo, updateCampaign } from 'api/fengming'
+import { getCurrentBalance, getCampaignInfo, updateCampaign, getAllGroups } from 'api/fengming'
 import clone from 'clone'
 import pick from 'lodash.pick'
 import { toHumanTime } from 'utils'
@@ -113,6 +121,7 @@ export default {
       originPromotion: emptyPromtion,
       promotion: emptyPromtion,
       currentBalance: 0,
+      groupData: [],
 
       isUpdating: false,
       actionTrackId: uuid()
@@ -172,10 +181,19 @@ export default {
       }
       return info
     },
+    async getGroupData () {
+      const { data = [] } = await getAllGroups({
+        campaignId: this.campaignId,
+        offset: 0,
+        limit: 100
+      })
+      this.groupData = data
+    },
     async initCampaignInfo () {
       this.originPromotion = await this.getCampaignInfo()
       this.promotion = pick(clone(this.originPromotion), ['areas', 'dailyBudget', 'validTime', 'negativeWords', 'schedule', 'budgetModificationCount', 'source'])
       this.currentBalance = await getCurrentBalance()
+      await this.getGroupData()
     },
     async updatePromotion () {
       try {
@@ -252,6 +270,12 @@ export default {
       if (newNegativeKeywords.length) data.newNegativeKeywords = newNegativeKeywords
       if (deletedNegativeKeywords.length) data.deletedNegativeKeywords = deletedNegativeKeywords
       return data
+    },
+    handleGoGroup () {
+      this.$router.push({
+        name: 'qwt-create-group',
+        query: { campaignId: this.campaignId }
+      })
     }
   },
   watch: {
@@ -264,7 +288,6 @@ export default {
 
 <style lang="scss" scoped>
 .promotion-update {
-  margin: 14px;
   .module {
     padding: 0 24px;
     background: #fff;
@@ -295,6 +318,12 @@ export default {
       }
       .update-btn {
         margin: 20px 0;
+      }
+      .add-group-btn {
+        margin-bottom: 20px;
+      }
+      .el-icon-plus {
+        margin-right: 4px;
       }
     }
   }
