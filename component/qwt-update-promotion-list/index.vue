@@ -36,7 +36,7 @@
               :statusOpts="GROUP_STATUSES_OPTS"
               :statusOrigin="GROUP_STATUSES"
             />
-            <groupTable @active="activeGroup" @pause="pauseGroup" :list="groupList" :loading="landingPageLoading"/>
+            <groupTable :groupData="groupList" :loading="landingPageLoading"/>
           </el-tab-pane>
         </el-tabs>
       </div>
@@ -46,7 +46,8 @@
 </template>
 
 <script>
-import { groupTable, promotionTable, topTips, baxForm } from './components'
+import { promotionTable, topTips, baxForm } from './components'
+import groupTable from '../qwt-update-promotion/group-table'
 import pick from 'lodash.pick'
 import clone from 'clone'
 import { CAMPAIGN_STATUS_OPTS, CAMPAIGN_STATUSES, CAMPAIGN_OPTIMIZATION_OPTS, GROUP_STATUSES_OPTS, GROUP_STATUSES } from './constant'
