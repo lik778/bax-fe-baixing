@@ -191,6 +191,7 @@ export default {
     editFormData (params) {
       const { value, key } = params
       this.queryParams[key] = value
+      this.queryParams.offset = 0
       if (this.activeName === 'plan') {
         this.fetchlandingPageList()
       } else {
