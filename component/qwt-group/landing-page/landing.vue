@@ -13,6 +13,7 @@
     <template v-else>
       <el-button-group>
         <el-button v-for="o of LANDING_TYPE_OPTS"
+                   :disabled="disabled"
                    :key="o.value"
                    :type="landingType === o.value ? 'primary' : ''"
                    @click="clickLandingType(o.value)">{{ o.label }}
@@ -20,6 +21,7 @@
       </el-button-group>
       <div class="cont">
         <user-ad-selector v-if="landingType === LANDING_TYPE_AD"
+                          :disabled="disabled"
                           :all-areas="allAreas"
                           :limit-mvp="false"
                           :selected-id="landingPageId"
@@ -27,10 +29,12 @@
                           @valid-change="(isValid) => setLandingPageValidity(LANDING_TYPE_AD, isValid)" />
         <gw-page-selector v-if="landingType === LANDING_TYPE_GW"
                           :init-value="landingPage"
+                          :disabled="disabled"
                           @change="v => emitUpdateGroup(LANDING_TYPE_GW, v)"
                           @valid-change="(isValid) => setLandingPageValidity(LANDING_TYPE_GW, isValid)" />
         <mvip-selector v-if="landingType === LANDING_TYPE_STORE"
                        :initValue="landingPageId || ''"
+                       :disabled="disabled"
                        @change="(url, id) => emitUpdateGroup(LANDING_TYPE_STORE, url, id)"
                        @validChange="(isValid) => setLandingPageValidity(LANDING_TYPE_STORE, isValid)" />
         <p v-if="disabled"
@@ -129,11 +133,11 @@ export default {
   > .cont {
     margin-top: 20px;
   }
-  .landing-page-link{
+  .landing-page-link {
     display: flex;
     align-items: center;
     margin-top: 20px;
-    a{
+    a {
       color: #222;
       cursor: pointer;
       width: 540px;
@@ -142,7 +146,12 @@ export default {
       white-space: nowrap;
     }
   }
-
+  .authing-tip {
+    display: inline-flex;
+    align-items: center;
+    font-size: 12px;
+    color: $c-main;
+  }
 }
 .page-error-placeholder {
   border: 1px solid #eee;

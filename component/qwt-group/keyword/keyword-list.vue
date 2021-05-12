@@ -50,8 +50,7 @@
         <div slot="header" slot-scope="col">
           <header-tip-comp :label-html="maxPriceLabel"
                            :tip-html="cpcTopPriceTip" />
-          <el-popover v-if="!disabled"
-                      placement="top"
+          <el-popover placement="top"
                       v-model="pricePopoverVisible">
             <div>
               <el-input placeholder="请输入关键词价格"
@@ -97,8 +96,7 @@
         <div slot="header" slot-scope="col">
           <header-tip-comp :label-html="matchTypeLabel"
                            :tip-html="matchTypeTip" />
-          <el-popover v-if="!disabled"
-                      placement="top"
+          <el-popover placement="top"
                       v-model="matchTypePopVisible">
             <div>
               <el-radio-group v-model="matchType"
@@ -242,10 +240,6 @@ export default {
     searchWord: {
       type: String,
       default: ''
-    },
-    disabled: {
-      type: Boolean,
-      default: false
     }
   },
   computed: {

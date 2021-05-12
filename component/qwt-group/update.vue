@@ -9,7 +9,7 @@
                              :landing-type="group.landingType"
                              :landing-page="group.landingPage"
                              :landing-page-id="group.landingPageId"
-                             :disabled="false"
+                             :disabled="landingAndCreativesDisabled"
                              @valid="(isValid) => { isErrorPage = !isValid }"
                              @change-landing="(args) => updateGroupData(args)" />
         </landing-comp>
@@ -23,6 +23,9 @@
       <div class="content">
         <creative-comp :source="promotion.source"
                        :creatives="group.creatives"
+                       :group-status="group.frontGroupStatus"
+                       :group-status-detail="group.frontGroupStatusDetails"
+                       :disabled="landingAndCreativesDisabled"
                        @add-creatives="() => group.creatives.push({ title: '', content: '' })"
                        @remove-creatives="(idx) => group.creatives.splice(idx, 1)"
                        @update-creatives="(idx, newData) => group.creatives.splice(idx, 1, newData)" />
@@ -82,7 +85,6 @@
                            :group-id="groupId"
                            :origin-keywords="originKeywords"
                            :search-word="searchWord"
-                           :disabled="updateGroupBtnDisabled"
                            @update-origin-keywords="(changeTag, v) => originKeywords = originKeywords.map(o => ({ ...o, [changeTag]: v }))"
                            @update-keywords="(words) => (keywords = words)"
                            @remove-keywords="(idx) => keywords.splice(idx, 1)" />
@@ -120,7 +122,7 @@
                          ref="contract" />
       <el-button class="add-group-btn"
                  type="primary"
-                 :disabled="updateGroupBtnDisabled"
+                 :disabled="isSales || isCampaignOffline"
                  :loading="lock.materialPictures || lock.group"
                  @click="updateMaterialThenGroup">更新单元</el-button>
     </section>
@@ -150,7 +152,8 @@ import {
   emptyCampaign,
   KEYWORDS_MAX,
   MATERIAL_PIC_STATUS,
-  GROUP_STATUS_PENDING_AUDIT
+  GROUP_STATUS_PENDING_AUDIT,
+  SEM_PLATFORM_SOGOU
 } from 'constant/fengming'
 import clone from 'clone'
 import uuid from 'uuid/v4'
@@ -250,8 +253,9 @@ export default {
     isGroupAudit () {
       return this.originGroup.frontGroupStatus === GROUP_STATUS_PENDING_AUDIT
     },
-    updateGroupBtnDisabled () {
-      if (this.promotion.source === SEM_PLATFORM_SHENMA) {
+    landingAndCreativesDisabled () {
+      // TIP 审核中：神马，百度，360落地页和创意应该可以修改；搜狗无法修改
+      if (this.promotion.source === SEM_PLATFORM_SOGOU) {
         return this.isSales || this.isCampaignOffline || this.isGroupAudit
       }
       return this.isSales || this.isCampaignOffline
@@ -353,7 +357,6 @@ export default {
       try {
         await this.validateGroup()
         await this._updateGroup()
-        this.$message.success('单元更新成功')
       } finally {
         this.lock.group = false
       }
@@ -367,14 +370,15 @@ export default {
         ...this.getUpdatedKeywordData()
       })
 
-      await updateGroup(this.groupId, data)
+      updateGroup(this.groupId, data).then(() => {
+        this.$message.success('单元更新成功')
+        this.handleTrack('leave-page: update-group')
 
-      this.handleTrack('leave-page: update-group')
-
-      this.$router.push({
-        name: 'qwt-update-promotion',
-        params: { id: this.promotion.id }
-      })
+        this.$router.push({
+          name: 'qwt-update-promotion',
+          params: { id: this.promotion.id }
+        })
+      }).catch(err => { console.log(err) })
     },
     validMaterialPictures () {
       if (!this.materialPictures.isValid) {
