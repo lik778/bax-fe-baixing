@@ -82,6 +82,7 @@
                            :group-id="groupId"
                            :origin-keywords="originKeywords"
                            :search-word="searchWord"
+                           :disabled="updateGroupBtnDisabled"
                            @update-origin-keywords="(changeTag, v) => originKeywords = originKeywords.map(o => ({ ...o, [changeTag]: v }))"
                            @update-keywords="(words) => (keywords = words)"
                            @remove-keywords="(idx) => keywords.splice(idx, 1)" />
@@ -148,7 +149,8 @@ import {
   emptyGroup,
   emptyCampaign,
   KEYWORDS_MAX,
-  MATERIAL_PIC_STATUS
+  MATERIAL_PIC_STATUS,
+  GROUP_STATUS_PENDING_AUDIT
 } from 'constant/fengming'
 import clone from 'clone'
 import uuid from 'uuid/v4'
@@ -243,13 +245,16 @@ export default {
       return isBaixingSales(this.userInfo.roles)
     },
     isCampaignOffline () {
-      return this.originGroup.status === CAMPAIGN_STATUS_OFFLINE
+      return this.originGroup.frontCampaignStatus === CAMPAIGN_STATUS_OFFLINE
+    },
+    isGroupAudit () {
+      return this.originGroup.frontGroupStatus === GROUP_STATUS_PENDING_AUDIT
     },
     updateGroupBtnDisabled () {
       if (this.promotion.source === SEM_PLATFORM_SHENMA) {
-        return this.isSales || this.isCampaignOffline
+        return this.isSales || this.isCampaignOffline || this.isGroupAudit
       }
-      return false
+      return this.isSales || this.isCampaignOffline
     }
   },
   async mounted () {

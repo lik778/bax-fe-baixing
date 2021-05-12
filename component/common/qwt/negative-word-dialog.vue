@@ -96,11 +96,12 @@ export default {
         this.loading = true
         validateKeyword(words)
 
-        const newWords = getNotExistWords(this.allWords, words)
+        const allWords = this.allWords.concat(this.words)
+        const newWords = getNotExistWords(allWords, words)
 
-        this.words = newWords.map(o => {
+        this.words = this.words.concat(newWords.map(o => {
           return { word: o }
-        })
+        }))
       } catch (e) {
         return this.$message.error(e.message)
       } finally {

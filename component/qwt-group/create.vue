@@ -90,7 +90,7 @@
                          ref="contract" />
       <el-button class="add-group-btn"
                  type="primary"
-                 :disabled="loading.updateGroup || isSales"
+                 :disabled="createBtnDisabled"
                  @click="addGroup">新增单元</el-button>
     </section>
   </div>
@@ -121,7 +121,8 @@ import {
   emptyGroup,
   NEGATIVE_KEYWORDS_MAX,
   KEYWORDS_MAX,
-  SEM_PLATFORM_SHENMA
+  SEM_PLATFORM_SHENMA,
+  CAMPAIGN_STATUS_OFFLINE
 } from 'constant/fengming'
 import clone from 'clone'
 import pick from 'lodash.pick'
@@ -174,7 +175,10 @@ export default {
       return isBaixingSales(this.userInfo.roles)
     },
     isCampaignOffline () {
-      return false
+      return this.promotion.frontCampaignStatus === CAMPAIGN_STATUS_OFFLINE
+    },
+    createBtnDisabled () {
+      return this.loading.updateGroup || this.isSales || this.isCampaignOffline
     }
   },
   async mounted () {

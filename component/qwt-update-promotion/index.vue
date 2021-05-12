@@ -29,7 +29,7 @@
       <div class="content">
         <el-button @click="handleGoGroup"
                    type="primary"
-                   :disabled="isSales || (groupData && groupData.length >= GROUP_MAX)"
+                   :disabled="isSales || (groupData && groupData.length >= GROUP_MAX) || isCampaignOffline"
                    class="add-group-btn">
           <i class="el-icon-plus" />新增单元
         </el-button>
@@ -140,8 +140,7 @@ export default {
       return this.$route.params.id
     },
     isCampaignOffline () {
-      const { status } = this.originPromotion
-      return status === CAMPAIGN_STATUS_OFFLINE
+      return this.originPromotion.frontCampaignStatus === CAMPAIGN_STATUS_OFFLINE
     }
   },
   async mounted () {

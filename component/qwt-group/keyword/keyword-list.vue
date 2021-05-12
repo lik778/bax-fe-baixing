@@ -28,8 +28,8 @@
       <el-table-column key="status"
                        min-width="120px">
         <header-tip-comp slot="header"
-                          label-html="关键词状态"
-                          :tip-html="keywordStatusTip" />
+                         label-html="关键词状态"
+                         :tip-html="keywordStatusTip" />
         <div slot-scope="{ row }">
           <el-tooltip v-if="row.status === KEYWORD_CHIBI_REJECT"
                       placement="top"
@@ -49,8 +49,9 @@
         <!-- eslint-disable-next-line -->
         <div slot="header" slot-scope="col">
           <header-tip-comp :label-html="maxPriceLabel"
-                            :tip-html="cpcTopPriceTip" />
-          <el-popover placement="top"
+                           :tip-html="cpcTopPriceTip" />
+          <el-popover v-if="!disabled"
+                      placement="top"
                       v-model="pricePopoverVisible">
             <div>
               <el-input placeholder="请输入关键词价格"
@@ -95,8 +96,9 @@
         <!-- eslint-disable-next-line -->
         <div slot="header" slot-scope="col">
           <header-tip-comp :label-html="matchTypeLabel"
-                            :tip-html="matchTypeTip" />
-          <el-popover placement="top"
+                           :tip-html="matchTypeTip" />
+          <el-popover v-if="!disabled"
+                      placement="top"
                       v-model="matchTypePopVisible">
             <div>
               <el-radio-group v-model="matchType"
@@ -240,6 +242,10 @@ export default {
     searchWord: {
       type: String,
       default: ''
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {

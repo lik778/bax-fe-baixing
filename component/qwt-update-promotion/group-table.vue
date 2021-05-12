@@ -73,8 +73,7 @@
         <el-button type="text"
                    :disabled="
                       isSales ||
-                      row.frontCampaignStatus === CAMPAIGN_STATUS_OFFLINE ||
-                      (groupData && groupData.length >= GROUP_MAX)
+                      row.frontCampaignStatus === CAMPAIGN_STATUS_OFFLINE
                     "
                    @click="copyGroup(row)">复制</el-button>
       </template>
@@ -180,6 +179,9 @@ export default {
     .el-button--text {
       color: $c-info;
       padding: 0;
+      &.is-disabled {
+        color: #c0c4cc;
+      }
     }
   }
 }
