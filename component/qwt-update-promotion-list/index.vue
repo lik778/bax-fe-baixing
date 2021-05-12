@@ -36,7 +36,7 @@
               :statusOpts="GROUP_STATUSES_OPTS"
               :statusOrigin="GROUP_STATUSES"
             />
-            <groupTable :groupData="groupList" :loading="landingPageLoading"/>
+            <groupTable @update-group-data="fetchGroupList" :groupData="groupList" :loading="landingPageLoading"/>
           </el-tab-pane>
         </el-tabs>
       </div>
