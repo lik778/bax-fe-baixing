@@ -30,7 +30,7 @@
         </span>
         <el-tooltip v-else
                     placement="top-start"
-                    :content="row.frontCampaignStatusDetails">
+                    :content="row.frontGroupStatusDetails">
           <span :class="GROUP_STATUSES[row.frontGroupStatus].type || 'warning'">
             {{ row.frontGroupStatusDesc }}
              <i class="el-icon-info danger" />
