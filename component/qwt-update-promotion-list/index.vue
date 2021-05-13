@@ -40,7 +40,7 @@
           </el-tab-pane>
         </el-tabs>
       </div>
-      <el-pagination layout="total, prev, pager, next"  @current-change="handlePageChange" :page-size="ONE_PAGE_NUM" :total="totalPage" />
+      <el-pagination layout="total, prev, pager, next"  @current-change="handlePageChange" :current-page="queryParams.offset/ONE_PAGE_NUM+1" :page-size="ONE_PAGE_NUM" :total="totalPage" />
     </main>
   </div>
 </template>
