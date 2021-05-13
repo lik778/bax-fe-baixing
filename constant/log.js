@@ -65,7 +65,7 @@ export const fieldType = {
   mobilePriceRatio: '移动出价比',
   timeRange: '投放时间',
   schedule: '投放时段',
-  status: '计划状态',
+  status: '状态',
   title: '创意标题',
   content: '创意内容',
   word: '关键词',
