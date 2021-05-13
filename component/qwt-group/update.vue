@@ -52,7 +52,7 @@
         <div class="keywords-container">
           <div class="pane">
             <header>添加推广关键词</header>
-            <search-comp :campaign-id="promotion.id"
+            <search-comp :group-id="group.id"
                          :areas="promotion.areas"
                          :landing-page="group.landingPage"
                          :landing-type="group.landingType"
@@ -456,7 +456,11 @@ export default {
       const data = {}
       const { landingPage, landingType, landingPageId, mobilePriceRatio, name } = this.group
       if (landingType !== this.originGroup.landingType) data.landingType = landingType
-      if (landingPage.split('?')[0] !== this.originGroup.landingPage.split('?')[0]) data.landingPage = landingPage
+      // TIP 后端需要landingPage和landingType都传
+      if (landingPage.split('?')[0] !== this.originGroup.landingPage.split('?')[0]) {
+        data.landingPage = landingPage
+        data.landingType = landingType
+      }
       if (landingPageId !== this.originGroup.landingPageId) data.landingPageId = landingPageId
       if (mobilePriceRatio !== this.originGroup.mobilePriceRatio) data.mobilePriceRatio = mobilePriceRatio
       if (name !== this.originGroup.name) data.name = name

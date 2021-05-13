@@ -64,24 +64,21 @@ import { fmtNewKeywordsPrice, getNotExistWords } from 'util/group'
 export default {
   name: 'qwt-keyword-dialog',
   props: {
+    extraQuery: {
+      type: Object,
+      default () {
+        return {}
+      }
+    },
     visible: {
       type: Boolean,
       required: true
-    },
-    sources: {
-      type: Array,
-      default: () => {
-        return []
-      }
     },
     allWords: {
       type: Array,
       default: () => {
         return []
       }
-    },
-    campaignId: {
-      type: [String, Number]
     }
   },
   data () {
@@ -143,9 +140,7 @@ export default {
       }
     },
     async fetchWords (words) {
-      const queryOpts = {}
-      if (this.sources.length) queryOpts.sources = this.sources
-      const result = await recommendByWordList(words, { campaignId: this.campaignId })
+      const result = await recommendByWordList(words, { ...this.extraQuery })
       if (!(result && isObj(result))) return
       for (const key in result) {
         result[key] = fmtNewKeywordsPrice(result[key])

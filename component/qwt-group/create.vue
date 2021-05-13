@@ -43,8 +43,7 @@
       <div class="content">
         <keyword-comp :keywords="group.keywords"
                       @remove-keywords="(idx) => group.keywords.splice(idx, 1)">
-          <search-comp :campaign-id="promotion.id"
-                       :areas="promotion.areas"
+          <search-comp :areas="promotion.areas"
                        :sources="[promotion.source]"
                        :landing-type="group.landingType"
                        :landing-page="group.landingPage"
@@ -128,6 +127,7 @@ import clone from 'clone'
 import pick from 'lodash.pick'
 import uuid from 'uuid/v4'
 import { isBaixingSales } from 'util/role'
+import { toFloat } from 'util/kit'
 
 const emptyPromotion = {
   id: 0,
@@ -251,6 +251,7 @@ export default {
       try {
         await createValidator.validate({
           ...this.group,
+          price: toFloat(this.group.price) * 100,
           promotion: this.promotion
         }, { first: true })
       } catch (e) {
@@ -264,6 +265,7 @@ export default {
 
         await createGroup({
           ...this.group,
+          price: toFloat(this.group.price) * 100,
           campaignId: this.promotion.id
         })
 
