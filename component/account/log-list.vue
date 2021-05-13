@@ -49,7 +49,7 @@
         label="项目"
         prop="timelineType"
         :formatter="timelineTypeFormatter"
-        width="120">
+        width="140">
       </el-table-column>
       <el-table-column
         :formatter="selectIdFormatter"
@@ -226,15 +226,20 @@ export default {
       }
       return opTypeOpts.find(({ value }) => value === opType).label
     },
-    timelineTypeFormatter ({ timelineType, message }) {
+    timelineTypeFormatter (item) {
+      const { timelineType } = item
       const timelineTypeOpts = this.genMaterial({
         fengming: fengmingTimelineTypeOpts,
         biaowang: biaowangTimelineTypeOpts
       })
-      const name = message.change?.name
       const result = timelineTypeOpts.find(({ value }) => value === timelineType)
       const label = result && result.label
-      return name ? label + `（${name}）` : label
+      const name = this.groupNameFormatter(item)
+
+      return name ? `${label}（${name}）` : label
+    },
+    groupNameFormatter ({ message }) {
+      return message?.groupName
     },
     dateFormatter ({ createdAt, timestamp }) {
       return toHumanTime(createdAt || timestamp, 'YYYY-MM-DD HH:mm')
