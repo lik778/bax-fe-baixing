@@ -49,24 +49,17 @@
         label="项目"
         prop="timelineType"
         :formatter="timelineTypeFormatter"
-        width="90">
+        width="120">
+      </el-table-column>
+      <el-table-column
+        :formatter="selectIdFormatter"
+        :label="selectByType().type"
+        width="80">
       </el-table-column>
       <el-table-column
         label="类型"
         :formatter="opTypeFormatter"
         width="80">
-      </el-table-column>
-      <el-table-column
-        :formatter="selectIdFormatter"
-        :label="selectByType().type"
-        width="110">
-      </el-table-column>
-      <el-table-column
-        v-if="isSelectedFengming"
-        label="单元"
-        key="groupID"
-        prop="groupId"
-        width="90">
       </el-table-column>
       <el-table-column
         :formatter="changeLogFormatter('field')"
@@ -132,6 +125,7 @@ const DIVIDING_CHAR = '   '
 
 const genFormatLogValues = (change, keys, type, opType, campaignSource) => {
   const valueKey = type === 'old' ? 'oldValue' : 'newValue'
+  // eslint-disable-next-line array-callback-return
   return keys.map(k => {
     const value = opType === OP_TYPE_CREATE ? change[k] : change[k][valueKey]
     if (k === 'price' || k === 'dailyBudget') {
@@ -162,7 +156,6 @@ const genFormatLogValues = (change, keys, type, opType, campaignSource) => {
     } else if (k in fieldType) {
       return value
     }
-    return undefined
   }).join(DIVIDING_CHAR)
 }
 
@@ -233,13 +226,15 @@ export default {
       }
       return opTypeOpts.find(({ value }) => value === opType).label
     },
-    timelineTypeFormatter ({ timelineType }) {
+    timelineTypeFormatter ({ timelineType, message }) {
       const timelineTypeOpts = this.genMaterial({
         fengming: fengmingTimelineTypeOpts,
         biaowang: biaowangTimelineTypeOpts
       })
+      const name = message.change?.name
       const result = timelineTypeOpts.find(({ value }) => value === timelineType)
-      return result && result.label
+      const label = result && result.label
+      return name ? label + `（${name}）` : label
     },
     dateFormatter ({ createdAt, timestamp }) {
       return toHumanTime(createdAt || timestamp, 'YYYY-MM-DD HH:mm')
