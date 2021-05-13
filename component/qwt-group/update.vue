@@ -455,13 +455,13 @@ export default {
     getUpdatedLandingData () {
       const data = {}
       const { landingPage, landingType, landingPageId, mobilePriceRatio, name } = this.group
-      if (landingType !== this.originGroup.landingType) data.landingType = landingType
-      // TIP 后端需要landingPage和landingType都传
-      if (landingPage.split('?')[0] !== this.originGroup.landingPage.split('?')[0]) {
+      // TIP landingPage/landingPageId更改一个，landingType必传
+      if (landingPage.split('?')[0] !== this.originGroup.landingPage.split('?')[0] ||
+          landingPageId !== this.originGroup.landingPageId) {
         data.landingPage = landingPage
         data.landingType = landingType
+        data.landingPageId = landingPageId
       }
-      if (landingPageId !== this.originGroup.landingPageId) data.landingPageId = landingPageId
       if (mobilePriceRatio !== this.originGroup.mobilePriceRatio) data.mobilePriceRatio = mobilePriceRatio
       if (name !== this.originGroup.name) data.name = name
       return data
