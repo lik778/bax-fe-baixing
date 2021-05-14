@@ -110,6 +110,7 @@ export default {
       if (this.disabled) return this.$message.warning('审核中，无法修改')
       if (this.landingType === val) return
       this.emitUpdateGroup(val)
+      this.setLandingPageValidity(val, true)
     }
   },
   components: {

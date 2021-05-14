@@ -20,14 +20,14 @@
     <!-- 添加关键词模态框 -->
     <keyword-dialog :visible.sync="keywordDialogVisible"
                     :all-words="allWords"
-                    :campaign-id="campaignId"
+                    :extra-query="{ group_id: groupId, sources: sources }"
                     :sources="sources"
                     @update="handleAddKeywords" />
 
     <!-- 规划拓词模态框 -->
     <baidu-expand-words-dialog v-if="baiduExpandWordsDialogVisible"
                                :visible.sync="baiduExpandWordsDialogVisible"
-                               :extra-query="{ campaign_id: campaignId, areas: areas }"
+                               :extra-query="{ group_id: groupId, areas: areas }"
                                @confirm="handleAddBaiduKeyWords" />
   </div>
 </template>
@@ -65,7 +65,7 @@ export default {
         return []
       }
     },
-    campaignId: {
+    groupId: {
       type: [String, Number]
     },
     landingType: {
@@ -112,7 +112,11 @@ export default {
         getNotExistWords(this.allWords, [val])
 
         this.loading.addBtn = true
-        const recommendKeywords = (await recommendByWord(val, { campaignId: this.campaignId })) || []
+        const recommendKeywords = (await recommendByWord(val, {
+          groupId: this.groupId,
+          areas: this.areas,
+          sources: this.sources
+        })) || []
         const newKeywords = fmtNewKeywordsPrice(recommendKeywords).find(k => k.word === val)
         if (!newKeywords) return this.$message.info('没有合适的关键词')
         this.$emit('add-keywords', [{ ...newKeywords, isNew: true }])
