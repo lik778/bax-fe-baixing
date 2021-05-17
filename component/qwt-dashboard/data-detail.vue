@@ -27,9 +27,10 @@
 
     <!-- 单元维度表格 -->
     <el-table v-else-if="dimension === DIMENSION_GROUP" :data="statistics" :key="DIMENSION_GROUP">
+      <el-table-column label="计划ID" prop="campaignId" width="140" />
+      <el-table-column label="单元ID" prop="groupId" width="140" />
       <el-table-column label="单元名称" prop="groupName" width="140" />
       <el-table-column label="日期" prop="date" width="140" />
-      <el-table-column label="计划ID" prop="campaignId" width="140" />
       <el-table-column label="渠道" width="100"
         :formatter="r => fmtChannel(r.channel)" />
       <el-table-column label="设备" width="100"
@@ -40,11 +41,9 @@
         :formatter="r => (r.clickAvgPrice / 100).toFixed(2) + '元'" />
       <el-table-column label="消耗" width="120"
         :formatter="r => (r.cost / 100).toFixed(2) + '元'" />
-      <el-table-column label="排名" width="120" sortable
-        :formatter="r => fmtCpcRanking(r.cpcRanking)" />
       <el-table-column label="关键词详情" width="140">
         <template slot-scope="scope">
-          <p class="link" @click="$emit('switch-to-campaign-report', scope.row)">
+          <p class="link" @click="$emit('switch-to-keyword-report', scope.row)">
             查看
           </p>
         </template>
@@ -56,6 +55,8 @@
       <el-table-column label="关键词" prop="keyword" width="200" />
       <el-table-column label="日期" prop="date" width="140" />
       <el-table-column label="计划ID" prop="campaignId" width="140" />
+      <el-table-column label="单元ID" prop="groupId" width="140" />
+      <el-table-column label="单元名称" prop="groupName" width="140" />
       <el-table-column label="渠道" width="100"
         :formatter="r => fmtChannel(r.channel)" />
       <el-table-column label="设备" width="100"
@@ -64,10 +65,9 @@
         <template slot-scope="scope">
           <span v-if="scope.row.price === null">-</span>
           <bax-input v-else
-            :value="f2y(scope.row.price)"
-            @blur="v => onChangePrice(v, scope.row.campaignId, scope.row.keywordId)"
-            @keyup="v => onChangePrice(v, scope.row.campaignId, scope.row.keywordId)"
-          />
+                     :value="f2y(scope.row.price)"
+                     @blur="v => onChangePrice(v, scope.row)"
+                     @keyup="v => onChangePrice(v, scope.row)" />
         </template>
       </el-table-column>
       <el-table-column label="展现" prop="shows" width="90" sortable />
@@ -78,17 +78,6 @@
         :formatter="r => (r.cost / 100).toFixed(2) + '元'" />
       <el-table-column label="排名" width="120" sortable
         :formatter="r => fmtCpcRanking(r.cpcRanking)" />
-      <el-table-column min-width="180" fixed="right">
-        <span slot="header">操作
-          <promotion-keyword-tip />
-        </span>
-        <el-button
-          type="text"
-          size="small"
-          :disabled="row.enableInNegativeWords || row.enableInKeywords"
-          @click="addGroupNegativeKeyword(row)"
-        >设为单元否词</el-button>
-      </el-table-column>
     </el-table>
 
     <!-- 搜索词维度表格 -->
@@ -118,7 +107,7 @@
         :formatter="r => (r.costs / 100).toFixed(2) + '元'" />
       <el-table-column label="平均点击价格" width="160" sortable
         :formatter="r => (r.clickAvgPrice / 100).toFixed(2) + '元'" />
-      <el-table-column min-width="180" fixed="right">
+      <el-table-column min-width="270" fixed="right">
         <span slot="header">操作
           <promotion-keyword-tip />
         </span>
@@ -128,13 +117,19 @@
             size="small"
             :disabled="row.enableInNegativeWords || row.enableInKeywords"
             @click="addKeyword(row)"
-          >添加</el-button>
+          >添加关键词</el-button>
           <el-button
             type="text"
             size="small"
             :disabled="row.enableInNegativeWords || row.enableInKeywords"
             @click="addCampaignNegativeKeyword(row)"
           >设为计划否词</el-button>
+          <el-button
+            type="text"
+            size="small"
+            :disabled="row.enableInNegativeWords || row.enableInKeywords"
+            @click="addGroupNegativeKeyword(row)"
+          >设为单元否词</el-button>
           <el-tooltip
             effect="dark"
             v-if="row.enableInNegativeWords || row.enableInKeywords"
@@ -170,7 +165,7 @@
 
 <script>
 import BaxPagination from 'com/common/pagination'
-import { updateCampaign } from 'api/fengming'
+import { updateCampaign, updateGroup } from 'api/fengming'
 import BaxInput from 'com/common/bax-input'
 import PromotionKeywordTip from 'com/widget/promotion-keyword-tip'
 import {
@@ -237,19 +232,16 @@ export default {
   },
   methods: {
     addKeyword (item) {
-      const { campaignId, queryWord } = item
+      const { groupId, queryWord } = item
       const price = 2 * 100
-      updateCampaign(campaignId, { newKeywords: [{ price, word: queryWord }] })
-        .then(res => {
+      updateGroup(groupId, { newKeywords: [{ price, word: queryWord }] })
+        .then(() => {
           Message({
             type: 'success',
             message: `成功添加 ${queryWord} 为关键词`
           })
-          this.$emit('refresh-keyword-list')
+          this.$emit('refresh')
         })
-    },
-    addGourpNegativeKeyword (item) {
-
     },
     addCampaignNegativeKeyword (item) {
       const { campaignId, queryWord } = item
@@ -257,19 +249,30 @@ export default {
         .then(() => {
           Message({
             type: 'success',
-            message: `成功添加 ${queryWord} 为否定关键词`
+            message: `成功添加 ${queryWord} 为计划否定关键词`
           })
-          this.$emit('refresh-keyword-list')
+          this.$emit('refresh')
         })
     },
-    async onChangePrice (userPrice, cid, kid) {
+    addGroupNegativeKeyword (item) {
+      const { groupId, queryWord } = item
+      updateGroup(groupId, { newNegativeKeywords: [{ word: queryWord }] })
+        .then(() => {
+          Message({
+            type: 'success',
+            message: `成功添加 ${queryWord} 为单元否定关键词`
+          })
+          this.$emit('refresh')
+        })
+    },
+    async onChangePrice (userPrice, { groupId, keywordId }) {
       const price = (userPrice ? toFloat(userPrice) : 0) * 100
       if (price > 99 * 100 || price < 2 * 100) {
         return this.$message.error('价格需在2-99元之间')
       }
       try {
         this.priceUpdating = true
-        await updateCampaign(cid, { updatedKeywords: [{ price, id: kid }] })
+        await updateGroup(groupId, { updatedKeywords: [{ price, id: keywordId }] })
         this.$message.success('价格更新成功')
       } finally {
         this.priceUpdating = false

@@ -123,6 +123,17 @@ export const timeTypes = [
   }
 ]
 
+const groupCommonColumnOptions = [
+  {
+    label: '单元名称',
+    value: 'groupName'
+  },
+  {
+    label: '单元ID',
+    value: 'groupId'
+  }
+]
+
 export const campaignColumnOpts = [
   {
     label: '日期',
@@ -158,7 +169,13 @@ export const campaignColumnOpts = [
   }
 ]
 
+export const groupColumnOpts = [
+  ...groupCommonColumnOptions,
+  ...campaignColumnOpts
+]
+
 export const keywordColumnOpts = [
+  ...groupCommonColumnOptions,
   {
     label: '日期',
     value: 'date'
@@ -218,6 +235,9 @@ function toUnderscore (s) {
 }
 
 export const campaignFields = campaignColumnOpts.map((col) =>
+  toUnderscore(col.value)
+)
+export const groupFields = groupColumnOpts.map((col) =>
   toUnderscore(col.value)
 )
 export const keywordFields = keywordColumnOpts.map((col) =>

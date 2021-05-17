@@ -76,7 +76,13 @@
       </span>
     </section>
     <section>
-      <aside>计划ID：</aside>
+      <aside>
+        <span v-if="[
+          DIMENSION_CAMPAIGN,
+          DIMENSION_SEARCH_KEYWORD
+        ].includes(query.dimension)">计划ID：</span>
+        <span v-else>单元ID：</span>
+      </aside>
       <el-input
         v-model.trim="searchCampaigns"
         size="mini"
@@ -99,8 +105,8 @@
       :limit="limit"
       :dimension="query.dimension"
       @switch-to-group-report="getGroupReport"
-      @switch-to-campaign-report="getCampaignReport"
-      @refresh-keyword-list="queryStatistics({ offset })"
+      @switch-to-keyword-report="getKeywordReport"
+      @refresh="() => queryStatistics({ offset })"
       @current-change="queryStatistics"
     >
     </data-detail>
@@ -127,6 +133,7 @@ import {
   allDevices,
   timeTypes,
   campaignFields,
+  groupFields,
   keywordFields
 } from 'constant/fengming-report'
 
@@ -157,6 +164,10 @@ export default {
   },
   data () {
     return {
+      DIMENSION_CAMPAIGN,
+      DIMENSION_GROUP,
+      DIMENSION_KEYWORD,
+      DIMENSION_SEARCH_KEYWORD,
       SEM_PLATFORM_SHENMA,
       DEVICE_WAP,
 
@@ -176,7 +187,6 @@ export default {
 
       searchCampaigns: '',
       campaignErrTip: false,
-      DIMENSION_SEARCH_KEYWORD,
       triPickerOptions: {
         disabledDate (time) {
           const timestamp = new Date(time).getTime()
@@ -209,7 +219,6 @@ export default {
 
       await store.clearStatistics()
       this.campaignErrTip = ''
-
       if (dimension === DIMENSION_SEARCH_KEYWORD) {
         if (
           this.searchCampaigns === '' ||
@@ -282,6 +291,13 @@ export default {
         endAt = t.endAt
       }
 
+      const fields = {
+        [DIMENSION_CAMPAIGN]: campaignFields,
+        [DIMENSION_GROUP]: groupFields,
+        [DIMENSION_KEYWORD]: keywordFields,
+        [DIMENSION_SEARCH_KEYWORD]: keywordFields
+      }[query.dimension]
+
       const q = {
         startAt,
         endAt,
@@ -294,9 +310,7 @@ export default {
         salesId,
         limit: this.limit,
         offset,
-        fields: query.dimension === DIMENSION_CAMPAIGN
-          ? campaignFields
-          : keywordFields
+        fields
       }
       await store.fetchReport(q)
     },
@@ -306,11 +320,13 @@ export default {
       this.query.dimension = DIMENSION_GROUP
       this.searchCampaigns = campaign.campaignId
     },
-    async getCampaignReport (campaign) {
-      this.query.channel = campaign.channel
-      this.query.device = DEVICE_ALL
+    async getKeywordReport ({ channel, groupId }) {
+      this.query.channel = channel
       this.query.dimension = DIMENSION_KEYWORD
-      this.searchCampaigns = campaign.campaignId
+      this.searchCampaigns = groupId
+
+      // // * for test suppose
+      // this.searchCampaigns = '123321'
     }
   },
   watch: {
