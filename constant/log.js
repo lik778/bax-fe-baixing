@@ -69,7 +69,8 @@ export const fieldType = {
   title: '创意标题',
   content: '创意内容',
   word: '关键词',
-  price: '关键词出价'
+  price: '关键词出价',
+  name: '名称'
 }
 
 export const selectType = {
