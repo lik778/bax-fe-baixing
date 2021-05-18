@@ -50,6 +50,7 @@
         <el-button class="update-btn"
                    type="primary"
                    :disabled="loading.updateCampaign || isSales"
+                   :loading="loading.updateCampaign"
                    @click="updatePromotion">
           更新推广
         </el-button>
@@ -72,7 +73,7 @@ import clone from 'clone'
 import pick from 'lodash.pick'
 import { toHumanTime } from 'utils'
 import isEqual from 'lodash.isequal'
-import { CAMPAIGN_STATUS_OFFLINE, GROUP_MAX } from 'constant/fengming'
+import { CAMPAIGN_STATUS_OFFLINE, GROUP_MAX, SEM_PLATFORM_QIHU, SEM_PLATFORM_SOGOU } from 'constant/fengming'
 import { getCampaignValidTime } from 'util/campaign'
 import { filterExistCurrentWords } from 'util/group'
 import track from 'util/track'
@@ -183,6 +184,10 @@ export default {
       } else {
         info.validTime = [null, null]
       }
+      // TIP 搜狗/360只能在计划设置移动端出价比，不能在单元
+      if (info.source === SEM_PLATFORM_QIHU || info.source === SEM_PLATFORM_SOGOU) {
+        info.mobilePriceRatio = 1
+      }
       return info
     },
     async getGroupData () {
@@ -200,7 +205,7 @@ export default {
     },
     async initCampaignInfo () {
       this.originPromotion = await this.getCampaignInfo()
-      this.promotion = pick(clone(this.originPromotion), ['areas', 'dailyBudget', 'validTime', 'negativeWords', 'schedule', 'budgetModificationCount', 'source'])
+      this.promotion = pick(clone(this.originPromotion), ['areas', 'dailyBudget', 'validTime', 'negativeWords', 'schedule', 'budgetModificationCount', 'source', 'mobilePriceRatio'])
       this.currentBalance = await getCurrentBalance()
       await this.getGroupData()
     },
@@ -208,7 +213,7 @@ export default {
       try {
         await this.validatePromotion()
         this.loading.updateCampaign = true
-        this._updatePromotion()
+        await this._updatePromotion()
       } catch (e) {
         return this.$message.error(e.message)
       } finally {

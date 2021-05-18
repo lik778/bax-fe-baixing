@@ -76,6 +76,13 @@
     </section>
 
     <section>
+      <mobile-price-ratio v-if="showMobilPriceRatio"
+                          :value="promotion.mobilePriceRatio"
+                          @change="(val) => emitPromtionData('mobilePriceRatio', val)"
+      />
+    </section>
+
+    <section>
       <div class="desc align-self">设置否词
         <el-tooltip content="当网民的搜索词与精确否定关键词完全一致时，您的推广结果将不会展现"
                     placement="top-start">
@@ -108,6 +115,7 @@
 <script>
 import AreaSelector from 'com/common/area-selector'
 import DurationSelector from 'com/common/duration-selector'
+import MobilePriceRatio from '../qwt-group/mobile-price-ratio'
 
 import { getCnName, isQwtEnableCity } from 'util/meta'
 import { disabledDate } from 'util/element'
@@ -122,7 +130,8 @@ import {
   SOGOU_MAX_DURATION,
   EXCLUDE_SOGOU_MAX_DURATION,
   DURATION_TYPE_OPTS,
-  SEM_PLATFORM_SOGOU
+  SEM_PLATFORM_SOGOU,
+  SEM_PLATFORM_QIHU
 } from 'constant/fengming'
 
 export default {
@@ -170,6 +179,10 @@ export default {
     consumeDays () {
       if (!this.promotion.dailyBudget) return 0
       return Math.floor(this.currentBalance / (this.promotion.dailyBudget * 100))
+    },
+    showMobilPriceRatio () {
+      const { source } = this.promotion
+      return source === SEM_PLATFORM_SOGOU || source === SEM_PLATFORM_QIHU
     }
   },
   methods: {
@@ -232,7 +245,8 @@ export default {
   },
   components: {
     AreaSelector,
-    DurationSelector
+    DurationSelector,
+    MobilePriceRatio
   }
 }
 </script>
@@ -251,7 +265,7 @@ export default {
     }
     .desc {
       flex-shrink: 0;
-      width: 100px;
+      width: 120px;
       margin-right: 10px;
       &.align-self {
         align-self: flex-start;

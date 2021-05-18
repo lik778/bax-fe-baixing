@@ -36,7 +36,7 @@
                   v-if="landingTypeDisplay === LANDING_TYPE_STORE"
                   :initValue="form.landingPageId"
                   @change="onSelectStore"
-                  @validChange="isValid => setLandingPageValidity(LANDING_TYPE_STORE, isValid)"
+                  @valid-change="isValid => setLandingPageValidity(LANDING_TYPE_STORE, isValid)"
                 />
               </div>
             </div>
