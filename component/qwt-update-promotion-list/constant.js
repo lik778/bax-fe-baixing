@@ -79,7 +79,7 @@ const CAMPAIGN_STATUS_OPTS = Object.freeze([
 ])
 
 // 单元筛选项
-const STATUS_REJECT = 5 // 审核驳回
+const STATUS_REJECT = -20 // 审核驳回
 const GROUP_STATUSES_OPTS = Object.freeze([
   {
     label: '下线',
