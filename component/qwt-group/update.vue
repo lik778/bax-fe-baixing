@@ -114,7 +114,7 @@
     </section>
 
     <section>
-      <mobile-price-ratio-comp v-if="promotion.source !== SEM_PLATFORM_SHENMA"
+      <mobile-price-ratio-comp v-if="promotion.source === SEM_PLATFORM_BAIDU"
                                :value="group.mobilePriceRatio"
                                @change="(val) => updateGroupData('mobilePriceRatio', val)" />
       <contract-ack-comp class="contract-ack"

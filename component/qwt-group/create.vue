@@ -81,7 +81,7 @@
       <cpc-price-comp style="margin-bottom: 10px"
                       :value="group.price"
                       @change="(val) => updateGroupData('price', val)" />
-      <mobile-price-ratio-comp v-if="promotion.source !== SEM_PLATFORM_SHENMA"
+      <mobile-price-ratio-comp v-if="promotion.source === SEM_PLATFORM_BAIDU"
                                :value="group.mobilePriceRatio"
                                @change="(val) => updateGroupData('mobilePriceRatio', val)" />
       <contract-ack-comp class="contract-ack"
@@ -120,8 +120,8 @@ import {
   emptyGroup,
   NEGATIVE_KEYWORDS_MAX,
   KEYWORDS_MAX,
-  SEM_PLATFORM_SHENMA,
-  CAMPAIGN_STATUS_OFFLINE
+  CAMPAIGN_STATUS_OFFLINE,
+  SEM_PLATFORM_BAIDU
 } from 'constant/fengming'
 import clone from 'clone'
 import pick from 'lodash.pick'
@@ -130,8 +130,8 @@ import { isBaixingSales } from 'util/role'
 import { toFloat } from 'util/kit'
 
 const emptyPromotion = {
-  id: 0,
-  source: 0,
+  id: '',
+  source: '',
   areas: []
 }
 
@@ -150,7 +150,7 @@ export default {
   data () {
     return {
       NEGATIVE_KEYWORDS_MAX,
-      SEM_PLATFORM_SHENMA,
+      SEM_PLATFORM_BAIDU,
 
       promotion: emptyPromotion,
       group: clone(emptyGroup),

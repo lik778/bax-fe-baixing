@@ -1,6 +1,6 @@
 
 import Schema from 'async-validator'
-import { LANDING_TYPE_AD, LANDING_TYPE_GW, LANDING_TYPE_STORE, MATCH_TYPE_EXACT, NEGATIVE_KEYWORDS_MAX, getMatchTypeObj, SEM_PLATFORM_SHENMA } from 'constant/fengming'
+import { LANDING_TYPE_AD, LANDING_TYPE_GW, LANDING_TYPE_STORE, MATCH_TYPE_EXACT, NEGATIVE_KEYWORDS_MAX, getMatchTypeObj, SEM_PLATFORM_BAIDU } from 'constant/fengming'
 import { MIN_WORD_PRICE, MAX_WORD_PRICE } from 'constant/keyword'
 import { keywordPriceTip } from 'constant/tip'
 
@@ -50,8 +50,8 @@ const commonDescriptor = {
     required: true,
     type: 'number',
     validator: (rule, value, cb, source) => {
-      // tip 神马渠道只能移动端，不用设置移动端出价比
-      if (source.promotion.source === SEM_PLATFORM_SHENMA) return true
+      // TIP 百度渠道支持单元移动端出价比，搜狗/360在计划纬度，神马单元和计划都无此字段
+      if (source.promotion.source !== SEM_PLATFORM_BAIDU) return true
       if (!value) return false
       const ratio = +(Number(value).toFixed(2))
       if (!(ratio >= 0.1 && ratio <= 9.9)) {
