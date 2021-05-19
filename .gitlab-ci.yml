@@ -16,7 +16,7 @@ stages:
 
 build:
   stage: build
-  image: node
+  image: node 12.2
   tags:
     - k8s-dev-build
   cache:
