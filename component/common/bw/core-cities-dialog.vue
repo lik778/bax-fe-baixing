@@ -2,11 +2,16 @@
   <el-dialog :visible="visible" title="提示" @close="handleClose" class="core-cities-dialog" width="580px">
     <div>请选择用户所在地：</div>
     <div class="city-container clearfix">
-      <span :class="{city: true, active: coreCities.includes(item)}"
-            v-for="item in areas"
-            :key="item"
-            @click="handleCoreCities(item)">
-        {{ getCnName(item, allAreas) }}
+      <span
+        v-for="item in displayAreas"
+        class="city"
+        :class="{
+          active: isSelected(item),
+          disabled: isDisabled(item),
+        }"
+        :key="item"
+        @click="handleCoreCities(item)">
+          {{ getCityName(item, allAreas) }}
       </span>
     </div>
     <div slot="footer" class="footer">
@@ -19,6 +24,8 @@
 <script>
 import { getCnName } from 'util'
 
+export const OTHER_CITY_ENUM = '_other'
+
 export default {
   name: 'core-cities-dialog',
   props: {
@@ -29,7 +36,7 @@ export default {
     },
     limit: {
       type: Number,
-      default: 3
+      default: 1
     },
     allAreas: {
       type: Array,
@@ -57,6 +64,11 @@ export default {
       coreCities: []
     }
   },
+  computed: {
+    displayAreas () {
+      return this.areas.concat([OTHER_CITY_ENUM])
+    }
+  },
   methods: {
     getCnName,
     handleClose () {
@@ -75,7 +87,21 @@ export default {
         this.coreCities.push(item)
         return
       }
-      this.$message.error(`用户所在地最多不能超过${this.limit}个`)
+      return this.$message.error(`用户所在地最多不能超过${this.limit}个`)
+    },
+
+    /* Atomics */
+
+    getCityName (item, areas) {
+      return item === OTHER_CITY_ENUM
+        ? '其它'
+        : getCnName(item, areas)
+    },
+    isSelected (item) {
+      return this.coreCities.includes(item)
+    },
+    isDisabled (item) {
+      return !this.isSelected(item) && (this.coreCities.length >= this.limit)
     }
   },
   watch: {
@@ -103,11 +129,18 @@ export default {
     text-align: center;
     padding: 3px 0;
     border-radius: 4px;
+    transition: .25s;
     cursor: pointer;
+
     &.active {
       background: $--color-primary;
       color: #fff;
       border-color: transparent;
+    }
+    &.disabled {
+      background: #ddd;
+      color: #aaa;
+      pointer-events: none;
     }
   }
 }

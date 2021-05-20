@@ -40,14 +40,14 @@
             </el-tag>
             <i class="el-icon-plus" @click="areaDialogVisible = true"></i>
           </el-form-item>
-          <el-form-item label="用户所在地" v-if="form.areas.length">
+          <el-form-item label="用户所在地" prop="coreCities" key="coreCities" v-if="form.areas.length">
             <el-tag type="success" closable class="kw-tag"
                     v-for="area in form.coreCities" :key="area"
                     @close="removeCoreCities(area)"
             >
               {{ formatArea(area) }}
             </el-tag>
-            <i class="el-icon-plus" @click="coreCitiesDialogVisible = true"></i>
+            <i v-if="form.coreCities.length < coreCityLimit" class="el-icon-plus" @click="coreCitiesDialogVisible = true" />
           </el-form-item>
           <el-form-item>
             <el-button @click="handleQueryPrice" :loading="loading" type="primary">查价</el-button>
@@ -128,11 +128,12 @@
     />
     <core-cities-dialog
       :visible="coreCitiesDialogVisible"
-      @cancel="coreCitiesDialogVisible = false"
-      @confirm="handleCoreCitiesConfirm"
+      :limit="coreCityLimit"
       :all-areas="allAreas"
       :origin-core-cities="form.coreCities"
       :areas="form.areas"
+      @cancel="coreCitiesDialogVisible = false"
+      @confirm="handleCoreCitiesConfirm"
     />
   </div>
 </template>
@@ -144,7 +145,7 @@ import RecentSold from './recent-sold'
 import ResultDevice from './result-device'
 import ManualTooltip from 'com/common/bw/manual-tooltip'
 import ManualDialog from 'com/common/bw/manual-dialog'
-import CoreCitiesDialog from 'com/common/bw/core-cities-dialog'
+import CoreCitiesDialog, { OTHER_CITY_ENUM } from 'com/common/bw/core-cities-dialog'
 import ResultPackageWord from './result-package-word'
 import { queryBWIndustry, sendSelectedIndustryToBW, queryKeywordPackagePrice } from 'api/biaowang'
 import clone from 'clone'
@@ -188,6 +189,7 @@ export default {
   },
   data () {
     return {
+      coreCityLimit: 1,
       form: {
         keyword: '',
         devices: [DEVICE_PC, DEVICE_WAP],
@@ -199,7 +201,8 @@ export default {
         industry: [{ type: 'array', required: true, trigger: 'change', message: '请填写行业' }],
         keyword: [{ required: true, trigger: 'blur', message: '请填写推广关键词' }],
         devices: [{ type: 'array', required: true, message: '请选择推广平台' }],
-        areas: [{ type: 'array', required: true, trigger: 'change', message: '请选择推广区域' }]
+        areas: [{ type: 'array', required: true, trigger: 'change', message: '请选择推广区域' }],
+        coreCities: [{ type: 'array', required: true, trigger: 'change', message: '请选择用户所在地' }]
       },
       skus: [],
       selected: [],
@@ -361,7 +364,9 @@ export default {
       this.areaDialogVisible = false
     },
     formatArea (name) {
-      return getCnName(name, this.allAreas)
+      return name === OTHER_CITY_ENUM
+        ? '其它'
+        : getCnName(name, this.allAreas)
     },
     removeArea (area) {
       this.form.areas = this.form.areas.filter(i => i !== area)
@@ -397,6 +402,14 @@ export default {
         keyword: this.form.keyword
       })
     },
+    getRemapedCoreCities () {
+      const { coreCities } = this.form
+      const hasOther = coreCities.includes(OTHER_CITY_ENUM)
+      // 选“其它”对后端来说相当于传空（既随机选一个城市做优化）
+      return (hasOther && coreCities.length === 1)
+        ? []
+        : coreCities
+    },
     async queryPrice () {
       this.selected = []
       this.loading = true
@@ -427,7 +440,7 @@ export default {
                 days: entry[0],
                 price: entry[1],
                 wordType: results.keyword.word === w.word ? 1 : 2,
-                coreCities: this.form.coreCities
+                coreCities: this.getRemapedCoreCities()
               }
             })
             return {
