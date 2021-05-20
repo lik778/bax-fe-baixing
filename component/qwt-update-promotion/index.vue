@@ -73,7 +73,7 @@ import clone from 'clone'
 import pick from 'lodash.pick'
 import { toHumanTime } from 'utils'
 import isEqual from 'lodash.isequal'
-import { CAMPAIGN_STATUS_OFFLINE, GROUP_MAX, SEM_PLATFORM_QIHU, SEM_PLATFORM_SOGOU } from 'constant/fengming'
+import { CAMPAIGN_STATUS_OFFLINE, GROUP_MAX } from 'constant/fengming'
 import { getCampaignValidTime } from 'util/campaign'
 import { filterExistCurrentWords } from 'util/group'
 import track from 'util/track'
@@ -184,10 +184,6 @@ export default {
       } else {
         info.validTime = [null, null]
       }
-      // TIP 搜狗/360只能在计划设置移动端出价比，不能在单元
-      if (info.source === SEM_PLATFORM_QIHU || info.source === SEM_PLATFORM_SOGOU) {
-        info.mobilePriceRatio = 1
-      }
       return info
     },
     async getGroupData () {
@@ -256,12 +252,15 @@ export default {
       }
 
       const data = {}
-      const { areas, dailyBudget, schedule, validTime } = this.promotion
+      const { areas, dailyBudget, schedule, validTime, mobilePriceRatio } = this.promotion
 
       // tip: dailyBudget和areas要么都传，要么都不传（呀呀呀，为啥啊？）
       if (!isEqual(areas, this.originPromotion.areas) || dailyBudget !== this.originPromotion.dailyBudget) {
         data.areas = areas
         data.dailyBudget = dailyBudget * 100
+      }
+      if (+this.originPromotion.mobilePriceRatio !== +mobilePriceRatio) {
+        data.mobilePriceRatio = mobilePriceRatio
       }
 
       if (isScheduleChange(this.originPromotion.schedule, schedule)) {
