@@ -54,7 +54,7 @@ export async function getPreparedDownloads () {
   return toCamelcase(body.data)
 }
 
-export async function getReport (opts = {}) {
+export async function getReport (opts = {}, campaignFields) {
   const q = reverseCamelcase(
     trim({
       offset: 0,
@@ -64,7 +64,9 @@ export async function getReport (opts = {}) {
   )
 
   const [body1, body2, body3] = await Promise.all([
-    fengming.get('/data_report').query(q).json(),
+    fengming.get('/data_report')
+      .query(q)
+      .json(),
     fengming
       .get('/data_report')
       .query({
@@ -77,7 +79,9 @@ export async function getReport (opts = {}) {
       .query({
         ...q,
         data_dimension: DIMENSION_NONE, // 汇总
-        time_unit: TIME_UNIT_YEAR
+        time_unit: TIME_UNIT_YEAR,
+        // 获取数据总量接口只能传计划相关字段
+        fields: campaignFields
       })
       .json()
   ])
