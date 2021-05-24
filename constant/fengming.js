@@ -248,7 +248,38 @@ export const FHYF_UN_USE = 0
 
 export const GROUP_MAX = 10
 
-/** 计划状态 */
+/* 计划状态 - 后端未转过的状态 */
+export const RAW_CAMPAIN_STATUS = {
+  // 计划下线
+  STATUS_OFFLINE: -1,
+  // 无效的投放期
+  STATUS_INVALID_DATE: -50,
+  // 账户余额不足
+  STATUS_ACCOUNT_BUDGET_NOT_ENOUGH: -51,
+  // 无效的投放区域
+  STATUS_INVALID_REGION: -52,
+  // 计划暂停
+  STATUS_PAUSE: -10,
+  // 迁框计划暂停
+  STATUS_MIGRATE_PAUSE: -11,
+  // 计划日预算不足
+  STATUS_CAMPAIGN_BUDGET_NOT_ENOUGH: 5,
+  // 计划投放中
+  STATUS_ONLINE: 100
+}
+
+/* 单元状态 - 后端未转过的状态 */
+export const RAW_GROUP_STATUS = {
+  // 下线
+  STATUS_OFFLINE: -1,
+  // 暂停
+  STATUS_PAUSE: -10,
+  // 有效
+  STATUS_ONLINE: 100
+}
+
+/* 计划状态 - 后端转过的状态 */
+
 export const CAMPAIGN_STATUS_ONLINE = 1
 export const CAMPAIGN_STATUS_OFFLINE = 2
 export const CAMPAIGN_STATUS_PAUSE = 3
