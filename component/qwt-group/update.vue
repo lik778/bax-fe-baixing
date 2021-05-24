@@ -106,7 +106,7 @@
           当前否定关键词数量: <strong>{{ group.negativeWords.length }}</strong>个
         </p>
         <negative-keyword-comp :negative-words="group.negativeWords"
-                               :all-words="group.negativeWords.concat(keywords)"
+                               :all-words="group.negativeWords.concat(keywords.filter(o => !o.isDel))"
                                :show-tip="false"
                                @track="(action, opts) => handleTrack(action, opts)"
                                @add-negative-words="(words) => group.negativeWords = words.concat(group.negativeWords)"
