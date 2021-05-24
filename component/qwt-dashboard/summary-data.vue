@@ -76,13 +76,7 @@
       </span>
     </section>
     <section>
-      <aside>
-        <span v-if="[
-          DIMENSION_CAMPAIGN,
-          DIMENSION_SEARCH_KEYWORD
-        ].includes(query.dimension)">计划ID：</span>
-        <span v-else>单元ID：</span>
-      </aside>
+      <aside>计划ID：</aside>
       <el-input
         v-model.trim="searchCampaigns"
         size="mini"
