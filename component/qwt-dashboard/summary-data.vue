@@ -213,6 +213,8 @@ export default {
 
       await store.clearStatistics()
       this.campaignErrTip = ''
+
+      // 搜索词维度需要填写计划ID
       if (dimension === DIMENSION_SEARCH_KEYWORD) {
         if (
           this.searchCampaigns === '' ||
@@ -225,6 +227,8 @@ export default {
         }
         return await this._getReportByQueryWord(opts)
       }
+
+      // 非搜索词维度，需要额外调获取计划总数据（总展现、总点击、总消费）接口
       if (
         this.searchCampaigns !== '' &&
         checkedCampaignIds.some((o) => isNaN(o))
@@ -306,7 +310,7 @@ export default {
         offset,
         fields
       }
-      await store.fetchReport(q)
+      await store.fetchReport(q, campaignFields)
     },
     async getGroupReport (campaign) {
       this.query.channel = campaign.channel
