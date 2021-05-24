@@ -98,10 +98,8 @@ import dayjs from 'dayjs'
 import { toHumanTime } from 'utils'
 import {
   SEM_PLATFORM_SOGOU,
-  CAMPAIGN_STATUS_OFFLINE,
-  CAMPAIGN_STATUS_ONLINE,
-  CAMPAIGN_STATUS_ACCOUNT_BUDGET_NOT_ENOUGH,
-  CAMPAIGN_STATUS_CAMPAIGN_BUDGET_NOT_ENOUGH
+  RAW_CAMPAIN_STATUS as R_C,
+  RAW_GROUP_STATUS as R_G
 } from 'constant/fengming'
 import {
   fieldType,
@@ -123,7 +121,7 @@ const CREATED_AT_VALUES = [
 ]
 const DIVIDING_CHAR = '   '
 
-const genFormatLogValues = (change, keys, type, opType, campaignSource) => {
+const genFormatLogValues = (change, keys, type, opType, campaignSource, message) => {
   const valueKey = type === 'old' ? 'oldValue' : 'newValue'
   // eslint-disable-next-line array-callback-return
   return keys.map(k => {
@@ -134,17 +132,25 @@ const genFormatLogValues = (change, keys, type, opType, campaignSource) => {
       if (value.includes(null)) return '全时段'
       return value.map(timeStamp => toHumanTime(new Date(timeStamp * 1000), 'MM月DD')).join('~')
     } else if (k === 'status') {
-      switch (value) {
-        case CAMPAIGN_STATUS_ACCOUNT_BUDGET_NOT_ENOUGH:
-        case CAMPAIGN_STATUS_CAMPAIGN_BUDGET_NOT_ENOUGH:
-          return '预算不足'
-        case CAMPAIGN_STATUS_OFFLINE:
-          return '计划下线'
-        case CAMPAIGN_STATUS_ONLINE:
-          return '开启投放'
-        default:
-          return '暂停投放'
+      const isGroup = message.groupName
+      const campaignStatusDisplay = {
+        [R_C.STATUS_ONLINE]: '计划投放中',
+        [R_C.STATUS_ACCOUNT_BUDGET_NOT_ENOUGH]: '计划预算不足',
+        [R_C.STATUS_CAMPAIGN_BUDGET_NOT_ENOUGH]: '计划预算不足',
+        [R_C.STATUS_OFFLINE]: '计划下线',
+        [R_C.STATUS_INVALID_DATE]: '计划暂停',
+        [R_C.STATUS_INVALID_REGION]: '计划暂停',
+        [R_C.STATUS_PAUSE]: '计划暂停',
+        [R_C.STATUS_MIGRATE_PAUSE]: '计划暂停'
       }
+      const groupStatusDisplay = {
+        [R_G.STATUS_ONLINE]: '单元投放中',
+        [R_G.STATUS_OFFLINE]: '单元下线',
+        [R_G.STATUS_PAUSE]: '单元暂停'
+      }
+      return (isGroup
+        ? groupStatusDisplay[value]
+        : campaignStatusDisplay[value]) ?? '未知状态'
     } else if (k === 'schedule') {
       if (campaignSource === SEM_PLATFORM_SOGOU) {
         return value.every(v => v === 3670009) ? '全部时段' : '部分时段'
@@ -261,9 +267,9 @@ export default {
           return changeKeys.map(key => fieldType[key]).join(DIVIDING_CHAR)
         } else if (type === 'old') {
           if (opType === OP_TYPE_CREATE) return '-'
-          return genFormatLogValues(change, changeKeys, type, opType, campaignSource)
+          return genFormatLogValues(change, changeKeys, type, opType, campaignSource, message)
         } else if (type === 'new') {
-          return genFormatLogValues(change, changeKeys, type, opType, campaignSource)
+          return genFormatLogValues(change, changeKeys, type, opType, campaignSource, message)
         }
       }
       const biaowangFormatter = ({ before, after, timelineType }) => {
