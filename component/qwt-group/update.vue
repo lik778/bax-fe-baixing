@@ -58,7 +58,7 @@
                          :landing-type="group.landingType"
                          :sources="[promotion.source]"
                          :creatives="group.creatives"
-                         :all-words="keywords.concat(group.negativeWords)"
+                         :all-words="keywords.filter(o => !o.isDel).concat(group.negativeWords)"
                          @track="(action, opts) => handleTrack(action, opts)"
                          @add-keywords="handleAddKeywords" />
           </div>
@@ -84,6 +84,7 @@
                            :keywords="keywords"
                            :group-id="groupId"
                            :origin-keywords="originKeywords"
+                           :negative-words="group.negativeWords"
                            :search-word="searchWord"
                            @update-origin-keywords="(changeTag, v) => originKeywords = originKeywords.map(o => ({ ...o, [changeTag]: v }))"
                            @update-keywords="(words) => (keywords = words)"

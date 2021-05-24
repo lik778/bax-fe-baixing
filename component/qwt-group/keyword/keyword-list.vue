@@ -47,7 +47,7 @@
                        min-width="220">
         <!-- 删除 slot-scope 后会有稀奇古怪的问题 -->
         <!-- eslint-disable-next-line -->
-        <div slot="header" slot-scope="col">
+        <div slot="header"slot-scope="col">
           <header-tip-comp :label-html="maxPriceLabel"
                            :tip-html="cpcTopPriceTip" />
           <el-popover placement="top"
@@ -153,11 +153,7 @@
                      type="success"
                      size="mini"
                      plain
-                     @click="emitUpdateKeyword({
-                        ...row,
-                        matchType: row.matchType === MATCH_TYPE_EXACT ? MATCH_TYPE_PHRASE: row.matchType,
-                        isDel: false
-                    })">恢复
+                     @click="resumeWord(row)">恢复
           </el-button>
         </div>
       </el-table-column>
@@ -240,6 +236,12 @@ export default {
     searchWord: {
       type: String,
       default: ''
+    },
+    negativeWords: {
+      type: Array,
+      default () {
+        return []
+      }
     }
   },
   computed: {
@@ -351,7 +353,18 @@ export default {
       const finalPrice = row.price
       return finalPrice >= MIN_WORD_PRICE && finalPrice <= MAX_WORD_PRICE
     },
+    resumeWord (row) {
+      if (this.negativeWords.some(o => o.word.toLowerCase() === row.word.toLowerCase())) {
+        return this.$message.error('已存在否词列表，请先删除否词，在恢复')
+      }
+      this.emitUpdateKeyword({
+        ...row,
+        matchType: row.matchType === MATCH_TYPE_EXACT ? MATCH_TYPE_PHRASE : row.matchType,
+        isDel: false
+      })
+    },
     emitUpdateKeyword (itemWord, isRemove = false) {
+      // TIP 否词列表已存在，不能恢复
       const idx = this.keywords.findIndex(o => o.word === itemWord.word)
       if (idx === -1) return
       if (isRemove) {
