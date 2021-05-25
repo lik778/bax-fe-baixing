@@ -274,7 +274,7 @@ export default {
       }
     },
     wordLen () {
-      return this.keywords.filter(o => !o.isDel).length
+      return this.keywords.length
     },
     matchTypeRemainExactCount () {
       const maxCount = getMatchTypeObj(this.wordLen).count(this.wordLen)
@@ -364,7 +364,6 @@ export default {
       })
     },
     emitUpdateKeyword (itemWord, isRemove = false) {
-      // TIP 否词列表已存在，不能恢复
       const idx = this.keywords.findIndex(o => o.word === itemWord.word)
       if (idx === -1) return
       if (isRemove) {
@@ -428,17 +427,22 @@ export default {
       this.offset = offset
     },
     deleteWord (row) {
+      const newRow = { ...row, isDel: true }
+      if (this.showMatchType) newRow.matchType = MATCH_TYPE_PHRASE
+      this.emitUpdateKeyword(newRow, !!row.isNew)
+
       if (this.showMatchType) {
         // 删除之后的精准匹配的最大值和当前值
         const maxCount = getMatchTypeObj(this.wordLen - 1).count(this.wordLen - 1)
-        let currentCount = this.keywords.filter(o => o.matchType === MATCH_TYPE_EXACT && !o.isDel).length
+        let currentCount = this.keywords.filter(o => o.matchType === MATCH_TYPE_EXACT).length
+
         if (String(row.matchType) === String(MATCH_TYPE_EXACT)) {
           currentCount--
         }
         if (maxCount < currentCount) {
           const h = this.$createElement
           const words = this.keywords.reduce((curr, prev) => {
-            if (String(prev.matchType) === String(MATCH_TYPE_EXACT) && !prev.isDel) {
+            if (String(prev.matchType) === String(MATCH_TYPE_EXACT)) {
               return curr.concat(prev.word)
             }
             return curr
@@ -461,7 +465,6 @@ export default {
         offset = offset === this.pagination.total - 1 ? offset - 1 : offset
         this.offset = offset
       }
-      this.emitUpdateKeyword({ ...row, isDel: true }, !!row.isNew)
     }
   },
   watch: {
