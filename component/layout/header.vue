@@ -29,6 +29,7 @@
           <transition name="el-zoom-in-top">
             <ul class="menu-group" v-show="isMenuVisible" @click="handleMenuClick">
               <li class="menu-item" data-command="account">我的账户</li>
+              <li class="menu-item" data-command="role">角色管理</li>
               <!-- <li class="menu-item" data-command="back">返回百姓网</li> -->
               <li class="menu-item" data-command="logout">退出</li>
             </ul>
@@ -66,6 +67,8 @@ export default {
         case 'logout':
           await logout()
           return redirectTo('signin')
+        case 'role':
+          return this.$router.push({ name: 'role' })
         default:
           this.isMenuVisible = false
       }
