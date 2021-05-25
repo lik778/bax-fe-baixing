@@ -55,10 +55,9 @@ class Store {
     }
   }
 
-  @action async loadBiaowangData () {
+  @action async loadBiaowangData (userId) {
     try {
-      const [biaowangData, { items: biaowangPromotes }] = await Promise.all([getHomePageBiaowangData(), getPromotes({ size: 5, page: 0 })])
-
+      const [biaowangData, { items: biaowangPromotes }] = await Promise.all([getHomePageBiaowangData(), getPromotes({ size: 5, page: 0, userId: userId })])
       const yesterday = dayjs().subtract(1, 'day').startOf('day').unix()
       const rankings = await getUserRanking({
         startTime: yesterday,
@@ -81,10 +80,10 @@ class Store {
     }
   }
 
-  @action initPageStore () {
+  @action initPageStore (userId) {
     this.loadKaData()
     this.loadBaxData()
-    this.loadBiaowangData()
+    this.loadBiaowangData(userId)
   }
 }
 

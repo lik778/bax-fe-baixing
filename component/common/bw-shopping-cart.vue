@@ -121,7 +121,6 @@ export default {
       const createOrderArgs = [localItems, userId, salesId]
 
       // items, targetUserId, salesId
-      // TODO: 后期还需对接接口
       const preTradeId = await createPreOrder(...createOrderArgs)
       if (this.isUser('BAIXING_USER')) {
         this.localItems = []

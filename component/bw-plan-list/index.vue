@@ -348,12 +348,13 @@ export default {
       return PROMOTE_STATUS_ONLINE.includes(row.status)
     },
     async getPromotes () {
-      const { offset, limit, keyword: word, promoteStatusFilters, auditStatusFilters, userId } = this.query
+      const { query: { user_id: userId } } = this.$route
+      const { offset, limit, keyword: word, promoteStatusFilters, auditStatusFilters } = this.query
       const { items, total } = await getPromotes({
         page: offset / limit,
         size: limit,
         word,
-        userId,
+        userId: userId,
         status: flatten(promoteStatusFilters),
         auditStatus: flatten(auditStatusFilters)
       })
@@ -476,6 +477,7 @@ export default {
   async mounted () {
     const promote = this.$route.params.promote
     this.query.userId = this.salesInfo.userId
+
     await this.getPromotes()
     if (promote && promote.id) {
       // 首页续费直接加入购物车

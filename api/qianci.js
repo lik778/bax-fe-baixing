@@ -110,7 +110,6 @@ export async function getPromoteList(opts = {}) {
     .get('/promote/user/promotes')
     .query(opts)
     .json()
-
   return {
     content: data.content,
     total: data.totalElements
