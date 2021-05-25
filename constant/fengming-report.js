@@ -227,6 +227,10 @@ export const keywordColumnOpts = [
   {
     label: '平均排名',
     value: 'cpcRanking'
+  },
+  {
+    label: '关键词状态',
+    value: 'status'
   }
 ]
 

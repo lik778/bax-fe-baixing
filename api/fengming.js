@@ -88,15 +88,6 @@ export async function updateCampaignRatio (opts) {
   return body
 }
 
-export async function updateCampaignTimeRange (opts) {
-  const body = await fengming
-    .post('/campaign/valid_time')
-    .send(reverseCamelcase(opts))
-    .json()
-
-  return body
-}
-
 export async function addUserLead (opts) {
   const body = await fengming
     .post('/new_user_leads')
@@ -384,18 +375,6 @@ export async function getLogs (queryParmas = {}) {
     logs: data,
     total: meta.count
   })
-}
-
-export async function getSummary () {
-  const [balance, daily] = await Promise.all([
-    getCurrentBalance(),
-    _getDailySummary()
-  ])
-
-  return {
-    balance,
-    ...daily
-  }
 }
 
 export async function getHomepageSummary () {
