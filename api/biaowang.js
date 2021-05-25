@@ -62,9 +62,10 @@ export async function getCpcRanking (promoteIds = []) {
   return body.data
 }
 
-export async function getPromoteById (id) {
+export async function getPromoteById (id, params) {
   const body = await biaowang
     .get(`/promote/user/${id}`)
+    .query(params)
     .json()
 
   return body.data
@@ -113,10 +114,10 @@ export async function getLogs (parmas) {
   return body.data
 }
 
-export async function getHomePageBiaowangData () {
+export async function getHomePageBiaowangData (parmas) {
   const [biaowangBalanceBrief, body] = await Promise.all([
     getCurrentBalanceBreif(BIAO_WANG_SPU_CODE),
-    await biaowang.get('/promote/user/info').json()
+    await biaowang.get('/promote/user/info').query(parmas).json()
   ])
 
   return {

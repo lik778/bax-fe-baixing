@@ -3,7 +3,7 @@
     <div class="white-bg">
       <header>我的标王推广计划</header>
       <main>
-        <router-link :to="{name: 'bw-query-price'}">
+        <router-link v-if="relationAllow()" :to="{name: 'bw-query-price'}">
           <el-button class="create-plan" type="primary" v-if="!userInfo.shAgent"><i class="el-icon-plus" ></i>新建标王计划</el-button>
         </router-link>
         <el-form :model="query" label-width="100px" label-position="left" @submit.native.prevent >
@@ -170,7 +170,7 @@ import {
   fmtAreasInBw
 } from 'util'
 import dayjs from 'dayjs'
-import { normalizeRoles } from 'util/role'
+import { normalizeRoles, relationAllow } from 'util/role'
 import flatten from 'lodash.flatten'
 import { fmtCpcRanking } from 'util/campaign'
 import auditRejectReasonDialog from 'com/common/audit-reject-reason-dialog'
@@ -205,6 +205,7 @@ export default {
     return {
       promoteStatusOpts,
       auditStatusOpts,
+      relationAllow,
       query: {
         keyword: '',
         promoteStatusFilters: [],
@@ -365,7 +366,8 @@ export default {
       const rankings = await getUserRanking({
         startTime: yesterday,
         endTime: yesterday,
-        promoteList: items.map(i => i.id)
+        promoteList: items.map(i => i.id),
+        userId
       })
 
       if (rankings.length) {

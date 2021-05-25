@@ -141,7 +141,8 @@ export default {
       gStore.getCurrentUser(),
       gStore.getCategories(),
       gStore.getAreas(),
-      gStore.getRoles()
+      gStore.getRoles(),
+      gStore.getRelation({ userId: this.salesInfo.userId })
     ])
 
     // 购物车限制在标王页面

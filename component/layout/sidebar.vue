@@ -82,7 +82,7 @@
           <template slot="title">
             <bx-icon type="sharealt"></bx-icon>标王推广
           </template>
-          <el-menu-item index="bw-query-price" v-if="!userInfo.shAgent">
+          <el-menu-item index="bw-query-price" v-if="!userInfo.shAgent && relationAllow()">
             <router-link :to="{ name: 'bw-query-price' }" tag="p">
               新建标王推广
             </router-link>
@@ -92,7 +92,7 @@
               管理标王推广
             </router-link>
           </el-menu-item>
-          <el-menu-item index="bw-manual" v-if="!userInfo.shAgent">
+          <el-menu-item index="bw-manual" v-if="!userInfo.shAgent && relationAllow()">
             <router-link :to="{ name: 'bw-manual'}" tag="p">
               人工报价记录
             </router-link>
@@ -201,7 +201,8 @@ import {
   allowQueryUsers,
   // global
   allowSeeAccount,
-  allowSeeBxAd
+  allowSeeBxAd,
+  relationAllow
 } from 'util/role'
 
 import { baxUserLogin, kaNavigation } from 'api/ka'
@@ -237,7 +238,7 @@ export default {
       defaultOpeneds: [],
       isRenderSiteLink: false,
       isRenderSiteNavTag: false,
-
+      relationAllow,
       isKaSuperman: false
     }
   },

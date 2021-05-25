@@ -179,6 +179,18 @@ export async function payOrder (orderId) {
   return data
 }
 
+/**
+ * @param {*} params
+ * @returns 获取当前销售和目标用户的关系
+ */
+export async function relation (params) {
+  const { data } = await api
+    .get('/user/relation')
+    .query(reverseCamelcase(params))
+    .json()
+  return data
+}
+
 export async function getCurrentBalanceBreif (accountType) {
   const body = await api
     .get('/balance/brief')

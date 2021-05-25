@@ -57,12 +57,13 @@ class Store {
 
   @action async loadBiaowangData (userId) {
     try {
-      const [biaowangData, { items: biaowangPromotes }] = await Promise.all([getHomePageBiaowangData(), getPromotes({ size: 5, page: 0, userId: userId })])
+      const [biaowangData, { items: biaowangPromotes }] = await Promise.all([getHomePageBiaowangData({ userId }), getPromotes({ size: 5, page: 0, userId: userId })])
       const yesterday = dayjs().subtract(1, 'day').startOf('day').unix()
       const rankings = await getUserRanking({
         startTime: yesterday,
         endTime: yesterday,
-        promoteList: biaowangPromotes.map(i => i.id)
+        promoteList: biaowangPromotes.map(i => i.id),
+        userId
       })
       this.biaowangPromotes = biaowangPromotes
       if (rankings.length) {

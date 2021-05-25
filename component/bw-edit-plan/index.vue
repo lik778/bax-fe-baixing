@@ -140,9 +140,9 @@ export default {
     }
   },
   async mounted () {
-    const { promoteId, orderIds: orderIdsString, notice } = this.$route.query
+    const { promoteId, orderIds: orderIdsString, notice, user_id: userId } = this.$route.query
     if (promoteId) {
-      const onePromote = await getPromoteById(promoteId)
+      const onePromote = await getPromoteById(promoteId, { userId })
       this.promotes = [onePromote]
       const { landingType, landingPage, landingPageId, creativeTitle, creativeContent } = onePromote
       this.form = {

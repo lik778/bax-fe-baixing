@@ -23,7 +23,7 @@
       </div>
       <div class="footer">
         <p>总计：<span class="price">{{f2y(totalPrice)}}</span>元</p>
-        <el-button class="checkout" type="primary" @click="checkout">{{payText}}</el-button>
+        <el-button v-if="this.relationAllow()" class="checkout" type="primary" @click="checkout">{{payText}}</el-button>
         <div v-if="payUrl" class="payurl">
           <label :title="payUrl">
             {{ '付款链接: ' + payUrl }}
@@ -40,7 +40,7 @@
 import clone from 'clone'
 import { f2y } from 'util'
 import { createPreOrder, refreshKeywordPriceNew } from 'api/biaowang'
-import { normalizeRoles } from 'util/role'
+import { normalizeRoles, relationAllow } from 'util/role'
 import Clipboard from 'com/widget/clipboard'
 import { getCnName } from 'util/meta'
 import { DEVICE } from 'constant/biaowang'
@@ -63,7 +63,7 @@ export default {
       localItems: [],
       payUrl: '',
       DEVICE,
-
+      relationAllow,
       expand: false,
       loading: false,
       firstLoad: false,
@@ -165,7 +165,7 @@ export default {
         // 每次打开更新下关键词价格、是否已售卖
         this.loading = true
         const items = await refreshKeywordPriceNew(this.localItems, {
-          targetUserId: this.getFinalUserId()
+          userId: this.getFinalUserId()
         })
         // 保留字段 xufei
         this.localItems = items.map(i => {
