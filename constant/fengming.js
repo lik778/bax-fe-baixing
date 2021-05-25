@@ -248,7 +248,7 @@ export const FHYF_UN_USE = 0
 
 export const GROUP_MAX = 10
 
-/* 计划状态 - 后端未转过的状态 */
+/* 计划状态 - 对应数据库 status 字段状态 */
 export const RAW_CAMPAIN_STATUS = {
   // 计划下线
   STATUS_OFFLINE: -1,
@@ -268,7 +268,7 @@ export const RAW_CAMPAIN_STATUS = {
   STATUS_ONLINE: 100
 }
 
-/* 单元状态 - 后端未转过的状态 */
+/* 单元状态 - 对应数据库 status 字段状态 */
 export const RAW_GROUP_STATUS = {
   // 下线
   STATUS_OFFLINE: -1,
@@ -278,7 +278,7 @@ export const RAW_GROUP_STATUS = {
   STATUS_ONLINE: 100
 }
 
-/* 计划状态 - 后端转过的状态 */
+/* 计划状态 - 后端包装过一层的状态 */
 
 export const CAMPAIGN_STATUS_ONLINE = 1
 export const CAMPAIGN_STATUS_OFFLINE = 2
@@ -349,6 +349,19 @@ export const GROUP_STATUSES = {
     label: '审核驳回',
     type: 'danger'
   }
+}
+
+// 关键词状态 - 对应数据库 status 字段状态
+export const RAW_KEYWORD_STATUS = {
+  ONLINE: 0,
+  OFFLINE: -1,
+  FAILED: -10,
+  PENDING: 1,
+  SEM_PENDING_CREATE: 5,
+  SEM_PENDING_DELETE: 6,
+  SEM_PENDING_UPDATE: 7,
+  SEM_PENDING_ADJUST: 8,
+  UNKNOWN: 10
 }
 
 // 物料图片类型枚举

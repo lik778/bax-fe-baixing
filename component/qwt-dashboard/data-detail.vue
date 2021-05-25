@@ -63,11 +63,16 @@
         :formatter="r => fmtDevice(r.device)" />
       <el-table-column label="出价" width="100">
         <template slot-scope="scope">
-          <span v-if="scope.row.price === null">-</span>
-          <bax-input v-else
-                     :value="f2y(scope.row.price)"
-                     @blur="v => onChangePrice(v, scope.row)"
-                     @keyup="v => onChangePrice(v, scope.row)" />
+          <template v-if="disableChangePrice(scope.row)">
+            <span>0</span>
+          </template>
+          <template v-else>
+            <span v-if="scope.row.price === null">-</span>
+            <bax-input v-else
+              :value="f2y(scope.row.price)"
+              @blur="v => onChangePrice(v, scope.row)"
+              @keyup="v => onChangePrice(v, scope.row)" />
+          </template>
         </template>
       </el-table-column>
       <el-table-column label="展现" prop="shows" width="90" sortable />
@@ -176,7 +181,8 @@ import {
 } from 'constant/fengming-report'
 import {
   semPlatformCn,
-  SEM_PLATFORM_SOGOU
+  SEM_PLATFORM_SOGOU,
+  RAW_KEYWORD_STATUS
 } from 'constant/fengming'
 import {
   fmtCpcRanking
@@ -304,6 +310,12 @@ export default {
       }
 
       return a.map(i => m[String(i)]).join(',')
+    },
+    disableChangePrice ({ status }) {
+      return [
+        RAW_KEYWORD_STATUS.OFFLINE,
+        RAW_KEYWORD_STATUS.SEM_PENDING_DELETE
+      ].includes(+status)
     },
     fmtCpcRanking,
     f2y
