@@ -427,8 +427,11 @@ export default {
       this.offset = offset
     },
     deleteWord (row) {
+      // TIP 删除时，更改状态
       const newRow = { ...row, isDel: true }
-      if (this.showMatchType) newRow.matchType = MATCH_TYPE_PHRASE
+      if (this.showMatchType && row.matchType !== MATCH_TYPE_PHRASE) {
+        newRow.matchType = MATCH_TYPE_PHRASE
+      }
       this.emitUpdateKeyword(newRow, !!row.isNew)
 
       if (this.showMatchType) {

@@ -69,15 +69,6 @@ const commonDescriptor = {
     if (errVal) return new Error(errVal.msg)
     return true
   },
-  keywords (rule, value) {
-    if (value.length < KEYWORDS_MIN) return new Error('请至少添加20个关键词')
-    const wordLen = value.filter(o => !o.isDel).length
-    const maxMatchTypeExactCount = getMatchTypeObj(wordLen).count(wordLen)
-    const currMatchTypeExactCount = value.filter(o => o.matchType === MATCH_TYPE_EXACT).length
-    if (currMatchTypeExactCount > maxMatchTypeExactCount) return new Error('精确匹配的设置已超过系统限制，请修改')
-    if (value.some(o => o.price < MIN_WORD_PRICE || o.price > MAX_WORD_PRICE)) return new Error(keywordPriceTip)
-    return true
-  },
   negativeWords (rule, value) {
     if (value.length > NEGATIVE_KEYWORDS_MAX) return new Error(`否词个数不得超过${NEGATIVE_KEYWORDS_MAX}个`)
     return true
@@ -86,6 +77,11 @@ const commonDescriptor = {
 
 const createDescriptor = {
   ...commonDescriptor,
+  keywords (rule, value) {
+    if (value.length < KEYWORDS_MIN) return new Error('请至少添加20个关键词')
+    if (value.some(o => o.price < MIN_WORD_PRICE || o.price > MAX_WORD_PRICE)) return new Error(keywordPriceTip)
+    return true
+  },
   price (rule, value) {
     if (!value) return new Error('还未填写关键词出价哦！')
     if (value > MAX_WORD_PRICE || value < MIN_WORD_PRICE) return new Error('关键词价格需在[2, 999]区间内')
@@ -94,7 +90,16 @@ const createDescriptor = {
 }
 
 const updateDescriptor = {
-  ...commonDescriptor
+  ...commonDescriptor,
+  keywords (rule, value) {
+    const wordLen = value.filter(o => !o.isDel).length
+    if (wordLen < KEYWORDS_MIN) return new Error('请至少添加20个关键词')
+    const maxMatchTypeExactCount = getMatchTypeObj(wordLen).count(wordLen)
+    const currMatchTypeExactCount = value.filter(o => o.matchType === MATCH_TYPE_EXACT).length
+    if (currMatchTypeExactCount > maxMatchTypeExactCount) return new Error('精确匹配的设置已超过系统限制，请修改')
+    if (value.some(o => o.price < MIN_WORD_PRICE || o.price > MAX_WORD_PRICE)) return new Error(keywordPriceTip)
+    return true
+  }
 }
 
 export const createValidator = new Schema(createDescriptor)

@@ -24,11 +24,11 @@
     </div>
     <div class="content">
       <div class="sec"
-           v-if="keywords.normalList.length">
+           v-if="keywords.normalList.length || deletedWords.length">
         <div class="sec-title">成功添加关键词</div>
         <div class="sec-content">
           <el-tag type="success"
-                  v-for="item in keywords.normalList"
+                  v-for="item in keywords.normalList.concat(deletedWords)"
                   :key="item.word"
                   class="tag-item">{{item.word}}
           </el-tag>
@@ -88,12 +88,14 @@ export default {
         bannedList: []
       },
       loading: false,
-      search: ''
+      search: '',
+      deletedWords: []
     }
   },
   methods: {
     handleConfirm () {
       this.$emit('update', this.keywords.normalList)
+      this.$emit('add-remove-keywords', this.deletedWords)
       this.handleClose()
     },
     handleClose () {
@@ -105,6 +107,7 @@ export default {
       for (const key in this.keywords) {
         this.keywords[key] = []
       }
+      this.deletedWords = []
     },
     async addWordList () {
       // 空字符校验
@@ -126,14 +129,29 @@ export default {
         validateKeyword(words)
         const normalList = (this.keywords && this.keywords.normalList) || []
         const allWords = this.allWords.concat(normalList)
+
         // 校验是否已存在
-        const newWords = getNotExistWords(allWords, words)
+        const newWords = getNotExistWords(allWords.filter(o => !o.isDel), words)
+
+        // 校验是否在已删除关键词列表
+        const existDeletedWords = []
+        const deletedWords = allWords.filter(o => o.isDel)
+        words.forEach(w => {
+          const idx = deletedWords.findIndex(o => o.word.toLowerCase() === w.toLowerCase())
+          if (idx > -1) {
+            existDeletedWords.push(deletedWords[idx])
+          }
+        })
+
+        if (!existDeletedWords.concat(newWords).length) throw new Error('关键词已存在关键词或否词列表中，请更换关键词')
 
         // 拼接关键词
         const newKeywords = await this.fetchWords(newWords)
         for (const key in this.keywords) {
           this.keywords[key] = [...new Set(this.keywords[key].concat(newKeywords[key]))]
         }
+        this.deletedWords = existDeletedWords
+
         this.search = ''
       } catch (e) {
         return this.$message.error(e.message)

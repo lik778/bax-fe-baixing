@@ -98,6 +98,7 @@ export default {
 
         const allWords = this.allWords.concat(this.words)
         const newWords = getNotExistWords(allWords, words)
+        if (!newWords.length) throw new Error('关键词已存在关键词或否词列表中，请更换关键词')
 
         this.words = this.words.concat(newWords.map(o => {
           return { word: o }

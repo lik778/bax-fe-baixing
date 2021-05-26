@@ -33,7 +33,5 @@ export function getNotExistWords (
   // 本地校验：（单元否词、单元关键词）直接过滤
   const words = originKeywords.map(w => w.word.toLowerCase())
   const resWords = newWords.filter(w => !words.includes(w.toLowerCase()))
-
-  if (!resWords.length) throw new Error('关键词已存在关键词或否词列表中，请更换关键词')
   return resWords
 }

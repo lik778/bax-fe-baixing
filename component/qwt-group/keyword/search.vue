@@ -22,6 +22,7 @@
                     :all-words="allWords"
                     :extra-query="{ group_id: groupId, sources: sources }"
                     :sources="sources"
+                    v-on="$listeners"
                     @update="handleAddKeywords" />
 
     <!-- 规划拓词模态框 -->
@@ -109,7 +110,13 @@ export default {
         validateKeyword([val])
 
         // 校验关键词是否已存在
-        getNotExistWords(this.allWords, [val])
+        const newWords = getNotExistWords(this.allWords.filter(o => !o.isDel), [val])
+        if (!newWords.length) throw new Error('关键词已存在关键词或否词列表中，请更换关键词')
+
+        // 校验关键词是否在已删除列表
+        if (this.allWords.filter(o => o.isDel).some(o => o.word.toLowerCase() === val.toLowerCase())) {
+          return this.$emit('add-remove-keywords', [{ word: val }])
+        }
 
         this.loading.addBtn = true
         const recommendKeywords = (await recommendByWord(val, {

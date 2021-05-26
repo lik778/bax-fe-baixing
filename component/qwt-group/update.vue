@@ -58,8 +58,9 @@
                          :landing-type="group.landingType"
                          :sources="[promotion.source]"
                          :creatives="group.creatives"
-                         :all-words="keywords.filter(o => !o.isDel).concat(group.negativeWords)"
+                         :all-words="keywords.concat(group.negativeWords)"
                          @track="(action, opts) => handleTrack(action, opts)"
+                         @add-remove-keywords="handleAddRemoveKeywords"
                          @add-keywords="handleAddKeywords" />
           </div>
           <div class="pane">
@@ -326,6 +327,22 @@ export default {
     handleAddKeywords (words) {
       this.keywords = words.concat(this.keywords)
       this.$refs.keywordListComp.$data.offset = 0
+    },
+    handleAddRemoveKeywords (deletedWords) {
+      const words = deletedWords.map(w => w.word.toLowerCase())
+      this.keywords = this.keywords.map(w => {
+        if (words.includes(w.word.toLowerCase())) {
+          // TIP 原有关键词列表有，并且价格和匹配模式有一个不一致，表示更新啦
+          const existWord = this.originKeywords.find(o => o.word.toLowerCase() === w.word.toLowerCase())
+          const isEqual = (existWord.price === w.price) && (existWord.matchType === w.matchType)
+          return {
+            ...w,
+            isDel: false,
+            isUpdated: !isEqual
+          }
+        }
+        return w
+      })
     },
     async updateMaterialThenGroup () {
       try {
