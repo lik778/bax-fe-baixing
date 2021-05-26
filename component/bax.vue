@@ -137,14 +137,16 @@ export default {
     }
   },
   async mounted () {
+    const { userId } = this.salesInfo
+    if (userId) {
+      gStore.getRelation({ userId })
+    }
     await Promise.all([
       gStore.getCurrentUser(),
       gStore.getCategories(),
       gStore.getAreas(),
-      gStore.getRoles(),
-      gStore.getRelation({ userId: this.salesInfo.userId })
+      gStore.getRoles()
     ])
-
     // 购物车限制在标王页面
     this.isBwRoute = this.$route.path.startsWith('/main/bw')
     router.beforeEach((to, from, next) => {
