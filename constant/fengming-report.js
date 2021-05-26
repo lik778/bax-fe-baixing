@@ -166,6 +166,10 @@ export const campaignColumnOpts = [
   {
     label: '消费',
     value: 'cost'
+  },
+  {
+    label: '点击率',
+    value: 'clickRate'
   }
 ]
 

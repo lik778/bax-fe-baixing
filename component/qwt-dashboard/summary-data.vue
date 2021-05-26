@@ -82,6 +82,7 @@
         size="mini"
         ref="campaignInput"
         class="search"
+        @blur="queryStatistics()"
         placeholder="输入计划ID，多个计划使用英文逗号分隔"
       />
       <span v-if="campaignErrTip" class="err-tip">
@@ -333,9 +334,6 @@ export default {
       handler: async function () {
         await this.queryStatistics()
       }
-    },
-    searchCampaigns () {
-      this.queryStatistics()
     }
   },
   async mounted () {

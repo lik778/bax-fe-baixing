@@ -12,6 +12,11 @@
         :formatter="r => fmtDevice(r.device)" />
       <el-table-column label="展现" prop="shows" width="90" sortable />
       <el-table-column label="点击" prop="clicks" width="90" sortable />
+      <el-table-column label="点击率" prop="clickRate" width="90">
+        <span slot-scope="{row}">
+          {{ (row.clickRate * 100).toFixed(2) }}%
+        </span>
+      </el-table-column>
       <el-table-column label="实扣点击单价" width="160" sortable
         :formatter="r => (r.clickAvgPrice / 100).toFixed(2) + '元'" />
       <el-table-column label="消耗" width="120"
@@ -37,6 +42,11 @@
         :formatter="r => fmtDevice(r.device)" />
       <el-table-column label="展现" prop="shows" width="90" sortable />
       <el-table-column label="点击" prop="clicks" width="90" sortable />
+      <el-table-column label="点击率" prop="clickRate" width="90">
+        <span slot-scope="{row}">
+          {{ (row.clickRate * 100).toFixed(2) }}%
+        </span>
+      </el-table-column>
       <el-table-column label="实扣点击单价" width="160" sortable
         :formatter="r => (r.clickAvgPrice / 100).toFixed(2) + '元'" />
       <el-table-column label="消耗" width="120"
@@ -77,6 +87,11 @@
       </el-table-column>
       <el-table-column label="展现" prop="shows" width="90" sortable />
       <el-table-column label="点击" prop="clicks" width="90" sortable />
+      <el-table-column label="点击率" prop="clickRate" width="90">
+        <span slot-scope="{row}">
+          {{ (row.clickRate * 100).toFixed(2) }}%
+        </span>
+      </el-table-column>
       <el-table-column label="实扣点击单价" width="160" sortable
         :formatter="r => (r.clickAvgPrice / 100).toFixed(2) + '元'" />
       <el-table-column label="消耗" width="120"
