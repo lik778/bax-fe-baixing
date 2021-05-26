@@ -101,7 +101,7 @@
     </el-table>
 
     <!-- 搜索词维度表格 -->
-    <el-table v-else :data="statistics" :key="DIMENSION_KEYWORD">
+    <el-table v-else :data="statistics" :key="DIMENSION_SEARCH_KEYWORD">
       <el-table-column label="搜索词" prop="queryWord" width="200" />
       <el-table-column label="日期" prop="date" width="140" />
       <el-table-column label="单元名称" prop="groupName" width="200" />
