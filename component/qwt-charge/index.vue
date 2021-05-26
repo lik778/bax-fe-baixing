@@ -20,8 +20,8 @@
             <header>选择{{chargeSpu.title}}：</header>
             <main>
               <section>
-                <price-tag v-for="(product, index) in chargeSpu.selection"
-                  :key="index"
+                <price-tag v-for="product in chargeSpu.selection"
+                  :key="product.skuVendorId"
                   :editable="Number(product.maxQuantity) !== Number(product.minQuantity)"
                   :price="centToYuan(product.price)"
                   :min-input-price="centToYuan(product.minQuantity * product.realPrice)"
@@ -40,8 +40,8 @@
             </header>
             <main>
               <section>
-                <gw-pro-widget v-for="(product, index) of siteSpu.selection"
-                  :key="index" :title="product.title" :desc="product.desc"
+                <gw-pro-widget v-for="product of siteSpu.selection"
+                  :key="product.skuVendorId" :title="product.title" :desc="product.desc"
                   :is-hot="product.tags.includes('hot')"
                   :price="centToYuan(product.realPrice)"
                   :checked="checkedProducts.includes(product)"
