@@ -29,7 +29,7 @@ const local = {
   fengmingApiHost: '//bax.baixing.cn/fengmingx',
   baxApiHost: '//bax.baixing.cn/bax',
   kaApiHost: '//bax.baixing.cn/ka/api/admin',
-  biaowangApiHost: '//172.17.3.180:8081/api',
+  biaowangApiHost: '//bax.baixing.cn/phoenixs/api',
   seoApiHost: 'http://bax.baixing.cn/seo-api',
   qcApiHost: 'http://bax.baixing.cn/sem-batch/api/sem-batch',
   b2bApiHost: '//172.30.2.14:31643',
