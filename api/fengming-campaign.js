@@ -109,6 +109,16 @@ export async function getReport (opts = {}, campaignFields) {
   }
 }
 
+// 获取用户下的所有计划的以及消耗信息
+export async function getAllCampaignsWithConsume () {
+  const body = await fengming
+    .get('/data_report/campaign_keyword')
+    .query({})
+    .json()
+
+  return toCamelcase(body.data)
+}
+
 export async function getDataReportByQueryWord (opts = {}) {
   const q = reverseCamelcase(
     trim({
