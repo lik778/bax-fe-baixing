@@ -1,18 +1,16 @@
 <template>
-  <div class="layout-container">
-    <div class="layout-left">
-      <h5 class="layout-header">
-        官网留言通知
-        <span class="action" v-if="notices && notices.length" @click="handleMoreBtnClick">更多</span>
-      </h5>
-      <notice :notice-list="notices" type="site" height="198px">
-        <p slot-scope="{notice}" class="notice">
-          {{notice.formatDate(new Date(notice.createdAt))}}&nbsp;&nbsp;
-          {{notice.name}} ({{notice.mobile}}) 给您留言：
-          <br />{{notice.content}}
-        </p>
-      </notice>
-    </div>
+  <div class="layout-left">
+    <h5 class="layout-header">
+      官网留言通知
+      <span class="action" v-if="notices && notices.length" @click="handleMoreBtnClick">更多</span>
+    </h5>
+    <notice :notice-list="notices" type="site" height="198px">
+      <p slot-scope="{notice}" class="notice">
+        {{notice.formatDate(new Date(notice.createdAt))}}&nbsp;&nbsp;
+        {{notice.name}} ({{notice.mobile}}) 给您留言：
+        <br />{{notice.content}}
+      </p>
+    </notice>
   </div>
 </template>
 
