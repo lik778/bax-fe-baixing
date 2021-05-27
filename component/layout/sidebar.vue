@@ -123,7 +123,7 @@
             <i class="el-icon-news" />精品官网
             <i v-if="isRenderSiteNavTag" class="el-icon-question" />
           </a>
-          <router-link :to="{name: 'gw-homepage'}" tag="p" v-else>
+          <router-link :to="{ name: 'gw-homepage' }" tag="p" v-else>
             <i class="el-icon-news" />精品官网
             <i v-if="isRenderSiteNavTag" class="el-icon-question" />
           </router-link>
@@ -179,6 +179,15 @@
             </router-link>
           </el-menu-item>
         </el-submenu>
+
+        <el-menu-item index="diamond-site-homepage">
+          <a v-if="isDiamondSiteJumpToMainSite" href="//shop.baixing.com/management/shop" style="color: inherit">
+            <i class="el-icon-news" />钻石官网
+          </a>
+          <router-link v-else :to="{ name: 'qwt-charge' }" tag="p">
+            <i class="el-icon-news" />钻石官网
+          </router-link>
+        </el-menu-item>
       </el-menu>
     </main>
   </div>
@@ -205,6 +214,7 @@ import {
 } from 'util/role'
 
 import { baxUserLogin, kaNavigation } from 'api/ka'
+import { getUserSites } from 'api/diamond-site'
 
 const MENU_GROUP_MAP = {
   charge: ['qwt-charge', 'seo-charge'],
@@ -237,6 +247,7 @@ export default {
       defaultOpeneds: [],
       isRenderSiteLink: false,
       isRenderSiteNavTag: false,
+      isDiamondSiteJumpToMainSite: false,
 
       isKaSuperman: false
     }
@@ -290,12 +301,20 @@ export default {
     goKaSuperPage () {
       location.href = '/ka/vendor/site'
     },
-    async initNavMenu () {
+    initNavMenu () {
+      this.initKaNav()
+      this.initDiamondSiteNav()
+    },
+    async initKaNav () {
       // 获取ka nav 数据
       this.isKaSuperman = ((await baxUserLogin()).data.roles || []).includes('seo_vendor')
       const { offlineSiteNum, canUseTicketsNum, allTicketsNum } = await kaNavigation()
       this.isRenderSiteNavTag = !!(offlineSiteNum || canUseTicketsNum)
       this.isRenderSiteLink = !!allTicketsNum
+    },
+    async initDiamondSiteNav () {
+      const hasDiamondSite = ((await getUserSites()) || []).length
+      this.isDiamondSiteJumpToMainSite = hasDiamondSite
     },
     toBuyKaOrGw () {
       const q = this.$route.query
