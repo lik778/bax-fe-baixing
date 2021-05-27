@@ -25,24 +25,26 @@
         <router-link :to="{name: 'qwt-create-promotion'}"><el-button type="primary" icon="el-icon-plus">新建站外推广</el-button></router-link>
       </div>
     </div>
-    <h3>计划关键词概览</h3>
-    <div
-      class="c-creative-con"
-      v-for="item in creatives"
-      :key="item.campaignId">
-        <div class="c-div">
-          <p class="c-div-title">计划ID</p>
-          <p class="bold">{{item.campaignId}}</p>
-        </div>
-        <div class="c-div">
-          <p class="c-div-title">总词数</p>
-          <p class="bold">{{item.currentKeywordCount}}</p>
-        </div>
-        <div class="c-div">
-          <p class="c-div-title">消耗词数</p>
-          <p class="bold">{{item.consumeKeywordCount}}</p>
-        </div>
-    </div>
+    <template v-if="creatives.length > 0">
+      <h3>计划关键词概览</h3>
+      <div
+        class="c-creative-con"
+        v-for="item in creatives"
+        :key="item.campaignId">
+          <div class="c-div">
+            <p class="c-div-title">计划ID</p>
+            <p class="bold">{{item.campaignId}}</p>
+          </div>
+          <div class="c-div">
+            <p class="c-div-title">总词数</p>
+            <p class="bold">{{item.currentKeywordCount}}</p>
+          </div>
+          <div class="c-div">
+            <p class="c-div-title">消耗词数</p>
+            <p class="bold">{{item.consumeKeywordCount}}</p>
+          </div>
+      </div>
+    </template>
   </div>
 </template>
 
