@@ -62,7 +62,7 @@
 
     <!-- 关键词维度表格 -->
     <el-table v-else-if="dimension === DIMENSION_KEYWORD" :data="statistics" :key="DIMENSION_KEYWORD">
-      <el-table-column label="关键词" prop="keyword" width="200" />
+      <el-table-column label="关键词" prop="keyword" width="200" :formatter="fmtKeywordName" />
       <el-table-column label="日期" prop="date" width="140" />
       <el-table-column label="计划ID" prop="campaignId" width="140" />
       <el-table-column label="单元ID" prop="groupId" width="140" />
@@ -74,7 +74,7 @@
       <el-table-column label="出价" width="100">
         <template slot-scope="scope">
           <template v-if="disableChangePrice(scope.row)">
-            <span>0</span>
+            <span class="disabled-text">0</span>
           </template>
           <template v-else>
             <span v-if="scope.row.price === null">-</span>
@@ -197,7 +197,7 @@ import {
 import {
   semPlatformCn,
   SEM_PLATFORM_SOGOU,
-  RAW_KEYWORD_STATUS
+  isDeletedKeyword
 } from 'constant/fengming'
 import {
   fmtCpcRanking
@@ -327,10 +327,13 @@ export default {
       return a.map(i => m[String(i)]).join(',')
     },
     disableChangePrice ({ status }) {
-      return [
-        RAW_KEYWORD_STATUS.OFFLINE,
-        RAW_KEYWORD_STATUS.SEM_PENDING_DELETE
-      ].includes(+status)
+      return isDeletedKeyword(+status)
+    },
+    fmtKeywordName ({ keyword, status }) {
+      const isDeleted = isDeletedKeyword(+status)
+      return isDeleted
+        ? (keyword + '（历史词）')
+        : keyword
     },
     fmtCpcRanking,
     f2y
@@ -397,5 +400,10 @@ export default {
       }
     }
   }
+}
+
+.disabled-text {
+  color: #ccc;
+  cursor: not-allowed;
 }
 </style>

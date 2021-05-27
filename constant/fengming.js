@@ -363,6 +363,10 @@ export const RAW_KEYWORD_STATUS = {
   SEM_PENDING_ADJUST: 8,
   UNKNOWN: 10
 }
+export const isDeletedKeyword = status => [
+  RAW_KEYWORD_STATUS.OFFLINE,
+  RAW_KEYWORD_STATUS.SEM_PENDING_DELETE
+].includes(status)
 
 // 物料图片类型枚举
 export const MATERIAL_PIC_TYPE = {
