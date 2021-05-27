@@ -294,7 +294,6 @@ export default {
             sku.spuCode = spu.spuCode
           })
         )
-        console.log('products：', products)
         this.siteSpu = products.find(p => isGwProduct(p.spuCode))
         this.chargeSpu = products.find(p => isChargeProduct(p.spuCode))
 
@@ -584,11 +583,15 @@ export default {
 .discount-info {
   font-size: 12px;
   margin-bottom: 10px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
   & > span {
     text-align: center;
   }
 
-  & > span.red {
+  & > .red {
     background-color: #ff3c3c;
     color: white;
     padding: 1px 4px;
