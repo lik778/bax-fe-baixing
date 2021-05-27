@@ -40,7 +40,7 @@
         </div>
         <div class="c-div">
           <p class="c-div-title">消耗词数</p>
-          <p class="bold">{{f2y(item.consumeKeywordCount)}}</p>
+          <p class="bold">{{item.consumeKeywordCount}}</p>
         </div>
     </div>
   </div>
