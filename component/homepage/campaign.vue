@@ -56,8 +56,7 @@ export default {
     }
   },
   fromMobx: {
-    fengmingData: () => store.fengmingData,
-    campaignRadar: () => store.campaignRadar
+    fengmingData: () => store.fengmingData
   },
   computed: {
     reportData () {
@@ -72,7 +71,8 @@ export default {
       return keys.map(k => data[k.toLowerCase()])
     },
     hasCampaign () {
-      return this.campaignRadar && this.campaignRadar.cntCampaign > 0
+      // 空 fengmingData 说明没有有效的计划
+      return Object.keys(this.fengmingData || {}).length > 0
     }
   },
   methods: {
