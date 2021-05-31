@@ -180,7 +180,7 @@
           </el-menu-item>
         </el-submenu>
 
-        <el-menu-item v-if="isBxUser" index="diamond-site-homepage" key="diamond-site-homepage">
+        <el-menu-item v-if="allowSeeDiamondSite" index="diamond-site-homepage" key="diamond-site-homepage">
           <a v-if="isDiamondSiteJumpToMainSite" href="//shop.baixing.com/management/shop" style="color: inherit">
             <i class="el-icon-news" />钻石官网
           </a>
@@ -317,7 +317,7 @@ export default {
       this.isRenderSiteLink = !!allTicketsNum
     },
     async initDiamondSiteNav () {
-      const hasDiamondSite = ((await getUserSites()) || []).length
+      const hasDiamondSite = !!(await getUserSites())
       this.isDiamondSiteJumpToMainSite = hasDiamondSite
     },
     toBuyKaOrGw () {
