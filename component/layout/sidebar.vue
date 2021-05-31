@@ -118,15 +118,10 @@
             </router-link>
           </el-menu-item>
         </el-submenu>
-        <el-menu-item index="gw-homepage">
-          <a href="/ka/main" v-if="isRenderSiteLink" style="color: inherit">
+        <el-menu-item index="gw-homepage" v-if="isRenderSiteLink">
+          <a href="/ka/main" style="color: inherit">
             <i class="el-icon-news" />精品官网
-            <i v-if="isRenderSiteNavTag" class="el-icon-question" />
           </a>
-          <router-link :to="{name: 'gw-homepage'}" tag="p" v-else>
-            <i class="el-icon-news" />精品官网
-            <i v-if="isRenderSiteNavTag" class="el-icon-question" />
-          </router-link>
         </el-menu-item>
         <el-submenu index="dashboard">
           <template slot="title">
@@ -204,7 +199,7 @@ import {
   allowSeeBxAd
 } from 'util/role'
 
-import { baxUserLogin, kaNavigation } from 'api/ka'
+import { baxUserLogin, kaOnlineAndTickets } from 'api/ka'
 
 const MENU_GROUP_MAP = {
   charge: ['qwt-charge', 'seo-charge'],
@@ -236,8 +231,6 @@ export default {
       defaultActive: null,
       defaultOpeneds: [],
       isRenderSiteLink: false,
-      isRenderSiteNavTag: false,
-
       isKaSuperman: false
     }
   },
@@ -291,11 +284,10 @@ export default {
       location.href = '/ka/vendor/site'
     },
     async initNavMenu () {
-      // 获取ka nav 数据
       this.isKaSuperman = ((await baxUserLogin()).data.roles || []).includes('seo_vendor')
-      const { offlineSiteNum, canUseTicketsNum, allTicketsNum } = await kaNavigation()
-      this.isRenderSiteNavTag = !!(offlineSiteNum || canUseTicketsNum)
-      this.isRenderSiteLink = !!allTicketsNum
+
+      const { hasSitesAndTickets } = await kaOnlineAndTickets()
+      this.isRenderSiteLink = hasSitesAndTickets
     },
     toBuyKaOrGw () {
       const q = this.$route.query
