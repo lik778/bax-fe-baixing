@@ -182,10 +182,10 @@
 
         <el-menu-item v-if="allowSeeDiamondSite" index="diamond-site-homepage" key="diamond-site-homepage">
           <a v-if="isDiamondSiteJumpToMainSite" href="//shop.baixing.com/management/shop" style="color: inherit">
-            <i class="el-icon-news" />钻石官网
+            <i class="el-icon-news" />钻石店铺
           </a>
           <router-link v-else :to="{ name: 'qwt-charge' }" tag="p">
-            <i class="el-icon-news" />钻石官网
+            <i class="el-icon-news" />钻石店铺
           </router-link>
         </el-menu-item>
       </el-menu>

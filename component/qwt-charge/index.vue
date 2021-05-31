@@ -35,7 +35,7 @@
           </template>
 
           <template v-if="siteSpu">
-            <header>选择官网：
+            <header>选择店铺：
               <span class="tip">具体官网搭售折扣及实付金额，请点击“确认购买”后前往订单确认页面查看</span>
             </header>
             <main>
