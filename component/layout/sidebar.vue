@@ -180,7 +180,7 @@
           </el-menu-item>
         </el-submenu>
 
-        <el-menu-item index="diamond-site-homepage">
+        <el-menu-item v-if="isBxUser" index="diamond-site-homepage" key="diamond-site-homepage">
           <a v-if="isDiamondSiteJumpToMainSite" href="//shop.baixing.com/management/shop" style="color: inherit">
             <i class="el-icon-news" />钻石官网
           </a>
@@ -210,7 +210,8 @@ import {
   allowQueryUsers,
   // global
   allowSeeAccount,
-  allowSeeBxAd
+  allowSeeBxAd,
+  normalizeRoles
 } from 'util/role'
 
 import { baxUserLogin, kaNavigation } from 'api/ka'
@@ -292,6 +293,10 @@ export default {
     // allow see qwt ...
     allowSeeQwtPromotion () {
       return allowSeeQwtPromotion(this.userInfo.roles)
+    },
+    isBxUser () {
+      const roles = normalizeRoles(this.userInfo.roles)
+      return roles.includes('BAIXING_USER')
     }
   },
   mounted () {
