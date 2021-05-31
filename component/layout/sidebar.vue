@@ -56,12 +56,6 @@
           </el-menu-item>
         </el-submenu>
 
-        <el-menu-item index="gw-charge" v-if="allowUseKaPackage">
-          <p @click="toBuyKaOrGw">
-            <bx-icon type="book"></bx-icon>官网购买
-          </p>
-        </el-menu-item>
-
         <el-submenu index="sst" v-show="allowSeeQwtPromotion">
           <template slot="title">
             <bx-icon type="sharealt"></bx-icon>站外推广
@@ -184,8 +178,7 @@ import { version } from '../../package.json'
 import BxIcon from 'com/widget/icon'
 
 import {
-  allowSeeQwtPromotion,
-  allowUseKaPackage
+  allowSeeQwtPromotion
 } from 'util/fengming-role'
 
 import {
@@ -248,10 +241,6 @@ export default {
     }
   },
   computed: {
-    allowUseKaPackage () {
-      // 合并产品购买和充值后，只有几个大客户可以看到官网单独购买入口
-      return allowUseKaPackage(this.userInfo.roles, this.userInfo.id)
-    },
     allowQueryMaterials () {
       return allowQueryMaterials(this.userInfo.roles)
     },
@@ -288,16 +277,6 @@ export default {
 
       const { hasSitesAndTickets } = await kaOnlineAndTickets()
       this.isRenderSiteLink = hasSitesAndTickets
-    },
-    toBuyKaOrGw () {
-      const q = this.$route.query
-
-      this.$router.push({
-        name: 'gw-charge',
-        query: {
-          ...q
-        }
-      })
     }
   }
 }
