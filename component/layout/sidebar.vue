@@ -211,7 +211,7 @@ import {
   // global
   allowSeeAccount,
   allowSeeBxAd,
-  normalizeRoles
+  allowSeeDiamondSite
 } from 'util/role'
 
 import { baxUserLogin, kaNavigation } from 'api/ka'
@@ -294,9 +294,8 @@ export default {
     allowSeeQwtPromotion () {
       return allowSeeQwtPromotion(this.userInfo.roles)
     },
-    isBxUser () {
-      const roles = normalizeRoles(this.userInfo.roles)
-      return roles.includes('BAIXING_USER')
+    allowSeeDiamondSite () {
+      return allowSeeDiamondSite(this.userInfo.roles)
     }
   },
   mounted () {
