@@ -3,14 +3,12 @@
     <account :userInfo="userInfo"/>
     <homepage-campaign :userInfo="userInfo"/>
     <biaowang :userInfo="userInfo" />
-    <site />
   </div>
 </template>
 
 <script>
 import store from './store'
 
-import Site from './site'
 import Account from './account'
 import Biaowang from './biaowang'
 
@@ -26,7 +24,6 @@ export default {
     store.initPageStore()
   },
   components: {
-    Site,
     Account,
     Biaowang
   }
