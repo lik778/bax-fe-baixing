@@ -191,10 +191,10 @@ export async function relation (params) {
   return data
 }
 
-export async function getCurrentBalanceBreif (accountType) {
+export async function getCurrentBalanceBreif (accountType, userId) {
   const body = await api
     .get('/balance/brief')
-    .query(reverseCamelcase({ accountType }))
+    .query(reverseCamelcase({ accountType, userId }))
     .json()
 
   return body.data
@@ -212,10 +212,10 @@ export async function getChargeLogs (opts) {
   }
 }
 
-export async function getCurrentAllBalanceBreif () {
+export async function getCurrentAllBalanceBreif ({ userId }) {
   const [fengmingBalanceBrief = {}, biaowangBalanceBrief = {}] = await Promise.all([
-    getCurrentBalanceBreif(WHOLE_SPU_CODE),
-    getCurrentBalanceBreif(BIAO_WANG_SPU_CODE)
+    getCurrentBalanceBreif(WHOLE_SPU_CODE, userId),
+    getCurrentBalanceBreif(BIAO_WANG_SPU_CODE, userId)
   ])
   return {
     fengmingBalance: fengmingBalanceBrief.currentBalance,

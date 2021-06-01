@@ -297,7 +297,8 @@ export default {
         .catch(() => {})
     },
     async loadBalance () {
-      const d = await getBalance()
+      const { query: { user_id: userId } } = this.$route
+      const d = await getBalance({ userId })
       this.balance = d.balance
     },
     f2y,
