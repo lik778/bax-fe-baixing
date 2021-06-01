@@ -35,7 +35,7 @@
           </template>
 
           <template v-if="siteSpu">
-            <header>选择{{siteSpu.title}}：
+            <header>选择店铺：
               <span class="tip">具体官网搭售折扣及实付金额，请点击“确认购买”后前往订单确认页面查看</span>
             </header>
             <main>
@@ -583,11 +583,15 @@ export default {
 .discount-info {
   font-size: 12px;
   margin-bottom: 10px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
   & > span {
     text-align: center;
   }
 
-  & > span.red {
+  & > .red {
     background-color: #ff3c3c;
     color: white;
     padding: 1px 4px;

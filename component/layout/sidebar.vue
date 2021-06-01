@@ -168,6 +168,15 @@
             </router-link>
           </el-menu-item>
         </el-submenu>
+
+        <el-menu-item v-if="allowSeeDiamondSite" index="diamond-site-homepage" key="diamond-site-homepage">
+          <a v-if="isDiamondSiteJumpToMainSite" href="//shop.baixing.com/management/shop" style="color: inherit">
+            <i class="el-icon-news" />钻石店铺
+          </a>
+          <router-link v-else :to="{ name: 'qwt-charge' }" tag="p">
+            <i class="el-icon-news" />钻石店铺
+          </router-link>
+        </el-menu-item>
       </el-menu>
     </main>
   </div>
@@ -189,9 +198,11 @@ import {
   allowQueryUsers,
   // global
   allowSeeAccount,
-  allowSeeBxAd
+  allowSeeBxAd,
+  allowSeeDiamondSite
 } from 'util/role'
 
+import { getUserSites } from 'api/diamond-site'
 import { baxUserLogin, kaOnlineAndTickets } from 'api/ka'
 
 const MENU_GROUP_MAP = {
@@ -224,6 +235,7 @@ export default {
       defaultActive: null,
       defaultOpeneds: [],
       isRenderSiteLink: false,
+      isDiamondSiteJumpToMainSite: false,
       isKaSuperman: false
     }
   },
@@ -263,6 +275,9 @@ export default {
     // allow see qwt ...
     allowSeeQwtPromotion () {
       return allowSeeQwtPromotion(this.userInfo.roles)
+    },
+    allowSeeDiamondSite () {
+      return allowSeeDiamondSite(this.userInfo.roles)
     }
   },
   mounted () {
@@ -272,11 +287,19 @@ export default {
     goKaSuperPage () {
       location.href = '/ka/vendor/site'
     },
-    async initNavMenu () {
+    initNavMenu () {
+      this.initKaNav()
+      this.initDiamondSiteNav()
+    },
+    async initKaNav () {
       this.isKaSuperman = ((await baxUserLogin()).data.roles || []).includes('seo_vendor')
 
       const { hasSitesAndTickets } = await kaOnlineAndTickets()
       this.isRenderSiteLink = hasSitesAndTickets
+    },
+    async initDiamondSiteNav () {
+      const hasDiamondSite = !!(await getUserSites())
+      this.isDiamondSiteJumpToMainSite = hasDiamondSite
     }
   }
 }
