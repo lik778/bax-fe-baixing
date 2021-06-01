@@ -19,13 +19,6 @@ export function allowSee258 (roles, uid) {
   return [1].includes(uid)
 }
 
-export function allowUseKaPackage (roles, uid) {
-  // 860603 优米帮
-  // 318 康品汇
-  const specialKaUserIds = [860603, 318, 47709, 53470, 17] // 这几个比较牛逼, 特价 (1000) 买官网
-  return specialKaUserIds.includes(uid)
-}
-
 export function allowBuyYoucaigouSite (uid) {
   const specialUserIds = [860603, 17, 39]
   return specialUserIds.includes(uid)
