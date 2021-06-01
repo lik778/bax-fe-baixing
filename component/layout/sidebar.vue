@@ -298,8 +298,10 @@ export default {
       this.isRenderSiteLink = hasSitesAndTickets
     },
     async initDiamondSiteNav () {
-      const hasDiamondSite = !!(await getUserSites())
-      this.isDiamondSiteJumpToMainSite = hasDiamondSite
+      if (this.allowSeeDiamondSite()) {
+        const hasDiamondSite = !!(await getUserSites())
+        this.isDiamondSiteJumpToMainSite = hasDiamondSite
+      }
     }
   }
 }
