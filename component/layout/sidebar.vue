@@ -250,6 +250,11 @@ export default {
           return defaultOpeneds
         }, [])
       this.defaultActive = route.name
+    },
+    'userInfo.roles' () {
+      if (allowSeeDiamondSite(this.userInfo.roles)) {
+        this.initDiamondSiteNav()
+      }
     }
   },
   computed: {
@@ -289,7 +294,6 @@ export default {
     },
     initNavMenu () {
       this.initKaNav()
-      this.initDiamondSiteNav()
     },
     async initKaNav () {
       this.isKaSuperman = ((await baxUserLogin()).data.roles || []).includes('seo_vendor')
@@ -298,10 +302,8 @@ export default {
       this.isRenderSiteLink = hasSitesAndTickets
     },
     async initDiamondSiteNav () {
-      if (this.allowSeeDiamondSite) {
-        const hasDiamondSite = !!(await getUserSites())
-        this.isDiamondSiteJumpToMainSite = hasDiamondSite
-      }
+      const hasDiamondSite = !!(await getUserSites())
+      this.isDiamondSiteJumpToMainSite = hasDiamondSite
     }
   }
 }
