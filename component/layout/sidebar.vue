@@ -298,7 +298,7 @@ export default {
       this.isRenderSiteLink = hasSitesAndTickets
     },
     async initDiamondSiteNav () {
-      if (this.allowSeeDiamondSite()) {
+      if (this.allowSeeDiamondSite) {
         const hasDiamondSite = !!(await getUserSites())
         this.isDiamondSiteJumpToMainSite = hasDiamondSite
       }
