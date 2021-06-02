@@ -290,6 +290,6 @@ export function relationAllow () {
     case relationEnum.NONE:
       return false
     default:
-      return false
+      return true
   }
 }
