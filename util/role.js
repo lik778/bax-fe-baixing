@@ -17,6 +17,14 @@ const ROLES_ENUM = [
   { name: '供应商审核', name_en: 'VENDOR_OPERATOR' }
 ]
 
+export function isSales (roles) {
+  const currentRoles = normalizeRoles(roles)
+  return checkRoles(currentRoles, [
+    'AGENT_SALES',
+    'BAIXING_SALES'
+  ])
+}
+
 // global
 
 export function allowSeeAccount (roles) {

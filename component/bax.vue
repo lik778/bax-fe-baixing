@@ -52,7 +52,8 @@ import es from 'base/es'
 
 import track from 'util/track'
 import {
-  normalizeRoles
+  normalizeRoles,
+  isSales
 } from 'util/role'
 
 import { router } from '../template/bax'
@@ -137,16 +138,17 @@ export default {
     }
   },
   async mounted () {
-    const { userId } = this.salesInfo
-    if (userId) {
-      gStore.getRelation({ userId })
-    }
     await Promise.all([
       gStore.getCurrentUser(),
       gStore.getCategories(),
       gStore.getAreas(),
       gStore.getRoles()
     ])
+    const { roles } = this.currentUser
+    const { userId } = this.salesInfo
+    if (isSales(roles) && userId) {
+      gStore.getRelation({ userId })
+    }
     // 购物车限制在标王页面
     this.isBwRoute = this.$route.path.startsWith('/main/bw')
     router.beforeEach((to, from, next) => {
