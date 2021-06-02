@@ -91,7 +91,7 @@ export default {
         validateKeyword([val])
 
         const newWords = getNotExistWords(this.allWords, [val])
-        if (!newWords.length) throw new Error('关键词已存在关键词或否词列表中，请更换关键词')
+        if (!newWords.length) throw new Error('否词已存在关键词或否词列表中，请更换关键词')
 
         this.$emit('add-negative-words', [{ word: val }])
         this.$emit('track', 'click-button: add-negative-keyword')
