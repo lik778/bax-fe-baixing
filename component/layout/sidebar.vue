@@ -56,12 +56,6 @@
           </el-menu-item>
         </el-submenu>
 
-        <el-menu-item index="gw-charge" v-if="allowUseKaPackage">
-          <p @click="toBuyKaOrGw">
-            <bx-icon type="book"></bx-icon>官网购买
-          </p>
-        </el-menu-item>
-
         <el-submenu index="sst" v-show="allowSeeQwtPromotion">
           <template slot="title">
             <bx-icon type="sharealt"></bx-icon>站外推广
@@ -118,15 +112,10 @@
             </router-link>
           </el-menu-item>
         </el-submenu>
-        <el-menu-item index="gw-homepage">
-          <a href="/ka/main" v-if="isRenderSiteLink" style="color: inherit">
+        <el-menu-item index="gw-homepage" v-if="isRenderSiteLink">
+          <a href="/ka/main" style="color: inherit">
             <i class="el-icon-news" />精品官网
-            <i v-if="isRenderSiteNavTag" class="el-icon-question" />
           </a>
-          <router-link :to="{name: 'gw-homepage'}" tag="p" v-else>
-            <i class="el-icon-news" />精品官网
-            <i v-if="isRenderSiteNavTag" class="el-icon-question" />
-          </router-link>
         </el-menu-item>
         <el-submenu index="dashboard">
           <template slot="title">
@@ -179,6 +168,15 @@
             </router-link>
           </el-menu-item>
         </el-submenu>
+
+        <el-menu-item v-if="allowSeeDiamondSite" index="diamond-site-homepage" key="diamond-site-homepage">
+          <a v-if="isDiamondSiteJumpToMainSite" href="//shop.baixing.com/management/shop" style="color: inherit">
+            <i class="el-icon-news" />钻石店铺
+          </a>
+          <router-link v-else :to="{ name: 'qwt-charge' }" tag="p">
+            <i class="el-icon-news" />钻石店铺
+          </router-link>
+        </el-menu-item>
       </el-menu>
     </main>
   </div>
@@ -189,8 +187,7 @@ import { version } from '../../package.json'
 import BxIcon from 'com/widget/icon'
 
 import {
-  allowSeeQwtPromotion,
-  allowUseKaPackage
+  allowSeeQwtPromotion
 } from 'util/fengming-role'
 
 import {
@@ -201,10 +198,12 @@ import {
   allowQueryUsers,
   // global
   allowSeeAccount,
-  allowSeeBxAd
+  allowSeeBxAd,
+  allowSeeDiamondSite
 } from 'util/role'
 
-import { baxUserLogin, kaNavigation } from 'api/ka'
+import { getUserSites } from 'api/diamond-site'
+import { baxUserLogin, kaOnlineAndTickets } from 'api/ka'
 
 const MENU_GROUP_MAP = {
   charge: ['qwt-charge', 'seo-charge'],
@@ -236,8 +235,7 @@ export default {
       defaultActive: null,
       defaultOpeneds: [],
       isRenderSiteLink: false,
-      isRenderSiteNavTag: false,
-
+      isDiamondSiteJumpToMainSite: false,
       isKaSuperman: false
     }
   },
@@ -252,13 +250,14 @@ export default {
           return defaultOpeneds
         }, [])
       this.defaultActive = route.name
+    },
+    'userInfo.roles' () {
+      if (allowSeeDiamondSite(this.userInfo.roles)) {
+        this.initDiamondSiteNav()
+      }
     }
   },
   computed: {
-    allowUseKaPackage () {
-      // 合并产品购买和充值后，只有几个大客户可以看到官网单独购买入口
-      return allowUseKaPackage(this.userInfo.roles, this.userInfo.id)
-    },
     allowQueryMaterials () {
       return allowQueryMaterials(this.userInfo.roles)
     },
@@ -281,6 +280,9 @@ export default {
     // allow see qwt ...
     allowSeeQwtPromotion () {
       return allowSeeQwtPromotion(this.userInfo.roles)
+    },
+    allowSeeDiamondSite () {
+      return allowSeeDiamondSite(this.userInfo.roles)
     }
   },
   mounted () {
@@ -290,22 +292,18 @@ export default {
     goKaSuperPage () {
       location.href = '/ka/vendor/site'
     },
-    async initNavMenu () {
-      // 获取ka nav 数据
-      this.isKaSuperman = ((await baxUserLogin()).data.roles || []).includes('seo_vendor')
-      const { offlineSiteNum, canUseTicketsNum, allTicketsNum } = await kaNavigation()
-      this.isRenderSiteNavTag = !!(offlineSiteNum || canUseTicketsNum)
-      this.isRenderSiteLink = !!allTicketsNum
+    initNavMenu () {
+      this.initKaNav()
     },
-    toBuyKaOrGw () {
-      const q = this.$route.query
+    async initKaNav () {
+      this.isKaSuperman = ((await baxUserLogin()).data.roles || []).includes('seo_vendor')
 
-      this.$router.push({
-        name: 'gw-charge',
-        query: {
-          ...q
-        }
-      })
+      const { hasSitesAndTickets } = await kaOnlineAndTickets()
+      this.isRenderSiteLink = hasSitesAndTickets
+    },
+    async initDiamondSiteNav () {
+      const hasDiamondSite = !!(await getUserSites())
+      this.isDiamondSiteJumpToMainSite = hasDiamondSite
     }
   }
 }

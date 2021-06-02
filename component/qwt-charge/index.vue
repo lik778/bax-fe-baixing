@@ -20,8 +20,8 @@
             <header>选择{{chargeSpu.title}}：</header>
             <main>
               <section>
-                <price-tag v-for="(product, index) in chargeSpu.selection"
-                  :key="index"
+                <price-tag v-for="product in chargeSpu.selection"
+                  :key="product.skuVendorId"
                   :editable="Number(product.maxQuantity) !== Number(product.minQuantity)"
                   :price="centToYuan(product.price)"
                   :min-input-price="centToYuan(product.minQuantity * product.realPrice)"
@@ -35,13 +35,13 @@
           </template>
 
           <template v-if="siteSpu">
-            <header>选择{{siteSpu.title}}：
+            <header>选择店铺：
               <span class="tip">具体官网搭售折扣及实付金额，请点击“确认购买”后前往订单确认页面查看</span>
             </header>
             <main>
               <section>
-                <gw-pro-widget v-for="(product, index) of siteSpu.selection"
-                  :key="index" :title="product.title" :desc="product.desc"
+                <gw-pro-widget v-for="product of siteSpu.selection"
+                  :key="product.skuVendorId" :title="product.title" :desc="product.desc"
                   :is-hot="product.tags.includes('hot')"
                   :price="centToYuan(product.realPrice)"
                   :checked="checkedProducts.includes(product)"
@@ -583,11 +583,15 @@ export default {
 .discount-info {
   font-size: 12px;
   margin-bottom: 10px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
   & > span {
     text-align: center;
   }
 
-  & > span.red {
+  & > .red {
     background-color: #ff3c3c;
     color: white;
     padding: 1px 4px;

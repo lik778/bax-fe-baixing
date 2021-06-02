@@ -44,11 +44,10 @@ export async function kaSimpleReport () {
   return toCamelcase(body.data)
 }
 
-export async function kaNavigation () {
+export async function kaOnlineAndTickets () {
   const body = await ka
-    .get('/bax/user/navigation')
+    .get('/check-online-sites-tickets')
     .json()
-
   return toCamelcase(body.data)
 }
 

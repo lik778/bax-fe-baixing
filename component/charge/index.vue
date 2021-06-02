@@ -32,7 +32,7 @@
             </div>
           </main>
 
-          <header>选择精品官网</header>
+          <header>选择官网</header>
           <main>
             <section>
               <gw-pro-widget

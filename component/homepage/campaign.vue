@@ -1,7 +1,6 @@
 <template>
   <div class="layout-container">
-    <slot name="left" />
-    <div class="layout-right">
+    <div class="layout-left">
       <h5 class="layout-header">
         站外推广数据概览
         <span class="action" @click="() => $router.push({name: 'qwt-dashboard'})">查看详情</span>
@@ -108,67 +107,6 @@ export default {
   color: #999;
 }
 .layout-left {
-  & .layout-content {
-    display: flex;
-    min-height: 288px;
-  }
-  & .chart {
-    width: 55%;
-    flex: 1;
-    & /deep/ .echarts {
-      width: 100%;
-      height: 100%;
-    }
-  }
-  & .description {
-    width: 45%;
-    flex: 1;
-    padding-top: 25px;
-    line-height: 36px;
-    letter-spacing: 1px;
-    & strong {
-      font-size: 24px;
-      font-weight: 600;
-      color: #ff6350;
-      margin: 0 4px;
-    }
-    & a {
-      letter-spacing: 0;
-      color: #35a5e4;
-    }
-  }
-  & .optimization {
-    line-height: 1.6;
-    margin-top: 22px;
-    & .title {
-      font-weight: 600;
-    }
-    & .keyword {
-      display: inline-block;
-      font-size: 13px;
-      margin-top: 8px;
-      margin-right: 8px;
-      padding: 3px 6px;
-      color: #b66969;
-      background-color: #fff5f5;
-      border-radius: 2px;
-      cursor: pointer;
-      transition: color, background-color 0.1s;
-      &:hover {
-        background-color: #ffe0e0;
-        color: #b64949;
-      }
-    }
-  }
-  & .actions {
-    margin-top: 25px;
-    & /deep/ .el-button {
-      min-width: 110px;
-      padding: 8px 12px;
-    }
-  }
-}
-.layout-right {
   & .radio-group {
     display: flex;
     justify-content: space-around;
