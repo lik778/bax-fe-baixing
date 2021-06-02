@@ -1,7 +1,7 @@
 <template>
   <div class="huodong-btn">
     <a target="_blank" :href="href" >
-      <img src="//file.baixing.net/202103/47a52ee00de019077e11b45e9f6ad537.png">
+      <img src="//file.baixing.net/202106/05873a4a3b73a382de36ed49a76d2fed.png">
     </a>
   </div>
 </template>

@@ -1,6 +1,6 @@
 export const activityConfig = {
-  startTime: '2021-03-23 00:00:00',
-  endTime: '2021-03-31 23:59:59'
+  startTime: '2021-06-10 00:00:00',
+  endTime: '2021-06-18 23:59:59'
 }
 
 export const COMMON_STATUS = 'common'
@@ -14,7 +14,9 @@ export const fengmingDiscountInfo = {
       [9888, 1200, 2000]
     ],
     get discountInfoHTML () {
-      const genHTML = item => `<p class="discount-info">站外资金满 ${item[0]} 元：同时购买 1 年钻石店铺，<i class="red">减</i>立减 ${item[1]} 元；同时购买 2 年钻石店铺，送 1 年钻石店铺时长，<i class="red">减</i>立减 ${item[2]} 元；</p>`
+      const genHTML = item => `<p class="discount-info">站外资金满 ${item[0]} 元：
+      同时购买 1 年钻石店铺，<i class="red">减</i>立减 ${item[1]} 元；
+      同时购买 2 年钻石店铺，送 1 年钻石店铺时长，<i class="red">减</i>立减 ${item[2]} 元；</p>`
       return this.discountInfo.map(item => genHTML(item))
     }
   },
