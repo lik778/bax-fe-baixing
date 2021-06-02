@@ -226,9 +226,6 @@ export default {
       required: true
     }
   },
-  created () {
-    this.initNavMenu()
-  },
   data () {
     return {
       version,
@@ -252,6 +249,7 @@ export default {
       this.defaultActive = route.name
     },
     'userInfo.roles' () {
+      // TIP: 只有普通销售会去
       if (allowSeeDiamondSite(this.userInfo.roles)) {
         this.initDiamondSiteNav()
       }
@@ -285,15 +283,12 @@ export default {
       return allowSeeDiamondSite(this.userInfo.roles)
     }
   },
-  mounted () {
-    this.initNavMenu()
+  async mounted () {
+    await this.initKaNav()
   },
   methods: {
     goKaSuperPage () {
       location.href = '/ka/vendor/site'
-    },
-    initNavMenu () {
-      this.initKaNav()
     },
     async initKaNav () {
       this.isKaSuperman = ((await baxUserLogin()).data.roles || []).includes('seo_vendor')
