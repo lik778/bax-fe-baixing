@@ -215,6 +215,8 @@ export default {
     background-color: #eeeff0;
     overflow-x: hidden;
     scroll-behavior: smooth;
+    position: absolute;
+    height: 100%;
   }
   .view {
     margin: 12px 12px 32px;
