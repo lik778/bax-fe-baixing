@@ -274,7 +274,7 @@ export default {
       }
     },
     wordLen () {
-      return this.keywords.length
+      return this.keywords.filter(o => !o.isDel).length
     },
     matchTypeRemainExactCount () {
       const maxCount = getMatchTypeObj(this.wordLen).count(this.wordLen)
@@ -432,7 +432,6 @@ export default {
       if (this.showMatchType && row.matchType !== MATCH_TYPE_PHRASE) {
         newRow.matchType = MATCH_TYPE_PHRASE
       }
-      this.emitUpdateKeyword(newRow, !!row.isNew)
 
       if (this.showMatchType) {
         // 删除之后的精准匹配的最大值和当前值
@@ -442,6 +441,7 @@ export default {
         if (String(row.matchType) === String(MATCH_TYPE_EXACT)) {
           currentCount--
         }
+
         if (maxCount < currentCount) {
           const h = this.$createElement
           const words = this.keywords.reduce((curr, prev) => {
@@ -463,6 +463,9 @@ export default {
           return
         }
       }
+
+      this.emitUpdateKeyword(newRow, !!row.isNew)
+
       if (row.isNew) {
         let offset = this.offset - 1 > 0 ? this.offset : 0
         offset = offset === this.pagination.total - 1 ? offset - 1 : offset

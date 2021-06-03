@@ -208,10 +208,13 @@ export default {
     async updatePromotion () {
       try {
         await this.validatePromotion()
-        this.loading.updateCampaign = true
-        await this._updatePromotion()
       } catch (e) {
         return this.$message.error(e.message)
+      }
+
+      try {
+        this.loading.updateCampaign = true
+        await this._updatePromotion()
       } finally {
         this.loading.updateCampaign = false
       }

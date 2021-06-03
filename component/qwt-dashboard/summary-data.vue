@@ -319,10 +319,10 @@ export default {
       this.query.dimension = DIMENSION_GROUP
       this.searchCampaigns = campaign.campaignId
     },
-    async getKeywordReport ({ channel, groupId }) {
+    async getKeywordReport ({ channel, campaignId }) {
       this.query.channel = channel
       this.query.dimension = DIMENSION_KEYWORD
-      this.searchCampaigns = groupId
+      this.searchCampaigns = campaignId
 
       // // * for test suppose
       // this.searchCampaigns = '123321'

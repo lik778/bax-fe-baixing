@@ -261,8 +261,12 @@ export default {
     async addGroup () {
       try {
         await this.validateGroup()
-        this.loading.updateGroup = true
+      } catch (e) {
+        return this.$message.error(e.message)
+      }
 
+      try {
+        this.loading.updateGroup = true
         await createGroup({
           ...this.group,
           price: toFloat(this.group.price) * 100,
@@ -277,8 +281,6 @@ export default {
           name: 'qwt-update-promotion',
           params: { id: this.promotion.id }
         })
-      } catch (e) {
-        return this.$message.error(e.message)
       } finally {
         this.loading.updateGroup = false
       }
