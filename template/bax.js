@@ -317,7 +317,7 @@ const qwtRoutes = [
     path: '/main/qwt/promotion/create',
     name: 'qwt-create-promotion',
     beforeEnter: (to, from, next) => {
-      next({ name: 'qwtOffline' })
+      localStorage.getItem('cdy') ? next() : next({ name: 'qwtOffline' })
     }
   },
   {
@@ -330,7 +330,7 @@ const qwtRoutes = [
     path: '/main/qwt/promotions',
     name: 'qwt-promotion-list',
     beforeEnter: (to, from, next) => {
-      next({ name: 'qwtOffline' })
+      localStorage.getItem('cdy') ? next() : next({ name: 'qwtOffline' })
     }
   },
   {
@@ -338,7 +338,7 @@ const qwtRoutes = [
     path: '/main/qwt/dashboard',
     name: 'qwt-dashboard',
     beforeEnter: (to, from, next) => {
-      next({ name: 'qwtOffline' })
+      localStorage.getItem('cdy') ? next() : next({ name: 'qwtOffline' })
     }
   },
   {
@@ -346,7 +346,7 @@ const qwtRoutes = [
     path: '/main/qwt/charge',
     name: 'qwt-charge',
     beforeEnter: async (to, from, next) => {
-      next({ name: 'qwtOffline' })
+      localStorage.getItem('cdy') ? next() : next({ name: 'qwtOffline' })
       // const { roles, realAgentId } = await getCurrentUser()
       // if (notAllowFengmingRecharge(roles, realAgentId)) {
       //   next({ name: 'qwt-promotion-list', redirect: true })
@@ -398,7 +398,7 @@ const sspRoutes = [
     path: '/main/ad-calendar',
     name: 'ad-calendar',
     beforeEnter: (to, from, next) => {
-      next({ name: 'qwtOffline' })
+      localStorage.getItem('cdy') ? next() : next({ name: 'qwtOffline' })
     }
   }
 ]
@@ -462,7 +462,7 @@ export const router = new VueRouter({
       path: '/main',
       name: 'root',
       beforeEnter: (to, form, next) => {
-        next({ name: 'qwtOffline' })
+        localStorage.getItem('cdy') ? next() : next({ name: 'qwtOffline' })
       }
     },
     {
@@ -485,7 +485,7 @@ export const router = new VueRouter({
       path: '/main/account',
       name: 'account',
       beforeEnter: (to, from, next) => {
-        next({ name: 'qwtOffline' })
+        localStorage.getItem('cdy') ? next() : next({ name: 'qwtOffline' })
       }
     },
     {
