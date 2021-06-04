@@ -142,7 +142,7 @@ export function isWeishopSite (siteUrl) {
 }
 
 export function isSiteLandingType (landingPage) {
-  const isSiteLandingTypeReg = /(\.shop|\.mvp)\.baixing\.com/i
+  const isSiteLandingTypeReg = /(\.shop|\.mvp)\.baixing(\.com|\.cn)/i
   return isSiteLandingTypeReg.test(landingPage) || isWeishopSite(landingPage)
 }
 

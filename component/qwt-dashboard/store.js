@@ -29,8 +29,8 @@ const store = observable({
     })
   }),
 
-  fetchReport: action(async function (opts) {
-    const result = await api.getReport(opts)
+  fetchReport: action(async function (opts, campaignFields) {
+    const result = await api.getReport(opts, campaignFields)
     const { rows, total, offset, summary } = result
 
     this._statistics = rows

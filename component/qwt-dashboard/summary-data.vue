@@ -82,6 +82,7 @@
         size="mini"
         ref="campaignInput"
         class="search"
+        @blur="queryStatistics()"
         placeholder="输入计划ID，多个计划使用英文逗号分隔"
       />
       <span v-if="campaignErrTip" class="err-tip">
@@ -98,8 +99,9 @@
       :total="total"
       :limit="limit"
       :dimension="query.dimension"
-      @switch-to-campaign-report="getCampaignReport"
-      @refresh-keyword-list="queryStatistics({ offset })"
+      @switch-to-group-report="getGroupReport"
+      @switch-to-keyword-report="getKeywordReport"
+      @refresh="() => queryStatistics({ offset })"
       @current-change="queryStatistics"
     >
     </data-detail>
@@ -115,6 +117,7 @@ import { toTimestamp } from 'utils'
 
 import {
   DIMENSION_CAMPAIGN,
+  DIMENSION_GROUP,
   DIMENSION_KEYWORD,
   DIMENSION_SEARCH_KEYWORD,
   TIME_UNIT_DAY,
@@ -125,6 +128,7 @@ import {
   allDevices,
   timeTypes,
   campaignFields,
+  groupFields,
   keywordFields
 } from 'constant/fengming-report'
 
@@ -155,6 +159,10 @@ export default {
   },
   data () {
     return {
+      DIMENSION_CAMPAIGN,
+      DIMENSION_GROUP,
+      DIMENSION_KEYWORD,
+      DIMENSION_SEARCH_KEYWORD,
       SEM_PLATFORM_SHENMA,
       DEVICE_WAP,
 
@@ -174,7 +182,6 @@ export default {
 
       searchCampaigns: '',
       campaignErrTip: false,
-      DIMENSION_SEARCH_KEYWORD,
       triPickerOptions: {
         disabledDate (time) {
           const timestamp = new Date(time).getTime()
@@ -208,6 +215,7 @@ export default {
       await store.clearStatistics()
       this.campaignErrTip = ''
 
+      // 搜索词维度需要填写计划ID
       if (dimension === DIMENSION_SEARCH_KEYWORD) {
         if (
           this.searchCampaigns === '' ||
@@ -220,6 +228,8 @@ export default {
         }
         return await this._getReportByQueryWord(opts)
       }
+
+      // 非搜索词维度，需要额外调获取计划总数据（总展现、总点击、总消费）接口
       if (
         this.searchCampaigns !== '' &&
         checkedCampaignIds.some((o) => isNaN(o))
@@ -280,10 +290,16 @@ export default {
         endAt = t.endAt
       }
 
+      const fields = {
+        [DIMENSION_CAMPAIGN]: campaignFields,
+        [DIMENSION_GROUP]: groupFields,
+        [DIMENSION_KEYWORD]: keywordFields,
+        [DIMENSION_SEARCH_KEYWORD]: keywordFields
+      }[query.dimension]
+
       const q = {
         startAt,
         endAt,
-
         dataDimension: query.dimension,
         timeUnit: query.timeUnit,
         device: query.device,
@@ -291,33 +307,33 @@ export default {
         campaignIds: checkedCampaignIds,
         userId,
         salesId,
-
         limit: this.limit,
         offset,
-
-        fields:
-          query.dimension === DIMENSION_CAMPAIGN
-            ? campaignFields
-            : keywordFields
+        fields
       }
-      await store.fetchReport(q)
+      await store.fetchReport(q, campaignFields)
     },
-    async getCampaignReport (campaign) {
+    async getGroupReport (campaign) {
       this.query.channel = campaign.channel
       this.query.device = DEVICE_ALL
-      this.query.dimension = DIMENSION_KEYWORD
+      this.query.dimension = DIMENSION_GROUP
       this.searchCampaigns = campaign.campaignId
+    },
+    async getKeywordReport ({ channel, campaignId }) {
+      this.query.channel = channel
+      this.query.dimension = DIMENSION_KEYWORD
+      this.searchCampaigns = campaignId
+
+      // // * for test suppose
+      // this.searchCampaigns = '123321'
     }
   },
   watch: {
     query: {
       deep: true,
-      handler: async function (v) {
+      handler: async function () {
         await this.queryStatistics()
       }
-    },
-    searchCampaigns () {
-      this.queryStatistics()
     }
   },
   async mounted () {

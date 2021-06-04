@@ -13,7 +13,6 @@
             :value="title"
             @change="onCreativeChange('title', $event)"
             @input="onInput('title', $event)"
-            size="small"
           />
         </text-limit-tip>
         <p class="auditing-prompt" v-if="creativeStatus === CREATIVE_STATUS_REJECT">
@@ -22,7 +21,7 @@
         <p class="auditing-prompt" v-else-if="creativeStatus === CREATIVE_STATUS_PENDING">
           您的推广物料正在审核中，预计审核时间3个工作日内，请您耐心等待。
         </p>
-        <p class="auditing-prompt" v-else-if="campaignOffline">
+        <p class="auditing-prompt" v-else-if="groupOffline">
           您当前的计划已下线，请重新开启投放。
         </p>
       </span>
@@ -73,6 +72,10 @@ export default {
     TextLimitTip
   },
   props: {
+    idx: {
+      type: Number,
+      default: 0
+    },
     disabled: {
       type: Boolean,
       default: false
@@ -95,7 +98,7 @@ export default {
     statusText: {
       type: String
     },
-    campaignOffline: {
+    groupOffline: {
       type: Boolean,
       default: false
     }
@@ -122,6 +125,18 @@ export default {
     contentMaxLen () {
       const { platforms } = this
       return getCreativeContentLenLimit(platforms)[1]
+    },
+    isTitleContentValid () {
+      const titleLen = this.title.length
+      const contentLen = this.content.length
+      if (titleLen >= this.titleMinLen &&
+          titleLen <= this.titleMaxLen &&
+          contentLen >= this.contentMinLen &&
+          contentLen <= this.contentMaxLen
+      ) {
+        return true
+      }
+      return false
     }
   },
   methods: {
@@ -132,7 +147,8 @@ export default {
       }
       const creativeValues = {
         ...defaultCreativeValues,
-        [type]: value
+        [type]: value,
+        idx: this.idx
       }
       this.$emit('change', creativeValues)
     },
@@ -149,9 +165,9 @@ export default {
         const { platforms } = this
         validateCreative({ title: creativeValues.title, content: creativeValues.content, platforms })
         await this.checkCreative(creativeValues.title, creativeValues.content, platforms)
-        this.$emit('error', undefined)
+        this.$emit('error', undefined, this.idx)
       } catch (e) {
-        this.$emit('error', e.message)
+        this.$emit('error', e.message, this.idx)
       }
     },
     async checkCreative (title, content, platforms) {
@@ -178,6 +194,14 @@ export default {
         message: '推广设置检查通过',
         type: 'success'
       })
+    }
+  },
+  watch: {
+    isTitleContentValid: {
+      immediate: true,
+      handler (newV) {
+        this.$emit('validate-len-change', newV, this.idx)
+      }
     }
   }
 }

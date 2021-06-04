@@ -219,7 +219,9 @@ export default {
     height: 100%;
   }
   .view {
-    margin: 12px 12px 32px;
+    min-height: calc(100vh - 50px);
+    box-sizing: border-box;
+    padding: 12px 12px 32px;
   }
 </style>
 

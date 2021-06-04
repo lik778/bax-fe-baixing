@@ -13,13 +13,12 @@ const { WHOLE_SPU_CODE } = SPUCODES
 // 获取创意配图物料
 export async function getMaterialPictures (opts) {
   return await fengming
-    .get(`/creative/${opts.campaignId}/image`)
+    .get(`/creative/${opts.groupId}/image`)
     .json()
 }
 
 // 更新创意配图物料
 export async function updateMaterialPictures (opts) {
-  // console.log('opts: ', opts)
   return await fengming
     .post('/creative/image')
     .send(reverseCamelcase(opts))
@@ -83,15 +82,6 @@ export async function updateCampaignDailyBudget (opts) {
 export async function updateCampaignRatio (opts) {
   const body = await fengming
     .post('/campaign/ratio')
-    .send(reverseCamelcase(opts))
-    .json()
-
-  return body
-}
-
-export async function updateCampaignTimeRange (opts) {
-  const body = await fengming
-    .post('/campaign/valid_time')
     .send(reverseCamelcase(opts))
     .json()
 
@@ -165,19 +155,7 @@ export async function getCampaignInfo (id) {
     .get(`/campaign/${id}`)
     .json()
 
-  const campaign = toCamelcase(body.data)
-
-  if (!campaign.landingPageId) {
-    // why ? 不想多说什么了, 呵呵
-    if (campaign.landingPage && campaign.landingPage.includes('vad_id')) {
-      const search = (new URL(campaign.landingPage)).search
-      const o = qs.parse(search)
-      if (o.vad_id) {
-        campaign.landingPageId = o.vad_id
-      }
-    }
-  }
-  return campaign
+  return toCamelcase(body.data)
 }
 
 export async function updateCampaign (id, data) {
@@ -218,7 +196,28 @@ export async function pauseCampaigns (ids) {
       pause: 1
     }))
     .json()
+  return body
+}
 
+export async function pauseGroup (ids) {
+  const body = await fengming
+    .post('/group/pause')
+    .send(reverseCamelcase({
+      group_ids: [...ids],
+      pause: 1
+    }))
+    .json()
+  return body
+}
+
+export async function activeGroup (ids) {
+  const body = await fengming
+    .post('/group/pause')
+    .send(reverseCamelcase({
+      group_ids: [...ids],
+      pause: 0
+    }))
+    .json()
   return body
 }
 
@@ -297,7 +296,6 @@ export async function getRecommandCreative (opts) {
   return toCamelcase(body.data)
 }
 
-// TODO: 添加计划id
 export async function recommendByUrl (opts) {
   const body = await fengming
     .post('/keyword/recommand/vad')
@@ -376,18 +374,6 @@ export async function getLogs (queryParmas = {}) {
     logs: data,
     total: meta.count
   })
-}
-
-export async function getSummary () {
-  const [balance, daily] = await Promise.all([
-    getCurrentBalance(),
-    _getDailySummary()
-  ])
-
-  return {
-    balance,
-    ...daily
-  }
 }
 
 export async function getHomepageSummary () {
@@ -494,6 +480,221 @@ export async function getDashboardHeader () {
 export async function changeCampaignKeywordsMatchType (campaignId, matchType) {
   const body = await fengming
     .post(`/campaign/${campaignId}/keyword_match`)
+    .send(reverseCamelcase({ matchType }))
+    .json()
+
+  return body.data
+}
+
+/**
+ * 创建单元
+ * @param {string} name
+ * @param {string} landing_page
+ * @param {number} landing_type
+ * @param {number} landing_page_id
+ * @param {array} creatives [{title: '', content: ''}]
+ * @param {array} negative_words [{word: ''}]
+ * @param {array} keywords [{word: ''}]
+ * @param {number} price
+ * @param {number} mobile_price_ratio
+ */
+export async function createGroup (data) {
+  const body = await fengming
+    .post('/group')
+    .send(reverseCamelcase(data))
+    .json()
+
+  return body.data
+}
+
+/**
+ * 更新单元
+ * @param {string} name
+ * @param {string} landing_page
+ * @param {number} landing_type
+ * @param {number} landing_page_id
+ * @param {array} newCreatives [{title: '', content: ''}]
+ * @param {array} updatedCreatives [{id: '', title: '', content: ''}]
+ * @param {array} deletedCreatives [1, 2, 3]
+ * @param {array} newKeywords [{word: '', price: '', matchType: ''}]
+ * @param {array} updatedKeywords [{id: '', word: '', price: '', matchType: ''}]
+ * @param {array} deletedKeywords [1, 2, 3]
+ * @param {array} newNegativeWords [{word: ''}]
+ * @param {array} deletedNegativeWords [1, 2, 3]
+ * @param {number} mobile_price_ratio
+ */
+export async function updateGroup (id, data) {
+  const body = await fengming
+    .post(`/group/${id}`)
+    .send(reverseCamelcase(data))
+    .json()
+
+  return body.data
+}
+
+/**
+ * 更加单元id获取单元下的关键词
+ * @param {number} group_id
+ */
+export async function getKeywordsByGroupId (groupId) {
+  const body = await fengming
+    .get('/keyword/list_by_group')
+    .query(reverseCamelcase({
+      groupId
+    }))
+    .json()
+
+  return toCamelcase(body.data)
+}
+
+/**
+ * 根据计划id获取用户关键词的总数（包含所有单元的关键词数量）
+ * @param {number} campaign_id
+ */
+export async function getCampaignKeywordsCount (campaignId) {
+  const body = await fengming
+    .get('/keyword/count')
+    .query(reverseCamelcase({
+      campaignId
+    }))
+    .json()
+
+  return body.data
+}
+
+/**
+ * 根据单元id获取关键词或否定关键词是否已在（计划关键词、单元关键词、单元否词）中
+ * @param {number} group_id
+ * @param {number} campaign_id
+ * @param {array} keywords
+ */
+export async function getWordsExistInGroupOrCampaign (data) {
+  const body = await fengming
+    .post('/keyword/check_keywords_in_words')
+    .send(reverseCamelcase(data))
+    .json()
+
+  return (body.data || []).map(o => o.toLowerCase())
+}
+
+/**
+ * 获取用户下的所有计划信息
+ * @param {number} campaign_id
+ * @param {array} statuses
+ * @param {array} areas
+ * @param {string} sources
+ * @param {number} limit
+ * @param {number} offset
+ */
+export async function getAllCampaigns (opts) {
+  const body = await fengming
+    .post('/campaign/info')
+    .send(reverseCamelcase(opts))
+    .json()
+
+  return toCamelcase(body.data)
+}
+
+/**
+ * 获取用户下的所有单元信息
+ * @param {number} campaign_id
+ * @param {array} statuses
+ * @param {array} sources
+ * @param {string} group_name
+ * @param {string} user_id
+ * @param {number} limit
+ * @param {number} offset
+ */
+export async function getAllGroups (opts) {
+  const body = await fengming
+    .post('/group/info')
+    .send(reverseCamelcase(opts))
+    .json()
+
+  return toCamelcase(body.data)
+}
+
+/**
+ * 根据单元id获取单元详情
+ * @param {number} groupId
+ */
+export async function getGroupDetailByGroupId (groupId) {
+  const body = await fengming
+    .get(`/group/${groupId}`)
+    .json()
+
+  const group = toCamelcase(body.data)
+
+  if (!group.landingPageId) {
+    // why ? 不想多说什么了, 呵呵
+    if (group.landingPage && group.landingPage.includes('vad_id')) {
+      const search = (new URL(group.landingPage)).search
+      const o = qs.parse(search)
+      if (o.vad_id) {
+        group.landingPageId = o.vad_id
+      }
+    }
+  }
+
+  return group
+}
+
+/**
+ * 激活单元
+ * @param {array} groupIds
+ * @param {number} pause
+ */
+export async function activeGroups (ids) {
+  const body = await fengming
+    .post('/group/pause')
+    .send(reverseCamelcase({
+      groupIds: [...ids],
+      pause: 0
+    }))
+    .json()
+
+  return body
+}
+
+/**
+ * 暂停单元
+ * @param {array} groupIds
+ * @param {number} pause
+ */
+export async function pauseGroups (ids) {
+  const body = await fengming
+    .post('/group/pause')
+    .send(reverseCamelcase({
+      groupIds: [...ids],
+      pause: 1
+    }))
+    .json()
+
+  return body
+}
+
+/**
+ * 单元接口批量改价
+ * @param {number} groupId
+ * @param {number} price
+ */
+export async function changeGroupKeywordsPrice (groupId, price) {
+  const body = await fengming
+    .post(`/group/${groupId}/keyword`)
+    .send({ price })
+    .json()
+
+  return body.data
+}
+
+/**
+ * 单元接口批量匹配模式
+ * @param {number} groupId
+ * @param {number} matchType
+ */
+export async function changeGroupKeywordsMatchType (groupId, matchType) {
+  const body = await fengming
+    .post(`/group/${groupId}/keyword_match`)
     .send(reverseCamelcase({ matchType }))
     .json()
 

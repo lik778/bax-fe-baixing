@@ -50,7 +50,7 @@ export default {
   computed: {
     isValueInvalid () {
       const isInvalid = !this.loading && (this.initValue && !this.value)
-      this.$emit('validChange', !isInvalid)
+      this.$emit('valid-change', !isInvalid)
       return isInvalid
     }
   },
@@ -106,7 +106,7 @@ export default {
 
 <style lang="scss" scoped>
 .selector {
-  width: 560px;
+  width: 530px;
 }
 p {
   margin-left: 10px;

@@ -1,15 +1,13 @@
 
 <template>
-  <div class="account-container">
-    <main>
-      <h1 class="title">{{ userInfo.name }}，欢迎回来</h1>
-      <account-summary :userInfo="userInfo"/>
-      <consume />
-      <charge />
-      <log-list :all-areas="allAreas"/>
-      <order-list />
-    </main>
-  </div>
+  <main class="ccontainer">
+    <header>{{ userInfo.name }}，欢迎回来</header>
+    <account-summary :userInfo="userInfo"/>
+    <consume />
+    <charge />
+    <log-list :all-areas="allAreas"/>
+    <order-list />
+  </main>
 </template>
 
 <script>
@@ -52,21 +50,24 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.account-container {
-  padding: 0 35px;
-  width: 100%;
-  color: #6a778c;
-  & .title {
-    background-color: #fff;
-    padding: 20px 20px 6px;
-    border-radius: 4px;
-  }
-  & >>> .layout-container {
-    background-color: #fff;
-    border-radius: 4px;
-    padding: 20px;
-    box-shadow: 0 2px 9px 0 rgba(83, 95, 127, .10);
-    margin-bottom: 10px;
+header {
+  padding: 20px;
+  padding-bottom: 0;
+  color: #454647;
+  font-size: 16px;
+  font-weight: bold;
+}
+.layout-container {
+  background-color: #fff;
+  border-radius: 4px;
+  padding: 20px;
+  box-shadow: 0 2px 9px 0 rgba(83, 95, 127, .10);
+  margin-top: 25px;
+  margin-bottom: 10px;
+
+  & /deep/ header {
+    margin-top: 0;
+    margin-bottom: 23px;
   }
 }
 </style>
