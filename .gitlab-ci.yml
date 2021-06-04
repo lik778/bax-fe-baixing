@@ -1,4 +1,4 @@
-image: docker
+image: registry.gitlab.baixing.cn/arch/base-images/docker:latest
 
 # before_script:
 #   - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.baixing.cn
