@@ -17,8 +17,6 @@ stages:
 build:
   stage: build
   image: node:12.2
-  tags:
-    - k8s-dev-build
   cache:
     key: ${CI_BUILD_REF_NAME}
     paths:
@@ -36,8 +34,6 @@ build:
 
 release:
   stage: release
-  tags:
-    - k8s-dev-build
   script:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.baixing.cn
     - docker build --pull -t $BAX_FE_REF .
