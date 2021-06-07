@@ -61,9 +61,9 @@ import Vue from 'vue'
 import { ErrorBoundary } from 'vue-error-boundary'
 import Vue2Filters from 'vue2-filters'
 import { getBusinessLicense } from 'api/seo'
-// import { getCurrentUser } from 'api/account'
+import { getCurrentUser } from 'api/account'
 import pick from 'lodash.pick'
-// import { notAllowFengmingRecharge } from 'util/role'
+import { notAllowFengmingRecharge } from 'util/role'
 import { parseQuery, stringifyQuery, f2y } from 'util'
 
 import gStore from '../component/store'
@@ -311,10 +311,7 @@ const qwtRoutes = [
   {
     component: () => import('com/qwt-create-promotion'),
     path: '/main/qwt/promotion/create',
-    name: 'qwt-create-promotion',
-    beforeEnter: (to, from, next) => {
-      localStorage.getItem('cdy') ? next() : next({ name: 'qwtOffline' })
-    }
+    name: 'qwt-create-promotion'
   },
   {
     component: () => import('com/qwt-update-promotion'),
@@ -334,31 +331,24 @@ const qwtRoutes = [
   {
     component: () => import('com/qwt-update-promotion-list'),
     path: '/main/qwt/promotions',
-    name: 'qwt-promotion-list',
-    beforeEnter: (to, from, next) => {
-      localStorage.getItem('cdy') ? next() : next({ name: 'qwtOffline' })
-    }
+    name: 'qwt-promotion-list'
   },
   {
     component: () => import('com/qwt-dashboard'),
     path: '/main/qwt/dashboard',
-    name: 'qwt-dashboard',
-    beforeEnter: (to, from, next) => {
-      localStorage.getItem('cdy') ? next() : next({ name: 'qwtOffline' })
-    }
+    name: 'qwt-dashboard'
   },
   {
     component: () => import('com/qwt-charge'),
     path: '/main/qwt/charge',
     name: 'qwt-charge',
     beforeEnter: async (to, from, next) => {
-      localStorage.getItem('cdy') ? next() : next({ name: 'qwtOffline' })
-      // const { roles, realAgentId } = await getCurrentUser()
-      // if (notAllowFengmingRecharge(roles, realAgentId)) {
-      //   next({ name: 'qwt-promotion-list', redirect: true })
-      // } else {
-      //   next()
-      // }
+      const { roles, realAgentId } = await getCurrentUser()
+      if (notAllowFengmingRecharge(roles, realAgentId)) {
+        next({ name: 'qwt-promotion-list', redirect: true })
+      } else {
+        next()
+      }
     }
   }
 ]
@@ -402,10 +392,7 @@ const sspRoutes = [
   {
     component: () => import('com/ssp-ad-calendar'),
     path: '/main/ad-calendar',
-    name: 'ad-calendar',
-    beforeEnter: (to, from, next) => {
-      localStorage.getItem('cdy') ? next() : next({ name: 'qwtOffline' })
-    }
+    name: 'ad-calendar'
   }
 ]
 
@@ -466,10 +453,7 @@ export const router = new VueRouter({
     {
       component: Homepage,
       path: '/main',
-      name: 'root',
-      beforeEnter: (to, form, next) => {
-        localStorage.getItem('cdy') ? next() : next({ name: 'qwtOffline' })
-      }
+      name: 'root'
     },
     {
       component: () => import('com/qwt-offline'),
@@ -489,10 +473,7 @@ export const router = new VueRouter({
     {
       component: () => import('com/account'),
       path: '/main/account',
-      name: 'account',
-      beforeEnter: (to, from, next) => {
-        localStorage.getItem('cdy') ? next() : next({ name: 'qwtOffline' })
-      }
+      name: 'account'
     },
     {
       component: () => import('com/coupon'),
