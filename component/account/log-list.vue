@@ -12,30 +12,28 @@
     <label class="ml">选择查询项目</label>
     <bax-select
       v-model="queryParmas.timelineType"
-      :clearable="false"
       placeholder="请选择查询项目"
-      :options="timelineTypeOpts">
-    </bax-select>
+      :clearable="false"
+      :options="timelineTypeOpts"
+    />
     <label class="ml">选择查询类型</label>
     <bax-select
-      :clearable="false"
-      placeholder="请选择查询类型"
       v-model="queryParmas.opType"
-      :options="opTypeOpts">
-    </bax-select>
+      placeholder="请选择查询类型"
+      :clearable="false"
+      :options="opTypeOpts"
+    />
     <el-radio-group v-model="queryParmas.createdAt" class="radio">
       <el-radio-button :label="genCreatedAtValues(0)">近一个月</el-radio-button>
       <el-radio-button :label="genCreatedAtValues(1)">近三个月</el-radio-button>
       <el-radio-button :label="genCreatedAtValues(2)">近一年</el-radio-button>
     </el-radio-group>
     <div class="input-wrap">
-      <label class="ml">{{selectByType().type}}</label>
+      <label>{{selectByType().type}}</label>
       <bax-input v-model="queryParmas.selectId" class="input" :placeholder="selectByType().placeholder" />
     </div>
 
-    <el-table class="log-table"
-      :data="logs"
-      style="width: 100%">
+    <el-table class="log-table" :data="logs" style="width: 100%">
       <el-table-column
         label="日期"
         :formatter="dateFormatter"
@@ -51,7 +49,12 @@
         label="项目"
         prop="timelineType"
         :formatter="timelineTypeFormatter"
-        width="90">
+        width="140">
+      </el-table-column>
+      <el-table-column
+        :formatter="selectIdFormatter"
+        :label="selectByType().type"
+        width="80">
       </el-table-column>
       <el-table-column
         label="类型"
@@ -59,27 +62,19 @@
         width="80">
       </el-table-column>
       <el-table-column
-        :formatter="selectIdFormatter"
-        :label="selectByType().type"
-        width="110">
-      </el-table-column>
-      <el-table-column
         :formatter="changeLogFormatter('field')"
         label="变更字段"
-        align="center"
-        width="260">
+        align="center">
       </el-table-column>
       <el-table-column
         :formatter="changeLogFormatter('old')"
         label="变更前"
-        align="center"
-        width="180">
+        align="center">
       </el-table-column>
       <el-table-column
         :formatter="changeLogFormatter('new')"
         label="变更后"
-        align="center"
-        width="180">
+        align="center">
       </el-table-column>
     </el-table>
     <el-pagination
@@ -103,10 +98,8 @@ import dayjs from 'dayjs'
 import { toHumanTime } from 'utils'
 import {
   SEM_PLATFORM_SOGOU,
-  CAMPAIGN_STATUS_OFFLINE,
-  CAMPAIGN_STATUS_ONLINE,
-  CAMPAIGN_STATUS_ACCOUNT_BUDGET_NOT_ENOUGH,
-  CAMPAIGN_STATUS_CAMPAIGN_BUDGET_NOT_ENOUGH
+  RAW_CAMPAIN_STATUS as R_C,
+  RAW_GROUP_STATUS as R_G
 } from 'constant/fengming'
 import {
   fieldType,
@@ -128,8 +121,9 @@ const CREATED_AT_VALUES = [
 ]
 const DIVIDING_CHAR = '   '
 
-const genFormatLogValues = (change, keys, type, opType, campaignSource) => {
+const genFormatLogValues = (change, keys, type, opType, campaignSource, message) => {
   const valueKey = type === 'old' ? 'oldValue' : 'newValue'
+  // eslint-disable-next-line array-callback-return
   return keys.map(k => {
     const value = opType === OP_TYPE_CREATE ? change[k] : change[k][valueKey]
     if (k === 'price' || k === 'dailyBudget') {
@@ -138,17 +132,25 @@ const genFormatLogValues = (change, keys, type, opType, campaignSource) => {
       if (value.includes(null)) return '全时段'
       return value.map(timeStamp => toHumanTime(new Date(timeStamp * 1000), 'MM月DD')).join('~')
     } else if (k === 'status') {
-      switch (value) {
-        case CAMPAIGN_STATUS_ACCOUNT_BUDGET_NOT_ENOUGH:
-        case CAMPAIGN_STATUS_CAMPAIGN_BUDGET_NOT_ENOUGH:
-          return '预算不足'
-        case CAMPAIGN_STATUS_OFFLINE:
-          return '计划下线'
-        case CAMPAIGN_STATUS_ONLINE:
-          return '开启投放'
-        default:
-          return '暂停投放'
+      const isGroup = message.groupName
+      const campaignStatusDisplay = {
+        [R_C.STATUS_ONLINE]: '计划投放中',
+        [R_C.STATUS_ACCOUNT_BUDGET_NOT_ENOUGH]: '计划预算不足',
+        [R_C.STATUS_CAMPAIGN_BUDGET_NOT_ENOUGH]: '计划预算不足',
+        [R_C.STATUS_OFFLINE]: '计划下线',
+        [R_C.STATUS_INVALID_DATE]: '计划暂停',
+        [R_C.STATUS_INVALID_REGION]: '计划暂停',
+        [R_C.STATUS_PAUSE]: '计划暂停',
+        [R_C.STATUS_MIGRATE_PAUSE]: '计划暂停'
       }
+      const groupStatusDisplay = {
+        [R_G.STATUS_ONLINE]: '单元投放中',
+        [R_G.STATUS_OFFLINE]: '单元下线',
+        [R_G.STATUS_PAUSE]: '单元暂停'
+      }
+      return (isGroup
+        ? groupStatusDisplay[value]
+        : campaignStatusDisplay[value]) ?? '未知状态'
     } else if (k === 'schedule') {
       if (campaignSource === SEM_PLATFORM_SOGOU) {
         return value.every(v => v === 3670009) ? '全部时段' : '部分时段'
@@ -160,7 +162,6 @@ const genFormatLogValues = (change, keys, type, opType, campaignSource) => {
     } else if (k in fieldType) {
       return value
     }
-    return undefined
   }).join(DIVIDING_CHAR)
 }
 
@@ -186,7 +187,6 @@ export default {
       opTypeOpts,
       fengmingTimelineTypeOpts,
       productTypeOpts,
-
       offset: 0,
       queryParmas: {
         opType: '',
@@ -202,16 +202,19 @@ export default {
     genCreatedAtValues (index) {
       return CREATED_AT_VALUES[index]
     },
-    async load (isResetOffset) {
+    async initData (isResetOffset) {
       if (isResetOffset) this.offset = 0
+      const params = {
+        ...this.queryParmas
+      }
       await store.getLogs({
-        ...this.queryParmas,
+        ...params,
         offset: this.offset
       })
     },
     goto (page) {
       this.offset = (page - 1) * ONE_PAGE_NUM
-      this.load()
+      this.initData()
     },
     genMaterial (material) {
       const { biaowang, fengming } = material
@@ -229,13 +232,20 @@ export default {
       }
       return opTypeOpts.find(({ value }) => value === opType).label
     },
-    timelineTypeFormatter ({ timelineType }) {
+    timelineTypeFormatter (item) {
+      const { timelineType } = item
       const timelineTypeOpts = this.genMaterial({
         fengming: fengmingTimelineTypeOpts,
         biaowang: biaowangTimelineTypeOpts
       })
       const result = timelineTypeOpts.find(({ value }) => value === timelineType)
-      return result && result.label
+      const label = result && result.label
+      const name = this.groupNameFormatter(item)
+
+      return name ? `${label}（${name}）` : label
+    },
+    groupNameFormatter ({ message }) {
+      return message?.groupName
     },
     dateFormatter ({ createdAt, timestamp }) {
       return toHumanTime(createdAt || timestamp, 'YYYY-MM-DD HH:mm')
@@ -257,9 +267,9 @@ export default {
           return changeKeys.map(key => fieldType[key]).join(DIVIDING_CHAR)
         } else if (type === 'old') {
           if (opType === OP_TYPE_CREATE) return '-'
-          return genFormatLogValues(change, changeKeys, type, opType, campaignSource)
+          return genFormatLogValues(change, changeKeys, type, opType, campaignSource, message)
         } else if (type === 'new') {
-          return genFormatLogValues(change, changeKeys, type, opType, campaignSource)
+          return genFormatLogValues(change, changeKeys, type, opType, campaignSource, message)
         }
       }
       const biaowangFormatter = ({ before, after, timelineType }) => {
@@ -277,6 +287,10 @@ export default {
     }
   },
   computed: {
+    isSelectedFengming () {
+      const productType = this.queryParmas.productType
+      return productType === PRODUCT_TYPE_FENGMING
+    },
     timelineTypeOpts () {
       return this.genMaterial({
         biaowang: biaowangTimelineTypeOpts,
@@ -288,8 +302,8 @@ export default {
     queryParmas: {
       deep: true,
       immediate: true,
-      handler (params) {
-        this.load(true)
+      handler () {
+        this.initData(true)
       }
     },
     'queryParmas.productType': {

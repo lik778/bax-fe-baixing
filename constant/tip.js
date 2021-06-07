@@ -38,14 +38,14 @@ export const campaignStatusTooltip = `
 `
 
 export const keywordStatusTip = `
-关键词有以下7种状态：
-  (1) 有效（推广中）；
-  (2) 不宜推广/审核拒绝（关键词不符合规定）；
-  (3) 搜索无效（关键词出价低于最低展现价格，此时推广无法展现）
-  (4) 计算机搜索无效（关键词计算机端出价低于最低展现价格，此时计算机端无法展现，移动端推广正常）；
-  (5) 移动搜索无效（关键词移动端出价低于最低展现价格，此时移动端无法展现，计算机端推广正常）；
-  (6) 搜索量过低（表明由于最近一段时间，网民搜索该词的次数极少，推广平台已经暂停了该关键词的推广）；
-  (7) 审核中。
+关键词有以下7种状态：<br/>
+  (1) 有效（推广中）；<br/>
+  (2) 不宜推广/审核拒绝（关键词不符合规定）；<br/>
+  (3) 搜索无效（关键词出价低于最低展现价格，此时推广无法展现）<br/>
+  (4) 计算机搜索无效（关键词计算机端出价低于最低展现价格，此时计算机端无法展现，移动端推广正常）；<br/>
+  (5) 移动搜索无效（关键词移动端出价低于最低展现价格，此时移动端无法展现，计算机端推广正常）；<br/>
+  (6) 搜索量过低（表明由于最近一段时间，网民搜索该词的次数极少，推广平台已经暂停了该关键词的推广）；<br/>
+  (7) 审核中。<br/>
 `
 
 export const campaignAuditStatusTooltip = `
@@ -58,3 +58,19 @@ export const campaignAuditStatusTooltip = `
 export const keywordPriceTip = `
 关键词有效出价区间为[${centToYuan(MIN_WORD_PRICE)}, ${centToYuan(MAX_WORD_PRICE)}]元，请调整出价
 `
+
+export const matchTypeTip = `<div style='margin: 6px 0'>
+  <div>智能匹配：（流量通道-大）</div>
+  <div>您提交的关键词，会被系统智能识别并匹配出搜索意图相关的用户搜索词。</div>
+</div>
+<div style='margin: 6px 0'>
+  <div>短语匹配：（流量通道-中）</div>
+  <div>提交的关键词或关键词的同义变体， 会被包含在用户搜索词中，或是在意思一致的前提下， 于搜索词的前中后插入或变换顺序。</div>
+</div>
+<div style='margin: 6px 0'>
+  <div>精确匹配：（流量通道-小）</div>
+  <div>广告主提交的关键词及关键词的同义变体，会与用户的搜索词一致。</div>
+</div>
+<div style='margin: 6px 0'>
+  <span style='color: #ff6350'><i class='el-icon-warning' style="margin-right: 4px"></i>提示：</span>为了保障您的基本流量和广告效果，系统会智能限制计划可设置精确匹配的关键词数。
+</div>`

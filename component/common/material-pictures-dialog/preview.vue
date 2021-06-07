@@ -41,6 +41,7 @@ export default {
   padding: 6px;
   width: 100%;
   background: #a2a2a2;
+  user-select: none;
 
   &.wap-preview {
     .title {
