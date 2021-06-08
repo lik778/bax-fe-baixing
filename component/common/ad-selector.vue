@@ -177,11 +177,14 @@ export default {
       }
     },
     async onSelectAd (notEmitSelected) {
+      console.log('onSelectAd')
+      console.log(this.checkedAdId)
       if (!this.checkedAdId) {
         return
       }
       if (!notEmitSelected) {
         const ad = this.ads.find(ad => ad.adId === this.checkedAdId)
+        console.log(ad)
         this.$emit('select-ad', {
           ...ad,
           url: isArray(ad.url) ? ad.url[0] : ad.url
@@ -214,7 +217,6 @@ export default {
       this.offset = 0
       this.mode = MODE_INIT
       this.keyword = ''
-      this.$emit('select-ad', { url: '', adId: '' })
 
       await this.queryAds()
     },
@@ -240,7 +242,7 @@ export default {
     const { selectedId } = this
     if (selectedId) {
       await this.reset(MODE_SELECTED, selectedId)
-      this.checkIsCurStoreValid()
+      // this.checkIsCurStoreValid()
     } else {
       await this.reset()
     }
