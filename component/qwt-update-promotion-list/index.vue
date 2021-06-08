@@ -179,7 +179,7 @@ export default {
     async fetchGroupList (params = clone(this.queryParams)) {
       this.landingPageLoading = true
       try {
-        const result = await getGroupList(params)
+        const result = await getGroupList({ ...params })
         const { total, data } = result
         this.totalPage = total
         this.groupList = data
