@@ -210,7 +210,8 @@ export default {
           adId: [adId]
         })
 
-        this.checkedAdId = this.ads[0] ? this.ads[0].adId : null
+        const ad = this.ads.find(ad => String(ad.adId) === String(adId))
+        this.checkedAdId = ad ? ad.adId : adId
         return
       }
 
