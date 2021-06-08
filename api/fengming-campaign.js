@@ -169,7 +169,7 @@ export async function getCampaignIds (params) {
 export async function getGroupList (params) {
   const body = await fengming
     .post('/group/info')
-    .send(reverseCamelcase(params))
+    .query(reverseCamelcase(params))
     .json()
   return toCamelcase(body.data)
 }
