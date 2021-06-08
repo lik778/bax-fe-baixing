@@ -174,7 +174,8 @@ export default {
       })
     },
     async getCampaignInfo () {
-      const info = await getCampaignInfo(this.campaignId)
+      const { query: { user_id: userId } } = this.$route
+      const info = await getCampaignInfo(this.campaignId, { userId })
       info.dailyBudget = info.dailyBudget / 100
       if (info.timeRange && info.timeRange.length && info.timeRange[0] !== null && info.timeRange[1] !== null) {
         info.validTime = [
@@ -187,12 +188,14 @@ export default {
       return info
     },
     async getGroupData () {
+      const { query: { user_id: userId } } = this.$route
       try {
         this.loading.fetchGroup = true
         const { data = [] } = await getAllGroups({
           campaignId: this.campaignId,
           offset: 0,
-          limit: 100
+          limit: 100,
+          userId
         })
         this.groupData = data
       } finally {

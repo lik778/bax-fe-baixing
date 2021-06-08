@@ -94,6 +94,7 @@
 <script>
 import { semPlatformCn, CAMPAIGN_STATUSES, CAMPAIGN_STATUS_OFFLINE } from 'constant/fengming'
 import { filterOptimization } from '../constant'
+import pick from 'lodash.pick'
 export default {
   name: 'promotionTable',
   props: {
@@ -125,9 +126,11 @@ export default {
   },
   methods: {
     optimizePromote (promote) {
+      const query = pick(this.$route.query, ['userId', 'salesId'])
       this.$router.push({
         name: 'qwt-update-promotion',
-        params: { id: promote.id }
+        params: { id: promote.id },
+        query
       })
     },
     async editeBudget (row) {

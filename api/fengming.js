@@ -150,9 +150,10 @@ export async function getProductPackages (type = 0) {
   return toCamelcase(body.data)
 }
 
-export async function getCampaignInfo (id) {
+export async function getCampaignInfo (id, params) {
   const body = await fengming
     .get(`/campaign/${id}`)
+    .query(reverseCamelcase(params))
     .json()
 
   return toCamelcase(body.data)
