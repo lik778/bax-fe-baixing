@@ -187,6 +187,8 @@ export default {
           url: isArray(ad.url) ? ad.url[0] : ad.url
         })
         this.checkIsCurStoreValid(this.checkedAdId)
+        this.mode = MODE_SELECTED
+        this.keyword = ''
       }
     },
     async onCancel () {
