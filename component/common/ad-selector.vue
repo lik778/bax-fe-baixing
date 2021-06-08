@@ -208,7 +208,6 @@ export default {
         })
 
         this.checkedAdId = this.ads[0] ? this.ads[0].adId : null
-        this.checkIsCurStoreValid()
         return
       }
 
@@ -241,6 +240,7 @@ export default {
     const { selectedId } = this
     if (selectedId) {
       await this.reset(MODE_SELECTED, selectedId)
+      this.checkIsCurStoreValid()
     } else {
       await this.reset()
     }
