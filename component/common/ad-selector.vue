@@ -177,18 +177,16 @@ export default {
       }
     },
     async onSelectAd (notEmitSelected) {
-      console.log('onSelectAd')
-      console.log(this.checkedAdId)
       if (!this.checkedAdId) {
         return
       }
       if (!notEmitSelected) {
         const ad = this.ads.find(ad => ad.adId === this.checkedAdId)
-        console.log(ad)
         this.$emit('select-ad', {
           ...ad,
           url: isArray(ad.url) ? ad.url[0] : ad.url
         })
+        this.checkIsCurStoreValid(this.checkedAdId)
       }
     },
     async onCancel () {
@@ -220,21 +218,15 @@ export default {
 
       await this.queryAds()
     },
-    checkIsCurStoreValid () {
-      if (+this.checkedAdId !== +this.selectedId) {
-        this.mode = MODE_INIT
-        this.isValueInvalid = true
-      } else {
-        this.isValueInvalid = false
-      }
-      this.$emit('valid-change', !this.isValueInvalid)
-    }
-  },
-  watch: {
-    async selectedId (curr) {
-      if (curr) {
-        await this.reset(MODE_SELECTED, curr)
-      }
+    async checkIsCurStoreValid (selectedId) {
+      const result = await queryAds({
+        limitMvp: false,
+        adId: selectedId,
+        limit: 1
+      })
+      const ad = result.ads && result.ads[0]
+      const isValueValid = (ad && String(ad.adId) === String(selectedId))
+      this.$emit('valid-change', !!isValueValid)
     }
   },
   async mounted () {
@@ -242,7 +234,7 @@ export default {
     const { selectedId } = this
     if (selectedId) {
       await this.reset(MODE_SELECTED, selectedId)
-      // this.checkIsCurStoreValid()
+      this.checkIsCurStoreValid(selectedId)
     } else {
       await this.reset()
     }
