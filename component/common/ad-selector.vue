@@ -242,7 +242,7 @@ export default {
     const { selectedId } = this
     if (selectedId) {
       await this.reset(MODE_SELECTED, selectedId)
-      this.checkIsCurStoreValid()
+      // this.checkIsCurStoreValid()
     } else {
       await this.reset()
     }
