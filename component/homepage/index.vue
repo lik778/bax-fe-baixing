@@ -1,18 +1,17 @@
 <template>
   <div class="homepage">
     <account :userInfo="userInfo"/>
-    <homepage-campaign :userInfo="userInfo"/>
     <biaowang :userInfo="userInfo" />
-    <site />
+    <campaign :userInfo="userInfo" />
   </div>
 </template>
 
 <script>
 import store from './store'
 
-import Site from './site'
 import Account from './account'
 import Biaowang from './biaowang'
+import Campaign from './campaign'
 
 export default {
   name: 'qwt-homepage',
@@ -27,9 +26,9 @@ export default {
     store.initPageStore(userId)
   },
   components: {
-    Site,
     Account,
-    Biaowang
+    Biaowang,
+    Campaign
   }
 }
 </script>
@@ -52,7 +51,7 @@ export default {
         margin-top: 10px;
       }
       & /deep/ .layout-left {
-        flex-basis: 62%;
+        flex-basis: 60%;
         margin-right: 10px;
         @include layout-base;
       }

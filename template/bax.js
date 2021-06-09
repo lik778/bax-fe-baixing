@@ -62,7 +62,6 @@ import Vue from 'vue'
 import { ErrorBoundary } from 'vue-error-boundary'
 import Vue2Filters from 'vue2-filters'
 import { getBusinessLicense } from 'api/seo'
-import { allowUseKaPackage } from 'util/fengming-role'
 import { getCurrentUser } from 'api/account'
 import pick from 'lodash.pick'
 import { notAllowFengmingRecharge } from 'util/role'
@@ -145,6 +144,7 @@ Vue.use(Popconfirm)
 Vue.use(Card)
 Vue.use(Image)
 Vue.use(Drawer)
+Vue.use(Popconfirm)
 
 /**
  * 错误回退组件
@@ -195,11 +195,6 @@ Vue.prototype.$formatter = {
   f2y
 }
 
-// 该组件引入echarts，体积较大，异步加载提升用户体验
-Vue.component('homepage-campaign', () =>
-  import('../component/homepage/campaign')
-)
-
 // 引入eventBus
 const eventBus = {
   install (Vue) {
@@ -246,28 +241,6 @@ VueRouter.prototype.replace = function replace (route) {
     console.log(error)
   })
 }
-
-const gwRoutes = [
-  {
-    component: () => import('com/gw-homepage'),
-    path: '/main/gw',
-    name: 'gw-homepage'
-  },
-  {
-    component: () => import('com/gw-charge'),
-    path: '/main/gw/charge',
-    name: 'gw-charge',
-    beforeEnter: async (to, from, next) => {
-      const userInfo = await getCurrentUser()
-      const license = allowUseKaPackage('', userInfo.id)
-      if (license) {
-        next()
-      } else {
-        Message.error('无权限访问')
-      }
-    }
-  }
-]
 
 const bwRoutes = [
   {
@@ -348,7 +321,17 @@ const qwtRoutes = [
     name: 'qwt-update-promotion'
   },
   {
-    component: () => import('com/qwt-promotion-list'),
+    component: () => import('com/qwt-group/create'),
+    path: '/main/qwt/group/create',
+    name: 'qwt-create-group'
+  },
+  {
+    component: () => import('com/qwt-group/update'),
+    path: '/main/qwt/group/:id/update',
+    name: 'qwt-update-group'
+  },
+  {
+    component: () => import('com/qwt-update-promotion-list'),
     path: '/main/qwt/promotions',
     name: 'qwt-promotion-list'
   },
@@ -475,6 +458,11 @@ export const router = new VueRouter({
       name: 'root'
     },
     {
+      component: () => import('com/qwt-offline'),
+      path: '/main/offline',
+      name: 'qwtOffline'
+    },
+    {
       component: () => import('com/redirect'),
       path: '/main/redirect-to',
       name: 'bax-redirect-page'
@@ -503,7 +491,6 @@ export const router = new VueRouter({
     ...qcRoutes,
     ...qwtRoutes,
     ...sspRoutes,
-    ...gwRoutes,
     ...seoRoutes,
     {
       path: '*',

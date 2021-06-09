@@ -1,72 +1,74 @@
 <template>
-  <div class="bw-dashboard">
-    <dashboard-header :sh-agent="userInfo.shAgent"></dashboard-header>
-    <div class="tip">今日数据存在一定的延时，且最近1小时内的展现数据会存在波动</div>
-    <section class="keyword">
-      <div class="title">推广关键词</div>
-      <el-tabs v-model="activeTab"
-               @tab-click="getChartData">
-        <el-tab-pane label="不限关键词"
-                     name="noLimit"></el-tab-pane>
-        <el-tab-pane label="指定关键词"
-                     name="limit">
-          <el-button type="primary"
-                     icon="el-icon-plus"
-                     @click="addKeywordModalShow = true">添加指定关键词</el-button>
-          <div>
-            <template v-if="promotes.length">
-              <keyword-list :can-deleted="true"
-                            :all-areas="allAreas"
-                            @delete="handleDeletePromote"
-                            :data="promotes.slice(pageSize * (currentPage - 1), pageSize * currentPage)">
-              </keyword-list>
-              <el-pagination class="pagination"
-                             layout="prev, pager, next"
-                             :total="totalPage"
-                             :page-size="pageSize"
-                             :current-page="currentPage"
-                             @current-change="(val) => currentPage = val">
-              </el-pagination>
-            </template>
-          </div>
-        </el-tab-pane>
-      </el-tabs>
-      <div class="date-range">
-        <el-button class="date-range-panel"
-                   :class="{'date-range-panel__active': item.label === activeDaterangeLabel}"
-                   v-for="item in daterangeList"
-                   :key="item.label"
-                   size="small"
-                   @click="handleDateChange(item)">
-          {{item.label}}
-        </el-button>
-        <el-date-picker v-model="daterange"
-                        :picker-options="triPickerOptions"
-                        @focus="activeDaterangeLabel = CUSTOM_DATE_RANGE_LABEL"
-                        :class="{
-                          'date-range-custom__active': activeDaterangeLabel === CUSTOM_DATE_RANGE_LABEL
-                        }"
-                        :clearable="false"
-                        type="daterange"
-                        size="small"
-                        range-separator="至"
-                        start-placeholder="开始日期"
-                        end-placeholder="结束日期">
-        </el-date-picker>
-      </div>
-      <add-keyword :show="addKeywordModalShow"
-                   ref="addKeyword"
-                   v-if="addKeywordModalShow"
-                   @close="handleKeywordClose"
-                   :all-areas="allAreas"
-                   :original-promotes="promotes"></add-keyword>
-    </section>
-    <chart v-if="showChartData && showChartData.length"
-           :chart-data="showChartData"
-           y-axis-name="展现量"></chart>
-    <chart v-if="cpcRankingChartData && cpcRankingChartData.length"
-           :chart-data="cpcRankingChartData"
-           y-axis-name="平均排名"></chart>
+  <div class="white-bg">
+    <div class="bw-dashboard">
+      <dashboard-header :sh-agent="userInfo.shAgent"></dashboard-header>
+      <div class="tip">今日数据存在一定的延时，且最近1小时内的展现数据会存在波动</div>
+      <section class="keyword">
+        <div class="title">推广关键词</div>
+        <el-tabs v-model="activeTab"
+                @tab-click="getChartData">
+          <el-tab-pane label="不限关键词"
+                      name="noLimit"></el-tab-pane>
+          <el-tab-pane label="指定关键词"
+                      name="limit">
+            <el-button type="primary"
+                      icon="el-icon-plus"
+                      @click="addKeywordModalShow = true">添加指定关键词</el-button>
+            <div>
+              <template v-if="promotes.length">
+                <keyword-list :can-deleted="true"
+                              :all-areas="allAreas"
+                              @delete="handleDeletePromote"
+                              :data="promotes.slice(pageSize * (currentPage - 1), pageSize * currentPage)">
+                </keyword-list>
+                <el-pagination class="pagination"
+                              layout="prev, pager, next"
+                              :total="totalPage"
+                              :page-size="pageSize"
+                              :current-page="currentPage"
+                              @current-change="(val) => currentPage = val">
+                </el-pagination>
+              </template>
+            </div>
+          </el-tab-pane>
+        </el-tabs>
+        <div class="date-range">
+          <el-button class="date-range-panel"
+                    :class="{'date-range-panel__active': item.label === activeDaterangeLabel}"
+                    v-for="item in daterangeList"
+                    :key="item.label"
+                    size="small"
+                    @click="handleDateChange(item)">
+            {{item.label}}
+          </el-button>
+          <el-date-picker v-model="daterange"
+                          :picker-options="triPickerOptions"
+                          @focus="activeDaterangeLabel = CUSTOM_DATE_RANGE_LABEL"
+                          :class="{
+                            'date-range-custom__active': activeDaterangeLabel === CUSTOM_DATE_RANGE_LABEL
+                          }"
+                          :clearable="false"
+                          type="daterange"
+                          size="small"
+                          range-separator="至"
+                          start-placeholder="开始日期"
+                          end-placeholder="结束日期">
+          </el-date-picker>
+        </div>
+        <add-keyword :show="addKeywordModalShow"
+                    ref="addKeyword"
+                    v-if="addKeywordModalShow"
+                    @close="handleKeywordClose"
+                    :all-areas="allAreas"
+                    :original-promotes="promotes"></add-keyword>
+      </section>
+      <chart v-if="showChartData && showChartData.length"
+            :chart-data="showChartData"
+            y-axis-name="展现量"></chart>
+      <chart v-if="cpcRankingChartData && cpcRankingChartData.length"
+            :chart-data="cpcRankingChartData"
+            y-axis-name="平均排名"></chart>
+    </div>
   </div>
 </template>
 

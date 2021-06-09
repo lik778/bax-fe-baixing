@@ -32,9 +32,7 @@ async function uploadFile (file) {
     return
   }
   const ext = '.' + (file.type || '/jpeg').split('/')[1]
-  const name = 'sst-img' + uuid() + ext
-
-  console.log(ext, name, file)
+  const name = 'qwt-group-img-' + uuid() + ext
 
   const expiration = ((Date.now() / 1000) | 0) + 15 * 60
   const { policy, sign } = await getUpyunToken({

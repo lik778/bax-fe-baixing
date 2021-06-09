@@ -188,6 +188,14 @@ export function allowContinueAd (roles) {
   ])
 }
 
+export function allowSeeDiamondSite (roles) {
+  const currentRoles = normalizeRoles(roles)
+
+  return checkRoles(currentRoles, [
+    'BAIXING_USER'
+  ])
+}
+
 export function isBaixingSales (roles) {
   const currentRoles = normalizeRoles(roles)
 

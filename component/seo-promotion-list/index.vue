@@ -38,7 +38,7 @@
                  class="table-container">
             <thead class="row header">
               <th class="col1">多选</th>
-              <th class="col2">计划id</th>
+              <th class="col2">计划ID</th>
               <th class="col3">
                 <top-tip label="计划状态"
                          tip="待投放的状态解释：请至少开启4个审核通过的关键词进行投放" />
@@ -112,7 +112,7 @@
                        min-width="130"></el-table-column>
       <el-table-column prop="id"
                        align="center"
-                       label="计划id"
+                       label="计划ID"
                        width="60"></el-table-column>
       <el-table-column prop="status"
                        align="center"
@@ -196,7 +196,7 @@
 </template>
 
 <script>
-import TopTip from '../qwt-promotion-list/topTip'
+import TopTip from './topTip'
 import { getUserSites } from 'api/ka'
 import {
   queryPromotion,

@@ -251,6 +251,8 @@ export default {
     handleSortChange (val) {
       const { prop, order } = val
       this.sortConfig = { prop, order }
+
+      if (!this.validQueryWord()) return
       this.getQueryList()
     },
     handleConfirm () {

@@ -322,7 +322,7 @@ export default {
           ]),
           beforeClose (action, instance, done) {
             if (action === 'confirm') {
-              window.open('https://www.baixing.com/bind/#bindList')
+              window.open('https://www.baixing.com/bind/?channel=sst')
             }
             done()
           }

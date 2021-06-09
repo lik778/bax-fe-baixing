@@ -6,3 +6,4 @@ dist/
 .idea/
 .run
 tool/server-config.js
+yarn.lock

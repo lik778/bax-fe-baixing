@@ -89,7 +89,7 @@ export default {
           ]),
           confirmButtonText: '前往认证'
         })
-        window.open('https://www.baixing.com/bind/#bindList')
+        window.open('https://www.baixing.com/bind/?channel=sst')
       }
     }
   },

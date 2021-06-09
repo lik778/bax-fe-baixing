@@ -44,7 +44,7 @@
             v-if="form.landingType === LANDING_TYPE_STORE"
             :initValue="form.landingType === LANDING_TYPE_STORE && form.landingPageId || ''"
             @change="setLanding"
-            @validChange="isValid => setLandingPageValidity(LANDING_TYPE_STORE, isValid)"
+            @valid-change="isValid => setLandingPageValidity(LANDING_TYPE_STORE, isValid)"
           />
         </el-form-item>
 

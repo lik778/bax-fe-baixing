@@ -28,6 +28,7 @@ import {
   baxUserLogin,
   getUserSites
 } from 'api/ka'
+import { isPro } from 'config'
 
 export default {
   name: 'qiqiaoban-page-selector',
@@ -104,7 +105,7 @@ export default {
       ...currentSpecialLandingpageOption,
       ...this.list.map(p => ({
         label: p.name,
-        value: 'http://' + p.domain + '.mvp.baixing.com'
+        value: `http://${p.domain}.mvp.baixing.${isPro ? 'com' : 'cn'}`
       }))
     ]
 
