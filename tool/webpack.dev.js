@@ -19,7 +19,7 @@ const config = merge(base, {
     stats: 'errors-only',
     proxy: {
       '/devApi': {
-        target: 'http://172.17.13.192:8080',
+        target: 'http://172.17.5.8:8000',
         pathRewrite: {
           '^/devApi': '/'
         },

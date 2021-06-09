@@ -65,3 +65,5 @@ export const assetHost = config.assetHost
 export const upyun = config.upyun
 export const preKeywordPath = config.preKeywordPath
 export const b2bApiHost = config.b2bApiHost
+
+export default config

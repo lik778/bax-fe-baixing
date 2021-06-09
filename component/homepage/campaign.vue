@@ -1,46 +1,6 @@
 <template>
   <div class="layout-container">
     <div class="layout-left">
-      <h5 class="layout-header">站外推广诊断</h5>
-      <div class="layout-content" v-if="chartOptions && hasCampaign">
-        <div class="chart">
-          <e-charts :options="chartOptions"/>
-        </div>
-        <div class="description">
-          <p>您当前的推广健康度为:<strong>{{avgScore}}</strong>分，</p>
-          <p>已经超过<strong>{{higherThan}}%</strong>的用户，</p>
-          <p v-if="campaignRadar.cntRejected > 0">
-            您当前有计划未通过审核，请
-            <a href="javascript:;" @click="goPromotionList">前往修改</a>
-          </p>
-          <div class="optimization" v-if="optimizablePoints.length">
-            <p class="title">建议进行如下优化，提升广告效果</p>
-            <div class="keywords">
-              <span class="keyword"
-                @click="handlePointClick(p.routerKey)"
-                v-for="p in optimizablePoints"
-                :key="p.key"
-              >
-                {{p.text}}
-              </span>
-            </div>
-          </div>
-          <div class="actions">
-            <el-button type="primary" @click="() => $router.push({name: 'qwt-create-promotion'})">新建站外推广</el-button>
-            <el-button type="primary" @click="() => $router.push({name: 'qwt-promotion-list'})">管理站外推广</el-button>
-          </div>
-        </div>
-      </div>
-      <loading-placeholder v-else-if="!chartOptions" style="height: 288px;">正在获取站外推广数据</loading-placeholder>
-      <div v-else class="no-campaign-radar-placeholder">
-        <p class="text">您暂时没有站外推广，您可以</p>
-        <div>
-          <el-button type="primary" @click="() => $router.push({name: 'qwt-create-promotion'})">新建站外推广</el-button>
-          <el-button v-if="userInfo.allowFmRecharge"  type="primary" @click="() => $router.push({name: 'qwt-charge'})">充值推广资金</el-button>
-        </div>
-      </div>
-    </div>
-    <div class="layout-right">
       <h5 class="layout-header">
         站外推广数据概览
         <span class="action" @click="() => $router.push({name: 'qwt-dashboard'})">查看详情</span>
@@ -78,106 +38,24 @@
 </template>
 
 <script>
-import clone from 'clone'
-import ECharts from 'vue-echarts/components/ECharts.vue'
-import loadingPlaceholder from './loading-placeholder'
-import 'echarts/lib/component/tooltip'
-import 'echarts/lib/chart/radar'
-
 import store from './store'
-import {
-  campaignOptimization
-} from 'constant/fengming'
-
-const OPTIMIZABLE_POINTS = [
-  { key: 'dailyBudget', text: '账户余额', routerKey: 'charge' },
-  { key: 'cntSrc', text: '渠道', routerKey: campaignOptimization.STATUS_OPT_SOURCE },
-  { key: 'kwCtr', text: '创意', routerKey: campaignOptimization.STATUS_OPT_CREATIVE },
-  { key: 'cntNonDefault', text: '投放设置', routerKey: campaignOptimization.STATUS_OPT_SETTING },
-  { key: 'kwPrice', text: '出价', routerKey: campaignOptimization.STATUS_OPT_PRICE },
-  { key: 'avgCntKw', text: '关键词', routerKey: campaignOptimization.STATUS_OPT_KEYWORD }
-]
-
 const formatPrice = (p) => {
   return p ? (p / 100).toFixed(2) : 0
-}
-
-const chartOptionsTmpl = {
-  title: {
-    text: '站外推广健康度'
-  },
-  tooltip: {
-    trigger: 'item',
-    backgroundColor: 'rgba(53, 165, 228, 0.8)'
-  },
-  radar: [
-    {
-      indicator: OPTIMIZABLE_POINTS.map(({ text }) => ({ text, max: 100 })),
-      center: ['45%', '55%'],
-      radius: '70%',
-      axisLine: {
-        lineStyle: {
-          color: ['#666'],
-          opacity: 0.15
-        }
-      },
-      splitLine: {
-        lineStyle: {
-          color: ['#ddd', '#ddd', '#ddd', '#ddd', '#ddd', '#35A5E4']
-        }
-      }
-    }
-  ],
-  series: [
-    {
-      name: '站外推广健康度(分)',
-      type: 'radar',
-      itemStyle: {
-        color: ['#FF8955']
-      },
-      lineStyle: {
-        color: ['#FF6350']
-      },
-      areaStyle: {
-        color: ['#FF6350'],
-        opacity: 0.6
-      },
-      data: [
-        {
-          value: []
-        }
-      ]
-    }
-  ]
-}
-
-const genChartOptions = value => {
-  const opt = clone(chartOptionsTmpl)
-  opt.series[0].data[0].value = value
-  return Object.freeze(opt)
 }
 
 const CNT_REJECTED_CODE = '-53'
 
 export default {
   name: 'homepage-campaign',
-  components: {
-    ECharts,
-    loadingPlaceholder
-  },
   props: ['userInfo'],
   data () {
     return {
-      chartOptions: null,
       reportPrefix: '',
-      radarScores: [],
-      avgScore: '0',
-      higherThan: '0'
+      radarScores: []
     }
   },
   fromMobx: {
-    fengmingData: () => store.fengmingData,
-    campaignRadar: () => store.campaignRadar
+    fengmingData: () => store.fengmingData
   },
   computed: {
     reportData () {
@@ -191,15 +69,9 @@ export default {
       }
       return keys.map(k => data[k.toLowerCase()])
     },
-    optimizablePoints () {
-      const scores = this.radarScores
-      return OPTIMIZABLE_POINTS.filter((_, index) => {
-        if (scores[index] < 60) return true
-        return false
-      })
-    },
     hasCampaign () {
-      return this.campaignRadar && this.campaignRadar.cntCampaign > 0
+      // 空 fengmingData 说明没有有效的计划
+      return Object.keys(this.fengmingData || {}).length > 0
     }
   },
   methods: {
@@ -221,15 +93,6 @@ export default {
         }
       })
     }
-  },
-  watch: {
-    campaignRadar (val) {
-      if (!val) return
-      const radarScores = this.radarScores = OPTIMIZABLE_POINTS.map(({ key }) => parseInt(val[key]))
-      this.chartOptions = genChartOptions(radarScores)
-      this.avgScore = (radarScores.reduce((t, s) => t + s, 0) / radarScores.length).toFixed(1)
-      this.higherThan = (val.higherThan * 100).toFixed(1)
-    }
   }
 }
 </script>
@@ -244,67 +107,6 @@ export default {
   color: #999;
 }
 .layout-left {
-  & .layout-content {
-    display: flex;
-    min-height: 288px;
-  }
-  & .chart {
-    width: 55%;
-    flex: 1;
-    & /deep/ .echarts {
-      width: 100%;
-      height: 100%;
-    }
-  }
-  & .description {
-    width: 45%;
-    flex: 1;
-    padding-top: 25px;
-    line-height: 36px;
-    letter-spacing: 1px;
-    & strong {
-      font-size: 24px;
-      font-weight: 600;
-      color: #ff6350;
-      margin: 0 4px;
-    }
-    & a {
-      letter-spacing: 0;
-      color: #35a5e4;
-    }
-  }
-  & .optimization {
-    line-height: 1.6;
-    margin-top: 22px;
-    & .title {
-      font-weight: 600;
-    }
-    & .keyword {
-      display: inline-block;
-      font-size: 13px;
-      margin-top: 8px;
-      margin-right: 8px;
-      padding: 3px 6px;
-      color: #b66969;
-      background-color: #fff5f5;
-      border-radius: 2px;
-      cursor: pointer;
-      transition: color, background-color 0.1s;
-      &:hover {
-        background-color: #ffe0e0;
-        color: #b64949;
-      }
-    }
-  }
-  & .actions {
-    margin-top: 25px;
-    & /deep/ .el-button {
-      min-width: 110px;
-      padding: 8px 12px;
-    }
-  }
-}
-.layout-right {
   & .radio-group {
     display: flex;
     justify-content: space-around;

@@ -142,6 +142,7 @@ Vue.use(Progress)
 Vue.use(Popconfirm)
 Vue.use(Card)
 Vue.use(Image)
+Vue.use(Popconfirm)
 
 /**
  * 错误回退组件
@@ -191,11 +192,6 @@ Vue.prototype.$formatter = {
   mapWith: (key = '', obj = {}) => obj[key],
   f2y
 }
-
-// 该组件引入echarts，体积较大，异步加载提升用户体验
-Vue.component('homepage-campaign', () =>
-  import('../component/homepage/campaign')
-)
 
 // 引入eventBus
 const eventBus = {
@@ -323,7 +319,17 @@ const qwtRoutes = [
     name: 'qwt-update-promotion'
   },
   {
-    component: () => import('com/qwt-promotion-list'),
+    component: () => import('com/qwt-group/create'),
+    path: '/main/qwt/group/create',
+    name: 'qwt-create-group'
+  },
+  {
+    component: () => import('com/qwt-group/update'),
+    path: '/main/qwt/group/:id/update',
+    name: 'qwt-update-group'
+  },
+  {
+    component: () => import('com/qwt-update-promotion-list'),
     path: '/main/qwt/promotions',
     name: 'qwt-promotion-list'
   },
@@ -448,6 +454,11 @@ export const router = new VueRouter({
       component: Homepage,
       path: '/main',
       name: 'root'
+    },
+    {
+      component: () => import('com/qwt-offline'),
+      path: '/main/offline',
+      name: 'qwtOffline'
     },
     {
       component: () => import('com/redirect'),
