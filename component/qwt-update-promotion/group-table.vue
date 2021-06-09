@@ -66,7 +66,6 @@
         </el-button>
         <el-button type="text"
                    :disabled="
-                      isSales ||
                       row.frontCampaignStatus === CAMPAIGN_STATUS_OFFLINE
                     "
                    @click="optimizeGroup(row)">优化</el-button>
