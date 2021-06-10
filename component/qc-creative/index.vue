@@ -36,7 +36,7 @@
           prop="landingPageId"
           key="landingPageId">
           <sites-selector
-            v-if="form.landingType === LANDING_TYPE_GUAN_WANG"
+            v-if="form.landingType === LANDING_TYPE_GUAN_WANG && isGwTypeShow"
             :initValue="form.landingPageId"
             @change="setLanding"
           />
@@ -79,7 +79,7 @@
 
 <script>
 import { getRouteParam } from 'util'
-import { LANDING_TYPE_GUAN_WANG, LANDING_TYPE_STORE, landingTypeOpts } from 'constant/qianci'
+import { LANDING_TYPE_GUAN_WANG, LANDING_TYPE_STORE, landingTypeOpts, AUDIT_STATUS_PASSED_B2B } from 'constant/qianci'
 import { getCreative, saveCreative } from 'api/qianci'
 import SitesSelector from 'com/common/sites-selector'
 import MvipSelector from 'com/common/mvip-selector'
@@ -94,10 +94,10 @@ export default {
     return {
       LANDING_TYPE_GUAN_WANG,
       LANDING_TYPE_STORE,
-      landingTypeOpts,
 
       id: null,
       isFormEdited: false,
+      originData: null,
       form: {
         coreWords: [],
         landingType: LANDING_TYPE_GUAN_WANG,
@@ -145,6 +145,17 @@ export default {
       }
     }
   },
+  computed: {
+    landingTypeOpts () {
+      if (this.isGwTypeShow) return landingTypeOpts
+      return landingTypeOpts.filter(o => o.value !== LANDING_TYPE_GUAN_WANG)
+    },
+    isGwTypeShow () {
+      const data = this.originData
+      if (!data) return false
+      return data.auditStatus !== AUDIT_STATUS_PASSED_B2B
+    }
+  },
   watch: {
     form: {
       deep: true,
@@ -174,6 +185,8 @@ export default {
         creativeTitle,
         creativeContent
       } = response || {}
+
+      this.originData = response
 
       // * for test
       // const coreWords = ['cestest']

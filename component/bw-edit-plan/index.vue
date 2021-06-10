@@ -27,7 +27,7 @@
                   @select-ad="onSelectAd"
                 />
                 <qiqiaoban-page-selector
-                  v-if="landingTypeDisplay === 1 || landingTypeDisplay === 2"
+                  v-if="!isCreateBw && (landingTypeDisplay === 1 || landingTypeDisplay === 2)"
                   :value="form.landingPage"
                   :is-special-landingpage="isSpecialLandingpage"
                   @change="onQiqiaobanChange"
@@ -65,7 +65,7 @@
 <script>
 import { isQiqiaobanSite, isWeishopSite, getLandingpageByPageProtocol } from 'util/kit'
 import { getPromoteById, getPromtesByOrders, updatePromote, getQiqiaobanCoupon } from 'api/biaowang'
-import { landingTypeOpts, SEM_PLATFORM_BAIDU, LANDING_TYPE_AD, LANDING_TYPE_STORE } from 'constant/fengming'
+import { landingTypeOpts, SEM_PLATFORM_BAIDU, LANDING_TYPE_AD, LANDING_TYPE_STORE, LANDING_TYPE_GW } from 'constant/fengming'
 import {
   AUDIT_STATUS_REJECT,
   PROMOTE_STATUS_OFFLINE,
@@ -113,7 +113,6 @@ export default {
       },
       buttonText: '创建标王计划',
 
-      landingTypeOpts,
       creativeError: '',
       isLoading: false,
       showNotice: false,
@@ -121,6 +120,10 @@ export default {
     }
   },
   computed: {
+    landingTypeOpts () {
+      if (this.isCreateBw) return landingTypeOpts.filter(o => o.value !== LANDING_TYPE_GW)
+      return landingTypeOpts
+    },
     isPromoteRejected () {
       return this.promotes.some(p => AUDIT_STATUS_REJECT.includes(p.auditStatus))
     },
@@ -129,6 +132,9 @@ export default {
     },
     isPromoteOffline () {
       return this.promotes.some(p => PROMOTE_STATUS_OFFLINE.includes(p.status))
+    },
+    isCreateBw () {
+      return this.promotes.some(p => PROMOTE_STATUS_PENDING_EDIT.includes(p.status))
     }
   },
   watch: {
