@@ -27,7 +27,7 @@
                   @select-ad="onSelectAd"
                 />
                 <qiqiaoban-page-selector
-                  v-if="landingTypeDisplay === 1 || landingTypeDisplay === 2"
+                  v-if="!isCreateBw && (landingTypeDisplay === 1 || landingTypeDisplay === 2)"
                   :value="form.landingPage"
                   :is-special-landingpage="isSpecialLandingpage"
                   @change="onQiqiaobanChange"
@@ -65,7 +65,7 @@
 <script>
 import { isQiqiaobanSite, isWeishopSite, getLandingpageByPageProtocol } from 'util/kit'
 import { getPromoteById, getPromtesByOrders, updatePromote, getQiqiaobanCoupon } from 'api/biaowang'
-import { landingTypeOpts, SEM_PLATFORM_BAIDU, LANDING_TYPE_AD, LANDING_TYPE_STORE } from 'constant/fengming'
+import { landingTypeOpts, SEM_PLATFORM_BAIDU, LANDING_TYPE_AD, LANDING_TYPE_STORE, LANDING_TYPE_GW } from 'constant/fengming'
 import {
   AUDIT_STATUS_REJECT,
   PROMOTE_STATUS_OFFLINE,
@@ -112,8 +112,8 @@ export default {
         landingPage: [{ required: true, message: '请选择投放页面', trigger: 'blur' }]
       },
       buttonText: '创建标王计划',
+      isCreateBw: true,
 
-      landingTypeOpts,
       creativeError: '',
       isLoading: false,
       showNotice: false,
@@ -121,6 +121,10 @@ export default {
     }
   },
   computed: {
+    landingTypeOpts () {
+      if (this.isCreateBw) return landingTypeOpts.filter(o => o.value !== LANDING_TYPE_GW)
+      return landingTypeOpts
+    },
     isPromoteRejected () {
       return this.promotes.some(p => AUDIT_STATUS_REJECT.includes(p.auditStatus))
     },
@@ -155,12 +159,14 @@ export default {
       }
       this.landingTypeDisplayProxy = landingType || 0
       this.buttonText = '更新标王计划'
+      this.isCreateBw = false
     }
     if (orderIdsString) {
       const orderIds = orderIdsString.split(',')
       this.promotes = await getPromtesByOrders(orderIds)
       this.form.promoteIds = this.promotes.map(p => p.id)
       this.buttonText = '创建标王计划'
+      this.isCreateBw = true
     }
     if (notice === 'true' || notice === '1') {
       this.showNotice = true

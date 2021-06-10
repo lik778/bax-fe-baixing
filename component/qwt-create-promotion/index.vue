@@ -31,11 +31,6 @@
                 :selected-id="newPromotion.landingPageId"
                 @select-ad="onSelectAd"
               />
-              <qiqiaoban-page-selector
-                v-if="newPromotion.landingType === LANDING_TYPE_GW"
-                :value="newPromotion.landingPage"
-                @change="v => setLanding(LANDING_TYPE_GW, v)"
-              />
               <mvip-selector
                 v-if="newPromotion.landingType === LANDING_TYPE_STORE"
                 :initValue="newPromotion.landingPageId"
@@ -204,7 +199,6 @@ import clone from 'clone'
 import BaiduExpandWordsDialog from 'com/common/qwt-baidu-expand-words'
 import PromotionCreativeTip from 'com/widget//promotion-creative-tip'
 import PromotionAreaLimitTip from 'com/widget/promotion-area-limit-tip'
-import QiqiaobanPageSelector from 'com/common/qiqiaoban-page-selector'
 import PromotionChargeTip from 'com/widget/promotion-charge-tip'
 import UserAdSelector from 'com/common/user-ad-selector'
 import CreativeEditor from 'com/widget/creative-editor'
@@ -274,7 +268,6 @@ export default {
     BaiduExpandWordsDialog,
     PromotionCreativeTip,
     PromotionAreaLimitTip,
-    QiqiaobanPageSelector,
     MvipSelector,
     PromotionChargeTip,
     UserAdSelector,
@@ -331,7 +324,7 @@ export default {
       PRE_IMG_PROMOTION: '//file.baixing.net/201809/a995bf0f1707a3e98a2c82a5dc5f8ad3.png',
       addKeywordsDialog: false,
 
-      landingTypeOpts
+      landingTypeOpts: landingTypeOpts.filter(o => o.value !== LANDING_TYPE_GW)
     }
   },
   computed: {
