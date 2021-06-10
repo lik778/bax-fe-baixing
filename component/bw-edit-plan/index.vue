@@ -112,7 +112,6 @@ export default {
         landingPage: [{ required: true, message: '请选择投放页面', trigger: 'blur' }]
       },
       buttonText: '创建标王计划',
-      isCreateBw: true,
 
       creativeError: '',
       isLoading: false,
@@ -133,6 +132,9 @@ export default {
     },
     isPromoteOffline () {
       return this.promotes.some(p => PROMOTE_STATUS_OFFLINE.includes(p.status))
+    },
+    isCreateBw () {
+      return this.promotes.some(p => PROMOTE_STATUS_PENDING_EDIT.includes(p.status))
     }
   },
   watch: {
@@ -159,14 +161,12 @@ export default {
       }
       this.landingTypeDisplayProxy = landingType || 0
       this.buttonText = '更新标王计划'
-      this.isCreateBw = false
     }
     if (orderIdsString) {
       const orderIds = orderIdsString.split(',')
       this.promotes = await getPromtesByOrders(orderIds)
       this.form.promoteIds = this.promotes.map(p => p.id)
       this.buttonText = '创建标王计划'
-      this.isCreateBw = true
     }
     if (notice === 'true' || notice === '1') {
       this.showNotice = true
