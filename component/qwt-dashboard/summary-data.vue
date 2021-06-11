@@ -1,6 +1,6 @@
 <template>
   <main>
-    <dashboard-header :userInfo="userInfo" />
+    <dashboard-header :userInfo="userInfo" :salesInfo="salesInfo" />
     <section>
       <p class="tip">
         <span v-if="query.dimension === DIMENSION_SEARCH_KEYWORD">

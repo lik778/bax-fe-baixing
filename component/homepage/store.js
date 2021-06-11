@@ -33,9 +33,9 @@ class Store {
     }
   }
 
-  @action async loadBaxData () {
+  @action async loadBaxData (params) {
     try {
-      const fengmingData = await getHomePageFengmingData()
+      const fengmingData = await getHomePageFengmingData(params)
       this.fengmingData = fengmingData
     } catch (err) {
       console.error(err)
@@ -80,7 +80,7 @@ class Store {
 
   @action initPageStore (userId) {
     this.loadKaData()
-    this.loadBaxData()
+    this.loadBaxData({ userId })
     this.loadBiaowangData(userId)
   }
 }

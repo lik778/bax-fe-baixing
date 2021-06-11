@@ -1,6 +1,6 @@
 <template>
   <div class="qwt-promotion-list">
-    <topTips :userInfo="userInfo" />
+    <topTips :salesInfo="salesInfo" :userInfo="userInfo" />
     <main class="container">
       <h2 class="header">我的站外推广计划</h2>
       <div class="action-group">
@@ -106,7 +106,7 @@ export default {
     if (this.salesInfo.userId) {
       this.queryParams.userId = this.salesInfo.userId
     }
-    const result = await getCampaignIds()
+    const result = await getCampaignIds({ userId: this.salesInfo.userId })
     this.promotionIds = result
     if (id) {
       // 从某个计划点击进来

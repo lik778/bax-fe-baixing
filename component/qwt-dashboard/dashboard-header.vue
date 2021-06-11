@@ -55,7 +55,7 @@ import { f2y } from 'util'
 
 export default {
   name: 'dashboard-header',
-  props: ['userInfo'],
+  props: ['userInfo', 'salesInfo'],
   data () {
     return {
       data: {},
@@ -68,7 +68,7 @@ export default {
   },
   methods: {
     async initDatas () {
-      this.data = await api.getDashboardHeader()
+      this.data = await api.getDashboardHeader({ userId: this.salesInfo.userId })
     },
     async initCreatives () {
       this.creatives = await getAllCampaignsWithConsume()

@@ -153,7 +153,7 @@ export async function getCampaignList (params) {
 export async function getCampaignIds (params) {
   const body = await fengming
     .get('/campaign/ids')
-    .send(params)
+    .query(reverseCamelcase(params))
     .json()
   const data = [{ value: 0, label: '全部' }]
   body.data.map(id => {
