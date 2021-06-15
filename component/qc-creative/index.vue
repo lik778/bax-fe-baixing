@@ -35,11 +35,6 @@
           label="投放地址"
           prop="landingPageId"
           key="landingPageId">
-          <sites-selector
-            v-if="form.landingType === LANDING_TYPE_GUAN_WANG && isGwTypeShow"
-            :initValue="form.landingPageId"
-            @change="setLanding"
-          />
           <mvip-selector
             v-if="form.landingType === LANDING_TYPE_STORE"
             :initValue="form.landingType === LANDING_TYPE_STORE && form.landingPageId || ''"
@@ -79,28 +74,26 @@
 
 <script>
 import { getRouteParam } from 'util'
-import { LANDING_TYPE_GUAN_WANG, LANDING_TYPE_STORE, landingTypeOpts, AUDIT_STATUS_PASSED_B2B } from 'constant/qianci'
+import { LANDING_TYPE_GUAN_WANG, LANDING_TYPE_STORE, landingTypeOpts } from 'constant/qianci'
 import { getCreative, saveCreative } from 'api/qianci'
-import SitesSelector from 'com/common/sites-selector'
 import MvipSelector from 'com/common/mvip-selector'
 
 export default {
   name: 'creative-manage',
   components: {
-    SitesSelector,
     MvipSelector
   },
   data () {
     return {
-      LANDING_TYPE_GUAN_WANG,
       LANDING_TYPE_STORE,
+      landingTypeOpts,
 
       id: null,
       isFormEdited: false,
       originData: null,
       form: {
         coreWords: [],
-        landingType: LANDING_TYPE_GUAN_WANG,
+        landingType: LANDING_TYPE_STORE,
         landingPage: '',
         landingPageId: '',
         creativeTitle: '',
@@ -143,17 +136,6 @@ export default {
       loading: {
         form: false
       }
-    }
-  },
-  computed: {
-    landingTypeOpts () {
-      if (this.isGwTypeShow) return landingTypeOpts
-      return landingTypeOpts.filter(o => o.value !== LANDING_TYPE_GUAN_WANG)
-    },
-    isGwTypeShow () {
-      const data = this.originData
-      if (!data) return false
-      return data.auditStatus !== AUDIT_STATUS_PASSED_B2B
     }
   },
   watch: {
@@ -203,9 +185,17 @@ export default {
       this.form.landingPage = landingPage || ''
       this.form.landingType = landingType
 
+      // TIP 2021-06-16 下线官网落地页类型
+      if (landingType === LANDING_TYPE_GUAN_WANG) {
+        this.form.landingType = LANDING_TYPE_STORE
+        this.clearLandingInput()
+      }
+
       // console.log('this.form: ', this.form)
 
-      this.$nextTick(() => (this.isFormEdited = false))
+      this.$nextTick(() => {
+        if (landingType !== LANDING_TYPE_GUAN_WANG) this.isFormEdited = false
+      })
     },
     clearLandingInput () {
       this.setLanding('', '')

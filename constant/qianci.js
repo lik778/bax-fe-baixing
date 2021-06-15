@@ -205,7 +205,6 @@ export const LANDING_TYPE_GUAN_WANG = 'GUAN_WANG'
 export const LANDING_TYPE_STORE = 'SHOP_SITE'
 
 export const landingType = {
-  [`${LANDING_TYPE_GUAN_WANG}`]: '官网',
   [`${LANDING_TYPE_STORE}`]: '店铺'
 }
 

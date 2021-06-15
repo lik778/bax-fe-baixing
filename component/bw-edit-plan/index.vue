@@ -26,12 +26,6 @@
                   :selected-id="form.landingPageId"
                   @select-ad="onSelectAd"
                 />
-                <qiqiaoban-page-selector
-                  v-if="!isCreateBw && (landingTypeDisplay === 1 || landingTypeDisplay === 2)"
-                  :value="form.landingPage"
-                  :is-special-landingpage="isSpecialLandingpage"
-                  @change="onQiqiaobanChange"
-                />
                 <mvip-selector
                   v-if="landingTypeDisplay === LANDING_TYPE_STORE"
                   :initValue="form.landingPageId"
@@ -74,7 +68,6 @@ import {
 import { Message } from 'element-ui'
 import UserAdSelector from 'com/common/user-ad-selector'
 import CreativeEditor from 'com/widget/creative-editor'
-import QiqiaobanPageSelector from 'com/common/qiqiaoban-page-selector'
 import MvipSelector from 'com/common/mvip-selector'
 import { queryAds } from 'api/fengming'
 
@@ -86,7 +79,6 @@ export default {
   components: {
     UserAdSelector,
     CreativeEditor,
-    QiqiaobanPageSelector,
     MvipSelector
   },
   data () {
@@ -112,6 +104,7 @@ export default {
         landingPage: [{ required: true, message: '请选择投放页面', trigger: 'blur' }]
       },
       buttonText: '创建标王计划',
+      landingTypeOpts,
 
       creativeError: '',
       isLoading: false,
@@ -120,10 +113,6 @@ export default {
     }
   },
   computed: {
-    landingTypeOpts () {
-      if (this.isCreateBw) return landingTypeOpts.filter(o => o.value !== LANDING_TYPE_GW)
-      return landingTypeOpts
-    },
     isPromoteRejected () {
       return this.promotes.some(p => AUDIT_STATUS_REJECT.includes(p.auditStatus))
     },
@@ -132,9 +121,6 @@ export default {
     },
     isPromoteOffline () {
       return this.promotes.some(p => PROMOTE_STATUS_OFFLINE.includes(p.status))
-    },
-    isCreateBw () {
-      return this.promotes.some(p => PROMOTE_STATUS_PENDING_EDIT.includes(p.status))
     }
   },
   watch: {
@@ -153,13 +139,21 @@ export default {
       const { landingType, landingPage, landingPageId, creativeTitle, creativeContent } = onePromote
       this.form = {
         promoteIds: [+promoteId],
-        landingType: landingType || 0,
+        landingType: landingType,
         landingPage,
         creativeTitle: creativeTitle || '',
         creativeContent: creativeContent || '',
         landingPageId: landingPageId || ''
       }
       this.landingTypeDisplayProxy = landingType || 0
+
+      // TIP: 2021-06-16 xielizhen 下线官网落地页渠道，原有的计划选择官网重新选择落地页
+      if (landingType === LANDING_TYPE_GW) {
+        this.form.landingType = LANDING_TYPE_AD
+        this.form.landingPage = ''
+        this.form.landingPageId = ''
+        this.landingTypeDisplayProxy = LANDING_TYPE_AD
+      }
       this.buttonText = '更新标王计划'
     }
     if (orderIdsString) {
