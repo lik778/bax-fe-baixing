@@ -264,6 +264,7 @@ export default {
     }
   },
   async mounted () {
+    const { query: { user_id: userId } } = this.$route
     const loadingInstance = this.$loading({
       lock: true,
       target: '.qwt-update-group',
@@ -271,15 +272,15 @@ export default {
       spinner: 'el-icon-loading'
     })
     try {
-      const originGroup = await getGroupDetailByGroupId(this.groupId)
+      const originGroup = await getGroupDetailByGroupId(this.groupId, { userId })
       this.originGroup = originGroup
       this.promotion = clone(this.originGroup.campaign)
       this.group = clone(this.originGroup)
 
-      this.originKeywords = await getKeywordsByGroupId(this.groupId)
+      this.originKeywords = await getKeywordsByGroupId(this.groupId, userId)
       this.keywords = clone(this.originKeywords)
 
-      this.campaignKeywordLen = await getCampaignKeywordsCount(this.promotion.id)
+      this.campaignKeywordLen = await getCampaignKeywordsCount(this.promotion.id, userId)
 
       if (this.enableMaterialPictures) {
         this.initMaterialPictures()
@@ -292,8 +293,10 @@ export default {
   },
   methods: {
     async initMaterialPictures (inits) {
+      const { query: { user_id: userId } } = this.$route
       this.materialPicturesInits = inits || (await getMaterialPictures({
-        groupId: this.groupId
+        groupId: this.groupId,
+        userId
       })).data
 
       // eslint-disable-next-line camelcase

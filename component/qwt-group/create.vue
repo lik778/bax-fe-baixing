@@ -192,14 +192,14 @@ export default {
     })
     try {
       // 复制进入
-      const cloneId = this.$route.query.cloneId
+      const { query: { cloneId, user_id: userId } } = this.$route
       if (cloneId) {
         await this.cloneGroupById(cloneId)
       } else {
-        const promotion = await getCampaignInfo(this.campaignId)
+        const promotion = await getCampaignInfo(this.campaignId, { userId })
         this.promotion = pick(promotion, ['id', 'source', 'areas'])
       }
-      this.campaignKeywordLen = await getCampaignKeywordsCount(this.campaignId)
+      this.campaignKeywordLen = await getCampaignKeywordsCount(this.campaignId, userId)
     } catch (error) {
       console.error('error:', error)
     } finally {
@@ -208,8 +208,9 @@ export default {
   },
   methods: {
     async cloneGroupById (groupId) {
-      const originGroup = await getGroupDetailByGroupId(groupId)
-      const keywords = await getKeywordsByGroupId(groupId)
+      const { query: { user_id: userId } } = this.$route
+      const originGroup = await getGroupDetailByGroupId(groupId, { userId })
+      const keywords = await getKeywordsByGroupId(groupId, userId)
       const group = pick(originGroup, ['creatives', 'landingPage', 'landingType', 'landingPageId', 'mobilePriceRatio', 'negativeWords'])
 
       this.group = {

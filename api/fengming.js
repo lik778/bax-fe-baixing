@@ -14,6 +14,7 @@ const { WHOLE_SPU_CODE } = SPUCODES
 export async function getMaterialPictures (opts) {
   return await fengming
     .get(`/creative/${opts.groupId}/image`)
+    .query(reverseCamelcase({ userId: opts.userId }))
     .json()
 }
 
@@ -264,7 +265,6 @@ export async function getCurrentCampaigns (opts) {
 }
 
 export async function getCurrentBalance (params) {
-  console.log('params', params)
   const body = await fengming
     .get('/balance/current')
     .query(reverseCamelcase(params))
@@ -411,7 +411,7 @@ export async function getHomePageFengmingData (params) {
 export async function getFengmingNotice (opts) {
   const body = await fengming
     .get('/dashboard/notice')
-    .query(opts)
+    .query(reverseCamelcase(opts))
     .json()
 
   return body.data
@@ -539,11 +539,12 @@ export async function updateGroup (id, data) {
  * 更加单元id获取单元下的关键词
  * @param {number} group_id
  */
-export async function getKeywordsByGroupId (groupId) {
+export async function getKeywordsByGroupId (groupId, userId) {
   const body = await fengming
     .get('/keyword/list_by_group')
     .query(reverseCamelcase({
-      groupId
+      groupId,
+      userId
     }))
     .json()
 
@@ -554,11 +555,12 @@ export async function getKeywordsByGroupId (groupId) {
  * 根据计划id获取用户关键词的总数（包含所有单元的关键词数量）
  * @param {number} campaign_id
  */
-export async function getCampaignKeywordsCount (campaignId) {
+export async function getCampaignKeywordsCount (campaignId, userId) {
   const body = await fengming
     .get('/keyword/count')
     .query(reverseCamelcase({
-      campaignId
+      campaignId,
+      userId
     }))
     .json()
 
@@ -621,9 +623,10 @@ export async function getAllGroups (opts) {
  * 根据单元id获取单元详情
  * @param {number} groupId
  */
-export async function getGroupDetailByGroupId (groupId) {
+export async function getGroupDetailByGroupId (groupId, params) {
   const body = await fengming
     .get(`/group/${groupId}`)
+    .query(reverseCamelcase(params))
     .json()
 
   const group = toCamelcase(body.data)

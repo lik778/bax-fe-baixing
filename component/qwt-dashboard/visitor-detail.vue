@@ -108,12 +108,14 @@ export default {
       return dayjs(timestamp).format('HH:mm')
     },
     async handleDeductDetail () {
+      const { query: { user_id: userId } } = this.$route
       const { rows, total } = await getDeductDetail({
         campaignId: this.campaignId,
         offset: this.offset,
         limit: this.limit,
         startDate: dayjs().subtract(8, 'day').startOf('date').unix(),
-        endDate: dayjs().subtract(1, 'day').endOf('date').unix()
+        endDate: dayjs().subtract(1, 'day').endOf('date').unix(),
+        userId
       })
       this.data = rows
       this.total = total

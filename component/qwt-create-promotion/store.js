@@ -32,8 +32,8 @@ const store = observable({
     // 场景: copy campaign 时, set keywords
     this._urlRecommends = words
   }),
-  getCurrentBalance: action(async function () {
-    this.currentBalance = await fapi.getCurrentBalance()
+  getCurrentBalance: action(async function (params) {
+    this.currentBalance = await fapi.getCurrentBalance(params)
   }),
   getCampaignsCount: action(async function () {
     this.campaignsCount = fapi.getCurrentCampaignCount()
@@ -42,8 +42,8 @@ const store = observable({
     this._searchRecommends = []
     this._urlRecommends = []
   }),
-  getCampaignInfo (campaignId) {
-    return fapi.getCampaignInfo(campaignId)
+  getCampaignInfo (campaignId, params) {
+    return fapi.getCampaignInfo(campaignId, params)
   }
 })
 

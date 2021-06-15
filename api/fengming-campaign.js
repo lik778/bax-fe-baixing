@@ -196,12 +196,13 @@ export async function getValidateCampaigns (userId) {
   return toCamelcase(body.data)
 }
 
-export async function getDeductStatistic (campaignId) {
+export async function getDeductStatistic (campaignId, userId) {
   const body = await fengming
     .get('/data_report/visitor/deduct_statistic')
     .query(
       reverseCamelcase({
-        campaignId
+        campaignId,
+        userId
       })
     )
     .json()

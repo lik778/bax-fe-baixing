@@ -56,6 +56,7 @@ export default {
     async fetchData (isResetPageNo) {
       if (isResetPageNo) this.pageNo = 1
       const { dateRange, ...otherParams } = this.query
+      const { query: { user_id: userId } } = this.$route
       let queryParmas = {
         pageNo: this.pageNo || 1,
         ...otherParams
@@ -69,7 +70,7 @@ export default {
           ...queryParmas
         }
       }
-      const { total, logs } = await api.getChangeLogs(queryParmas)
+      const { total, logs } = await api.getChangeLogs({ ...queryParmas, userId })
       this.data = logs
       this.total = total
     },
