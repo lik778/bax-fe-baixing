@@ -159,10 +159,6 @@ export default {
     },
     setLandingPageValidity (type, isValid) {
       this.isErrorLandingPageShow = !isValid
-      if (!isValid) {
-        this.form.landingType = type
-        this.clearLandingPage()
-      }
     },
     clearLandingPage () {
       this.form.landingPage = ''
@@ -199,7 +195,7 @@ export default {
     },
     banLandPageSelected () {
       // 落地页404，需要更改落地页投放
-      if (this.isErrorLandingPageShow && !this.form.landingPage) {
+      if (this.isErrorLandingPageShow) {
         throw this.$message.error('当前投放页面失效，请重新选择新的投放页面')
       }
     }
