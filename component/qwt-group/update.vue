@@ -155,7 +155,9 @@ import {
   KEYWORDS_MAX,
   MATERIAL_PIC_STATUS,
   GROUP_STATUS_PENDING_AUDIT,
-  SEM_PLATFORM_SOGOU
+  SEM_PLATFORM_SOGOU,
+  LANDING_TYPE_GW,
+  LANDING_TYPE_AD
 } from 'constant/fengming'
 import clone from 'clone'
 import uuid from 'uuid/v4'
@@ -272,9 +274,17 @@ export default {
     })
     try {
       const originGroup = await getGroupDetailByGroupId(this.groupId)
+
       this.originGroup = originGroup
       this.promotion = clone(this.originGroup.campaign)
       this.group = clone(this.originGroup)
+
+      // TIP: 2021-06-16 xielizhen 下线官网落地页渠道，原有的计划选择官网重新选择落地页
+      if (originGroup.landingType === LANDING_TYPE_GW) {
+        this.group.landingType = LANDING_TYPE_AD
+        this.group.landingPage = ''
+        this.group.landingPageId = ''
+      }
 
       this.originKeywords = await getKeywordsByGroupId(this.groupId)
       this.keywords = clone(this.originKeywords)
