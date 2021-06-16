@@ -210,7 +210,7 @@ export default {
           adId: [adId]
         })
 
-        this.checkedAdId = adId || (this.ads[0] ? this.ads[0].adId : null)
+        this.checkedAdId = String(adId) || (this.ads[0] ? this.ads[0].adId : null)
         return
       }
 
