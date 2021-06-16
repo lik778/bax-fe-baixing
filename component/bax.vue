@@ -287,7 +287,6 @@ body > .container {
 }
 
 .el-loading-mask {
-  background-color: transparent !important;
-  height: 173px;
+  height: 100%;
 }
 </style>

@@ -247,6 +247,11 @@ const bwRoutes = [
     name: 'bw-query-price'
   },
   {
+    component: () => import('com/bw-plus/bw-query-price'),
+    path: '/main/bw/bw-plus-query-price',
+    name: 'bw-plus-query-price'
+  },
+  {
     component: () => import('com/bw-edit-plan'),
     path: '/main/bw/edit-plan',
     name: 'bw-edit-plan'

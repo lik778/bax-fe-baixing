@@ -92,6 +92,16 @@
             </router-link>
           </el-menu-item>
         </el-submenu>
+        <el-submenu index="bwplus">
+          <template slot="title">
+            <bx-icon type="sharealt"></bx-icon>标王2.0
+          </template>
+          <el-menu-item index="bw-plus-query-price" v-if="!userInfo.shAgent">
+            <router-link :to="{ name: 'bw-plus-query-price' }" tag="p">
+              标王查价
+            </router-link>
+          </el-menu-item>
+        </el-submenu>
         <el-submenu index="qc">
           <template slot="title">
             <bx-icon type="sharealt"></bx-icon>易慧推
