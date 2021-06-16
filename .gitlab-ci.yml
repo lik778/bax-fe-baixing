@@ -55,12 +55,12 @@ test-deploy:
   script:
     - kubectl set image -n test-adtech deployments --selector app=bax-fe *=$BAX_FE_REF
 
-dev-deploy-auto-master:
-  stage: dev-deploy-auto-master
-  only:
-    - master
-  script:
-    - kubectl set image -n adtech deployments --selector app=bax-fe *=$BAX_FE_REF
+# dev-deploy-auto-master:
+#   stage: dev-deploy-auto-master
+#   only:
+#     - master
+#   script:
+#     - kubectl set image -n adtech deployments --selector app=bax-fe *=$BAX_FE_REF
 
 
 prod-deploy:
