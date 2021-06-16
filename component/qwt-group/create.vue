@@ -121,7 +121,9 @@ import {
   NEGATIVE_KEYWORDS_MAX,
   KEYWORDS_MAX,
   CAMPAIGN_STATUS_OFFLINE,
-  SEM_PLATFORM_BAIDU
+  SEM_PLATFORM_BAIDU,
+  LANDING_TYPE_GW,
+  LANDING_TYPE_AD
 } from 'constant/fengming'
 import clone from 'clone'
 import pick from 'lodash.pick'
@@ -131,7 +133,7 @@ import { toFloat } from 'util/kit'
 
 const emptyPromotion = {
   id: '',
-  source: '',
+  source: 0,
   areas: []
 }
 
@@ -211,6 +213,13 @@ export default {
       const originGroup = await getGroupDetailByGroupId(groupId)
       const keywords = await getKeywordsByGroupId(groupId)
       const group = pick(originGroup, ['creatives', 'landingPage', 'landingType', 'landingPageId', 'mobilePriceRatio', 'negativeWords'])
+
+      // TIP: 2021-06-16 谢丽珍 全面下线官网落地页，如果原有是官网的，默认选中帖子
+      if (group.landingType === LANDING_TYPE_GW) {
+        group.landingType = LANDING_TYPE_AD
+        group.landingPage = ''
+        group.landingPageId = ''
+      }
 
       this.group = {
         ...emptyGroup,

@@ -10,32 +10,26 @@
             </el-checkbox-group>
           </el-form-item>
           <el-form-item label="投放页面" prop="landingPage">
-            <div v-if="!isErrorLandingPageShow">
-              <div class="landing-type">
-                <el-radio-group v-model="landingTypeDisplayProxy" @change="clearLandingPage" size="small">
-                  <el-radio-button v-for="option of landingTypeOpts" :key="option.value" :label="option.value">{{option.label}}</el-radio-button>
-                </el-radio-group>
-                <a v-if="isSpecialLandingpage" href="javascript:;" class="qiqiaoban-warning" @click="goChargeKaSite">升级新精品官网，搜索通替你付一半</a>
-              </div>
-              <div class="landing-page">
-                <user-ad-selector
-                  v-if="landingTypeDisplay === LANDING_TYPE_AD"
-                  :type="adSelectorType"
-                  :all-areas="allAreas"
-                  :limit-mvp="false"
-                  :selected-id="form.landingPageId"
-                  @select-ad="onSelectAd"
-                />
-                <mvip-selector
-                  v-if="landingTypeDisplay === LANDING_TYPE_STORE"
-                  :initValue="form.landingPageId"
-                  @change="onSelectStore"
-                  @valid-change="isValid => setLandingPageValidity(LANDING_TYPE_STORE, isValid)"
-                />
-              </div>
+            <div class="landing-type">
+              <el-radio-group v-model="form.landingType" @change="clearLandingPage" size="small">
+                <el-radio-button v-for="option of landingTypeOpts" :key="option.value" :label="option.value">{{option.label}}</el-radio-button>
+              </el-radio-group>
             </div>
-            <div class="error-page-placeholder" v-else>
-              所选推广页面失效，请 <a href="javascript:;" @click="reselectLandingpage">重新选择</a>
+            <div class="landing-page">
+              <user-ad-selector
+                v-if="form.landingType === LANDING_TYPE_AD"
+                :all-areas="allAreas"
+                :limit-mvp="false"
+                :selected-id="form.landingPageId"
+                @select-ad="onSelectAd"
+                @valid-change="isValid => setLandingPageValidity(LANDING_TYPE_AD, isValid)"
+              />
+              <mvip-selector
+                v-if="form.landingType === LANDING_TYPE_STORE"
+                :initValue="form.landingPageId"
+                @change="onSelectStore"
+                @valid-change="isValid => setLandingPageValidity(LANDING_TYPE_STORE, isValid)"
+              />
             </div>
           </el-form-item>
           <h3>投放物料设置</h3>
@@ -57,19 +51,16 @@
 </template>
 
 <script>
-import { isQiqiaobanSite, isWeishopSite, getLandingpageByPageProtocol } from 'util/kit'
-import { getPromoteById, getPromtesByOrders, updatePromote, getQiqiaobanCoupon } from 'api/biaowang'
-import { landingTypeOpts, SEM_PLATFORM_BAIDU, LANDING_TYPE_AD, LANDING_TYPE_STORE, LANDING_TYPE_GW } from 'constant/fengming'
+import { getPromoteById, getPromtesByOrders, updatePromote } from 'api/biaowang'
+import { landingTypeOpts, SEM_PLATFORM_BAIDU, LANDING_TYPE_AD, LANDING_TYPE_STORE, LANDING_TYPE_GW, LANDING_TYPE_WESHOP } from 'constant/fengming'
 import {
   AUDIT_STATUS_REJECT,
-  PROMOTE_STATUS_OFFLINE,
-  PROMOTE_STATUS_PENDING_EDIT
+  PROMOTE_STATUS_OFFLINE
 } from 'constant/biaowang'
 import { Message } from 'element-ui'
-import UserAdSelector from 'com/common/user-ad-selector'
+import UserAdSelector from 'com/common/ad-selector'
 import CreativeEditor from 'com/widget/creative-editor'
 import MvipSelector from 'com/common/mvip-selector'
-import { queryAds } from 'api/fengming'
 
 export default {
   name: 'bw-edit-plan',
@@ -87,10 +78,7 @@ export default {
       LANDING_TYPE_AD,
       LANDING_TYPE_STORE,
       promotes: [],
-      landingTypeDisplay: null,
-      landingTypeDisplayProxy: 0,
       isErrorLandingPageShow: false,
-      isSpecialLandingpage: false,
       form: {
         promoteIds: [],
         landingType: 0,
@@ -108,8 +96,7 @@ export default {
 
       creativeError: '',
       isLoading: false,
-      showNotice: false,
-      adSelectorType: 'reselect'
+      showNotice: false
     }
   },
   computed: {
@@ -121,14 +108,6 @@ export default {
     },
     isPromoteOffline () {
       return this.promotes.some(p => PROMOTE_STATUS_OFFLINE.includes(p.status))
-    }
-  },
-  watch: {
-    // TODO refactor
-    landingTypeDisplayProxy (n) {
-      this.$nextTick(() => {
-        this.landingTypeDisplay = n
-      })
     }
   },
   async mounted () {
@@ -145,14 +124,12 @@ export default {
         creativeContent: creativeContent || '',
         landingPageId: landingPageId || ''
       }
-      this.landingTypeDisplayProxy = landingType || 0
 
-      // TIP: 2021-06-16 xielizhen 下线官网落地页渠道，原有的计划选择官网重新选择落地页
-      if (landingType === LANDING_TYPE_GW) {
+      // TIP: 2021-06-16 谢丽珍 下线官网落地页渠道，原有的计划选择官网重新选择落地页
+      if (landingType === LANDING_TYPE_GW || landingType === LANDING_TYPE_WESHOP) {
         this.form.landingType = LANDING_TYPE_AD
         this.form.landingPage = ''
         this.form.landingPageId = ''
-        this.landingTypeDisplayProxy = LANDING_TYPE_AD
       }
       this.buttonText = '更新标王计划'
     }
@@ -165,62 +142,15 @@ export default {
     if (notice === 'true' || notice === '1') {
       this.showNotice = true
     }
-    this.adSelectorType = this.promotes.every(p => PROMOTE_STATUS_PENDING_EDIT.includes(p.status)) ? '' : 'reselect'
-    this.verifyLandingpageIsError()
   },
   methods: {
-    reselectLandingpage () {
-      this.isErrorLandingPageShow = false
-      this.adSelectorType = ''
-    },
-    async verifyLandingpageIsError () {
-      const { landingPage, landingType, landingPageId } = this.form
-      if (landingType === 1 || landingType === 2) {
-        const script = document.createElement('script')
-        script.src = getLandingpageByPageProtocol(landingPage)
-        document.body.appendChild(script)
-        script.addEventListener('error', e => {
-          document.body.removeChild(script)
-          this.isErrorLandingPageShow = true
-          this.form.landingPage = ''
-        })
-        this.isSpecialLandingpage = this.specialLandingpage(this.form.landingPage)
-      }
-
-      // 验证百姓帖子已经归档
-      if (landingType === LANDING_TYPE_AD && landingPageId) {
-        const result = await queryAds({
-          limitMvp: false,
-          adId: landingPageId,
-          limit: 1
-        })
-        const ad = result.ads && result.ads[0]
-        if (ad && String(ad.adId) === String(landingPageId)) return
-        this.isErrorLandingPageShow = true
-        this.form.landingPage = ''
-      }
-    },
     onSelectAd (ad) {
-      this.form.landingType = 0
+      this.form.landingType = LANDING_TYPE_AD
       this.form.landingPageId = ad.adId
       this.form.landingPage = ad.url
 
       this.form.creativeTitle = ad.title && ad.title.slice(0, 24)
       this.form.creativeContent = ad.content && ad.content.slice(0, 39)
-    },
-    async goChargeKaSite () {
-      await getQiqiaobanCoupon(this.$route.query.promoteId)
-      setTimeout(() => {
-        this.$router.push('/main/qwt/charge?select_gw=1')
-      }, 300)
-    },
-    onQiqiaobanChange (v) {
-      this.form.landingType = 1
-      this.form.landingPage = v
-      this.form.landingPageId = ''
-
-      this.form.creativeTitle = ''
-      this.form.creativeContent = ''
     },
     onSelectStore (url, id) {
       this.form.landingType = LANDING_TYPE_STORE
@@ -228,10 +158,10 @@ export default {
       this.form.landingPage = url
     },
     setLandingPageValidity (type, isValid) {
-      this.adSelectortype = ''
+      this.isErrorLandingPageShow = !isValid
       if (!isValid) {
-        this.form.landingPage = ''
         this.form.landingType = type
+        this.clearLandingPage()
       }
     },
     clearLandingPage () {
@@ -267,20 +197,10 @@ export default {
         }
       })
     },
-    specialLandingpage (siteUrl) {
-      return isQiqiaobanSite(siteUrl) || isWeishopSite(siteUrl)
-    },
     banLandPageSelected () {
       // 落地页404，需要更改落地页投放
       if (this.isErrorLandingPageShow && !this.form.landingPage) {
-        this.adSelectorType = ''
-        const pageErrorPlaceholder = document.querySelector('.error-page-placeholder')
-        pageErrorPlaceholder.style.borderColor = '#FF6350'
         throw this.$message.error('当前投放页面失效，请重新选择新的投放页面')
-      }
-      // 已经下线计划且当前落地页为老官网或微站 不允许修改投放计划
-      if (this.isSpecialLandingpage && this.isPromoteOffline) {
-        throw this.$message.error('当前计划已下线，不能更新推广计划')
       }
     }
   }
