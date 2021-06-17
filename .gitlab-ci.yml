@@ -4,7 +4,7 @@ image: registry.gitlab.baixing.cn/arch/base-images/docker:latest
 #   - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.baixing.cn
 
 variables:
-  BAX_FE_REF: registry.gitlab.baixing.cn/channel/bax-fe:${CI_PIPELINE_ID}
+  BAX_FE_REF: registry.gitlab.baixing.cn/channel/bax-fe:${CI_BUILD_REF_NAME}-${CI_PIPELINE_ID}
 
 stages:
   - build
