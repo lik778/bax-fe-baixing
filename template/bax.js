@@ -52,7 +52,9 @@ import {
   MessageBox,
   Message,
   Cascader,
-  Notification
+  Notification,
+  Breadcrumb,
+  BreadcrumbItem
 } from 'element-ui'
 import '../cssbase/index.scss'
 import { reaction } from 'mobx'
@@ -143,6 +145,8 @@ Vue.use(Popconfirm)
 Vue.use(Card)
 Vue.use(Image)
 Vue.use(Popconfirm)
+Vue.use(Breadcrumb)
+Vue.use(BreadcrumbItem)
 
 /**
  * 错误回退组件
@@ -240,16 +244,38 @@ VueRouter.prototype.replace = function replace (route) {
   })
 }
 
+const bwPlusRoutes = [
+  {
+    component: () => import('com/bw-plus/bw-query-price'),
+    path: '/main/bw-plus/query-price',
+    name: 'bw-plus-query-price'
+  },
+  {
+    component: () => import('com/bw-plus/bw-price-records'),
+    path: '/main/bw-plus/price-records',
+    name: 'bw-plus-price-records'
+  },
+  {
+    component: () => import('com/bw-plus/bw-cibao-list'),
+    path: '/main/bw-plus/cibao-list',
+    name: 'bw-plus-cibao-list'
+  },
+  {
+    component: () => import('com/bw-plus/bw-plan-list'),
+    path: '/main/bw-plus/plan-list/:id',
+    name: 'bw-plus-plan-list'
+  },
+  {
+    component: () => import('com/bw-plus/bw-edit-plan'),
+    path: '/main/bw-plus/edit-plan/:id'
+  }
+]
+
 const bwRoutes = [
   {
     component: () => import('com/bw-query-price'),
     path: '/main/bw/query-price',
     name: 'bw-query-price'
-  },
-  {
-    component: () => import('com/bw-plus/bw-query-price'),
-    path: '/main/bw/bw-plus-query-price',
-    name: 'bw-plus-query-price'
   },
   {
     component: () => import('com/bw-edit-plan'),
@@ -495,6 +521,7 @@ export const router = new VueRouter({
     ...qwtRoutes,
     ...sspRoutes,
     ...seoRoutes,
+    ...bwPlusRoutes,
     {
       path: '*',
       redirect: '/main'
