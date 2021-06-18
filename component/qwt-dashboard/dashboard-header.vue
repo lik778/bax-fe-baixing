@@ -71,7 +71,7 @@ export default {
       this.data = await api.getDashboardHeader({ userId: this.salesInfo.userId })
     },
     async initCreatives () {
-      this.creatives = await getAllCampaignsWithConsume()
+      this.creatives = await getAllCampaignsWithConsume({ userId: this.salesInfo.userId })
     },
     f2y
   }

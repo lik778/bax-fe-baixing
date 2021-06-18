@@ -394,8 +394,9 @@ export async function getHomepageSummary (params) {
 }
 
 export async function getHomePageFengmingData (params) {
+  const { userId } = params
   const [balanceBrief, daily, notices] = await Promise.all([
-    getCurrentBalanceBreif(WHOLE_SPU_CODE),
+    getCurrentBalanceBreif(WHOLE_SPU_CODE, userId),
     _getDailySummary(params),
     getFengmingNotice(params)
   ])
