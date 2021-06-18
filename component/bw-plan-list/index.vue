@@ -65,7 +65,7 @@
           </el-table-column>
           <el-table-column label="操作" min-width="160px">
             <template slot-scope="scope">
-              <router-link v-if="!isBxSales && !isAgentAccounting" :to="{name: 'bw-edit-plan', query: {promoteId: scope.row.id}}"><el-button type="text" size="small">编辑</el-button></router-link>
+              <router-link v-if="!isAgentAccounting" :to="{name: 'bw-edit-plan', query: {promoteId: scope.row.id}}"><el-button type="text" size="small">编辑</el-button></router-link>
               <el-button v-if="canXufei(scope.row) && !userInfo.shAgent" size="small" type="text"
                          :disabled="disabledXuFeiBtn(scope.row)"
                          @click="onXufei(scope.row)">续费</el-button>

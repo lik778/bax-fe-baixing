@@ -42,7 +42,7 @@
             @error="handleCreativeError"
           />
           <el-form-item>
-            <el-button :disabled="isPromoteOffline" :loading="isLoading" @click="onSubmit" type="primary">{{buttonText}}</el-button>
+            <el-button :disabled="isPromoteOffline || !userInfo.shAgent" :loading="isLoading" @click="onSubmit" type="primary">{{buttonText}}</el-button>
           </el-form-item>
         </el-form>
       </main>
@@ -65,7 +65,8 @@ import MvipSelector from 'com/common/mvip-selector'
 export default {
   name: 'bw-edit-plan',
   props: {
-    allAreas: Array
+    allAreas: Array,
+    userInfo: Object
   },
   components: {
     UserAdSelector,
