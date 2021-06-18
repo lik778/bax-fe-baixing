@@ -85,7 +85,8 @@ export async function getCreative(opts = {}) {
   return (await qianci
     .get(`/promote/creative/${id}`)
     .query({
-      targetUserId: salesInfo.userId
+      targetUserId: salesInfo.userId,
+      salesId: salesInfo.salesId
     })
     .json())
     .data
