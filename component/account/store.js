@@ -67,8 +67,8 @@ const store = observable({
     this._coupons = await mapi.getCoupons(opt)
   }),
 
-  getBalance: action(async function () {
-    this._balance = await api.getCurrentAllBalanceBreif()
+  getBalance: action(async function (params) {
+    this._balance = await api.getCurrentAllBalanceBreif(params)
   })
 })
 
