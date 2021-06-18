@@ -35,8 +35,8 @@ const store = observable({
   getCurrentBalance: action(async function (params) {
     this.currentBalance = await fapi.getCurrentBalance(params)
   }),
-  getCampaignsCount: action(async function () {
-    this.campaignsCount = fapi.getCurrentCampaignCount()
+  getCampaignsCount: action(async function (params) {
+    this.campaignsCount = fapi.getCurrentCampaignCount(params)
   }),
   clearStore: action(function () {
     this._searchRecommends = []

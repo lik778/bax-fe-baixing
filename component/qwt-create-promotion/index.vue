@@ -299,6 +299,11 @@ export default {
       type: Object,
       required: true
     },
+    salesInfo: {
+      type: Object,
+      required: true,
+      default: () => {}
+    },
     allAreas: {
       type: Array,
       required: true
@@ -796,10 +801,10 @@ export default {
   },
 
   async mounted () {
-    const { query: { user_id: userId } } = this.$route
+    const { userId } = this.salesInfo
     await Promise.all([
       store.getCurrentBalance({ userId }),
-      store.getCampaignsCount()
+      store.getCampaignsCount({ userId })
     ])
 
     setTimeout(() => {

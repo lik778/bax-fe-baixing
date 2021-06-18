@@ -381,7 +381,7 @@ export async function getLogs (queryParmas = {}) {
 
 export async function getHomepageSummary (params) {
   const [campaignCount, balance, daily] = await Promise.all([
-    getCurrentCampaignCount(),
+    getCurrentCampaignCount(params),
     getCurrentBalance(params),
     _getDailySummary(params)
   ])
@@ -397,7 +397,7 @@ export async function getHomePageFengmingData (params) {
   const [balanceBrief, daily, notices] = await Promise.all([
     getCurrentBalanceBreif(WHOLE_SPU_CODE),
     _getDailySummary(params),
-    getFengmingNotice()
+    getFengmingNotice(params)
   ])
 
   return {
@@ -429,7 +429,7 @@ export async function getQiqiaobanCoupon (campaignId) {
 export async function getCurrentCampaignCount (opts) {
   const body = await fengming
     .get('/campaign/current/count')
-    .query(opts)
+    .query(reverseCamelcase(opts))
     .json()
 
   return body.data

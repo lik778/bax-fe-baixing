@@ -108,7 +108,7 @@
       <el-table-column label="操作" width="160">
         <template slot-scope="{ row }">
           <el-button
-            :disabled="!(userInfo.shAgent && canEditPromote(row.status))"
+            :disabled="!(userInfo.shAgent && canEditPromote(row.status) || isBaixingSales(userInfo.roles))"
             :loading="checkButtonLoading(row)"
             type="text"
             size="small"
@@ -166,6 +166,7 @@ import {
 import { getBusinessLicense } from 'api/seo'
 import { getPromoteList, getWanciSeoRedirect } from 'api/qianci'
 import { isPro } from 'config'
+import { isBaixingSales } from 'util/role'
 
 export default {
   name: 'qc-promote-list',
@@ -178,6 +179,7 @@ export default {
       PROMOTE_STATUS_MAPPING,
       PROMOTE_STATUS,
       AUDIT_STATUS_OPTIONS,
+      isBaixingSales,
       query: {
         coreWord: '',
         status: '',
@@ -297,11 +299,9 @@ export default {
       this.active.selectedItem = row
       const hasBusinessUrl = await this.checkLicense()
       if (hasBusinessUrl) {
-        const id = row.id
-        const search = window.location.search
-          ? window.location.search + `&promoteId=${id}`
-          : `?promoteId=${id}`
-        this.$router.push('/main/qc/creative' + search)
+        const promoteId = row.id
+        const query = { ...this.salesInfo, promoteId }
+        this.$router.push({ name: 'qc-creative', query })
       } else {
         this.$msgbox({
           title: '提示',

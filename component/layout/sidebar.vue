@@ -56,7 +56,7 @@
           </el-menu-item>
         </el-submenu>
 
-        <el-submenu index="sst" v-show="allowSeeQwtPromotion">
+        <el-submenu index="sst" v-show="allowSeeQwtPromotion || allowSales">
           <template slot="title">
             <bx-icon type="sharealt"></bx-icon>站外推广
           </template>
@@ -200,7 +200,8 @@ import {
   allowSeeAccount,
   allowSeeBxAd,
   relationAllow,
-  allowSeeDiamondSite
+  allowSeeDiamondSite,
+  isSales
 } from 'util/role'
 
 import { getUserSites } from 'api/diamond-site'
@@ -284,6 +285,9 @@ export default {
     },
     allowSeeDiamondSite () {
       return allowSeeDiamondSite(this.userInfo.roles)
+    },
+    allowSales () {
+      return isSales(this.userInfo.roles)
     }
   },
   async mounted () {
