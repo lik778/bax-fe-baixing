@@ -1,4 +1,3 @@
-import { baxUserLogin, kaSimpleReport } from 'api/ka'
 import { getHomePageFengmingData } from 'api/fengming'
 import { getHomePageBiaowangData, getPromotes, getUserRanking } from 'api/biaowang'
 import { observable, toJS, action, computed } from 'mobx'
@@ -6,7 +5,6 @@ import dayjs from 'dayjs'
 
 class Store {
   @observable fengmingData = null
-  @observable kaSiteData = null
   @observable biaowangData = null
   @observable biaowangPromotes = null
 
@@ -28,8 +26,7 @@ class Store {
 
   @computed get notices () {
     return {
-      fengming: this.fengmingData && toJS(this.fengmingData.notices),
-      kaSite: this.kaSiteData && toJS(this.kaSiteData.messages)
+      fengming: this.fengmingData && toJS(this.fengmingData.notices)
     }
   }
 
@@ -37,16 +34,6 @@ class Store {
     try {
       const fengmingData = await getHomePageFengmingData(params)
       this.fengmingData = fengmingData
-    } catch (err) {
-      console.error(err)
-    }
-  }
-
-  @action async loadKaData () {
-    try {
-      await baxUserLogin()
-      const kaSiteData = await kaSimpleReport()
-      this.kaSiteData = kaSiteData
     } catch (err) {
       console.error(err)
     }
@@ -79,7 +66,6 @@ class Store {
   }
 
   @action initPageStore (userId) {
-    this.loadKaData()
     this.loadBaxData({ userId })
     this.loadBiaowangData(userId)
   }

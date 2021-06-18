@@ -35,11 +35,6 @@
           label="投放地址"
           prop="landingPageId"
           key="landingPageId">
-          <sites-selector
-            v-if="form.landingType === LANDING_TYPE_GUAN_WANG"
-            :initValue="form.landingPageId"
-            @change="setLanding"
-          />
           <mvip-selector
             v-if="form.landingType === LANDING_TYPE_STORE"
             :initValue="form.landingType === LANDING_TYPE_STORE && form.landingPageId || ''"
@@ -81,13 +76,11 @@
 import { getRouteParam } from 'util'
 import { LANDING_TYPE_GUAN_WANG, LANDING_TYPE_STORE, landingTypeOpts } from 'constant/qianci'
 import { getCreative, saveCreative } from 'api/qianci'
-import SitesSelector from 'com/common/sites-selector'
 import MvipSelector from 'com/common/mvip-selector'
 
 export default {
   name: 'creative-manage',
   components: {
-    SitesSelector,
     MvipSelector
   },
   props: {
@@ -104,15 +97,15 @@ export default {
   },
   data () {
     return {
-      LANDING_TYPE_GUAN_WANG,
       LANDING_TYPE_STORE,
       landingTypeOpts,
 
       id: null,
       isFormEdited: false,
+      originData: null,
       form: {
         coreWords: [],
-        landingType: LANDING_TYPE_GUAN_WANG,
+        landingType: LANDING_TYPE_STORE,
         landingPage: '',
         landingPageId: '',
         creativeTitle: '',
@@ -187,6 +180,8 @@ export default {
         creativeContent
       } = response || {}
 
+      this.originData = response
+
       // * for test
       // const coreWords = ['cestest']
       // const creativeTitle = 'testtesttesttest'
@@ -202,9 +197,17 @@ export default {
       this.form.landingPage = landingPage || ''
       this.form.landingType = landingType
 
+      // TIP 2021-06-16 下线官网落地页类型
+      if (landingType === LANDING_TYPE_GUAN_WANG) {
+        this.form.landingType = LANDING_TYPE_STORE
+        this.clearLandingInput()
+      }
+
       // console.log('this.form: ', this.form)
 
-      this.$nextTick(() => (this.isFormEdited = false))
+      this.$nextTick(() => {
+        if (landingType !== LANDING_TYPE_GUAN_WANG) this.isFormEdited = false
+      })
     },
     clearLandingInput () {
       this.setLanding('', '')
