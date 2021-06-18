@@ -2,6 +2,7 @@
     <el-table
     border
     :data="tableData"
+    :cell-style="{background: '#fff', cursor: 'pointer'}"
     style="width: 100%">
         <el-table-column prop="type"></el-table-column>
         <el-table-column
@@ -9,7 +10,7 @@
         align="center">
             <el-table-column align="center" label="7天*24小时">
                 <template slot-scope="{ row }">
-                    <span @click="cellClick(row)">{{row.bothse}}</span>
+                    <span :class="row.bothse === selectRow.bothse && 'price-item'" @click="cellClick(row)">{{row.bothse}}</span>
                 </template>
             </el-table-column>
             <el-table-column align="center" prop="bothfe" label="5天*24小时"></el-table-column>
@@ -39,10 +40,21 @@ export default {
       require: true
     }
   },
+  data () {
+    return {
+      selectRow: ''
+    }
+  },
   methods: {
     cellClick (row) {
-      console.log(row)
+      this.selectRow = row
     }
   }
 }
 </script>
+
+<style lang="scss" scoped>
+    .el-table tbody tr:hover>td {
+        background-color:#fff !important
+    }
+</style>

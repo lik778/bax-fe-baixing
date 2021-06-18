@@ -2,8 +2,7 @@
     <el-table
     border
     :data="tableData"
-    style="width: 100%"
-    height="250">
+    style="width: 100%">
         <el-table-column
         prop="keyword"
         label="关键词">
