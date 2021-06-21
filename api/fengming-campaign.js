@@ -110,10 +110,10 @@ export async function getReport (opts = {}, campaignFields) {
 }
 
 // 获取用户下的所有计划的以及消耗信息
-export async function getAllCampaignsWithConsume () {
+export async function getAllCampaignsWithConsume (params) {
   const body = await fengming
     .get('/data_report/campaign_keyword')
-    .query({})
+    .query(reverseCamelcase(params))
     .json()
 
   return toCamelcase(body.data)
@@ -153,7 +153,7 @@ export async function getCampaignList (params) {
 export async function getCampaignIds (params) {
   const body = await fengming
     .get('/campaign/ids')
-    .send(params)
+    .query(reverseCamelcase(params))
     .json()
   const data = [{ value: 0, label: '全部' }]
   body.data.map(id => {
@@ -196,12 +196,13 @@ export async function getValidateCampaigns (userId) {
   return toCamelcase(body.data)
 }
 
-export async function getDeductStatistic (campaignId) {
+export async function getDeductStatistic (campaignId, userId) {
   const body = await fengming
     .get('/data_report/visitor/deduct_statistic')
     .query(
       reverseCamelcase({
-        campaignId
+        campaignId,
+        userId
       })
     )
     .json()

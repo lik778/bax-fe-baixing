@@ -71,11 +71,13 @@ export default {
   methods: {
     async fetchData (isResetPageNo) {
       if (isResetPageNo) this.pageNo = 1
+      const { query: { user_id: userId } } = this.$route
       const { dateRange, accountList, ...otherParams } = this.query
       let queryParmas = {
         pageNo: this.pageNo || 1,
         ...otherParams,
-        accountList: accountList || Object.keys(PRODUCTS)
+        accountList: accountList || Object.keys(PRODUCTS),
+        userId
       }
       if (dateRange) {
         const startDate = dayjs(dateRange[0]).startOf('day').unix()

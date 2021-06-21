@@ -1,7 +1,7 @@
 /* eslint-disable */
 
 import Fetch from 'fetch.io'
-import { paginationWrapper, pause } from 'util'
+import { paginationWrapper } from 'util'
 import { qianci, qianci1, baseOptions } from './base'
 import { qcApiHost } from 'config'
 import clone from 'clone'
@@ -81,9 +81,13 @@ export const getPreferredWordsList = paginationWrapper(async function (opts = {}
 // 获取推广物料信息
 export async function getCreative(opts = {}) {
   const id = opts.id
+  const { salesInfo } = opts
   return (await qianci
     .get(`/promote/creative/${id}`)
-    .query()
+    .query({
+      targetUserId: salesInfo.userId,
+      salesId: salesInfo.salesId
+    })
     .json())
     .data
 }
@@ -110,7 +114,6 @@ export async function getPromoteList(opts = {}) {
     .get('/promote/user/promotes')
     .query(opts)
     .json()
-
   return {
     content: data.content,
     total: data.totalElements

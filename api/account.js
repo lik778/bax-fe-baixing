@@ -179,12 +179,24 @@ export async function payOrder (orderId) {
   return data
 }
 
-export async function getCurrentBalanceBreif (accountType) {
+/**
+ * @param {*} params
+ * @returns 获取当前销售和目标用户的关系
+ */
+export async function relation (params) {
+  const { data } = await api
+    .get('/user/relation')
+    .query(reverseCamelcase(params))
+    .json()
+  return data
+}
+
+export async function getCurrentBalanceBreif (accountType, userId) {
   const body = await api
     .get('/balance/brief')
-    .query(reverseCamelcase({ accountType }))
+    .query(reverseCamelcase({ accountType, userId }))
     .json()
-
+  console.log('userId', userId)
   return body.data
 }
 
@@ -200,10 +212,10 @@ export async function getChargeLogs (opts) {
   }
 }
 
-export async function getCurrentAllBalanceBreif () {
+export async function getCurrentAllBalanceBreif ({ userId }) {
   const [fengmingBalanceBrief = {}, biaowangBalanceBrief = {}] = await Promise.all([
-    getCurrentBalanceBreif(WHOLE_SPU_CODE),
-    getCurrentBalanceBreif(BIAO_WANG_SPU_CODE)
+    getCurrentBalanceBreif(WHOLE_SPU_CODE, userId),
+    getCurrentBalanceBreif(BIAO_WANG_SPU_CODE, userId)
   ])
   return {
     fengmingBalance: fengmingBalanceBrief.currentBalance,

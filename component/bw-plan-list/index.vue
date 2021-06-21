@@ -3,8 +3,8 @@
     <div class="white-bg">
       <header>我的标王推广计划</header>
       <main>
-        <router-link :to="{name: 'bw-query-price'}">
-          <el-button class="create-plan" type="primary" v-if="!userInfo.shAgent"><i class="el-icon-plus" ></i>新建标王计划</el-button>
+        <router-link v-if="!userInfo.shAgent && relationAllow()" :to="{name: 'bw-query-price'}">
+          <el-button class="create-plan" type="primary"><i class="el-icon-plus" ></i>新建标王计划</el-button>
         </router-link>
         <el-form :model="query" label-width="100px" label-position="left" @submit.native.prevent >
           <el-form-item label="关键词">
@@ -65,7 +65,7 @@
           </el-table-column>
           <el-table-column label="操作" min-width="160px">
             <template slot-scope="scope">
-              <router-link v-if="!isBxSales && !isAgentAccounting" :to="{name: 'bw-edit-plan', query: {promoteId: scope.row.id}}"><el-button type="text" size="small">编辑</el-button></router-link>
+              <router-link v-if="!isAgentAccounting" :to="{name: 'bw-edit-plan', query: {promoteId: scope.row.id}}"><el-button type="text" size="small">编辑</el-button></router-link>
               <el-button v-if="canXufei(scope.row) && !userInfo.shAgent" size="small" type="text"
                          :disabled="disabledXuFeiBtn(scope.row)"
                          @click="onXufei(scope.row)">续费</el-button>
@@ -170,7 +170,7 @@ import {
   fmtAreasInBw
 } from 'util'
 import dayjs from 'dayjs'
-import { normalizeRoles } from 'util/role'
+import { normalizeRoles, relationAllow } from 'util/role'
 import flatten from 'lodash.flatten'
 import { fmtCpcRanking } from 'util/campaign'
 import auditRejectReasonDialog from 'com/common/audit-reject-reason-dialog'
@@ -205,6 +205,7 @@ export default {
     return {
       promoteStatusOpts,
       auditStatusOpts,
+      relationAllow,
       query: {
         keyword: '',
         promoteStatusFilters: [],
@@ -348,12 +349,13 @@ export default {
       return PROMOTE_STATUS_ONLINE.includes(row.status)
     },
     async getPromotes () {
-      const { offset, limit, keyword: word, promoteStatusFilters, auditStatusFilters, userId } = this.query
+      const { query: { user_id: userId } } = this.$route
+      const { offset, limit, keyword: word, promoteStatusFilters, auditStatusFilters } = this.query
       const { items, total } = await getPromotes({
         page: offset / limit,
         size: limit,
         word,
-        userId,
+        userId: userId,
         status: flatten(promoteStatusFilters),
         auditStatus: flatten(auditStatusFilters)
       })
@@ -364,7 +366,8 @@ export default {
       const rankings = await getUserRanking({
         startTime: yesterday,
         endTime: yesterday,
-        promoteList: items.map(i => i.id)
+        promoteList: items.map(i => i.id),
+        userId
       })
 
       if (rankings.length) {
@@ -476,6 +479,7 @@ export default {
   async mounted () {
     const promote = this.$route.params.promote
     this.query.userId = this.salesInfo.userId
+
     await this.getPromotes()
     if (promote && promote.id) {
       // 首页续费直接加入购物车

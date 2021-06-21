@@ -100,9 +100,10 @@ export default {
     }
   },
   async mounted () {
+    const { query: { user_id: userId } } = this.$route
     await Promise.all([
-      store.getCoupons({ onlyValid: true, status: 0 }),
-      store.getBalance()
+      store.getCoupons({ onlyValid: true, status: 0, userId }),
+      store.getBalance({ userId })
     ])
   }
 }

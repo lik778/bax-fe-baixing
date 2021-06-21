@@ -10,7 +10,7 @@
         <p>平均排名</p>
         <p>{{data.rank}}</p>
       </div>
-      <template v-if="!shAgent">
+      <template v-if="!shAgent && relationAllow()">
         <div class="split"></div>
         <div>
           <router-link :to="{name: 'bw-query-price'}">
@@ -25,6 +25,7 @@
 
 <script>
 import { getPromotionUserCollection } from 'api/biaowang'
+import { relationAllow } from 'util/role'
 
 export default {
   name: 'bw-dashboard-header',
@@ -39,11 +40,13 @@ export default {
       data: {
         show: 0,
         rank: 0
-      }
+      },
+      relationAllow
     }
   },
   async mounted () {
-    const data = await getPromotionUserCollection({ promoteList: [] })
+    const { query: { user_id: userId } } = this.$route
+    const data = await getPromotionUserCollection({ promoteList: [], userId })
     this.data = data
   }
 }

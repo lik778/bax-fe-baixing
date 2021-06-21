@@ -66,7 +66,7 @@
               {{ displayUserMobile }}
             </span>
           </section>
-          <section class="agreement">
+          <section v-if="relationAllow()" class="agreement">
             <div v-for="agreement in agreementList" :key="agreement.id">
               <contract :isAgreement="agreement.checked" :href="agreement.link"
                 @click="() => agreement.checked = !agreement.checked"
@@ -74,7 +74,7 @@
             </div>
           </section>
           <promotion-area-limit-tip :all-areas="allAreas" page="charge" />
-          <section class="pay-info">
+          <section v-if="relationAllow()" class="pay-info">
             <button v-if="!isAgentSales" class="pay-order"
               :loading="payInProgress" @click="createPreOrder">
               {{ submitButtonText }}
@@ -107,7 +107,7 @@ import PromotionAreaLimitTip from 'com/widget/promotion-area-limit-tip'
 import Clipboard from 'com/widget/clipboard'
 
 import { centToYuan } from 'utils'
-import { normalizeRoles } from 'util/role'
+import { normalizeRoles, relationAllow } from 'util/role'
 import { allowGetOrderPayUrl } from 'util'
 import { orderServiceHost } from 'config'
 import track from 'util/track'
@@ -157,6 +157,7 @@ export default {
       siteSpu: null,
       chargeSpu: null,
       checkedProducts: [],
+      relationAllow,
 
       salesIdLocked: false,
       displayBxSalesId: '',

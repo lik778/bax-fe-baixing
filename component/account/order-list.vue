@@ -182,11 +182,13 @@ export default {
     },
     async fetchOrderData (isResetOffset) {
       if (isResetOffset) this.pageNo = 1
+      const { query: { user_id: userId } } = this.$route
       const { dateRange, merchantList, ...otherParams } = this.params
       let queryParmas = {
         pageNo: this.pageNo || 1,
         ...otherParams,
-        merchantList: merchantList || Object.keys(PRODUCTS)
+        merchantList: merchantList || Object.keys(PRODUCTS),
+        userId
       }
       if (dateRange) {
         const startDate = dayjs(dateRange[0]).startOf('day').unix()

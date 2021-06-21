@@ -18,7 +18,10 @@ import {
 } from 'api/fengming'
 export default {
   name: 'top-tips',
-  props: ['userInfo'],
+  props: [
+    'userInfo',
+    'salesInfo'
+  ],
   data () {
     return {
       summary: undefined,
@@ -37,8 +40,8 @@ export default {
   methods: {
     async fetchSummary () {
       const [currentBalance, summary] = await Promise.all([
-        getCurrentBalance(),
-        getHomepageSummary()
+        getCurrentBalance({ userId: this.salesInfo.userId }),
+        getHomepageSummary({ userId: this.salesInfo.userId })
       ])
       this.summary = summary
       this.currentBalance = currentBalance

@@ -39,8 +39,8 @@ const store = observable({
     }
   }),
 
-  getCoupons: action(async function () {
-    this._coupons = await mapi.getCoupons()
+  getCoupons: action(async function (params) {
+    this._coupons = await mapi.getCoupons(params)
   })
 })
 

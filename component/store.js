@@ -14,6 +14,7 @@ const gStore = observable({
   _allAreas: [],
   _allQianciAreas: {},
   _allRoles: [],
+  _realation: '',
 
   addUserLeadVisible: false,
 
@@ -31,6 +32,9 @@ const gStore = observable({
   },
   get allQianciAreas () {
     return toJS(this._allQianciAreas)
+  },
+  get relation () {
+    return toJS(this._realation)
   },
   toggleAddUserLeadVisible: action(function () {
     this.addUserLeadVisible = !this.addUserLeadVisible
@@ -86,6 +90,10 @@ const gStore = observable({
   }),
   getRoles: action(async function () {
     this._allRoles = await aapi.getRoles()
+  }),
+  getRelation: action(async function (params) {
+    const { relation } = await aapi.relation(params)
+    this._realation = relation
   })
 })
 
