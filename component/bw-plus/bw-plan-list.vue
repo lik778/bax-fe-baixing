@@ -38,6 +38,7 @@ export default {
 .bw-plus-plan-list {
   margin: 10px;
   background: #fff;
+  padding: 0;
   > .breadcrumb {
     color: #666;
     border-bottom: 1px solid #e6e6e6;
