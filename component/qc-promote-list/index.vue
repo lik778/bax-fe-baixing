@@ -300,7 +300,7 @@ export default {
       const hasBusinessUrl = await this.checkLicense()
       if (hasBusinessUrl) {
         const promoteId = row.id
-        const query = { ...this.salesInfo, promoteId }
+        const query = { promoteId }
         this.$router.push({ name: 'qc-creative', query })
       } else {
         this.$msgbox({
