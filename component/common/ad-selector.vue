@@ -210,8 +210,7 @@ export default {
           adId: [adId]
         })
 
-        const ad = this.ads.find(ad => String(ad.adId) === String(adId))
-        this.checkedAdId = ad ? ad.adId : adId
+        this.checkedAdId = String(adId) || (this.ads[0] ? this.ads[0].adId : null)
         return
       }
 
@@ -230,6 +229,14 @@ export default {
       const ad = result.ads && result.ads[0]
       const isValueValid = (ad && String(ad.adId) === String(selectedId))
       this.$emit('valid-change', !!isValueValid)
+    }
+  },
+  watch: {
+    async selectedId (now) {
+      if (parseInt(now)) {
+        await this.reset(MODE_SELECTED, now)
+        this.checkIsCurStoreValid(now)
+      }
     }
   },
   async mounted () {

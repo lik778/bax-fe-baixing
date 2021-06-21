@@ -108,13 +108,13 @@ export const optTypeOpts = toOpt(optType)
 
 export const LANDING_TYPE_AD = 0
 export const LANDING_TYPE_GW = 1
+export const LANDING_TYPE_WESHOP = 2
 export const LANDING_TYPE_258 = 5
 export const LANDING_TYPE_STORE = 6
 export const LANDING_TYPE_BAIDU_JIMUYU = 7 // 百度基木鱼
 
 export const landingType = {
   [`${LANDING_TYPE_AD}`]: '帖子',
-  [`${LANDING_TYPE_GW}`]: '官网',
   [`${LANDING_TYPE_STORE}`]: '店铺'
 }
 
