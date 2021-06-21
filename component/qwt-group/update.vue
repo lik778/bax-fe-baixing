@@ -164,7 +164,7 @@ import uuid from 'uuid/v4'
 import { updateValidator } from './validate'
 import track from 'util/track'
 import { filterExistCurrentWords } from 'util/group'
-import { isBaixingSales } from 'util/role'
+import { isSales } from 'util/role'
 
 import {
   getCampaignKeywordsCount,
@@ -248,9 +248,6 @@ export default {
     updatedKeywords () {
       return this.keywords.filter(o => o.isUpdated)
     },
-    isSales () {
-      return isBaixingSales(this.userInfo.roles)
-    },
     isCampaignOffline () {
       return this.originGroup.frontCampaignStatus === CAMPAIGN_STATUS_OFFLINE
     },
@@ -260,9 +257,9 @@ export default {
     landingAndCreativesDisabled () {
       // TIP 审核中：神马，百度，360落地页和创意应该可以修改；搜狗无法修改
       if (this.promotion.source === SEM_PLATFORM_SOGOU) {
-        return this.isSales || this.isCampaignOffline || this.isGroupAudit
+        return isSales(this.userInfo.roles) || this.isCampaignOffline || this.isGroupAudit
       }
-      return this.isSales || this.isCampaignOffline
+      return isSales(this.userInfo.roles) || this.isCampaignOffline
     }
   },
   async mounted () {
