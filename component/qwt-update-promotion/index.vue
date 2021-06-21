@@ -33,7 +33,7 @@
                    class="add-group-btn">
           <i class="el-icon-plus" />新增单元
         </el-button>
-        <group-table-comp :show-columns="['name', 'frontGroupStatus', 'frontCampaignStatus', 'avgCpcRanking']"
+        <group-table-comp :show-columns="['name', 'frontGroupStatus', 'frontCampaignStatus', 'avgCpcRanking', 'id']"
                           :group-data="groupData"
                           @update-group-data="getGroupData()"
                           :loading="loading.fetchGroup"
