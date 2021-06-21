@@ -83,10 +83,10 @@ export const api = new Fetch({
       Message.error('请重新登录 >_<')
       return redirect('signin', `return=${encodeURIComponent(location.pathname + location.search)}`)
     }
-    // if (meta.status === 403) {
-    //   Message.error('你没有权限访问该页面')
-    //   return redirect('main')
-    // }
+    if (meta.status === 403) {
+      Message.error('你没有权限访问该页面')
+      return redirect('main')
+    }
     if (meta.message !== 'Success') {
       Message.error(meta.message)
       throw new Error(meta.message)
