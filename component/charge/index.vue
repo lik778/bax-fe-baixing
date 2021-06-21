@@ -564,6 +564,7 @@ export default {
       this.selectedCoupon.splice(0, 0, coupon)
     },
     async redeem () {
+      const userId = this.getFinalUserId()
       if (!this.couponCode) {
         return
       }
@@ -573,7 +574,7 @@ export default {
         return
       }
       this.$message.success('兑换成功')
-      await store.getCoupons({ onlyValid: true, status: 0 })
+      await store.getCoupons({ onlyValid: true, status: 0, userId })
     },
     empty () {
       this.orderPayUrl = ''
@@ -582,6 +583,7 @@ export default {
       this.chargeMoney = 0
     },
     async init () {
+      const userId = this.getFinalUserId()
       this.empty()
       //  目前只有这一个角色可以用券
       //  FIX: 修复页面加载后没有优惠券信息 使用$watch去监听 bxUser 变化并触发coupon 更新
@@ -590,7 +592,7 @@ export default {
         async isBxUser => {
           if (isBxUser) {
             await store.getConditions()
-            await store.getCoupons({ onlyValid: true, status: 0 })
+            await store.getCoupons({ onlyValid: true, status: 0, userId })
             this.disposeBxUserWatch()
           }
         }, { immediate: true })
@@ -810,10 +812,11 @@ export default {
       this.selectDefaultCoupon()
     },
     async couponVisible (v) {
+      const userId = this.getFinalUserId()
       if (v) {
         // 必须先拿到 condition
         await store.getConditions()
-        await store.getCoupons({ onlyValid: true, status: 0 })
+        await store.getCoupons({ onlyValid: true, status: 0, userId })
       } else {
         this.selectedCoupon = []
       }

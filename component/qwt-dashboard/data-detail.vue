@@ -135,19 +135,19 @@
           <el-button
             type="text"
             size="small"
-            :disabled="row.enableInNegativeWords || row.enableInKeywords"
+            :disabled="row.enableInNegativeWords || row.enableInKeywords || !notAllowNormalUser()"
             @click="addKeyword(row)"
           >添加关键词</el-button>
           <el-button
             type="text"
             size="small"
-            :disabled="row.enableInNegativeWords || row.enableInKeywords"
+            :disabled="row.enableInNegativeWords || row.enableInKeywords || !notAllowNormalUser()"
             @click="addCampaignNegativeKeyword(row)"
           >设为计划否词</el-button>
           <el-button
             type="text"
             size="small"
-            :disabled="row.enableInNegativeWords || row.enableInKeywords"
+            :disabled="row.enableInNegativeWords || row.enableInKeywords || !notAllowNormalUser()"
             @click="addGroupNegativeKeyword(row)"
           >设为单元否词</el-button>
           <el-tooltip
@@ -205,6 +205,7 @@ import {
 import track from 'util/track'
 import { toFloat, f2y } from 'util/kit'
 import { Message } from 'element-ui'
+import { isNormalUser } from 'util/role'
 
 const isArray = Array.isArray
 
@@ -239,6 +240,10 @@ export default {
     total: {
       type: Number,
       required: true
+    },
+    userInfo: {
+      type: Object,
+      require: true
     }
   },
   data () {
@@ -252,6 +257,10 @@ export default {
     }
   },
   methods: {
+    notAllowNormalUser () {
+      const { roles } = this.userInfo
+      return isNormalUser(roles)
+    },
     addKeyword (item) {
       const { groupId, queryWord } = item
       const price = 2 * 100

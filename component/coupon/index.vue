@@ -63,7 +63,8 @@ export default {
     }
   },
   async mounted () {
-    const { data: coupons } = await getCoupons({ status: 0, limit: 100 })
+    const { query: { user_id: userId } } = this.$route
+    const { data: coupons } = await getCoupons({ status: 0, limit: 100, userId })
     this.coupons = coupons
   }
 }

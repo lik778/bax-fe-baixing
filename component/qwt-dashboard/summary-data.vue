@@ -98,6 +98,7 @@
       :offset="offset"
       :total="total"
       :limit="limit"
+      :userInfo="userInfo"
       :dimension="query.dimension"
       @switch-to-group-report="getGroupReport"
       @switch-to-keyword-report="getKeywordReport"
