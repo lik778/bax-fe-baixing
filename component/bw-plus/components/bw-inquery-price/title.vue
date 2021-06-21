@@ -31,7 +31,7 @@ export default {
         align-items: center;
         .extra-title{
             font-size: 12px;
-            color: #909399;
+            color: #999999;
             margin-left: 6px;
         }
     }

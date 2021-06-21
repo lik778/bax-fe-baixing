@@ -1,4 +1,5 @@
 <template>
+  <section>
     <el-table
     border
     :data="tableData"
@@ -16,6 +17,10 @@
         label="移动端热度">
         </el-table-column>
     </el-table>
+    <footer>
+      <el-button type="danger" size="small" round>展开更多</el-button>
+    </footer>
+  </section>
 </template>
 
 <script>
@@ -30,3 +35,11 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+  footer{
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+  }
+</style>

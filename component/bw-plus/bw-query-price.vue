@@ -12,6 +12,20 @@
                       <Title title="查价结果" extra="请选择需要的平台*时段*时长"/>
                       <InqueryResult :tableData="inqueryResult" />
                     </section>
+                    <el-row type="flex" justify="start" align="middle">
+                      <el-col :span="3">
+                        <h2 class="wefare-title">超值福利</h2>
+                      </el-col>
+                      <el-col :span="3">
+                        <DiamondShopWelfare/>
+                      </el-col>
+                      <el-col :span="3" push="16">
+                        <div>
+                          <h3>总价： 38777元</h3>
+                          <el-button type="danger" plain>提交审核</el-button>
+                        </div>
+                      </el-col>
+                    </el-row>
                 </el-tab-pane>
             </el-tabs>
         </el-card>
@@ -19,14 +33,15 @@
 </template>
 
 <script>
-import { InqueryForm, KeywordHotDetail, Title, InqueryResult } from './components'
+import { InqueryForm, KeywordHotDetail, Title, InqueryResult, DiamondShopWelfare } from './components'
 export default {
   name: 'BwQueryPricePlus',
   components: {
     InqueryForm,
     KeywordHotDetail,
     Title,
-    InqueryResult
+    InqueryResult,
+    DiamondShopWelfare
   },
   props: {
     allAreas: {
@@ -66,7 +81,7 @@ export default {
         },
         {
           type: '360天',
-          bothse: 38766,
+          bothse: 38765,
           bothfe: 29800,
           wapse: 29640,
           wapfe: 18800,
@@ -86,10 +101,14 @@ export default {
     .bw-query-price{
         height: 100%;
         &_item{
-          margin-bottom: 20px;
+          margin-bottom: 30px;
         }
     }
    .box-card{
        margin: 10px;
+   }
+   .wefare-title{
+     font-size: 18px;
+     color: #FF6350;
    }
 </style>

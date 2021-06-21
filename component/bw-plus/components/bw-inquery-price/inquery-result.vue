@@ -1,16 +1,22 @@
 <template>
     <el-table
     border
+    type="index"
     :data="tableData"
-    :cell-style="{background: '#fff', cursor: 'pointer'}"
+    :cell-style="{background: '#fff',cursor: 'pointer'}"
     style="width: 100%">
-        <el-table-column prop="type"></el-table-column>
+        <el-table-column prop="type">
+          <template slot-scope="{ row }">
+            {{ row.type }} <el-tag>送店铺</el-tag>
+          </template>
+        </el-table-column>
         <el-table-column
         label="双端报价"
+        prop="both"
         align="center">
-            <el-table-column align="center" label="7天*24小时">
+            <el-table-column align="center" prop="ST" label="7天*24小时">
                 <template slot-scope="{ row }">
-                    <span :class="row.bothse === selectRow.bothse && 'price-item'" @click="cellClick(row)">{{row.bothse}}</span>
+                  <div :class="{ 'active-item': row.bothse === selectRow.bothse, 'option-item': true }" @click="cellClick(row)">{{row.bothse}}</div>
                 </template>
             </el-table-column>
             <el-table-column align="center" prop="bothfe" label="5天*24小时"></el-table-column>
@@ -31,6 +37,7 @@
 </template>
 
 <script>
+import clone from 'clone'
 export default {
   name: 'InqueryResult',
   props: {
@@ -47,7 +54,7 @@ export default {
   },
   methods: {
     cellClick (row) {
-      this.selectRow = row
+      this.selectRow = clone(row)
     }
   }
 }
@@ -55,6 +62,30 @@ export default {
 
 <style lang="scss" scoped>
     .el-table tbody tr:hover>td {
-        background-color:#fff !important
+      background-color:#fff !important
+    }
+    .option-item:hover{
+      color: #FF6350;
+    }
+    .active-item{
+      width: 100%;
+      height: 100%;
+      position: relative;
+      color: #FF6350;
+      display: block;
+      &::after{
+        content: "\2714";
+        position: absolute;
+        font-size: 14px;
+        color: #fff;
+        width: 18px;
+        height: 18px;
+        border-radius: 100%;
+        background: #FF6350;
+        text-align: center;
+        line-height: 18px;
+        right: 0;
+        bottom: 0;
+      }
     }
 </style>
