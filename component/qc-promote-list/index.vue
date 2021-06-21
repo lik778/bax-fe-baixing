@@ -108,7 +108,7 @@
       <el-table-column label="操作" width="160">
         <template slot-scope="{ row }">
           <el-button
-            :disabled="!(userInfo.shAgent && canEditPromote(row.status) || isBaixingSales(userInfo.roles))"
+            :disabled="!(userInfo.shAgent && canEditPromote(row.status) || isSales(userInfo.roles))"
             :loading="checkButtonLoading(row)"
             type="text"
             size="small"
@@ -166,7 +166,7 @@ import {
 import { getBusinessLicense } from 'api/seo'
 import { getPromoteList, getWanciSeoRedirect } from 'api/qianci'
 import { isPro } from 'config'
-import { isBaixingSales } from 'util/role'
+import { isSales } from 'util/role'
 
 export default {
   name: 'qc-promote-list',
@@ -179,7 +179,7 @@ export default {
       PROMOTE_STATUS_MAPPING,
       PROMOTE_STATUS,
       AUDIT_STATUS_OPTIONS,
-      isBaixingSales,
+      isSales,
       query: {
         coreWord: '',
         status: '',
