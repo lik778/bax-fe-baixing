@@ -43,6 +43,7 @@
                  type="primary"
                  @click="onSubmit">更新标王2.0计划</el-button>
     </main>
+    <select-promote-dialog />
   </div>
 </template>
 
@@ -51,6 +52,7 @@ import { landingTypeOpts, SEM_PLATFORM_BAIDU, LANDING_TYPE_AD, LANDING_TYPE_STOR
 import MvipSelector from 'com/common/mvip-selector'
 import UserAdSelector from 'com/common/ad-selector'
 import CreativeEditor from 'com/widget/creative-editor'
+import SelectPromoteDialog from './components/select-promote-dialog.vue'
 
 export default {
   name: 'bw-plus-edit-plan',
@@ -121,7 +123,8 @@ export default {
   components: {
     MvipSelector,
     UserAdSelector,
-    CreativeEditor
+    CreativeEditor,
+    SelectPromoteDialog
   }
 }
 </script>
