@@ -272,14 +272,18 @@ export default {
     },
     async checkLicense () {
       if (!isPro) return true
-      let businessUrl = null
-      this.loading.checkLicense = true
-      try {
-        businessUrl = await getBusinessLicense()
-      } finally {
-        setTimeout(() => (this.loading.checkLicense = false), 300)
+
+      if (!this.isSales) {
+        let businessUrl = null
+        this.loading.checkLicense = true
+        try {
+          businessUrl = await getBusinessLicense()
+        } finally {
+          setTimeout(() => (this.loading.checkLicense = false), 300)
+        }
+        return !!businessUrl
       }
-      return !!businessUrl
+      return true
     },
     goChartPage () {
       this.$router.push({ name: 'qc-dashboard' })
