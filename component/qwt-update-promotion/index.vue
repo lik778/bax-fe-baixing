@@ -8,13 +8,13 @@
       <h4>计划设置</h4>
       <div class="content">
         <promotion-comp :all-areas="allAreas"
-                        :is-sales="isSales"
+                        :is-sales="notAllowSales"
                         :promotion="promotion"
                         :current-balance="currentBalance"
                         @update-promotion="(type, data) => (promotion[type] = data)">
           <negative-words-comp :negative-words="promotion.negativeWords"
                                :all-words="promotion.negativeWords"
-                               :is-sales="isSales"
+                               :is-sales="notAllowSales"
                                @track="(action, opts) => handleTrack(action, opts)"
                                @add-negative-words="(words) =>(promotion.negativeWords = words.concat(promotion.negativeWords))"
                                @remove-negative-words="(idx) => promotion.negativeWords.splice(idx, 1)"
@@ -29,7 +29,7 @@
       <div class="content">
         <el-button @click="handleGoGroup"
                    type="primary"
-                   :disabled="isSales || (groupData && groupData.length >= GROUP_MAX) || isCampaignOffline"
+                   :disabled="notAllowSales || (groupData && groupData.length >= GROUP_MAX) || isCampaignOffline"
                    class="add-group-btn">
           <i class="el-icon-plus" />新增单元
         </el-button>
@@ -37,7 +37,7 @@
                           :group-data="groupData"
                           @update-group-data="getGroupData()"
                           :loading="loading.fetchGroup"
-                          :is-sales="isSales" />
+                          :is-sales="notAllowSales" />
       </div>
     </div>
 
@@ -49,7 +49,7 @@
                       ref="contract" />
         <el-button class="update-btn"
                    type="primary"
-                   :disabled="loading.updateCampaign || isSales"
+                   :disabled="loading.updateCampaign || notAllowSales"
                    :loading="loading.updateCampaign"
                    @click="updatePromotion">
           更新推广
@@ -67,7 +67,7 @@ import ContractAck from 'com/widget/contract-ack'
 import PromotionChargeTip from 'com/widget/promotion-charge-tip'
 import NegativeWordsComp from 'com/common/qwt/negative-words'
 
-import { isBaixingSales } from 'util/role'
+import { isSales } from 'util/role'
 import { getCurrentBalance, getCampaignInfo, updateCampaign, getAllGroups } from 'api/fengming'
 import clone from 'clone'
 import pick from 'lodash.pick'
@@ -134,8 +134,8 @@ export default {
     }
   },
   computed: {
-    isSales () {
-      return isBaixingSales(this.userInfo.roles)
+    notAllowSales () {
+      return isSales(this.userInfo.roles)
     },
     campaignId () {
       return this.$route.params.id
