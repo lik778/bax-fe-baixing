@@ -92,13 +92,18 @@
             </router-link>
           </el-menu-item>
         </el-submenu>
-        <el-submenu index="bwplus">
+        <el-submenu index="bwPlus">
           <template slot="title">
             <bx-icon type="sharealt"></bx-icon>标王2.0
           </template>
-          <el-menu-item index="bw-plus-query-price" v-if="!userInfo.shAgent">
+          <el-menu-item index="query-price" v-if="!userInfo.shAgent">
             <router-link :to="{ name: 'bw-plus-query-price' }" tag="p">
               标王查价
+            </router-link>
+          </el-menu-item>
+          <el-menu-item index="price-records" v-if="!userInfo.shAgent">
+            <router-link :to="{ name: 'bw-plus-price-records' }" tag="p">
+              查价记录
             </router-link>
           </el-menu-item>
         </el-submenu>
@@ -220,6 +225,7 @@ const MENU_GROUP_MAP = {
   seo: ['seo-create-promotion', 'seo-promotion-list'],
   sst: ['qwt-create-promotion', 'qwt-promotion-list'],
   bw: ['bw-query-price', 'bw-plan-list', 'bw-manual'],
+  bwPlus: ['query-price'],
   qc: ['qc-create-promote', 'qc-promote-list', 'qc-word-list'],
   ssp: ['ad-list', 'material-list', 'order-list', 'user-list', 'ad-calendar'],
   dashboard: ['qwt-dashboard', 'bw-dashboard', 'qc-dashboard']

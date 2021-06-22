@@ -7,6 +7,7 @@
                 </el-col>
             </el-form-item>
             <el-form-item label="推广行业" prop="industry">
+              <el-col :span="8">
                 <el-select v-model="form.industry" placeholder="请选择">
                     <el-option
                         v-for="(item, index) in industryList"
@@ -15,6 +16,7 @@
                         :value="item.name">
                     </el-option>
                 </el-select>
+              </el-col>
             </el-form-item>
             <el-form-item label="推广区域" prop="areas">
                 <el-tag type="success" closable class="kw-tag"
@@ -176,3 +178,9 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+  .el-select{
+    width: 100%;
+  }
+</style>

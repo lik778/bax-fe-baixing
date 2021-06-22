@@ -2,7 +2,7 @@
     <section class="bw-query-price">
         <el-card class="box-card">
             <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
-                <el-tab-pane label="标王2.0" name="first">
+                <el-tab-pane label="查价" name="first">
                     <InqueryForm :allAreas="allAreas"/>
                     <section class="bw-query-price_item">
                       <Title title="关键词热度明细"/>
@@ -19,8 +19,8 @@
                       <el-col :span="3">
                         <DiamondShopWelfare/>
                       </el-col>
-                      <el-col :span="3" push="16">
-                        <div>
+                      <el-col :span="5" push="13">
+                        <div class="submit">
                           <h3>总价： 38777元</h3>
                           <el-button type="danger" plain>提交审核</el-button>
                         </div>
@@ -35,7 +35,7 @@
 <script>
 import { InqueryForm, KeywordHotDetail, Title, InqueryResult, DiamondShopWelfare } from './components'
 export default {
-  name: 'BwQueryPricePlus',
+  name: 'bw-plus-query-price',
   components: {
     InqueryForm,
     KeywordHotDetail,
@@ -110,5 +110,20 @@ export default {
    .wefare-title{
      font-size: 18px;
      color: #FF6350;
+   }
+   .el-row{
+     margin-top: 60px;
+   }
+   .submit{
+     width: 100%;
+     display: flex;
+     flex-direction: column;
+     justify-content: flex-end;
+     align-items: flex-end;
+      h3{
+        font-size: 24px;
+        color: #FF6350;
+        margin-bottom: 20px;
+      }
    }
 </style>
