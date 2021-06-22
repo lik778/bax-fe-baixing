@@ -19,7 +19,7 @@
                       <el-col :span="3">
                         <DiamondShopWelfare/>
                       </el-col>
-                      <el-col :span="5" push="13">
+                      <el-col :span="5" :push="13">
                         <div class="submit">
                           <h3>总价： 38777元</h3>
                           <el-button type="danger" plain>提交审核</el-button>

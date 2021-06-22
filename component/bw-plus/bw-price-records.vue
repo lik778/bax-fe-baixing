@@ -23,6 +23,7 @@
     </el-row>
     <el-table
       style="width: 90%"
+      :data="records"
     >
       <el-table-column fixed prop="id" label="ID" />
       <el-table-column fixed prop="date" label="日期" />
@@ -41,16 +42,30 @@
         </template> -->
       </el-table-column>
     </el-table>
+    <el-pagination
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="currentPage"
+      :hide-on-single-page="true"
+      :page-size="PAGEAIZE"
+      layout="total, prev, pager, next"
+      :total="total">
+    </el-pagination>
   </el-card>
 </template>
 
 <script>
+const PAGEAIZE = 10
 export default {
   name: 'bw-plus-price-records',
   data () {
     return {
       keyword: '',
       status: '',
+      records: [],
+      total: 0,
+      PAGEAIZE,
+      currentPage: 0,
       options: [{
         value: '选项1',
         label: '黄金糕'
@@ -67,6 +82,14 @@ export default {
         value: '选项5',
         label: '北京烤鸭'
       }]
+    }
+  },
+  methods: {
+    handleSizeChange () {
+
+    },
+    handleCurrentChange () {
+
     }
   }
 }
