@@ -277,19 +277,9 @@ const bwRoutes = [
 
 const qcRoutes = [
   {
-    component: () => import('com/qc-create-promote'),
-    path: '/main/qc/create',
-    name: 'qc-create-promote'
-  },
-  {
     component: () => import('com/qc-promote-list'),
     path: '/main/qc/promote-list',
     name: 'qc-promote-list'
-  },
-  {
-    component: () => import('com/qc-word-list'),
-    path: '/main/qc/word-list',
-    name: 'qc-word-list'
   },
   {
     component: () => import('com/qc-keyword-list'),
