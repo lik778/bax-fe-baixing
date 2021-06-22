@@ -27,11 +27,6 @@
                           :selected-id="landingPageId"
                           @select-ad="(ad) => emitUpdateGroup(LANDING_TYPE_AD, ad.url, ad.adId)"
                           @valid-change="(isValid) => setLandingPageValidity(LANDING_TYPE_AD, isValid)" />
-        <gw-page-selector v-if="landingType === LANDING_TYPE_GW"
-                          :init-value="landingPage"
-                          :disabled="disabled"
-                          @change="v => emitUpdateGroup(LANDING_TYPE_GW, v)"
-                          @valid-change="(isValid) => setLandingPageValidity(LANDING_TYPE_GW, isValid)" />
         <mvip-selector v-if="landingType === LANDING_TYPE_STORE"
                        :initValue="landingPageId || ''"
                        :disabled="disabled"
@@ -47,7 +42,6 @@
 <script>
 import FmTip from 'com/widget/fm-tip'
 import UserAdSelector from 'com/common/ad-selector'
-import GwPageSelector from 'com/common/gw-page-selector'
 import MvipSelector from 'com/common/mvip-selector'
 
 import {
@@ -116,7 +110,6 @@ export default {
   components: {
     FmTip,
     UserAdSelector,
-    GwPageSelector,
     MvipSelector
   }
 }

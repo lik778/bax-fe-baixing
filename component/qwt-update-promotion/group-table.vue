@@ -10,6 +10,10 @@
                      label="单元名称"
                      align="center"
                      :show-overflow-tooltip="true" />
+    <el-table-column prop="id"
+                     v-if="showColumns.includes('id')"
+                     label="单元id"
+                     align="center" />
     <el-table-column prop="campaignId"
                      v-if="showColumns.includes('campaignId')"
                      label="所属计划"
@@ -99,7 +103,7 @@ export default {
       type: Array,
       required: false,
       default () {
-        return ['name', 'campaignId', 'source', 'frontGroupStatus', 'frontCampaignStatus', 'avgCpcRanking']
+        return ['id', 'name', 'campaignId', 'source', 'frontGroupStatus', 'frontCampaignStatus', 'avgCpcRanking']
       }
     },
     loading: {
