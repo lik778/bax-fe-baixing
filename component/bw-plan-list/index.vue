@@ -56,16 +56,17 @@
           </el-table-column>
           <el-table-column prop="cpcRanking" label="昨日排名" :formatter="({cpcRanking}) => cpcRanking && fmtCpcRanking(cpcRanking, false)" />
           <el-table-column prop="createdAt" label="购买日期" :formatter="dateFormatter" />
-          <el-table-column label="投放剩余天数">
+          <el-table-column prop="remainDays" label="投放剩余天数" />
+          <!-- <el-table-column label="投放剩余天数">
             <template slot-scope="scope">
               <div>
                 {{leftDays(scope.row)}}
               </div>
             </template>
-          </el-table-column>
+          </el-table-column> -->
           <el-table-column label="操作" min-width="160px">
             <template slot-scope="scope">
-              <router-link v-if="!isAgentAccounting" :to="{name: 'bw-edit-plan', query: {promoteId: scope.row.id}}"><el-button type="text" size="small">编辑</el-button></router-link>
+              <router-link v-if="!isAgentAccounting" :to="{name: 'bw-edit-plan', query: {promoteId: scope.row.id}}"><el-button :disabled="scope.row.status === PROMOTE_STATUS_PAUSE[0]" type="text" size="small">编辑</el-button></router-link>
               <el-button v-if="canXufei(scope.row) && !userInfo.shAgent" size="small" type="text"
                          :disabled="disabledXuFeiBtn(scope.row)"
                          @click="onXufei(scope.row)">续费</el-button>
@@ -161,7 +162,8 @@ import {
   PRICE_NEED_MANUAL_QUOTA,
   ORDER_APPLY_TYPE_NOT,
   GET_DAYS_MAP,
-  THIRTY_DAYS
+  THIRTY_DAYS,
+  PROMOTE_STATUS_PAUSE
 } from 'constant/biaowang'
 import { getPromotes, queryKeywordPriceNew, getUserLive, getUserRanking } from 'api/biaowang'
 import {
@@ -203,6 +205,7 @@ export default {
   },
   data () {
     return {
+      PROMOTE_STATUS_PAUSE,
       promoteStatusOpts,
       auditStatusOpts,
       relationAllow,
