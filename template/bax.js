@@ -54,7 +54,8 @@ import {
   Cascader,
   Notification,
   Breadcrumb,
-  BreadcrumbItem
+  BreadcrumbItem,
+  Alert
 } from 'element-ui'
 import '../cssbase/index.scss'
 import { reaction } from 'mobx'
@@ -147,6 +148,7 @@ Vue.use(Image)
 Vue.use(Popconfirm)
 Vue.use(Breadcrumb)
 Vue.use(BreadcrumbItem)
+Vue.use(Alert)
 
 /**
  * 错误回退组件

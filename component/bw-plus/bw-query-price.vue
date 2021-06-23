@@ -22,18 +22,24 @@
                       <el-col :span="5" :push="13">
                         <div class="submit">
                           <h3>总价： 38777元</h3>
-                          <el-button type="danger" plain>提交审核</el-button>
+                          <el-popconfirm
+                            title="确定提交审核吗？"
+                            @confirm="submit"
+                          >
+                            <el-button slot="reference" type="danger" plain>提交审核</el-button>
+                          </el-popconfirm>
                         </div>
                       </el-col>
                     </el-row>
                 </el-tab-pane>
             </el-tabs>
         </el-card>
+        <SuccessDialog :success="success"/>
     </section>
 </template>
 
 <script>
-import { InqueryForm, KeywordHotDetail, Title, InqueryResult, DiamondShopWelfare } from './components'
+import { InqueryForm, KeywordHotDetail, Title, InqueryResult, DiamondShopWelfare, SuccessDialog } from './components'
 export default {
   name: 'bw-plus-query-price',
   components: {
@@ -41,7 +47,8 @@ export default {
     KeywordHotDetail,
     Title,
     InqueryResult,
-    DiamondShopWelfare
+    DiamondShopWelfare,
+    SuccessDialog
   },
   props: {
     allAreas: {
@@ -52,6 +59,7 @@ export default {
   data () {
     return {
       activeName: 'first',
+      success: false,
       keywordHots: [
         {
           keyword: '总热度',
@@ -92,7 +100,11 @@ export default {
     }
   },
   methods: {
-    handleClick () {}
+    handleClick () {},
+    submit () {
+      console.log('提交')
+      this.success = true
+    }
   }
 }
 </script>
