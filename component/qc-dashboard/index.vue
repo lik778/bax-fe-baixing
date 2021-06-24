@@ -155,7 +155,8 @@ import {
   PROMOTE_STATUS_EDITED,
   PROMOTE_STATUS_ONLINE,
   PROMOTE_STATUS_ON_PROMOTE,
-  DEVICE_DASHBOARD
+  DEVICE_DASHBOARD,
+  PROMOTE_STATUS_PAUSED
 } from 'constant/qianci'
 import { parseQuery } from 'util'
 
@@ -270,7 +271,8 @@ export default {
           PROMOTE_STATUS_PENDING_EDIT,
           PROMOTE_STATUS_EDITED,
           PROMOTE_STATUS_ONLINE,
-          PROMOTE_STATUS_ON_PROMOTE
+          PROMOTE_STATUS_ON_PROMOTE,
+          PROMOTE_STATUS_PAUSED
         ]
       }
       const { content } = await getPromoteList(query)
