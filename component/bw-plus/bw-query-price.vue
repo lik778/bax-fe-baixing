@@ -34,12 +34,12 @@
                 </el-tab-pane>
             </el-tabs>
         </el-card>
-        <SuccessDialog :success="success"/>
+        <BwPlusDialog :BwPlusDialogMsg="BwPlusDialogMsg" @close="BwPlusDialogMsg.dialogVisible = false"/>
     </section>
 </template>
 
 <script>
-import { InqueryForm, KeywordHotDetail, Title, InqueryResult, DiamondShopWelfare, SuccessDialog } from './components'
+import { InqueryForm, KeywordHotDetail, Title, InqueryResult, DiamondShopWelfare, BwPlusDialog } from './components'
 export default {
   name: 'bw-plus-query-price',
   components: {
@@ -48,7 +48,7 @@ export default {
     Title,
     InqueryResult,
     DiamondShopWelfare,
-    SuccessDialog
+    BwPlusDialog
   },
   props: {
     allAreas: {
@@ -59,7 +59,12 @@ export default {
   data () {
     return {
       activeName: 'first',
-      success: false,
+      BwPlusDialogMsg: {
+        type: 'success',
+        dialogVisible: false,
+        content: '',
+        title: ''
+      },
       keywordHots: [
         {
           keyword: '总热度',
@@ -103,7 +108,12 @@ export default {
     handleClick () {},
     submit () {
       console.log('提交')
-      this.success = true
+      this.BwPlusDialogMsg = {
+        dialogVisible: true,
+        type: 'error',
+        content: ['审核预计1-3个工作日，去查看审核进度', '审核预计1-3个工作日，去查看审核进度', '审核预计1-3个工作日，去查看审核进度'],
+        title: '提交失败'
+      }
     }
   }
 }
