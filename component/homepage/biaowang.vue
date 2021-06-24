@@ -34,7 +34,7 @@
         </div>
       </div>
       <div class="no-promote-placeholder" v-else>
-        <p class="text">您暂时没有标王推广计划，您可以</p>
+        <p class="text">您暂时没有标王推广计划或者计划都处于暂停状态，您可以</p>
         <el-button type="primary" v-if="!userInfo.shAgent" @click="() => $router.push({name: 'bw-query-price'})">新建标王推广计划</el-button>
       </div>
     </div>
@@ -57,7 +57,8 @@
           <dd class="dd wrap" v-for="p in biaowangPromotes" :key="p.id">
             <span class="col">{{p.word}}</span>
             <span class="col">{{p.cpcRanking && fmtCpcRanking(p.cpcRanking, false)}}</span>
-            <span class="col">{{leftDays(p)}}/{{p.days.toFixed(1)}}</span>
+            <span class="col">{{p.remainDays}}/{{p.days.toFixed(1)}}</span>
+            <!-- <span class="col">{{leftDays(p)}}/{{p.days.toFixed(1)}}</span> -->
             <el-button v-if="canXufei(p) && !userInfo.shAgent"
                        :disabled="disabledXuFeiBtn(p)"
                        class="col renew"
