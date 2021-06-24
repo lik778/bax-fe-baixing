@@ -1,11 +1,11 @@
 <template>
   <el-card class="bw-price-record">
-    <el-row :gutter="20" type="flex" align="center">
-      <el-col :span="2"><span class="label">关键词/ID：</span></el-col>
-      <el-col :span="5"><el-input size="medium" v-model="keyword" placeholder="请输入关键词/ID"></el-input></el-col>
-      <el-col :span="2" :push="1"><span class="label">状态：</span></el-col>
-      <el-col :span="5">
-        <el-select size="medium" v-model="status" placeholder="请选择">
+    <el-form :inline="true" :model="formInline" class="demo-form-inline">
+      <el-form-item label="关键词/ID：">
+        <el-input v-model="formInline.keywordId" placeholder="关键词/ID："></el-input>
+      </el-form-item>
+      <el-form-item label="状态">
+        <el-select size="medium" v-model="formInline.status" placeholder="请选择">
           <el-option
             v-for="item in options"
             :key="item.value"
@@ -13,14 +13,12 @@
             :value="item.value">
           </el-option>
         </el-select>
-      </el-col>
-      <el-col :span="1" :push="1">
-        <div class="button-group">
-          <el-button type="primary" size="small">查询</el-button>
-          <el-button type="primary" size="small">重置</el-button>
-        </div>
-      </el-col>
-    </el-row>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" size="small">查询</el-button>
+        <el-button type="primary" size="small">重置</el-button>
+      </el-form-item>
+    </el-form>
     <el-table
       style="width: 90%"
       :data="records"
@@ -60,8 +58,10 @@ export default {
   name: 'bw-plus-price-records',
   data () {
     return {
-      keyword: '',
-      status: '',
+      formInline: {
+        keywordId: '',
+        status: ''
+      },
       records: [],
       total: 0,
       PAGEAIZE,

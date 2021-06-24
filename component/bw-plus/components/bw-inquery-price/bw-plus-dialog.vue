@@ -36,8 +36,8 @@ export default {
   }
 }
 </script>
-<style lang="scss">
-    .bw-plus-dialog{
+<style lang="scss" scoped>
+    /deep/ .bw-plus-dialog{
       .el-alert{
         background: none;
         .el-alert__icon{
