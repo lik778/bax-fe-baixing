@@ -40,7 +40,7 @@
 
 <script>
 import { InqueryForm, KeywordHotDetail, Title, InqueryResult, DiamondShopWelfare, BwPlusDialog } from './components'
-import { queryPrice } from 'api/biaowang-plus'
+import { querySystemResult } from 'api/biaowang-plus'
 export default {
   name: 'bw-plus-query-price',
   components: {
@@ -117,8 +117,14 @@ export default {
       }
     },
     async inquery (form) {
-      console.log(form)
-      await queryPrice(form)
+      console.log('form', form)
+      const params = {
+        cities: form.cities,
+        coreCity: form.coreCities[0],
+        industry: form.industry,
+        words: form.words.split(/[\s\n]/)
+      }
+      await querySystemResult(params)
     }
   }
 }

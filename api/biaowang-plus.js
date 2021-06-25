@@ -16,12 +16,13 @@ export async function checkKeyword (params) {
 }
 
 /**
- * @param {cities: string[], coreCity: string, words: string[], industry: string} params
+ * 获取系统报价（查价）
+ * @param { cities: string[], coreCity: string, words: string[], industry: string }
  * @returns
  */
-export async function queryPrice (params) {
+export async function querySystemResult (params) {
   const body = await biaowangPlus
-    .post('/phoenixs-plus/quota/getManualQuotaResult')
+    .post('/phoenixs-plus/quota/getSystemQuotaResult')
     .send(params)
     .json()
   return body
