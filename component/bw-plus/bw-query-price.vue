@@ -3,7 +3,7 @@
         <el-card class="box-card">
             <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
                 <el-tab-pane label="查价" name="first">
-                    <InqueryForm :allAreas="allAreas"/>
+                    <InqueryForm :allAreas="allAreas" @inquery="inquery"/>
                     <section class="bw-query-price_item">
                       <Title title="关键词热度明细"/>
                       <KeywordHotDetail :tableData="keywordHots"/>
@@ -40,6 +40,7 @@
 
 <script>
 import { InqueryForm, KeywordHotDetail, Title, InqueryResult, DiamondShopWelfare, BwPlusDialog } from './components'
+import { queryPrice } from 'api/biaowang-plus'
 export default {
   name: 'bw-plus-query-price',
   components: {
@@ -114,6 +115,10 @@ export default {
         content: ['审核预计1-3个工作日，去查看审核进度', '审核预计1-3个工作日，去查看审核进度', '审核预计1-3个工作日，去查看审核进度'],
         title: '提交失败'
       }
+    },
+    async inquery (form) {
+      console.log(form)
+      await queryPrice(form)
     }
   }
 }

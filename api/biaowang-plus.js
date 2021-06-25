@@ -14,3 +14,15 @@ export async function checkKeyword (params) {
     .json()
   return body
 }
+
+/**
+ * @param {cities: string[], coreCity: string, words: string[], industry: string} params
+ * @returns
+ */
+export async function queryPrice (params) {
+  const body = await biaowangPlus
+    .post('/phoenixs-plus/quota/getManualQuotaResult')
+    .send(params)
+    .json()
+  return body
+}

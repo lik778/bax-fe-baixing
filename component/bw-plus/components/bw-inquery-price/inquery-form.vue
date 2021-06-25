@@ -118,7 +118,7 @@ export default {
       })
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          console.log(this.form)
+          this.$emit('inquery', this.form)
         } else {
           console.log('')
         }
