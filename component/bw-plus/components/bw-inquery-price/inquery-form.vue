@@ -1,9 +1,9 @@
 <template>
     <div>
         <el-form ref="form" :rules="rules" :model="form" label-width="120px">
-            <el-form-item label="推广关键词" prop="keyWords">
+            <el-form-item label="推广关键词" prop="words">
                 <el-col :span="8">
-                    <el-input @change="checkKeyword" type="textarea" v-model="form.keyWords" rows="6"></el-input>
+                    <el-input @change="checkKeyword" type="textarea" v-model="form.words" rows="6"></el-input>
                 </el-col>
             </el-form-item>
             <el-form-item label="推广行业" prop="industry">
@@ -18,16 +18,16 @@
                 </el-select>
               </el-col>
             </el-form-item>
-            <el-form-item label="推广区域" prop="areas">
+            <el-form-item label="推广区域" prop="cities">
                 <el-tag type="success" closable class="kw-tag"
-                        v-for="area in form.areas" :key="area"
+                        v-for="area in form.cities" :key="area"
                         @close="removeArea(area)"
                 >
                 {{ formatArea(area) }}
                 </el-tag>
                 <i class="el-icon-plus" @click="areaDialogVisible = true"></i>
             </el-form-item>
-            <el-form-item label="用户所在地" prop="coreCities" key="coreCities" v-if="form.areas.length">
+            <el-form-item label="用户所在地" prop="coreCities" key="coreCities" v-if="form.cities.length">
                 <el-tag type="success" closable class="kw-tag"
                         v-for="area in form.coreCities" :key="area"
                         @close="removeCoreCities(area)"
@@ -42,7 +42,7 @@
         </el-form>
         <AreaSelector
         type="bw" :all-areas="allAreas"
-        :areas="form.areas"
+        :areas="form.cities"
         :visible="areaDialogVisible"
         :enable-china="false"
         @ok="onAreasChange"
@@ -53,7 +53,7 @@
         :limit="coreCityLimit"
         :all-areas="allAreas"
         :origin-core-cities="form.coreCities"
-        :areas="form.areas"
+        :areas="form.cities"
         @cancel="coreCitiesDialogVisible = false"
         @confirm="handleCoreCitiesConfirm"
         />
@@ -80,9 +80,9 @@ export default {
   data () {
     return {
       form: {
-        keyWords: '',
+        words: '',
         industry: '',
-        areas: [],
+        cities: [],
         coreCities: []
       },
       isInquery: false,
@@ -91,9 +91,9 @@ export default {
       coreCityLimit: 1,
       industryList: [],
       rules: {
-        keyWords: [{ required: true, message: '请输入推广关键词', trigger: 'blur' }],
+        words: [{ required: true, message: '请输入推广关键词', trigger: 'blur' }],
         industry: [{ required: true, message: '请选择推广行业', trigger: 'change' }],
-        areas: [{ required: true, message: '请选择推广地域', trigger: 'change' }],
+        cities: [{ required: true, message: '请选择推广地域', trigger: 'change' }],
         coreCities: [{ required: true, message: '请选择用户所在地', trigger: 'change' }]
       }
     }
@@ -151,7 +151,7 @@ export default {
       }
     },
     removeArea (area) {
-      this.form.areas = this.form.areas.filter(i => i !== area)
+      this.form.cities = this.form.cities.filter(i => i !== area)
       // 用户所在地和推广区域联动
       this.form.coreCities = this.form.coreCities.filter(i => i !== area)
       // 更新视图
@@ -166,7 +166,7 @@ export default {
       this.form.coreCities = this.form.coreCities.filter(i => i !== area)
     },
     onAreasChange (areas) {
-      this.form.areas = [...areas]
+      this.form.cities = [...areas]
       // 用户所在地和推广区域联动
       this.form.coreCities = this.form.coreCities.filter(i => areas.includes(i))
       this.areaDialogVisible = false
