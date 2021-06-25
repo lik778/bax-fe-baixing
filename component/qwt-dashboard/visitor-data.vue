@@ -91,7 +91,8 @@ export default {
       this.campaignId = this.campaignIds[0].id
     },
     async handleDeductStatistic () {
-      const res = await getDeductStatistic(this.campaignId)
+      const { user_id: userId } = this.$route.query
+      const res = await getDeductStatistic(this.campaignId, userId)
       this.deductInfo = {
         ...this.deductInfo,
         ...res

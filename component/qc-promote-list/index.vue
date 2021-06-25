@@ -108,7 +108,7 @@
       <el-table-column label="操作" width="160">
         <template slot-scope="{ row }">
           <el-button
-            :disabled="!(userInfo.shAgent && canEditPromote(row.status))"
+            :disabled="!(userInfo.shAgent && canEditPromote(row.status) || isSales(userInfo.roles))"
             :loading="checkButtonLoading(row)"
             type="text"
             size="small"
@@ -166,6 +166,7 @@ import {
 import { getBusinessLicense } from 'api/seo'
 import { getPromoteList, getWanciSeoRedirect } from 'api/qianci'
 import { isPro } from 'config'
+import { isSales } from 'util/role'
 
 export default {
   name: 'qc-promote-list',
@@ -178,6 +179,7 @@ export default {
       PROMOTE_STATUS_MAPPING,
       PROMOTE_STATUS,
       AUDIT_STATUS_OPTIONS,
+      isSales,
       query: {
         coreWord: '',
         status: '',
@@ -270,14 +272,18 @@ export default {
     },
     async checkLicense () {
       if (!isPro) return true
-      let businessUrl = null
-      this.loading.checkLicense = true
-      try {
-        businessUrl = await getBusinessLicense()
-      } finally {
-        setTimeout(() => (this.loading.checkLicense = false), 300)
+
+      if (!this.isSales) {
+        let businessUrl = null
+        this.loading.checkLicense = true
+        try {
+          businessUrl = await getBusinessLicense()
+        } finally {
+          setTimeout(() => (this.loading.checkLicense = false), 300)
+        }
+        return !!businessUrl
       }
-      return !!businessUrl
+      return true
     },
     goChartPage () {
       this.$router.push({ name: 'qc-dashboard' })
@@ -297,11 +303,9 @@ export default {
       this.active.selectedItem = row
       const hasBusinessUrl = await this.checkLicense()
       if (hasBusinessUrl) {
-        const id = row.id
-        const search = window.location.search
-          ? window.location.search + `&promoteId=${id}`
-          : `?promoteId=${id}`
-        this.$router.push('/main/qc/creative' + search)
+        const promoteId = row.id
+        const query = { promoteId }
+        this.$router.push({ name: 'qc-creative', query })
       } else {
         this.$msgbox({
           title: '提示',

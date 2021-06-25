@@ -61,7 +61,6 @@
       <template slot-scope="{ row }">
         <el-button type="text"
                    :disabled="
-                      isSales ||
                       row.frontCampaignStatus === CAMPAIGN_STATUS_OFFLINE ||
                       row.frontGroupStatus === GROUP_STATUS_OFFLINE
                      "
@@ -75,7 +74,6 @@
                    @click="optimizeGroup(row)">优化</el-button>
         <el-button type="text"
                    :disabled="
-                      isSales ||
                       row.frontCampaignStatus === CAMPAIGN_STATUS_OFFLINE
                     "
                    @click="copyGroup(row)">复制</el-button>

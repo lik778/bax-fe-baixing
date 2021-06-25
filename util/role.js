@@ -1,4 +1,5 @@
 import { isPro } from '../config'
+import gStore from 'com/store'
 
 const isArray = Array.isArray
 
@@ -15,6 +16,14 @@ const ROLES_ENUM = [
   { name: '凤鸣运营', name_en: 'FENGMING_OPERATOR' },
   { name: '供应商审核', name_en: 'VENDOR_OPERATOR' }
 ]
+
+export function isSales (roles) {
+  const currentRoles = normalizeRoles(roles)
+  return checkRoles(currentRoles, [
+    'AGENT_SALES',
+    'BAIXING_SALES'
+  ])
+}
 
 // global
 
@@ -272,4 +281,23 @@ export function notAllowFengmingRecharge (roles, agentId) {
       2435, 2449, 2450, 2451, 2495, 2512, 2553, 2144, 2420, 2550, 2332, 2443, 2491, 1779, 69, 2471, 77].includes(agentId) && isOnlyBaixingUser
   }
   return [50].includes(agentId) && isOnlyBaixingUser
+}
+
+export const relationEnum = {
+  SELF: 'self', // 直接用户
+  SUB: 'sub', // 下属销售用户
+  NONE: '' || null // 无关联
+}
+export function relationAllow () {
+  const relation = gStore.relation
+  switch (relation) {
+    case relationEnum.SELF:
+      return true
+    case relationEnum.SUB:
+      return false
+    case relationEnum.NONE:
+      return false
+    default:
+      return true
+  }
 }

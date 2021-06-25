@@ -122,10 +122,12 @@ export default {
       this.getPromoteList()
     },
     async getPromoteList (page) {
+      const { query: { user_id: userId } } = this.$route
       const { size, word, promoteStatusFilters, auditStatusFilters } = this.query
       const { items, total } = await getPromotes({
         page: this.currentPage - 1,
         size,
+        userId: userId,
         word,
         status: promoteStatusFilters,
         auditStatus: auditStatusFilters

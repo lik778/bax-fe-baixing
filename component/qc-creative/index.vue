@@ -63,7 +63,7 @@
         </el-form-item>
 
         <el-form-item label="">
-          <el-button type="primary" :loading="loading.form" @click="update">更新推广计划</el-button>
+          <el-button type="primary" :disabled="!userInfo.shAgent" :loading="loading.form" @click="update">更新推广计划</el-button>
           <el-button @click="() => $router.go(-1)">返回上一页</el-button>
         </el-form-item>
       </el-form>
@@ -82,6 +82,18 @@ export default {
   name: 'creative-manage',
   components: {
     MvipSelector
+  },
+  props: {
+    userInfo: {
+      type: Object,
+      require: true,
+      default: () => {}
+    },
+    salesInfo: {
+      type: Object,
+      require: true,
+      default: () => {}
+    }
   },
   data () {
     return {
@@ -158,7 +170,7 @@ export default {
   },
   methods: {
     async initCreative () {
-      const response = await getCreative({ id: this.id })
+      const response = await getCreative({ id: this.id, salesInfo: this.salesInfo })
       const {
         coreWords,
         landingType,

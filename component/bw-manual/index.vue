@@ -193,7 +193,7 @@ export default {
       })
 
       await refreshKeywordPriceNew(data, {
-        targetUserId: this.getFinalUserId()
+        userId: this.getFinalUserId()
       })
       this.loadingBtn = false
 
@@ -219,7 +219,7 @@ export default {
 
       this.loadingBtn = true
       await refreshKeywordPriceNew(data, {
-        targetUserId: this.getFinalUserId()
+        userId: this.getFinalUserId()
       })
       this.loadingBtn = false
 

@@ -167,10 +167,10 @@ export default {
     }
   },
   async mounted () {
-    const { promoteId } = this.$route.query
+    const { promoteId, user_id: userId } = this.$route.query
     if (promoteId) {
       this.activeTab = 'limit'
-      const promote = await getPromoteById(promoteId)
+      const promote = await getPromoteById(promoteId, { userId })
       this.promotes = [promote]
       return
     }
@@ -182,13 +182,15 @@ export default {
       this.activeDaterangeLabel = item.label
     },
     async getChartData () {
+      const { query: { user_id: userId } } = this.$route
       const daterange = this.daterange
       const startTime = dayjs(daterange[0]).startOf('day').unix()
       const endTime = dayjs(daterange[1]).startOf('day').unix()
       const options = {
         startTime,
         endTime,
-        promoteList: this.activeTab === 'noLimit' ? [] : this.promoteIds
+        promoteList: this.activeTab === 'noLimit' ? [] : this.promoteIds,
+        userId
       }
 
       const cpcRankingChartData = await getUserRanking(options)

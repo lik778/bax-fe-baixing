@@ -20,7 +20,8 @@ import { getFengmingNotice } from 'api/fengming'
 export default {
   name: 'qwt-notice',
   async created () {
-    this.noticeList = await getFengmingNotice()
+    const { query: { user_id: userId } } = this.$route
+    this.noticeList = await getFengmingNotice({ userId })
   },
   data () {
     return {

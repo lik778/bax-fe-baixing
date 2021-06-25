@@ -164,7 +164,7 @@ import uuid from 'uuid/v4'
 import { updateValidator } from './validate'
 import track from 'util/track'
 import { filterExistCurrentWords } from 'util/group'
-import { isBaixingSales } from 'util/role'
+import { isSales } from 'util/role'
 
 import {
   getCampaignKeywordsCount,
@@ -248,9 +248,6 @@ export default {
     updatedKeywords () {
       return this.keywords.filter(o => o.isUpdated)
     },
-    isSales () {
-      return isBaixingSales(this.userInfo.roles)
-    },
     isCampaignOffline () {
       return this.originGroup.frontCampaignStatus === CAMPAIGN_STATUS_OFFLINE
     },
@@ -260,12 +257,13 @@ export default {
     landingAndCreativesDisabled () {
       // TIP 审核中：神马，百度，360落地页和创意应该可以修改；搜狗无法修改
       if (this.promotion.source === SEM_PLATFORM_SOGOU) {
-        return this.isSales || this.isCampaignOffline || this.isGroupAudit
+        return isSales(this.userInfo.roles) || this.isCampaignOffline || this.isGroupAudit
       }
-      return this.isSales || this.isCampaignOffline
+      return isSales(this.userInfo.roles) || this.isCampaignOffline
     }
   },
   async mounted () {
+    const { query: { user_id: userId } } = this.$route
     const loadingInstance = this.$loading({
       lock: true,
       target: '.qwt-update-group',
@@ -273,23 +271,21 @@ export default {
       spinner: 'el-icon-loading'
     })
     try {
-      const originGroup = await getGroupDetailByGroupId(this.groupId)
-
+      const originGroup = await getGroupDetailByGroupId(this.groupId, { userId })
       this.originGroup = originGroup
       this.promotion = clone(this.originGroup.campaign)
       this.group = clone(this.originGroup)
 
+      this.originKeywords = await getKeywordsByGroupId(this.groupId, userId)
       // TIP: 2021-06-16 xielizhen 下线官网落地页渠道，原有的计划选择官网重新选择落地页
       if (originGroup.landingType === LANDING_TYPE_GW) {
         this.group.landingType = LANDING_TYPE_AD
         this.group.landingPage = ''
         this.group.landingPageId = ''
       }
-
-      this.originKeywords = await getKeywordsByGroupId(this.groupId)
       this.keywords = clone(this.originKeywords)
 
-      this.campaignKeywordLen = await getCampaignKeywordsCount(this.promotion.id)
+      this.campaignKeywordLen = await getCampaignKeywordsCount(this.promotion.id, userId)
 
       if (this.enableMaterialPictures) {
         this.initMaterialPictures()
@@ -302,8 +298,10 @@ export default {
   },
   methods: {
     async initMaterialPictures (inits) {
+      const { query: { user_id: userId } } = this.$route
       this.materialPicturesInits = inits || (await getMaterialPictures({
-        groupId: this.groupId
+        groupId: this.groupId,
+        userId
       })).data
 
       // eslint-disable-next-line camelcase

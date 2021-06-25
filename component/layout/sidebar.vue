@@ -56,7 +56,7 @@
           </el-menu-item>
         </el-submenu>
 
-        <el-submenu index="sst" v-show="allowSeeQwtPromotion">
+        <el-submenu index="sst" v-show="allowSeeQwtPromotion || allowSales">
           <template slot="title">
             <bx-icon type="sharealt"></bx-icon>站外推广
           </template>
@@ -76,7 +76,7 @@
           <template slot="title">
             <bx-icon type="sharealt"></bx-icon>标王推广
           </template>
-          <el-menu-item index="bw-query-price" v-if="!userInfo.shAgent">
+          <el-menu-item index="bw-query-price" v-if="!userInfo.shAgent && relationAllow()">
             <router-link :to="{ name: 'bw-query-price' }" tag="p">
               新建标王推广
             </router-link>
@@ -86,7 +86,7 @@
               管理标王推广
             </router-link>
           </el-menu-item>
-          <el-menu-item index="bw-manual" v-if="!userInfo.shAgent">
+          <el-menu-item index="bw-manual" v-if="!userInfo.shAgent && relationAllow()">
             <router-link :to="{ name: 'bw-manual'}" tag="p">
               人工报价记录
             </router-link>
@@ -214,7 +214,9 @@ import {
   // global
   allowSeeAccount,
   allowSeeBxAd,
-  allowSeeDiamondSite
+  relationAllow,
+  allowSeeDiamondSite,
+  isSales
 } from 'util/role'
 
 import { getUserSites } from 'api/diamond-site'
@@ -248,6 +250,8 @@ export default {
       defaultActive: null,
       defaultOpeneds: [],
       isRenderSiteLink: false,
+      isRenderSiteNavTag: false,
+      relationAllow,
       isDiamondSiteJumpToMainSite: false,
       isKaSuperman: false
     }
@@ -297,6 +301,9 @@ export default {
     },
     allowSeeDiamondSite () {
       return allowSeeDiamondSite(this.userInfo.roles)
+    },
+    allowSales () {
+      return isSales(this.userInfo.roles)
     }
   },
   async mounted () {

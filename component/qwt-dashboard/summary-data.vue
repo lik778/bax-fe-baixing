@@ -1,6 +1,6 @@
 <template>
   <main>
-    <dashboard-header :userInfo="userInfo" />
+    <dashboard-header :userInfo="userInfo" :salesInfo="salesInfo" />
     <section>
       <p class="tip">
         <span v-if="query.dimension === DIMENSION_SEARCH_KEYWORD">
@@ -98,6 +98,7 @@
       :offset="offset"
       :total="total"
       :limit="limit"
+      :userInfo="userInfo"
       :dimension="query.dimension"
       @switch-to-group-report="getGroupReport"
       @switch-to-keyword-report="getKeywordReport"

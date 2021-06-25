@@ -58,7 +58,8 @@ export default {
   methods: {
     f2y,
     async loadBalance () {
-      const d = await getBalance()
+      const { query: { user_id: userId } } = this.$route
+      const d = await getBalance({ userId })
       this.balance = d.balance
     },
     async getLiensence () {

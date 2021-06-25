@@ -22,7 +22,8 @@ export default {
     }
   },
   mounted () {
-    store.initPageStore()
+    const { query: { user_id: userId } } = this.$route
+    store.initPageStore(userId)
   },
   components: {
     Account,

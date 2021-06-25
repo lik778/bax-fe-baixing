@@ -30,24 +30,24 @@ class Store {
     }
   }
 
-  @action async loadBaxData () {
+  @action async loadBaxData (params) {
     try {
-      const fengmingData = await getHomePageFengmingData()
+      const fengmingData = await getHomePageFengmingData(params)
       this.fengmingData = fengmingData
     } catch (err) {
       console.error(err)
     }
   }
 
-  @action async loadBiaowangData () {
+  @action async loadBiaowangData (userId) {
     try {
-      const [biaowangData, { items: biaowangPromotes }] = await Promise.all([getHomePageBiaowangData(), getPromotes({ size: 5, page: 0 })])
-
+      const [biaowangData, { items: biaowangPromotes }] = await Promise.all([getHomePageBiaowangData({ userId }), getPromotes({ size: 5, page: 0, userId: userId })])
       const yesterday = dayjs().subtract(1, 'day').startOf('day').unix()
       const rankings = await getUserRanking({
         startTime: yesterday,
         endTime: yesterday,
-        promoteList: biaowangPromotes.map(i => i.id)
+        promoteList: biaowangPromotes.map(i => i.id),
+        userId
       })
       this.biaowangPromotes = biaowangPromotes
       if (rankings.length) {
@@ -65,9 +65,9 @@ class Store {
     }
   }
 
-  @action initPageStore () {
-    this.loadBaxData()
-    this.loadBiaowangData()
+  @action initPageStore (userId) {
+    this.loadBaxData({ userId })
+    this.loadBiaowangData(userId)
   }
 }
 

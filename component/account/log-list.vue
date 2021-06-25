@@ -194,7 +194,8 @@ export default {
         timelineType: '',
         limit: ONE_PAGE_NUM,
         createdAt: CREATED_AT_VALUES[0],
-        productType: PRODUCT_TYPE_FENGMING
+        productType: PRODUCT_TYPE_FENGMING,
+        userId: this.$route.query.user_id
       }
     }
   },

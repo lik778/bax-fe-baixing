@@ -292,6 +292,11 @@ export default {
       type: Object,
       required: true
     },
+    salesInfo: {
+      type: Object,
+      required: true,
+      default: () => {}
+    },
     allAreas: {
       type: Array,
       required: true
@@ -727,7 +732,8 @@ export default {
     },
 
     async cloneCampaignById (campaignId) {
-      const originPromotion = await store.getCampaignInfo(campaignId)
+      const { query: { user_id: userId } } = this.$route
+      const originPromotion = await store.getCampaignInfo(campaignId, { userId })
       const clonedPromotion = {}
       let ad = null
       // 判断源计划落地页类型是主站广告或者官网
@@ -788,9 +794,10 @@ export default {
   },
 
   async mounted () {
+    const { userId } = this.salesInfo
     await Promise.all([
-      store.getCurrentBalance(),
-      store.getCampaignsCount()
+      store.getCurrentBalance({ userId }),
+      store.getCampaignsCount({ userId })
     ])
 
     setTimeout(() => {
