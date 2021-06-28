@@ -4,33 +4,39 @@
             <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
                 <el-tab-pane label="查价" name="first">
                     <InqueryForm :allAreas="allAreas" @inquery="inquery"/>
-                    <section class="bw-query-price_item">
+                    <section class="bw-query-price_item" v-if="queryResult.keywordPvList" ref="viewScrollTop">
                       <Title title="关键词热度明细"/>
-                      <KeywordHotDetail :tableData="keywordHots"/>
+                      <KeywordHotDetail :tableData="queryResult && queryResult.keywordPvList"/>
                     </section>
-                    <section class="bw-query-price_item">
+                    <section class="bw-query-price_item" v-if="!(queryResult.error && queryResult.overHeat) && queryResult.keywordPriceList">
                       <Title title="查价结果" extra="请选择需要的平台*时段*时长"/>
-                      <InqueryResult :tableData="inqueryResult" />
+                      <InqueryResult @getValue="getCurrentPrice" :tableData="queryResult && queryResult.keywordPriceList" />
+                      <el-row type="flex" justify="start" align="middle">
+                        <el-col :span="3">
+                          <h2 class="wefare-title">超值福利</h2>
+                        </el-col>
+                        <el-col :span="3">
+                          <DiamondShopWelfare :current="currentPrice" />
+                        </el-col>
+                        <el-col :span="5" :push="13">
+                          <div class="submit">
+                            <h3>总价： {{currentPrice.price}}元</h3>
+                            <el-popconfirm
+                              title="确定提交审核吗？"
+                              @confirm="submit"
+                            >
+                              <el-button slot="reference" type="danger" plain>提交审核</el-button>
+                            </el-popconfirm>
+                          </div>
+                        </el-col>
+                      </el-row>
                     </section>
-                    <el-row type="flex" justify="start" align="middle">
-                      <el-col :span="3">
-                        <h2 class="wefare-title">超值福利</h2>
-                      </el-col>
-                      <el-col :span="3">
-                        <DiamondShopWelfare/>
-                      </el-col>
-                      <el-col :span="5" :push="13">
-                        <div class="submit">
-                          <h3>总价： 38777元</h3>
-                          <el-popconfirm
-                            title="确定提交审核吗？"
-                            @confirm="submit"
-                          >
-                            <el-button slot="reference" type="danger" plain>提交审核</el-button>
-                          </el-popconfirm>
-                        </div>
-                      </el-col>
-                    </el-row>
+                    <section v-if="queryResult.error || queryResult.overHeat">
+                      <p v-if="!queryResult.error && queryResult.overHeat">{{queryResult.overHeatWords.join("、")}}热度>500，暂无报价，请申请人工报价</p>
+                      <p v-if="queryResult.error && !queryResult.overHeat">{{queryResult.overHeatWords.join("、")}}未获取到热度，请重试或申请人工报价</p>
+                      <p v-if="queryResult.error && queryResult.overHeat">{{queryResult.overHeatWords.join("、")}}热度>500，{{queryResult.errorWords.join("、")}}未获取到热度，请申请人工报价</p>
+                      <el-button style="margin-top: 30px" type="danger" plain>申请人工报价</el-button>
+                    </section>
                 </el-tab-pane>
             </el-tabs>
         </el-card>
@@ -66,43 +72,8 @@ export default {
         content: '',
         title: ''
       },
-      keywordHots: [
-        {
-          keyword: '总热度',
-          pcHot: 60,
-          wapHot: 40
-        },
-        {
-          keyword: '发电机',
-          pcHot: 40,
-          wapHot: 20
-        },
-        {
-          keyword: '发电机哪家强',
-          pcHot: 20,
-          wapHot: 20
-        }
-      ],
-      inqueryResult: [
-        {
-          type: '360天',
-          bothse: 38766,
-          bothfe: 29800,
-          wapse: 29640,
-          wapfe: 18800,
-          pcse: 25700,
-          pcfe: 19800
-        },
-        {
-          type: '360天',
-          bothse: 38765,
-          bothfe: 29800,
-          wapse: 29640,
-          wapfe: 18800,
-          pcse: 25700,
-          pcfe: 19800
-        }
-      ]
+      queryResult: {},
+      currentPrice: {}
     }
   },
   methods: {
@@ -117,14 +88,20 @@ export default {
       }
     },
     async inquery (form) {
-      console.log('form', form)
       const params = {
         cities: form.cities,
         coreCity: form.coreCities[0],
         industry: form.industry,
         words: form.words.split(/[\s\n]/)
       }
-      await querySystemResult(params)
+      const { data } = await querySystemResult(params)
+      this.queryResult = data
+      this.$nextTick(() => {
+        this.$refs.viewScrollTop.scrollIntoView()
+      })
+    },
+    getCurrentPrice (value) {
+      this.currentPrice = value
     }
   }
 }

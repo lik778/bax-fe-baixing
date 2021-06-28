@@ -1,5 +1,5 @@
 <template>
-    <div :class="{'shop-container': true, 'active': active}" @click="handleClick">
+    <div :class="{'shop-container': true, 'active': active}">
         <h4>钻石店铺</h4>
         <p>支持首页宝推广，让您的网站上百度首页<br>支持SEO优化等更多专业版官网建站功能</p>
         <footer>
@@ -14,6 +14,24 @@ export default {
   data () {
     return {
       active: false
+    }
+  },
+  watch: {
+    current: {
+      handler (newV, oldV) {
+        if (newV) {
+          this.active = newV.duration > 30
+        }
+      },
+      deep: true,
+      immediate: true
+    }
+  },
+  props: {
+    current: {
+      type: Object,
+      default: () => {},
+      require: true
     }
   },
   methods: {

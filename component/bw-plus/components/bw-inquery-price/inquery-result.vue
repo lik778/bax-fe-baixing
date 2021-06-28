@@ -7,37 +7,56 @@
     style="width: 100%">
         <el-table-column prop="type">
           <template slot-scope="{ row }">
-            {{ row.type }} <el-tag>送店铺</el-tag>
+            {{ row.type }}天 <el-tag v-if="row.type > 30">送店铺</el-tag>
           </template>
         </el-table-column>
         <el-table-column
         label="双端报价"
         prop="both"
         align="center">
-            <el-table-column align="center" prop="ST" label="7天*24小时">
+            <el-table-column align="center" prop="bothSeven" label="7天*24小时">
                 <template slot-scope="{ row }">
-                  <div :class="{ 'active-item': row.bothse === selectRow.bothse, 'option-item': true }" @click="cellClick(row)">{{row.bothse}}</div>
+                  <div :class="{ 'active-item': row.bothSeven.index === current.index, 'option-item': true }" @click="cellClick(row.bothSeven)">{{row.bothSeven.price}}</div>
                 </template>
             </el-table-column>
-            <el-table-column align="center" prop="bothfe" label="5天*24小时"></el-table-column>
+            <el-table-column align="center" prop="bothFive" label="5天*24小时">
+              <template slot-scope="{ row }">
+                <div :class="{ 'active-item': row.bothFive.index === current.index, 'option-item': true }" @click="cellClick(row.bothFive)">{{row.bothFive.price}}</div>
+              </template>
+            </el-table-column>
         </el-table-column>
         <el-table-column
         label="手机端报价"
         align="center">
-            <el-table-column align="center" prop="wapse" label="7天*24小时"></el-table-column>
-            <el-table-column align="center" prop="wapfe" label="5天*24小时"></el-table-column>
+            <el-table-column align="center" prop="wapSeven" label="7天*24小时">
+              <template slot-scope="{ row }">
+                <div :class="{ 'active-item': row.wapSeven.index === current.index, 'option-item': true }" @click="cellClick(row.wapSeven)">{{row.wapSeven.price}}</div>
+              </template>
+            </el-table-column>
+            <el-table-column align="center" prop="wapFive" label="5天*24小时">
+              <template slot-scope="{ row }">
+                <div :class="{ 'active-item': row.wapFive.index === current.index, 'option-item': true }" @click="cellClick(row.wapFive)">{{row.wapFive.price}}</div>
+              </template>
+            </el-table-column>
         </el-table-column>
         <el-table-column
         label="电脑端报价"
         align="center">
-            <el-table-column align="center" prop="pcse" label="7天*24小时"></el-table-column>
-            <el-table-column align="center" prop="pcfe" label="5天*24小时"></el-table-column>
+            <el-table-column align="center" prop="pcSeven" label="7天*24小时">
+              <template slot-scope="{ row }">
+                <div :class="{ 'active-item': row.pcSeven.index === current.index, 'option-item': true }" @click="cellClick(row.pcSeven)">{{row.pcSeven.price}}</div>
+              </template>
+            </el-table-column>
+            <el-table-column align="center" prop="pcFive" label="5天*24小时">
+              <template slot-scope="{ row }">
+                <div :class="{ 'active-item': row.pcFive.index === current.index, 'option-item': true }" @click="cellClick(row.pcFive)">{{row.pcFive.price}}</div>
+              </template>
+            </el-table-column>
         </el-table-column>
     </el-table>
 </template>
 
 <script>
-import clone from 'clone'
 export default {
   name: 'InqueryResult',
   props: {
@@ -49,12 +68,13 @@ export default {
   },
   data () {
     return {
-      selectRow: ''
+      current: ''
     }
   },
   methods: {
-    cellClick (row) {
-      this.selectRow = clone(row)
+    cellClick (value) {
+      this.current = value
+      this.$emit('getValue', value)
     }
   }
 }

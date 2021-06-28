@@ -133,21 +133,25 @@ export default {
         spinner: 'el-icon-loading',
         background: 'rgba(0, 0, 0, 0.7)'
       })
-      const { keyWords = '' } = this.form
-      const { code, data: { passed, rejectedWordWithReason } } = await checkKeyword({ keyWords: keyWords.split(/[\s\n]/) })
-      loading.close()
-      if (code === 0) {
-        if (passed) {
-          this.$message({
-            message: '恭喜你，这是一条成功消息',
-            type: 'success'
-          })
-        } else {
-          this.$message({
-            message: rejectedWordWithReason,
-            type: 'success'
-          })
+      const { words = '' } = this.form
+      try {
+        const { code, data: { passed, rejectedWordWithReason } } = await checkKeyword({ keyWords: words.split(/[\s\n]/) })
+        loading.close()
+        if (code === 0) {
+          if (passed) {
+            this.$message({
+              message: '恭喜你，这是一条成功消息',
+              type: 'success'
+            })
+          } else {
+            this.$message({
+              message: rejectedWordWithReason,
+              type: 'success'
+            })
+          }
         }
+      } catch (error) {
+        loading.close()
       }
     },
     removeArea (area) {

@@ -5,15 +5,15 @@
     :data="tableData"
     style="width: 100%">
         <el-table-column
-        prop="keyword"
+        prop="word"
         label="关键词">
         </el-table-column>
         <el-table-column
-        prop="pcHot"
+        prop="pcPv"
         label="电脑端热度">
         </el-table-column>
         <el-table-column
-        prop="wapHot"
+        prop="mobilePv"
         label="移动端热度">
         </el-table-column>
     </el-table>
