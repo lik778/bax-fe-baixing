@@ -15,3 +15,8 @@ export const AUDIT_STATUS = {
   审核驳回: 3
 }
 export const auditStatusOpts = toOpt(AUDIT_STATUS, false, true)
+
+export const APPLY_TYPE_NORMAL = 0 // 正常报价
+export const APPLY_TYPE_OVERHEAT = 1 // 热度过高
+export const APPLY_TYPE_ERROR = 2 // 没有查到热度
+export const APPLY_TYPE_ERROR_APPLY_TYPE_OVERHEAT = 3 // 热度过高或热度缺失

@@ -35,7 +35,12 @@
                       <p v-if="!queryResult.error && queryResult.overHeat">{{queryResult.overHeatWords.join("、")}}热度>500，暂无报价，请申请人工报价</p>
                       <p v-if="queryResult.error && !queryResult.overHeat">{{queryResult.overHeatWords.join("、")}}未获取到热度，请重试或申请人工报价</p>
                       <p v-if="queryResult.error && queryResult.overHeat">{{queryResult.overHeatWords.join("、")}}热度>500，{{queryResult.errorWords.join("、")}}未获取到热度，请申请人工报价</p>
-                      <el-button style="margin-top: 30px" type="danger" plain>申请人工报价</el-button>
+                      <el-popconfirm
+                        title="确定提交审核吗？"
+                        @confirm="submit"
+                      >
+                        <el-button slot="reference" style="margin-top: 30px" type="danger" plain>申请人工报价</el-button>
+                      </el-popconfirm>
                     </section>
                 </el-tab-pane>
             </el-tabs>
@@ -46,7 +51,8 @@
 
 <script>
 import { InqueryForm, KeywordHotDetail, Title, InqueryResult, DiamondShopWelfare, BwPlusDialog } from './components'
-import { querySystemResult } from 'api/biaowang-plus'
+import { querySystemResult, commit } from 'api/biaowang-plus'
+import { APPLY_TYPE_NORMAL, APPLY_TYPE_ERROR, APPLY_TYPE_OVERHEAT, APPLY_TYPE_ERROR_APPLY_TYPE_OVERHEAT } from 'constant/bw-plus'
 export default {
   name: 'bw-plus-query-price',
   components: {
@@ -61,6 +67,10 @@ export default {
     allAreas: {
       type: Array,
       required: true
+    },
+    salesInfo: {
+      type: Object,
+      require: true
     }
   },
   data () {
@@ -73,19 +83,54 @@ export default {
         title: ''
       },
       queryResult: {},
-      currentPrice: {}
+      currentPrice: {},
+      queryInfo: {}
     }
   },
   methods: {
     handleClick () {},
-    submit () {
-      console.log('提交')
-      this.BwPlusDialogMsg = {
-        dialogVisible: true,
-        type: 'error',
-        content: ['审核预计1-3个工作日，去查看审核进度', '审核预计1-3个工作日，去查看审核进度', '审核预计1-3个工作日，去查看审核进度'],
-        title: '提交失败'
+    applyTypeFilter (error, overHeat) {
+      if (error && overHeat) {
+        return APPLY_TYPE_ERROR_APPLY_TYPE_OVERHEAT
       }
+      if (error && !overHeat) {
+        return APPLY_TYPE_ERROR
+      }
+      if (!error && !overHeat) {
+        return APPLY_TYPE_NORMAL
+      }
+      if (!error && overHeat) {
+        return APPLY_TYPE_OVERHEAT
+      }
+    },
+    async submit () {
+      const { error, overHeat, priceId, tempPvId } = this.queryResult
+      const { userId: targetUserId } = this.salesInfo
+      const { queryInfo, applyTypeFilter, currentPrice } = this
+      const baseParams = { targetUserId, applyType: applyTypeFilter(error, overHeat) }
+      let params = {}
+      if (!error && !overHeat) {
+        params = {
+          ...baseParams,
+          applyBasicAttr: { priceId, ...currentPrice }
+        }
+      } else {
+        params = {
+          ...baseParams,
+          applyKeywordsAttr: {
+            ...queryInfo,
+            tempPvId
+          }
+        }
+      }
+      console.log(this.salesInfo)
+      await commit(params)
+      // this.BwPlusDialogMsg = {
+      //   dialogVisible: true,
+      //   type: 'error',
+      //   content: ['审核预计1-3个工作日，去查看审核进度', '审核预计1-3个工作日，去查看审核进度', '审核预计1-3个工作日，去查看审核进度'],
+      //   title: '提交失败'
+      // }
     },
     async inquery (form) {
       const params = {
@@ -94,6 +139,7 @@ export default {
         industry: form.industry,
         words: form.words.split(/[\s\n]/)
       }
+      this.queryInfo = params
       const { data } = await querySystemResult(params)
       this.queryResult = data
       this.$nextTick(() => {
