@@ -165,6 +165,23 @@ export async function queryKeywordPriceNew (opts) {
   return body.data
 }
 
+export async function getRenewDetail (opts) {
+  const body = await biaowang
+    .get('/promote/user/special/renew/detail')
+    .query(opts)
+    .json()
+  return body
+}
+
+export async function specialRenew (opts) {
+  console.log('opts', opts)
+  const body = await biaowang
+    .post('/promote/user/special/renew')
+    .send(opts)
+    .json()
+  return body
+}
+
 export async function queryKeywordPackagePrice (opts) {
   const body = await biaowang
     .post('/keyword/v2/pricing/user/package/inquiry')

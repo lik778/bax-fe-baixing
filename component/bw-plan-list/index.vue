@@ -111,7 +111,14 @@
           </el-form-item>
           <el-form-item label="">
             <el-button @click="xufeiDialogVisible = false">取消续费</el-button>
-            <el-button type="primary" @click="addToCart">加入购物车</el-button>
+            <el-button v-if="xufeiForm.ifSpecialRenew" type="primary" @click="specialRenewHandel(xufeiForm)">续费</el-button>
+            <el-button v-else type="primary" @click="addToCart">加入购物车</el-button>
+            <div v-if="payUrl" class="payurl">
+              <label :title="payUrl">
+                {{ '付款链接: ' + payUrl }}
+              </label>
+              <Clipboard :content="payUrl"></Clipboard>
+            </div>
           </el-form-item>
         </el-form>
       </el-dialog>
@@ -146,6 +153,7 @@
 import BaxPagination from 'com/common/pagination'
 import ManualTooltip from 'com/common/bw/manual-tooltip'
 import ManualDialog from 'com/common/bw/manual-dialog'
+import Clipboard from 'com/widget/clipboard'
 import {
   promoteStatusOpts,
   auditStatusOpts,
@@ -165,7 +173,7 @@ import {
   THIRTY_DAYS,
   PROMOTE_STATUS_PAUSE
 } from 'constant/biaowang'
-import { getPromotes, queryKeywordPriceNew, getUserLive, getUserRanking } from 'api/biaowang'
+import { getPromotes, queryKeywordPriceNew, getUserLive, getUserRanking, getRenewDetail, specialRenew } from 'api/biaowang'
 import {
   f2y,
   getCnName,
@@ -176,6 +184,7 @@ import { normalizeRoles, relationAllow } from 'util/role'
 import flatten from 'lodash.flatten'
 import { fmtCpcRanking } from 'util/campaign'
 import auditRejectReasonDialog from 'com/common/audit-reject-reason-dialog'
+import { orderServiceHost, preKeywordPath } from 'config'
 
 const liveDevices = {
   [DEVICE_WAP]: {
@@ -196,7 +205,8 @@ export default {
     BaxPagination,
     auditRejectReasonDialog,
     ManualTooltip,
-    ManualDialog
+    ManualDialog,
+    Clipboard
   },
   props: {
     allAreas: Array,
@@ -208,6 +218,7 @@ export default {
       PROMOTE_STATUS_PAUSE,
       promoteStatusOpts,
       auditStatusOpts,
+      payUrl: '',
       relationAllow,
       query: {
         keyword: '',
@@ -235,7 +246,8 @@ export default {
       liveType: DEVICE_WAP,
       liveDevices,
       currentPromoteLive: null,
-      manualDialogVisible: false
+      manualDialogVisible: false,
+      specialRenewVisible: false
     }
   },
   computed: {
@@ -320,6 +332,35 @@ export default {
       const { userInfo } = this
       return userInfo.id
     },
+    async specialRenewHandel (xufeiform) {
+      const { salesInfo } = this
+      const params = {
+        targetUserId: salesInfo.userId,
+        salesId: salesInfo.salesId,
+        promoteId: xufeiform.promoteId
+      }
+      const { data: preTradeId } = await specialRenew(params)
+      if (preTradeId !== '0') {
+        if (this.isUser('BAIXING_USER')) {
+          location.href = `${orderServiceHost}/${preKeywordPath}/?appId=105&seq=${preTradeId}`
+        } else if (this.isUser('AGENT_ACCOUNTING')) {
+          location.href = `${orderServiceHost}/${preKeywordPath}/?appId=105&seq=${preTradeId}&agentId=${this.userInfo.id}`
+        } else if (this.isUser('BAIXING_SALES')) {
+          this.payUrl = `${orderServiceHost}/${preKeywordPath}/?appId=105&seq=${preTradeId}`
+        }
+      } else {
+        this.$message({
+          message: '恭喜你，续费成功',
+          type: 'success'
+        })
+      }
+      this.xufeiDialogVisible = false
+      await this.getPromotes()
+    },
+    isUser (roleString) {
+      console.log(this.userInfo)
+      return normalizeRoles(this.userInfo.roles).includes(roleString)
+    },
     getRandomQueryTimes () {
       let r = Math.random()
       while (r > 1 || r < 0.3) {
@@ -346,7 +387,7 @@ export default {
       return dayjs(row.createdAt * 1000).isBefore('2020-03-27 12:16:40.213743')
     },
     canXufei (row) {
-      return PROMOTE_STATUS_ONLINE.includes(row.status) && this.leftDays(row) <= 15
+      return (PROMOTE_STATUS_ONLINE.includes(row.status) && this.leftDays(row) <= 15) || row.ifSpecialRenew
     },
     canSeeLiveBtn (row) {
       return PROMOTE_STATUS_ONLINE.includes(row.status)
@@ -388,31 +429,35 @@ export default {
       await this.getPromotes()
     },
     async onXufei (row) {
-      const { word, cities, device } = row
+      const { word, cities, device, ifSpecialRenew } = row
       if (!this.canXufei(row)) {
         return this.$message.info('到期前15天才可续费哦')
       }
-      const result = await queryKeywordPriceNew({
-        targetUserId: this.getFinalUserId(),
-        word,
-        cities,
-        device
-      })
-
-      const priceObj = result[0].priceList[0]
-      const soldPriceMap = GET_DAYS_MAP(priceObj.orderApplyType).reduce((curr, prev) => {
-        return Object.assign(curr, {
-          [prev]: prev / THIRTY_DAYS * priceObj.price
+      if (ifSpecialRenew) {
+        const { data } = await getRenewDetail({ promoteId: row.id })
+        this.xufeiForm = { ...data, soldPriceMap: { [data.days]: [data.price] }, ifSpecialRenew: row.ifSpecialRenew }
+        console.log(this.xufeiForm)
+        this.xufeiDialogVisible = true
+      } else {
+        const result = await queryKeywordPriceNew({
+          targetUserId: this.getFinalUserId(),
+          word,
+          cities,
+          device
         })
-      }, {})
-      const xufeiForm = {
-        ...result[0],
-        ...priceObj,
-        soldPriceMap
+        const priceObj = result[0].priceList[0]
+        const soldPriceMap = GET_DAYS_MAP(priceObj.orderApplyType).reduce((curr, prev) => {
+          return Object.assign(curr, {
+            [prev]: prev / THIRTY_DAYS * priceObj.price
+          })
+        }, {})
+        this.xufeiForm = {
+          ...result[0],
+          ...priceObj,
+          soldPriceMap
+        }
+        this.xufeiDialogVisible = true
       }
-
-      this.xufeiForm = xufeiForm
-      this.xufeiDialogVisible = true
     },
     addToCart () {
       this.$refs.xufei.validate(isValid => {
