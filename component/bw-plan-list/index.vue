@@ -171,7 +171,8 @@ import {
   ORDER_APPLY_TYPE_NOT,
   GET_DAYS_MAP,
   THIRTY_DAYS,
-  PROMOTE_STATUS_PAUSE
+  PROMOTE_STATUS_PAUSE,
+  NOT_SPECIALRENEW_LIST
 } from 'constant/biaowang'
 import { getPromotes, queryKeywordPriceNew, getUserLive, getUserRanking, getRenewDetail, specialRenew } from 'api/biaowang'
 import {
@@ -387,6 +388,9 @@ export default {
       return dayjs(row.createdAt * 1000).isBefore('2020-03-27 12:16:40.213743')
     },
     canXufei (row) {
+      if (NOT_SPECIALRENEW_LIST.includes(row.id)) {
+        return false
+      }
       return (PROMOTE_STATUS_ONLINE.includes(row.status) && this.leftDays(row) <= 15) || row.ifSpecialRenew
     },
     canSeeLiveBtn (row) {
