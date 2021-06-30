@@ -14,9 +14,10 @@
             show-icon>
         </el-alert>
     </template>
-    <div>
-      <p v-for="(item, index) in BwPlusDialogMsg.content" :key="index">{{item}}</p>
+    <div v-if="BwPlusDialogMsg.type === 'error'">
+      <p v-for="(item, index) in BwPlusDialogMsg.content" :key="index">{{item.keyword}}-{{item.cities}}</p>
     </div>
+    <div v-else><p>{{BwPlusDialogMsg.content}}</p></div>
     <span slot="footer" class="dialog-footer">
         <el-button size="small" @click="$emit('close')">取 消</el-button>
         <el-button size="small" type="primary">查看审核进度</el-button>

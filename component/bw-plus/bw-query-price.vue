@@ -123,14 +123,23 @@ export default {
           }
         }
       }
-      console.log(this.salesInfo)
-      await commit(params)
-      // this.BwPlusDialogMsg = {
-      //   dialogVisible: true,
-      //   type: 'error',
-      //   content: ['审核预计1-3个工作日，去查看审核进度', '审核预计1-3个工作日，去查看审核进度', '审核预计1-3个工作日，去查看审核进度'],
-      //   title: '提交失败'
-      // }
+      const { code, data } = await commit(params)
+      if (code === 0) {
+        this.BwPlusDialogMsg = {
+          dialogVisible: true,
+          type: 'success',
+          content: '审核预计1-3个工作日，去查看审核进度',
+          title: '提交成功'
+        }
+      }
+      if (code === 4080) {
+        this.BwPlusDialogMsg = {
+          dialogVisible: true,
+          type: 'error',
+          content: data,
+          title: '提交失败'
+        }
+      }
     },
     async inquery (form) {
       const params = {

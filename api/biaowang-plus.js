@@ -57,3 +57,18 @@ export async function commit (params) {
     .json()
   return body
 }
+
+/**
+ * @param { Object } params
+ * @param { number } params.id
+ * @param { number } params.status
+ * @param { number } params.size
+ * @param { number } params.page
+ */
+export async function getInqueryList (params) {
+  const body = await biaowangPlus
+    .get('/apply/user/list')
+    .query(params)
+    .json()
+  return body
+}
