@@ -358,7 +358,6 @@ export default {
       await this.getPromotes()
     },
     isUser (roleString) {
-      console.log(this.userInfo)
       return normalizeRoles(this.userInfo.roles).includes(roleString)
     },
     getRandomQueryTimes () {
@@ -440,7 +439,6 @@ export default {
       if (ifSpecialRenew) {
         const { data } = await getRenewDetail({ promoteId: row.id })
         this.xufeiForm = { ...data, soldPriceMap: { [data.days]: [data.price] }, ifSpecialRenew: row.ifSpecialRenew }
-        console.log(this.xufeiForm)
         this.xufeiDialogVisible = true
       } else {
         const result = await queryKeywordPriceNew({
