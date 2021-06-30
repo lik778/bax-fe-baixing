@@ -355,11 +355,9 @@ export default {
           type: 'success'
         })
       }
-      this.xufeiDialogVisible = false
       await this.getPromotes()
     },
     isUser (roleString) {
-      console.log(this.userInfo)
       return normalizeRoles(this.userInfo.roles).includes(roleString)
     },
     getRandomQueryTimes () {
@@ -433,6 +431,7 @@ export default {
       await this.getPromotes()
     },
     async onXufei (row) {
+      this.payUrl = ''
       const { word, cities, device, ifSpecialRenew } = row
       if (!this.canXufei(row)) {
         return this.$message.info('到期前15天才可续费哦')
@@ -440,7 +439,6 @@ export default {
       if (ifSpecialRenew) {
         const { data } = await getRenewDetail({ promoteId: row.id })
         this.xufeiForm = { ...data, soldPriceMap: { [data.days]: [data.price] }, ifSpecialRenew: row.ifSpecialRenew }
-        console.log(this.xufeiForm)
         this.xufeiDialogVisible = true
       } else {
         const result = await queryKeywordPriceNew({
