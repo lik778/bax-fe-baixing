@@ -355,7 +355,6 @@ export default {
           type: 'success'
         })
       }
-      this.xufeiDialogVisible = false
       await this.getPromotes()
     },
     isUser (roleString) {
@@ -433,6 +432,7 @@ export default {
       await this.getPromotes()
     },
     async onXufei (row) {
+      this.payUrl = ''
       const { word, cities, device, ifSpecialRenew } = row
       if (!this.canXufei(row)) {
         return this.$message.info('到期前15天才可续费哦')
