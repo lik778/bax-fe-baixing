@@ -375,11 +375,11 @@ export default {
     f2y,
     leftDays (row) {
       if (!PROMOTE_STATUS_PENDING_ONLINE.concat(PROMOTE_STATUS_OFFLINE).includes(row.status)) {
-        let daysLeft = row.days
-        if (row.startedAt) {
-          // 可能是负值
-          daysLeft = row.days - (Date.now() - row.startedAt * 1000) / 86400 / 1000
-        }
+        const daysLeft = row.remainDays
+        // if (row.startedAt) {
+        //   // 可能是负值
+        //   daysLeft = row.days - (Date.now() - row.startedAt * 1000) / 86400 / 1000
+        // }
         return parseFloat(Math.max(daysLeft, 0)).toFixed(1)
       }
     },
