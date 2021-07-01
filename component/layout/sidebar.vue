@@ -31,24 +31,12 @@
               充值
             </router-link>
           </el-menu-item>
-          <!-- 下掉，暂时隐藏，等主站上线时候可以把路由和组件相关代码删除 -->
-          <!-- <el-menu-item index="seo-charge">
-            <router-link :to="{ name: 'seo-charge' }" tag="p">
-              首页宝
-            </router-link>
-          </el-menu-item> -->
         </el-submenu>
 
         <el-submenu index="seo">
           <template slot="title">
             <bx-icon type="sharealt"></bx-icon>首页宝
           </template>
-          <!-- 下掉，暂时隐藏，等主站上线时候可以把路由和组件相关代码删除 -->
-          <!-- <el-menu-item index="seo-create-promotion">
-            <router-link :to="{ name: 'seo-create-promotion' }" tag="p">
-              新建首页宝
-            </router-link>
-          </el-menu-item> -->
           <el-menu-item index="seo-promotion-list">
             <router-link :to="{ name: 'seo-promotion-list' }" tag="p">
               管理首页宝
@@ -96,19 +84,9 @@
           <template slot="title">
             <bx-icon type="sharealt"></bx-icon>易慧推
           </template>
-          <el-menu-item index="qc-create-promote" v-if="!userInfo.shAgent">
-            <router-link :to="{ name: 'qc-create-promote' }" tag="p">
-              新建订单
-            </router-link>
-          </el-menu-item>
           <el-menu-item index="qc-promote-list">
             <router-link :to="{ name: 'qc-promote-list' }" tag="p">
               管理推广
-            </router-link>
-          </el-menu-item>
-          <el-menu-item index="qc-word-list" v-if="!userInfo.shAgent">
-            <router-link :to="{ name: 'qc-word-list' }" tag="p">
-              查词记录
             </router-link>
           </el-menu-item>
         </el-submenu>
@@ -209,10 +187,10 @@ import { baxUserLogin, kaOnlineAndTickets } from 'api/ka'
 
 const MENU_GROUP_MAP = {
   charge: ['qwt-charge', 'seo-charge'],
-  seo: ['seo-create-promotion', 'seo-promotion-list'],
+  seo: ['seo-promotion-list'],
   sst: ['qwt-create-promotion', 'qwt-promotion-list'],
   bw: ['bw-query-price', 'bw-plan-list', 'bw-manual'],
-  qc: ['qc-create-promote', 'qc-promote-list', 'qc-word-list'],
+  qc: ['qc-promote-list'],
   ssp: ['ad-list', 'material-list', 'order-list', 'user-list', 'ad-calendar'],
   dashboard: ['qwt-dashboard', 'bw-dashboard', 'qc-dashboard']
 }
