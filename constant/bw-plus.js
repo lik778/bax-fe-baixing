@@ -1,20 +1,26 @@
-import { toOpt } from 'util/kit'
-
-export const PROMOTE_STATUS = {
-  待设置: 0,
-  待投放: 1,
-  投放中: 2,
-  已下线: 3
+// 审核状态
+export const AUDIT_STATUS_PENGDING = 0
+export const AUDIT_STATUS_AUDITING = 5
+export const AUDIT_STATUS_PASS = 10
+export const AUDIT_STATUS_REJECT = 20
+export const AUDIT_STATUS_MAP = {
+  [AUDIT_STATUS_PENGDING]: '待审核',
+  [AUDIT_STATUS_AUDITING]: '审核中',
+  [AUDIT_STATUS_PASS]: '审核通过',
+  [AUDIT_STATUS_REJECT]: '审核驳回'
 }
-export const promoteStatusOpts = toOpt(PROMOTE_STATUS, false, true)
 
-export const AUDIT_STATUS = {
-  待审核: 0,
-  审核中: 1,
-  审核通过: 2,
-  审核驳回: 3
+// 计划状态
+export const PROMOTE_STATUS_PENDING_EDIT = 0
+export const PROMOTE_STATUS_PENDING_ONLINE = 5
+export const PROMOTE_STATUS_ONLINE = 10
+export const PROMOTE_STATUS_OFFLINE = 50
+export const PROMOTE_STATUS_MAP = {
+  [PROMOTE_STATUS_PENDING_EDIT]: '待设置',
+  [PROMOTE_STATUS_PENDING_ONLINE]: '待投放',
+  [PROMOTE_STATUS_ONLINE]: '投放中',
+  [PROMOTE_STATUS_OFFLINE]: '已下线'
 }
-export const auditStatusOpts = toOpt(AUDIT_STATUS, false, true)
 
 // 查价
 export const APPLY_TYPE_NORMAL = 0 // 正常报价

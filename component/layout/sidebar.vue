@@ -94,8 +94,8 @@
               查价记录
             </router-link>
           </el-menu-item>
-          <el-menu-item index="bw-plus-cibao-list">
-            <router-link :to="{ name: 'bw-plus-cibao-list' }" tag="p">
+          <el-menu-item index="bw-plus-package-list">
+            <router-link :to="{ name: 'bw-plus-package-list' }" tag="p">
               管理推广
             </router-link>
           </el-menu-item>
@@ -210,7 +210,7 @@ const MENU_GROUP_MAP = {
   seo: ['seo-promotion-list'],
   sst: ['qwt-create-promotion', 'qwt-promotion-list'],
   bw: ['bw-query-price', 'bw-plan-list', 'bw-manual'],
-  bwPlus: ['query-price'],
+  bwPlus: ['bw-plus-query-price', 'bw-plus-price-records', 'bw-plus-package-list'],
   qc: ['qc-promote-list'],
   ssp: ['ad-list', 'material-list', 'order-list', 'user-list', 'ad-calendar'],
   dashboard: ['qwt-dashboard', 'bw-dashboard', 'qc-dashboard']

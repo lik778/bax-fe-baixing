@@ -1,4 +1,4 @@
-import { biaowangPlus } from 'api/base'
+import { biaowangPlus, trim } from 'api/base'
 
 export async function getAllIndustry () {
   const body = await biaowangPlus
@@ -69,6 +69,79 @@ export async function getInqueryList (params) {
   const body = await biaowangPlus
     .get('/apply/user/list')
     .query(params)
+    .json()
+  return body
+}
+
+/**
+ * 用户查看已购买的词包列表
+ * @param { Object } params
+ * @param { Number } params.id
+ * @param { String } params.keyword
+ * @param { Number[] } params.status
+ * @param { Number[] } params.auditStatus
+ * @param { Number } params.size
+ * @param { Number } params.page
+ * @returns
+ */
+export async function getUserPackageList (params) {
+  const body = await biaowangPlus
+    .get('/package/user/list')
+    .query(trim(params))
+    .json()
+
+  return {
+    items: body.data.content,
+    total: body.data.totalPage
+  }
+}
+
+/**
+ * 用户查看某个词包下的计划列表
+ * @param { Number } id
+ * @returns
+ */
+export async function getUsePromoteListByPackageId (id) {
+  const body = await biaowangPlus
+    .get('/promote/user/list')
+    .query({
+      packageId: id
+    })
+    .json()
+
+  return body.data
+}
+
+/**
+ * 用户查看计划详情
+ * @param { Number } id
+ * @returns
+ */
+export async function getPromoteDetailById (id) {
+  const body = await biaowangPlus
+    .get('/promote/user/info')
+    .query({
+      promoteId: id
+    })
+    .json()
+  return body
+}
+
+/**
+ * 用户编辑计划落地页创意
+ * @param { Object } params
+ * @param { Number[] } params.promoteIds
+ * @param { String } params.creativeTitle
+ * @param { String } params.creativeContent
+ * @param { String } params.landingPage
+ * @param { Number } params.landingPageId
+ * @param { Number } params.landingType
+ * @returns
+ */
+export async function updatePromoteDetail (params) {
+  const body = await biaowangPlus
+    .post('/promote/user/info')
+    .send(params)
     .json()
   return body
 }

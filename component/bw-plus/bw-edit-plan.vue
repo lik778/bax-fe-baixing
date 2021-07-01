@@ -43,7 +43,7 @@
                  type="primary"
                  @click="onSubmit">更新标王2.0计划</el-button>
     </main>
-    <select-promote-dialog />
+    <select-promote-dialog :visible="selectPromoteDialogVisible" />
   </div>
 </template>
 
@@ -53,6 +53,8 @@ import MvipSelector from 'com/common/mvip-selector'
 import UserAdSelector from 'com/common/ad-selector'
 import CreativeEditor from 'com/widget/creative-editor'
 import SelectPromoteDialog from './components/select-promote-dialog.vue'
+
+import { getPromoteDetailById } from 'api/biaowang-plus'
 
 export default {
   name: 'bw-plus-edit-plan',
@@ -71,7 +73,9 @@ export default {
       LANDING_TYPE_STORE,
       SEM_PLATFORM_BAIDU,
       landingTypeOpts,
+      selectPromoteDialogVisible: false,
 
+      originPromote: null,
       form: {
         landingType: LANDING_TYPE_AD,
         landingPage: '',
@@ -88,7 +92,16 @@ export default {
       return false
     }
   },
+  mounted () {
+    this.getPromoteDetail()
+  },
   methods: {
+    async getPromoteDetail () {
+      const id = this.$route.params.id
+      const data = await getPromoteDetailById(id)
+      this.originPromote = data
+      // TODO form表单保持一致
+    },
     clearLandingPage () {
       this.form.landingPage = ''
       this.form.landingPageId = ''

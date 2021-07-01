@@ -150,9 +150,9 @@ export default {
       gStore.getRelation({ userId })
     }
     // 购物车限制在标王页面
-    this.isBwRoute = this.$route.path.startsWith('/main/bw')
+    this.isBwRoute = this.$route.path.startsWith('/main/bw/')
     router.beforeEach((to, from, next) => {
-      this.isBwRoute = to.path.startsWith('/main/bw')
+      this.isBwRoute = to.path.startsWith('/main/bw/')
       next()
     })
 

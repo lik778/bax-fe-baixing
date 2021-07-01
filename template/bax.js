@@ -258,9 +258,9 @@ const bwPlusRoutes = [
     name: 'bw-plus-price-records'
   },
   {
-    component: () => import('com/bw-plus/bw-cibao-list'),
-    path: '/main/bw-plus/cibao-list',
-    name: 'bw-plus-cibao-list'
+    component: () => import('com/bw-plus/bw-package-list'),
+    path: '/main/bw-plus/package-list',
+    name: 'bw-plus-package-list'
   },
   {
     component: () => import('com/bw-plus/bw-plan-list'),
@@ -269,7 +269,8 @@ const bwPlusRoutes = [
   },
   {
     component: () => import('com/bw-plus/bw-edit-plan'),
-    path: '/main/bw-plus/edit-plan/:id'
+    path: '/main/bw-plus/edit-plan/:id',
+    name: 'bw-plus-edit-plan'
   }
 ]
 
