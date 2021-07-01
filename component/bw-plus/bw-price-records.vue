@@ -37,7 +37,7 @@
       <el-table-column align="center" prop="cities" width="200" label="投放城市" :formatter="citiesFormater" />
       <el-table-column align="center" width="120" prop="scheduleType" label="推广时段" :formatter="scheduleTypeFormater" />
       <el-table-column align="center" prop="days" label="服务时长" :formatter="daysFormater" />
-      <el-table-column align="center" width="100" prop="industry" label="推广行业" />
+      <el-table-column align="center" width="150" prop="industry" label="推广行业" />
       <el-table-column align="center" fixed="right" label="报价">
         <template slot-scope="{ row }">
           <span v-if="row.applyType === APPLY_TYPE_NORMAL">{{f2y(row.price)}}元</span>
@@ -102,28 +102,36 @@ export default {
       this.currentPage = 0
       await this.getRecord()
     },
-    daysFormater (row, column, days, index) {
+    daysFormater (...args) {
+      const [,, days] = args
       return SERVICE_DAYS[days] || '-'
     },
-    scheduleTypeFormater (row, column, cellValue, index) {
+    scheduleTypeFormater (...args) {
+      const [,, cellValue] = args
       return SCHEDULE_TYPE[cellValue] || '-'
     },
-    applyTypeFormatter (row, column, cellValue, index) {
+    applyTypeFormatter (...args) {
+      const [,, cellValue] = args
       return cellValue === APPLY_TYPE_NORMAL ? '系统报价' : '人工报价'
     },
-    dateFormater (row, column, cellValue, index) {
+    dateFormater (...args) {
+      const [,, cellValue] = args
       return cellValue.split('T')[0] || '-'
     },
-    priceFormatter (row, column, cellValue, index) {
+    priceFormatter (...args) {
+      const [,, cellValue] = args
       return `${f2y(cellValue)}元`
     },
-    statusFormatter (row, column, cellValue, index) {
+    statusFormatter (...args) {
+      const [,, cellValue] = args
       return APPLY_AUDIT_STATUS_OPTIONS[cellValue] || '-'
     },
-    deviceFormatter (row, column, cellValue, index) {
+    deviceFormatter (...args) {
+      const [,, cellValue] = args
       return DEVICE[cellValue] || '-'
     },
-    citiesFormater (row, column, cities, index) {
+    citiesFormater (...args) {
+      const [,, cities] = args
       return cities.slice(0, 20).map(city => getCnName(city, this.allAreas)).join(',') + (cities.length > 20 ? `等${cities.length}个城市` : '') || '-'
     },
     handleCurrentChange () {
