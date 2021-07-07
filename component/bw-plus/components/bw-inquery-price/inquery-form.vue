@@ -12,7 +12,7 @@
                     <el-option
                         v-for="(item, index) in industryList"
                         :key="index"
-                        :label="item.desc"
+                        :label="item.description"
                         :value="item.name">
                     </el-option>
                 </el-select>

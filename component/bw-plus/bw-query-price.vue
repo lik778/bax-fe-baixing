@@ -150,6 +150,7 @@ export default {
       }
       this.queryInfo = params
       const { data } = await querySystemResult(params)
+      console.log(data)
       this.queryResult = data
       this.$nextTick(() => {
         this.$refs.viewScrollTop.scrollIntoView()
