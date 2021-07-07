@@ -111,14 +111,7 @@
           </el-form-item>
           <el-form-item label="">
             <el-button @click="xufeiDialogVisible = false">取消续费</el-button>
-            <el-button v-if="xufeiForm.ifSpecialRenew" type="primary" @click="specialRenewHandel(xufeiForm)">续费</el-button>
-            <el-button v-else type="primary" @click="addToCart">加入购物车</el-button>
-            <div v-if="payUrl" class="payurl">
-              <label :title="payUrl">
-                {{ '付款链接: ' + payUrl }}
-              </label>
-              <Clipboard :content="payUrl"></Clipboard>
-            </div>
+            <el-button type="primary" @click="addToCart">加入购物车</el-button>
           </el-form-item>
         </el-form>
       </el-dialog>
@@ -153,7 +146,6 @@
 import BaxPagination from 'com/common/pagination'
 import ManualTooltip from 'com/common/bw/manual-tooltip'
 import ManualDialog from 'com/common/bw/manual-dialog'
-import Clipboard from 'com/widget/clipboard'
 import {
   promoteStatusOpts,
   auditStatusOpts,
@@ -171,8 +163,7 @@ import {
   ORDER_APPLY_TYPE_NOT,
   GET_DAYS_MAP,
   THIRTY_DAYS,
-  PROMOTE_STATUS_PAUSE,
-  NOT_SPECIALRENEW_LIST
+  PROMOTE_STATUS_PAUSE
 } from 'constant/biaowang'
 import { getPromotes, queryKeywordPriceNew, getUserLive, getUserRanking, getRenewDetail, specialRenew } from 'api/biaowang'
 import {
@@ -206,8 +197,7 @@ export default {
     BaxPagination,
     auditRejectReasonDialog,
     ManualTooltip,
-    ManualDialog,
-    Clipboard
+    ManualDialog
   },
   props: {
     allAreas: Array,
@@ -386,10 +376,7 @@ export default {
       return dayjs(row.createdAt * 1000).isBefore('2020-03-27 12:16:40.213743')
     },
     canXufei (row) {
-      if (NOT_SPECIALRENEW_LIST.includes(row.id)) {
-        return false
-      }
-      return (PROMOTE_STATUS_ONLINE.includes(row.status) && this.leftDays(row) <= 15) || row.ifSpecialRenew
+      return (PROMOTE_STATUS_ONLINE.includes(row.status) && this.leftDays(row) <= 15)
     },
     canSeeLiveBtn (row) {
       return PROMOTE_STATUS_ONLINE.includes(row.status)
