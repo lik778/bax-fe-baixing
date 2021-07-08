@@ -33,7 +33,7 @@ const local = {
   baxApiHost: '//bax.baixing.cn/bax',
   kaApiHost: '//bax.baixing.cn/ka/api/admin',
   biaowangApiHost: '//bax.baixing.cn/phoenixs/api',
-  biaowangPlusApiHost: `//${window.location.host}/devApi/api/phoenixs-plus`,
+  biaowangPlusApiHost: '//bax.baixing.cn/phoenixs-plus/api/phoenixs-plus',
   seoApiHost: 'http://bax.baixing.cn/seo-api',
   qcApiHost: 'http://bax.baixing.cn/sem-batch/api/sem-batch',
   b2bApiHost: '//172.30.2.14:31643',
