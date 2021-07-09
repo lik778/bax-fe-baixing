@@ -1,8 +1,8 @@
 <template>
   <div class="white-bg">
     <div class="bw-dashboard">
-      <dashboard-header :sh-agent="userInfo.shAgent"></dashboard-header>
-      <div class="tip">今日数据存在一定的延时，且最近1小时内的展现数据会存在波动</div>
+      <!-- <dashboard-header :sh-agent="userInfo.shAgent"></dashboard-header> -->
+      <!-- <div class="tip">今日数据存在一定的延时，且最近1小时内的展现数据会存在波动</div> -->
       <section class="keyword">
         <div class="title">推广关键词</div>
         <el-tabs v-model="activeTab"
@@ -74,7 +74,7 @@
 </template>
 
 <script>
-import DashboardHeader from './header'
+// import DashboardHeader from './header'
 // import Chart from './chart'
 import KeywordList from './keyword-list'
 import AddKeyword from './add-keyword'
@@ -119,7 +119,7 @@ const daterangeList = [
 export default {
   name: 'bw-dashboard',
   components: {
-    DashboardHeader,
+    // DashboardHeader,
     // Chart,
     KeywordList,
     AddKeyword
