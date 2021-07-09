@@ -21,18 +21,18 @@
       <el-table-column align="center" fixed="right" label="报价">
         <template slot-scope="{ row }">
           <span v-if="row.applyType === APPLY_TYPE_NORMAL">{{f2y(row.price)}}元</span>
-          <el-button v-else type="text" @click="reviewPrice(row)">查看</el-button>
+          <el-button v-else :disabled="row.status === APPLY_AUDIT_STATUS_REJECT" type="text" @click="reviewPrice(row)">查看</el-button>
         </template>
       </el-table-column>
       <el-table-column align="center" fixed="right" label="操作">
         <template slot-scope="{ row }">
-          <el-button :disabled="row.tradeSeq" type="text">提单</el-button>
+          <el-button @click="preOrder" :disabled="row.tradeSeq || row.status === APPLY_AUDIT_STATUS_REJECT || !row.price" type="text">提单</el-button>
         </template>
       </el-table-column>
     </el-table>
 </template>
 <script>
-import { APPLY_AUDIT_STATUS_OPTIONS, APPLY_TYPE_NORMAL, DEVICE, SCHEDULE_TYPE, SERVICE_DAYS } from 'constant/bw-plus'
+import { APPLY_AUDIT_STATUS_OPTIONS, APPLY_AUDIT_STATUS_REJECT, APPLY_TYPE_NORMAL, DEVICE, SCHEDULE_TYPE, SERVICE_DAYS, STATUS_MAP } from 'constant/bw-plus'
 import { f2y, getCnName } from 'util'
 export default {
   name: 'bw-records-table',
@@ -55,7 +55,9 @@ export default {
   data () {
     return {
       f2y,
-      APPLY_TYPE_NORMAL
+      APPLY_TYPE_NORMAL,
+      STATUS_MAP,
+      APPLY_AUDIT_STATUS_REJECT
     }
   },
   methods: {
@@ -93,6 +95,9 @@ export default {
     },
     reviewPrice (row) {
       this.$emit('reviewPrice', row)
+    },
+    preOrder () {
+      this.$emit('preOrder')
     }
   }
 }

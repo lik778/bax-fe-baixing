@@ -1,7 +1,7 @@
 <template>
   <el-card class="bw-price-record">
     <BwRecordsForm @search="search"/>
-    <BwRecordsTable @reviewPrice="reviewPrice" :loading="loading" :records="records" :allAreas="allAreas"/>
+    <BwRecordsTable @preOrder="preOrder" @reviewPrice="reviewPrice" :loading="loading" :records="records" :allAreas="allAreas"/>
     <el-dialog
       title="查看"
       :visible.sync="dialogVisible"
@@ -10,7 +10,7 @@
       <InqueryResult @getValue="getCurrentPrice" :tableData="activeRecord.priceList"/>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+        <el-button type="primary" @click="updateRecord">确 定</el-button>
       </span>
     </el-dialog>
     <el-pagination
@@ -26,9 +26,10 @@
 </template>
 
 <script>
-import { getInqueryList } from 'api/biaowang-plus'
+import { getInqueryList, userChoose, preOrder } from 'api/biaowang-plus'
 import { APPLY_AUDIT_STATUS_OPTIONS, APPLY_TYPE_NORMAL } from 'constant/bw-plus'
 import { BwRecordsForm, BwRecordsTable, InqueryResult } from './components'
+import pick from 'lodash.pick'
 import { f2y } from 'util'
 const PAGEAIZE = 10
 export default {
@@ -59,7 +60,8 @@ export default {
       total: 0,
       currentPage: 0,
       dialogVisible: false,
-      activeRecord: []
+      activeRecord: [],
+      currentPrice: {}
     }
   },
   async mounted () {
@@ -99,8 +101,21 @@ export default {
       this.activeRecord = record
       this.dialogVisible = true
     },
-    getCurrentPrice (value) {
-      console.log(value)
+    async getCurrentPrice (value) {
+      this.currentPrice = value
+    },
+    async updateRecord () {
+      const { id } = this.activeRecord
+      const { currentPrice } = this
+      const params = {
+        id,
+        ...pick(currentPrice, ['device', 'scheduleType', 'duration', 'price'])
+      }
+      await userChoose(params)
+    },
+    async preOrder () {
+      const { id } = this.activeRecord
+      await preOrder({ id })
     }
   }
 }

@@ -145,3 +145,33 @@ export async function updatePromoteDetail (params) {
     .json()
   return body
 }
+
+/**
+ * @param { object } params
+ * @param { number } params.id
+ * @param { number } params.device
+ * @param { number } params.scheduleType
+ * @param { number } params.days
+ * @param { number } params.price
+ * @returns { any }
+ */
+export async function userChoose (params) {
+  const body = await biaowangPlus
+    .post('/apply/user/choose')
+    .send(params)
+    .json()
+  return body
+}
+
+/**
+ * @param { object } params
+ * @param { number } params.id
+ * @returns { any }
+ */
+export async function preOrder (params) {
+  const body = await biaowangPlus
+    .post('/apply/user/pre-order')
+    .send(params)
+    .json()
+  return body
+}
