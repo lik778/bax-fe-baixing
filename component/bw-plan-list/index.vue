@@ -1,7 +1,9 @@
 <template>
   <div class="bg">
     <div class="white-bg">
-      <header>我的标王推广计划</header>
+      <header>我的标王推广计划
+        <span style="color: red; font-size: 12px">(系统维护中，为了保证您的物料正常投放，暂不支持创意及落地页的修改，如有任何问题请及时联系您的销售或客服。)</span>
+      </header>
       <main>
         <router-link v-if="!userInfo.shAgent && relationAllow()" :to="{name: 'bw-query-price'}">
           <el-button class="create-plan" type="primary"><i class="el-icon-plus" ></i>新建标王计划</el-button>
@@ -66,7 +68,7 @@
           </el-table-column> -->
           <el-table-column label="操作" min-width="160px">
             <template slot-scope="scope">
-              <router-link v-if="!isAgentAccounting && scope.row.status != PROMOTE_STATUS_PAUSE[0]" :to="{name: 'bw-edit-plan', query: {promoteId: scope.row.id}}"><el-button type="text" size="small">编辑</el-button></router-link>
+              <router-link v-if="!isAgentAccounting && scope.row.status != PROMOTE_STATUS_PAUSE[0] && scope.row.status != PROMOTE_STATUS_ONLINE[0]" :to="{name: 'bw-edit-plan', query: {promoteId: scope.row.id}}"><el-button type="text" size="small">编辑</el-button></router-link>
               <el-button v-if="canXufei(scope.row) && !userInfo.shAgent" size="small" type="text"
                          :disabled="disabledXuFeiBtn(scope.row)"
                          @click="onXufei(scope.row)">续费</el-button>
@@ -207,6 +209,7 @@ export default {
   data () {
     return {
       PROMOTE_STATUS_PAUSE,
+      PROMOTE_STATUS_ONLINE,
       promoteStatusOpts,
       auditStatusOpts,
       payUrl: '',

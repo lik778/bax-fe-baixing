@@ -62,23 +62,24 @@
                     :all-areas="allAreas"
                     :original-promotes="promotes"></add-keyword>
       </section>
-      <chart v-if="showChartData && showChartData.length"
+      <!-- <chart v-if="showChartData && showChartData.length"
             :chart-data="showChartData"
             y-axis-name="展现量"></chart>
       <chart v-if="cpcRankingChartData && cpcRankingChartData.length"
             :chart-data="cpcRankingChartData"
-            y-axis-name="平均排名"></chart>
+            y-axis-name="平均排名"></chart> -->
+      <div style="color: red; font-size: 13px; margin: 20px 0">系统维护中，预估15天内逐步开放，感谢您的理解与支持。</div>
     </div>
   </div>
 </template>
 
 <script>
 import DashboardHeader from './header'
-import Chart from './chart'
+// import Chart from './chart'
 import KeywordList from './keyword-list'
 import AddKeyword from './add-keyword'
 
-import { getPromoteById, getUserRanking, getUserShow } from 'api/biaowang'
+import { getPromoteById } from 'api/biaowang'
 import dayjs from 'dayjs'
 import clone from 'clone'
 
@@ -119,7 +120,7 @@ export default {
   name: 'bw-dashboard',
   components: {
     DashboardHeader,
-    Chart,
+    // Chart,
     KeywordList,
     AddKeyword
   },
@@ -182,22 +183,22 @@ export default {
       this.activeDaterangeLabel = item.label
     },
     async getChartData () {
-      const { query: { user_id: userId } } = this.$route
-      const daterange = this.daterange
-      const startTime = dayjs(daterange[0]).startOf('day').unix()
-      const endTime = dayjs(daterange[1]).startOf('day').unix()
-      const options = {
-        startTime,
-        endTime,
-        promoteList: this.activeTab === 'noLimit' ? [] : this.promoteIds,
-        userId
-      }
+      // const { query: { user_id: userId } } = this.$route
+      // const daterange = this.daterange
+      // const startTime = dayjs(daterange[0]).startOf('day').unix()
+      // const endTime = dayjs(daterange[1]).startOf('day').unix()
+      // const options = {
+      //   startTime,
+      //   endTime,
+      //   promoteList: this.activeTab === 'noLimit' ? [] : this.promoteIds,
+      //   userId
+      // }
 
-      const cpcRankingChartData = await getUserRanking(options)
-      this.cpcRankingChartData = cpcRankingChartData
+      // const cpcRankingChartData = await getUserRanking(options)
+      // this.cpcRankingChartData = cpcRankingChartData
 
-      const showChartData = await getUserShow(options)
-      this.showChartData = showChartData
+      // const showChartData = await getUserShow(options)
+      // this.showChartData = showChartData
     },
     handleKeywordClose (newPromotes) {
       this.addKeywordModalShow = false
