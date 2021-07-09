@@ -165,13 +165,13 @@ export async function userChoose (params) {
 
 /**
  * @param { object } params
- * @param { number } params.id
+ * @param { number } params.applyId
  * @returns { any }
  */
 export async function preOrder (params) {
   const body = await biaowangPlus
-    .post('/apply/user/pre-order')
-    .send(params)
+    .get('/apply/user/pre-order')
+    .query(params)
     .json()
   return body
 }

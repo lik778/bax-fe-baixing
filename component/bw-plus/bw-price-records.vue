@@ -111,11 +111,19 @@ export default {
         id,
         ...pick(currentPrice, ['device', 'scheduleType', 'duration', 'price'])
       }
-      await userChoose(params)
+      const { code } = await userChoose(params)
+      if (code === 0) {
+        this.$message({
+          message: '恭喜你，操作成功，去提单吧！',
+          type: 'success'
+        })
+        this.currentPage = 0
+        this.getRecord()
+      }
     },
-    async preOrder () {
-      const { id } = this.activeRecord
-      await preOrder({ id })
+    async preOrder (record) {
+      const { id: applyId } = record
+      await preOrder({ applyId })
     }
   }
 }
