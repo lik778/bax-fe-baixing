@@ -39,22 +39,33 @@
                          @error="handleCreativeError" />
       </div>
       <el-button :disabled="isPromoteOffline"
-                 :loading="loading"
                  type="primary"
                  @click="onSubmit">更新标王2.0计划</el-button>
     </main>
-    <select-promote-dialog :visible="selectPromoteDialogVisible" />
+    <select-promote-dialog :visible="selectPromoteDialogVisible"
+                           :package-id="originPromote.packageId"
+                           @close="selectPromoteDialogVisible = false"
+                           @update-promote-ids="handleUpdatePromoteIds"
+                           :promote-ids="form.promoteIds"
+                           :loading="loading"
+                           v-if="originPromote" />
   </div>
 </template>
 
 <script>
-import { landingTypeOpts, SEM_PLATFORM_BAIDU, LANDING_TYPE_AD, LANDING_TYPE_STORE } from 'constant/fengming'
 import MvipSelector from 'com/common/mvip-selector'
 import UserAdSelector from 'com/common/ad-selector'
 import CreativeEditor from 'com/widget/creative-editor'
-import SelectPromoteDialog from './components/select-promote-dialog.vue'
+import SelectPromoteDialog from '../components/select-promote-dialog.vue'
 
-import { getPromoteDetailById } from 'api/biaowang-plus'
+import {
+  landingTypeOpts,
+  SEM_PLATFORM_BAIDU,
+  LANDING_TYPE_AD,
+  LANDING_TYPE_STORE
+} from 'constant/fengming'
+import { getPromoteDetailById, updatePromoteDetail } from 'api/biaowang-plus'
+import { createValidator } from './validate'
 
 export default {
   name: 'bw-plus-edit-plan',
@@ -81,7 +92,8 @@ export default {
         landingPage: '',
         landingPageId: '',
         creativeTitle: '',
-        creativeContent: ''
+        creativeContent: '',
+        promoteIds: []
       },
       isErrorLandingPageShow: false,
       loading: false
@@ -100,7 +112,15 @@ export default {
       const id = this.$route.params.id
       const data = await getPromoteDetailById(id)
       this.originPromote = data
-      // TODO form表单保持一致
+      const { landingType, landingPage, landingPageId, creativeTitle, creativeContent } = data
+      this.form = {
+        promoteIds: [+id],
+        creativeTitle: creativeTitle || '',
+        creativeContent: creativeContent || '',
+        landingType: landingType || LANDING_TYPE_AD,
+        landingPage: landingPage || '',
+        landingPageId: landingPageId || ''
+      }
     },
     clearLandingPage () {
       this.form.landingPage = ''
@@ -130,7 +150,31 @@ export default {
       if (msg) this.$message.error(msg)
       this.creativeError = msg
     },
-    onSubmit () {
+    async handleUpdatePromoteIds (promoteIds) {
+      this.form.promoteIds = promoteIds
+      if (!promoteIds.length) {
+        return this.$message.error('必须选择一个标王推广计划!')
+      }
+      this.loading = true
+      try {
+        await updatePromoteDetail(this.form)
+      } finally {
+        this.loading = false
+      }
+    },
+    async onSubmit () {
+      if (this.isErrorLandingPageShow) {
+        return this.$message.error('当前投放页面失效，请重新选择新的投放页面')
+      }
+      if (this.creativeError) {
+        return this.$message.error(this.creativeError)
+      }
+      try {
+        await createValidator.validate(this.form, { first: true })
+      } catch (e) {
+        return this.$message.error(e.errors[0].message)
+      }
+      this.selectPromoteDialogVisible = true
     }
   },
   components: {
@@ -145,8 +189,8 @@ export default {
 <style lang='scss' scoped>
 .bw-plus-edit-plan {
   margin: 10px;
+  padding: 0 0 20px;
   background: #fff;
-  padding: 0;
   > .breadcrumb {
     color: #666;
     border-bottom: 1px solid #e6e6e6;
