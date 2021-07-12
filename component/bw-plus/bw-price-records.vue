@@ -123,7 +123,11 @@ export default {
     },
     async preOrder (record) {
       const { id: applyId } = record
-      await preOrder({ applyId })
+      const { code, data: { tradeSeq } } = await preOrder({ applyId })
+      console.log(tradeSeq)
+      if (code === 0) {
+        await this.getRecord()
+      }
     }
   }
 }

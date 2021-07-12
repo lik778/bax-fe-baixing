@@ -3,9 +3,10 @@
       style="width: 90%"
       :data="records"
       v-loading="loading"
+      :default-sort="{prop: 'createdTime', order: 'descending'}"
     >
-      <el-table-column align="center" fixed prop="id" label="IDIDIIID" />
-      <el-table-column align="center" fixed prop="createdTime" width="120" label="日期" :formatter="dateFormater" />
+      <el-table-column align="center" fixed prop="id" label="ID" />
+      <el-table-column sortable align="center" fixed prop="createdTime" width="160" label="日期" :formatter="dateFormater" />
       <el-table-column width="120" align="center" fixed prop="keywords" label="关键词">
         <template slot-scope="{ row }">
           {{ row.keywords.join("、") }}
@@ -14,8 +15,8 @@
       <el-table-column align="center" prop="applyType" label="报价类型" :formatter="applyTypeFormatter" />
       <el-table-column align="center" width="150" prop="status" label="审核状态">
         <template slot-scope="{ row }">
-          <span>{{APPLY_AUDIT_STATUS_OPTIONS[row.status] || '-'}}</span>
-          <el-tooltip v-if="row.status === APPLY_AUDIT_STATUS_REJECT" class="item" :content="row.rejectedReason" placement="top-start">
+          <span :class="transformClass(row.status)">{{APPLY_AUDIT_STATUS_OPTIONS[row.status] || '-'}}</span>
+          <el-tooltip v-if="row.status === APPLY_AUDIT_STATUS_REJECT" :class="transformClass(row.status)" :content="row.rejectedReason" placement="top-start">
             <i class="error el-icon-question pointer" />
           </el-tooltip>
         </template>
@@ -39,8 +40,9 @@
     </el-table>
 </template>
 <script>
-import { APPLY_AUDIT_STATUS_OPTIONS, APPLY_AUDIT_STATUS_REJECT, APPLY_TYPE_NORMAL, DEVICE, SCHEDULE_TYPE, SERVICE_DAYS, STATUS_MAP, APPLY_AUDIT_STATUS_PASS } from 'constant/bw-plus'
+import { APPLY_AUDIT_STATUS_OPTIONS, APPLY_AUDIT_STATUS_PENDING, APPLY_AUDIT_STATUS_REJECT, APPLY_TYPE_NORMAL, DEVICE, SCHEDULE_TYPE, SERVICE_DAYS, STATUS_MAP, APPLY_AUDIT_STATUS_PASS } from 'constant/bw-plus'
 import { f2y, getCnName } from 'util'
+import dayjs from 'dayjs'
 export default {
   name: 'bw-records-table',
   props: {
@@ -84,7 +86,7 @@ export default {
     },
     dateFormater (...args) {
       const [,, cellValue] = args
-      return cellValue
+      return dayjs(cellValue * 1000).format('YYYY-MM-DD HH:mm:ss')
     },
     priceFormatter (...args) {
       const [,, cellValue] = args
@@ -107,7 +109,28 @@ export default {
     },
     preOrder (row) {
       this.$emit('preOrder', row)
+    },
+    transformClass (status) {
+      switch (status) {
+        case APPLY_AUDIT_STATUS_REJECT:
+          return 'reject-item'
+        case APPLY_AUDIT_STATUS_PASS:
+          return 'pass-item'
+        case APPLY_AUDIT_STATUS_PENDING:
+          return 'pending-item'
+      }
     }
   }
 }
 </script>
+<style lang="scss" scoped>
+  .reject-item{
+    color: #F56C6C;
+  }
+  .pass-item{
+    color: #67C23A;
+  }
+  .pending-item{
+    color: #E6A23C;
+  }
+</style>

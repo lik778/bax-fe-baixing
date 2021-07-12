@@ -14,42 +14,42 @@
         label="双端报价"
         prop="both"
         align="center">
-            <el-table-column align="center" prop="bothSeven" label="7天*24小时">
+            <el-table-column align="center" prop="bothSeven" label="7天*24小时（元）">
                 <template slot-scope="{ row }">
-                  <div :class="{ 'active-item': row.bothSeven.index === current.index, 'option-item': true }" @click="cellClick(row.bothSeven)">{{row.bothSeven.price}}</div>
+                  <div :class="{ 'active-item': row.bothSeven.index === current.index, 'option-item': true }" @click="cellClick(row.bothSeven)">{{f2y(row.bothSeven.price)}}</div>
                 </template>
             </el-table-column>
-            <el-table-column align="center" prop="bothFive" label="5天*24小时">
+            <el-table-column align="center" prop="bothFive" label="5天*24小时（元）">
               <template slot-scope="{ row }">
-                <div :class="{ 'active-item': row.bothFive.index === current.index, 'option-item': true }" @click="cellClick(row.bothFive)">{{row.bothFive.price}}</div>
+                <div :class="{ 'active-item': row.bothFive.index === current.index, 'option-item': true }" @click="cellClick(row.bothFive)">{{f2y(row.bothFive.price)}}</div>
               </template>
             </el-table-column>
         </el-table-column>
         <el-table-column
         label="手机端报价"
         align="center">
-            <el-table-column align="center" prop="wapSeven" label="7天*24小时">
+            <el-table-column align="center" prop="wapSeven" label="7天*24小时（元）">
               <template slot-scope="{ row }">
-                <div :class="{ 'active-item': row.wapSeven.index === current.index, 'option-item': true }" @click="cellClick(row.wapSeven)">{{row.wapSeven.price}}</div>
+                <div :class="{ 'active-item': row.wapSeven.index === current.index, 'option-item': true }" @click="cellClick(row.wapSeven)">{{f2y(row.wapSeven.price)}}</div>
               </template>
             </el-table-column>
-            <el-table-column align="center" prop="wapFive" label="5天*24小时">
+            <el-table-column align="center" prop="wapFive" label="5天*24小时（元）">
               <template slot-scope="{ row }">
-                <div :class="{ 'active-item': row.wapFive.index === current.index, 'option-item': true }" @click="cellClick(row.wapFive)">{{row.wapFive.price}}</div>
+                <div :class="{ 'active-item': row.wapFive.index === current.index, 'option-item': true }" @click="cellClick(row.wapFive)">{{f2y(row.wapFive.price)}}</div>
               </template>
             </el-table-column>
         </el-table-column>
         <el-table-column
         label="电脑端报价"
         align="center">
-            <el-table-column align="center" prop="pcSeven" label="7天*24小时">
+            <el-table-column align="center" prop="pcSeven" label="7天*24小时（元）">
               <template slot-scope="{ row }">
-                <div :class="{ 'active-item': row.pcSeven.index === current.index, 'option-item': true }" @click="cellClick(row.pcSeven)">{{row.pcSeven.price}}</div>
+                <div :class="{ 'active-item': row.pcSeven.index === current.index, 'option-item': true }" @click="cellClick(row.pcSeven)">{{f2y(row.pcSeven.price)}}</div>
               </template>
             </el-table-column>
-            <el-table-column align="center" prop="pcFive" label="5天*24小时">
+            <el-table-column align="center" prop="pcFive" label="5天*24小时（元）">
               <template slot-scope="{ row }">
-                <div :class="{ 'active-item': row.pcFive.index === current.index, 'option-item': true }" @click="cellClick(row.pcFive)">{{row.pcFive.price}}</div>
+                <div :class="{ 'active-item': row.pcFive.index === current.index, 'option-item': true }" @click="cellClick(row.pcFive)">{{f2y(row.pcFive.price)}}</div>
               </template>
             </el-table-column>
         </el-table-column>
@@ -57,6 +57,7 @@
 </template>
 
 <script>
+import { f2y } from 'util'
 export default {
   name: 'InqueryResult',
   props: {
@@ -68,7 +69,8 @@ export default {
   },
   data () {
     return {
-      current: ''
+      current: '',
+      f2y
     }
   },
   methods: {
