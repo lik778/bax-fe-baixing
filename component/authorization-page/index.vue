@@ -39,7 +39,15 @@ export default {
         box-sizing: border-box;
         h4{
            text-align: center;
-           margin-bottom: 20px;
+           margin-bottom: 10px;
+           font-size: 18px;
+        }
+        p{
+            line-height: 24px;
+            font-size: 14px;
+        }
+        h5{
+            margin: 10px 0;
         }
     }
 </style>
