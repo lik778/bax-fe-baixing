@@ -4,7 +4,7 @@
       :data="records"
       v-loading="loading"
     >
-      <el-table-column align="center" fixed prop="id" label="ID" />
+      <el-table-column align="center" fixed prop="id" label="IDIDIIID" />
       <el-table-column align="center" fixed prop="createdTime" width="120" label="日期" :formatter="dateFormater" />
       <el-table-column width="120" align="center" fixed prop="keywords" label="关键词">
         <template slot-scope="{ row }">
@@ -15,7 +15,7 @@
       <el-table-column align="center" width="150" prop="status" label="审核状态">
         <template slot-scope="{ row }">
           <span>{{APPLY_AUDIT_STATUS_OPTIONS[row.status] || '-'}}</span>
-          <el-tooltip v-if="row.status === APPLY_AUDIT_STATUS_REJECT" class="item" effect="dark" :content="row.rejectedReason" placement="top-start">
+          <el-tooltip v-if="row.status === APPLY_AUDIT_STATUS_REJECT" class="item" :content="row.rejectedReason" placement="top-start">
             <i class="error el-icon-question pointer" />
           </el-tooltip>
         </template>
