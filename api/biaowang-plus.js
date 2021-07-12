@@ -124,7 +124,7 @@ export async function getPromoteDetailById (id) {
       promoteId: id
     })
     .json()
-  return body
+  return body.data
 }
 
 /**

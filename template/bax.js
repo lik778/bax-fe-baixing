@@ -268,7 +268,7 @@ const bwPlusRoutes = [
     name: 'bw-plus-plan-list'
   },
   {
-    component: () => import('com/bw-plus/bw-edit-plan'),
+    component: () => import('com/bw-plus/bw-edit-plan/index'),
     path: '/main/bw-plus/edit-plan/:id',
     name: 'bw-plus-edit-plan'
   }

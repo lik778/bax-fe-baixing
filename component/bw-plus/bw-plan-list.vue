@@ -119,7 +119,7 @@ export default {
     font-size: 13px;
   }
   main {
-    padding: 30px 20px;
+    padding: 40px 20px;
   }
 }
 </style>
