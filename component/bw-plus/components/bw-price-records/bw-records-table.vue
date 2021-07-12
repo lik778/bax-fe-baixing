@@ -4,7 +4,7 @@
       :data="records"
       v-loading="loading"
     >
-      <el-table-column align="center" fixed prop="id" label="ID" />
+      <el-table-column align="center" fixed prop="id" label="IDIDIIID" />
       <el-table-column align="center" fixed prop="createdTime" width="120" label="日期" :formatter="dateFormater" />
       <el-table-column width="120" align="center" fixed prop="keywords" label="关键词">
         <template slot-scope="{ row }">
@@ -12,7 +12,14 @@
         </template>
       </el-table-column>
       <el-table-column align="center" prop="applyType" label="报价类型" :formatter="applyTypeFormatter" />
-      <el-table-column align="center" prop="status" label="审核状态" :formatter="statusFormatter" />
+      <el-table-column align="center" width="150" prop="status" label="审核状态">
+        <template slot-scope="{ row }">
+          <span>{{APPLY_AUDIT_STATUS_OPTIONS[row.status] || '-'}}</span>
+          <el-tooltip v-if="row.status === APPLY_AUDIT_STATUS_REJECT" class="item" :content="row.rejectedReason" placement="top-start">
+            <i class="error el-icon-question pointer" />
+          </el-tooltip>
+        </template>
+      </el-table-column>
       <el-table-column align="center" prop="device" label="平台" :formatter="deviceFormatter" />
       <el-table-column align="center" prop="cities" width="200" label="投放城市" :formatter="citiesFormater" />
       <el-table-column align="center" width="120" prop="scheduleType" label="推广时段" :formatter="scheduleTypeFormater" />
@@ -26,13 +33,13 @@
       </el-table-column>
       <el-table-column align="center" fixed="right" label="操作">
         <template slot-scope="{ row }">
-          <el-button @click="preOrder(row)" :disabled="row.tradeSeq || row.status === APPLY_AUDIT_STATUS_REJECT || !row.price" type="text">提单</el-button>
+          <el-button @click="preOrder(row)" :disabled="row.tradeSeq || row.status != APPLY_AUDIT_STATUS_PASS || !row.price" type="text">提单</el-button>
         </template>
       </el-table-column>
     </el-table>
 </template>
 <script>
-import { APPLY_AUDIT_STATUS_OPTIONS, APPLY_AUDIT_STATUS_REJECT, APPLY_TYPE_NORMAL, DEVICE, SCHEDULE_TYPE, SERVICE_DAYS, STATUS_MAP } from 'constant/bw-plus'
+import { APPLY_AUDIT_STATUS_OPTIONS, APPLY_AUDIT_STATUS_REJECT, APPLY_TYPE_NORMAL, DEVICE, SCHEDULE_TYPE, SERVICE_DAYS, STATUS_MAP, APPLY_AUDIT_STATUS_PASS } from 'constant/bw-plus'
 import { f2y, getCnName } from 'util'
 export default {
   name: 'bw-records-table',
@@ -57,7 +64,9 @@ export default {
       f2y,
       APPLY_TYPE_NORMAL,
       STATUS_MAP,
-      APPLY_AUDIT_STATUS_REJECT
+      APPLY_AUDIT_STATUS_REJECT,
+      APPLY_AUDIT_STATUS_OPTIONS,
+      APPLY_AUDIT_STATUS_PASS
     }
   },
   methods: {
@@ -75,7 +84,7 @@ export default {
     },
     dateFormater (...args) {
       const [,, cellValue] = args
-      return cellValue.split('T')[0] || '-'
+      return cellValue
     },
     priceFormatter (...args) {
       const [,, cellValue] = args
