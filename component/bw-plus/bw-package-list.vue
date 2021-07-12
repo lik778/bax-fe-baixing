@@ -1,6 +1,6 @@
 <template>
   <div class="bw-plus-plan-list">
-    <header>管理计划</header>
+    <header>管理推广</header>
     <main>
       <el-form :model="query"
                label-width="100px"
@@ -40,19 +40,22 @@
                 @click="goToPlanList(row.id)">{{row.id}}</span>
         </el-table-column>
         <el-table-column label="关键词"
+                         show-overflow-tooltip
                          :formatter="r => $formatter.join(r.keywords, ',')" />
         <el-table-column label="审核状态">
           <div slot-scope="{row}"
                class="status-container">
-            <span class="dot"></span>
-            <span>{{AUDIT_STATUS_MAP[row.auditStatus]}}</span>
+            <status-show :dot-color="AUDIT_STATUS_COLOR_MAP[row.auditStatus]">
+              <span>{{AUDIT_STATUS_MAP[row.auditStatus]}}</span>
+            </status-show>
           </div>
         </el-table-column>
         <el-table-column label="投放状态">
           <div slot-scope="{row}"
                class="status-container">
-            <span class="dot"></span>
-            <span>{{PROMOTE_STATUS_MAP[row.status]}}</span>
+            <status-show :dot-color="PROMOTE_STATUS_COLOR_MAP[row.status]">
+              <span>{{PROMOTE_STATUS_MAP[row.status]}}</span>
+            </status-show>
           </div>
         </el-table-column>
         <el-table-column label="平台"
@@ -67,26 +70,42 @@
                          width="160">
           <div slot-scope="{row}">
             <el-button type="text"
+                       class="btn-text"
                        @click="goToPlanList(row.id)">查看计划</el-button>
             <el-button type="text"
+                       class="btn-text"
+                       :disabled="row.days < THIRTY_DAYS"
                        @click="goToShop">店铺</el-button>
           </div>
         </el-table-column>
       </el-table>
-      <el-pagination layout="prev, pager, next"
-                     :total="totalPage"
-                     :page-size="query.size"
-                     @current-change="handleCurrentChange"
-                     :current-page="query.page + 1">
-      </el-pagination>
+      <div class="pagination-container">
+        <el-pagination layout="prev, pager, next, total"
+                       :total="totalPage"
+                       :page-size="query.size"
+                       @current-change="handleCurrentChange"
+                       :current-page="query.page + 1">
+        </el-pagination>
+      </div>
     </main>
   </div>
 </template>
 
 <script>
 import { getUserPackageList } from 'api/biaowang-plus'
-import { AUDIT_STATUS_MAP, PROMOTE_STATUS_MAP, DEVICE, SCHEDULE_TYPE, SERVICE_DAYS } from 'constant/bw-plus'
+import {
+  AUDIT_STATUS_MAP,
+  PROMOTE_STATUS_MAP,
+  DEVICE,
+  SCHEDULE_TYPE,
+  SERVICE_DAYS,
+  PROMOTE_STATUS_COLOR_MAP,
+  AUDIT_STATUS_COLOR_MAP,
+  THIRTY_DAYS
+} from 'constant/bw-plus'
 import debounce from 'lodash.debounce'
+import StatusShow from './components/statusShow.vue'
+import { isPro } from 'config'
 
 export default {
   name: 'bw-plus-package-list',
@@ -94,9 +113,12 @@ export default {
     return {
       AUDIT_STATUS_MAP,
       PROMOTE_STATUS_MAP,
+      PROMOTE_STATUS_COLOR_MAP,
+      AUDIT_STATUS_COLOR_MAP,
       DEVICE,
       SCHEDULE_TYPE,
       SERVICE_DAYS,
+      THIRTY_DAYS,
 
       query: {
         keyword: '',
@@ -125,7 +147,10 @@ export default {
       this.$router.push({ name: 'bw-plus-plan-list', params: { id } })
     },
     goToShop () {
-      // TODO: 店铺跳转地址
+      const shopLink = isPro
+        ? '//shop.baixing.com/management/'
+        : '//shop-test.baixing.cn/management/'
+      window.open(shopLink)
     }
   },
   watch: {
@@ -136,6 +161,9 @@ export default {
         this.queryPackageList()
       }
     }
+  },
+  components: {
+    StatusShow
   }
 }
 </script>
@@ -158,5 +186,13 @@ export default {
     color: $--color-primary;
     cursor: pointer;
   }
+  .btn-text {
+    padding: 0;
+  }
+}
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  margin: 20px;
 }
 </style>
