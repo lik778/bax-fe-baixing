@@ -45,15 +45,17 @@
         <el-table-column label="审核状态">
           <div slot-scope="{row}"
                class="status-container">
-            <status-show :txt="AUDIT_STATUS_MAP[row.auditStatus]"
-                         :dot-color="AUDIT_STATUS_COLOR_MAP[row.auditStatus]" />
+            <status-show :dot-color="AUDIT_STATUS_COLOR_MAP[row.auditStatus]">
+              <span>{{AUDIT_STATUS_MAP[row.auditStatus]}}</span>
+            </status-show>
           </div>
         </el-table-column>
         <el-table-column label="投放状态">
           <div slot-scope="{row}"
                class="status-container">
-            <status-show :txt="PROMOTE_STATUS_MAP[row.status]"
-                         :dot-color="PROMOTE_STATUS_COLOR_MAP[row.status]" />
+            <status-show :dot-color="PROMOTE_STATUS_COLOR_MAP[row.status]">
+              <span>{{PROMOTE_STATUS_MAP[row.status]}}</span>
+            </status-show>
           </div>
         </el-table-column>
         <el-table-column label="平台"

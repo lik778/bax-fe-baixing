@@ -1,7 +1,7 @@
 <template>
   <div>
      <span :class="['dot', dotColor]" />
-     <span>{{txt}}</span>
+     <slot />
   </div>
 </template>
 
@@ -10,10 +10,6 @@ export default {
   name: 'statusShow',
   props: {
     dotColor: {
-      type: String,
-      required: false
-    },
-    txt: {
       type: String,
       required: false
     }
