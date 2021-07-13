@@ -31,10 +31,11 @@
                         </el-col>
                       </el-row>
                     </section>
-                    <section v-if="queryResult.error || queryResult.overHeat">
+                    <section v-if="queryResult.error || queryResult.overHeat || queryResult.industryError">
                       <p v-if="!queryResult.error && queryResult.overHeat">{{queryResult.overHeatWords.join("、")}}热度>500，暂无报价，请申请人工报价</p>
                       <p v-if="queryResult.error && !queryResult.overHeat">{{queryResult.overHeatWords.join("、")}}未获取到热度，请重试或申请人工报价</p>
                       <p v-if="queryResult.error && queryResult.overHeat">{{queryResult.overHeatWords.join("、")}}热度>500，{{queryResult.errorWords.join("、")}}未获取到热度，请申请人工报价</p>
+                      <p v-if="queryResult.industryError">{{queryInfo.industry}}太热，暂无报价，请申请人工报价</p>
                       <el-popconfirm
                         title="确定提交审核吗？"
                         @confirm="submit"
@@ -52,7 +53,7 @@
 <script>
 import { InqueryForm, KeywordHotDetail, Title, InqueryResult, DiamondShopWelfare, BwPlusDialog } from './components'
 import { querySystemResult, commit } from 'api/biaowang-plus'
-import { APPLY_TYPE_NORMAL, APPLY_TYPE_ERROR, APPLY_TYPE_OVERHEAT, APPLY_TYPE_ERROR_APPLY_TYPE_OVERHEAT } from 'constant/bw-plus'
+import { APPLY_TYPE_NORMAL, APPLY_TYPE_ERROR } from 'constant/bw-plus'
 import { f2y } from 'util'
 export default {
   name: 'bw-plus-query-price',
@@ -91,27 +92,20 @@ export default {
   },
   methods: {
     handleClick () {},
-    applyTypeFilter (error, overHeat) {
-      if (error && overHeat) {
-        return APPLY_TYPE_ERROR_APPLY_TYPE_OVERHEAT
-      }
-      if (error && !overHeat) {
+    applyTypeFilter (error, overHeat, industryError) {
+      if (error || overHeat || industryError) {
         return APPLY_TYPE_ERROR
-      }
-      if (!error && !overHeat) {
+      } else {
         return APPLY_TYPE_NORMAL
-      }
-      if (!error && overHeat) {
-        return APPLY_TYPE_OVERHEAT
       }
     },
     async submit () {
-      const { error, overHeat, priceId, tempPvId } = this.queryResult
+      const { error, overHeat, priceId, tempPvId, industryError } = this.queryResult
       const { userId: targetUserId } = this.salesInfo
       const { queryInfo, applyTypeFilter, currentPrice } = this
-      const baseParams = { targetUserId, applyType: applyTypeFilter(error, overHeat) }
+      const baseParams = { targetUserId, applyType: applyTypeFilter(error, overHeat, industryError) }
       let params = {}
-      if (!error && !overHeat) {
+      if (!error && !overHeat && !industryError) {
         params = {
           ...baseParams,
           applyBasicAttr: { priceId, ...currentPrice }
@@ -144,6 +138,12 @@ export default {
       }
     },
     async inquery (form) {
+      const loading = this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
       const params = {
         cities: form.cities,
         coreCity: form.coreCities[0],
@@ -152,7 +152,7 @@ export default {
       }
       this.queryInfo = params
       const { data } = await querySystemResult(params)
-      console.log(data)
+      loading.close()
       this.queryResult = data
       this.$nextTick(() => {
         this.$refs.viewScrollTop.scrollIntoView()

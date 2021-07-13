@@ -110,19 +110,12 @@ export default {
     },
     async submitForm (formName) {
       this.isInquery = true
-      const loading = this.$loading({
-        lock: true,
-        text: 'Loading',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      })
       this.$refs[formName].validate((valid) => {
         if (valid) {
           this.$emit('inquery', this.form)
         } else {
           console.log('')
         }
-        loading.close()
         this.isInquery = false
       })
     },

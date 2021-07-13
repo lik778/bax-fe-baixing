@@ -32,6 +32,11 @@ export default {
       default: () => [],
       require: true
     }
+  },
+  data () {
+    return {
+      keywordHotDetail: this.tableData
+    }
   }
 }
 </script>

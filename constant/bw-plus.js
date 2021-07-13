@@ -36,8 +36,7 @@ export const PROMOTE_STATUS_COLOR_MAP = {
 
 // 查价
 export const APPLY_TYPE_NORMAL = 0 // 正常报价
-export const APPLY_TYPE_OVERHEAT = 1 // 热度过高
-export const APPLY_TYPE_ERROR = 2 // 没有查到热度
+export const APPLY_TYPE_ERROR = 1 // 非正常报价
 export const APPLY_TYPE_ERROR_APPLY_TYPE_OVERHEAT = 3 // 热度过高或热度缺失
 export const APPLY_AUDIT_STATUS_PENDING = 0 // 待审核
 export const APPLY_AUDIT_STATUS_PASS = 1 // 审核通过

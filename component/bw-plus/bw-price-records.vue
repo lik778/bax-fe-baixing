@@ -14,11 +14,10 @@
       </span>
     </el-dialog>
     <el-pagination
-      @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
-      :current-page="currentPage"
+      :current-page="currentPage + 1"
       :hide-on-single-page="true"
-      :page-size="PAGEAIZE"
+      :page-size="PAGESIZE"
       layout="total, prev, pager, next"
       :total="total">
     </el-pagination>
@@ -33,7 +32,7 @@ import { normalizeRoles } from 'util/role'
 import { orderServiceHost } from 'config'
 import pick from 'lodash.pick'
 import { f2y } from 'util'
-const PAGEAIZE = 10
+const PAGESIZE = 10
 export default {
   name: 'bw-plus-price-records',
   components: {
@@ -61,7 +60,7 @@ export default {
       },
       f2y,
       APPLY_TYPE_NORMAL,
-      PAGEAIZE,
+      PAGESIZE,
       APPLY_AUDIT_STATUS_OPTIONS,
       records: [],
       total: 0,
@@ -88,28 +87,27 @@ export default {
       const roles = normalizeRoles(this.userInfo.roles)
       return roles.includes('AGENT_ACCOUNTING')
     },
-    handleSizeChange () {
-
-    },
     async search (value) {
       this.currentPage = 0
       this.formInline = value
       await this.getRecord()
     },
-    handleCurrentChange () {
-
+    async handleCurrentChange (current) {
+      this.currentPage = current - 1
+      await this.getRecord()
     },
     async getRecord () {
       this.loading = true
       const { formInline, currentPage } = this
       const params = {
         ...formInline,
-        size: PAGEAIZE,
+        size: PAGESIZE,
         page: currentPage
       }
       try {
-        const { data: { content } } = await getInqueryList(params)
+        const { data: { content, totalElements } } = await getInqueryList(params)
         this.records = content
+        this.total = totalElements
         this.loading = false
       } catch (error) {
         this.loading = false
@@ -162,9 +160,10 @@ export default {
 
 <style lang='scss' scoped>
   .bw-price-record{
-    height: 100%;
+    min-height: 100%;
     background: #fff;
     margin: 10px;
+    box-sizing: border-box;
   }
   // .label{
   //   display: inline-block;
