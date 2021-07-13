@@ -68,9 +68,6 @@
           {{ !!row.pause ? "开启" : "暂停" }}
         </el-button>
         <el-button type="text"
-                   :disabled="
-                      row.frontCampaignStatus === CAMPAIGN_STATUS_OFFLINE
-                    "
                    @click="optimizeGroup(row)">优化</el-button>
         <el-button type="text"
                    :disabled="
