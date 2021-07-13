@@ -124,7 +124,7 @@
                          ref="contract" />
       <el-button class="add-group-btn"
                  type="primary"
-                 :disabled="isSales || isCampaignOffline"
+                 :disabled="isSales || isCampaignOffline || isGroupOffline"
                  :loading="lock.materialPictures || lock.group"
                  @click="updateMaterialThenGroup">更新单元</el-button>
     </section>
@@ -157,7 +157,8 @@ import {
   GROUP_STATUS_PENDING_AUDIT,
   SEM_PLATFORM_SOGOU,
   LANDING_TYPE_GW,
-  LANDING_TYPE_AD
+  LANDING_TYPE_AD,
+  GROUP_STATUS_OFFLINE
 } from 'constant/fengming'
 import clone from 'clone'
 import uuid from 'uuid/v4'
@@ -251,8 +252,14 @@ export default {
     isCampaignOffline () {
       return this.originGroup.frontCampaignStatus === CAMPAIGN_STATUS_OFFLINE
     },
+    isGroupOffline () {
+      return this.originGroup.frontGroupStatus === GROUP_STATUS_OFFLINE
+    },
     isGroupAudit () {
       return this.originGroup.frontGroupStatus === GROUP_STATUS_PENDING_AUDIT
+    },
+    isSales () {
+      return isSales(this.userInfo.roles)
     },
     landingAndCreativesDisabled () {
       // TIP 审核中：神马，百度，360落地页和创意应该可以修改；搜狗无法修改

@@ -49,8 +49,8 @@ const STATUS_CAMPAIGN_BUDGET_NOT_ENOUGH = 5 // 计划日预算不足
 const STATUS_ONLINE = 100 // 计划投放中
 const CAMPAIGN_STATUS_OPTS = Object.freeze([
   {
-    label: '计划下线',
-    value: STATUS_OFFLINE
+    label: '计划投放中',
+    value: STATUS_ONLINE
   },
   {
     label: '无效的投放期',
@@ -73,8 +73,8 @@ const CAMPAIGN_STATUS_OPTS = Object.freeze([
     value: STATUS_CAMPAIGN_BUDGET_NOT_ENOUGH
   },
   {
-    label: '计划投放中',
-    value: STATUS_ONLINE
+    label: '计划下线',
+    value: STATUS_OFFLINE
   }
 ])
 
@@ -82,8 +82,8 @@ const CAMPAIGN_STATUS_OPTS = Object.freeze([
 const STATUS_REJECT = -20 // 审核驳回
 const GROUP_STATUSES_OPTS = Object.freeze([
   {
-    label: '下线',
-    value: STATUS_OFFLINE
+    label: '推广中/审核中',
+    value: STATUS_ONLINE
   },
   {
     label: '暂停',
@@ -94,8 +94,8 @@ const GROUP_STATUSES_OPTS = Object.freeze([
     value: STATUS_REJECT
   },
   {
-    label: '推广中/审核中',
-    value: STATUS_ONLINE
+    label: '下线',
+    value: STATUS_OFFLINE
   }
 ])
 export {
@@ -105,5 +105,6 @@ export {
   OPTIMIZATION,
   CAMPAIGN_STATUSES,
   GROUP_STATUSES,
+  STATUS_OFFLINE,
   filterOptimization
 }
