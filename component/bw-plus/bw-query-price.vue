@@ -20,7 +20,7 @@
                         </el-col>
                         <el-col :span="5" :push="13">
                           <div class="submit">
-                            <h3>总价： {{currentPrice.price}}元</h3>
+                            <h3>总价： {{f2y(currentPrice.price)}}元</h3>
                             <el-popconfirm
                               title="确定提交审核吗？"
                               @confirm="submit"
@@ -53,6 +53,7 @@
 import { InqueryForm, KeywordHotDetail, Title, InqueryResult, DiamondShopWelfare, BwPlusDialog } from './components'
 import { querySystemResult, commit } from 'api/biaowang-plus'
 import { APPLY_TYPE_NORMAL, APPLY_TYPE_ERROR, APPLY_TYPE_OVERHEAT, APPLY_TYPE_ERROR_APPLY_TYPE_OVERHEAT } from 'constant/bw-plus'
+import { f2y } from 'util'
 export default {
   name: 'bw-plus-query-price',
   components: {
@@ -84,7 +85,8 @@ export default {
       },
       queryResult: {},
       currentPrice: {},
-      queryInfo: {}
+      queryInfo: {},
+      f2y
     }
   },
   methods: {
@@ -172,6 +174,7 @@ export default {
     }
    .box-card{
        margin: 10px;
+       padding: 30px;
    }
    .wefare-title{
      font-size: 18px;

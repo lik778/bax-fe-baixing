@@ -29,6 +29,8 @@
 import { getInqueryList, userChoose, preOrder } from 'api/biaowang-plus'
 import { APPLY_AUDIT_STATUS_OPTIONS, APPLY_TYPE_NORMAL } from 'constant/bw-plus'
 import { BwRecordsForm, BwRecordsTable, InqueryResult } from './components'
+import { normalizeRoles } from 'util/role'
+import { orderServiceHost } from 'config'
 import pick from 'lodash.pick'
 import { f2y } from 'util'
 const PAGEAIZE = 10
@@ -43,6 +45,11 @@ export default {
     allAreas: {
       type: Array,
       required: true
+    },
+    userInfo: {
+      type: Object,
+      default: () => {},
+      require: true
     }
   },
   data () {
@@ -61,13 +68,26 @@ export default {
       currentPage: 0,
       dialogVisible: false,
       activeRecord: [],
-      currentPrice: {}
+      currentPrice: {},
+      orderPayUrl: ''
     }
   },
   async mounted () {
     await this.getRecord()
   },
   methods: {
+    isBxUser () {
+      const roles = normalizeRoles(this.userInfo.roles)
+      return roles.includes('BAIXING_USER')
+    },
+    isBxSales () {
+      const roles = normalizeRoles(this.userInfo.roles)
+      return roles.includes('BAIXING_SALES')
+    },
+    isAgentAccounting () {
+      const roles = normalizeRoles(this.userInfo.roles)
+      return roles.includes('AGENT_ACCOUNTING')
+    },
     handleSizeChange () {
 
     },
@@ -123,8 +143,15 @@ export default {
     },
     async preOrder (record) {
       const { id: applyId } = record
-      const { code, data: { tradeSeq } } = await preOrder({ applyId })
-      console.log(tradeSeq)
+      const { code, data: { preTradeId } } = await preOrder({ applyId })
+      if (this.isBxUser) {
+        location.href = `${orderServiceHost}/?appId=105&seq=${preTradeId}`
+      } else if (this.isAgentAccounting) {
+        location.href = `${orderServiceHost}/?appId=105&seq=${preTradeId}&agentId=${this.userInfo.id}`
+      } else if (this.isBxSales) {
+        this.orderPayUrl = `${orderServiceHost}/?appId=105&seq=${preTradeId}`
+      }
+      console.log(preTradeId)
       if (code === 0) {
         await this.getRecord()
       }

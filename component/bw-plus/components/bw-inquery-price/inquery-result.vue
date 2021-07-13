@@ -69,7 +69,7 @@ export default {
   },
   data () {
     return {
-      current: '',
+      current: this.tableData[0].bothSeven,
       f2y
     }
   },
@@ -78,6 +78,9 @@ export default {
       this.current = value
       this.$emit('getValue', value)
     }
+  },
+  mounted () {
+    this.cellClick(this.current)
   }
 }
 </script>
