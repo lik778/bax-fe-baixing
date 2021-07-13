@@ -34,6 +34,27 @@
         <span><i class="el-icon-info" />暂无站外推广数据概览</span>
       </div>
     </div>
+    <div class="layout-right">
+      <h5 class="layout-header">
+        授权操作
+      </h5>
+      <div class="layout-content">
+        <p class="item">站外推广：<el-button @click="authorization" type="danger" size="medium">申请授权</el-button></p>
+      </div>
+    </div>
+    <el-dialog
+      title="授权"
+      :visible.sync="dialogVisible"
+      width="40%"
+    >
+      <p class="content-item">1.发送授权链接到预留手机号码</p>
+      <p class="content-item">接收号码： <el-input class="number-input" v-model="phoneNumber" placeholder="请输入内容"></el-input> <el-button @click="send" size="medium">确认发送</el-button></p>
+      <p class="content-item">或</p>
+      <p class="content-item">2.复制授权链接发送给用户完成授权</p>
+      <p class="content-item">http://www.baixing.com/crm/transfer/?transferId……<el-button size="medium">复制链接</el-button></p>
+      <p class="tips content-item">注：授权链接有效期为72小时，请尽快联系客户授权。</p>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -51,7 +72,9 @@ export default {
   data () {
     return {
       reportPrefix: '',
-      radarScores: []
+      radarScores: [],
+      dialogVisible: false,
+      phoneNumber: ''
     }
   },
   fromMobx: {
@@ -92,7 +115,11 @@ export default {
           statuses: CNT_REJECTED_CODE
         }
       })
-    }
+    },
+    authorization () {
+      this.dialogVisible = true
+    },
+    send () {}
   }
 }
 </script>
@@ -170,5 +197,20 @@ export default {
   & .text {
     margin-bottom: 20px;
   }
+}
+.layout-content{
+  .item{
+    margin: 20px 0;
+  }
+}
+.content-item{
+  margin-bottom: 10px;
+}
+.number-input{
+  width: 60%;
+}
+.tips{
+  font-size: 12px;
+  color: #ff4f49;
 }
 </style>
