@@ -13,7 +13,7 @@
       @upload-success="handleUploadSuccess">
       <el-button
         class="upload-btn"
-        :disabled="value.length >= limit"
+        :disabled="value.length >= limit || readOnly"
         @click="$evt => uploadFile()">
         <i class="el-icon el-icon-plus" />
       </el-button>
@@ -72,7 +72,8 @@ export default {
   },
   props: {
     value: Array,
-    limit: Number
+    limit: Number,
+    readOnly: Boolean
   },
   model: {
     prop: 'value',

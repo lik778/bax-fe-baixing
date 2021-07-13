@@ -29,6 +29,7 @@
           </div>
           <div class="content">
             <images-con
+              :read-only="readOnly"
               v-model="forms.pc"
               :key="forms.type"
               :limit="picNumLimit('pc')"
@@ -61,6 +62,7 @@
           </div>
           <div class="content">
             <images-con
+              :read-only="readOnly"
               v-model="forms.wap"
               :key="forms.type"
               :limit="picNumLimit('wap')"
@@ -104,7 +106,8 @@ export default {
           wap: []
         }
       }
-    }
+    },
+    readOnly: Boolean
   },
   model: {
     prop: 'value',

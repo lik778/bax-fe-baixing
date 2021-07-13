@@ -42,6 +42,7 @@
       </header>
       <div class="content">
         <material-pictures-comp v-model="materialPictures"
+                                :read-only="isSales || isCampaignOffline || isGroupOffline"
                                 :initValue="materialPicturesInits"/>
       </div>
     </section>
@@ -87,6 +88,7 @@
                            :origin-keywords="originKeywords"
                            :negative-words="group.negativeWords"
                            :search-word="searchWord"
+                           :disabled="isSales || isCampaignOffline || isGroupOffline"
                            @update-origin-keywords="(changeTag, v) => originKeywords = originKeywords.map(o => ({ ...o, [changeTag]: v }))"
                            @update-keywords="(words) => (keywords = words)"
                            @remove-keywords="(idx) => keywords.splice(idx, 1)" />
