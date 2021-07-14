@@ -29,7 +29,7 @@
       <el-table-column align="center" fixed="right" label="报价">
         <template slot-scope="{ row }">
           <span v-if="row.applyType === APPLY_TYPE_NORMAL || row.price">{{f2y(row.price)}}元</span>
-          <el-button v-else :disabled="row.status === APPLY_AUDIT_STATUS_REJECT" type="text" @click="reviewPrice(row)">查看</el-button>
+          <el-button v-else :disabled="row.status != APPLY_AUDIT_STATUS_PASS " type="text" @click="reviewPrice(row)">查看</el-button>
         </template>
       </el-table-column>
       <el-table-column align="center" fixed="right" label="操作">

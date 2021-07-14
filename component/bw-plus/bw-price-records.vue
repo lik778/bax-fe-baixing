@@ -21,7 +21,7 @@
       layout="total, prev, pager, next"
       :total="total">
     </el-pagination>
-    <PreOrderDetail :dialogVisible="isPreInfo"/>
+    <PreOrderDetail @preOrder="preOrder" @cancel="isPreInfo=false" :allAreas="allAreas" :dialogVisible="isPreInfo" :preInfo="preInfo"/>
   </el-card>
 </template>
 
@@ -30,9 +30,9 @@ import { getInqueryList, userChoose, preOrder, preInfo } from 'api/biaowang-plus
 import { APPLY_AUDIT_STATUS_OPTIONS, APPLY_TYPE_NORMAL } from 'constant/bw-plus'
 import { BwRecordsForm, BwRecordsTable, InqueryResult, PreOrderDetail } from './components'
 import { normalizeRoles } from 'util/role'
-import { orderServiceHost } from 'config'
 import pick from 'lodash.pick'
 import { f2y } from 'util'
+import { Message } from 'element-ui'
 const PAGESIZE = 10
 export default {
   name: 'bw-plus-price-records',
@@ -68,10 +68,11 @@ export default {
       total: 0,
       currentPage: 0,
       dialogVisible: false,
-      activeRecord: [],
+      activeRecord: {},
       currentPrice: {},
       orderPayUrl: '',
-      isPreInfo: false
+      isPreInfo: false,
+      preInfo: {}
     }
   },
   async mounted () {
@@ -134,6 +135,7 @@ export default {
       }
       const { code } = await userChoose(params)
       if (code === 0) {
+        this.dialogVisible = false
         this.$message({
           message: '恭喜你，操作成功，去提单吧！',
           type: 'success'
@@ -142,25 +144,37 @@ export default {
         this.getRecord()
       }
     },
-    async preOrder (record) {
-      const { id: applyId } = record
-      const { code, data: { preTradeId } } = await preOrder({ applyId })
-      if (this.isBxUser) {
-        location.href = `${orderServiceHost}/?appId=105&seq=${preTradeId}`
-      } else if (this.isAgentAccounting) {
-        location.href = `${orderServiceHost}/?appId=105&seq=${preTradeId}&agentId=${this.userInfo.id}`
-      } else if (this.isBxSales) {
-        this.orderPayUrl = `${orderServiceHost}/?appId=105&seq=${preTradeId}`
-      }
+    async preOrder () {
+      const loading = this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
+      const { id: applyId } = this.activeRecord
+      const { code, data: { url } } = await preOrder({ applyId })
+      loading.close()
       if (code === 0) {
-        await this.getRecord()
+        this.$copyText(url).then(async (e) => {
+          Message.success('提单链接已复制到剪切板')
+          await this.getRecord()
+        }, function (e) {
+        })
       }
     },
     async getPreInfo (record) {
+      const loading = this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
       const { id: applyId } = record
+      this.activeRecord = record
       this.isPreInfo = true
       const { data } = await preInfo({ applyId })
-      console.log(data)
+      loading.close()
+      this.preInfo = data
     }
   }
 }
@@ -173,22 +187,4 @@ export default {
     margin: 10px;
     box-sizing: border-box;
   }
-  // .label{
-  //   display: inline-block;
-  //   height: 100%;
-  //   line-height: 100%;
-  //   white-space: nowrap;
-  //   display: flex;
-  //   align-items: center;
-  //   font-size: 14px;
-  // }
-  // .el-select{
-  //   width: 100%;
-  // }
-  // .button-group{
-  //   display: flex;
-  // }
-  // .el-row{
-  //   margin-bottom: 30px;
-  // }
 </style>
