@@ -1,6 +1,9 @@
 <template>
   <el-dialog :visible="visible" title="提示" @close="handleClose" class="core-cities-dialog" width="580px">
     <div>请选择用户所在地：</div>
+    <!-- <slot>
+      <el-input v-model="search" @click="handleSearch"> </el-input>
+    </slot> -->
     <div class="city-container clearfix">
       <span
         v-for="item in displayAreas"
