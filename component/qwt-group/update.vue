@@ -42,7 +42,6 @@
       </header>
       <div class="content">
         <material-pictures-comp v-model="materialPictures"
-                                :read-only="isSales || isCampaignOffline || isGroupOffline"
                                 :initValue="materialPicturesInits"/>
       </div>
     </section>
