@@ -1,7 +1,7 @@
 <template>
   <el-card class="bw-price-record">
     <BwRecordsForm @search="search"/>
-    <BwRecordsTable @preOrder="preOrder" @reviewPrice="reviewPrice" :loading="loading" :records="records" :allAreas="allAreas"/>
+    <BwRecordsTable @preOrder="getPreInfo" @reviewPrice="reviewPrice" :loading="loading" :records="records" :allAreas="allAreas"/>
     <el-dialog
       title="查看"
       :visible.sync="dialogVisible"
@@ -21,13 +21,14 @@
       layout="total, prev, pager, next"
       :total="total">
     </el-pagination>
+    <PreOrderDetail :dialogVisible="isPreInfo"/>
   </el-card>
 </template>
 
 <script>
-import { getInqueryList, userChoose, preOrder } from 'api/biaowang-plus'
+import { getInqueryList, userChoose, preOrder, preInfo } from 'api/biaowang-plus'
 import { APPLY_AUDIT_STATUS_OPTIONS, APPLY_TYPE_NORMAL } from 'constant/bw-plus'
-import { BwRecordsForm, BwRecordsTable, InqueryResult } from './components'
+import { BwRecordsForm, BwRecordsTable, InqueryResult, PreOrderDetail } from './components'
 import { normalizeRoles } from 'util/role'
 import { orderServiceHost } from 'config'
 import pick from 'lodash.pick'
@@ -38,7 +39,8 @@ export default {
   components: {
     BwRecordsForm,
     BwRecordsTable,
-    InqueryResult
+    InqueryResult,
+    PreOrderDetail
   },
   props: {
     allAreas: {
@@ -68,7 +70,8 @@ export default {
       dialogVisible: false,
       activeRecord: [],
       currentPrice: {},
-      orderPayUrl: ''
+      orderPayUrl: '',
+      isPreInfo: false
     }
   },
   async mounted () {
@@ -149,10 +152,15 @@ export default {
       } else if (this.isBxSales) {
         this.orderPayUrl = `${orderServiceHost}/?appId=105&seq=${preTradeId}`
       }
-      console.log(preTradeId)
       if (code === 0) {
         await this.getRecord()
       }
+    },
+    async getPreInfo (record) {
+      const { id: applyId } = record
+      this.isPreInfo = true
+      const { data } = await preInfo({ applyId })
+      console.log(data)
     }
   }
 }

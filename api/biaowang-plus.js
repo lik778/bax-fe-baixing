@@ -175,3 +175,16 @@ export async function preOrder (params) {
     .json()
   return body
 }
+
+/**
+ * @param { object } params
+ * @param { number } params.applyId
+ * @returns
+ */
+export async function preInfo (params) {
+  const body = await biaowangPlus
+    .get('/apply/user/pre-info')
+    .query(params)
+    .json()
+  return body
+}
