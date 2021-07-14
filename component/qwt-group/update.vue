@@ -254,6 +254,9 @@ export default {
     isGroupAudit () {
       return this.originGroup.frontGroupStatus === GROUP_STATUS_PENDING_AUDIT
     },
+    isSales () {
+      return isSales(this.userInfo.roles)
+    },
     landingAndCreativesDisabled () {
       // TIP 审核中：神马，百度，360落地页和创意应该可以修改；搜狗无法修改
       if (this.promotion.source === SEM_PLATFORM_SOGOU) {
