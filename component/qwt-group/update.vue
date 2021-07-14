@@ -87,7 +87,6 @@
                            :origin-keywords="originKeywords"
                            :negative-words="group.negativeWords"
                            :search-word="searchWord"
-                           :disabled="isSales || isCampaignOffline || isGroupOffline"
                            @update-origin-keywords="(changeTag, v) => originKeywords = originKeywords.map(o => ({ ...o, [changeTag]: v }))"
                            @update-keywords="(words) => (keywords = words)"
                            @remove-keywords="(idx) => keywords.splice(idx, 1)" />
@@ -158,8 +157,7 @@ import {
   GROUP_STATUS_PENDING_AUDIT,
   SEM_PLATFORM_SOGOU,
   LANDING_TYPE_GW,
-  LANDING_TYPE_AD,
-  GROUP_STATUS_OFFLINE
+  LANDING_TYPE_AD
 } from 'constant/fengming'
 import clone from 'clone'
 import uuid from 'uuid/v4'
@@ -252,9 +250,6 @@ export default {
     },
     isCampaignOffline () {
       return this.originGroup.frontCampaignStatus === CAMPAIGN_STATUS_OFFLINE
-    },
-    isGroupOffline () {
-      return this.originGroup.frontGroupStatus === GROUP_STATUS_OFFLINE
     },
     isGroupAudit () {
       return this.originGroup.frontGroupStatus === GROUP_STATUS_PENDING_AUDIT

@@ -63,7 +63,6 @@
                 <el-button type="primary"
                            size="mini"
                            :loading="loading"
-                           :disabled="disabled"
                            @click="changeAllWordPrice">确定
                 </el-button>
               </div>
@@ -116,7 +115,6 @@
                 <el-button type="primary"
                            size="mini"
                            :loading="loading"
-                           :disabled="disabled"
                            @click="changeAllMatchType">确定
                 </el-button>
               </div>
@@ -244,10 +242,6 @@ export default {
       default () {
         return []
       }
-    },
-    disabled: {
-      type: Boolean,
-      default: false
     }
   },
   computed: {
