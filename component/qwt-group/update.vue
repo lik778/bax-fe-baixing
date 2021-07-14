@@ -126,7 +126,7 @@
                          ref="contract" />
       <el-button class="add-group-btn"
                  type="primary"
-                 :disabled="isSales || isCampaignOffline || isGroupOffline"
+                 :disabled="isSales || isCampaignOffline"
                  :loading="lock.materialPictures || lock.group"
                  @click="updateMaterialThenGroup">更新单元</el-button>
     </section>
