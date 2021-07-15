@@ -67,3 +67,10 @@ export const SERVICE_DAYS = Object.freeze({
   30: '30天'
 })
 export const THIRTY_DAYS = 30
+
+export const OPTION_STATUS_AWAIT_OPERATION = 0 // 待运营处理
+export const OPTION_STATUS_AWAIT_USER = 10 // 待用户选择
+export const OPTION_STATUS_AWAIT_TIDAN = 20 // 待提单
+export const OPTION_STATUS_COPY_URL = 30 // 可复制链接
+export const OPTION_STATUS_BUY = 40 // 已购买
+export const OPTION_STATUS_EXPIRED = 50 // 已过期

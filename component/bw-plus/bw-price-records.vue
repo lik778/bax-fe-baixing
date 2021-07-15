@@ -157,6 +157,7 @@ export default {
       if (code === 0) {
         this.$copyText(url).then(async (e) => {
           Message.success('提单链接已复制到剪切板')
+          this.isPreInfo = false
           await this.getRecord()
         }, function (e) {
         })

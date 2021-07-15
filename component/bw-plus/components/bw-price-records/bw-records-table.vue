@@ -34,17 +34,22 @@
       </el-table-column>
       <el-table-column align="center" fixed="right" label="操作">
         <template slot-scope="{ row }">
-          <el-button @click="preOrder(row)" :disabled="row.tradeSeq || row.status != APPLY_AUDIT_STATUS_PASS || !row.price" type="text">提单</el-button>
+          <el-button @click="preOrder(row)" :disabled="row.operationStatus != OPTION_STATUS_AWAIT_TIDAN" type="text">提单</el-button>
+          <BaxClipboard v-if="row.operationStatus === OPTION_STATUS_COPY_URL" :content="row.url"/>
         </template>
       </el-table-column>
     </el-table>
 </template>
 <script>
-import { APPLY_AUDIT_STATUS_OPTIONS, APPLY_AUDIT_STATUS_PENDING, APPLY_AUDIT_STATUS_REJECT, APPLY_TYPE_NORMAL, DEVICE, SCHEDULE_TYPE, SERVICE_DAYS, STATUS_MAP, APPLY_AUDIT_STATUS_PASS } from 'constant/bw-plus'
+import { APPLY_AUDIT_STATUS_OPTIONS, APPLY_AUDIT_STATUS_PENDING, APPLY_AUDIT_STATUS_REJECT, APPLY_TYPE_NORMAL, DEVICE, SCHEDULE_TYPE, SERVICE_DAYS, STATUS_MAP, APPLY_AUDIT_STATUS_PASS, OPTION_STATUS_AWAIT_TIDAN, OPTION_STATUS_COPY_URL } from 'constant/bw-plus'
 import { f2y, getCnName } from 'util'
 import dayjs from 'dayjs'
+import BaxClipboard from 'com/widget/clipboard.vue'
 export default {
   name: 'bw-records-table',
+  components: {
+    BaxClipboard
+  },
   props: {
     records: {
       type: Array,
@@ -68,7 +73,9 @@ export default {
       STATUS_MAP,
       APPLY_AUDIT_STATUS_REJECT,
       APPLY_AUDIT_STATUS_OPTIONS,
-      APPLY_AUDIT_STATUS_PASS
+      APPLY_AUDIT_STATUS_PASS,
+      OPTION_STATUS_AWAIT_TIDAN,
+      OPTION_STATUS_COPY_URL
     }
   },
   methods: {
