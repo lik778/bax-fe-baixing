@@ -1,12 +1,13 @@
 <template>
   <el-dialog :visible="visible" title="提示" @close="handleClose" class="core-cities-dialog" width="580px">
-    <div>请选择用户所在地：</div>
-    <!-- <slot>
-      <el-input v-model="search" @click="handleSearch"> </el-input>
-    </slot> -->
+    <el-form label-width="140px">
+      <el-form-item label="请选择用户所在地：">
+        <el-input v-model="search"/>
+      </el-form-item>
+    </el-form>
     <div class="city-container clearfix">
       <span
-        v-for="item in displayAreas"
+        v-for="item in areasOption"
         class="city"
         :class="{
           active: isSelected(item),
@@ -64,12 +65,10 @@ export default {
   },
   data () {
     return {
-      coreCities: []
-    }
-  },
-  computed: {
-    displayAreas () {
-      return this.areas.concat([OTHER_CITY_ENUM])
+      coreCities: [],
+      search: '',
+      OTHER_CITY_ENUM,
+      areasOption: []
     }
   },
   methods: {
@@ -114,6 +113,17 @@ export default {
       handler (val) {
         this.coreCities = val
       }
+    },
+    areas: {
+      deep: true,
+      immediate: true,
+      handler (val) {
+        this.areasOption = val.concat([OTHER_CITY_ENUM])
+      }
+    },
+    search: function (newQuestion, oldQuestion) {
+      const result = this.areas.filter(city => getCnName(city, this.allAreas).indexOf(newQuestion) !== -1)
+      this.areasOption = [...result]
     }
   }
 }

@@ -5,6 +5,11 @@
                 <el-col :span="8">
                     <el-input @change="checkKeyword" type="textarea" v-model="form.words" rows="6"></el-input>
                 </el-col>
+                <el-col v-if="!checkResult.passed" :span="8" :push="1">
+                  <ul class="reject-result">
+                    <li v-for="(item, index) in Object.keys(checkResult.rejectedWordWithReason)" :key="index">{{index+1}}、{{item}}{{checkResult.rejectedWordWithReason[item]}}</li>
+                  </ul>
+                </el-col>
             </el-form-item>
             <el-form-item label="推广行业" prop="industry">
               <el-col :span="8">
@@ -91,10 +96,14 @@ export default {
       coreCityLimit: 1,
       industryList: [],
       rules: {
-        words: [{ required: true, message: '请输入推广关键词', trigger: 'blur' }],
+        words: [{ validator: this.checkWord, trigger: 'blur' }],
         industry: [{ required: true, message: '请选择推广行业', trigger: 'change' }],
         cities: [{ required: true, message: '请选择推广地域', trigger: 'change' }],
         coreCities: [{ required: true, message: '请选择用户所在地', trigger: 'change' }]
+      },
+      checkResult: {
+        passed: true,
+        rejectedWordWithReason: {}
       }
     }
   },
@@ -102,6 +111,17 @@ export default {
     await this.fetchAllIndustry()
   },
   methods: {
+    checkWord (rule, value, callback) {
+      if (!value) {
+        callback(new Error('请输入关键词'))
+      }
+      if (value && this.checkResult.passed) {
+        callback()
+      }
+      if (!this.checkResult.passed) {
+        callback(new Error('关键词风控审查不通过'))
+      }
+    },
     async fetchAllIndustry () {
       const { code, data: { industryList } } = await getAllIndustry()
       if (code === 0) {
@@ -128,20 +148,17 @@ export default {
       })
       const { words = '' } = this.form
       try {
-        const { code, data: { passed, rejectedWordWithReason } } = await checkKeyword({ keyWords: words.split(/[\s\n]/) })
+        const { code, data: { passed, rejectedWordWithReason } } = await checkKeyword({ keywords: words.split(/[\s\n]/) })
+        this.checkResult = {
+          passed,
+          rejectedWordWithReason
+        }
         loading.close()
-        if (code === 0) {
-          if (passed) {
-            this.$message({
-              message: '恭喜你，这是一条成功消息',
-              type: 'success'
-            })
-          } else {
-            this.$message({
-              message: rejectedWordWithReason,
-              type: 'success'
-            })
-          }
+        if (code !== 0) {
+          this.$message({
+            message: rejectedWordWithReason,
+            type: 'error'
+          })
         }
       } catch (error) {
         loading.close()
@@ -179,5 +196,12 @@ export default {
 <style lang="scss" scoped>
   .el-select{
     width: 100%;
+  }
+  .reject-result{
+    li{
+      margin: 6px 0;
+      color: #E6A23C;
+      line-height: 28px;
+    }
   }
 </style>
