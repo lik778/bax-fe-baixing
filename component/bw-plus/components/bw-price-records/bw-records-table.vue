@@ -41,7 +41,7 @@
     </el-table>
 </template>
 <script>
-import { APPLY_AUDIT_STATUS_OPTIONS, APPLY_AUDIT_STATUS_PENDING, APPLY_AUDIT_STATUS_REJECT, APPLY_TYPE_NORMAL, DEVICE, SCHEDULE_TYPE, SERVICE_DAYS, STATUS_MAP, APPLY_AUDIT_STATUS_PASS, OPTION_STATUS_AWAIT_TIDAN, OPTION_STATUS_COPY_URL } from 'constant/bw-plus'
+import { APPLY_AUDIT_STATUS_OPTIONS, APPLY_AUDIT_STATUS_PENDING, APPLY_AUDIT_STATUS_REJECT, APPLY_TYPE_NORMAL, DEVICE, SCHEDULE_TYPE, STATUS_MAP, APPLY_AUDIT_STATUS_PASS, OPTION_STATUS_AWAIT_TIDAN, OPTION_STATUS_COPY_URL } from 'constant/bw-plus'
 import { f2y, getCnName } from 'util'
 import dayjs from 'dayjs'
 import BaxClipboard from 'com/widget/clipboard.vue'
@@ -81,7 +81,7 @@ export default {
   methods: {
     daysFormater (...args) {
       const [,, days] = args
-      return SERVICE_DAYS[days] || '-'
+      return days > 0 ? `${days}天` : '-'
     },
     scheduleTypeFormater (...args) {
       const [,, cellValue] = args

@@ -61,7 +61,7 @@ export const SCHEDULE_TYPE = Object.freeze({
   724: '7天*24小时'
 })
 export const SERVICE_DAYS = Object.freeze({
-  360: '360天',
+  365: '365天',
   180: '180天',
   90: '90天',
   30: '30天'
