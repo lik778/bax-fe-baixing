@@ -115,7 +115,7 @@ export default {
       if (!value) {
         callback(new Error('请输入关键词'))
       }
-      if (value && this.checkResult.passed) {
+      if (value && this.checkKeyword()) {
         callback()
       }
       if (!this.checkResult.passed) {
@@ -159,9 +159,12 @@ export default {
             message: rejectedWordWithReason,
             type: 'error'
           })
+          return false
         }
+        return true
       } catch (error) {
         loading.close()
+        return false
       }
     },
     removeArea (area) {
