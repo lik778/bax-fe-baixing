@@ -55,7 +55,8 @@ import {
   Notification,
   Breadcrumb,
   BreadcrumbItem,
-  Alert
+  Alert,
+  OptionGroup
 } from 'element-ui'
 import '../cssbase/index.scss'
 import { reaction } from 'mobx'
@@ -127,6 +128,7 @@ Vue.use(Select)
 Vue.use(Option)
 Vue.use(Button)
 Vue.use(ButtonGroup)
+Vue.use(OptionGroup)
 Vue.use(Table)
 Vue.use(TableColumn)
 Vue.use(DatePicker)

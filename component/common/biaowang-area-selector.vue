@@ -7,6 +7,26 @@
     :show-close="false"
   >
     <main class="main">
+        <el-select filterable :value="searchArea" @change="searchFilter($event)" placeholder="请选择">
+          <el-option-group
+            v-for="(province, i) in topAreas"
+            :key="i"
+            :label="province.label"
+            >
+            <el-option
+              v-for="(area, i) in province.areas"
+              :key="i"
+              :label="area.label"
+              :value="area">
+            </el-option>
+          </el-option-group>
+        </el-select>
+        <el-tag type="success" closable class="kw-tag"
+                        v-for="area in selectedAreas" :key="area"
+                        @close="removeArea(area)"
+                >
+                {{ formatArea(area) }}
+        </el-tag>
         <div v-for="(province, i) in topAreas" :key="i">
           <el-checkbox class="checkbox-item" v-model="province.checked" @change="provinceCheckedChange(province)">
             <span :class="{ selected: province.checked }">{{ province.label }}</span>
@@ -37,6 +57,8 @@
 </template>
 
 <script>
+import { OTHER_CITY_ENUM } from 'com/common/bw/core-cities-dialog'
+import { getCnName } from 'util'
 import isequal from 'lodash.isequal'
 
 const specialCities = [
@@ -84,7 +106,8 @@ export default {
       selectedAreas: [...this.areas],
       quanguoChecked: false,
       cityProvinceMapping: {},
-      topAreas: []
+      topAreas: [],
+      searchArea: ''
     }
   },
   watch: {
@@ -188,6 +211,10 @@ export default {
         this.selectedAreas.splice(index, 1)
       }
     },
+    searchFilter (area) {
+      this.searchArea = area.label
+      this.cityChecked(area)
+    },
     setQuanguoChecked () {
       this.quanguoChecked = (this.topAreas.filter(x => x.checked).length === this.topAreas.length)
     },
@@ -211,6 +238,24 @@ export default {
     ok () {
       const areas = this.selectedAreas.concat([])
       this.$emit('ok', [...areas])
+    },
+    removeArea (id) {
+      const area = this.allAreas.find(y => String(y.id) === String(id))
+      if (area.areaType === 1 && specialCities.includes(area.name)) {
+        area.parent = 'zhixiashi'
+      }
+      const province = this.topAreas.find(y => y.id === area.parent)
+      province.checked = false
+      this.setQuanguoChecked()
+      const targerArea = province.areas.find(y => String(y.id) === String(id))
+      targerArea.checked = false
+      const index = this.selectedAreas.findIndex(y => String(y) === String(id))
+      this.selectedAreas.splice(index, 1)
+    },
+    formatArea (name) {
+      return name === OTHER_CITY_ENUM
+        ? '其它'
+        : getCnName(name, this.allAreas)
     }
   }
 }

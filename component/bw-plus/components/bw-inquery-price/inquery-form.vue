@@ -13,14 +13,14 @@
             </el-form-item>
             <el-form-item label="推广行业" prop="industry">
               <el-col :span="8">
-                <el-select v-model="form.industry" placeholder="请选择">
-                    <el-option
-                        v-for="(item, index) in industryList"
-                        :key="index"
-                        :label="item.description"
-                        :value="item.name">
-                    </el-option>
-                </el-select>
+                <el-autocomplete
+                  placement="bottom-end"
+                  value-key="description"
+                  v-model="form.industry"
+                  :fetch-suggestions="querySearchAsync"
+                  placeholder="请输入内容"
+                  @select="handleSelect"
+                ></el-autocomplete>
               </el-col>
             </el-form-item>
             <el-form-item label="推广区域" prop="cities">
@@ -104,7 +104,8 @@ export default {
       checkResult: {
         passed: true,
         rejectedWordWithReason: {}
-      }
+      },
+      restaurants: []
     }
   },
   async mounted () {
@@ -191,6 +192,20 @@ export default {
     handleCoreCitiesConfirm (coreCities) {
       this.form.coreCities = coreCities
       this.coreCitiesDialogVisible = false
+    },
+    querySearchAsync (queryString, cb) {
+      const industryList = this.industryList
+      const results = queryString ? industryList.filter(this.createFilter(queryString)) : industryList
+      // 调用 callback 返回建议列表的数据
+      cb(results)
+    },
+    createFilter (queryString) {
+      return (restaurant) => {
+        return (restaurant.description.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
+      }
+    },
+    handleSelect (item) {
+      console.log(item)
     }
   }
 }
