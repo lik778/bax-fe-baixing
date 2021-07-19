@@ -29,7 +29,15 @@
 </template>
 <script>
 export default {
-  name: 'authorization-page'
+  name: 'authorization-page',
+  data () {
+    return {
+      info: {}
+    }
+  },
+  methods: {
+    getInfo () {}
+  }
 }
 </script>
 <style lang="scss" scoped>
