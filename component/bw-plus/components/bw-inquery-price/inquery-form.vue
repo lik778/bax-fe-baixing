@@ -173,7 +173,7 @@ export default {
       // 用户所在地和推广区域联动
       this.form.coreCities = this.form.coreCities.filter(i => i !== area)
       // 更新视图
-      // this.$bus.$emit('updateBiaowangAreaSelectorView', area)
+      this.$bus.$emit('updateBiaowangAreaSelectorView', area)
     },
     formatArea (name) {
       return name === OTHER_CITY_ENUM
