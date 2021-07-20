@@ -122,7 +122,7 @@ export default {
       }
     },
     search: function (newQuestion, oldQuestion) {
-      const result = this.areas.filter(city => getCnName(city, this.allAreas).indexOf(newQuestion) !== -1)
+      const result = this.areas.concat([OTHER_CITY_ENUM]).filter(city => getCnName(city, this.allAreas).indexOf(newQuestion) !== -1)
       this.areasOption = [...result]
     }
   }

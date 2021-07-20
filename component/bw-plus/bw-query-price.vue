@@ -148,15 +148,28 @@ export default {
         cities: form.cities,
         coreCity: form.coreCities[0],
         industry: form.industry,
-        words: form.words.split(/[\s\n]/)
+        words: form.words.split(/[\s\n]/).filter(Boolean)
       }
       this.queryInfo = params
-      const { data } = await querySystemResult(params)
-      loading.close()
-      this.queryResult = data
-      this.$nextTick(() => {
-        this.$refs.viewScrollTop.scrollIntoView()
-      })
+      try {
+        const { data, code, message } = await querySystemResult(params)
+        if (code === 0) {
+          this.queryResult = data
+          this.$nextTick(() => {
+            this.$refs.viewScrollTop.scrollIntoView()
+          })
+        } else {
+          this.$message({
+            message: message,
+            type: 'warning'
+          })
+        }
+        loading.close()
+      } catch (error) {
+        loading.close()
+      } finally {
+        loading.close()
+      }
     },
     getCurrentPrice (value) {
       this.currentPrice = value

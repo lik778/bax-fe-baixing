@@ -119,6 +119,7 @@ export default {
       if (!this.checkResult.passed) {
         callback(new Error('关键词风控审查不通过'))
       }
+      callback()
     },
     async fetchAllIndustry () {
       const { code, data: { industryList } } = await getAllIndustry()
@@ -146,7 +147,7 @@ export default {
       })
       const { words = '' } = this.form
       try {
-        const { code, data: { passed, rejectedWordWithReason } } = await checkKeyword({ keywords: words.split(/[\s\n]/) })
+        const { code, data: { passed, rejectedWordWithReason } } = await checkKeyword({ keywords: words.split(/[\s\n]/).filter(Boolean) })
         this.checkResult = {
           passed,
           rejectedWordWithReason
