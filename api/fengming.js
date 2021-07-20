@@ -759,12 +759,27 @@ function fmtWordsByContent (words) {
 
 /**
  * @param {Object} params
- * @param {number} params.clientId
+ * @param {number} params.userId
  * @returns
  */
 export async function prepareAuthorize (params) {
   const body = await fengming
     .get('/agent_operation/prepareAuthorize')
+    .query(reverseCamelcase(params))
+    .json()
+  return body
+}
+
+/**
+ * @param {object} params
+ * @param { number } params.userId
+ * @param { string } params.url
+ * @param { string } params.mobile
+ * @returns
+ */
+export async function sendMessage (params) {
+  const body = await fengming
+    .get('/agent_operation/sendMessage')
     .query(reverseCamelcase(params))
     .json()
   return body

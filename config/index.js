@@ -14,7 +14,7 @@ const production = {
 }
 
 const development = {
-  fengmingApiHost: '/devApi/fengmingx',
+  fengmingApiHost: '/devApi',
   baxApiHost: '/bax',
   kaApiHost: '/ka/api/admin',
   biaowangApiHost: '/phoenixs/api',

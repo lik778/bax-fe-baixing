@@ -60,7 +60,7 @@
 
 <script>
 import store from './store'
-import { prepareAuthorize } from 'api/fengming'
+import { prepareAuthorize, sendMessage } from 'api/fengming'
 const formatPrice = (p) => {
   return p ? (p / 100).toFixed(2) : 0
 }
@@ -80,6 +80,10 @@ export default {
   },
   fromMobx: {
     fengmingData: () => store.fengmingData
+  },
+  mounted () {
+    document.cookie = document.cookie + 'source=optimizer;'
+    console.log('===', document.cookie)
   },
   computed: {
     reportData () {
@@ -118,12 +122,17 @@ export default {
       })
     },
     async authorization () {
-      const { query: { user_id: clientId } } = this.$route
-      const { data } = await prepareAuthorize({ clientId })
-      console.log(data)
+      const { query: { user_id: userId } } = this.$route
+      const { data } = await prepareAuthorize({ userId })
+      this.phoneNumber = data
       this.dialogVisible = true
     },
-    send () {}
+    async send () {
+      const { query: { user_id: userId } } = this.$route
+      const { phoneNumber: mobile } = this
+      const url = 'www'
+      await sendMessage({ userId, mobile, url })
+    }
   }
 }
 </script>
