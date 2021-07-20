@@ -17,9 +17,6 @@
         label="移动端热度">
         </el-table-column>
     </el-table>
-    <footer>
-      <el-button type="danger" size="small" round>展开更多</el-button>
-    </footer>
   </section>
 </template>
 

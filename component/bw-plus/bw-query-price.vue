@@ -31,7 +31,7 @@
                         </el-col>
                       </el-row>
                     </section>
-                    <section v-if="queryResult.error || queryResult.overHeat || queryResult.industryError">
+                    <section class="footer" v-if="queryResult.error || queryResult.overHeat || queryResult.industryError">
                       <p v-if="!queryResult.error && queryResult.overHeat">{{queryResult.overHeatWords.join("、")}}热度>500，暂无报价，请申请人工报价</p>
                       <p v-if="queryResult.error && !queryResult.overHeat">{{queryResult.overHeatWords.join("、")}}未获取到热度，请重试或申请人工报价</p>
                       <p v-if="queryResult.error && queryResult.overHeat">{{queryResult.overHeatWords.join("、")}}热度>500，{{queryResult.errorWords.join("、")}}未获取到热度，请申请人工报价</p>
@@ -208,4 +208,9 @@ export default {
         margin-bottom: 20px;
       }
    }
+  //  .footer{
+  //    display: flex;
+  //    justify-content: flex-start;
+  //    align-items: center;
+  //  }
 </style>
