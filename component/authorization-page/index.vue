@@ -2,7 +2,7 @@
     <div class="authorization">
         <h4>授权函</h4>
         <main>
-            <p>为方便本人/本公司更有效地开展业务和使用百姓网提供的服务，特授权维护业务之贵司销售<span>张三 （3456）</span>代为管理账户，由其统一管理。</p>
+            <p>为方便本人/本公司更有效地开展业务和使用百姓网提供的服务，特授权维护业务之贵司销售<span>{{info.optimizer_name}} （{{info.optimizer_id}}）</span>代为管理账户，由其统一管理。</p>
             <h5>1.授权范围：代指下列指定事项外所有操作</h5>
             <p>
                 (1)可通过由本人/本公司告知的账户、密码进行登录；<br/>
@@ -22,12 +22,17 @@
             <p>本人/本公司确认以上授权系完全自愿，是本人的真实表达意思，且明确知悉上述行为可能带来的事实行为，愿意承担由此产生的一切法律后果。</p>
             <h5>5.生效：</h5>
             <p>本授权书自本人/本公司点击确认提交系统后即生效。</p>
-            <p>授权方：15800455990（账号：160341042）</p>
+            <p>授权方：{{info.client_mobile}}（账号：{{info.client_id}}）</p>
             <p>说明：授权函有效时间为72小时，超时后授权函将自动失效。</p>
+            <footer>
+                <button class="info">拒绝</button>
+                <button class="primary" @click="shouquan">授权</button>
+            </footer>
         </main>
     </div>
 </template>
 <script>
+import { checkUrlValid, authorize } from 'api/fengming'
 export default {
   name: 'authorization-page',
   data () {
@@ -35,8 +40,29 @@ export default {
       info: {}
     }
   },
+  async mounted () {
+    await this.getInfo()
+  },
   methods: {
-    getInfo () {}
+    async getInfo () {
+      // const { query: { user_id: userId } } = this.$route
+      const { data } = await checkUrlValid({ userId: 1 })
+      this.info = data
+    },
+    async shouquan () {
+      const userId = this.getQueryParam('user_id')
+      const code = this.getQueryParam('code')
+      const optimizerId = this.getQueryParam('optimizer_id')
+      const data = await authorize({ userId, code, optimizerId })
+      console.log(data)
+    },
+    getQueryParam (key) {
+      const queryList = window.location.search.substring(1).split('&')
+      for (let i = 0; i < queryList.length; i++) {
+        const pair = queryList[i].split('=')
+        if (pair[0] === key) { return pair[1] }
+      }
+    }
   }
 }
 </script>
@@ -56,6 +82,27 @@ export default {
         }
         h5{
             margin: 10px 0;
+        }
+    }
+    footer{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        button{
+            outline: none;
+            color: #FFFFFF;
+            border: none;
+            font-size: 14px;
+            border-radius: 4px;
+            width: 100px;
+            height: 40px;
+            margin: 10px;
+        }
+        .info{
+            background: #909399;
+        }
+        .primary{
+            background: #409EFF;
         }
     }
 </style>

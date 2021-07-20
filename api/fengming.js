@@ -784,3 +784,31 @@ export async function sendMessage (params) {
     .json()
   return body
 }
+
+/**
+ * @param {object} params
+ * @param {string} params.userId
+ * @returns
+ */
+export async function checkUrlValid (params) {
+  const body = await fengming
+    .get('/agent_operation/checkUrlValid')
+    .query(reverseCamelcase(params))
+    .json()
+  return body
+}
+
+/**
+ * @param {object} params
+ * @param { number } params.userId
+ * @param { number } params.optimizerId
+ * @param { code } params.code
+ * @returns
+ */
+export async function authorize (params) {
+  const body = await fengming
+    .post('/agent_operation/authorize')
+    .send(reverseCamelcase(params))
+    .json()
+  return body
+}
