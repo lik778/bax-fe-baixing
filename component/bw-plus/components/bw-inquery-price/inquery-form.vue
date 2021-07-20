@@ -141,7 +141,7 @@ export default {
     async checkKeyword () {
       const loading = this.$loading({
         lock: true,
-        text: 'Loading',
+        text: '正在风控审查中， 请耐心等待',
         spinner: 'el-icon-loading',
         background: 'rgba(0, 0, 0, 0.7)'
       })
@@ -160,7 +160,10 @@ export default {
           })
           return false
         }
-        return true
+        this.$message({
+          message: '风控审查通过啦！快去查价吧！',
+          type: 'success'
+        })
       } catch (error) {
         loading.close()
         return false
