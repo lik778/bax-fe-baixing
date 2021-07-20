@@ -60,6 +60,7 @@
 
 <script>
 import store from './store'
+import { prepareAuthorize } from 'api/fengming'
 const formatPrice = (p) => {
   return p ? (p / 100).toFixed(2) : 0
 }
@@ -116,7 +117,10 @@ export default {
         }
       })
     },
-    authorization () {
+    async authorization () {
+      const { query: { user_id: clientId } } = this.$route
+      const { data } = await prepareAuthorize({ clientId })
+      console.log(data)
       this.dialogVisible = true
     },
     send () {}

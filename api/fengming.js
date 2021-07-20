@@ -756,3 +756,16 @@ function fmtWordsByContent (words) {
     ...w
   }))
 }
+
+/**
+ * @param {Object} params
+ * @param {number} params.clientId
+ * @returns
+ */
+export async function prepareAuthorize (params) {
+  const body = await fengming
+    .get('/agent_operation/prepareAuthorize')
+    .query(reverseCamelcase(params))
+    .json()
+  return body
+}
