@@ -812,3 +812,16 @@ export async function authorize (params) {
     .json()
   return body
 }
+
+/**
+ * @param {object} params
+ * @param {string} params.userId
+ * @returns
+ */
+export async function checkAuthorize (params) {
+  const body = await fengming
+    .get('/agent_operation/checkAuthorize')
+    .query(reverseCamelcase(params))
+    .json()
+  return body
+}

@@ -60,7 +60,7 @@
 
 <script>
 import store from './store'
-import { prepareAuthorize, sendMessage } from 'api/fengming'
+import { prepareAuthorize, sendMessage, checkAuthorize } from 'api/fengming'
 const formatPrice = (p) => {
   return p ? (p / 100).toFixed(2) : 0
 }
@@ -75,15 +75,23 @@ export default {
       reportPrefix: '',
       radarScores: [],
       dialogVisible: false,
-      phoneNumber: ''
+      phoneNumber: '',
+      isOptimizer: false
     }
   },
   fromMobx: {
     fengmingData: () => store.fengmingData
   },
-  mounted () {
-    document.cookie = document.cookie + 'source=optimizer;'
-    console.log('===', document.cookie)
+  async mounted () {
+    const { query: { source, user_id: userId } } = this.$route
+    this.isOptimizer = source || false
+    if (source) {
+      const { code, data } = await checkAuthorize({ userId })
+      if (code !== 0) {
+        this.isOptimizer = false
+      }
+      console.log(data)
+    }
   },
   computed: {
     reportData () {
