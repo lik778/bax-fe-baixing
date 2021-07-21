@@ -1,6 +1,7 @@
 <template>
     <el-table
     border
+    header-row-class-name="thead-row"
     type="index"
     :data="tableData"
     :cell-style="{background: '#fff',cursor: 'pointer'}"
@@ -19,7 +20,7 @@
                   <div :class="{ 'active-item': row.bothSeven.index === current.index, 'option-item': true }" @click="cellClick(row.bothSeven)">{{f2y(row.bothSeven.price)}}</div>
                 </template>
             </el-table-column>
-            <el-table-column align="center" prop="bothFive" label="5天*24小时（元）">
+            <el-table-column align="center" prop="bothFive" label="5天*8小时（元）">
               <template slot-scope="{ row }">
                 <div :class="{ 'active-item': row.bothFive.index === current.index, 'option-item': true }" @click="cellClick(row.bothFive)">{{f2y(row.bothFive.price)}}</div>
               </template>
@@ -33,7 +34,7 @@
                 <div :class="{ 'active-item': row.wapSeven.index === current.index, 'option-item': true }" @click="cellClick(row.wapSeven)">{{f2y(row.wapSeven.price)}}</div>
               </template>
             </el-table-column>
-            <el-table-column align="center" prop="wapFive" label="5天*24小时（元）">
+            <el-table-column align="center" prop="wapFive" label="5天*8小时（元）">
               <template slot-scope="{ row }">
                 <div :class="{ 'active-item': row.wapFive.index === current.index, 'option-item': true }" @click="cellClick(row.wapFive)">{{f2y(row.wapFive.price)}}</div>
               </template>
@@ -47,7 +48,7 @@
                 <div :class="{ 'active-item': row.pcSeven.index === current.index, 'option-item': true }" @click="cellClick(row.pcSeven)">{{f2y(row.pcSeven.price)}}</div>
               </template>
             </el-table-column>
-            <el-table-column align="center" prop="pcFive" label="5天*24小时（元）">
+            <el-table-column align="center" prop="pcFive" label="5天*8小时（元）">
               <template slot-scope="{ row }">
                 <div :class="{ 'active-item': row.pcFive.index === current.index, 'option-item': true }" @click="cellClick(row.pcFive)">{{f2y(row.pcFive.price)}}</div>
               </template>
@@ -117,5 +118,13 @@ export default {
       border-radius:20px;
       height: 25px;
       line-height: 24px;
+    }
+    /deep/ .thead-row{
+      th{
+        background: #fff1e3 !important;
+        border-right: 1px solid #ffddd2;
+        border-bottom: 1px solid #ffddd2;
+        color: #d4a47c;
+      }
     }
 </style>

@@ -1,7 +1,6 @@
 <template>
     <el-table
       style="width: 90%"
-      header-cell-class-name="thead-tr"
       :data="records"
       v-loading="loading"
       :default-sort="{prop: 'createdTime', order: 'descending'}"
