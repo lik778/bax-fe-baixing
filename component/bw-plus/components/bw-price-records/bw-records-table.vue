@@ -29,7 +29,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="device" label="平台" :formatter="deviceFormatter" />
-      <el-table-column prop="cities" width="200" label="投放城市" >
+      <el-table-column prop="cities" width="150" label="投放城市" >
         <template slot-scope="{ row }">
           <el-popover
           placement="top-start"

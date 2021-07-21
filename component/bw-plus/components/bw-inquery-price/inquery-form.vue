@@ -147,13 +147,13 @@ export default {
       })
       const { words = '' } = this.form
       try {
-        const { code, data: { passed, rejectedWordWithReason } } = await checkKeyword({ keywords: words.split(/[\s\n]/).filter(Boolean) })
+        const { data: { passed, rejectedWordWithReason } } = await checkKeyword({ keywords: words.split(/[\s\n]/).filter(Boolean) })
         this.checkResult = {
           passed,
           rejectedWordWithReason
         }
         loading.close()
-        if (code !== 0) {
+        if (!passed) {
           this.$message({
             message: rejectedWordWithReason,
             type: 'error'

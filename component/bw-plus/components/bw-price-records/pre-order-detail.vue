@@ -22,7 +22,7 @@
             {{SCHEDULE_TYPE[preInfo.scheduleType]}}
         </el-form-item>
         <el-form-item class="pre-info-item" label="服务时长：">
-            {{preInfo.days}}天 <el-tag v-if="preInfo.days > 30">赠送砖石官网（365天）</el-tag>
+            {{preInfo.days}}天 <el-tag v-if="preInfo.days > 30">赠送钻石官网（365天）</el-tag>
         </el-form-item>
         <el-form-item class="pre-info-item pre-info-price" label="提单价：">
             {{f2y(preInfo.price)}}元

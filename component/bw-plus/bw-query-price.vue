@@ -155,6 +155,7 @@ export default {
         const { data, code, message } = await querySystemResult(params)
         if (code === 0) {
           this.queryResult = data
+          this.currentPrice = data.keywordPriceList[0].bothSeven
           this.$nextTick(() => {
             this.$refs.viewScrollTop.scrollIntoView()
           })
