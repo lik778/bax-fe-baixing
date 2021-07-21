@@ -1,19 +1,27 @@
 <template>
     <el-table
       style="width: 90%"
+      header-cell-class-name="thead-tr"
       :data="records"
       v-loading="loading"
       :default-sort="{prop: 'createdTime', order: 'descending'}"
     >
-      <el-table-column align="center" fixed prop="id" label="ID" />
-      <el-table-column sortable align="center" fixed prop="createdTime" width="160" label="日期" :formatter="dateFormater" />
-      <el-table-column width="120" align="center" fixed prop="keywords" label="关键词">
+      <el-table-column fixed prop="id" label="ID" />
+      <el-table-column sortable fixed prop="createdTime" width="170" label="日期" :formatter="dateFormater" />
+      <el-table-column width="150" fixed prop="keywords" label="关键词">
         <template slot-scope="{ row }">
-          {{ row.keywords.join("、") }}
+          <el-popover
+          placement="top-start"
+          title="关键词"
+          width="150"
+          trigger="hover"
+          :content="row.keywords.join('、')">
+            <p slot="reference" class="keywords-row">{{ row.keywords.join("、") }}</p>
+          </el-popover>
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="applyType" label="报价类型" :formatter="applyTypeFormatter" />
-      <el-table-column align="center" width="150" prop="status" label="审核状态">
+      <el-table-column prop="applyType" label="报价类型" :formatter="applyTypeFormatter" />
+      <el-table-column width="150" prop="status" label="审核状态">
         <template slot-scope="{ row }">
           <span :class="transformClass(row.status)">{{APPLY_AUDIT_STATUS_OPTIONS[row.status] || '-'}}</span>
           <el-tooltip v-if="row.status === APPLY_AUDIT_STATUS_REJECT" :class="transformClass(row.status)" :content="row.rejectedReason" placement="top-start">
@@ -21,18 +29,30 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="device" label="平台" :formatter="deviceFormatter" />
-      <el-table-column align="center" prop="cities" width="200" label="投放城市" :formatter="citiesFormater" />
-      <el-table-column align="center" width="120" prop="scheduleType" label="推广时段" :formatter="scheduleTypeFormater" />
-      <el-table-column align="center" prop="days" label="服务时长" :formatter="daysFormater" />
-      <el-table-column align="center" width="150" prop="industry" label="推广行业" />
-      <el-table-column align="center" fixed="right" label="报价">
+      <el-table-column prop="device" label="平台" :formatter="deviceFormatter" />
+      <el-table-column prop="cities" width="200" label="投放城市" >
+        <template slot-scope="{ row }">
+          <el-popover
+          placement="top-start"
+          title="投放城市"
+          width="150"
+          trigger="hover"
+          >
+            <div class="cities-content">{{citiesFormater(row)}}</div>
+            <p slot="reference" class="keywords-row">{{ citiesFormater(row) }}</p>
+          </el-popover>
+        </template>
+      </el-table-column>
+      <el-table-column width="120" prop="scheduleType" label="推广时段" :formatter="scheduleTypeFormater" />
+      <el-table-column prop="days" label="服务时长" :formatter="daysFormater" />
+      <el-table-column width="150" prop="industry" label="推广行业" />
+      <el-table-column align="right" fixed="right" label="报价">
         <template slot-scope="{ row }">
           <span v-if="row.applyType === APPLY_TYPE_NORMAL || row.price">{{f2y(row.price)}}元</span>
           <el-button v-else :disabled="row.status != APPLY_AUDIT_STATUS_PASS " type="text" @click="reviewPrice(row)">查看</el-button>
         </template>
       </el-table-column>
-      <el-table-column align="center" fixed="right" label="操作">
+      <el-table-column width="100" fixed="right" label="操作">
         <template slot-scope="{ row }">
           <el-button @click="preOrder(row)" :disabled="row.operationStatus != OPTION_STATUS_AWAIT_TIDAN" type="text">提单</el-button>
           <BaxClipboard v-if="row.operationStatus === OPTION_STATUS_COPY_URL" :content="row.url"/>
@@ -107,9 +127,9 @@ export default {
       const [,, cellValue] = args
       return DEVICE[cellValue] || '-'
     },
-    citiesFormater (...args) {
-      const [,, cities] = args
-      return cities.slice(0, 20).map(city => getCnName(city, this.allAreas)).join(',') + (cities.length > 20 ? `等${cities.length}个城市` : '') || '-'
+    citiesFormater (row) {
+      const { cities } = row
+      return cities.map(city => getCnName(city, this.allAreas)).join('、')
     },
     reviewPrice (row) {
       this.$emit('reviewPrice', row)
@@ -140,4 +160,20 @@ export default {
   .pending-item{
     color: #E6A23C;
   }
+  .keywords-row{
+    width: 130px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-top: 6px;
+  }
+  .cities-content{
+    max-height: 200px;
+    overflow: auto;
+  }
+
+  .el-table thead.is-group th{
+    background: red;
+  }
+
 </style>

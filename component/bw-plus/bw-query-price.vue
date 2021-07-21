@@ -25,7 +25,7 @@
                               title="确定提交审核吗？"
                               @confirm="submit"
                             >
-                              <el-button slot="reference" type="danger" plain>提交审核</el-button>
+                              <el-button slot="reference" type="danger">提交审核</el-button>
                             </el-popconfirm>
                           </div>
                         </el-col>
@@ -40,7 +40,7 @@
                         title="确定提交审核吗？"
                         @confirm="submit"
                       >
-                        <el-button slot="reference" style="margin-top: 30px" type="danger" plain>申请人工报价</el-button>
+                        <el-button slot="reference" style="margin-top: 30px" type="danger">申请人工报价</el-button>
                       </el-popconfirm>
                     </section>
                 </el-tab-pane>
