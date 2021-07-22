@@ -1,7 +1,10 @@
 <template>
     <el-form :inline="true" :model="formInline" ref="formInline" class="demo-form-inline">
-      <el-form-item label="关键词/ID：" prop="keyword">
-        <el-input v-model="formInline.keyword" placeholder="关键词/ID：" clearable></el-input>
+      <el-form-item label="关键词：" prop="keyword">
+        <el-input v-model="formInline.keyword" placeholder="关键词：" clearable></el-input>
+      </el-form-item>
+      <el-form-item label="ID：" prop="id">
+        <el-input v-model="formInline.id" placeholder="ID：" clearable></el-input>
       </el-form-item>
       <el-form-item label="状态" prop="status">
         <el-select clearable size="medium" v-model="formInline.status" placeholder="请选择">
@@ -28,7 +31,8 @@ export default {
       APPLY_AUDIT_STATUS_OPTIONS,
       formInline: {
         keyword: '',
-        status: ''
+        status: '',
+        id: ''
       }
     }
   },
