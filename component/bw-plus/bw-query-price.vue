@@ -20,12 +20,12 @@
                         </el-col>
                         <el-col :span="5" :push="13">
                           <div class="submit">
-                            <h3>总价： {{f2y(currentPrice.price)}}元</h3>
+                            <h3>总价： {{transformPrice(currentPrice)}}元</h3>
                             <el-popconfirm
                               title="确定提交审核吗？"
                               @confirm="submit"
                             >
-                              <el-button slot="reference" type="danger">提交审核</el-button>
+                              <el-button :disabled="currentPrice.price <0 || currentPrice.price === '-'" slot="reference" type="danger">提交审核</el-button>
                             </el-popconfirm>
                           </div>
                         </el-col>
@@ -86,12 +86,14 @@ export default {
       },
       queryResult: {},
       currentPrice: {},
-      queryInfo: {},
-      f2y
+      queryInfo: {}
     }
   },
   methods: {
     handleClick () {},
+    transformPrice (currentPrice) {
+      return currentPrice.price > 0 ? f2y(currentPrice.price) : '-'
+    },
     applyTypeFilter (error, overHeat, industryError) {
       if (error || overHeat || industryError) {
         return APPLY_TYPE_ERROR
