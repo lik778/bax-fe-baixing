@@ -142,13 +142,9 @@ export const biaowangPlus = new Fetch({
     }
   },
   afterJSON (body) {
-    if (
-      body &&
-      body.code === 4114
-    ) {
-      // 没有经过身份证绑定
-      chargeNotice()
-      throw new Error('请先绑定身份认证')
+    const { code, message } = body
+    if (code !== 0) {
+      Message.error(message)
     }
   }
 })
