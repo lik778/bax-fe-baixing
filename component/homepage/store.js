@@ -1,4 +1,4 @@
-import { getHomePageFengmingData } from 'api/fengming'
+import { getHomePageFengmingData, checkAuthorize } from 'api/fengming'
 import { getHomePageBiaowangData, getPromotes, getUserRanking } from 'api/biaowang'
 import { observable, toJS, action, computed } from 'mobx'
 import dayjs from 'dayjs'
@@ -7,6 +7,7 @@ class Store {
   @observable fengmingData = null
   @observable biaowangData = null
   @observable biaowangPromotes = null
+  @observable fengmingOptimizer = null
 
   @computed get fengmingBalance () {
     const data = this.fengmingData
@@ -63,6 +64,11 @@ class Store {
     } catch (err) {
       console.error(err)
     }
+  }
+
+  @action async getFengmingOptimizer (params) {
+    const { data } = await checkAuthorize(params)
+    this.fengmingOptimizer = data
   }
 
   @action initPageStore (userId) {

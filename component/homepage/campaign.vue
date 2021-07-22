@@ -34,12 +34,18 @@
         <span><i class="el-icon-info" />暂无站外推广数据概览</span>
       </div>
     </div>
-    <div class="layout-right">
+    <div class="layout-right" v-if="fengmingOptimizer">
       <h5 class="layout-header">
         授权操作
       </h5>
       <div class="layout-content">
-        <p class="item">站外推广：<el-button @click="authorization" type="danger" size="medium">申请授权</el-button></p>
+        <p class="item">
+          站外推广：
+          <el-button v-if="fengmingOptimizer.relation === RELATION_SERVICE && fengmingOptimizer.status === SERVICE_NOT_OPTIMIZE" @click="authorization" type="danger" size="medium">申请授权</el-button>
+          <el-button v-if="fengmingOptimizer.relation === RELATION_SERVICE && fengmingOptimizer.status === SERVICE_OPTIMIZE_ING" :disabled="true" type="danger" size="medium">授权中</el-button>
+          <el-button v-if="fengmingOptimizer.relation === RELATION_SERVICE && fengmingOptimizer.status === SERVICE_OPTIMIZED" @click="cancel" type="danger" size="medium">取消授权</el-button>
+          <el-button v-if="fengmingOptimizer.relation === RELATION_MANAGER" :disabled="true" type="danger" size="medium">已授权</el-button>
+        </p>
       </div>
     </div>
     <el-dialog
@@ -60,13 +66,17 @@
 
 <script>
 import store from './store'
-import { prepareAuthorize, sendMessage, checkAuthorize } from 'api/fengming'
+import { prepareAuthorize, sendMessage } from 'api/fengming'
 const formatPrice = (p) => {
   return p ? (p / 100).toFixed(2) : 0
 }
 
 const CNT_REJECTED_CODE = '-53'
-
+const SERVICE_OPTIMIZED = 2 // 已授权
+const SERVICE_NOT_OPTIMIZE = 0 // 未授权
+const SERVICE_OPTIMIZE_ING = 1 // 授权中
+const RELATION_MANAGER = 'manager' // 优化师主管
+const RELATION_SERVICE = 'service' // 优化师
 export default {
   name: 'homepage-campaign',
   props: ['userInfo'],
@@ -76,22 +86,17 @@ export default {
       radarScores: [],
       dialogVisible: false,
       phoneNumber: '',
-      isOptimizer: false
+      isOptimizer: false,
+      RELATION_MANAGER,
+      RELATION_SERVICE,
+      SERVICE_NOT_OPTIMIZE,
+      SERVICE_OPTIMIZED,
+      SERVICE_OPTIMIZE_ING
     }
   },
   fromMobx: {
-    fengmingData: () => store.fengmingData
-  },
-  async mounted () {
-    const { query: { source, user_id: userId } } = this.$route
-    this.isOptimizer = source || false
-    if (source) {
-      const { code, data } = await checkAuthorize({ userId })
-      if (code !== 0) {
-        this.isOptimizer = false
-      }
-      console.log(data)
-    }
+    fengmingData: () => store.fengmingData,
+    fengmingOptimizer: () => store.fengmingOptimizer
   },
   computed: {
     reportData () {
@@ -140,7 +145,8 @@ export default {
       const { phoneNumber: mobile } = this
       const url = 'www'
       await sendMessage({ userId, mobile, url })
-    }
+    },
+    async cancel () {}
   }
 }
 </script>
