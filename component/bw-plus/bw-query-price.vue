@@ -35,7 +35,7 @@
                       <p v-if="!queryResult.error && queryResult.overHeat">{{queryResult.overHeatWords.join("、")}}热度>500，暂无报价，请申请人工报价</p>
                       <p v-if="queryResult.error && !queryResult.overHeat">{{queryResult.overHeatWords.join("、")}}未获取到热度，请重试或申请人工报价</p>
                       <p v-if="queryResult.error && queryResult.overHeat">{{queryResult.overHeatWords.join("、")}}热度>500，{{queryResult.errorWords.join("、")}}未获取到热度，请申请人工报价</p>
-                      <p v-if="queryResult.industryError">{{queryInfo.industry}}太热，暂无报价，请申请人工报价</p>
+                      <p v-if="queryResult.industryError">{{queryInfo.industryCn}}太热，暂无报价，请申请人工报价</p>
                       <el-popconfirm
                         title="确定提交审核吗？"
                         @confirm="submit"
@@ -152,7 +152,7 @@ export default {
         industry: form.industry,
         words: form.words.split(/[\s\n]/).filter(Boolean)
       }
-      this.queryInfo = params
+      this.queryInfo = form
       try {
         const { data, code, message } = await querySystemResult(params)
         if (code === 0) {

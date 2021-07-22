@@ -16,7 +16,7 @@
                 <el-select v-model="form.industry" filterable placeholder="请选择">
                   <el-option
                     v-for="item in industryList"
-                    :key="item.value"
+                    :key="item.name"
                     :label="item.description"
                     :value="item.name">
                   </el-option>
@@ -131,7 +131,10 @@ export default {
       this.isInquery = true
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.$emit('inquery', this.form)
+          const checkedIndustry = this.industryList.filter(item => item.name === this.form.industry)
+          const industryCn = checkedIndustry[0].description
+          console.log('industryCn', industryCn)
+          this.$emit('inquery', { ...this.form, industryCn })
         } else {
           console.log('')
         }
