@@ -1,6 +1,7 @@
 <template>
   <div>
-    <div v-if="isValidate === ERROR">出错啦！</div>
+    授权
+    <!-- <div v-if="isValidate === ERROR">出错啦！</div>
     <div class="authorization" v-if="isValidate === true">
         <h4>授权函</h4>
         <main>
@@ -34,7 +35,7 @@
     </div>
     <div v-if="isValidate === TIMEOUT" class="tips">
       授权链接已失效。
-    </div>
+    </div> -->
   </div>
 </template>
 <script>
