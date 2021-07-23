@@ -78,7 +78,7 @@ config.plugins = [
   new HtmlWebpackPlugin({
     filename: 'authorizationPage.html',
     template: 'template/authorization-page.html',
-    chunks: ['vendors~bax~huodong~signin', 'authorizationPage'],
+    chunks: ['vendors~authorizationPage~bax~huodong~signin', 'authorizationPage'],
     minify: {
       collapseWhitespace: true
     }
