@@ -1,6 +1,5 @@
 <template>
   <div>
-    授权
     <div v-if="isValidate === ERROR">出错啦！</div>
     <div class="authorization" v-if="isValidate === true">
         <h4>授权函</h4>
@@ -63,6 +62,7 @@ export default {
     async getInfo () {
       const userId = this.getQueryParam('user_id')
       const { data } = await checkUrlValid({ userId })
+      this.isValidate = true
       this.info = data
     },
     async shouquan () {

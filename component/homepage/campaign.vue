@@ -71,7 +71,9 @@
       <p class="content-item">接收号码： <el-input class="number-input" v-model="phoneNumber" placeholder="请输入内容"></el-input> <el-button @click="send" size="medium">确认发送</el-button></p>
       <p class="content-item">或</p>
       <p class="content-item">2.复制授权链接发送给用户完成授权</p>
-      <p class="content-item">http://www.baixing.com/crm/transfer/?transferId……<el-button size="medium">复制链接</el-button></p>
+      <p class="content-item">{{jumpUrl}}<el-button size="medium" v-clipboard:copy="encodeURIComponent(jumpUrl)"
+      v-clipboard:success="onCopy"
+      v-clipboard:error="onError">复制链接</el-button></p>
       <p class="tips content-item">注：授权链接有效期为72小时，请尽快联系客户授权。</p>
     </el-dialog>
 
@@ -106,7 +108,8 @@ export default {
       SERVICE_NOT_OPTIMIZE,
       SERVICE_OPTIMIZED,
       SERVICE_OPTIMIZE_ING,
-      userOptimizerInfo: null
+      userOptimizerInfo: null,
+      jumpUrl: ''
     }
   },
   fromMobx: {
@@ -114,7 +117,8 @@ export default {
     fengmingOptimizer: () => store.fengmingOptimizer
   },
   async mounted () {
-    const { query: { source } } = this.$route
+    const { query: { source, user_id: userId, sales_id: salesId } } = this.$route
+    this.jumpUrl = `http://bax.baixing.cn/authorization?user_id=${userId}&sales_id=${salesId}`
     if (!source) {
       await this.getUserAuthRelation()
     }
@@ -182,6 +186,12 @@ export default {
         })
         await this.getUserAuthRelation()
       }
+    },
+    onCopy (e) {
+      alert('授权链接已复制到粘贴板！')
+    },
+    onError: function (e) {
+      alert('Failed to copy texts')
     }
   }
 }
