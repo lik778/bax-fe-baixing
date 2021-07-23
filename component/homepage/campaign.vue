@@ -51,7 +51,12 @@
             <p v-for="(item, index) in userOptimizerInfo" :key="index">
               <span>已授权</span>
               <span>{{item.optimizer_name}}</span>
-              <el-button type="danger" @click="cancel(item.optimizer_id)" size="medium">取消授权</el-button>
+              <el-popconfirm
+                title="确定要取消授权嘛？"
+                @confirm="cancel(item.optimizer_id)"
+              >
+                <el-button slot="reference" type="danger" size="medium">取消授权</el-button>
+              </el-popconfirm>
             </p>
           </div>
         </div>

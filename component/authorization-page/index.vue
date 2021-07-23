@@ -1,6 +1,7 @@
 <template>
   <div>
-    <div class="authorization" v-if="isValidate">
+    <div v-if="isValidate === ERROR">出错啦！</div>
+    <div class="authorization" v-if="isValidate === true">
         <h4>授权函</h4>
         <main>
             <p>为方便本人/本公司更有效地开展业务和使用百姓网提供的服务，特授权维护业务之贵司销售<span>{{info.optimizer_name}} （{{info.optimizer_id}}）</span>代为管理账户，由其统一管理。</p>
@@ -31,19 +32,27 @@
             </footer>
         </main>
     </div>
-    <div v-else class="tips">
+    <div v-if="isValidate === TIMEOUT" class="tips">
       授权链接已失效。
     </div>
   </div>
 </template>
 <script>
 import { checkUrlValid, authorize } from 'api/fengming'
+const ERROR = 'error'
+const TIMEOUT = 'timeout'
+const TRUE = 'true'
+const WATING = 'await'
 export default {
   name: 'authorization-page',
   data () {
     return {
       info: {},
-      isValidate: true
+      isValidate: WATING,
+      ERROR,
+      TIMEOUT,
+      TRUE,
+      WATING
     }
   },
   async mounted () {

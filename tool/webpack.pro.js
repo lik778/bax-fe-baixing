@@ -74,6 +74,14 @@ config.plugins = [
     minify: {
       collapseWhitespace: true
     }
+  }),
+  new HtmlWebpackPlugin({
+    filename: 'authorizationPage.html',
+    template: 'template/authorization-page.html',
+    chunks: ['vendors~bax~huodong~signin', 'authorizationPage'],
+    minify: {
+      collapseWhitespace: true
+    }
   })
   // new BundleAnalyzerPlugin()
 ]
