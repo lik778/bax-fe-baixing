@@ -39,55 +39,55 @@
   </div>
 </template>
 <script>
-import { checkUrlValid, authorize } from 'api/fengming'
-const ERROR = 'error'
-const TIMEOUT = 'timeout'
-const TRUE = 'true'
-const WATING = 'await'
-export default {
-  name: 'authorization-page',
-  data () {
-    return {
-      info: {},
-      isValidate: WATING,
-      ERROR,
-      TIMEOUT,
-      TRUE,
-      WATING
-    }
-  },
-  async mounted () {
-    await this.getInfo()
-  },
-  methods: {
-    async getInfo () {
-      const userId = this.getQueryParam('user_id')
-      const { data } = await checkUrlValid({ userId })
-      this.info = data
-    },
-    async shouquan () {
-      const userId = this.getQueryParam('user_id')
-      const code = this.getQueryParam('code')
-      const optimizerId = this.getQueryParam('optimizer_id')
-      const { meta } = await authorize({ userId, code, optimizerId })
-      if (meta.code === 0) {
-        this.$message({
-          message: '恭喜你，授权成功',
-          type: 'success'
-        })
-      }
-      const { data } = await checkUrlValid({ userId })
-      this.info = data
-    },
-    getQueryParam (key) {
-      const queryList = window.location.search.substring(1).split('&')
-      for (let i = 0; i < queryList.length; i++) {
-        const pair = queryList[i].split('=')
-        if (pair[0] === key) { return pair[1] }
-      }
-    }
-  }
-}
+// import { checkUrlValid, authorize } from 'api/fengming'
+// const ERROR = 'error'
+// const TIMEOUT = 'timeout'
+// const TRUE = 'true'
+// const WATING = 'await'
+// export default {
+//   name: 'authorization-page',
+//   data () {
+//     return {
+//       info: {},
+//       isValidate: WATING,
+//       ERROR,
+//       TIMEOUT,
+//       TRUE,
+//       WATING
+//     }
+//   },
+//   async mounted () {
+//     await this.getInfo()
+//   },
+//   methods: {
+//     async getInfo () {
+//       const userId = this.getQueryParam('user_id')
+//       const { data } = await checkUrlValid({ userId })
+//       this.info = data
+//     },
+//     async shouquan () {
+//       const userId = this.getQueryParam('user_id')
+//       const code = this.getQueryParam('code')
+//       const optimizerId = this.getQueryParam('optimizer_id')
+//       const { meta } = await authorize({ userId, code, optimizerId })
+//       if (meta.code === 0) {
+//         this.$message({
+//           message: '恭喜你，授权成功',
+//           type: 'success'
+//         })
+//       }
+//       const { data } = await checkUrlValid({ userId })
+//       this.info = data
+//     },
+//     getQueryParam (key) {
+//       const queryList = window.location.search.substring(1).split('&')
+//       for (let i = 0; i < queryList.length; i++) {
+//         const pair = queryList[i].split('=')
+//         if (pair[0] === key) { return pair[1] }
+//       }
+//     }
+//   }
+// }
 </script>
 <style lang="scss" scoped>
     .authorization{
