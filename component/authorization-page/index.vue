@@ -39,6 +39,9 @@
   </div>
 </template>
 <script>
+export default {
+  name: 'authorization-page'
+}
 // import { checkUrlValid, authorize } from 'api/fengming'
 // const ERROR = 'error'
 // const TIMEOUT = 'timeout'
