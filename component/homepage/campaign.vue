@@ -34,18 +34,27 @@
         <span><i class="el-icon-info" />暂无站外推广数据概览</span>
       </div>
     </div>
-    <div class="layout-right" v-if="fengmingOptimizer">
+    <div class="layout-right" v-if="fengmingOptimizer || userOptimizerInfo">
       <h5 class="layout-header">
         授权操作
       </h5>
       <div class="layout-content">
-        <p class="item">
+        <p class="item" v-if="fengmingOptimizer">
           站外推广：
           <el-button v-if="fengmingOptimizer.relation === RELATION_SERVICE && fengmingOptimizer.status === SERVICE_NOT_OPTIMIZE" @click="authorization" type="danger" size="medium">申请授权</el-button>
           <el-button v-if="fengmingOptimizer.relation === RELATION_SERVICE && fengmingOptimizer.status === SERVICE_OPTIMIZE_ING" :disabled="true" type="danger" size="medium">授权中</el-button>
-          <el-button v-if="fengmingOptimizer.relation === RELATION_SERVICE && fengmingOptimizer.status === SERVICE_OPTIMIZED" @click="cancel" type="danger" size="medium">取消授权</el-button>
           <el-button v-if="fengmingOptimizer.relation === RELATION_MANAGER" :disabled="true" type="danger" size="medium">已授权</el-button>
         </p>
+        <div v-else class="item user-item">
+          <p class="user-item-title"> 站外推广：</p>
+          <div>
+            <p v-for="(item, index) in userOptimizerInfo" :key="index">
+              <span>已授权</span>
+              <span>{{item.optimizer_name}}</span>
+              <el-button type="danger" @click="cancel(item.optimizer_id)" size="medium">取消授权</el-button>
+            </p>
+          </div>
+        </div>
       </div>
     </div>
     <el-dialog
@@ -66,7 +75,7 @@
 
 <script>
 import store from './store'
-import { prepareAuthorize, sendMessage } from 'api/fengming'
+import { prepareAuthorize, sendMessage, getUserAuthRelation, cancel } from 'api/fengming'
 const formatPrice = (p) => {
   return p ? (p / 100).toFixed(2) : 0
 }
@@ -91,12 +100,19 @@ export default {
       RELATION_SERVICE,
       SERVICE_NOT_OPTIMIZE,
       SERVICE_OPTIMIZED,
-      SERVICE_OPTIMIZE_ING
+      SERVICE_OPTIMIZE_ING,
+      userOptimizerInfo: null
     }
   },
   fromMobx: {
     fengmingData: () => store.fengmingData,
     fengmingOptimizer: () => store.fengmingOptimizer
+  },
+  async mounted () {
+    const { query: { source } } = this.$route
+    if (!source) {
+      await this.getUserAuthRelation()
+    }
   },
   computed: {
     reportData () {
@@ -116,6 +132,10 @@ export default {
     }
   },
   methods: {
+    async getUserAuthRelation () {
+      const { data } = await getUserAuthRelation()
+      this.userOptimizerInfo = data
+    },
     formatPrice,
     handlePointClick (key) {
       if (key === 'charge') return this.$router.push({ name: 'qwt-charge' })
@@ -146,7 +166,18 @@ export default {
       const url = 'www'
       await sendMessage({ userId, mobile, url })
     },
-    async cancel () {}
+    async cancel (id) {
+      const optimizerId = id
+      const { meta: { code } } = await cancel({ optimizerId })
+      console.log('code', code)
+      if (code === 0) {
+        this.$message({
+          message: '恭喜你，取消授权成功',
+          type: 'success'
+        })
+        await this.getUserAuthRelation()
+      }
+    }
   }
 }
 </script>
@@ -239,5 +270,14 @@ export default {
 .tips{
   font-size: 12px;
   color: #ff4f49;
+}
+.user-item{
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+.user-item-title{
+  height: 36px;
+  line-height: 36px;
 }
 </style>

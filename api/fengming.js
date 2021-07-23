@@ -825,3 +825,23 @@ export async function checkAuthorize (params) {
     .json()
   return body
 }
+
+/**
+ * @param {object} params
+ * @param {string} params.optimizerId
+ * @returns
+ */
+export async function cancel (params) {
+  const body = await fengming
+    .get('/agent_operation/cancelAuthorize')
+    .query(reverseCamelcase(params))
+    .json()
+  return body
+}
+
+export async function getUserAuthRelation () {
+  const body = await fengming
+    .get('/agent_operation/getUserAuthRelation')
+    .json()
+  return body
+}

@@ -1,5 +1,6 @@
 <template>
-    <div class="authorization">
+  <div>
+    <div class="authorization" v-if="isValidate">
         <h4>授权函</h4>
         <main>
             <p>为方便本人/本公司更有效地开展业务和使用百姓网提供的服务，特授权维护业务之贵司销售<span>{{info.optimizer_name}} （{{info.optimizer_id}}）</span>代为管理账户，由其统一管理。</p>
@@ -30,6 +31,10 @@
             </footer>
         </main>
     </div>
+    <div v-else class="tips">
+      授权链接已失效。
+    </div>
+  </div>
 </template>
 <script>
 import { checkUrlValid, authorize } from 'api/fengming'
@@ -37,7 +42,8 @@ export default {
   name: 'authorization-page',
   data () {
     return {
-      info: {}
+      info: {},
+      isValidate: true
     }
   },
   async mounted () {
@@ -45,16 +51,23 @@ export default {
   },
   methods: {
     async getInfo () {
-      // const { query: { user_id: userId } } = this.$route
-      const { data } = await checkUrlValid({ userId: 1 })
+      const userId = this.getQueryParam('user_id')
+      const { data } = await checkUrlValid({ userId })
       this.info = data
     },
     async shouquan () {
       const userId = this.getQueryParam('user_id')
       const code = this.getQueryParam('code')
       const optimizerId = this.getQueryParam('optimizer_id')
-      const data = await authorize({ userId, code, optimizerId })
-      console.log(data)
+      const { meta } = await authorize({ userId, code, optimizerId })
+      if (meta.code === 0) {
+        this.$message({
+          message: '恭喜你，授权成功',
+          type: 'success'
+        })
+      }
+      const { data } = await checkUrlValid({ userId })
+      this.info = data
     },
     getQueryParam (key) {
       const queryList = window.location.search.substring(1).split('&')
@@ -104,5 +117,8 @@ export default {
         .primary{
             background: #409EFF;
         }
+    }
+    .tips{
+      font-size: 16px;
     }
 </style>
