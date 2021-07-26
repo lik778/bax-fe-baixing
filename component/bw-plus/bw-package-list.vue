@@ -32,6 +32,7 @@
 
       <el-table :data="promotes"
                 class="table"
+                :v-loading="loading"
                 style="width: 100%">
         <el-table-column prop="id"
                          label="推广ID">
@@ -81,7 +82,7 @@
       </el-table>
       <div class="pagination-container">
         <el-pagination layout="prev, pager, next, total"
-                       :total="totalPage"
+                       :total="total"
                        :page-size="query.size"
                        @current-change="handleCurrentChange"
                        :current-page="query.page + 1">
@@ -127,8 +128,9 @@ export default {
         size: 10,
         page: 0
       },
-      totalPage: 0,
-      promotes: []
+      total: 0,
+      promotes: [],
+      loading: false
     }
   },
   methods: {
@@ -136,12 +138,17 @@ export default {
       this.query.page = page - 1
     },
     queryPackageList: debounce(async function (params) {
-      const { items, total } = await getUserPackageList({
-        ...params,
-        ...this.query
-      })
-      this.totalPage = total
-      this.promotes = items
+      try {
+        this.loading = true
+        const { items, total } = await getUserPackageList({
+          ...params,
+          ...this.query
+        })
+        this.total = total
+        this.promotes = items
+      } finally {
+        this.loading = false
+      }
     }, 300),
     goToPlanList (id) {
       this.$router.push({ name: 'bw-plus-plan-list', params: { id } })
