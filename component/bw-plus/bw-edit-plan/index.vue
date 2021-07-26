@@ -102,6 +102,9 @@ export default {
   computed: {
     isPromoteOffline () {
       return false
+    },
+    id () {
+      return this.$route.params.id
     }
   },
   mounted () {
@@ -109,12 +112,11 @@ export default {
   },
   methods: {
     async getPromoteDetail () {
-      const id = this.$route.params.id
-      const data = await getPromoteDetailById(id)
+      const data = await getPromoteDetailById(this.id)
       this.originPromote = data
       const { landingType, landingPage, landingPageId, creativeTitle, creativeContent } = data
       this.form = {
-        promoteIds: [+id],
+        promoteIds: [+this.id],
         creativeTitle: creativeTitle || '',
         creativeContent: creativeContent || '',
         landingType: landingType || LANDING_TYPE_AD,
@@ -158,6 +160,8 @@ export default {
       this.loading = true
       try {
         await updatePromoteDetail(this.form)
+        this.selectPromoteDialogVisible = false
+        this.$router.push({ name: 'bw-plus-plan-list', params: { id: this.originPromote.packageId } })
       } finally {
         this.loading = false
       }

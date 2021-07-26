@@ -92,7 +92,7 @@ export async function getUserPackageList (params) {
 
   return {
     items: body.data.content,
-    total: body.data.totalPages
+    total: body.data.totalElements
   }
 }
 
