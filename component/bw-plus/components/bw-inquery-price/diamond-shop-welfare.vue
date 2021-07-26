@@ -1,6 +1,6 @@
 <template>
     <div :class="{'shop-container': true, 'active': active}">
-        <h4>钻石店铺</h4>
+        <h4>钻石官网</h4>
         <p>支持首页宝推广，让您的网站上百度首页<br>支持SEO优化等更多专业版官网建站功能</p>
         <footer>
             1200元一年

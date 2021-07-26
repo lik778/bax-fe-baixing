@@ -8,7 +8,7 @@
     style="width: 100%">
         <el-table-column prop="type">
           <template slot-scope="{ row }">
-            {{ row.type }}天 <el-tag class="tag-type" effect="dark" v-if="row.type > 30">送店铺</el-tag>
+            {{ row.type }}天 <el-tag class="tag-type" effect="dark" v-if="row.type > 30">送官网</el-tag>
           </template>
         </el-table-column>
         <el-table-column
