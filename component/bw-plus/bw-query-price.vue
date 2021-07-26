@@ -152,7 +152,7 @@ export default {
         industry: form.industry,
         words: form.words.split(/[\s\n]/).filter(Boolean)
       }
-      this.queryInfo = form
+      this.queryInfo = { ...form, ...params }
       try {
         const { data, code, message } = await querySystemResult(params)
         if (code === 0) {
