@@ -71,7 +71,7 @@
       <p class="content-item">接收号码： <el-input class="number-input" v-model="phoneNumber" placeholder="请输入内容"></el-input> <el-button @click="send" size="medium">确认发送</el-button></p>
       <p class="content-item">或</p>
       <p class="content-item">2.复制授权链接发送给用户完成授权</p>
-      <p class="content-item">{{jumpUrl}}<el-button size="medium" v-clipboard:copy="encodeURIComponent(jumpUrl)"
+      <p class="content-item">{{jumpUrl}}<el-button size="medium" v-clipboard:copy="jumpUrl"
       v-clipboard:success="onCopy"
       v-clipboard:error="onError">复制链接</el-button></p>
       <p class="tips content-item">注：授权链接有效期为72小时，请尽快联系客户授权。</p>
@@ -118,7 +118,8 @@ export default {
   },
   async mounted () {
     const { query: { source, user_id: userId, sales_id: salesId } } = this.$route
-    this.jumpUrl = `http://www.staging.baixing.cn/oauth2/authorize?client_id=100005&redirect_uri=${window.location.host}/authorization?user_id=${userId}&optimizer_id=${salesId}&response_type=code&scope=userinfo&state=`
+    const redirectUri = encodeURIComponent(`${window.location.host}/authorization?user_id=${userId}&optimizer_id=${salesId}`)
+    this.jumpUrl = `http://www.staging.baixing.cn/oauth2/authorize?client_id=100005&redirect_uri=${redirectUri}&response_type=code&scope=userinfo&state=`
     if (!source) {
       await this.getUserAuthRelation()
     }
@@ -188,10 +189,13 @@ export default {
       }
     },
     onCopy (e) {
-      alert('授权链接已复制到粘贴板！')
+      this.$message({
+        message: '授权链接已复制到粘贴板！',
+        type: 'success'
+      })
     },
     onError: function (e) {
-      alert('Failed to copy texts')
+      this.$message.error('授权链接复制失败')
     }
   }
 }
