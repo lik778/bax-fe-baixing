@@ -45,7 +45,7 @@
           <el-button v-if="fengmingOptimizer.relation === RELATION_SERVICE && fengmingOptimizer.status === SERVICE_OPTIMIZE_ING" :disabled="true" type="danger" size="medium">授权中</el-button>
           <el-button v-if="fengmingOptimizer.relation === RELATION_MANAGER" :disabled="true" type="danger" size="medium">已授权</el-button>
         </p>
-        <div v-else class="item user-item">
+        <div v-if="userOptimizerInfo" class="item user-item">
           <p class="user-item-title"> 站外推广：</p>
           <div>
             <p v-for="(item, index) in userOptimizerInfo" :key="index">
@@ -125,6 +125,7 @@ export default {
     if (!source) {
       await this.getUserAuthRelation()
     }
+    console.log(this.fengmingOptimizer)
   },
   computed: {
     reportData () {
@@ -146,7 +147,7 @@ export default {
   methods: {
     async getUserAuthRelation () {
       const { data } = await getUserAuthRelation()
-      this.userOptimizerInfo = data
+      if (data && data.length > 0) { this.userOptimizerInfo = data }
     },
     formatPrice,
     handlePointClick (key) {
