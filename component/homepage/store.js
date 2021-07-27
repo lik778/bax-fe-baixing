@@ -68,7 +68,7 @@ class Store {
 
   @action async getFengmingOptimizer (params) {
     const { data } = await checkAuthorize(params)
-    if (data && data.length > 0) { this.fengmingOptimizer = data }
+    this.fengmingOptimizer = data
   }
 
   @action initPageStore (userId) {
