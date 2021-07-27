@@ -121,7 +121,7 @@ export default {
     const { query: { source, user_id: userId, sales_id: salesId } } = this.$route
     const redirectUri = `http://${window.location.host}/authorization?user_id=${userId}&optimizer_id=${salesId}`
     const origin = isPro ? 'https://www.baixing.com' : 'http://pangshengfang.baixing.cn'
-    this.jumpUrl = `${origin}/oauth2/authorize?client_id=100005&redirect_uri=${redirectUri}&response_type=code&scope=userinfo&state=`
+    this.jumpUrl = `${origin}/oauth2/authorize?client_id=100008&redirect_uri=${redirectUri}&response_type=code&scope=userinfo&state=`
     if (!source) {
       await this.getUserAuthRelation()
     }
