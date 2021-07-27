@@ -83,6 +83,7 @@
 <script>
 import store from './store'
 import { prepareAuthorize, sendMessage, getUserAuthRelation, cancel } from 'api/fengming'
+import { isPro } from 'config'
 const formatPrice = (p) => {
   return p ? (p / 100).toFixed(2) : 0
 }
@@ -119,7 +120,8 @@ export default {
   async mounted () {
     const { query: { source, user_id: userId, sales_id: salesId } } = this.$route
     const redirectUri = `http://${window.location.host}/authorization?user_id=${userId}&optimizer_id=${salesId}`
-    this.jumpUrl = `http://www.staging.baixing.cn/oauth2/authorize?client_id=100005&redirect_uri=${redirectUri}&response_type=code&scope=userinfo&state=`
+    const origin = isPro ? 'https://www.baixing.com' : 'http://pangshengfang.baixing.cn'
+    this.jumpUrl = `${origin}/oauth2/authorize?client_id=100005&redirect_uri=${redirectUri}&response_type=code&scope=userinfo&state=`
     if (!source) {
       await this.getUserAuthRelation()
     }
