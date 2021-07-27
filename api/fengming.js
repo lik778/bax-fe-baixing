@@ -779,8 +779,8 @@ export async function prepareAuthorize (params) {
  */
 export async function sendMessage (params) {
   const body = await fengming
-    .get('/agent_operation/sendMessage')
-    .query(reverseCamelcase(params))
+    .post('/agent_operation/sendMessage')
+    .send(reverseCamelcase(params))
     .json()
   return body
 }
