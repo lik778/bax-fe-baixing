@@ -118,7 +118,7 @@ export default {
   },
   async mounted () {
     const { query: { source, user_id: userId, sales_id: salesId } } = this.$route
-    const redirectUri = encodeURIComponent(`${window.location.host}/authorization?user_id=${userId}&optimizer_id=${salesId}`)
+    const redirectUri = encodeURIComponent(`http://${window.location.host}/authorization?user_id=${userId}&optimizer_id=${salesId}`)
     this.jumpUrl = `http://www.staging.baixing.cn/oauth2/authorize?client_id=100005&redirect_uri=${redirectUri}&response_type=code&scope=userinfo&state=`
     if (!source) {
       await this.getUserAuthRelation()
