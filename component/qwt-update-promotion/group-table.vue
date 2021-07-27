@@ -56,6 +56,10 @@
                      v-if="showColumns.includes('avgCpcRanking')"
                      label="关键词平均排名"
                      align="center" />
+    <el-table-column prop="todayCost"
+                     label="今日消耗"
+                     align="center"
+                     :formatter="(row, column, cellValue) => cellValue === 0 ? '-' : $formatter.f2y(cellValue)" />
     <el-table-column label="操作"
                      align="center">
       <template slot-scope="{ row }">
