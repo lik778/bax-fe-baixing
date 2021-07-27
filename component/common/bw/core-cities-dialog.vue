@@ -118,11 +118,11 @@ export default {
       deep: true,
       immediate: true,
       handler (val) {
-        this.areasOption = val.concat([OTHER_CITY_ENUM])
+        this.areasOption = val
       }
     },
     search: function (newQuestion, oldQuestion) {
-      const result = this.areas.concat([OTHER_CITY_ENUM]).filter(city => getCnName(city, this.allAreas).indexOf(newQuestion) !== -1)
+      const result = this.areas.filter(city => getCnName(city, this.allAreas).indexOf(newQuestion) !== -1)
       this.areasOption = [...result]
     }
   }
