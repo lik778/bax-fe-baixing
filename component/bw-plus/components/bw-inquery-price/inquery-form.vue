@@ -119,6 +119,15 @@ export default {
       if (!this.checkResult.passed) {
         callback(new Error('关键词风控审查不通过'))
       }
+      value.split(/[\s\n]/).filter(Boolean).map(o => {
+        if (o.length > 10) {
+          callback(new Error('单个关键词字数在2-10之前'))
+          return false
+        } else {
+          callback()
+          return true
+        }
+      })
       callback()
     },
     async fetchAllIndustry () {
@@ -133,7 +142,6 @@ export default {
         if (valid) {
           const checkedIndustry = this.industryList.filter(item => item.name === this.form.industry)
           const industryCn = checkedIndustry[0].description
-          console.log('industryCn', industryCn)
           this.$emit('inquery', { ...this.form, industryCn })
         } else {
           console.log('')
