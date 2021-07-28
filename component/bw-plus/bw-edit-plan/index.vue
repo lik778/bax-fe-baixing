@@ -62,7 +62,8 @@ import {
   landingTypeOpts,
   SEM_PLATFORM_BAIDU,
   LANDING_TYPE_AD,
-  LANDING_TYPE_STORE
+  LANDING_TYPE_STORE,
+  PROMOTE_STATUS_OFFLINE
 } from 'constant/fengming'
 import { getPromoteDetailById, updatePromoteDetail } from 'api/biaowang-plus'
 import { createValidator } from './validate'
@@ -101,7 +102,8 @@ export default {
   },
   computed: {
     isPromoteOffline () {
-      return false
+      const { status } = this.form
+      return ![PROMOTE_STATUS_OFFLINE].includes(status)
     },
     id () {
       return this.$route.params.id
@@ -114,14 +116,15 @@ export default {
     async getPromoteDetail () {
       const data = await getPromoteDetailById(this.id)
       this.originPromote = data
-      const { landingType, landingPage, landingPageId, creativeTitle, creativeContent } = data
+      const { landingType, landingPage, landingPageId, creativeTitle, creativeContent, status } = data
       this.form = {
         promoteIds: [+this.id],
         creativeTitle: creativeTitle || '',
         creativeContent: creativeContent || '',
         landingType: landingType || LANDING_TYPE_AD,
         landingPage: landingPage || '',
-        landingPageId: landingPageId || ''
+        landingPageId: landingPageId || '',
+        status
       }
     },
     clearLandingPage () {
