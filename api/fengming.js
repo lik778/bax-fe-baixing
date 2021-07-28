@@ -42,6 +42,7 @@ export const queryBaiduExpandWords = paginationWrapper(
 )
 
 export async function queryAds (opts = {}) {
+  console.log('opts', opts)
   const q = {
     offset: 0,
     limit: 3,
@@ -59,6 +60,7 @@ export async function queryAds (opts = {}) {
       total: data.length
     }
   }
+  console.log(q)
 
   const body = await fengming
     .get('/simple/ad')

@@ -142,6 +142,7 @@ export default {
       await this.queryAds()
     },
     async queryAds (opts = {}) {
+      const { query: { user_id: userId } } = this.$route
       const { limitMvp, keyword, offset, limit } = this
 
       const t = Date.now()
@@ -151,7 +152,8 @@ export default {
         keyword,
         offset,
         limit,
-        ...opts
+        ...opts,
+        userId
       })
 
       if (t > this.requestStartTime) {

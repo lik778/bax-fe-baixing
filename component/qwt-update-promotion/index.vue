@@ -135,7 +135,8 @@ export default {
   },
   computed: {
     notAllowSales () {
-      return isSales(this.userInfo.roles)
+      const { query: { source } } = this.$route
+      return isSales(this.userInfo.roles) && !source
     },
     campaignId () {
       return this.$route.params.id

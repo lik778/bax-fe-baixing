@@ -742,7 +742,8 @@ export default {
         const result = await queryAds({
           limitMvp: false,
           adId: originPromotion.landingPageId,
-          limit: 1
+          limit: 1,
+          userId
         })
         ad = result.ads && result.ads[0]
         if (ad && String(ad.adId) === String(originPromotion.landingPageId)) {
