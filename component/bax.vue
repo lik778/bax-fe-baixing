@@ -129,8 +129,7 @@ export default {
     // 记录销售的客户id等信息
     // 米奇跳转userId需改成user_id
     // eslint-disable-next-line
-    const { user_id, userId, sales_id: salesId,  source } = qs.parse(location.search)
-    document.cookie = document.cookie + source + ';'
+    const { user_id, userId, sales_id: salesId } = qs.parse(location.search)
     // eslint-disable-next-line
     const uid = userId || user_id
     if (uid && salesId) {
@@ -139,6 +138,9 @@ export default {
     }
   },
   async mounted () {
+    const { source } = qs.parse(location.search)
+    console.log('source', source)
+    document.cookie = document.cookie + 'source=' + source + ';'
     await Promise.all([
       gStore.getCurrentUser(),
       gStore.getCategories(),
