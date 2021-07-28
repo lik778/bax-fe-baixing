@@ -62,10 +62,11 @@ export default {
   },
   methods: {
     async getMvipShops () {
+      const { query: { user_id: userId } } = this.$route
       let response
       try {
         this.loading = true
-        response = await minTime(queryMvipShops)
+        response = await minTime(queryMvipShops({ userId }))
       } catch (error) {
         response = {}
       } finally {

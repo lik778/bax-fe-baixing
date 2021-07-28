@@ -142,8 +142,8 @@ export default {
     async onKeywordChange (k) {
       this.keyword = k
       this.offset = 0
-
-      await this.queryAds()
+      const { query: { user_id: userId } } = this.$route
+      await this.queryAds({ userId })
     },
     async onCurrentChange (opts) {
       const { offset } = opts
