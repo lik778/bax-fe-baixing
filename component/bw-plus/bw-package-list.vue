@@ -55,7 +55,7 @@
           <div slot-scope="{row}"
                class="status-container">
             <status-show :dot-color="PROMOTE_STATUS_COLOR_MAP[row.status]">
-              <span>{{PROMOTE_STATUS_MAP[row.status]}}</span>
+              <span>{{PACKEAGE_STATUS_MAP[row.status]}}</span>
             </status-show>
           </div>
         </el-table-column>
@@ -97,6 +97,7 @@ import { getUserPackageList } from 'api/biaowang-plus'
 import {
   AUDIT_STATUS_MAP,
   PROMOTE_STATUS_MAP,
+  PACKEAGE_STATUS_MAP,
   DEVICE,
   SCHEDULE_TYPE,
   SERVICE_DAYS,
@@ -114,6 +115,7 @@ export default {
     return {
       AUDIT_STATUS_MAP,
       PROMOTE_STATUS_MAP,
+      PACKEAGE_STATUS_MAP,
       PROMOTE_STATUS_COLOR_MAP,
       AUDIT_STATUS_COLOR_MAP,
       DEVICE,
