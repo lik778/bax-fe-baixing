@@ -43,7 +43,8 @@
           站外推广：
           <el-button v-if="fengmingOptimizer.relation === RELATION_SERVICE && fengmingOptimizer.status === SERVICE_NOT_OPTIMIZE" @click="authorization" type="danger" size="medium">申请授权</el-button>
           <el-button v-if="fengmingOptimizer.relation === RELATION_SERVICE && fengmingOptimizer.status === SERVICE_OPTIMIZE_ING" :disabled="true" type="danger" size="medium">授权中</el-button>
-          <el-button v-if="fengmingOptimizer.relation === RELATION_MANAGER" :disabled="true" type="danger" size="medium">已授权</el-button>
+          <el-button v-if="fengmingOptimizer.relation === RELATION_SERVICE && fengmingOptimizer.status === SERVICE_OPTIMIZED" :disabled="true" type="danger" size="medium">已授权</el-button>
+          <el-button v-if="fengmingOptimizer.relation === RELATION_MANAGER" :disabled="true" type="danger" size="medium">{{ STATUS_MAP[fengmingOptimizer.status] }}</el-button>
         </p>
         <div v-if="userOptimizerInfo" class="item user-item">
           <p class="user-item-title"> 站外推广：</p>
@@ -94,6 +95,11 @@ const SERVICE_NOT_OPTIMIZE = 0 // 未授权
 const SERVICE_OPTIMIZE_ING = 1 // 授权中
 const RELATION_MANAGER = 'manager' // 优化师主管
 const RELATION_SERVICE = 'service' // 优化师
+const STATUS_MAP = Object.freeze({
+  [SERVICE_OPTIMIZED]: '已授权',
+  [SERVICE_NOT_OPTIMIZE]: '未授权',
+  [SERVICE_OPTIMIZE_ING]: '授权中'
+})
 export default {
   name: 'homepage-campaign',
   props: ['userInfo'],
@@ -105,6 +111,7 @@ export default {
       phoneNumber: '',
       isOptimizer: false,
       RELATION_MANAGER,
+      STATUS_MAP,
       RELATION_SERVICE,
       SERVICE_NOT_OPTIMIZE,
       SERVICE_OPTIMIZED,
@@ -125,7 +132,6 @@ export default {
     if (!source) {
       await this.getUserAuthRelation()
     }
-    console.log(this.fengmingOptimizer)
   },
   computed: {
     reportData () {

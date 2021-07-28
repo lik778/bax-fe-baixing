@@ -68,6 +68,7 @@ class Store {
 
   @action async getFengmingOptimizer (params) {
     const { data } = await checkAuthorize(params)
+    console.log('data', data)
     this.fengmingOptimizer = data
   }
 
