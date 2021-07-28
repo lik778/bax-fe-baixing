@@ -845,3 +845,18 @@ export async function getUserAuthRelation () {
     .json()
   return body
 }
+
+/**
+ * @param {object} params
+ * @param { string } params.userId
+ * @param { string } params.optimizer_id
+ * @param { string } params.code
+ * @returns
+ */
+export async function rejectAuthorize (params) {
+  const body = await fengming
+    .get('/agent_operation/rejectAuthorize')
+    .send(reverseCamelcase(params))
+    .json()
+  return body
+}

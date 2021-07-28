@@ -38,7 +38,7 @@
   </div>
 </template>
 <script>
-import { checkUrlValid, authorize } from 'api/fengming'
+import { checkUrlValid, authorize, rejectAuthorize } from 'api/fengming'
 const ERROR = 'error'
 const TIMEOUT = 'timeout'
 const TRUE = 'true'
@@ -83,7 +83,13 @@ export default {
         if (pair[0] === key) { return pair[1] }
       }
     },
-    refuse () {}
+    async refuse () {
+      const userId = this.getQueryParam('user_id')
+      const code = this.getQueryParam('code')
+      const optimizerId = this.getQueryParam('optimizer_id')
+      const result = await rejectAuthorize({ userId, code, optimizerId })
+      console.log(result)
+    }
   }
 }
 </script>
