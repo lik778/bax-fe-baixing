@@ -27,7 +27,7 @@
             <p>授权方：{{info.client_mobile}}（账号：{{info.client_id}}）</p>
             <p>说明：授权函有效时间为72小时，超时后授权函将自动失效。</p>
             <footer>
-                <button class="info">拒绝</button>
+                <button class="info" @click="refuse">拒绝</button>
                 <button class="primary" @click="shouquan">授权</button>
             </footer>
         </main>
@@ -82,7 +82,8 @@ export default {
         const pair = queryList[i].split('=')
         if (pair[0] === key) { return pair[1] }
       }
-    }
+    },
+    refuse () {}
   }
 }
 </script>
