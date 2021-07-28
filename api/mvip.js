@@ -1,4 +1,5 @@
 import { api } from './base'
+import { reverseCamelcase } from 'object-keys-mapping'
 
 /**
  * 查询优选推店铺
@@ -7,6 +8,6 @@ import { api } from './base'
 export async function queryMvipShops (params) {
   return await api
     .get('/user/shop/list')
-    .query(params)
+    .query(reverseCamelcase(params))
     .json()
 }

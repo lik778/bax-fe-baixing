@@ -142,8 +142,7 @@ export default {
     async onKeywordChange (k) {
       this.keyword = k
       this.offset = 0
-      const { query: { user_id: userId } } = this.$route
-      await this.queryAds({ userId })
+      await this.queryAds()
     },
     async onCurrentChange (opts) {
       const { offset } = opts
@@ -152,6 +151,7 @@ export default {
       await this.queryAds()
     },
     async queryAds (opts = {}) {
+      const { query: { user_id: userId } } = this.$route
       const { limitMvp, keyword, offset, limit } = this
       const t = Date.now()
 
@@ -161,7 +161,8 @@ export default {
           keyword,
           offset,
           limit,
-          ...opts
+          ...opts,
+          userId
         })
 
         if (t > this.requestStartTime) {
