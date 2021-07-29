@@ -21,7 +21,6 @@
 <script>
 import BaxSelect from './select'
 import { queryMvipShops } from 'api/mvip'
-import { minTime } from 'util/kit'
 
 export default {
   name: 'mvip-selector',
@@ -66,7 +65,7 @@ export default {
       let response
       try {
         this.loading = true
-        response = await minTime(queryMvipShops({ userId }))
+        response = await queryMvipShops({ userId })
       } catch (error) {
         response = {}
       } finally {
@@ -74,6 +73,7 @@ export default {
       }
       const { data = [] } = response
       this.list = data
+      console.log('response', response)
       this.options = this.list.map(x => ({
         label: x.name,
         value: +x.id
