@@ -112,6 +112,19 @@ export default {
     await this.fetchAllIndustry()
   },
   methods: {
+    keywordLengthCheck () {
+      const { words = '' } = this.form
+      let validate = true
+      words.split(/[\s\n]/).filter(Boolean).forEach(o => {
+        if (o.length > 1 && o.length < 11) {
+          validate = true
+          return
+        }
+        validate = false
+        return false
+      })
+      return validate
+    },
     checkWord (rule, value, callback) {
       if (!value) {
         callback(new Error('请输入关键词'))
@@ -119,15 +132,9 @@ export default {
       if (!this.checkResult.passed) {
         callback(new Error('关键词风控审查不通过'))
       }
-      value.split(/[\s\n]/).filter(Boolean).map(o => {
-        if (o.length > 10) {
-          callback(new Error('单个关键词字数在2-10之前'))
-          return false
-        } else {
-          callback()
-          return true
-        }
-      })
+      if (!this.keywordLengthCheck()) {
+        callback(new Error('单个关键词字数在2-10之前'))
+      }
       callback()
     },
     async fetchAllIndustry () {
@@ -150,34 +157,39 @@ export default {
       })
     },
     async checkKeyword () {
-      const loading = this.$loading({
-        lock: true,
-        text: '正在风控审查中， 请耐心等待',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      })
       const { words = '' } = this.form
-      try {
-        const { data: { passed, rejectedWordWithReason } } = await checkKeyword({ keywords: words.split(/[\s\n]/).filter(Boolean) })
-        this.checkResult = {
-          passed,
-          rejectedWordWithReason
-        }
-        loading.close()
-        if (!passed) {
+      if (!this.keywordLengthCheck()) {
+        return
+      }
+      {
+        const loading = this.$loading({
+          lock: true,
+          text: '正在风控审查中， 请耐心等待',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)'
+        })
+        try {
+          const { data: { passed, rejectedWordWithReason } } = await checkKeyword({ keywords: words.split(/[\s\n]/).filter(Boolean) })
+          this.checkResult = {
+            passed,
+            rejectedWordWithReason
+          }
+          loading.close()
+          if (!passed) {
+            this.$message({
+              message: rejectedWordWithReason,
+              type: 'error'
+            })
+            return false
+          }
           this.$message({
-            message: rejectedWordWithReason,
-            type: 'error'
+            message: '风控审查通过啦！快去查价吧！',
+            type: 'success'
           })
+        } catch (error) {
+          loading.close()
           return false
         }
-        this.$message({
-          message: '风控审查通过啦！快去查价吧！',
-          type: 'success'
-        })
-      } catch (error) {
-        loading.close()
-        return false
       }
     },
     removeArea (area) {

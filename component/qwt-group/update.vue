@@ -124,7 +124,7 @@
                          ref="contract" />
       <el-button class="add-group-btn"
                  type="primary"
-                 :disabled="isSales || isCampaignOffline"
+                 :disabled="isSales(userInfo.roles) || isCampaignOffline"
                  :loading="lock.materialPictures || lock.group"
                  @click="updateMaterialThenGroup">更新单元</el-button>
     </section>
@@ -193,7 +193,7 @@ export default {
   data () {
     return {
       actionTrackId: uuid(),
-
+      isSales,
       SEM_PLATFORM_SHENMA,
       SEM_PLATFORM_BAIDU,
       CAMPAIGN_STATUS_OFFLINE,
