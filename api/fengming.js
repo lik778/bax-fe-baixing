@@ -481,10 +481,10 @@ export async function getDashboardHeader (params) {
   }
 }
 
-export async function changeCampaignKeywordsMatchType (campaignId, matchType) {
+export async function changeCampaignKeywordsMatchType (campaignId, params) {
   const body = await fengming
     .post(`/campaign/${campaignId}/keyword_match`)
-    .send(reverseCamelcase({ matchType }))
+    .send(reverseCamelcase(params))
     .json()
 
   return body.data
@@ -683,12 +683,13 @@ export async function pauseGroups (ids) {
 /**
  * 单元接口批量改价
  * @param {number} groupId
- * @param {number} price
+ * @param {object} params
+ * @param {number} params.price
  */
-export async function changeGroupKeywordsPrice (groupId, price) {
+export async function changeGroupKeywordsPrice (groupId, params) {
   const body = await fengming
     .post(`/group/${groupId}/keyword`)
-    .send({ price })
+    .send(params)
     .json()
 
   return body.data
@@ -697,12 +698,12 @@ export async function changeGroupKeywordsPrice (groupId, price) {
 /**
  * 单元接口批量匹配模式
  * @param {number} groupId
- * @param {number} matchType
+ * @param {number} params.matchType
  */
-export async function changeGroupKeywordsMatchType (groupId, matchType) {
+export async function changeGroupKeywordsMatchType (groupId, params) {
   const body = await fengming
     .post(`/group/${groupId}/keyword_match`)
-    .send(reverseCamelcase({ matchType }))
+    .send(reverseCamelcase(params))
     .json()
 
   return body.data

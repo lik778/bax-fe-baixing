@@ -394,12 +394,14 @@ export default {
       }
     },
     async _updateGroup () {
+      const { id } = this.user_id
       const data = {}
       Object.assign(data, {
         ...this.getUpdatedLandingData(),
         ...this.getUpdatedNegativeWordData(),
         ...this.getUpdatedCreativeData(),
-        ...this.getUpdatedKeywordData()
+        ...this.getUpdatedKeywordData(),
+        userId: id
       })
 
       updateGroup(this.groupId, data).then(() => {

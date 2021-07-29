@@ -151,12 +151,14 @@ export default {
     },
     async modifyBudget (dailyBudget) {
       const { id, value } = dailyBudget
+      const { query: { user_id: userId } } = this.$route
       if (!(value > 0 && value < 10000000)) {
         return this.$message.error('请设置合理的预算')
       }
       const opts = {
         campaignIds: [id],
-        dailyBudget: parseFloat(value) * 100
+        dailyBudget: parseFloat(value) * 100,
+        userId
       }
       await updateCampaignDailyBudget(opts)
       this.fetchlandingPageList()
