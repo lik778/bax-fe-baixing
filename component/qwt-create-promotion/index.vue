@@ -842,7 +842,8 @@ export default {
       const result = await queryAds({
         limitMvp: false,
         adId: adId,
-        limit: 1
+        limit: 1,
+        userId
       })
       const ad = result.ads && result.ads[0]
       if (ad && ad.adId === String(adId)) {

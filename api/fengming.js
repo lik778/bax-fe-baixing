@@ -60,8 +60,6 @@ export async function queryAds (opts = {}) {
       total: data.length
     }
   }
-  console.log(q)
-
   const body = await fengming
     .get('/simple/ad')
     .query(reverseCamelcase(trim(q)))

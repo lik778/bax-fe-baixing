@@ -222,10 +222,12 @@ export default {
       await this.queryAds()
     },
     async checkIsCurStoreValid (selectedId) {
+      const { query: { user_id: userId } } = this.$route
       const result = await queryAds({
         limitMvp: false,
         adId: selectedId,
-        limit: 1
+        limit: 1,
+        userId
       })
       const ad = result.ads && result.ads[0]
       const isValueValid = (ad && String(ad.adId) === String(selectedId))
