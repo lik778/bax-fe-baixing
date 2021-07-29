@@ -630,8 +630,8 @@ export default {
       if (!p.landingPageId) {
         delete p.landingPageId
       }
-
-      const promotionIds = await createCampaign(fmtAreasInQwt(p, allAreas))
+      const { query: { user_id: userId } } = this.$route
+      const promotionIds = await createCampaign({ ...fmtAreasInQwt(p, allAreas), userId })
       // 凤凰于飞打点
       this.trackPromotionKeywords(promotionIds, p)
 

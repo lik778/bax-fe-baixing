@@ -260,7 +260,7 @@ export default {
     notAllowNormalUser () {
       const { roles } = this.userInfo
       const { query: { source } } = this.$route
-      return isNormalUser(roles) || !source
+      return isNormalUser(roles) && !source
     },
     addKeyword (item) {
       const { groupId, queryWord } = item
