@@ -73,7 +73,6 @@ export default {
       }
       const { data = [] } = response
       this.list = data
-      console.log('response', response)
       this.options = this.list.map(x => ({
         label: x.name,
         value: +x.id
