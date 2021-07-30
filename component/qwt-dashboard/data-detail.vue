@@ -272,7 +272,7 @@ export default {
     addKeyword (item) {
       const { groupId, queryWord } = item
       const price = 2 * 100
-      const { userId } = this.salesInfo
+      const { query: { user_id: userId } } = this.$route
       updateGroup(groupId, { newKeywords: [{ price, word: queryWord }], userId })
         .then(() => {
           Message({
@@ -283,8 +283,8 @@ export default {
         })
     },
     addCampaignNegativeKeyword (item) {
+      const { query: { user_id: userId } } = this.$route
       const { campaignId, queryWord } = item
-      const { userId } = this.salesInfo
       updateCampaign(campaignId, { newNegativeKeywords: [{ word: queryWord }], userId })
         .then(() => {
           Message({
@@ -306,7 +306,7 @@ export default {
         })
     },
     async onChangePrice (userPrice, { groupId, keywordId }) {
-      const { userId } = this.salesInfo
+      const { query: { user_id: userId } } = this.$route
       const price = (userPrice ? toFloat(userPrice) : 0) * 100
       if (price > 99 * 100 || price < 2 * 100) {
         return this.$message.error('价格需在2-99元之间')
