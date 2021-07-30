@@ -158,8 +158,12 @@ export default {
     },
     async handleUpdatePromoteIds (promoteIds) {
       this.form.promoteIds = promoteIds
+      const { creativeError } = this
       if (!promoteIds.length) {
         return this.$message.error('必须选择一个标王推广计划!')
+      }
+      if (creativeError) {
+        return this.$message.error(creativeError)
       }
       this.loading = true
       try {

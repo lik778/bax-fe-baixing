@@ -166,6 +166,7 @@ export default {
       this.form.landingPageId = ''
     },
     handleCreativeError (message) {
+      console.log('===', message)
       if (message) Message.error(message)
       this.creativeError = message
     },
