@@ -115,14 +115,13 @@ export default {
     keywordLengthCheck () {
       const { words = '' } = this.form
       let validate = true
-      words.split(/[\s\n]/).filter(Boolean).forEach(o => {
-        if (o.length > 1 && o.length < 11) {
-          validate = true
-          return
+      const array = words.split(/[\s\n]/).filter(Boolean)
+      for (let i = 0; i < array.length; i++) {
+        if (array[i].length < 2 || array[i].length > 10) {
+          validate = false
+          break
         }
-        validate = false
-        return false
-      })
+      }
       return validate
     },
     checkWord (rule, value, callback) {
@@ -157,6 +156,7 @@ export default {
       })
     },
     async checkKeyword () {
+      console.log('===', this.keywordLengthCheck())
       const { words = '' } = this.form
       if (!this.keywordLengthCheck()) {
         return
