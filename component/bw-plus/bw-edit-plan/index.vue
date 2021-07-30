@@ -64,7 +64,7 @@ import {
   LANDING_TYPE_AD,
   LANDING_TYPE_STORE,
   PROMOTE_STATUS_OFFLINE
-} from 'constant/fengming'
+} from 'constant/bw-plus'
 import { getPromoteDetailById, updatePromoteDetail } from 'api/biaowang-plus'
 import { createValidator } from './validate'
 
@@ -103,7 +103,8 @@ export default {
   computed: {
     isPromoteOffline () {
       const { status } = this.form
-      return ![PROMOTE_STATUS_OFFLINE].includes(status)
+      console.log('status', status)
+      return [PROMOTE_STATUS_OFFLINE].includes(status)
     },
     id () {
       return this.$route.params.id
