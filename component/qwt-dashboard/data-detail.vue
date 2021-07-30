@@ -244,6 +244,10 @@ export default {
     userInfo: {
       type: Object,
       require: true
+    },
+    salesInfo: {
+      type: Object,
+      require: true
     }
   },
   data () {
@@ -266,10 +270,10 @@ export default {
       return isNormalUser(roles) && !source
     },
     addKeyword (item) {
-      const { id } = this.userInfo
       const { groupId, queryWord } = item
       const price = 2 * 100
-      updateGroup(groupId, { newKeywords: [{ price, word: queryWord }], userId: id })
+      const { userId } = this.salesInfo
+      updateGroup(groupId, { newKeywords: [{ price, word: queryWord }], userId })
         .then(() => {
           Message({
             type: 'success',
@@ -301,14 +305,14 @@ export default {
         })
     },
     async onChangePrice (userPrice, { groupId, keywordId }) {
-      const { id } = this.userInfo
+      const { userId } = this.salesInfo
       const price = (userPrice ? toFloat(userPrice) : 0) * 100
       if (price > 99 * 100 || price < 2 * 100) {
         return this.$message.error('价格需在2-99元之间')
       }
       try {
         this.priceUpdating = true
-        await updateGroup(groupId, { updatedKeywords: [{ price, id: keywordId }], userId: id })
+        await updateGroup(groupId, { updatedKeywords: [{ price, id: keywordId }], userId })
         this.$message.success('价格更新成功')
       } finally {
         this.priceUpdating = false

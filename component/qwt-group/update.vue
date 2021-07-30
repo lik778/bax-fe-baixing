@@ -394,14 +394,14 @@ export default {
       }
     },
     async _updateGroup () {
-      const { id } = this.userInfo
+      const { query: { user_id: userId } } = this.$route
       const data = {}
       Object.assign(data, {
         ...this.getUpdatedLandingData(),
         ...this.getUpdatedNegativeWordData(),
         ...this.getUpdatedCreativeData(),
         ...this.getUpdatedKeywordData(),
-        userId: id
+        userId
       })
 
       updateGroup(this.groupId, data).then(() => {
