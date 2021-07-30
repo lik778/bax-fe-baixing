@@ -174,10 +174,10 @@ export default {
         this.$emit('error', '标题和内容不能为空', this.idx)
         return
       } else if (this.titleMinLen > title.length || this.titleMaxLen < title.length) {
-        this.$emit('error', '标题字数不能超过25', this.idx)
+        this.$emit('error', '标题字数限制为9-25个字', this.idx)
         return
       } else if (this.contentMinLen > content.length || this.contentMaxLen < content.length) {
-        this.$emit('error', '内容字数不能超过80', this.idx)
+        this.$emit('error', '内容字数限制9-80个字', this.idx)
         return
       }
 

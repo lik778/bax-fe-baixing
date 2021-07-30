@@ -15,7 +15,7 @@
         <el-form-item label="投放状态">
           <el-checkbox-group v-model="query.status">
             <el-checkbox :label="key"
-                         v-for="(value, key) in PROMOTE_STATUS_MAP"
+                         v-for="(value, key) in PACKEAGE_STATUS_MAP"
                          :key="key">{{value}}
             </el-checkbox>
           </el-checkbox-group>
@@ -96,7 +96,6 @@
 import { getUserPackageList } from 'api/biaowang-plus'
 import {
   AUDIT_STATUS_MAP,
-  PROMOTE_STATUS_MAP,
   PACKEAGE_STATUS_MAP,
   DEVICE,
   SCHEDULE_TYPE,
@@ -114,7 +113,6 @@ export default {
   data () {
     return {
       AUDIT_STATUS_MAP,
-      PROMOTE_STATUS_MAP,
       PACKEAGE_STATUS_MAP,
       PROMOTE_STATUS_COLOR_MAP,
       AUDIT_STATUS_COLOR_MAP,
