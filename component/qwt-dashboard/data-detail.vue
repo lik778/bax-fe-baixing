@@ -296,7 +296,8 @@ export default {
     },
     addGroupNegativeKeyword (item) {
       const { groupId, queryWord } = item
-      updateGroup(groupId, { newNegativeKeywords: [{ word: queryWord }] })
+      const { query: { user_id: userId } } = this.$route
+      updateGroup(groupId, { newNegativeKeywords: [{ word: queryWord }], userId })
         .then(() => {
           Message({
             type: 'success',
