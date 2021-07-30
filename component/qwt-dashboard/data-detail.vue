@@ -284,7 +284,8 @@ export default {
     },
     addCampaignNegativeKeyword (item) {
       const { campaignId, queryWord } = item
-      updateCampaign(campaignId, { newNegativeKeywords: [{ word: queryWord }] })
+      const { userId } = this.salesInfo
+      updateCampaign(campaignId, { newNegativeKeywords: [{ word: queryWord }], userId })
         .then(() => {
           Message({
             type: 'success',
