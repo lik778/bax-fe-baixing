@@ -62,9 +62,9 @@ import {
   landingTypeOpts,
   SEM_PLATFORM_BAIDU,
   LANDING_TYPE_AD,
-  LANDING_TYPE_STORE,
-  PROMOTE_STATUS_OFFLINE
-} from 'constant/bw-plus'
+  LANDING_TYPE_STORE
+} from 'constant/fengming'
+import { PROMOTE_STATUS_OFFLINE } from 'constant/bw-plus'
 import { getPromoteDetailById, updatePromoteDetail } from 'api/biaowang-plus'
 import { createValidator } from './validate'
 
