@@ -394,7 +394,7 @@ export default {
       }
     },
     async _updateGroup () {
-      const { id } = this.user_id
+      const { id } = this.userInfo
       const data = {}
       Object.assign(data, {
         ...this.getUpdatedLandingData(),
