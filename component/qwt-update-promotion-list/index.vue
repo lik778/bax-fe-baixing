@@ -202,17 +202,20 @@ export default {
       }
     },
     async pausePromote (ids) {
-      await pauseCampaigns([ids])
+      const { userId } = this.salesInfo
+      await pauseCampaigns([ids], userId)
       this.$message.success('已暂停投放')
       this.fetchlandingPageList()
     },
     async activeCampaigns (ids) {
-      await activeCampaigns([ids])
+      const { userId } = this.salesInfo
+      await activeCampaigns([ids], userId)
       this.$message.success('已开启投放')
       this.fetchlandingPageList()
     },
     async pauseGroup (ids) {
-      await pauseGroup([ids])
+      const { userId } = this.salesInfo
+      await pauseGroup([ids], userId)
       this.$message.success('已暂停投放')
       this.fetchGroupList()
     },

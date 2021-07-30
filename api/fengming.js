@@ -178,46 +178,50 @@ export async function createCampaign (data) {
   return body.data
 }
 
-export async function activeCampaigns (ids) {
+export async function activeCampaigns (ids, userId) {
   const body = await fengming
     .post('/campaign/pause')
     .send(reverseCamelcase({
       campaignIds: [...ids],
-      pause: 0
+      pause: 0,
+      userId
     }))
     .json()
 
   return body
 }
 
-export async function pauseCampaigns (ids) {
+export async function pauseCampaigns (ids, userId) {
   const body = await fengming
     .post('/campaign/pause')
     .send(reverseCamelcase({
       campaignIds: [...ids],
-      pause: 1
+      pause: 1,
+      userId
     }))
     .json()
   return body
 }
 
-export async function pauseGroup (ids) {
+export async function pauseGroup (ids, userId) {
   const body = await fengming
     .post('/group/pause')
     .send(reverseCamelcase({
       group_ids: [...ids],
-      pause: 1
+      pause: 1,
+      userId
     }))
     .json()
   return body
 }
 
-export async function activeGroup (ids) {
+export async function activeGroup (ids, userId) {
   const body = await fengming
     .post('/group/pause')
     .send(reverseCamelcase({
       group_ids: [...ids],
-      pause: 0
+      pause: 0,
+      userId
     }))
     .json()
   return body
@@ -651,12 +655,13 @@ export async function getGroupDetailByGroupId (groupId, params) {
  * @param {array} groupIds
  * @param {number} pause
  */
-export async function activeGroups (ids) {
+export async function activeGroups (ids, userId) {
   const body = await fengming
     .post('/group/pause')
     .send(reverseCamelcase({
       groupIds: [...ids],
-      pause: 0
+      pause: 0,
+      userId
     }))
     .json()
 
@@ -668,12 +673,13 @@ export async function activeGroups (ids) {
  * @param {array} groupIds
  * @param {number} pause
  */
-export async function pauseGroups (ids) {
+export async function pauseGroups (ids, userId) {
   const body = await fengming
     .post('/group/pause')
     .send(reverseCamelcase({
       groupIds: [...ids],
-      pause: 1
+      pause: 1,
+      userId
     }))
     .json()
 
@@ -689,7 +695,7 @@ export async function pauseGroups (ids) {
 export async function changeGroupKeywordsPrice (groupId, params) {
   const body = await fengming
     .post(`/group/${groupId}/keyword`)
-    .send(params)
+    .send(reverseCamelcase(params))
     .json()
 
   return body.data
