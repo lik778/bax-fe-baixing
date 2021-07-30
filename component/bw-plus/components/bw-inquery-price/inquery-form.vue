@@ -114,25 +114,39 @@ export default {
   methods: {
     keywordLengthCheck () {
       const { words = '' } = this.form
-      let validate = true
+      let errorMsg = {
+        validate: true,
+        error: ''
+      }
       const array = words.split(/[\s\n]/).filter(Boolean)
+      if (array.length > 10) {
+        errorMsg = {
+          validate: false,
+          error: '关键词个数不能超过10个'
+        }
+        return errorMsg
+      }
       for (let i = 0; i < array.length; i++) {
         if (array[i].length < 2 || array[i].length > 10) {
-          validate = false
+          errorMsg = {
+            validate: false,
+            error: '单个关键词个数在2-10之间'
+          }
           break
         }
       }
-      return validate
+      return errorMsg
     },
     checkWord (rule, value, callback) {
+      const result = this.keywordLengthCheck()
       if (!value) {
         callback(new Error('请输入关键词'))
       }
       if (!this.checkResult.passed) {
         callback(new Error('关键词风控审查不通过'))
       }
-      if (!this.keywordLengthCheck()) {
-        callback(new Error('单个关键词字数在2-10之前'))
+      if (!result.validate) {
+        callback(new Error(result.error))
       }
       callback()
     },
@@ -156,9 +170,8 @@ export default {
       })
     },
     async checkKeyword () {
-      console.log('===', this.keywordLengthCheck())
       const { words = '' } = this.form
-      if (!this.keywordLengthCheck()) {
+      if (!this.keywordLengthCheck().validate) {
         return
       }
       {
