@@ -79,7 +79,7 @@ export default {
       this.$emit('getValue', value)
     },
     transforPrice (price) {
-      if (price > 0) {
+      if (price >= 0) {
         return f2y(price)
       }
       return '-'

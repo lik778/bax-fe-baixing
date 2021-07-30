@@ -121,6 +121,7 @@ export default {
     },
     reviewPrice (record) {
       this.activeRecord = record
+      this.currentPrice = record.priceList[0].bothFive
       this.dialogVisible = true
     },
     async getCurrentPrice (value) {
@@ -129,6 +130,13 @@ export default {
     async updateRecord () {
       const { id } = this.activeRecord
       const { currentPrice } = this
+      if (currentPrice.price === 0) {
+        this.$message({
+          message: '不能选择0元订单',
+          type: 'error'
+        })
+        return
+      }
       const params = {
         id,
         ...pick(currentPrice, ['device', 'scheduleType', 'duration', 'price'])
