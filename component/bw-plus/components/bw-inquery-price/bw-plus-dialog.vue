@@ -20,7 +20,8 @@
     <div v-else><p>{{BwPlusDialogMsg.content}}</p></div>
     <span slot="footer" class="dialog-footer">
         <el-button size="small" @click="$emit('close')">取 消</el-button>
-        <router-link to="/main/bw-plus/price-records"><el-button size="small" type="primary">查看审核进度</el-button></router-link>
+        <router-link v-if="BwPlusDialogMsg.type === 'success'" to="/main/bw-plus/price-records"><el-button size="small" type="primary">查看审核进度</el-button></router-link>
+        <el-button v-else size="small" @click="$emit('close')">确 定</el-button>
     </span>
     </el-dialog>
 </template>
