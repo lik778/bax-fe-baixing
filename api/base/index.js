@@ -41,6 +41,11 @@ export const fengming = new Fetch({
       chargeNotice()
       throw new Error('请先绑定身份认证')
     }
+    if (body.meta &&
+      body.meta.status === 400 &&
+      body.meta.code === 430000) {
+      window.history.back()
+    }
     if (body.errors) {
       Message.error('出错啦')
       throw new Error('出错啦')
