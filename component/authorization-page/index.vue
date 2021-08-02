@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div v-if="isValidate === ERROR">出错啦！</div>
-    <div class="authorization" v-if="isValidate === true">
+    <!-- <div v-if="isValidate === ERROR">{{error}}</div> -->
+    <div class="authorization" v-if="isValidate === NORMAL">
         <h4>授权函</h4>
         <main>
             <p>为方便本人/本公司更有效地开展业务和使用百姓网提供的服务，特授权维护业务之贵司销售<span>{{info.optimizer_name}} （{{info.optimizer_id}}）</span>代为管理账户，由其统一管理。</p>
@@ -32,16 +32,16 @@
             </footer>
         </main>
     </div>
-    <div v-if="isValidate === TIMEOUT" class="tips">
-      授权链接已失效。
-    </div>
+    <!-- <div v-if="isValidate === TIMEOUT" class="tips">
+      {{error}}
+    </div> -->
   </div>
 </template>
 <script>
 import { checkUrlValid, authorize, rejectAuthorize } from 'api/fengming'
 const ERROR = 'error'
 const TIMEOUT = 'timeout'
-const TRUE = 'true'
+const NORMAL = 'normal'
 const WATING = 'await'
 export default {
   name: 'authorization-page',
@@ -51,8 +51,9 @@ export default {
       isValidate: WATING,
       ERROR,
       TIMEOUT,
-      TRUE,
-      WATING
+      NORMAL,
+      WATING,
+      error: ''
     }
   },
   async mounted () {
@@ -61,9 +62,14 @@ export default {
   methods: {
     async getInfo () {
       const userId = this.getQueryParam('user_id')
-      const { data } = await checkUrlValid({ userId })
-      this.isValidate = true
-      this.info = data
+      try {
+        const { data } = await checkUrlValid({ userId })
+        this.isValidate = NORMAL
+        this.info = data
+      } catch (error) {
+        this.isValidate = ERROR
+        this.error = error
+      }
     },
     async shouquan () {
       const userId = this.getQueryParam('user_id')
