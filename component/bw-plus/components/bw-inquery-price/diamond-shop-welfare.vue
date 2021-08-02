@@ -3,7 +3,7 @@
         <h4>钻石官网</h4>
         <p>支持首页宝推广，让您的网站上百度首页<br>支持SEO优化等更多专业版官网建站功能</p>
         <footer>
-            1200元一年
+            {{current.duration || '-'}}天
         </footer>
     </div>
 </template>
