@@ -236,9 +236,11 @@ export default {
     async checkSold () {
       const { words = '' } = this.form
       const keywords = words.split(/[\s\n]/).filter(Boolean)
-      const { data: { allSoldCities } } = await checkSoldCities({ keywords })
+      const { data: { pcSoldCities: allSoldCities } } = await checkSoldCities({ keywords })
       if (allSoldCities.length) {
         this.allSoldCities = Object.fromEntries(allSoldCities.map(item => [item, true]))
+      } else {
+        this.allSoldCities = {}
       }
       this.areaDialogVisible = true
     }
