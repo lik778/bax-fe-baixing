@@ -96,7 +96,7 @@ export default {
         title: ''
       },
       queryResult: {},
-      currentPrice: {},
+      currentPrice: {}, // 用户当前选中的价格
       queryInfo: {},
       keywordsLockDetails: [], // 当前关键词锁词详情
       ifExistLockCity: false, // 当前关键词是否存在已售城市
@@ -124,11 +124,13 @@ export default {
       const baseParams = { targetUserId, applyType: applyTypeFilter(error, overHeat, industryError) }
       let params = {}
       if (!error && !overHeat && !industryError) {
+        // error、overHeat、industryError都为false时为系统报价，参数如下
         params = {
           ...baseParams,
           applyBasicAttr: { priceId, ...currentPrice }
         }
       } else {
+        // error、overHeat、industryError不都为false时为人工报价，参数如下
         params = {
           ...baseParams,
           applyKeywordsAttr: {
@@ -173,6 +175,7 @@ export default {
         const { data, code, message, data: { keywordsLockDetails: { keywordsLockDetails, ifExistLockCity, ifSoldAvailable, deviceAvailableStatus: { ifMobileAvailable }, deviceAvailableStatus } } } = await querySystemResult(params)
         if (code === 0) {
           this.queryResult = data
+          // 锁词相关逻辑
           this.ifExistLockCity = ifExistLockCity
           this.keywordsLockDetails = keywordsLockDetails
           this.deviceAvailableStatus = deviceAvailableStatus
