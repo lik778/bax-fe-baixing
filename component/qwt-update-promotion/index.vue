@@ -225,10 +225,12 @@ export default {
       }
     },
     async _updatePromotion () {
+      const { query: { user_id: userId } } = this.$route
       const data = {}
       Object.assign(data, {
         ...this.getUpdatedPromotionData(),
-        ...this.getUpdatedNegativeWordData()
+        ...this.getUpdatedNegativeWordData(),
+        userId
       })
 
       await updateCampaign(this.campaignId, data)
