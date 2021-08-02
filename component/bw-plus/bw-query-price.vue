@@ -35,7 +35,7 @@
                               title="确定提交审核吗？"
                               @confirm="submit"
                             >
-                              <el-button :disabled="currentPrice.price <0 || currentPrice.price === '-'" slot="reference" type="danger">提交审核</el-button>
+                              <el-button :disabled="(currentPrice.price <0 || currentPrice.price === '-') || !ifSoldAvailable" slot="reference" type="danger">提交审核</el-button>
                             </el-popconfirm>
                           </div>
                         </el-col>
@@ -101,7 +101,8 @@ export default {
       keywordsLockDetails: [], // 当前关键词锁词详情
       ifExistLockCity: false, // 当前关键词是否存在已售城市
       keywordLockText: '', // 关键词已售文案
-      deviceAvailableStatus: {} // 判断当前关键词在各设备端是否可售
+      deviceAvailableStatus: {}, // 判断当前关键词在各设备端是否可售
+      ifSoldAvailable: false // 是否存在可售卖的平台
     }
   },
   methods: {
@@ -175,6 +176,7 @@ export default {
           this.ifExistLockCity = ifExistLockCity
           this.keywordsLockDetails = keywordsLockDetails
           this.deviceAvailableStatus = deviceAvailableStatus
+          this.ifSoldAvailable = ifSoldAvailable
           if (!ifSoldAvailable) {
             this.currentPrice = {}
             this.keywordLockText = '手机端、电脑端的“部分词的部分城市”已售出，详情如下。请更换已售出关键词/城市重新查价～'
