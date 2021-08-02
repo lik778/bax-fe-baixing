@@ -10,7 +10,7 @@
                     </section>
                     <section class="bw-query-price_item" v-if="!(queryResult.error && queryResult.overHeat) && queryResult.keywordPriceList">
                       <Title title="查价结果" extra="请选择需要的平台*时段*时长"/>
-                      <InqueryResult @getValue="getCurrentPrice" :tableData="queryResult && queryResult.keywordPriceList" />
+                      <InqueryResult :currentPrice="currentPrice" @getValue="getCurrentPrice" :tableData="queryResult && queryResult.keywordPriceList" />
                       <el-row type="flex" justify="start" align="middle">
                         <el-col :span="3">
                           <h2 class="wefare-title">超值福利</h2>

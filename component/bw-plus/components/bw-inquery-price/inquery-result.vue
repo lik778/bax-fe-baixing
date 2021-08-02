@@ -66,6 +66,23 @@ export default {
       type: Array,
       default: () => [],
       require: true
+    },
+    currentPrice: {
+      type: Object,
+      default: () => {},
+      require: true
+    }
+  },
+  watch: {
+    currentPrice: {
+      handler (newV, oldV) {
+        if (newV) {
+          this.active = newV.duration > 30
+          this.current = newV
+        }
+      },
+      deep: true,
+      immediate: true
     }
   },
   data () {
