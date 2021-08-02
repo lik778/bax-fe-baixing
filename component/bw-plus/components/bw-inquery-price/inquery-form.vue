@@ -53,6 +53,7 @@
         :allSoldCities="allSoldCities"
         @ok="onAreasChange"
         @cancel="areaDialogVisible = false"
+        comType="bw-plus"
         />
         <CoreCitiesDialog
         :visible="coreCitiesDialogVisible"

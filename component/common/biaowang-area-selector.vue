@@ -33,7 +33,7 @@
           </el-checkbox>
           <span>
             <p v-for="(area, i) in province.areas" :key="i"
-               :class="{ selected: area.checked, 'disable-item': allSoldCities[area.id] }"
+               :class="{ selected: area.checked, 'disable-item': allSoldCities && allSoldCities[area.id] }"
                @click="cityChecked(area)">
                 {{ area.label }}
             </p>
@@ -102,7 +102,13 @@ export default {
     },
     allSoldCities: {
       type: Object,
-      default: () => {}
+      default: () => {},
+      require: false
+    },
+    comType: {
+      type: String,
+      default: 'bw',
+      require: false
     }
   },
   data () {
@@ -263,10 +269,12 @@ export default {
     },
     checkDisabled (province) {
       let allowSelect = false
-      for (let i = 0; i < province.areas.length; i++) {
-        if (this.allSoldCities[province.areas[i].id]) {
-          allowSelect = true
-          break
+      if (this.comType === 'bw-plus') {
+        for (let i = 0; i < province.areas.length; i++) {
+          if (this.allSoldCities[province.areas[i].id]) {
+            allowSelect = true
+            break
+          }
         }
       }
       return allowSelect
