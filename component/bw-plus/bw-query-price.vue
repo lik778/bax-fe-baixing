@@ -4,13 +4,23 @@
             <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
                 <el-tab-pane label="查价" name="first">
                     <InqueryForm :allAreas="allAreas" @inquery="inquery"/>
+                    <section v-if="ifExistLockCity" ref="viewScrollTop">
+                      <el-alert
+                        class="lock-tips"
+                        :title="keywordLockText"
+                        type="warning"
+                        :closable="false"
+                        show-icon>
+                      </el-alert>
+                      <SoldCity :tableData="keywordsLockDetails" :allAreas="allAreas"/>
+                    </section>
                     <section class="bw-query-price_item" v-if="queryResult.keywordPvList" ref="viewScrollTop">
                       <Title title="关键词热度明细"/>
                       <KeywordHotDetail :tableData="queryResult && queryResult.keywordPvList"/>
                     </section>
                     <section class="bw-query-price_item" v-if="!(queryResult.error && queryResult.overHeat) && queryResult.keywordPriceList">
                       <Title title="查价结果" extra="请选择需要的平台*时段*时长"/>
-                      <InqueryResult :currentPrice="currentPrice" @getValue="getCurrentPrice" :tableData="queryResult && queryResult.keywordPriceList" />
+                      <InqueryResult :deviceAvailableStatus="deviceAvailableStatus" :currentPrice="currentPrice" @getValue="getCurrentPrice" :tableData="queryResult && queryResult.keywordPriceList" />
                       <el-row type="flex" justify="start" align="middle">
                         <el-col :span="3">
                           <h2 class="wefare-title">超值福利</h2>
@@ -51,7 +61,7 @@
 </template>
 
 <script>
-import { InqueryForm, KeywordHotDetail, Title, InqueryResult, DiamondShopWelfare, BwPlusDialog } from './components'
+import { InqueryForm, KeywordHotDetail, Title, InqueryResult, DiamondShopWelfare, BwPlusDialog, SoldCity } from './components'
 import { querySystemResult, commit } from 'api/biaowang-plus'
 import { APPLY_TYPE_NORMAL, APPLY_TYPE_ERROR } from 'constant/bw-plus'
 import { f2y } from 'util'
@@ -63,7 +73,8 @@ export default {
     Title,
     InqueryResult,
     DiamondShopWelfare,
-    BwPlusDialog
+    BwPlusDialog,
+    SoldCity
   },
   props: {
     allAreas: {
@@ -86,7 +97,11 @@ export default {
       },
       queryResult: {},
       currentPrice: {},
-      queryInfo: {}
+      queryInfo: {},
+      keywordsLockDetails: [], // 当前关键词锁词详情
+      ifExistLockCity: false, // 当前关键词是否存在已售城市
+      keywordLockText: '', // 关键词已售文案
+      deviceAvailableStatus: {} // 判断当前关键词在各设备端是否可售
     }
   },
   methods: {
@@ -154,10 +169,22 @@ export default {
       }
       this.queryInfo = { ...form, ...params }
       try {
-        const { data, code, message } = await querySystemResult(params)
+        const { data, code, message, data: { keywordsLockDetails: { keywordsLockDetails, ifExistLockCity, ifSoldAvailable, deviceAvailableStatus: { ifMobileAvailable }, deviceAvailableStatus } } } = await querySystemResult(params)
         if (code === 0) {
           this.queryResult = data
-          this.currentPrice = data.keywordPriceList[0].bothSeven
+          this.ifExistLockCity = ifExistLockCity
+          this.keywordsLockDetails = keywordsLockDetails
+          this.deviceAvailableStatus = deviceAvailableStatus
+          if (!ifSoldAvailable) {
+            this.currentPrice = {}
+            this.keywordLockText = '手机端、电脑端的“部分词的部分城市”已售出，详情如下。请更换已售出关键词/城市重新查价～'
+          } else if (ifMobileAvailable) {
+            this.currentPrice = data.keywordPriceList[0].wapSeven
+            this.keywordLockText = '电脑端的“部分词的部分城市”已售出，详情如下。请更换已售出关键词/城市重新查价～'
+          } else {
+            this.currentPrice = data.keywordPriceList[0].pcSeven
+            this.keywordLockText = '手机端的“部分词的部分城市”已售出，详情如下。请更换已售出关键词/城市重新查价～'
+          }
           this.$nextTick(() => {
             this.$refs.viewScrollTop.scrollIntoView()
           })
@@ -211,9 +238,11 @@ export default {
         margin-bottom: 20px;
       }
    }
-  //  .footer{
-  //    display: flex;
-  //    justify-content: flex-start;
-  //    align-items: center;
-  //  }
+    /deep/ .lock-tips{
+      margin-bottom: 10px;
+      padding: 14px 16px;
+      .el-alert__title{
+        font-size: 14px;
+      }
+    }
 </style>

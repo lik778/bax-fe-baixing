@@ -28,12 +28,12 @@
                 {{ formatArea(area) }}
         </el-tag>
         <div v-for="(province, i) in topAreas" :key="i">
-          <el-checkbox class="checkbox-item" v-model="province.checked" @change="provinceCheckedChange(province)">
+          <el-checkbox :disabled="checkDisabled(province)" class="checkbox-item" v-model="province.checked" @change="provinceCheckedChange(province)">
             <span :class="{ selected: province.checked }">{{ province.label }}</span>
           </el-checkbox>
           <span>
             <p v-for="(area, i) in province.areas" :key="i"
-               :class="{ selected: area.checked }"
+               :class="{ selected: area.checked, 'disable-item': allSoldCities[area.id] }"
                @click="cityChecked(area)">
                 {{ area.label }}
             </p>
@@ -99,6 +99,10 @@ export default {
     },
     type: {
       type: String
+    },
+    allSoldCities: {
+      type: Object,
+      default: () => {}
     }
   },
   data () {
@@ -256,6 +260,16 @@ export default {
       return name === OTHER_CITY_ENUM
         ? '其它'
         : getCnName(name, this.allAreas)
+    },
+    checkDisabled (province) {
+      let allowSelect = false
+      for (let i = 0; i < province.areas.length; i++) {
+        if (this.allSoldCities[province.areas[i].id]) {
+          allowSelect = true
+          break
+        }
+      }
+      return allowSelect
     }
   }
 }
@@ -287,5 +301,10 @@ export default {
 
 .checkbox-item {
   flex: 1;
+}
+.disable-item{
+  cursor: not-allowed !important;
+  pointer-events:none !important;
+  color: #C0C4CC !important;
 }
 </style>

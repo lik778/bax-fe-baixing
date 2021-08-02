@@ -7,6 +7,7 @@ import BwPlusDialog from './bw-inquery-price/bw-plus-dialog.vue'
 import BwRecordsForm from './bw-price-records/bw-records-form.vue'
 import BwRecordsTable from './bw-price-records/bw-records-table.vue'
 import PreOrderDetail from './bw-price-records/pre-order-detail.vue'
+import SoldCity from './bw-inquery-price/sold-city.vue'
 
 export {
   InqueryForm,
@@ -17,5 +18,6 @@ export {
   BwPlusDialog,
   BwRecordsForm,
   BwRecordsTable,
-  PreOrderDetail
+  PreOrderDetail,
+  SoldCity
 }

@@ -30,7 +30,7 @@
                 >
                 {{ formatArea(area) }}
                 </el-tag>
-                <i class="el-icon-plus" @click="areaDialogVisible = true"></i>
+                <i class="el-icon-plus" @click="checkSold"></i>
             </el-form-item>
             <el-form-item label="用户所在地" prop="coreCities" key="coreCities" v-if="form.cities.length">
                 <el-tag type="success" closable class="kw-tag"
@@ -50,6 +50,7 @@
         :areas="form.cities"
         :visible="areaDialogVisible"
         :enable-china="false"
+        :allSoldCities="allSoldCities"
         @ok="onAreasChange"
         @cancel="areaDialogVisible = false"
         />
@@ -66,7 +67,7 @@
 </template>
 
 <script>
-import { getAllIndustry, checkKeyword } from 'api/biaowang-plus'
+import { getAllIndustry, checkKeyword, checkSoldCities } from 'api/biaowang-plus'
 import CoreCitiesDialog, { OTHER_CITY_ENUM } from 'com/common/bw/core-cities-dialog'
 import AreaSelector from 'com/common/biaowang-area-selector'
 import { getCnName } from 'util'
@@ -105,7 +106,8 @@ export default {
         passed: true,
         rejectedWordWithReason: {}
       },
-      restaurants: []
+      restaurants: [],
+      allSoldCities: {}
     }
   },
   async mounted () {
@@ -229,6 +231,15 @@ export default {
     handleCoreCitiesConfirm (coreCities) {
       this.form.coreCities = coreCities
       this.coreCitiesDialogVisible = false
+    },
+    async checkSold () {
+      const { words = '' } = this.form
+      const keywords = words.split(/[\s\n]/).filter(Boolean)
+      const { data: { pcSoldCities: allSoldCities } } = await checkSoldCities({ keywords })
+      if (allSoldCities.length) {
+        this.allSoldCities = Object.fromEntries(allSoldCities.map(item => [item, true]))
+      }
+      this.areaDialogVisible = true
     }
   }
 }

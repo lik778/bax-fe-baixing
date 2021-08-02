@@ -188,3 +188,16 @@ export async function preInfo (params) {
     .json()
   return body
 }
+
+/**
+ * @param { object } params
+ * @param { string[] } params.keywords
+ * @returns
+ */
+export async function checkSoldCities (params) {
+  const body = await biaowangPlus
+    .post('/basic/keyword/sold-cities')
+    .send(params)
+    .json()
+  return body
+}
