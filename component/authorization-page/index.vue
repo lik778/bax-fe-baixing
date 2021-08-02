@@ -124,6 +124,7 @@ export default {
             width: 100px;
             height: 40px;
             margin: 10px;
+            cursor: pointer;
         }
         .info{
             background: #909399;

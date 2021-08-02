@@ -862,7 +862,7 @@ export async function getUserAuthRelation () {
  */
 export async function rejectAuthorize (params) {
   const body = await fengming
-    .get('/agent_operation/rejectAuthorize')
+    .post('/agent_operation/rejectAuthorize')
     .send(reverseCamelcase(params))
     .json()
   return body
