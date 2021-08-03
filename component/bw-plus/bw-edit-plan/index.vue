@@ -175,6 +175,7 @@ export default {
       }
     },
     async onSubmit () {
+      console.log('==', this.form)
       if (this.isErrorLandingPageShow) {
         return this.$message.error('当前投放页面失效，请重新选择新的投放页面')
       }

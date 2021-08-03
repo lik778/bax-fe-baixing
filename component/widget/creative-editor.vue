@@ -202,6 +202,7 @@ export default {
     isTitleContentValid: {
       immediate: true,
       handler (newV) {
+        console.log('=', newV)
         this.$emit('validate-len-change', newV, this.idx)
       }
     }

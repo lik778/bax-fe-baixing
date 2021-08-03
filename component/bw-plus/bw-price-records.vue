@@ -173,15 +173,23 @@ export default {
         background: 'rgba(0, 0, 0, 0.7)'
       })
       const { id: applyId } = this.activeRecord
-      const { code, data: { url } } = await preOrder({ applyId })
-      loading.close()
-      if (code === 0) {
-        this.$copyText(url).then(async (e) => {
-          Message.success('提单链接已复制到剪切板')
-          this.isPreInfo = false
-          await this.getRecord()
-        }, function (e) {
-        })
+      try {
+        const { code, data: { url }, message } = await preOrder({ applyId })
+        if (code === 0) {
+          this.$copyText(url).then(async (e) => {
+            Message.success('提单链接已复制到剪切板')
+            this.isPreInfo = false
+            await this.getRecord()
+          }, function (e) {})
+          return
+        }
+        if (code === 4080) {
+          Message.error(message || '关键词已经被售出!')
+        }
+      } catch (error) {
+        console.log('error', error)
+      } finally {
+        loading.close()
       }
     },
     async getPreInfo (record) {

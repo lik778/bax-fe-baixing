@@ -183,10 +183,10 @@ export default {
           if (!ifSoldAvailable) {
             this.currentPrice = {}
             this.keywordLockText = '手机端、电脑端的“部分词的部分城市”已售出，详情如下。请更换已售出关键词/城市重新查价～'
-          } else if (ifMobileAvailable && !ifPcAvailable) {
+          } else if (!ifPcAvailable) {
             this.currentPrice = data.keywordPriceList[0].wapSeven
             this.keywordLockText = '电脑端的“部分词的部分城市”已售出，详情如下。请更换已售出关键词/城市重新查价～'
-          } else if (!ifMobileAvailable && ifPcAvailable) {
+          } else if (!ifMobileAvailable) {
             this.currentPrice = data.keywordPriceList[0].pcSeven
             this.keywordLockText = '手机端的“部分词的部分城市”已售出，详情如下。请更换已售出关键词/城市重新查价～'
           }
