@@ -76,10 +76,18 @@ export default {
       const optimizerId = this.getQueryParam('optimizer_id')
       const { meta } = await authorize({ userId, code, optimizerId })
       if (meta.code === 0) {
-        alert('授权成功')
+        this.$alert('授权成功！', '授权', {
+          confirmButtonText: '确定',
+          callback: async action => {
+            const { data } = await checkUrlValid({ userId })
+            this.info = data
+            this.$message({
+              type: 'info',
+              message: '恭喜你操作成功！'
+            })
+          }
+        })
       }
-      const { data } = await checkUrlValid({ userId })
-      this.info = data
     },
     getQueryParam (key) {
       const queryList = window.location.search.substring(1).split('&')
