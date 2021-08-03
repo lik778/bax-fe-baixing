@@ -129,9 +129,9 @@ export async function getDataReportByQueryWord (opts = {}) {
   )
   const body = await fengming
     .get('/data_report/query_word')
-    .query({
+    .query(trim({
       ...q
-    })
+    }))
     .json()
 
   return {
@@ -160,6 +160,27 @@ export async function getCampaignIds (params) {
     data.push({
       value: id,
       label: `计划${id}`
+    })
+    return true
+  })
+  return data
+}
+
+/**
+ * @param {object} params
+ * @param {number} params.user_id
+ * @param {number} params.campaign_id
+ */
+export async function getGroupIds (params) {
+  const body = await fengming
+    .get('/group/ids')
+    .query(reverseCamelcase(params))
+    .json()
+  const data = [{ value: 0, label: '全部' }]
+  body.data.map(id => {
+    data.push({
+      value: id,
+      label: `单元${id}`
     })
     return true
   })

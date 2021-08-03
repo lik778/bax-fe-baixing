@@ -3,7 +3,7 @@
   <div class="qwt-dashboard-data-detail">
 
     <!-- 计划维度表格 -->
-    <el-table v-if="dimension === DIMENSION_CAMPAIGN" :data="statistics" :key="DIMENSION_CAMPAIGN">
+    <el-table @sort-change="sortChange" v-if="dimension === DIMENSION_CAMPAIGN" :data="statistics" :key="DIMENSION_CAMPAIGN">
       <el-table-column label="计划ID" prop="campaignId" width="120" />
       <el-table-column label="日期" prop="date" width="140" />
       <el-table-column label="渠道" width="100"
@@ -19,7 +19,7 @@
       </el-table-column>
       <el-table-column label="实扣点击单价" width="160" sortable
         :formatter="r => (r.clickAvgPrice / 100).toFixed(2) + '元'" />
-      <el-table-column label="消耗" width="120"
+      <el-table-column label="消耗" prop="cost" width="120" sortable="custom"
         :formatter="r => (r.cost / 100).toFixed(2) + '元'" />
       <el-table-column label="单元详情" width="140">
         <template slot-scope="scope">
@@ -31,7 +31,7 @@
     </el-table>
 
     <!-- 单元维度表格 -->
-    <el-table v-else-if="dimension === DIMENSION_GROUP" :data="statistics" :key="DIMENSION_GROUP">
+    <el-table @sort-change="sortChange" v-else-if="dimension === DIMENSION_GROUP" :data="statistics" :key="DIMENSION_GROUP">
       <el-table-column label="计划ID" prop="campaignId" width="140" />
       <el-table-column label="单元ID" prop="groupId" width="140" />
       <el-table-column label="单元名称" prop="groupName" width="140" />
@@ -49,7 +49,7 @@
       </el-table-column>
       <el-table-column label="实扣点击单价" width="160" sortable
         :formatter="r => (r.clickAvgPrice / 100).toFixed(2) + '元'" />
-      <el-table-column label="消耗" width="120"
+      <el-table-column label="消耗" width="120" prop="cost" sortable="custom"
         :formatter="r => (r.cost / 100).toFixed(2) + '元'" />
       <el-table-column label="关键词详情" width="140">
         <template slot-scope="scope">
@@ -61,7 +61,7 @@
     </el-table>
 
     <!-- 关键词维度表格 -->
-    <el-table v-else-if="dimension === DIMENSION_KEYWORD" :data="statistics" :key="DIMENSION_KEYWORD">
+    <el-table @sort-change="sortChange" v-else-if="dimension === DIMENSION_KEYWORD" :data="statistics" :key="DIMENSION_KEYWORD">
       <el-table-column label="关键词" prop="keyword" width="200" :formatter="fmtKeywordName" />
       <el-table-column label="日期" prop="date" width="140" />
       <el-table-column label="计划ID" prop="campaignId" width="140" />
@@ -94,17 +94,18 @@
       </el-table-column>
       <el-table-column label="实扣点击单价" width="160" sortable
         :formatter="r => (r.clickAvgPrice / 100).toFixed(2) + '元'" />
-      <el-table-column label="消耗" width="120"
+      <el-table-column label="消耗" prop="cost" width="120" sortable="custom"
         :formatter="r => (r.cost / 100).toFixed(2) + '元'" />
       <el-table-column label="排名" width="120" sortable
         :formatter="r => fmtCpcRanking(r.cpcRanking)" />
     </el-table>
 
     <!-- 搜索词维度表格 -->
-    <el-table v-else :data="statistics" :key="DIMENSION_SEARCH_KEYWORD">
+    <el-table @sort-change="sortChange" v-else :data="statistics" :key="DIMENSION_SEARCH_KEYWORD">
       <el-table-column label="搜索词" prop="queryWord" width="200" />
       <el-table-column label="日期" prop="date" width="140" />
       <el-table-column label="单元名称" prop="groupName" width="200" />
+      <el-table-column label="关键词" prop="keyword" />
       <el-table-column label="计划ID" prop="campaignId" width="140" />
       <el-table-column label="渠道" width="100"
         :formatter="r => fmtChannel(r.channel)" />
@@ -123,7 +124,7 @@
           <span v-else>{{(scope.row.clickRate * 100).toFixed(2) + '%'}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="消耗" width="120"
+      <el-table-column label="消耗" width="120" prop="cost" sortable="custom"
         :formatter="r => (r.costs / 100).toFixed(2) + '元'" />
       <el-table-column label="平均点击价格" width="160" sortable
         :formatter="r => (r.clickAvgPrice / 100).toFixed(2) + '元'" />
@@ -208,7 +209,6 @@ import { Message } from 'element-ui'
 import { isNormalUser } from 'util/role'
 
 const isArray = Array.isArray
-
 export default {
   name: 'qwt-dashboard-data-detail',
   components: {
@@ -257,6 +257,10 @@ export default {
     }
   },
   methods: {
+    async sortChange ({ column, prop, order }) {
+      this.$emit('sortChange', { column, prop, order })
+      console.log('order', order)
+    },
     notAllowNormalUser () {
       const { roles } = this.userInfo
       return isNormalUser(roles)
