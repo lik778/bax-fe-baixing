@@ -172,7 +172,7 @@ export default {
       }
       this.queryInfo = { ...form, ...params }
       try {
-        const { data, code, message, data: { keywordsLockDetails: { keywordsLockDetails, ifExistLockCity, ifSoldAvailable, deviceAvailableStatus: { ifMobileAvailable }, deviceAvailableStatus } } } = await querySystemResult(params)
+        const { data, code, message, data: { keywordsLockDetails: { keywordsLockDetails, ifExistLockCity, ifSoldAvailable, deviceAvailableStatus: { ifMobileAvailable, ifPcAvailable }, deviceAvailableStatus } } } = await querySystemResult(params)
         if (code === 0) {
           this.queryResult = data
           // 锁词相关逻辑
@@ -183,10 +183,10 @@ export default {
           if (!ifSoldAvailable) {
             this.currentPrice = {}
             this.keywordLockText = '手机端、电脑端的“部分词的部分城市”已售出，详情如下。请更换已售出关键词/城市重新查价～'
-          } else if (ifMobileAvailable) {
+          } else if (ifMobileAvailable && !ifPcAvailable) {
             this.currentPrice = data.keywordPriceList[0].wapSeven
             this.keywordLockText = '电脑端的“部分词的部分城市”已售出，详情如下。请更换已售出关键词/城市重新查价～'
-          } else {
+          } else if (!ifMobileAvailable && ifPcAvailable) {
             this.currentPrice = data.keywordPriceList[0].pcSeven
             this.keywordLockText = '手机端的“部分词的部分城市”已售出，详情如下。请更换已售出关键词/城市重新查价～'
           }

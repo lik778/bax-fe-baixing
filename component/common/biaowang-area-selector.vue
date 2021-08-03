@@ -21,12 +21,18 @@
             </el-option>
           </el-option-group>
         </el-select>
-        <el-tag type="success" closable class="kw-tag"
+        <div>
+          <el-checkbox class="checkbox-item" v-model="quanguoChecked" @change="quanguoCheckedChange()">
+            <span>全国</span>
+          </el-checkbox>
+          <span></span>
+        </div>
+        <!-- <el-tag type="success" closable class="kw-tag"
                         v-for="area in selectedAreas" :key="area"
                         @close="removeArea(area)"
                 >
                 {{ formatArea(area) }}
-        </el-tag>
+        </el-tag> -->
         <div v-for="(province, i) in topAreas" :key="i">
           <el-checkbox :disabled="checkDisabled(province)" class="checkbox-item" v-model="province.checked" @change="provinceCheckedChange(province)">
             <span :class="{ selected: province.checked }">{{ province.label }}</span>
@@ -38,12 +44,6 @@
                 {{ area.label }}
             </p>
           </span>
-        </div>
-        <div>
-          <el-checkbox class="checkbox-item" v-model="quanguoChecked" @change="quanguoCheckedChange()">
-            <span>全国</span>
-          </el-checkbox>
-          <span></span>
         </div>
     </main>
     <header slot="title" class="dialog-header">
