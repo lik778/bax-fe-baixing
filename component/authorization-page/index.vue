@@ -1,7 +1,6 @@
 <template>
   <div>
-    <!-- <div v-if="isValidate === ERROR">{{error}}</div> -->
-    <div class="authorization" v-if="isValidate === NORMAL">
+    <div class="authorization" v-if="isValidate">
         <h4>授权函</h4>
         <main>
             <p>为方便本人/本公司更有效地开展业务和使用百姓网提供的服务，特授权维护业务之贵司销售<span>{{info.optimizer_name}} （{{info.optimizer_id}}）</span>代为管理账户，由其统一管理。</p>
@@ -32,9 +31,9 @@
             </footer>
         </main>
     </div>
-    <!-- <div v-if="isValidate === TIMEOUT" class="tips">
+    <div v-else class="tips">
       {{error}}
-    </div> -->
+    </div>
   </div>
 </template>
 <script>
@@ -48,7 +47,7 @@ export default {
   data () {
     return {
       info: {},
-      isValidate: WATING,
+      isValidate: false,
       ERROR,
       TIMEOUT,
       NORMAL,
@@ -64,10 +63,10 @@ export default {
       const userId = this.getQueryParam('user_id')
       try {
         const { data } = await checkUrlValid({ userId })
-        this.isValidate = NORMAL
+        this.isValidate = true
         this.info = data
       } catch (error) {
-        this.isValidate = ERROR
+        this.isValidate = false
         this.error = error
       }
     },
