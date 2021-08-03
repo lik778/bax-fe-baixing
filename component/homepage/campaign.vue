@@ -91,6 +91,7 @@ const formatPrice = (p) => {
 
 const CNT_REJECTED_CODE = '-53'
 const SERVICE_OPTIMIZED = 2 // 已授权
+const MANAGE_OPTIMIZED = -1 // 已授权
 const SERVICE_NOT_OPTIMIZE = 0 // 未授权
 const SERVICE_OPTIMIZE_ING = 1 // 授权中
 const RELATION_MANAGER = 'manager' // 优化师主管
@@ -98,7 +99,8 @@ const RELATION_SERVICE = 'service' // 优化师
 const STATUS_MAP = Object.freeze({
   [SERVICE_OPTIMIZED]: '已授权',
   [SERVICE_NOT_OPTIMIZE]: '未授权',
-  [SERVICE_OPTIMIZE_ING]: '授权中'
+  [SERVICE_OPTIMIZE_ING]: '授权中',
+  [MANAGE_OPTIMIZED]: '已授权'
 })
 export default {
   name: 'homepage-campaign',
