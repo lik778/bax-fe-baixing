@@ -81,8 +81,7 @@ export default {
           this.$alert('授权成功！', '授权', {
             confirmButtonText: '确定',
             callback: async action => {
-              const { data } = await checkUrlValid({ userId, optimizerId })
-              this.info = data
+              await this.getInfo()
               this.$message({
                 type: 'info',
                 message: '恭喜你操作成功！'
