@@ -7,7 +7,7 @@
       :visible.sync="dialogVisible"
       width="65%"
       >
-      <InqueryResult @getValue="getCurrentPrice" :tableData="activeRecord.priceList"/>
+      <InqueryResult :currentPrice="currentPrice" :deviceAvailableStatus="deviceAvailableStatus" @getValue="getCurrentPrice" :tableData="activeRecord.priceList"/>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="updateRecord">确 定</el-button>
@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import { getInqueryList, userChoose, preOrder, preInfo } from 'api/biaowang-plus'
+import { getInqueryList, userChoose, preOrder, preInfo, getPriceList } from 'api/biaowang-plus'
 import { APPLY_AUDIT_STATUS_OPTIONS, APPLY_TYPE_NORMAL } from 'constant/bw-plus'
 import { BwRecordsForm, BwRecordsTable, InqueryResult, PreOrderDetail } from './components'
 import { normalizeRoles } from 'util/role'
@@ -72,7 +72,8 @@ export default {
       currentPrice: {},
       orderPayUrl: '',
       isPreInfo: false,
-      preInfo: {}
+      preInfo: {},
+      deviceAvailableStatus: {}
     }
   },
   async mounted () {
@@ -119,9 +120,21 @@ export default {
         this.loading = false
       }
     },
-    reviewPrice (record) {
+    async reviewPrice (record) {
+      const { id: applyId } = record
+      const { data: { keywordsLockDetails: { deviceAvailableStatus, ifSoldAvailable, deviceAvailableStatus: { ifMobileAvailable, ifPcAvailable, ifAllAvailable } } } } = await getPriceList({ applyId })
+      this.deviceAvailableStatus = deviceAvailableStatus
       this.activeRecord = record
-      this.currentPrice = record.priceList[0].bothFive
+      if (!ifSoldAvailable) {
+        this.currentPrice = {}
+      } else
+      if (ifAllAvailable) {
+        this.currentPrice = record.priceList[0].bothFive
+      } else if (ifMobileAvailable) {
+        this.currentPrice = record.priceList[0].wapSeven
+      } else if (ifPcAvailable) {
+        this.currentPrice = record.priceList[0].pcSeven
+      }
       this.dialogVisible = true
     },
     async getCurrentPrice (value) {

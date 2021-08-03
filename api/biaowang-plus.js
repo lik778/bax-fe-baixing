@@ -201,3 +201,16 @@ export async function checkSoldCities (params) {
     .json()
   return body
 }
+
+/**
+ * @param {object} params
+ * @param {number} params.applyId
+ * @returns
+ */
+export async function getPriceList (params) {
+  const body = await biaowangPlus
+    .get('/apply/user/price/options')
+    .query(params)
+    .json()
+  return body
+}
