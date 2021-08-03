@@ -181,11 +181,11 @@ export async function createCampaign (data) {
 export async function activeCampaigns (ids, userId) {
   const body = await fengming
     .post('/campaign/pause')
-    .send(reverseCamelcase({
+    .send(reverseCamelcase(trim({
       campaignIds: [...ids],
       pause: 0,
       userId
-    }))
+    })))
     .json()
 
   return body
@@ -194,11 +194,11 @@ export async function activeCampaigns (ids, userId) {
 export async function pauseCampaigns (ids, userId) {
   const body = await fengming
     .post('/campaign/pause')
-    .send(reverseCamelcase({
+    .send(reverseCamelcase(trim({
       campaignIds: [...ids],
       pause: 1,
       userId
-    }))
+    })))
     .json()
   return body
 }
