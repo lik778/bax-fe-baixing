@@ -61,8 +61,9 @@ export default {
   methods: {
     async getInfo () {
       const userId = this.getQueryParam('user_id')
+      const optimizerId = this.getQueryParam('optimizer_id')
       try {
-        const { data } = await checkUrlValid({ userId })
+        const { data } = await checkUrlValid({ userId, optimizerId })
         this.isValidate = true
         this.info = data
       } catch (error) {
@@ -80,7 +81,7 @@ export default {
           this.$alert('授权成功！', '授权', {
             confirmButtonText: '确定',
             callback: async action => {
-              const { data } = await checkUrlValid({ userId })
+              const { data } = await checkUrlValid({ userId, optimizerId })
               this.info = data
               this.$message({
                 type: 'info',
@@ -104,8 +105,25 @@ export default {
       const userId = this.getQueryParam('user_id')
       const code = this.getQueryParam('code')
       const optimizerId = this.getQueryParam('optimizer_id')
-      const result = await rejectAuthorize({ userId, code, optimizerId })
-      console.log(result)
+      try {
+        const { meta: { code: status } } = await rejectAuthorize({ userId, code, optimizerId })
+        if (status === 0) {
+          this.$alert('已拒绝授权！', '授权', {
+            confirmButtonText: '确定',
+            callback: async action => {
+              const { data } = await checkUrlValid({ userId, optimizerId })
+              this.info = data
+              this.$message({
+                type: 'info',
+                message: '恭喜你操作成功！'
+              })
+            }
+          })
+        }
+      } catch (error) {
+        this.isValidate = false
+        this.error = error
+      }
     }
   }
 }

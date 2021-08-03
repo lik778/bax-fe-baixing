@@ -24,6 +24,13 @@ const config = merge(base, {
           '^/devApi': '/'
         },
         changeOrigin: true
+      },
+      '/testApi': {
+        target: 'http://test-bax.baixing.cn/',
+        pathRewrite: {
+          '^/testApi': '/'
+        },
+        changeOrigin: true
       }
     },
     historyApiFallback: {
