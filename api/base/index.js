@@ -49,7 +49,7 @@ export const fengming = new Fetch({
     const meta = body.meta || {}
     if (meta.status === 401) {
       Message.error('请重新登录 >_<')
-      // return redirect('signin', `return=${encodeURIComponent(location.pathname + location.search)}`)
+      return redirect('signin', `return=${encodeURIComponent(location.pathname + location.search)}`)
     }
     if (meta.message !== 'Success') {
       Message.error(meta.message)
