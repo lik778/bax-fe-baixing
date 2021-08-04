@@ -62,7 +62,8 @@ export default {
   },
   async mounted () {
     const { query: { user_id: userId } } = this.$route
-    const result = await getCampaignIds({ userId })
+    const isOnline = 1
+    const result = await getCampaignIds({ userId, isOnline })
     this.promotionIds = result.splice(1, result.length)
   }
 }
