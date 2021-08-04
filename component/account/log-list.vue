@@ -76,10 +76,10 @@
         label="变更后"
         align="center">
       </el-table-column>
-      <el-table-column
+      <!-- <el-table-column
         prop="operator"
         label="操作人"
-        align="center"/>
+        align="center"/> -->
     </el-table>
     <el-pagination
       :total="total"
