@@ -213,6 +213,14 @@ export function onlyAgentSales (roles) {
   return isAgentSales && !isAgentAccounting
 }
 
+export function onlyAgentAccounting (roles) {
+  const currentRoles = normalizeRoles(roles)
+  if (currentRoles.length === 1 && currentRoles.includes('AGENT_ACCOUNTING')) {
+    return true
+  }
+  return false
+}
+
 export function normalizeRoles (roles) {
   if (!isArray(roles)) {
     return []

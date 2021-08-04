@@ -80,7 +80,7 @@
             </router-link>
           </el-menu-item>
         </el-submenu>
-        <el-submenu index="bwPlus">
+        <el-submenu index="bwPlus" v-if="!onlyAgentAccounting">
           <template slot="title">
             <bx-icon type="sharealt"></bx-icon>标王2.0
           </template>
@@ -199,7 +199,8 @@ import {
   allowSeeBxAd,
   relationAllow,
   allowSeeDiamondSite,
-  isSales
+  isSales,
+  onlyAgentAccounting
 } from 'util/role'
 
 import { getUserSites } from 'api/diamond-site'
@@ -287,6 +288,9 @@ export default {
     },
     allowSales () {
       return isSales(this.userInfo.roles)
+    },
+    onlyAgentAccounting () {
+      return onlyAgentAccounting(this.userInfo.roles)
     }
   },
   async mounted () {
