@@ -174,7 +174,7 @@ export async function getCampaignIds (params) {
 export async function getGroupIds (params) {
   const body = await fengming
     .get('/group/ids')
-    .query(reverseCamelcase(params))
+    .query(reverseCamelcase(trim(params)))
     .json()
   const data = [{ value: 0, label: '全部' }]
   body.data.map(id => {

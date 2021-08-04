@@ -376,10 +376,18 @@ export default {
       handler: async function (newV, oldV) {
         await this.queryStatistics()
         const { userId } = this.userInfo
-        const campaignId = newV || ''
-        const result = await getGroupIds({ userId, campaignId })
-        this.groupIds = result
-        this.searchGroupId = result[0].value
+        const campaignId = newV
+        if (campaignId) {
+          const result = await getGroupIds({ userId, campaignId })
+          this.groupIds = result
+          this.searchGroupId = result[0].value
+        } else {
+          this.searchGroupId = 0
+          this.groupIds = [{
+            label: '全部',
+            value: 0
+          }]
+        }
       }
     },
     searchGroupId: {
