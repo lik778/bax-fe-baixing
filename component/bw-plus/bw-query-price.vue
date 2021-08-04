@@ -4,7 +4,7 @@
             <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
                 <el-tab-pane label="查价" name="first">
                     <InqueryForm :allAreas="allAreas" @inquery="inquery"/>
-                    <section v-if="ifExistLockCity" ref="viewScrollTop">
+                    <section class="bw-query-price_item" v-if="ifExistLockCity" ref="viewScrollTop">
                       <el-alert
                         class="lock-tips"
                         :title="keywordLockText"
@@ -184,10 +184,10 @@ export default {
             this.currentPrice = {}
             this.keywordLockText = '手机端、电脑端的“部分词的部分城市”已售出，详情如下。请更换已售出关键词/城市重新查价～'
           } else if (!ifPcAvailable) {
-            this.currentPrice = data.keywordPriceList[0].wapSeven
+            this.currentPrice = data.keywordPriceList && data.keywordPriceList[0].wapSeven
             this.keywordLockText = '电脑端的“部分词的部分城市”已售出，详情如下。请更换已售出关键词/城市重新查价～'
           } else if (!ifMobileAvailable) {
-            this.currentPrice = data.keywordPriceList[0].pcSeven
+            this.currentPrice = data.keywordPriceList && data.keywordPriceList[0].pcSeven
             this.keywordLockText = '手机端的“部分词的部分城市”已售出，详情如下。请更换已售出关键词/城市重新查价～'
           }
           this.$nextTick(() => {
