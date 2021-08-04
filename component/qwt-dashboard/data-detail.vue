@@ -259,7 +259,6 @@ export default {
   methods: {
     async sortChange ({ column, prop, order }) {
       this.$emit('sortChange', { column, prop, order })
-      console.log('order', order)
     },
     notAllowNormalUser () {
       const { roles } = this.userInfo

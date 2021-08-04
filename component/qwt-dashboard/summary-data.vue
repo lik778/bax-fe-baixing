@@ -82,7 +82,8 @@
                 v-for="item in campaignIds"
                 :key="item.value"
                 :label="item.label"
-                :value="item.value" />
+                :value="item.value"
+                :disabled="query.dimension === DIMENSION_SEARCH_KEYWORD && item.value === 0" />
       </el-select>
     </section>
     <section v-if="query.dimension != DIMENSION_CAMPAIGN">
@@ -349,7 +350,10 @@ export default {
   watch: {
     query: {
       deep: true,
-      handler: async function () {
+      handler: async function (newV) {
+        if (newV.dimension === DIMENSION_SEARCH_KEYWORD) {
+          this.searchCampaigns = this.campaignIds[1].value
+        }
         await this.queryStatistics()
       }
     },
