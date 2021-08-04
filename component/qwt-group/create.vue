@@ -194,14 +194,14 @@ export default {
     })
     try {
       // 复制进入
-      const { query: { cloneId, user_id: userId } } = this.$route
+      const { query: { cloneId, user_id: userId, campaignId } } = this.$route
       if (cloneId) {
         await this.cloneGroupById(cloneId)
       } else {
-        const promotion = await getCampaignInfo(this.campaignId, { userId })
+        const promotion = await getCampaignInfo(campaignId, { userId })
         this.promotion = pick(promotion, ['id', 'source', 'areas'])
       }
-      this.campaignKeywordLen = await getCampaignKeywordsCount(this.campaignId, userId)
+      this.campaignKeywordLen = await getCampaignKeywordsCount(campaignId, userId)
     } catch (error) {
       console.error('error:', error)
     } finally {
@@ -232,13 +232,14 @@ export default {
     },
     handleTrack (action, opts = {}) {
       const { actionTrackId, userInfo } = this
+      const { query: { campaignId } } = this.$route
       track({
         roles: userInfo.roles.map(r => r.name).join(','),
         action: action,
         baixingId: userInfo.baixingId,
         time: Date.now() / 1000 | 0,
         baxId: userInfo.id,
-        campaignId: this.promotion.id,
+        campaignId: campaignId,
         actionTrackId,
         ...opts
       })
@@ -269,6 +270,7 @@ export default {
       }
     },
     async addGroup () {
+      const { query: { campaignId } } = this.$route
       try {
         await this.validateGroup()
       } catch (e) {
@@ -280,7 +282,7 @@ export default {
         await createGroup({
           ...this.group,
           price: toFloat(this.group.price) * 100,
-          campaignId: this.promotion.id
+          campaignId: campaignId
         })
 
         this.$message.success('创建单元成功')
@@ -289,7 +291,7 @@ export default {
 
         this.$router.push({
           name: 'qwt-update-promotion',
-          params: { id: this.promotion.id }
+          params: { id: campaignId }
         })
       } finally {
         this.loading.updateGroup = false
