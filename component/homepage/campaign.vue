@@ -66,6 +66,8 @@
     <el-dialog
       title="授权"
       :visible.sync="dialogVisible"
+      :close-on-press-escape="false"
+      :close-on-click-modal="false"
       width="40%"
     >
       <p class="content-item">1.发送授权链接到预留手机号码</p>
