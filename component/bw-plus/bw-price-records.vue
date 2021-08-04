@@ -1,7 +1,7 @@
 <template>
   <el-card class="bw-price-record">
     <BwRecordsForm @search="search"/>
-    <BwRecordsTable @preOrder="getPreInfo" @reviewPrice="reviewPrice" :loading="loading" :records="records" :allAreas="allAreas"/>
+    <BwRecordsTable @doCopy="copy" @preOrder="getPreInfo" @reviewPrice="reviewPrice" :loading="loading" :records="records" :allAreas="allAreas"/>
     <el-dialog
       title="查看"
       :visible.sync="dialogVisible"
