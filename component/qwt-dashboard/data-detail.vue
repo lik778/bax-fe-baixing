@@ -10,14 +10,14 @@
         :formatter="r => fmtChannel(r.channel)" />
       <el-table-column label="设备" width="100"
         :formatter="r => fmtDevice(r.device)" />
-      <el-table-column label="展现" prop="shows" width="90" sortable />
-      <el-table-column label="点击" prop="clicks" width="90" sortable />
+      <el-table-column label="展现" prop="shows" width="90" sortable="custom" />
+      <el-table-column label="点击" prop="clicks" width="90" sortable="custom" />
       <el-table-column label="点击率" prop="clickRate" width="90">
         <span slot-scope="{row}">
           {{ (row.clickRate * 100).toFixed(2) }}%
         </span>
       </el-table-column>
-      <el-table-column label="实扣点击单价" width="160" sortable
+      <el-table-column label="实扣点击单价" width="160" prop="clickAvgPrice" sortable="custom"
         :formatter="r => (r.clickAvgPrice / 100).toFixed(2) + '元'" />
       <el-table-column label="消耗" prop="cost" width="120" sortable="custom"
         :formatter="r => (r.cost / 100).toFixed(2) + '元'" />
@@ -40,14 +40,14 @@
         :formatter="r => fmtChannel(r.channel)" />
       <el-table-column label="设备" width="100"
         :formatter="r => fmtDevice(r.device)" />
-      <el-table-column label="展现" prop="shows" width="90" sortable />
-      <el-table-column label="点击" prop="clicks" width="90" sortable />
+      <el-table-column label="展现" prop="shows" width="90" sortable="custom" />
+      <el-table-column label="点击" prop="clicks" width="90" sortable="custom" />
       <el-table-column label="点击率" prop="clickRate" width="90">
         <span slot-scope="{row}">
           {{ (row.clickRate * 100).toFixed(2) }}%
         </span>
       </el-table-column>
-      <el-table-column label="实扣点击单价" width="160" sortable
+      <el-table-column label="实扣点击单价" prop="clickAvgPrice" width="160" sortable="custom"
         :formatter="r => (r.clickAvgPrice / 100).toFixed(2) + '元'" />
       <el-table-column label="消耗" width="120" prop="cost" sortable="custom"
         :formatter="r => (r.cost / 100).toFixed(2) + '元'" />
@@ -85,14 +85,14 @@
           </template>
         </template>
       </el-table-column>
-      <el-table-column label="展现" prop="shows" width="90" sortable />
-      <el-table-column label="点击" prop="clicks" width="90" sortable />
+      <el-table-column label="展现" prop="shows" width="90" sortable="custom" />
+      <el-table-column label="点击" prop="clicks" width="90" sortable="custom" />
       <el-table-column label="点击率" prop="clickRate" width="90">
         <span slot-scope="{row}">
           {{ (row.clickRate * 100).toFixed(2) }}%
         </span>
       </el-table-column>
-      <el-table-column label="实扣点击单价" width="160" sortable
+      <el-table-column label="实扣点击单价" prop="clickAvgPrice" width="160" sortable="custom"
         :formatter="r => (r.clickAvgPrice / 100).toFixed(2) + '元'" />
       <el-table-column label="消耗" prop="cost" width="120" sortable="custom"
         :formatter="r => (r.cost / 100).toFixed(2) + '元'" />
@@ -111,14 +111,14 @@
         :formatter="r => fmtChannel(r.channel)" />
       <el-table-column label="设备" width="100"
         :formatter="r => fmtDevice(r.device)" />
-      <el-table-column label="展现" prop="shows" width="90" sortable>
+      <el-table-column label="展现" prop="shows" width="90" sortable="custom">
         <template slot-scope="scope">
           <span v-if="scope.row.channel === SEM_PLATFORM_SOGOU">--</span>
           <span v-else>{{scope.row.shows}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="点击" prop="clicks" width="90" sortable />
-      <el-table-column label="点击率" width="160" sortable>
+      <el-table-column label="点击" prop="clicks" width="90" sortable="custom" />
+      <el-table-column label="点击率" prop="clickRate" width="160" sortable="custom">
         <template slot-scope="scope">
           <span v-if="scope.row.channel === SEM_PLATFORM_SOGOU">--</span>
           <span v-else>{{(scope.row.clickRate * 100).toFixed(2) + '%'}}</span>

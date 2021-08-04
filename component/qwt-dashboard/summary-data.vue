@@ -188,11 +188,21 @@ export default {
         device: DEVICE_ALL
       },
 
+      sort: {
+        orderType: '',
+        sortType: ''
+      },
+
       searchCampaigns: 0,
       searchGroupId: 0,
       campaignErrTip: false,
       campaignIds: [],
-      groupIds: [],
+      groupIds: [
+        {
+          label: '全部',
+          value: 0
+        }
+      ],
       triPickerOptions: {
         disabledDate (time) {
           const timestamp = new Date(time).getTime()
@@ -222,11 +232,15 @@ export default {
     async sortChange ({ column, prop, order }) {
       const orderType = order === 'ascending' ? ORDER_TYPE_ASC : ORDER_TYPE_DES
       const sortType = prop
-      await this.queryStatistics({ orderType, sortType })
+      this.sort = {
+        orderType,
+        sortType
+      }
+      await this.queryStatistics()
     },
     async queryStatistics (opts = {}) {
       const { dimension } = this.query
-      const { checkedCampaignIds } = this
+      const { checkedCampaignIds, sort } = this
 
       await store.clearStatistics()
       this.campaignErrTip = ''
@@ -242,7 +256,7 @@ export default {
           this.campaignErrTip = true
           return
         }
-        return await this._getReportByQueryWord(opts)
+        return await this._getReportByQueryWord({ ...opts, ...sort })
       }
 
       // 非搜索词维度，需要额外调获取计划总数据（总展现、总点击、总消费）接口
@@ -253,13 +267,12 @@ export default {
         this.campaignErrTip = true
         return
       }
-      return await this._getReport(opts)
+      return await this._getReport({ ...opts, ...sort })
     },
     async _getReportByQueryWord (opts = {}) {
       const offset = opts.offset || 0
       const { query, checkedCampaignIds } = this
       const { userId, salesId } = this.salesInfo
-      console.log('checkedCampaignIds', checkedCampaignIds)
       let startDate
       let endDate
 
@@ -284,7 +297,8 @@ export default {
         salesId,
         groupId: this.searchGroupId || '',
         limit: this.limit,
-        offset
+        offset,
+        ...opts
       }
       await store.fetchReportByQueryWord(q)
     },
@@ -292,8 +306,6 @@ export default {
       const offset = opts.offset || 0
       const { query, checkedCampaignIds } = this
       const { userId, salesId } = this.salesInfo
-      console.log('checkedCampaignIds', checkedCampaignIds)
-
       let startAt
       let endAt
 
@@ -351,6 +363,8 @@ export default {
     query: {
       deep: true,
       handler: async function (newV) {
+        // const { userId } = this.userInfo
+        // const campaignId = this.searchCampaigns || ''
         if (newV.dimension === DIMENSION_SEARCH_KEYWORD) {
           this.searchCampaigns = this.campaignIds[1].value
         }
@@ -365,6 +379,7 @@ export default {
         const campaignId = newV || ''
         const result = await getGroupIds({ userId, campaignId })
         this.groupIds = result
+        this.searchGroupId = result[0].value
       }
     },
     searchGroupId: {
