@@ -17,7 +17,7 @@
           {{ (row.clickRate * 100).toFixed(2) }}%
         </span>
       </el-table-column>
-      <el-table-column label="实扣点击单价" width="160" prop="clickAvgPrice" sortable="custom"
+      <el-table-column label="实扣点击单价" width="160" prop="click_avg_price" sortable="custom"
         :formatter="r => (r.clickAvgPrice / 100).toFixed(2) + '元'" />
       <el-table-column label="消耗" prop="cost" width="120" sortable="custom"
         :formatter="r => (r.cost / 100).toFixed(2) + '元'" />
@@ -47,7 +47,7 @@
           {{ (row.clickRate * 100).toFixed(2) }}%
         </span>
       </el-table-column>
-      <el-table-column label="实扣点击单价" prop="clickAvgPrice" width="160" sortable="custom"
+      <el-table-column label="实扣点击单价" prop="click_avg_price" width="160" sortable="custom"
         :formatter="r => (r.clickAvgPrice / 100).toFixed(2) + '元'" />
       <el-table-column label="消耗" width="120" prop="cost" sortable="custom"
         :formatter="r => (r.cost / 100).toFixed(2) + '元'" />
@@ -92,7 +92,7 @@
           {{ (row.clickRate * 100).toFixed(2) }}%
         </span>
       </el-table-column>
-      <el-table-column label="实扣点击单价" prop="clickAvgPrice" width="160" sortable="custom"
+      <el-table-column label="实扣点击单价" prop="click_avg_price" width="160" sortable="custom"
         :formatter="r => (r.clickAvgPrice / 100).toFixed(2) + '元'" />
       <el-table-column label="消耗" prop="cost" width="120" sortable="custom"
         :formatter="r => (r.cost / 100).toFixed(2) + '元'" />
@@ -126,7 +126,7 @@
       </el-table-column>
       <el-table-column label="消耗" width="120" prop="cost" sortable="custom"
         :formatter="r => (r.costs / 100).toFixed(2) + '元'" />
-      <el-table-column label="平均点击价格" width="160" sortable
+      <el-table-column label="平均点击价格" prop="click_avg_price" width="160" sortable="custom"
         :formatter="r => (r.clickAvgPrice / 100).toFixed(2) + '元'" />
       <el-table-column min-width="270" fixed="right">
         <span slot="header">操作
