@@ -3,6 +3,7 @@
     title="复制单元"
     :visible.sync="dialogVisible"
     width="30%"
+    @close="cancel"
     >
         <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="120px" class="demo-ruleForm">
             <el-form-item label="目标计划：" prop="promoteType">
@@ -56,7 +57,6 @@ export default {
       this.$emit('cancel')
     },
     confirm () {
-      console.log(this.ruleForm)
       this.$emit('copy', this.ruleForm)
     }
   },

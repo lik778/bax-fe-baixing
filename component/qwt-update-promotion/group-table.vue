@@ -82,7 +82,7 @@
       </template>
     </el-table-column>
   </el-table>
-  <SelectDialog @copy="copy" :dialogVisible="dialogVisible"/>
+  <SelectDialog @cancel="dialogVisible = false" @copy="copy" :dialogVisible="dialogVisible"/>
 </div>
 </template>
 
