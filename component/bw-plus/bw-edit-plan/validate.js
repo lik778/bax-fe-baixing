@@ -4,6 +4,16 @@ import { LANDING_TYPE_AD, LANDING_TYPE_STORE } from 'constant/fengming'
 
 const LANDING_TYPE_ENUMS = [LANDING_TYPE_AD, LANDING_TYPE_STORE]
 
+// const checkCreative = (title, content) => {
+//   if (!title || !content) {
+//     return '标题和内容不能为空'
+//   } else if (this.titleMinLen > title.length || this.titleMaxLen < title.length) {
+//     return '标题字数限制为9-25个字'
+//   } else if (this.contentMinLen > content.length || this.contentMaxLen < content.length) {
+//     return '内容字数限制9-80个字'
+//   }
+// }
+
 const createDescriptor = {
   landingType: {
     message: 'hi, 投放类型不能为空',
@@ -31,6 +41,20 @@ const createDescriptor = {
       }
       return true
     }
+  },
+  creativeTitle: {
+    message: 'hi，标题字数限制为9-25个字！',
+    type: 'string',
+    require: true,
+    min: 9,
+    max: 25
+  },
+  creativeContent: {
+    message: 'hi，内容字数限制9-80个字！',
+    type: 'string',
+    require: true,
+    min: 9,
+    max: 80
   }
 }
 
