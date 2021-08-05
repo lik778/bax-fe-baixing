@@ -236,6 +236,13 @@ export default {
     async checkSold () {
       const { words = '' } = this.form
       const keywords = words.split(/[\s\n]/).filter(Boolean)
+      if (!words) {
+        this.$message({
+          message: '请先输入您要查询的关键词！',
+          type: 'error'
+        })
+        return
+      }
       const { data: { allSoldCities } } = await checkSoldCities({ keywords })
       if (allSoldCities.length) {
         this.allSoldCities = Object.fromEntries(allSoldCities.map(item => [item, true]))
