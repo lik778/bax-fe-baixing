@@ -196,6 +196,8 @@ export default {
           } else if (!ifMobileAvailable) {
             this.currentPrice = data.keywordPriceList && data.keywordPriceList[0].pcSeven
             this.keywordLockText = '手机端的“部分词的部分城市”已售出，详情如下。请更换已售出关键词/城市重新查价～'
+          } else {
+            this.currentPrice = data.keywordPriceList && data.keywordPriceList[0].bothSeven
           }
           this.$nextTick(() => {
             this.$refs.viewScrollTop.scrollIntoView()
