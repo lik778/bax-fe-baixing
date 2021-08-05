@@ -7,18 +7,7 @@
     >
       <el-table-column fixed prop="id" label="ID" />
       <el-table-column sortable fixed prop="createdTime" width="170" label="日期" :formatter="dateFormater" />
-      <el-table-column width="150" fixed prop="keywords" label="关键词">
-        <template slot-scope="{ row }">
-          <el-popover
-          placement="top-start"
-          title="关键词"
-          width="150"
-          trigger="hover"
-          :content="row.keywords.join('、')">
-            <p slot="reference" class="keywords-row">{{ row.keywords.join("、") }}</p>
-          </el-popover>
-        </template>
-      </el-table-column>
+      <el-table-column width="150" :show-overflow-tooltip="true" fixed prop="keywords" label="关键词" :formatter="keywordsFormater" />
       <el-table-column prop="applyType" label="报价类型" :formatter="applyTypeFormatter" />
       <el-table-column width="150" prop="status" label="审核状态">
         <template slot-scope="{ row }">
@@ -29,19 +18,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="device" label="平台" :formatter="deviceFormatter" />
-      <el-table-column prop="cities" width="150" label="投放城市" >
-        <template slot-scope="{ row }">
-          <el-popover
-          placement="top-start"
-          title="投放城市"
-          width="150"
-          trigger="hover"
-          >
-            <div class="cities-content">{{citiesFormater(row)}}</div>
-            <p slot="reference" class="keywords-row">{{ citiesFormater(row) }}</p>
-          </el-popover>
-        </template>
-      </el-table-column>
+      <el-table-column prop="cities" width="150" :show-overflow-tooltip="true" label="投放城市" :formatter="citiesFormater" />
       <el-table-column width="120" prop="scheduleType" label="推广时段" :formatter="scheduleTypeFormater" />
       <el-table-column prop="days" label="服务时长" :formatter="daysFormater" />
       <el-table-column width="150" prop="industry" label="推广行业" />
@@ -94,6 +71,10 @@ export default {
     }
   },
   methods: {
+    keywordsFormater (...args) {
+      const [,, keywords] = args
+      return keywords.join('、')
+    },
     daysFormater (...args) {
       const [,, days] = args
       return days > 0 ? `${days}天` : '-'
@@ -122,8 +103,8 @@ export default {
       const [,, cellValue] = args
       return DEVICE[cellValue] || '-'
     },
-    citiesFormater (row) {
-      const { cities } = row
+    citiesFormater (...args) {
+      const [,, cities] = args
       return cities.map(city => getCnName(city, this.allAreas)).join('、')
     },
     reviewPrice (row) {
@@ -155,18 +136,6 @@ export default {
   .pending-item{
     color: #E6A23C;
   }
-  .keywords-row{
-    width: 130px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    margin-top: 6px;
-  }
-  .cities-content{
-    max-height: 200px;
-    overflow: auto;
-  }
-
   .el-table thead.is-group th{
     background: red;
   }
