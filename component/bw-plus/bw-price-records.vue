@@ -10,7 +10,7 @@
       <InqueryResult :currentPrice="currentPrice" :deviceAvailableStatus="deviceAvailableStatus" @getValue="getCurrentPrice" :tableData="activeRecord.priceList"/>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="updateRecord">确 定</el-button>
+        <el-button :disabled="notAllowUpdate" type="primary" @click="updateRecord">确 定</el-button>
       </span>
     </el-dialog>
     <el-pagination
@@ -56,6 +56,11 @@ export default {
       type: Object,
       default: () => {},
       require: true
+    }
+  },
+  computed: {
+    notAllowUpdate () {
+      return !this.currentPrice.price
     }
   },
   data () {
@@ -136,11 +141,11 @@ export default {
         this.currentPrice = {}
       } else
       if (ifAllAvailable) {
-        this.currentPrice = record.priceList[0].bothFive
+        this.currentPrice = record.priceList[0].bothFive.price ? record.priceList[0].bothFive : {}
       } else if (ifMobileAvailable) {
-        this.currentPrice = record.priceList[0].wapSeven
+        this.currentPrice = record.priceList[0].wapSeven.price ? record.priceList[0].wapSeven : {}
       } else if (ifPcAvailable) {
-        this.currentPrice = record.priceList[0].pcSeven
+        this.currentPrice = record.priceList[0].pcSeven.price ? record.priceList[0].pcSeven : {}
       }
       this.dialogVisible = true
     },

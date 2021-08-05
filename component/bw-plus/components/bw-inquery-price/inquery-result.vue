@@ -17,12 +17,12 @@
         align="center">
             <el-table-column align="center" prop="bothSeven" label="7天*24小时（元）">
                 <template slot-scope="{ row }">
-                  <div :class="{ 'active-item': row.bothSeven.index === current.index, 'option-item': true, 'disable-item': row.bothSeven.price < 0 || !deviceAvailableStatus.ifAllAvailable }" @click="cellClick(row.bothSeven)">{{transforPrice(row.bothSeven.price)}}</div>
+                  <div :class="{ 'active-item': row.bothSeven.index === current.index, 'option-item': true, 'disable-item': clickDisabled(row.bothSeven.price) }" @click="cellClick(row.bothSeven)">{{transforPrice(row.bothSeven.price)}}</div>
                 </template>
             </el-table-column>
             <el-table-column align="center" prop="bothFive" label="5天*8小时（元）">
               <template slot-scope="{ row }">
-                <div :class="{ 'active-item': row.bothFive.index === current.index, 'option-item': true, 'disable-item': row.bothFive.price < 0 || !deviceAvailableStatus.ifAllAvailable  }" @click="cellClick(row.bothFive)">{{transforPrice(row.bothFive.price)}}</div>
+                <div :class="{ 'active-item': row.bothFive.index === current.index, 'option-item': true, 'disable-item': clickDisabled(row.bothFive.price) }" @click="cellClick(row.bothFive)">{{transforPrice(row.bothFive.price)}}</div>
               </template>
             </el-table-column>
         </el-table-column>
@@ -31,12 +31,12 @@
         align="center">
             <el-table-column align="center" prop="wapSeven" label="7天*24小时（元）">
               <template slot-scope="{ row }">
-                <div :class="{ 'active-item': row.wapSeven.index === current.index, 'option-item': true, 'disable-item': row.wapSeven.price < 0 || !deviceAvailableStatus.ifMobileAvailable  }" @click="cellClick(row.wapSeven)">{{transforPrice(row.wapSeven.price)}}</div>
+                <div :class="{ 'active-item': row.wapSeven.index === current.index, 'option-item': true, 'disable-item': clickDisabled(row.wapSeven.price) }" @click="cellClick(row.wapSeven)">{{transforPrice(row.wapSeven.price)}}</div>
               </template>
             </el-table-column>
             <el-table-column align="center" prop="wapFive" label="5天*8小时（元）">
               <template slot-scope="{ row }">
-                <div :class="{ 'active-item': row.wapFive.index === current.index, 'option-item': true, 'disable-item': row.wapFive.price < 0 || !deviceAvailableStatus.ifMobileAvailable  }" @click="cellClick(row.wapFive)">{{transforPrice(row.wapFive.price)}}</div>
+                <div :class="{ 'active-item': row.wapFive.index === current.index, 'option-item': true, 'disable-item': clickDisabled(row.wapFive.price) }" @click="cellClick(row.wapFive)">{{transforPrice(row.wapFive.price)}}</div>
               </template>
             </el-table-column>
         </el-table-column>
@@ -45,12 +45,12 @@
         align="center">
             <el-table-column align="center" prop="pcSeven" label="7天*24小时（元）">
               <template slot-scope="{ row }">
-                <div :class="{ 'active-item': row.pcSeven.index === current.index, 'option-item': true, 'disable-item': row.pcSeven.price < 0 || !deviceAvailableStatus.ifPcAvailable  }" @click="cellClick(row.pcSeven)">{{transforPrice(row.pcSeven.price)}}</div>
+                <div :class="{ 'active-item': row.pcSeven.index === current.index, 'option-item': true, 'disable-item': clickDisabled(row.pcSeven.price) }" @click="cellClick(row.pcSeven)">{{transforPrice(row.pcSeven.price)}}</div>
               </template>
             </el-table-column>
             <el-table-column align="center" prop="pcFive" label="5天*8小时（元）">
               <template slot-scope="{ row }">
-                <div :class="{ 'active-item': row.pcFive.index === current.index, 'option-item': true, 'disable-item': row.pcFive.price < 0 || !deviceAvailableStatus.ifPcAvailable  }" @click="cellClick(row.pcFive)">{{transforPrice(row.pcFive.price)}}</div>
+                <div :class="{ 'active-item': row.pcFive.index === current.index, 'option-item': true, 'disable-item': clickDisabled(row.pcFive.price) }" @click="cellClick(row.pcFive)">{{transforPrice(row.pcFive.price)}}</div>
               </template>
             </el-table-column>
         </el-table-column>
@@ -105,6 +105,9 @@ export default {
         return f2y(price)
       }
       return '-'
+    },
+    clickDisabled (price) {
+      return price <= 0 || !this.deviceAvailableStatus.ifMobileAvailable
     }
   }
 }
