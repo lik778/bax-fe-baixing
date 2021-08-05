@@ -3,7 +3,7 @@
         <el-card class="box-card">
             <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
                 <el-tab-pane label="查价" name="first">
-                    <InqueryForm :allAreas="allAreas" @inquery="inquery"/>
+                    <InqueryForm :allAreas="allAreas" @inquery="inquery" @resetResult="resetResult"/>
                     <section class="bw-query-price_item" v-if="ifExistLockCity" ref="viewScrollTop">
                       <el-alert
                         class="lock-tips"
@@ -116,6 +116,13 @@ export default {
       } else {
         return APPLY_TYPE_NORMAL
       }
+    },
+    resetResult () {
+      this.queryResult = {}
+      this.currentPrice = {}
+      this.queryInfo = {}
+      this.keywordsLockDetails = []
+      this.ifExistLockCity = false
     },
     async submit () {
       const { error, overHeat, priceId, tempPvId, industryError } = this.queryResult

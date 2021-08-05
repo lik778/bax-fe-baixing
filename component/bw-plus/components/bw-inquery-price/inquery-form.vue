@@ -181,7 +181,14 @@ export default {
       })
     },
     async checkKeyword () {
+      this.$emit('resetResult')
       const { words = '' } = this.form
+      this.form = {
+        cities: [],
+        coreCities: [],
+        industry: '',
+        words
+      }
       if (!this.keywordLengthCheck().validate) {
         return
       }
@@ -198,7 +205,6 @@ export default {
             passed,
             rejectedWordWithReason
           }
-          loading.close()
           if (!passed) {
             this.$message({
               message: rejectedWordWithReason,
@@ -211,15 +217,9 @@ export default {
             type: 'success'
           })
         } catch (error) {
-          loading.close()
           return false
         } finally {
-          this.form = {
-            cities: [],
-            coreCities: [],
-            industry: '',
-            words
-          }
+          loading.close()
         }
       }
     },
@@ -239,6 +239,7 @@ export default {
       this.form.coreCities = this.form.coreCities.filter(i => i !== area)
     },
     onAreasChange (areas) {
+      console.log(areas)
       this.form.cities = [...areas]
       // 用户所在地和推广区域联动
       this.form.coreCities = this.form.coreCities.filter(i => areas.includes(i))
