@@ -1,7 +1,7 @@
 <template>
   <el-card class="bw-price-record">
     <BwRecordsForm @search="search"/>
-    <BwRecordsTable @doCopy="copy" @preOrder="getPreInfo" @reviewPrice="reviewPrice" :loading="loading" :records="records" :allAreas="allAreas"/>
+    <BwRecordsTable @doCopy="preOrder" @preOrder="getPreInfo" @reviewPrice="reviewPrice" :loading="loading" :records="records" :allAreas="allAreas"/>
     <el-dialog
       title="查看"
       :visible.sync="dialogVisible"
@@ -48,6 +48,11 @@ export default {
       required: true
     },
     userInfo: {
+      type: Object,
+      default: () => {},
+      require: true
+    },
+    salesInfo: {
       type: Object,
       default: () => {},
       require: true
@@ -104,10 +109,12 @@ export default {
     async getRecord () {
       this.loading = true
       const { formInline, currentPage } = this
+      const { userId } = this.salesInfo
       const params = {
         ...formInline,
         size: PAGESIZE,
-        page: currentPage
+        page: currentPage,
+        userId
       }
       try {
         const { data: { content, totalElements } } = await getInqueryList(params)

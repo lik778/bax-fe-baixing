@@ -133,7 +133,7 @@ export default {
         if (array[i].length < 2 || array[i].length > 10) {
           errorMsg = {
             validate: false,
-            error: '单个关键词个数在2-10之间'
+            error: '单个关键词字数在2-10之间'
           }
           break
         }
@@ -167,7 +167,7 @@ export default {
           const industryCn = checkedIndustry[0].description
           this.$emit('inquery', { ...this.form, industryCn })
         } else {
-          console.log('')
+          console.log(valid)
         }
         this.isInquery = false
       })
