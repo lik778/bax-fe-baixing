@@ -122,6 +122,14 @@ export default {
         error: ''
       }
       const array = words.split(/[\s\n]/).filter(Boolean)
+      const patrn = /[`~!@#$%^&*()_\-+=<>?:"{}|,.\\/;'\\[\]·~！@#￥%……&*（）——\-+={}|《》？：“”【】、；‘'，。、]/im
+      if (patrn.test(array.join(''))) { // 如果包含特殊字符返回false
+        errorMsg = {
+          validate: false,
+          error: '关键词只支持数字，字母和中文'
+        }
+        return errorMsg
+      }
       if (array.length > 10) {
         errorMsg = {
           validate: false,
@@ -205,6 +213,13 @@ export default {
         } catch (error) {
           loading.close()
           return false
+        } finally {
+          this.form = {
+            cities: [],
+            coreCities: [],
+            industry: '',
+            words
+          }
         }
       }
     },
