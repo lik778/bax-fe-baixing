@@ -192,7 +192,6 @@ export default {
       this.form = {
         coreCities: [],
         industry: '',
-        words,
         ...form
       }
       if (!this.keywordLengthCheck().validate) {
