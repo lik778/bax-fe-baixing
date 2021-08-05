@@ -33,17 +33,6 @@
           </el-menu-item>
         </el-submenu>
 
-        <el-submenu index="seo">
-          <template slot="title">
-            <bx-icon type="sharealt"></bx-icon>首页宝
-          </template>
-          <el-menu-item index="seo-promotion-list">
-            <router-link :to="{ name: 'seo-promotion-list' }" tag="p">
-              管理首页宝
-            </router-link>
-          </el-menu-item>
-        </el-submenu>
-
         <el-submenu index="sst" v-show="allowSeeQwtPromotion || allowSales">
           <template slot="title">
             <bx-icon type="sharealt"></bx-icon>站外推广
@@ -187,7 +176,6 @@ import { baxUserLogin, kaOnlineAndTickets } from 'api/ka'
 
 const MENU_GROUP_MAP = {
   charge: ['qwt-charge', 'seo-charge'],
-  seo: ['seo-promotion-list'],
   sst: ['qwt-create-promotion', 'qwt-promotion-list'],
   bw: ['bw-query-price', 'bw-plan-list', 'bw-manual'],
   qc: ['qc-promote-list'],

@@ -56,6 +56,10 @@
                      v-if="showColumns.includes('avgCpcRanking')"
                      label="关键词平均排名"
                      align="center" />
+    <el-table-column prop="todayCost"
+                     label="今日消耗"
+                     align="center"
+                     :formatter="(row, column, cellValue) => cellValue === 0 ? '-' : $formatter.f2y(cellValue)" />
     <el-table-column label="操作"
                      align="center">
       <template slot-scope="{ row }">
@@ -68,9 +72,6 @@
           {{ !!row.pause ? "开启" : "暂停" }}
         </el-button>
         <el-button type="text"
-                   :disabled="
-                      row.frontCampaignStatus === CAMPAIGN_STATUS_OFFLINE
-                    "
                    @click="optimizeGroup(row)">优化</el-button>
         <el-button type="text"
                    :disabled="

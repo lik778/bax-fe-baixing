@@ -10,7 +10,7 @@
   <transition name="el-fade-in">
     <div class="wx-modal" v-if="modalVisible">
       <div class="img-wrap" @click="toggleWechatModalVisible(false)">
-        <img src="//file.baixing.net/201903/a7560ecf7d023a1fbe63101f21504652.png" width="138" height="138">
+        <img src="//file.baixing.net/202107/4937607acaf1a3da4af87d80bc159f26.jpg" width="138" height="138">
         <span class="close-btn">&times;</span>
       </div>
     </div>
