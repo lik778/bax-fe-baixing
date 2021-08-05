@@ -21,7 +21,8 @@ module.exports = {
   entry: {
     signin: './template/signin',
     bax: './template/bax',
-    huodong: './template/huodong'
+    huodong: './template/huodong',
+    authorizationPage: './template/authorization-page'
   },
   output: {
     path: distPath,

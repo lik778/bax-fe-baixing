@@ -24,6 +24,13 @@ const config = merge(base, {
           '^/devApi': '/'
         },
         changeOrigin: true
+      },
+      '/testApi': {
+        target: 'http://test-bax.baixing.cn/',
+        pathRewrite: {
+          '^/testApi': '/'
+        },
+        changeOrigin: true
       }
     },
     historyApiFallback: {
@@ -39,6 +46,10 @@ const config = merge(base, {
         {
           from: /^\/huodong/,
           to: '/dist/huodong.html'
+        },
+        {
+          from: /^\/authorization/,
+          to: '/dist/authorizationPage.html'
         }
       ]
     }
@@ -64,6 +75,11 @@ config.plugins = [
     filename: 'huodong.html',
     template: 'template/huodong.html',
     chunks: ['vendors~bax~huodong~signin', 'huodong']
+  }),
+  new HtmlWebpackPlugin({
+    filename: 'authorizationPage.html',
+    template: 'template/authorization-page.html',
+    chunks: ['vendors~bax~huodong~signin', 'authorizationPage']
   })
 ]
 

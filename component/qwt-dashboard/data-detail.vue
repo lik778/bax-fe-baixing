@@ -244,6 +244,10 @@ export default {
     userInfo: {
       type: Object,
       require: true
+    },
+    salesInfo: {
+      type: Object,
+      require: true
     }
   },
   data () {
@@ -262,12 +266,17 @@ export default {
     },
     notAllowNormalUser () {
       const { roles } = this.userInfo
-      return isNormalUser(roles)
+      const { query: { source } } = this.$route
+      if (source) {
+        return true
+      }
+      return isNormalUser(roles) && !source
     },
     addKeyword (item) {
       const { groupId, queryWord } = item
       const price = 2 * 100
-      updateGroup(groupId, { newKeywords: [{ price, word: queryWord }] })
+      const { query: { user_id: userId } } = this.$route
+      updateGroup(groupId, { newKeywords: [{ price, word: queryWord }], userId })
         .then(() => {
           Message({
             type: 'success',
@@ -277,8 +286,9 @@ export default {
         })
     },
     addCampaignNegativeKeyword (item) {
+      const { query: { user_id: userId } } = this.$route
       const { campaignId, queryWord } = item
-      updateCampaign(campaignId, { newNegativeKeywords: [{ word: queryWord }] })
+      updateCampaign(campaignId, { newNegativeKeywords: [{ word: queryWord }], userId })
         .then(() => {
           Message({
             type: 'success',
@@ -289,7 +299,8 @@ export default {
     },
     addGroupNegativeKeyword (item) {
       const { groupId, queryWord } = item
-      updateGroup(groupId, { newNegativeKeywords: [{ word: queryWord }] })
+      const { query: { user_id: userId } } = this.$route
+      updateGroup(groupId, { newNegativeKeywords: [{ word: queryWord }], userId })
         .then(() => {
           Message({
             type: 'success',
@@ -299,13 +310,14 @@ export default {
         })
     },
     async onChangePrice (userPrice, { groupId, keywordId }) {
+      const { query: { user_id: userId } } = this.$route
       const price = (userPrice ? toFloat(userPrice) : 0) * 100
       if (price > 99 * 100 || price < 2 * 100) {
         return this.$message.error('价格需在2-99元之间')
       }
       try {
         this.priceUpdating = true
-        await updateGroup(groupId, { updatedKeywords: [{ price, id: keywordId }] })
+        await updateGroup(groupId, { updatedKeywords: [{ price, id: keywordId }], userId })
         this.$message.success('价格更新成功')
       } finally {
         this.priceUpdating = false

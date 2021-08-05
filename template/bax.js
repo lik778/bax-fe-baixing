@@ -208,7 +208,8 @@ function getExtraRoute (route) {
   if (window.location) {
     const querys = pick(parseQuery(window.location.search), [
       'user_id',
-      'sales_id'
+      'sales_id',
+      'source'
     ])
     if (typeof newRoute === 'string') {
       if (route.indexOf('?') > -1) {
