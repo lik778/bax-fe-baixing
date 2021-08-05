@@ -182,12 +182,18 @@ export default {
     },
     async checkKeyword () {
       this.$emit('resetResult')
-      const { words = '' } = this.form
+      const { form } = this
+      const { words = '', cities } = form
+      if (cities.length) {
+        cities.forEach(o => {
+          this.removeArea(o)
+        })
+      }
       this.form = {
-        cities: [],
         coreCities: [],
         industry: '',
-        words
+        words,
+        ...form
       }
       if (!this.keywordLengthCheck().validate) {
         return
@@ -239,7 +245,6 @@ export default {
       this.form.coreCities = this.form.coreCities.filter(i => i !== area)
     },
     onAreasChange (areas) {
-      console.log(areas)
       this.form.cities = [...areas]
       // 用户所在地和推广区域联动
       this.form.coreCities = this.form.coreCities.filter(i => areas.includes(i))

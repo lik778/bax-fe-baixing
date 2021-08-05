@@ -125,39 +125,7 @@ export default {
       immediate: true,
       deep: true,
       handler (values) {
-        this.topAreas = [
-          {
-            checked: false,
-            id: 'zhixiashi',
-            label: '直辖市',
-            level: 2,
-            parent: 'china',
-            areas: values
-              .filter(a => a.areaType === 1)
-              .filter(a => specialCities.includes(a.name))
-              .map(a => ({
-                label: a.nameCn,
-                id: a.name,
-                parent: 'zhixiashi',
-                level: 1,
-                checked: false,
-                areas: this.getSubAreas(a.name)
-              }))
-          },
-          ...values
-            .filter(a => a.areaType === 2)
-            .map(a => ({
-              parent: a.parent,
-              label: a.nameCn,
-              id: a.name,
-              level: 2,
-              checked: false,
-              areas: this.getSubAreas(a.name)
-            }))]
-        // 城市和city 完成mapping
-        values.forEach(v => {
-          this.cityProvinceMapping[v.id] = specialCities.includes(v.id) ? 'zhixiashi' : v.parent
-        })
+        this.transformTopAreas(values)
       }
     },
     areas (v) {
@@ -179,6 +147,41 @@ export default {
     })
   },
   methods: {
+    transformTopAreas (values) {
+      this.topAreas = [
+        {
+          checked: false,
+          id: 'zhixiashi',
+          label: '直辖市',
+          level: 2,
+          parent: 'china',
+          areas: values
+            .filter(a => a.areaType === 1)
+            .filter(a => specialCities.includes(a.name))
+            .map(a => ({
+              label: a.nameCn,
+              id: a.name,
+              parent: 'zhixiashi',
+              level: 1,
+              checked: false,
+              areas: this.getSubAreas(a.name)
+            }))
+        },
+        ...values
+          .filter(a => a.areaType === 2)
+          .map(a => ({
+            parent: a.parent,
+            label: a.nameCn,
+            id: a.name,
+            level: 2,
+            checked: false,
+            areas: this.getSubAreas(a.name)
+          }))]
+      // 城市和city 完成mapping
+      values.forEach(v => {
+        this.cityProvinceMapping[v.id] = specialCities.includes(v.id) ? 'zhixiashi' : v.parent
+      })
+    },
     quanguoCheckedChange () {
       this.selectedAreas = []
       this.topAreas.forEach(p => {
