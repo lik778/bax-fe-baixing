@@ -159,12 +159,14 @@ export default {
     },
     async modifyBudget (dailyBudget) {
       const { id, value } = dailyBudget
+      const { query: { user_id: userId } } = this.$route
       if (!(value > 0 && value < 10000000)) {
         return this.$message.error('请设置合理的预算')
       }
       const opts = {
         campaignIds: [id],
-        dailyBudget: parseFloat(value) * 100
+        dailyBudget: parseFloat(value) * 100,
+        userId
       }
       await updateCampaignDailyBudget(opts)
       this.fetchlandingPageList()
@@ -208,17 +210,20 @@ export default {
       }
     },
     async pausePromote (ids) {
-      await pauseCampaigns([ids])
+      const { userId } = this.salesInfo
+      await pauseCampaigns([ids], userId)
       this.$message.success('已暂停投放')
       this.fetchlandingPageList()
     },
     async activeCampaigns (ids) {
-      await activeCampaigns([ids])
+      const { userId } = this.salesInfo
+      await activeCampaigns([ids], userId)
       this.$message.success('已开启投放')
       this.fetchlandingPageList()
     },
     async pauseGroup (ids) {
-      await pauseGroup([ids])
+      const { userId } = this.salesInfo
+      await pauseGroup([ids], userId)
       this.$message.success('已暂停投放')
       this.fetchGroupList()
     },

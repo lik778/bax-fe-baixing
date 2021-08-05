@@ -124,7 +124,7 @@
                          ref="contract" />
       <el-button class="add-group-btn"
                  type="primary"
-                 :disabled="isSales || isCampaignOffline"
+                 :disabled="groupUpdateDisabled || isCampaignOffline"
                  :loading="lock.materialPictures || lock.group"
                  @click="updateMaterialThenGroup">更新单元</el-button>
     </section>
@@ -258,11 +258,16 @@ export default {
       return isSales(this.userInfo.roles)
     },
     landingAndCreativesDisabled () {
+      const { query: { source } } = this.$route
       // TIP 审核中：神马，百度，360落地页和创意应该可以修改；搜狗无法修改
       if (this.promotion.source === SEM_PLATFORM_SOGOU) {
-        return isSales(this.userInfo.roles) || this.isCampaignOffline || this.isGroupAudit
+        return (isSales(this.userInfo.roles) && !source) || this.isCampaignOffline || this.isGroupAudit
       }
-      return isSales(this.userInfo.roles) || this.isCampaignOffline
+      return (isSales(this.userInfo.roles) && !source) || this.isCampaignOffline
+    },
+    groupUpdateDisabled () {
+      const { query: { source } } = this.$route
+      return isSales(this.userInfo.roles) && !source
     }
   },
   async mounted () {
@@ -391,12 +396,14 @@ export default {
       }
     },
     async _updateGroup () {
+      const { query: { user_id: userId } } = this.$route
       const data = {}
       Object.assign(data, {
         ...this.getUpdatedLandingData(),
         ...this.getUpdatedNegativeWordData(),
         ...this.getUpdatedCreativeData(),
-        ...this.getUpdatedKeywordData()
+        ...this.getUpdatedKeywordData(),
+        userId
       })
 
       updateGroup(this.groupId, data).then(() => {
