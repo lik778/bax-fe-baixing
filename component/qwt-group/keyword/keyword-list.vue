@@ -1,6 +1,9 @@
 <template>
   <div class="keyword-list">
-    <el-table :data="rows">
+    <el-table :data="rows" @selection-change="handleSelectionChange">
+      <el-table-column
+      type="selection"
+      width="55" />
       <el-table-column label="关键词"
                        key="word"
                        min-width="140">
@@ -159,6 +162,16 @@
       </el-table-column>
     </el-table>
     <footer>
+      <p class="opration-item" v-if="currentSelect.length">
+        <el-popconfirm
+          title="确定批量删除吗？"
+        >
+          <el-button slot="reference" type="primary" size="mini">批量删除</el-button>
+        </el-popconfirm>
+        <el-button type="primary" size="mini">批量移动</el-button>
+        <el-button type="primary" size="mini">批量改价</el-button>
+        <el-button type="primary" size="mini">批量复制</el-button>
+      </p>
       <bax-pagination :options="pagination"
                       @current-change="onCurrentChange" />
     </footer>
@@ -298,6 +311,7 @@ export default {
       pricePopoverVisible: false,
       matchTypePopVisible: false,
       loading: false,
+      currentSelect: [],
 
       // 常量
       keywordStatusTip,
@@ -471,6 +485,10 @@ export default {
         offset = offset === this.pagination.total - 1 ? offset - 1 : offset
         this.offset = offset
       }
+    },
+    handleSelectionChange (selection) {
+      console.log(selection)
+      this.currentSelect = selection
     }
   },
   watch: {
@@ -540,5 +558,8 @@ export default {
 .match-radio {
   display: block;
   margin-bottom: 10px;
+}
+.opration-item{
+  margin-top: 20px;
 }
 </style>
