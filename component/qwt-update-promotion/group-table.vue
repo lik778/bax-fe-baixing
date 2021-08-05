@@ -56,6 +56,10 @@
                      v-if="showColumns.includes('avgCpcRanking')"
                      label="关键词平均排名"
                      align="center" />
+    <el-table-column prop="todayCost"
+                     label="今日消耗"
+                     align="center"
+                     :formatter="(row, column, cellValue) => cellValue === 0 ? '-' : $formatter.f2y(cellValue)" />
     <el-table-column label="操作"
                      align="center">
       <template slot-scope="{ row }">
@@ -68,9 +72,6 @@
           {{ !!row.pause ? "开启" : "暂停" }}
         </el-button>
         <el-button type="text"
-                   :disabled="
-                      row.frontCampaignStatus === CAMPAIGN_STATUS_OFFLINE
-                    "
                    @click="optimizeGroup(row)">优化</el-button>
         <el-button type="text"
                    :disabled="
@@ -134,15 +135,16 @@ export default {
   },
   methods: {
     async toggleGroupStatus (group) {
+      const { query: { user_id: userId } } = this.$route
       const typeText = group.pause ? '开启' : '暂停'
       await this.$confirm(`确定${typeText}投放？`, '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消'
       })
       if (group.pause === 1) {
-        await activeGroups([group.id])
+        await activeGroups([group.id], userId)
       } else {
-        await pauseGroups([group.id])
+        await pauseGroups([group.id], userId)
       }
       this.$emit('update-group-data')
     },

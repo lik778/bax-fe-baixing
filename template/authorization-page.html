@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>授权函</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="renderer" content="webkit">
+  <style>
+    *{
+      margin: 0;
+      padding: 0
+    }
+    #browser-warning {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 99999;
+      height: 26px;
+      min-height: 26px;
+      text-align: center;
+      padding-top: 6px;
+      line-height: 14px;
+      font-size: 14px;
+      color: red;
+      background: yellow;
+    }
+
+    #browser-warning a {
+      color: #409eff;
+      cursor: pointer;
+    }
+    </style>
+</head>
+<body>
+  <main id="authorization"></main>
+  <div id="browser-warning">
+    暂不支持IE浏览器，推荐您使用
+    <a href="https://browser.360.cn/se/" target="_blank">360，</a>
+    <a href="https://ie.sogou.com/" target="_blank">搜狗，</a>
+    <a href="http://browser.qq.com/" target="_blank">QQ</a>浏览器
+  </div>
+</body>
+</html>

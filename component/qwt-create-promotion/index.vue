@@ -630,8 +630,8 @@ export default {
       if (!p.landingPageId) {
         delete p.landingPageId
       }
-
-      const promotionIds = await createCampaign(fmtAreasInQwt(p, allAreas))
+      const { query: { user_id: userId } } = this.$route
+      const promotionIds = await createCampaign({ ...fmtAreasInQwt(p, allAreas), userId })
       // 凤凰于飞打点
       this.trackPromotionKeywords(promotionIds, p)
 
@@ -742,7 +742,8 @@ export default {
         const result = await queryAds({
           limitMvp: false,
           adId: originPromotion.landingPageId,
-          limit: 1
+          limit: 1,
+          userId
         })
         ad = result.ads && result.ads[0]
         if (ad && String(ad.adId) === String(originPromotion.landingPageId)) {
@@ -841,7 +842,8 @@ export default {
       const result = await queryAds({
         limitMvp: false,
         adId: adId,
-        limit: 1
+        limit: 1,
+        userId
       })
       const ad = result.ads && result.ads[0]
       if (ad && ad.adId === String(adId)) {

@@ -142,7 +142,6 @@ export default {
     async onKeywordChange (k) {
       this.keyword = k
       this.offset = 0
-
       await this.queryAds()
     },
     async onCurrentChange (opts) {
@@ -152,6 +151,7 @@ export default {
       await this.queryAds()
     },
     async queryAds (opts = {}) {
+      const { query: { user_id: userId } } = this.$route
       const { limitMvp, keyword, offset, limit } = this
       const t = Date.now()
 
@@ -161,7 +161,8 @@ export default {
           keyword,
           offset,
           limit,
-          ...opts
+          ...opts,
+          userId
         })
 
         if (t > this.requestStartTime) {
@@ -221,10 +222,12 @@ export default {
       await this.queryAds()
     },
     async checkIsCurStoreValid (selectedId) {
+      const { query: { user_id: userId } } = this.$route
       const result = await queryAds({
         limitMvp: false,
         adId: selectedId,
-        limit: 1
+        limit: 1,
+        userId
       })
       const ad = result.ads && result.ads[0]
       const isValueValid = (ad && String(ad.adId) === String(selectedId))

@@ -55,6 +55,7 @@ import {
   normalizeRoles,
   isSales
 } from 'util/role'
+import { delCookie } from 'util/cookie'
 
 import { router } from '../template/bax'
 import qs from 'query-string'
@@ -138,6 +139,12 @@ export default {
     }
   },
   async mounted () {
+    const { source } = qs.parse(location.search)
+    if (source) {
+      document.cookie = 'source=' + source + ';'
+    } else {
+      delCookie('source')
+    }
     await Promise.all([
       gStore.getCurrentUser(),
       gStore.getCategories(),

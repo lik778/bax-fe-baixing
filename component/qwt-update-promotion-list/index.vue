@@ -50,7 +50,7 @@ import { promotionTable, topTips, baxForm } from './components'
 import groupTable from '../qwt-update-promotion/group-table'
 import pick from 'lodash.pick'
 import clone from 'clone'
-import { CAMPAIGN_STATUS_OPTS, CAMPAIGN_STATUSES, CAMPAIGN_OPTIMIZATION_OPTS, GROUP_STATUSES_OPTS, GROUP_STATUSES } from './constant'
+import { CAMPAIGN_STATUS_OPTS, CAMPAIGN_STATUSES, CAMPAIGN_OPTIMIZATION_OPTS, GROUP_STATUSES_OPTS, GROUP_STATUSES, STATUS_OFFLINE } from './constant'
 import { getCampaignList, getGroupList, getCampaignIds } from 'api/fengming-campaign'
 import { updateCampaignDailyBudget, pauseCampaigns, pauseGroup, activeCampaigns, activeGroup } from 'api/fengming'
 import { semPlatformOpts as SOURCES_OPTS } from 'constant/fengming'
@@ -76,7 +76,7 @@ export default {
       queryParams: {
         group_name: '',
         areas: [],
-        statuses: CAMPAIGN_STATUS_OPTS.map(c => c.value),
+        statuses: this.excludeOfflineCampaignStatus,
         source: [],
         offset: 0,
         limit: ONE_PAGE_NUM,
@@ -90,6 +90,14 @@ export default {
       activeName: 'plan',
       areaDialogVisible: false,
       isActionGroupExpand: true
+    }
+  },
+  computed: {
+    excludeOfflineCampaignStatus () {
+      return CAMPAIGN_STATUS_OPTS.map(c => c.value).filter(o => o !== STATUS_OFFLINE)
+    },
+    excludeOfflineGroupStatus () {
+      return GROUP_STATUSES_OPTS.map(c => c.value).filter(o => o !== STATUS_OFFLINE)
     }
   },
   async mounted () {
@@ -110,16 +118,16 @@ export default {
     this.promotionIds = result
     if (id) {
       // 从某个计划点击进来
-      this.queryParams.statuses = GROUP_STATUSES_OPTS.map(c => c.value)
+      this.queryParams.statuses = this.excludeOfflineGroupStatus
       this.activeName = 'group'
       this.queryParams.campaign_id = id
       this.fetchGroupList()
     } else {
       if (this.activeName === 'plan') {
-        this.queryParams.statuses = CAMPAIGN_STATUS_OPTS.map(c => c.value)
+        this.queryParams.statuses = this.excludeOfflineCampaignStatus
         this.fetchlandingPageList()
       } else {
-        this.queryParams.statuses = GROUP_STATUSES_OPTS.map(c => c.value)
+        this.queryParams.statuses = this.excludeOfflineGroupStatus
         this.fetchGroupList()
       }
     }
@@ -141,22 +149,24 @@ export default {
         this.$router.push({ name: 'qwt-promotion-list', query })
       }
       if (!id && tab.index === '0') {
-        this.queryParams.statuses = CAMPAIGN_STATUS_OPTS.map(c => c.value)
+        this.queryParams.statuses = this.excludeOfflineCampaignStatus
         this.fetchlandingPageList()
       }
       if (tab.index === '1') {
-        this.queryParams.statuses = GROUP_STATUSES_OPTS.map(c => c.value)
+        this.queryParams.statuses = this.excludeOfflineGroupStatus
         this.fetchGroupList()
       }
     },
     async modifyBudget (dailyBudget) {
       const { id, value } = dailyBudget
+      const { query: { user_id: userId } } = this.$route
       if (!(value > 0 && value < 10000000)) {
         return this.$message.error('请设置合理的预算')
       }
       const opts = {
         campaignIds: [id],
-        dailyBudget: parseFloat(value) * 100
+        dailyBudget: parseFloat(value) * 100,
+        userId
       }
       await updateCampaignDailyBudget(opts)
       this.fetchlandingPageList()
@@ -200,17 +210,20 @@ export default {
       }
     },
     async pausePromote (ids) {
-      await pauseCampaigns([ids])
+      const { userId } = this.salesInfo
+      await pauseCampaigns([ids], userId)
       this.$message.success('已暂停投放')
       this.fetchlandingPageList()
     },
     async activeCampaigns (ids) {
-      await activeCampaigns([ids])
+      const { userId } = this.salesInfo
+      await activeCampaigns([ids], userId)
       this.$message.success('已开启投放')
       this.fetchlandingPageList()
     },
     async pauseGroup (ids) {
-      await pauseGroup([ids])
+      const { userId } = this.salesInfo
+      await pauseGroup([ids], userId)
       this.$message.success('已暂停投放')
       this.fetchGroupList()
     },
