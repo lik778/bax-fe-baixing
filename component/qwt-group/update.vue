@@ -219,8 +219,7 @@ export default {
       },
       materialPictures: {},
       materialPicturesInits: {},
-      materialPicturesInitsRaw: null,
-      isSales
+      materialPicturesInitsRaw: null
     }
   },
   computed: {
