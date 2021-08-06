@@ -118,7 +118,7 @@
         </template>
       </el-table-column>
       <el-table-column label="点击" prop="clicks" width="90" sortable="custom" />
-      <el-table-column label="点击率" prop="clickRate" width="160" sortable="custom">
+      <el-table-column label="点击率" prop="clickRate" width="160">
         <template slot-scope="scope">
           <span v-if="scope.row.channel === SEM_PLATFORM_SOGOU">--</span>
           <span v-else>{{(scope.row.clickRate * 100).toFixed(2) + '%'}}</span>
