@@ -35,7 +35,6 @@ export async function getAreas () {
   const body = await fengming.get('/meta/areas').json()
 
   const cities = toCamelcase(body.data)
-
   return cities.map((c) => ({
     ...c,
     value: c.name,

@@ -119,8 +119,8 @@ export default {
     transformArea () {
       const { cities } = this.form
       const maxLength = 3
-      if (cities.length >= 126) {
-        return '全国等126个城市'
+      if (cities.length >= 363) {
+        return '全国等363个城市'
       } else if (cities.length > 0) {
         if (cities.length <= maxLength) {
           return `${cities.map(o => this.formatArea(o))}`

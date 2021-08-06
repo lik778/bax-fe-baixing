@@ -80,3 +80,141 @@ export const OPTION_STATUS_AWAIT_TIDAN = 20 // 待提单
 export const OPTION_STATUS_COPY_URL = 30 // 可复制链接
 export const OPTION_STATUS_BUY = 40 // 已购买
 export const OPTION_STATUS_EXPIRED = 50 // 已过期
+
+export const PROVINCE_LIST = [
+  {
+    id: 1,
+    value: 'jiangsu',
+    label: '江苏'
+  },
+  {
+    id: 2,
+    value: 'guangdong',
+    label: '广东'
+  },
+  {
+    id: 3,
+    value: 'zhejiang',
+    label: '浙江'
+  },
+  {
+    id: 4,
+    value: 'fujian',
+    label: '福建'
+  },
+  {
+    id: 5,
+    value: 'jiangxi',
+    label: '江西'
+  },
+  {
+    id: 6,
+    value: 'shandong',
+    label: '山东'
+  },
+  {
+    id: 7,
+    value: 'shanghai',
+    label: '上海'
+  },
+  {
+    id: 8,
+    value: 'henan',
+    label: '河南'
+  },
+  {
+    id: 9,
+    value: 'hebei',
+    label: '河北'
+  },
+  {
+    id: 10,
+    value: 'shanxi',
+    label: '山西'
+  },
+  {
+    id: 11,
+    value: 'neimenggu',
+    label: '内蒙古'
+  },
+  {
+    id: 12,
+    value: 'hubei',
+    label: '湖北'
+  },
+  {
+    id: 13,
+    value: 'hunan',
+    label: '湖南'
+  },
+  {
+    id: 14,
+    value: 'shanxi',
+    label: '陕西'
+  },
+  {
+    id: 15,
+    value: 'sichuan',
+    label: '四川'
+  },
+  {
+    id: 16,
+    value: 'guangxi',
+    label: '广西'
+  },
+  {
+    id: 17,
+    value: 'yunnan',
+    label: '云南'
+  },
+  {
+    id: 18,
+    value: 'guihzou',
+    label: '贵州'
+  },
+  {
+    id: 19,
+    value: 'liaoning',
+    label: '辽宁'
+  },
+  {
+    id: 20,
+    value: 'jilinn',
+    label: '吉林'
+  },
+  {
+    id: 21,
+    value: 'heilongjiang',
+    label: '黑龙江'
+  },
+  {
+    id: 22,
+    value: 'gansu',
+    label: '甘肃'
+  },
+  {
+    id: 23,
+    value: 'ningxia',
+    label: '宁夏'
+  },
+  {
+    id: 24,
+    value: 'xinjiang',
+    label: '新疆'
+  },
+  {
+    id: 25,
+    value: 'xizang',
+    label: '西藏'
+  },
+  {
+    id: 26,
+    value: 'hannan',
+    label: '海南'
+  },
+  {
+    id: 27,
+    value: 'qinghai',
+    label: '青海'
+  }
+]

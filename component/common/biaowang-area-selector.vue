@@ -60,6 +60,7 @@
 import { OTHER_CITY_ENUM } from 'com/common/bw/core-cities-dialog'
 import { getCnName } from 'util'
 import isequal from 'lodash.isequal'
+import { PROVINCE_LIST } from 'constant/bw-plus'
 
 const specialCities = [
   'beijing',
@@ -148,6 +149,7 @@ export default {
   },
   methods: {
     transformTopAreas (values) {
+      const sortResult = this.sortProvince(values)
       this.topAreas = [
         {
           checked: false,
@@ -167,20 +169,29 @@ export default {
               areas: this.getSubAreas(a.name)
             }))
         },
-        ...values
-          .filter(a => a.areaType === 2)
-          .map(a => ({
-            parent: a.parent,
-            label: a.nameCn,
-            id: a.name,
-            level: 2,
-            checked: false,
-            areas: this.getSubAreas(a.name)
-          }))]
+        ...sortResult
+      ]
       // 城市和city 完成mapping
       values.forEach(v => {
         this.cityProvinceMapping[v.id] = specialCities.includes(v.id) ? 'zhixiashi' : v.parent
       })
+    },
+    sortProvince (values) {
+      return PROVINCE_LIST.map(o => ({
+        checked: false,
+        id: o.value,
+        label: o.label,
+        level: 2,
+        parent: 'china',
+        areas: values.filter(v => v.parent === o.value).map(a => ({
+          parent: a.parent,
+          label: a.nameCn,
+          id: a.name,
+          level: 2,
+          checked: false,
+          areas: this.getSubAreas(a.name)
+        }))
+      }))
     },
     quanguoCheckedChange () {
       this.selectedAreas = []
