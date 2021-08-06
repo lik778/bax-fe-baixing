@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="authorization" v-if="isValidate">
+    <div class="authorization" v-if="isValidate === NORMAL">
         <h4>授权函</h4>
         <main>
             <p>为方便本人/本公司更有效地开展业务和使用百姓网提供的服务，特授权维护业务之贵司销售<span>{{info.optimizer_name}} （{{info.optimizer_id}}）</span>代为管理账户，由其统一管理。</p>
@@ -31,28 +31,31 @@
             </footer>
         </main>
     </div>
-    <div v-else class="tips">
-      {{error}}
-    </div>
+    <transition name="fade">
+      <result v-if="isValidate === FINISH" @goHome="goHome" :type="type" :text="text"/>
+    </transition>
   </div>
 </template>
 <script>
 import { checkUrlValid, authorize, rejectAuthorize } from 'api/fengming'
-const ERROR = 'error'
-const TIMEOUT = 'timeout'
+import result from './components/result.vue'
 const NORMAL = 'normal'
 const WATING = 'await'
+const FINISH = 'finish'
 export default {
   name: 'authorization-page',
+  components: { result },
   data () {
     return {
       info: {},
-      isValidate: false,
-      ERROR,
-      TIMEOUT,
+      isValidate: WATING,
+      FINISH,
       NORMAL,
       WATING,
-      error: ''
+      error: '',
+      type: 'error',
+      visible: false,
+      text: 'hello'
     }
   },
   async mounted () {
@@ -64,11 +67,12 @@ export default {
       const optimizerId = this.getQueryParam('optimizer_id')
       try {
         const { data } = await checkUrlValid({ userId, optimizerId })
-        this.isValidate = true
+        this.isValidate = NORMAL
         this.info = data
       } catch (error) {
-        this.isValidate = false
-        this.error = error
+        this.isValidate = FINISH
+        this.text = '抱歉，服务器开小差了！'
+        this.type = 'error'
       }
     },
     async shouquan () {
@@ -77,20 +81,19 @@ export default {
       const optimizerId = this.getQueryParam('optimizer_id')
       try {
         const { meta } = await authorize({ userId, code, optimizerId })
+        this.isValidate = FINISH
         if (meta.code === 0) {
-          this.$alert('授权成功！', '授权', {
-            confirmButtonText: '确定',
-            callback: async action => {
-              await this.getInfo()
-              this.$message({
-                type: 'info',
-                message: '恭喜你操作成功！'
-              })
-            }
-          })
+          this.text = '恭喜，您已授权成功！'
+          this.type = 'success'
+        } else {
+          this.isValidate = FINISH
+          this.text = '抱歉，授权失败！'
+          this.type = 'error'
         }
       } catch (error) {
-        window.history.back()
+        this.isValidate = FINISH
+        this.text = '抱歉，服务器开小差了！'
+        this.type = 'error'
       }
     },
     getQueryParam (key) {
@@ -106,22 +109,22 @@ export default {
       const optimizerId = this.getQueryParam('optimizer_id')
       try {
         const { meta: { code: status } } = await rejectAuthorize({ userId, code, optimizerId })
+        this.isValidate = FINISH
         if (status === 0) {
-          this.$alert('已拒绝授权！', '授权', {
-            confirmButtonText: '确定',
-            callback: async action => {
-              await this.getInfo()
-              this.$message({
-                type: 'info',
-                message: '恭喜你操作成功！'
-              })
-            }
-          })
+          this.text = '您已拒绝授权！'
+          this.type = 'success'
+        } else {
+          this.text = '抱歉，服务器开小差了！'
+          this.type = 'error'
         }
       } catch (error) {
-        this.isValidate = false
-        this.error = error
+        this.isValidate = FINISH
+        this.text = '抱歉，服务器开小差了！'
+        this.type = 'error'
       }
+    },
+    goHome () {
+      window.location.href = 'https://www.baixing.com'
     }
   }
 }
