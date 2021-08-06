@@ -4,8 +4,8 @@
       <el-form-item label="请选择用户所在地：">
         <el-select @change="searchFilter($event)" v-model="search" filterable placeholder="请选择">
           <el-option
-            v-for="item in areasOption"
-            :key="item"
+            v-for="(item, index) in areasOption"
+            :key="index"
             :label="getCityName(item, allAreas)"
             :value="item">
           </el-option>
@@ -14,13 +14,13 @@
     </el-form>
     <div class="city-container clearfix">
       <span
-        v-for="item in areasOption"
+        v-for="(item, index) in areasOption"
         class="city"
         :class="{
           active: isSelected(item),
           disabled: isDisabled(item),
         }"
-        :key="item"
+        :key="index"
         @click="handleCoreCities(item)">
           {{ getCityName(item, allAreas) }}
       </span>

@@ -114,107 +114,107 @@ export const PROVINCE_LIST = [
   },
   {
     id: 7,
-    value: 'shanghai',
-    label: '上海'
-  },
-  {
-    id: 8,
     value: 'henan',
     label: '河南'
   },
   {
-    id: 9,
+    id: 8,
     value: 'hebei',
     label: '河北'
   },
   {
-    id: 10,
+    id: 9,
     value: 'shanxi',
     label: '山西'
   },
   {
-    id: 11,
+    id: 10,
     value: 'neimenggu',
     label: '内蒙古'
   },
   {
-    id: 12,
+    id: 11,
     value: 'hubei',
     label: '湖北'
   },
   {
-    id: 13,
+    id: 12,
     value: 'hunan',
     label: '湖南'
   },
   {
-    id: 14,
+    id: 13,
     value: 'shanxi',
     label: '陕西'
   },
   {
-    id: 15,
+    id: 14,
     value: 'sichuan',
     label: '四川'
   },
   {
-    id: 16,
+    id: 15,
     value: 'guangxi',
     label: '广西'
   },
   {
-    id: 17,
+    id: 16,
     value: 'yunnan',
     label: '云南'
   },
   {
-    id: 18,
-    value: 'guihzou',
+    id: 17,
+    value: 'guizhou',
     label: '贵州'
   },
   {
-    id: 19,
+    id: 18,
     value: 'liaoning',
     label: '辽宁'
   },
   {
-    id: 20,
+    id: 19,
     value: 'jilinn',
     label: '吉林'
   },
   {
-    id: 21,
+    id: 20,
     value: 'heilongjiang',
     label: '黑龙江'
   },
   {
-    id: 22,
+    id: 21,
     value: 'gansu',
     label: '甘肃'
   },
   {
-    id: 23,
+    id: 22,
     value: 'ningxia',
     label: '宁夏'
   },
   {
-    id: 24,
+    id: 23,
     value: 'xinjiang',
     label: '新疆'
   },
   {
-    id: 25,
+    id: 24,
     value: 'xizang',
     label: '西藏'
   },
   {
-    id: 26,
+    id: 25,
     value: 'hannan',
     label: '海南'
   },
   {
-    id: 27,
+    id: 26,
     value: 'qinghai',
     label: '青海'
+  },
+  {
+    id: 27,
+    value: 'anhui',
+    label: '安徽'
   }
 ]

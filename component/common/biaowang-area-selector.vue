@@ -177,13 +177,9 @@ export default {
       })
     },
     sortProvince (values) {
-      return PROVINCE_LIST.map(o => ({
-        checked: false,
-        id: o.value,
-        label: o.label,
-        level: 2,
-        parent: 'china',
-        areas: values.filter(v => v.parent === o.value).map(a => ({
+      let result = []
+      PROVINCE_LIST.forEach(o => {
+        const province = values.filter(v => v.name === o.value && v.areaType === 2).map(a => ({
           parent: a.parent,
           label: a.nameCn,
           id: a.name,
@@ -191,7 +187,10 @@ export default {
           checked: false,
           areas: this.getSubAreas(a.name)
         }))
-      }))
+        result = [...province, ...result]
+      }
+      )
+      return result
     },
     quanguoCheckedChange () {
       this.selectedAreas = []
