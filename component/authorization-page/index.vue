@@ -67,7 +67,7 @@ export default {
       const optimizerId = this.getQueryParam('optimizer_id')
       try {
         const { data } = await checkUrlValid({ userId, optimizerId })
-        this.isValidate = FINISH
+        this.isValidate = NORMAL
         this.info = data
       } catch (error) {
         this.isValidate = FINISH
