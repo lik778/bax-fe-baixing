@@ -24,12 +24,13 @@
               </el-col>
             </el-form-item>
             <el-form-item label="推广区域" prop="cities">
-                <el-tag type="success" closable class="kw-tag"
+              {{transformArea}}
+                <!-- <el-tag type="success" closable class="kw-tag"
                         v-for="area in form.cities" :key="area"
                         @close="removeArea(area)"
                 >
                 {{ formatArea(area) }}
-                </el-tag>
+                </el-tag> -->
                 <i class="el-icon-plus" @click="checkSold"></i>
             </el-form-item>
             <el-form-item label="用户所在地" prop="coreCities" key="coreCities" v-if="form.cities.length">
@@ -113,6 +114,23 @@ export default {
   },
   async mounted () {
     await this.fetchAllIndustry()
+  },
+  computed: {
+    transformArea () {
+      const { cities } = this.form
+      const maxLength = 3
+      if (cities.length >= 126) {
+        return '全国等126个城市'
+      } else if (cities.length > 0) {
+        if (cities.length <= maxLength) {
+          return `${cities.map(o => this.formatArea(o))}`
+        } else {
+          return `${cities.map(o => this.formatArea(o)).slice(0, maxLength)}等${cities.length}个城市`
+        }
+      } else {
+        return ''
+      }
+    }
   },
   methods: {
     keywordLengthCheck () {
