@@ -42,7 +42,7 @@
         <p class="item" v-if="fengmingOptimizer">
           站外推广：
           <el-button v-if="fengmingOptimizer.relation === RELATION_SERVICE && fengmingOptimizer.status === SERVICE_NOT_OPTIMIZE" @click="authorization" type="danger" size="medium">申请授权</el-button>
-          <el-button v-if="fengmingOptimizer.relation === RELATION_SERVICE && fengmingOptimizer.status === SERVICE_OPTIMIZE_ING" @click="dialogVisible = true" type="danger" size="medium">授权中</el-button>
+          <el-button v-if="fengmingOptimizer.relation === RELATION_SERVICE && fengmingOptimizer.status === SERVICE_OPTIMIZE_ING" @click="authorization" type="danger" size="medium">授权中</el-button>
           <el-button v-if="fengmingOptimizer.relation === RELATION_SERVICE && fengmingOptimizer.status === SERVICE_OPTIMIZED" :disabled="true" type="danger" size="medium">已授权</el-button>
           <el-button v-if="fengmingOptimizer.relation === RELATION_MANAGER" :disabled="true" type="danger" size="medium">{{ STATUS_MAP[fengmingOptimizer.status] }}</el-button>
         </p>
