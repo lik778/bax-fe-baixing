@@ -96,7 +96,7 @@
         :formatter="r => (r.clickAvgPrice / 100).toFixed(2) + '元'" />
       <el-table-column label="消耗" prop="cost" width="120" sortable="custom"
         :formatter="r => (r.cost / 100).toFixed(2) + '元'" />
-      <el-table-column label="排名" width="120" sortable
+      <el-table-column label="排名" width="120" prop="cpc_ranking" sortable="custom"
         :formatter="r => fmtCpcRanking(r.cpcRanking)" />
     </el-table>
 
