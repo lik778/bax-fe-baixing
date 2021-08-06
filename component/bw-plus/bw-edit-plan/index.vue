@@ -32,11 +32,14 @@
       </div>
       <div class="panel">
         <h4>投放物料设置</h4>
-        <creative-editor :platforms="[SEM_PLATFORM_BAIDU]"
+        <div class="creative">
+          <creative-editor :platforms="[SEM_PLATFORM_BAIDU]"
                          :title="form.creativeTitle"
                          :content="form.creativeContent"
                          @change="handleCreativeValueChange"
                          @error="handleCreativeError" />
+        <fm-tip class="tip" position="creative" img-url="//file.baixing.net/201903/d6f4502a0e8a659b78a33fbb3713e6b9.png">创意怎么才能飘红</fm-tip>
+        </div>
       </div>
       <el-button :disabled="isPromoteOffline"
                  type="primary"
@@ -57,6 +60,7 @@ import MvipSelector from 'com/common/mvip-selector'
 import UserAdSelector from 'com/common/ad-selector'
 import CreativeEditor from 'com/widget/creative-editor'
 import SelectPromoteDialog from '../components/select-promote-dialog.vue'
+import FmTip from 'com/widget/fm-tip'
 
 import {
   landingTypeOpts,
@@ -193,7 +197,8 @@ export default {
     MvipSelector,
     UserAdSelector,
     CreativeEditor,
-    SelectPromoteDialog
+    SelectPromoteDialog,
+    FmTip
   }
 }
 </script>
@@ -213,6 +218,14 @@ export default {
     padding: 0 60px;
     > .panel {
       margin-top: 30px;
+       > .creative{
+        position: relative;
+        > .tip {
+          position: absolute;
+          left: 700px;
+          top: 50px;
+        }
+      }
     }
   }
 }

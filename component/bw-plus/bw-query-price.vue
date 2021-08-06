@@ -46,17 +46,24 @@
                       <p v-if="queryResult.error && !queryResult.overHeat">{{queryResult.overHeatWords.join("、")}}未获取到热度，请重试或申请人工报价</p>
                       <p v-if="queryResult.error && queryResult.overHeat">{{queryResult.overHeatWords.join("、")}}热度>500，{{queryResult.errorWords.join("、")}}未获取到热度，请申请人工报价</p>
                       <p v-if="queryResult.industryError">{{queryInfo.industryCn}}太热，暂无报价，请申请人工报价</p>
-                      <el-popconfirm
-                        title="确定提交审核吗？"
-                        @confirm="submit"
-                      >
-                        <el-button slot="reference" style="margin-top: 30px" type="danger">申请人工报价</el-button>
-                      </el-popconfirm>
+                      <el-button @click="isSubmit = true" style="margin-top: 30px" type="danger">申请人工报价</el-button>
                     </section>
                 </el-tab-pane>
             </el-tabs>
         </el-card>
         <BwPlusDialog :BwPlusDialogMsg="BwPlusDialogMsg" @close="BwPlusDialogMsg.dialogVisible = false"/>
+        <el-dialog
+          title="提交"
+          :visible.sync="isSubmit"
+          width="30%"
+        >
+          <span>确认提交审核嘛？</span>
+          <span slot="footer" class="dialog-footer">
+            <el-button @click="isSubmit = false">取 消</el-button>
+            <el-button type="primary" @click="submit">确 定</el-button>
+          </span>
+        </el-dialog>
+
     </section>
 </template>
 
@@ -89,6 +96,7 @@ export default {
   data () {
     return {
       activeName: 'first',
+      isSubmit: false,
       BwPlusDialogMsg: {
         type: 'success',
         dialogVisible: false,
