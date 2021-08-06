@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="authorization" v-if="isValidate === 'NORMAL'">
+    <div class="authorization" v-if="isValidate === NORMAL">
         <h4>授权函</h4>
         <main>
             <p>为方便本人/本公司更有效地开展业务和使用百姓网提供的服务，特授权维护业务之贵司销售<span>{{info.optimizer_name}} （{{info.optimizer_id}}）</span>代为管理账户，由其统一管理。</p>
