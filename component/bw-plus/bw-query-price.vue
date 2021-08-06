@@ -31,12 +31,7 @@
                         <el-col :span="5" :push="13">
                           <div class="submit">
                             <h3>总价： {{transformPrice(currentPrice)}}元</h3>
-                            <el-popconfirm
-                              title="确定提交审核吗？"
-                              @confirm="submit"
-                            >
-                              <el-button :disabled="(currentPrice.price <0 || currentPrice.price === '-') || !ifSoldAvailable" slot="reference" type="danger">提交审核</el-button>
-                            </el-popconfirm>
+                            <el-button @click="isSubmit = true" :disabled="(currentPrice.price <0 || currentPrice.price === '-') || !ifSoldAvailable" type="danger">提交审核</el-button>
                           </div>
                         </el-col>
                       </el-row>
