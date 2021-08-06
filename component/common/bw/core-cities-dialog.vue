@@ -1,8 +1,15 @@
 <template>
-  <el-dialog :visible="visible" title="提示" @close="handleClose" class="core-cities-dialog" width="580px">
+  <el-dialog :visible="visible" @close="handleClose" :show-close="false" class="core-cities-dialog" width="580px">
     <el-form label-width="140px">
       <el-form-item label="请选择用户所在地：">
-        <el-input v-model="search"/>
+        <el-select @change="searchFilter($event)" v-model="search" filterable placeholder="请选择">
+          <el-option
+            v-for="item in areasOption"
+            :key="item"
+            :label="getCityName(item, allAreas)"
+            :value="item">
+          </el-option>
+        </el-select>
       </el-form-item>
     </el-form>
     <div class="city-container clearfix">
@@ -18,10 +25,13 @@
           {{ getCityName(item, allAreas) }}
       </span>
     </div>
-    <div slot="footer" class="footer">
-      <el-button type="primary" @click="handleConfirm">确定</el-button>
-      <el-button plain @click="handleClose">取消</el-button>
-    </div>
+    <header slot="title" class="dialog-header">
+      <h5 class="title">用户所在地</h5>
+      <div class="buttons">
+        <el-button type="primary" @click="handleConfirm">确定</el-button>
+        <el-button plain @click="handleClose">取消</el-button>
+      </div>
+    </header>
   </el-dialog>
 </template>
 
@@ -104,6 +114,9 @@ export default {
     },
     isDisabled (item) {
       return !this.isSelected(item) && (this.coreCities.length >= this.limit)
+    },
+    searchFilter (area) {
+      this.handleCoreCities(area)
     }
   },
   watch: {
@@ -120,11 +133,11 @@ export default {
       handler (val) {
         this.areasOption = val
       }
-    },
-    search: function (newQuestion, oldQuestion) {
-      const result = this.areas.filter(city => getCnName(city, this.allAreas).indexOf(newQuestion) !== -1)
-      this.areasOption = [...result]
     }
+    // search: function (newQuestion, oldQuestion) {
+    //   const result = this.areas.filter(city => getCnName(city, this.allAreas).indexOf(newQuestion) !== -1)
+    //   this.areasOption = [...result]
+    // }
   }
 }
 </script>
@@ -155,6 +168,21 @@ export default {
       color: #aaa;
       pointer-events: none;
     }
+  }
+}
+.dialog-header {
+  width: 100%;
+  display: flex;
+  text-align: center;
+  line-height: 40px;
+  & .title {
+    text-indent: 10px;
+    font-size: 18px;
+    color: #565656;
+  }
+  & .buttons {
+    margin-left: auto;
+    margin-right: 26px;
   }
 }
 </style>

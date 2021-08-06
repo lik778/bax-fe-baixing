@@ -23,10 +23,10 @@
                       <InqueryResult :deviceAvailableStatus="deviceAvailableStatus" :currentPrice="currentPrice" @getValue="getCurrentPrice" :tableData="queryResult && queryResult.keywordPriceList" />
                       <el-row type="flex" justify="start" align="middle">
                         <el-col :span="3">
-                          <h2 class="wefare-title">超值福利</h2>
+                          <h2 class="wefare-title" v-if="currentPrice.duration > 30">超值福利</h2>
                         </el-col>
                         <el-col :span="3">
-                          <DiamondShopWelfare :current="currentPrice" />
+                          <DiamondShopWelfare v-if="currentPrice.duration > 30" :current="currentPrice" />
                         </el-col>
                         <el-col :span="5" :push="13">
                           <div class="submit">

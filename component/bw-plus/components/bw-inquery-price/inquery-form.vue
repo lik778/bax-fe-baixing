@@ -68,7 +68,7 @@
 </template>
 
 <script>
-import { getAllIndustry, checkKeyword, checkSoldCities } from 'api/biaowang-plus'
+import { getAllIndustry, checkKeyword } from 'api/biaowang-plus'
 import CoreCitiesDialog, { OTHER_CITY_ENUM } from 'com/common/bw/core-cities-dialog'
 import AreaSelector from 'com/common/biaowang-area-selector'
 import { getCnName } from 'util'
@@ -254,21 +254,22 @@ export default {
       this.coreCitiesDialogVisible = false
     },
     async checkSold () {
-      const { words = '' } = this.form
-      const keywords = words.split(/[\s\n]/).filter(Boolean)
-      if (!words) {
-        this.$message({
-          message: '请先输入您要查询的关键词！',
-          type: 'error'
-        })
-        return
-      }
-      const { data: { allSoldCities } } = await checkSoldCities({ keywords })
-      if (allSoldCities.length) {
-        this.allSoldCities = Object.fromEntries(allSoldCities.map(item => [item, true]))
-      } else {
-        this.allSoldCities = {}
-      }
+      // 暂时去掉已售城市判断
+      // const { words = '' } = this.form
+      // const keywords = words.split(/[\s\n]/).filter(Boolean)
+      // if (!words) {
+      //   this.$message({
+      //     message: '请先输入您要查询的关键词！',
+      //     type: 'error'
+      //   })
+      //   return
+      // }
+      // const { data: { allSoldCities } } = await checkSoldCities({ keywords })
+      // if (allSoldCities.length) {
+      //   this.allSoldCities = Object.fromEntries(allSoldCities.map(item => [item, true]))
+      // } else {
+      //   this.allSoldCities = {}
+      // }
       this.areaDialogVisible = true
     }
   }
