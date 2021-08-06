@@ -187,7 +187,7 @@ export default {
           checked: false,
           areas: this.getSubAreas(a.name)
         }))
-        result = [...province, ...result]
+        result = [...result, ...province]
       }
       )
       return result
