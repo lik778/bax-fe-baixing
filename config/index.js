@@ -12,7 +12,8 @@ const production = {
   qcApiHost: 'http://bax.baixing.com.cn/api/sem-batch',
   b2bApiHost: '//squat.baixing.com.cn',
   orderServiceHost: 'https://trade.baixing.com',
-  identityBindingPage: 'https://www.baixing.com/bind/?type=idcard'
+  identityBindingPage: 'https://www.baixing.com/bind/?type=idcard',
+  biaowangPlusApiHost: '//bax.baixing.com.cn/api/phoenixs-plus'
 }
 
 const development = {
