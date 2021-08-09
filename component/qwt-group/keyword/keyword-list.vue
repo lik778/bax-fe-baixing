@@ -356,6 +356,7 @@ export default {
         campaignId: '',
         groupId: ''
       },
+      isNewSelect: [],
 
       // 常量
       keywordStatusTip,
@@ -543,9 +544,11 @@ export default {
     },
     selectAll (selection) {
       this.currentSelect = selection.map(o => o.id)
+      this.isNewSelect = selection.forEach(o => { o.isNew = true })
     },
     handleSelectionChange (selection, row) {
       this.currentSelect = selection.map(o => o.id)
+      this.isNewSelect = selection.forEach(o => { o.isNew = true })
     },
     batchDelet () {
       const { currentSelect, keywords } = this
@@ -592,7 +595,6 @@ export default {
     },
     batchRecover () {
       const { currentSelect, keywords } = this
-      console.log('currentSelect', currentSelect)
       const newKeywords = clone(keywords)
       newKeywords.forEach(row => {
         if (currentSelect.includes(row.id)) {
