@@ -8,6 +8,7 @@ import Fetch from 'fetch.io'
 import {
   fengmingApiHost,
   biaowangApiHost,
+  biaowangPlusApiHost,
   baxApiHost,
   kaApiHost,
   seoApiHost,
@@ -119,6 +120,31 @@ export const biaowang = new Fetch({
       // 没有经过身份证绑定
       chargeNotice()
       throw new Error('请先绑定身份认证')
+    }
+  }
+})
+
+export const biaowangPlus = new Fetch({
+  ...baseOptions,
+  prefix: biaowangPlusApiHost,
+  afterResponse (res) {
+    es.emit('http fetch end')
+    if (res.status === 200) {
+      // pass
+    } else if (res.status === 401) {
+      Message.error('请重新登录 >_<')
+      return redirect('signin', `return=${encodeURIComponent(location.pathname + location.search)}`)
+    } else {
+      res.clone().json().then(body => {
+        Message.error(body.message || '出错了，请稍后重试')
+      })
+      throw new Error(res.statusText)
+    }
+  },
+  afterJSON (body) {
+    const { code, message } = body
+    if (code !== 0) {
+      Message.error(message)
     }
   }
 })

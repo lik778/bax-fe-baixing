@@ -69,6 +69,26 @@
             </router-link>
           </el-menu-item>
         </el-submenu>
+        <el-submenu index="bwPlus" v-if="allowBwplus">
+          <template slot="title">
+            <bx-icon type="sharealt"></bx-icon>标王2.0
+          </template>
+          <el-menu-item index="bw-plus-query-price" v-if="!userInfo.shAgent">
+            <router-link :to="{ name: 'bw-plus-query-price' }" tag="p">
+              标王查价
+            </router-link>
+          </el-menu-item>
+          <el-menu-item index="bw-plus-price-records" v-if="!userInfo.shAgent">
+            <router-link :to="{ name: 'bw-plus-price-records' }" tag="p">
+              查价记录
+            </router-link>
+          </el-menu-item>
+          <el-menu-item index="bw-plus-package-list">
+            <router-link :to="{ name: 'bw-plus-package-list' }" tag="p">
+              管理推广
+            </router-link>
+          </el-menu-item>
+        </el-submenu>
         <el-submenu index="qc">
           <template slot="title">
             <bx-icon type="sharealt"></bx-icon>易慧推
@@ -168,7 +188,9 @@ import {
   allowSeeBxAd,
   relationAllow,
   allowSeeDiamondSite,
-  isSales
+  isSales,
+  onlyAgentAccounting,
+  allowBwplus
 } from 'util/role'
 
 import { getUserSites } from 'api/diamond-site'
@@ -178,6 +200,7 @@ const MENU_GROUP_MAP = {
   charge: ['qwt-charge', 'seo-charge'],
   sst: ['qwt-create-promotion', 'qwt-promotion-list'],
   bw: ['bw-query-price', 'bw-plan-list', 'bw-manual'],
+  bwPlus: ['bw-plus-query-price', 'bw-plus-price-records', 'bw-plus-package-list'],
   qc: ['qc-promote-list'],
   ssp: ['ad-list', 'material-list', 'order-list', 'user-list', 'ad-calendar'],
   dashboard: ['qwt-dashboard', 'bw-dashboard', 'qc-dashboard']
@@ -254,6 +277,12 @@ export default {
     },
     allowSales () {
       return isSales(this.userInfo.roles)
+    },
+    onlyAgentAccounting () {
+      return onlyAgentAccounting(this.userInfo.roles)
+    },
+    allowBwplus () {
+      return allowBwplus(this.userInfo.roles, this.userInfo.agentId, this.userInfo.salesId)
     }
   },
   async mounted () {
