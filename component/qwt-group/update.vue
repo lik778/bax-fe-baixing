@@ -400,29 +400,30 @@ export default {
     },
     async patchMoveGroup ({ groupId, campaignId, moveKeywords, isNewSelect }) {
       this.lock.group = true
-      this.isNewSelect = isNewSelect
       try {
-        await this._updateGroup(groupId, campaignId, moveKeywords)
+        await this._updateGroup(groupId, campaignId, moveKeywords, isNewSelect)
       } finally {
         this.lock.group = false
       }
     },
-    async _updateGroup (groupId = this.groupId, campaignId = this.promotion.id, moveKeywords = false) {
+    async _updateGroup (groupId = this.groupId, campaignId = this.promotion.id, moveKeywords = false, isNewSelect = []) {
       const { query: { user_id: userId } } = this.$route
       const data = {}
+      const newKeywords = isNewSelect
       Object.assign(data, {
         ...this.getUpdatedLandingData(),
         ...this.getUpdatedNegativeWordData(),
         ...this.getUpdatedCreativeData(),
         ...this.getUpdatedKeywordData(),
         userId,
-        moveKeywords
+        moveKeywords,
+        newKeywords
       })
       console.log('===', data)
 
       updateGroup(groupId, data).then(() => {
         if (moveKeywords) {
-          this.$message.success('操作整个！')
+          this.$message.success('操作成功！')
         } else {
           this.$message.success('单元更新成功')
         }

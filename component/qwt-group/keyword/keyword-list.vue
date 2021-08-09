@@ -166,49 +166,14 @@
         <el-button type="primary" @click="batchRecover" size="mini">批量恢复</el-button>
         <el-button type="primary" @click="batchDelet" size="mini">批量删除</el-button>
         <el-button type="primary" size="mini" @click="batchRemove">批量移动</el-button>
-        <el-button type="primary" size="mini">批量改价</el-button>
+        <el-button type="primary" size="mini" @click="() => {patchDeleteContent.visible = true; patchDeleteContent.type = 'change'}">批量改价</el-button>
         <el-button type="primary" @click="batchCopy" size="mini">批量复制</el-button>
       </p>
       <bax-pagination :options="pagination"
                       @current-change="onCurrentChange" />
     </footer>
-    <el-dialog
-      title="提示"
-      :visible.sync="dialogContent.visible"
-      width="30%"
-    >
-      <div>
-        <p>{{dialogContent.text}}</p>
-        <el-form ref="form" :model="form" label-width="100px">
-          <el-form-item label="请选择计划：">
-            <el-select @change="campaignIdChange" v-model="form.campaignId" placeholder="请选择">
-              <el-option
-                v-for="item in campaignIds"
-                :key="item.value"
-                :label="item.label"
-                :disabled="item.value === 0"
-                :value="item.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item v-if="form.campaignId" label="请选择单元：">
-            <el-select v-model="form.groupId" placeholder="请选择">
-              <el-option
-                v-for="item in groupIds"
-                :key="item.value"
-                :label="item.label"
-                :disabled="item.value === 0"
-                :value="item.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-form>
-      </div>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogContent.visible = false">取 消</el-button>
-        <el-button type="primary" @click="save" :loading="savePendding">保 存</el-button>
-      </span>
-    </el-dialog>
+    <MoveCopyCom :dialogContent="dialogContent" @save="save" @cancel="dialogContent.visible = false"/>
+    <PatchDelete :patchDeleteContent="patchDeleteContent" @changePrice="changePrice" @deleteHandle="deleteHandle" @cancel="patchDeleteContent.visible = false"/>
   </div>
 </template>
 
@@ -216,9 +181,10 @@
 import HeaderTipComp from 'com/common/header-tip'
 import BaxInput from 'com/common/bax-input'
 import BaxPagination from 'com/common/pagination'
+import MoveCopyCom from './move-copy-com.vue'
+import PatchDelete from './patch-delete.vue'
 
 import { changeGroupKeywordsPrice, changeGroupKeywordsMatchType } from 'api/fengming'
-import { getCampaignIds, getGroupIds } from 'api/fengming-campaign'
 
 import { fmtCpcRanking } from 'util/campaign'
 import {
@@ -352,13 +318,12 @@ export default {
         text: '',
         type: 'copy'
       },
-      campaignIds: [],
-      groupIds: [],
-      form: {
-        campaignId: '',
-        groupId: ''
+      patchDeleteContent: {
+        visible: false,
+        type: 'delete'
       },
       isNewSelect: [],
+      savePendding: false,
 
       // 常量
       keywordStatusTip,
@@ -371,11 +336,6 @@ export default {
       MATCH_TYPE_EXACT,
       MATCH_TYPE_PHRASE
     }
-  },
-  async mounted () {
-    const { query: { user_id: userId } } = this.$route
-    const result = await getCampaignIds({ userId, is_online: 1 })
-    this.campaignIds = result
   },
   methods: {
     fmtCpcRanking,
@@ -545,12 +505,20 @@ export default {
       }
     },
     selectAll (selection) {
-      this.currentSelect = selection.map(o => o.id)
-      this.isNewSelect = selection.forEach(o => { o.isNew = true })
+      const selectionClone = clone(selection)
+      this.currentSelect = selectionClone.map(o => o.id)
+      this.isNewSelect = selectionClone.map(o => ({
+        isNew: true,
+        ...o
+      }))
     },
     handleSelectionChange (selection, row) {
-      this.currentSelect = selection.map(o => o.id)
-      this.isNewSelect = selection.forEach(o => { o.isNew = true })
+      const selectionClone = clone(selection)
+      this.currentSelect = selectionClone.map(o => o.id)
+      this.isNewSelect = selectionClone.map(o => ({
+        isNew: true,
+        ...o
+      }))
     },
     batchDelet () {
       const { currentSelect, keywords } = this
@@ -558,6 +526,8 @@ export default {
       newKeywords.forEach(row => {
         if (currentSelect.includes(row.id)) {
           row.isDel = true
+        } else {
+          row.isDel = false
         }
         if (this.showMatchType && row.matchType !== MATCH_TYPE_PHRASE) {
           row.matchType = MATCH_TYPE_PHRASE
@@ -619,27 +589,24 @@ export default {
         type: 'copy'
       }
     },
-    async campaignIdChange () {
-      const { query: { user_id: userId } } = this.$route
-      const { campaignId } = this.form
-      const result = await getGroupIds({ userId, campaignId, is_online: 1 })
-      this.form.groupId = result[1] ? result[1].value : ''
-      this.groupIds = result
-    },
-    async save () {
+    async save (form) {
       this.savePendding = true
       const { dialogContent, isNewSelect } = this
-      const { groupId, campaignId } = this.form
+      const params = { ...form, moveKeywords: true }
       if (dialogContent.type === 'move') {
         this.batchDelet()
+      } else {
+        params.isNewSelect = isNewSelect
       }
       try {
-        await this.$emit('updateGroup', { groupId, campaignId, moveKeywords: true, isNewSelect })
+        await this.$emit('updateGroup', params)
         this.savePendding = false
       } catch (error) {
         this.savePendding = false
       }
-    }
+    },
+    deleteHandle () {},
+    changePrice (price) {}
   },
   watch: {
     searchWord () {
@@ -649,7 +616,9 @@ export default {
   components: {
     HeaderTipComp,
     BaxInput,
-    BaxPagination
+    BaxPagination,
+    MoveCopyCom,
+    PatchDelete
   }
 }
 </script>
