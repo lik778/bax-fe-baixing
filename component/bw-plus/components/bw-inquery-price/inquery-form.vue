@@ -3,7 +3,11 @@
         <el-form ref="form" :rules="rules" :model="form" label-width="120px">
             <el-form-item label="推广关键词" prop="words">
                 <el-col :span="8">
-                    <el-input @change="checkKeyword" type="textarea" v-model="form.words" rows="6"></el-input>
+                    <el-input @change="checkKeyword" type="textarea" v-model="form.words" rows="6" placeholder="请输入关键词，多个关键词换行
+示例：
+粮食烘干机
+粮食烘干塔
+…"></el-input>
                 </el-col>
                 <el-col v-if="!checkResult.passed" :span="8" :push="1">
                   <ul class="reject-result">
