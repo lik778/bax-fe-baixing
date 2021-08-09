@@ -143,13 +143,6 @@ export default {
     const { source } = qs.parse(location.search)
     const { userId } = this.salesInfo
     const { roles } = this.currentUser
-    if (source) {
-      document.cookie = 'source=' + source + ';'
-      // 此接口为查询当前用户的角色（主管/优化师）以及和目标用户的关系，后端暂存，用作后面的校验
-      await gStore.getFengmingOptimizer({ userId })
-    } else {
-      delCookie('source')
-    }
     await Promise.all([
       gStore.getCurrentUser(),
       gStore.getCategories(),
@@ -158,6 +151,13 @@ export default {
     ])
     if (isSales(roles) && userId) {
       gStore.getRelation({ userId })
+    }
+    if (source) {
+      document.cookie = 'source=' + source + ';'
+      // 此接口为查询当前用户的角色（主管/优化师）以及和目标用户的关系，后端暂存，用作后面的校验
+      await gStore.getFengmingOptimizer({ userId })
+    } else {
+      delCookie('source')
     }
     // 购物车限制在标王页面
     this.isBwRoute = this.$route.path.startsWith('/main/bw')
