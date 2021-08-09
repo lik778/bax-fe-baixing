@@ -77,20 +77,24 @@
     </section>
     <section>
       <aside>计划ID：</aside>
-      <el-input
-        v-model.trim="searchCampaigns"
-        size="mini"
-        ref="campaignInput"
-        class="search"
-        @blur="queryStatistics()"
-        placeholder="输入计划ID，多个计划使用英文逗号分隔"
-      />
-      <span v-if="campaignErrTip" class="err-tip">
-        <b v-if="query.dimension === DIMENSION_SEARCH_KEYWORD"
-          >请输入计划ID, 搜索词报告计划ID只能单个查询</b
-        >
-        <b v-else>请输入数字类型的计划ID</b>
-      </span>
+      <el-select v-model="searchCampaigns" placeholder="请选择">
+        <el-option
+                v-for="item in campaignIds"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+                :disabled="query.dimension === DIMENSION_SEARCH_KEYWORD && item.value === 0" />
+      </el-select>
+    </section>
+    <section v-if="query.dimension != DIMENSION_CAMPAIGN">
+      <aside>单元ID：</aside>
+      <el-select v-model="searchGroupId" placeholder="请选择">
+        <el-option
+                v-for="item in groupIds"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value" />
+      </el-select>
     </section>
     <data-detail
       :statistics="statistics"
@@ -104,6 +108,7 @@
       @switch-to-keyword-report="getKeywordReport"
       @refresh="() => queryStatistics({ offset })"
       @current-change="queryStatistics"
+      @sortChange="sortChange"
     >
     </data-detail>
   </main>
@@ -132,6 +137,7 @@ import {
   groupFields,
   keywordFields
 } from 'constant/fengming-report'
+import { getCampaignIds, getGroupIds } from 'api/fengming-campaign'
 
 import {
   SEM_PLATFORM_SHENMA,
@@ -140,7 +146,8 @@ import {
 } from 'constant/fengming'
 
 import store from './store'
-
+const ORDER_TYPE_ASC = 0 // 升序
+const ORDER_TYPE_DES = 1 // 降序
 export default {
   name: 'SummaryData',
   components: {
@@ -181,8 +188,21 @@ export default {
         device: DEVICE_ALL
       },
 
-      searchCampaigns: '',
+      sort: {
+        orderType: '',
+        sortType: ''
+      },
+
+      searchCampaigns: 0,
+      searchGroupId: 0,
       campaignErrTip: false,
+      campaignIds: [],
+      groupIds: [
+        {
+          label: '全部',
+          value: 0
+        }
+      ],
       triPickerOptions: {
         disabledDate (time) {
           const timestamp = new Date(time).getTime()
@@ -195,7 +215,7 @@ export default {
   },
   computed: {
     checkedCampaignIds () {
-      return String(this.searchCampaigns).split(',')
+      return this.searchCampaigns === 0 ? [] : String(this.searchCampaigns).split(',')
     },
     normalUserId () {
       return this.salesInfo.userId || this.userInfo.id
@@ -209,9 +229,18 @@ export default {
     }
   },
   methods: {
+    async sortChange ({ column, prop, order }) {
+      const orderType = order === 'ascending' ? ORDER_TYPE_ASC : ORDER_TYPE_DES
+      const sortType = prop
+      this.sort = {
+        orderType,
+        sortType
+      }
+      await this.queryStatistics()
+    },
     async queryStatistics (opts = {}) {
       const { dimension } = this.query
-      const { checkedCampaignIds } = this
+      const { checkedCampaignIds, sort } = this
 
       await store.clearStatistics()
       this.campaignErrTip = ''
@@ -227,7 +256,7 @@ export default {
           this.campaignErrTip = true
           return
         }
-        return await this._getReportByQueryWord(opts)
+        return await this._getReportByQueryWord({ ...opts, ...sort })
       }
 
       // 非搜索词维度，需要额外调获取计划总数据（总展现、总点击、总消费）接口
@@ -238,13 +267,12 @@ export default {
         this.campaignErrTip = true
         return
       }
-      return await this._getReport(opts)
+      return await this._getReport({ ...opts, ...sort })
     },
     async _getReportByQueryWord (opts = {}) {
       const offset = opts.offset || 0
       const { query, checkedCampaignIds } = this
       const { userId, salesId } = this.salesInfo
-
       let startDate
       let endDate
 
@@ -267,9 +295,10 @@ export default {
         campaignIds: checkedCampaignIds,
         userId,
         salesId,
-
+        groupId: this.searchGroupId || '',
         limit: this.limit,
-        offset
+        offset,
+        ...opts
       }
       await store.fetchReportByQueryWord(q)
     },
@@ -277,7 +306,6 @@ export default {
       const offset = opts.offset || 0
       const { query, checkedCampaignIds } = this
       const { userId, salesId } = this.salesInfo
-
       let startAt
       let endAt
 
@@ -309,8 +337,10 @@ export default {
         userId,
         salesId,
         limit: this.limit,
+        groupId: this.searchGroupId || '',
         offset,
-        fields
+        fields,
+        ...opts
       }
       await store.fetchReport(q, campaignFields)
     },
@@ -332,12 +362,45 @@ export default {
   watch: {
     query: {
       deep: true,
-      handler: async function () {
+      handler: async function (newV) {
+        // const { userId } = this.userInfo
+        // const campaignId = this.searchCampaigns || ''
+        if (newV.dimension === DIMENSION_SEARCH_KEYWORD) {
+          this.searchCampaigns = this.campaignIds[1].value
+        }
+        await this.queryStatistics()
+      }
+    },
+    searchCampaigns: {
+      deep: true,
+      handler: async function (newV, oldV) {
+        await this.queryStatistics()
+        const { userId } = this.userInfo
+        const campaignId = newV
+        if (campaignId) {
+          const result = await getGroupIds({ userId, campaignId })
+          this.groupIds = result
+          this.searchGroupId = result[0].value
+        } else {
+          this.searchGroupId = 0
+          this.groupIds = [{
+            label: '全部',
+            value: 0
+          }]
+        }
+      }
+    },
+    searchGroupId: {
+      deep: true,
+      handler: async function (newV, oldV) {
         await this.queryStatistics()
       }
     }
   },
   async mounted () {
+    const { userId } = this.salesInfo
+    const result = await getCampaignIds({ userId })
+    this.campaignIds = result
     await this.queryStatistics()
   }
 }

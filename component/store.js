@@ -5,6 +5,7 @@ import * as aapi from 'api/account'
 import * as mapi from 'api/meta'
 import * as qapi from 'api/qianci'
 import Sentry from '../lib/sentry'
+import { checkAuthorize } from 'api/fengming'
 
 const gStore = observable({
   _currentUser: {
@@ -15,6 +16,7 @@ const gStore = observable({
   _allQianciAreas: {},
   _allRoles: [],
   _realation: '',
+  _fengmingOptimizer: null,
 
   addUserLeadVisible: false,
 
@@ -35,6 +37,9 @@ const gStore = observable({
   },
   get relation () {
     return toJS(this._realation)
+  },
+  get fengmingOptimizer () {
+    return toJS(this._fengmingOptimizer)
   },
   toggleAddUserLeadVisible: action(function () {
     this.addUserLeadVisible = !this.addUserLeadVisible
@@ -80,7 +85,10 @@ const gStore = observable({
   getCategories: action(async function () {
     this._allCategories = await mapi.getCategories()
   }),
-
+  getFengmingOptimizer: action(async function (params) {
+    const { data } = await checkAuthorize(params)
+    this.fengmingOptimizer = data
+  }),
   getAreas: action(async function () {
     this._allAreas = await mapi.getAreas()
   }),

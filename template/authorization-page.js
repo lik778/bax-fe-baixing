@@ -2,7 +2,8 @@
 import Vue from 'vue'
 
 import AuthorizationPage from 'com/authorization-page'
-import { MessageBox, Message } from 'element-ui'
+import { MessageBox, Message, Button } from 'element-ui'
+Vue.use(Button)
 Vue.prototype.$message = Message
 Vue.prototype.$msgbox = MessageBox
 Vue.prototype.$alert = MessageBox.alert

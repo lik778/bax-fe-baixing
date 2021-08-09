@@ -42,7 +42,7 @@
         <p class="item" v-if="fengmingOptimizer">
           站外推广：
           <el-button v-if="fengmingOptimizer.relation === RELATION_SERVICE && fengmingOptimizer.status === SERVICE_NOT_OPTIMIZE" @click="authorization" type="danger" size="medium">申请授权</el-button>
-          <el-button v-if="fengmingOptimizer.relation === RELATION_SERVICE && fengmingOptimizer.status === SERVICE_OPTIMIZE_ING" :disabled="true" type="danger" size="medium">授权中</el-button>
+          <el-button v-if="fengmingOptimizer.relation === RELATION_SERVICE && fengmingOptimizer.status === SERVICE_OPTIMIZE_ING" @click="authorization" type="danger" size="medium">授权中</el-button>
           <el-button v-if="fengmingOptimizer.relation === RELATION_SERVICE && fengmingOptimizer.status === SERVICE_OPTIMIZED" :disabled="true" type="danger" size="medium">已授权</el-button>
           <el-button v-if="fengmingOptimizer.relation === RELATION_MANAGER" :disabled="true" type="danger" size="medium">{{ STATUS_MAP[fengmingOptimizer.status] }}</el-button>
         </p>
@@ -70,8 +70,8 @@
       :close-on-click-modal="false"
       width="40%"
     >
-      <p class="content-item">1.发送授权链接到预留手机号码</p>
-      <p class="content-item">接收号码： <el-input class="number-input" v-model="phoneNumber" placeholder="请输入内容"></el-input> <el-button @click="send" size="medium">确认发送</el-button></p>
+      <p class="content-item">1.发送授权链接到百姓网站内信</p>
+      <p class="content-item">接收用户： <el-input disabled class="number-input" v-model="phoneNumber" placeholder="请输入内容"></el-input> <el-button @click="send" size="medium">确认发送</el-button></p>
       <p class="content-item">或</p>
       <p class="content-item">2.复制授权链接发送给用户完成授权</p>
       <p class="content-item">{{jumpUrl}}<el-button size="medium" v-clipboard:copy="jumpUrl"
@@ -85,6 +85,7 @@
 
 <script>
 import store from './store'
+import gStore from '../store'
 import { prepareAuthorize, sendMessage, getUserAuthRelation, cancel } from 'api/fengming'
 import { isPro } from 'config'
 const formatPrice = (p) => {
@@ -126,7 +127,7 @@ export default {
   },
   fromMobx: {
     fengmingData: () => store.fengmingData,
-    fengmingOptimizer: () => store.fengmingOptimizer
+    fengmingOptimizer: () => gStore.fengmingOptimizer
   },
   async mounted () {
     const { query: { source, user_id: userId, sales_id: salesId } } = this.$route
