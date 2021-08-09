@@ -165,7 +165,7 @@
       <p class="opration-item" v-if="currentSelect.length">
         <el-button type="primary" @click="batchRecover" size="mini">批量恢复</el-button>
         <el-button type="primary" @click="batchDelet" size="mini">批量删除</el-button>
-        <el-button type="primary" size="mini" @click="dialogVisible = true">批量移动</el-button>
+        <el-button type="primary" size="mini" @click="batchRemove">批量移动</el-button>
         <el-button type="primary" size="mini">批量改价</el-button>
         <el-button type="primary" size="mini">批量复制</el-button>
       </p>
@@ -174,13 +174,39 @@
     </footer>
     <el-dialog
       title="提示"
-      :visible.sync="dialogVisible"
+      :visible.sync="dialogContent.visible"
       width="30%"
     >
-      <span>这是一段信息</span>
+      <div>
+        <p>{{dialogContent.text}}</p>
+        <el-form ref="form" :model="form" label-width="100px">
+          <el-form-item label="请选择计划：">
+            <el-select v-model="form.campaignId" placeholder="请选择">
+              <el-option
+                v-for="item in campaignIds"
+                :key="item.value"
+                :label="item.label"
+                :disabled="item.value === 0"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="请选择单元：">
+            <el-select v-model="form.groupId" placeholder="请选择">
+              <el-option
+                v-for="item in campaignIds"
+                :key="item.value"
+                :label="item.label"
+                :disabled="item.value === 0"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-form>
+      </div>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+        <el-button @click="dialogContent.visible = false">取 消</el-button>
+        <el-button type="primary" @click="save">保 存</el-button>
       </span>
     </el-dialog>
   </div>
@@ -192,6 +218,7 @@ import BaxInput from 'com/common/bax-input'
 import BaxPagination from 'com/common/pagination'
 
 import { changeGroupKeywordsPrice, changeGroupKeywordsMatchType } from 'api/fengming'
+import { getCampaignIds } from 'api/fengming-campaign'
 
 import { fmtCpcRanking } from 'util/campaign'
 import {
@@ -320,7 +347,15 @@ export default {
       matchTypePopVisible: false,
       loading: false,
       currentSelect: [],
-      dialogVisible: false,
+      dialogContent: {
+        visible: false,
+        text: ''
+      },
+      campaignIds: [],
+      form: {
+        campaignId: '',
+        groupId: ''
+      },
 
       // 常量
       keywordStatusTip,
@@ -333,6 +368,11 @@ export default {
       MATCH_TYPE_EXACT,
       MATCH_TYPE_PHRASE
     }
+  },
+  async mounted () {
+    const result = await getCampaignIds()
+    console.log('===', result)
+    this.campaignIds = result
   },
   methods: {
     fmtCpcRanking,
@@ -554,7 +594,14 @@ export default {
         }
       })
       this.$emit('update-keywords', newKeywords)
-    }
+    },
+    batchRemove () {
+      this.dialogContent = {
+        visible: true,
+        text: '将对选中的关键词移动到目标单元中，并在当前单元会删除，请选择目标位置'
+      }
+    },
+    save () {}
   },
   watch: {
     searchWord () {
