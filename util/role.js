@@ -309,3 +309,15 @@ export function relationAllow () {
       return true
   }
 }
+
+export function allowBwplus (roles, agentId, salesId) {
+  const currentRoles = normalizeRoles(roles)
+  const isSales = currentRoles.includes('AGENT_SALES') || currentRoles.includes('AGENT_ACCOUNTING')
+  if (isPro) {
+    const isAgentId = [1214, 2143, 2443, 2520, 2610, 2665, 2714].includes(agentId)
+    const salesIds = [4998, 21897, 21568, 9121, 9050]
+    const hasSalesId = salesIds.some(o => new RegExp(`^${o}`).test(salesId))
+    return isAgentId || (hasSalesId && isSales)
+  }
+  return [50].includes(agentId) || [5064].includes(salesId)
+}
