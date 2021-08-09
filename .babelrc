@@ -23,6 +23,13 @@
         "util": "./util",
         "api": "./api"
       }
-    }]
+    }],
+    [
+      "component",
+      {
+        "libraryName": "element-ui",
+        "styleLibraryName": "theme-chalk"
+      }
+    ]
   ]
 }

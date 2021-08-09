@@ -42,6 +42,7 @@ export const queryBaiduExpandWords = paginationWrapper(
 )
 
 export async function queryAds (opts = {}) {
+  console.log('opts', opts)
   const q = {
     offset: 0,
     limit: 3,
@@ -59,7 +60,6 @@ export async function queryAds (opts = {}) {
       total: data.length
     }
   }
-
   const body = await fengming
     .get('/simple/ad')
     .query(reverseCamelcase(trim(q)))
@@ -178,46 +178,50 @@ export async function createCampaign (data) {
   return body.data
 }
 
-export async function activeCampaigns (ids) {
+export async function activeCampaigns (ids, userId) {
   const body = await fengming
     .post('/campaign/pause')
-    .send(reverseCamelcase({
+    .send(reverseCamelcase(trim({
       campaignIds: [...ids],
-      pause: 0
-    }))
+      pause: 0,
+      userId
+    })))
     .json()
 
   return body
 }
 
-export async function pauseCampaigns (ids) {
+export async function pauseCampaigns (ids, userId) {
   const body = await fengming
     .post('/campaign/pause')
-    .send(reverseCamelcase({
+    .send(reverseCamelcase(trim({
       campaignIds: [...ids],
-      pause: 1
-    }))
+      pause: 1,
+      userId
+    })))
     .json()
   return body
 }
 
-export async function pauseGroup (ids) {
+export async function pauseGroup (ids, userId) {
   const body = await fengming
     .post('/group/pause')
     .send(reverseCamelcase({
       group_ids: [...ids],
-      pause: 1
+      pause: 1,
+      userId
     }))
     .json()
   return body
 }
 
-export async function activeGroup (ids) {
+export async function activeGroup (ids, userId) {
   const body = await fengming
     .post('/group/pause')
     .send(reverseCamelcase({
       group_ids: [...ids],
-      pause: 0
+      pause: 0,
+      userId
     }))
     .json()
   return body
@@ -481,10 +485,10 @@ export async function getDashboardHeader (params) {
   }
 }
 
-export async function changeCampaignKeywordsMatchType (campaignId, matchType) {
+export async function changeCampaignKeywordsMatchType (campaignId, params) {
   const body = await fengming
     .post(`/campaign/${campaignId}/keyword_match`)
-    .send(reverseCamelcase({ matchType }))
+    .send(reverseCamelcase(params))
     .json()
 
   return body.data
@@ -651,12 +655,13 @@ export async function getGroupDetailByGroupId (groupId, params) {
  * @param {array} groupIds
  * @param {number} pause
  */
-export async function activeGroups (ids) {
+export async function activeGroups (ids, userId) {
   const body = await fengming
     .post('/group/pause')
     .send(reverseCamelcase({
       groupIds: [...ids],
-      pause: 0
+      pause: 0,
+      userId
     }))
     .json()
 
@@ -668,12 +673,13 @@ export async function activeGroups (ids) {
  * @param {array} groupIds
  * @param {number} pause
  */
-export async function pauseGroups (ids) {
+export async function pauseGroups (ids, userId) {
   const body = await fengming
     .post('/group/pause')
     .send(reverseCamelcase({
       groupIds: [...ids],
-      pause: 1
+      pause: 1,
+      userId
     }))
     .json()
 
@@ -683,12 +689,13 @@ export async function pauseGroups (ids) {
 /**
  * 单元接口批量改价
  * @param {number} groupId
- * @param {number} price
+ * @param {object} params
+ * @param {number} params.price
  */
-export async function changeGroupKeywordsPrice (groupId, price) {
+export async function changeGroupKeywordsPrice (groupId, params) {
   const body = await fengming
     .post(`/group/${groupId}/keyword`)
-    .send({ price })
+    .send(reverseCamelcase(params))
     .json()
 
   return body.data
@@ -697,12 +704,12 @@ export async function changeGroupKeywordsPrice (groupId, price) {
 /**
  * 单元接口批量匹配模式
  * @param {number} groupId
- * @param {number} matchType
+ * @param {number} params.matchType
  */
-export async function changeGroupKeywordsMatchType (groupId, matchType) {
+export async function changeGroupKeywordsMatchType (groupId, params) {
   const body = await fengming
     .post(`/group/${groupId}/keyword_match`)
-    .send(reverseCamelcase({ matchType }))
+    .send(reverseCamelcase(params))
     .json()
 
   return body.data
@@ -755,4 +762,108 @@ function fmtWordsByContent (words) {
     word: w.content,
     ...w
   }))
+}
+
+/**
+ * @param {Object} params
+ * @param {number} params.userId
+ * @returns
+ */
+export async function prepareAuthorize (params) {
+  const body = await fengming
+    .get('/agent_operation/prepareAuthorize')
+    .query(reverseCamelcase(params))
+    .json()
+  return body
+}
+
+/**
+ * @param {object} params
+ * @param { number } params.userId
+ * @param { string } params.url
+ * @param { string } params.mobile
+ * @returns
+ */
+export async function sendMessage (params) {
+  const body = await fengming
+    .post('/agent_operation/sendMessage')
+    .send(reverseCamelcase(params))
+    .json()
+  return body
+}
+
+/**
+ * @param {object} params
+ * @param {string} params.userId
+ * @returns
+ */
+export async function checkUrlValid (params) {
+  const body = await fengming
+    .get('/agent_operation/checkUrlValid')
+    .query(reverseCamelcase(params))
+    .json()
+  return body
+}
+
+/**
+ * @param {object} params
+ * @param { number } params.userId
+ * @param { number } params.optimizerId
+ * @param { code } params.code
+ * @returns
+ */
+export async function authorize (params) {
+  const body = await fengming
+    .post('/agent_operation/authorize')
+    .send(reverseCamelcase(params))
+    .json()
+  return body
+}
+
+/**
+ * @param {object} params
+ * @param {string} params.userId
+ * @returns
+ */
+export async function checkAuthorize (params) {
+  const body = await fengming
+    .get('/agent_operation/checkAuthorize')
+    .query(reverseCamelcase(params))
+    .json()
+  return body
+}
+
+/**
+ * @param {object} params
+ * @param {string} params.optimizerId
+ * @returns
+ */
+export async function cancel (params) {
+  const body = await fengming
+    .get('/agent_operation/cancelAuthorize')
+    .query(reverseCamelcase(params))
+    .json()
+  return body
+}
+
+export async function getUserAuthRelation () {
+  const body = await fengming
+    .get('/agent_operation/getUserAuthRelation')
+    .json()
+  return body
+}
+
+/**
+ * @param {object} params
+ * @param { string } params.userId
+ * @param { string } params.optimizer_id
+ * @param { string } params.code
+ * @returns
+ */
+export async function rejectAuthorize (params) {
+  const body = await fengming
+    .post('/agent_operation/rejectAuthorize')
+    .send(reverseCamelcase(params))
+    .json()
+  return body
 }

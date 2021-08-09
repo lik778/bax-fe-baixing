@@ -21,7 +21,6 @@
 <script>
 import BaxSelect from './select'
 import { queryMvipShops } from 'api/mvip'
-import { minTime } from 'util/kit'
 
 export default {
   name: 'mvip-selector',
@@ -62,10 +61,11 @@ export default {
   },
   methods: {
     async getMvipShops () {
+      const { query: { user_id: userId } } = this.$route
       let response
       try {
         this.loading = true
-        response = await minTime(queryMvipShops)
+        response = await queryMvipShops({ userId })
       } catch (error) {
         response = {}
       } finally {

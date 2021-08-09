@@ -135,7 +135,8 @@ export default {
   },
   computed: {
     notAllowSales () {
-      return isSales(this.userInfo.roles)
+      const { query: { source } } = this.$route
+      return isSales(this.userInfo.roles) && !source
     },
     campaignId () {
       return this.$route.params.id
@@ -224,10 +225,12 @@ export default {
       }
     },
     async _updatePromotion () {
+      const { query: { user_id: userId } } = this.$route
       const data = {}
       Object.assign(data, {
         ...this.getUpdatedPromotionData(),
-        ...this.getUpdatedNegativeWordData()
+        ...this.getUpdatedNegativeWordData(),
+        userId
       })
 
       await updateCampaign(this.campaignId, data)

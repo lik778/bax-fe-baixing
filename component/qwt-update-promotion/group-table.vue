@@ -143,15 +143,16 @@ export default {
   },
   methods: {
     async toggleGroupStatus (group) {
+      const { query: { user_id: userId } } = this.$route
       const typeText = group.pause ? '开启' : '暂停'
       await this.$confirm(`确定${typeText}投放？`, '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消'
       })
       if (group.pause === 1) {
-        await activeGroups([group.id])
+        await activeGroups([group.id], userId)
       } else {
-        await pauseGroups([group.id])
+        await pauseGroups([group.id], userId)
       }
       this.$emit('update-group-data')
     },

@@ -454,6 +454,7 @@ export default {
       this.$emit('update-keywords', keywords)
     },
     async changeAllWordPrice () {
+      const { query: { user_id: userId } } = this.$route
       const keywordPrice = this.keywordPrice.trim()
       if (!keywordPrice) return
       const price = keywordPrice * 100
@@ -463,7 +464,7 @@ export default {
 
       try {
         this.loading = true
-        await changeGroupKeywordsPrice(this.groupId, price)
+        await changeGroupKeywordsPrice(this.groupId, { userId, price })
         this.emitUpdateKeywords('price', price)
         this.$emit('update-origin-keywords', 'price', price)
         this.$message.success('关键词批量改价成功')
@@ -474,10 +475,15 @@ export default {
     },
     async changeAllMatchType () {
       const matchType = this.matchType
-
+      const { groupId } = this
+      const { query: { user_id: userId } } = this.$route
+      const params = {
+        userId,
+        matchType
+      }
       try {
         this.loading = true
-        await changeGroupKeywordsMatchType(this.groupId, matchType)
+        await changeGroupKeywordsMatchType(groupId, params)
         this.emitUpdateKeywords('matchType', matchType)
         this.$emit('update-origin-keywords', 'matchType', matchType)
         this.$message.success('匹配方式批量修改成功')

@@ -21,9 +21,12 @@ export default {
       required: true
     }
   },
-  mounted () {
-    const { query: { user_id: userId } } = this.$route
-    store.initPageStore(userId)
+  async mounted () {
+    const { query: { source, user_id: userId } } = this.$route
+    await store.initPageStore(userId)
+    if (source) {
+      await store.getFengmingOptimizer({ userId })
+    }
   },
   components: {
     Account,

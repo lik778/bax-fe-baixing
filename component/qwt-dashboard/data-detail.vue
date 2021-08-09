@@ -3,23 +3,23 @@
   <div class="qwt-dashboard-data-detail">
 
     <!-- 计划维度表格 -->
-    <el-table v-if="dimension === DIMENSION_CAMPAIGN" :data="statistics" :key="DIMENSION_CAMPAIGN">
+    <el-table @sort-change="sortChange" v-if="dimension === DIMENSION_CAMPAIGN" :data="statistics" :key="DIMENSION_CAMPAIGN">
       <el-table-column label="计划ID" prop="campaignId" width="120" />
       <el-table-column label="日期" prop="date" width="140" />
       <el-table-column label="渠道" width="100"
         :formatter="r => fmtChannel(r.channel)" />
       <el-table-column label="设备" width="100"
         :formatter="r => fmtDevice(r.device)" />
-      <el-table-column label="展现" prop="shows" width="90" sortable />
-      <el-table-column label="点击" prop="clicks" width="90" sortable />
+      <el-table-column label="展现" prop="shows" width="90" sortable="custom" />
+      <el-table-column label="点击" prop="clicks" width="90" sortable="custom" />
       <el-table-column label="点击率" prop="clickRate" width="90">
         <span slot-scope="{row}">
           {{ (row.clickRate * 100).toFixed(2) }}%
         </span>
       </el-table-column>
-      <el-table-column label="实扣点击单价" width="160" sortable
+      <el-table-column label="实扣点击单价" width="160" prop="click_avg_price" sortable="custom"
         :formatter="r => (r.clickAvgPrice / 100).toFixed(2) + '元'" />
-      <el-table-column label="消耗" width="120"
+      <el-table-column label="消耗" prop="cost" width="120" sortable="custom"
         :formatter="r => (r.cost / 100).toFixed(2) + '元'" />
       <el-table-column label="单元详情" width="140">
         <template slot-scope="scope">
@@ -31,7 +31,7 @@
     </el-table>
 
     <!-- 单元维度表格 -->
-    <el-table v-else-if="dimension === DIMENSION_GROUP" :data="statistics" :key="DIMENSION_GROUP">
+    <el-table @sort-change="sortChange" v-else-if="dimension === DIMENSION_GROUP" :data="statistics" :key="DIMENSION_GROUP">
       <el-table-column label="计划ID" prop="campaignId" width="140" />
       <el-table-column label="单元ID" prop="groupId" width="140" />
       <el-table-column label="单元名称" prop="groupName" width="140" />
@@ -40,16 +40,16 @@
         :formatter="r => fmtChannel(r.channel)" />
       <el-table-column label="设备" width="100"
         :formatter="r => fmtDevice(r.device)" />
-      <el-table-column label="展现" prop="shows" width="90" sortable />
-      <el-table-column label="点击" prop="clicks" width="90" sortable />
+      <el-table-column label="展现" prop="shows" width="90" sortable="custom" />
+      <el-table-column label="点击" prop="clicks" width="90" sortable="custom" />
       <el-table-column label="点击率" prop="clickRate" width="90">
         <span slot-scope="{row}">
           {{ (row.clickRate * 100).toFixed(2) }}%
         </span>
       </el-table-column>
-      <el-table-column label="实扣点击单价" width="160" sortable
+      <el-table-column label="实扣点击单价" prop="click_avg_price" width="160" sortable="custom"
         :formatter="r => (r.clickAvgPrice / 100).toFixed(2) + '元'" />
-      <el-table-column label="消耗" width="120"
+      <el-table-column label="消耗" width="120" prop="cost" sortable="custom"
         :formatter="r => (r.cost / 100).toFixed(2) + '元'" />
       <el-table-column label="关键词详情" width="140">
         <template slot-scope="scope">
@@ -61,7 +61,7 @@
     </el-table>
 
     <!-- 关键词维度表格 -->
-    <el-table v-else-if="dimension === DIMENSION_KEYWORD" :data="statistics" :key="DIMENSION_KEYWORD">
+    <el-table @sort-change="sortChange" v-else-if="dimension === DIMENSION_KEYWORD" :data="statistics" :key="DIMENSION_KEYWORD">
       <el-table-column label="关键词" prop="keyword" width="200" :formatter="fmtKeywordName" />
       <el-table-column label="日期" prop="date" width="140" />
       <el-table-column label="计划ID" prop="campaignId" width="140" />
@@ -85,47 +85,48 @@
           </template>
         </template>
       </el-table-column>
-      <el-table-column label="展现" prop="shows" width="90" sortable />
-      <el-table-column label="点击" prop="clicks" width="90" sortable />
+      <el-table-column label="展现" prop="shows" width="90" sortable="custom" />
+      <el-table-column label="点击" prop="clicks" width="90" sortable="custom" />
       <el-table-column label="点击率" prop="clickRate" width="90">
         <span slot-scope="{row}">
           {{ (row.clickRate * 100).toFixed(2) }}%
         </span>
       </el-table-column>
-      <el-table-column label="实扣点击单价" width="160" sortable
+      <el-table-column label="实扣点击单价" prop="click_avg_price" width="160" sortable="custom"
         :formatter="r => (r.clickAvgPrice / 100).toFixed(2) + '元'" />
-      <el-table-column label="消耗" width="120"
+      <el-table-column label="消耗" prop="cost" width="120" sortable="custom"
         :formatter="r => (r.cost / 100).toFixed(2) + '元'" />
-      <el-table-column label="排名" width="120" sortable
+      <el-table-column label="排名" width="120"
         :formatter="r => fmtCpcRanking(r.cpcRanking)" />
     </el-table>
 
     <!-- 搜索词维度表格 -->
-    <el-table v-else :data="statistics" :key="DIMENSION_SEARCH_KEYWORD">
+    <el-table @sort-change="sortChange" v-else :data="statistics" :key="DIMENSION_SEARCH_KEYWORD">
       <el-table-column label="搜索词" prop="queryWord" width="200" />
       <el-table-column label="日期" prop="date" width="140" />
       <el-table-column label="单元名称" prop="groupName" width="200" />
+      <el-table-column label="关键词" prop="keyword" />
       <el-table-column label="计划ID" prop="campaignId" width="140" />
       <el-table-column label="渠道" width="100"
         :formatter="r => fmtChannel(r.channel)" />
       <el-table-column label="设备" width="100"
         :formatter="r => fmtDevice(r.device)" />
-      <el-table-column label="展现" prop="shows" width="90" sortable>
+      <el-table-column label="展现" prop="shows" width="90" sortable="custom">
         <template slot-scope="scope">
           <span v-if="scope.row.channel === SEM_PLATFORM_SOGOU">--</span>
           <span v-else>{{scope.row.shows}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="点击" prop="clicks" width="90" sortable />
-      <el-table-column label="点击率" width="160" sortable>
+      <el-table-column label="点击" prop="clicks" width="90" sortable="custom" />
+      <el-table-column label="点击率" prop="clickRate" width="160">
         <template slot-scope="scope">
           <span v-if="scope.row.channel === SEM_PLATFORM_SOGOU">--</span>
           <span v-else>{{(scope.row.clickRate * 100).toFixed(2) + '%'}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="消耗" width="120"
+      <el-table-column label="消耗" width="120" prop="cost" sortable="custom"
         :formatter="r => (r.costs / 100).toFixed(2) + '元'" />
-      <el-table-column label="平均点击价格" width="160" sortable
+      <el-table-column label="平均点击价格" prop="click_avg_price" width="160" sortable="custom"
         :formatter="r => (r.clickAvgPrice / 100).toFixed(2) + '元'" />
       <el-table-column min-width="270" fixed="right">
         <span slot="header">操作
@@ -208,7 +209,6 @@ import { Message } from 'element-ui'
 import { isNormalUser } from 'util/role'
 
 const isArray = Array.isArray
-
 export default {
   name: 'qwt-dashboard-data-detail',
   components: {
@@ -244,6 +244,10 @@ export default {
     userInfo: {
       type: Object,
       require: true
+    },
+    salesInfo: {
+      type: Object,
+      require: true
     }
   },
   data () {
@@ -257,14 +261,22 @@ export default {
     }
   },
   methods: {
+    async sortChange ({ column, prop, order }) {
+      this.$emit('sortChange', { column, prop, order })
+    },
     notAllowNormalUser () {
       const { roles } = this.userInfo
-      return isNormalUser(roles)
+      const { query: { source } } = this.$route
+      if (source) {
+        return true
+      }
+      return isNormalUser(roles) && !source
     },
     addKeyword (item) {
       const { groupId, queryWord } = item
       const price = 2 * 100
-      updateGroup(groupId, { newKeywords: [{ price, word: queryWord }] })
+      const { query: { user_id: userId } } = this.$route
+      updateGroup(groupId, { newKeywords: [{ price, word: queryWord }], userId })
         .then(() => {
           Message({
             type: 'success',
@@ -274,8 +286,9 @@ export default {
         })
     },
     addCampaignNegativeKeyword (item) {
+      const { query: { user_id: userId } } = this.$route
       const { campaignId, queryWord } = item
-      updateCampaign(campaignId, { newNegativeKeywords: [{ word: queryWord }] })
+      updateCampaign(campaignId, { newNegativeKeywords: [{ word: queryWord }], userId })
         .then(() => {
           Message({
             type: 'success',
@@ -286,7 +299,8 @@ export default {
     },
     addGroupNegativeKeyword (item) {
       const { groupId, queryWord } = item
-      updateGroup(groupId, { newNegativeKeywords: [{ word: queryWord }] })
+      const { query: { user_id: userId } } = this.$route
+      updateGroup(groupId, { newNegativeKeywords: [{ word: queryWord }], userId })
         .then(() => {
           Message({
             type: 'success',
@@ -296,13 +310,14 @@ export default {
         })
     },
     async onChangePrice (userPrice, { groupId, keywordId }) {
+      const { query: { user_id: userId } } = this.$route
       const price = (userPrice ? toFloat(userPrice) : 0) * 100
       if (price > 99 * 100 || price < 2 * 100) {
         return this.$message.error('价格需在2-99元之间')
       }
       try {
         this.priceUpdating = true
-        await updateGroup(groupId, { updatedKeywords: [{ price, id: keywordId }] })
+        await updateGroup(groupId, { updatedKeywords: [{ price, id: keywordId }], userId })
         this.$message.success('价格更新成功')
       } finally {
         this.priceUpdating = false

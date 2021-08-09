@@ -180,7 +180,8 @@ export default {
       return this.promotion.frontCampaignStatus === CAMPAIGN_STATUS_OFFLINE
     },
     createBtnDisabled () {
-      return this.loading.updateGroup || this.isSales || this.isCampaignOffline
+      const { query: { source } } = this.$route
+      return (this.loading.updateGroup || this.isSales || this.isCampaignOffline) && !source
     }
   },
   async mounted () {
