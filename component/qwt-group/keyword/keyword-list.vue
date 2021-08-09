@@ -1,6 +1,6 @@
 <template>
   <div class="keyword-list">
-    <el-table :data="rows" @selection-change="handleSelectionChange">
+    <el-table :data="rows" @select-all="selectAll" @select="handleSelectionChange">
       <el-table-column
       type="selection"
       width="55" />
@@ -50,7 +50,7 @@
                        min-width="220">
         <!-- 删除 slot-scope 后会有稀奇古怪的问题 -->
         <!-- eslint-disable-next-line -->
-        <div slot="header"slot-scope="col">
+        <div slot="header" slot-scope="col">
           <header-tip-comp :label-html="maxPriceLabel"
                            :tip-html="cpcTopPriceTip" />
           <el-popover placement="top"
@@ -163,18 +163,26 @@
     </el-table>
     <footer>
       <p class="opration-item" v-if="currentSelect.length">
-        <el-popconfirm
-          title="确定批量删除吗？"
-        >
-          <el-button slot="reference" type="primary" size="mini">批量删除</el-button>
-        </el-popconfirm>
-        <el-button type="primary" size="mini">批量移动</el-button>
+        <el-button type="primary" @click="batchRecover" size="mini">批量恢复</el-button>
+        <el-button type="primary" @click="batchDelet" size="mini">批量删除</el-button>
+        <el-button type="primary" size="mini" @click="dialogVisible = true">批量移动</el-button>
         <el-button type="primary" size="mini">批量改价</el-button>
         <el-button type="primary" size="mini">批量复制</el-button>
       </p>
       <bax-pagination :options="pagination"
                       @current-change="onCurrentChange" />
     </footer>
+    <el-dialog
+      title="提示"
+      :visible.sync="dialogVisible"
+      width="30%"
+    >
+      <span>这是一段信息</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -312,6 +320,7 @@ export default {
       matchTypePopVisible: false,
       loading: false,
       currentSelect: [],
+      dialogVisible: false,
 
       // 常量
       keywordStatusTip,
@@ -486,9 +495,65 @@ export default {
         this.offset = offset
       }
     },
-    handleSelectionChange (selection) {
-      console.log(selection)
-      this.currentSelect = selection
+    selectAll (selection) {
+      this.currentSelect = selection.map(o => o.id)
+    },
+    handleSelectionChange (selection, row) {
+      this.currentSelect = selection.map(o => o.id)
+    },
+    batchDelet () {
+      const { currentSelect, keywords } = this
+      const newKeywords = clone(keywords)
+      newKeywords.forEach(row => {
+        if (currentSelect.includes(row.id)) {
+          row.isDel = true
+        }
+        if (this.showMatchType && row.matchType !== MATCH_TYPE_PHRASE) {
+          row.matchType = MATCH_TYPE_PHRASE
+        }
+
+        if (this.showMatchType) {
+        // 删除之后的精准匹配的最大值和当前值
+          const maxCount = getMatchTypeObj(this.wordLen - 1).count(this.wordLen - 1)
+          let currentCount = this.keywords.filter(o => o.matchType === MATCH_TYPE_EXACT).length
+
+          if (String(row.matchType) === String(MATCH_TYPE_EXACT)) {
+            currentCount--
+          }
+
+          if (maxCount < currentCount) {
+            const h = this.$createElement
+            const words = this.keywords.reduce((curr, prev) => {
+              if (String(prev.matchType) === String(MATCH_TYPE_EXACT)) {
+                return curr.concat(prev.word)
+              }
+              return curr
+            }, [])
+            this.$msgbox({
+              title: '提示',
+              message: h('div', null, [
+                h('div', null, '操作失败，请先减少精确匹配方式的关键词后再重新操作。'),
+                h('div', { style: 'marginTop: 10px' }, [
+                  h('span', null, '已设置精确匹配的关键词：'),
+                  h('span', { style: 'color: #ff4401' }, words.join('，'))
+                ])
+              ])
+            })
+          }
+        }
+      })
+      this.$emit('update-keywords', newKeywords)
+    },
+    batchRecover () {
+      const { currentSelect, keywords } = this
+      console.log('currentSelect', currentSelect)
+      const newKeywords = clone(keywords)
+      newKeywords.forEach(row => {
+        if (currentSelect.includes(row.id)) {
+          row.isDel = false
+        }
+      })
+      this.$emit('update-keywords', newKeywords)
     }
   },
   watch: {
