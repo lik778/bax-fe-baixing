@@ -89,7 +89,8 @@
                            :search-word="searchWord"
                            @update-origin-keywords="(changeTag, v) => originKeywords = originKeywords.map(o => ({ ...o, [changeTag]: v }))"
                            @update-keywords="(words) => (keywords = words)"
-                           @remove-keywords="(idx) => keywords.splice(idx, 1)" />
+                           @remove-keywords="(idx) => keywords.splice(idx, 1)"
+                           @updateGroup="patchMoveGroup" />
       </div>
     </section>
 
@@ -361,9 +362,11 @@ export default {
       })
     },
     async updateMaterialThenGroup () {
+      const { groupId } = this.groupId
+      const { id: campaignId } = this.promotion
       try {
         await this.updateMaterialPictures()
-        await this.updateGroup()
+        await this.updateGroup({ groupId, campaignId, moveKeywords: false })
       } catch (e) {
         this.$message.error(e.message)
       }
@@ -386,16 +389,25 @@ export default {
         throw new Error(e.errors[0].message)
       }
     },
-    async updateGroup () {
+    async updateGroup ({ groupId, campaignId, moveKeywords }) {
       this.lock.group = true
       try {
         await this.validateGroup()
-        await this._updateGroup()
+        await this._updateGroup(groupId, campaignId, moveKeywords)
       } finally {
         this.lock.group = false
       }
     },
-    async _updateGroup () {
+    async patchMoveGroup ({ groupId, campaignId, moveKeywords, isNewSelect }) {
+      this.lock.group = true
+      this.isNewSelect = isNewSelect
+      try {
+        await this._updateGroup(groupId, campaignId, moveKeywords)
+      } finally {
+        this.lock.group = false
+      }
+    },
+    async _updateGroup (groupId = this.groupId, campaignId = this.promotion.id, moveKeywords = false) {
       const { query: { user_id: userId } } = this.$route
       const data = {}
       Object.assign(data, {
@@ -403,17 +415,24 @@ export default {
         ...this.getUpdatedNegativeWordData(),
         ...this.getUpdatedCreativeData(),
         ...this.getUpdatedKeywordData(),
-        userId
+        userId,
+        moveKeywords
       })
+      console.log('===', data)
 
-      updateGroup(this.groupId, data).then(() => {
-        this.$message.success('单元更新成功')
+      updateGroup(groupId, data).then(() => {
+        if (moveKeywords) {
+          this.$message.success('操作整个！')
+        } else {
+          this.$message.success('单元更新成功')
+        }
         this.handleTrack('leave-page: update-group')
-
-        this.$router.push({
-          name: 'qwt-update-promotion',
-          params: { id: this.promotion.id }
-        })
+        if (!moveKeywords) {
+          this.$router.push({
+            name: 'qwt-update-promotion',
+            params: { id: campaignId }
+          })
+        }
       }).catch(err => { console.log(err) })
     },
     validMaterialPictures () {

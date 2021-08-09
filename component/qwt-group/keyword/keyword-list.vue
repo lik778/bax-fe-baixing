@@ -167,7 +167,7 @@
         <el-button type="primary" @click="batchDelet" size="mini">批量删除</el-button>
         <el-button type="primary" size="mini" @click="batchRemove">批量移动</el-button>
         <el-button type="primary" size="mini">批量改价</el-button>
-        <el-button type="primary" size="mini">批量复制</el-button>
+        <el-button type="primary" @click="batchCopy" size="mini">批量复制</el-button>
       </p>
       <bax-pagination :options="pagination"
                       @current-change="onCurrentChange" />
@@ -181,7 +181,7 @@
         <p>{{dialogContent.text}}</p>
         <el-form ref="form" :model="form" label-width="100px">
           <el-form-item label="请选择计划：">
-            <el-select v-model="form.campaignId" placeholder="请选择">
+            <el-select @change="campaignIdChange" v-model="form.campaignId" placeholder="请选择">
               <el-option
                 v-for="item in campaignIds"
                 :key="item.value"
@@ -191,10 +191,10 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="请选择单元：">
+          <el-form-item v-if="form.campaignId" label="请选择单元：">
             <el-select v-model="form.groupId" placeholder="请选择">
               <el-option
-                v-for="item in campaignIds"
+                v-for="item in groupIds"
                 :key="item.value"
                 :label="item.label"
                 :disabled="item.value === 0"
@@ -206,7 +206,7 @@
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogContent.visible = false">取 消</el-button>
-        <el-button type="primary" @click="save">保 存</el-button>
+        <el-button type="primary" @click="save" :loading="savePendding">保 存</el-button>
       </span>
     </el-dialog>
   </div>
@@ -218,7 +218,7 @@ import BaxInput from 'com/common/bax-input'
 import BaxPagination from 'com/common/pagination'
 
 import { changeGroupKeywordsPrice, changeGroupKeywordsMatchType } from 'api/fengming'
-import { getCampaignIds } from 'api/fengming-campaign'
+import { getCampaignIds, getGroupIds } from 'api/fengming-campaign'
 
 import { fmtCpcRanking } from 'util/campaign'
 import {
@@ -349,9 +349,11 @@ export default {
       currentSelect: [],
       dialogContent: {
         visible: false,
-        text: ''
+        text: '',
+        type: 'copy'
       },
       campaignIds: [],
+      groupIds: [],
       form: {
         campaignId: '',
         groupId: ''
@@ -371,8 +373,8 @@ export default {
     }
   },
   async mounted () {
-    const result = await getCampaignIds()
-    console.log('===', result)
+    const { query: { user_id: userId } } = this.$route
+    const result = await getCampaignIds({ userId, is_online: 1 })
     this.campaignIds = result
   },
   methods: {
@@ -606,10 +608,38 @@ export default {
     batchRemove () {
       this.dialogContent = {
         visible: true,
-        text: '将对选中的关键词移动到目标单元中，并在当前单元会删除，请选择目标位置'
+        text: '将对选中的关键词移动到目标单元中，并在当前单元会删除，请选择目标位置',
+        type: 'move'
       }
     },
-    save () {}
+    batchCopy () {
+      this.dialogContent = {
+        visible: true,
+        text: '将对选中的关键词复制到目标单元中，请选择目标位置',
+        type: 'copy'
+      }
+    },
+    async campaignIdChange () {
+      const { query: { user_id: userId } } = this.$route
+      const { campaignId } = this.form
+      const result = await getGroupIds({ userId, campaignId, is_online: 1 })
+      this.form.groupId = result[1] ? result[1].value : ''
+      this.groupIds = result
+    },
+    async save () {
+      this.savePendding = true
+      const { dialogContent, isNewSelect } = this
+      const { groupId, campaignId } = this.form
+      if (dialogContent.type === 'move') {
+        this.batchDelet()
+      }
+      try {
+        await this.$emit('updateGroup', { groupId, campaignId, moveKeywords: true, isNewSelect })
+        this.savePendding = false
+      } catch (error) {
+        this.savePendding = false
+      }
+    }
   },
   watch: {
     searchWord () {
