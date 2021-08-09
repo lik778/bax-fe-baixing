@@ -144,7 +144,7 @@ export const PROVINCE_LIST = [
   },
   {
     id: 13,
-    value: 'shanxi',
+    value: 'shaanxi',
     label: '陕西'
   },
   {
