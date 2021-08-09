@@ -85,6 +85,7 @@
 
 <script>
 import store from './store'
+import gStore from '../store'
 import { prepareAuthorize, sendMessage, getUserAuthRelation, cancel } from 'api/fengming'
 import { isPro } from 'config'
 const formatPrice = (p) => {
@@ -126,7 +127,7 @@ export default {
   },
   fromMobx: {
     fengmingData: () => store.fengmingData,
-    fengmingOptimizer: () => store.fengmingOptimizer
+    fengmingOptimizer: () => gStore.fengmingOptimizer
   },
   async mounted () {
     const { query: { source, user_id: userId, sales_id: salesId } } = this.$route

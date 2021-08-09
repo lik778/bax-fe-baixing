@@ -59,7 +59,6 @@ import { delCookie } from 'util/cookie'
 
 import { router } from '../template/bax'
 import qs from 'query-string'
-import { getUserAuthRelation } from 'api/fengming'
 
 export default {
   name: 'bax',
@@ -142,10 +141,12 @@ export default {
   async mounted () {
     // source为当前用户是否是以优化师角色进入bax
     const { source } = qs.parse(location.search)
+    const { userId } = this.salesInfo
+    const { roles } = this.currentUser
     if (source) {
       document.cookie = 'source=' + source + ';'
       // 此接口为查询当前用户的角色（主管/优化师）以及和目标用户的关系，后端暂存，用作后面的校验
-      await getUserAuthRelation()
+      await gStore.getFengmingOptimizer({ userId })
     } else {
       delCookie('source')
     }
@@ -155,8 +156,6 @@ export default {
       gStore.getAreas(),
       gStore.getRoles()
     ])
-    const { roles } = this.currentUser
-    const { userId } = this.salesInfo
     if (isSales(roles) && userId) {
       gStore.getRelation({ userId })
     }
