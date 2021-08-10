@@ -166,7 +166,7 @@
         <el-button type="primary" @click="batchRecover" size="mini">批量恢复</el-button>
         <el-button type="primary" @click="batchDelet" size="mini">批量删除</el-button>
         <el-button type="primary" size="mini" @click="batchRemove">批量移动</el-button>
-        <el-button type="primary" size="mini" @click="() => {patchDeleteContent.visible = true; patchDeleteContent.type = 'change'}">批量改价</el-button>
+        <el-button type="primary" size="mini" @click="patchChangePrice">批量改价</el-button>
         <el-button type="primary" @click="batchCopy" size="mini">批量复制</el-button>
       </p>
       <bax-pagination :options="pagination"
@@ -541,8 +541,29 @@ export default {
       }
       return result
     },
+    patchChangePrice () {
+      const { currentSelect } = this
+      if (!this.transforArray(currentSelect).length) {
+        this.$message({
+          type: 'error',
+          message: '请至少选择一个关键词'
+        })
+        return
+      }
+      this.patchDeleteContent = {
+        type: 'change',
+        visible: true
+      }
+    },
     batchDelet () {
       const { keywords, currentSelect } = this
+      if (!this.transforArray(currentSelect).length) {
+        this.$message({
+          type: 'error',
+          message: '请至少选择一个关键词'
+        })
+        return
+      }
       const newKeywords = clone(keywords)
       newKeywords.forEach(row => {
         if (this.transforArray(currentSelect).includes(row.id)) {
@@ -588,6 +609,13 @@ export default {
     },
     batchRecover () {
       const { currentSelect, keywords } = this
+      if (!this.transforArray(currentSelect).length) {
+        this.$message({
+          type: 'error',
+          message: '请至少选择一个关键词'
+        })
+        return
+      }
       const newKeywords = clone(keywords)
       newKeywords.forEach(row => {
         if (this.transforArray(currentSelect).includes(row.id)) {
@@ -599,6 +627,14 @@ export default {
       this.$emit('update-keywords', newKeywords)
     },
     batchRemove () {
+      const { currentSelect } = this
+      if (!this.transforArray(currentSelect).length) {
+        this.$message({
+          type: 'error',
+          message: '请至少选择一个关键词'
+        })
+        return
+      }
       this.dialogContent = {
         visible: true,
         text: '将对选中的关键词移动到目标单元中，并在当前单元会删除，请选择目标位置',
@@ -606,6 +642,14 @@ export default {
       }
     },
     batchCopy () {
+      const { currentSelect } = this
+      if (!this.transforArray(currentSelect).length) {
+        this.$message({
+          type: 'error',
+          message: '请至少选择一个关键词'
+        })
+        return
+      }
       this.dialogContent = {
         visible: true,
         text: '将对选中的关键词复制到目标单元中，请选择目标位置',
@@ -630,7 +674,16 @@ export default {
         this.dialogContent.visible = false
       }
     },
-    deleteHandle () {},
+    deleteHandle () {
+      // const { currentSelect } = this
+      // if (!this.transforArray(currentSelect).length) {
+      //   this.$message({
+      //     type: 'error',
+      //     message: '请至少选择一个关键词'
+      //   })
+      //   return
+      // }
+    },
     changePrice (price) {
       const { currentSelect, keywords } = this
       const newKeywords = clone(keywords)
