@@ -73,12 +73,12 @@
           <template slot="title">
             <bx-icon type="sharealt"></bx-icon>标王2.0
           </template>
-          <el-menu-item index="bw-plus-query-price" v-if="!userInfo.shAgent">
+          <el-menu-item index="bw-plus-query-price" v-if="!userInfo.shAgent && relationAllow()">
             <router-link :to="{ name: 'bw-plus-query-price' }" tag="p">
               标王查价
             </router-link>
           </el-menu-item>
-          <el-menu-item index="bw-plus-price-records" v-if="!userInfo.shAgent">
+          <el-menu-item index="bw-plus-price-records" v-if="!userInfo.shAgent && relationAllow()">
             <router-link :to="{ name: 'bw-plus-price-records' }" tag="p">
               查价记录
             </router-link>
