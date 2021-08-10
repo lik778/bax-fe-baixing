@@ -1,6 +1,6 @@
 <template>
   <div class="keyword-list">
-    <el-table :data="rows" @select-all="selectAll" @select="handleSelectionChange">
+    <el-table ref="multipleTable" :data="rows" @select-all="selectAll" @select="handleSelectionChange">
       <el-table-column
       type="selection"
       width="55" />
@@ -460,6 +460,12 @@ export default {
     },
     onCurrentChange ({ offset }) {
       this.offset = offset
+      const { currentSelect, rows } = this
+      this.$nextTick(() => {
+        rows.filter(a => this.transforArray(currentSelect).includes(a.id)).forEach(o => {
+          this.$refs.multipleTable.toggleRowSelection(o, true)
+        })
+      })
     },
     deleteWord (row) {
       // TIP 删除时，更改状态
@@ -514,15 +520,17 @@ export default {
         isNew: true,
         ...o
       }))
-      console.log(Object.keys(this.currentSelect).length)
+      console.log(this.transforArray(this.currentSelect))
     },
     handleSelectionChange (selection, row) {
-      const selectionClone = clone(selection)
-      this.currentSelect[this.offset] = selectionClone.map(o => o.id)
-      this.isNewSelect[this.offset] = selectionClone.map(o => ({
-        isNew: true,
-        ...o
-      }))
+      const current = this.currentSelect[this.offset] || []
+      if (current && current.includes(row.id)) {
+        this.currentSelect[this.offset] = current.filter(o => o !== row.id)
+        this.isNewSelect[this.offset] = this.isNewSelect[this.offset].filter(o => o.id !== row.id).map(a => ({ ...a, isNew: true }))
+      } else {
+        this.currentSelect[this.offset] = [...current, row.id]
+        this.isNewSelect[this.offset].push({ isNew: true, ...row })
+      }
     },
     transforArray (obj) {
       let result = []
@@ -586,6 +594,8 @@ export default {
           row.isDel = false
         }
       })
+      this.$refs.multipleTable.clearSelection()
+      this.currentSelect = {}
       this.$emit('update-keywords', newKeywords)
     },
     batchRemove () {
