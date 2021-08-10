@@ -314,9 +314,9 @@ export function allowBwplus (roles, agentId, salesId) {
   const currentRoles = normalizeRoles(roles)
   const isSales = currentRoles.includes('AGENT_SALES') || currentRoles.includes('BAIXING_SALES')
   if (isPro) {
-    const isAgentId = [1214, 2143, 2443, 2520, 2610, 2665, 2714].includes(agentId)
+    const isAgentId = [1214, 2143, 2443, 2610, 2665].includes(agentId)
     const hasSalesId = [4998, 21897, 21568, 9121, 9050].includes(salesId)
-    return isSales && (isAgentId || hasSalesId)
+    return isNormalUser(roles) ? true : (isSales && (isAgentId || hasSalesId))
   }
-  return isSales && ([50].includes(agentId) || [5064].includes(salesId))
+  return isNormalUser(roles) ? true : (isSales && ([50].includes(agentId) || [5064].includes(salesId)))
 }
