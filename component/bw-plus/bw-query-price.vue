@@ -4,7 +4,8 @@
             <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
                 <el-tab-pane label="查价" name="first">
                     <InqueryForm :allAreas="allAreas" @inquery="inquery" @resetResult="resetResult"/>
-                    <section class="bw-query-price_item" v-if="ifExistLockCity" ref="viewScrollTop">
+                    <div ref="viewScrollTop"></div>
+                    <section class="bw-query-price_item" v-if="ifExistLockCity">
                       <el-alert
                         class="lock-tips"
                         :title="keywordLockText"
@@ -14,7 +15,7 @@
                       </el-alert>
                       <SoldCity :tableData="keywordsLockDetails" :allAreas="allAreas"/>
                     </section>
-                    <section class="bw-query-price_item" v-if="queryResult.keywordPvList" ref="viewScrollTop">
+                    <section class="bw-query-price_item" v-if="queryResult.keywordPvList">
                       <Title title="关键词热度明细"/>
                       <KeywordHotDetail :tableData="queryResult && queryResult.keywordPvList"/>
                     </section>
