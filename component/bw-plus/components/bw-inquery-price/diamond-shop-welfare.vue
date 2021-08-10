@@ -1,7 +1,7 @@
 <template>
     <div :class="{'shop-container': true, 'active': active}">
-        <h4>钻石官网</h4>
-        <p>支持首页宝推广，让您的网站上百度首页<br>支持SEO优化等更多专业版官网建站功能</p>
+        <h4>钻石店铺</h4>
+        <p>多端展示，多渠道共享落地页<br>支持微信分享，支持SEO优化</p>
         <footer>
             {{current.duration || '-'}}天
         </footer>
