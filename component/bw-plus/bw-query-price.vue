@@ -15,7 +15,7 @@
                       </el-alert>
                       <SoldCity :tableData="keywordsLockDetails" :allAreas="allAreas"/>
                     </section>
-                    <section class="bw-query-price_item" v-if="queryResult.keywordPvList" ref="viewScrollTop">
+                    <section class="bw-query-price_item" v-if="queryResult.keywordPvList">
                       <Title title="关键词热度明细"/>
                       <KeywordHotDetail :tableData="queryResult && queryResult.keywordPvList"/>
                     </section>
