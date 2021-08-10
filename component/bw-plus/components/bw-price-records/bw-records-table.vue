@@ -18,7 +18,19 @@
         </template>
       </el-table-column>
       <el-table-column prop="device" label="平台" :formatter="deviceFormatter" />
-      <el-table-column prop="cities" width="150" :show-overflow-tooltip="true" label="投放城市" :formatter="citiesFormater" />
+      <el-table-column prop="cities" width="150" label="投放城市" >
+        <template slot-scope="{ row }">
+          <el-popover
+          placement="top-start"
+          title="投放城市"
+          width="150"
+          trigger="hover"
+          >
+            <div class="cities-content">{{citiesFormater(row)}}</div>
+            <p slot="reference" class="keywords-row">{{ citiesFormater(row) }}</p>
+          </el-popover>
+        </template>
+      </el-table-column>
       <el-table-column width="120" prop="scheduleType" label="推广时段" :formatter="scheduleTypeFormater" />
       <el-table-column prop="days" label="服务时长" :formatter="daysFormater" />
       <el-table-column width="150" prop="industry" label="推广行业" />
@@ -103,8 +115,8 @@ export default {
       const [,, cellValue] = args
       return DEVICE[cellValue] || '-'
     },
-    citiesFormater (...args) {
-      const [,, cities] = args
+    citiesFormater (row) {
+      const { cities } = row
       return cities.map(city => getCnName(city, this.allAreas)).join('、')
     },
     reviewPrice (row) {
@@ -136,8 +148,15 @@ export default {
   .pending-item{
     color: #E6A23C;
   }
-  .el-table thead.is-group th{
-    background: red;
+  .keywords-row{
+    width: 130px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-top: 6px;
   }
-
+  .cities-content{
+    max-height: 200px;
+    overflow: auto;
+  }
 </style>
