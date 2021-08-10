@@ -162,7 +162,7 @@
       </el-table-column>
     </el-table>
     <footer>
-      <p class="opration-item" v-if="currentSelect.length">
+      <p class="opration-item">
         <el-button type="primary" @click="batchRecover" size="mini">批量恢复</el-button>
         <el-button type="primary" @click="batchDelet" size="mini">批量删除</el-button>
         <el-button type="primary" size="mini" @click="batchRemove">批量移动</el-button>
@@ -301,6 +301,9 @@ export default {
         return this.keywords.filter(row => row.word.indexOf(this.searchWord) > -1)
       }
       return []
+    },
+    canOption () {
+      return Object.keys(this.currentSelect).length
     }
   },
   data () {
@@ -312,7 +315,7 @@ export default {
       pricePopoverVisible: false,
       matchTypePopVisible: false,
       loading: false,
-      currentSelect: [],
+      currentSelect: {},
       dialogContent: {
         visible: false,
         text: '',
@@ -322,7 +325,7 @@ export default {
         visible: false,
         type: 'delete'
       },
-      isNewSelect: [],
+      isNewSelect: {},
       savePendding: false,
 
       // 常量
@@ -506,25 +509,35 @@ export default {
     },
     selectAll (selection) {
       const selectionClone = clone(selection)
-      this.currentSelect = selectionClone.map(o => o.id)
-      this.isNewSelect = selectionClone.map(o => ({
+      this.currentSelect[this.offset] = selectionClone.map(o => o.id)
+      this.isNewSelect[this.offset] = selectionClone.map(o => ({
         isNew: true,
         ...o
       }))
+      console.log(Object.keys(this.currentSelect).length)
     },
     handleSelectionChange (selection, row) {
       const selectionClone = clone(selection)
-      this.currentSelect = selectionClone.map(o => o.id)
-      this.isNewSelect = selectionClone.map(o => ({
+      this.currentSelect[this.offset] = selectionClone.map(o => o.id)
+      this.isNewSelect[this.offset] = selectionClone.map(o => ({
         isNew: true,
         ...o
       }))
     },
+    transforArray (obj) {
+      let result = []
+      for (let i = 0; i < this.pagination.total; i++) {
+        if (obj[i]) {
+          result = [...result, ...obj[i]]
+        }
+      }
+      return result
+    },
     batchDelet () {
-      const { currentSelect, keywords } = this
+      const { keywords, currentSelect } = this
       const newKeywords = clone(keywords)
       newKeywords.forEach(row => {
-        if (currentSelect.includes(row.id)) {
+        if (this.transforArray(currentSelect).includes(row.id)) {
           row.isDel = true
         } else {
           row.isDel = false
@@ -569,7 +582,7 @@ export default {
       const { currentSelect, keywords } = this
       const newKeywords = clone(keywords)
       newKeywords.forEach(row => {
-        if (currentSelect.includes(row.id)) {
+        if (this.transforArray(currentSelect).includes(row.id)) {
           row.isDel = false
         }
       })
@@ -596,17 +609,30 @@ export default {
       if (dialogContent.type === 'move') {
         this.batchDelet()
       } else {
-        params.isNewSelect = isNewSelect
+        params.isNewSelect = this.transforArray(isNewSelect)
       }
       try {
         await this.$emit('updateGroup', params)
-        this.savePendding = false
       } catch (error) {
+        console.log(error)
+      } finally {
         this.savePendding = false
+        this.dialogContent.visible = false
       }
     },
     deleteHandle () {},
-    changePrice (price) {}
+    changePrice (price) {
+      const { currentSelect, keywords } = this
+      const newKeywords = clone(keywords)
+      newKeywords.forEach(row => {
+        if (this.transforArray(currentSelect).includes(row.id)) {
+          row.isUpdated = true
+          row.price = price * 100
+        }
+      })
+      this.patchDeleteContent.visible = false
+      this.$emit('update-keywords', newKeywords)
+    }
   },
   watch: {
     searchWord () {

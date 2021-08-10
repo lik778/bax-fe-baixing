@@ -7,7 +7,7 @@
         <span v-if="patchDeleteContent.type === 'delete'">将对选中的关键词做删除操作，请确认：</span>
         <div v-if="patchDeleteContent.type === 'change'">
             <p>将对选中的关键词统一调整出价，请设置出价：</p>
-            <el-input v-model="price" placeholder="请输入内容"></el-input>
+            <el-input v-model="price" placeholder="请输入要设置的出价"></el-input>
         </div>
         <span slot="footer" class="dialog-footer">
             <el-button @click="cancel">取 消</el-button>
