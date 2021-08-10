@@ -1,4 +1,6 @@
-export const isLocal = location.hostname.includes('localhost')
+const env = process.env.NODE_ENV
+export const isLocal = env === 'development'
+
 export const isPro = location.hostname.includes('bax.baixing.com.cn')
 
 const production = {
@@ -10,7 +12,8 @@ const production = {
   qcApiHost: 'http://bax.baixing.com.cn/api/sem-batch',
   b2bApiHost: '//squat.baixing.com.cn',
   orderServiceHost: 'https://trade.baixing.com',
-  identityBindingPage: 'https://www.baixing.com/bind/?type=idcard'
+  identityBindingPage: 'https://www.baixing.com/bind/?type=idcard',
+  biaowangPlusApiHost: '//bax.baixing.com.cn/api/phoenixs-plus'
 }
 
 const development = {
@@ -18,6 +21,7 @@ const development = {
   baxApiHost: '/bax',
   kaApiHost: '/ka/api/admin',
   biaowangApiHost: '/phoenixs/api',
+  biaowangPlusApiHost: '/phoenixs-plus/api/phoenixs-plus',
   seoApiHost: '/seo-api',
   qcApiHost: '/sem-batch/api/sem-batch',
   b2bApiHost: '/b2b',
@@ -30,6 +34,7 @@ const local = {
   baxApiHost: '//bax.baixing.cn/bax',
   kaApiHost: '//bax.baixing.cn/ka/api/admin',
   biaowangApiHost: '//bax.baixing.cn/phoenixs/api',
+  biaowangPlusApiHost: '//bax.baixing.cn/phoenixs-plus/api/phoenixs-plus',
   seoApiHost: 'http://bax.baixing.cn/seo-api',
   qcApiHost: 'http://bax.baixing.cn/sem-batch/api/sem-batch',
   b2bApiHost: '//172.30.2.14:31643',
@@ -65,5 +70,6 @@ export const assetHost = config.assetHost
 export const upyun = config.upyun
 export const preKeywordPath = config.preKeywordPath
 export const b2bApiHost = config.b2bApiHost
+export const biaowangPlusApiHost = config.biaowangPlusApiHost
 
 export default config

@@ -1,7 +1,7 @@
 {
   "name": "bax-fe",
   "private": true,
-  "version": "8.8.0",
+  "version": "8.8.1",
   "scripts": {
     "start": "cross-env NODE_ENV=development webpack-dev-server --progress --config tool/webpack.dev.js",
     "build": "node tool/build.js",

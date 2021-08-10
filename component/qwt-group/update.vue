@@ -194,7 +194,6 @@ export default {
   data () {
     return {
       actionTrackId: uuid(),
-
       SEM_PLATFORM_SHENMA,
       SEM_PLATFORM_BAIDU,
       CAMPAIGN_STATUS_OFFLINE,
