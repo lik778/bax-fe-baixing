@@ -4,7 +4,7 @@
             <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
                 <el-tab-pane label="查价" name="first">
                     <InqueryForm :allAreas="allAreas" @inquery="inquery" @resetResult="resetResult"/>
-                    <div ref="viewScrollTop"></div>
+                    <div ref="viewScrollTop" class="placeHolder"></div>
                     <section class="bw-query-price_item" v-if="ifExistLockCity">
                       <el-alert
                         class="lock-tips"
@@ -227,6 +227,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  .placeHolder{
+    height: 60px;
+  }
     .bw-query-price{
         height: 100%;
         &_item{
