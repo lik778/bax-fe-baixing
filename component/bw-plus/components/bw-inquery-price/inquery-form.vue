@@ -160,10 +160,10 @@ export default {
         return errorMsg
       }
       for (let i = 0; i < array.length; i++) {
-        if (array[i].length < 2 || array[i].length > 10) {
+        if (array[i].length < 2 || array[i].length > 15) {
           errorMsg = {
             validate: false,
-            error: '单个关键词字数在2-10之间'
+            error: '单个关键词字数在2-15之间'
           }
           break
         }
