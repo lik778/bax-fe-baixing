@@ -671,7 +671,6 @@ export default {
       const { dialogContent, isNewSelect } = this
       const params = { ...form, moveKeywords: true }
       params.isNewSelect = this.transforArray(isNewSelect)
-      console.log(this.transforArray(isNewSelect))
       try {
         await this.$emit('updateGroup', params)
       } catch (error) {
@@ -679,6 +678,8 @@ export default {
       } finally {
         if (dialogContent.type === 'move') {
           this.batchDelet()
+        } else {
+          this.$refs.multipleTable.clearSelection()
         }
         this.savePendding = false
         this.dialogContent.visible = false
