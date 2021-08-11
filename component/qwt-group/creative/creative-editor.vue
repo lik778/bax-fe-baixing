@@ -171,6 +171,10 @@ export default {
       }
     },
     async checkCreative (title, content, platforms) {
+      const reg = /(^\s+)|(\s+$)|\s+/g
+      if (reg.test(title) || reg.test(content)) {
+        throw Error('标题和内容不能包含空格')
+      }
       if (!title || !content) {
         return
       } else if (this.titleMinLen > title.length || this.titleMaxLen < title.length) {
