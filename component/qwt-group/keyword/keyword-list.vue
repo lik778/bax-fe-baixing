@@ -672,6 +672,7 @@ export default {
       } finally {
         this.savePendding = false
         this.dialogContent.visible = false
+        this.currentSelect = []
       }
     },
     deleteHandle () {
@@ -695,6 +696,7 @@ export default {
       })
       this.patchDeleteContent.visible = false
       this.$emit('update-keywords', newKeywords)
+      this.currentSelect = []
     }
   },
   watch: {
