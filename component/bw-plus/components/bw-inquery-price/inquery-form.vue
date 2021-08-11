@@ -152,10 +152,10 @@ export default {
         }
         return errorMsg
       }
-      if (array.length > 30) {
+      if (array.length > 10) {
         errorMsg = {
           validate: false,
-          error: '关键词个数不能超过30个'
+          error: '关键词个数不能超过10个'
         }
         return errorMsg
       }
