@@ -408,15 +408,14 @@ export default {
     async _updateGroup (groupId = this.groupId, campaignId = this.promotion.id, moveKeywords = false, isNewSelect = []) {
       const { query: { user_id: userId } } = this.$route
       const data = {}
-      const newKeywords = isNewSelect
+      const newKeywords = isNewSelect.length > 0 ? { newKeywords: isNewSelect } : this.getUpdatedKeywordData()
       Object.assign(data, {
         ...this.getUpdatedLandingData(),
         ...this.getUpdatedNegativeWordData(),
         ...this.getUpdatedCreativeData(),
-        ...this.getUpdatedKeywordData(),
+        ...newKeywords,
         userId,
-        moveKeywords,
-        newKeywords
+        moveKeywords
       })
       console.log('===', data)
 
