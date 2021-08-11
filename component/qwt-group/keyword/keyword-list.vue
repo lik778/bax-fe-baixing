@@ -298,7 +298,7 @@ export default {
     },
     searchKeywords () {
       if (this.isSearchCondition) {
-        const searchWordArray = this.searchWord.split(',')
+        const searchWordArray = this.searchWord.trim().split(/[，,]]*/g)
         return this.keywords.filter(row => searchWordArray.includes(row.word))
       }
       return []
