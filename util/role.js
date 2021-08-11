@@ -213,6 +213,14 @@ export function onlyAgentSales (roles) {
   return isAgentSales && !isAgentAccounting
 }
 
+export function onlyAgentAccounting (roles) {
+  const currentRoles = normalizeRoles(roles)
+  if (currentRoles.length === 1 && currentRoles.includes('AGENT_ACCOUNTING')) {
+    return true
+  }
+  return false
+}
+
 export function normalizeRoles (roles) {
   if (!isArray(roles)) {
     return []
@@ -300,4 +308,15 @@ export function relationAllow () {
     default:
       return true
   }
+}
+
+export function allowBwplus (roles, agentId, salesId) {
+  const currentRoles = normalizeRoles(roles)
+  const isSales = currentRoles.includes('AGENT_SALES') || currentRoles.includes('BAIXING_SALES')
+  if (isPro) {
+    const isAgentId = [1214, 2143, 2443, 2610, 2665].includes(agentId)
+    const hasSalesId = [4998, 21897, 21568, 9121, 9050].includes(salesId)
+    return isNormalUser(roles) ? true : (isSales && (isAgentId || hasSalesId))
+  }
+  return isNormalUser(roles) ? true : (isSales && ([50].includes(agentId) || [5064].includes(salesId)))
 }

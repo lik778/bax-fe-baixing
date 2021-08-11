@@ -165,17 +165,19 @@ export default {
         const { platforms } = this
         validateCreative({ title: creativeValues.title, content: creativeValues.content, platforms })
         await this.checkCreative(creativeValues.title, creativeValues.content, platforms)
-        this.$emit('error', undefined, this.idx)
       } catch (e) {
         this.$emit('error', e.message, this.idx)
       }
     },
     async checkCreative (title, content, platforms) {
       if (!title || !content) {
+        this.$emit('error', '标题和内容不能为空', this.idx)
         return
       } else if (this.titleMinLen > title.length || this.titleMaxLen < title.length) {
+        this.$emit('error', '标题字数限制为9-25个字', this.idx)
         return
       } else if (this.contentMinLen > content.length || this.contentMaxLen < content.length) {
+        this.$emit('error', '内容字数限制9-80个字', this.idx)
         return
       }
 
@@ -188,7 +190,7 @@ export default {
       if (data.result) {
         throw Error(data.hint)
       }
-
+      this.$emit('error', undefined, this.idx)
       // 全部校验成功success弹框
       this.$message({
         message: '推广设置检查通过',
@@ -200,6 +202,7 @@ export default {
     isTitleContentValid: {
       immediate: true,
       handler (newV) {
+        console.log('=', newV)
         this.$emit('validate-len-change', newV, this.idx)
       }
     }

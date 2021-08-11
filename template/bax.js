@@ -53,7 +53,10 @@ import {
   Message,
   Cascader,
   Notification,
-  Drawer
+  Breadcrumb,
+  BreadcrumbItem,
+  Alert,
+  OptionGroup
 } from 'element-ui'
 import '../cssbase/index.scss'
 import { reaction } from 'mobx'
@@ -61,6 +64,7 @@ import Movue from 'movue'
 import Vue from 'vue'
 import { ErrorBoundary } from 'vue-error-boundary'
 import Vue2Filters from 'vue2-filters'
+import { getBusinessLicense } from 'api/seo'
 import { getCurrentUser } from 'api/account'
 import pick from 'lodash.pick'
 import { notAllowFengmingRecharge } from 'util/role'
@@ -124,6 +128,7 @@ Vue.use(Select)
 Vue.use(Option)
 Vue.use(Button)
 Vue.use(ButtonGroup)
+Vue.use(OptionGroup)
 Vue.use(Table)
 Vue.use(TableColumn)
 Vue.use(DatePicker)
@@ -142,8 +147,10 @@ Vue.use(Progress)
 Vue.use(Popconfirm)
 Vue.use(Card)
 Vue.use(Image)
-Vue.use(Drawer)
 Vue.use(Popconfirm)
+Vue.use(Breadcrumb)
+Vue.use(BreadcrumbItem)
+Vue.use(Alert)
 
 /**
  * 错误回退组件
@@ -241,6 +248,34 @@ VueRouter.prototype.replace = function replace (route) {
     console.log(error)
   })
 }
+
+const bwPlusRoutes = [
+  {
+    component: () => import('com/bw-plus/bw-query-price'),
+    path: '/main/bw-plus/query-price',
+    name: 'bw-plus-query-price'
+  },
+  {
+    component: () => import('com/bw-plus/bw-price-records'),
+    path: '/main/bw-plus/price-records',
+    name: 'bw-plus-price-records'
+  },
+  {
+    component: () => import('com/bw-plus/bw-package-list'),
+    path: '/main/bw-plus/package-list',
+    name: 'bw-plus-package-list'
+  },
+  {
+    component: () => import('com/bw-plus/bw-plan-list'),
+    path: '/main/bw-plus/plan-list/:id',
+    name: 'bw-plus-plan-list'
+  },
+  {
+    component: () => import('com/bw-plus/bw-edit-plan/index'),
+    path: '/main/bw-plus/edit-plan/:id',
+    name: 'bw-plus-edit-plan'
+  }
+]
 
 const bwRoutes = [
   {
@@ -388,6 +423,57 @@ const sspRoutes = [
   }
 ]
 
+const seoRoutes = [
+  {
+    component: () => import('com/seo-charge'),
+    path: '/main/seo/charge',
+    name: 'seo-charge'
+  },
+  {
+    component: () => import('com/seo-landing'),
+    path: '/main/seo/landing',
+    name: 'seo-landing'
+  },
+  {
+    component: () => import('com/seo-create-promotion'),
+    path: '/main/seo/promotion/create',
+    name: 'seo-create-promotion'
+  },
+  {
+    component: () => import('com/seo-promotion-list'),
+    path: '/main/seo/promotions',
+    name: 'seo-promotion-list'
+  },
+  {
+    component: () => import('com/seo-update-promotion-zixuan'),
+    path: '/main/seo/promotion/zixuan/:id/update',
+    name: 'seo-update-zixuan-promotion'
+  },
+  {
+    component: () => import('com/seo-create-promotion-zixuan'),
+    path: '/main/seo/promotion/create/zixuan',
+    name: 'seo-create-zixuan-promotion'
+  },
+  {
+    component: () => import('com/seo-promotion-cibao/create'),
+    path: '/main/seo/promotion/create/cibao',
+    name: 'seo-create-cibao-promotion',
+    beforeEnter: async (to, from, next) => {
+      const license = await getBusinessLicense()
+      if (license) {
+        next()
+      } else {
+        Message.error('无权限访问')
+      }
+    }
+  },
+  {
+    component: () => import('com/seo-promotion-cibao/update'),
+    path: '/main/seo/promotion/cibao/:id/update',
+    name: 'seo-update-cibao-promotion'
+  }
+]
+
 export const router = new VueRouter({
   mode: 'history',
   routes: [
@@ -430,6 +516,8 @@ export const router = new VueRouter({
     ...qcRoutes,
     ...qwtRoutes,
     ...sspRoutes,
+    ...seoRoutes,
+    ...bwPlusRoutes,
     {
       path: '*',
       redirect: '/main'

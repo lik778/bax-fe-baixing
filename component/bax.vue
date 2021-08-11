@@ -160,9 +160,9 @@ export default {
       delCookie('source')
     }
     // 购物车限制在标王页面
-    this.isBwRoute = this.$route.path.startsWith('/main/bw')
+    this.isBwRoute = this.$route.path.startsWith('/main/bw/')
     router.beforeEach((to, from, next) => {
-      this.isBwRoute = to.path.startsWith('/main/bw')
+      this.isBwRoute = to.path.startsWith('/main/bw/')
       next()
     })
 
@@ -302,7 +302,6 @@ body > .container {
 }
 
 .el-loading-mask {
-  background-color: transparent !important;
-  height: 173px;
+  height: 100%;
 }
 </style>
