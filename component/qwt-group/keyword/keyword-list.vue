@@ -517,19 +517,13 @@ export default {
     selectAll (selection) {
       const selectionClone = clone(selection)
       this.currentSelect[this.offset] = selectionClone.map(o => o.id)
-      // this.isNewSelect[this.offset] = selectionClone.map(o => ({
-      //   isNew: true,
-      //   ...o
-      // }))
     },
     handleSelectionChange (selection, row) {
       const current = this.currentSelect[this.offset] || []
       if (current && current.includes(row.id)) {
         this.currentSelect[this.offset] = current.filter(o => o !== row.id)
-        // this.isNewSelect[this.offset] = this.isNewSelect[this.offset].filter(o => o.id !== row.id).map(a => ({ ...a, isNew: true }))
       } else {
         this.currentSelect[this.offset] = [...current, row.id]
-        // this.isNewSelect[this.offset].push({ isNew: true, ...row })
       }
     },
     transforArray (obj) {
@@ -606,6 +600,7 @@ export default {
         }
       })
       this.$emit('update-keywords', newKeywords)
+      this.currentSelect = {}
     },
     batchRecover () {
       const { currentSelect, keywords } = this
