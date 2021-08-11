@@ -298,7 +298,8 @@ export default {
     },
     searchKeywords () {
       if (this.isSearchCondition) {
-        return this.keywords.filter(row => row.word.indexOf(this.searchWord) > -1)
+        const searchWordArray = this.searchWord.split(',')
+        return this.keywords.filter(row => searchWordArray.includes(row.word))
       }
       return []
     },
