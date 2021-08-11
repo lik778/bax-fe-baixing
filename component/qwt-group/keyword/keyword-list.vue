@@ -516,20 +516,19 @@ export default {
     selectAll (selection) {
       const selectionClone = clone(selection)
       this.currentSelect[this.offset] = selectionClone.map(o => o.id)
-      this.isNewSelect[this.offset] = selectionClone.map(o => ({
-        isNew: true,
-        ...o
-      }))
-      console.log(this.transforArray(this.currentSelect))
+      // this.isNewSelect[this.offset] = selectionClone.map(o => ({
+      //   isNew: true,
+      //   ...o
+      // }))
     },
     handleSelectionChange (selection, row) {
       const current = this.currentSelect[this.offset] || []
       if (current && current.includes(row.id)) {
         this.currentSelect[this.offset] = current.filter(o => o !== row.id)
-        this.isNewSelect[this.offset] = this.isNewSelect[this.offset].filter(o => o.id !== row.id).map(a => ({ ...a, isNew: true }))
+        // this.isNewSelect[this.offset] = this.isNewSelect[this.offset].filter(o => o.id !== row.id).map(a => ({ ...a, isNew: true }))
       } else {
         this.currentSelect[this.offset] = [...current, row.id]
-        this.isNewSelect[this.offset].push({ isNew: true, ...row })
+        // this.isNewSelect[this.offset].push({ isNew: true, ...row })
       }
     },
     transforArray (obj) {
@@ -627,7 +626,8 @@ export default {
       this.$emit('update-keywords', newKeywords)
     },
     batchRemove () {
-      const { currentSelect } = this
+      const { currentSelect, keywords } = this
+      const keywordsCopy = clone(keywords)
       if (!this.transforArray(currentSelect).length) {
         this.$message({
           type: 'error',
@@ -635,6 +635,10 @@ export default {
         })
         return
       }
+      this.isNewSelect[this.offset] = keywordsCopy.filter(o => this.transforArray(currentSelect).includes(o.id)).map(o => ({
+        isNew: true,
+        ...o
+      }))
       this.dialogContent = {
         visible: true,
         text: '将对选中的关键词移动到目标单元中，并在当前单元会删除，请选择目标位置',
@@ -642,7 +646,8 @@ export default {
       }
     },
     batchCopy () {
-      const { currentSelect } = this
+      const { currentSelect, keywords } = this
+      const keywordsCopy = clone(keywords)
       if (!this.transforArray(currentSelect).length) {
         this.$message({
           type: 'error',
@@ -650,6 +655,10 @@ export default {
         })
         return
       }
+      this.isNewSelect[this.offset] = keywordsCopy.filter(o => this.transforArray(currentSelect).includes(o.id)).map(o => ({
+        isNew: true,
+        ...o
+      }))
       this.dialogContent = {
         visible: true,
         text: '将对选中的关键词复制到目标单元中，请选择目标位置',
@@ -660,19 +669,18 @@ export default {
       this.savePendding = true
       const { dialogContent, isNewSelect } = this
       const params = { ...form, moveKeywords: true }
-      if (dialogContent.type === 'move') {
-        this.batchDelet()
-      } else {
-        params.isNewSelect = this.transforArray(isNewSelect)
-      }
+      params.isNewSelect = this.transforArray(isNewSelect)
+      console.log(this.transforArray(isNewSelect))
       try {
         await this.$emit('updateGroup', params)
       } catch (error) {
         console.log(error)
       } finally {
+        if (dialogContent.type === 'move') {
+          this.batchDelet()
+        }
         this.savePendding = false
         this.dialogContent.visible = false
-        this.currentSelect = []
       }
     },
     deleteHandle () {

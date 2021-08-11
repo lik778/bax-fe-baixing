@@ -408,7 +408,7 @@ export default {
     async _updateGroup (groupId = this.groupId, campaignId = this.promotion.id, moveKeywords = false, isNewSelect = []) {
       const { query: { user_id: userId } } = this.$route
       const data = {}
-      const updateKeywords = isNewSelect.length > 0 ? { newKeywords: isNewSelect, ...this.getUpdatedKeywordData() } : this.getUpdatedKeywordData()
+      const updateKeywords = isNewSelect.length > 0 ? { newKeywords: isNewSelect } : this.getUpdatedKeywordData()
       Object.assign(data, {
         ...this.getUpdatedLandingData(),
         ...this.getUpdatedNegativeWordData(),
@@ -417,7 +417,6 @@ export default {
         userId,
         moveKeywords
       })
-      console.log('===', data)
 
       updateGroup(groupId, data).then(() => {
         if (moveKeywords) {
