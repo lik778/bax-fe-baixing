@@ -22,6 +22,7 @@
                     v-for="item in industryList"
                     :key="item.name"
                     :label="item.description"
+                    :disabled="checkResult.industry && item.name !== checkResult.industry"
                     :value="item.name">
                   </el-option>
                 </el-select>
@@ -110,7 +111,8 @@ export default {
       },
       checkResult: {
         passed: true,
-        rejectedWordWithReason: {}
+        rejectedWordWithReason: {},
+        industry: ''
       },
       restaurants: [],
       allSoldCities: {}
@@ -227,18 +229,21 @@ export default {
           background: 'rgba(0, 0, 0, 0.7)'
         })
         try {
-          const { data: { passed, rejectedWordWithReason } } = await checkKeyword({ keywords: words.split(/[\s\n]/).filter(Boolean) })
+          const { data: { passed, rejectedWordWithReason, industry } } = await checkKeyword({ keywords: words.split(/[\s\n]/).filter(Boolean) })
           this.checkResult = {
             passed,
-            rejectedWordWithReason
+            rejectedWordWithReason,
+            industry
           }
           if (!passed) {
+            this.form.industry = ''
             this.$message({
               message: rejectedWordWithReason,
               type: 'error'
             })
             return false
           }
+          this.form.industry = industry
           this.$message({
             message: '风控审查通过啦！快去查价吧！',
             type: 'success'
