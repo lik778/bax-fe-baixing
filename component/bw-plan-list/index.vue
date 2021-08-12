@@ -167,7 +167,7 @@ import {
   PROMOTE_STATUS_PAUSE,
   NOT_SPECIALRENEW_LIST
 } from 'constant/biaowang'
-import { getPromotes, queryKeywordPriceNew, getUserLive, getUserRanking, getRenewDetail, specialRenew } from 'api/biaowang'
+import { getPromotes, queryKeywordPriceNew, getUserLive, getUserRanking, specialRenew } from 'api/biaowang'
 import {
   f2y,
   getCnName,
@@ -425,34 +425,28 @@ export default {
     },
     async onXufei (row) {
       this.payUrl = ''
-      const { word, cities, device, ifSpecialRenew } = row
+      const { word, cities, device } = row
       if (!this.canXufei(row)) {
         return this.$message.info('到期前15天才可续费哦')
       }
-      if (ifSpecialRenew) {
-        const { data } = await getRenewDetail({ promoteId: row.id })
-        this.xufeiForm = { ...data, soldPriceMap: { [data.days]: [data.price] }, ifSpecialRenew: row.ifSpecialRenew }
-        this.xufeiDialogVisible = true
-      } else {
-        const result = await queryKeywordPriceNew({
-          targetUserId: this.getFinalUserId(),
-          word,
-          cities,
-          device
+      const result = await queryKeywordPriceNew({
+        targetUserId: this.getFinalUserId(),
+        word,
+        cities,
+        device
+      })
+      const priceObj = result[0].priceList[0]
+      const soldPriceMap = GET_DAYS_MAP(priceObj.orderApplyType).reduce((curr, prev) => {
+        return Object.assign(curr, {
+          [prev]: prev / THIRTY_DAYS * priceObj.price
         })
-        const priceObj = result[0].priceList[0]
-        const soldPriceMap = GET_DAYS_MAP(priceObj.orderApplyType).reduce((curr, prev) => {
-          return Object.assign(curr, {
-            [prev]: prev / THIRTY_DAYS * priceObj.price
-          })
-        }, {})
-        this.xufeiForm = {
-          ...result[0],
-          ...priceObj,
-          soldPriceMap
-        }
-        this.xufeiDialogVisible = true
+      }, {})
+      this.xufeiForm = {
+        ...result[0],
+        ...priceObj,
+        soldPriceMap
       }
+      this.xufeiDialogVisible = true
     },
     addToCart () {
       this.$refs.xufei.validate(isValid => {
