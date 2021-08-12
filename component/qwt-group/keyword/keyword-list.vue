@@ -12,9 +12,11 @@
           <span class="new-word"
                 v-if="row.isNew">(新)</span>
           <span class="del-word"
-                v-if="row.isDel">(删除)</span>
+                v-if="row.isDel && !row.isRemove">(删除)</span>
           <span class="updated-word"
                 v-if="row.isUpdated">(更改)</span>
+          <span class="updated-word"
+                v-if="row.isRemove">(移动)</span>
           <span class="good-word"
                 v-if="RECOMMAND_SOURCES.includes(row.recommandSource)">(好词)</span>
         </template>
@@ -633,13 +635,17 @@ export default {
       }
       this.isNewSelect[this.offset] = keywordsCopy.filter(o => this.transforArray(currentSelect).includes(o.id)).map(o => ({
         isNew: true,
+        isRemove: true,
         ...o
       }))
+      const newKeywords = keywordsCopy.map(o => this.currentSelect[this.offset].includes(o.id) ? { ...o, isRemove: true } : { ...o })
       this.dialogContent = {
         visible: true,
         text: '将对选中的关键词移动到目标单元中，并在当前单元会删除，请选择目标位置',
         type: 'move'
       }
+      console.log(keywordsCopy)
+      this.$emit('update-keywords', newKeywords)
     },
     batchCopy () {
       const { currentSelect, keywords } = this

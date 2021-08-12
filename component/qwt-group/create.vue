@@ -198,10 +198,9 @@ export default {
       const { query: { cloneId, user_id: userId, campaignId } } = this.$route
       if (cloneId) {
         await this.cloneGroupById(cloneId)
-      } else {
-        const promotion = await getCampaignInfo(campaignId, { userId })
-        this.promotion = pick(promotion, ['id', 'source', 'areas'])
       }
+      const promotion = await getCampaignInfo(campaignId, { userId })
+      this.promotion = pick(promotion, ['id', 'source', 'areas'])
       this.campaignKeywordLen = await getCampaignKeywordsCount(campaignId, userId)
     } catch (error) {
       console.error('error:', error)
