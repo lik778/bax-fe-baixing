@@ -638,14 +638,11 @@ export default {
         isRemove: true,
         ...o
       }))
-      const newKeywords = keywordsCopy.map(o => this.currentSelect[this.offset].includes(o.id) ? { ...o, isRemove: true } : { ...o })
       this.dialogContent = {
         visible: true,
         text: '将对选中的关键词移动到目标单元中，并在当前单元会删除，请选择目标位置',
         type: 'move'
       }
-      console.log(keywordsCopy)
-      this.$emit('update-keywords', newKeywords)
     },
     batchCopy () {
       const { currentSelect, keywords } = this
@@ -669,7 +666,8 @@ export default {
     },
     async save (form) {
       this.savePendding = true
-      const { dialogContent, isNewSelect } = this
+      const { dialogContent, isNewSelect, keywords } = this
+      const keywordsCopy = clone(keywords)
       const params = { ...form, moveKeywords: true }
       params.isNewSelect = this.transforArray(isNewSelect)
       try {
@@ -678,12 +676,15 @@ export default {
         console.log(error)
       } finally {
         if (dialogContent.type === 'move') {
-          this.batchDelet()
+          const newKeywords = keywordsCopy.map(o => this.currentSelect[this.offset].includes(o.id) ? { ...o, isRemove: true, isDel: true } : { ...o })
+          this.$emit('update-keywords', newKeywords)
         } else {
           this.$refs.multipleTable.clearSelection()
         }
         this.savePendding = false
         this.dialogContent.visible = false
+        this.currentSelect = {}
+        this.isNewSelect = {}
       }
     },
     deleteHandle () {
