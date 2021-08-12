@@ -15,7 +15,9 @@
           width="150"
           trigger="hover"
           >
-            <div class="cities-content">{{row.keywords.join('、')}}</div>
+            <div class="cities-content">
+              {{row.keywords.join('、')}}
+            </div>
             <p slot="reference">{{ keywordsFormater(row) }}</p>
           </el-popover>
         </template>
@@ -38,7 +40,9 @@
           width="150"
           trigger="hover"
           >
-            <div class="cities-content">{{citiesFormater(row).detail}}</div>
+            <div class="cities-content">
+              <ProvinceCityMap :allAreas="allAreas" :cities="row.cities"/>
+            </div>
             <p slot="reference" class="keywords-row">{{ citiesFormater(row).text }}</p>
           </el-popover>
         </template>
@@ -64,8 +68,10 @@
 import { APPLY_AUDIT_STATUS_OPTIONS, APPLY_AUDIT_STATUS_PENDING, APPLY_AUDIT_STATUS_REJECT, APPLY_TYPE_NORMAL, DEVICE, SCHEDULE_TYPE, STATUS_MAP, APPLY_AUDIT_STATUS_PASS, OPTION_STATUS_AWAIT_TIDAN, OPTION_STATUS_COPY_URL } from 'constant/bw-plus'
 import { f2y, getCnName } from 'util'
 import dayjs from 'dayjs'
+import ProvinceCityMap from '../common/province-city-map.vue'
 export default {
   name: 'bw-records-table',
+  components: { ProvinceCityMap },
   props: {
     records: {
       type: Array,
@@ -91,14 +97,14 @@ export default {
       APPLY_AUDIT_STATUS_OPTIONS,
       APPLY_AUDIT_STATUS_PASS,
       OPTION_STATUS_AWAIT_TIDAN,
-      OPTION_STATUS_COPY_URL
+      OPTION_STATUS_COPY_URL,
+      allAreasNew: {}
     }
   },
   methods: {
     keywordsFormater (args) {
       const { keywords } = args
       const length = keywords.length
-      console.log(`${keywords[0]}等${length}个关键词`)
       return length > 1 ? `${keywords[0]}等${length}个关键词` : keywords.join('、')
     },
     daysFormater (...args) {
