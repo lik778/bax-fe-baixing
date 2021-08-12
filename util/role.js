@@ -312,11 +312,14 @@ export function relationAllow () {
 
 export function allowBwplus (roles, agentId, salesId) {
   const currentRoles = normalizeRoles(roles)
-  const isSales = currentRoles.includes('AGENT_SALES') || currentRoles.includes('BAIXING_SALES')
+  const isAgent = currentRoles.includes('AGENT_SALES')
+  const isSales = currentRoles.includes('BAIXING_SALES')
   if (isPro) {
-    const isAgentId = [1214, 2143, 2443, 2610, 2665].includes(agentId)
-    const hasSalesId = [4998, 21897, 21568, 9121, 9050].includes(salesId)
-    return isNormalUser(roles) ? true : (isSales && (isAgentId || hasSalesId))
+    const isAgentId = isAgent && [187108, 131102, 2443, 151015, 147010].includes(salesId.substring(0, 6))
+    const hasSalesId = isSales && [4998, 21897, 21568, 9121, 9050].includes(salesId)
+    return isNormalUser(roles) ? true : (isAgentId || hasSalesId)
   }
-  return isNormalUser(roles) ? true : (isSales && ([50].includes(agentId) || [5064].includes(salesId)))
+  const isAgentId = isAgent && [139601].includes(salesId.substring(0, 6))
+  const hasSalesId = isSales && [5064].includes(salesId)
+  return isNormalUser(roles) ? true : (isAgentId || hasSalesId)
 }
