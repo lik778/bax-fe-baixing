@@ -87,7 +87,7 @@ const gStore = observable({
   }),
   getFengmingOptimizer: action(async function (params) {
     const { data } = await checkAuthorize(params)
-    this.fengmingOptimizer = data
+    this._fengmingOptimizer = data
   }),
   getAreas: action(async function () {
     this._allAreas = await mapi.getAreas()
