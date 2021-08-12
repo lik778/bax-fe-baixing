@@ -199,8 +199,11 @@ export default {
       if (cloneId) {
         await this.cloneGroupById(cloneId)
       }
-      const promotion = await getCampaignInfo(campaignId, { userId })
-      this.promotion = pick(promotion, ['id', 'source', 'areas'])
+      // 复制到其他计划
+      if (cloneId && campaignId) {
+        const promotion = await getCampaignInfo(campaignId, { userId })
+        this.promotion = pick(promotion, ['id', 'source', 'areas'])
+      }
       this.campaignKeywordLen = await getCampaignKeywordsCount(campaignId, userId)
     } catch (error) {
       console.error('error:', error)
