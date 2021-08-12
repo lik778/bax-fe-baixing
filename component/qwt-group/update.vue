@@ -68,7 +68,7 @@
             <el-input v-model="searchWord"
                       class="input"
                       placeholder="请输入关键词查询" />
-            <span>多个关键词查询请用英文逗号隔开</span>
+            <span>多个关键词查询请用逗号隔开</span>
           </div>
           <p class="tip"
              style="margin-top: 20px"
