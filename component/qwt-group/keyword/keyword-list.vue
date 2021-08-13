@@ -482,11 +482,9 @@ export default {
         // 删除之后的精准匹配的最大值和当前值
         const maxCount = getMatchTypeObj(this.wordLen - 1).count(this.wordLen - 1)
         let currentCount = this.keywords.filter(o => o.matchType === MATCH_TYPE_EXACT).length
-
         if (String(row.matchType) === String(MATCH_TYPE_EXACT)) {
           currentCount--
         }
-
         if (maxCount < currentCount) {
           const h = this.$createElement
           const words = this.keywords.reduce((curr, prev) => {
@@ -553,8 +551,48 @@ export default {
         visible: true
       }
     },
-    batchDelet () {
-      const { keywords, currentSelect } = this
+    canDelete () {
+      const { keywords, showMatchType, currentSelect } = this
+      if (showMatchType) {
+        const newKeywords = clone(keywords)
+        // 删除之后的精准匹配的最大值和当前值
+        const maxCount = getMatchTypeObj(this.wordLen - this.transforArray(currentSelect).length).count(this.wordLen - this.transforArray(currentSelect).length)
+        let currentCount = newKeywords.filter(o => o.matchType === MATCH_TYPE_EXACT).length
+        newKeywords.forEach(row => {
+          if (this.showMatchType && row.matchType !== MATCH_TYPE_PHRASE) {
+            row.matchType = MATCH_TYPE_PHRASE
+          }
+          if (this.transforArray(currentSelect).includes(row.id)) {
+            if (String(row.matchType) === String(MATCH_TYPE_EXACT)) {
+              currentCount--
+            }
+          }
+        })
+        if (currentCount > maxCount) {
+          const h = this.$createElement
+          const words = this.keywords.reduce((curr, prev) => {
+            if (String(prev.matchType) === String(MATCH_TYPE_EXACT)) {
+              return curr.concat(prev.word)
+            }
+            return curr
+          }, [])
+          this.$msgbox({
+            title: '提示',
+            message: h('div', null, [
+              h('div', null, '操作失败，请先减少精确匹配方式的关键词后再重新操作。'),
+              h('div', { style: 'marginTop: 10px' }, [
+                h('span', null, '已设置精确匹配的关键词：'),
+                h('span', { style: 'color: #ff4401' }, words.join('，'))
+              ])
+            ])
+          })
+          return false
+        }
+        return true
+      }
+    },
+    async batchDelet () {
+      const { currentSelect, keywords } = this
       if (!this.transforArray(currentSelect).length) {
         this.$message({
           type: 'error',
@@ -562,49 +600,16 @@ export default {
         })
         return
       }
-      const newKeywords = clone(keywords)
-      newKeywords.forEach(row => {
-        if (this.showMatchType && row.matchType !== MATCH_TYPE_PHRASE) {
-          row.matchType = MATCH_TYPE_PHRASE
-        }
-
-        if (this.showMatchType) {
-        // 删除之后的精准匹配的最大值和当前值
-          const maxCount = getMatchTypeObj(this.wordLen - 1).count(this.wordLen - 1)
-          let currentCount = this.keywords.filter(o => o.matchType === MATCH_TYPE_EXACT).length
-
-          if (String(row.matchType) === String(MATCH_TYPE_EXACT)) {
-            currentCount--
-          }
-
-          if (maxCount < currentCount) {
-            const h = this.$createElement
-            const words = this.keywords.reduce((curr, prev) => {
-              if (String(prev.matchType) === String(MATCH_TYPE_EXACT)) {
-                return curr.concat(prev.word)
-              }
-              return curr
-            }, [])
-            this.$msgbox({
-              title: '提示',
-              message: h('div', null, [
-                h('div', null, '操作失败，请先减少精确匹配方式的关键词后再重新操作。'),
-                h('div', { style: 'marginTop: 10px' }, [
-                  h('span', null, '已设置精确匹配的关键词：'),
-                  h('span', { style: 'color: #ff4401' }, words.join('，'))
-                ])
-              ])
-            })
-            throw new Error()
-          }
-          if (this.transforArray(currentSelect).includes(row.id)) {
-            row.isDel = true
-          } else {
-            row.isDel = false
-          }
+      keywords.forEach(row => {
+        if (this.transforArray(currentSelect).includes(row.id)) {
+          row.isDel = true
+        } else {
+          row.isDel = false
         }
       })
-      this.$emit('update-keywords', newKeywords)
+      if (this.canDelete()) {
+        this.$emit('update-keywords', keywords)
+      }
     },
     batchRecover () {
       const { currentSelect, keywords } = this
