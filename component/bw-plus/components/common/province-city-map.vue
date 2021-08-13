@@ -1,15 +1,16 @@
 <template>
-  <el-card class="box-card">
-    <div slot="header" class="clearfix">
-      <span>{{title}}</span>
-    </div>
-    <ul>
-      <li v-for="(item, index) in province" :key="index">
-        <span>{{item.label}}</span>
-        <span v-for="(city, index) in cityInfo" :key="index">{{city.parent === item.value ? city.nameCn : ''}}</span>
+  <el-dialog @close="cancel" :title="title" :visible.sync="dialogCityVisible">
+    <ul class="province-content">
+      <li v-for="(item, index) in province" class="item" :key="index">
+        <h4 class="province">{{item.label}}</h4>
+        <p>
+          <span class="city" v-for="(city, index) in cityInfo.filter(o => o.parent === item.value)" :key="index">
+           {{city.nameCn}}
+          </span>
+        </p>
       </li>
     </ul>
-  </el-card>
+  </el-dialog>
 </template>
 
 <script>
@@ -30,6 +31,11 @@ export default {
     allAreas: {
       type: Array,
       default: () => [],
+      require: true
+    },
+    dialogCityVisible: {
+      type: Boolean,
+      default: false,
       require: true
     }
   },
@@ -57,6 +63,29 @@ export default {
   async mounted () {
   },
   methods: {
+    cancel () {
+      this.$emit('cancel')
+    }
   }
 }
 </script>
+<style lang="scss" scoped>
+  .province-content{
+    .item{
+      margin-bottom: 10px;
+      display: flex;
+      align-items: flex-start;
+    }
+    .province{
+      font-size: 14px;
+      width: 60px;
+      border-right: 1px dashed #DCDFE6;
+      flex-shrink: 0;
+      margin-right: 10px;
+    }
+    .city{
+      font-size: 14px;
+      margin-right: 10px;
+    }
+  }
+</style>

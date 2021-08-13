@@ -1,4 +1,5 @@
 <template>
+  <div>
     <el-table
       style="width: 90%"
       :data="records"
@@ -32,19 +33,10 @@
         </template>
       </el-table-column>
       <el-table-column prop="device" label="平台" :formatter="deviceFormatter" />
-      <el-table-column prop="cities" width="150" label="投放城市" >
+      <el-table-column prop="cities" width="180" label="投放城市" >
         <template slot-scope="{ row }">
-          <el-popover
-          placement="top-start"
-          title="投放城市"
-          width="150"
-          trigger="hover"
-          >
-            <div class="cities-content">
-              <ProvinceCityMap :allAreas="allAreas" :cities="row.cities"/>
-            </div>
-            <p slot="reference" class="keywords-row">{{ citiesFormater(row).text }}</p>
-          </el-popover>
+          {{citiesFormater(row).text}}
+          <el-button type="text" @click="viewCityDetai(row)">查看</el-button>
         </template>
       </el-table-column>
       <el-table-column width="120" prop="scheduleType" label="推广时段" :formatter="scheduleTypeFormater" />
@@ -63,6 +55,8 @@
         </template>
       </el-table-column>
     </el-table>
+    <ProvinceCityMap @cancel="dialogCityVisible = false" :dialogCityVisible="dialogCityVisible" :allAreas="allAreas" :cities="currentRow.cities"/>
+  </div>
 </template>
 <script>
 import { APPLY_AUDIT_STATUS_OPTIONS, APPLY_AUDIT_STATUS_PENDING, APPLY_AUDIT_STATUS_REJECT, APPLY_TYPE_NORMAL, DEVICE, SCHEDULE_TYPE, STATUS_MAP, APPLY_AUDIT_STATUS_PASS, OPTION_STATUS_AWAIT_TIDAN, OPTION_STATUS_COPY_URL } from 'constant/bw-plus'
@@ -98,10 +92,16 @@ export default {
       APPLY_AUDIT_STATUS_PASS,
       OPTION_STATUS_AWAIT_TIDAN,
       OPTION_STATUS_COPY_URL,
-      allAreasNew: {}
+      allAreasNew: {},
+      currentRow: {},
+      dialogCityVisible: false
     }
   },
   methods: {
+    viewCityDetai (row) {
+      this.currentRow = row
+      this.dialogCityVisible = true
+    },
     keywordsFormater (args) {
       const { keywords } = args
       const length = keywords.length

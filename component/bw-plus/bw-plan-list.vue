@@ -29,9 +29,15 @@
             <span>{{PROMOTE_STATUS_MAP[row.status]}}</span>
           </status-show>
         </el-table-column>
-        <el-table-column label="投放城市"
+        <el-table-column prop="cities" width="180" label="投放城市" >
+          <template slot-scope="{ row }">
+            {{citiesFormater(row).text}}
+            <el-button type="text" @click="viewCityDetai(row)">查看</el-button>
+          </template>
+        </el-table-column>
+        <!-- <el-table-column label="投放城市"
                          show-overflow-tooltip
-                         :formatter="r => r.cities.map(o => getCnName(o, allAreas)).join(',')" />
+                         :formatter="r => r.cities.map(o => getCnName(o, allAreas)).join(',')" /> -->
         <el-table-column label="推广时段"
                          :formatter="r => SCHEDULE_TYPE[r.scheduleType]" />
         <el-table-column label="服务时长"
@@ -48,6 +54,7 @@
           </div>
         </el-table-column>
       </el-table>
+      <ProvinceCityMap @cancel="dialogCityVisible = false" :dialogCityVisible="dialogCityVisible" :allAreas="allAreas" :cities="currentRow.cities"/>
     </main>
   </div>
 </template>
@@ -65,6 +72,7 @@ import {
 } from 'constant/bw-plus'
 import { getCnName } from 'util'
 import StatusShow from './components/statusShow'
+import { ProvinceCityMap } from './components'
 
 export default {
   name: 'bw-plus-plan-list',
@@ -86,8 +94,9 @@ export default {
       AUDIT_STATUS_COLOR_MAP,
       SCHEDULE_TYPE,
       AUDIT_STATUS_REJECT,
-
-      promotes: []
+      promotes: [],
+      currentRow: {},
+      dialogCityVisible: false
     }
   },
   mounted () {
@@ -99,10 +108,30 @@ export default {
       const id = this.$route.params.id
       const data = await getUsePromoteListByPackageId(id)
       this.promotes = data
+    },
+    citiesFormater (row) {
+      const { cities } = row
+      const length = cities.length
+      const detail = cities.map(city => getCnName(city, this.allAreas)).join('、')
+      if (length >= 363) {
+        return {
+          text: '全国363个城市',
+          detail
+        }
+      }
+      return {
+        text: `${getCnName(cities[0], this.allAreas)}等${length}个城市`,
+        detail
+      }
+    },
+    viewCityDetai (row) {
+      this.currentRow = row
+      this.dialogCityVisible = true
     }
   },
   components: {
-    StatusShow
+    StatusShow,
+    ProvinceCityMap
   }
 }
 </script>
