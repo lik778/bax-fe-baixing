@@ -684,26 +684,37 @@ export default {
     },
     async save (form) {
       this.savePendding = true
-      const { dialogContent, isNewSelect, keywords } = this
+      const { dialogContent, isNewSelect, keywords, currentSelect } = this
       const keywordsCopy = clone(keywords)
       const params = { ...form, moveKeywords: true }
       params.isNewSelect = this.transforArray(isNewSelect)
-      try {
-        await this.$emit('updateGroup', params)
-        if (dialogContent.type === 'move') {
-          const newKeywords = keywordsCopy.map(o => this.currentSelect[this.offset].includes(o.id) ? { ...o, isRemove: true, isDel: true } : { ...o })
+      const cboptions = {
+        success: () => {
+          if (dialogContent.type === 'move') {
+            console.log(1)
+            const newKeywords = keywordsCopy.map(o => this.transforArray(currentSelect).includes(o.id) ? { ...o, isRemove: true, isDel: true } : { ...o })
+            console.log('newKeywords', newKeywords)
+            this.$emit('update-keywords', newKeywords)
+          }
+        },
+        error: () => {
+          const newKeywords = keywordsCopy.map(o => this.transforArray(currentSelect).includes(o.id) ? { ...o, isRemove: false, isDel: false } : { ...o })
           this.$emit('update-keywords', newKeywords)
+        },
+        finally: () => {
+          this.savePendding = false
+          this.dialogContent.visible = false
+          this.currentSelect = {}
+          this.isNewSelect = {}
+          this.$refs.multipleTable.clearSelection()
         }
-      } catch (error) {
-        const newKeywords = keywordsCopy.map(o => this.currentSelect[this.offset].includes(o.id) ? { ...o, isRemove: false, isDel: false } : { ...o })
-        this.$emit('update-keywords', newKeywords)
-      } finally {
-        this.savePendding = false
-        this.dialogContent.visible = false
-        this.currentSelect = {}
-        this.isNewSelect = {}
-        this.$refs.multipleTable.clearSelection()
       }
+      await this.$emit('updateGroup', params, cboptions)
+      this.savePendding = false
+      this.dialogContent.visible = false
+      this.currentSelect = {}
+      this.isNewSelect = {}
+      this.$refs.multipleTable.clearSelection()
     },
     resetSelect () {
       this.currentSelect = {}

@@ -399,11 +399,16 @@ export default {
         this.lock.group = false
       }
     },
-    async patchMoveGroup ({ groupId, campaignId, moveKeywords, isNewSelect }) {
+    async patchMoveGroup ({ groupId, campaignId, moveKeywords, isNewSelect }, cboptions) {
       this.lock.group = true
       try {
         await this._updateGroup(groupId, campaignId, moveKeywords, isNewSelect)
+        cboptions && cboptions.success()
+      } catch (error) {
+        cboptions && cboptions.error()
+        throw new Error(error)
       } finally {
+        cboptions && cboptions.finally()
         this.lock.group = false
       }
     },
@@ -419,8 +424,8 @@ export default {
         userId,
         moveKeywords
       })
-
-      updateGroup(groupId, data).then(() => {
+      try {
+        await updateGroup(groupId, data)
         if (moveKeywords) {
           this.$message.success('操作成功！')
         } else {
@@ -433,7 +438,9 @@ export default {
             params: { id: campaignId }
           })
         }
-      }).catch(err => { console.log(err) })
+      } catch (error) {
+        throw new Error(error)
+      }
     },
     validMaterialPictures () {
       if (!this.materialPictures.isValid) {
