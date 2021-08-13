@@ -369,6 +369,8 @@ export default {
         await this.updateGroup({ groupId, campaignId, moveKeywords: false })
       } catch (e) {
         this.$message.error(e.message)
+      } finally {
+        this.$refs.keywordListComp.resetSelect()
       }
     },
     async validateGroup () {

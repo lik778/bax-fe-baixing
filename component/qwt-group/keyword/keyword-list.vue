@@ -175,7 +175,6 @@
                       @current-change="onCurrentChange" />
     </footer>
     <MoveCopyCom :dialogContent="dialogContent" @save="save" @cancel="dialogContent.visible = false"/>
-    <PatchDelete :patchDeleteContent="patchDeleteContent" @changePrice="changePrice" @deleteHandle="deleteHandle" @cancel="patchDeleteContent.visible = false"/>
   </div>
 </template>
 
@@ -184,7 +183,6 @@ import HeaderTipComp from 'com/common/header-tip'
 import BaxInput from 'com/common/bax-input'
 import BaxPagination from 'com/common/pagination'
 import MoveCopyCom from './move-copy-com.vue'
-import PatchDelete from './patch-delete.vue'
 
 import { changeGroupKeywordsPrice, changeGroupKeywordsMatchType } from 'api/fengming'
 
@@ -562,11 +560,6 @@ export default {
       }
       const newKeywords = clone(keywords)
       newKeywords.forEach(row => {
-        if (this.transforArray(currentSelect).includes(row.id)) {
-          row.isDel = true
-        } else {
-          row.isDel = false
-        }
         if (this.showMatchType && row.matchType !== MATCH_TYPE_PHRASE) {
           row.matchType = MATCH_TYPE_PHRASE
         }
@@ -598,11 +591,17 @@ export default {
                 ])
               ])
             })
+            this.$emit('update-keywords', newKeywords)
+            return false
+          }
+          if (this.transforArray(currentSelect).includes(row.id)) {
+            row.isDel = true
+          } else {
+            row.isDel = false
           }
         }
       })
       this.$emit('update-keywords', newKeywords)
-      this.currentSelect = {}
     },
     batchRecover () {
       const { currentSelect, keywords } = this
@@ -687,15 +686,10 @@ export default {
         this.isNewSelect = {}
       }
     },
-    deleteHandle () {
-      // const { currentSelect } = this
-      // if (!this.transforArray(currentSelect).length) {
-      //   this.$message({
-      //     type: 'error',
-      //     message: '请至少选择一个关键词'
-      //   })
-      //   return
-      // }
+    resetSelect () {
+      this.currentSelect = {}
+      this.isNewSelect = {}
+      this.$refs.multipleTable.clearSelection()
     },
     changePrice (price) {
       const { currentSelect, keywords } = this
@@ -720,8 +714,7 @@ export default {
     HeaderTipComp,
     BaxInput,
     BaxPagination,
-    MoveCopyCom,
-    PatchDelete
+    MoveCopyCom
   }
 }
 </script>
