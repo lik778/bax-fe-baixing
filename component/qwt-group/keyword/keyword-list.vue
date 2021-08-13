@@ -595,8 +595,7 @@ export default {
                 ])
               ])
             })
-            this.$emit('update-keywords', newKeywords)
-            return false
+            throw new Error()
           }
           if (this.transforArray(currentSelect).includes(row.id)) {
             row.isDel = true
