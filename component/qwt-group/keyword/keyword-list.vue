@@ -555,8 +555,8 @@ export default {
     },
     canDelete () {
       const { keywords, showMatchType, currentSelect } = this
+      const newKeywords = clone(keywords)
       if (showMatchType) {
-        const newKeywords = clone(keywords)
         // 删除之后的精准匹配的最大值和当前值
         const maxCount = getMatchTypeObj(this.wordLen - this.transforArray(currentSelect).length).count(this.wordLen - this.transforArray(currentSelect).length)
         let currentCount = newKeywords.filter(o => o.matchType === MATCH_TYPE_EXACT).length
@@ -591,8 +591,8 @@ export default {
           })
           throw new Error()
         }
-        return newKeywords
       }
+      return newKeywords
     },
     async batchDelet () {
       const { currentSelect } = this
