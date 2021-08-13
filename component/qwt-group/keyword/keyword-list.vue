@@ -1,6 +1,6 @@
 <template>
   <div class="keyword-list">
-    <el-table ref="multipleTable" :data="rows" @select-all="selectAll" @select="handleSelectionChange">
+    <el-table ref="multipleTable" :data="rows" @select-all="selectAll" @selection-change="change" @select="handleSelectionChange">
       <el-table-column
       type="selection"
       width="55" />
@@ -343,6 +343,9 @@ export default {
   },
   methods: {
     fmtCpcRanking,
+    change (selection) {
+      // console.log(selection)
+    },
     fmtStatus (row) {
       if (this.groupOffline) return '--'
       return keywordStatus[String(row.status)] || '--'
@@ -519,12 +522,13 @@ export default {
       this.currentSelect[this.offset] = selectionClone.map(o => o.id)
     },
     handleSelectionChange (selection, row) {
-      const current = this.currentSelect[this.offset] || []
-      if (current && current.includes(row.id)) {
-        this.currentSelect[this.offset] = current.filter(o => o !== row.id)
-      } else {
-        this.currentSelect[this.offset] = [...current, row.id]
-      }
+      this.currentSelect[this.offset] = selection.map(o => o.id)
+      console.log(this.currentSelect)
+      // const current = this.currentSelect[this.offset] || []
+      // if (current && current.includes(row.id)) {
+      //   this.currentSelect[this.offset] = current.filter(o => o !== row.id)
+      // } else {
+      // }
     },
     transforArray (obj) {
       let result = []
