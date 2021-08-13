@@ -165,7 +165,6 @@
     </el-table>
     <footer>
       <p class="opration-item">
-        <el-button type="primary" @click="batchRecover" size="mini">批量恢复</el-button>
         <el-button type="primary" @click="batchDelet" size="mini">批量删除</el-button>
         <el-button type="primary" size="mini" @click="batchRemove">批量移动</el-button>
         <el-button type="primary" size="mini" @click="patchChangePrice">批量改价</el-button>
@@ -175,6 +174,7 @@
                       @current-change="onCurrentChange" />
     </footer>
     <MoveCopyCom :dialogContent="dialogContent" @save="save" @cancel="dialogContent.visible = false"/>
+    <PatchDelete :patchDeleteContent="patchDeleteContent" @cancel="patchDeleteContent.visible = false" @changePrice="changePrice"/>
   </div>
 </template>
 
@@ -183,6 +183,7 @@ import HeaderTipComp from 'com/common/header-tip'
 import BaxInput from 'com/common/bax-input'
 import BaxPagination from 'com/common/pagination'
 import MoveCopyCom from './move-copy-com.vue'
+import PatchDelete from './patch-delete.vue'
 
 import { changeGroupKeywordsPrice, changeGroupKeywordsMatchType } from 'api/fengming'
 
@@ -731,7 +732,8 @@ export default {
     HeaderTipComp,
     BaxInput,
     BaxPagination,
-    MoveCopyCom
+    MoveCopyCom,
+    PatchDelete
   }
 }
 </script>
