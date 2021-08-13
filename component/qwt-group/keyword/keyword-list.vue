@@ -695,7 +695,8 @@ export default {
           this.$emit('update-keywords', newKeywords)
         }
       } catch (error) {
-        console.log(error)
+        const newKeywords = keywordsCopy.map(o => this.currentSelect[this.offset].includes(o.id) ? { ...o, isRemove: false, isDel: false } : { ...o })
+        this.$emit('update-keywords', newKeywords)
       } finally {
         this.savePendding = false
         this.dialogContent.visible = false
