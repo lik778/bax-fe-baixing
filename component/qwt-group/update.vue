@@ -367,10 +367,9 @@ export default {
       try {
         await this.updateMaterialPictures()
         await this.updateGroup({ groupId, campaignId, moveKeywords: false })
+        this.$refs.keywordListComp.resetSelect()
       } catch (e) {
         this.$message.error(e.message)
-      } finally {
-        this.$refs.keywordListComp.resetSelect()
       }
     },
     async validateGroup () {
