@@ -394,7 +394,8 @@ export default {
       this.emitUpdateKeyword({
         ...row,
         matchType: row.matchType === MATCH_TYPE_EXACT ? MATCH_TYPE_PHRASE : row.matchType,
-        isDel: false
+        isDel: false,
+        isRemove: false
       })
     },
     emitUpdateKeyword (itemWord, isRemove = false) {
