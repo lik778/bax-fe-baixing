@@ -559,15 +559,16 @@ export default {
         const maxCount = getMatchTypeObj(this.wordLen - this.transforArray(currentSelect).length).count(this.wordLen - this.transforArray(currentSelect).length)
         let currentCount = newKeywords.filter(o => o.matchType === MATCH_TYPE_EXACT).length
         newKeywords.forEach(row => {
-          if (this.showMatchType && row.matchType !== MATCH_TYPE_PHRASE) {
-            row.matchType = MATCH_TYPE_PHRASE
-          }
           if (this.transforArray(currentSelect).includes(row.id)) {
-            if (String(row.matchType) === String(MATCH_TYPE_EXACT)) {
-              currentCount--
+            if (this.showMatchType && row.matchType !== MATCH_TYPE_PHRASE) {
+              row.matchType = MATCH_TYPE_PHRASE
             }
           }
         })
+        currentCount = currentCount - keywords.reduce((curr, item) => {
+          if (this.transforArray(currentSelect).includes(item.id) && String(item.matchType) === String(MATCH_TYPE_EXACT)) { curr++ }
+          return curr
+        }, 0)
         if (currentCount > maxCount) {
           const h = this.$createElement
           const words = this.keywords.reduce((curr, prev) => {
@@ -586,13 +587,13 @@ export default {
               ])
             ])
           })
-          return false
+          throw new Error()
         }
-        return true
+        return newKeywords
       }
     },
     async batchDelet () {
-      const { currentSelect, keywords } = this
+      const { currentSelect } = this
       if (!this.transforArray(currentSelect).length) {
         this.$message({
           type: 'error',
@@ -600,15 +601,19 @@ export default {
         })
         return
       }
-      keywords.forEach(row => {
-        if (this.transforArray(currentSelect).includes(row.id)) {
-          row.isDel = true
-        } else {
-          row.isDel = false
-        }
-      })
-      if (this.canDelete()) {
-        this.$emit('update-keywords', keywords)
+      try {
+        const newKeywords = this.canDelete()
+        newKeywords.forEach(row => {
+          if (this.transforArray(currentSelect).includes(row.id)) {
+            row.isDel = true
+            row.isUpdated = false
+          } else {
+            row.isDel = false
+          }
+        })
+        this.$emit('update-keywords', newKeywords)
+      } catch (error) {
+        console.log(error)
       }
     },
     batchRecover () {
@@ -631,8 +636,7 @@ export default {
       this.$emit('update-keywords', newKeywords)
     },
     batchRemove () {
-      const { currentSelect, keywords } = this
-      const keywordsCopy = clone(keywords)
+      const { currentSelect } = this
       if (!this.transforArray(currentSelect).length) {
         this.$message({
           type: 'error',
@@ -640,15 +644,20 @@ export default {
         })
         return
       }
-      this.isNewSelect[this.offset] = keywordsCopy.filter(o => this.transforArray(currentSelect).includes(o.id)).map(o => ({
-        isNew: true,
-        isRemove: true,
-        ...o
-      }))
-      this.dialogContent = {
-        visible: true,
-        text: '将对选中的关键词移动到目标单元中，并在当前单元会删除，请选择目标位置',
-        type: 'move'
+      try {
+        const newKeywords = this.canDelete()
+        this.isNewSelect[this.offset] = newKeywords.filter(o => this.transforArray(currentSelect).includes(o.id)).map(o => ({
+          isNew: true,
+          isRemove: true,
+          ...o
+        }))
+        this.dialogContent = {
+          visible: true,
+          text: '将对选中的关键词移动到目标单元中，并在当前单元会删除，请选择目标位置',
+          type: 'move'
+        }
+      } catch (error) {
+        console.log(error)
       }
     },
     batchCopy () {
