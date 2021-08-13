@@ -690,19 +690,18 @@ export default {
       params.isNewSelect = this.transforArray(isNewSelect)
       try {
         await this.$emit('updateGroup', params)
-      } catch (error) {
-        console.log(error)
-      } finally {
         if (dialogContent.type === 'move') {
           const newKeywords = keywordsCopy.map(o => this.currentSelect[this.offset].includes(o.id) ? { ...o, isRemove: true, isDel: true } : { ...o })
           this.$emit('update-keywords', newKeywords)
-        } else {
-          this.$refs.multipleTable.clearSelection()
         }
+      } catch (error) {
+        console.log(error)
+      } finally {
         this.savePendding = false
         this.dialogContent.visible = false
         this.currentSelect = {}
         this.isNewSelect = {}
+        this.$refs.multipleTable.clearSelection()
       }
     },
     resetSelect () {
