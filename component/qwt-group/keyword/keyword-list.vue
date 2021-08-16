@@ -303,16 +303,8 @@ export default {
         const exactList = []
         const noExactList = []
         this.keywords.forEach(k => {
-          if (searchWordArray.includes(k.word)) {
-            exactList.push(k)
-          } else {
-            noExactList.push(k)
-          }
+          searchWordArray.includes(k.word) ? exactList.push(k) : noExactList.push(k)
         })
-        // const mohuList = noExactList.reduce((curr, prev) => {
-        //   if (searchWordArray.some(o => prev.word.indexOf(o) > -1)) curr.push(prev)
-        //   return curr
-        // }, [])
         const mohuList = noExactList.filter(k => searchWordArray.some(o => k.word.includes(o)))
         return [...exactList, ...mohuList]
       }
