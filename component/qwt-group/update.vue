@@ -367,8 +367,6 @@ export default {
       try {
         await this.updateMaterialPictures()
         await this.updateGroup({ groupId, campaignId, moveKeywords: false })
-        console.log(this.$refs.keywordListComp)
-        this.$refs.keywordListComp.resetSelect()
       } catch (e) {
         this.$message.error(e.message)
       }
@@ -430,6 +428,7 @@ export default {
         if (moveKeywords) {
           this.$message.success('操作成功！')
         } else {
+          this.$refs.keywordListComp.resetSelect()
           this.$message.success('单元更新成功')
         }
         this.handleTrack('leave-page: update-group')
