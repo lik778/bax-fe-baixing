@@ -305,7 +305,7 @@ export default {
         this.keywords.forEach(k => {
           searchWordArray.includes(k.word) ? exactList.push(k) : noExactList.push(k)
         })
-        const mohuList = noExactList.filter(k => searchWordArray.some(o => k.word.includes(o)))
+        const mohuList = noExactList.filter(k => searchWordArray.some(o => o && k.word.includes(o)))
         return [...exactList, ...mohuList]
       }
       return []
