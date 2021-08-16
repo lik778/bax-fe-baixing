@@ -311,7 +311,7 @@ export default {
             noExactSearchWordArray.push(k.word)
           }
         })
-        const mohuList = noExactList.filter(k => noExactSearchWordArray.some(o => o.includes(k.word)))
+        const mohuList = noExactList.filter(k => noExactSearchWordArray.some(o => k.word.includes(o)))
         return [...exactList, ...mohuList]
       }
       return []
