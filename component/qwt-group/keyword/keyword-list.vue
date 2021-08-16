@@ -300,7 +300,19 @@ export default {
     searchKeywords () {
       if (this.isSearchCondition) {
         const searchWordArray = this.searchWord.trim().split(/[，,]]*/g)
-        return this.keywords.filter(row => searchWordArray.includes(row.word))
+        const exactList = []
+        const noExactList = []
+        const noExactSearchWordArray = []
+        this.keywords.forEach(k => {
+          if (searchWordArray.includes(k.word)) {
+            exactList.push(k)
+          } else {
+            noExactList.push(k)
+            noExactSearchWordArray.push(k.word)
+          }
+        })
+        const mohuList = noExactList.filter(k => noExactSearchWordArray.some(o => o.includes(k.word)))
+        return [...exactList, ...mohuList]
       }
       return []
     },
