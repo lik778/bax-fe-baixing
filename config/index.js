@@ -10,7 +10,6 @@ const production = {
   biaowangApiHost: '//bax.baixing.com.cn/phoenixs/api',
   seoApiHost: '//bax.baixing.com.cn/seo-api',
   qcApiHost: 'http://bax.baixing.com.cn/api/sem-batch',
-  b2bApiHost: '//squat.baixing.com.cn',
   orderServiceHost: 'https://trade.baixing.com',
   identityBindingPage: 'https://www.baixing.com/bind/?type=idcard',
   biaowangPlusApiHost: '//bax.baixing.com.cn/api/phoenixs-plus'
@@ -24,20 +23,18 @@ const development = {
   biaowangPlusApiHost: '/phoenixs-plus/api/phoenixs-plus',
   seoApiHost: '/seo-api',
   qcApiHost: '/sem-batch/api/sem-batch',
-  b2bApiHost: '/b2b',
   orderServiceHost: 'http://trade-dev.baixing.cn',
   identityBindingPage: 'http://www.staging.baixing.cn/bind/?type=idcard'
 }
 
 const local = {
-  fengmingApiHost: '//bax.baixing.cn/fengmingx',
-  baxApiHost: '//bax.baixing.cn/bax',
-  kaApiHost: '//bax.baixing.cn/ka/api/admin',
-  biaowangApiHost: '//bax.baixing.cn/phoenixs/api',
-  biaowangPlusApiHost: '//bax.baixing.cn/phoenixs-plus/api/phoenixs-plus',
-  seoApiHost: 'http://bax.baixing.cn/seo-api',
-  qcApiHost: 'http://bax.baixing.cn/sem-batch/api/sem-batch',
-  b2bApiHost: '//172.30.2.14:31643',
+  fengmingApiHost: '/devApi/fengmingx',
+  baxApiHost: '/devApi/bax',
+  kaApiHost: '/devApi/ka/api/admin',
+  biaowangApiHost: '/devApi/phoenixs/api',
+  biaowangPlusApiHost: '/devApi/phoenixs-plus/api/phoenixs-plus',
+  seoApiHost: '/devApi/seo-api',
+  qcApiHost: '/devApi/sem-batch/api/sem-batch',
   orderServiceHost: 'http://trade-dev.baixing.cn',
   identityBindingPage: 'http://www.staging.baixing.cn/bind/?type=idcard'
 }
@@ -69,7 +66,6 @@ export const identityBindingPage = config.identityBindingPage
 export const assetHost = config.assetHost
 export const upyun = config.upyun
 export const preKeywordPath = config.preKeywordPath
-export const b2bApiHost = config.b2bApiHost
 export const biaowangPlusApiHost = config.biaowangPlusApiHost
 
 export default config
