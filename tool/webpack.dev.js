@@ -20,16 +20,9 @@ const config = merge(base, {
     stats: 'errors-only',
     proxy: {
       '/devApi': {
-        target: 'http://172.17.0.144:8000',
+        target: 'http://bax.baixing.cn',
         pathRewrite: {
           '^/devApi': '/'
-        },
-        changeOrigin: true
-      },
-      '/testApi': {
-        target: 'http://test-bax.baixing.cn/',
-        pathRewrite: {
-          '^/testApi': '/'
         },
         changeOrigin: true
       }
