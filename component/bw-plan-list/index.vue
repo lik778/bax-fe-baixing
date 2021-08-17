@@ -4,9 +4,6 @@
       <header>我的标王推广计划</header>
       <main>
         <div style="color: red; font-size: 14px;margin-bottom: 20px">(系统维护中，为了保证您的物料正常投放，暂不支持创意及落地页的修改，如有任何问题请及时联系您的销售或客服。)</div>
-        <router-link v-if="!userInfo.shAgent && relationAllow()" :to="{name: 'bw-query-price'}">
-          <el-button class="create-plan" type="primary"><i class="el-icon-plus" ></i>新建标王计划</el-button>
-        </router-link>
         <el-form :model="query" label-width="100px" label-position="left" @submit.native.prevent >
           <el-form-item label="关键词">
             <el-input v-model="query.keyword" placeholder="输入关键词查询" style="width: 300px;" />
@@ -174,7 +171,7 @@ import {
   fmtAreasInBw
 } from 'util'
 import dayjs from 'dayjs'
-import { normalizeRoles, relationAllow } from 'util/role'
+import { normalizeRoles } from 'util/role'
 import flatten from 'lodash.flatten'
 import { fmtCpcRanking } from 'util/campaign'
 import auditRejectReasonDialog from 'com/common/audit-reject-reason-dialog'
@@ -213,7 +210,6 @@ export default {
       promoteStatusOpts,
       auditStatusOpts,
       payUrl: '',
-      relationAllow,
       query: {
         keyword: '',
         promoteStatusFilters: [],

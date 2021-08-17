@@ -53,11 +53,6 @@
           <template slot="title">
             <bx-icon type="sharealt"></bx-icon>标王推广
           </template>
-          <el-menu-item index="bw-query-price" v-if="!userInfo.shAgent && relationAllow()">
-            <router-link :to="{ name: 'bw-query-price' }" tag="p">
-              新建标王推广
-            </router-link>
-          </el-menu-item>
           <el-menu-item index="bw-plan-list">
             <router-link :to="{ name: 'bw-plan-list' }" tag="p">
               管理标王推广
@@ -69,7 +64,7 @@
             </router-link>
           </el-menu-item>
         </el-submenu>
-        <el-submenu index="bwPlus" v-if="allowBwplus">
+        <el-submenu index="bwPlus">
           <template slot="title">
             <bx-icon type="sharealt"></bx-icon>标王2.0
           </template>
@@ -189,8 +184,7 @@ import {
   relationAllow,
   allowSeeDiamondSite,
   isSales,
-  onlyAgentAccounting,
-  allowBwplus
+  onlyAgentAccounting
 } from 'util/role'
 
 import { getUserSites } from 'api/diamond-site'
@@ -199,7 +193,7 @@ import { baxUserLogin, kaOnlineAndTickets } from 'api/ka'
 const MENU_GROUP_MAP = {
   charge: ['qwt-charge', 'seo-charge'],
   sst: ['qwt-create-promotion', 'qwt-promotion-list'],
-  bw: ['bw-query-price', 'bw-plan-list', 'bw-manual'],
+  bw: ['bw-plan-list', 'bw-manual'],
   bwPlus: ['bw-plus-query-price', 'bw-plus-price-records', 'bw-plus-package-list'],
   qc: ['qc-promote-list'],
   ssp: ['ad-list', 'material-list', 'order-list', 'user-list', 'ad-calendar'],
@@ -280,9 +274,6 @@ export default {
     },
     onlyAgentAccounting () {
       return onlyAgentAccounting(this.userInfo.roles)
-    },
-    allowBwplus () {
-      return allowBwplus(this.userInfo.roles, this.userInfo.agentId, this.userInfo.salesId)
     }
   },
   async mounted () {

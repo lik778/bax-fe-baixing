@@ -55,7 +55,6 @@
             <template slot-scope="{row}">
               <el-button type="text" size="small" @click="addToCart(row)"
                          :disabled="disabledAddCartBtn(row)">加入购物车</el-button>
-              <el-button type="text" size="small" @click="goToQueryPrice(row)">重新查价</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -224,18 +223,6 @@ export default {
       this.loadingBtn = false
 
       this.$parent.$refs.bwShoppingCart.addToCart(data)
-    },
-    goToQueryPrice (row) {
-      const { word, device, cities } = row
-      this.$router.push({
-        name: 'bw-query-price',
-        query: {
-          ...this.$route.query,
-          word,
-          device,
-          cities: cities.join('|')
-        }
-      })
     },
     handleCurrentPage (val) {
       this.currentPage = val
