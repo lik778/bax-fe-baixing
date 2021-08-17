@@ -394,8 +394,12 @@ export default {
       return finalPrice >= MIN_WORD_PRICE && finalPrice <= MAX_WORD_PRICE
     },
     resumeWord (row) {
+      const { currentSelect, offset } = this
       if (this.negativeWords.some(o => o.word.toLowerCase() === row.word.toLowerCase())) {
         return this.$message.error('已存在否词列表，请先删除否词，在恢复')
+      }
+      if (currentSelect[offset].includes(row.id)) {
+        this.currentSelect[offset] = currentSelect[offset].filter(o => o !== row.id)
       }
       this.emitUpdateKeyword({
         ...row,
@@ -482,6 +486,7 @@ export default {
     deleteWord (row) {
       // TIP 删除时，更改状态
       const newRow = { ...row, isDel: true }
+      const { currentSelect, offset } = this
       if (this.showMatchType && row.matchType !== MATCH_TYPE_PHRASE) {
         newRow.matchType = MATCH_TYPE_PHRASE
       }
@@ -514,7 +519,13 @@ export default {
           return
         }
       }
-
+      if (!currentSelect[offset]) {
+        currentSelect[offset] = []
+        currentSelect[offset].push(row.id)
+        this.currentSelect[offset] = currentSelect[offset]
+      } else {
+        this.currentSelect[offset].push(row.id)
+      }
       this.emitUpdateKeyword(newRow, !!row.isNew)
 
       if (row.isNew) {
@@ -529,12 +540,6 @@ export default {
     },
     handleSelectionChange (selection, row) {
       this.currentSelect[this.offset] = selection.map(o => o.id)
-      console.log(this.currentSelect)
-      // const current = this.currentSelect[this.offset] || []
-      // if (current && current.includes(row.id)) {
-      //   this.currentSelect[this.offset] = current.filter(o => o !== row.id)
-      // } else {
-      // }
     },
     transforArray (obj) {
       let result = []
@@ -744,6 +749,19 @@ export default {
   watch: {
     searchWord () {
       this.offset = 0
+    },
+    keywords: {
+      deep: true,
+      immediate: true,
+      handler (newV, oldV) {
+        const { currentSelect } = this
+        this.$nextTick(() => {
+          newV.filter(a => this.transforArray(currentSelect).includes(a.id)).forEach(o => {
+            console.log(o)
+            this.$refs.multipleTable.toggleRowSelection(o, true)
+          })
+        })
+      }
     }
   },
   components: {
