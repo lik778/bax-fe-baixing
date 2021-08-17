@@ -619,6 +619,7 @@ export default {
         newKeywords.forEach(row => {
           if (this.transforArray(currentSelect).includes(row.id)) {
             row.isDel = true
+            row.isUpdated = false
           }
         })
         this.$emit('update-keywords', newKeywords)
