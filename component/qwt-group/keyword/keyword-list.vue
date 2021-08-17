@@ -620,8 +620,6 @@ export default {
           if (this.transforArray(currentSelect).includes(row.id)) {
             row.isDel = true
             row.isUpdated = false
-          } else {
-            row.isDel = false
           }
         })
         this.$emit('update-keywords', newKeywords)
@@ -756,6 +754,18 @@ export default {
       handler (newV, oldV) {
         const { currentSelect } = this
         this.$nextTick(() => {
+          // newV.forEach(o => {
+          //   if (o.isDel || o.isUpdated || o.isNew) {
+          //     this.$refs.multipleTable.toggleRowSelection(o, true)
+          //     if (!currentSelect[offset]) {
+          //       currentSelect[offset] = []
+          //       currentSelect[offset].push(o.id)
+          //       this.currentSelect[offset] = currentSelect[offset]
+          //     } else {
+          //       this.currentSelect[offset].push(o.id)
+          //     }
+          //   }
+          // })
           newV.filter(a => this.transforArray(currentSelect).includes(a.id)).forEach(o => {
             console.log(o)
             this.$refs.multipleTable.toggleRowSelection(o, true)
