@@ -1,4 +1,5 @@
 <template>
+<div>
   <el-table class="group-table"
             cell-class-name="bax-cell"
             v-loading="loading"
@@ -81,6 +82,8 @@
       </template>
     </el-table-column>
   </el-table>
+  <SelectDialog @cancel="dialogVisible = false" @copy="copy" :dialogVisible="dialogVisible"/>
+</div>
 </template>
 
 <script>
@@ -94,9 +97,12 @@ import {
   GROUP_STATUS_OFFLINE,
   semPlatformCn
 } from 'constant/fengming'
-
+import SelectDialog from './select-dialog.vue'
+// const CURRENT_PROMOTE = '1'
+const OTHER_PROMOTE = '2'
 export default {
   name: 'group-table',
+  components: { SelectDialog },
   props: {
     showColumns: {
       type: Array,
@@ -130,7 +136,9 @@ export default {
       GROUP_STATUS_REJECT,
       CAMPAIGN_STATUS_OFFLINE,
       GROUP_STATUS_OFFLINE,
-      semPlatformCn
+      semPlatformCn,
+      dialogVisible: false,
+      activeRow: {}
     }
   },
   methods: {
@@ -155,9 +163,17 @@ export default {
       })
     },
     copyGroup (group) {
+      this.dialogVisible = true
+      this.activeRow = group
+    },
+    copy ({ promoteType, promoteId }) {
+      let { id: groupId, campaignId } = this.activeRow
+      if (promoteType === OTHER_PROMOTE) {
+        campaignId = promoteId
+      }
       this.$router.push({
         name: 'qwt-create-group',
-        query: { cloneId: group.id }
+        query: { cloneId: groupId, campaignId }
       })
     }
   }

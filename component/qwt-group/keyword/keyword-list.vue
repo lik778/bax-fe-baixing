@@ -1,6 +1,9 @@
 <template>
   <div class="keyword-list">
-    <el-table :data="rows">
+    <el-table ref="multipleTable" :data="rows" @select-all="selectAll" @selection-change="change" @select="handleSelectionChange">
+      <el-table-column
+      type="selection"
+      width="55" />
       <el-table-column label="关键词"
                        key="word"
                        min-width="140">
@@ -9,9 +12,11 @@
           <span class="new-word"
                 v-if="row.isNew">(新)</span>
           <span class="del-word"
-                v-if="row.isDel">(删除)</span>
+                v-if="row.isDel && !row.isRemove">(删除)</span>
           <span class="updated-word"
                 v-if="row.isUpdated">(更改)</span>
+          <span class="updated-word"
+                v-if="row.isRemove">(移动)</span>
           <span class="good-word"
                 v-if="RECOMMAND_SOURCES.includes(row.recommandSource)">(好词)</span>
         </template>
@@ -47,7 +52,7 @@
                        min-width="220">
         <!-- 删除 slot-scope 后会有稀奇古怪的问题 -->
         <!-- eslint-disable-next-line -->
-        <div slot="header"slot-scope="col">
+        <div slot="header" slot-scope="col">
           <header-tip-comp :label-html="maxPriceLabel"
                            :tip-html="cpcTopPriceTip" />
           <el-popover placement="top"
@@ -159,9 +164,17 @@
       </el-table-column>
     </el-table>
     <footer>
+      <p class="opration-item">
+        <el-button type="primary" @click="batchDelet" size="mini">批量删除</el-button>
+        <el-button type="primary" size="mini" @click="batchRemove">批量移动</el-button>
+        <el-button type="primary" size="mini" @click="patchChangePrice">批量改价</el-button>
+        <el-button type="primary" @click="batchCopy" size="mini">批量复制</el-button>
+      </p>
       <bax-pagination :options="pagination"
                       @current-change="onCurrentChange" />
     </footer>
+    <MoveCopyCom :dialogContent="dialogContent" @save="save" @cancel="dialogContent.visible = false"/>
+    <PatchDelete :patchDeleteContent="patchDeleteContent" @cancel="patchDeleteContent.visible = false" @changePrice="changePrice"/>
   </div>
 </template>
 
@@ -169,6 +182,8 @@
 import HeaderTipComp from 'com/common/header-tip'
 import BaxInput from 'com/common/bax-input'
 import BaxPagination from 'com/common/pagination'
+import MoveCopyCom from './move-copy-com.vue'
+import PatchDelete from './patch-delete.vue'
 
 import { changeGroupKeywordsPrice, changeGroupKeywordsMatchType } from 'api/fengming'
 
@@ -284,9 +299,19 @@ export default {
     },
     searchKeywords () {
       if (this.isSearchCondition) {
-        return this.keywords.filter(row => row.word.indexOf(this.searchWord) > -1)
+        const searchWordArray = this.searchWord.trim().split(/[，,]]*/g)
+        const exactList = []
+        const noExactList = []
+        this.keywords.forEach(k => {
+          searchWordArray.includes(k.word) ? exactList.push(k) : noExactList.push(k)
+        })
+        const mohuList = noExactList.filter(k => searchWordArray.some(o => o && k.word.includes(o)))
+        return [...exactList, ...mohuList]
       }
       return []
+    },
+    canOption () {
+      return Object.keys(this.currentSelect).length
     }
   },
   data () {
@@ -298,6 +323,18 @@ export default {
       pricePopoverVisible: false,
       matchTypePopVisible: false,
       loading: false,
+      currentSelect: {},
+      dialogContent: {
+        visible: false,
+        text: '',
+        type: 'copy'
+      },
+      patchDeleteContent: {
+        visible: false,
+        type: 'delete'
+      },
+      isNewSelect: {},
+      savePendding: false,
 
       // 常量
       keywordStatusTip,
@@ -313,6 +350,9 @@ export default {
   },
   methods: {
     fmtCpcRanking,
+    change (selection) {
+      // console.log(selection)
+    },
     fmtStatus (row) {
       if (this.groupOffline) return '--'
       return keywordStatus[String(row.status)] || '--'
@@ -360,7 +400,8 @@ export default {
       this.emitUpdateKeyword({
         ...row,
         matchType: row.matchType === MATCH_TYPE_EXACT ? MATCH_TYPE_PHRASE : row.matchType,
-        isDel: false
+        isDel: false,
+        isRemove: false
       })
     },
     emitUpdateKeyword (itemWord, isRemove = false) {
@@ -431,6 +472,12 @@ export default {
     },
     onCurrentChange ({ offset }) {
       this.offset = offset
+      const { currentSelect, rows } = this
+      this.$nextTick(() => {
+        rows.filter(a => this.transforArray(currentSelect).includes(a.id)).forEach(o => {
+          this.$refs.multipleTable.toggleRowSelection(o, true)
+        })
+      })
     },
     deleteWord (row) {
       // TIP 删除时，更改状态
@@ -443,11 +490,9 @@ export default {
         // 删除之后的精准匹配的最大值和当前值
         const maxCount = getMatchTypeObj(this.wordLen - 1).count(this.wordLen - 1)
         let currentCount = this.keywords.filter(o => o.matchType === MATCH_TYPE_EXACT).length
-
         if (String(row.matchType) === String(MATCH_TYPE_EXACT)) {
           currentCount--
         }
-
         if (maxCount < currentCount) {
           const h = this.$createElement
           const words = this.keywords.reduce((curr, prev) => {
@@ -477,6 +522,223 @@ export default {
         offset = offset === this.pagination.total - 1 ? offset - 1 : offset
         this.offset = offset
       }
+    },
+    selectAll (selection) {
+      const selectionClone = clone(selection)
+      this.currentSelect[this.offset] = selectionClone.map(o => o.id)
+    },
+    handleSelectionChange (selection, row) {
+      this.currentSelect[this.offset] = selection.map(o => o.id)
+      console.log(this.currentSelect)
+      // const current = this.currentSelect[this.offset] || []
+      // if (current && current.includes(row.id)) {
+      //   this.currentSelect[this.offset] = current.filter(o => o !== row.id)
+      // } else {
+      // }
+    },
+    transforArray (obj) {
+      let result = []
+      for (let i = 0; i < this.pagination.total; i++) {
+        if (obj[i]) {
+          result = [...result, ...obj[i]]
+        }
+      }
+      return result
+    },
+    patchChangePrice () {
+      const { currentSelect } = this
+      if (!this.transforArray(currentSelect).length) {
+        this.$message({
+          type: 'error',
+          message: '请至少选择一个关键词'
+        })
+        return
+      }
+      this.patchDeleteContent = {
+        type: 'change',
+        visible: true
+      }
+    },
+    canDelete () {
+      const { keywords, showMatchType, currentSelect } = this
+      const newKeywords = clone(keywords)
+      if (showMatchType) {
+        // 删除之后的精准匹配的最大值和当前值
+        const maxCount = getMatchTypeObj(this.wordLen - this.transforArray(currentSelect).length).count(this.wordLen - this.transforArray(currentSelect).length)
+        let currentCount = newKeywords.filter(o => o.matchType === MATCH_TYPE_EXACT).length
+        newKeywords.forEach(row => {
+          if (this.transforArray(currentSelect).includes(row.id)) {
+            if (this.showMatchType && row.matchType !== MATCH_TYPE_PHRASE) {
+              row.matchType = MATCH_TYPE_PHRASE
+            }
+          }
+        })
+        currentCount = currentCount - keywords.reduce((curr, item) => {
+          if (this.transforArray(currentSelect).includes(item.id) && String(item.matchType) === String(MATCH_TYPE_EXACT)) { curr++ }
+          return curr
+        }, 0)
+        if (currentCount > maxCount) {
+          const h = this.$createElement
+          const words = this.keywords.reduce((curr, prev) => {
+            if (String(prev.matchType) === String(MATCH_TYPE_EXACT)) {
+              return curr.concat(prev.word)
+            }
+            return curr
+          }, [])
+          this.$msgbox({
+            title: '提示',
+            message: h('div', null, [
+              h('div', null, '操作失败，请先减少精确匹配方式的关键词后再重新操作。'),
+              h('div', { style: 'marginTop: 10px' }, [
+                h('span', null, '已设置精确匹配的关键词：'),
+                h('span', { style: 'color: #ff4401' }, words.join('，'))
+              ])
+            ])
+          })
+          throw new Error()
+        }
+      }
+      return newKeywords
+    },
+    async batchDelet () {
+      const { currentSelect } = this
+      if (!this.transforArray(currentSelect).length) {
+        this.$message({
+          type: 'error',
+          message: '请至少选择一个关键词'
+        })
+        return
+      }
+      try {
+        const newKeywords = this.canDelete()
+        newKeywords.forEach(row => {
+          if (this.transforArray(currentSelect).includes(row.id)) {
+            row.isDel = true
+            row.isUpdated = false
+          } else {
+            row.isDel = false
+          }
+        })
+        this.$emit('update-keywords', newKeywords)
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    batchRecover () {
+      const { currentSelect, keywords } = this
+      if (!this.transforArray(currentSelect).length) {
+        this.$message({
+          type: 'error',
+          message: '请至少选择一个关键词'
+        })
+        return
+      }
+      const newKeywords = clone(keywords)
+      newKeywords.forEach(row => {
+        if (this.transforArray(currentSelect).includes(row.id)) {
+          row.isDel = false
+        }
+      })
+      this.$refs.multipleTable.clearSelection()
+      this.currentSelect = {}
+      this.$emit('update-keywords', newKeywords)
+    },
+    batchRemove () {
+      const { currentSelect } = this
+      if (!this.transforArray(currentSelect).length) {
+        this.$message({
+          type: 'error',
+          message: '请至少选择一个关键词'
+        })
+        return
+      }
+      try {
+        const newKeywords = this.canDelete()
+        this.isNewSelect[this.offset] = newKeywords.filter(o => this.transforArray(currentSelect).includes(o.id)).map(o => ({
+          isNew: true,
+          isRemove: true,
+          ...o
+        }))
+        this.dialogContent = {
+          visible: true,
+          text: '将对选中的关键词移动到目标单元中，并在当前单元会删除，请选择目标位置',
+          type: 'move'
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    batchCopy () {
+      const { currentSelect, keywords } = this
+      const keywordsCopy = clone(keywords)
+      if (!this.transforArray(currentSelect).length) {
+        this.$message({
+          type: 'error',
+          message: '请至少选择一个关键词'
+        })
+        return
+      }
+      this.isNewSelect[this.offset] = keywordsCopy.filter(o => this.transforArray(currentSelect).includes(o.id)).map(o => ({
+        isNew: true,
+        ...o
+      }))
+      this.dialogContent = {
+        visible: true,
+        text: '将对选中的关键词复制到目标单元中，请选择目标位置',
+        type: 'copy'
+      }
+    },
+    async save (form) {
+      this.savePendding = true
+      const { dialogContent, isNewSelect, keywords, currentSelect } = this
+      const keywordsCopy = clone(keywords)
+      const params = { ...form, moveKeywords: true }
+      params.isNewSelect = this.transforArray(isNewSelect)
+      const cboptions = {
+        success: () => {
+          if (dialogContent.type === 'move') {
+            console.log(1)
+            const newKeywords = keywordsCopy.map(o => this.transforArray(currentSelect).includes(o.id) ? { ...o, isRemove: true, isDel: true } : { ...o })
+            console.log('newKeywords', newKeywords)
+            this.$emit('update-keywords', newKeywords)
+          }
+        },
+        error: () => {
+          const newKeywords = keywordsCopy.map(o => this.transforArray(currentSelect).includes(o.id) ? { ...o, isRemove: false, isDel: false } : { ...o })
+          this.$emit('update-keywords', newKeywords)
+        },
+        finally: () => {
+          this.savePendding = false
+          this.dialogContent.visible = false
+          this.currentSelect = {}
+          this.isNewSelect = {}
+          this.$refs.multipleTable.clearSelection()
+        }
+      }
+      await this.$emit('updateGroup', params, cboptions)
+      this.savePendding = false
+      this.dialogContent.visible = false
+      this.currentSelect = {}
+      this.isNewSelect = {}
+      this.$refs.multipleTable.clearSelection()
+    },
+    resetSelect () {
+      this.currentSelect = {}
+      this.isNewSelect = {}
+      this.$refs.multipleTable.clearSelection()
+    },
+    changePrice (price) {
+      const { currentSelect, keywords } = this
+      const newKeywords = clone(keywords)
+      newKeywords.forEach(row => {
+        if (this.transforArray(currentSelect).includes(row.id)) {
+          row.isUpdated = true
+          row.price = price * 100
+        }
+      })
+      this.patchDeleteContent.visible = false
+      this.$emit('update-keywords', newKeywords)
+      this.currentSelect = []
     }
   },
   watch: {
@@ -487,7 +749,9 @@ export default {
   components: {
     HeaderTipComp,
     BaxInput,
-    BaxPagination
+    BaxPagination,
+    MoveCopyCom,
+    PatchDelete
   }
 }
 </script>
@@ -546,5 +810,8 @@ export default {
 .match-radio {
   display: block;
   margin-bottom: 10px;
+}
+.opration-item{
+  margin-top: 20px;
 }
 </style>

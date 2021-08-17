@@ -68,6 +68,7 @@
             <el-input v-model="searchWord"
                       class="input"
                       placeholder="请输入关键词查询" />
+            <span>多个关键词查询请用逗号隔开</span>
           </div>
           <p class="tip"
              style="margin-top: 20px"
@@ -89,7 +90,8 @@
                            :search-word="searchWord"
                            @update-origin-keywords="(changeTag, v) => originKeywords = originKeywords.map(o => ({ ...o, [changeTag]: v }))"
                            @update-keywords="(words) => (keywords = words)"
-                           @remove-keywords="(idx) => keywords.splice(idx, 1)" />
+                           @remove-keywords="(idx) => keywords.splice(idx, 1)"
+                           @updateGroup="patchMoveGroup" />
       </div>
     </section>
 
@@ -360,9 +362,11 @@ export default {
       })
     },
     async updateMaterialThenGroup () {
+      const { groupId } = this.groupId
+      const { id: campaignId } = this.promotion
       try {
         await this.updateMaterialPictures()
-        await this.updateGroup()
+        await this.updateGroup({ groupId, campaignId, moveKeywords: false })
       } catch (e) {
         this.$message.error(e.message)
       }
@@ -385,35 +389,58 @@ export default {
         throw new Error(e.errors[0].message)
       }
     },
-    async updateGroup () {
+    async updateGroup ({ groupId, campaignId, moveKeywords }) {
       this.lock.group = true
       try {
         await this.validateGroup()
-        await this._updateGroup()
+        await this._updateGroup(groupId, campaignId, moveKeywords)
       } finally {
         this.lock.group = false
       }
     },
-    async _updateGroup () {
+    async patchMoveGroup ({ groupId, campaignId, moveKeywords, isNewSelect }, cboptions) {
+      this.lock.group = true
+      try {
+        await this._updateGroup(groupId, campaignId, moveKeywords, isNewSelect)
+        cboptions && cboptions.success()
+      } catch (error) {
+        cboptions && cboptions.error()
+        throw new Error(error)
+      } finally {
+        cboptions && cboptions.finally()
+        this.lock.group = false
+      }
+    },
+    async _updateGroup (groupId = this.groupId, campaignId = this.promotion.id, moveKeywords = false, isNewSelect = []) {
       const { query: { user_id: userId } } = this.$route
       const data = {}
+      const updateKeywords = isNewSelect.length > 0 ? { newKeywords: isNewSelect } : this.getUpdatedKeywordData()
       Object.assign(data, {
         ...this.getUpdatedLandingData(),
         ...this.getUpdatedNegativeWordData(),
         ...this.getUpdatedCreativeData(),
-        ...this.getUpdatedKeywordData(),
-        userId
+        ...updateKeywords,
+        userId,
+        moveKeywords
       })
-
-      updateGroup(this.groupId, data).then(() => {
-        this.$message.success('单元更新成功')
+      try {
+        await updateGroup(groupId, data)
+        if (moveKeywords) {
+          this.$message.success('操作成功！')
+        } else {
+          this.$refs.keywordListComp.resetSelect()
+          this.$message.success('单元更新成功')
+        }
         this.handleTrack('leave-page: update-group')
-
-        this.$router.push({
-          name: 'qwt-update-promotion',
-          params: { id: this.promotion.id }
-        })
-      }).catch(err => { console.log(err) })
+        if (!moveKeywords) {
+          this.$router.push({
+            name: 'qwt-update-promotion',
+            params: { id: campaignId }
+          })
+        }
+      } catch (error) {
+        throw new Error(error)
+      }
     },
     validMaterialPictures () {
       if (!this.materialPictures.isValid) {

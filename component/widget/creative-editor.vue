@@ -170,15 +170,16 @@ export default {
       }
     },
     async checkCreative (title, content, platforms) {
+      const reg = /(^\s+)|(\s+$)|\s+/g
       if (!title || !content) {
-        this.$emit('error', '标题和内容不能为空', this.idx)
-        return
+        throw Error('标题和内容不能为空')
       } else if (this.titleMinLen > title.length || this.titleMaxLen < title.length) {
-        this.$emit('error', '标题字数限制为9-25个字', this.idx)
-        return
+        throw Error('标题字数限制为9-25个字')
       } else if (this.contentMinLen > content.length || this.contentMaxLen < content.length) {
-        this.$emit('error', '内容字数限制9-80个字', this.idx)
-        return
+        throw Error('内容字数限制9-80个字')
+      }
+      if (reg.test(title) || reg.test(content)) {
+        throw Error('标题和内容不能包含空格')
       }
 
       const data = await checkCreativeContent({
