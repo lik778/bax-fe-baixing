@@ -701,9 +701,7 @@ export default {
       const cboptions = {
         success: () => {
           if (dialogContent.type === 'move') {
-            console.log(1)
-            const newKeywords = keywordsCopy.map(o => this.transforArray(currentSelect).includes(o.id) ? { ...o, isRemove: true, isDel: true } : { ...o })
-            console.log('newKeywords', newKeywords)
+            const newKeywords = keywordsCopy.filter(k => !k.isNew).map(o => this.transforArray(currentSelect).includes(o.id) ? { ...o, isRemove: true, isDel: true } : { ...o })
             this.$emit('update-keywords', newKeywords)
           }
         },
@@ -755,18 +753,6 @@ export default {
       handler (newV, oldV) {
         const { currentSelect } = this
         this.$nextTick(() => {
-          // newV.forEach(o => {
-          //   if (o.isDel || o.isUpdated || o.isNew) {
-          //     this.$refs.multipleTable.toggleRowSelection(o, true)
-          //     if (!currentSelect[offset]) {
-          //       currentSelect[offset] = []
-          //       currentSelect[offset].push(o.id)
-          //       this.currentSelect[offset] = currentSelect[offset]
-          //     } else {
-          //       this.currentSelect[offset].push(o.id)
-          //     }
-          //   }
-          // })
           newV.filter(a => this.transforArray(currentSelect).includes(a.id)).forEach(o => {
             console.log(o)
             this.$refs.multipleTable.toggleRowSelection(o, true)
