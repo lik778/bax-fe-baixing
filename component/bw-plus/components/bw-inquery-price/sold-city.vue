@@ -1,30 +1,27 @@
 <template>
+  <div>
     <el-table border :data="tableData" style="width: 100%">
         <el-table-column prop="keyword" label="关键词" />
         <el-table-column prop="frontSoldDevice" label="平台" :formatter="deviceFormatter" />
         <el-table-column label="售出城市">
             <template slot-scope="{ row }">
                 {{ citiesFormater(row) }}
-                <el-popover
-                    placement="top-start"
-                    title="已售出城市"
-                    width="150"
-                    trigger="hover"
-                    >
-                        <div class="cities-content">{{citiesAllFormater(row)}}</div>
-                        <el-button slot="reference" type="text">查看</el-button>
-                    </el-popover>
+                <el-button @click="viewCityDetai(row)" type="text">查看</el-button>
             </template>
         </el-table-column>
     </el-table>
+    <ProvinceCityMap @cancel="dialogCityVisible = false" :dialogCityVisible="dialogCityVisible" :allAreas="allAreas" :cities="currentRow.frontSoldCities"/>
+  </div>
 </template>
 
 <script>
+import ProvinceCityMap from '../common/province-city-map.vue'
 import { DEVICE } from 'constant/bw-plus'
 import { getCnName } from 'util'
 import clone from 'clone'
 export default {
   name: 'sold-city',
+  components: { ProvinceCityMap },
   props: {
     tableData: {
       type: Array,
@@ -35,6 +32,12 @@ export default {
       type: Array,
       required: true,
       default: () => []
+    }
+  },
+  data () {
+    return {
+      currentRow: {},
+      dialogCityVisible: false
     }
   },
   methods: {
@@ -50,6 +53,10 @@ export default {
     citiesAllFormater (row) {
       const { frontSoldCities } = row
       return frontSoldCities.map(city => getCnName(city, this.allAreas)).join('、')
+    },
+    viewCityDetai (row) {
+      this.currentRow = row
+      this.dialogCityVisible = true
     }
   }
 }
