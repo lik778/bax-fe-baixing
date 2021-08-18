@@ -10,7 +10,7 @@
             </template>
         </el-table-column>
     </el-table>
-    <ProvinceCityMap @cancel="dialogCityVisible = false" :dialogCityVisible="dialogCityVisible" :allAreas="allAreas" :cities="currentRow.frontSoldCities"/>
+    <ProvinceCityMap title="已售城市" @cancel="dialogCityVisible = false" :dialogCityVisible="dialogCityVisible" :allAreas="allAreas" :cities="currentRow.frontSoldCities"/>
   </div>
 </template>
 

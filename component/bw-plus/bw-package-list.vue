@@ -59,6 +59,12 @@
             </status-show>
           </div>
         </el-table-column>
+        <el-table-column prop="cities" width="180" label="投放城市" >
+          <template slot-scope="{ row }">
+            {{citiesFormater(row).text}}
+            <el-button type="text" @click="viewCityDetai(row)">查看</el-button>
+          </template>
+        </el-table-column>
         <el-table-column label="平台"
                          :formatter="r => DEVICE[r.device]" />
         <el-table-column label="推广时段"
@@ -88,12 +94,14 @@
                        :current-page="query.page + 1">
         </el-pagination>
       </div>
+      <ProvinceCityMap @cancel="dialogCityVisible = false" :dialogCityVisible="dialogCityVisible" :allAreas="allAreas" :cities="currentRow.cities"/>
     </main>
   </div>
 </template>
 
 <script>
 import { getUserPackageList } from 'api/biaowang-plus'
+import { ProvinceCityMap } from './components'
 import {
   AUDIT_STATUS_MAP,
   PACKEAGE_STATUS_MAP,
@@ -104,12 +112,22 @@ import {
   AUDIT_STATUS_COLOR_MAP,
   THIRTY_DAYS
 } from 'constant/bw-plus'
+import { getCnName } from 'util'
 import debounce from 'lodash.debounce'
 import StatusShow from './components/statusShow.vue'
 import { isPro } from 'config'
 
 export default {
   name: 'bw-plus-package-list',
+  props: {
+    allAreas: {
+      type: Array,
+      required: true,
+      default () {
+        return []
+      }
+    }
+  },
   data () {
     return {
       AUDIT_STATUS_MAP,
@@ -130,12 +148,33 @@ export default {
       },
       total: 0,
       promotes: [],
-      loading: false
+      loading: false,
+      currentRow: {},
+      dialogCityVisible: false
     }
   },
   methods: {
     handleCurrentChange (page) {
       this.query.page = page - 1
+    },
+    viewCityDetai (row) {
+      this.currentRow = row
+      this.dialogCityVisible = true
+    },
+    citiesFormater (row) {
+      const { cities } = row
+      const length = cities.length
+      const detail = cities.map(city => getCnName(city, this.allAreas)).join('、')
+      if (length >= 363) {
+        return {
+          text: '全国363个城市',
+          detail
+        }
+      }
+      return {
+        text: `${getCnName(cities[0], this.allAreas)}等${length}个城市`,
+        detail
+      }
     },
     queryPackageList: debounce(async function (params) {
       try {
@@ -170,7 +209,8 @@ export default {
     }
   },
   components: {
-    StatusShow
+    StatusShow,
+    ProvinceCityMap
   }
 }
 </script>
