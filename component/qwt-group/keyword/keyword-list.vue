@@ -622,7 +622,7 @@ export default {
             row.isUpdated = false
           }
         })
-        const lastDeleteWords = newKeywords.filter(o => !o.isNew)
+        const lastDeleteWords = newKeywords.filter(o => !this.transforArray(currentSelect).includes(o.id) || !o.isNew)
         this.$emit('update-keywords', lastDeleteWords)
       } catch (error) {
         console.log(error)
