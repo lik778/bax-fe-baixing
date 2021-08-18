@@ -622,7 +622,8 @@ export default {
             row.isUpdated = false
           }
         })
-        this.$emit('update-keywords', newKeywords)
+        const lastDeleteWords = newKeywords.filter(o => !o.isNew)
+        this.$emit('update-keywords', lastDeleteWords)
       } catch (error) {
         console.log(error)
       }
