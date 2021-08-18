@@ -58,12 +58,6 @@
             <span class="col">{{p.word}}</span>
             <span class="col">{{p.cpcRanking && fmtCpcRanking(p.cpcRanking, false)}}</span>
             <span class="col">{{p.remainDays}}/{{p.days.toFixed(1)}}</span>
-            <!-- <span class="col">{{leftDays(p)}}/{{p.days.toFixed(1)}}</span> -->
-            <el-button v-if="canXufei(p) && !userInfo.shAgent"
-                       :disabled="disabledXuFeiBtn(p)"
-                       class="col renew"
-                       type="text"
-                       @click="$router.push({name: 'bw-plan-list', params: {promote: p}})">续费</el-button>
             <span class="col"></span>
           </dd>
         </dl>

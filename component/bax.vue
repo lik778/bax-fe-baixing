@@ -29,7 +29,6 @@
     <wechat-scan />
     <Notification />
     <chat />
-    <bw-shopping-cart ref="bwShoppingCart" :userInfo="currentUser" v-if="currentUser.id && isBwRoute" :salesInfo="salesInfo" :allAreas="allAreas"/>
   </div>
 </template>
 
@@ -42,7 +41,6 @@ import BackToTop from './widget/back-to-top'
 import Sidebar from './layout/sidebar'
 import Header from './layout/header'
 import Chat from './widget/chat'
-import BwShoppingCart from './common/bw-shopping-cart'
 import HuoDongBtn from './common/huodong-btn'
 
 import gStore from './store'
@@ -57,13 +55,11 @@ import {
 } from 'util/role'
 import { delCookie } from 'util/cookie'
 
-import { router } from '../template/bax'
 import qs from 'query-string'
 
 export default {
   name: 'bax',
   components: {
-    BwShoppingCart,
     NewUserIntro,
     Notification,
     AddUserLead,
@@ -88,7 +84,6 @@ export default {
       newUserIntroMode: '',
       pending: 0,
       huoDongIntroVisible: !document.referrer.includes('/a/quanwangtong'),
-      isBwRoute: false,
       salesInfo: {
         salesId: '',
         userId: ''
@@ -159,12 +154,6 @@ export default {
     } else {
       delCookie('source')
     }
-    // 购物车限制在标王页面
-    this.isBwRoute = this.$route.path.startsWith('/main/bw/')
-    router.beforeEach((to, from, next) => {
-      this.isBwRoute = to.path.startsWith('/main/bw/')
-      next()
-    })
 
     setTimeout(() => {
       const { currentUser } = this
