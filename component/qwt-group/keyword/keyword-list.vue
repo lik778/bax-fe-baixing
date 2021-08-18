@@ -701,7 +701,7 @@ export default {
       const cboptions = {
         success: () => {
           if (dialogContent.type === 'move') {
-            const newKeywords = keywordsCopy.filter(k => !k.isNew).map(o => this.transforArray(currentSelect).includes(o.id) ? { ...o, isRemove: true, isDel: true } : { ...o })
+            const newKeywords = keywordsCopy.filter(k => !this.transforArray(currentSelect).includes(k.id) || !k.isNew).map(o => this.transforArray(currentSelect).includes(o.id) ? { ...o, isRemove: true, isDel: true } : { ...o })
             this.$emit('update-keywords', newKeywords)
           }
         },
