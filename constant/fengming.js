@@ -156,6 +156,7 @@ export const DURATION_TYPE_OPTS = {
 }
 
 export const NEGATIVE_KEYWORDS_MAX = 200
+export const NEGATIVE_KEYWORDS_SOGOU_MAX = 50
 
 export const RECOMMAND_SOURCE_FH = 'tfidf_fh'
 export const NEW_RECOMMAND_SOURCE_FH = 'tfidf_fh_service'

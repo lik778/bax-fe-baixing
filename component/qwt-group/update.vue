@@ -105,12 +105,13 @@
       <div class="content">
         <p class="tip"
            style="margin-bottom: 20px">
-          当网民的搜索词与精确否定关键词完全一致时，您的推广结果将不会展现。 否词个数不得超过 <strong>{{ NEGATIVE_KEYWORDS_MAX }}</strong>个,
+          当网民的搜索词与精确否定关键词完全一致时，您的推广结果将不会展现。 否词个数不得超过 <strong>{{ negativeKeywordMax }}</strong>个,
           当前否定关键词数量: <strong>{{ group.negativeWords.length }}</strong>个
         </p>
         <negative-keyword-comp :negative-words="group.negativeWords"
                                :all-words="group.negativeWords.concat(keywords.filter(o => !o.isDel))"
                                :show-tip="false"
+                               :max-negative-words="negativeKeywordMax"
                                @track="(action, opts) => handleTrack(action, opts)"
                                @add-negative-words="(words) => group.negativeWords = words.concat(group.negativeWords)"
                                @remove-negative-words="(idx) => group.negativeWords.splice(idx, 1)" />
@@ -152,6 +153,7 @@ import {
   CAMPAIGN_STATUS_OFFLINE,
   CAMPAIGN_STATUS_ONLINE,
   NEGATIVE_KEYWORDS_MAX,
+  NEGATIVE_KEYWORDS_SOGOU_MAX,
   emptyGroup,
   emptyCampaign,
   KEYWORDS_MAX,
@@ -229,6 +231,9 @@ export default {
     },
     groupId () {
       return parseInt(this.$route.params.id) || this.originGroup.id
+    },
+    negativeKeywordMax () {
+      return this.promotion.source === SEM_PLATFORM_SOGOU ? NEGATIVE_KEYWORDS_SOGOU_MAX : NEGATIVE_KEYWORDS_MAX
     },
     // TODO
     isCurPromotionOrGroupPaused () {

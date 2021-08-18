@@ -66,11 +66,13 @@
       <div class="content">
         <p class="tip"
            style="margin-bottom: 20px">
-          当网民的搜索词与精确否定关键词完全一致时，您的推广结果将不会展现。 否词个数不得超过 <strong>{{ NEGATIVE_KEYWORDS_MAX }}</strong>个,
+          当网民的搜索词与精确否定关键词完全一致时，您的推广结果将不会展现。 否词个数不得超过
+          <strong>{{ negativeKeywordMax }}</strong>个,
           当前否定关键词数量: <strong>{{ group.negativeWords.length }}</strong>个
         </p>
         <negative-keyword-comp :negative-words="group.negativeWords"
                                :show-tip="false"
+                               :max-negative-words="negativeKeywordMax"
                                @track="(action, opts) => handleTrack(action, opts)"
                                :all-words="group.negativeWords.concat(group.keywords)"
                                @add-negative-words="(words) => group.negativeWords = words.concat(group.negativeWords)"
@@ -119,9 +121,11 @@ import track from 'util/track'
 import {
   emptyGroup,
   NEGATIVE_KEYWORDS_MAX,
+  NEGATIVE_KEYWORDS_SOGOU_MAX,
   KEYWORDS_MAX,
   CAMPAIGN_STATUS_OFFLINE,
   SEM_PLATFORM_BAIDU,
+  SEM_PLATFORM_SOGOU,
   LANDING_TYPE_GW,
   LANDING_TYPE_AD
 } from 'constant/fengming'
@@ -151,7 +155,6 @@ export default {
   },
   data () {
     return {
-      NEGATIVE_KEYWORDS_MAX,
       SEM_PLATFORM_BAIDU,
 
       promotion: emptyPromotion,
@@ -169,6 +172,9 @@ export default {
     keywordRemainCount () {
       const newLen = this.group.keywords.length
       return KEYWORDS_MAX - (this.campaignKeywordLen + newLen)
+    },
+    negativeKeywordMax () {
+      return this.promotion.source === SEM_PLATFORM_SOGOU ? NEGATIVE_KEYWORDS_SOGOU_MAX : NEGATIVE_KEYWORDS_MAX
     },
     campaignId () {
       return this.promotion.id || parseInt(this.$route.query.campaignId)

@@ -50,6 +50,10 @@ export default {
         return []
       }
     },
+    negativeKeywordsMax: {
+      type: Number,
+      default: NEGATIVE_KEYWORDS_MAX
+    },
     allWords: {
       type: Array,
       required: true
@@ -88,8 +92,8 @@ export default {
         .filter(row => row !== '')
       )]
 
-      if (words.concat(this.negativeWords).length > NEGATIVE_KEYWORDS_MAX) {
-        return this.$message.error(`否词个数不得超过${NEGATIVE_KEYWORDS_MAX}`)
+      if (words.concat(this.negativeWords).length > this.negativeKeywordsMax) {
+        return this.$message.error(`否词个数不得超过${this.negativeKeywordsMax}`)
       }
 
       try {
