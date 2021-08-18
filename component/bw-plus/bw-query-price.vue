@@ -68,6 +68,7 @@ import { InqueryForm, KeywordHotDetail, Title, InqueryResult, DiamondShopWelfare
 import { querySystemResult, commit } from 'api/biaowang-plus'
 import { APPLY_TYPE_NORMAL, APPLY_TYPE_ERROR } from 'constant/bw-plus'
 import { f2y } from 'util'
+import debounce from 'lodash.debounce'
 export default {
   name: 'bw-plus-query-price',
   components: {
@@ -91,6 +92,7 @@ export default {
   },
   data () {
     return {
+      debounce,
       activeName: 'first',
       isSubmit: false,
       BwPlusDialogMsg: {
@@ -128,7 +130,7 @@ export default {
       this.keywordsLockDetails = []
       this.ifExistLockCity = false
     },
-    async submit () {
+    submit: debounce(async function () {
       const { error, overHeat, priceId, tempPvId, industryError } = this.queryResult
       const { userId: targetUserId } = this.salesInfo
       const { queryInfo, applyTypeFilter, currentPrice } = this
@@ -152,6 +154,8 @@ export default {
       }
       const { code, data } = await commit(params)
       if (code === 0) {
+        this.isSubmit = false
+        this.resetResult()
         this.BwPlusDialogMsg = {
           dialogVisible: true,
           type: 'success',
@@ -167,7 +171,7 @@ export default {
           title: '提交失败'
         }
       }
-    },
+    }, 300),
     async inquery (form) {
       const loading = this.$loading({
         lock: true,

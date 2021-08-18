@@ -78,6 +78,7 @@ import { getAllIndustry, checkKeyword } from 'api/biaowang-plus'
 import CoreCitiesDialog, { OTHER_CITY_ENUM } from 'com/common/bw/core-cities-dialog'
 import AreaSelector from 'com/common/biaowang-area-selector'
 import { getCnName } from 'util'
+import debounce from 'lodash.debounce'
 export default {
   name: 'InqueryForm',
   components: {
@@ -189,7 +190,7 @@ export default {
         this.industryList = industryList
       }
     },
-    async submitForm (formName) {
+    submitForm: debounce(async function (formName) {
       this.isInquery = true
       this.$refs[formName].validate((valid) => {
         if (valid) {
@@ -201,7 +202,7 @@ export default {
         }
         this.isInquery = false
       })
-    },
+    }, 300),
     async checkKeyword () {
       this.$emit('resetResult')
       const { form } = this
