@@ -1,6 +1,6 @@
 
 import Schema from 'async-validator'
-import { LANDING_TYPE_AD, LANDING_TYPE_GW, LANDING_TYPE_STORE, LANDING_TYPE_BAIDU_JIMUYU, MATCH_TYPE_EXACT, NEGATIVE_KEYWORDS_MAX, getMatchTypeObj, SEM_PLATFORM_BAIDU } from 'constant/fengming'
+import { LANDING_TYPE_AD, LANDING_TYPE_GW, LANDING_TYPE_STORE, LANDING_TYPE_BAIDU_JIMUYU, MATCH_TYPE_EXACT, NEGATIVE_KEYWORDS_MAX, getMatchTypeObj, SEM_PLATFORM_BAIDU, SEM_PLATFORM_SOGOU, NEGATIVE_KEYWORDS_SOGOU_MAX } from 'constant/fengming'
 import { MIN_WORD_PRICE, MAX_WORD_PRICE } from 'constant/keyword'
 import { keywordPriceTip } from 'constant/tip'
 
@@ -69,8 +69,9 @@ const commonDescriptor = {
     if (errVal) return new Error(errVal.msg)
     return true
   },
-  negativeWords (rule, value) {
-    if (value.length > NEGATIVE_KEYWORDS_MAX) return new Error(`否词个数不得超过${NEGATIVE_KEYWORDS_MAX}个`)
+  negativeWords (rule, value, cb, source) {
+    const negativeWordsMax = source.promotion.source === SEM_PLATFORM_SOGOU ? NEGATIVE_KEYWORDS_SOGOU_MAX : NEGATIVE_KEYWORDS_MAX
+    if (value.length > negativeWordsMax) return new Error(`否词个数不得超过${negativeWordsMax}个`)
     return true
   }
 }

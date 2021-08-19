@@ -14,7 +14,7 @@
                  :disabled="isSales"
                  @click="negativeWordsDialogVisible = true">批量添加否定关键词</el-button>
       <span class="num"
-            v-if="showTip">(否词关键词个数不得超过<strong>{{ NEGATIVE_KEYWORDS_MAX }}</strong>个, 当前否词数量:
+            v-if="showTip">(否词关键词个数不得超过<strong>{{ negativeKeywordsMax }}</strong>个, 当前否词数量:
         <strong>{{ negativeWords.length }}</strong>个）</span>
     </div>
     <div class="res"
@@ -29,6 +29,7 @@
     </div>
     <negative-words-dialog :visible="negativeWordsDialogVisible"
                            :all-words="allWords"
+                           :negative-keywords-max="negativeKeywordsMax"
                            @close="negativeWordsDialogVisible = false"
                            @update-negative-words="updateNegativeWords"
                            :negative-words="negativeWords" />
@@ -52,6 +53,10 @@ export default {
         return []
       }
     },
+    negativeKeywordsMax: {
+      type: Number,
+      default: NEGATIVE_KEYWORDS_MAX
+    },
     negativeWords: {
       type: Array,
       required: true,
@@ -72,17 +77,15 @@ export default {
     return {
       word: '',
       negativeWordsDialogVisible: false,
-      loading: false,
-
-      NEGATIVE_KEYWORDS_MAX
+      loading: false
     }
   },
   methods: {
     async addNegativeWords () {
       const val = this.word.trim()
       if (val === '') return
-      if (this.negativeWords.length + 1 > NEGATIVE_KEYWORDS_MAX) {
-        return this.$message.error(`否定关键词个数不能超过${NEGATIVE_KEYWORDS_MAX}`)
+      if (this.negativeWords.length + 1 > this.negativeKeywordsMax) {
+        return this.$message.error(`否定关键词个数不能超过${this.negativeKeywordsMax}`)
       }
 
       this.loading = true
