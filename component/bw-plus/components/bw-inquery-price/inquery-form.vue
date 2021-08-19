@@ -205,17 +205,7 @@ export default {
     async checkKeyword () {
       this.$emit('resetResult')
       const { form } = this
-      const { words = '', cities } = form
-      if (cities.length) {
-        cities.forEach(o => {
-          this.removeArea(o)
-        })
-      }
-      this.form = {
-        coreCities: [],
-        industry: '',
-        ...form
-      }
+      const { words } = form
       if (!this.keywordLengthCheck().validate) {
         return
       }
