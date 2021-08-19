@@ -85,6 +85,7 @@ export default {
     getCnName,
     handleClose () {
       this.$emit('cancel')
+      this.search = ''
     },
     handleConfirm () {
       this.$emit('confirm', this.coreCities)
