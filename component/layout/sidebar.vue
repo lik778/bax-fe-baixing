@@ -58,11 +58,6 @@
               管理标王推广
             </router-link>
           </el-menu-item>
-          <el-menu-item index="bw-manual" v-if="!userInfo.shAgent && relationAllow()">
-            <router-link :to="{ name: 'bw-manual'}" tag="p">
-              人工报价记录
-            </router-link>
-          </el-menu-item>
         </el-submenu>
         <el-submenu index="bwPlus">
           <template slot="title">
@@ -193,7 +188,7 @@ import { baxUserLogin, kaOnlineAndTickets } from 'api/ka'
 const MENU_GROUP_MAP = {
   charge: ['qwt-charge', 'seo-charge'],
   sst: ['qwt-create-promotion', 'qwt-promotion-list'],
-  bw: ['bw-plan-list', 'bw-manual'],
+  bw: ['bw-plan-list'],
   bwPlus: ['bw-plus-query-price', 'bw-plus-price-records', 'bw-plus-package-list'],
   qc: ['qc-promote-list'],
   ssp: ['ad-list', 'material-list', 'order-list', 'user-list', 'ad-calendar'],
