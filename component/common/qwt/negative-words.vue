@@ -29,7 +29,7 @@
     </div>
     <negative-words-dialog :visible="negativeWordsDialogVisible"
                            :all-words="allWords"
-                           :negative-keyword-max="negativeKeywordsMax"
+                           :negative-keywords-max="negativeKeywordsMax"
                            @close="negativeWordsDialogVisible = false"
                            @update-negative-words="updateNegativeWords"
                            :negative-words="negativeWords" />

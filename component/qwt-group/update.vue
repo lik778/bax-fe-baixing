@@ -111,7 +111,7 @@
         <negative-keyword-comp :negative-words="group.negativeWords"
                                :all-words="group.negativeWords.concat(keywords.filter(o => !o.isDel))"
                                :show-tip="false"
-                               :max-negative-words="negativeKeywordMax"
+                               :negative-keywords-max="negativeKeywordMax"
                                @track="(action, opts) => handleTrack(action, opts)"
                                @add-negative-words="(words) => group.negativeWords = words.concat(group.negativeWords)"
                                @remove-negative-words="(idx) => group.negativeWords.splice(idx, 1)" />

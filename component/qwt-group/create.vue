@@ -72,7 +72,7 @@
         </p>
         <negative-keyword-comp :negative-words="group.negativeWords"
                                :show-tip="false"
-                               :max-negative-words="negativeKeywordMax"
+                               :negative-keywords-max="negativeKeywordMax"
                                @track="(action, opts) => handleTrack(action, opts)"
                                :all-words="group.negativeWords.concat(group.keywords)"
                                @add-negative-words="(words) => group.negativeWords = words.concat(group.negativeWords)"
