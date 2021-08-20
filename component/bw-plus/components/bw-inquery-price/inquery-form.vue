@@ -204,7 +204,7 @@ export default {
         }
         this.isInquery = false
       })
-    }, 300),
+    }, 1000),
     async checkKeyword () {
       this.$emit('resetResult')
       const { form } = this
@@ -250,6 +250,7 @@ export default {
             type: 'success'
           })
         } catch (error) {
+          this.checkResult.passed = false
           return false
         } finally {
           loading.close()
