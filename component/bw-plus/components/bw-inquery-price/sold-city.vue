@@ -46,6 +46,9 @@ export default {
     citiesFormater (row) {
       const { frontSoldCities } = clone(row)
       const length = frontSoldCities.length
+      if (length >= 362) {
+        return '全国'
+      }
       return length > 2 ? `${frontSoldCities.splice(0, 2).map(city => getCnName(city, this.allAreas)).join('、')}等${length}个城市` : frontSoldCities.map(city => getCnName(city, this.allAreas)).join('、')
     },
     citiesAllFormater (row) {

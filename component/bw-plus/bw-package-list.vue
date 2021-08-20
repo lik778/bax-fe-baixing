@@ -163,9 +163,9 @@ export default {
       const { cities } = row
       const length = cities.length
       const detail = cities.map(city => getCnName(city, this.allAreas)).join('、')
-      if (length >= 363) {
+      if (length >= 362) {
         return {
-          text: '全国363个城市',
+          text: '全国',
           detail
         }
       }
