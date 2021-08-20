@@ -481,6 +481,7 @@ export default {
       }
     },
     async _updateMaterialPictures () {
+      const { query: { user_id: userId } } = this.$route
       const isChanged = !![
         this.materialPictures.del.wap,
         this.materialPictures.del.pc,
@@ -499,7 +500,8 @@ export default {
           ...this.materialPictures.del.wap,
           ...this.materialPictures.del.pc
         ],
-        newImages: this.materialPictures.add
+        newImages: this.materialPictures.add,
+        userId
       })
 
       const errors = res?.data || []
