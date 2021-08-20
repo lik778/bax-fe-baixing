@@ -1,4 +1,5 @@
 <template>
+  <div>
     <el-table
       style="width: 90%"
       :data="records"
@@ -7,7 +8,21 @@
     >
       <el-table-column fixed prop="id" label="ID" />
       <el-table-column sortable fixed prop="createdTime" width="170" label="日期" :formatter="dateFormater" />
-      <el-table-column width="150" :show-overflow-tooltip="true" fixed prop="keywords" label="关键词" :formatter="keywordsFormater" />
+      <el-table-column width="150" fixed prop="keywords" label="关键词">
+        <template slot-scope="{ row }">
+          <el-popover
+          placement="top-start"
+          title="关键词"
+          width="300"
+          trigger="hover"
+          >
+            <div class="cities-content">
+              {{row.keywords.join('、')}}
+            </div>
+            <p slot="reference">{{ keywordsFormater(row) }}</p>
+          </el-popover>
+        </template>
+      </el-table-column>
       <el-table-column prop="applyType" label="报价类型" :formatter="applyTypeFormatter" />
       <el-table-column width="150" prop="status" label="审核状态">
         <template slot-scope="{ row }">
@@ -18,17 +33,15 @@
         </template>
       </el-table-column>
       <el-table-column prop="device" label="平台" :formatter="deviceFormatter" />
-      <el-table-column prop="cities" width="150" label="投放城市" >
+      <el-table-column prop="cities" width="180" label="投放城市" >
         <template slot-scope="{ row }">
-          <el-popover
-          placement="top-start"
-          title="投放城市"
-          width="150"
-          trigger="hover"
-          >
-            <div class="cities-content">{{citiesFormater(row)}}</div>
-            <p slot="reference" class="keywords-row">{{ citiesFormater(row) }}</p>
-          </el-popover>
+              <el-popover
+                placement="right"
+                width="500"
+                trigger="hover">
+                <ProvinceCityMap :allAreas="allAreas" :cities="row.cities"/>
+                <span slot="reference">{{ citiesFormater(row).text }}</span>
+              </el-popover>
         </template>
       </el-table-column>
       <el-table-column width="120" prop="scheduleType" label="推广时段" :formatter="scheduleTypeFormater" />
@@ -47,13 +60,16 @@
         </template>
       </el-table-column>
     </el-table>
+  </div>
 </template>
 <script>
 import { APPLY_AUDIT_STATUS_OPTIONS, APPLY_AUDIT_STATUS_PENDING, APPLY_AUDIT_STATUS_REJECT, APPLY_TYPE_NORMAL, DEVICE, SCHEDULE_TYPE, STATUS_MAP, APPLY_AUDIT_STATUS_PASS, OPTION_STATUS_AWAIT_TIDAN, OPTION_STATUS_COPY_URL } from 'constant/bw-plus'
 import { f2y, getCnName } from 'util'
 import dayjs from 'dayjs'
+import ProvinceCityMap from '../common/province-city-map.vue'
 export default {
   name: 'bw-records-table',
+  components: { ProvinceCityMap },
   props: {
     records: {
       type: Array,
@@ -79,13 +95,15 @@ export default {
       APPLY_AUDIT_STATUS_OPTIONS,
       APPLY_AUDIT_STATUS_PASS,
       OPTION_STATUS_AWAIT_TIDAN,
-      OPTION_STATUS_COPY_URL
+      OPTION_STATUS_COPY_URL,
+      allAreasNew: {}
     }
   },
   methods: {
-    keywordsFormater (...args) {
-      const [,, keywords] = args
-      return keywords.join('、')
+    keywordsFormater (args) {
+      const { keywords } = args
+      const length = keywords.length
+      return length > 1 ? `${keywords[0]}等${length}个关键词` : keywords.join('、')
     },
     daysFormater (...args) {
       const [,, days] = args
@@ -117,7 +135,18 @@ export default {
     },
     citiesFormater (row) {
       const { cities } = row
-      return cities.map(city => getCnName(city, this.allAreas)).join('、')
+      const length = cities.length
+      const detail = cities.map(city => getCnName(city, this.allAreas)).join('、')
+      if (length >= 362) {
+        return {
+          text: '全国',
+          detail
+        }
+      }
+      return {
+        text: `${getCnName(cities[0], this.allAreas)}等${length}个城市`,
+        detail
+      }
     },
     reviewPrice (row) {
       this.$emit('reviewPrice', row)

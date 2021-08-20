@@ -26,6 +26,9 @@
                   </el-option>
                 </el-select>
               </el-col>
+              <el-col v-if="checkResult.industry" :span="15" :push="1">
+                <p class="industry-tips">系统已帮你判断为“{{industryList.filter(o => o.name === checkResult.industry)[0].description}}”行业，系统判断行业无需审核，可直接提单</p>
+              </el-col>
             </el-form-item>
             <el-form-item label="推广区域" prop="cities">
               {{transformArea}}
@@ -77,6 +80,7 @@ import { getAllIndustry, checkKeyword } from 'api/biaowang-plus'
 import CoreCitiesDialog, { OTHER_CITY_ENUM } from 'com/common/bw/core-cities-dialog'
 import AreaSelector from 'com/common/biaowang-area-selector'
 import { getCnName } from 'util'
+import debounce from 'lodash.debounce'
 export default {
   name: 'InqueryForm',
   components: {
@@ -110,7 +114,8 @@ export default {
       },
       checkResult: {
         passed: true,
-        rejectedWordWithReason: {}
+        rejectedWordWithReason: {},
+        industry: ''
       },
       restaurants: [],
       allSoldCities: {}
@@ -123,8 +128,8 @@ export default {
     transformArea () {
       const { cities } = this.form
       const maxLength = 3
-      if (cities.length >= 363) {
-        return '全国等363个城市'
+      if (cities.length >= 362) {
+        return '全国'
       } else if (cities.length > 0) {
         if (cities.length <= maxLength) {
           return `${cities.map(o => this.formatArea(o))}`
@@ -159,14 +164,12 @@ export default {
         }
         return errorMsg
       }
-      for (let i = 0; i < array.length; i++) {
-        if (array[i].length < 2 || array[i].length > 15) {
-          errorMsg = {
-            validate: false,
-            error: '单个关键词字数在2-15之间'
-          }
-          break
+      if (array.some(item => item.length < 2 || item.length > 15)) {
+        errorMsg = {
+          validate: false,
+          error: '单个关键词字数在2-15之间'
         }
+        return errorMsg
       }
       return errorMsg
     },
@@ -189,7 +192,7 @@ export default {
         this.industryList = industryList
       }
     },
-    async submitForm (formName) {
+    submitForm: debounce(async function (formName) {
       this.isInquery = true
       this.$refs[formName].validate((valid) => {
         if (valid) {
@@ -201,7 +204,7 @@ export default {
         }
         this.isInquery = false
       })
-    },
+    }, 1000),
     async checkKeyword () {
       this.$emit('resetResult')
       const { form } = this
@@ -217,23 +220,27 @@ export default {
           background: 'rgba(0, 0, 0, 0.7)'
         })
         try {
-          const { data: { passed, rejectedWordWithReason } } = await checkKeyword({ keywords: words.split(/[\s\n]/).filter(Boolean) })
+          const { data: { passed, rejectedWordWithReason, industry } } = await checkKeyword({ keywords: words.split(/[\s\n]/).filter(Boolean) })
           this.checkResult = {
             passed,
-            rejectedWordWithReason
+            rejectedWordWithReason,
+            industry
           }
           if (!passed) {
+            this.form.industry = ''
             this.$message({
               message: rejectedWordWithReason,
               type: 'error'
             })
             return false
           }
+          this.form.industry = industry || ''
           this.$message({
             message: '风控审查通过啦！快去查价吧！',
             type: 'success'
           })
         } catch (error) {
+          this.checkResult.passed = false
           return false
         } finally {
           loading.close()
@@ -298,5 +305,10 @@ export default {
       color: #E6A23C;
       line-height: 28px;
     }
+  }
+  .industry-tips{
+    margin: 6px 0;
+    color: #E6A23C;
+    line-height: 28px;
   }
 </style>

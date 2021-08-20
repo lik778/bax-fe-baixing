@@ -7,6 +7,13 @@ export async function getAllIndustry () {
   return body
 }
 
+export async function getAllAreas () {
+  const body = await biaowangPlus
+    .get('/basic/all-area')
+    .json()
+  return body
+}
+
 export async function checkKeyword (params) {
   const body = await biaowangPlus
     .post('/basic/check-keyword')

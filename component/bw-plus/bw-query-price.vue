@@ -32,7 +32,7 @@
                         <el-col :span="5" :push="13">
                           <div class="submit">
                             <h3>总价： {{transformPrice(currentPrice)}}元</h3>
-                            <el-button @click="isSubmit = true" :disabled="(currentPrice.price <0 || currentPrice.price === '-') || !ifSoldAvailable" type="danger">提交审核</el-button>
+                            <el-button @click="isSubmit = true" :disabled="(currentPrice.price <0 || currentPrice.price === '-') || !ifSoldAvailable" type="danger" :loading="isPending">提交审核</el-button>
                           </div>
                         </el-col>
                       </el-row>
@@ -56,7 +56,7 @@
           <span>确认提交审核嘛？</span>
           <span slot="footer" class="dialog-footer">
             <el-button @click="isSubmit = false">取 消</el-button>
-            <el-button type="primary" @click="submit">确 定</el-button>
+            <el-button type="primary" :loading="isPending" @click="submit">确 定</el-button>
           </span>
         </el-dialog>
 
@@ -68,6 +68,7 @@ import { InqueryForm, KeywordHotDetail, Title, InqueryResult, DiamondShopWelfare
 import { querySystemResult, commit } from 'api/biaowang-plus'
 import { APPLY_TYPE_NORMAL, APPLY_TYPE_ERROR } from 'constant/bw-plus'
 import { f2y } from 'util'
+import debounce from 'lodash.debounce'
 export default {
   name: 'bw-plus-query-price',
   components: {
@@ -91,6 +92,7 @@ export default {
   },
   data () {
     return {
+      debounce,
       activeName: 'first',
       isSubmit: false,
       BwPlusDialogMsg: {
@@ -106,7 +108,8 @@ export default {
       ifExistLockCity: false, // 当前关键词是否存在已售城市
       keywordLockText: '', // 关键词已售文案
       deviceAvailableStatus: {}, // 判断当前关键词在各设备端是否可售
-      ifSoldAvailable: false // 是否存在可售卖的平台
+      ifSoldAvailable: false, // 是否存在可售卖的平台,
+      isPending: false
     }
   },
   methods: {
@@ -128,7 +131,8 @@ export default {
       this.keywordsLockDetails = []
       this.ifExistLockCity = false
     },
-    async submit () {
+    submit: debounce(async function () {
+      this.isPending = true
       const { error, overHeat, priceId, tempPvId, industryError } = this.queryResult
       const { userId: targetUserId } = this.salesInfo
       const { queryInfo, applyTypeFilter, currentPrice } = this
@@ -152,6 +156,8 @@ export default {
       }
       const { code, data } = await commit(params)
       if (code === 0) {
+        this.isSubmit = false
+        this.resetResult()
         this.BwPlusDialogMsg = {
           dialogVisible: true,
           type: 'success',
@@ -167,7 +173,8 @@ export default {
           title: '提交失败'
         }
       }
-    },
+      this.isPending = false
+    }, 300),
     async inquery (form) {
       const loading = this.$loading({
         lock: true,

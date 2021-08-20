@@ -40,9 +40,21 @@
                 class="promote-id"
                 @click="goToPlanList(row.id)">{{row.id}}</span>
         </el-table-column>
-        <el-table-column label="关键词"
-                         show-overflow-tooltip
-                         :formatter="r => $formatter.join(r.keywords, ',')" />
+        <el-table-column label="关键词">
+          <template slot-scope="{ row }">
+            <el-popover
+            placement="top-start"
+            title="关键词"
+            width="300"
+            trigger="hover"
+            >
+              <div class="cities-content">
+                {{row.keywords.join('、')}}
+              </div>
+              <p slot="reference">{{ keywordsFormater(row) }}</p>
+            </el-popover>
+          </template>
+        </el-table-column>
         <el-table-column label="审核状态">
           <div slot-scope="{row}"
                class="status-container">
@@ -58,6 +70,17 @@
               <span>{{PACKEAGE_STATUS_MAP[row.status]}}</span>
             </status-show>
           </div>
+        </el-table-column>
+        <el-table-column prop="cities" width="180" label="投放城市" >
+          <template slot-scope="{ row }">
+              <el-popover
+                placement="right"
+                width="500"
+                trigger="hover">
+                <ProvinceCityMap :allAreas="allAreas" :cities="row.cities"/>
+                <span slot="reference">{{ citiesFormater(row).text }}</span>
+              </el-popover>
+          </template>
         </el-table-column>
         <el-table-column label="平台"
                          :formatter="r => DEVICE[r.device]" />
@@ -94,6 +117,7 @@
 
 <script>
 import { getUserPackageList } from 'api/biaowang-plus'
+import { ProvinceCityMap } from './components'
 import {
   AUDIT_STATUS_MAP,
   PACKEAGE_STATUS_MAP,
@@ -104,12 +128,22 @@ import {
   AUDIT_STATUS_COLOR_MAP,
   THIRTY_DAYS
 } from 'constant/bw-plus'
+import { getCnName } from 'util'
 import debounce from 'lodash.debounce'
 import StatusShow from './components/statusShow.vue'
 import { isPro } from 'config'
 
 export default {
   name: 'bw-plus-package-list',
+  props: {
+    allAreas: {
+      type: Array,
+      required: true,
+      default () {
+        return []
+      }
+    }
+  },
   data () {
     return {
       AUDIT_STATUS_MAP,
@@ -134,8 +168,28 @@ export default {
     }
   },
   methods: {
+    keywordsFormater (args) {
+      const { keywords } = args
+      const length = keywords.length
+      return length > 1 ? `${keywords[0]}等${length}个关键词` : keywords.join('、')
+    },
     handleCurrentChange (page) {
       this.query.page = page - 1
+    },
+    citiesFormater (row) {
+      const { cities } = row
+      const length = cities.length
+      const detail = cities.map(city => getCnName(city, this.allAreas)).join('、')
+      if (length >= 362) {
+        return {
+          text: '全国',
+          detail
+        }
+      }
+      return {
+        text: `${getCnName(cities[0], this.allAreas)}等${length}个城市`,
+        detail
+      }
     },
     queryPackageList: debounce(async function (params) {
       try {
@@ -170,7 +224,8 @@ export default {
     }
   },
   components: {
-    StatusShow
+    StatusShow,
+    ProvinceCityMap
   }
 }
 </script>

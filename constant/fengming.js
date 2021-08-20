@@ -114,7 +114,7 @@ export const LANDING_TYPE_STORE = 6
 export const LANDING_TYPE_BAIDU_JIMUYU = 7 // 百度基木鱼
 
 export const landingType = {
-  [`${LANDING_TYPE_AD}`]: '帖子',
+  // [`${LANDING_TYPE_AD}`]: '帖子',
   [`${LANDING_TYPE_STORE}`]: '店铺'
 }
 

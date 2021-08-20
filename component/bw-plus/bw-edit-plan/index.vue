@@ -93,7 +93,7 @@ export default {
 
       originPromote: null,
       form: {
-        landingType: LANDING_TYPE_AD,
+        landingType: LANDING_TYPE_STORE,
         landingPage: '',
         landingPageId: '',
         creativeTitle: '',
@@ -126,7 +126,7 @@ export default {
         promoteIds: [+this.id],
         creativeTitle: creativeTitle || '',
         creativeContent: creativeContent || '',
-        landingType: landingType || LANDING_TYPE_AD,
+        landingType: landingType || LANDING_TYPE_STORE,
         landingPage: landingPage || '',
         landingPageId: landingPageId || '',
         status

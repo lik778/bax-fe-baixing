@@ -29,9 +29,17 @@
             <span>{{PROMOTE_STATUS_MAP[row.status]}}</span>
           </status-show>
         </el-table-column>
-        <el-table-column label="投放城市"
-                         show-overflow-tooltip
-                         :formatter="r => r.cities.map(o => getCnName(o, allAreas)).join(',')" />
+        <el-table-column prop="cities" width="180" label="投放城市" >
+          <template slot-scope="{ row }">
+              <el-popover
+                placement="right"
+                width="500"
+                trigger="hover">
+                <ProvinceCityMap :allAreas="allAreas" :cities="row.cities"/>
+                <span slot="reference">{{ citiesFormater(row).text }}</span>
+              </el-popover>
+          </template>
+        </el-table-column>
         <el-table-column label="推广时段"
                          :formatter="r => SCHEDULE_TYPE[r.scheduleType]" />
         <el-table-column label="服务时长"
@@ -65,6 +73,7 @@ import {
 } from 'constant/bw-plus'
 import { getCnName } from 'util'
 import StatusShow from './components/statusShow'
+import { ProvinceCityMap } from './components'
 
 export default {
   name: 'bw-plus-plan-list',
@@ -86,7 +95,6 @@ export default {
       AUDIT_STATUS_COLOR_MAP,
       SCHEDULE_TYPE,
       AUDIT_STATUS_REJECT,
-
       promotes: []
     }
   },
@@ -99,10 +107,26 @@ export default {
       const id = this.$route.params.id
       const data = await getUsePromoteListByPackageId(id)
       this.promotes = data
+    },
+    citiesFormater (row) {
+      const { cities } = row
+      const length = cities.length
+      const detail = cities.map(city => getCnName(city, this.allAreas)).join('、')
+      if (length >= 362) {
+        return {
+          text: '全国',
+          detail
+        }
+      }
+      return {
+        text: `${getCnName(cities[0], this.allAreas)}等${length}个城市`,
+        detail
+      }
     }
   },
   components: {
-    StatusShow
+    StatusShow,
+    ProvinceCityMap
   }
 }
 </script>

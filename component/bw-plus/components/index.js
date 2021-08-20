@@ -8,6 +8,7 @@ import BwRecordsForm from './bw-price-records/bw-records-form.vue'
 import BwRecordsTable from './bw-price-records/bw-records-table.vue'
 import PreOrderDetail from './bw-price-records/pre-order-detail.vue'
 import SoldCity from './bw-inquery-price/sold-city.vue'
+import ProvinceCityMap from './common/province-city-map.vue'
 
 export {
   InqueryForm,
@@ -19,5 +20,6 @@ export {
   BwRecordsForm,
   BwRecordsTable,
   PreOrderDetail,
-  SoldCity
+  SoldCity,
+  ProvinceCityMap
 }
