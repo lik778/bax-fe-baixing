@@ -40,9 +40,21 @@
                 class="promote-id"
                 @click="goToPlanList(row.id)">{{row.id}}</span>
         </el-table-column>
-        <el-table-column label="关键词"
-                         show-overflow-tooltip
-                         :formatter="r => $formatter.join(r.keywords, ',')" />
+        <el-table-column label="关键词">
+          <template slot-scope="{ row }">
+            <el-popover
+            placement="top-start"
+            title="关键词"
+            width="300"
+            trigger="hover"
+            >
+              <div class="cities-content">
+                {{row.keywords.join('、')}}
+              </div>
+              <p slot="reference">{{ keywordsFormater(row) }}</p>
+            </el-popover>
+          </template>
+        </el-table-column>
         <el-table-column label="审核状态">
           <div slot-scope="{row}"
                class="status-container">
@@ -156,6 +168,11 @@ export default {
     }
   },
   methods: {
+    keywordsFormater (args) {
+      const { keywords } = args
+      const length = keywords.length
+      return length > 1 ? `${keywords[0]}等${length}个关键词` : keywords.join('、')
+    },
     handleCurrentChange (page) {
       this.query.page = page - 1
     },
