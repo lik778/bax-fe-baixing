@@ -26,7 +26,7 @@
                   </el-option>
                 </el-select>
               </el-col>
-              <el-col v-if="form.industry" :span="15" :push="1">
+              <el-col v-if="checkResult.industry" :span="15" :push="1">
                 <p class="industry-tips">系统已帮你判断为“{{industryList.filter(o => o.name === checkResult.industry)[0].description}}”行业，系统判断行业无需审核，可直接提单</p>
               </el-col>
             </el-form-item>
@@ -244,7 +244,7 @@ export default {
             })
             return false
           }
-          this.form.industry = industry
+          this.form.industry = industry || ''
           this.$message({
             message: '风控审查通过啦！快去查价吧！',
             type: 'success'
