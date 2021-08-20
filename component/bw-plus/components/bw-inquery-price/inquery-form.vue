@@ -22,7 +22,6 @@
                     v-for="item in industryList"
                     :key="item.name"
                     :label="item.description"
-                    :disabled="checkResult.industry && item.name !== checkResult.industry"
                     :value="item.name">
                   </el-option>
                 </el-select>
