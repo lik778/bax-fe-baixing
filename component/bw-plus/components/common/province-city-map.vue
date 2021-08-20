@@ -4,7 +4,7 @@
     <h2 class="title">{{title}}</h2>
     <ul class="province-content">
       <li v-for="(item, index) in province" class="item" :key="index">
-        <h4 class="province">{{item.label}}</h4>
+        <span class="province">{{item.label}}</span>
         <p>
           <span class="city" v-for="(city, index) in cityInfo.filter(o => o.parent === item.value)" :key="index">
            {{city.nameCn}}
@@ -81,20 +81,24 @@ export default {
     max-height: 500px;
     overflow-y: auto;
     .item{
-      margin-bottom: 10px;
+      margin-bottom: 25px;
       display: flex;
       align-items: flex-start;
+      p{
+        border-left: 1px dashed #DCDFE6;
+      }
     }
     .province{
       font-size: 14px;
       width: 60px;
-      border-right: 1px dashed #DCDFE6;
       flex-shrink: 0;
       margin-right: 10px;
+      padding: 6px;
     }
     .city{
       font-size: 14px;
       margin-right: 10px;
+      padding: 6px;
     }
   }
 </style>

@@ -13,7 +13,7 @@
           <el-popover
           placement="top-start"
           title="关键词"
-          width="150"
+          width="300"
           trigger="hover"
           >
             <div class="cities-content">
