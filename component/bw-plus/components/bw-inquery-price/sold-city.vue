@@ -5,12 +5,16 @@
         <el-table-column prop="frontSoldDevice" label="平台" :formatter="deviceFormatter" />
         <el-table-column label="售出城市">
             <template slot-scope="{ row }">
-                {{ citiesFormater(row) }}
-                <el-button @click="viewCityDetai(row)" type="text">查看</el-button>
+              <el-popover
+                placement="right"
+                width="400"
+                trigger="hover">
+                <ProvinceCityMap title="已售城市" :allAreas="allAreas" :cities="row.frontSoldCities"/>
+                <span slot="reference">{{ citiesFormater(row) }}</span>
+              </el-popover>
             </template>
         </el-table-column>
     </el-table>
-    <ProvinceCityMap title="已售城市" @cancel="dialogCityVisible = false" :dialogCityVisible="dialogCityVisible" :allAreas="allAreas" :cities="currentRow.frontSoldCities"/>
   </div>
 </template>
 
@@ -34,12 +38,6 @@ export default {
       default: () => []
     }
   },
-  data () {
-    return {
-      currentRow: {},
-      dialogCityVisible: false
-    }
-  },
   methods: {
     deviceFormatter (...args) {
       const [,, device] = args
@@ -53,10 +51,6 @@ export default {
     citiesAllFormater (row) {
       const { frontSoldCities } = row
       return frontSoldCities.map(city => getCnName(city, this.allAreas)).join('、')
-    },
-    viewCityDetai (row) {
-      this.currentRow = row
-      this.dialogCityVisible = true
     }
   }
 }

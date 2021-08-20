@@ -31,13 +31,15 @@
         </el-table-column>
         <el-table-column prop="cities" width="180" label="投放城市" >
           <template slot-scope="{ row }">
-            {{citiesFormater(row).text}}
-            <el-button type="text" @click="viewCityDetai(row)">查看</el-button>
+              <el-popover
+                placement="right"
+                width="500"
+                trigger="hover">
+                <ProvinceCityMap :allAreas="allAreas" :cities="row.cities"/>
+                <span slot="reference">{{ citiesFormater(row).text }}</span>
+              </el-popover>
           </template>
         </el-table-column>
-        <!-- <el-table-column label="投放城市"
-                         show-overflow-tooltip
-                         :formatter="r => r.cities.map(o => getCnName(o, allAreas)).join(',')" /> -->
         <el-table-column label="推广时段"
                          :formatter="r => SCHEDULE_TYPE[r.scheduleType]" />
         <el-table-column label="服务时长"
@@ -54,7 +56,6 @@
           </div>
         </el-table-column>
       </el-table>
-      <ProvinceCityMap @cancel="dialogCityVisible = false" :dialogCityVisible="dialogCityVisible" :allAreas="allAreas" :cities="currentRow.cities"/>
     </main>
   </div>
 </template>
@@ -94,9 +95,7 @@ export default {
       AUDIT_STATUS_COLOR_MAP,
       SCHEDULE_TYPE,
       AUDIT_STATUS_REJECT,
-      promotes: [],
-      currentRow: {},
-      dialogCityVisible: false
+      promotes: []
     }
   },
   mounted () {
@@ -123,10 +122,6 @@ export default {
         text: `${getCnName(cities[0], this.allAreas)}等${length}个城市`,
         detail
       }
-    },
-    viewCityDetai (row) {
-      this.currentRow = row
-      this.dialogCityVisible = true
     }
   },
   components: {

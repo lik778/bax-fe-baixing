@@ -61,8 +61,13 @@
         </el-table-column>
         <el-table-column prop="cities" width="180" label="投放城市" >
           <template slot-scope="{ row }">
-            {{citiesFormater(row).text}}
-            <el-button type="text" @click="viewCityDetai(row)">查看</el-button>
+              <el-popover
+                placement="right"
+                width="500"
+                trigger="hover">
+                <ProvinceCityMap :allAreas="allAreas" :cities="row.cities"/>
+                <span slot="reference">{{ citiesFormater(row).text }}</span>
+              </el-popover>
           </template>
         </el-table-column>
         <el-table-column label="平台"
@@ -94,7 +99,6 @@
                        :current-page="query.page + 1">
         </el-pagination>
       </div>
-      <ProvinceCityMap @cancel="dialogCityVisible = false" :dialogCityVisible="dialogCityVisible" :allAreas="allAreas" :cities="currentRow.cities"/>
     </main>
   </div>
 </template>
@@ -148,18 +152,12 @@ export default {
       },
       total: 0,
       promotes: [],
-      loading: false,
-      currentRow: {},
-      dialogCityVisible: false
+      loading: false
     }
   },
   methods: {
     handleCurrentChange (page) {
       this.query.page = page - 1
-    },
-    viewCityDetai (row) {
-      this.currentRow = row
-      this.dialogCityVisible = true
     },
     citiesFormater (row) {
       const { cities } = row

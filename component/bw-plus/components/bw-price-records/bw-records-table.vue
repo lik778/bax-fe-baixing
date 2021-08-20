@@ -35,8 +35,13 @@
       <el-table-column prop="device" label="平台" :formatter="deviceFormatter" />
       <el-table-column prop="cities" width="180" label="投放城市" >
         <template slot-scope="{ row }">
-          {{citiesFormater(row).text}}
-          <el-button type="text" @click="viewCityDetai(row)">查看</el-button>
+              <el-popover
+                placement="right"
+                width="500"
+                trigger="hover">
+                <ProvinceCityMap :allAreas="allAreas" :cities="row.cities"/>
+                <span slot="reference">{{ citiesFormater(row).text }}</span>
+              </el-popover>
         </template>
       </el-table-column>
       <el-table-column width="120" prop="scheduleType" label="推广时段" :formatter="scheduleTypeFormater" />
@@ -55,7 +60,6 @@
         </template>
       </el-table-column>
     </el-table>
-    <ProvinceCityMap @cancel="dialogCityVisible = false" :dialogCityVisible="dialogCityVisible" :allAreas="allAreas" :cities="currentRow.cities"/>
   </div>
 </template>
 <script>
@@ -92,16 +96,10 @@ export default {
       APPLY_AUDIT_STATUS_PASS,
       OPTION_STATUS_AWAIT_TIDAN,
       OPTION_STATUS_COPY_URL,
-      allAreasNew: {},
-      currentRow: {},
-      dialogCityVisible: false
+      allAreasNew: {}
     }
   },
   methods: {
-    viewCityDetai (row) {
-      this.currentRow = row
-      this.dialogCityVisible = true
-    },
     keywordsFormater (args) {
       const { keywords } = args
       const length = keywords.length

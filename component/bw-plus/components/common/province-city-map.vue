@@ -1,5 +1,7 @@
 <template>
-  <el-dialog @close="cancel" :title="title" :visible.sync="dialogCityVisible">
+  <!-- <el-dialog @close="cancel" :title="title" :visible.sync="dialogCityVisible"> -->
+  <div class="province-container">
+    <h2 class="title">{{title}}</h2>
     <ul class="province-content">
       <li v-for="(item, index) in province" class="item" :key="index">
         <h4 class="province">{{item.label}}</h4>
@@ -10,7 +12,8 @@
         </p>
       </li>
     </ul>
-  </el-dialog>
+  </div>
+  <!-- </el-dialog> -->
 </template>
 
 <script>
@@ -31,11 +34,6 @@ export default {
     allAreas: {
       type: Array,
       default: () => [],
-      require: true
-    },
-    dialogCityVisible: {
-      type: Boolean,
-      default: false,
       require: true
     }
   },
@@ -70,7 +68,18 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+  .province-container{
+    .title{
+      font-size: 16px;
+      color: #606266;
+      margin-bottom: 10px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid #DCDFE6;
+    }
+  }
   .province-content{
+    max-height: 500px;
+    overflow-y: auto;
     .item{
       margin-bottom: 10px;
       display: flex;
