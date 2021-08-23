@@ -30,6 +30,9 @@
           <el-tooltip v-if="row.status === APPLY_AUDIT_STATUS_REJECT" :class="transformClass(row.status)" :content="row.rejectedReason" placement="top-start">
             <i class="error el-icon-question pointer" />
           </el-tooltip>
+          <!-- <el-tooltip v-if="row.status === APPLY_AUDIT_STATUS_PASS" :class="transformClass(row.status)" :content="row.comment" placement="top-start">
+            <i class="error el-icon-question pointer" />
+          </el-tooltip> -->
         </template>
       </el-table-column>
       <el-table-column prop="device" label="平台" :formatter="deviceFormatter" />
