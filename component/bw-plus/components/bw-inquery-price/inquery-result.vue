@@ -23,7 +23,7 @@
                     title="提示"
                     width="200"
                     trigger="hover"
-                    content="部分词的部分城市双端已售出">
+                    :content="row.bothSeven.price >= 0 ? '部分词的部分城市已售出' : '双端暂无报价'">
                     <span class="sold-item" slot="reference">{{transforPrice(row.bothSeven.price)}}</span>
                   </el-popover>
                   <div v-else :class="{ 'active-item': row.bothSeven.index === current.index, 'option-item': true }" @click="cellClick(row.bothSeven)">{{transforPrice(row.bothSeven.price)}}</div>
@@ -37,7 +37,7 @@
                     width="200"
                     title="提示"
                     trigger="hover"
-                    content="部分词的部分城市双端已售出">
+                    :content="row.bothFive.price >= 0 ? '部分词的部分城市已售出' : '双端暂无报价'">
                     <span class="sold-item" slot="reference">{{transforPrice(row.bothFive.price)}}</span>
                 </el-popover>
                 <div v-else :class="{ 'active-item': row.bothFive.index === current.index, 'option-item': true }" @click="cellClick(row.bothFive)">{{transforPrice(row.bothFive.price)}}</div>
@@ -55,7 +55,7 @@
                     width="200"
                     title="提示"
                     trigger="hover"
-                    content="部分词的部分城市手机端已售出">
+                    :content="row.wapSeven.price >= 0 ? '部分词的部分城市手机端已售出' : '手机端暂无报价'">
                     <span class="sold-item" slot="reference">{{transforPrice(row.wapSeven.price)}}</span>
                 </el-popover>
                 <div v-else :class="{ 'active-item': row.wapSeven.index === current.index, 'option-item': true }" @click="cellClick(row.wapSeven)">{{transforPrice(row.wapSeven.price)}}</div>
@@ -69,7 +69,7 @@
                     width="200"
                     title="提示"
                     trigger="hover"
-                    content="部分词的部分城市手机端已售出">
+                    :content="row.wapFive.price >= 0 ? '部分词的部分城市手机端已售出' : '手机端暂无报价'">
                     <span class="sold-item" slot="reference">{{transforPrice(row.wapFive.price)}}</span>
                 </el-popover>
                 <div v-else :class="{ 'active-item': row.wapFive.index === current.index, 'option-item': true }" @click="cellClick(row.wapFive)">{{transforPrice(row.wapFive.price)}}</div>
@@ -87,7 +87,7 @@
                     width="200"
                     title="提示"
                     trigger="hover"
-                    content="部分词的部分城市电脑端已售出">
+                    :content="row.pcSeven.price >= 0 ? '部分词的部分城市电脑端已售出' : '电脑端暂无报价'">
                     <span class="sold-item" slot="reference">{{transforPrice(row.pcSeven.price)}}</span>
                 </el-popover>
                 <div v-else :class="{ 'active-item': row.pcSeven.index === current.index, 'option-item': true }" @click="cellClick(row.pcSeven)">{{transforPrice(row.pcSeven.price)}}</div>
@@ -101,7 +101,7 @@
                     width="200"
                     title="提示"
                     trigger="hover"
-                    content="部分词的部分城市电脑端已售出">
+                    :content="row.pcFive.price >= 0 ? '部分词的部分城市电脑端已售出' : '电脑端暂无报价'">
                     <span class="sold-item" slot="reference">{{transforPrice(row.pcFive.price)}}</span>
                 </el-popover>
                 <div v-else :class="{ 'active-item': row.pcFive.index === current.index, 'option-item': true }" @click="cellClick(row.pcFive)">{{transforPrice(row.pcFive.price)}}</div>
