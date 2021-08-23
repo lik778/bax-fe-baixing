@@ -114,6 +114,11 @@ export const LANDING_TYPE_STORE = 6
 export const LANDING_TYPE_BAIDU_JIMUYU = 7 // 百度基木鱼
 
 export const landingType = {
+  [`${LANDING_TYPE_AD}`]: '帖子',
+  [`${LANDING_TYPE_STORE}`]: '店铺'
+}
+
+export const bwlandingType = {
   // [`${LANDING_TYPE_AD}`]: '帖子',
   [`${LANDING_TYPE_STORE}`]: '店铺'
 }
@@ -128,6 +133,7 @@ export const campaignOptimization = {
 }
 
 export const landingTypeOpts = toOpt(landingType)
+export const bwlandingTypeOpts = toOpt(bwlandingType)
 
 export const DEVICE_WAP = 1
 export const DEVICE_PC = 0
