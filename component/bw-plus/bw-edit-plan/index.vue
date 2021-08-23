@@ -12,7 +12,7 @@
         <el-radio-group v-model="form.landingType"
                         style="margin: 14px 0 10px 0"
                         @change="clearLandingPage">
-          <el-radio-button v-for="option of landingTypeOpts"
+          <el-radio-button v-for="option of bwlandingTypeOpts"
                            :key="option.value"
                            :label="option.value">{{option.label}}</el-radio-button>
         </el-radio-group>
@@ -63,7 +63,7 @@ import SelectPromoteDialog from '../components/select-promote-dialog.vue'
 import FmTip from 'com/widget/fm-tip'
 
 import {
-  landingTypeOpts,
+  bwlandingTypeOpts,
   SEM_PLATFORM_BAIDU,
   LANDING_TYPE_AD,
   LANDING_TYPE_STORE
@@ -88,7 +88,7 @@ export default {
       LANDING_TYPE_AD,
       LANDING_TYPE_STORE,
       SEM_PLATFORM_BAIDU,
-      landingTypeOpts,
+      bwlandingTypeOpts,
       selectPromoteDialogVisible: false,
 
       originPromote: null,
