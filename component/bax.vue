@@ -26,7 +26,8 @@
     <!-- <huo-dong-intro :show="huoDongIntroVisible" @close="huoDongIntroVisible = false" /> -->
     <huo-dong-btn v-if="inActivityPeriod" />
     <back-to-top />
-    <wechat-scan />
+    <WechatQrcode/>
+    <!-- <wechat-scan /> -->
     <Notification />
     <chat />
   </div>
@@ -36,7 +37,8 @@
 import NewUserIntro from './common/new-user-intro'
 import Notification from './common/notification'
 import AddUserLead from './common/add-user-lead'
-import WechatScan from './widget/wechat-scan'
+import WechatQrcode from './widget/wechat-qrcode.vue'
+// import WechatScan from './widget/wechat-scan'
 import BackToTop from './widget/back-to-top'
 import Sidebar from './layout/sidebar'
 import Header from './layout/header'
@@ -63,7 +65,8 @@ export default {
     NewUserIntro,
     Notification,
     AddUserLead,
-    WechatScan,
+    WechatQrcode,
+    // WechatScan,
     BackToTop,
     Sidebar,
     Header,
