@@ -374,8 +374,8 @@ export default {
     searchCampaigns: {
       deep: true,
       handler: async function (newV, oldV) {
+        const { query: { user_id: userId } } = this.$route
         await this.queryStatistics()
-        const { userId } = this.userInfo
         const campaignId = newV
         if (campaignId) {
           const result = await getGroupIds({ userId, campaignId })
