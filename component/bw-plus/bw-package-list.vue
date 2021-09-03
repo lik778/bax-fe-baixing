@@ -100,6 +100,9 @@
                        class="btn-text"
                        :disabled="row.days < THIRTY_DAYS"
                        @click="goToShop">店铺</el-button>
+            <el-button type="text"
+                       class="btn-text"
+                       @click="renew(row)">续费</el-button>
           </div>
         </el-table-column>
       </el-table>
@@ -112,12 +115,13 @@
         </el-pagination>
       </div>
     </main>
+    <RenewConfirm @cancel="isRenew = false" :allAreas="allAreas" :dialogVisible="isRenew" :renewInfo="renewInfo"/>
   </div>
 </template>
 
 <script>
 import { getUserPackageList } from 'api/biaowang-plus'
-import { ProvinceCityMap } from './components'
+import { ProvinceCityMap, RenewConfirm } from './components'
 import {
   AUDIT_STATUS_MAP,
   PACKEAGE_STATUS_MAP,
@@ -154,7 +158,6 @@ export default {
       SCHEDULE_TYPE,
       SERVICE_DAYS,
       THIRTY_DAYS,
-
       query: {
         keyword: '',
         status: [],
@@ -164,7 +167,9 @@ export default {
       },
       total: 0,
       promotes: [],
-      loading: false
+      loading: false,
+      isRenew: false,
+      renewInfo: {}
     }
   },
   methods: {
@@ -212,6 +217,10 @@ export default {
         ? '//shop.baixing.com/management/'
         : '//shop-test.baixing.cn/management/'
       window.open(shopLink)
+    },
+    renew (row) {
+      this.isRenew = true
+      this.renewInfo = row
     }
   },
   watch: {
@@ -225,7 +234,8 @@ export default {
   },
   components: {
     StatusShow,
-    ProvinceCityMap
+    ProvinceCityMap,
+    RenewConfirm
   }
 }
 </script>
