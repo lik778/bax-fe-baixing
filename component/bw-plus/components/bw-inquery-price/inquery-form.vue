@@ -149,7 +149,7 @@ export default {
         error: ''
       }
       const array = words.split(/[\s\n]/).filter(Boolean)
-      const patrn = /[`~!@#$%^&*()_\-+=<>?:"{}|,.\\/;'\\[\]·~！@#￥%……&*（）——\-+={}|《》？：“”【】、；‘'，。、]/im
+      const patrn = /[`~!@#$%^&*()_+=<>?:"{}|,.\\/;'\\[\]·~！@#￥%……&*（）——+={}|《》？：“”【】、；‘'，。、]/im
       if (patrn.test(array.join(''))) { // 如果包含特殊字符返回false
         errorMsg = {
           validate: false,
