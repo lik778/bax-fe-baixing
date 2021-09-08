@@ -3,8 +3,7 @@
     <div class="white-bg">
       <header>我的标王推广计划</header>
       <main>
-        <div style="color: red; font-size: 14px;margin-bottom: 20px">(系统维护中，为了保证您的物料正常投放，暂不支持创意及落地页的修改，如有任何问题请及时联系您的销售或客服。
-          近期会将现有投放中的计划迁移至标王2.0，显示为“已迁移”的数据可以到标王2.0查看，如有任何问题请及时联系您的销售或客服。)
+        <div style="color: red; font-size: 14px;margin-bottom: 20px">(近期会将现有投放中的计划迁移至标王2.0，显示为“已迁移”的数据可以到标王2.0查看，如有任何问题请及时联系您的销售或客服。)
         </div>
         <el-form :model="query" label-width="100px" label-position="left" @submit.native.prevent >
           <el-form-item label="关键词">
