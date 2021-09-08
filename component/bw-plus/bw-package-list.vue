@@ -87,9 +87,9 @@
         <el-table-column label="推广时段"
                          :formatter="r => SCHEDULE_TYPE[r.scheduleType]" />
         <el-table-column label="服务时长"
-                         :formatter="r => `${r.days}天`" />
+                         :formatter="({ days, phoenixsVersion }) => phoenixsVersion ? '老套餐' : `${days}天`" />
         <el-table-column label="投放剩余天数"
-                         :formatter="r => `${r.remainsDays || 0}天`" />
+                         :formatter="({remainsDays}) => `${remainsDays || 0}天`" />
         <el-table-column label="操作"
                          width="160">
           <div slot-scope="{row}">
