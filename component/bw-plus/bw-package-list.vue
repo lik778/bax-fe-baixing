@@ -102,7 +102,8 @@
                        @click="goToShop">店铺</el-button>
             <el-button type="text"
                        class="btn-text"
-                       @click="renew(row)">续费</el-button>
+                       :disabled="row.operationStatus === RENEW_OPRATION_STATUS_DISABLED"
+                       @click="renew(row)">{{row.operationStatus === RENEW_OPRATION_STATUS_COPY ? '复制' : '续费'}}</el-button>
           </div>
         </el-table-column>
       </el-table>
@@ -115,12 +116,12 @@
         </el-pagination>
       </div>
     </main>
-    <RenewConfirm @cancel="isRenew = false" :allAreas="allAreas" :dialogVisible="isRenew" :renewInfo="renewInfo"/>
+    <RenewConfirm @preOrder="renewPreOrder" @cancel="isRenew = false" :allAreas="allAreas" :dialogVisible="isRenew" :renewInfo="renewInfo"/>
   </div>
 </template>
 
 <script>
-import { getUserPackageList } from 'api/biaowang-plus'
+import { getUserPackageList, getRenewDetai, renewOrder } from 'api/biaowang-plus'
 import { ProvinceCityMap, RenewConfirm } from './components'
 import {
   AUDIT_STATUS_MAP,
@@ -130,12 +131,15 @@ import {
   SERVICE_DAYS,
   PROMOTE_STATUS_COLOR_MAP,
   AUDIT_STATUS_COLOR_MAP,
-  THIRTY_DAYS
+  THIRTY_DAYS,
+  RENEW_OPRATION_STATUS_DISABLED,
+  RENEW_OPRATION_STATUS_COPY
 } from 'constant/bw-plus'
 import { getCnName } from 'util'
 import debounce from 'lodash.debounce'
 import StatusShow from './components/statusShow.vue'
 import { isPro } from 'config'
+import { Message } from 'element-ui'
 
 export default {
   name: 'bw-plus-package-list',
@@ -158,6 +162,8 @@ export default {
       SCHEDULE_TYPE,
       SERVICE_DAYS,
       THIRTY_DAYS,
+      RENEW_OPRATION_STATUS_DISABLED,
+      RENEW_OPRATION_STATUS_COPY,
       query: {
         keyword: '',
         status: [],
@@ -218,9 +224,48 @@ export default {
         : '//shop-test.baixing.cn/management/'
       window.open(shopLink)
     },
-    renew (row) {
-      this.isRenew = true
-      this.renewInfo = row
+    async renew (row) {
+      const loading = this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
+      const { id: packageId, renewApplyId } = row
+      try {
+        const { data } = await getRenewDetai({ packageId })
+        this.isRenew = true
+        this.renewInfo = { ...data, renewApplyId }
+      } finally {
+        loading.close()
+      }
+    },
+    async renewPreOrder (applyId) {
+      const loading = this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
+      try {
+        const { code, data: { url }, message } = await renewOrder({ applyId })
+        if (code === 0) {
+          this.$copyText(url).then(async (e) => {
+            Message.success('提单链接已复制到剪切板')
+            await this.queryPackageList()
+            this.isRenew = false
+          }, function (e) {})
+          return
+        }
+        if (code === 4080) {
+          Message.error(message || '关键词已经被售出!')
+        }
+        if (code === 4014) {
+          Message.error('超出最大续费时长，目前最大续费（剩余投放天数）为3年')
+        }
+      } finally {
+        loading.close()
+      }
     }
   },
   watch: {

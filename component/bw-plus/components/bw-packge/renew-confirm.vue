@@ -7,7 +7,7 @@
     >
     <el-form ref="form" label-width="100px">
         <el-form-item class="pre-info-item" label="关键词：">
-            {{renewInfo.keywords.join("、")}}
+            {{renewInfo.words.join("、")}}
         </el-form-item>
         <el-form-item class="pre-info-item" label="推广城市：">
             {{citiesFormater(renewInfo.cities)}}
@@ -19,16 +19,16 @@
             {{SCHEDULE_TYPE[renewInfo.scheduleType]}}
         </el-form-item>
         <el-form-item class="pre-info-item" label="服务时长：">
-            <el-radio-group @change="change" v-model="serviceDays">
-                <el-radio v-for="( item, index ) in Object.keys(SERVICE_DAYS)" :key="index" :label="item">{{SERVICE_DAYS[item]}}</el-radio>
+            <el-radio-group @change="change" v-model="priceId">
+                <el-radio :disabled="renewInfo.renewApplyId && renewInfo.renewApplyId !== item.id" v-for="( item, index ) in renewInfo.priceList" :key="index" :label="item.id">{{item.type}} 天</el-radio>
             </el-radio-group>
         </el-form-item>
         <el-form-item class="pre-info-item pre-info-price" label="续费价：">
-            {{f2y(renewInfo.price)}}元
+            {{getRenewprice}}元
         </el-form-item>
         <el-row class="pre-info-row">
             <el-col :span="11">
-                <el-form-item class="pre-info-item" label="销售编号：">{{renewInfo.saleId}}</el-form-item>
+                <el-form-item class="pre-info-item" label="销售编号：">{{renewInfo.salesId}}</el-form-item>
             </el-col>
             <el-col :span="11">
                 <el-form-item class="pre-info-item" label="客户手机号：">{{renewInfo.mobile}}</el-form-item>
@@ -69,18 +69,16 @@ export default {
       f2y,
       DEVICE,
       SERVICE_DAYS,
-      serviceDays: '365'
+      priceId: 0
     }
   },
-  watch: {
-    renewInfo: {
-      immediate: true,
-      deep: true,
-      handler (newV) {
-        if (newV) {
-          this.serviceDays = newV.days > 0 ? newV.days.toString() : '365'
-        }
-      }
+  computed: {
+    getRenewprice () {
+      const { priceId, renewInfo: { priceList } } = this
+      console.log(priceId)
+      console.log(priceList.filter(o => o.id.toString() === priceId.toString()))
+      const price = priceList.filter(o => o.id.toString() === priceId.toString())[0].price
+      return f2y(price)
     }
   },
   methods: {
@@ -88,13 +86,23 @@ export default {
       this.$emit('cancel')
     },
     preOrder () {
-      this.$emit('preOrder')
+      this.$emit('preOrder', this.priceId)
     },
     citiesFormater (cities) {
       return cities.slice(0, 20).map(city => getCnName(city, this.allAreas)).join(',') + (cities.length > 20 ? `等${cities.length}个城市` : '') || '-'
     },
     change (value) {
       console.log('value', value)
+    }
+  },
+  watch: {
+    renewInfo: {
+      immediate: true,
+      deep: true,
+      handler (newV) {
+        const { renewApplyId, priceList } = newV
+        this.priceId = renewApplyId || priceList[0].id
+      }
     }
   }
 }

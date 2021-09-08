@@ -221,3 +221,29 @@ export async function getPriceList (params) {
     .json()
   return body
 }
+
+/**
+ * @param {Object} params
+ * @param {number} params.packageId
+ * @returns
+ */
+export async function getRenewDetai (params) {
+  const body = await biaowangPlus
+    .get('/package/user/renew/detail')
+    .query(params)
+    .json()
+  return body
+}
+
+/**
+ * @param {Object} params
+ * @param {number} params.applyId
+ * @returns
+ */
+export async function renewOrder (params) {
+  const body = await biaowangPlus
+    .get('/package/user/renew/pre-order')
+    .query(params)
+    .json()
+  return body
+}
