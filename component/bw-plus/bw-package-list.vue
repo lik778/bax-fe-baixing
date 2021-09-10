@@ -38,7 +38,7 @@
                          label="推广ID">
           <span slot-scope="{row}"
                 class="promote-id"
-                @click="goToPlanList(row.id)">{{row.id}}</span>
+                @click="goToPlanList(row)">{{row.id}}</span>
         </el-table-column>
         <el-table-column label="关键词">
           <template slot-scope="{ row }">
@@ -95,7 +95,7 @@
           <div slot-scope="{row}">
             <el-button type="text"
                        class="btn-text"
-                       @click="goToPlanList(row.id)">查看计划</el-button>
+                       @click="goToPlanList(row)">查看计划</el-button>
             <el-button type="text"
                        class="btn-text"
                        :disabled="row.days < THIRTY_DAYS"
@@ -204,8 +204,8 @@ export default {
         this.loading = false
       }
     }, 300),
-    goToPlanList (id) {
-      this.$router.push({ name: 'bw-plus-plan-list', params: { id } })
+    goToPlanList ({ id, phoenixsVersion }) {
+      this.$router.push({ name: 'bw-plus-plan-list', params: { id }, query: { phoenixsVersion } })
     },
     goToShop () {
       const shopLink = isPro
