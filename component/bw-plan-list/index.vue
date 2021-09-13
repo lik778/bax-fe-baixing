@@ -3,7 +3,8 @@
     <div class="white-bg">
       <header>我的标王推广计划</header>
       <main>
-        <div style="color: red; font-size: 14px;margin-bottom: 20px">(系统维护中，为了保证您的物料正常投放，暂不支持创意及落地页的修改，如有任何问题请及时联系您的销售或客服。)</div>
+        <div style="color: red; font-size: 14px;margin-bottom: 20px">(近期会将现有投放中的计划迁移至标王2.0，显示为“已迁移”的数据可以到标王2.0查看，如有任何问题请及时联系您的销售或客服。)
+        </div>
         <el-form :model="query" label-width="100px" label-position="left" @submit.native.prevent >
           <el-form-item label="关键词">
             <el-input v-model="query.keyword" placeholder="输入关键词查询" style="width: 300px;" />
@@ -64,8 +65,11 @@
           </el-table-column> -->
           <el-table-column label="操作" min-width="160px">
             <template slot-scope="scope">
-              <router-link v-if="!isAgentAccounting && scope.row.status != PROMOTE_STATUS_PAUSE[0] && scope.row.status != PROMOTE_STATUS_ONLINE[0]" :to="{name: 'bw-edit-plan', query: {promoteId: scope.row.id}}"><el-button type="text" size="small">编辑</el-button></router-link>
-              <router-link :to="{name: 'bw-dashboard', query: {promoteId: scope.row.id, keyword: scope.row.word}}">
+              <router-link v-if="!isAgentAccounting && ![...PROMOTE_STATUS_PAUSE, ...PROMOTE_STATUS_ONLINE, ...PROMOTE_STATUS_MIGRATE].includes(scope.row.status)" :to="{name: 'bw-edit-plan', query: {promoteId: scope.row.id}}"><el-button type="text" size="small">编辑</el-button></router-link>
+              <!-- <el-button v-if="canXufei(scope.row) && !userInfo.shAgent" size="small" type="text"
+                         :disabled="disabledXuFeiBtn(scope.row)"
+                         @click="onXufei(scope.row)">续费</el-button> -->
+              <router-link v-if="!PROMOTE_STATUS_MIGRATE.includes(scope.row.status)" :to="{name: 'bw-dashboard', query: {promoteId: scope.row.id, keyword: scope.row.word}}">
                 <el-button type="text" size="small">查看报告</el-button>
               </router-link>
               <span v-if="canSeeLiveBtn(scope.row)">
@@ -159,7 +163,8 @@ import {
   GET_DAYS_MAP,
   THIRTY_DAYS,
   PROMOTE_STATUS_PAUSE,
-  NOT_SPECIALRENEW_LIST
+  NOT_SPECIALRENEW_LIST,
+  PROMOTE_STATUS_MIGRATE
 } from 'constant/biaowang'
 import { getPromotes, queryKeywordPriceNew, getUserLive, getUserRanking, specialRenew } from 'api/biaowang'
 import {
@@ -206,6 +211,7 @@ export default {
       PROMOTE_STATUS_ONLINE,
       promoteStatusOpts,
       auditStatusOpts,
+      PROMOTE_STATUS_MIGRATE,
       payUrl: '',
       query: {
         keyword: '',

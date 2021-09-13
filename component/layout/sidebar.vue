@@ -58,6 +58,11 @@
               管理标王推广
             </router-link>
           </el-menu-item>
+          <!-- <el-menu-item index="bw-query-price" v-if="!userInfo.shAgent && relationAllow()">
+            <router-link :to="{ name: 'bw-query-price' }" tag="p">
+              新建标王推广
+            </router-link>
+          </el-menu-item> -->
         </el-submenu>
         <el-submenu index="bwPlus">
           <template slot="title">
