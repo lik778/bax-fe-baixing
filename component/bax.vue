@@ -30,7 +30,7 @@
     <!-- <wechat-scan /> -->
     <Notification />
     <chat />
-    <bw-shopping-cart ref="bwShoppingCart" :userInfo="currentUser" v-if="currentUser.id && isBwRoute" :salesInfo="salesInfo" :allAreas="allAreas"/>
+    <!-- <bw-shopping-cart ref="bwShoppingCart" :userInfo="currentUser" v-if="currentUser.id && isBwRoute" :salesInfo="salesInfo" :allAreas="allAreas"/> -->
   </div>
 </template>
 
@@ -45,8 +45,6 @@ import Sidebar from './layout/sidebar'
 import Header from './layout/header'
 import Chat from './widget/chat'
 import HuoDongBtn from './common/huodong-btn'
-import BwShoppingCart from './common/bw-shopping-cart'
-import { router } from '../template/bax'
 
 import gStore from './store'
 import aStore from './activity-store'
@@ -74,8 +72,7 @@ export default {
     Sidebar,
     Header,
     Chat,
-    HuoDongBtn,
-    BwShoppingCart
+    HuoDongBtn
   },
   fromMobx: {
     addUserLeadVisible: () => gStore.addUserLeadVisible,
@@ -88,7 +85,7 @@ export default {
   data () {
     return {
       showNewUserIntro: false,
-      isBwRoute: false,
+      // isBwRoute: false,
       newUserIntroMode: '',
       pending: 0,
       huoDongIntroVisible: !document.referrer.includes('/a/quanwangtong'),
@@ -164,11 +161,11 @@ export default {
     }
 
     // 购物车限制在标王页面
-    this.isBwRoute = this.$route.path.startsWith('/main/bw/')
-    router.beforeEach((to, from, next) => {
-      this.isBwRoute = to.path.startsWith('/main/bw/')
-      next()
-    })
+    // this.isBwRoute = this.$route.path.startsWith('/main/bw/')
+    // router.beforeEach((to, from, next) => {
+    //   this.isBwRoute = to.path.startsWith('/main/bw/')
+    //   next()
+    // })
 
     setTimeout(() => {
       const { currentUser } = this
