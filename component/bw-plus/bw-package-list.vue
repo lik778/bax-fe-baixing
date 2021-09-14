@@ -91,7 +91,7 @@
         <el-table-column label="投放剩余天数"
                          :formatter="({remainsDays}) => `${remainsDays || 0}天`" />
         <el-table-column label="操作"
-                         width="160">
+                         width="200">
           <div slot-scope="{row}">
             <el-button type="text"
                        class="btn-text"
@@ -103,7 +103,7 @@
             <el-button type="text"
                        class="btn-text"
                        :disabled="row.operationStatus === RENEW_OPRATION_STATUS_DISABLED"
-                       @click="renew(row)">{{row.operationStatus === RENEW_OPRATION_STATUS_COPY ? '复制' : '续费'}}</el-button>
+                       @click="renew(row)">续费</el-button>
           </div>
         </el-table-column>
       </el-table>
