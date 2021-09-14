@@ -30,7 +30,7 @@
     <!-- <wechat-scan /> -->
     <Notification />
     <chat />
-    <!-- <bw-shopping-cart ref="bwShoppingCart" :userInfo="currentUser" v-if="currentUser.id && isBwRoute" :salesInfo="salesInfo" :allAreas="allAreas"/> -->
+    <bw-shopping-cart ref="bwShoppingCart" :userInfo="currentUser" v-if="currentUser.id && isBwRoute" :salesInfo="salesInfo" :allAreas="allAreas"/>
   </div>
 </template>
 
@@ -40,6 +40,7 @@ import Notification from './common/notification'
 import AddUserLead from './common/add-user-lead'
 import WechatQrcode from './widget/wechat-qrcode.vue'
 // import WechatScan from './widget/wechat-scan'
+import BwShoppingCart from './common/bw-shopping-cart.vue'
 import BackToTop from './widget/back-to-top'
 import Sidebar from './layout/sidebar'
 import Header from './layout/header'
@@ -59,6 +60,7 @@ import {
 import { delCookie } from 'util/cookie'
 
 import qs from 'query-string'
+import { router } from '../template/bax'
 
 export default {
   name: 'bax',
@@ -67,6 +69,7 @@ export default {
     Notification,
     AddUserLead,
     WechatQrcode,
+    BwShoppingCart,
     // WechatScan,
     BackToTop,
     Sidebar,
@@ -85,7 +88,7 @@ export default {
   data () {
     return {
       showNewUserIntro: false,
-      // isBwRoute: false,
+      isBwRoute: false,
       newUserIntroMode: '',
       pending: 0,
       huoDongIntroVisible: !document.referrer.includes('/a/quanwangtong'),
@@ -161,11 +164,11 @@ export default {
     }
 
     // 购物车限制在标王页面
-    // this.isBwRoute = this.$route.path.startsWith('/main/bw/')
-    // router.beforeEach((to, from, next) => {
-    //   this.isBwRoute = to.path.startsWith('/main/bw/')
-    //   next()
-    // })
+    this.isBwRoute = this.$route.path.startsWith('/main/bw/')
+    router.beforeEach((to, from, next) => {
+      this.isBwRoute = to.path.startsWith('/main/bw/')
+      next()
+    })
 
     setTimeout(() => {
       const { currentUser } = this
