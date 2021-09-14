@@ -203,11 +203,13 @@ export default {
       }
     },
     queryPackageList: debounce(async function (params) {
+      const { user_id: userId } = this.$route.query
       try {
         this.loading = true
         const { items, total } = await getUserPackageList({
           ...params,
-          ...this.query
+          ...this.query,
+          userId
         })
         this.total = total
         this.promotes = items
