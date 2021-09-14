@@ -27,6 +27,7 @@
                   :disabled="!modifyBudgetQuota || isSales"
                   :value="promotion.dailyBudget"
                   @input="onChangeDaliyBudget" />
+        <el-button @click="systemDetect" type="primary" v-if="promotion.status === 100">系统检测</el-button>
         <span class="budget-tip"
               v-if="currentBalance <= 0">
           （您的推广资金可用余额为0元，请<router-link :to="{ name: 'qwt-charge', query: { mode: 'charge-only' } }">
@@ -119,6 +120,7 @@ import MobilePriceRatio from '../qwt-group/mobile-price-ratio'
 
 import { getCnName, isQwtEnableCity } from 'util/meta'
 import { disabledDate } from 'util/element'
+import { detect } from 'api/fengming'
 import {
   semPlatformCn,
   MIN_DAILY_BUDGET,
@@ -131,7 +133,9 @@ import {
   EXCLUDE_SOGOU_MAX_DURATION,
   DURATION_TYPE_OPTS,
   SEM_PLATFORM_SOGOU,
-  SEM_PLATFORM_QIHU
+  SEM_PLATFORM_QIHU,
+  RAW_CAMPAIN_STATUS,
+  STATUS_ONLINE
 } from 'constant/fengming'
 
 export default {
@@ -167,7 +171,9 @@ export default {
       MIN_DAILY_BUDGET,
       TIME_TYPE_OPTS,
       TIME_TYPE_CUSTOM,
-      DURATION_TYPE_OPTS
+      DURATION_TYPE_OPTS,
+      RAW_CAMPAIN_STATUS,
+      STATUS_ONLINE
     }
   },
   computed: {
@@ -232,6 +238,11 @@ export default {
         validTime = [null, null]
       }
       this.onValidTimeChange(validTime)
+    },
+    async systemDetect () {
+      const { id: campaignId } = this.promotion
+      const { data } = await detect({ campaignId })
+      this.emitPromtionData('dailyBudget', Number(data))
     }
   },
   watch: {

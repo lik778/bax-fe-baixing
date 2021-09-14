@@ -28,7 +28,7 @@ const development = {
 }
 
 const local = {
-  fengmingApiHost: '/devApi/fengmingx',
+  fengmingApiHost: '/fmDevApi',
   baxApiHost: '/devApi/bax',
   kaApiHost: '/devApi/ka/api/admin',
   biaowangApiHost: '/devApi/phoenixs/api',
