@@ -2,7 +2,7 @@
     <el-dialog
     title="续费确认"
     :visible.sync="dialogVisible"
-    width="40%"
+    width="48%"
     @close="cancel"
     >
     <el-form ref="form" label-width="100px">
@@ -20,7 +20,7 @@
         </el-form-item>
         <el-form-item class="pre-info-item" label="服务时长：">
             <el-radio-group @change="change" v-model="priceId">
-                <el-radio :disabled="renewInfo.renewApplyId && renewInfo.renewApplyId !== item.id" v-for="( item, index ) in renewInfo.priceList" :key="index" :label="item.id">{{item.type}} 天</el-radio>
+                <el-radio :disabled="renewInfo.renewApplyId && renewInfo.renewApplyId !== item.id" v-for="( item, index ) in renewInfo.priceList" :key="index" :label="item.id">{{item.type}} 天 <el-tag v-if="item.type > 30">赠店铺</el-tag></el-radio>
             </el-radio-group>
         </el-form-item>
         <el-form-item class="pre-info-item pre-info-price" label="续费价：">
@@ -75,8 +75,6 @@ export default {
   computed: {
     getRenewprice () {
       const { priceId, renewInfo: { priceList } } = this
-      console.log(priceId)
-      console.log(priceList.filter(o => o.id.toString() === priceId.toString()))
       const price = priceList.filter(o => o.id.toString() === priceId.toString())[0].price
       return f2y(price)
     }
@@ -92,7 +90,6 @@ export default {
       return cities.slice(0, 20).map(city => getCnName(city, this.allAreas)).join(',') + (cities.length > 20 ? `等${cities.length}个城市` : '') || '-'
     },
     change (value) {
-      console.log('value', value)
     }
   },
   watch: {
