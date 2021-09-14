@@ -149,7 +149,7 @@ export default {
         error: ''
       }
       const array = words.split(/[\s\n]/).filter(Boolean)
-      const patrn = /[`~!@#$%^&*()_\-+=<>?:"{}|,.\\/;'\\[\]·~！@#￥%……&*（）——\-+={}|《》？：“”【】、；‘'，。、]/im
+      const patrn = /[`~!@#$%^&*()_+=<>?:"{}|,.\\/;'\\[\]·~！@#￥%……&*（）——+={}|《》？：“”【】、；‘'，。、]/im
       if (patrn.test(array.join(''))) { // 如果包含特殊字符返回false
         errorMsg = {
           validate: false,
@@ -157,10 +157,10 @@ export default {
         }
         return errorMsg
       }
-      if (array.length > 10) {
+      if (array.length > 18) {
         errorMsg = {
           validate: false,
-          error: '关键词个数不能超过10个'
+          error: '关键词个数不能超过18个'
         }
         return errorMsg
       }

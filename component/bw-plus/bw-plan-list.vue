@@ -43,7 +43,7 @@
         <el-table-column label="推广时段"
                          :formatter="r => SCHEDULE_TYPE[r.scheduleType]" />
         <el-table-column label="服务时长"
-                         :formatter="r => `${r.days}天`" />
+                         :formatter="r => phoenixsVersion ? '老套餐' : `${r.days}天`" />
         <el-table-column label="投放剩余天数"
                          :formatter="r => `${r.remainDays}天`" />
         <el-table-column label="操作">
@@ -95,7 +95,8 @@ export default {
       AUDIT_STATUS_COLOR_MAP,
       SCHEDULE_TYPE,
       AUDIT_STATUS_REJECT,
-      promotes: []
+      promotes: [],
+      phoenixsVersion: this.$route.query.phoenixsVersion
     }
   },
   mounted () {

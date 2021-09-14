@@ -30,6 +30,7 @@
     <!-- <wechat-scan /> -->
     <Notification />
     <chat />
+    <!-- <bw-shopping-cart ref="bwShoppingCart" :userInfo="currentUser" v-if="currentUser.id && isBwRoute" :salesInfo="salesInfo" :allAreas="allAreas"/> -->
   </div>
 </template>
 
@@ -84,6 +85,7 @@ export default {
   data () {
     return {
       showNewUserIntro: false,
+      // isBwRoute: false,
       newUserIntroMode: '',
       pending: 0,
       huoDongIntroVisible: !document.referrer.includes('/a/quanwangtong'),
@@ -157,6 +159,13 @@ export default {
     } else {
       delCookie('source')
     }
+
+    // 购物车限制在标王页面
+    // this.isBwRoute = this.$route.path.startsWith('/main/bw/')
+    // router.beforeEach((to, from, next) => {
+    //   this.isBwRoute = to.path.startsWith('/main/bw/')
+    //   next()
+    // })
 
     setTimeout(() => {
       const { currentUser } = this

@@ -38,7 +38,7 @@
                          label="推广ID">
           <span slot-scope="{row}"
                 class="promote-id"
-                @click="goToPlanList(row.id)">{{row.id}}</span>
+                @click="goToPlanList(row)">{{row.id}}</span>
         </el-table-column>
         <el-table-column label="关键词">
           <template slot-scope="{ row }">
@@ -87,15 +87,15 @@
         <el-table-column label="推广时段"
                          :formatter="r => SCHEDULE_TYPE[r.scheduleType]" />
         <el-table-column label="服务时长"
-                         :formatter="r => `${r.days}天`" />
+                         :formatter="({ days, phoenixsVersion }) => phoenixsVersion ? '老套餐' : `${days}天`" />
         <el-table-column label="投放剩余天数"
-                         :formatter="r => `${r.remainsDays || 0}天`" />
+                         :formatter="({remainsDays}) => `${remainsDays || 0}天`" />
         <el-table-column label="操作"
                          width="160">
           <div slot-scope="{row}">
             <el-button type="text"
                        class="btn-text"
-                       @click="goToPlanList(row.id)">查看计划</el-button>
+                       @click="goToPlanList(row)">查看计划</el-button>
             <el-button type="text"
                        class="btn-text"
                        :disabled="row.days < THIRTY_DAYS"
@@ -215,8 +215,8 @@ export default {
         this.loading = false
       }
     }, 300),
-    goToPlanList (id) {
-      this.$router.push({ name: 'bw-plus-plan-list', params: { id } })
+    goToPlanList ({ id, phoenixsVersion }) {
+      this.$router.push({ name: 'bw-plus-plan-list', params: { id }, query: { phoenixsVersion } })
     },
     goToShop () {
       const shopLink = isPro
