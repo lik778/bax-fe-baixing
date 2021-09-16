@@ -98,7 +98,7 @@ export default {
   methods: {
     getVisitorLabel,
     formatterIP (ip) {
-      return `${ip.split('.').slice(0, -1).join('.')}.*`
+      return `${ip.split('.').slice(0, -2).join('.')}.*.*`
     },
     formatterTimestamp (timestamp, date = true) {
       if (!timestamp) return 0
