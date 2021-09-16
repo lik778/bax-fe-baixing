@@ -100,7 +100,7 @@
                        class="btn-text"
                        :disabled="row.days < THIRTY_DAYS"
                        @click="goToShop">店铺</el-button>
-            <el-button type="text"
+            <el-button v-if="allowRenew" type="text"
                        class="btn-text"
                        :disabled="row.operationStatus === RENEW_OPRATION_STATUS_DISABLED"
                        @click="renew(row)">续费</el-button>
@@ -140,6 +140,7 @@ import debounce from 'lodash.debounce'
 import StatusShow from './components/statusShow.vue'
 import { isPro } from 'config'
 import { Message } from 'element-ui'
+import { isSales } from 'util/role'
 
 export default {
   name: 'bw-plus-package-list',
@@ -150,6 +151,10 @@ export default {
       default () {
         return []
       }
+    },
+    userInfo: {
+      type: Object,
+      required: true
     }
   },
   data () {
@@ -176,6 +181,12 @@ export default {
       loading: false,
       isRenew: false,
       renewInfo: {}
+    }
+  },
+  computed: {
+    allowRenew () {
+      const { roles } = this.userInfo
+      return isSales(roles)
     }
   },
   methods: {
