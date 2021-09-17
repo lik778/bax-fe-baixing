@@ -218,3 +218,7 @@ export const PROVINCE_LIST = [
     label: '安徽'
   }
 ]
+
+export const RENEW_OPRATION_STATUS_OPEN = 20
+export const RENEW_OPRATION_STATUS_COPY = 30
+export const RENEW_OPRATION_STATUS_DISABLED = 60

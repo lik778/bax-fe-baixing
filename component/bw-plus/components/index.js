@@ -9,6 +9,7 @@ import BwRecordsTable from './bw-price-records/bw-records-table.vue'
 import PreOrderDetail from './bw-price-records/pre-order-detail.vue'
 import SoldCity from './bw-inquery-price/sold-city.vue'
 import ProvinceCityMap from './common/province-city-map.vue'
+import RenewConfirm from './bw-packge/renew-confirm.vue'
 
 export {
   InqueryForm,
@@ -21,5 +22,6 @@ export {
   BwRecordsTable,
   PreOrderDetail,
   SoldCity,
-  ProvinceCityMap
+  ProvinceCityMap,
+  RenewConfirm
 }
