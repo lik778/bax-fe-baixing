@@ -100,10 +100,10 @@
                        class="btn-text"
                        :disabled="row.days < THIRTY_DAYS"
                        @click="goToShop">店铺</el-button>
-            <el-button v-if="allowRenew" type="text"
+            <!-- <el-button v-if="allowRenew" type="text"
                        class="btn-text"
                        :disabled="row.operationStatus === RENEW_OPRATION_STATUS_DISABLED"
-                       @click="renew(row)">续费</el-button>
+                       @click="renew(row)">续费</el-button> -->
           </div>
         </el-table-column>
       </el-table>
