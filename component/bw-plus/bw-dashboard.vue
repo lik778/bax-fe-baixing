@@ -7,16 +7,39 @@
             <el-tab-pane label="关键词维度" name="keyword"></el-tab-pane>
         </el-tabs>
         <DataRange @searchData="searchData"/>
+        <ECharts style="width: 100%; max-width: 1300px; margin-top: 20px"
+        :options="chartOptions"></ECharts>
     </section>
 </template>
 <script>
 import { DataRange } from './components'
+import ECharts from 'vue-echarts/components/ECharts.vue'
+import dayjs from 'dayjs'
+import 'echarts/lib/component/tooltip'
+import 'echarts/lib/chart/line'
+const chartOptions = {
+  xAxis: {
+    type: 'category',
+    data: [dayjs().format('YYYY-MM-DD')]
+  },
+  yAxis: {
+    type: 'value'
+  },
+  series: [
+    {
+      data: [150, 230, 224, 218, 135, 147, 260],
+      type: 'line'
+    }
+  ]
+}
 export default {
   name: 'bw-plus-dashboard',
-  components: { DataRange },
+  components: { DataRange, ECharts },
   data () {
     return {
-      activeName: 'promote'
+      activeName: 'promote',
+      showChartData: [],
+      chartOptions
     }
   },
   methods: {
