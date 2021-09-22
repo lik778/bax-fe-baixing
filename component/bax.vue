@@ -40,6 +40,7 @@ import Notification from './common/notification'
 import AddUserLead from './common/add-user-lead'
 import WechatQrcode from './widget/wechat-qrcode.vue'
 // import WechatScan from './widget/wechat-scan'
+// import BwShoppingCart from './common/bw-shopping-cart.vue'
 import BackToTop from './widget/back-to-top'
 import Sidebar from './layout/sidebar'
 import Header from './layout/header'
@@ -59,6 +60,7 @@ import {
 import { delCookie } from 'util/cookie'
 
 import qs from 'query-string'
+// import { router } from '../template/bax'
 
 export default {
   name: 'bax',
@@ -67,6 +69,7 @@ export default {
     Notification,
     AddUserLead,
     WechatQrcode,
+    // BwShoppingCart,
     // WechatScan,
     BackToTop,
     Sidebar,

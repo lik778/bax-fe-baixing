@@ -98,7 +98,11 @@ export default {
       deep: true,
       handler (newV) {
         const { renewApplyId, priceList } = newV
-        this.priceId = renewApplyId || priceList[0].id
+        if (renewApplyId && priceList.map(o => o.id).includes(renewApplyId)) {
+          this.priceId = renewApplyId
+          return
+        }
+        this.priceId = priceList[0].id
       }
     }
   }
