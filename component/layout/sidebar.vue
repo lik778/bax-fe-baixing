@@ -113,6 +113,11 @@
               标王推广报表
             </router-link>
           </el-menu-item>
+          <el-menu-item index="bw-plus-dashboard">
+            <router-link :to="{ name: 'bw-plus-dashboard'}" tag="p">
+              标王2.0推广报表
+            </router-link>
+          </el-menu-item>
           <el-menu-item index="qc-dashboard">
             <router-link :to="{ name: 'qc-dashboard'}" tag="p">
               易慧推报表
