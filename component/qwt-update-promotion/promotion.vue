@@ -27,7 +27,7 @@
                   :disabled="!modifyBudgetQuota || isSales"
                   :value="promotion.dailyBudget"
                   @input="onChangeDaliyBudget" />
-        <el-button @click="systemDetect" type="primary" v-if="showDetect">系统检测</el-button>
+        <el-button @click="systemDetect" type="primary" v-if="showDetect">预算检测</el-button>
         <span class="budget-tip"
               v-if="currentBalance <= 0">
           （您的推广资金可用余额为0元，请<router-link :to="{ name: 'qwt-charge', query: { mode: 'charge-only' } }">
