@@ -25,6 +25,13 @@ const config = merge(base, {
           '^/devApi': '/'
         },
         changeOrigin: true
+      },
+      '/fmDevApi': {
+        target: 'http://172.17.0.144:8000',
+        pathRewrite: {
+          '^/fmDevApi': '/'
+        },
+        changeOrigin: true
       }
     },
     historyApiFallback: {

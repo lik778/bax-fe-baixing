@@ -867,3 +867,15 @@ export async function rejectAuthorize (params) {
     .json()
   return body
 }
+
+/**
+ * @param {Object} params
+ * @param { number } params.campaignId
+ */
+export async function detect (params) {
+  const body = await fengming
+    .get('/campaign/get_daily_budget_advice')
+    .query(reverseCamelcase(params))
+    .json()
+  return body
+}
