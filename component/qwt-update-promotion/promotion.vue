@@ -27,7 +27,7 @@
                   :disabled="!modifyBudgetQuota || isSales"
                   :value="promotion.dailyBudget"
                   @input="onChangeDaliyBudget" />
-        <el-button @click="systemDetect" type="primary" v-if="promotion.status === 100">系统检测</el-button>
+        <el-button @click="systemDetect" type="primary" v-if="showDetect">系统检测</el-button>
         <span class="budget-tip"
               v-if="currentBalance <= 0">
           （您的推广资金可用余额为0元，请<router-link :to="{ name: 'qwt-charge', query: { mode: 'charge-only' } }">
@@ -135,7 +135,8 @@ import {
   SEM_PLATFORM_SOGOU,
   SEM_PLATFORM_QIHU,
   RAW_CAMPAIN_STATUS,
-  STATUS_ONLINE
+  STATUS_ONLINE,
+  SEM_PLATFORM_BAIDU
 } from 'constant/fengming'
 
 export default {
@@ -177,6 +178,9 @@ export default {
     }
   },
   computed: {
+    showDetect () {
+      return this.promotion.status === 100 && this.promotion.source === SEM_PLATFORM_BAIDU
+    },
     modifyBudgetQuota () {
       const n = Math.floor(this.promotion.budgetModificationCount)
       const q = 5 - n
@@ -242,7 +246,7 @@ export default {
     async systemDetect () {
       const { id: campaignId } = this.promotion
       const { data } = await detect({ campaignId })
-      this.emitPromtionData('dailyBudget', Number(data))
+      this.emitPromtionData('dailyBudget', Number(data) / 100)
     }
   },
   watch: {
