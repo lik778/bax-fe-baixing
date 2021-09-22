@@ -10,6 +10,7 @@ import PreOrderDetail from './bw-price-records/pre-order-detail.vue'
 import SoldCity from './bw-inquery-price/sold-city.vue'
 import ProvinceCityMap from './common/province-city-map.vue'
 import RenewConfirm from './bw-packge/renew-confirm.vue'
+import DataRange from './bw-dashboard/data-range.vue'
 
 export {
   InqueryForm,
@@ -23,5 +24,6 @@ export {
   PreOrderDetail,
   SoldCity,
   ProvinceCityMap,
-  RenewConfirm
+  RenewConfirm,
+  DataRange
 }

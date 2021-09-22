@@ -79,7 +79,7 @@
 import KeywordList from './keyword-list'
 import AddKeyword from './add-keyword'
 
-import { getPromoteById } from 'api/biaowang'
+import { getPromoteById, getUserRanking, getUserShow } from 'api/biaowang'
 import dayjs from 'dayjs'
 import clone from 'clone'
 
@@ -183,22 +183,22 @@ export default {
       this.activeDaterangeLabel = item.label
     },
     async getChartData () {
-      // const { query: { user_id: userId } } = this.$route
-      // const daterange = this.daterange
-      // const startTime = dayjs(daterange[0]).startOf('day').unix()
-      // const endTime = dayjs(daterange[1]).startOf('day').unix()
-      // const options = {
-      //   startTime,
-      //   endTime,
-      //   promoteList: this.activeTab === 'noLimit' ? [] : this.promoteIds,
-      //   userId
-      // }
+      const { query: { user_id: userId } } = this.$route
+      const daterange = this.daterange
+      const startTime = dayjs(daterange[0]).startOf('day').unix()
+      const endTime = dayjs(daterange[1]).startOf('day').unix()
+      const options = {
+        startTime,
+        endTime,
+        promoteList: this.activeTab === 'noLimit' ? [] : this.promoteIds,
+        userId
+      }
 
-      // const cpcRankingChartData = await getUserRanking(options)
-      // this.cpcRankingChartData = cpcRankingChartData
+      const cpcRankingChartData = await getUserRanking(options)
+      this.cpcRankingChartData = cpcRankingChartData
 
-      // const showChartData = await getUserShow(options)
-      // this.showChartData = showChartData
+      const showChartData = await getUserShow(options)
+      this.showChartData = showChartData
     },
     handleKeywordClose (newPromotes) {
       this.addKeywordModalShow = false
