@@ -179,7 +179,7 @@ export default {
   },
   computed: {
     showDetect () {
-      return this.promotion.status === 100 && this.promotion.source === SEM_PLATFORM_BAIDU
+      return this.promotion.status !== -1 && this.promotion.source === SEM_PLATFORM_BAIDU
     },
     modifyBudgetQuota () {
       const n = Math.floor(this.promotion.budgetModificationCount)
