@@ -79,15 +79,32 @@ export default {
       }
     }
   },
+  mounted () {
+    this.$emit('getDate', this.daterange)
+  },
   methods: {
     handleDateChange (item) {
       this.activeDaterangeLabel = item.label
       this.$emit('searchData', item.daterange)
     },
     dataPickerChange (item) {
-      console.log(this.daterange)
-      console.log(item)
+      this.$emit('searchData', [dayjs(item[0]), dayjs(item[1])])
     }
   }
 }
 </script>
+
+<style lang="scss" scoped>
+  .date-range-panel {
+        margin-right: 7px;
+        margin-top: 15px;
+        &.date-range-panel__active {
+          background: #fff;
+          border-color: #ff8273;
+          color: #ff8273;
+        }
+  }
+  .date-range-custom__active {
+    border-color: #ff8273;
+  }
+</style>

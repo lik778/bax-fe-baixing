@@ -247,3 +247,46 @@ export async function renewOrder (params) {
     .json()
   return body
 }
+
+/**
+ * @param {object} params
+ * @param {number} params.userId
+ * @returns
+ */
+export async function keywordList (params) {
+  const body = await biaowangPlus
+    .get('/promote/user/listByUser')
+    .query(trim(params))
+    .json()
+  return body
+}
+
+/**
+ * @param {Object} params
+ * @param {number} params.packageId
+ * @param {number} params.promoteId
+ * @param {number} params.userId
+ * @param {number} params.start
+ * @param {number} params.end
+ * @returns
+ */
+export async function promoteDataShow (params) {
+  const body = await biaowangPlus
+    .get('/promote/show')
+    .query(trim(params))
+    .json()
+  return body
+}
+
+/**
+ * @param {object} params
+ * @param {number} params.userId
+ * @returns
+ */
+export async function promoteList (params) {
+  const body = await biaowangPlus
+    .get('/package/user/list-online')
+    .query(trim(params))
+    .json()
+  return body
+}
