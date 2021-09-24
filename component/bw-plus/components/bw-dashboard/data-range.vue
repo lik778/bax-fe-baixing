@@ -80,6 +80,7 @@ export default {
     }
   },
   mounted () {
+    console.log('----', this.daterange)
     this.$emit('getDate', this.daterange)
   },
   methods: {

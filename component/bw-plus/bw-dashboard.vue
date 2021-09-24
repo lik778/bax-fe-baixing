@@ -1,7 +1,7 @@
 <template>
     <section class="bw-plus-dashboard">
         <h2>昨日数据</h2>
-        <p>展现（次)<br/>{{yesterdayShow[0].show}}</p>
+        <p>展现（次)<br/>{{yesterdayShow[0] && yesterdayShow[0].show}}</p>
         <el-tabs v-model="activeName" @tab-click="handleClickTab">
             <el-tab-pane label="计划维度" name="promote"></el-tab-pane>
             <el-tab-pane label="关键词维度" name="keyword"></el-tab-pane>
@@ -114,7 +114,16 @@ export default {
       this.showInfo = showInfo
       this.chartOptions.xAxis.data = showInfo.map(o => dayjs(o.timestamp * 1000).format('YYYY-MM-DD'))
       this.chartOptions.series[0].data = showInfo.map(o => o.show)
-      return showInfo
+    },
+    async getYestodayShow () {
+      const { query: { user_id: userId } } = this.$route
+      const params = {
+        userId,
+        start: dayjs().subtract(1, 'day').unix(),
+        end: dayjs().subtract(1, 'day').unix()
+      }
+      const { data: { showInfo } } = await promoteDataShow(params)
+      this.yesterdayShow = showInfo
     },
     async getPromoteList () {
       const { query: { user_id: userId } } = this.$route
@@ -156,9 +165,8 @@ export default {
   },
   async mounted () {
     const { daterange } = this
-    this.getDate()
     await this.getPromoteList()
-    this.yesterdayShow = await this.searchData([dayjs().subtract(1, 'day'), dayjs().subtract(1, 'day')])
+    await this.getYestodayShow()
     await this.searchData(daterange)
   }
 }
