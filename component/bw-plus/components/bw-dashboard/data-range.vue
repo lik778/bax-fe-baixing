@@ -80,13 +80,13 @@ export default {
     }
   },
   mounted () {
-    console.log('----', this.daterange)
     this.$emit('getDate', this.daterange)
   },
   methods: {
     handleDateChange (item) {
       this.activeDaterangeLabel = item.label
       this.$emit('searchData', item.daterange)
+      this.daterange = item.daterange
     },
     dataPickerChange (item) {
       this.$emit('searchData', [dayjs(item[0]), dayjs(item[1])])

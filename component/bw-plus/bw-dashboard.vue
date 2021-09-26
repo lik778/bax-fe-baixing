@@ -26,9 +26,9 @@
         </el-form>
         <DataRange @getDate="getDate" @searchData="changeDateRange"/>
         <p class="show-tips">提示：仅支持查看昨日之前的数据，数据可能会有波动。</p>
-        <el-empty v-if="!showInfo.length" description="该时段暂时没有数据哦～"></el-empty>
-        <ECharts style="width: 100%; max-width: 1300px; margin-top: 20px"
+        <ECharts v-if="showInfo.length" style="width: 100%; max-width: 1300px; margin-top: 20px"
         :options="chartOptions"></ECharts>
+        <el-empty v-else description="该时段暂时没有数据哦～"></el-empty>
     </section>
 </template>
 <script>
@@ -41,7 +41,9 @@ import { promoteList, promoteDataShow } from 'api/biaowang-plus'
 const baseOptions = {
   tooltip: {
     trigger: 'axis',
-    axisPointer: { type: 'cross' }
+    axisPointer: {
+      type: 'cross'
+    }
   },
   xAxis: {
     type: 'category',
@@ -63,6 +65,9 @@ const baseOptions = {
     },
     axisLine: {
       show: false
+    },
+    axisPointer: {
+      show: true
     }
   },
   series: [
@@ -78,6 +83,11 @@ const baseOptions = {
           // 点的颜色。
           color: '#5099d8'
         }
+      },
+      label: {
+        show: true,
+        position: 'top',
+        fontSize: 14
       }
     }
   ]
