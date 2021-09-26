@@ -21,7 +21,7 @@
     "dayjs": "^1.8.6",
     "echarts": "^4.0.3",
     "echarts-liquidfill": "^2.0.6",
-    "element-ui": "^2.13.0",
+    "element-ui": "^2.15.6",
     "fetch.io": "^4.1.2",
     "fflate": "^0.3.1",
     "file-saver": "^2.0.2",
