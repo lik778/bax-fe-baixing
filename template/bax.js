@@ -56,7 +56,8 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   Alert,
-  OptionGroup
+  OptionGroup,
+  Empty
 } from 'element-ui'
 import '../cssbase/index.scss'
 import { reaction } from 'mobx'
@@ -151,6 +152,7 @@ Vue.use(Popconfirm)
 Vue.use(Breadcrumb)
 Vue.use(BreadcrumbItem)
 Vue.use(Alert)
+Vue.use(Empty)
 
 /**
  * 错误回退组件

@@ -26,6 +26,7 @@
         </el-form>
         <DataRange @getDate="getDate" @searchData="changeDateRange"/>
         <p class="show-tips">提示：仅支持查看昨日之前的数据，数据可能会有波动。</p>
+        <el-empty v-if="!showInfo.length" description="该时段暂时没有数据哦～"></el-empty>
         <ECharts style="width: 100%; max-width: 1300px; margin-top: 20px"
         :options="chartOptions"></ECharts>
     </section>
@@ -145,8 +146,10 @@ export default {
           promoteList: [...[{ id: null, label: '全部' }], ...o.promoteList.map(o => ({ id: o.promoteId, label: o.keyword }))]
         }
       ))
+      this.keywordList = [...[{ id: null, label: '全部' }]]
       this.promoteList = [...[{ id: null, label: '全部', promoteList: originKeywordAll }], ...tempdata]
       this.searchform.searchPackgeId = this.promoteList[0].id
+      this.searchform.searchPromoteId = this.keywordList[0].id
     },
     async getKeywordsList () {
       const { query: { user_id: userId } } = this.$route
@@ -178,7 +181,6 @@ export default {
     }
   },
   async mounted () {
-    await this.getKeywordsList()
     await this.getPromoteList()
     await this.getYestodayShow()
     await this.searchData()
