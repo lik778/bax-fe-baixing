@@ -37,7 +37,7 @@ import ECharts from 'vue-echarts/components/ECharts.vue'
 import dayjs from 'dayjs'
 import 'echarts/lib/component/tooltip'
 import 'echarts/lib/chart/line'
-import { promoteList, promoteDataShow, keywordList } from 'api/biaowang-plus'
+import { promoteList, promoteDataShow } from 'api/biaowang-plus'
 const baseOptions = {
   tooltip: {
     trigger: 'axis',
@@ -99,8 +99,7 @@ export default {
       searchform: {
         searchPackgeId: null,
         searchPromoteId: null
-      },
-      originKeywordAll: []
+      }
     }
   },
   methods: {
@@ -133,7 +132,6 @@ export default {
     },
     async getPromoteList () {
       const { query: { user_id: userId } } = this.$route
-      const { originKeywordAll } = this
       if (this.promoteList.length) {
         this.searchId = this.promoteList[0].packageId
         return
@@ -147,19 +145,8 @@ export default {
         }
       ))
       this.keywordList = [...[{ id: null, label: '全部' }]]
-      this.promoteList = [...[{ id: null, label: '全部', promoteList: originKeywordAll }], ...tempdata]
+      this.promoteList = [...[{ id: null, label: '全部', promoteList: [{ id: null, label: '全部' }] }], ...tempdata]
       this.searchform.searchPackgeId = this.promoteList[0].id
-      this.searchform.searchPromoteId = this.keywordList[0].id
-    },
-    async getKeywordsList () {
-      const { query: { user_id: userId } } = this.$route
-      const { data } = await keywordList({ userId })
-      const tempdata = data.map(o => ({
-        id: o.id,
-        label: o.keyword
-      }))
-      this.originKeywordAll = [...[{ id: null, label: '全部' }], ...tempdata]
-      this.keywordList = [...[{ id: null, label: '全部' }], ...tempdata]
       this.searchform.searchPromoteId = this.keywordList[0].id
     },
     async changePromoteHandle () {
