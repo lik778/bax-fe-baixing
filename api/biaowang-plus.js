@@ -285,7 +285,7 @@ export async function promoteDataShow (params) {
  */
 export async function promoteList (params) {
   const body = await biaowangPlus
-    .get('/package/user/list-online')
+    .get('/package/user/list-all')
     .query(trim(params))
     .json()
   return body
