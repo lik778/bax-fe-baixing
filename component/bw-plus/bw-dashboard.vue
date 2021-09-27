@@ -1,7 +1,7 @@
 <template>
     <section class="bw-plus-dashboard">
         <h2>昨日数据</h2>
-        <p>总展现（次)<br/>{{yesterdayShow[0] && yesterdayShow[0].show}}</p>
+        <p>总展现（次)<br/>{{(yesterdayShow[0] && yesterdayShow[0].show) || 0}}</p>
         <el-form :inline="true" ref="form" :model="searchform" label-width="80px">
           <el-form-item label="词包：" prop="searchPackgeId" name="">
             <el-select @change="changePackgeHandle" v-model="searchform.searchPackgeId" placeholder="请选择">
@@ -130,12 +130,13 @@ export default {
       this.chartOptions.xAxis.data = showInfo.map(o => dayjs(o.timestamp * 1000).format('YYYY-MM-DD'))
       this.chartOptions.series[0].data = showInfo.map(o => o.show)
     },
-    async getYestodayShow () {
+    async getYestodayShow (opts = {}) {
       const { query: { user_id: userId } } = this.$route
       const params = {
         userId,
         start: dayjs().subtract(1, 'day').unix(),
-        end: dayjs().subtract(1, 'day').unix()
+        end: dayjs().subtract(1, 'day').unix(),
+        ...opts
       }
       const { data: { showInfo } } = await promoteDataShow(params)
       this.yesterdayShow = showInfo
@@ -161,6 +162,7 @@ export default {
     },
     async changePromoteHandle () {
       const { searchform: { searchPromoteId: promoteId, searchPackgeId: packageId } } = this
+      await this.getYestodayShow({ promoteId, packageId })
       await this.searchData({ promoteId, packageId })
     },
     async changePackgeHandle (value) {
@@ -169,6 +171,7 @@ export default {
       const opts = {
         packageId: value
       }
+      await this.getYestodayShow(opts)
       await this.searchData(opts)
     },
     async changeDateRange (daterange) {
