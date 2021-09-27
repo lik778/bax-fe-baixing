@@ -1,8 +1,8 @@
 <template>
     <section class="bw-plus-dashboard">
-        <h2>昨日数据</h2>
-        <p>总展现（次)<br/>{{(yesterdayShow[0] && yesterdayShow[0].show) || 0}}</p>
-        <el-form :inline="true" ref="form" :model="searchform" label-width="80px">
+        <h2 class="show-title">昨日数据</h2>
+        <p class="total-show">总展现（次)<br/>{{(yesterdayShow[0] && yesterdayShow[0].show) || 0}}</p>
+        <el-form label-position="left" :inline="true" ref="form" :model="searchform" label-width="80px">
           <el-form-item label="词包：" prop="searchPackgeId" name="">
             <el-select @change="changePackgeHandle" v-model="searchform.searchPackgeId" placeholder="请选择">
               <el-option
@@ -193,6 +193,12 @@ export default {
         background: #fff;
         margin: 10px;
         box-sizing: border-box;
+        .show-title, .total-show{
+          font-size: 14px;
+        }
+        .total-show{
+          margin-bottom: 30px;
+        }
    }
    .show-tips{
      font-size: 14px;
