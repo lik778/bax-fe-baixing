@@ -338,10 +338,10 @@ export function allowBwplusDashboard (userInfo) {
     }
     return false
   }
-  if ((isNormalUser(roles) && realAgentId === 6) || (isNormalUser(roles) && !realAgentId)) {
+  if ((isNormalUser(roles) && realAgentId === 50) || (isNormalUser(roles) && !realAgentId)) {
     return true
   }
-  if (isSales || (isAgent && agentId === 6)) {
+  if (isSales || (isAgent && agentId === 50)) {
     return true
   }
   return false
