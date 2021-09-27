@@ -194,7 +194,7 @@ export default {
         margin: 10px;
         box-sizing: border-box;
         .show-title, .total-show{
-          font-size: 14px;
+          font-size: 16px;
         }
         .total-show{
           margin-bottom: 30px;
