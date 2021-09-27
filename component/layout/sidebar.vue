@@ -283,7 +283,6 @@ export default {
     },
     allowBwplusDashboard () {
       const { userInfo } = this
-      console.log(this.userInfo)
       return allowBwplusDashboard(userInfo)
     }
   },
