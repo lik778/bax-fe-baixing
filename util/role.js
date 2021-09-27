@@ -325,7 +325,7 @@ export function allowBwplus (roles, agentId, salesId) {
 }
 
 export function allowBwplusDashboard (userInfo) {
-  const { roles, realAgentId, agentId, salesId, baixingId } = userInfo
+  const { roles, realAgentId, agentId } = userInfo
   const currentRoles = normalizeRoles(roles)
   const isAgent = currentRoles.includes('AGENT_SALES')
   const isSales = currentRoles.includes('BAIXING_SALES')
@@ -338,7 +338,11 @@ export function allowBwplusDashboard (userInfo) {
     }
     return false
   }
-  const hasSalesId = isSales && [6].includes(salesId)
-  const hasUserId = isNormalUser(roles) && [198977741].includes(baixingId)
-  return hasSalesId || hasUserId
+  if ((isNormalUser(roles) && realAgentId === 6) || (isNormalUser(roles) && !realAgentId)) {
+    return true
+  }
+  if (isSales || (isAgent && agentId === 6)) {
+    return true
+  }
+  return false
 }

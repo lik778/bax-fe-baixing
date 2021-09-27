@@ -1,7 +1,7 @@
 <template>
     <section class="bw-plus-dashboard">
         <h2>昨日数据</h2>
-        <p>展现（次)<br/>{{yesterdayShow[0] && yesterdayShow[0].show}}</p>
+        <p>总展现（次)<br/>{{yesterdayShow[0] && yesterdayShow[0].show}}</p>
         <el-form :inline="true" ref="form" :model="searchform" label-width="80px">
           <el-form-item label="词包：" prop="searchPackgeId" name="">
             <el-select @change="changePackgeHandle" v-model="searchform.searchPackgeId" placeholder="请选择">
