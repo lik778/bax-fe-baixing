@@ -113,6 +113,11 @@
               标王推广报表
             </router-link>
           </el-menu-item>
+          <el-menu-item v-if="allowBwplusDashboard" index="bw-plus-dashboard">
+            <router-link :to="{ name: 'bw-plus-dashboard'}" tag="p">
+              标王2.0推广报表
+            </router-link>
+          </el-menu-item>
           <el-menu-item index="qc-dashboard">
             <router-link :to="{ name: 'qc-dashboard'}" tag="p">
               易慧推报表
@@ -184,7 +189,8 @@ import {
   relationAllow,
   allowSeeDiamondSite,
   isSales,
-  onlyAgentAccounting
+  onlyAgentAccounting,
+  allowBwplusDashboard
 } from 'util/role'
 
 import { getUserSites } from 'api/diamond-site'
@@ -274,6 +280,10 @@ export default {
     },
     onlyAgentAccounting () {
       return onlyAgentAccounting(this.userInfo.roles)
+    },
+    allowBwplusDashboard () {
+      const { userInfo } = this
+      return allowBwplusDashboard(userInfo)
     }
   },
   async mounted () {

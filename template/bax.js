@@ -56,7 +56,8 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   Alert,
-  OptionGroup
+  OptionGroup,
+  Empty
 } from 'element-ui'
 import '../cssbase/index.scss'
 import { reaction } from 'mobx'
@@ -151,6 +152,7 @@ Vue.use(Popconfirm)
 Vue.use(Breadcrumb)
 Vue.use(BreadcrumbItem)
 Vue.use(Alert)
+Vue.use(Empty)
 
 /**
  * 错误回退组件
@@ -274,6 +276,11 @@ const bwPlusRoutes = [
     component: () => import('com/bw-plus/bw-edit-plan/index'),
     path: '/main/bw-plus/edit-plan/:id',
     name: 'bw-plus-edit-plan'
+  },
+  {
+    component: () => import('com/bw-plus/bw-dashboard'),
+    path: '/main/bw-plus/bw-plus-dashboard',
+    name: 'bw-plus-dashboard'
   }
 ]
 

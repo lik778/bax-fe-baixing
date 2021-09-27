@@ -173,7 +173,6 @@ export default {
       this.activeTab = 'limit'
       const promote = await getPromoteById(promoteId, { userId })
       this.promotes = [promote]
-      return
     }
     this.getChartData()
   },
@@ -217,21 +216,21 @@ export default {
         this.currentPage--
       }
     }
-  },
-  watch: {
-    daterange: {
-      deep: true,
-      handler () {
-        this.getChartData()
-      }
-    },
-    promoteIds: {
-      deep: true,
-      handler () {
-        this.getChartData()
-      }
-    }
   }
+  // watch: {
+  //   daterange: {
+  //     deep: true,
+  //     handler () {
+  //       this.getChartData()
+  //     }
+  //   },
+  //   promoteIds: {
+  //     deep: true,
+  //     handler () {
+  //       this.getChartData()
+  //     }
+  //   }
+  // }
 }
 </script>
 
