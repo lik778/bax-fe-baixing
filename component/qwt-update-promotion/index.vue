@@ -206,7 +206,7 @@ export default {
     async initCampaignInfo () {
       const { query: { user_id: userId } } = this.$route
       this.originPromotion = await this.getCampaignInfo()
-      this.promotion = pick(clone(this.originPromotion), ['areas', 'dailyBudget', 'validTime', 'negativeWords', 'schedule', 'budgetModificationCount', 'source', 'mobilePriceRatio'])
+      this.promotion = pick(clone(this.originPromotion), ['areas', 'dailyBudget', 'validTime', 'negativeWords', 'schedule', 'budgetModificationCount', 'source', 'mobilePriceRatio', 'status', 'id'])
       this.currentBalance = await getCurrentBalance({ userId })
       await this.getGroupData()
     },
