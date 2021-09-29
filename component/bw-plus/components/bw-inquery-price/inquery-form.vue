@@ -130,7 +130,7 @@ export default {
     await this.fetchAllIndustry()
     if (renew) {
       const { words, industry, coreCity, cities } = this.renewQueryInfo
-      this.form.words = words.join(/[\s\n]/)
+      this.form.words = words.join('\n')
       this.form.cities = cities
       this.form.industry = industry
       this.form.coreCities = [coreCity]
@@ -219,7 +219,6 @@ export default {
       })
     }, 1000),
     async checkKeyword () {
-      console.log(1)
       this.$emit('resetResult')
       const { form } = this
       const { words } = form
