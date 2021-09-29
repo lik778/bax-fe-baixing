@@ -81,6 +81,7 @@ import CoreCitiesDialog, { OTHER_CITY_ENUM } from 'com/common/bw/core-cities-dia
 import AreaSelector from 'com/common/biaowang-area-selector'
 import { getCnName } from 'util'
 import debounce from 'lodash.debounce'
+import gStore from '../../../store'
 export default {
   name: 'InqueryForm',
   components: {
@@ -92,6 +93,9 @@ export default {
       type: Array,
       required: true
     }
+  },
+  fromMobx: {
+    renewQueryInfo: () => gStore.queryInfo
   },
   data () {
     return {
@@ -122,7 +126,16 @@ export default {
     }
   },
   async mounted () {
+    const { query: { renew } } = this.$route
     await this.fetchAllIndustry()
+    if (renew) {
+      const { words, industry, coreCity, cities } = this.renewQueryInfo
+      this.form.words = words.join(/[\s\n]/)
+      this.form.cities = cities
+      this.form.industry = industry
+      this.form.coreCities = [coreCity]
+      await this.checkKeyword()
+    }
   },
   computed: {
     transformArea () {
@@ -206,6 +219,7 @@ export default {
       })
     }, 1000),
     async checkKeyword () {
+      console.log(1)
       this.$emit('resetResult')
       const { form } = this
       const { words } = form

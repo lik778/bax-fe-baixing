@@ -19,6 +19,7 @@ const gStore = observable({
   _fengmingOptimizer: null,
 
   addUserLeadVisible: false,
+  _queryInfo: {}, // 下线计划续费重新查价的信息
 
   get currentUser () {
     return toJS(this._currentUser)
@@ -40,6 +41,9 @@ const gStore = observable({
   },
   get fengmingOptimizer () {
     return toJS(this._fengmingOptimizer)
+  },
+  get queryInfo () {
+    return toJS(this._queryInfo)
   },
   toggleAddUserLeadVisible: action(function () {
     this.addUserLeadVisible = !this.addUserLeadVisible
@@ -102,6 +106,9 @@ const gStore = observable({
   getRelation: action(async function (params) {
     const { relation } = await aapi.relation(params)
     this._realation = relation
+  }),
+  getQueryInfo: action(function (params) {
+    this._queryInfo = params
   })
 })
 

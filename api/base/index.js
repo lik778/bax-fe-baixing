@@ -135,7 +135,7 @@ export const biaowangPlus = new Fetch({
       return redirect('signin', `return=${encodeURIComponent(location.pathname + location.search)}`)
     } else {
       res.clone().json().then(body => {
-        Message.error(body.message || '出错了，请稍后重试')
+        if (body.code !== 301) { Message.error(body.message || '出错了，请稍后重试') }
       })
       throw new Error(res.statusText)
     }
