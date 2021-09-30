@@ -102,7 +102,6 @@
                        @click="goToShop">店铺</el-button>
             <el-button v-if="allowRenew" type="text"
                        class="btn-text"
-                       :disabled="row.operationStatus === RENEW_OPRATION_STATUS_DISABLED"
                        @click="renew(row)">续费</el-button>
           </div>
         </el-table-column>
@@ -117,6 +116,23 @@
       </div>
     </main>
     <RenewConfirm @preOrder="renewPreOrder" @cancel="isRenew = false" :allAreas="allAreas" :dialogVisible="isRenew" :renewInfo="renewInfo"/>
+    <el-dialog
+      :visible.sync="dialogVisible"
+      width="26%"
+      custom-class="query-price-dialog"
+    >
+      <el-alert
+        title="推广已到期，续费推广需重新购买"
+        type="warning"
+        show-icon
+        :closable="false">
+      </el-alert>
+      <p>因推广到期，关键词有被抢购风险，去查价重新购买快速锁定关键词</p>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="goQueryPrice">去查价</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -141,6 +157,7 @@ import StatusShow from './components/statusShow.vue'
 import { isPro } from 'config'
 import { Message } from 'element-ui'
 import { isSales } from 'util/role'
+import gStore from '../store'
 
 export default {
   name: 'bw-plus-package-list',
@@ -180,7 +197,8 @@ export default {
       promotes: [],
       loading: false,
       isRenew: false,
-      renewInfo: {}
+      renewInfo: {},
+      dialogVisible: false
     }
   },
   computed: {
@@ -237,6 +255,9 @@ export default {
         : '//shop-test.baixing.cn/management/'
       window.open(shopLink)
     },
+    goQueryPrice () {
+      this.$router.push({ name: 'bw-plus-query-price', query: { renew: 1 } })
+    },
     async renew (row) {
       const loading = this.$loading({
         lock: true,
@@ -246,7 +267,12 @@ export default {
       })
       const { id: packageId, renewApplyId } = row
       try {
-        const { data } = await getRenewDetai({ packageId })
+        const { code, data } = await getRenewDetai({ packageId })
+        if (code === 301) {
+          this.dialogVisible = true
+          gStore.getQueryInfo(data)
+          return
+        }
         this.isRenew = true
         this.renewInfo = { ...data, renewApplyId }
       } finally {
@@ -324,5 +350,28 @@ export default {
   display: flex;
   justify-content: center;
   margin: 20px;
+}
+/deep/ .query-price-dialog{
+  .el-dialog__header{
+    display: none;
+  }
+  .el-dialog__body{
+    padding-bottom: 10px;
+    p{
+      padding-left: 35px;
+    }
+  }
+  .el-alert{
+    background: none;
+    padding: 0;
+    .el-icon-warning{
+      font-size: 24px;
+      margin-right: 10px;
+    }
+    .el-alert__content{
+      color: #303133;
+      font-size: 14px;
+    }
+  }
 }
 </style>

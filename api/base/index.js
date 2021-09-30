@@ -142,7 +142,7 @@ export const biaowangPlus = new Fetch({
   },
   afterJSON (body) {
     const { code, message } = body
-    if (code !== 0) {
+    if (code !== 0 && code !== 301) {
       Message.error(message)
     }
   }
