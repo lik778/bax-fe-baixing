@@ -113,7 +113,7 @@
               标王推广报表
             </router-link>
           </el-menu-item>
-          <el-menu-item v-if="allowBwplusDashboard" index="bw-plus-dashboard">
+          <el-menu-item index="bw-plus-dashboard">
             <router-link :to="{ name: 'bw-plus-dashboard'}" tag="p">
               标王2.0推广报表
             </router-link>
