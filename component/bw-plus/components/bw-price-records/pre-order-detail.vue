@@ -28,11 +28,14 @@
             {{f2y(preInfo.price)}}元
         </el-form-item>
         <el-row class="pre-info-row">
-            <el-col :span="11">
+            <el-col :span="8">
                 <el-form-item class="pre-info-item" label="销售编号：">{{preInfo.saleId}}</el-form-item>
             </el-col>
-            <el-col :span="11">
+            <el-col :span="8">
                 <el-form-item class="pre-info-item" label="客户手机号：">{{preInfo.mobile}}</el-form-item>
+            </el-col>
+            <el-col :span="8">
+                <el-form-item class="pre-info-item" label="客户baxId：">{{preInfo.userBxId}}</el-form-item>
             </el-col>
         </el-row>
     </el-form>
