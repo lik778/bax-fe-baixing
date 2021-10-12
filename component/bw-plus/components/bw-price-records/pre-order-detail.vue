@@ -28,15 +28,17 @@
             {{f2y(preInfo.price)}}元
         </el-form-item>
         <el-row class="pre-info-row">
-            <el-col :span="7">
+            <el-col :span="12">
                 <el-form-item class="pre-info-item" label="销售编号：">{{preInfo.saleId}}</el-form-item>
             </el-col>
-            <el-col :span="9">
+            <el-col :span="12">
                 <el-form-item class="pre-info-item" label="客户手机号：">{{preInfo.mobile}}</el-form-item>
             </el-col>
-            <el-col :span="8">
-                <el-form-item class="pre-info-item" label="客户uid：">{{preInfo.userBxId}}</el-form-item>
-            </el-col>
+        </el-row>
+        <el-row class="pre-info-row">
+          <el-col :span="10">
+            <el-form-item class="pre-info-item" label="客户uid：">{{preInfo.userBxId}}</el-form-item>
+          </el-col>
         </el-row>
     </el-form>
     <span slot="footer" class="dialog-footer">
@@ -94,9 +96,8 @@ export default {
         font-weight: 500;
     }
     .pre-info-row{
-        border-bottom: 1px solid #ddd;
         border-top: 1px solid #ddd;
-        padding: 10px 0;
+        padding: 6px 0;
         margin-top: 10px;
         font-size: 16px;
         font-weight: 500;
