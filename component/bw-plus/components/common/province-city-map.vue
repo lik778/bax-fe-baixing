@@ -3,10 +3,10 @@
   <div class="province-container">
     <h2 class="title">{{title}}</h2>
     <ul class="province-content">
-      <li v-for="(item, index) in province" class="item" :key="index">
+      <li v-for="(item, index) in myWatch.currentProvince" class="item" :key="index">
         <span class="province">{{item.label}}</span>
         <p>
-          <span class="city" v-for="(city, index) in cityInfo.filter(o => o.parent === item.value)" :key="index">
+          <span class="city" v-for="(city, index) in myWatch.cityInfo.filter(o => o.parent === item.value)" :key="index">
            {{city.nameCn}}
           </span>
         </p>
@@ -43,21 +43,34 @@ export default {
       cityInfo: []
     }
   },
-  watch: {
-    cities: {
-      handler (newV, oldV) {
-        if (newV) {
-          const cityInfo = this.allAreas.filter(o => newV.includes(o.id))
-          const provinceList = cityInfo.map(o => o.parent)
-          const currentProvince = [{ label: '直辖市', value: 'china' }, ...PROVINCE_LIST].filter(o => provinceList.includes(o.value))
-          this.province = currentProvince
-          this.cityInfo = cityInfo
-        }
-      },
-      deep: true,
-      immediate: true
+  computed: {
+    myWatch () {
+      const { cities, allAreas } = this
+      if (cities.length && allAreas.length) {
+        const cityInfo = this.allAreas.filter(o => cities.includes(o.id))
+        const provinceList = cityInfo.map(o => o.parent)
+        const currentProvince = [{ label: '直辖市', value: 'china' }, ...PROVINCE_LIST].filter(o => provinceList.includes(o.value))
+        return { cityInfo, currentProvince }
+      }
+      return {}
     }
   },
+  // watch: {
+  //   cities: {
+  //     handler (newV, oldV) {
+  //       if (newV) {
+  //         const cityInfo = this.allAreas.filter(o => newV.includes(o.id))
+  //         const provinceList = cityInfo.map(o => o.parent)
+  //         const currentProvince = [{ label: '直辖市', value: 'china' }, ...PROVINCE_LIST].filter(o => provinceList.includes(o.value))
+  //         this.province = currentProvince
+  //         this.cityInfo = cityInfo
+  //         console.log('cityInfo', cityInfo)
+  //       }
+  //     },
+  //     deep: true,
+  //     immediate: true
+  //   }
+  // },
   async mounted () {
   },
   methods: {
