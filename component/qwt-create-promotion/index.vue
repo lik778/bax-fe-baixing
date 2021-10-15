@@ -36,6 +36,7 @@
                 :initValue="newPromotion.landingPageId"
                 @change="(...args) => setLandingAndID(LANDING_TYPE_STORE, ...args)"
               />
+              <p class="authing-tip" v-if="newPromotion.landingType === LANDING_TYPE_STORE">提示： 为提升客户留资效果凤鸣仅支持店铺作为落地页 </p>
             </div>
           </div>
         </div>
@@ -869,6 +870,11 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.authing-tip {
+    align-items: center;
+    font-size: 12px;
+    color: $c-main;
+}
 .input {
   width: 150px;
 }

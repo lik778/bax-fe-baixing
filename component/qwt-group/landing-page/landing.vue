@@ -32,6 +32,9 @@
                        :disabled="disabled"
                        @change="(url, id) => emitUpdateGroup(LANDING_TYPE_STORE, url, id)"
                        @valid-change="(isValid) => setLandingPageValidity(LANDING_TYPE_STORE, isValid)" />
+        <p v-if="landingType === LANDING_TYPE_STORE" class="authing-tip">
+          提示： 为提升客户留资效果凤鸣仅支持店铺作为落地页
+        </p>
         <p v-if="disabled"
            class="authing-tip">您的推广在审核中，审核通过后可修改落地页，感谢配合！</p>
       </div>

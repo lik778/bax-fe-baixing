@@ -17,7 +17,7 @@
         <landing-comp :value="group.name"
                       @change="(val) => updateGroupData('name', val)">
           <landing-page-comp :all-areas="allAreas"
-                             :landing-type="group.landingType"
+                             :landing-type="LANDING_TYPE_STORE"
                              :landing-page="group.landingPage"
                              :landing-page-id="group.landingPageId"
                              @change-landing="(args) => updateGroupData(args)" />
@@ -127,7 +127,8 @@ import {
   SEM_PLATFORM_BAIDU,
   SEM_PLATFORM_SOGOU,
   LANDING_TYPE_GW,
-  LANDING_TYPE_AD
+  LANDING_TYPE_AD,
+  LANDING_TYPE_STORE
 } from 'constant/fengming'
 import clone from 'clone'
 import pick from 'lodash.pick'
@@ -156,6 +157,7 @@ export default {
   data () {
     return {
       SEM_PLATFORM_BAIDU,
+      LANDING_TYPE_STORE,
 
       promotion: emptyPromotion,
       group: clone(emptyGroup),
