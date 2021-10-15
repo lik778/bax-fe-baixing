@@ -249,7 +249,7 @@ const RECOMMAND_SOURCES = [RECOMMAND_SOURCE_FH, NEW_RECOMMAND_SOURCE_FH]
 const MIN_DAILY_BUDGET = 100 * 100
 
 const promotionTemplate = {
-  landingType: 0,
+  landingType: LANDING_TYPE_STORE,
   landingPage: '',
   landingPageId: '',
   areas: [],
