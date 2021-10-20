@@ -114,12 +114,10 @@ export default {
     async getRecord () {
       this.loading = true
       const { formInline, currentPage } = this
-      const { userId } = this.salesInfo
       const params = {
         ...formInline,
         size: PAGESIZE,
-        page: currentPage,
-        userId
+        page: currentPage
       }
       try {
         const { data: { content, totalElements } } = await getInqueryList(params)
@@ -184,9 +182,10 @@ export default {
         spinner: 'el-icon-loading',
         background: 'rgba(0, 0, 0, 0.7)'
       })
+      const { userId } = this.salesInfo
       const { id: applyId } = this.activeRecord
       try {
-        const { code, data: { url }, message } = await preOrder({ applyId })
+        const { code, data: { url }, message } = await preOrder({ applyId, userId })
         if (code === 0) {
           this.$copyText(url).then(async (e) => {
             Message.success('提单链接已复制到剪切板')
@@ -211,10 +210,11 @@ export default {
         spinner: 'el-icon-loading',
         background: 'rgba(0, 0, 0, 0.7)'
       })
+      const { userId } = this.salesInfo
       const { id: applyId } = record
       this.activeRecord = record
       this.isPreInfo = true
-      const { data } = await preInfo({ applyId })
+      const { data } = await preInfo({ applyId, userId })
       loading.close()
       this.preInfo = data
     }

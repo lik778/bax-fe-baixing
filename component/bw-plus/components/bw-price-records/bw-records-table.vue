@@ -50,6 +50,7 @@
       <el-table-column width="120" prop="scheduleType" label="推广时段" :formatter="scheduleTypeFormater" />
       <el-table-column prop="days" label="服务时长" :formatter="daysFormater" />
       <el-table-column width="150" prop="industry" label="推广行业" />
+      <el-table-column width="100" label="绑定客户" prop="userId"/>
       <el-table-column align="right" fixed="right" label="报价">
         <template slot-scope="{ row }">
           <span v-if="row.applyType === APPLY_TYPE_NORMAL || row.price">{{f2y(row.price)}}元</span>
