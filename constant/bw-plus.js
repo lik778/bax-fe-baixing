@@ -225,24 +225,47 @@ export const RENEW_OPRATION_STATUS_DISABLED = 60
 
 export const welfareInfo = [
   {
+    id: 1,
     title: '营销旺铺',
-    value: 5000,
+    value: (price) => 1200,
     desc: '',
     content: ['双端适配', '视频展示', '支持微信分享', '支持seo优化'],
-    tag: '已解锁，赠送360天'
+    isActive: (duration, price) => {
+      const active = price > 0 && duration >= 90
+      return {
+        active,
+        tag: active ? '已解锁，赠送360天' : `购买时长为${duration}天可解锁`
+      }
+    }
   },
   {
+    id: 2,
     title: '精准标王词',
-    value: 5000,
+    value: (price) => price > 0 ? price / 10000 * 5000 : '**',
     desc: '限时11/1-11/11仅前30名',
     content: ['价值¥5000+的5热度关键词，', '每满¥10000即赠2个'],
-    tag: '已解锁，赠送2个'
+    isActive: (duration, price) => {
+      price = price > 0 ? price : 0
+      const active = price >= 10000
+      return {
+        active,
+        tag: active ? '已解锁，赠送2个' : `还差${10000 - price}元即可解锁`
+      }
+    }
   },
   {
+    id: 3,
     title: '三网整合营销',
-    value: 5000,
+    value: (price) => 8000,
     desc: '限时11/1/-11/11',
     content: ['360/搜狗/神马3大搜索引擎首页排名', '6个月超长时长'],
-    tag: '已解锁，赠送180天'
+    isActive: (duration, price) => {
+      price = price > 0 ? price : 0
+      const active = price >= 20000
+      return {
+        active,
+        tag: active ? '已解锁，赠送180天' : `还差${20000 - price}元即可解锁`
+      }
+    }
   }
 ]

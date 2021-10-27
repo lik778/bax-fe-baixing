@@ -19,7 +19,7 @@
                       <Title title="关键词热度明细"/>
                       <KeywordHotDetail :tableData="queryResult && queryResult.keywordPvList"/>
                     </section>
-                    <section class="bw-query-price_item">
+                    <section class="bw-query-price_item" v-if="showResult">
                       <Title title="查价结果" extra="请选择需要的平台*时段*时长"/>
                       <InqueryResult :deviceAvailableStatus="deviceAvailableStatus" :currentPrice="currentPrice" @getValue="getCurrentPrice" :tableData="queryResult && queryResult.keywordPriceList" />
                       <div class="welfare-content">
@@ -30,9 +30,10 @@
                             :key="index" :title="item.title"
                             :className="`custom-${index+1}`"
                             :desc="item.desc"
-                            :value="item.value"
-                            :tag="item.tag"
-                            :content="item.content"/>
+                            :value="item.value(currentPrice.price)"
+                            :tag="item.isActive(currentPrice.duration, currentPrice.price).tag"
+                            :content="item.content"
+                            :active="item.isActive(currentPrice.duration, currentPrice.price).active"/>
                         </div>
                       </div>
                       <el-row type="flex" justify="start" align="middle">
@@ -125,6 +126,12 @@ export default {
       deviceAvailableStatus: {}, // 判断当前关键词在各设备端是否可售
       ifSoldAvailable: false, // 是否存在可售卖的平台,
       isPending: false
+    }
+  },
+  computed: {
+    showResult () {
+      const { queryResult } = this
+      return !(queryResult.error && queryResult.overHeat) && queryResult.keywordPriceList
     }
   },
   methods: {

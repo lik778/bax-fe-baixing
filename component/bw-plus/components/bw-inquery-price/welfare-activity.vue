@@ -8,7 +8,7 @@
             </ul>
         </div>
         <p class="welfare-item_value">
-            <span>价值： {{value}}</span>
+            <span>价值： {{value}} 元</span>
             <span v-if="desc" class="welfare-item_value-desc">{{desc}}</span>
         </p>
     </div>
@@ -29,8 +29,8 @@ export default {
       require: true
     },
     value: {
-      type: Number,
-      default: 0,
+      type: Number || String,
+      default: '',
       require: true
     },
     desc: {
