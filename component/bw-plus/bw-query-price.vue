@@ -19,15 +19,28 @@
                       <Title title="关键词热度明细"/>
                       <KeywordHotDetail :tableData="queryResult && queryResult.keywordPvList"/>
                     </section>
-                    <section class="bw-query-price_item" v-if="!(queryResult.error && queryResult.overHeat) && queryResult.keywordPriceList">
+                    <section class="bw-query-price_item">
                       <Title title="查价结果" extra="请选择需要的平台*时段*时长"/>
                       <InqueryResult :deviceAvailableStatus="deviceAvailableStatus" :currentPrice="currentPrice" @getValue="getCurrentPrice" :tableData="queryResult && queryResult.keywordPriceList" />
+                      <div class="welfare-content">
+                        <Title title="超值福利" extra="满足规则即可解锁福利"/>
+                        <div class="welfare-content_wrapper">
+                          <WelfareActivity
+                            v-for="(item, index) in welfareInfo"
+                            :key="index" :title="item.title"
+                            :className="`custom-${index+1}`"
+                            :desc="item.desc"
+                            :value="item.value"
+                            :tag="item.tag"
+                            :content="item.content"/>
+                        </div>
+                      </div>
                       <el-row type="flex" justify="start" align="middle">
                         <el-col :span="3">
-                          <h2 class="wefare-title" v-if="currentPrice.duration > 30">超值福利</h2>
+                          <!-- <h2 class="wefare-title" v-if="currentPrice.duration > 30">超值福利</h2> -->
                         </el-col>
                         <el-col :span="3">
-                          <DiamondShopWelfare v-if="currentPrice.duration > 30" :current="currentPrice" />
+                          <!-- <DiamondShopWelfare v-if="currentPrice.duration > 30" :current="currentPrice" /> -->
                         </el-col>
                         <el-col :span="5" :push="13">
                           <div class="submit">
@@ -64,9 +77,9 @@
 </template>
 
 <script>
-import { InqueryForm, KeywordHotDetail, Title, InqueryResult, DiamondShopWelfare, BwPlusDialog, SoldCity } from './components'
+import { InqueryForm, KeywordHotDetail, Title, InqueryResult, BwPlusDialog, SoldCity, WelfareActivity } from './components'
 import { querySystemResult, commit } from 'api/biaowang-plus'
-import { APPLY_TYPE_NORMAL, APPLY_TYPE_ERROR } from 'constant/bw-plus'
+import { APPLY_TYPE_NORMAL, APPLY_TYPE_ERROR, welfareInfo } from 'constant/bw-plus'
 import { f2y } from 'util'
 import debounce from 'lodash.debounce'
 export default {
@@ -76,9 +89,10 @@ export default {
     KeywordHotDetail,
     Title,
     InqueryResult,
-    DiamondShopWelfare,
+    // DiamondShopWelfare,
     BwPlusDialog,
-    SoldCity
+    SoldCity,
+    WelfareActivity
   },
   props: {
     allAreas: {
@@ -92,6 +106,7 @@ export default {
   },
   data () {
     return {
+      welfareInfo,
       debounce,
       activeName: 'first',
       isSubmit: false,
@@ -271,6 +286,23 @@ export default {
       padding: 14px 16px;
       .el-alert__title{
         font-size: 14px;
+      }
+    }
+    .welfare-content{
+      margin-top: 30px;
+      &_wrapper{
+        display: flex;
+      }
+    }
+    /deep/ .custom-2{
+      li{
+        width: 100%;
+      }
+    }
+    /deep/ .custom-3{
+      background-image: linear-gradient(173deg, #FFDFBC 0%, #FFD2A0 0%, #FA7082 100%);
+      li{
+        width: 100%;
       }
     }
 </style>

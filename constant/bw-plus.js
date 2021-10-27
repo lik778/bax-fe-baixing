@@ -222,3 +222,27 @@ export const PROVINCE_LIST = [
 export const RENEW_OPRATION_STATUS_OPEN = 20
 export const RENEW_OPRATION_STATUS_COPY = 30
 export const RENEW_OPRATION_STATUS_DISABLED = 60
+
+export const welfareInfo = [
+  {
+    title: '营销旺铺',
+    value: 5000,
+    desc: '',
+    content: ['双端适配', '视频展示', '支持微信分享', '支持seo优化'],
+    tag: '已解锁，赠送360天'
+  },
+  {
+    title: '精准标王词',
+    value: 5000,
+    desc: '限时11/1-11/11仅前30名',
+    content: ['价值¥5000+的5热度关键词，', '每满¥10000即赠2个'],
+    tag: '已解锁，赠送2个'
+  },
+  {
+    title: '三网整合营销',
+    value: 5000,
+    desc: '限时11/1/-11/11',
+    content: ['360/搜狗/神马3大搜索引擎首页排名', '6个月超长时长'],
+    tag: '已解锁，赠送180天'
+  }
+]
