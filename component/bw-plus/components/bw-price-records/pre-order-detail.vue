@@ -27,7 +27,7 @@
         <el-form-item class="pre-info-item pre-info-price" label="提单价：">
             {{f2y(preInfo.price)}}元
         </el-form-item>
-        <el-form-item class="pre-info-item" label="超值福利：">
+        <el-form-item v-if="showWelfare" class="pre-info-item" label="超值福利：">
           <el-tag
             class="welfare-tag"
             :type="item.isActive(preInfo.days, preInfo.price).active ? 'danger' : 'info'"
@@ -58,7 +58,10 @@
 </template>
 <script>
 import { f2y, getCnName } from 'util'
+import dayjs from 'dayjs'
+import isBetween from 'dayjs/plugin/isBetween'
 import { SCHEDULE_TYPE, DEVICE, welfareInfo } from 'constant/bw-plus'
+dayjs.extend(isBetween)
 export default {
   name: 'pre-order-detail',
   props: {
@@ -84,6 +87,12 @@ export default {
       f2y,
       DEVICE,
       welfareInfo
+    }
+  },
+  computed: {
+    showWelfare () {
+      const now = dayjs()
+      return dayjs(now).isBetween('2021-11-1', dayjs('2021-11-11'))
     }
   },
   methods: {
