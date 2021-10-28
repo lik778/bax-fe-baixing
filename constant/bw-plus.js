@@ -235,8 +235,8 @@ export const welfareInfo = [
       const active = price > 0 && duration >= 90
       return {
         active,
-        tag: active ? '已解锁，赠送360天' : '购买时长为365天可解锁',
-        detail: '365天'
+        tag: active ? `已解锁，赠送${duration}天` : '至少购买90天可解锁',
+        detail: `${duration}天`
       }
     }
   },

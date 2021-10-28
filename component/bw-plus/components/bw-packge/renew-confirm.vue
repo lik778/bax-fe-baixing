@@ -20,11 +20,20 @@
         </el-form-item>
         <el-form-item class="pre-info-item" label="服务时长：">
             <el-radio-group @change="change" v-model="priceId">
-                <el-radio :disabled="renewInfo.renewApplyId && renewInfo.renewApplyId !== item.id" v-for="( item, index ) in renewInfo.priceList" :key="index" :label="item.id">{{item.type}} 天 <el-tag v-if="item.type > 30">赠店铺</el-tag></el-radio>
+                <el-radio :disabled="renewInfo.renewApplyId && renewInfo.renewApplyId !== item.id" v-for="( item, index ) in renewInfo.priceList" :key="index" :label="item.id">{{item.type}} 天 <el-tag v-if="item.type > 30 && !showWelfare">赠店铺</el-tag></el-radio>
             </el-radio-group>
         </el-form-item>
         <el-form-item class="pre-info-item pre-info-price" label="续费价：">
             {{getRenewprice}}元
+        </el-form-item>
+        <el-form-item v-if="showWelfare" class="pre-info-item" label="超值福利：">
+          <el-tag
+            class="welfare-tag"
+            :type="item.isActive(preInfo.days, preInfo.price).active ? 'danger' : 'info'"
+            v-for="(item, index) in welfareInfo"
+            :key="index">
+            {{item.title}} ({{item.isActive(preInfo.days, preInfo.price).detail}})
+          </el-tag>
         </el-form-item>
         <el-row class="pre-info-row">
             <el-col :span="11">
@@ -43,7 +52,10 @@
 </template>
 <script>
 import { f2y, getCnName } from 'util'
-import { SCHEDULE_TYPE, DEVICE, SERVICE_DAYS } from 'constant/bw-plus'
+import dayjs from 'dayjs'
+import isBetween from 'dayjs/plugin/isBetween'
+import { SCHEDULE_TYPE, DEVICE, SERVICE_DAYS, welfareInfo } from 'constant/bw-plus'
+dayjs.extend(isBetween)
 export default {
   name: 'renew-confirm',
   props: {
@@ -69,7 +81,8 @@ export default {
       f2y,
       DEVICE,
       SERVICE_DAYS,
-      priceId: 0
+      priceId: 0,
+      welfareInfo
     }
   },
   computed: {
@@ -77,6 +90,10 @@ export default {
       const { priceId, renewInfo: { priceList } } = this
       const price = priceList.filter(o => o.id.toString() === priceId.toString())[0].price
       return f2y(price)
+    },
+    showWelfare () {
+      const now = dayjs()
+      return dayjs(now).isBetween('2021-11-1', dayjs('2021-11-11'))
     }
   },
   methods: {
