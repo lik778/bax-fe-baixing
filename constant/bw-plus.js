@@ -1,3 +1,4 @@
+import { f2y } from 'util'
 // 审核状态
 export const AUDIT_STATUS_PENGDING = 0
 export const AUDIT_STATUS_AUDITING = 5
@@ -234,14 +235,14 @@ export const welfareInfo = [
       const active = price > 0 && duration >= 90
       return {
         active,
-        tag: active ? '已解锁，赠送360天' : `购买时长为${duration}天可解锁`
+        tag: active ? '已解锁，赠送360天' : '购买时长为365天可解锁'
       }
     }
   },
   {
     id: 2,
     title: '精准标王词',
-    value: (price) => price > 0 ? price / 10000 * 5000 : '**',
+    value: (price) => price > 0 ? Math.ceil(f2y(price)) / 10000 * 5000 : '**',
     desc: '限时11/1-11/11仅前30名',
     content: ['价值¥5000+的5热度关键词，', '每满¥10000即赠2个'],
     isActive: (duration, price) => {
@@ -249,7 +250,7 @@ export const welfareInfo = [
       const active = price >= 10000
       return {
         active,
-        tag: active ? '已解锁，赠送2个' : `还差${10000 - price}元即可解锁`
+        tag: active ? `已解锁，赠送${Math.floor(f2y(price) / 10000) * 2}个` : `还差${10000 - f2y(price)}元即可解锁`
       }
     }
   },
@@ -260,11 +261,11 @@ export const welfareInfo = [
     desc: '限时11/1/-11/11',
     content: ['360/搜狗/神马3大搜索引擎首页排名', '6个月超长时长'],
     isActive: (duration, price) => {
-      price = price > 0 ? price : 0
-      const active = price >= 20000
+      price = price > 0 ? f2y(price) : 0
+      const active = Math.floor(f2y(price)) >= 20000
       return {
         active,
-        tag: active ? '已解锁，赠送180天' : `还差${20000 - price}元即可解锁`
+        tag: active ? '已解锁，赠送180天' : `还差${20000 - Math.ceil(f2y(price))}元即可解锁`
       }
     }
   }

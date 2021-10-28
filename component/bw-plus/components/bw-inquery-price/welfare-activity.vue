@@ -60,7 +60,7 @@ export default {
     .welfare-item{
         width: 244px;
         height: 172px;
-        background-image: linear-gradient(174deg, #FF9C7E 0%, #F63F5C 100%);
+        background-image: linear-gradient(173deg, #FFDFBC 0%, #FFD2A0 0%, #FA7082 100%);
         border-radius: 8px;
         position: relative;
         padding: 10px;
@@ -148,6 +148,7 @@ export default {
     }
     .active{
         border: 1px solid #FF7533;
+        background-image: linear-gradient(174deg, #FF9C7E 0%, #F63F5C 100%);
         &::after {
             content: '';
             position: absolute;

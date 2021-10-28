@@ -307,7 +307,6 @@ export default {
       }
     }
     /deep/ .custom-3{
-      background-image: linear-gradient(173deg, #FFDFBC 0%, #FFD2A0 0%, #FA7082 100%);
       li{
         width: 100%;
       }
