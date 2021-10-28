@@ -249,9 +249,11 @@ export const welfareInfo = [
     isActive: (duration, price) => {
       price = price > 0 ? price : 0
       const active = price >= 10000
+      const num = Math.floor(f2y(price) / 10000) * 2
       return {
         active,
-        tag: active ? `已解锁，赠送${Math.floor(f2y(price) / 10000) * 2}个` : `还差${10000 - f2y(price)}元即可解锁`
+        tag: active ? `已解锁，赠送${num}个` : `还差${10000 - f2y(price)}元即可解锁`,
+        detail: `${num}个`
       }
     }
   },
@@ -266,7 +268,8 @@ export const welfareInfo = [
       const active = Math.floor(f2y(price)) >= 20000
       return {
         active,
-        tag: active ? '已解锁，赠送180天' : `还差${Math.ceil(20000 - f2y(price))}元即可解锁`
+        tag: active ? '已解锁，赠送180天' : `还差${Math.ceil(20000 - f2y(price))}元即可解锁`,
+        detail: '180天'
       }
     }
   }

@@ -31,7 +31,7 @@
           <span
             v-for="(item, index) in welfareInfo"
             :key="index">
-            {{item.title}}
+            {{item.isActive(preInfo.days, preInfo.price).detail}}
           </span>
         </el-form-item>
         <el-row class="pre-info-row">
