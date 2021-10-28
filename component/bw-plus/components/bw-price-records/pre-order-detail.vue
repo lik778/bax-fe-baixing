@@ -27,6 +27,13 @@
         <el-form-item class="pre-info-item pre-info-price" label="提单价：">
             {{f2y(preInfo.price)}}元
         </el-form-item>
+        <el-form-item class="pre-info-item" label="超值福利：">
+          <span
+            v-for="(item, index) in welfareInfo"
+            :key="index">
+            {{item.title}}
+          </span>
+        </el-form-item>
         <el-row class="pre-info-row">
             <el-col :span="12">
                 <el-form-item class="pre-info-item" label="销售编号：">{{preInfo.saleId}}</el-form-item>
@@ -49,7 +56,7 @@
 </template>
 <script>
 import { f2y, getCnName } from 'util'
-import { SCHEDULE_TYPE, DEVICE } from 'constant/bw-plus'
+import { SCHEDULE_TYPE, DEVICE, welfareInfo } from 'constant/bw-plus'
 export default {
   name: 'pre-order-detail',
   props: {
@@ -73,7 +80,8 @@ export default {
     return {
       SCHEDULE_TYPE,
       f2y,
-      DEVICE
+      DEVICE,
+      welfareInfo
     }
   },
   methods: {

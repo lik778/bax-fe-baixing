@@ -235,14 +235,15 @@ export const welfareInfo = [
       const active = price > 0 && duration >= 90
       return {
         active,
-        tag: active ? '已解锁，赠送360天' : '购买时长为365天可解锁'
+        tag: active ? '已解锁，赠送360天' : '购买时长为365天可解锁',
+        detail: '365天'
       }
     }
   },
   {
     id: 2,
     title: '精准标王词',
-    value: (price) => price > 0 ? Math.ceil(f2y(price)) / 10000 * 5000 : '**',
+    value: (price) => price > 0 ? Math.ceil(f2y(price) / 10000) * 5000 : '**',
     desc: '限时11/1-11/11仅前30名',
     content: ['价值¥5000+的5热度关键词，', '每满¥10000即赠2个'],
     isActive: (duration, price) => {
@@ -265,7 +266,7 @@ export const welfareInfo = [
       const active = Math.floor(f2y(price)) >= 20000
       return {
         active,
-        tag: active ? '已解锁，赠送180天' : `还差${20000 - Math.ceil(f2y(price))}元即可解锁`
+        tag: active ? '已解锁，赠送180天' : `还差${Math.ceil(20000 - f2y(price))}元即可解锁`
       }
     }
   }
