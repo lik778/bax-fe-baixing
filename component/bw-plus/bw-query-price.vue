@@ -78,7 +78,7 @@
 </template>
 
 <script>
-import { InqueryForm, KeywordHotDetail, Title, InqueryResult, BwPlusDialog, SoldCity, WelfareActivity } from './components'
+import { InqueryForm, KeywordHotDetail, Title, InqueryResult, BwPlusDialog, SoldCity, WelfareActivity, DiamondShopWelfare } from './components'
 import { querySystemResult, commit } from 'api/biaowang-plus'
 import { APPLY_TYPE_NORMAL, APPLY_TYPE_ERROR, welfareInfo } from 'constant/bw-plus'
 import { f2y } from 'util'
@@ -93,7 +93,7 @@ export default {
     KeywordHotDetail,
     Title,
     InqueryResult,
-    // DiamondShopWelfare,
+    DiamondShopWelfare,
     BwPlusDialog,
     SoldCity,
     WelfareActivity
