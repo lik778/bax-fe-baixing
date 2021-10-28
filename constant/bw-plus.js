@@ -248,7 +248,7 @@ export const welfareInfo = [
     content: ['价值¥5000+的5热度关键词，', '每满¥10000即赠2个'],
     isActive: (duration, price) => {
       price = price > 0 ? price : 0
-      const active = price >= 10000
+      const active = f2y(price) >= 10000
       const num = Math.floor(f2y(price) / 10000) * 2
       return {
         active,
@@ -264,8 +264,8 @@ export const welfareInfo = [
     desc: '限时11/1/-11/11',
     content: ['360/搜狗/神马3大搜索引擎首页排名', '6个月超长时长'],
     isActive: (duration, price) => {
-      price = price > 0 ? f2y(price) : 0
-      const active = Math.floor(f2y(price)) >= 20000
+      price = price > 0 ? price : 0
+      const active = f2y(price) >= 20000
       return {
         active,
         tag: active ? '已解锁，赠送180天' : `还差${Math.ceil(20000 - f2y(price))}元即可解锁`,

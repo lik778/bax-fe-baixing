@@ -28,11 +28,13 @@
             {{f2y(preInfo.price)}}元
         </el-form-item>
         <el-form-item class="pre-info-item" label="超值福利：">
-          <span
+          <el-tag
+            class="welfare-tag"
+            :type="item.isActive(preInfo.days, preInfo.price).active ? 'danger' : 'info'"
             v-for="(item, index) in welfareInfo"
             :key="index">
-            {{item.isActive(preInfo.days, preInfo.price).detail}}
-          </span>
+            {{item.title}} ({{item.isActive(preInfo.days, preInfo.price).detail}})
+          </el-tag>
         </el-form-item>
         <el-row class="pre-info-row">
             <el-col :span="12">
@@ -112,5 +114,8 @@ export default {
     }
     .pre-info-price{
         color: crimson;
+    }
+    .welfare-tag{
+      margin-right: 8px;
     }
 </style>
