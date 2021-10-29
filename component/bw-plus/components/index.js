@@ -11,6 +11,7 @@ import SoldCity from './bw-inquery-price/sold-city.vue'
 import ProvinceCityMap from './common/province-city-map.vue'
 import RenewConfirm from './bw-packge/renew-confirm.vue'
 import DataRange from './bw-dashboard/data-range.vue'
+import WelfareActivity from './bw-inquery-price/welfare-activity.vue'
 
 export {
   InqueryForm,
@@ -25,5 +26,6 @@ export {
   SoldCity,
   ProvinceCityMap,
   RenewConfirm,
-  DataRange
+  DataRange,
+  WelfareActivity
 }
