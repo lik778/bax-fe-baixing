@@ -22,11 +22,11 @@
                     <section class="bw-query-price_item" v-if="showResult">
                       <Title title="查价结果" extra="请选择需要的平台*时段*时长"/>
                       <InqueryResult :deviceAvailableStatus="deviceAvailableStatus" :currentPrice="currentPrice" @getValue="getCurrentPrice" :tableData="queryResult && queryResult.keywordPriceList" />
-                      <div class="welfare-content" v-if="showWelfare">
+                      <div class="welfare-content">
                         <Title title="超值福利" extra="满足规则即可解锁福利"/>
                         <div class="welfare-content_wrapper">
                           <WelfareActivity
-                            v-for="(item, index) in welfareInfo"
+                            v-for="(item, index) in welfareInfo.filter(o => o.show())"
                             :key="index" :title="item.title"
                             :className="`custom-${index+1}`"
                             :desc="item.desc"
@@ -38,10 +38,10 @@
                       </div>
                       <el-row type="flex" justify="start" align="middle">
                         <el-col :span="3">
-                          <h2 class="wefare-title" v-if="currentPrice.duration > 30 && !showWelfare">超值福利</h2>
+                          <!-- <h2 class="wefare-title" v-if="currentPrice.duration > 30 && !showWelfare">超值福利</h2> -->
                         </el-col>
                         <el-col :span="3">
-                          <DiamondShopWelfare v-if="currentPrice.duration > 30 && !showWelfare" :current="currentPrice" />
+                          <!-- <DiamondShopWelfare v-if="currentPrice.duration > 30 && !showWelfare" :current="currentPrice" /> -->
                         </el-col>
                         <el-col :span="5" :push="13">
                           <div class="submit">
@@ -78,14 +78,11 @@
 </template>
 
 <script>
-import { InqueryForm, KeywordHotDetail, Title, InqueryResult, BwPlusDialog, SoldCity, WelfareActivity, DiamondShopWelfare } from './components'
+import { InqueryForm, KeywordHotDetail, Title, InqueryResult, BwPlusDialog, SoldCity, WelfareActivity } from './components'
 import { querySystemResult, commit } from 'api/biaowang-plus'
 import { APPLY_TYPE_NORMAL, APPLY_TYPE_ERROR, welfareInfo } from 'constant/bw-plus'
 import { f2y } from 'util'
 import debounce from 'lodash.debounce'
-import dayjs from 'dayjs'
-import isBetween from 'dayjs/plugin/isBetween'
-dayjs.extend(isBetween)
 export default {
   name: 'bw-plus-query-price',
   components: {
@@ -93,7 +90,7 @@ export default {
     KeywordHotDetail,
     Title,
     InqueryResult,
-    DiamondShopWelfare,
+    // DiamondShopWelfare,
     BwPlusDialog,
     SoldCity,
     WelfareActivity
@@ -135,10 +132,6 @@ export default {
     showResult () {
       const { queryResult } = this
       return !(queryResult.error && queryResult.overHeat) && queryResult.keywordPriceList
-    },
-    showWelfare () {
-      const now = dayjs()
-      return dayjs(now).isBetween('2021-11-1', dayjs('2021-11-11'))
     }
   },
   methods: {

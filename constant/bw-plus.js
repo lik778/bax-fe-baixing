@@ -1,4 +1,7 @@
 import { f2y } from 'util'
+import dayjs from 'dayjs'
+import isBetween from 'dayjs/plugin/isBetween'
+dayjs.extend(isBetween)
 // 审核状态
 export const AUDIT_STATUS_PENGDING = 0
 export const AUDIT_STATUS_AUDITING = 5
@@ -223,6 +226,10 @@ export const PROVINCE_LIST = [
 export const RENEW_OPRATION_STATUS_OPEN = 20
 export const RENEW_OPRATION_STATUS_COPY = 30
 export const RENEW_OPRATION_STATUS_DISABLED = 60
+const showWelfare = () => {
+  const now = dayjs()
+  return dayjs(now).isBetween('2021-11-1', dayjs('2021-11-11'))
+}
 
 export const welfareInfo = [
   {
@@ -230,7 +237,7 @@ export const welfareInfo = [
     title: '营销旺铺',
     value: (price) => 1200,
     desc: '',
-    content: ['双端适配', '视频展示', '支持微信分享', '支持seo优化'],
+    content: ['双端适配', '视频展示', '智能接待系统', '支持seo优化'],
     isActive: (duration, price) => {
       const active = price > 0 && duration >= 90
       return {
@@ -238,13 +245,14 @@ export const welfareInfo = [
         tag: active ? `已解锁，赠送${duration}天` : '至少购买90天可解锁',
         detail: `${duration}天`
       }
-    }
+    },
+    show: () => true
   },
   {
     id: 2,
     title: '精准标王词',
     value: (price) => price > 0 ? Math.floor(f2y(price) / 10000) * 5000 : 5000,
-    desc: '限时11/1-11/11仅前30名',
+    desc: '限时11.1-11.11仅前111名',
     content: ['价值¥5000+的5热度关键词，', '每满¥10000即赠2个'],
     isActive: (duration, price) => {
       price = price > 0 ? price : 0
@@ -255,14 +263,15 @@ export const welfareInfo = [
         tag: active ? `已解锁，赠送${num}个` : `还差${10000 - f2y(price)}元即可解锁`,
         detail: `${num}个`
       }
-    }
+    },
+    show: showWelfare
   },
   {
     id: 3,
     title: '三网整合营销',
     value: (price) => 8000,
-    desc: '限时11/1/-11/11',
-    content: ['360/搜狗/神马3大搜索引擎首页排名', '6个月超长时长'],
+    desc: '限时11.1-11.11仅前30名',
+    content: ['360/搜狗/神马3大搜索引擎首页排名', '12个月超长时长'],
     isActive: (duration, price) => {
       price = price > 0 ? price : 0
       const active = f2y(price) >= 20000
@@ -271,6 +280,7 @@ export const welfareInfo = [
         tag: active ? '已解锁，赠送180天' : `还差${20000 - f2y(price)}元即可解锁`,
         detail: '180天'
       }
-    }
+    },
+    show: showWelfare
   }
 ]

@@ -63,7 +63,7 @@ export default {
         background-image: linear-gradient(173deg, #FFDFBC 0%, #FFD2A0 0%, #FA7082 100%);
         border-radius: 8px;
         position: relative;
-        padding: 10px;
+        padding: 12px;
         box-sizing: border-box;
         margin-top: 20px;
         &:not(:last-child){
@@ -74,7 +74,7 @@ export default {
             height: 30px;
             display: block;
             position: absolute;
-            background-image: linear-gradient(175deg, #FFF4A0 0%, #FFC967 100%);
+            background-image: linear-gradient(125deg, #FFC967 0%, #FFF4A0 100%);
             border-radius: 12px 4px 4px 4px;
             right: -8px;
             top: -8px;
@@ -93,7 +93,7 @@ export default {
             height: 52px;
             background: #FFF7EA;
             border-radius: 4px;
-            margin-bottom: 22px;
+            margin-bottom: 12px;
             display: flex;
             justify-content: flex-start;
             align-items: center;
@@ -134,6 +134,10 @@ export default {
             font-size: 14px;
             color: #FFF3A0;
             text-align: center;
+            height: 38px;
+            span:nth-child(1){
+              white-space: nowrap;
+            }
             &-desc{
                 background: rgba(194,32,50,0.50);
                 border-radius: 4px;
@@ -143,6 +147,7 @@ export default {
                 padding: 4px 10px;
                 box-sizing: border-box;
                 margin-left: 10px;
+                flex-shrink: 0;
             }
         }
     }
