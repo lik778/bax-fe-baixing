@@ -10,9 +10,12 @@
           <span class="discount-btn">优惠细则</span>
         </header>
         <div class="discount-section" v-show="showDiscount">
+          <p class="discount-info">首单特惠福利！</p>
+          <p class="discount-info" :key="index+1"
+            v-for="(html, index) in discountInfoHTML.slice(0, 1)" v-html="html" />
           <p class="discount-info">充值更多，可享更多优惠！</p>
-          <p class="discount-info" :key="index"
-            v-for="(html, index) in discountInfoHTML" v-html="html" />
+          <p class="discount-info" :key="index+2"
+            v-for="(html, index) in discountInfoHTML.slice(1)" v-html="html" />
         </div>
 
         <div class="charge-section">

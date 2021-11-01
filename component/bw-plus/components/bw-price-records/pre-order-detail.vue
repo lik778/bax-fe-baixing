@@ -22,18 +22,32 @@
             {{SCHEDULE_TYPE[preInfo.scheduleType]}}
         </el-form-item>
         <el-form-item class="pre-info-item" label="服务时长：">
-            {{preInfo.days}}天 <el-tag v-if="preInfo.days > 30">赠送钻石官网（{{preInfo.days}}天）</el-tag>
+            {{preInfo.days}}天 <el-tag v-if="preInfo.days > 30 && !showWelfare">赠送钻石官网（{{preInfo.days}}天）</el-tag>
         </el-form-item>
         <el-form-item class="pre-info-item pre-info-price" label="提单价：">
             {{f2y(preInfo.price)}}元
         </el-form-item>
+        <el-form-item v-if="showWelfare" class="pre-info-item" label="超值福利：">
+          <el-tag
+            class="welfare-tag"
+            type="danger"
+            v-for="(item, index) in welfareInfo.filter(o => o.isActive(preInfo.days, preInfo.price).active)"
+            :key="index">
+            {{item.title}} ({{item.isActive(preInfo.days, preInfo.price).detail}})
+          </el-tag>
+        </el-form-item>
         <el-row class="pre-info-row">
-            <el-col :span="11">
+            <el-col :span="12">
                 <el-form-item class="pre-info-item" label="销售编号：">{{preInfo.saleId}}</el-form-item>
             </el-col>
-            <el-col :span="11">
+            <el-col :span="12">
                 <el-form-item class="pre-info-item" label="客户手机号：">{{preInfo.mobile}}</el-form-item>
             </el-col>
+        </el-row>
+        <el-row class="pre-info-row">
+          <el-col :span="10">
+            <el-form-item class="pre-info-item" label="客户uid：">{{preInfo.userBxId}}</el-form-item>
+          </el-col>
         </el-row>
     </el-form>
     <span slot="footer" class="dialog-footer">
@@ -44,7 +58,10 @@
 </template>
 <script>
 import { f2y, getCnName } from 'util'
-import { SCHEDULE_TYPE, DEVICE } from 'constant/bw-plus'
+import dayjs from 'dayjs'
+import isBetween from 'dayjs/plugin/isBetween'
+import { SCHEDULE_TYPE, DEVICE, welfareInfo } from 'constant/bw-plus'
+dayjs.extend(isBetween)
 export default {
   name: 'pre-order-detail',
   props: {
@@ -68,7 +85,14 @@ export default {
     return {
       SCHEDULE_TYPE,
       f2y,
-      DEVICE
+      DEVICE,
+      welfareInfo
+    }
+  },
+  computed: {
+    showWelfare () {
+      const now = dayjs()
+      return dayjs(now).isBetween('2021-11-1', dayjs('2021-11-11'))
     }
   },
   methods: {
@@ -91,14 +115,16 @@ export default {
         font-weight: 500;
     }
     .pre-info-row{
-        border-bottom: 1px solid #ddd;
         border-top: 1px solid #ddd;
-        padding: 10px 0;
+        padding: 6px 0;
         margin-top: 10px;
         font-size: 16px;
         font-weight: 500;
     }
     .pre-info-price{
         color: crimson;
+    }
+    .welfare-tag{
+      margin-right: 8px;
     }
 </style>
