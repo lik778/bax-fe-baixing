@@ -1,5 +1,5 @@
 <template>
-    <div :class="{'welfare-item': true, 'active': active, [className]: className }">
+    <div :class="{'welfare-item': true, 'welfare-active': active, [className]: className }">
         <span class="welfare-item_tag">{{tag}}</span>
         <h5 class="welfare-item_title">{{title}}</h5>
         <div class="welfare-item_content">
@@ -146,7 +146,7 @@ export default {
             }
         }
     }
-    .active{
+    .welfare-active{
         border: 1px solid #FF7533;
         background-image: linear-gradient(174deg, #FF9C7E 0%, #F63F5C 100%);
         &::after {

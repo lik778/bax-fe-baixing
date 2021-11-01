@@ -243,7 +243,7 @@ export const welfareInfo = [
   {
     id: 2,
     title: '精准标王词',
-    value: (price) => price > 0 ? Math.floor((f2y(price) / 10000) * 5000) : '**',
+    value: (price) => price > 0 ? Math.floor(f2y(price) / 10000) * 5000 : 5000,
     desc: '限时11/1-11/11仅前30名',
     content: ['价值¥5000+的5热度关键词，', '每满¥10000即赠2个'],
     isActive: (duration, price) => {

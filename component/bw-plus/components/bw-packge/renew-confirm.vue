@@ -29,10 +29,10 @@
         <el-form-item v-if="showWelfare" class="pre-info-item" label="超值福利：">
           <el-tag
             class="welfare-tag"
-            :type="item.isActive(preInfo.days, preInfo.price).active ? 'danger' : 'info'"
-            v-for="(item, index) in welfareInfo"
+            type="danger"
+            v-for="(item, index) in welfareInfo.filter( o => o.isActive(getCurrentPrice.type, getCurrentPrice.price).active)"
             :key="index">
-            {{item.title}} ({{item.isActive(preInfo.days, preInfo.price).detail}})
+            {{item.title}} ({{item.isActive(getCurrentPrice.type, getCurrentPrice.price).detail}})
           </el-tag>
         </el-form-item>
         <el-row class="pre-info-row">
@@ -94,6 +94,11 @@ export default {
     showWelfare () {
       const now = dayjs()
       return dayjs(now).isBetween('2021-11-1', dayjs('2021-11-11'))
+    },
+    getCurrentPrice () {
+      const { priceId, renewInfo: { priceList } } = this
+      const currentPrice = priceList.filter(o => o.id.toString() === priceId.toString())[0]
+      return currentPrice
     }
   },
   methods: {
@@ -141,5 +146,8 @@ export default {
     }
     .pre-info-price{
         color: crimson;
+    }
+    .welfare-tag{
+      margin-right: 10px;
     }
 </style>

@@ -30,8 +30,8 @@
         <el-form-item v-if="showWelfare" class="pre-info-item" label="超值福利：">
           <el-tag
             class="welfare-tag"
-            :type="item.isActive(preInfo.days, preInfo.price).active ? 'danger' : 'info'"
-            v-for="(item, index) in welfareInfo"
+            type="danger"
+            v-for="(item, index) in welfareInfo.filter(o => o.isActive(preInfo.days, preInfo.price).active)"
             :key="index">
             {{item.title}} ({{item.isActive(preInfo.days, preInfo.price).detail}})
           </el-tag>
