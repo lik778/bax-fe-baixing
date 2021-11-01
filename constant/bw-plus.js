@@ -234,7 +234,7 @@ const showWelfare = () => {
 export const welfareInfo = [
   {
     id: 1,
-    title: '营销旺铺',
+    title: '会员钻石店铺',
     value: (price) => 1200,
     desc: '',
     content: ['双端适配', '视频展示', '智能接待系统', '支持seo优化'],
@@ -270,7 +270,7 @@ export const welfareInfo = [
     id: 3,
     title: '三网整合营销',
     value: (price) => 8000,
-    desc: '限时11.1-11.11仅前30名',
+    desc: '限时11.1-11.11 仅前30名',
     content: ['360/搜狗/神马3大搜索引擎首页排名', '365天超长时长'],
     isActive: (duration, price) => {
       price = price > 0 ? price : 0
