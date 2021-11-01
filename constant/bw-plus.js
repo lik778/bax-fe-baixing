@@ -278,7 +278,7 @@ export const welfareInfo = [
       return {
         active,
         tag: active ? '已解锁，赠送365天' : `还差${20000 - f2y(price)}元即可解锁`,
-        detail: '180天'
+        detail: '365天'
       }
     },
     show: showWelfare
