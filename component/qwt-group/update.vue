@@ -6,7 +6,7 @@
         <landing-comp :value="group.name"
                       @change="(name) => updateGroupData('name', name)">
           <landing-page-comp :all-areas="allAreas"
-                             :landing-type="group.landingType"
+                             :landing-type="group.landingType !== LANDING_TYPE_BAIDU_JIMUYU ? LANDING_TYPE_STORE : LANDING_TYPE_BAIDU_JIMUYU"
                              :landing-page="group.landingPage"
                              :landing-page-id="group.landingPageId"
                              :disabled="landingAndCreativesDisabled"
@@ -146,7 +146,6 @@ import ContractAckComp from 'com/widget/contract-ack'
 import MobilePriceRatioComp from './mobile-price-ratio'
 import KeywordListComp from './keyword/keyword-list'
 import MaterialPicturesComp from 'com/common/material-pictures-dialog'
-
 import {
   SEM_PLATFORM_SHENMA,
   SEM_PLATFORM_BAIDU,
@@ -161,7 +160,9 @@ import {
   GROUP_STATUS_PENDING_AUDIT,
   SEM_PLATFORM_SOGOU,
   LANDING_TYPE_GW,
-  LANDING_TYPE_AD
+  LANDING_TYPE_AD,
+  LANDING_TYPE_STORE,
+  LANDING_TYPE_BAIDU_JIMUYU
 } from 'constant/fengming'
 import clone from 'clone'
 import uuid from 'uuid/v4'
@@ -202,6 +203,8 @@ export default {
       CAMPAIGN_STATUS_OFFLINE,
       CAMPAIGN_STATUS_ONLINE,
       NEGATIVE_KEYWORDS_MAX,
+      LANDING_TYPE_STORE,
+      LANDING_TYPE_BAIDU_JIMUYU,
 
       promotion: emptyCampaign,
       originGroup: emptyGroup,

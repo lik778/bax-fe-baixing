@@ -36,6 +36,7 @@
                 :initValue="newPromotion.landingPageId"
                 @change="(...args) => setLandingAndID(LANDING_TYPE_STORE, ...args)"
               />
+              <p class="authing-tip" v-if="newPromotion.landingType === LANDING_TYPE_STORE">提示： 为提升客户留资效果凤鸣仅支持店铺作为落地页 </p>
             </div>
           </div>
         </div>
@@ -249,7 +250,7 @@ const RECOMMAND_SOURCES = [RECOMMAND_SOURCE_FH, NEW_RECOMMAND_SOURCE_FH]
 const MIN_DAILY_BUDGET = 100 * 100
 
 const promotionTemplate = {
-  landingType: 0,
+  landingType: LANDING_TYPE_STORE,
   landingPage: '',
   landingPageId: '',
   areas: [],
@@ -869,6 +870,11 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.authing-tip {
+    align-items: center;
+    font-size: 12px;
+    color: $c-main;
+}
 .input {
   width: 150px;
 }
