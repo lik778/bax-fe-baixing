@@ -3,6 +3,7 @@
     <el-tabs class="product-tab" v-model="productTabMchCode" @tab-click="changeProductMchCodeTab">
       <el-tab-pane :key="FENG_MING_MERCHANT_CODE"  label="站外推广" :name="FENG_MING_MERCHANT_CODE"></el-tab-pane>
       <el-tab-pane v-if="!userInfo.shAgent"  :key="PHOENIXS_MERCHANT_CODE"  label="标王" :name="PHOENIXS_MERCHANT_CODE"></el-tab-pane>
+      <el-tab-pane :key="CARE_FREE_MERCHANT_CODE" label="省心币" :name="CARE_FREE_MERCHANT_CODE"></el-tab-pane>
     </el-tabs>
     <div class="charge-container" v-loading.fullscreen.lock="fetchLoading">
       <section class="product shadow panel">
@@ -122,15 +123,15 @@ import { SPUCODES, MERCHANTS } from 'constant/product'
 import { getUniqueAgreementList } from 'util/charge'
 import store from '../activity-store'
 
-const { WHOLE_SPU_CODE, GUAN_WANG_SPU_CODE, BIAO_WANG_SPU_CODE } = SPUCODES
-const { FENG_MING_MERCHANT_CODE, PHOENIXS_MERCHANT_CODE } = MERCHANTS
+const { WHOLE_SPU_CODE, GUAN_WANG_SPU_CODE, BIAO_WANG_SPU_CODE, CARE_FREE_SPU_CODE } = SPUCODES
+const { FENG_MING_MERCHANT_CODE, PHOENIXS_MERCHANT_CODE, CARE_FREE_MERCHANT_CODE } = MERCHANTS
 
 const isGwProduct = function (spuCode) {
   return spuCode === GUAN_WANG_SPU_CODE
 }
 
 const isChargeProduct = function (spuCode) {
-  return [WHOLE_SPU_CODE, BIAO_WANG_SPU_CODE].includes(spuCode)
+  return [WHOLE_SPU_CODE, BIAO_WANG_SPU_CODE, CARE_FREE_SPU_CODE].includes(spuCode)
 }
 
 export default {
@@ -154,6 +155,7 @@ export default {
       productTabMchCode: FENG_MING_MERCHANT_CODE,
       FENG_MING_MERCHANT_CODE,
       PHOENIXS_MERCHANT_CODE,
+      CARE_FREE_MERCHANT_CODE,
       fetchLoading: true,
       showDiscount: true,
       actionTrackId: uuid(),
@@ -284,7 +286,7 @@ export default {
         let products = []
         let targetList = []
         if (this.productCacheList.length === 0) {
-          targetList = this.productCacheList = await getProductsByMchCodes([FENG_MING_MERCHANT_CODE, PHOENIXS_MERCHANT_CODE])
+          targetList = this.productCacheList = await getProductsByMchCodes([FENG_MING_MERCHANT_CODE, PHOENIXS_MERCHANT_CODE, CARE_FREE_MERCHANT_CODE])
         } else {
           targetList = this.productCacheList
         }

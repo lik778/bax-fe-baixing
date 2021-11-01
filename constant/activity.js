@@ -61,3 +61,28 @@ export const biaowangDiscountInfo = {
     }
   }
 }
+
+export const carefreeDiscountInfo = {
+  [COMMON_STATUS]: { // 平时文案展示
+    discountInfo: [
+      [1000, 200, 600],
+      [5000, 600, 1200],
+      [9888, 1200, 2000]
+    ],
+    get discountInfoHTML () {
+      const genHTML = item => `<p class="discount-info">${item[0]} 元</p>`
+      return this.discountInfo.map(item => genHTML(item))
+    }
+  },
+  [ACTIVITY_STATUS]: { // 活动文案
+    discountInfo: [
+      [1000, 200, 600],
+      [5000, 600, 1200],
+      [9888, 1200, 2000]
+    ],
+    get discountInfoHTML () {
+      const genHTML = item => `<p class="discount-info">${item[0]} 元</p>`
+      return this.discountInfo.map(item => genHTML(item))
+    }
+  }
+}
