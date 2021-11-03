@@ -282,6 +282,7 @@ export default {
       this.chargeSpu = null
       this.checkedProducts = []
       this.$bus.$emit('resetPriceTagInput')
+      this.showDiscount = this.productTabMchCode !== 'CARE_FREE'
       store.setDiscountInfoHTMLFactory(this.productTabMchCode)
       this.obtainProductByMchCode()
     },
