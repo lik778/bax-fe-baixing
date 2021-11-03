@@ -224,6 +224,12 @@ export default {
     PromotionAreaLimitTip,
     Clipboard
   },
+  created () {
+    const { query: { from } } = this.$route
+    if (from === CARE_FREE_MERCHANT_CODE) {
+      this.productTabMchCode = CARE_FREE_MERCHANT_CODE
+    }
+  },
   async mounted () {
     const {
       sales_id: salesId,

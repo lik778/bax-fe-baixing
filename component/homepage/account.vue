@@ -15,6 +15,12 @@
           <p class="desc">（ {{biaowangData.nearExpirationPromotes}} 个词即将到期）</p>
           <el-button type="primary" class="button" size="small" @click.native="() => handleCharge('biaowang')">管理标王推广</el-button>
         </li>
+        <li class="account-item" v-if="isShowSection('biaowang')">
+          <p class="title">省心币（元) </p>
+          <p class="num">{{ adPlatformBalance.price }}</p>
+          <!-- <p class="desc">（ {{biaowangData.nearExpirationPromotes}} 个词即将到期）</p> -->
+          <el-button type="primary" class="button" size="small" @click.native="() => handleCharge('adPlatform')">立即充值</el-button>
+        </li>
       </ul>
     </div>
     <loading-placeholder class="layout-left" v-else>
@@ -39,6 +45,7 @@
 import store from './store'
 import Notice from './notice'
 import loadingPlaceholder from './loading-placeholder'
+import { MERCHANTS } from 'constant/product'
 
 export default {
   name: 'homepage-accout',
@@ -47,12 +54,14 @@ export default {
   fromMobx: {
     fengmingBalance: () => store.fengmingBalance,
     biaowangBalance: () => store.biaowangBalance,
+    adPlatformBalance: () => store.adPlatformBalance,
     notices: () => store.notices.fengming,
     sites: () => store.kaSiteData && store.kaSiteData.sites,
     biaowangData: () => store.biaowangData
   },
   methods: {
     handleCharge (type) {
+      const { CARE_FREE_MERCHANT_CODE } = MERCHANTS
       switch (type) {
         case 'bax':
           return this.$router.push({ name: 'qwt-charge' })
@@ -60,6 +69,8 @@ export default {
           return this.$router.push({ name: 'qwt-charge', query: { select_gw: 1 } })
         case 'biaowang':
           return this.$router.push({ name: 'bw-plan-list' })
+        case 'adPlatform':
+          return this.$router.push({ name: 'qwt-charge', query: { from: CARE_FREE_MERCHANT_CODE } })
       }
     },
     isShowSection (sectionType) {

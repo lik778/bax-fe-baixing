@@ -196,7 +196,6 @@ export async function getCurrentBalanceBreif (accountType, userId) {
     .get('/balance/brief')
     .query(reverseCamelcase({ accountType, userId }))
     .json()
-  console.log('userId', userId)
   return body.data
 }
 
