@@ -118,6 +118,11 @@
               标王2.0推广报表
             </router-link>
           </el-menu-item>
+          <el-menu-item index="ad-dashboard">
+            <router-link :to="{ name: 'ad-dashboard'}" tag="p">
+              省心包推广报表
+            </router-link>
+          </el-menu-item>
           <el-menu-item index="qc-dashboard">
             <router-link :to="{ name: 'qc-dashboard'}" tag="p">
               易慧推报表
