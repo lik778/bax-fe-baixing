@@ -35,6 +35,9 @@ export default {
       costList: []
     }
   },
+  async mounted () {
+    await this.initData()
+  },
   methods: {
     getDate (daterange) {
       this.daterange = daterange
@@ -61,6 +64,13 @@ export default {
       }
       const { data } = await statistic(params)
       this.statistic = data
+    },
+    async initData () {
+      await Promise.all([
+        this.getFounds(),
+        this.getCostList(),
+        this.getStatistic()
+      ])
     }
   }
 }
