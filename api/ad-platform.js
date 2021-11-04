@@ -1,5 +1,6 @@
 import { getCurrentBalanceBreif } from './account'
 import { SPUCODES } from 'constant/product'
+import { adPlatform } from './base'
 
 const { CARE_FREE_SPU_CODE } = SPUCODES
 
@@ -9,4 +10,40 @@ export async function getHomePageAdplatformData (params) {
     getCurrentBalanceBreif(CARE_FREE_SPU_CODE, userId)
   ])
   return adPlatformBalanceBrief
+}
+
+export async function foundsInfo (params) {
+  const body = await adPlatform
+    .get('/report/funds/info')
+    .query(params)
+    .json()
+  return body
+}
+
+/**
+ * @param {object} params
+ * @param {string} params.startDate
+ * @param {string} params.endDate
+ * @returns
+ */
+export async function statistic (params) {
+  const body = await adPlatform
+    .post('/report/cost/statistic')
+    .send(params)
+    .json()
+  return body
+}
+
+/**
+ * @param {object} params
+ * @param {string} params.startDate
+ * @param {string} params.endDate
+ * @returns
+ */
+export async function costList (params) {
+  const body = await adPlatform
+    .post('/report/cost/list')
+    .send(params)
+    .json()
+  return body
 }
