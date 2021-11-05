@@ -4,35 +4,58 @@
     <ul>
       <li>
         <span>今日消耗（元）</span>
-        <span>88</span>
+        <span>{{f2y(founds.cost)}}</span>
       </li>
       <li>
         <span>账户余额（元）</span>
-        <span>88</span>
+        <span>{{f2y(founds.balance)}}</span>
       </li>
       <li>
         <span>累计充值（元）</span>
-        <span>88</span>
+        <span>{{f2y(founds.amount)}}</span>
       </li>
     </ul>
     <h3 class="title">数据概览</h3>
     <DataRange @getDate="getDate" @searchData="changeDateRange"/>
+    <div class="chart-content">
+      <div class="chart-line">
+        <ECharts style="width: 100%; max-width: 100%; margin-top: 20px"
+        :options="chartLineOptions"></ECharts>
+      </div>
+      <!-- <div class="chart-pie">
+        <ECharts style="width: 100%; max-width: 50%; margin-top: 20px"
+        :options="chartPieOptions"></ECharts>
+      </div> -->
+    </div>
+    <CostList :tableData="costList"/>
   </section>
 </template>
 <script>
 import { DataRange } from 'com/bw-plus/components'
 import { statistic, costList, foundsInfo } from 'api/ad-platform'
+import { f2y } from 'util'
+import CostList from './cost-list.vue'
+import { chartLineOptions, chartPieOptions } from './constant'
+import ECharts from 'vue-echarts/components/ECharts.vue'
+import 'echarts/lib/chart/pie'
+import 'echarts/lib/component/tooltip'
+import 'echarts/lib/chart/line'
 export default {
   name: 'ad-dashboard',
   components: {
-    DataRange
+    DataRange,
+    ECharts,
+    CostList
   },
   data () {
     return {
       daterange: [],
       founds: {},
       statistic: {},
-      costList: []
+      costList: [],
+      f2y,
+      chartLineOptions,
+      chartPieOptions
     }
   },
   async mounted () {
@@ -81,6 +104,9 @@ export default {
         background: #fff;
         margin: 10px;
         box-sizing: border-box;
+        .chart-content{
+          margin-bottom: 30px;
+        }
         .title{
             margin-bottom: 10px;
         }
