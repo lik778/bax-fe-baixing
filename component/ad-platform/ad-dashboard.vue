@@ -65,7 +65,13 @@ export default {
     getDate (daterange) {
       this.daterange = daterange
     },
-    changeDateRange () {},
+    async changeDateRange (daterange) {
+      this.daterange = daterange
+      await Promise.all([
+        this.getCostList(),
+        this.getStatistic()
+      ])
+    },
     async getFounds () {
       const { data } = await foundsInfo()
       this.founds = data
