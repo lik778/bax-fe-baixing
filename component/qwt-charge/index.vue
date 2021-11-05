@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-tabs class="product-tab" v-model="productTabMchCode" @tab-click="changeProductMchCodeTab">
-      <el-tab-pane :key="FENG_MING_MERCHANT_CODE"  label="站外推广" :name="FENG_MING_MERCHANT_CODE"></el-tab-pane>
+      <el-tab-pane v-if="userInfo.allowFmRecharge" :key="FENG_MING_MERCHANT_CODE"  label="站外推广" :name="FENG_MING_MERCHANT_CODE"></el-tab-pane>
       <el-tab-pane v-if="!userInfo.shAgent"  :key="PHOENIXS_MERCHANT_CODE"  label="标王" :name="PHOENIXS_MERCHANT_CODE"></el-tab-pane>
       <el-tab-pane :key="CARE_FREE_MERCHANT_CODE" label="省心币" :name="CARE_FREE_MERCHANT_CODE"></el-tab-pane>
     </el-tabs>
@@ -151,8 +151,9 @@ export default {
     }
   },
   data () {
+    const { userInfo } = this
     return {
-      productTabMchCode: FENG_MING_MERCHANT_CODE,
+      productTabMchCode: userInfo.allowFmRecharge ? FENG_MING_MERCHANT_CODE : (userInfo.shAgent ? CARE_FREE_MERCHANT_CODE : 'PHOENIXS_MERCHANT_CODE'),
       FENG_MING_MERCHANT_CODE,
       PHOENIXS_MERCHANT_CODE,
       CARE_FREE_MERCHANT_CODE,
