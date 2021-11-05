@@ -1,10 +1,24 @@
 import dayjs from 'dayjs'
+const commonOptions = {
+  type: 'line',
+  lineStyle: {
+    width: 1
+  },
+  label: {
+    show: true,
+    position: 'top',
+    fontSize: 14
+  }
+}
 export const chartLineOptions = {
   tooltip: {
     trigger: 'axis',
     axisPointer: {
       type: 'cross'
     }
+  },
+  legend: {
+    data: ['消耗', '展现', '点击', '平均点击单价']
   },
   xAxis: {
     type: 'category',
@@ -33,23 +47,32 @@ export const chartLineOptions = {
   },
   series: [
     {
-      data: [150, 230, 224, 218, 135, 147, 260],
-      type: 'line',
-      lineStyle: {
-        width: 1
-      },
-      itemStyle: {
-        // 普通样式。
-        normal: {
-          // 点的颜色。
-          color: '#5099d8'
-        }
-      },
-      label: {
-        show: true,
-        position: 'top',
-        fontSize: 14
-      }
+      name: '消耗',
+      id: 'cost',
+      stack: 'Total',
+      data: [],
+      ...commonOptions
+    },
+    {
+      name: '展现',
+      id: 'show',
+      stack: 'Total',
+      data: [],
+      ...commonOptions
+    },
+    {
+      name: '点击',
+      id: 'click',
+      stack: 'Total',
+      data: [],
+      ...commonOptions
+    },
+    {
+      name: '平均点击单价',
+      id: 'avgClick',
+      stack: 'Total',
+      data: [],
+      ...commonOptions
     }
   ]
 }

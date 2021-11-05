@@ -19,7 +19,7 @@
     <DataRange @getDate="getDate" @searchData="changeDateRange"/>
     <div class="chart-content">
       <div class="chart-line">
-        <ECharts style="width: 100%; max-width: 100%; margin-top: 20px"
+        <ECharts v-if="lineChartList && lineChartList.length" style="width: 100%; max-width: 100%; margin-top: 20px"
         :options="chartLineOptions"></ECharts>
       </div>
       <!-- <div class="chart-pie">
@@ -40,6 +40,7 @@ import ECharts from 'vue-echarts/components/ECharts.vue'
 import 'echarts/lib/chart/pie'
 import 'echarts/lib/component/tooltip'
 import 'echarts/lib/chart/line'
+import 'echarts/lib/component/legend'
 export default {
   name: 'ad-dashboard',
   components: {
@@ -52,6 +53,8 @@ export default {
       daterange: [],
       founds: {},
       statistic: {},
+      lineChartList: [],
+      pieChartList: [],
       costList: [],
       f2y,
       chartLineOptions,
@@ -91,8 +94,12 @@ export default {
         startDate: daterange[0].format('YYYY-MM-DD'),
         endDate: daterange[1].format('YYYY-MM-DD')
       }
-      const { data } = await statistic(params)
-      this.statistic = data
+      const { data: { lineChartList, pieChartList } } = await statistic(params)
+      chartLineOptions.series.forEach(item => {
+        item.data = lineChartList.map(o => o[item.id])
+      })
+      this.lineChartList = lineChartList
+      this.pieChartList = pieChartList
     },
     async initData () {
       await Promise.all([
