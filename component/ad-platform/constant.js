@@ -50,7 +50,7 @@ export const chartLineOptions = {
     {
       name: '消耗',
       id: 'cost',
-      stack: 'Total',
+      stack: 'cost',
       data: [],
       render: (value) => f2y(value),
       ...commonOptions
@@ -58,7 +58,7 @@ export const chartLineOptions = {
     {
       name: '展现',
       id: 'show',
-      stack: 'Total',
+      stack: 'show',
       render: (value) => value,
       data: [],
       ...commonOptions
@@ -66,7 +66,7 @@ export const chartLineOptions = {
     {
       name: '点击',
       id: 'click',
-      stack: 'Total',
+      stack: 'click',
       render: (value) => value,
       data: [],
       ...commonOptions
@@ -74,7 +74,7 @@ export const chartLineOptions = {
     {
       name: '平均点击单价',
       id: 'avgClickCost',
-      stack: 'Total',
+      stack: 'avgClickCost',
       render: (value) => f2y(value),
       data: [],
       ...commonOptions
