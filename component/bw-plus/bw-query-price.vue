@@ -46,7 +46,7 @@
                         <el-col :span="5" :push="13">
                           <div class="submit">
                             <h3>总价： {{transformPrice(currentPrice)}}元</h3>
-                            <el-button @click="isSubmit = true" :disabled="(currentPrice.price <0 || currentPrice.price === '-') || !ifSoldAvailable" type="danger" :loading="isPending">提交审核</el-button>
+                            <el-button @click="isSubmit = true" :disabled="(currentPrice.price <0 || !currentPrice.price ) || !ifSoldAvailable" type="danger" :loading="isPending">提交审核</el-button>
                           </div>
                         </el-col>
                       </el-row>

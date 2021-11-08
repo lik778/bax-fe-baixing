@@ -151,8 +151,13 @@ export default {
   },
   methods: {
     cellClick (value) {
-      this.current = value
-      this.$emit('getValue', value)
+      const { current } = this
+      if (current.index === value.index) {
+        this.current = {}
+      } else {
+        this.current = value
+      }
+      this.$emit('getValue', this.current)
     },
     transforPrice (price) {
       if (price >= 0) {
