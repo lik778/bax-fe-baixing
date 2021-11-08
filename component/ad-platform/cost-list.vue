@@ -31,7 +31,7 @@ export default {
     },
     dateFormater (...args) {
       const [,, cellValue] = args
-      return dayjs(cellValue * 1000).format('YYYY-MM-DD HH:mm:ss')
+      return dayjs(cellValue).format('YYYY-MM-DD HH:mm:ss')
     }
   }
 }

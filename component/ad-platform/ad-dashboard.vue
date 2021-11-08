@@ -98,6 +98,7 @@ export default {
       chartLineOptions.series.forEach(item => {
         item.data = lineChartList.map(o => o[item.id])
       })
+      chartLineOptions.xAxis.data = lineChartList.map(o => o.date)
       this.lineChartList = lineChartList
       this.pieChartList = pieChartList
     },
