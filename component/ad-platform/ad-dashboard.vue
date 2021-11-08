@@ -96,7 +96,7 @@ export default {
       }
       const { data: { lineChartList, pieChartList } } = await statistic(params)
       chartLineOptions.series.forEach(item => {
-        item.data = lineChartList.map(o => o[item.id])
+        item.data = lineChartList.map(o => item.render(o[item.id]))
       })
       chartLineOptions.xAxis.data = lineChartList.map(o => o.date)
       this.lineChartList = lineChartList

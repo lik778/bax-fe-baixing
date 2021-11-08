@@ -1,4 +1,5 @@
 import dayjs from 'dayjs'
+import { f2y } from 'util'
 const commonOptions = {
   type: 'line',
   lineStyle: {
@@ -51,12 +52,14 @@ export const chartLineOptions = {
       id: 'cost',
       stack: 'Total',
       data: [],
+      render: (value) => f2y(value),
       ...commonOptions
     },
     {
       name: '展现',
       id: 'show',
       stack: 'Total',
+      render: (value) => value,
       data: [],
       ...commonOptions
     },
@@ -64,6 +67,7 @@ export const chartLineOptions = {
       name: '点击',
       id: 'click',
       stack: 'Total',
+      render: (value) => value,
       data: [],
       ...commonOptions
     },
@@ -71,6 +75,7 @@ export const chartLineOptions = {
       name: '平均点击单价',
       id: 'avgClick',
       stack: 'Total',
+      render: (value) => f2y(value),
       data: [],
       ...commonOptions
     }
