@@ -73,7 +73,7 @@ export const chartLineOptions = {
     },
     {
       name: '平均点击单价',
-      id: 'avgClick',
+      id: 'avgClickCost',
       stack: 'Total',
       render: (value) => f2y(value),
       data: [],
