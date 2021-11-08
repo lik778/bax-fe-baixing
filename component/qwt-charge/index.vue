@@ -151,9 +151,8 @@ export default {
     }
   },
   data () {
-    const { userInfo } = this
     return {
-      productTabMchCode: userInfo.allowFmRecharge ? FENG_MING_MERCHANT_CODE : (userInfo.shAgent ? CARE_FREE_MERCHANT_CODE : 'PHOENIXS_MERCHANT_CODE'),
+      productTabMchCode: FENG_MING_MERCHANT_CODE,
       FENG_MING_MERCHANT_CODE,
       PHOENIXS_MERCHANT_CODE,
       CARE_FREE_MERCHANT_CODE,
@@ -225,18 +224,21 @@ export default {
     PromotionAreaLimitTip,
     Clipboard
   },
-  created () {
-    const { query: { from } } = this.$route
+  watch: {
+    userInfo: {
+      immediate: true,
+      deep: true,
+      handler (values) {
+        this.productTabMchCode = values.allowFmRecharge ? FENG_MING_MERCHANT_CODE : (values.shAgent ? CARE_FREE_MERCHANT_CODE : 'PHOENIXS_MERCHANT_CODE')
+      }
+    }
+  },
+  async mounted () {
+    const { query: { from, sales_id: salesId, user_id: userId } } = this.$route
     if (from === CARE_FREE_MERCHANT_CODE || this.productTabMchCode === CARE_FREE_MERCHANT_CODE) {
       this.productTabMchCode = CARE_FREE_MERCHANT_CODE
       this.showDiscount = false
     }
-  },
-  async mounted () {
-    const {
-      sales_id: salesId,
-      user_id: userId
-    } = this.$route.query
     setTimeout(() => {
       const { userInfo, actionTrackId } = this
       track({
@@ -275,6 +277,7 @@ export default {
         this.displayUserMobile = info.mobile
       }
     }
+    console.log('===')
     this.obtainProductByMchCode()
   },
   methods: {
