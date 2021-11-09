@@ -479,7 +479,7 @@ const seoRoutes = [
 
 export const adPlatformRoute = [
   {
-    component: () => import('com/ad-platform/ad-dashboard'),
+    component: () => import('com/ad-platform/ad-dashboard/index.vue'),
     path: '/main/ad-platform/ad-dashboard',
     name: 'ad-dashboard'
   }
