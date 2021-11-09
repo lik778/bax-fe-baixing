@@ -45,7 +45,7 @@
                         </el-col>
                         <el-col :span="5" :push="13">
                           <div class="submit">
-                            <h3>总价： {{transformPrice(currentPrice)}}元</h3>
+                            <h3>总价： {{transformPrice}}元</h3>
                             <el-button @click="isSubmit = true" :disabled="(currentPrice.price <0 || !currentPrice.price ) || !ifSoldAvailable" type="danger" :loading="isPending">提交审核</el-button>
                           </div>
                         </el-col>
@@ -132,13 +132,17 @@ export default {
     showResult () {
       const { queryResult } = this
       return !(queryResult.error && queryResult.overHeat) && queryResult.keywordPriceList
+    },
+    transformPrice () {
+      const { currentPrice } = this
+      return currentPrice.price > 0 ? f2y(currentPrice.price) : '-'
     }
   },
   methods: {
     handleClick () {},
-    transformPrice (currentPrice) {
-      return currentPrice.price > 0 ? f2y(currentPrice.price) : '-'
-    },
+    // transformPrice (currentPrice) {
+    //   return currentPrice.price > 0 ? f2y(currentPrice.price) : '-'
+    // },
     applyTypeFilter (error, overHeat, industryError) {
       if (error || overHeat || industryError) {
         return APPLY_TYPE_ERROR
