@@ -16,7 +16,7 @@
       </li>
     </ul>
     <h3 class="title">数据概览</h3>
-    <DataRange :subtractDay="0" @getDate="getDate" @searchData="changeDateRange"/>
+    <DataRange :daterangeListMall="daterangeList" :subtractDay="0" @getDate="getDate" @searchData="changeDateRange"/>
     <div class="chart-content">
       <div class="chart-line">
         <ECharts v-if="lineChartList && lineChartList.length" style="width: 100%; max-width: 100%; margin-top: 20px"
@@ -41,6 +41,17 @@ import 'echarts/lib/chart/pie'
 import 'echarts/lib/component/tooltip'
 import 'echarts/lib/chart/line'
 import 'echarts/lib/component/legend'
+import dayjs from 'dayjs'
+const daterangeList = [
+  {
+    id: 5,
+    label: '今日',
+    daterange: [
+      dayjs().subtract(0, 'day'),
+      dayjs().subtract(0, 'day')
+    ]
+  }
+]
 export default {
   name: 'ad-dashboard',
   components: {
@@ -50,6 +61,7 @@ export default {
   },
   data () {
     return {
+      daterangeList,
       daterange: [],
       founds: {},
       statistic: {},

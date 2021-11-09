@@ -2,7 +2,7 @@
     <div class="date-range">
           <el-button class="date-range-panel"
                     :class="{'date-range-panel__active': item.label === activeDaterangeLabel}"
-                    v-for="item in daterangeList"
+                    v-for="item in [...daterangeList,...daterangeListMall]"
                     :key="item.id"
                     size="small"
                     @click="handleDateChange(item)">
@@ -67,6 +67,11 @@ export default {
     subtractDay: {
       type: Number,
       default: 1,
+      require: false
+    },
+    daterangeListMall: {
+      type: Array,
+      default: () => [],
       require: false
     }
   },
