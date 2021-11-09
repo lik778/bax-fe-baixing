@@ -5,82 +5,34 @@
                 <el-tab-pane label="查价" name="first">
                     <InqueryForm :allAreas="allAreas" @inquery="inquery" @resetResult="resetResult"/>
                     <div ref="viewScrollTop" class="placeHolder"></div>
-                    <section class="bw-query-price_item" v-if="ifExistLockCity">
-                      <el-alert
-                        class="lock-tips"
-                        :title="keywordLockText"
-                        type="warning"
-                        :closable="false"
-                        show-icon>
-                      </el-alert>
-                      <SoldCity :tableData="keywordsLockDetails" :allAreas="allAreas"/>
-                    </section>
+                    <SoldCityLayout :allAreas="allAreas" :keywordsLockDetails="keywordsLockDetails" :keywordLockText="keywordLockText" v-if="ifExistLockCity"/>
                     <section class="bw-query-price_item" v-if="queryResult.keywordPvList">
                       <Title title="关键词热度明细"/>
                       <KeywordHotDetail :tableData="queryResult && queryResult.keywordPvList"/>
                     </section>
+
                     <section class="bw-query-price_item" v-if="showResult">
                       <Title title="查价结果" extra="请选择需要的平台*时段*时长"/>
                       <InqueryResult :deviceAvailableStatus="deviceAvailableStatus" :currentPrice="currentPrice" @getValue="getCurrentPrice" :tableData="queryResult && queryResult.keywordPriceList" />
-                      <div class="welfare-content">
-                        <Title title="超值福利" extra="满足规则即可解锁福利"/>
-                        <div class="welfare-content_wrapper">
-                          <WelfareActivity
-                            v-for="(item, index) in welfareInfo.filter(o => o.show())"
-                            :key="index" :title="item.title"
-                            :className="`custom-${index+1}`"
-                            :desc="item.desc"
-                            :value="item.value(currentPrice.price)"
-                            :tag="item.isActive(currentPrice.duration, currentPrice.price).tag"
-                            :content="item.content"
-                            :active="item.isActive(currentPrice.duration, currentPrice.price).active"/>
-                        </div>
+                      <WelfareLayout :currentPrice="currentPrice"/>
+                      <div class="submit">
+                        <h3>总价： {{transformPrice}}元</h3>
+                        <el-button @click="isSubmit = true" :disabled="(currentPrice.price <0 || !currentPrice.price ) || !ifSoldAvailable" type="danger" :loading="isPending">提交审核</el-button>
                       </div>
-                      <el-row type="flex" justify="start" align="middle">
-                        <el-col :span="3">
-                          <!-- <h2 class="wefare-title" v-if="currentPrice.duration > 30 && !showWelfare">超值福利</h2> -->
-                        </el-col>
-                        <el-col :span="3">
-                          <!-- <DiamondShopWelfare v-if="currentPrice.duration > 30 && !showWelfare" :current="currentPrice" /> -->
-                        </el-col>
-                        <el-col :span="5" :push="13">
-                          <div class="submit">
-                            <h3>总价： {{transformPrice}}元</h3>
-                            <el-button @click="isSubmit = true" :disabled="(currentPrice.price <0 || !currentPrice.price ) || !ifSoldAvailable" type="danger" :loading="isPending">提交审核</el-button>
-                          </div>
-                        </el-col>
-                      </el-row>
                     </section>
-                    <section class="footer" v-if="queryResult.error || queryResult.overHeat || queryResult.industryError">
-                      <p v-if="!queryResult.error && queryResult.overHeat">{{queryResult.overHeatWords.join("、")}}热度>2000，暂无报价，请申请人工报价</p>
-                      <p v-if="queryResult.error && !queryResult.overHeat">{{queryResult.overHeatWords.join("、")}}未获取到热度，请重试或申请人工报价</p>
-                      <p v-if="queryResult.error && queryResult.overHeat">{{queryResult.overHeatWords.join("、")}}热度>2000，{{queryResult.errorWords.join("、")}}未获取到热度，请申请人工报价</p>
-                      <p v-if="queryResult.industryError">{{queryInfo.industryCn}}太热，暂无报价，请申请人工报价</p>
-                      <el-button @click="isSubmit = true" style="margin-top: 30px" type="danger">申请人工报价</el-button>
-                    </section>
+                    <ErrorFooter v-if="queryResult.error || queryResult.overHeat || queryResult.industryError" :queryResult="queryResult"/>
                 </el-tab-pane>
             </el-tabs>
         </el-card>
         <BwPlusDialog :BwPlusDialogMsg="BwPlusDialogMsg" @close="BwPlusDialogMsg.dialogVisible = false"/>
-        <el-dialog
-          title="提交"
-          :visible.sync="isSubmit"
-          width="30%"
-        >
-          <span>确认提交审核嘛？</span>
-          <span slot="footer" class="dialog-footer">
-            <el-button @click="isSubmit = false">取 消</el-button>
-            <el-button type="primary" :loading="isPending" @click="submit">确 定</el-button>
-          </span>
-        </el-dialog>
-
+        <CommitDialog :visible="isSubmit" :isPending="isPending" @cancel="isSubmit = false" @submit="submit"/>
     </section>
 </template>
 
 <script>
-import { InqueryForm, KeywordHotDetail, Title, InqueryResult, BwPlusDialog, SoldCity, WelfareActivity } from './components'
+import { InqueryForm, KeywordHotDetail, Title, InqueryResult, BwPlusDialog, WelfareLayout, ErrorFooter, CommitDialog, SoldCityLayout } from '../components'
 import { querySystemResult, commit } from 'api/biaowang-plus'
-import { APPLY_TYPE_NORMAL, APPLY_TYPE_ERROR, welfareInfo } from 'constant/bw-plus'
+import { APPLY_TYPE_NORMAL, APPLY_TYPE_ERROR } from 'constant/bw-plus'
 import { f2y } from 'util'
 import debounce from 'lodash.debounce'
 export default {
@@ -90,10 +42,11 @@ export default {
     KeywordHotDetail,
     Title,
     InqueryResult,
-    // DiamondShopWelfare,
     BwPlusDialog,
-    SoldCity,
-    WelfareActivity
+    WelfareLayout,
+    ErrorFooter,
+    CommitDialog,
+    SoldCityLayout
   },
   props: {
     allAreas: {
@@ -107,7 +60,6 @@ export default {
   },
   data () {
     return {
-      welfareInfo,
       debounce,
       activeName: 'first',
       isSubmit: false,
@@ -140,9 +92,6 @@ export default {
   },
   methods: {
     handleClick () {},
-    // transformPrice (currentPrice) {
-    //   return currentPrice.price > 0 ? f2y(currentPrice.price) : '-'
-    // },
     applyTypeFilter (error, overHeat, industryError) {
       if (error || overHeat || industryError) {
         return APPLY_TYPE_ERROR
@@ -259,60 +208,4 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-  .placeHolder{
-    height: 60px;
-  }
-    .bw-query-price{
-        height: 100%;
-        &_item{
-          margin-bottom: 30px;
-        }
-    }
-   .box-card{
-       margin: 10px;
-       padding: 30px;
-   }
-   .wefare-title{
-     font-size: 18px;
-     color: #FF6350;
-   }
-   .el-row{
-     margin-top: 60px;
-   }
-   .submit{
-     width: 100%;
-     display: flex;
-     flex-direction: column;
-     justify-content: flex-end;
-     align-items: flex-end;
-      h3{
-        font-size: 24px;
-        color: #FF6350;
-        margin-bottom: 20px;
-      }
-   }
-    /deep/ .lock-tips{
-      margin-bottom: 10px;
-      padding: 14px 16px;
-      .el-alert__title{
-        font-size: 14px;
-      }
-    }
-    .welfare-content{
-      margin-top: 30px;
-      &_wrapper{
-        display: flex;
-      }
-    }
-    /deep/ .custom-2{
-      li{
-        width: 100%;
-      }
-    }
-    /deep/ .custom-3{
-      li{
-        width: 100%;
-      }
-    }
-</style>
+<style lang="scss" scoped src="./index.scss"/>
