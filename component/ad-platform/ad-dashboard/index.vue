@@ -75,23 +75,26 @@ export default {
       ])
     },
     async getFounds () {
-      const { data } = await foundsInfo()
+      const { query: { user_id: userId } } = this.$route
+      const { data } = await foundsInfo({ userId })
       this.founds = data
     },
     async getCostList () {
-      const { daterange } = this
+      const { daterange, $route: { query: { user_id: userId } } } = this
       const params = {
         startDate: daterange[0].format('YYYY-MM-DD'),
-        endDate: daterange[1].format('YYYY-MM-DD')
+        endDate: daterange[1].format('YYYY-MM-DD'),
+        userId
       }
       const { data } = await costList(params)
       this.costList = data
     },
     async getStatistic () {
-      const { daterange } = this
+      const { daterange, $route: { query: { user_id: userId } } } = this
       const params = {
         startDate: daterange[0].format('YYYY-MM-DD'),
-        endDate: daterange[1].format('YYYY-MM-DD')
+        endDate: daterange[1].format('YYYY-MM-DD'),
+        userId
       }
       const { data: { lineChartList, pieChartList } } = await statistic(params)
       chartLineOptions.series.forEach(item => {
