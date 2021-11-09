@@ -63,7 +63,15 @@ const daterangeList = [
 const CUSTOM_DATE_RANGE_LABEL = 'custom'
 export default {
   name: 'data-range',
+  props: {
+    subtractDay: {
+      type: Number,
+      default: 1,
+      require: false
+    }
+  },
   data () {
+    const { subtractDay } = this
     return {
       daterangeList,
       activeDaterangeLabel: daterangeList[1].label,
@@ -72,7 +80,7 @@ export default {
       triPickerOptions: {
         disabledDate (time) {
           const timestamp = new Date(time).getTime()
-          const yesterday = dayjs().subtract(1, 'day').valueOf()
+          const yesterday = dayjs().subtract(subtractDay, 'day').valueOf()
           const lastYear = dayjs().subtract(1, 'year').valueOf()
           return timestamp > yesterday || timestamp < lastYear
         }

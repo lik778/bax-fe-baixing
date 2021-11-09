@@ -16,7 +16,7 @@
       </li>
     </ul>
     <h3 class="title">数据概览</h3>
-    <DataRange @getDate="getDate" @searchData="changeDateRange"/>
+    <DataRange :subtractDay="0" @getDate="getDate" @searchData="changeDateRange"/>
     <div class="chart-content">
       <div class="chart-line">
         <ECharts v-if="lineChartList && lineChartList.length" style="width: 100%; max-width: 100%; margin-top: 20px"
