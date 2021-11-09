@@ -284,3 +284,28 @@ export const welfareInfo = [
     show: showWelfare
   }
 ]
+
+export const PRODUCT_STATUS_ONLINE = 1
+export const PRODUCT_STATUS_OFLINE = 0
+export const PRODUCT_LIST = Object.freeze([
+  {
+    name: '360标王',
+    day: '180天',
+    device: DEVICE_WAP,
+    hot: true,
+    originPrice: '',
+    currentPrice: '',
+    status: PRODUCT_STATUS_ONLINE,
+    statusDesc: ''
+  },
+  {
+    name: '头条标王',
+    day: [],
+    device: DEVICE_WAP,
+    hot: true,
+    originPrice: '',
+    currentPrice: '',
+    status: PRODUCT_STATUS_ONLINE,
+    statusDesc: ''
+  }
+])
