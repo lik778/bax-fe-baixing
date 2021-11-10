@@ -250,10 +250,10 @@ export const welfareInfo = [
   },
   {
     id: 2,
-    title: '精准标王词',
+    title: '精准关键词',
     value: (price) => price > 0 ? Math.floor(f2y(price) / 10000) * 5000 : 5000,
     desc: '限时11.1-11.18 仅前111名',
-    content: ['价值¥5000+的5热度关键词', '每满¥10000即赠2个'],
+    content: ['一周至尊标王或标王关键词二选一', '每满¥10000即赠2个5热度关键词'],
     isActive: (duration, price) => {
       price = price > 0 ? price : 0
       const active = f2y(price) >= 10000
