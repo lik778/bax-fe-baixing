@@ -16,6 +16,7 @@ import ErrorFooter from './bw-inquery-price/error-footer.vue'
 import CommitDialog from './bw-inquery-price/commit-dialog.vue'
 import WelfareLayout from './bw-inquery-price/welfare-layout.vue'
 import SoldCityLayout from './bw-inquery-price/sold-city-layout.vue'
+import BwProducts from './bw-inquery-price/bw-products.vue'
 
 export {
   InqueryForm,
@@ -35,5 +36,6 @@ export {
   ErrorFooter,
   CommitDialog,
   WelfareLayout,
-  SoldCityLayout
+  SoldCityLayout,
+  BwProducts
 }

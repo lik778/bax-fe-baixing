@@ -1,28 +1,26 @@
 <template>
     <section class="bw-query-price">
         <el-card class="box-card">
-            <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
-                <el-tab-pane label="查价" name="first">
-                    <InqueryForm :allAreas="allAreas" @inquery="inquery" @resetResult="resetResult"/>
-                    <div ref="viewScrollTop" class="placeHolder"></div>
-                    <SoldCityLayout :allAreas="allAreas" :keywordsLockDetails="keywordsLockDetails" :keywordLockText="keywordLockText" v-if="ifExistLockCity"/>
-                    <section class="bw-query-price_item" v-if="queryResult.keywordPvList">
-                      <Title title="关键词热度明细"/>
-                      <KeywordHotDetail :tableData="queryResult && queryResult.keywordPvList"/>
-                    </section>
-
-                    <section class="bw-query-price_item" v-if="showResult">
-                      <Title title="查价结果" extra="请选择需要的平台*时段*时长"/>
-                      <InqueryResult :deviceAvailableStatus="deviceAvailableStatus" :currentPrice="currentPrice" @getValue="getCurrentPrice" :tableData="queryResult && queryResult.keywordPriceList" />
-                      <WelfareLayout :currentPrice="currentPrice"/>
-                      <div class="submit">
-                        <h3>总价： {{transformPrice}}元</h3>
-                        <el-button @click="isSubmit = true" :disabled="(currentPrice.price <0 || !currentPrice.price ) || !ifSoldAvailable" type="danger" :loading="isPending">提交审核</el-button>
-                      </div>
-                    </section>
-                    <ErrorFooter v-if="queryResult.error || queryResult.overHeat || queryResult.industryError" :queryResult="queryResult"/>
-                </el-tab-pane>
-            </el-tabs>
+          <InqueryForm :allAreas="allAreas" @inquery="inquery" @resetResult="resetResult"/>
+          <div ref="viewScrollTop" class="placeHolder"></div>
+          <SoldCityLayout :allAreas="allAreas" :keywordsLockDetails="keywordsLockDetails" :keywordLockText="keywordLockText" v-if="ifExistLockCity"/>
+          <section class="bw-query-price_item" v-if="queryResult.keywordPvList">
+            <Title title="关键词热度明细"/>
+            <KeywordHotDetail :tableData="queryResult && queryResult.keywordPvList"/>
+          </section>
+          <section class="bw-query-price_item" v-if="showResult">
+            <Title title="百度标王，王牌产品" extra="请选择需要的平台*时段*时长"/>
+            <InqueryResult :deviceAvailableStatus="deviceAvailableStatus" :currentPrice="currentPrice" @getValue="getCurrentPrice" :tableData="queryResult && queryResult.keywordPriceList" />
+          </section>
+        </el-card>
+        <BwProducts />
+        <el-card class="box-card" v-if="showResult">
+          <WelfareLayout :currentPrice="currentPrice"/>
+          <div class="submit">
+            <h3>总价： {{transformPrice}}元</h3>
+            <el-button @click="isSubmit = true" :disabled="(currentPrice.price <0 || !currentPrice.price ) || !ifSoldAvailable" type="danger" :loading="isPending">提交审核</el-button>
+          </div>
+          <ErrorFooter v-if="queryResult.error || queryResult.overHeat || queryResult.industryError" :queryResult="queryResult"/>
         </el-card>
         <BwPlusDialog :BwPlusDialogMsg="BwPlusDialogMsg" @close="BwPlusDialogMsg.dialogVisible = false"/>
         <CommitDialog :visible="isSubmit" :isPending="isPending" @cancel="isSubmit = false" @submit="submit"/>
@@ -30,7 +28,7 @@
 </template>
 
 <script>
-import { InqueryForm, KeywordHotDetail, Title, InqueryResult, BwPlusDialog, WelfareLayout, ErrorFooter, CommitDialog, SoldCityLayout } from '../components'
+import { InqueryForm, KeywordHotDetail, Title, InqueryResult, BwPlusDialog, WelfareLayout, ErrorFooter, CommitDialog, SoldCityLayout, BwProducts } from '../components'
 import { querySystemResult, commit } from 'api/biaowang-plus'
 import { APPLY_TYPE_NORMAL, APPLY_TYPE_ERROR } from 'constant/bw-plus'
 import { f2y } from 'util'
@@ -46,7 +44,8 @@ export default {
     WelfareLayout,
     ErrorFooter,
     CommitDialog,
-    SoldCityLayout
+    SoldCityLayout,
+    BwProducts
   },
   props: {
     allAreas: {
