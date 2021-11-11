@@ -228,7 +228,7 @@ export const RENEW_OPRATION_STATUS_COPY = 30
 export const RENEW_OPRATION_STATUS_DISABLED = 60
 const showWelfare = () => {
   const now = dayjs()
-  return dayjs(now).isBetween('2021-11-1', dayjs('2021-11-12'))
+  return dayjs(now).isBetween('2021-11-1', dayjs('2021-11-19'))
 }
 
 export const welfareInfo = [
