@@ -2,7 +2,6 @@
     width: 200px;
     border: 1px solid #FA6A78;
     border-radius: 8px;
-    overflow: hidden;
     box-sizing: border-box;
     margin-right: 20px;
     margin-bottom: 20px;
@@ -17,6 +16,8 @@
     font-family: PingFangSC-Medium;
     font-size: 13px;
     color: #FFFFFF;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
     .hot-icon{
         width: 13px;
         height: 15px;

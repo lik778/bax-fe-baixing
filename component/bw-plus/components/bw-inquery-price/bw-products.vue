@@ -37,7 +37,11 @@ export default {
         this.checkedProducts = [...checkedProducts, ...[product]]
       }
       console.log('checkedProducts', this.checkedProducts)
-      this.currentExcludes = this.checkedProducts.map(o => [...o.excludes])[0]
+      let currentExcludes = []
+      this.checkedProducts.forEach(o => {
+        currentExcludes = [...currentExcludes, ...o.excludes]
+      })
+      this.currentExcludes = currentExcludes
       console.log('currentExcludes', this.currentExcludes)
     }
   }
