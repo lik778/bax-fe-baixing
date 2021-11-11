@@ -2,7 +2,7 @@
     <el-card class="box-card">
        <Title title="叠加媒体，低价加“量”"/>
        <div class="product-list">
-        <ProductItem @check="checkProduct" :currentExcludes="currentExcludes" v-for="product in productList.filter(o => o.type !== 0)" :key="product.id" :product="product"/>
+        <ProductItem @check="checkProduct" :currentExcludes="currentExcludes" v-for="product in productList" :key="product.id" :product="product"/>
        </div>
     </el-card>
 </template>

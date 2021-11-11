@@ -11,9 +11,10 @@
           <section class="bw-query-price_item" v-if="showResult">
             <Title title="百度标王，王牌产品" extra="请选择需要的平台*时段*时长"/>
             <InqueryResult :deviceAvailableStatus="deviceAvailableStatus" :currentPrice="currentPrice" @getValue="getCurrentPrice" :tableData="queryResult && queryResult.keywordPriceList" />
+            <BwCreativity :productList="productList.filter(o => o.type === 0)"/>
           </section>
         </el-card>
-        <BwProducts :productList="productList" />
+        <BwProducts :productList="productList.filter(o => o.type !== 0)" />
         <el-card class="box-card" v-if="showResult">
           <WelfareLayout :currentPrice="currentPrice"/>
           <div class="submit">
@@ -28,7 +29,7 @@
 </template>
 
 <script>
-import { InqueryForm, KeywordHotDetail, Title, InqueryResult, BwPlusDialog, WelfareLayout, ErrorFooter, CommitDialog, SoldCityLayout, BwProducts } from '../components'
+import { InqueryForm, KeywordHotDetail, Title, InqueryResult, BwPlusDialog, WelfareLayout, ErrorFooter, CommitDialog, SoldCityLayout, BwProducts, BwCreativity } from '../components'
 import { querySystemResult, commit } from 'api/biaowang-plus'
 import { APPLY_TYPE_NORMAL, APPLY_TYPE_ERROR } from 'constant/bw-plus'
 import { f2y } from 'util'
@@ -45,7 +46,8 @@ export default {
     ErrorFooter,
     CommitDialog,
     SoldCityLayout,
-    BwProducts
+    BwProducts,
+    BwCreativity
   },
   props: {
     allAreas: {

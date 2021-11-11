@@ -4,7 +4,7 @@
             <span>{{product.title}}</span>
             <i class="hot-icon"></i>
         </h3>
-        <ul class="product-specification">
+        <ul class="product-specification" v-if="product.limit">
             <li>360天</li>
             <li>双端</li>
             <li>7天*24小时</li>
