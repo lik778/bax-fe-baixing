@@ -13,7 +13,7 @@
             <InqueryResult :deviceAvailableStatus="deviceAvailableStatus" :currentPrice="currentPrice" @getValue="getCurrentPrice" :tableData="queryResult && queryResult.keywordPriceList" />
           </section>
         </el-card>
-        <BwProducts />
+        <BwProducts :productList="productList" />
         <el-card class="box-card" v-if="showResult">
           <WelfareLayout :currentPrice="currentPrice"/>
           <div class="submit">
@@ -76,7 +76,8 @@ export default {
       keywordLockText: '', // 关键词已售文案
       deviceAvailableStatus: {}, // 判断当前关键词在各设备端是否可售
       ifSoldAvailable: false, // 是否存在可售卖的平台,
-      isPending: false
+      isPending: false,
+      productList: []
     }
   },
   computed: {
@@ -164,9 +165,10 @@ export default {
       }
       this.queryInfo = { ...form, ...params }
       try {
-        const { data, code, message, data: { keywordsLockDetails: { keywordsLockDetails, ifExistLockCity, ifSoldAvailable, deviceAvailableStatus: { ifMobileAvailable, ifPcAvailable }, deviceAvailableStatus } } } = await querySystemResult(params)
+        const { data, code, message, data: { additionalProducts, keywordsLockDetails: { keywordsLockDetails, ifExistLockCity, ifSoldAvailable, deviceAvailableStatus: { ifMobileAvailable, ifPcAvailable }, deviceAvailableStatus } } } = await querySystemResult(params)
         if (code === 0) {
           this.queryResult = data
+          this.productList = additionalProducts
           // 锁词相关逻辑
           this.ifExistLockCity = ifExistLockCity
           this.keywordsLockDetails = keywordsLockDetails
