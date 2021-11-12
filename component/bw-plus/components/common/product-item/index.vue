@@ -1,4 +1,5 @@
 <template>
+  <div>
     <div :class="{'product-wrapper': true, 'product-checked': isActive, 'product-notAllowCheck': notAllowCheck}" @click="checkProduct">
         <h3 class="product-title">
             <span>{{product.title}}</span>
@@ -14,9 +15,10 @@
                 <span class="current-price">抢鲜价:8000元</span>
                 <span class="origin-price">原价:8000元</span>
             </div>
-            <el-button size="mini" :disabled="notAllowCheck">更换套餐</el-button>
+            <el-button @click.stop="changeCombo" v-if="product.limit" size="mini" :disabled="notAllowCheck">更换套餐</el-button>
         </div>
     </div>
+  </div>
 </template>
 <script>
 export default {
@@ -54,6 +56,9 @@ export default {
       const { product, product: { id }, isActive } = this
       this.$emit('check', { isActive, product })
       this.active = isActive ? 0 : id
+    },
+    changeCombo () {
+      this.$emit('changeCombo', this.product)
     }
   }
 }

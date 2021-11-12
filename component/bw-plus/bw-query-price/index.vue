@@ -14,7 +14,7 @@
             <BwCreativity :productList="productList.filter(o => o.type === 0)"/>
           </section>
         </el-card>
-        <BwProducts :productList="productList.filter(o => o.type !== 0)" />
+        <BwProducts :currentPrice="currentPrice" :deviceAvailableStatus="deviceAvailableStatus" :priceList="queryResult && queryResult.keywordPriceList" :productList="productList.filter(o => o.type !== 0)" />
         <el-card class="box-card" v-if="showResult">
           <WelfareLayout :currentPrice="currentPrice"/>
           <div class="submit">
