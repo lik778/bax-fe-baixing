@@ -14,7 +14,7 @@
             <BwCreativity :productList="productList.filter(o => o.type === 0)"/>
           </section>
         </el-card>
-        <BwProducts :currentPrice="currentPrice" :deviceAvailableStatus="deviceAvailableStatus" :priceList="queryResult && queryResult.keywordPriceList" :productList="productList.filter(o => o.type !== 0)" />
+        <BwProducts @getExtraProductValue="getExtraProductValue" :currentPrice="currentPrice" :deviceAvailableStatus="deviceAvailableStatus" :priceList="queryResult && queryResult.keywordPriceList" :productList="productList.filter(o => o.type !== 0)" />
         <el-card class="box-card" v-if="showResult">
           <WelfareLayout :currentPrice="currentPrice"/>
           <div class="submit">
@@ -34,6 +34,7 @@ import { querySystemResult, commit } from 'api/biaowang-plus'
 import { APPLY_TYPE_NORMAL, APPLY_TYPE_ERROR } from 'constant/bw-plus'
 import { f2y } from 'util'
 import debounce from 'lodash.debounce'
+import clone from 'clone'
 export default {
   name: 'bw-plus-query-price',
   components: {
@@ -170,7 +171,6 @@ export default {
         const { data, code, message, data: { additionalProducts, keywordsLockDetails: { keywordsLockDetails, ifExistLockCity, ifSoldAvailable, deviceAvailableStatus: { ifMobileAvailable, ifPcAvailable }, deviceAvailableStatus } } } = await querySystemResult(params)
         if (code === 0) {
           this.queryResult = data
-          this.productList = additionalProducts
           // 锁词相关逻辑
           this.ifExistLockCity = ifExistLockCity
           this.keywordsLockDetails = keywordsLockDetails
@@ -188,6 +188,7 @@ export default {
           } else {
             this.currentPrice = data.keywordPriceList && data.keywordPriceList[0].bothSeven
           }
+          this.productList = [...additionalProducts].map(o => ({ ...o, currentPrice: this.currentPrice }))
           this.$nextTick(() => {
             this.$refs.viewScrollTop.scrollIntoView()
           })
@@ -206,6 +207,18 @@ export default {
     },
     getCurrentPrice (value) {
       this.currentPrice = value
+      const { productList } = this
+      this.productList = [...productList].map(o => ({ ...o, currentPrice: value }))
+    },
+    getExtraProductValue (value) {
+      const { productList } = this
+      console.log(productList)
+      productList.forEach(o => {
+        if (o.id === value.productId) {
+          o.currentPrice = value
+        }
+      })
+      this.productList = clone(productList)
     }
   }
 }

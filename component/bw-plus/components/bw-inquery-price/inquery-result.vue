@@ -130,6 +130,16 @@ export default {
       type: Object,
       default: () => {},
       require: true
+    },
+    dealPriceRatio: {
+      type: Number,
+      default: 1,
+      require: false
+    },
+    limit: {
+      type: Object,
+      default: () => {},
+      require: false
     }
   },
   watch: {
@@ -160,8 +170,9 @@ export default {
       this.$emit('getValue', this.current)
     },
     transforPrice (price) {
+      const { dealPriceRatio } = this
       if (price >= 0) {
-        return f2y(price)
+        return f2y(dealPriceRatio * price)
       }
       return '-'
     },

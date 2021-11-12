@@ -11,10 +11,10 @@
       :visible.sync="dialogVisible"
       width="60%"
     >
-      <InqueryResult :currentPrice="currentPrice" :deviceAvailableStatus="deviceAvailableStatus" @getValue="getCurrentPrice" :tableData="priceList" />
+      <InqueryResult :limit="currentProduct.limit" :currentPrice="currentProduct.currentPrice" :dealPriceRatio="currentProduct.dealPriceRatio" :deviceAvailableStatus="deviceAvailableStatus" @getValue="getCheckedPrice" :tableData="priceList" />
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+        <el-button type="primary" @click="confirmCheckedPrice">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -45,18 +45,15 @@ export default {
       type: Object,
       default: () => {},
       require: true
-    },
-    currentPrice: {
-      type: Object,
-      default: () => {},
-      require: true
     }
   },
   data () {
     return {
       currentExcludes: [],
       checkedProducts: [],
-      dialogVisible: false
+      dialogVisible: false,
+      currentProduct: {},
+      checkedPrice: this.currentPrice
     }
   },
   methods: {
@@ -77,10 +74,16 @@ export default {
     },
     changeCombo (product) {
       this.dialogVisible = true
-      console.log(product)
+      this.currentProduct = product
     },
-    getCurrentPrice (value) {
-      console.log(value)
+    getCheckedPrice (value) {
+      this.checkedPrice = value
+    },
+    confirmCheckedPrice () {
+      const { id: productId } = this.currentProduct
+      console.log(productId)
+      this.$emit('getExtraProductValue', { ...this.checkedPrice, productId })
+      this.dialogVisible = false
     }
   }
 }
