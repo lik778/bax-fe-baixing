@@ -93,4 +93,7 @@ export default {
     display: flex;
     flex-wrap: wrap;
   }
+  .box-card{
+    margin: 10px;
+  }
 </style>
