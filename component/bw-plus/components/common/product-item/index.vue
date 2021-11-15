@@ -5,10 +5,10 @@
             <span>{{product.title}}</span>
             <i class="hot-icon"></i>
         </h3>
-        <ul class="product-specification" v-if="product.limit">
+        <ul class="product-specification" v-if="showDuration">
             <li>{{showDuration}}天</li>
-            <li>{{showDevice}}</li>
-            <li>{{showSchedule}}</li>
+            <li v-if="product.limit">{{showDevice}}</li>
+            <li v-if="product.limit">{{showSchedule}}</li>
         </ul>
         <div class="product-option">
             <div>
@@ -57,7 +57,12 @@ export default {
       return DEVICE[device]
     },
     showDuration () {
-      const { product: { limit, currentPrice: { duration } } } = this
+      const { product: { certainType, type, limit, currentPrice: { duration } } } = this
+      if (!limit && type === 2) {
+        return certainType
+      } else if (!limit) {
+        return null
+      }
       if (limit && limit.type && limit.type.length === 1) {
         return limit.type[0]
       }
@@ -71,12 +76,15 @@ export default {
       return SCHEDULE_TYPE[scheduleType]
     },
     dealPrice () {
-      const { product: { currentPrice: { price }, dealPriceRatio } } = this
-      return f2y(price * dealPriceRatio)
+      const { product: { certainDealPrice, type, currentPrice: { price }, dealPriceRatio } } = this
+      if (type === 2) {
+        return certainDealPrice
+      }
+      return price > 0 ? f2y(price * dealPriceRatio) : '-'
     },
     originalPrice () {
       const { product: { currentPrice: { price }, originalPriceRatio } } = this
-      return f2y(price * originalPriceRatio)
+      return price > 0 ? f2y(price * originalPriceRatio) : '-'
     }
   },
   methods: {

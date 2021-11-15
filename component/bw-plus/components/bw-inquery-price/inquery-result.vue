@@ -26,6 +26,7 @@
                     :content="row.bothSeven.price >= 0 ? '已售出' : '行业太热，暂无报价'">
                     <span class="sold-item" slot="reference">--</span>
                   </el-popover>
+                  <div v-else-if="notAllowCheck(DEVICE_ALL, 724, row.type)" :class="{'active-item': row.bothSeven.index === current.index, 'diabled': true, 'option-item': true}">{{transforPrice(row.bothSeven.price)}}</div>
                   <div v-else :class="{ 'active-item': row.bothSeven.index === current.index, 'option-item': true }" @click="cellClick(row.bothSeven)">{{transforPrice(row.bothSeven.price)}}</div>
                 </template>
             </el-table-column>
@@ -40,6 +41,7 @@
                     :content="row.bothFive.price >= 0 ? '已售出' : '行业太热，暂无报价'">
                     <span class="sold-item" slot="reference">--</span>
                 </el-popover>
+                <div v-else-if="notAllowCheck(DEVICE_ALL, 58, row.type)" :class="{'active-item': row.bothFive.index === current.index, 'diabled': true, 'option-item': true}">{{transforPrice(row.bothFive.price)}}</div>
                 <div v-else :class="{ 'active-item': row.bothFive.index === current.index, 'option-item': true }" @click="cellClick(row.bothFive)">{{transforPrice(row.bothFive.price)}}</div>
               </template>
             </el-table-column>
@@ -58,6 +60,7 @@
                     :content="row.wapSeven.price >= 0 ? '已售出' : '行业太热，暂无报价'">
                     <span class="sold-item" slot="reference">--</span>
                 </el-popover>
+                <div v-else-if="notAllowCheck(DEVICE_WAP, 724, row.type)" :class="{'active-item': row.wapSeven.index === current.index, 'diabled': true, 'option-item': true}">{{transforPrice(row.wapSeven.price)}}</div>
                 <div v-else :class="{ 'active-item': row.wapSeven.index === current.index, 'option-item': true }" @click="cellClick(row.wapSeven)">{{transforPrice(row.wapSeven.price)}}</div>
               </template>
             </el-table-column>
@@ -72,7 +75,8 @@
                     :content="row.wapFive.price >= 0 ? '已售出' : '行业太热，暂无报价'">
                     <span class="sold-item" slot="reference">--</span>
                 </el-popover>
-                <div v-else :class="{ 'active-item': row.wapFive.index === current.index, 'option-item': true }" @click="cellClick(row.wapFive)">{{transforPrice(row.wapFive.price)}}</div>
+                <div v-else-if="notAllowCheck(DEVICE_WAP, 58, row.type)" :class="{'active-item': row.wapFive.index === current.index, 'diabled': true, 'option-item': true}">{{transforPrice(row.wapFive.price)}}</div>
+                <div v-else :class="{ 'active-item': row.wapFive.index === current.index, 'option-item': true}" @click="cellClick(row.wapFive)">{{transforPrice(row.wapFive.price)}}</div>
               </template>
             </el-table-column>
         </el-table-column>
@@ -90,7 +94,8 @@
                     :content="row.pcSeven.price >= 0 ? '已售出' : '行业太热，暂无报价'">
                     <span class="sold-item" slot="reference">--</span>
                 </el-popover>
-                <div v-else :class="{ 'active-item': row.pcSeven.index === current.index, 'option-item': true }" @click="cellClick(row.pcSeven)">{{transforPrice(row.pcSeven.price)}}</div>
+                <div v-else-if="notAllowCheck(DEVICE_PC, 724, row.type)" :class="{'active-item': row.pcSeven.index === current.index, 'diabled': true, 'option-item': true}">{{transforPrice(row.pcSeven.price)}}</div>
+                <div v-else :class="{ 'active-item': row.pcSeven.index === current.index, 'option-item': true}" @click="cellClick(row.pcSeven)">{{transforPrice(row.pcSeven.price)}}</div>
               </template>
             </el-table-column>
             <el-table-column align="center" prop="pcFive" label="5天*8小时（元）">
@@ -104,7 +109,8 @@
                     :content="row.pcFive.price >= 0 ? '已售出' : '行业太热，暂无报价'">
                     <span class="sold-item" slot="reference">--</span>
                 </el-popover>
-                <div v-else :class="{ 'active-item': row.pcFive.index === current.index, 'option-item': true }" @click="cellClick(row.pcFive)">{{transforPrice(row.pcFive.price)}}</div>
+                <div v-else-if="notAllowCheck(DEVICE_PC, 58, row.type)" :class="{'active-item': row.pcFive.index === current.index, 'diabled': true, 'option-item': true}">{{transforPrice(row.pcFive.price)}}</div>
+                <div v-else :class="{ 'active-item': row.pcFive.index === current.index, 'option-item': true}" @click="cellClick(row.pcFive)">{{transforPrice(row.pcFive.price)}}</div>
               </template>
             </el-table-column>
         </el-table-column>
@@ -113,6 +119,7 @@
 
 <script>
 import { f2y } from 'util'
+import { DEVICE_ALL, DEVICE_PC, DEVICE_WAP } from 'constant/bw-plus'
 export default {
   name: 'InqueryResult',
   props: {
@@ -137,8 +144,8 @@ export default {
       require: false
     },
     limit: {
-      type: Object,
-      default: () => {},
+      type: null || Object,
+      default: () => null,
       require: false
     }
   },
@@ -156,7 +163,10 @@ export default {
   },
   data () {
     return {
-      current: this.tableData[0].bothSeven
+      current: this.tableData[0].bothSeven,
+      DEVICE_ALL,
+      DEVICE_PC,
+      DEVICE_WAP
     }
   },
   methods: {
@@ -178,6 +188,16 @@ export default {
     },
     clickDisabled (price, status) {
       return price <= 0 || !status
+    },
+    notAllowCheck (device, schedule, duration) {
+      const { limit } = this
+      if (limit) {
+        if (!limit.platform.includes(device) || !limit.schedule.includes(schedule) || !limit.type.includes(duration)) {
+          return true
+        }
+        return false
+      }
+      return false
     }
   }
 }
@@ -226,5 +246,9 @@ export default {
     }
     .sold-item{
       color: #909399;
+    }
+    .diabled{
+      color: #909399;
+      pointer-events: none;
     }
 </style>
