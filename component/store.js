@@ -60,7 +60,9 @@ const gStore = observable({
       realAgentId
     )
     currentUser.allowCareFreeRecharge = AllowCareFreeRecharge(roles)
-    currentUser.isCareFreeUser = await isAdplatformUser(currentUser.id)
+    if (isNormalUser(roles)) {
+      currentUser.isCareFreeUser = await isAdplatformUser(currentUser.id)
+    }
 
     this._currentUser = currentUser
     // 打点数据中添加用户身份信息
