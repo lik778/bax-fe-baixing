@@ -66,9 +66,9 @@ import Vue from 'vue'
 import { ErrorBoundary } from 'vue-error-boundary'
 import Vue2Filters from 'vue2-filters'
 import { getBusinessLicense } from 'api/seo'
-// import { getCurrentUser } from 'api/account'
+import { getCurrentUser } from 'api/account'
 import pick from 'lodash.pick'
-// import { notAllowFengmingRecharge } from 'util/role'
+import { notAllowFengmingRecharge } from 'util/role'
 import { parseQuery, stringifyQuery, f2y } from 'util'
 
 import gStore from '../component/store'
@@ -371,15 +371,15 @@ const qwtRoutes = [
   {
     component: () => import('com/qwt-charge'),
     path: '/main/qwt/charge',
-    name: 'qwt-charge'
-    // beforeEnter: async (to, from, next) => {
-    //   const { roles, realAgentId } = await getCurrentUser()
-    //   if (notAllowFengmingRecharge(roles, realAgentId)) {
-    //     next({ name: 'qwt-promotion-list', redirect: true })
-    //   } else {
-    //     next()
-    //   }
-    // }
+    name: 'qwt-charge',
+    beforeEnter: async (to, from, next) => {
+      const { roles, realAgentId } = await getCurrentUser()
+      if (notAllowFengmingRecharge(roles, realAgentId)) {
+        next({ name: 'qwt-promotion-list', redirect: true })
+      } else {
+        next()
+      }
+    }
   }
 ]
 

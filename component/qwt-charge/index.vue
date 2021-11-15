@@ -152,9 +152,8 @@ export default {
     }
   },
   data () {
-    const { userInfo } = this
     return {
-      productTabMchCode: userInfo.allowFmRecharge ? FENG_MING_MERCHANT_CODE : (userInfo.shAgent ? CARE_FREE_MERCHANT_CODE : 'PHOENIXS_MERCHANT_CODE'),
+      productTabMchCode: FENG_MING_MERCHANT_CODE,
       FENG_MING_MERCHANT_CODE,
       PHOENIXS_MERCHANT_CODE,
       CARE_FREE_MERCHANT_CODE,
