@@ -152,8 +152,9 @@ export default {
     }
   },
   data () {
+    const { userInfo } = this
     return {
-      productTabMchCode: FENG_MING_MERCHANT_CODE,
+      productTabMchCode: userInfo.allowFmRecharge ? FENG_MING_MERCHANT_CODE : (userInfo.shAgent ? CARE_FREE_MERCHANT_CODE : 'PHOENIXS_MERCHANT_CODE'),
       FENG_MING_MERCHANT_CODE,
       PHOENIXS_MERCHANT_CODE,
       CARE_FREE_MERCHANT_CODE,
@@ -224,15 +225,6 @@ export default {
     Contract,
     PromotionAreaLimitTip,
     Clipboard
-  },
-  watch: {
-    userInfo: {
-      immediate: true,
-      deep: true,
-      handler (values) {
-        this.productTabMchCode = values.allowFmRecharge ? FENG_MING_MERCHANT_CODE : (values.shAgent ? CARE_FREE_MERCHANT_CODE : 'PHOENIXS_MERCHANT_CODE')
-      }
-    }
   },
   async mounted () {
     const { query: { from, sales_id: salesId, user_id: userId } } = this.$route

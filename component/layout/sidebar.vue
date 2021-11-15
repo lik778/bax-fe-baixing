@@ -27,7 +27,7 @@
             <bx-icon type="paycircleo"></bx-icon>充值与购买
           </template>
           <el-menu-item index="qwt-charge">
-            <router-link :to="{ name: 'qwt-charge' }" tag="p">
+            <router-link :to="{ name: 'qwt-charge' }" tag="p" v-if="userInfo.allowFmRecharge || userInfo.allowCareFreeRecharge">
               充值
             </router-link>
           </el-menu-item>
