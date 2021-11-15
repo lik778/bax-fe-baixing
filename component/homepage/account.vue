@@ -19,7 +19,7 @@
           <p class="title">省心币（元) </p>
           <p class="num">{{ adPlatformBalance.price }}</p>
           <!-- <p class="desc">（ {{biaowangData.nearExpirationPromotes}} 个词即将到期）</p> -->
-          <el-button type="primary" class="button" size="small" @click.native="() => handleCharge('adPlatform')">立即充值</el-button>
+          <el-button v-if="userInfo.allowCareFreeRecharge" type="primary" class="button" size="small" @click.native="() => handleCharge('adPlatform')">立即充值</el-button>
         </li>
       </ul>
     </div>

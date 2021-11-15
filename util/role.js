@@ -291,6 +291,10 @@ export function notAllowFengmingRecharge (roles, agentId) {
   return [50].includes(agentId) && isOnlyBaixingUser
 }
 
+export function AllowCareFreeRecharge (roles) {
+  return isBaixingSales(roles)
+}
+
 export const relationEnum = {
   SELF: 'self', // 直接用户
   SUB: 'sub', // 下属销售用户
@@ -345,4 +349,14 @@ export function allowBwplusDashboard (userInfo) {
     return true
   }
   return false
+}
+
+export function allowCareFreeDashboard (userInfo) {
+  const { roles } = userInfo
+  const currentRoles = normalizeRoles(roles)
+  const isSales = currentRoles.includes('BAIXING_SALES')
+  if (isNormalUser(roles)) {
+    return userInfo.isCareFreeUser
+  }
+  return isSales
 }

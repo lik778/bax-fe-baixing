@@ -3,7 +3,7 @@
     <el-tabs class="product-tab" v-model="productTabMchCode" @tab-click="changeProductMchCodeTab">
       <el-tab-pane v-if="userInfo.allowFmRecharge" :key="FENG_MING_MERCHANT_CODE"  label="站外推广" :name="FENG_MING_MERCHANT_CODE"></el-tab-pane>
       <el-tab-pane v-if="!userInfo.shAgent"  :key="PHOENIXS_MERCHANT_CODE"  label="标王" :name="PHOENIXS_MERCHANT_CODE"></el-tab-pane>
-      <el-tab-pane :key="CARE_FREE_MERCHANT_CODE" label="省心币" :name="CARE_FREE_MERCHANT_CODE"></el-tab-pane>
+      <el-tab-pane v-if="userInfo.allowCareFreeRecharge" :key="CARE_FREE_MERCHANT_CODE" label="省心币" :name="CARE_FREE_MERCHANT_CODE"></el-tab-pane>
     </el-tabs>
     <div class="charge-container" v-loading.fullscreen.lock="fetchLoading">
       <section class="product shadow panel">
@@ -36,6 +36,7 @@
                 </price-tag>
               </section>
             </main>
+            <footer v-if="productTabMchCode === CARE_FREE_MERCHANT_CODE">说明：省心币购买的省心包为全托管产品，无客户操作后台，统一由百姓网托管。</footer>
           </template>
 
           <template v-if="siteSpu">
@@ -229,15 +230,14 @@ export default {
       immediate: true,
       deep: true,
       handler (values) {
-        this.productTabMchCode = values.allowFmRecharge ? FENG_MING_MERCHANT_CODE : (values.shAgent ? CARE_FREE_MERCHANT_CODE : 'PHOENIXS_MERCHANT_CODE')
+        this.productTabMchCode = values.allowFmRecharge ? FENG_MING_MERCHANT_CODE : (values.shAgent && values.allowCareFreeRecharge ? CARE_FREE_MERCHANT_CODE : PHOENIXS_MERCHANT_CODE)
       }
     }
   },
   async mounted () {
     const { query: { from, sales_id: salesId, user_id: userId } } = this.$route
-    if (from === CARE_FREE_MERCHANT_CODE || this.productTabMchCode === CARE_FREE_MERCHANT_CODE) {
+    if (from === CARE_FREE_MERCHANT_CODE) {
       this.productTabMchCode = CARE_FREE_MERCHANT_CODE
-      this.showDiscount = false
     }
     setTimeout(() => {
       const { userInfo, actionTrackId } = this
@@ -287,7 +287,6 @@ export default {
       this.chargeSpu = null
       this.checkedProducts = []
       this.$bus.$emit('resetPriceTagInput')
-      this.showDiscount = this.productTabMchCode !== 'CARE_FREE'
       store.setDiscountInfoHTMLFactory(this.productTabMchCode)
       this.obtainProductByMchCode()
     },

@@ -1,4 +1,4 @@
-import { getCurrentBalanceBreif } from './account'
+import { getCurrentBalanceBreif, isCareFreeUser } from './account'
 import { SPUCODES } from 'constant/product'
 import { adPlatform, trim } from './base'
 
@@ -10,6 +10,12 @@ export async function getHomePageAdplatformData (params) {
     getCurrentBalanceBreif(CARE_FREE_SPU_CODE, userId)
   ])
   return adPlatformBalanceBrief
+}
+
+export async function isAdplatformUser (params) {
+  const { userId } = params
+  const [value] = await Promise.all([isCareFreeUser(userId)])
+  return value
 }
 
 export async function foundsInfo (params) {
