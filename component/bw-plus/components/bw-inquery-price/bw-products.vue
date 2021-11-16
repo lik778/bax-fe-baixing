@@ -1,10 +1,25 @@
 <template>
   <div>
     <el-card class="box-card">
-       <Title title="叠加媒体，低价加“量”"/>
-       <div class="product-list">
-        <ProductItem @changeCombo="changeCombo" @check="checkProduct" :currentExcludes="currentExcludes" v-for="product in productList" :key="product.id" :product="product"/>
-       </div>
+      <Title title="叠加媒体，低价加“量”"/>
+      <div class="product-list">
+        <el-popover
+          v-for="product in productList"
+          :key="product.id"
+          placement="top-start"
+          :title="product.title"
+          trigger="hover"
+          width="318"
+        >
+          <div class="product-detail">
+            <div class="image-wrapper">
+              <img :src="product.image"/>
+            </div>
+            <p>{{product.description}}</p>
+          </div>
+          <ProductItem slot="reference" @changeCombo="changeCombo" @check="checkProduct" :currentExcludes="currentExcludes" :key="product.id" :product="product"/>
+        </el-popover>
+      </div>
     </el-card>
     <el-dialog
       title="提示"
@@ -95,5 +110,16 @@ export default {
   }
   .box-card{
     margin: 10px;
+  }
+  .image-wrapper{
+    width: 288px;
+    padding-top: 78%;
+    position: relative;
+    img{
+      width: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
   }
 </style>

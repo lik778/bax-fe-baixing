@@ -188,7 +188,10 @@ export default {
           } else {
             this.currentPrice = data.keywordPriceList && data.keywordPriceList[0].bothSeven
           }
-          this.productList = [...additionalProducts].map(o => ({ ...o, currentPrice: this.currentPrice }))
+          console.log(this.currentPrice)
+          console.log(this.queryResult.keywordPriceList)
+          this.transformProductList(additionalProducts)
+          console.log(this.productList)
           this.$nextTick(() => {
             this.$refs.viewScrollTop.scrollIntoView()
           })
@@ -207,18 +210,32 @@ export default {
     },
     getCurrentPrice (value) {
       this.currentPrice = value
-      const { productList } = this
-      this.productList = [...productList].map(o => ({ ...o, currentPrice: value }))
+      const productList = clone(this.productList)
+      this.transformProductList(productList)
     },
     getExtraProductValue (value) {
       const { productList } = this
-      console.log(productList)
       productList.forEach(o => {
         if (o.id === value.productId) {
           o.currentPrice = value
         }
       })
       this.productList = clone(productList)
+    },
+    transformProductList (additionalProducts) {
+      const { currentPrice, queryResult: { keywordPriceList } } = this
+      this.productList = [...additionalProducts].map(o => {
+        if (!o.limit || Object.values(o.limit).length === 0) {
+          return ({ ...o, currentPrice })
+        } else {
+          const { platform, schedule, type } = o.limit
+          const optionsType = keywordPriceList.filter(k => type.includes(k.type))
+          const optionsPlatform = Object.values(optionsType[0]).filter(k => platform.includes(k.device))
+          const optionsSchedule = optionsPlatform.filter(k => schedule.includes(k.scheduleType))
+          const resultPrice = optionsSchedule[0]
+          return ({ ...o, currentPrice: resultPrice })
+        }
+      })
     }
   }
 }
