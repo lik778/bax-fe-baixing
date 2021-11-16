@@ -93,7 +93,6 @@ export default {
     }
   },
   methods: {
-    handleClick () {},
     applyTypeFilter (error, overHeat, industryError) {
       if (error || overHeat || industryError) {
         return APPLY_TYPE_ERROR
