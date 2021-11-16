@@ -5,10 +5,10 @@
             <span>{{product.title}}</span>
             <i class="hot-icon"></i>
         </h3>
-        <ul class="product-specification" v-if="showDuration">
+        <ul class="product-specification" v-if="showProps">
             <li>{{showDuration}}天</li>
-            <li v-if="product.limit">{{showDevice}}</li>
-            <li v-if="product.limit">{{showSchedule}}</li>
+            <li>{{showDevice}}</li>
+            <li>{{showSchedule}}</li>
         </ul>
         <div class="product-option">
             <div>
@@ -43,6 +43,10 @@ export default {
     }
   },
   computed: {
+    showProps () {
+      const { limit } = this.product
+      return limit && Object.keys(limit).length
+    },
     isActive () {
       return this.active === this.product.id
     },
@@ -50,33 +54,22 @@ export default {
       return this.currentExcludes.includes(this.product.id)
     },
     showDevice () {
-      const { product: { limit, currentPrice: { device } } } = this
-      if (limit && limit.platform && limit.platform.length === 1) {
-        return DEVICE[limit.platform[0]]
-      }
+      const { product: { currentPrice: { device } } } = this
       return DEVICE[device]
     },
     showDuration () {
-      const { product: { certainType, type, limit, currentPrice: { duration } } } = this
-      if (!limit && type === 2) {
+      const { product: { certainType, currentPrice: { duration } } } = this
+      if (!this.showProps) {
         return certainType
-      } else if (!limit) {
-        return null
-      }
-      if (limit && limit.type && limit.type.length === 1) {
-        return limit.type[0]
       }
       return duration
     },
     showSchedule () {
-      const { product: { limit, currentPrice: { scheduleType } } } = this
-      if (limit && limit.schedule && limit.schedule.length === 1) {
-        return SCHEDULE_TYPE[limit.schedule[0]]
-      }
+      const { product: { currentPrice: { scheduleType } } } = this
       return SCHEDULE_TYPE[scheduleType]
     },
     dealPrice () {
-      const { product: { certainDealPrice, type, currentPrice: { price }, dealPriceRatio } } = this
+      const { product: { certainDealPrice, dealPriceRatio, type, currentPrice: { price } } } = this
       if (type === 2) {
         return certainDealPrice
       }

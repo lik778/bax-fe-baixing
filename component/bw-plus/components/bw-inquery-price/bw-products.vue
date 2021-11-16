@@ -96,7 +96,6 @@ export default {
     },
     confirmCheckedPrice () {
       const { id: productId } = this.currentProduct
-      console.log(productId)
       this.$emit('getExtraProductValue', { ...this.checkedPrice, productId })
       this.dialogVisible = false
     }

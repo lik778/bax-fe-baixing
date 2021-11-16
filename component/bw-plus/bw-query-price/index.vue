@@ -31,10 +31,9 @@
 <script>
 import { InqueryForm, KeywordHotDetail, Title, InqueryResult, BwPlusDialog, WelfareLayout, ErrorFooter, CommitDialog, SoldCityLayout, BwProducts, BwCreativity } from '../components'
 import { querySystemResult, commit } from 'api/biaowang-plus'
-import { APPLY_TYPE_NORMAL, APPLY_TYPE_ERROR } from 'constant/bw-plus'
+import { APPLY_TYPE_NORMAL, APPLY_TYPE_ERROR, DEVICE_PROPS, DEVICE_ALL } from 'constant/bw-plus'
 import { f2y } from 'util'
 import debounce from 'lodash.debounce'
-import clone from 'clone'
 export default {
   name: 'bw-plus-query-price',
   components: {
@@ -188,10 +187,7 @@ export default {
           } else {
             this.currentPrice = data.keywordPriceList && data.keywordPriceList[0].bothSeven
           }
-          console.log(this.currentPrice)
-          console.log(this.queryResult.keywordPriceList)
           this.transformProductList(additionalProducts)
-          console.log(this.productList)
           this.$nextTick(() => {
             this.$refs.viewScrollTop.scrollIntoView()
           })
@@ -210,17 +206,38 @@ export default {
     },
     getCurrentPrice (value) {
       this.currentPrice = value
-      const productList = clone(this.productList)
-      this.transformProductList(productList)
+      const { productList, transformCurrentPrice } = this
+      this.productList = productList.map(p => {
+        let currentPrice = value
+        if (p.options) {
+          currentPrice = transformCurrentPrice(p, p.options)
+        }
+        return { ...p, currentPrice }
+      })
+      console.log(this.productList)
     },
     getExtraProductValue (value) {
       const { productList } = this
-      productList.forEach(o => {
+      console.log(value)
+      this.productList = productList.map(o => {
         if (o.id === value.productId) {
-          o.currentPrice = value
+          return { ...o, currentPrice: value }
         }
+        return { ...o }
       })
-      this.productList = clone(productList)
+      console.log(this.productList)
+    },
+    transformCurrentPrice (product, options) {
+      const { currentPrice: { device, scheduleType, duration } } = this
+      const { limit: { platform, schedule, type } } = product
+      return options.find(k => {
+        const props = {
+          device: platform[0] === DEVICE_ALL ? device : platform[0],
+          scheduleType: schedule.includes(scheduleType) ? scheduleType : schedule[0],
+          duration: type.includes(duration) ? duration : type[0]
+        }
+        return k.device === props.device && k.scheduleType === props.scheduleType && k.duration === props.duration
+      })
     },
     transformProductList (additionalProducts) {
       const { currentPrice, queryResult: { keywordPriceList } } = this
@@ -229,13 +246,17 @@ export default {
           return ({ ...o, currentPrice })
         } else {
           const { platform, schedule, type } = o.limit
+          const optionsPlatformProp = DEVICE_PROPS[Object.keys(DEVICE_PROPS).filter(d => platform[0] === (Number(d)))[0]]
           const optionsType = keywordPriceList.filter(k => type.includes(k.type))
-          const optionsPlatform = Object.values(optionsType[0]).filter(k => platform.includes(k.device))
-          const optionsSchedule = optionsPlatform.filter(k => schedule.includes(k.scheduleType))
-          const resultPrice = optionsSchedule[0]
-          return ({ ...o, currentPrice: resultPrice })
+          const optionsPlatform = optionsType.map(o => [...optionsPlatformProp.map(p => ({
+            ...o[p]
+          }))]).reduce((a, b) => [...a, ...b], [])
+          const options = optionsPlatform.filter(k => schedule.includes(k.scheduleType))
+          const resultPrice = this.transformCurrentPrice(o, options)
+          return ({ ...o, currentPrice: resultPrice, options })
         }
       })
+      console.log('init', this.productList)
     }
   }
 }

@@ -61,6 +61,15 @@ export const APPLY_AUDIT_STATUS_OPTIONS = Object.freeze({
 export const DEVICE_ALL = 0 // 全平台
 export const DEVICE_PC = 1 // pc
 export const DEVICE_WAP = 2 // wap
+export const DEVICE_PROPS = {
+  [DEVICE_ALL]: ['bothFive', 'bothSeven', 'pcFive', 'pcSeven', 'wapFive', 'wapSeven'],
+  [DEVICE_PC]: ['pcFive', 'pcSeven'],
+  [DEVICE_WAP]: ['wapFive', 'wapSeven']
+}
+export const SCHEDULE_PROPS = {
+  58: ['wapFive', 'bothFive', 'pcFive'],
+  724: ['bothSeven', 'pcSeven', 'wapSeven']
+}
 export const DEVICE = Object.freeze({
   [DEVICE_ALL]: '全平台',
   [DEVICE_PC]: '电脑',
