@@ -142,7 +142,7 @@ export default {
       this.isPending = true
       const { error, overHeat, priceId, tempPvId, industryError } = this.queryResult
       const { userId: targetUserId } = this.salesInfo
-      const { queryInfo, applyTypeFilter, currentPrice, checkedAdditionProduct } = this
+      const { queryInfo, applyTypeFilter, currentPrice, checkedAdditionProduct: additionProduct } = this
       const baseParams = { targetUserId, applyType: applyTypeFilter(error, overHeat, industryError) }
       let params = {}
       if (!error && !overHeat && !industryError) {
@@ -150,7 +150,7 @@ export default {
         params = {
           ...baseParams,
           applyBasicAttr: { priceId, ...currentPrice },
-          checkedAdditionProduct
+          additionProduct
         }
       } else {
         // error、overHeat、industryError不都为false时为人工报价，参数如下
