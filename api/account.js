@@ -31,6 +31,15 @@ export async function getCurrentUser () {
   return toCamelcase(body.data)
 }
 
+export async function isCareFreeUser (userId) {
+  const body = await api
+    .get('/balance/cf_user')
+    .query(reverseCamelcase({ userId }))
+    .json()
+
+  return body.data
+}
+
 export async function loginLocal (id = 2) {
   const body = await api
     .get('/user/login/local')
@@ -196,7 +205,6 @@ export async function getCurrentBalanceBreif (accountType, userId) {
     .get('/balance/brief')
     .query(reverseCamelcase({ accountType, userId }))
     .json()
-  console.log('userId', userId)
   return body.data
 }
 

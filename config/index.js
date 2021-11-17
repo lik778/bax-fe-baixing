@@ -12,7 +12,8 @@ const production = {
   qcApiHost: 'http://bax.baixing.com.cn/api/sem-batch',
   orderServiceHost: 'https://trade.baixing.com',
   identityBindingPage: 'https://www.baixing.com/bind/?type=idcard',
-  biaowangPlusApiHost: '//bax.baixing.com.cn/api/phoenixs-plus'
+  biaowangPlusApiHost: '//bax.baixing.com.cn/api/phoenixs-plus',
+  adPlatformApiHost: '//bax.baixing.com.cn/api/ad-platform'
 }
 
 const development = {
@@ -24,7 +25,8 @@ const development = {
   seoApiHost: '/seo-api',
   qcApiHost: '/sem-batch/api/sem-batch',
   orderServiceHost: 'http://trade-dev.baixing.cn',
-  identityBindingPage: 'http://www.staging.baixing.cn/bind/?type=idcard'
+  identityBindingPage: 'http://www.staging.baixing.cn/bind/?type=idcard',
+  adPlatformApiHost: '/ad-platform/api/ad-platform'
 }
 
 const local = {
@@ -36,7 +38,8 @@ const local = {
   seoApiHost: '/devApi/seo-api',
   qcApiHost: '/devApi/sem-batch/api/sem-batch',
   orderServiceHost: 'http://trade-dev.baixing.cn',
-  identityBindingPage: 'http://www.staging.baixing.cn/bind/?type=idcard'
+  identityBindingPage: 'http://www.staging.baixing.cn/bind/?type=idcard',
+  adPlatformApiHost: '/adPlatformApi/api/ad-platform'
 }
 
 const common = {
@@ -67,5 +70,6 @@ export const assetHost = config.assetHost
 export const upyun = config.upyun
 export const preKeywordPath = config.preKeywordPath
 export const biaowangPlusApiHost = config.biaowangPlusApiHost
+export const adPlatformApiHost = config.adPlatformApiHost
 
 export default config
