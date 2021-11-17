@@ -145,25 +145,13 @@ export default {
     },
     limit: {
       type: null || Object,
-      default: () => null,
+      default: null,
       require: false
-    }
-  },
-  watch: {
-    currentPrice: {
-      handler (newV, oldV) {
-        if (newV) {
-          this.active = newV.duration > 30
-          this.current = newV
-        }
-      },
-      deep: true,
-      immediate: true
     }
   },
   data () {
     return {
-      current: this.tableData[0].bothSeven,
+      current: this.currentPrice,
       DEVICE_ALL,
       DEVICE_PC,
       DEVICE_WAP
@@ -172,6 +160,7 @@ export default {
   methods: {
     cellClick (value) {
       const { current } = this
+      console.log('value', value)
       if (current.index === value.index) {
         this.current = {}
       } else {
@@ -192,10 +181,11 @@ export default {
     notAllowCheck (device, schedule, duration) {
       const { limit } = this
       if (limit) {
-        if (!limit.platform.includes(device) || !limit.schedule.includes(schedule) || !limit.type.includes(duration)) {
+        if (!limit.platform.includes(device) && limit.platform[0] !== DEVICE_ALL) {
           return true
+        } else {
+          return !limit.schedule.includes(schedule) || !limit.type.includes(duration)
         }
-        return false
       }
       return false
     }

@@ -3,22 +3,7 @@
     <el-card class="box-card">
       <Title title="叠加媒体，低价加“量”"/>
       <div class="product-list">
-        <el-popover
-          v-for="product in productList"
-          :key="product.id"
-          placement="top-start"
-          :title="product.title"
-          trigger="hover"
-          width="318"
-        >
-          <div class="product-detail">
-            <div class="image-wrapper">
-              <img :src="product.image"/>
-            </div>
-            <p>{{product.description}}</p>
-          </div>
-          <ProductItem slot="reference" @changeCombo="changeCombo" @check="checkProduct" :currentExcludes="currentExcludes" :key="product.id" :product="product"/>
-        </el-popover>
+        <ProductItem v-for="product in productList" :key="product.id" @changeCombo="changeCombo" @check="checkProduct" :currentExcludes="currentExcludes" :product="product"/>
       </div>
     </el-card>
     <el-dialog
@@ -72,20 +57,20 @@ export default {
     }
   },
   methods: {
-    checkProduct ({ isActive, product }) {
+    checkProduct (product) {
       const { checkedProducts } = this
-      if (isActive) {
+      if (product.checked) {
         this.checkedProducts = checkedProducts.filter(o => o.id !== product.id)
       } else {
         this.checkedProducts = [...checkedProducts, ...[product]]
       }
-      console.log('checkedProducts', this.checkedProducts)
+      product.checked = !product.checked
+      this.$emit('checked', product)
       let currentExcludes = []
       this.checkedProducts.forEach(o => {
         currentExcludes = [...currentExcludes, ...o.excludes]
       })
       this.currentExcludes = currentExcludes
-      console.log('currentExcludes', this.currentExcludes)
     },
     changeCombo (product) {
       this.dialogVisible = true
@@ -109,16 +94,5 @@ export default {
   }
   .box-card{
     margin: 10px;
-  }
-  .image-wrapper{
-    width: 288px;
-    padding-top: 78%;
-    position: relative;
-    img{
-      width: 100%;
-      position: absolute;
-      top: 0;
-      left: 0;
-    }
   }
 </style>

@@ -1,21 +1,37 @@
 <template>
   <div>
-    <div :class="{'product-wrapper': true, 'product-checked': isActive, 'product-notAllowCheck': notAllowCheck}" @click="checkProduct">
-        <h3 class="product-title">
-            <span>{{product.title}}</span>
-            <i class="hot-icon"></i>
-        </h3>
-        <ul class="product-specification" v-if="showProps">
-            <li>{{showDuration}}天</li>
-            <li>{{showDevice}}</li>
-            <li>{{showSchedule}}</li>
-        </ul>
+    <div :class="{'product-wrapper': true, 'product-checked': product.checked, 'product-notAllowCheck': notAllowCheck}" @click="checkProduct">
+      <el-popover
+          placement="top-start"
+          :title="product.title"
+          trigger="hover"
+          popper-class="detail-popover"
+          class="detail-popover"
+        >
+          <div class="product-detail">
+            <div class="image-wrapper">
+              <img :src="product.image"/>
+            </div>
+            <p>{{product.description}}</p>
+          </div>
+          <div slot="reference" >
+            <h3 class="product-title">
+              <span>{{product.title}}</span>
+              <i class="hot-icon"></i>
+            </h3>
+            <ul class="product-specification" v-if="showProps">
+                <li>{{showDuration}}天</li>
+                <li>{{showDevice}}</li>
+                <li>{{showSchedule}}</li>
+            </ul>
+          </div>
+       </el-popover>
         <div class="product-option">
             <div>
                 <span class="current-price">抢鲜价:{{dealPrice}}元</span>
                 <span class="origin-price">原价:{{originalPrice}}元</span>
             </div>
-            <el-button @click.stop="changeCombo" v-if="product.limit" size="mini" :disabled="notAllowCheck">更换套餐</el-button>
+            <el-button @click.stop="changeCombo" v-if="showProps" size="mini" :disabled="notAllowCheck">更换套餐</el-button>
         </div>
     </div>
   </div>
@@ -37,18 +53,10 @@ export default {
       require: true
     }
   },
-  data () {
-    return {
-      active: 0
-    }
-  },
   computed: {
     showProps () {
       const { limit } = this.product
       return limit && Object.keys(limit).length
-    },
-    isActive () {
-      return this.active === this.product.id
     },
     notAllowCheck () {
       return this.currentExcludes.includes(this.product.id)
@@ -85,9 +93,8 @@ export default {
       if (this.notAllowCheck) {
         return
       }
-      const { product, product: { id }, isActive } = this
-      this.$emit('check', { isActive, product })
-      this.active = isActive ? 0 : id
+      const { product } = this
+      this.$emit('check', product)
     },
     changeCombo () {
       this.$emit('changeCombo', this.product)

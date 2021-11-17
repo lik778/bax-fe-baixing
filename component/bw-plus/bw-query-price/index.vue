@@ -8,18 +8,22 @@
             <Title title="关键词热度明细"/>
             <KeywordHotDetail :tableData="queryResult && queryResult.keywordPvList"/>
           </section>
-          <section class="bw-query-price_item" v-if="showResult">
+        </el-card>
+        <div v-if="showResult">
+        <el-card class="box-card">
+          <section class="bw-query-price_item">
             <Title title="百度标王，王牌产品" extra="请选择需要的平台*时段*时长"/>
             <InqueryResult :deviceAvailableStatus="deviceAvailableStatus" :currentPrice="currentPrice" @getValue="getCurrentPrice" :tableData="queryResult && queryResult.keywordPriceList" />
-            <BwCreativity :productList="productList.filter(o => o.type === 0)"/>
+            <BwCreativity @checked="checked" :productList="productList.filter(o => o.type === 0)"/>
           </section>
         </el-card>
-        <BwProducts @getExtraProductValue="getExtraProductValue" :currentPrice="currentPrice" :deviceAvailableStatus="deviceAvailableStatus" :priceList="queryResult && queryResult.keywordPriceList" :productList="productList.filter(o => o.type !== 0)" />
+        <BwProducts @checked="checked" @getExtraProductValue="getExtraProductValue" :currentPrice="currentPrice" :deviceAvailableStatus="deviceAvailableStatus" :priceList="queryResult && queryResult.keywordPriceList" :productList="productList.filter(o => o.type !== 0)" />
+        </div>
         <el-card class="box-card" v-if="showResult">
           <WelfareLayout :currentPrice="currentPrice"/>
           <div class="submit">
             <h3>总价： {{transformPrice}}元</h3>
-            <el-button @click="isSubmit = true" :disabled="(currentPrice.price <0 || !currentPrice.price ) || !ifSoldAvailable" type="danger" :loading="isPending">提交审核</el-button>
+            <el-button @click="isSubmit = true" :disabled="!(transformPrice > 0 && ifSoldAvailable)" type="danger" :loading="isPending">提交审核</el-button>
           </div>
           <ErrorFooter v-if="queryResult.error || queryResult.overHeat || queryResult.industryError" :queryResult="queryResult"/>
         </el-card>
@@ -79,7 +83,9 @@ export default {
       deviceAvailableStatus: {}, // 判断当前关键词在各设备端是否可售
       ifSoldAvailable: false, // 是否存在可售卖的平台,
       isPending: false,
-      productList: []
+      productList: [],
+      checkedProducts: [],
+      checkedCreativities: []
     }
   },
   computed: {
@@ -89,10 +95,35 @@ export default {
     },
     transformPrice () {
       const { currentPrice } = this
-      return currentPrice.price > 0 ? f2y(currentPrice.price) : '-'
+      if (!currentPrice.price || currentPrice.price < 0) {
+        currentPrice.price = 0
+      }
+      return f2y(currentPrice.price + this.totalPrice) > 0 ? f2y(currentPrice.price + this.totalPrice) : '-'
+    },
+    checkedAdditionProduct () {
+      const { productList } = this
+      const checkedProducts = productList.filter(p => p.checked)
+      return checkedProducts.map(c => ({
+        ...c.currentPrice,
+        skuId: c.id
+      }))
+    },
+    totalPrice () {
+      const { productList } = this
+      console.log(productList)
+      const total = productList.reduce((a, b) => {
+        const priceB = b.checked ? (b.type === 2 ? b.certainDealPrice : b.currentPrice.price * b.dealPriceRatio) : 0
+        return a + priceB
+      }, 0)
+      console.log(total)
+      return total
     }
   },
   methods: {
+    checked (product) {
+      const { productList } = this
+      this.productList = productList.map(p => product.id === p.id ? product : p)
+    },
     applyTypeFilter (error, overHeat, industryError) {
       if (error || overHeat || industryError) {
         return APPLY_TYPE_ERROR
@@ -111,14 +142,15 @@ export default {
       this.isPending = true
       const { error, overHeat, priceId, tempPvId, industryError } = this.queryResult
       const { userId: targetUserId } = this.salesInfo
-      const { queryInfo, applyTypeFilter, currentPrice } = this
+      const { queryInfo, applyTypeFilter, currentPrice, checkedAdditionProduct } = this
       const baseParams = { targetUserId, applyType: applyTypeFilter(error, overHeat, industryError) }
       let params = {}
       if (!error && !overHeat && !industryError) {
         // error、overHeat、industryError都为false时为系统报价，参数如下
         params = {
           ...baseParams,
-          applyBasicAttr: { priceId, ...currentPrice }
+          applyBasicAttr: { priceId, ...currentPrice },
+          checkedAdditionProduct
         }
       } else {
         // error、overHeat、industryError不都为false时为人工报价，参数如下
@@ -205,26 +237,25 @@ export default {
     },
     getCurrentPrice (value) {
       this.currentPrice = value
-      const { productList, transformCurrentPrice } = this
-      this.productList = productList.map(p => {
-        let currentPrice = value
-        if (p.options) {
-          currentPrice = transformCurrentPrice(p, p.options)
-        }
-        return { ...p, currentPrice }
-      })
-      console.log(this.productList)
+      if (Object.values(value).length > 0) {
+        const { productList, transformCurrentPrice } = this
+        this.productList = productList.map(p => {
+          let currentPrice = value
+          if (p.options) {
+            currentPrice = transformCurrentPrice(p, p.options)
+          }
+          return { ...p, currentPrice }
+        })
+      }
     },
     getExtraProductValue (value) {
       const { productList } = this
-      console.log(value)
       this.productList = productList.map(o => {
         if (o.id === value.productId) {
-          return { ...o, currentPrice: value }
+          o.currentPrice = value
         }
-        return { ...o }
+        return o
       })
-      console.log(this.productList)
     },
     transformCurrentPrice (product, options) {
       const { currentPrice: { device, scheduleType, duration } } = this
@@ -242,20 +273,19 @@ export default {
       const { currentPrice, queryResult: { keywordPriceList } } = this
       this.productList = [...additionalProducts].map(o => {
         if (!o.limit || Object.values(o.limit).length === 0) {
-          return ({ ...o, currentPrice })
+          return ({ ...o, currentPrice, checked: false })
         } else {
           const { platform, schedule, type } = o.limit
           const optionsPlatformProp = DEVICE_PROPS[Object.keys(DEVICE_PROPS).filter(d => platform[0] === (Number(d)))[0]]
           const optionsType = keywordPriceList.filter(k => type.includes(k.type))
-          const optionsPlatform = optionsType.map(o => [...optionsPlatformProp.map(p => ({
-            ...o[p]
-          }))]).reduce((a, b) => [...a, ...b], [])
+          const optionsPlatform = optionsType.reduce((a, b) => [
+            ...a, ...optionsPlatformProp.map(p => b[p])
+          ], [])
           const options = optionsPlatform.filter(k => schedule.includes(k.scheduleType))
           const resultPrice = this.transformCurrentPrice(o, options)
-          return ({ ...o, currentPrice: resultPrice, options })
+          return ({ ...o, currentPrice: resultPrice, options, checked: false })
         }
       })
-      console.log('init', this.productList)
     }
   }
 }

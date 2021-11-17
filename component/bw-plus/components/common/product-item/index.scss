@@ -6,8 +6,10 @@
     margin-right: 20px;
     margin-bottom: 20px;
     position: relative;
+    height: 150px;
 }
 .product-title{
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -32,6 +34,7 @@
     color: #666666;
     padding: 16px 10px;
     border-bottom: 1px solid #FA6A78;
+    height: 50px;
     li{
         display: flex;
         align-items: center;
@@ -54,7 +57,6 @@
     justify-content: space-between;
     align-items: center;
     padding: 10px;
-    min-height: 64px;
     .current-price{
         font-family: PingFangSC-Medium;
         font-size: 13px;
@@ -102,3 +104,15 @@
             }
         }
     }
+    .detail-popover{
+        width: 100%;
+        /deep/ .el-popover__reference-wrapper{
+            width: 100%;
+        }
+    }
+    .image-wrapper{
+        width: 288px;
+        img{
+          width: 100%;
+        }
+      }
