@@ -157,6 +157,15 @@ export default {
       DEVICE_WAP
     }
   },
+  watch: {
+    currentPrice: {
+      deep: true,
+      immediate: true,
+      handler (v) {
+        this.current = v
+      }
+    }
+  },
   methods: {
     cellClick (value) {
       const { current } = this

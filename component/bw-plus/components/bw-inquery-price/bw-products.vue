@@ -23,6 +23,7 @@
 import Title from './title.vue'
 import ProductItem from '../common/product-item/index.vue'
 import InqueryResult from './inquery-result.vue'
+import clone from 'clone'
 export default {
   name: 'bw-products',
   components: {
@@ -74,7 +75,7 @@ export default {
     },
     changeCombo (product) {
       this.dialogVisible = true
-      this.currentProduct = product
+      this.currentProduct = clone(product)
     },
     getCheckedPrice (value) {
       this.checkedPrice = value
