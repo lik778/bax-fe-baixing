@@ -93,7 +93,7 @@ export async function getInqueryList (params) {
  */
 export async function getUserPackageList (params) {
   const body = await biaowangPlus
-    .get('/package/user/list')
+    .get('/package/user/listPackagesWithSku')
     .query(trim(params))
     .json()
 
