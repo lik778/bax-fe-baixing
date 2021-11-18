@@ -48,6 +48,18 @@ export default {
       require: true
     }
   },
+  watch: {
+    productList: {
+      deep: true,
+      immediate: true,
+      handler (v) {
+        if (v.filter(o => o.checked).length <= 0) {
+          this.currentExcludes = []
+          this.checkedProducts = []
+        }
+      }
+    }
+  },
   data () {
     return {
       currentExcludes: [],
@@ -67,11 +79,7 @@ export default {
       }
       product.checked = !product.checked
       this.$emit('checked', product)
-      let currentExcludes = []
-      this.checkedProducts.forEach(o => {
-        currentExcludes = [...currentExcludes, ...o.excludes]
-      })
-      this.currentExcludes = currentExcludes
+      this.currentExcludes = this.checkedProducts.reduce((a, b) => [...a, ...b.excludes], [])
     },
     changeCombo (product) {
       this.dialogVisible = true
