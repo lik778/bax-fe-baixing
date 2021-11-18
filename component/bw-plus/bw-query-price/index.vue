@@ -1,7 +1,7 @@
 <template>
     <section class="bw-query-price">
         <el-card class="box-card">
-          <InqueryForm :allAreas="allAreas" @inquery="inquery" @resetResult="resetResult"/>
+          <InqueryForm :allAreas="allAreas" @inquery="inquery" :isPending="isPending" @resetResult="resetResult"/>
           <div ref="viewScrollTop" class="placeHolder"></div>
           <SoldCityLayout :allAreas="allAreas" :keywordsLockDetails="keywordsLockDetails" :keywordLockText="keywordLockText" v-if="ifExistLockCity"/>
           <section class="bw-query-price_item" v-if="queryResult.keywordPvList">
@@ -84,8 +84,7 @@ export default {
       ifSoldAvailable: false, // 是否存在可售卖的平台,
       isPending: false,
       productList: [],
-      checkedProducts: [],
-      checkedCreativities: []
+      checkedProducts: []
     }
   },
   computed: {
@@ -143,7 +142,7 @@ export default {
       const { error, overHeat, priceId, tempPvId, industryError } = this.queryResult
       const { userId: targetUserId } = this.salesInfo
       const { queryInfo, applyTypeFilter, currentPrice, checkedAdditionProduct: additionProduct } = this
-      const baseParams = { targetUserId, applyType: applyTypeFilter(error, overHeat, industryError) }
+      const baseParams = { targetUserId, applyType: currentPrice.price === 0 ? 2 : applyTypeFilter(error, overHeat, industryError) }
       let params = {}
       if (!error && !overHeat && !industryError) {
         // error、overHeat、industryError都为false时为系统报价，参数如下
@@ -162,28 +161,34 @@ export default {
           }
         }
       }
-      const { code, data } = await commit(params)
-      if (code === 0) {
-        this.isSubmit = false
-        this.resetResult()
-        this.BwPlusDialogMsg = {
-          dialogVisible: true,
-          type: 'success',
-          content: '审核预计1-3个工作日，去查看审核进度',
-          title: '提交成功'
+      try {
+        const { code, data } = await commit(params)
+        if (code === 0) {
+          this.isSubmit = false
+          this.resetResult()
+          this.BwPlusDialogMsg = {
+            dialogVisible: true,
+            type: 'success',
+            content: '审核预计1-3个工作日，去查看审核进度',
+            title: '提交成功'
+          }
         }
-      }
-      if (code === 4080) {
-        this.BwPlusDialogMsg = {
-          dialogVisible: true,
-          type: 'error',
-          content: data,
-          title: '提交失败'
+        if (code === 4080) {
+          this.BwPlusDialogMsg = {
+            dialogVisible: true,
+            type: 'error',
+            content: data,
+            title: '提交失败'
+          }
         }
+      } catch (error) {
+        console.log(error)
+      } finally {
+        this.isPending = false
       }
-      this.isPending = false
     }, 300),
     async inquery (form) {
+      this.isPending = true
       const loading = this.$loading({
         lock: true,
         text: 'Loading',
@@ -228,17 +233,17 @@ export default {
             type: 'warning'
           })
         }
-        loading.close()
       } catch (error) {
-        loading.close()
+        console.log('error', error)
       } finally {
         loading.close()
+        this.isPending = false
       }
     },
     getCurrentPrice (value) {
       this.currentPrice = value
+      const { productList, transformCurrentPrice } = this
       if (Object.values(value).length > 0) {
-        const { productList, transformCurrentPrice } = this
         this.productList = productList.map(p => {
           let currentPrice = value
           if (p.options) {
@@ -246,6 +251,8 @@ export default {
           }
           return { ...p, currentPrice }
         })
+      } else {
+        this.productList = productList.map(p => p.type === 0 ? { ...p, checked: false, currentPrice: value } : p)
       }
     },
     getExtraProductValue (value) {
