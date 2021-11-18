@@ -18,6 +18,8 @@ import WelfareLayout from './bw-inquery-price/welfare-layout.vue'
 import SoldCityLayout from './bw-inquery-price/sold-city-layout.vue'
 import BwProducts from './bw-inquery-price/bw-products.vue'
 import BwCreativity from './bw-inquery-price/bw-creativity.vue'
+import BwDescriptionItem from './bw-price-records/bw-description-item.vue'
+import PreInfoConfirm from './bw-price-records/pre-info-confirm.vue'
 
 export {
   InqueryForm,
@@ -39,5 +41,7 @@ export {
   WelfareLayout,
   SoldCityLayout,
   BwProducts,
-  BwCreativity
+  BwCreativity,
+  BwDescriptionItem,
+  PreInfoConfirm
 }

@@ -67,10 +67,7 @@ export default {
       return DEVICE[device]
     },
     showDuration () {
-      const { product: { certainType, currentPrice: { duration } } } = this
-      if (!this.showProps) {
-        return certainType
-      }
+      const { product: { currentPrice: { duration } } } = this
       return duration
     },
     showSchedule () {

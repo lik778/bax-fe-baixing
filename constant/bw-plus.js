@@ -58,11 +58,13 @@ export const APPLY_AUDIT_STATUS_OPTIONS = Object.freeze({
   [APPLY_AUDIT_STATUS_REJECT]: '审核拒绝'
 })
 
-export const DEVICE_ALL = 0 // 全平台
+export const DEVICE_ALL = 0 // 双端
 export const DEVICE_PC = 1 // pc
 export const DEVICE_WAP = 2 // wap
+export const DEVICE_THREE = 3 // 全平台
 export const DEVICE_PROPS = {
-  [DEVICE_ALL]: ['bothFive', 'bothSeven', 'pcFive', 'pcSeven', 'wapFive', 'wapSeven'],
+  [DEVICE_THREE]: ['bothFive', 'bothSeven', 'pcFive', 'pcSeven', 'wapFive', 'wapSeven'],
+  [DEVICE_ALL]: ['bothFive', 'bothSeven'],
   [DEVICE_PC]: ['pcFive', 'pcSeven'],
   [DEVICE_WAP]: ['wapFive', 'wapSeven']
 }

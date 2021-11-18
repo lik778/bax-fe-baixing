@@ -4,7 +4,7 @@
           :visible.sync="visible"
           width="30%"
         >
-          <span>确认提交审核嘛？</span>
+          <PreInfoConfirm :preInfo="preInfo"/>
           <span slot="footer" class="dialog-footer">
             <el-button @click="cancel">取 消</el-button>
             <el-button type="primary" :loading="isPending" @click="submit">确 定</el-button>
@@ -12,8 +12,12 @@
     </el-dialog>
 </template>
 <script>
+import { PreInfoConfirm } from '../index'
 export default {
   name: 'commit-dialog',
+  components: {
+    PreInfoConfirm
+  },
   props: {
     visible: {
       type: Boolean,
@@ -23,6 +27,11 @@ export default {
     isPending: {
       type: Boolean,
       default: false,
+      require: true
+    },
+    preInfo: {
+      type: Object,
+      default: () => {},
       require: true
     }
   },

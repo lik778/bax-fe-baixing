@@ -61,6 +61,10 @@ export default {
     salesInfo: {
       type: Object,
       require: true
+    },
+    userInfo: {
+      type: Object,
+      require: true
     }
   },
   data () {
@@ -88,6 +92,24 @@ export default {
     }
   },
   computed: {
+    preInfo () {
+      const { queryInfo, checkedProducts } = this
+      const preInfo = {
+        keywords: queryInfo.words,
+        cities: queryInfo.cities,
+        additionProductMap: checkedProducts.map(o => (
+          {
+            dealPrice: o.currentPrice.price * o.dealPriceRatio,
+            device: o.currentPrice.device,
+            duration: o.currentPrice.duration,
+            name: o.title,
+            originPrice: o.currentPrice.price * o.originalPriceRatio,
+            scheduleType: o.currentPrice.schedule
+          }
+        ))
+      }
+      return preInfo
+    },
     showResult () {
       const { queryResult } = this
       return !(queryResult.error && queryResult.overHeat) && queryResult.keywordPriceList
@@ -138,6 +160,7 @@ export default {
       this.ifExistLockCity = false
     },
     submit: debounce(async function () {
+      console.log(this.userInfo)
       this.isPending = true
       const { error, overHeat, priceId, tempPvId, industryError } = this.queryResult
       const { userId: targetUserId } = this.salesInfo

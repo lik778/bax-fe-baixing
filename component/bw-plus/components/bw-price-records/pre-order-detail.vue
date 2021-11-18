@@ -2,10 +2,16 @@
     <el-dialog
     title="提单确认"
     :visible.sync="dialogVisible"
-    width="40%"
+    width="50%"
     @close="cancel"
     >
-    <el-form ref="form" label-width="100px">
+    <PreInfoConfirm :preInfo="preInfo" :allAreas="allAreas"/>
+    <div class="row-info total-price">
+      <BwDescriptionItem label="客户手机号：" :value="preInfo.mobile"/>
+      <BwDescriptionItem label="销售编号：" :value="preInfo.saleId"/>
+      <BwDescriptionItem label="客户uid：" :value="preInfo.userBxId"/>
+    </div>
+    <!-- <el-form ref="form" label-width="100px">
         <el-form-item class="pre-info-item" label="关键词：">
             {{preInfo.keywords.join("、")}}
         </el-form-item>
@@ -49,7 +55,7 @@
             <el-form-item class="pre-info-item" label="客户uid：">{{preInfo.userBxId}}</el-form-item>
           </el-col>
         </el-row>
-    </el-form>
+    </el-form> -->
     <span slot="footer" class="dialog-footer">
         <el-button @click="cancel">取 消</el-button>
         <el-button type="primary" @click="preOrder">确认，生成并复制提单链接</el-button>
@@ -57,13 +63,14 @@
     </el-dialog>
 </template>
 <script>
-import { f2y, getCnName } from 'util'
-import dayjs from 'dayjs'
-import isBetween from 'dayjs/plugin/isBetween'
-import { SCHEDULE_TYPE, DEVICE, welfareInfo } from 'constant/bw-plus'
-dayjs.extend(isBetween)
+import PreInfoConfirm from './pre-info-confirm.vue'
+import BwDescriptionItem from './bw-description-item.vue'
 export default {
   name: 'pre-order-detail',
+  components: {
+    PreInfoConfirm,
+    BwDescriptionItem
+  },
   props: {
     dialogVisible: {
       type: Boolean,
@@ -81,29 +88,12 @@ export default {
       required: true
     }
   },
-  data () {
-    return {
-      SCHEDULE_TYPE,
-      f2y,
-      DEVICE,
-      welfareInfo
-    }
-  },
-  computed: {
-    showWelfare () {
-      const now = dayjs()
-      return dayjs(now).isBetween('2021-11-1', dayjs('2021-11-11'))
-    }
-  },
   methods: {
     cancel () {
       this.$emit('cancel')
     },
     preOrder () {
       this.$emit('preOrder')
-    },
-    citiesFormater (cities) {
-      return cities.slice(0, 20).map(city => getCnName(city, this.allAreas)).join(',') + (cities.length > 20 ? `等${cities.length}个城市` : '') || '-'
     }
   }
 }
@@ -124,7 +114,21 @@ export default {
     .pre-info-price{
         color: crimson;
     }
-    .welfare-tag{
-      margin-right: 8px;
+    .total-price{
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 20px;
+      margin-bottom: 0;
+      position: relative;
+      padding: 12px 0;
+      &::after{
+        width: 100%;
+        content: '';
+        height: 1px;
+        background: #ECECEC;
+        left: 0;
+        bottom: 0;
+        position: absolute;
+      }
     }
 </style>
