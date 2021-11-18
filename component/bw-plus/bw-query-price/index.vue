@@ -131,11 +131,9 @@ export default {
     },
     checkedAdditionProduct () {
       const { productList } = this
-      const checkedProducts = productList.filter(p => p.checked)
-      return checkedProducts.map(c => ({
-        ...c.currentPrice,
-        skuId: c.id
-      }))
+      return productList.reduce((a, b) => {
+        return b.checked ? [...a, { ...b.currentPrice, skuId: b.id }] : a
+      }, [])
     },
     totalPrice () {
       const { productList } = this
