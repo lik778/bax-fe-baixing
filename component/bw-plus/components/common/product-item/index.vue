@@ -29,8 +29,8 @@
        </el-popover>
         <div class="product-option">
             <div class="price-info">
-                <span class="current-price">抢鲜价:{{dealPrice}}元</span>
-                <span class="origin-price">原价:{{originalPrice}}元</span>
+                <span class="current-price">抢鲜价：{{dealPrice}}元</span>
+                <span class="origin-price">原价：{{originalPrice}}元</span>
             </div>
             <el-button @click.stop="changeCombo" v-if="product.type === 1" size="mini" :disabled="notAllowCheck">更换套餐</el-button>
         </div>
@@ -79,11 +79,11 @@ export default {
       if (type === SEO_PRODUCT_TYPE) {
         return f2y(certainDealPrice)
       }
-      return price > 0 ? f2y(price * dealPriceRatio) : '-'
+      return price > 0 ? f2y(price * dealPriceRatio) : '?'
     },
     originalPrice () {
       const { product: { currentPrice: { price }, originalPriceRatio } } = this
-      return price > 0 ? f2y(price * originalPriceRatio) : '-'
+      return price > 0 ? f2y(price * originalPriceRatio) : '?'
     }
   },
   methods: {
