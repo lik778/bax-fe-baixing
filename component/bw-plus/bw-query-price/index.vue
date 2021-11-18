@@ -28,14 +28,14 @@
           <ErrorFooter v-if="queryResult.error || queryResult.overHeat || queryResult.industryError" :queryResult="queryResult"/>
         </el-card>
         <BwPlusDialog :BwPlusDialogMsg="BwPlusDialogMsg" @close="BwPlusDialogMsg.dialogVisible = false"/>
-        <CommitDialog :visible="isSubmit" :isPending="isPending" @cancel="isSubmit = false" @submit="submit"/>
+        <CommitDialog :allAreas="allAreas" :preInfo="preInfo" :visible="isSubmit" :isPending="isPending" @cancel="isSubmit = false" @submit="submit"/>
     </section>
 </template>
 
 <script>
 import { InqueryForm, KeywordHotDetail, Title, InqueryResult, BwPlusDialog, WelfareLayout, ErrorFooter, CommitDialog, SoldCityLayout, BwProducts, BwCreativity } from '../components'
 import { querySystemResult, commit } from 'api/biaowang-plus'
-import { APPLY_TYPE_NORMAL, APPLY_TYPE_ERROR, DEVICE_PROPS, DEVICE_ALL } from 'constant/bw-plus'
+import { APPLY_TYPE_NORMAL, APPLY_TYPE_ERROR, DEVICE_PROPS, DEVICE_THREE, SEO_PRODUCT_TYPE } from 'constant/bw-plus'
 import { f2y } from 'util'
 import debounce from 'lodash.debounce'
 export default {
@@ -93,20 +93,28 @@ export default {
   },
   computed: {
     preInfo () {
-      const { queryInfo, checkedProducts } = this
+      const { queryInfo, productList, currentPrice } = this
+      const checkedProducts = productList.filter(p => p.checked)
+      const additionProduct = checkedProducts.map(o => (
+        {
+          dealPrice: o.type === SEO_PRODUCT_TYPE ? o.certainDealPrice : o.currentPrice.price * o.dealPriceRatio,
+          device: o.currentPrice.device,
+          duration: o.currentPrice.duration,
+          name: o.title,
+          originPrice: o.currentPrice.price * o.originalPriceRatio,
+          scheduleType: o.currentPrice.scheduleType
+        }
+      ))
+      const BAIDU_BW = [{
+        dealPrice: currentPrice.price,
+        originPrice: currentPrice.price,
+        name: '百度标王标准版',
+        ...currentPrice
+      }]
       const preInfo = {
         keywords: queryInfo.words,
         cities: queryInfo.cities,
-        additionProductMap: checkedProducts.map(o => (
-          {
-            dealPrice: o.currentPrice.price * o.dealPriceRatio,
-            device: o.currentPrice.device,
-            duration: o.currentPrice.duration,
-            name: o.title,
-            originPrice: o.currentPrice.price * o.originalPriceRatio,
-            scheduleType: o.currentPrice.schedule
-          }
-        ))
+        additionProductMap: currentPrice.price && currentPrice.price > 0 ? [...additionProduct, ...BAIDU_BW] : additionProduct
       }
       return preInfo
     },
@@ -292,7 +300,7 @@ export default {
       const { limit: { platform, schedule, type } } = product
       return options.find(k => {
         const props = {
-          device: platform[0] === DEVICE_ALL ? device : platform[0],
+          device: platform[0] === DEVICE_THREE ? device : platform[0],
           scheduleType: schedule.includes(scheduleType) ? scheduleType : schedule[0],
           duration: type.includes(duration) ? duration : type[0]
         }
@@ -316,6 +324,7 @@ export default {
           return ({ ...o, currentPrice: resultPrice, options, checked: false })
         }
       })
+      console.log(this.productList)
     }
   }
 }

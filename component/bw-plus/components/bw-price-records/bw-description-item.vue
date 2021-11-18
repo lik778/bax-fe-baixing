@@ -14,7 +14,7 @@ export default {
       require: true
     },
     value: {
-      type: String || Number,
+      type: [String, Number],
       default: 0,
       require: true
     }

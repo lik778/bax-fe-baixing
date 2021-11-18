@@ -320,3 +320,5 @@ export const PRODUCT_LIST = Object.freeze([
     statusDesc: ''
   }
 ])
+
+export const SEO_PRODUCT_TYPE = 2

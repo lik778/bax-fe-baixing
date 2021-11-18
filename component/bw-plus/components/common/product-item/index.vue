@@ -38,7 +38,7 @@
   </div>
 </template>
 <script>
-import { DEVICE, SCHEDULE_TYPE } from 'constant/bw-plus'
+import { DEVICE, SCHEDULE_TYPE, SEO_PRODUCT_TYPE } from 'constant/bw-plus'
 import { f2y } from 'util'
 export default {
   name: 'product-item',
@@ -76,7 +76,7 @@ export default {
     },
     dealPrice () {
       const { product: { certainDealPrice, dealPriceRatio, type, currentPrice: { price } } } = this
-      if (type === 2) {
+      if (type === SEO_PRODUCT_TYPE) {
         return f2y(certainDealPrice)
       }
       return price > 0 ? f2y(price * dealPriceRatio) : '-'
