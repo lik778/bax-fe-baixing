@@ -137,10 +137,9 @@ export default {
     },
     totalPrice () {
       const { productList } = this
-      console.log(productList)
-      const total = productList.reduce((a, b) => {
-        const priceB = b.checked ? (b.type === 2 ? b.certainDealPrice : b.currentPrice.price * b.dealPriceRatio) : 0
-        return a + priceB
+      const total = productList.reduce((producPrev, producNext) => {
+        const priceB = producNext.checked ? (producNext.type === 2 ? producNext.certainDealPrice : producNext.currentPrice.price * producNext.dealPriceRatio) : 0
+        return producPrev + priceB
       }, 0)
       console.log(total)
       return total
@@ -166,7 +165,6 @@ export default {
       this.ifExistLockCity = false
     },
     submit: debounce(async function () {
-      console.log(this.userInfo)
       this.isPending = true
       const { error, overHeat, priceId, tempPvId, industryError } = this.queryResult
       const { userId: targetUserId } = this.salesInfo
@@ -273,53 +271,53 @@ export default {
       this.currentPrice = value
       const { productList, transformCurrentPrice } = this
       if (Object.values(value).length > 0) {
-        this.productList = productList.map(p => {
+        this.productList = productList.map(product => {
           let currentPrice = value
-          if (p.options) {
-            currentPrice = transformCurrentPrice(p, p.options)
+          if (product.options) {
+            currentPrice = transformCurrentPrice(product, product.options)
           }
-          return { ...p, currentPrice }
+          return { ...product, currentPrice }
         })
       } else {
-        this.productList = productList.map(p => p.type === 0 ? { ...p, checked: false, currentPrice: value } : p)
+        this.productList = productList.map(product => product.type === 0 ? { ...product, checked: false, currentPrice: value } : product)
       }
     },
     getExtraProductValue (value) {
       const { productList } = this
-      this.productList = productList.map(o => {
-        if (o.id === value.productId) {
-          o.currentPrice = value
+      this.productList = productList.map(product => {
+        if (product.id === value.productId) {
+          product.currentPrice = value
         }
-        return o
+        return product
       })
     },
     transformCurrentPrice (product, options) {
       const { currentPrice: { device, scheduleType, duration } } = this
       const { limit: { platform, schedule, type } } = product
-      return options.find(k => {
+      return options.find(option => {
         const props = {
           device: platform[0] === DEVICE_THREE ? device : platform[0],
           scheduleType: schedule.includes(scheduleType) ? scheduleType : schedule[0],
           duration: type.includes(duration) ? duration : type[0]
         }
-        return k.device === props.device && k.scheduleType === props.scheduleType && k.duration === props.duration
+        return option.device === props.device && option.scheduleType === props.scheduleType && option.duration === props.duration
       })
     },
     transformProductList (additionalProducts) {
       const { currentPrice, queryResult: { keywordPriceList } } = this
-      this.productList = [...additionalProducts].map(o => {
-        if (!o.limit || Object.values(o.limit).length === 0) {
-          return ({ ...o, currentPrice, checked: false })
+      this.productList = [...additionalProducts].map(additionalProduct => {
+        if (!additionalProduct.limit || Object.values(additionalProduct.limit).length === 0) {
+          return ({ ...additionalProduct, currentPrice, checked: false })
         } else {
-          const { platform, schedule, type } = o.limit
+          const { platform, schedule, type } = additionalProduct.limit
           const optionsPlatformProp = DEVICE_PROPS[Object.keys(DEVICE_PROPS).filter(d => platform[0] === (Number(d)))[0]]
-          const optionsType = keywordPriceList.filter(k => type.includes(k.type))
-          const optionsPlatform = optionsType.reduce((a, b) => [
-            ...a, ...optionsPlatformProp.map(p => b[p])
+          const optionsType = keywordPriceList.filter(keywordPrice => type.includes(keywordPrice.type))
+          const optionsPlatform = optionsType.reduce((optionPrev, optionNext) => [
+            ...optionPrev, ...optionsPlatformProp.map(platformProp => optionNext[platformProp])
           ], [])
-          const options = optionsPlatform.filter(k => schedule.includes(k.scheduleType))
-          const resultPrice = this.transformCurrentPrice(o, options)
-          return ({ ...o, currentPrice: resultPrice, options, checked: false })
+          const options = optionsPlatform.filter(platform => schedule.includes(platform.scheduleType))
+          const resultPrice = this.transformCurrentPrice(additionalProduct, options)
+          return ({ ...additionalProduct, currentPrice: resultPrice, options, checked: false })
         }
       })
       console.log(this.productList)
