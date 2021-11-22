@@ -40,7 +40,6 @@
                           :is-sales="notAllowSales" />
       </div>
     </div>
-
     <!-- 更新推广 -->
     <div class="module">
       <div class="content">
@@ -209,6 +208,7 @@ export default {
       this.promotion = pick(clone(this.originPromotion), ['areas', 'dailyBudget', 'validTime', 'negativeWords', 'schedule', 'budgetModificationCount', 'source', 'mobilePriceRatio', 'status', 'id'])
       this.currentBalance = await getCurrentBalance({ userId })
       await this.getGroupData()
+      console.log(this.promotion)
     },
     async updatePromotion () {
       try {

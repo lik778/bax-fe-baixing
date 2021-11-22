@@ -33,12 +33,17 @@
                            @close="negativeWordsDialogVisible = false"
                            @update-negative-words="updateNegativeWords"
                            :negative-words="negativeWords" />
+    <negative-word-alone
+      :visible="negativeWordsAloneVisible"
+      @close="negativeWordsAloneVisible = false"
+      @upWord="upWordAlone"
+    />
   </div>
 </template>
 
 <script>
 import negativeWordsDialog from 'com/common/qwt/negative-word-dialog'
-
+import negativeWordAlone from 'com/common/qwt/negative-word-alone'
 import { NEGATIVE_KEYWORDS_MAX } from 'constant/fengming'
 import { validateKeyword } from 'util/campaign'
 import { getNotExistWords } from 'util/group'
@@ -77,33 +82,14 @@ export default {
     return {
       word: '',
       negativeWordsDialogVisible: false,
-      loading: false
+      loading: false,
+      negativeWordsAloneVisible: false,
+      upWordAloneDialog: ''
     }
   },
   methods: {
     async addNegativeWords () {
-      const val = this.word.trim()
-      if (val === '') return
-      if (this.negativeWords.length + 1 > this.negativeKeywordsMax) {
-        return this.$message.error(`否定关键词个数不能超过${this.negativeKeywordsMax}`)
-      }
-
-      this.loading = true
-
-      try {
-        validateKeyword([val])
-
-        const newWords = getNotExistWords(this.allWords, [val])
-        if (!newWords.length) throw new Error('否词已存在关键词或否词列表中，请更换关键词')
-
-        this.$emit('add-negative-words', [{ word: val }])
-        this.$emit('track', 'click-button: add-negative-keyword')
-      } catch (e) {
-        return this.$message.error(e.message)
-      } finally {
-        this.word = ''
-        this.loading = false
-      }
+      this.negativeWordsAloneVisible = true
     },
     removeNegativeWord (idx) {
       this.$emit('remove-negative-words', idx)
@@ -115,10 +101,39 @@ export default {
         negativeWordsLen: words.length,
         negativeWords: words.map(o => o.word).join(',')
       })
+    },
+    upWordAlone (word) {
+      this.upWordAloneDialog = word
+      if (this.upWordAloneDialog === '') {
+        return
+      }
+      this.addUpWordAlone()
+    },
+    addUpWordAlone () {
+      const val = this.word.trim()
+      if (val === '') return
+      if (this.negativeWords.length + 1 > this.negativeKeywordsMax) {
+        return this.$message.error(`否定关键词个数不能超过${this.negativeKeywordsMax}`)
+      }
+      this.loading = true
+      try {
+        validateKeyword([val])
+        const newWords = getNotExistWords(this.allWords, [val])
+        if (!newWords.length) throw new Error('否词已存在关键词或否词列表中，请更换关键词')
+
+        this.$emit('add-negative-words', [{ word: val }])
+        this.$emit('track', 'click-button: add-negative-keyword')
+      } catch (e) {
+        return this.$message.error(e.message)
+      } finally {
+        this.word = ''
+        this.loading = false
+      }
     }
   },
   components: {
-    negativeWordsDialog
+    negativeWordsDialog,
+    negativeWordAlone
   }
 }
 </script>
