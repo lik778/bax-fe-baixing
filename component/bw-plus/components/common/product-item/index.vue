@@ -89,7 +89,7 @@ export default {
         }
       }
       return {
-        disable: this.currentExcludes.includes(this.product.id) || !!this.product.available || (this.product.type === 0 && (Object.values(this.product.currentPrice).length <= 0 || this.product.currentPrice.price <= 0)),
+        disable: this.currentExcludes.includes(this.product.id) || !!this.product.available || (this.product.type === 0 && Object.values(this.product.currentPrice).length <= 0) || this.product.currentPrice.price <= 0,
         reason: ''
       }
     },
@@ -124,7 +124,11 @@ export default {
         if (this.product.available === 1) {
           message = '当前商品未上线，请咨询客服'
         } else if (!this.notAllowCheck.reason) {
-          message = '您的所选商品中存在与当前商品相同的服务'
+          if (this.product.currentPrice.price <= 0) {
+            message = '当前行业过热，暂无报价'
+          } else {
+            message = '您的所选商品中存在与当前商品相同的服务'
+          }
         }
         this.$message({
           message: message,
