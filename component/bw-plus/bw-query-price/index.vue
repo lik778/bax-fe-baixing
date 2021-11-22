@@ -119,8 +119,8 @@ export default {
       return preInfo
     },
     showResult () {
-      const { queryResult } = this
-      return !(queryResult.error && queryResult.overHeat) && queryResult.keywordPriceList
+      const { queryResult, ifSoldAvailable } = this
+      return !(queryResult.error && queryResult.overHeat) && queryResult.keywordPriceList && ifSoldAvailable
     },
     transformPrice () {
       const { currentPrice } = this

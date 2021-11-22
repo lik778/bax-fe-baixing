@@ -57,7 +57,7 @@
                     width="200"
                     title="提示"
                     trigger="hover"
-                    :content="row.wapSeven.price >= 0 ? '已售出' : '行业太热，暂无报价'">
+                    :content="row.wapSeven.price > 0 ? '已售出' : '行业太热，暂无报价'">
                     <span class="sold-item" slot="reference">--</span>
                 </el-popover>
                 <div v-else-if="notAllowCheck(DEVICE_WAP, 724, row.type)" :class="{'active-item': row.wapSeven.index === current.index, 'diabled': true, 'option-item': true}">{{transforPrice(row.wapSeven.price)}}</div>
@@ -119,7 +119,7 @@
 
 <script>
 import { f2y } from 'util'
-import { DEVICE_ALL, DEVICE_PC, DEVICE_WAP } from 'constant/bw-plus'
+import { DEVICE_ALL, DEVICE_PC, DEVICE_THREE, DEVICE_WAP } from 'constant/bw-plus'
 export default {
   name: 'InqueryResult',
   props: {
@@ -190,7 +190,7 @@ export default {
     notAllowCheck (device, schedule, duration) {
       const { limit } = this
       if (limit) {
-        if (!limit.platform.includes(device) && limit.platform[0] !== DEVICE_ALL) {
+        if (!limit.platform.includes(device) && limit.platform[0] !== DEVICE_THREE) {
           return true
         } else {
           return !limit.schedule.includes(schedule) || !limit.type.includes(duration)

@@ -3,7 +3,7 @@
     <el-card class="box-card">
       <Title title="叠加媒体，低价加“量”"/>
       <div class="product-list">
-        <ProductItem v-for="product in productList" :key="product.id" @changeCombo="changeCombo" @check="checkProduct" :currentExcludes="currentExcludes" :product="product"/>
+        <ProductItem :deviceAvailableStatus="deviceAvailableStatus" v-for="product in productList" :key="product.id" @changeCombo="changeCombo" @check="checkProduct" :currentExcludes="currentExcludes" :product="product"/>
       </div>
     </el-card>
     <el-dialog
