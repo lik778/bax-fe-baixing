@@ -143,13 +143,13 @@
             type="text"
             size="small"
             :disabled="row.enableInNegativeWords || row.enableInKeywords || !notAllowNormalUser()"
-            @click="addCampaignNegativeKeyword(row)"
+            @click="addCampaignNegativeKeyword(row,'plan')"
           >设为计划否词</el-button>
           <el-button
             type="text"
             size="small"
             :disabled="row.enableInNegativeWords || row.enableInKeywords || !notAllowNormalUser()"
-            @click="addGroupNegativeKeyword(row)"
+            @click="addGroupNegativeKeyword(row,'unit')"
           >设为单元否词</el-button>
           <el-tooltip
             effect="dark"
@@ -161,7 +161,6 @@
         </div>
       </el-table-column>
     </el-table>
-
     <footer>
       <div class="total" v-if="!!statistics.length && dimension !== DIMENSION_SEARCH_KEYWORD ">
         <span>
@@ -181,6 +180,11 @@
         @current-change="onCurrentChange">
       </bax-pagination>
     </footer>
+    <negativeWordAlone
+    :visible="visibleDialog"
+    @close="visibleDialog = false"
+    @upWord="upWords"
+    />
   </div>
 </template>
 
@@ -207,6 +211,7 @@ import track from 'util/track'
 import { toFloat, f2y } from 'util/kit'
 import { Message } from 'element-ui'
 import { isNormalUser } from 'util/role'
+import negativeWordAlone from 'com/common/qwt/negative-word-alone'
 
 const isArray = Array.isArray
 export default {
@@ -214,7 +219,8 @@ export default {
   components: {
     BaxPagination,
     BaxInput,
-    PromotionKeywordTip
+    PromotionKeywordTip,
+    negativeWordAlone
   },
   props: {
     statistics: {
@@ -257,10 +263,47 @@ export default {
       DIMENSION_GROUP,
       DIMENSION_KEYWORD,
       DIMENSION_SEARCH_KEYWORD,
-      SEM_PLATFORM_SOGOU
+      SEM_PLATFORM_SOGOU,
+      visibleDialog: false,
+      tableItem: {},
+      isPlanUnit: ''
     }
   },
   methods: {
+    upWords (word) {
+      if (word === '') {
+        return
+      }
+      if (this.isPlanUnit === 'plan') {
+        this.planWordApi(this.tableItem)
+      } else {
+        this.unitWordApi(this.tableItem)
+      }
+    },
+    planWordApi (item) {
+      const { query: { user_id: userId } } = this.$route
+      const { campaignId, queryWord } = item
+      updateCampaign(campaignId, { newNegativeKeywords: [{ word: queryWord }], userId })
+        .then(() => {
+          Message({
+            type: 'success',
+            message: `成功添加 ${queryWord} 为计划否定关键词`
+          })
+          this.$emit('refresh')
+        })
+    },
+    unitWordApi (item) {
+      const { groupId, queryWord } = item
+      const { query: { user_id: userId } } = this.$route
+      updateGroup(groupId, { newNegativeKeywords: [{ word: queryWord }], userId })
+        .then(() => {
+          Message({
+            type: 'success',
+            message: `成功添加 ${queryWord} 为单元否定关键词`
+          })
+          this.$emit('refresh')
+        })
+    },
     async sortChange ({ column, prop, order }) {
       this.$emit('sortChange', { column, prop, order })
     },
@@ -285,29 +328,15 @@ export default {
           this.$emit('refresh')
         })
     },
-    addCampaignNegativeKeyword (item) {
-      const { query: { user_id: userId } } = this.$route
-      const { campaignId, queryWord } = item
-      updateCampaign(campaignId, { newNegativeKeywords: [{ word: queryWord }], userId })
-        .then(() => {
-          Message({
-            type: 'success',
-            message: `成功添加 ${queryWord} 为计划否定关键词`
-          })
-          this.$emit('refresh')
-        })
+    addCampaignNegativeKeyword (item, word) {
+      this.visibleDialog = true
+      this.tableItem = item
+      this.isPlanUnit = word
     },
-    addGroupNegativeKeyword (item) {
-      const { groupId, queryWord } = item
-      const { query: { user_id: userId } } = this.$route
-      updateGroup(groupId, { newNegativeKeywords: [{ word: queryWord }], userId })
-        .then(() => {
-          Message({
-            type: 'success',
-            message: `成功添加 ${queryWord} 为单元否定关键词`
-          })
-          this.$emit('refresh')
-        })
+    addGroupNegativeKeyword (item, word) {
+      this.visibleDialog = true
+      this.tableItem = item
+      this.isPlanUnit = word
     },
     async onChangePrice (userPrice, { groupId, keywordId }) {
       const { query: { user_id: userId } } = this.$route
@@ -361,6 +390,9 @@ export default {
     },
     fmtCpcRanking,
     f2y
+  },
+  created () {
+    this.fn()
   }
 }
 </script>
