@@ -60,7 +60,7 @@ export async function querySystemResult (params) {
 export async function commit (params) {
   const body = await biaowangPlus
     .post('/apply/user/commit')
-    .send(params)
+    .send(trim(params))
     .json()
   return body
 }

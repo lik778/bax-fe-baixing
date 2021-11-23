@@ -50,7 +50,7 @@
                 <i v-if="form.coreCities.length < coreCityLimit" class="el-icon-plus" @click="coreCitiesDialogVisible = true" />
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" :loading="isInquery" @click="submitForm('form')">查价</el-button>
+                <el-button type="primary" :loading="isPending" @click="submitForm('form')">查价</el-button>
             </el-form-item>
         </el-form>
         <AreaSelector
@@ -92,6 +92,11 @@ export default {
     allAreas: {
       type: Array,
       required: true
+    },
+    isPending: {
+      type: Boolean,
+      require: true,
+      default: false
     }
   },
   fromMobx: {
@@ -191,9 +196,9 @@ export default {
       if (!value) {
         callback(new Error('请输入关键词'))
       }
-      if (!this.checkResult.passed) {
-        callback(new Error('关键词风控审查不通过'))
-      }
+      // if (!this.checkResult.passed) {
+      //   callback(new Error('关键词风控审查不通过'))
+      // }
       if (!result.validate) {
         callback(new Error(result.error))
       }
@@ -206,7 +211,6 @@ export default {
       }
     },
     submitForm: debounce(async function (formName) {
-      this.isInquery = true
       this.$refs[formName].validate((valid) => {
         if (valid) {
           const checkedIndustry = this.industryList.filter(item => item.name === this.form.industry)
@@ -215,7 +219,6 @@ export default {
         } else {
           console.log(valid)
         }
-        this.isInquery = false
       })
     }, 1000),
     async checkKeyword () {

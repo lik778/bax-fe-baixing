@@ -29,6 +29,7 @@ export default {
         display: flex;
         justify-content: flex-start;
         align-items: center;
+        margin-bottom: 10px;
         .extra-title{
             font-size: 12px;
             color: #999999;

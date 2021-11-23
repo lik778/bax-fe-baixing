@@ -12,6 +12,14 @@ import ProvinceCityMap from './common/province-city-map.vue'
 import RenewConfirm from './bw-packge/renew-confirm.vue'
 import DataRange from './bw-dashboard/data-range.vue'
 import WelfareActivity from './bw-inquery-price/welfare-activity.vue'
+import ErrorFooter from './bw-inquery-price/error-footer.vue'
+import CommitDialog from './bw-inquery-price/commit-dialog.vue'
+import WelfareLayout from './bw-inquery-price/welfare-layout.vue'
+import SoldCityLayout from './bw-inquery-price/sold-city-layout.vue'
+import BwProducts from './bw-inquery-price/bw-products.vue'
+import BwCreativity from './bw-inquery-price/bw-creativity.vue'
+import BwDescriptionItem from './bw-price-records/bw-description-item.vue'
+import PreInfoConfirm from './bw-price-records/pre-info-confirm.vue'
 
 export {
   InqueryForm,
@@ -27,5 +35,13 @@ export {
   ProvinceCityMap,
   RenewConfirm,
   DataRange,
-  WelfareActivity
+  WelfareActivity,
+  ErrorFooter,
+  CommitDialog,
+  WelfareLayout,
+  SoldCityLayout,
+  BwProducts,
+  BwCreativity,
+  BwDescriptionItem,
+  PreInfoConfirm
 }

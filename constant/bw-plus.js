@@ -58,9 +58,20 @@ export const APPLY_AUDIT_STATUS_OPTIONS = Object.freeze({
   [APPLY_AUDIT_STATUS_REJECT]: '审核拒绝'
 })
 
-export const DEVICE_ALL = 0 // 全平台
+export const DEVICE_ALL = 0 // 双端
 export const DEVICE_PC = 1 // pc
 export const DEVICE_WAP = 2 // wap
+export const DEVICE_THREE = 3 // 全平台
+export const DEVICE_PROPS = {
+  [DEVICE_THREE]: ['bothFive', 'bothSeven', 'pcFive', 'pcSeven', 'wapFive', 'wapSeven'],
+  [DEVICE_ALL]: ['bothFive', 'bothSeven'],
+  [DEVICE_PC]: ['pcFive', 'pcSeven'],
+  [DEVICE_WAP]: ['wapFive', 'wapSeven']
+}
+export const SCHEDULE_PROPS = {
+  58: ['wapFive', 'bothFive', 'pcFive'],
+  724: ['bothSeven', 'pcSeven', 'wapSeven']
+}
 export const DEVICE = Object.freeze({
   [DEVICE_ALL]: '全平台',
   [DEVICE_PC]: '电脑',
@@ -228,7 +239,7 @@ export const RENEW_OPRATION_STATUS_COPY = 30
 export const RENEW_OPRATION_STATUS_DISABLED = 60
 const showWelfare = () => {
   const now = dayjs()
-  return dayjs(now).isBetween('2021-11-1', dayjs('2021-11-11'))
+  return dayjs(now).isBetween('2021-11-1', dayjs('2021-11-19'))
 }
 
 export const welfareInfo = [
@@ -284,3 +295,30 @@ export const welfareInfo = [
     show: showWelfare
   }
 ]
+
+export const PRODUCT_STATUS_ONLINE = 1
+export const PRODUCT_STATUS_OFLINE = 0
+export const PRODUCT_LIST = Object.freeze([
+  {
+    name: '360标王',
+    day: '180天',
+    device: DEVICE_WAP,
+    hot: true,
+    originPrice: '',
+    currentPrice: '',
+    status: PRODUCT_STATUS_ONLINE,
+    statusDesc: ''
+  },
+  {
+    name: '头条标王',
+    day: [],
+    device: DEVICE_WAP,
+    hot: true,
+    originPrice: '',
+    currentPrice: '',
+    status: PRODUCT_STATUS_ONLINE,
+    statusDesc: ''
+  }
+])
+
+export const SEO_PRODUCT_TYPE = 2
