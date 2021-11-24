@@ -1,7 +1,7 @@
 <template>
   <el-card class="bw-price-record">
     <BwRecordsForm @search="search"/>
-    <BwRecordsTable @doCopy="preOrder" @preOrder="getPreInfo" @reviewPrice="reviewPrice" :loading="loading" :records="records" :allAreas="allAreas"/>
+    <BwRecordsTable @getDetail="getDetail" @doCopy="preOrder" @preOrder="getPreInfo" @reviewPrice="reviewPrice" :loading="loading" :records="records" :allAreas="allAreas"/>
     <el-dialog
       title="查看"
       :visible.sync="dialogVisible"
@@ -22,13 +22,19 @@
       :total="total">
     </el-pagination>
     <PreOrderDetail @preOrder="preOrder" @cancel="isPreInfo=false" :allAreas="allAreas" :dialogVisible="isPreInfo" :preInfo="preInfo"/>
+    <el-dialog
+    title="查价详情"
+    :visible="detailVisible"
+    @close="detailVisible=false">
+        <PreInfoConfirm :preInfo="queryPriceDetail" :allAreas="allAreas"/>
+    </el-dialog>
   </el-card>
 </template>
 
 <script>
 import { getInqueryList, userChoose, preOrder, preInfo, getPriceList } from 'api/biaowang-plus'
 import { APPLY_AUDIT_STATUS_OPTIONS, APPLY_TYPE_NORMAL } from 'constant/bw-plus'
-import { BwRecordsForm, BwRecordsTable, InqueryResult, PreOrderDetail } from './components'
+import { BwRecordsForm, BwRecordsTable, InqueryResult, PreOrderDetail, PreInfoConfirm } from './components'
 import { normalizeRoles } from 'util/role'
 import pick from 'lodash.pick'
 import { f2y } from 'util'
@@ -40,7 +46,8 @@ export default {
     BwRecordsForm,
     BwRecordsTable,
     InqueryResult,
-    PreOrderDetail
+    PreOrderDetail,
+    PreInfoConfirm
   },
   props: {
     allAreas: {
@@ -83,13 +90,19 @@ export default {
       orderPayUrl: '',
       isPreInfo: false,
       preInfo: {},
-      deviceAvailableStatus: {}
+      deviceAvailableStatus: {},
+      queryPriceDetail: {},
+      detailVisible: false
     }
   },
   async mounted () {
     await this.getRecord()
   },
   methods: {
+    getDetail (row) {
+      this.queryPriceDetail = row
+      this.detailVisible = true
+    },
     isBxUser () {
       const roles = normalizeRoles(this.userInfo.roles)
       return roles.includes('BAIXING_USER')
