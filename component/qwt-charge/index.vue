@@ -268,7 +268,6 @@ export default {
         this.displayUserMobile = info.mobile
       }
     }
-    console.log('===')
     this.obtainProductByMchCode()
   },
   methods: {
