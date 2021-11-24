@@ -1,7 +1,7 @@
 <template>
     <el-dialog
     title="续费确认"
-    :visible.sync="dialogVisible"
+    :visible.sync="dialogVisible_"
     width="48%"
     @close="cancel"
     >
@@ -99,11 +99,19 @@ export default {
       const { priceId, renewInfo: { priceList } } = this
       const currentPrice = priceList.filter(o => o.id.toString() === priceId.toString())[0]
       return currentPrice
+    },
+    dialogVisible_: {
+      get () {
+        return this.dialogVisible
+      },
+      set () {
+        this.$emit('cancel')
+      }
     }
   },
   methods: {
     cancel () {
-      this.$emit('cancel')
+      this.dialogVisible_ = false
     },
     preOrder () {
       this.$emit('preOrder', this.priceId)
