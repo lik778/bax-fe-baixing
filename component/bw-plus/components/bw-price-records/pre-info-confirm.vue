@@ -2,7 +2,7 @@
     <div>
       <div class="row-info">
         <BwDescriptionItem label="关键词：" :value="preInfo.keywords.join('、')"/>
-        <BwDescriptionItem label="词包热度：" :value="preInfo.totalPv"/>
+        <!-- <BwDescriptionItem label="词包热度：" :value="preInfo.totalPv"/> -->
         <BwDescriptionItem label="城市：" :value="citiesFormater(preInfo.cities)"/>
       </div>
       <el-table :data="preInfo.additionProductMap" style="width: 100%">
