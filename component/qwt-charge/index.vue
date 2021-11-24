@@ -324,6 +324,8 @@ export default {
     handlePriceChange (product, v) {
       product.price = v
       product.quantity = Math.floor(v / product.realPrice)
+      const idx = this.checkedProducts.findIndex(p => p.skuVendorId === product.skuVendorId)
+      this.$set(this.checkedProducts, idx, product)
     },
     toggleProduct (product, judgeProduct) {
       const index = this.checkedProducts.findIndex(p => p.skuVendorId === product.skuVendorId)
