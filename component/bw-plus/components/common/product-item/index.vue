@@ -40,6 +40,7 @@
 <script>
 import { DEVICE, SCHEDULE_TYPE, SEO_PRODUCT_TYPE, DEVICE_PC, DEVICE_WAP } from 'constant/bw-plus'
 import { f2y } from 'util'
+import { DEVICE_ALL } from 'constant/fengming-report'
 export default {
   name: 'product-item',
   props: {
@@ -70,13 +71,13 @@ export default {
     },
     notAllowCheck () {
       const { product: { currentPrice: { device } }, deviceAvailableStatus: { ifMobileAvailable, ifPcAvailable } } = this
-      if (ifMobileAvailable && !ifPcAvailable && device === DEVICE_PC) {
+      if (ifMobileAvailable && !ifPcAvailable && (device === DEVICE_PC || device === DEVICE_ALL)) {
         return {
           disable: true,
           reason: '当前商品电脑端已售出'
         }
       }
-      if (!ifMobileAvailable && ifPcAvailable && device === DEVICE_WAP) {
+      if (!ifMobileAvailable && ifPcAvailable && (device === DEVICE_WAP || device === DEVICE_ALL)) {
         return {
           disable: true,
           reason: '当前商品手机端已售出'
