@@ -28,7 +28,7 @@
           <ErrorFooter v-if="queryResult.error || queryResult.overHeat || queryResult.industryError" :queryResult="queryResult"/>
         </el-card>
         <BwPlusDialog :BwPlusDialogMsg="BwPlusDialogMsg" @close="BwPlusDialogMsg.dialogVisible = false"/>
-        <CommitDialog :allAreas="allAreas" :preInfo="preInfo" :visible="isSubmit" :isPending="isPending" @cancel="isSubmit = false" @submit="submit"/>
+        <CommitDialog :allAreas="allAreas" :preInfo="preInfo" :visible="isSubmit" :isPending="isPending" @cancel="cancel" @submit="submit"/>
     </section>
 </template>
 
@@ -146,6 +146,10 @@ export default {
     }
   },
   methods: {
+    cancel () {
+      this.isSubmit = false
+      this.isPending = false
+    },
     checked (product) {
       const { productList } = this
       this.productList = productList.map(p => product.id === p.id ? product : p)
@@ -191,7 +195,6 @@ export default {
       try {
         const { code, data } = await commit(params)
         if (code === 0) {
-          this.isSubmit = false
           this.resetResult()
           this.BwPlusDialogMsg = {
             dialogVisible: true,
@@ -212,6 +215,7 @@ export default {
         console.log(error)
       } finally {
         this.isPending = false
+        this.isSubmit = false
       }
     }, 300),
     async inquery (form) {

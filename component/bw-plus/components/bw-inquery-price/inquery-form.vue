@@ -50,7 +50,7 @@
                 <i v-if="form.coreCities.length < coreCityLimit" class="el-icon-plus" @click="coreCitiesDialogVisible = true" />
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" :loading="isPending" @click="submitForm('form')">查价</el-button>
+                <el-button type="primary" @click="submitForm('form')">查价</el-button>
             </el-form-item>
         </el-form>
         <AreaSelector

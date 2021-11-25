@@ -3,6 +3,7 @@
           title="提交"
           :visible.sync="visible"
           width="50%"
+          @close="cancel"
         >
           <PreInfoConfirm :allAreas="allAreas" :preInfo="preInfo"/>
           <span slot="footer" class="dialog-footer">
