@@ -35,7 +35,7 @@
 <script>
 import { InqueryForm, KeywordHotDetail, Title, InqueryResult, BwPlusDialog, WelfareLayout, ErrorFooter, CommitDialog, SoldCityLayout, BwProducts, BwCreativity } from '../components'
 import { querySystemResult, commit } from 'api/biaowang-plus'
-import { APPLY_TYPE_NORMAL, APPLY_TYPE_ERROR, DEVICE_PROPS, DEVICE_THREE, SEO_PRODUCT_TYPE } from 'constant/bw-plus'
+import { APPLY_TYPE_NORMAL, APPLY_TYPE_ERROR, DEVICE_PROPS, DEVICE_THREE, SEO_PRODUCT_TYPE, CREATIVE_PRODUCT_TYPE } from 'constant/bw-plus'
 import { f2y } from 'util'
 import debounce from 'lodash.debounce'
 export default {
@@ -103,14 +103,15 @@ export default {
           name: o.title,
           originPrice: o.currentPrice.price * o.originalPriceRatio,
           scheduleType: o.currentPrice.scheduleType,
-          type: o.type
+          displayType: (o.type === SEO_PRODUCT_TYPE || o.type === CREATIVE_PRODUCT_TYPE) ? 1 : 0
         }
       ))
       const BAIDU_BW = [{
         dealPrice: currentPrice.price,
         originPrice: currentPrice.price,
         name: '百度标王标准版',
-        ...currentPrice
+        ...currentPrice,
+        displayType: 0
       }]
       const preInfo = {
         keywords: queryInfo.words,

@@ -65,8 +65,8 @@ export default {
       return cities.slice(0, 2).map(city => getCnName(city, this.allAreas)).join(',') + (cities.length > 20 ? `等${cities.length}个城市` : '') || '-'
     },
     productFormatter (row, column, cellValue, index) {
-      const { device, scheduleType, type } = row
-      return type === 2 || type === 0 ? cellValue : `${cellValue} | ${DEVICE[device]} | ${SCHEDULE_TYPE[scheduleType]}`
+      const { device, scheduleType, displayType } = row
+      return displayType ? cellValue : `${cellValue} | ${DEVICE[device]} | ${SCHEDULE_TYPE[scheduleType]}`
     },
     priceFormatter (...args) {
       const [,, price] = args
