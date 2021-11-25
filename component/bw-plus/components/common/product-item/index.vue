@@ -32,13 +32,13 @@
                 <span class="current-price">抢鲜价：{{dealPrice}}元</span>
                 <span class="origin-price">原价：{{originalPrice}}元</span>
             </div>
-            <el-button @click.stop="changeCombo" v-if="product.type === 1" size="mini" :disabled="notAllowCheck.disable">更换套餐</el-button>
+            <el-button @click.stop="changeCombo" v-if="product.type === REGULAR_PRODUCT_TYPE" size="mini" :disabled="notAllowCheck.disable">更换套餐</el-button>
         </div>
     </div>
   </div>
 </template>
 <script>
-import { DEVICE, SCHEDULE_TYPE, SEO_PRODUCT_TYPE, DEVICE_PC, DEVICE_WAP } from 'constant/bw-plus'
+import { DEVICE, SCHEDULE_TYPE, SEO_PRODUCT_TYPE, DEVICE_PC, DEVICE_WAP, REGULAR_PRODUCT_TYPE } from 'constant/bw-plus'
 import { f2y } from 'util'
 import { DEVICE_ALL } from 'constant/fengming-report'
 export default {
@@ -62,6 +62,11 @@ export default {
         ifPcAvailable: true
       }),
       require: false
+    }
+  },
+  data () {
+    return {
+      REGULAR_PRODUCT_TYPE
     }
   },
   computed: {
@@ -100,7 +105,7 @@ export default {
     },
     showDuration () {
       const { product: { currentPrice: { duration } } } = this
-      return duration
+      return duration || '?'
     },
     showSchedule () {
       const { product: { currentPrice: { scheduleType } } } = this
@@ -120,12 +125,15 @@ export default {
   },
   methods: {
     checkProduct () {
+      console.log(this.product.currentPrice)
       if (this.notAllowCheck.disable) {
         let message = this.notAllowCheck.reason || '请先勾选百度标王产品！'
         if (this.product.available === 1) {
           message = '当前商品未上线，请咨询客服'
         } else if (!this.notAllowCheck.reason) {
-          if (this.product.currentPrice.price <= 0) {
+          if (!this.product.currentPrice.index) {
+            message = '须购买百度标王标准版，才可以购买此商品'
+          } else if (this.product.currentPrice.price <= 0) {
             message = '当前行业过热，暂无报价'
           } else {
             message = '您的所选商品中存在与当前商品相同的服务'

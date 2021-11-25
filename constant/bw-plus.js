@@ -323,3 +323,4 @@ export const PRODUCT_LIST = Object.freeze([
 
 export const SEO_PRODUCT_TYPE = 2
 export const CREATIVE_PRODUCT_TYPE = 0
+export const REGULAR_PRODUCT_TYPE = 1
