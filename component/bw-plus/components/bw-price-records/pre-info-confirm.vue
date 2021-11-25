@@ -13,9 +13,9 @@
         <el-table-column prop="dealPrice" label="实付（元）" :formatter="priceFormatter"/>
       </el-table>
       <div class="row-info total-price">
-        <BwDescriptionItem label="商品总价：" :value="totalPrice"/>
-        <BwDescriptionItem label="已优惠：" :value="spreadPrice"/>
-        <BwDescriptionItem label="提单价：" :value="totalDealPrice"/>
+        <BwDescriptionItem label="商品总价：" :value="f2y(totalPrice)"/>
+        <BwDescriptionItem label="已优惠：" :value="f2y(spreadPrice)"/>
+        <BwDescriptionItem label="提单价：" :value="f2y(totalDealPrice)"/>
       </div>
     </div>
 </template>
@@ -41,6 +41,11 @@ export default {
       required: true
     }
   },
+  data () {
+    return {
+      f2y
+    }
+  },
   computed: {
     showWelfare () {
       const now = dayjs()
@@ -49,7 +54,7 @@ export default {
     totalPrice () {
       const { additionProductMap } = this.preInfo
       const sum = additionProductMap.reduce((a, b) => a + b.originPrice, 0)
-      return f2y(sum)
+      return sum
     },
     spreadPrice () {
       return this.totalPrice - this.totalDealPrice
@@ -57,7 +62,7 @@ export default {
     totalDealPrice () {
       const { additionProductMap } = this.preInfo
       const sum = additionProductMap.reduce((a, b) => a + b.dealPrice, 0)
-      return f2y(sum)
+      return sum
     }
   },
   methods: {
