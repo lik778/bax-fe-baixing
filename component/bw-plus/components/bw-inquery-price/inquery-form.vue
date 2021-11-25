@@ -196,9 +196,9 @@ export default {
       if (!value) {
         callback(new Error('请输入关键词'))
       }
-      // if (!this.checkResult.passed) {
-      //   callback(new Error('关键词风控审查不通过'))
-      // }
+      if (!this.checkResult.passed) {
+        callback(new Error('关键词风控审查不通过'))
+      }
       if (!result.validate) {
         callback(new Error(result.error))
       }
