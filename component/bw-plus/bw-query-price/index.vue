@@ -140,10 +140,9 @@ export default {
     totalPrice () {
       const { productList } = this
       const total = productList.reduce((producPrev, producNext) => {
-        const priceB = producNext.checked ? (producNext.type === 2 ? producNext.certainDealPrice : producNext.currentPrice.price * producNext.dealPriceRatio) : 0
+        const priceB = producNext.checked ? (producNext.type === SEO_PRODUCT_TYPE ? producNext.certainDealPrice : producNext.currentPrice.price * producNext.dealPriceRatio) : 0
         return producPrev + priceB
       }, 0)
-      console.log(total)
       return total
     }
   },
@@ -220,6 +219,9 @@ export default {
         this.isSubmit = false
       }
     }, 300),
+    findCurrentPrice (row) {
+      return Object.values(row).find(item => item.price > 0)
+    },
     async inquery (form) {
       this.isPending = true
       const loading = this.$loading({
@@ -254,7 +256,7 @@ export default {
             this.currentPrice = data.keywordPriceList && data.keywordPriceList[0].pcSeven
             this.keywordLockText = '手机端的“部分词的部分城市”已售出，详情如下。请更换已售出关键词/城市重新查价～'
           } else {
-            this.currentPrice = data.keywordPriceList && data.keywordPriceList[0].bothSeven
+            this.currentPrice = data.keywordPriceList && this.findCurrentPrice(data.keywordPriceList[0])
           }
           this.transformProductList(additionalProducts)
           this.$nextTick(() => {
