@@ -125,7 +125,6 @@ export default {
   },
   methods: {
     checkProduct () {
-      console.log(this.product.currentPrice)
       if (this.notAllowCheck.disable) {
         let message = this.notAllowCheck.reason || '请先勾选百度标王产品！'
         if (this.product.available === 1) {
