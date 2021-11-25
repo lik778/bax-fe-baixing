@@ -102,7 +102,8 @@ export default {
           duration: o.currentPrice.duration,
           name: o.title,
           originPrice: o.currentPrice.price * o.originalPriceRatio,
-          scheduleType: o.currentPrice.scheduleType
+          scheduleType: o.currentPrice.scheduleType,
+          type: o.type
         }
       ))
       const BAIDU_BW = [{
