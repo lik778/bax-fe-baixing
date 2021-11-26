@@ -177,7 +177,6 @@ export default {
     },
     async getCampaignInfo () {
       const { query: { user_id: userId } } = this.$route
-      console.log(this.$route)
       const info = await getCampaignInfo(this.campaignId, { userId })
       info.dailyBudget = info.dailyBudget / 100
       if (info.timeRange && info.timeRange.length && info.timeRange[0] !== null && info.timeRange[1] !== null) {
@@ -211,7 +210,6 @@ export default {
       this.promotion = pick(clone(this.originPromotion), ['areas', 'dailyBudget', 'validTime', 'negativeWords', 'schedule', 'budgetModificationCount', 'source', 'mobilePriceRatio', 'status', 'id'])
       this.currentBalance = await getCurrentBalance({ userId })
       await this.getGroupData()
-      console.log(this.promotion)
     },
     async updatePromotion () {
       try {
