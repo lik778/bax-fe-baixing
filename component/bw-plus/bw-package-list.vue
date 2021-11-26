@@ -39,7 +39,8 @@
             style="width: 100%">
             <el-table-column
               label="项目名称"
-              width="350">
+              width="450"
+              >
               <template slot-scope="{row}">
                 <div class="project-name">
                   <img :src="row.logoImageUrl" alt="logo">
@@ -52,25 +53,23 @@
             <el-table-column
               :formatter="({ totalDays }) =>  `${totalDays}天`"
               label="时长"
-              width="150">
+              >
             </el-table-column>
             <el-table-column
               :formatter="({ skuId }) =>  skuId === 301 ? AUDIT_STATUS_MAP[item.auditStatus]: '--'"
-              width="150"
               label="审核状态">
             </el-table-column>
             <el-table-column
               :formatter="({ skuId }) =>  skuId === 301 ? PACKEAGE_STATUS_MAP[item.status] : '--'"
-              width="150"
               label="投放状态">
             </el-table-column>
             <el-table-column
               :formatter="({ remainDays }) =>  `${remainDays}天`"
-              width="150"
               label="剩余天数">
             </el-table-column>
             <el-table-column
               prop="address"
+              width="300"
               label="操作">
               <template slot-scope="{ row }">
                 <template  v-if="row.skuId === 301">

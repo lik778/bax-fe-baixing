@@ -2,7 +2,7 @@
     <div>
       <div class="row-info">
         <BwDescriptionItem label="关键词：" :value="preInfo.keywords.join('、')"/>
-        <BwDescriptionItem label="词包热度：" :value="preInfo.totalPv"/>
+        <!-- <BwDescriptionItem label="词包热度：" :value="preInfo.totalPv"/> -->
         <BwDescriptionItem label="城市：" :value="citiesFormater(preInfo.cities)"/>
       </div>
       <el-table :data="preInfo.additionProductMap" style="width: 100%">
@@ -13,9 +13,9 @@
         <el-table-column prop="dealPrice" label="实付（元）" :formatter="priceFormatter"/>
       </el-table>
       <div class="row-info total-price">
-        <BwDescriptionItem label="商品总价：" :value="totalPrice"/>
-        <BwDescriptionItem label="已优惠：" :value="spreadPrice"/>
-        <BwDescriptionItem label="提单价：" :value="totalDealPrice"/>
+        <BwDescriptionItem label="商品总价：" :value="f2y(totalPrice)"/>
+        <BwDescriptionItem label="已优惠：" :value="f2y(spreadPrice)"/>
+        <BwDescriptionItem label="提单价：" :value="f2y(totalDealPrice)"/>
       </div>
     </div>
 </template>
@@ -41,6 +41,11 @@ export default {
       required: true
     }
   },
+  data () {
+    return {
+      f2y
+    }
+  },
   computed: {
     showWelfare () {
       const now = dayjs()
@@ -49,7 +54,7 @@ export default {
     totalPrice () {
       const { additionProductMap } = this.preInfo
       const sum = additionProductMap.reduce((a, b) => a + b.originPrice, 0)
-      return f2y(sum)
+      return sum
     },
     spreadPrice () {
       return this.totalPrice - this.totalDealPrice
@@ -57,7 +62,7 @@ export default {
     totalDealPrice () {
       const { additionProductMap } = this.preInfo
       const sum = additionProductMap.reduce((a, b) => a + b.dealPrice, 0)
-      return f2y(sum)
+      return sum
     }
   },
   methods: {
@@ -65,8 +70,8 @@ export default {
       return cities.slice(0, 2).map(city => getCnName(city, this.allAreas)).join(',') + (cities.length > 20 ? `等${cities.length}个城市` : '') || '-'
     },
     productFormatter (row, column, cellValue, index) {
-      const { device, scheduleType } = row
-      return `${cellValue} | ${DEVICE[device]} | ${SCHEDULE_TYPE[scheduleType]}`
+      const { device, scheduleType, displayType } = row
+      return displayType ? cellValue : `${cellValue} | ${DEVICE[device]} | ${SCHEDULE_TYPE[scheduleType]}`
     },
     priceFormatter (...args) {
       const [,, price] = args

@@ -253,7 +253,7 @@ export const welfareInfo = [
       const active = price > 0 && duration >= 90
       return {
         active,
-        tag: active ? `已解锁，赠送${duration}天` : '至少购买90天可解锁',
+        tag: active ? `已解锁，赠送${duration}天` : '至少购买90天标王可解锁',
         detail: `${duration}天`
       }
     },
@@ -322,3 +322,5 @@ export const PRODUCT_LIST = Object.freeze([
 ])
 
 export const SEO_PRODUCT_TYPE = 2
+export const CREATIVE_PRODUCT_TYPE = 0
+export const REGULAR_PRODUCT_TYPE = 1

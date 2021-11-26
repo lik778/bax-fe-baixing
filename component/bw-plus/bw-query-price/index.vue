@@ -28,14 +28,14 @@
           <ErrorFooter v-if="queryResult.error || queryResult.overHeat || queryResult.industryError" :queryResult="queryResult"/>
         </el-card>
         <BwPlusDialog :BwPlusDialogMsg="BwPlusDialogMsg" @close="BwPlusDialogMsg.dialogVisible = false"/>
-        <CommitDialog :allAreas="allAreas" :preInfo="preInfo" :visible="isSubmit" :isPending="isPending" @cancel="isSubmit = false" @submit="submit"/>
+        <CommitDialog :allAreas="allAreas" :preInfo="preInfo" :visible="isSubmit" :isPending="isPending" @cancel="cancel" @submit="submit"/>
     </section>
 </template>
 
 <script>
 import { InqueryForm, KeywordHotDetail, Title, InqueryResult, BwPlusDialog, WelfareLayout, ErrorFooter, CommitDialog, SoldCityLayout, BwProducts, BwCreativity } from '../components'
 import { querySystemResult, commit } from 'api/biaowang-plus'
-import { APPLY_TYPE_NORMAL, APPLY_TYPE_ERROR, DEVICE_PROPS, DEVICE_THREE, SEO_PRODUCT_TYPE } from 'constant/bw-plus'
+import { APPLY_TYPE_NORMAL, APPLY_TYPE_ERROR, DEVICE_PROPS, DEVICE_THREE, SEO_PRODUCT_TYPE, CREATIVE_PRODUCT_TYPE } from 'constant/bw-plus'
 import { f2y } from 'util'
 import debounce from 'lodash.debounce'
 export default {
@@ -102,14 +102,16 @@ export default {
           duration: o.currentPrice.duration,
           name: o.title,
           originPrice: o.currentPrice.price * o.originalPriceRatio,
-          scheduleType: o.currentPrice.scheduleType
+          scheduleType: o.currentPrice.scheduleType,
+          displayType: (o.type === SEO_PRODUCT_TYPE || o.type === CREATIVE_PRODUCT_TYPE) ? 1 : 0
         }
       ))
       const BAIDU_BW = [{
         dealPrice: currentPrice.price,
         originPrice: currentPrice.price,
         name: '百度标王标准版',
-        ...currentPrice
+        ...currentPrice,
+        displayType: 0
       }]
       const preInfo = {
         keywords: queryInfo.words,
@@ -138,14 +140,17 @@ export default {
     totalPrice () {
       const { productList } = this
       const total = productList.reduce((producPrev, producNext) => {
-        const priceB = producNext.checked ? (producNext.type === 2 ? producNext.certainDealPrice : producNext.currentPrice.price * producNext.dealPriceRatio) : 0
+        const priceB = producNext.checked ? (producNext.type === SEO_PRODUCT_TYPE ? producNext.certainDealPrice : producNext.currentPrice.price * producNext.dealPriceRatio) : 0
         return producPrev + priceB
       }, 0)
-      console.log(total)
       return total
     }
   },
   methods: {
+    cancel () {
+      this.isSubmit = false
+      this.isPending = false
+    },
     checked (product) {
       const { productList } = this
       this.productList = productList.map(p => product.id === p.id ? product : p)
@@ -191,7 +196,6 @@ export default {
       try {
         const { code, data } = await commit(params)
         if (code === 0) {
-          this.isSubmit = false
           this.resetResult()
           this.BwPlusDialogMsg = {
             dialogVisible: true,
@@ -212,8 +216,12 @@ export default {
         console.log(error)
       } finally {
         this.isPending = false
+        this.isSubmit = false
       }
     }, 300),
+    findCurrentPrice (row) {
+      return Object.values(row).find(item => item.price > 0)
+    },
     async inquery (form) {
       this.isPending = true
       const loading = this.$loading({
@@ -248,7 +256,7 @@ export default {
             this.currentPrice = data.keywordPriceList && data.keywordPriceList[0].pcSeven
             this.keywordLockText = '手机端的“部分词的部分城市”已售出，详情如下。请更换已售出关键词/城市重新查价～'
           } else {
-            this.currentPrice = data.keywordPriceList && data.keywordPriceList[0].bothSeven
+            this.currentPrice = data.keywordPriceList && this.findCurrentPrice(data.keywordPriceList[0])
           }
           this.transformProductList(additionalProducts)
           this.$nextTick(() => {

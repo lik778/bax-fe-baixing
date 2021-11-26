@@ -50,7 +50,7 @@
                 <i v-if="form.coreCities.length < coreCityLimit" class="el-icon-plus" @click="coreCitiesDialogVisible = true" />
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" :loading="isPending" @click="submitForm('form')">查价</el-button>
+                <el-button type="primary" @click="submitForm('form')">查价</el-button>
             </el-form-item>
         </el-form>
         <AreaSelector
@@ -196,9 +196,9 @@ export default {
       if (!value) {
         callback(new Error('请输入关键词'))
       }
-      // if (!this.checkResult.passed) {
-      //   callback(new Error('关键词风控审查不通过'))
-      // }
+      if (!this.checkResult.passed) {
+        callback(new Error('关键词风控审查不通过'))
+      }
       if (!result.validate) {
         callback(new Error(result.error))
       }
