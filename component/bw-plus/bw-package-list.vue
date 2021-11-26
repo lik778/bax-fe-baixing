@@ -73,14 +73,17 @@
               prop="address"
               label="操作">
               <template slot-scope="{ row }">
+                <template  v-if="row.skuId === 301">
                 <el-row type="flex" justify="space-around">
                   <el-col :span="8" v-if="allowRenew">
                     <el-button  type="danger" style="width: 100%"  @click="renew(row,item)">续费</el-button>
                   </el-col>
-                  <el-col :span="8" >
+                  <el-col :span="8">
                     <el-button  style="width: 100%" @click="goToPlanList(item)">设置推广</el-button>
                   </el-col>
                 </el-row>
+                </template>
+                <span v-else>--</span>
               </template>
             </el-table-column>
         </el-table>
