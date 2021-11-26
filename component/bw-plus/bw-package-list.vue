@@ -397,8 +397,9 @@ export default {
 }
 .project-name {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
+  padding-left: 30px;
   img {
     width: 76px;
     height: 46px;
