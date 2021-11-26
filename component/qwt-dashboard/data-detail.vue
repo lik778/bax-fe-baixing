@@ -190,7 +190,7 @@
 
 <script>
 import BaxPagination from 'com/common/pagination'
-import { updateCampaign, updateGroup } from 'api/fengming'
+import { updateCampaign, updateGroup, getWordAuthority } from 'api/fengming'
 import BaxInput from 'com/common/bax-input'
 import PromotionKeywordTip from 'com/widget/promotion-keyword-tip'
 import {
@@ -266,24 +266,24 @@ export default {
       SEM_PLATFORM_SOGOU,
       visibleDialog: false,
       tableItem: {},
-      isPlanUnit: ''
+      isPlanUnit: '',
+      isAllowWord: false
     }
   },
   methods: {
-    upWords (word) {
-      if (word === '') {
-        return
-      }
+    upWords (wordType) {
+      if (wordType === '') return
+      const type = wordType === 'accurate' ? 0 : 1
       if (this.isPlanUnit === 'plan') {
-        this.planWordApi(this.tableItem)
+        this.planWordApi(this.tableItem, type)
       } else {
-        this.unitWordApi(this.tableItem)
+        this.unitWordApi(this.tableItem, type)
       }
     },
-    planWordApi (item) {
+    planWordApi (item, matchType = 0) {
       const { query: { user_id: userId } } = this.$route
       const { campaignId, queryWord } = item
-      updateCampaign(campaignId, { newNegativeKeywords: [{ word: queryWord }], userId })
+      updateCampaign(campaignId, { newNegativeKeywords: [{ word: queryWord, matchType }], userId })
         .then(() => {
           Message({
             type: 'success',
@@ -292,10 +292,10 @@ export default {
           this.$emit('refresh')
         })
     },
-    unitWordApi (item) {
+    unitWordApi (item, matchType = 0) {
       const { groupId, queryWord } = item
       const { query: { user_id: userId } } = this.$route
-      updateGroup(groupId, { newNegativeKeywords: [{ word: queryWord }], userId })
+      updateGroup(groupId, { newNegativeKeywords: [{ word: queryWord, matchType }], userId })
         .then(() => {
           Message({
             type: 'success',
@@ -329,14 +329,24 @@ export default {
         })
     },
     addCampaignNegativeKeyword (item, word) {
-      this.visibleDialog = true
-      this.tableItem = item
-      this.isPlanUnit = word
+      if (this.isAllowWord) {
+        this.visibleDialog = true
+        this.tableItem = item
+        this.isPlanUnit = word
+      } else {
+        this.visibleDialog = false
+        this.planWordApi(item)
+      }
     },
     addGroupNegativeKeyword (item, word) {
-      this.visibleDialog = true
-      this.tableItem = item
-      this.isPlanUnit = word
+      if (this.isAllowWord) {
+        this.visibleDialog = true
+        this.tableItem = item
+        this.isPlanUnit = word
+      } else {
+        this.visibleDialog = false
+        this.unitWordApi(item)
+      }
     },
     async onChangePrice (userPrice, { groupId, keywordId }) {
       const { query: { user_id: userId } } = this.$route
@@ -391,8 +401,9 @@ export default {
     fmtCpcRanking,
     f2y
   },
-  created () {
-    this.fn()
+  async mounted () {
+    const { data } = await getWordAuthority()
+    this.isAllowWord = data !== 0
   }
 }
 </script>

@@ -1,7 +1,7 @@
 import qs from 'query-string'
 import { reverseCamelcase, toCamelcase } from 'object-keys-mapping'
 
-import { fengming, trim } from './base'
+import { fengming, trim, api } from './base'
 import { getCurrentBalanceBreif } from './account'
 import { isPro } from 'config'
 import { paginationWrapper, isObj } from 'util'
@@ -875,6 +875,14 @@ export async function rejectAuthorize (params) {
 export async function detect (params) {
   const body = await fengming
     .get('/campaign/get_daily_budget_advice')
+    .query(reverseCamelcase(params))
+    .json()
+  return body
+}
+
+export async function getWordAuthority (params) {
+  const body = await api
+    .get('/user/check/agent')
     .query(reverseCamelcase(params))
     .json()
   return body

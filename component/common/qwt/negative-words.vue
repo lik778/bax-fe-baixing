@@ -17,21 +17,50 @@
             v-if="showTip">(否词关键词个数不得超过<strong>{{ negativeKeywordsMax }}</strong>个, 当前否词数量:
         <strong>{{ negativeWords.length }}</strong>个）</span>
     </div>
-    <div class="res"
-         v-if="negativeWords.length">
-      <el-tag class="tag"
+    <div class="res">
+      <template v-if="isAllowWord">
+      <div class="accurate" v-if="accurateWord.length">
+        <span>精确否定：</span>
+        <div class="word">
+            <el-tag class="tag"
               type="primary"
-              v-for="(item, idx) in negativeWords"
+              v-for="(item) in accurateWord"
               :key="item.word"
-              @close="removeNegativeWord(idx)"
+              @close="removeNegativeWord(item)"
               closable>{{ item.word }}
-      </el-tag>
+           </el-tag>
+        </div>
+      </div>
+      <div class="accurate" v-if="phraseWord.length">
+        <span>短语否定：</span>
+        <div class="word">
+            <el-tag class="tag"
+              type="primary"
+              v-for="(item) in phraseWord"
+              :key="item.word"
+              @close="removeNegativeWord(item)"
+              closable>{{ item.word }}
+           </el-tag>
+        </div>
+      </div>
+      </template>
+      <template v-else>
+            <el-tag class="tag"
+              type="primary"
+              v-for="(item,idx) in negativeWords"
+              :key="item.word"
+              @close="removeOtherWord(idx)"
+              closable>{{ item.word }}
+           </el-tag>
+      </template>
+
     </div>
     <negative-words-dialog :visible="negativeWordsDialogVisible"
                            :all-words="allWords"
                            :negative-keywords-max="negativeKeywordsMax"
                            @close="negativeWordsDialogVisible = false"
                            @update-negative-words="updateNegativeWords"
+                           :WordUser="isAllowWord"
                            :negative-words="negativeWords" />
     <negative-word-alone
       :visible="negativeWordsAloneVisible"
@@ -45,9 +74,9 @@
 import negativeWordsDialog from 'com/common/qwt/negative-word-dialog'
 import negativeWordAlone from 'com/common/qwt/negative-word-alone'
 import { NEGATIVE_KEYWORDS_MAX } from 'constant/fengming'
+import { getWordAuthority } from 'api/fengming'
 import { validateKeyword } from 'util/campaign'
 import { getNotExistWords } from 'util/group'
-
 export default {
   name: 'negative-words',
   props: {
@@ -76,6 +105,13 @@ export default {
     isSales: {
       type: Boolean,
       default: false
+    },
+    userInfo: {
+      type: Object,
+      default () {
+        return {}
+      },
+      required: true
     }
   },
   data () {
@@ -84,15 +120,27 @@ export default {
       negativeWordsDialogVisible: false,
       loading: false,
       negativeWordsAloneVisible: false,
-      upWordAloneDialog: ''
+      upWordAloneDialog: '',
+      accurateWord: [],
+      phraseWord: [],
+      userId: this.$route.query.user_id || '',
+      isAllowWord: false
     }
   },
   methods: {
     async addNegativeWords () {
-      this.negativeWordsAloneVisible = true
+      if (this.isAllowWord) {
+        this.negativeWordsAloneVisible = true
+      } else {
+        this.negativeWordsAloneVisible = false
+        this.addUpWordAlone()
+      }
     },
-    removeNegativeWord (idx) {
-      this.$emit('remove-negative-words', idx)
+    removeNegativeWord (item) {
+      this.$emit('remove-negative-words', item)
+    },
+    removeOtherWord (item) {
+      this.$emit('remove-other-words', item)
     },
     updateNegativeWords (words) {
       this.$emit('add-negative-words', words)
@@ -111,6 +159,7 @@ export default {
     },
     addUpWordAlone () {
       const val = this.word.trim()
+      let emitWords = []
       if (val === '') return
       if (this.negativeWords.length + 1 > this.negativeKeywordsMax) {
         return this.$message.error(`否定关键词个数不能超过${this.negativeKeywordsMax}`)
@@ -120,8 +169,13 @@ export default {
         validateKeyword([val])
         const newWords = getNotExistWords(this.allWords, [val])
         if (!newWords.length) throw new Error('否词已存在关键词或否词列表中，请更换关键词')
-
-        this.$emit('add-negative-words', [{ word: val }])
+        if (this.isAllowWord) {
+          const matchType = this.upWordAloneDialog === 'accurate' ? 0 : 1
+          emitWords = [{ word: val, matchType }]
+        } else {
+          emitWords = [{ word: val, matchType: 0 }]
+        }
+        this.$emit('add-negative-words', emitWords)
         this.$emit('track', 'click-button: add-negative-keyword')
       } catch (e) {
         return this.$message.error(e.message)
@@ -131,9 +185,27 @@ export default {
       }
     }
   },
+  watch: {
+    negativeWords: {
+      deep: true,
+      immediate: true,
+      handler (newV, oldV) {
+        if (newV && newV.length > 0) {
+          this.accurateWord = newV.filter(item => item.matchType === 0)
+          this.phraseWord = newV.filter(item => item.matchType === 1)
+        } else {
+          this.accurateWord = this.phraseWord = []
+        }
+      }
+    }
+  },
   components: {
     negativeWordsDialog,
     negativeWordAlone
+  },
+  async mounted () {
+    const { data } = await getWordAuthority()
+    this.isAllowWord = data !== 0
   }
 }
 </script>
@@ -171,6 +243,15 @@ export default {
     .tag {
       margin-right: 5px;
       margin-bottom: 5px;
+    }
+    .accurate {
+      display: flex;
+      flex-direction: column;
+      margin: 10px 0;
+      .word {
+        width: 100%;
+        margin-top: 10px;
+      }
     }
   }
 }

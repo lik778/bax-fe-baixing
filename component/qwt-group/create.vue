@@ -72,11 +72,14 @@
         </p>
         <negative-keyword-comp :negative-words="group.negativeWords"
                                :show-tip="false"
+                               :userInfo="userInfo"
                                :negative-keywords-max="negativeKeywordMax"
                                @track="(action, opts) => handleTrack(action, opts)"
                                :all-words="group.negativeWords.concat(group.keywords)"
                                @add-negative-words="(words) => group.negativeWords = words.concat(group.negativeWords)"
-                               @remove-negative-words="(idx) => group.negativeWords.splice(idx, 1)" />
+                               @remove-negative-words="removeNegatives"
+                               @remove-other-words="(word) => group.negativeWords.splice(word,1)"
+                               />
       </div>
     </section>
     <section>
@@ -307,6 +310,10 @@ export default {
     },
     handleAddKeywords (words) {
       this.group.keywords = words.concat(this.group.keywords)
+    },
+    removeNegatives (words = {}) {
+      const index = this.group.negativeWords.findIndex(item => item.word === words.word && item.matchType === words.matchType)
+      this.group.negativeWords.splice(index, 1)
     }
   },
   components: {

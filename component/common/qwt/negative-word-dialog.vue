@@ -19,7 +19,7 @@
       </div>
       <div class="tip">提示: 请用逗号区分关键词进行批量关键词添加，如合肥家政服务公司，合肥月嫂，合肥钟点工</div>
     </div>
-    <div class="selects">
+    <div class="selects" v-if="WordUser">
       <span>请选择否词类型：</span>
       <el-select v-model="selectValue" style="width: 150px" placeholder="请选择">
       <el-option
@@ -31,22 +31,31 @@
     </el-select>
     </div>
     <div class="content">
-      <div class="accurate" v-show="wordsObject.accurateWords.length > 0">
+      <template v-if="WordUser">
+      <div class="accurate" v-show="accurateWord.length > 0">
         <span>精确否定：</span>
         <el-tag type="success"
-                v-for="item in wordsObject.accurateWords"
+                v-for="item in accurateWord"
                 :key="item.word"
                 class="tag">{{item.word}}
         </el-tag>
       </div>
-      <div class="phrase" v-show="wordsObject.phrase.length > 0">
+      <div class="phrase" v-show="phrase.length > 0">
         <span>短语否定：</span>
         <el-tag type="success"
-                v-for="item in wordsObject.phrase"
+                v-for="item in phrase"
                 :key="item.word"
                 class="tag">{{item.word}}
         </el-tag>
       </div>
+      </template>
+      <template v-else>
+        <el-tag type="success"
+                v-for="item in words"
+                :key="item.word"
+                class="tag">{{item.word}}
+        </el-tag>
+      </template>
     </div>
     <span slot="footer"
           class="footer">
@@ -83,6 +92,10 @@ export default {
     visible: {
       type: Boolean,
       required: true
+    },
+    WordUser: {
+      type: Boolean,
+      required: true
     }
   },
   data () {
@@ -98,9 +111,21 @@ export default {
         value: 'phrase',
         label: '短语否定'
       }],
-      wordsObject: {
-        accurateWords: [],
-        phrase: []
+      accurateWord: [],
+      phrase: []
+    }
+  },
+  watch: {
+    words: {
+      deep: true,
+      immediate: true,
+      handler (newV, olV) {
+        if (newV && newV.length > 0) {
+          this.accurateWord = newV.filter(item => item.matchType === 0)
+          this.phrase = newV.filter(item => item.matchType === 1)
+        } else {
+          this.accurateWord = this.phrase = []
+        }
       }
     }
   },
@@ -119,7 +144,7 @@ export default {
       if (this.search.trim() === '') {
         return this.$message.warning('还未添加关键词')
       }
-      if (this.selectValue === '') {
+      if (this.selectValue === '' && this.WordUser) {
         return this.$message.warning('还未选择否词类型')
       }
       // 数组去重并去掉首尾的逗号
@@ -139,11 +164,13 @@ export default {
         const allWords = this.allWords.concat(this.words)
         const newWords = getNotExistWords(allWords, words)
         if (!newWords.length) throw new Error('否词已存在关键词或否词列表中，请更换关键词')
-
         this.words = this.words.concat(newWords.map(o => {
-          return { word: o }
+          if (this.WordUser) {
+            return { word: o, matchType: this.selectValue === 'accurateWords' ? 0 : 1 }
+          } else {
+            return { word: o }
+          }
         }))
-        this.wordsObject[this.selectValue] = this.words
       } catch (e) {
         return this.$message.error(e.message)
       } finally {

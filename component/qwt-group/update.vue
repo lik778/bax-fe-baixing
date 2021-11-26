@@ -111,10 +111,13 @@
         <negative-keyword-comp :negative-words="group.negativeWords"
                                :all-words="group.negativeWords.concat(keywords.filter(o => !o.isDel))"
                                :show-tip="false"
+                               :userInfo="userInfo"
                                :negative-keywords-max="negativeKeywordMax"
                                @track="(action, opts) => handleTrack(action, opts)"
                                @add-negative-words="(words) => group.negativeWords = words.concat(group.negativeWords)"
-                               @remove-negative-words="(idx) => group.negativeWords.splice(idx, 1)" />
+                               @remove-negative-words="removeNegatives"
+                               @remove-other-words="(word) => group.negativeWords.splice(word,1)"
+                               />
       </div>
     </section>
 
@@ -568,6 +571,10 @@ export default {
       if (this.deletedKeywords.length) data.deletedKeywords = this.deletedKeywords.map(o => o.id)
       if (this.updatedKeywords.length) data.updatedKeywords = this.updatedKeywords
       return data
+    },
+    removeNegatives (words = {}) {
+      const index = this.group.negativeWords.findIndex(item => item.word === words.word && item.matchType === words.matchType)
+      this.group.negativeWords.splice(index, 1)
     }
   },
   components: {

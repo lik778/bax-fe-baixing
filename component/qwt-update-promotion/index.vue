@@ -15,9 +15,11 @@
           <negative-words-comp :negative-words="promotion.negativeWords"
                                :all-words="promotion.negativeWords"
                                :is-sales="notAllowSales"
+                               :userInfo="userInfo"
                                @track="(action, opts) => handleTrack(action, opts)"
                                @add-negative-words="(words) =>(promotion.negativeWords = words.concat(promotion.negativeWords))"
-                               @remove-negative-words="(idx) => promotion.negativeWords.splice(idx, 1)"
+                               @remove-negative-words="removeNegatives"
+                               @remove-other-words="(word) => promotion.negativeWords.splice(word,1)"
                                slot="negative" />
         </promotion-comp>
       </div>
@@ -175,6 +177,7 @@ export default {
     },
     async getCampaignInfo () {
       const { query: { user_id: userId } } = this.$route
+      console.log(this.$route)
       const info = await getCampaignInfo(this.campaignId, { userId })
       info.dailyBudget = info.dailyBudget / 100
       if (info.timeRange && info.timeRange.length && info.timeRange[0] !== null && info.timeRange[1] !== null) {
@@ -299,6 +302,10 @@ export default {
         name: 'qwt-create-group',
         query: { campaignId: this.campaignId }
       })
+    },
+    removeNegatives (words = {}) {
+      const index = this.promotion.negativeWords.findIndex(item => item.word === words.word && item.matchType === words.matchType)
+      this.promotion.negativeWords.splice(index, 1)
     }
   },
   watch: {
