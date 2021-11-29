@@ -250,7 +250,7 @@ export const welfareInfo = [
     desc: '',
     content: ['双端适配', '视频展示', '智能接待系统', '支持seo优化'],
     isActive: (duration, price) => {
-      const active = price > 0 && duration >= 90
+      const active = duration >= 90
       return {
         active,
         tag: active ? `已解锁，赠送${duration}天` : '至少购买90天标王可解锁',

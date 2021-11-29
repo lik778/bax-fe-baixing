@@ -97,7 +97,7 @@ export default {
     getMaxDuration () {
       const { productList, currentPrice } = this
       const checkedProducts = productList.filter(p => p.checked)
-      const durationArray = [...checkedProducts.map(info => info.currentPrice.duration), currentPrice.duration]
+      const durationArray = [...checkedProducts.map(info => info.currentPrice.duration), currentPrice.duration || 0]
       return { ...currentPrice, duration: Math.max(...durationArray) }
     },
     preInfo () {
