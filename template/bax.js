@@ -477,6 +477,14 @@ const seoRoutes = [
   }
 ]
 
+export const adPlatformRoute = [
+  {
+    component: () => import('com/ad-platform/ad-dashboard/index.vue'),
+    path: '/main/ad-platform/ad-dashboard',
+    name: 'ad-dashboard'
+  }
+]
+
 export const router = new VueRouter({
   mode: 'history',
   routes: [
@@ -521,6 +529,7 @@ export const router = new VueRouter({
     ...sspRoutes,
     ...seoRoutes,
     ...bwPlusRoutes,
+    ...adPlatformRoute,
     {
       path: '*',
       redirect: '/main'

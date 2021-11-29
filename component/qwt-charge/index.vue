@@ -1,8 +1,9 @@
 <template>
   <div>
     <el-tabs class="product-tab" v-model="productTabMchCode" @tab-click="changeProductMchCodeTab">
-      <el-tab-pane :key="FENG_MING_MERCHANT_CODE"  label="站外推广" :name="FENG_MING_MERCHANT_CODE"></el-tab-pane>
+      <el-tab-pane v-if="userInfo.allowFmRecharge" :key="FENG_MING_MERCHANT_CODE"  label="站外推广" :name="FENG_MING_MERCHANT_CODE"></el-tab-pane>
       <el-tab-pane v-if="!userInfo.shAgent"  :key="PHOENIXS_MERCHANT_CODE"  label="标王" :name="PHOENIXS_MERCHANT_CODE"></el-tab-pane>
+      <el-tab-pane v-if="userInfo.allowCareFreeRecharge" :key="CARE_FREE_MERCHANT_CODE" label="省心币" :name="CARE_FREE_MERCHANT_CODE"></el-tab-pane>
     </el-tabs>
     <div class="charge-container" v-loading.fullscreen.lock="fetchLoading">
       <section class="product shadow panel">
@@ -10,10 +11,10 @@
           <span class="discount-btn">优惠细则</span>
         </header>
         <div class="discount-section" v-show="showDiscount">
-          <p class="discount-info">首单特惠福利！</p>
+          <p class="discount-info" v-if="productTabMchCode === FENG_MING_MERCHANT_CODE">首单特惠福利！</p>
           <p class="discount-info" :key="index+1"
             v-for="(html, index) in discountInfoHTML.slice(0, 1)" v-html="html" />
-          <p class="discount-info">充值更多，可享更多优惠！</p>
+          <p class="discount-info" v-if="productTabMchCode === FENG_MING_MERCHANT_CODE">老客特惠福利！</p>
           <p class="discount-info" :key="index+2"
             v-for="(html, index) in discountInfoHTML.slice(1)" v-html="html" />
         </div>
@@ -35,6 +36,7 @@
                 </price-tag>
               </section>
             </main>
+            <footer v-if="productTabMchCode === CARE_FREE_MERCHANT_CODE">说明：省心币购买的省心包为全托管产品，无客户操作后台，统一由百姓网托管。</footer>
           </template>
 
           <template v-if="siteSpu">
@@ -122,15 +124,15 @@ import { SPUCODES, MERCHANTS } from 'constant/product'
 import { getUniqueAgreementList } from 'util/charge'
 import store from '../activity-store'
 
-const { WHOLE_SPU_CODE, GUAN_WANG_SPU_CODE, BIAO_WANG_SPU_CODE } = SPUCODES
-const { FENG_MING_MERCHANT_CODE, PHOENIXS_MERCHANT_CODE } = MERCHANTS
+const { WHOLE_SPU_CODE, GUAN_WANG_SPU_CODE, BIAO_WANG_SPU_CODE, CARE_FREE_SPU_CODE } = SPUCODES
+const { FENG_MING_MERCHANT_CODE, PHOENIXS_MERCHANT_CODE, CARE_FREE_MERCHANT_CODE } = MERCHANTS
 
 const isGwProduct = function (spuCode) {
   return spuCode === GUAN_WANG_SPU_CODE
 }
 
 const isChargeProduct = function (spuCode) {
-  return [WHOLE_SPU_CODE, BIAO_WANG_SPU_CODE].includes(spuCode)
+  return [WHOLE_SPU_CODE, BIAO_WANG_SPU_CODE, CARE_FREE_SPU_CODE].includes(spuCode)
 }
 
 export default {
@@ -154,6 +156,7 @@ export default {
       productTabMchCode: FENG_MING_MERCHANT_CODE,
       FENG_MING_MERCHANT_CODE,
       PHOENIXS_MERCHANT_CODE,
+      CARE_FREE_MERCHANT_CODE,
       fetchLoading: true,
       showDiscount: true,
       actionTrackId: uuid(),
@@ -223,10 +226,10 @@ export default {
     Clipboard
   },
   async mounted () {
-    const {
-      sales_id: salesId,
-      user_id: userId
-    } = this.$route.query
+    const { query: { from, sales_id: salesId, user_id: userId } } = this.$route
+    if (from === CARE_FREE_MERCHANT_CODE) {
+      this.productTabMchCode = CARE_FREE_MERCHANT_CODE
+    }
     setTimeout(() => {
       const { userInfo, actionTrackId } = this
       track({
@@ -284,7 +287,7 @@ export default {
         let products = []
         let targetList = []
         if (this.productCacheList.length === 0) {
-          targetList = this.productCacheList = await getProductsByMchCodes([FENG_MING_MERCHANT_CODE, PHOENIXS_MERCHANT_CODE])
+          targetList = this.productCacheList = await getProductsByMchCodes([FENG_MING_MERCHANT_CODE, PHOENIXS_MERCHANT_CODE, CARE_FREE_MERCHANT_CODE])
         } else {
           targetList = this.productCacheList
         }
@@ -320,6 +323,8 @@ export default {
     handlePriceChange (product, v) {
       product.price = v
       product.quantity = Math.floor(v / product.realPrice)
+      const idx = this.checkedProducts.findIndex(p => p.skuVendorId === product.skuVendorId)
+      this.$set(this.checkedProducts, idx, product)
     },
     toggleProduct (product, judgeProduct) {
       const index = this.checkedProducts.findIndex(p => p.skuVendorId === product.skuVendorId)

@@ -2,14 +2,14 @@
 import { observable, action, toJS } from 'mobx'
 import {
   COMMON_STATUS, ACTIVITY_STATUS, activityConfig,
-  fengmingDiscountInfo, biaowangDiscountInfo
+  fengmingDiscountInfo, biaowangDiscountInfo, carefreeDiscountInfo
 } from 'constant/activity'
 import { MERCHANTS } from 'constant/product'
 import dayjs from 'dayjs'
 import isBetween from 'dayjs/plugin/isBetween'
 dayjs.extend(isBetween)
 
-const { FENG_MING_MERCHANT_CODE, PHOENIXS_MERCHANT_CODE } = MERCHANTS
+const { FENG_MING_MERCHANT_CODE, PHOENIXS_MERCHANT_CODE, CARE_FREE_MERCHANT_CODE } = MERCHANTS
 
 async function getServerTime () {
   const xhr = window.XMLHttpRequest
@@ -44,6 +44,8 @@ const store = observable({
       discountInfo = fengmingDiscountInfo
     } else if (productTabMchCode === PHOENIXS_MERCHANT_CODE) {
       discountInfo = biaowangDiscountInfo
+    } else if (productTabMchCode === CARE_FREE_MERCHANT_CODE) {
+      discountInfo = carefreeDiscountInfo
     }
     this._discountInfoHTML = discountInfo[type].discountInfoHTML
   })
