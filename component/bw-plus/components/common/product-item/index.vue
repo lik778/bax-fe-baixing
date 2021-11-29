@@ -52,7 +52,7 @@ export default {
     currentPrice: {
       type: Object,
       default: () => {},
-      require: true
+      require: false
     },
     currentExcludes: {
       type: Array,
@@ -118,7 +118,7 @@ export default {
     },
     dealPrice () {
       const { product: { certainDealPrice, dealPriceRatio, withoutPackagePriceRatio, type, currentPrice: { price } }, currentPrice } = this
-      const ratio = currentPrice.price && currentPrice.price > 0 ? dealPriceRatio : withoutPackagePriceRatio
+      const ratio = currentPrice && currentPrice.price && currentPrice.price > 0 ? dealPriceRatio : withoutPackagePriceRatio
       if (type === SEO_PRODUCT_TYPE) {
         return f2y(certainDealPrice)
       }
