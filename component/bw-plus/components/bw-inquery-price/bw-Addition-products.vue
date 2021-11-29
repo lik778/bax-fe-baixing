@@ -25,7 +25,7 @@ import ProductItem from '../common/product-item/index.vue'
 import InqueryResult from './inquery-result.vue'
 import clone from 'clone'
 export default {
-  name: 'bw-products',
+  name: 'bw-addition-products',
   components: {
     Title,
     ProductItem,
