@@ -20,7 +20,7 @@
             <BwProducts v-if="productList && productList.length" @checked="checked" @getExtraProductValue="getExtraProductValue" :currentPrice="currentPrice" :deviceAvailableStatus="deviceAvailableStatus" :priceList="queryResult && queryResult.keywordPriceList" :productList="productList.filter(o => o.type !== 0)" />
         </div>
         <el-card class="box-card" v-if="showResult">
-          <WelfareLayout :currentPrice="currentPrice"/>
+          <WelfareLayout :currentPrice="getMaxDuration"/>
           <div class="submit">
             <h3>总价： {{transformPrice}}元</h3>
             <el-button @click="isSubmit = true" :disabled="!(transformPrice > 0 && ifSoldAvailable)" type="danger" :loading="isPending">提交审核</el-button>
@@ -94,6 +94,12 @@ export default {
     }
   },
   computed: {
+    getMaxDuration () {
+      const { productList, currentPrice } = this
+      const checkedProducts = productList.filter(p => p.checked)
+      const durationArray = [...checkedProducts.map(info => info.currentPrice.duration), currentPrice.duration]
+      return { ...currentPrice, duration: Math.max(...durationArray) }
+    },
     preInfo () {
       const { queryInfo, productList, currentPrice } = this
       const checkedProducts = productList.filter(p => p.checked)
@@ -127,8 +133,6 @@ export default {
     },
     showErrorFooter () {
       const { queryResult: { error, overHeat, industryError } } = this
-      console.log(this.queryResult)
-      console.log(error || overHeat || industryError)
       return !!error || !!overHeat || !!industryError
     },
     showResult () {
