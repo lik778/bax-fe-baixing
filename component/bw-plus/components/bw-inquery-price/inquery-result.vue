@@ -169,7 +169,6 @@ export default {
   methods: {
     cellClick (value) {
       const { current } = this
-      console.log('value', value)
       if (current.index === value.index) {
         this.current = {}
       } else {

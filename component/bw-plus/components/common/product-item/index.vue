@@ -49,6 +49,11 @@ export default {
       default: () => {},
       require: true
     },
+    currentPrice: {
+      type: Object,
+      default: () => {},
+      require: true
+    },
     currentExcludes: {
       type: Array,
       default: () => [],
@@ -112,11 +117,12 @@ export default {
       return SCHEDULE_TYPE[scheduleType]
     },
     dealPrice () {
-      const { product: { certainDealPrice, dealPriceRatio, type, currentPrice: { price } } } = this
+      const { product: { certainDealPrice, dealPriceRatio, withoutPackagePriceRatio, type, currentPrice: { price } }, currentPrice } = this
+      const ratio = currentPrice.price && currentPrice.price > 0 ? dealPriceRatio : withoutPackagePriceRatio
       if (type === SEO_PRODUCT_TYPE) {
         return f2y(certainDealPrice)
       }
-      return price > 0 ? f2y(price * dealPriceRatio) : '?'
+      return price > 0 ? f2y(price * ratio) : '?'
     },
     originalPrice () {
       const { product: { currentPrice: { price }, originalPriceRatio } } = this

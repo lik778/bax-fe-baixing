@@ -102,10 +102,11 @@ export default {
     },
     preInfo () {
       const { queryInfo, productList, currentPrice } = this
+      const ratio = currentPrice.price && currentPrice.price > 0 ? 'dealPriceRatio' : 'withoutPackagePriceRatio'
       const checkedProducts = productList.filter(p => p.checked)
       const additionProduct = checkedProducts.map(o => (
         {
-          dealPrice: o.type === SEO_PRODUCT_TYPE ? o.certainDealPrice : o.currentPrice.price * o.dealPriceRatio,
+          dealPrice: o.type === SEO_PRODUCT_TYPE ? o.certainDealPrice : o.currentPrice.price * o[ratio],
           device: o.currentPrice.device,
           duration: o.currentPrice.duration,
           name: o.title,
@@ -153,9 +154,10 @@ export default {
       }, [])
     },
     totalPrice () {
-      const { productList } = this
+      const { productList, currentPrice } = this
+      const ratio = currentPrice.price && currentPrice.price > 0 ? 'dealPriceRatio' : 'withoutPackagePriceRatio'
       const total = productList.reduce((producPrev, producNext) => {
-        const priceB = producNext.checked ? (producNext.type === SEO_PRODUCT_TYPE ? producNext.certainDealPrice : producNext.currentPrice.price * producNext.dealPriceRatio) : 0
+        const priceB = producNext.checked ? (producNext.type === SEO_PRODUCT_TYPE ? producNext.certainDealPrice : producNext.currentPrice.price * producNext[ratio]) : 0
         return producPrev + priceB
       }, 0)
       return total
