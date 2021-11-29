@@ -4,31 +4,33 @@
           <InqueryForm :allAreas="allAreas" @inquery="inquery" :isPending="isPending" @resetResult="resetResult"/>
           <div ref="viewScrollTop" class="placeHolder"></div>
           <SoldCityLayout :allAreas="allAreas" :keywordsLockDetails="keywordsLockDetails" :keywordLockText="keywordLockText" v-if="ifExistLockCity"/>
-          <section class="bw-query-price_item" v-if="queryResult.keywordPvList">
+          <section class="bw-query-price_item" v-if="showKeywordPv">
             <Title title="关键词热度明细"/>
-            <KeywordHotDetail :tableData="queryResult && queryResult.keywordPvList"/>
+            <KeywordHotDetail :tableData="queryResult.keywordPvList"/>
           </section>
         </el-card>
         <div v-if="showResult">
-        <el-card class="box-card">
-          <section class="bw-query-price_item">
-            <Title title="百度标王，王牌产品" extra="请选择需要的平台*时段*时长"/>
-            <InqueryResult :deviceAvailableStatus="deviceAvailableStatus" :currentPrice="currentPrice" @getValue="getCurrentPrice" :tableData="queryResult && queryResult.keywordPriceList" />
-            <BwCreativity @checked="checked" :productList="productList.filter(o => o.type === 0)"/>
-          </section>
-        </el-card>
-        <BwProducts @checked="checked" @getExtraProductValue="getExtraProductValue" :currentPrice="currentPrice" :deviceAvailableStatus="deviceAvailableStatus" :priceList="queryResult && queryResult.keywordPriceList" :productList="productList.filter(o => o.type !== 0)" />
+            <el-card class="box-card">
+            <section class="bw-query-price_item">
+                <Title title="百度标王，王牌产品" extra="请选择需要的平台*时段*时长"/>
+                <InqueryResult :deviceAvailableStatus="deviceAvailableStatus" :currentPrice="currentPrice" @getValue="getCurrentPrice" :tableData="queryResult && queryResult.keywordPriceList" />
+                <BwCreativity v-if="productList && productList.length" @checked="checked" :productList="productList.filter(o => o.type === 0)"/>
+            </section>
+            </el-card>
+            <BwProducts v-if="productList && productList.length" @checked="checked" @getExtraProductValue="getExtraProductValue" :currentPrice="currentPrice" :deviceAvailableStatus="deviceAvailableStatus" :priceList="queryResult && queryResult.keywordPriceList" :productList="productList.filter(o => o.type !== 0)" />
         </div>
         <el-card class="box-card" v-if="showResult">
-          <WelfareLayout :currentPrice="currentPrice"/>
+          <WelfareLayout :currentPrice="getMaxDuration"/>
           <div class="submit">
             <h3>总价： {{transformPrice}}元</h3>
             <el-button @click="isSubmit = true" :disabled="!(transformPrice > 0 && ifSoldAvailable)" type="danger" :loading="isPending">提交审核</el-button>
           </div>
-          <ErrorFooter v-if="queryResult.error || queryResult.overHeat || queryResult.industryError" :queryResult="queryResult"/>
         </el-card>
-        <BwPlusDialog :BwPlusDialogMsg="BwPlusDialogMsg" @close="BwPlusDialogMsg.dialogVisible = false"/>
-        <CommitDialog :allAreas="allAreas" :preInfo="preInfo" :visible="isSubmit" :isPending="isPending" @cancel="cancel" @submit="submit"/>
+        <el-card class="box-card" v-if="showErrorFooter">
+            <ErrorFooter :queryResult="queryResult"/>
+        </el-card>
+        <BwPlusDialog v-if="BwPlusDialogMsg.dialogVisible" :destroy-on-close="true" :BwPlusDialogMsg="BwPlusDialogMsg" @close="BwPlusDialogMsg.dialogVisible = false"/>
+        <CommitDialog v-if="isSubmit" :destroy-on-close="true" :allAreas="allAreas" :preInfo="preInfo" :visible="isSubmit" :isPending="isPending" @cancel="cancel" @submit="submit"/>
     </section>
 </template>
 
@@ -92,12 +94,19 @@ export default {
     }
   },
   computed: {
+    getMaxDuration () {
+      const { productList, currentPrice } = this
+      const checkedProducts = productList.filter(p => p.checked)
+      const durationArray = [...checkedProducts.map(info => info.currentPrice.duration), currentPrice.duration]
+      return { ...currentPrice, duration: Math.max(...durationArray) }
+    },
     preInfo () {
       const { queryInfo, productList, currentPrice } = this
+      const ratio = currentPrice.price && currentPrice.price > 0 ? 'dealPriceRatio' : 'withoutPackagePriceRatio'
       const checkedProducts = productList.filter(p => p.checked)
       const additionProduct = checkedProducts.map(o => (
         {
-          dealPrice: o.type === SEO_PRODUCT_TYPE ? o.certainDealPrice : o.currentPrice.price * o.dealPriceRatio,
+          dealPrice: o.type === SEO_PRODUCT_TYPE ? o.certainDealPrice : o.currentPrice.price * o[ratio],
           device: o.currentPrice.device,
           duration: o.currentPrice.duration,
           name: o.title,
@@ -120,9 +129,16 @@ export default {
       }
       return preInfo
     },
+    showKeywordPv () {
+      return this.queryResult.keywordPvList && this.queryResult.keywordPvList.length > 0
+    },
+    showErrorFooter () {
+      const { queryResult: { error, overHeat, industryError } } = this
+      return !!error || !!overHeat || !!industryError
+    },
     showResult () {
-      const { queryResult, ifSoldAvailable } = this
-      return !(queryResult.error && queryResult.overHeat) && queryResult.keywordPriceList && ifSoldAvailable
+      const { queryResult, ifSoldAvailable, showErrorFooter } = this
+      return !showErrorFooter && !!queryResult.keywordPriceList && !!ifSoldAvailable
     },
     transformPrice () {
       const { currentPrice } = this
@@ -138,9 +154,10 @@ export default {
       }, [])
     },
     totalPrice () {
-      const { productList } = this
+      const { productList, currentPrice } = this
+      const ratio = currentPrice.price && currentPrice.price > 0 ? 'dealPriceRatio' : 'withoutPackagePriceRatio'
       const total = productList.reduce((producPrev, producNext) => {
-        const priceB = producNext.checked ? (producNext.type === SEO_PRODUCT_TYPE ? producNext.certainDealPrice : producNext.currentPrice.price * producNext.dealPriceRatio) : 0
+        const priceB = producNext.checked ? (producNext.type === SEO_PRODUCT_TYPE ? producNext.certainDealPrice : producNext.currentPrice.price * producNext[ratio]) : 0
         return producPrev + priceB
       }, 0)
       return total
@@ -258,7 +275,7 @@ export default {
           } else {
             this.currentPrice = data.keywordPriceList && this.findCurrentPrice(data.keywordPriceList[0])
           }
-          this.transformProductList(additionalProducts)
+          additionalProducts && this.transformProductList(additionalProducts)
           this.$nextTick(() => {
             this.$refs.viewScrollTop.scrollIntoView()
           })
