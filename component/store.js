@@ -1,11 +1,12 @@
-import { observable, action, toJS } from 'mobx'
+import { action, observable, toJS } from 'mobx'
 import { getIP } from 'util'
-import { isNormalUser, notAllowFengmingRecharge } from 'util/role'
+import { AllowCareFreeRecharge, isNormalUser, notAllowFengmingRecharge } from 'util/role'
 import * as aapi from 'api/account'
 import * as mapi from 'api/meta'
 import * as qapi from 'api/qianci'
 import Sentry from '../lib/sentry'
 import { checkAuthorize } from 'api/fengming'
+import { isAdplatformUser } from 'api/ad-platform'
 
 const gStore = observable({
   _currentUser: {
@@ -58,6 +59,10 @@ const gStore = observable({
       roles,
       realAgentId
     )
+    currentUser.allowCareFreeRecharge = AllowCareFreeRecharge(roles)
+    if (isNormalUser(roles)) {
+      currentUser.isCareFreeUser = await isAdplatformUser(currentUser.id)
+    }
 
     this._currentUser = currentUser
     // 打点数据中添加用户身份信息

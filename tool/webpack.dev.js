@@ -32,6 +32,13 @@ const config = merge(base, {
           '^/fmDevApi': '/'
         },
         changeOrigin: true
+      },
+      '/adPlatformApi': {
+        target: 'http://dev-api.baixing.cn',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/adPlatformApi': '/'
+        }
       }
     },
     historyApiFallback: {

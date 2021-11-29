@@ -19,12 +19,13 @@ import {
   normalizeRoles
 } from 'util/role'
 
-const { FENG_MING_MERCHANT_CODE, PHOENIXS_MERCHANT_CODE, SEO_MERCHANT_CODE, QIAN_CI_MERCHANT_CODE } = MERCHANTS
+const { FENG_MING_MERCHANT_CODE, PHOENIXS_MERCHANT_CODE, SEO_MERCHANT_CODE, QIAN_CI_MERCHANT_CODE, CARE_FREE_MERCHANT_CODE } = MERCHANTS
 const redirectPathname = {
   [FENG_MING_MERCHANT_CODE]: '/main/qwt/promotions',
   [PHOENIXS_MERCHANT_CODE]: '/main/bw/plan-list',
   [SEO_MERCHANT_CODE]: '/main/seo/promotions',
-  [QIAN_CI_MERCHANT_CODE]: '/main/qc/promote-list'
+  [QIAN_CI_MERCHANT_CODE]: '/main/qc/promote-list',
+  [CARE_FREE_MERCHANT_CODE]: '/main'
 }
 
 export default {

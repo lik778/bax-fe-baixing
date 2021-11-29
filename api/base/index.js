@@ -12,7 +12,8 @@ import {
   baxApiHost,
   kaApiHost,
   seoApiHost,
-  qcApiHost
+  qcApiHost,
+  adPlatformApiHost
 } from 'config'
 
 import es from 'base/es'
@@ -126,6 +127,31 @@ export const biaowang = new Fetch({
 export const biaowangPlus = new Fetch({
   ...baseOptions,
   prefix: biaowangPlusApiHost,
+  afterResponse (res) {
+    es.emit('http fetch end')
+    if (res.status === 200) {
+      // pass
+    } else if (res.status === 401) {
+      Message.error('请重新登录 >_<')
+      return redirect('signin', `return=${encodeURIComponent(location.pathname + location.search)}`)
+    } else {
+      res.clone().json().then(body => {
+        Message.error(body.message || '出错了，请稍后重试')
+      })
+      throw new Error(res.statusText)
+    }
+  },
+  afterJSON (body) {
+    const { code, message } = body
+    if (code !== 0 && code !== 301) {
+      Message.error(message)
+    }
+  }
+})
+
+export const adPlatform = new Fetch({
+  ...baseOptions,
+  prefix: adPlatformApiHost,
   afterResponse (res) {
     es.emit('http fetch end')
     if (res.status === 200) {

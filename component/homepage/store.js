@@ -1,11 +1,13 @@
 import { getHomePageFengmingData, checkAuthorize } from 'api/fengming'
 import { getHomePageBiaowangData, getPromotes, getUserRanking } from 'api/biaowang'
+import { getHomePageAdplatformData } from 'api/ad-platform'
 import { observable, toJS, action, computed } from 'mobx'
 import dayjs from 'dayjs'
 
 class Store {
   @observable fengmingData = null
   @observable biaowangData = null
+  @observable adPlatformData = null
   @observable biaowangPromotes = null
   @observable fengmingOptimizer = null
 
@@ -25,6 +27,13 @@ class Store {
     }
   }
 
+  @computed get adPlatformBalance () {
+    const data = this.adPlatformData
+    return {
+      price: data ? (data.currentBalance / 100).toFixed(2) : null
+    }
+  }
+
   @computed get notices () {
     return {
       fengming: this.fengmingData && toJS(this.fengmingData.notices)
@@ -37,6 +46,15 @@ class Store {
       this.fengmingData = fengmingData
     } catch (err) {
       console.error(err)
+    }
+  }
+
+  @action async loadAdPlatform (params) {
+    try {
+      const adPlatformData = await getHomePageAdplatformData(params)
+      this.adPlatformData = adPlatformData
+    } catch (error) {
+      console.error(error)
     }
   }
 
@@ -74,6 +92,7 @@ class Store {
   @action initPageStore (userId) {
     this.loadBaxData({ userId })
     this.loadBiaowangData(userId)
+    this.loadAdPlatform({ userId })
   }
 }
 

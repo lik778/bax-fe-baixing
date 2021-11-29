@@ -118,6 +118,11 @@
               标王2.0推广报表
             </router-link>
           </el-menu-item>
+          <el-menu-item index="ad-dashboard" v-if="allowCareFreeDashboard">
+            <router-link :to="{ name: 'ad-dashboard'}" tag="p">
+              省心包推广报表
+            </router-link>
+          </el-menu-item>
           <el-menu-item index="qc-dashboard">
             <router-link :to="{ name: 'qc-dashboard'}" tag="p">
               易慧推报表
@@ -190,7 +195,8 @@ import {
   allowSeeDiamondSite,
   isSales,
   onlyAgentAccounting,
-  allowBwplusDashboard
+  allowBwplusDashboard,
+  allowCareFreeDashboard
 } from 'util/role'
 
 import { getUserSites } from 'api/diamond-site'
@@ -284,6 +290,10 @@ export default {
     allowBwplusDashboard () {
       const { userInfo } = this
       return allowBwplusDashboard(userInfo)
+    },
+    allowCareFreeDashboard () {
+      const { userInfo } = this
+      return allowCareFreeDashboard(userInfo)
     }
   },
   async mounted () {
