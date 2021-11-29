@@ -44,14 +44,16 @@
               <template slot-scope="{row}">
                 <div class="project-name">
                   <img :src="row.logoImageUrl" alt="logo">
-                  <span>{{row.name}}&nbsp;|</span>
-                  <span>&nbsp;{{ DEVICE[row.device] }}&nbsp;|</span>
-                  <span>&nbsp;{{ SCHEDULE_TYPE[row.scheduleType] }}</span>
+                  <span>{{row.name}}</span>
+                  <template v-if="row.displayType === 0">
+                    <span>&nbsp;|&nbsp;{{ DEVICE[row.device] }}&nbsp;|</span>
+                    <span>&nbsp;{{ SCHEDULE_TYPE[row.scheduleType] }}</span>
+                  </template>
                 </div>
               </template>
             </el-table-column>
             <el-table-column
-              :formatter="({ totalDays }) =>  `${totalDays}天`"
+              :formatter="({ totalDays,displayType }) =>  displayType === 0 ? `${totalDays}天`: '--' "
               label="时长"
               >
             </el-table-column>
