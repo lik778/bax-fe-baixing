@@ -11,7 +11,7 @@
       :visible.sync="dialogVisible"
       width="60%"
     >
-      <InqueryResult :limit="currentProduct.limit" :currentPrice="currentProduct.currentPrice" :dealPriceRatio="getRatio" :deviceAvailableStatus="deviceAvailableStatus" @getValue="getCheckedPrice" :tableData="priceList" />
+      <InqueryResult :limit="currentProduct.limit" :currentPrice="currentProduct.currentPrice" :dealPriceRatio="getRatio" :deviceAvailableStatus="deviceAvailableStatus" @getValue="getCheckedPrice" :tableData="tansformPriceList" />
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="confirmCheckedPrice">确 定</el-button>
@@ -73,6 +73,11 @@ export default {
       }
       // 当代码运行到了这儿就代表用户未勾选百度标王产品
       return currentProduct.withoutPackagePriceRatio
+    },
+    tansformPriceList () {
+      const { priceList, currentProduct } = this
+      // 得到时长在可选范围内的价格列表
+      return priceList && currentProduct.limit ? priceList.filter(p => currentProduct.limit.type.includes(p.type)) : priceList
     }
   },
   data () {
