@@ -21,6 +21,10 @@
     color: #FFFFFF;
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
+    &-wrapper{
+        display: flex;
+        white-space: nowrap;
+    }
     .hot-icon{
         width: 13px;
         height: 15px;

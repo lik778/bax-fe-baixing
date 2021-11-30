@@ -1,22 +1,25 @@
 <template>
   <div>
     <div :class="{'product-wrapper': true, 'product-checked': product.checked, 'product-notAllowCheck': notAllowCheck.disable}" @click="checkProduct">
-      <el-popover
-          placement="top-start"
-          :title="product.title"
-          trigger="hover"
-          popper-class="detail-popover"
-          class="detail-popover"
-        >
-          <div class="product-detail">
-            <div class="image-wrapper">
-              <img :src="product.image"/>
-            </div>
-            <p>{{product.description}}</p>
-          </div>
-          <div slot="reference" >
-            <h3 class="product-title">
-              <span>{{product.title}}</span>
+        <h3 class="product-title">
+            <span class="product-title-wrapper">
+                {{product.title}}
+                <el-popover
+                    placement="top-start"
+                    :title="product.title"
+                    trigger="hover"
+                    popper-class="detail-popover"
+                    class="detail-popover"
+                    >
+                    <div class="product-detail">
+                        <div class="image-wrapper">
+                        <img :src="product.image"/>
+                        </div>
+                        <p>{{product.description}}</p>
+                    </div>
+                    <i slot="reference" class="el-icon-info"></i>
+                </el-popover>
+             </span>
               <span class="available-tips" v-if="!!product.available">待上线，请咨询客服</span>
               <i v-if="product.tag === 'hot'" class="hot-icon"></i>
             </h3>
@@ -25,8 +28,6 @@
                 <li v-if="product.type === 1">{{showDevice}}</li>
                 <li v-if="product.type === 1">{{showSchedule}}</li>
             </ul>
-          </div>
-       </el-popover>
         <div class="product-option">
             <div class="price-info">
                 <span class="current-price">抢鲜价：{{dealPrice}}元</span>
