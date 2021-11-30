@@ -1,5 +1,4 @@
 <template>
-  <div>
     <div :class="{'product-wrapper': true, 'product-checked': product.checked, 'product-notAllowCheck': notAllowCheck.disable}" @click="checkProduct">
         <h3 class="product-title">
             <span class="product-title-wrapper">
@@ -36,7 +35,6 @@
             <el-button @click.stop="changeCombo" v-if="product.type === REGULAR_PRODUCT_TYPE" size="mini" :disabled="notAllowCheck.disable">更换套餐</el-button>
         </div>
     </div>
-  </div>
 </template>
 <script>
 import { DEVICE, SCHEDULE_TYPE, SEO_PRODUCT_TYPE, DEVICE_PC, DEVICE_WAP, REGULAR_PRODUCT_TYPE, CREATIVE_PRODUCT_TYPE } from 'constant/bw-plus'
