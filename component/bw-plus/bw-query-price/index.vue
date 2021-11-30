@@ -101,6 +101,7 @@ export default {
       return { ...currentPrice, duration: Math.max(...durationArray) }
     },
     preInfo () {
+      // 构造选中商品列表数据，给用户确认
       const { queryInfo, productList, currentPrice } = this
       const ratio = currentPrice.price && currentPrice.price > 0 ? 'dealPriceRatio' : 'withoutPackagePriceRatio'
       const checkedProducts = productList.filter(p => p.checked)
