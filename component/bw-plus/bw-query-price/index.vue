@@ -296,6 +296,7 @@ export default {
       this.currentPrice = value
       const { productList, transformCurrentPrice } = this
       if (Object.values(value).length > 0) {
+        // 当前为选中百度标王状态时，遍历所有加购商品，计算出在当前百度标王的属性下，加购商品的价格
         this.productList = productList.map(product => {
           let currentPrice = value
           if (product.options) {
@@ -304,7 +305,8 @@ export default {
           return { ...product, currentPrice }
         })
       } else {
-        this.productList = productList.map(product => product.type === 0 ? { ...product, checked: false, currentPrice: value } : product)
+        // 取消选中百度标王状态，创意相关商品重置为未选中、价格置空，其他商品不变
+        this.productList = productList.map(product => product.type === CREATIVE_PRODUCT_TYPE ? { ...product, checked: false, currentPrice: value } : product)
       }
     },
     getAdditionProductValue (value) {
@@ -316,6 +318,7 @@ export default {
         return product
       })
     },
+    // 根据当前百度标王选中的属性计算加购商品的价格，与当前选中的百度标王的价格属性一致（并且在limit内）
     transformCurrentPrice (product, options) {
       const { currentPrice: { device, scheduleType, duration } } = this
       const { limit: { platform, schedule, type } } = product
@@ -328,6 +331,8 @@ export default {
         return option.device === props.device && option.scheduleType === props.scheduleType && option.duration === props.duration
       })
     },
+    // 将加购商品根据limit计算出每个加购商品的可选价格项和默认价格，以及商品初始状态
+    // checked: false（默认未选中）currentPrice（默认初始价格）options（可选价格项）
     transformProductList (additionalProducts) {
       const { currentPrice, queryResult: { keywordPriceList } } = this
       this.productList = [...additionalProducts].map(additionalProduct => {
