@@ -331,7 +331,7 @@ export default {
         return option.device === props.device && option.scheduleType === props.scheduleType && option.duration === props.duration
       })
     },
-    // 将加购商品根据limit计算出每个加购商品的可选价格项和默认价格，以及商品初始状态
+    // 将加购商品根据limit计算出每个加购商品的可选价格项和默认价格，以及商品初始状态，该方法在初始化时执行一遍
     // checked: false（默认未选中）currentPrice（默认初始价格）options（可选价格项）
     transformProductList (additionalProducts) {
       const { currentPrice, queryResult: { keywordPriceList } } = this

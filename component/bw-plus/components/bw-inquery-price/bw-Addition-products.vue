@@ -71,12 +71,13 @@ export default {
       if (currentPrice && currentPrice.price > 0) {
         return currentProduct.dealPriceRatio
       }
+      // 当代码运行到了这儿就代表用户未勾选百度标王产品
       return currentProduct.withoutPackagePriceRatio
     }
   },
   data () {
     return {
-      currentExcludes: [],
+      currentExcludes: [], // 互斥商品id集合
       checkedProducts: [],
       dialogVisible: false,
       currentProduct: {},
@@ -93,6 +94,7 @@ export default {
       }
       product.checked = !product.checked
       this.$emit('checked', product)
+      // 计算所选商品的互斥商品集合
       this.currentExcludes = this.checkedProducts.reduce((a, b) => [...a, ...b.excludes], [])
     },
     changeCombo (product) {
