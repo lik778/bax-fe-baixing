@@ -173,7 +173,7 @@ export default {
       if (array.length > 20) {
         errorMsg = {
           validate: false,
-          error: '关键词个数不能超过18个'
+          error: '关键词个数不能超过20个'
         }
         return errorMsg
       }
