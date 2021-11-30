@@ -11,7 +11,7 @@
       :visible.sync="dialogVisible"
       width="60%"
     >
-      <InqueryResult :limit="currentProduct.limit" :currentPrice="currentProduct.currentPrice" :dealPriceRatio="currentProduct.dealPriceRatio" :deviceAvailableStatus="deviceAvailableStatus" @getValue="getCheckedPrice" :tableData="priceList" />
+      <InqueryResult :limit="currentProduct.limit" :currentPrice="currentProduct.currentPrice" :dealPriceRatio="getRatio" :deviceAvailableStatus="deviceAvailableStatus" @getValue="getCheckedPrice" :tableData="priceList" />
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="confirmCheckedPrice">确 定</el-button>
@@ -63,6 +63,15 @@ export default {
           this.checkedProducts = []
         }
       }
+    }
+  },
+  computed: {
+    getRatio () {
+      const { currentProduct, currentPrice } = this
+      if (currentPrice && currentPrice.price > 0) {
+        return currentProduct.dealPriceRatio
+      }
+      return currentProduct.withoutPackagePriceRatio
     }
   },
   data () {
