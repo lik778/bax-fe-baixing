@@ -17,7 +17,7 @@
                 <BwCreativity v-if="productList && productList.length" @checked="checked" :productList="productList.filter(o => o.type === 0)"/>
             </section>
             </el-card>
-            <BwProducts v-if="productList && productList.length" @checked="checked" @getExtraProductValue="getExtraProductValue" :currentPrice="currentPrice" :deviceAvailableStatus="deviceAvailableStatus" :priceList="queryResult && queryResult.keywordPriceList" :productList="productList.filter(o => o.type !== 0)" />
+            <BwAdditionProducts v-if="productList && productList.length" @checked="checked" @getExtraProductValue="getAdditionProductValue" :currentPrice="currentPrice" :deviceAvailableStatus="deviceAvailableStatus" :priceList="queryResult && queryResult.keywordPriceList" :productList="productList.filter(o => o.type !== 0)" />
         </div>
         <el-card class="box-card" v-if="showResult">
           <WelfareLayout :currentPrice="getMaxDuration"/>
@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import { InqueryForm, KeywordHotDetail, Title, InqueryResult, BwPlusDialog, WelfareLayout, ErrorFooter, CommitDialog, SoldCityLayout, BwProducts, BwCreativity } from '../components'
+import { InqueryForm, KeywordHotDetail, Title, InqueryResult, BwPlusDialog, WelfareLayout, ErrorFooter, CommitDialog, SoldCityLayout, BwAdditionProducts, BwCreativity } from '../components'
 import { querySystemResult, commit } from 'api/biaowang-plus'
 import { APPLY_TYPE_NORMAL, APPLY_TYPE_ERROR, DEVICE_PROPS, DEVICE_THREE, SEO_PRODUCT_TYPE, CREATIVE_PRODUCT_TYPE } from 'constant/bw-plus'
 import { f2y } from 'util'
@@ -52,7 +52,7 @@ export default {
     ErrorFooter,
     CommitDialog,
     SoldCityLayout,
-    BwProducts,
+    BwAdditionProducts,
     BwCreativity
   },
   props: {
@@ -97,7 +97,7 @@ export default {
     getMaxDuration () {
       const { productList, currentPrice } = this
       const checkedProducts = productList.filter(p => p.checked)
-      const durationArray = [...checkedProducts.map(info => info.currentPrice.duration), currentPrice.duration]
+      const durationArray = [...checkedProducts.map(info => info.currentPrice.duration), currentPrice.duration || 0]
       return { ...currentPrice, duration: Math.max(...durationArray) }
     },
     preInfo () {
@@ -307,7 +307,7 @@ export default {
         this.productList = productList.map(product => product.type === 0 ? { ...product, checked: false, currentPrice: value } : product)
       }
     },
-    getExtraProductValue (value) {
+    getAdditionProductValue (value) {
       const { productList } = this
       this.productList = productList.map(product => {
         if (product.id === value.productId) {

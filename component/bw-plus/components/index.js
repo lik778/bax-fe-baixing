@@ -16,7 +16,7 @@ import ErrorFooter from './bw-inquery-price/error-footer.vue'
 import CommitDialog from './bw-inquery-price/commit-dialog.vue'
 import WelfareLayout from './bw-inquery-price/welfare-layout.vue'
 import SoldCityLayout from './bw-inquery-price/sold-city-layout.vue'
-import BwProducts from './bw-inquery-price/bw-products.vue'
+import BwAdditionProducts from './bw-inquery-price/bw-Addition-products.vue'
 import BwCreativity from './bw-inquery-price/bw-creativity.vue'
 import BwDescriptionItem from './bw-price-records/bw-description-item.vue'
 import PreInfoConfirm from './bw-price-records/pre-info-confirm.vue'
@@ -40,7 +40,7 @@ export {
   CommitDialog,
   WelfareLayout,
   SoldCityLayout,
-  BwProducts,
+  BwAdditionProducts,
   BwCreativity,
   BwDescriptionItem,
   PreInfoConfirm
