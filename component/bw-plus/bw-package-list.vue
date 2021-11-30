@@ -53,7 +53,7 @@
               </template>
             </el-table-column>
             <el-table-column
-              :formatter="({ totalDays,displayType }) =>  displayType === 0 ? `${totalDays}天`: '--' "
+              :formatter="({ totalDays }) =>  `${totalDays}天`"
               label="时长"
               >
             </el-table-column>
