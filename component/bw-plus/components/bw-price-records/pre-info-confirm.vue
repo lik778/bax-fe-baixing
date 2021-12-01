@@ -7,7 +7,7 @@
       </div>
       <el-table :data="preInfo.additionProductMap" style="width: 100%">
         <el-table-column width="260" prop="name" label="服务" :formatter="productFormatter"/>
-        <el-table-column prop="duration" label="服务时长"/>
+        <el-table-column prop="duration" label="服务时长（天）"/>
         <el-table-column prop="originPrice" label="价格（元）" :formatter="priceFormatter"/>
         <el-table-column prop="originPrice" label="优惠（元）" :formatter="spreadFormatter"/>
         <el-table-column prop="dealPrice" label="实付（元）" :formatter="priceFormatter"/>
