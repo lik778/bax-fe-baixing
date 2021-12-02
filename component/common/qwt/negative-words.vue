@@ -203,10 +203,11 @@ export default {
     negativeWordsDialog,
     negativeWordAlone
   },
-  async mounted () {
+  async created () {
     const { data } = await getWordAuthority()
     this.isAllowWord = data !== 0
   }
+
 }
 </script>
 
