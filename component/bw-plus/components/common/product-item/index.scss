@@ -122,7 +122,7 @@
         }
     }
     .image-wrapper{
-        width: 288px;
+        width: 100%;
         img{
           width: 100%;
         }
@@ -131,4 +131,7 @@
         font-family: PingFangSC-Regular;
         font-size: 10px;
         color: #FFFFFF;
+    }
+    .product-detail{
+        width: 450px;
     }
