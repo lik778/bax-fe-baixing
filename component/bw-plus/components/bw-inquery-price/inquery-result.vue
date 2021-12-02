@@ -205,17 +205,6 @@ export default {
     },
     clickDisabled (price, status) {
       return price <= 0 || !status
-    },
-    notAllowCheck (device, schedule, duration) {
-      const { limit } = this
-      if (limit) {
-        if (!limit.platform.includes(device) && limit.platform[0] !== DEVICE_THREE) {
-          return true
-        } else {
-          return !limit.schedule.includes(schedule) || !limit.type.includes(duration)
-        }
-      }
-      return false
     }
   }
 }

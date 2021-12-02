@@ -1,22 +1,24 @@
 <template>
-  <div>
     <div :class="{'product-wrapper': true, 'product-checked': product.checked, 'product-notAllowCheck': notAllowCheck.disable}" @click="checkProduct">
-      <el-popover
-          placement="top-start"
-          :title="product.title"
-          trigger="hover"
-          popper-class="detail-popover"
-          class="detail-popover"
-        >
-          <div class="product-detail">
-            <div class="image-wrapper">
-              <img :src="product.image"/>
-            </div>
-            <p>{{product.description}}</p>
-          </div>
-          <div slot="reference" >
-            <h3 class="product-title">
-              <span>{{product.title}}</span>
+        <h3 class="product-title">
+            <span class="product-title-wrapper">
+                {{product.title}}
+                <el-popover
+                    placement="top-start"
+                    :title="product.title"
+                    trigger="hover"
+                    popper-class="detail-popover"
+                    class="detail-popover"
+                    >
+                    <div class="product-detail">
+                        <div class="image-wrapper">
+                        <img :src="product.image"/>
+                        </div>
+                        <p>{{product.description}}</p>
+                    </div>
+                    <i slot="reference" class="el-icon-info"></i>
+                </el-popover>
+             </span>
               <span class="available-tips" v-if="!!product.available">待上线，请咨询客服</span>
               <i v-if="product.tag === 'hot'" class="hot-icon"></i>
             </h3>
@@ -25,8 +27,6 @@
                 <li v-if="product.type === 1">{{showDevice}}</li>
                 <li v-if="product.type === 1">{{showSchedule}}</li>
             </ul>
-          </div>
-       </el-popover>
         <div class="product-option">
             <div class="price-info">
                 <span class="current-price">抢鲜价：{{dealPrice}}元</span>
@@ -35,10 +35,9 @@
             <el-button @click.stop="changeCombo" v-if="product.type === REGULAR_PRODUCT_TYPE" size="mini" :disabled="notAllowCheck.disable">更换套餐</el-button>
         </div>
     </div>
-  </div>
 </template>
 <script>
-import { DEVICE, SCHEDULE_TYPE, SEO_PRODUCT_TYPE, DEVICE_PC, DEVICE_WAP, REGULAR_PRODUCT_TYPE } from 'constant/bw-plus'
+import { DEVICE, SCHEDULE_TYPE, SEO_PRODUCT_TYPE, DEVICE_PC, DEVICE_WAP, REGULAR_PRODUCT_TYPE, CREATIVE_PRODUCT_TYPE } from 'constant/bw-plus'
 import { f2y } from 'util'
 import { DEVICE_ALL } from 'constant/fengming-report'
 export default {
@@ -99,8 +98,9 @@ export default {
           reason: '当前商品手机端、电脑端已售出'
         }
       }
+      // 当前商品与所选商品存在互斥，或者当前商品未上线,或者当前商品是创意相关商品并且其价格<=0(即未选中百度标王产品，不允许单独购买)
       return {
-        disable: this.currentExcludes.includes(this.product.id) || !!this.product.available || (this.product.type === 0 && Object.values(this.product.currentPrice).length <= 0) || this.product.currentPrice.price <= 0,
+        disable: this.currentExcludes.includes(this.product.id) || !!this.product.available || (this.product.type === CREATIVE_PRODUCT_TYPE && Object.values(this.product.currentPrice).length <= 0) || this.product.currentPrice.price <= 0,
         reason: ''
       }
     },

@@ -6,7 +6,7 @@
       <el-col :span="4" class="column">
         <h3>凤鸣投放币</h3>
         <p><strong>{{ balance.fengmingBalance | priceFormat }}</strong>元</p>
-        <router-link :to="{name: 'qwt-charge', query: {mode: 'charge-only'}}"
+        <router-link v-if="userInfo.allowFmRecharge" :to="{name: 'qwt-charge', query: {mode: 'charge-only'}}"
           @click.native="onClickCharge">
           <el-button type="primary">充值</el-button>
         </router-link>
