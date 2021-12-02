@@ -5,17 +5,17 @@
         <!-- <BwDescriptionItem label="词包热度：" :value="preInfo.totalPv"/> -->
         <BwDescriptionItem label="城市：" :value="citiesFormater(preInfo.cities)"/>
       </div>
-      <el-table :data="preInfo.additionProductMap" style="width: 100%">
-        <el-table-column width="260" prop="name" label="服务" :formatter="productFormatter"/>
-        <el-table-column width="130" prop="duration" label="服务时长（天）"/>
-        <el-table-column prop="originPrice" label="价格（元）" :formatter="priceFormatter"/>
-        <el-table-column prop="originPrice" label="优惠（元）" :formatter="spreadFormatter"/>
-        <el-table-column prop="dealPrice" label="实付（元）" :formatter="priceFormatter"/>
+      <el-table header-row-class-name="confirm-info-header" :border="true" :data="preInfo.additionProductMap" style="width: 100%">
+        <el-table-column header-align="left" width="260" prop="name" label="服务" :formatter="productFormatter"/>
+        <el-table-column header-align="left" width="130" prop="duration" label="服务时长（天）"/>
+        <el-table-column header-align="left" prop="originPrice" label="价格（元）" :formatter="priceFormatter"/>
+        <el-table-column header-align="left" prop="originPrice" label="优惠（元）" :formatter="spreadFormatter"/>
+        <el-table-column header-align="left" prop="dealPrice" label="实付（元）" :formatter="priceFormatter"/>
       </el-table>
       <div class="row-info total-price">
-        <BwDescriptionItem label="商品总价：" :value="f2y(totalPrice)"/>
-        <BwDescriptionItem label="已优惠：" :value="f2y(spreadPrice)"/>
-        <BwDescriptionItem label="提单价：" :value="f2y(totalDealPrice)"/>
+        <BwDescriptionItem label="商品总价：" :value="`${f2y(totalPrice)}元`"/>
+        <BwDescriptionItem label="已优惠：" :value="`${f2y(spreadPrice)}元`"/>
+        <BwDescriptionItem class="total-price-value" label="提单价：" :value="`${f2y(totalDealPrice)}元`"/>
       </div>
     </div>
 </template>
@@ -85,6 +85,16 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+    /deep/ .confirm-info-header{
+        background: #FFF1E4;
+        th{
+          background: #FFF1E4;
+          font-family: PingFangSC-Medium;
+          font-size: 12px;
+          color: #C67C49;
+          letter-spacing: 0;
+        }
+    }
     .welfare-tag{
       margin-right: 8px;
     }
@@ -108,5 +118,13 @@ export default {
         bottom: 0;
         position: absolute;
       }
+    }
+    /deep/ .total-price-value{
+        span{
+            font-family: PingFangSC-Regular;
+            font-size: 18px;
+            color: #FF6350;
+            letter-spacing: 0;
+        }
     }
 </style>
