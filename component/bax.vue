@@ -46,6 +46,7 @@ import Sidebar from './layout/sidebar'
 import Header from './layout/header'
 import Chat from './widget/chat'
 import HuoDongBtn from './common/huodong-btn'
+import { getWordAuthority } from 'api/fengming'
 
 import gStore from './store'
 import aStore from './activity-store'
@@ -129,7 +130,7 @@ export default {
       this.pending = this.pending - 1
     })
   },
-  created () {
+  async created () {
     // 记录销售的客户id等信息
     // 米奇跳转userId需改成user_id
     // eslint-disable-next-line
@@ -140,6 +141,7 @@ export default {
       this.salesInfo.userId = +uid
       this.salesInfo.salesId = +salesId
     }
+    await getWordAuthority()
   },
   async mounted () {
     // source为当前用户是否是以优化师角色进入bax
