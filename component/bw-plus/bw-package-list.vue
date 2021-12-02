@@ -34,12 +34,14 @@
             :data="item.skuList"
             class="table"
             border
+            align="left"
             :cell-style="cellStyle"
-            :header-cell-style="{borderColor:'#FFDECF',color: '#C67C49',fontSize: '13px',textAlign:'center'}"
+            :header-cell-style="{borderColor:'#FFDECF',color: '#C67C49',fontSize: '13px',paddingLeft: '21px'}"
             style="width: 100%">
             <el-table-column
               label="项目名称"
               width="450"
+              align="left"
               >
               <template slot-scope="{row}">
                 <div class="project-name">
@@ -72,6 +74,7 @@
             <el-table-column
               prop="address"
               width="300"
+              align="center"
               label="操作">
               <template slot-scope="{ row }">
                 <template  v-if="row.skuId === 301">
@@ -84,7 +87,7 @@
                   </el-col>
                 </el-row>
                 </template>
-                <span v-else>--</span>
+                <p v-else style="textAlign: center">--</p>
               </template>
             </el-table-column>
         </el-table>
@@ -262,7 +265,7 @@ export default {
       }
     },
     cellStyle ({ row, column, rowIndex, columnIndex }) {
-      return 'border-color:#FFDECF !important;text-align: center;'
+      return 'border-color:#FFDECF !important;text-align: left;padding-left: 21px'
     },
     citiesFormater (row) {
       if (row && row.length > 0) {
@@ -287,8 +290,8 @@ export default {
     },
     keywordsFormater (args) {
       if (args && args.length > 0) {
-        const detail = args.map(keyword => getCnName(keyword, this.allAreas)).join(',')
-        const text = args.slice(0, 3).map(keyword => getCnName(keyword, this.allAreas)).join(',')
+        const detail = args.map(keyword => getCnName(keyword, this.allAreas)).join('、')
+        const text = args.slice(0, 3).map(keyword => getCnName(keyword, this.allAreas)).join('、')
         return {
           text: text,
           detail: detail
@@ -401,7 +404,6 @@ export default {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  padding-left: 30px;
   img {
     width: 76px;
     height: 46px;
