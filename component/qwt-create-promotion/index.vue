@@ -75,7 +75,7 @@
         <header>选取推广关键词</header>
         <p class="tip">请选取20个以上关键词，关键词越多您的创意被展现的机会越多。根据当月数据，为您推荐如下关键词</p>
         <el-button type="primary" style="margin-top:10px" size="small"
-                   @click="addKeywordsDialog = true">批量添加关键词</el-button>
+                   @click="addkeys">批量添加关键词</el-button>
         <el-button
           type="primary"
           style="margin-top:10px"
@@ -196,7 +196,6 @@ import Vue from 'vue'
 import { Message } from 'element-ui'
 import uuid from 'uuid/v4'
 import clone from 'clone'
-
 import BaiduExpandWordsDialog from 'com/common/qwt-baidu-expand-words'
 import PromotionCreativeTip from 'com/widget//promotion-creative-tip'
 import PromotionAreaLimitTip from 'com/widget/promotion-area-limit-tip'
@@ -214,7 +213,7 @@ import qwtAddKeywordsDialog from 'com/common/qwt-add-keywords-dialog'
 import BaxInput from 'com/common/bax-input'
 
 import track, { trackRecommendService } from 'util/track'
-
+import { TimeTracker, TimeInput, wordTime } from 'util/time'
 import {
   f2y,
   toFloat,
@@ -325,7 +324,10 @@ export default {
       isCreating: false,
       showPromotion: false,
       timeout: null,
-
+      // 关键词时间
+      keyTime: 0,
+      // 输入的时间
+      inputTime: 0,
       // PRE_IMG_PROMOTION: assetHost + 'promotion-advantage.png'
       PRE_IMG_PROMOTION: '//file.baixing.net/201809/a995bf0f1707a3e98a2c82a5dc5f8ad3.png',
       addKeywordsDialog: false,
@@ -379,6 +381,10 @@ export default {
     }
   },
   methods: {
+    addkeys () {
+      this.addKeywordsDialog = true
+      wordTime()
+    },
     f2y,
     isSameKeyword (a, b) {
       const compareKeys = ['word']
@@ -400,6 +406,7 @@ export default {
         return false
       }
       this.baiduExpandWordsDialogVisible = true
+      TimeInput()
     },
     addBaiduWords (words) {
       const bridge = x => ({
@@ -407,14 +414,15 @@ export default {
         price: x.price
       })
       this.addKeywords(words.map(x => bridge(x)))
+      this.keyTime = wordTime('keyword')
     },
     updatePromotionKeywords (kwAddResult) {
       this.addKeywordsDialog = false
       if (!kwAddResult) return
-
       const { normalList } = kwAddResult
       this.addKeywords(normalList)
-
+      // 关键词输入的时间
+      this.keyTime = wordTime('keyword')
       const { actionTrackId, userInfo } = this
       track({
         roles: userInfo.roles.map(r => r.name).join(','),
@@ -430,6 +438,7 @@ export default {
     handleCreativeValueChange ({ title, content }) {
       this.newPromotion.creativeTitle = title
       this.newPromotion.creativeContent = content
+      this.inputTime = TimeInput('blur')
     },
     handleCreativeError (message) {
       if (message) Message.error(message)
@@ -539,6 +548,7 @@ export default {
 
     async createPromotion () {
       if (!this.$refs.contract.$data.isAgreement) {
+        console.log('这是创建总时间' + TimeTracker(2))
         return this.$message.error('请阅读并勾选同意服务协议，再进行下一步操作')
       }
       if (this.isCreating) {
@@ -558,7 +568,6 @@ export default {
         baxId: userInfo.id,
         actionTrackId
       })
-
       try {
         await this._createPromotion(promotion)
       } finally {
@@ -851,6 +860,8 @@ export default {
         await this.onSelectAd(ad)
       }
     }
+    // 触发时间
+    TimeTracker(1)
   },
 
   beforeDestroy () {
@@ -864,6 +875,15 @@ export default {
     'newPromotion.landingType' (newVal, oldVal) {
       this.newPromotion.landingPage = ''
       this.newPromotion.landingPageId = ''
+    },
+    'queryWord' (newV) {
+      this.keyTime = wordTime('keyword')
+    },
+    'keyTime' (newV) {
+      console.log('这是添加关键词的时间' + newV)
+    },
+    'inputTime' (newV) {
+      console.log('这是输入的总时间' + newV)
     }
   }
 }
