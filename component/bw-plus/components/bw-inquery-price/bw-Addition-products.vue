@@ -7,7 +7,7 @@
       </div>
     </el-card>
     <el-dialog
-      title="提示"
+      :title="currentProduct.title"
       :visible.sync="dialogVisible"
       width="60%"
     >

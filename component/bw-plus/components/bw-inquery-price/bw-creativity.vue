@@ -1,6 +1,6 @@
 <template>
     <div class="bw-creativity">
-      <Title title="创意升级，效果加倍（请选择需要升级的形式）"/>
+      <Title subTitle="创意升级，效果加倍" subExtra="（请选择需要升级的形式）"/>
       <div class="bw-creativity_wrapper">
         <ProductItem @check="checkProduct" v-for="product in productList" :key="product.id" :currentExcludes="[]" :product="product"/>
       </div>
