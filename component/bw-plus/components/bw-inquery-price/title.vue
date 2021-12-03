@@ -2,11 +2,11 @@
     <div class="bw-title">
         <div class="title">
             <h4>{{title}}</h4>
-            <span v-if="!!extra" class="extra-title">({{extra}})</span>
+            <span v-if="!!extra" class="extra-title">{{extra}}</span>
         </div>
         <div v-if="!!subTitle" class="sub-title">
             <h5>{{subTitle}}</h5>
-            <span v-if="!!subExtra" class="subExtra-title">({{subExtra}})</span>
+            <span v-if="!!subExtra" class="subExtra-title">{{subExtra}}</span>
         </div>
     </div>
 </template>

@@ -12,7 +12,7 @@
         <div v-if="showResult">
             <el-card class="box-card">
             <section class="bw-query-price_item">
-                <Title title="百度标王，王牌产品" subTitle="标准版" subExtra="（请选择需要的平台*时段*时长）"/>
+                <Title title="百度标王" subTitle="标准版" subExtra="（请选择需要的平台*时段*时长）"/>
                 <InqueryResult :deviceAvailableStatus="deviceAvailableStatus" :currentPrice="currentPrice" @getValue="getCurrentPrice" :tableData="queryResult && queryResult.keywordPriceList" />
                 <BwCreativity v-if="productList && productList.length" @checked="checked" :productList="productList.filter(o => o.type === 0)"/>
             </section>
