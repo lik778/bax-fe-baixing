@@ -52,7 +52,7 @@ export default {
             font-weight: 500;
         }
         .extra-title{
-            font-size: 12px;
+            font-size: 14px;
             color: #999999;
             margin-left: 6px;
         }
@@ -70,7 +70,7 @@ export default {
         }
         .subExtra-title{
             font-family: PingFangSC-Regular;
-            font-size: 12px;
+            font-size: 14px;
             color: #999999;
             margin-left: 6px;
         }

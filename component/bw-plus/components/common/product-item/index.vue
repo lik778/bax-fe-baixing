@@ -32,7 +32,7 @@
                 <span class="current-price">抢鲜价：{{dealPrice}}元</span>
                 <span class="origin-price">原价：{{originalPrice}}元</span>
             </div>
-            <el-button @click.stop="changeCombo" v-if="product.type === REGULAR_PRODUCT_TYPE" size="mini" :disabled="notAllowCheck.disable">更换套餐</el-button>
+            <el-button class="mini-button" @click.stop="changeCombo" v-if="product.type === REGULAR_PRODUCT_TYPE" size="mini" :disabled="notAllowCheck.disable">更换套餐</el-button>
         </div>
     </div>
 </template>
