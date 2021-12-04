@@ -263,7 +263,7 @@ export const welfareInfo = [
     id: 2,
     title: '精准关键词',
     value: (price) => f2y(price) >= 10000 && f2y(price) < 20000 ? 2 * 5000 : Math.floor(f2y(price) / 20000) * 5 * 5000,
-    desc: '限时11.1-11.18 仅前111名',
+    desc: '限时12.6-12.17 仅前88名',
     content: (price) => ['满额即送标王关键词'],
     isActive: (duration, price) => {
       price = price > 0 ? price : 0
@@ -281,15 +281,20 @@ export const welfareInfo = [
     id: 3,
     title: '三网整合营销',
     value: (price) => f2y(price) < 20000 ? 3000 : 8000,
-    desc: '限时11.1-11.18 仅前30名',
-    content: (price) => f2y(price) < 20000 ? ['360/神马/搜狗三网选其一', '投放时间90天'] : ['360/神马/搜狗三网投放', '投放时间90天'],
+    desc: '限时12.6-12.17 仅前30名',
+    content: (price) => {
+      if (!price || f2y(price) < 20000) {
+        return ['360/神马/搜狗三网选其一', '投放时间90天']
+      }
+      return ['360/神马/搜狗三网选投放', '投放时间90天']
+    },
     isActive: (duration, price) => {
       price = price > 0 ? price : 0
       const active = f2y(price) >= 10000
       return {
         active,
-        tag: active ? '已解锁，赠送365天' : `还差${20000 - f2y(price)}元即可解锁`,
-        detail: '365天'
+        tag: active ? '已解锁，赠送365天' : `还差${10000 - f2y(price)}元即可解锁`,
+        detail: '90天'
       }
     },
     show: showWelfare
