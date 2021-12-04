@@ -12,6 +12,16 @@
         <el-table-column header-align="left" prop="originPrice" label="优惠（元）" :formatter="spreadFormatter"/>
         <el-table-column header-align="left" prop="dealPrice" label="实付（元）" :formatter="priceFormatter"/>
       </el-table>
+      <div v-if="showWelfare" class="welfare-info">
+        <label v-if="showWelfare">超值福利：</label>
+        <el-tag
+            class="welfare-tag"
+            type="danger"
+            v-for="(item, index) in welfareInfo.filter( o => o.isActive(getWelfareInfo.duration, getWelfareInfo.price).active)"
+            :key="index">
+            {{item.isActive(getWelfareInfo.duration, getWelfareInfo.price).name}} ({{item.isActive(getWelfareInfo.duration, getWelfareInfo.price).detail}})
+        </el-tag>
+      </div>
       <div class="row-info total-price">
         <BwDescriptionItem label="商品总价：" :value="`${f2y(totalPrice)}元`"/>
         <BwDescriptionItem label="已优惠：" :value="`${f2y(spreadPrice)}元`"/>
@@ -24,7 +34,7 @@ import { f2y, getCnName } from 'util'
 import BwDescriptionItem from './bw-description-item.vue'
 import dayjs from 'dayjs'
 import isBetween from 'dayjs/plugin/isBetween'
-import { SCHEDULE_TYPE, DEVICE } from 'constant/bw-plus'
+import { SCHEDULE_TYPE, DEVICE, welfareInfo } from 'constant/bw-plus'
 dayjs.extend(isBetween)
 export default {
   name: 'pre-info-confirm',
@@ -43,13 +53,19 @@ export default {
   },
   data () {
     return {
-      f2y
+      f2y,
+      welfareInfo
     }
   },
   computed: {
+    getWelfareInfo () {
+      const { additionProductMap } = this.preInfo
+      const durationArray = [...additionProductMap.map(info => info.duration)]
+      return { duration: Math.max(...durationArray), price: this.totalDealPrice }
+    },
     showWelfare () {
       const now = dayjs()
-      return dayjs(now).isBetween('2021-11-1', dayjs('2021-11-11'))
+      return dayjs(now).isBetween('2021-12-3', dayjs('2021-12-18')) && (this.getWelfareInfo.duration > 30 || f2y(this.getWelfareInfo.price) >= 10000)
     },
     totalPrice () {
       const { additionProductMap } = this.preInfo
@@ -126,5 +142,10 @@ export default {
             color: #FF6350;
             letter-spacing: 0;
         }
+    }
+    .welfare-info{
+       margin-top: 20px;
+       display: flex;
+       align-items: center;
     }
 </style>

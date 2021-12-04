@@ -11,11 +11,11 @@
         </el-card>
         <div v-if="showResult">
             <el-card class="box-card">
-            <section class="bw-query-price_item">
-                <Title title="百度标王" subTitle="标准版" subExtra="（不含配图）请选择需要的平台*时段*时长"/>
-                <InqueryResult :deviceAvailableStatus="deviceAvailableStatus" :currentPrice="currentPrice" @getValue="getCurrentPrice" :tableData="queryResult && queryResult.keywordPriceList" />
-                <BwCreativity v-if="productList && productList.length" @checked="checked" :productList="productList.filter(o => o.type === 0)"/>
-            </section>
+                <section class="bw-query-price_item">
+                    <Title title="百度标王" subTitle="标准版" subExtra="（不含配图）请选择需要的平台*时段*时长"/>
+                    <InqueryResult :deviceAvailableStatus="deviceAvailableStatus" :currentPrice="currentPrice" @getValue="getCurrentPrice" :tableData="queryResult && queryResult.keywordPriceList" />
+                    <BwCreativity v-if="productList && productList.length" @checked="checked" :productList="productList.filter(o => o.type === 0)"/>
+                </section>
             </el-card>
             <BwAdditionProducts v-if="productList && productList.length" @checked="checked" @getExtraProductValue="getAdditionProductValue" :currentPrice="currentPrice" :deviceAvailableStatus="deviceAvailableStatus" :priceList="queryResult && queryResult.keywordPriceList" :productList="productList.filter(o => o.type !== 0)" />
         </div>
@@ -30,7 +30,7 @@
             <ErrorFooter :queryResult="queryResult"/>
         </el-card>
         <BwPlusDialog v-if="BwPlusDialogMsg.dialogVisible" :destroy-on-close="true" :BwPlusDialogMsg="BwPlusDialogMsg" @close="BwPlusDialogMsg.dialogVisible = false"/>
-        <CommitDialog v-if="isSubmit" :destroy-on-close="true" :allAreas="allAreas" :preInfo="preInfo" :visible="isSubmit" :isPending="isPending" @cancel="cancel" @submit="submit"/>
+        <CommitDialog :welfare="getWelfareInfo" v-if="isSubmit" :destroy-on-close="true" :allAreas="allAreas" :preInfo="preInfo" :visible="isSubmit" :isPending="isPending" @cancel="cancel" @submit="submit"/>
     </section>
 </template>
 
