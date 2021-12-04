@@ -32,7 +32,7 @@
             type="danger"
             v-for="(item, index) in welfareInfo.filter( o => o.isActive(getCurrentPrice.type, getCurrentPrice.price).active)"
             :key="index">
-            {{item.title}} ({{item.isActive(getCurrentPrice.type, getCurrentPrice.price).detail}})
+            {{item.isActive(getCurrentPrice.type, getCurrentPrice.price).name}} ({{item.isActive(getCurrentPrice.type, getCurrentPrice.price).detail}})
           </el-tag>
         </el-form-item>
         <el-row class="pre-info-row">

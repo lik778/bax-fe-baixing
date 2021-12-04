@@ -254,7 +254,8 @@ export const welfareInfo = [
       return {
         active,
         tag: active ? `已解锁，赠送${duration}天` : '至少购买90天标王可解锁',
-        detail: `${duration}天`
+        detail: `${duration}天`,
+        name: '会员钻石店铺'
       }
     },
     show: () => true
@@ -272,7 +273,8 @@ export const welfareInfo = [
       return {
         active,
         tag: active ? `已解锁，赠送${num}个` : `还差${10000 - f2y(price)}元即可解锁`,
-        detail: `${num}个`
+        detail: `${num}个`,
+        name: '精准关键词'
       }
     },
     show: showWelfare
@@ -294,7 +296,8 @@ export const welfareInfo = [
       return {
         active,
         tag: active ? '已解锁，赠送365天' : `还差${10000 - f2y(price)}元即可解锁`,
-        detail: '90天'
+        detail: '90天',
+        name: !price || f2y(price) < 20000 ? '一网营销' : '三网整合营销'
       }
     },
     show: showWelfare
