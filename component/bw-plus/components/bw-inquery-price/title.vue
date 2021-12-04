@@ -47,8 +47,8 @@ export default {
         align-items: center;
         h4{
             font-family: PingFangSC-Medium;
-            font-size: 16px;
-            color: #333333;
+            font-size: 18px;
+            color: #FF6350;
             font-weight: 500;
         }
         .extra-title{
@@ -72,6 +72,7 @@ export default {
             font-family: PingFangSC-Regular;
             font-size: 12px;
             color: #999999;
+            margin-left: 6px;
         }
     }
     .bw-title{

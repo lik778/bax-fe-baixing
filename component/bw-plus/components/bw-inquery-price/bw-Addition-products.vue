@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-card class="box-card">
-      <Title title="叠加媒体，低价加“量”"/>
+      <Title title="更多媒体，低价加量" extra="请选择需要的媒体及其平台*时段*时长"/>
       <div class="product-list">
         <ProductItem :currentPrice="currentPrice" :deviceAvailableStatus="deviceAvailableStatus" v-for="product in productList" :key="product.id" @changeCombo="changeCombo" @check="checkProduct" :currentExcludes="currentExcludes" :product="product"/>
       </div>
