@@ -93,7 +93,7 @@ export default {
     },
     showWelfare () {
       const now = dayjs()
-      return dayjs(now).isBetween('2021-12-3', dayjs('2021-12-8'))
+      return dayjs(now).isBetween('2021-12-3', dayjs('2021-12-18'))
     },
     getCurrentPrice () {
       const { priceId, renewInfo: { priceList } } = this
