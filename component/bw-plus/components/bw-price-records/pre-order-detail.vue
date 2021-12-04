@@ -11,51 +11,6 @@
       <BwDescriptionItem label="销售编号：" :value="preInfo.saleId"/>
       <BwDescriptionItem label="客户uid：" :value="preInfo.userBxId"/>
     </div>
-    <!-- <el-form ref="form" label-width="100px">
-        <el-form-item class="pre-info-item" label="关键词：">
-            {{preInfo.keywords.join("、")}}
-        </el-form-item>
-        <el-form-item class="pre-info-item" label="推广城市：">
-            {{citiesFormater(preInfo.cities)}}
-        </el-form-item>
-        <el-form-item class="pre-info-item" label="推广平台：">
-            {{DEVICE[preInfo.device]}}
-        </el-form-item>
-        <el-form-item class="pre-info-item" label="词包热度：">
-            {{preInfo.totalPv}}
-        </el-form-item>
-        <el-form-item class="pre-info-item" label="推广时段：">
-            {{SCHEDULE_TYPE[preInfo.scheduleType]}}
-        </el-form-item>
-        <el-form-item class="pre-info-item" label="服务时长：">
-            {{preInfo.days}}天 <el-tag v-if="preInfo.days > 30 && !showWelfare">赠送钻石官网（{{preInfo.days}}天）</el-tag>
-        </el-form-item>
-        <el-form-item class="pre-info-item pre-info-price" label="提单价：">
-            {{f2y(preInfo.price)}}元
-        </el-form-item>
-        <el-form-item v-if="showWelfare" class="pre-info-item" label="超值福利：">
-          <el-tag
-            class="welfare-tag"
-            type="danger"
-            v-for="(item, index) in welfareInfo.filter(o => o.isActive(preInfo.days, preInfo.price).active)"
-            :key="index">
-            {{item.title}} ({{item.isActive(preInfo.days, preInfo.price).detail}})
-          </el-tag>
-        </el-form-item>
-        <el-row class="pre-info-row">
-            <el-col :span="12">
-                <el-form-item class="pre-info-item" label="销售编号：">{{preInfo.saleId}}</el-form-item>
-            </el-col>
-            <el-col :span="12">
-                <el-form-item class="pre-info-item" label="客户手机号：">{{preInfo.mobile}}</el-form-item>
-            </el-col>
-        </el-row>
-        <el-row class="pre-info-row">
-          <el-col :span="10">
-            <el-form-item class="pre-info-item" label="客户uid：">{{preInfo.userBxId}}</el-form-item>
-          </el-col>
-        </el-row>
-    </el-form> -->
     <span slot="footer" class="dialog-footer">
         <el-button @click="cancel">取 消</el-button>
         <el-button type="primary" @click="preOrder">确认，生成并复制提单链接</el-button>
