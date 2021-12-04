@@ -20,12 +20,12 @@
             <li>词包id：{{item.packageId}}</li>
             <li>关键词：
                <el-tooltip  effect="dark"  :content="keywordsFormater(item.keywords).detail" placement="top">
-                  <el-button  style="backgroundColor:#FFF1E4;border:0;fontSize:13px">{{ keywordsFormater(item.keywords).text }}</el-button>
+                  <el-button  style="backgroundColor:#FFF1E4;border:0;fontSize:13px;padding:0;">{{ keywordsFormater(item.keywords).text }}</el-button>
               </el-tooltip>
             </li>
             <li>所选城市：
               <el-tooltip  effect="dark"  :content="citiesFormater(item.cities).detail" placement="top">
-                  <el-button  style="backgroundColor:#FFF1E4;border:0;fontSize:13px">{{ citiesFormater(item.cities).text }}</el-button>
+                  <el-button style="backgroundColor:#FFF1E4;border:0;fontSize:13px;padding:0;">{{ citiesFormater(item.cities).text }}</el-button>
               </el-tooltip>
             </li>
           </ul>
@@ -34,14 +34,13 @@
             :data="item.skuList"
             class="table"
             border
-            align="left"
             :cell-style="cellStyle"
-            :header-cell-style="{borderColor:'#FFDECF',color: '#C67C49',fontSize: '13px',paddingLeft: '21px'}"
+            :header-cell-style="headerCellStyle"
             style="width: 100%">
             <el-table-column
               label="项目名称"
-              width="450"
-              align="left"
+              min-width="380"
+              class-name="project-name"
               >
               <template slot-scope="{row}">
                 <div class="project-name">
@@ -57,18 +56,22 @@
             <el-table-column
               :formatter="({ totalDays }) =>  `${totalDays}天`"
               label="时长"
+              min-width="100"
               >
             </el-table-column>
             <el-table-column
               :formatter="({ skuId }) =>  skuId === 301 ? AUDIT_STATUS_MAP[item.auditStatus]: '--'"
+              min-width="110"
               label="审核状态">
             </el-table-column>
             <el-table-column
               :formatter="({ skuId }) =>  skuId === 301 ? PACKEAGE_STATUS_MAP[item.status] : '--'"
+              min-width="110"
               label="投放状态">
             </el-table-column>
             <el-table-column
               :formatter="({ remainDays }) =>  `${remainDays}天`"
+              min-width="110"
               label="剩余天数">
             </el-table-column>
             <el-table-column
@@ -265,7 +268,20 @@ export default {
       }
     },
     cellStyle ({ row, column, rowIndex, columnIndex }) {
-      return 'border-color:#FFDECF !important;text-align: left;padding-left: 21px'
+      if (columnIndex === 0) {
+        return 'border-color:#FFDECF !important;text-align: left'
+      } else {
+        return 'border-color:#FFDECF !important;text-align: left;padding-left: 15px'
+      }
+    },
+    headerCellStyle ({ row, column, rowIndex, columnIndex }) {
+      if (columnIndex === 0 && rowIndex === 0) {
+        return 'border-color:#FFDECF !important;color:#C67C49;font-size:13px;text-align: left'
+      } else if (columnIndex === 5 && rowIndex === 0) {
+        return 'border-color:#FFDECF !important;color:#C67C49;font-size:13px;text-align: center'
+      } else {
+        return 'border-color:#FFDECF !important;color:#C67C49;padding-left:15px !important;font-size:13px;text-align: left'
+      }
     },
     citiesFormater (row) {
       if (row && row.length > 0) {
@@ -378,6 +394,7 @@ export default {
 .table {
   margin-bottom: 20px;
 }
+
 .table-titles {
   display: flex;
   justify-content: flex-start;
