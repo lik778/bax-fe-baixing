@@ -12,106 +12,96 @@
                     placeholder="输入关键词查询"
                     style="width: 300px;" />
         </el-form-item>
-        <el-form-item label="投放状态">
-          <el-checkbox-group v-model="query.status">
-            <el-checkbox :label="key"
-                         v-for="(value, key) in PACKEAGE_STATUS_MAP"
-                         :key="key">{{value}}
-            </el-checkbox>
-          </el-checkbox-group>
-        </el-form-item>
-        <el-form-item label="审批状态">
-          <el-checkbox-group v-model="query.auditStatus">
-            <el-checkbox :label="key"
-                         v-for="(value, key) in AUDIT_STATUS_MAP"
-                         :key="value">{{value}}
-            </el-checkbox>
-          </el-checkbox-group>
-        </el-form-item>
       </el-form>
 
-      <el-table :data="promotes"
-                class="table"
-                :v-loading="loading"
-                style="width: 100%">
-        <el-table-column prop="id"
-                         label="推广ID">
-          <span slot-scope="{row}"
-                class="promote-id"
-                @click="goToPlanList(row)">{{row.id}}</span>
-        </el-table-column>
-        <el-table-column label="关键词">
-          <template slot-scope="{ row }">
-            <el-popover
-            placement="top-start"
-            title="关键词"
-            width="300"
-            trigger="hover"
-            >
-              <div class="cities-content">
-                {{row.keywords.join('、')}}
-              </div>
-              <p slot="reference">{{ keywordsFormater(row) }}</p>
-            </el-popover>
-          </template>
-        </el-table-column>
-        <el-table-column label="审核状态">
-          <div slot-scope="{row}"
-               class="status-container">
-            <status-show :dot-color="AUDIT_STATUS_COLOR_MAP[row.auditStatus]">
-              <span>{{AUDIT_STATUS_MAP[row.auditStatus]}}</span>
-            </status-show>
-          </div>
-        </el-table-column>
-        <el-table-column label="投放状态">
-          <div slot-scope="{row}"
-               class="status-container">
-            <status-show :dot-color="PROMOTE_STATUS_COLOR_MAP[row.status]">
-              <span>{{PACKEAGE_STATUS_MAP[row.status]}}</span>
-            </status-show>
-          </div>
-        </el-table-column>
-        <el-table-column prop="cities" width="180" label="投放城市" >
-          <template slot-scope="{ row }">
-              <el-popover
-                placement="right"
-                width="500"
-                trigger="hover">
-                <ProvinceCityMap :allAreas="allAreas" :cities="row.cities"/>
-                <span slot="reference">{{ citiesFormater(row).text }}</span>
-              </el-popover>
-          </template>
-        </el-table-column>
-        <el-table-column label="平台"
-                         :formatter="r => DEVICE[r.device]" />
-        <el-table-column label="推广时段"
-                         :formatter="r => SCHEDULE_TYPE[r.scheduleType]" />
-        <el-table-column label="服务时长"
-                         :formatter="({ days, phoenixsVersion }) => phoenixsVersion ? '老套餐' : `${days}天`" />
-        <el-table-column label="投放剩余天数"
-                         :formatter="({remainsDays}) => `${remainsDays || 0}天`" />
-        <el-table-column label="操作"
-                         width="200">
-          <div slot-scope="{row}">
-            <el-button type="text"
-                       class="btn-text"
-                       @click="goToPlanList(row)">查看计划</el-button>
-            <el-button type="text"
-                       class="btn-text"
-                       :disabled="row.days < THIRTY_DAYS"
-                       @click="goToShop">店铺</el-button>
-            <el-button v-if="allowRenew" type="text"
-                       class="btn-text"
-                       @click="renew(row)">续费</el-button>
-          </div>
-        </el-table-column>
-      </el-table>
+      <div v-for="item in promotes" :key="item.packageId">
+        <div class="table-titles" >
+          <ul>
+            <li>词包id：{{item.packageId}}</li>
+            <li>关键词：
+               <el-tooltip  effect="dark"  :content="keywordsFormater(item.keywords).detail" placement="top">
+                  <el-button  style="backgroundColor:#FFF1E4;border:0;fontSize:13px;padding:0;">{{ keywordsFormater(item.keywords).text }}</el-button>
+              </el-tooltip>
+            </li>
+            <li>所选城市：
+              <el-tooltip  effect="dark"  :content="citiesFormater(item.cities).detail" placement="top">
+                  <el-button style="backgroundColor:#FFF1E4;border:0;fontSize:13px;padding:0;">{{ citiesFormater(item.cities).text }}</el-button>
+              </el-tooltip>
+            </li>
+          </ul>
+        </div>
+        <el-table
+            :data="item.skuList"
+            class="table"
+            border
+            :cell-style="cellStyle"
+            :header-cell-style="headerCellStyle"
+            style="width: 100%">
+            <el-table-column
+              label="项目名称"
+              min-width="380"
+              class-name="project-name"
+              >
+              <template slot-scope="{row}">
+                <div class="project-name">
+                  <img :src="row.logoImageUrl" alt="logo">
+                  <span>{{row.name}}</span>
+                  <template v-if="row.displayType === 0">
+                    <span>&nbsp;|&nbsp;{{ DEVICE[row.device] }}&nbsp;|</span>
+                    <span>&nbsp;{{ SCHEDULE_TYPE[row.scheduleType] }}</span>
+                  </template>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column
+              :formatter="({ totalDays }) =>  `${totalDays}天`"
+              label="时长"
+              min-width="100"
+              >
+            </el-table-column>
+            <el-table-column
+              :formatter="({ skuId }) =>  skuId === 301 ? AUDIT_STATUS_MAP[item.auditStatus]: '--'"
+              min-width="110"
+              label="审核状态">
+            </el-table-column>
+            <el-table-column
+              :formatter="({ skuId }) =>  skuId === 301 ? PACKEAGE_STATUS_MAP[item.status] : '--'"
+              min-width="110"
+              label="投放状态">
+            </el-table-column>
+            <el-table-column
+              :formatter="({ remainDays }) =>  `${remainDays}天`"
+              min-width="110"
+              label="剩余天数">
+            </el-table-column>
+            <el-table-column
+              prop="address"
+              width="300"
+              align="center"
+              label="操作">
+              <template slot-scope="{ row }">
+                <template  v-if="row.skuId === 301">
+                <el-row type="flex" justify="space-around">
+                  <el-col :span="8" v-if="allowRenew">
+                    <el-button  type="danger" style="width: 100%"  @click="renew(row,item)">续费</el-button>
+                  </el-col>
+                  <el-col :span="8">
+                    <el-button  style="width: 100%" @click="goToPlanList(item)">设置推广</el-button>
+                  </el-col>
+                </el-row>
+                </template>
+                <p v-else style="textAlign: center">--</p>
+              </template>
+            </el-table-column>
+        </el-table>
+      </div>
       <div class="pagination-container">
-        <el-pagination layout="prev, pager, next, total"
-                       :total="total"
-                       :page-size="query.size"
-                       @current-change="handleCurrentChange"
-                       :current-page="query.page + 1">
+        <el-pagination
+        layout="prev, pager, next, total"
+        :total="total"
+        :page-size="query.size"
+        @current-change="handleCurrentChange"
+        :current-page="query.page + 1">
         </el-pagination>
       </div>
     </main>
@@ -138,7 +128,7 @@
 
 <script>
 import { getUserPackageList, getRenewDetai, renewOrder } from 'api/biaowang-plus'
-import { ProvinceCityMap, RenewConfirm } from './components'
+import { RenewConfirm } from './components'
 import {
   AUDIT_STATUS_MAP,
   PACKEAGE_STATUS_MAP,
@@ -153,8 +143,6 @@ import {
 } from 'constant/bw-plus'
 import { getCnName } from 'util'
 import debounce from 'lodash.debounce'
-import StatusShow from './components/statusShow.vue'
-import { isPro } from 'config'
 import { Message } from 'element-ui'
 import { isSales } from 'util/role'
 import gStore from '../store'
@@ -188,8 +176,6 @@ export default {
       RENEW_OPRATION_STATUS_COPY,
       query: {
         keyword: '',
-        status: [],
-        auditStatus: [],
         size: 10,
         page: 0
       },
@@ -208,29 +194,10 @@ export default {
     }
   },
   methods: {
-    keywordsFormater (args) {
-      const { keywords } = args
-      const length = keywords.length
-      return length > 1 ? `${keywords[0]}等${length}个关键词` : keywords.join('、')
-    },
     handleCurrentChange (page) {
       this.query.page = page - 1
     },
-    citiesFormater (row) {
-      const { cities } = row
-      const length = cities.length
-      const detail = cities.map(city => getCnName(city, this.allAreas)).join('、')
-      if (length >= 362) {
-        return {
-          text: '全国',
-          detail
-        }
-      }
-      return {
-        text: `${getCnName(cities[0], this.allAreas)}等${length}个城市`,
-        detail
-      }
-    },
+
     queryPackageList: debounce(async function (params) {
       const { user_id: userId } = this.$route.query
       try {
@@ -246,26 +213,20 @@ export default {
         this.loading = false
       }
     }, 300),
-    goToPlanList ({ id, phoenixsVersion }) {
-      this.$router.push({ name: 'bw-plus-plan-list', params: { id }, query: { phoenixsVersion } })
-    },
-    goToShop () {
-      const shopLink = isPro
-        ? '//shop.baixing.com/management/'
-        : '//shop-test.baixing.cn/management/'
-      window.open(shopLink)
+    goToPlanList ({ packageId, phoenixsVersion }) {
+      this.$router.push({ name: 'bw-plus-plan-list', params: { id: packageId }, query: { phoenixsVersion } })
     },
     goQueryPrice () {
       this.$router.push({ name: 'bw-plus-query-price', query: { renew: 1 } })
     },
-    async renew (row) {
+    async renew (row, item) {
       const loading = this.$loading({
         lock: true,
         text: 'Loading',
         spinner: 'el-icon-loading',
         background: 'rgba(0, 0, 0, 0.7)'
       })
-      const { id: packageId, renewApplyId } = row
+      const { packageId, renewApplyId } = item
       try {
         const { code, data } = await getRenewDetai({ packageId })
         if (code === 301) {
@@ -305,6 +266,58 @@ export default {
       } finally {
         loading.close()
       }
+    },
+    cellStyle ({ row, column, rowIndex, columnIndex }) {
+      if (columnIndex === 0) {
+        return 'border-color:#FFDECF !important;text-align: left'
+      } else {
+        return 'border-color:#FFDECF !important;text-align: left;padding-left: 15px'
+      }
+    },
+    headerCellStyle ({ row, column, rowIndex, columnIndex }) {
+      if (columnIndex === 0 && rowIndex === 0) {
+        return 'border-color:#FFDECF !important;color:#C67C49;font-size:13px;text-align: left'
+      } else if (columnIndex === 5 && rowIndex === 0) {
+        return 'border-color:#FFDECF !important;color:#C67C49;font-size:13px;text-align: center'
+      } else {
+        return 'border-color:#FFDECF !important;color:#C67C49;padding-left:15px !important;font-size:13px;text-align: left'
+      }
+    },
+    citiesFormater (row) {
+      if (row && row.length > 0) {
+        const detail = row.map(city => getCnName(city, this.allAreas)).join('、')
+        const detailTwo = row.slice(0, 2).map(city => getCnName(city, this.allAreas)).join('、') + `等${row.length}个城市`
+        if (row.length >= 362) {
+          return {
+            text: '全国',
+            detail
+          }
+        }
+        return {
+          text: detailTwo,
+          detail
+        }
+      } else {
+        return {
+          detail: '暂无城市',
+          text: '暂无城市'
+        }
+      }
+    },
+    keywordsFormater (args) {
+      if (args && args.length > 0) {
+        const detail = args.map(keyword => getCnName(keyword, this.allAreas)).join('、')
+        const text = args.slice(0, 3).map(keyword => getCnName(keyword, this.allAreas)).join('、')
+        return {
+          text: text,
+          detail: detail
+        }
+      } else {
+        return {
+          text: '暂无关键词',
+          detail: '暂无关键词'
+        }
+      }
     }
   },
   watch: {
@@ -317,8 +330,6 @@ export default {
     }
   },
   components: {
-    StatusShow,
-    ProvinceCityMap,
     RenewConfirm
   }
 }
@@ -372,6 +383,48 @@ export default {
       color: #303133;
       font-size: 14px;
     }
+  }
+}
+.el-table td, .el-table th.is-leaf,.el-table--border, .el-table--group{
+    border-color: #FFDECF;
+}
+.el-table--border::after, .el-table--group::after, .el-table::before{
+    background-color: #FFDECF;
+}
+.table {
+  margin-bottom: 20px;
+}
+
+.table-titles {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  height: 48px;
+  padding-left: 13px;
+  margin-bottom: 20px;
+  background: #FFF1E4;
+  ul {
+    display: flex;
+    li {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      list-style: none;
+      margin-right: 30px;
+      font-size: 13px;
+      color: #666666;
+    }
+  }
+}
+.project-name {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  img {
+    width: 76px;
+    height: 46px;
+    margin-right: 10px;
   }
 }
 </style>

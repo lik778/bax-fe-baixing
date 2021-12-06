@@ -8,14 +8,15 @@
     style="width: 100%">
         <el-table-column prop="type">
           <template slot-scope="{ row }">
-            {{ row.type }}天 <el-tag class="tag-type" effect="dark" v-if="row.type > 30">送店铺</el-tag>
+            <span class="row-day">{{ row.type }}天</span> <el-tag class="tag-type" effect="dark" v-if="row.type > 30">送店铺</el-tag>
           </template>
         </el-table-column>
         <el-table-column
         label="双端报价"
         prop="both"
-        align="center">
-            <el-table-column align="center" prop="bothSeven" label="7天*24小时（元）">
+        align="center"
+        v-if="showDeviceAll">
+            <el-table-column v-if="showSchedule724" align="center" prop="bothSeven" label="7天*24小时（元）">
                 <template slot-scope="{ row }">
                   <el-popover
                     v-if="clickDisabled(row.bothSeven.price, deviceAvailableStatus.ifAllAvailable)"
@@ -29,7 +30,7 @@
                   <div v-else :class="{ 'active-item': row.bothSeven.index === current.index, 'option-item': true }" @click="cellClick(row.bothSeven)">{{transforPrice(row.bothSeven.price)}}</div>
                 </template>
             </el-table-column>
-            <el-table-column align="center" prop="bothFive" label="5天*8小时（元）">
+            <el-table-column v-if="showSchedule58" align="center" prop="bothFive" label="5天*8小时（元）">
               <template slot-scope="{ row }">
                 <el-popover
                     v-if="clickDisabled(row.bothFive.price, deviceAvailableStatus.ifAllAvailable)"
@@ -46,8 +47,9 @@
         </el-table-column>
         <el-table-column
         label="手机端报价"
-        align="center">
-            <el-table-column align="center" prop="wapSeven" label="7天*24小时（元）">
+        align="center"
+        v-if="showDeviceWap">
+            <el-table-column v-if="showSchedule724" align="center" prop="wapSeven" label="7天*24小时（元）">
               <template slot-scope="{ row }">
                 <el-popover
                     v-if="clickDisabled(row.wapSeven.price, deviceAvailableStatus.ifMobileAvailable)"
@@ -55,13 +57,13 @@
                     width="200"
                     title="提示"
                     trigger="hover"
-                    :content="row.wapSeven.price >= 0 ? '已售出' : '行业太热，暂无报价'">
+                    :content="row.wapSeven.price > 0 ? '已售出' : '行业太热，暂无报价'">
                     <span class="sold-item" slot="reference">--</span>
                 </el-popover>
                 <div v-else :class="{ 'active-item': row.wapSeven.index === current.index, 'option-item': true }" @click="cellClick(row.wapSeven)">{{transforPrice(row.wapSeven.price)}}</div>
               </template>
             </el-table-column>
-            <el-table-column align="center" prop="wapFive" label="5天*8小时（元）">
+            <el-table-column v-if="showSchedule58" align="center" prop="wapFive" label="5天*8小时（元）">
               <template slot-scope="{ row }">
                 <el-popover
                     v-if="clickDisabled(row.wapFive.price, deviceAvailableStatus.ifMobileAvailable)"
@@ -72,14 +74,15 @@
                     :content="row.wapFive.price >= 0 ? '已售出' : '行业太热，暂无报价'">
                     <span class="sold-item" slot="reference">--</span>
                 </el-popover>
-                <div v-else :class="{ 'active-item': row.wapFive.index === current.index, 'option-item': true }" @click="cellClick(row.wapFive)">{{transforPrice(row.wapFive.price)}}</div>
+                <div v-else :class="{ 'active-item': row.wapFive.index === current.index, 'option-item': true}" @click="cellClick(row.wapFive)">{{transforPrice(row.wapFive.price)}}</div>
               </template>
             </el-table-column>
         </el-table-column>
         <el-table-column
         label="电脑端报价"
-        align="center">
-            <el-table-column align="center" prop="pcSeven" label="7天*24小时（元）">
+        align="center"
+        v-if="showDevicePc">
+            <el-table-column v-if="showSchedule724" align="center" prop="pcSeven" label="7天*24小时（元）">
               <template slot-scope="{ row }">
                 <el-popover
                     v-if="clickDisabled(row.pcSeven.price, deviceAvailableStatus.ifPcAvailable)"
@@ -90,10 +93,10 @@
                     :content="row.pcSeven.price >= 0 ? '已售出' : '行业太热，暂无报价'">
                     <span class="sold-item" slot="reference">--</span>
                 </el-popover>
-                <div v-else :class="{ 'active-item': row.pcSeven.index === current.index, 'option-item': true }" @click="cellClick(row.pcSeven)">{{transforPrice(row.pcSeven.price)}}</div>
+                <div v-else :class="{ 'active-item': row.pcSeven.index === current.index, 'option-item': true}" @click="cellClick(row.pcSeven)">{{transforPrice(row.pcSeven.price)}}</div>
               </template>
             </el-table-column>
-            <el-table-column align="center" prop="pcFive" label="5天*8小时（元）">
+            <el-table-column v-if="showSchedule58" align="center" prop="pcFive" label="5天*8小时（元）">
               <template slot-scope="{ row }">
                 <el-popover
                     v-if="clickDisabled(row.pcFive.price, deviceAvailableStatus.ifPcAvailable)"
@@ -104,7 +107,7 @@
                     :content="row.pcFive.price >= 0 ? '已售出' : '行业太热，暂无报价'">
                     <span class="sold-item" slot="reference">--</span>
                 </el-popover>
-                <div v-else :class="{ 'active-item': row.pcFive.index === current.index, 'option-item': true }" @click="cellClick(row.pcFive)">{{transforPrice(row.pcFive.price)}}</div>
+                <div v-else :class="{ 'active-item': row.pcFive.index === current.index, 'option-item': true}" @click="cellClick(row.pcFive)">{{transforPrice(row.pcFive.price)}}</div>
               </template>
             </el-table-column>
         </el-table-column>
@@ -113,6 +116,7 @@
 
 <script>
 import { f2y } from 'util'
+import { DEVICE_ALL, DEVICE_PC, DEVICE_THREE, DEVICE_WAP } from 'constant/bw-plus'
 export default {
   name: 'InqueryResult',
   props: {
@@ -130,33 +134,72 @@ export default {
       type: Object,
       default: () => {},
       require: true
-    }
-  },
-  watch: {
-    currentPrice: {
-      handler (newV, oldV) {
-        if (newV) {
-          this.active = newV.duration > 30
-          this.current = newV
-        }
-      },
-      deep: true,
-      immediate: true
+    },
+    dealPriceRatio: {
+      type: Number,
+      default: 1,
+      require: false
+    },
+    limit: {
+      type: null || Object,
+      default: null,
+      require: false
     }
   },
   data () {
     return {
-      current: this.tableData[0].bothSeven
+      current: this.currentPrice,
+      DEVICE_ALL,
+      DEVICE_PC,
+      DEVICE_WAP,
+      DEVICE_THREE
+    }
+  },
+  watch: {
+    currentPrice: {
+      deep: true,
+      immediate: true,
+      handler (v) {
+        this.current = v
+      }
+    }
+  },
+  computed: {
+    showDeviceAll () {
+      const { limit } = this
+      return !limit || (limit && (limit.platform.includes(DEVICE_ALL) || limit.platform[0] === DEVICE_THREE))
+    },
+    showDevicePc () {
+      const { limit } = this
+      return !limit || (limit && (limit.platform.includes(DEVICE_PC) || limit.platform[0] === DEVICE_THREE))
+    },
+    showDeviceWap () {
+      const { limit } = this
+      return !limit || (limit && (limit.platform.includes(DEVICE_WAP) || limit.platform[0] === DEVICE_THREE))
+    },
+    showSchedule724 () {
+      const { limit } = this
+      return !limit || (limit && limit.schedule.includes(724))
+    },
+    showSchedule58 () {
+      const { limit } = this
+      return !limit || (limit && limit.schedule.includes(58))
     }
   },
   methods: {
     cellClick (value) {
-      this.current = value
-      this.$emit('getValue', value)
+      const { current } = this
+      if (current.index === value.index) {
+        this.current = {}
+      } else {
+        this.current = value
+      }
+      this.$emit('getValue', this.current)
     },
     transforPrice (price) {
+      const { dealPriceRatio } = this
       if (price >= 0) {
-        return f2y(price)
+        return f2y(dealPriceRatio * price)
       }
       return '-'
     },
@@ -200,6 +243,9 @@ export default {
       height: 25px;
       line-height: 24px;
     }
+    .row-day{
+        width: 46px;
+    }
     /deep/ .thead-row{
       th{
         background: #fff1e3 !important;
@@ -210,5 +256,9 @@ export default {
     }
     .sold-item{
       color: #909399;
+    }
+    .diabled{
+      color: #909399;
+      pointer-events: none;
     }
 </style>

@@ -65,8 +65,15 @@ module.exports = {
         ]
       },
       {
-        test: /\.(eot|woff|ttf)$/,
-        loader: 'file-loader'
+        test: /\.(eot|woff|ttf|png|jpg|gif)$/,
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+              limit: 8192
+            }
+          }
+        ]
       }
     ]
   },

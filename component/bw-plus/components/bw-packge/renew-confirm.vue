@@ -1,7 +1,7 @@
 <template>
     <el-dialog
     title="续费确认"
-    :visible.sync="dialogVisible"
+    :visible.sync="dialogVisible_"
     width="48%"
     @close="cancel"
     >
@@ -32,7 +32,7 @@
             type="danger"
             v-for="(item, index) in welfareInfo.filter( o => o.isActive(getCurrentPrice.type, getCurrentPrice.price).active)"
             :key="index">
-            {{item.title}} ({{item.isActive(getCurrentPrice.type, getCurrentPrice.price).detail}})
+            {{item.isActive(getCurrentPrice.type, getCurrentPrice.price).name}} ({{item.isActive(getCurrentPrice.type, getCurrentPrice.price).detail}})
           </el-tag>
         </el-form-item>
         <el-row class="pre-info-row">
@@ -93,17 +93,25 @@ export default {
     },
     showWelfare () {
       const now = dayjs()
-      return dayjs(now).isBetween('2021-11-1', dayjs('2021-11-11'))
+      return dayjs(now).isBetween('2021-12-3', dayjs('2021-12-18')) && (this.getCurrentPrice.type > 30 || f2y(this.getCurrentPrice.price) >= 10000)
     },
     getCurrentPrice () {
       const { priceId, renewInfo: { priceList } } = this
       const currentPrice = priceList.filter(o => o.id.toString() === priceId.toString())[0]
       return currentPrice
+    },
+    dialogVisible_: {
+      get () {
+        return this.dialogVisible
+      },
+      set () {
+        this.$emit('cancel')
+      }
     }
   },
   methods: {
     cancel () {
-      this.$emit('cancel')
+      this.dialogVisible_ = false
     },
     preOrder () {
       this.$emit('preOrder', this.priceId)
