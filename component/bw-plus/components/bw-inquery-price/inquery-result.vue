@@ -8,7 +8,7 @@
     style="width: 100%">
         <el-table-column prop="type">
           <template slot-scope="{ row }">
-            {{ row.type }}天 <el-tag class="tag-type" effect="dark" v-if="row.type > 30">送店铺</el-tag>
+            <span class="row-day">{{ row.type }}天</span> <el-tag class="tag-type" effect="dark" v-if="row.type > 30">送店铺</el-tag>
           </template>
         </el-table-column>
         <el-table-column
@@ -242,6 +242,9 @@ export default {
       border-radius:20px;
       height: 25px;
       line-height: 24px;
+    }
+    .row-day{
+        width: 46px;
     }
     /deep/ .thead-row{
       th{

@@ -37,7 +37,6 @@ export default {
 </script>
 <style lang="scss" scoped>
     .welfare-content{
-      margin-top: 30px;
       &_wrapper{
         display: flex;
       }
