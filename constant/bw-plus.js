@@ -58,9 +58,20 @@ export const APPLY_AUDIT_STATUS_OPTIONS = Object.freeze({
   [APPLY_AUDIT_STATUS_REJECT]: '审核拒绝'
 })
 
-export const DEVICE_ALL = 0 // 全平台
+export const DEVICE_ALL = 0 // 双端
 export const DEVICE_PC = 1 // pc
 export const DEVICE_WAP = 2 // wap
+export const DEVICE_THREE = 3 // 全平台
+export const DEVICE_PROPS = {
+  [DEVICE_THREE]: ['bothFive', 'bothSeven', 'pcFive', 'pcSeven', 'wapFive', 'wapSeven'],
+  [DEVICE_ALL]: ['bothFive', 'bothSeven'],
+  [DEVICE_PC]: ['pcFive', 'pcSeven'],
+  [DEVICE_WAP]: ['wapFive', 'wapSeven']
+}
+export const SCHEDULE_PROPS = {
+  58: ['wapFive', 'bothFive', 'pcFive'],
+  724: ['bothSeven', 'pcSeven', 'wapSeven']
+}
 export const DEVICE = Object.freeze({
   [DEVICE_ALL]: '全平台',
   [DEVICE_PC]: '电脑',
@@ -228,7 +239,7 @@ export const RENEW_OPRATION_STATUS_COPY = 30
 export const RENEW_OPRATION_STATUS_DISABLED = 60
 const showWelfare = () => {
   const now = dayjs()
-  return dayjs(now).isBetween('2021-11-1', dayjs('2021-11-19'))
+  return dayjs(now).isBetween('2021-12-3', dayjs('2021-12-18'))
 }
 
 export const welfareInfo = [
@@ -237,13 +248,14 @@ export const welfareInfo = [
     title: '会员钻石店铺',
     value: (price) => 1200,
     desc: '',
-    content: ['双端适配', '视频展示', '智能接待系统', '支持seo优化'],
+    content: (price) => ['双端适配', '视频展示', '智能接待系统', '支持seo优化'],
     isActive: (duration, price) => {
-      const active = price > 0 && duration >= 90
+      const active = duration >= 90
       return {
         active,
-        tag: active ? `已解锁，赠送${duration}天` : '至少购买90天可解锁',
-        detail: `${duration}天`
+        tag: active ? `已解锁，赠送${duration}天` : '至少购买90天标王可解锁',
+        detail: `${duration}天`,
+        name: '会员钻石店铺'
       }
     },
     show: () => true
@@ -251,17 +263,18 @@ export const welfareInfo = [
   {
     id: 2,
     title: '精准关键词',
-    value: (price) => price > 0 ? Math.floor(f2y(price) / 10000) * 5000 : 5000,
-    desc: '限时11.1-11.18 仅前111名',
-    content: ['一周至尊标王或标王关键词二选一', '每满¥10000即赠2个5热度关键词'],
+    value: (price) => !price || price < 0 ? 10000 : (f2y(price) >= 10000 && f2y(price) < 20000 ? 2 * 5000 : Math.floor(f2y(price) / 20000) * 5 * 5000),
+    desc: '限时12.6-12.17 仅前88名',
+    content: (price) => ['满额即送标王关键词'],
     isActive: (duration, price) => {
       price = price > 0 ? price : 0
       const active = f2y(price) >= 10000
-      const num = Math.floor(f2y(price) / 10000) * 2
+      const num = f2y(price) >= 10000 && f2y(price) < 20000 ? 2 : Math.floor(f2y(price) / 20000) * 5
       return {
         active,
         tag: active ? `已解锁，赠送${num}个` : `还差${10000 - f2y(price)}元即可解锁`,
-        detail: `${num}个`
+        detail: `${num}个`,
+        name: '精准关键词'
       }
     },
     show: showWelfare
@@ -269,18 +282,54 @@ export const welfareInfo = [
   {
     id: 3,
     title: '三网整合营销',
-    value: (price) => 8000,
-    desc: '限时11.1-11.18 仅前30名',
-    content: ['360/搜狗/神马3大搜索引擎首页排名', '365天超长时长'],
+    value: (price) => !price || f2y(price) < 20000 ? 3000 : 8000,
+    desc: '限时12.6-12.17 仅前30名',
+    content: (price) => {
+      if (!price || f2y(price) < 20000) {
+        return ['360/神马/搜狗三网选其一', '投放时间90天']
+      }
+      return ['360/神马/搜狗三网选投放', '投放时间90天']
+    },
     isActive: (duration, price) => {
       price = price > 0 ? price : 0
-      const active = f2y(price) >= 20000
+      const active = f2y(price) >= 10000
       return {
         active,
-        tag: active ? '已解锁，赠送365天' : `还差${20000 - f2y(price)}元即可解锁`,
-        detail: '365天'
+        tag: active ? '已解锁，赠送365天' : `还差${10000 - f2y(price)}元即可解锁`,
+        detail: '90天',
+        name: !price || f2y(price) < 20000 ? '一网营销' : '三网整合营销'
       }
     },
     show: showWelfare
   }
 ]
+
+export const PRODUCT_STATUS_ONLINE = 1
+export const PRODUCT_STATUS_OFLINE = 0
+export const PRODUCT_LIST = Object.freeze([
+  {
+    name: '360标王',
+    day: '180天',
+    device: DEVICE_WAP,
+    hot: true,
+    originPrice: '',
+    currentPrice: '',
+    status: PRODUCT_STATUS_ONLINE,
+    statusDesc: ''
+  },
+  {
+    name: '头条标王',
+    day: [],
+    device: DEVICE_WAP,
+    hot: true,
+    originPrice: '',
+    currentPrice: '',
+    status: PRODUCT_STATUS_ONLINE,
+    statusDesc: ''
+  }
+])
+
+export const SEO_PRODUCT_TYPE = 2
+export const CREATIVE_PRODUCT_TYPE = 0
+export const REGULAR_PRODUCT_TYPE = 1
+export const BAIDUBW_PRODUCT_TYPE = 3

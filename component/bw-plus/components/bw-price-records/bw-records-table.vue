@@ -6,9 +6,9 @@
       v-loading="loading"
       :default-sort="{prop: 'createdTime', order: 'descending'}"
     >
-      <el-table-column fixed prop="id" label="ID" />
-      <el-table-column sortable fixed prop="createdTime" width="170" label="日期" :formatter="dateFormater" />
-      <el-table-column width="150" fixed prop="keywords" label="关键词">
+      <el-table-column prop="id" label="ID" />
+      <el-table-column sortable prop="createdTime" width="170" label="日期" :formatter="dateFormater" />
+      <el-table-column width="150" prop="keywords" label="关键词">
         <template slot-scope="{ row }">
           <el-popover
           placement="top-start"
@@ -23,8 +23,8 @@
           </el-popover>
         </template>
       </el-table-column>
-      <el-table-column prop="applyType" label="报价类型" :formatter="applyTypeFormatter" />
-      <el-table-column width="150" prop="status" label="审核状态">
+      <!-- <el-table-column prop="applyType" label="报价类型" :formatter="applyTypeFormatter" /> -->
+      <el-table-column prop="status" label="审核状态">
         <template slot-scope="{ row }">
           <span :class="transformClass(row.status)">{{APPLY_AUDIT_STATUS_OPTIONS[row.status] || '-'}}</span>
           <el-tooltip v-if="row.status === APPLY_AUDIT_STATUS_REJECT" :class="transformClass(row.status)" :content="row.rejectedReason" placement="top-start">
@@ -35,8 +35,8 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column prop="device" label="平台" :formatter="deviceFormatter" />
-      <el-table-column prop="cities" width="180" label="投放城市" >
+      <!-- <el-table-column prop="device" label="平台" :formatter="deviceFormatter" /> -->
+      <el-table-column prop="cities" width="150" label="投放城市" >
         <template slot-scope="{ row }">
               <el-popover
                 placement="right"
@@ -47,18 +47,19 @@
               </el-popover>
         </template>
       </el-table-column>
-      <el-table-column width="120" prop="scheduleType" label="推广时段" :formatter="scheduleTypeFormater" />
-      <el-table-column prop="days" label="服务时长" :formatter="daysFormater" />
-      <el-table-column width="150" prop="industry" label="推广行业" />
-      <el-table-column width="100" label="绑定客户" prop="userId"/>
-      <el-table-column align="right" fixed="right" label="报价">
+      <!-- <el-table-column width="120" prop="scheduleType" label="推广时段" :formatter="scheduleTypeFormater" />
+      <el-table-column prop="days" label="服务时长" :formatter="daysFormater" /> -->
+      <el-table-column prop="industry" label="推广行业" />
+      <el-table-column align="right" label="报价">
         <template slot-scope="{ row }">
           <span v-if="row.applyType === APPLY_TYPE_NORMAL || row.price">{{f2y(row.price)}}元</span>
           <el-button v-else :disabled="row.status != APPLY_AUDIT_STATUS_PASS " type="text" @click="reviewPrice(row)">查看</el-button>
         </template>
       </el-table-column>
-      <el-table-column width="100" fixed="right" label="操作">
+      <el-table-column width="100" label="绑定客户" prop="userId"/>
+      <el-table-column width="150" fixed="right" label="操作">
         <template slot-scope="{ row }">
+          <el-button @click="getDetail(row)" type="text">查价详情</el-button>
           <el-button @click="preOrder(row)" :disabled="row.operationStatus != OPTION_STATUS_AWAIT_TIDAN" type="text">提单</el-button>
           <i v-if="row.operationStatus === OPTION_STATUS_COPY_URL" @click="preOrder(row)" class="el-icon-document-copy"></i>
         </template>
@@ -104,6 +105,9 @@ export default {
     }
   },
   methods: {
+    getDetail (row) {
+      this.$emit('getDetail', row)
+    },
     keywordsFormater (args) {
       const { keywords } = args
       const length = keywords.length

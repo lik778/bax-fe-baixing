@@ -60,7 +60,7 @@ export async function querySystemResult (params) {
 export async function commit (params) {
   const body = await biaowangPlus
     .post('/apply/user/commit')
-    .send(params)
+    .send(trim(params))
     .json()
   return body
 }
@@ -93,7 +93,7 @@ export async function getInqueryList (params) {
  */
 export async function getUserPackageList (params) {
   const body = await biaowangPlus
-    .get('/package/user/list')
+    .get('/package/user/listPackagesWithSku')
     .query(trim(params))
     .json()
 
