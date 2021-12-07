@@ -17,7 +17,7 @@
                                :is-sales="notAllowSales"
                                :userInfo="userInfo"
                                @track="(action, opts) => handleTrack(action, opts)"
-                               @add-negative-words="(words) =>(promotion.negativeWords = words.concat(promotion.negativeWords))"
+                               @add-negative-words="addNegative"
                                @remove-negative-words="removeNegatives"
                                @remove-other-words="(word) => promotion.negativeWords.splice(word,1)"
                                slot="negative" />
@@ -162,6 +162,10 @@ export default {
     }
   },
   methods: {
+    addNegative (words) {
+      this.promotion.negativeWords = words.concat(this.promotion.negativeWords)
+      console.log(this.promotion.negativeWords)
+    },
     handleTrack (action) {
       const { actionTrackId, userInfo } = this
 
@@ -290,6 +294,7 @@ export default {
       const { negativeWords } = this.promotion
       const originNegativeWords = this.originPromotion.negativeWords
       const newNegativeKeywords = filterExistCurrentWords(originNegativeWords, negativeWords)
+      console.log(newNegativeKeywords, 1)
       const deletedNegativeKeywords = filterExistCurrentWords(negativeWords, originNegativeWords)
       if (newNegativeKeywords.length) data.newNegativeKeywords = newNegativeKeywords
       if (deletedNegativeKeywords.length) data.deletedNegativeKeywords = deletedNegativeKeywords
@@ -304,6 +309,7 @@ export default {
     removeNegatives (words = {}) {
       const index = this.promotion.negativeWords.findIndex(item => item.word === words.word && item.matchType === words.matchType)
       this.promotion.negativeWords.splice(index, 1)
+      console.log(this.promotion.negativeWords)
     }
   },
   watch: {

@@ -379,7 +379,7 @@ export default {
         await this.updateMaterialPictures()
         await this.updateGroup({ groupId, campaignId, moveKeywords: false })
       } catch (e) {
-        this.$message.error(e.message)
+        throw new Error(e.message)
       }
     },
     async validateGroup () {
@@ -434,23 +434,19 @@ export default {
         userId,
         moveKeywords
       })
-      try {
-        await updateGroup(groupId, data)
-        if (moveKeywords) {
-          this.$message.success('操作成功！')
-        } else {
-          this.$refs.keywordListComp.resetSelect()
-          this.$message.success('单元更新成功')
-        }
-        this.handleTrack('leave-page: update-group')
-        if (!moveKeywords) {
-          this.$router.push({
-            name: 'qwt-update-promotion',
-            params: { id: campaignId }
-          })
-        }
-      } catch (error) {
-        throw new Error(error)
+      await updateGroup(groupId, data)
+      if (moveKeywords) {
+        this.$message.success('操作成功！')
+      } else {
+        this.$refs.keywordListComp.resetSelect()
+        this.$message.success('单元更新成功')
+      }
+      this.handleTrack('leave-page: update-group')
+      if (!moveKeywords) {
+        this.$router.push({
+          name: 'qwt-update-promotion',
+          params: { id: campaignId }
+        })
       }
     },
     validMaterialPictures () {
