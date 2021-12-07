@@ -172,7 +172,6 @@ export default {
         if (this.isAllowWord) {
           const matchType = this.upWordAloneDialog === 'accurate' ? 0 : 1
           emitWords = [{ word: val, matchType }]
-          console.log(emitWords)
         } else {
           emitWords = [{ word: val, matchType: 0 }]
         }
