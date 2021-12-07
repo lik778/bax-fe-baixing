@@ -295,7 +295,7 @@ export const welfareInfo = [
       const active = f2y(price) >= 10000
       return {
         active,
-        tag: active ? '已解锁，赠送365天' : `还差${10000 - f2y(price)}元即可解锁`,
+        tag: active ? '已解锁，赠送90天' : `还差${10000 - f2y(price)}元即可解锁`,
         detail: '90天',
         name: !price || f2y(price) < 20000 ? '一网营销' : '三网整合营销'
       }
