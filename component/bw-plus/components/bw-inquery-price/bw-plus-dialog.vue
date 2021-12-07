@@ -20,8 +20,9 @@
     <div v-else><p>{{BwPlusDialogMsg.content}}</p></div>
     <span slot="footer" class="dialog-footer">
         <el-button size="small" @click="$emit('close')">取 消</el-button>
-        <router-link v-if="BwPlusDialogMsg.type === 'success'" to="/main/bw-plus/price-records"><el-button size="small" type="primary">查看审核进度</el-button></router-link>
-        <el-button v-else size="small" @click="$emit('close')">确 定</el-button>
+        <router-link v-if="BwPlusDialogMsg.type === 'success' && BwPlusDialogMsg.skipManualAudit" :to="`/main/bw-plus/price-records?applyId=${commitInfo.applyId}&skipAudit=${commitInfo.skipAudit}`"><el-button size="small" type="primary">去提单</el-button></router-link>
+        <router-link v-if="BwPlusDialogMsg.type === 'success' && !BwPlusDialogMsg.skipManualAudit" to="/main/bw-plus/price-records?applyId"><el-button size="small" type="primary">查看审核进度</el-button></router-link>
+        <el-button v-if="BwPlusDialogMsg.type === 'error'" size="small" @click="$emit('close')">确 定</el-button>
     </span>
     </el-dialog>
 </template>
@@ -31,6 +32,11 @@ export default {
   name: 'bw-plus-dialog',
   props: {
     BwPlusDialogMsg: {
+      type: Object,
+      default: () => {},
+      require: true
+    },
+    commitInfo: {
       type: Object,
       default: () => {},
       require: true
