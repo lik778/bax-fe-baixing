@@ -7,7 +7,8 @@
 示例：
 粮食烘干机
 粮食烘干塔
-…"></el-input>
+…
+查价前请先对比右侧是否属于禁售行业"></el-input>
                 </el-col>
                 <el-col class="more-tips" :span="8">
                     <InvalidIndustry/>
@@ -335,8 +336,9 @@ export default {
     }
   }
   .industry-tips{
+    font-size: 14px;
     margin: 6px 0;
-    color: #E6A23C;
+    color: #F56C6C;
     line-height: 18px;
   }
   .more-tips{
