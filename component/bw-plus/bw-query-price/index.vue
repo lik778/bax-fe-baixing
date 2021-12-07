@@ -37,7 +37,7 @@
 <script>
 import { InqueryForm, KeywordHotDetail, Title, InqueryResult, BwPlusDialog, WelfareLayout, ErrorFooter, CommitDialog, SoldCityLayout, BwAdditionProducts, BwCreativity } from '../components'
 import { querySystemResult, commit } from 'api/biaowang-plus'
-import { APPLY_TYPE_NORMAL, APPLY_TYPE_ERROR, DEVICE_PROPS, DEVICE_THREE, SEO_PRODUCT_TYPE, CREATIVE_PRODUCT_TYPE, INDUSTRY_MANUAL_AUDITTYE } from 'constant/bw-plus'
+import { APPLY_TYPE_NORMAL, APPLY_TYPE_ERROR, DEVICE_PROPS, DEVICE_THREE, SEO_PRODUCT_TYPE, CREATIVE_PRODUCT_TYPE } from 'constant/bw-plus'
 import { f2y } from 'util'
 import debounce from 'lodash.debounce'
 export default {
@@ -166,6 +166,21 @@ export default {
     }
   },
   methods: {
+    getIndustryAuditType (industryAuditResult, industryCn) {
+      if (industryAuditResult && industryAuditResult.industryManualAuditType) {
+        switch (industryAuditResult.industryManualAuditType) {
+          case 1:
+            return `系统已经帮你判定为“${industryCn}”行业，但由于该关键词容易误判, 需要人工审核，审核预计1-3个工作日，去查看审核进度`
+          case 2:
+            return `系统已经帮你判定为“${industryCn}”行业，但由于该关键词容易误判, 需要人工审核，审核预计1-3个工作日，去查看审核进度`
+          case 3:
+            return `系统已经帮你判定为“${industryCn}”行业，但由于该关键词竞争激烈, 需要人工审核，审核预计1-3个工作日，去查看审核进度`
+          default:
+            return ''
+        }
+      }
+      return ''
+    },
     cancel () {
       this.isSubmit = false
       this.isPending = false
@@ -219,7 +234,7 @@ export default {
           this.BwPlusDialogMsg = {
             dialogVisible: true,
             type: 'success',
-            content: industryAuditResult.skipManualAudit ? '当前报价无需人工审核哦！可以立即提单！' : INDUSTRY_MANUAL_AUDITTYE[industryAuditResult.industryManualAuditType],
+            content: industryAuditResult.skipManualAudit ? '当前报价无需人工审核哦！可以立即提单！' : this.getIndustryAuditType(industryAuditResult, queryInfo.industryCn),
             title: '提交成功',
             ...industryAuditResult
           }
