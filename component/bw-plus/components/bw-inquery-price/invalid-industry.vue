@@ -6,7 +6,7 @@
         <ul>
             <li v-for="(item, index) in INVALID_INDUSTRY" :key="index">{{item}}</li>
         </ul>
-        <span class="invalid-tips" slot="reference">禁售行业<i class="el-icon-warning-outline"></i></span>
+        <span class="invalid-tips" slot="reference">禁售行业<i class="el-icon-question"></i></span>
     </el-popover>
 </template>
 
@@ -25,8 +25,8 @@ export default {
     .invalid-tips{
         color: #909399;
     }
-    .el-icon-warning-outline{
+    .el-icon-question{
         color: #F56C6C;
-        margin-left: 4px;
+        margin-left: 2px;
     }
 </style>

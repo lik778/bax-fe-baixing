@@ -170,11 +170,11 @@ export default {
       if (industryAuditResult && industryAuditResult.industryManualAuditType) {
         switch (industryAuditResult.industryManualAuditType) {
           case 1:
-            return `系统已经帮你判定为“${industryCn}”行业，但由于该关键词容易误判, 需要人工审核，审核预计1-3个工作日，去查看审核进度`
+            return `系统已经帮你判定为“${industryCn}”行业，但由于该关键词容易误判, 需要人工审核，审核预计24小时内完成，去查看审核进度`
           case 2:
-            return `系统已经帮你判定为“${industryCn}”行业，但由于该关键词容易误判, 需要人工审核，审核预计1-3个工作日，去查看审核进度`
+            return `系统已经帮你判定为“${industryCn}”行业，但由于该关键词容易误判, 需要人工审核，审核预计24小时内完成，去查看审核进度`
           case 3:
-            return `系统已经帮你判定为“${industryCn}”行业，但由于该关键词竞争激烈, 需要人工审核，审核预计1-3个工作日，去查看审核进度`
+            return `系统已经帮你判定为“${industryCn}”行业，但由于该关键词竞争激烈, 需要人工审核，审核预计24小时内完成，去查看审核进度`
           default:
             return ''
         }
