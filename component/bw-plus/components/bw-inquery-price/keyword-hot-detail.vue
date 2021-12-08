@@ -30,9 +30,12 @@ export default {
       require: true
     }
   },
-  data () {
-    return {
-      keywordHotDetail: this.tableData
+  watch: {
+    tableData: {
+      deep: true,
+      handler (v) {
+        console.log('v', v)
+      }
     }
   }
 }

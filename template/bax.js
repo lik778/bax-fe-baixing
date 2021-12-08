@@ -253,7 +253,7 @@ VueRouter.prototype.replace = function replace (route) {
 
 const bwPlusRoutes = [
   {
-    component: () => import('com/bw-plus/bw-query-price'),
+    component: () => import('com/bw-plus/bw-query-price/index'),
     path: '/main/bw-plus/query-price',
     name: 'bw-plus-query-price'
   },

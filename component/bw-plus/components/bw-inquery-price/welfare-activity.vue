@@ -70,14 +70,14 @@ export default {
             margin-right: 30px;
         }
         &_tag{
-            width: 134px;
+            width: 150px;
             height: 30px;
             display: block;
             position: absolute;
             background-image: linear-gradient(125deg, #FFC967 0%, #FFF4A0 100%);
             border-radius: 12px 4px 4px 4px;
             right: -8px;
-            top: -8px;
+            top: -16px;
             font-size: 12px;
             color: #CD260A;
             text-align: center;
