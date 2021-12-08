@@ -205,7 +205,7 @@ export default {
     negativeWordAlone
   },
   async created () {
-    const { userId } = qs.parse(location.search)
+    const { user_id: userId } = qs.parse(location.search)
     const { data } = await getWordAuthority({ userId })
     this.isAllowWord = data !== 0
   }

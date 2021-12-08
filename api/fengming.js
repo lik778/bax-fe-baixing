@@ -881,6 +881,7 @@ export async function detect (params) {
 }
 
 export async function getWordAuthority (params) {
+  console.log(params)
   const body = await fengming
     .get('/user/check/agent')
     .query(reverseCamelcase(params))

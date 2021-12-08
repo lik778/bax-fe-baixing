@@ -403,7 +403,7 @@ export default {
     f2y
   },
   async mounted () {
-    const { userId } = qs.parse(location.search)
+    const { user_id: userId } = qs.parse(location.search)
     const { data } = await getWordAuthority({ userId })
     this.isAllowWord = data !== 0
   }
