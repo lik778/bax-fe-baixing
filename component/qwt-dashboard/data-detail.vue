@@ -143,13 +143,13 @@
             type="text"
             size="small"
             :disabled="row.enableInNegativeWords || row.enableInKeywords || !notAllowNormalUser()"
-            @click="addCampaignNegativeKeyword(row)"
+            @click="addCampaignNegativeKeyword(row,'plan')"
           >设为计划否词</el-button>
           <el-button
             type="text"
             size="small"
             :disabled="row.enableInNegativeWords || row.enableInKeywords || !notAllowNormalUser()"
-            @click="addGroupNegativeKeyword(row)"
+            @click="addGroupNegativeKeyword(row,'unit')"
           >设为单元否词</el-button>
           <el-tooltip
             effect="dark"
@@ -161,7 +161,6 @@
         </div>
       </el-table-column>
     </el-table>
-
     <footer>
       <div class="total" v-if="!!statistics.length && dimension !== DIMENSION_SEARCH_KEYWORD ">
         <span>
@@ -181,14 +180,20 @@
         @current-change="onCurrentChange">
       </bax-pagination>
     </footer>
+    <negativeWordAlone
+    :visible="visibleDialog"
+    @close="visibleDialog = false"
+    @upWord="upWords"
+    />
   </div>
 </template>
 
 <script>
 import BaxPagination from 'com/common/pagination'
-import { updateCampaign, updateGroup } from 'api/fengming'
+import { updateCampaign, updateGroup, getWordAuthority } from 'api/fengming'
 import BaxInput from 'com/common/bax-input'
 import PromotionKeywordTip from 'com/widget/promotion-keyword-tip'
+import qs from 'query-string'
 import {
   DIMENSION_CAMPAIGN,
   DIMENSION_GROUP,
@@ -207,6 +212,7 @@ import track from 'util/track'
 import { toFloat, f2y } from 'util/kit'
 import { Message } from 'element-ui'
 import { isNormalUser } from 'util/role'
+import negativeWordAlone from 'com/common/qwt/negative-word-alone'
 
 const isArray = Array.isArray
 export default {
@@ -214,7 +220,8 @@ export default {
   components: {
     BaxPagination,
     BaxInput,
-    PromotionKeywordTip
+    PromotionKeywordTip,
+    negativeWordAlone
   },
   props: {
     statistics: {
@@ -257,10 +264,47 @@ export default {
       DIMENSION_GROUP,
       DIMENSION_KEYWORD,
       DIMENSION_SEARCH_KEYWORD,
-      SEM_PLATFORM_SOGOU
+      SEM_PLATFORM_SOGOU,
+      visibleDialog: false,
+      tableItem: {},
+      isPlanUnit: '',
+      isAllowWord: false
     }
   },
   methods: {
+    upWords (wordType) {
+      if (wordType === '') return
+      const type = wordType === 'accurate' ? 0 : 1
+      if (this.isPlanUnit === 'plan') {
+        this.planWordApi(this.tableItem, type)
+      } else {
+        this.unitWordApi(this.tableItem, type)
+      }
+    },
+    planWordApi (item, matchType = 0) {
+      const { query: { user_id: userId } } = this.$route
+      const { campaignId, queryWord } = item
+      updateCampaign(campaignId, { newNegativeKeywords: [{ word: queryWord, matchType }], userId })
+        .then(() => {
+          Message({
+            type: 'success',
+            message: `成功添加 ${queryWord} 为计划否定关键词`
+          })
+          this.$emit('refresh')
+        })
+    },
+    unitWordApi (item, matchType = 0) {
+      const { groupId, queryWord } = item
+      const { query: { user_id: userId } } = this.$route
+      updateGroup(groupId, { newNegativeKeywords: [{ word: queryWord, matchType }], userId })
+        .then(() => {
+          Message({
+            type: 'success',
+            message: `成功添加 ${queryWord} 为单元否定关键词`
+          })
+          this.$emit('refresh')
+        })
+    },
     async sortChange ({ column, prop, order }) {
       this.$emit('sortChange', { column, prop, order })
     },
@@ -285,29 +329,25 @@ export default {
           this.$emit('refresh')
         })
     },
-    addCampaignNegativeKeyword (item) {
-      const { query: { user_id: userId } } = this.$route
-      const { campaignId, queryWord } = item
-      updateCampaign(campaignId, { newNegativeKeywords: [{ word: queryWord }], userId })
-        .then(() => {
-          Message({
-            type: 'success',
-            message: `成功添加 ${queryWord} 为计划否定关键词`
-          })
-          this.$emit('refresh')
-        })
+    addCampaignNegativeKeyword (item, word) {
+      if (this.isAllowWord) {
+        this.visibleDialog = true
+        this.tableItem = item
+        this.isPlanUnit = word
+      } else {
+        this.visibleDialog = false
+        this.planWordApi(item)
+      }
     },
-    addGroupNegativeKeyword (item) {
-      const { groupId, queryWord } = item
-      const { query: { user_id: userId } } = this.$route
-      updateGroup(groupId, { newNegativeKeywords: [{ word: queryWord }], userId })
-        .then(() => {
-          Message({
-            type: 'success',
-            message: `成功添加 ${queryWord} 为单元否定关键词`
-          })
-          this.$emit('refresh')
-        })
+    addGroupNegativeKeyword (item, word) {
+      if (this.isAllowWord) {
+        this.visibleDialog = true
+        this.tableItem = item
+        this.isPlanUnit = word
+      } else {
+        this.visibleDialog = false
+        this.unitWordApi(item)
+      }
     },
     async onChangePrice (userPrice, { groupId, keywordId }) {
       const { query: { user_id: userId } } = this.$route
@@ -361,6 +401,11 @@ export default {
     },
     fmtCpcRanking,
     f2y
+  },
+  async mounted () {
+    const { user_id: userId } = qs.parse(location.search)
+    const { data } = await getWordAuthority({ userId })
+    this.isAllowWord = data !== 0
   }
 }
 </script>

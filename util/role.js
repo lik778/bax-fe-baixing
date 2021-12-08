@@ -16,6 +16,12 @@ const ROLES_ENUM = [
   { name: '凤鸣运营', name_en: 'FENGMING_OPERATOR' },
   { name: '供应商审核', name_en: 'VENDOR_OPERATOR' }
 ]
+const USES_ID = [
+  1001,
+  1002,
+  1003,
+  1004
+]
 
 export function isSales (roles) {
   const currentRoles = normalizeRoles(roles)
@@ -23,6 +29,11 @@ export function isSales (roles) {
     'AGENT_SALES',
     'BAIXING_SALES'
   ])
+}
+
+export function isWordUser (id) {
+  const res = USES_ID.some(item => item === id)
+  return res
 }
 
 // global

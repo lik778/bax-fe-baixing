@@ -879,3 +879,12 @@ export async function detect (params) {
     .json()
   return body
 }
+
+export async function getWordAuthority (params) {
+  console.log(params)
+  const body = await fengming
+    .get('/user/check/agent')
+    .query(reverseCamelcase(params))
+    .json()
+  return body
+}
