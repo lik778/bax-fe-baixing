@@ -1,7 +1,7 @@
 import qs from 'query-string'
 import { reverseCamelcase, toCamelcase } from 'object-keys-mapping'
 
-import { fengming, trim, api } from './base'
+import { fengming, trim } from './base'
 import { getCurrentBalanceBreif } from './account'
 import { isPro } from 'config'
 import { paginationWrapper, isObj } from 'util'
@@ -881,7 +881,7 @@ export async function detect (params) {
 }
 
 export async function getWordAuthority (params) {
-  const body = await api
+  const body = await fengming
     .get('/user/check/agent')
     .query(reverseCamelcase(params))
     .json()

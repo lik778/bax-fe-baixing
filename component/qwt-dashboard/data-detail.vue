@@ -193,6 +193,7 @@ import BaxPagination from 'com/common/pagination'
 import { updateCampaign, updateGroup, getWordAuthority } from 'api/fengming'
 import BaxInput from 'com/common/bax-input'
 import PromotionKeywordTip from 'com/widget/promotion-keyword-tip'
+import qs from 'query-string'
 import {
   DIMENSION_CAMPAIGN,
   DIMENSION_GROUP,
@@ -402,7 +403,8 @@ export default {
     f2y
   },
   async mounted () {
-    const { data } = await getWordAuthority()
+    const { userId } = qs.parse(location.search)
+    const { data } = await getWordAuthority({ userId })
     this.isAllowWord = data !== 0
   }
 }

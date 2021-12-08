@@ -77,6 +77,7 @@ import { NEGATIVE_KEYWORDS_MAX } from 'constant/fengming'
 import { getWordAuthority } from 'api/fengming'
 import { validateKeyword } from 'util/campaign'
 import { getNotExistWords } from 'util/group'
+import qs from 'query-string'
 export default {
   name: 'negative-words',
   props: {
@@ -204,7 +205,8 @@ export default {
     negativeWordAlone
   },
   async created () {
-    const { data } = await getWordAuthority()
+    const { userId } = qs.parse(location.search)
+    const { data } = await getWordAuthority({ userId })
     this.isAllowWord = data !== 0
   }
 

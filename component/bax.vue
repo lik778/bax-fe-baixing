@@ -141,7 +141,7 @@ export default {
       this.salesInfo.userId = +uid
       this.salesInfo.salesId = +salesId
     }
-    await getWordAuthority()
+    await getWordAuthority({ userId })
   },
   async mounted () {
     // source为当前用户是否是以优化师角色进入bax
