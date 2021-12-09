@@ -166,15 +166,15 @@ export default {
     }
   },
   methods: {
-    getIndustryAuditType (industryAuditResult, industryCn) {
+    getIndustryAuditType (industryAuditResult) {
       if (industryAuditResult && industryAuditResult.industryManualAuditType) {
         switch (industryAuditResult.industryManualAuditType) {
           case 1:
-            return `系统已经帮你判定为“${industryCn}”行业，但由于该关键词容易误判, 需要人工审核，审核预计24小时内完成，去查看审核进度`
+            return '需人工审核（该关键词容易误判，最终提单价格依据人工审核结果）'
           case 2:
-            return `系统已经帮你判定为“${industryCn}”行业，但由于该关键词容易误判, 需要人工审核，审核预计24小时内完成，去查看审核进度`
+            return '需人工审核（该关键词容易误判，最终提单价格依据人工审核结果）'
           case 3:
-            return `系统已经帮你判定为“${industryCn}”行业，但由于该关键词竞争激烈, 需要人工审核，审核预计24小时内完成，去查看审核进度`
+            return '需人工审核（该关键词竞争激烈，最终提单价格依据人工审核结果）'
           default:
             return ''
         }
@@ -234,7 +234,7 @@ export default {
           this.BwPlusDialogMsg = {
             dialogVisible: true,
             type: 'success',
-            content: industryAuditResult.skipManualAudit ? '当前报价无需人工审核哦！可以立即提单！' : this.getIndustryAuditType(industryAuditResult, queryInfo.industryCn),
+            content: industryAuditResult.skipManualAudit ? '当前报价无需人工审核哦！可以立即提单！' : `${this.getIndustryAuditType(industryAuditResult)}，审核预计24小时内完成，去查看审核进度`,
             title: '提交成功',
             ...industryAuditResult
           }
@@ -298,6 +298,12 @@ export default {
           this.$nextTick(() => {
             this.$refs.viewScrollTop.scrollIntoView()
           })
+          if (!data.industryAuditResult.skipManualAudit) {
+            const content = this.getIndustryAuditType(data.industryAuditResult)
+            this.$alert(content, '提示', {
+              confirmButtonText: '确定'
+            })
+          }
         } else {
           this.$message({
             message: message,

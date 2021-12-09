@@ -149,10 +149,9 @@ export default {
   },
   computed: {
     industryTips () {
-      const { industryList, checkResult: { industry, skipManualAudit, passed } } = this
-      const industryCn = industryList.find(o => o.name === industry).description
+      const { checkResult: { skipManualAudit, passed } } = this
       if (passed) {
-        return skipManualAudit ? `系统已帮你判断为“${industryCn}”行业，系统判断行业无需审核，可直接提单` : `系统已经帮你判定为“${industryCn}”行业，由于该关键词容易误判，需要人工审核`
+        return skipManualAudit ? '可直接提单（系统判断行业无需审核）' : '需人工审核（该关键词竞争激烈，最终提单价格依据人工审核结果）'
       }
       return ''
     },
