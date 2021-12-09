@@ -15,9 +15,11 @@
           <negative-words-comp :negative-words="promotion.negativeWords"
                                :all-words="promotion.negativeWords"
                                :is-sales="notAllowSales"
+                               :userInfo="userInfo"
                                @track="(action, opts) => handleTrack(action, opts)"
-                               @add-negative-words="(words) =>(promotion.negativeWords = words.concat(promotion.negativeWords))"
-                               @remove-negative-words="(idx) => promotion.negativeWords.splice(idx, 1)"
+                               @add-negative-words="addNegative"
+                               @remove-negative-words="removeNegatives"
+                               @remove-other-words="(word) => promotion.negativeWords.splice(word,1)"
                                slot="negative" />
         </promotion-comp>
       </div>
@@ -40,7 +42,6 @@
                           :is-sales="notAllowSales" />
       </div>
     </div>
-
     <!-- 更新推广 -->
     <div class="module">
       <div class="content">
@@ -161,6 +162,9 @@ export default {
     }
   },
   methods: {
+    addNegative (words) {
+      this.promotion.negativeWords = words.concat(this.promotion.negativeWords)
+    },
     handleTrack (action) {
       const { actionTrackId, userInfo } = this
 
@@ -299,6 +303,10 @@ export default {
         name: 'qwt-create-group',
         query: { campaignId: this.campaignId }
       })
+    },
+    removeNegatives (words = {}) {
+      const index = this.promotion.negativeWords.findIndex(item => item.word === words.word && item.matchType === words.matchType)
+      this.promotion.negativeWords.splice(index, 1)
     }
   },
   watch: {
