@@ -548,7 +548,7 @@ export default {
 
     async createPromotion () {
       if (!this.$refs.contract.$data.isAgreement) {
-        console.log('这是创建总时间' + TimeTracker(2))
+        // console.log('这是创建总时间' + TimeTracker(2))
         return this.$message.error('请阅读并勾选同意服务协议，再进行下一步操作')
       }
       if (this.isCreating) {
@@ -567,6 +567,16 @@ export default {
         time: Date.now() / 1000 | 0,
         baxId: userInfo.id,
         actionTrackId
+      })
+      // 记录操作的时间
+      track({
+        action: 'click-button: create-time',
+        baixingId: userInfo.baixingId,
+        time: Date.now() / 1000 | 0,
+        baxId: userInfo.id,
+        createPromoteTime: TimeTracker(2),
+        createContent: this.inputTime,
+        inputkeywords: this.keyTime
       })
       try {
         await this._createPromotion(promotion)
@@ -878,13 +888,13 @@ export default {
     },
     'queryWord' (newV) {
       this.keyTime = wordTime('keyword')
-    },
-    'keyTime' (newV) {
-      console.log('这是添加关键词的时间' + newV)
-    },
-    'inputTime' (newV) {
-      console.log('这是输入的总时间' + newV)
     }
+    // 'keyTime' (newV) {
+    //   console.log('这是添加关键词的时间' + newV)
+    // },
+    // 'inputTime' (newV) {
+    //   console.log('这是输入的总时间' + newV)
+    // }
   }
 }
 </script>
