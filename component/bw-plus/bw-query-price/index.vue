@@ -351,7 +351,6 @@ export default {
           return ({ ...additionalProduct, currentPrice: resultPrice, options, checked: false })
         }
       })
-      console.log(this.productList)
     }
   }
 }

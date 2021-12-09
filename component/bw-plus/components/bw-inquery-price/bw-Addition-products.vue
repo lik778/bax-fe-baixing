@@ -24,6 +24,7 @@ import Title from './title.vue'
 import ProductItem from '../common/product-item/index.vue'
 import InqueryResult from './inquery-result.vue'
 import clone from 'clone'
+import { bwPlusTrack } from '../../utils/track'
 export default {
   name: 'bw-addition-products',
   components: {
@@ -107,7 +108,12 @@ export default {
       this.currentProduct = clone(product)
     },
     getCheckedPrice (value) {
+      const { currentProduct } = this
       this.checkedPrice = value
+      bwPlusTrack('bwplus: click product parameters', {
+        productName: currentProduct.title,
+        ...value
+      })
     },
     confirmCheckedPrice () {
       const { id: productId } = this.currentProduct

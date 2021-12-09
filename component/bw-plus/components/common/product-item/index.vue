@@ -9,6 +9,7 @@
                     trigger="hover"
                     popper-class="detail-popover"
                     class="detail-popover"
+                    @show="showDetail"
                     >
                     <div class="product-detail">
                         <div class="image-wrapper">
@@ -40,6 +41,7 @@
 import { DEVICE, SCHEDULE_TYPE, SEO_PRODUCT_TYPE, DEVICE_PC, DEVICE_WAP, REGULAR_PRODUCT_TYPE, CREATIVE_PRODUCT_TYPE } from 'constant/bw-plus'
 import { f2y } from 'util'
 import { DEVICE_ALL } from 'constant/fengming-report'
+import { bwPlusTrack } from '../../../utils/track'
 export default {
   name: 'product-item',
   props: {
@@ -130,6 +132,10 @@ export default {
     }
   },
   methods: {
+    showDetail () {
+      const { product } = this
+      bwPlusTrack('bwplus: hover product', { productName: product.title })
+    },
     checkProduct () {
       if (this.notAllowCheck.disable) {
         let message = this.notAllowCheck.reason || '请先勾选百度标王产品！'
@@ -151,6 +157,9 @@ export default {
         return
       }
       const { product } = this
+      if (!product.checked) {
+        bwPlusTrack('bwplus: click product', { productName: product.title })
+      }
       this.$emit('check', product)
     },
     changeCombo () {
