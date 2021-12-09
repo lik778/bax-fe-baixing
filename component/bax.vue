@@ -26,7 +26,7 @@
     <!-- <huo-dong-intro :show="huoDongIntroVisible" @close="huoDongIntroVisible = false" /> -->
     <huo-dong-btn v-if="inActivityPeriod" />
     <back-to-top />
-    <WechatQrcode/>
+    <!-- <WechatQrcode/> -->
     <!-- <wechat-scan /> -->
     <Notification />
     <chat />
@@ -38,7 +38,7 @@
 import NewUserIntro from './common/new-user-intro'
 import Notification from './common/notification'
 import AddUserLead from './common/add-user-lead'
-import WechatQrcode from './widget/wechat-qrcode.vue'
+// import WechatQrcode from './widget/wechat-qrcode.vue'
 // import WechatScan from './widget/wechat-scan'
 // import BwShoppingCart from './common/bw-shopping-cart.vue'
 import BackToTop from './widget/back-to-top'
@@ -69,7 +69,7 @@ export default {
     NewUserIntro,
     Notification,
     AddUserLead,
-    WechatQrcode,
+    // WechatQrcode,
     // BwShoppingCart,
     // WechatScan,
     BackToTop,
