@@ -151,7 +151,7 @@ export default {
     industryTips () {
       const { checkResult: { skipManualAudit, passed } } = this
       if (passed) {
-        return skipManualAudit ? '可直接提单（系统判断行业无需审核）' : '需人工审核（该关键词竞争激烈，最终提单价格依据人工审核结果）'
+        return skipManualAudit ? '可直接提单（系统判断行业无需审核）' : '需人工审核（该关键词容易误判，最终提单价格依据人工审核结果）'
       }
       return ''
     },

@@ -295,15 +295,19 @@ export default {
             this.currentPrice = data.keywordPriceList && this.findCurrentPrice(data.keywordPriceList[0])
           }
           additionalProducts && this.transformProductList(additionalProducts)
-          this.$nextTick(() => {
-            this.$refs.viewScrollTop.scrollIntoView()
-          })
           if (!data.industryAuditResult.skipManualAudit) {
             const content = this.getIndustryAuditType(data.industryAuditResult)
             this.$alert(content, '提示', {
-              confirmButtonText: '确定'
+              confirmButtonText: '确定',
+              callback: () => {
+                this.$refs.viewScrollTop.scrollIntoView()
+              }
             })
+            return
           }
+          this.$nextTick(() => {
+            this.$refs.viewScrollTop.scrollIntoView()
+          })
         } else {
           this.$message({
             message: message,
