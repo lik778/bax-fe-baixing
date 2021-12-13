@@ -96,7 +96,12 @@ export default {
     }
   },
   async mounted () {
+    const { query: { skipAudit, applyId } } = this.$route
     await this.getRecord()
+    if (skipAudit) {
+      await this.getPreInfo({ id: applyId })
+      this.isPreInfo = true
+    }
   },
   methods: {
     getDetail (row) {

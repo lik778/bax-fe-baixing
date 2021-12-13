@@ -29,7 +29,7 @@
         <el-card class="box-card" v-if="showErrorFooter">
             <ErrorFooter :queryResult="queryResult"/>
         </el-card>
-        <BwPlusDialog v-if="BwPlusDialogMsg.dialogVisible" :destroy-on-close="true" :BwPlusDialogMsg="BwPlusDialogMsg" @close="BwPlusDialogMsg.dialogVisible = false"/>
+        <BwPlusDialog :commitInfo="commitInfo" v-if="BwPlusDialogMsg.dialogVisible" :destroy-on-close="true" :BwPlusDialogMsg="BwPlusDialogMsg" @close="BwPlusDialogMsg.dialogVisible = false"/>
         <CommitDialog :welfare="getWelfareInfo" v-if="isSubmit" :destroy-on-close="true" :allAreas="allAreas" :preInfo="preInfo" :visible="isSubmit" :isPending="isPending" @cancel="cancel" @submit="submit"/>
     </section>
 </template>
@@ -90,7 +90,8 @@ export default {
       ifSoldAvailable: false, // 是否存在可售卖的平台,
       isPending: false,
       productList: [],
-      checkedProducts: []
+      checkedProducts: [],
+      commitInfo: {}
     }
   },
   computed: {
@@ -165,6 +166,21 @@ export default {
     }
   },
   methods: {
+    getIndustryAuditType (industryAuditResult) {
+      if (industryAuditResult && industryAuditResult.industryManualAuditType) {
+        switch (industryAuditResult.industryManualAuditType) {
+          case 1:
+            return '需人工审核（该关键词容易误判，最终提单价格依据人工审核结果）'
+          case 2:
+            return '需人工审核（该关键词容易误判，最终提单价格依据人工审核结果）'
+          case 3:
+            return '需人工审核（该关键词竞争激烈，最终提单价格依据人工审核结果）'
+          default:
+            return ''
+        }
+      }
+      return ''
+    },
     cancel () {
       this.isSubmit = false
       this.isPending = false
@@ -189,7 +205,7 @@ export default {
     },
     submit: debounce(async function () {
       this.isPending = true
-      const { error, overHeat, priceId, tempPvId, industryError } = this.queryResult
+      const { error, overHeat, priceId, tempPvId, industryError, industryAuditResult } = this.queryResult
       const { userId: targetUserId } = this.salesInfo
       const { queryInfo, applyTypeFilter, currentPrice, checkedAdditionProduct: additionProduct } = this
       const baseParams = { targetUserId, applyType: currentPrice.price === 0 ? 2 : applyTypeFilter(error, overHeat, industryError) }
@@ -218,9 +234,11 @@ export default {
           this.BwPlusDialogMsg = {
             dialogVisible: true,
             type: 'success',
-            content: '审核预计1-3个工作日，去查看审核进度',
-            title: '提交成功'
+            content: industryAuditResult.skipManualAudit ? '当前报价无需人工审核哦！可以立即提单！' : `${this.getIndustryAuditType(industryAuditResult)}，审核预计24小时内完成，去查看审核进度`,
+            title: '提交成功',
+            ...industryAuditResult
           }
+          this.commitInfo = data
         }
         if (code === 4080) {
           this.BwPlusDialogMsg = {
@@ -277,6 +295,16 @@ export default {
             this.currentPrice = data.keywordPriceList && this.findCurrentPrice(data.keywordPriceList[0])
           }
           additionalProducts && this.transformProductList(additionalProducts)
+          if (!data.industryAuditResult.skipManualAudit) {
+            const content = this.getIndustryAuditType(data.industryAuditResult)
+            this.$alert(content, '提示', {
+              confirmButtonText: '确定',
+              callback: () => {
+                this.$refs.viewScrollTop.scrollIntoView()
+              }
+            })
+            return
+          }
           this.$nextTick(() => {
             this.$refs.viewScrollTop.scrollIntoView()
           })

@@ -7,17 +7,20 @@
 示例：
 粮食烘干机
 粮食烘干塔
-…"></el-input>
+…
+查价前请先对比右侧是否属于禁售行业"></el-input>
                 </el-col>
-                <el-col v-if="!checkResult.passed" :span="8" :push="1">
-                  <ul class="reject-result">
-                    <li v-for="(item, index) in Object.keys(checkResult.rejectedWordWithReason)" :key="index">{{index+1}}、{{item}}{{checkResult.rejectedWordWithReason[item]}}</li>
-                  </ul>
+                <el-col class="more-tips" :span="8">
+                    <InvalidIndustry/>
+                    <p class="industry-tips">注：如有不清楚是否属于禁售行业，请即时咨询您的销售支持，如果签单后发现涉及到禁售行业不能上线的，运营有权驳回</p>
+                    <ul v-if="!checkResult.passed" class="reject-result">
+                        <li v-for="(item, index) in Object.keys(checkResult.rejectedWordWithReason)" :key="index">{{index+1}}、{{item}}{{checkResult.rejectedWordWithReason[item]}}</li>
+                    </ul>
                 </el-col>
             </el-form-item>
             <el-form-item label="推广行业" prop="industry">
               <el-col :span="8">
-                <el-select v-model="form.industry" filterable placeholder="请选择">
+                <el-select :disabled="true" v-model="form.industry" filterable placeholder="请选择">
                   <el-option
                     v-for="item in industryList"
                     :key="item.name"
@@ -26,8 +29,8 @@
                   </el-option>
                 </el-select>
               </el-col>
-              <el-col v-if="checkResult.industry" :span="15" :push="1">
-                <p class="industry-tips">系统已帮你判断为“{{industryList.filter(o => o.name === checkResult.industry)[0].description}}”行业，系统判断行业无需审核，可直接提单</p>
+              <el-col class="more-tips" v-if="checkResult.industry" :span="15">
+                <p class="industry-tips">{{industryTips}}</p>
               </el-col>
             </el-form-item>
             <el-form-item label="推广区域" prop="cities">
@@ -79,6 +82,7 @@
 import { getAllIndustry, checkKeyword } from 'api/biaowang-plus'
 import CoreCitiesDialog, { OTHER_CITY_ENUM } from 'com/common/bw/core-cities-dialog'
 import AreaSelector from 'com/common/biaowang-area-selector'
+import InvalidIndustry from './invalid-industry.vue'
 import { getCnName } from 'util'
 import debounce from 'lodash.debounce'
 import gStore from '../../../store'
@@ -86,7 +90,8 @@ export default {
   name: 'InqueryForm',
   components: {
     AreaSelector,
-    CoreCitiesDialog
+    CoreCitiesDialog,
+    InvalidIndustry
   },
   props: {
     allAreas: {
@@ -143,6 +148,13 @@ export default {
     }
   },
   computed: {
+    industryTips () {
+      const { checkResult: { skipManualAudit, passed } } = this
+      if (passed) {
+        return skipManualAudit ? '可直接提单（系统判断行业无需审核）' : '需人工审核（该关键词容易误判，最终提单价格依据人工审核结果）'
+      }
+      return ''
+    },
     transformArea () {
       const { cities } = this.form
       const maxLength = 3
@@ -236,11 +248,12 @@ export default {
           background: 'rgba(0, 0, 0, 0.7)'
         })
         try {
-          const { data: { passed, rejectedWordWithReason, industry } } = await checkKeyword({ keywords: words.split(/[\s\n]/).filter(Boolean) })
+          const { data: { passed, rejectedWordWithReason, industry, skipManualAudit } } = await checkKeyword({ keywords: words.split(/[\s\n]/).filter(Boolean) })
           this.checkResult = {
             passed,
             rejectedWordWithReason,
-            industry
+            industry,
+            skipManualAudit
           }
           if (!passed) {
             this.form.industry = ''
@@ -323,8 +336,12 @@ export default {
     }
   }
   .industry-tips{
+    font-size: 14px;
     margin: 6px 0;
-    color: #E6A23C;
-    line-height: 28px;
+    color: #F56C6C;
+    line-height: 18px;
+  }
+  .more-tips{
+      margin-left: 10px;
   }
 </style>
