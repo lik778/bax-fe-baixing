@@ -12,6 +12,7 @@
                     @show="showDetail"
                     >
                     <div class="product-detail">
+                        <p class="product-intro"></p>
                         <div class="image-wrapper">
                         <img :src="product.image"/>
                         </div>
