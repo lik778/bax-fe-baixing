@@ -17,7 +17,7 @@
                         </div>
                         <p>{{product.description}}</p>
                     </div> -->
-                    <ProductDetail />
+                    <ProductDetail :product="product" />
                     <i slot="reference" class="el-icon-info"></i>
                 </el-popover>
              </span>
