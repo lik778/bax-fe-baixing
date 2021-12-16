@@ -6,17 +6,18 @@
                 <el-popover
                     placement="top-start"
                     :title="product.title"
-                    trigger="hover"
+                    trigger="click"
                     popper-class="detail-popover"
                     class="detail-popover"
                     @show="showDetail"
                     >
-                    <div class="product-detail">
+                    <!-- <div class="product-detail">
                         <div class="image-wrapper">
                         <img :src="product.image"/>
                         </div>
                         <p>{{product.description}}</p>
-                    </div>
+                    </div> -->
+                    <ProductDetail />
                     <i slot="reference" class="el-icon-info"></i>
                 </el-popover>
              </span>
@@ -42,6 +43,7 @@ import { DEVICE, SCHEDULE_TYPE, SEO_PRODUCT_TYPE, DEVICE_PC, DEVICE_WAP, REGULAR
 import { f2y } from 'util'
 import { DEVICE_ALL } from 'constant/fengming-report'
 import { bwPlusTrack } from '../../../utils/track'
+import ProductDetail from '../product-detail/index.vue'
 export default {
   name: 'product-item',
   props: {
@@ -165,6 +167,9 @@ export default {
     changeCombo () {
       this.$emit('changeCombo', this.product)
     }
+  },
+  components: {
+    ProductDetail
   }
 }
 </script>

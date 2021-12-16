@@ -118,12 +118,14 @@
             }
         }
     }
-    .detail-popover{
+    /deep/ .detail-popover{
         width: 100%;
-        /deep/ .el-popover__reference-wrapper{
+        .el-popover__reference-wrapper{
             width: 100%;
         }
-    }
+       .el-popover__title{
+            background-color: #FFAD94;
+        }
     .image-wrapper{
         width: 100%;
         img{
@@ -137,4 +139,7 @@
     }
     .product-detail{
         width: 600px;
+   
     }
+   
+}
