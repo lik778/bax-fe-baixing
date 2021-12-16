@@ -118,28 +118,3 @@
             }
         }
     }
-    /deep/ .detail-popover{
-        width: 100%;
-        .el-popover__reference-wrapper{
-            width: 100%;
-        }
-       .el-popover__title{
-            background-color: #FFAD94;
-        }
-    .image-wrapper{
-        width: 100%;
-        img{
-          width: 100%;
-        }
-      }
-    .available-tips{
-        font-family: PingFangSC-Regular;
-        font-size: 10px;
-        color: #FFFFFF;
-    }
-    .product-detail{
-        width: 600px;
-   
-    }
-   
-}
