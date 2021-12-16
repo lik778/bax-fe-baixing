@@ -8,7 +8,6 @@
                     :title="product.title"
                     trigger="click"
                     popper-class="detail-popover"
-                    class="detail-popover"
                     @show="showDetail"
                     >
                     <!-- <div class="product-detail">
@@ -173,4 +172,16 @@ export default {
   }
 }
 </script>
+<style lang="scss">
+    .detail-popover{
+        width: 100%;
+        background: red !important;
+        .el-popover__reference-wrapper{
+            width: 100%;
+        }
+       .el-popover__title{
+            background-color: #FFAD94;
+        }
+    }
+</style>
 <style lang="scss" scoped src="./index.scss"/>
