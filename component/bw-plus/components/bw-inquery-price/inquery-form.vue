@@ -22,8 +22,8 @@
               <el-col :span="8">
                 <el-select :disabled="true" v-model="form.industry" filterable placeholder="请选择">
                   <el-option
-                    v-for="item in industryList"
-                    :key="item.name"
+                    v-for="(item, index) in industryList"
+                    :key="`${item.name}-${index}`"
                     :label="item.description"
                     :value="item.name">
                   </el-option>
