@@ -1,25 +1,18 @@
 <template>
         <div class="product-detail">
             <div class="text">
-                <p>产品介绍：1. 主打产品关键词抢占头条搜索首页排名  2. 只有手机端；展现形式为头
-                条搜索首页广告位+落地页广告  3. 可单独购买，也可搭售其他任意产品一同购买搭
-                售百度标王标准版有6折左右优惠
-                </p>
+                <p>产品介绍:{{product.description}}</p>
             </div>
             <div class="image-wrapper">
                 <img :src="product.image">
             </div>
             <p class="tip">注意事项：</p>
             <ul>
-                <li>1.请在购买本产品时先选择你需要购买的平台、时段及时长。</li>
-                <li>2.展现率根据头条搜索规则最大化展现，请勿过度承诺客户，如有问题，可直接与客服沟通。</li>
-                <li>3.如遇到后台检测不能做的关键词，引导更换关键词或者替换同等价值的其他服务。</li>
+                <li>{{product.notes}}</li>
             </ul>
-            <p class="tip">注意事项：</p>
+            <p class="tip">支付须知：</p>
             <ul>
-                <li>1.请在购买本产品时先选择你需要购买的平台、时段及时长。</li>
-                <li>2.展现率根据头条搜索规则最大化展现，请勿过度承诺客户，如有问题，可直接与客服沟通。</li>
-                <li>3. 如遇到后台检测不能做的关键词，引导更换关键词或者替换同等价值的其他服务。</li>
+                <li>{{product.deliveryNotice}}</li>
             </ul>
         </div>
 </template>
@@ -37,42 +30,54 @@ export default {
 </script>
 <style lang="scss" scoped>
 .product-detail{
-    width: 600px;
-    border: 1px solid black;
-    padding: 4px 7px;
+    width: 400px;
+    padding-bottom: 5px;
     .text{
-      font-size: 14px;
+      width: 400px;
       font-family: PingFangSC-Regular, PingFang SC;
       font-weight: 400;
       color: #333333;
-      background-color: #FFF9F3;
-    //   box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.04);
-    //   line-height: 5px;
+      margin-bottom: 4px;
+      margin-top: -25%;
+        p{
+          width: 200%;
+          font-size: 20px;
+          background-color: #FFF9F3;
+          padding: 16px 28px;
+          transform-origin: left top;
+          transform: scale(0.5) translateY(100%);
+     }
     }
     .image-wrapper{
-        height: 300px;
-        background: #FFFFFF;
-        box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.13);
+      width: 100%;
+      background: #FFFFFF;
+      box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.13);
+      margin-bottom: 10px;
         img{
-            width: 100%;
-            height: 100%;
-        }
+          // margin-left: 17px;
+          width: 100%;
+          height:100%;
+      }
     }
     .tip{
+        padding: 0px 10px;
         font-size: 14px;
         font-weight: 500;
         color: #FF6350;
         text-shadow: 0px 2px 6px rgba(0, 0, 0, 0.13);
         font-family: PingFangSC-Regular, PingFang SC;
+        margin: 5px 0;
     }
-    ul>li{
-        height: 20px;
-        font-size: 12px;
-        font-weight: 400;
-        color: #666666;
-        letter-spacing: 1px;
-        text-shadow: 0px 2px 6px rgba(0, 0, 0, 0.13);
-        font-family: PingFangSC-Regular, PingFang SC;
+    ul{
+       padding: 0px 14px;
+       li{
+          font-size: 12px;
+          font-weight: 400;
+          color: #666666;
+          letter-spacing: 1px;
+          text-shadow: 0px 2px 6px rgba(0, 0, 0, 0.13);
+          font-family: PingFangSC-Regular, PingFang SC;
+       }
     }
 }
 

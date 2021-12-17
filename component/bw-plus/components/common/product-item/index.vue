@@ -135,7 +135,7 @@ export default {
   methods: {
     showDetail () {
       const { product } = this
-      bwPlusTrack('bwplus: hover product', { productName: product.title })
+      bwPlusTrack('bwplus: click product', { productName: product.title })
     },
     checkProduct () {
       if (this.notAllowCheck.disable) {
@@ -159,7 +159,7 @@ export default {
       }
       const { product } = this
       if (!product.checked) {
-        bwPlusTrack('bwplus: click product', { productName: product.title })
+        bwPlusTrack('bwplus: hover product', { productName: product.title })
       }
       this.$emit('check', product)
     },
@@ -174,13 +174,19 @@ export default {
 </script>
 <style lang="scss">
     .detail-popover{
-        width: 100%;
-        background: red !important;
+        padding: 0px;
         .el-popover__reference-wrapper{
             width: 100%;
         }
        .el-popover__title{
-            background-color: #FFAD94;
+          width: 400px;
+          font-size: 14px;
+          padding: 11px 13px;
+          margin-bottom: 0px;
+          background-color: #FFF1E2;
+          font-family: PingFangSC-Medium, PingFang SC;
+          font-weight: bold;
+          color: #333333;
         }
     }
 </style>
