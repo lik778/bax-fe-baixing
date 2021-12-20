@@ -3,7 +3,7 @@
         <Title class="wefare-title" title="超值福利，满额即送" extra="满足规则即可解锁福利"/>
         <div class="welfare-content_wrapper">
             <WelfareActivity
-                v-for="(item, index) in welfareInfo.filter(o => o.show())"
+                v-for="(item, index) in welfareInfo.filter(o => o.show)"
                 :key="index" :title="item.title"
                 :className="`custom-${index+1}`"
                 :desc="item.desc"

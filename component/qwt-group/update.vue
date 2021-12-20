@@ -165,7 +165,8 @@ import {
   LANDING_TYPE_GW,
   LANDING_TYPE_AD,
   LANDING_TYPE_STORE,
-  LANDING_TYPE_BAIDU_JIMUYU
+  LANDING_TYPE_BAIDU_JIMUYU,
+  NEGATIVE_KEYWORDS_SHENMA_MAX
 } from 'constant/fengming'
 import clone from 'clone'
 import uuid from 'uuid/v4'
@@ -202,6 +203,7 @@ export default {
     return {
       actionTrackId: uuid(),
       SEM_PLATFORM_SHENMA,
+      NEGATIVE_KEYWORDS_SHENMA_MAX,
       SEM_PLATFORM_BAIDU,
       CAMPAIGN_STATUS_OFFLINE,
       CAMPAIGN_STATUS_ONLINE,
@@ -239,7 +241,7 @@ export default {
       return parseInt(this.$route.params.id) || this.originGroup.id
     },
     negativeKeywordMax () {
-      return this.promotion.source === SEM_PLATFORM_SOGOU ? NEGATIVE_KEYWORDS_SOGOU_MAX : NEGATIVE_KEYWORDS_MAX
+      return this.promotion.source === SEM_PLATFORM_SOGOU ? NEGATIVE_KEYWORDS_SOGOU_MAX : this.promotion.source === SEM_PLATFORM_SHENMA ? NEGATIVE_KEYWORDS_SHENMA_MAX : NEGATIVE_KEYWORDS_MAX
     },
     // TODO
     isCurPromotionOrGroupPaused () {
