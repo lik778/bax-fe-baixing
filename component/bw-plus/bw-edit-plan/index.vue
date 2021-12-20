@@ -71,6 +71,7 @@ import {
 import { PROMOTE_STATUS_OFFLINE } from 'constant/bw-plus'
 import { getPromoteDetailById, updatePromoteDetail } from 'api/biaowang-plus'
 import { createValidator } from './validate'
+import { bwPlusTrack, time, getStart } from '../utils/track'
 
 export default {
   name: 'bw-plus-edit-plan',
@@ -101,13 +102,14 @@ export default {
         promoteIds: []
       },
       isErrorLandingPageShow: false,
-      loading: false
+      loading: false,
+      trackData: {},
+      startTime: 0
     }
   },
   computed: {
     isPromoteOffline () {
       const { status } = this.form
-      console.log('status', status)
       return [PROMOTE_STATUS_OFFLINE].includes(status)
     },
     id () {
@@ -116,6 +118,7 @@ export default {
   },
   mounted () {
     this.getPromoteDetail()
+    getStart('create')
   },
   methods: {
     async getPromoteDetail () {
@@ -155,6 +158,8 @@ export default {
     handleCreativeValueChange ({ title, content }) {
       this.form.creativeTitle = title
       this.form.creativeContent = content
+      getStart()
+      this.trackData.editeCreativeTime = time('action')
     },
     handleCreativeError (msg) {
       if (msg) this.$message.error(msg)
@@ -176,6 +181,9 @@ export default {
         this.$router.push({ name: 'bw-plus-plan-list', params: { id: this.originPromote.packageId } })
       } finally {
         this.loading = false
+        this.trackData.createPromoteTime = time('create')
+        const { trackData, id } = this
+        bwPlusTrack('bwplus: edite plan', { ...trackData, promoteId: id })
       }
     },
     async onSubmit () {
