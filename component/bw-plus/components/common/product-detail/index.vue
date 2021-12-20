@@ -6,14 +6,14 @@
             <div class="image-wrapper">
                 <img :src="product.image">
             </div>
-            <p class="tip">注意事项：</p>
-            <ul>
-                <li>{{product.notes}}</li>
-            </ul>
-            <p class="tip">支付须知：</p>
-            <ul>
-                <li>{{product.deliveryNotice}}</li>
-            </ul>
+              <p class="tip">注意事项：</p>
+              <div class="tip-text">
+                    <div>{{product.notes}}</div>
+              </div>
+              <p class="tip">支付须知：</p>
+              <div class="tip-text">
+                    <div>{{product.deliveryNotice}}</div>
+              </div>
         </div>
 </template>
 <script>
@@ -30,55 +30,52 @@ export default {
 </script>
 <style lang="scss" scoped>
 .product-detail{
-    width: 400px;
-    padding-bottom: 5px;
+    background-color: #FFFFFF;
+    width: 587px;
+    padding-bottom: 10px;
     .text{
-      width: 400px;
       font-family: PingFangSC-Regular, PingFang SC;
       font-weight: 400;
       color: #333333;
-      margin-bottom: 4px;
-      margin-top: -25%;
+      margin-bottom: 9px;
         p{
-          width: 200%;
-          font-size: 20px;
+          font-size: 12px;
           background-color: #FFF9F3;
-          padding: 16px 28px;
-          transform-origin: left top;
-          transform: scale(0.5) translateY(100%);
+          padding:8px 14px;
      }
+    }
+      .tip{
+      padding: 0 14px;
+      font-size: 12px;
+      font-weight: 500;
+      color: #FF6350;
+      text-shadow: 0px 2px 6px rgba(0, 0, 0, 0.13);
+      font-family: PingFangSC-Regular, PingFang SC;
+      margin: 10px 0 6px 0;
+    }
+    .tip-text{
+      padding: 0px 14px;
+      div{
+        line-height: 24px;
+        font-size: 12px;
+        white-space: pre-wrap;
+        font-weight: 400;
+        color: #666666;
+        text-shadow: 0px 2px 6px rgba(0, 0, 0, 0.13);
+        font-family: PingFangSC-Regular, PingFang SC;
+       }
+      }
     }
     .image-wrapper{
       width: 100%;
       background: #FFFFFF;
       box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.13);
       margin-bottom: 10px;
+      padding: 0 13px;
         img{
-          // margin-left: 17px;
           width: 100%;
           height:100%;
       }
     }
-    .tip{
-        padding: 0px 10px;
-        font-size: 14px;
-        font-weight: 500;
-        color: #FF6350;
-        text-shadow: 0px 2px 6px rgba(0, 0, 0, 0.13);
-        font-family: PingFangSC-Regular, PingFang SC;
-        margin: 5px 0;
-    }
-    ul{
-       padding: 0px 14px;
-       li{
-          font-size: 12px;
-          font-weight: 400;
-          color: #666666;
-          letter-spacing: 1px;
-          text-shadow: 0px 2px 6px rgba(0, 0, 0, 0.13);
-          font-family: PingFangSC-Regular, PingFang SC;
-       }
-    }
-}
 
 </style>

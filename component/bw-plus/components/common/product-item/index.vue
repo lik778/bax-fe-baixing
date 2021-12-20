@@ -6,7 +6,7 @@
                 <el-popover
                     placement="top-start"
                     :title="product.title"
-                    trigger="click"
+                    trigger="hover"
                     popper-class="detail-popover"
                     @show="showDetail"
                     >
@@ -135,7 +135,7 @@ export default {
   methods: {
     showDetail () {
       const { product } = this
-      bwPlusTrack('bwplus: click product', { productName: product.title })
+      bwPlusTrack('bwplus: hover product', { productName: product.title })
     },
     checkProduct () {
       if (this.notAllowCheck.disable) {
@@ -159,7 +159,7 @@ export default {
       }
       const { product } = this
       if (!product.checked) {
-        bwPlusTrack('bwplus: hover product', { productName: product.title })
+        bwPlusTrack('bwplus: click product', { productName: product.title })
       }
       this.$emit('check', product)
     },
@@ -179,7 +179,7 @@ export default {
             width: 100%;
         }
        .el-popover__title{
-          width: 400px;
+          width: 587px;
           font-size: 14px;
           padding: 11px 13px;
           margin-bottom: 0px;
