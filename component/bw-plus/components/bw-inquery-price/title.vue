@@ -58,7 +58,7 @@ export default {
         }
     }
     .sub-title{
-       padding: 8px;
+       padding:0px 8px 8px 8px;
         display: flex;
         justify-content: flex-start;
         align-items: center;
