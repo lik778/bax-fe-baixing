@@ -6,7 +6,7 @@
                 <el-popover
                     placement="top-start"
                     :title="product.title"
-                    trigger="hover"
+                    trigger="click"
                     popper-class="detail-popover"
                     @show="showDetail"
                     >

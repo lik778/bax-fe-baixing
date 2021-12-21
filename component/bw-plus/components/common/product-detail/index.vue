@@ -38,6 +38,7 @@ export default {
       font-weight: 400;
       color: #333333;
       margin-bottom: 9px;
+      box-shadow: 0px 2px 3px 0px rgba(0, 0, 0, 0.04);
         p{
           font-size: 12px;
           background-color: #FFF9F3;
