@@ -15,10 +15,10 @@ export default {
 
 <style lang="scss" scoped>
     .use-tips{
-        position: fixed;
+        position: absolute;
         top: 100px;
         right: 60px;
-        z-index: 999;
+        z-index: 997;
         display: block;
         color: #909399;
         font-size: 12px;
