@@ -12,7 +12,7 @@
                 </el-col>
                 <el-col class="more-tips" :span="8">
                     <InvalidIndustry/>
-                    <p class="industry-tips">注：如有不清楚是否属于禁售行业，请即时咨询您的销售支持，如果签单后发现涉及到禁售行业不能上线的，运营有权驳回</p>
+                    <!-- <p class="industry-tips">注：如有不清楚是否属于禁售行业，请即时咨询您的销售支持，如果签单后发现涉及到禁售行业不能上线的，运营有权驳回</p> -->
                     <ul v-if="!checkResult.passed" class="reject-result">
                         <li v-for="(item, index) in Object.keys(checkResult.rejectedWordWithReason)" :key="index">{{index+1}}、{{item}}{{checkResult.rejectedWordWithReason[item]}}</li>
                     </ul>
@@ -29,9 +29,9 @@
                   </el-option>
                 </el-select>
               </el-col>
-              <el-col class="more-tips" v-if="checkResult.industry" :span="15">
+              <!-- <el-col class="more-tips" v-if="checkResult.industry" :span="15">
                 <p class="industry-tips">{{industryTips}}</p>
-              </el-col>
+              </el-col> -->
             </el-form-item>
             <el-form-item label="推广区域" prop="cities">
               {{transformArea}}
@@ -335,12 +335,12 @@ export default {
       line-height: 28px;
     }
   }
-  .industry-tips{
-    font-size: 14px;
-    margin: 6px 0;
-    color: #F56C6C;
-    line-height: 18px;
-  }
+  // .industry-tips{
+  //   font-size: 14px;
+  //   margin: 6px 0;
+  //   color: #F56C6C;
+  //   line-height: 18px;
+  // }
   .more-tips{
       margin-left: 10px;
   }
