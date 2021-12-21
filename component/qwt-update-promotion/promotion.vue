@@ -83,7 +83,7 @@
       />
     </section>
 
-    <section>
+    <section v-if="showNegative">
       <div class="desc align-self">设置否词
         <el-tooltip content="当网民的搜索词与精确否定关键词完全一致时，您的推广结果将不会展现"
                     placement="top-start">
@@ -136,7 +136,8 @@ import {
   SEM_PLATFORM_QIHU,
   RAW_CAMPAIN_STATUS,
   STATUS_ONLINE,
-  SEM_PLATFORM_BAIDU
+  SEM_PLATFORM_BAIDU,
+  SEM_PLATFORM_SHENMA
 } from 'constant/fengming'
 
 export default {
@@ -178,6 +179,9 @@ export default {
     }
   },
   computed: {
+    showNegative () {
+      return this.promotion.source !== SEM_PLATFORM_SHENMA
+    },
     showDetect () {
       return this.promotion.status !== -1 && this.promotion.source === SEM_PLATFORM_BAIDU
     },

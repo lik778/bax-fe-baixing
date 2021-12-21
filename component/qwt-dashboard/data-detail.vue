@@ -140,6 +140,7 @@
             @click="addKeyword(row)"
           >添加关键词</el-button>
           <el-button
+            v-if="row.channel !== SEM_PLATFORM_SHENMA"
             type="text"
             size="small"
             :disabled="row.enableInNegativeWords || row.enableInKeywords || !notAllowNormalUser()"
@@ -203,7 +204,8 @@ import {
 import {
   semPlatformCn,
   SEM_PLATFORM_SOGOU,
-  isDeletedKeyword
+  isDeletedKeyword,
+  SEM_PLATFORM_SHENMA
 } from 'constant/fengming'
 import {
   fmtCpcRanking
@@ -268,7 +270,8 @@ export default {
       visibleDialog: false,
       tableItem: {},
       isPlanUnit: '',
-      isAllowWord: false
+      isAllowWord: false,
+      SEM_PLATFORM_SHENMA
     }
   },
   methods: {

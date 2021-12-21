@@ -143,7 +143,7 @@ export default {
                 border-radius: 4px;
                 font-size: 12px;
                 color: #FFF3A0;
-                width: 104px;
+                width: 110px;
                 padding: 4px 10px;
                 box-sizing: border-box;
                 margin-left: 10px;
