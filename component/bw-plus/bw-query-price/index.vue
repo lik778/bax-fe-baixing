@@ -31,11 +31,12 @@
         </el-card>
         <BwPlusDialog :commitInfo="commitInfo" v-if="BwPlusDialogMsg.dialogVisible" :destroy-on-close="true" :BwPlusDialogMsg="BwPlusDialogMsg" @close="BwPlusDialogMsg.dialogVisible = false"/>
         <CommitDialog :welfare="getWelfareInfo" v-if="isSubmit" :destroy-on-close="true" :allAreas="allAreas" :preInfo="preInfo" :visible="isSubmit" :isPending="isPending" @cancel="cancel" @submit="submit"/>
+        <UseTips />
     </section>
 </template>
 
 <script>
-import { InqueryForm, KeywordHotDetail, Title, InqueryResult, BwPlusDialog, WelfareLayout, ErrorFooter, CommitDialog, SoldCityLayout, BwAdditionProducts, BwCreativity } from '../components'
+import { InqueryForm, KeywordHotDetail, Title, InqueryResult, BwPlusDialog, WelfareLayout, ErrorFooter, CommitDialog, SoldCityLayout, BwAdditionProducts, BwCreativity, UseTips } from '../components'
 import { querySystemResult, commit } from 'api/biaowang-plus'
 import { APPLY_TYPE_NORMAL, APPLY_TYPE_ERROR, DEVICE_PROPS, DEVICE_THREE, SEO_PRODUCT_TYPE, CREATIVE_PRODUCT_TYPE } from 'constant/bw-plus'
 import { f2y } from 'util'
@@ -53,7 +54,8 @@ export default {
     CommitDialog,
     SoldCityLayout,
     BwAdditionProducts,
-    BwCreativity
+    BwCreativity,
+    UseTips
   },
   props: {
     allAreas: {
