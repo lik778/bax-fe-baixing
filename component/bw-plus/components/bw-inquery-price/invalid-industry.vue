@@ -1,7 +1,7 @@
 <template>
     <el-popover
         placement="right"
-        width="400"
+        width="600"
         trigger="hover">
         <ul>
             <li v-for="(item, index) in INVALID_INDUSTRY" :key="index">{{item}}</li>
