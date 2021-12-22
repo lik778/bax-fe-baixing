@@ -60,12 +60,14 @@
               >
             </el-table-column>
             <el-table-column
-              :formatter="({ skuId }) =>  skuId === 301 ? AUDIT_STATUS_MAP[item.auditStatus]: '--'"
+              prop="auditStatus"
+              :formatter="({ skuId, auditStatus }) =>  skuId === 301 ? AUDIT_STATUS_MAP[auditStatus]: '--'"
               min-width="110"
               label="审核状态">
             </el-table-column>
             <el-table-column
-              :formatter="({ skuId }) =>  skuId === 301 ? PACKEAGE_STATUS_MAP[item.status] : '--'"
+              prop="status"
+              :formatter="({ status }) => PACKEAGE_STATUS_MAP[status]"
               min-width="110"
               label="投放状态">
             </el-table-column>
