@@ -15,7 +15,7 @@
         <el-button v-for="o of LANDING_TYPE_OPTS"
                    :disabled="disabled"
                    :key="o.value"
-                   :type="landingType === o.value ? 'primary' : ''"
+                   :type="landingType === o.value || landingType === LANDING_TYPE_BAIDU_JIMUYU ? 'primary' : ''"
                    @click="clickLandingType(o.value)">{{ o.label }}
         </el-button>
       </el-button-group>
@@ -27,7 +27,7 @@
                           :selected-id="landingPageId"
                           @select-ad="(ad) => emitUpdateGroup(LANDING_TYPE_AD, ad.url, ad.adId)"
                           @valid-change="(isValid) => setLandingPageValidity(LANDING_TYPE_AD, isValid)" />
-        <mvip-selector v-if="landingType === LANDING_TYPE_STORE"
+        <mvip-selector v-if="landingType === LANDING_TYPE_STORE || landingType === LANDING_TYPE_BAIDU_JIMUYU"
                        :initValue="landingPageId || ''"
                        :disabled="disabled"
                        @change="(url, id) => emitUpdateGroup(LANDING_TYPE_STORE, url, id)"
