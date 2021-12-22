@@ -175,6 +175,13 @@ export default {
       }
       const array = words.split(/[\s\n]/).filter(Boolean)
       const patrn = /[`~!@#$%^&*()_+=<>?:"{}|,.\\/;'\\[\]·~！@#￥%……&*（）——+={}|《》？：“”【】、；‘'，。、]/im
+      if (array.length <= 0) {
+        errorMsg = {
+          validate: false,
+          error: '请输入关键词'
+        }
+        return errorMsg
+      }
       if (patrn.test(array.join(''))) { // 如果包含特殊字符返回false
         errorMsg = {
           validate: false,
