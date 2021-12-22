@@ -12,10 +12,12 @@
                 </el-col>
                 <el-col class="more-tips" :span="8">
                     <InvalidIndustry/>
-                    <!-- <p class="industry-tips">注：如有不清楚是否属于禁售行业，请即时咨询您的销售支持，如果签单后发现涉及到禁售行业不能上线的，运营有权驳回</p> -->
                     <ul v-if="!checkResult.passed" class="reject-result">
                         <li v-for="(item, index) in Object.keys(checkResult.rejectedWordWithReason)" :key="index">{{index+1}}、{{item}}{{checkResult.rejectedWordWithReason[item]}}</li>
                     </ul>
+                </el-col>
+                <el-col :span="2" :push="5">
+                    <UseTips/>
                 </el-col>
             </el-form-item>
             <el-form-item label="推广行业" prop="industry">
@@ -29,18 +31,9 @@
                   </el-option>
                 </el-select>
               </el-col>
-              <!-- <el-col class="more-tips" v-if="checkResult.industry" :span="15">
-                <p class="industry-tips">{{industryTips}}</p>
-              </el-col> -->
             </el-form-item>
             <el-form-item label="推广区域" prop="cities">
               {{transformArea}}
-                <!-- <el-tag type="success" closable class="kw-tag"
-                        v-for="area in form.cities" :key="area"
-                        @close="removeArea(area)"
-                >
-                {{ formatArea(area) }}
-                </el-tag> -->
                 <i class="el-icon-plus" @click="checkSold"></i>
             </el-form-item>
             <el-form-item label="用户所在地" prop="coreCities" key="coreCities" v-if="form.cities.length">
@@ -82,6 +75,7 @@
 import { getAllIndustry, checkKeyword } from 'api/biaowang-plus'
 import CoreCitiesDialog, { OTHER_CITY_ENUM } from 'com/common/bw/core-cities-dialog'
 import AreaSelector from 'com/common/biaowang-area-selector'
+import UseTips from './use-tips.vue'
 import InvalidIndustry from './invalid-industry.vue'
 import { getCnName } from 'util'
 import debounce from 'lodash.debounce'
@@ -91,7 +85,8 @@ export default {
   components: {
     AreaSelector,
     CoreCitiesDialog,
-    InvalidIndustry
+    InvalidIndustry,
+    UseTips
   },
   props: {
     allAreas: {

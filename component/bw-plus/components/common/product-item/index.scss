@@ -4,9 +4,8 @@
     border-radius: 8px;
     box-sizing: border-box;
     margin-right: 20px;
-    margin-bottom: 20px;
     position: relative;
-    height: 150px;
+    height: 135px;
     cursor: pointer;
 }
 .mini-button{
@@ -117,24 +116,4 @@
                 color: #AAAAAA;
             }
         }
-    }
-    .detail-popover{
-        width: 100%;
-        /deep/ .el-popover__reference-wrapper{
-            width: 100%;
-        }
-    }
-    .image-wrapper{
-        width: 100%;
-        img{
-          width: 100%;
-        }
-      }
-    .available-tips{
-        font-family: PingFangSC-Regular;
-        font-size: 10px;
-        color: #FFFFFF;
-    }
-    .product-detail{
-        width: 600px;
     }
