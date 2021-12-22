@@ -23,19 +23,18 @@
           <WelfareLayout :currentPrice="getWelfareInfo"/>
           <div class="submit">
             <h3>总价： {{transformPrice}}元</h3>
-            <el-button @click="isSubmit = true" :disabled="!(transformPrice > 0 && ifSoldAvailable)" type="danger" :loading="isPending">提交审核</el-button>
+            <el-button @click="isSubmit = true" :disabled="!(transformPrice > 0 && ifSoldAvailable)" type="danger" :loading="isPending">{{showCommitDesc}}</el-button>
           </div>
         </el-card>
         <el-card class="box-card" v-if="showErrorFooter">
             <ErrorFooter :queryResult="queryResult"/>
         </el-card>
-        <BwPlusDialog :commitInfo="commitInfo" v-if="BwPlusDialogMsg.dialogVisible" :destroy-on-close="true" :BwPlusDialogMsg="BwPlusDialogMsg" @close="BwPlusDialogMsg.dialogVisible = false"/>
-        <CommitDialog :welfare="getWelfareInfo" v-if="isSubmit" :destroy-on-close="true" :allAreas="allAreas" :preInfo="preInfo" :visible="isSubmit" :isPending="isPending" @cancel="cancel" @submit="submit"/>
+        <CommitDialog :industryAuditResult="queryResult.industryAuditResult" :welfare="getWelfareInfo" :destroy-on-close="true" :allAreas="allAreas" :preInfo="preInfo" :visible="isSubmit" :isPending="isPending" @cancel="cancel" @submit="submit"/>
     </section>
 </template>
 
 <script>
-import { InqueryForm, KeywordHotDetail, Title, InqueryResult, BwPlusDialog, WelfareLayout, ErrorFooter, CommitDialog, SoldCityLayout, BwAdditionProducts, BwCreativity } from '../components'
+import { InqueryForm, KeywordHotDetail, Title, InqueryResult, WelfareLayout, ErrorFooter, CommitDialog, SoldCityLayout, BwAdditionProducts, BwCreativity } from '../components'
 import { querySystemResult, commit } from 'api/biaowang-plus'
 import { APPLY_TYPE_NORMAL, APPLY_TYPE_ERROR, DEVICE_PROPS, DEVICE_THREE, SEO_PRODUCT_TYPE, CREATIVE_PRODUCT_TYPE } from 'constant/bw-plus'
 import { f2y } from 'util'
@@ -47,7 +46,6 @@ export default {
     KeywordHotDetail,
     Title,
     InqueryResult,
-    BwPlusDialog,
     WelfareLayout,
     ErrorFooter,
     CommitDialog,
@@ -90,11 +88,14 @@ export default {
       ifSoldAvailable: false, // 是否存在可售卖的平台,
       isPending: false,
       productList: [],
-      checkedProducts: [],
-      commitInfo: {}
+      checkedProducts: []
     }
   },
   computed: {
+    showCommitDesc () {
+      const { queryResult: { industryAuditResult } } = this
+      return industryAuditResult && industryAuditResult.skipManualAudit ? '确 认' : '提交审核'
+    },
     getWelfareInfo () {
       const { productList, currentPrice, totalPrice } = this
       const checkedProducts = productList.filter(p => p.checked)
@@ -170,11 +171,11 @@ export default {
       if (industryAuditResult && industryAuditResult.industryManualAuditType) {
         switch (industryAuditResult.industryManualAuditType) {
           case 1:
-            return '需人工审核（该关键词容易误判，最终提单价格依据人工审核结果）'
+            return '需要人工审核哦，关键词行业比较特殊！提单价格以人工审核结果为准～'
           case 2:
-            return '需人工审核（该关键词容易误判，最终提单价格依据人工审核结果）'
+            return '需要人工审核哦，关键词行业比较特殊！提单价格以人工审核结果为准～'
           case 3:
-            return '需人工审核（该关键词竞争激烈，最终提单价格依据人工审核结果）'
+            return '需要人工审核哦，关键词竞争极其激烈！提单价格以人工审核结果为准～'
           default:
             return ''
         }
@@ -231,14 +232,9 @@ export default {
         const { code, data } = await commit(params)
         if (code === 0) {
           this.resetResult()
-          this.BwPlusDialogMsg = {
-            dialogVisible: true,
-            type: 'success',
-            content: industryAuditResult.skipManualAudit ? '当前报价无需人工审核哦！可以立即提单！' : `${this.getIndustryAuditType(industryAuditResult)}，审核预计24小时内完成，去查看审核进度`,
-            title: '提交成功',
-            ...industryAuditResult
-          }
-          this.commitInfo = data
+          const applyId = data.applyId
+          const skipAudit = industryAuditResult.skipManualAudit
+          this.$router.push({ name: 'bw-plus-price-records', query: { applyId, skipAudit } })
         }
         if (code === 4080) {
           this.BwPlusDialogMsg = {
@@ -295,16 +291,7 @@ export default {
             this.currentPrice = data.keywordPriceList && this.findCurrentPrice(data.keywordPriceList[0])
           }
           additionalProducts && this.transformProductList(additionalProducts)
-          if (!data.industryAuditResult.skipManualAudit) {
-            const content = this.getIndustryAuditType(data.industryAuditResult)
-            this.$alert(content, '提示', {
-              confirmButtonText: '确定',
-              callback: () => {
-                this.$refs.viewScrollTop.scrollIntoView()
-              }
-            })
-            return
-          }
+          this.showIndustryAuditResult(data.industryAuditResult)
           this.$nextTick(() => {
             this.$refs.viewScrollTop.scrollIntoView()
           })
@@ -320,6 +307,15 @@ export default {
         loading.close()
         this.isPending = false
       }
+    },
+    showIndustryAuditResult (industryAuditResult) {
+      const content = industryAuditResult.skipManualAudit ? '关键词已审核通过啦！查完价确认后可直接去提单～' : this.getIndustryAuditType(industryAuditResult)
+      this.$alert(content, '温馨提示', {
+        confirmButtonText: '确定',
+        callback: () => {
+          this.$refs.viewScrollTop.scrollIntoView()
+        }
+      })
     },
     getCurrentPrice (value) {
       this.currentPrice = value

@@ -8,15 +8,15 @@
                     :title="product.title"
                     trigger="hover"
                     popper-class="detail-popover"
-                    class="detail-popover"
                     @show="showDetail"
                     >
-                    <div class="product-detail">
+                    <!-- <div class="product-detail">
                         <div class="image-wrapper">
                         <img :src="product.image"/>
                         </div>
                         <p>{{product.description}}</p>
-                    </div>
+                    </div> -->
+                    <ProductDetail :product="product" />
                     <i slot="reference" class="el-icon-info"></i>
                 </el-popover>
              </span>
@@ -42,6 +42,7 @@ import { DEVICE, SCHEDULE_TYPE, SEO_PRODUCT_TYPE, DEVICE_PC, DEVICE_WAP, REGULAR
 import { f2y } from 'util'
 import { DEVICE_ALL } from 'constant/fengming-report'
 import { bwPlusTrack } from '../../../utils/track'
+import ProductDetail from '../product-detail/index.vue'
 export default {
   name: 'product-item',
   props: {
@@ -165,7 +166,28 @@ export default {
     changeCombo () {
       this.$emit('changeCombo', this.product)
     }
+  },
+  components: {
+    ProductDetail
   }
 }
 </script>
+<style lang="scss">
+    .detail-popover{
+        padding: 0px;
+        .el-popover__reference-wrapper{
+            width: 100%;
+        }
+       .el-popover__title{
+          width: 587px;
+          font-size: 14px;
+          padding: 11px 13px;
+          margin-bottom: 0px;
+          background-color: #FFF1E2;
+          font-family: PingFangSC-Medium, PingFang SC;
+          font-weight: bold;
+          color: #333333;
+        }
+    }
+</style>
 <style lang="scss" scoped src="./index.scss"/>
