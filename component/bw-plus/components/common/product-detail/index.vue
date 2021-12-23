@@ -50,7 +50,6 @@ export default {
       font-size: 12px;
       font-weight: 500;
       color: #FF6350;
-      text-shadow: 0px 2px 6px rgba(0, 0, 0, 0.13);
       font-family: PingFangSC-Regular, PingFang SC;
       margin: 10px 0 6px 0;
     }
@@ -62,7 +61,6 @@ export default {
         white-space: pre-wrap;
         font-weight: 400;
         color: #666666;
-        text-shadow: 0px 2px 6px rgba(0, 0, 0, 0.13);
         font-family: PingFangSC-Regular, PingFang SC;
        }
       }
