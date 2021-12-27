@@ -109,11 +109,11 @@ export default {
       const checkedProducts = productList.filter(p => p.checked)
       const additionProduct = checkedProducts.map(o => (
         {
-          dealPrice: o.type === SEO_PRODUCT_TYPE ? o.certainDealPrice : o.currentPrice.price * o[ratio],
+          dealPrice: o.type === SEO_PRODUCT_TYPE ? (currentPrice.price && currentPrice.price > 0 ? o.certainDealPrice : o.certainDealPrice) : o.currentPrice.price * o[ratio],
           device: o.currentPrice.device,
           duration: o.currentPrice.duration,
           name: o.title,
-          originPrice: o.currentPrice.price * o.originalPriceRatio,
+          originPrice: o.type === SEO_PRODUCT_TYPE ? o.certainOriginPrice : o.currentPrice.price * o.originalPriceRatio,
           scheduleType: o.currentPrice.scheduleType,
           displayType: (o.type === SEO_PRODUCT_TYPE || o.type === CREATIVE_PRODUCT_TYPE) ? 1 : 0
         }
