@@ -257,7 +257,7 @@ export const welfareInfo = [
         name: '会员钻石店铺'
       }
     },
-    show: () => true
+    show: true
   },
   {
     id: 2,
