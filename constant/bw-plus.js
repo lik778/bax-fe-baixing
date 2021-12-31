@@ -238,8 +238,8 @@ export const RENEW_OPRATION_STATUS_OPEN = 20
 export const RENEW_OPRATION_STATUS_COPY = 30
 export const RENEW_OPRATION_STATUS_DISABLED = 60
 const now = dayjs()
-const showWelfare = dayjs(now).isBetween('2021-12-3', dayjs('2022-1-1'))
-const showDesc = dayjs(now).isBetween('2021-12-18', dayjs('2022-1-1')) ? '12.18-12.31' : '12.6-12.17'
+const showWelfare = dayjs(now).isBetween('2021-12-3', '2022-1-1')
+const showDesc = dayjs(now).isBetween('2021-12-18', '2022-1-1') ? '12.18-12.31' : '12.6-12.17'
 
 export const welfareInfo = [
   {
