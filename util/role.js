@@ -303,8 +303,19 @@ export function notAllowFengmingRecharge (roles, agentId) {
   return !!agentId && isOnlyBaixingUser
 }
 
-export function AllowCareFreeRecharge (roles) {
-  return isBaixingSales(roles)
+export function AllowCareFreeRecharge (roles, agentId, salesId) {
+  const currentRoles = normalizeRoles(roles)
+  let hasSalesIds = false
+  let hasAgentIds = false
+  const salesIds = ['139601']
+  const agentIds = [50]
+  if (currentRoles.includes('AGENT_ACCOUNTING')) {
+    hasSalesIds = salesIds.some(o => `${salesId}`.startsWith`${o}`)
+  }
+  if (currentRoles.includes('AGENT_SALES')) {
+    hasAgentIds = agentIds.includes(agentId)
+  }
+  return isBaixingSales(roles) || hasSalesIds || hasAgentIds
 }
 
 export const relationEnum = {

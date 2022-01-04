@@ -52,14 +52,14 @@ const gStore = observable({
 
   getCurrentUser: action(async function () {
     const currentUser = await aapi.getCurrentUser()
-    const { roles = [], realAgentId } = currentUser
+    const { roles = [], realAgentId, agentId, salesId } = currentUser
 
     currentUser.shAgent = isNormalUser(roles)
     currentUser.allowFmRecharge = !notAllowFengmingRecharge(
       roles,
       realAgentId
     )
-    currentUser.allowCareFreeRecharge = AllowCareFreeRecharge(roles)
+    currentUser.allowCareFreeRecharge = AllowCareFreeRecharge(roles, agentId, salesId)
     if (isNormalUser(roles)) {
       currentUser.isCareFreeUser = await isAdplatformUser(currentUser.id)
     }
