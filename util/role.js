@@ -312,8 +312,8 @@ export function AllowCareFreeRecharge (roles, agentId, salesId) {
   const currentRoles = normalizeRoles(roles)
   let hasSalesIds = false
   let hasAgentIds = false
-  const salesIds = isPro ? ['102210', '102716', '125501', '134905', '134906', '134907', '134908', '134909', '134910', '134911', '134912', '134913', '143302', '151609', '156603', '157406', '159502', '195103', '199110'] : ['139601']
-  const agentIds = isPro ? [1257, 2560, 2420, 2182, 2183, 2184, 2185, 2186, 2187, 2188, 2189, 2190, 770, 1779, 2336, 1797, 139, 2040, 2656] : [50]
+  const salesIds = isPro ? ['159502', '157406', '130005'] : ['139601']
+  const agentIds = isPro ? [139, 1797, 1214] : [50]
   if (currentRoles.includes('AGENT_SALES')) {
     hasSalesIds = salesIds.some(o => `${salesId}`.startsWith(o))
   }
