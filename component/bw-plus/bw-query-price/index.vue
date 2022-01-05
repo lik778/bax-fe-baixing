@@ -10,9 +10,8 @@
       <div ref="viewScrollTop" class="placeHolder"></div>
       <SoldCityLayout
         :allAreas="allAreas"
-        :keywordsLockDetails="keywordsLockDetails"
-        :keywordLockText="keywordLockText"
-        v-if="ifExistLockCity"
+        :keywordsLockDetails="keywordLockDetails.lockList"
+        v-if="keywordLockDetails.lockList && keywordLockDetails.lockList.length"
       />
       <section class="bw-query-price_item" v-if="showKeywordPv">
         <Title title="关键词热度明细" />
@@ -28,7 +27,7 @@
             subExtra="（不含配图）请选择需要的平台*时段*时长"
           />
           <InqueryResult
-            :deviceAvailableStatus="deviceAvailableStatus"
+            :disableDeviceListBySku="keywordLockDetails.disableDeviceListBySku"
             :currentPrice="currentPrice"
             @getValue="getCurrentPrice"
             :tableData="queryResult.keywordPriceList"
@@ -45,7 +44,6 @@
         @checked="checked"
         @getExtraProductValue="getAdditionProductValue"
         :currentPrice="currentPrice"
-        :deviceAvailableStatus="deviceAvailableStatus"
         :priceList="queryResult.keywordPriceList"
         :productList="productList.filter((o) => o.type !== 0)"
       />
@@ -56,7 +54,7 @@
         <h3>总价： {{ transformPrice }}元</h3>
         <el-button
           @click="isSubmit = true"
-          :disabled="!(transformPrice > 0 && ifSoldAvailable)"
+          :disabled="allowCommit"
           type="danger"
           :loading="isPending"
           >{{ showCommitDesc }}</el-button
@@ -101,7 +99,8 @@ import {
   DEVICE_PROPS,
   DEVICE_THREE,
   SEO_PRODUCT_TYPE,
-  CREATIVE_PRODUCT_TYPE
+  CREATIVE_PRODUCT_TYPE,
+  BAIDU_PRODUCT_SOURCE
 } from 'constant/bw-plus'
 import { f2y } from 'util'
 import debounce from 'lodash.debounce'
@@ -147,9 +146,8 @@ export default {
       queryResult: {},
       currentPrice: {}, // 用户当前选中的价格
       queryInfo: {},
-      keywordsLockDetails: [], // 当前关键词锁词详情
+      keywordLockDetails: [], // 当前关键词锁词详情
       ifExistLockCity: false, // 当前关键词是否存在已售城市
-      keywordLockText: '', // 关键词已售文案
       deviceAvailableStatus: {}, // 判断当前关键词在各设备端是否可售
       ifSoldAvailable: false, // 是否存在可售卖的平台,
       isPending: false,
@@ -158,6 +156,9 @@ export default {
     }
   },
   computed: {
+    allowCommit () {
+      return !(this.transformPrice > 0)
+    },
     showCommitDesc () {
       const {
         queryResult: { industryAuditResult }
@@ -191,8 +192,8 @@ export default {
         dealPrice:
           o.type === SEO_PRODUCT_TYPE
             ? currentPrice.price && currentPrice.price > 0
-                ? o.certainDealPrice
-                : o.certainDealPrice
+              ? o.certainDealPrice
+              : o.certainDealPrice
             : o.currentPrice.price * o[ratio],
         device: o.currentPrice.device,
         duration: o.currentPrice.duration,
@@ -239,10 +240,8 @@ export default {
       return !!error || !!overHeat || !!industryError
     },
     showResult () {
-      const { queryResult, ifSoldAvailable, showErrorFooter } = this
-      return (
-        !showErrorFooter && !!queryResult.keywordPriceList && !!ifSoldAvailable
-      )
+      const { queryResult, showErrorFooter } = this
+      return !showErrorFooter && !!queryResult.keywordPriceList
     },
     transformPrice () {
       const { currentPrice } = this
@@ -268,8 +267,8 @@ export default {
       const total = productList.reduce((producPrev, producNext) => {
         const priceB = producNext.checked
           ? producNext.type === SEO_PRODUCT_TYPE
-              ? producNext.certainDealPrice
-              : producNext.currentPrice.price * producNext[ratio]
+            ? producNext.certainDealPrice
+            : producNext.currentPrice.price * producNext[ratio]
           : 0
         return producPrev + priceB
       }, 0)
@@ -384,8 +383,17 @@ export default {
         this.isSubmit = false
       }
     }, 300),
-    findCurrentPrice (row) {
-      return Object.values(row).find((item) => item.price > 0)
+    findCurrentPrice (row, disableDeviceListBySku) {
+      const { skuId } = row
+      const disabledDevice = disableDeviceListBySku[skuId]
+      return (
+        {
+          ...Object.values(row).find(
+            (item) => item.price > 0 && !disabledDevice.includes(item.device)
+          ),
+          skuId
+        } || { skuId }
+      )
     },
     async inquery (form) {
       this.isPending = true
@@ -409,46 +417,23 @@ export default {
           message,
           data: {
             additionalProducts,
-            keywordsLockDetails: {
-              keywordsLockDetails,
-              ifExistLockCity,
-              ifSoldAvailable,
-              deviceAvailableStatus: { ifMobileAvailable, ifPcAvailable },
-              deviceAvailableStatus
-            }
+            keywordLockDetails,
+            keywordLockDetails: { disableDeviceListBySku }
           }
         } = await querySystemResult(params)
         if (code === 0) {
           this.queryResult = data
-          // 锁词相关逻辑
-          this.ifExistLockCity = ifExistLockCity
-          this.keywordsLockDetails = keywordsLockDetails
-          this.deviceAvailableStatus = deviceAvailableStatus
-          this.ifSoldAvailable = ifSoldAvailable
-          if (!ifSoldAvailable) {
-            this.currentPrice = {}
-            this.keywordLockText =
-              '手机端、电脑端的“部分词的部分城市”已售出，详情如下。请更换已售出关键词/城市重新查价～'
-          } else if (!ifPcAvailable) {
-            this.currentPrice =
-              data.keywordPriceList && data.keywordPriceList[0].wapSeven
-            this.keywordLockText =
-              '电脑端的“部分词的部分城市”已售出，详情如下。请更换已售出关键词/城市重新查价～'
-          } else if (!ifMobileAvailable) {
-            this.currentPrice =
-              data.keywordPriceList && data.keywordPriceList[0].pcSeven
-            this.keywordLockText =
-              '手机端的“部分词的部分城市”已售出，详情如下。请更换已售出关键词/城市重新查价～'
-          } else {
-            this.currentPrice =
-              data.keywordPriceList &&
-              this.findCurrentPrice(data.keywordPriceList[0])
-          }
+          this.keywordLockDetails = keywordLockDetails
+          this.currentPrice =
+            data.keywordPriceList &&
+            this.findCurrentPrice(
+              { ...data.keywordPriceList[0], skuId: BAIDU_PRODUCT_SOURCE },
+              disableDeviceListBySku
+            )
           additionalProducts && this.transformProductList(additionalProducts)
           data.industryAuditResult &&
             this.showIndustryAuditResult(data.industryAuditResult)
           this.$nextTick(() => {
-            console.log('==', this.queryResult.keywordPvlist)
             this.$refs.viewScrollTop.scrollIntoView()
           })
         } else {
@@ -464,6 +449,7 @@ export default {
         this.isPending = false
       }
     },
+
     showIndustryAuditResult (industryAuditResult) {
       const content = industryAuditResult.skipManualAudit
         ? '关键词已审核通过啦！查完价确认后可直接去提单～'

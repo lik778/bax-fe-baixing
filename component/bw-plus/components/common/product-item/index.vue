@@ -17,12 +17,6 @@
           popper-class="detail-popover"
           @show="showDetail"
         >
-          <!-- <div class="product-detail">
-                        <div class="image-wrapper">
-                        <img :src="product.image"/>
-                        </div>
-                        <p>{{product.description}}</p>
-                    </div> -->
           <ProductDetail :product="product" />
           <i slot="reference" class="el-icon-info"></i>
         </el-popover>
@@ -142,7 +136,6 @@ export default {
       return {
         disable:
           this.currentExcludes.includes(this.product.id) ||
-          !!this.product.available ||
           (this.product.type === CREATIVE_PRODUCT_TYPE &&
             Object.values(this.product.currentPrice).length <= 0) ||
           this.product.currentPrice.price <= 0,
