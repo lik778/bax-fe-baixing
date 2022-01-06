@@ -1,9 +1,21 @@
 <template>
   <div>
     <el-card class="box-card">
-      <Title title="更多媒体，低价加量" extra="请选择需要的媒体及其平台*时段*时长"/>
+      <Title
+        title="更多媒体，低价加量"
+        extra="请选择需要的媒体及其平台*时段*时长"
+      />
       <div class="product-list">
-        <ProductItem :currentPrice="currentPrice" :deviceAvailableStatus="deviceAvailableStatus" v-for="product in productList" :key="product.id" @changeCombo="changeCombo" @check="checkProduct" :currentExcludes="currentExcludes" :product="product"/>
+        <ProductItem
+          :currentPrice="currentPrice"
+          :disableDeviceListBySku="disableDeviceListBySku"
+          v-for="product in productList"
+          :key="product.id"
+          @changeCombo="changeCombo"
+          @check="checkProduct"
+          :currentExcludes="currentExcludes"
+          :product="product"
+        />
       </div>
     </el-card>
     <el-dialog
@@ -11,7 +23,14 @@
       :visible.sync="dialogVisible"
       width="60%"
     >
-      <InqueryResult :limit="currentProduct.limit" :currentPrice="currentProduct.currentPrice" :dealPriceRatio="getRatio" :deviceAvailableStatus="deviceAvailableStatus" @getValue="getCheckedPrice" :tableData="tansformPriceList" />
+      <InqueryResult
+        :limit="currentProduct.limit"
+        :currentPrice="currentProduct.currentPrice"
+        :dealPriceRatio="getRatio"
+        :disableDeviceListBySku="disableDeviceListBySku"
+        @getValue="getCheckedPrice"
+        :tableData="tansformPriceList"
+      />
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="confirmCheckedPrice">确 定</el-button>
@@ -48,7 +67,7 @@ export default {
       default: () => [],
       require: true
     },
-    deviceAvailableStatus: {
+    disableDeviceListBySku: {
       type: Object,
       default: () => {},
       require: true
@@ -59,7 +78,7 @@ export default {
       deep: true,
       immediate: true,
       handler (v) {
-        if (v.filter(o => o.checked).length <= 0) {
+        if (v.filter((o) => o.checked).length <= 0) {
           this.currentExcludes = []
           this.checkedProducts = []
         }
@@ -78,7 +97,9 @@ export default {
     tansformPriceList () {
       const { priceList, currentProduct } = this
       // 得到时长在可选范围内的价格列表
-      return priceList && currentProduct.limit ? priceList.filter(p => currentProduct.limit.type.includes(p.type)) : priceList
+      return priceList && currentProduct.limit
+        ? priceList.filter((p) => currentProduct.limit.type.includes(p.type))
+        : priceList
     }
   },
   data () {
@@ -94,14 +115,19 @@ export default {
     checkProduct (product) {
       const { checkedProducts } = this
       if (product.checked) {
-        this.checkedProducts = checkedProducts.filter(o => o.id !== product.id)
+        this.checkedProducts = checkedProducts.filter(
+          (o) => o.id !== product.id
+        )
       } else {
         this.checkedProducts = [...checkedProducts, ...[product]]
       }
       product.checked = !product.checked
       this.$emit('checked', product)
       // 计算所选商品的互斥商品集合
-      this.currentExcludes = this.checkedProducts.reduce((a, b) => [...a, ...b.excludes], [])
+      this.currentExcludes = this.checkedProducts.reduce(
+        (a, b) => [...a, ...b.excludes],
+        []
+      )
     },
     changeCombo (product) {
       this.dialogVisible = true
@@ -116,19 +142,19 @@ export default {
       })
     },
     confirmCheckedPrice () {
-      const { id: productId } = this.currentProduct
-      this.$emit('getExtraProductValue', { ...this.checkedPrice, productId })
+      const { id: skuId } = this.currentProduct
+      this.$emit('getExtraProductValue', { ...this.checkedPrice, skuId })
       this.dialogVisible = false
     }
   }
 }
 </script>
 <style lang="scss" scoped>
-  .product-list{
-    display: flex;
-    flex-wrap: wrap;
-  }
-  .box-card{
-    margin: 10px;
-  }
+.product-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+.box-card {
+  margin: 10px;
+}
 </style>

@@ -44,6 +44,7 @@
         @checked="checked"
         @getExtraProductValue="getAdditionProductValue"
         :currentPrice="currentPrice"
+        :disableDeviceListBySku="keywordLockDetails.disableDeviceListBySku"
         :priceList="queryResult.keywordPriceList"
         :productList="productList.filter((o) => o.type !== 0)"
       />
@@ -383,17 +384,16 @@ export default {
         this.isSubmit = false
       }
     }, 300),
-    findCurrentPrice (row, disableDeviceListBySku) {
-      const { skuId } = row
-      const disabledDevice = disableDeviceListBySku[skuId]
-      return (
-        {
-          ...Object.values(row).find(
-            (item) => item.price > 0 && !disabledDevice.includes(item.device)
-          ),
-          skuId
-        } || { skuId }
+    findSomeoneAllowSold (priceList, skuId) {
+      const {
+        keywordLockDetails: { disableDeviceListBySku }
+      } = this
+      const disabledDevice = disableDeviceListBySku[skuId] || []
+      // 若找不到，即该关键词在该渠道所有平台全部已售出
+      const target = priceList.find(
+        (item) => item.price > 0 && !disabledDevice.includes(item.device)
       )
+      return target ? { ...target, skuId } : { price: 0, skuId }
     },
     async inquery (form) {
       this.isPending = true
@@ -415,20 +415,16 @@ export default {
           data,
           code,
           message,
-          data: {
-            additionalProducts,
-            keywordLockDetails,
-            keywordLockDetails: { disableDeviceListBySku }
-          }
+          data: { additionalProducts, keywordLockDetails }
         } = await querySystemResult(params)
         if (code === 0) {
           this.queryResult = data
           this.keywordLockDetails = keywordLockDetails
           this.currentPrice =
             data.keywordPriceList &&
-            this.findCurrentPrice(
-              { ...data.keywordPriceList[0], skuId: BAIDU_PRODUCT_SOURCE },
-              disableDeviceListBySku
+            this.findSomeoneAllowSold(
+              Object.values(data.keywordPriceList[0]),
+              BAIDU_PRODUCT_SOURCE
             )
           additionalProducts && this.transformProductList(additionalProducts)
           data.industryAuditResult &&
@@ -467,7 +463,7 @@ export default {
       if (Object.values(value).length > 0) {
         // 当前为选中百度标王状态时，遍历所有加购商品，计算出在当前百度标王的属性下，加购商品的价格
         this.productList = productList.map((product) => {
-          let currentPrice = value
+          let currentPrice = { ...value, skuId: product.id }
           if (product.options) {
             currentPrice = transformCurrentPrice(product, product.options)
           }
@@ -477,7 +473,11 @@ export default {
         // 取消选中百度标王状态，创意相关商品重置为未选中、价格置空，其他商品不变
         this.productList = productList.map((product) =>
           product.type === CREATIVE_PRODUCT_TYPE
-            ? { ...product, checked: false, currentPrice: value }
+            ? {
+                ...product,
+                checked: false,
+                currentPrice: { ...value, skuId: product.id }
+              }
             : product
         )
       }
@@ -485,34 +485,26 @@ export default {
     getAdditionProductValue (value) {
       const { productList } = this
       this.productList = productList.map((product) => {
-        if (product.id === value.productId) {
+        if (product.id === value.skuId) {
           product.currentPrice = value
         }
         return product
       })
     },
-    // 根据当前百度标王选中的属性计算加购商品的价格，与当前选中的百度标王的价格属性一致（并且在limit内）
+    // 计算当前小渠道商品的初始价格
     transformCurrentPrice (product, options) {
       const {
-        currentPrice: { device, scheduleType, duration }
-      } = this
-      const {
-        limit: { platform, schedule, type }
+        limit: { platform },
+        id: skuId
       } = product
-      return options.find((option) => {
-        const props = {
-          device: platform[0] === DEVICE_THREE ? device : platform[0],
-          scheduleType: schedule.includes(scheduleType)
-            ? scheduleType
-            : schedule[0],
-          duration: type.includes(duration) ? duration : type[0]
-        }
-        return (
-          option.device === props.device &&
-          option.scheduleType === props.scheduleType &&
-          option.duration === props.duration
-        )
-      })
+      const {
+        queryResult: { keywordPriceList }
+      } = this
+      const priceListAllow =
+        platform[0] === DEVICE_THREE
+          ? Object.values(keywordPriceList[0])
+          : options.filter((o) => platform.includes(o.device))
+      return this.findSomeoneAllowSold(priceListAllow, skuId)
     },
     // 将加购商品根据limit计算出每个加购商品的可选价格项和默认价格，以及商品初始状态，该方法在初始化时执行一遍
     // checked: false（默认未选中）currentPrice（默认初始价格）options（可选价格项）
@@ -556,7 +548,7 @@ export default {
           )
           return {
             ...additionalProduct,
-            currentPrice: resultPrice,
+            currentPrice: { ...resultPrice, skuId: additionalProduct.id },
             options,
             checked: false
           }

@@ -29,12 +29,7 @@
       >
         <template slot-scope="{ row }">
           <el-popover
-            v-if="
-              clickDisabled(
-                row.bothSeven.price,
-                deviceAvailableStatus.ifAllAvailable
-              )
-            "
+            v-if="clickDisabled(row.bothSeven.price, DEVICE_ALL)"
             placement="top-start"
             title="提示"
             width="200"
@@ -65,12 +60,7 @@
       >
         <template slot-scope="{ row }">
           <el-popover
-            v-if="
-              clickDisabled(
-                row.bothFive.price,
-                deviceAvailableStatus.ifAllAvailable
-              )
-            "
+            v-if="clickDisabled(row.bothFive.price, DEVICE_ALL)"
             placement="top-start"
             width="200"
             title="提示"
@@ -101,12 +91,7 @@
       >
         <template slot-scope="{ row }">
           <el-popover
-            v-if="
-              clickDisabled(
-                row.wapSeven.price,
-                deviceAvailableStatus.ifMobileAvailable
-              )
-            "
+            v-if="clickDisabled(row.wapSeven.price, DEVICE_WAP)"
             placement="top-start"
             width="200"
             title="提示"
@@ -135,12 +120,7 @@
       >
         <template slot-scope="{ row }">
           <el-popover
-            v-if="
-              clickDisabled(
-                row.wapFive.price,
-                deviceAvailableStatus.ifMobileAvailable
-              )
-            "
+            v-if="clickDisabled(row.wapFive.price, DEVICE_WAP)"
             placement="top-start"
             width="200"
             title="提示"
@@ -171,12 +151,7 @@
       >
         <template slot-scope="{ row }">
           <el-popover
-            v-if="
-              clickDisabled(
-                row.pcSeven.price,
-                deviceAvailableStatus.ifPcAvailable
-              )
-            "
+            v-if="clickDisabled(row.pcSeven.price, DEVICE_PC)"
             placement="top-start"
             width="200"
             title="提示"
@@ -205,12 +180,7 @@
       >
         <template slot-scope="{ row }">
           <el-popover
-            v-if="
-              clickDisabled(
-                row.pcFive.price,
-                deviceAvailableStatus.ifPcAvailable
-              )
-            "
+            v-if="clickDisabled(row.pcFive.price, DEVICE_PC)"
             placement="top-start"
             width="200"
             title="提示"
@@ -255,11 +225,6 @@ export default {
       type: Object,
       default: () => {},
       require: true
-    },
-    deviceAvailableStatus: {
-      type: Object,
-      default: () => {},
-      require: false
     },
     disableDeviceListBySku: {
       type: Object,
@@ -352,8 +317,16 @@ export default {
       }
       return '-'
     },
-    clickDisabled (price, status) {
-      return price <= 0 || !!status
+    clickDisabled (price, device) {
+      const {
+        disableDeviceListBySku,
+        currentPrice: { skuId }
+      } = this
+      return (
+        price <= 0 ||
+        (disableDeviceListBySku[skuId] &&
+          disableDeviceListBySku[skuId].includes(device))
+      )
     }
   }
 }
