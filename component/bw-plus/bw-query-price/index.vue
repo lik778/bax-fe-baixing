@@ -148,9 +148,6 @@ export default {
       currentPrice: {}, // 用户当前选中的价格
       queryInfo: {},
       keywordLockDetails: [], // 当前关键词锁词详情
-      ifExistLockCity: false, // 当前关键词是否存在已售城市
-      deviceAvailableStatus: {}, // 判断当前关键词在各设备端是否可售
-      ifSoldAvailable: false, // 是否存在可售卖的平台,
       isPending: false,
       productList: [],
       checkedProducts: []
@@ -193,8 +190,8 @@ export default {
         dealPrice:
           o.type === SEO_PRODUCT_TYPE
             ? currentPrice.price && currentPrice.price > 0
-              ? o.certainDealPrice
-              : o.certainDealPrice
+                ? o.certainDealPrice
+                : o.certainDealPrice
             : o.currentPrice.price * o[ratio],
         device: o.currentPrice.device,
         duration: o.currentPrice.duration,
@@ -268,8 +265,8 @@ export default {
       const total = productList.reduce((producPrev, producNext) => {
         const priceB = producNext.checked
           ? producNext.type === SEO_PRODUCT_TYPE
-            ? producNext.certainDealPrice
-            : producNext.currentPrice.price * producNext[ratio]
+              ? producNext.certainDealPrice
+              : producNext.currentPrice.price * producNext[ratio]
           : 0
         return producPrev + priceB
       }, 0)
@@ -314,7 +311,6 @@ export default {
       this.currentPrice = {}
       this.queryInfo = {}
       this.keywordsLockDetails = []
-      this.ifExistLockCity = false
     },
     submit: debounce(async function () {
       this.isPending = true
