@@ -393,7 +393,9 @@ export default {
       const target = priceList.find(
         (item) => item.price > 0 && !disabledDevice.includes(item.device)
       )
-      return target ? { ...target, skuId } : { price: 0, skuId }
+      return target
+        ? { ...target, skuId }
+        : { ...priceList[0], price: 0, skuId }
     },
     async inquery (form) {
       this.isPending = true
@@ -457,17 +459,44 @@ export default {
         }
       })
     },
+    // 根据当前百度标王选中的属性计算创意类型加购商品的价格，与当前选中的百度标王的价格属性一致（并且在limit内）
+    transformCreativeCurrentPrice (product, options) {
+      const {
+        currentPrice: { device, scheduleType, duration }
+      } = this
+      const {
+        limit: { platform, schedule, type }
+      } = product
+      return options.find((option) => {
+        const props = {
+          device: platform[0] === DEVICE_THREE ? device : platform[0],
+          scheduleType: schedule.includes(scheduleType)
+            ? scheduleType
+            : schedule[0],
+          duration: type.includes(duration) ? duration : type[0]
+        }
+        return (
+          option.device === props.device &&
+          option.scheduleType === props.scheduleType &&
+          option.duration === props.duration
+        )
+      })
+    },
     getCurrentPrice (value) {
       this.currentPrice = value
-      const { productList, transformCurrentPrice } = this
+      const { productList, transformCreativeCurrentPrice } = this
       if (Object.values(value).length > 0) {
         // 当前为选中百度标王状态时，遍历所有加购商品，计算出在当前百度标王的属性下，加购商品的价格
         this.productList = productList.map((product) => {
-          let currentPrice = { ...value, skuId: product.id }
-          if (product.options) {
-            currentPrice = transformCurrentPrice(product, product.options)
+          if (product.options && product.type === CREATIVE_PRODUCT_TYPE) {
+            const currentPrice = transformCreativeCurrentPrice(
+              product,
+              product.options
+            )
+            return { ...product, currentPrice }
+          } else {
+            return product
           }
-          return { ...product, currentPrice }
         })
       } else {
         // 取消选中百度标王状态，创意相关商品重置为未选中、价格置空，其他商品不变

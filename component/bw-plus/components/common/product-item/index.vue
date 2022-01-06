@@ -53,7 +53,10 @@ import {
   SCHEDULE_TYPE,
   SEO_PRODUCT_TYPE,
   REGULAR_PRODUCT_TYPE,
-  CREATIVE_PRODUCT_TYPE
+  CREATIVE_PRODUCT_TYPE,
+  IMAGE_PRODUCT_SOURCE,
+  DAIL_BUTTON_PRODUCT_SOURCE,
+  VIDEO_PRODUCT_SOURCE
 } from 'constant/bw-plus'
 import { f2y } from 'util'
 import { bwPlusTrack } from '../../../utils/track'
@@ -94,12 +97,27 @@ export default {
     },
     notAllowCheck () {
       const {
-        product: { currentPrice: price }
+        product: {
+          currentPrice: { price, skuId }
+        }
       } = this
       if (price <= 0) {
         return {
           disable: true,
           reason: '当前渠道商品已被售出～请更换关键词或城市重新查价购买哦～'
+        }
+      }
+      if (
+        !price &&
+        [
+          IMAGE_PRODUCT_SOURCE,
+          DAIL_BUTTON_PRODUCT_SOURCE,
+          VIDEO_PRODUCT_SOURCE
+        ].includes(skuId)
+      ) {
+        return {
+          disable: true,
+          reason: '须购买百度标王标准版，才可以购买此商品'
         }
       }
       // 当前商品与所选商品存在互斥，或者当前商品未上线,或者当前商品是创意相关商品并且其价格<=0(即未选中百度标王产品，不允许单独购买)
