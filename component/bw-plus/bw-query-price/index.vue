@@ -516,7 +516,7 @@ export default {
         return product
       })
     },
-    // 计算当前小渠道商品的初始价格
+    // 计算当前小渠道商品的价格
     transformCurrentPrice (product, options) {
       const {
         limit: { platform },
@@ -567,10 +567,18 @@ export default {
           const options = optionsPlatform.filter((platform) =>
             schedule.includes(platform.scheduleType)
           )
-          const resultPrice = this.transformCurrentPrice(
-            additionalProduct,
-            options
-          )
+          let resultPrice = {}
+          if (additionalProduct.type === CREATIVE_PRODUCT_TYPE) {
+            resultPrice = this.transformCreativeCurrentPrice(
+              additionalProduct,
+              options
+            )
+          } else {
+            resultPrice = this.transformCurrentPrice(
+              additionalProduct,
+              options
+            )
+          }
           return {
             ...additionalProduct,
             currentPrice: { ...resultPrice, skuId: additionalProduct.id },
