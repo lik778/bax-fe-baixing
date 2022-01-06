@@ -14,10 +14,8 @@
         </el-table>
         <el-dialog title="录入跟进记录" :visible.sync="dialogFormVisible" width="500px">
             <el-form :model="rowList">
-                <el-form-item>
                     <el-input v-model="rowList.remark" placeholder="请录入跟进记录，限制0-20字" type="textarea"></el-input>
-                    <p>提示保存后将更新上次的记录</p>
-                </el-form-item>
+                    <p class="text">提示保存后将更新上次的记录</p>
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -69,5 +67,12 @@ export default {
 <style  lang="scss">
 .ciueCenter{
   padding-top: 30px;
+}
+.el-dialog__body{
+  padding: 20px 20px 0px 20px;
+  .text{
+    padding: 10px 0px;
+    font-size: 12px;
+  }
 }
 </style>
