@@ -93,39 +93,15 @@ export default {
       return limit && Object.keys(limit).length
     },
     notAllowCheck () {
-      //   const {
-      //     product: {
-      //       currentPrice: { device },
-      //       id
-      //     },
-      //     disableDeviceListBySku
-      //   } = this
-      //   if (
-      //     ifMobileAvailable &&
-      //     !ifPcAvailable &&
-      //     (device === DEVICE_PC || device === DEVICE_ALL)
-      //   ) {
-      //     return {
-      //       disable: true,
-      //       reason: '当前商品电脑端已售出'
-      //     }
-      //   }
-      //   if (
-      //     !ifMobileAvailable &&
-      //     ifPcAvailable &&
-      //     (device === DEVICE_WAP || device === DEVICE_ALL)
-      //   ) {
-      //     return {
-      //       disable: true,
-      //       reason: '当前商品手机端已售出'
-      //     }
-      //   }
-      //   if (!ifMobileAvailable && !ifPcAvailable) {
-      //     return {
-      //       disable: true,
-      //       reason: '当前商品手机端、电脑端已售出'
-      //     }
-      //   }
+      const {
+        product: { currentPrice: price }
+      } = this
+      if (price <= 0) {
+        return {
+          disable: true,
+          reason: '当前渠道商品已被售出～请更换关键词或城市重新查价购买哦～'
+        }
+      }
       // 当前商品与所选商品存在互斥，或者当前商品未上线,或者当前商品是创意相关商品并且其价格<=0(即未选中百度标王产品，不允许单独购买)
       return {
         disable:
