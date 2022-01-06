@@ -2,26 +2,30 @@
   <section class="ad-platform-dashboard">
     <h3 class="title">资金概览</h3>
     <Founds :founds="founds"/>
-    <h3 class="title">数据概览</h3>
-    <DataRange :daterangeListMall="daterangeList" :subtractDay="0" @getDate="getDate" @searchData="changeDateRange"/>
-    <div class="chart-content">
-      <div class="chart-line">
-        <ECharts v-if="lineChartList && lineChartList.length" style="width: 100%; max-width: 100%; margin-top: 20px"
-        :options="chartLineOptions"></ECharts>
+    <h3 class="title"><span  :class="cueVisible?'active':null" @click="cueVisible=false">数据概览</span><span :class="cueVisible?null:'active'" @click="cueVisible=true">线索中心</span></h3>
+    <div v-if="cueVisible==false">
+      <DataRange :daterangeListMall="daterangeList" :subtractDay="0" @getDate="getDate" @searchData="changeDateRange"/>
+      <div class="chart-content" >
+        <div class="chart-line" >
+          <ECharts v-if="lineChartList && lineChartList.length" style="width: 100%; max-width: 100%; margin-top: 20px"
+          :options="chartLineOptions"></ECharts>
+        </div>
+        <!-- <div class="chart-pie">
+          <ECharts style="width: 100%; max-width: 50%; margin-top: 20px"
+          :options="chartPieOptions"></ECharts>
+        </div> -->
       </div>
-      <!-- <div class="chart-pie">
-        <ECharts style="width: 100%; max-width: 50%; margin-top: 20px"
-        :options="chartPieOptions"></ECharts>
-      </div> -->
     </div>
-    <CostList :tableData="costList"/>
+    <CostList :tableData="costList" v-if="cueVisible==false"/>
+    <Cluecenter :tableData="ciueCenterList" v-if="cueVisible==true" @getList="getCiueCenterList"/>
   </section>
 </template>
 <script>
 import { DataRange } from 'com/bw-plus/components'
 import Founds from '../components/funds.vue'
-import { statistic, costList, foundsInfo } from 'api/ad-platform'
+import { statistic, costList, foundsInfo, ciueCenterList } from 'api/ad-platform'
 import CostList from '../components/cost-list.vue'
+import Cluecenter from '../components/clue-center.vue'
 import { chartLineOptions, chartPieOptions } from '../constant'
 import ECharts from 'vue-echarts/components/ECharts.vue'
 import 'echarts/lib/chart/pie'
@@ -45,7 +49,8 @@ export default {
     DataRange,
     ECharts,
     CostList,
-    Founds
+    Founds,
+    Cluecenter
   },
   data () {
     return {
@@ -56,8 +61,12 @@ export default {
       lineChartList: [],
       pieChartList: [],
       costList: [],
+      ciueCenterList: [],
       chartLineOptions,
-      chartPieOptions
+      chartPieOptions,
+      cueVisible: false,
+      total: 0,
+      userId: this.$route.query.user_id
     }
   },
   async mounted () {
@@ -71,7 +80,8 @@ export default {
       this.daterange = daterange
       await Promise.all([
         this.getCostList(),
-        this.getStatistic()
+        this.getStatistic(),
+        this.getCiueCenterList()
       ])
     },
     async getFounds () {
@@ -88,6 +98,16 @@ export default {
       }
       const { data } = await costList(params)
       this.costList = data
+    },
+    async getCiueCenterList () {
+      const params = {
+        page: 1,
+        size: 10,
+        userId: this.userId
+      }
+      const { data: { total, list } } = await ciueCenterList(params)
+      this.ciueCenterList = list
+      this.total = total
     },
     async getStatistic () {
       const { daterange, $route: { query: { user_id: userId } } } = this
@@ -108,7 +128,8 @@ export default {
       await Promise.all([
         this.getFounds(),
         this.getCostList(),
-        this.getStatistic()
+        this.getStatistic(),
+        this.getCiueCenterList()
       ])
     }
   }

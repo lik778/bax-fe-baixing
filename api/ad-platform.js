@@ -53,3 +53,30 @@ export async function costList (params) {
     .json()
   return body
 }
+
+/**
+ * @param {object} params
+ * @param {string} params.startDate
+ * @param {string} params.endDate
+ * @returns
+ */
+export async function ciueCenterList (params) {
+  const body = await adPlatform
+    .post('/report/lead/list')
+    .send(trim(params))
+    .json()
+  return body
+}
+
+/**
+ * @param {object} params.id
+ * @param {string} params.remark
+ * @returns
+ */
+export async function remarkEdit (params) {
+  const body = await adPlatform
+    .post('/report/lead/edit')
+    .send(trim(params))
+    .json()
+  return body
+}
