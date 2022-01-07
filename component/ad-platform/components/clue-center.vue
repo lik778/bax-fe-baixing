@@ -55,7 +55,6 @@ export default {
       this.rowList = row
     },
     async submenu () {
-      console.log(this.tableData)
       const { id, remark } = this.rowList
       await remarkEdit({ id, remark })
       this.dialogFormVisible = false
