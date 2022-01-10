@@ -479,7 +479,8 @@ export default {
       })
     },
     getCurrentPrice (value) {
-      this.currentPrice = value
+      const { currentPrice: { skuId } } = this
+      this.currentPrice = { skuId, ...value }
       const { productList, transformCreativeCurrentPrice } = this
       if (Object.values(value).length > 0) {
         // 当前为选中百度标王状态时，遍历所有加购商品，计算出在当前百度标王的属性下，加购商品的价格
