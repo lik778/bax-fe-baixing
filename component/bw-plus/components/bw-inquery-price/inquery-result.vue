@@ -339,6 +339,9 @@ export default {
 .option-item:hover {
   color: #ff6350;
 }
+.option-item{
+    padding: 10px 0;
+}
 .active-item {
   width: 100%;
   height: 100%;
