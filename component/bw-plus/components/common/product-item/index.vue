@@ -14,6 +14,7 @@
           placement="top-start"
           :title="product.title"
           trigger="hover"
+          :disabled="!!product.available"
           popper-class="detail-popover"
           @show="showDetail"
         >
