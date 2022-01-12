@@ -241,6 +241,7 @@ export const RENEW_OPRATION_STATUS_COPY = 30
 export const RENEW_OPRATION_STATUS_DISABLED = 60
 const now = dayjs()
 const showWelfare = dayjs(now).isBetween('2021-12-3', '2022-1-1')
+const showWelfare01 = dayjs(now).isBetween('2021-12-13', '2022-1-31')
 const showDesc = dayjs(now).isBetween('2021-12-18', '2022-1-1') ? '12.18-12.31' : '12.6-12.17'
 
 export const welfareInfo = [
@@ -302,6 +303,28 @@ export const welfareInfo = [
       }
     },
     show: showWelfare
+  },
+  {
+    id: 4,
+    title: '精准词',
+    switch: [{ type: 1, name: '精准词' }, { type: 2, name: '时长' }],
+    value: (price) => !price || f2y(price) < 20000 ? 3000 : 8000,
+    desc: '限时1.14-1.31 仅前30名',
+    content: (price, item) => {
+      console.log(item)
+      return item.type === 1 ? ['每满¥10000即赠1个5热度关键词'] : ['每满¥10000即赠15天服务时长']
+    },
+    isActive: (duration, price) => {
+      price = price > 0 ? price : 0
+      const active = f2y(price) >= 10000
+      return {
+        active,
+        tag: active ? '已解锁，赠送90天' : `还差${10000 - f2y(price)}元即可解锁`,
+        detail: '90天',
+        name: !price || f2y(price) < 20000 ? '一网营销' : '三网整合营销'
+      }
+    },
+    show: showWelfare01
   }
 ]
 
