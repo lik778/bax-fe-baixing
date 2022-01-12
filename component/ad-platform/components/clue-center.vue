@@ -13,13 +13,14 @@
         </el-table-column>
         </el-table>
         <el-dialog title="录入跟进记录" :visible.sync="dialogFormVisible" width="500px">
-            <el-form :model="rowList">
-                    <el-input v-model="rowList.remark" placeholder="请录入跟进记录，限制0-20字" type="textarea"></el-input>
-                    <p class="text">提示保存后将更新上次的记录</p>
-            </el-form>
+            <el-form :model="followForm" :rules="rules" ref="form">
+                <el-form-item prop="remark">
+                    <el-input v-model="followForm.remark" placeholder="请录入跟进记录，限制0-20字" type="textarea"></el-input>
+                </el-form-item>
+            </el-form><p class="text">提示保存后将更新上次的记录</p>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogFormVisible = false">取 消</el-button>
-                <el-button type="primary" @click="submenu()">确 定</el-button>
+                <el-button type="primary" @click="submenu('form')">确 定</el-button>
             </div>
         </el-dialog>
     </div>
@@ -32,7 +33,16 @@ export default {
   data () {
     return {
       dialogFormVisible: false,
-      rowList: []
+      rowList: [],
+      followForm: {
+        id: '',
+        remark: ''
+      },
+      rules: {
+        remark: [
+          { min: 0, max: 20, message: '不能超过20字符', trigger: 'blur' }
+        ]
+      }
     }
   },
   props: {
@@ -53,12 +63,17 @@ export default {
     handleedit (row) {
       this.dialogFormVisible = true
       this.rowList = row
+      this.followForm.remark = row.remark
+      this.followForm.id = row.id
     },
-    async submenu () {
-      const { id, remark } = this.rowList
-      await remarkEdit({ id, remark })
-      this.dialogFormVisible = false
-      this.$emit('getList')
+    async submenu (from) {
+      this.$refs[from].validate(async (valid) => {
+        if (valid) {
+          await remarkEdit(this.followForm)
+          this.dialogFormVisible = false
+          this.$emit('getList')
+        }
+      })
     }
   }
 }
@@ -70,7 +85,6 @@ export default {
 .el-dialog__body{
   padding: 20px 20px 0px 20px;
   .text{
-    padding: 10px 0px;
     font-size: 12px;
   }
 }

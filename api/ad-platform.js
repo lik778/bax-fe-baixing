@@ -76,7 +76,7 @@ export async function ciueCenterList (params) {
 export async function remarkEdit (params) {
   const body = await adPlatform
     .post('/report/lead/edit')
-    .send(trim(params))
+    .send(params)
     .json()
   return body
 }
