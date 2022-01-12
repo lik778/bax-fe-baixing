@@ -4,18 +4,18 @@
             img-url="//file.baixing.net/201903/8d224eb6179a947eecbf0fde089f7ed3.png">
       电话接不停小妙招
     </fm-tip>
-    <div v-if="landingType === LANDING_TYPE_BAIDU_JIMUYU">
+    <!-- <div v-if="landingType === LANDING_TYPE_BAIDU_JIMUYU">
       <el-tag effect="dark">基木鱼</el-tag>
       <p class="landing-page-link">投放页面：
         <a :href="landingPage">{{landingPage}}</a>
       </p>
-    </div>
-    <template v-else>
+    </div> -->
+    <template>
       <el-button-group>
         <el-button v-for="o of LANDING_TYPE_OPTS"
                    :disabled="disabled"
                    :key="o.value"
-                   :type="landingType === o.value ? 'primary' : ''"
+                   :type="landingType === o.value || landingType === LANDING_TYPE_BAIDU_JIMUYU ? 'primary' : ''"
                    @click="clickLandingType(o.value)">{{ o.label }}
         </el-button>
       </el-button-group>
@@ -27,7 +27,7 @@
                           :selected-id="landingPageId"
                           @select-ad="(ad) => emitUpdateGroup(LANDING_TYPE_AD, ad.url, ad.adId)"
                           @valid-change="(isValid) => setLandingPageValidity(LANDING_TYPE_AD, isValid)" />
-        <mvip-selector v-if="landingType === LANDING_TYPE_STORE"
+        <mvip-selector v-if="landingType === LANDING_TYPE_STORE || landingType === LANDING_TYPE_BAIDU_JIMUYU"
                        :initValue="landingPageId || ''"
                        :disabled="disabled"
                        @change="(url, id) => emitUpdateGroup(LANDING_TYPE_STORE, url, id)"
