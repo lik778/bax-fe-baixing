@@ -67,6 +67,7 @@ import { f2y } from 'util'
 import { DEVICE_ALL } from 'constant/fengming-report'
 import { bwPlusTrack } from '../../../utils/track'
 import ProductDetail from '../product-detail/index.vue'
+const PRODUCT_OFFLINE = 1
 export default {
   name: 'product-item',
   props: {
@@ -221,8 +222,8 @@ export default {
     checkProduct () {
       if (this.notAllowCheck.disable) {
         let message = this.notAllowCheck.reason || '请先勾选百度标王产品！'
-        if (this.product.available === 1) {
-          message = '当前商品未上线，请咨询客服'
+        if (this.product.available === PRODUCT_OFFLINE) {
+          message = this.product.id === 307 ? '暂停售卖，后续调整后上线！' : '当前商品未上线，请咨询客服'
         } else if (!this.notAllowCheck.reason) {
           if (!this.product.currentPrice.index) {
             message = '须购买百度标王标准版，才可以购买此商品'
