@@ -29,6 +29,7 @@
               </el-tooltip>
             </li>
           </ul>
+          <el-button v-if="allowRenew" type="text" @click="renew(item)">续费</el-button>
         </div>
         <el-table
             :data="item.skuList"
@@ -84,9 +85,6 @@
               <template slot-scope="{ row }">
                 <template  v-if="row.skuId === 301">
                 <el-row type="flex" justify="space-around">
-                  <el-col :span="8" v-if="allowRenew">
-                    <el-button  type="danger" style="width: 100%"  @click="renew(row,item)">续费</el-button>
-                  </el-col>
                   <el-col :span="8">
                     <el-button  style="width: 100%" @click="goToPlanList(item)">设置推广</el-button>
                   </el-col>
@@ -129,7 +127,7 @@
 </template>
 
 <script>
-import { getUserPackageList, getRenewDetai, renewOrder } from 'api/biaowang-plus'
+import { getUserPackageList, renewOrder } from 'api/biaowang-plus'
 import { RenewConfirm } from './components'
 import {
   AUDIT_STATUS_MAP,
@@ -147,7 +145,6 @@ import { getCnName } from 'util'
 import debounce from 'lodash.debounce'
 import { Message } from 'element-ui'
 import { isSales } from 'util/role'
-import gStore from '../store'
 
 export default {
   name: 'bw-plus-package-list',
@@ -221,26 +218,20 @@ export default {
     goQueryPrice () {
       this.$router.push({ name: 'bw-plus-query-price', query: { renew: 1 } })
     },
-    async renew (row, item) {
-      const loading = this.$loading({
-        lock: true,
-        text: 'Loading',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      })
-      const { packageId, renewApplyId } = item
-      try {
-        const { code, data } = await getRenewDetai({ packageId })
-        if (code === 301) {
-          this.dialogVisible = true
-          gStore.getQueryInfo(data)
-          return
-        }
-        this.isRenew = true
-        this.renewInfo = { ...data, renewApplyId }
-      } finally {
-        loading.close()
-      }
+    async renew (item) {
+      const { packageId } = item
+      this.$router.push({ name: 'renew-upgrade', query: { packageId } })
+      //   const { packageId, renewApplyId } = item
+      //   try {
+      //     const { code, data } = await getRenewDetai({ packageId })
+      //     if (code === 301) {
+      //       this.dialogVisible = true
+      //       gStore.getQueryInfo(data)
+      //       return
+      //     }
+      //     this.isRenew = true
+      //     this.renewInfo = { ...data, renewApplyId }
+      //   }
     },
     async renewPreOrder (applyId) {
       const loading = this.$loading({
@@ -399,13 +390,15 @@ export default {
 
 .table-titles {
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
   width: 100%;
   height: 48px;
   padding-left: 13px;
   margin-bottom: 20px;
   background: #FFF1E4;
+  box-sizing: border-box;
+  padding: 0 20px;
   ul {
     display: flex;
     li {

@@ -258,6 +258,11 @@ const bwPlusRoutes = [
     name: 'bw-plus-query-price'
   },
   {
+    component: () => import('com/bw-plus/renew-upgrade/index'),
+    path: '/main/bw-plus/renew-upgrade',
+    name: 'renew-upgrade'
+  },
+  {
     component: () => import('com/bw-plus/bw-price-records'),
     path: '/main/bw-plus/price-records',
     name: 'bw-plus-price-records'
