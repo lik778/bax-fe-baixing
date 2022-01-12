@@ -223,7 +223,7 @@ export default {
       if (this.notAllowCheck.disable) {
         let message = this.notAllowCheck.reason || '请先勾选百度标王产品！'
         if (this.product.available === PRODUCT_OFFLINE) {
-          message = this.product.id === 307 ? '产品优化中，敬请期待～' : '当前商品未上线，请咨询客服'
+          message = this.product.id === 307 ? '暂停售卖，产品优化中，敬请期待～' : '当前商品未上线，请咨询客服'
         } else if (!this.notAllowCheck.reason) {
           if (!this.product.currentPrice.index) {
             message = '须购买百度标王标准版，才可以购买此商品'
