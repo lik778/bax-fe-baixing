@@ -306,13 +306,11 @@ export const welfareInfo = [
   },
   {
     id: 4,
-    title: '精准词',
-    switch: [{ type: 1, name: '精准词' }, { type: 2, name: '时长' }],
+    title: '精准词或时长',
     value: (price) => !price || f2y(price) < 20000 ? 3000 : 8000,
     desc: '限时1.14-1.31 仅前30名',
-    content: (price, item) => {
-      console.log(item)
-      return item.type === 1 ? ['每满¥10000即赠1个5热度关键词'] : ['每满¥10000即赠15天服务时长']
+    content: (price) => {
+      return ['满¥10000即赠', '']
     },
     isActive: (duration, price) => {
       price = price > 0 ? price : 0
