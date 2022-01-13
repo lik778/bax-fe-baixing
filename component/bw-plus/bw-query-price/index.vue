@@ -192,7 +192,7 @@ export default {
           o.type === SEO_PRODUCT_TYPE
             ? currentPrice.price && currentPrice.price > 0
                 ? o.certainDealPrice
-                : o.certainDealPrice
+                : o.withoutPackageCertainDealPrice
             : o.currentPrice.price * o[ratio],
         device: o.currentPrice.device,
         duration: o.currentPrice.duration,
@@ -268,7 +268,9 @@ export default {
       const total = productList.reduce((producPrev, producNext) => {
         const priceB = producNext.checked
           ? producNext.type === SEO_PRODUCT_TYPE
-              ? producNext.certainDealPrice
+              ? currentPrice.price && currentPrice.price > 0
+                  ? producNext.certainDealPrice
+                  : producNext.withoutPackageCertainDealPrice
               : producNext.currentPrice.price * producNext[ratio]
           : 0
         return producPrev + priceB
