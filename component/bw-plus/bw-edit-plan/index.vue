@@ -31,7 +31,19 @@
         </div>
       </div>
       <div class="panel">
-        <h4 class="title">投放物料设置</h4><el-button type="text" class="btn-text" @click="showRecommend">智能推荐</el-button>
+        <h4>投放物料设置</h4>
+        <div class="recommend-box">
+          <div class="icon-box"><img src="../../../asset/bw-plus-bw-edit-plan2.png" alt=""></div>
+          <div class="text-box">
+            <div class="text">
+              <div class="title">智能创意推荐
+                <span class="color" @click="recommendVisible = true" v-if="recommendVisible ==false">点击查看</span>
+                <span class="color" @click="recommendVisible = false" v-if="recommendVisible ==true">点击收回</span></div>
+                <div class="content">基于您的关键词所属行业， 已为您推荐以下创意。您可根据需要调整推广标题与内容</div>
+            </div>
+            <div class="icon"><img src="../../../asset/bw-plus-bw-edit-plan.png" alt=""></div>
+          </div>
+        </div>
         <Recommend v-if="recommendVisible" @close="recommendVisible=false"></Recommend>
         <div class="creative">
           <creative-editor :platforms="[SEM_PLATFORM_BAIDU]"
@@ -142,9 +154,9 @@ export default {
       this.form.landingPage = ''
       this.form.landingPageId = ''
     },
-    showRecommend () {
-      this.recommendVisible = true
-    },
+    // showRecommend () {
+    //   this.recommendVisible = true
+    // },
     setLandingPageValidity (type, isValid) {
       this.isErrorLandingPageShow = !isValid
     },
@@ -233,8 +245,63 @@ export default {
     padding: 0 60px;
     > .panel {
       margin-top: 30px;
-      > .title{
-        display: inline-block;
+      >.recommend-box{
+        margin: 10px 0;
+        padding: 0px 30px;
+        width: 620px;
+        height: 100px;
+        background: #FFF8F7;
+        border-radius: 4px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        img{
+          width: 100%;
+          height: 100%;
+        }
+        .icon-box{
+          width: 32px;
+          height: 42px;
+        }
+        .text-box{
+          flex: 1;
+          height: 42px;
+          padding-left: 10px;
+          display: flex;
+          flex-direction: row;
+          .icon{
+            width: 42px;
+            height: 42px;
+          }
+          .text{
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
+            .title{
+              font-family: PingFangSC-Medium;
+              font-weight: bold;
+              font-size: 14px;
+              color: #000000;
+              letter-spacing: 0;
+              .color{
+                margin-left: 15px;
+                font-family: PingFangSC-Medium;
+                font-size: 14px;
+                color: #FF6350;
+                letter-spacing: 0;
+                cursor: pointer;
+              }
+            }
+            .content{
+              font-family: PingFangSC-Regular;
+              font-size: 12px;
+              color: #999999;
+              letter-spacing: 0;
+            }
+          }
+        }
       }
       > .btn-text{
         color: #409EFF;
@@ -243,6 +310,7 @@ export default {
         margin-left: 20px;
       }
        > .creative{
+         margin-top: 30px;
         position: relative;
         > .tip {
           position: absolute;

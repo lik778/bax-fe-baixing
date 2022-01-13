@@ -367,16 +367,41 @@ export const INVALID_INDUSTRY = Object.freeze([
 ])
 export const CREATIVE_TEMPLATE = Object.freeze([
   {
-    keywords: '自动焊机',
-    title: '{关键词}就找XXXXX，厂家直销，质量保障',
-    content: '公司主营{关键词}XXXX等，XX年专业生产经验，累计服务XX家XX企业，规格型号全，支持定制，价格透明合理，欢迎新老客户咨询。'
+    keyword: '自动焊机',
+    contentKey: '便携式自动焊机',
+    title: '就找上海轶煌，厂家直销，型号齐全',
+    content: '、电焊机等，20年专业生产经验，累计服务200家大中型建筑建材企业，规格型号全，支持定制，价格透明合理，欢迎新老客户咨询。'
   },
   {
-    title: '专业{关键词}厂家，按需定做，交付快，价格透明',
-    content: 'xxxxx主要经营xxxx等业务，专业技术团队，多年行业经验，xxxxxx，现在咨询有优惠！'
+    keyword: '螺纹钢',
+    contentKey: '',
+    title: '厂家，按需定做，交付快，价格透明',
+    content: '上海昶睿金属主要经营螺纹钢,镀锌方管,无缝方管,螺旋管等,专业技术团队，多年行业经验，产品难蚀不易锈，稳定性强，现在咨询有优惠！'
   },
   {
-    title: '{关键词}生产厂家，业务优势+业务特点',
-    content: 'xxxxx专业从事 xxxxx 的研发、生产和销售，安装xxxx，效率xxxxx，xxxx！'
+    keyword: '除尘设备',
+    contentKey: '',
+    title: '生产厂家，效率高，风量大，可定制',
+    content: '上海缘威环保专业从事除尘设备的研发、生产和销售，模块化安装除尘效率好，国处理风量大结构紧凑,约占地面积,密封性好故障率低,使用寿命长，经济效益好!'
+  }
+])
+export const CREATIVE_TEMPLATE_INPUT = Object.freeze([
+  {
+    keyword: '自动焊机',
+    contentKey: '便携式自动焊机',
+    title: '就找上海轶煌，厂家直销，型号齐全',
+    content: '、电焊机等，20年专业生产经验，累计服务200家大中型建筑建材企业，规格型号全，支持定制，价格透明合理，欢迎新老客户咨询。'
+  },
+  {
+    keyword: '螺纹钢',
+    contentKey: '',
+    title: '厂家，按需定做，交付快，价格透明',
+    content: '上海昶睿金属主要经营螺纹钢,镀锌方管,无缝方管,螺旋管等,专业技术团队，多年行业经验，产品难蚀不易锈，稳定性强，现在咨询有优惠！'
+  },
+  {
+    keyword: '除尘设备',
+    contentKey: '',
+    title: '生产厂家，效率高，风量大，可定制',
+    content: '上海缘威环保专业从事除尘设备的研发、生产和销售，模块化安装除尘效率好，国处理风量大结构紧凑,约占地面积,密封性好故障率低,使用寿命长，经济效益好!'
   }
 ])
