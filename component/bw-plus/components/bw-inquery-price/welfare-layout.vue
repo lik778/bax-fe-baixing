@@ -9,7 +9,7 @@
                 :desc="item.desc"
                 :value="item.value(currentPrice.price)"
                 :tag="item.isActive(currentPrice.duration, currentPrice.price).tag"
-                :content="item.content(currentPrice.price, item.switch[0])"
+                :content="item.content(currentPrice.price)"
                 :active="item.isActive(currentPrice.duration, currentPrice.price).active"/>
         </div>
     </div>
