@@ -1,13 +1,11 @@
 <template>
     <div class="bw-plus-renew-upgrade">
-        <Header>续费</Header>
+        <header>续费</header>
     </div>
 </template>
 
 <script>
-import Header from 'com/bw-dashboard/header.vue'
 export default {
-  components: { Header },
   name: 'renew-upgrade'
 }
 </script>
