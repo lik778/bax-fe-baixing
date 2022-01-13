@@ -308,7 +308,7 @@ export const welfareInfo = [
     id: 4,
     title: '精准词或时长',
     value: (price) => !price || price < 0 ? 3000 : (Math.floor(f2y(price) / 10000) || 1) * 3000,
-    desc: '限时1.14-1.31 仅前30名',
+    desc: '限时1.14-1.31 仅前88名',
     content: (price) => {
       return ['满¥10000即赠', `赠${Math.floor(f2y(price) / 10000) || '*'}个5热度关键词或赠15天服务时长`]
     },
