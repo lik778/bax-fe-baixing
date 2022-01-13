@@ -126,6 +126,7 @@ export default {
       return {
         disable:
           this.currentExcludes.includes(this.product.id) ||
+          !!this.product.available ||
           (this.product.type === CREATIVE_PRODUCT_TYPE &&
             Object.values(this.product.currentPrice).length <= 0) ||
           this.product.currentPrice.price <= 0,
