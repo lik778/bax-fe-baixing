@@ -31,15 +31,15 @@
         </div>
       </div>
       <div class="panel">
-        <h4 class="title">投放物料设置</h4><el-button type="text" class="btn-text">智能推荐</el-button>
-        <Recommend></Recommend>
+        <h4 class="title">投放物料设置</h4><el-button type="text" class="btn-text" @click="showRecommend">智能推荐</el-button>
+        <Recommend v-if="recommendVisible" @close="recommendVisible=false"></Recommend>
         <div class="creative">
           <creative-editor :platforms="[SEM_PLATFORM_BAIDU]"
                          :title="form.creativeTitle"
                          :content="form.creativeContent"
                          @change="handleCreativeValueChange"
                          @error="handleCreativeError" />
-        <fm-tip class="tip" position="creative" img-url="//file.baixing.net/201903/d6f4502a0e8a659b78a33fbb3713e6b9.png">创意怎么才能飘红</fm-tip>
+        <!-- <fm-tip class="tip" position="creative" img-url="//file.baixing.net/201903/d6f4502a0e8a659b78a33fbb3713e6b9.png">创意怎么才能飘红</fm-tip> -->
         </div>
       </div>
       <el-button :disabled="isPromoteOffline"
@@ -61,7 +61,7 @@ import MvipSelector from 'com/common/mvip-selector'
 import UserAdSelector from 'com/common/ad-selector'
 import CreativeEditor from 'com/widget/creative-editor'
 import SelectPromoteDialog from '../components/select-promote-dialog.vue'
-import FmTip from 'com/widget/fm-tip'
+// import FmTip from 'com/widget/fm-tip'
 import { Recommend } from '../components'
 
 import {
@@ -106,7 +106,8 @@ export default {
       isErrorLandingPageShow: false,
       loading: false,
       trackData: {},
-      startTime: 0
+      startTime: 0,
+      recommendVisible: false
     }
   },
   computed: {
@@ -140,6 +141,9 @@ export default {
     clearLandingPage () {
       this.form.landingPage = ''
       this.form.landingPageId = ''
+    },
+    showRecommend () {
+      this.recommendVisible = true
     },
     setLandingPageValidity (type, isValid) {
       this.isErrorLandingPageShow = !isValid
@@ -208,7 +212,7 @@ export default {
     UserAdSelector,
     CreativeEditor,
     SelectPromoteDialog,
-    FmTip,
+    // FmTip,
     Recommend
   }
 }

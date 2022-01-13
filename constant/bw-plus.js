@@ -367,6 +367,7 @@ export const INVALID_INDUSTRY = Object.freeze([
 ])
 export const CREATIVE_TEMPLATE = Object.freeze([
   {
+    keywords: '自动焊机',
     title: '{关键词}就找XXXXX，厂家直销，质量保障',
     content: '公司主营{关键词}XXXX等，XX年专业生产经验，累计服务XX家XX企业，规格型号全，支持定制，价格透明合理，欢迎新老客户咨询。'
   },
