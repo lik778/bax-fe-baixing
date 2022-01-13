@@ -31,7 +31,8 @@
         </div>
       </div>
       <div class="panel">
-        <h4>投放物料设置</h4>
+        <h4 class="title">投放物料设置</h4><el-button type="text" class="btn-text">智能推荐</el-button>
+        <Recommend></Recommend>
         <div class="creative">
           <creative-editor :platforms="[SEM_PLATFORM_BAIDU]"
                          :title="form.creativeTitle"
@@ -61,6 +62,7 @@ import UserAdSelector from 'com/common/ad-selector'
 import CreativeEditor from 'com/widget/creative-editor'
 import SelectPromoteDialog from '../components/select-promote-dialog.vue'
 import FmTip from 'com/widget/fm-tip'
+import { Recommend } from '../components'
 
 import {
   bwlandingTypeOpts,
@@ -206,7 +208,8 @@ export default {
     UserAdSelector,
     CreativeEditor,
     SelectPromoteDialog,
-    FmTip
+    FmTip,
+    Recommend
   }
 }
 </script>
@@ -226,6 +229,15 @@ export default {
     padding: 0 60px;
     > .panel {
       margin-top: 30px;
+      > .title{
+        display: inline-block;
+      }
+      > .btn-text{
+        color: #409EFF;
+        text-decoration-line: underline;
+        text-decoration-color: currentColor;
+        margin-left: 20px;
+      }
        > .creative{
         position: relative;
         > .tip {

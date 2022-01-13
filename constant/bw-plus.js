@@ -365,3 +365,17 @@ export const INVALID_INDUSTRY = Object.freeze([
   '21、房地产行业；',
   '22、涉及宗教及政治相关行业；'
 ])
+export const CREATIVE_TEMPLATE = Object.freeze([
+  {
+    title: '{关键词}就找XXXXX，厂家直销，质量保障',
+    content: '公司主营{关键词}XXXX等，XX年专业生产经验，累计服务XX家XX企业，规格型号全，支持定制，价格透明合理，欢迎新老客户咨询。'
+  },
+  {
+    title: '专业{关键词}厂家，按需定做，交付快，价格透明',
+    content: 'xxxxx主要经营xxxx等业务，专业技术团队，多年行业经验，xxxxxx，现在咨询有优惠！'
+  },
+  {
+    title: '{关键词}生产厂家，业务优势+业务特点',
+    content: 'xxxxx专业从事 xxxxx 的研发、生产和销售，安装xxxx，效率xxxxx，xxxx！'
+  }
+])
