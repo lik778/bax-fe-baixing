@@ -232,6 +232,11 @@ export function onlyAgentAccounting (roles) {
   return false
 }
 
+export function isAgentAccounting (roles) {
+  const currentRoles = normalizeRoles(roles)
+  return currentRoles.includes('AGENT_ACCOUNTING')
+}
+
 export function normalizeRoles (roles) {
   if (!isArray(roles)) {
     return []
@@ -303,8 +308,19 @@ export function notAllowFengmingRecharge (roles, agentId) {
   return !!agentId && isOnlyBaixingUser
 }
 
-export function AllowCareFreeRecharge (roles) {
-  return isBaixingSales(roles)
+export function AllowCareFreeRecharge (roles, agentId, salesId) {
+  const currentRoles = normalizeRoles(roles)
+  let hasSalesIds = false
+  let hasAgentIds = false
+  const salesIds = isPro ? ['159502', '157406', '130005'] : ['139601']
+  const agentIds = isPro ? [139, 1797, 1214] : [50]
+  if (currentRoles.includes('AGENT_SALES')) {
+    hasSalesIds = salesIds.some(o => `${salesId}`.startsWith(o))
+  }
+  if (currentRoles.includes('AGENT_ACCOUNTING')) {
+    hasAgentIds = agentIds.includes(agentId)
+  }
+  return isBaixingSales(roles) || hasSalesIds || hasAgentIds
 }
 
 export const relationEnum = {
@@ -364,11 +380,11 @@ export function allowBwplusDashboard (userInfo) {
 }
 
 export function allowCareFreeDashboard (userInfo) {
-  const { roles } = userInfo
+  const { roles, agentId, salesId } = userInfo
   const currentRoles = normalizeRoles(roles)
   const isSales = currentRoles.includes('BAIXING_SALES')
   if (isNormalUser(roles)) {
     return userInfo.isCareFreeUser
   }
-  return isSales
+  return isSales || AllowCareFreeRecharge(roles, agentId, salesId)
 }
