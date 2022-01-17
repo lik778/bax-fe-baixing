@@ -8,5 +8,12 @@
     }
     .title{
         margin-bottom: 10px;
+        .active{
+         color: #C0C4CC;
+        }
+        span{
+          cursor: pointer;
+          margin-right: 20px;
+        }
     }
 }
