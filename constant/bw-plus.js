@@ -241,6 +241,7 @@ export const RENEW_OPRATION_STATUS_COPY = 30
 export const RENEW_OPRATION_STATUS_DISABLED = 60
 const now = dayjs()
 const showWelfare = dayjs(now).isBetween('2021-12-3', '2022-1-1')
+const showWelfare01 = dayjs(now).isBetween('2022-1-14', '2022-2-1')
 const showDesc = dayjs(now).isBetween('2021-12-18', '2022-1-1') ? '12.18-12.31' : '12.6-12.17'
 
 export const welfareInfo = [
@@ -269,7 +270,7 @@ export const welfareInfo = [
     content: (price) => ['满额即送标王关键词'],
     isActive: (duration, price) => {
       price = price > 0 ? price : 0
-      const active = f2y(price) >= 10000
+      const active = f2y(price) >= 10000 && showWelfare
       const num = f2y(price) >= 10000 && f2y(price) < 20000 ? 2 : Math.floor(f2y(price) / 20000) * 5
       return {
         active,
@@ -293,7 +294,7 @@ export const welfareInfo = [
     },
     isActive: (duration, price) => {
       price = price > 0 ? price : 0
-      const active = f2y(price) >= 10000
+      const active = f2y(price) >= 10000 && showWelfare
       return {
         active,
         tag: active ? '已解锁，赠送90天' : `还差${10000 - f2y(price)}元即可解锁`,
@@ -302,6 +303,26 @@ export const welfareInfo = [
       }
     },
     show: showWelfare
+  },
+  {
+    id: 4,
+    title: '精准词或时长',
+    value: (price) => !price || price < 0 ? 3000 : (Math.floor(f2y(price) / 10000) || 1) * 3000,
+    desc: '限时1.14-1.31 仅前88名',
+    content: (price) => {
+      return ['满¥10000即赠', `赠${Math.floor(f2y(price) / 10000) || '*'}个5热度关键词或赠15天服务时长`]
+    },
+    isActive: (duration, price) => {
+      price = price > 0 ? price : 0
+      const active = f2y(price) >= 10000 && showWelfare01
+      return {
+        active,
+        tag: active ? '已解锁' : `还差${10000 - f2y(price)}元即可解锁`,
+        detail: `${Math.floor(f2y(price) / 10000)}个关键词或15天服务时长`,
+        name: '精准词或时长'
+      }
+    },
+    show: showWelfare01
   }
 ]
 
