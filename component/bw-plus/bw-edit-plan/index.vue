@@ -211,7 +211,7 @@ export default {
       }
     },
     async onSubmit () {
-      const reg = /[`~@#$^&*=|';\\[\].<>']|[x]{3,}/
+      const reg = /[`~#^&*_\\[\]·~#￥&*]|[x]{3,}/
       if (reg.test(this.form.creativeTitle) && reg.test(this.form.creativeContent)) {
         return this.$message.error('推广标题和推广内容不能有特殊字符')
       } else {
