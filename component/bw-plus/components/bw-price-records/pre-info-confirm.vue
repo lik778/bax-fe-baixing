@@ -65,7 +65,7 @@ export default {
     },
     showWelfare () {
       const now = dayjs()
-      return dayjs(now).isBetween('2021-12-3', '2022-1-1') && (this.getWelfareInfo.duration > 30 || f2y(this.getWelfareInfo.price) >= 10000)
+      return dayjs(now).isBetween('2022-1-14', '2022-2-1') && (this.getWelfareInfo.duration > 30 || f2y(this.getWelfareInfo.price) >= 10000)
     },
     totalPrice () {
       const { additionProductMap } = this.preInfo

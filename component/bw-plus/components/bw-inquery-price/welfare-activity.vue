@@ -58,7 +58,7 @@ export default {
 </script>
 <style lang="scss">
     .welfare-item{
-        width: 244px;
+        width: 260px;
         height: 172px;
         background-image: linear-gradient(173deg, #FFDFBC 0%, #FFD2A0 0%, #FA7082 100%);
         border-radius: 8px;
@@ -89,7 +89,7 @@ export default {
             margin-bottom: 10px;
         }
         &_content{
-            width: 220px;
+            width: 240px;
             height: 52px;
             background: #FFF7EA;
             border-radius: 4px;
