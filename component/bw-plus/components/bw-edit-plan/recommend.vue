@@ -1,31 +1,11 @@
 <template>
     <div class="box">
         <el-row :gutter="20">
-            <!-- <el-col :span="8">
+             <el-col :span="8" v-for="(item,index) in templateList" :key="index" >
                 <div class="grid-content bg-purple">
-                    <div class="title">自动焊机就找上海轶煌，厂家直销，型号齐全</div>
-                    <div class="content">公司主营便携式自动焊机、电焊机等，20年专业生产经验，累计服务200家大中型建筑建材企业，规格型号全，支持定制，价格透明合理，欢迎新老客户咨询。</div>
-                    <div class="footer">
-                        <div class="tip">
-                            <img src="../../../../asset/bw-plus-bw-edit-plan3.png" alt="">
-                            <span>百姓网</span>
-                            <span>广告</span>
-                            <span>保障</span>
-                        </div>
-                        <div class="btn-box">
-                            <el-button size="mini" class="btn">应用该创意</el-button>
-                        </div>
-                    </div>
-                </div>
-            </el-col> -->
-            <el-col :span="8" v-for="(item,index) in CREATIVE_TEMPLATE" :key="index">
-                <div class="grid-content bg-purple">
-                    <div class="title"><span v-if="index==1">专业</span><span class="red">{{item.keyword}}</span>{{item.title}}</div>
-                    <div class="content">
-                        <span v-if="index==0">
-                            公司主营<span class="red">{{item.contentKey}}</span>
-                        </span>
-                        {{item.content}}
+                    <div class="title" v-html="item.displayTitle">{{item.displayTitle}}</div>
+                    <div class="content"  v-html="item.displayContent">
+                        {{item.displayContent}}
                     </div>
                     <div class="footer">
                         <div class="tip">
@@ -35,7 +15,7 @@
                             <span>保障</span>
                         </div>
                         <div class="btn-box">
-                            <el-button size="mini" class="btn" @click="applyBtn">应用该创意</el-button>
+                            <el-button size="mini" class="btn" @click="applyBtn(index)">应用该创意</el-button>
                         </div>
                     </div>
                 </div>
@@ -45,6 +25,7 @@
 </template>
 <script>
 import { CREATIVE_TEMPLATE } from 'constant/bw-plus'
+import { bwPlusTrack } from '../../utils/track'
 export default {
   name: 'recommend',
   data () {
@@ -52,11 +33,32 @@ export default {
       CREATIVE_TEMPLATE
     }
   },
-  methods: {
-    close () {
-      this.$emit('close')
+  props: {
+    templateList: {
+      type: Array,
+      required: true,
+      default () {
+        return []
+      }
     },
-    applyBtn () {
+    keyword: {
+      type: String,
+      require: true,
+      default () {
+        return ''
+      }
+    },
+    id: {
+      type: Number,
+      require: true,
+      default () {
+        return 0
+      }
+    }
+  },
+  methods: {
+    applyBtn (index) {
+      bwPlusTrack('bwplus: click apply ', { keyword: this.keyword, promoteId: this.id })
       this.$confirm('选用当前推荐后将更新您已填写的信息，确定要继续操作吗？', '提示:', {
         confirmButtonText: '确定',
         cancelButtonText: '取消'
@@ -65,6 +67,8 @@ export default {
           type: 'success',
           message: '应用成功!'
         })
+        bwPlusTrack('bwplus: click and confirm ', { keyword: this.keyword, promoteId: this.id })
+        this.$emit('getIndex', index)
       }).catch(() => {
       })
     }
@@ -102,13 +106,10 @@ export default {
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-        }
-        .red{
-            font-family: PingFangSC-Regular;
-            color: #FF6350;
+            color: #333333;
             letter-spacing: 0;
             line-height: 20px;
-            }
+        }
         .content{
             flex: 1;
             margin-bottom: 10px;
@@ -151,7 +152,7 @@ export default {
                     font-family: PingFangSC-Medium;
                     color: #FF6350;
                     letter-spacing: 0;
-                    background: #FFEFED;
+                    background-color: #FFEFED;
                     border-radius: 4px;
                     border: none;
                     font-weight: bold;

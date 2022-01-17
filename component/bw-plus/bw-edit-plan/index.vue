@@ -37,21 +37,21 @@
           <div class="text-box">
             <div class="text">
               <div class="title">智能创意推荐
-                <span class="color" @click="recommendVisible = true" v-if="recommendVisible ==false">点击查看</span>
-                <span class="color" @click="recommendVisible = false" v-if="recommendVisible ==true">点击收回</span></div>
+                <span class="color" @click="showCreative" v-if="recommendVisible==false">点击查看</span>
+                <span class="color" @click="recommendVisible=false" v-if="recommendVisible==true">点击收回</span></div>
                 <div class="content">基于您的关键词所属行业， 已为您推荐以下创意。您可根据需要调整推广标题与内容</div>
             </div>
             <div class="icon"><img src="../../../asset/bw-plus-bw-edit-plan.png" alt=""></div>
           </div>
         </div>
-        <Recommend v-if="recommendVisible" @close="recommendVisible=false"></Recommend>
+        <Recommend v-if="recommendVisible==true" @getIndex="getIndex" :templateList="template" :keyword="keyword" :id="id"></Recommend>
         <div class="creative">
           <creative-editor :platforms="[SEM_PLATFORM_BAIDU]"
                          :title="form.creativeTitle"
                          :content="form.creativeContent"
                          @change="handleCreativeValueChange"
                          @error="handleCreativeError" />
-        <!-- <fm-tip class="tip" position="creative" img-url="//file.baixing.net/201903/d6f4502a0e8a659b78a33fbb3713e6b9.png">创意怎么才能飘红</fm-tip> -->
+        <fm-tip class="tip" position="creative" img-url="//file.baixing.net/201903/d6f4502a0e8a659b78a33fbb3713e6b9.png">创意怎么才能飘红</fm-tip>
         </div>
       </div>
       <el-button :disabled="isPromoteOffline"
@@ -73,7 +73,7 @@ import MvipSelector from 'com/common/mvip-selector'
 import UserAdSelector from 'com/common/ad-selector'
 import CreativeEditor from 'com/widget/creative-editor'
 import SelectPromoteDialog from '../components/select-promote-dialog.vue'
-// import FmTip from 'com/widget/fm-tip'
+import FmTip from 'com/widget/fm-tip'
 import { Recommend } from '../components'
 
 import {
@@ -83,7 +83,7 @@ import {
   LANDING_TYPE_STORE
 } from 'constant/fengming'
 import { PROMOTE_STATUS_OFFLINE } from 'constant/bw-plus'
-import { getPromoteDetailById, updatePromoteDetail } from 'api/biaowang-plus'
+import { getPromoteDetailById, updatePromoteDetail, recommendList } from 'api/biaowang-plus'
 import { createValidator } from './validate'
 import { bwPlusTrack, time, getStart } from '../utils/track'
 
@@ -119,7 +119,10 @@ export default {
       loading: false,
       trackData: {},
       startTime: 0,
-      recommendVisible: false
+      recommendVisible: false,
+      templateList: [],
+      template: [],
+      keyword: null
     }
   },
   computed: {
@@ -140,6 +143,7 @@ export default {
       const data = await getPromoteDetailById(this.id)
       this.originPromote = data
       const { landingType, landingPage, landingPageId, creativeTitle, creativeContent, status } = data
+      this.keyword = this.originPromote.keyword
       this.form = {
         promoteIds: [+this.id],
         creativeTitle: creativeTitle || '',
@@ -154,9 +158,11 @@ export default {
       this.form.landingPage = ''
       this.form.landingPageId = ''
     },
-    // showRecommend () {
-    //   this.recommendVisible = true
-    // },
+    getIndex (val) {
+      this.index = val
+      this.form.creativeTitle = this.templateList[val].title
+      this.form.creativeContent = this.templateList[val].content
+    },
     setLandingPageValidity (type, isValid) {
       this.isErrorLandingPageShow = !isValid
     },
@@ -205,18 +211,41 @@ export default {
       }
     },
     async onSubmit () {
-      if (this.isErrorLandingPageShow) {
-        return this.$message.error('当前投放页面失效，请重新选择新的投放页面')
+      const reg = /[`~@#$^&*()=|{}':;\\[\].<>'x]/
+      if (reg.test(this.form.creativeTitle) && reg.test(this.form.creativeContent)) {
+        return this.$message.error('推广标题和推广内容不能有特殊字符')
+      } else {
+        if (this.isErrorLandingPageShow) {
+          return this.$message.error('当前投放页面失效，请重新选择新的投放页面')
+        }
+        if (this.creativeError) {
+          return this.$message.error(this.creativeError)
+        }
+        try {
+          await createValidator.validate(this.form, { first: true })
+        } catch (e) {
+          return this.$message.error(e.errors[0].message)
+        }
+        this.selectPromoteDialogVisible = true
       }
-      if (this.creativeError) {
-        return this.$message.error(this.creativeError)
-      }
-      try {
-        await createValidator.validate(this.form, { first: true })
-      } catch (e) {
-        return this.$message.error(e.errors[0].message)
-      }
-      this.selectPromoteDialogVisible = true
+    },
+    async showCreative () {
+      this.recommendVisible = true
+      const { data: { creativeTemplateList } } = await recommendList(this.id)
+      this.templateList = creativeTemplateList
+      this.extractTemplate()
+      const { keyword } = this.originPromote
+      bwPlusTrack('bwplus: intelligent recommendation', { keyword, promoteId: this.id })
+    },
+    extractTemplate () {
+      this.template = []
+      const reg = /\((.+)\)/g
+      this.templateList.forEach(item => {
+        const obj = {}
+        obj.displayTitle = item.displayTitle.replace(reg, "<span style='color:#FF6350;'>$1</span>")
+        obj.displayContent = item.displayContent.replace(reg, "<span style='color:#FF6350;'>$1</span>")
+        this.template.push(obj)
+      })
     }
   },
   components: {
@@ -224,7 +253,7 @@ export default {
     UserAdSelector,
     CreativeEditor,
     SelectPromoteDialog,
-    // FmTip,
+    FmTip,
     Recommend
   }
 }

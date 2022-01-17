@@ -34,7 +34,7 @@ const local = {
   baxApiHost: '/devApi/bax',
   kaApiHost: '/devApi/ka/api/admin',
   biaowangApiHost: '/devApi/phoenixs/api',
-  biaowangPlusApiHost: '/devApi/phoenixs-plus/api/phoenixs-plus',
+  biaowangPlusApiHost: '/bwplusDevApi/api/phoenixs-plus',
   seoApiHost: '/devApi/seo-api',
   qcApiHost: '/devApi/sem-batch/api/sem-batch',
   orderServiceHost: 'http://trade-dev.baixing.cn',
