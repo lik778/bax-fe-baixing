@@ -252,6 +252,7 @@ export default {
         const obj = {}
         obj.displayTitle = item.displayTitle.replace(reg, "<span style='color:#FF6350;'>$1</span>")
         obj.displayContent = item.displayContent.replace(reg, "<span style='color:#FF6350;'>$1</span>")
+        obj.id = item.id
         this.template.push(obj)
       })
     }
