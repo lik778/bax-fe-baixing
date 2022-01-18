@@ -21,6 +21,7 @@ import BwCreativity from './bw-inquery-price/bw-creativity.vue'
 import BwDescriptionItem from './bw-price-records/bw-description-item.vue'
 import PreInfoConfirm from './bw-price-records/pre-info-confirm.vue'
 import UseTips from './bw-inquery-price/use-tips.vue'
+import Recommend from './bw-edit-plan/recommend.vue'
 export {
   InqueryForm,
   KeywordHotDetail,
@@ -44,5 +45,6 @@ export {
   BwCreativity,
   BwDescriptionItem,
   PreInfoConfirm,
-  UseTips
+  UseTips,
+  Recommend
 }

@@ -408,3 +408,9 @@ export const INVALID_INDUSTRY = Object.freeze([
   '21、房地产行业；',
   '22、涉及宗教及政治相关行业；'
 ])
+
+export const YINGYONG_TIP = Object.freeze([
+  '提示：',
+  '1.通配符内的关键词与当前计划关键词一致时，其他计划会自动替换关键词并更新；',
+  '2.通配符内的关键词与当前计划关键词不一致时，其他计划会统一按当前物料更新。'
+])
