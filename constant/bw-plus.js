@@ -255,7 +255,7 @@ export const welfareInfo = [
       const active = duration >= 90
       return {
         active,
-        tag: active ? `已解锁，赠送${duration}天` : '至少购买90天标王可解锁',
+        tag: '至少购买90天标王可解锁',
         detail: `${duration}天`,
         name: '会员钻石店铺'
       }
@@ -274,7 +274,7 @@ export const welfareInfo = [
       const num = f2y(price) >= 10000 && f2y(price) < 20000 ? 2 : Math.floor(f2y(price) / 20000) * 5
       return {
         active,
-        tag: active ? `已解锁，赠送${num}个` : `还差${10000 - f2y(price)}元即可解锁`,
+        tag: `还差${10000 - f2y(price)}元即可解锁`,
         detail: `${num}个`,
         name: '精准关键词'
       }
@@ -297,7 +297,7 @@ export const welfareInfo = [
       const active = f2y(price) >= 10000 && showWelfare
       return {
         active,
-        tag: active ? '已解锁，赠送90天' : `还差${10000 - f2y(price)}元即可解锁`,
+        tag: `还差${10000 - f2y(price)}元即可解锁`,
         detail: '90天',
         name: !price || f2y(price) < 20000 ? '一网营销' : '三网整合营销'
       }
@@ -317,7 +317,7 @@ export const welfareInfo = [
       const active = f2y(price) >= 10000 && showWelfare01
       return {
         active,
-        tag: active ? '已解锁' : `还差${10000 - f2y(price)}元即可解锁`,
+        tag: `还差${10000 - f2y(price)}元即可解锁`,
         detail: `${Math.floor(f2y(price) / 10000)}个关键词或15天服务时长`,
         name: '精准词或时长'
       }

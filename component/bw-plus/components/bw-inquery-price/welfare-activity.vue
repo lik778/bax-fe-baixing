@@ -1,16 +1,15 @@
 <template>
-    <div :class="{'welfare-item': true, 'welfare-active': active, [className]: className }">
-        <span class="welfare-item_tag">{{tag}}</span>
-        <h5 class="welfare-item_title">{{title}}</h5>
-        <div class="welfare-item_content">
-            <ul>
-                <li v-for="(item, index) in content" :key="index">{{item}}</li>
-            </ul>
+    <div v-if="active" :class="{'welfare-active': true, [className]: className }">
+        <span class="welfare-active_tag">赠送{{detail}}</span>
+        <div class="welfare-active_wrapper">
+            <h3 class="welfare-active_title">{{item.title}}</h3>
+            <span v-if="item.desc" class="welfare-active_desc">{{item.desc}}</span>
         </div>
-        <p class="welfare-item_value">
-            <span>价值： {{value}} 元</span>
-            <span v-if="desc" class="welfare-item_value-desc">{{desc}}</span>
-        </p>
+        <span class="welfare-active_tips">{{active ? '已解锁' : '未解锁'}}</span>
+    </div>
+    <div v-else class="welfare-default">
+        <h3 class="welfare-default_title">{{item.title}}</h3>
+        <p class="welfare-default_desc">{{tag}}</p>
     </div>
 </template>
 
@@ -18,142 +17,116 @@
 export default {
   name: 'welfare-activity',
   props: {
-    title: {
-      type: String,
-      default: '',
+    item: {
+      type: Object,
+      default: () => {},
       require: true
     },
-    tag: {
-      type: String,
-      default: '',
-      require: true
-    },
-    value: {
-      type: Number || String,
-      default: '',
-      require: true
-    },
-    desc: {
-      type: String,
-      default: '',
-      require: false
-    },
-    content: {
-      type: Array,
-      default: () => [],
+    currentPrice: {
+      type: Object,
+      default: () => {},
       require: true
     },
     className: {
       type: String,
       default: '',
       require: false
+    }
+  },
+  computed: {
+    detail () {
+      const { item, currentPrice } = this
+      return item.isActive(currentPrice.duration, currentPrice.price).detail
     },
-    active: {
-      type: Boolean,
-      default: false,
-      require: false
+    tag () {
+      const { item, currentPrice } = this
+      return item.isActive(currentPrice.duration, currentPrice.price).tag
+    },
+    active () {
+      const { item, currentPrice } = this
+      return item.isActive(currentPrice.duration, currentPrice.price).active
     }
   }
 }
 </script>
 <style lang="scss">
-    .welfare-item{
-        width: 260px;
-        height: 172px;
-        background-image: linear-gradient(173deg, #FFDFBC 0%, #FFD2A0 0%, #FA7082 100%);
-        border-radius: 8px;
-        position: relative;
-        padding: 12px;
-        box-sizing: border-box;
-        margin-top: 20px;
+    .welfare-default{
+        width: 222px;
+        height: 66px;
+        background: linear-gradient(180deg, #FFCF9F 0%, #FA7484 100%);
+        border-radius: 5px;
+        padding: 8px 12px;
+        margin-top: 16px;
         &:not(:last-child){
             margin-right: 30px;
         }
+        &_title{
+            font-size: 13px;
+            font-family: PingFangSC-Medium, PingFang SC;
+            font-weight: 500;
+            color: #FFFFFF;
+        }
+        &_desc{
+            font-size: 20px;
+            transform-origin: left;
+            transform: scale(.5);
+            font-family: PingFangSC-Medium, PingFang SC;
+            font-weight: 500;
+            color: #FFFFFF;
+            white-space: nowrap;
+        }
+    }
+    .welfare-active{
+        width: 222px;
+        height: 66px;
+        background: url(../../../../asset/welfare-bg.png) no-repeat center/contain;
+        border-radius: 8px;
+        position: relative;
+        box-sizing: border-box;
+        margin-top: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        &:not(:last-child){
+            margin-right: 30px;
+        }
+        &_wrapper{
+            width: 158px;
+            padding-left: 14px;
+            box-sizing: border-box;
+        }
+        &_desc{
+            font-size: 12px;
+            font-family: PingFangSC-Regular, PingFang SC;
+            font-weight: 400;
+            color: #FF6E51;
+            white-space: nowrap;
+        }
         &_tag{
-            width: 150px;
-            height: 30px;
             display: block;
             position: absolute;
-            background-image: linear-gradient(125deg, #FFC967 0%, #FFF4A0 100%);
-            border-radius: 12px 4px 4px 4px;
+            border-radius: 4px;
+            background-image: linear-gradient(to right, #FED8BA , #FFF1E0, #FFF7EA, #FFF3E4, #FFD4B0);
+            border-top-right-radius: 16px;
             right: -8px;
             top: -16px;
             font-size: 12px;
             color: #CD260A;
             text-align: center;
-            line-height: 30px;
+            padding: 6px;
+            box-sizing: border-box;
         }
         &_title{
-            font-size: 16px;
-            color: #FFFFFF;
-            margin-bottom: 10px;
+            font-size: 15px;
+            color: #CE4321;
+            font-weight: bold;
         }
-        &_content{
-            width: 240px;
-            height: 52px;
-            background: #FFF7EA;
-            border-radius: 4px;
-            margin-bottom: 12px;
-            display: flex;
-            justify-content: flex-start;
-            align-items: center;
-            padding: 8px 10px;
-            box-sizing: border-box;
-            ul{
-                display: flex;
-                flex-wrap: wrap;
-                justify-content: space-between;
-                li{
-                    width: 50%;
-                    font-size: 12px;
-                    color: #CF4321;
-                    list-style: none;
-                    height: 17px;
-                    line-height: 17px;
-                    margin-bottom: 2px;
-                    display: flex;
-                    align-items: center;
-                    flex-shrink: 0;
-                    white-space: nowrap;
-                    &::before{
-                       content: '';
-                       display: inline-block;
-                       width: 4px;
-                       height: 4px;
-                       border-radius: 100%;
-                       background: #CF4321;
-                       margin-right: 4px;
-                    }
-                }
-            }
-        }
-        &_value{
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        &_tips{
             font-size: 14px;
-            color: #FFF3A0;
-            text-align: center;
-            height: 38px;
-            span:nth-child(1){
-              white-space: nowrap;
-            }
-            &-desc{
-                background: rgba(194,32,50,0.50);
-                border-radius: 4px;
-                font-size: 12px;
-                color: #FFF3A0;
-                width: 110px;
-                padding: 4px 10px;
-                box-sizing: border-box;
-                margin-left: 10px;
-                flex-shrink: 0;
-            }
+            color: #FFFFFF;
+            margin-right: 10px;
+            white-space: nowrap;
         }
-    }
-    .welfare-active{
-        border: 1px solid #FF7533;
-        background-image: linear-gradient(174deg, #FF9C7E 0%, #F63F5C 100%);
         &::after {
             content: '';
             position: absolute;

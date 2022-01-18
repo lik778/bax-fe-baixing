@@ -1,26 +1,21 @@
 <template>
     <div class="welfare-content">
-        <Title class="wefare-title" title="超值福利，满额即送" extra="满足规则即可解锁福利"/>
         <div class="welfare-content_wrapper">
             <WelfareActivity
                 v-for="(item, index) in welfareInfo.filter(o => o.show)"
-                :key="index" :title="item.title"
+                :key="index"
                 :className="`custom-${index+1}`"
-                :desc="item.desc"
-                :value="item.value(currentPrice.price)"
-                :tag="item.isActive(currentPrice.duration, currentPrice.price).tag"
-                :content="item.content(currentPrice.price)"
-                :active="item.isActive(currentPrice.duration, currentPrice.price).active"/>
+                :item="item"
+                :currentPrice="currentPrice" />
         </div>
     </div>
 </template>
 <script>
-import Title from './title.vue'
 import WelfareActivity from './welfare-activity.vue'
 import { welfareInfo } from 'constant/bw-plus'
 export default {
   name: 'welfare-layout',
-  components: { Title, WelfareActivity },
+  components: { WelfareActivity },
   props: {
     currentPrice: {
       type: Object,
@@ -37,6 +32,7 @@ export default {
 </script>
 <style lang="scss" scoped>
     .welfare-content{
+        flex-shrink: 0;
       &_wrapper{
         display: flex;
       }
