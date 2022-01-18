@@ -2,7 +2,7 @@
   <section class="ad-platform-dashboard">
     <h3 class="title">资金概览</h3>
     <Founds :founds="founds"/>
-    <h3 class="title"><span  :class="cueVisible?'active':null" @click="cueVisible=false">数据概览</span><span :class="cueVisible?null:'active'" @click="cueVisible=true">线索中心</span></h3>
+    <h3 class="title"><span  :class="cueVisible?'active':null" @click="cueVisible=false">数据概览</span><span :class="cueVisible?null:'active'" @click="cueVisibleList">线索中心</span></h3>
     <div v-if="cueVisible==false">
       <DataRange :daterangeListMall="daterangeList" :subtractDay="0" @getDate="getDate" @searchData="changeDateRange"/>
       <div class="chart-content" >
@@ -108,6 +108,10 @@ export default {
       const { data: { total, list } } = await ciueCenterList(params)
       this.ciueCenterList = list
       this.total = total
+    },
+    cueVisibleList () {
+      this.cueVisible = true
+      this.getCiueCenterList()
     },
     async getStatistic () {
       const { daterange, $route: { query: { user_id: userId } } } = this

@@ -356,6 +356,28 @@ export const CREATIVE_PRODUCT_TYPE = 0
 export const REGULAR_PRODUCT_TYPE = 1
 export const BAIDUBW_PRODUCT_TYPE = 3
 
+export const BAIDU_PRODUCT_SOURCE = 301
+export const IMAGE_PRODUCT_SOURCE = 302
+export const DAIL_BUTTON_PRODUCT_SOURCE = 303
+export const VIDEO_PRODUCT_SOURCE = 304
+export const BIAOWANG_360_PRODUCT_SOURCE = 305
+export const BIAOWANG_TOUTIAO_PRODUCT_SOURCE = 306
+export const BIAOWANG_DOUYIN_PRODUCT_SOURCE = 307
+export const SEO_CLOUD_PRODUCT_SOURCE = 308
+export const BIAOWANG_ZHIZUN_PRODUCT_SOURCE = 311
+
+export const PRODUCT_SOURCE_MAP = Object.freeze({
+  [BAIDU_PRODUCT_SOURCE]: '百度',
+  [IMAGE_PRODUCT_SOURCE]: '创意加配图',
+  [DAIL_BUTTON_PRODUCT_SOURCE]: '创意加拨打按钮',
+  [VIDEO_PRODUCT_SOURCE]: '创意加视频',
+  [BIAOWANG_360_PRODUCT_SOURCE]: '360',
+  [BIAOWANG_TOUTIAO_PRODUCT_SOURCE]: '头条',
+  [BIAOWANG_DOUYIN_PRODUCT_SOURCE]: '抖音',
+  [SEO_CLOUD_PRODUCT_SOURCE]: 'seo云推广',
+  [BIAOWANG_ZHIZUN_PRODUCT_SOURCE]: '至尊标王'
+})
+
 export const INVALID_INDUSTRY = Object.freeze([
   '一、 定义',
   '禁售行业：由于搜索引擎规则限制或行业资质限制，较难展现或不能推广的行业。',

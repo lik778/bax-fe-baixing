@@ -18,12 +18,6 @@
           popper-class="detail-popover"
           @show="showDetail"
         >
-          <!-- <div class="product-detail">
-                        <div class="image-wrapper">
-                        <img :src="product.image"/>
-                        </div>
-                        <p>{{product.description}}</p>
-                    </div> -->
           <ProductDetail :product="product" />
           <i slot="reference" class="el-icon-info"></i>
         </el-popover>
@@ -59,13 +53,13 @@ import {
   DEVICE,
   SCHEDULE_TYPE,
   SEO_PRODUCT_TYPE,
-  DEVICE_PC,
-  DEVICE_WAP,
   REGULAR_PRODUCT_TYPE,
-  CREATIVE_PRODUCT_TYPE
+  CREATIVE_PRODUCT_TYPE,
+  IMAGE_PRODUCT_SOURCE,
+  DAIL_BUTTON_PRODUCT_SOURCE,
+  VIDEO_PRODUCT_SOURCE
 } from 'constant/bw-plus'
 import { f2y } from 'util'
-import { DEVICE_ALL } from 'constant/fengming-report'
 import { bwPlusTrack } from '../../../utils/track'
 import ProductDetail from '../product-detail/index.vue'
 const PRODUCT_OFFLINE = 1
@@ -87,13 +81,9 @@ export default {
       default: () => [],
       require: true
     },
-    deviceAvailableStatus: {
+    disableDeviceListBySku: {
       type: Object,
-      default: () => ({
-        ifAllAvailable: true,
-        ifMobileAvailable: true,
-        ifPcAvailable: true
-      }),
+      default: () => {},
       require: false
     }
   },
@@ -110,34 +100,26 @@ export default {
     notAllowCheck () {
       const {
         product: {
-          currentPrice: { device }
-        },
-        deviceAvailableStatus: { ifMobileAvailable, ifPcAvailable }
+          currentPrice: { price, skuId }
+        }
       } = this
-      if (
-        ifMobileAvailable &&
-        !ifPcAvailable &&
-        (device === DEVICE_PC || device === DEVICE_ALL)
-      ) {
+      if (price <= 0) {
         return {
           disable: true,
-          reason: '当前商品电脑端已售出'
+          reason: '当前渠道商品已被售出～请更换关键词或城市重新查价购买哦～'
         }
       }
       if (
-        !ifMobileAvailable &&
-        ifPcAvailable &&
-        (device === DEVICE_WAP || device === DEVICE_ALL)
+        !price &&
+        [
+          IMAGE_PRODUCT_SOURCE,
+          DAIL_BUTTON_PRODUCT_SOURCE,
+          VIDEO_PRODUCT_SOURCE
+        ].includes(skuId)
       ) {
         return {
           disable: true,
-          reason: '当前商品手机端已售出'
-        }
-      }
-      if (!ifMobileAvailable && !ifPcAvailable) {
-        return {
-          disable: true,
-          reason: '当前商品手机端、电脑端已售出'
+          reason: '须购买百度标王标准版，才可以购买此商品'
         }
       }
       // 当前商品与所选商品存在互斥，或者当前商品未上线,或者当前商品是创意相关商品并且其价格<=0(即未选中百度标王产品，不允许单独购买)
