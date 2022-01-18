@@ -122,7 +122,8 @@ export default {
       recommendVisible: false,
       templateList: [],
       template: [],
-      keyword: null
+      keyword: null,
+      code: null
     }
   },
   computed: {
@@ -200,7 +201,12 @@ export default {
       }
       this.loading = true
       try {
-        await updatePromoteDetail(this.form)
+        const { code } = await updatePromoteDetail(this.form)
+        this.code = code
+        if (this.code !== 0) {
+          this.selectPromoteDialogVisible = false
+          return
+        }
         this.selectPromoteDialogVisible = false
         this.$router.push({ name: 'bw-plus-plan-list', params: { id: this.originPromote.packageId } })
       } finally {

@@ -85,7 +85,7 @@ export default {
         font-size: 14px;
         padding: 8px 0px;
     }
-    width:846px;
+    width:1000px;
     .closeClick{
         position: absolute;
         right: 20px;
@@ -97,7 +97,7 @@ export default {
         border: 1px solid #DCDFE6;
         border-radius: 4px;
         padding: 15px 10px 15px;
-        height: 165px;
+        height: 180px;
         display: flex;
         flex-direction: column;
         .title{
@@ -117,7 +117,7 @@ export default {
             font-size: 12px;
             color: #666666;
             letter-spacing: 0;
-            line-height: 17px;
+            line-height: 21px;
         }
         .footer{
             font-size: 12px;

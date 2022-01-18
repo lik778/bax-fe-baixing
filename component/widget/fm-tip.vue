@@ -1,10 +1,11 @@
 <template>
   <div class="fm-tip-container" @mouseover="visiable = true" @mouseleave="visiable = false">
+
     <transition name="el-fade-in-linear">
       <div
         class="image-wrap"
         v-show="visiable"
-        :style="position === 'creative' ? 'transform: translateY(-65%);' : ''"
+        :style="position === 'creative' ? 'transform: translateY(-100%) translateX(-30%);' : ''"
       >
         <slot name="float-content">
           <img :src="imgUrl">
