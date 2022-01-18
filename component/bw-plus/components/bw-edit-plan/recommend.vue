@@ -106,7 +106,7 @@ export default {
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            color: #333333;
+            color: #74B8FF;
             letter-spacing: 0;
             line-height: 20px;
         }
