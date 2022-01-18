@@ -45,22 +45,17 @@ export default {
     keyword: {
       type: String,
       require: true,
-      default () {
-        return ''
-      }
+      default: ''
     },
     id: {
-      type: Number,
+      type: String,
       require: true,
-      default () {
-        return 0
-      }
+      default: ''
     }
   },
   methods: {
     applyBtn (index) {
       this.templateId = this.templateList[index].id
-      console.log(this.templateId)
       bwPlusTrack('bwplus: click apply ', { keyword: this.keyword, promoteId: this.id, templateId: this.templateId })
       this.$confirm('选用当前推荐后将更新您已填写的信息，确定要继续操作吗？', '提示:', {
         confirmButtonText: '确定',
