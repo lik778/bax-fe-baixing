@@ -113,7 +113,8 @@ export default {
         landingPageId: '',
         creativeTitle: '',
         creativeContent: '',
-        promoteIds: []
+        promoteIds: [],
+        currentPromoteId: ''
       },
       isErrorLandingPageShow: false,
       loading: false,
@@ -152,6 +153,7 @@ export default {
         landingType: landingType || LANDING_TYPE_STORE,
         landingPage: landingPage || '',
         landingPageId: landingPageId || '',
+        currentPromoteId: +this.id,
         status
       }
     },
