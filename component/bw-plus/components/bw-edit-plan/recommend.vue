@@ -30,7 +30,8 @@ export default {
   name: 'recommend',
   data () {
     return {
-      CREATIVE_TEMPLATE
+      CREATIVE_TEMPLATE,
+      templateId: null
     }
   },
   props: {
@@ -44,21 +45,18 @@ export default {
     keyword: {
       type: String,
       require: true,
-      default () {
-        return ''
-      }
+      default: ''
     },
     id: {
-      type: Number,
+      type: String,
       require: true,
-      default () {
-        return 0
-      }
+      default: ''
     }
   },
   methods: {
     applyBtn (index) {
-      bwPlusTrack('bwplus: click apply ', { keyword: this.keyword, promoteId: this.id })
+      this.templateId = this.templateList[index].id
+      bwPlusTrack('bwplus: click apply ', { keyword: this.keyword, promoteId: this.id, templateId: this.templateId })
       this.$confirm('选用当前推荐后将更新您已填写的信息，确定要继续操作吗？', '提示:', {
         confirmButtonText: '确定',
         cancelButtonText: '取消'
@@ -67,7 +65,7 @@ export default {
           type: 'success',
           message: '应用成功!'
         })
-        bwPlusTrack('bwplus: click and confirm ', { keyword: this.keyword, promoteId: this.id })
+        bwPlusTrack('bwplus: click and confirm ', { keyword: this.keyword, promoteId: this.id, templateId: this.templateId })
         this.$emit('getIndex', index)
       }).catch(() => {
       })
