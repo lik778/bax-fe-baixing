@@ -22,6 +22,9 @@
           {{promote.keyword}}*{{DEVICE[promote.device]}}
         </el-checkbox>
       </el-checkbox-group>
+      <div class="content-tip" v-if="tipShow">
+        <p v-for="(item,index) in YINGYONG_TIP" :key="index">{{item}}</p>
+      </div>
     </div>
     <footer slot="footer"
             class="footer">
@@ -36,7 +39,7 @@
 
 <script>
 import { getUsePromoteListByPackageId } from 'api/biaowang-plus'
-import { DEVICE } from 'constant/bw-plus'
+import { DEVICE, YINGYONG_TIP } from 'constant/bw-plus'
 import clone from 'clone'
 
 export default {
@@ -65,12 +68,13 @@ export default {
   data () {
     return {
       DEVICE,
-
+      YINGYONG_TIP,
       isIndeterminate: false,
       checkAll: false,
       checkedPromoteIds: [],
       originPromotes: [],
-      promotes: []
+      promotes: [],
+      tipShow: false
     }
   },
   mounted () {
@@ -96,10 +100,12 @@ export default {
       const promoteLen = this.originPromotes.length
       this.checkAll = checkedCount === promoteLen
       this.isIndeterminate = checkedCount > 0 && checkedCount < promoteLen
+      this.tipShow = true
     },
     handleCheckAllChange (val) {
       this.checkedPromoteIds = val ? this.originPromotes.map(o => o.id) : []
       this.isIndeterminate = false
+      this.tipShow = true
     },
     handleCancel () {
       this.$emit('close')
@@ -125,6 +131,9 @@ export default {
   /deep/ .el-dialog__header {
     border-bottom: 1px solid #ddd;
   }
+   /deep/ .el-dialog__body {
+    padding: 20px 20px 0px 20px;
+  }
   /deep/ .el-dialog__footer {
     border-top: 1px solid #ddd;
   }
@@ -139,6 +148,11 @@ export default {
     min-height: 200px;
     .checkbox-item {
       margin-bottom: 14px;
+    }
+    .content-tip{
+      padding: 20px 0;
+      font-size: 12px;
+      color: #666;
     }
   }
 }

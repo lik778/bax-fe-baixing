@@ -8,7 +8,7 @@
     <a
       class="use-tips"
       target="_blank"
-      href="https://file.baixing.net/bax-fe/asset/user-product-new.pdf"
+      href="https://file.baixing.net/bax-fe/asset/product-use-book-20220117.pdf"
       download="产品使用手册"
     >
       <i class="el-icon-question"></i>
