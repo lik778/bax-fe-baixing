@@ -68,7 +68,7 @@ export default {
         }
         &_title{
             font-size: 15px;
-            color: #333333;
+            color: #666;
             font-weight: bold;
             font-family: PingFangSC-Medium, PingFang SC;
         }
@@ -78,7 +78,7 @@ export default {
             transform-origin: left;
             font-family: PingFangSC-Regular, PingFang SC;
             font-weight: 400;
-            color: #333333;
+            color: #666;
             white-space: nowrap;
             position: absolute;
             bottom: -18px;
@@ -100,7 +100,7 @@ export default {
         }
         &_tips{
             font-size: 13px;
-            color: #333333;
+            color: #666;
             margin-right: 10px;
             white-space: nowrap;
             font-family: PingFangSC-Regular, PingFang SC;
