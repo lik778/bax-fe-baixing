@@ -2,7 +2,7 @@
     <div :class="{'welfare-default': true, 'welfare-active': active, [className]: className }">
         <span class="welfare-default_tag">{{tag}}</span>
         <div class="welfare-default_wrapper">
-            <h3 class="welfare-default_title">{{item.title}}</h3>
+            <span class="welfare-default_title">{{item.title}}</span>
             <p v-if="item.desc" class="welfare-default_desc">({{item.desc}})</p>
         </div>
         <span class="welfare-default_tips">{{active ? '已解锁' : '未解锁'}}</span>
@@ -69,7 +69,7 @@ export default {
         &_title{
             font-size: 15px;
             color: #666;
-            font-weight: bold;
+            font-weight: 500;
             font-family: PingFangSC-Medium, PingFang SC;
             text-align: center;
         }
@@ -97,7 +97,7 @@ export default {
             font-size: 12px;
             color: #CD260A;
             text-align: center;
-            padding: 6px;
+            padding: 4px;
             box-sizing: border-box;
         }
         &_tips{
