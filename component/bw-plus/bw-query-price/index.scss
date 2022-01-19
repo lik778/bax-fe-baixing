@@ -4,9 +4,6 @@
     .bw-query-price{
         height: 100%;
     }
-    // .query-card{
-    //     padding-bottom: 160px;
-    // }
    .box-card{
        margin: 10px;
    }
@@ -20,7 +17,6 @@
       h3{
         font-size: 24px;
         color: #FF6350;
-        margin-bottom: 20px;
       }
    }
     /deep/ .lock-tips{
@@ -42,7 +38,7 @@
 }
 
 .submit-fixed{
-    width: calc(100% - 200px);
+    width: calc(100% - 220px);
     z-index: 3;
     box-sizing: border-box;
     display: flex;
@@ -50,13 +46,10 @@
     align-items: center;
     background: #fff;
     padding: 0 30px;
-    padding-bottom: 30px;
     box-sizing: border-box;
     box-shadow: 0px -6px 15px 0px rgba(83,95,127,0.15);
     position: fixed;
     bottom: 0;
     left: 190px;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
     margin-bottom: 0;
 }

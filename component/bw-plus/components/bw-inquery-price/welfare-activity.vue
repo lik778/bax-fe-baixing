@@ -1,15 +1,11 @@
 <template>
-    <div v-if="active" :class="{'welfare-active': true, [className]: className }">
-        <span class="welfare-active_tag">赠送{{detail}}</span>
-        <div class="welfare-active_wrapper">
-            <h3 class="welfare-active_title">{{item.title}}</h3>
-            <span v-if="item.desc" class="welfare-active_desc">{{item.desc}}</span>
+    <div :class="{'welfare-default': true, 'welfare-active': active, [className]: className }">
+        <span class="welfare-default_tag">{{tag}}</span>
+        <div class="welfare-default_wrapper">
+            <h3 class="welfare-default_title">{{item.title}}</h3>
+            <p v-if="item.desc" class="welfare-default_desc">({{item.desc}})</p>
         </div>
-        <span class="welfare-active_tips">{{active ? '已解锁' : '未解锁'}}</span>
-    </div>
-    <div v-else class="welfare-default">
-        <h3 class="welfare-default_title">{{item.title}}</h3>
-        <p class="welfare-default_desc">{{tag}}</p>
+        <span class="welfare-default_tips">{{active ? '已解锁' : '未解锁'}}</span>
     </div>
 </template>
 
@@ -51,35 +47,9 @@ export default {
 </script>
 <style lang="scss">
     .welfare-default{
-        width: 222px;
-        height: 66px;
-        background: linear-gradient(180deg, #FFCF9F 0%, #FA7484 100%);
-        border-radius: 5px;
-        padding: 8px 12px;
-        margin-top: 16px;
-        &:not(:last-child){
-            margin-right: 30px;
-        }
-        &_title{
-            font-size: 13px;
-            font-family: PingFangSC-Medium, PingFang SC;
-            font-weight: 500;
-            color: #FFFFFF;
-        }
-        &_desc{
-            font-size: 20px;
-            transform-origin: left;
-            transform: scale(.5);
-            font-family: PingFangSC-Medium, PingFang SC;
-            font-weight: 500;
-            color: #FFFFFF;
-            white-space: nowrap;
-        }
-    }
-    .welfare-active{
-        width: 222px;
-        height: 66px;
-        background: url(../../../../asset/welfare-bg.png) no-repeat center/contain;
+        width: 185px;
+        height: 55px;
+        background: url(../../../../asset/welfare-bg-default.png) no-repeat center/contain;
         border-radius: 8px;
         position: relative;
         box-sizing: border-box;
@@ -91,16 +61,27 @@ export default {
             margin-right: 30px;
         }
         &_wrapper{
-            width: 158px;
-            padding-left: 14px;
+            width: 130px;
+            padding-left: 12px;
             box-sizing: border-box;
+            position: relative;
+        }
+        &_title{
+            font-size: 15px;
+            color: #333333;
+            font-weight: bold;
+            font-family: PingFangSC-Medium, PingFang SC;
         }
         &_desc{
-            font-size: 12px;
+            font-size: 20px;
+            transform: scale(.5);
+            transform-origin: left;
             font-family: PingFangSC-Regular, PingFang SC;
             font-weight: 400;
-            color: #FF6E51;
+            color: #333333;
             white-space: nowrap;
+            position: absolute;
+            bottom: -18px;
         }
         &_tag{
             display: block;
@@ -108,6 +89,7 @@ export default {
             border-radius: 4px;
             background-image: linear-gradient(to right, #FED8BA , #FFF1E0, #FFF7EA, #FFF3E4, #FFD4B0);
             border-top-right-radius: 16px;
+            font-family: PingFangSC-Medium, PingFang SC;
             right: -8px;
             top: -16px;
             font-size: 12px;
@@ -116,16 +98,24 @@ export default {
             padding: 6px;
             box-sizing: border-box;
         }
-        &_title{
-            font-size: 15px;
-            color: #CE4321;
-            font-weight: bold;
-        }
         &_tips{
-            font-size: 14px;
-            color: #FFFFFF;
+            font-size: 13px;
+            color: #333333;
             margin-right: 10px;
             white-space: nowrap;
+            font-family: PingFangSC-Regular, PingFang SC;
+        }
+    }
+    .welfare-active{
+        background: url(../../../../asset/welfare-bg.png) no-repeat center/contain;
+        .welfare-default_desc{
+            color: #FF6E51;
+        }
+        .welfare-default_title{
+            color: #CE4321;
+        }
+        .welfare-default_tips{
+           color: #FFFFFF;
         }
         &::after {
             content: '';
