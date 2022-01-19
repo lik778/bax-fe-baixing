@@ -71,6 +71,7 @@ export default {
             color: #666;
             font-weight: bold;
             font-family: PingFangSC-Medium, PingFang SC;
+            text-align: center;
         }
         &_desc{
             font-size: 20px;
@@ -82,6 +83,7 @@ export default {
             white-space: nowrap;
             position: absolute;
             bottom: -18px;
+            margin-left: 4px;
         }
         &_tag{
             display: block;
