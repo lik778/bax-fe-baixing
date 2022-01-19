@@ -176,7 +176,7 @@ export default {
       return {
         ...currentPrice,
         duration: Math.max(...durationArray),
-        price: currentPrice.price + totalPrice
+        price: currentPrice.price && currentPrice.price > 0 ? currentPrice.price + totalPrice : totalPrice
       }
     },
     preInfo () {
