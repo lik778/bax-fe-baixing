@@ -49,7 +49,7 @@
         :productList="productList.filter((o) => o.type !== 0)"
       />
     </div>
-    <div :style="{height: '100px'}"></div>
+    <div :style="{height: '124px'}"></div>
     <div class="box-card submit-fixed" v-if="showResult">
       <WelfareLayout :currentPrice="getWelfareInfo" />
       <div class="submit">
