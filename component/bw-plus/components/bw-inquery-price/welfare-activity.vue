@@ -30,10 +30,6 @@ export default {
     }
   },
   computed: {
-    detail () {
-      const { item, currentPrice } = this
-      return item.isActive(currentPrice.duration, currentPrice.price).detail
-    },
     tag () {
       const { item, currentPrice } = this
       return item.isActive(currentPrice.duration, currentPrice.price).tag
