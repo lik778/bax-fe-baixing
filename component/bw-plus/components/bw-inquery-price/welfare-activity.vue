@@ -89,7 +89,7 @@ export default {
             display: block;
             position: absolute;
             border-radius: 4px;
-            background-image: linear-gradient(to right, #FED8BA , #FFF1E0, #FFF7EA, #FFF3E4, #FFD4B0);
+            background-image: linear-gradient(to right, #FED8BA 10% , #FFF1E0, #FFF7EA, #FFF3E4, #FFD4B0);
             border-top-right-radius: 16px;
             font-family: PingFangSC-Medium, PingFang SC;
             right: -8px;
