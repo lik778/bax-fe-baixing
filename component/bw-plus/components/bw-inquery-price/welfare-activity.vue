@@ -2,7 +2,7 @@
     <div :class="{'welfare-default': true, 'welfare-active': active, [className]: className }">
         <span class="welfare-default_tag">{{tag}}</span>
         <div class="welfare-default_wrapper">
-            <span class="welfare-default_title">{{item.title}}</span>
+            <p class="welfare-default_title">{{item.title}}</p>
             <p v-if="item.desc" class="welfare-default_desc">({{item.desc}})</p>
         </div>
         <span class="welfare-default_tips">{{active ? '已解锁' : '未解锁'}}</span>
