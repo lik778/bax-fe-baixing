@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-card class="box-card">
+    <el-card class="box-card result-card">
       <Title
         title="更多媒体，低价加量"
         extra="请选择需要的媒体及其平台*时段*时长"
@@ -156,5 +156,8 @@ export default {
 }
 .box-card {
   margin: 10px;
+}
+.result-card{
+    padding-bottom: 60px;
 }
 </style>

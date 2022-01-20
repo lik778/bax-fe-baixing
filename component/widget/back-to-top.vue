@@ -19,9 +19,6 @@ export default {
 
 <style lang="scss" scoped>
 .back-to-top {
-  position: fixed;
-  bottom: 50px;
-  right: 20px;
   border: 1px solid #ccc;
   height: 52px;
   width: 52px;

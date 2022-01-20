@@ -176,9 +176,6 @@ function highlight (msg, keywords) {
 
 <style lang="scss" scoped>
 .chat-button {
-  position: fixed;
-  bottom: 100px;
-  right: 20px;
   border: 1px solid #ccc;
   height: 52px;
   width: 52px;

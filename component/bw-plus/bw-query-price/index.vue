@@ -1,13 +1,13 @@
 <template>
   <section class="bw-query-price">
-    <el-card class="box-card">
+    <el-card class="box-card query-card">
       <InqueryForm
         :allAreas="allAreas"
         @inquery="inquery"
         :isPending="isPending"
         @resetResult="resetResult"
       />
-      <div ref="viewScrollTop" class="placeHolder"></div>
+      <div ref="viewScrollTop" class="viewScrollTop"></div>
       <SoldCityLayout
         :allAreas="allAreas"
         :keywordsLockDetails="keywordLockDetails.lockList"
@@ -49,7 +49,8 @@
         :productList="productList.filter((o) => o.type !== 0)"
       />
     </div>
-    <el-card class="box-card" v-if="showResult">
+    <div :style="{height: '80px'}"></div>
+    <div class="box-card submit-fixed" v-if="showResult">
       <WelfareLayout :currentPrice="getWelfareInfo" />
       <div class="submit">
         <h3>总价： {{ transformPrice }}元</h3>
@@ -61,7 +62,7 @@
           >{{ showCommitDesc }}</el-button
         >
       </div>
-    </el-card>
+    </div>
     <el-card class="box-card" v-if="showErrorFooter">
       <ErrorFooter :queryResult="queryResult" />
     </el-card>
@@ -175,7 +176,7 @@ export default {
       return {
         ...currentPrice,
         duration: Math.max(...durationArray),
-        price: currentPrice.price + totalPrice
+        price: currentPrice.price && currentPrice.price > 0 ? currentPrice.price + totalPrice : totalPrice
       }
     },
     preInfo () {
