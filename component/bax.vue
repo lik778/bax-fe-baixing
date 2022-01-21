@@ -25,11 +25,13 @@
     />
     <!-- <huo-dong-intro :show="huoDongIntroVisible" @close="huoDongIntroVisible = false" /> -->
     <huo-dong-btn v-if="inActivityPeriod" />
+    <div class="right-utils">
+    <chat />
     <back-to-top />
     <!-- <WechatQrcode/> -->
     <!-- <wechat-scan /> -->
     <Notification />
-    <chat />
+    </div>
     <!-- <bw-shopping-cart ref="bwShoppingCart" :userInfo="currentUser" v-if="currentUser.id && isBwRoute" :salesInfo="salesInfo" :allAreas="allAreas"/> -->
   </div>
 </template>
@@ -309,5 +311,11 @@ body > .container {
 
 .el-loading-mask {
   height: 100%;
+}
+.right-utils{
+    position: fixed;
+    right: 20px;
+    bottom: 160px;
+    z-index: 3;
 }
 </style>

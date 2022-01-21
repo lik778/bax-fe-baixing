@@ -3,9 +3,6 @@
   }
     .bw-query-price{
         height: 100%;
-        // &_item{
-        //   margin-bottom: 30px;
-        // }
     }
    .box-card{
        margin: 10px;
@@ -16,11 +13,9 @@
      flex-direction: column;
      justify-content: flex-end;
      align-items: flex-end;
-     margin-top: 30px;
       h3{
         font-size: 24px;
         color: #FF6350;
-        margin-bottom: 20px;
       }
    }
     /deep/ .lock-tips{
@@ -39,4 +34,21 @@
       li{
         width: 100%;
       }
+}
+
+.submit-fixed{
+    width: calc(100% - 224px);
+    z-index: 3;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fff;
+    padding: 18px 20px;
+    box-sizing: border-box;
+    box-shadow: 0px -6px 15px 0px rgba(83,95,127,0.15);
+    position: fixed;
+    bottom: 0;
+    left: 192px;
+    margin-bottom: 0;
 }

@@ -39,6 +39,13 @@ const config = merge(base, {
         pathRewrite: {
           '^/adPlatformApi': '/'
         }
+      },
+      '/bwplusDevApi': {
+        target: 'http://172.17.2.49:8080',
+        pathRewrite: {
+          '^/bwplusDevApi': '/'
+        },
+        changeOrigin: true
       }
     },
     historyApiFallback: {

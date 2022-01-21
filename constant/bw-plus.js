@@ -255,7 +255,7 @@ export const welfareInfo = [
       const active = duration >= 90
       return {
         active,
-        tag: active ? `已解锁，赠送${duration}天` : '至少购买90天标王可解锁',
+        tag: active ? `赠送${duration}天` : '至少购买90天标王可解锁',
         detail: `${duration}天`,
         name: '会员钻石店铺'
       }
@@ -274,7 +274,7 @@ export const welfareInfo = [
       const num = f2y(price) >= 10000 && f2y(price) < 20000 ? 2 : Math.floor(f2y(price) / 20000) * 5
       return {
         active,
-        tag: active ? `已解锁，赠送${num}个` : `还差${10000 - f2y(price)}元即可解锁`,
+        tag: active ? `赠送${num}个` : `还差${10000 - f2y(price)}元即可解锁`,
         detail: `${num}个`,
         name: '精准关键词'
       }
@@ -297,7 +297,7 @@ export const welfareInfo = [
       const active = f2y(price) >= 10000 && showWelfare
       return {
         active,
-        tag: active ? '已解锁，赠送90天' : `还差${10000 - f2y(price)}元即可解锁`,
+        tag: active ? '赠送90天' : `还差${10000 - f2y(price)}元即可解锁`,
         detail: '90天',
         name: !price || f2y(price) < 20000 ? '一网营销' : '三网整合营销'
       }
@@ -317,7 +317,7 @@ export const welfareInfo = [
       const active = f2y(price) >= 10000 && showWelfare01
       return {
         active,
-        tag: active ? '已解锁' : `还差${10000 - f2y(price)}元即可解锁`,
+        tag: active ? `赠送${Math.floor(f2y(price) / 10000)}个关键词或15天服务时长` : `还差${10000 - f2y(price)}元即可解锁`,
         detail: `${Math.floor(f2y(price) / 10000)}个关键词或15天服务时长`,
         name: '精准词或时长'
       }
@@ -356,6 +356,28 @@ export const CREATIVE_PRODUCT_TYPE = 0
 export const REGULAR_PRODUCT_TYPE = 1
 export const BAIDUBW_PRODUCT_TYPE = 3
 
+export const BAIDU_PRODUCT_SOURCE = 301
+export const IMAGE_PRODUCT_SOURCE = 302
+export const DAIL_BUTTON_PRODUCT_SOURCE = 303
+export const VIDEO_PRODUCT_SOURCE = 304
+export const BIAOWANG_360_PRODUCT_SOURCE = 305
+export const BIAOWANG_TOUTIAO_PRODUCT_SOURCE = 306
+export const BIAOWANG_DOUYIN_PRODUCT_SOURCE = 307
+export const SEO_CLOUD_PRODUCT_SOURCE = 308
+export const BIAOWANG_ZHIZUN_PRODUCT_SOURCE = 311
+
+export const PRODUCT_SOURCE_MAP = Object.freeze({
+  [BAIDU_PRODUCT_SOURCE]: '百度',
+  [IMAGE_PRODUCT_SOURCE]: '创意加配图',
+  [DAIL_BUTTON_PRODUCT_SOURCE]: '创意加拨打按钮',
+  [VIDEO_PRODUCT_SOURCE]: '创意加视频',
+  [BIAOWANG_360_PRODUCT_SOURCE]: '360',
+  [BIAOWANG_TOUTIAO_PRODUCT_SOURCE]: '头条',
+  [BIAOWANG_DOUYIN_PRODUCT_SOURCE]: '抖音',
+  [SEO_CLOUD_PRODUCT_SOURCE]: 'seo云推广',
+  [BIAOWANG_ZHIZUN_PRODUCT_SOURCE]: '至尊标王'
+})
+
 export const INVALID_INDUSTRY = Object.freeze([
   '一、 定义',
   '禁售行业：由于搜索引擎规则限制或行业资质限制，较难展现或不能推广的行业。',
@@ -385,4 +407,10 @@ export const INVALID_INDUSTRY = Object.freeze([
   '20、汽车行业（如：汽车配件，二手车、报废车回收）；',
   '21、房地产行业；',
   '22、涉及宗教及政治相关行业；'
+])
+
+export const YINGYONG_TIP = Object.freeze([
+  '提示：',
+  '1.通配符内的关键词与当前计划关键词一致时，其他计划会自动替换关键词并更新；',
+  '2.通配符内的关键词与当前计划关键词不一致时，其他计划会统一按当前物料更新。'
 ])

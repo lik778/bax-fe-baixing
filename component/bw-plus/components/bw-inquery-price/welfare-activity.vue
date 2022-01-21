@@ -1,16 +1,11 @@
 <template>
-    <div :class="{'welfare-item': true, 'welfare-active': active, [className]: className }">
-        <span class="welfare-item_tag">{{tag}}</span>
-        <h5 class="welfare-item_title">{{title}}</h5>
-        <div class="welfare-item_content">
-            <ul>
-                <li v-for="(item, index) in content" :key="index">{{item}}</li>
-            </ul>
+    <div :class="{'welfare-default': true, 'welfare-active': active, [className]: className }">
+        <span class="welfare-default_tag">{{tag}}</span>
+        <div class="welfare-default_wrapper">
+            <p class="welfare-default_title">{{item.title}}</p>
+            <p v-if="item.desc" class="welfare-default_desc">({{item.desc}})</p>
         </div>
-        <p class="welfare-item_value">
-            <span>价值： {{value}} 元</span>
-            <span v-if="desc" class="welfare-item_value-desc">{{desc}}</span>
-        </p>
+        <span class="welfare-default_tips">{{active ? '已解锁' : '未解锁'}}</span>
     </div>
 </template>
 
@@ -18,142 +13,108 @@
 export default {
   name: 'welfare-activity',
   props: {
-    title: {
-      type: String,
-      default: '',
+    item: {
+      type: Object,
+      default: () => {},
       require: true
     },
-    tag: {
-      type: String,
-      default: '',
-      require: true
-    },
-    value: {
-      type: Number || String,
-      default: '',
-      require: true
-    },
-    desc: {
-      type: String,
-      default: '',
-      require: false
-    },
-    content: {
-      type: Array,
-      default: () => [],
+    currentPrice: {
+      type: Object,
+      default: () => {},
       require: true
     },
     className: {
       type: String,
       default: '',
       require: false
+    }
+  },
+  computed: {
+    tag () {
+      const { item, currentPrice } = this
+      return item.isActive(currentPrice.duration, currentPrice.price).tag
     },
-    active: {
-      type: Boolean,
-      default: false,
-      require: false
+    active () {
+      const { item, currentPrice } = this
+      return item.isActive(currentPrice.duration, currentPrice.price).active
     }
   }
 }
 </script>
 <style lang="scss">
-    .welfare-item{
-        width: 260px;
-        height: 172px;
-        background-image: linear-gradient(173deg, #FFDFBC 0%, #FFD2A0 0%, #FA7082 100%);
+    .welfare-default{
+        width: 185px;
+        height: 55px;
+        background: url(../../../../asset/welfare-bg-default.png) no-repeat center/contain;
         border-radius: 8px;
         position: relative;
-        padding: 12px;
         box-sizing: border-box;
         margin-top: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         &:not(:last-child){
             margin-right: 30px;
         }
+        &_wrapper{
+            width: 130px;
+            padding-left: 12px;
+            box-sizing: border-box;
+            position: relative;
+        }
+        &_title{
+            font-size: 15px;
+            color: #666;
+            font-weight: 500;
+            font-family: PingFangSC-Medium, PingFang SC;
+            text-align: center;
+        }
+        &_desc{
+            font-size: 20px;
+            transform: scale(.5);
+            transform-origin: left;
+            font-family: PingFangSC-Regular, PingFang SC;
+            font-weight: 400;
+            color: #666;
+            white-space: nowrap;
+            position: absolute;
+            bottom: -18px;
+            margin-left: 4px;
+        }
         &_tag{
-            width: 150px;
-            height: 30px;
             display: block;
             position: absolute;
-            background-image: linear-gradient(125deg, #FFC967 0%, #FFF4A0 100%);
-            border-radius: 12px 4px 4px 4px;
+            border-radius: 4px;
+            background-image: linear-gradient(to right, #FED8BA 10% , #FFF1E0, #FFF7EA, #FFF3E4, #FFD4B0);
+            border-top-right-radius: 16px;
+            font-family: PingFangSC-Medium, PingFang SC;
             right: -8px;
             top: -16px;
             font-size: 12px;
             color: #CD260A;
             text-align: center;
-            line-height: 30px;
-        }
-        &_title{
-            font-size: 16px;
-            color: #FFFFFF;
-            margin-bottom: 10px;
-        }
-        &_content{
-            width: 240px;
-            height: 52px;
-            background: #FFF7EA;
-            border-radius: 4px;
-            margin-bottom: 12px;
-            display: flex;
-            justify-content: flex-start;
-            align-items: center;
-            padding: 8px 10px;
+            padding: 4px;
             box-sizing: border-box;
-            ul{
-                display: flex;
-                flex-wrap: wrap;
-                justify-content: space-between;
-                li{
-                    width: 50%;
-                    font-size: 12px;
-                    color: #CF4321;
-                    list-style: none;
-                    height: 17px;
-                    line-height: 17px;
-                    margin-bottom: 2px;
-                    display: flex;
-                    align-items: center;
-                    flex-shrink: 0;
-                    white-space: nowrap;
-                    &::before{
-                       content: '';
-                       display: inline-block;
-                       width: 4px;
-                       height: 4px;
-                       border-radius: 100%;
-                       background: #CF4321;
-                       margin-right: 4px;
-                    }
-                }
-            }
         }
-        &_value{
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            color: #FFF3A0;
-            text-align: center;
-            height: 38px;
-            span:nth-child(1){
-              white-space: nowrap;
-            }
-            &-desc{
-                background: rgba(194,32,50,0.50);
-                border-radius: 4px;
-                font-size: 12px;
-                color: #FFF3A0;
-                width: 110px;
-                padding: 4px 10px;
-                box-sizing: border-box;
-                margin-left: 10px;
-                flex-shrink: 0;
-            }
+        &_tips{
+            font-size: 13px;
+            color: #666;
+            margin-right: 10px;
+            white-space: nowrap;
+            font-family: PingFangSC-Regular, PingFang SC;
         }
     }
     .welfare-active{
-        border: 1px solid #FF7533;
-        background-image: linear-gradient(174deg, #FF9C7E 0%, #F63F5C 100%);
+        background: url(../../../../asset/welfare-bg.png) no-repeat center/contain;
+        .welfare-default_desc{
+            color: #FF6E51;
+        }
+        .welfare-default_title{
+            color: #CE4321;
+        }
+        .welfare-default_tips{
+           color: #FFFFFF;
+        }
         &::after {
             content: '';
             position: absolute;

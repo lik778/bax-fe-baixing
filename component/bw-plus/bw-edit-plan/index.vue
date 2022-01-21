@@ -32,6 +32,19 @@
       </div>
       <div class="panel">
         <h4>投放物料设置</h4>
+        <div class="recommend-box">
+          <div class="icon-box"><img src="../../../asset/bw-plus-bw-edit-plan2.png" alt=""></div>
+          <div class="text-box">
+            <div class="text">
+              <div class="title">智能创意推荐
+                <span class="color" @click="showCreative" v-if="recommendVisible==false">点击查看</span>
+                <span class="color" @click="recommendVisible=false" v-if="recommendVisible==true">点击收回</span></div>
+                <div class="content">基于您的关键词所属行业， 已为您推荐以下创意。您可根据需要调整推广标题与内容</div>
+            </div>
+            <div class="icon"><img src="../../../asset/bw-plus-bw-edit-plan.png" alt=""></div>
+          </div>
+        </div>
+        <Recommend v-if="recommendVisible==true" @getIndex="getIndex" :templateList="template" :keyword="keyword" :id="id"></Recommend>
         <div class="creative">
           <creative-editor :platforms="[SEM_PLATFORM_BAIDU]"
                          :title="form.creativeTitle"
@@ -61,6 +74,7 @@ import UserAdSelector from 'com/common/ad-selector'
 import CreativeEditor from 'com/widget/creative-editor'
 import SelectPromoteDialog from '../components/select-promote-dialog.vue'
 import FmTip from 'com/widget/fm-tip'
+import { Recommend } from '../components'
 
 import {
   bwlandingTypeOpts,
@@ -69,7 +83,7 @@ import {
   LANDING_TYPE_STORE
 } from 'constant/fengming'
 import { PROMOTE_STATUS_OFFLINE } from 'constant/bw-plus'
-import { getPromoteDetailById, updatePromoteDetail } from 'api/biaowang-plus'
+import { getPromoteDetailById, updatePromoteDetail, recommendList } from 'api/biaowang-plus'
 import { createValidator } from './validate'
 import { bwPlusTrack, time, getStart } from '../utils/track'
 
@@ -99,12 +113,18 @@ export default {
         landingPageId: '',
         creativeTitle: '',
         creativeContent: '',
-        promoteIds: []
+        promoteIds: [],
+        currentPromoteId: ''
       },
       isErrorLandingPageShow: false,
       loading: false,
       trackData: {},
-      startTime: 0
+      startTime: 0,
+      recommendVisible: false,
+      templateList: [],
+      template: [],
+      keyword: null,
+      code: null
     }
   },
   computed: {
@@ -125,6 +145,7 @@ export default {
       const data = await getPromoteDetailById(this.id)
       this.originPromote = data
       const { landingType, landingPage, landingPageId, creativeTitle, creativeContent, status } = data
+      this.keyword = this.originPromote.keyword
       this.form = {
         promoteIds: [+this.id],
         creativeTitle: creativeTitle || '',
@@ -132,12 +153,18 @@ export default {
         landingType: landingType || LANDING_TYPE_STORE,
         landingPage: landingPage || '',
         landingPageId: landingPageId || '',
+        currentPromoteId: +this.id,
         status
       }
     },
     clearLandingPage () {
       this.form.landingPage = ''
       this.form.landingPageId = ''
+    },
+    getIndex (val) {
+      this.index = val
+      this.form.creativeTitle = this.templateList[val].title
+      this.form.creativeContent = this.templateList[val].content
     },
     setLandingPageValidity (type, isValid) {
       this.isErrorLandingPageShow = !isValid
@@ -176,7 +203,12 @@ export default {
       }
       this.loading = true
       try {
-        await updatePromoteDetail(this.form)
+        const { code } = await updatePromoteDetail(this.form)
+        this.code = code
+        if (this.code !== 0) {
+          this.selectPromoteDialogVisible = false
+          return
+        }
         this.selectPromoteDialogVisible = false
         this.$router.push({ name: 'bw-plus-plan-list', params: { id: this.originPromote.packageId } })
       } finally {
@@ -187,18 +219,42 @@ export default {
       }
     },
     async onSubmit () {
-      if (this.isErrorLandingPageShow) {
-        return this.$message.error('当前投放页面失效，请重新选择新的投放页面')
+      const reg = /[`~#^&*_\\[\]·~#￥&*]|[x]{3,}/
+      if (reg.test(this.form.creativeTitle) || reg.test(this.form.creativeContent)) {
+        return this.$message.error('推广标题和推广内容不能有特殊字符')
+      } else {
+        if (this.isErrorLandingPageShow) {
+          return this.$message.error('当前投放页面失效，请重新选择新的投放页面')
+        }
+        if (this.creativeError) {
+          return this.$message.error(this.creativeError)
+        }
+        try {
+          await createValidator.validate(this.form, { first: true })
+        } catch (e) {
+          return this.$message.error(e.errors[0].message)
+        }
+        this.selectPromoteDialogVisible = true
       }
-      if (this.creativeError) {
-        return this.$message.error(this.creativeError)
-      }
-      try {
-        await createValidator.validate(this.form, { first: true })
-      } catch (e) {
-        return this.$message.error(e.errors[0].message)
-      }
-      this.selectPromoteDialogVisible = true
+    },
+    async showCreative () {
+      this.recommendVisible = true
+      const { data: { creativeTemplateList } } = await recommendList(this.id)
+      this.templateList = creativeTemplateList
+      this.extractTemplate()
+      const { keyword } = this.originPromote
+      bwPlusTrack('bwplus: intelligent recommendation', { keyword, promoteId: this.id })
+    },
+    extractTemplate () {
+      this.template = []
+      const reg = /\((.+)\)/g
+      this.templateList.forEach(item => {
+        const obj = {}
+        obj.displayTitle = item.displayTitle.replace(reg, "<span style='color:#FF6350;'>$1</span>")
+        obj.displayContent = item.displayContent.replace(reg, "<span style='color:#FF6350;'>$1</span>")
+        obj.id = item.id
+        this.template.push(obj)
+      })
     }
   },
   components: {
@@ -206,7 +262,8 @@ export default {
     UserAdSelector,
     CreativeEditor,
     SelectPromoteDialog,
-    FmTip
+    FmTip,
+    Recommend
   }
 }
 </script>
@@ -226,7 +283,72 @@ export default {
     padding: 0 60px;
     > .panel {
       margin-top: 30px;
+      >.recommend-box{
+        margin: 10px 0;
+        padding: 0px 30px;
+        width: 620px;
+        height: 100px;
+        background: #FFF8F7;
+        border-radius: 4px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        img{
+          width: 100%;
+          height: 100%;
+        }
+        .icon-box{
+          width: 32px;
+          height: 42px;
+        }
+        .text-box{
+          flex: 1;
+          height: 42px;
+          padding-left: 10px;
+          display: flex;
+          flex-direction: row;
+          .icon{
+            width: 42px;
+            height: 42px;
+          }
+          .text{
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
+            .title{
+              font-family: PingFangSC-Medium;
+              font-weight: bold;
+              font-size: 14px;
+              color: #000000;
+              letter-spacing: 0;
+              .color{
+                margin-left: 15px;
+                font-family: PingFangSC-Medium;
+                font-size: 14px;
+                color: #FF6350;
+                letter-spacing: 0;
+                cursor: pointer;
+              }
+            }
+            .content{
+              font-family: PingFangSC-Regular;
+              font-size: 12px;
+              color: #999999;
+              letter-spacing: 0;
+            }
+          }
+        }
+      }
+      > .btn-text{
+        color: #409EFF;
+        text-decoration-line: underline;
+        text-decoration-color: currentColor;
+        margin-left: 20px;
+      }
        > .creative{
+         margin-top: 30px;
         position: relative;
         > .tip {
           position: absolute;

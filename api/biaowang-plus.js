@@ -290,3 +290,17 @@ export async function promoteList (params) {
     .json()
   return body
 }
+
+/**
+ * @param {number} params.promoteId
+ * @returns
+ */
+export async function recommendList (id) {
+  const body = await biaowangPlus
+    .get('/promote/user/template')
+    .query({
+      promoteId: id
+    })
+    .json()
+  return body
+}
