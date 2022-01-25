@@ -414,3 +414,18 @@ export const YINGYONG_TIP = Object.freeze([
   '1.通配符内的关键词与当前计划关键词一致时，其他计划会自动替换关键词并更新；',
   '2.通配符内的关键词与当前计划关键词不一致时，其他计划会统一按当前物料更新。'
 ])
+
+export const BAIDU_BW_PRODUCT_PRICELIST = Object.freeze([
+  {
+    duration: 365
+  },
+  {
+    duration: 180
+  },
+  {
+    duration: 90
+  },
+  {
+    duration: 30
+  }
+])

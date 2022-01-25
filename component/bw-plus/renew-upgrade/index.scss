@@ -8,4 +8,44 @@
       padding: 14px;
       font-size: 16px;
     }
+    .package-info{
+        display: flex;
+        background: #fff1e3;
+        padding: 10px 6px;
+        li{
+            margin-right: 20px;
+            color: #909399;
+        }
+    }
+    &_content{
+        padding: 10px;
+        box-sizing: border-box;
+    }
+    .active-item {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        color: #ff6350;
+        display: block;
+        &::after {
+          content: '\2714';
+          position: absolute;
+          font-size: 14px;
+          color: #fff;
+          width: 18px;
+          height: 18px;
+          border-radius: 100%;
+          background: #ff6350;
+          text-align: center;
+          line-height: 18px;
+          right: 0;
+          bottom: 0;
+        }
+    }
+    .option-item:hover {
+        color: #ff6350;
+      }
+      .option-item{
+          padding: 10px 0;
+      }
 }

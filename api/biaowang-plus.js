@@ -292,7 +292,7 @@ export async function promoteList (params) {
 }
 
 /**
- * @param {number} params.promoteId
+ * @param {number} id
  * @returns
  */
 export async function recommendList (id) {
@@ -301,6 +301,19 @@ export async function recommendList (id) {
     .query({
       promoteId: id
     })
+    .json()
+  return body
+}
+
+/**
+ * @param {object} params
+ * @param {number} params.packageId
+ * @returns
+ */
+export async function getRenewPriceByPackageId (params) {
+  const body = await biaowangPlus
+    .get('/package/user/renew/details')
+    .query(params)
     .json()
   return body
 }

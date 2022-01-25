@@ -85,6 +85,11 @@ export default {
       type: Object,
       default: () => {},
       require: false
+    },
+    isRenew: {
+      type: Boolean,
+      default: false,
+      require: false
     }
   },
   data () {
@@ -94,6 +99,9 @@ export default {
   },
   computed: {
     showProps () {
+      if (this.isRenew) {
+        return false
+      }
       const { limit } = this.product
       return limit && Object.keys(limit).length
     },
