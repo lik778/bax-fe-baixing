@@ -144,7 +144,7 @@
             <BwCreativity
                 @checked="checked"
                 :productList="additionalSkuList"
-                :additionRenewDetailList="currentRenewInfo.additionRenewDetailList"
+                :additionRenewDetailList="renewDetails.additionRenewDetailList"
                 :currentPrice="currentRenewInfo"
                 :isRenew="true"
             />

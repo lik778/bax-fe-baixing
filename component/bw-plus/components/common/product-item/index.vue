@@ -99,9 +99,6 @@ export default {
   },
   computed: {
     showProps () {
-      if (this.isRenew) {
-        return false
-      }
       const { limit } = this.product
       return limit && Object.keys(limit).length
     },
@@ -109,8 +106,15 @@ export default {
       const {
         product: {
           currentPrice: { price, skuId }
-        }
+        },
+        isRenew
       } = this
+      if (isRenew) {
+        return {
+          disable: false,
+          reason: ''
+        }
+      }
       if (price <= 0) {
         return {
           disable: true,
@@ -152,10 +156,13 @@ export default {
     showDuration () {
       const {
         product: {
-          currentPrice: { duration }
-        }
+          currentPrice: { duration },
+          additionRenewDetai: { extraDays = 0 } = {}
+        },
+        isRenew
       } = this
-      return duration || '?'
+      const isRenewDays = duration ? `${extraDays}天+${duration}` : extraDays
+      return isRenew ? isRenewDays : duration || '?'
     },
     showSchedule () {
       const {

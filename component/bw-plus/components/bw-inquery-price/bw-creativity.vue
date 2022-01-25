@@ -32,8 +32,8 @@ export default {
       require: false
     },
     additionRenewDetailList: {
-      type: Object,
-      default: () => {},
+      type: Array,
+      default: () => [],
       require: false
     }
   },
