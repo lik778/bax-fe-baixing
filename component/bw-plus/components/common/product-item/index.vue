@@ -156,12 +156,12 @@ export default {
     showDuration () {
       const {
         product: {
-          currentPrice: { duration },
+          currentPrice: { days, duration },
           additionRenewDetai: { extraDays = 0 } = {}
         },
         isRenew
       } = this
-      const isRenewDays = duration ? `${extraDays}天+${duration}` : extraDays
+      const isRenewDays = days ? `${extraDays}天+${days}` : extraDays
       return isRenew ? isRenewDays : duration || '?'
     },
     showSchedule () {
@@ -183,9 +183,12 @@ export default {
           dealPriceRatio,
           withoutPackagePriceRatio,
           type,
-          currentPrice: { price }
-        }
+          additionRenewDetai,
+          currentPrice: { price = 0 }
+        },
+        isRenew
       } = this
+      const defaultPrice = isRenew && additionRenewDetai ? additionRenewDetai.extraOriginPrice + price : price
       const ratio = this.baiduBwIsChecked
         ? dealPriceRatio
         : withoutPackagePriceRatio
@@ -194,21 +197,24 @@ export default {
           ? f2y(certainDealPrice)
           : f2y(withoutPackageCertainDealPrice)
       }
-      return price > 0 ? f2y(price * ratio) : '?'
+      return defaultPrice > 0 ? f2y(defaultPrice * ratio) : '?'
     },
     originalPrice () {
       const {
         product: {
-          currentPrice: { price },
+          currentPrice: { price = 0 },
           originalPriceRatio,
           certainOriginPrice,
-          type
-        }
+          type,
+          additionRenewDetai
+        },
+        isRenew
       } = this
+      const defaultPrice = isRenew && additionRenewDetai ? additionRenewDetai.extraOriginPrice + price : price
       return type === SEO_PRODUCT_TYPE
         ? f2y(certainOriginPrice)
-        : price > 0
-          ? f2y(price * originalPriceRatio)
+        : defaultPrice > 0
+          ? f2y(defaultPrice * originalPriceRatio)
           : '?'
     }
   },

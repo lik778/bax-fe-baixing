@@ -148,20 +148,47 @@
                 :currentPrice="currentRenewInfo"
                 :isRenew="true"
             />
+            <footer>
+                <WelfareLayout :currentPrice="getWelfareInfo" />
+                <div>
+                    <h3>续费价：{{f2y(totalPrice)}}</h3>
+                    <el-button type="primary" @click="visible=true">确认</el-button>
+                </div>
+            </footer>
         </section>
+        <el-dialog
+          title="续费升级确认"
+          :visible.sync="visible"
+          width="50%"
+          @close="visible=false"
+        >
+          <PreInfoConfirm :allAreas="allAreas" :preInfo="preInfo"/>
+          <span slot="footer" class="dialog-footer">
+            <el-button @click="visible=false">取 消</el-button>
+            <el-button type="primary" :loading="isPending" @click="submit">确认，生成并复制提单链接</el-button>
+          </span>
+        </el-dialog>
     </div>
 </template>
 
 <script>
 import { getRenewPriceByPackageId } from 'api/biaowang-plus'
-import { Title, BwCreativity } from '../components'
-import { BAIDU_BW_PRODUCT_PRICELIST, DEVICE_ALL, DEVICE_WAP, DEVICE_PC } from 'constant/bw-plus'
+import { Title, BwCreativity, PreInfoConfirm, WelfareLayout } from '../components'
+import { BAIDU_BW_PRODUCT_PRICELIST, DEVICE_ALL, DEVICE_WAP, DEVICE_PC, SEO_PRODUCT_TYPE, CREATIVE_PRODUCT_TYPE } from 'constant/bw-plus'
 import { f2y } from 'util'
 export default {
   name: 'renew-upgrade',
   components: {
     Title,
-    BwCreativity
+    BwCreativity,
+    PreInfoConfirm,
+    WelfareLayout
+  },
+  props: {
+    allAreas: {
+      type: Array,
+      required: true
+    }
   },
   data () {
     return {
@@ -172,7 +199,9 @@ export default {
       DEVICE_PC,
       f2y,
       currentRenewInfo: {},
-      additionalSkuList: {}
+      additionalSkuList: {},
+      visible: false,
+      isPending: false
     }
   },
   async mounted () {
@@ -181,27 +210,118 @@ export default {
     this.renewDetails = data
     this.additionalSkuList = additionalSkuList.map(a => ({ ...a, checked: false }))
   },
+  computed: {
+    getWelfareInfo () {
+      const { currentRenewInfo } = this
+      return {
+        ...currentRenewInfo,
+        price: 0
+      }
+    },
+    totalPrice () {
+      const { currentRenewInfo: { price = 0 }, additionalSkuList, getPrice } = this
+      const ratio =
+        price && price > 0
+          ? 'dealPriceRatio'
+          : 'withoutPackagePriceRatio'
+      const total = additionalSkuList.reduce((producPrev, producNext) => {
+        const priceB = producNext.checked
+          ? producNext.type === SEO_PRODUCT_TYPE
+              ? price && price > 0
+                  ? producNext.certainDealPrice
+                  : producNext.withoutPackageCertainDealPrice
+              : (getPrice(producNext).extraOriginPrice + price) * producNext[ratio]
+          : 0
+        return producPrev + priceB
+      }, 0)
+      return (total + price) || '-'
+    },
+    preInfo () {
+      // 构造选中商品列表数据，给用户确认
+      const { renewDetails, additionalSkuList, currentRenewInfo: { price = 0, days = 0, device, scheduleType }, getPrice, currentRenewInfo } = this
+      const ratio =
+       price && price > 0
+         ? 'dealPriceRatio'
+         : 'withoutPackagePriceRatio'
+      const checkedProducts = additionalSkuList.filter((p) => p.checked)
+      const additionProduct = checkedProducts.map((o) => ({
+        dealPrice:
+          o.type === SEO_PRODUCT_TYPE
+            ? price && price > 0
+                ? o.certainDealPrice
+                : o.withoutPackageCertainDealPrice
+            : (getPrice(o).extraOriginPrice + price) * o[ratio],
+        device,
+        duration: getPrice(o).extraDays + days,
+        name: o.title,
+        originPrice:
+          o.type === SEO_PRODUCT_TYPE
+            ? o.certainOriginPrice
+            : (getPrice(o).extraOriginPrice + price) * o.originalPriceRatio,
+        scheduleType,
+        displayType:
+          o.type === SEO_PRODUCT_TYPE || o.type === CREATIVE_PRODUCT_TYPE
+            ? 1
+            : 0
+      }))
+      const BAIDU_BW = [
+        {
+          dealPrice: price,
+          originPrice: price,
+          name: '百度标王标准版',
+          ...currentRenewInfo,
+          duration: currentRenewInfo.days,
+          displayType: 0
+        }
+      ]
+      const preInfo = {
+        keywords: renewDetails.words,
+        cities: renewDetails.cities,
+        additionProductMap:
+          price && price > 0
+            ? [...additionProduct, ...BAIDU_BW]
+            : additionProduct
+      }
+      return preInfo
+    }
+  },
   methods: {
+    submit () {
+      this.isPending = true
+      console.log(this.preInfo)
+    },
+    getPrice (product) {
+      const { additionRenewDetailList } = this.renewDetails
+      return additionRenewDetailList.find(a => a.sku === product.id)
+    },
     transformDeviceAllPrice (row, device, scheduleType) {
       const { duration } = row
       const { phoenixsPriceList } = this.renewDetails
       const target = phoenixsPriceList.find(p => p.device === device && p.scheduleType === scheduleType)
       if (target) {
-        const { daysPriceList } = target
-        const cellValue = daysPriceList.find(d => d.days === duration)
-        return { ...cellValue, allowRenew: true }
+        if (duration) {
+          const { daysPriceList } = target
+          const cellValue = daysPriceList.find(d => d.days === duration)
+          return { ...cellValue, allowRenew: true }
+        }
+        return { allowRenew: true, price: 0, device, scheduleType, duration, days: duration, soldAvailable: true }
       }
       return {
         allowRenew: false
       }
     },
     cellClick (row, device, scheduleType) {
-      if (device === this.currentRenewInfo.device && scheduleType === this.currentRenewInfo.scheduleType && row.duration === this.currentRenewInfo.days) {
-        this.currentRenewInfo = {}
-        return
-      }
       const { phoenixsPriceList } = this.renewDetails
       const target = phoenixsPriceList.find(p => p.device === device && p.scheduleType === scheduleType)
+      if (row.duration === 0) {
+        this.currentRenewInfo = {
+          price: 0,
+          device,
+          scheduleType,
+          days: row.duration
+        }
+        return
+      }
       this.currentRenewInfo = { ...target.daysPriceList.find(d => d.days === row.duration), device, scheduleType }
     },
     isActive (row, device, scheduleType) {

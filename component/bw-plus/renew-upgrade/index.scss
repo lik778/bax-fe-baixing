@@ -44,8 +44,24 @@
     }
     .option-item:hover {
         color: #ff6350;
-      }
-      .option-item{
-          padding: 10px 0;
-      }
+    }
+    .option-item{
+        padding: 10px 0;
+    }
+    footer{
+        width: calc(100% - 224px);
+        z-index: 3;
+        box-sizing: border-box;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        padding: 18px 20px;
+        margin-top: 30px;
+        position: fixed;
+        h3{
+            font-size: 24px;
+            color: #FF6350;
+            margin-bottom: 10px;
+        }  
+    }
 }

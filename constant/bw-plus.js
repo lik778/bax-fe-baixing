@@ -427,5 +427,8 @@ export const BAIDU_BW_PRODUCT_PRICELIST = Object.freeze([
   },
   {
     duration: 30
+  },
+  {
+    duration: 0
   }
 ])
