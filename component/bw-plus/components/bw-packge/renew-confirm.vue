@@ -12,17 +12,6 @@
         <el-form-item class="pre-info-item" label="推广城市：">
             {{citiesFormater(renewInfo.cities)}}
         </el-form-item>
-        <el-form-item class="pre-info-item" label="推广平台：">
-            {{DEVICE[renewInfo.device]}}
-        </el-form-item>
-        <el-form-item class="pre-info-item" label="推广时段：">
-            {{SCHEDULE_TYPE[renewInfo.scheduleType]}}
-        </el-form-item>
-        <el-form-item class="pre-info-item" label="服务时长：">
-            <el-radio-group @change="change" v-model="priceId">
-                <el-radio :disabled="renewInfo.renewApplyId && renewInfo.renewApplyId !== item.id" v-for="( item, index ) in renewInfo.priceList" :key="index" :label="item.id">{{item.type}} 天 <el-tag v-if="item.type > 30 && !showWelfare">赠店铺</el-tag></el-radio>
-            </el-radio-group>
-        </el-form-item>
         <el-form-item class="pre-info-item pre-info-price" label="续费价：">
             {{getRenewprice}}元
         </el-form-item>

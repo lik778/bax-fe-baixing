@@ -5,7 +5,7 @@
             <ul class="package-info">
                 <li>词包id: {{renewDetails.packageId}}</li>
                 <li>关键词: {{renewDetails.words.join('、')}}</li>
-                <li>所选城市: {{renewDetails.cities.join('、')}}</li>
+                <li>所选城市: {{citiesFormater(renewDetails.cities)}}</li>
             </ul>
             <Title
                 title="百度标王"
@@ -148,8 +148,11 @@
                 :currentPrice="currentRenewInfo"
                 :isRenew="true"
             />
+            <div :style="{height: '130px'}"></div>
             <footer>
-                <WelfareLayout :currentPrice="getWelfareInfo" />
+                <WelfareActivity
+                    :item="welfareInfo[0]"
+                    :currentPrice="getWelfareInfo" />
                 <div>
                     <h3>续费价：{{f2y(totalPrice)}}</h3>
                     <el-button type="primary" @click="visible=true">确认</el-button>
@@ -162,7 +165,7 @@
           width="50%"
           @close="visible=false"
         >
-          <PreInfoConfirm :allAreas="allAreas" :preInfo="preInfo"/>
+          <PreInfoConfirm :isRenew="true" :allAreas="allAreas" :preInfo="preInfo"/>
           <span slot="footer" class="dialog-footer">
             <el-button @click="visible=false">取 消</el-button>
             <el-button type="primary" :loading="isPending" @click="submit">确认，生成并复制提单链接</el-button>
@@ -172,17 +175,18 @@
 </template>
 
 <script>
-import { getRenewPriceByPackageId } from 'api/biaowang-plus'
-import { Title, BwCreativity, PreInfoConfirm, WelfareLayout } from '../components'
-import { BAIDU_BW_PRODUCT_PRICELIST, DEVICE_ALL, DEVICE_WAP, DEVICE_PC, SEO_PRODUCT_TYPE, CREATIVE_PRODUCT_TYPE } from 'constant/bw-plus'
-import { f2y } from 'util'
+import { getRenewPriceByPackageId, submitPreOrder } from 'api/biaowang-plus'
+import { Title, BwCreativity, PreInfoConfirm, WelfareActivity } from '../components'
+import { BAIDU_BW_PRODUCT_PRICELIST, DEVICE_ALL, DEVICE_WAP, DEVICE_PC, SEO_PRODUCT_TYPE, CREATIVE_PRODUCT_TYPE, welfareInfo, BAIDU_PRODUCT_SOURCE } from 'constant/bw-plus'
+import { f2y, getCnName } from 'util'
+import { Message } from 'element-ui'
 export default {
   name: 'renew-upgrade',
   components: {
     Title,
     BwCreativity,
     PreInfoConfirm,
-    WelfareLayout
+    WelfareActivity
   },
   props: {
     allAreas: {
@@ -201,7 +205,8 @@ export default {
       currentRenewInfo: {},
       additionalSkuList: {},
       visible: false,
-      isPending: false
+      isPending: false,
+      welfareInfo
     }
   },
   async mounted () {
@@ -209,17 +214,20 @@ export default {
     const { data, data: { additionalSkuList } } = await getRenewPriceByPackageId({ packageId })
     this.renewDetails = data
     this.additionalSkuList = additionalSkuList.map(a => ({ ...a, checked: false }))
+    this.currentRenewInfo = { ...data.phoenixsPriceList[0].daysPriceList[0], device: data.phoenixsPriceList[0].device, scheduleType: data.phoenixsPriceList[0].scheduleType }
   },
   computed: {
     getWelfareInfo () {
       const { currentRenewInfo } = this
       return {
         ...currentRenewInfo,
+        duration: currentRenewInfo.days,
         price: 0
       }
     },
     totalPrice () {
       const { currentRenewInfo: { price = 0 }, additionalSkuList, getPrice } = this
+      console.log(this.currentRenewInfo)
       const ratio =
         price && price > 0
           ? 'dealPriceRatio'
@@ -252,7 +260,11 @@ export default {
                 : o.withoutPackageCertainDealPrice
             : (getPrice(o).extraOriginPrice + price) * o[ratio],
         device,
+        price,
+        sku: o.id,
         duration: getPrice(o).extraDays + days,
+        days,
+        totalDays: getPrice(o).extraDays + days,
         name: o.title,
         originPrice:
           o.type === SEO_PRODUCT_TYPE
@@ -267,11 +279,14 @@ export default {
       const BAIDU_BW = [
         {
           dealPrice: price,
+          price,
           originPrice: price,
           name: '百度标王标准版',
           ...currentRenewInfo,
           duration: currentRenewInfo.days,
-          displayType: 0
+          totalDays: currentRenewInfo.days,
+          displayType: 0,
+          sku: BAIDU_PRODUCT_SOURCE
         }
       ]
       const preInfo = {
@@ -286,9 +301,26 @@ export default {
     }
   },
   methods: {
-    submit () {
+    citiesFormater (cities) {
+      return cities.slice(0, 2).map(city => getCnName(city, this.allAreas)).join(',') + (cities.length > 2 ? `等${cities.length}个城市` : '') || '-'
+    },
+    async submit () {
       this.isPending = true
-      console.log(this.preInfo)
+      const params = {
+        renewId: this.renewDetails.renewId,
+        skuList: this.preInfo.additionProductMap
+      }
+      try {
+        const { data: { url } } = await submitPreOrder(params)
+        this.$copyText(url).then(async (e) => {
+          Message.success('提单链接已复制到剪切板')
+          this.$router.push({ name: 'bw-plus-package-list' })
+        }, function (e) {})
+      } catch (error) {
+        console.log(error)
+      } finally {
+        this.isPending = false
+      }
     },
     getPrice (product) {
       const { additionRenewDetailList } = this.renewDetails

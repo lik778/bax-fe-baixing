@@ -49,7 +49,8 @@
         padding: 10px 0;
     }
     footer{
-        width: calc(100% - 224px);
+        box-shadow: 0px -6px 15px 0px rgba(83,95,127,0.15);
+        width: calc(100% - 200px);
         z-index: 3;
         box-sizing: border-box;
         display: flex;
@@ -58,6 +59,9 @@
         padding: 18px 20px;
         margin-top: 30px;
         position: fixed;
+        left: 190px;
+        bottom: 0;
+        background: #fff;
         h3{
             font-size: 24px;
             color: #FF6350;

@@ -317,3 +317,24 @@ export async function getRenewPriceByPackageId (params) {
     .json()
   return body
 }
+
+/**
+ * @param {Object} params
+ * @param {number} params.renewId
+ * @type {Object} skuItem
+ * @type {number} skuItem.sku
+ * @type {number} skuItem.scheduleType
+ * @type {number} skuItem.device
+ * @type {number} skuItem.days
+ * @type {number} skuItem.totalDays
+ * @type {number} skuItem.price
+ * @param {skuItem[]} params.skuList
+ * @returns
+ */
+export async function submitPreOrder (params) {
+  const body = await biaowangPlus
+    .post('/package/user/renew/commit')
+    .send(params)
+    .json()
+  return body
+}

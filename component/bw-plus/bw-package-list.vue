@@ -29,7 +29,7 @@
               </el-tooltip>
             </li>
           </ul>
-          <el-button v-if="allowRenew" type="text" @click="renew(item)">续费</el-button>
+          <el-button v-if="allowRenew(item)" type="text" @click="renew(item)">续费</el-button>
         </div>
         <el-table
             :data="item.skuList"
@@ -105,7 +105,7 @@
         </el-pagination>
       </div>
     </main>
-    <RenewConfirm @preOrder="renewPreOrder" @cancel="isRenew = false" :allAreas="allAreas" :dialogVisible="isRenew" :renewInfo="renewInfo"/>
+    <PreOrderDetail @preOrder="submit" @cancel="visible=false" :allAreas="allAreas" :dialogVisible="visible" :preInfo="renewInfo"/>
     <el-dialog
       :visible.sync="dialogVisible"
       width="26%"
@@ -127,8 +127,8 @@
 </template>
 
 <script>
-import { getUserPackageList, renewOrder } from 'api/biaowang-plus'
-import { RenewConfirm } from './components'
+import { getUserPackageList, renewOrder, getRenewPriceByPackageId, submitPreOrder } from 'api/biaowang-plus'
+import { PreOrderDetail } from './components'
 import {
   AUDIT_STATUS_MAP,
   PACKEAGE_STATUS_MAP,
@@ -139,7 +139,8 @@ import {
   AUDIT_STATUS_COLOR_MAP,
   THIRTY_DAYS,
   RENEW_OPRATION_STATUS_DISABLED,
-  RENEW_OPRATION_STATUS_COPY
+  RENEW_OPRATION_STATUS_COPY,
+  BAIDU_PRODUCT_SOURCE
 } from 'constant/bw-plus'
 import { getCnName } from 'util'
 import debounce from 'lodash.debounce'
@@ -148,6 +149,9 @@ import { isSales } from 'util/role'
 
 export default {
   name: 'bw-plus-package-list',
+  components: {
+    PreOrderDetail
+  },
   props: {
     allAreas: {
       type: Array,
@@ -183,20 +187,34 @@ export default {
       loading: false,
       isRenew: false,
       renewInfo: {},
-      dialogVisible: false
-    }
-  },
-  computed: {
-    allowRenew () {
-      const { roles } = this.userInfo
-      return isSales(roles)
+      dialogVisible: false,
+      commitSkuDetailList: [],
+      visible: false
     }
   },
   methods: {
+    async submit () {
+      const params = {
+        renewId: this.renewInfo.renewId,
+        skuList: this.renewInfo.additionProductMap
+      }
+      try {
+        const { data: { url } } = await submitPreOrder(params)
+        this.$copyText(url).then(async (e) => {
+          Message.success('提单链接已复制到剪切板')
+        }, function (e) {})
+      } catch (error) {
+        console.log(error)
+      }
+    },
     handleCurrentChange (page) {
       this.query.page = page - 1
     },
-
+    allowRenew (item) {
+      const { roles } = this.userInfo
+      const { skuList } = item
+      return isSales(roles) && skuList.some(s => s.skuId === BAIDU_PRODUCT_SOURCE)
+    },
     queryPackageList: debounce(async function (params) {
       const { user_id: userId } = this.$route.query
       try {
@@ -220,18 +238,14 @@ export default {
     },
     async renew (item) {
       const { packageId } = item
-      this.$router.push({ name: 'renew-upgrade', query: { packageId } })
-      //   const { packageId, renewApplyId } = item
-      //   try {
-      //     const { code, data } = await getRenewDetai({ packageId })
-      //     if (code === 301) {
-      //       this.dialogVisible = true
-      //       gStore.getQueryInfo(data)
-      //       return
-      //     }
-      //     this.isRenew = true
-      //     this.renewInfo = { ...data, renewApplyId }
-      //   }
+      const { user_id: userBxId } = this.$route.query
+      const { data: { renewId, commitSkuDetailList, cities, words: keywords, mobile = '', salesId } } = await getRenewPriceByPackageId({ packageId })
+      if (commitSkuDetailList && commitSkuDetailList.length) {
+        this.visible = true
+        this.renewInfo = { renewId, additionProductMap: commitSkuDetailList, cities, keywords, salesId, mobile, userBxId }
+      } else {
+        this.$router.push({ name: 'renew-upgrade', query: { packageId } })
+      }
     },
     async renewPreOrder (applyId) {
       const loading = this.$loading({
@@ -321,9 +335,6 @@ export default {
         this.queryPackageList()
       }
     }
-  },
-  components: {
-    RenewConfirm
   }
 }
 </script>
