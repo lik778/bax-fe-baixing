@@ -154,8 +154,8 @@
                     :item="welfareInfo[0]"
                     :currentPrice="getWelfareInfo" />
                 <div>
-                    <h3>续费价：{{f2y(totalPrice)}}</h3>
-                    <el-button type="primary" @click="visible=true">确认</el-button>
+                    <h3>续费价：{{totalPrice}}</h3>
+                    <el-button type="primary" :disabled="totalPrice === '-' || totalPrice <= 0" @click="visible=true">确认</el-button>
                 </div>
             </footer>
         </section>
@@ -227,7 +227,6 @@ export default {
     },
     totalPrice () {
       const { currentRenewInfo: { price = 0 }, additionalSkuList, getPrice } = this
-      console.log(this.currentRenewInfo)
       const ratio =
         price && price > 0
           ? 'dealPriceRatio'
@@ -242,7 +241,7 @@ export default {
           : 0
         return producPrev + priceB
       }, 0)
-      return (total + price) || '-'
+      return f2y(total + price) || '-'
     },
     preInfo () {
       // 构造选中商品列表数据，给用户确认
