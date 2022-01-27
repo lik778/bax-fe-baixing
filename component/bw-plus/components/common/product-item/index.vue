@@ -105,13 +105,14 @@ export default {
     notAllowCheck () {
       const {
         product: {
-          currentPrice: { price, skuId }
+          currentPrice: { price, skuId },
+          additionRenewDetai: { extraOriginPrice } = {}
         },
         isRenew
       } = this
       if (isRenew) {
         return {
-          disable: false,
+          disable: extraOriginPrice + price <= 0,
           reason: ''
         }
       }

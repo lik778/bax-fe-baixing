@@ -343,7 +343,9 @@ export default {
       }
     },
     cellClick (row, device, scheduleType) {
-      const { phoenixsPriceList } = this.renewDetails
+      const { phoenixsPriceList, additionRenewDetailList } = this.renewDetails
+      const { additionalSkuList } = this
+      const targetAdditionRenewProduct = additionRenewDetailList.filter(a => a.extraOriginPrice === 0)
       const target = phoenixsPriceList.find(p => p.device === device && p.scheduleType === scheduleType)
       if (row.duration === 0) {
         this.currentRenewInfo = {
@@ -351,6 +353,14 @@ export default {
           device,
           scheduleType,
           days: row.duration
+        }
+        if (targetAdditionRenewProduct) {
+          this.additionalSkuList = additionalSkuList.map(a => {
+            if (targetAdditionRenewProduct.find(t => t.sku === a.id)) {
+              return { ...a, checked: false }
+            }
+            return a
+          })
         }
         return
       }
