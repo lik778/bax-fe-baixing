@@ -140,7 +140,8 @@ import {
   THIRTY_DAYS,
   RENEW_OPRATION_STATUS_DISABLED,
   RENEW_OPRATION_STATUS_COPY,
-  BAIDU_PRODUCT_SOURCE
+  BAIDU_PRODUCT_SOURCE,
+  PROMOTE_STATUS_OFFLINE
 } from 'constant/bw-plus'
 import { getCnName } from 'util'
 import debounce from 'lodash.debounce'
@@ -237,7 +238,12 @@ export default {
       this.$router.push({ name: 'bw-plus-query-price', query: { renew: 1 } })
     },
     async renew (item) {
-      const { packageId } = item
+      const { packageId, skuList } = item
+      const target = skuList.find(s => s.skuId === BAIDU_PRODUCT_SOURCE)
+      if (target && target.status === PROMOTE_STATUS_OFFLINE) {
+        this.dialogVisible = true
+        return
+      }
       const { user_id: userBxId } = this.$route.query
       const { data: { renewId, commitSkuDetailList, cities, words: keywords, mobile = '', salesId } } = await getRenewPriceByPackageId({ packageId })
       if (commitSkuDetailList && commitSkuDetailList.length) {
