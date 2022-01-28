@@ -105,7 +105,7 @@
         </el-pagination>
       </div>
     </main>
-    <PreOrderDetail @preOrder="submit" @cancel="visible=false" :allAreas="allAreas" :dialogVisible="visible" :preInfo="renewInfo"/>
+    <PreOrderDetail :isRenew="true" @preOrder="submit" @cancel="visible=false" :allAreas="allAreas" :dialogVisible="visible" :preInfo="renewInfo"/>
     <el-dialog
       :visible.sync="dialogVisible"
       width="26%"
