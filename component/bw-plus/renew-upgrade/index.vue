@@ -30,7 +30,7 @@
                     <el-table-column align="center" label="7天*24小时（元）">
                         <template slot-scope="{ row }">
                             <div @click="cellClick(row, DEVICE_ALL, 724)" :class="{'active-item': isActive(row, DEVICE_ALL, 724),
-              'option-item': true,'diabled': !transformDeviceAllPrice(row, DEVICE_ALL, 724).allowRenew}" v-if="transformDeviceAllPrice(row, DEVICE_ALL, 724).allowRenew">
+              'option-item': true,'diabled': !transformDeviceAllPrice(row, DEVICE_ALL, 724).allowRenew || !transformDeviceAllPrice(row, DEVICE_ALL, 724).soldAvailable}" v-if="transformDeviceAllPrice(row, DEVICE_ALL, 724).allowRenew">
                                 {{transformDeviceAllPrice(row, DEVICE_ALL, 724).soldAvailable ? f2y(transformDeviceAllPrice(row, DEVICE_ALL, 724).price) : '已售出'}}
                             </div>
                             <el-popover
@@ -48,7 +48,7 @@
                     <el-table-column align="center" label="5天*8小时（元）">
                         <template slot-scope="{ row }">
                             <div @click="cellClick(row, DEVICE_ALL, 58)" :class="{'active-item': isActive(row, DEVICE_ALL, 58),
-              'option-item': true,'diabled': !transformDeviceAllPrice(row, DEVICE_ALL, 58).allowRenew}" v-if="transformDeviceAllPrice(row, DEVICE_ALL, 58).allowRenew">
+              'option-item': true,'diabled': !transformDeviceAllPrice(row, DEVICE_ALL, 58).allowRenew || !transformDeviceAllPrice(row, DEVICE_ALL, 58).soldAvailable}" v-if="transformDeviceAllPrice(row, DEVICE_ALL, 58).allowRenew">
                                 {{transformDeviceAllPrice(row, DEVICE_ALL, 58).soldAvailable ? f2y(transformDeviceAllPrice(row, DEVICE_ALL, 58).price) : '已售出'}}
                             </div>
                             <el-popover
@@ -68,7 +68,7 @@
                     <el-table-column align="center" label="7天*24小时（元）">
                         <template slot-scope="{ row }">
                             <div @click="cellClick(row, DEVICE_WAP, 724)" :class="{'active-item': isActive(row, DEVICE_WAP, 724),
-              'option-item': true,'diabled': !transformDeviceAllPrice(row, DEVICE_WAP, 724).allowRenew}" v-if="transformDeviceAllPrice(row, DEVICE_WAP, 724).allowRenew">
+              'option-item': true,'diabled': !transformDeviceAllPrice(row, DEVICE_WAP, 724).allowRenew || !transformDeviceAllPrice(row, DEVICE_WAP, 724).soldAvailable}" v-if="transformDeviceAllPrice(row, DEVICE_WAP, 724).allowRenew">
                                 {{transformDeviceAllPrice(row, DEVICE_WAP, 724).soldAvailable ? f2y(transformDeviceAllPrice(row, DEVICE_WAP, 724).price) : '已售出'}}
                             </div>
                             <el-popover
@@ -86,7 +86,7 @@
                     <el-table-column align="center" label="5天*8小时（元）">
                         <template slot-scope="{ row }">
                             <div @click="cellClick(row, DEVICE_WAP, 58)" :class="{'active-item': isActive(row, DEVICE_WAP, 58),
-              'option-item': true,'diabled': !transformDeviceAllPrice(row, DEVICE_WAP, 58).allowRenew}" v-if="transformDeviceAllPrice(row, DEVICE_WAP, 58).allowRenew">
+              'option-item': true,'diabled': !transformDeviceAllPrice(row, DEVICE_WAP, 58).allowRenew || !transformDeviceAllPrice(row, DEVICE_WAP, 58).soldAvailable}" v-if="transformDeviceAllPrice(row, DEVICE_WAP, 58).allowRenew">
                                 {{transformDeviceAllPrice(row, DEVICE_WAP, 58).soldAvailable ? f2y(transformDeviceAllPrice(row, DEVICE_WAP, 58).price) : '已售出'}}
                             </div>
                             <el-popover
@@ -106,7 +106,7 @@
                     <el-table-column align="center" label="7天*24小时（元）">
                         <template slot-scope="{ row }">
                             <div @click="cellClick(row, DEVICE_PC, 724)" :class="{'active-item': isActive(row, DEVICE_PC, 724),
-              'option-item': true,'diabled': !transformDeviceAllPrice(row, DEVICE_PC, 724).allowRenew}" v-if="transformDeviceAllPrice(row, DEVICE_PC, 724).allowRenew">
+              'option-item': true,'diabled': !transformDeviceAllPrice(row, DEVICE_PC, 724).allowRenew || !transformDeviceAllPrice(row, DEVICE_PC, 724).soldAvailable}" v-if="transformDeviceAllPrice(row, DEVICE_PC, 724).allowRenew">
                                 {{transformDeviceAllPrice(row, DEVICE_PC, 724).soldAvailable ? f2y(transformDeviceAllPrice(row, DEVICE_PC, 724).price) : '已售出'}}
                             </div>
                             <el-popover
@@ -124,7 +124,7 @@
                     <el-table-column align="center" label="5天*8小时（元）">
                         <template slot-scope="{ row }">
                             <div @click="cellClick(row, DEVICE_PC, 58)" :class="{'active-item': isActive(row, DEVICE_PC, 58),
-              'option-item': true,'diabled': !transformDeviceAllPrice(row, DEVICE_PC, 58).allowRenew}" v-if="transformDeviceAllPrice(row, DEVICE_PC, 58).allowRenew">
+              'option-item': true,'diabled': !transformDeviceAllPrice(row, DEVICE_PC, 58).allowRenew || !transformDeviceAllPrice(row, DEVICE_PC, 58).soldAvailable}" v-if="transformDeviceAllPrice(row, DEVICE_PC, 58).allowRenew">
                                 {{transformDeviceAllPrice(row, DEVICE_PC, 58).soldAvailable ? f2y(transformDeviceAllPrice(row, DEVICE_PC, 58).price) : '已售出' }}
                             </div>
                             <el-popover
@@ -214,7 +214,7 @@ export default {
     const { data, data: { additionalSkuList } } = await getRenewPriceByPackageId({ packageId })
     this.renewDetails = data
     this.additionalSkuList = additionalSkuList.map(a => ({ ...a, checked: false }))
-    this.currentRenewInfo = { ...data.phoenixsPriceList[0].daysPriceList[0], device: data.phoenixsPriceList[0].device, scheduleType: data.phoenixsPriceList[0].scheduleType }
+    this.currentRenewInfo = { ...data.phoenixsPriceList[0].daysPriceList.find(d => d.soldAvailable), device: data.phoenixsPriceList[0].device, scheduleType: data.phoenixsPriceList[0].scheduleType }
   },
   computed: {
     getWelfareInfo () {
