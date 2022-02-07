@@ -2,7 +2,7 @@
     <div class="bw-creativity">
       <Title subTitle="创意升级，效果加倍" subExtra="请选择需要升级的创意形式"/>
       <div class="bw-creativity_wrapper">
-        <ProductItem :isRenew="isRenew" @check="checkProduct" v-for="product in productList" :key="product.id" :currentExcludes="[]" :product="transformProduct(product)"/>
+        <ProductItem :isRenew="isRenew" @check="checkProduct" v-for="product in productList" :key="product.id" :currentExcludes="currentExcludes" :product="transformProduct(product)"/>
       </div>
     </div>
 </template>
@@ -39,7 +39,8 @@ export default {
   },
   data () {
     return {
-      checkedProducts: []
+      checkedProducts: [],
+      currentExcludes: []
     }
   },
   methods: {
@@ -63,6 +64,11 @@ export default {
       }
       product.checked = !product.checked
       this.$emit('checked', product)
+      // 计算所选商品的互斥商品集合
+      this.currentExcludes = this.checkedProducts.reduce(
+        (a, b) => [...a, ...b.excludes],
+        []
+      )
     }
   }
 }

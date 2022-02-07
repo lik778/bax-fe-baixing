@@ -112,8 +112,8 @@ export default {
       } = this
       if (isRenew) {
         return {
-          disable: extraOriginPrice + price <= 0,
-          reason: ''
+          disable: this.currentExcludes.includes(this.product.id) || extraOriginPrice + price <= 0,
+          reason: this.currentExcludes.includes(this.product.id) ? '当前商品与所选商品存在互斥' : ''
         }
       }
       if (price <= 0) {
