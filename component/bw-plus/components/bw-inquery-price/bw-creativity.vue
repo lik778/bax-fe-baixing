@@ -47,7 +47,6 @@ export default {
     currentPrice: {
       deep: true,
       handler (v) {
-        console.log(this.checkedProducts)
         if (v.days) {
           // 计算所选商品的互斥商品集合
           this.currentExcludes = this.checkedProducts.reduce(
@@ -59,16 +58,6 @@ export default {
           this.currentExcludes = []
         }
       }
-    }
-  },
-  computed: {
-    getCurrentExcludes () {
-      const { currentPrice: { days }, checkedProducts } = this
-      const currentExcludes = checkedProducts.reduce(
-        (a, b) => [...a, ...b.excludes],
-        []
-      )
-      return days ? currentExcludes : []
     }
   },
   methods: {
