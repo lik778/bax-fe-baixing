@@ -195,10 +195,10 @@ export default {
         : withoutPackagePriceRatio
       if (type === SEO_PRODUCT_TYPE) {
         return this.baiduBwIsChecked
-          ? f2y(certainDealPrice)
-          : f2y(withoutPackageCertainDealPrice)
+          ? Math.floor(f2y(certainDealPrice))
+          : Math.floor(f2y(withoutPackageCertainDealPrice))
       }
-      return defaultPrice > 0 ? f2y(defaultPrice * ratio) : '?'
+      return defaultPrice > 0 ? Math.floor(f2y(defaultPrice * ratio)) : '?'
     },
     originalPrice () {
       const {
@@ -213,9 +213,9 @@ export default {
       } = this
       const defaultPrice = isRenew && additionRenewDetai ? additionRenewDetai.extraOriginPrice + price : price
       return type === SEO_PRODUCT_TYPE
-        ? f2y(certainOriginPrice)
+        ? Math.floor(f2y(certainOriginPrice))
         : defaultPrice > 0
-          ? f2y(defaultPrice * originalPriceRatio)
+          ? Math.floor(f2y(defaultPrice * originalPriceRatio))
           : '?'
     }
   },

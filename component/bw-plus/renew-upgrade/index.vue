@@ -239,7 +239,7 @@ export default {
                   : producNext.withoutPackageCertainDealPrice
               : (getPrice(producNext).extraOriginPrice + price) * producNext[ratio]
           : 0
-        return producPrev + priceB
+        return producPrev + Math.floor(f2y(priceB)) * 100
       }, 0)
       return f2y(total + price) || '-'
     },
