@@ -147,6 +147,7 @@ import { getCnName } from 'util'
 import debounce from 'lodash.debounce'
 import { Message } from 'element-ui'
 import { isSales } from 'util/role'
+import gStore from '../store'
 
 export default {
   name: 'bw-plus-package-list',
@@ -190,7 +191,8 @@ export default {
       renewInfo: {},
       dialogVisible: false,
       commitSkuDetailList: [],
-      visible: false
+      visible: false,
+      renewPackgeInfo: {}
     }
   },
   methods: {
@@ -239,6 +241,10 @@ export default {
     },
     async renew (item) {
       const { packageId, skuList } = item
+      {
+        const { cities, coreCity, industry, keywords: words } = item
+        gStore.getQueryInfo({ cities, coreCity, industry, words })
+      }
       const target = skuList.find(s => s.skuId === BAIDU_PRODUCT_SOURCE)
       if (target && target.status === PROMOTE_STATUS_OFFLINE) {
         this.dialogVisible = true
