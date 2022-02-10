@@ -76,7 +76,6 @@ export default {
     },
     totalPrice () {
       const { additionProductMap } = this.preInfo
-      console.log(additionProductMap)
       const sum = additionProductMap.reduce((a, b) => a + b.originPrice, 0)
       return sum
     },
