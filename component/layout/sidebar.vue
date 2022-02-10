@@ -48,8 +48,7 @@
             </router-link>
           </el-menu-item>
         </el-submenu>
-
-        <el-submenu index="bw">
+        <!-- <el-submenu index="bw">
           <template slot="title">
             <bx-icon type="sharealt"></bx-icon>标王推广
           </template>
@@ -58,12 +57,12 @@
               管理标王推广
             </router-link>
           </el-menu-item>
-          <!-- <el-menu-item index="bw-query-price" v-if="!userInfo.shAgent && relationAllow()">
+          <el-menu-item index="bw-query-price" v-if="!userInfo.shAgent && relationAllow()">
             <router-link :to="{ name: 'bw-query-price' }" tag="p">
               新建标王推广
             </router-link>
-          </el-menu-item> -->
-        </el-submenu>
+          </el-menu-item>
+        </el-submenu> -->
         <el-submenu index="bwPlus">
           <template slot="title">
             <bx-icon type="sharealt"></bx-icon>标王2.0
@@ -84,7 +83,7 @@
             </router-link>
           </el-menu-item>
         </el-submenu>
-        <el-submenu index="qc">
+        <!-- <el-submenu index="qc">
           <template slot="title">
             <bx-icon type="sharealt"></bx-icon>易慧推
           </template>
@@ -93,7 +92,7 @@
               管理推广
             </router-link>
           </el-menu-item>
-        </el-submenu>
+        </el-submenu> -->
         <el-menu-item index="gw-homepage" v-if="isRenderSiteLink">
           <a href="/ka/main" style="color: inherit">
             <i class="el-icon-news" />精品官网
@@ -108,11 +107,11 @@
               站外推广报表
             </router-link>
           </el-menu-item>
-          <el-menu-item index="bw-dashboard">
+          <!-- <el-menu-item index="bw-dashboard">
             <router-link :to="{ name: 'bw-dashboard'}" tag="p">
               标王推广报表
             </router-link>
-          </el-menu-item>
+          </el-menu-item> -->
           <el-menu-item index="bw-plus-dashboard">
             <router-link :to="{ name: 'bw-plus-dashboard'}" tag="p">
               标王2.0推广报表
@@ -123,13 +122,12 @@
               省心包推广报表
             </router-link>
           </el-menu-item>
-          <el-menu-item index="qc-dashboard">
+          <!-- <el-menu-item index="qc-dashboard">
             <router-link :to="{ name: 'qc-dashboard'}" tag="p">
               易慧推报表
             </router-link>
-          </el-menu-item>
+          </el-menu-item> -->
         </el-submenu>
-
         <el-submenu index="ssp" v-show="allowSeeBxAd">
           <template slot="title">
             <i class="el-icon-message"></i>品牌广告
@@ -209,7 +207,7 @@ const MENU_GROUP_MAP = {
   bwPlus: ['bw-plus-query-price', 'bw-plus-price-records', 'bw-plus-package-list'],
   qc: ['qc-promote-list'],
   ssp: ['ad-list', 'material-list', 'order-list', 'user-list', 'ad-calendar'],
-  dashboard: ['qwt-dashboard', 'bw-dashboard', 'qc-dashboard']
+  dashboard: ['qwt-dashboard', 'bw-dashboard', 'qc-dashboard', 'bw-plus-dashboard', 'ad-dashboard']
 }
 
 export default {
