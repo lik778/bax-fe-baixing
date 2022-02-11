@@ -250,10 +250,10 @@ export default {
         this.dialogVisible = true
         return
       }
-      const { data: { renewId, commitSkuDetailList, cities, words: keywords, mobile = '', salesId } } = await getRenewPriceByPackageId({ packageId })
+      const { data: { renewId, commitSkuDetailList, cities, words: keywords, mobile = '', salesId, userId: userBxId } } = await getRenewPriceByPackageId({ packageId })
       if (commitSkuDetailList && commitSkuDetailList.length) {
         this.visible = true
-        this.renewInfo = { renewId, additionProductMap: commitSkuDetailList, cities, keywords, salesId, mobile }
+        this.renewInfo = { renewId, additionProductMap: commitSkuDetailList, cities, keywords, salesId, mobile, userBxId }
       } else {
         this.$router.push({ name: 'renew-upgrade', query: { packageId } })
       }
