@@ -116,10 +116,10 @@ import dayjs from 'dayjs'
 import * as api from 'api/account'
 import SectionHeader from 'com/common/section-header'
 import { orderStatusType, orderStatusLabelDisplay } from 'constant/order'
-import { MERCHANTS, SKUTYPES, PHOENIXS_MERCHANT_CODE } from 'constant/product'
+import { MERCHANTS, SKUTYPES } from 'constant/product'
 import { orderServiceHost } from 'config'
 
-const { FENG_MING_MERCHANT_CODE } = MERCHANTS
+const { FENG_MING_MERCHANT_CODE, PHOENIXS_MERCHANT_CODE } = MERCHANTS
 const { GIFT } = SKUTYPES
 const ONE_PAGE_NUM = 10
 const DEFAULT_DATE_RANGE = [
