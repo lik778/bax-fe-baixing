@@ -116,7 +116,7 @@ import dayjs from 'dayjs'
 import * as api from 'api/account'
 import SectionHeader from 'com/common/section-header'
 import { orderStatusType, orderStatusLabelDisplay } from 'constant/order'
-import { MERCHANTS, SKUTYPES } from 'constant/product'
+import { MERCHANTS, SKUTYPES, PHOENIXS_MERCHANT_CODE } from 'constant/product'
 import { orderServiceHost } from 'config'
 
 const { FENG_MING_MERCHANT_CODE } = MERCHANTS
@@ -127,8 +127,8 @@ const DEFAULT_DATE_RANGE = [
   dayjs().toDate()
 ]
 const PRODUCTS = {
-  [FENG_MING_MERCHANT_CODE]: '站外推广'
-//   [PHOENIXS_MERCHANT_CODE]: '标王'
+  [FENG_MING_MERCHANT_CODE]: '站外推广',
+  [PHOENIXS_MERCHANT_CODE]: '标王'
 }
 
 export default {

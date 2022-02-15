@@ -284,34 +284,34 @@ const bwPlusRoutes = [
   }
 ]
 
-const bwRoutes = [
-  {
-    component: () => import('com/bw-query-price'),
-    path: '/main/bw/query-price',
-    name: 'bw-query-price',
-    redirect: '/main/bw/plan-list'
-  },
-  {
-    component: () => import('com/bw-edit-plan'),
-    path: '/main/bw/edit-plan',
-    name: 'bw-edit-plan'
-  },
-  {
-    component: () => import('com/bw-plan-list'),
-    path: '/main/bw/plan-list',
-    name: 'bw-plan-list'
-  },
-  {
-    component: () => import('com/bw-landing'),
-    path: '/main/bw/landing',
-    name: 'bw-landing'
-  },
-  {
-    component: () => import('com/bw-dashboard'),
-    path: '/main/bw/dashboard',
-    name: 'bw-dashboard'
-  }
-]
+// const bwRoutes = [
+//   {
+//     component: () => import('com/bw-query-price'),
+//     path: '/main/bw/query-price',
+//     name: 'bw-query-price',
+//     redirect: '/main/bw/plan-list'
+//   },
+//   {
+//     component: () => import('com/bw-edit-plan'),
+//     path: '/main/bw/edit-plan',
+//     name: 'bw-edit-plan'
+//   },
+//   {
+//     component: () => import('com/bw-plan-list'),
+//     path: '/main/bw/plan-list',
+//     name: 'bw-plan-list'
+//   },
+//   {
+//     component: () => import('com/bw-landing'),
+//     path: '/main/bw/landing',
+//     name: 'bw-landing'
+//   },
+//   {
+//     component: () => import('com/bw-dashboard'),
+//     path: '/main/bw/dashboard',
+//     name: 'bw-dashboard'
+//   }
+// ]
 
 const qcRoutes = [
   {
@@ -523,7 +523,7 @@ export const router = new VueRouter({
       path: '/main/notice',
       name: 'notice'
     },
-    ...bwRoutes,
+    // ...bwRoutes,
     ...qcRoutes,
     ...qwtRoutes,
     ...sspRoutes,
