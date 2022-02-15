@@ -154,7 +154,7 @@
                     :item="welfareInfo[0]"
                     :currentPrice="getWelfareInfo" />
                 <div>
-                    <h3>续费价：{{totalPrice}}</h3>
+                    <h3>续费价：{{totalPrice}}元</h3>
                     <el-button type="primary" :disabled="totalPrice === '-' || totalPrice <= 0" @click="visible=true">确认</el-button>
                 </div>
             </footer>

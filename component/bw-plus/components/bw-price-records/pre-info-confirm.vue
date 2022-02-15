@@ -76,7 +76,7 @@ export default {
     },
     totalPrice () {
       const { additionProductMap } = this.preInfo
-      const sum = additionProductMap.reduce((a, b) => a + b.originPrice, 0)
+      const sum = additionProductMap.reduce((a, b) => a + Math.floor(b.originPrice / 100) * 100, 0)
       return sum
     },
     spreadPrice () {
@@ -84,7 +84,7 @@ export default {
     },
     totalDealPrice () {
       const { additionProductMap } = this.preInfo
-      const sum = additionProductMap.reduce((a, b) => a + b.dealPrice, 0)
+      const sum = additionProductMap.reduce((a, b) => a + Math.floor(b.dealPrice / 100) * 100, 0)
       return sum
     }
   },
@@ -98,11 +98,11 @@ export default {
     },
     priceFormatter (...args) {
       const [,, price] = args
-      return f2y(price)
+      return Math.floor(f2y(price))
     },
     spreadFormatter (row, column, cellValue, index) {
       const { dealPrice, originPrice } = row
-      return f2y(originPrice - dealPrice)
+      return Math.floor(f2y(originPrice)) - Math.floor(f2y(dealPrice))
     }
   }
 }

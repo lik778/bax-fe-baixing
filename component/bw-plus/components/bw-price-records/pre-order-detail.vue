@@ -8,7 +8,7 @@
     <PreInfoConfirm :isRenew="isRenew" :preInfo="preInfo" :allAreas="allAreas"/>
     <div class="row-info total-price">
       <BwDescriptionItem label="客户手机号：" :value="preInfo.mobile"/>
-      <BwDescriptionItem label="销售编号：" :value="preInfo.salesId"/>
+      <BwDescriptionItem label="销售编号：" :value="preInfo.saleId"/>
       <BwDescriptionItem label="客户uid：" :value="preInfo.userBxId"/>
     </div>
     <span slot="footer" class="dialog-footer">
