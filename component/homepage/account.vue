@@ -12,7 +12,7 @@
         <li class="account-item" v-if="isShowSection('biaowang')">
           <p class="title">标王投放币（元) </p>
           <p class="num">{{ biaowangBalance.price }}</p>
-          <p class="desc">（ {{biaowangData.nearExpirationPromotes}} 个词即将到期）</p>
+          <!-- <p class="desc">（ {{biaowangData.nearExpirationPromotes}} 个词即将到期）</p> -->
           <el-button type="primary" class="button" size="small" @click.native="() => handleCharge('biaowang')">管理标王推广</el-button>
         </li>
         <li class="account-item" v-if="isShowSection('biaowang')">
@@ -68,7 +68,7 @@ export default {
         case 'site':
           return this.$router.push({ name: 'qwt-charge', query: { select_gw: 1 } })
         case 'biaowang':
-          return this.$router.push({ name: 'bw-plan-list' })
+          return this.$router.push({ name: 'bw-plus-package-list' })
         case 'adPlatform':
           return this.$router.push({ name: 'qwt-charge', query: { from: CARE_FREE_MERCHANT_CODE } })
       }

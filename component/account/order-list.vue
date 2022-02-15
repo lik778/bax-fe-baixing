@@ -119,7 +119,7 @@ import { orderStatusType, orderStatusLabelDisplay } from 'constant/order'
 import { MERCHANTS, SKUTYPES } from 'constant/product'
 import { orderServiceHost } from 'config'
 
-const { FENG_MING_MERCHANT_CODE, PHOENIXS_MERCHANT_CODE } = MERCHANTS
+const { FENG_MING_MERCHANT_CODE } = MERCHANTS
 const { GIFT } = SKUTYPES
 const ONE_PAGE_NUM = 10
 const DEFAULT_DATE_RANGE = [
@@ -127,8 +127,8 @@ const DEFAULT_DATE_RANGE = [
   dayjs().toDate()
 ]
 const PRODUCTS = {
-  [FENG_MING_MERCHANT_CODE]: '站外推广',
-  [PHOENIXS_MERCHANT_CODE]: '标王'
+  [FENG_MING_MERCHANT_CODE]: '站外推广'
+//   [PHOENIXS_MERCHANT_CODE]: '标王'
 }
 
 export default {
