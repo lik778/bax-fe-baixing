@@ -1,7 +1,7 @@
 <template>
   <div class="homepage">
     <account :userInfo="userInfo"/>
-    <biaowang :userInfo="userInfo" />
+    <!-- <biaowang :userInfo="userInfo" /> -->
     <campaign :userInfo="userInfo" />
   </div>
 </template>
@@ -10,7 +10,6 @@
 import store from './store'
 
 import Account from './account'
-import Biaowang from './biaowang'
 import Campaign from './campaign'
 
 export default {
@@ -27,7 +26,6 @@ export default {
   },
   components: {
     Account,
-    Biaowang,
     Campaign
   }
 }

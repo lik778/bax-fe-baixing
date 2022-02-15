@@ -43,7 +43,7 @@ export const biaowangTimelineType = {
 }
 
 const productType = {
-  标王: PRODUCT_TYPE_BIAOWANG,
+//   标王: PRODUCT_TYPE_BIAOWANG,
   站外推广: PRODUCT_TYPE_FENGMING
 }
 
