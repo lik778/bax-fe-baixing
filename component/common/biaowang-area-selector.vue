@@ -134,6 +134,9 @@ export default {
         return
       }
       this.selectedAreas = [...v]
+    },
+    visible (newBooln, oldBooln) {
+      console.log(newBooln, oldBooln)
     }
   },
   mounted () {

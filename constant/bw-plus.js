@@ -1,6 +1,10 @@
 import { f2y } from 'util'
 import dayjs from 'dayjs'
 import isBetween from 'dayjs/plugin/isBetween'
+
+// seo
+import write from '../component/seo/assets/write.png'
+import golden from '../component/seo/assets/golden.png'
 dayjs.extend(isBetween)
 // 审核状态
 export const AUDIT_STATUS_PENGDING = 0
@@ -414,3 +418,80 @@ export const YINGYONG_TIP = Object.freeze([
   '1.通配符内的关键词与当前计划关键词一致时，其他计划会自动替换关键词并更新；',
   '2.通配符内的关键词与当前计划关键词不一致时，其他计划会统一按当前物料更新。'
 ])
+
+// seo
+export const packageInfo = [
+  {
+    id: 0,
+    title: '基础版',
+    src: write,
+    value: (price) => 1200,
+    desc: '基础版套餐',
+    list: [{
+      name: 'SEO云推广',
+      day: '365'
+    },
+    {
+      name: '企业官方钻石店铺',
+      day: '365'
+    }
+    ]
+  },
+  {
+    id: 1,
+    title: '高级版',
+    src: golden,
+    value: (price) => 1200,
+    desc: '高级版套餐',
+    list: [{
+      name: 'SEO云推广',
+      day: '365'
+    },
+    {
+      name: '关键词百度首页排名',
+      day: '30/60'
+    },
+    {
+      name: '企业官方钻石店铺',
+      day: '365'
+    }
+    ]
+  }
+]
+
+export const PACKAGE_INTRODUCE = [
+  {
+    id: 0,
+    title: '基础版介绍',
+    value: (price) => 1200,
+    list: [{
+      name: 'SEO云推广',
+      desc: '钻石店铺100个非指定关键词优化到百度电脑端/手机端首页',
+      src: ''
+    }
+    ],
+    tipList: ['1.服务开始时间从下单时间开始计算，购买成功后，请制作店铺并完成SEO设置。',
+      '2.钻石店铺制作完成后，请按照《钻石店铺SEO手册》进行设置，然后启动一键优化，启动一键优化后最快4天后可陆续上词。',
+      ' 3. 标王2.0部分关键词的行业需要经过人工审核，投放时常以人工审核为准。'],
+    payText: 'SEO云推广为非指定关键词，后台提供上线关键词查询工具，定期更新，实际结果以百度实际搜索为准。'
+  },
+  {
+    id: 1,
+    title: '高级版介绍',
+    value: (price) => 1200,
+    list: [{
+      name: 'SEO云推广',
+      desc: '1年钻石店铺100个非指定关键词优化到百度电脑端/手机端首页',
+      src: ''
+    },
+    {
+      name: '标王2.0',
+      desc: '抢占全网搜索首页位置流量/电脑端5*8小时/20个5热度关键词(其他行业30天/非其他行业60天)',
+      src: ''
+    }],
+    tipList: ['1.服务开始时间从下单时间开始计算，购买成功后，请制作店铺并完成SEO设置。',
+      '2.钻石店铺制作完成后，请按照《钻石店铺SEO手册》进行设置，然后启动一键优化，启动一键优化后最快4天后可陆续上词。',
+      ' 3. 标王2.0部分关键词的行业需要经过人工审核，投放时常以人工审核为准。'],
+    payText: 'SEO云推广为非指定关键词，后台提供上线关键词查询工具，定期更新，实际结果以百度实际搜索为准。'
+  }
+]

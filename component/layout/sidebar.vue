@@ -83,6 +83,26 @@
             </router-link>
           </el-menu-item>
         </el-submenu>
+        <el-submenu index="seo">
+          <template slot="title">
+            <bx-icon type="sharealt"></bx-icon>SEO云推广
+          </template>
+          <el-menu-item index="seo-promotion-purchase">
+            <router-link :to="{ name: 'seo-promotion-purchase' }" tag="p">
+              SEO云推广购买
+            </router-link>
+          </el-menu-item>
+          <el-menu-item index="seo-word-records">
+            <router-link :to="{ name: 'seo-word-records' }" tag="p">
+              查词记录
+            </router-link>
+          </el-menu-item>
+          <el-menu-item index="seo-package-list">
+            <router-link :to="{ name: 'seo-package-list' }" tag="p">
+              管理推广
+            </router-link>
+          </el-menu-item>
+        </el-submenu>
         <!-- <el-submenu index="qc">
           <template slot="title">
             <bx-icon type="sharealt"></bx-icon>易慧推
@@ -207,7 +227,8 @@ const MENU_GROUP_MAP = {
   bwPlus: ['bw-plus-query-price', 'bw-plus-price-records', 'bw-plus-package-list'],
   qc: ['qc-promote-list'],
   ssp: ['ad-list', 'material-list', 'order-list', 'user-list', 'ad-calendar'],
-  dashboard: ['qwt-dashboard', 'bw-dashboard', 'qc-dashboard', 'bw-plus-dashboard', 'ad-dashboard']
+  dashboard: ['qwt-dashboard', 'bw-dashboard', 'qc-dashboard', 'bw-plus-dashboard', 'ad-dashboard'],
+  seo: ['seo-promotion-purchase', 'seo-word-records', 'seo-package-list']
 }
 
 export default {
