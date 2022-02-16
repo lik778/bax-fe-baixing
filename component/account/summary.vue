@@ -14,7 +14,7 @@
       <el-col :span="4" class="column">
         <h3>标王投放币</h3>
         <p><strong>{{ balance.biaowangBalance | priceFormat }}</strong>元</p>
-        <router-link :to="{name: 'bw-plan-list'}">
+        <router-link :to="{name: 'bw-plus-package-list'}">
           <el-button type="primary">管理标王推广</el-button>
         </router-link>
       </el-col>
