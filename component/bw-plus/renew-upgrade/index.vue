@@ -7,6 +7,7 @@
                 <li>关键词: {{renewDetails.words.join('、')}}</li>
                 <li>所选城市: {{citiesFormater(renewDetails.cities)}}</li>
             </ul>
+            <p class="bax-el-alert"><i class="el-icon-warning"></i>{{getExtraDetail}}</p>
             <Title
                 title="百度标王"
                 subTitle="标准版"
@@ -145,6 +146,7 @@
                 @checked="checked"
                 :productList="additionalSkuList"
                 :additionRenewDetailList="renewDetails.additionRenewDetailList"
+                :disableSkuList="renewDetails.disableSkuList"
                 :currentPrice="currentRenewInfo"
                 :isRenew="true"
             />
@@ -177,7 +179,7 @@
 <script>
 import { getRenewPriceByPackageId, submitPreOrder } from 'api/biaowang-plus'
 import { Title, BwCreativity, PreInfoConfirm, WelfareActivity } from '../components'
-import { BAIDU_BW_PRODUCT_PRICELIST, DEVICE_ALL, DEVICE_WAP, DEVICE_PC, SEO_PRODUCT_TYPE, CREATIVE_PRODUCT_TYPE, welfareInfo, BAIDU_PRODUCT_SOURCE } from 'constant/bw-plus'
+import { BAIDU_BW_PRODUCT_PRICELIST, DEVICE_ALL, DEVICE_WAP, DEVICE_PC, SEO_PRODUCT_TYPE, CREATIVE_PRODUCT_TYPE, welfareInfo, BAIDU_PRODUCT_SOURCE, PRODUCT_SOURCE_MAP } from 'constant/bw-plus'
 import { f2y, getCnName } from 'util'
 import { Message } from 'element-ui'
 export default {
@@ -217,6 +219,10 @@ export default {
     this.currentRenewInfo = { ...data.phoenixsPriceList[0].daysPriceList.find(d => d.soldAvailable), device: data.phoenixsPriceList[0].device, scheduleType: data.phoenixsPriceList[0].scheduleType }
   },
   computed: {
+    getExtraDetail () {
+      const { skuLeftDaysMap } = this.renewDetails
+      return Object.keys(skuLeftDaysMap).reduce((a, b) => `${a}${a && '、'}${PRODUCT_SOURCE_MAP[b]}剩余${skuLeftDaysMap[b]}天`, '')
+    },
     getWelfareInfo () {
       const { currentRenewInfo } = this
       return {
