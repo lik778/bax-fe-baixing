@@ -22,7 +22,7 @@
                 <el-table-column align="center" prop="duration">
                     <template slot-scope="{ row }">
                         <span class="row-day">延长{{ row.duration }}天</span>
-                        <el-tag class="tag-type" effect="dark" v-if="row.duration > 30"
+                        <el-tag class="tag-type" effect="dark" v-if="row.duration >= 30"
                         >送店铺</el-tag
                         >
                     </template>
@@ -153,7 +153,7 @@
             <div :style="{height: '130px'}"></div>
             <footer>
                 <WelfareActivity
-                    :item="welfareInfo[0]"
+                    :item="welfareInfo"
                     :currentPrice="getWelfareInfo" />
                 <div>
                     <h3>续费价：{{totalPrice}}元</h3>
@@ -179,9 +179,26 @@
 <script>
 import { getRenewPriceByPackageId, submitPreOrder } from 'api/biaowang-plus'
 import { Title, BwCreativity, PreInfoConfirm, WelfareActivity } from '../components'
-import { BAIDU_BW_PRODUCT_PRICELIST, DEVICE_ALL, DEVICE_WAP, DEVICE_PC, SEO_PRODUCT_TYPE, CREATIVE_PRODUCT_TYPE, welfareInfo, BAIDU_PRODUCT_SOURCE, PRODUCT_SOURCE_MAP } from 'constant/bw-plus'
+import { BAIDU_BW_PRODUCT_PRICELIST, DEVICE_ALL, DEVICE_WAP, DEVICE_PC, SEO_PRODUCT_TYPE, CREATIVE_PRODUCT_TYPE, BAIDU_PRODUCT_SOURCE, PRODUCT_SOURCE_MAP } from 'constant/bw-plus'
 import { f2y, getCnName } from 'util'
 import { Message } from 'element-ui'
+const welfareInfo = {
+  id: 1,
+  title: '会员钻石店铺',
+  value: (price) => 1200,
+  desc: '',
+  content: (price) => ['双端适配', '视频展示', '智能接待系统', '支持seo优化'],
+  isActive: (duration, price) => {
+    const active = duration >= 30
+    return {
+      active,
+      tag: active ? `赠送${duration}天` : '至少购买标王可解锁',
+      detail: `${duration}天`,
+      name: '会员钻石店铺'
+    }
+  },
+  show: true
+}
 export default {
   name: 'renew-upgrade',
   components: {
