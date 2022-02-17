@@ -306,6 +306,7 @@ export async function recommendList (id) {
 }
 
 /**
+ * @param {object} params
  * @param { String[] } params.words
  * @param { String[] } params.cities
  * @param { String } params.industry
@@ -315,6 +316,52 @@ export async function getTrialSystem (params) {
   const body = await biaowangPlus
     .post('/quota/getTrialSystemQuotaResult')
     .send(params)
+    .json()
+  return body
+}
+
+/**
+ * @param {object} params
+ * @param {number} params.applyId
+ * @param {number} params.userId
+ * @returns
+ */
+export async function getPreInfo (params) {
+  const body = await biaowangPlus
+    .get('/cloud/user/pre-info')
+    .query(params)
+    .json()
+  return body
+}
+/**
+ * @param {object} params
+ * @param { number } params.targetUserId
+ * @param { number } params.salesId
+ * @param { number } params.skuId
+ * @param { number } params.priceId
+ * @returns
+ */
+export async function seoCommit (params) {
+  const body = await biaowangPlus
+    .post('/cloud/user/commit')
+    .send(trim(params))
+    .json()
+  return body
+}
+
+/**
+ * @param { object } params
+ * @param { number } params.status
+ * @param { string } params.keyword
+ * @param { number } params.userId
+ * @param { number } params.size
+ * @param { number } params.page
+ * @returns
+ */
+export async function getuserList (params) {
+  const body = await biaowangPlus
+    .get('/cloud/user/list')
+    .query(trim(params))
     .json()
   return body
 }

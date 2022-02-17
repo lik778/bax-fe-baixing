@@ -419,6 +419,10 @@ export const YINGYONG_TIP = Object.freeze([
   '2.通配符内的关键词与当前计划关键词不一致时，其他计划会统一按当前物料更新。'
 ])
 
+// 基础版
+export const SEO_BASIS = 312
+// 高级版
+export const SEO_SENIOR = 313
 // seo
 export const packageInfo = [
   {

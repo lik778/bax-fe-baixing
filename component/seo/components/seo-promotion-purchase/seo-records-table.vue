@@ -24,6 +24,7 @@
         </template>
       </el-table-column>
       <!-- <el-table-column prop="applyType" label="报价类型" :formatter="applyTypeFormatter" /> -->
+      <el-table-column prop="status" label="版本"/>
       <el-table-column prop="status" label="审核状态">
         <template slot-scope="{ row }">
           <span :class="transformClass(row.status)">{{APPLY_AUDIT_STATUS_OPTIONS[row.status] || '-'}}</span>
@@ -46,11 +47,11 @@
               </el-popover>
         </template>
       </el-table-column>
-      <el-table-column prop="industry" label="推广行业" />
-      <el-table-column width="100" label="绑定客户" prop="userId"/>
+      <!-- <el-table-column prop="industry" label="推广行业" /> -->
+      <!-- <el-table-column width="100" label="绑定客户" prop="userId"/> -->
       <el-table-column width="150" fixed="right" label="操作">
         <template slot-scope="{ row }">
-          <el-button @click="getDetail(row)" type="text">查价</el-button>
+          <el-button @click="getDetail(row)" type="text">详情</el-button>
           <el-button @click="preOrder(row)" :disabled="row.operationStatus != OPTION_STATUS_AWAIT_TIDAN" type="text">提单</el-button>
           <i v-if="row.operationStatus === OPTION_STATUS_COPY_URL" @click="preOrder(row)" class="el-icon-document-copy"></i>
         </template>

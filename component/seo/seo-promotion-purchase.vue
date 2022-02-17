@@ -5,7 +5,7 @@
         <main>
           <p class="seo-title">SEO云推广优选套餐</p>
           <ProductItem @chooseClick="chooseClick" />
-          <div class="submenu-btn" v-if="checkTip==0"><el-button type="primary" @click="open">提交</el-button></div>
+          <div class="submenu-btn" v-if="checkTip==0"><el-button type="primary" @click="commit">提交</el-button></div>
         </main>
          <CommitDialog
                 :welfare="getWelfareInfo"
@@ -53,9 +53,9 @@
                   <el-table :data="resultList" border style="width: 100%" :header-cell-style="{background: '#FFF6F2',color: '#C67C49'}">
                     <el-table-column prop="word" label="关键词" />
                     <el-table-column prop="pcPv" label="电脑端热度" />
-                    <el-table-column prop="result" label="查询结果" />
+                    <el-table-column prop="pcPv" label="查询结果" />
                   </el-table>
-                <div class="submenu-btn"><el-button type="primary" @click="open">提交</el-button></div>
+                <div class="submenu-btn"><el-button type="primary" @click="commit">提交</el-button></div>
                 <!-- :preInfo="preInfo" -->
               </div>
           </div>
@@ -68,9 +68,9 @@ import InvalidIndustry from './components/seo-promotion-purchase/invalid-industr
 import CommitDialog from './components/seo-promotion-purchase/commit-dialog.vue'
 import ProductItem from './components/product-item'
 import AreaSelector from 'com/common/biaowang-area-selector'
-import { checkKeyword, getTrialSystem } from 'api/biaowang-plus'
-// , querySystemResult, commit
+import { checkKeyword, getTrialSystem, getPreInfo, seoCommit } from 'api/biaowang-plus'
 import { getCnName } from 'util'
+import { SEO_BASIS, SEO_SENIOR } from 'constant/bw-plus'
 import { OTHER_CITY_ENUM } from 'com/common/bw/core-cities-dialog'
 import debounce from 'lodash.debounce'
 export default {
@@ -93,11 +93,7 @@ export default {
           result: '通过'
         }
       ],
-      messageRed: {
-        overHeatWords: [],
-        errorWords: [],
-        soldWords: []
-      },
+      priceId: null,
       rules: {
         words: [{ validator: this.checkWord, trigger: 'blur' }],
         cities: [{ required: true, message: '请选择推广地域', trigger: 'change' }]
@@ -119,7 +115,10 @@ export default {
       queryResult: {},
       queryBtnDisable: true,
       submitBtn: true,
-      resultList: []
+      resultList: [],
+      SEO_BASIS,
+      SEO_SENIOR,
+      skuId: null
     }
   },
   methods: {
@@ -189,13 +188,13 @@ export default {
         }
         return errorMsg
       }
-      // if (array.length < 20 || array.length > 20) {
-      //   errorMsg = {
-      //     validate: false,
-      //     error: `关键词个数只能输入20个，当前关键词${array.length}个`
-      //   }
-      //   return errorMsg
-      // }
+      if (array.length < 20 || array.length > 20) {
+        errorMsg = {
+          validate: false,
+          error: `关键词个数只能输入20个，当前关键词${array.length}个`
+        }
+        return errorMsg
+      }
       if (array.some(item => item.length < 2 || item.length > 15)) {
         errorMsg = {
           validate: false,
@@ -219,20 +218,40 @@ export default {
       callback()
     },
     async getTrialSystem () {
-      const { data, data: { disable, keywordPvList } } = await getTrialSystem(this.form)
-      this.messageRed.overHeatWords = data.overHeatWords
-      this.messageRed.errorWords = data.errorWords
-      this.messageRed.soldWords = data.soldWords
+      const words = this.form.words.split(/[\s\n]/).filter(Boolean)
+      const { data, data: { disable, keywordPvList, priceId } } = await getTrialSystem({
+        words,
+        cities: this.form.cities,
+        industry: this.form.industry
+        // ...this.form
+      })
+      this.priceId = priceId
       keywordPvList.forEach(item => {
-
+        if (data.overHeatWords) {
+          const a = this.findWordsColor(data.overHeatWords, item.word)
+          console.log(a)
+        }
+        if (data.errorWords) {
+          const b = this.findWordsColor(data.errorWords, item.word)
+          console.log(b)
+        }
+        if (data.soldWords) {
+          const c = this.findWordsColor(data.soldWords, item.word)
+          console.log(c)
+        }
       })
       this.resultList = keywordPvList
+      console.log(keywordPvList)
+      console.log(this.resultList)
       this.submitBtn = disable
+    },
+    findWordsColor (arr, val) {
+      return arr.find(o => o === val)
     },
     submitForm: debounce(async function (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid && !this.queryBtnDisable) {
-          // this.checkKeyword()
+          this.getTrialSystem()
           this.resultVisible = true
         } else if (this.queryBtnDisable) {
           this.$message({
@@ -248,16 +267,23 @@ export default {
       this.form.cities = [...areas]
       this.areaDialogVisible = false
     },
-    open () {
-      if (!this.submitBtn) {
+    async getPreInfo () {
+      await getPreInfo({
+
+      })
+    },
+    async commit () {
+      if (!this.submitBtn || this.checkTip === 0) {
         this.isSubmit = true
       }
     },
     chooseClick (val) {
       this.checkTip = val
       if (this.checkTip === 0) {
+        this.skuId = SEO_BASIS
         this.seniorShow = false
       } else {
+        this.skuId = SEO_SENIOR
         this.seniorShow = true
       }
     },
@@ -283,32 +309,38 @@ export default {
       }
     },
     submit: debounce(async function () {
-      // this.isPending = true
-      // try {
-      //   const { code, data } = await commit(params)
-      //   if (code === 0) {
-      //     this.resetResult()
-      //     const applyId = data.applyId
-      //     const skipAudit = industryAuditResult.skipManualAudit
-      //     this.$router.push({
-      //       name: 'bw-plus-price-records',
-      //       query: { applyId, skipAudit }
-      //     })
-      //   }
-      //   if (code === 4080) {
-      //     this.BwPlusDialogMsg = {
-      //       dialogVisible: true,
-      //       type: 'error',
-      //       content: data,
-      //       title: '提交失败'
-      //     }
-      //   }
-      // } catch (error) {
-      //   console.log(error)
-      // } finally {
-      //   this.isPending = false
-      //   this.isSubmit = false
-      // }
+      this.isPending = true
+      try {
+        const targetUserId = this.$route.query.user_id
+        const salesId = this.$route.query.sales_id
+        const { data, code } = await seoCommit({
+          targetUserId,
+          salesId,
+          skuId: this.skuId,
+          priceId: this.priceId
+        })
+        if (code === 0) {
+          const applyId = data.applyId
+          const skipAudit = data.skipAudit
+          this.$router.push({
+            name: 'seo-word-records',
+            query: { applyId, skipAudit }
+          })
+        }
+        // if (code === 4080) {
+        //   this.BwPlusDialogMsg = {
+        //     dialogVisible: true,
+        //     type: 'error',
+        //     content: data,
+        //     title: '提交失败'
+        //   }
+        // }
+      } catch (error) {
+        console.log(error)
+      } finally {
+        this.isPending = false
+        this.isSubmit = false
+      }
     }, 300)
   },
   computed: {

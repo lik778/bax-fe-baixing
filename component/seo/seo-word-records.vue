@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import { getInqueryList, userChoose, preOrder, preInfo, getPriceList } from 'api/biaowang-plus'
+import { getuserList, userChoose, preOrder, preInfo, getPriceList } from 'api/biaowang-plus'
 import { APPLY_AUDIT_STATUS_OPTIONS, APPLY_TYPE_NORMAL } from 'constant/bw-plus'
 import PreInfoConfirm from './components/seo-promotion-purchase/pre-info-confim.vue'
 import PreOrderDetail from './components/seo-promotion-purchase/pre-order-detail.vue'
@@ -147,7 +147,7 @@ export default {
         page: currentPage
       }
       try {
-        const { data: { content, totalElements } } = await getInqueryList(params)
+        const { data: { content, totalElements } } = await getuserList(params)
         this.records = content
         this.total = totalElements
         this.loading = false
