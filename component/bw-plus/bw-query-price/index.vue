@@ -418,7 +418,6 @@ export default {
           message,
           data: { additionalProducts, keywordLockDetails }
         } = await querySystemResult(params)
-        console.log(additionalProducts)
         if (code === 0) {
           this.queryResult = data
           this.keywordLockDetails = keywordLockDetails

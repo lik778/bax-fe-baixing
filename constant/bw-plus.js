@@ -425,7 +425,7 @@ export const packageInfo = [
     id: 0,
     title: '基础版',
     src: write,
-    value: (price) => 1200,
+    price: '￥8800',
     desc: '基础版套餐',
     list: [{
       name: 'SEO云推广',
@@ -441,7 +441,7 @@ export const packageInfo = [
     id: 1,
     title: '高级版',
     src: golden,
-    value: (price) => 1200,
+    price: '￥9800',
     desc: '高级版套餐',
     list: [{
       name: 'SEO云推广',
@@ -463,7 +463,7 @@ export const PACKAGE_INTRODUCE = [
   {
     id: 0,
     title: '基础版介绍',
-    value: (price) => 1200,
+    price: '￥8800',
     list: [{
       name: 'SEO云推广',
       desc: '钻石店铺100个非指定关键词优化到百度电脑端/手机端首页',
@@ -478,7 +478,7 @@ export const PACKAGE_INTRODUCE = [
   {
     id: 1,
     title: '高级版介绍',
-    value: (price) => 1200,
+    price: '￥9800',
     list: [{
       name: 'SEO云推广',
       desc: '1年钻石店铺100个非指定关键词优化到百度电脑端/手机端首页',

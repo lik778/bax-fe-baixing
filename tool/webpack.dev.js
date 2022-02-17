@@ -41,7 +41,7 @@ const config = merge(base, {
         }
       },
       '/bwplusDevApi': {
-        target: 'http://172.17.2.49:8080',
+        target: 'http://172.17.3.138:8080',
         pathRewrite: {
           '^/bwplusDevApi': '/'
         },

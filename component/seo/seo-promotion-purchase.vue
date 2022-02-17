@@ -4,7 +4,7 @@
         <header>seo云推广</header>
         <main>
           <p class="seo-title">SEO云推广优选套餐</p>
-          <ProductItem @chooseClick="chooseClick"></ProductItem>
+          <ProductItem @chooseClick="chooseClick" />
           <div class="submenu-btn" v-if="checkTip==0"><el-button type="primary" @click="open">提交</el-button></div>
         </main>
          <CommitDialog
@@ -20,9 +20,10 @@
         <el-card class="box-card query-card senior-card" v-if="seniorShow">
           <p class="senior-title">高级版-标王推广关键词<span class="text">（注：20个5热度关键词只投放电脑端、5 * 8 小时、普通行业两个月/特殊行业一个月）</span></p>
           <div class="package-box">
+            <el-col :span="15">
             <el-form ref="form"  label-width="80px" :model="form" :rules="rules">
               <el-form-item label="活动名称" prop="words">
-                <el-input type="textarea" v-model="form.words" rows="6" placeholder="请输入关键词，多个关键词换行
+                <el-input type="textarea" @change="checkKeyword" v-model="form.words" rows="6" placeholder="请输入关键词，多个关键词换行
 示例：
 粮食烘干机
 粮食烘干塔
@@ -34,9 +35,13 @@
                   <i class="el-icon-plus" @click="citiesShow"></i>
               </el-form-item>
               <el-form-item label-width="0">
-                <el-button type="primary" class="found-btn" @click="submitForm('form')" >查询</el-button>
+                <el-button type="primary" class="found-btn" @click="submitForm('form')">查询</el-button>
               </el-form-item>
             </el-form>
+            </el-col>
+            <el-col :span="8" class="tip">
+              <InvalidIndustry/>
+            </el-col>
              <AreaSelector
               type="bw" :all-areas="allAreas"
               :areas="form.cities"
@@ -44,10 +49,10 @@
               @ok="onAreasChange"
               @cancel="areaDialogVisible = false"
               />
-              <div v-if="resultVisible">
-                  <el-table :data="tableData" border style="width: 100%" :header-cell-style="{background: '#FFF6F2',color: '#C67C49'}">
+              <div v-if="resultVisible" class="table-box">
+                  <el-table :data="resultList" border style="width: 100%" :header-cell-style="{background: '#FFF6F2',color: '#C67C49'}">
                     <el-table-column prop="word" label="关键词" />
-                    <el-table-column prop="hot" label="电脑端热度" />
+                    <el-table-column prop="pcPv" label="电脑端热度" />
                     <el-table-column prop="result" label="查询结果" />
                   </el-table>
                 <div class="submenu-btn"><el-button type="primary" @click="open">提交</el-button></div>
@@ -59,10 +64,11 @@
 </template>
 
 <script>
+import InvalidIndustry from './components/seo-promotion-purchase/invalid-industry.vue'
 import CommitDialog from './components/seo-promotion-purchase/commit-dialog.vue'
 import ProductItem from './components/product-item'
 import AreaSelector from 'com/common/biaowang-area-selector'
-import { checkKeyword } from 'api/biaowang-plus'
+import { checkKeyword, getTrialSystem } from 'api/biaowang-plus'
 // , querySystemResult, commit
 import { getCnName } from 'util'
 import { OTHER_CITY_ENUM } from 'com/common/bw/core-cities-dialog'
@@ -87,27 +93,38 @@ export default {
           result: '通过'
         }
       ],
+      messageRed: {
+        overHeatWords: [],
+        errorWords: [],
+        soldWords: []
+      },
       rules: {
         words: [{ validator: this.checkWord, trigger: 'blur' }],
         cities: [{ required: true, message: '请选择推广地域', trigger: 'change' }]
       },
       checkResult: {
         passed: true,
-        rejectedWordWithReason: {}
+        rejectedWordWithReason: {},
+        industry: ''
       },
       form: {
         words: '',
-        cities: []
+        cities: [],
+        industry: ''
       },
       areaDialogVisible: false,
       resultVisible: false,
       isSubmit: false,
       isPending: false,
-      queryResult: {}
+      queryResult: {},
+      queryBtnDisable: true,
+      submitBtn: true,
+      resultList: []
     }
   },
   methods: {
     async checkKeyword () {
+      // this.$emit('resetResult')
       const { form } = this
       const { words } = form
       if (!this.keywordLengthCheck().validate) {
@@ -121,24 +138,27 @@ export default {
           background: 'rgba(0, 0, 0, 0.7)'
         })
         try {
-          const { data: { passed, rejectedWordWithReason, skipManualAudit } } = await checkKeyword({ keywords: words.split(/[\s\n]/).filter(Boolean) })
+          const { data: { passed, rejectedWordWithReason, industry, skipManualAudit } } = await checkKeyword({ keywords: words.split(/[\s\n]/).filter(Boolean) })
           this.checkResult = {
             passed,
             rejectedWordWithReason,
+            industry,
             skipManualAudit
           }
           if (!passed) {
+            this.form.industry = ''
             this.$message({
               message: rejectedWordWithReason,
               type: 'error'
             })
             return false
           }
-          this.resultVisible = true
-          // this.$message({
-          //   message: '风控审查通过啦！快去查价吧！',
-          //   type: 'success'
-          // })
+          this.form.industry = industry || ''
+          this.$message({
+            message: '风控审查通过啦！快去查价吧！',
+            type: 'success'
+          })
+          this.queryBtnDisable = false
         } catch (error) {
           this.checkResult.passed = false
           return false
@@ -198,10 +218,27 @@ export default {
       }
       callback()
     },
+    async getTrialSystem () {
+      const { data, data: { disable, keywordPvList } } = await getTrialSystem(this.form)
+      this.messageRed.overHeatWords = data.overHeatWords
+      this.messageRed.errorWords = data.errorWords
+      this.messageRed.soldWords = data.soldWords
+      keywordPvList.forEach(item => {
+
+      })
+      this.resultList = keywordPvList
+      this.submitBtn = disable
+    },
     submitForm: debounce(async function (formName) {
       this.$refs[formName].validate((valid) => {
-        if (valid) {
-          this.checkKeyword()
+        if (valid && !this.queryBtnDisable) {
+          // this.checkKeyword()
+          this.resultVisible = true
+        } else if (this.queryBtnDisable) {
+          this.$message({
+            message: '关键词风控审查不通过',
+            type: 'error'
+          })
         } else {
           console.log(valid)
         }
@@ -212,9 +249,9 @@ export default {
       this.areaDialogVisible = false
     },
     open () {
-      console.log(1111)
-      this.isSubmit = true
-      console.log(this.isSubmit)
+      if (!this.submitBtn) {
+        this.isSubmit = true
+      }
     },
     chooseClick (val) {
       this.checkTip = val
@@ -247,46 +284,6 @@ export default {
     },
     submit: debounce(async function () {
       // this.isPending = true
-      // const {
-      //   error,
-      //   overHeat,
-      //   priceId,
-      //   tempPvId,
-      //   industryError,
-      //   industryAuditResult
-      // } = this.queryResult
-      // const { userId: targetUserId } = this.salesInfo
-      // const {
-      //   queryInfo,
-      //   applyTypeFilter,
-      //   currentPrice,
-      //   checkedAdditionProduct: additionProduct
-      // } = this
-      // const baseParams = {
-      //   targetUserId,
-      //   applyType:
-      //     currentPrice.price === 0
-      //       ? 2
-      //       : applyTypeFilter(error, overHeat, industryError)
-      // }
-      // let params = {}
-      // if (!error && !overHeat && !industryError) {
-      //   // error、overHeat、industryError都为false时为系统报价，参数如下
-      //   params = {
-      //     ...baseParams,
-      //     applyBasicAttr: { priceId, ...currentPrice },
-      //     additionProduct
-      //   }
-      // } else {
-      //   // error、overHeat、industryError不都为false时为人工报价，参数如下
-      //   params = {
-      //     ...baseParams,
-      //     applyKeywordsAttr: {
-      //       ...queryInfo,
-      //       tempPvId
-      //     }
-      //   }
-      // }
       // try {
       //   const { code, data } = await commit(params)
       //   if (code === 0) {
@@ -332,7 +329,7 @@ export default {
     }
   },
   components: {
-    ProductItem, AreaSelector, CommitDialog
+    ProductItem, AreaSelector, CommitDialog, InvalidIndustry
   }
 }
 </script>
@@ -372,6 +369,9 @@ export default {
     letter-spacing: 0;
   }
 }
+.tip{
+  margin-left: 20px;
+}
 .el-icon-plus{
   cursor: pointer;
 }
@@ -388,6 +388,11 @@ export default {
     margin-left: 5px;
   }
 }
+.table-box{
+  .submenu-btn{
+    text-align: start;
+  }
+}
 .found-btn{
   width: 107px;
   margin-bottom: 18px;
@@ -398,7 +403,7 @@ export default {
 }
 .submenu-btn{
   text-align: right;
-  margin-top: 35px;
+  margin: 35px 100px 0 0;
     .el-button{
       width: 107px;
     }

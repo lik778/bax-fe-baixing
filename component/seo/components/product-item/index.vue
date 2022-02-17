@@ -12,7 +12,7 @@
                 </el-popover>
               </p>
               <div class="content-box">
-                <p class="price">￥8800</p>
+                <p class="price">{{item.price}}</p>
                 <p>{{item.desc}}</p>
                 <ul>
                   <li v-for="(item1,index) in item.list" :key="index"><p>{{item1.name}}</p><span>{{item1.day}}天</span></li>

@@ -304,3 +304,17 @@ export async function recommendList (id) {
     .json()
   return body
 }
+
+/**
+ * @param { String[] } params.words
+ * @param { String[] } params.cities
+ * @param { String } params.industry
+ * @returns { any }
+ */
+export async function getTrialSystem (params) {
+  const body = await biaowangPlus
+    .post('/quota/getTrialSystemQuotaResult')
+    .send(params)
+    .json()
+  return body
+}
