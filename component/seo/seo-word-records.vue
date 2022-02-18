@@ -2,7 +2,7 @@
   <div class="seo-word-records">
     <el-card class="bw-price-record">
       <SeoRecordsForm @search="search"/>
-      <SeoRecordsTable @getDetail="getDetail" @doCopy="preOrder" @preOrder="getPreInfo" @reviewPrice="reviewPrice" :loading="loading" :records="records" :allAreas="allAreas"/>
+      <SeoRecordsTable @getDetail="getDetail" @doCopy="preOrder" @preOrder="getPreInfo" :loading="loading" :records="records" :allAreas="allAreas"/>
       <el-dialog
         title="查看"
         :visible.sync="dialogVisible"
@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import { getuserList, userChoose, preOrder, preInfo, getPriceList } from 'api/biaowang-plus'
+import { getuserList, getPreInfo } from 'api/biaowang-plus'
 import { APPLY_AUDIT_STATUS_OPTIONS, APPLY_TYPE_NORMAL } from 'constant/bw-plus'
 import PreInfoConfirm from './components/seo-promotion-purchase/pre-info-confim.vue'
 import PreOrderDetail from './components/seo-promotion-purchase/pre-order-detail.vue'
@@ -42,7 +42,7 @@ import SeoRecordsForm from './components/seo-promotion-purchase/seo-records-form
 import SeoRecordsTable from './components/seo-promotion-purchase/seo-records-table.vue'
 // import { BwRecordsForm, BwRecordsTable, InqueryResult, PreOrderDetail, PreInfoConfirm } from './components'
 import { normalizeRoles } from 'util/role'
-import pick from 'lodash.pick'
+// import pick from 'lodash.pick'
 import { f2y } from 'util'
 import { Message } from 'element-ui'
 const PAGESIZE = 10
@@ -98,7 +98,8 @@ export default {
       preInfo: {},
       deviceAvailableStatus: {},
       queryPriceDetail: {},
-      detailVisible: false
+      detailVisible: false,
+      url: ''
     }
   },
   async mounted () {
@@ -157,78 +158,41 @@ export default {
         this.loading = false
       }
     },
-    async reviewPrice (record) {
-      const { id: applyId } = record
-      const { data: { keywordsLockDetails: { deviceAvailableStatus, ifSoldAvailable, deviceAvailableStatus: { ifMobileAvailable, ifPcAvailable, ifAllAvailable } } } } = await getPriceList({ applyId })
-      this.deviceAvailableStatus = deviceAvailableStatus
-      this.activeRecord = record
-      if (!ifSoldAvailable) {
-        this.currentPrice = {}
-      } else
-      if (ifAllAvailable) {
-        this.currentPrice = record.priceList[0].bothFive.price ? record.priceList[0].bothFive : {}
-      } else if (ifMobileAvailable) {
-        this.currentPrice = record.priceList[0].wapSeven.price ? record.priceList[0].wapSeven : {}
-      } else if (ifPcAvailable) {
-        this.currentPrice = record.priceList[0].pcSeven.price ? record.priceList[0].pcSeven : {}
-      }
-      this.dialogVisible = true
-    },
     async getCurrentPrice (value) {
       this.currentPrice = value
     },
     async updateRecord () {
-      const { id } = this.activeRecord
       const { currentPrice } = this
       if (currentPrice.price === 0) {
         this.$message({
           message: '不能选择0元订单',
           type: 'error'
         })
-        return
       }
-      const params = {
-        id,
-        ...pick(currentPrice, ['device', 'scheduleType', 'duration', 'price'])
-      }
-      const { code } = await userChoose(params)
-      if (code === 0) {
-        this.dialogVisible = false
-        this.$message({
-          message: '恭喜你，操作成功，去提单吧！',
-          type: 'success'
-        })
-        this.currentPage = 0
-        this.getRecord()
-      }
+      // const params = {
+      //   id,
+      //   ...pick(currentPrice, ['device', 'scheduleType', 'duration', 'price'])
+      // }
+      // const { code } = await userChoose(params)
+      // if (code === 0) {
+      //   this.dialogVisible = false
+      //   this.$message({
+      //     message: '恭喜你，操作成功，去提单吧！',
+      //     type: 'success'
+      //   })
+      //   this.currentPage = 0
+      //   this.getRecord()
+      // }
     },
     async preOrder () {
-      const loading = this.$loading({
-        lock: true,
-        text: 'Loading',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
+      this.$copyText(this.url).then(async () => {
+        console.log('成功')
+        Message.success('提单链接已复制到剪切板')
+        this.isPreInfo = false
+        await this.getRecord()
+      }).catch((e) => {
+        console.log('失败')
       })
-      const { userId } = this.salesInfo
-      const { id: applyId } = this.activeRecord
-      try {
-        const { code, data: { url }, message } = await preOrder({ applyId, userId })
-        if (code === 0) {
-          this.$copyText(url).then(async (e) => {
-            Message.success('提单链接已复制到剪切板')
-            this.isPreInfo = false
-            await this.getRecord()
-          }, function (e) {})
-          return
-        }
-        if (code === 4080) {
-          Message.error(message || '关键词已经被售出!')
-        }
-      } catch (error) {
-        console.log('error', error)
-      } finally {
-        loading.close()
-      }
     },
     async getPreInfo (record) {
       const loading = this.$loading({
@@ -241,7 +205,8 @@ export default {
       const { id: applyId } = record
       this.activeRecord = record
       this.isPreInfo = true
-      const { data } = await preInfo({ applyId, userId })
+      const { data } = await getPreInfo({ applyId, userId })
+      this.url = record.url
       loading.close()
       this.preInfo = data
     }

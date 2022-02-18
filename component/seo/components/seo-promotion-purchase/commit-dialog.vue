@@ -1,15 +1,14 @@
 <template>
-          <!-- :title="industryAuditResult.skipManualAudit ? '您的关键词已确认，可直接去提单哦！' : '需要人工审核哦！最快5分钟！最晚24小时内～'" -->
     <el-dialog
+          :title="skipAudit ? '您的关键词已确认，可直接去提单哦！' : '需要人工审核哦！最快5分钟！最晚24小时内～'"
           :visible.sync="visible"
           width="50%"
           @close="cancel"
         >
-          <PreInfoConfirm :allAreas="allAreas"/>
+          <PreInfoConfirm :allAreas="allAreas" :preInfo="preInfo"/>
           <span slot="footer" class="dialog-footer">
             <el-button @click="cancel">取 消</el-button>
-            <el-button type="primary" :loading="isPending" @click="submit">去提单</el-button>
-            <!-- {{industryAuditResult.skipManualAudit ? '去提单' : '提交并查看审核进度'}} -->
+            <el-button type="primary" :loading="isPending" @click="submit">{{skipAudit? '去提单' : '提交并查看审核进度'}}</el-button>
           </span>
     </el-dialog>
 </template>
@@ -31,10 +30,19 @@ export default {
       default: () => [],
       require: true
     },
+    preInfo: {
+      type: Object,
+      default: () => {},
+      require: true
+    },
     isPending: {
       type: Boolean,
       default: false,
       require: true
+    },
+    skipAudit: {
+      type: Boolean,
+      default: true
     }
   },
   methods: {

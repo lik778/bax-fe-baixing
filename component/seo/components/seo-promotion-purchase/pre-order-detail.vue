@@ -5,11 +5,11 @@
     width="50%"
     @close="cancel"
     >
-    <PreInfoConfirm :allAreas="allAreas"/>
+    <PreInfoConfirm :allAreas="allAreas" :preInfo="preInfo"/>
     <div class="row-info total-price">
-      <!-- <BwDescriptionItem label="客户手机号：" :value="preInfo.mobile"/>
-      <BwDescriptionItem label="销售编号：" :value="preInfo.saleId"/>
-      <BwDescriptionItem label="客户uid：" :value="preInfo.userBxId"/> -->
+        <p>客户手机号：{{preInfo.mobile}}</p>
+        <p>客户id：{{preInfo.userBxId}}</p>
+        <p>销售编号：{{preInfo.saleId}}</p>
     </div>
     <span slot="footer" class="dialog-footer">
         <el-button @click="cancel">取 消</el-button>
@@ -48,6 +48,7 @@ export default {
     },
     preOrder () {
       this.$emit('preOrder')
+      console.log('确认，生成并复制提单链接')
     }
   }
 }
@@ -75,6 +76,9 @@ export default {
       margin-bottom: 0;
       position: relative;
       padding: 12px 0;
+      p{
+        margin-left: 10px;
+      }
       &::after{
         width: 100%;
         content: '';

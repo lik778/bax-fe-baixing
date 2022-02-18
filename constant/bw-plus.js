@@ -499,3 +499,18 @@ export const PACKAGE_INTRODUCE = [
     payText: 'SEO云推广为非指定关键词，后台提供上线关键词查询工具，定期更新，实际结果以百度实际搜索为准。'
   }
 ]
+
+// 基础版
+export const SEO_BASIS_PACKAGE = Object.freeze([{
+  name: 'SEO云推广标准版',
+  duration: 'SEO云推广（365天）',
+  originPrice: 880000,
+  dealPrice: 880000
+}])
+// 高级版
+export const SEO_SENIOR_PACKAGE = Object.freeze([{
+  name: 'SEO云推广高级版（标王2.0｜电脑端｜5天*8小时）',
+  duration: 'SEO云推广（365天）/标王2.0 （30天）',
+  originPrice: 980000,
+  dealPrice: 980000
+}])

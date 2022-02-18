@@ -19,12 +19,12 @@
             <div class="cities-content">
               {{row.keywords.join('、')}}
             </div>
-            <p slot="reference">{{ keywordsFormater(row) }}</p>
+            <p slot="reference">{{row.keywords.length==0?"-":keywordsFormater(row) }}</p>
           </el-popover>
         </template>
       </el-table-column>
       <!-- <el-table-column prop="applyType" label="报价类型" :formatter="applyTypeFormatter" /> -->
-      <el-table-column prop="status" label="版本"/>
+      <el-table-column prop="version" label="版本"/>
       <el-table-column prop="status" label="审核状态">
         <template slot-scope="{ row }">
           <span :class="transformClass(row.status)">{{APPLY_AUDIT_STATUS_OPTIONS[row.status] || '-'}}</span>
@@ -43,7 +43,7 @@
                 width="500"
                 trigger="hover">
                 <ProvinceCityMap :allAreas="allAreas" :cities="row.cities"/>
-                <span slot="reference">{{ citiesFormater(row).text }}</span>
+                <span slot="reference" >{{ row.cities.length==0?'-':citiesFormater(row).text }}</span>
               </el-popover>
         </template>
       </el-table-column>
@@ -147,9 +147,6 @@ export default {
         text: `${getCnName(cities[0], this.allAreas)}等${length}个城市`,
         detail
       }
-    },
-    reviewPrice (row) {
-      this.$emit('reviewPrice', row)
     },
     preOrder (row) {
       this.$emit('preOrder', row)

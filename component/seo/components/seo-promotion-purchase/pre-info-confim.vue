@@ -1,36 +1,23 @@
 <template>
     <div>
-      <el-row style="margin-bottom:10px">
-        <el-col :span="12"><div class="grid-content bg-purple">关键词：</div></el-col>
-        <el-col :span="12"><div class="grid-content bg-purple-light">城市：</div></el-col>
+      <el-row style="margin-bottom:10px" v-if="preInfo.keywords!=0">
+        <el-col :span="12"><div class="grid-content bg-purple">关键词：{{preInfo.keywords.slice(0,2).join('、')}}等20个关键词</div></el-col>
+        <el-col :span="12"><div class="grid-content bg-purple-light">城市：{{citiesFormater(preInfo.cities)}}</div></el-col>
       </el-row>
         <!-- <BwDescriptionItem label="关键词：" :value="preInfo.keywords.join('、')"/> -->
         <!-- <BwDescriptionItem label="城市：" :value="citiesFormater(preInfo.cities)"/> -->
       <el-table header-row-class-name="confirm-info-header" :border="true" :data="preInfo.additionProductMap" style="width: 100%">
-        <el-table-column header-align="left" width="260" prop="name" label="套餐" :formatter="productFormatter"/>
-        <el-table-column header-align="left" width="260" prop="name" label="服务" :formatter="productFormatter"/>
+        <el-table-column header-align="left" width="260" prop="name" label="产品" />
+        <!-- :formatter="productFormatter" -->
         <el-table-column header-align="left" width="130" prop="duration" label="服务时长（天）"/>
         <el-table-column header-align="left" prop="originPrice" label="价格（元）" :formatter="priceFormatter"/>
         <el-table-column header-align="left" prop="originPrice" label="优惠（元）" :formatter="spreadFormatter"/>
         <el-table-column header-align="left" prop="dealPrice" label="实付（元）" :formatter="priceFormatter"/>
       </el-table>
-      <div v-if="showWelfare" class="welfare-info">
-        <label v-if="showWelfare">超值福利：</label>
-        <el-tag
-            class="welfare-tag"
-            type="danger"
-            v-for="(item, index) in welfareInfo.filter( o => o.isActive(getWelfareInfo.duration, getWelfareInfo.price).active)"
-            :key="index">
-            {{item.isActive(getWelfareInfo.duration, getWelfareInfo.price).name}} ({{item.isActive(getWelfareInfo.duration, getWelfareInfo.price).detail}})
-        </el-tag>
-      </div>
       <div class="row-info total-price">
-        <p>商品总价：</p>
-        <p>已优惠：</p>
-        <p class="total-price-value">提单价：</p>
-        <!-- <BwDescriptionItem label="商品总价：" :value="`${f2y(totalPrice)}元`"/>
-        <BwDescriptionItem label="已优惠：" :value="`${f2y(spreadPrice)}元`"/>
-        <BwDescriptionItem class="total-price-value" label="提单价：" :value="`${f2y(totalDealPrice)}元`"/> -->
+        <p>商品总价：{{`${f2y(totalPrice)}元`}}</p>
+        <p>已优惠：{{`${f2y(spreadPrice)}元`}}</p>
+        <p class="total-price-value">提单价：{{`${f2y(totalDealPrice)}元`}}</p>
       </div>
     </div>
 </template>
@@ -43,11 +30,11 @@ dayjs.extend(isBetween)
 export default {
   name: 'pre-info-confirm',
   props: {
-    // preInfo: {
-    //   type: Object,
-    //   default: () => {},
-    //   require: true
-    // },
+    preInfo: {
+      type: Object,
+      default: () => {},
+      require: true
+    },
     allAreas: {
       type: Array,
       default: () => [],
@@ -57,17 +44,7 @@ export default {
   data () {
     return {
       f2y,
-      welfareInfo,
-      preInfo: {
-        additionProductMap: [
-          {
-            name: '1111',
-            duration: '1111',
-            originPrice: '1111',
-            dealPrice: '1111'
-          }
-        ]
-      }
+      welfareInfo
     }
   },
   computed: {
@@ -129,7 +106,12 @@ export default {
     }
     .row-info{
       display: flex;
+      justify-content: flex-end;
       margin-bottom: 20px;
+      margin-top: 10px;
+       p{
+        margin-left: 10px;
+      }
     }
     .total-price{
       display: flex;
@@ -137,7 +119,8 @@ export default {
       margin-top: 20px;
       margin-bottom: 0;
       position: relative;
-      padding: 12px 0;
+      padding: 12px 10px;
+
       &::after{
         width: 100%;
         content: '';

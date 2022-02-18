@@ -13,6 +13,7 @@
                 :allAreas="allAreas"
                 :visible="isSubmit"
                 :isPending="isPending"
+                :preInfo="preInfo"
                 @cancel="isSubmit=false"
                 @submit="submit"
                  />
@@ -22,7 +23,7 @@
           <div class="package-box">
             <el-col :span="15">
             <el-form ref="form"  label-width="80px" :model="form" :rules="rules">
-              <el-form-item label="活动名称" prop="words">
+              <el-form-item label="推广关键词" prop="words">
                 <el-input type="textarea" @change="checkKeyword" v-model="form.words" rows="6" placeholder="请输入关键词，多个关键词换行
 示例：
 粮食烘干机
@@ -50,13 +51,24 @@
               @cancel="areaDialogVisible = false"
               />
               <div v-if="resultVisible" class="table-box">
-                  <el-table :data="resultList" border style="width: 100%" :header-cell-style="{background: '#FFF6F2',color: '#C67C49'}">
-                    <el-table-column prop="word" label="关键词" />
-                    <el-table-column prop="pcPv" label="电脑端热度" />
-                    <el-table-column prop="pcPv" label="查询结果" />
+                  <el-table :data="resultList" border style="width: 100%" :header-cell-style="{background: '#FFF6F2',color: '#C67C49'}"  v-loading="loading">
+                    <el-table-column label="关键词">
+                     <template scope="{row}">
+                          <div v-html="row.word">{{row.word}}</div>
+                      </template>
+                    </el-table-column>
+                    <el-table-column label="电脑端热度">
+                     <template scope="{row}">
+                          <div v-html="row.pcPv">{{row.pcPv}}</div>
+                      </template>
+                    </el-table-column>
+                    <el-table-column label="查询结果">
+                      <template scope="{row}">
+                          <div class="text-color" v-html="row.result">{{row.result}}</div>
+                      </template>
+                    </el-table-column>
                   </el-table>
                 <div class="submenu-btn"><el-button type="primary" @click="commit">提交</el-button></div>
-                <!-- :preInfo="preInfo" -->
               </div>
           </div>
         </el-card>
@@ -68,9 +80,9 @@ import InvalidIndustry from './components/seo-promotion-purchase/invalid-industr
 import CommitDialog from './components/seo-promotion-purchase/commit-dialog.vue'
 import ProductItem from './components/product-item'
 import AreaSelector from 'com/common/biaowang-area-selector'
-import { checkKeyword, getTrialSystem, getPreInfo, seoCommit } from 'api/biaowang-plus'
+import { checkKeyword, getTrialSystem, seoCommit } from 'api/biaowang-plus'
 import { getCnName } from 'util'
-import { SEO_BASIS, SEO_SENIOR } from 'constant/bw-plus'
+import { SEO_BASIS, SEO_SENIOR, SEO_BASIS_PACKAGE, SEO_SENIOR_PACKAGE } from 'constant/bw-plus'
 import { OTHER_CITY_ENUM } from 'com/common/bw/core-cities-dialog'
 import debounce from 'lodash.debounce'
 export default {
@@ -85,14 +97,6 @@ export default {
     return {
       seniorShow: false,
       checkTip: null,
-      tableData: [
-        {
-          word: '',
-          hot: 5,
-          staus: '检测中',
-          result: '通过'
-        }
-      ],
       priceId: null,
       rules: {
         words: [{ validator: this.checkWord, trigger: 'blur' }],
@@ -118,7 +122,21 @@ export default {
       resultList: [],
       SEO_BASIS,
       SEO_SENIOR,
-      skuId: null
+      skuId: null,
+      loading: false,
+      SEO_BASIS_PACKAGE,
+      SEO_SENIOR_PACKAGE,
+      preInfo: {
+        keywords: [],
+        cities: [],
+        additionProductMap: [{
+          skuId: '',
+          name: '',
+          originPrice: '',
+          dealPrice: '',
+          duration: ''
+        }]
+      }
     }
   },
   methods: {
@@ -217,42 +235,49 @@ export default {
       }
       callback()
     },
+    commit () {
+      this.isSubmit = true
+      this.preInfoList()
+    },
+    preInfoList () {
+      if (this.checkTip === 0) {
+        this.preInfo.additionProductMap = SEO_BASIS_PACKAGE
+      } else if (this.checkTip === 1) {
+        this.preInfo.additionProductMap = SEO_SENIOR_PACKAGE
+        this.preInfo.keywords = this.form.words.split(/[\s\n]/).filter(Boolean)
+        this.preInfo.cities = this.form.cities
+      }
+    },
     async getTrialSystem () {
       const words = this.form.words.split(/[\s\n]/).filter(Boolean)
       const { data, data: { disable, keywordPvList, priceId } } = await getTrialSystem({
         words,
         cities: this.form.cities,
         industry: this.form.industry
-        // ...this.form
       })
       this.priceId = priceId
       keywordPvList.forEach(item => {
-        if (data.overHeatWords) {
-          const a = this.findWordsColor(data.overHeatWords, item.word)
-          console.log(a)
-        }
-        if (data.errorWords) {
-          const b = this.findWordsColor(data.errorWords, item.word)
-          console.log(b)
-        }
-        if (data.soldWords) {
-          const c = this.findWordsColor(data.soldWords, item.word)
-          console.log(c)
-        }
+        item.result = '可推广'
       })
       this.resultList = keywordPvList
-      console.log(keywordPvList)
-      console.log(this.resultList)
+      if (data.overHeatWords) {
+        this.findIndexWord(data.overHeatWords, '<span style="color: #FF6350">热度太高，不可推广</span>')
+      }
+      if (data.errorWords) {
+        this.findIndexWord(data.errorWords, '<span style="color: #FF6350">查不到价，不可推广</span>')
+      }
+      if (data.soldWords) {
+        this.findIndexWord(data.soldWords, '<span style="color: #FF6350">已被购买，不可推广</span>')
+      }
       this.submitBtn = disable
     },
-    findWordsColor (arr, val) {
-      return arr.find(o => o === val)
-    },
     submitForm: debounce(async function (formName) {
-      this.$refs[formName].validate((valid) => {
+      this.$refs[formName].validate(async (valid) => {
         if (valid && !this.queryBtnDisable) {
-          this.getTrialSystem()
+          this.loading = true
+          await this.getTrialSystem()
           this.resultVisible = true
+          this.loading = false
         } else if (this.queryBtnDisable) {
           this.$message({
             message: '关键词风控审查不通过',
@@ -267,16 +292,55 @@ export default {
       this.form.cities = [...areas]
       this.areaDialogVisible = false
     },
-    async getPreInfo () {
-      await getPreInfo({
-
+    findIndexWord (arr, text) {
+      arr.forEach(o => {
+        const index = this.resultList.indexOf(this.resultList.filter(d => d.word === o)[0])
+        this.resultList[index].result = text
+        this.resultList[index].word = `<span style="color: #999999">${this.resultList[index].word}</span>`
+        this.resultList[index].pcPv = `<span style="color: #999999">${this.resultList[index].pcPv}</span>`
       })
     },
-    async commit () {
+    // async getPreInfo (applyId, userId) {
+    //   const { data } = await getPreInfo({ applyId, userId })
+    //   this.preInfo = data
+    // },
+    submit: debounce(async function () {
       if (!this.submitBtn || this.checkTip === 0) {
-        this.isSubmit = true
+        try {
+          const targetUserId = +this.$route.query.user_id
+          const salesId = +this.$route.query.sales_id
+          const { data, code } = await seoCommit({
+            targetUserId,
+            salesId,
+            skuId: this.skuId,
+            priceId: this.priceId
+          })
+          if (code === 0) {
+            const applyId = data.applyId
+            const skipAudit = data.skipAudit
+            this.$router.push({
+              name: 'seo-word-records',
+              query: { applyId, skipAudit }
+            })
+            this.isPending = false
+            this.isSubmit = false
+          }
+          if (code === 4080) {
+            this.BwPlusDialogMsg = {
+              dialogVisible: true,
+              type: 'error',
+              content: data,
+              title: '提交失败'
+            }
+          }
+        } catch (error) {
+          console.log(error)
+        } finally {
+          this.isPending = false
+          this.isSubmit = false
+        }
       }
-    },
+    }, 300),
     chooseClick (val) {
       this.checkTip = val
       if (this.checkTip === 0) {
@@ -307,41 +371,7 @@ export default {
         duration: Math.max(...durationArray),
         price: currentPrice.price && currentPrice.price > 0 ? currentPrice.price + totalPrice : totalPrice
       }
-    },
-    submit: debounce(async function () {
-      this.isPending = true
-      try {
-        const targetUserId = this.$route.query.user_id
-        const salesId = this.$route.query.sales_id
-        const { data, code } = await seoCommit({
-          targetUserId,
-          salesId,
-          skuId: this.skuId,
-          priceId: this.priceId
-        })
-        if (code === 0) {
-          const applyId = data.applyId
-          const skipAudit = data.skipAudit
-          this.$router.push({
-            name: 'seo-word-records',
-            query: { applyId, skipAudit }
-          })
-        }
-        // if (code === 4080) {
-        //   this.BwPlusDialogMsg = {
-        //     dialogVisible: true,
-        //     type: 'error',
-        //     content: data,
-        //     title: '提交失败'
-        //   }
-        // }
-      } catch (error) {
-        console.log(error)
-      } finally {
-        this.isPending = false
-        this.isSubmit = false
-      }
-    }, 300)
+    }
   },
   computed: {
     transformArea () {
@@ -369,6 +399,9 @@ export default {
 <style lang='scss' scoped>
 .seo-promotion-purchase{
     min-height: 100%;
+}
+.text-color{
+  color: #67C23A;
 }
 .seo-title{
   font-family: PingFangSC-Medium;
