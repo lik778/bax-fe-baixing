@@ -192,7 +192,7 @@ const welfareInfo = {
     const active = duration >= 30
     return {
       active,
-      tag: active ? `赠送${duration}天` : '至少购买标王可解锁',
+      tag: active ? `赠送${duration}天` : '',
       detail: `${duration}天`,
       name: '会员钻石店铺'
     }
@@ -238,7 +238,10 @@ export default {
   computed: {
     getExtraDetail () {
       const { skuLeftDaysMap } = this.renewDetails
-      return Object.keys(skuLeftDaysMap).reduce((a, b) => `${a}${a && '、'}${PRODUCT_SOURCE_MAP[b]}剩余${skuLeftDaysMap[b]}天`, '')
+      return Object.keys(skuLeftDaysMap).reduce((a, b) => {
+        const next = skuLeftDaysMap[b] ? `${PRODUCT_SOURCE_MAP[b]}剩余${skuLeftDaysMap[b]}天` : ''
+        return `${a}${a && skuLeftDaysMap[b] ? '、' : ''}${next}`
+      }, '')
     },
     getWelfareInfo () {
       const { currentRenewInfo } = this
