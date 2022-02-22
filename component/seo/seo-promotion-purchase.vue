@@ -8,21 +8,22 @@
           <div class="submenu-btn" v-if="checkTip==0"><el-button type="primary" @click="commit">提交</el-button></div>
         </main>
          <CommitDialog
-                :welfare="getWelfareInfo"
-                :destroy-on-close="true"
-                :allAreas="allAreas"
-                :visible="isSubmit"
-                :isPending="isPending"
-                :preInfo="preInfo"
-                @cancel="isSubmit=false"
-                @submit="submit"
-                 />
+          :welfare="getWelfareInfo"
+          :destroy-on-close="true"
+          :allAreas="allAreas"
+          :visible="isSubmit"
+          :isPending="isPending"
+          :preInfo="preInfo"
+          :skipAudit="skipAudit"
+          @cancel="isSubmit=false"
+          @submit="submit"
+           />
         </el-card>
         <el-card class="box-card query-card senior-card" v-if="seniorShow">
           <p class="senior-title">高级版-标王推广关键词<span class="text">（注：20个5热度关键词只投放电脑端、5 * 8 小时、普通行业两个月/特殊行业一个月）</span></p>
           <div class="package-box">
             <el-col :span="15">
-            <el-form ref="form"  label-width="80px" :model="form" :rules="rules">
+            <el-form ref="form"  label-width="100px" :model="form" :rules="rules">
               <el-form-item label="推广关键词" prop="words">
                 <el-input type="textarea" @change="checkKeyword" v-model="form.words" rows="6" placeholder="请输入关键词，多个关键词换行
 示例：
@@ -36,7 +37,7 @@
                   <i class="el-icon-plus" @click="citiesShow"></i>
               </el-form-item>
               <el-form-item label-width="0">
-                <el-button type="primary" class="found-btn" @click="submitForm('form')">查询</el-button>
+                <el-button type="primary" class="found-btn" @click="submitForm('form')" :loading="loading">查询</el-button>
               </el-form-item>
             </el-form>
             </el-col>
@@ -136,7 +137,8 @@ export default {
           dealPrice: '',
           duration: ''
         }]
-      }
+      },
+      skipAudit: true
     }
   },
   methods: {
@@ -168,6 +170,7 @@ export default {
               message: rejectedWordWithReason,
               type: 'error'
             })
+            this.resultVisible = false
             return false
           }
           this.form.industry = industry || ''
@@ -227,17 +230,24 @@ export default {
       if (!value) {
         callback(new Error('请输入关键词'))
       }
-      if (!this.checkResult.passed) {
-        callback(new Error('关键词风控审查不通过'))
-      }
       if (!result.validate) {
         callback(new Error(result.error))
+      }
+      if (!this.checkResult.passed) {
+        callback(new Error('关键词风控审查不通过'))
       }
       callback()
     },
     commit () {
-      this.isSubmit = true
-      this.preInfoList()
+      if (this.checkTip === 0 || !this.submitBtn) {
+        this.isSubmit = true
+        this.preInfoList()
+      } else {
+        this.$message({
+          message: '不可提交',
+          type: 'error'
+        })
+      }
     },
     preInfoList () {
       if (this.checkTip === 0) {
@@ -300,45 +310,39 @@ export default {
         this.resultList[index].pcPv = `<span style="color: #999999">${this.resultList[index].pcPv}</span>`
       })
     },
-    // async getPreInfo (applyId, userId) {
-    //   const { data } = await getPreInfo({ applyId, userId })
-    //   this.preInfo = data
-    // },
     submit: debounce(async function () {
-      if (!this.submitBtn || this.checkTip === 0) {
-        try {
-          const targetUserId = +this.$route.query.user_id
-          const salesId = +this.$route.query.sales_id
-          const { data, code } = await seoCommit({
-            targetUserId,
-            salesId,
-            skuId: this.skuId,
-            priceId: this.priceId
+      try {
+        const targetUserId = +this.$route.query.user_id
+        const salesId = +this.$route.query.sales_id
+        const { data, code } = await seoCommit({
+          targetUserId,
+          salesId,
+          skuId: this.skuId,
+          priceId: this.priceId
+        })
+        if (code === 0) {
+          const applyId = data.applyId
+          this.skipAudit = data.skipAudit
+          this.$router.push({
+            name: 'seo-word-records',
+            query: { applyId, skipAudit: this.skipAudit }
           })
-          if (code === 0) {
-            const applyId = data.applyId
-            const skipAudit = data.skipAudit
-            this.$router.push({
-              name: 'seo-word-records',
-              query: { applyId, skipAudit }
-            })
-            this.isPending = false
-            this.isSubmit = false
-          }
-          if (code === 4080) {
-            this.BwPlusDialogMsg = {
-              dialogVisible: true,
-              type: 'error',
-              content: data,
-              title: '提交失败'
-            }
-          }
-        } catch (error) {
-          console.log(error)
-        } finally {
           this.isPending = false
           this.isSubmit = false
         }
+        if (code === 4080) {
+          this.BwPlusDialogMsg = {
+            dialogVisible: true,
+            type: 'error',
+            content: data,
+            title: '提交失败'
+          }
+        }
+      } catch (error) {
+        console.log(error)
+      } finally {
+        this.isPending = false
+        this.isSubmit = false
       }
     }, 300),
     chooseClick (val) {

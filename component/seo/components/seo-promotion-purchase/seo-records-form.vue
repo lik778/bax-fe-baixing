@@ -6,9 +6,6 @@
       <el-form-item label="ID：" prop="id">
         <el-input v-model="formInline.id" placeholder="ID：" clearable></el-input>
       </el-form-item>
-      <el-form-item label="版本" prop="id">
-        <el-input v-model="formInline.id" placeholder="ID：" clearable></el-input>
-      </el-form-item>
       <el-form-item label="状态" prop="status">
         <el-select clearable size="medium" v-model="formInline.status" placeholder="请选择">
           <el-option

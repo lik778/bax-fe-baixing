@@ -8,21 +8,20 @@
         :visible.sync="dialogVisible"
         width="65%"
         >
-        <!-- <InqueryResult :currentPrice="currentPrice" :deviceAvailableStatus="deviceAvailableStatus" @getValue="getCurrentPrice" :tableData="activeRecord.priceList"/> -->
         <span slot="footer" class="dialog-footer">
           <el-button @click="dialogVisible = false">取 消</el-button>
           <el-button :disabled="notAllowUpdate" type="primary" @click="updateRecord">确 定</el-button>
         </span>
       </el-dialog>
       <el-pagination
+        :hide-on-single-page="true"
         @current-change="handleCurrentChange"
         :current-page="currentPage + 1"
-        :hide-on-single-page="true"
         :page-size="PAGESIZE"
         layout="total, prev, pager, next"
         :total="total">
       </el-pagination>
-      <PreOrderDetail @preOrder="preOrder" @cancel="checkPriceCancel" :allAreas="allAreas" :dialogVisible="isPreInfo" :preInfo="preInfo"/>
+      <PreOrderDetail :loading="loading" @preOrder="preOrder" @cancel="checkPriceCancel" :allAreas="allAreas" :dialogVisible="isPreInfo" :preInfo="preInfo"/>
       <el-dialog
       title="查价详情"
       :visible="detailVisible"
@@ -34,15 +33,12 @@
 </template>
 
 <script>
-import { getuserList, getPreInfo } from 'api/biaowang-plus'
+import { getuserList, getPreInfo, getPreOrder } from 'api/biaowang-plus'
 import { APPLY_AUDIT_STATUS_OPTIONS, APPLY_TYPE_NORMAL } from 'constant/bw-plus'
 import PreInfoConfirm from './components/seo-promotion-purchase/pre-info-confim.vue'
 import PreOrderDetail from './components/seo-promotion-purchase/pre-order-detail.vue'
 import SeoRecordsForm from './components/seo-promotion-purchase/seo-records-form.vue'
 import SeoRecordsTable from './components/seo-promotion-purchase/seo-records-table.vue'
-// import { BwRecordsForm, BwRecordsTable, InqueryResult, PreOrderDetail, PreInfoConfirm } from './components'
-import { normalizeRoles } from 'util/role'
-// import pick from 'lodash.pick'
 import { f2y } from 'util'
 import { Message } from 'element-ui'
 const PAGESIZE = 10
@@ -99,7 +95,7 @@ export default {
       deviceAvailableStatus: {},
       queryPriceDetail: {},
       detailVisible: false,
-      url: ''
+      applyId: null
     }
   },
   async mounted () {
@@ -117,18 +113,6 @@ export default {
     },
     checkPriceCancel () {
       this.isPreInfo = false
-    },
-    isBxUser () {
-      const roles = normalizeRoles(this.userInfo.roles)
-      return roles.includes('BAIXING_USER')
-    },
-    isBxSales () {
-      const roles = normalizeRoles(this.userInfo.roles)
-      return roles.includes('BAIXING_SALES')
-    },
-    isAgentAccounting () {
-      const roles = normalizeRoles(this.userInfo.roles)
-      return roles.includes('AGENT_ACCOUNTING')
     },
     async search (value) {
       this.currentPage = 0
@@ -169,30 +153,33 @@ export default {
           type: 'error'
         })
       }
-      // const params = {
-      //   id,
-      //   ...pick(currentPrice, ['device', 'scheduleType', 'duration', 'price'])
-      // }
-      // const { code } = await userChoose(params)
-      // if (code === 0) {
-      //   this.dialogVisible = false
-      //   this.$message({
-      //     message: '恭喜你，操作成功，去提单吧！',
-      //     type: 'success'
-      //   })
-      //   this.currentPage = 0
-      //   this.getRecord()
-      // }
     },
     async preOrder () {
-      this.$copyText(this.url).then(async () => {
-        console.log('成功')
-        Message.success('提单链接已复制到剪切板')
-        this.isPreInfo = false
-        await this.getRecord()
-      }).catch((e) => {
-        console.log('失败')
+      const loading = this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
       })
+      const { userId } = this.salesInfo
+      try {
+        const { code, data: { url }, message } = await getPreOrder({ applyId: this.applyId, userId })
+        if (code === 0) {
+          this.$copyText(url).then(async (e) => {
+            Message.success('提单链接已复制到剪切板')
+            this.isPreInfo = false
+            await this.getRecord()
+          }, function (e) {})
+          return
+        }
+        if (code === 4080) {
+          Message.error(message || '关键词已经被售出!')
+        }
+      } catch (error) {
+        console.log('error', error)
+      } finally {
+        loading.close()
+      }
     },
     async getPreInfo (record) {
       const loading = this.$loading({
@@ -203,10 +190,10 @@ export default {
       })
       const { userId } = this.salesInfo
       const { id: applyId } = record
+      this.applyId = applyId
       this.activeRecord = record
       this.isPreInfo = true
       const { data } = await getPreInfo({ applyId, userId })
-      this.url = record.url
       loading.close()
       this.preInfo = data
     }

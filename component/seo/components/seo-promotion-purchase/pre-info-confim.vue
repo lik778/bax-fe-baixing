@@ -1,19 +1,18 @@
 <template>
     <div>
-      <el-row style="margin-bottom:10px" v-if="preInfo.keywords!=0">
-        <el-col :span="12"><div class="grid-content bg-purple">关键词：{{preInfo.keywords.slice(0,2).join('、')}}等20个关键词</div></el-col>
-        <el-col :span="12"><div class="grid-content bg-purple-light">城市：{{citiesFormater(preInfo.cities)}}</div></el-col>
-      </el-row>
-        <!-- <BwDescriptionItem label="关键词：" :value="preInfo.keywords.join('、')"/> -->
-        <!-- <BwDescriptionItem label="城市：" :value="citiesFormater(preInfo.cities)"/> -->
       <el-table header-row-class-name="confirm-info-header" :border="true" :data="preInfo.additionProductMap" style="width: 100%">
-        <el-table-column header-align="left" width="260" prop="name" label="产品" />
-        <!-- :formatter="productFormatter" -->
+        <el-table-column header-align="left" width="260" prop="skuId" label="套餐" :formatter="packageFormatter" v-if="!scheduleType" />
+        <el-table-column header-align="left" width="260" prop="name" label="服务" :formatter="productFormatter" />
         <el-table-column header-align="left" width="130" prop="duration" label="服务时长（天）"/>
         <el-table-column header-align="left" prop="originPrice" label="价格（元）" :formatter="priceFormatter"/>
         <el-table-column header-align="left" prop="originPrice" label="优惠（元）" :formatter="spreadFormatter"/>
         <el-table-column header-align="left" prop="dealPrice" label="实付（元）" :formatter="priceFormatter"/>
       </el-table>
+      <ul class="desc-box" v-if="preInfo.keywords.length!=0&&scheduleType">
+        <li class="title">标王体验版说明</li>
+        <li>关键词：<p>{{preInfo.keywords.slice(0,3).join('、')}}...等 <span>20</span>个词</p></li>
+        <li>城市：<p>{{citiesFormater(preInfo.cities)}}</p></li>
+      </ul>
       <div class="row-info total-price">
         <p>商品总价：{{`${f2y(totalPrice)}元`}}</p>
         <p>已优惠：{{`${f2y(spreadPrice)}元`}}</p>
@@ -24,8 +23,8 @@
 <script>
 import { f2y, getCnName } from 'util'
 import dayjs from 'dayjs'
+import { SCHEDULE_TYPE, DEVICE } from 'constant/bw-plus'
 import isBetween from 'dayjs/plugin/isBetween'
-import { SCHEDULE_TYPE, DEVICE, welfareInfo } from 'constant/bw-plus'
 dayjs.extend(isBetween)
 export default {
   name: 'pre-info-confirm',
@@ -44,19 +43,10 @@ export default {
   data () {
     return {
       f2y,
-      welfareInfo
+      scheduleType: ''
     }
   },
   computed: {
-    getWelfareInfo () {
-      const { additionProductMap } = this.preInfo
-      const durationArray = [...additionProductMap.map(info => info.duration)]
-      return { duration: Math.max(...durationArray), price: this.totalDealPrice }
-    },
-    showWelfare () {
-      const now = dayjs()
-      return dayjs(now).isBetween('2022-1-14', '2022-2-1') && (this.getWelfareInfo.duration > 30 || f2y(this.getWelfareInfo.price) >= 10000)
-    },
     totalPrice () {
       const { additionProductMap } = this.preInfo
       const sum = additionProductMap.reduce((a, b) => a + b.originPrice, 0)
@@ -73,11 +63,7 @@ export default {
   },
   methods: {
     citiesFormater (cities) {
-      return cities.slice(0, 2).map(city => getCnName(city, this.allAreas)).join(',') + (cities.length > 2 ? `等${cities.length}个城市` : '') || '-'
-    },
-    productFormatter (row, column, cellValue, index) {
-      const { device, scheduleType, displayType } = row
-      return displayType ? cellValue : `${cellValue} | ${DEVICE[device]} | ${SCHEDULE_TYPE[scheduleType]}`
+      return cities.slice(0, 3).map(city => getCnName(city, this.allAreas)).join(',') + (cities.length > 3 ? `...等${cities.length}个城市` : '') || '-'
     },
     priceFormatter (...args) {
       const [,, price] = args
@@ -86,6 +72,19 @@ export default {
     spreadFormatter (row, column, cellValue, index) {
       const { dealPrice, originPrice } = row
       return f2y(originPrice - dealPrice)
+    },
+    productFormatter (row, column, cellValue, index) {
+      const { device, scheduleType, displayType } = row
+      this.scheduleType = scheduleType
+      if (scheduleType) {
+        return displayType ? cellValue : `${cellValue} | ${DEVICE[device]} | ${SCHEDULE_TYPE[scheduleType]}`
+      } else {
+        return row.name
+      }
+    },
+    packageFormatter (row, column, cellValue, index) {
+      const { skuId } = row
+      return skuId === 312 ? '基础版' : '高级版'
     }
   }
 }
@@ -103,6 +102,21 @@ export default {
     }
     .welfare-tag{
       margin-right: 8px;
+    }
+    .desc-box{
+      .title{
+        font-weight:bold;
+      }
+      margin:20px 0 30px;
+      li{
+        p{
+          font-weight:bold;
+          display: inline-block;
+          span{
+            color: #02a7f0;
+          }
+        }
+      }
     }
     .row-info{
       display: flex;

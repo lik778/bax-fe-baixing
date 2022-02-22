@@ -1,5 +1,5 @@
 <template>
-  <div class="bw-plus-plan-list">
+  <div class="seo-plan-list">
     <header>管理推广</header>
     <main>
       <el-form :model="query"
@@ -124,7 +124,7 @@
 </template>
 
 <script>
-import { getUserPackageList, renewOrder } from 'api/biaowang-plus'
+import { getlistSeoPackages } from 'api/biaowang-plus'
 import {
   AUDIT_STATUS_MAP,
   PACKEAGE_STATUS_MAP,
@@ -139,8 +139,6 @@ import {
 } from 'constant/bw-plus'
 import { getCnName } from 'util'
 import debounce from 'lodash.debounce'
-import { Message } from 'element-ui'
-import { isSales } from 'util/role'
 
 export default {
   name: 'seo-package-list',
@@ -182,12 +180,6 @@ export default {
       dialogVisible: false
     }
   },
-  computed: {
-    allowRenew () {
-      const { roles } = this.userInfo
-      return isSales(roles)
-    }
-  },
   methods: {
     handleCurrentChange (page) {
       this.query.page = page - 1
@@ -197,13 +189,13 @@ export default {
       const { user_id: userId } = this.$route.query
       try {
         this.loading = true
-        const { items, total } = await getUserPackageList({
+        const { data: { content, totalElements } } = await getlistSeoPackages({
           ...params,
           ...this.query,
           userId
         })
-        this.total = total
-        this.promotes = items
+        this.total = totalElements
+        this.promotes = content
       } finally {
         this.loading = false
       }
@@ -213,33 +205,6 @@ export default {
     },
     goQueryPrice () {
       this.$router.push({ name: 'bw-plus-query-price', query: { renew: 1 } })
-    },
-    async renewPreOrder (applyId) {
-      const loading = this.$loading({
-        lock: true,
-        text: 'Loading',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      })
-      try {
-        const { code, data: { url }, message } = await renewOrder({ applyId })
-        if (code === 0) {
-          this.$copyText(url).then(async (e) => {
-            Message.success('提单链接已复制到剪切板')
-            await this.queryPackageList()
-            this.isRenew = false
-          }, function (e) {})
-          return
-        }
-        if (code === 4080) {
-          Message.error(message || '关键词已经被售出!')
-        }
-        if (code === 4014) {
-          Message.error('超出最大续费时长，目前最大续费（剩余投放天数）为3年')
-        }
-      } finally {
-        loading.close()
-      }
     },
     cellStyle ({ row, column, rowIndex, columnIndex }) {
       if (columnIndex === 0) {
@@ -309,7 +274,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.bw-plus-plan-list {
+.seo-plan-list {
   margin: 10px;
   background: #fff;
   padding: 0;

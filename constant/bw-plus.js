@@ -505,11 +505,12 @@ export const SEO_BASIS_PACKAGE = Object.freeze([{
   name: 'SEO云推广标准版',
   duration: 'SEO云推广（365天）',
   originPrice: 880000,
-  dealPrice: 880000
+  dealPrice: 880000,
+  skuId: 312
 }])
 // 高级版
 export const SEO_SENIOR_PACKAGE = Object.freeze([{
-  name: 'SEO云推广高级版（标王2.0｜电脑端｜5天*8小时）',
+  name: 'SEO云推广高级版',
   duration: 'SEO云推广（365天）/标王2.0 （30天）',
   originPrice: 980000,
   dealPrice: 980000

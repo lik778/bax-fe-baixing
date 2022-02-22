@@ -322,8 +322,8 @@ export async function getTrialSystem (params) {
 
 /**
  * @param {object} params
- * @param {number} params.applyId
- * @param {number} params.userId
+ * @param {Number} params.applyId
+ * @param {numbNumberer} params.userId
  * @returns
  */
 export async function getPreInfo (params) {
@@ -335,10 +335,10 @@ export async function getPreInfo (params) {
 }
 /**
  * @param {object} params
- * @param { number } params.targetUserId
- * @param { number } params.salesId
- * @param { number } params.skuId
- * @param { number } params.priceId
+ * @param { Number } params.targetUserId
+ * @param { Number } params.salesId
+ * @param { Number } params.skuId
+ * @param { Number } params.priceId
  * @returns
  */
 export async function seoCommit (params) {
@@ -362,6 +362,35 @@ export async function getuserList (params) {
   const body = await biaowangPlus
     .get('/cloud/user/list')
     .query(trim(params))
+    .json()
+  return body
+}
+/**
+ * @param {object} params
+ * @param {number} params.applyId
+ * @param {number} params.userId
+ * @returns
+ */
+export async function getPreOrder (params) {
+  const body = await biaowangPlus
+    .get('/cloud/user/pre-order')
+    .query(params)
+    .json()
+  return body
+}
+
+/**
+ * @param {object} params
+ * @param {String} params.keyword
+ * @param {number} params.userId
+ * @param {number} params.size
+ * @param {number} params.page
+ * @returns
+ */
+export async function getlistSeoPackages (params) {
+  const body = await biaowangPlus
+    .get('/cloud/user/listSeoPackages')
+    .query(params)
     .json()
   return body
 }

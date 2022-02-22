@@ -5,6 +5,7 @@
     width="50%"
     @close="cancel"
     >
+    <p class="tip">请确认订单信息，支付后将不能在更改</p>
     <PreInfoConfirm :allAreas="allAreas" :preInfo="preInfo"/>
     <div class="row-info total-price">
         <p>客户手机号：{{preInfo.mobile}}</p>
@@ -43,7 +44,6 @@ export default {
   },
   methods: {
     cancel () {
-      console.log(111)
       this.$emit('cancel')
     },
     preOrder () {
@@ -51,9 +51,13 @@ export default {
       console.log('确认，生成并复制提单链接')
     }
   }
+
 }
 </script>
 <style lang="scss" scoped>
+    .tip{
+      padding-bottom: 20px;
+    }
     .pre-info-item{
         margin-bottom: 0;
         font-size: 16px;
