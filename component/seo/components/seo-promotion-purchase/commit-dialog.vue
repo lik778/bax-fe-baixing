@@ -3,7 +3,7 @@
           :title="skipAudit ? '您的关键词已确认，可直接去提单哦！' : '需要人工审核哦！最快5分钟！最晚24小时内～'"
           :visible.sync="visible"
           width="50%"
-          @close="cancel"
+          :before-close="cancel"
         >
           <PreInfoConfirm :allAreas="allAreas" :preInfo="preInfo"/>
           <span slot="footer" class="dialog-footer">
