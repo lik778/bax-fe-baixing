@@ -1,5 +1,4 @@
 <template>
-  <!-- <el-dialog @close="cancel" :title="title" :visible.sync="dialogCityVisible"> -->
   <div class="province-container">
     <h2 class="title">{{title}}</h2>
     <ul class="province-content">
@@ -13,7 +12,6 @@
       </li>
     </ul>
   </div>
-  <!-- </el-dialog> -->
 </template>
 
 <script>
@@ -54,24 +52,6 @@ export default {
       }
       return {}
     }
-  },
-  // watch: {
-  //   cities: {
-  //     handler (newV, oldV) {
-  //       if (newV) {
-  //         const cityInfo = this.allAreas.filter(o => newV.includes(o.id))
-  //         const provinceList = cityInfo.map(o => o.parent)
-  //         const currentProvince = [{ label: '直辖市', value: 'china' }, ...PROVINCE_LIST].filter(o => provinceList.includes(o.value))
-  //         this.province = currentProvince
-  //         this.cityInfo = cityInfo
-  //         console.log('cityInfo', cityInfo)
-  //       }
-  //     },
-  //     deep: true,
-  //     immediate: true
-  //   }
-  // },
-  async mounted () {
   },
   methods: {
     cancel () {

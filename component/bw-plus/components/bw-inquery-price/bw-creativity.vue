@@ -2,7 +2,7 @@
     <div class="bw-creativity">
       <Title subTitle="创意升级，效果加倍" subExtra="请选择需要升级的创意形式"/>
       <div class="bw-creativity_wrapper">
-        <ProductItem @check="checkProduct" v-for="product in productList" :key="product.id" :currentExcludes="[]" :product="product"/>
+        <ProductItem :isRenew="isRenew" @check="checkProduct" v-for="product in productList" :key="product.id" :currentExcludes="[...currentExcludes, ...disableSkuList]" :product="transformProduct(product)"/>
       </div>
     </div>
 </template>
@@ -20,14 +20,63 @@ export default {
       type: Array,
       default: () => [],
       require: true
+    },
+    currentPrice: {
+      type: Object,
+      default: () => {},
+      require: false
+    },
+    isRenew: {
+      type: Boolean,
+      default: false,
+      require: false
+    },
+    additionRenewDetailList: {
+      type: Array,
+      default: () => [],
+      require: false
+    },
+    disableSkuList: {
+      type: Array,
+      default: () => [],
+      require: false
     }
   },
   data () {
     return {
-      checkedProducts: []
+      checkedProducts: [],
+      currentExcludes: []
+    }
+  },
+  watch: {
+    currentPrice: {
+      deep: true,
+      handler (v) {
+        if (v.days) {
+          // 计算所选商品的互斥商品集合
+          this.currentExcludes = this.checkedProducts.reduce(
+            (a, b) => [...a, ...b.excludes],
+            []
+          )
+        } else {
+          this.checkedProducts = this.checkedProducts.filter(p => p.additionRenewDetai.extraOriginPrice > 0)
+          this.currentExcludes = []
+        }
+      }
     }
   },
   methods: {
+    transformProduct (product) {
+      if (this.isRenew) {
+        const { additionRenewDetailList, currentPrice } = this
+        return {
+          ...product,
+          additionRenewDetai: additionRenewDetailList.find(a => a.sku === product.id),
+          currentPrice
+        }
+      }
+      return product
+    },
     checkProduct (product) {
       const { checkedProducts } = this
       if (product.checked) {
@@ -37,6 +86,11 @@ export default {
       }
       product.checked = !product.checked
       this.$emit('checked', product)
+      // 计算所选商品的互斥商品集合
+      this.currentExcludes = this.checkedProducts.reduce(
+        (a, b) => [...a, ...b.excludes],
+        []
+      )
     }
   }
 }

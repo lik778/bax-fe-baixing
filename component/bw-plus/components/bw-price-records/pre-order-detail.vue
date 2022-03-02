@@ -5,7 +5,7 @@
     width="50%"
     @close="cancel"
     >
-    <PreInfoConfirm :preInfo="preInfo" :allAreas="allAreas"/>
+    <PreInfoConfirm :isRenew="isRenew" :preInfo="preInfo" :allAreas="allAreas"/>
     <div class="row-info total-price">
       <BwDescriptionItem label="客户手机号：" :value="preInfo.mobile"/>
       <BwDescriptionItem label="销售编号：" :value="preInfo.saleId"/>
@@ -41,6 +41,11 @@ export default {
       type: Array,
       default: () => [],
       required: true
+    },
+    isRenew: {
+      type: Boolean,
+      default: false,
+      require: false
     }
   },
   methods: {

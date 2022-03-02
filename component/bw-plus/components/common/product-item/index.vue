@@ -85,6 +85,11 @@ export default {
       type: Object,
       default: () => {},
       require: false
+    },
+    isRenew: {
+      type: Boolean,
+      default: false,
+      require: false
     }
   },
   data () {
@@ -100,9 +105,17 @@ export default {
     notAllowCheck () {
       const {
         product: {
-          currentPrice: { price, skuId }
-        }
+          currentPrice: { price, skuId },
+          additionRenewDetai: { extraOriginPrice } = {}
+        },
+        isRenew
       } = this
+      if (isRenew) {
+        return {
+          disable: this.currentExcludes.includes(this.product.id) || extraOriginPrice + price <= 0,
+          reason: this.currentExcludes.includes(this.product.id) ? '当前商品与所选商品存在互斥' : ''
+        }
+      }
       if (price <= 0) {
         return {
           disable: true,
@@ -144,10 +157,13 @@ export default {
     showDuration () {
       const {
         product: {
-          currentPrice: { duration }
-        }
+          currentPrice: { days, duration },
+          additionRenewDetai: { extraDays = 0 } = {}
+        },
+        isRenew
       } = this
-      return duration || '?'
+      const isRenewDays = days ? `${extraDays}天+${days}` : extraDays
+      return isRenew ? isRenewDays : duration || '?'
     },
     showSchedule () {
       const {
@@ -168,32 +184,38 @@ export default {
           dealPriceRatio,
           withoutPackagePriceRatio,
           type,
-          currentPrice: { price }
-        }
+          additionRenewDetai,
+          currentPrice: { price = 0 }
+        },
+        isRenew
       } = this
+      const defaultPrice = isRenew && additionRenewDetai ? additionRenewDetai.extraOriginPrice + price : price
       const ratio = this.baiduBwIsChecked
         ? dealPriceRatio
         : withoutPackagePriceRatio
       if (type === SEO_PRODUCT_TYPE) {
         return this.baiduBwIsChecked
-          ? f2y(certainDealPrice)
-          : f2y(withoutPackageCertainDealPrice)
+          ? Math.floor(f2y(certainDealPrice))
+          : Math.floor(f2y(withoutPackageCertainDealPrice))
       }
-      return price > 0 ? f2y(price * ratio) : '?'
+      return defaultPrice > 0 ? Math.floor(f2y(defaultPrice * ratio)) : '?'
     },
     originalPrice () {
       const {
         product: {
-          currentPrice: { price },
+          currentPrice: { price = 0 },
           originalPriceRatio,
           certainOriginPrice,
-          type
-        }
+          type,
+          additionRenewDetai
+        },
+        isRenew
       } = this
+      const defaultPrice = isRenew && additionRenewDetai ? additionRenewDetai.extraOriginPrice + price : price
       return type === SEO_PRODUCT_TYPE
-        ? f2y(certainOriginPrice)
-        : price > 0
-          ? f2y(price * originalPriceRatio)
+        ? Math.floor(f2y(certainOriginPrice))
+        : defaultPrice > 0
+          ? Math.floor(f2y(defaultPrice * originalPriceRatio))
           : '?'
     }
   },
