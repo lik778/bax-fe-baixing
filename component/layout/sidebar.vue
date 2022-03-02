@@ -87,12 +87,12 @@
           <template slot="title">
             <bx-icon type="sharealt"></bx-icon>SEO云推广
           </template>
-          <el-menu-item index="seo-promotion-purchase">
+          <el-menu-item index="seo-promotion-purchase" v-if="!userInfo.shAgent && relationAllow()">
             <router-link :to="{ name: 'seo-promotion-purchase' }" tag="p">
               SEO云推广购买
             </router-link>
           </el-menu-item>
-          <el-menu-item index="seo-word-records">
+          <el-menu-item index="seo-word-records" v-if="!userInfo.shAgent && relationAllow()">
             <router-link :to="{ name: 'seo-word-records' }" tag="p">
               查词记录
             </router-link>
