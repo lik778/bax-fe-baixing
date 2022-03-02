@@ -29,6 +29,7 @@
               </el-tooltip>
             </li>
           </ul>
+          <el-button v-if="allowRenew(item)" type="text" @click="renew(item)">续费</el-button>
         </div>
         <el-table
             :data="item.skuList"
@@ -84,9 +85,6 @@
               <template slot-scope="{ row }">
                 <template  v-if="row.skuId === 301">
                 <el-row type="flex" justify="space-around">
-                  <el-col :span="8" v-if="allowRenew">
-                    <el-button  type="danger" style="width: 100%"  @click="renew(row,item)">续费</el-button>
-                  </el-col>
                   <el-col :span="8">
                     <el-button  style="width: 100%" @click="goToPlanList(item)">设置推广</el-button>
                   </el-col>
@@ -107,7 +105,7 @@
         </el-pagination>
       </div>
     </main>
-    <RenewConfirm @preOrder="renewPreOrder" @cancel="isRenew = false" :allAreas="allAreas" :dialogVisible="isRenew" :renewInfo="renewInfo"/>
+    <PreOrderDetail :isRenew="true" @preOrder="submit" @cancel="visible=false" :allAreas="allAreas" :dialogVisible="visible" :preInfo="renewInfo"/>
     <el-dialog
       :visible.sync="dialogVisible"
       width="26%"
@@ -129,8 +127,8 @@
 </template>
 
 <script>
-import { getUserPackageList, getRenewDetai, renewOrder } from 'api/biaowang-plus'
-import { RenewConfirm } from './components'
+import { getUserPackageList, renewOrder, getRenewPriceByPackageId, submitPreOrder } from 'api/biaowang-plus'
+import { PreOrderDetail } from './components'
 import {
   AUDIT_STATUS_MAP,
   PACKEAGE_STATUS_MAP,
@@ -141,7 +139,9 @@ import {
   AUDIT_STATUS_COLOR_MAP,
   THIRTY_DAYS,
   RENEW_OPRATION_STATUS_DISABLED,
-  RENEW_OPRATION_STATUS_COPY
+  RENEW_OPRATION_STATUS_COPY,
+  BAIDU_PRODUCT_SOURCE,
+  PROMOTE_STATUS_OFFLINE
 } from 'constant/bw-plus'
 import { getCnName } from 'util'
 import debounce from 'lodash.debounce'
@@ -151,6 +151,9 @@ import gStore from '../store'
 
 export default {
   name: 'bw-plus-package-list',
+  components: {
+    PreOrderDetail
+  },
   props: {
     allAreas: {
       type: Array,
@@ -186,20 +189,35 @@ export default {
       loading: false,
       isRenew: false,
       renewInfo: {},
-      dialogVisible: false
-    }
-  },
-  computed: {
-    allowRenew () {
-      const { roles } = this.userInfo
-      return isSales(roles)
+      dialogVisible: false,
+      commitSkuDetailList: [],
+      visible: false,
+      renewPackgeInfo: {}
     }
   },
   methods: {
+    async submit () {
+      const params = {
+        renewId: this.renewInfo.renewId,
+        skuList: this.renewInfo.additionProductMap
+      }
+      try {
+        const { data: { url } } = await submitPreOrder(params)
+        this.$copyText(url).then(async (e) => {
+          Message.success('提单链接已复制到剪切板')
+        }, function (e) {})
+      } catch (error) {
+        console.log(error)
+      }
+    },
     handleCurrentChange (page) {
       this.query.page = page - 1
     },
-
+    allowRenew (item) {
+      const { roles } = this.userInfo
+      const { skuList } = item
+      return isSales(roles) && skuList.some(s => s.skuId === BAIDU_PRODUCT_SOURCE)
+    },
     queryPackageList: debounce(async function (params) {
       const { user_id: userId } = this.$route.query
       try {
@@ -221,25 +239,23 @@ export default {
     goQueryPrice () {
       this.$router.push({ name: 'bw-plus-query-price', query: { renew: 1 } })
     },
-    async renew (row, item) {
-      const loading = this.$loading({
-        lock: true,
-        text: 'Loading',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      })
-      const { packageId, renewApplyId } = item
-      try {
-        const { code, data } = await getRenewDetai({ packageId })
-        if (code === 301) {
-          this.dialogVisible = true
-          gStore.getQueryInfo(data)
-          return
-        }
-        this.isRenew = true
-        this.renewInfo = { ...data, renewApplyId }
-      } finally {
-        loading.close()
+    async renew (item) {
+      const { packageId, skuList } = item
+      {
+        const { cities, coreCity, industry, keywords: words } = item
+        gStore.getQueryInfo({ cities, coreCity, industry, words })
+      }
+      const target = skuList.find(s => s.skuId === BAIDU_PRODUCT_SOURCE)
+      if (target && target.status === PROMOTE_STATUS_OFFLINE) {
+        this.dialogVisible = true
+        return
+      }
+      const { data: { renewId, commitSkuDetailList, cities, words: keywords, mobile = '', salesId: saleId, userId: userBxId } } = await getRenewPriceByPackageId({ packageId })
+      if (commitSkuDetailList && commitSkuDetailList.length) {
+        this.visible = true
+        this.renewInfo = { renewId, additionProductMap: commitSkuDetailList, cities, keywords, saleId, mobile, userBxId }
+      } else {
+        this.$router.push({ name: 'renew-upgrade', query: { packageId } })
       }
     },
     async renewPreOrder (applyId) {
@@ -330,9 +346,6 @@ export default {
         this.queryPackageList()
       }
     }
-  },
-  components: {
-    RenewConfirm
   }
 }
 </script>
@@ -399,13 +412,15 @@ export default {
 
 .table-titles {
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
   width: 100%;
   height: 48px;
   padding-left: 13px;
   margin-bottom: 20px;
   background: #FFF1E4;
+  box-sizing: border-box;
+  padding: 0 20px;
   ul {
     display: flex;
     li {

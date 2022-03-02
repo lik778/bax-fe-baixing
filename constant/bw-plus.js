@@ -515,3 +515,20 @@ export const SEO_SENIOR_PACKAGE = Object.freeze([{
   originPrice: 980000,
   dealPrice: 980000
 }])
+export const BAIDU_BW_PRODUCT_PRICELIST = Object.freeze([
+  {
+    duration: 365
+  },
+  {
+    duration: 180
+  },
+  {
+    duration: 90
+  },
+  {
+    duration: 30
+  },
+  {
+    duration: 0
+  }
+])

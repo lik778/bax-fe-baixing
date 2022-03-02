@@ -34,8 +34,9 @@ import { f2y, getCnName } from 'util'
 import BwDescriptionItem from './bw-description-item.vue'
 import dayjs from 'dayjs'
 import isBetween from 'dayjs/plugin/isBetween'
-import { SCHEDULE_TYPE, DEVICE, welfareInfo } from 'constant/bw-plus'
+import { SCHEDULE_TYPE, DEVICE, welfareInfo, IMAGE_PRODUCT_SOURCE, DAIL_BUTTON_PRODUCT_SOURCE, VIDEO_PRODUCT_SOURCE } from 'constant/bw-plus'
 dayjs.extend(isBetween)
+const creativityProduct = [IMAGE_PRODUCT_SOURCE, DAIL_BUTTON_PRODUCT_SOURCE, VIDEO_PRODUCT_SOURCE]
 export default {
   name: 'pre-info-confirm',
   components: { BwDescriptionItem },
@@ -49,6 +50,11 @@ export default {
       type: Array,
       default: () => [],
       required: true
+    },
+    isRenew: {
+      type: Boolean,
+      default: false,
+      require: false
     }
   },
   data () {
@@ -60,8 +66,9 @@ export default {
   computed: {
     getWelfareInfo () {
       const { additionProductMap } = this.preInfo
+      const { isRenew } = this
       const durationArray = [...additionProductMap.map(info => info.duration)]
-      return { duration: Math.max(...durationArray), price: this.totalDealPrice }
+      return { duration: Math.max(...durationArray), price: isRenew ? 0 : this.totalDealPrice }
     },
     showWelfare () {
       const now = dayjs()
@@ -69,7 +76,7 @@ export default {
     },
     totalPrice () {
       const { additionProductMap } = this.preInfo
-      const sum = additionProductMap.reduce((a, b) => a + b.originPrice, 0)
+      const sum = additionProductMap.reduce((a, b) => a + Math.floor(b.originPrice / 100) * 100, 0)
       return sum
     },
     spreadPrice () {
@@ -77,7 +84,7 @@ export default {
     },
     totalDealPrice () {
       const { additionProductMap } = this.preInfo
-      const sum = additionProductMap.reduce((a, b) => a + b.dealPrice, 0)
+      const sum = additionProductMap.reduce((a, b) => a + Math.floor(b.dealPrice / 100) * 100, 0)
       return sum
     }
   },
@@ -86,16 +93,16 @@ export default {
       return cities.slice(0, 2).map(city => getCnName(city, this.allAreas)).join(',') + (cities.length > 2 ? `等${cities.length}个城市` : '') || '-'
     },
     productFormatter (row, column, cellValue, index) {
-      const { device, scheduleType, displayType } = row
-      return displayType ? cellValue : `${cellValue} | ${DEVICE[device]} | ${SCHEDULE_TYPE[scheduleType]}`
+      const { device, scheduleType, displayType, sku } = row
+      return displayType || creativityProduct.includes(sku) ? cellValue : `${cellValue} | ${DEVICE[device]} | ${SCHEDULE_TYPE[scheduleType]}`
     },
     priceFormatter (...args) {
       const [,, price] = args
-      return f2y(price)
+      return Math.floor(f2y(price))
     },
     spreadFormatter (row, column, cellValue, index) {
       const { dealPrice, originPrice } = row
-      return f2y(originPrice - dealPrice)
+      return Math.floor(f2y(originPrice)) - Math.floor(f2y(dealPrice))
     }
   }
 }
