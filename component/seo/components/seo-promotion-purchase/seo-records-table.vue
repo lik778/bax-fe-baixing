@@ -6,9 +6,9 @@
       v-loading="loading"
       :default-sort="{prop: 'createdTime', order: 'descending'}"
     >
-      <el-table-column prop="id" label="ID" />
-      <el-table-column sortable prop="createdTime" width="170" label="日期" :formatter="dateFormater" />
-      <el-table-column width="150" prop="keywords" label="关键词">
+      <el-table-column prop="id" label="ID"  width="100" />
+      <el-table-column sortable prop="createdTime" width="200" label="日期" :formatter="dateFormater" />
+      <el-table-column width="250" prop="keywords" label="关键词">
         <template slot-scope="{ row }">
           <el-popover
           placement="top-start"
@@ -24,8 +24,8 @@
         </template>
       </el-table-column>
       <!-- <el-table-column prop="applyType" label="报价类型" :formatter="applyTypeFormatter" /> -->
-      <el-table-column prop="version" label="版本"/>
-      <el-table-column prop="status" label="审核状态">
+      <el-table-column prop="version" width="150" label="版本"/>
+      <el-table-column prop="status" width="150" label="审核状态">
         <template slot-scope="{ row }">
           <span :class="transformClass(row.status)">{{APPLY_AUDIT_STATUS_OPTIONS[row.status] || '-'}}</span>
           <el-tooltip v-if="row.status === APPLY_AUDIT_STATUS_REJECT" :class="transformClass(row.status)" :content="row.rejectedReason" placement="top-start">
@@ -49,7 +49,7 @@
       </el-table-column>
       <!-- <el-table-column prop="industry" label="推广行业" /> -->
       <!-- <el-table-column width="100" label="绑定客户" prop="userId"/> -->
-      <el-table-column width="150" fixed="right" label="操作">
+      <el-table-column  fixed="right" label="操作">
         <template slot-scope="{ row }">
           <el-button @click="getDetail(row)" type="text">详情</el-button>
           <el-button @click="preOrder(row)" :disabled="row.operationStatus != OPTION_STATUS_AWAIT_TIDAN" type="text">提单</el-button>
