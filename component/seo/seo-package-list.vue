@@ -81,7 +81,7 @@
               align="center"
               label="操作">
               <template slot-scope="{ row }">
-                <template  v-if="row.skuId === 301">
+                <template  v-if="row.skuId === 314">
                 <el-row type="flex" justify="space-around">
                   <el-col :span="8">
                     <el-button  style="width: 100%" @click="goToPlanList(item)">设置推广</el-button>
