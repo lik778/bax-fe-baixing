@@ -6,9 +6,9 @@
       v-loading="loading"
       :default-sort="{prop: 'createdTime', order: 'descending'}"
     >
-      <el-table-column prop="id" label="ID"  width="100" />
-      <el-table-column sortable prop="createdTime" width="200" label="日期" :formatter="dateFormater" />
-      <el-table-column width="250" prop="keywords" label="关键词">
+      <el-table-column prop="id" label="ID"  width="150" />
+      <el-table-column sortable prop="createdTime" width="170" label="日期" :formatter="dateFormater" />
+      <el-table-column width="200" prop="keywords" label="关键词">
         <template slot-scope="{ row }">
           <el-popover
           placement="top-start"
@@ -24,8 +24,8 @@
         </template>
       </el-table-column>
       <!-- <el-table-column prop="applyType" label="报价类型" :formatter="applyTypeFormatter" /> -->
-      <el-table-column prop="version" width="150" label="版本"/>
-      <el-table-column prop="status" width="150" label="审核状态">
+      <el-table-column prop="version" width="170" label="版本"/>
+      <el-table-column prop="status" width="170" label="审核状态">
         <template slot-scope="{ row }">
           <span :class="transformClass(row.status)">{{APPLY_AUDIT_STATUS_OPTIONS[row.status] || '-'}}</span>
           <el-tooltip v-if="row.status === APPLY_AUDIT_STATUS_REJECT" :class="transformClass(row.status)" :content="row.rejectedReason" placement="top-start">
@@ -36,7 +36,7 @@
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column prop="cities" width="150" label="投放城市" >
+      <el-table-column prop="cities" width="170" label="投放城市" >
         <template slot-scope="{ row }">
               <el-popover
                 placement="right"
