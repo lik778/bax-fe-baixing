@@ -60,7 +60,7 @@
             </el-table-column>
             <el-table-column
               prop="auditStatus"
-              :formatter="({ skuId, auditStatus }) =>  skuId === 301 ? AUDIT_STATUS_MAP[auditStatus]: '--'"
+              :formatter="({ skuId, auditStatus }) =>  skuId === 314 ? AUDIT_STATUS_MAP[auditStatus]: '--'"
               min-width="110"
               label="审核状态">
             </el-table-column>
