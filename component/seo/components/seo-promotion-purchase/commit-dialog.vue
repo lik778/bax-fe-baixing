@@ -5,7 +5,7 @@
           width="50%"
           :before-close="cancel"
         >
-          <PreInfoConfirm :allAreas="allAreas" :preInfo="preInfo"/>
+          <PreInfoConfirm :allAreas="allAreas" :preInfo="preInfo" :skipAudit="skipAudit" :industry="industry"/>
           <span slot="footer" class="dialog-footer">
             <el-button @click="cancel">取 消</el-button>
             <el-button type="primary" :loading="isPending" @click="submit">{{skipAudit? '去提单' : '提交并查看审核进度'}}</el-button>
@@ -43,6 +43,11 @@ export default {
     skipAudit: {
       type: Boolean,
       default: true
+    },
+    industry: {
+      type: String,
+      default: '',
+      require: true
     }
   },
   methods: {

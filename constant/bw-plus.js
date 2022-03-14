@@ -509,12 +509,15 @@ export const SEO_BASIS_PACKAGE = Object.freeze([{
   skuId: 312
 }])
 // 高级版
-export const SEO_SENIOR_PACKAGE = Object.freeze([{
-  name: 'SEO云推广高级版',
-  duration: 'SEO云推广（365天）/标王体验版（30天）',
-  originPrice: 1380000,
-  dealPrice: 980000
-}])
+export const seoSeniorPackage = [
+  {
+    name: 'SEO云推广高级版',
+    duration: (skipManualAudit, industry) => {
+      return `${skipManualAudit === true ? (industry === 'qita' ? 'SEO云推广（365天）/标王体验版（60天）' : 'SEO云推广（365天）/标王体验版（30天）') : 'SEO云推广（365天）/'}`
+    },
+    originPrice: 1380000,
+    dealPrice: 980000
+  }]
 export const BAIDU_BW_PRODUCT_PRICELIST = Object.freeze([
   {
     duration: 365

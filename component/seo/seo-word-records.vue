@@ -26,7 +26,7 @@
       title="查价详情"
       :visible="detailVisible"
       @close="detailVisible=false">
-          <PreInfoConfirm :preInfo="queryPriceDetail" :allAreas="allAreas"/>
+          <PreInfoConfirm :preInfo="queryPriceDetail" :allAreas="allAreas" :status="status"/>
       </el-dialog>
     </el-card>
   </div>
@@ -95,7 +95,9 @@ export default {
       deviceAvailableStatus: {},
       queryPriceDetail: {},
       detailVisible: false,
-      applyId: null
+      applyId: null,
+      // 审核状态
+      status: null
     }
   },
   async mounted () {
@@ -108,6 +110,7 @@ export default {
   },
   methods: {
     getDetail (row) {
+      this.status = row.status
       this.queryPriceDetail = row
       this.detailVisible = true
     },

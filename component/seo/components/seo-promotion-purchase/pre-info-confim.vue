@@ -3,11 +3,12 @@
       <el-table header-row-class-name="confirm-info-header" :border="true" :data="preInfo.additionProductMap" style="width: 100%">
         <el-table-column header-align="left" width="80" prop="skuId" label="套餐" :formatter="packageFormatter" v-if="!scheduleType" />
         <el-table-column header-align="left" width="200" prop="name" label="服务" :formatter="productFormatter" />
-        <el-table-column header-align="left" width="200" prop="duration" label="服务时长（天）"/>
+        <el-table-column header-align="left" width="200" prop="duration" label="服务时长（天）" :formatter="dayFormatter"/>
         <el-table-column header-align="left" prop="originPrice" label="价格（元）" :formatter="priceFormatter"/>
         <el-table-column header-align="left" prop="originPrice" label="优惠（元）" :formatter="spreadFormatter"/>
         <el-table-column header-align="left" prop="dealPrice" label="实付（元）" :formatter="priceFormatter"/>
       </el-table>
+      <p class="tip"  v-if="this.flag===false||this.skipAudit===false">提示：由于行业在审核中，标王体验版的天数不确定</p>
       <ul class="desc-box" v-if="preInfo.keywords.length!=0&&scheduleType">
         <li class="title">标王体验版说明</li>
         <li>关键词：<p>{{preInfo.keywords.slice(0,3).join('、')}}...等 <span>20</span>个词</p></li>
@@ -34,16 +35,30 @@ export default {
       default: () => {},
       require: true
     },
+    status: {
+      type: Number,
+      default: 0
+    },
     allAreas: {
       type: Array,
       default: () => [],
       required: true
+    },
+    skipAudit: {
+      type: Boolean,
+      default: true
+    },
+    industry: {
+      type: String,
+      default: '',
+      require: true
     }
   },
   data () {
     return {
       f2y,
-      scheduleType: ''
+      scheduleType: '',
+      flag: true
     }
   },
   computed: {
@@ -85,6 +100,16 @@ export default {
     packageFormatter (row, column, cellValue, index) {
       const { skuId } = row
       return skuId === 312 ? '基础版' : '高级版'
+    },
+    dayFormatter (row, column, cellValue, index) {
+      if (typeof row.duration === 'function') {
+        return row.duration(this.skipAudit, this.industry)
+      } else if (this.status && this.status === 0 && row.skuId === 314) {
+        this.flag = false
+        return '/'
+      } else {
+        return row.duration
+      }
     }
   }
 }
@@ -157,5 +182,10 @@ export default {
        margin-top: 20px;
        display: flex;
        align-items: center;
+    }
+    .tip{
+      padding: 10px 0;
+      font-size: 12px;
+      color: #FF6350;
     }
 </style>

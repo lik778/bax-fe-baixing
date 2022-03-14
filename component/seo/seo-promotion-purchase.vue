@@ -14,7 +14,8 @@
           :visible="isSubmit"
           :isPending="isPending"
           :preInfo="preInfo"
-          :skipAudit="skipAudit"
+          :skipAudit="checkResult.skipManualAudit"
+          :industry="checkResult.industry"
           @cancel="isSubmit=false"
           @submit="submit"
            />
@@ -83,7 +84,7 @@ import ProductItem from './components/product-item'
 import AreaSelector from 'com/common/biaowang-area-selector'
 import { checkKeyword, getTrialSystem, seoCommit } from 'api/biaowang-plus'
 import { getCnName } from 'util'
-import { SEO_BASIS, SEO_SENIOR, SEO_BASIS_PACKAGE, SEO_SENIOR_PACKAGE } from 'constant/bw-plus'
+import { SEO_BASIS, SEO_SENIOR, SEO_BASIS_PACKAGE, seoSeniorPackage } from 'constant/bw-plus'
 import { OTHER_CITY_ENUM } from 'com/common/bw/core-cities-dialog'
 import debounce from 'lodash.debounce'
 export default {
@@ -126,7 +127,7 @@ export default {
       skuId: null,
       loading: false,
       SEO_BASIS_PACKAGE,
-      SEO_SENIOR_PACKAGE,
+      seoSeniorPackage,
       preInfo: {
         keywords: [],
         cities: [],
@@ -244,7 +245,7 @@ export default {
         this.preInfoList()
       } else {
         this.$message({
-          message: '不可提交',
+          message: '查询结果不通过，不可提交',
           type: 'error'
         })
       }
@@ -253,7 +254,7 @@ export default {
       if (this.checkTip === 0) {
         this.preInfo.additionProductMap = SEO_BASIS_PACKAGE
       } else if (this.checkTip === 1) {
-        this.preInfo.additionProductMap = SEO_SENIOR_PACKAGE
+        this.preInfo.additionProductMap = seoSeniorPackage
         this.preInfo.keywords = this.form.words.split(/[\s\n]/).filter(Boolean)
         this.preInfo.cities = this.form.cities
       }
@@ -305,9 +306,11 @@ export default {
     findIndexWord (arr, text) {
       arr.forEach(o => {
         const index = this.resultList.indexOf(this.resultList.filter(d => d.word === o)[0])
-        this.resultList[index].result = text
-        this.resultList[index].word = `<span style="color: #999999">${this.resultList[index].word}</span>`
-        this.resultList[index].pcPv = `<span style="color: #999999">${this.resultList[index].pcPv}</span>`
+        if (index !== -1) {
+          this.resultList[index].result = text
+          this.resultList[index].word = `<span style="color: #999999">${this.resultList[index].word}</span>`
+          this.resultList[index].pcPv = `<span style="color: #999999">${this.resultList[index].pcPv}</span>`
+        }
       })
     },
     submit: debounce(async function () {
