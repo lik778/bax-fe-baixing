@@ -116,13 +116,9 @@ export default {
     dayFormatter (row, column, cellValue, index) {
       if (typeof row.duration === 'function') {
         return row.duration(this.skipAudit, this.industry)
-      } else if (this.status && this.status === 0 && row.skuId === 314) {
+      } else if (this.status === 0 && row.skuId === 314) {
         this.flag = false
         return '/'
-      } else if (this.skipAudit && this.industry === 'qita' && row.skuId === 314) {
-        return '60'
-      } else if (this.skipAudit && this.industry !== 'qita' && row.skuId === 314) {
-        return '30'
       } else {
         return row.duration
       }
