@@ -11,7 +11,19 @@
       <p class="tip"  v-if="this.flag===false||this.skipAudit===false">提示：由于行业在审核中，标王体验版的天数不确定</p>
       <ul class="desc-box" v-if="preInfo.keywords.length!=0&&scheduleType">
         <li class="title">标王体验版说明</li>
-        <li>关键词：<p>{{preInfo.keywords.slice(0,3).join('、')}}...等 <span>20</span>个词</p></li>
+        <li>关键词
+          <el-popover
+          placement="top-start"
+          title="关键词"
+          width="300"
+          trigger="hover"
+          >
+            <div class="cities-content">
+              {{preInfo.keywords.join('、')}}
+            </div>
+            <p slot="reference">{{preInfo.keywords.slice(0,3).join('、')}}...等 <span >20</span>个词</p>
+          </el-popover>
+          </li>
         <li>城市：<p>{{citiesFormater(preInfo.cities)}}</p></li>
       </ul>
       <div class="row-info total-price">
@@ -107,6 +119,10 @@ export default {
       } else if (this.status && this.status === 0 && row.skuId === 314) {
         this.flag = false
         return '/'
+      } else if (this.skipAudit && this.industry === 'qita' && row.skuId === 314) {
+        return '60'
+      } else if (this.skipAudit && this.industry !== 'qita' && row.skuId === 314) {
+        return '30'
       } else {
         return row.duration
       }

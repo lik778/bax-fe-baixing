@@ -5,6 +5,7 @@
         <main>
           <p class="seo-title">SEO云推广优选套餐</p>
           <ProductItem @chooseClick="chooseClick" />
+          <p class="check-tip">提示：SEO云推广仅支持B2B行业购买，提单前请确认客户行业属性</p>
           <div class="submenu-btn" v-if="checkTip==0"><el-button type="primary" @click="commit">提交</el-button></div>
         </main>
          <CommitDialog
@@ -145,6 +146,7 @@ export default {
   methods: {
     async checkKeyword () {
       // this.$emit('resetResult')
+      this.resultList = []
       const { form } = this
       const { words } = form
       if (!this.keywordLengthCheck().validate) {
@@ -409,6 +411,11 @@ export default {
 }
 .text-color{
   color: #67C23A;
+}
+.check-tip{
+  color: #ff6750;
+  font-size: 12px;
+  padding: 10px 0;
 }
 .seo-title{
   font-family: PingFangSC-Medium;

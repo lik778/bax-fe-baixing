@@ -85,11 +85,11 @@ export default {
   .basis-box{
     position: relative;
     height: 287px;
-    width: 220px;
+    width: 218px;
     margin-right: 20px;
    .title{
       height: 54px;
-      width: 220px;
+      width: 218px;
       background-image: url(../../assets/basic-version.png);
       background-size: contain;
       text-align: center;
