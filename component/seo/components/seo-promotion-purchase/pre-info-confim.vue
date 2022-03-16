@@ -14,11 +14,11 @@
         <li>关键词
           <el-popover
           placement="top-start"
-          title="关键词"
           width="300"
           trigger="hover"
           >
             <div class="cities-content">
+              <p>关键词</p>
               {{preInfo.keywords.join('、')}}
             </div>
             <p slot="reference" v-if="preInfo.keywords.length>3">{{preInfo.keywords.slice(0,3).join('、')}}...等 <span >{{preInfo.keywords.length}}</span>个词</p>
@@ -143,6 +143,13 @@ export default {
           color: #C67C49;
           letter-spacing: 0;
         }
+    }
+    .cities-content{
+      padding: 5px;
+      p{
+        font-weight: bold;
+        padding-bottom: 5px;
+      }
     }
     .welfare-tag{
       margin-right: 8px;
