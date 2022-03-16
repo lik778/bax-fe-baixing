@@ -10,7 +10,7 @@
               <p>{{item.name}}</p><p>{{item.desc}}</p>
             </div>
             <div class="image-wrapper">
-              <img src="" alt="">
+              <img :src="item.src" alt="">
             </div>
           </li>
         </ul>

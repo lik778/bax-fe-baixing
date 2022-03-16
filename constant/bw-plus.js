@@ -471,7 +471,7 @@ export const PACKAGE_INTRODUCE = [
     list: [{
       name: 'SEO云推广',
       desc: '钻石店铺100个非指定关键词优化到百度电脑端/手机端首页',
-      src: ''
+      src: 'http://file.baixing.net/202203/076e3f3f31f86e33e4d02507d28b9bc4.png'
     }
     ],
     tipList: ['1.服务开始时间从下单时间开始计算，购买成功后，请制作店铺并完成SEO设置。',
@@ -486,12 +486,12 @@ export const PACKAGE_INTRODUCE = [
     list: [{
       name: 'SEO云推广',
       desc: '1年钻石店铺100个非指定关键词优化到百度电脑端/手机端首页',
-      src: ''
+      src: 'http://file.baixing.net/202203/076e3f3f31f86e33e4d02507d28b9bc4.png'
     },
     {
       name: '标王2.0',
       desc: '抢占全网搜索首页位置流量/电脑端5*8小时/20个5热度关键词(其他行业30天/非其他行业60天)',
-      src: ''
+      src: 'http://file.baixing.net/202203/39789f5d870f318b73f8dfc64560c2d4.png'
     }],
     tipList: ['1.服务开始时间从下单时间开始计算，购买成功后，请制作店铺并完成SEO设置。',
       '2.钻石店铺制作完成后，请按照《钻石店铺SEO手册》进行设置，然后启动一键优化，启动一键优化后最快4天后可陆续上词。',

@@ -24,7 +24,8 @@
         <el-card class="box-card query-card senior-card" v-if="seniorShow">
           <p class="senior-title">高级版-标王推广关键词<span class="text">（注：20个5热度关键词只投放电脑端、5 * 8 小时、普通行业两个月/特殊行业一个月）</span></p>
           <div class="package-box">
-            <el-col :span="15">
+            <el-row>
+              <el-col :span="15">
             <el-form ref="form"  label-width="100px" :model="form" :rules="rules">
               <el-form-item label="推广关键词" prop="words">
                 <el-input type="textarea" @change="checkKeyword" v-model="form.words" rows="6" placeholder="请输入关键词，多个关键词换行
@@ -46,6 +47,7 @@
             <el-col :span="8" class="tip">
               <InvalidIndustry/>
             </el-col>
+            </el-row>
              <AreaSelector
               type="bw" :all-areas="allAreas"
               :areas="form.cities"
@@ -54,6 +56,7 @@
               @cancel="areaDialogVisible = false"
               />
               <div v-if="resultVisible" class="table-box">
+                  <p class="check-tip">提示：关键词总热度不超过100。当前选择关键词总热度为：{{hotCount}}，{{hotCount>100?'不可推广。请根据下面的查询情况进行关键词调整吧~':'可推广。下面查询结果都为可推广后，即可提交哦~'}}</p>
                   <el-table :data="resultList" border style="width: 100%" :header-cell-style="{background: '#FFF6F2',color: '#C67C49'}"  v-loading="loading">
                     <el-table-column label="关键词">
                      <template scope="{row}">
@@ -140,7 +143,8 @@ export default {
           duration: ''
         }]
       },
-      skipAudit: true
+      skipAudit: true,
+      pvList: []
     }
   },
   methods: {
@@ -245,6 +249,16 @@ export default {
       if (this.checkTip === 0 || !this.submitBtn) {
         this.isSubmit = true
         this.preInfoList()
+      } else if (this.submitBtn && this.hotCount > 100) {
+        this.$message({
+          message: '热度过高，不可提交',
+          type: 'error'
+        })
+      } else if (this.submitBtn === true) {
+        this.$message({
+          message: '请先查询',
+          type: 'error'
+        })
       } else {
         this.$message({
           message: '查询结果不通过，不可提交',
@@ -269,8 +283,11 @@ export default {
         industry: this.form.industry
       })
       this.priceId = priceId
+      this.pvList = []
+      this.submitBtn = true
       keywordPvList.forEach(item => {
         item.result = '可推广'
+        this.pvList.push(item.pcPv)
       })
       this.resultList = keywordPvList
       if (data.overHeatWords) {
@@ -384,6 +401,13 @@ export default {
     }
   },
   computed: {
+    hotCount () {
+      const sum = this.pvList.reduce((prev, p) => {
+        prev = prev + p
+        return prev
+      }, 0)
+      return sum
+    },
     transformArea () {
       const { cities } = this.form
       const maxLength = 3

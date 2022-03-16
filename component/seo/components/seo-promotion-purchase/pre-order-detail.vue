@@ -6,7 +6,7 @@
     @close="cancel"
     >
     <p class="tip">请确认订单信息，支付后将不能在更改</p>
-    <PreInfoConfirm :allAreas="allAreas" :preInfo="preInfo"/>
+    <PreInfoConfirm :allAreas="allAreas" :preInfo="preInfo" :confirm="confirm"/>
     <div class="row-info total-price">
         <p>客户手机号：{{preInfo.mobile}}</p>
         <p>客户id：{{preInfo.userBxId}}</p>
@@ -24,6 +24,11 @@ export default {
   name: 'pre-order-detail',
   components: {
     PreInfoConfirm
+  },
+  data () {
+    return {
+      confirm: true
+    }
   },
   props: {
     dialogVisible: {

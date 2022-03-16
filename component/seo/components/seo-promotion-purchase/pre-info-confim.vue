@@ -8,8 +8,8 @@
         <el-table-column header-align="left" prop="originPrice" label="优惠（元）" :formatter="spreadFormatter"/>
         <el-table-column header-align="left" prop="dealPrice" label="实付（元）" :formatter="priceFormatter"/>
       </el-table>
-      <p class="tip"  v-if="this.flag===false||this.skipAudit===false">提示：由于行业在审核中，标王体验版的天数不确定</p>
       <ul class="desc-box" v-if="preInfo.keywords.length!=0&&scheduleType">
+      <p class="tip"  v-if="(this.flag===false||this.skipAudit===false) && confirm === false">提示：由于行业在审核中，标王体验版的天数不确定</p>
         <li class="title">标王体验版说明</li>
         <li>关键词
           <el-popover
@@ -21,7 +21,8 @@
             <div class="cities-content">
               {{preInfo.keywords.join('、')}}
             </div>
-            <p slot="reference">{{preInfo.keywords.slice(0,3).join('、')}}...等 <span >20</span>个词</p>
+            <p slot="reference" v-if="preInfo.keywords.length>3">{{preInfo.keywords.slice(0,3).join('、')}}...等 <span >{{preInfo.keywords.length}}</span>个词</p>
+            <p slot="reference" v-else>{{preInfo.keywords.join('、')}}</p>
           </el-popover>
           </li>
         <li>城市：<p>{{citiesFormater(preInfo.cities)}}</p></li>
@@ -64,6 +65,10 @@ export default {
       type: String,
       default: '',
       require: true
+    },
+    confirm: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -116,6 +121,8 @@ export default {
     dayFormatter (row, column, cellValue, index) {
       if (typeof row.duration === 'function') {
         return row.duration(this.skipAudit, this.industry)
+      } else if (this.confirm === true) {
+        return row.duration
       } else if (this.status === 0 && row.skuId === 314) {
         this.flag = false
         return '/'
