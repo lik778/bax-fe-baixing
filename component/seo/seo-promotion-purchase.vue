@@ -212,10 +212,10 @@ export default {
         }
         return errorMsg
       }
-      if (array.length < 20 || array.length > 20) {
+      if (array.length > 20) {
         errorMsg = {
           validate: false,
-          error: `关键词个数只能输入20个，当前关键词${array.length}个`
+          error: '关键词个数最多20个'
         }
         return errorMsg
       }
@@ -362,6 +362,7 @@ export default {
     },
     citiesShow () {
       this.areaDialogVisible = true
+      this.resultList = []
     },
     formatArea (name) {
       return name === OTHER_CITY_ENUM

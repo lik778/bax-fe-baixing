@@ -513,7 +513,7 @@ export const seoSeniorPackage = [
   {
     name: 'SEO云推广高级版',
     duration: (skipManualAudit, industry) => {
-      return `${skipManualAudit === true ? (industry === 'qita' ? 'SEO云推广（365天）/标王体验版（60天）' : 'SEO云推广（365天）/标王体验版（30天）') : 'SEO云推广（365天）/标王体验版'}`
+      return `${skipManualAudit === true ? (industry === 'qiTa' ? 'SEO云推广（365天）/标王体验版（60天）' : 'SEO云推广（365天）/标王体验版（30天）') : 'SEO云推广（365天）/标王体验版'}`
     },
     originPrice: 1380000,
     dealPrice: 980000
