@@ -291,7 +291,7 @@ export default {
       })
       this.resultList = keywordPvList
       if (data.overHeatWords) {
-        this.findIndexWord(data.overHeatWords, '<span style="color: #FF6350">热度太高，不可推广</span>')
+        this.findIndexWord(data.overHeatWords, '<span style="color: #FF6350">热度超出标准，请换词</span>')
       }
       if (data.errorWords) {
         data.errorWords.forEach(e => {
