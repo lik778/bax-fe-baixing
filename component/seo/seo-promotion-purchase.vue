@@ -294,7 +294,13 @@ export default {
         this.findIndexWord(data.overHeatWords, '<span style="color: #FF6350">热度太高，不可推广</span>')
       }
       if (data.errorWords) {
-        this.findIndexWord(data.errorWords, '<span style="color: #FF6350">查不到价，不可推广</span>')
+        data.errorWords.forEach(e => {
+          this.resultList.push({
+            word: e,
+            pcPv: '-',
+            result: '<span style="color: #FF6350">查不到价，不可推广</span>'
+          })
+        })
       }
       if (data.soldWords) {
         this.findIndexWord(data.soldWords, '<span style="color: #FF6350">已被购买，不可推广</span>')
@@ -305,9 +311,13 @@ export default {
       this.$refs[formName].validate(async (valid) => {
         if (valid && !this.queryBtnDisable) {
           this.loading = true
-          await this.getTrialSystem()
-          this.resultVisible = true
-          this.loading = false
+          await this.getTrialSystem().then(() => {
+            this.loading = false
+            this.resultVisible = true
+          }).catch((error) => {
+            console.log(error)
+            this.loading = false
+          })
         } else if (this.queryBtnDisable) {
           this.$message({
             message: '关键词风控审查不通过',
