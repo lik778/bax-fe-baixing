@@ -22,7 +22,7 @@
            />
         </el-card>
         <el-card class="box-card query-card senior-card" v-if="seniorShow">
-          <p class="senior-title">高级版-标王推广关键词<span class="text">（注：关键词只投放电脑端、5 * 8 小时、普通行业两个月/特殊行业一个月）</span></p>
+          <p class="senior-title">高级版-标王推广关键词<span class="text">（单个词热度≤10且总热度≤100，总词数≤20；限PC端，5*8小时；其他行业2个月/非其他行业1个月）</span></p>
           <div class="package-box">
             <el-row>
               <el-col :span="15">
@@ -106,7 +106,7 @@ export default {
       priceId: null,
       rules: {
         words: [{ validator: this.checkWord, trigger: 'blur' }],
-        cities: [{ required: true, message: '请选择推广地域', trigger: 'change' }]
+        cities: [{ required: true, message: '请选择推广城市~', trigger: 'change' }]
       },
       checkResult: {
         passed: true,
@@ -219,7 +219,7 @@ export default {
       if (array.length > 20) {
         errorMsg = {
           validate: false,
-          error: '关键词个数最多20个'
+          error: '不得超过20个关键词哦~'
         }
         return errorMsg
       }
