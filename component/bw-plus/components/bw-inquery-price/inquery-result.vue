@@ -48,7 +48,7 @@
             }"
             @click="cellClick(row.bothSeven)"
           >
-            {{ transforPrice(row.bothSeven.price) }}
+            <span :class="!this.skipAudit?'click-item':''">{{this.skipAudit?transforPrice(row.bothSeven.price):'——'}}</span>
           </div>
         </template>
       </el-table-column>
@@ -77,7 +77,7 @@
             }"
             @click="cellClick(row.bothFive)"
           >
-            {{ transforPrice(row.bothFive.price) }}
+            <span :class="!this.skipAudit?'click-item':''">{{this.skipAudit?transforPrice(row.bothFive.price):'——'}}</span>
           </div>
         </template>
       </el-table-column>
@@ -108,7 +108,7 @@
             }"
             @click="cellClick(row.wapSeven)"
           >
-            {{ transforPrice(row.wapSeven.price) }}
+            <span :class="!this.skipAudit?'click-item':''">{{this.skipAudit?transforPrice(row.wapSeven.price):'——'}}</span>
           </div>
         </template>
       </el-table-column>
@@ -137,7 +137,7 @@
             }"
             @click="cellClick(row.wapFive)"
           >
-            {{ transforPrice(row.wapFive.price) }}
+            <span :class="!this.skipAudit?'click-item':''">{{this.skipAudit?transforPrice(row.wapFive.price):'——'}}</span>
           </div>
         </template>
       </el-table-column>
@@ -168,7 +168,7 @@
             }"
             @click="cellClick(row.pcSeven)"
           >
-            {{ transforPrice(row.pcSeven.price) }}
+            <span :class="!this.skipAudit?'click-item':''">{{this.skipAudit?transforPrice(row.pcSeven.price):'——'}}</span>
           </div>
         </template>
       </el-table-column>
@@ -197,7 +197,7 @@
             }"
             @click="cellClick(row.pcFive)"
           >
-            {{ transforPrice(row.pcFive.price) }}
+            <span :class="!this.skipAudit?'click-item':''">{{this.skipAudit?transforPrice(row.pcFive.price):'——'}}</span>
           </div>
         </template>
       </el-table-column>
@@ -240,6 +240,11 @@ export default {
       type: null || Object,
       default: null,
       require: false
+    },
+    skipAudit: {
+      type: Boolean,
+      default: false,
+      require: true
     }
   },
   data () {
@@ -381,6 +386,9 @@ export default {
 }
 .sold-item {
   color: #909399;
+}
+.click-item{
+  color: #ff6350;
 }
 .diabled {
   color: #909399;
