@@ -381,7 +381,12 @@ export default {
         await this.updateMaterialPictures()
         await this.updateGroup({ groupId, campaignId, moveKeywords: false })
       } catch (e) {
-        throw new Error(e.message)
+        // console.log(e, 'e')
+        // throw new Error(e.message)
+        this.$message({
+          message: e.message,
+          type: 'error'
+        })
       }
     },
     async validateGroup () {
