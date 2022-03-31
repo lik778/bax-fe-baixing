@@ -307,6 +307,21 @@ export async function recommendList (id) {
 
 /**
  * @param {object} params
+
+ * @param { String[] } params.words
+ * @param { String[] } params.cities
+ * @param { String } params.industry
+ * @returns { any }
+ */
+export async function getTrialSystem (params) {
+  const body = await biaowangPlus
+    .post('/quota/getTrialSystemQuotaResult')
+    .send(params)
+    .json()
+  return body
+}
+/**
+ * @param {object} params
  * @param {number} params.packageId
  * @returns
  */
@@ -335,6 +350,81 @@ export async function submitPreOrder (params) {
   const body = await biaowangPlus
     .post('/package/user/renew/commit')
     .send(params)
+    .json()
+  return body
+}
+
+/**
+ * @param {object} params
+ * @param {Number} params.applyId
+ * @param {numbNumberer} params.userId
+ * @returns
+ */
+export async function getPreInfo (params) {
+  const body = await biaowangPlus
+    .get('/cloud/user/pre-info')
+    .query(params)
+    .json()
+  return body
+}
+/**
+ * @param {object} params
+ * @param { Number } params.targetUserId
+ * @param { Number } params.salesId
+ * @param { Number } params.skuId
+ * @param { Number } params.priceId
+ * @returns
+ */
+export async function seoCommit (params) {
+  const body = await biaowangPlus
+    .post('/cloud/user/commit')
+    .send(trim(params))
+    .json()
+  return body
+}
+
+/**
+ * @param { object } params
+ * @param { number } params.status
+ * @param { string } params.keyword
+ * @param { number } params.userId
+ * @param { number } params.size
+ * @param { number } params.page
+ * @returns
+ */
+export async function getuserList (params) {
+  const body = await biaowangPlus
+    .get('/cloud/user/list')
+    .query(trim(params))
+    .json()
+  return body
+}
+/**
+ * @param {object} params
+ * @param {number} params.applyId
+ * @param {number} params.userId
+ * @returns
+ */
+export async function getPreOrder (params) {
+  const body = await biaowangPlus
+    .get('/cloud/user/pre-order')
+    .query(params)
+    .json()
+  return body
+}
+
+/**
+ * @param {object} params
+ * @param {String} params.keyword
+ * @param {number} params.userId
+ * @param {number} params.size
+ * @param {number} params.page
+ * @returns
+ */
+export async function getlistSeoPackages (params) {
+  const body = await biaowangPlus
+    .get('/cloud/user/listSeoPackages')
+    .query(params)
     .json()
   return body
 }
