@@ -51,7 +51,25 @@
             <i class="el-icon-plus" @click="areaDialogVisible = true"></i>
           </div>
         </div>
-
+        <div>
+          <label>投放行业：</label>
+          <div class="industry">
+             <el-cascader
+              ref="refHandle"
+              :options="industryOptions"
+              v-model="cascaderValue"
+              :props="{ checkStrictly: true, expandTrigger: 'hover' }"
+              @change="industryChange"
+              @expand-change="expandChange"
+              popper-class="industry-class"
+              clearable></el-cascader>
+          </div>
+          <span class="industryTip"
+          @click="IndustryDialogVisible = true"
+          >
+            <u>没有找到你的行业</u>
+          </span>
+        </div>
         <promotion-area-limit-tip :all-areas="allAreas" :selected-areas="newPromotion.areas" />
       </section>
 
@@ -188,6 +206,11 @@
       :areas="newPromotion.areas"
       :sources="newPromotion.sources"
     />
+    <bw-industry-selector
+      @close="IndustryDialogVisible = false"
+      @submit="industrySubmit"
+      :visible="IndustryDialogVisible"
+    />
   </div>
 </template>
 
@@ -211,6 +234,7 @@ import wxBindModal from 'com/common/wx-bind-modal'
 import FmTip from 'com/widget/fm-tip'
 import qwtAddKeywordsDialog from 'com/common/qwt-add-keywords-dialog'
 import BaxInput from 'com/common/bax-input'
+import BwIndustrySelector from 'com/common/bw-industry-selector'
 
 import track, { trackRecommendService } from 'util/track'
 import { TimeTracker, TimeInput, wordTime } from 'util/time'
@@ -225,7 +249,9 @@ import {
 
 import {
   createCampaign,
-  queryAds
+  queryAds,
+  getIndusty,
+  postIndusty
 } from 'api/fengming'
 
 import {
@@ -259,9 +285,11 @@ const promotionTemplate = {
 
   keywords: [],
   sources: semPlatformOpts.map(opt => opt.value),
-  dailyBudget: MIN_DAILY_BUDGET
+  dailyBudget: MIN_DAILY_BUDGET,
+  firstId: 0,
+  secondId: 0,
+  thirdId: 0
 }
-
 export default {
   name: 'qwt-create-promotion',
   components: {
@@ -278,7 +306,8 @@ export default {
     CpcPriceTip,
     FmTip,
     qwtAddKeywordsDialog,
-    BaxInput
+    BaxInput,
+    BwIndustrySelector
   },
   fromMobx: {
     searchRecommends: () => store.searchRecommends,
@@ -319,6 +348,7 @@ export default {
       chargeDialogVisible: false,
       areaDialogVisible: false,
       baiduExpandWordsDialogVisible: false,
+      IndustryDialogVisible: false,
 
       semPlatformOpts,
       isCreating: false,
@@ -332,7 +362,10 @@ export default {
       PRE_IMG_PROMOTION: '//file.baixing.net/201809/a995bf0f1707a3e98a2c82a5dc5f8ad3.png',
       addKeywordsDialog: false,
 
-      landingTypeOpts: landingTypeOpts.filter(o => o.value !== LANDING_TYPE_GW)
+      landingTypeOpts: landingTypeOpts.filter(o => o.value !== LANDING_TYPE_GW),
+
+      industryOptions: [],
+      cascaderValue: []
     }
   },
   computed: {
@@ -613,6 +646,10 @@ export default {
         return Message.error('请填写关键字')
       }
 
+      if (!this.cascaderValue.length) {
+        return Message.error('请选择投放行业')
+      }
+
       if (p.keywords.length < 20) {
         return Message.error('请至少添加20个投放关键词')
       }
@@ -811,6 +848,60 @@ export default {
         creativeTitle,
         creativeContent
       })
+    },
+    // 行业输入
+    async industrySubmit (el) {
+      const x = el.trim()
+      if (x.length >= 2) {
+        const { meta } = await postIndusty({ category: el })
+        if (meta.message === 'Success') {
+          Message.success('添加成功')
+        } else {
+          Message.error('添加失败')
+        }
+      } else {
+        Message.error('最少两个字符')
+        return
+      }
+      this.IndustryDialogVisible = false
+    },
+    industryChange () {
+      const x = this.cascaderValue
+      x.length && x.forEach((item, index) => {
+        switch (index) {
+          case 0:
+            this.newPromotion.firstId = item
+            break
+          case 1:
+            this.newPromotion.secondId = item
+            break
+          case 2:
+            this.newPromotion.thirdId = item
+            break
+          default:
+            break
+        }
+      })
+    },
+    async getAllInStrusty () {
+      const { data } = await getIndusty()
+      this.industryOptions = data.map(item => ({ ...item, disabled: true }))
+    },
+    expandChange () {
+      const that = this
+      setTimeout(() => {
+        document.querySelectorAll('.el-cascader-node__label').forEach(el => {
+          el.onclick = function () {
+            this.previousElementSibling.click()
+            that.$refs.refHandle.dropDownVisible = false // 监听值发生变化就关闭它
+          }
+        })
+        document.querySelectorAll('.el-cascader-node .el-radio').forEach(el => {
+          el.onclick = function () {
+            that.$refs.refHandle.dropDownVisible = false // 监听值发生变化就关闭它
+          }
+        })
+      }, 100)
     }
   },
 
@@ -872,6 +963,7 @@ export default {
     }
     // 触发时间
     TimeTracker(1)
+    this.getAllInStrusty()
   },
 
   beforeDestroy () {
@@ -1027,7 +1119,14 @@ strong.red {
       color: rgb(21, 164, 250);
     }
   }
+  .industryTip {
+    margin-left: 20px;
+    font-size: 16px;
+    color: #ff7533;
+    cursor: pointer;
+  }
 }
+
 </style>
 
 <style lang="scss">
@@ -1041,5 +1140,15 @@ strong.red {
       }
     }
   }
+}
+</style>
+<style lang="scss">
+.industry-class {
+     & .el-cascader-node {
+      & > .el-radio {
+          visibility: hidden;
+          cursor: pointer;
+        }
+      }
 }
 </style>

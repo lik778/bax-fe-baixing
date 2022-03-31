@@ -19,6 +19,11 @@
       <div class="desc">投放渠道</div>
       <div class="cont">{{ SEM_PLATFORM_CN[promotion.source] }}</div>
     </section>
+    <!-- 待设置 -->
+    <section>
+      <div class="desc">投放行业</div>
+      <div class="cont">{{ `${promotion.firstName || ''}${promotion.secondName || ''}${promotion.thirdName || ''}` }}</div>
+    </section>
     <section>
       <div class="desc">渠道单日预算</div>
       <div class="cont">
@@ -175,7 +180,8 @@ export default {
       TIME_TYPE_CUSTOM,
       DURATION_TYPE_OPTS,
       RAW_CAMPAIN_STATUS,
-      STATUS_ONLINE
+      STATUS_ONLINE,
+      industryName: ''
     }
   },
   computed: {

@@ -881,9 +881,24 @@ export async function detect (params) {
 }
 
 export async function getWordAuthority (params) {
-  console.log(params)
   const body = await fengming
     .get('/user/check/agent')
+    .query(reverseCamelcase(params))
+    .json()
+  return body
+}
+
+export async function getIndusty (params) {
+  const body = await fengming
+    .get('/user/industry/category/all')
+    .query(reverseCamelcase(params))
+    .json()
+  return body
+}
+
+export async function postIndusty (params) {
+  const body = await fengming
+    .post('/user/industry/apply')
     .query(reverseCamelcase(params))
     .json()
   return body
