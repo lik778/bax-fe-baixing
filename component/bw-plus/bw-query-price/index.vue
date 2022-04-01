@@ -31,6 +31,7 @@
             :currentPrice="currentPrice"
             @getValue="getCurrentPrice"
             :tableData="queryResult.keywordPriceList"
+            :skipAudit="queryResult.industryAuditResult.skipManualAudit"
           />
           <BwCreativity
             v-if="productList && productList.length"
