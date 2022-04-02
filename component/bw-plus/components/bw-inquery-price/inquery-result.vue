@@ -35,8 +35,7 @@
             width="200"
             trigger="hover"
             :content="
-              row.bothSeven.price >= 0 ? '已售出' : '行业太热，暂无报价'
-            "
+              row.bothSeven.price >= 0 ? '已售出' : '行业太热，暂无报价'"
           >
             <span class="sold-item" slot="reference">--</span>
           </el-popover>
@@ -48,7 +47,16 @@
             }"
             @click="cellClick(row.bothSeven)"
           >
-            <span :class="!this.skipAudit?'click-item':''">{{this.skipAudit?transforPrice(row.bothSeven.price):'——'}}</span>
+          <el-popover
+            placement="top-start"
+            width="200"
+            title="提示"
+            :disabled="skipAudit"
+            trigger="hover"
+            :content="skipAudit? '' : '按照“平台*时段*时长”勾选，具体价格需要人工审核后确定。'"
+          >
+            <span :class="!skipAudit?'click-item':''" slot="reference">{{ skipAudit?transforPrice(row.bothSeven.price):'—'}}</span>
+          </el-popover>
           </div>
         </template>
       </el-table-column>
@@ -77,7 +85,16 @@
             }"
             @click="cellClick(row.bothFive)"
           >
-            <span :class="!this.skipAudit?'click-item':''">{{this.skipAudit?transforPrice(row.bothFive.price):'——'}}</span>
+          <el-popover
+            placement="top-start"
+            width="200"
+            title="提示"
+            trigger="hover"
+            :disabled="skipAudit"
+            :content="skipAudit? '' : '按照“平台*时段*时长”勾选，具体价格需要人工审核后确定。'"
+          >
+            <span :class="!skipAudit?'click-item':''" slot="reference">{{ skipAudit?transforPrice(row.bothFive.price):'—'}}</span>
+          </el-popover>
           </div>
         </template>
       </el-table-column>
@@ -108,7 +125,16 @@
             }"
             @click="cellClick(row.wapSeven)"
           >
-            <span :class="!this.skipAudit?'click-item':''">{{this.skipAudit?transforPrice(row.wapSeven.price):'——'}}</span>
+          <el-popover
+            placement="top-start"
+            width="200"
+            title="提示"
+            :disabled="skipAudit"
+            trigger="hover"
+            :content="skipAudit? '' : '按照“平台*时段*时长”勾选，具体价格需要人工审核后确定。'"
+          >
+            <span :class="!skipAudit?'click-item':''" slot="reference">{{ skipAudit?transforPrice(row.wapSeven.price):'—'}}</span>
+          </el-popover>
           </div>
         </template>
       </el-table-column>
@@ -137,7 +163,16 @@
             }"
             @click="cellClick(row.wapFive)"
           >
-            <span :class="!this.skipAudit?'click-item':''">{{this.skipAudit?transforPrice(row.wapFive.price):'——'}}</span>
+          <el-popover
+            placement="top-start"
+            width="200"
+            title="提示"
+            trigger="hover"
+            :disabled="skipAudit"
+            :content="skipAudit? '' : '按照“平台*时段*时长”勾选，具体价格需要人工审核后确定。'"
+          >
+            <span :class="!skipAudit?'click-item':''" slot="reference">{{ skipAudit?transforPrice(row.wapFive.price):'—'}}</span>
+          </el-popover>
           </div>
         </template>
       </el-table-column>
@@ -168,7 +203,16 @@
             }"
             @click="cellClick(row.pcSeven)"
           >
-            <span :class="!this.skipAudit?'click-item':''">{{this.skipAudit?transforPrice(row.pcSeven.price):'——'}}</span>
+          <el-popover
+            placement="top-start"
+            width="200"
+            title="提示"
+            trigger="hover"
+            :disabled="skipAudit"
+            :content="skipAudit? '' : '按照“平台*时段*时长”勾选，具体价格需要人工审核后确定。'"
+          >
+            <span :class="!skipAudit?'click-item':''" slot="reference">{{ skipAudit?transforPrice(row.pcSeven.price):'—'}}</span>
+          </el-popover>
           </div>
         </template>
       </el-table-column>
@@ -197,7 +241,16 @@
             }"
             @click="cellClick(row.pcFive)"
           >
-            <span :class="!this.skipAudit?'click-item':''">{{this.skipAudit?transforPrice(row.pcFive.price):'——'}}</span>
+          <el-popover
+            placement="top-start"
+            width="200"
+            title="提示"
+            :disabled="skipAudit"
+            trigger="hover"
+            :content="skipAudit? '' : '按照“平台*时段*时长”勾选，具体价格需要人工审核后确定。'"
+          >
+            <span :class="!skipAudit?'click-item':''" slot="reference">{{ skipAudit?transforPrice(row.pcFive.price):'—'}}</span>
+          </el-popover>
           </div>
         </template>
       </el-table-column>
@@ -243,8 +296,7 @@ export default {
     },
     skipAudit: {
       type: Boolean,
-      default: false,
-      require: true
+      default: true
     }
   },
   data () {
@@ -316,6 +368,7 @@ export default {
       this.$emit('getValue', this.current)
     },
     transforPrice (price) {
+      console.log(this)
       const { dealPriceRatio } = this
       if (price >= 0) {
         return f2y(dealPriceRatio * price)

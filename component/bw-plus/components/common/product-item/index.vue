@@ -34,7 +34,7 @@
     </ul>
     <div class="product-option">
       <div class="price-info">
-        <span class="current-price">抢鲜价：{{ dealPrice }}元</span>
+        <span class="current-price">抢鲜价：{{skipAudit?dealPrice:' — ' }}元</span>
         <span class="origin-price">原价：{{ originalPrice }}元</span>
       </div>
       <el-button
@@ -85,6 +85,11 @@ export default {
       type: Object,
       default: () => {},
       require: false
+    },
+    skipAudit: {
+      type: Boolean,
+      default: false,
+      require: true
     },
     isRenew: {
       type: Boolean,
