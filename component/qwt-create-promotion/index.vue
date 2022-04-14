@@ -65,7 +65,7 @@
               clearable></el-cascader>
           </div>
           <span class="industryTip"
-          @click="IndustryDialogVisible = true"
+          @click="upVisbleClick"
           >
             <u>没有找到你的行业</u>
           </span>
@@ -851,6 +851,7 @@ export default {
     },
     // 行业输入
     async industrySubmit (el) {
+      // 在此处更改
       const x = el.trim()
       if (x.length >= 2) {
         const { meta } = await postIndusty({ category: el })
@@ -902,6 +903,15 @@ export default {
           }
         })
       }, 100)
+    },
+    upVisbleClick () {
+      if (this.cascaderValue.length < 2) {
+        this.$message({
+          message: '请先选择一二行业'
+        })
+        return
+      }
+      this.IndustryDialogVisible = true
     }
   },
 

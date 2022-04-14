@@ -22,7 +22,7 @@
     <!-- 待设置 -->
     <section>
       <div class="desc">投放行业</div>
-      <div class="cont">{{ `${promotion.firstName || ''}${promotion.secondName || ''}${promotion.thirdName || ''}` }}</div>
+      <div class="cont">{{ `${promotion.firstName  || ''}${ '-'  +  promotion.secondName || ''}${ '-'  + promotion.thirdName || ''}` }}</div>
     </section>
     <section>
       <div class="desc">渠道单日预算</div>
