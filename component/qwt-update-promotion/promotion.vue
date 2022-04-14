@@ -20,10 +20,10 @@
       <div class="cont">{{ SEM_PLATFORM_CN[promotion.source] }}</div>
     </section>
     <!-- 待设置 -->
-    <section>
+    <!-- <section>
       <div class="desc">投放行业</div>
       <div class="cont">{{ `${promotion.firstName  || ''}${ '-'  +  promotion.secondName || ''}${ '-'  + promotion.thirdName || ''}` }}</div>
-    </section>
+    </section> -->
     <section>
       <div class="desc">渠道单日预算</div>
       <div class="cont">
