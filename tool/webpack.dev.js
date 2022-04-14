@@ -65,6 +65,10 @@ const config = merge(base, {
         {
           from: /^\/authorization/,
           to: '/dist/authorizationPage.html'
+        },
+        {
+          from: /^\/yibaisou/,
+          to: '/dist/yibaisou.html'
         }
       ]
     }
@@ -95,6 +99,11 @@ config.plugins = [
     filename: 'authorizationPage.html',
     template: 'template/authorization-page.html',
     chunks: ['vendors~bax~huodong~signin', 'authorizationPage']
+  }),
+  new HtmlWebpackPlugin({
+    filename: 'yibaisou.html',
+    template: 'template/yibaisou.html',
+    chunks: ['vendors~bax~huodong~signin', 'vendors~bax~signin', 'yibaisou']
   })
 ]
 
