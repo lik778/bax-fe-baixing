@@ -54,7 +54,7 @@ config.plugins = [
   new HtmlWebpackPlugin({
     filename: 'main.html',
     template: 'template/main.html',
-    chunks: ['vendors~authorizationPage~bax~huodong~signin', 'vendors~authorizationPage~bax~signin', 'bax'],
+    chunks: ['vendors~authorizationPage~bax~huodong~yibaisou~signin', 'vendors~authorizationPage~bax~signin', 'bax'],
     minify: {
       collapseWhitespace: true
     }
@@ -79,6 +79,14 @@ config.plugins = [
     filename: 'authorizationPage.html',
     template: 'template/authorization-page.html',
     chunks: ['vendors~authorizationPage~bax~huodong~signin', 'vendors~authorizationPage~bax~signin', 'authorizationPage'],
+    minify: {
+      collapseWhitespace: true
+    }
+  }),
+  new HtmlWebpackPlugin({
+    filename: 'yibaisou.html',
+    template: 'template/yibaisou.html',
+    chunks: ['vendors~authorizationPage~bax~huodong~yibaisou~signin', 'vendors~authorizationPage~bax~yibaisou~signin', 'yibaisou'],
     minify: {
       collapseWhitespace: true
     }
