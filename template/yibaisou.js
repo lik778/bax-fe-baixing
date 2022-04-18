@@ -1,7 +1,5 @@
 import '../lib/trackerlib'
 import sentry from '../lib/sentry'
-
-import Homepage from 'com/homepage'
 import Yibaisou from 'com/yibaisou'
 
 import dayjs from 'dayjs'
@@ -290,39 +288,9 @@ export const router = new VueRouter({
   mode: 'history',
   routes: [
     {
-      component: Homepage,
+      component: () => import('com/bw-plus/bw-query-price/index'),
       path: '/yibaisou',
       name: 'root'
-    },
-    {
-      component: () => import('com/qwt-offline'),
-      path: '/yibaisou/offline',
-      name: 'qwtOffline'
-    },
-    {
-      component: () => import('com/redirect'),
-      path: '/yibaisou/redirect-to',
-      name: 'bax-redirect-page'
-    },
-    {
-      component: () => import('com/payment-success'),
-      path: '/yibaisou/payment-success',
-      name: 'payment-success-page'
-    },
-    {
-      component: () => import('com/account'),
-      path: '/yibaisou/account',
-      name: 'account'
-    },
-    {
-      component: () => import('com/coupon'),
-      path: '/yibaisou/coupon',
-      name: 'coupon'
-    },
-    {
-      component: () => import('com/notice'),
-      path: '/yibaisou/notice',
-      name: 'notice'
     },
     ...bwPlusRoutes,
     {

@@ -16,12 +16,12 @@
           <template slot="title">
             <bx-icon type="sharealt"></bx-icon>标王2.0
           </template>
-          <el-menu-item index="bw-plus-query-price" v-if="!userInfo.shAgent && relationAllow()">
+          <el-menu-item index="bw-plus-query-price">
             <router-link :to="{ name: 'bw-plus-query-price' }" tag="p">
               标王查价
             </router-link>
           </el-menu-item>
-          <el-menu-item index="bw-plus-price-records" v-if="!userInfo.shAgent && relationAllow()">
+          <el-menu-item index="bw-plus-price-records">
             <router-link :to="{ name: 'bw-plus-price-records' }" tag="p">
               查价记录
             </router-link>
@@ -32,7 +32,7 @@
             </router-link>
           </el-menu-item>
         </el-submenu>
-        <el-menu-item v-if="allowSeeDiamondSite" index="diamond-site-homepage" key="diamond-site-homepage">
+        <el-menu-item index="diamond-site-homepage" key="diamond-site-homepage">
           <a v-if="isDiamondSiteJumpToMainSite" href="//shop.baixing.com/management/shop" style="color: inherit">
             <i class="el-icon-news" />钻石店铺
           </a>
@@ -50,24 +50,8 @@ import { version } from '../../../../package.json'
 import BxIcon from 'com/widget/icon'
 
 import {
-  allowSeeQwtPromotion
-} from 'util/fengming-role'
-
-import {
-  // bx ad
-  allowQueryMaterials,
-  allowQueryAdItems,
-  allowQueryOrders,
-  allowQueryUsers,
-  // global
-  allowSeeAccount,
-  allowSeeBxAd,
   relationAllow,
-  allowSeeDiamondSite,
-  isSales,
-  onlyAgentAccounting,
-  allowBwplusDashboard,
-  allowCareFreeDashboard
+  allowSeeDiamondSite
 } from 'util/role'
 
 import { getUserSites } from 'api/diamond-site'
@@ -123,48 +107,6 @@ export default {
       if (allowSeeDiamondSite(this.userInfo.roles)) {
         this.initDiamondSiteNav()
       }
-    }
-  },
-  computed: {
-    allowQueryMaterials () {
-      return allowQueryMaterials(this.userInfo.roles)
-    },
-    allowQueryAdItems () {
-      return allowQueryAdItems(this.userInfo.roles)
-    },
-    allowQueryOrders () {
-      return allowQueryOrders(this.userInfo.roles)
-    },
-    allowQueryUsers () {
-      return allowQueryUsers(this.userInfo.roles)
-    },
-    // allow see bx ad ...
-    allowSeeAccount () {
-      return allowSeeAccount(this.userInfo.roles)
-    },
-    allowSeeBxAd () {
-      return allowSeeBxAd(this.userInfo.roles)
-    },
-    // allow see qwt ...
-    allowSeeQwtPromotion () {
-      return allowSeeQwtPromotion(this.userInfo.roles)
-    },
-    allowSeeDiamondSite () {
-      return allowSeeDiamondSite(this.userInfo.roles)
-    },
-    allowSales () {
-      return isSales(this.userInfo.roles)
-    },
-    onlyAgentAccounting () {
-      return onlyAgentAccounting(this.userInfo.roles)
-    },
-    allowBwplusDashboard () {
-      const { userInfo } = this
-      return allowBwplusDashboard(userInfo)
-    },
-    allowCareFreeDashboard () {
-      const { userInfo } = this
-      return allowCareFreeDashboard(userInfo)
     }
   },
   async mounted () {

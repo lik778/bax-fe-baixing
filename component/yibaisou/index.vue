@@ -45,7 +45,7 @@ import AddUserLead from '../common/add-user-lead'
 // import BwShoppingCart from './common/bw-shopping-cart.vue'
 import BackToTop from '../widget/back-to-top'
 import Sidebar from './components/sidebar'
-import Header from '../layout/header'
+import Header from './components/header'
 import Chat from '../widget/chat'
 import HuoDongBtn from '../common/huodong-btn'
 
