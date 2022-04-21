@@ -1,11 +1,14 @@
 import { f2y } from 'util'
 import dayjs from 'dayjs'
 import isBetween from 'dayjs/plugin/isBetween'
-
 // seo
 import write from '../component/seo/assets/write.png'
 import golden from '../component/seo/assets/golden.png'
 dayjs.extend(isBetween)
+
+// 易佰搜 NORMAL_USER为普通百姓网用户，AGENT_USER为该账号被易百搜代理商所使用
+export const AGENT_USER = 'AGENT_USER'
+export const NORMAL_USER = 'NORMAL_USER'
 // 审核状态
 export const AUDIT_STATUS_PENGDING = 0
 export const AUDIT_STATUS_AUDITING = 5

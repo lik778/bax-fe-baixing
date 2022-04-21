@@ -67,6 +67,7 @@ import pick from 'lodash.pick'
 import { parseQuery, stringifyQuery, f2y } from 'util'
 
 import gStore from '../component/store'
+import { isYibaisouSales } from 'util/role'
 
 import clone from 'clone'
 
@@ -250,7 +251,15 @@ const bwPlusRoutes = [
   {
     component: () => import('com/bw-plus/bw-query-price/index'),
     path: '/yibaisou/bw-plus/query-price',
-    name: 'bw-plus-query-price'
+    name: 'bw-plus-query-price',
+    beforeEnter: async (to, from, next) => {
+      const { roles } = $vueForGetMobx.$options.fromMobx.currentUser()
+      if (isYibaisouSales(roles)) {
+        next()
+      } else {
+        Message.error('您没有权限访问，请更换帐号登陆')
+      }
+    }
   },
   {
     component: () => import('com/bw-plus/renew-upgrade/index'),
@@ -260,22 +269,54 @@ const bwPlusRoutes = [
   {
     component: () => import('com/bw-plus/bw-price-records'),
     path: '/yibaisou/bw-plus/price-records',
-    name: 'bw-plus-price-records'
+    name: 'bw-plus-price-records',
+    beforeEnter: async (to, from, next) => {
+      const { roles } = $vueForGetMobx.$options.fromMobx.currentUser()
+      if (isYibaisouSales(roles)) {
+        next()
+      } else {
+        Message.error('您没有权限访问，请更换帐号登陆')
+      }
+    }
   },
   {
     component: () => import('com/bw-plus/bw-package-list'),
     path: '/yibaisou/bw-plus/package-list',
-    name: 'bw-plus-package-list'
+    name: 'bw-plus-package-list',
+    beforeEnter: async (to, from, next) => {
+      const { isYibaisouUser, roles } = $vueForGetMobx.$options.fromMobx.currentUser()
+      if (isYibaisouSales(roles) || isYibaisouUser) {
+        next()
+      } else {
+        Message.error('您没有权限访问，请更换帐号登陆')
+      }
+    }
   },
   {
     component: () => import('com/bw-plus/bw-plan-list'),
     path: '/yibaisou/bw-plus/plan-list/:id',
-    name: 'bw-plus-plan-list'
+    name: 'bw-plus-plan-list',
+    beforeEnter: async (to, from, next) => {
+      const { isYibaisouUser, roles } = $vueForGetMobx.$options.fromMobx.currentUser()
+      if (isYibaisouSales(roles) || isYibaisouUser) {
+        next()
+      } else {
+        Message.error('您没有权限访问，请更换帐号登陆')
+      }
+    }
   },
   {
     component: () => import('com/bw-plus/bw-edit-plan/index'),
     path: '/yibaisou/bw-plus/edit-plan/:id',
-    name: 'bw-plus-edit-plan'
+    name: 'bw-plus-edit-plan',
+    beforeEnter: async (to, from, next) => {
+      const { isYibaisouUser, roles } = $vueForGetMobx.$options.fromMobx.currentUser()
+      if (isYibaisouSales(roles) || isYibaisouUser) {
+        next()
+      } else {
+        Message.error('您没有权限访问，请更换帐号登陆')
+      }
+    }
   },
   {
     component: () => import('com/bw-plus/bw-dashboard'),
@@ -288,7 +329,7 @@ export const router = new VueRouter({
   mode: 'history',
   routes: [
     {
-      component: () => import('com/bw-plus/bw-query-price/index'),
+      component: () => import('com/bw-plus/bw-dashboard'),
       path: '/yibaisou',
       name: 'root'
     },

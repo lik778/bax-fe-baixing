@@ -58,7 +58,9 @@ import es from 'base/es'
 import track from 'util/track'
 import {
   normalizeRoles,
-  isSales
+  isSales,
+  isNormalUser,
+  isYibaisouSales
 } from 'util/role'
 import { delCookie } from 'util/cookie'
 
@@ -147,15 +149,26 @@ export default {
   },
   async mounted () {
     // source为当前用户是否是以优化师角色进入bax
-    const { source } = qs.parse(location.search)
-    const { userId } = this.salesInfo
-    const { roles } = this.currentUser
     await Promise.all([
       gStore.getCurrentUser(),
       gStore.getCategories(),
       gStore.getAreas(),
       gStore.getRoles()
     ])
+    const { source } = qs.parse(location.search)
+    const { userId } = this.salesInfo
+    const { roles, isYibaisouUser } = this.currentUser
+    if (isNormalUser(roles)) {
+      if (isYibaisouUser) {
+        window.location.href = `${window.origin}/yibaisou`
+        return
+      }
+    } else {
+      if (isYibaisouSales(roles)) {
+        window.location.href = `${window.origin}/yibaisou`
+        return
+      }
+    }
     if (isSales(roles) && userId) {
       gStore.getRelation({ userId })
     }

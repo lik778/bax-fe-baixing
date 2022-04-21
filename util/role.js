@@ -388,3 +388,11 @@ export function allowCareFreeDashboard (userInfo) {
   }
   return isSales || AllowCareFreeRecharge(roles, agentId, salesId)
 }
+
+export function isYibaisouSales (roles) {
+  const currentRoles = normalizeRoles(roles)
+  return checkRoles(currentRoles, [
+    'YBS_SALES',
+    'YBS_ACCOUNTING'
+  ])
+}

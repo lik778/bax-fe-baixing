@@ -16,7 +16,7 @@
           <template slot="title">
             <bx-icon type="sharealt"></bx-icon>标王2.0
           </template>
-          <el-menu-item index="bw-plus-query-price">
+          <el-menu-item v-if="allowSeeQueryPrice" index="bw-plus-query-price">
             <router-link :to="{ name: 'bw-plus-query-price' }" tag="p">
               标王查价
             </router-link>
@@ -51,7 +51,9 @@ import BxIcon from 'com/widget/icon'
 
 import {
   relationAllow,
-  allowSeeDiamondSite
+  allowSeeDiamondSite,
+  checkRoles,
+  normalizeRoles
 } from 'util/role'
 
 import { getUserSites } from 'api/diamond-site'
@@ -88,6 +90,13 @@ export default {
       relationAllow,
       isDiamondSiteJumpToMainSite: false,
       isKaSuperman: false
+    }
+  },
+  computed: {
+    allowSeeQueryPrice () {
+      const { roles } = this.userInfo
+      const currentRoles = normalizeRoles(roles)
+      return checkRoles(currentRoles, ['YBS_SALES'])
     }
   },
   watch: {
