@@ -449,7 +449,7 @@ export default {
 
     showIndustryAuditResult (industryAuditResult) {
       const content = industryAuditResult.skipManualAudit
-        ? '关键词已审核通过啦！查完价确认后可直接去提单～'
+        ? '关键词已审核通过，确认套餐后可以确认订单~'
         : this.getIndustryAuditType(industryAuditResult)
       this.$alert(content, '温馨提示', {
         confirmButtonText: '确定',

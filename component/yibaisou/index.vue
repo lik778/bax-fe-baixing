@@ -136,10 +136,11 @@ export default {
         Message.error('您没有权限访问，请更换帐号登陆')
         return redirect('signin', `return=${encodeURIComponent(location.pathname + location.search)}`)
       }
-    }
-    if (!isYibaisouSales(roles)) {
-      Message.error('您没有权限访问，请更换帐号登陆')
-      return redirect('signin', `return=${encodeURIComponent(location.pathname + location.search)}`)
+    } else {
+      if (!isYibaisouSales(roles)) {
+        Message.error('您没有权限访问，请更换帐号登陆')
+        return redirect('signin', `return=${encodeURIComponent(location.pathname + location.search)}`)
+      }
     }
     setTimeout(() => {
       const { currentUser } = this

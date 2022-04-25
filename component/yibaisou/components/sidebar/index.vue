@@ -21,7 +21,7 @@
               标王查价
             </router-link>
           </el-menu-item>
-          <el-menu-item index="bw-plus-price-records">
+          <el-menu-item v-if="allowSeeRecord" index="bw-plus-price-records">
             <router-link :to="{ name: 'bw-plus-price-records' }" tag="p">
               查价记录
             </router-link>
@@ -97,6 +97,11 @@ export default {
       const { roles } = this.userInfo
       const currentRoles = normalizeRoles(roles)
       return checkRoles(currentRoles, ['YBS_SALES'])
+    },
+    allowSeeRecord () {
+      const { roles } = this.userInfo
+      const currentRoles = normalizeRoles(roles)
+      return checkRoles(currentRoles, ['YBS_ACCOUNTING', 'YBS_SALES'])
     }
   },
   watch: {

@@ -68,7 +68,6 @@ import { parseQuery, stringifyQuery, f2y } from 'util'
 
 import gStore from '../component/store'
 import { isYibaisouSales } from 'util/role'
-import { getCurrentUser } from 'api/account'
 
 import clone from 'clone'
 
@@ -254,7 +253,8 @@ const bwPlusRoutes = [
     path: '/yibaisou/bw-plus/query-price',
     name: 'bw-plus-query-price',
     beforeEnter: async (to, from, next) => {
-      const { roles } = await getCurrentUser()
+      await gStore.getCurrentUser()
+      const { roles } = $vueForGetMobx.$options.fromMobx.currentUser()
       if (isYibaisouSales(roles)) {
         next()
       } else {
@@ -272,7 +272,8 @@ const bwPlusRoutes = [
     path: '/yibaisou/bw-plus/price-records',
     name: 'bw-plus-price-records',
     beforeEnter: async (to, from, next) => {
-      const { roles } = await getCurrentUser()
+      await gStore.getCurrentUser()
+      const { roles } = $vueForGetMobx.$options.fromMobx.currentUser()
       if (isYibaisouSales(roles)) {
         next()
       } else {
@@ -285,7 +286,8 @@ const bwPlusRoutes = [
     path: '/yibaisou/bw-plus/package-list',
     name: 'bw-plus-package-list',
     beforeEnter: async (to, from, next) => {
-      const { roles, isYibaisouUser } = await getCurrentUser()
+      await gStore.getCurrentUser()
+      const { roles, isYibaisouUser } = $vueForGetMobx.$options.fromMobx.currentUser()
       if (isYibaisouSales(roles) || isYibaisouUser) {
         next()
       } else {
@@ -298,7 +300,8 @@ const bwPlusRoutes = [
     path: '/yibaisou/bw-plus/plan-list/:id',
     name: 'bw-plus-plan-list',
     beforeEnter: async (to, from, next) => {
-      const { roles, isYibaisouUser } = await getCurrentUser()
+      await gStore.getCurrentUser()
+      const { roles, isYibaisouUser } = $vueForGetMobx.$options.fromMobx.currentUser()
       if (isYibaisouSales(roles) || isYibaisouUser) {
         next()
       } else {
@@ -311,7 +314,8 @@ const bwPlusRoutes = [
     path: '/yibaisou/bw-plus/edit-plan/:id',
     name: 'bw-plus-edit-plan',
     beforeEnter: async (to, from, next) => {
-      const { roles, isYibaisouUser } = await getCurrentUser()
+      await gStore.getCurrentUser()
+      const { roles, isYibaisouUser } = $vueForGetMobx.$options.fromMobx.currentUser()
       if (isYibaisouSales(roles) || isYibaisouUser) {
         next()
       } else {

@@ -253,13 +253,14 @@ export function normalizeRoles (roles) {
 
 export function checkRoles (currentRoles, validRoles) {
   let valid = false
-
   for (const r of validRoles) {
     if (currentRoles.includes(r)) {
+      console.log(r)
       valid = true
       break
     }
   }
+  console.log(valid)
 
   return valid
 }
