@@ -11,9 +11,17 @@
       <BwDescriptionItem label="销售编号：" :value="preInfo.saleId"/>
       <BwDescriptionItem label="客户uid：" :value="preInfo.userBxId"/>
     </div>
+    <el-form :rules="rules" ref="userForm" :model="userForm" label-width="100px">
+        <el-form-item label="客户信息：">
+            <el-input type="textarea" v-model="userForm.userDesc"></el-input>
+        </el-form-item>
+        <el-form-item label="备注：">
+            <el-input type="textarea" v-model="userForm.comment"></el-input>
+        </el-form-item>
+    </el-form>
     <span slot="footer" class="dialog-footer">
         <el-button @click="cancel">取 消</el-button>
-        <el-button type="primary" @click="preOrder">确认，生成并复制提单链接</el-button>
+        <el-button type="primary" @click="preOrder">确认提单</el-button>
     </span>
     </el-dialog>
 </template>
@@ -48,12 +56,34 @@ export default {
       require: false
     }
   },
+  data () {
+    return {
+      userForm: {
+        userDesc: '',
+        comment: ''
+      },
+      rules: {
+        userDesc: [
+          { required: true, message: '请输入客户公司名称', trigger: 'blur' }
+        ]
+      }
+    }
+  },
   methods: {
     cancel () {
       this.$emit('cancel')
     },
     preOrder () {
-      this.$emit('preOrder')
+      const { userForm } = this
+      this.$refs.userForm.validate((valid) => {
+        console.log('valid', valid)
+        if (valid) {
+          this.$emit('preOrder', userForm)
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
     }
   }
 }
@@ -78,7 +108,7 @@ export default {
       display: flex;
       justify-content: flex-end;
       margin-top: 20px;
-      margin-bottom: 0;
+      margin-bottom: 20px;
       position: relative;
       padding: 12px 0;
       &::after{

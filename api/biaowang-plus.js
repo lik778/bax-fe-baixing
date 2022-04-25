@@ -440,3 +440,11 @@ export async function whoAmI () {
     .json()
   return body
 }
+
+export async function yibaisouCommit (params) {
+  const body = await biaowangPlus
+    .post('/apply/accounting/commit')
+    .send(params)
+    .json()
+  return body
+}

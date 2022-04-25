@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import { getInqueryList, userChoose, preOrder, preInfo, getPriceList } from 'api/biaowang-plus'
+import { getInqueryList, userChoose, preInfo, getPriceList, yibaisouCommit } from 'api/biaowang-plus'
 import { APPLY_AUDIT_STATUS_OPTIONS, APPLY_TYPE_NORMAL } from 'constant/bw-plus'
 import { BwRecordsForm, BwRecordsTable, InqueryResult, PreOrderDetail, PreInfoConfirm } from './components'
 import { normalizeRoles } from 'util/role'
@@ -193,24 +193,20 @@ export default {
         this.getRecord()
       }
     },
-    async preOrder () {
+    async preOrder (userForm) {
       const loading = this.$loading({
         lock: true,
         text: 'Loading',
         spinner: 'el-icon-loading',
         background: 'rgba(0, 0, 0, 0.7)'
       })
-      const { userId } = this.salesInfo
       const { id: applyId } = this.activeRecord
       try {
-        const { code, data: { url }, message } = await preOrder({ applyId, userId })
+        const { code, message } = await yibaisouCommit({ applyId, ...userForm })
         if (code === 0) {
-          this.$copyText(url).then(async (e) => {
-            Message.success('提单链接已复制到剪切板')
-            this.isPreInfo = false
-            await this.getRecord()
-          }, function (e) {})
-          return
+          Message.success('提单成功')
+          this.isPreInfo = false
+          await this.getRecord()
         }
         if (code === 4080) {
           Message.error(message || '关键词已经被售出!')
