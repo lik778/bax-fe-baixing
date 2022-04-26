@@ -67,7 +67,7 @@ import pick from 'lodash.pick'
 import { parseQuery, stringifyQuery, f2y } from 'util'
 
 import gStore from '../component/store'
-import { isYibaisouSales } from 'util/role'
+import { isYibaisouSales, normalizeRoles, checkRoles } from 'util/role'
 
 import clone from 'clone'
 
@@ -288,7 +288,8 @@ const bwPlusRoutes = [
     beforeEnter: async (to, from, next) => {
       await gStore.getCurrentUser()
       const { roles, isYibaisouUser } = $vueForGetMobx.$options.fromMobx.currentUser()
-      if (isYibaisouSales(roles) || isYibaisouUser) {
+      const currentRoles = normalizeRoles(roles)
+      if (checkRoles(currentRoles, ['YBS_ACCOUNTING']) || isYibaisouUser) {
         next()
       } else {
         Message.error('您没有权限访问，请更换帐号登陆')
@@ -302,7 +303,8 @@ const bwPlusRoutes = [
     beforeEnter: async (to, from, next) => {
       await gStore.getCurrentUser()
       const { roles, isYibaisouUser } = $vueForGetMobx.$options.fromMobx.currentUser()
-      if (isYibaisouSales(roles) || isYibaisouUser) {
+      const currentRoles = normalizeRoles(roles)
+      if (checkRoles(currentRoles, ['YBS_ACCOUNTING']) || isYibaisouUser) {
         next()
       } else {
         Message.error('您没有权限访问，请更换帐号登陆')
@@ -316,7 +318,8 @@ const bwPlusRoutes = [
     beforeEnter: async (to, from, next) => {
       await gStore.getCurrentUser()
       const { roles, isYibaisouUser } = $vueForGetMobx.$options.fromMobx.currentUser()
-      if (isYibaisouSales(roles) || isYibaisouUser) {
+      const currentRoles = normalizeRoles(roles)
+      if (checkRoles(currentRoles, ['YBS_ACCOUNTING']) || isYibaisouUser) {
         next()
       } else {
         Message.error('您没有权限访问，请更换帐号登陆')

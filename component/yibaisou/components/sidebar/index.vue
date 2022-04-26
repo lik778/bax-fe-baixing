@@ -26,13 +26,13 @@
               查价记录
             </router-link>
           </el-menu-item>
-          <el-menu-item index="bw-plus-package-list">
+          <el-menu-item v-if="allowSeeManage" index="bw-plus-package-list">
             <router-link :to="{ name: 'bw-plus-package-list' }" tag="p">
               管理推广
             </router-link>
           </el-menu-item>
         </el-submenu>
-        <el-menu-item index="diamond-site-homepage" key="diamond-site-homepage">
+        <el-menu-item v-if="allowSeeDianpu" index="diamond-site-homepage" key="diamond-site-homepage">
           <a v-if="isDiamondSiteJumpToMainSite" href="//shop.baixing.com/management/shop" style="color: inherit">
             <i class="el-icon-news" />钻石店铺
           </a>
@@ -102,6 +102,15 @@ export default {
       const { roles } = this.userInfo
       const currentRoles = normalizeRoles(roles)
       return checkRoles(currentRoles, ['YBS_ACCOUNTING', 'YBS_SALES'])
+    },
+    allowSeeManage () {
+      const { roles, isYibaisouUser } = this.userInfo
+      const currentRoles = normalizeRoles(roles)
+      return checkRoles(currentRoles, ['YBS_ACCOUNTING']) || isYibaisouUser
+    },
+    allowSeeDianpu () {
+      const { isYibaisouUser } = this.userInfo
+      return isYibaisouUser
     }
   },
   watch: {

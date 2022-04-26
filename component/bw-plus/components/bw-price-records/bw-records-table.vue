@@ -60,7 +60,7 @@
       <el-table-column width="150" fixed="right" label="操作">
         <template slot-scope="{ row }">
           <el-button @click="getDetail(row)" type="text">查价详情</el-button>
-          <el-button @click="preOrder(row)" :disabled="row.operationStatus != OPTION_STATUS_AWAIT_TIDAN || notAllowTidan.includes(row.status)" type="text">提单</el-button>
+          <el-button @click="preOrder(row)" :disabled="notAllowTidan.includes(row.status) || !is_YBS_ACCOUNTING" type="text">提单</el-button>
           <i v-if="row.operationStatus === OPTION_STATUS_COPY_URL" @click="preOrder(row)" class="el-icon-document-copy"></i>
         </template>
       </el-table-column>
@@ -72,9 +72,14 @@ import { APPLY_AUDIT_STATUS_OPTIONS, APPLY_AUDIT_STATUS_PENDING, APPLY_AUDIT_STA
 import { f2y, getCnName } from 'util'
 import dayjs from 'dayjs'
 import ProvinceCityMap from '../common/province-city-map.vue'
+import gStore from '../../../store'
+import { checkRoles, normalizeRoles } from 'util/role'
 export default {
   name: 'bw-records-table',
   components: { ProvinceCityMap },
+  fromMobx: {
+    currentUser: () => gStore.currentUser
+  },
   props: {
     records: {
       type: Array,
@@ -103,6 +108,13 @@ export default {
       OPTION_STATUS_COPY_URL,
       notAllowTidan,
       allAreasNew: {}
+    }
+  },
+  computed: {
+    is_YBS_ACCOUNTING () {
+      const { roles } = this.currentUser
+      const currentRoles = normalizeRoles(roles)
+      return checkRoles(currentRoles, ['YBS_ACCOUNTING'])
     }
   },
   methods: {
