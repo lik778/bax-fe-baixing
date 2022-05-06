@@ -56,7 +56,7 @@
           <el-button v-else :disabled="row.status != APPLY_AUDIT_STATUS_PASS " type="text" @click="reviewPrice(row)">查看</el-button>
         </template>
       </el-table-column>
-      <el-table-column width="100" label="绑定客户" prop="userId"/>
+      <el-table-column width="100" label="绑定销售" prop="salesName"/>
       <el-table-column width="150" fixed="right" label="操作">
         <template slot-scope="{ row }">
           <el-button @click="getDetail(row)" type="text">查价详情</el-button>
