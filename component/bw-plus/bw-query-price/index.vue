@@ -31,10 +31,12 @@
             :currentPrice="currentPrice"
             @getValue="getCurrentPrice"
             :tableData="queryResult.keywordPriceList"
+            :skipAudit="queryResult.industryAuditResult.skipManualAudit"
           />
           <BwCreativity
             v-if="productList && productList.length"
             @checked="checked"
+            :skipAudit="queryResult.industryAuditResult.skipManualAudit"
             :productList="productList.filter((o) => o.type === 0)"
           />
         </section>
@@ -43,6 +45,7 @@
         v-if="productList && productList.length"
         @checked="checked"
         @getExtraProductValue="getAdditionProductValue"
+        :skipAudit="queryResult.industryAuditResult.skipManualAudit"
         :currentPrice="currentPrice"
         :disableDeviceListBySku="keywordLockDetails.disableDeviceListBySku"
         :priceList="queryResult.keywordPriceList"
@@ -53,7 +56,7 @@
     <div class="box-card submit-fixed" v-if="showResult">
       <WelfareLayout :currentPrice="getWelfareInfo" />
       <div class="submit">
-        <h3>总价： {{ transformPrice }}元</h3>
+        <h3>总价： {{queryResult.industryAuditResult.skipManualAudit?transformPrice:' XXX ' }}元</h3>
         <el-button
           @click="isSubmit = true"
           :disabled="allowCommit"

@@ -15,6 +15,7 @@
           @check="checkProduct"
           :currentExcludes="currentExcludes"
           :product="product"
+          :skipAudit="skipAudit"
         />
       </div>
     </el-card>
@@ -30,6 +31,7 @@
         :disableDeviceListBySku="disableDeviceListBySku"
         @getValue="getCheckedPrice"
         :tableData="tansformPriceList"
+        :skipAudit="skipAudit"
       />
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
@@ -56,6 +58,11 @@ export default {
       type: Object,
       default: () => {},
       require: true
+    },
+    skipAudit: {
+      type: Boolean,
+      default: false,
+      require: false
     },
     productList: {
       type: Array,
