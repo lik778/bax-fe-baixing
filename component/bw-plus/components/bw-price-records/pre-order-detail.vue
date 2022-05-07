@@ -7,18 +7,11 @@
     >
     <PreInfoConfirm :isRenew="isRenew" :preInfo="preInfo" :allAreas="allAreas"/>
     <div class="row-info total-price">
-      <BwDescriptionItem label="客户手机号：" :value="preInfo.mobile"/>
+      <BwDescriptionItem label="客户手机号：" :value="preInfo.customerMobile"/>
       <BwDescriptionItem label="销售编号：" :value="preInfo.saleId"/>
-      <BwDescriptionItem label="客户uid：" :value="preInfo.userBxId"/>
+      <BwDescriptionItem label="客户uid：" :value="preInfo.customerId"/>
     </div>
-    <el-form :rules="rules" ref="userForm" :model="userForm" label-width="100px">
-        <el-form-item label="客户信息：">
-            <el-input type="textarea" v-model="userForm.userDesc"></el-input>
-        </el-form-item>
-        <el-form-item label="备注：">
-            <el-input type="textarea" v-model="userForm.comment"></el-input>
-        </el-form-item>
-    </el-form>
+    <BwDescriptionItem label="客户信息：" :value="preInfo.customerDesc"/>
     <span slot="footer" class="dialog-footer">
         <el-button @click="cancel">取 消</el-button>
         <el-button type="primary" @click="preOrder">确认提单</el-button>
@@ -56,34 +49,12 @@ export default {
       require: false
     }
   },
-  data () {
-    return {
-      userForm: {
-        userDesc: '',
-        comment: ''
-      },
-      rules: {
-        userDesc: [
-          { required: true, message: '请输入客户公司名称', trigger: 'blur' }
-        ]
-      }
-    }
-  },
   methods: {
     cancel () {
       this.$emit('cancel')
     },
     preOrder () {
-      const { userForm } = this
-      this.$refs.userForm.validate((valid) => {
-        console.log('valid', valid)
-        if (valid) {
-          this.$emit('preOrder', userForm)
-        } else {
-          console.log('error submit!!')
-          return false
-        }
-      })
+      this.$emit('preOrder')
     }
   }
 }

@@ -193,7 +193,7 @@ export default {
         this.getRecord()
       }
     },
-    async preOrder (userForm) {
+    async preOrder () {
       const loading = this.$loading({
         lock: true,
         text: 'Loading',
@@ -201,8 +201,9 @@ export default {
         background: 'rgba(0, 0, 0, 0.7)'
       })
       const { id: applyId } = this.activeRecord
+      const { userId } = this.salesInfo
       try {
-        const { code, message } = await yibaisouCommit({ applyId, ...userForm })
+        const { code, message } = await yibaisouCommit({ applyId, userId })
         if (code === 0) {
           Message.success('提单成功')
           this.isPreInfo = false
