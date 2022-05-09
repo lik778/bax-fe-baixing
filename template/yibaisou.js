@@ -336,15 +336,10 @@ const bwPlusRoutes = [
 export const router = new VueRouter({
   mode: 'history',
   routes: [
-    {
-      component: () => import('com/bw-plus/bw-dashboard'),
-      path: '/yibaisou',
-      name: 'root'
-    },
     ...bwPlusRoutes,
     {
       path: '*',
-      redirect: '/yibaisou'
+      redirect: '/yibaisou/bw-plus/package-list'
     }
   ]
 })

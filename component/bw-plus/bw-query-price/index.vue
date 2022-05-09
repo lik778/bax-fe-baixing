@@ -325,8 +325,7 @@ export default {
         overHeat,
         priceId,
         tempPvId,
-        industryError,
-        industryAuditResult
+        industryError
       } = this.queryResult
       const { userId: targetUserId } = this.salesInfo
       const {
@@ -364,11 +363,10 @@ export default {
         const { code, data } = await commit(params)
         if (code === 0) {
           this.resetResult()
-          const applyId = data.applyId
-          const skipAudit = industryAuditResult.skipManualAudit
+          //   const applyId = data.applyId
+          //   const skipAudit = industryAuditResult.skipManualAudit
           this.$router.push({
-            name: 'bw-plus-price-records',
-            query: { applyId, skipAudit }
+            name: 'bw-plus-price-records'
           })
         }
         if (code === 4080) {
