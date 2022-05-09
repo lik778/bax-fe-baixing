@@ -148,7 +148,15 @@ export default {
     await getWordAuthority({ userId })
   },
   async mounted () {
-    await gStore.getCurrentUser()
+    // source为当前用户是否是以优化师角色进入bax
+    await Promise.all([
+      gStore.getCurrentUser(),
+      gStore.getCategories(),
+      gStore.getAreas(),
+      gStore.getRoles()
+    ])
+    const { source } = qs.parse(location.search)
+    const { userId } = this.salesInfo
     const { roles, isYibaisouUser } = this.currentUser
     if (isNormalUser(roles)) {
       if (isYibaisouUser) {
@@ -161,14 +169,6 @@ export default {
         return
       }
     }
-    // source为当前用户是否是以优化师角色进入bax
-    await Promise.all([
-      gStore.getCategories(),
-      gStore.getAreas(),
-      gStore.getRoles()
-    ])
-    const { source } = qs.parse(location.search)
-    const { userId } = this.salesInfo
     if (isSales(roles) && userId) {
       gStore.getRelation({ userId })
     }
