@@ -40,6 +40,16 @@
             <i class="el-icon-news" />钻石店铺
           </router-link>
         </el-menu-item>
+        <el-submenu v-if="allowSeeDianpu" index="dashboard">
+          <template slot="title">
+            <i class="el-icon-document" />数据报表
+          </template>
+          <el-menu-item index="qwt-dashboard">
+            <router-link :to="{ name: 'bw-plus-dashboard'}" tag="p">
+              易百搜推广报表
+            </router-link>
+          </el-menu-item>
+        </el-submenu>
       </el-menu>
     </main>
   </div>

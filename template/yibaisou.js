@@ -330,6 +330,20 @@ const bwPlusRoutes = [
     component: () => import('com/bw-plus/bw-dashboard'),
     path: '/yibaisou/bw-plus/bw-plus-dashboard',
     name: 'bw-plus-dashboard'
+  },
+  {
+    component: () => import('com/bw-plus/bw-dashboard'),
+    path: '/yibaisou/bw-plus/bw-plus-dashboard',
+    name: 'bw-plus-dashboard',
+    beforeEnter: async (to, from, next) => {
+      await gStore.getCurrentUser()
+      const { isYibaisouUser } = $vueForGetMobx.$options.fromMobx.currentUser()
+      if (isYibaisouUser) {
+        next()
+      } else {
+        Message.error('您没有权限访问，请更换帐号登陆')
+      }
+    }
   }
 ]
 
