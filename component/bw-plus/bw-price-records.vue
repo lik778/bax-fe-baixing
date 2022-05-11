@@ -201,7 +201,7 @@ export default {
         background: 'rgba(0, 0, 0, 0.7)'
       })
       const { id: applyId } = this.activeRecord
-      const { userId } = this.salesInfo
+      const { query: { user_id: userId } } = this.$route
       try {
         const { code, message } = await yibaisouCommit({ applyId, userId })
         if (code === 0) {
@@ -225,7 +225,7 @@ export default {
         spinner: 'el-icon-loading',
         background: 'rgba(0, 0, 0, 0.7)'
       })
-      const { userId } = this.salesInfo
+      const { query: { user_id: userId } } = this.$route
       const { id: applyId } = record
       this.activeRecord = record
       this.isPreInfo = true

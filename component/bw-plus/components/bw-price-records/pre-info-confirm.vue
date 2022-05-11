@@ -23,9 +23,9 @@
         </el-tag>
       </div>
       <div class="row-info total-price">
-        <BwDescriptionItem label="商品总价：" :value="(skipManualAudit || !isShowPrice)?`${f2y(totalPrice)}元`:'待确定'"/>
-        <BwDescriptionItem label="已优惠：" :value="(skipManualAudit || !isShowPrice)?`${f2y(spreadPrice)}元`:'待确定'"/>
-        <BwDescriptionItem class="total-price-value" label="提单价：" :value="(skipManualAudit || !isShowPrice)?`${f2y(totalDealPrice)}元`:'待确定'"/>
+        <BwDescriptionItem label="商品总价：" :value="(!isShowPrice)?`${f2y(totalPrice)}元`:'待确定'"/>
+        <BwDescriptionItem label="已优惠：" :value="(!isShowPrice)?`${f2y(spreadPrice)}元`:'待确定'"/>
+        <BwDescriptionItem class="total-price-value" label="提单价：" :value="(!isShowPrice)?`${f2y(totalDealPrice)}元`:'待确定'"/>
       </div>
     </div>
 </template>
@@ -110,11 +110,11 @@ export default {
       const [,, price] = args
       const [list] = args
       const { dealPrice, originPrice } = list
-      return (this.skipManualAudit || dealPrice !== originPrice) ? Math.floor(f2y(price)) : '待确定'
+      return (dealPrice !== originPrice) ? Math.floor(f2y(price)) : '待确定'
     },
     spreadFormatter (row, column, cellValue, index) {
       const { dealPrice, originPrice } = row
-      return (this.skipManualAudit || dealPrice !== originPrice) ? Math.floor(f2y(originPrice)) - Math.floor(f2y(dealPrice)) : '待确定'
+      return (dealPrice !== originPrice) ? Math.floor(f2y(originPrice)) - Math.floor(f2y(dealPrice)) : '待确定'
     }
   }
 }
