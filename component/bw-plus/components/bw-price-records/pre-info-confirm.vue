@@ -23,9 +23,9 @@
         </el-tag>
       </div>
       <div class="row-info total-price">
-        <BwDescriptionItem label="商品总价：" :value="(!isShowPrice)?`${f2y(totalPrice)}元`:'待确定'"/>
-        <BwDescriptionItem label="已优惠：" :value="(!isShowPrice)?`${f2y(spreadPrice)}元`:'待确定'"/>
-        <BwDescriptionItem class="total-price-value" label="提单价：" :value="(!isShowPrice)?`${f2y(totalDealPrice)}元`:'待确定'"/>
+        <BwDescriptionItem label="商品总价：" :value="`${f2y(totalPrice)}元`"/>
+        <BwDescriptionItem label="已优惠：" :value="`${f2y(spreadPrice)}元`"/>
+        <BwDescriptionItem class="total-price-value" label="提单价：" :value="`${f2y(totalDealPrice)}元`"/>
       </div>
     </div>
 </template>
@@ -84,11 +84,6 @@ export default {
       const sum = additionProductMap.reduce((a, b) => a + Math.floor(b.originPrice / 100) * 100, 0)
       return sum
     },
-    isShowPrice () {
-      const { additionProductMap } = this.preInfo
-      const flag = additionProductMap.find(item => item.originPrice === item.dealPrice)
-      return flag
-    },
     spreadPrice () {
       return this.totalPrice - this.totalDealPrice
     },
@@ -108,13 +103,11 @@ export default {
     },
     priceFormatter (...args) {
       const [,, price] = args
-      const [list] = args
-      const { dealPrice, originPrice } = list
-      return (dealPrice !== originPrice) ? Math.floor(f2y(price)) : '待确定'
+      return Math.floor(f2y(price))
     },
     spreadFormatter (row, column, cellValue, index) {
       const { dealPrice, originPrice } = row
-      return (dealPrice !== originPrice) ? Math.floor(f2y(originPrice)) - Math.floor(f2y(dealPrice)) : '待确定'
+      return Math.floor(f2y(originPrice)) - Math.floor(f2y(dealPrice))
     }
   }
 }

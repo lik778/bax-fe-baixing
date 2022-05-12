@@ -28,8 +28,9 @@
                   <el-button style="backgroundColor:#FFF1E4;border:0;fontSize:13px;padding:0;">{{ citiesFormater(item.cities).text }}</el-button>
               </el-tooltip>
             </li>
+            <li v-if="userInfo.isYibaisouUser">客户信息：{{item.userDesc}}</li>
           </ul>
-          <el-button v-if="allowRenew(item)" type="text" @click="renew(item)">续费</el-button>
+          <!-- <el-button v-if="allowRenew(item)" type="text" @click="renew(item)">续费</el-button> -->
         </div>
         <el-table
             :data="item.skuList"

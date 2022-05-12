@@ -37,14 +37,6 @@ export const AUDIT_STATUS_COLOR_MAP = {
   [AUDIT_STATUS_CONFIRMED]: 'success'
 }
 
-export const notAllowTidan = [
-  AUDIT_STATUS_REJECT,
-  AUDIT_STATUS_EXPIRED,
-  AUDIT_STATUS_PENGDING,
-  AUSIT_STATUS_PENDING_CONFIRM,
-  AUDIT_STATUS_CONFIRMED
-]
-
 // 计划状态
 export const PROMOTE_STATUS_PENDING_EDIT = 0
 export const PROMOTE_STATUS_PENDING_ONLINE = 5
@@ -78,12 +70,33 @@ export const APPLY_TYPE_ERROR_APPLY_TYPE_OVERHEAT = 3 // 热度过高或热度�
 export const APPLY_AUDIT_STATUS_PENDING = 0 // 待审核
 export const APPLY_AUDIT_STATUS_PASS = 1 // 审核通过
 export const APPLY_AUDIT_STATUS_REJECT = 2 // 审核拒绝
+export const APPLY_AUDIT_STATUS_EXPIRED = 3 // 已过期
+export const APPLY_AUDIT_STATUS_PENDING_CONFIRM = 4 // 待运营确认
+export const APPLY_AUDIT_STATUS_PENDING_RECOMMIT = 5 // 待重新提单
+export const APPLY_AUDIT_STATUS_CONFIRMED = 6 // 已确认付款
 
 export const APPLY_AUDIT_STATUS_OPTIONS = Object.freeze({
   [APPLY_AUDIT_STATUS_PENDING]: '待审核',
   [APPLY_AUDIT_STATUS_PASS]: '已审核',
-  [APPLY_AUDIT_STATUS_REJECT]: '审核拒绝'
+  [APPLY_AUDIT_STATUS_REJECT]: '审核拒绝',
+  [APPLY_AUDIT_STATUS_EXPIRED]: '已过期',
+  [APPLY_AUDIT_STATUS_PENDING_CONFIRM]: '待运营确认',
+  [APPLY_AUDIT_STATUS_PENDING_RECOMMIT]: '待重新提单',
+  [APPLY_AUDIT_STATUS_CONFIRMED]: '已确认付款'
 })
+
+export const notAllowTidan = [
+  AUDIT_STATUS_REJECT,
+  AUDIT_STATUS_EXPIRED,
+  AUDIT_STATUS_PENGDING,
+  AUSIT_STATUS_PENDING_CONFIRM,
+  AUDIT_STATUS_CONFIRMED,
+  APPLY_AUDIT_STATUS_PENDING,
+  APPLY_AUDIT_STATUS_REJECT,
+  APPLY_AUDIT_STATUS_EXPIRED,
+  APPLY_AUDIT_STATUS_CONFIRMED,
+  APPLY_AUDIT_STATUS_PENDING_CONFIRM
+]
 
 export const DEVICE_ALL = 0 // 双端
 export const DEVICE_PC = 1 // pc

@@ -229,7 +229,10 @@ export default {
       const { id: applyId } = record
       this.activeRecord = record
       this.isPreInfo = true
-      const { data } = await preInfo({ applyId, userId })
+      const { data, code, message } = await preInfo({ applyId, userId })
+      if (code !== 0) {
+        message.error(message || '服务器开小差了')
+      }
       loading.close()
       this.preInfo = data
     }
