@@ -14,11 +14,11 @@
       >
         <el-submenu index="bwPlus">
           <template slot="title">
-            <bx-icon type="sharealt"></bx-icon>标王2.0
+            <bx-icon type="sharealt"></bx-icon>百搜标王
           </template>
           <el-menu-item v-if="allowSeeQueryPrice" index="bw-plus-query-price">
             <router-link :to="{ name: 'bw-plus-query-price' }" tag="p">
-              标王查价
+              百搜标王查价
             </router-link>
           </el-menu-item>
           <el-menu-item v-if="allowSeeRecord" index="bw-plus-price-records">
