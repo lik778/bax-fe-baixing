@@ -26,20 +26,21 @@
     title="查价详情"
     :visible="detailVisible"
     @close="detailVisible=false">
-        <PreInfoConfirm :preInfo="queryPriceDetail" :allAreas="allAreas"/>
+        <PreInfoConfirm :skipManualAudit="skipAudit" :preInfo="queryPriceDetail" :allAreas="allAreas"/>
     </el-dialog>
   </el-card>
 </template>
 
 <script>
 import { getInqueryList, userChoose, preInfo, getPriceList, yibaisouCommit } from 'api/biaowang-plus'
-import { APPLY_AUDIT_STATUS_OPTIONS, APPLY_TYPE_NORMAL } from 'constant/bw-plus'
+import { APPLY_AUDIT_STATUS_OPTIONS, APPLY_TYPE_NORMAL, APPLY_AUDIT_STATUS_PASS, APPLY_AUDIT_STATUS_CONFIRMED } from 'constant/bw-plus'
 import { BwRecordsForm, BwRecordsTable, InqueryResult, PreOrderDetail, PreInfoConfirm } from './components'
 import { normalizeRoles } from 'util/role'
 import pick from 'lodash.pick'
 import { f2y } from 'util'
 import { Message } from 'element-ui'
 const PAGESIZE = 10
+const NOT_OPRATION = 50
 export default {
   name: 'bw-plus-price-records',
   components: {
@@ -68,6 +69,9 @@ export default {
   computed: {
     notAllowUpdate () {
       return !this.currentPrice.price
+    },
+    skipAudit () {
+      return [APPLY_AUDIT_STATUS_PASS, APPLY_AUDIT_STATUS_CONFIRMED].includes(this.queryPriceDetail.status) && this.queryPriceDetail.operationStatus !== NOT_OPRATION
     }
   },
   data () {
