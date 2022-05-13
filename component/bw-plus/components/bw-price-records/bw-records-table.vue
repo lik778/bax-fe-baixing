@@ -60,7 +60,7 @@
       <el-table-column width="150" fixed="right" label="操作">
         <template slot-scope="{ row }">
           <el-button @click="getDetail(row)" type="text">查价详情</el-button>
-          <el-button @click="preOrder(row)" :disabled="notAllowTidan.includes(row.status) || !is_YBS_ACCOUNTING" type="text">提单</el-button>
+          <el-button @click="preOrder(row)" :disabled="notAllowTidan.includes(row.status) || !is_YBS_ACCOUNTING || row.operationStatus === NOT_OPRATION" type="text">提单</el-button>
           <i v-if="row.operationStatus === OPTION_STATUS_COPY_URL" @click="preOrder(row)" class="el-icon-document-copy"></i>
         </template>
       </el-table-column>
@@ -74,6 +74,7 @@ import dayjs from 'dayjs'
 import ProvinceCityMap from '../common/province-city-map.vue'
 import gStore from '../../../store'
 import { checkRoles, normalizeRoles } from 'util/role'
+const NOT_OPRATION = 50
 export default {
   name: 'bw-records-table',
   components: { ProvinceCityMap },
@@ -98,6 +99,7 @@ export default {
   },
   data () {
     return {
+      NOT_OPRATION,
       f2y,
       APPLY_TYPE_NORMAL,
       STATUS_MAP,

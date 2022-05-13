@@ -114,9 +114,8 @@ export default {
       return checkRoles(currentRoles, ['YBS_ACCOUNTING', 'YBS_SALES'])
     },
     allowSeeManage () {
-      const { roles, isYibaisouUser } = this.userInfo
-      const currentRoles = normalizeRoles(roles)
-      return checkRoles(currentRoles, ['YBS_ACCOUNTING']) || isYibaisouUser
+      const { isYibaisouUser } = this.userInfo
+      return isYibaisouUser
     },
     allowSeeDianpu () {
       const { isYibaisouUser } = this.userInfo
