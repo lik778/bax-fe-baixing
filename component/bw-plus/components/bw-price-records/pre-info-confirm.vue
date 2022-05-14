@@ -103,11 +103,13 @@ export default {
     },
     priceFormatter (...args) {
       const [,, price] = args
-      return Math.floor(f2y(price))
+      const { skipManualAudit } = this
+      return skipManualAudit === undefined || skipManualAudit ? Math.floor(f2y(price)) : '待确定'
     },
     spreadFormatter (row, column, cellValue, index) {
       const { dealPrice, originPrice } = row
-      return Math.floor(f2y(originPrice)) - Math.floor(f2y(dealPrice))
+      const { skipManualAudit } = this
+      return skipManualAudit === undefined || skipManualAudit ? (Math.floor(f2y(originPrice)) - Math.floor(f2y(dealPrice))) : '待确定'
     }
   }
 }
