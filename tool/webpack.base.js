@@ -22,7 +22,8 @@ module.exports = {
     signin: './template/signin',
     bax: './template/bax',
     huodong: './template/huodong',
-    authorizationPage: './template/authorization-page'
+    authorizationPage: './template/authorization-page',
+    yibaisou: './template/yibaisou'
   },
   output: {
     path: distPath,

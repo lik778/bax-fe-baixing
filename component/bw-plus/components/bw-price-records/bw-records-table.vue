@@ -56,11 +56,11 @@
           <el-button v-else :disabled="row.status != APPLY_AUDIT_STATUS_PASS " type="text" @click="reviewPrice(row)">查看</el-button>
         </template>
       </el-table-column>
-      <el-table-column width="100" label="绑定客户" prop="userId"/>
+      <el-table-column width="100" label="绑定销售" prop="salesName"/>
       <el-table-column width="150" fixed="right" label="操作">
         <template slot-scope="{ row }">
           <el-button @click="getDetail(row)" type="text">查价详情</el-button>
-          <el-button @click="preOrder(row)" :disabled="row.operationStatus != OPTION_STATUS_AWAIT_TIDAN" type="text">提单</el-button>
+          <el-button @click="preOrder(row)" :disabled="notAllowTidan.includes(row.status) || !is_YBS_ACCOUNTING || row.operationStatus === NOT_OPRATION" type="text">提单</el-button>
           <i v-if="row.operationStatus === OPTION_STATUS_COPY_URL" @click="preOrder(row)" class="el-icon-document-copy"></i>
         </template>
       </el-table-column>
@@ -68,13 +68,19 @@
   </div>
 </template>
 <script>
-import { APPLY_AUDIT_STATUS_OPTIONS, APPLY_AUDIT_STATUS_PENDING, APPLY_AUDIT_STATUS_REJECT, APPLY_TYPE_NORMAL, DEVICE, SCHEDULE_TYPE, STATUS_MAP, APPLY_AUDIT_STATUS_PASS, OPTION_STATUS_AWAIT_TIDAN, OPTION_STATUS_COPY_URL } from 'constant/bw-plus'
+import { APPLY_AUDIT_STATUS_OPTIONS, APPLY_AUDIT_STATUS_PENDING, APPLY_AUDIT_STATUS_REJECT, APPLY_TYPE_NORMAL, DEVICE, SCHEDULE_TYPE, STATUS_MAP, APPLY_AUDIT_STATUS_PASS, OPTION_STATUS_AWAIT_TIDAN, OPTION_STATUS_COPY_URL, notAllowTidan } from 'constant/bw-plus'
 import { f2y, getCnName } from 'util'
 import dayjs from 'dayjs'
 import ProvinceCityMap from '../common/province-city-map.vue'
+import gStore from '../../../store'
+import { checkRoles, normalizeRoles } from 'util/role'
+const NOT_OPRATION = 50
 export default {
   name: 'bw-records-table',
   components: { ProvinceCityMap },
+  fromMobx: {
+    currentUser: () => gStore.currentUser
+  },
   props: {
     records: {
       type: Array,
@@ -93,6 +99,7 @@ export default {
   },
   data () {
     return {
+      NOT_OPRATION,
       f2y,
       APPLY_TYPE_NORMAL,
       STATUS_MAP,
@@ -101,7 +108,15 @@ export default {
       APPLY_AUDIT_STATUS_PASS,
       OPTION_STATUS_AWAIT_TIDAN,
       OPTION_STATUS_COPY_URL,
+      notAllowTidan,
       allAreasNew: {}
+    }
+  },
+  computed: {
+    is_YBS_ACCOUNTING () {
+      const { roles } = this.currentUser
+      const currentRoles = normalizeRoles(roles)
+      return checkRoles(currentRoles, ['YBS_ACCOUNTING'])
     }
   },
   methods: {
