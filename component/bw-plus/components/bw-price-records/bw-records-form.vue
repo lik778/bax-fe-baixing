@@ -12,9 +12,9 @@
       <el-form-item label="状态" prop="status">
         <el-select clearable size="medium" v-model="formInline.status" placeholder="请选择">
           <el-option
-            v-for="item in Object.keys(APPLY_AUDIT_STATUS_OPTIONS)"
+            v-for="item in Object.keys(APPLY_AUDIT_STATUS_OPTIONS_FILTER)"
             :key="item"
-            :label="APPLY_AUDIT_STATUS_OPTIONS[item]"
+            :label="APPLY_AUDIT_STATUS_OPTIONS_FILTER[item]"
             :value="item">
           </el-option>
         </el-select>
@@ -26,12 +26,12 @@
     </el-form>
 </template>
 <script>
-import { APPLY_AUDIT_STATUS_OPTIONS } from 'constant/bw-plus'
+import { APPLY_AUDIT_STATUS_OPTIONS_FILTER } from 'constant/bw-plus'
 export default {
   name: 'bw-records-form',
   data () {
     return {
-      APPLY_AUDIT_STATUS_OPTIONS,
+      APPLY_AUDIT_STATUS_OPTIONS_FILTER,
       formInline: {
         keyword: '',
         status: '',

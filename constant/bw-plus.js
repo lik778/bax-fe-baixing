@@ -74,6 +74,12 @@ export const APPLY_AUDIT_STATUS_OPTIONS = Object.freeze({
   [APPLY_AUDIT_STATUS_PENDING_RECOMMIT]: '待重新提单',
   [APPLY_AUDIT_STATUS_CONFIRMED]: '已确认付款'
 })
+export const APPLY_AUDIT_STATUS_OPTIONS_FILTER = Object.freeze({
+  [APPLY_AUDIT_STATUS_PENDING]: '待审核',
+  [APPLY_AUDIT_STATUS_PASS]: '已审核',
+  [APPLY_AUDIT_STATUS_REJECT]: '审核拒绝',
+  [APPLY_AUDIT_STATUS_CONFIRMED]: '已确认付款'
+})
 
 export const notAllowTidan = [
   AUDIT_STATUS_REJECT,
