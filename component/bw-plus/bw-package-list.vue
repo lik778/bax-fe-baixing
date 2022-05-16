@@ -39,6 +39,7 @@
               </el-tooltip>
             </li>
             <li v-if="userInfo.isYibaisouUser">客户信息：{{item.customerName}}</li>
+            <li v-if="userInfo.isYibaisouUser">客户id：{{item.customerId}}</li>
           </ul>
           <!-- <el-button v-if="allowRenew(item)" type="text" @click="renew(item)">续费</el-button> -->
         </div>
