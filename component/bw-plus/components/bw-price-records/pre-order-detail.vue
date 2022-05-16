@@ -54,7 +54,14 @@ export default {
       this.$emit('cancel')
     },
     preOrder () {
-      this.$emit('preOrder')
+      this.$confirm('请确认客户已付款?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$emit('preOrder')
+      }).catch(() => {
+      })
     }
   }
 }

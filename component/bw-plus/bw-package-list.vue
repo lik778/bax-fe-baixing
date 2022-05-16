@@ -12,6 +12,16 @@
                     placeholder="输入关键词查询"
                     style="width: 300px;" />
         </el-form-item>
+        <el-form-item label="客户公司">
+          <el-input v-model="query.customerName"
+                    placeholder="输入公司名称查询"
+                    style="width: 300px;" />
+        </el-form-item>
+        <el-form-item label="客户id">
+          <el-input v-model="query.customerId"
+                    placeholder="输入客户id查询"
+                    style="width: 300px;" />
+        </el-form-item>
       </el-form>
 
       <div v-for="item in promotes" :key="item.packageId">
@@ -28,7 +38,7 @@
                   <el-button style="backgroundColor:#FFF1E4;border:0;fontSize:13px;padding:0;">{{ citiesFormater(item.cities).text }}</el-button>
               </el-tooltip>
             </li>
-            <li v-if="userInfo.isYibaisouUser">客户信息：{{item.userDesc}}</li>
+            <li v-if="userInfo.isYibaisouUser">客户信息：{{item.customerName}}</li>
           </ul>
           <!-- <el-button v-if="allowRenew(item)" type="text" @click="renew(item)">续费</el-button> -->
         </div>
@@ -183,7 +193,9 @@ export default {
       query: {
         keyword: '',
         size: 10,
-        page: 0
+        page: 0,
+        customerName: '',
+        customerId: ''
       },
       total: 0,
       promotes: [],
