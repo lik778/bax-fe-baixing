@@ -4,7 +4,6 @@ import isBetween from 'dayjs/plugin/isBetween'
 
 // seo
 import write from '../component/seo/assets/write.png'
-import golden from '../component/seo/assets/golden.png'
 dayjs.extend(isBetween)
 // 审核状态
 export const AUDIT_STATUS_PENGDING = 0
@@ -429,31 +428,11 @@ export const packageInfo = [
     id: 0,
     title: '基础版',
     src: write,
-    price: '￥8800',
+    price: '￥5800',
     desc: '基础版套餐',
     list: [{
       name: 'SEO云推广',
       day: '365'
-    },
-    {
-      name: '企业官方钻石店铺',
-      day: '365'
-    }
-    ]
-  },
-  {
-    id: 1,
-    title: '高级版',
-    src: golden,
-    price: '￥9800',
-    desc: '高级版套餐',
-    list: [{
-      name: 'SEO云推广',
-      day: '365'
-    },
-    {
-      name: '关键词百度首页排名',
-      day: '30/60'
     },
     {
       name: '企业官方钻石店铺',
@@ -467,7 +446,7 @@ export const PACKAGE_INTRODUCE = [
   {
     id: 0,
     title: '基础版介绍',
-    price: '￥8800',
+    price: '￥5800',
     list: [{
       name: 'SEO云推广',
       desc: '钻石店铺100个非指定关键词优化到百度电脑端/手机端首页',
@@ -505,19 +484,10 @@ export const SEO_BASIS_PACKAGE = Object.freeze([{
   name: 'SEO云推广标准版',
   duration: '365天',
   originPrice: 1180000,
-  dealPrice: 880000,
+  dealPrice: 580000,
   skuId: 312
 }])
 // 高级版
-export const seoSeniorPackage = [
-  {
-    name: 'SEO云推广高级版',
-    duration: (skipManualAudit, industry) => {
-      return `${skipManualAudit === true ? (industry === 'qiTa' ? 'SEO云推广（365天）/标王体验版（60天）' : 'SEO云推广（365天）/标王体验版（30天）') : 'SEO云推广（365天）/标王体验版'}`
-    },
-    originPrice: 1380000,
-    dealPrice: 980000
-  }]
 export const BAIDU_BW_PRODUCT_PRICELIST = Object.freeze([
   {
     duration: 365

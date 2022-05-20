@@ -92,16 +92,6 @@
               SEO云推广购买
             </router-link>
           </el-menu-item>
-          <el-menu-item index="seo-word-records" v-if="!userInfo.shAgent && relationAllow()">
-            <router-link :to="{ name: 'seo-word-records' }" tag="p">
-              查词记录
-            </router-link>
-          </el-menu-item>
-          <el-menu-item index="seo-package-list">
-            <router-link :to="{ name: 'seo-package-list' }" tag="p">
-              管理推广
-            </router-link>
-          </el-menu-item>
         </el-submenu>
         <!-- <el-submenu index="qc">
           <template slot="title">
