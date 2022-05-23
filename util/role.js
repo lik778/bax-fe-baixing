@@ -253,13 +253,14 @@ export function normalizeRoles (roles) {
 
 export function checkRoles (currentRoles, validRoles) {
   let valid = false
-
   for (const r of validRoles) {
     if (currentRoles.includes(r)) {
+      console.log(r)
       valid = true
       break
     }
   }
+  console.log(valid)
 
   return valid
 }
@@ -387,4 +388,12 @@ export function allowCareFreeDashboard (userInfo) {
     return userInfo.isCareFreeUser
   }
   return isSales || AllowCareFreeRecharge(roles, agentId, salesId)
+}
+
+export function isYibaisouSales (roles) {
+  const currentRoles = normalizeRoles(roles)
+  return checkRoles(currentRoles, [
+    'YBS_SALES',
+    'YBS_ACCOUNTING'
+  ])
 }

@@ -23,52 +23,42 @@
       :visible="addUserLeadVisible"
       @close="toggleAddUserLeadVisible"
     />
-    <!-- <huo-dong-intro :show="huoDongIntroVisible" @close="huoDongIntroVisible = false" /> -->
     <huo-dong-btn v-if="inActivityPeriod" />
     <div class="right-utils">
     <chat />
     <back-to-top />
-    <!-- <WechatQrcode/> -->
-    <!-- <wechat-scan /> -->
     <Notification />
     </div>
-    <!-- <bw-shopping-cart ref="bwShoppingCart" :userInfo="currentUser" v-if="currentUser.id && isBwRoute" :salesInfo="salesInfo" :allAreas="allAreas"/> -->
   </div>
 </template>
 
 <script>
-import NewUserIntro from './common/new-user-intro'
-import Notification from './common/notification'
-import AddUserLead from './common/add-user-lead'
-// import WechatQrcode from './widget/wechat-qrcode.vue'
-// import WechatScan from './widget/wechat-scan'
-// import BwShoppingCart from './common/bw-shopping-cart.vue'
-import BackToTop from './widget/back-to-top'
-import Sidebar from './layout/sidebar'
-import Header from './layout/header'
-import Chat from './widget/chat'
-import HuoDongBtn from './common/huodong-btn'
-import { getWordAuthority } from 'api/fengming'
+import NewUserIntro from '../common/new-user-intro'
+import Notification from '../common/notification'
+import AddUserLead from '../common/add-user-lead'
+import BackToTop from '../widget/back-to-top'
+import Sidebar from './components/sidebar'
+import Header from './components/header'
+import Chat from '../widget/chat'
+import HuoDongBtn from '../common/huodong-btn'
 
-import gStore from './store'
-import aStore from './activity-store'
-
-import es from 'base/es'
+import gStore from '../store'
+import aStore from '../activity-store'
 
 import track from 'util/track'
 import {
   normalizeRoles,
-  isSales,
   isNormalUser,
   isYibaisouSales
 } from 'util/role'
-import { delCookie } from 'util/cookie'
 
 import qs from 'query-string'
+import { Message } from 'element-ui'
+import { redirect } from 'util'
 // import { router } from '../template/bax'
 
 export default {
-  name: 'bax',
+  name: 'Yibaisou',
   components: {
     NewUserIntro,
     Notification,
@@ -121,19 +111,6 @@ export default {
       gStore.toggleAddUserLeadVisible()
     }
   },
-  async beforeMount () {
-    // 设置活动优惠信息
-    await aStore.setDiscountInfoHTMLFactory()
-
-    // 全局只 mount 一次, 无需 remove listener
-    es.addListener('http fetch start', () => {
-      this.pending = this.pending + 1
-    })
-
-    es.addListener('http fetch end', () => {
-      this.pending = this.pending - 1
-    })
-  },
   async created () {
     // 记录销售的客户id等信息
     // 米奇跳转userId需改成user_id
@@ -145,48 +122,26 @@ export default {
       this.salesInfo.userId = +uid
       this.salesInfo.salesId = +salesId
     }
-    await getWordAuthority({ userId })
   },
   async mounted () {
-    // source为当前用户是否是以优化师角色进入bax
     await Promise.all([
       gStore.getCurrentUser(),
       gStore.getCategories(),
       gStore.getAreas(),
       gStore.getRoles()
     ])
-    const { source } = qs.parse(location.search)
-    const { userId } = this.salesInfo
     const { roles, isYibaisouUser } = this.currentUser
     if (isNormalUser(roles)) {
-      if (isYibaisouUser) {
-        window.location.href = `${window.origin}/yibaisou`
-        return
+      if (!isYibaisouUser) {
+        Message.error('您没有权限访问，请更换帐号登陆')
+        return redirect('signin', `return=${encodeURIComponent(location.pathname + location.search)}`)
       }
     } else {
-      if (isYibaisouSales(roles)) {
-        window.location.href = `${window.origin}/yibaisou`
-        return
+      if (!isYibaisouSales(roles)) {
+        Message.error('您没有权限访问，请更换帐号登陆')
+        return redirect('signin', `return=${encodeURIComponent(location.pathname + location.search)}`)
       }
     }
-    if (isSales(roles) && userId) {
-      gStore.getRelation({ userId })
-    }
-    if (source) {
-      document.cookie = 'source=' + source + ';path=/;'
-      // 此接口为查询当前用户的角色（主管/优化师）以及和目标用户的关系，后端暂存，用作后面的校验
-      await gStore.getFengmingOptimizer({ userId })
-    } else {
-      delCookie('source')
-    }
-
-    // 购物车限制在标王页面
-    // this.isBwRoute = this.$route.path.startsWith('/main/bw/')
-    // router.beforeEach((to, from, next) => {
-    //   this.isBwRoute = to.path.startsWith('/main/bw/')
-    //   next()
-    // })
-
     setTimeout(() => {
       const { currentUser } = this
       // move to user intro component

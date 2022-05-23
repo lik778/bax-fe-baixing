@@ -26,20 +26,21 @@
     title="查价详情"
     :visible="detailVisible"
     @close="detailVisible=false">
-        <PreInfoConfirm :preInfo="queryPriceDetail" :allAreas="allAreas"/>
+        <PreInfoConfirm :skipManualAudit="skipAudit" :preInfo="queryPriceDetail" :allAreas="allAreas"/>
     </el-dialog>
   </el-card>
 </template>
 
 <script>
-import { getInqueryList, userChoose, preOrder, preInfo, getPriceList } from 'api/biaowang-plus'
-import { APPLY_AUDIT_STATUS_OPTIONS, APPLY_TYPE_NORMAL } from 'constant/bw-plus'
+import { getInqueryList, userChoose, preInfo, getPriceList, yibaisouCommit } from 'api/biaowang-plus'
+import { APPLY_AUDIT_STATUS_OPTIONS, APPLY_TYPE_NORMAL, APPLY_AUDIT_STATUS_PASS, APPLY_AUDIT_STATUS_CONFIRMED } from 'constant/bw-plus'
 import { BwRecordsForm, BwRecordsTable, InqueryResult, PreOrderDetail, PreInfoConfirm } from './components'
 import { normalizeRoles } from 'util/role'
 import pick from 'lodash.pick'
 import { f2y } from 'util'
 import { Message } from 'element-ui'
 const PAGESIZE = 10
+const NOT_OPRATION = 50
 export default {
   name: 'bw-plus-price-records',
   components: {
@@ -68,6 +69,9 @@ export default {
   computed: {
     notAllowUpdate () {
       return !this.currentPrice.price
+    },
+    skipAudit () {
+      return [APPLY_AUDIT_STATUS_PASS, APPLY_AUDIT_STATUS_CONFIRMED].includes(this.queryPriceDetail.status) && this.queryPriceDetail.operationStatus !== NOT_OPRATION
     }
   },
   data () {
@@ -200,17 +204,14 @@ export default {
         spinner: 'el-icon-loading',
         background: 'rgba(0, 0, 0, 0.7)'
       })
-      const { userId } = this.salesInfo
       const { id: applyId } = this.activeRecord
+      const { query: { user_id: userId } } = this.$route
       try {
-        const { code, data: { url }, message } = await preOrder({ applyId, userId })
+        const { code, message } = await yibaisouCommit({ applyId, userId })
         if (code === 0) {
-          this.$copyText(url).then(async (e) => {
-            Message.success('提单链接已复制到剪切板')
-            this.isPreInfo = false
-            await this.getRecord()
-          }, function (e) {})
-          return
+          Message.success('提单成功')
+          this.isPreInfo = false
+          await this.getRecord()
         }
         if (code === 4080) {
           Message.error(message || '关键词已经被售出!')
@@ -228,11 +229,14 @@ export default {
         spinner: 'el-icon-loading',
         background: 'rgba(0, 0, 0, 0.7)'
       })
-      const { userId } = this.salesInfo
+      const { query: { user_id: userId } } = this.$route
       const { id: applyId } = record
       this.activeRecord = record
       this.isPreInfo = true
-      const { data } = await preInfo({ applyId, userId })
+      const { data, code, message } = await preInfo({ applyId, userId })
+      if (code !== 0) {
+        message.error(message || '服务器开小差了')
+      }
       loading.close()
       this.preInfo = data
     }
