@@ -36,7 +36,7 @@
     "object-keys-mapping": "2.0.0",
     "query-string": "4.3.4",
     "rxjs": "^5.5.6",
-    "utils": "git+https://oauth2:wLzzPwDxKXa9K9Kzzuh3@gitlab.baixing.cn/channel/fe-utils.git",
+    "utils": "git+https://oauth2:XPzPCi2n6xz67jJZrt-7@gitlab.baixing.cn/channel/fe-utils.git",
     "uuid": "3.0.1",
     "vue": "^2.6.11",
     "vue-clipboard2": "0.0.8",
