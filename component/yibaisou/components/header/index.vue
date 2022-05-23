@@ -40,8 +40,8 @@ export default {
             padding: 0 30px;
             box-sizing: border-box;
             .yi-baisou-logo{
-                width: 113px;
-                height: 47px;
+                width: 133px;
+                height: 46px;
                 background: url(../../assets/images/yi-baisou-logo.png) no-repeat center/cover;
             }
             .user-logo{
