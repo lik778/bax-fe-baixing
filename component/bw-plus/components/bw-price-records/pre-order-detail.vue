@@ -7,13 +7,14 @@
     >
     <PreInfoConfirm :isRenew="isRenew" :preInfo="preInfo" :allAreas="allAreas"/>
     <div class="row-info total-price">
-      <BwDescriptionItem label="客户手机号：" :value="preInfo.mobile"/>
+      <BwDescriptionItem label="客户手机号：" :value="preInfo.customerMobile"/>
       <BwDescriptionItem label="销售编号：" :value="preInfo.saleId"/>
-      <BwDescriptionItem label="客户uid：" :value="preInfo.userBxId"/>
+      <BwDescriptionItem label="客户uid：" :value="preInfo.customerId"/>
     </div>
+    <BwDescriptionItem label="客户信息：" :value="preInfo.customerDesc"/>
     <span slot="footer" class="dialog-footer">
         <el-button @click="cancel">取 消</el-button>
-        <el-button type="primary" @click="preOrder">确认，生成并复制提单链接</el-button>
+        <el-button type="primary" @click="preOrder">确认提单</el-button>
     </span>
     </el-dialog>
 </template>
@@ -53,7 +54,14 @@ export default {
       this.$emit('cancel')
     },
     preOrder () {
-      this.$emit('preOrder')
+      this.$confirm('请确认客户已付款?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$emit('preOrder')
+      }).catch(() => {
+      })
     }
   }
 }
@@ -78,7 +86,7 @@ export default {
       display: flex;
       justify-content: flex-end;
       margin-top: 20px;
-      margin-bottom: 0;
+      margin-bottom: 20px;
       position: relative;
       padding: 12px 0;
       &::after{

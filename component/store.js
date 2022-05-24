@@ -7,6 +7,8 @@ import * as qapi from 'api/qianci'
 import Sentry from '../lib/sentry'
 import { checkAuthorize } from 'api/fengming'
 import { isAdplatformUser } from 'api/ad-platform'
+import { whoAmI } from 'api/biaowang-plus'
+import { AGENT_USER } from 'constant/bw-plus'
 
 const gStore = observable({
   _currentUser: {
@@ -53,7 +55,13 @@ const gStore = observable({
   getCurrentUser: action(async function () {
     const currentUser = await aapi.getCurrentUser()
     const { roles = [], realAgentId, agentId, salesId } = currentUser
-
+    currentUser.isYibaisouUser = false
+    if (isNormalUser(roles)) {
+      const { data: { role } } = await whoAmI()
+      if (role === AGENT_USER) {
+        currentUser.isYibaisouUser = true
+      }
+    }
     currentUser.shAgent = isNormalUser(roles)
     currentUser.allowFmRecharge = !notAllowFengmingRecharge(
       roles,

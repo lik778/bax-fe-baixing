@@ -252,21 +252,21 @@ VueRouter.prototype.replace = function replace (route) {
 }
 
 const bwPlusRoutes = [
-  {
-    component: () => import('com/bw-plus/bw-query-price/index'),
-    path: '/main/bw-plus/query-price',
-    name: 'bw-plus-query-price'
-  },
-  {
-    component: () => import('com/bw-plus/renew-upgrade/index'),
-    path: '/main/bw-plus/renew-upgrade',
-    name: 'renew-upgrade'
-  },
-  {
-    component: () => import('com/bw-plus/bw-price-records'),
-    path: '/main/bw-plus/price-records',
-    name: 'bw-plus-price-records'
-  },
+//   {
+//     component: () => import('com/bw-plus/bw-query-price/index'),
+//     path: '/main/bw-plus/query-price',
+//     name: 'bw-plus-query-price'
+//   },
+//   {
+//     component: () => import('com/bw-plus/renew-upgrade/index'),
+//     path: '/main/bw-plus/renew-upgrade',
+//     name: 'renew-upgrade'
+//   },
+//   {
+//     component: () => import('com/bw-plus/bw-price-records'),
+//     path: '/main/bw-plus/price-records',
+//     name: 'bw-plus-price-records'
+//   },
   {
     component: () => import('com/bw-plus/bw-package-list'),
     path: '/main/bw-plus/package-list',

@@ -428,3 +428,23 @@ export async function getlistSeoPackages (params) {
     .json()
   return body
 }
+
+/**
+ * 校验当前用户是易佰搜代理商下的还是普通用户
+ * @returns
+ */
+export async function whoAmI () {
+  const body = await biaowangPlus
+    .get('/user/whoami')
+    .query()
+    .json()
+  return body
+}
+
+export async function yibaisouCommit (params) {
+  const body = await biaowangPlus
+    .post('/apply/accounting/commit')
+    .send(params)
+    .json()
+  return body
+}

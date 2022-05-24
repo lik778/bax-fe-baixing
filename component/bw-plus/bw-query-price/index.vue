@@ -31,10 +31,12 @@
             :currentPrice="currentPrice"
             @getValue="getCurrentPrice"
             :tableData="queryResult.keywordPriceList"
+            :skipAudit="queryResult.industryAuditResult.skipManualAudit"
           />
           <BwCreativity
             v-if="productList && productList.length"
             @checked="checked"
+            :skipAudit="queryResult.industryAuditResult.skipManualAudit"
             :productList="productList.filter((o) => o.type === 0)"
           />
         </section>
@@ -43,6 +45,7 @@
         v-if="productList && productList.length"
         @checked="checked"
         @getExtraProductValue="getAdditionProductValue"
+        :skipAudit="queryResult.industryAuditResult.skipManualAudit"
         :currentPrice="currentPrice"
         :disableDeviceListBySku="keywordLockDetails.disableDeviceListBySku"
         :priceList="queryResult.keywordPriceList"
@@ -53,7 +56,7 @@
     <div class="box-card submit-fixed" v-if="showResult">
       <WelfareLayout :currentPrice="getWelfareInfo" />
       <div class="submit">
-        <h3>总价： {{ transformPrice }}元</h3>
+        <h3>总价： {{queryResult.industryAuditResult.skipManualAudit?transformPrice:' XXX ' }}元</h3>
         <el-button
           @click="isSubmit = true"
           :disabled="allowCommit"
@@ -322,8 +325,7 @@ export default {
         overHeat,
         priceId,
         tempPvId,
-        industryError,
-        industryAuditResult
+        industryError
       } = this.queryResult
       const { userId: targetUserId } = this.salesInfo
       const {
@@ -361,11 +363,10 @@ export default {
         const { code, data } = await commit(params)
         if (code === 0) {
           this.resetResult()
-          const applyId = data.applyId
-          const skipAudit = industryAuditResult.skipManualAudit
+          //   const applyId = data.applyId
+          //   const skipAudit = industryAuditResult.skipManualAudit
           this.$router.push({
-            name: 'bw-plus-price-records',
-            query: { applyId, skipAudit }
+            name: 'bw-plus-price-records'
           })
         }
         if (code === 4080) {
@@ -449,7 +450,7 @@ export default {
 
     showIndustryAuditResult (industryAuditResult) {
       const content = industryAuditResult.skipManualAudit
-        ? '关键词已审核通过啦！查完价确认后可直接去提单～'
+        ? '关键词已审核通过，确认套餐后可以确认订单~'
         : this.getIndustryAuditType(industryAuditResult)
       this.$alert(content, '温馨提示', {
         confirmButtonText: '确定',
