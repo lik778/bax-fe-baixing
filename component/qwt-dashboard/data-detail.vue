@@ -396,11 +396,13 @@ export default {
     disableChangePrice ({ status }) {
       return isDeletedKeyword(+status)
     },
-    fmtKeywordName ({ keyword, status }) {
+    fmtKeywordName ({ keyword, status, date }) {
+      const target = new Date(date).getTime()
+      const a = new Date('2022-05-19').getTime()
+      const b = new Date('2022-05-20').getTime()
       const isDeleted = isDeletedKeyword(+status)
-      return isDeleted
-        ? (keyword + '（历史词）')
-        : keyword
+      const res = (target === a || target === b) ? '' : '（历史词）'
+      return isDeleted ? (keyword + res) : keyword
     },
     fmtCpcRanking,
     f2y
