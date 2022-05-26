@@ -15,8 +15,10 @@
           :visible="isSubmit"
           :isPending="isPending"
           :preInfo="preInfo"
+          :isPreInfo="isPreInfo"
           @cancel="isSubmit=false"
           @submit="submit"
+          @preOrder="preOrder"
            />
         </el-card>
     </section>
@@ -25,9 +27,10 @@
 <script>
 import CommitDialog from './components/seo-promotion-purchase/commit-dialog.vue'
 import ProductItem from './components/product-item'
-import { seoCommit } from 'api/biaowang-plus'
+import { seoCommit, getPreInfo, getPreOrder } from 'api/biaowang-plus'
 import { SEO_BASIS, SEO_BASIS_PACKAGE } from 'constant/bw-plus'
 import debounce from 'lodash.debounce'
+import { Message } from 'element-ui'
 export default {
   name: 'seo-promotion-purchase',
   props: {
@@ -62,7 +65,8 @@ export default {
           duration: ''
         }]
       },
-      skipAudit: true
+      skipAudit: true,
+      isPreInfo: false
     }
   },
   methods: {
@@ -81,12 +85,7 @@ export default {
           priceId: this.priceId
         })
         if (code === 0) {
-          this.$message({
-            message: '提交成功',
-            type: 'success'
-          })
-          this.isPending = false
-          this.isSubmit = false
+          await this.getPreInfo(data)
         }
         if (code === 4080) {
           this.BwPlusDialogMsg = {
@@ -98,15 +97,56 @@ export default {
         }
       } catch (error) {
         console.log(error)
-      } finally {
-        this.isPending = false
-        this.isSubmit = false
       }
     }, 300),
     chooseClick (val) {
       this.checkTip = val
       if (this.checkTip === 0) {
         this.skuId = SEO_BASIS
+      }
+    },
+    async getPreInfo (record) {
+      const loading = this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
+      const userId = +this.$route.query.user_id
+      const { applyId } = record
+      this.applyId = applyId
+      this.isPreInfo = true
+      const { data } = await getPreInfo({ applyId, userId })
+      loading.close()
+      this.preInfo = data
+    },
+    async preOrder () {
+      const loading = this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
+      const userId = +this.$route.query.user_id
+      try {
+        const { code, data: { url }, message } = await getPreOrder({ applyId: this.applyId, userId })
+        if (code === 0) {
+          this.$copyText(url).then(async (e) => {
+            Message.success('提单链接已复制到剪切板')
+            this.isPreInfo = false
+            this.isPending = false
+            this.isSubmit = false
+            await this.getRecord()
+          }, function (e) {})
+          return
+        }
+        if (code === 4080) {
+          Message.error(message || '关键词已经被售出!')
+        }
+      } catch (error) {
+        console.log('error', error)
+      } finally {
+        loading.close()
       }
     },
     getWelfareInfo () {
