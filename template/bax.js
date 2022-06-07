@@ -484,16 +484,6 @@ const seoRoutes = [
     component: () => import('com/seo/seo-promotion-purchase'),
     path: '/main/seo/promotion-purchase',
     name: 'seo-promotion-purchase'
-  },
-  {
-    component: () => import('com/seo/seo-word-records'),
-    path: '/main/seo/word-records',
-    name: 'seo-word-records'
-  },
-  {
-    component: () => import('com/seo/seo-package-list'),
-    path: '/main/seo/package-list',
-    name: 'seo-package-list'
   }
 ]
 
