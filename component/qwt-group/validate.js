@@ -3,11 +3,10 @@ import Schema from 'async-validator'
 import { LANDING_TYPE_AD, LANDING_TYPE_GW, LANDING_TYPE_STORE, LANDING_TYPE_BAIDU_JIMUYU, MATCH_TYPE_EXACT, NEGATIVE_KEYWORDS_MAX, getMatchTypeObj, SEM_PLATFORM_BAIDU, SEM_PLATFORM_SOGOU, NEGATIVE_KEYWORDS_SOGOU_MAX } from 'constant/fengming'
 import { MIN_WORD_PRICE, MAX_WORD_PRICE } from 'constant/keyword'
 import { keywordPriceTip } from 'constant/tip'
-
 const LANDING_TYPE_ENUMS = [LANDING_TYPE_AD, LANDING_TYPE_GW, LANDING_TYPE_STORE, LANDING_TYPE_BAIDU_JIMUYU]
 const GROUP_NAME_MAX = 6
 const GROUP_NAME_MIN = 1
-const KEYWORDS_MIN = 20
+const KEYWORDS_MIN = JSON.parse(window.localStorage.getItem('isSpecial')) === 0 ? 20 : 0
 
 const commonDescriptor = {
   name: {

@@ -34,6 +34,13 @@ export default {
       default () {
         return []
       }
+    },
+    userInfo: {
+      type: Object,
+      required: true,
+      default () {
+        return {}
+      }
     }
   },
   data () {

@@ -5,10 +5,11 @@ import * as aapi from 'api/account'
 import * as mapi from 'api/meta'
 import * as qapi from 'api/qianci'
 import Sentry from '../lib/sentry'
-import { checkAuthorize } from 'api/fengming'
+import { checkAuthorize, getSpecail } from 'api/fengming'
 import { isAdplatformUser } from 'api/ad-platform'
 import { whoAmI } from 'api/biaowang-plus'
 import { AGENT_USER } from 'constant/bw-plus'
+import { getQueryParams } from 'constant/fengming'
 
 const gStore = observable({
   _currentUser: {
@@ -53,8 +54,15 @@ const gStore = observable({
   }),
 
   getCurrentUser: action(async function () {
+    const userId = getQueryParams('user_id')
+    const { data: isSpecial } = await getSpecail({
+      type: 'GRAY_KEYWORD_MATCHING_LIST',
+      user_id: userId
+    })
+    window.localStorage.setItem('isSpecial', JSON.stringify(isSpecial))
     const currentUser = await aapi.getCurrentUser()
     const { roles = [], realAgentId, agentId, salesId } = currentUser
+    currentUser.isSpecial = isSpecial
     currentUser.isYibaisouUser = false
     if (isNormalUser(roles)) {
       const { data: { role } } = await whoAmI()

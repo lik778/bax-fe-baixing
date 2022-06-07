@@ -257,6 +257,13 @@ export default {
       default () {
         return []
       }
+    },
+    userInfo: {
+      type: Object,
+      required: true,
+      default () {
+        return {}
+      }
     }
   },
   computed: {
@@ -289,10 +296,11 @@ export default {
       }
     },
     wordLen () {
+      console.log(this.keywords)
       return this.keywords.filter(o => !o.isDel).length
     },
     matchTypeRemainExactCount () {
-      const maxCount = getMatchTypeObj(this.wordLen).count(this.wordLen)
+      const maxCount = getMatchTypeObj(this.wordLen, this.userInfo.isSpecial).count(this.wordLen)
       const currentCount = this.keywords.filter(o => o.matchType === MATCH_TYPE_EXACT).length
       const count = maxCount - currentCount
       return count > 0 ? count : 0

@@ -42,6 +42,7 @@
       <header>选取推广关键词（当前计划还可添加<strong>{{keywordRemainCount}}</strong>个关键词）</header>
       <div class="content">
         <keyword-comp :keywords="group.keywords"
+                       :userInfo="userInfo"
                       @remove-keywords="(idx) => group.keywords.splice(idx, 1)">
           <search-comp :areas="promotion.areas"
                        :sources="[promotion.source]"
@@ -271,6 +272,7 @@ export default {
       }
 
       try {
+        console.log(this.group)
         await createValidator.validate({
           ...this.group,
           price: toFloat(this.group.price) * 100,

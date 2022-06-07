@@ -642,7 +642,7 @@ export default {
         return Message.error('请填写创意')
       }
 
-      if (!p.keywords.length) {
+      if (!p.keywords.length && this.userInfo.isSpecial === 0) {
         return Message.error('请填写关键字')
       }
 
@@ -650,7 +650,7 @@ export default {
         return Message.error('请选择投放行业')
       }
 
-      if (p.keywords.length < 20) {
+      if (p.keywords.length < 20 && this.userInfo.isSpecial === 0) {
         return Message.error('请至少添加20个投放关键词')
       }
 
