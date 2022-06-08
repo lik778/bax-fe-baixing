@@ -91,7 +91,7 @@
 
       <section class="keyword">
         <header>选取推广关键词</header>
-        <p class="tip">请选取20个以上关键词，关键词越多您的创意被展现的机会越多。根据当月数据，为您推荐如下关键词</p>
+        <p class="tip">请选取<span v-if="userInfo.isSpecial === 0">20</span> <span v-else>1</span>个以上关键词，关键词越多您的创意被展现的机会越多。根据当月数据，为您推荐如下关键词</p>
         <el-button type="primary" style="margin-top:10px" size="small"
                    @click="addkeys">批量添加关键词</el-button>
         <el-button

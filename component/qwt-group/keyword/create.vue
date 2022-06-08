@@ -1,7 +1,7 @@
 <template>
   <div class="keywords-container">
     <p class="tip">
-      请选取<strong>20</strong>个以上关键词，关键词越多您的创意被展现的机会越多。
+      请选取<strong>{{ userInfo.isSpecial === 0 ? 20 : 1 }}</strong>个以上关键词，关键词越多您的创意被展现的机会越多。
       当前单元关键词数量<strong>{{keywords.length}}</strong>个
     </p>
     <slot name="search" />

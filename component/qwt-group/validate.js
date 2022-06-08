@@ -6,7 +6,8 @@ import { keywordPriceTip } from 'constant/tip'
 const LANDING_TYPE_ENUMS = [LANDING_TYPE_AD, LANDING_TYPE_GW, LANDING_TYPE_STORE, LANDING_TYPE_BAIDU_JIMUYU]
 const GROUP_NAME_MAX = 6
 const GROUP_NAME_MIN = 1
-const KEYWORDS_MIN = JSON.parse(window.localStorage.getItem('isSpecial')) === 0 ? 20 : 1
+const ISSPECIAL = JSON.parse(window.localStorage.getItem('isSpecial'))
+const KEYWORDS_MIN = ISSPECIAL === 0 ? 20 : 1
 
 const commonDescriptor = {
   name: {
@@ -94,7 +95,7 @@ const updateDescriptor = {
   keywords (rule, value) {
     const wordLen = value.filter(o => !o.isDel).length
     if (wordLen < KEYWORDS_MIN) return new Error(`请至少添加${KEYWORDS_MIN}个关键词`)
-    const maxMatchTypeExactCount = getMatchTypeObj(wordLen).count(wordLen)
+    const maxMatchTypeExactCount = getMatchTypeObj(wordLen, ISSPECIAL).count(wordLen)
     const currMatchTypeExactCount = value.filter(o => o.matchType === MATCH_TYPE_EXACT).length
     if (currMatchTypeExactCount > maxMatchTypeExactCount) return new Error('精确匹配的设置已超过系统限制，请修改')
     if (value.some(o => o.price < MIN_WORD_PRICE || o.price > MAX_WORD_PRICE)) return new Error(keywordPriceTip)
