@@ -78,7 +78,7 @@ const commonDescriptor = {
 const createDescriptor = {
   ...commonDescriptor,
   keywords (rule, value) {
-    if (value.length < KEYWORDS_MIN) return new Error('请至少添加20个关键词')
+    if (value.length < KEYWORDS_MIN) return new Error(`请至少添加${KEYWORDS_MIN}个关键词`)
     if (value.some(o => o.price < MIN_WORD_PRICE || o.price > MAX_WORD_PRICE)) return new Error(keywordPriceTip)
     return true
   },
@@ -93,7 +93,7 @@ const updateDescriptor = {
   ...commonDescriptor,
   keywords (rule, value) {
     const wordLen = value.filter(o => !o.isDel).length
-    if (wordLen < KEYWORDS_MIN) return new Error('请至少添加20个关键词')
+    if (wordLen < KEYWORDS_MIN) return new Error(`请至少添加${KEYWORDS_MIN}个关键词`)
     const maxMatchTypeExactCount = getMatchTypeObj(wordLen).count(wordLen)
     const currMatchTypeExactCount = value.filter(o => o.matchType === MATCH_TYPE_EXACT).length
     if (currMatchTypeExactCount > maxMatchTypeExactCount) return new Error('精确匹配的设置已超过系统限制，请修改')
