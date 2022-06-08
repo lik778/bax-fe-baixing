@@ -217,22 +217,28 @@ export const matchTypeTipAndCount = [
   }
 ]
 // 针对特殊代理商和用户的精确匹配逻辑
-export const matchTypeTipAndCountSpecial = {
-  minKeywordCount: 2,
-  maxKeywordCount: 10000000,
-  errTip: '精确匹配的设置数量已超过系统限制，更改失败。',
-  count: (wordLen) => {
-    return Math.ceil(wordLen * 0.5)
+export const matchTypeTipAndCountSpecial = [
+  {
+    minKeywordCount: 2,
+    maxKeywordCount: 10000000,
+    errTip: '精确匹配的设置数量已超过系统限制，更改失败。',
+    count: (wordLen) => {
+      return Math.ceil(wordLen * 0.5)
+    }
+  },
+  {
+    minKeywordCount: 0,
+    maxKeywordCount: 1,
+    errTip: '计划中关键词数不足2，提升至2个以上时可设置精确匹配',
+    count: () => {
+      return 0
+    }
   }
-}
+]
 
 export const getMatchTypeObj = (wordLen, special) => {
-  if (!special) {
-    const tempObj = matchTypeTipAndCount.find(o => wordLen >= o.minKeywordCount && wordLen <= o.maxKeywordCount)
-    return tempObj || matchTypeTipAndCount[0]
-  } else {
-    return matchTypeTipAndCountSpecial
-  }
+  const tempObj = (!special ? matchTypeTipAndCount : matchTypeTipAndCountSpecial).find(o => wordLen >= o.minKeywordCount && wordLen <= o.maxKeywordCount)
+  return tempObj || (!special ? matchTypeTipAndCount : matchTypeTipAndCountSpecial)[0]
 }
 
 export function filterBannedListByContent (words) {

@@ -6,7 +6,7 @@ import { keywordPriceTip } from 'constant/tip'
 const LANDING_TYPE_ENUMS = [LANDING_TYPE_AD, LANDING_TYPE_GW, LANDING_TYPE_STORE, LANDING_TYPE_BAIDU_JIMUYU]
 const GROUP_NAME_MAX = 6
 const GROUP_NAME_MIN = 1
-const KEYWORDS_MIN = JSON.parse(window.localStorage.getItem('isSpecial')) === 0 ? 20 : 0
+const KEYWORDS_MIN = JSON.parse(window.localStorage.getItem('isSpecial')) === 0 ? 20 : 1
 
 const commonDescriptor = {
   name: {

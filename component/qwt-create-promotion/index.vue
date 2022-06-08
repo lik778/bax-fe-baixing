@@ -652,6 +652,8 @@ export default {
 
       if (p.keywords.length < 20 && this.userInfo.isSpecial === 0) {
         return Message.error('请至少添加20个投放关键词')
+      } else if (p.keywords.length < 1 && this.userInfo.isSpecial === 1) {
+        return Message.error('请至少添加1个投放关键词')
       }
 
       // 这个应该是个雷！
