@@ -91,7 +91,7 @@
 
       <section class="keyword">
         <header>选取推广关键词</header>
-        <p class="tip">请选取20个以上关键词，关键词越多您的创意被展现的机会越多。根据当月数据，为您推荐如下关键词</p>
+        <p class="tip">请选取<span v-if="userInfo.isSpecial === 0">20</span> <span v-else>1</span>个以上关键词，关键词越多您的创意被展现的机会越多。根据当月数据，为您推荐如下关键词</p>
         <el-button type="primary" style="margin-top:10px" size="small"
                    @click="addkeys">批量添加关键词</el-button>
         <el-button
@@ -642,7 +642,7 @@ export default {
         return Message.error('请填写创意')
       }
 
-      if (!p.keywords.length) {
+      if (!p.keywords.length && this.userInfo.isSpecial === 0) {
         return Message.error('请填写关键字')
       }
 
@@ -650,8 +650,10 @@ export default {
         return Message.error('请选择投放行业')
       }
 
-      if (p.keywords.length < 20) {
+      if (p.keywords.length < 20 && this.userInfo.isSpecial === 0) {
         return Message.error('请至少添加20个投放关键词')
+      } else if (p.keywords.length < 1 && this.userInfo.isSpecial === 1) {
+        return Message.error('请至少添加1个投放关键词')
       }
 
       // 这个应该是个雷！

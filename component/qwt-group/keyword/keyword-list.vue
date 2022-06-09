@@ -257,6 +257,13 @@ export default {
       default () {
         return []
       }
+    },
+    userInfo: {
+      type: Object,
+      required: true,
+      default () {
+        return {}
+      }
     }
   },
   computed: {
@@ -289,10 +296,11 @@ export default {
       }
     },
     wordLen () {
+      console.log(this.keywords)
       return this.keywords.filter(o => !o.isDel).length
     },
     matchTypeRemainExactCount () {
-      const maxCount = getMatchTypeObj(this.wordLen).count(this.wordLen)
+      const maxCount = getMatchTypeObj(this.wordLen, this.userInfo.isSpecial).count(this.wordLen)
       const currentCount = this.keywords.filter(o => o.matchType === MATCH_TYPE_EXACT).length
       const count = maxCount - currentCount
       return count > 0 ? count : 0
@@ -493,7 +501,7 @@ export default {
 
       if (this.showMatchType) {
         // 删除之后的精准匹配的最大值和当前值
-        const maxCount = getMatchTypeObj(this.wordLen - 1).count(this.wordLen - 1)
+        const maxCount = getMatchTypeObj(this.wordLen - 1, this.userInfo.isSpecial).count(this.wordLen - 1)
         let currentCount = this.keywords.filter(o => o.matchType === MATCH_TYPE_EXACT).length
         if (String(row.matchType) === String(MATCH_TYPE_EXACT)) {
           currentCount--
@@ -569,7 +577,7 @@ export default {
       const newKeywords = clone(keywords)
       if (showMatchType) {
         // 删除之后的精准匹配的最大值和当前值
-        const maxCount = getMatchTypeObj(this.wordLen - this.transforArray(currentSelect).length).count(this.wordLen - this.transforArray(currentSelect).length)
+        const maxCount = getMatchTypeObj(this.wordLen - this.transforArray(currentSelect).length, this.userInfo.isSpecial).count(this.wordLen - this.transforArray(currentSelect).length)
         let currentCount = newKeywords.filter(o => o.matchType === MATCH_TYPE_EXACT).length
         newKeywords.forEach(row => {
           if (this.transforArray(currentSelect).includes(row.id)) {
