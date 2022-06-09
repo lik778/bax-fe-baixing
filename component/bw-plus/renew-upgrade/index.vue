@@ -332,7 +332,7 @@ export default {
     async submit () {
       this.isPending = true
       const params = {
-        renewId: this.renewDetails.renewId,
+        applyId: this.renewDetails.applyId,
         skuList: this.preInfo.additionProductMap
       }
       try {

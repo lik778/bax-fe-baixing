@@ -335,7 +335,7 @@ export async function getRenewPriceByPackageId (params) {
 
 /**
  * @param {Object} params
- * @param {number} params.renewId
+ * @param {number} params.applyId
  * @type {Object} skuItem
  * @type {number} skuItem.sku
  * @type {number} skuItem.scheduleType

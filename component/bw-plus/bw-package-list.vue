@@ -218,7 +218,7 @@ export default {
   methods: {
     async submit () {
       const params = {
-        renewId: this.renewInfo.renewId,
+        applyId: this.renewInfo.applyId,
         skuList: this.renewInfo.additionProductMap
       }
       try {
@@ -270,11 +270,13 @@ export default {
         this.dialogVisible = true
         return
       }
-      const { data: { renewId, commitSkuDetailList, cities, words: keywords, mobile = '', salesId: saleId, userId: userBxId } } = await getRenewPriceByPackageId({ packageId })
+      const { data: { applyId, commitSkuDetailList, cities, words: keywords, mobile = '', salesId: saleId, userId:
+        userBxId } } = await getRenewPriceByPackageId({ packageId })
       console.log(item)
       if (commitSkuDetailList && commitSkuDetailList.length) {
         this.visible = true
-        this.renewInfo = { renewId, additionProductMap: commitSkuDetailList, cities, keywords, saleId, mobile, userBxId }
+        this.renewInfo = { applyId, additionProductMap: commitSkuDetailList, cities, keywords, saleId, mobile,
+          userBxId }
       } else {
         this.$router.push({ name: 'renew-upgrade', query: { packageId } })
       }
