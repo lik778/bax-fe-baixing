@@ -22,6 +22,11 @@
                     placeholder="输入客户id查询"
                     style="width: 300px;" />
         </el-form-item>
+          <el-form-item label="客户id">
+          <el-input v-model="query.wordId"
+                    placeholder="输入词包id查询"
+                    style="width: 300px;" />
+        </el-form-item>
       </el-form>
 
       <div v-for="item in promotes" :key="item.packageId">
@@ -41,7 +46,7 @@
             <li v-if="userInfo.isYibaisouUser">客户公司：{{item.customerName}}</li>
             <li v-if="userInfo.isYibaisouUser">客户id：{{item.customerId}}</li>
           </ul>
-          <!-- <el-button v-if="allowRenew(item)" type="text" @click="renew(item)">续费</el-button> -->
+          <el-button type="text" @click="renew(item)">续费</el-button>
         </div>
         <el-table
             :data="item.skuList"
@@ -196,7 +201,8 @@ export default {
         size: 10,
         page: 0,
         customerName: '',
-        customerId: ''
+        customerId: '',
+        wordId: ''
       },
       total: 0,
       promotes: [],
@@ -265,6 +271,7 @@ export default {
         return
       }
       const { data: { renewId, commitSkuDetailList, cities, words: keywords, mobile = '', salesId: saleId, userId: userBxId } } = await getRenewPriceByPackageId({ packageId })
+      console.log(item)
       if (commitSkuDetailList && commitSkuDetailList.length) {
         this.visible = true
         this.renewInfo = { renewId, additionProductMap: commitSkuDetailList, cities, keywords, saleId, mobile, userBxId }
