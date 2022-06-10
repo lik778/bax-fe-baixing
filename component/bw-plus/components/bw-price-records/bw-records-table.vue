@@ -8,6 +8,12 @@
     >
       <el-table-column prop="id" label="ID" />
       <el-table-column sortable prop="createdTime" width="170" label="日期" :formatter="dateFormater" />
+      <el-table-column sortable prop="renewApply" label="类型">
+        <template slot-scope="{ row }">
+          <span v-if="row.renewApply === true">续费</span>
+          <span v-if="row.renewApply === false">新购</span>
+        </template>
+      </el-table-column>
       <el-table-column width="150" prop="keywords" label="关键词">
         <template slot-scope="{ row }">
           <el-popover

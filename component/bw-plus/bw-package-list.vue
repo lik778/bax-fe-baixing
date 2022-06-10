@@ -22,7 +22,7 @@
                     placeholder="输入客户id查询"
                     style="width: 300px;" />
         </el-form-item>
-          <el-form-item label="客户id">
+          <el-form-item label="词包id">
           <el-input v-model="query.wordId"
                     placeholder="输入词包id查询"
                     style="width: 300px;" />

@@ -170,7 +170,7 @@
           <PreInfoConfirm :isRenew="true" :allAreas="allAreas" :preInfo="preInfo"/>
           <span slot="footer" class="dialog-footer">
             <el-button @click="visible=false">取 消</el-button>
-            <el-button type="primary" :loading="isPending" @click="submit">确认，生成并复制提单链接</el-button>
+            <el-button type="primary" :loading="isPending" @click="submit">确认</el-button>
           </span>
         </el-dialog>
     </div>
@@ -311,7 +311,7 @@ export default {
           duration: currentRenewInfo.days,
           totalDays: currentRenewInfo.days,
           displayType: 0,
-          sku: BAIDU_PRODUCT_SOURCE
+          skuId: BAIDU_PRODUCT_SOURCE
         }
       ]
       const preInfo = {
@@ -336,11 +336,17 @@ export default {
         skuList: this.preInfo.additionProductMap
       }
       try {
-        const { data: { url } } = await submitPreOrder(params)
-        this.$copyText(url).then(async (e) => {
-          Message.success('提单链接已复制到剪切板')
-          this.$router.push({ name: 'bw-plus-package-list' })
-        }, function (e) {})
+        // const { data: { url } } = await submitPreOrder(params)
+        // this.$copyText(url).then(async (e) => {
+        //   Message.success('提单链接已复制到剪切板')
+        //   this.$router.push({ name: 'bw-plus-package-list' })
+        // }, function (e) {})
+
+        await submitPreOrder(params)
+        // this.$router.push({ name: 'bw-plus-package-list' })
+        this.$router.push({
+          name: 'bw-plus-price-records'
+        })
       } catch (error) {
         console.log(error)
       } finally {
