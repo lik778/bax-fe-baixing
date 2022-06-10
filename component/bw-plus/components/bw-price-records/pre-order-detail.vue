@@ -1,20 +1,21 @@
 <template>
     <el-dialog
-    title="提单确认"
+    title="续费"
     :visible.sync="dialogVisible"
     width="50%"
     @close="cancel"
     >
     <PreInfoConfirm :isRenew="isRenew" :preInfo="preInfo" :allAreas="allAreas"/>
     <div class="row-info total-price">
-      <BwDescriptionItem label="客户手机号：" :value="preInfo.customerMobile"/>
+<!--      <BwDescriptionItem label="客户手机号：" :value="preInfo.customerMobile"/>-->
       <BwDescriptionItem label="销售编号：" :value="preInfo.saleId"/>
       <BwDescriptionItem label="客户uid：" :value="preInfo.customerId"/>
     </div>
     <BwDescriptionItem label="客户信息：" :value="preInfo.customerDesc"/>
     <span slot="footer" class="dialog-footer">
         <el-button @click="cancel">取 消</el-button>
-        <el-button type="primary" @click="preOrder">确认提单</el-button>
+<!--        <el-button type="primary" @click="preOrder">确认提单</el-button>-->
+        <el-button type="primary" @click="updateRenewSku">修改续费商品</el-button>
     </span>
     </el-dialog>
 </template>
@@ -62,6 +63,9 @@ export default {
         this.$emit('preOrder')
       }).catch(() => {
       })
+    },
+    updateRenewSku () {
+      this.$router.push({ name: 'renew-upgrade', query: { packageId: this.preInfo.packageId } })
     }
   }
 }

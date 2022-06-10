@@ -275,7 +275,7 @@ export default {
       console.log(item)
       if (commitSkuDetailList && commitSkuDetailList.length) {
         this.visible = true
-        this.renewInfo = { applyId, additionProductMap: commitSkuDetailList, cities, keywords, saleId, mobile,
+        this.renewInfo = { applyId, packageId, additionProductMap: commitSkuDetailList, cities, keywords, saleId, mobile,
           userBxId }
       } else {
         this.$router.push({ name: 'renew-upgrade', query: { packageId } })
