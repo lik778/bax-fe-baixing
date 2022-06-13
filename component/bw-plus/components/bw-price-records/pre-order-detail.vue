@@ -1,6 +1,6 @@
 <template>
     <el-dialog
-    title="续费"
+    title="提单确认"
     :visible.sync="dialogVisible"
     width="50%"
     @close="cancel"
@@ -14,14 +14,15 @@
     <BwDescriptionItem label="客户信息：" :value="preInfo.customerDesc"/>
     <span slot="footer" class="dialog-footer">
         <el-button @click="cancel">取 消</el-button>
-<!--        <el-button type="primary" @click="preOrder">确认提单</el-button>-->
-        <el-button type="primary" @click="updateRenewSku">修改续费商品</el-button>
+        <el-button v-if="isYbsAccounting()" type="primary" @click="preOrder">确认提单</el-button>
+        <el-button v-if="isYbsSales()" type="primary" @click="updateRenewSku">修改商品</el-button>
     </span>
     </el-dialog>
 </template>
 <script>
 import PreInfoConfirm from './pre-info-confirm.vue'
 import BwDescriptionItem from './bw-description-item.vue'
+import { normalizeRoles } from 'util/role'
 export default {
   name: 'pre-order-detail',
   components: {
@@ -32,6 +33,11 @@ export default {
     dialogVisible: {
       type: Boolean,
       default: false,
+      require: true
+    },
+    userInfo: {
+      type: Object,
+      default: () => {},
       require: true
     },
     preInfo: {
@@ -53,6 +59,15 @@ export default {
   methods: {
     cancel () {
       this.$emit('cancel')
+    },
+    isYbsSales () {
+      const roles = normalizeRoles(this.userInfo.roles)
+      return roles.includes('YBS_SALES')
+    },
+    isYbsAccounting () {
+      const roles = normalizeRoles(this.userInfo.roles)
+      console.info('roles is' + roles)
+      return roles.includes('YBS_ACCOUNTING')
     },
     preOrder () {
       this.$confirm('请确认客户已付款?', '提示', {
