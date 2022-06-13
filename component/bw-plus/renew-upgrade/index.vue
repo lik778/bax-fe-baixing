@@ -181,7 +181,6 @@ import { getRenewPriceByPackageId, submitPreOrder } from 'api/biaowang-plus'
 import { Title, BwCreativity, PreInfoConfirm, WelfareActivity } from '../components'
 import { BAIDU_BW_PRODUCT_PRICELIST, DEVICE_ALL, DEVICE_WAP, DEVICE_PC, SEO_PRODUCT_TYPE, CREATIVE_PRODUCT_TYPE, BAIDU_PRODUCT_SOURCE, PRODUCT_SOURCE_MAP } from 'constant/bw-plus'
 import { f2y, getCnName } from 'util'
-import { Message } from 'element-ui'
 const welfareInfo = {
   id: 1,
   title: '会员钻石店铺',
@@ -222,7 +221,7 @@ export default {
       DEVICE_PC,
       f2y,
       currentRenewInfo: {},
-      additionalSkuList: {},
+      additionalSkuList: [],
       visible: false,
       isPending: false,
       welfareInfo
@@ -403,6 +402,11 @@ export default {
     },
     checked (product) {
       const { additionalSkuList } = this
+      for (const item of this.additionalSkuList) {
+        if (item.id === product.id) {
+          item.checked = !item.checked
+        }
+      }
       this.additionalSkuList = additionalSkuList.map((p) =>
         product.id === p.id ? product : p
       )

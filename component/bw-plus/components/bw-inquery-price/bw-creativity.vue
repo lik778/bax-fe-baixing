@@ -89,7 +89,6 @@ export default {
       } else {
         this.checkedProducts = [...checkedProducts, ...[product]]
       }
-      product.checked = !product.checked
       this.$emit('checked', product)
       // 计算所选商品的互斥商品集合
       this.currentExcludes = this.checkedProducts.reduce(
