@@ -402,14 +402,13 @@ export default {
     },
     checked (product) {
       const { additionalSkuList } = this
-      for (const item of this.additionalSkuList) {
+      for (const item of additionalSkuList) {
         if (item.id === product.id) {
           item.checked = !item.checked
+          product.checked = !product.checked
         }
       }
-      this.additionalSkuList = additionalSkuList.map((p) =>
-        product.id === p.id ? product : p
-      )
+      this.additionalSkuList = additionalSkuList.map(p => product.id === p.id ? product : p)
     }
   }
 }
