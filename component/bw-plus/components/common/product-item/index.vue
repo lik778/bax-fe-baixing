@@ -2,7 +2,7 @@
   <div
     :class="{
       'product-wrapper': true,
-      'product-checked': product.checked,
+      'product-checked': product.checked || flag,
       'product-notAllowCheck': notAllowCheck.disable
     }"
     @click="checkProduct"
@@ -92,6 +92,11 @@ export default {
       require: true
     },
     isRenew: {
+      type: Boolean,
+      default: false,
+      require: false
+    },
+    flag: {
       type: Boolean,
       default: false,
       require: false

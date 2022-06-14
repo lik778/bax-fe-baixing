@@ -143,12 +143,14 @@
                 </el-table-column>
             </el-table>
             <BwCreativity
+                v-if="additionalSkuList && additionalSkuList.length"
                 @checked="checked"
-                :productList="additionalSkuList"
+                :productList="additionalSkuList.filter(item => item.type === 0)"
                 :additionRenewDetailList="renewDetails.additionRenewDetailList"
                 :disableSkuList="renewDetails.disableSkuList"
                 :currentPrice="currentRenewInfo"
                 :isRenew="true"
+                :flag="flag"
             />
             <div :style="{height: '130px'}"></div>
             <footer>
@@ -157,19 +159,19 @@
                     :currentPrice="getWelfareInfo" />
                 <div>
                     <h3>续费价：{{totalPrice}}元</h3>
-                    <el-button type="primary" :disabled="totalPrice === '-' || totalPrice <= 0" @click="visible=true">确认</el-button>
+                    <el-button type="primary" :disabled="totalPrice === '-' || totalPrice <= 0" @click="submitDialog">确认</el-button>
                 </div>
             </footer>
         </section>
         <el-dialog
           title="续费升级确认"
-          :visible.sync="visible"
+          :visible.sync="dialogVisible"
           width="50%"
-          @close="visible=false"
+          @close="dialogVisible = false"
         >
           <PreInfoConfirm :isRenew="true" :allAreas="allAreas" :preInfo="preInfo"/>
           <span slot="footer" class="dialog-footer">
-            <el-button @click="visible=false">取 消</el-button>
+            <el-button @click="dialogVisible=false">取 消</el-button>
             <el-button type="primary" :loading="isPending" @click="submit">确认</el-button>
           </span>
         </el-dialog>
@@ -181,6 +183,7 @@ import { getRenewPriceByPackageId, submitPreOrder } from 'api/biaowang-plus'
 import { Title, BwCreativity, PreInfoConfirm, WelfareActivity } from '../components'
 import { BAIDU_BW_PRODUCT_PRICELIST, DEVICE_ALL, DEVICE_WAP, DEVICE_PC, SEO_PRODUCT_TYPE, CREATIVE_PRODUCT_TYPE, BAIDU_PRODUCT_SOURCE, PRODUCT_SOURCE_MAP } from 'constant/bw-plus'
 import { f2y, getCnName } from 'util'
+// import _ from 'lodash'
 const welfareInfo = {
   id: 1,
   title: '会员钻石店铺',
@@ -221,10 +224,11 @@ export default {
       DEVICE_PC,
       f2y,
       currentRenewInfo: {},
+      dialogVisible: false,
       additionalSkuList: [],
-      visible: false,
       isPending: false,
-      welfareInfo
+      welfareInfo,
+      flag: false
     }
   },
   async mounted () {
@@ -270,12 +274,10 @@ export default {
     },
     preInfo () {
       // 构造选中商品列表数据，给用户确认
-      const { renewDetails, additionalSkuList, currentRenewInfo: { price = 0, days = 0, device, scheduleType }, getPrice, currentRenewInfo } = this
-      const ratio =
-       price && price > 0
-         ? 'dealPriceRatio'
-         : 'withoutPackagePriceRatio'
-      const checkedProducts = additionalSkuList.filter((p) => p.checked)
+      const { renewDetails, additionalSkuList, currentRenewInfo: { price = 0, days = 0, device, scheduleType }, getPrice, currentRenewInfo, flag } = this
+      const ratio = price && price > 0 ? 'dealPriceRatio' : 'withoutPackagePriceRatio'
+      // const checkedProducts = additionalSkuList.filter((p) => p.checked)
+      const checkedProducts = flag ? additionalSkuList : []
       const additionProduct = checkedProducts.map((o) => ({
         dealPrice:
           o.type === SEO_PRODUCT_TYPE
@@ -285,7 +287,7 @@ export default {
             : (getPrice(o).extraOriginPrice + price) * o[ratio],
         device,
         price,
-        sku: o.id,
+        skuId: o.id,
         duration: getPrice(o).extraDays + days,
         days,
         totalDays: getPrice(o).extraDays + days,
@@ -354,7 +356,7 @@ export default {
     },
     getPrice (product) {
       const { additionRenewDetailList } = this.renewDetails
-      return additionRenewDetailList.find(a => a.sku === product.id)
+      return additionRenewDetailList.find(a => a.skuId === product.id)
     },
     transformDeviceAllPrice (row, device, scheduleType) {
       const { duration } = row
@@ -401,14 +403,30 @@ export default {
       return currentRenewInfo.device === device && currentRenewInfo.scheduleType === scheduleType && currentRenewInfo.days === row.duration
     },
     checked (product) {
-      const { additionalSkuList } = this
-      for (const item of additionalSkuList) {
-        if (item.id === product.id) {
-          item.checked = !item.checked
-          product.checked = !product.checked
-        }
-      }
-      this.additionalSkuList = additionalSkuList.map(p => product.id === p.id ? product : p)
+      // const { additionalSkuList } = this
+      this.flag = !this.flag
+      // this.additionalSkuList = additionalSkuList.map((p) =>
+      //   product.id === p.id ? product : p
+      // )
+      // this.additionalSkuList.splice(0, 1, newDD)
+      // const result = _.cloneDeep(product)
+      // const newAddition = _.cloneDeep(this.additionalSkuList)
+      // product.checked = !product.checked
+      // const res = newAddition.map(item => (item.id === product.id ? { ...item, checked: !item.checked } : item))[0]
+      // this.additionalSkuList.splice(0, 1, res)
+      // this.additionalSkuList.push({}).pop
+      // this.flag = newAddition.map(item => ({ value: item.value * 2 }))
+      // this.additionalSkuList.forEach(item => {
+      //   if (item.id === product.id) {
+      //     item.checked = !item.checked
+      //   }
+      // })
+    },
+    submitDialog () {
+      this.dialogVisible = true
+    },
+    closeDialog () {
+      this.dialogVisible = false
     }
   }
 }

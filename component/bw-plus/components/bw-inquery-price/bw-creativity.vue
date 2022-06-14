@@ -2,7 +2,15 @@
     <div class="bw-creativity">
       <Title subTitle="创意升级，效果加倍" subExtra="请选择需要升级的创意形式"/>
       <div class="bw-creativity_wrapper">
-        <ProductItem :isRenew="isRenew" :skipAudit="skipAudit" @check="checkProduct" v-for="product in productList" :key="product.id" :currentExcludes="[...currentExcludes, ...disableSkuList]" :product="transformProduct(product)"/>
+        <ProductItem
+         :isRenew="isRenew"
+         :skipAudit="skipAudit"
+          @check="checkProduct"
+          v-for="product in productList"
+          :key="product.id"
+          :currentExcludes="[...currentExcludes, ...disableSkuList]"
+          :flag="flag"
+          :product="transformProduct(product)"/>
       </div>
     </div>
 </template>
@@ -24,7 +32,7 @@ export default {
     skipAudit: {
       type: Boolean,
       default: false,
-      require: true
+      require: false
     },
     currentPrice: {
       type: Object,
@@ -44,6 +52,11 @@ export default {
     disableSkuList: {
       type: Array,
       default: () => [],
+      require: false
+    },
+    flag: {
+      type: Boolean,
+      default: () => false,
       require: false
     }
   },
@@ -68,15 +81,24 @@ export default {
           this.currentExcludes = []
         }
       }
+    },
+    productList: {
+      deep: true,
+      handler (v1) {
+        this.productListData = v1
+        console.log(v1, 'productList')
+      },
+      immediate: true
     }
   },
   methods: {
     transformProduct (product) {
+      console.log(product, 12)
       if (this.isRenew) {
         const { additionRenewDetailList, currentPrice } = this
         return {
           ...product,
-          additionRenewDetai: additionRenewDetailList.find(a => a.sku === product.id),
+          additionRenewDetai: additionRenewDetailList.find(a => a.skuId === product.id),
           currentPrice
         }
       }
@@ -89,6 +111,7 @@ export default {
       } else {
         this.checkedProducts = [...checkedProducts, ...[product]]
       }
+      product.checked = !product.checked
       this.$emit('checked', product)
       // 计算所选商品的互斥商品集合
       this.currentExcludes = this.checkedProducts.reduce(
@@ -96,6 +119,9 @@ export default {
         []
       )
     }
+  },
+  updated (pre) {
+    console.log('传进来了12', pre)
   }
 }
 </script>
