@@ -23,7 +23,7 @@
                     style="width: 300px;" />
         </el-form-item>
           <el-form-item label="词包id">
-          <el-input v-model="query.wordId"
+          <el-input v-model="query.packageId"
                     placeholder="输入词包id查询"
                     style="width: 300px;" />
         </el-form-item>
@@ -202,7 +202,7 @@ export default {
         page: 0,
         customerName: '',
         customerId: '',
-        wordId: ''
+        packageId: ''
       },
       total: 0,
       promotes: [],
