@@ -46,7 +46,7 @@
             <li>客户公司：{{item.customerName}}</li>
             <li>客户id：{{item.customerId}}</li>
           </ul>
-          <el-button type="text" @click="renew(item)">续费</el-button>
+          <el-button type="text" v-if="isRolesId(userInfo.roles)" @click="renew(item)">续费</el-button>
         </div>
         <el-table
             :data="item.skuList"
@@ -137,7 +137,7 @@
       <p>因推广到期，关键词有被抢购风险，去查价重新购买快速锁定关键词</p>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="goQueryPrice">去查价</el-button>
+        <el-button type="primary"  @click="goQueryPrice">去查价</el-button>
       </span>
     </el-dialog>
   </div>
@@ -163,7 +163,7 @@ import {
 import { getCnName } from 'util'
 import debounce from 'lodash.debounce'
 import { Message } from 'element-ui'
-import { isSales } from 'util/role'
+import { isSales, isRolesId } from 'util/role'
 import gStore from '../store'
 
 export default {
@@ -371,7 +371,8 @@ export default {
           detail: '暂无关键词'
         }
       }
-    }
+    },
+    isRolesId
   },
   watch: {
     query: {

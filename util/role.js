@@ -23,12 +23,21 @@ const USES_ID = [
   1004
 ]
 
+const ROLES_ID = [
+  11
+]
+
 export function isSales (roles) {
   const currentRoles = normalizeRoles(roles)
   return checkRoles(currentRoles, [
     'AGENT_SALES',
     'BAIXING_SALES'
   ])
+}
+
+export function isRolesId (roles, target) {
+  const rolesId = roles.map(item => item.id)
+  return rolesId.some(item => ROLES_ID.includes(item))
 }
 
 export function isWordUser (id) {

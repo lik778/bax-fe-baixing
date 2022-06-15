@@ -183,7 +183,7 @@ import { getRenewPriceByPackageId, submitPreOrder } from 'api/biaowang-plus'
 import { Title, BwCreativity, PreInfoConfirm, WelfareActivity } from '../components'
 import { BAIDU_BW_PRODUCT_PRICELIST, DEVICE_ALL, DEVICE_WAP, DEVICE_PC, SEO_PRODUCT_TYPE, CREATIVE_PRODUCT_TYPE, BAIDU_PRODUCT_SOURCE, PRODUCT_SOURCE_MAP } from 'constant/bw-plus'
 import { f2y, getCnName } from 'util'
-// import _ from 'lodash'
+import _ from 'lodash'
 const welfareInfo = {
   id: 1,
   title: '会员钻石店铺',
@@ -255,12 +255,18 @@ export default {
       }
     },
     totalPrice () {
-      const { currentRenewInfo: { price = 0 }, additionalSkuList, getPrice } = this
+      const { currentRenewInfo: { price = 0 }, additionalSkuList, getPrice, flag } = this
+      const cloneAdditionalSkuList = _.cloneDeep(additionalSkuList)
+      cloneAdditionalSkuList.forEach(item => {
+        if (flag) {
+          item.checked = !item.checked
+        }
+      })
       const ratio =
         price && price > 0
           ? 'dealPriceRatio'
           : 'withoutPackagePriceRatio'
-      const total = additionalSkuList.reduce((producPrev, producNext) => {
+      const total = cloneAdditionalSkuList.reduce((producPrev, producNext) => {
         const priceB = producNext.checked
           ? producNext.type === SEO_PRODUCT_TYPE
               ? price && price > 0
