@@ -56,10 +56,11 @@
       <!-- <el-table-column width="120" prop="scheduleType" label="推广时段" :formatter="scheduleTypeFormater" />
       <el-table-column prop="days" label="服务时长" :formatter="daysFormater" /> -->
       <el-table-column prop="industry" label="推广行业" />
-      <el-table-column align="right" label="报价">
+      <el-table-column align="left" label="报价">
         <template slot-scope="{ row }">
           <span v-if="row.applyType === APPLY_TYPE_NORMAL || row.price">{{f2y(row.price)}}元</span>
-          <el-button v-else :disabled="row.status != APPLY_AUDIT_STATUS_PASS " type="text" @click="reviewPrice(row)">查看</el-button>
+          <span v-else-if="row.status != APPLY_AUDIT_STATUS_PASS">待确认</span>
+          <el-button v-else type="text" @click="reviewPrice(row)">查看</el-button>
         </template>
       </el-table-column>
       <el-table-column width="100" label="绑定销售" prop="salesName"/>

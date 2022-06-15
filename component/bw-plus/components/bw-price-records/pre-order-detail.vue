@@ -66,7 +66,6 @@ export default {
     },
     isYbsAccounting () {
       const roles = normalizeRoles(this.userInfo.roles)
-      console.info('roles is' + roles)
       return roles.includes('YBS_ACCOUNTING')
     },
     preOrder () {

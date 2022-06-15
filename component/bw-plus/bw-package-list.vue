@@ -122,7 +122,7 @@
         </el-pagination>
       </div>
     </main>
-    <PreOrderDetail :isRenew="true" @preOrder="submit" @cancel="visible=false" :allAreas="allAreas" :dialogVisible="visible" :preInfo="renewInfo"/>
+    <PreOrderDetail :isRenew="true" @preOrder="submit" @cancel="visible=false" :allAreas="allAreas" :dialogVisible="visible"  :userInfo="userInfo" :preInfo="renewInfo"/>
     <el-dialog
       :visible.sync="dialogVisible"
       width="26%"
@@ -145,7 +145,7 @@
 
 <script>
 import { getUserPackageList, renewOrder, getRenewPriceByPackageId, submitPreOrder } from 'api/biaowang-plus'
-import { PreOrderDetail } from './components'
+import PreOrderDetail from './components/bw-price-records/pre-order-detail.vue'
 import {
   AUDIT_STATUS_MAP,
   PACKEAGE_STATUS_MAP,
@@ -273,10 +273,9 @@ export default {
       const {
         data: {
           applyId, commitSkuDetailList, cities, words: keywords, mobile = '', salesId: saleId, userId:
-        userBxId
+            userBxId
         }
       } = await getRenewPriceByPackageId({ packageId })
-      console.log(item)
       if (commitSkuDetailList && commitSkuDetailList.length) {
         this.visible = true
         this.renewInfo = {
@@ -289,6 +288,7 @@ export default {
           mobile,
           userBxId
         }
+        console.log(this.renewInfo)
       } else {
         this.$router.push({ name: 'renew-upgrade', query: { packageId } })
       }
