@@ -273,12 +273,14 @@ export default {
       const {
         data: {
           applyId, commitSkuDetailList, cities, words: keywords, mobile = '', salesId: saleId, userId:
-            userBxId
+            userBxId, customerId, customerDesc
         }
       } = await getRenewPriceByPackageId({ packageId })
       if (commitSkuDetailList && commitSkuDetailList.length) {
         this.visible = true
         this.renewInfo = {
+          customerDesc,
+          customerId,
           applyId,
           packageId,
           additionProductMap: commitSkuDetailList,
