@@ -46,7 +46,7 @@
             <li>客户公司：{{item.customerName}}</li>
             <li>客户id：{{item.customerId}}</li>
           </ul>
-          <el-button type="text" v-if="isRolesId(userInfo.roles)" @click="renew(item)">续费</el-button>
+          <el-button type="text" v-if="isRolesId(userInfo.roles, userInfo.agentId)" @click="renew(item)">续费</el-button>
         </div>
         <el-table
             :data="item.skuList"
