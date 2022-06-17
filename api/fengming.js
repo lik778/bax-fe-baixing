@@ -903,3 +903,11 @@ export async function postIndusty (params) {
     .json()
   return body
 }
+
+export async function getSpecail (params) {
+  const body = await fengming
+    .get('/user/config/check_gray_list')
+    .query(reverseCamelcase(params))
+    .json()
+  return body
+}

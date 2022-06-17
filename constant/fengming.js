@@ -216,10 +216,29 @@ export const matchTypeTipAndCount = [
     }
   }
 ]
+// 针对特殊代理商和用户的精确匹配逻辑
+export const matchTypeTipAndCountSpecial = [
+  {
+    minKeywordCount: 2,
+    maxKeywordCount: 10000000,
+    errTip: '精确匹配的设置数量已超过系统限制，更改失败。',
+    count: (wordLen) => {
+      return Math.ceil(wordLen * 0.5)
+    }
+  },
+  {
+    minKeywordCount: 0,
+    maxKeywordCount: 1,
+    errTip: '计划中关键词数不足2，提升至2个以上时可设置精确匹配',
+    count: () => {
+      return 0
+    }
+  }
+]
 
-export const getMatchTypeObj = (wordLen) => {
-  const tempObj = matchTypeTipAndCount.find(o => wordLen >= o.minKeywordCount && wordLen <= o.maxKeywordCount)
-  return tempObj || matchTypeTipAndCount[0]
+export const getMatchTypeObj = (wordLen, special) => {
+  const tempObj = (!special ? matchTypeTipAndCount : matchTypeTipAndCountSpecial).find(o => wordLen >= o.minKeywordCount && wordLen <= o.maxKeywordCount)
+  return tempObj || (!special ? matchTypeTipAndCount : matchTypeTipAndCountSpecial)[0]
 }
 
 export function filterBannedListByContent (words) {
@@ -415,4 +434,15 @@ export const MATERIAL_PIC_AUDIT_TYPE = {
   OFFLINE: [
     MATERIAL_PIC_STATUS.STATUS_CASCADE_OFFLINE
   ]
+}
+
+// 拿到url上的query 对应的value
+export const getQueryParams = (key) => {
+  const query = window.location.search.substring(1).split('&')
+  for (const item of query) {
+    const cur = item.split('=')
+    if (cur[0] === key) {
+      return cur[1]
+    }
+  }
 }

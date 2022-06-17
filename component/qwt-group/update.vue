@@ -73,8 +73,11 @@
           <p class="tip"
              style="margin-top: 20px"
              v-if="promotion.source === SEM_PLATFORM_BAIDU">
-            为保证流量，单个单元内的关键词数≥<strong>20</strong>个才能选择精确匹配方式；
-            单个单元最多可设置<strong>10</strong>个精确匹配。
+            <span v-if="userInfo.isSpecial === 0">为保证流量，单个单元内的关键词数≥<strong>20</strong>个才能选择精确匹配方式；
+            单个单元最多可设置<strong>10</strong>个精确匹配。</span>
+            <span v-else>
+              单个单元内的关键词数≥<strong>2</strong>个才能选择精确匹配方式；单个单元最多可设置当前计划关键词总数的<strong>50%</strong>。
+            </span>
           </p>
         </div>
         <keyword-list-comp ref="keywordListComp"
@@ -85,6 +88,7 @@
                            :group-online="originGroup.status === CAMPAIGN_STATUS_ONLINE"
                            :keywords="keywords"
                            :group-id="groupId"
+                           :userInfo="userInfo"
                            :origin-keywords="originKeywords"
                            :negative-words="group.negativeWords"
                            :search-word="searchWord"
@@ -293,6 +297,13 @@ export default {
       spinner: 'el-icon-loading'
     })
     try {
+      // 获取当前用户是否是指定用户或代理商
+      // const user_id = getQueryParams('user_id')
+      // const data = await getSpecail({
+      //   type: 'GRAY_KEYWORD_MATCHING_LIST',
+      //   user_id: user_id
+      // })
+      // console.log(data)
       const originGroup = await getGroupDetailByGroupId(this.groupId, { userId })
       this.originGroup = originGroup
       this.promotion = clone(this.originGroup.campaign)
