@@ -289,7 +289,7 @@ const bwPlusRoutes = [
       await gStore.getCurrentUser()
       const { roles, isYibaisouUser } = $vueForGetMobx.$options.fromMobx.currentUser()
       const currentRoles = normalizeRoles(roles)
-      if (checkRoles(currentRoles, ['YBS_ACCOUNTING']) || isYibaisouUser) {
+      if (checkRoles(currentRoles, ['YBS_ACCOUNTING', 'YBS_SALES']) || isYibaisouUser) {
         next()
       } else {
         Message.error('您没有权限访问，请更换帐号登陆')

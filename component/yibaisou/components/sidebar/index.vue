@@ -115,7 +115,9 @@ export default {
     },
     allowSeeManage () {
       const { isYibaisouUser } = this.userInfo
-      return isYibaisouUser
+      const { roles } = this.userInfo
+      const currentRoles = normalizeRoles(roles)
+      return (isYibaisouUser || checkRoles(currentRoles, ['YBS_SALES']))
     },
     allowSeeDianpu () {
       const { isYibaisouUser } = this.userInfo

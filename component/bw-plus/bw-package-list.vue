@@ -22,6 +22,11 @@
                     placeholder="输入客户id查询"
                     style="width: 300px;" />
         </el-form-item>
+          <el-form-item label="词包id">
+          <el-input v-model="query.packageId"
+                    placeholder="输入词包id查询"
+                    style="width: 300px;" />
+        </el-form-item>
       </el-form>
 
       <div v-for="item in promotes" :key="item.packageId">
@@ -38,10 +43,10 @@
                   <el-button style="backgroundColor:#FFF1E4;border:0;fontSize:13px;padding:0;">{{ citiesFormater(item.cities).text }}</el-button>
               </el-tooltip>
             </li>
-            <li v-if="userInfo.isYibaisouUser">客户公司：{{item.customerName}}</li>
-            <li v-if="userInfo.isYibaisouUser">客户id：{{item.customerId}}</li>
+            <li>客户公司：{{item.customerName}}</li>
+            <li>客户id：{{item.customerId}}</li>
           </ul>
-          <!-- <el-button v-if="allowRenew(item)" type="text" @click="renew(item)">续费</el-button> -->
+          <el-button type="text" v-if="isRolesId(userInfo.roles, userInfo.agentId)" @click="renew(item)">续费</el-button>
         </div>
         <el-table
             :data="item.skuList"
@@ -117,7 +122,7 @@
         </el-pagination>
       </div>
     </main>
-    <PreOrderDetail :isRenew="true" @preOrder="submit" @cancel="visible=false" :allAreas="allAreas" :dialogVisible="visible" :preInfo="renewInfo"/>
+    <PreOrderDetail :isRenew="true" @preOrder="submit" @cancel="visible=false" :allAreas="allAreas" :dialogVisible="visible"  :userInfo="userInfo" :preInfo="renewInfo"/>
     <el-dialog
       :visible.sync="dialogVisible"
       width="26%"
@@ -132,7 +137,7 @@
       <p>因推广到期，关键词有被抢购风险，去查价重新购买快速锁定关键词</p>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="goQueryPrice">去查价</el-button>
+        <el-button type="primary"  @click="goQueryPrice">去查价</el-button>
       </span>
     </el-dialog>
   </div>
@@ -140,7 +145,7 @@
 
 <script>
 import { getUserPackageList, renewOrder, getRenewPriceByPackageId, submitPreOrder } from 'api/biaowang-plus'
-import { PreOrderDetail } from './components'
+import PreOrderDetail from './components/bw-price-records/pre-order-detail.vue'
 import {
   AUDIT_STATUS_MAP,
   PACKEAGE_STATUS_MAP,
@@ -158,7 +163,7 @@ import {
 import { getCnName } from 'util'
 import debounce from 'lodash.debounce'
 import { Message } from 'element-ui'
-import { isSales } from 'util/role'
+import { isSales, isRolesId } from 'util/role'
 import gStore from '../store'
 
 export default {
@@ -196,7 +201,8 @@ export default {
         size: 10,
         page: 0,
         customerName: '',
-        customerId: ''
+        customerId: '',
+        packageId: ''
       },
       total: 0,
       promotes: [],
@@ -212,7 +218,7 @@ export default {
   methods: {
     async submit () {
       const params = {
-        renewId: this.renewInfo.renewId,
+        applyId: this.renewInfo.applyId,
         skuList: this.renewInfo.additionProductMap
       }
       try {
@@ -264,10 +270,27 @@ export default {
         this.dialogVisible = true
         return
       }
-      const { data: { renewId, commitSkuDetailList, cities, words: keywords, mobile = '', salesId: saleId, userId: userBxId } } = await getRenewPriceByPackageId({ packageId })
+      const {
+        data: {
+          applyId, commitSkuDetailList, cities, words: keywords, mobile = '', salesId: saleId, userId:
+            userBxId, customerId, customerDesc
+        }
+      } = await getRenewPriceByPackageId({ packageId })
       if (commitSkuDetailList && commitSkuDetailList.length) {
         this.visible = true
-        this.renewInfo = { renewId, additionProductMap: commitSkuDetailList, cities, keywords, saleId, mobile, userBxId }
+        this.renewInfo = {
+          customerDesc,
+          customerId,
+          applyId,
+          packageId,
+          additionProductMap: commitSkuDetailList,
+          cities,
+          keywords,
+          saleId,
+          mobile,
+          userBxId
+        }
+        console.log(this.renewInfo)
       } else {
         this.$router.push({ name: 'renew-upgrade', query: { packageId } })
       }
@@ -350,7 +373,8 @@ export default {
           detail: '暂无关键词'
         }
       }
-    }
+    },
+    isRolesId
   },
   watch: {
     query: {

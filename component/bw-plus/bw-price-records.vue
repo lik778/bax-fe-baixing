@@ -21,7 +21,8 @@
       layout="total, prev, pager, next"
       :total="total">
     </el-pagination>
-    <PreOrderDetail @preOrder="preOrder" @cancel="isPreInfo=false" :allAreas="allAreas" :dialogVisible="isPreInfo" :preInfo="preInfo"/>
+    <PreOrderDetail @preOrder="preOrder" @cancel="isPreInfo=false" :userInfo="userInfo" :allAreas="allAreas"
+                    :dialogVisible="isPreInfo" :preInfo="preInfo"/>
     <el-dialog
     title="查价详情"
     :visible="detailVisible"
@@ -198,6 +199,7 @@ export default {
       }
     },
     async preOrder () {
+      console.log('201 preOrder...')
       const loading = this.$loading({
         lock: true,
         text: 'Loading',
@@ -223,6 +225,7 @@ export default {
       }
     },
     async getPreInfo (record) {
+      console.log('226 getPreInfo...')
       const loading = this.$loading({
         lock: true,
         text: 'Loading',

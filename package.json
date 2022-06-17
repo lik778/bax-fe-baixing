@@ -26,6 +26,7 @@
     "fflate": "^0.3.1",
     "file-saver": "^2.0.2",
     "json2csv": "^4.5.4",
+    "lodash": "^4.17.21",
     "lodash.debounce": "^4.0.8",
     "lodash.flatten": "^4.4.0",
     "lodash.isequal": "4.5.0",

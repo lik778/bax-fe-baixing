@@ -3,12 +3,12 @@
         <el-form ref="form" :rules="rules" :model="form" label-width="120px">
             <el-form-item label="推广关键词" prop="words">
                 <el-col :span="8">
-                    <el-input @change="checkKeyword" type="textarea" v-model="form.words" rows="6" placeholder="请输入关键词，多个关键词换行
-示例：
-粮食烘干机
-粮食烘干塔
-…
-查价前请先对比右侧是否属于禁售行业"></el-input>
+                    <el-input @change="checkKeyword" type="textarea"  class="textarea-input" v-model="form.words"  rows="6"
+                              placeholder='请输入关键词，多个关键词换行
+                              示例：粮食烘干机
+                              粮食烘干塔
+                              …
+                              查价前请先对比右侧是否属于禁售行业'>></el-input>
                 </el-col>
                 <el-col class="more-tips" :span="8">
                     <InvalidIndustry/>
@@ -327,6 +327,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.textarea-input {
+  ::v-deep textarea {
+    white-space: pre-line;
+  }
+}
   .el-select{
     width: 100%;
   }

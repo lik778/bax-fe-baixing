@@ -2,7 +2,7 @@
   <div
     :class="{
       'product-wrapper': true,
-      'product-checked': product.checked,
+      'product-checked': product.checked || flag,
       'product-notAllowCheck': notAllowCheck.disable
     }"
     @click="checkProduct"
@@ -34,7 +34,7 @@
     </ul>
     <div class="product-option">
       <div class="price-info">
-        <span class="current-price">抢鲜价：{{skipAudit?dealPrice:' — ' }}元</span>
+        <span class="current-price">抢鲜价：{{ dealPrice }}元</span>
         <span class="origin-price">原价：{{ originalPrice }}元</span>
       </div>
       <el-button
@@ -92,6 +92,11 @@ export default {
       require: true
     },
     isRenew: {
+      type: Boolean,
+      default: false,
+      require: false
+    },
+    flag: {
       type: Boolean,
       default: false,
       require: false
