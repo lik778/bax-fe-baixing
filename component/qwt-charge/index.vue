@@ -221,9 +221,9 @@ export default {
     // 指定权限
     isTargetUId () {
       const allId = this.userInfo.roles.map(item => item.id)
-      const { baixingId } = this.userInfo
+      const { id } = this.userInfo
       if (allId.includes(6)) {
-        return ROLE_USER_ID.includes(baixingId)
+        return ROLE_USER_ID.includes(id)
       } else {
         const { userId = 0 } = this.salesInfo
         return ROLE_USER_ID.includes(userId)
