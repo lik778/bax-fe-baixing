@@ -123,7 +123,7 @@ import { createPreOrder } from 'api/order'
 import { SPUCODES, MERCHANTS } from 'constant/product'
 import { getUniqueAgreementList } from 'util/charge'
 import store from '../activity-store'
-import { ROLE_USER_ID, ROLE_AGENT_ID } from './data'
+import { ROLE_USER_ID } from './data'
 
 const { WHOLE_SPU_CODE, GUAN_WANG_SPU_CODE, BIAO_WANG_SPU_CODE, CARE_FREE_SPU_CODE } = SPUCODES
 const { FENG_MING_MERCHANT_CODE, PHOENIXS_MERCHANT_CODE, CARE_FREE_MERCHANT_CODE } = MERCHANTS
@@ -226,7 +226,7 @@ export default {
         return ROLE_USER_ID.includes(baixingId)
       } else {
         const { userId = 0 } = this.salesInfo
-        return ROLE_AGENT_ID.includes(userId)
+        return ROLE_USER_ID.includes(userId)
       }
     }
   },
