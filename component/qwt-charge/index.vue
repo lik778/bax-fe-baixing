@@ -223,10 +223,10 @@ export default {
       const allId = this.userInfo.roles.map(item => item.id)
       const { baixingId } = this.userInfo
       if (allId.includes(6)) {
-        return ROLE_AGENT_ID.includes(baixingId)
+        return ROLE_USER_ID.includes(baixingId)
       } else {
         const { userId = 0 } = this.salesInfo
-        return ROLE_USER_ID.includes(userId)
+        return ROLE_AGENT_ID.includes(userId)
       }
     }
   },
