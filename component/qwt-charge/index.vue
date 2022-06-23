@@ -80,10 +80,10 @@
           </section>
           <promotion-area-limit-tip :all-areas="allAreas" page="charge" />
           <section v-if="relationAllow()" class="pay-info">
-            <button v-if="!isAgentSales" class="pay-order"
+            <el-button v-if="!isAgentSales" :disabled="isTargetUId" class="pay-order"
               :loading="payInProgress" @click="createPreOrder">
               {{ submitButtonText }}
-            </button>
+            </el-button>
             <span v-if="orderPayUrl">
               <label :title="orderPayUrl">
                 {{ '付款链接: ' + orderPayUrl }}
@@ -123,6 +123,7 @@ import { createPreOrder } from 'api/order'
 import { SPUCODES, MERCHANTS } from 'constant/product'
 import { getUniqueAgreementList } from 'util/charge'
 import store from '../activity-store'
+import { ROLE_USER_ID } from './data'
 
 const { WHOLE_SPU_CODE, GUAN_WANG_SPU_CODE, BIAO_WANG_SPU_CODE, CARE_FREE_SPU_CODE } = SPUCODES
 const { FENG_MING_MERCHANT_CODE, PHOENIXS_MERCHANT_CODE, CARE_FREE_MERCHANT_CODE } = MERCHANTS
@@ -216,6 +217,17 @@ export default {
     },
     hasUnCheckedAgreement () {
       return this.agreementList.length ? this.agreementList.some(agreement => !agreement.checked) : true
+    },
+    // 指定权限
+    isTargetUId () {
+      const allId = this.userInfo.roles.map(item => item.id)
+      const { id } = this.userInfo
+      if (allId.includes(6)) {
+        return ROLE_USER_ID.includes(id)
+      } else {
+        const { userId = 0 } = this.salesInfo
+        return ROLE_USER_ID.includes(userId)
+      }
     }
   },
   components: {
