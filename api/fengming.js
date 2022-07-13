@@ -911,3 +911,11 @@ export async function getSpecail (params) {
     .json()
   return body
 }
+
+export async function checkIdentity (params) {
+  const body = await fengming
+    .get('/user/check/identity')
+    .query(reverseCamelcase(params))
+    .json()
+  return body
+}
