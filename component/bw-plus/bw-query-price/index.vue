@@ -108,7 +108,7 @@ import {
   BAIDU_PRODUCT_SOURCE
 } from 'constant/bw-plus'
 import { f2y } from 'util'
-import clone from 'lodash.cloneDeep'
+import clone from 'clone'
 import debounce from 'lodash.debounce'
 export default {
   name: 'bw-plus-query-price',
