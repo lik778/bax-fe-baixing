@@ -93,7 +93,6 @@ export default {
   },
   methods: {
     transformProduct (product) {
-      console.log(product, 12)
       if (this.isRenew) {
         const { additionRenewDetailList, currentPrice } = this
         return {

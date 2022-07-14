@@ -280,23 +280,42 @@ const showDesc = dayjs(now).isBetween('2021-12-18', '2022-1-1') ? '12.18-12.31' 
 export const welfareInfo = [
   {
     id: 1,
-    title: '会员钻石店铺',
+    title: '高级版钻石店铺',
     value: (price) => 1200,
     desc: '',
+    defaultActive: true,
     content: (price) => ['双端适配', '视频展示', '智能接待系统', '支持seo优化'],
-    isActive: (duration, price) => {
+    isActive: (duration, defaultShow, price) => {
       const active = duration >= 90
       return {
         active,
-        tag: active ? `赠送${duration}天` : '至少购买90天标王可解锁',
+        tag: active && defaultShow ? `赠送${duration}天` : '至少购买90天标王可解锁',
         detail: `${duration}天`,
-        name: '会员钻石店铺'
+        name: '高级版钻石店铺'
       }
     },
     show: true
   },
   {
     id: 2,
+    title: '标准版钻石店铺',
+    value: (price) => 1200,
+    desc: '',
+    defaultActive: false,
+    content: (price) => ['双端适配', '视频展示', '智能接待系统', '支持seo优化'],
+    isActive: (duration, defaultShow, price) => {
+      const active = duration >= 90
+      return {
+        active,
+        tag: active && defaultShow ? `赠送${duration}天` : '至少购买90天标王可解锁',
+        detail: `${duration}天`,
+        name: '标准版钻石店铺'
+      }
+    },
+    show: true
+  },
+  {
+    id: 3,
     title: '精准关键词',
     value: (price) => !price || price < 0 ? 10000 : (f2y(price) >= 10000 && f2y(price) < 20000 ? 2 * 5000 : Math.floor(f2y(price) / 20000) * 5 * 5000),
     desc: `限时${showDesc} 仅前88名`,
@@ -315,7 +334,7 @@ export const welfareInfo = [
     show: showWelfare
   },
   {
-    id: 3,
+    id: 4,
     title: '三网整合营销',
     value: (price) => !price || f2y(price) < 20000 ? 3000 : 8000,
     desc: `限时${showDesc} 仅前30名`,
@@ -338,7 +357,7 @@ export const welfareInfo = [
     show: showWelfare
   },
   {
-    id: 4,
+    id: 5,
     title: '精准词或时长',
     value: (price) => !price || price < 0 ? 3000 : (Math.floor(f2y(price) / 10000) || 1) * 3000,
     desc: '限时1.14-1.31 仅前88名',

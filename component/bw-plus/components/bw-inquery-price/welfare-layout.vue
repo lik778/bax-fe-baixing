@@ -6,6 +6,7 @@
                 :key="index"
                 :className="`custom-${index+1}`"
                 :item="item"
+                @emitActivity="acceptActivity"
                 :currentPrice="currentPrice" />
         </div>
     </div>
@@ -26,6 +27,22 @@ export default {
   data () {
     return {
       welfareInfo
+    }
+  },
+  methods: {
+    acceptActivity (target) {
+      const { welfareInfo } = this
+      this.welfareInfo = welfareInfo.map(item => {
+        if (item.id === target && !item.defaultActive) {
+          this.$emit('postActivityID', target)
+        }
+        if (item.id === target) {
+          item.defaultActive = true
+        } else {
+          item.defaultActive = false
+        }
+        return item
+      })
     }
   }
 }

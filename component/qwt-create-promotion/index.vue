@@ -1011,9 +1011,10 @@ export default {
     // 触发时间
     TimeTracker(1)
     this.getAllInStrusty()
+  },
+  created () {
     this.checkIdentity()
   },
-
   beforeDestroy () {
     store.clearStore()
   },

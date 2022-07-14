@@ -1,5 +1,5 @@
 <template>
-    <div :class="{'welfare-default': true, 'welfare-active': active, [className]: className }">
+    <div @click="handleClick(item.id)" :class="{'welfare-default': true, 'welfare-active': active, [className]: className }">
         <span class="welfare-default_tag">{{tag}}</span>
         <div class="welfare-default_wrapper">
             <p class="welfare-default_title">{{item.title}}</p>
@@ -29,14 +29,22 @@ export default {
       require: false
     }
   },
+  methods: {
+    handleClick (e) {
+      this.$emit('emitActivity', e)
+    }
+  },
   computed: {
     tag () {
       const { item, currentPrice } = this
-      return item.isActive(currentPrice.duration, currentPrice.price).tag
+      return item.isActive(currentPrice.duration, item.defaultActive, currentPrice.price).tag
     },
     active () {
       const { item, currentPrice } = this
-      return item.isActive(currentPrice.duration, currentPrice.price).active
+      if (item.defaultActive) {
+        return item.isActive(currentPrice.duration, item.defaultActive, currentPrice.price).active
+      }
+      return false
     }
   }
 }
