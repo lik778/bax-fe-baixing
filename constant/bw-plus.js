@@ -285,11 +285,11 @@ export const welfareInfo = [
     desc: '',
     defaultActive: true,
     content: (price) => ['双端适配', '视频展示', '智能接待系统', '支持seo优化'],
-    isActive: (duration, defaultShow, price) => {
+    isActive: (duration, price) => {
       const active = duration >= 90
       return {
         active,
-        tag: active && defaultShow ? `赠送${duration}天` : '至少购买90天标王可解锁',
+        tag: active ? `赠送${duration}天` : '至少购买90天标王可解锁',
         detail: `${duration}天`,
         name: '高级版钻石店铺'
       }
@@ -303,11 +303,11 @@ export const welfareInfo = [
     desc: '',
     defaultActive: false,
     content: (price) => ['双端适配', '视频展示', '智能接待系统', '支持seo优化'],
-    isActive: (duration, defaultShow, price) => {
+    isActive: (duration, price) => {
       const active = duration >= 90
       return {
         active,
-        tag: active && defaultShow ? `赠送${duration}天` : '至少购买90天标王可解锁',
+        tag: active ? `赠送${duration}天` : '至少购买90天标王可解锁',
         detail: `${duration}天`,
         name: '标准版钻石店铺'
       }

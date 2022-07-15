@@ -561,6 +561,7 @@ export default {
     },
     getCurrentPrice (value) {
       const { currentPrice: { skuId } } = this
+      console.log(value)
       this.currentPrice = { skuId, ...value }
       const { productList, transformCreativeCurrentPrice } = this
       if (Object.values(value).length > 0) {

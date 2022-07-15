@@ -37,12 +37,12 @@ export default {
   computed: {
     tag () {
       const { item, currentPrice } = this
-      return item.isActive(currentPrice.duration, item.defaultActive, currentPrice.price).tag
+      return item.isActive(currentPrice.duration, currentPrice.price).tag
     },
     active () {
       const { item, currentPrice } = this
       if (item.defaultActive) {
-        return item.isActive(currentPrice.duration, item.defaultActive, currentPrice.price).active
+        return item.isActive(currentPrice.duration, currentPrice.price).active
       }
       return false
     }
