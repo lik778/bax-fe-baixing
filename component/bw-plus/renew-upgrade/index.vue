@@ -150,6 +150,7 @@
                 :disableSkuList="renewDetails.disableSkuList"
                 :currentPrice="currentRenewInfo"
                 :isRenew="true"
+                :skipAudit="true"
                 :flag="flag"
             />
             <div :style="{height: '130px'}"></div>
