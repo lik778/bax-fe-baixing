@@ -5,7 +5,7 @@
             <p class="welfare-default_title">{{item.title}}</p>
             <p v-if="item.desc" class="welfare-default_desc">({{item.desc}})</p>
         </div>
-        <span class="welfare-default_tips">{{active ? '已解锁' : '未解锁'}}</span>
+        <span class="welfare-default_tips">{{item.isActive(currentPrice.duration, currentPrice.price).active ? '已解锁' : '未解锁'}}</span>
     </div>
 </template>
 

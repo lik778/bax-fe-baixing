@@ -227,7 +227,6 @@ export default {
   async mounted () {
     const { packageId } = this.$route.query
     const { data, data: { additionalSkuList } } = await getRenewPriceByPackageId({ packageId })
-    console.log(data, additionalSkuList)
     const cloneData = this.changePhoenixsPriceList(clone(data))
     this.renewDetails = cloneData
     this.additionalSkuList = additionalSkuList.map(a => ({ ...a, checked: false }))

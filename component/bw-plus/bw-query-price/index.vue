@@ -36,6 +36,7 @@
           <BwCreativity
             v-if="productList && productList.length"
             @checked="checked"
+            :currentPrice="currentPrice"
             :skipAudit="queryResult.industryAuditResult.skipManualAudit"
             :productList="productList.filter((o) => o.type === 0)"
           />
@@ -156,6 +157,7 @@ export default {
       keywordLockDetails: [], // 当前关键词锁词详情
       isPending: false,
       productList: [],
+      cloneProductList: [],
       checkedProducts: [],
       isHight: true
     }
@@ -250,11 +252,9 @@ export default {
     },
     transformPrice () {
       const { currentPrice } = this
-      console.log(currentPrice)
       if (!currentPrice.price || currentPrice.price < 0) {
         currentPrice.price = 0
       }
-      console.log(currentPrice.price)
       return f2y(currentPrice.price + this.totalPrice) > 0
         ? f2y(currentPrice.price + this.totalPrice)
         : '-'
@@ -294,39 +294,40 @@ export default {
           cloneKeyWordPriceList[i] = this.changePriceObject(cloneKeyWordPriceList[i])
         }
         this.queryResult.keywordPriceList = cloneKeyWordPriceList
-        this.currentPrice =
-            cloneKeyWordPriceList &&
-            this.findSomeoneAllowSold(
-              Object.values(cloneKeyWordPriceList[0]),
-              BAIDU_PRODUCT_SOURCE
-            )
+        const lastCurrentPrice = clone(this.currentPrice)
+        this.currentPrice = { ...lastCurrentPrice, price: clone(lastCurrentPrice).price * 1.05 }
         // product 也涨5%
         for (const p in cloneProduct) {
           const pItem = clone(cloneProduct[p])
           if (pItem.hasOwnProperty('currentPrice')) {
-            const curP = pItem.currentPrice
-            curP.price += curP.price * 0.05
-            cloneProduct[p] = pItem
+            pItem.currentPrice.price = pItem.currentPrice.price * 1.05
           }
+          // if (pItem.hasOwnProperty('options')) {
+          //   pItem.options = pItem.options.map(pOptions => {
+          //     return { ...pOptions, price: pOptions.price * 1.05 }
+          //   })
+          // }
+          cloneProduct[p] = pItem
         }
         this.productList = cloneProduct
       } else {
         this.isHight = false
         this.queryResult.keywordPriceList = this.copyResult
         const cloneProduct = clone(this.productList)
-        this.currentPrice =
-            this.copyResult &&
-            this.findSomeoneAllowSold(
-              Object.values(this.copyResult[0]),
-              BAIDU_PRODUCT_SOURCE
-            )
+        const lastCurrentPrice = clone(this.currentPrice)
+        this.currentPrice = { ...lastCurrentPrice, price: clone(lastCurrentPrice).price / 1.05 }
         // product 减少5%
         for (const p in cloneProduct) {
-          const pItem = cloneProduct[p]
+          const pItem = clone(cloneProduct[p])
           if (pItem.hasOwnProperty('currentPrice')) {
-            const curP = pItem.currentPrice
-            curP.price = curP.price / 1.05
+            pItem.currentPrice.price = pItem.currentPrice.price / 1.05
           }
+          // if (pItem.hasOwnProperty('options')) {
+          //   pItem.options = pItem.options.map(pOptions => {
+          //     return { ...pOptions, price: pOptions.price / 1.05 }
+          //   })
+          // }
+          cloneProduct[p] = pItem
         }
         this.productList = cloneProduct
       }
@@ -400,7 +401,6 @@ export default {
         checkedAdditionProduct: additionProduct,
         isHight
       } = this
-      console.log(queryInfo)
       const baseParams = {
         targetUserId,
         applyType:
@@ -464,7 +464,6 @@ export default {
       } = this
       const disabledDevice = disableDeviceListBySku[skuId] || []
       // 若找不到，即该关键词在该渠道所有平台全部已售出
-      console.log(priceList)
       const target = priceList.find(
         (item) => item.price > 0 && !disabledDevice.includes(item.device)
       )
@@ -561,7 +560,6 @@ export default {
     },
     getCurrentPrice (value) {
       const { currentPrice: { skuId } } = this
-      console.log(value)
       this.currentPrice = { skuId, ...value }
       const { productList, transformCreativeCurrentPrice } = this
       if (Object.values(value).length > 0) {
@@ -572,7 +570,7 @@ export default {
               product,
               product.options
             )
-            return { ...product, currentPrice }
+            return { ...product, currentPrice: { ...currentPrice, price: this.currentPrice.price } }
           } else {
             return product
           }
@@ -670,6 +668,7 @@ export default {
           }
         }
       })
+      this.cloneProductList = clone(this.productList)
     }
   }
 }

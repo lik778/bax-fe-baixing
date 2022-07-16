@@ -86,7 +86,6 @@ export default {
       deep: true,
       handler (v1) {
         this.productListData = v1
-        console.log(v1, 'productList')
       },
       immediate: true
     }
@@ -120,7 +119,6 @@ export default {
     }
   },
   updated (pre) {
-    console.log('传进来了12', pre)
   }
 }
 </script>

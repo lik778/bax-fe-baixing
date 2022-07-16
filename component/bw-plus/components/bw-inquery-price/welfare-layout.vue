@@ -32,6 +32,8 @@ export default {
   methods: {
     acceptActivity (target) {
       const { welfareInfo } = this
+      const { duration } = this.currentPrice
+      if (duration === 30) return
       this.welfareInfo = welfareInfo.map(item => {
         if (item.id === target && !item.defaultActive) {
           this.$emit('postActivityID', target)
