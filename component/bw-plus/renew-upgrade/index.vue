@@ -188,10 +188,48 @@
 <script>
 import { getRenewPriceByPackageId, submitPreOrder } from 'api/biaowang-plus'
 import { Title, BwCreativity, PreInfoConfirm, WelfareActivity } from '../components'
-import { welfareInfo, BAIDU_BW_PRODUCT_PRICELIST, DEVICE_ALL, DEVICE_WAP, DEVICE_PC, SEO_PRODUCT_TYPE, CREATIVE_PRODUCT_TYPE, BAIDU_PRODUCT_SOURCE, PRODUCT_SOURCE_MAP } from 'constant/bw-plus'
+import { BAIDU_BW_PRODUCT_PRICELIST, DEVICE_ALL, DEVICE_WAP, DEVICE_PC, SEO_PRODUCT_TYPE, CREATIVE_PRODUCT_TYPE, BAIDU_PRODUCT_SOURCE, PRODUCT_SOURCE_MAP } from 'constant/bw-plus'
 import { f2y, getCnName } from 'util'
 import _ from 'lodash'
 import clone from 'clone'
+
+const welfareInfo = [{
+  id: 1,
+  title: '高级版钻石店铺',
+  value: (price) => 1200,
+  desc: '',
+  defaultActive: true,
+  content: (price) => ['双端适配', '视频展示', '智能接待系统', '支持seo优化'],
+  isActive: (duration, price) => {
+    const active = duration >= 30
+    return {
+      active,
+      tag: active ? `赠送${duration}天` : '',
+      detail: `${duration}天`,
+      name: '高级版钻石店铺'
+    }
+  },
+  show: true
+},
+{
+  id: 2,
+  title: '标准版钻石店铺',
+  value: (price) => 1200,
+  desc: '',
+  defaultActive: false,
+  content: (price) => ['双端适配', '视频展示', '智能接待系统', '支持seo优化'],
+  isActive: (duration, price) => {
+    const active = duration >= 30
+    return {
+      active,
+      tag: active ? `赠送${duration}天` : '',
+      detail: `${duration}天`,
+      name: '标准版钻石店铺'
+    }
+  },
+  show: true
+}
+]
 
 export default {
   name: 'renew-upgrade',

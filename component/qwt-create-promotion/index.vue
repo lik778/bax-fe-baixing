@@ -365,7 +365,7 @@ export default {
       areaDialogVisible: false,
       baiduExpandWordsDialogVisible: false,
       IndustryDialogVisible: false,
-      dialogVisible: true,
+      dialogVisible: false,
       semPlatformOpts,
       isCreating: false,
       showPromotion: false,
@@ -1012,9 +1012,9 @@ export default {
     TimeTracker(1)
     this.getAllInStrusty()
   },
-  created () {
-    this.checkIdentity()
-  },
+  // created () {
+  //   this.checkIdentity()
+  // },
   beforeDestroy () {
     store.clearStore()
   },
