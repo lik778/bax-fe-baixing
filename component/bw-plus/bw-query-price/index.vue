@@ -55,7 +55,7 @@
     </div>
     <div :style="{height: '80px'}"></div>
     <div class="box-card submit-fixed" v-if="showResult">
-      <WelfareLayout @postActivityID="acceptActivityID" :currentPrice="getWelfareInfo" />
+      <WelfareLayout @postActivityID="acceptActivityID" :isInit="isInits" :currentPrice="getWelfareInfo" />
       <div class="submit">
         <h3>总价： {{queryResult.industryAuditResult.skipManualAudit?transformPrice:' XXX ' }}元</h3>
         <el-button
@@ -159,7 +159,8 @@ export default {
       productList: [],
       cloneProductList: [],
       checkedProducts: [],
-      isHight: true
+      isHight: true,
+      isInits: false
     }
   },
   computed: {
@@ -521,6 +522,7 @@ export default {
         loading.close()
         this.isPending = false
         this.acceptActivityID(1)
+        this.isInits = !this.isInits
       }
     },
 
