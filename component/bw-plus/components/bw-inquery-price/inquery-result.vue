@@ -368,10 +368,9 @@ export default {
       this.$emit('getValue', this.current)
     },
     transforPrice (price) {
-      console.log(this)
       const { dealPriceRatio } = this
       if (price >= 0) {
-        return f2y(dealPriceRatio * price)
+        return Math.round(f2y(dealPriceRatio * price))
       }
       return '-'
     },

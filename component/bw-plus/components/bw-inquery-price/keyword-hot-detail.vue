@@ -34,7 +34,6 @@ export default {
     tableData: {
       deep: true,
       handler (v) {
-        console.log('v', v)
       }
     }
   }

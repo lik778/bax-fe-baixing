@@ -32,7 +32,7 @@
                         <template slot-scope="{ row }">
                             <div @click="cellClick(row, DEVICE_ALL, 724)" :class="{'active-item': isActive(row, DEVICE_ALL, 724),
               'option-item': true,'diabled': !transformDeviceAllPrice(row, DEVICE_ALL, 724).allowRenew || !transformDeviceAllPrice(row, DEVICE_ALL, 724).soldAvailable}" v-if="transformDeviceAllPrice(row, DEVICE_ALL, 724).allowRenew">
-                                {{transformDeviceAllPrice(row, DEVICE_ALL, 724).soldAvailable ? f2y(transformDeviceAllPrice(row, DEVICE_ALL, 724).price) : '已售出'}}
+                                {{transformDeviceAllPrice(row, DEVICE_ALL, 724).soldAvailable ? Math.round(f2y(transformDeviceAllPrice(row, DEVICE_ALL, 724).price)) : '已售出'}}
                             </div>
                             <el-popover
                                 v-else
@@ -50,7 +50,7 @@
                         <template slot-scope="{ row }">
                             <div @click="cellClick(row, DEVICE_ALL, 58)" :class="{'active-item': isActive(row, DEVICE_ALL, 58),
               'option-item': true,'diabled': !transformDeviceAllPrice(row, DEVICE_ALL, 58).allowRenew || !transformDeviceAllPrice(row, DEVICE_ALL, 58).soldAvailable}" v-if="transformDeviceAllPrice(row, DEVICE_ALL, 58).allowRenew">
-                                {{transformDeviceAllPrice(row, DEVICE_ALL, 58).soldAvailable ? f2y(transformDeviceAllPrice(row, DEVICE_ALL, 58).price) : '已售出'}}
+                                {{transformDeviceAllPrice(row, DEVICE_ALL, 58).soldAvailable ? Math.round(f2y(transformDeviceAllPrice(row, DEVICE_ALL, 58).price)) : '已售出'}}
                             </div>
                             <el-popover
                                 v-else
@@ -70,7 +70,7 @@
                         <template slot-scope="{ row }">
                             <div @click="cellClick(row, DEVICE_WAP, 724)" :class="{'active-item': isActive(row, DEVICE_WAP, 724),
               'option-item': true,'diabled': !transformDeviceAllPrice(row, DEVICE_WAP, 724).allowRenew || !transformDeviceAllPrice(row, DEVICE_WAP, 724).soldAvailable}" v-if="transformDeviceAllPrice(row, DEVICE_WAP, 724).allowRenew">
-                                {{transformDeviceAllPrice(row, DEVICE_WAP, 724).soldAvailable ? f2y(transformDeviceAllPrice(row, DEVICE_WAP, 724).price) : '已售出'}}
+                                {{transformDeviceAllPrice(row, DEVICE_WAP, 724).soldAvailable ? Math.round(f2y(transformDeviceAllPrice(row, DEVICE_WAP, 724).price)) : '已售出'}}
                             </div>
                             <el-popover
                                 v-else
@@ -88,7 +88,7 @@
                         <template slot-scope="{ row }">
                             <div @click="cellClick(row, DEVICE_WAP, 58)" :class="{'active-item': isActive(row, DEVICE_WAP, 58),
               'option-item': true,'diabled': !transformDeviceAllPrice(row, DEVICE_WAP, 58).allowRenew || !transformDeviceAllPrice(row, DEVICE_WAP, 58).soldAvailable}" v-if="transformDeviceAllPrice(row, DEVICE_WAP, 58).allowRenew">
-                                {{transformDeviceAllPrice(row, DEVICE_WAP, 58).soldAvailable ? f2y(transformDeviceAllPrice(row, DEVICE_WAP, 58).price) : '已售出'}}
+                                {{transformDeviceAllPrice(row, DEVICE_WAP, 58).soldAvailable ? Math.round(f2y(transformDeviceAllPrice(row, DEVICE_WAP, 58).price)) : '已售出'}}
                             </div>
                             <el-popover
                                 v-else
@@ -108,7 +108,7 @@
                         <template slot-scope="{ row }">
                             <div @click="cellClick(row, DEVICE_PC, 724)" :class="{'active-item': isActive(row, DEVICE_PC, 724),
               'option-item': true,'diabled': !transformDeviceAllPrice(row, DEVICE_PC, 724).allowRenew || !transformDeviceAllPrice(row, DEVICE_PC, 724).soldAvailable}" v-if="transformDeviceAllPrice(row, DEVICE_PC, 724).allowRenew">
-                                {{transformDeviceAllPrice(row, DEVICE_PC, 724).soldAvailable ? f2y(transformDeviceAllPrice(row, DEVICE_PC, 724).price) : '已售出'}}
+                                {{transformDeviceAllPrice(row, DEVICE_PC, 724).soldAvailable ? Math.round(f2y(transformDeviceAllPrice(row, DEVICE_PC, 724).price)) : '已售出'}}
                             </div>
                             <el-popover
                                 v-else
@@ -126,7 +126,7 @@
                         <template slot-scope="{ row }">
                             <div @click="cellClick(row, DEVICE_PC, 58)" :class="{'active-item': isActive(row, DEVICE_PC, 58),
               'option-item': true,'diabled': !transformDeviceAllPrice(row, DEVICE_PC, 58).allowRenew || !transformDeviceAllPrice(row, DEVICE_PC, 58).soldAvailable}" v-if="transformDeviceAllPrice(row, DEVICE_PC, 58).allowRenew">
-                                {{transformDeviceAllPrice(row, DEVICE_PC, 58).soldAvailable ? f2y(transformDeviceAllPrice(row, DEVICE_PC, 58).price) : '已售出' }}
+                                {{transformDeviceAllPrice(row, DEVICE_PC, 58).soldAvailable ? Math.round(f2y(transformDeviceAllPrice(row, DEVICE_PC, 58).price)) : '已售出' }}
                             </div>
                             <el-popover
                                 v-else
@@ -150,13 +150,20 @@
                 :disableSkuList="renewDetails.disableSkuList"
                 :currentPrice="currentRenewInfo"
                 :isRenew="true"
+                :skipAudit="true"
                 :flag="flag"
             />
             <div :style="{height: '130px'}"></div>
             <footer>
-                <WelfareActivity
-                    :item="welfareInfo"
+               <div class="flex-welfware">
+                  <WelfareActivity
+                    v-for="(welfItem,index) in welfareInfo.filter(o => o.show)"
+                    :item="welfItem"
+                    :key="index"
+                    :className="`custom-${index+1}`"
+                     @emitActivity="acceptActivity"
                     :currentPrice="getWelfareInfo" />
+               </div>
                 <div>
                     <h3>续费价：{{totalPrice}}元</h3>
                     <el-button type="primary" :disabled="totalPrice === '-' || totalPrice <= 0" @click="submitDialog">确认</el-button>
@@ -184,11 +191,14 @@ import { Title, BwCreativity, PreInfoConfirm, WelfareActivity } from '../compone
 import { BAIDU_BW_PRODUCT_PRICELIST, DEVICE_ALL, DEVICE_WAP, DEVICE_PC, SEO_PRODUCT_TYPE, CREATIVE_PRODUCT_TYPE, BAIDU_PRODUCT_SOURCE, PRODUCT_SOURCE_MAP } from 'constant/bw-plus'
 import { f2y, getCnName } from 'util'
 import _ from 'lodash'
-const welfareInfo = {
+import clone from 'clone'
+
+const welfareInfo = [{
   id: 1,
-  title: '会员钻石店铺',
+  title: '高级版钻石店铺',
   value: (price) => 1200,
   desc: '',
+  defaultActive: true,
   content: (price) => ['双端适配', '视频展示', '智能接待系统', '支持seo优化'],
   isActive: (duration, price) => {
     const active = duration >= 30
@@ -196,11 +206,31 @@ const welfareInfo = {
       active,
       tag: active ? `赠送${duration}天` : '',
       detail: `${duration}天`,
-      name: '会员钻石店铺'
+      name: '高级版钻石店铺'
+    }
+  },
+  show: true
+},
+{
+  id: 2,
+  title: '标准版钻石店铺',
+  value: (price) => 1200,
+  desc: '',
+  defaultActive: false,
+  content: (price) => ['双端适配', '视频展示', '智能接待系统', '支持seo优化'],
+  isActive: (duration, price) => {
+    const active = duration >= 30
+    return {
+      active,
+      tag: active ? `赠送${duration}天` : '',
+      detail: `${duration}天`,
+      name: '标准版钻石店铺'
     }
   },
   show: true
 }
+]
+
 export default {
   name: 'renew-upgrade',
   components: {
@@ -228,15 +258,17 @@ export default {
       additionalSkuList: [],
       isPending: false,
       welfareInfo,
-      flag: false
+      flag: false,
+      isHight: true
     }
   },
   async mounted () {
     const { packageId } = this.$route.query
     const { data, data: { additionalSkuList } } = await getRenewPriceByPackageId({ packageId })
-    this.renewDetails = data
+    const cloneData = this.changePhoenixsPriceList(clone(data))
+    this.renewDetails = cloneData
     this.additionalSkuList = additionalSkuList.map(a => ({ ...a, checked: false }))
-    this.currentRenewInfo = { ...data.phoenixsPriceList[0].daysPriceList.find(d => d.soldAvailable), device: data.phoenixsPriceList[0].device, scheduleType: data.phoenixsPriceList[0].scheduleType }
+    this.currentRenewInfo = { ...cloneData.phoenixsPriceList[0].daysPriceList.find(d => d.soldAvailable), device: cloneData.phoenixsPriceList[0].device, scheduleType: cloneData.phoenixsPriceList[0].scheduleType }
   },
   computed: {
     getExtraDetail () {
@@ -276,7 +308,7 @@ export default {
           : 0
         return producPrev + Math.floor(f2y(priceB)) * 100
       }, 0)
-      return f2y(total + price) || '-'
+      return Math.round(f2y(total + price)) || '-'
     },
     preInfo () {
       // 构造选中商品列表数据，给用户确认
@@ -333,11 +365,43 @@ export default {
     }
   },
   methods: {
+    changeDaysPrice (value) {
+      return value.map(i => ({ ...i, price: this.isHight ? i.price * 1.05 : i.price / 1.05 }))
+    },
+    changePhoenixsPriceList (target) {
+      target.phoenixsPriceList.forEach(item => {
+        item.daysPriceList = this.changeDaysPrice(item.daysPriceList)
+      })
+      return target
+    },
+    acceptActivity (target) {
+      const { welfareInfo } = this
+      this.welfareInfo = welfareInfo.map(item => {
+        if (item.id === target && !item.defaultActive) {
+          target === 1 ? this.isHight = true : this.isHight = false
+          this.chargeInint()
+        }
+        if (item.id === target) {
+          item.defaultActive = true
+        } else {
+          item.defaultActive = false
+        }
+        return item
+      })
+    },
+    chargeInint () {
+      const curPhoneixsPrice = this.changePhoenixsPriceList(clone(this.renewDetails))
+      this.renewDetails = curPhoneixsPrice
+      this.currentRenewInfo = { ...curPhoneixsPrice.phoenixsPriceList[0].daysPriceList.find(d => d.soldAvailable), device: curPhoneixsPrice.phoenixsPriceList[0].device, scheduleType: curPhoneixsPrice.phoenixsPriceList[0].scheduleType }
+    },
     citiesFormater (cities) {
       return cities.slice(0, 2).map(city => getCnName(city, this.allAreas)).join(',') + (cities.length > 2 ? `等${cities.length}个城市` : '') || '-'
     },
     async submit () {
       this.isPending = true
+      this.dialogVisible = false
+      this.isHight = false
+      this.chargeInint()
       const params = {
         applyId: this.renewDetails.applyId,
         skuList: this.preInfo.additionProductMap
@@ -445,6 +509,10 @@ export default {
     border-bottom: 1px solid #ffddd2;
     color: #d4a47c;
   }
+}
+.flex-welfware {
+  display: flex;
+  justify-content: flex-start;
 }
 .diabled {
   color: #909399;

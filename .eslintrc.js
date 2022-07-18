@@ -19,5 +19,6 @@ module.exports = {
     'vue'
   ],
   rules: {
+    'no-prototype-builtins': [0]
   }
 }
