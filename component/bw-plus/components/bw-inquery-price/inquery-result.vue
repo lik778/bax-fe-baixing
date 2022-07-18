@@ -370,7 +370,7 @@ export default {
     transforPrice (price) {
       const { dealPriceRatio } = this
       if (price >= 0) {
-        return Math.floor(f2y(dealPriceRatio * price))
+        return Math.round(f2y(dealPriceRatio * price))
       }
       return '-'
     },
