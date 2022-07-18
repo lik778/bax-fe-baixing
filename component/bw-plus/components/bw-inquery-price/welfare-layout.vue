@@ -22,6 +22,11 @@ export default {
       type: Object,
       default: () => {},
       require: true
+    },
+    isInits: {
+      type: Boolean,
+      default: () => false,
+      require: true
     }
   },
   data () {
@@ -45,6 +50,22 @@ export default {
         }
         return item
       })
+    }
+  },
+  watch: {
+    isInits: { // 每次值改变时，初始化
+      immediate: true,
+      handler (v) {
+        const { welfareInfo } = this
+        this.welfareInfo = welfareInfo.map(item => {
+          if (item.id === 1) {
+            item.defaultActive = true
+          } else {
+            item.defaultActive = false
+          }
+          return item
+        })
+      }
     }
   }
 }
