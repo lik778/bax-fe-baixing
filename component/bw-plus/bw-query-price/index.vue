@@ -256,7 +256,7 @@ export default {
         currentPrice.price = 0
       }
       return f2y(currentPrice.price + this.totalPrice) > 0
-        ? f2y(currentPrice.price + this.totalPrice)
+        ? Math.floor(f2y(currentPrice.price + this.totalPrice))
         : '-'
     },
     checkedAdditionProduct () {

@@ -32,7 +32,7 @@
                         <template slot-scope="{ row }">
                             <div @click="cellClick(row, DEVICE_ALL, 724)" :class="{'active-item': isActive(row, DEVICE_ALL, 724),
               'option-item': true,'diabled': !transformDeviceAllPrice(row, DEVICE_ALL, 724).allowRenew || !transformDeviceAllPrice(row, DEVICE_ALL, 724).soldAvailable}" v-if="transformDeviceAllPrice(row, DEVICE_ALL, 724).allowRenew">
-                                {{transformDeviceAllPrice(row, DEVICE_ALL, 724).soldAvailable ? f2y(transformDeviceAllPrice(row, DEVICE_ALL, 724).price) : '已售出'}}
+                                {{transformDeviceAllPrice(row, DEVICE_ALL, 724).soldAvailable ? Math.floor(f2y(transformDeviceAllPrice(row, DEVICE_ALL, 724).price)) : '已售出'}}
                             </div>
                             <el-popover
                                 v-else
@@ -50,7 +50,7 @@
                         <template slot-scope="{ row }">
                             <div @click="cellClick(row, DEVICE_ALL, 58)" :class="{'active-item': isActive(row, DEVICE_ALL, 58),
               'option-item': true,'diabled': !transformDeviceAllPrice(row, DEVICE_ALL, 58).allowRenew || !transformDeviceAllPrice(row, DEVICE_ALL, 58).soldAvailable}" v-if="transformDeviceAllPrice(row, DEVICE_ALL, 58).allowRenew">
-                                {{transformDeviceAllPrice(row, DEVICE_ALL, 58).soldAvailable ? f2y(transformDeviceAllPrice(row, DEVICE_ALL, 58).price) : '已售出'}}
+                                {{transformDeviceAllPrice(row, DEVICE_ALL, 58).soldAvailable ? Math.floor(f2y(transformDeviceAllPrice(row, DEVICE_ALL, 58).price)) : '已售出'}}
                             </div>
                             <el-popover
                                 v-else
@@ -70,7 +70,7 @@
                         <template slot-scope="{ row }">
                             <div @click="cellClick(row, DEVICE_WAP, 724)" :class="{'active-item': isActive(row, DEVICE_WAP, 724),
               'option-item': true,'diabled': !transformDeviceAllPrice(row, DEVICE_WAP, 724).allowRenew || !transformDeviceAllPrice(row, DEVICE_WAP, 724).soldAvailable}" v-if="transformDeviceAllPrice(row, DEVICE_WAP, 724).allowRenew">
-                                {{transformDeviceAllPrice(row, DEVICE_WAP, 724).soldAvailable ? f2y(transformDeviceAllPrice(row, DEVICE_WAP, 724).price) : '已售出'}}
+                                {{transformDeviceAllPrice(row, DEVICE_WAP, 724).soldAvailable ? Math.floor(f2y(transformDeviceAllPrice(row, DEVICE_WAP, 724).price)) : '已售出'}}
                             </div>
                             <el-popover
                                 v-else
@@ -88,7 +88,7 @@
                         <template slot-scope="{ row }">
                             <div @click="cellClick(row, DEVICE_WAP, 58)" :class="{'active-item': isActive(row, DEVICE_WAP, 58),
               'option-item': true,'diabled': !transformDeviceAllPrice(row, DEVICE_WAP, 58).allowRenew || !transformDeviceAllPrice(row, DEVICE_WAP, 58).soldAvailable}" v-if="transformDeviceAllPrice(row, DEVICE_WAP, 58).allowRenew">
-                                {{transformDeviceAllPrice(row, DEVICE_WAP, 58).soldAvailable ? f2y(transformDeviceAllPrice(row, DEVICE_WAP, 58).price) : '已售出'}}
+                                {{transformDeviceAllPrice(row, DEVICE_WAP, 58).soldAvailable ? Math.floor(f2y(transformDeviceAllPrice(row, DEVICE_WAP, 58).price)) : '已售出'}}
                             </div>
                             <el-popover
                                 v-else
@@ -108,7 +108,7 @@
                         <template slot-scope="{ row }">
                             <div @click="cellClick(row, DEVICE_PC, 724)" :class="{'active-item': isActive(row, DEVICE_PC, 724),
               'option-item': true,'diabled': !transformDeviceAllPrice(row, DEVICE_PC, 724).allowRenew || !transformDeviceAllPrice(row, DEVICE_PC, 724).soldAvailable}" v-if="transformDeviceAllPrice(row, DEVICE_PC, 724).allowRenew">
-                                {{transformDeviceAllPrice(row, DEVICE_PC, 724).soldAvailable ? f2y(transformDeviceAllPrice(row, DEVICE_PC, 724).price) : '已售出'}}
+                                {{transformDeviceAllPrice(row, DEVICE_PC, 724).soldAvailable ? Math.floor(f2y(transformDeviceAllPrice(row, DEVICE_PC, 724).price)) : '已售出'}}
                             </div>
                             <el-popover
                                 v-else
@@ -126,7 +126,7 @@
                         <template slot-scope="{ row }">
                             <div @click="cellClick(row, DEVICE_PC, 58)" :class="{'active-item': isActive(row, DEVICE_PC, 58),
               'option-item': true,'diabled': !transformDeviceAllPrice(row, DEVICE_PC, 58).allowRenew || !transformDeviceAllPrice(row, DEVICE_PC, 58).soldAvailable}" v-if="transformDeviceAllPrice(row, DEVICE_PC, 58).allowRenew">
-                                {{transformDeviceAllPrice(row, DEVICE_PC, 58).soldAvailable ? f2y(transformDeviceAllPrice(row, DEVICE_PC, 58).price) : '已售出' }}
+                                {{transformDeviceAllPrice(row, DEVICE_PC, 58).soldAvailable ? Math.floor(f2y(transformDeviceAllPrice(row, DEVICE_PC, 58).price)) : '已售出' }}
                             </div>
                             <el-popover
                                 v-else
@@ -308,7 +308,7 @@ export default {
           : 0
         return producPrev + Math.floor(f2y(priceB)) * 100
       }, 0)
-      return f2y(total + price) || '-'
+      return Math.floor(f2y(total + price)) || '-'
     },
     preInfo () {
       // 构造选中商品列表数据，给用户确认
