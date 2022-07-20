@@ -421,9 +421,9 @@ export default {
 
         await submitPreOrder(params)
         // this.$router.push({ name: 'bw-plus-package-list' })
-        // this.$router.push({
-        //   name: 'bw-plus-price-records'
-        // })
+        this.$router.push({
+          name: 'bw-plus-price-records'
+        })
       } catch (error) {
         console.log(error)
       } finally {
