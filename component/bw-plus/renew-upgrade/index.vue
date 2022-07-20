@@ -400,11 +400,17 @@ export default {
     async submit () {
       this.isPending = true
       this.dialogVisible = false
-      this.isHight = false
-      this.chargeInint()
+      const clonePreInfoAdditionProductMap = clone(this.preInfo.additionProductMap)
+      clonePreInfoAdditionProductMap.forEach(item => {
+        if (this.isHight) {
+          item.dealPrice = item.dealPrice / 1.05
+          item.originPrice = item.originPrice / 1.05
+          item.price = item.price / 1.05
+        }
+      })
       const params = {
         applyId: this.renewDetails.applyId,
-        skuList: this.preInfo.additionProductMap
+        skuList: clonePreInfoAdditionProductMap
       }
       try {
         // const { data: { url } } = await submitPreOrder(params)
