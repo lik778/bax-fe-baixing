@@ -1012,9 +1012,9 @@ export default {
     TimeTracker(1)
     this.getAllInStrusty()
   },
-  // created () {
-  //   this.checkIdentity()
-  // },
+  created () {
+    this.checkIdentity()
+  },
   beforeDestroy () {
     store.clearStore()
   },
