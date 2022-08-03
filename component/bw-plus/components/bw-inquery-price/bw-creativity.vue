@@ -86,14 +86,12 @@ export default {
       deep: true,
       handler (v1) {
         this.productListData = v1
-        console.log(v1, 'productList')
       },
       immediate: true
     }
   },
   methods: {
     transformProduct (product) {
-      console.log(product, 12)
       if (this.isRenew) {
         const { additionRenewDetailList, currentPrice } = this
         return {
@@ -121,7 +119,6 @@ export default {
     }
   },
   updated (pre) {
-    console.log('传进来了12', pre)
   }
 }
 </script>

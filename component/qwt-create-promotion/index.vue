@@ -211,6 +211,21 @@
       @submit="industrySubmit"
       :visible="IndustryDialogVisible"
     />
+    <el-dialog
+      title="尊敬的用户："
+      :visible.sync="dialogVisible"
+      width="30%"
+      center
+      :close-on-press-escape="false"
+      :close-on-click-modal="false"
+      :before-close="handleClose"
+      >
+      <span>&nbsp;&nbsp;根据最新的风控策略要求，需求认证身份才能新建计划，系统检测到您未认证相关资质，请跳转完成认证。</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="clickLocation">跳转认证</el-button>
+      </span>
+</el-dialog>
+
   </div>
 </template>
 
@@ -235,7 +250,7 @@ import FmTip from 'com/widget/fm-tip'
 import qwtAddKeywordsDialog from 'com/common/qwt-add-keywords-dialog'
 import BaxInput from 'com/common/bax-input'
 import BwIndustrySelector from 'com/common/bw-industry-selector'
-
+import qs from 'query-string'
 import track, { trackRecommendService } from 'util/track'
 import { TimeTracker, TimeInput, wordTime } from 'util/time'
 import {
@@ -251,7 +266,8 @@ import {
   createCampaign,
   queryAds,
   getIndusty,
-  postIndusty
+  postIndusty,
+  checkIdentity
 } from 'api/fengming'
 
 import {
@@ -349,7 +365,7 @@ export default {
       areaDialogVisible: false,
       baiduExpandWordsDialogVisible: false,
       IndustryDialogVisible: false,
-
+      dialogVisible: false,
       semPlatformOpts,
       isCreating: false,
       showPromotion: false,
@@ -365,7 +381,8 @@ export default {
       landingTypeOpts: landingTypeOpts.filter(o => o.value !== LANDING_TYPE_GW),
 
       industryOptions: [],
-      cascaderValue: []
+      cascaderValue: [],
+      isIdenity: false
     }
   },
   computed: {
@@ -414,6 +431,20 @@ export default {
     }
   },
   methods: {
+    handleClose () {
+      this.dialogVisible = false
+    },
+    clickLocation () {
+      window.location.href = 'https://www.baixing.com/bind/'
+    },
+    async checkIdentity () {
+      const { user_id: userId } = qs.parse(location.search)
+      const res = await checkIdentity({
+        userId
+      })
+      this.dialogVisible = !res.data
+      this.isIdenity = !res.data
+    },
     addkeys () {
       this.addKeywordsDialog = true
       wordTime()
@@ -580,6 +611,10 @@ export default {
     },
 
     async createPromotion () {
+      if (this.isIdenity) {
+        this.dialogVisible = true
+        return
+      }
       if (!this.$refs.contract.$data.isAgreement) {
         // console.log('这是创建总时间' + TimeTracker(2))
         return this.$message.error('请阅读并勾选同意服务协议，再进行下一步操作')
@@ -977,7 +1012,9 @@ export default {
     TimeTracker(1)
     this.getAllInStrusty()
   },
-
+  created () {
+    this.checkIdentity()
+  },
   beforeDestroy () {
     store.clearStore()
   },

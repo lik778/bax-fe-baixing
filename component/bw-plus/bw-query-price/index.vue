@@ -36,6 +36,7 @@
           <BwCreativity
             v-if="productList && productList.length"
             @checked="checked"
+            :currentPrice="currentPrice"
             :skipAudit="queryResult.industryAuditResult.skipManualAudit"
             :productList="productList.filter((o) => o.type === 0)"
           />
@@ -54,7 +55,7 @@
     </div>
     <div :style="{height: '80px'}"></div>
     <div class="box-card submit-fixed" v-if="showResult">
-      <WelfareLayout :currentPrice="getWelfareInfo" />
+      <WelfareLayout @postActivityID="acceptActivityID" :isInit="isInits" :currentPrice="getWelfareInfo" />
       <div class="submit">
         <h3>总价： {{queryResult.industryAuditResult.skipManualAudit?transformPrice:' XXX ' }}元</h3>
         <el-button
@@ -108,6 +109,7 @@ import {
   BAIDU_PRODUCT_SOURCE
 } from 'constant/bw-plus'
 import { f2y } from 'util'
+import clone from 'clone'
 import debounce from 'lodash.debounce'
 export default {
   name: 'bw-plus-query-price',
@@ -149,12 +151,16 @@ export default {
         title: ''
       },
       queryResult: {},
+      copyResult: [],
       currentPrice: {}, // 用户当前选中的价格
       queryInfo: {},
       keywordLockDetails: [], // 当前关键词锁词详情
       isPending: false,
       productList: [],
-      checkedProducts: []
+      cloneProductList: [],
+      checkedProducts: [],
+      isHight: true,
+      isInits: false
     }
   },
   computed: {
@@ -251,7 +257,7 @@ export default {
         currentPrice.price = 0
       }
       return f2y(currentPrice.price + this.totalPrice) > 0
-        ? f2y(currentPrice.price + this.totalPrice)
+        ? Math.round(f2y(currentPrice.price + this.totalPrice))
         : '-'
     },
     checkedAdditionProduct () {
@@ -280,6 +286,67 @@ export default {
     }
   },
   methods: {
+    acceptActivityID (id) {
+      if (Number(id) === 1) { // 涨5%
+        this.isHight = true
+        const cloneKeyWordPriceList = clone(this.queryResult.keywordPriceList)
+        const cloneProduct = clone(this.productList)
+        for (const i in cloneKeyWordPriceList) {
+          cloneKeyWordPriceList[i] = this.changePriceObject(cloneKeyWordPriceList[i])
+        }
+        this.queryResult.keywordPriceList = cloneKeyWordPriceList
+        const lastCurrentPrice = clone(this.currentPrice)
+        this.currentPrice = { ...lastCurrentPrice, price: clone(lastCurrentPrice).price * 1.05 }
+        // product 也涨5%
+        for (const p in cloneProduct) {
+          const pItem = clone(cloneProduct[p])
+          if (pItem.hasOwnProperty('currentPrice')) {
+            pItem.currentPrice.price = pItem.currentPrice.price * 1.05
+          }
+          // if (pItem.hasOwnProperty('options')) {
+          //   pItem.options = pItem.options.map(pOptions => {
+          //     return { ...pOptions, price: pOptions.price * 1.05 }
+          //   })
+          // }
+          cloneProduct[p] = pItem
+        }
+        this.productList = cloneProduct
+      } else {
+        this.isHight = false
+        this.queryResult.keywordPriceList = this.copyResult
+        const cloneProduct = clone(this.productList)
+        const lastCurrentPrice = clone(this.currentPrice)
+        this.currentPrice = { ...lastCurrentPrice, price: clone(lastCurrentPrice).price / 1.05 }
+        // product 减少5%
+        for (const p in cloneProduct) {
+          const pItem = clone(cloneProduct[p])
+          if (pItem.hasOwnProperty('currentPrice')) {
+            pItem.currentPrice.price = pItem.currentPrice.price / 1.05
+          }
+          // if (pItem.hasOwnProperty('options')) {
+          //   pItem.options = pItem.options.map(pOptions => {
+          //     return { ...pOptions, price: pOptions.price / 1.05 }
+          //   })
+          // }
+          cloneProduct[p] = pItem
+        }
+        this.productList = cloneProduct
+      }
+    },
+    changePriceObject (obj) {
+      const cloneObject = clone(obj)
+      const arr = Object.keys(cloneObject)
+      arr.forEach(item => {
+        if (typeof cloneObject[item] === 'object') {
+          const curObj = clone(cloneObject[item])
+          if (curObj.hasOwnProperty('price')) {
+            curObj.price += curObj.price * 0.05
+            cloneObject[item] = curObj
+          }
+        }
+      })
+      return cloneObject
+    },
     getIndustryAuditType (industryAuditResult) {
       if (industryAuditResult && industryAuditResult.industryManualAuditType) {
         switch (industryAuditResult.industryManualAuditType) {
@@ -332,7 +399,8 @@ export default {
         queryInfo,
         applyTypeFilter,
         currentPrice,
-        checkedAdditionProduct: additionProduct
+        checkedAdditionProduct: additionProduct,
+        isHight
       } = this
       const baseParams = {
         targetUserId,
@@ -344,10 +412,17 @@ export default {
       let params = {}
       if (!error && !overHeat && !industryError) {
         // error、overHeat、industryError都为false时为系统报价，参数如下
+        // 5%减掉
+        const clonePostCurrentprice = clone(currentPrice)
+        const clonePostAdditionProduct = clone(additionProduct)
+        if (isHight) {
+          clonePostCurrentprice.price = clonePostCurrentprice.price / 1.05
+          clonePostAdditionProduct.length > 0 && clonePostAdditionProduct.forEach(item => { item.price = item.price / 1.05 })
+        }
         params = {
           ...baseParams,
-          applyBasicAttr: { priceId, ...currentPrice },
-          additionProduct
+          applyBasicAttr: { priceId, ...clonePostCurrentprice },
+          additionProduct: clonePostAdditionProduct
         }
       } else {
         // error、overHeat、industryError不都为false时为人工报价，参数如下
@@ -421,6 +496,7 @@ export default {
         } = await querySystemResult(params)
         if (code === 0) {
           this.queryResult = data
+          this.copyResult = data.keywordPriceList
           this.keywordLockDetails = keywordLockDetails
           this.currentPrice =
             data.keywordPriceList &&
@@ -445,6 +521,8 @@ export default {
       } finally {
         loading.close()
         this.isPending = false
+        this.acceptActivityID(1)
+        this.isInits = !this.isInits
       }
     },
 
@@ -494,7 +572,7 @@ export default {
               product,
               product.options
             )
-            return { ...product, currentPrice }
+            return { ...product, currentPrice: { ...currentPrice, price: this.currentPrice.price } }
           } else {
             return product
           }
@@ -592,6 +670,7 @@ export default {
           }
         }
       })
+      this.cloneProductList = clone(this.productList)
     }
   }
 }

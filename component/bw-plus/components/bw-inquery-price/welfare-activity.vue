@@ -1,11 +1,11 @@
 <template>
-    <div :class="{'welfare-default': true, 'welfare-active': active, [className]: className }">
+    <div @click="handleClick(item.id)" :class="{'welfare-default': true, 'welfare-active': active, [className]: className }">
         <span class="welfare-default_tag">{{tag}}</span>
         <div class="welfare-default_wrapper">
             <p class="welfare-default_title">{{item.title}}</p>
             <p v-if="item.desc" class="welfare-default_desc">({{item.desc}})</p>
         </div>
-        <span class="welfare-default_tips">{{active ? '已解锁' : '未解锁'}}</span>
+        <span class="welfare-default_tips">{{item.isActive(currentPrice.duration, currentPrice.price).active ? '已解锁' : '未解锁'}}</span>
     </div>
 </template>
 
@@ -29,6 +29,11 @@ export default {
       require: false
     }
   },
+  methods: {
+    handleClick (e) {
+      this.$emit('emitActivity', e)
+    }
+  },
   computed: {
     tag () {
       const { item, currentPrice } = this
@@ -36,7 +41,10 @@ export default {
     },
     active () {
       const { item, currentPrice } = this
-      return item.isActive(currentPrice.duration, currentPrice.price).active
+      if (item.defaultActive) {
+        return item.isActive(currentPrice.duration, currentPrice.price).active
+      }
+      return false
     }
   }
 }

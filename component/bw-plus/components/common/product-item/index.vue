@@ -34,8 +34,8 @@
     </ul>
     <div class="product-option">
       <div class="price-info">
-        <span class="current-price">抢鲜价：{{ dealPrice }}元</span>
-        <span class="origin-price">原价：{{ originalPrice }}元</span>
+        <span class="current-price">抢鲜价：{{  skipAudit ? dealPrice : 'XXX' }}元</span>
+        <span class="origin-price">原价：{{ skipAudit ?  originalPrice  : 'XXX'}}元</span>
       </div>
       <el-button
         class="mini-button"

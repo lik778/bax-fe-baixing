@@ -58,7 +58,7 @@
       <el-table-column prop="industry" label="推广行业" />
       <el-table-column align="left" label="报价">
         <template slot-scope="{ row }">
-          <span v-if="row.applyType === APPLY_TYPE_NORMAL || row.price">{{f2y(row.price)}}元</span>
+          <span v-if="row.applyType === APPLY_TYPE_NORMAL || row.price">{{ row.status === 0 ? '待审核' : f2y(row.price) + '元' }}</span>
           <span v-else-if="row.status != APPLY_AUDIT_STATUS_PASS">待确认</span>
           <el-button v-else type="text" @click="reviewPrice(row)">查看</el-button>
         </template>
