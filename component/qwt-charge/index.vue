@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-tabs class="product-tab" v-model="productTabMchCode" @tab-click="changeProductMchCodeTab">
+    <el-tabs v-if="!isYibaisouFengming" class="product-tab" v-model="productTabMchCode" @tab-click="changeProductMchCodeTab">
       <el-tab-pane v-if="userInfo.allowFmRecharge" :key="FENG_MING_MERCHANT_CODE"  label="站外推广" :name="FENG_MING_MERCHANT_CODE"></el-tab-pane>
       <el-tab-pane v-if="!userInfo.shAgent"  :key="PHOENIXS_MERCHANT_CODE"  label="标王" :name="PHOENIXS_MERCHANT_CODE"></el-tab-pane>
       <el-tab-pane v-if="userInfo.allowCareFreeRecharge" :key="CARE_FREE_MERCHANT_CODE" label="省心币" :name="CARE_FREE_MERCHANT_CODE"></el-tab-pane>
@@ -80,7 +80,7 @@
           </section>
           <promotion-area-limit-tip :all-areas="allAreas" page="charge" />
           <section v-if="relationAllow()" class="pay-info">
-            <el-button v-if="!isAgentSales" :disabled="isTargetUId" class="pay-order"
+            <el-button v-if="!isAgentSales" :disabled="isTargetUId"  class="pay-order"
               :loading="payInProgress" @click="createPreOrder">
               {{ submitButtonText }}
             </el-button>
@@ -95,7 +95,10 @@
 
         <footer>
           <li>凤鸣产品/服务购买后使用规则：</li>
-          <li>1. 该产品购买后，钻石店铺及凤鸣币不可退款，如有疑问请致电客服400-036-3650；</li>
+          <li>1. 该产品购买后，钻石店铺及凤鸣币不可退款，如有疑问请致电客服
+            <span v-if="isYibaisouFengming">400-150-229</span>
+            <span v-else>400-036-3645</span>
+            ；</li>
           <li>2. 该钻石店铺及凤鸣币自购买之日起有效期为1年，请在有效期内使用；</li>
           <li>3. 详细推广记录请在【搜索通】-【数据报表】查看。</li>
         </footer>
@@ -112,7 +115,7 @@ import PromotionAreaLimitTip from 'com/widget/promotion-area-limit-tip'
 import Clipboard from 'com/widget/clipboard'
 
 import { centToYuan } from 'utils'
-import { normalizeRoles, relationAllow } from 'util/role'
+import { normalizeRoles, relationAllow, isNormalUser, isYibaisouSales } from 'util/role'
 import { allowGetOrderPayUrl } from 'util'
 import { orderServiceHost } from 'config'
 import track from 'util/track'
@@ -181,6 +184,20 @@ export default {
     discountInfoHTML: () => store.discountInfoHTML
   },
   computed: {
+    isYibaisouFengming () {
+      const { roles, isYibaisouUser } = this.userInfo
+      if (isNormalUser(roles)) {
+        if (!isYibaisouUser) {
+          console.log('jinlai1')
+          return false
+        }
+      } else {
+        if (!isYibaisouSales(roles)) {
+          return false
+        }
+      }
+      return true
+    },
     isAgentSales () {
       const roles = normalizeRoles(this.userInfo.roles)
       return roles.includes('AGENT_SALES')
@@ -281,6 +298,7 @@ export default {
       }
     }
     this.obtainProductByMchCode()
+    store.setDiscountInfoHTMLFactory(this.productTabMchCode)
   },
   methods: {
     centToYuan,
@@ -305,7 +323,6 @@ export default {
         }
         const item = targetList.find(x => x.vendorCode === this.productTabMchCode)
         products = item ? item.products : []
-
         products.forEach(spu =>
           spu.selection.forEach(sku => {
             sku.quantity = sku.minQuantity === sku.maxQuantity ? sku.minQuantity : 0
@@ -315,7 +332,6 @@ export default {
         )
         this.siteSpu = products.find(p => isGwProduct(p.spuCode))
         this.chargeSpu = products.find(p => isChargeProduct(p.spuCode))
-
         this.agreementList = getUniqueAgreementList(products)
         this.checkedProducts = []
       } catch (e) {

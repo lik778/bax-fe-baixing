@@ -5,7 +5,7 @@
         v-if="summary && summary.budget"
       >
         您的推广资金可用余额为<span class="red">{{ f2y(currentBalance) }}元</span>，预计可消耗<span class="red">{{ days }}天</span>
-        <label v-if="userInfo.allowFmRecharge">为了保证您的广告正常投放，请及时<router-link :to="{ name: 'qwt-charge' }">充值</router-link></label>
+        <label v-if="userInfo.allowFmRecharge">为了保证您的广告正常投放，请及时充值</label>
       </p>
     </div>
 </template>

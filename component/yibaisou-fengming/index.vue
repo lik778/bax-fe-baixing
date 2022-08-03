@@ -51,10 +51,9 @@ import {
   isNormalUser,
   isYibaisouSales
 } from 'util/role'
-
-import qs from 'query-string'
 import { Message } from 'element-ui'
 import { redirect } from 'util'
+import qs from 'query-string'
 // import { router } from '../template/bax'
 
 export default {

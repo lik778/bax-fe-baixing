@@ -1,21 +1,21 @@
 <template>
   <div class="layout-container">
-    <div class="layout-left" v-if="isShowSection('fengming') || isShowSection('site') || isShowSection('biaowang')">
+    <div class="layout-left" v-if="isShowSection('fengming') || isShowSection('biaowang')">
       <h5 class="layout-header">账户概览</h5>
       <ul class="accout">
-        <li class="account-item" v-if="isShowSection('fengming')">
-          <p class="title">凤鸣投放币（元) <span class="sub-title">不含冻结</span></p>
+        <li class="account-item" v-if="isShowSection('fengming') && isYibaisouBiao">
+          <p class="title">百搜凤鸣投放币（元) <span class="sub-title">不含冻结</span></p>
           <p class="num">{{fengmingBalance.price}}</p>
           <p class="desc" :style="{ marginBottom: userInfo.allowFmRecharge ? '' : '72px' }">（冻结金额 {{fengmingBalance.freezeBalance}} 元）</p>
-          <el-button v-if="userInfo.allowFmRecharge" type="primary" class="button" size="small" @click.native="() => handleCharge('bax')">立即充值</el-button>
+          <!-- <el-button v-if="userInfo.allowFmRecharge" type="primary" class="button" size="small" @click.native="() => handleCharge('bax')">立即充值</el-button> -->
         </li>
-        <li class="account-item" v-if="isShowSection('biaowang')">
+        <li class="account-item" v-if="isShowSection('biaowang')  && !isYibaisouBiao">
           <p class="title">标王投放币（元) </p>
           <p class="num">{{ biaowangBalance.price }}</p>
           <!-- <p class="desc">（ {{biaowangData.nearExpirationPromotes}} 个词即将到期）</p> -->
           <el-button type="primary" class="button" size="small" @click.native="() => handleCharge('biaowang')">管理标王推广</el-button>
         </li>
-        <li class="account-item" v-if="isShowSection('biaowang')">
+        <li class="account-item" v-if="isShowSection('biaowang') &&  !isYibaisouBiao">
           <p class="title">省心币（元) </p>
           <p class="num">{{ adPlatformBalance.price }}</p>
           <p class="desc" :style="{ marginBottom: userInfo.allowCareFreeRecharge ? '' : '72px' }"></p>
@@ -46,6 +46,10 @@ import store from './store'
 import Notice from './notice'
 import loadingPlaceholder from './loading-placeholder'
 import { MERCHANTS } from 'constant/product'
+import {
+  isNormalUser,
+  isYibaisouSales
+} from 'util/role'
 
 export default {
   name: 'homepage-accout',
@@ -58,6 +62,21 @@ export default {
     notices: () => store.notices.fengming,
     sites: () => store.kaSiteData && store.kaSiteData.sites,
     biaowangData: () => store.biaowangData
+  },
+  computed: {
+    isYibaisouBiao () {
+      const { roles, isYibaisouUser } = this.userInfo
+      if (isNormalUser(roles)) {
+        if (!isYibaisouUser) {
+          return false
+        }
+      } else {
+        if (!isYibaisouSales(roles)) {
+          return false
+        }
+      }
+      return true
+    }
   },
   methods: {
     handleCharge (type) {
@@ -76,6 +95,7 @@ export default {
     isShowSection (sectionType) {
       switch (sectionType) {
         case 'fengming':
+          console.log(this.fengmingBalance.price, '进来了')
           return this.fengmingBalance.price !== null && this.fengmingBalance.day !== null
         case 'biaowang':
           return this.biaowangData

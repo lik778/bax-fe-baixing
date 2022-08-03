@@ -6,10 +6,10 @@
           推广目标设置
           <p>
             按点击付费，展现免费，100元一键投放百度，神马等多渠道
-            <el-popover trigger="hover">
+            <!-- <el-popover trigger="hover">
               <img :src="PRE_IMG_PROMOTION" width="638" height="405">
               <a slot="reference">查看详情</a>
-            </el-popover>
+            </el-popover> -->
           </p>
         </header>
 
@@ -171,7 +171,7 @@
         <p class="tip">
           扣除其余有效计划日预算后，您的推广资金可用余额为￥{{f2y(currentBalance)}}元，可消耗<strong class="red strong">{{predictedInfo.days}}</strong>天
         </p>
-        <contract-ack type="content-rule" ref="contract"/>
+        <contract-ack type="contract-yibaisou" ref="contract"/>
         <div>
           <el-button type="primary"
             :disabled="isCreating"

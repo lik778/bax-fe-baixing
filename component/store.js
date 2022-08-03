@@ -22,19 +22,19 @@ const gStore = observable({
   _realation: '',
   _fengmingOptimizer: null,
 
-  addUserLeadVisible: false,
+  addUserLeadVisible: false, // 1
   _queryInfo: {}, // 下线计划续费重新查价的信息
 
-  get currentUser () {
+  get currentUser () { // 2
     return toJS(this._currentUser)
   },
-  get allCategories () {
+  get allCategories () { // 3
     return toJS(this._allCategories)
   },
-  get allAreas () {
+  get allAreas () { // 4
     return toJS(this._allAreas)
   },
-  get allRoles () {
+  get allRoles () { // 5
     return toJS(this._allRoles)
   },
   get allQianciAreas () {

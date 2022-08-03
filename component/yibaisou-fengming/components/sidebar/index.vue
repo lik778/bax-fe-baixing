@@ -5,51 +5,48 @@
       <el-menu
         style="border: none;"
         :default-active="defaultActive"
-        :default-openeds="defaultOpeneds"
         :unique-opened="true"
         background-color="#fff"
         active-text-color="#FF6350"
         text-color="#333"
         ref="menu"
       >
-        <el-submenu index="bwPlus">
+        <el-submenu index="fengMingRoutes" key="fengMingRoutes">
           <template slot="title">
             <bx-icon type="sharealt"></bx-icon>百搜凤鸣
           </template>
-          <el-menu-item v-if="allowSeeQueryPrice" index="bw-plus-query-price">
-            <router-link :to="{ name: 'bw-plus-query-price' }" tag="p">
-              百搜标王查价
+          <el-menu-item  index="fengming-main">
+            <router-link :to="{ name: 'fengming-main' }" tag="p">
+              账户概览
             </router-link>
           </el-menu-item>
-          <el-menu-item v-if="allowSeeRecord" index="bw-plus-price-records">
-            <router-link :to="{ name: 'bw-plus-price-records' }" tag="p">
-              查价记录
+          <!-- v-if="allowSeeQwtCharge" -->
+          <el-menu-item  v-if="allowSeeQwtCharge"   index="qwt-charge">
+            <router-link  :to="{ name: 'qwt-charge' }" tag="p">
+              充值资金
             </router-link>
           </el-menu-item>
-          <el-menu-item v-if="allowSeeManage" index="bw-plus-package-list">
-            <router-link :to="{ name: 'bw-plus-package-list' }" tag="p">
+          <el-menu-item  index="qwt-create-promotion">
+            <router-link :to="{ name: 'qwt-create-promotion' }" tag="p">
+              新建推广
+            </router-link>
+          </el-menu-item>
+          <el-menu-item index="qwt-promotion-list">
+            <router-link :to="{ name: 'qwt-promotion-list' }" tag="p">
               管理推广
             </router-link>
           </el-menu-item>
-        </el-submenu>
-        <el-menu-item v-if="allowSeeDianpu" index="diamond-site-homepage" key="diamond-site-homepage">
-          <a v-if="isDiamondSiteJumpToMainSite" href="//shop.baixing.com/management/shop" style="color: inherit">
-            <i class="el-icon-news" />钻石店铺
-          </a>
-          <router-link v-else :to="{ name: 'qwt-charge' }" tag="p">
-            <i class="el-icon-news" />钻石店铺
-          </router-link>
-        </el-menu-item>
-        <el-submenu v-if="allowSeeDianpu" index="dashboard">
-          <template slot="title">
-            <i class="el-icon-document" />数据报表
-          </template>
           <el-menu-item index="qwt-dashboard">
-            <router-link :to="{ name: 'bw-plus-dashboard'}" tag="p">
-              易百搜推广报表
+            <router-link :to="{ name: 'qwt-dashboard' }" tag="p">
+              数据报表
             </router-link>
           </el-menu-item>
         </el-submenu>
+        <el-menu-item index="diamondShop" key="diamondShop">
+          <a  :href="locationShop" style="color: inherit">
+            <i class="el-icon-news" />钻石店铺
+          </a>
+        </el-menu-item>
       </el-menu>
     </main>
   </div>
@@ -69,15 +66,9 @@ import {
 import { getUserSites } from 'api/diamond-site'
 import { baxUserLogin, kaOnlineAndTickets } from 'api/ka'
 
-const MENU_GROUP_MAP = {
-  charge: ['qwt-charge', 'seo-charge'],
-  sst: ['qwt-create-promotion', 'qwt-promotion-list'],
-  bw: ['bw-plan-list'],
-  bwPlus: ['bw-plus-query-price', 'bw-plus-price-records', 'bw-plus-package-list'],
-  qc: ['qc-promote-list'],
-  ssp: ['ad-list', 'material-list', 'order-list', 'user-list', 'ad-calendar'],
-  dashboard: ['qwt-dashboard', 'bw-dashboard', 'qc-dashboard', 'bw-plus-dashboard', 'ad-dashboard']
-}
+// const MENU_GROUP_MAP = {
+//   fengMingRoutes: ['fengming-main', 'qwt-charge', 'qwt-create-promotion', 'qwt-promotion-list', 'qwt-dashboard']
+// }
 
 export default {
   name: 'sidebar',
@@ -94,7 +85,7 @@ export default {
     return {
       version,
       defaultActive: null,
-      defaultOpeneds: [],
+      // defaultOpeneds: [],
       isRenderSiteLink: false,
       isRenderSiteNavTag: false,
       relationAllow,
@@ -103,38 +94,51 @@ export default {
     }
   },
   computed: {
-    allowSeeQueryPrice () {
+    // 只有易白搜的销售才可以看到充值资金
+    allowSeeQwtCharge () {
       const { roles } = this.userInfo
       const currentRoles = normalizeRoles(roles)
       return checkRoles(currentRoles, ['YBS_SALES'])
     },
-    allowSeeRecord () {
-      const { roles } = this.userInfo
-      const currentRoles = normalizeRoles(roles)
-      return checkRoles(currentRoles, ['YBS_ACCOUNTING', 'YBS_SALES'])
-    },
-    allowSeeManage () {
-      const { isYibaisouUser } = this.userInfo
-      const { roles } = this.userInfo
-      const currentRoles = normalizeRoles(roles)
-      return (isYibaisouUser || checkRoles(currentRoles, ['YBS_SALES']))
-    },
-    allowSeeDianpu () {
-      const { isYibaisouUser } = this.userInfo
-      return isYibaisouUser
+    locationShop () {
+      return `//baixing.com/oz/login/?redirect=${encodeURIComponent('//shop.baixing.com/management/shop')}`
     }
+    // allowSeeQueryPrice () {
+    //   const { roles } = this.userInfo
+    //   const currentRoles = normalizeRoles(roles)
+    //   return checkRoles(currentRoles, ['YBS_SALES'])
+    // },
+    // allowSeeRecord () {
+    //   const { roles } = this.userInfo
+    //   const currentRoles = normalizeRoles(roles)
+    //   return checkRoles(currentRoles, ['YBS_ACCOUNTING', 'YBS_SALES'])
+    // },
+    // allowSeeManage () {
+    //   const { isYibaisouUser } = this.userInfo
+    //   const { roles } = this.userInfo
+    //   const currentRoles = normalizeRoles(roles)
+    //   return (isYibaisouUser || checkRoles(currentRoles, ['YBS_SALES']))
+    // },
+    // allowSeeDianpu () {
+    //   const { isYibaisouUser } = this.userInfo
+    //   return isYibaisouUser
+    // }
   },
   watch: {
-    $route (route) {
-      this.defaultOpeneds = Object
-        .entries(MENU_GROUP_MAP)
-        .reduce((defaultOpeneds, [groupIndex, group]) => {
-          if (group.some(item => item === route.name)) {
-            return defaultOpeneds.concat(groupIndex)
-          }
-          return defaultOpeneds
-        }, [])
-      this.defaultActive = route.name
+    $route: {
+      immediate: true,
+      deep: true,
+      handler (route) {
+        // this.defaultOpeneds = Object
+        //   .entries(MENU_GROUP_MAP)
+        //   .reduce((defaultOpeneds, [groupIndex, group]) => {
+        //     if (group.some(item => item === route.name)) {
+        //       return defaultOpeneds.concat(groupIndex)
+        //     }
+        //     return defaultOpeneds
+        //   }, [])
+        this.defaultActive = route.name
+      }
     },
     'userInfo.roles' () {
       // TIP: 只有普通销售会去

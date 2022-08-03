@@ -58,9 +58,9 @@ import es from 'base/es'
 import track from 'util/track'
 import {
   normalizeRoles,
-  isSales,
-  isNormalUser,
-  isYibaisouSales
+  isSales
+  // isNormalUser,
+  // isYibaisouSales
 } from 'util/role'
 import { delCookie } from 'util/cookie'
 
@@ -157,18 +157,18 @@ export default {
     ])
     const { source } = qs.parse(location.search)
     const { userId } = this.salesInfo
-    const { roles, isYibaisouUser } = this.currentUser
-    if (isNormalUser(roles)) {
-      if (isYibaisouUser) {
-        window.location.href = `${window.origin}/yibaisou`
-        return
-      }
-    } else {
-      if (isYibaisouSales(roles)) {
-        window.location.href = `${window.origin}/yibaisou`
-        return
-      }
-    }
+    const { roles } = this.currentUser
+    // if (isNormalUser(roles)) {
+    //   if (isYibaisouUser) {
+    //     window.location.href = `${window.origin}/yibaisou`
+    //     return
+    //   }
+    // } else {
+    //   if (isYibaisouSales(roles)) {
+    //     window.location.href = `${window.origin}/yibaisou`
+    //     return
+    //   }
+    // }
     if (isSales(roles) && userId) {
       gStore.getRelation({ userId })
     }

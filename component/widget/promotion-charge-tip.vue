@@ -3,7 +3,7 @@
   <footer>
     <li>请注意：</li>
     <li>1. 该资金无法用于购买其他付费产品，自产生当日起有效期为一年，超出有效期后，未用完部分将无法继续使用。</li>
-    <a target="_blank" href="/qa">常见问题解答</a>
+    <!-- <a target="_blank" href="/qa">常见问题解答</a> -->
   </footer>
 </template>
 

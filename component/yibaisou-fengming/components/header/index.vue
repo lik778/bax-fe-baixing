@@ -42,7 +42,7 @@ export default {
             .yi-baisou-logo{
                 width: 133px;
                 height: 46px;
-                background: url(../../assets/images/yi-baisou-logo.png) no-repeat center/cover;
+                background: url('//file.baixing.net/202207/32f87f411b80b72cf3091ad8476e5d32.png') no-repeat center/cover;
             }
             .user-logo{
                 color: #fff;

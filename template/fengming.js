@@ -249,31 +249,27 @@ VueRouter.prototype.replace = function replace (route) {
 }
 
 const fengMingRoutes = [
-  {
+  { // 账户概览
     component: Homepage,
-    path: '/yibaisou/fengming/main',
-    name: 'fengming-main'
-    // beforeEnter: async (to, from, next) => {
-    //   await gStore.getCurrentUser()
-    //   const { roles } = $vueForGetMobx.$options.fromMobx.currentUser()
-    //   if (isYibaisouSales(roles)) {
-    //     next()
-    //   } else {
-    //     Message.error('您没有权限访问，请更换帐号登陆')
-    //   }
-    // }
-  },
-  {
-    component: () => import('com/bw-plus/renew-upgrade/index'),
-    path: '/yibaisou/bw-plus/renew-upgrade',
-    name: 'renew-upgrade'
-  },
-  {
-    component: () => import('com/bw-plus/bw-price-records'),
-    path: '/yibaisou/bw-plus/price-records',
-    name: 'bw-plus-price-records',
+    path: '/fengming/main',
+    name: 'fengming-main',
     beforeEnter: async (to, from, next) => {
       await gStore.getCurrentUser()
+      const { roles, isYibaisouUser } = $vueForGetMobx.$options.fromMobx.currentUser()
+      const currentRoles = normalizeRoles(roles)
+      if (checkRoles(currentRoles, ['YBS_ACCOUNTING', 'YBS_SALES']) || isYibaisouUser) {
+        next()
+      } else {
+        Message.error('您没有权限访问，请更换帐号登陆')
+      }
+    }
+  },
+  { // 充值资金
+    component: () => import('com/qwt-charge'),
+    path: '/fengming/qwt/charge',
+    name: 'qwt-charge',
+    beforeEnter: async (to, from, next) => {
+      // await gStore.getCurrentUser()
       const { roles } = $vueForGetMobx.$options.fromMobx.currentUser()
       if (isYibaisouSales(roles)) {
         next()
@@ -282,10 +278,40 @@ const fengMingRoutes = [
       }
     }
   },
-  {
-    component: () => import('com/bw-plus/bw-package-list'),
-    path: '/yibaisou/bw-plus/package-list',
-    name: 'bw-plus-package-list',
+  { // 新建推广
+    component: () => import('com/qwt-create-promotion'),
+    path: '/fengming/qwt/promotion/create',
+    name: 'qwt-create-promotion',
+    beforeEnter: async (to, from, next) => {
+      await gStore.getCurrentUser()
+      const { roles, isYibaisouUser } = $vueForGetMobx.$options.fromMobx.currentUser()
+      const currentRoles = normalizeRoles(roles)
+      if (checkRoles(currentRoles, ['YBS_ACCOUNTING', 'YBS_SALES']) || isYibaisouUser) {
+        next()
+      } else {
+        Message.error('您没有权限访问，请更换帐号登陆')
+      }
+    }
+  },
+  { // 管理推广
+    component: () => import('com/qwt-update-promotion-list'),
+    path: '/fengming/qwt/promotions',
+    name: 'qwt-promotion-list',
+    beforeEnter: async (to, from, next) => {
+      await gStore.getCurrentUser()
+      const { roles, isYibaisouUser } = $vueForGetMobx.$options.fromMobx.currentUser()
+      const currentRoles = normalizeRoles(roles)
+      if (checkRoles(currentRoles, ['YBS_ACCOUNTING', 'YBS_SALES']) || isYibaisouUser) {
+        next()
+      } else {
+        Message.error('您没有权限访问，请更换帐号登陆')
+      }
+    }
+  },
+  { // 数据报表
+    component: () => import('com/qwt-dashboard'),
+    path: '/fengming/qwt/dashboard',
+    name: 'qwt-dashboard',
     beforeEnter: async (to, from, next) => {
       await gStore.getCurrentUser()
       const { roles, isYibaisouUser } = $vueForGetMobx.$options.fromMobx.currentUser()
@@ -298,14 +324,14 @@ const fengMingRoutes = [
     }
   },
   {
-    component: () => import('com/bw-plus/bw-plan-list'),
-    path: '/yibaisou/bw-plus/plan-list/:id',
-    name: 'bw-plus-plan-list',
+    component: () => import('com/qwt-update-promotion'),
+    path: '/fengming/qwt/promotions/:id/update',
+    name: 'qwt-update-promotion',
     beforeEnter: async (to, from, next) => {
       await gStore.getCurrentUser()
       const { roles, isYibaisouUser } = $vueForGetMobx.$options.fromMobx.currentUser()
       const currentRoles = normalizeRoles(roles)
-      if (checkRoles(currentRoles, ['YBS_ACCOUNTING']) || isYibaisouUser) {
+      if (checkRoles(currentRoles, ['YBS_ACCOUNTING', 'YBS_SALES']) || isYibaisouUser) {
         next()
       } else {
         Message.error('您没有权限访问，请更换帐号登陆')
@@ -313,14 +339,14 @@ const fengMingRoutes = [
     }
   },
   {
-    component: () => import('com/bw-plus/bw-edit-plan/index'),
-    path: '/yibaisou/bw-plus/edit-plan/:id',
-    name: 'bw-plus-edit-plan',
+    component: () => import('com/qwt-group/create'),
+    path: '/fengming/qwt/group/create',
+    name: 'qwt-create-group',
     beforeEnter: async (to, from, next) => {
       await gStore.getCurrentUser()
       const { roles, isYibaisouUser } = $vueForGetMobx.$options.fromMobx.currentUser()
       const currentRoles = normalizeRoles(roles)
-      if (checkRoles(currentRoles, ['YBS_ACCOUNTING']) || isYibaisouUser) {
+      if (checkRoles(currentRoles, ['YBS_ACCOUNTING', 'YBS_SALES']) || isYibaisouUser) {
         next()
       } else {
         Message.error('您没有权限访问，请更换帐号登陆')
@@ -328,18 +354,14 @@ const fengMingRoutes = [
     }
   },
   {
-    component: () => import('com/bw-plus/bw-dashboard'),
-    path: '/yibaisou/bw-plus/bw-plus-dashboard',
-    name: 'bw-plus-dashboard'
-  },
-  {
-    component: () => import('com/bw-plus/bw-dashboard'),
-    path: '/yibaisou/bw-plus/bw-plus-dashboard',
-    name: 'bw-plus-dashboard',
+    component: () => import('com/qwt-group/update'),
+    path: '/fengming/qwt/group/:id/update',
+    name: 'qwt-update-group',
     beforeEnter: async (to, from, next) => {
       await gStore.getCurrentUser()
-      const { isYibaisouUser } = $vueForGetMobx.$options.fromMobx.currentUser()
-      if (isYibaisouUser) {
+      const { roles, isYibaisouUser } = $vueForGetMobx.$options.fromMobx.currentUser()
+      const currentRoles = normalizeRoles(roles)
+      if (checkRoles(currentRoles, ['YBS_ACCOUNTING', 'YBS_SALES']) || isYibaisouUser) {
         next()
       } else {
         Message.error('您没有权限访问，请更换帐号登陆')
@@ -354,7 +376,7 @@ export const router = new VueRouter({
     ...fengMingRoutes,
     {
       path: '*',
-      redirect: '/yibaisou/bw-plus/package-list'
+      redirect: '/fengming/main'
     }
   ]
 })
@@ -364,4 +386,4 @@ const app = new Vue({
   router
 })
 
-app.$mount('#yibaisou')
+app.$mount('#fengming')

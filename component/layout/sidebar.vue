@@ -33,7 +33,7 @@
           </el-menu-item>
         </el-submenu>
 
-        <el-submenu index="sst" v-show="allowSeeQwtPromotion || allowSales">
+        <!-- <el-submenu index="sst" v-show="allowSeeQwtPromotion || allowSales">
           <template slot="title">
             <bx-icon type="sharealt"></bx-icon>站外推广
           </template>
@@ -47,7 +47,7 @@
               管理站外推广
             </router-link>
           </el-menu-item>
-        </el-submenu>
+        </el-submenu> -->
         <!-- <el-submenu index="bw">
           <template slot="title">
             <bx-icon type="sharealt"></bx-icon>标王推广
@@ -112,11 +112,11 @@
           <template slot="title">
             <i class="el-icon-document" />数据报表
           </template>
-          <el-menu-item index="qwt-dashboard">
+          <!-- <el-menu-item index="qwt-dashboard">
             <router-link :to="{ name: 'qwt-dashboard'}" tag="p">
               站外推广报表
             </router-link>
-          </el-menu-item>
+          </el-menu-item> -->
           <!-- <el-menu-item index="bw-dashboard">
             <router-link :to="{ name: 'bw-dashboard'}" tag="p">
               标王推广报表
