@@ -611,10 +611,10 @@ export default {
     },
 
     async createPromotion () {
-      if (this.isIdenity) {
-        this.dialogVisible = true
-        return
-      }
+      // if (this.isIdenity) {
+      //   this.dialogVisible = true
+      //   return
+      // }
       if (!this.$refs.contract.$data.isAgreement) {
         // console.log('这是创建总时间' + TimeTracker(2))
         return this.$message.error('请阅读并勾选同意服务协议，再进行下一步操作')
@@ -1012,9 +1012,9 @@ export default {
     TimeTracker(1)
     this.getAllInStrusty()
   },
-  created () {
-    this.checkIdentity()
-  },
+  // created () {
+  //   this.checkIdentity()
+  // },
   beforeDestroy () {
     store.clearStore()
   },

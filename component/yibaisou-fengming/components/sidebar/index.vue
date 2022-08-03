@@ -43,7 +43,7 @@
           </el-menu-item>
         </el-submenu>
         <el-menu-item index="diamondShop" key="diamondShop">
-          <a  :href="locationShop" style="color: inherit">
+          <a  href="//shop.baixing.com/management/shop" style="color: inherit">
             <i class="el-icon-news" />钻石店铺
           </a>
         </el-menu-item>
@@ -99,10 +99,10 @@ export default {
       const { roles } = this.userInfo
       const currentRoles = normalizeRoles(roles)
       return checkRoles(currentRoles, ['YBS_SALES'])
-    },
-    locationShop () {
-      return `//baixing.com/oz/login/?redirect=${encodeURIComponent('//shop.baixing.com/management/shop')}`
     }
+    // locationShop () {
+    //   return `//baixing.com/oz/login/?redirect=${encodeURIComponent('//shop.baixing.com/management/shop')}`
+    // }
     // allowSeeQueryPrice () {
     //   const { roles } = this.userInfo
     //   const currentRoles = normalizeRoles(roles)

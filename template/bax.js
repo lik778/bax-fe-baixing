@@ -66,9 +66,9 @@ import Vue from 'vue'
 import { ErrorBoundary } from 'vue-error-boundary'
 import Vue2Filters from 'vue2-filters'
 import { getBusinessLicense } from 'api/seo'
-// import { getCurrentUser } from 'api/account'
+import { getCurrentUser } from 'api/account'
 import pick from 'lodash.pick'
-// import { notAllowFengmingRecharge } from 'util/role'
+import { notAllowFengmingRecharge } from 'util/role'
 import { parseQuery, stringifyQuery, f2y } from 'util'
 
 import gStore from '../component/store'
@@ -342,51 +342,51 @@ const qcRoutes = [
   }
 ]
 
-// const qwtRoutes = [
-//   {
-//     component: () => import('com/qwt-create-promotion'),
-//     path: '/main/qwt/promotion/create',
-//     name: 'qwt-create-promotion'
-//   },
-//   {
-//     component: () => import('com/qwt-update-promotion'),
-//     path: '/main/qwt/promotions/:id/update',
-//     name: 'qwt-update-promotion'
-//   },
-//   {
-//     component: () => import('com/qwt-group/create'),
-//     path: '/main/qwt/group/create',
-//     name: 'qwt-create-group'
-//   },
-//   {
-//     component: () => import('com/qwt-group/update'),
-//     path: '/main/qwt/group/:id/update',
-//     name: 'qwt-update-group'
-//   },
-//   {
-//     component: () => import('com/qwt-update-promotion-list'),
-//     path: '/main/qwt/promotions',
-//     name: 'qwt-promotion-list'
-//   },
-//   {
-//     component: () => import('com/qwt-dashboard'),
-//     path: '/main/qwt/dashboard',
-//     name: 'qwt-dashboard'
-//   },
-//   {
-//     component: () => import('com/qwt-charge'),
-//     path: '/main/qwt/charge',
-//     name: 'qwt-charge',
-//     beforeEnter: async (to, from, next) => {
-//       const { roles, realAgentId } = await getCurrentUser()
-//       if (notAllowFengmingRecharge(roles, realAgentId)) {
-//         next({ name: 'qwt-promotion-list', redirect: true })
-//       } else {
-//         next()
-//       }
-//     }
-//   }
-// ]
+const qwtRoutes = [
+  {
+    component: () => import('com/qwt-create-promotion'),
+    path: '/main/qwt/promotion/create',
+    name: 'qwt-create-promotion'
+  },
+  {
+    component: () => import('com/qwt-update-promotion'),
+    path: '/main/qwt/promotions/:id/update',
+    name: 'qwt-update-promotion'
+  },
+  {
+    component: () => import('com/qwt-group/create'),
+    path: '/main/qwt/group/create',
+    name: 'qwt-create-group'
+  },
+  {
+    component: () => import('com/qwt-group/update'),
+    path: '/main/qwt/group/:id/update',
+    name: 'qwt-update-group'
+  },
+  {
+    component: () => import('com/qwt-update-promotion-list'),
+    path: '/main/qwt/promotions',
+    name: 'qwt-promotion-list'
+  },
+  {
+    component: () => import('com/qwt-dashboard'),
+    path: '/main/qwt/dashboard',
+    name: 'qwt-dashboard'
+  },
+  {
+    component: () => import('com/qwt-charge'),
+    path: '/main/qwt/charge',
+    name: 'qwt-charge',
+    beforeEnter: async (to, from, next) => {
+      const { roles, realAgentId } = await getCurrentUser()
+      if (notAllowFengmingRecharge(roles, realAgentId)) {
+        next({ name: 'qwt-promotion-list', redirect: true })
+      } else {
+        next()
+      }
+    }
+  }
+]
 
 const sspRoutes = [
   {
@@ -535,7 +535,7 @@ export const router = new VueRouter({
     },
     // ...bwRoutes,
     ...qcRoutes,
-    // ...qwtRoutes,
+    ...qwtRoutes,
     ...sspRoutes,
     ...seoRoutes,
     ...bwPlusRoutes,
