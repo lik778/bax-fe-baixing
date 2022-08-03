@@ -23,8 +23,8 @@ module.exports = {
     bax: './template/bax',
     huodong: './template/huodong',
     authorizationPage: './template/authorization-page',
-    yibaisou: './template/yibaisou',
-    fengming: './template/fengming'
+    yibaisou: './template/yibaisou'
+    // fengming: './template/fengming'
   },
   output: {
     path: distPath,
