@@ -90,6 +90,14 @@ config.plugins = [
     minify: {
       collapseWhitespace: true
     }
+  }),
+  new HtmlWebpackPlugin({
+    filename: 'fengming.html',
+    template: 'template/fengming.html',
+    chunks: ['vendors~bax~huodong~signin', 'vendors~bax~signin', 'fengming'],
+    minify: {
+      collapseWhitespace: true
+    }
   })
   // new BundleAnalyzerPlugin()
 ]
