@@ -54,7 +54,7 @@ config.plugins = [
   new HtmlWebpackPlugin({
     filename: 'main.html',
     template: 'template/main.html',
-    chunks: ['vendors~authorizationPage~bax~huodong~signin~yibaisou~fengming', 'vendors~authorizationPage~bax~signin~yibaisou~fengming', 'bax'],
+    chunks: ['vendors~authorizationPage~bax~fengming~huodong~signin~yibaisou', 'vendors~authorizationPage~bax~fengming~signin~yibaisou', 'bax'],
     minify: {
       collapseWhitespace: true
     }
@@ -62,7 +62,7 @@ config.plugins = [
   new HtmlWebpackPlugin({
     filename: 'signin.html',
     template: 'template/signin.html',
-    chunks: ['vendors~authorizationPage~bax~huodong~signin~yibaisou~fengming', 'vendors~authorizationPage~bax~signin~yibaisou~fengming', 'signin'],
+    chunks: ['vendors~authorizationPage~bax~fengming~huodong~signin~yibaisou', 'vendors~authorizationPage~bax~fengming~signin~yibaisou', 'signin'],
     minify: {
       collapseWhitespace: true
     }
@@ -70,7 +70,7 @@ config.plugins = [
   new HtmlWebpackPlugin({
     filename: 'huodong.html',
     template: 'template/huodong.html',
-    chunks: ['vendors~authorizationPage~bax~huodong~signin', 'huodong'],
+    chunks: ['vendors~authorizationPage~bax~fengming~huodong~signin~yibaisou', 'huodong'],
     minify: {
       collapseWhitespace: true
     }
@@ -78,7 +78,7 @@ config.plugins = [
   new HtmlWebpackPlugin({
     filename: 'authorizationPage.html',
     template: 'template/authorization-page.html',
-    chunks: ['vendors~authorizationPage~bax~huodong~signin~yibaisou~fengming', 'vendors~authorizationPage~bax~signin~yibaisou~fengming', 'authorizationPage'],
+    chunks: ['vendors~authorizationPage~bax~fengming~huodong~signin~yibaisou', 'vendors~authorizationPage~bax~fengming~signin~yibaisou', 'authorizationPage'],
     minify: {
       collapseWhitespace: true
     }
@@ -86,7 +86,7 @@ config.plugins = [
   new HtmlWebpackPlugin({
     filename: 'yibaisou.html',
     template: 'template/yibaisou.html',
-    chunks: ['vendors~authorizationPage~bax~huodong~signin~yibaisou', 'vendors~authorizationPage~bax~signin~yibaisou', 'yibaisou'],
+    chunks: ['vendors~authorizationPage~bax~fengming~huodong~signin~yibaisou', 'vendors~authorizationPage~bax~fengming~signin~yibaisou', 'yibaisou'],
     minify: {
       collapseWhitespace: true
     }
@@ -94,7 +94,7 @@ config.plugins = [
   new HtmlWebpackPlugin({
     filename: 'fengming.html',
     template: 'template/fengming.html',
-    chunks: ['vendors~authorizationPage~bax~huodong~signin~fengming', 'vendors~authorizationPage~bax~signin~fengming', 'fengming'],
+    chunks: ['vendors~authorizationPage~bax~fengming~huodong~signin~yibaisou', 'vendors~authorizationPage~bax~fengming~signin~yibaisou', 'fengming'],
     minify: {
       collapseWhitespace: true
     }
