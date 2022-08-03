@@ -1,7 +1,8 @@
 // import '../lib/trackerlib'
 // import sentry from '../lib/sentry'
 // // import Homepage from 'com/homepage'
-import YibaisouFengming from 'com/yibaisou-fengming'
+import Signin from 'com/signin'
+// import YibaisouFengming from 'com/yibaisou-fengming'
 
 // import dayjs from 'dayjs'
 // import VueClipboard from 'vue-clipboard2'
@@ -382,7 +383,7 @@ import Vue from 'vue'
 // })
 
 const app = new Vue({
-  render: (h) => h(YibaisouFengming)
+  render: (h) => h(Signin)
   // router
 })
 
