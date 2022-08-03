@@ -54,7 +54,7 @@ config.plugins = [
   new HtmlWebpackPlugin({
     filename: 'main.html',
     template: 'template/main.html',
-    chunks: ['vendors~authorizationPage~bax~huodong~signin~yibaisou~fengming', 'vendors~authorizationPage~bax~signin~yibaisou~fengming', 'bax'],
+    chunks: ['vendors~authorizationPage~bax~huodong~signin~yibaisou', 'vendors~authorizationPage~bax~signin~yibaisou', 'bax'],
     minify: {
       collapseWhitespace: true
     }
