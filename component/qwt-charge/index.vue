@@ -1,10 +1,10 @@
 <template>
   <div>
-    <el-tabs v-if="!isYibaisouFengming" class="product-tab" v-model="productTabMchCode" @tab-click="changeProductMchCodeTab">
+    <!-- <el-tabs v-if="!isYibaisouFengming" class="product-tab" v-model="productTabMchCode" @tab-click="changeProductMchCodeTab">
       <el-tab-pane v-if="userInfo.allowFmRecharge" :key="FENG_MING_MERCHANT_CODE"  label="站外推广" :name="FENG_MING_MERCHANT_CODE"></el-tab-pane>
       <el-tab-pane v-if="!userInfo.shAgent"  :key="PHOENIXS_MERCHANT_CODE"  label="标王" :name="PHOENIXS_MERCHANT_CODE"></el-tab-pane>
       <el-tab-pane v-if="userInfo.allowCareFreeRecharge" :key="CARE_FREE_MERCHANT_CODE" label="省心币" :name="CARE_FREE_MERCHANT_CODE"></el-tab-pane>
-    </el-tabs>
+    </el-tabs> -->
     <div class="charge-container" v-loading.fullscreen.lock="fetchLoading">
       <section class="product shadow panel">
         <header v-show="showDiscount">
@@ -79,7 +79,7 @@
             </div>
           </section>
           <promotion-area-limit-tip :all-areas="allAreas" page="charge" />
-          <section v-if="relationAllow()" class="pay-info">
+          <section v-if="relationAllow() && !isAgentAccounting" class="pay-info">
             <el-button v-if="!isAgentSales" :disabled="isTargetUId"  class="pay-order"
               :loading="payInProgress" @click="createPreOrder">
               {{ submitButtonText }}
@@ -96,8 +96,8 @@
         <footer>
           <li>凤鸣产品/服务购买后使用规则：</li>
           <li>1. 该产品购买后，钻石店铺及凤鸣币不可退款，如有疑问请致电客服
-            <span v-if="isYibaisouFengming">400-150-229</span>
-            <span v-else>400-036-3645</span>
+            <!-- <span v-if="isYibaisouFengming">400-150-229</span> -->
+            <span>400-036-3645</span>
             ；</li>
           <li>2. 该钻石店铺及凤鸣币自购买之日起有效期为1年，请在有效期内使用；</li>
           <li>3. 详细推广记录请在【搜索通】-【数据报表】查看。</li>
@@ -204,15 +204,15 @@ export default {
     },
     isBxUser () {
       const roles = normalizeRoles(this.userInfo.roles)
-      return roles.includes('BAIXING_USER')
+      return roles.includes('YBS_USER')
     },
     isBxSales () {
       const roles = normalizeRoles(this.userInfo.roles)
-      return roles.includes('BAIXING_SALES')
+      return roles.includes('YBS_SALES')
     },
     isAgentAccounting () {
       const roles = normalizeRoles(this.userInfo.roles)
-      return roles.includes('AGENT_ACCOUNTING')
+      return roles.includes('YBS_ACCOUNTING')
     },
     submitButtonText () {
       const { userInfo } = this

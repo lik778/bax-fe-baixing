@@ -130,7 +130,7 @@
                                :value="group.mobilePriceRatio"
                                @change="(val) => updateGroupData('mobilePriceRatio', val)" />
       <contract-ack-comp class="contract-ack"
-                         type="content-rule"
+                         type="contract-yibaisou"
                          ref="contract" />
       <el-button class="add-group-btn"
                  type="primary"

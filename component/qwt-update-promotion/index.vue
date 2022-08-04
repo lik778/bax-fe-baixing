@@ -46,7 +46,7 @@
     <div class="module">
       <div class="content">
         <contract-ack class="contract-ack"
-                      type="content-rule"
+                      type="contract-yibaisou"
                       ref="contract" />
         <el-button class="update-btn"
                    type="primary"

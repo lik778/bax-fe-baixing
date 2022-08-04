@@ -4,8 +4,8 @@
       <router-link to="/main" class="logo" tag="h1">搜索通</router-link>
       <p class="version" v-once>v{{version}}</p>
       <ul class="nav">
-        <li class="nav-item" @click="isDialogVisible = true">联系客服&nbsp;400-036-3650</li>
-        <li
+        <!-- <li class="nav-item" @click="isDialogVisible = true">联系客服&nbsp;400-036-3650</li> -->
+        <!-- <li
           class="nav-item"
           @mouseenter="() => this.isHelpVisible = true"
           @mouseleave="() => this.isHelpVisible = false"
@@ -18,7 +18,7 @@
               <a target="_blank" href="/qa?mode=questions" class="menu-item link">常见问题</a>
             </div>
           </transition>
-        </li>
+        </li> -->
         <li
           class="nav-item menu"
           @mouseenter="() => this.isMenuVisible = true"
@@ -28,7 +28,7 @@
           <i :class="isMenuVisible ? 'el-icon-arrow-up' : 'el-icon-arrow-down'"/>
           <transition name="el-zoom-in-top">
             <ul class="menu-group" v-show="isMenuVisible" @click="handleMenuClick">
-              <li class="menu-item" data-command="account">我的账户</li>
+              <!-- <li class="menu-item" data-command="account">我的账户</li> -->
               <!-- <li class="menu-item" data-command="back">返回百姓网</li> -->
               <li class="menu-item" data-command="logout">退出</li>
             </ul>
@@ -36,7 +36,7 @@
         </li>
       </ul>
     </div>
-    <add-user-lead :visible="isDialogVisible" :userInfo="userInfo" @close="isDialogVisible = false"/>
+    <!-- <add-user-lead :visible="isDialogVisible" :userInfo="userInfo" @close="isDialogVisible = false"/> -->
   </div>
 </template>
 
@@ -44,7 +44,7 @@
 import { redirectTo } from 'utils'
 import { logout } from 'api/account'
 import { version } from '../../package.json'
-import AddUserLead from 'com/common/add-user-lead'
+// import AddUserLead from 'com/common/add-user-lead'
 
 export default {
   name: 'layout-header',
@@ -56,7 +56,7 @@ export default {
       isDialogVisible: false
     }
   },
-  components: { AddUserLead },
+  // components: { AddUserLead },
   props: ['userInfo'],
   methods: {
     async handleMenuClick (e) {

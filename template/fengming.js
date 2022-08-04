@@ -68,7 +68,7 @@ import pick from 'lodash.pick'
 import { parseQuery, stringifyQuery, f2y } from 'util'
 
 import gStore from '../component/store'
-import { isYibaisouSales, normalizeRoles, checkRoles } from 'util/role'
+import { normalizeRoles, checkRoles } from 'util/role'
 // isYibaisouSales
 import clone from 'clone'
 
@@ -257,7 +257,7 @@ const fengMingRoutes = [
       await gStore.getCurrentUser()
       const { roles, isYibaisouUser } = $vueForGetMobx.$options.fromMobx.currentUser()
       const currentRoles = normalizeRoles(roles)
-      if (checkRoles(currentRoles, ['YBS_ACCOUNTING', 'YBS_SALES']) || isYibaisouUser) {
+      if (checkRoles(currentRoles, ['YBS_ACCOUNTING', 'YBS_SALES', 'YBS_USER', 'BAIXING_USER']) || isYibaisouUser) {
         next()
       } else {
         Message.error('您没有权限访问，请更换帐号登陆')
@@ -270,8 +270,14 @@ const fengMingRoutes = [
     name: 'qwt-charge',
     beforeEnter: async (to, from, next) => {
       await gStore.getCurrentUser()
-      const { roles } = $vueForGetMobx.$options.fromMobx.currentUser()
-      if (isYibaisouSales(roles)) {
+      const { roles, isYibaisouUser } = $vueForGetMobx.$options.fromMobx.currentUser()
+      const currentRoles = normalizeRoles(roles)
+      // if (isYibaisouSales(roles)) {
+      //   next()
+      // } else {
+      //   Message.error('您没有权限访问，请更换帐号登陆')
+      // }
+      if (checkRoles(currentRoles, ['YBS_ACCOUNTING', 'YBS_SALES', 'YBS_USER', 'BAIXING_USER']) || isYibaisouUser) {
         next()
       } else {
         Message.error('您没有权限访问，请更换帐号登陆')
@@ -286,7 +292,7 @@ const fengMingRoutes = [
       await gStore.getCurrentUser()
       const { roles, isYibaisouUser } = $vueForGetMobx.$options.fromMobx.currentUser()
       const currentRoles = normalizeRoles(roles)
-      if (checkRoles(currentRoles, ['YBS_ACCOUNTING', 'YBS_SALES']) || isYibaisouUser) {
+      if (checkRoles(currentRoles, ['YBS_ACCOUNTING', 'YBS_SALES', 'YBS_USER', 'BAIXING_USER']) || isYibaisouUser) {
         next()
       } else {
         Message.error('您没有权限访问，请更换帐号登陆')
@@ -301,7 +307,7 @@ const fengMingRoutes = [
       await gStore.getCurrentUser()
       const { roles, isYibaisouUser } = $vueForGetMobx.$options.fromMobx.currentUser()
       const currentRoles = normalizeRoles(roles)
-      if (checkRoles(currentRoles, ['YBS_ACCOUNTING', 'YBS_SALES']) || isYibaisouUser) {
+      if (checkRoles(currentRoles, ['YBS_ACCOUNTING', 'YBS_SALES', 'YBS_USER', 'BAIXING_USER']) || isYibaisouUser) {
         next()
       } else {
         Message.error('您没有权限访问，请更换帐号登陆')
@@ -316,7 +322,7 @@ const fengMingRoutes = [
       await gStore.getCurrentUser()
       const { roles, isYibaisouUser } = $vueForGetMobx.$options.fromMobx.currentUser()
       const currentRoles = normalizeRoles(roles)
-      if (checkRoles(currentRoles, ['YBS_ACCOUNTING', 'YBS_SALES']) || isYibaisouUser) {
+      if (checkRoles(currentRoles, ['YBS_ACCOUNTING', 'YBS_SALES', 'YBS_USER', 'BAIXING_USER']) || isYibaisouUser) {
         next()
       } else {
         Message.error('您没有权限访问，请更换帐号登陆')
@@ -331,7 +337,7 @@ const fengMingRoutes = [
       await gStore.getCurrentUser()
       const { roles, isYibaisouUser } = $vueForGetMobx.$options.fromMobx.currentUser()
       const currentRoles = normalizeRoles(roles)
-      if (checkRoles(currentRoles, ['YBS_ACCOUNTING', 'YBS_SALES']) || isYibaisouUser) {
+      if (checkRoles(currentRoles, ['YBS_ACCOUNTING', 'YBS_SALES', 'YBS_USER', 'BAIXING_USER']) || isYibaisouUser) {
         next()
       } else {
         Message.error('您没有权限访问，请更换帐号登陆')
@@ -346,7 +352,7 @@ const fengMingRoutes = [
       await gStore.getCurrentUser()
       const { roles, isYibaisouUser } = $vueForGetMobx.$options.fromMobx.currentUser()
       const currentRoles = normalizeRoles(roles)
-      if (checkRoles(currentRoles, ['YBS_ACCOUNTING', 'YBS_SALES']) || isYibaisouUser) {
+      if (checkRoles(currentRoles, ['YBS_ACCOUNTING', 'YBS_SALES', 'YBS_USER', 'BAIXING_USER']) || isYibaisouUser) {
         next()
       } else {
         Message.error('您没有权限访问，请更换帐号登陆')
@@ -361,7 +367,7 @@ const fengMingRoutes = [
       await gStore.getCurrentUser()
       const { roles, isYibaisouUser } = $vueForGetMobx.$options.fromMobx.currentUser()
       const currentRoles = normalizeRoles(roles)
-      if (checkRoles(currentRoles, ['YBS_ACCOUNTING', 'YBS_SALES']) || isYibaisouUser) {
+      if (checkRoles(currentRoles, ['YBS_ACCOUNTING', 'YBS_SALES', 'YBS_USER', 'BAIXING_USER']) || isYibaisouUser) {
         next()
       } else {
         Message.error('您没有权限访问，请更换帐号登陆')

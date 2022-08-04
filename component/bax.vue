@@ -13,11 +13,11 @@
       </router-view>
     </div>
     <sidebar :user-info="currentUser"></sidebar>
-    <new-user-intro
+    <!-- <new-user-intro
       :mode="newUserIntroMode"
       :visible="showNewUserIntro"
       @close="showNewUserIntro = false"
-    />
+    /> -->
     <add-user-lead
       :user-info="currentUser"
       :visible="addUserLeadVisible"
@@ -25,28 +25,28 @@
     />
     <!-- <huo-dong-intro :show="huoDongIntroVisible" @close="huoDongIntroVisible = false" /> -->
     <huo-dong-btn v-if="inActivityPeriod" />
-    <div class="right-utils">
-    <chat />
-    <back-to-top />
-    <!-- <WechatQrcode/> -->
-    <!-- <wechat-scan /> -->
-    <Notification />
-    </div>
+    <!-- <div class="right-utils"> -->
+    <!-- <chat /> -->
+    <!-- <back-to-top /> -->
+        <!-- <WechatQrcode/> -->
+        <!-- <wechat-scan /> -->
+        <!-- <Notification /> -->
+    <!-- </div> -->
     <!-- <bw-shopping-cart ref="bwShoppingCart" :userInfo="currentUser" v-if="currentUser.id && isBwRoute" :salesInfo="salesInfo" :allAreas="allAreas"/> -->
   </div>
 </template>
 
 <script>
-import NewUserIntro from './common/new-user-intro'
-import Notification from './common/notification'
+// import NewUserIntro from './common/new-user-intro' // 新用户引导关闭
+// import Notification from './common/notification'
 import AddUserLead from './common/add-user-lead'
 // import WechatQrcode from './widget/wechat-qrcode.vue'
 // import WechatScan from './widget/wechat-scan'
 // import BwShoppingCart from './common/bw-shopping-cart.vue'
-import BackToTop from './widget/back-to-top'
+// import BackToTop from './widget/back-to-top'
 import Sidebar from './layout/sidebar'
 import Header from './layout/header'
-import Chat from './widget/chat'
+// import Chat from './widget/chat'
 import HuoDongBtn from './common/huodong-btn'
 import { getWordAuthority } from 'api/fengming'
 
@@ -58,9 +58,9 @@ import es from 'base/es'
 import track from 'util/track'
 import {
   normalizeRoles,
-  isSales
-  // isNormalUser,
-  // isYibaisouSales
+  isSales,
+  isNormalUser,
+  isYibaisouSales
 } from 'util/role'
 import { delCookie } from 'util/cookie'
 
@@ -70,16 +70,16 @@ import qs from 'query-string'
 export default {
   name: 'bax',
   components: {
-    NewUserIntro,
-    Notification,
+    // NewUserIntro,
+    // Notification,
     AddUserLead,
     // WechatQrcode,
     // BwShoppingCart,
     // WechatScan,
-    BackToTop,
+    // BackToTop,
     Sidebar,
     Header,
-    Chat,
+    // Chat,
     HuoDongBtn
   },
   fromMobx: {
@@ -92,7 +92,7 @@ export default {
   },
   data () {
     return {
-      showNewUserIntro: false,
+      // showNewUserIntro: false,
       // isBwRoute: false,
       newUserIntroMode: '',
       pending: 0,
@@ -157,18 +157,18 @@ export default {
     ])
     const { source } = qs.parse(location.search)
     const { userId } = this.salesInfo
-    const { roles } = this.currentUser
-    // if (isNormalUser(roles)) {
-    //   if (isYibaisouUser) {
-    //     window.location.href = `${window.origin}/yibaisou`
-    //     return
-    //   }
-    // } else {
-    //   if (isYibaisouSales(roles)) {
-    //     window.location.href = `${window.origin}/yibaisou`
-    //     return
-    //   }
-    // }
+    const { roles, isYibaisouUser } = this.currentUser
+    if (isNormalUser(roles)) {
+      if (isYibaisouUser) {
+        window.location.href = `${window.origin}/yibaisou`
+        return
+      }
+    } else {
+      if (isYibaisouSales(roles)) {
+        window.location.href = `${window.origin}/yibaisou`
+        return
+      }
+    }
     if (isSales(roles) && userId) {
       gStore.getRelation({ userId })
     }
@@ -325,10 +325,10 @@ body > .container {
 .el-loading-mask {
   height: 100%;
 }
-.right-utils{
-    position: fixed;
-    right: 20px;
-    bottom: 160px;
-    z-index: 3;
-}
+// .right-utils{
+//     position: fixed;
+//     right: 20px;
+//     bottom: 160px;
+//     z-index: 3;
+// }
 </style>

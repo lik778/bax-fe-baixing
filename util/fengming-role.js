@@ -36,6 +36,7 @@ export function allowGetOrderPayUrl (roles) {
   const currentRoles = normalizeRoles(roles)
 
   return checkRoles(currentRoles, [
+    'YBS_SALES',
     'BAIXING_SALES',
     'BAIXING_USER'
   ])

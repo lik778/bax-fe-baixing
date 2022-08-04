@@ -22,7 +22,7 @@
           </router-link>
         </el-menu-item>
 
-        <el-submenu index="charge">
+        <!-- <el-submenu index="charge">
           <template slot="title">
             <bx-icon type="paycircleo"></bx-icon>充值与购买
           </template>
@@ -31,7 +31,7 @@
               充值
             </router-link>
           </el-menu-item>
-        </el-submenu>
+        </el-submenu> -->
 
         <!-- <el-submenu index="sst" v-show="allowSeeQwtPromotion || allowSales">
           <template slot="title">
@@ -83,7 +83,7 @@
             </router-link>
           </el-menu-item>
         </el-submenu>
-        <el-submenu index="seo">
+        <!-- <el-submenu index="seo">
           <template slot="title">
             <bx-icon type="sharealt"></bx-icon>SEO云推广
           </template>
@@ -92,7 +92,7 @@
               SEO云推广购买
             </router-link>
           </el-menu-item>
-        </el-submenu>
+        </el-submenu> -->
         <!-- <el-submenu index="qc">
           <template slot="title">
             <bx-icon type="sharealt"></bx-icon>易慧推
@@ -103,11 +103,11 @@
             </router-link>
           </el-menu-item>
         </el-submenu> -->
-        <el-menu-item index="gw-homepage" v-if="isRenderSiteLink">
+        <!-- <el-menu-item index="gw-homepage" v-if="isRenderSiteLink">
           <a href="/ka/main" style="color: inherit">
             <i class="el-icon-news" />精品官网
           </a>
-        </el-menu-item>
+        </el-menu-item> -->
         <el-submenu index="dashboard">
           <template slot="title">
             <i class="el-icon-document" />数据报表
@@ -138,7 +138,7 @@
             </router-link>
           </el-menu-item> -->
         </el-submenu>
-        <el-submenu index="ssp" v-show="allowSeeBxAd">
+        <!-- <el-submenu index="ssp" v-show="allowSeeBxAd">
           <template slot="title">
             <i class="el-icon-message"></i>品牌广告
           </template>
@@ -167,7 +167,7 @@
               广告排期
             </router-link>
           </el-menu-item>
-        </el-submenu>
+        </el-submenu> -->
 
         <el-menu-item v-if="allowSeeDiamondSite" index="diamond-site-homepage" key="diamond-site-homepage">
           <a v-if="isDiamondSiteJumpToMainSite" href="//shop.baixing.com/management/shop" style="color: inherit">

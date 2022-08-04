@@ -15,7 +15,7 @@
           <template slot="title">
             <bx-icon type="sharealt"></bx-icon>百搜凤鸣
           </template>
-          <el-menu-item  index="fengming-main">
+          <el-menu-item  v-if="allowSeeFengmingOther"  index="fengming-main">
             <router-link :to="{ name: 'fengming-main' }" tag="p">
               账户概览
             </router-link>
@@ -26,12 +26,13 @@
               充值资金
             </router-link>
           </el-menu-item>
+          <template  v-if="allowSeeFengmingOther">
           <el-menu-item  index="qwt-create-promotion">
             <router-link :to="{ name: 'qwt-create-promotion' }" tag="p">
               新建推广
             </router-link>
           </el-menu-item>
-          <el-menu-item index="qwt-promotion-list">
+         <el-menu-item index="qwt-promotion-list">
             <router-link :to="{ name: 'qwt-promotion-list' }" tag="p">
               管理推广
             </router-link>
@@ -41,8 +42,9 @@
               数据报表
             </router-link>
           </el-menu-item>
+          </template>
         </el-submenu>
-        <el-menu-item index="diamondShop" key="diamondShop">
+        <el-menu-item  v-if="allowSeeFengmingOther" index="diamondShop" key="diamondShop">
           <a  href="//shop.baixing.com/management/shop" style="color: inherit">
             <i class="el-icon-news" />钻石店铺
           </a>
@@ -94,11 +96,16 @@ export default {
     }
   },
   computed: {
-    // 只有易白搜的销售才可以看到充值资金
+    // 只有易白搜的销售和提单员才可以看到充值资金
     allowSeeQwtCharge () {
       const { roles } = this.userInfo
       const currentRoles = normalizeRoles(roles)
-      return checkRoles(currentRoles, ['YBS_SALES'])
+      return checkRoles(currentRoles, ['YBS_SALES', 'YBS_USER', 'BAIXING_USER', 'YBS_ACCOUNTING'])
+    },
+    allowSeeFengmingOther () {
+      const { roles } = this.userInfo
+      const currentRoles = normalizeRoles(roles)
+      return checkRoles(currentRoles, ['YBS_SALES', 'YBS_USER', 'BAIXING_USER'])
     }
     // locationShop () {
     //   return `//baixing.com/oz/login/?redirect=${encodeURIComponent('//shop.baixing.com/management/shop')}`

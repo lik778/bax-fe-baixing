@@ -13,11 +13,11 @@
       </router-view>
     </div>
     <sidebar :user-info="currentUser"></sidebar>
-    <new-user-intro
+    <!-- <new-user-intro
       :mode="newUserIntroMode"
       :visible="showNewUserIntro"
       @close="showNewUserIntro = false"
-    />
+    /> -->
     <add-user-lead
       :user-info="currentUser"
       :visible="addUserLeadVisible"
@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import NewUserIntro from '../common/new-user-intro'
+// import NewUserIntro from '../common/new-user-intro'
 import Notification from '../common/notification'
 import AddUserLead from '../common/add-user-lead'
 import BackToTop from '../widget/back-to-top'
@@ -60,7 +60,7 @@ import { redirect } from 'util'
 export default {
   name: 'Yibaisou',
   components: {
-    NewUserIntro,
+    // NewUserIntro,
     Notification,
     AddUserLead,
     // WechatQrcode,

@@ -13,11 +13,11 @@
       </router-view>
     </div>
     <sidebar :user-info="currentUser"></sidebar>
-    <new-user-intro
+    <!-- <new-user-intro
       :mode="newUserIntroMode"
       :visible="showNewUserIntro"
       @close="showNewUserIntro = false"
-    />
+    /> -->
     <add-user-lead
       :user-info="currentUser"
       :visible="addUserLeadVisible"
@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import NewUserIntro from '../common/new-user-intro'
+// import NewUserIntro from '../common/new-user-intro'
 import Notification from '../common/notification'
 import AddUserLead from '../common/add-user-lead'
 import BackToTop from '../widget/back-to-top'
@@ -48,8 +48,8 @@ import aStore from '../activity-store'
 import track from 'util/track'
 import {
   normalizeRoles,
-  isNormalUser,
-  isYibaisouSales
+  // isNormalUser,
+  isYibaisouFengMing
 } from 'util/role'
 import { Message } from 'element-ui'
 import { redirect } from 'util'
@@ -59,7 +59,7 @@ import qs from 'query-string'
 export default {
   name: 'YibaisouFengming',
   components: {
-    NewUserIntro,
+    // NewUserIntro,
     Notification,
     AddUserLead,
     // WechatQrcode,
@@ -129,17 +129,10 @@ export default {
       gStore.getAreas(),
       gStore.getRoles()
     ])
-    const { roles, isYibaisouUser } = this.currentUser
-    if (isNormalUser(roles)) {
-      if (!isYibaisouUser) {
-        Message.error('您没有权限访问，请更换帐号登陆')
-        return redirect('signin', `return=${encodeURIComponent(location.pathname + location.search)}`)
-      }
-    } else {
-      if (!isYibaisouSales(roles)) {
-        Message.error('您没有权限访问，请更换帐号登陆')
-        return redirect('signin', `return=${encodeURIComponent(location.pathname + location.search)}`)
-      }
+    const { roles } = this.currentUser
+    if (!isYibaisouFengMing(roles)) {
+      Message.error('您没有权限访问，请更换帐号登陆')
+      return redirect('signin', `return=${encodeURIComponent(location.pathname + location.search)}`)
     }
     setTimeout(() => {
       const { currentUser } = this

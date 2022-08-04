@@ -22,9 +22,9 @@
       </span>
     </form>
     <div v-else class="fengming-admin">
-      <p class="fengming-tip">请跳转到易白搜后台登录</p>
+      <p class="fengming-tip">请跳转到易百搜后台登录</p>
       <p class="fengming-submit">
-       <a class="fengming-dev" href="">跳转</a>
+       <a class="fengming-dev" href="//crm.e-baixing.com/">跳转</a>
         <button class="fengming-reload" @click="onload">已登录，刷新</button>
       </p>
     </div>
