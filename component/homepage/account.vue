@@ -3,19 +3,19 @@
     <div class="layout-left" v-if="isShowSection('fengming') || isShowSection('biaowang')">
       <h5 class="layout-header">账户概览</h5>
       <ul class="accout">
-        <li class="account-item" v-if="isShowSection('fengming') && isYibaisouBiao && isYiBaisouYuMing">
+        <li class="account-item" v-if="isShowSection('fengming') && isYibaisouBiao">
           <p class="title">百搜凤鸣投放币（元) <span class="sub-title">不含冻结</span></p>
           <p class="num">{{fengmingBalance.price}}</p>
           <p class="desc" :style="{ marginBottom: userInfo.allowFmRecharge ? '' : '72px' }">（冻结金额 {{fengmingBalance.freezeBalance}} 元）</p>
           <!-- <el-button v-if="userInfo.allowFmRecharge" type="primary" class="button" size="small" @click.native="() => handleCharge('bax')">立即充值</el-button> -->
         </li>
-        <li class="account-item" v-if="isShowSection('biaowang') && !isYiBaisouYuMing">
+        <li class="account-item" v-if="isShowSection('biaowang') && !isYibaisouBiao">
           <p class="title">标王投放币（元) </p>
           <p class="num">{{ biaowangBalance.price }}</p>
           <!-- <p class="desc">（ {{biaowangData.nearExpirationPromotes}} 个词即将到期）</p> -->
           <el-button type="primary" class="button" size="small" @click.native="() => handleCharge('biaowang')">管理标王推广</el-button>
         </li>
-        <li class="account-item" v-if="isShowSection('biaowang') && !isYiBaisouYuMing">
+        <li class="account-item" v-if="isShowSection('biaowang') && !isYibaisouBiao">
           <p class="title">省心币（元) </p>
           <p class="num">{{ adPlatformBalance.price }}</p>
           <p class="desc" :style="{ marginBottom: userInfo.allowCareFreeRecharge ? '' : '72px' }"></p>
@@ -46,9 +46,6 @@ import store from './store'
 import Notice from './notice'
 import loadingPlaceholder from './loading-placeholder'
 import { MERCHANTS } from 'constant/product'
-import {
-  isYibaisouFengMing
-} from 'util/role'
 
 export default {
   name: 'homepage-accout',
@@ -63,15 +60,8 @@ export default {
     biaowangData: () => store.biaowangData
   },
   computed: {
-    isYiBaisouYuMing () {
-      return location.origin.includes('yibaisou')
-    },
     isYibaisouBiao () {
-      const { roles } = this.userInfo
-      if (!isYibaisouFengMing(roles)) {
-        return false
-      }
-      return true
+      return this.$route.path.includes('fengming')
     }
   },
   methods: {

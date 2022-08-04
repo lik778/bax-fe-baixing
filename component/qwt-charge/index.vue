@@ -204,7 +204,7 @@ export default {
     },
     isBxUser () {
       const roles = normalizeRoles(this.userInfo.roles)
-      return roles.includes('YBS_USER')
+      return roles.includes('YBS_USER') || roles.includes('BAIXING_USER')
     },
     isBxSales () {
       const roles = normalizeRoles(this.userInfo.roles)

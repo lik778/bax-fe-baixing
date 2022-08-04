@@ -37,7 +37,6 @@ export function allowGetOrderPayUrl (roles) {
 
   return checkRoles(currentRoles, [
     'YBS_SALES',
-    'BAIXING_SALES',
-    'BAIXING_USER'
+    'BAIXING_SALES'
   ])
 }

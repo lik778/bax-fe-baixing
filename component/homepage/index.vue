@@ -11,10 +11,6 @@ import store from './store'
 
 import Account from './account'
 import Campaign from './campaign'
-import {
-  isNormalUser,
-  isYibaisouFengMing
-} from 'util/role'
 export default {
   name: 'qwt-homepage',
   props: {
@@ -33,17 +29,7 @@ export default {
   },
   computed: {
     isYibaisouBiao () {
-      const { roles, isYibaisouUser } = this.userInfo
-      if (isNormalUser(roles)) {
-        if (!isYibaisouUser) {
-          return false
-        }
-      } else {
-        if (!isYibaisouFengMing(roles)) {
-          return false
-        }
-      }
-      return true
+      return this.$route.path.includes('fengming')
     }
   }
 }
