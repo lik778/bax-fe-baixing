@@ -65,7 +65,7 @@ import Vue from 'vue'
 import { ErrorBoundary } from 'vue-error-boundary'
 import Vue2Filters from 'vue2-filters'
 import pick from 'lodash.pick'
-import { parseQuery, stringifyQuery, f2y } from 'util'
+import { parseQuery, stringifyQuery, f2y, redirect } from 'util'
 
 import gStore from '../component/store'
 import { normalizeRoles, checkRoles } from 'util/role'
@@ -252,127 +252,122 @@ const fengMingRoutes = [
   { // 账户概览
     component: Homepage,
     path: '/fengming/main',
-    name: 'fengming-main',
-    beforeEnter: async (to, from, next) => {
-      await gStore.getCurrentUser()
-      const { roles, isYibaisouUser } = $vueForGetMobx.$options.fromMobx.currentUser()
-      const currentRoles = normalizeRoles(roles)
-      if (checkRoles(currentRoles, ['YBS_ACCOUNTING', 'YBS_SALES', 'YBS_USER', 'BAIXING_USER']) || isYibaisouUser) {
-        next()
-      } else {
-        Message.error('您没有权限访问，请更换帐号登陆')
-      }
-    }
+    name: 'fengming-main'
+    // beforeEnter: async (to, from, next) => {
+    //   await gStore.getCurrentUser()
+    //   const { roles, isYibaisouUser } = $vueForGetMobx.$options.fromMobx.currentUser()
+    //   const currentRoles = normalizeRoles(roles)
+    //   if (checkRoles(currentRoles, ['YBS_ACCOUNTING', 'YBS_SALES', 'YBS_USER', 'BAIXING_USER']) || isYibaisouUser) {
+    //     next()
+    //   } else {
+    //     Message.error('您没有权限访问，请更换帐号登陆')
+    //   }
+    // }
   },
   { // 充值资金
     component: () => import('com/qwt-charge'),
     path: '/fengming/qwt/charge',
-    name: 'qwt-charge',
-    beforeEnter: async (to, from, next) => {
-      await gStore.getCurrentUser()
-      const { roles, isYibaisouUser } = $vueForGetMobx.$options.fromMobx.currentUser()
-      const currentRoles = normalizeRoles(roles)
-      // if (isYibaisouSales(roles)) {
-      //   next()
-      // } else {
-      //   Message.error('您没有权限访问，请更换帐号登陆')
-      // }
-      if (checkRoles(currentRoles, ['YBS_ACCOUNTING', 'YBS_SALES', 'YBS_USER', 'BAIXING_USER']) || isYibaisouUser) {
-        next()
-      } else {
-        Message.error('您没有权限访问，请更换帐号登陆')
-      }
-    }
+    name: 'qwt-charge'
+    // beforeEnter: async (to, from, next) => {
+    //   await gStore.getCurrentUser()
+    //   const { roles, isYibaisouUser } = $vueForGetMobx.$options.fromMobx.currentUser()
+    //   const currentRoles = normalizeRoles(roles)
+    //   if (checkRoles(currentRoles, ['YBS_ACCOUNTING', 'YBS_SALES', 'YBS_USER', 'BAIXING_USER']) || isYibaisouUser) {
+    //     next()
+    //   } else {
+    //     Message.error('您没有权限访问，请更换帐号登陆')
+    //   }
+    // }
   },
   { // 新建推广
     component: () => import('com/qwt-create-promotion'),
     path: '/fengming/qwt/promotion/create',
-    name: 'qwt-create-promotion',
-    beforeEnter: async (to, from, next) => {
-      await gStore.getCurrentUser()
-      const { roles, isYibaisouUser } = $vueForGetMobx.$options.fromMobx.currentUser()
-      const currentRoles = normalizeRoles(roles)
-      if (checkRoles(currentRoles, ['YBS_ACCOUNTING', 'YBS_SALES', 'YBS_USER', 'BAIXING_USER']) || isYibaisouUser) {
-        next()
-      } else {
-        Message.error('您没有权限访问，请更换帐号登陆')
-      }
-    }
+    name: 'qwt-create-promotion'
+    // beforeEnter: async (to, from, next) => {
+    //   await gStore.getCurrentUser()
+    //   const { roles, isYibaisouUser } = $vueForGetMobx.$options.fromMobx.currentUser()
+    //   const currentRoles = normalizeRoles(roles)
+    //   if (checkRoles(currentRoles, ['YBS_ACCOUNTING', 'YBS_SALES', 'YBS_USER', 'BAIXING_USER']) || isYibaisouUser) {
+    //     next()
+    //   } else {
+    //     Message.error('您没有权限访问，请更换帐号登陆')
+    //   }
+    // }
   },
   { // 管理推广
     component: () => import('com/qwt-update-promotion-list'),
     path: '/fengming/qwt/promotions',
-    name: 'qwt-promotion-list',
-    beforeEnter: async (to, from, next) => {
-      await gStore.getCurrentUser()
-      const { roles, isYibaisouUser } = $vueForGetMobx.$options.fromMobx.currentUser()
-      const currentRoles = normalizeRoles(roles)
-      if (checkRoles(currentRoles, ['YBS_ACCOUNTING', 'YBS_SALES', 'YBS_USER', 'BAIXING_USER']) || isYibaisouUser) {
-        next()
-      } else {
-        Message.error('您没有权限访问，请更换帐号登陆')
-      }
-    }
+    name: 'qwt-promotion-list'
+    // beforeEnter: async (to, from, next) => {
+    //   await gStore.getCurrentUser()
+    //   const { roles, isYibaisouUser } = $vueForGetMobx.$options.fromMobx.currentUser()
+    //   const currentRoles = normalizeRoles(roles)
+    //   if (checkRoles(currentRoles, ['YBS_ACCOUNTING', 'YBS_SALES', 'YBS_USER', 'BAIXING_USER']) || isYibaisouUser) {
+    //     next()
+    //   } else {
+    //     Message.error('您没有权限访问，请更换帐号登陆')
+    //   }
+    // }
   },
   { // 数据报表
     component: () => import('com/qwt-dashboard'),
     path: '/fengming/qwt/dashboard',
-    name: 'qwt-dashboard',
-    beforeEnter: async (to, from, next) => {
-      await gStore.getCurrentUser()
-      const { roles, isYibaisouUser } = $vueForGetMobx.$options.fromMobx.currentUser()
-      const currentRoles = normalizeRoles(roles)
-      if (checkRoles(currentRoles, ['YBS_ACCOUNTING', 'YBS_SALES', 'YBS_USER', 'BAIXING_USER']) || isYibaisouUser) {
-        next()
-      } else {
-        Message.error('您没有权限访问，请更换帐号登陆')
-      }
-    }
+    name: 'qwt-dashboard'
+    // beforeEnter: async (to, from, next) => {
+    //   await gStore.getCurrentUser()
+    //   const { roles, isYibaisouUser } = $vueForGetMobx.$options.fromMobx.currentUser()
+    //   const currentRoles = normalizeRoles(roles)
+    //   if (checkRoles(currentRoles, ['YBS_ACCOUNTING', 'YBS_SALES', 'YBS_USER', 'BAIXING_USER']) || isYibaisouUser) {
+    //     next()
+    //   } else {
+    //     Message.error('您没有权限访问，请更换帐号登陆')
+    //   }
+    // }
   },
   {
     component: () => import('com/qwt-update-promotion'),
     path: '/fengming/qwt/promotions/:id/update',
-    name: 'qwt-update-promotion',
-    beforeEnter: async (to, from, next) => {
-      await gStore.getCurrentUser()
-      const { roles, isYibaisouUser } = $vueForGetMobx.$options.fromMobx.currentUser()
-      const currentRoles = normalizeRoles(roles)
-      if (checkRoles(currentRoles, ['YBS_ACCOUNTING', 'YBS_SALES', 'YBS_USER', 'BAIXING_USER']) || isYibaisouUser) {
-        next()
-      } else {
-        Message.error('您没有权限访问，请更换帐号登陆')
-      }
-    }
+    name: 'qwt-update-promotion'
+    // beforeEnter: async (to, from, next) => {
+    //   await gStore.getCurrentUser()
+    //   const { roles, isYibaisouUser } = $vueForGetMobx.$options.fromMobx.currentUser()
+    //   const currentRoles = normalizeRoles(roles)
+    //   if (checkRoles(currentRoles, ['YBS_ACCOUNTING', 'YBS_SALES', 'YBS_USER', 'BAIXING_USER']) || isYibaisouUser) {
+    //     next()
+    //   } else {
+    //     Message.error('您没有权限访问，请更换帐号登陆')
+    //   }
+    // }
   },
   {
     component: () => import('com/qwt-group/create'),
     path: '/fengming/qwt/group/create',
-    name: 'qwt-create-group',
-    beforeEnter: async (to, from, next) => {
-      await gStore.getCurrentUser()
-      const { roles, isYibaisouUser } = $vueForGetMobx.$options.fromMobx.currentUser()
-      const currentRoles = normalizeRoles(roles)
-      if (checkRoles(currentRoles, ['YBS_ACCOUNTING', 'YBS_SALES', 'YBS_USER', 'BAIXING_USER']) || isYibaisouUser) {
-        next()
-      } else {
-        Message.error('您没有权限访问，请更换帐号登陆')
-      }
-    }
+    name: 'qwt-create-group'
+    // beforeEnter: async (to, from, next) => {
+    //   await gStore.getCurrentUser()
+    //   const { roles, isYibaisouUser } = $vueForGetMobx.$options.fromMobx.currentUser()
+    //   const currentRoles = normalizeRoles(roles)
+    //   if (checkRoles(currentRoles, ['YBS_ACCOUNTING', 'YBS_SALES', 'YBS_USER', 'BAIXING_USER']) || isYibaisouUser) {
+    //     next()
+    //   } else {
+    //     Message.error('您没有权限访问，请更换帐号登陆')
+    //   }
+    // }
   },
   {
     component: () => import('com/qwt-group/update'),
     path: '/fengming/qwt/group/:id/update',
-    name: 'qwt-update-group',
-    beforeEnter: async (to, from, next) => {
-      await gStore.getCurrentUser()
-      const { roles, isYibaisouUser } = $vueForGetMobx.$options.fromMobx.currentUser()
-      const currentRoles = normalizeRoles(roles)
-      if (checkRoles(currentRoles, ['YBS_ACCOUNTING', 'YBS_SALES', 'YBS_USER', 'BAIXING_USER']) || isYibaisouUser) {
-        next()
-      } else {
-        Message.error('您没有权限访问，请更换帐号登陆')
-      }
-    }
+    name: 'qwt-update-group'
+    // beforeEnter: async (to, from, next) => {
+    //   await gStore.getCurrentUser()
+    //   const { roles, isYibaisouUser } = $vueForGetMobx.$options.fromMobx.currentUser()
+    //   const currentRoles = normalizeRoles(roles)
+    //   if (checkRoles(currentRoles, ['YBS_ACCOUNTING', 'YBS_SALES', 'YBS_USER', 'BAIXING_USER']) || isYibaisouUser) {
+    //     next()
+    //   } else {
+    //     Message.error('您没有权限访问，请更换帐号登陆')
+    //   }
+    // }
   }
 ]
 
@@ -385,6 +380,22 @@ export const router = new VueRouter({
       redirect: '/fengming/main'
     }
   ]
+})
+
+router.beforeEach(async (to, from, next) => {
+  if ($vueForGetMobx.$options.fromMobx.currentUser().roles.length === 0) {
+    await gStore.getCurrentUser()
+    const { roles } = $vueForGetMobx.$options.fromMobx.currentUser()
+    localStorage.setItem('roles', JSON.stringify(roles))
+  }
+  const localRoles = JSON.parse(localStorage.getItem('roles'))
+  const currentRoles = normalizeRoles(localRoles)
+  if (checkRoles(currentRoles, ['YBS_ACCOUNTING', 'YBS_SALES', 'YBS_USER', 'BAIXING_USER'])) {
+    next()
+  } else {
+    Message.error('您没有权限访问，请更换帐号登陆')
+    return redirect('signin', `return=${encodeURIComponent(location.pathname + location.search)}`)
+  }
 })
 
 const app = new Vue({
