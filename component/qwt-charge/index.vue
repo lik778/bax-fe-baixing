@@ -73,9 +73,10 @@
           </section>
           <section v-if="relationAllow()" class="agreement">
             <div v-for="agreement in agreementList" :key="agreement.id">
-              <contract :isAgreement="agreement.checked" :href="agreement.link"
+              <contract :isAgreement="agreement.checked"
                 @click="() => agreement.checked = !agreement.checked"
-                :title="agreement.title" />
+                 />
+                 <!-- :title="agreement.title"  :href="agreement.link"-->
             </div>
           </section>
           <promotion-area-limit-tip :all-areas="allAreas" page="charge" />

@@ -24,7 +24,7 @@ const development = {
   biaowangPlusApiHost: '/phoenixs-plus/api/phoenixs-plus',
   seoApiHost: '/seo-api',
   qcApiHost: '/sem-batch/api/sem-batch',
-  orderServiceHost: 'http://trade-dev.baixing.cn',
+  orderServiceHost: 'http://openbax.baixing.cn/trade',
   identityBindingPage: 'http://www.staging.baixing.cn/bind/?type=idcard',
   adPlatformApiHost: '/ad-platform/api/ad-platform'
 }
@@ -38,7 +38,7 @@ const local = {
   biaowangPlusApiHost: '/devApi/phoenixs-plus/api/phoenixs-plus',
   seoApiHost: '/devApi/seo-api',
   qcApiHost: '/devApi/sem-batch/api/sem-batch',
-  orderServiceHost: 'http://trade-dev.baixing.cn',
+  orderServiceHost: 'http://openbax.baixing.cn/trade',
   identityBindingPage: 'http://www.staging.baixing.cn/bind/?type=idcard',
   adPlatformApiHost: '/adPlatformApi/api/ad-platform'
 }
