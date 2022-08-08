@@ -115,12 +115,11 @@ export default {
     // 米奇跳转userId需改成user_id
     // eslint-disable-next-line
     const { user_id, user_id: userId, sales_id: salesId } = qs.parse(location.search)
+    console.log(qs.parse(location.search))
     // eslint-disable-next-line
     const uid = userId || user_id
-    if (uid && salesId) {
-      this.salesInfo.userId = +uid
-      this.salesInfo.salesId = +salesId
-    }
+    uid && (this.salesInfo.userId = +uid)
+    salesId && (this.salesInfo.salesId = +salesId)
   },
   async mounted () {
     await Promise.all([

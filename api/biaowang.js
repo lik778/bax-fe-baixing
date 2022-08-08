@@ -116,13 +116,11 @@ export async function getLogs (parmas) {
 
 export async function getHomePageBiaowangData (parmas) {
   const { userId } = parmas
-  const [biaowangBalanceBrief, body] = await Promise.all([
-    getCurrentBalanceBreif(BIAO_WANG_SPU_CODE, userId),
-    await biaowang.get('/promote/user/info').query(parmas).json()
+  const [biaowangBalanceBrief] = await Promise.all([
+    getCurrentBalanceBreif(BIAO_WANG_SPU_CODE, userId)
   ])
 
   return {
-    ...body.data,
     biaowangBalance: biaowangBalanceBrief.currentBalance
   }
 }
