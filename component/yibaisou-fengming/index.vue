@@ -110,14 +110,13 @@ export default {
       gStore.toggleAddUserLeadVisible()
     }
   },
-  async created () {
+  created () {
     // 记录销售的客户id等信息
     // 米奇跳转userId需改成user_id
     // eslint-disable-next-line
-    const { user_id, user_id: userId, sales_id: salesId } = qs.parse(location.search)
-    console.log(qs.parse(location.search))
+    const { user_id, userId, sales_id: salesId } = qs.parse(location.search)
     // eslint-disable-next-line
-    const uid = userId || user_id
+    const uid =  user_id || userId
     uid && (this.salesInfo.userId = +uid)
     salesId && (this.salesInfo.salesId = +salesId)
   },
