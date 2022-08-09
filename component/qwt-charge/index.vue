@@ -127,7 +127,7 @@ import { createPreOrder } from 'api/order'
 import { SPUCODES, MERCHANTS } from 'constant/product'
 import { getUniqueAgreementList } from 'util/charge'
 import store from '../activity-store'
-import { ROLE_USER_ID } from './data'
+import { ROLE_USER_ID, ROLE_AGENT_ID } from './data'
 
 const { WHOLE_SPU_CODE, GUAN_WANG_SPU_CODE, BIAO_WANG_SPU_CODE, CARE_FREE_SPU_CODE } = SPUCODES
 const { FENG_MING_MERCHANT_CODE, PHOENIXS_MERCHANT_CODE, CARE_FREE_MERCHANT_CODE } = MERCHANTS
@@ -239,9 +239,9 @@ export default {
     // 指定权限
     isTargetUId () {
       const allId = this.userInfo.roles.map(item => item.id)
-      const { id } = this.userInfo
-      if (allId.includes(6)) {
-        return ROLE_USER_ID.includes(id)
+      const { id, agentId } = this.userInfo
+      if (allId.includes(6) || allId.includes(14)) {
+        return ROLE_USER_ID.includes(id) || !ROLE_AGENT_ID.includes(agentId)
       } else {
         const { userId = 0 } = this.salesInfo
         return ROLE_USER_ID.includes(userId)
@@ -374,6 +374,9 @@ export default {
       this.toggleProduct(product, isGwProduct)
     },
     async createPreOrder () {
+      if (this.isBxSales && !this.salesInfo.userId) {
+        return this.$message.error('用户需拥有一个百姓网账号')
+      }
       if (this.hasUnCheckedAgreement) {
         return this.$message.error('请阅读并勾选同意服务协议，再进行下一步操作')
       }
@@ -464,11 +467,11 @@ export default {
     async getFinalUserId () {
       const { user_id: userId } = this.$route.query
       const { userInfo, salesInfo } = this
-      if (userId) {
-        return userId
+      if (this.isBxUser) {
+        return userInfo.id || userId
       }
       // 进入bax时带有销售身份信息，用户信息直接在salesInfo获取
-      if (salesInfo.userId) {
+      if (this.isBxSales) {
         return salesInfo.userId
       }
       return userInfo.id

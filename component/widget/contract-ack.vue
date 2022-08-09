@@ -19,7 +19,7 @@
     </a>
      <a v-if="type === 'contract-yibaisou'"
         download="易白搜站外推广填写准则.docx"
-      :href="assetHost + 'baixing-sst-contract-2020-v2.pdf'">
+      :href="assetHost + 'yibaisou-zhanwai-contract-2022-v1.pdf'">
       《易白搜站外推广填写准则》
     </a>
   </h4>

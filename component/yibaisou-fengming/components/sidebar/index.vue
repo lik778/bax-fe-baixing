@@ -27,8 +27,8 @@
             </router-link>
           </el-menu-item>
           <template  v-if="allowSeeFengmingOther">
-          <el-menu-item  index="qwt-create-promotion">
-            <router-link :to="{ name: 'qwt-create-promotion' }" tag="p">
+          <el-menu-item  v-if="notAllowSalesSeeFengming" index="qwt-create-promotion">
+            <router-link  :to="{ name: 'qwt-create-promotion' }" tag="p">
               新建推广
             </router-link>
           </el-menu-item>
@@ -44,7 +44,7 @@
           </el-menu-item>
           </template>
         </el-submenu>
-        <el-menu-item  v-if="allowSeeFengmingOther" index="diamondShop" key="diamondShop">
+        <el-menu-item  v-if="allowSeeFengmingOther && notAllowSalesSeeFengming" index="diamondShop" key="diamondShop">
           <a  href="//shop.baixing.com/management/shop" style="color: inherit">
             <i class="el-icon-news" />钻石店铺
           </a>
@@ -105,6 +105,12 @@ export default {
       const { roles } = this.userInfo
       const currentRoles = normalizeRoles(roles)
       return checkRoles(currentRoles, ['YBS_SALES', 'YBS_USER', 'BAIXING_USER'])
+    },
+    // 销售不能看到钻石店铺和新建计划
+    notAllowSalesSeeFengming () {
+      const { roles } = this.userInfo
+      const currentRoles = normalizeRoles(roles)
+      return !checkRoles(currentRoles, ['YBS_SALES'])
     }
     // locationShop () {
     //   return `//baixing.com/oz/login/?redirect=${encodeURIComponent('//shop.baixing.com/management/shop')}`
