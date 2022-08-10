@@ -375,7 +375,7 @@ export default {
     },
     async createPreOrder () {
       if (this.isBxSales && !this.salesInfo.userId) {
-        return this.$message.error('用户需拥有一个百姓网账号')
+        return this.$message.error('提单需要带用户信息')
       }
       if (this.hasUnCheckedAgreement) {
         return this.$message.error('请阅读并勾选同意服务协议，再进行下一步操作')
@@ -426,7 +426,9 @@ export default {
       })
 
       this.payInProgress = true
-
+      if (userInfo.customerId) {
+        orderParams.customer = userInfo.customerId
+      }
       try {
         const preTradeId = await createPreOrder(orderParams)
         track({
