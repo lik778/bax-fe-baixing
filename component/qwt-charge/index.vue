@@ -427,7 +427,7 @@ export default {
 
       this.payInProgress = true
       if (userInfo.customerId) {
-        orderParams.customer = userInfo.customerId
+        orderParams.customerId = userInfo.customerId
       }
       try {
         const preTradeId = await createPreOrder(orderParams)
