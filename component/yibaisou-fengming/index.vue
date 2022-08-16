@@ -24,22 +24,22 @@
       @close="toggleAddUserLeadVisible"
     />
     <huo-dong-btn v-if="inActivityPeriod" />
-    <div class="right-utils">
+    <!-- <div class="right-utils">
     <chat />
     <back-to-top />
     <Notification />
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script>
 // import NewUserIntro from '../common/new-user-intro'
-import Notification from '../common/notification'
+// import Notification from '../common/notification'
 import AddUserLead from '../common/add-user-lead'
-import BackToTop from '../widget/back-to-top'
+// import BackToTop from '../widget/back-to-top'
 import Sidebar from './components/sidebar'
 import Header from './components/header'
-import Chat from '../widget/chat'
+// import Chat from '../widget/chat'
 import HuoDongBtn from '../common/huodong-btn'
 
 import gStore from '../store'
@@ -60,15 +60,15 @@ export default {
   name: 'YibaisouFengming',
   components: {
     // NewUserIntro,
-    Notification,
+    // Notification,
     AddUserLead,
     // WechatQrcode,
     // BwShoppingCart,
     // WechatScan,
-    BackToTop,
+    // BackToTop,
     Sidebar,
     Header,
-    Chat,
+    // Chat,
     HuoDongBtn
   },
   fromMobx: {

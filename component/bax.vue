@@ -59,8 +59,8 @@ import track from 'util/track'
 import {
   normalizeRoles,
   isSales,
-  isNormalUser,
-  isYibaisouSales
+  isNormalUser
+  // isYibaisouSales
 } from 'util/role'
 import { delCookie } from 'util/cookie'
 
@@ -148,6 +148,7 @@ export default {
     await getWordAuthority({ userId })
   },
   async mounted () {
+    console.log(this.$route)
     // source为当前用户是否是以优化师角色进入bax
     await Promise.all([
       gStore.getCurrentUser(),
@@ -157,17 +158,18 @@ export default {
     ])
     const { source } = qs.parse(location.search)
     const { userId } = this.salesInfo
-    const { roles, isYibaisouUser } = this.currentUser
+    const { roles } = this.currentUser
+    // isYibaisouUser
     if (isNormalUser(roles)) {
-      if (isYibaisouUser) {
-        window.location.href = `${window.origin}/yibaisou`
-        return
-      }
+      // if (isYibaisouUser) {
+      //   window.location.href = `${window.origin}/yibaisou`
+      //   return
+      // }
     } else {
-      if (isYibaisouSales(roles)) {
-        window.location.href = `${window.origin}/yibaisou`
-        return
-      }
+      // if (isYibaisouSales(roles)) {
+      //   window.location.href = `${window.origin}/yibaisou`
+      //   return
+      // }
     }
     if (isSales(roles) && userId) {
       gStore.getRelation({ userId })

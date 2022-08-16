@@ -20,7 +20,7 @@
      <a v-if="type === 'contract-yibaisou'"
         download="易白搜站外推广填写准则.docx"
       :href="assetHost + 'yibaisou-zhanwai-contract-2022-v1.pdf'">
-      《易白搜站外推广填写准则》
+      《易百搜站外推广填写准则》
     </a>
   </h4>
 </template>

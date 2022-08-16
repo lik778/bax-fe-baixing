@@ -69,7 +69,7 @@ import Vue2Filters from 'vue2-filters'
 // import { getCurrentUser } from 'api/account'
 import pick from 'lodash.pick'
 // import { notAllowFengmingRecharge } from 'util/role'
-import { parseQuery, stringifyQuery, f2y } from 'util'
+import { parseQuery, stringifyQuery, f2y, redirect } from 'util'
 
 import gStore from '../component/store'
 
@@ -318,74 +318,85 @@ const bwPlusRoutes = [
 //   }
 // ]
 
-const qcRoutes = [
-  {
-    component: () => import('com/qc-promote-list'),
-    path: '/main/qc/promote-list',
-    name: 'qc-promote-list'
-  },
-  {
-    component: () => import('com/qc-keyword-list'),
-    path: '/main/qc/keyword-list',
-    name: 'qc-keyword-list',
-    hidden: true
-  },
-  {
-    component: () => import('com/qc-creative'),
-    path: '/main/qc/creative',
-    name: 'qc-creative'
-  },
-  {
-    component: () => import('com/qc-dashboard'),
-    path: '/main/qc/dashboard',
-    name: 'qc-dashboard'
-  }
-]
+// const qcRoutes = [
+//   {
+//     component: () => import('com/qc-promote-list'),
+//     path: '/main/qc/promote-list',
+//     name: 'qc-promote-list'
+//   },
+//   {
+//     component: () => import('com/qc-keyword-list'),
+//     path: '/main/qc/keyword-list',
+//     name: 'qc-keyword-list',
+//     hidden: true
+//   },
+//   {
+//     component: () => import('com/qc-creative'),
+//     path: '/main/qc/creative',
+//     name: 'qc-creative'
+//   },
+//   {
+//     component: () => import('com/qc-dashboard'),
+//     path: '/main/qc/dashboard',
+//     name: 'qc-dashboard'
+//   }
+// ]
 
 const qwtRoutes = [
   {
     component: () => import('com/qwt-create-promotion'),
     path: '/main/qwt/promotion/create',
-    name: 'qwt-create-promotion'
+    name: 'qwt-create-promotion',
+    beforeEnter: (to, from, next) => {
+      location.href = 'http://openbax.baixing.cn/fengming/qwt/promotion/create'
+      // redirect('/fengming/qwt/promotion/create')
+      return false
+    }
   },
   {
     component: () => import('com/qwt-update-promotion'),
     path: '/main/qwt/promotions/:id/update',
-    name: 'qwt-update-promotion'
+    name: 'qwt-update-promotion',
+    beforeEnter: (to, from, next) => {
+      location.href = 'http://openbax.baixing.cn/fengming/qwt/promotions'
+      // redirect('/fengming/qwt/promotions')
+      return false
+    }
   },
-  {
-    component: () => import('com/qwt-group/create'),
-    path: '/main/qwt/group/create',
-    name: 'qwt-create-group'
-  },
-  {
-    component: () => import('com/qwt-group/update'),
-    path: '/main/qwt/group/:id/update',
-    name: 'qwt-update-group'
-  },
+  // {
+  //   component: () => import('com/qwt-group/create'),
+  //   path: '/main/qwt/group/create',
+  //   name: 'qwt-create-group'
+  // },
+  // {
+  //   component: () => import('com/qwt-group/update'),
+  //   path: '/main/qwt/group/:id/update',
+  //   name: 'qwt-update-group'
+  // },
   {
     component: () => import('com/qwt-update-promotion-list'),
     path: '/main/qwt/promotions',
-    name: 'qwt-promotion-list'
+    name: 'qwt-promotion-list',
+    beforeEnter: (to, from, next) => {
+      location.href = 'http://openbax.baixing.cn/fengming/qwt/promotions'
+      // redirect('/fengming/qwt/promotions')
+      return false
+    }
   },
-  {
-    component: () => import('com/qwt-dashboard'),
-    path: '/main/qwt/dashboard',
-    name: 'qwt-dashboard'
-  }
   // {
-  //   component: () => import('com/qwt-charge'),
-  //   path: '/main/qwt/charge',
-  //   name: 'qwt-charge',
-  //   beforeEnter: async (to, from, next) => {
-  //     const { roles, realAgentId } = await getCurrentUser()
-  //     if (notAllowFengmingRecharge(roles, realAgentId)) {
-  //       next({ name: 'qwt-promotion-list', redirect: true })
-  //     } else {
-  //       next()
-  //     }
-  //   }
+  //   component: () => import('com/qwt-dashboard'),
+  //   path: '/main/qwt/dashboard',
+  //   name: 'qwt-dashboard'
   // }
+  {
+    component: () => import('com/qwt-charge'),
+    path: '/main/qwt/charge',
+    name: 'qwt-charge',
+    beforeEnter: async (to, from, next) => {
+      redirect('/fengming/qwt/charge')
+      return false
+    }
+  }
 ]
 
 // const sspRoutes = [
@@ -534,7 +545,7 @@ export const router = new VueRouter({
       name: 'notice'
     },
     // ...bwRoutes,
-    ...qcRoutes,
+    // ...qcRoutes,
     ...qwtRoutes,
     // ...sspRoutes,
     // ...seoRoutes,
