@@ -69,7 +69,7 @@ import Vue2Filters from 'vue2-filters'
 // import { getCurrentUser } from 'api/account'
 import pick from 'lodash.pick'
 // import { notAllowFengmingRecharge } from 'util/role'
-import { parseQuery, stringifyQuery, f2y, redirect } from 'util'
+import { parseQuery, stringifyQuery, f2y } from 'util'
 
 import gStore from '../component/store'
 
@@ -393,7 +393,7 @@ const qwtRoutes = [
     path: '/main/qwt/charge',
     name: 'qwt-charge',
     beforeEnter: async (to, from, next) => {
-      redirect('/fengming/qwt/charge')
+      location.href = 'http://openbax.baixing.cn/fengming/qwt/promotions'
       return false
     }
   }
