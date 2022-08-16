@@ -139,7 +139,7 @@ const isGwProduct = function (spuCode) {
 const isChargeProduct = function (spuCode) {
   return [WHOLE_SPU_CODE, BIAO_WANG_SPU_CODE, CARE_FREE_SPU_CODE].includes(spuCode)
 }
-
+// 测试
 export default {
   name: 'charge-container',
   props: {
