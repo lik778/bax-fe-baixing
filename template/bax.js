@@ -393,7 +393,7 @@ const qwtRoutes = [
     path: '/main/qwt/charge',
     name: 'qwt-charge',
     beforeEnter: async (to, from, next) => {
-      location.href = 'http://openbax.baixing.cn/fengming/qwt/promotions'
+      location.href = 'http://openbax.baixing.cn/fengming/qwt/charge'
       return false
     }
   }
