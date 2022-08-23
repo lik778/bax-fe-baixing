@@ -12,10 +12,10 @@
         text-color="#333"
         ref="menu"
       >
-        <el-menu-item index="/ka/vendor/site" @click="goKaSuperPage" v-if="isKaSuperman">
+        <!-- <el-menu-item index="/ka/vendor/site" @click="goKaSuperPage" v-if="isKaSuperman">
           <i class="el-icon-info" />
           官网超人入口
-        </el-menu-item>
+        </el-menu-item> -->
         <el-menu-item index="root">
           <router-link :to="{ name: 'root' }" tag="p">
             <bx-icon type="appstore"></bx-icon>我的搜索通
@@ -208,7 +208,7 @@ import {
 } from 'util/role'
 
 import { getUserSites } from 'api/diamond-site'
-import { baxUserLogin, kaOnlineAndTickets } from 'api/ka'
+// import { baxUserLogin, kaOnlineAndTickets } from 'api/ka'
 
 const MENU_GROUP_MAP = {
   charge: ['qwt-charge', 'seo-charge'],
@@ -305,19 +305,19 @@ export default {
       return allowCareFreeDashboard(userInfo)
     }
   },
-  async mounted () {
-    await this.initKaNav()
-  },
+  // async mounted () {
+  //   await this.initKaNav()
+  // },
   methods: {
-    goKaSuperPage () {
-      location.href = '/ka/vendor/site'
-    },
-    async initKaNav () {
-      this.isKaSuperman = ((await baxUserLogin()).data.roles || []).includes('seo_vendor')
+    // goKaSuperPage () {
+    //   location.href = '/ka/vendor/site'
+    // }
+    // async initKaNav () {
+    //   this.isKaSuperman = ((await baxUserLogin()).data.roles || []).includes('seo_vendor')
 
-      const { hasSitesAndTickets } = await kaOnlineAndTickets()
-      this.isRenderSiteLink = hasSitesAndTickets
-    },
+    //   const { hasSitesAndTickets } = await kaOnlineAndTickets()
+    //   this.isRenderSiteLink = hasSitesAndTickets
+    // },
     async initDiamondSiteNav () {
       const hasDiamondSite = !!(await getUserSites())
       this.isDiamondSiteJumpToMainSite = hasDiamondSite

@@ -60,12 +60,9 @@ import BxIcon from 'com/widget/icon'
 
 import {
   relationAllow,
-  allowSeeDiamondSite,
   checkRoles,
   normalizeRoles
 } from 'util/role'
-
-import { getUserSites } from 'api/diamond-site'
 
 // const MENU_GROUP_MAP = {
 //   fengMingRoutes: ['fengming-main', 'qwt-charge', 'qwt-create-promotion', 'qwt-promotion-list', 'qwt-dashboard']
@@ -89,9 +86,7 @@ export default {
       // defaultOpeneds: [],
       isRenderSiteLink: false,
       isRenderSiteNavTag: false,
-      relationAllow,
-      isDiamondSiteJumpToMainSite: false,
-      isKaSuperman: false
+      relationAllow
     }
   },
   computed: {
@@ -154,15 +149,9 @@ export default {
     },
     'userInfo.roles' () {
       // TIP: 只有普通销售会去
-      if (allowSeeDiamondSite(this.userInfo.roles)) {
-        this.initDiamondSiteNav()
-      }
-    }
-  },
-  methods: {
-    async initDiamondSiteNav () {
-      const hasDiamondSite = !!(await getUserSites())
-      this.isDiamondSiteJumpToMainSite = hasDiamondSite
+      // if (allowSeeDiamondSite(this.userInfo.roles)) {
+      //   this.initDiamondSiteNav()
+      // }
     }
   }
 }
