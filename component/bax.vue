@@ -59,8 +59,9 @@ import track from 'util/track'
 import {
   normalizeRoles,
   isSales,
-  isNormalUser
-  // isYibaisouSales
+  isNormalUser,
+  isYibaisouSales,
+  isYibaisouUser
 } from 'util/role'
 import { delCookie } from 'util/cookie'
 
@@ -161,15 +162,15 @@ export default {
     const { roles } = this.currentUser
     // isYibaisouUser
     if (isNormalUser(roles)) {
-      // if (isYibaisouUser) {
-      //   window.location.href = `${window.origin}/yibaisou`
-      //   return
-      // }
+      if (isYibaisouUser) {
+        window.location.href = `${window.origin}/yibaisou`
+        return
+      }
     } else {
-      // if (isYibaisouSales(roles)) {
-      //   window.location.href = `${window.origin}/yibaisou`
-      //   return
-      // }
+      if (isYibaisouSales(roles)) {
+        window.location.href = `${window.origin}/yibaisou`
+        return
+      }
     }
     if (isSales(roles) && userId) {
       gStore.getRelation({ userId })
