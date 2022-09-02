@@ -385,7 +385,6 @@ export const router = new VueRouter({
 router.beforeEach(async (to, from, next) => {
   const localRoles = JSON.parse(localStorage.getItem('roles')) || []
   if (localRoles.length === 0) {
-    console.log('打请求了')
     await gStore.getCurrentUser()
     const { roles } = $vueForGetMobx.$options.fromMobx.currentUser()
     localStorage.setItem('roles', JSON.stringify(roles))

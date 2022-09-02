@@ -348,7 +348,7 @@ const qwtRoutes = [
     path: '/main/qwt/promotion/create',
     name: 'qwt-create-promotion',
     beforeEnter: (to, from, next) => {
-      location.href = 'http://openbax.baixing.cn/fengming/qwt/promotion/create'
+      location.href = 'http://ybs.e-baixing.com/fengming/qwt/promotion/create'
       // redirect('/fengming/qwt/promotion/create')
       return false
     }
@@ -358,7 +358,7 @@ const qwtRoutes = [
     path: '/main/qwt/promotions/:id/update',
     name: 'qwt-update-promotion',
     beforeEnter: (to, from, next) => {
-      location.href = 'http://openbax.baixing.cn/fengming/qwt/promotions'
+      location.href = 'http://ybs.e-baixing.com/fengming/qwt/promotions'
       // redirect('/fengming/qwt/promotions')
       return false
     }
@@ -378,7 +378,7 @@ const qwtRoutes = [
     path: '/main/qwt/promotions',
     name: 'qwt-promotion-list',
     beforeEnter: (to, from, next) => {
-      location.href = 'http://openbax.baixing.cn/fengming/qwt/promotions'
+      location.href = 'http://ybs.e-baixing.com/fengming/qwt/promotions'
       // redirect('/fengming/qwt/promotions')
       return false
     }
@@ -393,7 +393,7 @@ const qwtRoutes = [
     path: '/main/qwt/charge',
     name: 'qwt-charge',
     beforeEnter: async (to, from, next) => {
-      location.href = 'http://openbax.baixing.cn/fengming/qwt/charge'
+      location.href = 'http://ybs.e-baixing.com/fengming/qwt/charge'
       return false
     }
   }

@@ -1,7 +1,7 @@
 const env = process.env.NODE_ENV
 export const isLocal = env === 'development'
 
-export const isPro = location.hostname.includes('bax.baixing.com.cn')
+export const isPro = location.hostname.includes('bax.baixing.com.cn') || location.hostname.includes('ybs.e-baixing.com')
 
 const production = {
   fengmingApiHost: '//bax.baixing.com.cn/fengmingx-api',
@@ -10,7 +10,7 @@ const production = {
   biaowangApiHost: '//bax.baixing.com.cn/phoenixs/api',
   seoApiHost: '//bax.baixing.com.cn/seo-api',
   qcApiHost: 'http://bax.baixing.com.cn/api/sem-batch',
-  orderServiceHost: 'https://trade.baixing.com',
+  orderServiceHost: 'http://ybs.e-baixing.com/trade',
   identityBindingPage: 'https://www.baixing.com/bind/?type=idcard',
   biaowangPlusApiHost: '//bax.baixing.com.cn/api/phoenixs-plus',
   adPlatformApiHost: '//bax.baixing.com.cn/api/ad-platform'
