@@ -1,7 +1,9 @@
 
 <template>
   <div class="container" v-loading.fullscreen="fullscreenLoading">
-    <Header :userInfo="currentUser"/>
+    <p v-if="flag" class="tip-p">配合百度正进行相关系统更新升级中，部分功能使用可能会受到影响，给您带来不便敬请谅解</p>
+    <div v-else>
+      <Header :userInfo="currentUser"/>
     <div class="main-content">
       <router-view class="view"
         :key="$route.fullPath"
@@ -28,6 +30,7 @@
     <chat />
     <back-to-top />
     <Notification />
+    </div>
     </div>
   </div>
 </template>
@@ -90,7 +93,8 @@ export default {
       salesInfo: {
         salesId: '',
         userId: ''
-      }
+      },
+      flag: true
     }
   },
   computed: {
@@ -180,6 +184,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  .tip-p {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 20px;
+  }
   .notice {
     display: flex;
     position: fixed;
