@@ -1,7 +1,9 @@
 
 <template>
   <div class="container" v-loading.fullscreen="fullscreenLoading">
-    <Header :userInfo="currentUser"/>
+    <p v-if="flag" class="tip-p">配合百度正进行相关系统更新升级中，部分功能使用可能会受到影响，给您带来不便敬请谅解</p>
+    <div v-else>
+      <Header :userInfo="currentUser"/>
     <div class="main-content">
       <router-view class="view"
         :key="$route.fullPath"
@@ -31,6 +33,7 @@
     <!-- <WechatQrcode/> -->
     <!-- <wechat-scan /> -->
     <Notification />
+    </div>
     </div>
     <!-- <bw-shopping-cart ref="bwShoppingCart" :userInfo="currentUser" v-if="currentUser.id && isBwRoute" :salesInfo="salesInfo" :allAreas="allAreas"/> -->
   </div>
@@ -100,7 +103,8 @@ export default {
       salesInfo: {
         salesId: '',
         userId: ''
-      }
+      },
+      flag: true
     }
   },
   computed: {
@@ -225,6 +229,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  .tip-p {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 20px;
+  }
   .notice {
     display: flex;
     position: fixed;
