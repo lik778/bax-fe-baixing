@@ -1,7 +1,7 @@
 
 <template>
   <div class="container" v-loading.fullscreen="fullscreenLoading">
-    <p v-if="flag" class="tip-p">配合百度正进行相关系统更新升级中，部分功能使用可能会受到影响，给您带来不便敬请谅解</p>
+    <p v-if="flag" class="tip-p">系统正在维护升级中，预计需要2-3个工作日，最晚19日开放。升级期间广告上线及创意修改等服务将暂停提供，感谢您的理解与支持~</p>
     <div v-else>
       <Header :userInfo="currentUser"/>
     <div class="main-content">
