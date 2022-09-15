@@ -94,7 +94,7 @@ export default {
         salesId: '',
         userId: ''
       },
-      flag: true
+      flag: false
     }
   },
   computed: {
@@ -136,11 +136,13 @@ export default {
     ])
     const { roles, isYibaisouUser } = this.currentUser
     if (isNormalUser(roles)) {
+      this.flag = true
       if (!isYibaisouUser) {
         Message.error('您没有权限访问，请更换帐号登陆')
         return redirect('signin', `return=${encodeURIComponent(location.pathname + location.search)}`)
       }
     } else {
+      this.flag = false
       if (!isYibaisouSales(roles)) {
         Message.error('您没有权限访问，请更换帐号登陆')
         return redirect('signin', `return=${encodeURIComponent(location.pathname + location.search)}`)

@@ -163,11 +163,13 @@ export default {
     const { userId } = this.salesInfo
     const { roles, isYibaisouUser } = this.currentUser
     if (isNormalUser(roles)) {
+      this.flag = true
       if (isYibaisouUser) {
         window.location.href = `${window.origin}/yibaisou`
         return
       }
     } else {
+      this.flag = false
       if (isYibaisouSales(roles)) {
         window.location.href = `${window.origin}/yibaisou`
         return
