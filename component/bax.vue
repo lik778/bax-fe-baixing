@@ -1,7 +1,9 @@
 
 <template>
   <div class="container" v-loading.fullscreen="fullscreenLoading">
-    <Header :userInfo="currentUser"/>
+    <p v-if="flag" class="tip-p">系统正在维护升级中，预计需要2-3个工作日，最晚19日开放。升级期间广告上线及创意修改等服务将暂停提供，感谢您的理解与支持~</p>
+    <div v-else>
+      <Header :userInfo="currentUser"/>
     <div class="main-content">
       <router-view class="view"
         :key="$route.fullPath"
@@ -33,6 +35,7 @@
         <!-- <Notification /> -->
     <!-- </div> -->
     <!-- <bw-shopping-cart ref="bwShoppingCart" :userInfo="currentUser" v-if="currentUser.id && isBwRoute" :salesInfo="salesInfo" :allAreas="allAreas"/> -->
+    </div>
   </div>
 </template>
 
@@ -101,7 +104,8 @@ export default {
       salesInfo: {
         salesId: '',
         userId: ''
-      }
+      },
+      flag: true
     }
   },
   computed: {
@@ -162,11 +166,13 @@ export default {
     const { roles } = this.currentUser
     // isYibaisouUser
     if (isNormalUser(roles)) {
+      this.flag = true
       if (isYibaisouUser) {
         window.location.href = `${window.origin}/yibaisou`
         return
       }
     } else {
+      this.flag = false
       if (isYibaisouSales(roles)) {
         window.location.href = `${window.origin}/yibaisou`
         return
@@ -228,6 +234,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  .tip-p {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 20px;
+  }
   .notice {
     display: flex;
     position: fixed;

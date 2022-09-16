@@ -1,7 +1,9 @@
 
 <template>
   <div class="container" v-loading.fullscreen="fullscreenLoading">
-    <Header :userInfo="currentUser"/>
+    <p v-if="flag" class="tip-p">系统正在维护升级中，预计需要2-3个工作日，最晚19日开放。升级期间广告上线及创意修改等服务将暂停提供，感谢您的理解与支持~</p>
+    <div v-else>
+      <Header :userInfo="currentUser"/>
     <div class="main-content">
       <router-view class="view"
         :key="$route.fullPath"
@@ -28,6 +30,7 @@
     <chat />
     <back-to-top />
     <Notification />
+    </div>
     </div>
   </div>
 </template>
@@ -90,7 +93,8 @@ export default {
       salesInfo: {
         salesId: '',
         userId: ''
-      }
+      },
+      flag: false
     }
   },
   computed: {
@@ -132,11 +136,13 @@ export default {
     ])
     const { roles, isYibaisouUser } = this.currentUser
     if (isNormalUser(roles)) {
+      this.flag = true
       if (!isYibaisouUser) {
         Message.error('您没有权限访问，请更换帐号登陆')
         return redirect('signin', `return=${encodeURIComponent(location.pathname + location.search)}`)
       }
     } else {
+      this.flag = false
       if (!isYibaisouSales(roles)) {
         Message.error('您没有权限访问，请更换帐号登陆')
         return redirect('signin', `return=${encodeURIComponent(location.pathname + location.search)}`)
@@ -180,6 +186,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  .tip-p {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 20px;
+  }
   .notice {
     display: flex;
     position: fixed;
