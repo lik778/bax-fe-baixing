@@ -1,7 +1,9 @@
 
 <template>
   <div class="container" v-loading.fullscreen="fullscreenLoading">
-    <Header :userInfo="currentUser"/>
+    <p v-if="flag" class="tip-p">系统正在维护升级中，预计需要2-3个工作日，最晚19日开放。升级期间广告上线及创意修改等服务将暂停提供，感谢您的理解与支持~</p>
+    <div v-else>
+      <Header :userInfo="currentUser"/>
     <div class="main-content">
       <router-view class="view"
         :key="$route.fullPath"
@@ -29,6 +31,7 @@
     <back-to-top />
     <Notification />
     </div> -->
+    </div>
   </div>
 </template>
 
@@ -49,7 +52,8 @@ import track from 'util/track'
 import {
   normalizeRoles,
   // isNormalUser,
-  isYibaisouFengMing
+  isYibaisouFengMing,
+  isBaiXinguser
 } from 'util/role'
 import { Message } from 'element-ui'
 import { redirect } from 'util'
@@ -89,7 +93,8 @@ export default {
       salesInfo: {
         salesId: '',
         userId: ''
-      }
+      },
+      flag: false
     }
   },
   computed: {
@@ -128,48 +133,57 @@ export default {
       gStore.getRoles()
     ])
     const { roles } = this.currentUser
-    if (!isYibaisouFengMing(roles)) {
-      Message.error('您没有权限访问，请更换帐号登陆')
-      return redirect('signin', `return=${encodeURIComponent(location.pathname + location.search)}`)
-    }
-    setTimeout(() => {
-      const { currentUser } = this
-      // move to user intro component
-      const roles = normalizeRoles(currentUser.roles)
-      if (this.currentUser.isNewUser === 1 &&
+    if (isBaiXinguser(roles)) {
+      this.flag = true
+    } else {
+      if (!isYibaisouFengMing(roles)) {
+        Message.error('您没有权限访问，请更换帐号登陆')
+        return redirect('signin', `return=${encodeURIComponent(location.pathname + location.search)}`)
+      }
+      setTimeout(() => {
+        const { currentUser } = this
+        // move to user intro component
+        const roles = normalizeRoles(currentUser.roles)
+        if (this.currentUser.isNewUser === 1 &&
         roles.includes('BAIXING_USER')) {
-        this.showNewUserIntro = true
-      } else if (Date.now() < 1529596800000) {
-        const times = localStorage.getItem('bx-qt-sm-al-t') | 0
-        if (times === 0) {
-          // 初次
-          this.newUserIntroMode = 'shenma'
           this.showNewUserIntro = true
-          localStorage.setItem('bx-qt-sm-al-lt', Date.now())
-          localStorage.setItem('bx-qt-sm-al-t', 1)
-        } else if (times < 3) {
-          const lastTime = parseInt(localStorage.getItem('bx-qt-sm-al-lt'))
-          if ((Date.now() - lastTime) > 24 * 60 * 60 * 1000) {
+        } else if (Date.now() < 1529596800000) {
+          const times = localStorage.getItem('bx-qt-sm-al-t') | 0
+          if (times === 0) {
+          // 初次
             this.newUserIntroMode = 'shenma'
             this.showNewUserIntro = true
             localStorage.setItem('bx-qt-sm-al-lt', Date.now())
-            localStorage.setItem('bx-qt-sm-al-t', times + 1)
+            localStorage.setItem('bx-qt-sm-al-t', 1)
+          } else if (times < 3) {
+            const lastTime = parseInt(localStorage.getItem('bx-qt-sm-al-lt'))
+            if ((Date.now() - lastTime) > 24 * 60 * 60 * 1000) {
+              this.newUserIntroMode = 'shenma'
+              this.showNewUserIntro = true
+              localStorage.setItem('bx-qt-sm-al-lt', Date.now())
+              localStorage.setItem('bx-qt-sm-al-t', times + 1)
+            }
           }
         }
-      }
 
-      track({
-        action: 'bax: enter page',
-        baixingId: currentUser.baixingId,
-        baxId: currentUser.id,
-        src: this.$route.query.src || ''
-      })
-    }, 1200)
+        track({
+          action: 'bax: enter page',
+          baixingId: currentUser.baixingId,
+          baxId: currentUser.id,
+          src: this.$route.query.src || ''
+        })
+      }, 1200)
+    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+  .tip-p {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 20px;
+  }
   .notice {
     display: flex;
     position: fixed;

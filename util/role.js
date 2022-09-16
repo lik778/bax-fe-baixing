@@ -416,3 +416,8 @@ export function isYibaisouFengMing (roles) {
     'BAIXING_USER'
   ])
 }
+
+export function isBaiXinguser (roles) {
+  const nameEn = roles.map(item => item.nameEn)
+  return nameEn.includes('BAIXING_USER')
+}
