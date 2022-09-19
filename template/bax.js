@@ -346,22 +346,22 @@ const qwtRoutes = [
   {
     component: () => import('com/qwt-create-promotion'),
     path: '/main/qwt/promotion/create',
-    name: 'qwt-create-promotion',
-    beforeEnter: (to, from, next) => {
-      location.href = 'http://ybs.e-baixing.com/fengming/qwt/promotion/create'
-      // redirect('/fengming/qwt/promotion/create')
-      return false
-    }
+    name: 'qwt-create-promotion'
+    // beforeEnter: (to, from, next) => {
+    //   location.href = 'http://ybs.e-baixing.com/fengming/qwt/promotion/create'
+    //   // redirect('/fengming/qwt/promotion/create')
+    //   return false
+    // }
   },
   {
     component: () => import('com/qwt-update-promotion'),
     path: '/main/qwt/promotions/:id/update',
-    name: 'qwt-update-promotion',
-    beforeEnter: (to, from, next) => {
-      location.href = 'http://ybs.e-baixing.com/fengming/qwt/promotions'
-      // redirect('/fengming/qwt/promotions')
-      return false
-    }
+    name: 'qwt-update-promotion'
+    // beforeEnter: (to, from, next) => {
+    //   location.href = 'http://ybs.e-baixing.com/fengming/qwt/promotions'
+    //   // redirect('/fengming/qwt/promotions')
+    //   return false
+    // }
   },
   // {
   //   component: () => import('com/qwt-group/create'),
@@ -376,12 +376,12 @@ const qwtRoutes = [
   {
     component: () => import('com/qwt-update-promotion-list'),
     path: '/main/qwt/promotions',
-    name: 'qwt-promotion-list',
-    beforeEnter: (to, from, next) => {
-      location.href = 'http://ybs.e-baixing.com/fengming/qwt/promotions'
-      // redirect('/fengming/qwt/promotions')
-      return false
-    }
+    name: 'qwt-promotion-list'
+    // beforeEnter: (to, from, next) => {
+    //   location.href = 'http://ybs.e-baixing.com/fengming/qwt/promotions'
+    //   // redirect('/fengming/qwt/promotions')
+    //   return false
+    // }
   },
   // {
   //   component: () => import('com/qwt-dashboard'),
@@ -391,11 +391,11 @@ const qwtRoutes = [
   {
     component: () => import('com/qwt-charge'),
     path: '/main/qwt/charge',
-    name: 'qwt-charge',
-    beforeEnter: async (to, from, next) => {
-      location.href = 'http://ybs.e-baixing.com/fengming/qwt/charge'
-      return false
-    }
+    name: 'qwt-charge'
+    // beforeEnter: async (to, from, next) => {
+    //   location.href = 'http://ybs.e-baixing.com/fengming/qwt/charge'
+    //   return false
+    // }
   }
 ]
 
