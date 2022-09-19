@@ -67,7 +67,7 @@ import {
 } from 'util/role'
 
 import { getUserSites } from 'api/diamond-site'
-import { baxUserLogin, kaOnlineAndTickets } from 'api/ka'
+// import { baxUserLogin, kaOnlineAndTickets } from 'api/ka'
 
 const MENU_GROUP_MAP = {
   charge: ['qwt-charge', 'seo-charge'],
@@ -143,19 +143,19 @@ export default {
       }
     }
   },
-  async mounted () {
-    await this.initKaNav()
-  },
+  // async mounted () {
+  //   await this.initKaNav()
+  // },
   methods: {
-    goKaSuperPage () {
-      location.href = '/ka/vendor/site'
-    },
-    async initKaNav () {
-      this.isKaSuperman = ((await baxUserLogin()).data.roles || []).includes('seo_vendor')
+    // goKaSuperPage () {
+    //   location.href = '/ka/vendor/site'
+    // },
+    // async initKaNav () {
+    //   this.isKaSuperman = ((await baxUserLogin()).data.roles || []).includes('seo_vendor')
 
-      const { hasSitesAndTickets } = await kaOnlineAndTickets()
-      this.isRenderSiteLink = hasSitesAndTickets
-    },
+    //   const { hasSitesAndTickets } = await kaOnlineAndTickets()
+    //   this.isRenderSiteLink = hasSitesAndTickets
+    // },
     async initDiamondSiteNav () {
       const hasDiamondSite = !!(await getUserSites())
       this.isDiamondSiteJumpToMainSite = hasDiamondSite

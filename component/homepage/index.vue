@@ -2,7 +2,7 @@
   <div class="homepage">
     <account :userInfo="userInfo"/>
     <!-- <biaowang :userInfo="userInfo" /> -->
-    <campaign :userInfo="userInfo" />
+    <campaign v-if="isYibaisouBiao" :userInfo="userInfo" />
   </div>
 </template>
 
@@ -11,7 +11,6 @@ import store from './store'
 
 import Account from './account'
 import Campaign from './campaign'
-
 export default {
   name: 'qwt-homepage',
   props: {
@@ -27,6 +26,11 @@ export default {
   components: {
     Account,
     Campaign
+  },
+  computed: {
+    isYibaisouBiao () {
+      return this.$route.path.includes('fengming')
+    }
   }
 }
 </script>

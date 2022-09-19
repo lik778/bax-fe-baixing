@@ -1,8 +1,7 @@
 import { getHomePageFengmingData, checkAuthorize } from 'api/fengming'
-import { getHomePageBiaowangData, getPromotes, getUserRanking } from 'api/biaowang'
+import { getHomePageBiaowangData } from 'api/biaowang'
 import { getHomePageAdplatformData } from 'api/ad-platform'
 import { observable, toJS, action, computed } from 'mobx'
-import dayjs from 'dayjs'
 
 class Store {
   @observable fengmingData = null
@@ -60,24 +59,25 @@ class Store {
 
   @action async loadBiaowangData (userId) {
     try {
-      const [biaowangData, { items: biaowangPromotes }] = await Promise.all([getHomePageBiaowangData({ userId }), getPromotes({ size: 5, page: 0, userId: userId })])
-      const yesterday = dayjs().subtract(1, 'day').startOf('day').unix()
-      const rankings = await getUserRanking({
-        startTime: yesterday,
-        endTime: yesterday,
-        promoteList: biaowangPromotes.map(i => i.id),
-        userId
-      })
-      this.biaowangPromotes = biaowangPromotes
-      if (rankings.length) {
-        this.biaowangPromotes = biaowangPromotes.map(p => {
-          const one = rankings.find(r => r.promoteId === p.id)
-          if (one && one.rankList.length) {
-            return Object.assign(p, { cpcRanking: parseFloat(one.rankList[0]).toFixed(2) })
-          }
-          return p
-        })
-      }
+      const [biaowangData] = await Promise.all([getHomePageBiaowangData({ userId })])
+      // const yesterday = dayjs().subtract(1, 'day').startOf('day').unix()
+      // const rankings = await getUserRanking({
+      //   startTime: yesterday,
+      //   endTime: yesterday,
+      //   promoteList: biaowangPromotes.map(i => i.id),
+      //   userId
+      // })
+      // this.biaowangPromotes = biaowangPromotes
+
+      // if (rankings.length) {
+      //   this.biaowangPromotes = biaowangPromotes.map(p => {
+      //     const one = rankings.find(r => r.promoteId === p.id)
+      //     if (one && one.rankList.length) {
+      //       return Object.assign(p, { cpcRanking: parseFloat(one.rankList[0]).toFixed(2) })
+      //     }
+      //     return p
+      //   })
+      // }
       this.biaowangData = biaowangData
     } catch (err) {
       console.error(err)

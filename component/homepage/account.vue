@@ -1,21 +1,21 @@
 <template>
   <div class="layout-container">
-    <div class="layout-left" v-if="isShowSection('fengming') || isShowSection('site') || isShowSection('biaowang')">
+    <div class="layout-left" v-if="isShowSection('fengming') || isShowSection('biaowang')">
       <h5 class="layout-header">账户概览</h5>
       <ul class="accout">
-        <li class="account-item" v-if="isShowSection('fengming')">
-          <p class="title">凤鸣投放币（元) <span class="sub-title">不含冻结</span></p>
+        <li class="account-item" v-if="isShowSection('fengming') && isYibaisouBiao">
+          <p class="title">百搜凤鸣投放币（元) <span class="sub-title">不含冻结</span></p>
           <p class="num">{{fengmingBalance.price}}</p>
           <p class="desc" :style="{ marginBottom: userInfo.allowFmRecharge ? '' : '72px' }">（冻结金额 {{fengmingBalance.freezeBalance}} 元）</p>
-          <el-button v-if="userInfo.allowFmRecharge" type="primary" class="button" size="small" @click.native="() => handleCharge('bax')">立即充值</el-button>
+          <!-- <el-button v-if="userInfo.allowFmRecharge" type="primary" class="button" size="small" @click.native="() => handleCharge('bax')">立即充值</el-button> -->
         </li>
-        <li class="account-item" v-if="isShowSection('biaowang')">
+        <li class="account-item" v-if="isShowSection('biaowang') && !isYibaisouBiao">
           <p class="title">标王投放币（元) </p>
           <p class="num">{{ biaowangBalance.price }}</p>
           <!-- <p class="desc">（ {{biaowangData.nearExpirationPromotes}} 个词即将到期）</p> -->
           <el-button type="primary" class="button" size="small" @click.native="() => handleCharge('biaowang')">管理标王推广</el-button>
         </li>
-        <li class="account-item" v-if="isShowSection('biaowang')">
+        <li class="account-item" v-if="isShowSection('biaowang') && !isYibaisouBiao">
           <p class="title">省心币（元) </p>
           <p class="num">{{ adPlatformBalance.price }}</p>
           <p class="desc" :style="{ marginBottom: userInfo.allowCareFreeRecharge ? '' : '72px' }"></p>
@@ -27,7 +27,7 @@
       <h5 class="layout-header" slot="header">账户概览</h5>
       正在获取推广数据
     </loading-placeholder>
-    <div class="layout-right">
+    <div class="layout-right" v-if="isYibaisouBiao">
       <h5 class="layout-header">
         账户推广通知
         <span class="action" v-if="notices && notices.length" @click="$router.push('/main/notice')">更多</span>
@@ -58,6 +58,11 @@ export default {
     notices: () => store.notices.fengming,
     sites: () => store.kaSiteData && store.kaSiteData.sites,
     biaowangData: () => store.biaowangData
+  },
+  computed: {
+    isYibaisouBiao () {
+      return this.$route.path.includes('fengming')
+    }
   },
   methods: {
     handleCharge (type) {

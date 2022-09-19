@@ -35,8 +35,7 @@
         <el-button @click="systemDetect" type="primary" v-if="showDetect">预算检测</el-button>
         <span class="budget-tip"
               v-if="currentBalance <= 0">
-          （您的推广资金可用余额为0元，请<router-link :to="{ name: 'qwt-charge', query: { mode: 'charge-only' } }">
-            充值</router-link>）
+          （您的推广资金可用余额为0元，请充值）
         </span>
         <span class="budget-tip"
               v-else>

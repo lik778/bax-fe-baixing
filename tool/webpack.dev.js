@@ -69,6 +69,10 @@ const config = merge(base, {
         {
           from: /^\/yibaisou/,
           to: '/dist/yibaisou.html'
+        },
+        {
+          from: /^\/fengming/,
+          to: '/dist/fengming.html'
         }
       ]
     }
@@ -104,6 +108,11 @@ config.plugins = [
     filename: 'yibaisou.html',
     template: 'template/yibaisou.html',
     chunks: ['vendors~bax~huodong~signin', 'vendors~bax~signin', 'yibaisou']
+  }),
+  new HtmlWebpackPlugin({
+    filename: 'fengming.html',
+    template: 'template/fengming.html',
+    chunks: ['vendors~bax~huodong~signin', 'vendors~bax~signin', 'fengming']
   })
 ]
 

@@ -1,10 +1,10 @@
 <template>
   <div>
-    <el-tabs class="product-tab" v-model="productTabMchCode" @tab-click="changeProductMchCodeTab">
+    <!-- <el-tabs v-if="!isYibaisouFengming" class="product-tab" v-model="productTabMchCode" @tab-click="changeProductMchCodeTab">
       <el-tab-pane v-if="userInfo.allowFmRecharge" :key="FENG_MING_MERCHANT_CODE"  label="站外推广" :name="FENG_MING_MERCHANT_CODE"></el-tab-pane>
       <el-tab-pane v-if="!userInfo.shAgent"  :key="PHOENIXS_MERCHANT_CODE"  label="标王" :name="PHOENIXS_MERCHANT_CODE"></el-tab-pane>
       <el-tab-pane v-if="userInfo.allowCareFreeRecharge" :key="CARE_FREE_MERCHANT_CODE" label="省心币" :name="CARE_FREE_MERCHANT_CODE"></el-tab-pane>
-    </el-tabs>
+    </el-tabs> -->
     <div class="charge-container" v-loading.fullscreen.lock="fetchLoading">
       <section class="product shadow panel">
         <header v-show="showDiscount">
@@ -73,14 +73,15 @@
           </section>
           <section v-if="relationAllow()" class="agreement">
             <div v-for="agreement in agreementList" :key="agreement.id">
-              <contract :isAgreement="agreement.checked" :href="agreement.link"
+              <contract :isAgreement="agreement.checked"
                 @click="() => agreement.checked = !agreement.checked"
-                :title="agreement.title" />
+                 />
+                 <!-- :title="agreement.title"  :href="agreement.link"-->
             </div>
           </section>
           <promotion-area-limit-tip :all-areas="allAreas" page="charge" />
-          <section v-if="relationAllow()" class="pay-info">
-            <el-button v-if="!isAgentSales" :disabled="isTargetUId" class="pay-order"
+          <section v-if="relationAllow() && !isAgentAccounting" class="pay-info">
+            <el-button v-if="!isAgentSales" :disabled="isTargetUId"  class="pay-order"
               :loading="payInProgress" @click="createPreOrder">
               {{ submitButtonText }}
             </el-button>
@@ -95,9 +96,12 @@
 
         <footer>
           <li>凤鸣产品/服务购买后使用规则：</li>
-          <li>1. 该产品购买后，钻石店铺及凤鸣币不可退款，如有疑问请致电客服400-036-3650；</li>
+          <li>1. 该产品购买后，钻石店铺及凤鸣币不可退款，如有疑问请致电客服
+            <!-- <span v-if="isYibaisouFengming">400-150-229</span> -->
+            <span>400-036-3645</span>
+            ；</li>
           <li>2. 该钻石店铺及凤鸣币自购买之日起有效期为1年，请在有效期内使用；</li>
-          <li>3. 详细推广记录请在【搜索通】-【数据报表】查看。</li>
+          <li>3. 详细推广记录请在【百搜凤鸣】-【数据报表】查看。</li>
         </footer>
       </section>
     </div>
@@ -112,7 +116,7 @@ import PromotionAreaLimitTip from 'com/widget/promotion-area-limit-tip'
 import Clipboard from 'com/widget/clipboard'
 
 import { centToYuan } from 'utils'
-import { normalizeRoles, relationAllow } from 'util/role'
+import { normalizeRoles, relationAllow, isNormalUser, isYibaisouSales } from 'util/role'
 import { allowGetOrderPayUrl } from 'util'
 import { orderServiceHost } from 'config'
 import track from 'util/track'
@@ -123,7 +127,7 @@ import { createPreOrder } from 'api/order'
 import { SPUCODES, MERCHANTS } from 'constant/product'
 import { getUniqueAgreementList } from 'util/charge'
 import store from '../activity-store'
-import { ROLE_USER_ID } from './data'
+import { ROLE_USER_ID, ROLE_AGENT_ID } from './data'
 
 const { WHOLE_SPU_CODE, GUAN_WANG_SPU_CODE, BIAO_WANG_SPU_CODE, CARE_FREE_SPU_CODE } = SPUCODES
 const { FENG_MING_MERCHANT_CODE, PHOENIXS_MERCHANT_CODE, CARE_FREE_MERCHANT_CODE } = MERCHANTS
@@ -135,7 +139,7 @@ const isGwProduct = function (spuCode) {
 const isChargeProduct = function (spuCode) {
   return [WHOLE_SPU_CODE, BIAO_WANG_SPU_CODE, CARE_FREE_SPU_CODE].includes(spuCode)
 }
-
+// 测试
 export default {
   name: 'charge-container',
   props: {
@@ -181,21 +185,35 @@ export default {
     discountInfoHTML: () => store.discountInfoHTML
   },
   computed: {
+    isYibaisouFengming () {
+      const { roles, isYibaisouUser } = this.userInfo
+      if (isNormalUser(roles)) {
+        if (!isYibaisouUser) {
+          console.log('jinlai1')
+          return false
+        }
+      } else {
+        if (!isYibaisouSales(roles)) {
+          return false
+        }
+      }
+      return true
+    },
     isAgentSales () {
       const roles = normalizeRoles(this.userInfo.roles)
       return roles.includes('AGENT_SALES')
     },
     isBxUser () {
       const roles = normalizeRoles(this.userInfo.roles)
-      return roles.includes('BAIXING_USER')
+      return roles.includes('YBS_USER') || roles.includes('BAIXING_USER')
     },
     isBxSales () {
       const roles = normalizeRoles(this.userInfo.roles)
-      return roles.includes('BAIXING_SALES')
+      return roles.includes('YBS_SALES')
     },
     isAgentAccounting () {
       const roles = normalizeRoles(this.userInfo.roles)
-      return roles.includes('AGENT_ACCOUNTING')
+      return roles.includes('YBS_ACCOUNTING')
     },
     submitButtonText () {
       const { userInfo } = this
@@ -221,9 +239,9 @@ export default {
     // 指定权限
     isTargetUId () {
       const allId = this.userInfo.roles.map(item => item.id)
-      const { id } = this.userInfo
-      if (allId.includes(6)) {
-        return ROLE_USER_ID.includes(id)
+      const { id, agentId } = this.userInfo
+      if (allId.includes(6) || allId.includes(14)) {
+        return ROLE_USER_ID.includes(id) || !ROLE_AGENT_ID.includes(agentId)
       } else {
         const { userId = 0 } = this.salesInfo
         return ROLE_USER_ID.includes(userId)
@@ -281,6 +299,7 @@ export default {
       }
     }
     this.obtainProductByMchCode()
+    store.setDiscountInfoHTMLFactory(this.productTabMchCode)
   },
   methods: {
     centToYuan,
@@ -305,7 +324,6 @@ export default {
         }
         const item = targetList.find(x => x.vendorCode === this.productTabMchCode)
         products = item ? item.products : []
-
         products.forEach(spu =>
           spu.selection.forEach(sku => {
             sku.quantity = sku.minQuantity === sku.maxQuantity ? sku.minQuantity : 0
@@ -315,7 +333,6 @@ export default {
         )
         this.siteSpu = products.find(p => isGwProduct(p.spuCode))
         this.chargeSpu = products.find(p => isChargeProduct(p.spuCode))
-
         this.agreementList = getUniqueAgreementList(products)
         this.checkedProducts = []
       } catch (e) {
@@ -357,6 +374,9 @@ export default {
       this.toggleProduct(product, isGwProduct)
     },
     async createPreOrder () {
+      if (this.isBxSales && !this.salesInfo.userId) {
+        return this.$message.error('提单需要带用户信息')
+      }
       if (this.hasUnCheckedAgreement) {
         return this.$message.error('请阅读并勾选同意服务协议，再进行下一步操作')
       }
@@ -406,7 +426,9 @@ export default {
       })
 
       this.payInProgress = true
-
+      if (userInfo.customerId) {
+        orderParams.customerId = userInfo.customerId
+      }
       try {
         const preTradeId = await createPreOrder(orderParams)
         track({
@@ -447,11 +469,11 @@ export default {
     async getFinalUserId () {
       const { user_id: userId } = this.$route.query
       const { userInfo, salesInfo } = this
-      if (userId) {
-        return userId
+      if (this.isBxUser) {
+        return userInfo.id || userId
       }
       // 进入bax时带有销售身份信息，用户信息直接在salesInfo获取
-      if (salesInfo.userId) {
+      if (this.isBxSales) {
         return salesInfo.userId
       }
       return userInfo.id

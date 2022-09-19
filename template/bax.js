@@ -65,10 +65,10 @@ import Movue from 'movue'
 import Vue from 'vue'
 import { ErrorBoundary } from 'vue-error-boundary'
 import Vue2Filters from 'vue2-filters'
-import { getBusinessLicense } from 'api/seo'
-import { getCurrentUser } from 'api/account'
+// import { getBusinessLicense } from 'api/seo'
+// import { getCurrentUser } from 'api/account'
 import pick from 'lodash.pick'
-import { notAllowFengmingRecharge } from 'util/role'
+// import { notAllowFengmingRecharge } from 'util/role'
 import { parseQuery, stringifyQuery, f2y } from 'util'
 
 import gStore from '../component/store'
@@ -318,174 +318,185 @@ const bwPlusRoutes = [
 //   }
 // ]
 
-const qcRoutes = [
-  {
-    component: () => import('com/qc-promote-list'),
-    path: '/main/qc/promote-list',
-    name: 'qc-promote-list'
-  },
-  {
-    component: () => import('com/qc-keyword-list'),
-    path: '/main/qc/keyword-list',
-    name: 'qc-keyword-list',
-    hidden: true
-  },
-  {
-    component: () => import('com/qc-creative'),
-    path: '/main/qc/creative',
-    name: 'qc-creative'
-  },
-  {
-    component: () => import('com/qc-dashboard'),
-    path: '/main/qc/dashboard',
-    name: 'qc-dashboard'
-  }
-]
+// const qcRoutes = [
+//   {
+//     component: () => import('com/qc-promote-list'),
+//     path: '/main/qc/promote-list',
+//     name: 'qc-promote-list'
+//   },
+//   {
+//     component: () => import('com/qc-keyword-list'),
+//     path: '/main/qc/keyword-list',
+//     name: 'qc-keyword-list',
+//     hidden: true
+//   },
+//   {
+//     component: () => import('com/qc-creative'),
+//     path: '/main/qc/creative',
+//     name: 'qc-creative'
+//   },
+//   {
+//     component: () => import('com/qc-dashboard'),
+//     path: '/main/qc/dashboard',
+//     name: 'qc-dashboard'
+//   }
+// ]
 
 const qwtRoutes = [
   {
     component: () => import('com/qwt-create-promotion'),
     path: '/main/qwt/promotion/create',
-    name: 'qwt-create-promotion'
+    name: 'qwt-create-promotion',
+    beforeEnter: (to, from, next) => {
+      location.href = 'http://ybs.e-baixing.com/fengming/qwt/promotion/create'
+      // redirect('/fengming/qwt/promotion/create')
+      return false
+    }
   },
   {
     component: () => import('com/qwt-update-promotion'),
     path: '/main/qwt/promotions/:id/update',
-    name: 'qwt-update-promotion'
+    name: 'qwt-update-promotion',
+    beforeEnter: (to, from, next) => {
+      location.href = 'http://ybs.e-baixing.com/fengming/qwt/promotions'
+      // redirect('/fengming/qwt/promotions')
+      return false
+    }
   },
-  {
-    component: () => import('com/qwt-group/create'),
-    path: '/main/qwt/group/create',
-    name: 'qwt-create-group'
-  },
-  {
-    component: () => import('com/qwt-group/update'),
-    path: '/main/qwt/group/:id/update',
-    name: 'qwt-update-group'
-  },
+  // {
+  //   component: () => import('com/qwt-group/create'),
+  //   path: '/main/qwt/group/create',
+  //   name: 'qwt-create-group'
+  // },
+  // {
+  //   component: () => import('com/qwt-group/update'),
+  //   path: '/main/qwt/group/:id/update',
+  //   name: 'qwt-update-group'
+  // },
   {
     component: () => import('com/qwt-update-promotion-list'),
     path: '/main/qwt/promotions',
-    name: 'qwt-promotion-list'
+    name: 'qwt-promotion-list',
+    beforeEnter: (to, from, next) => {
+      location.href = 'http://ybs.e-baixing.com/fengming/qwt/promotions'
+      // redirect('/fengming/qwt/promotions')
+      return false
+    }
   },
-  {
-    component: () => import('com/qwt-dashboard'),
-    path: '/main/qwt/dashboard',
-    name: 'qwt-dashboard'
-  },
+  // {
+  //   component: () => import('com/qwt-dashboard'),
+  //   path: '/main/qwt/dashboard',
+  //   name: 'qwt-dashboard'
+  // }
   {
     component: () => import('com/qwt-charge'),
     path: '/main/qwt/charge',
     name: 'qwt-charge',
     beforeEnter: async (to, from, next) => {
-      const { roles, realAgentId } = await getCurrentUser()
-      if (notAllowFengmingRecharge(roles, realAgentId)) {
-        next({ name: 'qwt-promotion-list', redirect: true })
-      } else {
-        next()
-      }
+      location.href = 'http://ybs.e-baixing.com/fengming/qwt/charge'
+      return false
     }
   }
 ]
 
-const sspRoutes = [
-  {
-    component: () => import('com/ssp-ad-list'),
-    path: '/main/ads',
-    name: 'ad-list'
-  },
-  {
-    component: () => import('com/ssp-material-info'),
-    path: '/main/materials/:id',
-    name: 'material-info'
-  },
-  {
-    component: () => import('com/ssp-material-list'),
-    path: '/main/materials',
-    name: 'material-list'
-  },
-  {
-    component: () => import('com/ssp-order-create'),
-    path: '/main/order/create',
-    name: 'create-order'
-  },
-  {
-    component: () => import('com/ssp-order-info'),
-    path: '/main/orders/:id',
-    name: 'order-info'
-  },
-  {
-    component: () => import('com/ssp-order-list'),
-    path: '/main/orders',
-    name: 'order-list'
-  },
-  {
-    component: () => import('com/ssp-user-list'),
-    path: '/main/users',
-    name: 'user-list'
-  },
-  {
-    component: () => import('com/ssp-ad-calendar'),
-    path: '/main/ad-calendar',
-    name: 'ad-calendar'
-  }
-]
+// const sspRoutes = [
+//   {
+//     component: () => import('com/ssp-ad-list'),
+//     path: '/main/ads',
+//     name: 'ad-list'
+//   },
+//   {
+//     component: () => import('com/ssp-material-info'),
+//     path: '/main/materials/:id',
+//     name: 'material-info'
+//   },
+//   {
+//     component: () => import('com/ssp-material-list'),
+//     path: '/main/materials',
+//     name: 'material-list'
+//   },
+//   {
+//     component: () => import('com/ssp-order-create'),
+//     path: '/main/order/create',
+//     name: 'create-order'
+//   },
+//   {
+//     component: () => import('com/ssp-order-info'),
+//     path: '/main/orders/:id',
+//     name: 'order-info'
+//   },
+//   {
+//     component: () => import('com/ssp-order-list'),
+//     path: '/main/orders',
+//     name: 'order-list'
+//   },
+//   {
+//     component: () => import('com/ssp-user-list'),
+//     path: '/main/users',
+//     name: 'user-list'
+//   },
+//   {
+//     component: () => import('com/ssp-ad-calendar'),
+//     path: '/main/ad-calendar',
+//     name: 'ad-calendar'
+//   }
+// ]
 
-const seoRoutes = [
-  {
-    component: () => import('com/seo-charge'),
-    path: '/main/seo/charge',
-    name: 'seo-charge'
-  },
-  {
-    component: () => import('com/seo-landing'),
-    path: '/main/seo/landing',
-    name: 'seo-landing'
-  },
-  {
-    component: () => import('com/seo-create-promotion'),
-    path: '/main/seo/promotion/create',
-    name: 'seo-create-promotion'
-  },
-  {
-    component: () => import('com/seo-promotion-list'),
-    path: '/main/seo/promotions',
-    name: 'seo-promotion-list'
-  },
-  {
-    component: () => import('com/seo-update-promotion-zixuan'),
-    path: '/main/seo/promotion/zixuan/:id/update',
-    name: 'seo-update-zixuan-promotion'
-  },
-  {
-    component: () => import('com/seo-create-promotion-zixuan'),
-    path: '/main/seo/promotion/create/zixuan',
-    name: 'seo-create-zixuan-promotion'
-  },
-  {
-    component: () => import('com/seo-promotion-cibao/create'),
-    path: '/main/seo/promotion/create/cibao',
-    name: 'seo-create-cibao-promotion',
-    beforeEnter: async (to, from, next) => {
-      const license = await getBusinessLicense()
-      if (license) {
-        next()
-      } else {
-        Message.error('无权限访问')
-      }
-    }
-  },
-  {
-    component: () => import('com/seo-promotion-cibao/update'),
-    path: '/main/seo/promotion/cibao/:id/update',
-    name: 'seo-update-cibao-promotion'
-  },
-  {
-    component: () => import('com/seo/seo-promotion-purchase'),
-    path: '/main/seo/promotion-purchase',
-    name: 'seo-promotion-purchase'
-  }
-]
+// const seoRoutes = [
+//   {
+//     component: () => import('com/seo-charge'),
+//     path: '/main/seo/charge',
+//     name: 'seo-charge'
+//   },
+//   {
+//     component: () => import('com/seo-landing'),
+//     path: '/main/seo/landing',
+//     name: 'seo-landing'
+//   },
+//   {
+//     component: () => import('com/seo-create-promotion'),
+//     path: '/main/seo/promotion/create',
+//     name: 'seo-create-promotion'
+//   },
+//   {
+//     component: () => import('com/seo-promotion-list'),
+//     path: '/main/seo/promotions',
+//     name: 'seo-promotion-list'
+//   },
+//   {
+//     component: () => import('com/seo-update-promotion-zixuan'),
+//     path: '/main/seo/promotion/zixuan/:id/update',
+//     name: 'seo-update-zixuan-promotion'
+//   },
+//   {
+//     component: () => import('com/seo-create-promotion-zixuan'),
+//     path: '/main/seo/promotion/create/zixuan',
+//     name: 'seo-create-zixuan-promotion'
+//   },
+//   {
+//     component: () => import('com/seo-promotion-cibao/create'),
+//     path: '/main/seo/promotion/create/cibao',
+//     name: 'seo-create-cibao-promotion',
+//     beforeEnter: async (to, from, next) => {
+//       const license = await getBusinessLicense()
+//       if (license) {
+//         next()
+//       } else {
+//         Message.error('无权限访问')
+//       }
+//     }
+//   },
+//   {
+//     component: () => import('com/seo-promotion-cibao/update'),
+//     path: '/main/seo/promotion/cibao/:id/update',
+//     name: 'seo-update-cibao-promotion'
+//   }
+//   // {
+//   //   component: () => import('com/seo/seo-promotion-purchase'),
+//   //   path: '/main/seo/promotion-purchase',
+//   //   name: 'seo-promotion-purchase'
+//   // }
+// ]
 
 export const adPlatformRoute = [
   {
@@ -518,11 +529,11 @@ export const router = new VueRouter({
       path: '/main/payment-success',
       name: 'payment-success-page'
     },
-    {
-      component: () => import('com/account'),
-      path: '/main/account',
-      name: 'account'
-    },
+    // {
+    //   component: () => import('com/account'),
+    //   path: '/main/account',
+    //   name: 'account'
+    // },
     {
       component: () => import('com/coupon'),
       path: '/main/coupon',
@@ -534,10 +545,10 @@ export const router = new VueRouter({
       name: 'notice'
     },
     // ...bwRoutes,
-    ...qcRoutes,
+    // ...qcRoutes,
     ...qwtRoutes,
-    ...sspRoutes,
-    ...seoRoutes,
+    // ...sspRoutes,
+    // ...seoRoutes,
     ...bwPlusRoutes,
     ...adPlatformRoute,
     {

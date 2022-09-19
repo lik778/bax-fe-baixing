@@ -24,7 +24,7 @@ async function getServerTime () {
 const store = observable({
   _inActivityPeriod: null,
   _discountInfoHTML: [],
-  get inActivityPeriod () {
+  get inActivityPeriod () { // 1
     return this._inActivityPeriod
   },
   get discountInfoHTML () {

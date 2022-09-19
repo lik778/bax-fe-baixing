@@ -12,17 +12,17 @@
         text-color="#333"
         ref="menu"
       >
-        <el-menu-item index="/ka/vendor/site" @click="goKaSuperPage" v-if="isKaSuperman">
+        <!-- <el-menu-item index="/ka/vendor/site" @click="goKaSuperPage" v-if="isKaSuperman">
           <i class="el-icon-info" />
           官网超人入口
-        </el-menu-item>
+        </el-menu-item> -->
         <el-menu-item index="root">
           <router-link :to="{ name: 'root' }" tag="p">
             <bx-icon type="appstore"></bx-icon>我的搜索通
           </router-link>
         </el-menu-item>
 
-        <el-submenu index="charge">
+        <!-- <el-submenu index="charge">
           <template slot="title">
             <bx-icon type="paycircleo"></bx-icon>充值与购买
           </template>
@@ -31,9 +31,9 @@
               充值
             </router-link>
           </el-menu-item>
-        </el-submenu>
+        </el-submenu> -->
 
-        <el-submenu index="sst" v-show="allowSeeQwtPromotion || allowSales">
+        <!-- <el-submenu index="sst" v-show="allowSeeQwtPromotion || allowSales">
           <template slot="title">
             <bx-icon type="sharealt"></bx-icon>站外推广
           </template>
@@ -47,7 +47,7 @@
               管理站外推广
             </router-link>
           </el-menu-item>
-        </el-submenu>
+        </el-submenu> -->
         <!-- <el-submenu index="bw">
           <template slot="title">
             <bx-icon type="sharealt"></bx-icon>标王推广
@@ -83,7 +83,7 @@
             </router-link>
           </el-menu-item>
         </el-submenu>
-        <el-submenu index="seo">
+        <!-- <el-submenu index="seo">
           <template slot="title">
             <bx-icon type="sharealt"></bx-icon>SEO云推广
           </template>
@@ -92,7 +92,7 @@
               SEO云推广购买
             </router-link>
           </el-menu-item>
-        </el-submenu>
+        </el-submenu> -->
         <!-- <el-submenu index="qc">
           <template slot="title">
             <bx-icon type="sharealt"></bx-icon>易慧推
@@ -103,20 +103,20 @@
             </router-link>
           </el-menu-item>
         </el-submenu> -->
-        <el-menu-item index="gw-homepage" v-if="isRenderSiteLink">
+        <!-- <el-menu-item index="gw-homepage" v-if="isRenderSiteLink">
           <a href="/ka/main" style="color: inherit">
             <i class="el-icon-news" />精品官网
           </a>
-        </el-menu-item>
+        </el-menu-item> -->
         <el-submenu index="dashboard">
           <template slot="title">
             <i class="el-icon-document" />数据报表
           </template>
-          <el-menu-item index="qwt-dashboard">
+          <!-- <el-menu-item index="qwt-dashboard">
             <router-link :to="{ name: 'qwt-dashboard'}" tag="p">
               站外推广报表
             </router-link>
-          </el-menu-item>
+          </el-menu-item> -->
           <!-- <el-menu-item index="bw-dashboard">
             <router-link :to="{ name: 'bw-dashboard'}" tag="p">
               标王推广报表
@@ -138,7 +138,7 @@
             </router-link>
           </el-menu-item> -->
         </el-submenu>
-        <el-submenu index="ssp" v-show="allowSeeBxAd">
+        <!-- <el-submenu index="ssp" v-show="allowSeeBxAd">
           <template slot="title">
             <i class="el-icon-message"></i>品牌广告
           </template>
@@ -167,7 +167,7 @@
               广告排期
             </router-link>
           </el-menu-item>
-        </el-submenu>
+        </el-submenu> -->
 
         <el-menu-item v-if="allowSeeDiamondSite" index="diamond-site-homepage" key="diamond-site-homepage">
           <a v-if="isDiamondSiteJumpToMainSite" href="//shop.baixing.com/management/shop" style="color: inherit">
@@ -208,7 +208,7 @@ import {
 } from 'util/role'
 
 import { getUserSites } from 'api/diamond-site'
-import { baxUserLogin, kaOnlineAndTickets } from 'api/ka'
+// import { baxUserLogin, kaOnlineAndTickets } from 'api/ka'
 
 const MENU_GROUP_MAP = {
   charge: ['qwt-charge', 'seo-charge'],
@@ -305,19 +305,19 @@ export default {
       return allowCareFreeDashboard(userInfo)
     }
   },
-  async mounted () {
-    await this.initKaNav()
-  },
+  // async mounted () {
+  //   await this.initKaNav()
+  // },
   methods: {
-    goKaSuperPage () {
-      location.href = '/ka/vendor/site'
-    },
-    async initKaNav () {
-      this.isKaSuperman = ((await baxUserLogin()).data.roles || []).includes('seo_vendor')
+    // goKaSuperPage () {
+    //   location.href = '/ka/vendor/site'
+    // }
+    // async initKaNav () {
+    //   this.isKaSuperman = ((await baxUserLogin()).data.roles || []).includes('seo_vendor')
 
-      const { hasSitesAndTickets } = await kaOnlineAndTickets()
-      this.isRenderSiteLink = hasSitesAndTickets
-    },
+    //   const { hasSitesAndTickets } = await kaOnlineAndTickets()
+    //   this.isRenderSiteLink = hasSitesAndTickets
+    // },
     async initDiamondSiteNav () {
       const hasDiamondSite = !!(await getUserSites())
       this.isDiamondSiteJumpToMainSite = hasDiamondSite

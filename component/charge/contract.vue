@@ -14,11 +14,11 @@ export default {
   props: {
     href: {
       type: String,
-      default: assetHost + 'baixing-sst-contract-2020-v1.pdf'
+      default: assetHost + 'yibaisou-sst-contract-2022-v1.pdf'
     },
     title: {
       type: String,
-      default: '百姓网搜索通服务协议'
+      default: '易百搜凤鸣产品协议'
     },
     isAgreement: {
       type: Boolean,

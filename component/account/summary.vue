@@ -3,14 +3,14 @@
     <section-header>我的账户</section-header>
     <el-row type="flex" justify="space-around" align="center">
       <el-col :span="1"></el-col>
-      <el-col :span="4" class="column">
+      <!-- <el-col :span="4" class="column">
         <h3>凤鸣投放币</h3>
         <p><strong>{{ balance.fengmingBalance | priceFormat }}</strong>元</p>
         <router-link v-if="userInfo.allowFmRecharge" :to="{name: 'qwt-charge', query: {mode: 'charge-only'}}"
           @click.native="onClickCharge">
           <el-button type="primary">充值</el-button>
         </router-link>
-      </el-col>
+      </el-col> -->
       <el-col :span="4" class="column">
         <h3>标王投放币</h3>
         <p><strong>{{ balance.biaowangBalance | priceFormat }}</strong>元</p>
@@ -18,15 +18,15 @@
           <el-button type="primary">管理标王推广</el-button>
         </router-link>
       </el-col>
-      <el-col :span="4" class="column">
+      <!-- <el-col :span="4" class="column">
         <h3>可用优惠券</h3>
         <p><span class="number">{{coupons.totalElements}}</span>张</p>
         <router-link :to="{name: 'coupon'}"
           @click.native="onClickCoupon">
           <el-button type="primary">查看</el-button>
         </router-link>
-      </el-col>
-      <el-col :span="16" class="column">
+      </el-col> -->
+      <!-- <el-col :span="16" class="column">
         <el-row class="multi">
           <el-col :span="18">
             <div class="btn">
@@ -36,16 +36,9 @@
                 <el-button type="primary">推广管理</el-button>
               </router-link>
             </div>
-            <!-- <div class="btn">
-              <span>智能投放：</span>
-              <router-link :to="{name: 'mvp-campaign-list'}"
-                @click.native="onClickMvpCampaignList">
-                <el-button type="primary">推广管理</el-button>
-              </router-link>
-            </div> -->
           </el-col>
         </el-row>
-      </el-col>
+      </el-col> -->
     </el-row>
   </div>
 </template>

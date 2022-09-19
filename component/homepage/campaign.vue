@@ -2,7 +2,7 @@
   <div class="layout-container">
     <div class="layout-left">
       <h5 class="layout-header">
-        站外推广数据概览
+        数据概览
         <span class="action" @click="() => $router.push({name: 'qwt-dashboard'})">查看详情</span>
       </h5>
       <div class="layout-content" v-if="hasCampaign">

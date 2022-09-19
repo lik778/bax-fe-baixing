@@ -2,7 +2,7 @@
 <template>
   <main>
     <header>BAX 广告交易平台</header>
-    <form class="box">
+    <form v-if="!isFengMing" class="box">
       <p>登录</p>
       <input
         placeholder="邮箱"
@@ -21,6 +21,13 @@
         登录
       </span>
     </form>
+    <div v-else class="fengming-admin">
+      <p class="fengming-tip">请跳转到易百搜后台登录</p>
+      <p class="fengming-submit">
+       <a class="fengming-dev" href="//crm.e-baixing.com/">跳转</a>
+        <button class="fengming-reload" @click="onload">已登录，刷新</button>
+      </p>
+    </div>
   </main>
 </template>
 
@@ -46,13 +53,19 @@ export default {
     return {
       password: '',
       email: '',
-      redirectHref: ''
+      redirectHref: '',
+      isFengMing: false
     }
   },
   created () {
     const query = parseQuery(window.location.search.substring(1))
     const returnUrl = query.return || ''
     this.redirectHref = isPro ? `https://www.baixing.com/fengming/bax?redirect_url=${returnUrl}` : `http://www.zhubailin.baixing.cn/fengming/bax?redirect_url=${returnUrl}`
+    if (returnUrl.indexOf('/fengming/') !== -1) {
+      this.isFengMing = true
+    } else {
+      this.isFengMing = false
+    }
   },
   methods: {
     async login () {
@@ -74,8 +87,14 @@ export default {
       if (allowVerifyAd(userInfo.roles)) {
         return redirectTo('main/ads')
       }
-
       redirectTo('main/orders')
+    },
+    async onload () {
+      await getCurrentUser()
+      const query = parseQuery(window.location.search.substring(1))
+      if (query.return) {
+        location.href = location.origin + query.return
+      }
     }
   }
 }
@@ -136,6 +155,51 @@ dialog {
 </style>
 
 <style lang="scss" scoped>
+.fengming-admin {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 420px;
+  height: 220px;
+  padding: 15px 20px 0;
+  border-radius: 5px;
+  border-radius: 4px;
+  background: rgba(216, 216, 216, 0.3);
+  .fengming-tip {
+    text-align: center;
+    font-size: 16px;
+    color: #616161;
+  }
+  .fengming-dev {
+    width: 100px;
+    height: 36px;
+    line-height: 36px;
+    margin-right: 30px;
+    text-align: center;
+    border: 1px solid #83e5e7;
+    border-radius: 4px;
+    background: #7ddede;
+    color: #616161;
+    cursor: pointer;
+  }
+  .fengming-reload {
+    width: 120px;
+    height: 36px;
+    text-align: center;
+    line-height: 36px;
+    border-radius: 4px;
+    border: 1px solid white;
+    font-size: 14px;
+    color: white;
+    background: rgba(216, 216, 216, 0.3);
+    cursor: pointer;
+  }
+  .fengming-submit {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+  }
+}
 .box {
   display: grid;
   grid-template-rows: 40px 55px 55px;
