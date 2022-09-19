@@ -1,8 +1,8 @@
 
 <template>
   <div class="container" v-loading.fullscreen="fullscreenLoading">
-    <p v-if="flag" class="tip-p">系统正在维护升级中，预计需要2-3个工作日，最晚19日开放。升级期间广告上线及创意修改等服务将暂停提供，感谢您的理解与支持~</p>
-    <div v-else>
+    <!-- <p v-if="flag" class="tip-p">系统正在维护升级中，预计需要2-3个工作日，最晚19日开放。升级期间广告上线及创意修改等服务将暂停提供，感谢您的理解与支持~</p>
+    <div v-else> -->
       <Header :userInfo="currentUser"/>
     <div class="main-content">
       <router-view class="view"
@@ -32,7 +32,7 @@
     <Notification />
     </div> -->
     </div>
-  </div>
+  <!-- </div> -->
 </template>
 
 <script>
@@ -93,8 +93,8 @@ export default {
       salesInfo: {
         salesId: '',
         userId: ''
-      },
-      flag: false
+      }
+      // flag: false
     }
   },
   computed: {
@@ -134,7 +134,7 @@ export default {
     ])
     const { roles } = this.currentUser
     if (isBaiXinguser(roles)) {
-      this.flag = true
+      // this.flag = true
     } else {
       if (!isYibaisouFengMing(roles)) {
         Message.error('您没有权限访问，请更换帐号登陆')
