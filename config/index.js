@@ -3,17 +3,19 @@ export const isLocal = env === 'development'
 
 export const isPro = location.hostname.includes('bax.baixing.com.cn') || location.hostname.includes('ybs.e-baixing.com')
 
+const isYbsUrl = location.hostname.includes('ybs.e-baixing.com') ? 'ybs.e-baixing.com' : 'bax.baixing.com.cn'
+
 const production = {
-  fengmingApiHost: '//bax.baixing.com.cn/fengmingx-api',
-  baxApiHost: '//bax.baixing.com.cn/bax-api',
-  kaApiHost: '//bax.baixing.com.cn/ka/api/admin',
-  biaowangApiHost: '//bax.baixing.com.cn/phoenixs/api',
-  seoApiHost: '//bax.baixing.com.cn/seo-api',
-  qcApiHost: 'http://bax.baixing.com.cn/api/sem-batch',
+  fengmingApiHost: `//${isYbsUrl}/fengmingx-api`,
+  baxApiHost: `//${isYbsUrl}/bax-api`,
+  kaApiHost: `//${isYbsUrl}/ka/api/admin`,
+  biaowangApiHost: `//${isYbsUrl}/phoenixs/api`,
+  seoApiHost: `//${isYbsUrl}/seo-api`,
+  qcApiHost: `http://${isYbsUrl}/api/sem-batch`,
   orderServiceHost: 'http://ybs.e-baixing.com/trade',
   identityBindingPage: 'https://www.baixing.com/bind/?type=idcard',
-  biaowangPlusApiHost: '//bax.baixing.com.cn/api/phoenixs-plus',
-  adPlatformApiHost: '//bax.baixing.com.cn/api/ad-platform'
+  biaowangPlusApiHost: `//${isYbsUrl}/api/phoenixs-plus`,
+  adPlatformApiHost: `//${isYbsUrl}/api/ad-platform`
 }
 
 const development = {
