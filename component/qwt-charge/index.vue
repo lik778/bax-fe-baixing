@@ -81,7 +81,7 @@
           </section>
           <promotion-area-limit-tip :all-areas="allAreas" page="charge" />
           <section v-if="isExitUserId" class="pay-info">
-            <el-button :disabled="isTargetUId"  class="pay-order"
+            <el-button v-if="isBxUser" :disabled="isTargetUId"  class="pay-order"
               :loading="payInProgress" @click="createPreOrder">
               {{ submitButtonText }}
             </el-button>
@@ -117,7 +117,7 @@ import PromotionAreaLimitTip from 'com/widget/promotion-area-limit-tip'
 import Clipboard from 'com/widget/clipboard'
 
 import { centToYuan } from 'utils'
-import { normalizeRoles, relationAllow, isNormalUser, isYibaisouSales, isYibaisouSalesCur } from 'util/role'
+import { normalizeRoles, relationAllow, isNormalUser, isYibaisouSales } from 'util/role'
 import { allowGetOrderPayUrl } from 'util'
 import { orderServiceHost } from 'config'
 import track from 'util/track'
@@ -251,7 +251,7 @@ export default {
     isExitUserId () {
       const { user_id: userId } = qs.parse(location.search)
       if (userId) {
-        if (isYibaisouSalesCur) {
+        if (this.isBxSales) {
           return true
         } else {
           return false

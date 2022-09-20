@@ -429,3 +429,10 @@ export function isBaiXinguser (roles) {
   const nameEn = roles.map(item => item.nameEn)
   return nameEn.includes('BAIXING_USER')
 }
+
+export function isYibaisouUser (roles) {
+  const currentRoles = normalizeRoles(roles)
+  return checkRoles(currentRoles, [
+    'YBS_USER'
+  ])
+}
