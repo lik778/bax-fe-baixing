@@ -407,6 +407,14 @@ export function isYibaisouSales (roles) {
   ])
 }
 
+export function isYibaisouSalesCur (roles) {
+  const currentRoles = normalizeRoles(roles)
+  return checkRoles(currentRoles, [
+    'YBS_SALES',
+    'YBS_ACCOUNTING'
+  ])
+}
+
 export function isYibaisouFengMing (roles) {
   const currentRoles = normalizeRoles(roles)
   return checkRoles(currentRoles, [

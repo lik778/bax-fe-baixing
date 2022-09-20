@@ -80,8 +80,8 @@
             </div>
           </section>
           <promotion-area-limit-tip :all-areas="allAreas" page="charge" />
-          <section v-if="relationAllow() && !isAgentAccounting" class="pay-info">
-            <el-button v-if="!isAgentSales" :disabled="isTargetUId"  class="pay-order"
+          <section v-if="isExitUserId" class="pay-info">
+            <el-button :disabled="isTargetUId"  class="pay-order"
               :loading="payInProgress" @click="createPreOrder">
               {{ submitButtonText }}
             </el-button>
@@ -109,6 +109,7 @@
 </template>
 
 <script>
+import qs from 'query-string'
 import PriceTag from 'com/charge/price-tag'
 import GwProWidget from 'com/charge/gw-pro'
 import Contract from 'com/charge/contract'
@@ -116,7 +117,7 @@ import PromotionAreaLimitTip from 'com/widget/promotion-area-limit-tip'
 import Clipboard from 'com/widget/clipboard'
 
 import { centToYuan } from 'utils'
-import { normalizeRoles, relationAllow, isNormalUser, isYibaisouSales } from 'util/role'
+import { normalizeRoles, relationAllow, isNormalUser, isYibaisouSales, isYibaisouSalesCur } from 'util/role'
 import { allowGetOrderPayUrl } from 'util'
 import { orderServiceHost } from 'config'
 import track from 'util/track'
@@ -245,6 +246,18 @@ export default {
       } else {
         const { userId = 0 } = this.salesInfo
         return ROLE_USER_ID.includes(userId)
+      }
+    },
+    isExitUserId () {
+      const { user_id: userId } = qs.parse(location.search)
+      if (userId) {
+        if (isYibaisouSalesCur) {
+          return true
+        } else {
+          return false
+        }
+      } else {
+        return true
       }
     }
   },
