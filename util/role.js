@@ -407,6 +407,14 @@ export function isYibaisouSales (roles) {
   ])
 }
 
+export function isYibaisouSalesCur (roles) {
+  const currentRoles = normalizeRoles(roles)
+  return checkRoles(currentRoles, [
+    'YBS_SALES',
+    'YBS_ACCOUNTING'
+  ])
+}
+
 export function isYibaisouFengMing (roles) {
   const currentRoles = normalizeRoles(roles)
   return checkRoles(currentRoles, [
@@ -420,4 +428,11 @@ export function isYibaisouFengMing (roles) {
 export function isBaiXinguser (roles) {
   const nameEn = roles.map(item => item.nameEn)
   return nameEn.includes('BAIXING_USER')
+}
+
+export function isYibaisouUser (roles) {
+  const currentRoles = normalizeRoles(roles)
+  return checkRoles(currentRoles, [
+    'YBS_USER'
+  ])
 }

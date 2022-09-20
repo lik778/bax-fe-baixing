@@ -80,8 +80,8 @@
             </div>
           </section>
           <promotion-area-limit-tip :all-areas="allAreas" page="charge" />
-          <section v-if="relationAllow() && !isAgentAccounting" class="pay-info">
-            <el-button v-if="!isAgentSales" :disabled="isTargetUId"  class="pay-order"
+          <section v-if="isExitUserId" class="pay-info">
+            <el-button :disabled="isTargetUId"  class="pay-order"
               :loading="payInProgress" @click="createPreOrder">
               {{ submitButtonText }}
             </el-button>
@@ -109,6 +109,7 @@
 </template>
 
 <script>
+import qs from 'query-string'
 import PriceTag from 'com/charge/price-tag'
 import GwProWidget from 'com/charge/gw-pro'
 import Contract from 'com/charge/contract'
@@ -245,6 +246,21 @@ export default {
       } else {
         const { userId = 0 } = this.salesInfo
         return ROLE_USER_ID.includes(userId)
+      }
+    },
+    isExitUserId () {
+      const { user_id: userId } = qs.parse(location.search)
+      if (userId) {
+        if (this.isBxSales) {
+          return true
+        } else {
+          return false
+        }
+      } else {
+        if (this.isBxUser) {
+          return true
+        }
+        return false
       }
     }
   },

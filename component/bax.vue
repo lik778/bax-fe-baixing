@@ -63,8 +63,8 @@ import {
   normalizeRoles,
   isSales,
   isNormalUser,
-  isYibaisouSales,
-  isYibaisouUser
+  isYibaisouSales
+  // isYibaisouUser
 } from 'util/role'
 import { delCookie } from 'util/cookie'
 
@@ -163,7 +163,7 @@ export default {
     ])
     const { source } = qs.parse(location.search)
     const { userId } = this.salesInfo
-    const { roles } = this.currentUser
+    const { roles, isYibaisouUser } = this.currentUser
     // isYibaisouUser
     if (isNormalUser(roles)) {
       // this.flag = true
