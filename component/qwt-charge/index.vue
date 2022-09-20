@@ -81,7 +81,7 @@
           </section>
           <promotion-area-limit-tip :all-areas="allAreas" page="charge" />
           <section v-if="isExitUserId" class="pay-info">
-            <el-button v-if="isBxUser" :disabled="isTargetUId"  class="pay-order"
+            <el-button :disabled="isTargetUId"  class="pay-order"
               :loading="payInProgress" @click="createPreOrder">
               {{ submitButtonText }}
             </el-button>
@@ -257,7 +257,10 @@ export default {
           return false
         }
       } else {
-        return true
+        if (this.isBxUser) {
+          return true
+        }
+        return false
       }
     }
   },
