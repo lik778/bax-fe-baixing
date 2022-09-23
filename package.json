@@ -62,6 +62,7 @@
     "babel-loader": "^8.1.0",
     "babel-plugin-component": "^1.1.1",
     "babel-plugin-module-resolver": "^3.2.0",
+    "babel-plugin-transform-remove-console": "^6.9.4",
     "cross-env": "^7.0.3",
     "css-loader": "^0.28.11",
     "element-theme": "^2.0.1",
