@@ -318,7 +318,7 @@ let storedIP = null
 export function getIP () {
   // TODO backup address
   const urls = [
-    '//icanhazip.com',
+    // '//icanhazip.com',
     '//api.myip.com',
     '//txt.go.sohu.com/ip/soip'
   ]
