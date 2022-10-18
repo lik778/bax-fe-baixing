@@ -318,9 +318,9 @@ let storedIP = null
 export function getIP () {
   // TODO backup address
   const urls = [
-    '//icanhazip.com',
-    '//api.myip.com',
-    '//txt.go.sohu.com/ip/soip'
+    // '//icanhazip.com',
+    // '//api.myip.com',
+    // '//txt.go.sohu.com/ip/soip'
   ]
   return new Promise((resolve, reject) => {
     if (storedIP) return resolve(storedIP)
