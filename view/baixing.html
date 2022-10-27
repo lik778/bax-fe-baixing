@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>【上海百姓网】 - 免费发布信息 - 上海分类信息网 - 上海百姓网</title>
+  <link rel="shortcut icon" href="http://s.baixing.net/favicon.ico" type="image/x-icon">
   <style>
     :root {
       --number: 100vw - 1200px
@@ -39,10 +40,16 @@
       top: 37px;
       left: calc((100vw - 1200px) / 2);
       z-index: 999;
-      width: 200px;
+      width: 137px;
       height: 100px;
       text-decoration: none;
       cursor: pointer;
+      background-color: #fff;
+    }
+    img {
+      width: 117px;
+      height: 43px;
+      margin-top: 35px;
     }
   </style>
 </head>
@@ -50,9 +57,11 @@
   <div class="container">
     <!-- src 是嵌套页面的网址  -->
     <!-- frameborder是嵌套页面的一个边距 一般设置为0 -->
-    <iframe src="https://shanghai.baixing.com/"  frameborder="0" class="ifr"></iframe>
+    <iframe src="https://shanghai.baixing.com/?pinzhuan=baidu_pinzhuan"  frameborder="0" class="ifr"></iframe>
     <div class="mask-comntainer"></div>
-    <a href="http://www.baixing.cn" class="mask-link"></a>
+    <a href="http://www.baixing.cn" class="mask-link">
+      <img src="http://file.baixing.net/202112/346ca3c2b6f1cf1a419278eaab47482e.png" alt="百姓优选">
+    </a>
   </div>
   <script type="text/javascript">
     const maskLink = document.querySelector('.mask-link')
