@@ -40,10 +40,16 @@
       top: 37px;
       left: calc((100vw - 1200px) / 2);
       z-index: 999;
-      width: 200px;
+      width: 137px;
       height: 100px;
       text-decoration: none;
       cursor: pointer;
+      background-color: #fff;
+    }
+    img {
+      width: 117px;
+      height: 43px;
+      margin-top: 35px;
     }
   </style>
 </head>
@@ -53,7 +59,9 @@
     <!-- frameborder是嵌套页面的一个边距 一般设置为0 -->
     <iframe src="https://shanghai.baixing.com/?pinzhuan=baidu_pinzhuan"  frameborder="0" class="ifr"></iframe>
     <div class="mask-comntainer"></div>
-    <a href="http://www.baixing.cn" class="mask-link"></a>
+    <a href="http://www.baixing.cn" class="mask-link">
+      <img src="http://file.baixing.net/202112/346ca3c2b6f1cf1a419278eaab47482e.png" alt="百姓优选">
+    </a>
   </div>
   <script type="text/javascript">
     const maskLink = document.querySelector('.mask-link')
