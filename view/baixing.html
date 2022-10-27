@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    :root {
+      --number: 100vw - 1200px
+    }
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      position: relative;
+      width: 100%;
+      height: 2500px;
+      /* height: 1200px; */
+    }
+    iframe {
+      width: 100%;
+      height: 100%;
+    }
+    .mask-comntainer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 998;
+      /* height: 2000px; */
+      height: 100%;
+      opacity: 0;
+    }
+    .mask-link {
+      display: block;
+      position: absolute;
+      top: 37px;
+      left: calc((100vw - 1200px) / 2);
+      z-index: 999;
+      width: 200px;
+      height: 100px;
+      text-decoration: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- src 是嵌套页面的网址  -->
+    <!-- frameborder是嵌套页面的一个边距 一般设置为0 -->
+    <iframe src="https://shanghai.baixing.com/"  frameborder="0" class="ifr"></iframe>
+    <div class="mask-comntainer"></div>
+    <a href="http://www.baixing.cn" class="mask-link"></a>
+  </div>
+  <script type="text/javascript">
+    const maskLink = document.querySelector('.mask-link')
+    // document.addEventListener('scroll',function() {
+    //   const scrollTop = window.pageYOffset || window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0
+    //   if(scrollTop > 141.5) {
+    //     maskLink.style('display','none')
+    //   } else {
+    //     maskLink.style('display','block')
+    //   }
+    // })
+  </script>
+</body>
+</html>
