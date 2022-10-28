@@ -10,6 +10,10 @@
     :root {
       --number: 100vw - 1200px
     }
+    a {
+      text-decoration: none;
+      color: #999;
+    }
     * {
       margin: 0;
       padding: 0;
@@ -67,6 +71,32 @@
       background-color: #fff;
       /* background-color: blue; */
     }
+    .footer {
+      color: #999;
+      font-size: 12px;
+    }
+    ul,li {
+      margin: 0;
+      list-style: none;
+    }
+    li {
+      text-align: center;
+    }
+    .footer-beian {
+      display: flex;
+      flex-wrap: wrap;
+      width: 100%;
+      margin-top: 0;
+      
+    }
+    .footer-beian li {
+      width: 50%;
+      margin-bottom: 5px;
+    }
+    .footer-last {
+      text-align: center;
+      padding-bottom: 10px;
+    }
   </style>
 </head>
 <body>
@@ -81,6 +111,22 @@
     <a href="https://shanghai.baixing.com/m/" class="bx-logo-mobile">
       <img src="https://file.baixing.net/202112/346ca3c2b6f1cf1a419278eaab47482e.png" alt="百姓优选" class="img2">
     </a>
+    <div class="footer">
+      <ul>
+        <li>© 2022 上海林登信息技术有限公司</li>
+        <li>客服服务热线:400-036-3650 或 021-61300110 </li>
+        <li>举报热线:021-61300238（周一至周日，9:00-18:00）</li>
+        <li>上海市闵行区东川路555号戊楼1005室</li>
+      </ul>
+      <ul class="footer-beian">
+        <li><a href="http://file.baixing.net/202103/7cf87238e437434700417cb9b5aa3282.png" target="_blank" rel="nofollow">营业执照号 </a> 
+        </li>
+        <li> <a href="//file.baixing.net/202103/d0eddbdf016501cf29fe6efa710424d4.jpg" target="_blank" rel="nofollow"></a> 人力资源服务许可证</li>
+        <li><a href="https://beian.miit.gov.cn/#/Integrated/index" target="_blank">沪ICP备06019413</a</li>
+        <li><a href="https://beian.miit.gov.cn/#/Integrated/index" target="_blank"> 沪ICP证B2-20080088 </a></li>
+      </ul>
+      <p class="footer-last"><a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=31011302007132" target="_blank"><img alt="沪公网安备31011302007132号" src="https://gw.alicdn.com/tfs/TB15m.8rEY1gK0jSZFCXXcwqXXa-20-20.png" style="width:14px;height:14px;margin-bottom: -3px" class="icp-icon">沪公网安备31011302007132号</a></p>
+    </div>
   </div>
   <script type="text/javascript">
     function isMobile() {
@@ -108,6 +154,7 @@
     } else {
       document.querySelector('.bx-logo-mobile').style.display = 'block'
       document.querySelector('.container').style.height = '3765px'
+      document.querySelector('.footer').style.display = 'block'
     }
 
   </script>
