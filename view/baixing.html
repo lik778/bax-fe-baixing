@@ -148,11 +148,13 @@
     }
     if(!isMobile()) {
       document.querySelector('.bx-logo-mobile').style.display = 'none'
-      // document.querySelector('.mask-link').style.display = 'block'
+      document.querySelector('.mask-link').style.display = 'block'
+      document.querySelector('.footer').style.display = 'none'
     } else {
       document.querySelector('.bx-logo-mobile').style.display = 'block'
       document.querySelector('.container').style.height = '3765px'
       document.querySelector('.footer').style.display = 'block'
+      document.querySelector('.mask-link').style.display = 'none'
     }
 
   </script>
