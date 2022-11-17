@@ -126,9 +126,9 @@
     </section>
 
     <section>
-      <mobile-price-ratio-comp v-if="promotion.source === SEM_PLATFORM_BAIDU"
+      <!-- <mobile-price-ratio-comp v-if="promotion.source === SEM_PLATFORM_BAIDU"
                                :value="group.mobilePriceRatio"
-                               @change="(val) => updateGroupData('mobilePriceRatio', val)" />
+                               @change="(val) => updateGroupData('mobilePriceRatio', val)" /> -->
       <contract-ack-comp class="contract-ack"
                          type="contract-yibaisou"
                          ref="contract" />
@@ -150,7 +150,7 @@ import CreativeTipComp from './creative/creative-tip'
 import SearchComp from './keyword/search'
 import NegativeKeywordComp from 'com/common/qwt/negative-words'
 import ContractAckComp from 'com/widget/contract-ack'
-import MobilePriceRatioComp from './mobile-price-ratio'
+// import MobilePriceRatioComp from './mobile-price-ratio'
 import KeywordListComp from './keyword/keyword-list'
 import MaterialPicturesComp from 'com/common/material-pictures-dialog'
 import {
@@ -524,7 +524,7 @@ export default {
         userId
       })
 
-      const errors = res?.data || []
+      const errors = res.data || []
 
       if (errors.length) {
         const { pc = [], wap = [] } = this.materialPictures._raw
@@ -599,7 +599,7 @@ export default {
     SearchComp,
     NegativeKeywordComp,
     ContractAckComp,
-    MobilePriceRatioComp,
+    // MobilePriceRatioComp,
     KeywordListComp,
     MaterialPicturesComp
   }

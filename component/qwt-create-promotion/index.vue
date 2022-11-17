@@ -151,14 +151,40 @@
               content="您可以根据需求选择一个或多个渠道展示您的广告。不同渠道会分开建立投放计划，您可以在管理推广计划页面对您的计划进行管理。"
               placement="right">
               <i class="el-icon-question"></i>
-            </el-tooltip>：
+            </el-tooltip>
+            ：
           </label>
           <el-checkbox-group v-model="newPromotion.sources" size="small" class="platform-checkbox">
             <el-checkbox v-for="(opt, index) in semPlatformOpts" :key="index" :label="opt.value">{{opt.label}}</el-checkbox>
           </el-checkbox-group>
           <p v-if="isShenmaChecked" class="tip warning">神马渠道仅支持移动端, 禁止投放搬家、金融类（包括但不限于担保贷款）信息</p>
         </div>
-
+        <div class="baidu-platform-port" v-if="newPromotion.sources.includes(0)">
+          <label>选择百度投放端口
+            <el-tooltip
+              style="cursor:pointer;"
+              effect="light"
+              placement="right">
+              <div slot="content">
+                百度投放端口升级啦~<br/>
+                用户可以根据行业属性，自行选择投放端口<br>
+                有3种模式：不限/电脑端/手机端<br/>
+                默认情况下，系统自动选择 “不限”<br/>
+                注：百度投放端口的选择不影响其他渠道
+              </div>
+              <i class="el-icon-question"></i>
+            </el-tooltip>
+            ：
+          </label>
+          <el-select size="small" v-model="baixingPortDevice" placeholder="请选择端口">
+            <el-option
+              v-for="item in BAIDU_PORT_DEVICE"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        </div>
         <div class="budget">
           <label>单渠道日预算：</label>
           <bax-input :value="f2y(newPromotion.dailyBudget)"
@@ -290,6 +316,21 @@ const RECOMMAND_SOURCES = [RECOMMAND_SOURCE_FH, NEW_RECOMMAND_SOURCE_FH]
 
 const MIN_DAILY_BUDGET = 100 * 100
 
+const BAIDU_PORT_DEVICE = [
+  {
+    label: '不限',
+    value: 3
+  },
+  {
+    label: '移动端',
+    value: 1
+  },
+  {
+    label: '电脑端',
+    value: 2
+  }
+]
+
 const promotionTemplate = {
   landingType: LANDING_TYPE_STORE,
   landingPage: '',
@@ -300,7 +341,7 @@ const promotionTemplate = {
   creativeContent: '',
 
   keywords: [],
-  sources: semPlatformOpts.map(opt => opt.value),
+  sources: semPlatformOpts.map(opt => (opt.value !== 0 && opt.value)),
   dailyBudget: MIN_DAILY_BUDGET,
   firstId: 0,
   secondId: 0,
@@ -359,7 +400,7 @@ export default {
       LANDING_TYPE_258,
       LANDING_TYPE_STORE,
       RECOMMAND_SOURCES,
-
+      BAIDU_PORT_DEVICE,
       searchRecommendsVisible: false,
       chargeDialogVisible: false,
       areaDialogVisible: false,
@@ -382,7 +423,8 @@ export default {
 
       industryOptions: [],
       cascaderValue: [],
-      isIdenity: false
+      isIdenity: false,
+      baixingPortDevice: 3
     }
   },
   computed: {
