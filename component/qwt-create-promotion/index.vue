@@ -160,10 +160,20 @@
           <p v-if="isShenmaChecked" class="tip warning">神马渠道仅支持移动端, 禁止投放搬家、金融类（包括但不限于担保贷款）信息</p>
         </div>
         <div class="baidu-platform-port" v-if="newPromotion.sources.includes(0)">
-          <label>选择百度投放端口
+          选择百度投放端口：
+          <el-select size="small" v-model="baixingPortDevice" placeholder="请选择端口">
+            <el-option
+              v-for="item in BAIDU_PORT_DEVICE"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
             <el-tooltip
               style="cursor:pointer;"
               effect="light"
+              :value="showToolTip"
+              :hide-after="3000"
               placement="right">
               <div slot="content">
                 百度投放端口升级啦~<br/>
@@ -174,16 +184,6 @@
               </div>
               <i class="el-icon-question"></i>
             </el-tooltip>
-            ：
-          </label>
-          <el-select size="small" v-model="baixingPortDevice" placeholder="请选择端口">
-            <el-option
-              v-for="item in BAIDU_PORT_DEVICE"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
         </div>
         <div class="budget">
           <label>单渠道日预算：</label>
@@ -319,15 +319,15 @@ const MIN_DAILY_BUDGET = 100 * 100
 const BAIDU_PORT_DEVICE = [
   {
     label: '不限',
-    value: 3
+    value: 0
   },
   {
     label: '移动端',
-    value: 1
+    value: 2
   },
   {
     label: '电脑端',
-    value: 2
+    value: 1
   }
 ]
 
@@ -424,7 +424,8 @@ export default {
       industryOptions: [],
       cascaderValue: [],
       isIdenity: false,
-      baixingPortDevice: 3
+      baixingPortDevice: 0,
+      showToolTip: true
     }
   },
   computed: {
@@ -707,9 +708,9 @@ export default {
         return Message.error('推广日预算太高啦！您咋这么土豪呢~')
       }
 
-      if (!p.landingPage) {
-        return Message.error('请填写投放页面')
-      }
+      // if (!p.landingPage) {
+      //   return Message.error('请填写投放页面')
+      // }
 
       if (this.creativeError) {
         return Message.error(this.creativeError)
@@ -766,6 +767,11 @@ export default {
       if (!p.landingPageId) {
         delete p.landingPageId
       }
+
+      if (p.sources.includes(0)) {
+        p.device = this.baixingPortDevice
+      }
+
       const { query: { user_id: userId } } = this.$route
       const promotionIds = await createCampaign({ ...fmtAreasInQwt(p, allAreas), userId })
       // 凤凰于飞打点
