@@ -341,7 +341,7 @@ const promotionTemplate = {
   creativeContent: '',
 
   keywords: [],
-  sources: semPlatformOpts.map(opt => (opt.value !== 0 && opt.value)),
+  sources: semPlatformOpts.map(opt => opt.value).filter(i => Number(i) !== 0),
   dailyBudget: MIN_DAILY_BUDGET,
   firstId: 0,
   secondId: 0,
@@ -768,7 +768,7 @@ export default {
         delete p.landingPageId
       }
 
-      if (p.sources.includes(0)) {
+      if (p.sources.length > 0 && p.sources.indexOf(0) !== -1) {
         p.device = this.baixingPortDevice
       }
 
