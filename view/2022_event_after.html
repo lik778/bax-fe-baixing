@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+  <link rel="shortcut icon" href="https://s.baixing.net/favicon.ico" type="image/x-icon">
+  <title>百姓双11 全民狂欢节</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    body::-webkit-scrollbar {
+      display: none;
+    }
+    .container {
+      width: 100%;
+    }
+    img {
+      width: 100%;
+    }
+    .btn-tel {
+      position: fixed;
+      left: 50%;
+      bottom: 0;
+      transform: translateX(-50%);
+      width: 100%;
+      height: 83px;
+      opacity: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <img id="cardBg" src="http://file.baixing.net/202211/22ef70c528640ba2abf5526ba7f8cec0.jpg" alt="双十一返场">
+    <a href="tel:4000363650" class="btn-tel"></a>
+  </div>
+  <script type="text/javascript">
+    function isMobile() {
+      var userAgentInfo = navigator.userAgent;
+      var mobileAgents = ["Android", "iPhone", "SymbianOS", "Windows Phone", "iPad", "iPod"];
+      var mobile_flag = false;
+      //根据userAgent判断是否是手机
+        for (var v = 0; v < mobileAgents.length; v++) {
+          if (userAgentInfo.indexOf(mobileAgents[v]) > 0) {
+                mobile_flag = true;
+                break;
+          }
+        }
+        var screen_width = window.screen.width;
+        var screen_height = window.screen.height;
+      //根据屏幕分辨率判断是否是手机
+      // if (screen_width > 325 && screen_height < 750) {
+      //     mobile_flag = true;
+      // }
+      return mobile_flag;
+    }
+    if(isMobile()) {
+      document.querySelector('#cardBg').setAttribute('src','http://file.baixing.net/202211/22ef70c528640ba2abf5526ba7f8cec0.jpg')
+    }  else {
+      document.querySelector('#cardBg').setAttribute('src','http://file.baixing.net/202211/c7504a09eb6b7ab0c7d5f2e261122df9.png')
+    }
+  </script>
+</body>
+</html>

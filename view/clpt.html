@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0,minimum-scale=1.0, user-scalable=no">
+  <title>【上海林登信息】 - 信息 - 上海信息网 - 上海林登</title>
+  <link rel="shortcut icon" href="https://s.baixing.net/favicon.ico" type="image/x-icon">
+  <style>
+    :root {
+      --number: 100vw - 1200px
+    }
+
+    a {
+      text-decoration: none;
+      color: #999;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      position: relative;
+      width: 100%;
+      /* height: 2500px; */
+      /* height: 1200px; */
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+    }
+
+    .mask-comntainer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 998;
+      /* height: 2000px; */
+      height: 100%;
+      opacity: 0;
+    }
+
+    .mask-link {
+      display: block;
+      position: absolute;
+      top: 37px;
+      left: calc((100vw - 1200px) / 2);
+      z-index: 999;
+      width: 137px;
+      height: 100px;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .img1 {
+      width: 117px;
+      height: 43px;
+      margin-top: 35px;
+    }
+
+    .img2 {
+      margin-top: 10px;
+      width: 65px;
+      height: 30px;
+    }
+
+    .bx-logo-mobile {
+      position: absolute;
+      z-index: 9999;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 65px;
+      height: 46px;
+      background-color: #fff;
+      /* background-color: blue; */
+    }
+
+    .footer {
+      color: #999;
+      font-size: 12px;
+    }
+
+    ul,
+    li {
+      margin: 0;
+      list-style: none;
+    }
+
+    li {
+      text-align: center;
+    }
+
+    .footer-beian {
+      display: flex;
+      flex-wrap: wrap;
+      width: 100%;
+      margin-top: 0;
+
+    }
+
+    .footer-beian li {
+      width: 50%;
+      margin-bottom: 5px;
+    }
+
+    .footer-last {
+      text-align: center;
+      padding-bottom: 10px;
+    }
+
+    .img-list {
+      width: 100%;
+    }
+
+    .last-3 {
+      margin-bottom: -7px
+    }
+
+    .last-4 {
+      margin-bottom: -7px
+    }
+
+    .first-3 {
+      margin-bottom: -7px
+    }
+
+    .first-2 {
+      margin-bottom: -7px
+    }
+
+    .footer[data-v-b4635e97] {
+      background: #1e2022;
+      height: 150px;
+      color: #fff;
+      font-size: 12px
+    }
+
+    .flex-shrink-0 {
+      flex-shrink: 0;
+    }
+
+    .items-center {
+      align-items: center;
+    }
+
+    .flex {
+      display: flex;
+    }
+
+    .footer-inner[data-v-b4635e97] {
+      color: #858f87;
+      width: 1120px;
+      margin: 0 auto;
+    }
+
+    .ml-5 {
+      margin-left: 1.25rem;
+    }
+
+    .mr-5 {
+      margin-right: 1.25rem;
+    }
+
+    .flex {
+      display: flex;
+    }
+
+    .inner-left {
+      flex-direction: column;
+    }
+
+    .official-info-container {
+      background-color: #fff;
+      border-bottom: 1px solid #f0f0f0
+    }
+
+    .official-info-container .official-info-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 1200px;
+      height: 98px;
+      margin: 0 auto;
+    }
+
+    .official-info-container .official-info-content .left {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+    }
+
+    .official-info-container .official-info-content .left .line {
+      width: 6px;
+      height: 56px;
+      margin-right: 20px;
+      background: url(//file.baixing.net/202204/2ab2976….png) no-repeat 50%/cover;
+    }
+
+    .official-info-container .official-info-content .left .text {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .official-info-container .official-info-content .left .text .title {
+      font-size: 28px;
+      font-weight: 700;
+    }
+
+    .official-info-container .official-info-content .left .text .subtitle {
+      margin-top: 7px;
+      font-size: 16px;
+      color: #646464;
+    }
+
+    .official-info-phone-container {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+    }
+
+    .official-info-phone-container .official-info-phone-block {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      position: relative;
+    }
+
+    .official-info-phone-container .official-info-phone-block .hot-link {
+      display: inline-block;
+      margin-bottom: 4px;
+      line-height: 28px;
+      color: #212121;
+      font-size: 14px;
+    }
+
+    .official-info-phone-container .official-info-phone-block .official-info-phone-num {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      min-width: 154px;
+      margin-right: -3px;
+      line-height: 30px;
+      font-size: 22px;
+      font-weight: 700;
+      color: #336fff;
+      cursor: pointer;
+      letter-spacing: 1;
+    }
+
+    .official-info-phone-container .official-info-phone-block .official-info-phone-num {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      min-width: 154px;
+      margin-right: -3px;
+      line-height: 30px;
+      font-size: 22px;
+      font-weight: 700;
+      color: #336fff;
+      cursor: pointer;
+      letter-spacing: 1;
+    }
+
+    .official-info-phone-container .official-info-phone-block .official-info-phone-num .line {
+      display: inline-block;
+      width: 12px;
+      height: 3px;
+      background: #336fff;
+      font-weight: 700;
+    }
+
+    .official-info-container .official-info-content .left .logo {
+      height: 88px;
+      max-width: 191px;
+      margin-right: 15px;
+    }
+
+    .official-info-phone-container .official-info-phone-block .hot-link .hot-icon {
+      width: 20px;
+      height: 20px;
+      margin-right: 8px;
+      vertical-align: text-bottom;
+    }
+
+    .official-info-container .official-info-content .left .line {
+      width: 6px;
+      height: 56px;
+      margin-right: 20px;
+      background: url('https://file.baixing.net/202204/2ab2976101a2a512594763fff397d790.png') no-repeat 50%/cover;
+    }
+
+    .official-nav-container {
+      position: relative;
+      box-shadow: 0 4px 4px rgb(0 0 0 / 20%);
+    }
+
+    .official-nav-content {
+      display: flex;
+      align-items: center;
+      width: 1200px;
+      margin: 0 auto;
+    }
+
+    .official-nav-content .nav-item-box {
+      flex: 1;
+      max-width: 240px;
+    }
+
+    .official-nav-content * {
+      box-sizing: border-box;
+    }
+
+    .maskLayer-relative {
+      position: relative;
+    }
+
+    .official-nav-content .hover-box {
+      width: 123px;
+      position: relative;
+    }
+
+    .official-nav-content * {
+      box-sizing: border-box;
+    }
+
+    .official-nav-content .hover-box .nav-item {
+      display: block;
+      height: 64px;
+      padding: 0 5px;
+      position: relative;
+      text-align: center;
+      line-height: 64px;
+      font-size: 18px;
+      color: #fff;
+    }
+
+    .official-nav-content * {
+      box-sizing: border-box;
+    }
+
+    .nav-dropdown {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="official-info-container">
+      <div class="official-info-content">
+        <div class="left">
+          <a class="logo-a" href="?"><img class="logo"
+              src="http://img5.baixing.net/7cae42e2361eade7972c2fb4fb41106d.png_sv1" alt="上海林登信息技术有限公司">
+            </a>
+          <div class="line">
+          </div>
+          <div class="text">
+            <div class="title">上海林登信息技术有限公司</div>
+            <div class="subtitle">以质量求生存，以信用求发展 </div>
+          </div>
+        </div>
+        <div class="right">
+          <div class="official-info-phone-container">
+            <div class="official-info-phone-block">
+              <div class="hot-link"><img class="hot-icon"
+                  src="http://file.baixing.net/202204/31715156aa6c8440f1a3e27ea78a9045.png" alt="服务电话">24小时服务热线</div>
+              <div class="official-info-phone-num"><span class="num" style="color: #336FFF">400</span><span class="line"
+                  style="background-color: #336FFF"></span><span class="num" style="color: #336FFF">036</span><span
+                  class="line" style="background-color: #336FFF"></span><span class="num"
+                  style="color: #336FFF">3650</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="official-nav-container" style="background: #343434">
+      <div class="official-nav-content">
+        <div class="nav-item-box maskLayer-relative">
+          <div class="hover-box" data-hover="#336FFF" databread="" data-hoverleave="#343434"><a class="nav-item"
+              href="?" style="background: rgb(52, 52, 52);">首页</a></div>
+        </div>
+        <div class="nav-item-box maskLayer-relative">
+          <div class="hover-box" data-hover="#336FFF" databread="" data-hoverleave="#343434"><a class="nav-item"
+              href="?name=about">关于我们</a></div>
+        </div>
+        <div class="nav-item-box maskLayer-relative">
+          <div class="hover-box" data-hover="#336FFF" databread="" data-hoverleave="#343434"><a class="nav-item"
+              href="?name=product" style="background: rgb(52, 52, 52);">产品服务</a>
+          </div>
+        </div>
+        <div class="nav-item-box maskLayer-relative">
+          <div class="hover-box" data-hover="#336FFF" databread="" data-hoverleave="#343434"><a class="nav-item"
+              href="?" style="background: rgb(52, 52, 52);">新闻资讯</a>
+          </div>
+        </div>
+        <div class="nav-item-box maskLayer-relative">
+          <div class="hover-box" data-hover="#336FFF" databread="" data-hoverleave="#343434"><a class="nav-item"
+              href="?name=about" style="background: rgb(52, 52, 52);">联系我们</a></div>
+        </div>
+      </div>
+    </div>
+    <!-- 首页图片 1 -->
+    <img class="img-list" id="containerSrc" src="https://file.baixing.net/202211/clpt.png" alt="">
+    <img class="img-list" src="http://file.baixing.net/202211/ba8c60600d2fae09ad2f2df0c8012646.png" alt="">
+  </div>
+  <script  type="text/javascript">
+    function getQueryVariable(variable) {
+        let href = window.location.href
+        let query = href.substring(href.indexOf('?')+1);
+        let vars = query.split("&");
+        for (var i = 0; i < vars.length; i++) {
+            let pair = vars[i].split("=");
+            if (pair[0] == variable) {
+                return pair[1];
+            }
+        }
+        return (false);
+    }
+
+    function getName() {
+      const name = getQueryVariable('name')
+        switch(name) {
+        case false:
+          // 首页图片链接 2 （1和2图片链接相同）
+          return setArrate('https://file.baixing.net/202211/clpt.png');
+        case 'about':
+          // 过于我们链接 3
+          return setArrate('https://file.baixing.net/202211/10.about.html.png');
+        case 'product':
+          // 产品服务链接 4
+          return setArrate('https://file.baixing.net/202211/10.product.html.png');
+      }
+    }
+
+    function setArrate(url) {
+      containerSrc.setAttribute('src',url)
+    }
+    const containerSrc =   document.querySelector('#containerSrc')
+    const hoverBoxAll =  document.querySelectorAll('.hover-box')
+    getName()
+    for(let i=0;i<hoverBoxAll.length;i++) {
+      hoverBoxAll[i].onclick = function() {
+        getName()
+      }
+    }
+  </script>
+</body>
+ 
+</html>
