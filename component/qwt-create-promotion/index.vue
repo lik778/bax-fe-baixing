@@ -708,9 +708,9 @@ export default {
         return Message.error('推广日预算太高啦！您咋这么土豪呢~')
       }
 
-      // if (!p.landingPage) {
-      //   return Message.error('请填写投放页面')
-      // }
+      if (!p.landingPage) {
+        return Message.error('请填写投放页面')
+      }
 
       if (this.creativeError) {
         return Message.error(this.creativeError)
