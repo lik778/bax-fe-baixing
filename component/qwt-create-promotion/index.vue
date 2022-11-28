@@ -324,11 +324,11 @@ const BAIDU_PORT_DEVICE = [
     value: 0
   },
   {
-    label: '移动端',
+    label: '移动',
     value: 2
   },
   {
-    label: '电脑端',
+    label: '计算机',
     value: 1
   }
 ]
