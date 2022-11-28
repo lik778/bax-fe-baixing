@@ -343,7 +343,7 @@ const promotionTemplate = {
   creativeContent: '',
 
   keywords: [],
-  sources: semPlatformOpts.map(opt => opt.value).filter(i => Number(i) !== 0),
+  sources: semPlatformOpts.map(opt => opt.value),
   dailyBudget: MIN_DAILY_BUDGET,
   firstId: 0,
   secondId: 0,
@@ -426,7 +426,7 @@ export default {
       industryOptions: [],
       cascaderValue: [],
       isIdenity: false,
-      baixingPortDevice: 0,
+      baixingPortDevice: null,
       showToolTip: true
     }
   },
@@ -771,7 +771,11 @@ export default {
       }
 
       if (p.sources.length > 0 && p.sources.indexOf(0) !== -1) {
-        p.device = this.baixingPortDevice
+        if (this.baixingPortDevice === null) {
+          return Message.error('请选择百度投放端口')
+        } else {
+          p.device = this.baixingPortDevice
+        }
       }
 
       const { query: { user_id: userId } } = this.$route
