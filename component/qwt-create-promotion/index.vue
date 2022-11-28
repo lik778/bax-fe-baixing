@@ -145,7 +145,7 @@
         </div>
 
         <div class="platform">
-          <label>选择渠道
+          <label class="platform-label">选择渠道
             <el-tooltip
               style="cursor:pointer;"
               content="您可以根据需求选择一个或多个渠道展示您的广告。不同渠道会分开建立投放计划，您可以在管理推广计划页面对您的计划进行管理。"
@@ -157,33 +157,35 @@
           <el-checkbox-group v-model="newPromotion.sources" size="small" class="platform-checkbox">
             <el-checkbox v-for="(opt, index) in semPlatformOpts" :key="index" :label="opt.value">{{opt.label}}</el-checkbox>
           </el-checkbox-group>
-          <p v-if="isShenmaChecked" class="tip warning">神马渠道仅支持移动端, 禁止投放搬家、金融类（包括但不限于担保贷款）信息</p>
-        </div>
-        <div class="baidu-platform-port" v-if="newPromotion.sources.includes(0)">
-          选择百度投放端口：
-          <el-select size="small" v-model="baixingPortDevice" placeholder="请选择端口">
-            <el-option
-              v-for="item in BAIDU_PORT_DEVICE"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
-            <el-tooltip
-              style="cursor:pointer;"
-              effect="light"
-              :value="showToolTip"
-              :hide-after="3000"
-              placement="right">
-              <div slot="content">
-                百度投放端口升级啦~<br/>
-                用户可以根据行业属性，自行选择投放端口<br>
-                有3种模式：不限/电脑端/手机端<br/>
-                默认情况下，系统自动选择 “不限”<br/>
-                注：百度投放端口的选择不影响其他渠道
-              </div>
-              <i class="el-icon-question"></i>
-            </el-tooltip>
+          <div class="platform-right">
+            <div class="baidu-platform-port" v-if="newPromotion.sources.includes(0)">
+              选择百度投放端口：
+              <el-select size="small" v-model="baixingPortDevice" placeholder="请选择端口">
+                <el-option
+                  v-for="item in BAIDU_PORT_DEVICE"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+              </el-select>
+                <el-tooltip
+                  style="cursor:pointer;"
+                  effect="light"
+                  :value="showToolTip"
+                  :hide-after="3000"
+                  placement="right">
+                  <div slot="content">
+                    百度投放端口升级啦~<br/>
+                    用户可以根据行业属性，自行选择投放端口<br>
+                    有3种模式：不限/电脑端/手机端<br/>
+                    默认情况下，系统自动选择 “不限”<br/>
+                    注：百度投放端口的选择不影响其他渠道
+                  </div>
+                  <i class="el-icon-question"></i>
+                </el-tooltip>
+            </div>
+            <p v-if="isShenmaChecked" class="tip warning platform-tip">神马渠道仅支持移动端, 禁止投放搬家、金融类（包括但不限于担保贷款）信息</p>
+          </div>
         </div>
         <div class="budget">
           <label>单渠道日预算：</label>
@@ -1190,7 +1192,34 @@ strong.red {
   color: red;
 }
 .platform-checkbox {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
   margin-right: 20px;
+}
+.baidu-platform-port {
+  position: absolute;
+  left: 0;
+  top: -5px;
+}
+.platform {
+  display: flex;
+  align-items: flex-start !important;
+  margin: 12px 0;
+}
+.platform-label {
+  min-width: 108px;
+}
+.platform-right {
+  position: relative;
+  min-height: 80px;
+  width: 100%;
+}
+.platform-tip {
+  position: absolute;
+  left: 0;
+  bottom: 0;
 }
 .el-icon-plus {
   cursor: pointer;

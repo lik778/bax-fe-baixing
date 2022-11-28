@@ -98,6 +98,12 @@ const GROUP_STATUSES_OPTS = Object.freeze([
     value: STATUS_OFFLINE
   }
 ])
+// 百度投放平台
+const DEVICE = {
+  0: '全平台',
+  1: '电脑端',
+  2: '移动端'
+}
 export {
   CAMPAIGN_OPTIMIZATION_OPTS,
   CAMPAIGN_STATUS_OPTS,
@@ -106,5 +112,6 @@ export {
   CAMPAIGN_STATUSES,
   GROUP_STATUSES,
   STATUS_OFFLINE,
-  filterOptimization
+  filterOptimization,
+  DEVICE
 }
