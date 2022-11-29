@@ -101,8 +101,8 @@ const GROUP_STATUSES_OPTS = Object.freeze([
 // 百度投放平台
 const DEVICE = {
   0: '不限',
-  1: '移动',
-  2: '计算机'
+  1: '计算机',
+  2: '移动'
 }
 export {
   CAMPAIGN_OPTIMIZATION_OPTS,
