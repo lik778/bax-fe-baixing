@@ -27,7 +27,20 @@
                 </template>
             </el-table-column>
             <el-table-column prop="source" label="渠道" align="center" :formatter="(row, column, cellValue) => semPlatformCn[cellValue]" />
-                <el-table-column
+              <el-table-column
+                label="平台"
+                align="center"
+              >
+              <template slot-scope="scope">
+                <span v-if="semPlatformCn[scope.row.source] === '百度'">
+                    {{DEVICE[scope.row.device]}}
+                </span>
+                <span v-else>
+                    /
+                </span>
+              </template>
+            </el-table-column>
+              <el-table-column
                     prop="groups"
                     label="单元"
                     align="center"
@@ -48,6 +61,7 @@
                   </div>
                 </template>
               </el-table-column>
+
             <el-table-column
                 prop="dailyBudget"
                 label="今日预算"
@@ -93,7 +107,7 @@
 
 <script>
 import { semPlatformCn, CAMPAIGN_STATUSES, CAMPAIGN_STATUS_OFFLINE } from 'constant/fengming'
-import { filterOptimization } from '../constant'
+import { filterOptimization, DEVICE } from '../constant'
 import pick from 'lodash.pick'
 export default {
   name: 'promotionTable',
@@ -121,7 +135,8 @@ export default {
       dailyBudget: {
         id: '',
         value: 0
-      }
+      },
+      DEVICE
     }
   },
   methods: {
