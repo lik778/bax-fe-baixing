@@ -80,12 +80,12 @@
       </div>
     </section>
 
-    <section>
+    <!-- <section>
       <mobile-price-ratio v-if="showMobilPriceRatio"
                           :value="promotion.mobilePriceRatio"
                           @change="(val) => emitPromtionData('mobilePriceRatio', val)"
       />
-    </section>
+    </section> -->
 
     <section v-if="showNegative">
       <div class="desc align-self">设置否词
@@ -120,7 +120,7 @@
 <script>
 import AreaSelector from 'com/common/area-selector'
 import DurationSelector from 'com/common/duration-selector'
-import MobilePriceRatio from '../qwt-group/mobile-price-ratio'
+// import MobilePriceRatio from '../qwt-group/mobile-price-ratio'
 
 import { getCnName, isQwtEnableCity } from 'util/meta'
 import { disabledDate } from 'util/element'
@@ -269,8 +269,8 @@ export default {
   },
   components: {
     AreaSelector,
-    DurationSelector,
-    MobilePriceRatio
+    DurationSelector
+    // MobilePriceRatio
   }
 }
 </script>
