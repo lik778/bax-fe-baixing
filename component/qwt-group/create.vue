@@ -87,7 +87,7 @@
       <cpc-price-comp style="margin-bottom: 10px"
                       :value="group.price"
                       @change="(val) => updateGroupData('price', val)" />
-      <mobile-price-ratio-comp v-if="promotion.source === SEM_PLATFORM_BAIDU"
+      <mobile-price-ratio-comp v-if="promotion.source === 9999"
                                :value="group.mobilePriceRatio"
                                @change="(val) => updateGroupData('mobilePriceRatio', val)" />
       <contract-ack-comp class="contract-ack"
